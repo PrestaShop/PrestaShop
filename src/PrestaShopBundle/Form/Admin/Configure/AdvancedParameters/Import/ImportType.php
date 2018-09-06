@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Import;
 
+use PrestaShop\PrestaShop\Core\Import\ImportSettings;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -49,15 +50,15 @@ class ImportType extends TranslatorAwareType
             ->add('csv', HiddenType::class)
             ->add('entity', ChoiceType::class, [
                 'choices' => [
-                    $this->trans('Categories', 'Admin.Global') => 0,
-                    $this->trans('Products', 'Admin.Global') => 1,
-                    $this->trans('Combinations', 'Admin.Global') => 2,
-                    $this->trans('Customers', 'Admin.Global') => 3,
-                    $this->trans('Addresses', 'Admin.Global') => 4,
-                    $this->trans('Brands', 'Admin.Global') => 5,
-                    $this->trans('Suppliers', 'Admin.Global') => 6,
-                    $this->trans('Alias', 'Admin.Shopparameters.Feature') => 7,
-                    $this->trans('Store contacts', 'Admin.Advparameters.Feature') => 8,
+                    $this->trans('Categories', 'Admin.Global') => ImportSettings::CATEGORY_IMPORT,
+                    $this->trans('Products', 'Admin.Global') => ImportSettings::PRODUCT_IMPORT,
+                    $this->trans('Combinations', 'Admin.Global') => ImportSettings::COMBINATION_IMPORT,
+                    $this->trans('Customers', 'Admin.Global') => ImportSettings::CUSTOMER_IMPORT,
+                    $this->trans('Addresses', 'Admin.Global') => ImportSettings::ADDRESS_IMPORT,
+                    $this->trans('Brands', 'Admin.Global') => ImportSettings::BRAND_IMPORT,
+                    $this->trans('Suppliers', 'Admin.Global') => ImportSettings::SUPPLIER_IMPORT,
+                    $this->trans('Alias', 'Admin.Shopparameters.Feature') => ImportSettings::ALIAS_IMPORT,
+                    $this->trans('Store contacts', 'Admin.Advparameters.Feature') => ImportSettings::STORE_CONTACT_IMPORT,
                 ],
             ])
             ->add('file', FileType::class, [

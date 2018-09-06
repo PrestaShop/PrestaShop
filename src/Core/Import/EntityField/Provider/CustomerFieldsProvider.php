@@ -24,16 +24,16 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Import\EntityField\Factory;
+namespace PrestaShop\PrestaShop\Core\Import\EntityField\Provider;
 
 use PrestaShop\PrestaShop\Core\Import\EntityField\EntityField;
 use PrestaShop\PrestaShop\Core\Import\EntityField\EntityFieldCollection;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * Class CategoryFieldCollectionFactory defines a category field collection factory.
+ * Class CustomerFieldsProvider defines a customer fields provider.
  */
-final class CategoryFieldCollectionFactory implements EntityFieldCollectionFactoryInterface
+final class CustomerFieldsProvider implements EntityFieldsProviderInterface
 {
     /**
      * @var TranslatorInterface
@@ -51,26 +51,24 @@ final class CategoryFieldCollectionFactory implements EntityFieldCollectionFacto
     /**
      * {@inheritdoc}
      */
-    public function create()
+    public function getCollection()
     {
         $fields = [
             new EntityField('id', $this->trans('ID', 'Admin.Global')),
-            new EntityField('active', $this->trans('Active (0/1)')),
-            new EntityField('name', $this->trans('Name', 'Admin.Global')),
-            new EntityField('parent', $this->trans('Parent category', 'Admin.Catalog.Feature')),
+            new EntityField('active', $this->trans('Active  (0/1)')),
+            new EntityField('id_gender', $this->trans('Titles ID (Mr = 1, Ms = 2, else 0)')),
+            new EntityField('email', $this->trans('Email', 'Admin.Global'), '', true),
+            new EntityField('passwd', $this->trans('Password', 'Admin.Global'), '', true),
+            new EntityField('birthday', $this->trans('Birth date (yyyy-mm-dd)')),
+            new EntityField('lastname', $this->trans('Last name', 'Admin.Global'), '', true),
+            new EntityField('firstname', $this->trans('First name', 'Admin.Global'), '', true),
+            new EntityField('newsletter', $this->trans('Newsletter (0/1)')),
+            new EntityField('optin', $this->trans('Partner offers (0/1)')),
+            new EntityField('date_add', $this->trans('Registration date (yyyy-mm-dd)')),
+            new EntityField('group', $this->trans('Groups (x,y,z...)')),
+            new EntityField('id_default_group', $this->trans('Default group ID')),
             new EntityField(
-                'is_root_category',
-                $this->trans('Root category (0/1)'),
-                $this->trans('A category root is where a category tree can begin. This is used with multistore.', 'Admin.Advparameters.Help')
-            ),
-            new EntityField('description', $this->trans('Description', 'Admin.Global')),
-            new EntityField('meta_title', $this->trans('Meta title', 'Admin.Global')),
-            new EntityField('meta_keywords', $this->trans('Meta keywords', 'Admin.Global')),
-            new EntityField('meta_description', $this->trans('Meta description', 'Admin.Global')),
-            new EntityField('link_rewrite', $this->trans('Rewritten URL', 'Admin.Shopparameters.Feature')),
-            new EntityField('image', $this->trans('Image URL')),
-            new EntityField(
-                'shop',
+                'id_shop',
                 $this->trans('ID / Name of shop'),
                 $this->trans('Ignore this field if you don\'t use the Multistore tool. If you leave this field empty, the default shop will be used.', 'Admin.Advparameters.Help')
             ),

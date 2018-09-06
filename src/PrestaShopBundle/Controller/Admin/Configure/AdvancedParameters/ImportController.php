@@ -173,6 +173,7 @@ class ImportController extends FrameworkBundleAdminController
             'dataRowCollection' => $presentedDataRowCollection,
             'maxVisibleColumns' => ImportSettings::MAX_VISIBLE_COLUMNS,
             'showPagingArrows' => $presentedDataRowCollection['row_size'] > ImportSettings::MAX_VISIBLE_COLUMNS,
+            'requiredFields' => [],
         ];
     }
 

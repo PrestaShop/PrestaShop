@@ -24,16 +24,16 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Import\EntityField\Factory;
+namespace PrestaShop\PrestaShop\Core\Import\EntityField\Provider;
 
 use PrestaShop\PrestaShop\Core\Import\EntityField\EntityField;
 use PrestaShop\PrestaShop\Core\Import\EntityField\EntityFieldCollection;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * Class StoreContactFieldCollectionFactory defines a store contact field collection factory.
+ * Class CategoryFieldsProvider defines a category fields provider.
  */
-final class StoreContactFieldCollectionFactory implements EntityFieldCollectionFactoryInterface
+final class CategoryFieldsProvider implements EntityFieldsProviderInterface
 {
     /**
      * @var TranslatorInterface
@@ -51,25 +51,23 @@ final class StoreContactFieldCollectionFactory implements EntityFieldCollectionF
     /**
      * {@inheritdoc}
      */
-    public function create()
+    public function getCollection()
     {
         $fields = [
             new EntityField('id', $this->trans('ID', 'Admin.Global')),
             new EntityField('active', $this->trans('Active (0/1)')),
             new EntityField('name', $this->trans('Name', 'Admin.Global')),
-            new EntityField('address1', $this->trans('Address', 'Admin.Global'), '', true),
-            new EntityField('address2', $this->trans('Address (2)')),
-            new EntityField('postcode', $this->trans('Zip/postal code', 'Admin.Global')),
-            new EntityField('state', $this->trans('State', 'Admin.Global')),
-            new EntityField('city', $this->trans('City', 'Admin.Global'), '', true),
-            new EntityField('country', $this->trans('Country', 'Admin.Global'), '', true),
-            new EntityField('latitude', $this->trans('Latitude'), '', true),
-            new EntityField('longitude', $this->trans('Longitude'), '', true),
-            new EntityField('phone', $this->trans('Phone', 'Admin.Global')),
-            new EntityField('fax', $this->trans('Fax', 'Admin.Global')),
-            new EntityField('email', $this->trans('Email address', 'Admin.Global')),
-            new EntityField('note', $this->trans('Note')),
-            new EntityField('hours', $this->trans('Hours (x,y,z...)')),
+            new EntityField('parent', $this->trans('Parent category', 'Admin.Catalog.Feature')),
+            new EntityField(
+                'is_root_category',
+                $this->trans('Root category (0/1)'),
+                $this->trans('A category root is where a category tree can begin. This is used with multistore.', 'Admin.Advparameters.Help')
+            ),
+            new EntityField('description', $this->trans('Description', 'Admin.Global')),
+            new EntityField('meta_title', $this->trans('Meta title', 'Admin.Global')),
+            new EntityField('meta_keywords', $this->trans('Meta keywords', 'Admin.Global')),
+            new EntityField('meta_description', $this->trans('Meta description', 'Admin.Global')),
+            new EntityField('link_rewrite', $this->trans('Rewritten URL', 'Admin.Shopparameters.Feature')),
             new EntityField('image', $this->trans('Image URL')),
             new EntityField(
                 'shop',

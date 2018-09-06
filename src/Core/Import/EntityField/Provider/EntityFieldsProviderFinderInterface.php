@@ -24,19 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Import\EntityField\Factory;
-
-use PrestaShop\PrestaShop\Core\Import\EntityField\EntityFieldCollectionInterface;
+namespace PrestaShop\PrestaShop\Core\Import\EntityField\Provider;
 
 /**
- * Interface EntityFieldCollectionFactoryInterface describes an entity field collection factory.
+ * Interface EntityFieldsProviderFinderInterface describes an entity fields finder.
  */
-interface EntityFieldCollectionFactoryInterface
+interface EntityFieldsProviderFinderInterface
 {
     /**
-     * Create the entity field collection.
+     * Find the appropriate entity fields provider.
      *
-     * @return EntityFieldCollectionInterface
+     * @return EntityFieldsProviderInterface
      */
-    public function create();
+    public function find();
 }
