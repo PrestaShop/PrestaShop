@@ -1,5 +1,5 @@
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,10 +23,12 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import ImportDataPage from './ImportDataPage';
+import SaveImportMatchConfiguration from './SaveImportMatchConfiguration';
+import ImportDataTable from './ImportDataTable';
 
-const $ = window.$;
-
-$(() => {
-  new ImportDataPage();
-});
+export default class ImportDataPage {
+  constructor() {
+    new SaveImportMatchConfiguration();
+    new ImportDataTable();
+  }
+}
