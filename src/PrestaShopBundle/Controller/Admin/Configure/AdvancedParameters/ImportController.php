@@ -325,6 +325,37 @@ class ImportController extends FrameworkBundleAdminController
     }
 
     /**
+     * Delete import data match configuration
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function deleteImportMatchAction(Request $request)
+    {
+        $legacyController = $request->attributes->get('_legacy_controller');
+
+        if (!in_array($this->authorizationLevel($legacyController), [
+            PageVoter::LEVEL_DELETE
+        ])) {
+            return $this->json([
+                'error' => $this->trans('You do not have permission to delete this.', 'Admin.Notifications.Error'),
+            ]);
+        }
+
+        if ($this->isDemoModeEnabled()) {
+            return $this->json([
+                'error' => $this->trans('This functionality has been disabled.', 'Admin.Notifications.Error'),
+            ]);
+        }
+
+        $importMatchRepository = $this->get('prestashop.core.admin.import_match.repository');
+        $importMatchRepository->deleteById($request->get('import_match_id'));
+
+        return $this->json([]);
+    }
+
+    /**
      * Get import data match configuration
      *
      * @param Request $request

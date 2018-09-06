@@ -44,6 +44,7 @@ export default class ImportMatchConfiguration
   loadEvents() {
     $(document).on('click', '.js-save-import-match', (event) => this.save(event));
     $(document).on('click', '.js-load-import-match', (event) => this.load(event));
+    $(document).on('click', '.js-delete-import-match', (event) => this.delete(event));
   }
 
   /**
@@ -124,13 +125,9 @@ export default class ImportMatchConfiguration
       data: {
         import_match_id: selectedMatchId
       },
-    }).then(response => {
-      if (typeof response.errors !== 'undefined' && response.errors.length) {
-        this._showErrorPopUp(response.errors);
-      } else {
+    }).then(() => {
         // Delete the match option from matches dropdown
-        $dataMatchesDropdown.find('option[id=' + selectedMatchId + ']');
-      }
+        $dataMatchesDropdown.find('option[value=' + selectedMatchId + ']').remove();
     });
   }
 
