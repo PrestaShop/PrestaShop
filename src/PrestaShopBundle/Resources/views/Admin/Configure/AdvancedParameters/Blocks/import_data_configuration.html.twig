@@ -54,12 +54,14 @@
             </div>
             <div class="col">
               <button
-                class="btn btn-primary-reverse btn-outline-primary light-button js-load-match">
+                class="btn btn-outline-primary js-load-import-match"
+                data-url="{{ path('admin_import_get_import_match') }}"
+              >
                 {#todo: implement#}
                 <i class="material-icons">settings</i> {{ 'Load'|trans({}, 'Admin.Actions') }}
               </button>
               <button
-                class="btn btn-primary-reverse btn-outline-primary light-button js-load-match">
+                class="btn btn-outline-primary js-delete-import-match">
                 {#todo: implement#}
                 <i class="material-icons">delete</i> {{ 'Delete'|trans({}, 'Admin.Actions') }}
               </button>
@@ -78,9 +80,9 @@
             </div>
             <div class="col">
               <button
-                class="btn btn-primary-reverse btn-outline-primary light-button js-save-import-match"
-                data-url="{{ path('admin_import_save_import_match') }}">
-                {#todo: finish implementation#}
+                class="btn btn-outline-primary js-save-import-match"
+                data-url="{{ path('admin_import_save_import_match') }}"
+              >
                 <i class="material-icons">save</i> {{ 'Save'|trans({}, 'Admin.Actions') }}
               </button>
             </div>
