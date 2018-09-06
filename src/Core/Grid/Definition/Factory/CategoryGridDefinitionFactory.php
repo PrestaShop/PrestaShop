@@ -45,6 +45,7 @@ use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShop\PrestaShop\Core\Multistore\MultistoreContextCheckerInterface;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
+use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 /**
@@ -191,11 +192,8 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'required' => false,
                 ])
             )
-            ->add((new Filter('active', TextType::class))
+            ->add((new Filter('active', YesAndNoChoiceType::class))
                 ->setAssociatedColumn('active')
-                ->setTypeOptions([
-                    'required' => false,
-                ])
             )
             ->add((new Filter('actions', SearchAndResetType::class))
                 ->setAssociatedColumn('actions')
