@@ -30,9 +30,9 @@ use Doctrine\DBAL\Connection;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
 /**
- * Class SeoUrlsQueryBuilder is responsible for providing data for seo & urls list.
+ * Class MetaQueryBuilder is responsible for providing data for seo & urls list.
  */
-final class SeoUrlsQueryBuilder extends AbstractDoctrineQueryBuilder
+final class MetaQueryBuilder extends AbstractDoctrineQueryBuilder
 {
     /**
      * @var int
@@ -45,7 +45,7 @@ final class SeoUrlsQueryBuilder extends AbstractDoctrineQueryBuilder
     private $contextIdShop;
 
     /**
-     * SeoUrlsQueryBuilder constructor.
+     * MetaQueryBuilder constructor.
      *
      * @param Connection $connection
      * @param $dbPrefix
