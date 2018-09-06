@@ -175,7 +175,7 @@ class WebserviceController extends FrameworkBundleAdminController
      */
     public function deleteSingleWebserviceAction($webserviceAccountId)
     {
-        $webserviceEraser = $this->get('prestashop.adapter.webservice.webservice_account_eraser');
+        $webserviceEraser = $this->get('prestashop.adapter.webservice.webservice_key_eraser');
         $errors = $webserviceEraser->erase([$webserviceAccountId]);
 
         if (!empty($errors)) {
@@ -206,7 +206,7 @@ class WebserviceController extends FrameworkBundleAdminController
     {
         $webserviceToDelete = $request->request->get('webservice_bulk_action');
 
-        $webserviceEraser = $this->get('prestashop.adapter.webservice.webservice_account_eraser');
+        $webserviceEraser = $this->get('prestashop.adapter.webservice.webservice_key_eraser');
         $errors = $webserviceEraser->erase($webserviceToDelete);
 
         if (!empty($errors)) {
@@ -237,9 +237,9 @@ class WebserviceController extends FrameworkBundleAdminController
     public function enableMultipleStatusAction(Request $request)
     {
         $webserviceToEnable = $request->request->get('webservice_bulk_action');
-        $statusModifier = $this->get('prestashop.adapter.webservice.webservice_account_status_modifier');
+        $statusModifier = $this->get('prestashop.adapter.webservice.webservice_key_status_modifier');
 
-        $statusModifier->toggleMultipleStatus($webserviceToEnable, 1);
+        $statusModifier->setStatus($webserviceToEnable, 1);
 
         return $this->redirectToRoute('admin_webservice');
     }
@@ -260,9 +260,9 @@ class WebserviceController extends FrameworkBundleAdminController
     public function disableMultipleStatusAction(Request $request)
     {
         $webserviceToEnable = $request->request->get('webservice_bulk_action');
-        $statusModifier = $this->get('prestashop.adapter.webservice.webservice_account_status_modifier');
+        $statusModifier = $this->get('prestashop.adapter.webservice.webservice_key_status_modifier');
 
-        $statusModifier->toggleMultipleStatus($webserviceToEnable, 0);
+        $statusModifier->setStatus($webserviceToEnable, 0);
 
         return $this->redirectToRoute('admin_webservice');
     }
@@ -282,7 +282,7 @@ class WebserviceController extends FrameworkBundleAdminController
      */
     public function toggleStatusAction($webserviceAccountId)
     {
-        $statusModifier = $this->get('prestashop.adapter.webservice.webservice_account_status_modifier');
+        $statusModifier = $this->get('prestashop.adapter.webservice.webservice_key_status_modifier');
         $errors = $statusModifier->toggleStatus($webserviceAccountId);
 
         if (!empty($errors)) {

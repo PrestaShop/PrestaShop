@@ -30,24 +30,24 @@ use PrestaShopCollection;
 use WebserviceKey;
 
 /**
- * Class WebserviceEraser is responsible for deleting the records from webservice account table.
+ * Class WebserviceKeyEraser is responsible for deleting the records from webservice account table.
  */
-final class WebserviceAccountEraser
+final class WebserviceKeyEraser
 {
     /**
      * Erase given webservice accounts.
      *
-     * @param int[] $webServiceAccountIds
+     * @param int[] $webServiceKeyIds
      *
      * @return string[] - array of errors. If array is empty then erase operation succeeded.
      *
      * @throws \PrestaShopException
      */
-    public function erase(array $webServiceAccountIds)
+    public function erase(array $webServiceKeyIds)
     {
         $errors = [];
 
-        if (empty($webServiceAccountIds)) {
+        if (empty($webServiceKeyIds)) {
             $errors[] = [
                 'key' => 'You must select at least one element to delete.',
                 'parameters' => [],
@@ -57,16 +57,16 @@ final class WebserviceAccountEraser
             return $errors;
         }
 
-        $webserviceAccounts = new PrestaShopCollection(WebserviceKey::class);
-        $webserviceAccounts->where('id_webservice_account', 'in', $webServiceAccountIds);
+        $webserviceKeys = new PrestaShopCollection(WebserviceKey::class);
+        $webserviceKeys->where('id_webservice_account', 'in', $webServiceKeyIds);
 
-        /** @var WebserviceKey $webserviceAccount */
-        foreach ($webserviceAccounts->getResults() as $webserviceAccount) {
-            if (!$webserviceAccount->delete()) {
+        /** @var WebserviceKey $webserviceKey */
+        foreach ($webserviceKeys->getResults() as $webserviceKey) {
+            if (!$webserviceKey->delete()) {
                 $errors[] = [
                     'key' => 'Can\'t delete #%id%',
                     'parameters' => [
-                        '%id%' => $webserviceAccount->id,
+                        '%id%' => $webserviceKey->id,
                     ],
                     'domain' => 'Admin.Notifications.Error',
                 ];
