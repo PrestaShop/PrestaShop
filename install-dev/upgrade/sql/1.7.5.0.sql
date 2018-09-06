@@ -10,5 +10,5 @@ ALTER TABLE `PREFIX_cms_lang`
 
 DELETE FROM `PREFIX_tab` where `class_name` = 'AdminAddonsCatalog';
 
-ALTER TABLE `PREFIX_product` CHANGE `location` `location` VARCHAR(255) NULL DEFAULT NULL;
-ALTER TABLE `PREFIX_product_attribute` CHANGE `location` `location` VARCHAR(255) NULL DEFAULT NULL;
+ALTER TABLE `PREFIX_product` MODIFY `location` VARCHAR(255) NULL DEFAULT NULL;
+ALTER TABLE `PREFIX_product_attribute` MODIFY `location` VARCHAR(255) NULL DEFAULT NULL;
