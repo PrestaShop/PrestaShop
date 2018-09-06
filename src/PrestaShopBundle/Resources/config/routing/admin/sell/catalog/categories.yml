@@ -58,3 +58,10 @@ admin_category_edit:
         _legacy_controller: AdminCategories
     requirements:
         categoryId: \d+
+
+admin_category_export:
+    path: /export
+    methods: [GET]
+    defaults:
+      _controller: PrestaShopBundle:Admin\Sell\Catalog\Category:export
+      _legacy_controller: AdminCategories
