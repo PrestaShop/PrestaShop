@@ -27,7 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
-use PrestaShop\PrestaShop\Core\Search\Filters\WebserviceFilters;
+use PrestaShop\PrestaShop\Core\Search\Filters\WebserviceKeyFilters;
 use PrestaShop\PrestaShop\Core\Webservice\WebserviceCanBeEnabledConfigurationChecker;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
@@ -48,15 +48,15 @@ class WebserviceController extends FrameworkBundleAdminController
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
-     * @param WebserviceFilters $filters - filters for webservice list
+     * @param WebserviceKeyFilters $filters - filters for webservice list
      * @param Request $request
      *
      * @return Response
      */
-    public function indexAction(WebserviceFilters $filters, Request $request)
+    public function indexAction(WebserviceKeyFilters $filters, Request $request)
     {
         $form = $this->getFormHandler()->getForm();
-        $gridWebserviceFactory = $this->get('prestashop.core.grid.factory.webservice');
+        $gridWebserviceFactory = $this->get('prestashop.core.grid.factory.webservice_key');
         $grid = $gridWebserviceFactory->getGrid($filters);
 
         $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
@@ -145,7 +145,7 @@ class WebserviceController extends FrameworkBundleAdminController
      */
     public function searchAction(Request $request)
     {
-        $definitionFactory = $this->get('prestashop.core.grid.definition.factory.webservice');
+        $definitionFactory = $this->get('prestashop.core.grid.definition.factory.webservice_key');
         $webserviceDefinition = $definitionFactory->getDefinition();
 
         $gridFilterFormFactory = $this->get('prestashop.core.grid.filter.form_factory');
