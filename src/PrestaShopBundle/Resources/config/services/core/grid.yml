@@ -17,6 +17,7 @@ services:
         arguments:
             - '@prestashop.core.admin.log.repository'
             - '@prestashop.core.hook.dispatcher'
+            - '@prestashop.core.grid.query.doctrine_query_parser'
             - 'logs'
 
     prestashop.core.grid.data_provider.email_logs:
@@ -24,6 +25,7 @@ services:
         arguments:
             - '@prestashop.core.grid.query_builder.email_logs'
             - '@prestashop.core.hook.dispatcher'
+            - '@prestashop.core.grid.query.doctrine_query_parser'
             - 'email_logs'
 
     prestashop.core.grid.data_provider.request_sql:
@@ -31,6 +33,7 @@ services:
         arguments:
             - '@prestashop.core.admin.request_sql.repository'
             - '@prestashop.core.hook.dispatcher'
+            - '@prestashop.core.grid.query.doctrine_query_parser'
             - 'request_sql'
 
     prestashop.core.grid.data_provider.webservice:
@@ -38,6 +41,7 @@ services:
         arguments:
             - '@prestashop.core.grid.query_builder.webservice'
             - '@prestashop.core.hook.dispatcher'
+            - '@prestashop.core.grid.query.doctrine_query_parser'
             - 'webservice'
 
     # Grid definition factories
@@ -134,7 +138,7 @@ services:
         arguments:
             - '@prestashop.core.hook.dispatcher'
 
-    # Query builder
+    # Grid Query builder
     prestashop.core.grid.abstract_query_builder:
         class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory'
         abstract: true
@@ -154,6 +158,10 @@ services:
         parent: 'prestashop.core.grid.abstract_query_builder'
         public: true
 
-    # Query applicators
+    # Grid Query parser
+    prestashop.core.grid.query.doctrine_query_parser:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Query\DoctrineQueryParser'
+
+    # Grid Query applicators
     prestashop.core.query.doctrine_search_criteria_applicator:
         class: 'PrestaShop\PrestaShop\Core\Grid\Query\DoctrineSearchCriteriaApplicator'
