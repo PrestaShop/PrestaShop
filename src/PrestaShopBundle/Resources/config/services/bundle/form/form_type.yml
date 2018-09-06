@@ -564,3 +564,10 @@ services:
             - '@=service("prestashop.core.form.choice_provider.category_delete_mode").getChoices()'
         tags:
             - { name: form.type }
+
+    from.type.yes_and_no_choice:
+        class: 'PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        tags:
+            - { name: form.type }
