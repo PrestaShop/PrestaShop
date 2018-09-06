@@ -24,28 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\RequestSql;
+namespace PrestaShop\PrestaShop\Core\Domain\SqlManagement\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Encoding\CharsetEncoding;
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\FormBuilderInterface;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command\EditSqlRequestCommand;
 
 /**
- * Class RequestSqlSettingsType build form type for "Configure > Advanced Parameters > Database > SQL Manager" page.
+ * Interface EditSqlRequestHandlerInterface defines contract SqlRequest editing handler.
  */
-class RequestSqlSettingsType extends AbstractType
+interface EditSqlRequestHandlerInterface
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
-    {
-        $builder
-            ->add('default_file_encoding', ChoiceType::class, [
-                'choices' => [
-                    CharsetEncoding::UTF_8 => 1,
-                    CharsetEncoding::ISO_8859_1 => 2,
-                ],
-                'translation_domain' => false,
-            ])
-        ;
-    }
+    /**
+     * @param EditSqlRequestCommand $command
+     */
+    public function handle(EditSqlRequestCommand $command);
 }

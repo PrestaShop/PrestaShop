@@ -26,10 +26,26 @@
 
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
+use Exception;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command\BulkDeleteSqlRequestCommand;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command\DeleteSqlRequestCommand;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\DatabaseTableFields;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\DatabaseTablesList;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\CannotDeleteSqlRequestException;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlRequestException;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlRequestNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetDatabaseTableFieldsList;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetDatabaseTablesList;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetSqlRequestExecutionResult;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetSqlRequestSettings;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\SqlRequestExecutionResult;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\SqlRequestSettings;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\ValueObject\SqlRequestId;
+use PrestaShop\PrestaShop\Core\Export\Exception\FileWritingException;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\RequestSqlFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\RequestSql\RequestSqlFormHandler;
+use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\RequestSql\SqlRequestFormHandler;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -37,11 +53,12 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 /**
  * Responsible of "Configure > Advanced Parameters > Database -> SQL Manager" page.
  */
-class RequestSqlController extends FrameworkBundleAdminController
+class SqlManagerController extends FrameworkBundleAdminController
 {
     /**
      * Show list of saved SQL's.
@@ -74,7 +91,7 @@ class RequestSqlController extends FrameworkBundleAdminController
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/RequestSql/list.html.twig', [
             'layoutHeaderToolbarBtn' => [
                 'add' => [
-                    'href' => $this->generateUrl('admin_request_sql_create'),
+                    'href' => $this->generateUrl('admin_sql_request_create'),
                     'desc' => $this->trans('Add new SQL query', 'Admin.Advparameters.Feature'),
                     'icon' => 'add_circle_outline',
                 ],
@@ -111,13 +128,13 @@ class RequestSqlController extends FrameworkBundleAdminController
             $filters = $filtersForm->getData();
         }
 
-        return $this->redirectToRoute('admin_request_sql', ['filters' => $filters]);
+        return $this->redirectToRoute('admin_sql_request', ['filters' => $filters]);
     }
 
     /**
      * Process Request SQL settings save.
      *
-     * @DemoRestricted(redirectRoute="admin_request_sql")
+     * @DemoRestricted(redirectRoute="admin_sql_request")
      * @AdminSecurity(
      *     "is_granted(['update', 'create','delete'], request.get('_legacy_controller')~'_')",
      *      message="You do not have permission to edit this."
@@ -141,7 +158,7 @@ class RequestSqlController extends FrameworkBundleAdminController
             }
         }
 
-        return $this->redirectToRoute('admin_request_sql');
+        return $this->redirectToRoute('admin_sql_request');
     }
 
     /**
@@ -159,7 +176,6 @@ class RequestSqlController extends FrameworkBundleAdminController
     public function createAction(Request $request)
     {
         $requestSqlFormHandler = $this->getRequestSqlFormHandler();
-        $dataProvider = $this->get('prestashop.adapter.sql_manager.request_sql_data_provider');
 
         $requestSqlData = [];
 
@@ -171,14 +187,15 @@ class RequestSqlController extends FrameworkBundleAdminController
             ];
         }
 
-        $requestSqlForm = $requestSqlFormHandler->getForm($requestSqlData);
+        $requestSqlForm = $requestSqlFormHandler->getForm();
+        $requestSqlForm->setData($requestSqlData);
         $requestSqlForm->handleRequest($request);
 
         if ($requestSqlForm->isSubmitted()) {
             if ($this->isDemoModeEnabled()) {
                 $this->addFlash('error', $this->getDemoModeErrorMessage());
 
-                return $this->redirectToRoute('admin_request_sql');
+                return $this->redirectToRoute('admin_sql_request');
             }
 
             $errors = $requestSqlFormHandler->save($requestSqlForm->getData());
@@ -186,7 +203,7 @@ class RequestSqlController extends FrameworkBundleAdminController
             if (empty($errors)) {
                 $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
 
-                return $this->redirectToRoute('admin_request_sql');
+                return $this->redirectToRoute('admin_sql_request');
             }
 
             $this->flashErrors($errors);
@@ -198,7 +215,7 @@ class RequestSqlController extends FrameworkBundleAdminController
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'requestSqlForm' => $requestSqlForm->createView(),
-            'dbTableNames' => $dataProvider->getTables(),
+            'dbTableNames' => $this->getDatabaseTables(),
         ]);
     }
 
@@ -210,38 +227,34 @@ class RequestSqlController extends FrameworkBundleAdminController
      *     message="You do not have permission to edit this."
      * )
      *
-     * @param int $requestSqlId
+     * @param int $sqlRequestId
      * @param Request $request
      *
      * @return Response
      */
-    public function editAction($requestSqlId, Request $request)
+    public function editAction($sqlRequestId, Request $request)
     {
         $requestSqlFormHandler = $this->getRequestSqlFormHandler();
 
-        $formHandler = $this->get('prestashop.admin.request_sql.form_handler');
-        $dataProvider = $this->get('prestashop.adapter.sql_manager.request_sql_data_provider');
+        $editRequestSqlForm = $requestSqlFormHandler->getFormFor($sqlRequestId);
+        $editRequestSqlForm->handleRequest($request);
 
-        $requestSql = $dataProvider->getRequestSql($requestSqlId);
-        if (!$requestSql) {
-            $this->addFlash('error', $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'));
-
-            return $this->redirectToRoute('admin_request_sql');
-        }
-
-        $requestSqlForm = $requestSqlFormHandler->getForm(['request_sql' => $requestSql]);
-        $requestSqlForm->handleRequest($request);
-
-        if ($requestSqlForm->isSubmitted()) {
+        if ($editRequestSqlForm->isSubmitted()) {
             if ($this->isDemoModeEnabled()) {
                 $this->addFlash('error', $this->getDemoModeErrorMessage());
 
-                return $this->redirectToRoute('admin_request_sql');
+                return $this->redirectToRoute('admin_sql_request');
             }
-            if (!$errors = $formHandler->save($requestSqlForm->getData())) {
-                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
 
-                return $this->redirectToRoute('admin_request_sql');
+            $errors = $requestSqlFormHandler->save($editRequestSqlForm->getData());
+
+            if (empty($errors)) {
+                $this->addFlash(
+                    'success',
+                    $this->trans('Successful update.', 'Admin.Notifications.Success')
+                );
+
+                return $this->redirectToRoute('admin_sql_request');
             }
 
             $this->flashErrors($errors);
@@ -252,8 +265,8 @@ class RequestSqlController extends FrameworkBundleAdminController
             'requireAddonsSearch' => true,
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
-            'requestSqlForm' => $requestSqlForm->createView(),
-            'dbTableNames' => $dataProvider->getTables(),
+            'requestSqlForm' => $editRequestSqlForm->createView(),
+            'dbTableNames' => $this->getDatabaseTables(),
         ]);
     }
 
@@ -264,32 +277,27 @@ class RequestSqlController extends FrameworkBundleAdminController
      *     "is_granted(['delete'], request.get('_legacy_controller')~'_')",
      *     message="You do not have permission to edit this."
      * )
-     * @DemoRestricted(redirectRoute="admin_request_sql")
+     * @DemoRestricted(redirectRoute="admin_sql_request")
      *
-     * @param int $requestSqlId ID of selected Request SQL
+     * @param int $sqlRequestId ID of selected Request SQL
      *
      * @return RedirectResponse
      */
-    public function deleteAction($requestSqlId)
+    public function deleteAction($sqlRequestId)
     {
-        $requestSqlDataProvider = $this->get('prestashop.adapter.sql_manager.request_sql_data_provider');
-        if (null === $requestSqlDataProvider->getRequestSql($requestSqlId)) {
-            $this->addFlash('error', $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'));
+        try {
+            $deleteSqlRequestCommand = new DeleteSqlRequestCommand(
+                new SqlRequestId($sqlRequestId)
+            );
 
-            return $this->redirectToRoute('admin_request_sql');
-        }
+            $this->getCommandBus()->handle($deleteSqlRequestCommand);
 
-        $requestSqlManager = $this->get('prestashop.adapter.sql_manager.request_sql_manager');
-        $errors = $requestSqlManager->delete([$requestSqlId]);
-        if (empty($errors)) {
             $this->addFlash('success', $this->trans('Successful deletion', 'Admin.Notifications.Success'));
-
-            return $this->redirectToRoute('admin_request_sql');
+        } catch (SqlRequestException $e) {
+            $this->addFlash('error', $this->handleDeleteException($e));
         }
 
-        $this->addFlash('error', $this->trans('An error occurred while deleting the object.', 'Admin.Notifications.Error'));
-
-        return $this->redirectToRoute('admin_request_sql');
+        return $this->redirectToRoute('admin_sql_request');
     }
 
     /**
@@ -299,7 +307,7 @@ class RequestSqlController extends FrameworkBundleAdminController
      *     "is_granted(['delete'], request.get('_legacy_controller')~'_')",
      *     message="You do not have permission to edit this."
      * )
-     * @DemoRestricted(redirectRoute="admin_request_sql")
+     * @DemoRestricted(redirectRoute="admin_sql_request")
      *
      * @param Request $request
      *
@@ -307,32 +315,21 @@ class RequestSqlController extends FrameworkBundleAdminController
      */
     public function deleteBulkAction(Request $request)
     {
-        $requestSqlIds = $request->request->get('request_sql_bulk');
-        if (empty($requestSqlIds)) {
-            $this->addFlash(
-                'error',
-                $this->trans('You must select at least one element to delete.', 'Admin.Notifications.Error')
-            );
+        try {
+            $requestSqlIds = $request->request->get('request_sql_bulk');
+            $bulkDeleteSqlRequestCommand = new BulkDeleteSqlRequestCommand($requestSqlIds);
 
-            return $this->redirectToRoute('admin_request_sql');
-        }
+            $this->getCommandBus()->handle($bulkDeleteSqlRequestCommand);
 
-        $requestSqlManager = $this->get('prestashop.adapter.sql_manager.request_sql_manager');
-        $errors = $requestSqlManager->delete($requestSqlIds);
-
-        if (empty($errors)) {
             $this->addFlash(
                 'success',
                 $this->trans('The selection has been successfully deleted.', 'Admin.Notifications.Success')
             );
-        } else {
-            $this->addFlash(
-                'error',
-                $this->trans('An error occurred while deleting this selection.', 'Admin.Notifications.Error')
-            );
+        } catch (SqlRequestException $e) {
+            $this->addFlash('error', $this->handleDeleteException($e));
         }
 
-        return $this->redirectToRoute('admin_request_sql');
+        return $this->redirectToRoute('admin_sql_request');
     }
 
     /**
@@ -344,19 +341,20 @@ class RequestSqlController extends FrameworkBundleAdminController
      * )
      *
      * @param Request $request
-     * @param int $requestSqlId
+     * @param int $sqlRequestId
      *
      * @return Response
      */
-    public function viewAction(Request $request, $requestSqlId)
+    public function viewAction(Request $request, $sqlRequestId)
     {
-        $requestSqlDataProvider = $this->get('prestashop.adapter.sql_manager.request_sql_data_provider');
-        $requestSqlResult = $requestSqlDataProvider->getRequestSqlResult($requestSqlId);
+        try {
+            $query = new GetSqlRequestExecutionResult($sqlRequestId);
 
-        if (null === $requestSqlResult) {
-            $this->addFlash('error', $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'));
+            $sqlRequestExecutionResult = $this->getQueryBus()->handle($query);
+        } catch (SqlRequestException $e) {
+            $this->addFlash('error', $this->handleViewException($e));
 
-            return $this->redirectToRoute('admin_request_sql');
+            return $this->redirectToRoute('admin_sql_request');
         }
 
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/RequestSql/view.html.twig', [
@@ -365,7 +363,7 @@ class RequestSqlController extends FrameworkBundleAdminController
             'requireAddonsSearch' => true,
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
-            'requestSqlResult' => $requestSqlResult,
+            'sqlRequestResult' => $sqlRequestExecutionResult,
         ]);
     }
 
@@ -373,25 +371,40 @@ class RequestSqlController extends FrameworkBundleAdminController
      * Export Request SQL data.
      *
      * @AdminSecurity(
-     *     "is_granted(['read'], request.get('_legacy_controller')~'_')",
+     *     "is_granted(['read'], request.get('_legacy_controller'))",
      *     message="Access denied."
      * )
-     * @DemoRestricted(redirectRoute="admin_request_sql")
+     * @DemoRestricted(redirectRoute="admin_sql_request")
      *
-     * @param int $requestSqlId Request SQL id
+     * @param int $sqlRequestId Request SQL id
      *
      * @return RedirectResponse|BinaryFileResponse
      */
-    public function exportAction($requestSqlId)
+    public function exportAction($sqlRequestId)
     {
-        $requestSqlExporter = $this->get('prestashop.adapter.sql_manager.request_sql_exporter');
-        $response = $requestSqlExporter->export($requestSqlId);
+        $requestSqlExporter = $this->get('prestashop.core.sql_manager.exporter.sql_request_exporter');
 
-        if (null === $response) {
-            $this->addFlash('error', $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'));
+        try {
+            $query = new GetSqlRequestExecutionResult($sqlRequestId);
+            /** @var SqlRequestExecutionResult $sqlRequestExecutionResult */
+            $sqlRequestExecutionResult = $this->getQueryBus()->handle($query);
 
-            return $this->redirectToRoute('admin_request_sql');
+            $exportedFile = $requestSqlExporter->exportToFile(
+                $query->getSqlRequestId(),
+                $sqlRequestExecutionResult
+            );
+
+            /** @var SqlRequestSettings $sqlRequestSettings */
+            $sqlRequestSettings = $this->getQueryBus()->handle(new GetSqlRequestSettings());
+        } catch (SqlRequestException $e) {
+            $this->addFlash('error', $this->handleExportException($e));
+
+            return $this->redirectToRoute('admin_sql_request');
         }
+
+        $response = new BinaryFileResponse($exportedFile->getPathname());
+        $response->setCharset($sqlRequestSettings->getFileEncoding());
+        $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $exportedFile->getFilename());
 
         return $response;
     }
@@ -405,19 +418,11 @@ class RequestSqlController extends FrameworkBundleAdminController
      */
     public function ajaxTableColumnsAction($mySqlTableName)
     {
-        $dataProvider = $this->get('prestashop.adapter.sql_manager.request_sql_data_provider');
+        $query = new GetDatabaseTableFieldsList($mySqlTableName);
+        /** @var DatabaseTableFields $databaseFields */
+        $databaseFields = $this->getQueryBus()->handle($query);
 
-        $columns = [];
-
-        $tableColumns = $dataProvider->getTableColumns($mySqlTableName);
-        foreach ($tableColumns as $tableColumn) {
-            $columns[] = [
-                'name' => $tableColumn['Field'],
-                'type' => $tableColumn['Type'],
-            ];
-        }
-
-        return $this->json(['columns' => $columns]);
+        return $this->json(['columns' => $databaseFields->getFields()]);
     }
 
     /**
@@ -441,10 +446,138 @@ class RequestSqlController extends FrameworkBundleAdminController
     }
 
     /**
-     * @return RequestSqlFormHandler
+     * @return SqlRequestFormHandler
      */
     protected function getRequestSqlFormHandler()
     {
         return $this->get('prestashop.admin.request_sql.form_handler');
+    }
+
+    /**
+     * Get human readable error for exception.
+     *
+     * @param SqlRequestException $e
+     *
+     * @return string Error message
+     */
+    protected function handleDeleteException(SqlRequestException $e)
+    {
+        $code = $e->getCode();
+        $type = get_class($e);
+
+        $exceptionMessages = [
+            SqlRequestNotFoundException::class => $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'),
+            SqlRequestException::class => $this->trans('An error occurred while deleting the object.', 'Admin.Notifications.Error'),
+        ];
+
+        $deleteExceptionMessages = [
+            CannotDeleteSqlRequestException::CANNOT_SINGLE_DELETE => $this->trans('An error occurred while deleting the object.', 'Admin.Notifications.Error'),
+            CannotDeleteSqlRequestException::CANNOT_BULK_DELETE => $this->trans('An error occurred while deleting this selection.', 'Admin.Notifications.Error'),
+        ];
+
+        if (CannotDeleteSqlRequestException::class === $type
+            && isset($deleteExceptionMessages[$code])
+        ) {
+            return $deleteExceptionMessages[$code];
+        }
+
+        if (isset($exceptionMessages[$type])) {
+            return $exceptionMessages[$type];
+        }
+
+        return $this->getFallbackErrorMessage($type, $code);
+    }
+
+    /**
+     * Get error message when exception occurs on View action.
+     *
+     * @param SqlRequestException $e
+     *
+     * @return string
+     */
+    protected function handleViewException(SqlRequestException $e)
+    {
+        $type = get_class($e);
+
+        $exceptionMessages = [
+            SqlRequestNotFoundException::class => $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'),
+        ];
+
+        if (isset($exceptionMessages[$type])) {
+            return $exceptionMessages[$type];
+        }
+
+        return $this->getFallbackErrorMessage($type, $e->getCode());
+    }
+
+    /**
+     * @param Exception $e
+     *
+     * @return string Error message
+     */
+    protected function handleExportException(Exception $e)
+    {
+        $type = get_class($e);
+
+        if ($e instanceof FileWritingException) {
+            return $this->handleApplicationExportException($e);
+        }
+
+        if ($e instanceof SqlRequestException) {
+            return $this->handleDomainExportException($e);
+        }
+
+        return $this->getFallbackErrorMessage($type, $e->getCode());
+    }
+
+    /**
+     * @param FileWritingException $e
+     *
+     * @return string Error message
+     */
+    protected function handleApplicationExportException(FileWritingException $e)
+    {
+        $code = $e->getCode();
+
+        $applicationErrors = [
+            FileWritingException::CANNOT_OPEN_FILE_FOR_WRITING => $this->trans('Cannot open export file for writing', 'Admin.Notifications.Error'),
+        ];
+
+        if (isset($applicationErrors[$code])) {
+            return $applicationErrors[$code];
+        }
+
+        return $this->getFallbackErrorMessage(get_class($e), $code);
+    }
+
+    /**
+     * @param SqlRequestException $e
+     *
+     * @return string
+     */
+    protected function handleDomainExportException(SqlRequestException $e)
+    {
+        $type = get_class($e);
+
+        $domainErrors = [
+            SqlRequestNotFoundException::class => $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'),
+        ];
+
+        if (isset($domainErrors[$type])) {
+            return $domainErrors[$type];
+        }
+
+        return $this->getFallbackErrorMessage($type, $e->getCode());
+    }
+
+    /**
+     * @return string[] Array of database tables
+     */
+    protected function getDatabaseTables()
+    {
+        /** @var DatabaseTablesList $databaseTablesList */
+        $databaseTablesList = $this->getQueryBus()->handle(new GetDatabaseTablesList());
+
+        return $databaseTablesList->getTables();
     }
 }

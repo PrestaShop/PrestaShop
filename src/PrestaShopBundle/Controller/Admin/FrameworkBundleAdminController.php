@@ -352,6 +352,26 @@ class FrameworkBundleAdminController extends Controller
     }
 
     /**
+     * Get fallback error message when something unexpected happens.
+     *
+     * @param string $type
+     * @param string $code
+     *
+     * @return string
+     */
+    protected function getFallbackErrorMessage($type, $code)
+    {
+        return $this->trans(
+            'An unexpected error occurred. [%type% code %code%]',
+            'Admin.Notifications.Error',
+            [
+                '%type%' => $type,
+                '%code%' => $code,
+            ]
+        );
+    }
+
+    /**
      * Get Admin URI from PrestaShop 1.6 Back Office.
      *
      * @param string $controller the old Controller name

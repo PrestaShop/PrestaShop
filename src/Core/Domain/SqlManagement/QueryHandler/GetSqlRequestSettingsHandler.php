@@ -24,15 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\Configuration;
+namespace PrestaShop\PrestaShop\Core\Domain\SqlManagement\QueryHandler;
 
-use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetSqlRequestSettings;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\SqlRequestSettings;
+use PrestaShop\PrestaShop\Core\Encoding\CharsetEncoding;
 
 /**
- * Class RequestSqlConfiguration is responsible for RequestSql configuration.
+ * Class GetSqlRequestSettingsHandler handles query to get SqlRequest settings.
  */
-class RequestSqlConfiguration implements DataConfigurationInterface
+final class GetSqlRequestSettingsHandler implements GetSqlRequestSettingsHandlerInterface
 {
     /**
      * @var ConfigurationInterface
@@ -50,30 +52,33 @@ class RequestSqlConfiguration implements DataConfigurationInterface
     /**
      * {@inheritdoc}
      */
-    public function getConfiguration()
+    public function handle(GetSqlRequestSettings $query)
     {
-        return [
-            'default_file_encoding' => $this->configuration->get('PS_ENCODING_FILE_MANAGER_SQL'),
-        ];
+        $fileEncodingIntValue = $this->configuration->get(SqlRequestSettings::FILE_ENCODING);
+
+        return new SqlRequestSettings(
+            $this->getFileEncoding($fileEncodingIntValue)
+        );
     }
 
     /**
-     * {@inheritdoc}
+     * File encodings are saved as integer values in databases.
+     *
+     * @param int|null $rawValue
+     *
+     * @return string
      */
-    public function updateConfiguration(array $configuration)
+    private function getFileEncoding($rawValue)
     {
-        if ($this->validateConfiguration($configuration)) {
-            $this->configuration->set('PS_ENCODING_FILE_MANAGER_SQL', $configuration['default_file_encoding']);
+        $valuesMapping = [
+            1 => CharsetEncoding::UTF_8,
+            2 => CharsetEncoding::ISO_8859_1,
+        ];
+
+        if (isset($valuesMapping[$rawValue])) {
+            return $valuesMapping[$rawValue];
         }
 
-        return [];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function validateConfiguration(array $configuration)
-    {
-        return isset($configuration['default_file_encoding']);
+        return CharsetEncoding::UTF_8;
     }
 }

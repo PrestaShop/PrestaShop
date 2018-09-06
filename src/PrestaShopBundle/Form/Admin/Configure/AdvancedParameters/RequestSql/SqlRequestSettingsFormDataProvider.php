@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 /**
  * Class RequestSqlSettingsFormDataProvider is responsible for managing RequestSql settings.
  */
-final class RequestSqlSettingsFormDataProvider implements FormDataProviderInterface
+final class SqlRequestSettingsFormDataProvider implements FormDataProviderInterface
 {
     /**
      * @var DataConfigurationInterface

@@ -24,26 +24,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\RequestSql;
+namespace PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception;
 
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\FormBuilderInterface;
-
-/**
- * Class RequestSqlType defines RequestSql entity form type.
- */
-class RequestSqlType extends AbstractType
+class SqlRequestNotFoundException extends SqlRequestException
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function buildForm(FormBuilderInterface $builder, array $options)
-    {
-        $builder
-            ->add('name', TextType::class)
-            ->add('sql', TextareaType::class)
-        ;
-    }
 }
