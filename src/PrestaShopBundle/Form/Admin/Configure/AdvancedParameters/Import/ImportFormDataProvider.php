@@ -94,6 +94,11 @@ final class ImportFormDataProvider implements FormDataProviderInterface
         $this->session->set('iso_lang', $data['iso_lang']);
         $this->session->set('separator', $data['separator']);
         $this->session->set('multiple_value_separator', $data['multiple_value_separator']);
+        $this->session->set('truncate', $data['truncate']);
+        $this->session->set('match_ref', $data['match_ref']);
+        $this->session->set('regenerate', $data['regenerate']);
+        $this->session->set('forceIDs', $data['forceIDs']);
+        $this->session->set('sendemail', $data['sendemail']);
 
         return $errors;
     }

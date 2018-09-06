@@ -8,6 +8,7 @@ use PrestaShop\PrestaShop\Core\Import\File\DataRow\Factory\DataRowCollectionFact
 use PrestaShop\PrestaShop\Core\Import\ImportDirectory;
 use PrestaShopBundle\Entity\Repository\ImportMatchRepository;
 use SplFileInfo;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -36,11 +37,6 @@ class ImportDataMatchConfiguration implements DataConfigurationInterface
     private $importDirectory;
 
     /**
-     * @var string file name of the imported file
-     */
-    private $importFilename;
-
-    /**
      * @var Connection database connection
      */
     private $connection;
@@ -56,33 +52,38 @@ class ImportDataMatchConfiguration implements DataConfigurationInterface
     private $importMatchRepository;
 
     /**
+     * @var SessionInterface
+     */
+    private $session;
+
+    /**
      * @param TranslatorInterface $translator
      * @param array $entityFieldChoices
      * @param ImportDirectory $importDirectory
-     * @param string $importFilename
      * @param DataRowCollectionFactoryInterface $dataRowCollectionFactory
      * @param Connection $connection
      * @param string $dbPrefix
      * @param ImportMatchRepository $importMatchRepository
+     * @param SessionInterface $session
      */
     public function __construct(
         TranslatorInterface $translator,
         array $entityFieldChoices,
         ImportDirectory $importDirectory,
-        $importFilename,
         DataRowCollectionFactoryInterface $dataRowCollectionFactory,
         Connection $connection,
         $dbPrefix,
-        ImportMatchRepository $importMatchRepository
+        ImportMatchRepository $importMatchRepository,
+        SessionInterface $session
     ) {
         $this->translator = $translator;
         $this->entityFieldChoices = $entityFieldChoices;
         $this->dataRowCollectionFactory = $dataRowCollectionFactory;
         $this->importDirectory = $importDirectory;
-        $this->importFilename = $importFilename;
         $this->connection = $connection;
         $this->dbPrefix = $dbPrefix;
         $this->importMatchRepository = $importMatchRepository;
+        $this->session = $session;
     }
 
     /**
@@ -90,7 +91,7 @@ class ImportDataMatchConfiguration implements DataConfigurationInterface
      */
     public function getConfiguration()
     {
-        $importFile = new SplFileInfo($this->importDirectory . $this->importFilename);
+        $importFile = new SplFileInfo($this->importDirectory . $this->session->get('csv'));
         $dataRowCollection = $this->dataRowCollectionFactory->buildFromFile($importFile, 1);
 
         // Getting the number of cells in the first row
@@ -98,6 +99,11 @@ class ImportDataMatchConfiguration implements DataConfigurationInterface
 
         $configuration = [
             'type_value' => [],
+            'truncate' => $this->session->get('truncate'),
+            'match_reference' => $this->session->get('match_reference'),
+            'regenerate' => $this->session->get('regenerate'),
+            'force_ids' => $this->session->get('force_ids'),
+            'send_email' => $this->session->get('send_email'),
         ];
 
         $numberOfValuesAdded = 0;

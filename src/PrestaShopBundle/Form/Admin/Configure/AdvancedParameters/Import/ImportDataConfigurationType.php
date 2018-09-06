@@ -29,6 +29,7 @@ namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Import;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -96,6 +97,11 @@ class ImportDataConfigurationType extends TranslatorAwareType
                 ],
                 'label' => false,
             ])
+            ->add('truncate', HiddenType::class)
+            ->add('match_ref', HiddenType::class)
+            ->add('regenerate', HiddenType::class)
+            ->add('forceIDs', HiddenType::class)
+            ->add('sendemail', HiddenType::class)
         ;
     }
 }
