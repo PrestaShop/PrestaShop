@@ -84,7 +84,7 @@ final class MetaGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getName()
     {
-        return $this->trans('Seo & urls', [], 'Admin.Navigation.Menu');
+        return $this->trans('SEO & URLS', [], 'Admin.Navigation.Menu');
     }
 
     /**
@@ -117,7 +117,7 @@ final class MetaGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ])
             )
             ->add((new DataColumn('url_rewrite'))
-                ->setName($this->trans('Friendly URL', [], 'Admin.Shopparameters.Feature'))
+                ->setName($this->trans('Friendly URL', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'url_rewrite',
                 ])
