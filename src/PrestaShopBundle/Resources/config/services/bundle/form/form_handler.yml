@@ -263,12 +263,12 @@ services:
               'copy_language': 'PrestaShopBundle\Form\Admin\Improve\International\Translations\CopyLanguageType'
             - 'TranslationSettingsPage'
 
-    prestashop.admin.seo_urls_settings.form_handler:
-        class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\SeoUrlsFormHandler'
+    prestashop.admin.meta_settings.form_handler:
+        class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
         arguments:
             - '@=service("form.factory").createBuilder()'
             - '@prestashop.core.hook.dispatcher'
-            - '@prestashop.admin.seo_urls.form_data_provider'
+            - '@prestashop.admin.traffic_seo.meta.form_data_provider'
             -
               'set_up_urls': 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\SetUpUrlsType'
             - 'SeoUrlsPage'
