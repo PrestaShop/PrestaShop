@@ -107,4 +107,19 @@ class ImportMatchRepository implements RepositoryInterface
 
         return $queryBuilder->execute()->fetchAll();
     }
+
+    /**
+     * Delete one import match by it's id
+     *
+     * @param int $id
+     */
+    public function deleteById($id)
+    {
+        $this->connection->delete(
+            $this->importMatchTable,
+            [
+                'id_import_match' => $id
+            ]
+        );
+    }
 }

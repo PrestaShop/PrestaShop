@@ -1,6 +1,6 @@
 <?php
 
-namespace PrestaShop\PrestaShop\Adapter\Import\Configuration;
+namespace PrestaShop\PrestaShop\Adapter\Import;
 
 use Doctrine\DBAL\Connection;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
