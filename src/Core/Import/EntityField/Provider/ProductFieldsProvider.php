@@ -24,16 +24,16 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Import\EntityField\Factory;
+namespace PrestaShop\PrestaShop\Core\Import\EntityField\Provider;
 
 use PrestaShop\PrestaShop\Core\Import\EntityField\EntityField;
 use PrestaShop\PrestaShop\Core\Import\EntityField\EntityFieldCollection;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * Class ProductFieldCollectionFactory defines a product field collection factory.
+ * Class ProductFieldsProvider defines a product fields provider.
  */
-final class ProductFieldCollectionFactory implements EntityFieldCollectionFactoryInterface
+final class ProductFieldsProvider implements EntityFieldsProviderInterface
 {
     /**
      * @var TranslatorInterface
@@ -51,7 +51,7 @@ final class ProductFieldCollectionFactory implements EntityFieldCollectionFactor
     /**
      * {@inheritdoc}
      */
-    public function create()
+    public function getCollection()
     {
         $fields = [
             new EntityField('id', $this->trans('ID', 'Admin.Global')),
