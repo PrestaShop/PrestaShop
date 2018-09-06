@@ -24,45 +24,19 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Import;
+namespace PrestaShop\PrestaShop\Core\Import\EntityField\Provider;
+
+use PrestaShop\PrestaShop\Core\Import\EntityField\EntityFieldCollectionInterface;
 
 /**
- * Class ImportSettings provides import constants to be used in import pages
+ * Interface EntityFieldsProviderInterface defines a provider of entity fields
  */
-final class ImportSettings
+interface EntityFieldsProviderInterface
 {
     /**
-     * Default value separator
+     * Get entity field as a collection
+     *
+     * @return EntityFieldCollectionInterface
      */
-    const DEFAULT_SEPARATOR = ';';
-
-    /**
-     * Default multiple value separator
-     */
-    const DEFAULT_MULTIVALUE_SEPARATOR = ',';
-
-    /**
-     * Maximum number of columns that are visible in the import matches configuration page
-     */
-    const MAX_VISIBLE_COLUMNS = 6;
-
-    /**
-     * Import entities
-     */
-    const CATEGORY_IMPORT = 0;
-    const PRODUCT_IMPORT = 1;
-    const COMBINATION_IMPORT = 2;
-    const CUSTOMER_IMPORT = 3;
-    const ADDRESS_IMPORT = 4;
-    const BRAND_IMPORT = 5;
-    const SUPPLIER_IMPORT = 6;
-    const ALIAS_IMPORT = 7;
-    const STORE_CONTACT_IMPORT = 8;
-
-    /**
-     * This class cannot be instantiated.
-     */
-    private function __construct()
-    {
-    }
+    public function getCollection();
 }

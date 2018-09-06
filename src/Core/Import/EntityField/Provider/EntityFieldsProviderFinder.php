@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -24,55 +24,47 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
+namespace PrestaShop\PrestaShop\Core\Import\EntityField\Provider;
 
 use InvalidArgumentException;
-use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
+use PrestaShop\PrestaShop\Core\Import\ImportSettings;
 
 /**
- * Class ImportChoiceProviderFinder finds the responsible import choice provider.
+ * Class EntityFieldsProviderFinder defines an entity fields provider finder.
  */
-final class ImportChoiceProviderFinder implements FormChoiceProviderInterface
+final class EntityFieldsProviderFinder implements EntityFieldsProviderFinderInterface
 {
     /**
-     * @var int the numeric representation of import entity (0-8)
+     * @var int import entity
+     *
+     * @see ImportSettings
      */
     private $importEntity;
 
     /**
-     * @var array
+     * @var array of entity fields providers
      */
-    private $importChoiceProviders;
+    private $entityFieldsProviders;
 
     /**
      * @param int $importEntity
-     * @param array $importChoiceProviders
+     * @param array $entityFieldsProviders
      */
-    public function __construct($importEntity, array $importChoiceProviders)
+    public function __construct($importEntity, array $entityFieldsProviders)
     {
         $this->importEntity = $importEntity;
-        $this->importChoiceProviders = $importChoiceProviders;
+        $this->entityFieldsProviders = $entityFieldsProviders;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getChoices()
+    public function find()
     {
-        return $this->findChoiceProvider()->getChoices();
-    }
-
-    /**
-     * Finds the choice provider for the import entity.
-     *
-     * @return FormChoiceProviderInterface
-     */
-    private function findChoiceProvider()
-    {
-        if (!isset($this->importChoiceProviders[$this->importEntity])) {
-            throw new InvalidArgumentException("Choice provider does not exist for entity $this->importEntity.");
+        if (!isset($this->entityFieldsProviders[$this->importEntity])) {
+            throw new InvalidArgumentException("Entity fields provider does not exist for entity $this->importEntity.");
         }
 
-        return $this->importChoiceProviders[$this->importEntity];
+        return $this->entityFieldsProviders[$this->importEntity];
     }
 }
