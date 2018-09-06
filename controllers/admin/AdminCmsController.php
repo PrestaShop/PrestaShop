@@ -153,7 +153,7 @@ class AdminCmsControllerCore extends AdminController
                     'name' => 'head_seo_title',
                     'lang' => true,
                     'hint' => array(
-                        $this->trans('Used to override the title tag value. If left blank the default title value is used.', array(), 'Admin.Design.Help'),
+                        $this->trans('Used to override the title tag value. If left blank, the default title value is used.', array(), 'Admin.Design.Help'),
                         $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info') . ' &lt;&gt;;=#{}',
                     ),
                 ),
