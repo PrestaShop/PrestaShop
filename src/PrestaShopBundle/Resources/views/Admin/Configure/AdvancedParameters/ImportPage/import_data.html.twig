@@ -39,6 +39,8 @@
 {% block javascripts %}
   {{ parent() }}
 
+  <script>
+    let requiredImportFields = {{ requiredFields|json_encode|raw }};
+  </script>
   <script src="{{ asset('themes/new-theme/public/imports_data.bundle.js') }}"></script>
 {% endblock %}
-
