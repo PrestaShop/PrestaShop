@@ -35,4 +35,9 @@ class CategoryConstraintException extends CategoryException
      * Code is used when Category status is created with invalid value.
      */
     const INVALID_STATUS = 10;
+
+    /**
+     * Code is used when Category delete mode is created with invalid value.
+     */
+    const INVALID_DELETE_MODE = 20;
 }

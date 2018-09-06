@@ -1,6 +1,6 @@
 admin_category_listing:
     path: /
-    methods: [GET]
+    methods: [GET, POST]
     defaults:
         _controller: PrestaShopBundle:Admin\Sell\Catalog\Category:index
         _legacy_controller: AdminCategories
@@ -34,6 +34,20 @@ admin_category_process_status_toggle:
     methods: [POST]
     defaults:
         _controller: PrestaShopBundle:Admin\Sell\Catalog\Category:processStatusToggle
+        _legacy_controller: AdminCategories
+
+admin_category_process_bulk_delete:
+    path: /bulk-delete
+    methods: [POST]
+    defaults:
+        _controller: PrestaShopBundle:Admin\Sell\Catalog\Category:processBulkDelete
+        _legacy_controller: AdminCategories
+
+admin_category_process_delete:
+    path: /delete
+    methods: [POST]
+    defaults:
+        _controller: PrestaShopBundle:Admin\Sell\Catalog\Category:processDelete
         _legacy_controller: AdminCategories
 
 admin_category_edit:
