@@ -198,7 +198,7 @@ class WebserviceController extends FrameworkBundleAdminController
      */
     public function deleteMultipleWebserviceAction(Request $request)
     {
-        $webserviceToDelete = $request->request->get('webservice_bulk_action');
+        $webserviceToDelete = $request->request->get('webservice_key_bulk_action');
 
         $webserviceEraser = $this->get('prestashop.adapter.webservice.webservice_key_eraser');
         $errors = $webserviceEraser->erase($webserviceToDelete);
@@ -230,7 +230,7 @@ class WebserviceController extends FrameworkBundleAdminController
      */
     public function enableMultipleStatusAction(Request $request)
     {
-        $webserviceToEnable = $request->request->get('webservice_bulk_action');
+        $webserviceToEnable = $request->request->get('webservice_key_bulk_action');
         $statusModifier = $this->get('prestashop.adapter.webservice.webservice_key_status_modifier');
 
         $statusModifier->setStatus($webserviceToEnable, 1);
@@ -253,7 +253,7 @@ class WebserviceController extends FrameworkBundleAdminController
      */
     public function disableMultipleStatusAction(Request $request)
     {
-        $webserviceToEnable = $request->request->get('webservice_bulk_action');
+        $webserviceToEnable = $request->request->get('webservice_key_bulk_action');
         $statusModifier = $this->get('prestashop.adapter.webservice.webservice_key_status_modifier');
 
         $statusModifier->setStatus($webserviceToEnable, 0);
