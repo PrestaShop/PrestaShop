@@ -61,12 +61,30 @@ export default class ImportMatchConfiguration
     }).then(response => {
       if (typeof response.errors !== 'undefined' && response.errors.length) {
         this._showErrorPopUp(response.errors);
+      } else if (response.matches.length > 0){
+        let $dataMatchesDropdown = $('#form_import_data_configuration_matches');
+
+        for (let key in response.matches) {
+          let $existingMatch = $dataMatchesDropdown.find('option[value=' + response.matches[key].id_import_match + ']');
+
+          // If match already exists with same id - do nothing
+          if ($existingMatch.length > 0) {
+            continue;
+          }
+
+          let $newOption = $('<option>');
+          $newOption.attr('value', response.matches[key].id_import_match);
+          $newOption.text(response.matches[key].name);
+
+          // Append the new option to the matches dropdown
+          $dataMatchesDropdown.append($newOption);
+        }
       }
     });
   }
 
   /**
-   * Get the import match
+   * Load the import match
    */
   load(event) {
     event.preventDefault();
@@ -87,6 +105,31 @@ export default class ImportMatchConfiguration
         for (let i in entityFields) {
           $('#form_import_data_configuration_type_value_' + i).val(entityFields[i]);
         }
+      }
+    });
+  }
+
+  /**
+   * Delete the import match
+   */
+  delete(event) {
+    event.preventDefault();
+    const ajaxUrl = $('.js-delete-import-match').attr('data-url');
+    const $dataMatchesDropdown = $('#form_import_data_configuration_matches');
+    const selectedMatchId = $dataMatchesDropdown.val();
+
+    $.ajax({
+      type: 'DELETE',
+      url: ajaxUrl,
+      data: {
+        import_match_id: selectedMatchId
+      },
+    }).then(response => {
+      if (typeof response.errors !== 'undefined' && response.errors.length) {
+        this._showErrorPopUp(response.errors);
+      } else {
+        // Delete the match option from matches dropdown
+        $dataMatchesDropdown.find('option[id=' + selectedMatchId + ']');
       }
     });
   }
