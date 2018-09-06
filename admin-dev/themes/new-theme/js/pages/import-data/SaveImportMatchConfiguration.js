@@ -23,8 +23,6 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import ImportMatchTypeProvider from './ImportMatchTypesProvider.js';
-
 const $ = window.$;
 
 /**
@@ -52,17 +50,13 @@ export default class SaveImportMatchConfiguration
    */
   save(event) {
     event.preventDefault();
-    const $button = $('.js-save-import-match');
-    // todo: uncomment const matchTypes = ImportMatchTypeProvider.getTypes as json string
-    const url = $button.attr('data-url');
-
-    const $form = $('form[name="import_data_configuration"]');
-    const data = $form.serialize();
+    const ajaxUrl = $('.js-save-import-match').attr('data-url');
+    const formData = $('form[name="import_data_configuration"]').serialize();
 
     $.ajax({
       type: 'POST',
-      url: url,
-      data,
+      url: ajaxUrl,
+      data: formData,
     }).then(response => {
       if (typeof response.errors !== 'undefined' && response.errors.length) {
         this._showErrorPopUp(response.errors);

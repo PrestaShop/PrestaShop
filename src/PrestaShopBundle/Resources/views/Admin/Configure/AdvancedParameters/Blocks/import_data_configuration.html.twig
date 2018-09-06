@@ -97,11 +97,11 @@
         </div>
       </div>
       <div class="row">
-        <table class="table table-bordered">
+        <table class="table table-bordered js-import-data-table">
           <thead>
             <tr>
               {% for importEntityField in dataConfigurationForm.type_value %}
-                <th{% if loop.index > maxVisibleColumns %} class="d-none"{% endif %}>
+                <th class="js-entity-field {% if loop.index > maxVisibleColumns %} d-none{% endif %}">
                   {{ form_errors(importEntityField) }}
                   {{ form_widget(importEntityField) }}
                 </th>
@@ -135,6 +135,18 @@
         </div>
       </div>
       {{ form_rest(dataConfigurationForm) }}
+    </div>
+  </div>
+  <div class="card-footer">
+    <div class="d-flex justify-content-between">
+      <a href="{{ path('admin_import') }}" class="btn btn-outline-secondary">
+        <i class="material-icons">cancel</i>
+        {{ 'Cancel'|trans({}, 'Admin.Actions') }}
+      </a>
+      <button class="btn btn-primary">
+        <i class="material-icons">check</i>
+        {{ 'Import'|trans({}, 'Admin.Actions') }}
+      </button>
     </div>
   </div>
 </div>
