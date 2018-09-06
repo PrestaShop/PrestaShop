@@ -106,7 +106,7 @@ const config = {
       './js/pages/webservice'
     ],
     seo_urls: [
-      './js/pages/seo-urls'
+      './js/pages/meta'
     ],
   },
   output: {

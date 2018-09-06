@@ -33,17 +33,17 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Class SeoUrlController is responsible for page display and all actions used in Configure -> Shop parameters ->
+ * Class MetaController is responsible for page display and all actions used in Configure -> Shop parameters ->
  * Traffic & Seo -> Seo & Urls tab.
  */
-class SeoUrlController extends FrameworkBundleAdminController
+class MetaController extends FrameworkBundleAdminController
 {
     /**
      * responsible for displaying page content
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
-     * @Template("@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/seo_urls.html.twig")
+     * @Template("@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/meta.html.twig")
      *
      * @param SeoUrlsFilters $filters
      *
@@ -53,7 +53,7 @@ class SeoUrlController extends FrameworkBundleAdminController
      */
     public function indexAction(SeoUrlsFilters $filters)
     {
-        $seoUrlsGridFactory = $this->get('prestashop.core.grid.factory.seo_urls');
+        $seoUrlsGridFactory = $this->get('prestashop.core.grid.factory.meta');
         $grid = $seoUrlsGridFactory->getGrid($filters);
 
         $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
@@ -64,7 +64,7 @@ class SeoUrlController extends FrameworkBundleAdminController
         return [
             'layoutHeaderToolbarBtn' => [
                 'add' => [
-                    'href' => $this->generateUrl('admin_seo_urls_list_create'),
+                    'href' => $this->generateUrl('admin_meta_list_create'),
                     'desc' => $this->trans('Add a new page', 'Admin.Shopparameters.Feature'),
                     'icon' => 'add_circle_outline',
                 ],
@@ -76,7 +76,7 @@ class SeoUrlController extends FrameworkBundleAdminController
 
     public function searchAction(Request $request)
     {
-        $definitionFactory = $this->get('prestashop.core.grid.definition.factory.seo_urls');
+        $definitionFactory = $this->get('prestashop.core.grid.definition.factory.meta');
         $definitionFactory = $definitionFactory->getDefinition();
 
         $gridFilterFormFactory = $this->get('prestashop.core.grid.filter.form_factory');
@@ -88,7 +88,7 @@ class SeoUrlController extends FrameworkBundleAdminController
             $filters = $searchParametersForm->getData();
         }
 
-        return $this->redirectToRoute('admin_seo_urls', ['filters' => $filters]);
+        return $this->redirectToRoute('admin_meta', ['filters' => $filters]);
     }
 
     public function createListAction()
