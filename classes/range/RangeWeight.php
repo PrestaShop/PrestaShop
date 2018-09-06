@@ -100,8 +100,13 @@ class RangeWeightCore extends ObjectModel
 
     public static function rangeExist($id_carrier, $delimiter1, $delimiter2, $id_reference = null)
     {
+        return (bool) RangeWeight::getRangeIdByDelimiter($id_carrier, $delimiter1, $delimiter2, $id_reference);
+    }
+
+    public static function getRangeIdByDelimiter($id_carrier, $delimiter1, $delimiter2, $id_reference = null)
+    {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-            SELECT count(*)
+            SELECT rw.id_range_weight
             FROM `' . _DB_PREFIX_ . 'range_weight` rw' .
             (is_null($id_carrier) && $id_reference ? '
             INNER JOIN `' . _DB_PREFIX_ . 'carrier` c on (rw.`id_carrier` = c.`id_carrier`)' : '') . '
