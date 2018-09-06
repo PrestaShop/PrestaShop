@@ -137,7 +137,7 @@ class ImportController extends FrameworkBundleAdminController
                     [
                         'request' => $request,
                     ],
-                    307
+                    Response::HTTP_TEMPORARY_REDIRECT
                 );
             }
 
@@ -392,6 +392,25 @@ class ImportController extends FrameworkBundleAdminController
         $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $sampleFile->getFilename());
 
         return $response;
+    }
+
+    /**
+     * Process the import.
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function processImportAction(Request $request)
+    {
+        $requestPreparator = $this->get('prestashop.adapter.import.request_preparator');
+        $requestPreparator->prepare($request);
+
+        $legacyController = $request->attributes->get('_legacy_controller');
+        $legacyContext = $this->get('prestashop.adapter.legacy.context');
+        $legacyImportUrl = $legacyContext->getAdminLink($legacyController);
+
+        return $this->redirect($legacyImportUrl, Response::HTTP_TEMPORARY_REDIRECT);
     }
 
     /**
