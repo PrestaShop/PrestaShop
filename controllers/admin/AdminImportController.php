@@ -80,8 +80,18 @@ class AdminImportControllerCore extends AdminController
     public $convert;
     public $multiple_value_separator;
 
+    /**
+     * This flag shows if import was executed in current request.
+     * Used for symfony migration purposes.
+     *
+     * @var bool
+     */
+    private $importExecuted = false;
+
     public function __construct()
     {
+        $this->preparePostFromSession();
+
         $this->bootstrap = true;
 
         parent::__construct();
@@ -610,6 +620,31 @@ class AdminImportControllerCore extends AdminController
 
     public function renderForm()
     {
+        // If import was executed - collect errors or success message
+        // and send them to the migrated controller.
+        if ($this->importExecuted) {
+            $session = $this->getSession();
+
+            if ($this->errors) {
+                foreach ($this->errors as $error) {
+                    $session->getFlashBag()->add('error', $error);
+                }
+            } else {
+                foreach ($this->warnings as $warning) {
+                    $session->getFlashBag()->add('warning', $warning);
+                }
+
+                $session->getFlashBag()->add(
+                    'success',
+                    $this->trans(
+                        'Your file has been successfully imported into your shop. Don\'t forget to re - build the products\' search index.',
+                        [],
+                        'Admin.Advparameters.Notification'
+                    )
+                );
+            }
+        }
+
         // Import form is reworked in Symfony.
         // If user tries to access legacy form directly,
         // we redirect him to new form.
@@ -4393,6 +4428,7 @@ class AdminImportControllerCore extends AdminController
         }
 
         if (Tools::isSubmit('import')) {
+            $this->importExecuted = true;
             $this->importByGroups();
         } elseif ($filename = Tools::getValue('csvfilename')) {
             $filename = urldecode($filename);
@@ -4701,5 +4737,45 @@ class AdminImportControllerCore extends AdminController
              'modal_title' => $this->trans('Importing your data...', array(), 'Admin.Advparameters.Notification'),
              'modal_content' => $modal_content,
          );
+    }
+
+    /**
+     * Prepares $_POST values from session.
+     * Legacy controller expects all values to be in $_POST and migrated controller passes them in session.
+     * This method does the compatibility between the two.
+     */
+    private function preparePostFromSession()
+    {
+        $session = $this->getSession();
+
+        $fields = [
+            'entity',
+            'iso_lang',
+            'separator',
+            'multiple_value_separator',
+            'csv',
+            'truncate',
+            'match_ref',
+            'regenerate',
+            'forceIDs',
+            'sendemail',
+            'skip',
+            'type_value',
+            'import',
+        ];
+
+        foreach ($fields as $field) {
+            $_POST[$field] = $session->get($field);
+        }
+    }
+
+    /**
+     * Gets session from symfony container
+     *
+     * @return \Symfony\Component\HttpFoundation\Session\Session
+     */
+    private function getSession()
+    {
+        return \PrestaShop\PrestaShop\Adapter\SymfonyContainer::getInstance()->get('session');
     }
 }
