@@ -44,7 +44,7 @@
   {% endblock %}
 
   {% block categories_delete_block %}
-    {% include '@PrestaShop/Admin/Sell/Catalog/Categories/Blocks/delete_block.html.twig' %}
+    {{ render(controller('PrestaShopBundle:Admin\\Sell\\Catalog\\Category:renderDeleteFormBlock')) }}
   {% endblock %}
 
   {% block categories_breadcrumb %}

@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Sell\Category;
 
+use PrestaShop\PrestaShop\Core\Domain\Product\Category\ValueObject\CategoryDeletionMode;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -60,11 +61,12 @@ class DeleteCategoriesType extends AbstractType
                 'expanded' => true,
                 'choices' => $this->categoryDeleteModelChoices,
                 'label' => false,
-                'data' => 'linkanddisable', //@todo: move to const
+                'data' => CategoryDeletionMode::ASSOCIATE_PRODUCTS_WITH_PARENT_AND_DISABLE,
             ])
             ->add('categories_to_delete', CollectionType::class, [
                 'entry_type' => HiddenType::class,
                 'label' => false,
+                'allow_add' => true,
             ])
         ;
     }

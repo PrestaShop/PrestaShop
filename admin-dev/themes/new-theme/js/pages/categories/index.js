@@ -32,6 +32,8 @@ import ReloadListExtension from "../../components/grid/extension/reload-list-ext
 import BulkActionCheckboxExtension from "../../components/grid/extension/bulk-action-checkbox-extension";
 import SubmitBulkExtension from "../../components/grid/extension/submit-bulk-action-extension";
 import ColumnTogglingExtension from "../../components/grid/extension/column-toggling-extension";
+import SubmitRowActionExtension from "../../components/grid/extension/action/row/submit-row-action-extension";
+import LinkRowActionExtension from "../../components/grid/extension/link-row-action-extension";
 
 const $ = window.$;
 
@@ -46,4 +48,6 @@ $(() => {
   categoriesGrid.addExtension(new BulkActionCheckboxExtension());
   categoriesGrid.addExtension(new SubmitBulkExtension());
   categoriesGrid.addExtension(new ColumnTogglingExtension());
+  categoriesGrid.addExtension(new SubmitRowActionExtension());
+  categoriesGrid.addExtension(new LinkRowActionExtension());
 });
