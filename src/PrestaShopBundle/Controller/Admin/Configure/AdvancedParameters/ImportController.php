@@ -278,8 +278,32 @@ class ImportController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_import');
     }
 
+    /**
+     * Save import data match configuration
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
     public function saveImportMatchAction(Request $request)
     {
+        $legacyController = $request->attributes->get('_legacy_controller');
+
+        if (!in_array($this->authorizationLevel($legacyController), [
+            PageVoter::LEVEL_DELETE,
+            PageVoter::LEVEL_CREATE
+        ])) {
+            return $this->json([
+                'error' => $this->trans('You do not have permission to update this.', 'Admin.Notifications.Error'),
+            ]);
+        }
+
+        if ($this->isDemoModeEnabled()) {
+            return $this->json([
+                'error' => $this->trans('This functionality has been disabled.', 'Admin.Notifications.Error'),
+            ]);
+        }
+
         $formHandler = $this->get('prestashop.admin.import_data_configuration.form_handler');
 
         $form = $formHandler->getForm();
@@ -291,6 +315,20 @@ class ImportController extends FrameworkBundleAdminController
         return $this->json([
             'errors' => $errors,
         ]);
+    }
+
+    /**
+     * Get import data match configuration
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function getImportMatchAction(Request $request)
+    {
+        $importMatchId = $request->get('import_match_id');
+
+        return $this->json([]);
     }
 
     /**
