@@ -45,9 +45,9 @@ use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 
 /**
- * Class WebserviceDefinitionFactory is responsible for creating grid definition for Webservice grid.
+ * Class WebserviceKeyDefinitionFactory is responsible for creating grid definition for Webservice grid.
  */
-final class WebserviceDefinitionFactory extends AbstractGridDefinitionFactory
+final class WebserviceKeyDefinitionFactory extends AbstractGridDefinitionFactory
 {
     /**
      * @var array
@@ -65,7 +65,7 @@ final class WebserviceDefinitionFactory extends AbstractGridDefinitionFactory
     private $redirectionUrl;
 
     /**
-     * WebserviceDefinitionFactory constructor.
+     * WebserviceKeyDefinitionFactory constructor.
      *
      * @param array $statusChoices
      * @param $resetActionUrl
@@ -86,7 +86,7 @@ final class WebserviceDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getId()
     {
-        return 'webservice';
+        return 'webservice_key';
     }
 
     /**
