@@ -99,13 +99,12 @@ class WebserviceController extends FrameworkBundleAdminController
      *
      * @return RedirectResponse
      */
-    public function listCreateAction()
+    public function createAction()
     {
-        $legacyContext = $this->get('prestashop.adapter.legacy.context');
         //@todo: this action should point to new add page
-        $legacyLink = $legacyContext->getAdminLink(
-                'AdminWebservice'
-            ) . '&addwebservice_account';
+        $legacyLink = $this->getAdminLink('AdminWebservice', [
+            'addwebservice_account' => 1,
+        ]);
 
         return $this->redirect($legacyLink);
     }
@@ -119,17 +118,12 @@ class WebserviceController extends FrameworkBundleAdminController
      *
      * @return RedirectResponse
      */
-    public function listEditAction($webserviceAccountId)
+    public function editAction($webserviceAccountId)
     {
-        $legacyContext = $this->get('prestashop.adapter.legacy.context');
-        //@todo: this action should point to new edit page
-        $legacyLink = $legacyContext->getAdminLink(
-            'AdminWebservice',
-            true,
-            [
-                'id_webservice_account' => $webserviceAccountId,
-            ]
-        ) . '&updatewebservice_account';
+        $legacyLink = $this->getAdminLink('AdminWebservice', [
+            'id_webservice_account' => $webserviceAccountId,
+            'updatewebservice_account' => 1,
+        ]);
 
         return $this->redirect($legacyLink);
     }
@@ -309,7 +303,7 @@ class WebserviceController extends FrameworkBundleAdminController
      *
      * @throws \Exception
      */
-    public function processSettingsFormAction(Request $request)
+    public function processFormAction(Request $request)
     {
         $this->dispatchHook('actionAdminAdminWebserviceControllerPostProcessBefore', array('controller' => $this));
 
