@@ -162,6 +162,9 @@ final class WebserviceKeyDefinitionFactory extends AbstractGridDefinitionFactory
         ;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function getFilters()
     {
         return (new FilterCollection())
@@ -197,6 +200,9 @@ final class WebserviceKeyDefinitionFactory extends AbstractGridDefinitionFactory
         ;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function getGridActions()
     {
         return (new GridActionCollection())
@@ -215,6 +221,9 @@ final class WebserviceKeyDefinitionFactory extends AbstractGridDefinitionFactory
         ;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function getBulkActions()
     {
         return (new BulkActionCollection())
