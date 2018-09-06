@@ -26,11 +26,6 @@ class ImportDataMatchConfiguration implements DataConfigurationInterface
     private $entityFieldChoices;
 
     /**
-     * @var string path to the import file
-     */
-    private $importFilePath;
-
-    /**
      * @var DataRowCollectionFactoryInterface
      */
     private $dataRowCollectionFactory;
@@ -149,7 +144,7 @@ class ImportDataMatchConfiguration implements DataConfigurationInterface
             'import_match',
             [
                 'name' => pSQL($configuration['match_name']),
-                'match' => '', //todo : pSQL($configuration['match']),
+                'match' => pSQL(implode('|', $configuration['type_value'])),
                 'skip' => (int) $configuration['rows_skip'],
             ],
             false,
@@ -171,8 +166,7 @@ class ImportDataMatchConfiguration implements DataConfigurationInterface
         $query->select('`id_import_match`');
         $query->from('import_match');
         $query->where('`name`="' . pSQL($matchName) . '"');
-        $result = Db::getInstance()->getValue($query);
 
-        return $result ? true : false;
+        return Db::getInstance()->getValue($query) ? true : false;
     }
 }

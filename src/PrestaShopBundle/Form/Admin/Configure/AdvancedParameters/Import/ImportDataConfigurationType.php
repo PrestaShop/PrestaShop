@@ -78,7 +78,9 @@ class ImportDataConfigurationType extends TranslatorAwareType
                 'choices' => $this->dataMatchChoices,
                 'choice_translation_domain' => false,
             ])
-            ->add('match_name', TextType::class)
+            ->add('match_name', TextType::class, [
+                'required' => false,
+            ])
             ->add('rows_skip', IntegerType::class, [
                 'data' => 1,
             ])
