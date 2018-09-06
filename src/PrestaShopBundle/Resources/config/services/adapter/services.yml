@@ -60,6 +60,9 @@ services:
     prestashop.adapter.validate:
         class: PrestaShop\PrestaShop\Adapter\Validate
 
+    prestashop.adapter.import.request_preparator:
+        class: PrestaShop\PrestaShop\Adapter\Import\RequestPreparator
+
     # SSL middleware
     prestashop.adapter.middleware.ssl:
         class: PrestaShop\PrestaShop\Adapter\Security\SslMiddleware
