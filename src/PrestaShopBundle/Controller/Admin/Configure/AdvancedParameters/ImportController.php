@@ -311,9 +311,16 @@ class ImportController extends FrameworkBundleAdminController
         $form->setData($requestData['form']['import_data_configuration']);
 
         $errors = $formHandler->save($form->getData());
+        $matches = [];
+
+        if (!$errors) {
+            $importMatchRepository = $this->get('prestashop.core.admin.import_match.repository');
+            $matches = $importMatchRepository->findAll();
+        }
 
         return $this->json([
             'errors' => $errors,
+            'matches' => $matches,
         ]);
     }
 

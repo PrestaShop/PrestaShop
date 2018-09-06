@@ -75,6 +75,26 @@ class ImportMatchRepository implements RepositoryInterface
     }
 
     /**
+     * Find one item by name
+     *
+     * @param string $name
+     *
+     * @return array
+     */
+    public function findOneByName($name)
+    {
+        $queryBuilder = $this->connection
+            ->createQueryBuilder()
+            ->select('*')
+            ->from($this->importMatchTable)
+            ->where('`name` = :name')
+            ->setParameter('name', $name)
+        ;
+
+        return $queryBuilder->execute()->fetch();
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function findAll()
