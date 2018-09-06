@@ -51,6 +51,23 @@ class EntityFieldCollection implements EntityFieldCollectionInterface
     /**
      * {@inheritdoc}
      */
+    public function getRequiredFields()
+    {
+        $requiredFields = [];
+
+        /** @var EntityFieldInterface $entityField */
+        foreach ($this->entityFields as $entityField) {
+            if ($entityField->isRequired()) {
+                $requiredFields[] = $entityField->getName();
+            }
+        }
+
+        return $requiredFields;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public static function createFromArray(array $entityFields)
     {
         $collection = new self();

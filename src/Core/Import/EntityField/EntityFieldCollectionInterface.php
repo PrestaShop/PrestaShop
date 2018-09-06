@@ -45,6 +45,13 @@ interface EntityFieldCollectionInterface extends ArrayAccess, Countable, Iterato
     public function addEntityField(EntityFieldInterface $entityField);
 
     /**
+     * Get required fields from the collection
+     *
+     * @return array
+     */
+    public function getRequiredFields();
+
+    /**
      * Creates a collection from array of entity fields.
      *
      * @param array $entityFields array of objects implementing EntityFieldInterface
