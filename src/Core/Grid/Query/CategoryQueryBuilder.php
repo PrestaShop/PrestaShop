@@ -28,7 +28,9 @@ namespace PrestaShop\PrestaShop\Core\Grid\Query;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
+use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
+use PrestaShop\PrestaShop\Core\Multistore\MultistoreContextCheckerInterface;
 
 /**
  * Class CategoryQueryBuilder builds search & count queries for categories grid.
@@ -51,24 +53,40 @@ final class CategoryQueryBuilder extends AbstractDoctrineQueryBuilder
     private $searchCriteriaApplicator;
 
     /**
+     * @var MultistoreContextCheckerInterface
+     */
+    private $multistoreContextChecker;
+
+    /**
+     * @var FeatureInterface
+     */
+    private $multistoreFeature;
+
+    /**
      * @param Connection $connection
      * @param string $dbPrefix
      * @param DoctrineSearchCriteriaApplicator $searchCriteriaApplicator
      * @param int $contextLangId
      * @param int $contextShopId
+     * @param MultistoreContextCheckerInterface $multistoreContextChecker
+     * @param FeatureInterface $multistoreFeature
      */
     public function __construct(
         Connection $connection,
         $dbPrefix,
         DoctrineSearchCriteriaApplicator $searchCriteriaApplicator,
         $contextLangId,
-        $contextShopId
+        $contextShopId,
+        MultistoreContextCheckerInterface $multistoreContextChecker,
+        FeatureInterface $multistoreFeature
     ) {
         parent::__construct($connection, $dbPrefix);
 
         $this->contextLangId = $contextLangId;
         $this->contextShopId = $contextShopId;
         $this->searchCriteriaApplicator = $searchCriteriaApplicator;
+        $this->multistoreContextChecker = $multistoreContextChecker;
+        $this->multistoreFeature = $multistoreFeature;
     }
 
     /**
@@ -110,22 +128,27 @@ final class CategoryQueryBuilder extends AbstractDoctrineQueryBuilder
         $qb = $this->connection
             ->createQueryBuilder()
             ->from($this->dbPrefix . 'category', 'c')
-            ->leftJoin(
-                'c',
-                $this->dbPrefix . 'category_lang',
-                'cl',
-                'c.id_category = cl.id_category AND cl.id_lang = :context_lang_id AND cl.id_shop = :context_shop_id'
-            )
-            ->leftJoin(
-                'c',
-                $this->dbPrefix . 'category_shop',
-                'cs',
-                'c.id_category = cs.id_category AND cs.id_shop = :context_shop_id'
-            )
-            ->andWhere('cs.id_shop = :context_shop_id')
             ->setParameter('context_lang_id', $this->contextLangId)
             ->setParameter('context_shop_id', $this->contextShopId)
         ;
+
+        $qb->leftJoin(
+            'c',
+            $this->dbPrefix . 'category_lang',
+            'cl',
+            $this->multistoreFeature->isUsed() && $this->multistoreContextChecker->isSingleShopContext() ?
+                'c.id_category = cl.id_category AND cl.id_lang = :context_lang_id AND cl.id_shop = :context_shop_id' :
+                'c.id_category = cl.id_category AND cl.id_lang = :context_lang_id AND cl.id_shop = c.id_shop_default'
+        );
+
+        $qb->leftJoin(
+            'c',
+            $this->dbPrefix . 'category_shop',
+            'cs',
+            $this->multistoreContextChecker->isSingleShopContext() ?
+                'c.id_category = cs.id_category AND cs.id_shop = :context_shop_id' :
+                'c.id_category = cs.id_category AND cs.id_shop = c.id_shop_default'
+        );
 
         foreach ($filters as $filterName => $filterValue) {
             if ('id_category' === $filterName) {
@@ -169,6 +192,10 @@ final class CategoryQueryBuilder extends AbstractDoctrineQueryBuilder
 
                 continue;
             }
+        }
+
+        if ($this->multistoreFeature->isUsed() && $this->multistoreContextChecker->isSingleShopContext()) {
+            $qb->andWhere('cs.id_shop = :context_shop_id');
         }
 
         return $qb;
