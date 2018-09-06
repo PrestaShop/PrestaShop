@@ -328,7 +328,10 @@ class ImportController extends FrameworkBundleAdminController
     {
         $importMatchId = $request->get('import_match_id');
 
-        return $this->json([]);
+        $importMatchRepository = $this->get('prestashop.core.admin.import_match.repository');
+        $importMatch = $importMatchRepository->findOneById($importMatchId);
+
+        return $this->json($importMatch);
     }
 
     /**

@@ -117,7 +117,7 @@ services:
     prestashop.core.form.choice_provider.import_match_configuration:
         class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ImportMatchConfigurationChoiceProvider'
         arguments:
-            - '@=service("prestashop.adapter.import.import_data_match.provider").getImportMatchConfiguration()'
+            - '@=service("prestashop.core.admin.import_match.repository").findAll()'
 
     prestashop.core.form.choice_provider.product_import_field:
         class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ImportEntityFieldChoiceProvider'

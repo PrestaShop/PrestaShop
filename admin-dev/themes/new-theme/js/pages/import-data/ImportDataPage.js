@@ -23,12 +23,12 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import SaveImportMatchConfiguration from './SaveImportMatchConfiguration';
+import ImportMatchConfiguration from './ImportMatchConfiguration';
 import ImportDataTable from './ImportDataTable';
 
 export default class ImportDataPage {
   constructor() {
-    new SaveImportMatchConfiguration();
+    new ImportMatchConfiguration();
     new ImportDataTable();
   }
 }

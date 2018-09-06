@@ -26,27 +26,28 @@
 const $ = window.$;
 
 /**
- * Class is responsible for saving import match configuration
+ * Class is responsible for import match configuration
  * in Advanced parameters -> Import -> step 2 form
  */
-export default class SaveImportMatchConfiguration
+export default class ImportMatchConfiguration
 {
   /**
-   * Initializes all the processes related with import match saving
+   * Initializes all the processes related with import matches
    */
   constructor() {
     this.loadEvents();
   }
 
   /**
-   * Method responsible for all events loading related with save data match configuration
+   * Loads all events data match configuration
    */
   loadEvents() {
     $(document).on('click', '.js-save-import-match', (event) => this.save(event));
+    $(document).on('click', '.js-load-import-match', (event) => this.load(event));
   }
 
   /**
-   * Method responsible for saving the import match configuration
+   * Save the import match configuration
    */
   save(event) {
     event.preventDefault();
@@ -60,6 +61,32 @@ export default class SaveImportMatchConfiguration
     }).then(response => {
       if (typeof response.errors !== 'undefined' && response.errors.length) {
         this._showErrorPopUp(response.errors);
+      }
+    });
+  }
+
+  /**
+   * Get the import match
+   */
+  load(event) {
+    event.preventDefault();
+    const ajaxUrl = $('.js-load-import-match').attr('data-url');
+
+    $.ajax({
+      type: 'GET',
+      url: ajaxUrl,
+      data: {
+        import_match_id: $('#form_import_data_configuration_matches').val()
+      },
+    }).then(response => {
+      if (response) {
+        $('#form_import_data_configuration_rows_skip').val(response.skip);
+
+        let entityFields = response.match.split('|');
+
+        for (let i in entityFields) {
+          $('#form_import_data_configuration_type_value_' + i).val(entityFields[i]);
+        }
       }
     });
   }
