@@ -24,29 +24,26 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo;
+namespace PrestaShop\PrestaShop\Core\Search\Filters;
 
-use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
+use PrestaShop\PrestaShop\Core\Search\Filters;
 
 /**
- * Class SeoUrlsFormDataProvider is responsible for providing configurations data and responsible for persisting data
- * in configuration database.
+ * Class MetaFilters is responsible for providing default filter values for Seo & urls list.
  */
-class SeoUrlsFormDataProvider implements FormDataProviderInterface
+final class MetaFilters extends Filters
 {
     /**
      * {@inheritdoc}
      */
-    public function getData()
+    public static function getDefaults()
     {
-        // TODO: Implement getData() method.
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setData(array $data)
-    {
-        // TODO: Implement setData() method.
+        return [
+            'limit' => 50,
+            'offset' => 0,
+            'orderBy' => 'id_meta',
+            'sortOrder' => 'asc',
+            'filters' => [],
+        ];
     }
 }
