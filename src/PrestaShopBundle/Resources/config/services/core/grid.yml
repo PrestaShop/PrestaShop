@@ -156,6 +156,8 @@ services:
     prestashop.core.grid.query_builder.webservice_key:
         class: 'PrestaShop\PrestaShop\Core\Grid\Query\WebserviceKeyQueryBuilder'
         parent: 'prestashop.core.grid.abstract_query_builder'
+        arguments:
+            - '@prestashop.core.query.doctrine_search_criteria_applicator'
         public: true
 
     # Grid Query parser
