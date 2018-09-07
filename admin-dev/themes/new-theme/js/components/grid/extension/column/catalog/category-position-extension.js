@@ -146,6 +146,18 @@ export default class CategoryPositionExtension {
         'cache-control': 'no-cache'
       },
       data: params
-    }).then(() => this._updateCategoryIdsAndPositions());
+    }).then((response) => {
+      response = JSON.parse(response);
+
+      if (typeof response.message !== 'undefined') {
+        showSuccessMessage(response.message);
+      } else {
+        // use legacy error
+        // update when all category controller is migrated to symfony
+        showErrorMessage(response.errors);
+      }
+
+      this._updateCategoryIdsAndPositions();
+    });
   }
 }
