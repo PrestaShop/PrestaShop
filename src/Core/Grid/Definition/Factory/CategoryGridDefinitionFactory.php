@@ -39,6 +39,7 @@ use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Catalog\PositionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\LinkColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ToggleColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
@@ -124,10 +125,13 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'field' => 'id_category',
                 ])
             )
-            ->add((new DataColumn('name'))
+            ->add((new LinkColumn('name'))
                 ->setName($this->trans('Name', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'name',
+                    'route' => 'admin_category_edit',
+                    'route_param_name' => 'categoryId',
+                    'route_param_field' => 'id_category',
                 ])
             )
             ->add((new DataColumn('description'))
