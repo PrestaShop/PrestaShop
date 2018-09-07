@@ -39,15 +39,23 @@ final class MetaFormDataProvider implements FormDataProviderInterface
      * @var DataConfigurationInterface
      */
     private $setUpUrlDataConfiguration;
+    /**
+     * @var DataConfigurationInterface
+     */
+    private $shopUrlsDataConfiguration;
 
     /**
      * MetaFormDataProvider constructor.
      *
      * @param DataConfigurationInterface $setUpUrlDataConfiguration
+     * @param DataConfigurationInterface $shopUrlsDataConfiguration
      */
-    public function __construct(DataConfigurationInterface $setUpUrlDataConfiguration)
-    {
+    public function __construct(
+        DataConfigurationInterface $setUpUrlDataConfiguration,
+        DataConfigurationInterface $shopUrlsDataConfiguration
+    ) {
         $this->setUpUrlDataConfiguration = $setUpUrlDataConfiguration;
+        $this->shopUrlsDataConfiguration = $shopUrlsDataConfiguration;
     }
 
     /**
@@ -57,6 +65,7 @@ final class MetaFormDataProvider implements FormDataProviderInterface
     {
         return [
             'set_up_urls' => $this->setUpUrlDataConfiguration->getConfiguration(),
+            'shop_urls' => $this->shopUrlsDataConfiguration->getConfiguration(),
         ];
     }
 
@@ -65,6 +74,9 @@ final class MetaFormDataProvider implements FormDataProviderInterface
      */
     public function setData(array $data)
     {
-        return $this->setUpUrlDataConfiguration->updateConfiguration($data['set_up_urls']);
+        return array_merge(
+            $this->setUpUrlDataConfiguration->updateConfiguration($data['set_up_urls']),
+            $this->shopUrlsDataConfiguration->updateConfiguration($data['shop_urls'])
+        );
     }
 }
