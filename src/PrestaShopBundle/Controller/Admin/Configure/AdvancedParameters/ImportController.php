@@ -285,7 +285,7 @@ class ImportController extends FrameworkBundleAdminController
     }
 
     /**
-     * Save import data match configuration
+     * Save import data match configuration.
      *
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message="You do not have permission to update this.", redirectRoute="admin_import")
      * @DemoRestricted(redirectRoute="admin_import")
@@ -316,7 +316,7 @@ class ImportController extends FrameworkBundleAdminController
     }
 
     /**
-     * Delete import data match configuration
+     * Delete import data match configuration.
      *
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message="You do not have permission to update this.", redirectRoute="admin_import")
      * @DemoRestricted(redirectRoute="admin_import")
@@ -334,7 +334,7 @@ class ImportController extends FrameworkBundleAdminController
     }
 
     /**
-     * Get import data match configuration
+     * Get import data match configuration.
      *
      * @param Request $request
      *
