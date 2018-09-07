@@ -50,7 +50,7 @@
           </div>
 
           <div class="form-group row">
-            {{ ps.label_with_help(('Accented URL'|trans), ('Enable this option if you want to allow accented characters in your friendly URLs.' ~ ' ' ~ 'You should only activate this option if you are using non-latin characters ; for all the latin charsets, your SEO will be better without this option.'|trans({}, 'Admin.Shopparameters.Help'))) }}
+            {{ ps.label_with_help(('Accented URL'|trans), ('Enable this option if you want to allow accented characters in your friendly URLs.'|trans({}, 'Admin.Shopparameters.Help') ~ ' ' ~ 'You should only activate this option if you are using non-latin characters ; for all the latin charsets, your SEO will be better without this option.'|trans({}, 'Admin.Shopparameters.Help'))) }}
             <div class="col-sm">
               {{ form_errors(metaForm.set_up_urls.accented_url) }}
               {{ form_widget(metaForm.set_up_urls.accented_url) }}
