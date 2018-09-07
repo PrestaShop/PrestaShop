@@ -1003,7 +1003,9 @@ class AdminCategoriesControllerCore extends AdminController
                     $category->cleanPositions((int) $category->id_parent);
                 }
 
-                die(true);
+                die(json_encode([
+                    'message' => $this->trans('Successful update.', [], 'Admin.Notifications.Success'),
+                ]));
             } else {
                 die('{"hasError" : true, errors : "Cannot update categories position"}');
             }
