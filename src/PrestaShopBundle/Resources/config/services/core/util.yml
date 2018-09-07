@@ -1,0 +1,8 @@
+services:
+    _defaults:
+        public: true
+
+    prestashop.core.util.url.htaccess_file_checker:
+        class: 'PrestaShop\PrestaShop\Core\Util\Url\HtAccessFileChecker'
+        arguments:
+            - '@=service("prestashop.adapter.hosting_information").isHostMode()'

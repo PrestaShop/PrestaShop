@@ -61,7 +61,13 @@ class MetaController extends FrameworkBundleAdminController
         $presentedGrid = $gridPresenter->present($grid);
 
         $metaForm = $this->get('prestashop.admin.meta_settings.form_handler')->getForm();
+
         $tools = $this->get('prestashop.adapter.tools');
+
+        $htaccessFileFinder = $this->get('prestashop.core.file.finder.htaccess');
+        list($htaccessFile) = $htaccessFileFinder->find();
+
+        $htaccessFileChecker = $this->get('prestashop.core.util.url.htaccess_file_checker');
 
         return [
             'layoutHeaderToolbarBtn' => [
@@ -74,6 +80,7 @@ class MetaController extends FrameworkBundleAdminController
             'grid' => $presentedGrid,
             'metaForm' => $metaForm->createView(),
             'isModRewriteActive' => $tools->isModRewriteActive(),
+            'isHtaccessFileValid' => $htaccessFileChecker->isValidFile($htaccessFile),
         ];
     }
 
