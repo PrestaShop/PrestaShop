@@ -121,7 +121,7 @@ function initTableDnD(table)
 					module = tableId.replace('module-', '');
 
 					params = {
-						updatePositions: true,
+						action : 'updatePositions',
 						configure: module
 					};
 				}
