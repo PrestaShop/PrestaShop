@@ -54,6 +54,7 @@ class ImportController extends FrameworkBundleAdminController
      *
      * @param Request $request
      *
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      * @Template("@PrestaShop/Admin/Configure/AdvancedParameters/ImportPage/import.html.twig")
      *
      * @return array|RedirectResponse|Response
@@ -158,8 +159,9 @@ class ImportController extends FrameworkBundleAdminController
     /**
      * Shows import data page where the configuration of importable data and the final step of import is handled.
      *
-     * @Template("@PrestaShop/Admin/Configure/AdvancedParameters/ImportPage/import_data.html.twig")
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      * @DemoRestricted(redirectRoute="admin_import")
+     * @Template("@PrestaShop/Admin/Configure/AdvancedParameters/ImportPage/import_data.html.twig")
      *
      * @param Request $request
      *
@@ -285,31 +287,16 @@ class ImportController extends FrameworkBundleAdminController
     /**
      * Save import data match configuration
      *
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message="You do not have permission to update this.", redirectRoute="admin_import")
+     * @DemoRestricted(redirectRoute="admin_import")
+     *
      * @param Request $request
      *
      * @return JsonResponse
      */
     public function saveImportMatchAction(Request $request)
     {
-        $legacyController = $request->attributes->get('_legacy_controller');
-
-        if (!in_array($this->authorizationLevel($legacyController), [
-            PageVoter::LEVEL_DELETE,
-            PageVoter::LEVEL_CREATE
-        ])) {
-            return $this->json([
-                'error' => $this->trans('You do not have permission to update this.', 'Admin.Notifications.Error'),
-            ]);
-        }
-
-        if ($this->isDemoModeEnabled()) {
-            return $this->json([
-                'error' => $this->trans('This functionality has been disabled.', 'Admin.Notifications.Error'),
-            ]);
-        }
-
         $formHandler = $this->get('prestashop.admin.import_data_configuration.form_handler');
-
         $form = $formHandler->getForm();
         $requestData = $request->request->all();
         $form->setData($requestData['form']['import_data_configuration']);
@@ -331,28 +318,15 @@ class ImportController extends FrameworkBundleAdminController
     /**
      * Delete import data match configuration
      *
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message="You do not have permission to update this.", redirectRoute="admin_import")
+     * @DemoRestricted(redirectRoute="admin_import")
+     *
      * @param Request $request
      *
      * @return JsonResponse
      */
     public function deleteImportMatchAction(Request $request)
     {
-        $legacyController = $request->attributes->get('_legacy_controller');
-
-        if (!in_array($this->authorizationLevel($legacyController), [
-            PageVoter::LEVEL_DELETE
-        ])) {
-            return $this->json([
-                'error' => $this->trans('You do not have permission to delete this.', 'Admin.Notifications.Error'),
-            ]);
-        }
-
-        if ($this->isDemoModeEnabled()) {
-            return $this->json([
-                'error' => $this->trans('This functionality has been disabled.', 'Admin.Notifications.Error'),
-            ]);
-        }
-
         $importMatchRepository = $this->get('prestashop.core.admin.import_match.repository');
         $importMatchRepository->deleteById($request->get('import_match_id'));
 
@@ -414,6 +388,8 @@ class ImportController extends FrameworkBundleAdminController
 
     /**
      * Process the import.
+     *
+     * @DemoRestricted(redirectRoute="admin_import")
      *
      * @param Request $request
      *
