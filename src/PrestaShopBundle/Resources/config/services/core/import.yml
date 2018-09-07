@@ -92,7 +92,6 @@ services:
     prestashop.core.import.fields_provider_finder:
         class: 'PrestaShop\PrestaShop\Core\Import\EntityField\Provider\EntityFieldsProviderFinder'
         arguments:
-            - '@=service("session").get("entity")'
             -
               0: '@prestashop.core.import.fields_provider.category'
               1: '@prestashop.core.import.fields_provider.product'
