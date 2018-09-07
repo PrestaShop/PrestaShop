@@ -37,7 +37,7 @@ const entityStoreContacts = 8;
 
 export default class FormFieldToggle {
   constructor() {
-    $('.js-entity-select').on('change', this.toggleForm.bind(this));
+    $('.js-entity-select').on('change', () => this.toggleForm());
 
     this.toggleForm();
   }
@@ -130,25 +130,38 @@ export default class FormFieldToggle {
    * @param {int} entity
    */
   loadAvailableFields(entity) {
-    const url = -1 === window.location.href.indexOf('index.php') ? '../../../ajax.php' : '../../../../ajax.php';
+    const $availableFields = $('.js-available-fields');
 
     $.ajax({
-      url: url,
+      url: $availableFields.data('url'),
       data: {
-        getAvailableFields: 1,
         entity: entity
       },
       dataType: 'json',
     }).then(response => {
-      let fields = '';
-      let $availableFields = $('.js-available-fields');
+      // Hide open popovers
+      $availableFields.find('[data-toggle="popover"]').popover('hide');
       $availableFields.empty();
 
       for (let i = 0; i < response.length; i++) {
-        fields += response[i].field;
+        let $field = $('.js-available-field-template').clone();
+        let fieldText = response[i].label + (response[i].required ? '*' : '');
+
+        $field.text(fieldText);
+
+        if (response[i].description) {
+          // Help box next to the field
+          let $fieldHelp = $('.js-available-field-popover-template').clone();
+
+          $fieldHelp.attr('data-content', response[i].description);
+          $fieldHelp.removeClass('js-available-field-popover-template d-none');
+          $field.append($fieldHelp);
+        }
+
+        $field.removeClass('js-available-field-template d-none');
+        $field.appendTo($availableFields);
       }
 
-      $availableFields.html(fields);
       $availableFields.find('[data-toggle="popover"]').popover();
     });
   }
