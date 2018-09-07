@@ -26,6 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Query;
 
+use PrestaShop\PrestaShop\Core\Grid\Exception\UnsupportedParameterException;
+
 /**
  * This class offers a DBAL implementation of Query parser.
  */
@@ -40,27 +42,86 @@ final class DoctrineQueryParser implements QueryParserInterface
         $values = $queryParameters;
 
         foreach ($queryParameters as $key => $value) {
-            if (is_string($key)) {
-                $keys[] = '/:' . $key . '/';
-            } else {
-                $keys[] = '/[?]/';
+            if (!is_string($key)) {
+                throw new UnsupportedParameterException('Only named parameters are supported in prepared queries.');
             }
 
+            $keys[] = '/:' . $key . '/';
+
             if (is_string($value)) {
-                $values[$key] = "'" . $value . "'";
+                $values = $this->parseStringParameter($value, $values, $key);
             }
 
             if (is_array($value)) {
-                $values[$key] = "'" . implode("','", $value) . "'";
+                $values = $this->parseArrayParameter($value, $values, $key);
+            }
+
+            if (is_bool($value)) {
+                $values = $this->parseBooleanParameter($value, $values, $key);
             }
 
             if ($value === null) {
-                $values[$key] = 'NULL';
+                $values = $this->parseNullParameter($values, $key);
             }
         }
 
         $query = preg_replace($keys, $values, $query);
 
         return $query;
+    }
+
+    /**
+     * @param string $value
+     * @param array $values
+     * @param string $key
+     *
+     * @return array
+     */
+    private function parseStringParameter($value, $values, $key)
+    {
+        $values[$key] = "'" . $value . "'";
+
+        return $values;
+    }
+
+    /**
+     * @param array $value
+     * @param array $values
+     * @param string $key
+     *
+     * @return array
+     */
+    private function parseArrayParameter(array $value, $values, $key)
+    {
+        $values[$key] = "'" . implode("', '", $value) . "'";
+
+        return $values;
+    }
+
+    /**
+     * @param bool $value
+     * @param array $values
+     * @param string $key
+     *
+     * @return array
+     */
+    private function parseBooleanParameter($value, $values, $key)
+    {
+        $values[$key] = $value ? 'TRUE' : 'FALSE';
+
+        return $values;
+    }
+
+    /**
+     * @param array $values
+     * @param string $key
+     *
+     * @return array
+     */
+    private function parseNullParameter($values, $key)
+    {
+        $values[$key] = 'NULL';
+
+        return $values;
     }
 }
