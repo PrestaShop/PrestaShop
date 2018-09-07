@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,22 +29,22 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Category\ValueObject;
 use PrestaShop\PrestaShop\Core\Domain\Product\Category\Exception\CategoryConstraintException;
 
 /**
- * Class DeleteMode stores mode for category deletion
+ * Class DeleteMode stores mode for category deletion.
  */
 class CategoryDeletionMode
 {
     /**
-     * Associate products with parent category and disable them
+     * Associate products with parent category and disable them.
      */
     const ASSOCIATE_PRODUCTS_WITH_PARENT_AND_DISABLE = 'associate_and_disable';
 
     /**
-     * Associate products with parent and do not change their status
+     * Associate products with parent and do not change their status.
      */
     const ASSOCIATE_PRODUCTS_WITH_PARENT_ONLY = 'associate_only';
 
     /**
-     * Remove products that are associated only with category that is being deleted
+     * Remove products that are associated only with category that is being deleted.
      */
     const REMOVE_ASSOCIATED_PRODUCTS = 'remove_associated';
 
@@ -94,7 +94,7 @@ class CategoryDeletionMode
     }
 
     /**
-     * Whether products associated with category should be removed
+     * Whether products associated with category should be removed.
      *
      * @return bool
      */
@@ -104,7 +104,7 @@ class CategoryDeletionMode
     }
 
     /**
-     * Whether products should be disabled when category is deleted
+     * Whether products should be disabled when category is deleted.
      *
      * @return bool
      */
