@@ -112,6 +112,8 @@ final class MetaQueryBuilder extends AbstractDoctrineQueryBuilder
 
         $qb->andWhere('l.`id_lang`=' . $this->contextIdLang);
         $qb->andWhere('l.`id_shop`=' . $this->contextIdShop);
+        $qb->andWhere('m.`configurable`=1');
+        $qb->groupBy('m.`id_meta`');
 
         foreach ($filters as $name => $value) {
             if ('id_meta' === $name) {
