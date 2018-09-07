@@ -68,6 +68,25 @@ class EntityFieldCollection implements EntityFieldCollectionInterface
     /**
      * {@inheritdoc}
      */
+    public function toArray()
+    {
+        $array = [];
+
+        /** @var EntityFieldInterface $entityField */
+        foreach ($this->entityFields as $entityField) {
+            $array[] = [
+                'label' => $entityField->getLabel(),
+                'description' => $entityField->getDescription(),
+                'required' => $entityField->isRequired(),
+            ];
+        }
+
+        return $array;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public static function createFromArray(array $entityFields)
     {
         $collection = new self();
