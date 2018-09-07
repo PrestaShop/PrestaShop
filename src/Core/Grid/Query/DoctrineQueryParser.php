@@ -49,8 +49,10 @@ final class DoctrineQueryParser implements QueryParserInterface
     }
 
     /**
-     * @param mixed $value the parameter value.
-     * @return string the partial raw parameter.
+     * @param mixed $value the parameter value
+     *
+     * @return string the partial raw parameter
+     *
      * @throws UnsupportedParameterException
      */
     private function parseValue($value)
@@ -80,6 +82,7 @@ final class DoctrineQueryParser implements QueryParserInterface
 
     /**
      * @param string $value
+     *
      * @return string
      */
     private function parseStringParameter($value)
@@ -89,6 +92,7 @@ final class DoctrineQueryParser implements QueryParserInterface
 
     /**
      * @param array $value
+     *
      * @return string
      */
     private function parseArrayParameter(array $value)
@@ -98,6 +102,7 @@ final class DoctrineQueryParser implements QueryParserInterface
 
     /**
      * @param bool $value
+     *
      * @return string
      */
     private function parseBooleanParameter($value)
