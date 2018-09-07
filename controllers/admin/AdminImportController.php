@@ -637,7 +637,7 @@ class AdminImportControllerCore extends AdminController
                 $session->getFlashBag()->add(
                     'success',
                     $this->trans(
-                        'Your file has been successfully imported into your shop. Don\'t forget to re - build the products\' search index.',
+                        'Your file has been successfully imported into your shop. Don\'t forget to re-build the products\' search index.',
                         [],
                         'Admin.Advparameters.Notification'
                     )
