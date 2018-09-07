@@ -26,6 +26,8 @@
 
 namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo;
 
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\File\FileFinderInterface;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -43,13 +45,30 @@ class SetUpUrlsType extends AbstractType
     private $canonicalUrlChoices;
 
     /**
+     * @var ConfigurationInterface
+     */
+    private $configuration;
+
+    /**
+     * @var FileFinderInterface
+     */
+    private $htaccessFinder;
+
+    /**
      * SetUpUrlsType constructor.
      *
      * @param array $canonicalUrlChoices
+     * @param ConfigurationInterface $configuration
+     * @param FileFinderInterface $htaccessFinder
      */
-    public function __construct(array $canonicalUrlChoices)
-    {
+    public function __construct(
+        array $canonicalUrlChoices,
+        ConfigurationInterface $configuration,
+        FileFinderInterface $htaccessFinder
+    ) {
         $this->canonicalUrlChoices = $canonicalUrlChoices;
+        $this->configuration = $configuration;
+        $this->htaccessFinder = $htaccessFinder;
     }
 
     /**
@@ -64,8 +83,15 @@ class SetUpUrlsType extends AbstractType
                     'choices' => $this->canonicalUrlChoices,
                 ]
             )
-            ->add('disable_apache_multiview', SwitchType::class)
-            ->add('disable_apache_mod_security', SwitchType::class)
         ;
+
+        list($htaccessFile) = $this->htaccessFinder->find();
+
+        if (!$this->configuration->get('_PS_HOST_MODE_') && is_writable($htaccessFile)) {
+            $builder
+                ->add('disable_apache_multiview', SwitchType::class)
+                ->add('disable_apache_mod_security', SwitchType::class)
+            ;
+        }
     }
 }
