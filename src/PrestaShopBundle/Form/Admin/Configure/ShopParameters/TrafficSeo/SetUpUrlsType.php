@@ -26,8 +26,8 @@
 
 namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo;
 
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\File\FileFinderInterface;
+use PrestaShop\PrestaShop\Core\Util\Url\UrlFileCheckerInterface;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -45,30 +45,29 @@ class SetUpUrlsType extends AbstractType
     private $canonicalUrlChoices;
 
     /**
-     * @var ConfigurationInterface
-     */
-    private $configuration;
-
-    /**
      * @var FileFinderInterface
      */
     private $htaccessFinder;
+    /**
+     * @var UrlFileCheckerInterface
+     */
+    private $urlFileChecker;
 
     /**
      * SetUpUrlsType constructor.
      *
      * @param array $canonicalUrlChoices
-     * @param ConfigurationInterface $configuration
      * @param FileFinderInterface $htaccessFinder
+     * @param UrlFileCheckerInterface $urlFileChecker
      */
     public function __construct(
         array $canonicalUrlChoices,
-        ConfigurationInterface $configuration,
-        FileFinderInterface $htaccessFinder
+        FileFinderInterface $htaccessFinder,
+        UrlFileCheckerInterface $urlFileChecker
     ) {
         $this->canonicalUrlChoices = $canonicalUrlChoices;
-        $this->configuration = $configuration;
         $this->htaccessFinder = $htaccessFinder;
+        $this->urlFileChecker = $urlFileChecker;
     }
 
     /**
@@ -87,7 +86,7 @@ class SetUpUrlsType extends AbstractType
 
         list($htaccessFile) = $this->htaccessFinder->find();
 
-        if (!$this->configuration->get('_PS_HOST_MODE_') && is_writable($htaccessFile)) {
+        if ($this->urlFileChecker->isValidFile($htaccessFile)) {
             $builder
                 ->add('disable_apache_multiview', SwitchType::class)
                 ->add('disable_apache_mod_security', SwitchType::class)

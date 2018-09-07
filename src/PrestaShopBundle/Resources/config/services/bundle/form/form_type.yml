@@ -523,7 +523,7 @@ services:
         class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\SetUpUrlsType'
         arguments:
             - '@=service("prestashop.core.form.choice_provider.canonical_url").getChoices()'
-            - '@prestashop.adapter.legacy.configuration'
             - '@prestashop.core.file.finder.htaccess'
+            - '@prestashop.core.util.url.htaccess_file_checker'
         tags:
             - { name: form.type }

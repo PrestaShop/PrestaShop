@@ -33,6 +33,23 @@
       </h3>
       <div class="card-block row">
         <div class="card-text">
+
+          {% if not isHtaccessFileValid %}
+            <div class="row">
+              <div class="col-sm">
+                <div class="alert alert-info" role="alert">
+                  <div class="alert-text">
+                    {{ 'Before you can use this tool, you need to:'|trans({}, 'Admin.Shopparameters.Notification') }}
+                    <br>
+                    {{ '1) Create a blank .htaccess file in your root directory.'|trans({}, 'Admin.Shopparameters.Notification') }}
+                    <br>
+                    {{ '2) Give it write permissions (CHMOD 666 on Unix system).'|trans({}, 'Admin.Shopparameters.Notification') }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          {% endif %}
+
           <div class="form-group row">
             {% if isModRewriteActive %}
               {{ ps.label_with_help('Friendly URL'|trans({}, 'Admin.Global'), ('Enable this option only if your server allows URL rewriting (recommended).'|trans({}, 'Admin.Shopparameters.Help'))) }}
@@ -65,21 +82,25 @@
             </div>
           </div>
 
-          <div class="form-group row">
-            {{ ps.label_with_help(("Disable Apache's MultiViews option"|trans), ('Enable this option only if you have problems with URL rewriting.'|trans({}, 'Admin.Shopparameters.Help'))) }}
-            <div class="col-sm">
-              {{ form_errors(metaForm.set_up_urls.disable_apache_multiview) }}
-              {{ form_widget(metaForm.set_up_urls.disable_apache_multiview) }}
+          {% if metaForm.set_up_urls.disable_apache_multiview is defined %}
+            <div class="form-group row">
+              {{ ps.label_with_help(("Disable Apache's MultiViews option"|trans), ('Enable this option only if you have problems with URL rewriting.'|trans({}, 'Admin.Shopparameters.Help'))) }}
+              <div class="col-sm">
+                {{ form_errors(metaForm.set_up_urls.disable_apache_multiview) }}
+                {{ form_widget(metaForm.set_up_urls.disable_apache_multiview) }}
+              </div>
             </div>
-          </div>
+          {% endif %}
 
-          <div class="form-group row">
-            {{ ps.label_with_help(("Disable Apache's mod_security module"|trans), ("Some of PrestaShop's features might not work correctly with a specific configuration of Apache's mod_security module. We recommend to turn it off."|trans({}, 'Admin.Shopparameters.Help'))) }}
-            <div class="col-sm">
-              {{ form_errors(metaForm.set_up_urls.disable_apache_mod_security) }}
-              {{ form_widget(metaForm.set_up_urls.disable_apache_mod_security) }}
+          {% if metaForm.set_up_urls.disable_apache_mod_security is defined %}
+            <div class="form-group row">
+              {{ ps.label_with_help(("Disable Apache's mod_security module"|trans), ("Some of PrestaShop's features might not work correctly with a specific configuration of Apache's mod_security module. We recommend to turn it off."|trans({}, 'Admin.Shopparameters.Help'))) }}
+              <div class="col-sm">
+                {{ form_errors(metaForm.set_up_urls.disable_apache_mod_security) }}
+                {{ form_widget(metaForm.set_up_urls.disable_apache_mod_security) }}
+              </div>
             </div>
-          </div>
+          {% endif %}
 
           {% block meta_form_rest %}
             {{ form_rest(metaForm.set_up_urls) }}
