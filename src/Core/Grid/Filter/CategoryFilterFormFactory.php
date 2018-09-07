@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -32,7 +32,7 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
- * Class CategoryFilterFormFactory decorates original filter factory to add custom submit action
+ * Class CategoryFilterFormFactory decorates original filter factory to add custom submit action.
  */
 final class CategoryFilterFormFactory implements GridFilterFormFactoryInterface
 {

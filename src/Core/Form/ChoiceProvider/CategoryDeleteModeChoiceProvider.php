@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * Class CategoryDeleteModeChoiceProvider
+ * Class CategoryDeleteModeChoiceProvider.
  */
 final class CategoryDeleteModeChoiceProvider implements FormChoiceProviderInterface
 {

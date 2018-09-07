@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -25,11 +25,12 @@
  */
 
 namespace PrestaShop\PrestaShop\Core\Grid\Column\Type\Common;
+
 use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Class LinkColumn is used to define column which is link to record action (view, edit, add
+ * Class LinkColumn is used to define column which is link to record action (view, edit, add.
  */
 final class LinkColumn extends AbstractColumn
 {

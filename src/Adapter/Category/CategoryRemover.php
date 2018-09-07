@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -35,7 +35,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 use Validate;
 
 /**
- * Class CategoryRemover is responsible for deleting legacy categories
+ * Class CategoryRemover is responsible for deleting legacy categories.
  *
  * @internal
  */
@@ -64,7 +64,7 @@ class CategoryRemover
     }
 
     /**
-     * Delete single category
+     * Delete single category.
      *
      * @param int $categoryId
      * @param CategoryDeletionMode $mode
@@ -122,7 +122,7 @@ class CategoryRemover
     }
 
     /**
-     * Delete multiple categories
+     * Delete multiple categories.
      *
      * @param int[] $categoryIds
      * @param CategoryDeletionMode $mode
@@ -154,7 +154,7 @@ class CategoryRemover
     }
 
     /**
-     * Handle products category after its deletion
+     * Handle products category after its deletion.
      *
      * @param $parentCategoryId
      * @param CategoryDeletionMode $mode

@@ -34,12 +34,10 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Category\Exception\CategoryNotFoun
 use PrestaShop\PrestaShop\Core\Domain\Product\Category\ValueObject\CategoryDeletionMode;
 use PrestaShop\PrestaShop\Core\Domain\Product\Category\ValueObject\CategoryId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Category\ValueObject\CategoryStatus;
-use PrestaShop\PrestaShop\Core\Grid\Column\ColumnInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\CategoryFilters;
 use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Sell\Category\DeleteCategoriesType;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -77,7 +75,7 @@ class CategoryController extends FrameworkBundleAdminController
     }
 
     /**
-     * Renders category deletion from
+     * Renders category deletion from.
      *
      * @return Response
      */
@@ -161,7 +159,7 @@ class CategoryController extends FrameworkBundleAdminController
     }
 
     /**
-     * Processes bulk categories deleting
+     * Processes bulk categories deleting.
      *
      * @param Request $request
      *
@@ -194,7 +192,7 @@ class CategoryController extends FrameworkBundleAdminController
     }
 
     /**
-     * Process single category deleting
+     * Process single category deleting.
      *
      * @param Request $request
      *
@@ -244,7 +242,7 @@ class CategoryController extends FrameworkBundleAdminController
     }
 
     /**
-     * Export filtered categories
+     * Export filtered categories.
      *
      * @param CategoryFilters $filters
      *
