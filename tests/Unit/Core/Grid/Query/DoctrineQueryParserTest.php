@@ -26,6 +26,7 @@
 
 namespace Tests\Unit\Core\Grid\Query;
 
+use stdClass;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Grid\Exception\UnsupportedParameterException;
 use PrestaShop\PrestaShop\Core\Grid\Query\DoctrineQueryParser;
@@ -63,6 +64,7 @@ class DoctrineQueryParserTest extends TestCase
      */
     public function testParseWithParametersMustThrowAnException()
     {
+        $this->expectExceptionMessage('Only named parameters are supported in prepared queries.');
         $this->expectException(UnsupportedParameterException::class);
 
         $preparedQuery = 'SELECT tests FROM pierre_rambaud WHERE motivation = ? AND energy = ?';
@@ -94,6 +96,7 @@ class DoctrineQueryParserTest extends TestCase
      */
     public function testParseWithArrayParametersMustThrowAnException()
     {
+        $this->expectExceptionMessage('Only named parameters are supported in prepared queries.');
         $this->expectException(UnsupportedParameterException::class);
 
         $preparedQuery = 'SELECT tests FROM pierre_rambaud WHERE motivation IN (?)';
@@ -141,5 +144,18 @@ class DoctrineQueryParserTest extends TestCase
         $expectedQuery2 = "SELECT tests FROM pierre_rambaud WHERE energy = TRUE";
 
         $this->assertSame($expectedQuery2, $this->queryParser->parse($preparedQuery2, $queryParameters2));
+    }
+
+    public function testParseWithUnsupportedTypeMustThrowAnException()
+    {
+        $this->expectExceptionMessage('Unsupported value type: object');
+        $this->expectException(UnsupportedParameterException::class);
+
+        $preparedQuery = 'SELECT tests FROM pierre_rambaud WHERE motivation IN (:motivation)';
+        $queryParameters = [
+            'motivation' => new stdClass(),
+        ];
+
+        $this->queryParser->parse($preparedQuery, $queryParameters);
     }
 }

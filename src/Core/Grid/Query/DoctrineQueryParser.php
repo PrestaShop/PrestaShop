@@ -38,90 +38,70 @@ final class DoctrineQueryParser implements QueryParserInterface
      */
     public function parse($query, array $queryParameters)
     {
-        $keys = array();
-        $values = $queryParameters;
-
         foreach ($queryParameters as $key => $value) {
             if (!is_string($key)) {
                 throw new UnsupportedParameterException('Only named parameters are supported in prepared queries.');
             }
-
-            $keys[] = '/:' . $key . '/';
-
-            if (is_string($value)) {
-                $values = $this->parseStringParameter($value, $values, $key);
-            }
-
-            if (is_array($value)) {
-                $values = $this->parseArrayParameter($value, $values, $key);
-            }
-
-            if (is_bool($value)) {
-                $values = $this->parseBooleanParameter($value, $values, $key);
-            }
-
-            if ($value === null) {
-                $values = $this->parseNullParameter($values, $key);
-            }
+            $values[':' . $key] = $this->parseValue($value);
         }
 
-        $query = preg_replace($keys, $values, $query);
+        return strtr($query, $values);
+    }
 
-        return $query;
+    /**
+     * @param mixed $value the parameter value.
+     * @return string the partial raw parameter.
+     * @throws UnsupportedParameterException
+     */
+    private function parseValue($value)
+    {
+        if (is_string($value)) {
+            return $this->parseStringParameter($value);
+        }
+
+        if (is_numeric($value)) {
+            return $this->parseNumericParameter($value);
+        }
+
+        if (is_array($value)) {
+            return $this->parseArrayParameter($value);
+        }
+
+        if (is_bool($value)) {
+            return $this->parseBooleanParameter($value);
+        }
+
+        if ($value === null) {
+            return 'NULL';
+        }
+
+        throw new UnsupportedParameterException('Unsupported value type: ' . gettype($value));
     }
 
     /**
      * @param string $value
-     * @param array $values
-     * @param string $key
-     *
-     * @return array
+     * @return string
      */
-    private function parseStringParameter($value, $values, $key)
+    private function parseStringParameter($value)
     {
-        $values[$key] = "'" . $value . "'";
-
-        return $values;
+        return "'" . addslashes($value) . "'";
     }
 
     /**
      * @param array $value
-     * @param array $values
-     * @param string $key
-     *
-     * @return array
+     * @return string
      */
-    private function parseArrayParameter(array $value, $values, $key)
+    private function parseArrayParameter(array $value)
     {
-        $values[$key] = "'" . implode("', '", $value) . "'";
-
-        return $values;
+        return "'" . implode("', '", array_map('addslashes', $value)) . "'";
     }
 
     /**
      * @param bool $value
-     * @param array $values
-     * @param string $key
-     *
-     * @return array
+     * @return string
      */
-    private function parseBooleanParameter($value, $values, $key)
+    private function parseBooleanParameter($value)
     {
-        $values[$key] = $value ? 'TRUE' : 'FALSE';
-
-        return $values;
-    }
-
-    /**
-     * @param array $values
-     * @param string $key
-     *
-     * @return array
-     */
-    private function parseNullParameter($values, $key)
-    {
-        $values[$key] = 'NULL';
-
-        return $values;
+        return $value ? 'TRUE' : 'FALSE';
     }
 }
