@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -55,7 +55,7 @@ class ImportMatchRepository implements RepositoryInterface
     }
 
     /**
-     * Find one item by ID
+     * Find one item by ID.
      *
      * @param int $id
      *
@@ -75,7 +75,7 @@ class ImportMatchRepository implements RepositoryInterface
     }
 
     /**
-     * Find one item by name
+     * Find one item by name.
      *
      * @param string $name
      *
@@ -109,7 +109,7 @@ class ImportMatchRepository implements RepositoryInterface
     }
 
     /**
-     * Delete one import match by it's id
+     * Delete one import match by it's id.
      *
      * @param int $id
      */
@@ -118,7 +118,7 @@ class ImportMatchRepository implements RepositoryInterface
         $this->connection->delete(
             $this->importMatchTable,
             [
-                'id_import_match' => $id
+                'id_import_match' => $id,
             ]
         );
     }

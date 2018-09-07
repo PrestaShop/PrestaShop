@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -27,32 +27,32 @@
 namespace PrestaShop\PrestaShop\Core\Import;
 
 /**
- * Class ImportSettings provides import constants to be used in import pages
+ * Class ImportSettings provides import constants to be used in import pages.
  */
 final class ImportSettings
 {
     /**
-     * Default value separator
+     * Default value separator.
      */
     const DEFAULT_SEPARATOR = ';';
 
     /**
-     * Default multiple value separator
+     * Default multiple value separator.
      */
     const DEFAULT_MULTIVALUE_SEPARATOR = ',';
 
     /**
-     * Maximum number of columns that are visible in the import matches configuration page
+     * Maximum number of columns that are visible in the import matches configuration page.
      */
     const MAX_VISIBLE_COLUMNS = 6;
 
     /**
-     * Maximum number of rows that are visible in the import matces configuration page
+     * Maximum number of rows that are visible in the import matces configuration page.
      */
     const MAX_VISIBLE_ROWS = 10;
 
     /**
-     * Import entities
+     * Import entities.
      */
     const CATEGORY_IMPORT = 0;
     const PRODUCT_IMPORT = 1;
