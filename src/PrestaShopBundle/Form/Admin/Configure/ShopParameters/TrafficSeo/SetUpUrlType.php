@@ -34,10 +34,10 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 /**
- * Class SetUpUrlsType is responsible for providing form fields for Set up urls block located in
+ * Class SetUpUrlType is responsible for providing form fields for Set up urls block located in
  * Shop parameters -> Traffic & Seo -> Seo & urls page.
  */
-class SetUpUrlsType extends AbstractType
+class SetUpUrlType extends AbstractType
 {
     /**
      * @var array
@@ -54,7 +54,7 @@ class SetUpUrlsType extends AbstractType
     private $htaccessFileChecker;
 
     /**
-     * SetUpUrlsType constructor.
+     * SetUpUrlType constructor.
      *
      * @param array $canonicalUrlChoices
      * @param FileFinderInterface $htaccessFinder
