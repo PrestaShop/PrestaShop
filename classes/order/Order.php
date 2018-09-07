@@ -640,7 +640,7 @@ class OrderCore extends ObjectModel
 
             $this->setProductImageInformations($row);
             $this->setProductCurrentStock($row);
-            $this->setProductStockLocationForCombination($row);
+            $this->setProductStockLocationFromCombination($row);
 
             // Backward compatibility 1.4 -> 1.5
             $this->setProductPrices($row);
@@ -698,7 +698,7 @@ class OrderCore extends ObjectModel
      *
      * @param array &$product
      */
-    protected function setProductStockLocationForCombination(&$product)
+    protected function setProductStockLocationFromCombination(&$product)
     {
         if ($product['product_attribute_id'] === '0') {
             return;
