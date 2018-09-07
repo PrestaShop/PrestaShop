@@ -225,9 +225,9 @@ var AdminModuleController = function() {
   this.fetchModulesList = function() {
     var self = this;
     self.modulesList = [];
-    $(".modules-list").each(function() {
+    $('.modules-list').each(function() {
       var container = $(this);
-      container.find(".module-item").each(function() {
+      container.find('.module-item').each(function() {
         var $this = $(this);
         self.modulesList.push({
           domObject: $this,
@@ -286,18 +286,22 @@ var AdminModuleController = function() {
     $('.modules-list').html('');
 
     // Modules visibility management
-    for (var i = 0; i < this.modulesList.length; i++) {
-      var currentModule = this.modulesList[i];
-      if (currentModule.display == this.currentDisplay) {
-        var isVisible = true;
-        if (this.currentRefCategory !== null) {
-          isVisible &= currentModule.categories === this.currentRefCategory;
+    var isVisible;
+    var currentModule;
+    var tagExists;
+
+    for (var i = 0; i < self.modulesList.length; i++) {
+      currentModule = self.modulesList[i];
+      if (currentModule.display == self.currentDisplay) {
+        isVisible = true;
+        if (self.currentRefCategory !== null) {
+          isVisible &= currentModule.categories === self.currentRefCategory;
         }
         if (self.currentRefStatus !== null) {
-          isVisible &= currentModule.active === this.currentRefStatus;
+          isVisible &= currentModule.active === self.currentRefStatus;
         }
         if (self.currentTagsList.length) {
-          var tagExists = false;
+          tagExists = false;
           $.each(self.currentTagsList, function(index, value) {
             value = value.toLowerCase();
             tagExists |= (
@@ -314,6 +318,17 @@ var AdminModuleController = function() {
         }
       }
     }
+
+    $('.module-short-list').each(function() {
+      if ((self.currentRefCategory || self.currentRefStatus)
+          && $(this).find('.module-item').length === 0
+      ) {
+        $(this).hide();
+      } else {
+        $(this).show();
+      }
+    });
+
     if (this.currentTagsList.length) {
         if ('grid' === this.currentDisplay) {
             $(".modules-list").append(this.addonsCardGrid);
@@ -821,7 +836,8 @@ var AdminModuleController = function() {
     var body = $('body');
     body.on('click', this.categoryItemSelector, function () {
       // Get data from li DOM input
-      self.currentRefCategory = $(this).attr('data-category-ref').toLowerCase();
+      self.currentRefCategory = $(this).attr('data-category-ref');
+      self.currentRefCategory = self.currentRefCategory ? self.currentRefCategory.toLowerCase() : null;
       var categorySelectedDisplayName = $(this).attr('data-category-display-name');
       // Change dropdown label to set it to the current category's displayname
       $(self.categorySelectorLabelSelector).text(categorySelectedDisplayName);
