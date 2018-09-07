@@ -47,6 +47,11 @@ final class ImportSettings
     const MAX_VISIBLE_COLUMNS = 6;
 
     /**
+     * Maximum number of rows that are visible in the import matces configuration page
+     */
+    const MAX_VISIBLE_ROWS = 10;
+
+    /**
      * Import entities
      */
     const CATEGORY_IMPORT = 0;

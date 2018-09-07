@@ -34,7 +34,9 @@ interface EntityFieldsProviderFinderInterface
     /**
      * Find the appropriate entity fields provider.
      *
+     * @param int $importEntity import entity ID (@see ImportSettings)
+     *
      * @return EntityFieldsProviderInterface
      */
-    public function find();
+    public function find($importEntity);
 }
