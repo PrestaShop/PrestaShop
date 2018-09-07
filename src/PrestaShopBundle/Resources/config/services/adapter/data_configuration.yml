@@ -225,3 +225,10 @@ services:
         class: 'PrestaShop\PrestaShop\Adapter\Webservice\WebserviceAccountStatusModifier'
         arguments:
             - '@translator'
+
+    prestashop.adapter.meta.set_up_urls.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Meta\SetUpUrlsDataConfigurator'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+            - '@prestashop.core.file.finder.htaccess'
+            - '@prestashop.core.util.url.htaccess_file_checker'
