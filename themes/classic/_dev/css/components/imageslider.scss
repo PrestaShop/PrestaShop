@@ -4,14 +4,11 @@
   .direction {
     z-index: auto;
   }
-  .carousel-inner {
-    height: 340px;
-    @media (max-width: 767px) {
-      height: auto;
-    }
-  }
   .carousel-item {
     height: 100%;
+    figure {
+      margin-bottom: 0;
+    }
     img {
       @media (max-width: 767px) {
         max-width: 100%;
@@ -29,13 +26,34 @@
       left: 90px;
       }
       @media (max-width: 767px) {
-        bottom: 5px;
+        transform: translateY(50%);
+        bottom: 50%;
         left: 40px;
+      }
+      @media (max-width: 767px) {
+        h2 {
+          font-size: 1.75rem;
+          margin-bottom: 0;
+        }
       }
       color: white;
       max-width: 340px;
-      .caption-description p {
-        color: white;
+      .caption-description {
+        display: none;
+        @media (min-width: 768px) {
+          display: block;
+        }
+        & p {
+          color: white;
+        }
+        & > :first-child {
+          margin-top: 0;
+          padding-top: 0;
+        }
+        & > :last-child {
+          margin-bottom: 0;
+          padding-bottom: 0;
+        }
       }
     }
     figure {
@@ -48,12 +66,21 @@
     opacity: 1;
     .icon-next,
     .icon-prev {
+      height: 3.125rem;
+      margin: -1.5625rem 0 0;
+      width: 3.125rem;
       &::before {
         content: "";
       }
       i {
-        font-size: 3.125rem;
         color: white;
+        font-size: 3.125rem;
+        line-height: 3.125rem;
+        height: 100%;
+        width: 100%;
+        @media (max-width: 767px) {
+          font-size: 2rem;
+        }
       }
       &:hover {
         i {
@@ -62,10 +89,10 @@
       }
     }
     .icon-prev {
-      left: 1rem;
+      left: 0;
     }
     .icon-next {
-      right: 2rem;
+      right: 0;
     }
     &.left,
     &.right {
