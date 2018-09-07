@@ -3,6 +3,6 @@ services:
         public: true
 
     prestashop.core.util.url.htaccess_file_checker:
-        class: 'PrestaShop\PrestaShop\Core\Util\Url\HtAccessFileChecker'
+        class: 'PrestaShop\PrestaShop\Core\Util\Url\HtaccessFileChecker'
         arguments:
             - '@=service("prestashop.adapter.hosting_information").isHostMode()'

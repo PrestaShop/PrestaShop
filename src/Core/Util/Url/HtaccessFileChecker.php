@@ -30,7 +30,7 @@ namespace PrestaShop\PrestaShop\Core\Util\Url;
  * Class HtaccessFileChecker is responsible for checking files validity which are related with
  * urls generation (.htaccess) file.
  */
-final class HtAccessFileChecker implements UrlFileCheckerInterface
+final class HtaccessFileChecker implements UrlFileCheckerInterface
 {
     /**
      * @var bool
@@ -38,7 +38,7 @@ final class HtAccessFileChecker implements UrlFileCheckerInterface
     private $isHostMode;
 
     /**
-     * HtAccessFileChecker constructor.
+     * HtaccessFileChecker constructor.
      *
      * @param bool $isHostMode
      */
