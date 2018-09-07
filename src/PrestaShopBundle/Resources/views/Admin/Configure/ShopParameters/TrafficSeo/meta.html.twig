@@ -38,7 +38,7 @@
         {{ form_start(metaForm, {'action': path('admin_meta_process')}) }}
 
         {% include '@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Blocks/set_up_urls.html.twig' %}
-
+        {% include '@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Blocks/shop_urls.html.twig' %}
         {% block meta_form_rest %}
           {{ form_rest(metaForm) }}
         {% endblock %}

@@ -519,11 +519,22 @@ services:
         tags:
             - { name: form.type }
 
-    form.type.seo_urls.set_up_url:
-        class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\SetUpUrlsType'
+    form.type.shop.traffic_seo.set_up_url:
+        class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\SetUpUrlType'
         arguments:
             - '@=service("prestashop.core.form.choice_provider.canonical_url").getChoices()'
             - '@prestashop.core.file.finder.htaccess'
             - '@prestashop.core.util.url.htaccess_file_checker'
         tags:
             - { name: form.type }
+
+    form.type.shop.traffic_seo.shop_url:
+        class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\ShopUrlType'
+        arguments:
+            - '@=service("prestashop.adapter.hosting_information").isHostMode()'
+            - '@=service("prestashop.adapter.shop.context").isShopFeatureActive()'
+            - '@=service("prestashop.adapter.shop.shop_url").isMainShopUrlExists()'
+        tags:
+            - { name: form.type }
+
+
