@@ -33,14 +33,19 @@
     </div>
   </div>
 
-  {{ form_start(form, {'action': path('admin_webservice_settings_save') ,'attr' : {'class': 'form', 'id': 'configuration_form'} }) }}
     <div class="row justify-content-center">
-      {{ include('@PrestaShop/Admin/Configure/AdvancedParameters/WebservicePage/webservice_settings.twig') }}
-      {% block webservice_configuration_form_rest %}
-        {{ form_rest(form) }}
-      {% endblock %}
+      <div class="col">
+        {{ form_start(form, {'action': path('admin_webservice_settings_save') ,'attr' : {'class': 'form', 'id': 'configuration_form'} }) }}
+
+        {{ include('@PrestaShop/Admin/Configure/AdvancedParameters/WebservicePage/webservice_settings.html.twig') }}
+
+        {% block webservice_configuration_form_rest %}
+          {{ form_rest(form) }}
+        {% endblock %}
+
+        {{ form_end(form) }}
+      </div>
     </div>
-  {{ form_end(form) }}
 {% endblock %}
 
 {% block javascripts %}
