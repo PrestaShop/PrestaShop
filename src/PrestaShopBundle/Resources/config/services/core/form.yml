@@ -122,4 +122,4 @@ services:
     prestashop.core.form.choice_provider.import_entity_field:
         class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ImportEntityFieldChoiceProvider'
         arguments:
-            - '@=service("prestashop.core.import.fields_provider_finder").find().getCollection()'
+            - '@=service("prestashop.core.import.fields_provider_finder").find(service("session").get("entity")).getCollection()'
