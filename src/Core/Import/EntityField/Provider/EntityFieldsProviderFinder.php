@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Core\Import\EntityField\Provider;
 
 use InvalidArgumentException;
-use PrestaShop\PrestaShop\Core\Import\ImportSettings;
 
 /**
  * Class EntityFieldsProviderFinder defines an entity fields provider finder.
@@ -35,36 +34,27 @@ use PrestaShop\PrestaShop\Core\Import\ImportSettings;
 final class EntityFieldsProviderFinder implements EntityFieldsProviderFinderInterface
 {
     /**
-     * @var int import entity
-     *
-     * @see ImportSettings
-     */
-    private $importEntity;
-
-    /**
      * @var array of entity fields providers
      */
     private $entityFieldsProviders;
 
     /**
-     * @param int $importEntity
      * @param array $entityFieldsProviders
      */
-    public function __construct($importEntity, array $entityFieldsProviders)
+    public function __construct(array $entityFieldsProviders)
     {
-        $this->importEntity = $importEntity;
         $this->entityFieldsProviders = $entityFieldsProviders;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function find()
+    public function find($importEntity)
     {
-        if (!isset($this->entityFieldsProviders[$this->importEntity])) {
-            throw new InvalidArgumentException("Entity fields provider does not exist for entity $this->importEntity.");
+        if (!isset($this->entityFieldsProviders[$importEntity])) {
+            throw new InvalidArgumentException("Entity fields provider does not exist for entity $importEntity.");
         }
 
-        return $this->entityFieldsProviders[$this->importEntity];
+        return $this->entityFieldsProviders[$importEntity];
     }
 }

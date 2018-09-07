@@ -159,6 +159,7 @@ class ImportController extends FrameworkBundleAdminController
      * Shows import data page where the configuration of importable data and the final step of import is handled.
      *
      * @Template("@PrestaShop/Admin/Configure/AdvancedParameters/ImportPage/import_data.html.twig")
+     * @DemoRestricted(redirectRoute="admin_import")
      *
      * @param Request $request
      *
@@ -175,9 +176,9 @@ class ImportController extends FrameworkBundleAdminController
         $entityFieldsProviderFinder = $this->get('prestashop.core.import.fields_provider_finder');
 
         $importFile = new SplFileInfo($importDirectory . $request->getSession()->get('csv'));
-        $dataRowCollection = $dataRowCollectionFactory->buildFromFile($importFile, 10);
+        $dataRowCollection = $dataRowCollectionFactory->buildFromFile($importFile, ImportSettings::MAX_VISIBLE_ROWS);
         $presentedDataRowCollection = $dataRowCollectionPresenter->present($dataRowCollection);
-        $entityFieldsProvider = $entityFieldsProviderFinder->find();
+        $entityFieldsProvider = $entityFieldsProviderFinder->find($request->getSession()->get('entity'));
 
         return [
             'importDataConfigurationForm' => $form->createView(),
