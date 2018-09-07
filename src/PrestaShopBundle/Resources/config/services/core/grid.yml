@@ -16,6 +16,7 @@ services:
         arguments:
             - '@prestashop.core.grid.filter.form_factory'
             - '@router'
+            - '@request_stack'
 
     # Grid data factories
     prestashop.core.grid.data_provider.log:
