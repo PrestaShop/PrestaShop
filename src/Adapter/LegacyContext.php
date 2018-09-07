@@ -110,7 +110,7 @@ class LegacyContext
 
         $link = new Link();
 
-        return $link->getBaseLink() . basename(_PS_ADMIN_DIR_) . '/' . Dispatcher::getInstance()->createUrl($controller, $id_lang, $params, false);
+        return $link->getAdminBaseLink() . basename(_PS_ADMIN_DIR_) . '/' . Dispatcher::getInstance()->createUrl($controller, $id_lang, $params, false);
     }
 
     /**
