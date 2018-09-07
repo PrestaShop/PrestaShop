@@ -368,12 +368,26 @@ class ImportController extends FrameworkBundleAdminController
      */
     public function getImportMatchAction(Request $request)
     {
-        $importMatchId = $request->get('import_match_id');
-
         $importMatchRepository = $this->get('prestashop.core.admin.import_match.repository');
-        $importMatch = $importMatchRepository->findOneById($importMatchId);
+        $importMatch = $importMatchRepository->findOneById($request->get('import_match_id'));
 
         return $this->json($importMatch);
+    }
+
+    /**
+     * Get available entity fields.
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function getAvailableEntityFieldsAction(Request $request)
+    {
+        $fieldsProviderFinder = $this->get('prestashop.core.import.fields_provider_finder');
+        $fieldsProvider = $fieldsProviderFinder->find($request->get('entity'));
+        $fieldsCollection = $fieldsProvider->getCollection();
+
+        return $this->json($fieldsCollection->toArray());
     }
 
     /**

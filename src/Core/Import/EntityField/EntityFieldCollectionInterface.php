@@ -59,4 +59,11 @@ interface EntityFieldCollectionInterface extends ArrayAccess, Countable, Iterato
      * @return self
      */
     public static function createFromArray(array $entityFields);
+
+    /**
+     * Converts the collection to array
+     *
+     * @return array
+     */
+    public function toArray();
 }
