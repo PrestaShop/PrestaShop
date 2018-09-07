@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Configure\ShopParameters;
 
+use Exception;
 use PrestaShop\PrestaShop\Core\Search\Filters\MetaFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -152,8 +153,35 @@ class MetaController extends FrameworkBundleAdminController
         // todo: implement
     }
 
-    public function processFormAction()
+    /**
+     * Submits settings forms
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     *
+     * @throws Exception
+     */
+    public function processFormAction(Request $request)
     {
-        // todo: implement
+        $formHandler = $this->get('prestashop.admin.meta_settings.form_handler');
+        $configurationForm = $formHandler->getForm();
+
+        $configurationForm->handleRequest($request);
+
+        if ($configurationForm->isSubmitted()) {
+            $errors = $formHandler->save($configurationForm->getData());
+
+            if (!empty($errors)) {
+                $this->flashErrors($errors);
+            } else {
+                $this->addFlash(
+                    'success',
+                    $this->trans('The settings have been successfully updated.', 'Admin.Notifications.Success')
+                );
+            }
+        }
+
+        return $this->redirectToRoute('admin_meta');
     }
 }

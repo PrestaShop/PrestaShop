@@ -51,23 +51,23 @@ class SetUpUrlsType extends AbstractType
     /**
      * @var UrlFileCheckerInterface
      */
-    private $urlFileChecker;
+    private $htaccessFileChecker;
 
     /**
      * SetUpUrlsType constructor.
      *
      * @param array $canonicalUrlChoices
      * @param FileFinderInterface $htaccessFinder
-     * @param UrlFileCheckerInterface $urlFileChecker
+     * @param UrlFileCheckerInterface $htaccessFileChecker
      */
     public function __construct(
         array $canonicalUrlChoices,
         FileFinderInterface $htaccessFinder,
-        UrlFileCheckerInterface $urlFileChecker
+        UrlFileCheckerInterface $htaccessFileChecker
     ) {
         $this->canonicalUrlChoices = $canonicalUrlChoices;
         $this->htaccessFinder = $htaccessFinder;
-        $this->urlFileChecker = $urlFileChecker;
+        $this->htaccessFileChecker = $htaccessFileChecker;
     }
 
     /**
@@ -86,7 +86,7 @@ class SetUpUrlsType extends AbstractType
 
         list($htaccessFile) = $this->htaccessFinder->find();
 
-        if ($this->urlFileChecker->isValidFile($htaccessFile)) {
+        if ($this->htaccessFileChecker->isValidFile($htaccessFile)) {
             $builder
                 ->add('disable_apache_multiview', SwitchType::class)
                 ->add('disable_apache_mod_security', SwitchType::class)
