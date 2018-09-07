@@ -26,14 +26,14 @@
 import Grid from '../../components/grid/grid';
 import FiltersResetExtension from "../../components/grid/extension/filters-reset-extension";
 import SortingExtension from "../../components/grid/extension/sorting-extension";
-import CategoryPositionExtension from "../../components/grid/extension/catalog/category-position-extension";
 import ExportToSqlManagerExtension from "../../components/grid/extension/export-to-sql-manager-extension";
 import ReloadListExtension from "../../components/grid/extension/reload-list-extension";
 import BulkActionCheckboxExtension from "../../components/grid/extension/bulk-action-checkbox-extension";
 import SubmitBulkExtension from "../../components/grid/extension/submit-bulk-action-extension";
-import ColumnTogglingExtension from "../../components/grid/extension/column-toggling-extension";
 import SubmitRowActionExtension from "../../components/grid/extension/action/row/submit-row-action-extension";
 import LinkRowActionExtension from "../../components/grid/extension/link-row-action-extension";
+import CategoryPositionExtension from "../../components/grid/extension/column/catalog/category-position-extension";
+import AsyncToggleColumnExtension from "../../components/grid/extension/column/common/async-toggle-column-extension";
 
 const $ = window.$;
 
@@ -47,7 +47,7 @@ $(() => {
   categoriesGrid.addExtension(new ReloadListExtension());
   categoriesGrid.addExtension(new BulkActionCheckboxExtension());
   categoriesGrid.addExtension(new SubmitBulkExtension());
-  categoriesGrid.addExtension(new ColumnTogglingExtension());
   categoriesGrid.addExtension(new SubmitRowActionExtension());
   categoriesGrid.addExtension(new LinkRowActionExtension());
+  categoriesGrid.addExtension(new AsyncToggleColumnExtension());
 });
