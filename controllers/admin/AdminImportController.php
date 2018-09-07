@@ -4770,7 +4770,7 @@ class AdminImportControllerCore extends AdminController
     }
 
     /**
-     * Gets session from symfony container
+     * Gets session from symfony container.
      *
      * @return \Symfony\Component\HttpFoundation\Session\Session
      */
