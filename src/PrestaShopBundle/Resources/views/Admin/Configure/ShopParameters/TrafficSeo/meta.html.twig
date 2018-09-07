@@ -33,15 +33,19 @@
     </div>
   </div>
 
-  {{ form_start(metaForm, {'action': path('admin_meta_process')}) }}
-    <div class="row justify-content-center">
-      {% include '@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Blocks/set_up_urls.html.twig' %}
+  <div class="row justify-content-center">
+      <div class="col">
+        {{ form_start(metaForm, {'action': path('admin_meta_process')}) }}
 
-      {% block meta_form_rest %}
-        {{ form_rest(metaForm) }}
-      {% endblock %}
-    </div>
-  {{ form_end(metaForm) }}
+        {% include '@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Blocks/set_up_urls.html.twig' %}
+
+        {% block meta_form_rest %}
+          {{ form_rest(metaForm) }}
+        {% endblock %}
+
+        {{ form_end(metaForm) }}
+      </div>
+  </div>
 
 {% endblock %}
 
