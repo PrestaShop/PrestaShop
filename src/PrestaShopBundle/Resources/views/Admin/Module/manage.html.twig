@@ -41,9 +41,18 @@
         {% for category in categories.subMenu %}
           <div class="module-short-list">
             <span id="{{ category.tab }}_modules" class="module-search-result-wording">{{ category.name | trans({}, 'Admin.Modules.Feature') }}</span>
-          </div>
 
-          {% include 'PrestaShopBundle:Admin/Module/Includes:grid_manage_installed.html.twig' with { 'modules': category.modules, 'display_type': 'list', 'origin': 'manage', 'id': category.tab } %}
+            {% if category.modules is empty %}
+              <div class="module-list-empty">
+                <p>
+                  {{ 'You do not have module in « %categoryName% ».' | trans({'%categoryName%': category.name}, 'Admin.Modules.Feature') }}<br/>
+                  {{ 'Discover the best modules in this category in %link%.' | trans({'%link%': category.name}, 'Admin.Modules.Feature') }}
+                </p>
+              </div>
+            {% else  %}
+              {% include 'PrestaShopBundle:Admin/Module/Includes:grid_manage_installed.html.twig' with { 'modules': category.modules, 'display_type': 'list', 'origin': 'manage', 'id': category.tab } %}
+            {% endif %}
+          </div>
         {% endfor %}
       </div>
     </div>
