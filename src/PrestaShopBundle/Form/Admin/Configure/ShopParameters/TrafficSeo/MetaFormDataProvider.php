@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo;
 
+use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 
 /**
@@ -35,11 +36,28 @@ use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 final class MetaFormDataProvider implements FormDataProviderInterface
 {
     /**
+     * @var DataConfigurationInterface
+     */
+    private $setUpUrlDataConfiguration;
+
+    /**
+     * MetaFormDataProvider constructor.
+     *
+     * @param DataConfigurationInterface $setUpUrlDataConfiguration
+     */
+    public function __construct(DataConfigurationInterface $setUpUrlDataConfiguration)
+    {
+        $this->setUpUrlDataConfiguration = $setUpUrlDataConfiguration;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function getData()
     {
-        // TODO: Implement getData() method.
+        return [
+            'set_up_urls' => $this->setUpUrlDataConfiguration->getConfiguration(),
+        ];
     }
 
     /**
@@ -47,6 +65,6 @@ final class MetaFormDataProvider implements FormDataProviderInterface
      */
     public function setData(array $data)
     {
-        // TODO: Implement setData() method.
+        return $this->setUpUrlDataConfiguration->updateConfiguration($data['set_up_urls']);
     }
 }
