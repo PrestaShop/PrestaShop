@@ -270,7 +270,8 @@ services:
             - '@prestashop.core.hook.dispatcher'
             - '@prestashop.admin.traffic_seo.meta.form_data_provider'
             -
-              'set_up_urls': 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\SetUpUrlsType'
+              'set_up_urls': 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\SetUpUrlType'
+              'shop_urls': 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\ShopUrlType'
             - 'SeoUrlsPage'
 
     # Entity form handler
