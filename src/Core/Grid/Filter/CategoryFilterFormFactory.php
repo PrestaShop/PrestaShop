@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Grid\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Definition\GridDefinitionInterface;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
@@ -47,15 +48,22 @@ final class CategoryFilterFormFactory implements GridFilterFormFactoryInterface
     private $urlGenerator;
 
     /**
+     * @var RequestStack
+     */
+    private $requestStack;
+
+    /**
      * @param GridFilterFormFactoryInterface $formFactory
      * @param UrlGeneratorInterface $urlGenerator
      */
     public function __construct(
         GridFilterFormFactoryInterface $formFactory,
-        UrlGeneratorInterface $urlGenerator
+        UrlGeneratorInterface $urlGenerator,
+        RequestStack $requestStack
     ) {
         $this->formFactory = $formFactory;
         $this->urlGenerator = $urlGenerator;
+        $this->requestStack = $requestStack;
     }
 
     /**
@@ -79,8 +87,16 @@ final class CategoryFilterFormFactory implements GridFilterFormFactoryInterface
             );
         }
 
+        $queryParams = [];
+
+        if (null !== ($request = $this->requestStack->getMasterRequest())
+            && $request->query->has('id_category')
+        ) {
+            $queryParams['id_category'] = $request->query->get('id_category');
+        }
+
         $newCategoryFormBuilder->setAction(
-            $this->urlGenerator->generate('admin_category_listing_search')
+            $this->urlGenerator->generate('admin_category_listing_search', $queryParams)
         );
 
         return $newCategoryFormBuilder->getForm();
