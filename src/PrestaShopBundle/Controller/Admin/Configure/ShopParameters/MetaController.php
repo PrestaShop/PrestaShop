@@ -64,6 +64,7 @@ class MetaController extends FrameworkBundleAdminController
         $metaForm = $this->get('prestashop.admin.meta_settings.form_handler')->getForm();
 
         $tools = $this->get('prestashop.adapter.tools');
+        $context = $this->get('prestashop.adapter.shop.context');
 
         $htaccessFileFinder = $this->get('prestashop.core.file.finder.htaccess');
         list($htaccessFile) = $htaccessFileFinder->find();
@@ -82,6 +83,7 @@ class MetaController extends FrameworkBundleAdminController
             'metaForm' => $metaForm->createView(),
             'isModRewriteActive' => $tools->isModRewriteActive(),
             'isHtaccessFileValid' => $htaccessFileChecker->isValidFile($htaccessFile),
+            'isShopFeatureActive' => $context->isShopFeatureActive(),
         ];
     }
 
