@@ -837,11 +837,11 @@ class ProductController extends FrameworkBundleAdminController
 
                     $hookDispatcher->dispatchWithParameters(
                         'actionAdminSortBefore',
-                        $hookEventParemters
+                        $hookEventParameters
                     );
                     $hookDispatcher->dispatchWithParameters(
                         'actionAdminProductsControllerSortBefore',
-                        $hookEventParemters
+                        $hookEventParameters
                     );
 
                     // Hooks: managed in ProductUpdater
@@ -866,11 +866,11 @@ class ProductController extends FrameworkBundleAdminController
                     ];
                     $hookDispatcher->dispatchWithParameters(
                         'actionAdminSortAfter',
-                        $hookEventParemters
+                        $hookEventParameters
                     );
                     $hookDispatcher->dispatchWithParameters(
                         'actionAdminProductsControllerSortAfter',
-                        $hookEventParemters
+                        $hookEventParameters
                     );
                     break;
                 default:
