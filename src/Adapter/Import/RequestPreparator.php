@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,12 +29,12 @@ namespace PrestaShop\PrestaShop\Adapter\Import;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Class RequestPreparator prepares the request for legacy import controller
+ * Class RequestPreparator prepares the request for legacy import controller.
  */
 class RequestPreparator
 {
     /**
-     * Prepares the request for the legacy import action
+     * Prepares the request for the legacy import action.
      *
      * @param Request $request
      *

@@ -45,7 +45,7 @@ interface EntityFieldCollectionInterface extends ArrayAccess, Countable, Iterato
     public function addEntityField(EntityFieldInterface $entityField);
 
     /**
-     * Get required fields from the collection
+     * Get required fields from the collection.
      *
      * @return array
      */
@@ -61,7 +61,7 @@ interface EntityFieldCollectionInterface extends ArrayAccess, Countable, Iterato
     public static function createFromArray(array $entityFields);
 
     /**
-     * Converts the collection to array
+     * Converts the collection to array.
      *
      * @return array
      */

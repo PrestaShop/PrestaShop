@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,12 +29,12 @@ namespace PrestaShop\PrestaShop\Core\Import\EntityField\Provider;
 use PrestaShop\PrestaShop\Core\Import\EntityField\EntityFieldCollectionInterface;
 
 /**
- * Interface EntityFieldsProviderInterface defines a provider of entity fields
+ * Interface EntityFieldsProviderInterface defines a provider of entity fields.
  */
 interface EntityFieldsProviderInterface
 {
     /**
-     * Get entity field as a collection
+     * Get entity field as a collection.
      *
      * @return EntityFieldCollectionInterface
      */
