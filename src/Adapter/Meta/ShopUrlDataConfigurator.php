@@ -24,60 +24,55 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\Shop;
+namespace PrestaShop\PrestaShop\Adapter\Meta;
 
-use PrestaShopException;
+use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 
 /**
- * Class ShopUrl is responsible for providing data from shop_url table.
+ * Class ShopUrlDataConfigurator is responsible for updating and getting data from shop_url table.
  */
-class ShopUrl
+final class ShopUrlDataConfigurator implements DataConfigurationInterface
 {
     /**
-     * @var int
+     * @var array
      */
-    private $contextShopId;
+    private $mainShopUrlData;
 
     /**
-     * ShopUrl constructor.
+     * ShopUrlsDataConfigurator constructor.
      *
-     * @param int $contextShopId
+     * @param array $mainShopUrlData
      */
-    public function __construct($contextShopId)
+    public function __construct(array $mainShopUrlData)
     {
-        $this->contextShopId = $contextShopId;
+        $this->mainShopUrlData = $mainShopUrlData;
     }
 
     /**
-     * Gets main shop url data.
-     *
-     * @return array
-     *
-     * @throws PrestaShopException
+     * {@inheritdoc}
      */
-    public function getMainShopUrl()
+    public function getConfiguration()
     {
-        /** @var \ShopUrl $shopUrl */
-        $shopUrl = \ShopUrl::getShopUrls($this->contextShopId)->where('main', '=', 1)->getFirst();
-
         return [
-            'domain' => $shopUrl->domain,
-            'domain_ssl' => $shopUrl->domain_ssl,
-            'physical_uri' => $shopUrl->physical_uri,
+            'domain' => $this->mainShopUrlData['domain'],
+            'domain_ssl' => $this->mainShopUrlData['domain_ssl'],
+            'base_uri' => $this->mainShopUrlData['physical_uri'],
         ];
     }
 
     /**
-     * Checks whenever the main shop url exists for current shop context.
-     *
-     * @return bool
-     *
-     * @throws \PrestaShopException
+     * {@inheritdoc}
      */
-    public function isMainShopUrlExists()
+    public function updateConfiguration(array $configuration)
     {
-        $shopUrl = \ShopUrl::getShopUrls($this->contextShopId)->where('main', '=', 1)->getFirst();
+        // TODO: Implement updateConfiguration() method.
+    }
 
-        return \Validate::isLoadedObject($shopUrl);
+    /**
+     * {@inheritdoc}
+     */
+    public function validateConfiguration(array $configuration)
+    {
+
     }
 }
