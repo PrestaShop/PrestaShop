@@ -902,8 +902,8 @@ class AdminControllerCore extends Controller
                     return $return;
                 } elseif (!empty($action) && $this->controller_name == 'AdminModules' && Tools::getIsset('configure')) {
                     $module_obj = Module::getInstanceByName(Tools::getValue('configure'));
-                    if (Validate::isLoadedObject($module_obj) && method_exists($module_obj, 'ajaxProcess'.$action)) {
-                        return $module_obj->{'ajaxProcess'.$action}();
+                    if (Validate::isLoadedObject($module_obj) && method_exists($module_obj, 'ajaxProcess'.Tools::toCamelCase($action))) {
+                        return $module_obj->{'ajaxProcess'.Tools::toCamelCase($action)}();
                     }
                 } elseif (method_exists($this, 'ajaxProcess')) {
                     return $this->ajaxProcess();
