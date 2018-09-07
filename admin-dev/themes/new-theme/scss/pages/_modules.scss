@@ -94,7 +94,18 @@
 }
 
 .module-short-list {
-  margin: 2em;
+  margin: 2em 0;
+
+  .module-list-empty {
+    background: #fff;
+    padding: 20px;
+    border: dashed 1px #696969;
+
+    p {
+      margin: 0;
+      padding: 0;
+    }
+  }
 }
 
 /**
@@ -107,6 +118,7 @@
       top: $grid-gutter-width / 2;
       bottom: $grid-gutter-width / 2;
     }
+
     background-color: white;
   }
   +:nth-child(even) {
@@ -353,6 +365,16 @@
 }
 .module-top-menu {
   min-height: 74px;
+  .module-menu-item {
+    margin-top: 30px;
+    &.disable {
+      opacity: 0.5;
+    }
+
+    h3 {
+      font-size: 14px;
+    }
+  }
 }
 
 .toolbar-icons {
