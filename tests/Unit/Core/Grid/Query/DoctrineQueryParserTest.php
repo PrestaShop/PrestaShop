@@ -61,16 +61,14 @@ class DoctrineQueryParserTest extends TestCase
     /**
      * @throws \PrestaShop\PrestaShop\Core\Grid\Exception\UnsupportedParameterException
      */
-    public function testParseWithParameters()
+    public function testParseWithParametersMustThrowAnException()
     {
         $this->expectException(UnsupportedParameterException::class);
 
         $preparedQuery = 'SELECT tests FROM pierre_rambaud WHERE motivation = ? AND energy = ?';
         $queryParameters = ['OK', 'none'];
 
-        $expectedQuery = "SELECT tests FROM pierre_rambaud WHERE motivation = 'OK' AND energy = 'none'";
-
-        $this->assertSame($expectedQuery, $this->queryParser->parse($preparedQuery, $queryParameters));
+        $this->queryParser->parse($preparedQuery, $queryParameters);
     }
 
     public function testParseWithArrayNamedParameters()
@@ -94,7 +92,7 @@ class DoctrineQueryParserTest extends TestCase
     /**
      * @throws \PrestaShop\PrestaShop\Core\Grid\Exception\UnsupportedParameterException
      */
-    public function testParseWithArrayParameters()
+    public function testParseWithArrayParametersMustThrowAnException()
     {
         $this->expectException(UnsupportedParameterException::class);
 
@@ -109,12 +107,10 @@ class DoctrineQueryParserTest extends TestCase
             ]
         ];
 
-        $expectedQuery = "SELECT tests FROM pierre_rambaud WHERE motivation IN ('great', 'good', 'ok', 'nok', 'none')";
-
-        $this->assertSame($expectedQuery, $this->queryParser->parse($preparedQuery, $queryParameters));
+        $this->queryParser->parse($preparedQuery, $queryParameters);
     }
 
-    public function testParseWithNullParameters()
+    public function testParseWithNullNamedParameters()
     {
         $preparedQuery = 'SELECT tests FROM pierre_rambaud WHERE motivation IS :motivation';
         $queryParameters = [
@@ -126,7 +122,7 @@ class DoctrineQueryParserTest extends TestCase
         $this->assertSame($expectedQuery, $this->queryParser->parse($preparedQuery, $queryParameters));
     }
 
-    public function testParseWithBooleanParameters()
+    public function testParseWithBooleanNamedParameters()
     {
         $preparedQuery = 'SELECT tests FROM pierre_rambaud WHERE motivation = :motivation';
         $queryParameters = [
