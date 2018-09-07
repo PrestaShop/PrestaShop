@@ -38,6 +38,7 @@ use PrestaShop\PrestaShop\Core\Search\Filters\CategoryFilters;
 use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Sell\Category\DeleteCategoriesType;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -110,7 +111,7 @@ class CategoryController extends FrameworkBundleAdminController
      *
      * @param int $categoryId
      *
-     * @return RedirectResponse
+     * @return JsonResponse
      */
     public function processStatusToggleAction($categoryId)
     {
@@ -119,15 +120,18 @@ class CategoryController extends FrameworkBundleAdminController
 
             $this->getCommandBus()->handle($command);
 
-            $this->addFlash(
-                'success',
-                $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
-            );
+            $response = [
+                'status' => true,
+                'message' => $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success'),
+            ];
         } catch (CategoryException $e) {
-            $this->addFlash('error', $this->handleUpdateStatusException($e));
+            $response = [
+                'status' => false,
+                'message' => $this->handleUpdateStatusException($e),
+            ];
         }
 
-        return $this->redirectToRoute('admin_category_listing');
+        return $this->json($response);
     }
 
     /**
