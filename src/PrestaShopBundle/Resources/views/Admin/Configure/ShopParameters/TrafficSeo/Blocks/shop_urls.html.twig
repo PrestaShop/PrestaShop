@@ -82,8 +82,8 @@
               {{ 'Base URI'|trans }}
             </label>
             <div class="col-sm">
-              {{ form_errors(shopUrlForm.base_uri) }}
-              {{ form_widget(shopUrlForm.base_uri) }}
+              {{ form_errors(shopUrlForm.physical_uri) }}
+              {{ form_widget(shopUrlForm.physical_uri, {'required': false}) }}
             </div>
           </div>
 
