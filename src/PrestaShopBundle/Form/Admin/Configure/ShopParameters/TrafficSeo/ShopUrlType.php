@@ -74,7 +74,7 @@ class ShopUrlType extends AbstractType
             $builder
                 ->add('domain', TextType::class)
                 ->add('domain_ssl', TextType::class)
-                ->add('base_uri', TextType::class)
+                ->add('physical_uri', TextType::class)
             ;
         }
     }
