@@ -70,6 +70,7 @@ class MetaController extends FrameworkBundleAdminController
         list($htaccessFile) = $htaccessFileFinder->find();
 
         $htaccessFileChecker = $this->get('prestashop.core.util.url.htaccess_file_checker');
+        $hostingInformation = $this->get('prestashop.adapter.hosting_information');
 
         return [
             'layoutHeaderToolbarBtn' => [
@@ -84,6 +85,7 @@ class MetaController extends FrameworkBundleAdminController
             'isModRewriteActive' => $tools->isModRewriteActive(),
             'isHtaccessFileValid' => $htaccessFileChecker->isValidFile($htaccessFile),
             'isShopFeatureActive' => $context->isShopFeatureActive(),
+            'isHostMode' => $hostingInformation->isHostMode(),
         ];
     }
 

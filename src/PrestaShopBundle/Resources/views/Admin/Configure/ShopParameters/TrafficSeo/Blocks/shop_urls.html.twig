@@ -27,7 +27,7 @@
 
 {% set shopUrlForm = metaForm.shop_urls %}
 
-{% block set_up_urls_configuration %}
+{% block shop_urls_configuration %}
   {% if shopUrlForm.domain is defined and shopUrlForm.domain_ssl is defined and shopUrlForm.physical_uri is defined %}
     <div class="card">
       <h3 class="card-header">
