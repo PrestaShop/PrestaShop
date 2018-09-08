@@ -53,21 +53,29 @@ final class SetUpUrlsDataConfigurator implements DataConfigurationInterface
     private $htaccessFileChecker;
 
     /**
+     * @var bool
+     */
+    private $isHostMode;
+
+    /**
      * SetUpUrlsDataConfigurator constructor.
      *
      * @param ConfigurationInterface $configuration
      * @param FileFinderInterface $htaccessFinder
      * @param UrlFileCheckerInterface $htaccessFileChecker
+     * @param bool $isHostMode
      */
     public function __construct(
         ConfigurationInterface $configuration,
         FileFinderInterface $htaccessFinder,
-        UrlFileCheckerInterface $htaccessFileChecker
+        UrlFileCheckerInterface $htaccessFileChecker,
+        $isHostMode
     )
     {
         $this->configuration = $configuration;
         $this->htaccessFinder = $htaccessFinder;
         $this->htaccessFileChecker = $htaccessFileChecker;
+        $this->isHostMode = $isHostMode;
     }
 
     /**
@@ -94,7 +102,7 @@ final class SetUpUrlsDataConfigurator implements DataConfigurationInterface
             $this->configuration->set('PS_ALLOW_ACCENTED_CHARS_URL', $configuration['accented_url']);
             $this->configuration->set('PS_CANONICAL_REDIRECT', $configuration['canonical_url_redirection']);
 
-            if ($this->isHtaccessFileValid()) {
+            if (!$this->isHostMode && $this->isHtaccessFileValid()) {
                 $this->configuration->set('PS_HTACCESS_DISABLE_MULTIVIEWS', $configuration['disable_apache_multiview']);
                 $this->configuration->set('PS_HTACCESS_DISABLE_MODSEC', $configuration['disable_apache_mod_security']);
             }
@@ -109,10 +117,10 @@ final class SetUpUrlsDataConfigurator implements DataConfigurationInterface
     public function validateConfiguration(array $configuration)
     {
 
-        $isDisableApacheConfigs = true;
+        $isApacheConfigsValid = true;
 
-        if ($this->isHtaccessFileValid()) {
-            $isDisableApacheConfigs = isset(
+        if (!$this->isHostMode && $this->isHtaccessFileValid()) {
+            $isApacheConfigsValid = isset(
                 $configuration['disable_apache_multiview'],
                 $configuration['disable_apache_mod_security']
             );
@@ -122,7 +130,7 @@ final class SetUpUrlsDataConfigurator implements DataConfigurationInterface
             $configuration['friendly_url'],
             $configuration['accented_url'],
             $configuration['canonical_url_redirection']
-        ) && $isDisableApacheConfigs;
+        ) && $isApacheConfigsValid;
     }
 
     /**
