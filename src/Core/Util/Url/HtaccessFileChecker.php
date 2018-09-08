@@ -33,29 +33,14 @@ namespace PrestaShop\PrestaShop\Core\Util\Url;
 final class HtaccessFileChecker implements UrlFileCheckerInterface
 {
     /**
-     * @var bool
-     */
-    private $isHostMode;
-
-    /**
-     * HtaccessFileChecker constructor.
-     *
-     * @param bool $isHostMode
-     */
-    public function __construct($isHostMode)
-    {
-        $this->isHostMode = $isHostMode;
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function isValidFile($filePath)
     {
         if (file_exists($filePath)) {
-            return !$this->isHostMode && is_writable($filePath);
+            return is_writable($filePath);
         }
 
-        return !$this->isHostMode && is_writable(dirname($filePath));
+        return is_writable(dirname($filePath));
     }
 }

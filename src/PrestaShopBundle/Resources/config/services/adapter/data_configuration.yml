@@ -224,6 +224,7 @@ services:
             - '@prestashop.adapter.legacy.configuration'
             - '@prestashop.core.file.finder.htaccess'
             - '@prestashop.core.util.url.htaccess_file_checker'
+            - '@=service("prestashop.adapter.hosting_information").isHostMode()'
 
     prestashop.adapter.meta.shop_url.configuration:
         class: 'PrestaShop\PrestaShop\Adapter\Meta\ShopUrlDataConfigurator'
