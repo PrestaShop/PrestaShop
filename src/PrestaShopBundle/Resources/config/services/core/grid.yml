@@ -42,7 +42,7 @@ services:
             - '@prestashop.core.grid.query.webservice_key_query_builder'
             - '@prestashop.core.hook.dispatcher'
             - '@prestashop.core.grid.query.doctrine_query_parser'
-            - 'webservice'
+            - 'webservice_key'
 
     # Grid definition factories
     prestashop.core.grid.definition.factory.abstract_grid_definition:
