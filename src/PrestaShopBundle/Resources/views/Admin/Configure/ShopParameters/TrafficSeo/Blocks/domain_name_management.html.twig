@@ -23,35 +23,34 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-{% extends '@PrestaShop/Admin/layout.html.twig' %}
 {% trans_default_domain "Admin.Shopparameters.Feature" %}
 
-{% block content %}
-  <div class="row">
-    <div class="col">
-      {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': grid} %}
-    </div>
-  </div>
-
-  <div class="row justify-content-center">
-      <div class="col">
-        {{ form_start(metaForm, {'action': path('admin_meta_process')}) }}
-
-        {% include '@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Blocks/set_up_urls.html.twig' %}
-        {% include '@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Blocks/shop_urls.html.twig' %}
-        {% include '@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Blocks/domain_name_management.html.twig' %}
-        {% block meta_form_rest %}
-          {{ form_rest(metaForm) }}
-        {% endblock %}
-
-        {{ form_end(metaForm) }}
+{% block domain_name_management %}
+{% if isHostMode %}
+    <div class="card">
+      <h3 class="card-header">
+        <i class="material-icons">settings</i> {{ 'Manage domain name'|trans }}
+      </h3>
+      <div class="card-block row">
+        <div class="card-text">
+          <div class="row">
+            <div class="col-sm">
+              <div class="alert alert-info" role="alert">
+                <div class="alert-text">
+                  {{ 'You can search for a new domain name or add a domain name that you already own. You will be redirected to your PrestaShop account.'|trans({}, 'Admin.Shopparameters.Help') }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-  </div>
 
-{% endblock %}
+      <div class="card-footer">
+        <div class="d-flex justify-content-end">
+          <a target="_blank" href="https://www.prestashop.com/cloud/" class="btn btn-primary">{{ 'Add a domain name'|trans }}</a>
+        </div>
+      </div>
 
-{% block javascripts %}
-  {{ parent() }}
-  <script src="{{ asset('themes/new-theme/public/seo_urls.bundle.js') }}"></script>
-  <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
+    </div>
+  {% endif %}
 {% endblock %}
