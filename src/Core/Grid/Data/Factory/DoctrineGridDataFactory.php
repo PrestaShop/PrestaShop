@@ -28,7 +28,9 @@ namespace PrestaShop\PrestaShop\Core\Grid\Data\Factory;
 
 use PDO;
 use PrestaShop\PrestaShop\Core\Grid\Data\GridData;
+use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\PrestaShop\Core\Grid\Query\DoctrineQueryBuilderInterface;
+use PrestaShop\PrestaShop\Core\Grid\Query\QueryParserInterface;
 use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollection;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
@@ -49,6 +51,11 @@ final class DoctrineGridDataFactory implements GridDataFactoryInterface
     private $hookDispatcher;
 
     /**
+     * @var QueryParserInterface
+     */
+    private $queryParser;
+
+    /**
      * @var string
      */
     private $gridId;
@@ -61,10 +68,12 @@ final class DoctrineGridDataFactory implements GridDataFactoryInterface
     public function __construct(
         DoctrineQueryBuilderInterface $gridQueryBuilder,
         HookDispatcherInterface $hookDispatcher,
+        QueryParserInterface $queryParser,
         $gridId
     ) {
         $this->gridQueryBuilder = $gridQueryBuilder;
         $this->hookDispatcher = $hookDispatcher;
+        $this->queryParser = $queryParser;
         $this->gridId = $gridId;
     }
 
@@ -89,7 +98,20 @@ final class DoctrineGridDataFactory implements GridDataFactoryInterface
         return new GridData(
             $records,
             $recordsTotal,
-            $searchQueryBuilder->getSQL()
+            $this->getRawQuery($searchQueryBuilder)
         );
+    }
+
+    /**
+     * @param QueryBuilder $queryBuilder
+     *
+     * @return string
+     */
+    private function getRawQuery(QueryBuilder $queryBuilder)
+    {
+        $query = $queryBuilder->getSQL();
+        $parameters = $queryBuilder->getParameters();
+
+        return $this->queryParser->parse($query, $parameters);
     }
 }
