@@ -229,3 +229,6 @@ services:
         class: 'PrestaShop\PrestaShop\Adapter\Meta\ShopUrlDataConfigurator'
         arguments:
             - '@=service("prestashop.adapter.shop.shop_url").getMainShopUrl()'
+            - '@prestashop.adapter.legacy.configuration'
+            - '@prestashop.adapter.validate'
+            - '@translator'
