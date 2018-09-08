@@ -51,20 +51,20 @@ class ShopUrl
     /**
      * Gets main shop url data.
      *
-     * @return array
+     * @return \ShopUrl
      *
      * @throws PrestaShopException
      */
     public function getMainShopUrl()
     {
-        /** @var \ShopUrl $shopUrl */
-        $shopUrl = \ShopUrl::getShopUrls($this->contextShopId)->where('main', '=', 1)->getFirst();
+        /** @var \ShopUrl $result */
+        $result = \ShopUrl::getShopUrls($this->contextShopId)->where('main', '=', 1)->getFirst();
 
-        return [
-            'domain' => $shopUrl->domain,
-            'domain_ssl' => $shopUrl->domain_ssl,
-            'physical_uri' => $shopUrl->physical_uri,
-        ];
+        if (!\Validate::isLoadedObject($result)) {
+            return new \ShopUrl();
+        }
+
+        return $result;
     }
 
     /**
