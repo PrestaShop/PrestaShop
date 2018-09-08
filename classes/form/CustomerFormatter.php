@@ -98,7 +98,7 @@ class CustomerFormatterCore implements FormFormatterInterface
 
         $genders = Gender::getGenders($this->language->id);
         if ($genders->count() > 0) {
-            $genderField = (new FormField)
+            $genderField = (new FormField())
                 ->setName('id_gender')
                 ->setType('radio-buttons')
                 ->setLabel(
