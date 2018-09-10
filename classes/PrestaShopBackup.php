@@ -169,7 +169,7 @@ class PrestaShopBackupCore
                 true,
                 [
                     'route' => 'admin_backup_download',
-                    'downloadFileName' => basename($this->id)
+                    'downloadFileName' => basename($this->id),
                 ]
             )
             . '&action=backupContent&ajax=1&filename='
