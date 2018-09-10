@@ -430,6 +430,7 @@
 										<a class="slide-button btn"></a>
 									</span>
 								{elseif $input.type == 'textarea'}
+									{*<div class="input-group">*}
 									{assign var=use_textarea_autosize value=true}
 									{if isset($input.lang) AND $input.lang}
 										{foreach $languages as $language}
@@ -489,6 +490,7 @@
 											</script>
 										{/if}
 									{/if}
+									<div class="input-group">
 									{if isset($input.maxchar) && $input.maxchar}</div>{/if}
 								{elseif $input.type == 'checkbox'}
 									{if isset($input.expand)}
