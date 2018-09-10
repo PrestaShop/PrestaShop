@@ -238,7 +238,7 @@
 /******/ 				};
 /******/ 			});
 /******/ 			hotUpdate = {};
-/******/ 			var chunkId = 6;
+/******/ 			var chunkId = 3;
 /******/ 			{ // eslint-disable-line no-lone-blocks
 /******/ 				/*globals chunkId */
 /******/ 				hotEnsureUpdateChunk(chunkId);
@@ -706,7 +706,7 @@
 /******/ 	__webpack_require__.h = function() { return hotCurrentHash; };
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return hotCreateRequire(495)(__webpack_require__.s = 495);
+/******/ 	return hotCreateRequire(484)(__webpack_require__.s = 484);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -1626,26 +1626,24 @@ var SubmitBulkActionExtension = function () {
 
 /***/ }),
 
-/***/ 249:
+/***/ 238:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_grid_grid__ = __webpack_require__(14);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_grid_extension_reload_list_extension__ = __webpack_require__(19);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_grid_extension_export_to_sql_manager_extension__ = __webpack_require__(17);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_grid_extension_filters_reset_extension__ = __webpack_require__(18);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_grid_extension_sorting_extension__ = __webpack_require__(20);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_grid_extension_filters_reset_extension__ = __webpack_require__(18);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_grid_extension_sorting_extension__ = __webpack_require__(20);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_grid_extension_export_to_sql_manager_extension__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_grid_extension_reload_list_extension__ = __webpack_require__(19);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__components_grid_extension_bulk_action_checkbox_extension__ = __webpack_require__(16);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__components_grid_extension_submit_bulk_action_extension__ = __webpack_require__(21);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__components_grid_extension_submit_grid_action_extension__ = __webpack_require__(44);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__components_grid_extension_action_row_submit_row_action_extension__ = __webpack_require__(32);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__components_grid_extension_link_row_action_extension__ = __webpack_require__(25);
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__components_grid_extension_column_catalog_category_position_extension__ = __webpack_require__(281);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__components_grid_extension_column_common_async_toggle_column_extension__ = __webpack_require__(282);
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -1664,7 +1662,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -1679,113 +1677,23 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 
 
+
+
 var $ = window.$;
 
-var SqlManagerPage = function () {
-  function SqlManagerPage() {
-    var _this = this;
+$(function () {
+  var categoriesGrid = new __WEBPACK_IMPORTED_MODULE_0__components_grid_grid__["a" /* default */]('categories');
 
-    _classCallCheck(this, SqlManagerPage);
-
-    var requestSqlGrid = new __WEBPACK_IMPORTED_MODULE_0__components_grid_grid__["a" /* default */]('request_sql');
-    requestSqlGrid.addExtension(new __WEBPACK_IMPORTED_MODULE_1__components_grid_extension_reload_list_extension__["a" /* default */]());
-    requestSqlGrid.addExtension(new __WEBPACK_IMPORTED_MODULE_2__components_grid_extension_export_to_sql_manager_extension__["a" /* default */]());
-    requestSqlGrid.addExtension(new __WEBPACK_IMPORTED_MODULE_3__components_grid_extension_filters_reset_extension__["a" /* default */]());
-    requestSqlGrid.addExtension(new __WEBPACK_IMPORTED_MODULE_4__components_grid_extension_sorting_extension__["a" /* default */]());
-    requestSqlGrid.addExtension(new __WEBPACK_IMPORTED_MODULE_8__components_grid_extension_link_row_action_extension__["a" /* default */]());
-    requestSqlGrid.addExtension(new __WEBPACK_IMPORTED_MODULE_7__components_grid_extension_submit_grid_action_extension__["a" /* default */]());
-    requestSqlGrid.addExtension(new __WEBPACK_IMPORTED_MODULE_6__components_grid_extension_submit_bulk_action_extension__["a" /* default */]());
-    requestSqlGrid.addExtension(new __WEBPACK_IMPORTED_MODULE_5__components_grid_extension_bulk_action_checkbox_extension__["a" /* default */]());
-
-    $(document).on('change', '.js-db-tables-select', function () {
-      return _this.reloadDbTableColumns();
-    });
-    $(document).on('click', '.js-add-db-table-to-query-btn', function (event) {
-      return _this.addDbTableToQuery(event);
-    });
-    $(document).on('click', '.js-add-db-table-column-to-query-btn', function (event) {
-      return _this.addDbTableColumnToQuery(event);
-    });
-  }
-
-  /**
-   * Reload database table columns
-   */
-
-
-  _createClass(SqlManagerPage, [{
-    key: 'reloadDbTableColumns',
-    value: function reloadDbTableColumns() {
-      var $selectedOption = $('.js-db-tables-select').find('option:selected');
-      var $table = $('.js-table-columns');
-
-      $.ajax($selectedOption.data('table-columns-url')).then(function (response) {
-        $('.js-table-alert').addClass('d-none');
-
-        var columns = response.columns;
-
-        $table.removeClass('d-none');
-        $table.find('tbody').empty();
-
-        columns.forEach(function (column) {
-          var $row = $('<tr>').append($('<td>').html(column.name)).append($('<td>').html(column.type)).append($('<td>').addClass('text-right').append($('<button>').addClass('btn btn-sm btn-outline-secondary js-add-db-table-column-to-query-btn').attr('data-column', column.name).html($table.data('action-btn'))));
-
-          $table.find('tbody').append($row);
-        });
-      });
-    }
-
-    /**
-     * Add selected database table name to SQL query input
-     *
-     * @param event
-     */
-
-  }, {
-    key: 'addDbTableToQuery',
-    value: function addDbTableToQuery(event) {
-      var $selectedOption = $('.js-db-tables-select').find('option:selected');
-
-      if ($selectedOption.length === 0) {
-        alert($(event.target).data('choose-table-message'));
-
-        return;
-      }
-
-      this.addToQuery($selectedOption.val());
-    }
-
-    /**
-     * Add table column to SQL query input
-     *
-     * @param event
-     */
-
-  }, {
-    key: 'addDbTableColumnToQuery',
-    value: function addDbTableColumnToQuery(event) {
-      this.addToQuery($(event.target).data('column'));
-    }
-
-    /**
-     * Add data to SQL query input
-     *
-     * @param {String} data
-     */
-
-  }, {
-    key: 'addToQuery',
-    value: function addToQuery(data) {
-      var $queryInput = $('#form_request_sql_sql');
-      $queryInput.val($queryInput.val() + ' ' + data);
-    }
-  }]);
-
-  return SqlManagerPage;
-}();
-
-$(document).ready(function () {
-  new SqlManagerPage();
+  categoriesGrid.addExtension(new __WEBPACK_IMPORTED_MODULE_1__components_grid_extension_filters_reset_extension__["a" /* default */]());
+  categoriesGrid.addExtension(new __WEBPACK_IMPORTED_MODULE_2__components_grid_extension_sorting_extension__["a" /* default */]());
+  categoriesGrid.addExtension(new __WEBPACK_IMPORTED_MODULE_9__components_grid_extension_column_catalog_category_position_extension__["a" /* default */]());
+  categoriesGrid.addExtension(new __WEBPACK_IMPORTED_MODULE_3__components_grid_extension_export_to_sql_manager_extension__["a" /* default */]());
+  categoriesGrid.addExtension(new __WEBPACK_IMPORTED_MODULE_4__components_grid_extension_reload_list_extension__["a" /* default */]());
+  categoriesGrid.addExtension(new __WEBPACK_IMPORTED_MODULE_5__components_grid_extension_bulk_action_checkbox_extension__["a" /* default */]());
+  categoriesGrid.addExtension(new __WEBPACK_IMPORTED_MODULE_6__components_grid_extension_submit_bulk_action_extension__["a" /* default */]());
+  categoriesGrid.addExtension(new __WEBPACK_IMPORTED_MODULE_7__components_grid_extension_action_row_submit_row_action_extension__["a" /* default */]());
+  categoriesGrid.addExtension(new __WEBPACK_IMPORTED_MODULE_8__components_grid_extension_link_row_action_extension__["a" /* default */]());
+  categoriesGrid.addExtension(new __WEBPACK_IMPORTED_MODULE_10__components_grid_extension_column_common_async_toggle_column_extension__["a" /* default */]());
 });
 
 /***/ }),
@@ -1860,7 +1768,210 @@ var LinkRowActionExtension = function () {
 
 /***/ }),
 
-/***/ 44:
+/***/ 281:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_tablednd_dist_jquery_tablednd_min__ = __webpack_require__(397);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_tablednd_dist_jquery_tablednd_min___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_tablednd_dist_jquery_tablednd_min__);
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/**
+ * 2007-2018 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2018 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
+
+
+
+var $ = window.$;
+
+/**
+ * Class CategoryPositionExtension extends Grid with reorderable category positions
+ */
+
+var CategoryPositionExtension = function () {
+  function CategoryPositionExtension() {
+    var _this = this;
+
+    _classCallCheck(this, CategoryPositionExtension);
+
+    return {
+      extend: function extend(grid) {
+        return _this.extend(grid);
+      }
+    };
+  }
+
+  /**
+   * Extend grid
+   *
+   * @param {Grid} grid
+   */
+
+
+  _createClass(CategoryPositionExtension, [{
+    key: 'extend',
+    value: function extend(grid) {
+      var _this2 = this;
+
+      this.grid = grid;
+
+      this._addIdsToGridTableRows();
+
+      grid.getContainer().find('.js-grid-table').tableDnD({
+        dragHandle: '.js-drag-handle',
+        onDragStart: function onDragStart() {
+          _this2.originalPositions = decodeURIComponent($.tableDnD.serialize());
+        },
+        onDrop: function onDrop(table, row) {
+          return _this2._handleCategoryPositionChange(row);
+        }
+      });
+    }
+
+    /**
+     * When position is changed handle update
+     *
+     * @param {HTMLElement} row
+     *
+     * @private
+     */
+
+  }, {
+    key: '_handleCategoryPositionChange',
+    value: function _handleCategoryPositionChange(row) {
+      var positions = decodeURIComponent($.tableDnD.serialize());
+      var way = this.originalPositions.indexOf(row.id) < positions.indexOf(row.id) ? 1 : 0;
+
+      var $categoryPositionContainer = $(row).find('.js-' + this.grid.getId() + '-position:first');
+
+      var categoryId = $categoryPositionContainer.data('id');
+      var categoryParentId = $categoryPositionContainer.data('id-parent');
+      var positionUpdateUrl = $categoryPositionContainer.data('position-update-url');
+
+      var params = positions.replace(new RegExp(this.grid.getId() + '_grid_table', 'g'), 'category');
+      params += '&id_category_parent=' + categoryParentId + '&id_category_to_move=' + categoryId;
+      params += '&way=' + way + '&ajax=1&action=updatePositions';
+
+      if (positions.indexOf('_0&') !== -1) {
+        params += '&found_first=1';
+      }
+
+      this._updateCategoryPosition(positionUpdateUrl, params);
+    }
+
+    /**
+     * Add ID's to Grid table rows to make tableDnD.onDrop() function work.
+     *
+     * @private
+     */
+
+  }, {
+    key: '_addIdsToGridTableRows',
+    value: function _addIdsToGridTableRows() {
+      this.grid.getContainer().find('.js-grid-table').find('.js-' + this.grid.getId() + '-position').each(function (index, positionWrapper) {
+        var $positionWrapper = $(positionWrapper);
+
+        var categoryId = $positionWrapper.data('id');
+        var categoryParentId = $positionWrapper.data('id-parent');
+        var position = $positionWrapper.data('position');
+
+        var id = 'tr_' + categoryParentId + '_' + categoryId + '_' + position;
+
+        $positionWrapper.closest('tr').attr('id', id);
+      });
+    }
+
+    /**
+     * Update categories listing with new positions
+     *
+     * @private
+     */
+
+  }, {
+    key: '_updateCategoryIdsAndPositions',
+    value: function _updateCategoryIdsAndPositions() {
+      this.grid.getContainer().find('.js-grid-table').find('.js-' + this.grid.getId() + '-position').each(function (index, positionWrapper) {
+        var $positionWrapper = $(positionWrapper);
+        var $row = $positionWrapper.closest('tr');
+
+        var offset = $positionWrapper.data('pagination-offset');
+        var newPosition = offset > 0 ? index + offset : index;
+
+        var oldId = $row.attr('id');
+        $row.attr('id', oldId.replace(/_[0-9]$/g, '_' + newPosition));
+
+        $positionWrapper.find('.js-position').text(newPosition + 1);
+        $positionWrapper.data('position', newPosition);
+      });
+    }
+
+    /**
+     * Process categories positions update
+     *
+     * @param {String} url
+     * @param {String} params
+     *
+     * @private
+     */
+
+  }, {
+    key: '_updateCategoryPosition',
+    value: function _updateCategoryPosition(url, params) {
+      var _this3 = this;
+
+      $.post({
+        url: url,
+        headers: {
+          'cache-control': 'no-cache'
+        },
+        data: params
+      }).then(function (response) {
+        response = JSON.parse(response);
+
+        if (typeof response.message !== 'undefined') {
+          showSuccessMessage(response.message);
+        } else {
+          // use legacy error
+          // update when all category controller is migrated to symfony
+          showErrorMessage(response.errors);
+        }
+
+        _this3._updateCategoryIdsAndPositions();
+      });
+    }
+  }]);
+
+  return CategoryPositionExtension;
+}();
+
+/* harmony default export */ __webpack_exports__["a"] = (CategoryPositionExtension);
+
+/***/ }),
+
+/***/ 282:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1896,14 +2007,14 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 var $ = window.$;
 
 /**
- * Class SubmitGridActionExtension handles grid action submits
+ * Class AsyncToggleColumnExtension submits toggle action using AJAX
  */
 
-var SubmitGridActionExtension = function () {
-  function SubmitGridActionExtension() {
+var AsyncToggleColumnExtension = function () {
+  function AsyncToggleColumnExtension() {
     var _this = this;
 
-    _classCallCheck(this, SubmitGridActionExtension);
+    _classCallCheck(this, AsyncToggleColumnExtension);
 
     return {
       extend: function extend(grid) {
@@ -1912,56 +2023,172 @@ var SubmitGridActionExtension = function () {
     };
   }
 
-  _createClass(SubmitGridActionExtension, [{
+  /**
+   * Extend grid
+   *
+   * @param {Grid} grid
+   */
+
+
+  _createClass(AsyncToggleColumnExtension, [{
     key: 'extend',
     value: function extend(grid) {
       var _this2 = this;
 
-      grid.getContainer().on('click', '.js-grid-action-submit-btn', function (event) {
-        _this2.handleSubmit(event, grid);
+      grid.getContainer().find('.js-grid-table').on('click', '.ps-togglable-row', function (event) {
+        event.preventDefault();
+
+        var $button = $(event.currentTarget);
+
+        $.post({
+          url: $button.data('toggle-url')
+        }).then(function (response) {
+          if (response.status) {
+            showSuccessMessage(response.message);
+
+            _this2._toggleButtonDisplay($button);
+
+            return;
+          }
+
+          showErrorMessage(response.message);
+        });
       });
     }
 
     /**
-     * Handle grid action submit.
-     * It uses grid form to submit actions.
+     * Toggle button display from enabled to disabled and other way around
      *
-     * @param {Event} event
-     * @param {Grid} grid
+     * @param {jQuery} $button
      *
      * @private
      */
 
   }, {
-    key: 'handleSubmit',
-    value: function handleSubmit(event, grid) {
-      var $submitBtn = $(event.currentTarget);
-      var confirmMessage = $submitBtn.data('confirm-message');
+    key: '_toggleButtonDisplay',
+    value: function _toggleButtonDisplay($button) {
+      var isActive = $button.hasClass('grid-toggler-icon-valid');
 
-      if (typeof confirmMessage !== "undefined" && 0 < confirmMessage.length && !confirm(confirmMessage)) {
-        return;
-      }
+      var classToAdd = isActive ? 'grid-toggler-icon-not-valid' : 'grid-toggler-icon-valid';
+      var classToRemove = isActive ? 'grid-toggler-icon-valid' : 'grid-toggler-icon-not-valid';
+      var icon = isActive ? 'clear' : 'check';
 
-      var $form = $('#' + grid.getId() + '_filter_form');
-
-      $form.attr('action', $submitBtn.data('url'));
-      $form.attr('method', $submitBtn.data('method'));
-      $form.find('input[name="' + grid.getId() + '[_token]"]').val($submitBtn.data('csrf'));
-      $form.submit();
+      $button.removeClass(classToRemove);
+      $button.addClass(classToAdd);
+      $button.text(icon);
     }
   }]);
 
-  return SubmitGridActionExtension;
+  return AsyncToggleColumnExtension;
 }();
 
-/* harmony default export */ __webpack_exports__["a"] = (SubmitGridActionExtension);
+/* harmony default export */ __webpack_exports__["a"] = (AsyncToggleColumnExtension);
 
 /***/ }),
 
-/***/ 495:
+/***/ 32:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/**
+ * 2007-2018 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2018 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
+
+var $ = window.$;
+
+/**
+ * Class SubmitRowActionExtension handles submitting of row action
+ */
+
+var SubmitRowActionExtension = function () {
+  function SubmitRowActionExtension() {
+    _classCallCheck(this, SubmitRowActionExtension);
+  }
+
+  _createClass(SubmitRowActionExtension, [{
+    key: 'extend',
+
+    /**
+     * Extend grid
+     *
+     * @param {Grid} grid
+     */
+    value: function extend(grid) {
+      grid.getContainer().on('click', '.js-submit-row-action', function (event) {
+        event.preventDefault();
+
+        var $button = $(event.currentTarget);
+        var confirmMessage = $button.data('confirm-message');
+
+        if (confirmMessage.length && !confirm(confirmMessage)) {
+          return;
+        }
+
+        var method = $button.data('method');
+        var isGetOrPostMethod = ['GET', 'POST'].includes(method);
+
+        var $form = $('<form>', {
+          'action': $button.data('url'),
+          'method': isGetOrPostMethod ? method : 'POST'
+        }).appendTo('body');
+
+        if (!isGetOrPostMethod) {
+          $form.append($('<input>', {
+            'type': '_hidden',
+            'name': '_method',
+            'value': method
+          }));
+        }
+
+        $form.submit();
+      });
+    }
+  }]);
+
+  return SubmitRowActionExtension;
+}();
+
+/* harmony default export */ __webpack_exports__["a"] = (SubmitRowActionExtension);
+
+/***/ }),
+
+/***/ 397:
+/***/ (function(module, exports) {
+
+/*! jquery.tablednd.js 30-12-2017 */
+!function(a,b,c,d){var e="touchstart mousedown",f="touchmove mousemove",g="touchend mouseup";a(c).ready(function(){function b(a){for(var b={},c=a.match(/([^;:]+)/g)||[];c.length;)b[c.shift()]=c.shift().trim();return b}a("table").each(function(){"dnd"===a(this).data("table")&&a(this).tableDnD({onDragStyle:a(this).data("ondragstyle")&&b(a(this).data("ondragstyle"))||null,onDropStyle:a(this).data("ondropstyle")&&b(a(this).data("ondropstyle"))||null,onDragClass:a(this).data("ondragclass")===d&&"tDnD_whileDrag"||a(this).data("ondragclass"),onDrop:a(this).data("ondrop")&&new Function("table","row",a(this).data("ondrop")),onDragStart:a(this).data("ondragstart")&&new Function("table","row",a(this).data("ondragstart")),onDragStop:a(this).data("ondragstop")&&new Function("table","row",a(this).data("ondragstop")),scrollAmount:a(this).data("scrollamount")||5,sensitivity:a(this).data("sensitivity")||10,hierarchyLevel:a(this).data("hierarchylevel")||0,indentArtifact:a(this).data("indentartifact")||'<div class="indent">&nbsp;</div>',autoWidthAdjust:a(this).data("autowidthadjust")||!0,autoCleanRelations:a(this).data("autocleanrelations")||!0,jsonPretifySeparator:a(this).data("jsonpretifyseparator")||"\t",serializeRegexp:a(this).data("serializeregexp")&&new RegExp(a(this).data("serializeregexp"))||/[^\-]*$/,serializeParamName:a(this).data("serializeparamname")||!1,dragHandle:a(this).data("draghandle")||null})})}),jQuery.tableDnD={currentTable:null,dragObject:null,mouseOffset:null,oldX:0,oldY:0,build:function(b){return this.each(function(){this.tableDnDConfig=a.extend({onDragStyle:null,onDropStyle:null,onDragClass:"tDnD_whileDrag",onDrop:null,onDragStart:null,onDragStop:null,scrollAmount:5,sensitivity:10,hierarchyLevel:0,indentArtifact:'<div class="indent">&nbsp;</div>',autoWidthAdjust:!0,autoCleanRelations:!0,jsonPretifySeparator:"\t",serializeRegexp:/[^\-]*$/,serializeParamName:!1,dragHandle:null},b||{}),a.tableDnD.makeDraggable(this),this.tableDnDConfig.hierarchyLevel&&a.tableDnD.makeIndented(this)}),this},makeIndented:function(b){var c,d,e=b.tableDnDConfig,f=b.rows,g=a(f).first().find("td:first")[0],h=0,i=0;if(a(b).hasClass("indtd"))return null;d=a(b).addClass("indtd").attr("style"),a(b).css({whiteSpace:"nowrap"});for(var j=0;j<f.length;j++)i<a(f[j]).find("td:first").text().length&&(i=a(f[j]).find("td:first").text().length,c=j);for(a(g).css({width:"auto"}),j=0;j<e.hierarchyLevel;j++)a(f[c]).find("td:first").prepend(e.indentArtifact);for(g&&a(g).css({width:g.offsetWidth}),d&&a(b).css(d),j=0;j<e.hierarchyLevel;j++)a(f[c]).find("td:first").children(":first").remove();return e.hierarchyLevel&&a(f).each(function(){(h=a(this).data("level")||0)<=e.hierarchyLevel&&a(this).data("level",h)||a(this).data("level",0);for(var b=0;b<a(this).data("level");b++)a(this).find("td:first").prepend(e.indentArtifact)}),this},makeDraggable:function(b){var c=b.tableDnDConfig;c.dragHandle&&a(c.dragHandle,b).each(function(){a(this).bind(e,function(d){return a.tableDnD.initialiseDrag(a(this).parents("tr")[0],b,this,d,c),!1})})||a(b.rows).each(function(){a(this).hasClass("nodrag")?a(this).css("cursor",""):a(this).bind(e,function(d){if("TD"===d.target.tagName)return a.tableDnD.initialiseDrag(this,b,this,d,c),!1}).css("cursor","move")})},currentOrder:function(){var b=this.currentTable.rows;return a.map(b,function(b){return(a(b).data("level")+b.id).replace(/\s/g,"")}).join("")},initialiseDrag:function(b,d,e,h,i){this.dragObject=b,this.currentTable=d,this.mouseOffset=this.getMouseOffset(e,h),this.originalOrder=this.currentOrder(),a(c).bind(f,this.mousemove).bind(g,this.mouseup),i.onDragStart&&i.onDragStart(d,e)},updateTables:function(){this.each(function(){this.tableDnDConfig&&a.tableDnD.makeDraggable(this)})},mouseCoords:function(a){return a.originalEvent.changedTouches?{x:a.originalEvent.changedTouches[0].clientX,y:a.originalEvent.changedTouches[0].clientY}:a.pageX||a.pageY?{x:a.pageX,y:a.pageY}:{x:a.clientX+c.body.scrollLeft-c.body.clientLeft,y:a.clientY+c.body.scrollTop-c.body.clientTop}},getMouseOffset:function(a,c){var d,e;return c=c||b.event,e=this.getPosition(a),d=this.mouseCoords(c),{x:d.x-e.x,y:d.y-e.y}},getPosition:function(a){var b=0,c=0;for(0===a.offsetHeight&&(a=a.firstChild);a.offsetParent;)b+=a.offsetLeft,c+=a.offsetTop,a=a.offsetParent;return b+=a.offsetLeft,c+=a.offsetTop,{x:b,y:c}},autoScroll:function(a){var d=this.currentTable.tableDnDConfig,e=b.pageYOffset,f=b.innerHeight?b.innerHeight:c.documentElement.clientHeight?c.documentElement.clientHeight:c.body.clientHeight;c.all&&(void 0!==c.compatMode&&"BackCompat"!==c.compatMode?e=c.documentElement.scrollTop:void 0!==c.body&&(e=c.body.scrollTop)),a.y-e<d.scrollAmount&&b.scrollBy(0,-d.scrollAmount)||f-(a.y-e)<d.scrollAmount&&b.scrollBy(0,d.scrollAmount)},moveVerticle:function(a,b){0!==a.vertical&&b&&this.dragObject!==b&&this.dragObject.parentNode===b.parentNode&&(0>a.vertical&&this.dragObject.parentNode.insertBefore(this.dragObject,b.nextSibling)||0<a.vertical&&this.dragObject.parentNode.insertBefore(this.dragObject,b))},moveHorizontal:function(b,c){var d,e=this.currentTable.tableDnDConfig;if(!e.hierarchyLevel||0===b.horizontal||!c||this.dragObject!==c)return null;d=a(c).data("level"),0<b.horizontal&&d>0&&a(c).find("td:first").children(":first").remove()&&a(c).data("level",--d),0>b.horizontal&&d<e.hierarchyLevel&&a(c).prev().data("level")>=d&&a(c).children(":first").prepend(e.indentArtifact)&&a(c).data("level",++d)},mousemove:function(b){var c,d,e,f,g,h=a(a.tableDnD.dragObject),i=a.tableDnD.currentTable.tableDnDConfig;return b&&b.preventDefault(),!!a.tableDnD.dragObject&&("touchmove"===b.type&&event.preventDefault(),i.onDragClass&&h.addClass(i.onDragClass)||h.css(i.onDragStyle),d=a.tableDnD.mouseCoords(b),f=d.x-a.tableDnD.mouseOffset.x,g=d.y-a.tableDnD.mouseOffset.y,a.tableDnD.autoScroll(d),c=a.tableDnD.findDropTargetRow(h,g),e=a.tableDnD.findDragDirection(f,g),a.tableDnD.moveVerticle(e,c),a.tableDnD.moveHorizontal(e,c),!1)},findDragDirection:function(a,b){var c=this.currentTable.tableDnDConfig.sensitivity,d=this.oldX,e=this.oldY,f=d-c,g=d+c,h=e-c,i=e+c,j={horizontal:a>=f&&a<=g?0:a>d?-1:1,vertical:b>=h&&b<=i?0:b>e?-1:1};return 0!==j.horizontal&&(this.oldX=a),0!==j.vertical&&(this.oldY=b),j},findDropTargetRow:function(b,c){for(var d=0,e=this.currentTable.rows,f=this.currentTable.tableDnDConfig,g=0,h=null,i=0;i<e.length;i++)if(h=e[i],g=this.getPosition(h).y,d=parseInt(h.offsetHeight)/2,0===h.offsetHeight&&(g=this.getPosition(h.firstChild).y,d=parseInt(h.firstChild.offsetHeight)/2),c>g-d&&c<g+d)return b.is(h)||f.onAllowDrop&&!f.onAllowDrop(b,h)||a(h).hasClass("nodrop")?null:h;return null},processMouseup:function(){if(!this.currentTable||!this.dragObject)return null;var b=this.currentTable.tableDnDConfig,d=this.dragObject,e=0,h=0;a(c).unbind(f,this.mousemove).unbind(g,this.mouseup),b.hierarchyLevel&&b.autoCleanRelations&&a(this.currentTable.rows).first().find("td:first").children().each(function(){(h=a(this).parents("tr:first").data("level"))&&a(this).parents("tr:first").data("level",--h)&&a(this).remove()})&&b.hierarchyLevel>1&&a(this.currentTable.rows).each(function(){if((h=a(this).data("level"))>1)for(e=a(this).prev().data("level");h>e+1;)a(this).find("td:first").children(":first").remove(),a(this).data("level",--h)}),b.onDragClass&&a(d).removeClass(b.onDragClass)||a(d).css(b.onDropStyle),this.dragObject=null,b.onDrop&&this.originalOrder!==this.currentOrder()&&a(d).hide().fadeIn("fast")&&b.onDrop(this.currentTable,d),b.onDragStop&&b.onDragStop(this.currentTable,d),this.currentTable=null},mouseup:function(b){return b&&b.preventDefault(),a.tableDnD.processMouseup(),!1},jsonize:function(a){var b=this.currentTable;return a?JSON.stringify(this.tableData(b),null,b.tableDnDConfig.jsonPretifySeparator):JSON.stringify(this.tableData(b))},serialize:function(){return a.param(this.tableData(this.currentTable))},serializeTable:function(a){for(var b="",c=a.tableDnDConfig.serializeParamName||a.id,d=a.rows,e=0;e<d.length;e++){b.length>0&&(b+="&");var f=d[e].id;f&&a.tableDnDConfig&&a.tableDnDConfig.serializeRegexp&&(f=f.match(a.tableDnDConfig.serializeRegexp)[0],b+=c+"[]="+f)}return b},serializeTables:function(){var b=[];return a("table").each(function(){this.id&&b.push(a.param(a.tableDnD.tableData(this)))}),b.join("&")},tableData:function(b){var c,d,e,f,g=b.tableDnDConfig,h=[],i=0,j=0,k=null,l={};if(b||(b=this.currentTable),!b||!b.rows||!b.rows.length)return{error:{code:500,message:"Not a valid table."}};if(!b.id&&!g.serializeParamName)return{error:{code:500,message:"No serializable unique id provided."}};f=g.autoCleanRelations&&b.rows||a.makeArray(b.rows),d=g.serializeParamName||b.id,e=d,c=function(a){return a&&g&&g.serializeRegexp?a.match(g.serializeRegexp)[0]:a},l[e]=[],!g.autoCleanRelations&&a(f[0]).data("level")&&f.unshift({id:"undefined"});for(var m=0;m<f.length;m++)if(g.hierarchyLevel){if(0===(j=a(f[m]).data("level")||0))e=d,h=[];else if(j>i)h.push([e,i]),e=c(f[m-1].id);else if(j<i)for(var n=0;n<h.length;n++)h[n][1]===j&&(e=h[n][0]),h[n][1]>=i&&(h[n][1]=0);i=j,a.isArray(l[e])||(l[e]=[]),k=c(f[m].id),k&&l[e].push(k)}else(k=c(f[m].id))&&l[e].push(k);return l}},jQuery.fn.extend({tableDnD:a.tableDnD.build,tableDnDUpdate:a.tableDnD.updateTables,tableDnDSerialize:a.proxy(a.tableDnD.serialize,a.tableDnD),tableDnDSerializeAll:a.tableDnD.serializeTables,tableDnDData:a.proxy(a.tableDnD.tableData,a.tableDnD)})}(jQuery,window,window.document);
+
+/***/ }),
+
+/***/ 484:
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(249);
+module.exports = __webpack_require__(238);
 
 
 /***/ })
