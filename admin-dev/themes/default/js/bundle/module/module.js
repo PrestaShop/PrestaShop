@@ -323,10 +323,12 @@ var AdminModuleController = function() {
       if ((self.currentRefCategory || self.currentRefStatus)
           && $(this).find('.module-item').length === 0
       ) {
+        console.log(self.currentRefCategory);
         $(this).hide();
-      } else {
-        $(this).show();
+        return;
       }
+
+      $(this).show();
     });
 
     if (this.currentTagsList.length) {
