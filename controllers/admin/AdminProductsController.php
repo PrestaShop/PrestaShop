@@ -3253,7 +3253,7 @@ class AdminProductsControllerCore extends AdminController
             AND p.`id_product` != ' . (int) (Tools::getValue('id_product')));
 
         foreach ($products as $packItem) {
-            $jsonArray[] = '{"value": "' . (int) ($packItem['id_product']). '-' . addslashes($packItem['name'])
+            $jsonArray[] = '{"value": "' . (int) ($packItem['id_product']) . '-' . addslashes($packItem['name'])
                 . '", "text":"' . (int) ($packItem['id_product']) . ' - ' . addslashes($packItem['name']) . '"}';
         }
         $this->ajaxRender('[' . implode(',', $jsonArray) . ']');
