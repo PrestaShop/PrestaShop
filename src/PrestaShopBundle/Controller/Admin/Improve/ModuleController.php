@@ -115,6 +115,7 @@ class ModuleController extends ModuleAbstractController
             ->removeStatus(AddonListFilterStatus::UNINSTALLED);
         $installedProducts = $moduleRepository->getFilteredList($filters);
 
+        /* @var CategoriesProvider */
         $categories = $this->get('prestashop.categories_provider')->getCategoriesMenu($installedProducts);
 
         foreach ($categories['categories']->subMenu as $category) {
