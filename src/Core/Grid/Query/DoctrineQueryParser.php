@@ -92,6 +92,16 @@ final class DoctrineQueryParser implements QueryParserInterface
     }
 
     /**
+     * @param int|float $value
+     *
+     * @return string
+     */
+    private function parseNumericParameter($value)
+    {
+        return "'".$value."'";
+    }
+
+    /**
      * @param array $value
      *
      * @return string
