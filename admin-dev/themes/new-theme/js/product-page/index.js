@@ -41,7 +41,9 @@ $(() => {
   nestedCategory().init();
 
   const serpComp = new Serp();
-  serpComp.vm.$refs.serp.setUrl($('#product_form_preview_btn').data('redirect'));
+  if (serpComp.isActive()) {
+    serpComp.vm.$refs.serp.setUrl($('#product_form_preview_btn').data('redirect'));
+  }
 
   // This is the only script for the module page so there is no specific file for it.
   $('.modules-list-select').on("change", (e) => {

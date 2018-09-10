@@ -81,6 +81,13 @@ class SerpApp {
     updateSerpUrl();
     updateSerpDescription();
   }
+
+  /**
+   * @returns {boolean}
+   */
+  isActive() {
+    return (undefined !== this.vm);
+  }
 }
 
 export default SerpApp;
