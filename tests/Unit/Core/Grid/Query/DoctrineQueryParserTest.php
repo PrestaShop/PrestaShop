@@ -158,4 +158,25 @@ class DoctrineQueryParserTest extends TestCase
 
         $this->queryParser->parse($preparedQuery, $queryParameters);
     }
+
+    public function testParseWithNumericNamedParameters()
+    {
+        $preparedQuery = 'SELECT * FROM product WHERE id_product = :id_product';
+        $queryParameters = [
+            'id_product' => 2,
+        ];
+
+        $expectedQuery = "SELECT * FROM product WHERE id_product = '2'";
+
+        $this->assertSame($expectedQuery, $this->queryParser->parse($preparedQuery, $queryParameters));
+
+        $preparedQuery = 'SELECT * FROM product WHERE price = :price';
+        $queryParameters = [
+            'price' => 3.99,
+        ];
+
+        $expectedQuery = "SELECT * FROM product WHERE price = '3.99'";
+
+        $this->assertSame($expectedQuery, $this->queryParser->parse($preparedQuery, $queryParameters));
+    }
 }
