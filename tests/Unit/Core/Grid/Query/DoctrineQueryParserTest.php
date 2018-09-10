@@ -166,7 +166,7 @@ class DoctrineQueryParserTest extends TestCase
             'id_product' => 2,
         ];
 
-        $expectedQuery = "SELECT * FROM product WHERE id_product = '2'";
+        $expectedQuery = "SELECT * FROM product WHERE id_product = 2";
 
         $this->assertSame($expectedQuery, $this->queryParser->parse($preparedQuery, $queryParameters));
 
@@ -175,7 +175,7 @@ class DoctrineQueryParserTest extends TestCase
             'price' => 3.99,
         ];
 
-        $expectedQuery = "SELECT * FROM product WHERE price = '3.99'";
+        $expectedQuery = "SELECT * FROM product WHERE price = 3.99";
 
         $this->assertSame($expectedQuery, $this->queryParser->parse($preparedQuery, $queryParameters));
     }
