@@ -430,7 +430,6 @@
 										<a class="slide-button btn"></a>
 									</span>
 								{elseif $input.type == 'textarea'}
-									{*<div class="input-group">*}
 									{assign var=use_textarea_autosize value=true}
 									{if isset($input.lang) AND $input.lang}
 										{foreach $languages as $language}
