@@ -13,7 +13,7 @@ parameters:
 
 framework:
     assets:
-        version: '1.7.0'
+        version: !php/const \AppKernel::VERSION
 
     #esi:             ~
     secret:          "%secret%"
