@@ -98,7 +98,7 @@ final class DoctrineQueryParser implements QueryParserInterface
      */
     private function parseNumericParameter($value)
     {
-        return "'".$value."'";
+        return "'" . $value . "'";
     }
 
     /**
