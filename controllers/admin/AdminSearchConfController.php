@@ -398,7 +398,7 @@ class AdminSearchConfControllerCore extends AdminController
     }
 
     /**
-     * Retrieve a part of the cookie key for token check. (needs to be static)
+     * Retrieve a part of the cookie key for token check. (needs to be static).
      *
      * @return string Token
      */
