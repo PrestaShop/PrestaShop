@@ -147,13 +147,13 @@ class AdminZonesControllerCore extends AdminController
     public function displayAjaxZones()
     {
         $this->context->smarty->assign(array(
-            'zones' => Zone::getZones()
+            'zones' => Zone::getZones(),
         ));
 
         $array = array(
             'hasError' => false,
             'errors' => '',
-            'data' => $this->context->smarty->fetch('controllers/zones/select.tpl')
+            'data' => $this->context->smarty->fetch('controllers/zones/select.tpl'),
         );
         $this->ajaxRender(json_encode($array));
     }
