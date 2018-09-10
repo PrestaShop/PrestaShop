@@ -54,7 +54,7 @@ const config = {
       './js/app/pages/translations',
     ],
     logs: [
-      './js/app/pages/logs',
+      './js/pages/logs',
     ],
     improve_design_positions: [
       './js/pages/improve/design_positions',
