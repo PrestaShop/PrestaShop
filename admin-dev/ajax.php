@@ -153,7 +153,8 @@ if (Tools::getValue('page') == 'prestastore' && @fsockopen('addons.prestashop.co
  */
 if (Tools::isSubmit('getNotifications')) {
     $notification = new Notification;
-    die(json_encode($notification->getLastElements()));
+    echo json_encode($notification->getLastElements());
+    die(0);
 }
 
 /**

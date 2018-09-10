@@ -1110,7 +1110,7 @@ class AdminCategoriesControllerCore extends AdminController
      * Required request params:
      * - id_category_parent
      * - selectedCat
-     * -use_shop_context
+     * - use_shop_context
      */
     public function displayAjaxChildrenCategories()
     {

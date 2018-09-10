@@ -3231,7 +3231,8 @@ class AdminProductsControllerCore extends AdminController
             AND p.`id_product` != ' . (int) (Tools::getValue('id_product')));
 
         foreach ($products as $packItem) {
-            $jsonArray[] = '{"value": "' . (int) ($packItem['id_product']) . '-' . addslashes($packItem['name']) . '", "text":"' . (int) ($packItem['id_product']) . ' - ' . addslashes($packItem['name']) . '"}';
+            $jsonArray[] = '{"value": "' . (int) ($packItem['id_product']). '-' . addslashes($packItem['name'])
+                . '", "text":"' . (int) ($packItem['id_product']) . ' - ' . addslashes($packItem['name']) . '"}';
         }
         $this->ajaxRender('[' . implode(',', $jsonArray) . ']');
     }
@@ -3243,7 +3244,7 @@ class AdminProductsControllerCore extends AdminController
     public function displayAjaxProductsList()
     {
         $query = Tools::getValue('q', false);
-        if (!$query || $query == '' || strlen($query) < 1) {
+        if (empty($query)) {
             return;
         }
 

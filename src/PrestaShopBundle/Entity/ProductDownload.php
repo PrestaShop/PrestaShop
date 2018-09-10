@@ -278,7 +278,7 @@ class ProductDownload
     public function updateTimestamps()
     {
         if ($this->getDateAdd() == null) {
-            $this->setDateAdd(new DateTime(date('Y-m-d H:i:s')));
+            $this->setDateAdd(new DateTime());
         }
     }
 }

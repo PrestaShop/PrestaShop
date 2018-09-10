@@ -189,10 +189,10 @@ class ModuleHistory
      */
     public function updatedTimestamps()
     {
-        $this->setDateUpd(new DateTime(date('Y-m-d H:i:s')));
+        $this->setDateUpd(new DateTime());
 
         if ($this->getDateAdd() == null) {
-            $this->setDateAdd(new DateTime(date('Y-m-d H:i:s')));
+            $this->setDateAdd(new DateTime());
         }
     }
 }

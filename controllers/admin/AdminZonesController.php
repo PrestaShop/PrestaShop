@@ -146,12 +146,15 @@ class AdminZonesControllerCore extends AdminController
      */
     public function displayAjaxZones()
     {
-        $html = '<select id="zone_to_affect" name="zone_to_affect">';
-        foreach (Zone::getZones() as $z) {
-            $html .= '<option value="' . $z['id_zone'] . '">' . $z['name'] . '</option>';
-        }
-        $html .= '</select>';
-        $array = array('hasError' => false, 'errors' => '', 'data' => $html);
-        $this->renderAjax(json_encode($array));
+        $this->context->smarty->assign(array(
+            'zones' => Zone::getZones()
+        ));
+
+        $array = array(
+            'hasError' => false,
+            'errors' => '',
+            'data' => $this->context->smarty->fetch('controllers/zones/select.tpl')
+        );
+        $this->ajaxRender(json_encode($array));
     }
 }
