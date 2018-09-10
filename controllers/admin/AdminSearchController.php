@@ -25,6 +25,9 @@
  */
 class AdminSearchControllerCore extends AdminController
 {
+    const TOKEN_CHECK_START_POS = 34;
+    const TOKEN_CHECK_LENGTH = 8;
+
     public function __construct()
     {
         $this->bootstrap = true;
@@ -40,7 +43,11 @@ class AdminSearchControllerCore extends AdminController
     {
         // Specific check for the ajax request 'searchCron'
         if (Tools::isSubmit('action') && 'searchCron' === Tools::getValue('action')) {
-            if (substr(_COOKIE_KEY_, 34, 8) === Tools::getValue('token')) {
+            if (substr(
+                _COOKIE_KEY_,
+                static::TOKEN_CHECK_START_POS,
+                static::TOKEN_CHECK_LENGTH
+            ) === Tools::getValue('token')) {
                 return true;
             }
         }
@@ -487,6 +494,7 @@ class AdminSearchControllerCore extends AdminController
             Context::getContext()->shop->setContext(Shop::CONTEXT_SHOP, (int) Tools::getValue('id_shop'));
         }
 
+        // Considering the indexing task can be really long, we ask the PHP process to not stop before 2 hours.
         ini_set('max_execution_time', 7200);
         Search::indexation(Tools::getValue('full'));
         if (Tools::getValue('redirect')) {

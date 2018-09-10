@@ -164,7 +164,16 @@ class PrestaShopBackupCore
     public function getBackupURL()
     {
         // Additionnal parameters (action, filename, ajax) are kept for backward compatibility, in case we disable the new controller
-        return Context::getContext()->link->getAdminLink('AdminBackup', true, ['route' => 'admin_backup_download', 'downloadFileName' => basename($this->id)]) . '&action=backupContent&ajax=1&filename=' . basename($this->id);
+        return Context::getContext()->link->getAdminLink(
+                'AdminBackup',
+                true,
+                [
+                    'route' => 'admin_backup_download',
+                    'downloadFileName' => basename($this->id)
+                ]
+            )
+            . '&action=backupContent&ajax=1&filename='
+            . basename($this->id);
     }
 
     /**
