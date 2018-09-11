@@ -26,15 +26,38 @@
 
 namespace PrestaShopBundle\Form\Admin\Catalog\Category;
 
+use PrestaShopBundle\Form\Admin\Type\Material\MaterialChoiceTableType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
+use PrestaShopBundle\Form\Admin\Type\TranslateTextareaType;
 use PrestaShopBundle\Form\Admin\Type\TranslateTextType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class CategoryType extends TranslatorAwareType
 {
+    /**
+     * @var array
+     */
+    private $customerGroupChoices;
+
+    /**
+     * @param TranslatorInterface $translator
+     * @param array $locales
+     * @param array $customerGroupChoices
+     */
+    public function __construct(
+        TranslatorInterface $translator,
+        array $locales,
+        array $customerGroupChoices
+    ) {
+        parent::__construct($translator, $locales);
+
+        $this->customerGroupChoices = $customerGroupChoices;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -43,9 +66,7 @@ class CategoryType extends TranslatorAwareType
             ])
             ->add('active', SwitchType::class)
             ->add('id_parent',ChoiceType::class)
-            ->add('description', TranslateTextType::class, [
-                'locales' => $this->locales,
-            ])
+            ->add('description', TranslateTextareaType::class)
             ->add('cover_image', FileType::class)
             ->add('thumbnail_image', FileType::class)
             ->add('menu_thumbnail_images', FileType::class, [
@@ -54,7 +75,7 @@ class CategoryType extends TranslatorAwareType
             ->add('meta_title', TranslateTextType::class, [
                 'locales' => $this->locales,
             ])
-            ->add('meta_description', TranslateTextType::class, [
+            ->add('meta_description', TranslateTextareaType::class, [
                 'locales' => $this->locales,
             ])
             ->add('meta_keyword', TranslateTextType::class, [
@@ -63,7 +84,9 @@ class CategoryType extends TranslatorAwareType
             ->add('friendly_url', TranslateTextType::class, [
                 'locales' => $this->locales,
             ])
-            ->add('customer_group_access', ChoiceType::class)
+            ->add('customer_group_access', MaterialChoiceTableType::class, [
+                'choices' => $this->customerGroupChoices,
+            ])
             ->add('shop_association', ChoiceType::class)
         ;
     }
