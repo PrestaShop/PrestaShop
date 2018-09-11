@@ -43,7 +43,7 @@
           <span id="{{ category.tab }}_modules" class="module-search-result-wording">{{ category.name | trans({}, 'Admin.Modules.Feature') }}</span>
 
           {% if category.modules is empty %}
-            <div class="module-list-empty">
+            <div class="modules-list module-list-empty" data-name="{{ category.tab }}">
               <p>
                 {{ 'You do not have module in « %categoryName% ».' | trans({'%categoryName%': category.name}, 'Admin.Modules.Feature') }}<br/>
                 {{ 'Discover the best-selling modules of this category in the %link% page.' | trans({'%link%': category.name}, 'Admin.Modules.Feature') }}
