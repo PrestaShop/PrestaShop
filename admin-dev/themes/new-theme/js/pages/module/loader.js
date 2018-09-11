@@ -30,7 +30,6 @@ const $ = window.$;
  * @constructor
  */
 class ModuleLoader {
-
   constructor() {
     ModuleLoader.handleImport();
     ModuleLoader.handleEvents();
@@ -62,15 +61,19 @@ class ModuleLoader {
   }
 
   static handleEvents() {
-    $('body').on('click', 'a.module-read-more-grid-btn, a.module-read-more-list-btn', function (event) {
-      event.preventDefault();
-      const modulePoppin = $(event.target).data('target');
+    $('body').on(
+      'click',
+      'a.module-read-more-grid-btn, a.module-read-more-list-btn',
+      (event) => {
+        event.preventDefault();
+        const modulePoppin = $(event.target).data('target');
 
-      $.get(event.target.href, (data) => {
-        $(modulePoppin).html(data);
-        $(modulePoppin).modal();
-      });
-    });
+        $.get(event.target.href, (data) => {
+          $(modulePoppin).html(data);
+          $(modulePoppin).modal();
+        });
+      }
+    );
   }
 }
 
