@@ -261,7 +261,7 @@ class AdminModuleController {
           description: $this.attr('data-description').toLowerCase(),
           techName: $this.attr('data-tech-name').toLowerCase(),
           childCategories: $this.attr('data-child-categories'),
-          categories: $this.attr('data-categories').toLowerCase(),
+          categories: $this.closest('.modules-list').data('name').toLowerCase(),
           type: $this.attr('data-type'),
           price: parseFloat($this.attr('data-price')),
           active: parseInt($this.attr('data-active'), 10),
@@ -307,7 +307,7 @@ class AdminModuleController {
       }
     }
 
-    $('.modules-list').html('');
+    $('.modules-list').find('.module-item').remove();
 
     // Modules visibility management
     let isVisible;
@@ -348,14 +348,21 @@ class AdminModuleController {
     }
 
     $('.module-short-list').each(function setShortListVisibility() {
-      if ((self.currentRefCategory || self.currentRefStatus)
-          && $(this).find('.module-item').length === 0
+      const container = $(this);
+      if (
+        (
+          self.currentRefCategory
+          && self.currentRefCategory !== container.find('.modules-list').data('name')
+        ) || (
+          self.currentRefStatus !== null
+          && container.find('.module-item').length === 0
+        )
       ) {
-        $(this).hide();
+        container.hide();
         return;
       }
 
-      $(this).show();
+      container.show();
     });
 
     if (self.currentTagsList.length) {
@@ -370,8 +377,6 @@ class AdminModuleController {
       if (self.isUploadStarted === true) {
         return 'It seems some critical operation are running, are you sure you want to change page ? It might cause some unexepcted behaviors.';
       }
-
-      return false;
     });
   }
 
@@ -794,10 +799,14 @@ class AdminModuleController {
 
     self.currentSorting = $(this.moduleSortingDropdownSelector).find(':checked').attr('value');
 
-    $('body').on('change', this.moduleSortingDropdownSelector, function initializeBodySortingChange() {
-      self.currentSorting = $(this).find(':checked').attr('value');
-      self.updateModuleVisibility();
-    });
+    $('body').on(
+      'change',
+      self.moduleSortingDropdownSelector,
+      function initializeBodySortingChange() {
+        self.currentSorting = $(this).find(':checked').attr('value');
+        self.updateModuleVisibility();
+      }
+    );
   }
 
   doBulkAction(requestedBulkAction) {
