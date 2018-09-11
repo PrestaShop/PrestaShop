@@ -29,7 +29,7 @@
 
 {% block content %}
   <div class="row justify-content-center">
-    <div class="col-xl-10">
+    <div class="col">
       {{ form_start(categoryForm) }}
       <div class="card">
         <h3 class="card-header">
@@ -137,4 +137,13 @@
       {{ form_end(categoryForm) }}
     </div>
   </div>
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+
+  <script src="{{ asset('themes/new-theme/public/categories.bundle.js') }}"></script>
+  <script src="{{ asset('../js/tiny_mce/tiny_mce.js') }}"></script>
+  <script src="{{ asset('../js/admin/tinymce.inc.js') }}"></script>
+  <script src="{{ asset('../js/admin/tinymce_loader.js') }}"></script>
 {% endblock %}
