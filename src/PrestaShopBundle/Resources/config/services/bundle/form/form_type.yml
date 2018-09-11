@@ -587,3 +587,10 @@ services:
             - '@=service("prestashop.adapter.form.choice_provider.profile_by_id_choice_provider").getChoices()'
         tags:
             - { name: form.type }
+
+    form.type.catalog.category:
+        class: 'PrestaShopBundle\Form\Admin\Catalog\Category\CategoryType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        tags:
+            - { name: form.type }
