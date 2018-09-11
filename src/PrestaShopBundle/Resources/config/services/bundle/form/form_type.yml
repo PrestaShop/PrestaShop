@@ -519,6 +519,7 @@ services:
         tags:
             - { name: form.type }
 
+<<<<<<< HEAD
     form.type.shop.traffic_seo.meta.set_up_url:
         class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta\SetUpUrlType'
         arguments:
@@ -551,3 +552,9 @@ services:
         tags:
             - { name: form.type }
 
+    form.type.catalog.category:
+        class: 'PrestaShopBundle\Form\Admin\Catalog\Category\CategoryType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        tags:
+            - { name: form.type }
