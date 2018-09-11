@@ -301,6 +301,18 @@ class CategoryController extends FrameworkBundleAdminController
     }
 
     /**
+     * Show category creation.
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function createAction(Request $request)
+    {
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Categories/create.html.twig');
+    }
+
+    /**
      * Export filtered categories.
      *
      * @AdminSecurity(
