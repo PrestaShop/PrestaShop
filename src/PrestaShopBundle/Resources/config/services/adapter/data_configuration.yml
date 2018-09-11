@@ -223,6 +223,8 @@ services:
         arguments:
             - '@prestashop.adapter.legacy.configuration'
             - '@prestashop.core.util.url.htaccess_file_checker'
+            - '@prestashop.adapter.file.htaccess_file_generator'
+            - '@translator'
             - '@=service("prestashop.adapter.hosting_information").isHostMode()'
 
     prestashop.adapter.meta.shop_url.configuration:
