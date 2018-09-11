@@ -123,3 +123,8 @@ services:
         class: 'PrestaShop\PrestaShop\Adapter\Shop\ShopUrlDataProvider'
         arguments:
             - '@=service("prestashop.adapter.legacy.context").getContext().shop.id'
+
+    prestashop.adapter.file.htaccess_file_generator:
+        class: 'PrestaShop\PrestaShop\Adapter\File\HtaccessFileGenerator'
+        arguments:
+            - '@prestashop.adapter.cache_clearer'
