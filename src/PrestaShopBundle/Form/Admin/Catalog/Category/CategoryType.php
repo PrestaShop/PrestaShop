@@ -64,28 +64,47 @@ class CategoryType extends TranslatorAwareType
             ->add('name', TranslateTextType::class, [
                 'locales' => $this->locales,
             ])
-            ->add('active', SwitchType::class)
+            ->add('active', SwitchType::class, [
+                'required' => false,
+            ])
             ->add('id_parent',ChoiceType::class)
-            ->add('description', TranslateTextareaType::class)
-            ->add('cover_image', FileType::class)
-            ->add('thumbnail_image', FileType::class)
+            ->add('description', TranslateTextareaType::class, [
+                'required' => false,
+            ])
+            ->add('cover_image', FileType::class, [
+                'required' => false,
+            ])
+            ->add('thumbnail_image', FileType::class, [
+                'required' => false,
+            ])
             ->add('menu_thumbnail_images', FileType::class, [
                 'multiple' => true,
+                'required' => false,
             ])
             ->add('meta_title', TranslateTextType::class, [
                 'locales' => $this->locales,
+                'options' => [
+                    'required' => false,
+                ],
             ])
             ->add('meta_description', TranslateTextareaType::class, [
                 'locales' => $this->locales,
+                'options' => [
+                    'required' => false,
+                ],
             ])
             ->add('meta_keyword', TranslateTextType::class, [
                 'locales' => $this->locales,
+                'options' => [
+                    'required' => false,
+                ],
             ])
             ->add('friendly_url', TranslateTextType::class, [
                 'locales' => $this->locales,
             ])
             ->add('customer_group_access', MaterialChoiceTableType::class, [
                 'choices' => $this->customerGroupChoices,
+                'required' => false,
             ])
             ->add('shop_association', ChoiceType::class)
         ;
