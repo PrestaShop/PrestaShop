@@ -26,10 +26,11 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Meta;
 
+use PrestaShop\PrestaShop\Adapter\File\HtaccessFileGenerator;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
-use PrestaShop\PrestaShop\Core\File\FileFinderInterface;
 use PrestaShop\PrestaShop\Core\Util\Url\UrlFileCheckerInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Class SetUpUrlsDataConfiguration is responsible for saving, validating and getting configurations related with urls
@@ -53,21 +54,37 @@ final class SetUpUrlsDataConfiguration implements DataConfigurationInterface
     private $isHostMode;
 
     /**
+     * @var HtaccessFileGenerator
+     */
+    private $htaccessFileGenerator;
+
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
      * SetUpUrlsDataConfiguration constructor.
      *
      * @param ConfigurationInterface $configuration
      * @param UrlFileCheckerInterface $htaccessFileChecker
+     * @param HtaccessFileGenerator $htaccessFileGenerator
+     * @param TranslatorInterface $translator
      * @param bool $isHostMode
      */
     public function __construct(
         ConfigurationInterface $configuration,
         UrlFileCheckerInterface $htaccessFileChecker,
+        HtaccessFileGenerator $htaccessFileGenerator,
+        TranslatorInterface $translator,
         $isHostMode
     )
     {
         $this->configuration = $configuration;
         $this->htaccessFileChecker = $htaccessFileChecker;
         $this->isHostMode = $isHostMode;
+        $this->htaccessFileGenerator = $htaccessFileGenerator;
+        $this->translator = $translator;
     }
 
     /**
@@ -89,6 +106,7 @@ final class SetUpUrlsDataConfiguration implements DataConfigurationInterface
      */
     public function updateConfiguration(array $configuration)
     {
+        $errors = [];
         if ($this->validateConfiguration($configuration)) {
             $this->configuration->set('PS_REWRITING_SETTINGS', $configuration['friendly_url']);
             $this->configuration->set('PS_ALLOW_ACCENTED_CHARS_URL', $configuration['accented_url']);
@@ -98,9 +116,38 @@ final class SetUpUrlsDataConfiguration implements DataConfigurationInterface
                 $this->configuration->set('PS_HTACCESS_DISABLE_MULTIVIEWS', $configuration['disable_apache_multiview']);
                 $this->configuration->set('PS_HTACCESS_DISABLE_MODSEC', $configuration['disable_apache_mod_security']);
             }
+
+            if (!$this->htaccessFileGenerator->generateFile($configuration['disable_apache_multiview'])) {
+                $this->configuration->set('PS_REWRITING_SETTINGS', 0);
+
+                $errorMessage = $this->translator
+                    ->trans(
+                        'Before being able to use this tool, you need to:',
+                        [],
+                        'Admin.Shopparameters.Notification'
+                    );
+
+                $errorMessage .= ' ';
+                $errorMessage .= $this->translator
+                    ->trans(
+                        'Create a blank .htaccess in your root directory.',
+                        [],
+                        'Admin.Shopparameters.Notification'
+                    );
+
+                $errorMessage .= ' ';
+                $errorMessage .= $this->translator
+                    ->trans(
+                        'Give it write permissions (CHMOD 666 on Unix system).',
+                        [],
+                        'Admin.Shopparameters.Notification'
+                    );
+
+                $errors[] = $errorMessage;
+            }
         }
 
-        return [];
+        return $errors;
     }
 
     /**
