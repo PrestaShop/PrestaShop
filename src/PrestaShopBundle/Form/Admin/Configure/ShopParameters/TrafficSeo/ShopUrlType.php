@@ -49,20 +49,20 @@ class ShopUrlType extends AbstractType
     /**
      * @var bool
      */
-    private $isMainShopUrlExists;
+    private $doesMainShopUrlExist;
 
     /**
      * ShopUrlType constructor.
      *
      * @param bool $isHostMode
      * @param bool $isShopFeatureActive
-     * @param bool $isMainShopUrlExists
+     * @param bool $doesMainShopUrlExist
      */
-    public function __construct($isHostMode, $isShopFeatureActive, $isMainShopUrlExists)
+    public function __construct($isHostMode, $isShopFeatureActive, $doesMainShopUrlExist)
     {
         $this->isHostMode = $isHostMode;
         $this->isShopFeatureActive = $isShopFeatureActive;
-        $this->isMainShopUrlExists = $isMainShopUrlExists;
+        $this->doesMainShopUrlExist = $doesMainShopUrlExist;
     }
 
     /**
@@ -70,7 +70,7 @@ class ShopUrlType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        if (!$this->isHostMode && !$this->isShopFeatureActive && $this->isMainShopUrlExists) {
+        if (!$this->isHostMode && !$this->isShopFeatureActive && $this->doesMainShopUrlExist) {
             $builder
                 ->add('domain', TextType::class)
                 ->add('domain_ssl', TextType::class)

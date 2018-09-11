@@ -227,7 +227,7 @@ services:
             - '@=service("prestashop.adapter.hosting_information").isHostMode()'
 
     prestashop.adapter.meta.shop_url.configuration:
-        class: 'PrestaShop\PrestaShop\Adapter\Meta\ShopUrlDataConfigurator'
+        class: 'PrestaShop\PrestaShop\Adapter\Meta\ShopUrlDataConfiguration'
         arguments:
             - '@=service("prestashop.adapter.shop.shop_url").getMainShopUrl()'
             - '@prestashop.adapter.legacy.configuration'

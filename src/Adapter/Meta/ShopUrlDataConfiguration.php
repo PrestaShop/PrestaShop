@@ -36,9 +36,9 @@ use ShopUrl;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * Class ShopUrlDataConfigurator is responsible for updating and getting data from shop_url table.
+ * Class ShopUrlDataConfiguration is responsible for updating and getting data from shop_url table.
  */
-final class ShopUrlDataConfigurator implements DataConfigurationInterface
+final class ShopUrlDataConfiguration implements DataConfigurationInterface
 {
     /**
      * @var ShopUrl
@@ -60,7 +60,7 @@ final class ShopUrlDataConfigurator implements DataConfigurationInterface
     private $translator;
 
     /**
-     * ShopUrlsDataConfigurator constructor.
+     * ShopUrlDataConfiguration constructor.
      *
      * @param ShopUrl $mainShopUrl
      * @param ConfigurationInterface $configuration

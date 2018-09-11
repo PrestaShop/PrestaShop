@@ -29,9 +29,9 @@ namespace PrestaShop\PrestaShop\Adapter\Shop;
 use PrestaShopException;
 
 /**
- * Class ShopUrl is responsible for providing data from shop_url table.
+ * Class ShopUrlDataProvider is responsible for providing data from shop_url table.
  */
-class ShopUrl
+class ShopUrlDataProvider
 {
     /**
      * @var int
@@ -39,7 +39,7 @@ class ShopUrl
     private $contextShopId;
 
     /**
-     * ShopUrl constructor.
+     * ShopUrlDataProvider constructor.
      *
      * @param int $contextShopId
      */
@@ -74,7 +74,7 @@ class ShopUrl
      *
      * @throws \PrestaShopException
      */
-    public function isMainShopUrlExists()
+    public function doesMainShopUrlExist()
     {
         $shopUrl = \ShopUrl::getShopUrls($this->contextShopId)->where('main', '=', 1)->getFirst();
 
