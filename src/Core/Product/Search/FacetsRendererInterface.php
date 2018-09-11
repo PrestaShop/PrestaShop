@@ -26,13 +26,28 @@
 
 namespace PrestaShop\PrestaShop\Core\Product\Search;
 
+/**
+ * Define how we render facets and active filters.
+ */
 interface FacetsRendererInterface
 {
+    /**
+     * @param ProductSearchContext $context
+     * @param ProductSearchResult $result
+     *
+     * @return string HTML content is expected here
+     */
     public function renderFacets(
         ProductSearchContext $context,
         ProductSearchResult $result
     );
 
+    /**
+     * @param ProductSearchContext $context
+     * @param ProductSearchResult $result
+     *
+     * @return string HTML content is expected here
+     */
     public function renderActiveFilters(
         ProductSearchContext $context,
         ProductSearchResult $result
