@@ -33,10 +33,27 @@ namespace PrestaShop\PrestaShop\Core\Util\Url;
 final class HtaccessFileChecker implements UrlFileCheckerInterface
 {
     /**
+     * @var string
+     */
+    private $rootDirectory;
+
+    /**
+     * HtaccessFileChecker constructor.
+     *
+     * @param string $rootDirectory
+     */
+    public function __construct($rootDirectory)
+    {
+        $this->rootDirectory = $rootDirectory;
+    }
+
+    /**
      * {@inheritdoc}
      */
-    public function isValidFile($filePath)
+    public function isValidFile()
     {
+        $filePath = $this->rootDirectory.'/.htaccess';
+
         if (file_exists($filePath)) {
             return is_writable($filePath);
         }

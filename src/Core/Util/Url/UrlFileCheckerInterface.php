@@ -35,9 +35,7 @@ interface UrlFileCheckerInterface
      * Checks if the file is valid - it can check whenever is file or file directory
      * is writable or certain server configs are enabled.
      *
-     * @param string $filePath
-     *
      * @return bool
      */
-    public function isValidFile($filePath);
+    public function isValidFile();
 }
