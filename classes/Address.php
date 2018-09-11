@@ -223,7 +223,7 @@ class AddressCore extends ObjectModel
         if (empty($this->id)) {
             return true;
         }
-        
+
         if (!$this->isUsed()) {
             return parent::delete();
         } else {
