@@ -214,7 +214,6 @@ class HTMLPurifier_Printer_HTMLDefinition extends HTMLPurifier_Printer
         $ret .= $this->element('th', 'Allowed children', $attr);
 
         if ($def->type == 'chameleon') {
-
             $ret .= $this->element(
                 'td',
                 '<em>Block</em>: ' .
@@ -231,15 +230,12 @@ class HTMLPurifier_Printer_HTMLDefinition extends HTMLPurifier_Printer
                 null,
                 0
             );
-
         } elseif ($def->type == 'custom') {
-
             $ret .= $this->element(
                 'td',
                 '<em>' . ucfirst($def->type) . '</em>: ' .
                 $def->dtd_regex
             );
-
         } else {
             $ret .= $this->element(
                 'td',
@@ -322,4 +318,3 @@ class HTMLPurifier_Printer_HTMLDefinition extends HTMLPurifier_Printer
 }
 
 // vim: et sw=4 sts=4
-
