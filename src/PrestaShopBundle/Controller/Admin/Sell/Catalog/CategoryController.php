@@ -68,6 +68,8 @@ class CategoryController extends FrameworkBundleAdminController
         $categoryViewData = $categoryViewDataProvider->getViewData($currentCategoryId);
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Categories/categories.html.twig', [
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+            'enableSidebar' => true,
             'categoriesGrid' => $this->presentGrid($categoryGrid),
             'categoriesKpi' => $categoriesKpiFactory->build(),
             'layoutHeaderToolbarBtn' => $this->getCategoryToolbarButtons($request),
