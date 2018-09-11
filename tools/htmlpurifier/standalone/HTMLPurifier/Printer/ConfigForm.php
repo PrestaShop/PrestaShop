@@ -201,7 +201,6 @@ class HTMLPurifier_Printer_ConfigForm extends HTMLPurifier_Printer
         $ret .= $this->end('tbody');
         return $ret;
     }
-
 }
 
 /**
@@ -321,12 +320,17 @@ class HTMLPurifier_Printer_ConfigForm_default extends HTMLPurifier_Printer
                         $value[] = $val;
                     }
                     //TODO does this need a break?
+                    // no break
                 case HTMLPurifier_VarParser::ALIST:
                     $value = implode(PHP_EOL, $value);
                     break;
                 case HTMLPurifier_VarParser::HASH:
                     $nvalue = '';
                     foreach ($value as $i => $v) {
+                        if (is_array($v)) {
+                            // HACK
+                            $v = implode(";", $v);
+                        }
                         $nvalue .= "$i:$v" . PHP_EOL;
                     }
                     $value = $nvalue;
@@ -445,4 +449,3 @@ class HTMLPurifier_Printer_ConfigForm_bool extends HTMLPurifier_Printer
 }
 
 // vim: et sw=4 sts=4
-
