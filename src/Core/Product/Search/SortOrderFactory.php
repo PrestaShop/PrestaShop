@@ -28,15 +28,31 @@ namespace PrestaShop\PrestaShop\Core\Product\Search;
 
 use Symfony\Component\Translation\TranslatorInterface;
 
+/**
+ * Class SortOrderFactory.
+ */
 class SortOrderFactory
 {
+    /**
+     * @var TranslatorInterface
+     */
     private $translator;
 
+    /**
+     * SortOrderFactory constructor.
+     *
+     * @param TranslatorInterface $translator
+     */
     public function __construct(TranslatorInterface $translator)
     {
         $this->translator = $translator;
     }
 
+    /**
+     * @return array
+     *
+     * @throws \Exception
+     */
     public function getDefaultSortOrders()
     {
         return [

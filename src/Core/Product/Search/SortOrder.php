@@ -28,13 +28,37 @@ namespace PrestaShop\PrestaShop\Core\Product\Search;
 
 use Exception;
 
+/**
+ * Class SortOrder.
+ */
 class SortOrder
 {
+    /**
+     * @var
+     */
     private $entity;
+    /**
+     * @var
+     */
     private $field;
+    /**
+     * @var
+     */
     private $direction;
+    /**
+     * @var
+     */
     private $label;
 
+    /**
+     * SortOrder constructor.
+     *
+     * @param $entity
+     * @param $field
+     * @param string $direction
+     *
+     * @throws Exception
+     */
     public function __construct($entity, $field, $direction = 'asc')
     {
         $this
@@ -43,16 +67,27 @@ class SortOrder
             ->setDirection($direction);
     }
 
+    /**
+     * @return SortOrder
+     *
+     * @throws Exception
+     */
     public static function random()
     {
         return new static('', '', 'random');
     }
 
+    /**
+     * @return bool
+     */
     public function isRandom()
     {
         return $this->getDirection() === 'random';
     }
 
+    /**
+     * @return array
+     */
     public function toArray()
     {
         return [
@@ -64,11 +99,21 @@ class SortOrder
         ];
     }
 
+    /**
+     * @return string
+     */
     public function toString()
     {
         return "{$this->entity}.{$this->field}.{$this->direction}";
     }
 
+    /**
+     * @param $paramValue
+     *
+     * @return SortOrder
+     *
+     * @throws Exception
+     */
     public static function newFromString($paramValue)
     {
         list($entity, $field, $direction) = explode('.', $paramValue);
@@ -76,6 +121,11 @@ class SortOrder
         return new SortOrder($entity, $field, $direction);
     }
 
+    /**
+     * @param $label
+     *
+     * @return $this
+     */
     public function setLabel($label)
     {
         $this->label = $label;
@@ -83,11 +133,19 @@ class SortOrder
         return $this;
     }
 
+    /**
+     * @return mixed
+     */
     public function getLabel()
     {
         return $this->label;
     }
 
+    /**
+     * @param $entity
+     *
+     * @return $this
+     */
     public function setEntity($entity)
     {
         $this->entity = $entity;
@@ -95,11 +153,19 @@ class SortOrder
         return $this;
     }
 
+    /**
+     * @return mixed
+     */
     public function getEntity()
     {
         return $this->entity;
     }
 
+    /**
+     * @param $field
+     *
+     * @return $this
+     */
     public function setField($field)
     {
         $this->field = $field;
@@ -107,11 +173,21 @@ class SortOrder
         return $this;
     }
 
+    /**
+     * @return mixed
+     */
     public function getField()
     {
         return $this->field;
     }
 
+    /**
+     * @param $dir
+     *
+     * @return string
+     *
+     * @throws Exception
+     */
     public function setDirection($dir)
     {
         $direction = strtolower($dir);
@@ -127,11 +203,17 @@ class SortOrder
         return $this->direction;
     }
 
+    /**
+     * @return mixed
+     */
     public function getDirection()
     {
         return $this->direction;
     }
 
+    /**
+     * @return string
+     */
     private function getLegacyPrefix()
     {
         if ($this->entity === 'product') {
@@ -151,6 +233,11 @@ class SortOrder
         }
     }
 
+    /**
+     * @param bool $prefix
+     *
+     * @return string
+     */
     public function toLegacyOrderBy($prefix = false)
     {
         if ($prefix) {
@@ -162,6 +249,9 @@ class SortOrder
         }
     }
 
+    /**
+     * @return mixed
+     */
     public function toLegacyOrderWay()
     {
         return $this->getDirection();
