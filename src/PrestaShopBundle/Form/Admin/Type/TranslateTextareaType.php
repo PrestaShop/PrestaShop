@@ -44,7 +44,7 @@ class TranslateTextareaType extends TranslatorAwareType
             TextareaType::class;
 
         foreach ($options['locales'] as $locale) {
-            $localeOptions = $options['entry_options'];
+            $localeOptions = $options['options'];
             $localeOptions['label'] = $locale['iso_code'];
 
             if (!isset($localeOptions['required'])) {
@@ -73,7 +73,7 @@ class TranslateTextareaType extends TranslatorAwareType
         $resolver
             ->setDefaults([
                 'with_editor' => false,
-                'entry_options' => [],
+                'options' => [],
                 'locales' => $this->locales,
             ])
         ;
