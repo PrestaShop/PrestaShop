@@ -111,6 +111,9 @@ const config = {
     meta: [
       './js/pages/meta'
     ],
+    categories: [
+      './js/pages/categories'
+    ],
   },
   output: {
     path: path.resolve(__dirname, 'public'),
