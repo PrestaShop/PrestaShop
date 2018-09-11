@@ -26,8 +26,18 @@
 
 namespace PrestaShop\PrestaShop\Core\Product\Search;
 
+/**
+ * Class URLFragmentSerializer.
+ */
 class URLFragmentSerializer
 {
+    /**
+     * @param $separator
+     * @param $escape
+     * @param array $list
+     *
+     * @return string
+     */
     private function serializeListOfStrings($separator, $escape, array $list)
     {
         return implode($separator, array_map(function ($item) use ($separator, $escape) {
@@ -35,6 +45,13 @@ class URLFragmentSerializer
         }, $list));
     }
 
+    /**
+     * @param $separator
+     * @param $escape
+     * @param $str
+     *
+     * @return array
+     */
     private function unserializeListOfStrings($separator, $escape, $str)
     {
         $list = [];
@@ -78,6 +95,11 @@ class URLFragmentSerializer
         return $list;
     }
 
+    /**
+     * @param array $fragment
+     *
+     * @return string
+     */
     public function serialize(array $fragment)
     {
         $parts = [];
@@ -89,6 +111,11 @@ class URLFragmentSerializer
         return $this->serializeListOfStrings('/', '/', $parts);
     }
 
+    /**
+     * @param $str
+     *
+     * @return array
+     */
     public function unserialize($str)
     {
         $fragment = [];
