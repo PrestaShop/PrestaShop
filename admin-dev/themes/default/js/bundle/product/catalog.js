@@ -148,17 +148,17 @@ function updateFilterMenu() {
 }
 
 function productCategoryFilterReset(div) {
-	$('#choice_tree').categorytree('unselect');
+	$('#product_categories').categorytree('unselect');
 	$('#product_catalog_list input[name="filter_category"]').val('');
 	$('#product_catalog_list').submit();
 }
 
 function productCategoryFilterExpand(div, btn) {
-	$('#choice_tree').categorytree('unfold');
+	$('#product_categories').categorytree('unfold');
 }
 
 function productCategoryFilterCollapse(div, btn) {
-	$('#choice_tree').categorytree('fold');
+	$('#product_categories').categorytree('fold');
 }
 
 function categoryFilterButtons() {
