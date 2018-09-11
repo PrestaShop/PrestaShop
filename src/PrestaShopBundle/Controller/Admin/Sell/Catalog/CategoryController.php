@@ -47,6 +47,7 @@ use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use PrestaShopBundle\Form\Admin\Catalog\Category\CategoryType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -309,7 +310,11 @@ class CategoryController extends FrameworkBundleAdminController
      */
     public function createAction(Request $request)
     {
-        return $this->render('@PrestaShop/Admin/Sell/Catalog/Categories/create.html.twig');
+        $categoryCreateForm = $this->createForm(CategoryType::class);
+
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Categories/create.html.twig', [
+            'categoryForm' => $categoryCreateForm->createView(),
+        ]);
     }
 
     /**
