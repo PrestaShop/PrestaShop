@@ -37,9 +37,11 @@
       <div class="col">
         {{ form_start(metaForm, {'action': path('admin_meta_process')}) }}
 
-        {% include '@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Blocks/set_up_urls.html.twig' %}
-        {% include '@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Blocks/shop_urls.html.twig' %}
+        {% include '@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Blocks/set_up_urls_configuration.html.twig' %}
+        {% include '@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Blocks/shop_urls_configuration.html.twig' %}
         {% include '@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Blocks/domain_name_management.html.twig' %}
+        {% include '@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Blocks/url_schema_configuration.html.twig' %}
+
         {% block meta_form_rest %}
           {{ form_rest(metaForm) }}
         {% endblock %}
