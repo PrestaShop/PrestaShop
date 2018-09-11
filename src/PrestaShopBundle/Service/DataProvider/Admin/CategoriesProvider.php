@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Service\DataProvider\Admin;
 
+use PrestaShop\PrestaShop\Adapter\Module\Module as ApiModule;
 use GuzzleHttp\Exception\RequestException;
 use PrestaShopBundle\Service\DataProvider\Marketplace\ApiClient;
 use Psr\Log\LoggerInterface;
@@ -36,6 +37,8 @@ use Psr\Log\LoggerInterface;
 class CategoriesProvider
 {
     const CATEGORY_OTHER = 'Other';
+    const CATEGORY_THEME = 'theme_bundle';
+    const CATEGORY_MY_MODULES = 'my_modules';
 
     private $apiClient;
     private $logger;
@@ -49,6 +52,11 @@ class CategoriesProvider
         $this->logger = $logger;
     }
 
+    /**
+     * Get categories from API
+     *
+     * @return array
+     */
     public function getCategories()
     {
         if (null === self::$categoriesFromApi) {
@@ -74,37 +82,72 @@ class CategoriesProvider
     {
         if (null === self::$categories) {
             // The Root category is "Categories"
-            $categories['categories'] = $this->createMenuObject('categories', 'Categories');
-            foreach ($this->getCategories() as $category) {
-                $categories['categories']->subMenu[$category->name] = $this->createMenuObject(
-                    $category->name,
-                    $category->name,
-                    [],
-                    isset($category->tab) ? $category->tab : null
-                );
-            }
-
-            $categories['categories']->subMenu[self::CATEGORY_OTHER] = $this->createMenuObject(
-                self::CATEGORY_OTHER,
-                self::CATEGORY_OTHER,
-                [],
-                null
-            );
-
+            $categoriesListing = $this->getCategories();
+            $categories = $this->initializeCategories($categoriesListing);
             foreach ($modules as $module) {
-                $moduleCategory = $module->attributes->get('categoryName');
-                $moduleCategoryParent = $this->getParentCategory($moduleCategory);
-                if (!isset($categories['categories']->subMenu[$moduleCategoryParent])) {
-                    $moduleCategoryParent = self::CATEGORY_OTHER;
+                if (empty($categoriesListing)) {
+                    $category = $this->findModuleType($module, $categories);
+                } else {
+                    $category = $this->findModuleCategory($module, $categories);
                 }
 
-                $categories['categories']->subMenu[$moduleCategoryParent]->modules[] = $module;
+                $categories['categories']->subMenu[$category]->modules[] = $module;
             }
 
             self::$categories = $categories;
         }
 
         return self::$categories;
+    }
+
+    /**
+     * Initialize categories from API or if this one is empty,
+     * use theme and my modules categories.
+     *
+     * @param array $categoriesListing Category listing
+     *
+     * @return array
+     */
+    private function initializeCategories(array $categoriesListing)
+    {
+        $categories = [
+            'categories' => $this->createMenuObject('categories', 'Categories')
+        ];
+
+        if (empty($categoriesListing)) {
+            $categories['categories']->subMenu[self::CATEGORY_THEME] = $this->createMenuObject(
+                self::CATEGORY_THEME,
+                self::CATEGORY_THEME,
+                [],
+                self::CATEGORY_THEME
+            );
+            $categories['categories']->subMenu[self::CATEGORY_MY_MODULES] = $this->createMenuObject(
+                self::CATEGORY_MY_MODULES,
+                self::CATEGORY_MY_MODULES,
+                [],
+                self::CATEGORY_MY_MODULES
+            );
+
+            return $categories;
+        }
+
+        foreach ($categoriesListing as $category) {
+            $categories['categories']->subMenu[$category->name] = $this->createMenuObject(
+                $category->name,
+                $category->name,
+                [],
+                isset($category->tab) ? $category->tab : null
+            );
+        }
+
+        $categories['categories']->subMenu[self::CATEGORY_OTHER] = $this->createMenuObject(
+            self::CATEGORY_OTHER,
+            self::CATEGORY_OTHER,
+            [],
+            null
+        );
+
+        return $categories;
     }
 
     /**
@@ -137,14 +180,52 @@ class CategoriesProvider
      *
      * @return object
      */
-    private function createMenuObject($menu, $name, $moduleIds = array(), $tab = null)
+    private function createMenuObject($menu, $name, $moduleIds = [], $tab = null)
     {
         return (object) array(
             'tab' => $tab,
             'name' => $name,
             'refMenu' => $menu,
             'modules' => $moduleIds,
-            'subMenu' => array(),
+            'subMenu' => [],
         );
+    }
+
+    /**
+     * Find module type.
+     *
+     * @param ApiModule $installedProduct Installed product
+     * @param array $modulesTheme Modules theme
+     */
+    private function findModuleType(ApiModule $installedProduct, array $modulesTheme)
+    {
+        if (in_array($installedProduct->attributes->get('name'), $modulesTheme)) {
+            return self::CATEGORY_THEME;
+        }
+
+        return self::CATEGORY_MY_MODULES;
+    }
+
+    /**
+     * Find module category.
+     *
+     * @param ApiModule $installedProduct Installed product
+     * @param array $categories Available categories
+     */
+    private function findModuleCategory(ApiModule $installedProduct, array $categories)
+    {
+
+        $moduleCategory = $module->attributes->get('categoryName');
+        $moduleCategoryParent = $this->getParentCategory($moduleCategory);
+        if (!isset($categories['categories']->subMenu[$moduleCategoryParent])) {
+            $moduleCategoryParent = self::CATEGORY_OTHER;
+        }
+        foreach ($categories as $category) {
+            if ($category->name === $installedProduct->attributes->get('categoryName')) {
+                return $category->tab;
+            }
+        }
+
+        return CategoriesProvider::CATEGORY_OTHER;
     }
 }

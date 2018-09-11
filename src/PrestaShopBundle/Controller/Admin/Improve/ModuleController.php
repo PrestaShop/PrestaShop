@@ -34,9 +34,7 @@ use PrestaShopBundle\Entity\ModuleHistory;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
-use PrestaShop\PrestaShop\Adapter\Module\Module as ApiModule;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilter;
-use PrestaShop\PrestaShop\Core\Addon\AddonListFilterOrigin;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterStatus;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterType;
 use PrestaShop\PrestaShop\Core\Addon\AddonsCollection;
@@ -735,51 +733,6 @@ class ModuleController extends ModuleAbstractController
         )->getContent();
 
         return $formattedContent;
-    }
-
-    /**
-     * Find module type.
-     *
-     * @param ApiModule $installedProduct Installed product
-     * @param array $modulesTheme Modules theme
-     */
-    private function findModuleType(ApiModule $installedProduct, array $modulesTheme)
-    {
-        if (in_array($installedProduct->attributes->get('name'), $modulesTheme)) {
-            return 'theme_bundle';
-        }
-
-        if ($installedProduct->attributes->has('origin_filter_value') &&
-            in_array(
-                $installedProduct->attributes->get('origin_filter_value'),
-                [
-                    AddonListFilterOrigin::ADDONS_NATIVE,
-                    AddonListFilterOrigin::ADDONS_NATIVE_ALL,
-                ]
-            ) &&
-            'PrestaShop' === $installedProduct->attributes->get('author')
-        ) {
-            return 'native_modules';
-        }
-
-        return 'modules';
-    }
-
-    /**
-     * Find module category.
-     *
-     * @param ApiModule $installedProduct Installed product
-     * @param array $categories Available categories
-     */
-    private function findModuleCategory(ApiModule $installedProduct, array $categories)
-    {
-        foreach ($categories as $category) {
-            if ($category->name === $installedProduct->attributes->get('categoryName')) {
-                return $category->tab;
-            }
-        }
-
-        return CategoriesProvider::CATEGORY_OTHER;
     }
 
     private function checkPermissions(array $pageVoter)
