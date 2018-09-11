@@ -23,12 +23,14 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+import ModuleCard from '../../components/module-card';
 import AdminModuleController from './controller';
 import ModuleLoader from './loader';
 
 const $ = window.$;
 
 $(() => {
-  ModuleLoader();
-  AdminModuleController();
+  const moduleCardController = new ModuleCard().init();
+  new ModuleLoader();
+  new AdminModuleController(moduleCardController);
 });
