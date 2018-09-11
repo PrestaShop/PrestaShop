@@ -219,10 +219,9 @@ services:
             - '@=service("prestashop.adapter.legacy.configuration").get("_PS_TRANSLATIONS_DIR_")'
 
     prestashop.adapter.meta.set_up_urls.configuration:
-        class: 'PrestaShop\PrestaShop\Adapter\Meta\SetUpUrlsDataConfigurator'
+        class: 'PrestaShop\PrestaShop\Adapter\Meta\SetUpUrlsDataConfiguration'
         arguments:
             - '@prestashop.adapter.legacy.configuration'
-            - '@prestashop.core.file.finder.htaccess'
             - '@prestashop.core.util.url.htaccess_file_checker'
             - '@=service("prestashop.adapter.hosting_information").isHostMode()'
 

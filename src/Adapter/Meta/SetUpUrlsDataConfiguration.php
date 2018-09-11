@@ -32,20 +32,15 @@ use PrestaShop\PrestaShop\Core\File\FileFinderInterface;
 use PrestaShop\PrestaShop\Core\Util\Url\UrlFileCheckerInterface;
 
 /**
- * Class SetUpUrlsDataConfigurator is responsible for saving, validating and getting configurations related with urls
+ * Class SetUpUrlsDataConfiguration is responsible for saving, validating and getting configurations related with urls
  * configuration located in Shop parameters -> Traffic & Seo -> Seo & Urls.
  */
-final class SetUpUrlsDataConfigurator implements DataConfigurationInterface
+final class SetUpUrlsDataConfiguration implements DataConfigurationInterface
 {
     /**
      * @var ConfigurationInterface
      */
     private $configuration;
-
-    /**
-     * @var FileFinderInterface
-     */
-    private $htaccessFinder;
 
     /**
      * @var UrlFileCheckerInterface
@@ -58,22 +53,19 @@ final class SetUpUrlsDataConfigurator implements DataConfigurationInterface
     private $isHostMode;
 
     /**
-     * SetUpUrlsDataConfigurator constructor.
+     * SetUpUrlsDataConfiguration constructor.
      *
      * @param ConfigurationInterface $configuration
-     * @param FileFinderInterface $htaccessFinder
      * @param UrlFileCheckerInterface $htaccessFileChecker
      * @param bool $isHostMode
      */
     public function __construct(
         ConfigurationInterface $configuration,
-        FileFinderInterface $htaccessFinder,
         UrlFileCheckerInterface $htaccessFileChecker,
         $isHostMode
     )
     {
         $this->configuration = $configuration;
-        $this->htaccessFinder = $htaccessFinder;
         $this->htaccessFileChecker = $htaccessFileChecker;
         $this->isHostMode = $isHostMode;
     }
@@ -102,7 +94,7 @@ final class SetUpUrlsDataConfigurator implements DataConfigurationInterface
             $this->configuration->set('PS_ALLOW_ACCENTED_CHARS_URL', $configuration['accented_url']);
             $this->configuration->set('PS_CANONICAL_REDIRECT', $configuration['canonical_url_redirection']);
 
-            if (!$this->isHostMode && $this->isHtaccessFileValid()) {
+            if (!$this->isHostMode && $this->htaccessFileChecker->isValidFile()) {
                 $this->configuration->set('PS_HTACCESS_DISABLE_MULTIVIEWS', $configuration['disable_apache_multiview']);
                 $this->configuration->set('PS_HTACCESS_DISABLE_MODSEC', $configuration['disable_apache_mod_security']);
             }
@@ -119,7 +111,7 @@ final class SetUpUrlsDataConfigurator implements DataConfigurationInterface
 
         $isApacheConfigsValid = true;
 
-        if (!$this->isHostMode && $this->isHtaccessFileValid()) {
+        if (!$this->isHostMode && $this->htaccessFileChecker->isValidFile()) {
             $isApacheConfigsValid = isset(
                 $configuration['disable_apache_multiview'],
                 $configuration['disable_apache_mod_security']
@@ -131,16 +123,5 @@ final class SetUpUrlsDataConfigurator implements DataConfigurationInterface
             $configuration['accented_url'],
             $configuration['canonical_url_redirection']
         ) && $isApacheConfigsValid;
-    }
-
-    /**
-     * Checks whenever the htaccess file is valid.
-     *
-     * @return bool
-     */
-    private function isHtaccessFileValid()
-    {
-        list($htaccessFile) = $this->htaccessFinder->find();
-        return $this->htaccessFileChecker->isValidFile($htaccessFile);
     }
 }
