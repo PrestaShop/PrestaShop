@@ -113,11 +113,11 @@ class SqlQueryValidator
     /**
      * Get SQL error for "FROM" keyword validation.
      *
-     * @param array $legacyError
+     * @param array|bool $legacyError
      *
      * @return array
      */
-    private function getFromKeywordError(array $legacyError)
+    private function getFromKeywordError($legacyError)
     {
         if (isset($legacyError['table'])) {
             return [
