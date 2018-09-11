@@ -30,6 +30,7 @@ use PrestaShop\PrestaShop\Adapter\Module\Module as ApiModule;
 use GuzzleHttp\Exception\RequestException;
 use PrestaShopBundle\Service\DataProvider\Marketplace\ApiClient;
 use Psr\Log\LoggerInterface;
+use stdClass;
 
 /**
  * Provide the categories used to order modules and themes on https://addons.prestashop.com.
@@ -108,7 +109,7 @@ class CategoriesProvider
      *
      * @return array
      */
-    private function initializeCategories(array $categoriesListing)
+    private function initializeCategories(stdClass $categoriesListing)
     {
         $categories = [
             'categories' => $this->createMenuObject('categories', 'Categories')
@@ -132,8 +133,8 @@ class CategoriesProvider
         }
 
         foreach ($categoriesListing as $category) {
-            $categories['categories']->subMenu[$category->name] = $this->createMenuObject(
-                $category->name,
+            $categories['categories']->subMenu[$category->tab] = $this->createMenuObject(
+                isset($category->tab) ? $category->tab : $category->name,
                 $category->name,
                 [],
                 isset($category->tab) ? $category->tab : null
@@ -214,13 +215,13 @@ class CategoriesProvider
      */
     private function findModuleCategory(ApiModule $installedProduct, array $categories)
     {
-
-        $moduleCategory = $module->attributes->get('categoryName');
+        $moduleCategory = $installedProduct->attributes->get('categoryName');
         $moduleCategoryParent = $this->getParentCategory($moduleCategory);
         if (!isset($categories['categories']->subMenu[$moduleCategoryParent])) {
             $moduleCategoryParent = self::CATEGORY_OTHER;
         }
-        foreach ($categories as $category) {
+
+        foreach ($categories['categories']->subMenu as $category) {
             if ($category->name === $installedProduct->attributes->get('categoryName')) {
                 return $category->tab;
             }
