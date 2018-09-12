@@ -64,8 +64,8 @@ class CategoriesProvider
             try {
                 self::$categoriesFromApi = $this->apiClient->getCategories();
             } catch (RequestException $e) {
-                $this->logger->error('Module & services categories could not be loaded from marketplace API');
-                self::$categoriesFromApi = array();
+                $this->logger->error('Modules categories could not be loaded from marketplace API');
+                self::$categoriesFromApi = [];
             }
         }
 
@@ -106,11 +106,11 @@ class CategoriesProvider
      * Initialize categories from API or if this one is empty,
      * use theme and my modules categories.
      *
-     * @param array $categoriesListing Category listing
+     * @param array|stdClass $categoriesListing Category listing
      *
      * @return array
      */
-    private function initializeCategories(stdClass $categoriesListing)
+    private function initializeCategories($categoriesListing)
     {
         $categories = [
             'categories' => $this->createMenuObject('categories', 'Categories')
