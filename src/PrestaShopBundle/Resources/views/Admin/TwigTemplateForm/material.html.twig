@@ -72,7 +72,7 @@
     <div class="md-checkbox md-checkbox-inline">
       <label>
         <input type="checkbox"
-               name="{{ form.vars.full_name }}[{{ choice_name }}][]"
+               name="{{ form.vars.full_name }}[]"
                value="{{ choice[choice_value] }}"
                class="category"
         >
@@ -87,7 +87,8 @@
   <div class="radio js-input-wrapper">
     <label>
       <input type="radio"
-             name="form[{{ form.vars.id }}][{{ choice_name }}]"
+             name="{{ form.vars.full_name }}"
+             value="{{ choice[choice_value] }}"
       >
       {{ choice[choice_label] }}
     </label>
