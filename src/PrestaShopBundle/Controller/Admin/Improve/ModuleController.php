@@ -112,6 +112,7 @@ class ModuleController extends ModuleAbstractController
         $filters->setType(AddonListFilterType::MODULE | AddonListFilterType::SERVICE)
             ->removeStatus(AddonListFilterStatus::UNINSTALLED);
         $installedProducts = $moduleRepository->getFilteredList($filters);
+        $this->sortModules($installedProducts);
 
         /* @var CategoriesProvider */
         $categories = $this->get('prestashop.categories_provider')->getCategoriesMenu($installedProducts);
@@ -137,7 +138,7 @@ class ModuleController extends ModuleAbstractController
             [
                 'bulkActions' => $bulkActions,
                 'layoutHeaderToolbarBtn' => $this->getToolbarButtons(),
-                'layoutTitle' => $this->trans('Manage installed modules', 'Admin.Modules.Feature'),
+                'layoutTitle' => $this->trans('Module manager', 'Admin.Modules.Feature'),
                 'categories' => $categories['categories'],
                 'topMenuData' => $this->getTopMenuData($categories),
                 'requireAddonsSearch' => false,
@@ -749,5 +750,22 @@ class ModuleController extends ModuleAbstractController
                 ]
             );
         }
+    }
+
+    /**
+     * Sort modules by last access date
+     *
+     * @param array &$installedModules
+     */
+    private function sortModules(array &$installedModules)
+    {
+        usort(
+            $installedModules,
+            function ($a, $b) {
+                $aDate = new DateTime($a->database->get('last_access_date'));
+                $bDate = new DateTime($b->database->get('last_access_date'));
+                return $aDate < $bDate;
+            }
+        );
     }
 }
