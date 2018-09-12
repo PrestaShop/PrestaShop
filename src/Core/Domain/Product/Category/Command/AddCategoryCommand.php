@@ -218,7 +218,7 @@ class AddCategoryCommand
      */
     public function setIsActive($isActive)
     {
-        if (is_bool($isActive)) {
+        if (!is_bool($isActive)) {
             throw new CategoryConstraintException(
                 'Invalid Category status supplied',
                 CategoryConstraintException::INVALID_STATUS
