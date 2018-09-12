@@ -89,6 +89,8 @@ module.exports = {
     combination_size_m: '//*[@id="attribute-group-1"]//label[@for="attribute-2"]',
     combination_color_grey: '//*[@id="attribute-group-2"]//label[@for="attribute-5"]',
     combination_color_beige: '//*[@id="attribute-group-2"]//label[@for="attribute-7"]',
+    combination_color_green: '//label[@for="attribute-15"]',
+    combination_color_red: '//label[@for="attribute-10"]',
     combination_generate_button: '//*[@id="create-combinations"]',
     combination_impact_price_input: '//*[@id="attribute_%NUMBER"]/td[@class="attribute-price"]//input',
     combination_final_price_span: '//*[@id="attribute_%NUMBER"]/td[contains(@class, "attribute-finalprice")]/span',
@@ -205,9 +207,10 @@ module.exports = {
     continue_confirmation: '//*[@id="confirmation_modal"]//button[2]',
     search_categories: '//*[@id="ps-select-product-category"]',
     list_categories: '//*[@id="ui-id-1"]/li',
-    default_category: '//*[@id="ps_categoryTags"]/span[1]/a'
+    default_category: '//*[@id="ps_categoryTags"]/span[1]/a',
+    image_combination_src: '(//*[@id="combination_%ID_id_image_attr"]//img)[%POS]',
+    img_added_product_pack: '//*[@id="form_step1_inputPackItems-data"]/li[%ID]//img'
   },
-
   ProductList: {
     product_id: '//*[@id="product_catalog_list"]//tr[%ID]/td[2]/label',
     product_name: '//*[@id="product_catalog_list"]//tbody/tr[%ID]/td[4]/a',
