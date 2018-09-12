@@ -194,7 +194,7 @@ class AddCategoryCommand
      * 
      * @return self
      */
-    public function setDescriptions($descriptions)
+    public function setDescriptions(array $descriptions)
     {
         $this->descriptions = $descriptions;
 
@@ -211,11 +211,20 @@ class AddCategoryCommand
 
     /**
      * @param bool $isActive
-     * 
+     *
      * @return self
+     *
+     * @throws CategoryConstraintException
      */
     public function setIsActive($isActive)
     {
+        if (is_bool($isActive)) {
+            throw new CategoryConstraintException(
+                'Invalid Category status supplied',
+                CategoryConstraintException::INVALID_STATUS
+            );
+        }
+
         $this->isActive = $isActive;
 
         return $this;
@@ -231,18 +240,27 @@ class AddCategoryCommand
 
     /**
      * @param int $parentCategoryId
-     * 
+     *
      * @return self
+     *
+     * @throws CategoryConstraintException
      */
     private function setParentCategoryId($parentCategoryId)
     {
+        if (!is_int($parentCategoryId) || 0 >= $parentCategoryId) {
+            throw new CategoryConstraintException(
+                sprintf('Invalid Category parent id %s supplied', var_export($parentCategoryId, true)),
+                CategoryConstraintException::INVALID_PARENT_ID
+            );
+        }
+
         $this->parentCategoryId = $parentCategoryId;
         
         return $this;
     }
 
     /**
-     * @return array|string[]
+     * @return string[]
      */
     public function getMetaTitles()
     {
@@ -250,7 +268,7 @@ class AddCategoryCommand
     }
 
     /**
-     * @param array|string[] $metaTitles
+     * @param string[] $metaTitles
      * 
      * @return self
      */
@@ -262,7 +280,7 @@ class AddCategoryCommand
     }
 
     /**
-     * @return array|string[]
+     * @return string[]
      */
     public function getMetaDescriptions()
     {
@@ -270,7 +288,7 @@ class AddCategoryCommand
     }
 
     /**
-     * @param array|string[] $metaDescriptions
+     * @param string[] $metaDescriptions
      * 
      * @return self
      */
@@ -297,6 +315,7 @@ class AddCategoryCommand
     public function setMetaKeywords(array $metaKeywords)
     {
         $this->metaKeywords = $metaKeywords;
+
         return $this;
     }
 
@@ -309,7 +328,7 @@ class AddCategoryCommand
     }
 
     /**
-     * @param array|int[] $associatedGroupIds
+     * @param int[] $associatedGroupIds
      * 
      * @return self
      */
