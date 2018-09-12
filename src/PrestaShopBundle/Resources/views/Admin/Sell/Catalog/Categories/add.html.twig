@@ -102,13 +102,13 @@
             <div class="form-group row">
               {{ ps.label_with_help(('Friendly URL'|trans({}, 'Admin.Global')), ('Only letters, numbers, underscore (_) and the minus (-) character are allowed.'|trans({}, 'Admin.Catalog.Help'))) }}
               <div class="col-sm">
-                {{ form_widget(categoryForm.friendly_url) }}
+                {{ form_widget(categoryForm.link_rewrite) }}
               </div>
             </div>
             <div class="form-group row">
               {{ ps.label_with_help(('Group access'|trans), ('Mark all of the customer groups which you would like to have access to this category.'|trans({}, 'Admin.Catalog.Help'))) }}
               <div class="col-sm">
-                {{ form_widget(categoryForm.customer_group_access) }}
+                {{ form_widget(categoryForm.group_association) }}
               </div>
             </div>
             <div class="form-group row">

@@ -32,11 +32,16 @@ use Symfony\Component\HttpFoundation\Request;
 
 class CategoryController extends FrameworkBundleAdminController
 {
-    public function createAction(Request $request)
+    public function addAction(Request $request)
     {
         $categoryCreateForm = $this->createForm(CategoryType::class);
+        $categoryCreateForm->handleRequest($request);
 
-        return $this->render('@PrestaShop/Admin/Sell/Catalog/Categories/create.html.twig', [
+        if ($categoryCreateForm->isSubmitted()) {
+            $data = $categoryCreateForm->getData();
+        }
+
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Categories/add.html.twig', [
             'categoryForm' => $categoryCreateForm->createView(),
         ]);
     }
