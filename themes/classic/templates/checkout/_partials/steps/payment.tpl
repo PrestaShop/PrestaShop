@@ -140,7 +140,8 @@
     </div>
     <div class="ps-hidden-by-js">
       {if $selected_payment_option and $all_conditions_approved}
-        <label for="pay-with-{$selected_payment_option}">{l s='PLACE YOUR ORDER' d='Shop.Theme.Checkout'}</label>
+        <label for="pay-with-{$selected_payment_option}">{l s='Order with an obligation to pay' d='Shop.Theme.Checkout'}</label>
+
       {/if}
     </div>
   </div>
