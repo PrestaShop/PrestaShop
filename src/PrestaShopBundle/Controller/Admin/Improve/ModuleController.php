@@ -727,7 +727,7 @@ class ModuleController extends ModuleAbstractController
         $formattedContent = [];
         $formattedContent['selector'] = '.module-menu-item';
         $formattedContent['content'] = $this->render(
-            'PrestaShopBundle:Admin/Module/Includes:dropdown_categories.html.twig',
+            'PrestaShopBundle:Admin/Module/Includes:dropdown_categories_catalog.html.twig',
             array(
                 'topMenuData' => $this->getTopMenuData($categoriesMenu),
             )
