@@ -25,10 +25,12 @@
 
 import TranslatableInput from "../../components/translatable-input";
 import ChoiceTable from "../../components/choice-table";
+import ChoiceTree from "../../components/choice-tree";
 
 const $ = window.$;
 
 $(() => {
   new TranslatableInput();
   new ChoiceTable();
+  new ChoiceTree();
 });
