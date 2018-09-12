@@ -34,12 +34,12 @@ class Facet
     /**
      * @var string the facet label
      */
-    private $label;
+    private $label = '';
 
     /**
      * @var string the facet type
      */
-    private $type;
+    private $type = '';
 
     /**
      * @var bool if true, the facet is displayed
