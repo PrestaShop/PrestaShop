@@ -52,6 +52,10 @@ final class AddCategoryHandler implements AddCategoryHandlerInterface
         $category->meta_keywords = $command->getMetaKeywords();
         $category->groupBox = $command->getAssociatedGroupIds();
 
+        // inside Category::add() it checks if shop association is submitted by
+        // by retrieving data from $_POST["checkBoxShopAsso_category"]
+        $_POST['checkBoxShopAsso_category'] = $command->getAssociatedShopIds();
+
         $category->add();
     }
 }
