@@ -43,7 +43,6 @@ class MaterialChoiceTreeType extends AbstractType
         $view->vars['choice_label'] = $options['choice_label'];
         $view->vars['choice_value'] = $options['choice_value'];
         $view->vars['choice_children'] = $options['choice_children'];
-        $view->vars['choice_name'] = $options['choice_name'];
     }
 
     /**
@@ -57,7 +56,6 @@ class MaterialChoiceTreeType extends AbstractType
                 'choice_label' => 'name',
                 'choice_value' => 'id',
                 'choice_children' => 'children',
-                'choice_name' => 'tree',
                 'multiple' => false,
                 'compound' => false,
             ])
@@ -66,7 +64,6 @@ class MaterialChoiceTreeType extends AbstractType
             ->setAllowedTypes('choice_value', 'string')
             ->setAllowedTypes('choice_label', 'string')
             ->setAllowedTypes('choice_children', 'string')
-            ->setAllowedTypes('choice_name', 'string')
             ->addAllowedValues('compound', false)
         ;
     }
