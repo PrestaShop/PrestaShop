@@ -50,6 +50,7 @@ final class AddCategoryHandler implements AddCategoryHandlerInterface
         $category->meta_title = $command->getMetaTitles();
         $category->meta_description = $command->getMetaDescriptions();
         $category->meta_keywords = $command->getMetaKeywords();
+        $category->groupBox = $command->getAssociatedGroupIds();
 
         $category->add();
     }
