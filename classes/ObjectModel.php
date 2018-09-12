@@ -463,7 +463,7 @@ abstract class ObjectModelCore implements Core_Foundation_Database_EntityInterfa
 
         // @hook actionObject*AddBefore
         Hook::exec('actionObjectAddBefore', array('object' => $this));
-        Hook::exec('actionObject'.get_class($this).'AddBefore', array('object' => $this));
+        Hook::exec('actionObject' . $this->getFullyQualifiedName() . 'AddBefore', array('object' => $this));
 
         // Automatically fill dates
         if ($auto_date && property_exists($this, 'date_add')) {
@@ -534,9 +534,15 @@ abstract class ObjectModelCore implements Core_Foundation_Database_EntityInterfa
 
         // @hook actionObject*AddAfter
         Hook::exec('actionObjectAddAfter', array('object' => $this));
-        Hook::exec('actionObject'.get_class($this).'AddAfter', array('object' => $this));
+        Hook::exec('actionObject' . $this->getFullyQualifiedName() . 'AddAfter', array('object' => $this));
 
         return $result;
+    }
+	
+	
+    private function getFullyQualifiedName()
+    {
+        return str_replace('\\', '', get_class($this));
     }
 
     /**
