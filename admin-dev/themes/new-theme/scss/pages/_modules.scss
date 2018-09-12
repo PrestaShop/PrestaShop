@@ -366,13 +366,13 @@
 }
 .module-top-menu {
   min-height: 74px;
-  .module-menu-item {
-    margin-top: 30px;
+  .module-top-menu-item {
     &.disable {
       opacity: 0.5;
     }
 
     h3 {
+      margin-top: 30px;
       font-size: 14px;
     }
   }

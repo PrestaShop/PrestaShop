@@ -128,7 +128,7 @@ class AdminModuleController {
     this.moduleImportConfirmSelector = '.module-import-confirm';
 
     this.initBOEventRegistering();
-    this.loadVariables();
+    this.initCurrentDisplay();
     this.initSortingDisplaySwitch();
     this.initSortingDropdown();
     this.initSearchBlock();
@@ -151,7 +151,7 @@ class AdminModuleController {
     const body = $('body');
     body.on('click', self.statusItemSelector, function () {
       // Get data from li DOM input
-      self.currentRefStatus = parseInt($(this).attr('data-status-ref'), 10);
+      self.currentRefStatus = parseInt($(this).data('status-ref'), 10);
       // Change dropdown label to set it to the current status' displayname
       $(self.statusSelectorLabelSelector).text($(this).find('a:first').text());
       $(self.statusResetBtnSelector).show();
@@ -287,20 +287,20 @@ class AdminModuleController {
         $this = $(this);
         self.modulesList.push({
           domObject: $this,
-          id: $this.attr('data-id'),
-          name: $this.attr('data-name').toLowerCase(),
-          scoring: parseFloat($this.attr('data-scoring')),
-          logo: $this.attr('data-logo'),
-          author: $this.attr('data-author').toLowerCase(),
-          version: $this.attr('data-version'),
-          description: $this.attr('data-description').toLowerCase(),
-          techName: $this.attr('data-tech-name').toLowerCase(),
-          childCategories: $this.attr('data-child-categories'),
+          id: $this.data('id'),
+          name: $this.data('name').toLowerCase(),
+          scoring: parseFloat($this.data('scoring')),
+          logo: $this.data('logo'),
+          author: $this.data('author').toLowerCase(),
+          version: $this.data('version'),
+          description: $this.data('description').toLowerCase(),
+          techName: $this.data('tech-name').toLowerCase(),
+          childCategories: $this.data('child-categories'),
           categories: $this.closest('.modules-list').data('name').toLowerCase(),
-          type: $this.attr('data-type'),
-          price: parseFloat($this.attr('data-price')),
-          active: parseInt($this.attr('data-active'), 10),
-          access: $this.attr('data-last-access'),
+          type: $this.data('type'),
+          price: parseFloat($this.data('price')),
+          active: parseInt($this.data('active'), 10),
+          access: $this.data('last-access'),
           display: $this.hasClass('module-item-list') ? 'list' : 'grid',
           container,
         });
@@ -431,7 +431,7 @@ class AdminModuleController {
       }
 
       currentElement = $(this).parents(moduleItemSelector);
-      htmlGenerated += `- ${currentElement.attr('data-name')}<br/>`;
+      htmlGenerated += `- ${currentElement.data('name')}<br/>`;
       alreadyDoneFlag += 1;
 
       return true;
@@ -445,13 +445,13 @@ class AdminModuleController {
 
     // Make addons connect modal ready to be clicked
     if ($(this.addonsConnectModalBtnSelector).attr('href') === '#') {
-      $(this.addonsConnectModalBtnSelector).attr('data-toggle', 'modal');
-      $(this.addonsConnectModalBtnSelector).attr('data-target', this.addonsConnectModalSelector);
+      $(this.addonsConnectModalBtnSelector).data('toggle', 'modal');
+      $(this.addonsConnectModalBtnSelector).data('target', this.addonsConnectModalSelector);
     }
 
     if ($(this.addonsLogoutModalBtnSelector).attr('href') === '#') {
-      $(this.addonsLogoutModalBtnSelector).attr('data-toggle', 'modal');
-      $(this.addonsLogoutModalBtnSelector).attr('data-target', this.addonsLogoutModalSelector);
+      $(this.addonsLogoutModalBtnSelector).data('toggle', 'modal');
+      $(this.addonsLogoutModalBtnSelector).data('target', this.addonsLogoutModalSelector);
     }
 
     $('body').on('submit', this.addonsConnectForm, function initializeBodySubmit(event) {
@@ -482,8 +482,8 @@ class AdminModuleController {
   initAddModuleAction() {
     const self = this;
     const addModuleButton = $(self.addonsImportModalBtnSelector);
-    addModuleButton.attr('data-toggle', 'modal');
-    addModuleButton.attr('data-target', self.dropZoneModalSelector);
+    addModuleButton.data('toggle', 'modal');
+    addModuleButton.data('target', self.dropZoneModalSelector);
   }
 
   initDropzone() {
@@ -708,10 +708,6 @@ class AdminModuleController {
          : this.checkedBulkActionListSelector;
   }
 
-  loadVariables() {
-    this.initCurrentDisplay();
-  }
-
   getModuleItemSelector() {
     return this.currentDisplay === 'grid'
          ? this.moduleItemGridSelector
@@ -769,7 +765,7 @@ class AdminModuleController {
     $('body').on('click', this.categoryGridItemSelector, function initilaizeGridBodyClick(event) {
       event.stopPropagation();
       event.preventDefault();
-      const refCategory = $(this).attr('data-category-ref');
+      const refCategory = $(this).data('category-ref');
 
       // In case we have some tags we need to reset it !
       if (self.currentTagsList.length) {
@@ -847,7 +843,7 @@ class AdminModuleController {
     const bulkModulesTechNames = [];
     let moduleTechName;
     $(bulkActionSelectedSelector).each(function bulkActionSelector() {
-      moduleTechName = $(this).attr('data-tech-name');
+      moduleTechName = $(this).data('tech-name');
       bulkModulesTechNames.push({
         techName: moduleTechName,
         actionMenuObj: $(this).parent().next(),
@@ -901,7 +897,7 @@ class AdminModuleController {
         $next.show();
 
         $.ajax({
-          url: $this.attr('data-url'),
+          url: $this.data('url'),
           dataType: 'json',
         }).done(() => {
           $next.fadeOut();
@@ -919,28 +915,36 @@ class AdminModuleController {
   initCategorySelect() {
     const self = this;
     const body = $('body');
-    body.on('click', this.categoryItemSelector, function initializeCategorySelectClick() {
-      // Get data from li DOM input
-      self.currentRefCategory = $(this).attr('data-category-ref');
-      self.currentRefCategory = self.currentRefCategory ? self.currentRefCategory.toLowerCase() : null;
-      // Change dropdown label to set it to the current category's displayname
-      $(self.categorySelectorLabelSelector).text($(this).attr('data-category-display-name'));
-      $(self.categoryResetBtnSelector).show();
-      // Do Search on categoryRef
-      self.updateModuleVisibility();
-    });
+    body.on(
+      'click',
+      self.categoryItemSelector,
+      function initializeCategorySelectClick() {
+        // Get data from li DOM input
+        self.currentRefCategory = $(this).data('category-ref');
+        self.currentRefCategory = self.currentRefCategory ? self.currentRefCategory.toLowerCase() : null;
+        // Change dropdown label to set it to the current category's displayname
+        $(self.categorySelectorLabelSelector).text($(this).data('category-display-name'));
+        $(self.categoryResetBtnSelector).show();
+        // Do Search on categoryRef
+        self.updateModuleVisibility();
+      }
+    );
 
-    body.on('click', this.categoryResetBtnSelector, function initializeCategoryResetButtonClick() {
-      const rawText = $(self.categorySelector).attr('aria-labelledby');
-      const upperFirstLetter = rawText.charAt(0).toUpperCase();
-      const removedFirstLetter = rawText.slice(1);
-      const originalText = upperFirstLetter + removedFirstLetter;
+    body.on(
+      'click',
+      self.categoryResetBtnSelector,
+      function initializeCategoryResetButtonClick() {
+        const rawText = $(self.categorySelector).attr('aria-labelledby');
+        const upperFirstLetter = rawText.charAt(0).toUpperCase();
+        const removedFirstLetter = rawText.slice(1);
+        const originalText = upperFirstLetter + removedFirstLetter;
 
-      $(self.categorySelectorLabelSelector).text(originalText);
-      $(this).hide();
-      self.currentRefCategory = null;
-      self.updateModuleVisibility();
-    });
+        $(self.categorySelectorLabelSelector).text(originalText);
+        $(this).hide();
+        self.currentRefCategory = null;
+        self.updateModuleVisibility();
+      }
+    );
   }
 
   initSearchBlock() {
@@ -972,25 +976,30 @@ class AdminModuleController {
   initSortingDisplaySwitch() {
     const self = this;
 
-    $('body').on('click', '.module-sort-switch', () => {
-      const switchTo = $(this).attr('data-switch');
-      const isAlreadyDisplayed = $(this).hasClass('active-display');
-      if (typeof switchTo !== 'undefined' && isAlreadyDisplayed === false) {
-        self.switchSortingDisplayTo(switchTo);
-        self.currentDisplay = switchTo;
+    $('body').on(
+      'click',
+      '.module-sort-switch',
+      function switchSort() {
+        const switchTo = $(this).data('switch');
+        const isAlreadyDisplayed = $(this).hasClass('active-display');
+        if (typeof switchTo !== 'undefined' && isAlreadyDisplayed === false) {
+          self.switchSortingDisplayTo(switchTo);
+          self.currentDisplay = switchTo;
+        }
       }
-    });
+    );
   }
 
   switchSortingDisplayTo(switchTo) {
-    if (switchTo === 'grid' || switchTo === 'list') {
-      $('.module-sort-switch').removeClass('module-sort-active');
-      $(`#module-sort-${switchTo}`).addClass('module-sort-active');
-      this.currentDisplay = switchTo;
-      this.updateModuleVisibility();
-    } else {
+    if (switchTo !== 'grid' && switchTo !== 'list') {
       console.error(`Can't switch to undefined display property "${switchTo}"`);
+      return;
     }
+
+    $('.module-sort-switch').removeClass('module-sort-active');
+    $(`#module-sort-${switchTo}`).addClass('module-sort-active');
+    this.currentDisplay = switchTo;
+    this.updateModuleVisibility();
   }
 }
 
