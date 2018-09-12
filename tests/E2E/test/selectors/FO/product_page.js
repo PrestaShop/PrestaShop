@@ -26,11 +26,11 @@ module.exports = {
     offline_warning_message: '//div[contains(@class, "alert-warning")]//p',
     product_discounts_table: '//*[@id="add-to-cart-or-refresh"]//tbody/tr[%R]/td[%D]',
     second_product: '(//*[@id="content"]//h3[@itemprop="name"])[2]',
+    product_availability_message: '//*[@id="product-availability"]',
     product_summary: '(//*[@itemprop="description"]//p)[1]',
     product_description: '//*[@id="description"]',
     product_detail_tab: '//*[@role="tablist"]//li[2]',
     attachments_tab: '//*[@id="main"]//div[@class="product-information"]//a[@aria-controls="attachments"]',
-    filename_link: '(//*[@id="attachments"]//a)[1]',
-    second_product: '(//*[@id="content"]//h3[@itemprop="name"])[2]'
+    filename_link: '(//*[@id="attachments"]//a)[1]'
   }
 };
