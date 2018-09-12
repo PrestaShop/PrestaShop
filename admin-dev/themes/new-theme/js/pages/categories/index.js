@@ -38,6 +38,7 @@ import DeleteCategoryRowActionExtension from "../../components/grid/extension/ac
 import DeleteCategoriesBulkActionExtension from "../../components/grid/extension/action/bulk/category/delete-categories-bulk-action-extension";
 import TranslatableInput from "../../components/translatable-input";
 import ChoiceTable from "../../components/choice-table";
+import ChoiceTree from "../../components/choice-tree";
 
 const $ = window.$;
 
@@ -59,4 +60,5 @@ $(() => {
 
   new TranslatableInput();
   new ChoiceTable();
+  new ChoiceTree();
 });
