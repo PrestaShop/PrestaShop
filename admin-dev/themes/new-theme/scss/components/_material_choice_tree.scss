@@ -2,6 +2,11 @@
   padding: .625rem;
   border: 1px solid $gray-light;
 
+  .choice-tree-actions {
+    border-bottom: .063rem solid $gray-light;
+    margin-bottom: 10px;
+  }
+
   ul.choice-tree {
     padding: 0;
     margin: 0;
