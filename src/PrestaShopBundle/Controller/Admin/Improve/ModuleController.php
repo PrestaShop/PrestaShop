@@ -114,15 +114,7 @@ class ModuleController extends ModuleAbstractController
         $installedProducts = $moduleRepository->getFilteredList($filters);
         $this->sortModules($installedProducts);
 
-        /* @var CategoriesProvider */
-        $categories = $this->get('prestashop.categories_provider')->getCategoriesMenu($installedProducts);
-
-        foreach ($categories['categories']->subMenu as $category) {
-            $collection = AddonsCollection::createFrom($category->modules);
-            $modulesProvider->generateAddonsUrls($collection);
-            $category->modules = $this->get('prestashop.adapter.presenter.module')
-                               ->presentCollection($category->modules);
-        }
+        $categories = $this->getCategories($modulesProvider, $installedProducts);
 
         $bulkActions = [
             'bulk-uninstall' => $this->trans('Uninstall', 'Admin.Actions'),
@@ -331,10 +323,14 @@ class ModuleController extends ModuleAbstractController
             $modulesProvider->generateAddonsUrls($modulesFromRepository);
 
             $modules = $modulesFromRepository->toArray();
-            $categoriesMenu = $this->get('prestashop.categories_provider')->getCategoriesMenu($modules);
             shuffle($modules);
-            $responseArray['domElements'][] = $this->constructJsonCatalogCategoriesMenuResponse($categoriesMenu);
-            $responseArray['domElements'][] = $this->constructJsonCatalogBodyResponse($modulesProvider, $modules);
+            $categories = $this->getCategories($modulesProvider, $modules);
+
+            $responseArray['domElements'][] = $this->constructJsonCatalogCategoriesMenuResponse($categories);
+            $responseArray['domElements'][] = $this->constructJsonCatalogBodyResponse(
+                $categories,
+                $modules
+            );
             $responseArray['status'] = true;
         } catch (Exception $e) {
             $responseArray['msg'] = $this->trans(
@@ -688,15 +684,17 @@ class ModuleController extends ModuleAbstractController
     }
 
     /**
-     * @param AdminModuleDataProvider $modulesProvider
+     * Construct Json struct for catalog body response
+     *
+     * @param array $categories
      * @param array $modules
      *
      * @return array
      */
-    private function constructJsonCatalogBodyResponse(AdminModuleDataProvider $modulesProvider, array $modules)
-    {
-        $collection = AddonsCollection::createFrom($modules);
-        $modules = $modulesProvider->generateAddonsUrls($collection);
+    private function constructJsonCatalogBodyResponse(
+        array $categories,
+        array $modules
+    ) {
         $formattedContent = [];
         $formattedContent['selector'] = '.module-catalog-page';
         $formattedContent['content'] = $this->render(
@@ -709,11 +707,10 @@ class ModuleController extends ModuleAbstractController
         $errorMessage = $this->trans('You do not have permission to add this.', 'Admin.Notifications.Error');
 
         $formattedContent['content'] .= $this->render(
-            'PrestaShopBundle:Admin/Module/Includes:grid.html.twig',
+            'PrestaShopBundle:Admin/Module:catalog-refresh.html.twig',
             array(
-                'modules' => $this->get('prestashop.adapter.presenter.module')->presentCollection($modules),
+                'categories' => $categories['categories'],
                 'requireAddonsSearch' => true,
-                'id' => 'all',
                 'level' => $this->authorizationLevel(self::CONTROLLER_NAME),
                 'errorMessage' => $errorMessage,
             )
@@ -722,20 +719,34 @@ class ModuleController extends ModuleAbstractController
         return $formattedContent;
     }
 
-    private function constructJsonCatalogCategoriesMenuResponse($categoriesMenu)
+    /**
+     * Construct json struct from top menu
+     *
+     * @param array $categories
+     *
+     * @return array
+     */
+    private function constructJsonCatalogCategoriesMenuResponse(array $categories)
     {
         $formattedContent = [];
         $formattedContent['selector'] = '.module-menu-item';
         $formattedContent['content'] = $this->render(
             'PrestaShopBundle:Admin/Module/Includes:dropdown_categories_catalog.html.twig',
             array(
-                'topMenuData' => $this->getTopMenuData($categoriesMenu),
+                'topMenuData' => $this->getTopMenuData($categories),
             )
         )->getContent();
 
         return $formattedContent;
     }
 
+    /**
+     * Check user permission
+     *
+     * @param array $pageVoter
+     *
+     * @return void|JsonResponse
+     */
     private function checkPermissions(array $pageVoter)
     {
         if (!in_array(
@@ -755,17 +766,39 @@ class ModuleController extends ModuleAbstractController
     /**
      * Sort modules by last access date
      *
-     * @param array &$installedModules
+     * @param array &$modules
      */
-    private function sortModules(array &$installedModules)
+    private function sortModules(array &$modules)
     {
         usort(
-            $installedModules,
+            $modules,
             function ($a, $b) {
                 $aDate = new DateTime($a->database->get('last_access_date'));
                 $bDate = new DateTime($b->database->get('last_access_date'));
                 return $aDate < $bDate;
             }
         );
+    }
+
+    /**
+     * Get categories and its modules
+     *
+     * @param array $modules List of installed modules
+     *
+     * @return array
+     */
+    private function getCategories(AdminModuleDataProvider $modulesProvider, array $modules)
+    {
+        /* @var CategoriesProvider */
+        $categories = $this->get('prestashop.categories_provider')->getCategoriesMenu($modules);
+
+        foreach ($categories['categories']->subMenu as $category) {
+            $collection = AddonsCollection::createFrom($category->modules);
+            $modulesProvider->generateAddonsUrls($collection);
+            $category->modules = $this->get('prestashop.adapter.presenter.module')
+                               ->presentCollection($category->modules);
+        }
+
+        return $categories;
     }
 }
