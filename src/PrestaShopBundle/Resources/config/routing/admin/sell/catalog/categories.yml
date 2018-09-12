@@ -1,4 +1,4 @@
-admin_category_create:
+admin_category_add:
     path: /add
     methods: [GET, POST]
     defaults:
