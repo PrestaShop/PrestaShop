@@ -78,7 +78,7 @@ class AdminModuleController {
     this.upgradeAllTargets = '#modules-list-container-update .module_action_menu_upgrade:visible';
 
     // Bulk action selectors
-    this.bulkActionDropDownSelector = '.module-bulk-actions select';
+    this.bulkActionDropDownSelector = '.module-bulk-actions';
     this.checkedBulkActionListSelector = '.module-checkbox-bulk-list input:checked';
     this.checkedBulkActionGridSelector = '.module-checkbox-bulk-grid input:checked';
     this.bulkActionCheckboxGridSelector = '.module-checkbox-bulk-grid';
@@ -99,6 +99,11 @@ class AdminModuleController {
     this.statusSelectorLabelSelector = '.module-status-selector-label';
     this.statusItemSelector = '.module-status-menu';
     this.statusResetBtnSelector = '.module-status-reset';
+
+    // Module's bulk actions selectors
+    this.bulkSelectorLabelSelector = '.module-bulk-actions-selector-label';
+    this.bulkItemSelector = '.module-bulk-actions-menu';
+    this.bulkResetBtnSelector = '.module-bulk-actions-reset';
 
     // Selectors for Module Import and Addons connect
     this.addonsConnectModalBtnSelector = '#page-header-desc-configuration-addons_connect';
@@ -135,7 +140,6 @@ class AdminModuleController {
     this.initAddModuleAction();
     this.initDropzone();
     this.initPageChangeProtection();
-    this.initBulkActions();
     this.initPlaceholderMechanism();
     this.initFilterStatusDropdown();
     this.fetchModulesList();
@@ -145,7 +149,7 @@ class AdminModuleController {
   initFilterStatusDropdown() {
     const self = this;
     const body = $('body');
-    body.on('click', this.statusItemSelector, function () {
+    body.on('click', self.statusItemSelector, function () {
       // Get data from li DOM input
       self.currentRefStatus = parseInt($(this).attr('data-status-ref'), 10);
       // Change dropdown label to set it to the current status' displayname
@@ -155,11 +159,42 @@ class AdminModuleController {
       self.updateModuleVisibility();
     });
 
-    body.on('click', this.statusResetBtnSelector, function () {
+    body.on('click', self.statusResetBtnSelector, function () {
       $(self.statusSelectorLabelSelector).text($(this).find('a').text());
       $(this).hide();
       self.currentRefStatus = null;
       self.updateModuleVisibility();
+    });
+  }
+
+  initBulkDropdown() {
+    const self = this;
+    const body = $('body');
+
+    body.on('change', self.bulkActionDropDownSelector, function initializeBodyChange() {
+      if ($(self.getBulkCheckboxesCheckedSelector()).length === 0) {
+        $.growl.warning({message: window.translate_javascripts['Bulk Action - One module minimum']});
+        return;
+      }
+
+      self.lastBulkAction = $(this).find(':checked').attr('value');
+      const modulesListString = self.buildBulkActionModuleList();
+      const actionString = $(this).find(':checked').text().toLowerCase();
+      $(self.bulkConfirmModalListSelector).html(modulesListString);
+      $(self.bulkConfirmModalActionNameSelector).text(actionString);
+
+      if (self.lastBulkAction !== 'bulk-uninstall') {
+        $(self.bulkActionCheckboxSelector).hide();
+      }
+
+      $(self.bulkConfirmModalSelector).modal('show');
+    });
+
+    body.on('click', this.bulkConfirmModalAckBtnSelector, (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      $(self.bulkConfirmModalSelector).modal('hide');
+      self.doBulkAction(self.lastBulkAction);
     });
   }
 
@@ -355,7 +390,7 @@ class AdminModuleController {
           && self.currentRefCategory !== container.find('.modules-list').data('name')
         ) || (
           self.currentRefStatus !== null
-          && container.find('.module-item').length === 0
+          && container.find('.module-item').length !== 0
         )
       ) {
         container.hide();
@@ -380,36 +415,6 @@ class AdminModuleController {
     });
   }
 
-  initBulkActions() {
-    const self = this;
-    const body = $('body');
-
-    body.on('change', self.bulkActionDropDownSelector, function initializeBodyChange() {
-      if ($(self.getBulkCheckboxesCheckedSelector()).length === 0) {
-        $.growl.warning({message: window.translate_javascripts['Bulk Action - One module minimum']});
-        return;
-      }
-
-      self.lastBulkAction = $(this).find(':checked').attr('value');
-      const modulesListString = self.buildBulkActionModuleList();
-      const actionString = $(this).find(':checked').text().toLowerCase();
-      $(self.bulkConfirmModalListSelector).html(modulesListString);
-      $(self.bulkConfirmModalActionNameSelector).text(actionString);
-
-      if (self.lastBulkAction !== 'bulk-uninstall') {
-        $(self.bulkActionCheckboxSelector).hide();
-      }
-
-      $(self.bulkConfirmModalSelector).modal('show');
-    });
-
-    body.on('click', this.bulkConfirmModalAckBtnSelector, (event) => {
-      event.preventDefault();
-      event.stopPropagation();
-      $(self.bulkConfirmModalSelector).modal('hide');
-      self.doBulkAction(self.lastBulkAction);
-    });
-  }
 
   buildBulkActionModuleList() {
     const checkBoxesSelector = this.getBulkCheckboxesCheckedSelector();

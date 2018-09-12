@@ -37,7 +37,7 @@ use stdClass;
  */
 class CategoriesProvider
 {
-    const CATEGORY_OTHER = 'Other';
+    const CATEGORY_OTHER = 'other';
     const CATEGORY_THEME = 'theme_bundle';
     const CATEGORY_MY_MODULES = 'my_modules';
 
@@ -87,6 +87,7 @@ class CategoriesProvider
             $categories = $this->initializeCategories($categoriesListing);
             foreach ($modules as $module) {
                 if (empty($categoriesListing)) {
+                    // No result from Addons, check module type
                     $category = $this->findModuleType($module, $categories);
                 } else {
                     $category = $this->findModuleCategory($module, $categories);
@@ -133,7 +134,7 @@ class CategoriesProvider
         }
 
         foreach ($categoriesListing as $category) {
-            $categories['categories']->subMenu[$category->tab] = $this->createMenuObject(
+            $categories['categories']->subMenu[$category->name] = $this->createMenuObject(
                 isset($category->tab) ? $category->tab : $category->name,
                 $category->name,
                 [],
@@ -145,7 +146,7 @@ class CategoriesProvider
             self::CATEGORY_OTHER,
             self::CATEGORY_OTHER,
             [],
-            null
+            self::CATEGORY_OTHER
         );
 
         return $categories;
@@ -222,8 +223,8 @@ class CategoriesProvider
         }
 
         foreach ($categories['categories']->subMenu as $category) {
-            if ($category->name === $installedProduct->attributes->get('categoryName')) {
-                return $category->tab;
+            if ($category->name === $moduleCategoryParent) {
+                return $category->name;
             }
         }
 
