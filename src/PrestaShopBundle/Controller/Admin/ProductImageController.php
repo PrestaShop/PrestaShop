@@ -52,7 +52,7 @@ class ProductImageController extends FrameworkBundleAdminController
         $adminProductWrapper = $this->get('prestashop.adapter.admin.wrapper.product');
         $return_data = [];
 
-        if ($idProduct == 0 || !$request->isXmlHttpRequest()) {
+        if ($idProduct == 1 || !$request->isXmlHttpRequest()) {
             return $response;
         }
 
