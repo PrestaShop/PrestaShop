@@ -79,9 +79,13 @@
   }
 
   .tab {
+    position: relative;
+
     .notification-container {
       @include notification_container(1.5rem)
-      float: right;
+      position: absolute;
+      bottom: -5px;
+      right: 15px;
 
       .notification-counter {
         @include notification_counter();
