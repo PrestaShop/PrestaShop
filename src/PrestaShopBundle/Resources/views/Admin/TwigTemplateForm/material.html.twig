@@ -24,7 +24,20 @@
  *#}
 
 {% block material_choice_tree_widget %}
-<div class="material-choice-tree-container">
+<div class="material-choice-tree-container js-choice-tree-container">
+  <div class="choice-tree-actions">
+    <span class="form-control-label js-toggle-choice-tree-action"
+          data-expanded-text="{{ 'Expand'|trans({}, 'Admin.Actions') }}"
+          data-expanded-icon="expand_more"
+          data-collapsed-text="{{ 'Collapse'|trans({}, 'Admin.Actions') }}"
+          data-collapsed-icon="expand_less"
+          data-action="expand"
+    >
+      <i class="material-icons">expand_more</i>
+      <span class="js-toggle-text">{{ 'Expand'|trans({}, 'Admin.Actions') }}</span>
+    </span>
+  </div>
+
   <ul class="choice-tree">
     {% for choice in choices_tree %}
       {{ block('material_choice_tree_item_widget') }}
@@ -55,7 +68,7 @@
 {% endblock material_choice_tree_item_widget %}
 
 {% block material_choice_tree_item_checkbox_widget %}
-  <div class="checkbox">
+  <div class="checkbox js-input-wrapper">
     <div class="md-checkbox md-checkbox-inline">
       <label>
         <input type="checkbox"
@@ -71,7 +84,7 @@
 {% endblock material_choice_tree_item_checkbox_widget %}
 
 {% block material_choice_tree_item_radio_widget %}
-  <div class="radio">
+  <div class="radio js-input-wrapper">
     <label>
       <input type="radio"
              name="form[{{ form.vars.id }}][{{ choice_name }}]"
