@@ -43,7 +43,6 @@ class AdminCarrierWizardControllerCore extends AdminController
         $this->step_number = 0;
         $this->type_context = Shop::getContext();
         $this->old_context = Context::getContext();
-        
         $this->context = Context::getContext();
 
         $this->fieldImageSettings = array(
