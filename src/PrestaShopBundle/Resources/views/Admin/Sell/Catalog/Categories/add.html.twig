@@ -109,6 +109,15 @@
               {{ ps.label_with_help(('Group access'|trans), ('Mark all of the customer groups which you would like to have access to this category.'|trans({}, 'Admin.Catalog.Help'))) }}
               <div class="col-sm">
                 {{ form_widget(categoryForm.group_association) }}
+                <div class="alert alert-info">
+                  <p>
+                    <strong>{{ 'You now have three default customer groups.'|trans({}, 'Admin.Catalog.Help') }}</strong>
+                  </p>
+
+                  <p>{{ '%group_name% - All people without a valid customer account.'|trans }}</p>
+                  <p>{{ '%group_name% - Customer who placed an order with the guest checkout.'|trans }}</p>
+                  <p>{{ '%group_name% - All people who have created an account on this site.'|trans }}</p>
+                </div>
               </div>
             </div>
             <div class="form-group row">
