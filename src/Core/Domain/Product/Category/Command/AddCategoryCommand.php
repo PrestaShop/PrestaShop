@@ -194,7 +194,7 @@ class AddCategoryCommand
      * 
      * @return self
      */
-    private function setDescriptions($descriptions)
+    public function setDescriptions($descriptions)
     {
         $this->descriptions = $descriptions;
 
@@ -214,7 +214,7 @@ class AddCategoryCommand
      * 
      * @return self
      */
-    private function setIsActive($isActive)
+    public function setIsActive($isActive)
     {
         $this->isActive = $isActive;
 
@@ -254,7 +254,7 @@ class AddCategoryCommand
      * 
      * @return self
      */
-    private function setMetaTitles(array $metaTitles)
+    public function setMetaTitles(array $metaTitles)
     {
         $this->metaTitles = $metaTitles;
         
@@ -274,7 +274,7 @@ class AddCategoryCommand
      * 
      * @return self
      */
-    private function setMetaDescriptions(array $metaDescriptions)
+    public function setMetaDescriptions(array $metaDescriptions)
     {
         $this->metaDescriptions = $metaDescriptions;
         
@@ -294,7 +294,7 @@ class AddCategoryCommand
      * 
      * @return self
      */
-    private function setMetaKeywords(array $metaKeywords)
+    public function setMetaKeywords(array $metaKeywords)
     {
         $this->metaKeywords = $metaKeywords;
         return $this;
@@ -313,7 +313,7 @@ class AddCategoryCommand
      * 
      * @return self
      */
-    private function setAssociatedGroupIds(array $associatedGroupIds)
+    public function setAssociatedGroupIds(array $associatedGroupIds)
     {
         $this->associatedGroupIds = $associatedGroupIds;
 
@@ -333,7 +333,7 @@ class AddCategoryCommand
      * 
      * @return self
      */
-    private function setAssociatedShopIds(array $associatedShopIds)
+    public function setAssociatedShopIds(array $associatedShopIds)
     {
         $this->associatedShopIds = $associatedShopIds;
 

@@ -75,9 +75,7 @@ class CategoryType extends TranslatorAwareType
                 'required' => false,
                 'empty_data' => true,
             ])
-            ->add('id_parent', CategoryChoiceTreeType::class, [
-                'multiple' => true,
-            ])
+            ->add('id_parent', CategoryChoiceTreeType::class)
             ->add('description', TranslateTextareaType::class, [
                 'required' => false,
             ])
