@@ -74,7 +74,7 @@
       </div>
       {/foreach}
     {foreachelse}
-       <p class="alert alert-danger">{l s='Unfortunately, there are no payment method available.' d='Shop.Theme.Checkout'}</p>
+      <p class="alert alert-danger">{l s='Unfortunately, there are no payment method available.' d='Shop.Theme.Checkout'}</p>
     {/foreach}
   </div>
 
