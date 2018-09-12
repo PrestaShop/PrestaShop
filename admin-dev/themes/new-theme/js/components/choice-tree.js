@@ -30,23 +30,31 @@ const $ = window.$;
  */
 export default class ChoiceTree {
   constructor() {
-    $('.js-choice-tree-container').on('click', '.js-input-wrapper', (event) => {
+    const $container = $('.js-choice-tree-container');
+
+    $container.on('click', '.js-input-wrapper', (event) => {
       const $inputWrapper = $(event.currentTarget);
 
-      this._toggleTreeDisplay($inputWrapper);
+      this._toggleChildTree($inputWrapper);
+    });
+
+    $container.on('click', '.js-toggle-choice-tree-action', (event) => {
+      const $action = $(event.currentTarget);
+
+      this._toggleTree($action);
     });
 
     return {};
   }
 
   /**
-   * Collapse or expand sub-tree
+   * Collapse or expand sub-tree for single parent
    *
    * @param {jQuery} $inputWrapper
    *
    * @private
    */
-  _toggleTreeDisplay($inputWrapper) {
+  _toggleChildTree($inputWrapper) {
     const $parentWrapper = $inputWrapper.closest('li');
 
     if ($parentWrapper.hasClass('expanded')) {
@@ -62,5 +70,54 @@ export default class ChoiceTree {
         .removeClass('collapsed')
         .addClass('expanded');
     }
+  }
+
+  /**
+   * Collapse or expand whole tree
+   *
+   * @param {jQuery} $action
+   *
+   * @private
+   */
+  _toggleTree($action) {
+    const $parentContainer = $action.closest('.js-choice-tree-container');
+    const action = $action.data('action');
+
+    // toggle action configuration
+    const config = {
+      addClass: {
+        expand: 'expanded',
+        collapse: 'collapsed',
+      },
+      removeClass: {
+        expand: 'collapsed',
+        collapse: 'expanded',
+      },
+      nextAction: {
+        expand: 'collapse',
+        collapse: 'expand',
+      },
+      text: {
+        expand: 'collapsed-text',
+        collapse: 'expanded-text',
+      },
+      icon: {
+        expand: 'collapsed-icon',
+        collapse: 'expanded-icon',
+      }
+    };
+
+    $parentContainer.find('li').each((index, item) => {
+      const $item = $(item);
+
+      if ($item.hasClass(config.removeClass[action])) {
+          $item.removeClass(config.removeClass[action])
+            .addClass(config.addClass[action]);
+      }
+    });
+
+    $action.data('action', config.nextAction[action]);
+    $action.find('.material-icons').text($action.data(config.icon[action]));
+    $action.find('.js-toggle-text').text($action.data(config.text[action]));
   }
 }
