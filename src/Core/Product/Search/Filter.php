@@ -41,7 +41,7 @@ class Filter
     /**
      * @var bool whether or not the filter is used in the query
      */
-    private $active = true;
+    private $active = false;
 
     /**
      * @var bool whether or not the filter is displayed
