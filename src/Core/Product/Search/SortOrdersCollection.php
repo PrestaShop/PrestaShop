@@ -29,11 +29,9 @@ namespace PrestaShop\PrestaShop\Core\Product\Search;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * This class is not a factory but a provider of default Sort Orders.
- *
- * @deprecated since 1.7.5 and to be removed in 1.8: use SortOrdersCollection:getDefaults instead.
+ * This class provide the list of default Sort Orders.
  */
-class SortOrderFactory
+final class SortOrdersCollection
 {
     /**
      * @var TranslatorInterface the translator
@@ -50,7 +48,7 @@ class SortOrderFactory
      *
      * @throws \Exception
      */
-    public function getDefaultSortOrders()
+    public function getDefaults()
     {
         return [
             (new SortOrder('product', 'position', 'desc'))->setLabel(

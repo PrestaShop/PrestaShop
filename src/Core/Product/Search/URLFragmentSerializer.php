@@ -27,13 +27,13 @@
 namespace PrestaShop\PrestaShop\Core\Product\Search;
 
 /**
- * Class URLFragmentSerializer.
+ * This class is a serializer for URL fragments.
  */
 class URLFragmentSerializer
 {
     /**
-     * @param $separator
-     * @param $escape
+     * @param string $separator the string separator
+     * @param string $escape the string escape
      * @param array $list
      *
      * @return string
@@ -46,40 +46,40 @@ class URLFragmentSerializer
     }
 
     /**
-     * @param $separator
-     * @param $escape
-     * @param $str
+     * @param string $separator the string separator
+     * @param string $escape the string escape
+     * @param string $string the UTF8 string
      *
      * @return array
      */
-    private function unserializeListOfStrings($separator, $escape, $str)
+    private function unserializeListOfStrings($separator, $escape, $string)
     {
         $list = [];
         $currentString = '';
         $escaping = false;
 
         // get UTF-8 chars, inspired from http://stackoverflow.com/questions/9438158/split-utf8-string-into-array-of-chars
-        $arr = [];
-        preg_match_all('/./u', $str, $arr);
-        $chars = $arr[0];
+        $arrayOfCharacters = [];
+        preg_match_all('/./u', $string, $arrayOfCharacters);
+        $characters = $arrayOfCharacters[0];
 
-        foreach ($chars as $char) {
+        foreach ($characters as $character) {
             if ($escaping) {
-                if ($char === $separator || $char === $escape) {
-                    $currentString .= $char;
+                if ($character === $separator || $character === $escape) {
+                    $currentString .= $character;
                 } else {
                     $list[] = $currentString;
-                    $currentString = $char;
+                    $currentString = $character;
                 }
                 $escaping = false;
             } else {
-                if ($char === $escape) {
+                if ($character === $escape) {
                     $escaping = true;
-                } elseif ($char === $separator) {
+                } elseif ($character === $separator) {
                     $list[] = $currentString;
                     $currentString = '';
                 } else {
-                    $currentString .= $char;
+                    $currentString .= $character;
                 }
             }
         }
@@ -112,14 +112,14 @@ class URLFragmentSerializer
     }
 
     /**
-     * @param $str
+     * @param string $string
      *
      * @return array
      */
-    public function unserialize($str)
+    public function unserialize($string)
     {
         $fragment = [];
-        $parts = $this->unserializeListOfStrings('/', '/', $str);
+        $parts = $this->unserializeListOfStrings('/', '/', $string);
         foreach ($parts as $part) {
             $values = $this->unserializeListOfStrings('-', '-', $part);
             $key = array_shift($values);
