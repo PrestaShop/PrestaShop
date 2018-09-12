@@ -31,17 +31,17 @@ class Filter
     /**
      * @var string the filter label
      */
-    private $label;
+    private $label = '';
 
     /**
      * @var string internal type, used by query logic
      */
-    private $type;
+    private $type = '';
 
     /**
      * @var bool whether or not the filter is used in the query
      */
-    private $active;
+    private $active = true;
 
     /**
      * @var bool whether or not the filter is displayed
@@ -56,17 +56,17 @@ class Filter
     /**
      * @var int the filter magnitude
      */
-    private $magnitude;
+    private $magnitude = 0;
 
     /**
-     * @var
+     * @var mixed the filter value
      */
     private $value;
 
     /**
-     * @var array
+     * @var array the filter next encoded facets
      */
-    private $nextEncodedFacets;
+    private $nextEncodedFacets = [];
 
     /**
      * @return array an array representation of the filter
@@ -145,6 +145,10 @@ class Filter
      */
     public function getProperty($name)
     {
+        if (!array_key_exists($name, $this->properties)) {
+            return null;
+        }
+
         return $this->properties[$name];
     }
 
