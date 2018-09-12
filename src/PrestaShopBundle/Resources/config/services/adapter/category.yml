@@ -48,3 +48,9 @@ services:
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Category\Command\BulkDeleteCategoriesCommand
+
+
+  prestashop.adapter.category.command_handler.add_category_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Category\CommandHandler\AddCategoryHandler'
+    tags:
+      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Product\Category\Command\AddCategoryCommand' }

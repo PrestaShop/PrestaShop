@@ -40,6 +40,7 @@ use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryDeleteMode;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 use PrestaShop\PrestaShop\Core\Search\Filters\CategoryFilters;
 use PrestaShopBundle\Component\CsvResponse;
+use PrestaShop\PrestaShop\Core\Domain\Product\Category\Command\AddCategoryCommand;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Sell\Category\DeleteCategoriesType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -315,6 +316,51 @@ class CategoryController extends FrameworkBundleAdminController
 
         if ($categoryCreateForm->isSubmitted()) {
             $data = $categoryCreateForm->getData();
+
+            try {
+                $command = new AddCategoryCommand(
+                    $data['name'],
+                    $data['link_rewrite'],
+                    $data['id_parent']
+                );
+
+                if (isset($data['active'])) {
+                    $command->setIsActive($data['active']);
+                }
+
+                if (isset($data['description'])) {
+                    $command->setDescriptions($data['description']);
+                }
+
+                if (isset($data['meta_title'])) {
+                    $command->setMetaTitles($data['meta_title']);
+                }
+
+                if (isset($data['meta_description'])) {
+                    $command->setMetaDescriptions($data['meta_description']);
+                }
+
+                if (isset($data['meta_keyword'])) {
+                    $command->setMetaKeywords($data['meta_keyword']);
+                }
+
+                if (isset($data['group_association'])) {
+                    $command->setAssociatedGroupIds($data['group_association']);
+                }
+
+                if (isset($data['shop_association'])) {
+                    $command->setAssociatedShopIds($data['shop_association']);
+                }
+
+                $this->getCommandBus()->handle($command);
+
+                $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_category_add');
+            } catch (CategoryException $e) {
+                //@todo: handle properly
+                throw $e;
+            }
         }
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Categories/add.html.twig', [
