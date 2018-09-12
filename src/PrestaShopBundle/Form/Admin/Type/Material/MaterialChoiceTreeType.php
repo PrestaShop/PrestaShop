@@ -59,6 +59,7 @@ class MaterialChoiceTreeType extends AbstractType
                 'choice_children' => 'children',
                 'choice_name' => 'tree',
                 'multiple' => false,
+                'compound' => false,
             ])
             ->setAllowedTypes('choices_tree', 'array')
             ->setAllowedTypes('multiple', 'bool')
@@ -66,6 +67,7 @@ class MaterialChoiceTreeType extends AbstractType
             ->setAllowedTypes('choice_label', 'string')
             ->setAllowedTypes('choice_children', 'string')
             ->setAllowedTypes('choice_name', 'string')
+            ->addAllowedValues('compound', false)
         ;
     }
 
