@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Catalog\Category;
 
+use PrestaShopBundle\Form\Admin\Type\CategoryChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\Material\MaterialChoiceTableType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslateTextareaType;
@@ -36,6 +37,9 @@ use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
+/**
+ * Class CategoryType
+ */
 class CategoryType extends TranslatorAwareType
 {
     /**
@@ -58,6 +62,9 @@ class CategoryType extends TranslatorAwareType
         $this->customerGroupChoices = $customerGroupChoices;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -66,8 +73,11 @@ class CategoryType extends TranslatorAwareType
             ])
             ->add('active', SwitchType::class, [
                 'required' => false,
+                'empty_data' => true,
             ])
-            ->add('id_parent',ChoiceType::class)
+            ->add('id_parent', CategoryChoiceTreeType::class, [
+                'multiple' => true,
+            ])
             ->add('description', TranslateTextareaType::class, [
                 'required' => false,
             ])
@@ -99,10 +109,10 @@ class CategoryType extends TranslatorAwareType
                     'required' => false,
                 ],
             ])
-            ->add('friendly_url', TranslateTextType::class, [
+            ->add('link_rewrite', TranslateTextType::class, [
                 'locales' => $this->locales,
             ])
-            ->add('customer_group_access', MaterialChoiceTableType::class, [
+            ->add('group_association', MaterialChoiceTableType::class, [
                 'choices' => $this->customerGroupChoices,
                 'required' => false,
             ])
