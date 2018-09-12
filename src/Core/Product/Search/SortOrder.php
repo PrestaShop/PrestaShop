@@ -29,33 +29,33 @@ namespace PrestaShop\PrestaShop\Core\Product\Search;
 use Exception;
 
 /**
- * Class SortOrder.
+ * This class define in which order the list of products will be sorted.
  */
 class SortOrder
 {
     /**
-     * @var
+     * @var string the SortOrder entity
      */
     private $entity;
     /**
-     * @var
+     * @var string the SortOrder field
      */
     private $field;
     /**
-     * @var
+     * @var string the SortOrder direction
      */
     private $direction;
     /**
-     * @var
+     * @var string string The SortOrder label
      */
     private $label;
 
     /**
      * SortOrder constructor.
      *
-     * @param $entity
-     * @param $field
-     * @param string $direction
+     * @param string $entity the SortOrder entity
+     * @param string $field the SortOrder field
+     * @param string $direction the SortOrder direction
      *
      * @throws Exception
      */
@@ -68,6 +68,8 @@ class SortOrder
     }
 
     /**
+     * Will returns a new Sort Order with random direction.
+     *
      * @return SortOrder
      *
      * @throws Exception
@@ -78,7 +80,7 @@ class SortOrder
     }
 
     /**
-     * @return bool
+     * @return bool if true, the Sort Order direction is random
      */
     public function isRandom()
     {
@@ -86,7 +88,7 @@ class SortOrder
     }
 
     /**
-     * @return array
+     * @return array the array representation of a Sort Order
      */
     public function toArray()
     {
@@ -100,7 +102,7 @@ class SortOrder
     }
 
     /**
-     * @return string
+     * @return string the string representation of a Sort Order
      */
     public function toString()
     {
@@ -108,21 +110,23 @@ class SortOrder
     }
 
     /**
-     * @param $paramValue
+     * Creates a new Sort Order from string of this kind: {entity}.{field}.{direction}.
+     *
+     * @param string $sortOrderConfiguration the Sort Order configuration string
      *
      * @return SortOrder
      *
      * @throws Exception
      */
-    public static function newFromString($paramValue)
+    public static function newFromString($sortOrderConfiguration)
     {
-        list($entity, $field, $direction) = explode('.', $paramValue);
+        list($entity, $field, $direction) = explode('.', $sortOrderConfiguration);
 
         return new SortOrder($entity, $field, $direction);
     }
 
     /**
-     * @param $label
+     * @param string $label the Sort Order label
      *
      * @return $this
      */
@@ -134,7 +138,7 @@ class SortOrder
     }
 
     /**
-     * @return mixed
+     * @return string the Sort Order label
      */
     public function getLabel()
     {
@@ -142,7 +146,7 @@ class SortOrder
     }
 
     /**
-     * @param $entity
+     * @param string $entity the Sort Order entity
      *
      * @return $this
      */
@@ -154,7 +158,7 @@ class SortOrder
     }
 
     /**
-     * @return mixed
+     * @return string the Sort Order entity
      */
     public function getEntity()
     {
@@ -162,7 +166,7 @@ class SortOrder
     }
 
     /**
-     * @param $field
+     * @param string $field the Sort Order field
      *
      * @return $this
      */
@@ -174,7 +178,7 @@ class SortOrder
     }
 
     /**
-     * @return mixed
+     * @return string the Sort Order field
      */
     public function getField()
     {
@@ -182,29 +186,29 @@ class SortOrder
     }
 
     /**
-     * @param $dir
+     * @param string $direction
      *
      * @return string
      *
      * @throws Exception
      */
-    public function setDirection($dir)
+    public function setDirection($direction)
     {
-        $direction = strtolower($dir);
-        if (!in_array($direction, ['asc', 'desc', 'random'])) {
+        $formattedDirection = strtolower($direction);
+        if (!in_array($formattedDirection, ['asc', 'desc', 'random'])) {
             throw new Exception(sprintf(
                 'Invalid SortOrder direction `%s`. Expecting one of: `ASC`, `DESC`, or `RANDOM`.',
-                $dir
+                $direction
             ));
         }
 
-        $this->direction = $direction;
+        $this->direction = $formattedDirection;
 
         return $this->direction;
     }
 
     /**
-     * @return mixed
+     * @return string the Sort Order direction
      */
     public function getDirection()
     {
@@ -212,7 +216,7 @@ class SortOrder
     }
 
     /**
-     * @return string
+     * @return string returns the order way using legacy prefix
      */
     private function getLegacyPrefix()
     {
@@ -234,7 +238,7 @@ class SortOrder
     }
 
     /**
-     * @param bool $prefix
+     * @param bool $prefix if true, relies on legacy prefix
      *
      * @return string
      */
@@ -250,7 +254,7 @@ class SortOrder
     }
 
     /**
-     * @return mixed
+     * @return string the legacy order way
      */
     public function toLegacyOrderWay()
     {

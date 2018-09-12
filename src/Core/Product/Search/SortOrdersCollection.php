@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -29,11 +29,9 @@ namespace PrestaShop\PrestaShop\Core\Product\Search;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * This class is not a factory but a provider of default Sort Orders.
- *
- * @deprecated since 1.7.5 and to be removed in 1.8: use SortOrdersCollection:getDefaults instead.
+ * This class provide the list of default Sort Orders.
  */
-class SortOrderFactory
+final class SortOrdersCollection
 {
     /**
      * @var TranslatorInterface the translator
@@ -50,7 +48,7 @@ class SortOrderFactory
      *
      * @throws \Exception
      */
-    public function getDefaultSortOrders()
+    public function getDefaults()
     {
         return [
             (new SortOrder('product', 'position', 'desc'))->setLabel(
