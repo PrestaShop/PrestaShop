@@ -617,3 +617,10 @@ services:
       public: true
       tags:
           - { name: form.type }
+
+    form.type.common.category_choice_tree:
+        class: 'PrestaShopBundle\Form\Admin\Type\CategoryChoiceTreeType'
+        arguments:
+            - '@prestashop.core.api.category.repository'
+        tags:
+            - { name: form.type }

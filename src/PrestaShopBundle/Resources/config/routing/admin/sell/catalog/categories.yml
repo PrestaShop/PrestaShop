@@ -67,8 +67,8 @@ admin_category_export:
       _legacy_controller: AdminCategories
 
 admin_category_create:
-    path: /create
+    path: /add
     methods: [GET, POST]
     defaults:
-        _controller: PrestaShopBundle:Admin\Sell\Catalog\Category:create
+        _controller: PrestaShopBundle:Admin\Sell\Catalog\Category:add
         _legacy_controller: AdminCategories
