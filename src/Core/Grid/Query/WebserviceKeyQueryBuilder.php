@@ -26,27 +26,50 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Query;
 
+use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
 /**
- * Class WebserviceQueryBuilder is responsible for providing data for webservice accounts list.
+ * Class WebserviceKeyQueryBuilder is responsible for providing data for webservice accounts list.
  */
-final class WebserviceQueryBuilder extends AbstractDoctrineQueryBuilder
+final class WebserviceKeyQueryBuilder extends AbstractDoctrineQueryBuilder
 {
+    /**
+     * @var DoctrineSearchCriteriaApplicatorInterface
+     */
+    private $searchCriteriaApplicator;
+
+    /**
+     * WebserviceKeyQueryBuilder constructor.
+     *
+     * @param Connection $connection
+     * @param $dbPrefix
+     * @param DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator
+     */
+    public function __construct(
+        Connection $connection,
+        $dbPrefix,
+        DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator
+    ) {
+        parent::__construct($connection, $dbPrefix);
+        $this->searchCriteriaApplicator = $searchCriteriaApplicator;
+    }
+
     /**
      * {@inheritdoc}
      */
-    public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria = null)
+    public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $qb = $this->getQueryBuilder($searchCriteria->getFilters());
         $qb->select('wa.`id_webservice_account`, wa.`key`, wa.`description`, wa.`active`')
             ->orderBy(
-            $this->getModifiedOrderBy($searchCriteria->getOrderBy()),
-            $searchCriteria->getOrderWay()
+                $this->getModifiedOrderBy($searchCriteria->getOrderBy()),
+                $searchCriteria->getOrderWay()
             )
-            ->setFirstResult($searchCriteria->getOffset())
-            ->setMaxResults($searchCriteria->getLimit());
+        ;
+
+        $this->searchCriteriaApplicator->applyPagination($searchCriteria, $qb);
 
         return $qb;
     }
@@ -54,7 +77,7 @@ final class WebserviceQueryBuilder extends AbstractDoctrineQueryBuilder
     /**
      * {@inheritdoc}
      */
-    public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria = null)
+    public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $qb = $this->getQueryBuilder($searchCriteria->getFilters());
         $qb->select('COUNT(wa.`id_webservice_account`)');

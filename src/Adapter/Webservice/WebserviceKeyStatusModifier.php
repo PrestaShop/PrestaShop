@@ -31,9 +31,9 @@ use Validate;
 use WebserviceKey;
 
 /**
- * Class WebserviceAccountStatusModifier is responsible for modifying webservice account status.
+ * Class WebserviceKeyStatusModifier is responsible for modifying webservice account status.
  */
-final class WebserviceAccountStatusModifier
+final class WebserviceKeyStatusModifier
 {
     /**
      * @var TranslatorInterface
@@ -41,7 +41,7 @@ final class WebserviceAccountStatusModifier
     private $translator;
 
     /**
-     * WebserviceAccountStatusModifier constructor.
+     * WebserviceKeyStatusModifier constructor.
      *
      * @param TranslatorInterface $translator
      */
@@ -71,8 +71,8 @@ final class WebserviceAccountStatusModifier
                     [],
                     'Admin.Notifications.Error'
                 ) .
-                ' <b>' . WebserviceKey::$definition['table'] . '</b> ' .
-                $this->translator->trans('(cannot load object)', array(), 'Admin.Notifications.Error');
+                WebserviceKey::$definition['table'] .
+                $this->translator->trans('(cannot load object)', [], 'Admin.Notifications.Error');
 
             return [$error];
         }
@@ -98,7 +98,7 @@ final class WebserviceAccountStatusModifier
      * @throws \PrestaShopDatabaseException
      * @throws \PrestaShopException
      */
-    public function toggleMultipleStatus(array $columnIds, $status)
+    public function setStatus(array $columnIds, $status)
     {
         $result = true;
         foreach ($columnIds as $columnId) {

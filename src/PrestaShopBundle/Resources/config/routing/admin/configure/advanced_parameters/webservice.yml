@@ -16,21 +16,21 @@ admin_webservice_settings_save:
     path: /settings
     methods: POST
     defaults:
-        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Webservice:processSettingsForm'
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Webservice:processForm'
         _legacy_controller: AdminWebservice
 
 admin_webservice_list_create:
     path: /create
     methods: GET
     defaults:
-        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Webservice:listCreate'
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Webservice:create'
         _legacy_controller: AdminWebservice
 
 admin_webservice_list_edit:
     path: /edit/{webserviceAccountId}
     methods: GET
     defaults:
-        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Webservice:listEdit'
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Webservice:edit'
         _legacy_controller: AdminWebservice
     requirements:
         webserviceAccountId: \d+

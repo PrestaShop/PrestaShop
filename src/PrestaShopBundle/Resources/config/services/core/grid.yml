@@ -36,13 +36,13 @@ services:
             - '@prestashop.core.grid.query.doctrine_query_parser'
             - 'request_sql'
 
-    prestashop.core.grid.data_provider.webservice:
+    prestashop.core.grid.data_provider.webservice_key:
         class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
         arguments:
-            - '@prestashop.core.grid.query_builder.webservice'
+            - '@prestashop.core.grid.query.webservice_key_query_builder'
             - '@prestashop.core.hook.dispatcher'
             - '@prestashop.core.grid.query.doctrine_query_parser'
-            - 'webservice'
+            - 'webservice_key'
 
     # Grid definition factories
     prestashop.core.grid.definition.factory.abstract_grid_definition:
@@ -82,8 +82,8 @@ services:
         parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
         public: true
 
-    prestashop.core.grid.definition.factory.webservice:
-        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\WebserviceDefinitionFactory'
+    prestashop.core.grid.definition.factory.webservice_key:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\WebserviceKeyDefinitionFactory'
         parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
         arguments:
             - '@=service("prestashop.core.form.choice_provider.status").getChoices()'
@@ -124,11 +124,11 @@ services:
             - '@prestashop.core.grid.filter.form_factory'
             - '@prestashop.core.hook.dispatcher'
 
-    prestashop.core.grid.factory.webservice:
+    prestashop.core.grid.factory.webservice_key:
         class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
         arguments:
-            - '@prestashop.core.grid.definition.factory.webservice'
-            - '@prestashop.core.grid.data_provider.webservice'
+            - '@prestashop.core.grid.definition.factory.webservice_key'
+            - '@prestashop.core.grid.data_provider.webservice_key'
             - '@prestashop.core.grid.filter.form_factory'
             - '@prestashop.core.hook.dispatcher'
 
@@ -153,9 +153,11 @@ services:
         arguments:
             - '@prestashop.core.query.doctrine_search_criteria_applicator'
 
-    prestashop.core.grid.query_builder.webservice:
-        class: 'PrestaShop\PrestaShop\Core\Grid\Query\WebserviceQueryBuilder'
+    prestashop.core.grid.query.webservice_key_query_builder:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Query\WebserviceKeyQueryBuilder'
         parent: 'prestashop.core.grid.abstract_query_builder'
+        arguments:
+            - '@prestashop.core.query.doctrine_search_criteria_applicator'
         public: true
 
     # Grid Query parser
