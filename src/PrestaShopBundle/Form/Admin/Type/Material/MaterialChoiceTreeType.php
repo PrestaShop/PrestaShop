@@ -52,15 +52,13 @@ class MaterialChoiceTreeType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver
-            ->setRequired([
-                'choice_label',
-                'choice_value',
-            ])
             ->setDefaults([
                 'choices_tree' => [],
+                'choice_label' => 'name',
+                'choice_value' => 'id',
                 'choice_children' => 'children',
                 'choice_name' => 'tree',
-                'multiple' => true,
+                'multiple' => false,
             ])
             ->setAllowedTypes('choices_tree', 'array')
             ->setAllowedTypes('multiple', 'bool')
