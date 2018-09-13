@@ -39,8 +39,10 @@ class AdminModuleController {
     this.moduleCardController = moduleCardController;
 
     this.DEFAULT_INDEX = 6;
+    this.DISPLAY_GRID = 'grid';
+    this.DISPLAY_LIST = 'list';
 
-    this.currentIndexes = {};
+    this.currentCategoryDisplay = {};
     this.currentDisplay = '';
     this.isCategoryGridDisplayed = false;
     this.currentTagsList = [];
@@ -60,6 +62,10 @@ class AdminModuleController {
     this.modulesList = [];
     this.addonsCardGrid = null;
     this.addonsCardList = null;
+
+    // See more & See less selector
+    this.seeMoreSelector = '.module-short-list .see-more';
+    this.seeLessSelector = '.module-short-list .see-less';
 
     // Selectors into vars to make it easier to change them while keeping same code logic
     this.moduleItemGridSelector = '.module-item-grid';
@@ -147,6 +153,7 @@ class AdminModuleController {
     this.initFilterStatusDropdown();
     this.fetchModulesList();
     this.getNotificationsCount();
+    this.initializeSeeMore();
   }
 
   initFilterStatusDropdown() {
@@ -304,7 +311,7 @@ class AdminModuleController {
           price: parseFloat($this.data('price')),
           active: parseInt($this.data('active'), 10),
           access: $this.data('last-access'),
-          display: $this.hasClass('module-item-list') ? 'list' : 'grid',
+          display: $this.hasClass('module-item-list') ? self.DISPLAY_LIST : self.DISPLAY_GRID,
           index: $this.data('index'),
           container,
         });
@@ -380,11 +387,15 @@ class AdminModuleController {
           isVisible &= tagExists;
         }
 
-        if (self.currentIndexes[currentModule.categories] === undefined) {
-          self.currentIndexes[currentModule.categories] = self.DEFAULT_INDEX;
+        if (self.currentCategoryDisplay[currentModule.categories] === undefined) {
+          self.currentCategoryDisplay[currentModule.categories] = false;
         }
 
-        isVisible &= self.currentIndexes[currentModule.categories] > currentModule.index;
+        if (self.currentDisplay === self.DISPLAY_LIST
+            && currentModule.index >= self.DEFAULT_INDEX
+        ) {
+          isVisible &= self.currentCategoryDisplay[currentModule.categories];
+        }
 
         if (isVisible) {
           currentModule.container.append(currentModule.domObject);
@@ -411,7 +422,7 @@ class AdminModuleController {
     });
 
     if (self.currentTagsList.length) {
-      $('.modules-list').append(this.currentDisplay === 'grid' ? this.addonsCardGrid : this.addonsCardList);
+      $('.modules-list').append(this.currentDisplay === self.DISPLAY_GRID ? this.addonsCardGrid : this.addonsCardList);
     }
   }
 
@@ -706,20 +717,20 @@ class AdminModuleController {
   }
 
   getBulkCheckboxesSelector() {
-    return this.currentDisplay === 'grid'
+    return this.currentDisplay === this.DISPLAY_GRID
          ? this.bulkActionCheckboxGridSelector
          : this.bulkActionCheckboxListSelector;
   }
 
 
   getBulkCheckboxesCheckedSelector() {
-    return this.currentDisplay === 'grid'
+    return this.currentDisplay === this.DISPLAY_GRID
          ? this.checkedBulkActionGridSelector
          : this.checkedBulkActionListSelector;
   }
 
   getModuleItemSelector() {
-    return this.currentDisplay === 'grid'
+    return this.currentDisplay === this.DISPLAY_GRID
          ? this.moduleItemGridSelector
          : this.moduleItemListSelector;
   }
@@ -802,7 +813,7 @@ class AdminModuleController {
   }
 
   initCurrentDisplay() {
-    this.currentDisplay = this.currentDisplay === '' ? 'list' : 'grid';
+    this.currentDisplay = this.currentDisplay === '' ? this.DISPLAY_LIST : this.DISPLAY_GRID;
   }
 
   initSortingDropdown() {
@@ -1001,7 +1012,7 @@ class AdminModuleController {
   }
 
   switchSortingDisplayTo(switchTo) {
-    if (switchTo !== 'grid' && switchTo !== 'list') {
+    if (switchTo !== this.DISPLAY_GRID && switchTo !== this.DISPLAY_LIST) {
       console.error(`Can't switch to undefined display property "${switchTo}"`);
       return;
     }
@@ -1010,6 +1021,24 @@ class AdminModuleController {
     $(`#module-sort-${switchTo}`).addClass('module-sort-active');
     this.currentDisplay = switchTo;
     this.updateModuleVisibility();
+  }
+
+  initializeSeeMore() {
+    const self = this;
+    $(self.seeMoreSelector).on('click', function seeMore() {
+      console.log('here');
+      self.currentCategoryDisplay[$(this).data('category')] = true;
+      $(this).addClass('d-none');
+      $(self.seeLessSelector).removeClass('d-none');
+      self.updateModuleVisibility();
+    });
+
+    $(self.seeLessSelector).on('click', function seeMore() {
+      self.currentCategoryDisplay[$(this).data('category')] = false;
+      $(this).addClass('d-none');
+      $(self.seeMoreSelector).removeClass('d-none');
+      self.updateModuleVisibility();
+    });
   }
 }
 

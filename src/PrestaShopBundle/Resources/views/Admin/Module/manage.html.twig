@@ -51,6 +51,12 @@
             </div>
           {% else  %}
             {% include 'PrestaShopBundle:Admin/Module/Includes:grid_manage_installed.html.twig' with { 'modules': category.modules, 'display_type': 'list', 'origin': 'manage', 'id': category.tab } %}
+
+            {% block addon_card_see_more %}
+              {% if (category.modules | length) > maxModulesDisplayed %}
+                {% include 'PrestaShopBundle:Admin/Module/Includes:see_more.html.twig' with { 'id': category.tab } %}
+              {% endif %}
+            {% endblock %}
           {% endif %}
         </div>
       {% endfor %}
