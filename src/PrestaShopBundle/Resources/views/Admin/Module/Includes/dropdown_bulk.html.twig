@@ -22,7 +22,7 @@
   * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
   * International Registered Trademark & Property of PrestaShop SA
   *#}
-<div class="ps-dropdown dropdown btn-group bordered mb-1 module-bulk-actions">
+<div class="ps-dropdown dropdown btn-group bordered mb-1 module-bulk-actions disabled">
   <div id="bulk-actions-dropdown" class="dropdown-label" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
     <span class="js-selected-item selected-item module-bulk-actions-selector-label">
       {{ 'All Categories'|trans({}, 'Admin.Modules.Feature') }}
@@ -34,6 +34,7 @@
     <ul class="items-list js-items-list">
       {% for key, name in bulkActions %}
         <li
+          class="module-bulk-menu"
           data-ref="{{key}}"
           data-display-name="{{name}}"
         >

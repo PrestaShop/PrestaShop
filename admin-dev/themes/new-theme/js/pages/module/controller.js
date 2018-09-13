@@ -88,10 +88,11 @@ class AdminModuleController {
 
     // Bulk action selectors
     this.bulkActionDropDownSelector = '.module-bulk-actions';
-    this.checkedBulkActionListSelector = '.module-checkbox-bulk-list input:checked';
-    this.checkedBulkActionGridSelector = '.module-checkbox-bulk-grid input:checked';
-    this.bulkActionCheckboxGridSelector = '.module-checkbox-bulk-grid';
-    this.bulkActionCheckboxListSelector = '.module-checkbox-bulk-list';
+    this.bulkItemSelector = '.module-bulk-menu';
+    this.bulkActionCheckboxListSelector = '.module-checkbox-bulk-list input';
+    this.bulkActionCheckboxGridSelector = '.module-checkbox-bulk-grid input';
+    this.checkedBulkActionListSelector = `${this.bulkActionCheckboxListSelector}:checked`;
+    this.checkedBulkActionGridSelector = `${this.bulkActionCheckboxGridSelector}:checked`;
     this.bulkActionCheckboxSelector = '#module-modal-bulk-checkbox';
     this.bulkConfirmModalSelector = '#module-modal-bulk-confirm';
     this.bulkConfirmModalActionNameSelector = '#module-modal-bulk-confirm-action-name';
@@ -108,11 +109,6 @@ class AdminModuleController {
     this.statusSelectorLabelSelector = '.module-status-selector-label';
     this.statusItemSelector = '.module-status-menu';
     this.statusResetBtnSelector = '.module-status-reset';
-
-    // Module's bulk actions selectors
-    this.bulkSelectorLabelSelector = '.module-bulk-actions-selector-label';
-    this.bulkItemSelector = '.module-bulk-actions-menu';
-    this.bulkResetBtnSelector = '.module-bulk-actions-reset';
 
     // Selectors for Module Import and Addons connect
     this.addonsConnectModalBtnSelector = '#page-header-desc-configuration-addons_connect';
@@ -140,6 +136,7 @@ class AdminModuleController {
     this.initCurrentDisplay();
     this.initSortingDisplaySwitch();
     this.initSortingDropdown();
+    this.initBulkDropdown();
     this.initSearchBlock();
     this.initCategorySelect();
     this.initCategoriesGrid();
@@ -181,19 +178,34 @@ class AdminModuleController {
     const self = this;
     const body = $('body');
 
-    body.on('change', self.bulkActionDropDownSelector, function initializeBodyChange() {
+    body.on('click', self.getBulkCheckboxesSelector, () => {
+      const selector = $(self.bulkActionDropDownSelector);
+      if ($(self.getBulkCheckboxesCheckedSelector()).length > 0) {
+        selector.removeClass('disabled');
+        selector.closest('.module-top-menu-item')
+          .removeClass('disabled');
+      } else {
+        selector.addClass('disabled');
+        selector.closest('.module-top-menu-item')
+          .addClass('disabled');
+      }
+    });
+
+    body.on('click', self.bulkItemSelector, function initializeBodyChange() {
       if ($(self.getBulkCheckboxesCheckedSelector()).length === 0) {
         $.growl.warning({message: window.translate_javascripts['Bulk Action - One module minimum']});
         return;
       }
 
-      self.lastBulkAction = $(this).find(':checked').attr('value');
+      self.lastBulkAction = $(this).data('ref');
       const modulesListString = self.buildBulkActionModuleList();
       const actionString = $(this).find(':checked').text().toLowerCase();
       $(self.bulkConfirmModalListSelector).html(modulesListString);
       $(self.bulkConfirmModalActionNameSelector).text(actionString);
 
-      if (self.lastBulkAction !== 'bulk-uninstall') {
+      if (self.lastBulkAction === 'bulk-uninstall') {
+        $(self.bulkActionCheckboxSelector).show();
+      } else {
         $(self.bulkActionCheckboxSelector).hide();
       }
 
@@ -444,14 +456,14 @@ class AdminModuleController {
     let htmlGenerated = '';
     let currentElement;
 
-    $(checkBoxesSelector).each(() => {
+    $(checkBoxesSelector).each(function prepareCheckboxes() {
       if (alreadyDoneFlag === 10) {
         // Break each
         htmlGenerated += '- ...';
         return false;
       }
 
-      currentElement = $(this).parents(moduleItemSelector);
+      currentElement = $(this).closest(moduleItemSelector);
       htmlGenerated += `- ${currentElement.data('name')}<br/>`;
       alreadyDoneFlag += 1;
 
@@ -832,6 +844,7 @@ class AdminModuleController {
   }
 
   doBulkAction(requestedBulkAction) {
+    const self = this;
     // This object is used to check if requested bulkAction is available and give proper
     // url segment to be called for it
     const forceDeletion = $('#force_bulk_deletion').prop('checked');
@@ -880,15 +893,15 @@ class AdminModuleController {
 
       urlActionSegment = bulkActionToUrl[requestedBulkAction];
 
-      if (typeof this.moduleCardController !== 'undefined') {
+      if (typeof self.moduleCardController !== 'undefined') {
         // We use jQuery to get the specific link for this action. If found, we send it.
         urlElement = $(
-          this.moduleCardController.moduleActionMenuLinkSelector + urlActionSegment,
+          self.moduleCardController.moduleActionMenuLinkSelector + urlActionSegment,
           actionMenuObj
         );
 
         if (urlElement.length > 0) {
-          this.moduleCardController.requestToController(
+          self.moduleCardController._requestToController(
             urlActionSegment,
             urlElement,
             forceDeletion
@@ -995,20 +1008,20 @@ class AdminModuleController {
    * Initialize display switching between List or Grid
    */
   initSortingDisplaySwitch() {
-    const self = this;
+      const self = this;
 
-    $('body').on(
-      'click',
-      '.module-sort-switch',
-      function switchSort() {
-        const switchTo = $(this).data('switch');
-        const isAlreadyDisplayed = $(this).hasClass('active-display');
-        if (typeof switchTo !== 'undefined' && isAlreadyDisplayed === false) {
-          self.switchSortingDisplayTo(switchTo);
-          self.currentDisplay = switchTo;
+      $('body').on(
+        'click',
+        '.module-sort-switch',
+        function switchSort() {
+          const switchTo = $(this).data('switch');
+          const isAlreadyDisplayed = $(this).hasClass('active-display');
+          if (typeof switchTo !== 'undefined' && isAlreadyDisplayed === false) {
+            self.switchSortingDisplayTo(switchTo);
+            self.currentDisplay = switchTo;
+          }
         }
-      }
-    );
+      );
   }
 
   switchSortingDisplayTo(switchTo) {
@@ -1026,7 +1039,6 @@ class AdminModuleController {
   initializeSeeMore() {
     const self = this;
     $(self.seeMoreSelector).on('click', function seeMore() {
-      console.log('here');
       self.currentCategoryDisplay[$(this).data('category')] = true;
       $(this).addClass('d-none');
       $(self.seeLessSelector).removeClass('d-none');
