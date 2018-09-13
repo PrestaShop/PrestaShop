@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Category\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Category\Exception\CategoryConstraintException;
+use SplFileInfo;
 
 /**
  * Class AddCategoryCommand adds new category
@@ -82,6 +83,16 @@ class AddCategoryCommand
      * @var int[]
      */
     private $associatedShopIds;
+
+    /**
+     * @var SplFileInfo|null
+     */
+    private $coverImage;
+
+    /**
+     * @var SplFileInfo|null
+     */
+    private $thumbnailImage;
 
     /**
      * @param string[] $names
@@ -357,5 +368,37 @@ class AddCategoryCommand
         $this->associatedShopIds = $associatedShopIds;
 
         return $this;
+    }
+
+    /**
+     * @return SplFileInfo|null
+     */
+    public function getThumbnailImage()
+    {
+        return $this->thumbnailImage;
+    }
+
+    /**
+     * @param SplFileInfo $thumbnailImage
+     */
+    public function setThumbnailImage(SplFileInfo $thumbnailImage)
+    {
+        $this->thumbnailImage = $thumbnailImage;
+    }
+
+    /**
+     * @return SplFileInfo|null
+     */
+    public function getCoverImage()
+    {
+        return $this->coverImage;
+    }
+
+    /**
+     * @param SplFileInfo $coverImage
+     */
+    public function setCoverImage(SplFileInfo $coverImage)
+    {
+        $this->coverImage = $coverImage;
     }
 }
