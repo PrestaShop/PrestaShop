@@ -29,6 +29,7 @@ namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Class ShopUrlType is responsible for providing form fields for
@@ -77,5 +78,15 @@ class ShopUrlType extends AbstractType
                 ->add('physical_uri', TextType::class)
             ;
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults([
+            'label' => false,
+        ]);
     }
 }
