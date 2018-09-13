@@ -163,7 +163,8 @@ final class MetaFormDataProvider implements FormDataProviderInterface
                             '%keyword%' => $keyword,
                             '%routeName%' => $routeId,
                             '%routeRule%' => $rule,
-                        ]
+                        ],
+                        'Admin.Shopparameters.Feature'
                     );
                 }
             }
