@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Form\Admin\Catalog\Category;
 
 use PrestaShopBundle\Form\Admin\Type\CategoryChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\Material\MaterialChoiceTableType;
+use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslateTextareaType;
 use PrestaShopBundle\Form\Admin\Type\TranslateTextType;
@@ -114,7 +115,7 @@ class CategoryType extends TranslatorAwareType
                 'choices' => $this->customerGroupChoices,
                 'required' => false,
             ])
-            ->add('shop_association', ChoiceType::class)
+            ->add('shop_association', ShopChoiceTreeType::class)
         ;
     }
 }
