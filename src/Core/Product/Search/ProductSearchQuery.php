@@ -32,37 +32,39 @@ namespace PrestaShop\PrestaShop\Core\Product\Search;
 class ProductSearchQuery
 {
     /**
-     * @var string
+     * @var string The Product Search query type.
      */
     private $queryType;
 
     /**
-     * @var int
+     * @var int The Product Search Category id.
      */
     private $idCategory;
 
     /**
-     * @var int
+     * @var int The Product Search Manufacturer id.
      */
     private $idManufacturer;
 
     /**
-     * @var int
+     * @var int The Product Search Supplier id.
      */
     private $idSupplier;
 
     /**
-     * @var string
+     * @var string The Product Search search string.
      */
     private $searchString;
 
     /**
-     * @var string
+     * @var string The Product Search search tag.
      */
     private $searchTag;
 
     /**
-     * @var array
+     * At this time, this concept is not used in Core.
+     * @deprecated since 1.7.5, to be removed in 1.8.
+     * @var array The Product Search encoded facets.
      */
     private $encodedFacets;
 
@@ -75,18 +77,15 @@ class ProductSearchQuery
     private $resultsPerPage = 12;
 
     /**
-     * @var int
+     * @var int The Product Search page index.
      */
     private $page = 1;
 
     /**
-     * @var SortOrder
+     * @var SortOrder The Product Search Sort order.
      */
     private $sortOrder;
 
-    /**
-     * ProductSearchQuery constructor.
-     */
     public function __construct()
     {
         $this->setSortOrder(new SortOrder('product', 'name', 'ASC'));
@@ -105,7 +104,7 @@ class ProductSearchQuery
     }
 
     /**
-     * @return string
+     * @return string Returns the Query type
      */
     public function getQueryType()
     {
@@ -113,7 +112,7 @@ class ProductSearchQuery
     }
 
     /**
-     * @param $idCategory
+     * @param int $idCategory the Category id
      *
      * @return $this
      */
@@ -125,7 +124,7 @@ class ProductSearchQuery
     }
 
     /**
-     * @return int
+     * @return int Returns the Category id
      */
     public function getIdCategory()
     {
@@ -133,7 +132,7 @@ class ProductSearchQuery
     }
 
     /**
-     * @param $idManufacturer
+     * @param int $idManufacturer the Manufacturer id
      *
      * @return $this
      */
@@ -145,7 +144,7 @@ class ProductSearchQuery
     }
 
     /**
-     * @return int
+     * @return int Returns the Manufacturer id
      */
     public function getIdManufacturer()
     {
@@ -153,7 +152,7 @@ class ProductSearchQuery
     }
 
     /**
-     * @param $idSupplier
+     * @param int $idSupplier the Supplier id
      *
      * @return $this
      */
@@ -165,7 +164,7 @@ class ProductSearchQuery
     }
 
     /**
-     * @return int
+     * @return int Returns the Supplier id
      */
     public function getIdSupplier()
     {
@@ -173,19 +172,19 @@ class ProductSearchQuery
     }
 
     /**
-     * @param $resultsPerPage
+     * @param int $resultsPerPage the number of results per page
      *
      * @return $this
      */
     public function setResultsPerPage($resultsPerPage)
     {
-        $this->resultsPerPage = (int) $resultsPerPage;
+        $this->resultsPerPage = $resultsPerPage;
 
         return $this;
     }
 
     /**
-     * @return int
+     * @return int Returns the number of results per page
      */
     public function getResultsPerPage()
     {
@@ -193,19 +192,19 @@ class ProductSearchQuery
     }
 
     /**
-     * @param $page
+     * @param int $page the page index
      *
      * @return $this
      */
     public function setPage($page)
     {
-        $this->page = (int) $page;
+        $this->page = $page;
 
         return $this;
     }
 
     /**
-     * @return int
+     * @return int Returns the page index
      */
     public function getPage()
     {
@@ -213,7 +212,7 @@ class ProductSearchQuery
     }
 
     /**
-     * @param SortOrder $sortOrder
+     * @param SortOrder $sortOrder the Sort order
      *
      * @return $this
      */
@@ -225,7 +224,7 @@ class ProductSearchQuery
     }
 
     /**
-     * @return SortOrder
+     * @return SortOrder Returns the Sort Order
      */
     public function getSortOrder()
     {
@@ -233,7 +232,7 @@ class ProductSearchQuery
     }
 
     /**
-     * @param $searchString
+     * @param string $searchString the search string
      *
      * @return $this
      */
@@ -245,7 +244,7 @@ class ProductSearchQuery
     }
 
     /**
-     * @return string
+     * @return string Returns the search string
      */
     public function getSearchString()
     {
@@ -253,7 +252,7 @@ class ProductSearchQuery
     }
 
     /**
-     * @param $searchTag
+     * @param string $searchTag the search tag
      *
      * @return $this
      */
@@ -265,7 +264,7 @@ class ProductSearchQuery
     }
 
     /**
-     * @return string
+     * @return string Returns the search tag
      */
     public function getSearchTag()
     {
