@@ -128,6 +128,10 @@ class CommonClient {
     return this.client.end();
   }
 
+  closeWindow(id){
+    return this.client.closeWindow(id);
+  }
+
   waitForExistAndClick(selector, pause = 0, timeout = 90000) {
     return this.client
       .pause(pause)
@@ -502,6 +506,16 @@ class CommonClient {
         expect(current_url).to.contain(param);
         global.param[param] = current_url.split(param + '=')[1].split("&")[0];
       });
+  }
+
+  dragAndDrop(sourceElement, destinationElement) {
+    return this.client
+      .pause(2000)
+      .moveToObject(sourceElement)
+      .buttonDown()
+      .moveToObject(destinationElement)
+      .buttonUp()
+      .pause(2000);
   }
 
 }
