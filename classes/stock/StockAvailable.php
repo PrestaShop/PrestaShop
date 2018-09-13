@@ -54,6 +54,9 @@ class StockAvailableCore extends ObjectModel
     /** @var bool determine if a product is out of stock - it was previously in Product class */
     public $out_of_stock = false;
 
+    /** @var string the location of the stock for this product / combination */
+    public $location = '';
+
     /**
      * @see ObjectModel::$definition
      */
@@ -68,6 +71,7 @@ class StockAvailableCore extends ObjectModel
             'quantity' => array('type' => self::TYPE_INT, 'validate' => 'isInt', 'required' => true),
             'depends_on_stock' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool', 'required' => true),
             'out_of_stock' => array('type' => self::TYPE_INT, 'validate' => 'isInt', 'required' => true),
+            'location' => array('type' => self::TYPE_STRING, 'validate' => 'isString', 'size' => 255),
         ),
     );
 
@@ -344,6 +348,44 @@ class StockAvailableCore extends ObjectModel
         } else {
             $params = array(
                 'out_of_stock' => (int) $out_of_stock,
+                'id_product' => (int) $id_product,
+                'id_product_attribute' => (int) $id_product_attribute,
+            );
+
+            StockAvailable::addSqlShopParams($params, $id_shop);
+            Db::getInstance()->insert('stock_available', $params, false, true, Db::ON_DUPLICATE_KEY);
+        }
+    }
+
+    /**
+     * @param int $id_product
+     * @param string $location
+     * @param int $id_shop Optional
+     * @param int $id_product_attribute Optional
+     *
+     * @return bool
+     *
+     * @throws PrestaShopDatabaseException
+     */
+    public static function setLocation($id_product, $location, $id_shop = null, $id_product_attribute = 0)
+    {
+        if (false === Validate::isUnsignedId($id_product)) {
+            return false;
+        }
+
+        $existing_id = (int) StockAvailable::getStockAvailableIdByProductId((int) $id_product, (int) $id_product_attribute, $id_shop);
+
+        if ($existing_id > 0) {
+            Db::getInstance()->update(
+                'stock_available',
+                array('location' => $location),
+                'id_product = ' . (int) $id_product .
+                (($id_product_attribute) ? ' AND id_product_attribute = ' . (int) $id_product_attribute : '') .
+                StockAvailable::addSqlShopRestriction(null, $id_shop)
+            );
+        } else {
+            $params = array(
+                'location' => $location,
                 'id_product' => (int) $id_product,
                 'id_product_attribute' => (int) $id_product_attribute,
             );
@@ -699,6 +741,33 @@ class StockAvailableCore extends ObjectModel
     }
 
     /**
+     * @param int $id_product
+     * @param int id_product_attribute Optional
+     * @param int $id_shop Optional
+     *
+     * @return bool|string
+     */
+    public static function getLocation($id_product, $id_product_attribute = null, $id_shop = null)
+    {
+        if (false === Validate::isUnsignedId($id_product)) {
+            return false;
+        }
+        if (null === $id_product_attribute) {
+            $id_product_attribute = 0;
+        }
+
+        $query = new DbQuery();
+        $query->select('location');
+        $query->from('stock_available');
+        $query->where('id_product = ' . (int) $id_product);
+        $query->where('id_product_attribute = ' . (int) $id_product_attribute);
+
+        $query = StockAvailable::addSqlShopRestriction($query, $id_shop);
+
+        return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
+    }
+
+    /**
      * Add an sql restriction for shops fields - specific to StockAvailable.
      *
      * @param DbQuery|string|null $sql Reference to the query object
@@ -818,10 +887,11 @@ class StockAvailableCore extends ObjectModel
 				id_shop_group,
 				quantity,
 				depends_on_stock,
-				out_of_stock
+				out_of_stock,
+				location
 			)
 			(
-				SELECT id_product, id_product_attribute, ' . (int) $dst_shop_id . ', 0, quantity, depends_on_stock, out_of_stock
+				SELECT id_product, id_product_attribute, ' . (int) $dst_shop_id . ', 0, quantity, depends_on_stock, out_of_stock, location
 				FROM ' . _DB_PREFIX_ . 'stock_available
 				WHERE id_shop = ' . (int) $src_shop_id .
             ')';
