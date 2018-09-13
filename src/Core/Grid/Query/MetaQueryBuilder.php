@@ -43,30 +43,37 @@ final class MetaQueryBuilder extends AbstractDoctrineQueryBuilder
      * @var int
      */
     private $contextIdShop;
+    /**
+     * @var DoctrineSearchCriteriaApplicatorInterface
+     */
+    private $searchCriteriaApplicator;
 
     /**
      * MetaQueryBuilder constructor.
      *
      * @param Connection $connection
      * @param $dbPrefix
+     * @param DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator
      * @param int $contextIdLang
      * @param int $contextIdShop
      */
     public function __construct(
         Connection $connection,
         $dbPrefix,
+        DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator,
         $contextIdLang,
         $contextIdShop
     ) {
         parent::__construct($connection, $dbPrefix);
         $this->contextIdLang = $contextIdLang;
         $this->contextIdShop = $contextIdShop;
+        $this->searchCriteriaApplicator = $searchCriteriaApplicator;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria = null)
+    public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $qb = $this->getQueryBuilder($searchCriteria->getFilters());
         $qb->select('m.`id_meta`, m.`page`, l.`title`, l.`url_rewrite`')
@@ -77,13 +84,18 @@ final class MetaQueryBuilder extends AbstractDoctrineQueryBuilder
             ->setFirstResult($searchCriteria->getOffset())
             ->setMaxResults($searchCriteria->getLimit());
 
+        $this->searchCriteriaApplicator
+            ->applyPagination($searchCriteria, $qb)
+            ->applySorting($searchCriteria, $qb)
+        ;
+
         return $qb;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria = null)
+    public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $qb = $this->getQueryBuilder($searchCriteria->getFilters());
         $qb->select('COUNT(m.`id_meta`)');
@@ -113,7 +125,7 @@ final class MetaQueryBuilder extends AbstractDoctrineQueryBuilder
         $qb->andWhere('l.`id_lang`=' . $this->contextIdLang);
         $qb->andWhere('l.`id_shop`=' . $this->contextIdShop);
         $qb->andWhere('m.`configurable`=1');
-        $qb->groupBy('m.`id_meta`');
+//        $qb->groupBy('m.`id_meta`'); todo: check why group by results in incorrect list count
 
         foreach ($filters as $name => $value) {
             if ('id_meta' === $name) {
