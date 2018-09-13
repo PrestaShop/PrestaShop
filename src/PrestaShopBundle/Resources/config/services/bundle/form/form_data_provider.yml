@@ -144,3 +144,4 @@ services:
             - '@prestashop.adapter.meta.url_schema.configuration'
             - '@translator'
             - '@prestashop.adapter.routes.route_validator'
+            - '@prestashop.adapter.validate'
