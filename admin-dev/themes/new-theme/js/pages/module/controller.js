@@ -38,6 +38,9 @@ class AdminModuleController {
   constructor(moduleCardController) {
     this.moduleCardController = moduleCardController;
 
+    this.DEFAULT_INDEX = 6;
+
+    this.currentIndexes = {};
     this.currentDisplay = '';
     this.isCategoryGridDisplayed = false;
     this.currentTagsList = [];
@@ -302,6 +305,7 @@ class AdminModuleController {
           active: parseInt($this.data('active'), 10),
           access: $this.data('last-access'),
           display: $this.hasClass('module-item-list') ? 'list' : 'grid',
+          index: $this.data('index'),
           container,
         });
 
@@ -375,6 +379,12 @@ class AdminModuleController {
           });
           isVisible &= tagExists;
         }
+
+        if (self.currentIndexes[currentModule.categories] === undefined) {
+          self.currentIndexes[currentModule.categories] = self.DEFAULT_INDEX;
+        }
+
+        isVisible &= self.currentIndexes[currentModule.categories] > currentModule.index;
 
         if (isVisible) {
           currentModule.container.append(currentModule.domObject);
