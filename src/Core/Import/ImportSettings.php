@@ -52,19 +52,6 @@ final class ImportSettings
     const MAX_VISIBLE_ROWS = 10;
 
     /**
-     * Import entities.
-     */
-    const CATEGORY_IMPORT = 0;
-    const PRODUCT_IMPORT = 1;
-    const COMBINATION_IMPORT = 2;
-    const CUSTOMER_IMPORT = 3;
-    const ADDRESS_IMPORT = 4;
-    const BRAND_IMPORT = 5;
-    const SUPPLIER_IMPORT = 6;
-    const ALIAS_IMPORT = 7;
-    const STORE_CONTACT_IMPORT = 8;
-
-    /**
      * This class cannot be instantiated.
      */
     private function __construct()

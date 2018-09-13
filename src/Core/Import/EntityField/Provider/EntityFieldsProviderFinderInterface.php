@@ -34,7 +34,7 @@ interface EntityFieldsProviderFinderInterface
     /**
      * Find the appropriate entity fields provider.
      *
-     * @param int $importEntity import entity ID (@see ImportSettings)
+     * @param int $importEntity import entity ID (@see PrestaShop\PrestaShop\Core\Import\Entity)
      *
      * @return EntityFieldsProviderInterface
      */
