@@ -28,25 +28,36 @@
 {% set shopUrlForm = metaForm.shop_urls %}
 
 {% block shop_urls_configuration %}
-  {% if shopUrlForm.children is not empty %}
+
+  {% set cardHeaderLabel = 'Set shop URL'|trans %}
+  {% if isShopFeatureActive and not isHostMode %}
     <div class="card">
-      <h3 class="card-header">
-        <i class="material-icons">settings</i> {{ 'Set shop URL'|trans }}
-      </h3>
+      <div class="card-header">
+        <i class="material-icons">settings</i> {{ cardHeaderLabel }}
+      </div>
       <div class="card-block row">
         <div class="card-text">
-          {% if isShopFeatureActive %}
-            <div class="row">
-              <div class="col-sm">
-                <div class="alert alert-info" role="alert">
-                  <div class="alert-text">
-                    {{ 'The multistore option is enabled. If you want to change the URL of your shop, you must go to the "Multistore" page under the "Advanced Parameters" menu.'|trans({}, 'Admin.Shopparameters.Notification') }}
-                  </div>
+          <div class="row">
+            <div class="col-sm">
+              <div class="alert alert-info" role="alert">
+                <div class="alert-text">
+                  {{ 'The multistore option is enabled. If you want to change the URL of your shop, you must go to the "Multistore" page under the "Advanced Parameters" menu.'|trans({}, 'Admin.Shopparameters.Notification') }}
                 </div>
               </div>
             </div>
-          {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
 
+  {% if shopUrlForm.children is not empty %}
+    <div class="card">
+      <h3 class="card-header">
+        <i class="material-icons">settings</i> {{ cardHeaderLabel }}
+      </h3>
+      <div class="card-block row">
+        <div class="card-text">
             <div class="row">
               <div class="col-sm">
                 <div class="alert alert-info" role="alert">
