@@ -230,8 +230,6 @@ services:
         arguments:
             - '@=service("prestashop.adapter.shop.shop_url").getMainShopUrl()'
             - '@prestashop.adapter.legacy.configuration'
-            - '@prestashop.adapter.validate'
-            - '@translator'
 
     prestashop.adapter.meta.url_schema.configuration:
         class: 'PrestaShop\PrestaShop\Adapter\Meta\UrlSchemaDataConfiguration'
