@@ -1,0 +1,8 @@
+services:
+    _defaults:
+        public: true
+
+    prestashop.adapter.image.uploader.category_cover_image_uploader:
+        class: 'PrestaShop\PrestaShop\Adapter\Image\Uploader\CategoryCoverImageUploader'
+
+    
