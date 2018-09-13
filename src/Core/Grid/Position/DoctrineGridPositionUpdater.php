@@ -24,7 +24,6 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-
 namespace PrestaShop\PrestaShop\Core\Grid\Position;
 
 use Doctrine\DBAL\Connection;
@@ -32,8 +31,8 @@ use Doctrine\DBAL\Driver\Statement;
 use GuzzleHttp\Exception\ConnectException;
 
 /**
- * Class GridPositionUpdater.
- * @package PrestaShop\PrestaShop\Core\Grid\Position
+ * Class GridPositionUpdater, this class is responsible for updating the position of items
+ * of a grid using the information from a PositionUpdateInterface object.
  */
 class DoctrineGridPositionUpdater implements GridPositionUpdaterInterface
 {
@@ -48,7 +47,6 @@ class DoctrineGridPositionUpdater implements GridPositionUpdaterInterface
     private $dbPrefix;
 
     /**
-     * GridPositionUpdater constructor.
      * @param Connection $connection
      * @param string     $dbPrefix
      */
@@ -134,7 +132,7 @@ class DoctrineGridPositionUpdater implements GridPositionUpdaterInterface
     }
 
     /**
-     * @param mixed $parentId
+     * @param string|int $parentId
      * @param PositionDefinitionInterface $positionDefinition
      *
      * @return array

@@ -27,22 +27,28 @@
 namespace PrestaShop\PrestaShop\Core\Grid\Position;
 
 /**
- * Interface RowUpdateInterface.
- * @package PrestaShop\PrestaShop\Core\Grid\Position
+ * Interface RowUpdateInterface contains the modification for a
+ * designated row.
  */
 interface RowUpdateInterface
 {
     /**
-     * @return mixed
+     * The row id allowing to match it.
+     *
+     * @return string|int
      */
     public function getId();
 
     /**
+     * The former row position.
+     *
      * @return int
      */
     public function getOldPosition();
 
     /**
+     * The new row position.
+     *
      * @return int
      */
     public function getNewPosition();

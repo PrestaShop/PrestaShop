@@ -28,6 +28,7 @@ namespace PrestaShopBundle\EventListener;
 
 use Doctrine\Common\Annotations\AnnotationException;
 use PrestaShopBundle\Security\Annotation\ModuleActivated;
+use PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -37,6 +38,7 @@ use Doctrine\Common\Annotations\Reader;
 use Doctrine\Common\Util\ClassUtils;
 use ReflectionObject;
 use ReflectionClass;
+use Module;
 
 /**
  * Allow a redirection to the right url when using ModuleActivated annotation
@@ -65,23 +67,29 @@ class ModuleActivatedListener
     private $annotationReader;
 
     /**
-     * ModuleActivatedListener constructor.
-     *
+     * @var ModuleRepository
+     */
+    private $moduleRepository;
+
+    /**
      * @param RouterInterface     $router
      * @param TranslatorInterface $translator
      * @param SessionInterface    $session
      * @param Reader              $annotationReader
+     * @param ModuleRepository $moduleRepository
      */
     public function __construct(
         RouterInterface $router,
         TranslatorInterface $translator,
         SessionInterface $session,
-        Reader $annotationReader
+        Reader $annotationReader,
+        ModuleRepository $moduleRepository
     ) {
         $this->router = $router;
         $this->translator = $translator;
         $this->session = $session;
         $this->annotationReader = $annotationReader;
+        $this->moduleRepository = $moduleRepository;
     }
 
     /**
@@ -109,8 +117,8 @@ class ModuleActivatedListener
             return;
         }
 
-        /** @var \Module $module */
-        $module = \Module::getInstanceByName($moduleActivated->getModuleName());
+        /** @var Module $module */
+        $module = $this->moduleRepository->getInstanceByName($moduleActivated->getModuleName());
         if (null === $module) {
             return;
         }

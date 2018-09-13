@@ -29,7 +29,7 @@ namespace PrestaShopBundle\Security\Annotation;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ConfigurationAnnotation;
 
 /**
- * Forbid access to the page if Demonstration mode is enabled.
+ * Forbid access to the page if the defined module mode is inactive.
  *
  * @Annotation
  */

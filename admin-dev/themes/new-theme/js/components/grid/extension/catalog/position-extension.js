@@ -88,7 +88,8 @@ export default class CategoryPositionExtension {
         const regex = /row_(\d+)_(\d+)/;
 
         let positions = [];
-        for (let i = 0; i < rowsData.length; ++i) {
+        const rowsNb = rowsData.length;
+        for (let i = 0; i < rowsNb; ++i) {
             let rowData = regex.exec(rowsData[i]);
             positions.push({
                 rowId: rowData[1],
@@ -150,7 +151,8 @@ export default class CategoryPositionExtension {
             })
         );
 
-        for (let i = 0; i < params.positions.length; ++i) {
+        const positionsNb = params.positions.length;
+        for (let i = 0; i < positionsNb; ++i) {
             let position = params.positions[i];
             $form.append(
                 $('<input>', {

@@ -27,8 +27,8 @@
 namespace PrestaShop\PrestaShop\Core\Grid\Position;
 
 /**
- * Class PositionUpdate.
- * @package PrestaShop\PrestaShop\Core\Grid\Position
+ * Class PositionUpdate contains the modifications needed
+ * to update the grid positions.
  */
 final class PositionUpdate implements PositionUpdateInterface
 {
@@ -43,15 +43,14 @@ final class PositionUpdate implements PositionUpdateInterface
     private $rowUpdateCollection;
 
     /**
-     * @var mixed
+     * @var string|null
      */
     private $parentId;
 
     /**
-     * PositionUpdate constructor.
      * @param RowUpdateCollectionInterface $rowUpdateCollection
      * @param PositionDefinitionInterface $positionDefinition
-     * @param mixed $parentId
+     * @param string|null $parentId
      */
     public function __construct(
         RowUpdateCollectionInterface $rowUpdateCollection,
@@ -80,7 +79,7 @@ final class PositionUpdate implements PositionUpdateInterface
     }
 
     /**
-     * @return mixed
+     * @inheritDoc
      */
     public function getParentId()
     {

@@ -24,12 +24,11 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-
 namespace PrestaShop\PrestaShop\Core\Grid\Position;
 
 /**
- * Class PositionDefinition.
- * @package PrestaShop\PrestaShop\Core\Grid\Position
+ * Class PositionDefinition used to define a position relationship, see
+ * PositionDefinitionInterface for more details.
  */
 final class PositionDefinition implements PositionDefinitionInterface
 {
@@ -54,7 +53,6 @@ final class PositionDefinition implements PositionDefinitionInterface
     private $parentIdField;
 
     /**
-     * PositionDefinition constructor.
      * @param string $table
      * @param string $idField
      * @param string $positionField

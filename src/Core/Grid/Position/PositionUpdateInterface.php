@@ -27,23 +27,31 @@
 namespace PrestaShop\PrestaShop\Core\Grid\Position;
 
 /**
- * Interface PositionUpdateInterface.
- * @package PrestaShop\PrestaShop\Core\Grid\Position
+ * Interface PositionUpdateInterface contains the modifications needed
+ * to update the grid positions.
  */
 interface PositionUpdateInterface
 {
     /**
+     * The PositionDefinition defines the "position relationship" and
+     * allows to be build the database request.
+     *
      * @return PositionDefinitionInterface
      */
     public function getPositionDefinition();
 
     /**
+     * A collection of modifications for each modified rows.
+     *
      * @return RowUpdateCollectionInterface
      */
     public function getRowUpdateCollection();
 
     /**
-     * @return mixed
+     * If the PositionDefinition needs a parent and has defined a
+     * parentIdField then this field contains its value.
+     *
+     * @return string|null
      */
     public function getParentId();
 }
