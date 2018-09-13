@@ -272,6 +272,7 @@ services:
             -
               'set_up_urls': 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\SetUpUrlType'
               'shop_urls': 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\ShopUrlType'
+              'url_schema': 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\UrlSchemaType'
             - 'SeoUrlsPage'
 
     # Entity form handler

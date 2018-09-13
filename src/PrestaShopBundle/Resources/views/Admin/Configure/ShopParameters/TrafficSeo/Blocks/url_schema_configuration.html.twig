@@ -25,6 +25,8 @@
 
 {% trans_default_domain "Admin.Shopparameters.Feature" %}
 
+{% set urlSchemaForm = metaForm.url_schema %}
+
 {% block url_schema_configuration %}
   <div class="card">
     <h3 class="card-header">
@@ -43,6 +45,87 @@
             </div>
           </div>
         </div>
+
+        <div class="form-group row">
+          <label class="form-control-label">
+            {{ 'Route to products'|trans }}
+          </label>
+          <div class="col-sm">
+            {{ form_errors(urlSchemaForm.product_rule) }}
+            {{ form_widget(urlSchemaForm.product_rule) }}
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label class="form-control-label">
+            {{ 'Route to category'|trans }}
+          </label>
+          <div class="col-sm">
+            {{ form_errors(urlSchemaForm.category_rule) }}
+            {{ form_widget(urlSchemaForm.category_rule) }}
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label class="form-control-label">
+            {{ 'Route to category which has the "selected_filter" attribute for the "Layered Navigation" (blocklayered) module'|trans }}
+          </label>
+          <div class="col-sm">
+            {{ form_errors(urlSchemaForm.layered_rule) }}
+            {{ form_widget(urlSchemaForm.layered_rule) }}
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label class="form-control-label">
+            {{ 'Route to supplier'|trans }}
+          </label>
+          <div class="col-sm">
+            {{ form_errors(urlSchemaForm.supplier_rule) }}
+            {{ form_widget(urlSchemaForm.supplier_rule) }}
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label class="form-control-label">
+            {{ 'Route to brand'|trans }}
+          </label>
+          <div class="col-sm">
+            {{ form_errors(urlSchemaForm.manufacturer_rule) }}
+            {{ form_widget(urlSchemaForm.manufacturer_rule) }}
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label class="form-control-label">
+            {{ 'Route to page'|trans }}
+          </label>
+          <div class="col-sm">
+            {{ form_errors(urlSchemaForm.cms_rule) }}
+            {{ form_widget(urlSchemaForm.cms_rule) }}
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label class="form-control-label">
+            {{ 'Route to page category'|trans }}
+          </label>
+          <div class="col-sm">
+            {{ form_errors(urlSchemaForm.cms_category_rule) }}
+            {{ form_widget(urlSchemaForm.cms_category_rule) }}
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label class="form-control-label">
+            {{ 'Route to modules'|trans }}
+          </label>
+          <div class="col-sm">
+            {{ form_errors(urlSchemaForm.module_rule) }}
+            {{ form_widget(urlSchemaForm.module_rule) }}
+          </div>
+        </div>
+
       </div>
     </div>
     <div class="card-footer">
