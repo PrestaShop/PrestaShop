@@ -72,9 +72,10 @@
     <div class="md-checkbox md-checkbox-inline">
       <label>
         <input type="checkbox"
+               {% if choice[choice_value] is not null %}
                name="{{ form.vars.full_name }}[]"
                value="{{ choice[choice_value] }}"
-               class="category"
+               {% endif %}
         >
         <i class="md-checkbox-control"></i>
         {{ choice[choice_label] }}
