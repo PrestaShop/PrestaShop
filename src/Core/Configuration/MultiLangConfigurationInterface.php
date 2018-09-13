@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Configuration;
 
 /**
- * Interface MultiLangConfigurationInterface defines contract multi-language configuration data
+ * Interface MultiLangConfigurationInterface defines contract multi-language configuration data.
  */
 interface MultiLangConfigurationInterface
 {
@@ -39,7 +39,7 @@ interface MultiLangConfigurationInterface
      * @param null|int $idShop
      *
      * @return array - returns a value from database. It gets from installed languages. The array key contains
-     * language id
+     *               language id
      */
     public function getWithInactiveLocales($key, $idShopGroup = null, $idShop = null);
 }

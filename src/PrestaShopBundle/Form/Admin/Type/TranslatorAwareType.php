@@ -45,9 +45,9 @@ abstract class TranslatorAwareType extends CommonAbstractType
     protected $locales;
 
     /**
-     * Active and in-active languages available on shop. Used to apply translations
+     * Active and in-active languages available on shop. Used to apply translations.
      *
-     * @var array $installedLocales
+     * @var array
      */
     protected $installedLocales;
 
@@ -67,7 +67,7 @@ abstract class TranslatorAwareType extends CommonAbstractType
     }
 
     /**
-     * Get the translated chain from key
+     * Get the translated chain from key.
      *
      * @param $key - the key to be translated
      * @param $domain - the domain to be selected
@@ -81,7 +81,7 @@ abstract class TranslatorAwareType extends CommonAbstractType
     }
 
     /**
-     * Get locales to be used in form type
+     * Get locales to be used in form type.
      *
      * @return array
      */
@@ -91,7 +91,7 @@ abstract class TranslatorAwareType extends CommonAbstractType
     }
 
     /**
-     * Get locales to be used in form type including the disabled ones
+     * Get locales to be used in form type including the disabled ones.
      *
      * @return array
      */
@@ -118,7 +118,7 @@ abstract class TranslatorAwareType extends CommonAbstractType
     }
 
     /**
-     * Gets active locales
+     * Gets active locales.
      *
      * @param array $locales
      *
