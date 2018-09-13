@@ -72,7 +72,7 @@ class FilterTest extends TestCase
         $this->assertEmpty($this->filter->getNextEncodedFacets());
         $this->assertSame(0, $this->filter->getMagnitude());
         $this->assertTrue($this->filter->isDisplayed());
-        $this->assertTrue($this->filter->isActive());
+        $this->assertFalse($this->filter->isActive());
         $this->assertSame([
             'label' => '',
             'type' => '',
