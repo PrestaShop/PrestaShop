@@ -55,8 +55,9 @@
     </div>
     <div class="card-footer">
       <div class="d-flex justify-content-end">
-        {#todo : check contidional display of the button #}
-        <button class="btn btn-primary">{{ 'Generate robots.txt file'|trans }}</button>
+        {% if isRobotsTextFileValid %}
+          <button class="btn btn-primary">{{ 'Generate robots.txt file'|trans }}</button>
+        {% endif %}
       </div>
     </div>
   </div>
