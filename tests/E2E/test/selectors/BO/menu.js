@@ -38,7 +38,7 @@ module.exports = {
         merchandise_returns_submenu: '#subtab-AdminReturn'
       },
       Stats: {
-        stats_menu: '//*[@id="subtab-AdminStats"]/a',
+        stats_menu: '//*[@id="subtab-AdminStats"]/a'
       }
     },
     Improve: {
@@ -48,7 +48,7 @@ module.exports = {
         installed_modules_tabs: '//*[@id="subtab-AdminModulesManage"]',
         notifications_tabs: '//*[@id="subtab-AdminModulesNotifications"]',
         selection_tab: '//*[@id="subtab-AdminModulesCatalog"]',
-        modules_catalog_submenu: '#subtab-AdminAddonsCatalog',
+        modules_catalog_submenu: '#subtab-AdminParentModulesCatalog'
       },
       Design: {
         design_menu: '//*[@id="subtab-AdminParentThemes"]/a',

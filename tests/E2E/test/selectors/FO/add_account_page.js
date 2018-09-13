@@ -3,10 +3,11 @@ module.exports = {
     create_button: '[data-link-action="display-register-form"]',
     firstname_input: '[name="firstname"]',
     lastname_input: '[name="lastname"]',
-    email_input: '[name="email"]',
+    email_input: '//*[@id="customer-form"]//input[contains(@name,"email")]',
     password_input: '[name="password"]',
+    birthday_input: '[name="birthday"]',
     save_account_button: '[data-link-action="save-customer"]',
-    radio_button_gender: '(//*[@id="customer-form"]//input[contains(@name,"id_gender")])[2]',
+    gender_radio_button: '(//*[@id="customer-form"]//input[contains(@name,"id_gender")])[2]',
     account_link: '//*[@id="_desktop_user_info"]//a[@class="account"]',
     add_first_address: '#address-link',
     adr_address: '//*[@id="content"]//input[@name="address1"]',
@@ -31,7 +32,8 @@ module.exports = {
     order_button: '//*[@id="payment-confirmation"]//button',
     confirmed_order_message: '//*[@id="content-hook_order_confirmation"]//h3[contains(@class, "card-title")]',
     email_sent_message: '//*[@id="content-hook_order_confirmation"]//p',
-    notification_save_adr: '//*[@id="notifications"]//li',
+    save_notification: '//*[@id="notifications"]//li',
+    danger_alert: '//*[@id="customer-form"]//li[contains(@class,"alert-danger")]',
     add_new_address: '//*[@id="checkout-addresses-step"]//p[@class="add-address"]/a'
   }
 };

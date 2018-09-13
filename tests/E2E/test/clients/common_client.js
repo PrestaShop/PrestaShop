@@ -90,6 +90,11 @@ class CommonClient {
       });
   }
 
+  isVisibleWithinViewport(selector){
+    return this.client
+      .isVisibleWithinViewport(selector);
+  }
+
   takeScreenshot() {
     return this.client.saveScreenshot(`test/screenshots/${this.client.desiredCapabilities.browserName}_exception_${new Date().getTime()}.png`);
   }
@@ -121,6 +126,10 @@ class CommonClient {
 
   close() {
     return this.client.end();
+  }
+
+  closeWindow(id){
+    return this.client.closeWindow(id);
   }
 
   waitForExistAndClick(selector, pause = 0, timeout = 90000) {
@@ -429,6 +438,19 @@ class CommonClient {
     delete object[pos];
   }
 
+  setAttributeById(selector) {
+    return this.client
+      .execute(function (selector) {
+        document.getElementById(selector).style.display = 'none';
+      }, selector);
+  }
+
+  middleClick(selector) {
+    return this.client
+      .waitForExist(selector, 9000)
+      .middleClick(selector);
+  }
+
   stringifyNumber(number) {
     let special = ['zeroth','first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth', 'ninth', 'tenth', 'eleventh', 'twelfth', 'thirteenth', 'fourteenth', 'fifteenth', 'sixteenth', 'seventeenth', 'eighteenth', 'nineteenth'];
     let deca = ['twent', 'thirt', 'fort', 'fift', 'sixt', 'sevent', 'eight', 'ninet'];
@@ -484,6 +506,16 @@ class CommonClient {
         expect(current_url).to.contain(param);
         global.param[param] = current_url.split(param + '=')[1].split("&")[0];
       });
+  }
+
+  dragAndDrop(sourceElement, destinationElement) {
+    return this.client
+      .pause(2000)
+      .moveToObject(sourceElement)
+      .buttonDown()
+      .moveToObject(destinationElement)
+      .buttonUp()
+      .pause(2000);
   }
 
 }

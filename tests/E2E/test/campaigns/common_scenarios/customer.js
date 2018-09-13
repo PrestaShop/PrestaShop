@@ -1,5 +1,6 @@
 const {Menu} = require('../../selectors/BO/menu.js');
 const {Customer} = require('../../selectors/BO/customers/customer');
+const {accountPage} = require('../../selectors/FO/add_account_page');
 const {BO} = require('../../selectors/BO/customers/index');
 
 let promise = Promise.resolve();
@@ -34,12 +35,13 @@ module.exports = {
           .then(() => client.waitAndSelectByValue(Customer.month_select, customerData.birthday.month))
           .then(() => client.waitAndSelectByValue(Customer.years_select, customerData.birthday.year));
       });
+      test('should activate "Partner offers" option ', () => client.waitForExistAndClick(Customer.Partner_offers));
       test('should click on "Save" button', () => client.waitForExistAndClick(Customer.save_button));
       test('should verify the appearance of the green validation', () => client.checkTextValue(BO.success_panel, '×\nSuccessful creation.'));
     }, 'customer');
   },
   checkCustomerBO: function (customerData) {
-    scenario('Check the customer creation in the back office', client => {
+    scenario('Check the customer creation in the Back Office', client => {
       test('should check the email existence in the "Customers list"', () => {
         return promise
           .then(() => client.isVisible(Customer.customer_filter_by_email_input))
@@ -113,5 +115,11 @@ module.exports = {
       test('should click on "Delete" button', () => client.waitForExistAndClick(Customer.delete_confirmation_button));
       test('should verify the appearance of the green validation', () => client.checkTextValue(BO.success_panel, '×\nThe selection has been successfully deleted.'));
     }, 'customer');
+  },
+  checkCustomerFO: function (client, customerData) {
+    test('should check the customer "First name"', () => client.checkAttributeValue(accountPage.firstname_input, 'value', customerData.first_name));
+    test('should check the customer "Last name"', () => client.checkAttributeValue(accountPage.lastname_input, 'value', customerData.last_name));
+    test('should check that the customer "Email" is equal to "' + date_time + customerData.email_address + '"', () => client.checkAttributeValue(accountPage.email_input, 'value', date_time + customerData.email_address));
+    test('should check that the customer "Birthday" is equal to "' + customerData.birthday.month + '/' + customerData.birthday.day + '/' + customerData.birthday.year + '"', () => client.checkAttributeValue(accountPage.birthday_input, 'value', customerData.birthday.month + '/' + customerData.birthday.day + '/' + customerData.birthday.year, "contain"));
   }
 };

@@ -158,7 +158,6 @@ module.exports = {
     }, 'product/product');
 
   },
-
   checkProductBO(AddProductPage, productData) {
     scenario('Check the product creation in the Back Office', client => {
       test('should go to "Catalog" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.products_submenu));
@@ -172,7 +171,6 @@ module.exports = {
       test('should click on "Reset button"', () => client.waitForExistAndClick(AddProductPage.catalog_reset_filter));
     }, 'product/check_product');
   },
-
   sortProduct: function (selector, sortBy) {
     scenario('Check the sort of products by "' + sortBy.toUpperCase() + '"', client => {
       test('should click on "Sort by ASC" icon', () => {
@@ -207,7 +205,6 @@ module.exports = {
       });
     }, 'product/product');
   },
-
   checkPaginationFO(client, productPage, buttonName, pageNumber) {
     let selectorButton = buttonName === 'Next' ? productPage.pagination_next : productPage.pagination_previous;
     test('should click on "' + buttonName + '" button', () => {
