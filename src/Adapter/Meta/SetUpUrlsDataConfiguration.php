@@ -44,16 +44,6 @@ final class SetUpUrlsDataConfiguration implements DataConfigurationInterface
     private $configuration;
 
     /**
-     * @var UrlFileCheckerInterface
-     */
-    private $htaccessFileChecker;
-
-    /**
-     * @var bool
-     */
-    private $isHostMode;
-
-    /**
      * @var HtaccessFileGenerator
      */
     private $htaccessFileGenerator;
@@ -67,22 +57,15 @@ final class SetUpUrlsDataConfiguration implements DataConfigurationInterface
      * SetUpUrlsDataConfiguration constructor.
      *
      * @param ConfigurationInterface $configuration
-     * @param UrlFileCheckerInterface $htaccessFileChecker
      * @param HtaccessFileGenerator $htaccessFileGenerator
      * @param TranslatorInterface $translator
-     * @param bool $isHostMode
      */
     public function __construct(
         ConfigurationInterface $configuration,
-        UrlFileCheckerInterface $htaccessFileChecker,
         HtaccessFileGenerator $htaccessFileGenerator,
-        TranslatorInterface $translator,
-        $isHostMode
-    )
-    {
+        TranslatorInterface $translator
+    ) {
         $this->configuration = $configuration;
-        $this->htaccessFileChecker = $htaccessFileChecker;
-        $this->isHostMode = $isHostMode;
         $this->htaccessFileGenerator = $htaccessFileGenerator;
         $this->translator = $translator;
     }
@@ -111,11 +94,8 @@ final class SetUpUrlsDataConfiguration implements DataConfigurationInterface
             $this->configuration->set('PS_REWRITING_SETTINGS', $configuration['friendly_url']);
             $this->configuration->set('PS_ALLOW_ACCENTED_CHARS_URL', $configuration['accented_url']);
             $this->configuration->set('PS_CANONICAL_REDIRECT', $configuration['canonical_url_redirection']);
-
-            if (!$this->isHostMode && $this->htaccessFileChecker->isValidFile()) {
-                $this->configuration->set('PS_HTACCESS_DISABLE_MULTIVIEWS', $configuration['disable_apache_multiview']);
-                $this->configuration->set('PS_HTACCESS_DISABLE_MODSEC', $configuration['disable_apache_mod_security']);
-            }
+            $this->configuration->set('PS_HTACCESS_DISABLE_MULTIVIEWS', $configuration['disable_apache_multiview']);
+            $this->configuration->set('PS_HTACCESS_DISABLE_MODSEC', $configuration['disable_apache_mod_security']);
 
             if (!$this->htaccessFileGenerator->generateFile($configuration['disable_apache_multiview'])) {
                 $this->configuration->set('PS_REWRITING_SETTINGS', 0);
@@ -155,20 +135,12 @@ final class SetUpUrlsDataConfiguration implements DataConfigurationInterface
      */
     public function validateConfiguration(array $configuration)
     {
-
-        $isApacheConfigsValid = true;
-
-        if (!$this->isHostMode && $this->htaccessFileChecker->isValidFile()) {
-            $isApacheConfigsValid = isset(
-                $configuration['disable_apache_multiview'],
-                $configuration['disable_apache_mod_security']
-            );
-        }
-
         return isset(
             $configuration['friendly_url'],
             $configuration['accented_url'],
-            $configuration['canonical_url_redirection']
-        ) && $isApacheConfigsValid;
+            $configuration['canonical_url_redirection'],
+            $configuration['disable_apache_multiview'],
+            $configuration['disable_apache_mod_security']
+        );
     }
 }
