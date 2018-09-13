@@ -49,6 +49,7 @@ final class RowUpdate implements RowUpdateInterface
 
     /**
      * RowUpdate constructor.
+     *
      * @param string|int $id
      * @param int $oldPosition
      * @param int $newPosition
@@ -64,7 +65,7 @@ final class RowUpdate implements RowUpdateInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function getId()
     {
@@ -72,7 +73,7 @@ final class RowUpdate implements RowUpdateInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function getOldPosition()
     {
@@ -80,11 +81,10 @@ final class RowUpdate implements RowUpdateInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function getNewPosition()
     {
         return $this->newPosition;
     }
-
 }

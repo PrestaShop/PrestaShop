@@ -36,7 +36,7 @@ interface GridPositionUpdaterInterface
      * Updates a grid based on the data in PositionUpdateInterface composed
      * of the PositionDefinitionInterface allowing to build the query, the
      * new positions and optionally a parentId
-     * Returns an array of errors if something went wrong
+     * Returns an array of errors if something went wrong.
      *
      * @param PositionUpdateInterface $positionUpdate
      *

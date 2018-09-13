@@ -57,7 +57,7 @@ class ModuleActivated extends ConfigurationAnnotation
     protected $redirectRoute;
 
     /**
-     * The module name to check
+     * The module name to check.
      *
      * @var string
      */
@@ -122,7 +122,7 @@ class ModuleActivated extends ConfigurationAnnotation
     }
 
     /**
-     * Returns the name of the module to check
+     * Returns the name of the module to check.
      *
      * @return string
      */

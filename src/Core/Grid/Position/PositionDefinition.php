@@ -71,7 +71,7 @@ final class PositionDefinition implements PositionDefinitionInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function getTable()
     {
@@ -79,7 +79,7 @@ final class PositionDefinition implements PositionDefinitionInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function getIdField()
     {
@@ -87,7 +87,7 @@ final class PositionDefinition implements PositionDefinitionInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function getPositionField()
     {
@@ -95,7 +95,7 @@ final class PositionDefinition implements PositionDefinitionInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function getParentIdField()
     {

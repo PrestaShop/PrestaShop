@@ -72,10 +72,10 @@ class ModuleActivatedListener
     private $moduleRepository;
 
     /**
-     * @param RouterInterface     $router
+     * @param RouterInterface $router
      * @param TranslatorInterface $translator
-     * @param SessionInterface    $session
-     * @param Reader              $annotationReader
+     * @param SessionInterface $session
+     * @param Reader $annotationReader
      * @param ModuleRepository $moduleRepository
      */
     public function __construct(
@@ -155,6 +155,7 @@ class ModuleActivatedListener
      * @param string $methodName
      *
      * @return null|ModuleActivated
+     *
      * @throws AnnotationException
      * @throws \ReflectionException
      */
@@ -190,7 +191,8 @@ class ModuleActivatedListener
 
     /**
      * @param ModuleActivated $annotation
-     * @param string          $annotationPosition
+     * @param string $annotationPosition
+     *
      * @throws AnnotationException
      */
     private function validateAnnotation(ModuleActivated $annotation, $annotationPosition)

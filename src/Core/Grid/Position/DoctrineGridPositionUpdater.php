@@ -48,7 +48,7 @@ class DoctrineGridPositionUpdater implements GridPositionUpdaterInterface
 
     /**
      * @param Connection $connection
-     * @param string     $dbPrefix
+     * @param string $dbPrefix
      */
     public function __construct(
         Connection $connection,
@@ -62,6 +62,7 @@ class DoctrineGridPositionUpdater implements GridPositionUpdaterInterface
      * @param PositionUpdateInterface $positionUpdate
      *
      * @throws \Doctrine\DBAL\ConnectionException
+     *
      * @return array
      */
     public function update(PositionUpdateInterface $positionUpdate)
@@ -79,6 +80,7 @@ class DoctrineGridPositionUpdater implements GridPositionUpdaterInterface
      * @param array $newPositions
      *
      * @throws \Doctrine\DBAL\ConnectionException
+     *
      * @return array
      */
     private function updatePositions(PositionDefinitionInterface $positionDefinition, array $newPositions)
@@ -92,7 +94,7 @@ class DoctrineGridPositionUpdater implements GridPositionUpdaterInterface
                 $qb
                     ->update($this->dbPrefix . $positionDefinition->getTable())
                     ->set($positionDefinition->getPositionField(), ':position')
-                    ->andWhere($positionDefinition->getIdField().' = :rowId')
+                    ->andWhere($positionDefinition->getIdField() . ' = :rowId')
                     ->setParameter('rowId', $rowId)
                     ->setParameter('position', $positionIndex)
                 ;
@@ -105,7 +107,7 @@ class DoctrineGridPositionUpdater implements GridPositionUpdaterInterface
                         'parameters' => [$rowId],
                     ];
                 }
-                $positionIndex++;
+                ++$positionIndex;
             }
             $this->connection->commit();
         } catch (ConnectException $e) {
@@ -117,6 +119,7 @@ class DoctrineGridPositionUpdater implements GridPositionUpdaterInterface
 
     /**
      * @param PositionUpdateInterface $positionUpdate
+     *
      * @return array
      */
     private function getNewPositions(PositionUpdateInterface $positionUpdate)
