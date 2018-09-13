@@ -29,6 +29,7 @@ namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Class UrlSchemaType is responsible for providing form fields for
@@ -36,17 +37,31 @@ use Symfony\Component\Form\FormBuilderInterface;
  */
 class UrlSchemaType extends AbstractType
 {
+    /**
+     * {@inheritdoc}
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('product_rule', TextType::class)
+            ->add('product_rule', TextType::class, [
+            ])
             ->add('category_rule', TextType::class)
             ->add('layered_rule', TextType::class)
             ->add('supplier_rule', TextType::class)
             ->add('manufacturer_rule', TextType::class)
             ->add('cms_rule', TextType::class)
             ->add('cms_category_rule', TextType::class)
-            ->add('module_rule', TextType::class)
+            ->add('module', TextType::class)
         ;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults([
+            'label' => false,
+        ]);
     }
 }
