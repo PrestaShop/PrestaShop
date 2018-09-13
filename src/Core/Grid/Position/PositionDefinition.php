@@ -41,22 +41,7 @@ final class PositionDefinition implements PositionDefinitionInterface
     /**
      * @var string
      */
-    private $parentTable;
-
-    /**
-     * @var string
-     */
     private $idField;
-
-    /**
-     * @var string
-     */
-    private $parentIdField;
-
-    /**
-     * @var string
-     */
-    private $parentTableIdField;
 
     /**
      * @var string
@@ -64,28 +49,27 @@ final class PositionDefinition implements PositionDefinitionInterface
     private $positionField;
 
     /**
+     * @var string|null
+     */
+    private $parentIdField;
+
+    /**
      * PositionDefinition constructor.
      * @param string $table
-     * @param string $parentTable
      * @param string $idField
-     * @param string $parentIdField
-     * @param string $parentTableIdField
      * @param string $positionField
+     * @param string|null $parentIdField
      */
     public function __construct(
         $table,
-        $parentTable,
         $idField,
-        $parentIdField,
-        $parentTableIdField,
-        $positionField
+        $positionField,
+        $parentIdField = null
     ) {
         $this->table = $table;
-        $this->parentTable = $parentTable;
         $this->idField = $idField;
-        $this->parentIdField = $parentIdField;
-        $this->parentTableIdField = $parentTableIdField;
         $this->positionField = $positionField;
+        $this->parentIdField = $parentIdField;
     }
 
     /**
@@ -99,33 +83,9 @@ final class PositionDefinition implements PositionDefinitionInterface
     /**
      * @inheritDoc
      */
-    public function getParentTable()
-    {
-        return $this->parentTable;
-    }
-
-    /**
-     * @inheritDoc
-     */
     public function getIdField()
     {
         return $this->idField;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getParentIdField()
-    {
-        return $this->parentIdField;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getParentTableIdField()
-    {
-        return $this->parentTableIdField;
     }
 
     /**
@@ -139,8 +99,8 @@ final class PositionDefinition implements PositionDefinitionInterface
     /**
      * @inheritDoc
      */
-    public function getRowUpdateCollection()
+    public function getParentIdField()
     {
-        return $this->rowUpdateCollection;
+        return $this->parentIdField;
     }
 }
