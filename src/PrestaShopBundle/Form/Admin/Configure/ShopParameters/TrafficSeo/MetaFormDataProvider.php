@@ -39,23 +39,32 @@ final class MetaFormDataProvider implements FormDataProviderInterface
      * @var DataConfigurationInterface
      */
     private $setUpUrlDataConfiguration;
+
     /**
      * @var DataConfigurationInterface
      */
     private $shopUrlsDataConfiguration;
 
     /**
+     * @var DataConfigurationInterface
+     */
+    private $urlSchemaDataConfiguration;
+
+    /**
      * MetaFormDataProvider constructor.
      *
      * @param DataConfigurationInterface $setUpUrlDataConfiguration
      * @param DataConfigurationInterface $shopUrlsDataConfiguration
+     * @param DataConfigurationInterface $urlSchemaDataConfiguration
      */
     public function __construct(
         DataConfigurationInterface $setUpUrlDataConfiguration,
-        DataConfigurationInterface $shopUrlsDataConfiguration
+        DataConfigurationInterface $shopUrlsDataConfiguration,
+        DataConfigurationInterface $urlSchemaDataConfiguration
     ) {
         $this->setUpUrlDataConfiguration = $setUpUrlDataConfiguration;
         $this->shopUrlsDataConfiguration = $shopUrlsDataConfiguration;
+        $this->urlSchemaDataConfiguration = $urlSchemaDataConfiguration;
     }
 
     /**
@@ -66,6 +75,7 @@ final class MetaFormDataProvider implements FormDataProviderInterface
         return [
             'set_up_urls' => $this->setUpUrlDataConfiguration->getConfiguration(),
             'shop_urls' => $this->shopUrlsDataConfiguration->getConfiguration(),
+            'url_schema' => $this->urlSchemaDataConfiguration->getConfiguration(),
         ];
     }
 
@@ -76,7 +86,8 @@ final class MetaFormDataProvider implements FormDataProviderInterface
     {
         return array_merge(
             $this->setUpUrlDataConfiguration->updateConfiguration($data['set_up_urls']),
-            $this->shopUrlsDataConfiguration->updateConfiguration($data['shop_urls'])
+            $this->shopUrlsDataConfiguration->updateConfiguration($data['shop_urls']),
+            $this->urlSchemaDataConfiguration->updateConfiguration($data['url_schema'])
         );
     }
 }
