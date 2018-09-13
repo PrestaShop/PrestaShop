@@ -64,7 +64,7 @@ class UrlSchemaDataConfiguration implements DataConfigurationInterface
     {
         $configResult = [];
         foreach ($this->rules as $routeId => $defaultRule) {
-            $result = $this->getConfigurationValue($routeId) ? $this->getConfigurationValue($routeId) : $defaultRule;
+            $result = $this->getConfigurationValue($routeId) ?: $defaultRule;
             $configResult[$routeId] = $result;
         }
 
@@ -76,7 +76,13 @@ class UrlSchemaDataConfiguration implements DataConfigurationInterface
      */
     public function updateConfiguration(array $configuration)
     {
-        // TODO: Implement updateConfiguration() method.
+        if ($this->validateConfiguration($configuration)) {
+            foreach ($configuration as $routeId => $value) {
+                $this->updateConfigurationValue($routeId, $value);
+            }
+        }
+
+        return [];
     }
 
     /**
@@ -84,7 +90,12 @@ class UrlSchemaDataConfiguration implements DataConfigurationInterface
      */
     public function validateConfiguration(array $configuration)
     {
-        // TODO: Implement validateConfiguration() method.
+        $configurationExists = true;
+        foreach (array_keys($configuration) as $routeId) {
+            $configurationExists &= isset($this->rules[$routeId]);
+        }
+
+        return $configurationExists;
     }
 
     /**
@@ -96,6 +107,31 @@ class UrlSchemaDataConfiguration implements DataConfigurationInterface
      */
     private function getConfigurationValue($routeId)
     {
-        return $this->configuration->get(sprintf('PS_ROUTE_%s', $routeId));
+        return $this->configuration->get($this->getConfigurationKey($routeId));
+    }
+
+    /**
+     * Updates configuration data.
+     *
+     * @param string $routeId
+     * @param string $rule
+     *
+     * @return mixed
+     */
+    private function updateConfigurationValue($routeId, $rule)
+    {
+        return $this->configuration->set($this->getConfigurationKey($routeId), $rule);
+    }
+
+    /**
+     * Gets key which is used to retrieve data from configuration table.
+     *
+     * @param string $routeId
+     *
+     * @return string
+     */
+    private function getConfigurationKey($routeId)
+    {
+        return sprintf('PS_ROUTE_%s', $routeId);
     }
 }
