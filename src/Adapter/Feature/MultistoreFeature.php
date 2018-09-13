@@ -27,25 +27,25 @@
 namespace PrestaShop\PrestaShop\Adapter\Feature;
 
 use PrestaShop\PrestaShop\Adapter\Entity\Shop;
-use PrestaShop\PrestaShop\Adapter\Configuration;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
 
 /**
- * Class MultistoreFeature provides data about multishop feature usage.
+ * Class MultishopFeature provides data about multishop feature usage.
  *
  * @internal
  */
 final class MultistoreFeature implements FeatureInterface
 {
     /**
-     * @var Configuration
+     * @var ConfigurationInterface
      */
     private $configuration;
 
     /**
-     * @param Configuration $configuration
+     * @param ConfigurationInterface $configuration
      */
-    public function __construct(Configuration $configuration)
+    public function __construct(ConfigurationInterface $configuration)
     {
         $this->configuration = $configuration;
     }
@@ -65,7 +65,7 @@ final class MultistoreFeature implements FeatureInterface
      */
     public function isActive()
     {
-        return $this->configuration->getBoolean('PS_MULTISHOP_FEATURE_ACTIVE');
+        return (bool) $this->configuration->get('PS_MULTISHOP_FEATURE_ACTIVE');
     }
 
     /**

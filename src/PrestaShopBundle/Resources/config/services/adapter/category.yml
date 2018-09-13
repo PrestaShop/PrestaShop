@@ -9,7 +9,7 @@ services:
     class: PrestaShop\PrestaShop\Adapter\Category\CategoryViewDataProvider
     arguments:
       - '@prestashop.adapter.legacy.configuration'
-      - '@prestashop.adapter.feature.multishop'
+      - '@prestashop.adapter.feature.multistore'
       - '@prestashop.adapter.shop.context'
       - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
 

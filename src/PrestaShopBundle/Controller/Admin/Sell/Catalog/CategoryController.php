@@ -350,7 +350,7 @@ class CategoryController extends FrameworkBundleAdminController
     {
         $toolbarButtons = [];
 
-        if ($this->get('prestashop.adapter.feature.multishop')->isActive()) {
+        if ($this->get('prestashop.adapter.feature.multistore')->isActive()) {
             $toolbarButtons['add_root'] = [
                 'href' => $this->getAdminLink('AdminCategories', [
                     'addcategoryroot' => 1,
