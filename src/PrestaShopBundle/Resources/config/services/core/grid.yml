@@ -276,5 +276,5 @@ services:
             - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
             - "@=service('prestashop.adapter.legacy.context').getContext().shop.id"
             - '@prestashop.adapter.shop.context'
-            - '@prestashop.adapter.feature.multishop'
+            - '@prestashop.adapter.feature.multistore'
         public: true
