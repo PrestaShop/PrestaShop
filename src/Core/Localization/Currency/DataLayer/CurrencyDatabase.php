@@ -146,12 +146,12 @@ class CurrencyDatabase extends AbstractDataLayer implements CurrencyDataLayerInt
         }
 
         $currencyCode   = $currencyDataId->getCurrencyCode();
-        $currencyEntity = $this->dataProvider->getCurrencyByIsoCodeOrCreate($currencyCode, 'fr-FR');
+        $currencyEntity = $this->dataProvider->getCurrencyByIsoCodeOrCreate($currencyCode, $currencyDataId->getLocaleCode());
 
         $currencyEntity->iso_code         = $currencyData->isoCode;
-        $currencyEntity->name             = $currencyData->names[$currencyCode];
+        $currencyEntity->name             = $currencyData->names[$currencyDataId->getLocaleCode()];
         $currencyEntity->numeric_iso_code = $currencyData->numericIsoCode;
-        $currencyEntity->symbol           = $currencyData->symbols[$currencyCode];
+        $currencyEntity->symbol           = $currencyData->symbols[$currencyDataId->getLocaleCode()];
         $currencyEntity->precision        = $currencyData->precision;
 
         try {
