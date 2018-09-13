@@ -827,14 +827,14 @@ class LinkCore
 
     /**
      * @param \Symfony\Component\Routing\RouterInterface $sfRouter
-     * @param string                                     $controller
+     * @param string $controller
      *
      * @return string|null
      */
     private function searchRouteFromRouter(\Symfony\Component\Routing\RouterInterface $sfRouter, $controller)
     {
         /**
-         * @var string                           $routeName
+         * @var string
          * @var \Symfony\Component\Routing\Route $route
          */
         foreach ($sfRouter->getRouteCollection() as $routeName => $route) {

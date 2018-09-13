@@ -63,7 +63,7 @@ final class PositionUpdate implements PositionUpdateInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function getPositionDefinition()
     {
@@ -71,7 +71,7 @@ final class PositionUpdate implements PositionUpdateInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function getRowUpdateCollection()
     {
@@ -79,7 +79,7 @@ final class PositionUpdate implements PositionUpdateInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function getParentId()
     {
