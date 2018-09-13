@@ -33,11 +33,6 @@ namespace PrestaShop\PrestaShop\Core\Grid\Position;
 interface PositionUpdateInterface
 {
     /**
-     * @return mixed
-     */
-    public function getParentId();
-
-    /**
      * @return PositionDefinitionInterface
      */
     public function getPositionDefinition();
@@ -46,4 +41,9 @@ interface PositionUpdateInterface
      * @return RowUpdateCollectionInterface
      */
     public function getRowUpdateCollection();
+
+    /**
+     * @return mixed
+     */
+    public function getParentId();
 }
