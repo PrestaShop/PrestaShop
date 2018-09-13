@@ -1,5 +1,5 @@
 admin_category_add:
-    path: /add
+    path: /new
     methods: [GET, POST]
     defaults:
         _controller: PrestaShopBundle:Admin\Sell\Catalog\Category:add
