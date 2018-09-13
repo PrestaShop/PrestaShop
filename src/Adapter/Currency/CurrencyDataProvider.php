@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\Currency;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use Currency;
 use Exception;
-use PrestaShop\PrestaShop\Adapter\Entity\Configuration;
+use PrestaShop\PrestaShop\Adapter\Configuration as ConfigurationAdapter;
 use PrestaShopException;
 
 /**
@@ -38,7 +38,7 @@ use PrestaShopException;
 class CurrencyDataProvider
 {
     /**
-     * @var \PrestaShop\PrestaShop\Adapter\Configuration
+     * @var ConfigurationAdapter
      */
     private $configuration;
 
@@ -47,7 +47,7 @@ class CurrencyDataProvider
      */
     private $shopId;
 
-    public function __construct(Configuration $configuration, $shopId)
+    public function __construct(ConfigurationAdapter $configuration, $shopId)
     {
         $this->configuration = $configuration;
         $this->shopId = $shopId;
