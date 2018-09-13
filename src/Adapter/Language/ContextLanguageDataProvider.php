@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\Language;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 
 /**
- * Class ContextLanguageDataProvider is responsible for getting languages related data from legacy content class
+ * Class ContextLanguageDataProvider is responsible for getting languages related data from legacy content class.
  */
 class ContextLanguageDataProvider
 {
@@ -38,6 +38,11 @@ class ContextLanguageDataProvider
      */
     private $legacyContext;
 
+    /**
+     * ContextLanguageDataProvider constructor.
+     *
+     * @param LegacyContext $legacyContext
+     */
     public function __construct(LegacyContext $legacyContext)
     {
         $this->legacyContext = $legacyContext;

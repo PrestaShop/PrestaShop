@@ -41,5 +41,5 @@ interface MultiLangConfigurationInterface
      * @return array - returns a value from database. It gets from installed languages. The array key contains
      * language id
      */
-    public function getIncludingInactiveLocales($key, $idShopGroup = null, $idShop = null);
+    public function getWithInactiveLocales($key, $idShopGroup = null, $idShop = null);
 }

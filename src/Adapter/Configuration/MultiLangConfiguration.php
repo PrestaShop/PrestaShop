@@ -38,7 +38,7 @@ final class MultiLangConfiguration implements MultiLangConfigurationInterface
     /**
      * {@inheritdoc}
      */
-    public function getIncludingInactiveLocales($key, $idShopGroup = null, $idShop = null)
+    public function getWithInactiveLocales($key, $idShopGroup = null, $idShop = null)
     {
         $languageIds = LanguageLegacy::getIDs(false);
         $result = [];

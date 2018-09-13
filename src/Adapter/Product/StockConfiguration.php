@@ -60,16 +60,11 @@ class StockConfiguration implements DataConfigurationInterface
         return [
             'allow_ordering_oos' => $this->configuration->getBoolean('PS_ORDER_OUT_OF_STOCK'),
             'stock_management' => $this->configuration->getBoolean('PS_STOCK_MANAGEMENT'),
-            'in_stock_label' =>
-                $this->langConfiguration->getIncludingInactiveLocales('PS_LABEL_IN_STOCK_PRODUCTS'),
-            'oos_allowed_backorders' =>
-                $this->langConfiguration->getIncludingInactiveLocales('PS_LABEL_OOS_PRODUCTS_BOA'),
-            'oos_denied_backorders' =>
-                $this->langConfiguration->getIncludingInactiveLocales('PS_LABEL_OOS_PRODUCTS_BOD'),
-            'delivery_time' =>
-                $this->langConfiguration->getIncludingInactiveLocales('PS_LABEL_DELIVERY_TIME_AVAILABLE'),
-            'oos_delivery_time' =>
-                $this->langConfiguration->getIncludingInactiveLocales('PS_LABEL_DELIVERY_TIME_OOSBOA'),
+            'in_stock_label' => $this->langConfiguration->getWithInactiveLocales('PS_LABEL_IN_STOCK_PRODUCTS'),
+            'oos_allowed_backorders' => $this->langConfiguration->getWithInactiveLocales('PS_LABEL_OOS_PRODUCTS_BOA'),
+            'oos_denied_backorders' => $this->langConfiguration->getWithInactiveLocales('PS_LABEL_OOS_PRODUCTS_BOD'),
+            'delivery_time' => $this->langConfiguration->getWithInactiveLocales('PS_LABEL_DELIVERY_TIME_AVAILABLE'),
+            'oos_delivery_time' => $this->langConfiguration->getWithInactiveLocales('PS_LABEL_DELIVERY_TIME_OOSBOA'),
             'pack_stock_management' => $this->configuration->get('PS_PACK_STOCK_TYPE'),
         ];
     }
