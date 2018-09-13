@@ -31,20 +31,12 @@ use Language as LanguageLegacy;
 use PrestaShop\PrestaShop\Core\Configuration\MultiLangConfigurationInterface;
 
 /**
- * Class MultiLangConfiguration is responsible for getting multi-language configuration
+ * Class MultiLangConfiguration is responsible for getting multi-language configuration.
  */
 final class MultiLangConfiguration implements MultiLangConfigurationInterface
 {
     /**
-     * {@inheritDoc}
-     */
-    public function get($key, $idShopGroup = null, $idShop = null)
-    {
-        return ConfigurationLegacy::getInt($key, $idShopGroup, $idShop);
-    }
-
-    /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getIncludingInactiveLocales($key, $idShopGroup = null, $idShop = null)
     {
@@ -53,6 +45,7 @@ final class MultiLangConfiguration implements MultiLangConfigurationInterface
         foreach ($languageIds as $idLang) {
             $result[$idLang] = ConfigurationLegacy::get($key, $idLang, $idShopGroup, $idShop);
         }
+
         return $result;
     }
 }
