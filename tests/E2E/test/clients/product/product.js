@@ -7,6 +7,7 @@ let path = require('path');
 global.productIdElement = [];
 global.productsTable = [];
 global.productsSortedTable = [];
+global.productStatus = [];
 
 class Product extends CommonClient {
 
@@ -244,6 +245,13 @@ class Product extends CommonClient {
     return this.client
       .pause(1000)
       .then(() => global.tab[globalVar] = global.URL + "/" + (global.tab[globalVar].split("/"))[(global.tab[globalVar].split("/")).length - 1].replace(".jpg", "/" + productName + ".jpg"));
+  }
+
+  getProductStatus(selector, i) {
+    return this.client
+      .getText(selector).then(function (status) {
+        global.productStatus[i] = status;
+      });
   }
 
 }
