@@ -201,7 +201,7 @@ services:
         class: 'PrestaShop\PrestaShop\Core\Grid\Query\DoctrineSearchCriteriaApplicator'
 
     # Grid position updater
-    prestashop.core.grid.position.updater:
+    prestashop.core.grid.position.doctrine_grid_position_updater:
         class: 'PrestaShop\PrestaShop\Core\Grid\Position\DoctrineGridPositionUpdater'
         arguments:
             - '@doctrine.dbal.default_connection'
