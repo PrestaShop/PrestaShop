@@ -129,5 +129,5 @@
     <tab id="Warehouses" name="Warehouses" />
     <tab id="Webservice" name="Webservice" />
     <tab id="Zones" name="Zones" />
-    <tab id="Marketing_tools" name="Modules Selections" />
+    <tab id="Marketing_tools" name="Module Selections" />
 </entity_tab>
