@@ -87,15 +87,9 @@ class ProductController extends FrameworkBundleAdminController
     /**
      * Get the Catalog page with KPI banner, product list, bulk actions, filters, search, etc...
      *
-     * URL example: /product/catalog/40/20/id_product/asc
-     *
      * @Template("@PrestaShop/Admin/Product/CatalogPage/catalog.html.twig")
      *
      * @param Request $request
-     * @param int $limit The size of the listing
-     * @param int $offset The offset of the listing
-     * @param string $orderBy To order product list
-     * @param string $sortOrder To order product list
      *
      * @return array|Template|RedirectResponse|Response
      *
@@ -107,26 +101,16 @@ class ProductController extends FrameworkBundleAdminController
      * @throws \Symfony\Component\Form\Exception\LogicException
      * @throws \Symfony\Component\Form\Exception\AlreadySubmittedException
      */
-    public function catalogAction(
-        Request $request,
-        $limit = 10,
-        $offset = 0,
-        $orderBy = 'id_product',
-        $sortOrder = 'desc'
-    ) {
+    public function catalogAction(Request $request)
+    {
         if (!$this->isGranted(array(PageVoter::READ, PageVoter::UPDATE, PageVoter::CREATE), self::PRODUCT_OBJECT)) {
             return $this->redirect('admin_dashboard');
         }
 
-        /**
-         * Parameters can be overwritten with urls.
-         *
-         * @example ?limit=100&offset=2&orderBy=name&sortOrder=desc
-         */
-        $limit = $request->query->get('limit', $limit);
-        $offset = $request->query->get('offset', $offset);
-        $orderBy = $request->query->get('orderBy', $orderBy);
-        $sortOrder = $request->query->get('sortOrder', $sortOrder);
+        $limit = $request->query->get('limit', 10);
+        $offset = $request->query->get('offset', 0);
+        $orderBy = $request->query->get('orderBy', 'id_product');
+        $sortOrder = $request->query->get('sortOrder', 'desc');
 
         $language = $this->getContext()->language;
         $request->getSession()->set('_locale', $language->locale);
