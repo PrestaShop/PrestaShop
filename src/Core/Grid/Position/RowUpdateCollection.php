@@ -24,47 +24,55 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Column\Type\Catalog;
+namespace PrestaShop\PrestaShop\Core\Grid\Position;
 
-use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+use PrestaShop\PrestaShop\Core\Grid\Collection\AbstractCollection;
 
 /**
- * Class PositionColumn.
+ * Class RowUpdateCollection holds collection of row updates for grid.
+ *
+ * @property RowUpdateInterface[] $items
  */
-final class PositionColumn extends AbstractColumn
+final class RowUpdateCollection extends AbstractCollection implements RowUpdateCollectionInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function getType()
+    public function add(RowUpdateInterface $rowUpdate)
     {
-        return 'position';
+        $this->items[$rowUpdate->getId()] = $rowUpdate;
+
+        return $this;
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function configureOptions(OptionsResolver $resolver)
+    public function remove(RowUpdateInterface $rowUpdate)
     {
-        $resolver
-            ->setRequired([
-                'field',
-                'id_field',
-                'id_parent_field',
-                'update_route',
-            ])
-            ->setDefaults([
-                'sortable' => true,
-                'update_method' => 'GET',
-            ])
-            ->setAllowedTypes('sortable', 'bool')
-            ->setAllowedTypes('update_method', 'string')
-            ->setAllowedTypes('field', 'string')
-            ->setAllowedTypes('id_field', 'string')
-            ->setAllowedTypes('id_parent_field', 'string')
-            ->setAllowedTypes('update_route', 'string')
-            ->setAllowedValues('update_method', array('GET', 'POST'))
-        ;
+        if (isset($this->items[$rowUpdate->getId()])) {
+            unset($this->items[$rowUpdate->getId()]);
+        }
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function toArray()
+    {
+        $rowUpdates = [];
+
+        /** @var RowUpdateInterface $item */
+        foreach ($this->items as $item) {
+            $rowUpdates[] = [
+                'id' => $item->getId(),
+                'oldPosition' => $item->getOldPosition(),
+                'newPosition' => $item->getNewPosition(),
+            ];
+        }
+
+        return $rowUpdates;
     }
 }
