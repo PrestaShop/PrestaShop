@@ -99,7 +99,7 @@ class SortOrderTest extends TestCase
     public function testCreateNewSortOrderFromInvalidString()
     {
         $this->expectException(Exception::class);
-        $sortOrder = SortOrder::newFromString('invalid.string');
+        SortOrder::newFromString('invalid.string');
     }
 
     public function testGetterAndSetterLabel()
@@ -224,7 +224,7 @@ class SortOrderTest extends TestCase
 
         $sortOrderArray = $unserializedSortOrder->toArray();
         $this->assertEquals($data['entity'], $sortOrderArray['entity']);
-        $this->assertEquals($data['field'],  $sortOrderArray['field']);
+        $this->assertEquals($data['field'], $sortOrderArray['field']);
         $this->assertEquals($data['direction'], $sortOrderArray['direction']);
     }
 }
