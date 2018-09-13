@@ -46,9 +46,9 @@ class SortOrder
      */
     private $direction;
     /**
-     * @var string string The SortOrder label
+     * @var string The SortOrder label
      */
-    private $label;
+    private $label = '';
 
     /**
      * SortOrder constructor.
@@ -81,6 +81,35 @@ class SortOrder
     }
 
     /**
+     * Creates a new Sort Order from string of this kind: {entity}.{field}.{direction}.
+     *
+     * @param string $sortOrderString the Sort Order configuration string
+     *
+     * @return SortOrder
+     *
+     * @throws Exception
+     */
+    public static function newFromString($sortOrderString)
+    {
+        if (!preg_match(
+            '#([a-z]+)\.([a-z]+)\.([a-z]+)#',
+            $sortOrderString,
+            $sortOrderConfiguration
+        )) {
+            throw new Exception(sprintf(
+                'Invalid string `%s`. Expecting one of the following form: `{entity}.{field}.{direction}`.',
+                $sortOrderString
+            ));
+        }
+
+        return new SortOrder(
+            $sortOrderConfiguration[1],
+            $sortOrderConfiguration[2],
+            $sortOrderConfiguration[3]
+        );
+    }
+
+    /**
      * @return bool if true, the Sort Order direction is random
      */
     public function isRandom()
@@ -108,22 +137,6 @@ class SortOrder
     public function toString()
     {
         return "{$this->entity}.{$this->field}.{$this->direction}";
-    }
-
-    /**
-     * Creates a new Sort Order from string of this kind: {entity}.{field}.{direction}.
-     *
-     * @param string $sortOrderConfiguration the Sort Order configuration string
-     *
-     * @return SortOrder
-     *
-     * @throws Exception
-     */
-    public static function newFromString($sortOrderConfiguration)
-    {
-        list($entity, $field, $direction) = explode('.', $sortOrderConfiguration);
-
-        return new SortOrder($entity, $field, $direction);
     }
 
     /**

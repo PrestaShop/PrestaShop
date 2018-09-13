@@ -29,15 +29,17 @@ namespace Tests\Unit\Core\Product\Search;
 use PHPUnit\Framework\TestCase;
 use Search;
 
+/**
+ * @doc ./vendor/bin/phpunit -c tests/phpunit.xml --filter="SearchTest"
+ */
 class SearchTest extends Testcase
 {
     /**
-     *
      * @dataProvider searchStringProvider()
      *
-     * @param $input
-     * @param $langId
-     * @param $expected
+     * @param string $input The input search.
+     * @param int $langId the language id.
+     * @param array $expected
      */
     public function testSearchSanitizer($input, $langId, $expected)
     {
@@ -49,69 +51,69 @@ class SearchTest extends Testcase
     public function searchStringProvider()
     {
         return [
-            'simple'                                => [
-                'input'    => 'test',
-                'langId'   => 1,
+            'simple' => [
+                'input' => 'test',
+                'langId' => 1,
                 'expected' => ['test'],
             ],
-            'with hyphen'                           => [
-                'input'    => 'test1-test2',
-                'langId'   => 1,
+            'with hyphen' => [
+                'input' => 'test1-test2',
+                'langId' => 1,
                 'expected' => ['test1', 'test2', 'test1test2', 'test1-test2'],
             ],
-            'with hyphen with double'               => [
-                'input'    => 'test1-test-test',
-                'langId'   => 1,
+            'with hyphen with double' => [
+                'input' => 'test1-test-test',
+                'langId' => 1,
                 'expected' => ['test1', 'test', 'test1testtest', 'test1-test-test'],
             ],
-            'with space'                            => [
-                'input'    => 'test1 test2',
-                'langId'   => 1,
+            'with space' => [
+                'input' => 'test1 test2',
+                'langId' => 1,
                 'expected' => ['test1', 'test2'],
             ],
-            'with double space'                     => [
-                'input'    => 'test1  test2',
-                'langId'   => 1,
+            'with double space' => [
+                'input' => 'test1  test2',
+                'langId' => 1,
                 'expected' => ['test1', 'test2'],
             ],
-            'with space with double'                => [
-                'input'    => 'test test',
-                'langId'   => 1,
+            'with space with double' => [
+                'input' => 'test test',
+                'langId' => 1,
                 'expected' => ['test'],
             ],
-            'with space before hyphen'              => [
-                'input'    => 'test1 -test2',
-                'langId'   => 1,
+            'with space before hyphen' => [
+                'input' => 'test1 -test2',
+                'langId' => 1,
                 'expected' => ['test1', '-test2', 'test2'],
             ],
-            'with double space before hyphen'       => [
-                'input'    => 'test1  -test2',
-                'langId'   => 1,
+            'with double space before hyphen' => [
+                'input' => 'test1  -test2',
+                'langId' => 1,
                 'expected' => ['test1', '-test2', 'test2'],
             ],
-            'with multiple hyphens'                 => [
-                'input'    => 'test1--test2',
-                'langId'   => 1,
+            'with multiple hyphens' => [
+                'input' => 'test1--test2',
+                'langId' => 1,
                 'expected' => ['test1', '-test2', 'test1test2', 'test1--test2'],
             ],
-            'with space separated hyphen'           => [
-                'input'    => 'test1 - test2',
-                'langId'   => 1,
+            'with space separated hyphen' => [
+                'input' => 'test1 - test2',
+                'langId' => 1,
                 'expected' => ['test1', '-', 'test2'],
             ],
-            'with strange double hyphens'           => [
-                'input'    => 'test1 -- test2',
-                'langId'   => 1,
+            'with strange double hyphens' => [
+                'input' => 'test1 -- test2',
+                'langId' => 1,
                 'expected' => ['test1', '-', 'test2', '--'],
             ],
-            'with space after hyphen'               => [
-                'input'    => 'test1- test2',
-                'langId'   => 1,
+            'with space after hyphen' => [
+                'input' => 'test1- test2',
+                'langId' => 1,
                 'expected' => ['test1', 'test2', 'test1-'],
             ],
             'with multiple space separated hyphens' => [
-                'input'    => 'test1 - - test2',
-                'langId'   => 1,
+                'input' => 'test1 - - test2',
+                'langId' => 1,
                 'expected' => ['test1', '-', 'test2'],
             ],
         ];

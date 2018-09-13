@@ -29,38 +29,47 @@ namespace Tests\Unit\Core\Product\Search;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Product\Search\URLFragmentSerializer;
 
+/**
+ * @doc ./vendor/bin/phpunit -c tests/phpunit.xml --filter="URLFragmentSerializerTest"
+ */
 class URLFragmentSerializerTest extends Testcase
 {
+    /**
+     * @var URLFragmentSerializer
+     */
     private $serializer;
 
+    /**
+     * {@inheritdoc}
+     */
     public function setUp()
     {
         $this->serializer = new URLFragmentSerializer;
     }
 
-    private function doTest($expected, array $fragment)
+    private function doSerializationTests($expected, array $fragment)
     {
         $this->assertEquals($expected, $this->serializer->serialize($fragment));
         $this->assertEquals($fragment, $this->serializer->unserialize($expected));
     }
 
-    public function test_serialize_single_monovalued_fragment()
+    public function testSerializationOnSingleMonovaluedFragmentWorksAsExpected()
     {
-        $this->doTest('a-b', ['a' => ['b']]);
+        $this->doSerializationTests('a-b', ['a' => ['b']]);
     }
 
-    public function test_serialize_single_multivalued_fragment()
+    public function testSerializationOnSingleMultivaluedFragmentWorksAsExpected()
     {
-        $this->doTest('a-b-c', ['a' => ['b', 'c']]);
+        $this->doSerializationTests('a-b-c', ['a' => ['b', 'c']]);
     }
 
-    public function test_serialize_multiple_multivalued_fragments()
+    public function testSerializationOnMultipleMultivaluedFragmentsWorksAsExpected()
     {
-        $this->doTest('a-b-c/x-y-z', ['a' => ['b', 'c'], 'x' => ['y', 'z']]);
+        $this->doSerializationTests('a-b-c/x-y-z', ['a' => ['b', 'c'], 'x' => ['y', 'z']]);
     }
 
-    public function test_serialize_single_monovalued_fragment_with_dash_in_name()
+    public function testSerializationOnSingleMonovaluedFragmentWithDashInNameWorksAsExpected()
     {
-        $this->doTest('a-b--c', ['a' => ['b-c']]);
+        $this->doSerializationTests('a-b--c', ['a' => ['b-c']]);
     }
 }
