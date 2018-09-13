@@ -128,3 +128,6 @@ services:
         class: 'PrestaShop\PrestaShop\Adapter\File\HtaccessFileGenerator'
         arguments:
             - '@prestashop.adapter.cache_clearer'
+
+    prestashop.adapter.file.robots_text_file_generator:
+        class: 'PrestaShop\PrestaShop\Adapter\File\RobotsTextFileGenerator'

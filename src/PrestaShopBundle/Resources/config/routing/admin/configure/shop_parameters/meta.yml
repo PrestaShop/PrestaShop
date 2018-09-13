@@ -45,8 +45,15 @@ admin_meta_list_delete_multiple:
         _legacy_controller: AdminMeta
 
 admin_meta_process:
-  path: /settings
-  methods: [POST]
-  defaults:
-    _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\Meta:processForm'
-    _legacy_controller: AdminEmails
+    path: /settings
+    methods: [POST]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\Meta:processForm'
+        _legacy_controller: AdminMeta
+
+admin_meta_generate_robots_file:
+    path: /generate/robots
+    methods: POST
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\Meta:generateRobotsTextFile'
+        _legacy_controller: AdminMeta
