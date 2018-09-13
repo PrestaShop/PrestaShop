@@ -26,17 +26,20 @@
 
 namespace PrestaShop\PrestaShop\Core\Product\Search;
 
+/**
+ * Responsible of the pagination of the list of products.
+ */
 class Pagination
 {
     /**
      * @var int the total number of pages for this query
      */
-    private $pagesCount;
+    private $pagesCount = 0;
 
     /**
      * @var int the index of the returned page
      */
-    private $page;
+    private $page = 0;
 
     /**
      * @param int $pagesCount
@@ -76,37 +79,6 @@ class Pagination
     public function getPage()
     {
         return $this->page;
-    }
-
-    /**
-     * @param $page
-     * @param string $type
-     *
-     * @return array
-     */
-    private function buildPageLink($page, $type = 'page')
-    {
-        $current = $page === $this->getPage();
-
-        return [
-            'type' => $type,
-            'page' => $page,
-            'clickable' => !$current,
-            'current' => $type === 'page' ? $current : false,
-        ];
-    }
-
-    /**
-     * @return array
-     */
-    private function buildSpacer()
-    {
-        return [
-            'type' => 'spacer',
-            'page' => null,
-            'clickable' => false,
-            'current' => false,
-        ];
     }
 
     /**
@@ -159,5 +131,36 @@ class Pagination
         $links[] = $this->buildPageLink(min($this->getPagesCount(), $this->getPage() + 1), 'next');
 
         return $links;
+    }
+
+    /**
+     * @param $page
+     * @param string $type
+     *
+     * @return array
+     */
+    private function buildPageLink($page, $type = 'page')
+    {
+        $current = $page === $this->getPage();
+
+        return [
+            'type' => $type,
+            'page' => $page,
+            'clickable' => !$current,
+            'current' => $type === 'page' ? $current : false,
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    private function buildSpacer()
+    {
+        return [
+            'type' => 'spacer',
+            'page' => null,
+            'clickable' => false,
+            'current' => false,
+        ];
     }
 }

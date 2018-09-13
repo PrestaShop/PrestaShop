@@ -59,6 +59,7 @@ class FacetCollectionTest extends TestCase
     public function testCreateANewCollection()
     {
         $this->assertInternalType('array', $this->facetCollection->getFacets());
+        $this->assertSame([], $this->facetCollection->getFacets());
     }
 
     public function testAddFacet()

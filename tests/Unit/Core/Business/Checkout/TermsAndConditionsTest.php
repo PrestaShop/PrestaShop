@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Core\Checkout;
+namespace Tests\Core\Business\Checkout;
 
 use Tests\TestCase\UnitTestCase;
 use PrestaShop\PrestaShop\Core\Checkout\TermsAndConditions;
