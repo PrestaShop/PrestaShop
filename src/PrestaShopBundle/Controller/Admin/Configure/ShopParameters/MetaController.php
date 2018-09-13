@@ -72,6 +72,10 @@ class MetaController extends FrameworkBundleAdminController
         $hostingInformation = $this->get('prestashop.adapter.hosting_information');
 
         $defaultRoutesProvider = $this->get('prestashop.adapter.data_provider.default_route');
+
+        $isShopContext = $context->isShopContext();
+        $isShopFeatureActive = $context->isShopFeatureActive();
+
         return [
             'layoutHeaderToolbarBtn' => [
                 'add' => [
@@ -87,7 +91,8 @@ class MetaController extends FrameworkBundleAdminController
             'isModRewriteActive' => $tools->isModRewriteActive(),
             'isHtaccessFileValid' => $htaccessFileChecker->isValidFile(),
             'isRobotsTextFileValid' => $robotsTextFileChecker->isValidFile(),
-            'isShopFeatureActive' => $context->isShopFeatureActive(),
+            'isShopContext' => $isShopContext,
+            'isShopFeatureActive' => $isShopFeatureActive,
             'isHostMode' => $hostingInformation->isHostMode(),
         ];
     }
