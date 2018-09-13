@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\Category\CommandHandler;
 use Category;
 use PrestaShop\PrestaShop\Core\Domain\Product\Category\Command\AddCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Category\CommandHandler\AddCategoryHandlerInterface;
+use PrestaShop\PrestaShop\Core\Image\Uploader\ImageUploaderInterface;
 
 /**
  * Class AddCategoryHandler
@@ -37,6 +38,19 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Category\CommandHandler\AddCategor
  */
 final class AddCategoryHandler implements AddCategoryHandlerInterface
 {
+    /**
+     * @var ImageUploaderInterface
+     */
+    private $categoryImageUploader;
+
+    /**
+     * @param ImageUploaderInterface $categoryImageUploader
+     */
+    public function __construct(ImageUploaderInterface $categoryImageUploader)
+    {
+        $this->categoryImageUploader = $categoryImageUploader;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -57,5 +71,12 @@ final class AddCategoryHandler implements AddCategoryHandlerInterface
         $_POST['checkBoxShopAsso_category'] = $command->getAssociatedShopIds();
 
         $category->add();
+
+        if (null !== $command->getCoverImage()) {
+            $this->categoryImageUploader->upload(
+                $category->id,
+                $command->getCoverImage()
+            );
+        }
     }
 }

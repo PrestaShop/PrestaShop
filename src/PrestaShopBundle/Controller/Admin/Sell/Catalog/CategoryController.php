@@ -352,6 +352,14 @@ class CategoryController extends FrameworkBundleAdminController
                     $command->setAssociatedShopIds($data['shop_association']);
                 }
 
+                if (isset($data['cover_image'])) {
+                    $command->setCoverImage($data['cover_image']);
+                }
+
+                if (isset($data['thumbnail_image'])) {
+                    $command->setThumbnailImage($data['thumbnail_image']);
+                }
+
                 $this->getCommandBus()->handle($command);
 
                 $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
