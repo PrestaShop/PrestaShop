@@ -233,7 +233,7 @@ class Filter
     }
 
     /**
-     * @param $nextEncodedFacets
+     * @param array $nextEncodedFacets
      *
      * @return $this
      */

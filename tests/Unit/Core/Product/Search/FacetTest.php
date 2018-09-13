@@ -58,8 +58,6 @@ class FacetTest extends TestCase
 
     public function testCreateANewFacet()
     {
-        $this->assertInstanceOf(Facet::class, $this->facet);
-
         // Facet public integrity of data types.
         $this->assertInternalType('string', $this->facet->getLabel());
         $this->assertInternalType('string', $this->facet->getWidgetType());
@@ -68,7 +66,6 @@ class FacetTest extends TestCase
         $this->assertInternalType('bool', $this->facet->isMultipleSelectionAllowed());
         $this->assertInternalType('array', $this->facet->getFilters());
         $this->assertInternalType('array', $this->facet->toArray());
-
 
         // Facet public integrity of default Facet data
         $this->assertEmpty($this->facet->getLabel());
