@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo;
 
 use PrestaShop\PrestaShop\Adapter\Routes\RouteValidator;
+use PrestaShop\PrestaShop\Adapter\Validate;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 use PrestaShopException;
@@ -63,6 +64,11 @@ final class MetaFormDataProvider implements FormDataProviderInterface
     private $translator;
 
     /**
+     * @var Validate
+     */
+    private $validate;
+
+    /**
      * MetaFormDataProvider constructor.
      *
      * @param DataConfigurationInterface $setUpUrlDataConfiguration
@@ -70,19 +76,22 @@ final class MetaFormDataProvider implements FormDataProviderInterface
      * @param DataConfigurationInterface $urlSchemaDataConfiguration
      * @param TranslatorInterface $translator
      * @param RouteValidator $routeValidator
+     * @param Validate $validate
      */
     public function __construct(
         DataConfigurationInterface $setUpUrlDataConfiguration,
         DataConfigurationInterface $shopUrlsDataConfiguration,
         DataConfigurationInterface $urlSchemaDataConfiguration,
         TranslatorInterface $translator,
-        RouteValidator $routeValidator
+        RouteValidator $routeValidator,
+        Validate $validate
     ) {
         $this->setUpUrlDataConfiguration = $setUpUrlDataConfiguration;
         $this->shopUrlsDataConfiguration = $shopUrlsDataConfiguration;
         $this->urlSchemaDataConfiguration = $urlSchemaDataConfiguration;
         $this->routeValidator = $routeValidator;
         $this->translator = $translator;
+        $this->validate = $validate;
     }
 
     /**
@@ -121,12 +130,18 @@ final class MetaFormDataProvider implements FormDataProviderInterface
      * @param array $data
      *
      * @return array - if array is not empty then error strings are returned.
+     *
+     * @throws PrestaShopException
      */
     private function validateData(array $data)
     {
         $urlSchemaErrors = $this->validateUrlSchema($data['url_schema']);
+        $shopUrlErrors = $this->validateShopUrl($data['shop_urls']);
 
-        return $urlSchemaErrors;
+        return array_merge(
+            $urlSchemaErrors,
+            $shopUrlErrors
+        );
     }
 
     /**
@@ -175,5 +190,34 @@ final class MetaFormDataProvider implements FormDataProviderInterface
         }
 
         return $requiredFieldErrors;
+    }
+
+    /**
+     * Validates shop url form data.
+     *
+     * @param array $configuration
+     *
+     * @return array
+     */
+    private function validateShopUrl(array $configuration)
+    {
+        $errors = [];
+        if (!$this->validate->isCleanHtml($configuration['domain'])) {
+            $errors[] = $this->translator->trans(
+                'This domain is not valid.',
+                [],
+                'Admin.Notifications.Error'
+            );
+        }
+
+        if (!$this->validate->isCleanHtml($configuration['domain_ssl'])) {
+            $errors[] = $this->translator->trans(
+                'The SSL domain is not valid.',
+                [],
+                'Admin.Notifications.Error'
+            );
+        }
+
+        return $errors;
     }
 }

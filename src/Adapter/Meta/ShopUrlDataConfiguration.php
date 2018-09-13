@@ -51,32 +51,17 @@ final class ShopUrlDataConfiguration implements DataConfigurationInterface
     private $configuration;
 
     /**
-     * @var Validate
-     */
-    private $validate;
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    /**
      * ShopUrlDataConfiguration constructor.
      *
      * @param ShopUrl $mainShopUrl
      * @param ConfigurationInterface $configuration
-     * @param Validate $validate
-     * @param TranslatorInterface $translator
      */
     public function __construct(
         ShopUrl $mainShopUrl,
-        ConfigurationInterface $configuration,
-        Validate $validate,
-        TranslatorInterface $translator
+        ConfigurationInterface $configuration
     ) {
         $this->mainShopUrl = $mainShopUrl;
         $this->configuration = $configuration;
-        $this->validate = $validate;
-        $this->translator = $translator;
     }
 
     /**
@@ -107,8 +92,6 @@ final class ShopUrlDataConfiguration implements DataConfigurationInterface
                 $this->configuration->set('PS_SHOP_DOMAIN', $configuration['domain']);
                 $this->configuration->set('PS_SHOP_DOMAIN_SSL', $configuration['domain_ssl']);
             }
-        } catch (InvalidArgumentException $exception) {
-            $errors[] = $exception->getMessage();
         } catch (PrestaShopException $exception) {
             $errors[] = $exception->getMessage();
         }
@@ -118,32 +101,12 @@ final class ShopUrlDataConfiguration implements DataConfigurationInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @throws InvalidArgumentException
      */
     public function validateConfiguration(array $configuration)
     {
-        $issetRequiredVars = isset(
+        return isset(
             $configuration['domain'],
             $configuration['domain_ssl']
         );
-
-        if (!$issetRequiredVars) {
-            return false;
-        }
-
-        if (!$this->validate->isCleanHtml($configuration['domain'])) {
-            throw new InvalidArgumentException(
-                $this->translator->trans('This domain is not valid.', [], 'Admin.Notifications.Error')
-            );
-        }
-
-        if (!$this->validate->isCleanHtml($configuration['domain_ssl'])) {
-            throw new InvalidArgumentException(
-                $this->translator->trans('The SSL domain is not valid.', [], 'Admin.Notifications.Error')
-            );
-        }
-
-        return true;
     }
 }
