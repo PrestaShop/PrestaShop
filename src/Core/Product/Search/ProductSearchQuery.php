@@ -32,39 +32,41 @@ namespace PrestaShop\PrestaShop\Core\Product\Search;
 class ProductSearchQuery
 {
     /**
-     * @var string The Product Search query type.
+     * @var string the Product Search query type
      */
     private $queryType;
 
     /**
-     * @var int The Product Search Category id.
+     * @var int the Product Search Category id
      */
     private $idCategory;
 
     /**
-     * @var int The Product Search Manufacturer id.
+     * @var int the Product Search Manufacturer id
      */
     private $idManufacturer;
 
     /**
-     * @var int The Product Search Supplier id.
+     * @var int the Product Search Supplier id
      */
     private $idSupplier;
 
     /**
-     * @var string The Product Search search string.
+     * @var string the Product Search search string
      */
     private $searchString;
 
     /**
-     * @var string The Product Search search tag.
+     * @var string the Product Search search tag
      */
     private $searchTag;
 
     /**
      * At this time, this concept is not used in Core.
+     *
      * @deprecated since 1.7.5, to be removed in 1.8.
-     * @var array The Product Search encoded facets.
+     *
+     * @var array the Product Search encoded facets
      */
     private $encodedFacets;
 
@@ -77,12 +79,12 @@ class ProductSearchQuery
     private $resultsPerPage = 12;
 
     /**
-     * @var int The Product Search page index.
+     * @var int the Product Search page index
      */
     private $page = 1;
 
     /**
-     * @var SortOrder The Product Search Sort order.
+     * @var SortOrder the Product Search Sort order
      */
     private $sortOrder;
 
