@@ -38,11 +38,6 @@ interface PositionDefinitionInterface
     public function getTable();
 
     /**
-     * @return mixed
-     */
-    public function getParentTable();
-
-    /**
      * @return string
      */
     public function getIdField();
@@ -50,15 +45,10 @@ interface PositionDefinitionInterface
     /**
      * @return string
      */
-    public function getParentIdField();
-
-    /**
-     * @return string
-     */
-    public function getParentTableIdField();
-
-    /**
-     * @return string
-     */
     public function getPositionField();
+
+    /**
+     * @return string|null
+     */
+    public function getParentIdField();
 }

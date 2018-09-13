@@ -123,7 +123,7 @@ class DoctrineGridPositionUpdater implements GridPositionUpdaterInterface
      */
     private function getNewPositions(PositionUpdateInterface $positionUpdate)
     {
-        $positions = $this->getCurrentPositions($positionUpdate->getParentId(), $positionUpdate->getPositionDefinition());
+        $positions = $this->getCurrentPositions($positionUpdate->getPositionDefinition(), $positionUpdate->getParentId());
 
         /** @var RowUpdateInterface $rowUpdate */
         foreach ($positionUpdate->getRowUpdateCollection() as $rowUpdate) {
@@ -139,21 +139,21 @@ class DoctrineGridPositionUpdater implements GridPositionUpdaterInterface
      *
      * @return array
      */
-    private function getCurrentPositions($parentId, PositionDefinitionInterface $positionDefinition)
+    private function getCurrentPositions(PositionDefinitionInterface $positionDefinition, $parentId = null)
     {
         $qb = $this->connection->createQueryBuilder();
         $qb
-            ->from($this->dbPrefix . $positionDefinition->getParentTable(), 'p')
-            ->leftJoin(
-                'p',
-                $this->dbPrefix . $positionDefinition->getTable(),
-                't', 'p.' . $positionDefinition->getParentTableIdField() . ' = ' . 't.' . $positionDefinition->getParentIdField()
-            )
+            ->from($this->dbPrefix . $positionDefinition->getTable(), 't')
             ->select('t.' . $positionDefinition->getIdField() . ', t.' . $positionDefinition->getPositionField())
-            ->andWhere('p.' . $positionDefinition->getParentTableIdField() . ' = :parentId')
             ->addOrderBy('t.' . $positionDefinition->getPositionField(), 'ASC')
-            ->setParameter('parentId', $parentId)
         ;
+
+        if (null !== $parentId && null !== $positionDefinition->getParentIdField()) {
+            $qb
+                ->andWhere('t.' . $positionDefinition->getParentIdField() . ' = :parentId')
+                ->setParameter('parentId', $parentId)
+            ;
+        }
 
         $positions = $qb->execute()->fetchAll();
         $currentPositions = [];

@@ -33,11 +33,6 @@ namespace PrestaShop\PrestaShop\Core\Grid\Position;
 final class PositionUpdate implements PositionUpdateInterface
 {
     /**
-     * @var mixed
-     */
-    private $parentId;
-
-    /**
      * @var PositionDefinitionInterface
      */
     private $positionDefinition;
@@ -48,27 +43,24 @@ final class PositionUpdate implements PositionUpdateInterface
     private $rowUpdateCollection;
 
     /**
-     * PositionUpdate constructor.
-     * @param mixed $parentId
-     * @param RowUpdateCollectionInterface $rowUpdateCollection
-     * @param PositionDefinitionInterface $positionDefinition
+     * @var mixed
      */
-    public function __construct(
-        $parentId,
-        RowUpdateCollectionInterface $rowUpdateCollection,
-        PositionDefinitionInterface $positionDefinition
-    ) {
-        $this->parentId = $parentId;
-        $this->positionDefinition = $positionDefinition;
-        $this->rowUpdateCollection = $rowUpdateCollection;
-    }
+    private $parentId;
 
     /**
-     * @return mixed
+     * PositionUpdate constructor.
+     * @param RowUpdateCollectionInterface $rowUpdateCollection
+     * @param PositionDefinitionInterface $positionDefinition
+     * @param mixed $parentId
      */
-    public function getParentId()
-    {
-        return $this->parentId;
+    public function __construct(
+        RowUpdateCollectionInterface $rowUpdateCollection,
+        PositionDefinitionInterface $positionDefinition,
+        $parentId = null
+    ) {
+        $this->positionDefinition = $positionDefinition;
+        $this->rowUpdateCollection = $rowUpdateCollection;
+        $this->parentId = $parentId;
     }
 
     /**
@@ -85,5 +77,13 @@ final class PositionUpdate implements PositionUpdateInterface
     public function getRowUpdateCollection()
     {
         return $this->rowUpdateCollection;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getParentId()
+    {
+        return $this->parentId;
     }
 }
