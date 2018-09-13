@@ -48,7 +48,10 @@
 
         {{ form_end(metaForm) }}
 
-        {% include '@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Blocks/robots_file_generation.html.twig' %}
+        {{ form_start(robotsForm, {'action': path('admin_meta_generate_robots_file')}) }}
+          {% include '@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Blocks/robots_file_generation.html.twig' %}
+          {{ form_rest(metaForm) }}
+        {{ form_end(robotsForm) }}
       </div>
   </div>
 

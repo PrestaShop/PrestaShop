@@ -41,7 +41,7 @@ use Symfony\Component\HttpFoundation\Request;
 class MetaController extends FrameworkBundleAdminController
 {
     /**
-     * responsible for displaying page content
+     * responsible for displaying page content.
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
@@ -72,9 +72,6 @@ class MetaController extends FrameworkBundleAdminController
         $hostingInformation = $this->get('prestashop.adapter.hosting_information');
 
         $defaultRoutesProvider = $this->get('prestashop.adapter.data_provider.default_route');
-
-
-
         return [
             'layoutHeaderToolbarBtn' => [
                 'add' => [
@@ -85,6 +82,7 @@ class MetaController extends FrameworkBundleAdminController
             ],
             'grid' => $presentedGrid,
             'metaForm' => $metaForm->createView(),
+            'robotsForm' => $this->createFormBuilder()->getForm()->createView(),
             'routeKeywords' => $defaultRoutesProvider->getKeywords(),
             'isModRewriteActive' => $tools->isModRewriteActive(),
             'isHtaccessFileValid' => $htaccessFileChecker->isValidFile(),
@@ -163,7 +161,7 @@ class MetaController extends FrameworkBundleAdminController
     }
 
     /**
-     * Submits settings forms
+     * Submits settings forms.
      *
      * @param Request $request
      *
@@ -190,6 +188,40 @@ class MetaController extends FrameworkBundleAdminController
                 );
             }
         }
+
+        return $this->redirectToRoute('admin_meta');
+    }
+
+    /**
+     * Generates robots.txt file.
+     *
+     * @return RedirectResponse
+     */
+    public function generateRobotsTextFileAction()
+    {
+        $robotsTextFileGenerator = $this->get('prestashop.adapter.file.robots_text_file_generator');
+
+        $rootDir = $this->get('prestashop.adapter.legacy.configuration')->get('_PS_ROOT_DIR_');
+
+        if (!$robotsTextFileGenerator->generateFile()) {
+            $this->addFlash(
+                'error',
+                $this->trans(
+                    'Cannot write into file: %filename%. Please check write permissions.',
+                    'Admin.Notifications.Error',
+                    [
+                        '%filename%' => $rootDir.'/robots.txt'
+                    ]
+                )
+            );
+
+            return $this->redirectToRoute('admin_meta');
+        }
+
+        $this->addFlash(
+            'success',
+            $this->trans('Successful update.', 'Admin.Notifications.Success')
+        );
 
         return $this->redirectToRoute('admin_meta');
     }
