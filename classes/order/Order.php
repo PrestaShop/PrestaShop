@@ -639,7 +639,7 @@ class OrderCore extends ObjectModel
             }
 
             $this->setProductImageInformations($row);
-            $this->setProductCurrentStock($row);
+            $this->setProductCurrentStockInformations($row);
 
             // Backward compatibility 1.4 -> 1.5
             $this->setProductPrices($row);
@@ -699,7 +699,7 @@ class OrderCore extends ObjectModel
      *
      * @param array &$product
      */
-    protected function setProductCurrentStock(&$product)
+    protected function setProductCurrentStockInformations(&$product)
     {
         if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')
             && (int) $product['advanced_stock_management'] == 1
@@ -708,6 +708,8 @@ class OrderCore extends ObjectModel
         } else {
             $product['current_stock'] = StockAvailable::getQuantityAvailableByProduct($product['product_id'], $product['product_attribute_id'], (int) $this->id_shop);
         }
+
+        $product['location'] = StockAvailable::getLocation($product['product_id'], $product['product_attribute_id'], (int) $this->id_shop);
     }
 
     /**

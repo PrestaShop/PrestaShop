@@ -6510,14 +6510,18 @@ class ProductCore extends ObjectModel
      */
     public function loadStockData()
     {
-        if (Validate::isLoadedObject($this)) {
-            // By default, the product quantity correspond to the available quantity to sell in the current shop
-            $this->quantity = StockAvailable::getQuantityAvailableByProduct($this->id, 0);
-            $this->out_of_stock = StockAvailable::outOfStock($this->id);
-            $this->depends_on_stock = StockAvailable::dependsOnStock($this->id);
-            if (Context::getContext()->shop->getContext() == Shop::CONTEXT_GROUP && Context::getContext()->shop->getContextShopGroup()->share_stock == 1) {
-                $this->advanced_stock_management = $this->useAdvancedStockManagement();
-            }
+        if (false === Validate::isLoadedObject($this)) {
+            return;
+        }
+
+        // Default product quantity is available quantity to sell in current shop
+        $this->quantity = StockAvailable::getQuantityAvailableByProduct($this->id, 0);
+        $this->out_of_stock = StockAvailable::outOfStock($this->id);
+        $this->depends_on_stock = StockAvailable::dependsOnStock($this->id);
+        $this->location = StockAvailable::getLocation($this->id);
+
+        if (Context::getContext()->shop->getContext() == Shop::CONTEXT_GROUP && Context::getContext()->shop->getContextShopGroup()->share_stock == 1) {
+            $this->advanced_stock_management = $this->useAdvancedStockManagement();
         }
     }
 

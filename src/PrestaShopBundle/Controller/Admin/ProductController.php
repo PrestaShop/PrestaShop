@@ -486,10 +486,11 @@ class ProductController extends FrameworkBundleAdminController
                     }
                     $adminProductWrapper->processDependsOnStock($product, ($_POST['depends_on_stock'] == '1'));
 
-                    // If there is no combination, then quantity is managed for the whole product (as combination ID 0)
+                    // If there is no combination, then quantity and location are managed for the whole product (as combination ID 0)
                     // In all cases, legacy hooks are triggered: actionProductUpdate and actionUpdateQuantity
                     if (count($_POST['combinations']) === 0 && isset($_POST['qty_0'])) {
                         $adminProductWrapper->processQuantityUpdate($product, $_POST['qty_0']);
+                        $adminProductWrapper->processLocation($product, $_POST['location']);
                     }
                     // else quantities are managed from $adminProductWrapper->processProductAttribute() above.
 
