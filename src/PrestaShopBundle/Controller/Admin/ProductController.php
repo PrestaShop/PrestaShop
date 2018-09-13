@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin;
 
 use Exception;
+use PrestaShopException;
 use PrestaShop\PrestaShop\Adapter\Tax\TaxRuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Warehouse\WarehouseDataProvider;
 use PrestaShopBundle\Component\CsvResponse;
@@ -405,7 +406,6 @@ class ProductController extends FrameworkBundleAdminController
         $legacyContextService = $this->get('prestashop.adapter.legacy.context');
         $isMultiShopContext = count($shopContext->getContextListShopID()) > 1;
 
-        $response = new JsonResponse();
         $modelMapper = $this->get('prestashop.adapter.admin.model.product');
         $adminProductWrapper = $this->get('prestashop.adapter.admin.wrapper.product');
 
@@ -450,27 +450,41 @@ class ProductController extends FrameworkBundleAdminController
         $formData = $form->getData();
         $formData['step3']['combinations'] = $combinationsList;
 
-        if ($form->isSubmitted()) {
-            if ($this->isDemoModeEnabled() && $request->isXmlHttpRequest()) {
-                $errorMessage = $this->getDemoModeErrorMessage();
+        try {
+            if ($form->isSubmitted()) {
+                if ($this->isDemoModeEnabled() && $request->isXmlHttpRequest()) {
+                    $errorMessage = $this->getDemoModeErrorMessage();
 
-                return new JsonResponse(['error' => [$errorMessage]], 503);
-            }
+                    return $this->returnErrorJsonResponse(
+                        ['error' => [$errorMessage]],
+                        Response::HTTP_SERVICE_UNAVAILABLE
+                    );
+                }
 
-            if ($form->isValid()) {
-                //define POST values for keeping legacy adminController skills
-                $_POST = $modelMapper->getModelData($formData, $isMultiShopContext) + $_POST;
-                $_POST['state'] = Product::STATE_SAVED;
+                if ($form->isValid()) {
+                    //define POST values for keeping legacy adminController skills
+                    $_POST = $modelMapper->getModelData($formData, $isMultiShopContext) + $_POST;
+                    $_POST['state'] = Product::STATE_SAVED;
 
-                $adminProductController = $adminProductWrapper->getInstance();
-                $adminProductController->setIdObject($formData['id_product']);
-                $adminProductController->setAction('save');
+                    $adminProductController = $adminProductWrapper->getInstance();
+                    $adminProductController->setIdObject($formData['id_product']);
+                    $adminProductController->setAction('save');
 
-                // Hooks: this will trigger legacy AdminProductController, postProcess():
-                // actionAdminSaveBefore; actionAdminProductsControllerSaveBefore
-                // actionProductAdd or actionProductUpdate (from processSave() -> processAdd() or processUpdate())
-                // actionAdminSaveAfter; actionAdminProductsControllerSaveAfter
-                if ($product = $adminProductController->postCoreProcess()) {
+                    // Hooks: this will trigger legacy AdminProductController, postProcess():
+                    // actionAdminSaveBefore; actionAdminProductsControllerSaveBefore
+                    // actionProductAdd or actionProductUpdate (from processSave() -> processAdd() or processUpdate())
+                    // actionAdminSaveAfter; actionAdminProductsControllerSaveAfter
+                    $productSaveResult = $adminProductController->postCoreProcess();
+
+                    if (false == $productSaveResult) {
+                        return $this->returnErrorJsonResponse(
+                            ['error' => $adminProductController->errors],
+                            Response::HTTP_BAD_REQUEST
+                        );
+                    }
+
+                    $product = $productSaveResult;
+
                     /* @var $product Product */
                     $adminProductController->processSuppliers($product->id);
                     $adminProductController->processFeatures($product->id);
@@ -503,21 +517,32 @@ class ProductController extends FrameworkBundleAdminController
 
                     $adminProductController->processWarehouses();
 
+                    $response = new JsonResponse();
                     $response->setData([
                         'product' => $product,
                         'customization_fields_ids' => $customizationFieldsIds,
                     ]);
-                }
 
-                if ($request->isXmlHttpRequest()) {
-                    return $response;
+                    if ($request->isXmlHttpRequest()) {
+                        return $response;
+                    }
+                } elseif ($request->isXmlHttpRequest()) {
+                    return $this->returnErrorJsonResponse(
+                        $this->getFormErrorsForJS($form),
+                        Response::HTTP_BAD_REQUEST
+                    );
                 }
-            } elseif ($request->isXmlHttpRequest()) {
-                $response->setStatusCode(400);
-                $response->setData($this->getFormErrorsForJS($form));
-
-                return $response;
             }
+        } catch (PrestaShopException $e) {
+            // this controller can be called as an AJAX JSON route or a HTML page
+            // so we need to return the right type of response if an exception it thrown
+            if ($request->isXmlHttpRequest()) {
+                return $this->returnErrorJsonResponse(
+                    [],
+                    Response::HTTP_INTERNAL_SERVER_ERROR
+                );
+            }
+            throw $e;
         }
 
         $stockManager = $this->get('prestashop.core.data_provider.stock_interface');
@@ -1130,5 +1155,20 @@ class ProductController extends FrameworkBundleAdminController
             'form' => $form->getForm()->get($step)->get($fieldName)->createView(),
             'formId' => $step . '_' . $fieldName . '_rendered',
         ]);
+    }
+
+    /**
+     * @param array $errors
+     * @param int $httpStatusCode
+     *
+     * @return JsonResponse
+     */
+    private function returnErrorJsonResponse(array $errors, $httpStatusCode)
+    {
+        $response = new JsonResponse();
+        $response->setStatusCode($httpStatusCode);
+        $response->setData($errors);
+
+        return $response;
     }
 }
