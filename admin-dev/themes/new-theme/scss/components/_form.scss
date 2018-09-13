@@ -28,6 +28,10 @@
 
   .card-block {
     justify-content: center;
+    padding: 1.875rem $card-spacer-x;
+    &.row {
+      margin: 0; // used to override negative margins brought by .row
+    }
   }
 
   .card-text {
