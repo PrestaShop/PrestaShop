@@ -27,11 +27,23 @@
 {% trans_default_domain "Admin.Shopparameters.Feature" %}
 
 {% block content %}
-  <div class="row">
-    <div class="col">
-      {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': grid} %}
-    </div>
-  </div>
+  {% if isShopFeatureActive and isShopContext %}
+      <div class="row">
+        <div class="col">
+          {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': grid} %}
+        </div>
+      </div>
+    {% else %}
+      <div class="row">
+        <div class="col-sm">
+          <div class="alert alert-info" role="alert">
+            <div class="alert-text">
+              {{ 'You can only display the page list in a shop context.'|trans({}, 'Admin.Shopparameters.Notification') }}
+            </div>
+          </div>
+        </div>
+      </div>
+  {% endif %}
 
   <div class="row justify-content-center">
       <div class="col">
