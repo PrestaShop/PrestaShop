@@ -537,4 +537,10 @@ services:
         tags:
             - { name: form.type }
 
+    form.type.shop.traffic_seo.url_schema:
+        class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\UrlSchemaType'
+        arguments:
+            - '@=service("prestashop.adapter.legacy.configuration").get("PS_REWRITING_SETTINGS")'
+        tags:
+            - { name: form.type }
 
