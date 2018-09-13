@@ -28,7 +28,8 @@
           data-id="{{ record[column.options.id_field] }}"
           data-id-parent="{{ record[column.options.id_parent_field] }}"
           data-position="{{ record[column.options.field] }}"
-          data-position-update-url="{{ url(column.options.position_update_route) }}"
+          data-update-url="{{ url(column.options.update_route) }}"
+          data-update-method="{{ column.options.update_method }}"
           data-pagination-offset="{{ grid.pagination.offset }}"
      >
          <i class="material-icons">swap_vert</i>
