@@ -32,17 +32,17 @@ namespace PrestaShop\PrestaShop\Core\Product\Search;
 class Pagination
 {
     /**
-     * @var int the total number of pages for this query
+     * @var int The total number of pages for this query
      */
     private $pagesCount = 0;
 
     /**
-     * @var int the index of the returned page
+     * @var int The index of the returned page
      */
     private $page = 0;
 
     /**
-     * @param int $pagesCount
+     * @param int $pagesCount The Pagination pages count.
      *
      * @return $this
      */
@@ -54,7 +54,7 @@ class Pagination
     }
 
     /**
-     * @return int
+     * @return int The Pagination pages count.
      */
     public function getPagesCount()
     {
@@ -62,7 +62,7 @@ class Pagination
     }
 
     /**
-     * @param int $page
+     * @param int $page The Pagination page index.
      *
      * @return $this
      */
@@ -74,7 +74,7 @@ class Pagination
     }
 
     /**
-     * @return int
+     * @return int The Pagination page index.
      */
     public function getPage()
     {
@@ -82,7 +82,7 @@ class Pagination
     }
 
     /**
-     * @return array
+     * @return array Returns an list of links as array.
      */
     public function buildLinks()
     {
@@ -134,8 +134,8 @@ class Pagination
     }
 
     /**
-     * @param $page
-     * @param string $type
+     * @param int $page The page index.
+     * @param string $type The pagination type, can be 'page', 'previous', 'spacer' or 'next'
      *
      * @return array
      */
