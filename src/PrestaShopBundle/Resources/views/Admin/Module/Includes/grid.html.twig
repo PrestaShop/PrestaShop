@@ -29,9 +29,9 @@
     {% endfor %}
   {% endif %}
 
-  {% for module in modules %}
+  {% for index, module in modules %}
     {% block addon_card %}
-      {% include 'PrestaShopBundle:Admin/Module/Includes:card_list.html.twig' with { 'module': module, 'origin': origin|default('none') } %}
+      {% include 'PrestaShopBundle:Admin/Module/Includes:card_list.html.twig' with { 'index': index, 'module': module, 'origin': origin|default('none') } %}
     {% endblock %}
   {% endfor %}
 
