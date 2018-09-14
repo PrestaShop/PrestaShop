@@ -23,28 +23,22 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-{% extends '@PrestaShop/Admin/layout.html.twig' %}
-{% trans_default_domain 'Admin.Advparameters.Feature' %}
+{% trans_default_domain 'Admin.Advparameters.Notification' %}
 
-{% block content %}
-<div class="row justify-content-center">
-  <div class="col-xl-10">
-    {% block import_panel %}
-      {% include '@PrestaShop/Admin/Configure/AdvancedParameters/ImportPage/Blocks/import_data_configuration.html.twig' %}
-    {% endblock %}
+{% embed 'PrestaShopBundle:Admin/Helpers:bootstrap_popup.html.twig' with {
+  'id': 'import_progress_modal',
+  'title': 'Importing your data...'|trans,
+  'closable': false,
+  'actions': [{
+    'type': 'button',
+    'label': 'Close'|trans({}, 'Admin.Actions'),
+    'value': 'import_modal_close',
+    'class': 'btn btn-success btn-lg',
+  }],
+} %}
+  {% block content %}
+    <div class="modal-body">
 
-    {% block import_modal %}
-      {% include '@PrestaShop/Admin/Configure/AdvancedParameters/ImportPage/Blocks/import_modal.html.twig' %}
-    {% endblock %}
-  </div>
-</div>
-{% endblock %}
-
-{% block javascripts %}
-  {{ parent() }}
-
-  <script>
-    let requiredImportFields = {{ requiredFields|json_encode|raw }};
-  </script>
-  <script src="{{ asset('themes/new-theme/public/imports_data.bundle.js') }}"></script>
-{% endblock %}
+    </div>
+  {% endblock %}
+{% endembed %}
