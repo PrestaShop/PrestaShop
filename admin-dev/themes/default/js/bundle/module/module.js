@@ -144,11 +144,17 @@ var AdminModuleController = function() {
 
   this.initBOEventRegistering = function() {
     BOEvent.on('Module Disabled', this.onModuleDisabled, this);
+    BOEvent.on('Module Uninstalled', this.updateTotalResults, this);
   };
 
   this.onModuleDisabled = function() {
     var moduleItemSelector = this.getModuleItemSelector();
     var self = this;
+
+    $('.modules-list').each(function() {
+      var totalForCurrentSelector = $(this).find(moduleItemSelector+':visible').length;
+      self.updateTotalResults(totalForCurrentSelector, $(this));
+    });
 
   };
 
@@ -225,9 +231,9 @@ var AdminModuleController = function() {
   this.fetchModulesList = function() {
     var self = this;
     self.modulesList = [];
-    $('.modules-list').each(function() {
+    $(".modules-list").each(function() {
       var container = $(this);
-      container.find('.module-item').each(function() {
+      container.find(".module-item").each(function() {
         var $this = $(this);
         self.modulesList.push({
           domObject: $this,
@@ -286,22 +292,18 @@ var AdminModuleController = function() {
     $('.modules-list').html('');
 
     // Modules visibility management
-    var isVisible;
-    var currentModule;
-    var tagExists;
-
-    for (var i = 0; i < self.modulesList.length; i++) {
-      currentModule = self.modulesList[i];
-      if (currentModule.display == self.currentDisplay) {
-        isVisible = true;
-        if (self.currentRefCategory !== null) {
-          isVisible &= currentModule.categories === self.currentRefCategory;
+    for (var i = 0; i < this.modulesList.length; i++) {
+      var currentModule = this.modulesList[i];
+      if (currentModule.display == this.currentDisplay) {
+        var isVisible = true;
+        if (this.currentRefCategory !== null) {
+          isVisible &= currentModule.categories === this.currentRefCategory;
         }
         if (self.currentRefStatus !== null) {
-          isVisible &= currentModule.active === self.currentRefStatus;
+          isVisible &= currentModule.active === this.currentRefStatus;
         }
         if (self.currentTagsList.length) {
-          tagExists = false;
+          var tagExists = false;
           $.each(self.currentTagsList, function(index, value) {
             value = value.toLowerCase();
             tagExists |= (
@@ -318,26 +320,15 @@ var AdminModuleController = function() {
         }
       }
     }
-
-    $('.module-short-list').each(function() {
-      if ((self.currentRefCategory || self.currentRefStatus)
-          && $(this).find('.module-item').length === 0
-      ) {
-        console.log(self.currentRefCategory);
-        $(this).hide();
-        return;
-      }
-
-      $(this).show();
-    });
-
     if (this.currentTagsList.length) {
-        if ('grid' === this.currentDisplay) {
-            $(".modules-list").append(this.addonsCardGrid);
-        } else {
-            $(".modules-list").append(this.addonsCardList);
-        }
+      if ('grid' === this.currentDisplay) {
+        $(".modules-list").append(this.addonsCardGrid);
+      } else {
+        $(".modules-list").append(this.addonsCardList);
+      }
     }
+
+    this.updateTotalResults();
   };
 
   this.initPageChangeProtection = function() {
@@ -356,8 +347,8 @@ var AdminModuleController = function() {
 
     body.on('change', this.bulkActionDropDownSelector, function() {
       if (0 === $(self.getBulkCheckboxesCheckedSelector()).length) {
-          $.growl.warning({message: translate_javascripts['Bulk Action - One module minimum']});
-          return;
+        $.growl.warning({message: translate_javascripts['Bulk Action - One module minimum']});
+        return;
       }
       self.lastBulkAction = $(this).find(':checked').attr('value');
       var modulesListString = self.buildBulkActionModuleList();
@@ -552,15 +543,15 @@ var AdminModuleController = function() {
     dropzone.dropzone($.extend(dropzoneOptions));
 
     this.animateStartUpload = function() {
-        // State that we start module upload
-        self.isUploadStarted = true;
-        $(self.moduleImportStartSelector).hide(0);
-        dropzone.css('border', 'none');
-        $(self.moduleImportProcessingSelector).fadeIn();
+      // State that we start module upload
+      self.isUploadStarted = true;
+      $(self.moduleImportStartSelector).hide(0);
+      dropzone.css('border', 'none');
+      $(self.moduleImportProcessingSelector).fadeIn();
     };
 
     this.animateEndUpload = function(callback) {
-        $(self.moduleImportProcessingSelector).finish().fadeOut(callback);
+      $(self.moduleImportProcessingSelector).finish().fadeOut(callback);
     };
 
     /**
@@ -569,22 +560,22 @@ var AdminModuleController = function() {
      * @param object result containing the server response
      */
     this.displayOnUploadDone = function(result) {
-        var self = this;
-        self.animateEndUpload(function() {
-            if (result.status === true) {
-              if (result.is_configurable === true) {
-                var configureLink = moduleURLs.configurationPage.replace('1', result.module_name);
-                $(self.moduleImportSuccessConfigureBtnSelector).attr('href', configureLink);
-                $(self.moduleImportSuccessConfigureBtnSelector).show();
-              }
-              $(self.moduleImportSuccessSelector).fadeIn();
-            } else if (typeof result.confirmation_subject !== 'undefined') {
-                self.displayPrestaTrustStep(result);
-            } else {
-              $(self.moduleImportFailureMsgDetailsSelector).html(result.msg);
-              $(self.moduleImportFailureSelector).fadeIn();
-            }
-          });
+      var self = this;
+      self.animateEndUpload(function() {
+        if (result.status === true) {
+          if (result.is_configurable === true) {
+            var configureLink = moduleURLs.configurationPage.replace('1', result.module_name);
+            $(self.moduleImportSuccessConfigureBtnSelector).attr('href', configureLink);
+            $(self.moduleImportSuccessConfigureBtnSelector).show();
+          }
+          $(self.moduleImportSuccessSelector).fadeIn();
+        } else if (typeof result.confirmation_subject !== 'undefined') {
+          self.displayPrestaTrustStep(result);
+        } else {
+          $(self.moduleImportFailureMsgDetailsSelector).html(result.msg);
+          $(self.moduleImportFailureSelector).fadeIn();
+        }
+      });
     };
 
     /**
@@ -594,10 +585,10 @@ var AdminModuleController = function() {
      * @param string message explaining the error.
      */
     this.displayOnUploadError = function(message) {
-        self.animateEndUpload(function() {
-            $(self.moduleImportFailureMsgDetailsSelector).html(message);
-            $(self.moduleImportFailureSelector).fadeIn();
-        });
+      self.animateEndUpload(function() {
+        $(self.moduleImportFailureMsgDetailsSelector).html(message);
+        $(self.moduleImportFailureSelector).fadeIn();
+      });
     };
 
     /**
@@ -608,43 +599,43 @@ var AdminModuleController = function() {
      * @param Previous server response result
      */
     this.displayPrestaTrustStep = function (result) {
-          var self = this;
-          var modal = module_card_controller.replacePrestaTrustPlaceholders(result);
-          var moduleName = result.module.attributes.name;
-          $(this.moduleImportConfirmSelector).html(modal.find('.modal-body').html()).fadeIn();
-          $(this.dropZoneModalFooterSelector).html(modal.find('.modal-footer').html()).fadeIn();
-          $(this.dropZoneModalFooterSelector).find(".pstrust-install").off('click').on('click', function() {
+      var self = this;
+      var modal = module_card_controller.replacePrestaTrustPlaceholders(result);
+      var moduleName = result.module.attributes.name;
+      $(this.moduleImportConfirmSelector).html(modal.find('.modal-body').html()).fadeIn();
+      $(this.dropZoneModalFooterSelector).html(modal.find('.modal-footer').html()).fadeIn();
+      $(this.dropZoneModalFooterSelector).find(".pstrust-install").off('click').on('click', function() {
 
-            $(self.moduleImportConfirmSelector).hide();
-            $(self.dropZoneModalFooterSelector).html('');
-            self.animateStartUpload();
+        $(self.moduleImportConfirmSelector).hide();
+        $(self.dropZoneModalFooterSelector).html('');
+        self.animateStartUpload();
 
-            // Install ajax call
-            $.post(result.module.attributes.urls.install, { 'actionParams[confirmPrestaTrust]': "1"})
-              .done(function(data) {
-                self.displayOnUploadDone(data[moduleName]);
-              })
-              .fail(function(data) {
-                self.displayOnUploadError(data[moduleName]);
-              })
-              .always(function() {
-                  self.isUploadStarted = false;
-              });
-          });
+        // Install ajax call
+        $.post(result.module.attributes.urls.install, { 'actionParams[confirmPrestaTrust]': "1"})
+         .done(function(data) {
+           self.displayOnUploadDone(data[moduleName]);
+         })
+         .fail(function(data) {
+           self.displayOnUploadError(data[moduleName]);
+         })
+         .always(function() {
+           self.isUploadStarted = false;
+         });
+      });
     };
   };
 
   this.getBulkCheckboxesSelector = function () {
     return this.currentDisplay == 'grid'
-      ? this.bulkActionCheckboxGridSelector
-      : this.bulkActionCheckboxListSelector;
+         ? this.bulkActionCheckboxGridSelector
+         : this.bulkActionCheckboxListSelector;
   };
 
 
   this.getBulkCheckboxesCheckedSelector = function () {
     return this.currentDisplay == 'grid'
-      ? this.checkedBulkActionGridSelector
-      : this.checkedBulkActionListSelector;
+         ? this.checkedBulkActionGridSelector
+         : this.checkedBulkActionListSelector;
   };
 
   this.loadVariables = function () {
@@ -653,8 +644,8 @@ var AdminModuleController = function() {
 
   this.getModuleItemSelector = function () {
     return this.currentDisplay == 'grid'
-      ? this.moduleItemGridSelector
-      : this.moduleItemListSelector;
+         ? this.moduleItemGridSelector
+         : this.moduleItemListSelector;
   };
 
   /**
@@ -665,24 +656,24 @@ var AdminModuleController = function() {
     var urlToCall = moduleURLs.notificationsCount;
 
     $.getJSON(
-        urlToCall,
-        this.updateNotificationsCount
+      urlToCall,
+      this.updateNotificationsCount
     ).fail(function() {
-        console.error('Could not retrieve module notifications count.');
+      console.error('Could not retrieve module notifications count.');
     });
   };
 
   this.updateNotificationsCount = function(badge) {
     var destinationTabs = {
-        'to_configure': $("#subtab-AdminModulesNotifications"),
-        'to_update': $("#subtab-AdminModulesUpdates"),
+      'to_configure': $("#subtab-AdminModulesNotifications"),
+      'to_update': $("#subtab-AdminModulesUpdates"),
     };
 
     for (var key in destinationTabs) {
-        if (destinationTabs[key].length === 0) {
-            continue;
-        }
-        destinationTabs[key].find('.notification-counter').text(badge[key]);
+      if (destinationTabs[key].length === 0) {
+        continue;
+      }
+      destinationTabs[key].find('.notification-counter').text(badge[key]);
     };
   };
 
@@ -798,8 +789,8 @@ var AdminModuleController = function() {
             module_card_controller.requestToController(urlActionSegment, urlElement, forceDeletion);
           } else {
             $.growl.error({message: translate_javascripts["Bulk Action - Request not available for module"]
-                        .replace('[1]', urlActionSegment)
-                        .replace('[2]', moduleTechName)});
+              .replace('[1]', urlActionSegment)
+              .replace('[2]', moduleTechName)});
           }
         }
       });
@@ -828,8 +819,8 @@ var AdminModuleController = function() {
     // "Upgrade All" button handler
     var that = this;
     $('body').on('click', this.upgradeAllSource, function(event) {
-        event.preventDefault();
-        $(that.upgradeAllTargets).click();
+      event.preventDefault();
+      $(that.upgradeAllTargets).click();
     });
   };
 
@@ -838,8 +829,7 @@ var AdminModuleController = function() {
     var body = $('body');
     body.on('click', this.categoryItemSelector, function () {
       // Get data from li DOM input
-      self.currentRefCategory = $(this).attr('data-category-ref');
-      self.currentRefCategory = self.currentRefCategory ? self.currentRefCategory.toLowerCase() : null;
+      self.currentRefCategory = $(this).attr('data-category-ref').toLowerCase();
       var categorySelectedDisplayName = $(this).attr('data-category-display-name');
       // Change dropdown label to set it to the current category's displayname
       $(self.categorySelectorLabelSelector).text(categorySelectedDisplayName);
@@ -858,6 +848,46 @@ var AdminModuleController = function() {
       self.currentRefCategory = null;
       self.updateModuleVisibility();
     });
+  };
+
+  this.updateTotalResults = function() {
+
+    // If there are some shortlist: each shortlist count the modules on the next container.
+    var $shortLists = $('.module-short-list');
+    if ($shortLists.length > 0) {
+      $shortLists.each(function() {
+        var $this = $(this);
+        updateText(
+          $this.find('.module-search-result-wording'),
+          $this.next('.modules-list').find('.module-item').length
+        );
+      });
+
+      // If there is no shortlist: the wording directly update from the only module container.
+    } else {
+      var modulesCount = $('.modules-list').find('.module-item').length;
+      updateText(
+        $('.module-search-result-wording'),
+        modulesCount
+      );
+
+      $(this.addonItemGridSelector).toggle(modulesCount !== (this.modulesList.length/2));
+      $(this.addonItemListSelector).toggle(modulesCount !== (this.modulesList.length/2));
+      if (modulesCount === 0) {
+        $('.module-addons-search-link').attr(
+          'href',
+          this.baseAddonsUrl
+          + 'search.php?search_query='
+          + encodeURIComponent(this.currentTagsList.join(' '))
+        );
+      }
+    }
+
+    function updateText(element, value) {
+      var explodedText = element.text().split(' ');
+      explodedText[0] = value;
+      element.text(explodedText.join(' '));
+    }
   };
 
   this.initSearchBlock = function() {
