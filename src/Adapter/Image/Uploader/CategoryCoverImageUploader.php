@@ -33,16 +33,14 @@ use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageOptimizationExcepti
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageUploadException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\MemoryLimitException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\UploadedImageConstraintException;
-use PrestaShop\PrestaShop\Core\Image\Uploader\ImageUploaderInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Tools;
 
 /**
  * Class CategoryCoverImageUploader
  *
  * @internal
  */
-final class CategoryCoverImageUploader implements ImageUploaderInterface
+final class CategoryCoverImageUploader extends AbstractImageUploader
 {
     /**
      * {@inheritdoc}
@@ -74,8 +72,6 @@ final class CategoryCoverImageUploader implements ImageUploaderInterface
     /**
      * @param UploadedFile $image
      * @param int $id
-     *
-     * @return string
      *
      * @throws ImageOptimizationException
      * @throws ImageUploadException
@@ -135,42 +131,6 @@ final class CategoryCoverImageUploader implements ImageUploaderInterface
             if (!$generated) {
                 throw new ImageUploadException('Error occurred when uploading image');
             }
-        }
-    }
-
-    /**
-     * Check if image is allowed to be uploaded.
-     *
-     * @param UploadedFile $image
-     *
-     * @throws UploadedImageConstraintException
-     */
-    private function checkImageIsAllowedForUpload(UploadedFile $image)
-    {
-        $maxFileSize = Tools::getMaxUploadSize();
-
-        if ($maxFileSize > 0 && $image->getSize() > $maxFileSize) {
-            throw new UploadedImageConstraintException(
-                sprintf(
-                    'Max file size allowed is "%s" bytes. Uploaded image size is "%s".',
-                    $maxFileSize,
-                    $image->getSize()
-                ),
-                UploadedImageConstraintException::EXCEEDED_SIZE
-            );
-        }
-
-        if (!ImageManager::isRealImage($image->getPathname(), $image->getClientOriginalExtension())
-            || !ImageManager::isCorrectImageFileExt($image->getClientOriginalExtension())
-            || preg_match('/\%00/', $image->getClientOriginalName())
-        ) {
-            throw new UploadedImageConstraintException(
-                sprintf(
-                    'Image format "%s", not recognized, allowed formats are: .gif, .jpg, .png',
-                    $image->getClientOriginalExtension()
-                ),
-                UploadedImageConstraintException::UNRECOGNIZED_FORMAT
-            );
         }
     }
 }
