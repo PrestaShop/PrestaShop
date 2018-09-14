@@ -83,7 +83,7 @@
       {foreach from=$orders item=order}
         <div class="order">
           <div class="row">
-            <div class="col-xs-10">
+            <div class="col-10">
               <a href="{$order.details.details_url}"><h3>{$order.details.reference}</h3></a>
               <div class="date">{$order.details.order_date}</div>
               <div class="total">{$order.totals.total.value}</div>
@@ -96,7 +96,7 @@
                 </span>
               </div>
             </div>
-            <div class="col-xs-2 text-xs-right">
+            <div class="col-2 text-xs-right">
                 <div>
                   <a href="{$order.details.details_url}" data-link-action="view-order-details" title="{l s='Details' d='Shop.Theme.Customeraccount'}">
                     <i class="material-icons">&#xE8B6;</i>
