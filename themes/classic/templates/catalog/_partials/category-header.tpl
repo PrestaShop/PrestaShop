@@ -23,33 +23,20 @@
  * International Registered Trademark & Property of PrestaShop SA
  *}
 <div id="js-product-list-header">
-  {if $listing.pagination.items_shown_from == 1}
-    <div class="block-category card card-block hidden-sm-down">
-      <h1 class="h1">{$category.name}</h1>
-      {if $category.description}
-        <div id="category-description" class="text-muted">{$category.description nofilter}</div>
-      {/if}
-      {if $category.image.large.url}
-        <div class="category-cover">
-          <img src="{$category.image.large.url}" alt="{if !empty($category.image.legend)}{$category.image.legend}{else}{$category.name}{/if}">
+    {if $listing.pagination.items_shown_from == 1}
+        <div class="block-category card card-block hidden-sm-down">
+            <h1 class="h1">{$category.name}</h1>
+            {if $category.description}
+                <div id="category-description" class="text-muted">{$category.description nofilter}</div>
+            {/if}
+            {if $category.image.large.url}
+                <div class="category-cover">
+                    <img src="{$category.image.large.url}" alt="{if !empty($category.image.legend)}{$category.image.legend}{else}{$category.name}{/if}">
+                </div>
+            {/if}
         </div>
-      {/if}
-    </div>
-    <div class="text-sm-center hidden-md-up">
-      <h1 class="h1">{$category.name}</h1>
-    </div>
-  {/if}
-  {block name='subcategories'}
-    {if isset($subcategories) && $subcategories}
-      <div class="block-subcategories card card-block">
-        <div class="row">
-          {foreach from=$subcategories item="subcategory"}
-            {include file='catalog/_partials/miniatures/category.tpl' category=$subcategory}
-          {/foreach}
+        <div class="text-sm-center hidden-md-up">
+            <h1 class="h1">{$category.name}</h1>
         </div>
-      </div>
     {/if}
-  {/block}
 </div>
-
-
