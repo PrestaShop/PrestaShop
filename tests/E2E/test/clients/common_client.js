@@ -297,7 +297,7 @@ class CommonClient {
    * @returns {*}
    */
   checkFile(folderPath, fileName, pause = 0) {
-    fs.stat(folderPath + fileName, function(err, stats) {
+    fs.stat(folderPath + fileName, function (err, stats) {
       err === null && stats.isFile() ? global.existingFile = true : global.existingFile = false;
     });
 
@@ -452,11 +452,11 @@ class CommonClient {
   }
 
   stringifyNumber(number) {
-    let special = ['zeroth','first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth', 'ninth', 'tenth', 'eleventh', 'twelfth', 'thirteenth', 'fourteenth', 'fifteenth', 'sixteenth', 'seventeenth', 'eighteenth', 'nineteenth'];
+    let special = ['zeroth', 'first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth', 'ninth', 'tenth', 'eleventh', 'twelfth', 'thirteenth', 'fourteenth', 'fifteenth', 'sixteenth', 'seventeenth', 'eighteenth', 'nineteenth'];
     let deca = ['twent', 'thirt', 'fort', 'fift', 'sixt', 'sevent', 'eight', 'ninet'];
     if (number < 20) return special[number];
-    if (number%10 === 0) return deca[Math.floor(number/10)-2] + 'ieth';
-    return deca[Math.floor(number/10)-2] + 'y-' + special[number%10];
+    if (number % 10 === 0) return deca[Math.floor(number / 10) - 2] + 'ieth';
+    return deca[Math.floor(number / 10) - 2] + 'y-' + special[number % 10];
   }
 
   /**
@@ -495,6 +495,17 @@ class CommonClient {
   refresh() {
     return this.client
       .refresh();
+  }
+
+  middleClick(selector, pause = 2000) {
+    if (global.isVisible) {
+      return this.client
+        .moveToObject(selector)
+        .pause(pause)
+        .middleClick(selector);
+    } else {
+      return this.client.pause(1000);
+    }
   }
 
   getParamFromURL(param, pause = 0) {

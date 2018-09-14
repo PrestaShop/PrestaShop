@@ -24,7 +24,7 @@ scenario('Navigate between the catalog pages in the back office', () => {
       return promise
         .then(() => client.getProductPageNumber('product_catalog_list'))
         .then(() => {
-          let productNumber = 20 - global.productsPageNumber;
+          let productNumber = 20 - global.productsNumber;
           if (productNumber !== 0) {
             for (let i = 0; i < productNumber + 1; i++) {
               commonProduct.createProduct(AddProductPage, productData);
