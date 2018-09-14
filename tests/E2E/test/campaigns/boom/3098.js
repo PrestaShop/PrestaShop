@@ -1,6 +1,6 @@
-const {AccessPageBO} = require('../../../selectors/BO/access_page');
-const {AddProductPage} = require('../../../selectors/BO/add_product_page');
-const {Menu} = require('../../../selectors/BO/menu.js');
+const {AccessPageBO} = require('../../selectors/BO/access_page');
+const {AddProductPage} = require('../../selectors/BO/add_product_page');
+const {Menu} = require('../../selectors/BO/menu.js');
 let promise = Promise.resolve();
 
 let combinationProductData = {
@@ -94,7 +94,7 @@ scenario('Create a product with two combinations', () => {
     }, 'product/product');
   }, 'product/product');
 
-  scenario('Create a pack of product "t-shirt"', client => {
+  scenario('Create a pack of product "t-shirt"', () => {
     scenario('Add product Basic settings', client => {
       test('should go to "Catalog" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.products_submenu));
       test('should click on "New Product" button', () => client.waitForExistAndClick(AddProductPage.new_product_button));

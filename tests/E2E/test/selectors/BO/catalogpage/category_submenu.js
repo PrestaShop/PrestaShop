@@ -36,7 +36,7 @@ module.exports = {
     mode_link_disable_radio: '//*[@id="deleteMode_linkanddisable"]',
     mode_link_radio: '//*[@id="deleteMode_link"]',
     mode_delete_radio: '//*[@id="deleteMode_delete"]',
-    expand_all_button: '//*[@id="expand-all-categories-tree"]',
+    expand_all_button: '//*[@id="categories-tree-expand"]',
     parent_category: '(//*[@id="categories-tree"]//span[contains(.,"%NAME")]//input)[1]',
     search_no_results: '//*[@id="table-category"]//td[@class="list-empty"]'
   }

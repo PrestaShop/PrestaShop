@@ -1,10 +1,10 @@
-const {AccessPageBO} = require('../../../selectors/BO/access_page');
-const {AddProductPage} = require('../../../selectors/BO/add_product_page');
-const {SearchProductPage} = require('../../../selectors/FO/search_product_page');
-const {productPage} = require('../../../selectors/FO/product_page');
-const {Menu} = require('../../../selectors/BO/menu.js');
-const {CustomerSettings} = require('../../../selectors/BO/shopParameters/customer_settings.js');
-const commonScenarios = require('../../common_scenarios/taxes');
+const {AccessPageBO} = require('../../selectors/BO/access_page');
+const {AddProductPage} = require('../../selectors/BO/add_product_page');
+const {SearchProductPage} = require('../../selectors/FO/search_product_page');
+const {productPage} = require('../../selectors/FO/product_page');
+const {Menu} = require('../../selectors/BO/menu.js');
+const {CustomerSettings} = require('../../selectors/BO/shopParameters/customer_settings.js');
+const commonScenarios = require('../common_scenarios/taxes');
 let promise = Promise.resolve();
 
 let productData = {
@@ -33,7 +33,7 @@ let taxData = {
   tax: '23'
 };
 
-scenario('Create "Tax rules" in the Back Office', () => {
+scenario('BOMM-3580: Create "Tax rules" in the Back Office', () => {
   scenario('Open the browser and connect to the Back Office', client => {
     test('should open the browser', () => client.open());
     test('should log in successfully in the Back Office', () => client.signInBO(AccessPageBO));
@@ -110,11 +110,6 @@ scenario('Create "Product"', () => {
     test('should logout successfully from the Back Office', () => client.signOutBO());
   }, 'product/product');
 }, 'product/product', true);
-
-/**
- * This scenario is based on the bug described in this ticket
- * http://forge.prestashop.com/browse/BOOM-3580
- **/
 
 scenario('Check the product discount in the Front Office', () => {
   scenario('Open the browser and connect to the Back Office', client => {

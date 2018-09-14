@@ -1,8 +1,8 @@
-const {AccessPageBO} = require('../../../selectors/BO/access_page');
-const {AccessPageFO} = require('../../../selectors/FO/access_page');
-const {productPage} = require('../../../selectors/FO/product_page');
-const {CheckoutOrderPage} = require('../../../selectors/FO/order_page');
-const commonScenarios = require('../../common_scenarios/discount');
+const {AccessPageBO} = require('../../selectors/BO/access_page');
+const {AccessPageFO} = require('../../selectors/FO/access_page');
+const {productPage} = require('../../selectors/FO/product_page');
+const {CheckoutOrderPage} = require('../../selectors/FO/order_page');
+const commonScenarios = require('../common_scenarios/discount');
 
 let catalogPriceRule = [{
   name: 'Catalog_price_1',
@@ -15,12 +15,7 @@ let catalogPriceRule = [{
   quantity: '48'
 }];
 
-/**
- * This scenario is based on the bug described in this ticket
- * http://forge.prestashop.com/browse/BOOM-3843
- **/
-
-scenario('Check double catalog price rules', () => {
+scenario('BOOM-3843: Check double catalog price rules', () => {
 
   scenario('Open the browser and connect to the BO', client => {
     test('should open the browser', () => client.open());

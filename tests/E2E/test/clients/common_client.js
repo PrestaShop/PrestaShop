@@ -406,7 +406,7 @@ class CommonClient {
   showElement(className, order) {
     return this.client
       .execute(function (className, order) {
-        document.querySelectorAll(className)[order].style.display = 'block';
+        document.querySelectorAll(className)[order].style.display = 'inherit';
       }, className, order);
   }
 
@@ -555,6 +555,13 @@ class CommonClient {
       .buttonUp()
       .pause(2000);
   }
+
+  selectByVisibleText(selector, text, timeout = 90000) {
+    return this.client
+      .waitForExist(selector, timeout)
+      .selectByVisibleText(selector, text)
+  }
+
 
 }
 

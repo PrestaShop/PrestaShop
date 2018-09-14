@@ -4,24 +4,13 @@ const {ModulePage} = require('../../selectors/BO/module_page');
 const {AddProductPage} = require('../../selectors/BO/add_product_page');
 const {OnBoarding} = require('../../selectors/BO/onboarding.js');
 const {AccessPageFO} = require('../../selectors/FO/access_page');
-const {ShopParameters} = require('../../selectors/BO/shopParameters/shop_parameters');
-
-const commonScenarios = require('../common_scenarios/product');
 const commonInstallation = require('../common_scenarios/common_installation');
 const moduleCommonScenarios = require('../common_scenarios/module');
-const orderCommonScenarios = require('../common_scenarios/order');
 
 let promise = Promise.resolve();
 
-let productData = {
-  name: 'UpgradeProduct',
-  reference: 'product',
-  quantity: "10",
-  price: '5',
-  image_name: 'image_test.jpg',
-};
 
-scenario('The shop installation', () => {
+scenario('BOOM-3195: The shop installation', () => {
 
   scenario('Open the browser and download the RC', client => {
     test('should open the browser', () => client.open());
@@ -51,6 +40,11 @@ scenario('The shop installation', () => {
         .then(() => client.isVisible(OnBoarding.welcome_modal))
         .then(() => client.closeBoarding(OnBoarding.popup_close_button));
     });
+  }, 'installation');
+
+  scenario('Install "Top-sellers block" and "New products block" modules From Cross selling', client => {
+    moduleCommonScenarios.installModule(client, ModulePage, AddProductPage, "ps_bestsellers");
+    moduleCommonScenarios.installModule(client, ModulePage, AddProductPage, "ps_newproducts");
   }, 'installation');
 
   scenario('Install " 1-Click Upgrade " From Cross selling and configure it', client => {
@@ -84,24 +78,15 @@ scenario('The shop installation', () => {
     test('should logout successfully from the Back Office', () => client.signOutBO());
   }, 'installation');
 
-  scenario('Connect to the Back Office', client => {
-    test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO, UrlLastStableVersion));
-  }, 'installation');
-
-  scenario('Enable shop in the Back Office', client => {
-    test('should go to "Shop parameters" page', () => client.waitForExistAndClick(ShopParameters.maintenance_mode_link));
-    test('should set the "Enable shop" parameter to "Yes"', () => client.waitForExistAndClick(ShopParameters.enable_shop.replace("%ID", '1')));
-    test('should click on "Save" button', () => client.waitForExistAndClick(ShopParameters.save_button));
-    test('should verify the appearance of the green validation', () => client.checkTextValue(ShopParameters.success_box, "Successful update."));
-  }, 'common_client');
-
-  commonScenarios.createProduct(AddProductPage, productData);
-
   scenario('Login in the Front Office', client => {
     test('should login successfully in the Front Office', () => client.signInFO(AccessPageFO, UrlLastStableVersion));
   }, 'installation');
 
-  orderCommonScenarios.createOrderFO();
+  scenario('Check the existence of "Top sellers block" and "New products block"', client => {
+    test('should set the language of shop to "English"', () => client.changeLanguage());
+    test('should check the existence of "Top sellers" block', () => client.waitForVisible(AccessPageFO.top_sellers_block));
+    test('should check the existence of "New products" block', () => client.waitForVisible(AccessPageFO.new_products_block));
+  }, 'installation');
 
   scenario('Logout from the back office', client => {
     test('should logout successfully from the Front Office', () => client.signOutFO(AccessPageFO));

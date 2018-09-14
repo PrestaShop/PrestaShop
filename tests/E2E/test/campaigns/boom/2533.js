@@ -1,31 +1,31 @@
-const {AddProductPage} = require('../../../selectors/BO/add_product_page');
-const {AccessPageBO} = require('../../../selectors/BO/access_page');
-const {Menu} = require('../../../selectors/BO/menu.js');
-const {OnBoarding} = require('../../../selectors/BO/onboarding');
-const common_scenarios = require('../../common_scenarios/employee');
-const common_international_scenarios = require('../../common_scenarios/international');
+const {AddProductPage} = require('../../selectors/BO/add_product_page');
+const {AccessPageBO} = require('../../selectors/BO/access_page');
+const {Menu} = require('../../selectors/BO/menu.js');
+const {OnBoarding} = require('../../selectors/BO/onboarding');
+const common_scenarios = require('../common_scenarios/employee');
+const common_international_scenarios = require('../common_scenarios/international');
 let promise = Promise.resolve();
 
 let employeeData = [
   {
     firstname: 'Demo',
     lastname: "Prestashop",
-    email: global.credentials.email,
-    password: global.credentials.password,
+    email: global.adminEmail,
+    password: global.adminPassword,
     profile: '4',
     language: 'Tiếng Việt (Vietnamese)'
   },
   {
     firstname: 'Demo',
     lastname: "Prestashop",
-    email: global.credentials.email,
-    password: global.credentials.password,
+    email: global.adminEmail,
+    password: global.adminPassword,
     profile: '4',
     language: 'English (English)'
   }
 ];
 
-scenario('Import a localization', () => {
+scenario('BOOM-2533: Import a localization', () => {
   scenario('Open the browser and connect to the Back Office', client => {
     test('should open the browser', () => client.open());
     test('should log in successfully in BO', () => client.signInBO(AccessPageBO));
@@ -35,6 +35,7 @@ scenario('Import a localization', () => {
     test('should logout successfully from the Back Office', () => client.signOutBO());
   }, 'common_client');
 }, 'common_client', true);
+
 
 scenario('Edit the connected employee profile in the Back Office', () => {
   scenario('Login in the Back Office', client => {
@@ -51,11 +52,6 @@ scenario('Edit the connected employee profile in the Back Office', () => {
     test('should logout successfully from the Back Office', () => client.signOutBO());
   }, 'common_client');
 }, 'common_client', true);
-
-/**
- * This scenario is based on the bug described in this ticket
- * http://forge.prestashop.com/browse/BOOM-2533
- **/
 
 scenario('Check that the TinyMCE field is well displayed in the Back Office', client => {
   test('should open the browser', () => client.open());
@@ -75,3 +71,4 @@ scenario('Edit the connected employee profile in the Back Office', () => {
     test('should logout successfully from the Back Office', () => client.signOutBO());
   }, 'common_client');
 }, 'common_client', true);
+

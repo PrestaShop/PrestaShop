@@ -95,7 +95,7 @@ scenario('Check the total price after applying vouchers in the Front Office', ()
     test('should click on "Remove voucher" button', () => client.waitForExistAndClick(CheckoutOrderPage.remove_voucher_button));
     test('should click on "Have a promo code?" link', () => client.waitForExistAndClick(CheckoutOrderPage.promo_code_link));
     test('should set the "Promo code" input', () => client.setPromoCode(CheckoutOrderPage.promo_code_input, CheckoutOrderPage.promo_code_add_button, 'codePromo3'));
-    test('should check the total price after reduction', () => {
+    test('should check the total price after reduction (BOOM-2518)', () => {
       return promise
         .then(() => client.getTextInVar(CheckoutOrderPage.cart_subtotal_products, "totalProducts"))
         .then(() => client.getTextInVar(CheckoutOrderPage.cart_subtotal_discount, "totalDiscount"))

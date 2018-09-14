@@ -1,10 +1,10 @@
 module.exports = {
   Localization: {
     Localization: {
-      pack_select: '//*[@id="iso_localization_pack_chosen"]',
-      pack_search_input: '//*[@id="iso_localization_pack_chosen"]//div[@class="chosen-search"]//input',
-      pack_option: '//*[@id="iso_localization_pack_chosen"]//ul[@class="chosen-results"]//li',
-      import_button: '//*[@id="configuration_form_submit_btn_1"]'
+      pack_select: '//*[@id="import_localization_pack_iso_localization_pack"]',
+      pack_search_input: '//*[@id="import_localization_pack_iso_localization_pack"]//div[@class="chosen-search"]//input',
+      pack_option: '//*[@id="import_localization_pack_iso_localization_pack"]//ul[@class="chosen-results"]//li',
+      import_button: '//*[@name="import_localization_pack"]//div[@class="card-footer"]//button'
     },
     languages: {
       add_new_language_button: '//*[@id="page-header-desc-lang-new_language"]',

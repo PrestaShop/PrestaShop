@@ -1,14 +1,14 @@
-const {AccessPageBO} = require('../../../selectors/BO/access_page');
-const {AddProductPage} = require('../../../selectors/BO/add_product_page');
-const {ProductSettings} = require('../../../selectors/BO/shopParameters/product_settings');
-const {ShopParameters} = require('../../../selectors/BO/shopParameters/shop_parameters');
-const {TrafficAndSeo} = require('../../../selectors/BO/shopParameters/shop_parameters');
-const {productPage} = require('../../../selectors/FO/product_page');
-const {Menu} = require('../../../selectors/BO/menu.js');
-const commonProductScenarios = require('../../common_scenarios/product');
+const {AccessPageBO} = require('../../selectors/BO/access_page');
+const {AddProductPage} = require('../../selectors/BO/add_product_page');
+const {ProductSettings} = require('../../selectors/BO/shopParameters/product_settings');
+const {ShopParameters} = require('../../selectors/BO/shopParameters/shop_parameters');
+const {TrafficAndSeo} = require('../../selectors/BO/shopParameters/shop_parameters');
+const {productPage} = require('../../selectors/FO/product_page');
+const {Menu} = require('../../selectors/BO/menu.js');
+const commonProductScenarios = require('../common_scenarios/product');
 let promise = Promise.resolve();
 
-scenario('Check that the pagination works fine on the product page in the Front Office', () => {
+scenario('BOOM-4847: Check that the pagination works fine on the product page in the Front Office', () => {
   scenario('Open the browser and connect to the Back Office', client => {
     test('should open the browser', () => client.open());
     test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
@@ -16,14 +16,18 @@ scenario('Check that the pagination works fine on the product page in the Front 
   scenario('Edit the number of product per page', client => {
     test('should go to "Product settings" page', () => client.goToSubtabMenuPage(Menu.Configure.ShopParameters.shop_parameters_menu, Menu.Configure.ShopParameters.product_settings_submenu));
     test('should set the "Products per page" input', () => client.waitAndSetValue(ProductSettings.Pagination.products_per_page_input, 6));
-    test('should click on "Save" button', () => client.waitForExistAndClick(ProductSettings.save_button.replace("%POS", 4)));
+    test('should close symfony Profiler', () => {
+      return promise
+        .then(() => client.isVisible(AddProductPage.symfony_toolbar, 3000))
+        .then(() => {
+          if (global.isVisible) {
+            client.waitForExistAndClick(AddProductPage.symfony_toolbar);
+          }
+        })
+    });
+    test('should click on "Save" button', () => client.scrollWaitForExistAndClick(ProductSettings.save_button.replace("%POS", 4)));
     test('should verify the appearance of the green validation', () => client.checkTextValue(ShopParameters.success_box, "Update successful"));
   }, 'common_client');
-
-  /**
-   * This scenario is based on the bug described in this ticket
-   * http://forge.prestashop.com/browse/BOOM-4847
-   **/
 
   scenario('Disable the Friendly URL', client => {
     test('should close symfony Profiler', () => {
