@@ -39,8 +39,12 @@ export default class ImportDataPage {
    * Import process event handler
    */
   importHandler(e) {
+    e.preventDefault();
+
     if (!EntityFieldsValidator.validate()) {
-      e.preventDefault();
+      return;
     }
+
+    //@todo process import
   }
 }
