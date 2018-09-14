@@ -2046,14 +2046,24 @@ class ToolsCore
 
     public static function refreshCACertFile()
     {
-      if ((time() - @filemtime(_PS_CACHE_CA_CERT_FILE_) > 1296000)) {
-          $stream_context = @stream_context_create(array('http' => array('timeout' => 3), 'ssl' => array('cafile' => _PS_CACHE_CA_CERT_FILE_)));
-          $ca_cert_content = @file_get_contents(Tools::CACERT_LOCATION, false, $stream_context);
+        if ((time() - @filemtime(_PS_CACHE_CA_CERT_FILE_) > 1296000)) {
+            $stream_context = @stream_context_create(
+                array(
+                    'http' => array('timeout' => 3),
+                    'ssl' => array(
+                        'cafile' => _PS_CACHE_CA_CERT_FILE_,
+                    )
+                )
+            );
+            $ca_cert_content = @file_get_contents(Tools::CACERT_LOCATION, false, $stream_context);
 
-          if (preg_match('/(.*-----BEGIN CERTIFICATE-----.*-----END CERTIFICATE-----){50}$/Uims', $ca_cert_content) && substr(rtrim($ca_cert_content), -1) == '-') {
-              file_put_contents(_PS_CACHE_CA_CERT_FILE_, $ca_cert_content);
-          }
-      }
+            if (
+                preg_match('/(.*-----BEGIN CERTIFICATE-----.*-----END CERTIFICATE-----){50}$/Uims', $ca_cert_content) &&
+                substr(rtrim($ca_cert_content), -1) == '-'
+            ) {
+                file_put_contents(_PS_CACHE_CA_CERT_FILE_, $ca_cert_content);
+            }
+        }
     }
 
     public static function file_get_contents($url, $use_include_path = false, $stream_context = null, $curl_timeout = 5, $fallback = false)
