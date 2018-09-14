@@ -33,7 +33,7 @@ scenario('Check that the shopping cart dosen\'t allow checkout of zero quantity 
         .then(() => client.waitForExistAndClick(AccessPageBO.shopname))
         .then(() => client.switchWindow(1));
     });
-    test('should set the shop language to "English"', () => client.changeLanguage('english'));
+    test('should set the shop language to "English"', () => client.changeLanguage());
     test('should search for the product', () => client.searchByValue(SearchProductPage.search_input, SearchProductPage.search_button, productData.name + date_time));
     test('should go to the product page', () => client.waitForExistAndClick(SearchProductPage.product_result_name));
     test('should click on "Add to cart" button', () => client.waitForExistAndClick(CheckoutOrderPage.add_to_cart_button));

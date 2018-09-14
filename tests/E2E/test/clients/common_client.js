@@ -1,5 +1,5 @@
 const {getClient} = require('../common.webdriverio.js');
-const {selector} = require('../globals.webdriverio.js');
+const {languageFO} = require('../selectors/FO/index');
 let path = require('path');
 let fs = require('fs');
 let pdfUtil = require('pdf-to-text');
@@ -99,15 +99,17 @@ class CommonClient {
     return this.client.saveScreenshot(`test/screenshots/${this.client.desiredCapabilities.browserName}_exception_${new Date().getTime()}.png`);
   }
 
-  changeLanguage(language) {
-    if (language === "francais") {
-      return this.client
-        .waitForExistAndClick(selector.languageFO.language_selector)
-        .waitForVisibleAndClick(selector.languageFO.language_FR)
-    }
+  changeLanguage(language = 'en') {
     return this.client
-       .waitForExistAndClick(selector.languageFO.language_selector)
-       .waitForVisibleAndClick(selector.languageFO.language_EN)
+      .waitForExistAndClick(languageFO.language_selector)
+      .pause(1000)
+      .isVisible(languageFO.language_option.replace('%LANG', language))
+      .then((isVisible) => {
+        expect(isVisible, "This language is not existing").to.be.true;
+        if (isVisible) {
+          this.client.waitForVisibleAndClick(languageFO.language_option.replace('%LANG', language));
+        }
+      });
   }
 
   selectLanguage(selector, option, language, id) {
@@ -249,6 +251,23 @@ class CommonClient {
           .waitForExist(selector, 90000)
           .then(() => this.client.getAttribute(selector, attribute))
           .then((text) => expect(text).to.be.equal(value));
+    }
+  }
+
+  checkCssPropertyValue(selector, property, value, parameter = 'equal', pause = 0) {
+    switch (parameter) {
+      case "contain":
+        return this.client
+          .pause(pause)
+          .waitForExist(selector, 90000)
+          .then(() => this.client.getCssProperty(selector, property))
+          .then((property) => expect(property.value).to.be.contain(value));
+      case "equal":
+        return this.client
+          .pause(pause)
+          .waitForExist(selector, 90000)
+          .then(() => this.client.getCssProperty(selector, property))
+          .then((property) => expect(property.value).to.be.equal(value));
     }
   }
 
