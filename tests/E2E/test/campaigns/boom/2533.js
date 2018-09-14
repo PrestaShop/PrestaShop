@@ -36,6 +36,7 @@ scenario('BOOM-2533: Import a localization', () => {
   }, 'common_client');
 }, 'common_client', true);
 
+
 scenario('Edit the connected employee profile in the Back Office', () => {
   scenario('Login in the Back Office', client => {
     test('should open the browser', () => client.open());
@@ -70,3 +71,4 @@ scenario('Edit the connected employee profile in the Back Office', () => {
     test('should logout successfully from the Back Office', () => client.signOutBO());
   }, 'common_client');
 }, 'common_client', true);
+

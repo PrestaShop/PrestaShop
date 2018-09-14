@@ -556,6 +556,13 @@ class CommonClient {
       .pause(2000);
   }
 
+  selectByVisibleText(selector, text, timeout = 90000) {
+    return this.client
+      .waitForExist(selector, timeout)
+      .selectByVisibleText(selector, text)
+  }
+
+
 }
 
 module.exports = CommonClient;
