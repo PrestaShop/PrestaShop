@@ -2010,8 +2010,9 @@ class AdminControllerCore extends Controller
             $tabs[$index]['href'] = $this->context->link->getAdminLink($tab['class_name']);
             $tabs[$index]['sub_tabs'] = array_values($this->getTabs($tab['id_tab'], $level + 1));
 
-            if (isset($tabs[$index]['sub_tabs'][0])) {
-                $tabs[$index]['href'] = $tabs[$index]['sub_tabs'][0]['href'];
+            $subTabHref = $this->getTabLinkFromSubTabs($tabs[$index]['sub_tabs']);
+            if (!empty($subTabHref)) {
+                $tabs[$index]['href'] = $subTabHref;
             } elseif (0 == $tabs[$index]['id_parent'] && '' == $tabs[$index]['icon']) {
                 unset($tabs[$index]);
             } elseif (empty($tabs[$index]['icon'])) {
@@ -4712,5 +4713,23 @@ class AdminControllerCore extends Controller
         } else {
             return 0;
         }
+    }
+
+    /**
+     * Get the url of the first active sub-tab.
+     *
+     * @param array[] $subtabs
+     *
+     * @return string Url, or empty if no active sub-tab
+     */
+    private function getTabLinkFromSubTabs(array $subtabs)
+    {
+        foreach ($subtabs as $tab) {
+            if ($tab['active']) {
+                return $tab['href'];
+            }
+        }
+
+        return '';
     }
 }
