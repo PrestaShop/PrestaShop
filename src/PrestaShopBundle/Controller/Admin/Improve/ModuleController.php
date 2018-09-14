@@ -45,7 +45,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\Constraints as Assert;
-use stdClass;
 use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
 
 /**
@@ -685,7 +684,7 @@ class ModuleController extends ModuleAbstractController
     }
 
     /**
-     * Construct Json struct for catalog body response
+     * Construct Json struct for catalog body response.
      *
      * @param array $categories
      * @param array $modules
@@ -721,7 +720,7 @@ class ModuleController extends ModuleAbstractController
     }
 
     /**
-     * Construct json struct from top menu
+     * Construct json struct from top menu.
      *
      * @param array $categories
      *
@@ -742,7 +741,7 @@ class ModuleController extends ModuleAbstractController
     }
 
     /**
-     * Check user permission
+     * Check user permission.
      *
      * @param array $pageVoter
      *
@@ -765,7 +764,7 @@ class ModuleController extends ModuleAbstractController
     }
 
     /**
-     * Get categories and its modules
+     * Get categories and its modules.
      *
      * @param array $modules List of installed modules
      *
