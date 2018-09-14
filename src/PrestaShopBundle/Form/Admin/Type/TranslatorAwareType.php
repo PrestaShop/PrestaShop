@@ -128,7 +128,7 @@ abstract class TranslatorAwareType extends CommonAbstractType
     {
         $result = [];
         foreach ($locales as $locale) {
-            if ($locale['active']) {
+            if (isset($locale['active']) && $locale['active']) {
                 $result[] = $locale;
             }
         }
