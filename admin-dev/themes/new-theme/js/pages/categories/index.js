@@ -26,6 +26,7 @@
 import TranslatableInput from "../../components/translatable-input";
 import ChoiceTable from "../../components/choice-table";
 import ChoiceTree from "../../components/choice-tree";
+import TextWithLengthCounter from "../../components/form/text-with-length-counter";
 
 const $ = window.$;
 
@@ -33,4 +34,5 @@ $(() => {
   new TranslatableInput();
   new ChoiceTable();
   new ChoiceTree();
+  new TextWithLengthCounter();
 });
