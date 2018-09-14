@@ -44,11 +44,20 @@ final class AddCategoryHandler implements AddCategoryHandlerInterface
     private $categoryImageUploader;
 
     /**
-     * @param ImageUploaderInterface $categoryImageUploader
+     * @var ImageUploaderInterface
      */
-    public function __construct(ImageUploaderInterface $categoryImageUploader)
-    {
-        $this->categoryImageUploader = $categoryImageUploader;
+    private $categoryThumbnailUploader;
+
+    /**
+     * @param ImageUploaderInterface $categoryCoverUploader
+     * @param ImageUploaderInterface $categoryThumbnailUploader
+     */
+    public function __construct(
+        ImageUploaderInterface $categoryCoverUploader,
+        ImageUploaderInterface $categoryThumbnailUploader
+    ) {
+        $this->categoryImageUploader = $categoryCoverUploader;
+        $this->categoryThumbnailUploader = $categoryThumbnailUploader;
     }
 
     /**
@@ -76,6 +85,13 @@ final class AddCategoryHandler implements AddCategoryHandlerInterface
             $this->categoryImageUploader->upload(
                 $category->id,
                 $command->getCoverImage()
+            );
+        }
+
+        if (null !== $command->getThumbnailImage()) {
+            $this->categoryThumbnailUploader->upload(
+                $category->id,
+                $command->getThumbnailImage()
             );
         }
     }
