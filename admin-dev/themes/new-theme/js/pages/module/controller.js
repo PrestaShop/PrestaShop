@@ -38,9 +38,11 @@ class AdminModuleController {
   constructor(moduleCardController) {
     this.moduleCardController = moduleCardController;
 
-    this.DEFAULT_INDEX = 6;
+    this.DEFAULT_MAX_RECENTLY_USED = 10;
+    this.DEFAULT_MAX_PER_CATEGORIES = 6;
     this.DISPLAY_GRID = 'grid';
     this.DISPLAY_LIST = 'list';
+    this.CATEGORY_RECENTLY_USED = 'recently-used';
 
     this.currentCategoryDisplay = {};
     this.currentDisplay = '';
@@ -53,6 +55,8 @@ class AdminModuleController {
     this.pstaggerInput = null;
     this.lastBulkAction = null;
     this.isUploadStarted = false;
+
+    this.recentlyUsedSelector = '#module-recently-used-list .modules-list';
 
     /**
      * Loaded modules list.
@@ -132,10 +136,10 @@ class AdminModuleController {
     this.moduleImportFailureMsgDetailsSelector = '.module-import-failure-details';
     this.moduleImportConfirmSelector = '.module-import-confirm';
 
+    this.initSortingDropdown();
     this.initBOEventRegistering();
     this.initCurrentDisplay();
     this.initSortingDisplaySwitch();
-    this.initSortingDropdown();
     this.initBulkDropdown();
     this.initSearchBlock();
     this.initCategorySelect();
@@ -178,16 +182,15 @@ class AdminModuleController {
     const self = this;
     const body = $('body');
 
-    body.on('click', self.getBulkCheckboxesSelector, () => {
+
+    body.on('click', self.getBulkCheckboxesSelector(), () => {
       const selector = $(self.bulkActionDropDownSelector);
       if ($(self.getBulkCheckboxesCheckedSelector()).length > 0) {
-        selector.removeClass('disabled');
         selector.closest('.module-top-menu-item')
-          .removeClass('disabled');
+                .removeClass('disabled');
       } else {
-        selector.addClass('disabled');
         selector.closest('.module-top-menu-item')
-          .addClass('disabled');
+                .addClass('disabled');
       }
     });
 
@@ -324,7 +327,6 @@ class AdminModuleController {
           active: parseInt($this.data('active'), 10),
           access: $this.data('last-access'),
           display: $this.hasClass('module-item-list') ? self.DISPLAY_LIST : self.DISPLAY_GRID,
-          index: $this.data('index'),
           container,
         });
 
@@ -354,8 +356,19 @@ class AdminModuleController {
       }
 
       const currentCompare = (a, b) => {
-        if (a[key] < b[key]) return -1;
-        if (a[key] > b[key]) return 1;
+        if (key === 'access') {
+          let aDate = (new Date(a[key])).getTime();
+          let bDate = (new Date(b[key])).getTime();
+          aDate = isNaN(aDate) ? 0 : aDate;
+          bDate = isNaN(bDate) ? 0 : bDate;
+
+          if (aDate < bDate) return -1;
+          if (aDate > bDate) return 1;
+        } else {
+          if (a[key] < b[key]) return -1;
+          if (a[key] > b[key]) return 1;
+        }
+
         return 0;
       };
 
@@ -365,20 +378,30 @@ class AdminModuleController {
       }
     }
 
+    $(self.recentlyUsedSelector).find('.module-item').remove();
     $('.modules-list').find('.module-item').remove();
 
     // Modules visibility management
     let isVisible;
     let currentModule;
+    let moduleCategory;
     let tagExists;
     let newValue;
+
+    const counter = {};
+
 
     for (let i = 0; i < self.modulesList.length; i++) {
       currentModule = self.modulesList[i];
       if (currentModule.display === self.currentDisplay) {
         isVisible = true;
+
+        moduleCategory = self.currentRefCategory === self.CATEGORY_RECENTLY_USED ?
+                         self.CATEGORY_RECENTLY_USED :
+                         currentModule.categories;
+
         if (self.currentRefCategory !== null) {
-          isVisible &= currentModule.categories === self.currentRefCategory;
+          isVisible &= moduleCategory === self.currentRefCategory;
         }
 
         if (self.currentRefStatus !== null) {
@@ -399,18 +422,32 @@ class AdminModuleController {
           isVisible &= tagExists;
         }
 
-        if (self.currentCategoryDisplay[currentModule.categories] === undefined) {
-          self.currentCategoryDisplay[currentModule.categories] = false;
+        if (self.currentCategoryDisplay[moduleCategory] === undefined) {
+          self.currentCategoryDisplay[moduleCategory] = false;
         }
 
-        if (self.currentDisplay === self.DISPLAY_LIST
-            && currentModule.index >= self.DEFAULT_INDEX
-        ) {
-          isVisible &= self.currentCategoryDisplay[currentModule.categories];
+        if (self.currentDisplay === self.DISPLAY_LIST) {
+          if (!counter[moduleCategory]) {
+            counter[moduleCategory] = 0;
+          }
+
+          if (moduleCategory === self.CATEGORY_RECENTLY_USED) {
+            if (counter[moduleCategory] >= self.DEFAULT_MAX_RECENTLY_USED) {
+              isVisible &= self.currentCategoryDisplay[moduleCategory];
+            }
+          } else if (counter[moduleCategory] >= self.DEFAULT_MAX_PER_CATEGORIES) {
+            isVisible &= self.currentCategoryDisplay[moduleCategory];
+          }
+
+          counter[moduleCategory] += 1;
         }
 
         if (isVisible) {
-          currentModule.container.append(currentModule.domObject);
+          if (self.currentRefCategory === self.CATEGORY_RECENTLY_USED) {
+            $(self.recentlyUsedSelector).append(currentModule.domObject);
+          } else {
+            currentModule.container.append(currentModule.domObject);
+          }
         }
       }
     }
@@ -424,6 +461,9 @@ class AdminModuleController {
         ) || (
           self.currentRefStatus !== null
           && container.find('.module-item').length !== 0
+        ) || (
+          container.find('.module-item').length === 0 &&
+          container.find('.modules-list').data('name') === self.CATEGORY_RECENTLY_USED
         )
       ) {
         container.hide();
@@ -832,6 +872,9 @@ class AdminModuleController {
     const self = this;
 
     self.currentSorting = $(this.moduleSortingDropdownSelector).find(':checked').attr('value');
+    if (!self.currentSorting) {
+      self.currentSorting = 'access-desc';
+    }
 
     $('body').on(
       'change',
@@ -1008,20 +1051,20 @@ class AdminModuleController {
    * Initialize display switching between List or Grid
    */
   initSortingDisplaySwitch() {
-      const self = this;
+    const self = this;
 
-      $('body').on(
-        'click',
-        '.module-sort-switch',
-        function switchSort() {
-          const switchTo = $(this).data('switch');
-          const isAlreadyDisplayed = $(this).hasClass('active-display');
-          if (typeof switchTo !== 'undefined' && isAlreadyDisplayed === false) {
-            self.switchSortingDisplayTo(switchTo);
-            self.currentDisplay = switchTo;
-          }
+    $('body').on(
+      'click',
+      '.module-sort-switch',
+      function switchSort() {
+        const switchTo = $(this).data('switch');
+        const isAlreadyDisplayed = $(this).hasClass('active-display');
+        if (typeof switchTo !== 'undefined' && isAlreadyDisplayed === false) {
+          self.switchSortingDisplayTo(switchTo);
+          self.currentDisplay = switchTo;
         }
-      );
+      }
+    );
   }
 
   switchSortingDisplayTo(switchTo) {
