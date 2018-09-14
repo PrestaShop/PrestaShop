@@ -26,16 +26,65 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Image\Uploader;
 
-use PrestaShop\PrestaShop\Core\Image\Uploader\ImageUploaderInterface;
-use SplFileInfo;
+use ImageManager;
+use ImageType;
+use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageOptimizationException;
+use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageUploadException;
+use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\UploadedImageConstraintException;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
-final class CategoryThumbnailImageUploader implements ImageUploaderInterface
+/**
+ * Class CategoryThumbnailImageUploader
+ */
+final class CategoryThumbnailImageUploader extends AbstractImageUploader
 {
     /**
      * {@inheritdoc}
+     *
+     * @throws UploadedImageConstraintException
+     * @throws ImageUploadException
+     * @throws ImageOptimizationException
      */
-    public function upload($id, SplFileInfo $uploadedImage)
+    public function upload($id, UploadedFile $uploadedImage)
     {
+        $imagesTypes = ImageType::getImagesTypes('categories');
+        $formattedName = ImageType::getFormattedName('small');
 
+        foreach ($imagesTypes as $k => $imagesType) {
+            if ($formattedName !== $imagesType['name']) {
+                continue;
+            }
+
+            $this->checkImageIsAllowedForUpload($uploadedImage);
+
+            $tmpName = tempnam(_PS_TMP_IMG_DIR_, 'PS');
+            if (!$tmpName) {
+                throw new ImageUploadException('Failed to create temporary category thumbnail image file');
+            }
+
+            if (!move_uploaded_file($uploadedImage->getPathname(), $tmpName)) {
+                throw new ImageUploadException('Failed to upload category thumbnail image');
+            }
+
+            if (!ImageManager::resize(
+                $tmpName,
+                _PS_CAT_IMG_DIR_ . $id . '-' . stripslashes($imagesType['name']) . '.jpg',
+                (int) $imagesType['width'],
+                (int) $imagesType['height']
+            )) {
+                throw new ImageOptimizationException('Failed to optimize category thumbnail image after uploading');
+            }
+
+            if (($imageSize = getimagesize($tmpName)) && is_array($imageSize)) {
+                ImageManager::resize(
+                    $tmpName,
+                    _PS_CAT_IMG_DIR_ . $id . '_thumb.jpg',
+                    (int) $imageSize[0],
+                    (int) $imageSize[1]
+                );
+            }
+
+            unlink($tmpName);
+        }
     }
 }

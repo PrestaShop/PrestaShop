@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Category\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Category\Exception\CategoryConstraintException;
-use SplFileInfo;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * Class AddCategoryCommand adds new category
@@ -85,12 +85,12 @@ class AddCategoryCommand
     private $associatedShopIds;
 
     /**
-     * @var SplFileInfo|null
+     * @var UploadedFile|null
      */
     private $coverImage;
 
     /**
-     * @var SplFileInfo|null
+     * @var UploadedFile|null
      */
     private $thumbnailImage;
 
@@ -371,7 +371,7 @@ class AddCategoryCommand
     }
 
     /**
-     * @return SplFileInfo|null
+     * @return UploadedFile|null
      */
     public function getThumbnailImage()
     {
@@ -379,15 +379,15 @@ class AddCategoryCommand
     }
 
     /**
-     * @param SplFileInfo $thumbnailImage
+     * @param UploadedFile $thumbnailImage
      */
-    public function setThumbnailImage(SplFileInfo $thumbnailImage)
+    public function setThumbnailImage(UploadedFile $thumbnailImage)
     {
         $this->thumbnailImage = $thumbnailImage;
     }
 
     /**
-     * @return SplFileInfo|null
+     * @return UploadedFile|null
      */
     public function getCoverImage()
     {
@@ -395,9 +395,9 @@ class AddCategoryCommand
     }
 
     /**
-     * @param SplFileInfo $coverImage
+     * @param UploadedFile $coverImage
      */
-    public function setCoverImage(SplFileInfo $coverImage)
+    public function setCoverImage(UploadedFile $coverImage)
     {
         $this->coverImage = $coverImage;
     }
