@@ -39,6 +39,14 @@
             {{ 'All Categories'|trans({}, 'Admin.Modules.Feature') }}
           </a>
         </li>
+        <li class="module-category-menu module-category-recently-used"
+          data-category-ref="recently-used"
+          data-category-display-name="{{ 'Recently Used'|trans({}, 'Admin.Modules.Feature') }}"
+        >
+          <a class="dropdown-item" href="#">
+            {{ 'Recently Used'|trans({}, 'Admin.Modules.Feature') }}
+          </a>
+        </li>
         </li>
         {% for subMenu in menu.subMenu %}
           <li class="module-category-menu"

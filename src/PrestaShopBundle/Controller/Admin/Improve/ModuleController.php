@@ -114,8 +114,6 @@ class ModuleController extends ModuleAbstractController
         $filters->setType(AddonListFilterType::MODULE | AddonListFilterType::SERVICE)
             ->removeStatus(AddonListFilterStatus::UNINSTALLED);
         $installedProducts = $moduleRepository->getFilteredList($filters);
-        $this->sortModules($installedProducts);
-
         $categories = $this->getCategories($modulesProvider, $installedProducts);
 
         $bulkActions = [
@@ -764,23 +762,6 @@ class ModuleController extends ModuleAbstractController
                 ]
             );
         }
-    }
-
-    /**
-     * Sort modules by last access date
-     *
-     * @param array &$modules
-     */
-    private function sortModules(array &$modules)
-    {
-        usort(
-            $modules,
-            function ($a, $b) {
-                $aDate = new DateTime($a->database->get('last_access_date'));
-                $bDate = new DateTime($b->database->get('last_access_date'));
-                return $aDate < $bDate;
-            }
-        );
     }
 
     /**
