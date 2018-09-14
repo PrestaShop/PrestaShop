@@ -5,7 +5,7 @@ module.exports = {
       promise
         .then(() => client.getTextInVar(Stock.product_quantity.replace('%O', orderProduct), "productQuantity"))
         .then(() => client.moveToObject(Stock.product_quantity_input.replace('%O', orderProduct)));
-      if (option == "add") {
+      if (option === "add") {
         for (let i = 1; i < itemNumber; i++) {
           promise = client.waitForExistAndClick(Stock.add_quantity_button);
         }
@@ -29,5 +29,4 @@ module.exports = {
     });
     test('should check movement history', () => client.checkMovement(Movement, movementIndex, itemNumber, option, type));
   }
-
 };

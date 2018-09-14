@@ -124,7 +124,7 @@ module.exports = {
           test('should search for the category', () => client.waitAndSetValue(AddProductPage.search_categories, productData.categories['1']['name'] + date_time));
           test('should select the category', () => client.waitForVisibleAndClick(AddProductPage.list_categories));
           test('should open all categories', () => client.openAllCategory());
-          if(Object.keys(productData.categories).length > 1) {
+          if (Object.keys(productData.categories).length > 1) {
             Object.keys(productData.categories).forEach(function (key) {
               if (productData.categories[key]["main_category"] && productData.categories[key]["name"] !== 'home') {
                 test('should choose the created category as default', () => {
@@ -228,7 +228,6 @@ module.exports = {
           .then(() => expect(global.productsNumber).to.be.at.most(itemPerPage));
       });
       if (paginateBetweenPages) {
-        /** @todo to be removed when the PR that creates a global variable to determine if we are in the debug mode or not will be merged **/
         test('should close the symfony toolbar if exists', () => {
           return promise
             .then(() => client.isVisible(AddProductPage.symfony_toolbar))
@@ -351,6 +350,53 @@ module.exports = {
         test('should check that the product quantity is equal to "5"', () => client.checkAttributeValue(productPage.product_quantity, 'data-stock', productData[3].quantity));
       }, 'product/product');
 
+    }, 'product/product', true);
+  },
+  checkAllProduct(AccessPageFO, productPage) {
+    scenario('Check the created product in the Front Office', () => {
+      scenario('Login in the Front Office', client => {
+        test('should login successfully in the Front Office', () => client.signInFO(AccessPageFO));
+      }, 'product/product');
+      scenario('Check that all product are displayed in the Front Office', client => {
+        test('should set the language of shop to "English"', () => client.changeLanguage());
+        test('should click on "SEE ALL PRODUCTS" link', () => client.scrollWaitForExistAndClick(productPage.see_all_products));
+        for (let i = 0; i <= pagination; i++) {
+          for (let j = 0; j < global.productInfo.length; j++) {
+            test('should check the ' + global.productInfo[j].name + ' existence in the ' + (Number(i) + 1) + ' page', () => {
+              return promise
+                .then(() => client.pause(4000))
+                .then(() => client.isVisible(AccessPageFO.product_name.replace('%PAGENAME', global.productInfo[j].name.substring(0, 23))))
+                .then(() => {
+                  if (global.isVisible) {
+                    global.productInfo[j].status = true;
+                  }
+                });
+            });
+          }
+          if (i !== pagination) {
+            test('should click on "NEXT" button', () => {
+              return promise
+                .then(() => client.isVisible(productPage.pagination_next))
+                .then(() => {
+                  if (global.isVisible) {
+                    client.clickPageNext(productPage.pagination_next);
+                  }
+                });
+            });
+          }
+        }
+      }, 'product/product');
+      scenario('Verify the existence of all product in the Front Office', client => {
+        test('should check that the product doesn\'t contain false status', () => {
+          return promise
+            .then(() => {
+              for (let i = 0; i < global.productInfo.length; i++) {
+                expect(global.productInfo[i].status, 'the product ' + global.productInfo[i].name + ' doesn\'t in the Front Office').to.equal(true);
+              }
+            })
+            .then(() => client.pause(2000));
+        });
+      }, 'product/product');
     }, 'product/product', true);
   }
 };
