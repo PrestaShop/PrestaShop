@@ -348,6 +348,14 @@ class CommonClient {
       .then((isExisting) => expect(isExisting).to.be.true);
   }
 
+  isNotSelected(selector, pause = 0) {
+    return this.client
+      .pause(pause)
+      .scrollTo(selector)
+      .isSelected(selector)
+      .then((isExisting) => expect(isExisting).to.be.false);
+  }
+
   isNotExisting(selector, pause = 0) {
     return this.client
       .pause(pause)
