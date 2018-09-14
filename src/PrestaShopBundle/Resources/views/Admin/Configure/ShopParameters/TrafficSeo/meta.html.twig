@@ -27,13 +27,7 @@
 {% trans_default_domain "Admin.Shopparameters.Feature" %}
 
 {% block content %}
-  {% if isShopFeatureActive and isShopContext %}
-      <div class="row">
-        <div class="col">
-          {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': grid} %}
-        </div>
-      </div>
-    {% else %}
+  {% if isShopFeatureActive and not isShopContext %}
       <div class="row">
         <div class="col-sm">
           <div class="alert alert-info" role="alert">
@@ -41,6 +35,12 @@
               {{ 'You can only display the page list in a shop context.'|trans({}, 'Admin.Shopparameters.Notification') }}
             </div>
           </div>
+        </div>
+      </div>
+    {% else %}
+      <div class="row">
+        <div class="col">
+          {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': grid} %}
         </div>
       </div>
   {% endif %}
