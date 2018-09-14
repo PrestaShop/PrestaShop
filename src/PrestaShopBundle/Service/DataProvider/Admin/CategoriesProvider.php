@@ -54,7 +54,7 @@ class CategoriesProvider
     }
 
     /**
-     * Get categories from API
+     * Get categories from API.
      *
      * @return array
      */
@@ -113,7 +113,7 @@ class CategoriesProvider
     private function initializeCategories($categoriesListing)
     {
         $categories = [
-            'categories' => $this->createMenuObject('categories', 'Categories')
+            'categories' => $this->createMenuObject('categories', 'Categories'),
         ];
 
         if (empty($categoriesListing)) {
