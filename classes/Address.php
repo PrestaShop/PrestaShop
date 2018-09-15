@@ -219,7 +219,7 @@ class AddressCore extends ObjectModel
         if (Validate::isUnsignedId($this->id_customer)) {
             Customer::resetAddressCache($this->id_customer, $this->id);
         }
-        
+
         if (!$this->isUsed()) {
             return parent::delete();
         } else {
