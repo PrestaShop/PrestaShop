@@ -124,15 +124,16 @@ class TagCore extends ObjectModel
                 }
             }
         }
-        $data = '';
-        foreach ($list as $tag) {
-            $data .= '(' . (int) $tag . ',' . (int) $idProduct . ',' . (int) $idLang . '),';
-        }
-        $data = rtrim($data, ',');
 
-        $result = Db::getInstance()->execute('
-        INSERT INTO `' . _DB_PREFIX_ . 'product_tag` (`id_tag`, `id_product`, `id_lang`)
-        VALUES ' . $data);
+        $data = array();
+        foreach ($list as $tag) {
+            $data[] = array(
+                'id_tag' => (int)$tag,
+                'id_product' => (int)$id_product,
+                'id_lang' => (int)$id_lang
+            );
+        }
+        $result = Db::getInstance()->insert('product_tag', $data);
 
         if ($list != array()) {
             self::updateTagCount($list);
