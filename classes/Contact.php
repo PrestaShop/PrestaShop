@@ -50,7 +50,7 @@ class ContactCore extends ObjectModel
         'primary' => 'id_contact',
         'multilang' => true,
         'fields' => array(
-            'email' => array('type' => self::TYPE_STRING, 'validate' => 'isEmail', 'size' => 128),
+            'email' => array('type' => self::TYPE_STRING, 'validate' => 'isEmail', 'size' => 255),
             'customer_service' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 
             /* Lang fields */
