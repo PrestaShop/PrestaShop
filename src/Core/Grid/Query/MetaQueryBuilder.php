@@ -76,13 +76,7 @@ final class MetaQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $qb = $this->getQueryBuilder($searchCriteria->getFilters());
-        $qb->select('m.`id_meta`, m.`page`, l.`title`, l.`url_rewrite`')
-            ->orderBy(
-                $searchCriteria->getOrderBy(),
-                $searchCriteria->getOrderWay()
-            )
-            ->setFirstResult($searchCriteria->getOffset())
-            ->setMaxResults($searchCriteria->getLimit());
+        $qb->select('m.`id_meta`, m.`page`, l.`title`, l.`url_rewrite`');
 
         $this->searchCriteriaApplicator
             ->applyPagination($searchCriteria, $qb)
@@ -125,7 +119,6 @@ final class MetaQueryBuilder extends AbstractDoctrineQueryBuilder
         $qb->andWhere('l.`id_lang`=' . $this->contextIdLang);
         $qb->andWhere('l.`id_shop`=' . $this->contextIdShop);
         $qb->andWhere('m.`configurable`=1');
-//        $qb->groupBy('m.`id_meta`'); todo: check why group by results in incorrect list count
 
         foreach ($filters as $name => $value) {
             if ('id_meta' === $name) {
