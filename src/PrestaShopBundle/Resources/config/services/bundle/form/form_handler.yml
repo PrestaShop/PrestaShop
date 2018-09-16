@@ -268,11 +268,11 @@ services:
         arguments:
             - '@=service("form.factory").createBuilder()'
             - '@prestashop.core.hook.dispatcher'
-            - '@prestashop.admin.traffic_seo.meta.form_data_provider'
+            - '@prestashop.admin.traffic_seo.meta_settings.form_data_provider'
             -
-              'set_up_urls': 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\SetUpUrlType'
-              'shop_urls': 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\ShopUrlType'
-              'url_schema': 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\UrlSchemaType'
+              'set_up_urls': 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta\SetUpUrlType'
+              'shop_urls': 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta\ShopUrlType'
+              'url_schema': 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta\UrlSchemaType'
             - 'SeoUrlsPage'
 
     # Entity form handler

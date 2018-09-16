@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo;
+namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -32,38 +32,24 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Class ShopUrlType is responsible for providing form fields for
- * Shop parameters -> Traffic & Seo -> Seo & Urls -> Shop urls block.
+ * Class UrlSchemaType is responsible for providing form fields for
+ * Shop parameters -> Traffic & Seo -> Seo & Urls -> Schema of urls block.
  */
-class ShopUrlType extends AbstractType
+class UrlSchemaType extends AbstractType
 {
     /**
      * @var bool
      */
-    private $isHostMode;
+    private $isRewriteSettingEnabled;
 
     /**
-     * @var bool
-     */
-    private $isShopFeatureActive;
-
-    /**
-     * @var bool
-     */
-    private $doesMainShopUrlExist;
-
-    /**
-     * ShopUrlType constructor.
+     * UrlSchemaType constructor.
      *
-     * @param bool $isHostMode
-     * @param bool $isShopFeatureActive
-     * @param bool $doesMainShopUrlExist
+     * @param bool $isRewriteSettingEnabled
      */
-    public function __construct($isHostMode, $isShopFeatureActive, $doesMainShopUrlExist)
+    public function __construct($isRewriteSettingEnabled)
     {
-        $this->isHostMode = $isHostMode;
-        $this->isShopFeatureActive = $isShopFeatureActive;
-        $this->doesMainShopUrlExist = $doesMainShopUrlExist;
+        $this->isRewriteSettingEnabled = $isRewriteSettingEnabled;
     }
 
     /**
@@ -71,11 +57,17 @@ class ShopUrlType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        if (!$this->isHostMode && !$this->isShopFeatureActive && $this->doesMainShopUrlExist) {
+        if ($this->isRewriteSettingEnabled) {
             $builder
-                ->add('domain', TextType::class)
-                ->add('domain_ssl', TextType::class)
-                ->add('physical_uri', TextType::class)
+                ->add('product_rule', TextType::class, [
+                ])
+                ->add('category_rule', TextType::class)
+                ->add('layered_rule', TextType::class)
+                ->add('supplier_rule', TextType::class)
+                ->add('manufacturer_rule', TextType::class)
+                ->add('cms_rule', TextType::class)
+                ->add('cms_category_rule', TextType::class)
+                ->add('module', TextType::class)
             ;
         }
     }
