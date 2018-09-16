@@ -182,9 +182,32 @@ class MetaController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_meta');
     }
 
-    public function deleteMultipleListItemsAction()
+    /**
+     * Removes multiple records from meta list.
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     *
+     * @throws PrestaShopException
+     */
+    public function deleteMultipleListItemsAction(Request $request)
     {
-        // todo: implement
+        $metaToDelete = $request->request->get('meta_bulk');
+
+        $metaEraser = $this->get('prestashop.adapter.meta.meta_eraser');
+        $errors = $metaEraser->erase($metaToDelete);
+
+        if (!empty($errors)) {
+            $this->flashErrors($errors);
+        } else {
+            $this->addFlash(
+                'success',
+                $this->trans('The selection has been successfully deleted.', 'Admin.Notifications.Success')
+            );
+        }
+
+        return $this->redirectToRoute('admin_meta');
     }
 
     /**
