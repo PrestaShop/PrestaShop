@@ -123,19 +123,12 @@ class MetaController extends FrameworkBundleAdminController
     }
 
     /**
-     * Redirects to page where new record of meta list can be created.
+     * Points to the form where new record of meta list can be created.
      *
-     * @return RedirectResponse
      */
     public function createAction()
     {
-        $legacyContext = $this->get('prestashop.adapter.legacy.context');
-        //@todo: this action should point to new add page
-        $legacyLink = $legacyContext->getAdminLink(
-                'AdminMeta'
-            ) . '&addmeta';
 
-        return $this->redirect($legacyLink);
     }
 
     /**
