@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo;
+namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta;
 
 use PrestaShop\PrestaShop\Adapter\Routes\RouteValidator;
 use PrestaShop\PrestaShop\Adapter\Validate;
@@ -34,10 +34,10 @@ use PrestaShopException;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * Class MetaFormDataProvider is responsible for providing configurations data and responsible for persisting data
+ * Class MetaSettingsFormDataProvider is responsible for providing configurations data and responsible for persisting data
  * in configuration database.
  */
-final class MetaFormDataProvider implements FormDataProviderInterface
+final class MetaSettingsFormDataProvider implements FormDataProviderInterface
 {
     /**
      * @var DataConfigurationInterface

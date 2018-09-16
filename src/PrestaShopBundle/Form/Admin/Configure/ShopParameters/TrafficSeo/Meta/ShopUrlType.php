@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo;
+namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -32,24 +32,38 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Class UrlSchemaType is responsible for providing form fields for
- * Shop parameters -> Traffic & Seo -> Seo & Urls -> Schema of urls block.
+ * Class ShopUrlType is responsible for providing form fields for
+ * Shop parameters -> Traffic & Seo -> Seo & Urls -> Shop urls block.
  */
-class UrlSchemaType extends AbstractType
+class ShopUrlType extends AbstractType
 {
     /**
      * @var bool
      */
-    private $isRewriteSettingEnabled;
+    private $isHostMode;
 
     /**
-     * UrlSchemaType constructor.
-     *
-     * @param bool $isRewriteSettingEnabled
+     * @var bool
      */
-    public function __construct($isRewriteSettingEnabled)
+    private $isShopFeatureActive;
+
+    /**
+     * @var bool
+     */
+    private $doesMainShopUrlExist;
+
+    /**
+     * ShopUrlType constructor.
+     *
+     * @param bool $isHostMode
+     * @param bool $isShopFeatureActive
+     * @param bool $doesMainShopUrlExist
+     */
+    public function __construct($isHostMode, $isShopFeatureActive, $doesMainShopUrlExist)
     {
-        $this->isRewriteSettingEnabled = $isRewriteSettingEnabled;
+        $this->isHostMode = $isHostMode;
+        $this->isShopFeatureActive = $isShopFeatureActive;
+        $this->doesMainShopUrlExist = $doesMainShopUrlExist;
     }
 
     /**
@@ -57,17 +71,11 @@ class UrlSchemaType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        if ($this->isRewriteSettingEnabled) {
+        if (!$this->isHostMode && !$this->isShopFeatureActive && $this->doesMainShopUrlExist) {
             $builder
-                ->add('product_rule', TextType::class, [
-                ])
-                ->add('category_rule', TextType::class)
-                ->add('layered_rule', TextType::class)
-                ->add('supplier_rule', TextType::class)
-                ->add('manufacturer_rule', TextType::class)
-                ->add('cms_rule', TextType::class)
-                ->add('cms_category_rule', TextType::class)
-                ->add('module', TextType::class)
+                ->add('domain', TextType::class)
+                ->add('domain_ssl', TextType::class)
+                ->add('physical_uri', TextType::class)
             ;
         }
     }
