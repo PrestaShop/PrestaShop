@@ -30,6 +30,7 @@ use Exception;
 use PrestaShop\PrestaShop\Core\Search\Filters\MetaFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -155,9 +156,30 @@ class MetaController extends FrameworkBundleAdminController
         return $this->redirect($legacyLink);
     }
 
-    public function deleteSingleListItemAction()
+    /**
+     * Removes single element from meta list.
+     *
+     * @param int $metaId
+     *
+     * @return RedirectResponse
+     *
+     * @throws PrestaShopException
+     */
+    public function deleteSingleListItemAction($metaId)
     {
-        // todo: implement
+        $metaEraser = $this->get('prestashop.adapter.meta.meta_eraser');
+        $errors = $metaEraser->erase([$metaId]);
+
+        if (!empty($errors)) {
+            $this->flashErrors($errors);
+        } else {
+            $this->addFlash(
+                'success',
+                $this->trans('Successful deletion.', 'Admin.Notifications.Success')
+            );
+        }
+
+        return $this->redirectToRoute('admin_meta');
     }
 
     public function deleteMultipleListItemsAction()
