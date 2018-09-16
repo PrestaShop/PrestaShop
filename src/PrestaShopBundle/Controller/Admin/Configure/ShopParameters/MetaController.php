@@ -34,6 +34,7 @@ use PrestaShopException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class MetaController is responsible for page display and all actions used in Configure -> Shop parameters ->
@@ -125,10 +126,18 @@ class MetaController extends FrameworkBundleAdminController
     /**
      * Points to the form where new record of meta list can be created.
      *
+     * @return Response
      */
     public function createAction()
     {
+        $metaFormHandler = $this->get('prestashop.admin.meta.form_handler');
 
+        return $this->render(
+            '@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/Form/add_edit.html.twig',
+            [
+                'form' => $metaFormHandler->getForm()->createView(),
+            ]
+        );
     }
 
     /**
