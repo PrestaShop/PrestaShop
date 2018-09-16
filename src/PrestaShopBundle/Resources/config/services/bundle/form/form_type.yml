@@ -519,8 +519,8 @@ services:
         tags:
             - { name: form.type }
 
-    form.type.shop.traffic_seo.set_up_url:
-        class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\SetUpUrlType'
+    form.type.shop.traffic_seo.meta.set_up_url:
+        class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta\SetUpUrlType'
         arguments:
             - '@=service("prestashop.core.form.choice_provider.canonical_url").getChoices()'
             - '@prestashop.core.util.url.htaccess_file_checker'
@@ -528,8 +528,8 @@ services:
         tags:
             - { name: form.type }
 
-    form.type.shop.traffic_seo.shop_url:
-        class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\ShopUrlType'
+    form.type.shop.traffic_seo.meta.shop_url:
+        class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta\ShopUrlType'
         arguments:
             - '@=service("prestashop.adapter.hosting_information").isHostMode()'
             - '@=service("prestashop.adapter.shop.context").isShopFeatureActive()'
@@ -537,8 +537,8 @@ services:
         tags:
             - { name: form.type }
 
-    form.type.shop.traffic_seo.url_schema:
-        class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\UrlSchemaType'
+    form.type.shop.traffic_seo.meta.url_schema:
+        class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta\UrlSchemaType'
         arguments:
             - '@=service("prestashop.adapter.legacy.configuration").get("PS_REWRITING_SETTINGS")'
         tags:
