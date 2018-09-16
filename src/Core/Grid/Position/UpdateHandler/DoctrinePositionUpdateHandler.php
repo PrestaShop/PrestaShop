@@ -29,13 +29,14 @@ namespace PrestaShop\PrestaShop\Core\Grid\Position\UpdateHandler;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ConnectionException;
 use Doctrine\DBAL\Statement;
+use PrestaShop\PrestaShop\Core\Grid\Position\Exception\PositionUpdateException;
 use PrestaShop\PrestaShop\Core\Grid\Position\PositionDefinitionInterface;
 
 /**
  * Class DoctrinePositionUpdateHandler updates the grid positions using a Doctrine
  * Connection.
  */
-class DoctrinePositionUpdateHandler implements PositionUpdateHandlerInterface
+final class DoctrinePositionUpdateHandler implements PositionUpdateHandlerInterface
 {
     /**
      * @var Connection
@@ -119,14 +120,13 @@ class DoctrinePositionUpdateHandler implements PositionUpdateHandlerInterface
             }
             $this->connection->commit();
         } catch (ConnectionException $e) {
-            $errors[] = [
-                'key' => 'Could not update.',
-                'parameters' => [],
-                'domain' => 'Admin.Catalog.Notification',
-            ];
             $this->connection->rollBack();
-        }
 
-        return $errors;
+            throw new PositionUpdateException(
+                'Could not update.',
+                'Admin.Catalog.Notification',
+                []
+            );
+        }
     }
 }

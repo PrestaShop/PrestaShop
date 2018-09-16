@@ -24,34 +24,13 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Position;
+namespace PrestaShop\PrestaShop\Core\Grid\Position\Exception;
+
+use PrestaShop\PrestaShop\Core\Exception\PrestaShopCoreException;
 
 /**
- * Interface PositionUpdateInterface contains the modifications needed
- * to update the grid positions.
+ * Class PositionException used by the GridPositionUpdater component.
  */
-interface PositionUpdateInterface
+class PositionException extends PrestaShopCoreException
 {
-    /**
-     * The PositionDefinition defines the position relationship and
-     * allows to be build the database request.
-     *
-     * @return PositionDefinitionInterface
-     */
-    public function getPositionDefinition();
-
-    /**
-     * A collection of modifications for each modified rows.
-     *
-     * @return PositionModificationCollectionInterface
-     */
-    public function getPositionModificationCollection();
-
-    /**
-     * If the PositionDefinition needs a parent and has defined a
-     * parentIdField then this field contains its value.
-     *
-     * @return string|null
-     */
-    public function getParentId();
 }

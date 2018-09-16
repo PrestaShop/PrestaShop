@@ -27,10 +27,10 @@
 namespace PrestaShop\PrestaShop\Core\Grid\Position;
 
 /**
- * Class RowUpdate contains the modification for a
+ * Class PositionModification contains the modification for a
  * designated row.
  */
-final class RowUpdate implements RowUpdateInterface
+final class PositionModification implements PositionModificationInterface
 {
     /**
      * @var string|int
@@ -48,8 +48,6 @@ final class RowUpdate implements RowUpdateInterface
     private $newPosition;
 
     /**
-     * RowUpdate constructor.
-     *
      * @param string|int $id
      * @param int $oldPosition
      * @param int $newPosition

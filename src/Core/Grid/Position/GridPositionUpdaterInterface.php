@@ -26,6 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Position;
 
+use PrestaShop\PrestaShop\Core\Grid\Position\Exception\PositionUpdateException;
+
 /**
  * Interface GridPositionUpdaterInterface, this interface is responsible for updating the position of items
  * of a grid using the information from a PositionUpdateInterface object.
@@ -36,11 +38,11 @@ interface GridPositionUpdaterInterface
      * Updates a grid based on the data in PositionUpdateInterface composed
      * of the PositionDefinitionInterface allowing to build the query, the
      * new positions and optionally a parentId
-     * Returns an array of errors if something went wrong.
+     * Throws a PositionUpdateException if something went wrong.
      *
      * @param PositionUpdateInterface $positionUpdate
      *
-     * @return array
+     * @throws PositionUpdateException
      */
     public function update(PositionUpdateInterface $positionUpdate);
 }

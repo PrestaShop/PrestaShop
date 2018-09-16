@@ -27,31 +27,18 @@
 namespace PrestaShop\PrestaShop\Core\Grid\Position;
 
 /**
- * Interface PositionUpdateInterface contains the modifications needed
- * to update the grid positions.
+ * Interface PositionDataHandlerInterface is used to interpret the provided
+ * data array and transform it in a fully filled PositionUpdate object.
  */
-interface PositionUpdateInterface
+interface PositionDataHandlerInterface
 {
     /**
-     * The PositionDefinition defines the position relationship and
-     * allows to be build the database request.
+     * Transform the provided data into a PositionUpdate.
      *
-     * @return PositionDefinitionInterface
-     */
-    public function getPositionDefinition();
-
-    /**
-     * A collection of modifications for each modified rows.
+     * @param array $data
+     * @param PositionDefinition $positionDefinition
      *
-     * @return PositionModificationCollectionInterface
+     * @return PositionUpdate
      */
-    public function getPositionModificationCollection();
-
-    /**
-     * If the PositionDefinition needs a parent and has defined a
-     * parentIdField then this field contains its value.
-     *
-     * @return string|null
-     */
-    public function getParentId();
+    public function handleData(array $data, PositionDefinition $positionDefinition);
 }

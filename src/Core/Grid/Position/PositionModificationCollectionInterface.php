@@ -26,32 +26,36 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Position;
 
+use Countable;
+use Iterator;
+
 /**
- * Interface PositionUpdateInterface contains the modifications needed
- * to update the grid positions.
+ * Interface PositionModificationCollectionInterface defines contract for grid RowModificationInterface collection.
  */
-interface PositionUpdateInterface
+interface PositionModificationCollectionInterface extends Iterator, Countable
 {
     /**
-     * The PositionDefinition defines the position relationship and
-     * allows to be build the database request.
+     * Add rowModification to collection.
      *
-     * @return PositionDefinitionInterface
+     * @param PositionModificationInterface $positionModification
+     *
+     * @return self
      */
-    public function getPositionDefinition();
+    public function add(PositionModificationInterface $positionModification);
 
     /**
-     * A collection of modifications for each modified rows.
+     * Remove positionModification from collection.
      *
-     * @return PositionModificationCollectionInterface
+     * @param PositionModificationInterface $positionModification
+     *
+     * @return self
      */
-    public function getPositionModificationCollection();
+    public function remove(PositionModificationInterface $positionModification);
 
     /**
-     * If the PositionDefinition needs a parent and has defined a
-     * parentIdField then this field contains its value.
+     * Get positionModifications as array.
      *
-     * @return string|null
+     * @return array
      */
-    public function getParentId();
+    public function toArray();
 }

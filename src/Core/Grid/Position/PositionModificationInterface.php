@@ -26,36 +26,30 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Position;
 
-use Countable;
-use Iterator;
-
 /**
- * Interface RowUpdateCollectionInterface defines contract for grid RowUpdate collection.
+ * Interface PositionModificationInterface contains the modification for a
+ * designated row.
  */
-interface RowUpdateCollectionInterface extends Iterator, Countable
+interface PositionModificationInterface
 {
     /**
-     * Add rowUpdate to collection.
+     * The row id allowing to match it.
      *
-     * @param RowUpdateInterface $rowUpdate
-     *
-     * @return self
+     * @return string|int
      */
-    public function add(RowUpdateInterface $rowUpdate);
+    public function getId();
 
     /**
-     * Remove rowUpdate from collection.
+     * The former row position.
      *
-     * @param RowUpdateInterface $rowUpdate
-     *
-     * @return self
+     * @return int
      */
-    public function remove(RowUpdateInterface $rowUpdate);
+    public function getOldPosition();
 
     /**
-     * Get rowUpdates as array.
+     * The new row position.
      *
-     * @return array
+     * @return int
      */
-    public function toArray();
+    public function getNewPosition();
 }

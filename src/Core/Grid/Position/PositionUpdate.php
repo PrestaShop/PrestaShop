@@ -38,9 +38,9 @@ final class PositionUpdate implements PositionUpdateInterface
     private $positionDefinition;
 
     /**
-     * @var RowUpdateCollectionInterface
+     * @var PositionModificationCollectionInterface
      */
-    private $rowUpdateCollection;
+    private $positionModificationCollection;
 
     /**
      * @var string|null
@@ -48,17 +48,17 @@ final class PositionUpdate implements PositionUpdateInterface
     private $parentId;
 
     /**
-     * @param RowUpdateCollectionInterface $rowUpdateCollection
+     * @param PositionModificationCollectionInterface $positionModificationCollection
      * @param PositionDefinitionInterface $positionDefinition
      * @param string|null $parentId
      */
     public function __construct(
-        RowUpdateCollectionInterface $rowUpdateCollection,
+        PositionModificationCollectionInterface $positionModificationCollection,
         PositionDefinitionInterface $positionDefinition,
         $parentId = null
     ) {
         $this->positionDefinition = $positionDefinition;
-        $this->rowUpdateCollection = $rowUpdateCollection;
+        $this->positionModificationCollection = $positionModificationCollection;
         $this->parentId = $parentId;
     }
 
@@ -73,9 +73,9 @@ final class PositionUpdate implements PositionUpdateInterface
     /**
      * {@inheritdoc}
      */
-    public function getRowUpdateCollection()
+    public function getPositionModificationCollection()
     {
-        return $this->rowUpdateCollection;
+        return $this->positionModificationCollection;
     }
 
     /**

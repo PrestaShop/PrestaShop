@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Column\Type\Catalog;
+namespace PrestaShop\PrestaShop\Core\Grid\Column\Type\Common;
 
 use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -66,7 +66,7 @@ final class PositionColumn extends AbstractColumn
             ->setAllowedTypes('id_field', 'string')
             ->setAllowedTypes('id_parent_field', 'string')
             ->setAllowedTypes('update_route', 'string')
-            ->setAllowedValues('update_method', array('GET', 'POST'))
+            ->setAllowedValues('update_method', ['GET', 'POST'])
         ;
     }
 }
