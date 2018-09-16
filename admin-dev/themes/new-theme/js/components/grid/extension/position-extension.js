@@ -28,9 +28,9 @@ import tableDnD from "tablednd/dist/jquery.tablednd.min";
 const $ = window.$;
 
 /**
- * Class CategoryPositionExtension extends Grid with reorderable category positions
+ * Class PositionExtension extends Grid with reorderable positions
  */
-export default class CategoryPositionExtension {
+export default class PositionExtension {
     constructor() {
         return {
             extend: (grid) => this.extend(grid),

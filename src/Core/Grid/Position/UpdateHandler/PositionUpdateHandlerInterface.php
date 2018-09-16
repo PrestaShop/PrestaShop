@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Position\UpdateHandler;
 
+use PrestaShop\PrestaShop\Core\Grid\Position\Exception\PositionUpdateException;
 use PrestaShop\PrestaShop\Core\Grid\Position\PositionDefinitionInterface;
 
 /**
@@ -67,12 +68,12 @@ interface PositionUpdateHandlerInterface
      *      3 => 3
      * ];
      *
-     * Returns an array of errors if something went wrong.
+     * Throws a PositionUpdateException if something went wrong.
      *
      * @param PositionDefinitionInterface $positionDefinition
      * @param array $newPositions
      *
-     * @return array
+     * @throws PositionUpdateException
      */
     public function updatePositions(PositionDefinitionInterface $positionDefinition, array $newPositions);
 }

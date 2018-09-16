@@ -24,32 +24,11 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Position;
+namespace PrestaShop\PrestaShop\Core\Grid\Position\Exception;
 
 /**
- * Interface RowUpdateInterface contains the modification for a
- * designated row.
+ * Class PositionUpdateException throw by GridPositionUpdater.
  */
-interface RowUpdateInterface
+class PositionUpdateException extends PositionException
 {
-    /**
-     * The row id allowing to match it.
-     *
-     * @return string|int
-     */
-    public function getId();
-
-    /**
-     * The former row position.
-     *
-     * @return int
-     */
-    public function getOldPosition();
-
-    /**
-     * The new row position.
-     *
-     * @return int
-     */
-    public function getNewPosition();
 }

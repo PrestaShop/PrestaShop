@@ -24,55 +24,75 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Position;
-
-use PrestaShop\PrestaShop\Core\Grid\Collection\AbstractCollection;
+namespace PrestaShop\PrestaShop\Core\Exception;
 
 /**
- * Class RowUpdateCollection holds collection of row updates for grid.
- *
- * @property RowUpdateInterface[] $items
+ * Class PrestaShopCoreException.
  */
-final class RowUpdateCollection extends AbstractCollection implements RowUpdateCollectionInterface
+class PrestaShopCoreException extends \Exception
 {
     /**
-     * {@inheritdoc}
+     * @var string
      */
-    public function add(RowUpdateInterface $rowUpdate)
-    {
-        $this->items[$rowUpdate->getId()] = $rowUpdate;
+    private $key;
 
-        return $this;
+    /**
+     * @var string
+     */
+    private $domain;
+
+    /**
+     * @var array
+     */
+    private $parameters;
+
+    /**
+     * PrestaShopCoreException constructor.
+     * @param string $key
+     * @param string $domain
+     * @param array $parameters
+     */
+    public function __construct($key, $domain, array $parameters)
+    {
+        parent::__construct();
+        $this->key = $key;
+        $this->domain = $domain;
+        $this->parameters = $parameters;
     }
 
     /**
-     * {@inheritdoc}
+     * @return string
      */
-    public function remove(RowUpdateInterface $rowUpdate)
+    public function getKey()
     {
-        if (isset($this->items[$rowUpdate->getId()])) {
-            unset($this->items[$rowUpdate->getId()]);
-        }
-
-        return $this;
+        return $this->key;
     }
 
     /**
-     * {@inheritdoc}
+     * @return string
+     */
+    public function getDomain()
+    {
+        return $this->domain;
+    }
+
+    /**
+     * @return array
+     */
+    public function getParameters()
+    {
+        return $this->parameters;
+    }
+
+    /**
+     * @return array
      */
     public function toArray()
     {
-        $rowUpdates = [];
-
-        /** @var RowUpdateInterface $item */
-        foreach ($this->items as $item) {
-            $rowUpdates[] = [
-                'id' => $item->getId(),
-                'oldPosition' => $item->getOldPosition(),
-                'newPosition' => $item->getNewPosition(),
-            ];
-        }
-
-        return $rowUpdates;
+        return [
+            'key' => $this->key,
+            'domain' => $this->domain,
+            'parameters' => $this->parameters,
+        ];
     }
 }

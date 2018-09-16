@@ -35,7 +35,7 @@ use PrestaShop\PrestaShop\Core\Grid\Position\UpdateHandler\PositionUpdateHandler
  * Class GridPositionUpdater, this class is responsible for updating the position of items
  * of a grid using the information from a PositionUpdateInterface object.
  */
-class GridPositionUpdater implements GridPositionUpdaterInterface
+final class GridPositionUpdater implements GridPositionUpdaterInterface
 {
     /**
      * @var PositionUpdateHandlerInterface
@@ -71,9 +71,9 @@ class GridPositionUpdater implements GridPositionUpdaterInterface
     {
         $positions = $this->updateHandler->getCurrentPositions($positionUpdate->getPositionDefinition(), $positionUpdate->getParentId());
 
-        /** @var RowUpdateInterface $rowUpdate */
-        foreach ($positionUpdate->getRowUpdateCollection() as $rowUpdate) {
-            $positions[$rowUpdate->getId()] = $rowUpdate->getNewPosition();
+        /** @var PositionModificationInterface $rowModification */
+        foreach ($positionUpdate->getPositionModificationCollection() as $rowModification) {
+            $positions[$rowModification->getId()] = $rowModification->getNewPosition();
         }
 
         return $positions;
