@@ -48,6 +48,7 @@ class PrestaShopCoreException extends \Exception
 
     /**
      * PrestaShopCoreException constructor.
+     *
      * @param string $key
      * @param string $domain
      * @param array $parameters

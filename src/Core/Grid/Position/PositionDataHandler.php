@@ -38,7 +38,7 @@ class PositionDataHandler implements PositionDataHandlerInterface
 {
     /**
      * Transform the provided data into a PositionUpdate. You need to provided the data
-     * into a specific format:
+     * into a specific format:.
      *
      * $data = [
      *      'positions' => [
@@ -65,6 +65,7 @@ class PositionDataHandler implements PositionDataHandlerInterface
      * @param PositionDefinition $positionDefinition
      *
      * @return PositionUpdate
+     *
      * @throws PositionDataException
      */
     public function handleData(array $data, PositionDefinition $positionDefinition)
@@ -94,6 +95,7 @@ class PositionDataHandler implements PositionDataHandlerInterface
     /**
      * @param array $data
      * @param PositionDefinition $positionDefinition
+     *
      * @throws PositionDataException
      */
     private function validateData(array $data, PositionDefinition $positionDefinition)
@@ -117,7 +119,9 @@ class PositionDataHandler implements PositionDataHandlerInterface
 
     /**
      * Validate the position format, throw a PositionDataException if is not correct.
+     *
      * @param array $position
+     *
      * @throws PositionDataException
      */
     private function validatePositionData(array $position)
