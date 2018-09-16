@@ -261,6 +261,21 @@ class PrestaShopAutoload
         }
         // Ignore for filesystems that do not support umask
         @chmod($tmpFile, 0666);
+        // If the file exists 'rename' can fail with access denied message, remove it first.
+        if (is_file($filename)) {
+            @unlink($filename);
+            if (is_file($filename)) {
+                // File handler is not immediately released, especially in Windows.
+                // Wait for a while, but not very long.
+                for ($i = 0; $i < 5; $i++) {             
+                    time_nanosleep(0, 100000000); // 0.1 sec
+                    clearstatcache(true, $filename); // essential line, because results of 'is_file' are cached
+                    if (!is_file($filename)) {
+                        break;
+                    }
+                }
+            }
+        }
         rename($tmpFile, $filename);
 
         return true;
