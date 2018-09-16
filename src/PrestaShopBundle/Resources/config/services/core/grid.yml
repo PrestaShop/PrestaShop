@@ -49,6 +49,7 @@ services:
         arguments:
             - '@prestashop.core.grid.query_builder.meta'
             - '@prestashop.core.hook.dispatcher'
+            - '@prestashop.core.grid.query.doctrine_query_parser'
             - 'meta'
 
     # Grid definition factories
@@ -186,11 +187,11 @@ services:
     prestashop.core.grid.query_builder.meta:
         class: 'PrestaShop\PrestaShop\Core\Grid\Query\MetaQueryBuilder'
         parent: 'prestashop.core.grid.abstract_query_builder'
-        public: true
         arguments:
             - '@prestashop.core.query.doctrine_search_criteria_applicator'
             - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
             - "@=service('prestashop.adapter.legacy.context').getContext().shop.id"
+        public: true
 
     # Grid Query parser
     prestashop.core.grid.query.doctrine_query_parser:
