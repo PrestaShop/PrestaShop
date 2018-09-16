@@ -26,9 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Position;
 
-use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Driver\Statement;
-use GuzzleHttp\Exception\ConnectException;
 use PrestaShop\PrestaShop\Core\Grid\Position\UpdateHandler\PositionUpdateHandlerInterface;
 
 /**
@@ -45,7 +42,8 @@ final class GridPositionUpdater implements GridPositionUpdaterInterface
     /**
      * @param PositionUpdateHandlerInterface $updateHandler
      */
-    public function __construct(PositionUpdateHandlerInterface $updateHandler) {
+    public function __construct(PositionUpdateHandlerInterface $updateHandler)
+    {
         $this->updateHandler = $updateHandler;
     }
 
