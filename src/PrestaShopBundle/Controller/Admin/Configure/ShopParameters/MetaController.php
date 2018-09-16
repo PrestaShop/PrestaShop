@@ -46,7 +46,7 @@ class MetaController extends FrameworkBundleAdminController
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
-     * @Template("@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/meta.html.twig")
+     * @Template("@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/meta.html.twig")
      *
      * @param MetaFilters $filters
      *
