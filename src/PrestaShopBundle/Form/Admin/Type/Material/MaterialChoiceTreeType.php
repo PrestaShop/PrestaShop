@@ -38,11 +38,17 @@ class MaterialChoiceTreeType extends AbstractType
      */
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
+        $selectedData = [];
+        if (null !== $form->getData()) {
+            $selectedData = is_array($form->getData()) ? $form->getData() : [$form->getData()];
+        }
+
         $view->vars['multiple'] = $options['multiple'];
         $view->vars['choices_tree'] = $options['choices_tree'];
         $view->vars['choice_label'] = $options['choice_label'];
         $view->vars['choice_value'] = $options['choice_value'];
         $view->vars['choice_children'] = $options['choice_children'];
+        $view->vars['selected_values'] = $selectedData;
     }
 
     /**
