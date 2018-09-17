@@ -81,7 +81,6 @@ class CategoryType extends TranslatorAwareType
             ->add('description', TranslatableType::class, [
                 'type' => TextareaType::class,
                 'required' => false,
-                'locales' => $this->locales,
             ])
             ->add('cover_image', FileType::class, [
                 'required' => false,
