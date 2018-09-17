@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Category\Exception\CategoryExcepti
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Catalog\Category\CategoryType;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class CategoryController extends FrameworkBundleAdminController
 {
@@ -99,5 +100,18 @@ class CategoryController extends FrameworkBundleAdminController
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Categories/add.html.twig', [
             'categoryForm' => $categoryCreateForm->createView(),
         ]);
+    }
+
+    /**
+     * Show & process category editing
+     *
+     * @param int $categoryId
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function editAction($categoryId, Request $request)
+    {
+
     }
 }
