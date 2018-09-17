@@ -38,6 +38,8 @@ use PrestaShopBundle\Form\Admin\Type\TranslateType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -72,16 +74,18 @@ class CategoryType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('name', TranslateTextType::class, [
-                'locales' => $this->locales,
+            ->add('name', TranslatableType::class, [
+                'type' => TextType::class,
             ])
             ->add('active', SwitchType::class, [
                 'required' => false,
                 'data' => true,
             ])
             ->add('id_parent', CategoryChoiceTreeType::class)
-            ->add('description', TranslateTextareaType::class, [
+            ->add('description', TranslatableType::class, [
+                'type' => TextareaType::class,
                 'required' => false,
+                'locales' => $this->locales,
             ])
             ->add('cover_image', FileType::class, [
                 'required' => false,
@@ -93,8 +97,8 @@ class CategoryType extends TranslatorAwareType
                 'multiple' => true,
                 'required' => false,
             ])
-            ->add('meta_title', TranslateTextType::class, [
-                'locales' => $this->locales,
+            ->add('meta_title', TranslatableType::class, [
+                'type' => TextType::class,
                 'options' => [
                     'required' => false,
                 ],
@@ -104,22 +108,21 @@ class CategoryType extends TranslatorAwareType
                 'options' => [
                     'max_length' => 5,
                 ],
-                'locales' => $this->locales,
             ])
-            ->add('meta_description', TranslateTextareaType::class, [
-                'locales' => $this->locales,
+            ->add('meta_description', TranslatableType::class, [
+                'type' => TextareaType::class,
                 'options' => [
                     'required' => false,
                 ],
             ])
-            ->add('meta_keyword', TranslateTextType::class, [
-                'locales' => $this->locales,
+            ->add('meta_keyword', TranslatableType::class, [
+                'type' => TextType::class,
                 'options' => [
                     'required' => false,
                 ],
             ])
-            ->add('link_rewrite', TranslateTextType::class, [
-                'locales' => $this->locales,
+            ->add('link_rewrite', TranslatableType::class, [
+                'type' => TextType::class,
             ])
             ->add('group_association', MaterialChoiceTableType::class, [
                 'choices' => $this->customerGroupChoices,
