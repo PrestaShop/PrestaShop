@@ -94,12 +94,6 @@ class CategoryType extends TranslatorAwareType
                 'required' => false,
             ])
             ->add('meta_title', TranslatableType::class, [
-                'type' => TextType::class,
-                'options' => [
-                    'required' => false,
-                ],
-            ])
-            ->add('meta_title', TranslatableType::class, [
                 'type' => TextWithLengthCounterType::class,
                 'options' => [
                     'max_length' => 5,

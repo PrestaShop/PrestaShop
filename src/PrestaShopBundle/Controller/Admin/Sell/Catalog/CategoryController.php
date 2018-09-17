@@ -27,7 +27,10 @@
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Category\Command\AddCategoryCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Category\EditableCategory;
 use PrestaShop\PrestaShop\Core\Domain\Product\Category\Exception\CategoryException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Category\Query\GetCategoryForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Product\Category\ValueObject\CategoryId;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Catalog\Category\CategoryType;
 use Symfony\Component\HttpFoundation\Request;
@@ -112,7 +115,22 @@ class CategoryController extends FrameworkBundleAdminController
      */
     public function editAction($categoryId, Request $request)
     {
-        $categoryForm = $this->createForm(CategoryType::class);
+        $categoryId = new CategoryId($categoryId);
+        /** @var EditableCategory $editableCategory */
+        $editableCategory = $this->getQueryBus()->handle(new GetCategoryForEditing($categoryId));
+
+        $categoryForm = $this->createForm(CategoryType::class, [
+            'name' => $editableCategory->getName(),
+            'active' => $editableCategory->getName(),
+            'id_parent' => $editableCategory->getName(),
+            'description' => $editableCategory->getName(),
+            'meta_title' => $editableCategory->getMetaTitle(),
+            'meta_description' => $editableCategory->getMetaDescription(),
+            'meta_keyword' => $editableCategory->getMetaKeywords(),
+            'link_rewrite' => $editableCategory->getLinkRewrite(),
+            'group_association' => $editableCategory->getGroupAssociationIds(),
+            'shop_association' => $editableCategory->getShopAssociationIds(),
+        ]);
         $categoryForm->handleRequest($request);
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Categories/edit.html.twig', [
