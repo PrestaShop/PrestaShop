@@ -489,8 +489,6 @@
 											</script>
 										{/if}
 									{/if}
-									<div class="input-group">
-									{if isset($input.maxchar) && $input.maxchar}</div>{/if}
 								{elseif $input.type == 'checkbox'}
 									{if isset($input.expand)}
 										<a class="btn btn-default show_checkbox{if strtolower($input.expand.default) == 'hide'} hidden{/if}" href="#">
