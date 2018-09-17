@@ -39,6 +39,19 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class TranslatableType extends AbstractType
 {
     /**
+     * @var array
+     */
+    private $locales;
+
+    /**
+     * @param array $locales
+     */
+    public function __construct(array $locales)
+    {
+        $this->locales = $locales;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -73,7 +86,7 @@ class TranslatableType extends AbstractType
         $resolver->setDefaults([
             'type' => TextType::class,
             'options' => [],
-            'locales' => [],
+            'locales' => $this->locales,
         ]);
 
         $resolver->setAllowedTypes('locales', 'array');
