@@ -1156,19 +1156,4 @@ class ProductController extends FrameworkBundleAdminController
             'formId' => $step . '_' . $fieldName . '_rendered',
         ]);
     }
-
-    /**
-     * @param array $errors
-     * @param int $httpStatusCode
-     *
-     * @return JsonResponse
-     */
-    private function returnErrorJsonResponse(array $errors, $httpStatusCode)
-    {
-        $response = new JsonResponse();
-        $response->setStatusCode($httpStatusCode);
-        $response->setData($errors);
-
-        return $response;
-    }
 }

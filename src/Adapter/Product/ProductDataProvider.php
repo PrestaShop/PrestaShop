@@ -118,7 +118,7 @@ class ProductDataProvider
      *
      * @return string
      */
-    public function getLocation($id_product, $id_product_attribute = null)
+    public function getLocation($id_product, $id_product_attribute = 0)
     {
         return StockAvailable::getLocation($id_product, $id_product_attribute);
     }

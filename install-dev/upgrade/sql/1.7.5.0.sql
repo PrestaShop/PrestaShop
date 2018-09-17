@@ -9,4 +9,4 @@ ALTER TABLE `PREFIX_cms_lang`
 	ADD `head_seo_title` varchar(255) DEFAULT NULL AFTER `meta_title`;
 
 ALTER TABLE `PREFIX_stock_available`
-  ADD `location` VARCHAR(1) NOT NULL DEFAULT '' AFTER `out_of_stock`;
+  ADD `location` VARCHAR(255) NOT NULL DEFAULT '' AFTER `out_of_stock`;

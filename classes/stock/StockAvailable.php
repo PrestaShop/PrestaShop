@@ -369,25 +369,39 @@ class StockAvailableCore extends ObjectModel
      */
     public static function setLocation($id_product, $location, $id_shop = null, $id_product_attribute = 0)
     {
-        if (false === Validate::isUnsignedId($id_product)) {
-            return false;
+        if (
+            false === Validate::isUnsignedId($id_product)
+            || (((false === Validate::isUnsignedId($id_shop)) && (null !== $id_shop)))
+            || (false === Validate::isUnsignedId($id_product_attribute))
+            || (false === Validate::isString($location))
+        ) {
+            $serializedInputData = [
+                'id_product' => $id_product,
+                'id_shop' => $id_shop,
+                'id_product_attribute' => $id_product_attribute,
+                'location' => $location,
+            ];
+            throw new \InvalidArgumentException(sprintf(
+                'Could not update location as input data is not valid: %s',
+                json_encode($serializedInputData)
+            ));
         }
 
-        $existing_id = (int) StockAvailable::getStockAvailableIdByProductId((int) $id_product, (int) $id_product_attribute, $id_shop);
+        $existing_id = StockAvailable::getStockAvailableIdByProductId($id_product, $id_product_attribute, $id_shop);
 
         if ($existing_id > 0) {
             Db::getInstance()->update(
                 'stock_available',
                 array('location' => $location),
-                'id_product = ' . (int) $id_product .
-                (($id_product_attribute) ? ' AND id_product_attribute = ' . (int) $id_product_attribute : '') .
+                'id_product = ' . $id_product .
+                (($id_product_attribute) ? ' AND id_product_attribute = ' . $id_product_attribute : '') .
                 StockAvailable::addSqlShopRestriction(null, $id_shop)
             );
         } else {
             $params = array(
                 'location' => $location,
-                'id_product' => (int) $id_product,
-                'id_product_attribute' => (int) $id_product_attribute,
+                'id_product' => $id_product,
+                'id_product_attribute' => $id_product_attribute,
             );
 
             StockAvailable::addSqlShopParams($params, $id_shop);
@@ -749,9 +763,22 @@ class StockAvailableCore extends ObjectModel
      */
     public static function getLocation($id_product, $id_product_attribute = null, $id_shop = null)
     {
-        if (false === Validate::isUnsignedId($id_product)) {
-            return false;
+        if (
+            false === Validate::isUnsignedId($id_product)
+            || ((null !== $id_product_attribute) && (false === Validate::isUnsignedId($id_product_attribute)))
+            || ((null !== $id_shop) && (false === Validate::isUnsignedId($id_shop)))
+        ) {
+            $serializedInputData = [
+                'id_product' => $id_product,
+                'id_shop' => $id_shop,
+                'id_product_attribute' => $id_product_attribute,
+            ];
+            throw new \InvalidArgumentException(sprintf(
+                'Could not get location as input data is not valid: %s',
+                json_encode($serializedInputData)
+            ));
         }
+
         if (null === $id_product_attribute) {
             $id_product_attribute = 0;
         }
@@ -759,8 +786,8 @@ class StockAvailableCore extends ObjectModel
         $query = new DbQuery();
         $query->select('location');
         $query->from('stock_available');
-        $query->where('id_product = ' . (int) $id_product);
-        $query->where('id_product_attribute = ' . (int) $id_product_attribute);
+        $query->where('id_product = ' . $id_product);
+        $query->where('id_product_attribute = ' . $id_product_attribute);
 
         $query = StockAvailable::addSqlShopRestriction($query, $id_shop);
 

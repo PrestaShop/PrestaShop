@@ -222,7 +222,7 @@ class AdminProductWrapper
      */
     public function processLocation(Product $product, $location)
     {
-        StockAvailable::setLocation((int) $product->id, $location);
+        StockAvailable::setLocation($product->id, $location);
     }
 
     /**

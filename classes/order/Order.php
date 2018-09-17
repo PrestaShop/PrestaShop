@@ -639,7 +639,7 @@ class OrderCore extends ObjectModel
             }
 
             $this->setProductImageInformations($row);
-            $this->setProductCurrentStockInformations($row);
+            $this->setProductCurrentStock($row);
 
             // Backward compatibility 1.4 -> 1.5
             $this->setProductPrices($row);
@@ -699,7 +699,7 @@ class OrderCore extends ObjectModel
      *
      * @param array &$product
      */
-    protected function setProductCurrentStockInformations(&$product)
+    protected function setProductCurrentStock(&$product)
     {
         if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')
             && (int) $product['advanced_stock_management'] == 1
