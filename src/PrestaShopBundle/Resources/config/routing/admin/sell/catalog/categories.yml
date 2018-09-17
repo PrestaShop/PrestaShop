@@ -74,8 +74,10 @@ admin_category_create:
         _legacy_controller: AdminCategories
 
 admin_category_edit:
-    path: /{id}/edit
-    methods: ['GET', 'POST']
+    path: /{categoryId}/edit
+    methods: [GET, POST]
     defaults:
         _controller: PrestaShopBundle:Admin\Sell\Catalog\Category:edit
         _legacy_controller: AdminCategories
+    requirements:
+        categoryId: \d+
