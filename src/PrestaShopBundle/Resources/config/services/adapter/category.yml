@@ -1,5 +1,4 @@
 services:
-<<<<<<< HEAD
   _defaults:
     public: true
 
@@ -50,10 +49,15 @@ services:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Category\Command\BulkDeleteCategoriesCommand
 
-  prestashop.adapter.category.command_handler.add_category_handler:
-    class: 'PrestaShop\PrestaShop\Adapter\Category\CommandHandler\AddCategoryHandler'
-    arguments:
-      - '@prestashop.adapter.image.uploader.category_cover_image_uploader'
-      - '@prestashop.adapter.image.uploader.category_thumbnail_image_uploader'
-    tags:
-      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Product\Category\Command\AddCategoryCommand' }
+    prestashop.adapter.category.command_handler.add_category_handler:
+        class: 'PrestaShop\PrestaShop\Adapter\Category\CommandHandler\AddCategoryHandler'
+        arguments:
+            - '@prestashop.adapter.image.uploader.category_cover_image_uploader'
+            - '@prestashop.adapter.image.uploader.category_thumbnail_image_uploader'
+        tags:
+            - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Product\Category\Command\AddCategoryCommand' }
+
+    prestashop.adapter.category.query_handler.get_category_for_editing:
+        class: 'PrestaShop\PrestaShop\Adapter\Category\QueryHandler\GetCategoryForEditingHandler'
+        tags:
+            - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Product\Category\Query\GetCategoryForEditing' }
