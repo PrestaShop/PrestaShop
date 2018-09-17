@@ -515,7 +515,7 @@ services:
             - { name: form.type }
 
     form.type.translations.copy_language:
-        class: 'PrestaShopBundle\Form\Admin\Improve\International\Translations\CopyLanguageType'
+        class: 'PrestaShopBundle\CaForm\Admin\Improve\International\Translations\CopyLanguageType'
         parent: 'form.type.translatable.aware'
         public: true
         arguments:
@@ -622,5 +622,12 @@ services:
         class: 'PrestaShopBundle\Form\Admin\Type\CategoryChoiceTreeType'
         arguments:
             - '@prestashop.core.api.category.repository'
+        tags:
+            - { name: form.type }
+
+    form.type.common.translatable:
+        class: 'PrestaShopBundle\Form\Admin\Type\TranslatableType'
+        arguments:
+            - "@=service('prestashop.adapter.legacy.context').getLanguages()"
         tags:
             - { name: form.type }
