@@ -96,7 +96,6 @@ module.exports = {
         titles_tab: '//*[@id="head_tabs"]//a[text()="Titles"]',
         contact_submenu: '#subtab-AdminParentStores',
         stores_tab: '//*[@id="main"]//div[@class="page-head-tabs"]//a[text()="Stores"]',
-        traffic_seo_submenu: '#subtab-AdminParentMeta',
         search_engines_tab: '//*[@id="main"]//div[@class="page-head-tabs"]//a[text()="Search Engines"]',
         referrers_tab: '//*[@id="main"]//div[@class="page-head-tabs"]//a[text()="Referrers"]',
         search_submenu: '#subtab-AdminParentSearchConf',

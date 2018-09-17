@@ -472,12 +472,6 @@ class CommonClient {
       }, selector);
   }
 
-  middleClick(selector) {
-    return this.client
-      .waitForExist(selector, 9000)
-      .middleClick(selector);
-  }
-
   stringifyNumber(number) {
     let special = ['zeroth', 'first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth', 'ninth', 'tenth', 'eleventh', 'twelfth', 'thirteenth', 'fourteenth', 'fifteenth', 'sixteenth', 'seventeenth', 'eighteenth', 'nineteenth'];
     let deca = ['twent', 'thirt', 'fort', 'fift', 'sixt', 'sevent', 'eight', 'ninet'];
@@ -524,8 +518,8 @@ class CommonClient {
       .refresh();
   }
 
-  middleClick(selector, pause = 2000) {
-    if (global.isVisible) {
+  middleClick(selector, globalVisibility = true, pause = 2000) {
+    if(visibility){
       return this.client
         .moveToObject(selector)
         .pause(pause)
@@ -534,6 +528,12 @@ class CommonClient {
       return this.client.pause(1000);
     }
   }
+
+/*  middleClick(selector,) {
+    return this.client
+      .waitForExist(selector, 9000)
+      .middleClick(selector);
+  }*/
 
   getParamFromURL(param, pause = 0) {
     return this.client
