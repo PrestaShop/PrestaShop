@@ -5,6 +5,15 @@ services:
     # Data providers service
     prestashop.adapter.data_provider.currency:
         class: PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider
+        arguments:
+          - "@prestashop.adapter.legacy.configuration"
+          - "@=service('prestashop.adapter.legacy.context').getContext().shop?service('prestashop.adapter.legacy.context').getContext().shop.id"
+
+    prestashop.adapter.legacy.configuration:
+        class: PrestaShop\PrestaShop\Adapter\Configuration
+
+    prestashop.adapter.legacy.context:
+        class: PrestaShop\PrestaShop\Adapter\LegacyContext
 
     # Localization
     prestashop.core.localization.cache.adapter:
