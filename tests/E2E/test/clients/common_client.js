@@ -251,6 +251,12 @@ class CommonClient {
           .waitForExist(selector, 90000)
           .then(() => this.client.getAttribute(selector, attribute))
           .then((text) => expect(text).to.be.equal(value));
+      case "notequal":
+        return this.client
+          .pause(pause)
+          .waitForExist(selector, 90000)
+          .then(() => this.client.getAttribute(selector, attribute))
+          .then((text) => expect(text).to.not.equal(value));
     }
   }
 
@@ -442,6 +448,17 @@ class CommonClient {
       .execute(function (content) {
         return (tinyMCE.activeEditor.setContent(content));
       }, content);
+  }
+
+  checkTextEditor(selector, content, pause = 0) {
+    return this.client
+      .pause(pause)
+      .scrollTo(selector)
+      .waitForExistAndClick(selector)
+      .execute(function () {
+        return (tinyMCE.activeEditor.getContent());
+      })
+      .then((values) => expect(values.value.indexOf(content) >= 0).to.equal(true));
   }
 
   editObjectData(object, type = '') {

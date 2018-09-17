@@ -1,7 +1,6 @@
 module.exports = Object.assign(
   {
     CatalogPage: {
-      menu_button: '//*[@id="subtab-AdminCatalog"]/a',
       success_panel: '//*[@id="content"]/div[@class="bootstrap"]/div[contains(@class, "success")]',
       danger_panel: '//*[@id="content"]/div[@class="bootstrap"]/div[contains(@class, "danger")]',
       select_all_product_button: '//*[@id="bulk_action_select_all"]/..',

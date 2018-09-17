@@ -32,7 +32,7 @@ class Product extends CommonClient {
       .then((text) => expect(text).to.be.true);
   }
 
-  openAllCategory() {
+  openAllCategories() {
     return this.client
       .scrollTo(AddProductPage.catalog_home, 50)
       .waitForExistAndClick(AddProductPage.catalog_home)
@@ -265,6 +265,24 @@ class Product extends CommonClient {
       .getText(selector).then(function (status) {
         global.productStatus[i] = status;
       });
+  }
+
+  checkFeatureValue(predefinedValueSelector, customValueSelector, featureData) {
+    if(global.isVisible) {
+      if(featureData.predefined_value !== '') {
+        return this.client
+          .isSelected(predefinedValueSelector)
+          .then((value) => expect(value).to.be.equal(true));
+      } else if (featureData.customized_value !== '') {
+        return this.client
+          .getAttribute(customValueSelector, 'value')
+          .then((value) => expect(value).to.be.equal(featureData.customized_value));
+      } else {
+        return this.client
+          .pause(0)
+          .then(() => expect(featureData.predefined_value !== '' && featureData.customized_value !== '', "You must choose a pre-defined value or set the customized value").to.be.equal(true));
+      }
+    }
   }
 
 }
