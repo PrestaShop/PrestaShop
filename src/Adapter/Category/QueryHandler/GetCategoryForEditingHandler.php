@@ -50,8 +50,6 @@ final class GetCategoryForEditingHandler implements GetCategoryForEditingHandler
             );
         }
 
-        dump($category);
-
         $editableCategory = new EditableCategory(
             $category->name,
             (bool) $category->active,
@@ -64,8 +62,6 @@ final class GetCategoryForEditingHandler implements GetCategoryForEditingHandler
             $category->getGroups(),
             $category->getAssociatedShops()
         );
-
-        dump($editableCategory);
 
         return $editableCategory;
     }
