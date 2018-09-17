@@ -121,9 +121,9 @@ class CategoryController extends FrameworkBundleAdminController
 
         $categoryForm = $this->createForm(CategoryType::class, [
             'name' => $editableCategory->getName(),
-            'active' => $editableCategory->getName(),
-            'id_parent' => $editableCategory->getName(),
-            'description' => $editableCategory->getName(),
+            'active' => $editableCategory->isActive(),
+            'id_parent' => $editableCategory->getParentId(),
+            'description' => $editableCategory->getDescription(),
             'meta_title' => $editableCategory->getMetaTitle(),
             'meta_description' => $editableCategory->getMetaDescription(),
             'meta_keyword' => $editableCategory->getMetaKeywords(),
