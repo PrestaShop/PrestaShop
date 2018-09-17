@@ -31,6 +31,7 @@ use PrestaShopBundle\Form\Admin\Type\Material\MaterialChoiceTableType;
 use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TextWithLengthCounterType;
+use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslateTextareaType;
 use PrestaShopBundle\Form\Admin\Type\TranslateTextType;
 use PrestaShopBundle\Form\Admin\Type\TranslateType;
@@ -92,14 +93,18 @@ class CategoryType extends TranslatorAwareType
                 'multiple' => true,
                 'required' => false,
             ])
-//            ->add('meta_title', TranslateTextType::class, [
-//                'locales' => $this->locales,
-//                'options' => [
-//                    'required' => false,
-//                ],
-//            ])
-            ->add('meta_title', TextWithLengthCounterType::class, [
-                'max_length' => 5,
+            ->add('meta_title', TranslateTextType::class, [
+                'locales' => $this->locales,
+                'options' => [
+                    'required' => false,
+                ],
+            ])
+            ->add('meta_title', TranslatableType::class, [
+                'type' => TextWithLengthCounterType::class,
+                'options' => [
+                    'max_length' => 5,
+                ],
+                'locales' => $this->locales,
             ])
             ->add('meta_description', TranslateTextareaType::class, [
                 'locales' => $this->locales,
