@@ -13,3 +13,9 @@ services:
     prestashop.adapter.group.feature:
         class: 'PrestaShop\PrestaShop\Adapter\Feature\GroupFeature'
         arguments: ['@prestashop.adapter.legacy.configuration']
+
+    prestashop.adapter.multi_shop_feature:
+        class: 'PrestaShop\PrestaShop\Adapter\Feature\MultiShopFeature'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+            - '@prestashop.core.admin.shop.repository'

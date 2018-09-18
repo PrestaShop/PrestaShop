@@ -170,14 +170,4 @@ class Context
     {
         return new ShopGroup($shopGroupId);
     }
-
-    /**
-     * Checks if shop feature is active.
-     *
-     * @return bool
-     */
-    public function isShopFeatureActive()
-    {
-        return Shop::isFeatureActive();
-    }
 }

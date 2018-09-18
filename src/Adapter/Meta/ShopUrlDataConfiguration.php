@@ -82,7 +82,11 @@ final class ShopUrlDataConfiguration implements DataConfigurationInterface
             if ($this->validateConfiguration($configuration)) {
                 $this->mainShopUrl->domain = $configuration['domain'];
                 $this->mainShopUrl->domain_ssl = $configuration['domain_ssl'];
-                $this->mainShopUrl->physical_uri = (string) $configuration['physical_uri'];
+
+                if (is_string($configuration['physical_uri'])) {
+                    $this->mainShopUrl->physical_uri = $configuration['physical_uri'];
+                }
+
                 $this->mainShopUrl->update();
 
                 $this->configuration->set('PS_SHOP_DOMAIN', $configuration['domain']);
