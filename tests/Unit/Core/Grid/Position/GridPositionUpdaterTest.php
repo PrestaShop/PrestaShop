@@ -27,8 +27,11 @@
 namespace Tests\Unit\Core\Grid\Position;
 
 use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Core\Grid\Position\Exception\PositionException;
+use PrestaShop\PrestaShop\Core\Grid\Position\Exception\PositionUpdateException;
 use PrestaShop\PrestaShop\Core\Grid\Position\GridPositionUpdater;
 use PrestaShop\PrestaShop\Core\Grid\Position\PositionDefinition;
+use PrestaShop\PrestaShop\Core\Grid\Position\PositionDefinitionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Position\PositionModification;
 use PrestaShop\PrestaShop\Core\Grid\Position\PositionModificationCollection;
 use PrestaShop\PrestaShop\Core\Grid\Position\PositionUpdate;
@@ -39,10 +42,30 @@ class GridPositionUpdaterTest extends TestCase
     public function testUpdate()
     {
         $positionUpdate = $this->createPositionUpdate();
-        $updateHandler = $this->createUpdateHandlerMock();
+        //Most of the assertions are actually in the mock
+        $updateHandler = $this->createUpdateHandlerMockWithAssertions();
         $gridUpdater = new GridPositionUpdater($updateHandler);
 
         $gridUpdater->update($positionUpdate);
+    }
+
+    public function testUpdateException()
+    {
+        $positionUpdate = $this->createPositionUpdate();
+        $updateHandler = $this->createUpdateHandlerMockThrowingException();
+        $gridUpdater = new GridPositionUpdater($updateHandler);
+
+        $caughtException = null;
+        try {
+            $gridUpdater->update($positionUpdate);
+        } catch (PositionException $e) {
+            $caughtException = $e;
+        }
+        $this->assertNotNull($caughtException);
+        $this->assertInstanceOf(PositionUpdateException::class, $caughtException);
+        $this->assertEquals('Could not update #%i', $caughtException->getKey());
+        $this->assertEquals('Admin.Catalog.Notification', $caughtException->getDomain());
+        $this->assertSame([5], $caughtException->getParameters());
     }
 
     /**
@@ -57,7 +80,8 @@ class GridPositionUpdaterTest extends TestCase
 
         $positionUpdate = new PositionUpdate(
             $collection,
-            $this->getDefinition()
+            $this->getDefinition(),
+            42
         );
 
         return $positionUpdate;
@@ -66,11 +90,15 @@ class GridPositionUpdaterTest extends TestCase
     /**
      * @return \PHPUnit_Framework_MockObject_MockObject|PositionUpdateHandlerInterface
      */
-    private function createUpdateHandlerMock()
+    private function createUpdateHandlerMockWithAssertions()
     {
         $updaterMock = $this->createMock(PositionUpdateHandlerInterface::class);
         $updaterMock
             ->method('getCurrentPositions')
+            ->with(
+                $this->isInstanceOf(PositionDefinitionInterface::class),
+                $this->equalTo(42)
+            )
             ->willReturn([
                 1 => 0,
                 5 => 1,
@@ -80,7 +108,7 @@ class GridPositionUpdaterTest extends TestCase
         $updaterMock
             ->method('updatePositions')
             ->with(
-                $this->anything(),
+                $this->isInstanceOf(PositionDefinitionInterface::class),
                 $this->equalTo([
                     1 => 0,
                     5 => 2,
@@ -91,6 +119,42 @@ class GridPositionUpdaterTest extends TestCase
         return $updaterMock;
     }
 
+    private function createUpdateHandlerMockThrowingException()
+    {
+        $updaterMock = $this->createMock(PositionUpdateHandlerInterface::class);
+        $updaterMock
+            ->method('getCurrentPositions')
+            ->with(
+                $this->isInstanceOf(PositionDefinitionInterface::class),
+                $this->equalTo(42)
+            )
+            ->willReturn([
+                1 => 0,
+                5 => 1,
+                42 => 2,
+            ]);
+
+        $updaterMock
+            ->method('updatePositions')
+            ->with(
+                $this->isInstanceOf(PositionDefinitionInterface::class),
+                $this->equalTo([
+                    1 => 0,
+                    5 => 2,
+                    42 => 1,
+                ])
+            )
+            ->willThrowException(new PositionUpdateException(
+                'Could not update #%i',
+                'Admin.Catalog.Notification',
+                [5]
+            ))
+        ;
+
+        return $updaterMock;
+
+    }
+
     /**
      * @return PositionDefinition
      */
@@ -99,7 +163,8 @@ class GridPositionUpdaterTest extends TestCase
         return new PositionDefinition(
             'product',
             'id_product',
-            'position'
+            'position',
+            'id_category'
         );
     }
 }

@@ -57,7 +57,7 @@ final class GridPositionUpdater implements GridPositionUpdaterInterface
         //Sort by new position value
         asort($newPositions);
 
-        return $this->updateHandler->updatePositions($positionUpdate->getPositionDefinition(), $newPositions);
+        $this->updateHandler->updatePositions($positionUpdate->getPositionDefinition(), $newPositions);
     }
 
     /**
