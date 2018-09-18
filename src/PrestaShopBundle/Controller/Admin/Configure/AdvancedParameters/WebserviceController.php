@@ -318,8 +318,6 @@ class WebserviceController extends FrameworkBundleAdminController
             } else {
                 $this->flashErrors($saveErrors);
             }
-
-            return $this->redirectToRoute('admin_webservice');
         }
 
         return $this->redirectToRoute('admin_webservice');
