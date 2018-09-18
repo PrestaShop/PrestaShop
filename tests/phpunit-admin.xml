@@ -1,6 +1,9 @@
 <phpunit
   bootstrap="bootstrap-admin.php"
   processIsolation="false"
+  convertErrorsToExceptions   = "true"
+  convertNoticesToExceptions  = "true"
+  convertWarningsToExceptions = "true"
 >
     <php>
         <env name="SYMFONY_ENV" value="test"/>
