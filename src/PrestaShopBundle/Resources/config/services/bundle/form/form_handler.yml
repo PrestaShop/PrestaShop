@@ -288,9 +288,3 @@ services:
         arguments:
             - '@prestashop.core.command_bus'
             - '@prestashop.core.query_bus'
-
-    prestashop.admin.meta.form_handler:
-        class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta\MetaFormHandler'
-        arguments:
-            - '@form.factory'
-            - '@prestashop.admin.traffic_seo.meta.form_data_provider'
