@@ -32,9 +32,9 @@ use Symfony\Component\Translation\TranslatorInterface;
 use RuntimeException;
 
 /**
- * Looks at server configuration in order to check PrestaShop Webservice can be enabled.
+ * Looks at server configuration in order to check if PrestaShop's Webservice feature can be enabled.
  */
-final class WebserviceCanBeEnabledConfigurationChecker
+final class WebserviceCanBeEnabledConfigurationChecker implements ServerRequirementsCheckerInterface
 {
     const ISSUE_NOT_APACHE_SERVER = 'not_apache_server';
     const ISSUE_CANNOT_CHECK_APACHE_MODULES = 'cannot_check_apache_modules';
@@ -67,11 +67,11 @@ final class WebserviceCanBeEnabledConfigurationChecker
      * Analyses the server configuration (apache configuration and php settings)
      * to check whether PrestaShop Webservice can be used or not.
      *
-     * @param request $request (optional) Request
+     * @param Request $request (optional) Request
      *
      * @return array empty if no errors
      */
-    public function getErrors(Request $request = null)
+    public function check(Request $request = null)
     {
         $issues = $this->lookForIssues($request);
 
