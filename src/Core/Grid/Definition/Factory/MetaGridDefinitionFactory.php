@@ -84,7 +84,7 @@ final class MetaGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getName()
     {
-        return $this->trans('SEO & URLS', [], 'Admin.Navigation.Menu');
+        return $this->trans('SEO & URLs', [], 'Admin.Navigation.Menu');
     }
 
     /**
@@ -203,7 +203,7 @@ final class MetaGridDefinitionFactory extends AbstractGridDefinitionFactory
     {
         return (new GridActionCollection())
             ->add((new SimpleGridAction('common_refresh_list'))
-                ->setName($this->trans('Refresh list', [], 'Admin.Shopparameters.Feature'))
+                ->setName($this->trans('Refresh list', [], 'Admin.Advparameters.Feature'))
                 ->setIcon('refresh')
             )
             ->add((new SimpleGridAction('common_show_query'))
