@@ -53,13 +53,13 @@ class ShopUrlDataProvider
     /**
      * Gets main shop url data.
      *
-     * @return \ShopUrl
+     * @return ShopUrl
      *
      * @throws PrestaShopException
      */
     public function getMainShopUrl()
     {
-        /** @var \ShopUrl $result */
+        /** @var ShopUrl $result */
         $result = ShopUrl::getShopUrls($this->contextShopId)->where('main', '=', 1)->getFirst();
 
         if (!Validate::isLoadedObject($result)) {
@@ -74,7 +74,7 @@ class ShopUrlDataProvider
      *
      * @return bool
      *
-     * @throws \PrestaShopException
+     * @throws PrestaShopException
      */
     public function doesMainShopUrlExist()
     {
