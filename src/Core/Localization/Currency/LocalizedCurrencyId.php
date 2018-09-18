@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -28,12 +28,12 @@
 namespace PrestaShop\PrestaShop\Core\Localization\Currency;
 
 /**
- * Value-object representing an identifier for a currency, "translated" in a given locale (language + region)
+ * Value-object representing an identifier for a currency, "translated" in a given locale (language + region).
  */
 class LocalizedCurrencyId
 {
     /**
-     * ISO 4217 code of the currency
+     * ISO 4217 code of the currency.
      *
      * @var string
      */
@@ -41,7 +41,7 @@ class LocalizedCurrencyId
 
     /**
      * CurrencyData's data is translated in this locale.
-     * IETF tag (e.g.: fr-FR, en-US...)
+     * IETF tag (e.g.: fr-FR, en-US...).
      *
      * @var string
      */
@@ -49,15 +49,14 @@ class LocalizedCurrencyId
 
     /**
      * @param string $currencyCode
-     *   ISO 4217 currency code
-     *
+     *                             ISO 4217 currency code
      * @param $localeCode
      *  IETF tag (e.g.: fr-FR, en-US...)
      */
     public function __construct($currencyCode, $localeCode)
     {
         $this->currencyCode = $currencyCode;
-        $this->localeCode   = $localeCode;
+        $this->localeCode = $localeCode;
     }
 
     public function __toString()
