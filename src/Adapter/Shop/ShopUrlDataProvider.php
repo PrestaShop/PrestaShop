@@ -27,6 +27,8 @@
 namespace PrestaShop\PrestaShop\Adapter\Shop;
 
 use PrestaShopException;
+use Validate;
+use ShopUrl;
 
 /**
  * Class ShopUrlDataProvider is responsible for providing data from shop_url table.
@@ -58,10 +60,10 @@ class ShopUrlDataProvider
     public function getMainShopUrl()
     {
         /** @var \ShopUrl $result */
-        $result = \ShopUrl::getShopUrls($this->contextShopId)->where('main', '=', 1)->getFirst();
+        $result = ShopUrl::getShopUrls($this->contextShopId)->where('main', '=', 1)->getFirst();
 
-        if (!\Validate::isLoadedObject($result)) {
-            return new \ShopUrl();
+        if (!Validate::isLoadedObject($result)) {
+            return new ShopUrl();
         }
 
         return $result;
@@ -76,8 +78,8 @@ class ShopUrlDataProvider
      */
     public function doesMainShopUrlExist()
     {
-        $shopUrl = \ShopUrl::getShopUrls($this->contextShopId)->where('main', '=', 1)->getFirst();
+        $shopUrl = ShopUrl::getShopUrls($this->contextShopId)->where('main', '=', 1)->getFirst();
 
-        return \Validate::isLoadedObject($shopUrl);
+        return Validate::isLoadedObject($shopUrl);
     }
 }

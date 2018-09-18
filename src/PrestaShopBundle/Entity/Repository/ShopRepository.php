@@ -34,4 +34,11 @@ namespace PrestaShopBundle\Entity\Repository;
  */
 class ShopRepository extends \Doctrine\ORM\EntityRepository
 {
+    /**
+     * @return bool true if multiple shops exists.
+     */
+    public function haveMultipleShops()
+    {
+        return count($this->findAll()) > 1;
+    }
 }

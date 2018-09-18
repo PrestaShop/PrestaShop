@@ -76,7 +76,7 @@ class MetaController extends FrameworkBundleAdminController
         $defaultRoutesProvider = $this->get('prestashop.adapter.data_provider.default_route');
 
         $isShopContext = $context->isShopContext();
-        $isShopFeatureActive = $context->isShopFeatureActive();
+        $isShopFeatureActive = $this->get('prestashop.adapter.multi_shop_feature')->isActive();
 
         return [
             'layoutHeaderToolbarBtn' => [
