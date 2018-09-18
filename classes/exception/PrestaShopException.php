@@ -91,11 +91,7 @@ class PrestaShopExceptionCore extends Exception
         } else {
             // If not in mode dev, display an error page
             if (file_exists(_PS_ROOT_DIR_.'/error500.html')) {
-                $errorPage = file_get_contents(_PS_ROOT_DIR_.'/error500.html');
-                if (defined('_PS_ADMIN_DIR_')) {
-                    $errorPage = str_replace('<!-- ADMIN_ERROR_MESSAGE -->', '<h3>' . $this->getExtendedMessage() . '</h3>', $errorPage);
-                }
-                echo $errorPage;
+                echo file_get_contents(_PS_ROOT_DIR_.'/error500.html');
             }
         }
         // Log the error in the disk
