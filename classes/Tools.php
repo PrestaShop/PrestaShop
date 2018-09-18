@@ -738,24 +738,21 @@ class ToolsCore
     }
 
     /**
-     * Return price with currency sign for a given product
+     * Return price with currency sign for a given product.
      *
      * @deprecated Since 1.7.5.0. Please use Locale::formatPrice() instead
      * @see PrestaShop\PrestaShop\Core\Localization\Locale
      *
      * @param float $price
-     *  Product price
-     *
+     *                     Product price
      * @param object|array $currency
-     *  Current currency (object, id_currency, NULL => context currency)
-     *
+     *                               Current currency (object, id_currency, NULL => context currency)
      * @param bool $no_utf8
-     *  Not used anymore
-     *
+     *                      Not used anymore
      * @param Context|null $context
      *
      * @return string Price correctly formatted (sign, decimal separator...)
-     * if you modify this function, don't forget to modify the Javascript function formatCurrency (in tools.js)
+     *                if you modify this function, don't forget to modify the Javascript function formatCurrency (in tools.js)
      *
      * @throws LocalizationException
      */
@@ -771,7 +768,7 @@ class ToolsCore
             return $price;
         }
 
-        $context  = $context ?: Context::getContext();
+        $context = $context ?: Context::getContext();
         $currency = $currency ?: $context->currency;
 
         if (is_int($currency)) {
@@ -787,7 +784,7 @@ class ToolsCore
 
             /** @var LocaleRepository $localeRepository */
             $localeRepository = $container->get(self::SERVICE_LOCALE_REPOSITORY);
-            $locale           = $localeRepository->getLocale((string)$context->language->locale);
+            $locale = $localeRepository->getLocale((string) $context->language->locale);
         }
         $currencyCode = is_array($currency) ? $currency['iso_code'] : $currency->iso_code;
 
@@ -795,19 +792,18 @@ class ToolsCore
     }
 
     /**
-     * Returns a well formatted number
+     * Returns a well formatted number.
      *
      * @deprecated Since 1.7.5.0. Please use Locale::formatNumber() instead
      * @see PrestaShop\PrestaShop\Core\Localization\Locale
      *
      * @param float $number
-     *  The number to format
-     *
+     *                      The number to format
      * @param null $currency
-     *  not used anymore
+     *                       not used anymore
      *
      * @return string
-     *  The formatted number
+     *                The formatted number
      *
      * @throws Exception
      * @throws LocalizationException
@@ -821,7 +817,7 @@ class ToolsCore
         );
 
         $context = Context::getContext();
-        $locale  = $context->currentLocale;
+        $locale = $context->currentLocale;
         if (null === $locale) {
             $container = $context->controller->getContainer();
             if (null === $container) {
@@ -830,7 +826,7 @@ class ToolsCore
 
             /** @var LocaleRepository $localeRepo */
             $localeRepo = $container->get(self::SERVICE_LOCALE_REPOSITORY);
-            $locale     = $localeRepo->getLocale((string)$context->language->locale);
+            $locale = $localeRepo->getLocale((string) $context->language->locale);
         }
 
         return $locale->formatNumber($number);
