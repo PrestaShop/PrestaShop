@@ -102,7 +102,7 @@ services:
     prestashop.core.form.choice_provider.status:
         class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\StatusChoiceProvider'
 
-    prestashop.core.form.choice_provider.canonical_url:
-        class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CanonicalUrlChoiceProvider'
+    prestashop.core.form.choice_provider.canonical_redirect_type:
+        class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CanonicalRedirectTypeChoiceProvider'
         arguments:
             - '@translator'

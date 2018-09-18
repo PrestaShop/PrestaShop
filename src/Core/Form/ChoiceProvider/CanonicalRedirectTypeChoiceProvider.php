@@ -30,10 +30,10 @@ use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * Class CanonicalUrlChoiceProvider is responsible for providing choices for
+ * Class CanonicalRedirectTypeChoiceProvider is responsible for providing choices for
  * redirect to the canonical URL form field selection.
  */
-final class CanonicalUrlChoiceProvider implements FormChoiceProviderInterface
+final class CanonicalRedirectTypeChoiceProvider implements FormChoiceProviderInterface
 {
     /**
      * @var TranslatorInterface
@@ -41,7 +41,7 @@ final class CanonicalUrlChoiceProvider implements FormChoiceProviderInterface
     private $translator;
 
     /**
-     * CanonicalUrlChoiceProvider constructor.
+     * CanonicalRedirectTypeChoiceProvider constructor.
      *
      * @param TranslatorInterface $translator
      */
