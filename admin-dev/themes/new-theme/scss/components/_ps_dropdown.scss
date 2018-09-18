@@ -25,6 +25,7 @@
     border-radius: 0;
     min-width: 300px;
     margin-top: 4px;
+    padding: 0;
     .dropdown-item {
       cursor: pointer;
       display: flex;
@@ -37,8 +38,7 @@
       line-height: 0.75rem;
       margin: 0;
       .dropdown-item {
-        margin: 0.625em 0;
-        padding: 0.3125rem 1.25rem;
+        padding: 10px;
         &.selected {
           color: $gray-light;
         }
