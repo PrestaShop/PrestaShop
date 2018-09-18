@@ -59,5 +59,10 @@ services:
 
     prestashop.adapter.category.query_handler.get_category_for_editing:
         class: 'PrestaShop\PrestaShop\Adapter\Category\QueryHandler\GetCategoryForEditingHandler'
+        arguments:
+            - '@prestashop.adapter.category.image.category_thumbnail_retriever'
         tags:
             - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Product\Category\Query\GetCategoryForEditing' }
+
+    prestashop.adapter.category.image.category_thumbnail_retriever:
+        class: 'PrestaShop\PrestaShop\Adapter\Category\Image\CategoryThumbnailRetriever'
