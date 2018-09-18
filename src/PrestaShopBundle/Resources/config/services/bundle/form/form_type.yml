@@ -532,7 +532,7 @@ services:
         class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta\ShopUrlType'
         arguments:
             - '@=service("prestashop.adapter.hosting_information").isHostMode()'
-            - '@=service("prestashop.adapter.shop.context").isShopFeatureActive()'
+            - '@=service("prestashop.adapter.multi_shop_feature").isActive()'
             - '@=service("prestashop.adapter.shop.shop_url").doesMainShopUrlExist()'
         tags:
             - { name: form.type }

@@ -28,7 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter\Meta;
 
 use PrestaShop\PrestaShop\Adapter\File\HtaccessFileGenerator;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Adapter\Configuration;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -38,7 +38,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 final class SetUpUrlsDataConfiguration implements DataConfigurationInterface
 {
     /**
-     * @var ConfigurationInterface
+     * @var Configuration
      */
     private $configuration;
 
@@ -55,12 +55,12 @@ final class SetUpUrlsDataConfiguration implements DataConfigurationInterface
     /**
      * SetUpUrlsDataConfiguration constructor.
      *
-     * @param ConfigurationInterface $configuration
+     * @param Configuration $configuration
      * @param HtaccessFileGenerator $htaccessFileGenerator
      * @param TranslatorInterface $translator
      */
     public function __construct(
-        ConfigurationInterface $configuration,
+        Configuration $configuration,
         HtaccessFileGenerator $htaccessFileGenerator,
         TranslatorInterface $translator
     ) {
@@ -75,11 +75,11 @@ final class SetUpUrlsDataConfiguration implements DataConfigurationInterface
     public function getConfiguration()
     {
         return [
-            'friendly_url' => (bool) $this->configuration->get('PS_REWRITING_SETTINGS'),
-            'accented_url' => (bool) $this->configuration->get('PS_ALLOW_ACCENTED_CHARS_URL'),
+            'friendly_url' => $this->configuration->getBoolean('PS_REWRITING_SETTINGS'),
+            'accented_url' => $this->configuration->getBoolean('PS_ALLOW_ACCENTED_CHARS_URL'),
             'canonical_url_redirection' => $this->configuration->get('PS_CANONICAL_REDIRECT'),
-            'disable_apache_multiview' => (bool) $this->configuration->get('PS_HTACCESS_DISABLE_MULTIVIEWS'),
-            'disable_apache_mod_security' => (bool) $this->configuration->get('PS_HTACCESS_DISABLE_MODSEC'),
+            'disable_apache_multiview' => $this->configuration->getBoolean('PS_HTACCESS_DISABLE_MULTIVIEWS'),
+            'disable_apache_mod_security' => $this->configuration->getBoolean('PS_HTACCESS_DISABLE_MODSEC'),
         ];
     }
 
