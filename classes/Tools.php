@@ -2334,7 +2334,7 @@ class ToolsCore
             $cache_control = (int) Configuration::get('PS_HTACCESS_CACHE_CONTROL');
         }
         if (is_null($disable_multiviews)) {
-            $disable_multiviews = (int) Configuration::get('PS_HTACCESS_DISABLE_MULTIVIEWS');
+            $disable_multiviews = (bool) Configuration::get('PS_HTACCESS_DISABLE_MULTIVIEWS');
         }
 
         if ($disable_modsec === null) {

@@ -128,6 +128,8 @@ services:
         class: 'PrestaShop\PrestaShop\Adapter\File\HtaccessFileGenerator'
         arguments:
             - '@prestashop.adapter.cache_clearer'
+            - '@prestashop.adapter.tools'
+            - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_HTACCESS_DISABLE_MULTIVIEWS')"
 
     prestashop.adapter.file.robots_text_file_generator:
         class: 'PrestaShop\PrestaShop\Adapter\File\RobotsTextFileGenerator'

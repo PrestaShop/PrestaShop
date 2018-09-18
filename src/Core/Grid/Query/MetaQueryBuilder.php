@@ -98,7 +98,7 @@ final class MetaQueryBuilder extends AbstractDoctrineQueryBuilder
     }
 
     /**
-     * Gets query builder with common sql for meta table
+     * Gets query builder with common sql for meta table.
      *
      * @param array $filters
      *

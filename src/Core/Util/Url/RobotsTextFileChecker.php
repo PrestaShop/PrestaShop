@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Util\Url;
 
 /**
- * Class RobotsTextFileChecker
+ * Class RobotsTextFileChecker.
  */
 final class RobotsTextFileChecker implements UrlFileCheckerInterface
 {
@@ -51,7 +51,7 @@ final class RobotsTextFileChecker implements UrlFileCheckerInterface
      */
     public function isValidFile()
     {
-        $filePath = $this->rootDirectory.'/robots.txt';
+        $filePath = $this->rootDirectory . '/robots.txt';
 
         if (file_exists($filePath)) {
             return is_writable($filePath);

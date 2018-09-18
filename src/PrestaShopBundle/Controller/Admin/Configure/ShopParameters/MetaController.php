@@ -262,7 +262,7 @@ class MetaController extends FrameworkBundleAdminController
                     'Cannot write into file: %filename%. Please check write permissions.',
                     'Admin.Notifications.Error',
                     [
-                        '%filename%' => $rootDir.'/robots.txt'
+                        '%filename%' => $rootDir . '/robots.txt',
                     ]
                 )
             );

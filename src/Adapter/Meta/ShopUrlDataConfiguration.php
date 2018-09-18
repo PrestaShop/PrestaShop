@@ -26,14 +26,10 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Meta;
 
-use InvalidArgumentException;
-use PrestaShop\PrestaShop\Adapter\Validate;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
-use PrestaShopDatabaseException;
 use PrestaShopException;
 use ShopUrl;
-use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Class ShopUrlDataConfiguration is responsible for updating and getting data from shop_url table.

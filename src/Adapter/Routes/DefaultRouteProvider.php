@@ -38,7 +38,7 @@ class DefaultRouteProvider
      * Gets keywords used in generating different routes.
      *
      * @return array - the key is the route id  - product_rule, category_rule etc... and the values are keyword array
-     * used to generate the route. If param field exists in keywords array then it is mandatory field to use.
+     *               used to generate the route. If param field exists in keywords array then it is mandatory field to use.
      *
      * @throws PrestaShopException
      */

@@ -129,7 +129,7 @@ final class MetaSettingsFormDataProvider implements FormDataProviderInterface
      *
      * @param array $data
      *
-     * @return array - if array is not empty then error strings are returned.
+     * @return array - if array is not empty then error strings are returned
      *
      * @throws PrestaShopException
      */
@@ -162,7 +162,7 @@ final class MetaSettingsFormDataProvider implements FormDataProviderInterface
                 $patternErrors[] = $this->translator->trans(
                   'The route %routeRule% is not valid',
                   [
-                      '%routeRule%' => htmlspecialchars($rule)
+                      '%routeRule%' => htmlspecialchars($rule),
                   ],
                   'Admin.Shopparameters.Feature'
                 );
