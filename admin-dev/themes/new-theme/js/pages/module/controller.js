@@ -460,7 +460,7 @@ class AdminModuleController {
           && self.currentRefCategory !== container.find('.modules-list').data('name')
         ) || (
           self.currentRefStatus !== null
-          && container.find('.module-item').length !== 0
+          && container.find('.module-item').length === 0
         ) || (
           container.find('.module-item').length === 0 &&
           container.find('.modules-list').data('name') === self.CATEGORY_RECENTLY_USED
