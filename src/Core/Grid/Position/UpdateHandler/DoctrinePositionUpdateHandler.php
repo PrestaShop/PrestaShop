@@ -94,7 +94,6 @@ final class DoctrinePositionUpdateHandler implements PositionUpdateHandlerInterf
      */
     public function updatePositions(PositionDefinitionInterface $positionDefinition, array $newPositions)
     {
-        $errors = [];
         try {
             $this->connection->beginTransaction();
             $positionIndex = 0;
@@ -110,11 +109,11 @@ final class DoctrinePositionUpdateHandler implements PositionUpdateHandlerInterf
 
                 $statement = $qb->execute();
                 if ($statement instanceof Statement && $statement->errorCode()) {
-                    $errors[] = [
-                        'key' => 'Could not update #%i',
-                        'domain' => 'Admin.Catalog.Notification',
-                        'parameters' => [$rowId],
-                    ];
+                    throw new PositionUpdateException(
+                        'Could not update #%i',
+                        'Admin.Catalog.Notification',
+                        [$rowId]
+                    );
                 }
                 ++$positionIndex;
             }
