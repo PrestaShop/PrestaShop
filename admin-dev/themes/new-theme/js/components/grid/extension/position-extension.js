@@ -68,10 +68,10 @@ export default class PositionExtension {
         const method = $rowPositionContainer.data('update-method');
         const paginationOffset = parseInt($rowPositionContainer.data('pagination-offset'));
         const positions = this._getRowsPositions(paginationOffset);
-        let params = {
+        const params = {
             updatedRowId: $rowPositionContainer.data('id'),
             parentId: $rowPositionContainer.data('id-parent'),
-            positions: positions
+            positions: positions,
         };
 
         this._updatePosition(updateUrl, params, method);
@@ -85,12 +85,13 @@ export default class PositionExtension {
     _getRowsPositions(paginationOffset) {
         const tableData = JSON.parse($.tableDnD.jsonize());
         const rowsData = tableData[this.grid.getId()+'_grid_table'];
-        const regex = /row_(\d+)_(\d+)/;
+        const regex = /^row_(\d+)_(\d+)$/;
 
-        let positions = [];
         const rowsNb = rowsData.length;
-        for (let i = 0; i < rowsNb; ++i) {
-            let rowData = regex.exec(rowsData[i]);
+        let positions = [];
+        let rowData, i;
+        for (i = 0; i < rowsNb; ++i) {
+            rowData = regex.exec(rowsData[i]);
             positions.push({
                 rowId: rowData[1],
                 newPosition: paginationOffset + i,
@@ -108,13 +109,12 @@ export default class PositionExtension {
      */
     _addIdsToGridTableRows() {
         this.grid.getContainer()
-            .find('.js-grid-table')
-            .find('.js-' + this.grid.getId() + '-position')
+            .find('.js-grid-table .js-' + this.grid.getId() + '-position')
             .each((index, positionWrapper) => {
                 const $positionWrapper = $(positionWrapper);
                 const rowId = $positionWrapper.data('id');
                 const position = $positionWrapper.data('position');
-                const id = 'row_' + rowId + '_' + position;
+                const id = `row_${rowId}_${position}`;
                 $positionWrapper.closest('tr').attr('id', id);
             });
     }
@@ -129,8 +129,6 @@ export default class PositionExtension {
      * @private
      */
     _updatePosition(url, params, method) {
-        console.log(url, params, method);
-
         const isGetOrPostMethod = ['GET', 'POST'].includes(method);
 
         const $form = $('<form>', {
@@ -152,8 +150,9 @@ export default class PositionExtension {
         );
 
         const positionsNb = params.positions.length;
+        let position;
         for (let i = 0; i < positionsNb; ++i) {
-            let position = params.positions[i];
+            position = params.positions[i];
             $form.append(
                 $('<input>', {
                     'type': 'hidden',

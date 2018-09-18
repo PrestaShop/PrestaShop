@@ -27,6 +27,7 @@ use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use PrestaShop\PrestaShop\Core\Feature\TokenInUrls;
+use Symfony\Component\Routing\RouterInterface;
 
 class LinkCore
 {
@@ -810,11 +811,11 @@ class LinkCore
                 }
         }
 
-        if (is_null($routeName)) {
+        if (null === $routeName) {
             $routeName = $this->searchRouteFromRouter($sfRouter, $controller);
         }
 
-        if (!is_null($routeName)) {
+        if (null !== $routeName) {
             $sfRoute = array_key_exists('route', $sfRouteParams) ? $sfRouteParams['route'] : $routeName;
 
             return $sfRouter->generate($sfRoute, $sfRouteParams, UrlGeneratorInterface::ABSOLUTE_URL);
@@ -826,12 +827,12 @@ class LinkCore
     }
 
     /**
-     * @param \Symfony\Component\Routing\RouterInterface $sfRouter
+     * @param RouterInterface $sfRouter
      * @param string $controller
      *
      * @return string|null
      */
-    private function searchRouteFromRouter(\Symfony\Component\Routing\RouterInterface $sfRouter, $controller)
+    private function searchRouteFromRouter(RouterInterface $sfRouter, $controller)
     {
         /**
          * @var string
