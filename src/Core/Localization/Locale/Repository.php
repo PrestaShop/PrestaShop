@@ -48,7 +48,7 @@ class Repository implements RepositoryInterface
 {
     /**
      * Max number of digits to use in the fraction part of a decimal number
-     * This is a default value
+     * This is a default value.
      */
     const MAX_FRACTION_DIGITS = 3;
 
@@ -76,7 +76,7 @@ class Repository implements RepositoryInterface
 
     /**
      * Numbering system to use when formatting numbers.
-     * Default value: "latn"
+     * Default value: "latn".
      *
      * @see http://cldr.unicode.org/translation/numbering-systems
      *
@@ -87,7 +87,7 @@ class Repository implements RepositoryInterface
     /**
      * Currency display type
      * Default is "symbol". But sometimes you may want to display the currency code instead.
-     * Possible values: PrestaShop\PrestaShop\Core\Localization\Specification\Price::CURRENCY_DISPLAY_*
+     * Possible values: PrestaShop\PrestaShop\Core\Localization\Specification\Price::CURRENCY_DISPLAY_*.
      *
      * @var string
      */
@@ -108,7 +108,7 @@ class Repository implements RepositoryInterface
     protected $numberGroupingUsed;
 
     /**
-     * Max number of digits to display in a number's decimal part
+     * Max number of digits to display in a number's decimal part.
      *
      * @var int
      */
@@ -124,12 +124,12 @@ class Repository implements RepositoryInterface
         $maxFractionDigits = self::MAX_FRACTION_DIGITS
     ) {
         $this->cldrLocaleRepository = $cldrLocaleRepository;
-        $this->currencyRepository   = $currencyRepository;
-        $this->roundingMode         = $roundingMode;
-        $this->numberingSystem      = $numberingSystem;
-        $this->currencyDisplayType  = $currencyDisplayType;
-        $this->numberGroupingUsed   = $groupingUsed;
-        $this->maxFractionDigits    = $maxFractionDigits;
+        $this->currencyRepository = $currencyRepository;
+        $this->roundingMode = $roundingMode;
+        $this->numberingSystem = $numberingSystem;
+        $this->currencyDisplayType = $currencyDisplayType;
+        $this->numberGroupingUsed = $groupingUsed;
+        $this->maxFractionDigits = $maxFractionDigits;
     }
 
     /**
@@ -170,7 +170,7 @@ class Repository implements RepositoryInterface
             throw new LocalizationException('CLDR locale not found for locale code "' . $localeCode . '"');
         }
 
-        return (new SpecificationFactory)->buildNumberSpecification(
+        return (new SpecificationFactory())->buildNumberSpecification(
             $cldrLocale,
             $this->maxFractionDigits,
             $this->numberGroupingUsed
@@ -203,7 +203,7 @@ class Repository implements RepositoryInterface
         $priceSpecifications = new PriceSpecificationMap();
         foreach ($currencies as $currency) {
             // Build the spec
-            $thisPriceSpecification = (new SpecificationFactory)->buildPriceSpecification(
+            $thisPriceSpecification = (new SpecificationFactory())->buildPriceSpecification(
                 $localeCode,
                 $cldrLocale,
                 $currency,

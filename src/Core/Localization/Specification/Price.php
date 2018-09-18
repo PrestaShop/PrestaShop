@@ -136,7 +136,7 @@ class Price extends NumberSpecification
 
     /**
      * Get the currency symbol
-     * e.g.: €
+     * e.g.: €.
      *
      * @return string
      */
@@ -147,7 +147,7 @@ class Price extends NumberSpecification
 
     /**
      * Get the currency ISO code
-     * e.g.: EUR
+     * e.g.: EUR.
      *
      * @return string
      */

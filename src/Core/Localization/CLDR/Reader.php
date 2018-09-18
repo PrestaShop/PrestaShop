@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationFileNotFoundEx
 use SimpleXMLElement;
 
 /**
- * CLDR files reader class
+ * CLDR files reader class.
  *
  * This class provides CLDR LocaleData objects built with data coming from official CLDR xml data files.
  */
@@ -63,7 +63,7 @@ class Reader implements ReaderInterface
 
     /**
      * Additional data about numbering systems
-     * Mainly used for digits (they depend on numbering system)
+     * Mainly used for digits (they depend on numbering system).
      *
      * @var SimpleXMLElement
      */
@@ -231,7 +231,7 @@ class Reader implements ReaderInterface
      *                          The locale data
      *
      * @throws LocalizationFileNotFoundException
-     *  If this locale code has no corresponding xml file
+     *                                           If this locale code has no corresponding xml file
      */
     protected function getMainXmlData($localeCode)
     {
@@ -275,7 +275,7 @@ class Reader implements ReaderInterface
             // Example for Chinese : zh_CN.xml doesn't exist. There is only a zh.xml file.
             // That's why we can't let this exception bubble up.
 
-            return new LocaleData;
+            return new LocaleData();
         }
 
         $supplementalData = ['digits' => $this->getDigitsData()];
@@ -338,7 +338,7 @@ class Reader implements ReaderInterface
                 if (!isset($symbolsNode['numberSystem'])) {
                     continue;
                 }
-                $thisNumberingSystem = (string)$symbolsNode['numberSystem'];
+                $thisNumberingSystem = (string) $symbolsNode['numberSystem'];
 
                 // Copying data from another node when relevant (alias)
                 if (isset($symbolsNode->alias)) {
@@ -413,7 +413,7 @@ class Reader implements ReaderInterface
             // systems.
             foreach ($numbersData->decimalFormats as $format) {
                 /** @var SimplexmlElement $format */
-                $numberSystem = (string)$format['numberSystem'];
+                $numberSystem = (string) $format['numberSystem'];
                 // If alias is set, we just copy data from another numbering system:
                 $alias = $format->alias;
                 if ($alias
@@ -444,7 +444,7 @@ class Reader implements ReaderInterface
             // systems.
             foreach ($numbersData->percentFormats as $format) {
                 /** @var SimplexmlElement $format */
-                $numberSystem = (string)$format['numberSystem'];
+                $numberSystem = (string) $format['numberSystem'];
                 // If alias is set, we just copy data from another numbering system:
                 $alias = $format->alias;
                 if ($alias
@@ -465,7 +465,7 @@ class Reader implements ReaderInterface
         if (isset($numbersData->currencyFormats)) {
             foreach ($numbersData->currencyFormats as $format) {
                 /** @var SimplexmlElement $format */
-                $numberSystem  = (string)$format['numberSystem'];
+                $numberSystem = (string) $format['numberSystem'];
                 $patternResult = $format->xpath(
                     'currencyFormatLength[not(@*)]/currencyFormat[@type="standard"]/pattern'
                 );
@@ -478,7 +478,7 @@ class Reader implements ReaderInterface
             // systems.
             foreach ($numbersData->currencyFormats as $format) {
                 /** @var SimplexmlElement $format */
-                $numberSystem = (string)$format['numberSystem'];
+                $numberSystem = (string) $format['numberSystem'];
                 // If alias is set, we just copy data from another numbering system:
                 $alias = $format->alias;
                 if ($alias
@@ -500,27 +500,27 @@ class Reader implements ReaderInterface
         $currencyData = $numbersData->currencies;
         if (isset($currencyData->currency)) {
             foreach ($currencyData->currency as $currencyNode) {
-                $currencyCode = (string)$currencyNode['type'];
+                $currencyCode = (string) $currencyNode['type'];
 
-                $currencyData          = new CurrencyData();
+                $currencyData = new CurrencyData();
                 $currencyData->isoCode = $currencyCode;
 
                 // Symbols
                 foreach ($currencyNode->symbol as $symbolNode) {
-                    $type = (string)$symbolNode['alt'];
+                    $type = (string) $symbolNode['alt'];
                     if (empty($type)) {
                         $type = 'default';
                     }
-                    $currencyData->symbols[$type] = (string)$symbolNode;
+                    $currencyData->symbols[$type] = (string) $symbolNode;
                 }
 
                 // Names
                 foreach ($currencyNode->displayName as $nameNode) {
                     $countContext = 'default';
                     if (!empty($nameNode['count'])) {
-                        $countContext = (string)$nameNode['count'];
+                        $countContext = (string) $nameNode['count'];
                     }
-                    $currencyData->displayNames[$countContext] = (string)$nameNode;
+                    $currencyData->displayNames[$countContext] = (string) $nameNode;
                 }
 
                 // Supplemental (fraction digits and numeric iso code)
@@ -530,8 +530,8 @@ class Reader implements ReaderInterface
 
                 if (!empty($codesMapping)) {
                     /** @var SimplexmlElement $codesMapping */
-                    $codesMapping                 = $codesMapping[0];
-                    $currencyData->numericIsoCode = (string)$codesMapping->attributes()->numeric;
+                    $codesMapping = $codesMapping[0];
+                    $currencyData->numericIsoCode = (string) $codesMapping->attributes()->numeric;
                 }
 
                 $fractionsData = $this->supplementalXml->supplementalData->xpath(
@@ -540,8 +540,8 @@ class Reader implements ReaderInterface
 
                 if (!empty($fractionsData)) {
                     /** @var SimplexmlElement $fractionsData */
-                    $fractionsData               = $fractionsData[0];
-                    $currencyData->decimalDigits = (int)(string)$fractionsData->attributes()->digits;
+                    $fractionsData = $fractionsData[0];
+                    $currencyData->decimalDigits = (int) (string) $fractionsData->attributes()->digits;
                 }
 
                 $localeData->currencies[$currencyCode] = $currencyData;
