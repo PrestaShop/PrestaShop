@@ -34,7 +34,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 /**
  * This form class generates the "Webservice configuration" form in Webservice page.
  */
-class WebserviceType extends CommonAbstractType
+class WebserviceConfigurationType extends CommonAbstractType
 {
     /**
      * {@inheritdoc}
@@ -47,7 +47,8 @@ class WebserviceType extends CommonAbstractType
             ])
             ->add('enable_cgi', SwitchType::class, [
                 'required' => true,
-            ]);
+            ])
+        ;
     }
 
     /**
