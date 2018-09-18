@@ -145,6 +145,3 @@ services:
             - '@translator'
             - '@prestashop.adapter.routes.route_validator'
             - '@prestashop.adapter.validate'
-
-    prestashop.admin.traffic_seo.meta.form_data_provider:
-        class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta\MetaFormDataProvider'
