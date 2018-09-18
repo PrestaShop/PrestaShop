@@ -72,10 +72,10 @@ class LocaleCache extends AbstractDataLayer implements CldrLocaleDataLayerInterf
      * Data is read from passed cache adapter
      *
      * @param string $localeCode
-     *  The CLDR LocaleData object identifier
+     *                           The CLDR LocaleData object identifier
      *
      * @return LocaleData|null
-     *  The wanted CLDR LocaleData object (null if not found)
+     *                         The wanted CLDR LocaleData object (null if not found)
      */
     protected function doRead($localeCode)
     {

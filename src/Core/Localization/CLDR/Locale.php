@@ -38,7 +38,7 @@ use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 class Locale
 {
     /**
-     * The locale code for this data (either language code or IETF tag)
+     * The locale code for this data (either language code or IETF tag).
      *
      * @var string
      */
@@ -46,21 +46,21 @@ class Locale
 
     /**
      * List of available numbering systems
-     * Array of strings (codes)
+     * Array of strings (codes).
      *
      * @var string[]
      */
     public $numberingSystems;
 
     /**
-     * Default numbering system
+     * Default numbering system.
      *
      * @var string
      */
     public $defaultNumberingSystem;
 
     /**
-     * Used to suppress groupings below a certain value
+     * Used to suppress groupings below a certain value.
      *
      * 1 -> grouping starts at 4 figures integers (1,000 and more)
      * 2 -> grouping starts at 5 figures integers (10,000 and more)
@@ -70,7 +70,7 @@ class Locale
     public $minimumGroupingDigits;
 
     /**
-     * Collection of all available symbols list (by numbering system)
+     * Collection of all available symbols list (by numbering system).
      *
      * @var NumberSymbolsData[]
      */
@@ -78,7 +78,7 @@ class Locale
 
     /**
      * Collection of all available decimal patterns (by numbering system)
-     * Array of strings (patterns)
+     * Array of strings (patterns).
      *
      * @var string[]
      */
@@ -86,7 +86,7 @@ class Locale
 
     /**
      * Collection of all available percent patterns (by numbering system)
-     * Array of strings (patterns)
+     * Array of strings (patterns).
      *
      * @var string[]
      */
@@ -94,14 +94,14 @@ class Locale
 
     /**
      * Collection of all available currency patterns (by numbering system)
-     * Array of strings (patterns)
+     * Array of strings (patterns).
      *
      * @var string[]
      */
     public $currencyPatterns;
 
     /**
-     * All currencies, by ISO code
+     * All currencies, by ISO code.
      *
      * @var CurrencyData[]
      */
@@ -109,22 +109,22 @@ class Locale
 
     public function __construct(LocaleData $localeData)
     {
-        $this->localeCode             = $localeData->localeCode;
-        $this->numberingSystems       = $localeData->numberingSystems;
+        $this->localeCode = $localeData->localeCode;
+        $this->numberingSystems = $localeData->numberingSystems;
         $this->defaultNumberingSystem = $localeData->defaultNumberingSystem;
-        $this->minimumGroupingDigits  = $localeData->minimumGroupingDigits;
-        $this->numberSymbols          = $localeData->numberSymbols;
-        $this->decimalPatterns        = $localeData->decimalPatterns;
-        $this->percentPatterns        = $localeData->percentPatterns;
-        $this->currencyPatterns       = $localeData->currencyPatterns;
-        $this->currencies             = $localeData->currencies;
+        $this->minimumGroupingDigits = $localeData->minimumGroupingDigits;
+        $this->numberSymbols = $localeData->numberSymbols;
+        $this->decimalPatterns = $localeData->decimalPatterns;
+        $this->percentPatterns = $localeData->percentPatterns;
+        $this->currencyPatterns = $localeData->currencyPatterns;
+        $this->currencies = $localeData->currencies;
     }
 
     /**
-     * Get the code of this Locale (simplified IETF notation)
+     * Get the code of this Locale (simplified IETF notation).
      *
      * @return string
-     *  The locale code
+     *                The locale code
      */
     public function getLocaleCode()
     {
@@ -132,7 +132,7 @@ class Locale
     }
 
     /**
-     * Get all available numbering systems for this locale
+     * Get all available numbering systems for this locale.
      *
      * @return string[]
      */
@@ -142,7 +142,7 @@ class Locale
     }
 
     /**
-     * Get the default numbering system for this locale
+     * Get the default numbering system for this locale.
      *
      * @return string
      */
@@ -152,7 +152,7 @@ class Locale
     }
 
     /**
-     * Get the minimum grouping digits number when formatting numbers for this locale
+     * Get the minimum grouping digits number when formatting numbers for this locale.
      *
      * @return int
      */
@@ -162,10 +162,10 @@ class Locale
     }
 
     /**
-     * Get all available number symbols lists, by numbering system
+     * Get all available number symbols lists, by numbering system.
      *
      * @return NumberSymbolsData[]
-     *  All number symbols lists (by numbering system)
+     *                             All number symbols lists (by numbering system)
      */
     public function getAllNumberSymbols()
     {
@@ -176,14 +176,14 @@ class Locale
      * Get the number symbols to use for a given numbering system.
      *
      * @param string|null $numberingSystem
-     *  The numbering system of the wanted symbols set.
-     *  If null, the default numbering system of this locale will be used.
+     *                                     The numbering system of the wanted symbols set.
+     *                                     If null, the default numbering system of this locale will be used.
      *
      * @return NumberSymbolsData
-     *  The wanted number symbols
+     *                           The wanted number symbols
      *
      * @throws LocalizationException
-     *  When passed $numberingSystem is invalid
+     *                               When passed $numberingSystem is invalid
      */
     public function getNumberSymbolsByNumberingSystem($numberingSystem = null)
     {
@@ -201,14 +201,14 @@ class Locale
      * Get the pattern to use when formatting a decimal number (for a given numbering system).
      *
      * @param string|null $numberingSystem
-     *  The numbering system of the wanted symbols set.
-     *  If null, the default numbering system of this locale will be used.
+     *                                     The numbering system of the wanted symbols set.
+     *                                     If null, the default numbering system of this locale will be used.
      *
      * @return string
-     *  The decimal pattern
+     *                The decimal pattern
      *
      * @throws LocalizationException
-     *  When passed numbering system is invalid
+     *                               When passed numbering system is invalid
      */
     public function getDecimalPattern($numberingSystem = null)
     {
@@ -226,14 +226,14 @@ class Locale
      * Get the pattern to use when formatting a percentage (for a given numbering system).
      *
      * @param string|null $numberingSystem
-     *  The numbering system of the wanted symbols set.
-     *  If null, the default numbering system of this locale will be used.
+     *                                     The numbering system of the wanted symbols set.
+     *                                     If null, the default numbering system of this locale will be used.
      *
      * @return string
-     *  The percent pattern
+     *                The percent pattern
      *
      * @throws LocalizationException
-     *  When passed numbering system is invalid
+     *                               When passed numbering system is invalid
      */
     public function getPercentPattern($numberingSystem = null)
     {
@@ -251,14 +251,14 @@ class Locale
      * Get the pattern to use when formatting a price (for a given numbering system).
      *
      * @param string|null $numberingSystem
-     *  The numbering system of the wanted symbols set.
-     *  If null, the default numbering system of this locale will be used.
+     *                                     The numbering system of the wanted symbols set.
+     *                                     If null, the default numbering system of this locale will be used.
      *
      * @return string
-     *  The currency pattern
+     *                The currency pattern
      *
      * @throws LocalizationException
-     *  When passed numbering system is invalid
+     *                               When passed numbering system is invalid
      */
     public function getCurrencyPattern($numberingSystem = null)
     {
@@ -273,13 +273,13 @@ class Locale
     }
 
     /**
-     * Get a given CLDR Currency
+     * Get a given CLDR Currency.
      *
      * @param string $currencyCode
-     *  An ISO 4217 currency code
+     *                             An ISO 4217 currency code
      *
      * @return null|Currency
-     *  The wanted CLDR Currency. Null if this currency is not available for this locale.
+     *                       The wanted CLDR Currency. Null if this currency is not available for this locale.
      */
     public function getCurrency($currencyCode)
     {
@@ -291,13 +291,13 @@ class Locale
     }
 
     /**
-     * Get CLDR data of a given currency
+     * Get CLDR data of a given currency.
      *
      * @param string $currencyCode
-     *  An ISO 4217 currency code
+     *                             An ISO 4217 currency code
      *
      * @return null|CurrencyData
-     *  The wanted currency data. Null if this currency is not available for this locale.
+     *                           The wanted currency data. Null if this currency is not available for this locale.
      */
     public function getCurrencyData($currencyCode)
     {

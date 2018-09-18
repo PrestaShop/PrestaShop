@@ -26,10 +26,9 @@
 
 namespace PrestaShopBundle\Cache;
 
-use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
-use Tools;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 
 class LocalizationWarmer implements CacheWarmerInterface
 {

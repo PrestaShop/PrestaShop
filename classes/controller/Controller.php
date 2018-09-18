@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
@@ -184,7 +183,7 @@ abstract class ControllerCore
         if (null === $this->container) {
             $this->container = $this->buildContainer();
         }
-        $localeRepo                   = $this->get(self::SERVICE_LOCALE_REPOSITORY);
+        $localeRepo = $this->get(self::SERVICE_LOCALE_REPOSITORY);
         $this->context->currentLocale = $localeRepo->getLocale($this->context->language->locale);
     }
 

@@ -27,8 +27,6 @@
 /**
  * @property Currency $object
  */
-
-use PrestaShop\PrestaShop\Core\Cldr\Repository;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 
 class AdminCurrenciesControllerCore extends AdminController
@@ -98,45 +96,45 @@ class AdminCurrenciesControllerCore extends AdminController
         $this->fields_form = [
             'legend' => [
                 'title' => $this->trans('Currencies', [], 'Admin.Global'),
-                'icon'  => 'icon-money',
+                'icon' => 'icon-money',
             ],
-            'input'  => [
+            'input' => [
                 [
-                    'type'     => 'select',
-                    'col'      => '4',
-                    'label'    => $this->trans('Currency', [], 'Admin.Global'),
-                    'name'     => 'iso_code',
+                    'type' => 'select',
+                    'col' => '4',
+                    'label' => $this->trans('Currency', [], 'Admin.Global'),
+                    'name' => 'iso_code',
                     'required' => true,
-                    'hint'     => $this->trans('ISO code (e.g. USD for Dollars, EUR for Euros, etc.).', [], 'Admin.International.Help'),
-                    'options'  => [
+                    'hint' => $this->trans('ISO code (e.g. USD for Dollars, EUR for Euros, etc.).', [], 'Admin.International.Help'),
+                    'options' => [
                         'query' => $this->cldr->getAllCurrencies(),
-                        'name'  => 'name',
-                        'id'    => 'code',
+                        'name' => 'name',
+                        'id' => 'code',
                     ],
                 ],
                 [
-                    'type'      => 'text',
-                    'label'     => $this->trans('Exchange rate', [], 'Admin.International.Feature'),
-                    'name'      => 'conversion_rate',
+                    'type' => 'text',
+                    'label' => $this->trans('Exchange rate', [], 'Admin.International.Feature'),
+                    'name' => 'conversion_rate',
                     'maxlength' => 11,
-                    'required'  => true,
-                    'col'       => '2',
-                    'hint'      => $this->trans('Exchange rates are calculated from one unit of your shop\'s default currency. For example, if the default currency is euros and your chosen currency is dollars, type "1.20" (1&euro; = $1.20).', [], 'Admin.International.Help'),
+                    'required' => true,
+                    'col' => '2',
+                    'hint' => $this->trans('Exchange rates are calculated from one unit of your shop\'s default currency. For example, if the default currency is euros and your chosen currency is dollars, type "1.20" (1&euro; = $1.20).', [], 'Admin.International.Help'),
                 ],
                 [
-                    'type'     => 'hidden',
-                    'label'    => $this->trans('Enable', [], 'Admin.Actions'),
-                    'name'     => 'active',
+                    'type' => 'hidden',
+                    'label' => $this->trans('Enable', [], 'Admin.Actions'),
+                    'name' => 'active',
                     'required' => false,
-                    'is_bool'  => true,
-                    'values'   => [
+                    'is_bool' => true,
+                    'values' => [
                         [
-                            'id'    => 'active_on',
+                            'id' => 'active_on',
                             'value' => 1,
                             'label' => $this->trans('Enabled', [], 'Admin.Global'),
                         ],
                         [
-                            'id'    => 'active_off',
+                            'id' => 'active_off',
                             'value' => 0,
                             'label' => $this->trans('Disabled', [], 'Admin.Global'),
                         ],
