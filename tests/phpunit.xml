@@ -1,5 +1,10 @@
-<phpunit bootstrap="bootstrap.php"
-         color="true">
+<phpunit
+    bootstrap="bootstrap.php"
+    color="true"
+    convertErrorsToExceptions   = "true"
+    convertNoticesToExceptions  = "true"
+    convertWarningsToExceptions = "true"
+>
     <php>
         <server name="KERNEL_CLASS" value="AppKernel" />
         <env name="SYMFONY_ENV" value="test"/>

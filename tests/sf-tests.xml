@@ -6,6 +6,9 @@
   colors                      = "true"
   processIsolation            = "true"
   bootstrap                   = "bootstrap-sf.php"
+  convertErrorsToExceptions   = "true"
+  convertNoticesToExceptions  = "true"
+  convertWarningsToExceptions = "true"
 >
   <php>
     <server name="KERNEL_CLASS" value="AppKernel" />
