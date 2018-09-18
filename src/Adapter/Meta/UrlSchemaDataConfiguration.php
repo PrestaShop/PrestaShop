@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\ConfigurationInterface;
  * Class UrlSchemaDataConfiguration is responsible for validating, updating and retrieving data used in
  * Shop parameters -> Traffix & Seo -> Seo & Urls -> Set Shop URL form field.
  */
-class UrlSchemaDataConfiguration implements DataConfigurationInterface
+final class UrlSchemaDataConfiguration implements DataConfigurationInterface
 {
     /**
      * @var array
