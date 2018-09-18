@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -39,28 +39,28 @@ use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
  */
 class Currency
 {
-    const SYMBOL_TYPE_DEFAULT        = 'default';
-    const SYMBOL_TYPE_NARROW         = 'narrow';
+    const SYMBOL_TYPE_DEFAULT = 'default';
+    const SYMBOL_TYPE_NARROW = 'narrow';
     const DISPLAY_NAME_COUNT_DEFAULT = 'default';
-    const DISPLAY_NAME_COUNT_ONE     = 'one';
-    const DISPLAY_NAME_COUNT_OTHER   = 'other';
+    const DISPLAY_NAME_COUNT_ONE = 'one';
+    const DISPLAY_NAME_COUNT_OTHER = 'other';
 
     /**
-     * Alphabetic ISO 4217 currency code
+     * Alphabetic ISO 4217 currency code.
      *
      * @var string
      */
     protected $isoCode;
 
     /**
-     * Numeric ISO 4217 currency code
+     * Numeric ISO 4217 currency code.
      *
      * @var string
      */
     protected $numericIsoCode;
 
     /**
-     * Number of decimal digits to display for a price in this currency
+     * Number of decimal digits to display for a price in this currency.
      *
      * @var int
      */
@@ -81,7 +81,7 @@ class Currency
     protected $displayNames;
 
     /**
-     * Possible symbols (PrestaShop is using narrow)
+     * Possible symbols (PrestaShop is using narrow).
      *
      * e.g.:
      * [
@@ -95,18 +95,18 @@ class Currency
 
     public function __construct(CurrencyData $currencyData)
     {
-        $this->isoCode        = $currencyData->isoCode;
+        $this->isoCode = $currencyData->isoCode;
         $this->numericIsoCode = $currencyData->numericIsoCode;
-        $this->decimalDigits  = $currencyData->decimalDigits;
-        $this->displayNames   = $currencyData->displayNames;
-        $this->symbols        = $currencyData->symbols;
+        $this->decimalDigits = $currencyData->decimalDigits;
+        $this->displayNames = $currencyData->displayNames;
+        $this->symbols = $currencyData->symbols;
     }
 
     /**
-     * Get the ISO code of this currency
+     * Get the ISO code of this currency.
      *
      * @return string
-     *  The currency's ISO 4217 code
+     *                The currency's ISO 4217 code
      */
     public function getIsoCode()
     {
@@ -114,10 +114,10 @@ class Currency
     }
 
     /**
-     * Get the numeric ISO code of this currency
+     * Get the numeric ISO code of this currency.
      *
      * @return string
-     *  The currency's ISO 4217 numeric code
+     *                The currency's ISO 4217 numeric code
      */
     public function getNumericIsoCode()
     {
@@ -125,10 +125,10 @@ class Currency
     }
 
     /**
-     * Get the number of decimal digits to display when formatting a price with this currency
+     * Get the number of decimal digits to display when formatting a price with this currency.
      *
      * @return int
-     *  The number of decimal digits to display
+     *             The number of decimal digits to display
      */
     public function getDecimalDigits()
     {
@@ -136,16 +136,16 @@ class Currency
     }
 
     /**
-     * Get the display name for the passed count context
+     * Get the display name for the passed count context.
      *
      * @param string $countContext
-     *  The count context
-     *  "default" = talking about the currency (e.g.: "used currency is Euro")
-     *  "one"     = talking about one unit of this currency (e.g.: "one euro")
-     *  "other"   = talking about several units of this currency (e.g.: "ten euros")
+     *                             The count context
+     *                             "default" = talking about the currency (e.g.: "used currency is Euro")
+     *                             "one"     = talking about one unit of this currency (e.g.: "one euro")
+     *                             "other"   = talking about several units of this currency (e.g.: "ten euros")
      *
      * @return string
-     *  The wanted display name
+     *                The wanted display name
      */
     public function getDisplayName($countContext = 'default')
     {
@@ -156,13 +156,13 @@ class Currency
      * Get the symbol of this currency. Narrow symbol is returned by default.
      *
      * @param string $type
-     *  Possible value: "default" ("$") and "narrow" ("US$")
+     *                     Possible value: "default" ("$") and "narrow" ("US$")
      *
      * @return string
-     *  The currency's symbol
+     *                The currency's symbol
      *
      * @throws LocalizationException
-     *  When an invalid symbol type is passed
+     *                               When an invalid symbol type is passed
      */
     public function getSymbol($type = self::SYMBOL_TYPE_NARROW)
     {

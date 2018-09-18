@@ -67,7 +67,7 @@ interface CurrencyDataLayerInterface
      *                                               The lower data layer
      *
      * @return self
-     *  Fluent interface
+     *              Fluent interface
      */
     public function setLowerLayer(CurrencyDataLayerInterface $lowerLayer);
 }

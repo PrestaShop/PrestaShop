@@ -43,7 +43,7 @@ interface LocaleDataLayerInterface
      *                           eg: fr-FR, en-US
      *
      * @return LocaleData
-     *                        The searched locale's CLDR data
+     *                    The searched locale's CLDR data
      */
     public function read($localeCode);
 
@@ -51,15 +51,14 @@ interface LocaleDataLayerInterface
      * Write a locale's CLDR data object into the data source.
      *
      * @param string $localeCode
-     *  The locale code (simplified IETF tag syntax)
-     *  Combination of ISO 639-1 (2-letters language code) and ISO 3166-2 (2-letters region code)
-     *  eg: fr-FR, en-US
-     *
+     *                           The locale code (simplified IETF tag syntax)
+     *                           Combination of ISO 639-1 (2-letters language code) and ISO 3166-2 (2-letters region code)
+     *                           eg: fr-FR, en-US
      * @param LocaleData $localeData
-     *  The locale's CLDR data to write
+     *                               The locale's CLDR data to write
      *
      * @return LocaleData
-     *                        The locale's CLDR data to be written by the upper data layer
+     *                    The locale's CLDR data to be written by the upper data layer
      */
     public function write($localeCode, $localeData);
 

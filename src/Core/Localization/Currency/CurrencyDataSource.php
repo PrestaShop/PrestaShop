@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,12 +30,12 @@ use PrestaShop\PrestaShop\Core\Localization\Currency\DataLayer\CurrencyInstalled
 
 /**
  * Localization CurrencyData source
- * Uses a stack of middleware data layers to read / write CurrencyData objects
+ * Uses a stack of middleware data layers to read / write CurrencyData objects.
  */
 class CurrencyDataSource implements DataSourceInterface
 {
     /**
-     * The top layer of the middleware stack
+     * The top layer of the middleware stack.
      *
      * @var CurrencyDataLayerInterface
      */
@@ -55,18 +55,18 @@ class CurrencyDataSource implements DataSourceInterface
      */
     public function __construct(CurrencyDataLayerInterface $topLayer, CurrencyInstalledDataLayer $installedDataLayer)
     {
-        $this->topLayer           = $topLayer;
+        $this->topLayer = $topLayer;
         $this->installedDataLayer = $installedDataLayer;
     }
 
     /**
-     * Get complete currency data by currency code, in a given language
+     * Get complete currency data by currency code, in a given language.
      *
      * @param LocalizedCurrencyId $localizedCurrencyId
-     *  The currency data identifier (currency code + locale code)
+     *                                                 The currency data identifier (currency code + locale code)
      *
      * @return CurrencyData
-     *  The currency data
+     *                      The currency data
      */
     public function getLocalizedCurrencyData(LocalizedCurrencyId $localizedCurrencyId)
     {
@@ -75,12 +75,12 @@ class CurrencyDataSource implements DataSourceInterface
 
     /**
      * Is this currency available ?
-     * (an available currency is not deleted AND is active)
+     * (an available currency is not deleted AND is active).
      *
      * @param $currencyCode
      *
      * @return bool
-     *  True if currency is available
+     *              True if currency is available
      */
     public function isCurrencyAvailable($currencyCode)
     {
@@ -88,17 +88,17 @@ class CurrencyDataSource implements DataSourceInterface
     }
 
     /**
-     * Get all the available (installed + active) currencies' data
+     * Get all the available (installed + active) currencies' data.
      *
      * @param string $localeCode
-     *  IETF tag. Data will be translated in this language
+     *                           IETF tag. Data will be translated in this language
      *
      * @return CurrencyData[]
-     *  The available currencies' data
+     *                        The available currencies' data
      */
     public function getAvailableCurrenciesData($localeCode)
     {
-        $currencyCodes  = $this->installedDataLayer->getAvailableCurrencyCodes();
+        $currencyCodes = $this->installedDataLayer->getAvailableCurrencyCodes();
         $currenciesData = [];
         foreach ($currencyCodes as $currencyCode) {
             $currenciesData[] = $this->getLocalizedCurrencyData(new LocalizedCurrencyId($currencyCode, $localeCode));
