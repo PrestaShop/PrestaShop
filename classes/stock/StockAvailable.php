@@ -763,24 +763,12 @@ class StockAvailableCore extends ObjectModel
      */
     public static function getLocation($id_product, $id_product_attribute = null, $id_shop = null)
     {
-        if (
-            false === Validate::isUnsignedId($id_product)
-            || ((null !== $id_product_attribute) && (false === Validate::isUnsignedId($id_product_attribute)))
-            || ((null !== $id_shop) && (false === Validate::isUnsignedId($id_shop)))
-        ) {
-            $serializedInputData = [
-                'id_product' => $id_product,
-                'id_shop' => $id_shop,
-                'id_product_attribute' => $id_product_attribute,
-            ];
-            throw new \InvalidArgumentException(sprintf(
-                'Could not get location as input data is not valid: %s',
-                json_encode($serializedInputData)
-            ));
-        }
+        $id_product = (int) $id_product;
 
         if (null === $id_product_attribute) {
             $id_product_attribute = 0;
+        } else {
+            $id_product_attribute = (int) $id_product_attribute;
         }
 
         $query = new DbQuery();
