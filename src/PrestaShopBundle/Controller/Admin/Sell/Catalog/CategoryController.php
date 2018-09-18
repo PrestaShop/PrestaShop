@@ -134,7 +134,8 @@ class CategoryController extends FrameworkBundleAdminController
         $categoryForm->handleRequest($request);
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Categories/edit.html.twig', [
-            'categoryForm' => $categoryForm->createView(),
+            'editCategoryForm' => $categoryForm->createView(),
+            'editableCategory' => $editableCategory,
         ]);
     }
 }
