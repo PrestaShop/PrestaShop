@@ -126,6 +126,8 @@ class MetaController extends FrameworkBundleAdminController
     /**
      * Points to the form where new record of meta list can be created.
      *
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))", message="You do not have permission to add this.")
+     *
      * @return Response
      */
     public function createAction()
@@ -139,6 +141,8 @@ class MetaController extends FrameworkBundleAdminController
 
     /**
      * Redirects to page where list record can be edited.
+     *
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message="You do not have permission to edit this.")
      *
      * @param int $metaId
      *
@@ -156,6 +160,8 @@ class MetaController extends FrameworkBundleAdminController
 
     /**
      * Removes single element from meta list.
+     *
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message="You do not have permission to delete this.")
      *
      * @param int $metaId
      *
@@ -182,6 +188,8 @@ class MetaController extends FrameworkBundleAdminController
 
     /**
      * Removes multiple records from meta list.
+     *
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message="You do not have permission to delete this.")
      *
      * @param Request $request
      *
@@ -210,6 +218,8 @@ class MetaController extends FrameworkBundleAdminController
 
     /**
      * Submits settings forms.
+     *
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message="You do not have permission to edit this.")
      *
      * @param Request $request
      *
