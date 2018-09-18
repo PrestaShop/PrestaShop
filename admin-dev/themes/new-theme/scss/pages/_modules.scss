@@ -97,7 +97,8 @@
   margin: 2em 0;
 
   .module-list-empty {
-    background: #fff;
+    background: rgba(255,255,255,0.4);
+    border-radius: 3px;
     padding: 20px;
     border: dashed 1px #696969;
 
@@ -267,7 +268,12 @@
 }
 
 .module-checkbox-bulk-list {
-  padding: 5px 0 0 5px;
+  position: absolute;
+  right: 7px;
+  top: 7px;
+  &.md-checkbox label {
+    padding: 0;
+  }
 }
 
 .module-search-bar {
@@ -378,6 +384,7 @@
   .module-top-menu-item {
     &.disabled {
       opacity: 0.5;
+      pointer-events: none;
     }
 
     h3 {
