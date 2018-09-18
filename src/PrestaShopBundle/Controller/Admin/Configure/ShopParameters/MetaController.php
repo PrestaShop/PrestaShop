@@ -130,14 +130,11 @@ class MetaController extends FrameworkBundleAdminController
      */
     public function createAction()
     {
-        $metaFormHandler = $this->get('prestashop.admin.meta.form_handler');
+        $legacyLink = $this->getAdminLink('AdminMeta', [
+            'addmeta' => 1,
+        ]);
 
-        return $this->render(
-            '@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/Form/add_edit.html.twig',
-            [
-                'form' => $metaFormHandler->getForm()->createView(),
-            ]
-        );
+        return $this->redirect($legacyLink);
     }
 
     /**
@@ -149,7 +146,6 @@ class MetaController extends FrameworkBundleAdminController
      */
     public function editAction($metaId)
     {
-        //@todo: this action should point to new add page
         $legacyLink = $this->getAdminLink('AdminMeta', [
             'id_meta' => $metaId,
             'updatemeta' => 1,
