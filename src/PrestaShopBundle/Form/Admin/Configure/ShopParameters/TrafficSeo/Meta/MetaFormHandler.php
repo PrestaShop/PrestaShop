@@ -77,6 +77,7 @@ class MetaFormHandler
     public function getFormFor($metaId)
     {
         $data = $this->metaDataProvider->getData($metaId);
+
         return $this->getMetaForm($data);
     }
 
@@ -85,7 +86,7 @@ class MetaFormHandler
      *
      * @param array $data
      *
-     * @return array - if array contains strings then it returned errors.
+     * @return array - if array contains strings then it returned errors
      */
     public function save(array $data)
     {
@@ -95,7 +96,7 @@ class MetaFormHandler
     /**
      * Gets meta form with.
      *
-     * @param array|null $metaFormData - if data is provided then it gets data with MetaType form field results.
+     * @param array|null $metaFormData - if data is provided then it gets data with MetaType form field results
      *
      * @return FormInterface
      */

@@ -32,12 +32,10 @@ namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta;
  */
 class MetaFormDataProvider
 {
-
     public function getData($metaId)
     {
         // TODO: Implement getData() method.
     }
-
 
     public function saveData(array $data)
     {

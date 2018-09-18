@@ -53,7 +53,7 @@ class RouteValidator
      * @param string $routeId
      * @param string $rule Rule to verify
      *
-     * @return array - returns list of missing keywords.
+     * @return array - returns list of missing keywords
      *
      * @throws PrestaShopException
      */

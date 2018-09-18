@@ -52,7 +52,7 @@ final class HtaccessFileChecker implements UrlFileCheckerInterface
      */
     public function isValidFile()
     {
-        $filePath = $this->rootDirectory.'/.htaccess';
+        $filePath = $this->rootDirectory . '/.htaccess';
 
         if (file_exists($filePath)) {
             return is_writable($filePath);

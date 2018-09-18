@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter;
 
 use PrestaShop\Decimal\Number;
+use PrestaShop\PrestaShop\Adapter\File\HtaccessFileGenerator;
 use Tools as LegacyTools;
 
 /**
@@ -114,6 +115,53 @@ class Tools
     public function generateHtaccess()
     {
         return LegacyTools::generateHtaccess();
+    }
+
+    /**
+     * @see HtaccessFileGenerator::generateFile()
+     *
+     * @param bool $disableMultiView enable/disable Multiviews option
+     *
+     * @return bool
+     */
+    private function generateHtaccessOnMultiViews($disableMultiView = false)
+    {
+        return LegacyTools::generateHtaccess(null,
+            null,
+            null,
+            '',
+            $disableMultiView
+        );
+    }
+
+    /**
+     * @see HtaccessFileGenerator::generateFile()
+     *
+     * @return bool
+     */
+    public function generateHtaccessWithMultiViews()
+    {
+        return LegacyTools::generateHtaccess(null,
+            null,
+            null,
+            '',
+            true
+        );
+    }
+
+    /**
+     * @see HtaccessFileGenerator::generateFile()
+     *
+     * @return bool
+     */
+    public function generateHtaccessWithoutMultiViews()
+    {
+        return LegacyTools::generateHtaccess(null,
+            null,
+            null,
+            '',
+            false
+        );
     }
 
     /**
