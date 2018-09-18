@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -36,7 +36,7 @@ use PrestaShop\PrestaShop\Core\Localization\Currency\CurrencyDataLayerInterface;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 
 /**
- * Localization/CurrencyReference data layer
+ * Localization/CurrencyReference data layer.
  *
  * Provides reference data for currencies...
  * Data comes from CLDR official data files, and is read only.
@@ -44,7 +44,7 @@ use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 class CurrencyReference extends AbstractDataLayer implements CurrencyDataLayerInterface
 {
     /**
-     * CLDR locale repository
+     * CLDR locale repository.
      *
      * Provides LocaleData objects
      *
@@ -58,7 +58,7 @@ class CurrencyReference extends AbstractDataLayer implements CurrencyDataLayerIn
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function setLowerLayer(CurrencyDataLayerInterface $lowerLayer)
     {
@@ -68,19 +68,19 @@ class CurrencyReference extends AbstractDataLayer implements CurrencyDataLayerIn
     }
 
     /**
-     * Actually read a CurrencyData object into the current layer
+     * Actually read a CurrencyData object into the current layer.
      *
      * Data is read from official CLDR files (via the CLDR LocaleRepository)
      *
      * @param LocalizedCurrencyId $currencyDataId
-     *  The CurrencyData object identifier
+     *                                            The CurrencyData object identifier
      *
      * @return CurrencyData|null
-     *  The wanted CurrencyData object (null if not found)
+     *                           The wanted CurrencyData object (null if not found)
      *
      * @throws LocalizationException
-     *  In case of invalid $currencyDataId
-     *  Also in case of invalid type asked for symbol (but use a constant, so it is very unlikely...)
+     *                               In case of invalid $currencyDataId
+     *                               Also in case of invalid type asked for symbol (but use a constant, so it is very unlikely...)
      */
     protected function doRead($currencyDataId)
     {
@@ -101,12 +101,12 @@ class CurrencyReference extends AbstractDataLayer implements CurrencyDataLayerIn
             return null;
         }
 
-        $currencyData                       = new CurrencyData();
-        $currencyData->isoCode              = $cldrCurrency->getIsoCode();
-        $currencyData->numericIsoCode       = $cldrCurrency->getNumericIsoCode();
+        $currencyData = new CurrencyData();
+        $currencyData->isoCode = $cldrCurrency->getIsoCode();
+        $currencyData->numericIsoCode = $cldrCurrency->getNumericIsoCode();
         $currencyData->symbols[$localeCode] = $cldrCurrency->getSymbol(CldrCurrency::SYMBOL_TYPE_NARROW);
-        $currencyData->precision            = $cldrCurrency->getDecimalDigits();
-        $currencyData->names[$localeCode]   = $cldrCurrency->getDisplayName();
+        $currencyData->precision = $cldrCurrency->getDecimalDigits();
+        $currencyData->names[$localeCode] = $cldrCurrency->getDisplayName();
 
         return $currencyData;
     }
@@ -115,12 +115,9 @@ class CurrencyReference extends AbstractDataLayer implements CurrencyDataLayerIn
      * CLDR files are read only. Nothing can be written there.
      *
      * @param LocalizedCurrencyId $currencyDataId
-     *  The LocaleData object identifier
-     *
+     *                                            The LocaleData object identifier
      * @param CurrencyData $currencyData
-     *  The CurrencyData object to be written
-     *
-     * @return void
+     *                                   The CurrencyData object to be written
      */
     protected function doWrite($currencyDataId, $currencyData)
     {

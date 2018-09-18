@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -31,7 +31,7 @@ use Currency;
 use PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider;
 
 /**
- * Installed Currencies data layer
+ * Installed Currencies data layer.
  *
  * Provides currencies' installation info
  */
@@ -50,33 +50,33 @@ class CurrencyInstalled
     }
 
     /**
-     * Check if a currency is currently available (not deleted + active)
+     * Check if a currency is currently available (not deleted + active).
      *
      * @param $currencyCode
      *  The said currency ISO code
      *
      * @return bool
-     *  True if this currency is available
+     *              True if this currency is available
      */
     public function isAvailable($currencyCode)
     {
         $currency = $this->dataProvider->getCurrencyByIsoCode($currencyCode);
 
         if ($currency instanceof Currency) {
-            return (bool)$currency->active;
+            return (bool) $currency->active;
         }
 
         return false;
     }
 
     /**
-     * Get all available (not deleted + active) currencies' ISO codes
+     * Get all available (not deleted + active) currencies' ISO codes.
      *
      * @return string[]
      */
     public function getAvailableCurrencyCodes()
     {
-        $currencies  = $this->dataProvider->getCurrencies();
+        $currencies = $this->dataProvider->getCurrencies();
         $currencyIds = array_column($currencies, 'iso_code');
 
         return $currencyIds;

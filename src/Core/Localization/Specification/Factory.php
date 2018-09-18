@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -42,16 +42,14 @@ use PrestaShop\PrestaShop\Core\Localization\Specification\Price as PriceSpecific
 class Factory
 {
     /**
-     * Build a Number specification from a CLDR Locale object
+     * Build a Number specification from a CLDR Locale object.
      *
      * @param CldrLocale $cldrLocale
-     *  This CldrLocale object is a low level data object extracted from CLDR data source
-     *
+     *                               This CldrLocale object is a low level data object extracted from CLDR data source
      * @param int $maxFractionDigits
-     *  Max number of digits to display in a number's decimal part
-     *
+     *                               Max number of digits to display in a number's decimal part
      * @param bool $numberGroupingUsed
-     *  Should we group digits in a number's integer part ?
+     *                                 Should we group digits in a number's integer part ?
      *
      * @return NumberSpecification
      *
@@ -75,26 +73,21 @@ class Factory
     }
 
     /**
-     * Build a Price specification from a CLDR Locale object and a Currency object
+     * Build a Price specification from a CLDR Locale object and a Currency object.
      *
      * @param string $localeCode
-     *  The concerned locale
-     *
-     * @param CldrLocale $cldrLocale
-     *  This CldrLocale object is a low level data object extracted from CLDR data source
-     *  It contains data about the concerned locale.
-     *
+     *                           The concerned locale
+     * @param cldrLocale $cldrLocale
+     *                               This CldrLocale object is a low level data object extracted from CLDR data source
+     *                               It contains data about the concerned locale
      * @param Currency $currency
-     *  This Currency object brings missing specification to format a number as a price
-     *
+     *                           This Currency object brings missing specification to format a number as a price
      * @param bool $numberGroupingUsed
-     *  Should we group digits when formatting prices ?
-     *
+     *                                 Should we group digits when formatting prices ?
      * @param $currencyDisplayType
      *  Type of display for currency symbol (symbol or ISO code)
-     *
      * @param null|int $maxFractionDigits
-     *  The decimal precision of the price
+     *                                    The decimal precision of the price
      *
      * @return PriceSpecification
      *
@@ -109,11 +102,11 @@ class Factory
         $maxFractionDigits = null
     ) {
         $currencyPattern = $cldrLocale->getCurrencyPattern();
-        $numbersSymbols  = $cldrLocale->getAllNumberSymbols();
+        $numbersSymbols = $cldrLocale->getAllNumberSymbols();
 
         $precision = $maxFractionDigits;
         if (null === $precision) {
-            $precision = (int)$currency->getDecimalPrecision();
+            $precision = (int) $currency->getDecimalPrecision();
         }
 
         return new PriceSpecification(
@@ -133,13 +126,13 @@ class Factory
 
     /**
      * Extract the positive pattern from a CLDR formatting pattern
-     * Works with any formatting pattern (number, price, percentage)
+     * Works with any formatting pattern (number, price, percentage).
      *
      * @param string $pattern
-     *  The CLDR pattern
+     *                        The CLDR pattern
      *
      * @return string
-     *  The extracted positive pattern
+     *                The extracted positive pattern
      */
     protected function getPositivePattern($pattern)
     {
@@ -150,13 +143,13 @@ class Factory
 
     /**
      * Extract the negative pattern from a CLDR formatting pattern
-     * Works with any formatting pattern (number, price, percentage)
+     * Works with any formatting pattern (number, price, percentage).
      *
      * @param string $pattern
-     *  The CLDR pattern
+     *                        The CLDR pattern
      *
      * @return string
-     *  The extracted negative pattern
+     *                The extracted negative pattern
      */
     protected function getNegativePattern($pattern)
     {
@@ -168,15 +161,15 @@ class Factory
     }
 
     /**
-     * Convert a list of CLDR number symbols data into a list of NumberSymbolList objects
+     * Convert a list of CLDR number symbols data into a list of NumberSymbolList objects.
      *
      * @param NumberSymbolsData[] $allNumberSymbolsData
-     *  All the CLDR number symbols data indexed by numbering system
+     *                                                  All the CLDR number symbols data indexed by numbering system
      *
      * @return NumberSymbolList[]
      *
      * @throws LocalizationException
-     *  If passed data is invalid
+     *                               If passed data is invalid
      */
     protected function computeNumberSymbolLists($allNumberSymbolsData)
     {
@@ -189,16 +182,16 @@ class Factory
     }
 
     /**
-     * Get a NumberSymbolList object from a CLDR NumberSymbolsData object
+     * Get a NumberSymbolList object from a CLDR NumberSymbolsData object.
      *
      * @param NumberSymbolsData $symbolsData
-     *  Data that will be used to build the NumberSymbolList object
+     *                                       Data that will be used to build the NumberSymbolList object
      *
      * @return NumberSymbolList
-     *  An immutable NumberSymbolList object
+     *                          An immutable NumberSymbolList object
      *
      * @throws LocalizationException
-     *  If passed data is invalid
+     *                               If passed data is invalid
      */
     protected function getNumberSymbolList(NumberSymbolsData $symbolsData)
     {
@@ -218,36 +211,36 @@ class Factory
     }
 
     /**
-     * Extract the min number of fraction digits from a number pattern (decimal, currency, percentage)
+     * Extract the min number of fraction digits from a number pattern (decimal, currency, percentage).
      *
      * @param string $pattern
-     *  The formatting pattern to use for extraction
+     *                        The formatting pattern to use for extraction
      *
      * @return int
-     *  The min number of fraction digits to display in the final number
+     *             The min number of fraction digits to display in the final number
      */
     protected function getMinFractionDigits($pattern)
     {
-        $dotPos = (int)strpos($pattern, '.');
+        $dotPos = (int) strpos($pattern, '.');
 
         return substr_count($pattern, '0', $dotPos);
     }
 
     /**
-     * Get the primary digits group size from a number formatting pattern
+     * Get the primary digits group size from a number formatting pattern.
      *
      * @param string $pattern
-     *  The CLDR number formatting pattern (e.g.: #,##0.###)
+     *                        The CLDR number formatting pattern (e.g.: #,##0.###)
      *
      * @return int
-     *  The primary group size of the passed pattern
+     *             The primary group size of the passed pattern
      */
     protected function getPrimaryGroupSize($pattern)
     {
-        $parts       = explode('.', $pattern);
+        $parts = explode('.', $pattern);
         $integerPart = $parts[0];
-        $groups      = explode(',', $integerPart);
-        $nbGroups    = count($groups);
+        $groups = explode(',', $integerPart);
+        $nbGroups = count($groups);
 
         return strlen($groups[$nbGroups - 1]);
     }
@@ -258,17 +251,17 @@ class Factory
      * e.g.: with #,##,##0.### => Secondary group size is 2, primary group size is 3.
      *
      * @param string $pattern
-     *  The CLDR number formatting pattern
+     *                        The CLDR number formatting pattern
      *
      * @return int
-     *  The secondary group size of the passed pattern
+     *             The secondary group size of the passed pattern
      */
     protected function getSecondaryGroupSize($pattern)
     {
-        $parts       = explode('.', $pattern);
+        $parts = explode('.', $pattern);
         $integerPart = $parts[0];
-        $groups      = explode(',', $integerPart);
-        $nbGroups    = count($groups);
+        $groups = explode(',', $integerPart);
+        $nbGroups = count($groups);
 
         if ($nbGroups > 2) {
             return strlen($groups[$nbGroups - 2]);

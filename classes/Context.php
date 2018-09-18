@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
@@ -72,7 +71,7 @@ class ContextCore
     public $currency;
 
     /**
-     * Current locale instance
+     * Current locale instance.
      *
      * @var Locale
      */

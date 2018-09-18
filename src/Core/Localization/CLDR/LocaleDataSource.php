@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,7 +30,7 @@ namespace PrestaShop\PrestaShop\Core\Localization\CLDR;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleDataLayerInterface as CldrLocaleDataLayerInterface;
 
 /**
- * LocaleDataSource provides CLDR LocaleData objects
+ * LocaleDataSource provides CLDR LocaleData objects.
  *
  * This class uses Locale data layers as middlewares stack to read CLDR data.
  */

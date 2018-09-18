@@ -30,14 +30,14 @@ class CurrencyCore extends ObjectModel
     public $id;
 
     /**
-     * Name of the currency
+     * Name of the currency.
      *
      * @var string
      */
     public $name;
 
     /**
-     * Alphabetic ISO 4217 code of this currency
+     * Alphabetic ISO 4217 code of this currency.
      *
      * @var string
      */
@@ -45,21 +45,21 @@ class CurrencyCore extends ObjectModel
 
     /**
      * Numeric ISO 4217 code of this currency
-     * Will be deprecated soon
+     * Will be deprecated soon.
      *
      * @var string
      */
     public $iso_code_num;
 
     /**
-     * Numeric ISO 4217 code of this currency
+     * Numeric ISO 4217 code of this currency.
      *
      * @var string
      */
     public $numeric_iso_code;
 
     /**
-     * Exchange rate from default currency
+     * Exchange rate from default currency.
      *
      * @var float
      */
@@ -82,14 +82,14 @@ class CurrencyCore extends ObjectModel
 
     /**
      * Currency's symbol
-     * Will be deprecated soon
+     * Will be deprecated soon.
      *
      * @var string
      */
     public $sign;
 
     /**
-     * Currency's symbol
+     * Currency's symbol.
      *
      * @var string
      */
@@ -97,7 +97,7 @@ class CurrencyCore extends ObjectModel
 
     /**
      * CLDR price formatting pattern
-     * e.g.: In french (fr-FR), price formatting pattern is : #,##0.00 ¤
+     * e.g.: In french (fr-FR), price formatting pattern is : #,##0.00 ¤.
      *
      * @var string
      */
@@ -110,14 +110,14 @@ class CurrencyCore extends ObjectModel
 
     /**
      * Number of decimal digits to use when displaying a price in this currency
-     * Will be deprecated soon
+     * Will be deprecated soon.
      *
      * @var int
      */
     public $decimals;
 
     /**
-     * Number of decimal digits to use when displaying a price in this currency
+     * Number of decimal digits to use when displaying a price in this currency.
      *
      * @var int
      */
@@ -132,16 +132,16 @@ class CurrencyCore extends ObjectModel
         'multilang' => true,
         // 'multilang_shop' => true,
         'fields' => array(
-            'iso_code'         => array('type' => self::TYPE_STRING, 'validate' => 'isLanguageIsoCode', 'required' => true, 'size' => 3),
+            'iso_code' => array('type' => self::TYPE_STRING, 'validate' => 'isLanguageIsoCode', 'required' => true, 'size' => 3),
             'numeric_iso_code' => array('type' => self::TYPE_STRING, 'validate' => 'isNumericIsoCode', 'size' => 3),
-            'precision'        => array('type' => self::TYPE_INT   , 'validate' => 'isInt'),
-            'conversion_rate'  => array('type' => self::TYPE_FLOAT , 'validate' => 'isUnsignedFloat'  , 'required' => true, 'shop' => true),
-            'deleted'          => array('type' => self::TYPE_BOOL  , 'validate' => 'isBool'),
-            'active'           => array('type' => self::TYPE_BOOL  , 'validate' => 'isBool'),
+            'precision' => array('type' => self::TYPE_INT, 'validate' => 'isInt'),
+            'conversion_rate' => array('type' => self::TYPE_FLOAT, 'validate' => 'isUnsignedFloat', 'required' => true, 'shop' => true),
+            'deleted' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+            'active' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 
             /* Lang fields */
-            'name'   => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
-            'symbol' => array('type' => self::TYPE_STRING, 'lang' => true                               , 'size' => 255),
+            'name' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
+            'symbol' => array('type' => self::TYPE_STRING, 'lang' => true, 'size' => 255),
         ),
     );
 
@@ -182,14 +182,14 @@ class CurrencyCore extends ObjectModel
         if ($this->iso_code) {
             $cldrCurrency = $this->cldr->getCurrency($this->iso_code);
 
-            $this->sign             = $cldrCurrency['symbol'];
-            $this->symbol           = $cldrCurrency['symbol'];
-            $this->iso_code_num     = $cldrCurrency['iso_code'];
+            $this->sign = $cldrCurrency['symbol'];
+            $this->symbol = $cldrCurrency['symbol'];
+            $this->iso_code_num = $cldrCurrency['iso_code'];
             $this->numeric_iso_code = $cldrCurrency['iso_code'];
-            $this->name             = $cldrCurrency['name'];
-            $this->format           = $this->cldr->getCurrencyFormatPattern();
-            $this->blank            = 1;
-            $this->decimals         = 1;
+            $this->name = $cldrCurrency['name'];
+            $this->format = $this->cldr->getCurrencyFormatPattern();
+            $this->blank = 1;
+            $this->decimals = 1;
         }
 
         if (!$this->conversion_rate) {

@@ -28,7 +28,7 @@
 namespace PrestaShop\PrestaShop\Core\Localization\Currency;
 
 /**
- * Localization Currency data object
+ * Localization Currency data object.
  *
  * This class is only used internally, it is mutable and overridable until fully built. It can then be used as
  * an intermediary data bag to build a real Localization/Currency (immutable) object.
@@ -43,7 +43,7 @@ class CurrencyData
     public $isActive;
 
     /**
-     * Conversion rate of this currency against the default shop's currency
+     * Conversion rate of this currency against the default shop's currency.
      *
      * Price in currency A * currency A's conversion rate = price in default currency
      *
@@ -57,7 +57,7 @@ class CurrencyData
     public $conversionRate;
 
     /**
-     * Currency's alphabetic ISO code (ISO 4217)
+     * Currency's alphabetic ISO code (ISO 4217).
      *
      * @see https://www.iso.org/iso-4217-currency-codes.html
      *
@@ -66,7 +66,7 @@ class CurrencyData
     public $isoCode;
 
     /**
-     * Currency's numeric ISO code (ISO 4217)
+     * Currency's numeric ISO code (ISO 4217).
      *
      * @see https://www.iso.org/iso-4217-currency-codes.html
      *
@@ -75,7 +75,7 @@ class CurrencyData
     public $numericIsoCode;
 
     /**
-     * Currency's symbols, by locale code
+     * Currency's symbols, by locale code.
      *
      * eg.: $symbolsUSD = [
      *     'en-US' => '$',
@@ -87,14 +87,14 @@ class CurrencyData
     public $symbols;
 
     /**
-     * Number of decimal digits to use with this currency
+     * Number of decimal digits to use with this currency.
      *
      * @var int
      */
     public $precision;
 
     /**
-     * the currency's name, by locale code
+     * the currency's name, by locale code.
      *
      * @var string[]
      */
