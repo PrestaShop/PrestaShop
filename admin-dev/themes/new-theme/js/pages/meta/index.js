@@ -32,6 +32,7 @@ import LinkRowActionExtension from "../../components/grid/extension/link-row-act
 import SubmitGridExtension from "../../components/grid/extension/submit-grid-action-extension";
 import SubmitBulkExtension from "../../components/grid/extension/submit-bulk-action-extension";
 import BulkActionCheckboxExtension from "../../components/grid/extension/bulk-action-checkbox-extension";
+import SubmitRowActionExtension from "../../components/grid/extension/action/row/submit-row-action-extension";
 
 const $ = window.$;
 
@@ -44,5 +45,6 @@ $(() => {
   meta.addExtension(new LinkRowActionExtension());
   meta.addExtension(new SubmitGridExtension());
   meta.addExtension(new SubmitBulkExtension());
+  meta.addExtension(new SubmitRowActionExtension());
   meta.addExtension(new BulkActionCheckboxExtension());
 });
