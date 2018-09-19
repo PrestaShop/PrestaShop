@@ -511,7 +511,7 @@ services:
             - { name: form.type }
 
     form.type.translations.copy_language:
-        class: 'PrestaShopBundle\CaForm\Admin\Improve\International\Translations\CopyLanguageType'
+        class: 'PrestaShopBundle\Form\Admin\Improve\International\Translations\CopyLanguageType'
         parent: 'form.type.translatable.aware'
         public: true
         arguments:
@@ -519,7 +519,6 @@ services:
         tags:
             - { name: form.type }
 
-<<<<<<< HEAD
     form.type.shop.traffic_seo.meta.set_up_url:
         class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta\SetUpUrlType'
         arguments:
@@ -552,21 +551,34 @@ services:
         tags:
             - { name: form.type }
 
-    form.type.catalog.category:
-        class: 'PrestaShopBundle\Form\Admin\Catalog\Category\CategoryType'
+    form.type.catalog.abstract_category:
+        class: 'PrestaShopBundle\Form\Admin\Catalog\Category\AbstractCategoryType'
+        abstract: true
         parent: 'form.type.translatable.aware'
         arguments:
             - '@=service("prestashop.core.form.choice_provider.group_by_id").getChoices()'
+        public: true
+
+    form.type.catalog.category:
+        class: 'PrestaShopBundle\Form\Admin\Catalog\Category\CategoryType'
+        parent: 'form.type.catalog.abstract_category'
+        public: true
+        tags:
+          - { name: form.type }
+
+    form.type.catalog.root_category:
+        class: 'PrestaShopBundle\Form\Admin\Catalog\Category\RootCategoryType'
+        parent: 'form.type.catalog.abstract_category'
         public: true
         tags:
             - { name: form.type }
 
     form.type.common.translate_textarea:
-      class: 'PrestaShopBundle\Form\Admin\Type\TranslateTextareaType'
-      parent: 'form.type.translatable.aware'
-      public: true
-      tags:
-          - { name: form.type }
+        class: 'PrestaShopBundle\Form\Admin\Type\TranslateTextareaType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        tags:
+            - { name: form.type }
 
     form.type.common.category_choice_tree:
         class: 'PrestaShopBundle\Form\Admin\Type\CategoryChoiceTreeType'
