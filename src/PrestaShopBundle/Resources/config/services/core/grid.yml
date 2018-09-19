@@ -201,8 +201,14 @@ services:
         class: 'PrestaShop\PrestaShop\Core\Grid\Query\DoctrineSearchCriteriaApplicator'
 
     # Grid position updater
-    prestashop.core.grid.position.update_handler.position_data_handler:
-        class: 'PrestaShop\PrestaShop\Core\Grid\Position\PositionDataHandler'
+    prestashop.core.grid.position.position_update_factory:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Position\PositionUpdateFactory'
+        arguments:
+            - 'positions'
+            - 'rowId'
+            - 'oldPosition'
+            - 'newPosition'
+            - 'parentId'
 
     prestashop.core.grid.position.update_handler.doctrine_position_update_handler:
         class: 'PrestaShop\PrestaShop\Core\Grid\Position\UpdateHandler\DoctrinePositionUpdateHandler'

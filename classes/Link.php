@@ -716,7 +716,7 @@ class LinkCore
             $sfRouter = $sfContainer->get('router');
         }
 
-        $routeName = null;
+        $routeName = '';
         switch ($controller) {
             case 'AdminProducts':
                 // New architecture modification: temporary behavior to switch between old and new controllers.
@@ -811,11 +811,11 @@ class LinkCore
                 }
         }
 
-        if (null === $routeName) {
+        if (empty($routeName)) {
             $routeName = $this->searchRouteFromRouter($sfRouter, $controller);
         }
 
-        if (null !== $routeName) {
+        if (!empty($routeName)) {
             $sfRoute = array_key_exists('route', $sfRouteParams) ? $sfRouteParams['route'] : $routeName;
 
             return $sfRouter->generate($sfRoute, $sfRouteParams, UrlGeneratorInterface::ABSOLUTE_URL);
@@ -830,7 +830,7 @@ class LinkCore
      * @param RouterInterface $sfRouter
      * @param string $controller
      *
-     * @return string|null
+     * @return string
      */
     private function searchRouteFromRouter(RouterInterface $sfRouter, $controller)
     {
@@ -847,7 +847,7 @@ class LinkCore
             }
         }
 
-        return null;
+        return '';
     }
 
     /**

@@ -28,15 +28,15 @@ namespace Tests\Unit\Core\Grid\Position;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Grid\Position\Exception\PositionDataException;
-use PrestaShop\PrestaShop\Core\Grid\Position\PositionDataHandler;
+use PrestaShop\PrestaShop\Core\Grid\Position\PositionUpdateFactory;
 use PrestaShop\PrestaShop\Core\Grid\Position\PositionDefinition;
 use PrestaShop\PrestaShop\Core\Grid\Position\PositionModificationCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Position\PositionModificationInterface;
 
 /**
- * Class PositionDataHandlerTest.
+ * Class PositionUpdateFactoryTest.
  */
-class PositionDataHandlerTest extends TestCase
+class PositionUpdateFactoryTest extends TestCase
 {
     public function testHandleData()
     {
@@ -45,8 +45,8 @@ class PositionDataHandlerTest extends TestCase
             ['rowId' => 1, 'oldPosition' => 1, 'newPosition' => 2]
         ]];
 
-        $dataHandler = new PositionDataHandler();
-        $positionUpdate = $dataHandler->handleData($data, $definition);
+        $positionUpdateFactory = $this->getPositionUpdateFactory();
+        $positionUpdate = $positionUpdateFactory->buildPositionUpdate($data, $definition);
         /** @var PositionModificationCollectionInterface $collection */
         $collection = $positionUpdate->getPositionModificationCollection();
         $this->assertNotNull($collection);
@@ -69,8 +69,8 @@ class PositionDataHandlerTest extends TestCase
             'parentId' => 42,
         ];
 
-        $dataHandler = new PositionDataHandler();
-        $positionUpdate = $dataHandler->handleData($data, $definition);
+        $positionUpdateFactory = $this->getPositionUpdateFactory();
+        $positionUpdate = $positionUpdateFactory->buildPositionUpdate($data, $definition);
         /** @var PositionModificationCollectionInterface $collection */
         $collection = $positionUpdate->getPositionModificationCollection();
         $this->assertNotNull($collection);
@@ -98,17 +98,17 @@ class PositionDataHandlerTest extends TestCase
         $data = ['positions' => [
             ['row' => 1]
         ]];
-        $this->checkDataValidation($data, 'Invalid position data, missing rowId field.');
+        $this->checkDataValidation($data, PositionUpdateFactory::POSITION_KEY, [0, 'rowId']);
 
         $data = ['positions' => [
             ['rowId' => 1]
         ]];
-        $this->checkDataValidation($data, 'Invalid position data, missing oldPosition field.');
+        $this->checkDataValidation($data, PositionUpdateFactory::POSITION_KEY, [0, 'oldPosition']);
 
         $data = ['positions' => [
             ['rowId' => 1, 'oldPosition' => 1]
         ]];
-        $this->checkDataValidation($data, 'Invalid position data, missing newPosition field.');
+        $this->checkDataValidation($data, PositionUpdateFactory::POSITION_KEY, [0, 'newPosition']);
     }
 
     public function testDataParentIdValidation()
@@ -117,25 +117,26 @@ class PositionDataHandlerTest extends TestCase
         $data = ['positions' => [
             ['rowId' => 1, 'oldPosition' => 1, 'newPosition' => 1]
         ]];
-        $this->checkDataValidation($data, 'Missing parentId in your data.', $definition);
+        $this->checkDataValidation($data, 'Missing parentId in your data.', null, $definition);
     }
 
     /**
      * @param array $data
      * @param string|null $expectedErrorKey
+     * @param array|null $expectedErrorParameters
      * @param PositionDefinition|null $definition
      */
-    private function checkDataValidation(array $data, $expectedErrorKey = null, $definition = null)
+    private function checkDataValidation(array $data, $expectedErrorKey = null, $expectedErrorParameters = null, $definition = null)
     {
         if (null === $definition) {
             $definition = $this->getDefinition();
         }
-        $dataHandler = new PositionDataHandler();
+        $positionUpdateFactory = $this->getPositionUpdateFactory();
 
         /** @var PositionDataException $caughtException */
         $caughtException = null;
         try {
-            $dataHandler->handleData($data, $definition);
+            $positionUpdateFactory->buildPositionUpdate($data, $definition);
         } catch (PositionDataException $e) {
             $caughtException = $e;
         }
@@ -147,6 +148,9 @@ class PositionDataHandlerTest extends TestCase
             $this->assertInstanceOf(PositionDataException::class, $caughtException);
             $this->assertEquals($expectedErrorKey, $caughtException->getKey());
             $this->assertEquals('Admin.Notifications.Failure', $caughtException->getDomain());
+            if (null !== $expectedErrorParameters) {
+                $this->assertSame($expectedErrorParameters, $caughtException->getParameters());
+            }
         }
     }
 
@@ -172,6 +176,20 @@ class PositionDataHandlerTest extends TestCase
             'id_product',
             'position',
             'id_category'
+        );
+    }
+
+    /**
+     * @return PositionUpdateFactory
+     */
+    private function getPositionUpdateFactory()
+    {
+        return new PositionUpdateFactory(
+            'positions',
+            'rowId',
+            'oldPosition',
+            'newPosition',
+            'parentId'
         );
     }
 }

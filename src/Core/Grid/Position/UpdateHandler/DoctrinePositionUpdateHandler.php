@@ -123,8 +123,7 @@ final class DoctrinePositionUpdateHandler implements PositionUpdateHandlerInterf
 
             throw new PositionUpdateException(
                 'Could not update.',
-                'Admin.Catalog.Notification',
-                []
+                'Admin.Catalog.Notification'
             );
         }
     }

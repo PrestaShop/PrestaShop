@@ -212,6 +212,14 @@ class Module implements ModuleInterface
     }
 
     /**
+     * @return bool
+     */
+    public function isActive()
+    {
+        return (bool) $this->database->get('active');
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function onInstall()

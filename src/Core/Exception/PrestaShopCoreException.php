@@ -26,6 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Exception;
 
+use Throwable;
+
 /**
  * Class PrestaShopCoreException.
  */
@@ -44,18 +46,23 @@ class PrestaShopCoreException extends \Exception
     /**
      * @var array
      */
-    private $parameters;
+    private $parameters = [];
 
     /**
-     * PrestaShopCoreException constructor.
-     *
      * @param string $key
      * @param string $domain
      * @param array $parameters
+     * @param int $code
+     * @param Throwable|null $previous
      */
-    public function __construct($key, $domain, array $parameters)
-    {
-        parent::__construct();
+    public function __construct(
+        $key,
+        $domain,
+        $parameters = [],
+        $code = 0,
+        Throwable $previous = null
+    ) {
+        parent::__construct($key, $code, $previous);
         $this->key = $key;
         $this->domain = $domain;
         $this->parameters = $parameters;
@@ -70,6 +77,19 @@ class PrestaShopCoreException extends \Exception
     }
 
     /**
+     * @param string $key
+     *
+     * @return PrestaShopCoreException
+     */
+    public function setKey($key)
+    {
+        $this->key = $key;
+        $this->message = $key;
+
+        return $this;
+    }
+
+    /**
      * @return string
      */
     public function getDomain()
@@ -78,11 +98,35 @@ class PrestaShopCoreException extends \Exception
     }
 
     /**
+     * @param string $domain
+     *
+     * @return PrestaShopCoreException
+     */
+    public function setDomain($domain)
+    {
+        $this->domain = $domain;
+
+        return $this;
+    }
+
+    /**
      * @return array
      */
     public function getParameters()
     {
         return $this->parameters;
+    }
+
+    /**
+     * @param array $parameters
+     *
+     * @return PrestaShopCoreException
+     */
+    public function setParameters(array $parameters)
+    {
+        $this->parameters = $parameters;
+
+        return $this;
     }
 
     /**

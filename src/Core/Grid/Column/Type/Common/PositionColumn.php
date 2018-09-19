@@ -27,12 +27,16 @@
 namespace PrestaShop\PrestaShop\Core\Grid\Column\Type\Common;
 
 use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
+use PrestaShop\PrestaShop\Core\Grid\Position\GridPositionUpdater;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Class PositionColumn defines a position column used to sort elements in a grid,
  * it is associated to a special template, and works well with the PositionExtension
  * javascript extension and the GridPositionUpdater service.
+ *
+ * @see admin-dev/themes/new-theme/js/components/grid/extension/position-extension.js
+ * @see GridPositionUpdater
  */
 final class PositionColumn extends AbstractColumn
 {

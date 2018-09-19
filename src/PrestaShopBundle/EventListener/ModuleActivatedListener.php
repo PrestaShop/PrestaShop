@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\EventListener;
 
 use Doctrine\Common\Annotations\AnnotationException;
+use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShopBundle\Security\Annotation\ModuleActivated;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -38,7 +39,6 @@ use Doctrine\Common\Annotations\Reader;
 use Doctrine\Common\Util\ClassUtils;
 use ReflectionObject;
 use ReflectionClass;
-use Module;
 
 /**
  * Allow a redirection to the right url when using ModuleActivated annotation
@@ -118,12 +118,12 @@ class ModuleActivatedListener
         }
 
         /** @var Module $module */
-        $module = $this->moduleRepository->getInstanceByName($moduleActivated->getModuleName());
+        $module = $this->moduleRepository->getModule($moduleActivated->getModuleName());
         if (null === $module) {
             return;
         }
 
-        if (!$module->active) {
+        if (!$module->isActive()) {
             $this->showNotificationMessage($moduleActivated);
             $url = $this->router->generate($moduleActivated->getRedirectRoute());
 

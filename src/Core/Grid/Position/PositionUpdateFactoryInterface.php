@@ -27,10 +27,10 @@
 namespace PrestaShop\PrestaShop\Core\Grid\Position;
 
 /**
- * Interface PositionDataHandlerInterface is used to interpret the provided
+ * Interface PositionUpdateFactoryInterface is used to interpret the provided
  * data array and transform it in a fully filled PositionUpdate object.
  */
-interface PositionDataHandlerInterface
+interface PositionUpdateFactoryInterface
 {
     /**
      * Transform the provided data into a PositionUpdate.
@@ -40,5 +40,5 @@ interface PositionDataHandlerInterface
      *
      * @return PositionUpdate
      */
-    public function handleData(array $data, PositionDefinition $positionDefinition);
+    public function buildPositionUpdate(array $data, PositionDefinition $positionDefinition);
 }

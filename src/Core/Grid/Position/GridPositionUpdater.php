@@ -53,10 +53,7 @@ final class GridPositionUpdater implements GridPositionUpdaterInterface
     public function update(PositionUpdateInterface $positionUpdate)
     {
         $newPositions = $this->getNewPositions($positionUpdate);
-
-        //Sort by new position value
-        asort($newPositions);
-
+        $this->sortByPositionValue($newPositions);
         $this->updateHandler->updatePositions($positionUpdate->getPositionDefinition(), $newPositions);
     }
 
@@ -75,5 +72,13 @@ final class GridPositionUpdater implements GridPositionUpdaterInterface
         }
 
         return $positions;
+    }
+
+    /**
+     * @param $positions
+     */
+    private function sortByPositionValue(&$positions)
+    {
+        asort($positions);
     }
 }
