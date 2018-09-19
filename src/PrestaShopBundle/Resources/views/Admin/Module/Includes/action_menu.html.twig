@@ -47,9 +47,8 @@
     </form>
     {% if (urls|length > 1) %}
           <input type="hidden" class="btn">
-          <button type="button" class="btn btn-outline-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <span class="caret"></span>
-            <span class="sr-only">{{ 'Toggle Dropdown'|trans({}, 'Admin.Modules.Feature') }}</span>
+          <button type="button" class="btn btn-outline-primary dropdown-toggle dropdown-toggle-split dropdown-toggle-split-text" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            {{ 'More' |trans({}, 'Admin.Navigation.Menu') }}
           </button>
           <div class="dropdown-menu">
             {% for module_action, module_url in urls %}
