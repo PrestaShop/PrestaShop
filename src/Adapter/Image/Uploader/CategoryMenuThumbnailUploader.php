@@ -58,9 +58,18 @@ final class CategoryMenuThumbnailUploader implements ImageUploaderInterface
         }
 
         $availableKeys = array_diff($allowedKeys, $usedKeys);
+
+        // HelperImageUploader::process expects
+        $_FILES['thumbnail'] = [
+            'error' => [$uploadedImage->getError()],
+            'name' => [$uploadedImage->getClientOriginalName()],
+            'size' => [$uploadedImage->getSize()],
+            'tmp_name' => [$uploadedImage->getPathname()],
+            'type' => [$uploadedImage->getMimeType()],
+        ];
+
         $helper = new HelperImageUploader('thumbnail');
         $uploadedFiles = $helper->process();
-        $total_errors = [];
 
         if (count($availableKeys) < count($files)) {
             //@todo: throw exception
@@ -68,25 +77,17 @@ final class CategoryMenuThumbnailUploader implements ImageUploaderInterface
 
         foreach ($uploadedFiles as &$uploadedFile) {
             $key = array_shift($availableKeys);
-            $errors = array();
 
             // Evaluate the memory required to resize the image: if it's too much, you can't resize it.
             if (isset($uploadedFile['save_path']) && !ImageManager::checkImageMemoryLimit($uploadedFile['save_path'])) {
-                $errors[] = $this->trans('Due to memory limit restrictions, this image cannot be loaded. Please increase your memory_limit value via your server\'s configuration settings. ', array(), 'Admin.Notifications.Error');
+                //@todo: throw exception
             }
 
             // Copy new image
             if (!isset($uploadedFile['save_path'])
-                || (
-                    empty($errors)
-                    && !ImageManager::resize($uploadedFile['save_path'], _PS_CAT_IMG_DIR_ . $categoryId . '-' . $key . '_thumb.jpg')
-                )
+                || !ImageManager::resize($uploadedFile['save_path'], _PS_CAT_IMG_DIR_ . $categoryId . '-' . $key . '_thumb.jpg')
             ) {
                 throw new ImageUploadException('An error occurred while uploading the image.');
-            }
-
-            if (count($errors)) {
-                $total_errors = array_merge($total_errors, $errors);
             }
 
             if (isset($uploadedFile['save_path']) && is_file($uploadedFile['save_path'])) {
