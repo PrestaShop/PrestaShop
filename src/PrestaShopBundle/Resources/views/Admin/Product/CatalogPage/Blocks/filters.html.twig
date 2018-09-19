@@ -76,7 +76,7 @@
             class="d-inline-block"
             bulkurl="{{ path('admin_product_bulk_action', {'action': 'activate_all'}) }}"
             massediturl="{{ path('admin_product_mass_edit_action', {'action': 'sort'}) }}"
-$            redirecturl="{{ path('admin_product_catalog', {'limit': limit, 'offset': offset, 'orderBy': orderBy, 'sortOrder': sortOrder}) }}"
+            redirecturl="{{ path('admin_product_catalog', {'limit': limit, 'offset': offset, 'orderBy': orderBy, 'sortOrder': sortOrder}) }}"
             redirecturlnextpage="{{ path('admin_product_catalog', {'limit': limit, 'offset': offset+limit, 'orderBy': orderBy, 'sortOrder': sortOrder}) }}"
         >
           {% set buttons_action = [
