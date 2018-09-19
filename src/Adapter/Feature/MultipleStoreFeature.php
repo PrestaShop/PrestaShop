@@ -26,15 +26,15 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Feature;
 
-use Shop;
+use PrestaShop\PrestaShop\Adapter\Entity\Shop;
 use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
-use PrestaShop\PrestaShop\Adapter\Configuration;
-use PrestaShopBundle\Entity\Repository\ShopRepository;
 
 /**
- * This class manages MultiShop feature.
+ * Class MultistoreFeature provides data about multishop feature usage.
+ *
+ * @internal
  */
-class MultiShopFeature implements FeatureInterface
+final class MultistoreFeature implements FeatureInterface
 {
     /**
      * @var Configuration
@@ -42,14 +42,11 @@ class MultiShopFeature implements FeatureInterface
     private $configuration;
 
     /**
-     * @var ShopRepository
+     * @param Configuration $configuration
      */
-    private $shopRepository;
-
-    public function __construct(Configuration $configuration, ShopRepository $shopRepository)
+    public function __construct(Configuration $configuration)
     {
         $this->configuration = $configuration;
-        $this->shopRepository = $shopRepository;
     }
 
     /**
@@ -57,7 +54,9 @@ class MultiShopFeature implements FeatureInterface
      */
     public function isUsed()
     {
-        return $this->isActive() && $this->shopRepository->haveMultipleShops();
+        // internally it checks if feature is active
+        // and at least 2 shops exist
+        return Shop::isFeatureActive();
     }
 
     /**
@@ -65,7 +64,7 @@ class MultiShopFeature implements FeatureInterface
      */
     public function isActive()
     {
-        return Shop::isFeatureActive();
+        return $this->configuration->getBoolean('PS_MULTISHOP_FEATURE_ACTIVE');
     }
 
     /**
@@ -73,7 +72,7 @@ class MultiShopFeature implements FeatureInterface
      */
     public function enable()
     {
-        $this->configuration->set('PS_MULTISHOP_FEATURE_ACTIVE', true);
+        $this->configuration->set('PS_MULTISHOP_FEATURE_ACTIVE', 1);
     }
 
     /**
@@ -81,7 +80,7 @@ class MultiShopFeature implements FeatureInterface
      */
     public function disable()
     {
-        $this->configuration->set('PS_MULTISHOP_FEATURE_ACTIVE', false);
+        $this->configuration->set('PS_MULTISHOP_FEATURE_ACTIVE', 0);
     }
 
     /**
@@ -89,6 +88,6 @@ class MultiShopFeature implements FeatureInterface
      */
     public function update($status)
     {
-        true === $status ? $this->enable() : $this->disable();
+        $status ? $this->enable() : $this->disable();
     }
 }

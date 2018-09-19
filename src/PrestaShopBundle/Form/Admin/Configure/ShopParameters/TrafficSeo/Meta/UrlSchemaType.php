@@ -59,8 +59,7 @@ class UrlSchemaType extends AbstractType
     {
         if ($this->isRewriteSettingEnabled) {
             $builder
-                ->add('product_rule', TextType::class, [
-                ])
+                ->add('product_rule', TextType::class)
                 ->add('category_rule', TextType::class)
                 ->add('layered_rule', TextType::class)
                 ->add('supplier_rule', TextType::class)
