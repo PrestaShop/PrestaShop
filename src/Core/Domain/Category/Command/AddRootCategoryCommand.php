@@ -24,31 +24,11 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\Category\CommandHandler;
-
-use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddCategoryCommand;
-use PrestaShop\PrestaShop\Core\Domain\Category\CommandHandler\AddCategoryHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
+namespace PrestaShop\PrestaShop\Core\Domain\Category\Command;
 
 /**
- * Class AddCategoryHandler
- *
- * @internal
+ * Class AddRootCategoryCommand
  */
-final class AddCategoryHandler extends AbstractAddCategoryHandler implements AddCategoryHandlerInterface
+class AddRootCategoryCommand extends AbstractAddCategoryCommand
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function handle(AddCategoryCommand $command)
-    {
-        $category = $this->buildCategory($command);
-        $category->id_parent = $command->getParentCategoryId();
-
-        $category->add();
-
-        $this->uploadImages($category, $command);
-
-        return new CategoryId($category->id);
-    }
 }
