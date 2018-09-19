@@ -24,39 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Category\ValueObject;
+namespace PrestaShop\PrestaShop\Core\Domain\Category\QueryHandler;
+
+use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryForEditing;
 
 /**
- * Class CategoryId
+ * Interface GetCategoryForEditingHandlerInterface
  */
-class CategoryId
+interface GetCategoryForEditingHandlerInterface
 {
     /**
-     * @var int
+     * @param GetCategoryForEditing $query
      */
-    private $categoryId;
-
-    /**
-     * @param int $categoryId
-     */
-    public function __construct($categoryId)
-    {
-        $this->setCategoryId($categoryId);
-    }
-
-    /**
-     * @return int
-     */
-    public function getValue()
-    {
-        return $this->categoryId;
-    }
-
-    /**
-     * @param int $categoryId
-     */
-    private function setCategoryId($categoryId)
-    {
-        $this->categoryId = $categoryId;
-    }
+    public function handle(GetCategoryForEditing $query);
 }

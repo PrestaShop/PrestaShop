@@ -24,9 +24,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Category\Command;
+namespace PrestaShop\PrestaShop\Core\Domain\Category\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Category\Exception\CategoryConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryConstraintException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
