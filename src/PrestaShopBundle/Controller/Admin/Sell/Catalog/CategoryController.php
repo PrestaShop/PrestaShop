@@ -42,6 +42,7 @@ use PrestaShop\PrestaShop\Core\Search\Filters\CategoryFilters;
 use PrestaShopBundle\Component\CsvResponse;
 use PrestaShop\PrestaShop\Core\Domain\Product\Category\Command\AddCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Category\EditableCategory;
+use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryForEditing;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Sell\Category\DeleteCategoriesType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;

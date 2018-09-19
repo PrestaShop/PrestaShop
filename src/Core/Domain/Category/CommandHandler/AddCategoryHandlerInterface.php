@@ -24,17 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Category\QueryHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Category\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Category\Query\GetCategoryForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddCategoryCommand;
 
 /**
- * Interface GetCategoryForEditingHandlerInterface
+ * Interface AddCategoryHandlerInterface
  */
-interface GetCategoryForEditingHandlerInterface
+interface AddCategoryHandlerInterface
 {
     /**
-     * @param GetCategoryForEditing $query
+     * @param AddCategoryCommand $command
      */
-    public function handle(GetCategoryForEditing $query);
+    public function handle(AddCategoryCommand $command);
 }
