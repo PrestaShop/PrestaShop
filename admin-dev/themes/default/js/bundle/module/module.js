@@ -321,11 +321,11 @@ var AdminModuleController = function() {
       }
     }
     if (this.currentTagsList.length) {
-      if ('grid' === this.currentDisplay) {
-        $(".modules-list").append(this.addonsCardGrid);
-      } else {
-        $(".modules-list").append(this.addonsCardList);
-      }
+        if ('grid' === this.currentDisplay) {
+            $(".modules-list").append(this.addonsCardGrid);
+        } else {
+            $(".modules-list").append(this.addonsCardList);
+        }
     }
 
     this.updateTotalResults();
@@ -347,8 +347,8 @@ var AdminModuleController = function() {
 
     body.on('change', this.bulkActionDropDownSelector, function() {
       if (0 === $(self.getBulkCheckboxesCheckedSelector()).length) {
-        $.growl.warning({message: translate_javascripts['Bulk Action - One module minimum']});
-        return;
+          $.growl.warning({message: translate_javascripts['Bulk Action - One module minimum']});
+          return;
       }
       self.lastBulkAction = $(this).find(':checked').attr('value');
       var modulesListString = self.buildBulkActionModuleList();
@@ -441,7 +441,7 @@ var AdminModuleController = function() {
     var self = this;
     var body = $('body');
     var dropzone = $('.dropzone');
-
+    
     // Reset modal when click on Retry in case of failure
     body.on('click', this.moduleImportFailureRetrySelector, function() {
       $(self.moduleImportSuccessSelector + ', ' + self.moduleImportFailureSelector + ', ' + self.moduleImportProcessingSelector).fadeOut(function() {
@@ -541,101 +541,101 @@ var AdminModuleController = function() {
       }
     };
     dropzone.dropzone($.extend(dropzoneOptions));
-
+    
     this.animateStartUpload = function() {
-      // State that we start module upload
-      self.isUploadStarted = true;
-      $(self.moduleImportStartSelector).hide(0);
-      dropzone.css('border', 'none');
-      $(self.moduleImportProcessingSelector).fadeIn();
+        // State that we start module upload
+        self.isUploadStarted = true;
+        $(self.moduleImportStartSelector).hide(0);
+        dropzone.css('border', 'none');
+        $(self.moduleImportProcessingSelector).fadeIn();
     };
-
+    
     this.animateEndUpload = function(callback) {
-      $(self.moduleImportProcessingSelector).finish().fadeOut(callback);
+        $(self.moduleImportProcessingSelector).finish().fadeOut(callback);
     };
-
+    
     /**
      * Method to call for upload modal, when the ajax call went well.
-     *
+     * 
      * @param object result containing the server response
      */
     this.displayOnUploadDone = function(result) {
-      var self = this;
-      self.animateEndUpload(function() {
-        if (result.status === true) {
-          if (result.is_configurable === true) {
-            var configureLink = moduleURLs.configurationPage.replace('1', result.module_name);
-            $(self.moduleImportSuccessConfigureBtnSelector).attr('href', configureLink);
-            $(self.moduleImportSuccessConfigureBtnSelector).show();
-          }
-          $(self.moduleImportSuccessSelector).fadeIn();
-        } else if (typeof result.confirmation_subject !== 'undefined') {
-          self.displayPrestaTrustStep(result);
-        } else {
-          $(self.moduleImportFailureMsgDetailsSelector).html(result.msg);
-          $(self.moduleImportFailureSelector).fadeIn();
-        }
-      });
+        var self = this;
+        self.animateEndUpload(function() {
+            if (result.status === true) {
+              if (result.is_configurable === true) {
+                var configureLink = moduleURLs.configurationPage.replace('1', result.module_name);
+                $(self.moduleImportSuccessConfigureBtnSelector).attr('href', configureLink);
+                $(self.moduleImportSuccessConfigureBtnSelector).show();
+              }
+              $(self.moduleImportSuccessSelector).fadeIn();
+            } else if (typeof result.confirmation_subject !== 'undefined') {
+                self.displayPrestaTrustStep(result);
+            } else {
+              $(self.moduleImportFailureMsgDetailsSelector).html(result.msg);
+              $(self.moduleImportFailureSelector).fadeIn();
+            }
+          });
     };
 
     /**
      * Method to call for upload modal, when the ajax call went wrong or when the action requested could not
      * succeed for some reason.
-     *
+     * 
      * @param string message explaining the error.
      */
     this.displayOnUploadError = function(message) {
-      self.animateEndUpload(function() {
-        $(self.moduleImportFailureMsgDetailsSelector).html(message);
-        $(self.moduleImportFailureSelector).fadeIn();
-      });
+        self.animateEndUpload(function() {
+            $(self.moduleImportFailureMsgDetailsSelector).html(message);
+            $(self.moduleImportFailureSelector).fadeIn();
+        });
     };
 
     /**
      * If PrestaTrust needs to be confirmed, we ask for the confirmation modal content and we display it in the
      * currently displayed one. We also generate the ajax call to trigger once we confirm we want to install
      * the module.
-     *
+     * 
      * @param Previous server response result
      */
     this.displayPrestaTrustStep = function (result) {
-      var self = this;
-      var modal = module_card_controller.replacePrestaTrustPlaceholders(result);
-      var moduleName = result.module.attributes.name;
-      $(this.moduleImportConfirmSelector).html(modal.find('.modal-body').html()).fadeIn();
-      $(this.dropZoneModalFooterSelector).html(modal.find('.modal-footer').html()).fadeIn();
-      $(this.dropZoneModalFooterSelector).find(".pstrust-install").off('click').on('click', function() {
-
-        $(self.moduleImportConfirmSelector).hide();
-        $(self.dropZoneModalFooterSelector).html('');
-        self.animateStartUpload();
-
-        // Install ajax call
-        $.post(result.module.attributes.urls.install, { 'actionParams[confirmPrestaTrust]': "1"})
-         .done(function(data) {
-           self.displayOnUploadDone(data[moduleName]);
-         })
-         .fail(function(data) {
-           self.displayOnUploadError(data[moduleName]);
-         })
-         .always(function() {
-           self.isUploadStarted = false;
-         });
-      });
+          var self = this;
+          var modal = module_card_controller.replacePrestaTrustPlaceholders(result);
+          var moduleName = result.module.attributes.name;
+          $(this.moduleImportConfirmSelector).html(modal.find('.modal-body').html()).fadeIn();
+          $(this.dropZoneModalFooterSelector).html(modal.find('.modal-footer').html()).fadeIn();
+          $(this.dropZoneModalFooterSelector).find(".pstrust-install").off('click').on('click', function() {
+            
+            $(self.moduleImportConfirmSelector).hide();
+            $(self.dropZoneModalFooterSelector).html('');
+            self.animateStartUpload();
+            
+            // Install ajax call
+            $.post(result.module.attributes.urls.install, { 'actionParams[confirmPrestaTrust]': "1"})
+              .done(function(data) {
+                self.displayOnUploadDone(data[moduleName]);
+              })
+              .fail(function(data) {
+                self.displayOnUploadError(data[moduleName]);
+              })
+              .always(function() {
+                  self.isUploadStarted = false;
+              });
+          });
     };
   };
 
   this.getBulkCheckboxesSelector = function () {
     return this.currentDisplay == 'grid'
-         ? this.bulkActionCheckboxGridSelector
-         : this.bulkActionCheckboxListSelector;
+      ? this.bulkActionCheckboxGridSelector
+      : this.bulkActionCheckboxListSelector;
   };
 
 
   this.getBulkCheckboxesCheckedSelector = function () {
     return this.currentDisplay == 'grid'
-         ? this.checkedBulkActionGridSelector
-         : this.checkedBulkActionListSelector;
+      ? this.checkedBulkActionGridSelector
+      : this.checkedBulkActionListSelector;
   };
 
   this.loadVariables = function () {
@@ -644,10 +644,10 @@ var AdminModuleController = function() {
 
   this.getModuleItemSelector = function () {
     return this.currentDisplay == 'grid'
-         ? this.moduleItemGridSelector
-         : this.moduleItemListSelector;
+      ? this.moduleItemGridSelector
+      : this.moduleItemListSelector;
   };
-
+  
   /**
    * Get the module notifications count and displays it as a badge on the notification tab
    * @return void
@@ -656,24 +656,24 @@ var AdminModuleController = function() {
     var urlToCall = moduleURLs.notificationsCount;
 
     $.getJSON(
-      urlToCall,
-      this.updateNotificationsCount
+        urlToCall,
+        this.updateNotificationsCount
     ).fail(function() {
-      console.error('Could not retrieve module notifications count.');
+        console.error('Could not retrieve module notifications count.');
     });
   };
-
+  
   this.updateNotificationsCount = function(badge) {
     var destinationTabs = {
-      'to_configure': $("#subtab-AdminModulesNotifications"),
-      'to_update': $("#subtab-AdminModulesUpdates"),
+        'to_configure': $("#subtab-AdminModulesNotifications"),
+        'to_update': $("#subtab-AdminModulesUpdates"),
     };
-
+    
     for (var key in destinationTabs) {
-      if (destinationTabs[key].length === 0) {
-        continue;
-      }
-      destinationTabs[key].find('.notification-counter').text(badge[key]);
+        if (destinationTabs[key].length === 0) {
+            continue;
+        }
+        destinationTabs[key].find('.notification-counter').text(badge[key]);
     };
   };
 
@@ -789,8 +789,8 @@ var AdminModuleController = function() {
             module_card_controller.requestToController(urlActionSegment, urlElement, forceDeletion);
           } else {
             $.growl.error({message: translate_javascripts["Bulk Action - Request not available for module"]
-              .replace('[1]', urlActionSegment)
-              .replace('[2]', moduleTechName)});
+                        .replace('[1]', urlActionSegment)
+                        .replace('[2]', moduleTechName)});
           }
         }
       });
@@ -819,8 +819,8 @@ var AdminModuleController = function() {
     // "Upgrade All" button handler
     var that = this;
     $('body').on('click', this.upgradeAllSource, function(event) {
-      event.preventDefault();
-      $(that.upgradeAllTargets).click();
+        event.preventDefault();
+        $(that.upgradeAllTargets).click();
     });
   };
 
