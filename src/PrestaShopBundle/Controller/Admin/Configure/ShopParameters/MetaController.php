@@ -81,7 +81,7 @@ class MetaController extends FrameworkBundleAdminController
         return [
             'layoutHeaderToolbarBtn' => [
                 'add' => [
-                    'href' => $this->generateUrl('admin_meta_list_create'),
+                    'href' => $this->getAdminLink('AdminMeta', ['addmeta' => '']),
                     'desc' => $this->trans('Add a new page', 'Admin.Shopparameters.Feature'),
                     'icon' => 'add_circle_outline',
                 ],
