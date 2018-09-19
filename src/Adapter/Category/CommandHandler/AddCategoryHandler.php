@@ -27,8 +27,8 @@
 namespace PrestaShop\PrestaShop\Adapter\Category\CommandHandler;
 
 use Category;
-use PrestaShop\PrestaShop\Core\Domain\Product\Category\Command\AddCategoryCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Category\CommandHandler\AddCategoryHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddCategoryCommand;
+use PrestaShop\PrestaShop\Core\Domain\Category\CommandHandler\AddCategoryHandlerInterface;
 use PrestaShop\PrestaShop\Core\Image\Uploader\ImageUploaderInterface;
 
 /**

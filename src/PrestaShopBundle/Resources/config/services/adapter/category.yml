@@ -55,14 +55,14 @@ services:
             - '@prestashop.adapter.image.uploader.category_cover_image_uploader'
             - '@prestashop.adapter.image.uploader.category_thumbnail_image_uploader'
         tags:
-            - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Product\Category\Command\AddCategoryCommand' }
+            - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Category\Command\AddCategoryCommand' }
 
     prestashop.adapter.category.query_handler.get_category_for_editing:
         class: 'PrestaShop\PrestaShop\Adapter\Category\QueryHandler\GetCategoryForEditingHandler'
         arguments:
             - '@prestashop.adapter.category.image.category_thumbnail_retriever'
         tags:
-            - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Product\Category\Query\GetCategoryForEditing' }
+            - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryForEditing' }
 
     prestashop.adapter.category.image.category_thumbnail_retriever:
         class: 'PrestaShop\PrestaShop\Adapter\Category\Image\CategoryThumbnailRetriever'

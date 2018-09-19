@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -26,23 +26,10 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Category\Exception;
 
-/**
- * Class CategoryConstraintException.
- */
 class CategoryConstraintException extends CategoryException
 {
-    /**
-     * Code is used when Category status is created with invalid value.
-     */
-    const INVALID_STATUS = 10;
-
-    /**
-     * Code is used when Category delete mode is created with invalid value.
-     */
-    const INVALID_DELETE_MODE = 20;
-
-    /**
-     * Code is used when bulk delete command is dispatched without any data.
-     */
-    const EMPTY_BULK_DELETE_DATA = 30;
+    const EMPTY_NAME = 1;
+    const EMPTY_LINK_REWRITE = 2;
+    const INVALID_STATUS = 4;
+    const INVALID_PARENT_ID = 8;
 }

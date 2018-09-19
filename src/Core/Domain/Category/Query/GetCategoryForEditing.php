@@ -24,9 +24,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Category\Query;
+namespace PrestaShop\PrestaShop\Core\Domain\Category\Query;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Category\ValueObject\CategoryId;
+use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 
 /**
  * Class GetCategoryForEditing retrieves category data for editing
