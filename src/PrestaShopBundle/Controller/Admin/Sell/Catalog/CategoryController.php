@@ -51,23 +51,20 @@ class CategoryController extends FrameworkBundleAdminController
                 $command = new AddCategoryCommand(
                     $data['name'],
                     $data['link_rewrite'],
+                    (bool) $data['active'],
                     (int) $data['id_parent']
                 );
 
-                if (isset($data['active'])) {
-                    $command->setIsActive($data['active']);
-                }
-
                 if (isset($data['description'])) {
-                    $command->setDescriptions($data['description']);
+                    $command->setDescription($data['description']);
                 }
 
                 if (isset($data['meta_title'])) {
-                    $command->setMetaTitles($data['meta_title']);
+                    $command->setMetaTitle($data['meta_title']);
                 }
 
                 if (isset($data['meta_description'])) {
-                    $command->setMetaDescriptions($data['meta_description']);
+                    $command->setMetaDescription($data['meta_description']);
                 }
 
                 if (isset($data['meta_keyword'])) {
