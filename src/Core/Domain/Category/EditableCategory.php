@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Category;
+namespace PrestaShop\PrestaShop\Core\Domain\Category;
 
 /**
  * Class EditableCategory
