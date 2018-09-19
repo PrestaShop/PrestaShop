@@ -54,6 +54,7 @@ services:
         arguments:
             - '@prestashop.adapter.image.uploader.category_cover_image_uploader'
             - '@prestashop.adapter.image.uploader.category_thumbnail_image_uploader'
+            - '@prestashop.adapter.image.uploader.category_menu_thumbnail_image_uploader'
         tags:
             - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Category\Command\AddCategoryCommand' }
 

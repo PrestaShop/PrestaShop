@@ -49,15 +49,23 @@ final class AddCategoryHandler implements AddCategoryHandlerInterface
     private $categoryThumbnailUploader;
 
     /**
+     * @var ImageUploaderInterface
+     */
+    private $categoryMenuThumbnailUploader;
+
+    /**
      * @param ImageUploaderInterface $categoryCoverUploader
      * @param ImageUploaderInterface $categoryThumbnailUploader
+     * @param ImageUploaderInterface $categoryMenuThumbnailUploader
      */
     public function __construct(
         ImageUploaderInterface $categoryCoverUploader,
-        ImageUploaderInterface $categoryThumbnailUploader
+        ImageUploaderInterface $categoryThumbnailUploader,
+        ImageUploaderInterface $categoryMenuThumbnailUploader
     ) {
         $this->categoryImageUploader = $categoryCoverUploader;
         $this->categoryThumbnailUploader = $categoryThumbnailUploader;
+        $this->categoryMenuThumbnailUploader = $categoryMenuThumbnailUploader;
     }
 
     /**
@@ -75,7 +83,7 @@ final class AddCategoryHandler implements AddCategoryHandlerInterface
         $category->meta_keywords = $command->getMetaKeywords();
         $category->groupBox = $command->getAssociatedGroupIds();
 
-        // inside Category::add() it checks if shop association is submitted by
+        // inside Category::add() method it checks if shop association is submitted by
         // by retrieving data from $_POST["checkBoxShopAsso_category"]
         $_POST['checkBoxShopAsso_category'] = $command->getAssociatedShopIds();
 
@@ -93,6 +101,12 @@ final class AddCategoryHandler implements AddCategoryHandlerInterface
                 $category->id,
                 $command->getThumbnailImage()
             );
+        }
+
+        if (!empty($menuThumbnails = $command->getMenuThumbnailImages())) {
+            foreach ($menuThumbnails as $menuThumbnail) {
+                $this->categoryMenuThumbnailUploader->upload($category->id, $menuThumbnail);
+            }
         }
     }
 }

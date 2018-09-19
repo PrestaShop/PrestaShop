@@ -95,6 +95,11 @@ class AddCategoryCommand
     private $thumbnailImage;
 
     /**
+     * @var UploadedFile[]
+     */
+    private $menuThumbnailImages = [];
+
+    /**
      * @param string[] $names
      * @param string[] $linkRewrites
      * @param string[] $descriptions
@@ -400,5 +405,31 @@ class AddCategoryCommand
     public function setCoverImage(UploadedFile $coverImage)
     {
         $this->coverImage = $coverImage;
+    }
+
+    /**
+     * @return UploadedFile[]
+     */
+    public function getMenuThumbnailImages()
+    {
+        return $this->menuThumbnailImages;
+    }
+
+    /**
+     * @param UploadedFile[] $menuThumbnailImages
+     */
+    public function setMenuThumbnailImages(array $menuThumbnailImages)
+    {
+        $imagesCount = count($menuThumbnailImages);
+
+        //@todo: define as a constant
+        if (3 < $imagesCount) {
+            throw new CategoryConstraintException(
+                sprintf('Category cannot have more than 3 thumbnail images. %d images were submitted.', $imagesCount),
+                CategoryConstraintException::TOO_MANY_MENU_THUMBNAILS
+            );
+        }
+
+        $this->menuThumbnailImages = $menuThumbnailImages;
     }
 }
