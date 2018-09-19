@@ -822,28 +822,6 @@ class LinkCore
     }
 
     /**
-     * Adapter to get Admin HTTP link.
-     *
-     * @param string $controller the controller name
-     * @param bool $withToken
-     * @param array[string] $extraParams
-     *
-     * @return string
-     */
-    public function getLegacyAdminLink($controller, $withToken = true, $extraParams = array())
-    {
-        $id_lang = Context::getContext()->language->id;
-        $params = $extraParams;
-        if ($withToken) {
-            $params['token'] = Tools::getAdminTokenLite($controller);
-        }
-
-        $link = new Link();
-
-        return $link->getAdminBaseLink() . basename(_PS_ADMIN_DIR_) . '/' . Dispatcher::getInstance()->createUrl($controller, $id_lang, $params, false);
-    }
-
-    /**
      * @param int|null $idShop
      * @param bool|null $ssl
      * @param bool $relativeProtocol

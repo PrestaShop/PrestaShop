@@ -53,6 +53,7 @@ final class MetaSettingsFormDataProvider implements FormDataProviderInterface
      * @var DataConfigurationInterface
      */
     private $urlSchemaDataConfiguration;
+
     /**
      * @var RouteValidator
      */
