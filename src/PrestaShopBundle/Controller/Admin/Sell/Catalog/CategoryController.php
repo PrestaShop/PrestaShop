@@ -526,6 +526,11 @@ class CategoryController extends FrameworkBundleAdminController
                     $data['active']
                 );
                 $this->populateCommandWithFormData($command, $data);
+
+                if (isset($data['menu_thumbnail_images'])) {
+                    $command->setMenuThumbnailImages($data['menu_thumbnail_images']);
+                }
+
                 $this->getCommandBus()->handle($command);
 
                 $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));

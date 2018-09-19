@@ -32,4 +32,5 @@ class CategoryConstraintException extends CategoryException
     const EMPTY_LINK_REWRITE = 2;
     const INVALID_STATUS = 4;
     const INVALID_PARENT_ID = 8;
+    const TOO_MANY_MENU_THUMBNAILS = 16;
 }
