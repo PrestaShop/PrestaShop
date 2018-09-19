@@ -24,17 +24,13 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Category\QueryHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Category\Exception;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Category\Query\GetCategoryForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 
 /**
- * Interface GetCategoryForEditingHandlerInterface
+ * Class CategoryException is base exception for Category bounded context
  */
-interface GetCategoryForEditingHandlerInterface
+class CategoryException extends DomainException
 {
-    /**
-     * @param GetCategoryForEditing $query
-     */
-    public function handle(GetCategoryForEditing $query);
 }

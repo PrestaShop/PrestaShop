@@ -30,11 +30,11 @@ use Category;
 use ImageManager;
 use ImageType;
 use PrestaShop\PrestaShop\Adapter\Category\Image\CategoryThumbnailRetriever;
-use PrestaShop\PrestaShop\Core\Domain\Product\Category\EditableCategory;
-use PrestaShop\PrestaShop\Core\Domain\Product\Category\Exception\CategoryNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Category\Query\GetCategoryForEditing;
-use PrestaShop\PrestaShop\Core\Domain\Product\Category\QueryHandler\GetCategoryForEditingHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\Category\ValueObject\CategoryId;
+use PrestaShop\PrestaShop\Core\Domain\Category\EditableCategory;
+use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Category\QueryHandler\GetCategoryForEditingHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 
 /**
  * Class GetCategoryForEditingHandler

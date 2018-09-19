@@ -24,17 +24,39 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Category\CommandHandler;
-
-use PrestaShop\PrestaShop\Core\Domain\Product\Category\Command\AddCategoryCommand;
+namespace PrestaShop\PrestaShop\Core\Domain\Category\ValueObject;
 
 /**
- * Interface AddCategoryHandlerInterface
+ * Class CategoryId
  */
-interface AddCategoryHandlerInterface
+class CategoryId
 {
     /**
-     * @param AddCategoryCommand $command
+     * @var int
      */
-    public function handle(AddCategoryCommand $command);
+    private $categoryId;
+
+    /**
+     * @param int $categoryId
+     */
+    public function __construct($categoryId)
+    {
+        $this->setCategoryId($categoryId);
+    }
+
+    /**
+     * @return int
+     */
+    public function getValue()
+    {
+        return $this->categoryId;
+    }
+
+    /**
+     * @param int $categoryId
+     */
+    private function setCategoryId($categoryId)
+    {
+        $this->categoryId = $categoryId;
+    }
 }

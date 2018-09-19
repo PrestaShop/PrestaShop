@@ -24,13 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Category\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Category\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
+use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddCategoryCommand;
 
 /**
- * Class CategoryException is base exception for Category bounded context
+ * Interface AddCategoryHandlerInterface
  */
-class CategoryException extends DomainException
+interface AddCategoryHandlerInterface
 {
+    /**
+     * @param AddCategoryCommand $command
+     */
+    public function handle(AddCategoryCommand $command);
 }

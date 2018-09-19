@@ -26,11 +26,11 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Category\Command\AddCategoryCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Category\EditableCategory;
-use PrestaShop\PrestaShop\Core\Domain\Product\Category\Exception\CategoryException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Category\Query\GetCategoryForEditing;
-use PrestaShop\PrestaShop\Core\Domain\Product\Category\ValueObject\CategoryId;
+use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddCategoryCommand;
+use PrestaShop\PrestaShop\Core\Domain\Category\EditableCategory;
+use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryException;
+use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Catalog\Category\CategoryType;
 use Symfony\Component\HttpFoundation\Request;
