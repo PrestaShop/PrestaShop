@@ -146,6 +146,9 @@ class PrestaShopExceptionCore extends Exception
 
         $criticalParameters = [
             'password',
+            'passwd',
+            'pwd',
+            'pass',
             'database',
             'server',
         ];
@@ -160,7 +163,14 @@ class PrestaShopExceptionCore extends Exception
                     break;
                 }
 
-                if (in_array(strtolower($parameter->getName()), $criticalParameters)) {
+                $isCritical = false;
+                foreach ($criticalParameters as $criticalParameter) {
+                    if (preg_match('/' . $criticalParameter . '/', $parameter->getName())) {
+                        $isCritical = true;
+                    }
+                }
+
+                if ($isCritical) {
                     $hiddenArgs[] = '**hidden_' . $parameter->getName() . '**';
                 } else {
                     $hiddenArgs[] = $args[$argIndex];
