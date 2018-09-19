@@ -6,7 +6,7 @@ services:
         class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
         arguments:
             - '@prestashop.core.grid.definition.factory.logs'
-            - '@prestashop.core.grid.data_provider.log'
+            - '@prestashop.core.grid.data_factory.log'
             - '@prestashop.core.grid.filter.form_factory'
             - '@prestashop.core.hook.dispatcher'
 
@@ -14,7 +14,7 @@ services:
         class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
         arguments:
             - '@prestashop.core.grid.definition.factory.email_logs'
-            - '@prestashop.core.grid.data_provider.email_logs'
+            - '@prestashop.core.grid.data_factory.email_logs'
             - '@prestashop.core.grid.filter.form_factory'
             - '@prestashop.core.hook.dispatcher'
 
@@ -22,7 +22,7 @@ services:
         class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
         arguments:
             - '@prestashop.core.grid.definition.factory.request_sql'
-            - '@prestashop.core.grid.data_provider.request_sql'
+            - '@prestashop.core.grid.data_factory.request_sql'
             - '@prestashop.core.grid.filter.form_factory'
             - '@prestashop.core.hook.dispatcher'
 
@@ -38,7 +38,7 @@ services:
         class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
         arguments:
             - '@prestashop.core.grid.definition.factory.webservice_key'
-            - '@prestashop.core.grid.data_provider.webservice_key'
+            - '@prestashop.core.grid.data_factory.webservice_key'
             - '@prestashop.core.grid.filter.form_factory'
             - '@prestashop.core.hook.dispatcher'
 

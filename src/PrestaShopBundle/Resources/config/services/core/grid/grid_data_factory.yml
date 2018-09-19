@@ -2,7 +2,7 @@ services:
     _defaults:
         public: true
 
-    prestashop.core.grid.data_provider.log:
+    prestashop.core.grid.data_factory.log:
         class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
         arguments:
             - '@prestashop.core.admin.log.repository'
@@ -10,7 +10,7 @@ services:
             - '@prestashop.core.grid.query.doctrine_query_parser'
             - 'logs'
 
-    prestashop.core.grid.data_provider.email_logs:
+    prestashop.core.grid.data_factory.email_logs:
         class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
         arguments:
             - '@prestashop.core.grid.query_builder.email_logs'
@@ -18,7 +18,7 @@ services:
             - '@prestashop.core.grid.query.doctrine_query_parser'
             - 'email_logs'
 
-    prestashop.core.grid.data_provider.request_sql:
+    prestashop.core.grid.data_factory.request_sql:
         class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
         arguments:
             - '@prestashop.core.admin.request_sql.repository'
@@ -26,7 +26,7 @@ services:
             - '@prestashop.core.grid.query.doctrine_query_parser'
             - 'request_sql'
 
-    prestashop.core.grid.data_provider.webservice_key:
+    prestashop.core.grid.data_factory.webservice_key:
         class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
         arguments:
             - '@prestashop.core.grid.query.webservice_key_query_builder'
