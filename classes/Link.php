@@ -800,6 +800,7 @@ class LinkCore
                     'AdminInvoices' => 'admin_order_invoices',
                     'AdminEmails' => 'admin_email',
                     'AdminRequestSql' => 'admin_sql_request',
+                    'AdminMeta' => 'admin_meta',
                     // 'AdminWebservice' => 'admin_webservice', @todo: uncomment when grid and entity form are done.
                     'AdminBackup' => 'admin_backup',
                 );
@@ -818,6 +819,28 @@ class LinkCore
         $idLang = Context::getContext()->language->id;
 
         return $this->getAdminBaseLink() . basename(_PS_ADMIN_DIR_) . '/' . Dispatcher::getInstance()->createUrl($controller, $idLang, $params);
+    }
+
+    /**
+     * Adapter to get Admin HTTP link.
+     *
+     * @param string $controller the controller name
+     * @param bool $withToken
+     * @param array[string] $extraParams
+     *
+     * @return string
+     */
+    public function getLegacyAdminLink($controller, $withToken = true, $extraParams = array())
+    {
+        $id_lang = Context::getContext()->language->id;
+        $params = $extraParams;
+        if ($withToken) {
+            $params['token'] = Tools::getAdminTokenLite($controller);
+        }
+
+        $link = new Link();
+
+        return $link->getAdminBaseLink() . basename(_PS_ADMIN_DIR_) . '/' . Dispatcher::getInstance()->createUrl($controller, $id_lang, $params, false);
     }
 
     /**

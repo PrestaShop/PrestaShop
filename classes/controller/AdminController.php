@@ -961,6 +961,7 @@ class AdminControllerCore extends Controller
                     Hook::exec('action' . get_class($this) . ucfirst($this->action) . 'Before', array('controller' => $this));
                     // Call process
                     $return = $this->{'process' . Tools::toCamelCase($this->action)}();
+
                     // Hook After Action
                     Hook::exec('actionAdmin' . ucfirst($this->action) . 'After', array('controller' => $this, 'return' => $return));
                     Hook::exec('action' . get_class($this) . ucfirst($this->action) . 'After', array('controller' => $this, 'return' => $return));
