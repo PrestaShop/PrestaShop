@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddCategoryCommand;
+use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddRootCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\EditableCategory;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryForEditing;
@@ -118,6 +119,22 @@ class CategoryController extends FrameworkBundleAdminController
     {
         $rootCategoryForm = $this->createForm(RootCategoryType::class);
         $rootCategoryForm->handleRequest($request);
+
+        if ($rootCategoryForm->isSubmitted()) {
+            $data = $rootCategoryForm->getData();
+
+            $command = new AddRootCategoryCommand(
+                $data['name'],
+                $data['link_rewrite'],
+                $data['active']
+            );
+
+            $this->getCommandBus()->handle($command);
+
+            $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+
+            return $this->redirectToRoute('admin_category_add');
+        }
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Categories/add_root.html.twig', [
             'rootCategoryForm' => $rootCategoryForm->createView(),
