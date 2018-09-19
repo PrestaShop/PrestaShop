@@ -42,6 +42,7 @@
           {{ form_widget(categoryForm.active) }}
         </div>
       </div>
+      {% if categoryForm.id_parent is defined %}
       <div class="form-group row">
         <label class="form-control-label">
           {{ 'Parent category'|trans }}
@@ -50,6 +51,7 @@
           {{ form_widget(categoryForm.id_parent) }}
         </div>
       </div>
+      {% endif %}
       <div class="form-group row">
         {{ ps.label_with_help(('Description'|trans({}, 'Admin.Global')), ('Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' <>;=#{}')) }}
         <div class="col-sm">

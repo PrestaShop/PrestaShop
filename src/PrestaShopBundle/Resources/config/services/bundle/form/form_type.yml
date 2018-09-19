@@ -624,6 +624,13 @@ services:
         tags:
             - { name: form.type }
 
+    form.type.catalog.root_category:
+      class: 'PrestaShopBundle\Form\Admin\Catalog\Category\RootCategoryType'
+      parent: 'form.type.catalog.abstract_category'
+      public: true
+      tags:
+          - { name: form.type }
+
     form.type.common.translate_textarea:
         class: 'PrestaShopBundle\Form\Admin\Type\TranslateTextareaType'
         parent: 'form.type.translatable.aware'
