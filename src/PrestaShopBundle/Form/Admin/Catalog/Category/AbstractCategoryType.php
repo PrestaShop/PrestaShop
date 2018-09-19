@@ -74,7 +74,6 @@ abstract class AbstractCategoryType extends TranslatorAwareType
                 'required' => false,
                 'data' => true,
             ])
-            ->add('id_parent', CategoryChoiceTreeType::class)
             ->add('description', TranslatableType::class, [
                 'type' => TextareaType::class,
                 'required' => false,

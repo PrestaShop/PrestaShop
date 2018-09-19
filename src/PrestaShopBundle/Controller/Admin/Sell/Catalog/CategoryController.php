@@ -51,6 +51,7 @@ use PrestaShopBundle\Security\Voter\PageVoter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use PrestaShopBundle\Form\Admin\Catalog\Category\CategoryType;
+use PrestaShopBundle\Form\Admin\Catalog\Category\RootCategoryType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -546,9 +547,9 @@ class CategoryController extends FrameworkBundleAdminController
             'defaultGroups' => $defaultGroups,
         ]);
     }
-
+    
     /**
-     * Show & process category editing.
+     * Show & process category editing
      *
      * @param int $categoryId
      * @param Request $request

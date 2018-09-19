@@ -64,6 +64,13 @@ admin_category_add:
         _controller: PrestaShopBundle:Admin\Sell\Catalog\Category:add
         _legacy_controller: AdminCategories
 
+admin_category_add_root:
+    path: /new-root
+    methods: [GET, POST]
+    defaults:
+        _controller: PrestaShopBundle:Admin\Sell\Catalog\Category:addRoot
+        _legacy_controller: AdminCategories
+
 admin_category_edit:
     path: /{categoryId}/edit
     methods: [GET, POST]
