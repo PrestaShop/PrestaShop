@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Catalog\Category\CategoryType;
+use PrestaShopBundle\Form\Admin\Catalog\Category\RootCategoryType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -106,6 +107,23 @@ class CategoryController extends FrameworkBundleAdminController
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Categories/add.html.twig', [
             'categoryForm' => $categoryCreateForm->createView(),
+        ]);
+    }
+
+    /**
+     * Show "Add new root category" page & process adding
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function addRootAction(Request $request)
+    {
+        $rootCategoryForm = $this->createForm(RootCategoryType::class);
+        $rootCategoryForm->handleRequest($request);
+
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Categories/add_root.html.twig', [
+            'rootCategoryForm' => $rootCategoryForm->createView(),
         ]);
     }
 
