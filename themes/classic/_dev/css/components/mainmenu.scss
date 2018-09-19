@@ -1,3 +1,6 @@
+body.js-mobile-menu-open{
+  overflow-y: hidden;
+}
 .top-menu {
   &[data-depth="1"] {
     margin: 0.625rem;
@@ -72,16 +75,14 @@
   }
 }
 #mobile_top_menu_wrapper {
-  @media(max-width:767px){
-    box-shadow: 0 0 5px #ddd;
-  }
-  margin: -.625rem 0 0 0;
+  margin: 0;
   background: #fff;
-  position: absolute;
-  width: 100%;
-  height: 100vh;
-  top: 0;
+  position: fixed;
+  z-index: 99;
+  top: 52px;
+  bottom: 0;
   left: 0;
+  width: 100%;
   overflow-y: auto;
   #top-menu {
     margin-bottom: 0.625rem;
