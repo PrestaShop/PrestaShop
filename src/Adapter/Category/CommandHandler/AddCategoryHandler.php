@@ -74,12 +74,12 @@ final class AddCategoryHandler implements AddCategoryHandlerInterface
     public function handle(AddCategoryCommand $command)
     {
         $category = new Category();
-        $category->name = $command->getNames();
-        $category->link_rewrite = $command->getLinkRewrites();
-        $category->description = $command->getDescriptions();
+        $category->name = $command->getName();
+        $category->link_rewrite = $command->getLinkRewrite();
+        $category->description = $command->getDescription();
         $category->id_parent = $command->getParentCategoryId();
-        $category->meta_title = $command->getMetaTitles();
-        $category->meta_description = $command->getMetaDescriptions();
+        $category->meta_title = $command->getMetaTitle();
+        $category->meta_description = $command->getMetaDescription();
         $category->meta_keywords = $command->getMetaKeywords();
         $category->groupBox = $command->getAssociatedGroupIds();
 
