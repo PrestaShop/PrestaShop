@@ -135,7 +135,7 @@ class CategoriesProvider
 
         foreach ($categoriesListing as $category) {
             $categories['categories']->subMenu[$category->name] = $this->createMenuObject(
-                isset($category->tab) ? $category->tab : $category->name,
+                $category->id_category,
                 $category->name,
                 [],
                 isset($category->tab) ? $category->tab : null

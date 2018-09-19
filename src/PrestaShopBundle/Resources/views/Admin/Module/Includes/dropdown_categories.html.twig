@@ -55,7 +55,7 @@
             data-category-display-name="{{subMenu.name}}"
           >
             <a class="dropdown-item" href="#">
-              {{subMenu.name}}
+              {{subMenu.name}}<span class="float-right">{{subMenu.modules|length }}</span>
             </a>
           </li>
         {% endfor %}

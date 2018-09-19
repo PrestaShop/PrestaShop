@@ -321,7 +321,7 @@ class AdminModuleController {
           description: $this.data('description').toLowerCase(),
           techName: $this.data('tech-name').toLowerCase(),
           childCategories: $this.data('child-categories'),
-          categories: $this.closest('.modules-list').data('name').toLowerCase(),
+          categories: String($this.closest('.modules-list').data('name')).toLowerCase(),
           type: $this.data('type'),
           price: parseFloat($this.data('price')),
           active: parseInt($this.data('active'), 10),
@@ -390,7 +390,6 @@ class AdminModuleController {
 
     const counter = {};
 
-
     for (let i = 0; i < self.modulesList.length; i++) {
       currentModule = self.modulesList[i];
       if (currentModule.display === self.currentDisplay) {
@@ -457,7 +456,7 @@ class AdminModuleController {
       if (
         (
           self.currentRefCategory
-          && self.currentRefCategory !== container.find('.modules-list').data('name')
+          && self.currentRefCategory !== String(container.find('.modules-list').data('name'))
         ) || (
           self.currentRefStatus !== null
           && container.find('.module-item').length === 0
@@ -998,7 +997,7 @@ class AdminModuleController {
       function initializeCategorySelectClick() {
         // Get data from li DOM input
         self.currentRefCategory = $(this).data('category-ref');
-        self.currentRefCategory = self.currentRefCategory ? self.currentRefCategory.toLowerCase() : null;
+        self.currentRefCategory = self.currentRefCategory ? String(self.currentRefCategory).toLowerCase() : null;
         // Change dropdown label to set it to the current category's displayname
         $(self.categorySelectorLabelSelector).text($(this).data('category-display-name'));
         $(self.categoryResetBtnSelector).show();
