@@ -23,5 +23,5 @@
   * International Registered Trademark & Property of PrestaShop SA
   *#}
 {% for category in categories.subMenu %}
-  {% include 'PrestaShopBundle:Admin/Module/Includes:grid.html.twig' with { 'modules': category.modules, 'display_type': 'grid', 'id': category.tab } %}
+  {% include 'PrestaShopBundle:Admin/Module/Includes:grid.html.twig' with { 'modules': category.modules, 'display_type': 'grid', 'id': category.refMenu } %}
 {% endfor %}
