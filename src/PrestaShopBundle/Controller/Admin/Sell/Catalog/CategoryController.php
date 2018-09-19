@@ -34,14 +34,15 @@ use PrestaShop\PrestaShop\Core\Domain\Category\Command\ToggleCategoryStatusComma
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotDeleteRootCategoryForShopException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotUpdateCategoryStatusException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddCategoryCommand;
+use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddRootCategoryCommand;
+use PrestaShop\PrestaShop\Core\Domain\Category\EditableCategory;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryDeleteMode;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 use PrestaShop\PrestaShop\Core\Search\Filters\CategoryFilters;
 use PrestaShopBundle\Component\CsvResponse;
-use PrestaShop\PrestaShop\Core\Domain\Product\Category\Command\AddCategoryCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Category\EditableCategory;
 use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryForEditing;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Sell\Category\DeleteCategoriesType;
