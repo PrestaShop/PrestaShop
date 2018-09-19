@@ -101,8 +101,8 @@ class CommonClient {
 
   changeLanguage(language = 'en') {
     return this.client
-      .waitForExistAndClick(languageFO.language_selector)
-      .pause(1000)
+      .waitForExistAndClick(languageFO.language_selector, 2000)
+      .pause(2000)
       .isVisible(languageFO.language_option.replace('%LANG', language))
       .then((isVisible) => {
         expect(isVisible, "This language is not existing").to.be.true;
@@ -536,7 +536,7 @@ class CommonClient {
   }
 
   middleClick(selector, globalVisibility = true, pause = 2000) {
-    if(visibility){
+    if(globalVisibility){
       return this.client
         .moveToObject(selector)
         .pause(pause)
