@@ -897,6 +897,10 @@ class DispatcherCore
         }
 
         if (!isset($this->routes[$id_shop][$id_lang][$route_id])) {
+            if ($this->multilang_activated && !isset($params['id_lang'])) {
+                $params = array_merge(array('id_lang' => (int)$id_lang), $params);
+            }
+
             $query = http_build_query($params, '', '&');
             $index_link = $this->use_routes ? '' : 'index.php';
 
