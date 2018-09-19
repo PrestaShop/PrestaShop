@@ -47,6 +47,7 @@ export default class TopMenu extends DropDown {
     });
     $('#menu-icon').on('click', function() {
       $('#mobile_top_menu_wrapper').toggle();
+      $(this).toggleClass("menu-open");
       self.toggleMobileMenu();
     });
     $('.js-top-menu .category').mouseleave(() => {

@@ -51,12 +51,27 @@
   }
   .header-nav {
     border-bottom: $gray-light 2px solid;
-    max-height: 50px;
+    height: 50px;
+    overflow: hidden;
     margin-bottom: 30px;
     #menu-icon {
       vertical-align: middle;
       cursor: pointer;
       margin-left: 1rem;
+      &.menu-open{
+        .ham-closed{
+          display:none;
+        }
+        .ham-open{
+          display: inline;
+        }
+      }
+      .ham-open{
+        display:none;
+      }
+      .ham-closed{
+        display: inline;
+      }
       .material-icons {
         line-height: 50px;
       }
@@ -93,7 +108,6 @@
       }
       .shopping-cart {
         vertical-align: middle;
-        color: $gray;
       }
       .body {
         display: none;
@@ -101,7 +115,7 @@
     }
     .blockcart {
       background: $gray-light;
-      height: 3rem;
+      height: 50px;
       padding: 0.75rem;
       margin-left: 0.9375rem;
       text-align: center;
@@ -311,14 +325,23 @@
       background: white;
       margin-bottom: 0.625rem;
       color: $gray-darker;
+      box-shadow: 0 0 5px #ddd;
+      border-bottom: 0;
       .top-logo {
         line-height: 50px;
         vertical-align: middle;
         width: 200px;
         margin: 0 auto;
+        height: 50px;
+        display: inline-flex;
+        align-items: center;
+        padding-left: 15px;
+        h1{
+          margin: 0;
+        }
         a {
           img {
-            max-height: 50px;
+            max-height: 40px;
             max-width: 100%;
           }
         }
@@ -351,6 +374,9 @@
       padding-bottom: 0;
       a[data-depth="0"] {
         color: $gray-darker;
+      }
+      .search-widget{
+        width: 100%;
       }
     }
   }
