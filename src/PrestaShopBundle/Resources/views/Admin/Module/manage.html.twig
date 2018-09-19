@@ -59,7 +59,7 @@
 
             {% block addon_card_see_more %}
               {% if (category.modules | length) > maxModulesDisplayed %}
-                {% include 'PrestaShopBundle:Admin/Module/Includes:see_more.html.twig' with { 'id': category.tab } %}
+                {% include 'PrestaShopBundle:Admin/Module/Includes:see_more.html.twig' with { 'id': category.refMenu } %}
               {% endif %}
             {% endblock %}
           {% endif %}
