@@ -42,82 +42,17 @@ use Symfony\Component\Translation\TranslatorInterface;
 /**
  * Class CategoryType
  */
-class CategoryType extends TranslatorAwareType
+class CategoryType extends AbstractCategoryType
 {
-    /**
-     * @var array
-     */
-    private $customerGroupChoices;
-
-    /**
-     * @param TranslatorInterface $translator
-     * @param array $locales
-     * @param array $customerGroupChoices
-     */
-    public function __construct(
-        TranslatorInterface $translator,
-        array $locales,
-        array $customerGroupChoices
-    ) {
-        parent::__construct($translator, $locales);
-
-        $this->customerGroupChoices = $customerGroupChoices;
-    }
-
     /**
      * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        parent::buildForm($builder, $options);
+
         $builder
-            ->add('name', TranslatableType::class, [
-                'type' => TextType::class,
-            ])
-            ->add('active', SwitchType::class, [
-                'required' => false,
-                'data' => true,
-            ])
             ->add('id_parent', CategoryChoiceTreeType::class)
-            ->add('description', TranslatableType::class, [
-                'type' => TextareaType::class,
-                'required' => false,
-            ])
-            ->add('cover_image', FileType::class, [
-                'required' => false,
-            ])
-            ->add('thumbnail_image', FileType::class, [
-                'required' => false,
-            ])
-            ->add('menu_thumbnail_images', FileType::class, [
-                'multiple' => true,
-                'required' => false,
-            ])
-            ->add('meta_title', TranslatableType::class, [
-                'type' => TextWithLengthCounterType::class,
-                'options' => [
-                    'max_length' => 5,
-                ],
-            ])
-            ->add('meta_description', TranslatableType::class, [
-                'type' => TextareaType::class,
-                'options' => [
-                    'required' => false,
-                ],
-            ])
-            ->add('meta_keyword', TranslatableType::class, [
-                'type' => TextType::class,
-                'options' => [
-                    'required' => false,
-                ],
-            ])
-            ->add('link_rewrite', TranslatableType::class, [
-                'type' => TextType::class,
-            ])
-            ->add('group_association', MaterialChoiceTableType::class, [
-                'choices' => $this->customerGroupChoices,
-                'required' => false,
-            ])
-            ->add('shop_association', ShopChoiceTreeType::class)
         ;
     }
 }
