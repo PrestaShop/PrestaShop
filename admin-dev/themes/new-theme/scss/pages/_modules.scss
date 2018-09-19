@@ -648,3 +648,16 @@ form#importDropzone {
 #unhook-button-position-bottom {
   display: none;
 }
+
+.form-action-button-container {
+  // @toDo: move to ui kit
+  .dropdown-toggle-split-text {
+    color: #AEAEAE;
+    border-color: #AEAEAE;
+    margin-left: 10px !important;
+    &:hover {
+      background-color: #AEAEAE;
+      color: white;
+    }
+  }
+}
