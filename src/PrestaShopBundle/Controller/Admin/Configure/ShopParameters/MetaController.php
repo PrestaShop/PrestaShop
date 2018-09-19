@@ -96,6 +96,8 @@ class MetaController extends FrameworkBundleAdminController
             'isShopContext' => $isShopContext,
             'isShopFeatureActive' => $isShopFeatureActive,
             'isHostMode' => $hostingInformation->isHostMode(),
+            'enableSidebar' => true,
+            'help_link' => $this->generateSidebarLink('AdminMeta'),
         ];
     }
 
