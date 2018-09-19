@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Feature;
 
 use PrestaShop\PrestaShop\Adapter\Entity\Shop;
+use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
 
 /**
