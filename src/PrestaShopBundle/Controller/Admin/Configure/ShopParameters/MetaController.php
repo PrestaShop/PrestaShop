@@ -102,7 +102,7 @@ class MetaController extends FrameworkBundleAdminController
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink('AdminMeta'),
             'helperDocLink' => $helperBlockLinkProvider->getLink(),
-            'indexPageId' => $metaDataProvider->getIdByPage('index')
+            'indexPageId' => $metaDataProvider->getIdByPage('index'),
         ];
     }
 
