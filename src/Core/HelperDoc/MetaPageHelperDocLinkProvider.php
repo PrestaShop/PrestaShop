@@ -55,9 +55,6 @@ class MetaPageHelperDocLinkProvider implements HelperDocLinkProviderInterface
         $link = 'http://doc.prestashop.com/display/PS17/SEO+and+URLs';
 
         switch ($this->contextIsoCode) {
-            case 'en':
-                $link = 'http://doc.prestashop.com/display/PS17/SEO+and+URLs';
-                break;
             case 'fr':
                 $link = 'http://doc.prestashop.com/display/PS17/SEO+et+URL';
                 break;
