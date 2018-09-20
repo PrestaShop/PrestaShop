@@ -32,15 +32,42 @@ namespace PrestaShop\PrestaShop\Core\HelperDoc;
  */
 class MetaPageHelperDocLinkProvider implements HelperDocLinkProviderInterface
 {
-    public function __construct()
+    /**
+     * @var string
+     */
+    private $contextIsoCode;
+
+    /**
+     * MetaPageHelperDocLinkProvider constructor.
+     *
+     * @param string $contextIsoCode
+     */
+    public function __construct($contextIsoCode)
     {
+        $this->contextIsoCode = $contextIsoCode;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function get()
+    public function getLink()
     {
-        // TODO: Implement get() method.
+        $link = 'http://doc.prestashop.com/display/PS17/SEO+and+URLs';
+
+        switch ($this->contextIsoCode) {
+            case 'en':
+                $link = 'http://doc.prestashop.com/display/PS17/SEO+and+URLs';
+                break;
+            case 'fr':
+                $link = 'http://doc.prestashop.com/display/PS17/SEO+et+URL';
+                break;
+            case 'es':
+                $link = 'http://doc.prestashop.com/display/PS17/SEO+y+URLs';
+                break;
+            case 'it':
+                $link = 'http://doc.prestashop.com/display/PS17/SEO+e+URL';
+        }
+
+        return $link;
     }
 }
