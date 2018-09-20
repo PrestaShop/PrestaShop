@@ -34,9 +34,7 @@ use PrestaShopBundle\Entity\ModuleHistory;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
-use PrestaShop\PrestaShop\Adapter\Module\Module as ApiModule;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilter;
-use PrestaShop\PrestaShop\Core\Addon\AddonListFilterOrigin;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterStatus;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterType;
 use PrestaShop\PrestaShop\Core\Addon\AddonsCollection;
@@ -47,7 +45,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\Constraints as Assert;
-use stdClass;
+use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
 
 /**
  * Responsible of "Improve > Modules > Modules & Services > Catalog / Manage" page display.
@@ -55,6 +53,8 @@ use stdClass;
 class ModuleController extends ModuleAbstractController
 {
     const CONTROLLER_NAME = 'ADMINMODULESSF';
+
+    const MAX_MODULES_DISPLAYED = 6;
 
     /**
      * @AdminSecurity("is_granted(['read', 'create', 'update', 'delete'], 'ADMINMODULESSF_')")
@@ -113,32 +113,26 @@ class ModuleController extends ModuleAbstractController
         $filters->setType(AddonListFilterType::MODULE | AddonListFilterType::SERVICE)
             ->removeStatus(AddonListFilterStatus::UNINSTALLED);
         $installedProducts = $moduleRepository->getFilteredList($filters);
+        $categories = $this->getCategories($modulesProvider, $installedProducts);
 
-        $modules = new stdClass();
-        foreach (['native_modules', 'theme_bundle', 'modules'] as $subpart) {
-            $modules->{$subpart} = [];
-        }
-
-        foreach ($installedProducts as $installedProduct) {
-            $modules->{$this->findModuleType($installedProduct, $modulesTheme)}[] = $installedProduct;
-        }
-
-        foreach ($modules as $moduleLabel => $modulesPart) {
-            $collection = AddonsCollection::createFrom($modulesPart);
-            $modules->{$moduleLabel} = $modulesProvider->generateAddonsUrls($collection);
-            $modules->{$moduleLabel} = $this->get('prestashop.adapter.presenter.module')
-                                           ->presentCollection($modulesPart);
-        }
+        $bulkActions = [
+            'bulk-uninstall' => $this->trans('Uninstall', 'Admin.Actions'),
+            'bulk-disable' => $this->trans('Disable', 'Admin.Actions'),
+            'bulk-enable' => $this->trans('Enable', 'Admin.Actions'),
+            'bulk-reset' => $this->trans('Reset', 'Admin.Actions'),
+            'bulk-enable-mobile' => $this->trans('Enable Mobile', 'Admin.Modules.Feature'),
+            'bulk-disable-mobile' => $this->trans('Disable Mobile', 'Admin.Modules.Feature'),
+        ];
 
         return $this->render(
             'PrestaShopBundle:Admin/Module:manage.html.twig',
             [
+                'maxModulesDisplayed' => self::MAX_MODULES_DISPLAYED,
+                'bulkActions' => $bulkActions,
                 'layoutHeaderToolbarBtn' => $this->getToolbarButtons(),
-                'layoutTitle' => $this->trans('Manage installed modules', 'Admin.Modules.Feature'),
-                'modules' => $modules,
-                'topMenuData' => $this->getTopMenuData(
-                    $this->get('prestashop.categories_provider')->getCategoriesMenu($installedProducts)
-                ),
+                'layoutTitle' => $this->trans('Module manager', 'Admin.Modules.Feature'),
+                'categories' => $categories['categories'],
+                'topMenuData' => $this->getTopMenuData($categories),
                 'requireAddonsSearch' => false,
                 'requireBulkActions' => true,
                 'enableSidebar' => true,
@@ -329,10 +323,14 @@ class ModuleController extends ModuleAbstractController
             $modulesProvider->generateAddonsUrls($modulesFromRepository);
 
             $modules = $modulesFromRepository->toArray();
-            $categoriesMenu = $this->get('prestashop.categories_provider')->getCategoriesMenu($modules);
             shuffle($modules);
-            $responseArray['domElements'][] = $this->constructJsonCatalogCategoriesMenuResponse($categoriesMenu);
-            $responseArray['domElements'][] = $this->constructJsonCatalogBodyResponse($modulesProvider, $modules);
+            $categories = $this->getCategories($modulesProvider, $modules);
+
+            $responseArray['domElements'][] = $this->constructJsonCatalogCategoriesMenuResponse($categories);
+            $responseArray['domElements'][] = $this->constructJsonCatalogBodyResponse(
+                $categories,
+                $modules
+            );
             $responseArray['status'] = true;
         } catch (Exception $e) {
             $responseArray['msg'] = $this->trans(
@@ -686,15 +684,17 @@ class ModuleController extends ModuleAbstractController
     }
 
     /**
-     * @param AdminModuleDataProvider $modulesProvider
+     * Construct Json struct for catalog body response.
+     *
+     * @param array $categories
      * @param array $modules
      *
      * @return array
      */
-    private function constructJsonCatalogBodyResponse(AdminModuleDataProvider $modulesProvider, array $modules)
-    {
-        $collection = AddonsCollection::createFrom($modules);
-        $modules = $modulesProvider->generateAddonsUrls($collection);
+    private function constructJsonCatalogBodyResponse(
+        array $categories,
+        array $modules
+    ) {
         $formattedContent = [];
         $formattedContent['selector'] = '.module-catalog-page';
         $formattedContent['content'] = $this->render(
@@ -707,11 +707,10 @@ class ModuleController extends ModuleAbstractController
         $errorMessage = $this->trans('You do not have permission to add this.', 'Admin.Notifications.Error');
 
         $formattedContent['content'] .= $this->render(
-            'PrestaShopBundle:Admin/Module/Includes:grid.html.twig',
+            'PrestaShopBundle:Admin/Module:catalog-refresh.html.twig',
             array(
-                'modules' => $this->get('prestashop.adapter.presenter.module')->presentCollection($modules),
+                'categories' => $categories['categories'],
                 'requireAddonsSearch' => true,
-                'id' => 'all',
                 'level' => $this->authorizationLevel(self::CONTROLLER_NAME),
                 'errorMessage' => $errorMessage,
             )
@@ -720,14 +719,21 @@ class ModuleController extends ModuleAbstractController
         return $formattedContent;
     }
 
-    private function constructJsonCatalogCategoriesMenuResponse($categoriesMenu)
+    /**
+     * Construct json struct from top menu.
+     *
+     * @param array $categories
+     *
+     * @return array
+     */
+    private function constructJsonCatalogCategoriesMenuResponse(array $categories)
     {
         $formattedContent = [];
         $formattedContent['selector'] = '.module-menu-item';
         $formattedContent['content'] = $this->render(
-            'PrestaShopBundle:Admin/Module/Includes:dropdown_categories.html.twig',
+            'PrestaShopBundle:Admin/Module/Includes:dropdown_categories_catalog.html.twig',
             array(
-                'topMenuData' => $this->getTopMenuData($categoriesMenu),
+                'topMenuData' => $this->getTopMenuData($categories),
             )
         )->getContent();
 
@@ -735,33 +741,12 @@ class ModuleController extends ModuleAbstractController
     }
 
     /**
-     * Find module type.
+     * Check user permission.
      *
-     * @param ApiModule $installedProduct Installed product
-     * @param array $modulesTheme Modules theme
+     * @param array $pageVoter
+     *
+     * @return void|JsonResponse
      */
-    private function findModuleType(ApiModule $installedProduct, array $modulesTheme)
-    {
-        if (in_array($installedProduct->attributes->get('name'), $modulesTheme)) {
-            return 'theme_bundle';
-        }
-
-        if ($installedProduct->attributes->has('origin_filter_value') &&
-            in_array(
-                $installedProduct->attributes->get('origin_filter_value'),
-                [
-                    AddonListFilterOrigin::ADDONS_NATIVE,
-                    AddonListFilterOrigin::ADDONS_NATIVE_ALL,
-                ]
-            ) &&
-            'PrestaShop' === $installedProduct->attributes->get('author')
-        ) {
-            return 'native_modules';
-        }
-
-        return 'modules';
-    }
-
     private function checkPermissions(array $pageVoter)
     {
         if (!in_array(
@@ -776,5 +761,27 @@ class ModuleController extends ModuleAbstractController
                 ]
             );
         }
+    }
+
+    /**
+     * Get categories and its modules.
+     *
+     * @param array $modules List of installed modules
+     *
+     * @return array
+     */
+    private function getCategories(AdminModuleDataProvider $modulesProvider, array $modules)
+    {
+        /* @var CategoriesProvider */
+        $categories = $this->get('prestashop.categories_provider')->getCategoriesMenu($modules);
+
+        foreach ($categories['categories']->subMenu as $category) {
+            $collection = AddonsCollection::createFrom($category->modules);
+            $modulesProvider->generateAddonsUrls($collection);
+            $category->modules = $this->get('prestashop.adapter.presenter.module')
+                               ->presentCollection($category->modules);
+        }
+
+        return $categories;
     }
 }

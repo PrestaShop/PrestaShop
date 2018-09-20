@@ -1,5 +1,5 @@
-{#**
- * 2007-2018 PrestaShop
+/**
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -21,16 +21,16 @@
  * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
-{% extends "PrestaShopBundle:Admin/Module/Includes:card_list.html.twig" %}
+ */
 
-{# Twig extension for "Addons to update" part in notification page #}
+import ModuleCard from '../../components/module-card';
+import AdminModuleController from './controller';
+import ModuleLoader from './loader';
 
-{# Display database version #}
-{% block addon_version %}
-  {% if module.attributes.productType == "service" %}
-    {{ 'Service by %author%'|trans({'%author%' : '<b>' ~ module.attributes.author ~ '</b>'}, 'Admin.Modules.Feature')|raw }}
-  {% else %}
-    {{ 'v%version% - by %author%'|trans({ '%version%' : module.attributes.version, '%author%' : '<b>' ~ module.attributes.author ~ '</b>' }, 'Admin.Modules.Feature')|raw }}
-  {% endif %}
-{% endblock %}
+const $ = window.$;
+
+$(() => {
+  const moduleCardController = new ModuleCard();
+  new ModuleLoader();
+  new AdminModuleController(moduleCardController);
+});

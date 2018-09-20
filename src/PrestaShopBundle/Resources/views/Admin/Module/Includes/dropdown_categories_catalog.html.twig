@@ -27,7 +27,7 @@
     {% set refMenu = menu.refMenu %}
     <div id="{{refMenu}}" class="dropdown-label" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
       <span class="js-selected-item selected-item module-category-selector-label">
-        {{ 'All Categories'|trans({}, 'Admin.Modules.Feature') }}
+        {{menu.name}}
       </span>
       <i class="material-icons arrow-down float-right">keyboard_arrow_down</i>
     </div>
@@ -39,22 +39,13 @@
             {{ 'All Categories'|trans({}, 'Admin.Modules.Feature') }}
           </a>
         </li>
-        <li class="module-category-menu module-category-recently-used"
-          data-category-ref="recently-used"
-          data-category-display-name="{{ 'Recently used'|trans({}, 'Admin.Modules.Feature') }}"
-        >
-          <a class="dropdown-item" href="#">
-            {{ 'Recently used'|trans({}, 'Admin.Modules.Feature') }}
-          </a>
-        </li>
-        </li>
         {% for subMenu in menu.subMenu %}
           <li class="module-category-menu"
             {% if subMenu.tab %}data-category-tab="{{subMenu.tab}}"{% endif %}
             data-category-ref="{{subMenu.refMenu}}"
             data-category-display-name="{{subMenu.name}}"
           >
-            <a class="dropdown-item" href="#">
+            <a  class="dropdown-item" href="#">
               {{subMenu.name}}<span class="float-right">{{subMenu.modules|length }}</span>
             </a>
           </li>

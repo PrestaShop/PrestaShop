@@ -133,7 +133,7 @@ class SurvivalTest extends WebTestCase
             'admin_theme_catalog' => ['Themes Catalog', 'admin_theme_catalog'],
             'admin_module_catalog' => ['Module selection', 'admin_module_catalog'],
             'admin_module_notification' => ['Module notifications', 'admin_module_notification'],
-            'admin_module_manage' => ['Manage installed modules', 'admin_module_manage'],
+            'admin_module_manage' => ['Module Manager', 'admin_module_manage'],
             'admin_shipping_preferences' => ['Shipping Preferences', 'admin_shipping_preferences'],
             'admin_payment_methods' => ['Payment Methods', 'admin_payment_methods'],
             'admin_geolocation' => ['Geolocation', 'admin_geolocation'],
