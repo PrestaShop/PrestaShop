@@ -78,6 +78,8 @@ class MetaController extends FrameworkBundleAdminController
         $isShopContext = $context->isShopContext();
         $isShopFeatureActive = $this->get('prestashop.adapter.multistore_feature')->isActive();
 
+        $helperBlockLinkProvider = $this->get('prestashop.core.helper_doc.meta_page_link_provider');
+
         return [
             'layoutHeaderToolbarBtn' => [
                 'add' => [
@@ -98,6 +100,7 @@ class MetaController extends FrameworkBundleAdminController
             'isHostMode' => $hostingInformation->isHostMode(),
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink('AdminMeta'),
+            'helperDocLink' => $helperBlockLinkProvider->getLink(),
         ];
     }
 

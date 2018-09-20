@@ -22,10 +22,16 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *#}
+
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 {% trans_default_domain "Admin.Shopparameters.Feature" %}
 
 {% block content %}
+  <div class="row">
+    <div class="col-sm">
+      {% include '@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/Blocks/meta_helper_card.html.twig' %}
+    </div>
+  </div>
   {% if isShopFeatureActive and not isShopContext %}
       <div class="row">
         <div class="col-sm">

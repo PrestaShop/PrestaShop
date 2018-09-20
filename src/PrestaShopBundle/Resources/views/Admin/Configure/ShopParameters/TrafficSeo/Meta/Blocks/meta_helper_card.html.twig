@@ -1,6 +1,5 @@
-<?php
-/**
- * 2007-2018 PrestaShop.
+{#**
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -22,19 +21,22 @@
  * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- */
+ *#}
 
-namespace PrestaShop\PrestaShop\Core\HelperDoc;
+{% trans_default_domain "Admin.Shopparameters.Feature" %}
 
-/**
- * Interface HelperDocLinkProviderInterface defines contract for retrieving "Learn more" links for helper blocks.
- */
-interface HelperDocLinkProviderInterface
-{
-    /**
-     * Gets link of helper doc.
-     *
-     * @return string
-     */
-    public function getLink();
-}
+{% block meta_helper_card %}
+  <div>
+    <div class="empty-state">
+      <div class="empty-state__left shape-one">
+        <img src="" alt="">
+      </div>
+      <div class="empty-state__right">
+        <h2>{{ 'Improve your Seo'|trans }}</h2>
+        <p>{{ 'Edit information about your pages to gain visibility and therefore reach more visitors. We advice you to start with the index page, it stand for your homepage.'|trans }}</p>
+        <a class="empty-state__learn-more-button" href="{{ helperDocLink }}" target="_blank">{{ 'Learn more'|trans({}, 'Admin.Actions') }}</a>
+      </div>
+      <i class="empty-state__close material-icons">close</i>
+    </div>
+  </div>
+{% endblock %}
