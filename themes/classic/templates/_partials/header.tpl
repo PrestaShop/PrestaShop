@@ -42,7 +42,8 @@
         </div>
         <div class="hidden-md-up text-sm-center mobile">
           <div class="float-xs-left" id="menu-icon">
-            <i class="material-icons d-inline">&#xE5D2;</i>
+            <i class="material-icons ham-closed">&#xE5D2;</i>
+            <i class="material-icons ham-open">&#xE5CD;</i>
           </div>
           <div class="float-xs-right" id="_mobile_cart"></div>
           <div class="float-xs-right" id="_mobile_user_info"></div>

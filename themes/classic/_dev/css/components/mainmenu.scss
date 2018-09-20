@@ -1,3 +1,6 @@
+body.js-mobile-menu-open{
+  overflow-y: hidden;
+}
 .top-menu {
   &[data-depth="1"] {
     margin: 0.625rem;
@@ -71,11 +74,16 @@
     }
   }
 }
-
 #mobile_top_menu_wrapper {
-  margin: .625rem 0 0;
-  padding-bottom: 0.625rem;
-  background: white;
+  margin: 0;
+  background: #fff;
+  position: fixed;
+  z-index: 99;
+  top: 52px;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  overflow-y: auto;
   #top-menu {
     margin-bottom: 0.625rem;
   }
@@ -92,9 +100,17 @@
     .collapse-icons .remove {
       display: none;
     }
+    .dropdown-item{
+      position: relative;
+    }
     .navbar-toggler {
-      display: inline-block;
-      padding: 0;
+      padding: 8px 15px;
+      width: 55px;
+      height: 41px;
+      border-left: 1px solid $gray-light;
+      position: absolute;
+      right: 0;
+      top: 0;
     }
     a[data-depth="0"] {
       padding: 0.625rem;
@@ -121,7 +137,7 @@
       margin-left: 0;
       width: 100%;
       min-width: 100%;
-      background: $gray-lighter;
+      background: #f9f9f9;
       ul[data-depth="0"] > li {
         border-bottom: 1px solid $gray;
       }
@@ -140,7 +156,7 @@
       }
       li > a {
         padding: 0.625rem;
-        border-bottom: 1px solid white;
+        border-bottom: 1px solid $gray-light;
         font-weight: bold;
       }
       ul[data-depth="2"] li a {
@@ -155,6 +171,7 @@
     }
   }
   .js-top-menu-bottom {
+    font-size: $font-size-sm;
     a {
       color: $gray;
     }
