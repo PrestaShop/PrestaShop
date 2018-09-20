@@ -27,14 +27,15 @@
 namespace PrestaShop\PrestaShop\Core\Webservice;
 
 use PrestaShop\PrestaShop\Adapter\Configuration;
-use Symfony\Component\HttpFoundation\Request;
+use PrestaShop\PrestaShop\Adapter\Hosting\HostingInformation;
+use PrestaShop\PrestaShop\Core\Configuration\PhpExtensionCheckerInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use RuntimeException;
 
 /**
- * Looks at server configuration in order to check PrestaShop Webservice can be enabled.
+ * Looks at server configuration in order to check if PrestaShop's Webservice feature can be enabled.
  */
-final class WebserviceCanBeEnabledConfigurationChecker
+final class ServerRequirementsChecker implements ServerRequirementsCheckerInterface
 {
     const ISSUE_NOT_APACHE_SERVER = 'not_apache_server';
     const ISSUE_CANNOT_CHECK_APACHE_MODULES = 'cannot_check_apache_modules';
@@ -54,26 +55,42 @@ final class WebserviceCanBeEnabledConfigurationChecker
     private $configuration;
 
     /**
+     * @var HostingInformation
+     */
+    private $hostingInformation;
+
+    /**
+     * @var PhpExtensionCheckerInterface
+     */
+    private $phpExtensionChecker;
+
+    /**
      * @param TranslatorInterface $translator
      * @param Configuration $configuration
+     * @param HostingInformation $hostingInformation
+     * @param PhpExtensionCheckerInterface $phpExtensionChecker
      */
-    public function __construct(TranslatorInterface $translator, Configuration $configuration)
-    {
+    public function __construct(
+        TranslatorInterface $translator,
+        Configuration $configuration,
+        HostingInformation $hostingInformation,
+        PhpExtensionCheckerInterface $phpExtensionChecker
+    ) {
         $this->translator = $translator;
         $this->configuration = $configuration;
+        $this->hostingInformation = $hostingInformation;
+        $this->phpExtensionChecker = $phpExtensionChecker;
     }
 
     /**
      * Analyses the server configuration (apache configuration and php settings)
      * to check whether PrestaShop Webservice can be used or not.
      *
-     * @param request $request (optional) Request
-     *
      * @return array empty if no errors
      */
-    public function getErrors(Request $request = null)
+    public function checkForErrors()
     {
-        $issues = $this->lookForIssues($request);
+        $issues = $this->lookForIssues();
 
         if (empty($issues)) {
             return [];
@@ -94,18 +111,14 @@ final class WebserviceCanBeEnabledConfigurationChecker
     }
 
     /**
-     * @param Request $request optional
-     *
      * @return string[]
      */
-    private function lookForIssues(Request $request = null)
+    private function lookForIssues()
     {
         $issues = [];
 
-        if ($request !== null) {
-            if (strpos($request->server->get('SERVER_SOFTWARE'), 'Apache') === false) {
-                $issues[] = self::ISSUE_NOT_APACHE_SERVER;
-            }
+        if (false === strpos($this->hostingInformation->getServerInformation()['version'], 'Apache')) {
+            $issues[] = self::ISSUE_NOT_APACHE_SERVER;
         }
 
         if (function_exists('apache_get_modules')) {
@@ -122,7 +135,7 @@ final class WebserviceCanBeEnabledConfigurationChecker
             $issues[] = self::ISSUE_CANNOT_CHECK_APACHE_MODULES;
         }
 
-        if (false === extension_loaded('SimpleXML')) {
+        if (!$this->phpExtensionChecker->loaded('SimpleXML')) {
             $issues[] = self::ISSUE_EXT_SIMPLEXML_NOT_AVAILABLE;
         }
 

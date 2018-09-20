@@ -248,7 +248,7 @@ services:
             - '@prestashop.core.hook.dispatcher'
             - '@prestashop.admin.webservice.form_data_provider'
             -
-              'webservice_configuration': 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Webservice\WebserviceType'
+              'webservice_configuration': 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Webservice\WebserviceConfigurationType'
             - 'WebservicePage'
 
     prestashop.admin.translations_settings.form_handler:

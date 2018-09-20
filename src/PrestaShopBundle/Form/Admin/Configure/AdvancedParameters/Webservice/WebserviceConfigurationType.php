@@ -26,15 +26,15 @@
 
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Webservice;
 
-use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
+use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * This form class generates the "Webservice configuration" form in Webservice page.
  */
-class WebserviceType extends CommonAbstractType
+class WebserviceConfigurationType extends AbstractType
 {
     /**
      * {@inheritdoc}
@@ -47,7 +47,8 @@ class WebserviceType extends CommonAbstractType
             ])
             ->add('enable_cgi', SwitchType::class, [
                 'required' => true,
-            ]);
+            ])
+        ;
     }
 
     /**

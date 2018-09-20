@@ -28,7 +28,6 @@ namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\WebserviceKeyFilters;
-use PrestaShop\PrestaShop\Core\Webservice\WebserviceCanBeEnabledConfigurationChecker;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -318,8 +317,6 @@ class WebserviceController extends FrameworkBundleAdminController
             } else {
                 $this->flashErrors($saveErrors);
             }
-
-            return $this->redirectToRoute('admin_webservice');
         }
 
         return $this->redirectToRoute('admin_webservice');
@@ -334,17 +331,12 @@ class WebserviceController extends FrameworkBundleAdminController
     }
 
     /**
-     * @param Request $request
-     *
      * @return string[]
      */
-    private function lookForWarnings(Request $request)
+    private function lookForWarnings()
     {
-        /** @var WebserviceCanBeEnabledConfigurationChecker $configurationChecker */
-        $configurationChecker = $this->get('prestashop.core.configuration.webservice_can_be_enabled_configuration_checker');
+        $configurationChecker = $this->get('prestashop.core.webservice.server_requirements_checker');
 
-        $warningMessages = $configurationChecker->getErrors($request);
-
-        return $warningMessages;
+        return $configurationChecker->checkForErrors();
     }
 }
