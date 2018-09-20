@@ -35,7 +35,7 @@
 @import "components/choice_table";
 @import "components/form";
 @import "components/grid";
-@import "components/empty-states";
+@import "components/helper-card";
 
 // Pages specifics SCSS files
 @import "pages/product_page";
@@ -43,6 +43,7 @@
 @import "pages/translation_page";
 @import "pages/stock_page";
 @import "pages/invoices";
+@import "pages/meta";
 
 // Main Layout
 @import "pages/modules";
