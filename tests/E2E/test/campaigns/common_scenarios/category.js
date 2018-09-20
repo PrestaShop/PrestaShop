@@ -129,7 +129,7 @@ module.exports = {
   deleteCategoryWithDeleteMode(categoryData, parentCategory = '', deleteMode = 'linkanddisable') {
     scenario('Delete the created "Category"', client => {
       test('should go to "Category" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.category_submenu));
-      if(parentCategory !== '') {
+      if (parentCategory !== '') {
         test('should search for category ', () => client.searchByValue(CategorySubMenu.search_input, CategorySubMenu.search_button, parentCategory));
         test('should click on "View" action', () => {
           return promise
@@ -174,9 +174,9 @@ module.exports = {
           .then(() => client.waitForExistAndClick(AccessPageBO.shopname))
           .then(() => client.switchWindow(id));
       });
-      test('should change front office language to english', () => client.changeLanguage('english'));
+      test('should change front office language to english', () => client.changeLanguage());
       test('should click on "All products" link', () => client.scrollWaitForExistAndClick(AccessPageFO.product_list_button, 50));
-      if(parentCategory) {
+      if (parentCategory) {
         test('should click on "' + categoryData.name + date_time + '" category name', () => client.waitForExistAndClick(CategoryPageFO.category_top_menu.replace('%ID', param['id_category']).replace('%POS', '2'), 2000));
         test('should check the existence of the created category inside the parent', () => client.checkCategoryInsideParent(CategoryPageFO.category_top_menu.replace('%ID', global.tab['parent_category_id']).replace('%POS', '1'), CategoryPageFO.category_top_menu.replace('%ID', param['id_category']).replace('%POS', '1')));
         test('should check the breadcrumb of the created category', () => client.checkBreadcrumbInFo(CategoryPageFO.breadcrumb_path, "Accessories", categoryData.name));
@@ -240,12 +240,12 @@ module.exports = {
         test('should go to the Front Office', () => client.switchWindow(1));
       }
       Object.keys(productData).forEach(function (keys) {
-        test('should search for the created product', () => client.searchByValue(SearchProductPage.search_input, SearchProductPage.search_button ,productData[keys].name + date_time));
+        test('should search for the created product', () => client.searchByValue(SearchProductPage.search_input, SearchProductPage.search_button, productData[keys].name + date_time));
         if (keys.toString() === '0' && deleteMode !== 'link') {
           test('should check that the product does not exist', () => client.isNotExisting(SearchProductPage.product_result_name, 2000));
         } else {
           test('should go to the product page', () => client.waitForExistAndClick(SearchProductPage.product_result_name));
-          test('should set the shop language to "English"', () => client.changeLanguage('english'));
+          test('should set the shop language to "English"', () => client.changeLanguage());
           test('should check that the product category is equal to "Home"', () => client.checkTextValue('(//*[@id="wrapper"]//nav[contains(@class, "breadcrumb")]//span)[1]', 'Home'));
         }
       });

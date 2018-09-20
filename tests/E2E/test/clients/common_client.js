@@ -90,7 +90,7 @@ class CommonClient {
       });
   }
 
-  isVisibleWithinViewport(selector){
+  isVisibleWithinViewport(selector) {
     return this.client
       .isVisibleWithinViewport(selector);
   }
@@ -131,7 +131,7 @@ class CommonClient {
     return this.client.end();
   }
 
-  closeWindow(id){
+  closeWindow(id) {
     return this.client.closeWindow(id);
   }
 
@@ -544,7 +544,7 @@ class CommonClient {
   }
 
   middleClick(selector, globalVisibility = true, pause = 2000) {
-    if(globalVisibility){
+    if (globalVisibility) {
       return this.client
         .moveToObject(selector)
         .pause(pause)

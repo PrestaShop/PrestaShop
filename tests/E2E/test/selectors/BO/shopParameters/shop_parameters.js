@@ -1,6 +1,6 @@
 module.exports = {
   ShopParameters: {
-    maintenance_tab: '//a[text() = "Maintenance"]',
+    maintenance_tab: '//*[@id="subtab-AdminMaintenance"]',
     success_panel: '//*[@id="content"]/div[@class="bootstrap"]/div[contains(@class, "success")]',
     enable_shop: '//label[@for="form_general_enable_shop_%ID"]',
     source_code_button: '(//*[@id="PS_MAINTENANCE_TEXT_%ID"]//button)[1]',

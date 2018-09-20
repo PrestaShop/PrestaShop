@@ -12,7 +12,8 @@ scenario('Check the click on "Read more" button', () => {
   }, 'common_client');
 
   scenario('Install MBO module if it\'s not installed', client => {
-    test('should go to "Module manager" page', () => client.goToSubtabMenuPage(Menu.Improve.Modules.modules_menu, Menu.Improve.Modules.modules_catalog_submenu));
+    test('should go to "Modules Catalog" page', () => client.goToSubtabMenuPage(Menu.Improve.Modules.modules_menu, Menu.Improve.Modules.modules_catalog));
+    test('should click on "Modules Catalog" tab', () => client.waitForExistAndClick(Menu.Improve.Modules.modules_catalog));
     test('should set the name of the module in the search input', () => client.waitAndSetValue(ModulePage.module_selection_input, 'ps_mbo'));
     test('should click on "Search" button', () => client.waitForExistAndClick(ModulePage.selection_search_button));
     test('should install the module if it\'s exist', () => {
@@ -35,7 +36,6 @@ scenario('Check the click on "Read more" button', () => {
     });
   }, 'common_client');
   commonModule.clickOnReadMore(ModulePage, "Mailchimp", module_tech_name);
-
   scenario('Uninstall MBO module if it\'s installed', client => {
     test('should go to "Module manager" page', () => {
       return promise
