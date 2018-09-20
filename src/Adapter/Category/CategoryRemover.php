@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Category;
 
 use Category;
-use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryDeletionMode;
+use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryDeleteMode;
 use PrestaShop\PrestaShop\Core\Foundation\Database\DatabaseInterface;
 use Product;
 use Shop;
@@ -67,11 +67,11 @@ class CategoryRemover
      * Delete single category.
      *
      * @param int $categoryId
-     * @param CategoryDeletionMode $mode
+     * @param CategoryDeleteMode $mode
      *
      * @return string[] Errors if any
      */
-    public function remove($categoryId, CategoryDeletionMode $mode)
+    public function remove($categoryId, CategoryDeleteMode $mode)
     {
         $errors = [];
 
@@ -125,11 +125,11 @@ class CategoryRemover
      * Delete multiple categories.
      *
      * @param int[] $categoryIds
-     * @param CategoryDeletionMode $mode
+     * @param CategoryDeleteMode $mode
      *
      * @return string[] Errors if any
      */
-    public function removeMultiple(array $categoryIds, CategoryDeletionMode $mode)
+    public function removeMultiple(array $categoryIds, CategoryDeleteMode $mode)
     {
         $errors = [];
 
@@ -157,9 +157,9 @@ class CategoryRemover
      * Handle products category after its deletion.
      *
      * @param $parentCategoryId
-     * @param CategoryDeletionMode $mode
+     * @param CategoryDeleteMode $mode
      */
-    private function handleProductsUpdate($parentCategoryId, CategoryDeletionMode $mode)
+    private function handleProductsUpdate($parentCategoryId, CategoryDeleteMode $mode)
     {
         $productWithoutCategory = $this->database->select('
 			SELECT p.`id_product`

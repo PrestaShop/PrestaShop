@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
 
-use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryDeletionMode;
+use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryDeleteMode;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -76,9 +76,9 @@ final class CategoryDeleteModeChoiceProvider implements FormChoiceProviderInterf
         );
 
         return [
-            $associateAndDisableLabel => CategoryDeletionMode::ASSOCIATE_PRODUCTS_WITH_PARENT_AND_DISABLE,
-            $associateOnlyLabel => CategoryDeletionMode::ASSOCIATE_PRODUCTS_WITH_PARENT_ONLY,
-            $deleteProductLabel => CategoryDeletionMode::REMOVE_ASSOCIATED_PRODUCTS,
+            $associateAndDisableLabel => CategoryDeleteMode::ASSOCIATE_PRODUCTS_WITH_PARENT_AND_DISABLE,
+            $associateOnlyLabel => CategoryDeleteMode::ASSOCIATE_PRODUCTS_WITH_PARENT_ONLY,
+            $deleteProductLabel => CategoryDeleteMode::REMOVE_ASSOCIATED_PRODUCTS,
         ];
     }
 }

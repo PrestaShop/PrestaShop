@@ -28,5 +28,11 @@ services:
   prestashop.adapter.category.command_handler.toggle_category_status_handler:
     class: PrestaShop\PrestaShop\Adapter\Category\CommandHandler\ToggleCategoryStatusHandler
     tags:
-    - name: tactician.handler
-      command: PrestaShop\PrestaShop\Core\Domain\Category\Command\ToggleCategoryStatusCommand
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\Category\Command\ToggleCategoryStatusCommand
+
+  prestashop.adapter.category.command_handler.delete_category_handler:
+    class: PrestaShop\PrestaShop\Adapter\Category\CommandHandler\DeleteCategoryHandler
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\Category\Command\DeleteCategoryCommand

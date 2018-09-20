@@ -29,9 +29,9 @@ namespace PrestaShop\PrestaShop\Core\Domain\Category\ValueObject;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryConstraintException;
 
 /**
- * Class DeleteMode stores mode for category deletion.
+ * Class CategoryDeleteMode stores mode for category deletion.
  */
-class CategoryDeletionMode
+class CategoryDeleteMode
 {
     /**
      * Associate products with parent category and disable them.
