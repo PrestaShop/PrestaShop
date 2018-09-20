@@ -25,7 +25,7 @@
 {block name='product_miniature_item'}
   <article class="product-miniature js-product-miniature" data-id-product="{$product.id_product}" data-id-product-attribute="{$product.id_product_attribute}" itemscope itemtype="http://schema.org/Product">
     <div class="thumbnail-container">
-      <div class="product-thumbnail>
+      <div class="product-thumbnail">
         {block name='product_thumbnail'}
           {if $product.cover}
             <a href="{$product.url}" class="thumbnail">
