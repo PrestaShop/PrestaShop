@@ -71,7 +71,7 @@ final class WebserviceCanBeEnabledConfigurationChecker implements ServerRequirem
      *
      * @return array empty if no errors
      */
-    public function check(Request $request = null)
+    public function checkForErrors(Request $request = null)
     {
         $issues = $this->lookForIssues($request);
 

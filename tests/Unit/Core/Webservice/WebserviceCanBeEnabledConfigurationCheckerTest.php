@@ -56,7 +56,7 @@ class WebserviceCanBeEnabledConfigurationCheckerTest extends \PHPUnit\Framework\
 
         $checker = new WebserviceCanBeEnabledConfigurationChecker($this->translatorStub, $this->configurationStub);
 
-        $warnings = $checker->check($request);
+        $warnings = $checker->checkForErrors($request);
 
         $this->assertFalse(in_array('To avoid operating problems, please use an Apache server.', $warnings));
     }
@@ -67,7 +67,7 @@ class WebserviceCanBeEnabledConfigurationCheckerTest extends \PHPUnit\Framework\
 
         $checker = new WebserviceCanBeEnabledConfigurationChecker($this->translatorStub, $this->configurationStub);
 
-        $warnings = $checker->check($request);
+        $warnings = $checker->checkForErrors($request);
 
         $this->assertTrue(in_array('To avoid operating problems, please use an Apache server.', $warnings));
     }
@@ -80,7 +80,7 @@ class WebserviceCanBeEnabledConfigurationCheckerTest extends \PHPUnit\Framework\
 
         $checker = new WebserviceCanBeEnabledConfigurationChecker($this->translatorStub, $this->configurationStub);
 
-        $warnings = $checker->check();
+        $warnings = $checker->checkForErrors();
 
         $this->assertFalse(in_array('It is preferable to use SSL (https:) for webservice calls, as it avoids the "man in the middle" type security issues.', $warnings));
     }
@@ -93,7 +93,7 @@ class WebserviceCanBeEnabledConfigurationCheckerTest extends \PHPUnit\Framework\
 
         $checker = new WebserviceCanBeEnabledConfigurationChecker($this->translatorStub, $this->configurationStub);
 
-        $warnings = $checker->check();
+        $warnings = $checker->checkForErrors();
 
         $this->assertTrue(in_array('It is preferable to use SSL (https:) for webservice calls, as it avoids the "man in the middle" type security issues.', $warnings));
     }
