@@ -429,9 +429,10 @@ class AdminModuleController {
     let tagExists;
     let newValue;
 
+    const modulesListLength = self.modulesList.length;
     const counter = {};
 
-    for (let i = 0; i < self.modulesList.length; i += 1) {
+    for (let i = 0; i < modulesListLength; i += 1) {
       currentModule = self.modulesList[i];
       if (currentModule.display === self.currentDisplay) {
         isVisible = true;
