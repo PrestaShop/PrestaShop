@@ -26,12 +26,13 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
+use PrestaShop\PrestaShop\Core\Domain\Category\Command\DeleteCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\ToggleCategoryStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\UpdateCategoriesStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotUpdateCategoryStatusException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryDeletionMode;
+use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryDeleteMode;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryStatus;
 use PrestaShop\PrestaShop\Core\Search\Filters\CategoryFilters;
@@ -181,7 +182,7 @@ class CategoryController extends FrameworkBundleAdminController
 
             $errors = $this->get('prestashop.adapter.category.category_remover')->removeMultiple(
                 $categoriesDeleteData['categories_to_delete'],
-                new CategoryDeletionMode($categoriesDeleteData['delete_mode'])
+                new CategoryDeleteMode($categoriesDeleteData['delete_mode'])
             );
 
             if (empty($errors)) {
@@ -212,18 +213,20 @@ class CategoryController extends FrameworkBundleAdminController
         if ($deleteCategoriesForm->isSubmitted()) {
             $categoriesDeleteData = $deleteCategoriesForm->getData();
 
-            $errors = $this->get('prestashop.adapter.category.category_remover')->remove(
-                reset($categoriesDeleteData['categories_to_delete']),
-                new CategoryDeletionMode($categoriesDeleteData['delete_mode'])
-            );
+            try {
+                $command = new DeleteCategoryCommand(
+                    new CategoryId(reset($categoriesDeleteData['categories_to_delete'])),
+                    new CategoryDeleteMode($categoriesDeleteData['delete_mode'])
+                );
 
-            if (empty($errors)) {
+                $this->getCommandBus()->handle($command);
+
                 $this->addFlash(
                     'success',
                     $this->trans('Successful deletion.', 'Admin.Notifications.Success')
                 );
-            } else {
-                $this->flashErrors($errors);
+            } catch (CategoryException $e) {
+                throw $e;
             }
         }
 
