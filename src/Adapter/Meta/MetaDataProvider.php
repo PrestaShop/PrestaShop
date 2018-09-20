@@ -26,10 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Meta;
 
-use Meta;
-use PrestaShopCollection;
-use PrestaShopException;
-use Validate;
+use Db;
+use DbQuery;
 
 /**
  * Class MetaDataProvider is responsible for providing data related with meta entity.
@@ -37,24 +35,24 @@ use Validate;
 class MetaDataProvider
 {
     /**
-     * Gets meta id by page.
+     * Gets id by page.
      *
      * @param string $pageName
      *
      * @return int
-     *
-     * @throws PrestaShopException
      */
     public function getIdByPage($pageName)
     {
-        $collection =  new PrestaShopCollection(Meta::class);
-        $collection->where('page', '=', pSQL($pageName));
-
-        $result = $collection->getFirst();
+        $query = new DbQuery();
+        $query->select('`id_meta`');
+        $query->from('meta');
+        $query->where('`page`= "' . pSQL($pageName) . '"');
 
         $idMeta = 0;
-        if (Validate::isLoadedObject($result)) {
-            $idMeta = $result->id;
+        $result = Db::getInstance()->getValue($query);
+
+        if ($result) {
+            $idMeta = $result;
         }
 
         return $idMeta;
