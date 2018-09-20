@@ -27,7 +27,6 @@
 namespace PrestaShopBundle\Controller\Admin;
 
 use Exception;
-use PrestaShopException;
 use PrestaShop\PrestaShop\Adapter\Tax\TaxRuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Warehouse\WarehouseDataProvider;
 use PrestaShopBundle\Component\CsvResponse;
@@ -533,7 +532,7 @@ class ProductController extends FrameworkBundleAdminController
                     );
                 }
             }
-        } catch (PrestaShopException $e) {
+        } catch (Exception $e) {
             // this controller can be called as an AJAX JSON route or a HTML page
             // so we need to return the right type of response if an exception it thrown
             if ($request->isXmlHttpRequest()) {
