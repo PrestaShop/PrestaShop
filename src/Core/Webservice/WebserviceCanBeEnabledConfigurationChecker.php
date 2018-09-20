@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Webservice;
 
 use PrestaShop\PrestaShop\Adapter\Configuration;
-use Symfony\Component\HttpFoundation\Request;
+use PrestaShop\PrestaShop\Adapter\Hosting\HostingInformation;
 use Symfony\Component\Translation\TranslatorInterface;
 use RuntimeException;
 
@@ -54,26 +54,34 @@ final class WebserviceCanBeEnabledConfigurationChecker implements ServerRequirem
     private $configuration;
 
     /**
+     * @var HostingInformation
+     */
+    private $hostingInformation;
+
+    /**
      * @param TranslatorInterface $translator
      * @param Configuration $configuration
+     * @param HostingInformation $hostingInformation
      */
-    public function __construct(TranslatorInterface $translator, Configuration $configuration)
-    {
+    public function __construct(
+        TranslatorInterface $translator,
+        Configuration $configuration,
+        HostingInformation $hostingInformation
+    ) {
         $this->translator = $translator;
         $this->configuration = $configuration;
+        $this->hostingInformation = $hostingInformation;
     }
 
     /**
      * Analyses the server configuration (apache configuration and php settings)
      * to check whether PrestaShop Webservice can be used or not.
      *
-     * @param Request $request (optional) Request
-     *
      * @return array empty if no errors
      */
-    public function checkForErrors(Request $request = null)
+    public function checkForErrors()
     {
-        $issues = $this->lookForIssues($request);
+        $issues = $this->lookForIssues();
 
         if (empty($issues)) {
             return [];
@@ -94,18 +102,14 @@ final class WebserviceCanBeEnabledConfigurationChecker implements ServerRequirem
     }
 
     /**
-     * @param Request $request optional
-     *
      * @return string[]
      */
-    private function lookForIssues(Request $request = null)
+    private function lookForIssues()
     {
         $issues = [];
 
-        if ($request !== null) {
-            if (strpos($request->server->get('SERVER_SOFTWARE'), 'Apache') === false) {
-                $issues[] = self::ISSUE_NOT_APACHE_SERVER;
-            }
+        if (false === strpos($this->hostingInformation->getServerInformation()['version'], 'Apache')) {
+            $issues[] = self::ISSUE_NOT_APACHE_SERVER;
         }
 
         if (function_exists('apache_get_modules')) {

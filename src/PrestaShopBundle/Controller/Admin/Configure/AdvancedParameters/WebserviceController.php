@@ -332,15 +332,13 @@ class WebserviceController extends FrameworkBundleAdminController
     }
 
     /**
-     * @param Request $request
-     *
      * @return string[]
      */
-    private function lookForWarnings(Request $request)
+    private function lookForWarnings()
     {
         /** @var WebserviceCanBeEnabledConfigurationChecker $configurationChecker */
         $configurationChecker = $this->get('prestashop.core.configuration.webservice_can_be_enabled_configuration_checker');
 
-        return $configurationChecker->checkForErrors($request);
+        return $configurationChecker->checkForErrors();
     }
 }
