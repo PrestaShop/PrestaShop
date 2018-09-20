@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product;
 use Image;
 use Product;
 use Context;
+use StockAvailable;
 
 /**
  * This class will provide data from DB / ORM about Product, for both Front and Admin interfaces.
@@ -109,6 +110,17 @@ class ProductDataProvider
     public function getQuantity($id_product, $id_product_attribute = null, $cache_is_pack = null)
     {
         return Product::getQuantity($id_product, $id_product_attribute, $cache_is_pack);
+    }
+
+    /**
+     * @param int $id_product
+     * @param int $id_product_attribute Optional
+     *
+     * @return string
+     */
+    public function getLocation($id_product, $id_product_attribute = 0)
+    {
+        return StockAvailable::getLocation($id_product, $id_product_attribute);
     }
 
     /**
