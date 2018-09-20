@@ -192,12 +192,25 @@ class ModuleRepository implements ModuleRepositoryInterface
      *
      * @param string $name The technical module name to instanciate
      *
-     * @return \Module|null Instance of legacy Module, if valid
+     * @return LegacyModule|null Instance of legacy Module, if valid
      */
     public function getInstanceByName($name)
     {
         // Return legacy instance !
         return $this->getModule($name)->getInstance();
+    }
+
+    /**
+     * Get the **Legacy** Module object from its ID (local database).
+     * Return an instance of the specified module.
+     *
+     * @param int $moduleId Module id
+     *
+     * @return LegacyModule instance
+     */
+    public function getInstanceById($moduleId)
+    {
+        return LegacyModule::getInstanceById((int) $moduleId);
     }
 
     /**
