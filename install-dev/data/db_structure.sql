@@ -372,7 +372,7 @@ CREATE TABLE `PREFIX_category_lang` (
   `link_rewrite` varchar(128) NOT NULL, 
   `meta_title` varchar(255) DEFAULT NULL, 
   `meta_keywords` varchar(255) DEFAULT NULL, 
-  `meta_description` varchar(255) DEFAULT NULL, 
+  `meta_description` varchar(512) DEFAULT NULL, 
   PRIMARY KEY (
     `id_category`, `id_shop`, `id_lang`
   ), 
@@ -406,7 +406,7 @@ CREATE TABLE `PREFIX_cms_lang` (
   `id_shop` int(10) unsigned NOT NULL DEFAULT '1', 
   `meta_title` varchar(255) NOT NULL, 
   `head_seo_title` varchar(255) DEFAULT NULL, 
-  `meta_description` varchar(255) DEFAULT NULL, 
+  `meta_description` varchar(512) DEFAULT NULL, 
   `meta_keywords` varchar(255) DEFAULT NULL, 
   `content` longtext, 
   `link_rewrite` varchar(128) NOT NULL, 
@@ -436,7 +436,7 @@ CREATE TABLE `PREFIX_cms_category_lang` (
   `link_rewrite` varchar(128) NOT NULL, 
   `meta_title` varchar(255) DEFAULT NULL, 
   `meta_keywords` varchar(255) DEFAULT NULL, 
-  `meta_description` varchar(255) DEFAULT NULL, 
+  `meta_description` varchar(512) DEFAULT NULL, 
   PRIMARY KEY (
     `id_cms_category`, `id_shop`, `id_lang`
   ), 
@@ -1066,7 +1066,7 @@ CREATE TABLE `PREFIX_manufacturer_lang` (
   `short_description` text, 
   `meta_title` varchar(255) DEFAULT NULL, 
   `meta_keywords` varchar(255) DEFAULT NULL, 
-  `meta_description` varchar(255) DEFAULT NULL, 
+  `meta_description` varchar(512) DEFAULT NULL, 
   PRIMARY KEY (`id_manufacturer`, `id_lang`)
 ) ENGINE = ENGINE_TYPE DEFAULT CHARSET = utf8 COLLATION;
 
@@ -1804,7 +1804,7 @@ CREATE TABLE `PREFIX_product_lang` (
   `description` text, 
   `description_short` text, 
   `link_rewrite` varchar(128) NOT NULL, 
-  `meta_description` varchar(255) DEFAULT NULL, 
+  `meta_description` varchar(512) DEFAULT NULL, 
   `meta_keywords` varchar(255) DEFAULT NULL, 
   `meta_title` varchar(128) DEFAULT NULL, 
   `name` varchar(128) NOT NULL, 
@@ -2047,7 +2047,7 @@ CREATE TABLE `PREFIX_supplier_lang` (
   `description` text, 
   `meta_title` varchar(255) DEFAULT NULL, 
   `meta_keywords` varchar(255) DEFAULT NULL, 
-  `meta_description` varchar(255) DEFAULT NULL, 
+  `meta_description` varchar(512) DEFAULT NULL, 
   PRIMARY KEY (`id_supplier`, `id_lang`)
 ) ENGINE = ENGINE_TYPE DEFAULT CHARSET = utf8 COLLATION;
 
