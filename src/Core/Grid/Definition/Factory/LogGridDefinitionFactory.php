@@ -73,7 +73,7 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getId()
     {
-        return 'logs';
+        return 'Logs';
     }
 
     /**
