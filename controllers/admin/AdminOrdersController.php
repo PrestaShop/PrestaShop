@@ -1755,7 +1755,8 @@ class AdminOrdersControllerCore extends AdminController
             $display_out_of_stock_warning = true;
         }
 
-        // products current stock (from stock_available)
+        // products current stock informations (from stock_available)
+        $stockLocationIsAvailable = false;
         foreach ($products as &$product) {
             // Get total customized quantity for current product
             $customized_product_quantity = 0;
@@ -1794,6 +1795,10 @@ class AdminOrdersControllerCore extends AdminController
             } else {
                 $product['warehouse_name'] = '--';
                 $product['warehouse_location'] = false;
+            }
+
+            if (!empty($product['location'])) {
+                $stockLocationIsAvailable = true;
             }
         }
 
@@ -1886,6 +1891,7 @@ class AdminOrdersControllerCore extends AdminController
             'display_warehouse' => (int) Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'),
             'carrier_list' => $this->getCarrierList($order),
             'recalculate_shipping_cost' => (int) Configuration::get('PS_ORDER_RECALCULATE_SHIPPING'),
+            'stock_location_is_available' => $stockLocationIsAvailable,
             'HOOK_CONTENT_ORDER' => Hook::exec('displayAdminOrderContentOrder', array(
                 'order' => $order,
                 'products' => $products,
@@ -2564,6 +2570,14 @@ class AdminOrdersControllerCore extends AdminController
 
         $order = $order->refreshShippingCost();
 
+        $stockLocationIsAvailable = false;
+        foreach ($products as $currentProduct) {
+            if (!empty($currentProduct['location'])) {
+                $stockLocationIsAvailable = true;
+                break;
+            }
+        }
+
         // Assign to smarty informations in order to show the new product line
         $this->context->smarty->assign(array(
             'product' => $product,
@@ -2575,6 +2589,7 @@ class AdminOrdersControllerCore extends AdminController
             'link' => Context::getContext()->link,
             'current_index' => self::$currentIndex,
             'display_warehouse' => (int) Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'),
+            'stock_location_is_available' => $stockLocationIsAvailable,
         ));
 
         if (!$res) {

@@ -10,10 +10,10 @@ let data = require('../../datas/customer_and_address_data');
 let promise = Promise.resolve();
 
 module.exports = {
-  createOrderFO: function (authentication = "connected") {
+  createOrderFO: function (authentication = "connected", login = 'pub@prestashop.com', password = '123456789') {
     scenario('Create order in the Front Office', client => {
       test('should set the language of shop to "English"', () => client.changeLanguage());
-      test('should go to the first product page', () => client.waitForExistAndClick(productPage.first_product));
+      test('should go to the first product page', () => client.waitForExistAndClick(productPage.first_product, 2000));
       test('should select product "size M" ', () => client.waitAndSelectByValue(productPage.first_product_size, '2'));
       test('should select product "color Black"', () => client.waitForExistAndClick(productPage.first_product_color));
       test('should set the product "quantity"', () => {
@@ -50,17 +50,47 @@ module.exports = {
 
       if (authentication === "connect") {
         scenario('Login with existing customer', client => {
-          test('should choose shipping method my carrier', () => client.waitForExistAndClick(accountPage.sign_tab));
-          test('should set the "Email" input', () => client.waitAndSetValue(accountPage.signin_email_input, 'pub@prestashop.com'));
-          test('should set the "Password" input', () => client.waitAndSetValue(accountPage.signin_password_input, '123456789'));
+          test('should click on "Sign in"', () => client.waitForExistAndClick(accountPage.sign_tab));
+          test('should set the "Email" input', () => client.waitAndSetValue(accountPage.signin_email_input, login));
+          test('should set the "Password" input', () => client.waitAndSetValue(accountPage.signin_password_input, password));
           test('should click on "CONTINUE" button', () => client.waitForExistAndClick(accountPage.continue_button));
         }, 'common_client');
       }
 
-      if (authentication === "connected" || authentication === "connect") {
-        scenario('Choose the personal and delivery address ', client => {
-          test('should click on confirm address button', () => client.waitForExistAndClick(CheckoutOrderPage.checkout_step2_continue_button));
+      if (login !== 'pub@prestashop.com') {
+        scenario('Add new address', client => {
+          test('should set the "company" input', () => client.waitAndSetValue(CheckoutOrderPage.company_input, 'prestashop'));
+          test('should set "VAT number" input', () => client.waitAndSetValue(CheckoutOrderPage.vat_number_input, '0123456789'));
+          test('should set "Address" input', () => client.waitAndSetValue(CheckoutOrderPage.address_input, '12 rue d\'amsterdam'));
+          test('should set "Second address" input', () => client.waitAndSetValue(CheckoutOrderPage.address_second_input, 'RDC'));
+          test('should set "Postal code" input', () => client.waitAndSetValue(CheckoutOrderPage.zip_code_input, '75009'));
+          test('should set "City" input', () => client.waitAndSetValue(CheckoutOrderPage.city_input, 'Paris'));
+          test('should set "Pays" input', () => client.waitAndSelectByVisibleText(CheckoutOrderPage.country_input, 'France'));
+          test('should set "Home phone" input', () => client.waitAndSetValue(CheckoutOrderPage.phone_input, '0123456789'));
+          test('should click on "Use this address for invoice too', () => client.waitForExistAndClick(CheckoutOrderPage.use_address_for_facturation_input));
+          test('should click on "CONTINUE', () => client.waitForExistAndClick(accountPage.new_address_btn));
+
+          scenario('Add Invoice Address', client => {
+            test('should set the "company" input', () => client.waitAndSetValue(CheckoutOrderPage.invoice_company_input, 'prestashop'));
+            test('should set "VAT number" input', () => client.waitAndSetValue(CheckoutOrderPage.invoice_vat_number_input, '0123456789'));
+            test('should set "Address" input', () => client.waitAndSetValue(CheckoutOrderPage.invoice_address_input, '12 rue d\'amsterdam'));
+            test('should set "Second address" input', () => client.waitAndSetValue(CheckoutOrderPage.invoice_address_second_input, 'RDC'));
+            test('should set "Postal code" input', () => client.waitAndSetValue(CheckoutOrderPage.invoice_zip_code_input, '75009'));
+            test('should set "City" input', () => client.waitAndSetValue(CheckoutOrderPage.invoice_city_input, 'Paris'));
+            test('should set "Pays" input', () => client.waitAndSelectByVisibleText(CheckoutOrderPage.invoice_country_input, 'France'));
+            test('should set "Home phone" input', () => client.waitAndSetValue(CheckoutOrderPage.invoice_phone_input, '0123456789'));
+            test('should click on "CONTINUE" button', () => client.waitForExistAndClick(accountPage.new_address_btn));
+          }, 'order');
+
         }, 'common_client');
+      }
+
+      if (authentication === "connected" || authentication === "connect") {
+        if (login === 'pub@prestashop.com') {
+          scenario('Choose the personal and delivery address ', client => {
+            test('should click on confirm address button', () => client.waitForExistAndClick(CheckoutOrderPage.checkout_step2_continue_button));
+          }, 'common_client');
+        }
       }
 
       scenario('Choose "SHIPPING METHOD"', client => {
@@ -68,6 +98,7 @@ module.exports = {
         test('should create message', () => client.waitAndSetValue(CheckoutOrderPage.message_textarea, 'Order message test'));
         test('should click on "confirm delivery" button', () => client.waitForExistAndClick(CheckoutOrderPage.checkout_step3_continue_button));
       }, 'common_client');
+
       scenario('Choose "PAYMENT" method', client => {
         test('should set the payment type "Payment by bank wire"', () => client.waitForExistAndClick(CheckoutOrderPage.checkout_step4_payment_radio));
         test('should set "the condition to approve"', () => client.waitForExistAndClick(CheckoutOrderPage.condition_check_box));

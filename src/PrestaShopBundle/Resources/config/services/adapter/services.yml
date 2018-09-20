@@ -118,3 +118,18 @@ services:
             - '@prestashop.service.translation'
             - '@=service("prestashop.adapter.legacy.context").getContext().link'
             - '@prestashop.core.admin.module.repository'
+
+    prestashop.adapter.shop.shop_url:
+        class: 'PrestaShop\PrestaShop\Adapter\Shop\ShopUrlDataProvider'
+        arguments:
+            - '@=service("prestashop.adapter.legacy.context").getContext().shop.id'
+
+    prestashop.adapter.file.htaccess_file_generator:
+        class: 'PrestaShop\PrestaShop\Adapter\File\HtaccessFileGenerator'
+        arguments:
+            - '@prestashop.adapter.cache_clearer'
+            - '@prestashop.adapter.tools'
+            - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_HTACCESS_DISABLE_MULTIVIEWS')"
+
+    prestashop.adapter.file.robots_text_file_generator:
+        class: 'PrestaShop\PrestaShop\Adapter\File\RobotsTextFileGenerator'
