@@ -24,34 +24,19 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\Meta;
-
-use Db;
-use DbQuery;
-use PrestaShop\PrestaShop\Core\Meta\MetaDataProviderInterface;
+namespace PrestaShop\PrestaShop\Core\Meta;
 
 /**
- * Class MetaDataProvider is responsible for providing data related with meta entity.
+ * Interface MetaDataProviderInterface defines contract fot MetaDataProvider.
  */
-class MetaDataProvider implements MetaDataProviderInterface
+interface MetaDataProviderInterface
 {
     /**
-     * {@inheritdoc}
+     * Gets id by page.
+     *
+     * @param string $pageName
+     *
+     * @return int
      */
-    public function getIdByPage($pageName)
-    {
-        $query = new DbQuery();
-        $query->select('`id_meta`');
-        $query->from('meta');
-        $query->where('`page`= "' . pSQL($pageName) . '"');
-
-        $idMeta = 0;
-        $result = Db::getInstance()->getValue($query);
-
-        if ($result) {
-            $idMeta = $result;
-        }
-
-        return $idMeta;
-    }
+    public function getIdByPage($pageName);
 }
