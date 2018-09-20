@@ -1,4 +1,4 @@
-{#**
+/**
  * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
@@ -21,23 +21,40 @@
  * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-{% trans_default_domain "Admin.Shopparameters.Feature" %}
+const $ = window.$;
 
-{% block meta_helper_card %}
-  <div id="seo-urls-helper-block" class="empty-state">
-    <div class="empty-state__left shape-one">
-      <img src="" alt="">
-    </div>
-    <div class="empty-state__right">
-      <h2>{{ 'Improve your Seo'|trans }}</h2>
-      <p>{{ 'Edit information about your pages to gain visibility and therefore reach more visitors. We advice you to start with the index page, it stand for your homepage.'|trans }}</p>
-      <a class="btn btn-outline-secondary" href="{{ helperDocLink }}" target="_blank">{{ 'Learn more'|trans({}, 'Admin.Actions') }}</a>
-      {% if indexPageId %}
-        <a class="btn btn-primary" href="{{ path('admin_meta_list_edit', {'metaId': indexPageId}) }}">{{ 'Configure index page'|trans }}</a>
-      {% endif %}
-    </div>
-    <i class="empty-state__close material-icons js-remove-helper-block">close</i>
-  </div>
-{% endblock %}
+/**
+ * Class HelperBlock is responsible for handling events related with helper block.
+ */
+export default class HelperBlock {
+
+  /**
+   * Helper block id.
+   *
+   * @param {string} id
+   */
+  constructor(id) {
+    this.id = id;
+    this.$container = $('#' + this.id);
+  }
+
+  /**
+   * Get helper block container.
+   *
+   * @returns {jQuery}
+   */
+  getContainer() {
+    return this.$container;
+  }
+
+  /**
+   * Extend helper-block with external extensions.
+   *
+   * @param {object} extension
+   */
+  addExtension(extension) {
+    extension.extend(this);
+  }
+}
