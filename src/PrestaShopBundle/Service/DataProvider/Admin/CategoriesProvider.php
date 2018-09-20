@@ -40,8 +40,8 @@ class CategoriesProvider
     const CATEGORY_OTHER = 'other';
     const CATEGORY_OTHER_NAME = 'Other';
 
-    const CATEGORY_THEME = 'theme_bundle';
-    const CATEGORY_THEME_NAME = 'Theme Bundle';
+    const CATEGORY_THEME = 'theme_modules';
+    const CATEGORY_THEME_NAME = 'Theme Modules';
 
     const CATEGORY_MY_MODULES = 'my_modules';
     const CATEGORY_MY_MODULES_NAME = 'My Modules';
@@ -147,6 +147,12 @@ class CategoriesProvider
             );
         }
 
+        $categories['categories']->subMenu[self::CATEGORY_THEME] = $this->createMenuObject(
+            self::CATEGORY_THEME,
+            self::CATEGORY_THEME_NAME,
+            [],
+            self::CATEGORY_THEME
+        );
         $categories['categories']->subMenu[self::CATEGORY_OTHER] = $this->createMenuObject(
             self::CATEGORY_OTHER,
             self::CATEGORY_OTHER_NAME,
@@ -224,7 +230,11 @@ class CategoriesProvider
         $moduleCategory = $installedProduct->attributes->get('categoryName');
         $moduleCategoryParent = $this->getParentCategory($moduleCategory);
         if (!isset($categories['categories']->subMenu[$moduleCategoryParent])) {
-            $moduleCategoryParent = self::CATEGORY_OTHER;
+            if (in_array($installedProduct->attributes->get('name'), $categories)) {
+                $moduleCategoryParent = self::CATEGORY_THEME;
+            } else {
+                $moduleCategoryParent = self::CATEGORY_OTHER;
+            }
         }
 
         foreach ($categories['categories']->subMenu as $category) {
