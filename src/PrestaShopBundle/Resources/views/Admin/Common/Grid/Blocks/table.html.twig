@@ -41,7 +41,7 @@
         <tr>
           {% for column in grid.columns %}
             <td>
-              {{ include('@PrestaShop/Admin/Common/Grid/Columns/'~column.type~'.html.twig', {'grid': grid, 'column': column, 'record': record}) }}
+              {{ column_content(record, column, grid) }}
             </td>
           {% endfor %}
         </tr>
@@ -51,7 +51,6 @@
     {% endif %}
   {% endblock %}
   </tbody>
-
   {% block grid_table_footer %}{% endblock %}
 </table>
 {{ form_end(grid.filter_form) }}
