@@ -149,6 +149,10 @@ main.m-menu-open{
     .dropdown-item{
       height: 41px;
       position: relative;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      padding-right: 60px;
     }
   }
   .top-menu {
