@@ -519,7 +519,6 @@ services:
         tags:
             - { name: form.type }
 
-<<<<<<< HEAD
     form.type.shop.traffic_seo.meta.set_up_url:
         class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta\SetUpUrlType'
         arguments:
@@ -542,13 +541,6 @@ services:
         class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta\UrlSchemaType'
         arguments:
             - '@=service("prestashop.adapter.legacy.configuration").get("PS_REWRITING_SETTINGS")'
-        tags:
-            - { name: form.type }
-
-    form.type.shop.traffic_seo.meta:
-        class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta\MetaType'
-        parent: 'form.type.translatable.aware'
-        public: true
         tags:
             - { name: form.type }
 
