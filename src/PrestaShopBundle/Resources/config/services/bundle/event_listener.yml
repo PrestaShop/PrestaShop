@@ -52,3 +52,14 @@ services:
             - "@=service('prestashop.adapter.legacy.configuration').getBoolean('_PS_MODE_DEMO_')"
         tags:
             - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }
+
+    prestashop.module_activated.listener:
+        class: PrestaShopBundle\EventListener\ModuleActivatedListener
+        arguments:
+        - "@router"
+        - "@translator"
+        - "@session"
+        - "@annotation_reader"
+        - "@prestashop.core.admin.module.repository"
+        tags:
+        - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }

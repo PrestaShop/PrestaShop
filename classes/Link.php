@@ -27,6 +27,7 @@ use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use PrestaShop\PrestaShop\Core\Feature\TokenInUrls;
+use Symfony\Component\Routing\RouterInterface;
 
 class LinkCore
 {
@@ -715,7 +716,7 @@ class LinkCore
             $sfRouter = $sfContainer->get('router');
         }
 
-        $routeName = null;
+        $routeName = '';
         switch ($controller) {
             case 'AdminProducts':
                 // New architecture modification: temporary behavior to switch between old and new controllers.
@@ -810,7 +811,11 @@ class LinkCore
                 }
         }
 
-        if (!is_null($routeName)) {
+        if (empty($routeName)) {
+            $routeName = $this->searchRouteFromRouter($sfRouter, $controller);
+        }
+
+        if (!empty($routeName)) {
             $sfRoute = array_key_exists('route', $sfRouteParams) ? $sfRouteParams['route'] : $routeName;
 
             return $sfRouter->generate($sfRoute, $sfRouteParams, UrlGeneratorInterface::ABSOLUTE_URL);
@@ -819,6 +824,30 @@ class LinkCore
         $idLang = Context::getContext()->language->id;
 
         return $this->getAdminBaseLink() . basename(_PS_ADMIN_DIR_) . '/' . Dispatcher::getInstance()->createUrl($controller, $idLang, $params);
+    }
+
+    /**
+     * @param RouterInterface $sfRouter
+     * @param string $controller
+     *
+     * @return string
+     */
+    private function searchRouteFromRouter(RouterInterface $sfRouter, $controller)
+    {
+        /**
+         * @var string
+         * @var \Symfony\Component\Routing\Route $route
+         */
+        foreach ($sfRouter->getRouteCollection() as $routeName => $route) {
+            if (in_array('GET', $route->getMethods())) {
+                $routeDefaults = $route->getDefaults();
+                if (isset($routeDefaults['_legacy_link']) && $controller == $routeDefaults['_legacy_link']) {
+                    return $routeName;
+                }
+            }
+        }
+
+        return '';
     }
 
     /**
