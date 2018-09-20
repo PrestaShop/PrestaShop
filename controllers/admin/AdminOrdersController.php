@@ -2970,7 +2970,7 @@ class AdminOrdersControllerCore extends AdminController
     public function ajaxProcessChangePaymentMethod()
     {
         $customer = new Customer(Tools::getValue('id_customer'));
-        $modules = Module::getAuthorizedModules($customer->id_default_group);
+        $modules = Module::getAuthorizedModules($customer->id_default_group, array($customer->id_shop));
         $authorized_modules = array();
 
         if (!Validate::isLoadedObject($customer) || !is_array($modules)) {

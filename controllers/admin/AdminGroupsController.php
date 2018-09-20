@@ -405,8 +405,10 @@ class AdminGroupsControllerCore extends AdminController
         $auth_modules = array();
         $unauth_modules = array();
 
+        $shops = Shop::getContextListShopID();
+
         if ($id_group) {
-            $authorized_modules = Module::getAuthorizedModules($id_group);
+            $authorized_modules = Module::getAuthorizedModules($id_group, $shops);
         }
 
         if (is_array($authorized_modules)) {
@@ -500,11 +502,10 @@ class AdminGroupsControllerCore extends AdminController
         $auth_modules = Tools::getValue('modulesBoxAuth');
         $return = true;
         if ($id_group) {
-            Group::truncateModulesRestrictions((int) $id_group);
-        }
-        $shops = Shop::getShops(true, null, true);
-        if (is_array($auth_modules)) {
-            $return &= Group::addModulesRestrictions($id_group, $auth_modules, $shops);
+            $shops = Shop::getContextListShopID();
+            if (is_array($auth_modules)) {
+                $return &= Group::addModulesRestrictions($id_group, $auth_modules, $shops);
+            }
         }
 
         // update module list by hook cache
