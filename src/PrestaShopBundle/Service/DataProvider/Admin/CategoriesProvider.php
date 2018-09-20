@@ -38,8 +38,13 @@ use stdClass;
 class CategoriesProvider
 {
     const CATEGORY_OTHER = 'other';
+    const CATEGORY_OTHER_NAME = 'Other';
+
     const CATEGORY_THEME = 'theme_bundle';
+    const CATEGORY_THEME_NAME = 'Theme Bundle';
+
     const CATEGORY_MY_MODULES = 'my_modules';
+    const CATEGORY_MY_MODULES_NAME = 'My Modules';
 
     private $apiClient;
     private $logger;
@@ -119,13 +124,13 @@ class CategoriesProvider
         if (empty($categoriesListing)) {
             $categories['categories']->subMenu[self::CATEGORY_THEME] = $this->createMenuObject(
                 self::CATEGORY_THEME,
-                self::CATEGORY_THEME,
+                self::CATEGORY_THEME_NAME,
                 [],
                 self::CATEGORY_THEME
             );
             $categories['categories']->subMenu[self::CATEGORY_MY_MODULES] = $this->createMenuObject(
                 self::CATEGORY_MY_MODULES,
-                self::CATEGORY_MY_MODULES,
+                self::CATEGORY_MY_MODULES_NAME,
                 [],
                 self::CATEGORY_MY_MODULES
             );
@@ -144,7 +149,7 @@ class CategoriesProvider
 
         $categories['categories']->subMenu[self::CATEGORY_OTHER] = $this->createMenuObject(
             self::CATEGORY_OTHER,
-            self::CATEGORY_OTHER,
+            self::CATEGORY_OTHER_NAME,
             [],
             self::CATEGORY_OTHER
         );

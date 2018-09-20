@@ -77,7 +77,6 @@ class Validate
     }
 
     /**
-<<<<<<< HEAD
      * Check for module name validity.
      *
      * @param string $name Module name to validate
