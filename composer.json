@@ -19,6 +19,7 @@
         "doctrine/dbal": "^2.5.3",
         "doctrine/doctrine-bundle": "^1.6",
         "doctrine/orm": "~2.5.3",
+        "ezyang/htmlpurifier": "^4.10",
         "geoip2/geoip2": "~2.4.2",
         "greenlion/php-sql-parser": "^4.1",
         "guzzlehttp/guzzle": "~5.0",
