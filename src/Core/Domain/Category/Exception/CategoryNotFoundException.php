@@ -24,17 +24,11 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Category\CommandHandler;
-
-use PrestaShop\PrestaShop\Core\Domain\Product\Category\Command\UpdateCategoriesStatusCommand;
+namespace PrestaShop\PrestaShop\Core\Domain\Category\Exception;
 
 /**
- * Interface UpdateCategoriesStatusHandlerInterface.
+ * Class CategoryNotFoundException.
  */
-interface UpdateCategoriesStatusHandlerInterface
+class CategoryNotFoundException extends CategoryException
 {
-    /**
-     * @param UpdateCategoriesStatusCommand $command
-     */
-    public function handle(UpdateCategoriesStatusCommand $command);
 }

@@ -24,33 +24,20 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Category\Command;
-
-use PrestaShop\PrestaShop\Core\Domain\Product\Category\ValueObject\CategoryId;
+namespace PrestaShop\PrestaShop\Core\Domain\Category\Exception;
 
 /**
- * Class ToggleCategoryStatusCommand toggles given category status.
+ * Class CategoryConstraintException.
  */
-class ToggleCategoryStatusCommand
+class CategoryConstraintException extends CategoryException
 {
     /**
-     * @var CategoryId
+     * Code is used when Category status is created with invalid value.
      */
-    private $categoryId;
+    const INVALID_STATUS = 10;
 
     /**
-     * @param CategoryId $categoryId
+     * Code is used when Category delete mode is created with invalid value.
      */
-    public function __construct(CategoryId $categoryId)
-    {
-        $this->categoryId = $categoryId;
-    }
-
-    /**
-     * @return CategoryId
-     */
-    public function getCategoryId()
-    {
-        return $this->categoryId;
-    }
+    const INVALID_DELETE_MODE = 20;
 }

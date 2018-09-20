@@ -24,11 +24,33 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Category\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Category\Command;
+
+use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 
 /**
- * Class CannotUpdateCategoryStatusException is thrown when Category status update failed.
+ * Class ToggleCategoryStatusCommand toggles given category status.
  */
-class CannotUpdateCategoryStatusException extends CategoryException
+class ToggleCategoryStatusCommand
 {
+    /**
+     * @var CategoryId
+     */
+    private $categoryId;
+
+    /**
+     * @param CategoryId $categoryId
+     */
+    public function __construct(CategoryId $categoryId)
+    {
+        $this->categoryId = $categoryId;
+    }
+
+    /**
+     * @return CategoryId
+     */
+    public function getCategoryId()
+    {
+        return $this->categoryId;
+    }
 }
