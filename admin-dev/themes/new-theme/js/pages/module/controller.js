@@ -31,7 +31,7 @@ const $ = window.$;
  */
 class AdminModuleController {
   /**
-   * Initialize all listners and bind everything
+   * Initialize all listeners and bind everything
    * @method init
    * @memberof AdminModule
    */
@@ -166,7 +166,6 @@ class AdminModuleController {
       // Change dropdown label to set it to the current status' displayname
       $(self.statusSelectorLabelSelector).text($(this).find('a:first').text());
       $(self.statusResetBtnSelector).show();
-      // Do Search on categoryRef
       self.updateModuleVisibility();
     });
 
@@ -340,43 +339,85 @@ class AdminModuleController {
     $('body').trigger('moduleCatalogLoaded');
   }
 
+  /**
+   * Prepare sorting
+   *
+   */
+  updateModuleSorting() {
+    const self = this;
+
+    if (!self.currentSorting) {
+      return;
+    }
+
+    // Modules sorting
+    let order = 'asc';
+    let key = self.currentSorting;
+    const splittedKey = key.split('-');
+    if (splittedKey.length > 1) {
+      key = splittedKey[0];
+      if (splittedKey[1] === 'desc') {
+        order = 'desc';
+      }
+    }
+
+
+    const currentCompare = (a, b) => {
+      let aData = a[key];
+      let bData = b[key];
+      if (key === 'access') {
+        aData = (new Date(aData)).getTime();
+        bData = (new Date(bData)).getTime();
+        aData = isNaN(aData) ? 0 : aData;
+        bData = isNaN(bData) ? 0 : bData;
+      }
+
+      if (aData < bData) return -1;
+      if (aData > bData) return 1;
+
+      return 0;
+    };
+
+    self.modulesList.sort(currentCompare);
+    if (order === 'desc') {
+      self.modulesList.reverse();
+    }
+  }
+
+  updateModuleContainerDisplay() {
+    const self = this;
+
+    $('.module-short-list').each(function setShortListVisibility() {
+      const container = $(this);
+      if (
+        (
+          self.currentRefCategory
+          && self.currentRefCategory !== String(container.find('.modules-list').data('name'))
+        ) || (
+          self.currentRefStatus !== null
+          && container.find('.module-item').length === 0
+        ) || (
+          container.find('.module-item').length === 0 &&
+          String(container.find('.modules-list').data('name')) === self.CATEGORY_RECENTLY_USED
+        )
+      ) {
+        container.hide();
+        return;
+      }
+
+      container.show();
+      if (container.find('.module-item').length >= self.DEFAULT_MAX_RECENTLY_USED) {
+        container.find(`${this.seeMoreSelector}, ${this.seeLessSelector}`).show();
+      } else {
+        container.find(`${this.seeMoreSelector}, ${this.seeLessSelector}`).hide();
+      }
+    });
+  }
+
   updateModuleVisibility() {
     const self = this;
 
-    if (self.currentSorting) {
-      // Modules sorting
-      let order = 'asc';
-      let key = self.currentSorting;
-      if (key.split('-').length > 1) {
-        key = key.split('-')[0];
-      }
-
-      if (self.currentSorting.indexOf('-desc') !== -1) {
-        order = 'desc';
-      }
-
-      const currentCompare = (a, b) => {
-        if (key === 'access') {
-          let aDate = (new Date(a[key])).getTime();
-          let bDate = (new Date(b[key])).getTime();
-          aDate = isNaN(aDate) ? 0 : aDate;
-          bDate = isNaN(bDate) ? 0 : bDate;
-
-          if (aDate < bDate) return -1;
-          if (aDate > bDate) return 1;
-        } else {
-          if (a[key] < b[key]) return -1;
-          if (a[key] > b[key]) return 1;
-        }
-
-        return 0;
-      };
-
-      self.modulesList.sort(currentCompare);
-      if (order === 'desc') {
-        self.modulesList.reverse();
-      }
-    }
+    self.updateModuleSorting();
 
     $(self.recentlyUsedSelector).find('.module-item').remove();
     $('.modules-list').find('.module-item').remove();
@@ -390,7 +431,7 @@ class AdminModuleController {
 
     const counter = {};
 
-    for (let i = 0; i < self.modulesList.length; i++) {
+    for (let i = 0; i < self.modulesList.length; i += 1) {
       currentModule = self.modulesList[i];
       if (currentModule.display === self.currentDisplay) {
         isVisible = true;
@@ -399,14 +440,17 @@ class AdminModuleController {
                          self.CATEGORY_RECENTLY_USED :
                          currentModule.categories;
 
+        // Check for same category
         if (self.currentRefCategory !== null) {
           isVisible &= moduleCategory === self.currentRefCategory;
         }
 
+        // Check for same status
         if (self.currentRefStatus !== null) {
           isVisible &= currentModule.active === self.currentRefStatus;
         }
 
+        // Check for tag list
         if (self.currentTagsList.length) {
           tagExists = false;
           $.each(self.currentTagsList, (index, value) => {
@@ -421,11 +465,14 @@ class AdminModuleController {
           isVisible &= tagExists;
         }
 
-        if (self.currentCategoryDisplay[moduleCategory] === undefined) {
-          self.currentCategoryDisplay[moduleCategory] = false;
-        }
-
+        /**
+         * If list display we must display only the first 5 modules
+         */
         if (self.currentDisplay === self.DISPLAY_LIST) {
+          if (self.currentCategoryDisplay[moduleCategory] === undefined) {
+            self.currentCategoryDisplay[moduleCategory] = false;
+          }
+
           if (!counter[moduleCategory]) {
             counter[moduleCategory] = 0;
           }
@@ -441,6 +488,7 @@ class AdminModuleController {
           counter[moduleCategory] += 1;
         }
 
+        // If visible, display (Thx captain obvious)
         if (isVisible) {
           if (self.currentRefCategory === self.CATEGORY_RECENTLY_USED) {
             $(self.recentlyUsedSelector).append(currentModule.domObject);
@@ -451,26 +499,7 @@ class AdminModuleController {
       }
     }
 
-    $('.module-short-list').each(function setShortListVisibility() {
-      const container = $(this);
-      if (
-        (
-          self.currentRefCategory
-          && self.currentRefCategory !== String(container.find('.modules-list').data('name'))
-        ) || (
-          self.currentRefStatus !== null
-          && container.find('.module-item').length === 0
-        ) || (
-          container.find('.module-item').length === 0 &&
-          container.find('.modules-list').data('name') === self.CATEGORY_RECENTLY_USED
-        )
-      ) {
-        container.hide();
-        return;
-      }
-
-      container.show();
-    });
+    self.updateModuleContainerDisplay();
 
     if (self.currentTagsList.length) {
       $('.modules-list').append(this.currentDisplay === self.DISPLAY_GRID ? this.addonsCardGrid : this.addonsCardList);
@@ -1001,7 +1030,6 @@ class AdminModuleController {
         // Change dropdown label to set it to the current category's displayname
         $(self.categorySelectorLabelSelector).text($(this).data('category-display-name'));
         $(self.categoryResetBtnSelector).show();
-        // Do Search on categoryRef
         self.updateModuleVisibility();
       }
     );
@@ -1080,6 +1108,7 @@ class AdminModuleController {
 
   initializeSeeMore() {
     const self = this;
+
     $(self.seeMoreSelector).on('click', function seeMore() {
       self.currentCategoryDisplay[$(this).data('category')] = true;
       $(this).addClass('d-none');
