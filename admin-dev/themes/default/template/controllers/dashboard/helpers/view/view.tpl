@@ -119,7 +119,7 @@
 						<dd>{l s="Enhance your store with templates & modules" d='Admin.Dashboard.Feature'}</dd>
 					</dl>
 					<dl>
-						<dt><a href="https://github.com/PrestaShop/PrestaShop/issues" class="_blank">{l s="Bug Tracker" d='Admin.Global'}</a></dt>
+						<dt><a href="https://github.com/PrestaShop/PrestaShop/issues" class="_blank">{l s="GitHub" d='Admin.Global'}</a></dt>
 						<dd>{l s="Report issues on GitHub" d='Admin.Dashboard.Feature'}</dd>
 					</dl>
 					<dl>
