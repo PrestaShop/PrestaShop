@@ -71,7 +71,7 @@ final class RequestSqlGridDefinitionFactory extends AbstractGridDefinitionFactor
      */
     protected function getId()
     {
-        return 'request_sql';
+        return 'SqlRequest';
     }
 
     /**
