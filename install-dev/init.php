@@ -82,6 +82,10 @@ require_once _PS_CORE_DIR_.'/config/defines.inc.php';
 require_once _PS_CORE_DIR_.'/config/autoload.php';
 if (file_exists(_PS_CORE_DIR_.'/app/config/parameters.php')) {
     require_once _PS_CORE_DIR_.'/config/bootstrap.php';
+
+    $kernel = new AppKernel(_PS_MODE_DEV_ ? 'dev' : 'prod', _PS_MODE_DEV_);
+    $kernel->loadClassCache();
+    $kernel->boot();
 }
 require_once _PS_CORE_DIR_.'/config/defines_uri.inc.php';
 
