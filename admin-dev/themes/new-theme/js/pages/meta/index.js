@@ -33,8 +33,8 @@ import SubmitGridExtension from "../../components/grid/extension/submit-grid-act
 import SubmitBulkExtension from "../../components/grid/extension/submit-bulk-action-extension";
 import BulkActionCheckboxExtension from "../../components/grid/extension/bulk-action-checkbox-extension";
 import SubmitRowActionExtension from "../../components/grid/extension/action/row/submit-row-action-extension";
-import HelperBlock from "../../components/helper-block/helper-block";
-import HelperBlockCloseExtension from "../../components/helper-block/extension/helper-block-close-extension";
+import ShowcaseCard from "../../components/showcase-card/showcase-card";
+import ShowcaseCardCloseExtension from "../../components/showcase-card/extension/showcase-card-close-extension";
 
 const $ = window.$;
 
@@ -50,6 +50,6 @@ $(() => {
   meta.addExtension(new SubmitRowActionExtension());
   meta.addExtension(new BulkActionCheckboxExtension());
 
-  const helperBlock = new HelperBlock('seo-urls-helper-block');
-  helperBlock.addExtension(new HelperBlockCloseExtension());
+  const helperBlock = new ShowcaseCard('seo-urls-showcase-card');
+  helperBlock.addExtension(new ShowcaseCardCloseExtension());
 });

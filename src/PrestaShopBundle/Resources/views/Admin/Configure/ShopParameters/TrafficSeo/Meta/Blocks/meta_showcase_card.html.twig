@@ -25,12 +25,12 @@
 
 {% trans_default_domain "Admin.Shopparameters.Feature" %}
 
-{% block meta_helper_card %}
-  <div id="seo-urls-helper-block" class="empty-state card">
-    <div class="empty-state__left shape-one helper-card__meta-background">
+{% block meta_showcase_card %}
+  <div id="seo-urls-showcase-card" class="showcase-card card">
+    <div class="showcase-card__left shape-one helper-card__meta-background">
       <img src="{{ asset('themes/new-theme/scss/img/helper-card/seo@3x.png') }}" class="img-fluid">
     </div>
-    <div class="empty-state__right">
+    <div class="showcase-card__right">
       <h2>{{ 'Improve your Seo'|trans }}</h2>
       <p>{{ 'Edit information about your pages to gain visibility and therefore reach more visitors. We advice you to start with the index page, it stand for your homepage.'|trans }}</p>
       <a class="btn btn-outline-secondary" href="{{ helperDocLink }}" target="_blank">{{ 'Learn more'|trans({}, 'Admin.Actions') }}</a>
@@ -38,6 +38,6 @@
         <a class="btn btn-primary" href="{{ path('admin_meta_list_edit', {'metaId': indexPageId}) }}">{{ 'Configure index page'|trans }}</a>
       {% endif %}
     </div>
-    <i class="empty-state__close material-icons js-remove-helper-block">close</i>
+    <i class="showcase-card__close material-icons js-remove-helper-block">close</i>
   </div>
 {% endblock %}
