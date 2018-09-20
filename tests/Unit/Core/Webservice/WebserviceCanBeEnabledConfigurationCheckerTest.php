@@ -26,7 +26,7 @@
 
 namespace Tests\Unit\Core\Webservice;
 
-use PrestaShop\PrestaShop\Core\Webservice\WebserviceCanBeEnabledConfigurationChecker;
+use PrestaShop\PrestaShop\Core\Webservice\ServerRequirementsChecker;
 use Symfony\Component\HttpFoundation\Request;
 
 class WebserviceCanBeEnabledConfigurationCheckerTest extends \PHPUnit\Framework\TestCase
@@ -54,7 +54,7 @@ class WebserviceCanBeEnabledConfigurationCheckerTest extends \PHPUnit\Framework\
     {
         $request = new Request([], [], [], [], [], ['SERVER_SOFTWARE' => 'Apache/2.2.22 (Win64) PHP/5.3.13']);
 
-        $checker = new WebserviceCanBeEnabledConfigurationChecker($this->translatorStub, $this->configurationStub);
+        $checker = new ServerRequirementsChecker($this->translatorStub, $this->configurationStub);
 
         $warnings = $checker->checkForErrors($request);
 
@@ -65,7 +65,7 @@ class WebserviceCanBeEnabledConfigurationCheckerTest extends \PHPUnit\Framework\
     {
         $request = new Request([], [], [], [], [], ['SERVER_SOFTWARE' => 'SERVER_SOFTWARE=Microsoft-IIS/4.0']);
 
-        $checker = new WebserviceCanBeEnabledConfigurationChecker($this->translatorStub, $this->configurationStub);
+        $checker = new ServerRequirementsChecker($this->translatorStub, $this->configurationStub);
 
         $warnings = $checker->checkForErrors($request);
 
@@ -78,7 +78,7 @@ class WebserviceCanBeEnabledConfigurationCheckerTest extends \PHPUnit\Framework\
             ->method('getBoolean')
             ->will($this->returnValue(true));
 
-        $checker = new WebserviceCanBeEnabledConfigurationChecker($this->translatorStub, $this->configurationStub);
+        $checker = new ServerRequirementsChecker($this->translatorStub, $this->configurationStub);
 
         $warnings = $checker->checkForErrors();
 
@@ -91,7 +91,7 @@ class WebserviceCanBeEnabledConfigurationCheckerTest extends \PHPUnit\Framework\
             ->method('getBoolean')
             ->will($this->returnValue(false));
 
-        $checker = new WebserviceCanBeEnabledConfigurationChecker($this->translatorStub, $this->configurationStub);
+        $checker = new ServerRequirementsChecker($this->translatorStub, $this->configurationStub);
 
         $warnings = $checker->checkForErrors();
 

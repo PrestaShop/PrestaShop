@@ -28,13 +28,14 @@ namespace PrestaShop\PrestaShop\Core\Webservice;
 
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Hosting\HostingInformation;
+use PrestaShop\PrestaShop\Core\Configuration\PhpExtensionCheckerInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use RuntimeException;
 
 /**
  * Looks at server configuration in order to check if PrestaShop's Webservice feature can be enabled.
  */
-final class WebserviceCanBeEnabledConfigurationChecker implements ServerRequirementsCheckerInterface
+final class ServerRequirementsChecker implements ServerRequirementsCheckerInterface
 {
     const ISSUE_NOT_APACHE_SERVER = 'not_apache_server';
     const ISSUE_CANNOT_CHECK_APACHE_MODULES = 'cannot_check_apache_modules';
@@ -59,18 +60,26 @@ final class WebserviceCanBeEnabledConfigurationChecker implements ServerRequirem
     private $hostingInformation;
 
     /**
+     * @var PhpExtensionCheckerInterface
+     */
+    private $phpExtensionChecker;
+
+    /**
      * @param TranslatorInterface $translator
      * @param Configuration $configuration
      * @param HostingInformation $hostingInformation
+     * @param PhpExtensionCheckerInterface $phpExtensionChecker
      */
     public function __construct(
         TranslatorInterface $translator,
         Configuration $configuration,
-        HostingInformation $hostingInformation
+        HostingInformation $hostingInformation,
+        PhpExtensionCheckerInterface $phpExtensionChecker
     ) {
         $this->translator = $translator;
         $this->configuration = $configuration;
         $this->hostingInformation = $hostingInformation;
+        $this->phpExtensionChecker = $phpExtensionChecker;
     }
 
     /**
@@ -126,7 +135,7 @@ final class WebserviceCanBeEnabledConfigurationChecker implements ServerRequirem
             $issues[] = self::ISSUE_CANNOT_CHECK_APACHE_MODULES;
         }
 
-        if (false === extension_loaded('SimpleXML')) {
+        if (!$this->phpExtensionChecker->loaded('SimpleXML')) {
             $issues[] = self::ISSUE_EXT_SIMPLEXML_NOT_AVAILABLE;
         }
 
