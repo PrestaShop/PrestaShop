@@ -24,20 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Category\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Category\CommandHandler;
+
+use PrestaShop\PrestaShop\Core\Domain\Category\Command\UpdateCategoriesStatusCommand;
 
 /**
- * Class CategoryConstraintException.
+ * Interface UpdateCategoriesStatusHandlerInterface.
  */
-class CategoryConstraintException extends CategoryException
+interface UpdateCategoriesStatusHandlerInterface
 {
     /**
-     * Code is used when Category status is created with invalid value.
+     * @param UpdateCategoriesStatusCommand $command
      */
-    const INVALID_STATUS = 10;
-
-    /**
-     * Code is used when Category delete mode is created with invalid value.
-     */
-    const INVALID_DELETE_MODE = 20;
+    public function handle(UpdateCategoriesStatusCommand $command);
 }

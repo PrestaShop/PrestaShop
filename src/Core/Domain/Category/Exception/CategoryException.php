@@ -24,11 +24,13 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Category\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Category\Exception;
+
+use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 
 /**
- * Class CategoryNotFoundException.
+ * Class CategoryException is base exception for Category bounded context.
  */
-class CategoryNotFoundException extends CategoryException
+class CategoryException extends DomainException
 {
 }

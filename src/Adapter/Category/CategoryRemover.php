@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Category;
 
 use Category;
-use PrestaShop\PrestaShop\Core\Domain\Product\Category\ValueObject\CategoryDeletionMode;
+use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryDeletionMode;
 use PrestaShop\PrestaShop\Core\Foundation\Database\DatabaseInterface;
 use Product;
 use Shop;

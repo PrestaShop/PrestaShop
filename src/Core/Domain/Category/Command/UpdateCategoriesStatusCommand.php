@@ -24,12 +24,12 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Category\Command;
+namespace PrestaShop\PrestaShop\Core\Domain\Category\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Category\Exception\CategoryConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Category\Exception\CategoryException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Category\ValueObject\CategoryId;
-use PrestaShop\PrestaShop\Core\Domain\Product\Category\ValueObject\CategoryStatus;
+use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryException;
+use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
+use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryStatus;
 
 /**
  * Class ChangeCategoriesStatusCommand updates provided categories status to new given status.
