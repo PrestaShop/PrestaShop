@@ -29,7 +29,6 @@ module.exports = {
     product_availability_message: '//*[@id="product-availability"]',
     product_summary: '(//*[@itemprop="description"]//p)[1]',
     product_description: '//*[@id="description"]',
-    productLink: '//*[@id="js-product-list"]//div[contains(class, highlighted-informations)]//a[contains(text(), "%PRODUCTNAME")]',
     product_detail_tab: '//*[@role="tablist"]//li[2]',
     attachments_tab: '//*[@id="main"]//div[@class="product-information"]//a[@aria-controls="attachments"]',
     product_footer_linkwidget:'//*[@id="main"]/div[2]//p[contains(text(),"%DISPLAYFOOTERPRODUCT")]',
@@ -44,6 +43,7 @@ module.exports = {
     category_page: '//*[@id="category"]',
     left_column_block: '//*[@id="left-column"]',
     pagination_block: '//*[@id="js-product-list"]/nav',
-    filename_link: '(//*[@id="attachments"]//a)[1]'
+    filename_link: '(//*[@id="attachments"]//a)[1]',
+    productLink: '//*[@id="js-product-list"]//a[contains(text(), "%PRODUCTNAME")]'
   }
 };

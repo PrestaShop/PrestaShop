@@ -16,8 +16,10 @@ let productData = {
   reference: 'mvt',
   type: 'combination',
   attribute: {
-    name: 'color',
-    variation_quantity: '4'
+    1: {
+      name: 'color',
+      variation_quantity: '4'
+    }
   }
 };
 

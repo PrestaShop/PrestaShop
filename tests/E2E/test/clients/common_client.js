@@ -109,7 +109,8 @@ class CommonClient {
         if (isVisible) {
           this.client.waitForVisibleAndClick(languageFO.language_option.replace('%LANG', language));
         }
-      });
+      })
+      .then(() => this.client.pause(3000));
   }
 
   selectLanguage(selector, option, language, id) {
@@ -159,6 +160,13 @@ class CommonClient {
   waitForVisibleAndClick(selector, pause = 0, timeout = 90000) {
     return this.client
       .pause(pause)
+      .waitForVisibleAndClick(selector, timeout);
+  }
+
+  scrollWaitForVisibleAndClick(selector, pause = 0, timeout = 90000) {
+    return this.client
+      .pause(pause)
+      .scrollTo(selector)
       .waitForVisibleAndClick(selector, timeout);
   }
 
@@ -546,12 +554,6 @@ class CommonClient {
     }
   }
 
-/*  middleClick(selector,) {
-    return this.client
-      .waitForExist(selector, 9000)
-      .middleClick(selector);
-  }*/
-
   getParamFromURL(param, pause = 0) {
     return this.client
       .pause(pause)
@@ -579,6 +581,12 @@ class CommonClient {
       .selectByVisibleText(selector, text)
   }
 
+  middleClickWhenVisible(selector) {
+    if (global.isVisible) {
+      return this.client
+        .middleClick(selector)
+    }
+  }
 
 }
 

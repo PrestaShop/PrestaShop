@@ -217,7 +217,9 @@ module.exports = {
     custom_value_input: '//*[@id="form_step1_features_0_custom_value_1"]',
     background_picture: '//*[@id="product-images-dropzone"]//div[@class="dz-image bg"]',
     product_pack_items: '//*[@id="form_step1_inputPackItems-data"]',
-    add_products_to_pack: '//*[@id="js_form_step1_inputPackItems"]/div'
+    add_products_to_pack: '//*[@id="js_form_step1_inputPackItems"]/div',
+    attribute_group_name: '//*[@id="attributes-list"]//a[text()[contains(.,"%NAME")]]',
+    attribute_value_checkbox: '//*[@id="attribute-group-%ID"]/div/div[%S]//label'
   },
   ProductList: {
     product_id: '//*[@id="product_catalog_list"]//tr[%ID]/td[2]/label',
