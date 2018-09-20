@@ -74,6 +74,7 @@ class ProductCategories extends TranslatorAwareType
             'list' => $this->categoryProvider->getNestedCategories(null, $this->languageId, false),
             'valid_list' => [],
             'multiple' => false,
+            'expanded' => false,
         ));
     }
 

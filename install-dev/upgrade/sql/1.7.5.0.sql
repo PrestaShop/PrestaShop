@@ -47,6 +47,7 @@ ALTER TABLE `PREFIX_supply_order_history` CHANGE `employee_firstname` `employee_
 ALTER TABLE `PREFIX_supply_order_receipt_history` CHANGE `employee_firstname` `employee_firstname` VARCHAR(255) DEFAULT '';
 
 ALTER TABLE `PREFIX_supply_order_receipt_history` CHANGE `employee_lastname` `employee_firstname` VARCHAR(255) DEFAULT '';
+<<<<<<< HEAD
 
 ALTER TABLE `PREFIX_category_lang` CHANGE `meta_description` `meta_description` varchar(512) DEFAULT NULL;
 
@@ -57,3 +58,5 @@ ALTER TABLE `PREFIX_cms_category_lang` CHANGE `meta_description` `meta_descripti
 ALTER TABLE `PREFIX_manufacturer_lang` CHANGE `meta_description` `meta_description` varchar(512) DEFAULT NULL;
 
 ALTER TABLE `PREFIX_supplier_lang` CHANGE `meta_description` `meta_description` varchar(512) DEFAULT NULL;
+=======
+>>>>>>> 4bf79634745dd182cfc4102e8521390e5cc5d934

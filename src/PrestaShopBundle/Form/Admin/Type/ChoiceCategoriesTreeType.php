@@ -46,6 +46,7 @@ class ChoiceCategoriesTreeType extends CommonAbstractType
     {
         $view->vars['choices'] = $options['list'];
         $view->vars['multiple'] = $options['multiple'];
+        $view->vars['expanded'] = $options['expanded'];
 
         //if form is submitted, inject categories values array to check or not each field
         if (!empty($view->vars['value']) && !empty($view->vars['value']['tree'])) {
@@ -80,6 +81,7 @@ class ChoiceCategoriesTreeType extends CommonAbstractType
             'list' => [],
             'valid_list' => [],
             'multiple' => true,
+            'expanded' => true,
         ]);
     }
 
