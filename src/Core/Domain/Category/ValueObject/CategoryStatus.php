@@ -24,9 +24,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Category\ValueObject;
+namespace PrestaShop\PrestaShop\Core\Domain\Category\ValueObject;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Category\Exception\CategoryConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryConstraintException;
 
 /**
  * Class CategoryStatus.

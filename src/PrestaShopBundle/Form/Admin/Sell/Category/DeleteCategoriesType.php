@@ -26,7 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Sell\Category;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Category\ValueObject\CategoryDeletionMode;
+use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryDeletionMode;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;

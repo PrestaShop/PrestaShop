@@ -24,17 +24,51 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Category\CommandHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Category\ValueObject;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Category\Command\ToggleCategoryStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryException;
 
 /**
- * Interface ToggleCategoryStatusHandlerInterface.
+ * Class CategoryId.
  */
-interface ToggleCategoryStatusHandlerInterface
+class CategoryId
 {
     /**
-     * @param ToggleCategoryStatusCommand $command
+     * @var int
      */
-    public function handle(ToggleCategoryStatusCommand $command);
+    private $id;
+
+    /**
+     * @param int $id
+     *
+     * @throws CategoryException
+     */
+    public function __construct($id)
+    {
+        $this->setId($id);
+    }
+
+    /**
+     * @return int
+     */
+    public function getValue()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param int $id
+     *
+     * @throws CategoryException
+     */
+    private function setId($id)
+    {
+        if (!is_numeric($id) || 0 >= $id) {
+            throw new CategoryException(
+                sprintf('Invalid Category id %s supplied', var_export($id, true))
+            );
+        }
+
+        $this->id = (int) $id;
+    }
 }

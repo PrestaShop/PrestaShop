@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Category\ValueObject\CategoryDeletionMode;
+use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryDeletionMode;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 

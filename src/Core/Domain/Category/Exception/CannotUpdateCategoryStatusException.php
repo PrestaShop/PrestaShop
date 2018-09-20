@@ -24,13 +24,11 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Category\Exception;
-
-use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
+namespace PrestaShop\PrestaShop\Core\Domain\Category\Exception;
 
 /**
- * Class CategoryException is base exception for Category bounded context.
+ * Class CannotUpdateCategoryStatusException is thrown when Category status update failed.
  */
-class CategoryException extends DomainException
+class CannotUpdateCategoryStatusException extends CategoryException
 {
 }
