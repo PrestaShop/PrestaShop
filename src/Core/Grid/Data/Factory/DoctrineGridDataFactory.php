@@ -28,9 +28,12 @@ namespace PrestaShop\PrestaShop\Core\Grid\Data\Factory;
 
 use PDO;
 use PrestaShop\PrestaShop\Core\Grid\Data\GridData;
+use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\PrestaShop\Core\Grid\Query\DoctrineQueryBuilderInterface;
+use PrestaShop\PrestaShop\Core\Grid\Query\QueryParserInterface;
 use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollection;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
+use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 
 /**
  * Class DoctrineGridDataFactory is responsible for returning grid data using Doctrine query builders.
@@ -43,12 +46,35 @@ final class DoctrineGridDataFactory implements GridDataFactoryInterface
     private $gridQueryBuilder;
 
     /**
+     * @var HookDispatcherInterface
+     */
+    private $hookDispatcher;
+
+    /**
+     * @var QueryParserInterface
+     */
+    private $queryParser;
+
+    /**
+     * @var string
+     */
+    private $gridId;
+
+    /**
      * @param DoctrineQueryBuilderInterface $gridQueryBuilder
+     * @param HookDispatcherInterface $hookDispatcher
+     * @param string $gridId
      */
     public function __construct(
-        DoctrineQueryBuilderInterface $gridQueryBuilder
+        DoctrineQueryBuilderInterface $gridQueryBuilder,
+        HookDispatcherInterface $hookDispatcher,
+        QueryParserInterface $queryParser,
+        $gridId
     ) {
         $this->gridQueryBuilder = $gridQueryBuilder;
+        $this->hookDispatcher = $hookDispatcher;
+        $this->queryParser = $queryParser;
+        $this->gridId = $gridId;
     }
 
     /**
@@ -62,12 +88,30 @@ final class DoctrineGridDataFactory implements GridDataFactoryInterface
         $records = $searchQueryBuilder->execute()->fetchAll();
         $recordsTotal = (int) $countQueryBuilder->execute()->fetch(PDO::FETCH_COLUMN);
 
+        $this->hookDispatcher->dispatchWithParameters('action' . $this->gridId . 'GridQueryBuilderModifier', [
+            'search_query_builder' => $searchQueryBuilder,
+            'count_query_builder' => $countQueryBuilder,
+        ]);
+
         $records = new RecordCollection($records);
 
         return new GridData(
             $records,
             $recordsTotal,
-            $searchQueryBuilder->getSQL()
+            $this->getRawQuery($searchQueryBuilder)
         );
+    }
+
+    /**
+     * @param QueryBuilder $queryBuilder
+     *
+     * @return string
+     */
+    private function getRawQuery(QueryBuilder $queryBuilder)
+    {
+        $query = $queryBuilder->getSQL();
+        $parameters = $queryBuilder->getParameters();
+
+        return $this->queryParser->parse($query, $parameters);
     }
 }

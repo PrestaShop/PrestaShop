@@ -26,8 +26,10 @@
 
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Import;
 
+use PrestaShop\PrestaShop\Core\Import\Entity;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -49,15 +51,15 @@ class ImportType extends TranslatorAwareType
             ->add('csv', HiddenType::class)
             ->add('entity', ChoiceType::class, [
                 'choices' => [
-                    $this->trans('Categories', 'Admin.Global') => 0,
-                    $this->trans('Products', 'Admin.Global') => 1,
-                    $this->trans('Combinations', 'Admin.Global') => 2,
-                    $this->trans('Customers', 'Admin.Global') => 3,
-                    $this->trans('Addresses', 'Admin.Global') => 4,
-                    $this->trans('Brands', 'Admin.Global') => 5,
-                    $this->trans('Suppliers', 'Admin.Global') => 6,
-                    $this->trans('Alias', 'Admin.Shopparameters.Feature') => 7,
-                    $this->trans('Store contacts', 'Admin.Advparameters.Feature') => 8,
+                    $this->trans('Categories', 'Admin.Global') => Entity::TYPE_CATEGORIES,
+                    $this->trans('Products', 'Admin.Global') => Entity::TYPE_PRODUCTS,
+                    $this->trans('Combinations', 'Admin.Global') => Entity::TYPE_COMBINATIONS,
+                    $this->trans('Customers', 'Admin.Global') => Entity::TYPE_CUSTOMERS,
+                    $this->trans('Addresses', 'Admin.Global') => Entity::TYPE_ADDRESSES,
+                    $this->trans('Brands', 'Admin.Global') => Entity::TYPE_MANUFACTURERS,
+                    $this->trans('Suppliers', 'Admin.Global') => Entity::TYPE_SUPPLIERS,
+                    $this->trans('Alias', 'Admin.Shopparameters.Feature') => Entity::TYPE_ALIAS,
+                    $this->trans('Store contacts', 'Admin.Advparameters.Feature') => Entity::TYPE_STORE_CONTACTS,
                 ],
             ])
             ->add('file', FileType::class, [
@@ -82,7 +84,23 @@ class ImportType extends TranslatorAwareType
             ])
             ->add('sendemail', SwitchType::class, [
                 'data' => true,
-            ]);
+            ])
+        ;
+
+        $builder->get('entity')
+            ->addModelTransformer(new CallbackTransformer(
+                function ($entity) {
+                    if (null === $entity) {
+                        return $entity;
+                    }
+
+                    return is_numeric($entity) ? $entity : Entity::getFromName($entity);
+                },
+                function ($entity) {
+                    return $entity;
+                }
+            ))
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver)

@@ -55,8 +55,8 @@ class AdminSecurity extends Security
     protected $redirectRoute;
 
     /**
-     * @deprecated Once the back office is migrated, rely only on route.
-     * The url for the redirection.
+     * @deprecated once the back office is migrated, rely only on route.
+     * The url for the redirection
      *
      * @return string
      */

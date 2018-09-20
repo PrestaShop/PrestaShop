@@ -1,6 +1,4 @@
 const {AccessPageBO} = require('../../../selectors/BO/access_page');
-const {CatalogPage} = require('../../../selectors/BO/catalogpage/index');
-const {Stock} = require('../../../selectors/BO/catalogpage/stocksubmenu/stock');
 const {Movement} = require('../../../selectors/BO/catalogpage/stocksubmenu/movements');
 const {OrderPage} = require('../../../selectors/BO/order');
 const {CreateOrder} = require('../../../selectors/BO/order');
@@ -45,7 +43,7 @@ scenario('Check order movement', client => {
   scenario('Check order movement', client => {
     test('should go to "Stocks" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.stocks_submenu));
     test('should go to "Movements" tabs', () => client.goToStockMovements(Menu, Movement));
-    test('should check the movements of the delivered product', () => client.checkMovement(Movement, 1, '4', "-", "Customer Order"));
+    test('should check the movements of the delivered product', () => client.checkMovement(Movement, 1, '4', "-", "Customer Order", "mvt"));
   }, 'stocks');
 
 }, 'stocks', true);

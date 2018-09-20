@@ -132,6 +132,12 @@ function initCommands(client) {
       .refresh();
   });
 
+  client.addCommand('closeWindow', function (id) {
+    return client
+      .getTabIds()
+      .then(ids => client.close(ids[id]));
+  });
+
   client.addCommand('isOpen', function (selector) {
     return client
       .getAttribute(selector + '/..', 'class')

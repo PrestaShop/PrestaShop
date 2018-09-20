@@ -59,6 +59,7 @@ module.exports = {
     feature_select_option_height: '//*[@id="select2-form_step1_features_0_feature-results"]/li[2]',
     feature_custom_value_height: '//*[@id="form_step1_features_0_custom_value_1"]',
     priceTE_shortcut: '#form_step1_price_shortcut',
+    priceTTC_shortcut: '#form_step1_price_ttc_shortcut',
     product_reference: '//*[@id="form_step6_reference"]',
     product_quantities_tab: '//*[@id="tab_step3"]/a',
     product_quantity_input: '//*[@id="form_step3_qty_0"]',
@@ -89,6 +90,8 @@ module.exports = {
     combination_size_m: '//*[@id="attribute-group-1"]//label[@for="attribute-2"]',
     combination_color_grey: '//*[@id="attribute-group-2"]//label[@for="attribute-5"]',
     combination_color_beige: '//*[@id="attribute-group-2"]//label[@for="attribute-7"]',
+    combination_color_green: '//label[@for="attribute-15"]',
+    combination_color_red: '//label[@for="attribute-10"]',
     combination_generate_button: '//*[@id="create-combinations"]',
     combination_impact_price_input: '//*[@id="attribute_%NUMBER"]/td[@class="attribute-price"]//input',
     combination_final_price_span: '//*[@id="attribute_%NUMBER"]/td[contains(@class, "attribute-finalprice")]/span',
@@ -205,9 +208,17 @@ module.exports = {
     continue_confirmation: '//*[@id="confirmation_modal"]//button[2]',
     search_categories: '//*[@id="ps-select-product-category"]',
     list_categories: '//*[@id="ui-id-1"]/li',
-    default_category: '//*[@id="ps_categoryTags"]/span[1]/a'
+    default_category: '//*[@id="ps_categoryTags"]/span[1]/a',
+    image_combination_src: '(//*[@id="combination_%ID_id_image_attr"]//img)[%POS]',
+    img_added_product_pack: '//*[@id="form_step1_inputPackItems-data"]/li[%ID]//img',
+    product_type_option: '//*[@id="form_step1_type_product"]/option[%POS]',
+    tax_rule_taux_standard_option: '//*[@id="step2_id_tax_rules_group_rendered"]/option[5]',
+    predefined_value_option: '//*[@id="form_step1_features_0_value"]/option[text()="%V"]',
+    custom_value_input: '//*[@id="form_step1_features_0_custom_value_1"]',
+    background_picture: '//*[@id="product-images-dropzone"]//div[@class="dz-image bg"]',
+    product_pack_items: '//*[@id="form_step1_inputPackItems-data"]',
+    add_products_to_pack: '//*[@id="js_form_step1_inputPackItems"]/div'
   },
-
   ProductList: {
     product_id: '//*[@id="product_catalog_list"]//tr[%ID]/td[2]/label',
     product_name: '//*[@id="product_catalog_list"]//tbody/tr[%ID]/td[4]/a',
@@ -229,6 +240,8 @@ module.exports = {
     page_active_number: '//*[@id="product_catalog_list"]//li[@class="page-item active"]//input',
     item_per_page: '//*[@id="paginator_select_page_limit"]',
     product_category: '//*[@id="product_catalog_list"]//div//tr[%I]/td[6]',
-    reset_button: '//*[@id="product_catalog_list"]//tr[2]/th[9]/button[@name="products_filter_reset"]'
+    reset_button: '//*[@id="product_catalog_list"]//tr[2]/th[9]/button[@name="products_filter_reset"]',
+    status_filter: '//*[@id="product_filter_column_active"]//select[@name=\'filter_column_active\']',
+    item_per_page_select: '//*[@id="paginator_select_page_limit"]'
   }
 };

@@ -191,7 +191,11 @@ npm run install-upgrade-test -- --URL=prestashop.localhost \
                                 --FILENAME=RCFileName
 ```
 
-
+#### BOOM
+If you want to run scenarios taken from forge tickets, you can run the campaign **boom**
+```
+npm run boom -- --URL=FrontOfficeURL --DIR=DownloadDirectory --URLLASTSTABLEVERSION=LaststableversionURL --DB_SERVER=DataBaseServer --DB_USER=DataBaseUser --DB_PASSWD=DataBasePassword --RCLINK=RCDownloadlink --RCTARGET=LastStableVersionLocation --FILENAME=RCFileName --LANGUAGE=language --COUNTRY=country
+```
 
 ## Running the tests with Docker
 

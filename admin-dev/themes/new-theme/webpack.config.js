@@ -1,3 +1,4 @@
+/* eslint-disable indent,comma-dangle */
 /**
  * 2007-2018 PrestaShop
  *
@@ -54,7 +55,7 @@ const config = {
       './js/app/pages/translations',
     ],
     logs: [
-      './js/app/pages/logs',
+      './js/pages/logs',
     ],
     improve_design_positions: [
       './js/pages/improve/design_positions',
@@ -100,7 +101,13 @@ const config = {
     ],
     translation_settings: [
       './js/pages/translation-settings'
-    ]
+    ],
+    webservice: [
+      './js/pages/webservice'
+    ],
+    meta: [
+      './js/pages/meta'
+    ],
   },
   output: {
     path: path.resolve(__dirname, 'public'),

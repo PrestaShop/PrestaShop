@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Controller\Admin;
 
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Grid\GridInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Form;
@@ -320,8 +321,7 @@ class FrameworkBundleAdminController extends Controller
             ) || (
                 ($action === 'duplicate' . $suffix) &&
                 ($this->isGranted(PageVoter::UPDATE, $object) || $this->isGranted(PageVoter::CREATE, $object))
-            )
-        ;
+            );
     }
 
     /**
@@ -352,6 +352,26 @@ class FrameworkBundleAdminController extends Controller
     }
 
     /**
+     * Get fallback error message when something unexpected happens.
+     *
+     * @param string $type
+     * @param string $code
+     *
+     * @return string
+     */
+    protected function getFallbackErrorMessage($type, $code)
+    {
+        return $this->trans(
+            'An unexpected error occurred. [%type% code %code%]',
+            'Admin.Notifications.Error',
+            [
+                '%type%' => $type,
+                '%code%' => $code,
+            ]
+        );
+    }
+
+    /**
      * Get Admin URI from PrestaShop 1.6 Back Office.
      *
      * @param string $controller the old Controller name
@@ -363,5 +383,37 @@ class FrameworkBundleAdminController extends Controller
     protected function getAdminLink($controller, array $params, $withToken = true)
     {
         return $this->get('prestashop.adapter.legacy.context')->getAdminLink($controller, $withToken, $params);
+    }
+
+    /**
+     * Present provided grid.
+     *
+     * @param GridInterface $grid
+     *
+     * @return array
+     */
+    protected function presentGrid(GridInterface $grid)
+    {
+        return $this->get('prestashop.core.grid.presenter.grid_presenter')->present($grid);
+    }
+
+    /**
+     * Get commands bus to execute commands.
+     *
+     * @return \PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface
+     */
+    protected function getCommandBus()
+    {
+        return $this->get('prestashop.core.command_bus');
+    }
+
+    /**
+     * Get query bus to execute queries.
+     *
+     * @return \PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface
+     */
+    protected function getQueryBus()
+    {
+        return $this->get('prestashop.core.query_bus');
     }
 }

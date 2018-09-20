@@ -28,6 +28,10 @@
 
   .card-block {
     justify-content: center;
+    padding: 1.875rem $card-spacer-x;
+    &.row {
+      margin: 0; // used to override negative margins brought by .row
+    }
   }
 
   .card-text {
@@ -37,8 +41,9 @@
   .form-group.row {
     margin-bottom: 1.2rem;
 
+    // label column in forms
     > .form-control-label:first-of-type {
-      @extend .col-sm-5;
+      @extend .col-sm-4;
       @extend .col-form-label;
 
       @include media-breakpoint-up('sm') {

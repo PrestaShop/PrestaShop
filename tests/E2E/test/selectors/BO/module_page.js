@@ -72,8 +72,22 @@ module.exports = {
       selected_item_list : '//*[@id="items"]//option[@value="CAT%ID"]',
       save_button: '//*[@id="module_form_submit_btn"]'
     },
+    ReadMoreModal: {
+      read_more_link: '//*[@id="modules-list-container-all"]/div[contains(@data-tech-name, "%moduleTechName")]//a[text()="Read more"]',
+      overview_content: '//*[@id="overview-%moduleTechName"]/p',
+      additional_content: '//*[@id="additional-%moduleTechName"]//li',
+      features_content: '//*[@id="features-%moduleTechName"]//li',
+      changelog_content: '//*[@id="changelog-%moduleTechName"]//li',
+      module_readmore_tabs: '//*[@id="modules-list-container-all"]/div[contains(@data-tech-name, "%moduleTechName")]//a[contains(text(), "%NAME")]',
+      close_modal_button: '//*[@id="module-modal-read-more-%moduleTechName"]//button[@class="close"]'
+    },
 
     //Module name in "addons.prestashop.com" after clicking on "Dicover" button
-    module_name: '//*[@id="product_content"]/div[@class="product_head"]//h1'
+    module_name: '//*[@id="product_content"]/div[@class="product_head"]//h1',
+    ContactFormPage: {
+      send_confirmation_email_button: '//*[@id="fieldset_0"]//label[@for="CONTACTFORM_SEND_CONFIRMATION_EMAIL_%S"]',
+      receive_customers_messages_label: '//*[@id="fieldset_0"]//label[@for="CONTACTFORM_SEND_NOTIFICATION_EMAIL_%S"]',
+      save_button: '//*[@id="module_form_submit_btn"]'
+    }
   }
 };

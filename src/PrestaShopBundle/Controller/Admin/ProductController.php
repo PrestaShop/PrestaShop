@@ -210,8 +210,8 @@ class ProductController extends FrameworkBundleAdminController
                 'layoutHeaderToolbarBtn' => $toolbarButtons,
                 'categories' => $categoriesForm->createView(),
                 'pagination_limit_choices' => $productProvider->getPaginationLimitChoices(),
-                'import_link' => $this->getAdminLink('AdminImport', ['import_type' => 'products']),
-                'sql_manager_add_link' => $this->getAdminLink('AdminRequestSql', ['addrequest_sql' => 1]),
+                'import_link' => $this->generateUrl('admin_import', ['import_type' => 'products']),
+                'sql_manager_add_link' => $this->generateUrl('admin_sql_request_create', ['addrequest_sql' => 1]),
                 'enableSidebar' => true,
                 'help_link' => $this->generateSidebarLink('AdminProducts'),
                 'is_shop_context' => $this->get('prestashop.adapter.shop.context')->isShopContext(),
@@ -837,11 +837,11 @@ class ProductController extends FrameworkBundleAdminController
 
                     $hookDispatcher->dispatchWithParameters(
                         'actionAdminSortBefore',
-                        $hookEventParemters
+                        $hookEventParameters
                     );
                     $hookDispatcher->dispatchWithParameters(
                         'actionAdminProductsControllerSortBefore',
-                        $hookEventParemters
+                        $hookEventParameters
                     );
 
                     // Hooks: managed in ProductUpdater
@@ -866,11 +866,11 @@ class ProductController extends FrameworkBundleAdminController
                     ];
                     $hookDispatcher->dispatchWithParameters(
                         'actionAdminSortAfter',
-                        $hookEventParemters
+                        $hookEventParameters
                     );
                     $hookDispatcher->dispatchWithParameters(
                         'actionAdminProductsControllerSortAfter',
-                        $hookEventParemters
+                        $hookEventParameters
                     );
                     break;
                 default:

@@ -37,9 +37,9 @@ class PriceCalculator
     /**
      * @param int $idProduct Product id
      * @param bool $useTax With taxes or not (optional)
-     * @param int|null $idProductAttribute Product attribute id (optional).
+     * @param int|null $idProductAttribute product attribute id (optional).
      *                                     If set to false, do not apply the combination price impact.
-     *                                     NULL does apply the default combination price impact.
+     *                                     NULL does apply the default combination price impact
      * @param int $decimals Number of decimals (optional)
      * @param int|null $divisor Useful when paying many time without fees (optional)
      * @param bool $onlyReduc Returns only the reduction amount

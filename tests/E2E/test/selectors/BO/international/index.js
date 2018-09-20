@@ -1,9 +1,10 @@
 module.exports =Object.assign(
   {
     InternationalPage: {
-      success_panel: '//*[@id="content"]/div[@class="bootstrap"]/div[contains(@class, "success")]',
+      success_panel: '//*[@class="alert alert-success"]/div[@class="alert-text"]',
     }
   },
   require('./taxes'),
-  require('./translations')
+  require('./translations'),
+  require('./localization')
 );

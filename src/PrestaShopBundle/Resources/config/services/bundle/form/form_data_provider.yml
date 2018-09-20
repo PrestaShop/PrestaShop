@@ -122,9 +122,9 @@ services:
             - '@prestashop.core.email.smtp_configurator'
 
     prestashop.admin.request_sql_settings.form_data_provider:
-        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\RequestSql\RequestSqlSettingsFormDataProvider'
+        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\RequestSql\SqlRequestSettingsFormDataProvider'
         arguments:
-            - '@prestashop.adapter.sql_manager_settings.configuration'
+          - '@prestashop.core.sql_manager.configuration.sql_request_configuration'
 
     prestashop.admin.webservice.form_data_provider:
         class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Webservice\WebserviceFormDataProvider'
@@ -135,3 +135,13 @@ services:
         class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Backup\BackupDataProvider'
         arguments:
             - '@prestashop.core.backup.options_configuration'
+
+    prestashop.admin.traffic_seo.meta_settings.form_data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta\MetaSettingsFormDataProvider'
+        arguments:
+            - '@prestashop.adapter.meta.set_up_urls.configuration'
+            - '@prestashop.adapter.meta.shop_url.configuration'
+            - '@prestashop.adapter.meta.url_schema.configuration'
+            - '@translator'
+            - '@prestashop.adapter.routes.route_validator'
+            - '@prestashop.adapter.validate'

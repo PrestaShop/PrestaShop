@@ -6,9 +6,9 @@
     <field name="id_feature_value"/>
   </fields>
   <entities>
-    <feature_product id="feature_product_5_8" id_feature="5" id_product="8" id_feature_value="5"/>
-    <feature_product id="feature_product_5_10" id_feature="5" id_product="10" id_feature_value="5"/>
-    <feature_product id="feature_product_8_28" id_feature="8" id_product="28" id_feature_value="37"/>
-    <feature_product id="feature_product_8_29" id_feature="8" id_product="29" id_feature_value="37"/>
+    <feature_product id="feature_product_6_9" id_feature="3" id_product="6" id_feature_value="9"/>
+    <feature_product id="feature_product_7_9" id_feature="3" id_product="7" id_feature_value="9"/>
+    <feature_product id="feature_product_8_9" id_feature="3" id_product="8" id_feature_value="9"/>
+    <feature_product id="feature_product_19_9" id_feature="3" id_product="19" id_feature_value="9"/>
   </entities>
 </entity_feature_product>

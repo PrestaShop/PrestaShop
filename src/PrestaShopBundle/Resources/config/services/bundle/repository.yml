@@ -12,6 +12,12 @@ services:
         arguments:
             - PrestaShopBundle\Entity\Tab
 
+    prestashop.core.admin.shop.repository:
+        class: 'PrestaShopBundle\Entity\Repository\ShopRepository'
+        factory: ['@doctrine.orm.default_entity_manager', getRepository]
+        arguments:
+        - 'PrestaShopBundle\Entity\Shop'
+
     prestashop.core.admin.translation.repository:
         class: PrestaShopBundle\Entity\Repository\TranslationRepository
         factory: ['@doctrine.orm.default_entity_manager', getRepository]
@@ -29,6 +35,7 @@ services:
         arguments:
             - '@doctrine.dbal.default_connection'
             - '%database_prefix%'
+            - '@prestashop.core.query.doctrine_search_criteria_applicator'
 
     prestashop.core.api.stock.repository:
         class: PrestaShopBundle\Entity\Repository\StockRepository

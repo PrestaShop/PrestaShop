@@ -228,7 +228,7 @@ services:
             - '@prestashop.core.hook.dispatcher'
             - '@prestashop.admin.request_sql_settings.form_data_provider'
             -
-              'settings': 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\RequestSql\RequestSqlSettingsType'
+              'settings': 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\RequestSql\SqlRequestSettingsType'
             - 'RequestSql'
 
     prestashop.admin.backup.form_handler:
@@ -263,10 +263,28 @@ services:
               'copy_language': 'PrestaShopBundle\Form\Admin\Improve\International\Translations\CopyLanguageType'
             - 'TranslationSettingsPage'
 
+    prestashop.admin.meta_settings.form_handler:
+        class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
+        arguments:
+            - '@=service("form.factory").createBuilder()'
+            - '@prestashop.core.hook.dispatcher'
+            - '@prestashop.admin.traffic_seo.meta_settings.form_data_provider'
+            -
+              'set_up_urls': 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta\SetUpUrlType'
+              'shop_urls': 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta\ShopUrlType'
+              'url_schema': 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta\UrlSchemaType'
+            - 'MetaPage'
+
     # Entity form handler
     prestashop.admin.request_sql.form_handler:
-        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\RequestSql\RequestSqlFormHandler'
+        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\RequestSql\SqlRequestFormHandler'
         arguments:
             - '@form.factory'
-            - '@prestashop.adapter.sql_manager.request_sql_manager'
-            - '@prestashop.adapter.sql_manager.sql_query_validator'
+            - '@prestashop.adapter.sql_manager.request_sql_form_data_validator'
+            - '@prestashop.bundle.form.admin.configure.advanced_parameters.request_sql.form_data_provider'
+
+    prestashop.bundle.form.admin.configure.advanced_parameters.request_sql.form_data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\RequestSql\SqlRequestFormDataProvider'
+        arguments:
+            - '@prestashop.core.command_bus'
+            - '@prestashop.core.query_bus'

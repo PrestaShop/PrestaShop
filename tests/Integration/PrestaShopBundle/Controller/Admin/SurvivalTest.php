@@ -140,6 +140,7 @@ class SurvivalTest extends WebTestCase
             'admin_localization_show_settings' => ['Localization', 'admin_localization_show_settings'],
             'admin_payment_preferences' => ['Payment preferences', 'admin_payment_preferences'],
             'admin_modules_positions' => ['Positions', 'admin_modules_positions'],
+            'admin_backup' => ['DB Backup', 'admin_backup'],
         ];
     }
 

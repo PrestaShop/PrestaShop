@@ -3074,9 +3074,9 @@ class ProductCore extends ObjectModel
      *
      * @param int $id_product Product id
      * @param bool $usetax With taxes or not (optional)
-     * @param int|null $id_product_attribute Product attribute id (optional).
+     * @param int|null $id_product_attribute product attribute id (optional).
      *                                       If set to false, do not apply the combination price impact.
-     *                                       NULL does apply the default combination price impact.
+     *                                       NULL does apply the default combination price impact
      * @param int $decimals Number of decimals (optional)
      * @param int|null $divisor Useful when paying many time without fees (optional)
      * @param bool $only_reduc Returns only the reduction amount
@@ -4942,7 +4942,7 @@ class ProductCore extends ObjectModel
         }
         if (!array_key_exists($id_product . '-' . $id_lang, self::$_frontFeaturesCache)) {
             self::$_frontFeaturesCache[$id_product . '-' . $id_lang] = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-				SELECT name, value, pf.id_feature
+				SELECT name, value, pf.id_feature, f.position
 				FROM ' . _DB_PREFIX_ . 'feature_product pf
 				LEFT JOIN ' . _DB_PREFIX_ . 'feature_lang fl ON (fl.id_feature = pf.id_feature AND fl.id_lang = ' . (int) $id_lang . ')
 				LEFT JOIN ' . _DB_PREFIX_ . 'feature_value_lang fvl ON (fvl.id_feature_value = pf.id_feature_value AND fvl.id_lang = ' . (int) $id_lang . ')

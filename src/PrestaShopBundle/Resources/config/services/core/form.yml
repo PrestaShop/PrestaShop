@@ -98,3 +98,11 @@ services:
         class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ModuleByNameChoiceProvider'
         arguments:
             - '@=service("prestashop.core.admin.module.repository").getInstalledModulesCollection()'
+
+    prestashop.core.form.choice_provider.status:
+        class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\StatusChoiceProvider'
+
+    prestashop.core.form.choice_provider.canonical_redirect_type:
+        class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CanonicalRedirectTypeChoiceProvider'
+        arguments:
+            - '@translator'

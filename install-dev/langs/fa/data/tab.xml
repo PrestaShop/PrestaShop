@@ -102,8 +102,8 @@
     <tab id="Shops" name="فروشگاه ها" />
     <tab id="SQL_Manager" name="مدیریت SQL" />
     <tab id="States" name="استان ها" />
-    <tab id="Stats_1" name="استان ها" />
-    <tab id="Stats" name="استان ها" />
+    <tab id="Stats_1" name="آمار" />
+    <tab id="Stats" name="آمار" />
     <tab id="Statuses" name="وضعیت ها" />
     <tab id="Stock_Coverage" name="پوشش موجودی" />
     <tab id="Stock_Management" name="مدیریت موجودی" />

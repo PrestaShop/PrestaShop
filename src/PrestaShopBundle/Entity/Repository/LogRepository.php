@@ -29,6 +29,7 @@ namespace PrestaShopBundle\Entity\Repository;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\PrestaShop\Core\Grid\Query\DoctrineQueryBuilderInterface;
+use PrestaShop\PrestaShop\Core\Grid\Query\DoctrineSearchCriteriaApplicatorInterface;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 use PrestaShop\PrestaShop\Core\Repository\RepositoryInterface;
 
@@ -41,11 +42,20 @@ class LogRepository implements RepositoryInterface, DoctrineQueryBuilderInterfac
     private $databasePrefix;
     private $logTable;
 
-    public function __construct(Connection $connection, $databasePrefix)
-    {
+    /**
+     * @var DoctrineSearchCriteriaApplicatorInterface
+     */
+    private $searchCriteriaApplicator;
+
+    public function __construct(
+        Connection $connection,
+        $databasePrefix,
+        DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator
+    ) {
         $this->connection = $connection;
         $this->databasePrefix = $databasePrefix;
         $this->logTable = $this->databasePrefix . 'log';
+        $this->searchCriteriaApplicator = $searchCriteriaApplicator;
     }
 
     /**
@@ -167,16 +177,14 @@ class LogRepository implements RepositoryInterface, DoctrineQueryBuilderInterfac
      *
      * @return QueryBuilder
      */
-    public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria = null)
+    public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $qb = $this->buildGridQuery($searchCriteria);
-        $qb->select('l.*', 'e.email', 'CONCAT(e.firstname, \' \', e.lastname) as employee')
-            ->orderBy(
-                $searchCriteria->getOrderBy(),
-                $searchCriteria->getOrderWay()
-            )
-            ->setFirstResult($searchCriteria->getOffset())
-            ->setMaxResults($searchCriteria->getLimit());
+        $qb->select('l.*', 'e.email', 'CONCAT(e.firstname, \' \', e.lastname) as employee');
+
+        $this->searchCriteriaApplicator
+            ->applyPagination($searchCriteria, $qb)
+            ->applySorting($searchCriteria, $qb);
 
         return $qb;
     }
@@ -188,7 +196,7 @@ class LogRepository implements RepositoryInterface, DoctrineQueryBuilderInterfac
      *
      * @return QueryBuilder
      */
-    public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria = null)
+    public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $qb = $this->buildGridQuery($searchCriteria);
         $qb->select('COUNT(*)');
@@ -203,7 +211,7 @@ class LogRepository implements RepositoryInterface, DoctrineQueryBuilderInterfac
      *
      * @return QueryBuilder
      */
-    private function buildGridQuery(SearchCriteriaInterface $searchCriteria = null)
+    private function buildGridQuery(SearchCriteriaInterface $searchCriteria)
     {
         $employeeTable = $this->databasePrefix . 'employee';
 

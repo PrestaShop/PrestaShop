@@ -21,7 +21,7 @@ module.exports = {
         supplier_tab: '//*[@id="content"]//div[@class="page-head-tabs"]//a[text()="Suppliers"]',
         files_submenu: '#subtab-AdminAttachments',
         discounts_submenu: '#subtab-AdminParentCartRules',
-        catalog_price_rules_tab: '//*[@id="content"]//div[@class="page-head-tabs"]//a[text()="Catalog Price Rules"]',
+        catalog_price_rules_tab: '#subtab-AdminSpecificPriceRule',
         stocks_submenu: '#subtab-AdminStockManagement',
         stock_tab: '//*[@id="head_tabs"]//a[text()="Stock"]',
         movement_tab: '//*[@id="head_tabs"]//a[text()="Movements"]'
@@ -38,7 +38,7 @@ module.exports = {
         merchandise_returns_submenu: '#subtab-AdminReturn'
       },
       Stats: {
-        stats_menu: '//*[@id="subtab-AdminStats"]/a',
+        stats_menu: '//*[@id="subtab-AdminStats"]/a'
       }
     },
     Improve: {
@@ -48,7 +48,7 @@ module.exports = {
         installed_modules_tabs: '//*[@id="subtab-AdminModulesManage"]',
         notifications_tabs: '//*[@id="subtab-AdminModulesNotifications"]',
         selection_tab: '//*[@id="subtab-AdminModulesCatalog"]',
-        modules_catalog_submenu: '#subtab-AdminAddonsCatalog',
+        modules_catalog_submenu: '#subtab-AdminParentModulesCatalog'
       },
       Design: {
         design_menu: '//*[@id="subtab-AdminParentThemes"]/a',
@@ -72,14 +72,14 @@ module.exports = {
       International: {
         international_menu: '//*[@id="subtab-AdminInternational"]/a',
         localization_submenu: '#subtab-AdminParentLocalization',
-        languages_tab: '//*[@id="main"]//div[@class="page-head-tabs"]//a[text()="Languages"]',
-        currencies_tab: '//*[@id="main"]//div[@class="page-head-tabs"]//a[text()="Currencies"]',
-        geolocation_tab: '//*[@id="main"]//div[@class="page-head-tabs"]//a[text()="Geolocation"]',
+        languages_tab: '//*[@id="subtab-AdminLanguages"]',
+        currencies_tab: '//*[@id="subtab-AdminCurrencies"]',
+        geolocation_tab: '//*[@id="subtab-AdminGeolocation"]',
         locations_submenu: '#subtab-AdminParentCountries',
         countries_tab: '//*[@id="main"]//div[@class="page-head-tabs"]//a[text()="Countries"]',
         states_tab: '//*[@id="main"]//div[@class="page-head-tabs"]//a[text()="States"]',
         taxes_submenu: '#subtab-AdminParentTaxes',
-        taxe_rules_tab: '//*[@id="main"]//div[@class="page-head-tabs"]//a[text()="Tax Rules"]',
+        taxe_rules_tab: '#subtab-AdminTaxRulesGroup',
         translations_submenu: '#subtab-AdminTranslations'
       }
     },
@@ -92,11 +92,10 @@ module.exports = {
         statuses_tab: '//*[@id="head_tabs"]//a[text()="Statuses"]',
         product_settings_submenu: '#subtab-AdminPPreferences',
         customer_settings_submenu: '#subtab-AdminParentCustomerPreferences',
-        groups_tab: '//*[@id="head_tabs"]//a[text()="Groups"]',
+        groups_tab: '#subtab-AdminGroups',
         titles_tab: '//*[@id="head_tabs"]//a[text()="Titles"]',
         contact_submenu: '#subtab-AdminParentStores',
         stores_tab: '//*[@id="main"]//div[@class="page-head-tabs"]//a[text()="Stores"]',
-        traffic_seo_submenu: '#subtab-AdminParentMeta',
         search_engines_tab: '//*[@id="main"]//div[@class="page-head-tabs"]//a[text()="Search Engines"]',
         referrers_tab: '//*[@id="main"]//div[@class="page-head-tabs"]//a[text()="Referrers"]',
         search_submenu: '#subtab-AdminParentSearchConf',

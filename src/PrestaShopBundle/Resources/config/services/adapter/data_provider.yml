@@ -98,3 +98,6 @@ services:
     prestashop.categories_provider:
         class: PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider
         arguments: ['@prestashop.addons.client_api', '@logger']
+
+    prestashop.adapter.data_provider.default_route:
+        class: PrestaShop\PrestaShop\Adapter\Routes\DefaultRouteProvider

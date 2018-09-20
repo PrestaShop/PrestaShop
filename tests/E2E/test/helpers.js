@@ -1,6 +1,8 @@
 const chai = require('chai');
 chai.use(require('chai-string'));
+require('../test/globals.webdriverio');
 global.expect = chai.expect;
+require('./globals.webdriverio.js');
 
 const takeScreenshot = err => this.client.takeScreenshot().then(() => {
   throw err;

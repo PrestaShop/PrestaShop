@@ -68,7 +68,7 @@ abstract class DbCore
     public static $_servers = array();
 
     /** @var null Flag used to load slave servers only once.
-     * See loadSlaveServers() method.
+     * See loadSlaveServers() method
      */
     public static $_slave_servers_loaded = null;
 

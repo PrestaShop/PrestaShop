@@ -117,7 +117,7 @@ class MailCore extends ObjectModel
      * @param string $toName To name
      * @param string $from From email
      * @param string $fromName To email
-     * @param array $fileAttachment Array with three parameters (content, mime and name).
+     * @param array $fileAttachment array with three parameters (content, mime and name).
      *                              You can use an array of array to attach multiple files
      * @param bool $mode_smtp SMTP mode (deprecated)
      * @param string $templatePath Template path

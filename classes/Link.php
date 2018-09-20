@@ -799,7 +799,8 @@ class LinkCore
                     'AdminPaymentPreferences' => 'admin_payment_preferences',
                     'AdminInvoices' => 'admin_order_invoices',
                     'AdminEmails' => 'admin_email',
-                    'AdminRequestSql' => 'admin_request_sql',
+                    'AdminRequestSql' => 'admin_sql_request',
+                    'AdminMeta' => 'admin_meta',
                     // 'AdminWebservice' => 'admin_webservice', @todo: uncomment when grid and entity form are done.
                     'AdminBackup' => 'admin_backup',
                 );

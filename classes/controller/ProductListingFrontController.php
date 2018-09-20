@@ -418,17 +418,33 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
         $itemsShownFrom = ($query->getResultsPerPage() * ($query->getPage() - 1)) + 1;
         $itemsShownTo = $query->getResultsPerPage() * $query->getPage();
 
+        $pages = array_map(function ($link) {
+            $link['url'] = $this->updateQueryString(array(
+                'page' => $link['page'] > 1 ? $link['page'] : null,
+            ));
+
+            return $link;
+        }, $pagination->buildLinks());
+
+        //Filter next/previous link on first/last page
+        $pages = array_filter($pages, function ($page) use ($pagination) {
+            if ('previous' === $page['type'] && 1 === $pagination->getPage()) {
+                return false;
+            }
+            if ('next' === $page['type'] && $pagination->getPagesCount() === $pagination->getPage()) {
+                return false;
+            }
+
+            return true;
+        });
+
         return array(
             'total_items' => $totalItems,
             'items_shown_from' => $itemsShownFrom,
             'items_shown_to' => ($itemsShownTo <= $totalItems) ? $itemsShownTo : $totalItems,
-            'pages' => array_map(function ($link) {
-                $link['url'] = $this->updateQueryString(array(
-                    'page' => $link['page'],
-                ));
-
-                return $link;
-            }, $pagination->buildLinks()),
+            'current_page' => $pagination->getPage(),
+            'pages_count' => $pagination->getPagesCount(),
+            'pages' => $pages,
             // Compare to 3 because there are the next and previous links
             'should_be_displayed' => (count($pagination->buildLinks()) > 3),
         );

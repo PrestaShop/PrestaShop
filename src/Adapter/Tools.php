@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter;
 
 use PrestaShop\Decimal\Number;
+use PrestaShop\PrestaShop\Adapter\File\HtaccessFileGenerator;
 use Tools as LegacyTools;
 
 /**
@@ -117,6 +118,53 @@ class Tools
     }
 
     /**
+     * @see HtaccessFileGenerator::generateFile()
+     *
+     * @param bool $disableMultiView enable/disable Multiviews option
+     *
+     * @return bool
+     */
+    private function generateHtaccessOnMultiViews($disableMultiView = false)
+    {
+        return LegacyTools::generateHtaccess(null,
+            null,
+            null,
+            '',
+            $disableMultiView
+        );
+    }
+
+    /**
+     * @see HtaccessFileGenerator::generateFile()
+     *
+     * @return bool
+     */
+    public function generateHtaccessWithMultiViews()
+    {
+        return LegacyTools::generateHtaccess(null,
+            null,
+            null,
+            '',
+            true
+        );
+    }
+
+    /**
+     * @see HtaccessFileGenerator::generateFile()
+     *
+     * @return bool
+     */
+    public function generateHtaccessWithoutMultiViews()
+    {
+        return LegacyTools::generateHtaccess(null,
+            null,
+            null,
+            '',
+            false
+        );
+    }
+
+    /**
      * returns the rounded value of $value to specified precision, according to your configuration;.
      *
      * @note : PHP 5.3.0 introduce a 3rd parameter mode in round function
@@ -142,5 +190,15 @@ class Tools
     public function getShopDomainSsl($http = false, $entities = false)
     {
         return LegacyTools::getShopDomainSsl($http, $entities);
+    }
+
+    /**
+     * Checks if apache mod exists for mod_rewrite or the server has HTTP_MOD_REWRITE enabled.
+     *
+     * @return bool
+     */
+    public function isModRewriteActive()
+    {
+        return LegacyTools::modRewriteActive();
     }
 }
