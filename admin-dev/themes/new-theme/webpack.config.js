@@ -1,3 +1,4 @@
+/* eslint-disable indent,comma-dangle */
 /**
  * 2007-2018 PrestaShop
  *
@@ -103,6 +104,9 @@ const config = {
     ],
     webservice: [
       './js/pages/webservice'
+    ],
+    meta: [
+      './js/pages/meta'
     ],
   },
   output: {

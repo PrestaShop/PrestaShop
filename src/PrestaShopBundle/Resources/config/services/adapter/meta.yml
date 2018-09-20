@@ -1,0 +1,6 @@
+services:
+    _defaults:
+        public: true
+
+    prestashop.adapter.meta.meta_eraser:
+        class: 'PrestaShop\PrestaShop\Adapter\Meta\MetaEraser'

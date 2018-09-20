@@ -217,3 +217,22 @@ services:
             - '@prestashop.adapter.data_provider.language'
             - '@prestashop.adapter.cache_clearer'
             - '@=service("prestashop.adapter.legacy.configuration").get("_PS_TRANSLATIONS_DIR_")'
+
+    prestashop.adapter.meta.set_up_urls.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Meta\SetUpUrlsDataConfiguration'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+            - '@prestashop.adapter.file.htaccess_file_generator'
+            - '@translator'
+
+    prestashop.adapter.meta.shop_url.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Meta\ShopUrlDataConfiguration'
+        arguments:
+            - '@=service("prestashop.adapter.shop.shop_url").getMainShopUrl()'
+            - '@prestashop.adapter.legacy.configuration'
+
+    prestashop.adapter.meta.url_schema.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Meta\UrlSchemaDataConfiguration'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+            - '@=service("prestashop.adapter.data_provider.default_route").getRules()'
