@@ -29,18 +29,6 @@
 	</ul>
 {/if}
 
-<div class="empty-state">
-	<div class="empty-state__left shape-one">
-		<img src="../img/admin/empty-states/content@3x.png" alt="Content">
-	</div>
-	<div class="empty-state__right">
-		<h2>Create meaningful content</h2>
-		<p>PrestaShop enables you to create content pages as easily as you would create product pages. You can add static pages in the top menu using the "Main menu" module.</p>
-		<button>Learn more</button>
-	</div>
-	<i class="empty-state__close material-icons">close</i>
-</div>
-
 {$content}
 
 {if isset($url_prev)}
