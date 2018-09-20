@@ -80,32 +80,30 @@ class MetaController extends FrameworkBundleAdminController
             new GetShowcaseCardIsClosed($this->getContext()->employee->id, ShowcaseCard::SEO_URLS_CARD)
         );
 
-        return $this->render(
-            '@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/index.html.twig',
-            [
-                'layoutHeaderToolbarBtn' => [
-                    'add' => [
-                        'href' => $this->getAdminLink('AdminMeta', ['addmeta' => '']),
-                        'desc' => $this->trans('Add a new page', 'Admin.Shopparameters.Feature'),
-                        'icon' => 'add_circle_outline',
-                    ],
+        return $this->render('@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/index.html.twig', [
+            'layoutHeaderToolbarBtn' => [
+                'add' => [
+                    'href' => $this->generateUrl('admin_meta_list_create'),
+                    'desc' => $this->trans('Add a new page', 'Admin.Shopparameters.Feature'),
+                    'icon' => 'add_circle_outline',
                 ],
-                'grid' => $presentedGrid,
-                'metaForm' => $metaForm->createView(),
-                'robotsForm' => $this->createFormBuilder()->getForm()->createView(),
-                'routeKeywords' => $defaultRoutesProvider->getKeywords(),
-                'isModRewriteActive' => $tools->isModRewriteActive(),
-                'isHtaccessFileValid' => $urlFileChecker->isHtaccessFileWritable(),
-                'isRobotsTextFileValid' => $urlFileChecker->isRobotsFileWritable(),
-                'isShopContext' => $isShopContext,
-                'isShopFeatureActive' => $isShopFeatureActive,
-                'isHostMode' => $hostingInformation->isHostMode(),
-                'enableSidebar' => true,
-                'help_link' => $this->generateSidebarLink('AdminMeta'),
-                'helperDocLink' => $helperBlockLinkProvider->getLink('meta'),
-                'indexPageId' => $metaDataProvider->getIdByPage('index'),
-                'metaShowcaseCardName' => ShowcaseCard::SEO_URLS_CARD,
-                'showcaseCardIsClosed' => $showcaseCardIsClosed,
+            ],
+            'grid' => $presentedGrid,
+            'metaForm' => $metaForm->createView(),
+            'robotsForm' => $this->createFormBuilder()->getForm()->createView(),
+            'routeKeywords' => $defaultRoutesProvider->getKeywords(),
+            'isModRewriteActive' => $tools->isModRewriteActive(),
+            'isHtaccessFileValid' => $urlFileChecker->isHtaccessFileWritable(),
+            'isRobotsTextFileValid' => $urlFileChecker->isRobotsFileWritable(),
+            'isShopContext' => $isShopContext,
+            'isShopFeatureActive' => $isShopFeatureActive,
+            'isHostMode' => $hostingInformation->isHostMode(),
+            'enableSidebar' => true,
+            'help_link' => $this->generateSidebarLink('AdminMeta'),
+            'helperDocLink' => $helperBlockLinkProvider->getLink('meta'),
+            'indexPageId' => $metaDataProvider->getIdByPage('index'),
+            'metaShowcaseCardName' => ShowcaseCard::SEO_URLS_CARD,
+            'showcaseCardIsClosed' => $showcaseCardIsClosed,
             ]
         );
     }
@@ -143,14 +141,13 @@ class MetaController extends FrameworkBundleAdminController
      */
     public function createAction()
     {
-        $legacyLink = $this->getAdminLink(
-            'AdminMeta',
+        $metaFormHandler = $this->get('prestashop.admin.meta.form_handler');
+        return $this->render(
+            '@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/Form/add_edit.html.twig',
             [
-                'addmeta' => 1,
+                'form' => $metaFormHandler->getForm()->createView(),
             ]
         );
-
-        return $this->redirect($legacyLink);
     }
 
     /**
