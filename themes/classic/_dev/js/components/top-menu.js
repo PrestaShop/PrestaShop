@@ -46,8 +46,22 @@ export default class TopMenu extends DropDown {
       }
     });
     $('#menu-icon').on('click', function() {
-      $('#mobile_top_menu_wrapper').toggle();
-      self.toggleMobileMenu();
+      /*$('#mobile_top_menu_wrapper').velocity({
+        left: '-1px'
+      }, 200);
+      $('body').velocity({
+        left: '286px'
+      }, 200);*/
+      $('body,.header-nav,#mobile_top_menu_wrapper,main').addClass('m-menu-open');
+    });
+    $('#_mobile_top_menu-close').on('click', function() {
+      /*$('#mobile_top_menu_wrapper').velocity({
+        left: '-285px'
+      }, 200);
+      $('body').velocity({
+        left: '0'
+      }, 200);*/
+      $('body,.header-nav,#mobile_top_menu_wrapper,main').removeClass('m-menu-open');
     });
     $('.js-top-menu .category').mouseleave(() => {
       if (this.el.parent().hasClass('mobile')) {
@@ -60,19 +74,6 @@ export default class TopMenu extends DropDown {
       }
       e.stopPropagation();
     });
-    prestashop.on('responsive update', function(event) {
-      $('.js-sub-menu').removeAttr('style');
-      self.toggleMobileMenu();
-    });
     super.init();
-  }
-
-  toggleMobileMenu() {
-    $('#header').toggleClass('is-open');
-    if ($('#mobile_top_menu_wrapper').is(":visible")) {
-      $('#notifications, #wrapper, #footer').hide();
-    } else {
-      $('#notifications, #wrapper, #footer').show();
-    }
   }
 }

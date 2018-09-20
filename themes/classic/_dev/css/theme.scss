@@ -93,7 +93,6 @@
       }
       .shopping-cart {
         vertical-align: middle;
-        color: $gray;
       }
       .body {
         display: none;
@@ -155,6 +154,11 @@
     }
     .search-widget {
       float: right;
+      form button[type=submit]{
+        bottom: 0;
+        right: 0;
+        height: 42px;
+      }
     }
   }
   .top-menu-link {
@@ -310,11 +314,27 @@
       background: white;
       margin-bottom: 0.625rem;
       color: $gray-darker;
+      height: 50px;
+      border-bottom: 0;
+      &.m-menu-open{
+        #menu-icon{
+          visibility: hidden;
+        }
+        #_mobile_logo{
+          margin-left: -40px;
+          transition: .2s ease;
+        }
+      }
       .top-logo {
-        padding-top: 11px;
+        display: inline-flex;
+        height: 50px;
+        align-items: center;
+        h1{
+          margin: 0;
+        }
         a {
           img {
-            max-height: 50px;
+            max-height: 40px;
             max-width: 100%;
           }
         }

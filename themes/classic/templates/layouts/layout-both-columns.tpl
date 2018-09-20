@@ -37,6 +37,10 @@
       {hook h='displayAfterBodyOpeningTag'}
     {/block}
 
+    {block name='off_canvas_menu'}
+      {include file='_partials/off-canvas-menu.tpl'}
+    {/block}
+
     <main>
       {block name='product_activation'}
         {include file='catalog/_partials/product-activation.tpl'}
