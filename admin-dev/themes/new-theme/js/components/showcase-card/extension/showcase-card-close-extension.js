@@ -24,14 +24,14 @@
  */
 
 /**
- * Class HelperBlockCloseExtension is responsible for providing helper block closing behavior
+ * Class ShowcaseCardCloseExtension is responsible for providing helper block closing behavior
  */
-export default class HelperBlockCloseExtension {
+export default class ShowcaseCardCloseExtension {
 
   /**
    * Extend helper block.
    *
-   * @param {HelperBlock} helperBlock
+   * @param {ShowcaseCard} helperBlock
    */
   extend(helperBlock) {
     helperBlock.getContainer().on('click', '.js-remove-helper-block', () => {

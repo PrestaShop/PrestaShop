@@ -26,12 +26,12 @@
 const $ = window.$;
 
 /**
- * Class HelperBlock is responsible for handling events related with helper block.
+ * Class ShowcaseCard is responsible for handling events related with showcase card.
  */
-export default class HelperBlock {
+export default class ShowcaseCard {
 
   /**
-   * Helper block id.
+   * Showcase card id.
    *
    * @param {string} id
    */
@@ -41,7 +41,7 @@ export default class HelperBlock {
   }
 
   /**
-   * Get helper block container.
+   * Get showcase card container.
    *
    * @returns {jQuery}
    */
@@ -50,7 +50,7 @@ export default class HelperBlock {
   }
 
   /**
-   * Extend helper-block with external extensions.
+   * Extend showcase card with external extensions.
    *
    * @param {object} extension
    */
