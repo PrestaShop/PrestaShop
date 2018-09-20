@@ -519,7 +519,6 @@ services:
         tags:
             - { name: form.type }
 
-<<<<<<< HEAD
     form.type.shop.traffic_seo.meta.set_up_url:
         class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta\SetUpUrlType'
         arguments:
