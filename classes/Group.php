@@ -323,7 +323,7 @@ class GroupCore extends ObjectModel
 
         // Delete all record for this group
         Db::getInstance()->execute(
-            'DELETE FROM `' . _DB_PREFIX_.'module_group`
+            'DELETE FROM `' . _DB_PREFIX_ . 'module_group`
             WHERE `id_group` = ' . (int) $id_group . '
             AND `id_shop` IN ('
               . (implode(',', array_map('intval', $shops)))
