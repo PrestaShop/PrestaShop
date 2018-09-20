@@ -640,6 +640,7 @@ class OrderCore extends ObjectModel
 
             $this->setProductImageInformations($row);
             $this->setProductCurrentStock($row);
+            $this->setProductStockLocationFromCombination($row);
 
             // Backward compatibility 1.4 -> 1.5
             $this->setProductPrices($row);
@@ -689,6 +690,21 @@ class OrderCore extends ObjectModel
         } else {
             $product['customizationQuantityTotal'] = 0;
         }
+    }
+
+    /**
+     * If order line targets a combination, replace row stock location data
+     * by combination stock location data.
+     *
+     * @param array &$product
+     */
+    protected function setProductStockLocationFromCombination(&$product)
+    {
+        if ($product['product_attribute_id'] === '0') {
+            return;
+        }
+        $combination = new Combination($product['product_attribute_id']);
+        $product['location'] = $combination->location;
     }
 
     /**
