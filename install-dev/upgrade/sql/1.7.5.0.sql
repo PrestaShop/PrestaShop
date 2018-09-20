@@ -85,3 +85,42 @@ ALTER TABLE `prefix_manufacturer_lang`
 
 ALTER TABLE `prefix_supplier_lang`
   CHANGE `meta_description` `meta_description` VARCHAR(512) DEFAULT NULL; 
+
+ALTER TABLE `PREFIX_customer`
+  CHANGE `passwd` `passwd` varchar(2048) NOT NULL;
+
+ALTER TABLE `PREFIX_employee`
+  CHANGE `passwd` `passwd` varchar(2048) NOT NULL;
+
+ALTER TABLE `PREFIX_customer`
+  CHANGE `passwd` `passwd` varchar(2048) NOT NULL;
+
+ALTER TABLE `PREFIX_order_detail`
+  CHANGE `product_reference` `product_reference` varchar(64) DEFAULT NULL;
+
+ALTER TABLE `PREFIX_product`
+  CHANGE `reference` `supplier_reference` varchar(64) DEFAULT NULL;
+
+ALTER TABLE `PREFIX_product`
+  CHANGE `supplier_reference` `supplier_reference` varchar(64) DEFAULT NULL;
+
+ALTER TABLE `PREFIX_product_attribute`
+  CHANGE `reference` `reference` varchar(64) DEFAULT NULL;
+
+ALTER TABLE `PREFIX_product_attribute`
+  CHANGE `supplier_reference` `supplier_reference` varchar(64) DEFAULT NULL;
+
+ALTER TABLE `PREFIX_warehouse`
+  CHANGE `reference` `reference` varchar(64) DEFAULT NULL;
+
+ALTER TABLE `PREFIX_stock`
+  CHANGE `reference` `reference` varchar(64) DEFAULT NULL;
+
+ALTER TABLE `PREFIX_supply_order_detail`
+  CHANGE `reference` `reference` varchar(64) NOT NULL; 
+
+ALTER TABLE `PREFIX_supply_order_detail`
+  CHANGE `supplier_reference` `supplier_reference` varchar(64) NOT NULL; 
+
+ALTER TABLE `PREFIX_product_supplier`
+  CHANGE `product_supplier_reference` `product_supplier_reference` varchar(64) DEFAULT NULL; 
