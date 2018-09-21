@@ -34,7 +34,7 @@ use Tests\Integration\PrestaShopBundle\Test\WebTestCase;
  */
 class PositionsControllerTest extends WebTestCase
 {
-    public function testMoveHookPositionWithUnknowModule()
+    public function testMoveHookPositionWithUnknownModule()
     {
         $this->client->request(
             'POST',
@@ -43,7 +43,7 @@ class PositionsControllerTest extends WebTestCase
             ),
             [
                 'moduleId' => 999999,
-                'hookId' => 161,
+                'hookId' => 184, // dashboardZoneOne hook
                 'way' => 1,
                 'positions' => []
             ]
@@ -70,7 +70,7 @@ class PositionsControllerTest extends WebTestCase
             ),
             [
                 'moduleId' => 4,
-                'hookId' => 161,
+                'hookId' => 184, // dashboardZoneOne hook
                 'way' => 1,
                 'positions' => []
             ]

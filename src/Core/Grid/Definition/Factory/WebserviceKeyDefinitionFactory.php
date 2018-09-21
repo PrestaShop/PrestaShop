@@ -86,7 +86,7 @@ final class WebserviceKeyDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getId()
     {
-        return 'webservice_key';
+        return 'WebserviceKey';
     }
 
     /**
