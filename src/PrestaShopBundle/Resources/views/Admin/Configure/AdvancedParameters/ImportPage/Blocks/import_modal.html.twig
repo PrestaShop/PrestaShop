@@ -28,17 +28,47 @@
 {% embed 'PrestaShopBundle:Admin/Helpers:bootstrap_popup.html.twig' with {
   'id': 'import_progress_modal',
   'title': 'Importing your data...'|trans,
-  'closable': false,
-  'actions': [{
-    'type': 'button',
-    'label': 'Close'|trans({}, 'Admin.Actions'),
-    'value': 'import_modal_close',
-    'class': 'btn btn-success btn-lg',
-  }],
+  'closable': true,
+  'progressbar': {
+    id: 'import_progress_bar',
+    label: 'Validating data...'|trans
+  },
+  'actions': [
+    {
+      'type': 'button',
+      'label': 'Ignore warnings and continue?'|trans,
+      'class': 'btn btn-outline-warning btn-lg js-ignore-warnings',
+    },
+    {
+      'type': 'button',
+      'label': 'Abort import'|trans,
+      'class': 'btn btn-outline-danger btn-lg js-abort-import',
+    }
+  ],
 } %}
   {% block content %}
     <div class="modal-body">
-
+      <div class="alert alert-success js-import-success d-none" role="alert">
+        <span class="alert-text">
+          {{ 'Data imported!'|trans }}
+          {{ "Look at your listings to make sure it's all there as you wished."|trans }}
+        </span>
+      </div>
+      <div class="alert alert-warning js-post-limit-warning d-none" role="alert">
+        <span class="alert-text">
+          {{ "Warning, the current import may require a PHP setting update, to allow more data to be transferred. If the current import stops before the end, you should increase your PHP \"post_max_size\" setting to [1]%size%[/1]MB at least, and try again."|trans|replace({'[1]': '<span id="post_limit_value">','%size%': '16','[/1]': '</span>'})|raw }}
+        </span>
+      </div>
+      <div class="alert alert-warning js-import-warnings d-none" role="alert">
+        <span class="alert-text">
+          {{ 'Some errors were detected. Please check the details:'|trans }}
+        </span>
+      </div>
+      <div class="alert alert-info js-import-info d-none" role="alert">
+        <span class="alert-text">
+          {{ 'We made the following adjustments:'|trans }}
+        </span>
+      </div>
     </div>
   {% endblock %}
 {% endembed %}
