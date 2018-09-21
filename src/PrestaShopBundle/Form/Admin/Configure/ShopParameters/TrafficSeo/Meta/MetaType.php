@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta;
 
+use Doctrine\DBAL\Types\TextType;
 use PrestaShopBundle\Form\Admin\Type\TranslateTextType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -81,11 +82,13 @@ class MetaType extends TranslatorAwareType
             ])
             ->add('page_title', TranslateTextType::class, [
                 'locales' => $this->locales,
+                'required' => false,
             ])
             ->add('meta_description', TranslateTextType::class, [
                 'locales' => $this->locales,
+                'required' => false,
             ])
-//            ->add('meta_keywords') //todo: decide if implement tags type here
+            ->add('meta_keywords', ChoiceType::class) // todo: implement as translatable and it is not required field
             ->add('url_rewrite', TranslateTextType::class, [
                 'locales' => $this->locales,
             ])
