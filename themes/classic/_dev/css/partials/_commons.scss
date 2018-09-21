@@ -2,10 +2,8 @@ body,
 html {
   height: 100%;
 }
-body{
-  position: relative;
-}
 body {
+  position: relative;
   direction: ltr;
   font-family: 'Noto Sans', sans-serif;
   font-size: $base-font-size;
@@ -229,7 +227,6 @@ input, textarea {
 }
 .bootstrap-touchspin {
   width: auto;
-  float: left;
   display: inline-block;
   @include box-shadow-light;
   input {
