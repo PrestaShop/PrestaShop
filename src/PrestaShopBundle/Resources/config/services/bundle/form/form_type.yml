@@ -550,6 +550,16 @@ services:
             - '@=service("prestashop.adapter.legacy.configuration").get("PS_REWRITING_SETTINGS")'
         tags:
             - { name: form.type }
+            -
+    form.type.shop.traffic_seo.meta:
+        class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta\MetaType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        arguments:
+            - '@=service("prestashop.core.form.choice_provider.default_page").getChoices()'
+            - '@=service("prestashop.core.form.choice_provider.module_page").getChoices()'
+        tags:
+            - { name: form.type }
 
     form.type.catalog.abstract_category:
         class: 'PrestaShopBundle\Form\Admin\Catalog\Category\AbstractCategoryType'

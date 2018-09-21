@@ -30,6 +30,7 @@ use PrestaShopBundle\Form\Admin\Type\TranslateTextType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Class MetaType is responsible for providing form fields for Shop parameters -> Traffic & Seo ->
@@ -38,13 +39,45 @@ use Symfony\Component\Form\FormBuilderInterface;
 class MetaType extends TranslatorAwareType
 {
     /**
+     * @var array
+     */
+    private $defaultPageChoices;
+    /**
+     * @var array
+     */
+    private $modulePageChoices;
+
+    /**
+     * MetaType constructor.
+     *
+     * @param TranslatorInterface $translator
+     * @param array $locales
+     * @param array $defaultPageChoices
+     * @param array $modulePageChoices
+     */
+    public function __construct(
+        TranslatorInterface $translator,
+        array $locales,
+        array $defaultPageChoices,
+        array $modulePageChoices
+    ) {
+        parent::__construct($translator, $locales);
+        $this->defaultPageChoices = $defaultPageChoices;
+        $this->modulePageChoices = $modulePageChoices;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->add('page_name', ChoiceType::class, [
-                'choices' => [],
+                'choices' => [
+                    $this->trans('Default pages', 'Admin.Shopparameters.Feature') => $this->defaultPageChoices,
+                    $this->trans('Module pages', 'Admin.Shopparameters.Feature') => $this->modulePageChoices,
+                ],
+                'choice_translation_domain' => false,
             ])
             ->add('page_title', TranslateTextType::class, [
                 'locales' => $this->locales,
