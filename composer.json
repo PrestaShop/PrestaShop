@@ -150,7 +150,8 @@
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget"
         ],
         "create-test-db": [
-            "@php ./tests/create-test-db.php"
+            "@php ./tests/create-test-db.php",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache"
         ],
         "test-all": [
             "composer phpunit-legacy",
