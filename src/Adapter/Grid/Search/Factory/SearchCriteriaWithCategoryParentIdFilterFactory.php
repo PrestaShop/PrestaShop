@@ -27,12 +27,13 @@
 namespace PrestaShop\PrestaShop\Adapter\Grid\Search\Factory;
 
 use Category;
-use Configuration;
-use Context;
+use PrestaShop\PrestaShop\Adapter\Configuration;
+use PrestaShop\PrestaShop\Adapter\Shop\Context;
+use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
 use PrestaShop\PrestaShop\Core\Grid\Search\Factory\DecoratedSearchCriteriaFactory;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteria;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
-use Shop;
+use PrestaShop\PrestaShop\Core\Multistore\MultistoreContextCheckerInterface;
 use Tools;
 
 /**
@@ -42,6 +43,52 @@ use Tools;
  */
 final class SearchCriteriaWithCategoryParentIdFilterFactory implements DecoratedSearchCriteriaFactory
 {
+    /**
+     * @var Configuration
+     */
+    private $configuration;
+
+    /**
+     * @var Context
+     */
+    private $shopContext;
+
+    /**
+     * @var FeatureInterface
+     */
+    private $multistoreFeature;
+
+    /**
+     * @var MultistoreContextCheckerInterface
+     */
+    private $multistoreContextChecker;
+
+    /**
+     * @var int
+     */
+    private $contextShopCategoryId;
+
+    /**
+     * @param Configuration $configuration
+     * @param Context $shopContext
+     * @param FeatureInterface $multistoreFeature
+     * @param MultistoreContextCheckerInterface $multistoreContextChecker
+     * @param int $contextShopCategoryId
+     */
+    public function __construct(
+        Configuration $configuration,
+        Context $shopContext,
+        FeatureInterface $multistoreFeature,
+        MultistoreContextCheckerInterface $multistoreContextChecker,
+        $contextShopCategoryId
+    ) {
+        $this->configuration = $configuration;
+        $this->shopContext = $shopContext;
+        $this->multistoreFeature = $multistoreFeature;
+        $this->multistoreContextChecker = $multistoreContextChecker;
+        $this->contextShopCategoryId = $contextShopCategoryId;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -73,29 +120,29 @@ final class SearchCriteriaWithCategoryParentIdFilterFactory implements Decorated
         }
 
         $categoriesCountWithoutParent = count(Category::getCategoriesWithoutParent());
-        $isMultiShopFeatureActive = Shop::isFeatureActive();
+        $isMultistoreFeatureUsed = $this->multistoreFeature->isUsed();
 
-        if (!$isMultiShopFeatureActive && $categoriesCountWithoutParent > 1) {
-            return (int) Configuration::get('PS_ROOT_CATEGORY');
+        if (!$isMultistoreFeatureUsed && $categoriesCountWithoutParent > 1) {
+            return $this->configuration->getInt('PS_ROOT_CATEGORY');
         }
 
-        if ($isMultiShopFeatureActive && 1 === $categoriesCountWithoutParent) {
-            return (int) Configuration::get('PS_HOME_CATEGORY');
+        if ($isMultistoreFeatureUsed && 1 === $categoriesCountWithoutParent) {
+            return $this->configuration->getInt('PS_HOME_CATEGORY');
         }
 
-        if ($isMultiShopFeatureActive
+        if ($isMultistoreFeatureUsed
             && $categoriesCountWithoutParent > 1
-            && Shop::getContext() !== Shop::CONTEXT_SHOP
+            && !$this->multistoreContextChecker->isSingleShopContext()
         ) {
-            if (Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE')
-                && count(Shop::getShops(true, null, true)) === 1
+            if ($this->multistoreFeature->isActive()
+                && count($this->shopContext->getShops(true, true)) === 1
             ) {
-                return Context::getContext()->shop->id_category;
+                return $this->contextShopCategoryId;
             }
 
-            return (int) Configuration::get('PS_ROOT_CATEGORY');
+            return $this->configuration->getInt('PS_ROOT_CATEGORY');
         }
 
-        return Context::getContext()->shop->id_category;
+        return $this->contextShopCategoryId;
     }
 }
