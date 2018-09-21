@@ -62,6 +62,9 @@ export default class TopMenu extends DropDown {
       }
       e.stopPropagation();
     });
+    prestashop.on('responsive update', function(event) {
+      $('body,.header-nav,#mobile_top_menu_wrapper,main').removeClass('m-menu-open');
+    });
     super.init();
   }
 }
