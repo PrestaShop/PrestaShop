@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -24,25 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Category\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Category\CommandHandler;
+
+use PrestaShop\PrestaShop\Core\Domain\Category\Command\BulkDeleteCategoriesCommand;
 
 /**
- * Class CategoryConstraintException.
+ * Interface BulkDeleteCategoriesHandlerInterface
  */
-class CategoryConstraintException extends CategoryException
+interface BulkDeleteCategoriesHandlerInterface
 {
     /**
-     * Code is used when Category status is created with invalid value.
+     * @param BulkDeleteCategoriesCommand $command
      */
-    const INVALID_STATUS = 10;
-
-    /**
-     * Code is used when Category delete mode is created with invalid value.
-     */
-    const INVALID_DELETE_MODE = 20;
-
-    /**
-     * Code is used when bulk delete command is dispatched without any data.
-     */
-    const EMPTY_BULK_DELETE_DATA = 30;
+    public function handle(BulkDeleteCategoriesCommand $command);
 }

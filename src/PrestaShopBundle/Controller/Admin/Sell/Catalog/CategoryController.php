@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
+use PrestaShop\PrestaShop\Core\Domain\Category\Command\BulkDeleteCategoriesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\DeleteCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\ToggleCategoryStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\UpdateCategoriesStatusCommand;
@@ -180,19 +181,16 @@ class CategoryController extends FrameworkBundleAdminController
         if ($deleteCategoriesForm->isSubmitted()) {
             $categoriesDeleteData = $deleteCategoriesForm->getData();
 
-            $errors = $this->get('prestashop.adapter.category.category_remover')->removeMultiple(
+            $command = new BulkDeleteCategoriesCommand(
                 $categoriesDeleteData['categories_to_delete'],
                 new CategoryDeleteMode($categoriesDeleteData['delete_mode'])
             );
 
-            if (empty($errors)) {
-                $this->addFlash(
-                    'success',
-                    $this->trans('The selection has been successfully deleted.', 'Admin.Notifications.Success')
-                );
-            } else {
-                $this->flashErrors($errors);
-            }
+            $this->getCommandBus()->handle($command);
+
+            $this->addFlash('success',
+                $this->trans('The selection has been successfully deleted.', 'Admin.Notifications.Success')
+            );
         }
 
         return $this->redirectToRoute('admin_category_listing');
@@ -221,10 +219,7 @@ class CategoryController extends FrameworkBundleAdminController
 
                 $this->getCommandBus()->handle($command);
 
-                $this->addFlash(
-                    'success',
-                    $this->trans('Successful deletion.', 'Admin.Notifications.Success')
-                );
+                $this->addFlash('success', $this->trans('Successful deletion.', 'Admin.Notifications.Success'));
             } catch (CategoryException $e) {
                 throw $e;
             }
