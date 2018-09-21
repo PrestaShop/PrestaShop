@@ -26,6 +26,7 @@
 import ImportMatchConfiguration from './ImportMatchConfiguration';
 import ImportDataTable from './ImportDataTable';
 import EntityFieldsValidator from './EntityFieldsValidator';
+import Importer from './Importer';
 
 export default class ImportDataPage {
   constructor() {
@@ -45,6 +46,8 @@ export default class ImportDataPage {
       return;
     }
 
-    //@todo process import
+    let importer = new Importer();
+
+    importer.import();
   }
 }
