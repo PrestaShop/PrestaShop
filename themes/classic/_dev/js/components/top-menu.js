@@ -47,9 +47,11 @@ export default class TopMenu extends DropDown {
     });
     $('#menu-icon').on('click', function() {
       $('body,.header-nav,#mobile_top_menu_wrapper,main').addClass('m-menu-open');
+      $("meta[name='viewport']").attr('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0');
     });
     $('#_mobile_top_menu-close').on('click', function() {
       $('body,.header-nav,#mobile_top_menu_wrapper,main').removeClass('m-menu-open');
+      $("meta[name='viewport']").attr('content', 'width=device-width, initial-scale=1');
     });
     $('.js-top-menu .category').mouseleave(() => {
       if (this.el.parent().hasClass('mobile')) {
@@ -64,6 +66,7 @@ export default class TopMenu extends DropDown {
     });
     prestashop.on('responsive update', function(event) {
       $('body,.header-nav,#mobile_top_menu_wrapper,main').removeClass('m-menu-open');
+      $("meta[name='viewport']").attr('content', 'width=device-width, initial-scale=1');
     });
     super.init();
   }
