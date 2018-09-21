@@ -109,14 +109,14 @@ File: admin-dev/themes/default/template/controllers/dashboard/helpers/view/view.
 File: admin-dev/themes/default/template/controllers/dashboard/helpers/view/view.tpl:119</note>
       </trans-unit>
       <trans-unit id="f76e3bc0ddc043c3abdd4d40245172e4">
-        <source>GitHub</source>
-        <target>GitHub</target>
+        <source>The Forge</source>
+        <target>The Forge</target>
         <note>Context:
 File: admin-dev/themes/default/template/controllers/dashboard/helpers/view/view.tpl:122</note>
       </trans-unit>
       <trans-unit id="13df627c018625ce68ca2200a869dd65">
-        <source>Report issues on GitHub</source>
-        <target>Report issues on GitHub</target>
+        <source>Report issues in the Bug Tracker</source>
+        <target>Report issues in the Bug Tracker</target>
         <note>Context:
 File: admin-dev/themes/default/template/controllers/dashboard/helpers/view/view.tpl:123</note>
       </trans-unit>
