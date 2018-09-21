@@ -34,11 +34,27 @@ use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
  */
 final class DefaultPageChoiceProvider implements FormChoiceProviderInterface
 {
+
+    /**
+     * @var array
+     */
+    private $defaultPages;
+
+    /**
+     * DefaultPageChoiceProvider constructor.
+     *
+     * @param array $defaultPages
+     */
+    public function __construct(array $defaultPages)
+    {
+        $this->defaultPages = $defaultPages;
+    }
+
     /**
      * {@inheritdoc}
      */
     public function getChoices()
     {
-        return [];
+        return $this->defaultPages;
     }
 }

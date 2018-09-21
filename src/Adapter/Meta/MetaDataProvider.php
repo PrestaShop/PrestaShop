@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter\Meta;
 
 use Db;
 use DbQuery;
+use Meta;
 use PrestaShop\PrestaShop\Core\Meta\MetaDataProviderInterface;
 
 /**
@@ -53,5 +54,54 @@ class MetaDataProvider implements MetaDataProviderInterface
         }
 
         return $idMeta;
+    }
+
+    /**
+     * Gets default pages which are not configured in Seo & urls page.
+     *
+     * @return array
+     */
+    public function getDefaultPagesExcludingFilled()
+    {
+        $pages = Meta::getPages(true);
+
+        $result = [];
+        foreach ($pages as $pageName => $fileName) {
+            if (!$this->isModuleFile($fileName)) {
+                $result[$pageName] = $fileName;
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Gets module pages which are not configured in Seo & urls page.
+     *
+     * @return array
+     */
+    public function getModulePagesExcludingFilled()
+    {
+        $pages = Meta::getPages(true);
+
+        $result = [];
+        foreach ($pages as $pageName => $fileName) {
+            if ($this->isModuleFile($fileName)) {
+                $result[$pageName] = $fileName;
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Checks whenever the file contains module file pattern.
+     *
+     * @param string $fileName
+     *
+     * @return bool
+     */
+    private function isModuleFile($fileName) {
+        return 0 === strncmp($fileName, 'module-', 7);
     }
 }

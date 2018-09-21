@@ -35,10 +35,25 @@ use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 final class ModulePageChoiceProvider implements FormChoiceProviderInterface
 {
     /**
+     * @var array
+     */
+    private $modulePages;
+
+    /**
+     * ModulePageChoiceProvider constructor.
+     *
+     * @param array $modulePages
+     */
+    public function __construct(array $modulePages)
+    {
+        $this->modulePages = $modulePages;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function getChoices()
     {
-        return [];
+        return $this->modulePages;
     }
 }
