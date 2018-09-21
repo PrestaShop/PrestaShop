@@ -88,7 +88,10 @@ class MetaType extends TranslatorAwareType
                 'locales' => $this->locales,
                 'required' => false,
             ])
-            ->add('meta_keywords', ChoiceType::class) // todo: implement as translatable and it is not required field
+            ->add('meta_keywords', TranslateTextType::class, [
+                'locales' => $this->locales,
+                'required' => false,
+            ]) // todo: not required field. Use bootstrap-tokenfield
             ->add('url_rewrite', TranslateTextType::class, [
                 'locales' => $this->locales,
             ])

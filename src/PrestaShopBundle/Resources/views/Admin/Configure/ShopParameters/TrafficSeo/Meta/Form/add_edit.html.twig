@@ -65,16 +65,15 @@
                 {{ form_widget(metaForm.meta_description) }}
               </div>
             </div>
-            {#todo: finish meta keywords#}
-            {#<div class="form-group row">#}
-              {#<label class="form-control-label">#}
-                {#{{ 'Meta keywords'|trans }}#}
-              {#</label>#}
-              {#<div class="col-sm">#}
-                {#{{ form_errors(metaForm.meta_keywords) }}#}
-                {#{{ form_widget(metaForm.meta_keywords) }}#}
-              {#</div>#}
-            {#</div>#}
+            <div class="form-group row">
+              <label class="form-control-label">
+                {{ 'Meta keywords'|trans }}
+              </label>
+              <div class="col-sm">
+                {{ form_errors(metaForm.meta_keywords) }}
+                {{ form_widget(metaForm.meta_keywords) }}
+              </div>
+            </div>
             <div class="form-group row">
               <label class="form-control-label">
                 {{ 'Rewritten URL'|trans }}
