@@ -153,7 +153,6 @@ module.exports = {
         scenario('Add category', client => {
           test('should search for the category', () => client.waitAndSetValue(AddProductPage.search_categories, productData.categories['1']['name'] + date_time));
           test('should select the category', () => client.waitForVisibleAndClick(AddProductPage.list_categories));
-          test('should open all categories', () => client.openAllCategory());
           if (Object.keys(productData.categories).length > 1) {
             Object.keys(productData.categories).forEach(function (key) {
               if (productData.categories[key]["main_category"] && productData.categories[key]["name"] !== 'home') {
@@ -300,13 +299,13 @@ module.exports = {
         test('should set the language of shop to "English"', () => client.changeLanguage());
         test('should click on "SEE ALL PRODUCTS" link', () => client.scrollWaitForExistAndClick(productPage.see_all_products));
         for (let i = 0; i <= pagination; i++) {
-          for (let j = 0; j < 4 ; j++) {
-              test('should check the ' + productData[j].name + ' product existence in the ' + (Number(i) + 1) + ' page', () => {
-                return promise
-                  .then(() => client.pause(4000))
-                  .then(() => client.isVisible(productPage.productLink.replace('%PRODUCTNAME', productData[j].name + date_time)));
-              });
-              test('should open the product in new tab if exist', () =>  client.middleClick(productPage.productLink.replace('%PRODUCTNAME', productData[j].name + date_time), global.isVisible));
+          for (let j = 0; j < 4; j++) {
+            test('should check the ' + productData[j].name + ' product existence in the ' + (Number(i) + 1) + ' page', () => {
+              return promise
+                .then(() => client.pause(4000))
+                .then(() => client.isVisible(productPage.productLink.replace('%PRODUCTNAME', productData[j].name + date_time)));
+            });
+            test('should open the product in new tab if exist', () => client.middleClick(productPage.productLink.replace('%PRODUCTNAME', productData[j].name + date_time), global.isVisible));
           }
           if (i !== pagination) {
             test('should click on "NEXT" button', () => {
@@ -463,7 +462,7 @@ module.exports = {
           test('should check that "Virtual product" type is well selected', () => client.isSelected(AddProductPage.product_type_option.replace('%POS', 3)));
         }
       }
-      if(productData.hasOwnProperty('picture')) {
+      if (productData.hasOwnProperty('picture')) {
         test('should check the appearance of the product picture', () => client.checkAttributeValue(AddProductPage.background_picture, 'style', productData.picture, 'contain'));
       }
       test('should check that the product quantity is equal to "' + productData.quantity + '"', () => client.checkAttributeValue(AddProductPage.product_quantity_input, 'value', productData.quantity));

@@ -5,8 +5,8 @@ module.exports = {
     image_input: '//*[@id="logo"]',
     meta_title_input: '//*[@id="meta_title_1"]',
     meta_description_input: '//*[@id="meta_description_1"]',
-    meta_keywords_input:'//*[@id="fieldset_0"]/div[2]/div[7]/div/div/div[1]/div[1]/div/input',   // '//*[@id="manufacturer_form"]/div/div[2]/div[7]/div/div/input',
-    active_button: '//*[@id="manufacturer_form"]/div/div[2]/div[8]/div/span/label[1]',
+    meta_keywords_input:'//*[@id="fieldset_0"]//div[5]//div[1]/div[1]/div/input[@placeholder="Add tag"]',
+    active_button: '//*[@id="fieldset_0"]//label[@for="active_on"]',
     save_button: '//*[@id="manufacturer_form_submit_btn"]',
     short_description_input: '(//*[@id="manufacturer_form"]//div[@class="mce-tinymce mce-container mce-panel"])[1]',
     description_input: '(//*[@id="manufacturer_form"]//div[@class="mce-tinymce mce-container mce-panel"])[3]'

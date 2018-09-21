@@ -9,7 +9,8 @@ scenario('Check the addons catalog page in the Back Office', () => {
     test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'common_client');
   scenario('Check the addons catalog page', client => {
-    test('should go to "Modules" page', () => client.goToSubtabMenuPage(Menu.Improve.Modules.modules_menu, Menu.Improve.Modules.modules_catalog_submenu));
+    test('should go to "Modules Catalog" page', () => client.goToSubtabMenuPage(Menu.Improve.Modules.modules_menu, Menu.Improve.Modules.modules_catalog));
+    test('should click on "Modules Selections" tab', () => client.waitForExistAndClick(Menu.Improve.Modules.modules_catalog_submenu));
     test('should click on "View all the Traffic modules" link', () => client.waitForExistAndClick(ModulesCatalogPage.view_all_traffic_modules_link));
     test('should check that the page is well opened', () => {
       return promise
@@ -24,7 +25,11 @@ scenario('Check the addons catalog page in the Back Office', () => {
         .then(() => client.checkTextValue(ModulesCatalogPage.module_name, "SEO Expert", 'contain'))
         .then(() => client.switchWindow(0));
     });
-    test('should click on "Discover the payment modules" link', () => client.scrollWaitForExistAndClick(ModulesCatalogPage.discover_payment_modules_link));
+    test('should click on "Discover the payment modules" link', () => {
+      return promise
+        .then(() => client.moveToObject(ModulesCatalogPage.discover_payment_modules_link))
+        .then(() => client.waitForVisibleAndClick(ModulesCatalogPage.discover_payment_modules_link))
+    });
     test('should check that the page is well opened', () => {
       return promise
         .then(() => client.switchWindow(3))

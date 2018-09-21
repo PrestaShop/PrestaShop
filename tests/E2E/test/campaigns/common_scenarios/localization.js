@@ -9,7 +9,7 @@ const Design = require('../../selectors/BO/design/index');
 const {languageFO} = require('../../selectors/FO/index');
 
 module.exports = {
-  createLanguage: function (languageData)  {
+  createLanguage: function (languageData) {
     scenario('Create a new "Language"', client => {
       test('should go to "Localization" page', () => client.goToSubtabMenuPage(Menu.Improve.International.international_menu, Menu.Improve.International.localization_submenu));
       test('should click on "Languages" tab', () => client.waitForExistAndClick(Menu.Improve.International.languages_tab));
@@ -27,7 +27,7 @@ module.exports = {
       test('should verify the appearance of the green validation', () => client.checkTextValue(InternationalPage.success_panel, '×\nSuccessful creation.'));
     }, 'common_client');
   },
-  editLanguage: function (name, languageData)  {
+  editLanguage: function (name, languageData) {
     scenario('Edit the created "Language"', client => {
       test('should go to "Localization" page', () => client.goToSubtabMenuPage(Menu.Improve.International.international_menu, Menu.Improve.International.localization_submenu));
       test('should click on "Languages" tab', () => client.waitForExistAndClick(Menu.Improve.International.languages_tab));
@@ -50,7 +50,7 @@ module.exports = {
       test('should verify the appearance of the green validation', () => client.checkTextValue(InternationalPage.success_panel, '×\nSuccessful update.'));
     }, 'common_client');
   },
-  checkLanguageBO: function (languageData)  {
+  checkLanguageBO: function (languageData) {
     scenario('Check the created "Language"', client => {
       test('should go to "Localization" page', () => client.goToSubtabMenuPage(Menu.Improve.International.international_menu, Menu.Improve.International.localization_submenu));
       test('should click on "Languages" tab', () => client.waitForExistAndClick(Menu.Improve.International.languages_tab));
@@ -65,7 +65,7 @@ module.exports = {
       test('should click on "Reset" button', () => client.waitForExistAndClick(Localization.languages.reset_button));
     }, 'common_client');
   },
-  checkLanguageFO: function (languageData, isDeleted = false)  {
+  checkLanguageFO: function (languageData, isDeleted = false) {
     scenario('Check the created "Language" in the Front Office', client => {
       if (isDeleted) {
         test('should click on "Language" select', () => client.waitForExistAndClick(languageFO.language_selector));
@@ -73,7 +73,7 @@ module.exports = {
       } else {
         test('should set the shop language to "' + languageData.name + '"', () => client.changeLanguage(languageData.iso_code.toLowerCase()));
         test('should check that the "' + languageData.name + '" language is well selected', () => client.checkTextValue(languageFO.selected_language_button, languageData.name + date_time, 'equal', 3000));
-        if(languageData.hasOwnProperty('is_rtl') && languageData.is_rtl === 'on') {
+        if (languageData.hasOwnProperty('is_rtl') && languageData.is_rtl === 'on') {
           test('should check that the "Home" page is well displayed in RTL mode', () => client.checkCssPropertyValue(HomePage.home_page, 'direction', 'rtl', 'equal', 2000));
           test('should check that the "Contact us" is well reversed', () => client.checkCssPropertyValue(HomePage.contact_us_link, 'float', 'right'));
           test('should check that the "Logo" is well reversed', () => client.checkCssPropertyValue(HomePage.logo_home_page, 'float', 'right'));
@@ -109,6 +109,7 @@ module.exports = {
           test('should check that the "Cart total" is well reversed', () => client.checkCssPropertyValue(CheckoutOrderPage.cart_total, 'direction', 'rtl'));
           test('should check that the "Cart subtotal" is well reversed', () => client.checkCssPropertyValue(CheckoutOrderPage.cart_subtotal_products, 'direction', 'rtl'));
           test('should go to the "Home" page', () => client.waitForExistAndClick(HomePage.logo_home_page));
+          test('should set the shop language to "' + languageData.name + '"', () => client.changeLanguage(languageData.iso_code.toLowerCase()));
           test('should click on "All product" page', () => client.scrollWaitForExistAndClick(HomePage.all_product_link));
           test('should check that the "Category" page is well displayed in RTL mode', () => client.checkCssPropertyValue(productPage.category_page, 'direction', 'rtl'));
           test('should check that the "Left column" is well reversed', () => client.checkCssPropertyValue(productPage.left_column_block, 'direction', 'rtl'));
@@ -117,7 +118,7 @@ module.exports = {
       }
     }, 'common_client');
   },
-  deleteLanguage: function (name)  {
+  deleteLanguage: function (name) {
     scenario('Delete the created "Language"', client => {
       test('should go to "Localization" page', () => client.goToSubtabMenuPage(Menu.Improve.International.international_menu, Menu.Improve.International.localization_submenu));
       test('should click on "Languages" tab', () => client.waitForExistAndClick(Menu.Improve.International.languages_tab));

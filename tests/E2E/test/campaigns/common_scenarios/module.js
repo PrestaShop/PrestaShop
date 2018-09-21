@@ -7,15 +7,16 @@ module.exports = {
     test('should check the configuration page', () => client.checkTextValue(ModulePage.config_legend.replace("%moduleTechName", moduleTechName), moduleTechName));
   },
   installModule: function (client, ModulePage, AddProductPage, moduleTechName) {
-    test('should go to "Module" page', () => client.goToSubtabMenuPage(Menu.Improve.Modules.modules_menu, Menu.Improve.Modules.modules_services_submenu));
-    test('should click on "Selection" tab', () => client.waitForExistAndClick(Menu.Improve.Modules.selection_tab));
+    test('should go to "Module Catalog" page', () => client.goToSubtabMenuPage(Menu.Improve.Modules.modules_menu, Menu.Improve.Modules.modules_catalog));
+    test('should click on "Modules Catalog" tab', () => client.waitForExistAndClick(Menu.Improve.Modules.modules_catalog));
     test('should set the name of the module in the search input', () => client.waitAndSetValue(ModulePage.module_selection_input, moduleTechName));
-    test('should click on "Search" button', () => client.waitForExistAndClick(ModulePage.selection_search_button));
+    test('should click on "Search" button', () => client.waitForExistAndClick(ModulePage.selection_search_button, 2000));
     test('should click on "Install" button', () => client.waitForExistAndClick(ModulePage.install_button.replace("%moduleTechName", moduleTechName)));
     test('should check that the success alert message is well displayed', () => client.waitForExistAndClick(AddProductPage.close_validation_button));
-    test('should click on "Installed Modules"', () => client.waitForVisibleAndClick(Menu.Improve.Modules.installed_modules_tabs));
-    test('should search for ' + moduleTechName + ' module in the installed module tab', () => client.waitAndSetValue(ModulePage.modules_search_input, moduleTechName));
-    test('should click on "Search" button', () => client.waitForExistAndClick(ModulePage.modules_search_button));
+    test('should go to "Module Manager" page', () => client.goToSubtabMenuPage(Menu.Improve.Modules.modules_menu, Menu.Improve.Modules.modules_services_submenu));
+    test('should click on "Modules" tab', () => client.waitForExistAndClick(ModulePage.modules_tab));
+    test('should set the name of the module in the search input', () => client.waitAndSetValue(ModulePage.module_selection_input, moduleTechName));
+    test('should click on "Search" button', () => client.waitForExistAndClick(ModulePage.selection_search_button));
     test('should check if the module ' + moduleTechName + ' was installed', () => client.isExisting(ModulePage.installed_module_div.replace('%moduleTechName', moduleTechName)));
   },
   uninstallModule: function (client, ModulePage, AddProductPage, moduleTechName) {
@@ -71,9 +72,6 @@ module.exports = {
       } else if (sortType === "price") {
         return promise
           .then(() => client.checkSortByIncPrice((parseInt((tab["modules_number"].match(/[0-9]+/g)[0])))))
-      } else if (sortType === "price-desc") {
-        return promise
-          .then(() => client.checkSortDesc((parseInt((tab["modules_number"].match(/[0-9]+/g)[0])))))
       } else {
         return promise
           .then(() => client.checkSortDesc((parseInt((tab["modules_number"].match(/[0-9]+/g)[0])))))
@@ -82,7 +80,7 @@ module.exports = {
   },
   clickOnReadMore: function(ModulePage, moduleName, moduleTechName) {
     scenario('Check that the click on "Read more" button is working well', client => {
-      test('should go to "Module catalog" page', () => client.goToSubtabMenuPage(Menu.Improve.Modules.modules_menu, Menu.Improve.Modules.modules_catalog_submenu));
+      test('should go to "Modules Catalog" page', () => client.goToSubtabMenuPage(Menu.Improve.Modules.modules_menu, Menu.Improve.Modules.modules_catalog));
       test('should search for the module "' + moduleName + '"', () => {
         return promise
           .then(() => client.waitAndSetValue(ModulePage.module_selection_input, moduleTechName))
