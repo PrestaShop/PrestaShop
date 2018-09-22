@@ -107,26 +107,15 @@
           {/if}
         {/block}
 
-      {elseif $field.type === 'birthday'}
+      {elseif $field.name === 'birthday'}
 
         {block name='form_field_item_birthday'}
-          <div class="js-parent-focus">
-            {html_select_date
-            field_order=DMY
-            time={$field.value}
-            field_array={$field.name}
-            prefix=false
-            reverse_years=true
-            field_separator='<br>'
-            day_extra='class="form-control form-control-select"'
-            month_extra='class="form-control form-control-select"'
-            year_extra='class="form-control form-control-select"'
-            day_empty={l s='-- day --' d='Shop.Forms.Labels'}
-            month_empty={l s='-- month --' d='Shop.Forms.Labels'}
-            year_empty={l s='-- year --' d='Shop.Forms.Labels'}
-            start_year={'Y'|date}-100 end_year={'Y'|date}
-            }
-          </div>
+          <input name="{$field.name}" class="form-control" type="date" value="{if $field.value}{$field.value|date_format:'%Y-%m-%d'}{/if}" placeholder="{if isset($field.availableValues.placeholder)}{$field.availableValues.placeholder}{/if}">
+          {if isset($field.availableValues.comment)}
+            <span class="form-control-comment">
+              {$field.availableValues.comment}
+            </span>
+          {/if}
         {/block}
 
       {elseif $field.type === 'password'}
