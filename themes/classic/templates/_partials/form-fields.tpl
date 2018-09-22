@@ -110,7 +110,7 @@
       {elseif $field.name === 'birthday'}
 
         {block name='form_field_item_birthday'}
-          <input name="{$field.name}" class="form-control" type="date" value="{if $field.value}{$field.value|date_format:'%Y-%m-%d'}{/if}" placeholder="{if isset($field.availableValues.placeholder)}{$field.availableValues.placeholder}{/if}">
+          <input name="{$field.name}" class="form-control" type="date" value="{if isset($field.value)}{$field.value|date_format:'%Y-%m-%d'}{/if}" placeholder="{if isset($field.availableValues.placeholder)}{$field.availableValues.placeholder}{/if}">
           {if isset($field.availableValues.comment)}
             <span class="form-control-comment">
               {$field.availableValues.comment}
