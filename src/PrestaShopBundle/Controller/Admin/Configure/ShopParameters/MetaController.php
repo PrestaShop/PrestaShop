@@ -335,9 +335,31 @@ class MetaController extends FrameworkBundleAdminController
      * @param int $metaId
      *
      * @param Request $request
+     *
+     * @return RedirectResponse
      */
     public function processMetaEditFormAction($metaId, Request $request)
     {
-        //todo: implement
+        $metaFormHandler = $this->get('prestashop.admin.meta.form_handler');
+        $metaForm = $metaFormHandler->getForm();
+
+        $metaForm->handleRequest($request);
+
+        if ($metaForm->isSubmitted()) {
+            $data = $metaForm->getData()['meta'];
+            $data['id'] = $metaId;
+
+            $errors = $metaFormHandler->save($data);
+
+            if (empty($errors)) {
+                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_meta');
+            }
+
+            $this->flashErrors($errors);
+        }
+
+        return $this->redirectToRoute('admin_meta');
     }
 }

@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Domain\Meta\Command\EditMetaCommand;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Command\SaveMetaCommand;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Query\GetMetaForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Meta\ValueObject\EditableMeta;
@@ -78,7 +79,9 @@ class MetaFormDataProvider
 
     public function saveData(array $data)
     {
-        $this->commandBus->handle($this->getSaveMetaCommand($data));
+        $command = !empty($data['id']) ? $this->getEditMetaCommand($data) : $this->getSaveMetaCommand($data);
+        $this->commandBus->handle($command);
+        //todo: hooks ?
         return [];
     }
 
@@ -92,6 +95,25 @@ class MetaFormDataProvider
     private function getSaveMetaCommand(array $data)
     {
         return new SaveMetaCommand(
+            $data['page_name'],
+            $data['page_title'],
+            $data['meta_description'],
+            (array) $data['meta_keywords'], //todo: remove casting once multilang value is fixed.
+            $data['url_rewrite']
+        );
+    }
+
+    /**
+     * Gets
+     *
+     * @param array $data
+     *
+     * @return EditMetaCommand
+     */
+    private function getEditMetaCommand(array $data)
+    {
+        return new EditMetaCommand(
+            $data['id'],
             $data['page_name'],
             $data['page_title'],
             $data['meta_description'],

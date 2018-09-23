@@ -10,6 +10,12 @@ services:
             - name: 'tactician.handler'
               command: 'PrestaShop\PrestaShop\Core\Domain\Meta\Command\SaveMetaCommand'
 
+    prestashop.core.domain.meta.command_handler.edit_meta:
+        class: 'PrestaShop\PrestaShop\Core\Domain\Meta\CommandHandler\EditMetaHandler'
+        tags:
+            - name: 'tactician.handler'
+              command: 'PrestaShop\PrestaShop\Core\Domain\Meta\Command\EditMetaCommand'
+
     # QUERY HANDLERS
 
     prestashop.core.domain.meta.query_handler.get_meta_for_editing:
