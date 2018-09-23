@@ -169,3 +169,5 @@ services:
 
     prestashop.admin.traffic_seo.meta.form_data_provider:
         class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta\MetaFormDataProvider'
+        arguments:
+            - '@prestashop.core.command_bus'

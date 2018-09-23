@@ -303,6 +303,8 @@ class MetaController extends FrameworkBundleAdminController
      * Saves meta form.
      *
      * @param Request $request
+     *
+     * @return RedirectResponse
      */
     public function processMetaSaveFormAction(Request $request)
     {
@@ -313,6 +315,16 @@ class MetaController extends FrameworkBundleAdminController
 
         if ($metaForm->isSubmitted()) {
             $errors = $metaFormHandler->save($metaForm->getData()['meta']);
+
+            if (empty($errors)) {
+                $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_meta');
+            }
+
+            $this->flashErrors($errors);
         }
+
+        return $this->redirectToRoute('admin_meta');
     }
 }

@@ -26,12 +26,29 @@
 
 namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta;
 
+use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Domain\Meta\Command\SaveMetaCommand;
+
 /**
  * Class MetaFormDataProvider is responsible for providing data for Shop parameters ->
  * Traffic & Seo -> Seo & Urls -> add/edit form.
  */
 class MetaFormDataProvider
 {
+    /**
+     * @var CommandBusInterface
+     */
+    private $commandBus;
+
+    /**
+     * MetaFormDataProvider constructor.
+     *
+     * @param CommandBusInterface $commandBus
+     */
+    public function __construct(CommandBusInterface $commandBus)
+    {
+        $this->commandBus = $commandBus;
+    }
 
     public function getData($metaId)
     {
@@ -41,6 +58,25 @@ class MetaFormDataProvider
 
     public function saveData(array $data)
     {
-        // TODO: Implement setData() method.
+        $this->commandBus->handle($this->getSaveMetaCommand($data));
+        return [];
+    }
+
+    /**
+     * Gets save meta command.
+     *
+     * @param array $data
+     *
+     * @return SaveMetaCommand
+     */
+    private function getSaveMetaCommand(array $data)
+    {
+        return new SaveMetaCommand(
+            $data['page_name'],
+            $data['page_title'],
+            $data['meta_description'],
+            (array) $data['meta_keywords'], //todo: remove casting once multilang value is fixed.
+            $data['url_rewrite']
+        );
     }
 }

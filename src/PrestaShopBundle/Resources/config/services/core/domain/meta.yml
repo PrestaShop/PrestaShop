@@ -1,0 +1,11 @@
+services:
+    _defaults:
+        public: true
+
+    # COMMAND HANDLERS
+
+    prestashop.core.domain.meta.command_handler.save_meta:
+        class: 'PrestaShop\PrestaShop\Core\Domain\Meta\CommandHandler\SaveMetaHandler'
+        tags:
+            - name: 'tactician.handler'
+              command: 'PrestaShop\PrestaShop\Core\Domain\Meta\Command\SaveMetaCommand'
