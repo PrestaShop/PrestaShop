@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta;
 
 use Doctrine\DBAL\Types\TextType;
+use PrestaShopBundle\Form\Admin\Type\TokenFieldType;
 use PrestaShopBundle\Form\Admin\Type\TranslateTextType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -88,10 +89,9 @@ class MetaType extends TranslatorAwareType
                 'locales' => $this->locales,
                 'required' => false,
             ])
-            ->add('meta_keywords', TranslateTextType::class, [
-                'locales' => $this->locales,
+            ->add('meta_keywords', TokenFieldType::class, [
                 'required' => false,
-            ]) // todo: not required field. Use bootstrap-tokenfield
+            ])
             ->add('url_rewrite', TranslateTextType::class, [
                 'locales' => $this->locales,
             ])
