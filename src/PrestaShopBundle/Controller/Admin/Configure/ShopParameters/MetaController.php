@@ -146,6 +146,7 @@ class MetaController extends FrameworkBundleAdminController
             '@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/Form/add_edit.html.twig',
             [
                 'form' => $metaFormHandler->getForm()->createView(),
+                'formAction' => $this->generateUrl('admin_meta_list_save_form')
             ]
         );
     }
@@ -296,5 +297,22 @@ class MetaController extends FrameworkBundleAdminController
         );
 
         return $this->redirectToRoute('admin_metas_index');
+    }
+
+    /**
+     * Saves meta form.
+     *
+     * @param Request $request
+     */
+    public function processMetaSaveFormAction(Request $request)
+    {
+        $metaFormHandler = $this->get('prestashop.admin.meta.form_handler');
+        $metaForm = $metaFormHandler->getForm();
+
+        $metaForm->handleRequest($request);
+
+        if ($metaForm->isSubmitted()) {
+            $errors = $metaFormHandler->save($metaForm->getData()['meta']);
+        }
     }
 }

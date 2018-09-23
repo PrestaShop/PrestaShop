@@ -89,7 +89,7 @@ class MetaFormHandler
      */
     public function save(array $data)
     {
-        return $this->metaDataProvider->setData($data);
+        return $this->metaDataProvider->saveData($data);
     }
 
     /**

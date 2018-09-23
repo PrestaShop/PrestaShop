@@ -31,7 +31,7 @@
   {% set metaForm = form.meta %}
   <div class="row justify-content-center">
     <div class="col">
-      {{ form_start(metaForm) }}
+      {{ form_start(metaForm, {'action': formAction}) }}
       <div class="card">
         <div class="card-header">
           {{ 'Meta tags'|trans }}
@@ -102,6 +102,11 @@
               </div>
             </div>
             {{ form_rest(metaForm) }}
+          </div>
+        </div>
+        <div class="card-footer">
+          <div class="d-flex justify-content-end">
+            <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
           </div>
         </div>
       </div>
