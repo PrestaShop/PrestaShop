@@ -28,8 +28,7 @@ const $ = window.$;
 import Bloodhound from 'typeahead.js';
 
 /**
- * class TokenField is responsible for providing functionality from bootstrap-token field functionality and
- * use it for TokenFieldType form type.
+ * class TokenField is responsible for providing functionality from bootstrap-tokenfield plugin.
  */
 export default class TokenField {
   constructor() {

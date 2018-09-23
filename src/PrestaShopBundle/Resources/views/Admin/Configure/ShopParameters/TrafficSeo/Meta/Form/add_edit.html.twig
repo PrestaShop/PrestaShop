@@ -71,7 +71,7 @@
               </label>
               <div class="col-sm">
                 {{ form_errors(metaForm.meta_keywords) }}
-                {{ form_widget(metaForm.meta_keywords) }}
+                {{ form_widget(metaForm.meta_keywords, {'attr':{'class': 'js-token-field', 'placeholder': 'Add tag'|trans({}, 'Admin.Actions')}}) }}
               </div>
             </div>
             <div class="form-group row">
