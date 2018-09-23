@@ -36,6 +36,7 @@ import SubmitRowActionExtension from "../../components/grid/extension/action/row
 import ShowcaseCard from "../../components/showcase-card/showcase-card";
 import ShowcaseCardCloseExtension from "../../components/showcase-card/extension/showcase-card-close-extension";
 import TokenField from "../../components/token-field";
+import TranslatableInput from "../../components/translatable-input";
 
 const $ = window.$;
 
@@ -55,4 +56,5 @@ $(() => {
   helperBlock.addExtension(new ShowcaseCardCloseExtension());
 
   new TokenField();
+  new TranslatableInput();
 });
