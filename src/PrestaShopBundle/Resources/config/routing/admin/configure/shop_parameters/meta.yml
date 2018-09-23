@@ -28,8 +28,17 @@ admin_meta_list_save_form:
     _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\Meta:processMetaSaveForm'
     _legacy_controller: AdminMeta
 
-admin_metas_edit:
-    path: /{metaId}/edit
+admin_meta_list_edit_form:
+  path: /edit/{metaId}
+  methods: POST
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\Meta:processMetaEditForm'
+    _legacy_controller: AdminMeta
+  requirements:
+    metaId: \d+
+
+admin_meta_list_edit:
+    path: /edit/{metaId}
     methods: GET
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\Meta:edit'

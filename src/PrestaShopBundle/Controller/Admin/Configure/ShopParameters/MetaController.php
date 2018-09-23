@@ -158,19 +158,20 @@ class MetaController extends FrameworkBundleAdminController
      *
      * @param int $metaId
      *
-     * @return RedirectResponse
+     * @return Response
      */
     public function editAction($metaId)
     {
-        $legacyLink = $this->getAdminLink(
-            'AdminMeta',
+        $metaFormHandler = $this->get('prestashop.admin.meta.form_handler');
+        return $this->render(
+            '@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/Form/add_edit.html.twig',
             [
-                'id_meta' => $metaId,
-                'updatemeta' => 1,
+                'form' => $metaFormHandler->getFormFor($metaId)->createView(),
+                'formAction' => $this->generateUrl('admin_meta_list_edit_form', [
+                    'metaId' => $metaId,
+                ])
             ]
         );
-
-        return $this->redirect($legacyLink);
     }
 
     /**
@@ -326,5 +327,17 @@ class MetaController extends FrameworkBundleAdminController
         }
 
         return $this->redirectToRoute('admin_meta');
+    }
+
+    /**
+     * Edits meta form.
+     *
+     * @param int $metaId
+     *
+     * @param Request $request
+     */
+    public function processMetaEditFormAction($metaId, Request $request)
+    {
+        //todo: implement
     }
 }
