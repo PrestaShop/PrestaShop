@@ -35,6 +35,7 @@ import BulkActionCheckboxExtension from "../../components/grid/extension/bulk-ac
 import SubmitRowActionExtension from "../../components/grid/extension/action/row/submit-row-action-extension";
 import ShowcaseCard from "../../components/showcase-card/showcase-card";
 import ShowcaseCardCloseExtension from "../../components/showcase-card/extension/showcase-card-close-extension";
+import TokenField from "../../components/token-field";
 
 const $ = window.$;
 
@@ -52,4 +53,6 @@ $(() => {
 
   const helperBlock = new ShowcaseCard('seo-urls-showcase-card');
   helperBlock.addExtension(new ShowcaseCardCloseExtension());
+
+  new TokenField();
 });

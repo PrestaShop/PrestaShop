@@ -1,6 +1,5 @@
-<?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -24,35 +23,27 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Form\Admin\Type;
+const $ = window.$;
 
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+import Bloodhound from 'typeahead.js';
 
 /**
- * Class TokenFieldType is responsible for adding input field where you can create elegant taggable fields.
- * Use together with javascript class TokenField.
+ * class TokenField is responsible for providing functionality from bootstrap-token field functionality and
+ * use it for TokenFieldType form type.
  */
-class TokenFieldType extends AbstractType
-{
-    /**
-     * {@inheritdoc}
-     */
-    public function getParent()
-    {
-        return TextType::class;
-    }
+export default class TokenField {
+  constructor() {
+    const engine = new Bloodhound({
+      datumTokenizer: function(d) {
+        return Bloodhound.tokenizers.whitespace(d.value);
+      },
+      queryTokenizer: Bloodhound.tokenizers.whitespace
+    });
 
-    /**
-     * {@inheritdoc}
-     */
-    public function configureOptions(OptionsResolver $resolver)
-    {
-        $resolver->setDefaults([
-            'attr' => [
-                'class' => 'tokenfield js-token-field',
-            ],
-        ]);
-    }
+    engine.initialize();
+
+    $('.js-token-field').tokenfield({
+      typeahead: [null, { source: engine.ttAdapter() }]
+    });
+  }
 }
