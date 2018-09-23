@@ -28,6 +28,8 @@ namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Command\SaveMetaCommand;
+use PrestaShop\PrestaShop\Core\Domain\Meta\Query\GetMetaForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Meta\ValueObject\EditableMeta;
 
 /**
  * Class MetaFormDataProvider is responsible for providing data for Shop parameters ->
@@ -41,18 +43,36 @@ class MetaFormDataProvider
     private $commandBus;
 
     /**
+     * @var CommandBusInterface
+     */
+    private $queryBus;
+
+    /**
      * MetaFormDataProvider constructor.
      *
      * @param CommandBusInterface $commandBus
+     * @param CommandBusInterface $queryBus
      */
-    public function __construct(CommandBusInterface $commandBus)
-    {
+    public function __construct(
+        CommandBusInterface $commandBus,
+        CommandBusInterface $queryBus
+    ) {
         $this->commandBus = $commandBus;
+        $this->queryBus = $queryBus;
     }
 
     public function getData($metaId)
     {
-        // TODO: Implement getData() method.
+        /** @var EditableMeta $result */
+        $result = $this->queryBus->handle(new GetMetaForEditing($metaId));
+
+        return [
+            'page_name' => $result->getPageName(),
+            'page_title' => $result->getPageTitle(),
+            'meta_description' => $result->getMetaDescription(),
+            'meta_keywords' => $result->getMetaKeywords(),
+            'url_rewrite' => $result->getUrlRewrite(),
+        ];
     }
 
 

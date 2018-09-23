@@ -171,3 +171,4 @@ services:
         class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta\MetaFormDataProvider'
         arguments:
             - '@prestashop.core.command_bus'
+            - '@prestashop.core.query_bus'
