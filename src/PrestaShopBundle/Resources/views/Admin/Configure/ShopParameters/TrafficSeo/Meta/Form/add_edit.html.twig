@@ -40,7 +40,7 @@
           <div class="card-text">
             <div class="form-group row">
               <label class="form-control-label">
-                {{ 'Page name'|trans }}
+                {{ ps.label_with_help('Page name'|trans, ('Name of the related page.'|trans({}, 'Admin.Shopparameters.Help'))) }}
               </label>
               <div class="col-sm">
                 {{ form_errors(metaForm.page_name) }}
@@ -49,7 +49,12 @@
             </div>
             <div class="form-group row">
               <label class="form-control-label">
-                {{ 'Page title'|trans }}
+                {% set pageTilteLabel %}
+                  {{ 'Title of this page.'|trans({}, 'Admin.Shopparameters.Help') }}
+                  {{ 'Invalid characters:'|trans({}, 'Admin.Shopparameters.Help') ~ '  &lt;&gt;;=#{}'}}
+                {% endset %}
+
+                {{ ps.label_with_help('Page title'|trans, (pageTilteLabel))}}
               </label>
               <div class="col-sm">
                 {{ form_errors(metaForm.page_title) }}
@@ -58,7 +63,11 @@
             </div>
             <div class="form-group row">
               <label class="form-control-label">
-                {{ 'Meta description'|trans }}
+                {% set metaDescriptionLabel %}
+                  {{ 'A short description of your shop.'|trans({}, 'Admin.Shopparameters.Help') }}
+                  {{ 'Invalid characters:'|trans({}, 'Admin.Shopparameters.Help') ~ ' &lt;&gt;;=#{}' }}
+                {% endset %}
+                {{ ps.label_with_help('Meta description'|trans, (metaDescriptionLabel))}}
               </label>
               <div class="col-sm">
                 {{ form_errors(metaForm.meta_description) }}
@@ -67,7 +76,12 @@
             </div>
             <div class="form-group row">
               <label class="form-control-label">
-                {{ 'Meta keywords'|trans }}
+                {% set metaKeywordsLabel %}
+                  {{ 'List of keywords for search engines.'|trans({}, 'Admin.Shopparameters.Help') }}
+                  {{ 'To add tags, click in the field, write something, and then press the "Enter" key.'|trans({}, 'Admin.Shopparameters.Help') }}
+                  {{ 'Invalid characters:'|trans({}, 'Admin.Shopparameters.Help') ~ ' &lt;&gt;;=#{}' }}
+                {% endset %}
+                {{ ps.label_with_help('Meta keywords'|trans, (metaKeywordsLabel))}}
               </label>
               <div class="col-sm">
                 {{ form_errors(metaForm.meta_keywords) }}
@@ -76,7 +90,11 @@
             </div>
             <div class="form-group row">
               <label class="form-control-label">
-                {{ 'Rewritten URL'|trans }}
+                {% set rewriteUrlLabel %}
+                  {{ 'For instance, "contacts" for http://example.com/shop/contacts to redirect to http://example.com/shop/contact-form.php'|trans({}, 'Admin.Shopparameters.Help') }}
+                  {{ 'Only letters and hyphens are allowed.'|trans({}, 'Admin.Shopparameters.Help') }}
+                {% endset %}
+                {{ ps.label_with_help('Rewritten URL'|trans, (rewriteUrlLabel))}}
               </label>
               <div class="col-sm">
                 {{ form_errors(metaForm.url_rewrite) }}

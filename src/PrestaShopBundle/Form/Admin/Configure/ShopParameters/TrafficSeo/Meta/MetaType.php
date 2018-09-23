@@ -89,7 +89,7 @@ class MetaType extends TranslatorAwareType
                 'required' => false,
             ])
             ->add('meta_keywords', TextType::class, [
-                'required' => false,
+                'required' => false, //todo: language support
             ])
             ->add('url_rewrite', TranslateTextType::class, [
                 'locales' => $this->locales,
