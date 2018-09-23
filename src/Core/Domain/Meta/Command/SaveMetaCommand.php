@@ -37,22 +37,22 @@ class SaveMetaCommand
     private $pageName;
 
     /**
-     * @var array
+     * @var string[]
      */
     private $pageTitle;
 
     /**
-     * @var array
+     * @var string[]
      */
     private $metaDescription;
 
     /**
-     * @var array
+     * @var string[]
      */
     private $metaKeywords;
 
     /**
-     * @var array
+     * @var string[]
      */
     private $rewriteUrl;
 
@@ -60,10 +60,10 @@ class SaveMetaCommand
      * SaveMetaCommand constructor.
      *
      * @param string $pageName
-     * @param array $pageTitle
-     * @param array $metaDescription
-     * @param array $metaKeywords
-     * @param array $rewriteUrl
+     * @param string[] $pageTitle
+     * @param string[] $metaDescription
+     * @param string[] $metaKeywords
+     * @param string[] $rewriteUrl
      */
     public function __construct(
         $pageName,
@@ -88,7 +88,7 @@ class SaveMetaCommand
     }
 
     /**
-     * @return array
+     * @return string[]
      */
     public function getPageTitle()
     {
@@ -96,7 +96,7 @@ class SaveMetaCommand
     }
 
     /**
-     * @return array
+     * @return string[]
      */
     public function getMetaDescription()
     {
@@ -104,7 +104,7 @@ class SaveMetaCommand
     }
 
     /**
-     * @return array
+     * @return string[]
      */
     public function getMetaKeywords()
     {
@@ -112,7 +112,7 @@ class SaveMetaCommand
     }
 
     /**
-     * @return array
+     * @return string[]
      */
     public function getRewriteUrl()
     {

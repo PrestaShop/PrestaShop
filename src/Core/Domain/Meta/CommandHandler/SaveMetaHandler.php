@@ -26,18 +26,43 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Meta\CommandHandler;
 
+use Meta;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Command\SaveMetaCommand;
+use PrestaShopDatabaseException;
+use PrestaShopException;
 
 /**
  * Class SaveMetaHandler is responsible for saving meta data.
  */
-class SaveMetaHandler implements SaveMetaHandlerInterface
+final class SaveMetaHandler implements SaveMetaHandlerInterface
 {
     /**
      * {@inheritdoc}
      */
     public function handle(SaveMetaCommand $command)
     {
-        // TODO: Implement handle() method.
+        try {
+            $this->saveMetaData($command);
+        } catch (PrestaShopDatabaseException $e) {
+//            todo: implement error logging
+        } catch (PrestaShopException $e) {
+        }
+    }
+
+    /**
+     * @param SaveMetaCommand $command
+     *
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
+     */
+    private function saveMetaData(SaveMetaCommand $command)
+    {
+        $entity = new Meta();
+        $entity->page = $command->getPageName();
+        $entity->title = $command->getPageTitle();
+        $entity->description = $command->getMetaDescription();
+        $entity->keywords = $command->getMetaKeywords();
+        $entity->url_rewrite = $command->getRewriteUrl();
+        $entity->add();
     }
 }
