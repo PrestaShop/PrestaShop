@@ -232,10 +232,7 @@ class AdminModuleController {
     const moduleItemSelector = self.getModuleItemSelector();
 
     $('.modules-list').each(function scanModulesList() {
-      self.updateTotalResults(
-        $(this).find(`${moduleItemSelector}:visible`).length,
-        $(this)
-      );
+      self.updateTotalResults();
     });
   }
 
@@ -1152,11 +1149,10 @@ class AdminModuleController {
       const modulesCount = $('.modules-list').find('.module-item').length;
       updateText($('.module-search-result-wording'), modulesCount);
 
-      if (self.currentDisplay === self.DISPLAY_LIST) {
-        $(this.addonItemListSelector).toggle(modulesCount !== (this.modulesList.length / 2));
-      } else {
-        $(this.addonItemGridSelector).toggle(modulesCount !== (this.modulesList.length / 2));
-      }
+      const selectorToToggle = (self.currentDisplay === self.DISPLAY_LIST) ?
+                               this.addonItemListSelector :
+                               this.addonItemGridSelector;
+      $(selectorToToggle).toggle(modulesCount !== (this.modulesList.length / 2));
 
       if (modulesCount === 0) {
         $('.module-addons-search-link').attr(
@@ -1166,11 +1162,11 @@ class AdminModuleController {
       }
     }
 
-    function updateText(element, value) {
+    const updateText = (element, value) => {
       const explodedText = element.text().split(' ');
       explodedText[0] = value;
       element.text(explodedText.join(' '));
-    }
+    };
   }
 }
 
