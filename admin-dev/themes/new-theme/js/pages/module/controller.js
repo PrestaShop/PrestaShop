@@ -546,17 +546,17 @@ class AdminModuleController {
     const self = this;
 
     // Make addons connect modal ready to be clicked
-    if ($(this.addonsConnectModalBtnSelector).attr('href') === '#') {
-      $(this.addonsConnectModalBtnSelector).data('toggle', 'modal');
-      $(this.addonsConnectModalBtnSelector).data('target', this.addonsConnectModalSelector);
+    if ($(self.addonsConnectModalBtnSelector).attr('href') === '#') {
+      $(self.addonsConnectModalBtnSelector).attr('data-toggle', 'modal');
+      $(self.addonsConnectModalBtnSelector).attr('data-target', self.addonsConnectModalSelector);
     }
 
-    if ($(this.addonsLogoutModalBtnSelector).attr('href') === '#') {
-      $(this.addonsLogoutModalBtnSelector).data('toggle', 'modal');
-      $(this.addonsLogoutModalBtnSelector).data('target', this.addonsLogoutModalSelector);
+    if ($(self.addonsLogoutModalBtnSelector).attr('href') === '#') {
+      $(self.addonsLogoutModalBtnSelector).attr('data-toggle', 'modal');
+      $(self.addonsLogoutModalBtnSelector).attr('data-target', self.addonsLogoutModalSelector);
     }
 
-    $('body').on('submit', this.addonsConnectForm, function initializeBodySubmit(event) {
+    $('body').on('submit', self.addonsConnectForm, function initializeBodySubmit(event) {
       event.preventDefault();
       event.stopPropagation();
 
@@ -584,8 +584,8 @@ class AdminModuleController {
   initAddModuleAction() {
     const self = this;
     const addModuleButton = $(self.addonsImportModalBtnSelector);
-    addModuleButton.data('toggle', 'modal');
-    addModuleButton.data('target', self.dropZoneModalSelector);
+    addModuleButton.attr('data-toggle', 'modal');
+    addModuleButton.attr('data-target', self.dropZoneModalSelector);
   }
 
   initDropzone() {
