@@ -32,6 +32,7 @@
 <a class="{{ class }}"
    href="#"
    data-category-id="{{ record[action.options.category_id_field] }}"
+   data-category-delete-url="{{ path(action.options.category_delete_route) }}"
    {% if attributes.tooltip_name %}
      data-toggle="pstooltip"
      data-placement="top"

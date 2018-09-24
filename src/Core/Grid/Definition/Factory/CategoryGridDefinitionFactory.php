@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\Catalog\Category\DeleteCategoriesBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\SubmitBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\AccessibilityChecker\AccessibilityCheckerInterface;
@@ -278,10 +279,10 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'submit_route' => 'admin_category_process_bulk_status_disable',
                 ])
             )
-            ->add((new SubmitBulkAction('delete_selection'))
+            ->add((new DeleteCategoriesBulkAction('delete_selection'))
                 ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
                 ->setOptions([
-                    'submit_route' => 'admin_category_process_bulk_delete',
+                    'categories_bulk_delete_route' => 'admin_category_process_bulk_delete',
                 ])
             )
         ;
@@ -317,6 +318,7 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setIcon('delete')
                 ->setOptions([
                     'category_id_field' => 'id_category',
+                    'category_delete_route' => 'admin_category_process_delete',
                 ])
             )
         ;

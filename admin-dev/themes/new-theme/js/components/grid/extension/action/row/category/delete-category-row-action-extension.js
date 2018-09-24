@@ -63,7 +63,10 @@ export default class DeleteCategoryRowActionExtension {
 
         $categoriesToDeleteInputBlock.append($item);
 
-        $deleteCategoriesModal.find('form').submit();
+        const $form = $deleteCategoriesModal.find('form');
+
+        $form.attr('action', $button.data('category-delete-url'));
+        $form.submit();
       });
     });
   }
