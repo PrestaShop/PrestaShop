@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\LinkGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Catalog\Category\DeleteCategoryRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Catalog\PositionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
@@ -96,7 +97,7 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getId()
     {
-        return 'categories';
+        return 'Categories';
     }
 
     /**
@@ -311,14 +312,11 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'route_param_field' => 'id_category',
                 ])
             )
-            ->add((new LinkRowAction('delete'))
+            ->add((new DeleteCategoryRowAction('delete'))
                 ->setName($this->trans('Delete', [], 'Admin.Actions'))
                 ->setIcon('delete')
                 ->setOptions([
-                    'route' => 'admin_category_listing',
-                    'route_param_name' => 'id_category_to_delete',
-                    'route_param_field' => 'id_category',
-                    'confirm_message' => $this->trans('Delete selected item?', [], 'Admin.Notifications.Warning'),
+                    'category_id_field' => 'id_category',
                 ])
             )
         ;
