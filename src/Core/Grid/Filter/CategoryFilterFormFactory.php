@@ -55,6 +55,7 @@ final class CategoryFilterFormFactory implements GridFilterFormFactoryInterface
     /**
      * @param GridFilterFormFactoryInterface $formFactory
      * @param UrlGeneratorInterface $urlGenerator
+     * @param RequestStack $requestStack
      */
     public function __construct(
         GridFilterFormFactoryInterface $formFactory,
@@ -89,7 +90,7 @@ final class CategoryFilterFormFactory implements GridFilterFormFactoryInterface
 
         $queryParams = [];
 
-        if (null !== ($request = $this->requestStack->getMasterRequest())
+        if (null !== ($request = $this->requestStack->getCurrentRequest())
             && $request->query->has('id_category')
         ) {
             $queryParams['id_category'] = $request->query->get('id_category');
