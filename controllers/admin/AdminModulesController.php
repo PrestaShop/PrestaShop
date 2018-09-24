@@ -827,7 +827,7 @@ class AdminModulesControllerCore extends AdminController
                         $this->errors[] = Tools::displayError('You do not have permission to install this module.');
                     } elseif ($key == 'delete' && ($this->tabAccess['delete'] !== '1' || !$module->getPermission('configure'))) {
                         $this->errors[] = Tools::displayError('You do not have permission to delete this module.');
-                    } elseif ($key == 'configure' && ($this->tabAccess['edit'] !== '1' || !$module->getPermission('configure') || !Module::isInstalled(urldecode($name)))) {
+                    } elseif ($key == 'configure' && (!$module->getPermission('configure') || !Module::isInstalled(urldecode($name)))) {
                         $this->errors[] = Tools::displayError('You do not have permission to configure this module.');
                     } elseif ($key == 'install' && Module::isInstalled($module->name)) {
                         $this->errors[] = sprintf(Tools::displayError('This module is already installed: %s.'), $module->name);
