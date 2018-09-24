@@ -28,8 +28,9 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\BulkDeleteCategoriesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\DeleteCategoryCommand;
+use PrestaShop\PrestaShop\Core\Domain\Category\Command\DisableCategoriesCommand;
+use PrestaShop\PrestaShop\Core\Domain\Category\Command\EnableCategoriesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\ToggleCategoryStatusCommand;
-use PrestaShop\PrestaShop\Core\Domain\Category\Command\UpdateCategoriesStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotDeleteRootCategoryForShopException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotUpdateCategoryStatusException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryConstraintException;
@@ -37,7 +38,6 @@ use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryDeleteMode;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
-use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryStatus;
 use PrestaShop\PrestaShop\Core\Search\Filters\CategoryFilters;
 use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -121,7 +121,20 @@ class CategoryController extends FrameworkBundleAdminController
      */
     public function processBulkStatusEnableAction(Request $request)
     {
-        $this->updateBulkStatus($request->request->get('categories_bulk'), CategoryStatus::ENABLED);
+        try {
+            $command = new EnableCategoriesCommand(
+                $request->request->get('categories_bulk')
+            );
+
+            $this->getCommandBus()->handle($command);
+
+            $this->addFlash(
+                'success',
+                $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
+            );
+        } catch (CategoryException $e) {
+            $this->addFlash('error', $this->handleUpdateStatusException($e));
+        }
 
         return $this->redirectToRoute('admin_category_listing');
     }
@@ -135,7 +148,20 @@ class CategoryController extends FrameworkBundleAdminController
      */
     public function processBulkStatusDisableAction(Request $request)
     {
-        $this->updateBulkStatus($request->request->get('categories_bulk'), CategoryStatus::DISABLED);
+        try {
+            $command = new DisableCategoriesCommand(
+                $request->request->get('categories_bulk')
+            );
+
+            $this->getCommandBus()->handle($command);
+
+            $this->addFlash(
+                'success',
+                $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
+            );
+        } catch (CategoryException $e) {
+            $this->addFlash('error', $this->handleUpdateStatusException($e));
+        }
 
         return $this->redirectToRoute('admin_category_listing');
     }
@@ -261,31 +287,6 @@ class CategoryController extends FrameworkBundleAdminController
             ->setHeadersData($headers)
             ->setFileName('category_' . date('Y-m-d_His') . '.csv')
         ;
-    }
-
-    /**
-     * Update categories status.
-     *
-     * @param int[] $categoryIds
-     * @param string $newStatus
-     */
-    protected function updateBulkStatus(array $categoryIds, $newStatus)
-    {
-        try {
-            $command = new UpdateCategoriesStatusCommand(
-                $categoryIds,
-                new CategoryStatus($newStatus)
-            );
-
-            $this->getCommandBus()->handle($command);
-
-            $this->addFlash(
-                'success',
-                $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
-            );
-        } catch (CategoryException $e) {
-            $this->addFlash('error', $this->handleUpdateStatusException($e));
-        }
     }
 
     /**
