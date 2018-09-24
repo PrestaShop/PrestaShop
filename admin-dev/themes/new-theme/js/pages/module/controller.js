@@ -952,7 +952,7 @@ class AdminModuleController {
       moduleTechName = $(this).data('tech-name');
       bulkModulesTechNames.push({
         techName: moduleTechName,
-        actionMenuObj: $(this).parent().next(),
+        actionMenuObj: $(this).closest('.module-checkbox-bulk-list').next(),
       });
     });
 
