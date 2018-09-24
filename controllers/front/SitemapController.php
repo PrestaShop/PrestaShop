@@ -34,6 +34,7 @@ class SitemapControllerCore extends FrontController
      */
     public function initContent()
     {
+        parent::initContent();
         $this->context->smarty->assign(
             array(
                 'our_offers' => $this->trans('Our Offers', array(), 'Shop.Theme.Global'),
@@ -49,7 +50,6 @@ class SitemapControllerCore extends FrontController
             )
         );
 
-        parent::initContent();
         $this->setTemplate('cms/sitemap');
     }
 
