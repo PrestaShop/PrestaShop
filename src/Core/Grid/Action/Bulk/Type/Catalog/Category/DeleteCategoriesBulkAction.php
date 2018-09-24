@@ -24,15 +24,34 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Multistore;
+namespace PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\Catalog\Category;
+
+use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\AbstractBulkAction;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Class MultistoreConfig
+ * Class DeleteCategoriesBulkAction implements bulk deleting for categories grid.
  */
-class MultistoreConfig
+final class DeleteCategoriesBulkAction extends AbstractBulkAction
 {
     /**
-     * Name of configuration for Multistore feature status in ps_configuration table.
+     * {@inheritdoc}
      */
-    const FEATURE_STATUS = 'PS_MULTISHOP_FEATURE_ACTIVE';
+    public function getType()
+    {
+        return 'delete_categories';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver
+            ->setRequired([
+                'submit_route',
+            ])
+            ->setAllowedTypes('submit_route', 'string')
+        ;
+    }
 }

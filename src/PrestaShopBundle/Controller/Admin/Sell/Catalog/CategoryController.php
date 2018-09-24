@@ -69,44 +69,16 @@ class CategoryController extends FrameworkBundleAdminController
         $categoryViewDataProvider = $this->get('prestashop.adapter.category.category_view_data_provider');
         $categoryViewData = $categoryViewDataProvider->getViewData($currentCategoryId);
 
-        return $this->render('@PrestaShop/Admin/Sell/Catalog/Categories/categories.html.twig', [
+        $deleteCategoriesForm = $this->createForm(DeleteCategoriesType::class);
+
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Categories/index.html.twig', [
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'enableSidebar' => true,
             'categoriesGrid' => $this->presentGrid($categoryGrid),
             'categoriesKpi' => $categoriesKpiFactory->build(),
             'layoutHeaderToolbarBtn' => $this->getCategoryToolbarButtons($request),
             'currentCategoryView' => $categoryViewData,
-        ]);
-    }
-
-    /**
-     * Renders category deletion from.
-     *
-     * @return Response
-     */
-    public function renderDeleteFormBlockAction()
-    {
-        $request = $this->get('request_stack')->getMasterRequest();
-
-        $data = [];
-        $options = [];
-        $isDeleteSubmitted = true;
-
-        if ($request->request->has('categories_bulk')) {
-            $data['categories_to_delete'] = $request->request->get('categories_bulk');
-            $options['action'] = $this->generateUrl('admin_category_process_bulk_delete');
-        } elseif ($request->query->has('id_category_to_delete')) {
-            $data['categories_to_delete'] = [$request->query->get('id_category_to_delete')];
-            $options['action'] = $this->generateUrl('admin_category_process_delete');
-        } else {
-            $isDeleteSubmitted = false;
-        }
-
-        $deleteCategoriesForm = $this->createForm(DeleteCategoriesType::class, $data, $options);
-
-        return $this->render('@PrestaShop/Admin/Sell/Catalog/Categories/Blocks/delete_block.html.twig', [
             'deleteCategoriesForm' => $deleteCategoriesForm->createView(),
-            'isDeleteSubmitted' => $isDeleteSubmitted,
         ]);
     }
 

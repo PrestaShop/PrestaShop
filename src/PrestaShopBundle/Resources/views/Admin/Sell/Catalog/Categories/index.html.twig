@@ -43,10 +43,6 @@
     </div>
   {% endblock %}
 
-  {% block categories_delete_block %}
-    {{ render(controller('PrestaShopBundle:Admin\\Sell\\Catalog\\Category:renderDeleteFormBlock')) }}
-  {% endblock %}
-
   {% block categories_breadcrumb %}
     {% include '@PrestaShop/Admin/Sell/Catalog/Categories/Blocks/breadcrumb.html.twig' %}
   {% endblock %}
@@ -56,6 +52,11 @@
       {% embed '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': categoriesGrid} %}
         {% block grid_panel_footer %}
           {% include '@PrestaShop/Admin/Sell/Catalog/Categories/Blocks/listing_panel_footer.html.twig' %}
+        {% endblock %}
+
+        {% block grid_panel_extra_content %}
+          <div class="test"></div>
+          {% include '@PrestaShop/Admin/Sell/Catalog/Categories/Blocks/delete_categories_modal.html.twig' %}
         {% endblock %}
       {% endembed %}
     </div>
