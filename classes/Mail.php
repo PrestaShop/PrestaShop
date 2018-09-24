@@ -177,47 +177,48 @@ class MailCore extends ObjectModel
             return false;
         }
 
-        /* Construct multiple recipients list if needed */
-        $message = Swift_Message::newInstance();
-        if (is_array($to) && isset($to)) {
-            foreach ($to as $key => $addr) {
-                $addr = trim($addr);
-                if (!Validate::isEmail($addr)) {
-                    Tools::dieOrLog(Tools::displayError('Error: invalid e-mail address'), $die);
-                    return false;
-                }
-
-                if (is_array($to_name) && isset($to_name[$key])) {
-                    $addrName = $to_name[$key];
-                } else {
-                    $addrName = $to_name;
-                }
-                
-                $addrName = (($addrName == null || $addrName == $addr || !Validate::isGenericName($addrName)) ? '' : self::mimeEncode($addrName));
-                $message->addTo($addr, $addrName);
-            }
-            $to_plugin = $to[0];
-        } else {
-            /* Simple recipient, one address */
-            $to_plugin = $to;
-            $to_name = (($to_name == null || $to_name == $to) ? '' : self::mimeEncode($to_name));
-            $message->addTo($to, $to_name);
-        }
-
-        if (isset($bcc) && is_array($bcc)) {
-            foreach ($bcc as $addr) {
-                $addr = trim($addr);
-                if (!Validate::isEmail($addr)) {
-                    Tools::dieOrLog(Tools::displayError('Error: invalid e-mail address'), $die);
-                    return false;
-                }
-                $message->addBcc($addr);
-            }
-        } elseif (isset($bcc)) {
-            $message->addBcc($bcc);
-        }
-
         try {
+
+            /* Construct multiple recipients list if needed */
+            $message = Swift_Message::newInstance();
+            if (is_array($to) && isset($to)) {
+                foreach ($to as $key => $addr) {
+                    $addr = trim($addr);
+                    if (!Validate::isEmail($addr)) {
+                        Tools::dieOrLog(Tools::displayError('Error: invalid e-mail address'), $die);
+                        return false;
+                    }
+
+                    if (is_array($to_name) && isset($to_name[$key])) {
+                        $addrName = $to_name[$key];
+                    } else {
+                        $addrName = $to_name;
+                    }
+
+                    $addrName = (($addrName == null || $addrName == $addr || !Validate::isGenericName($addrName)) ? '' : self::mimeEncode($addrName));
+                    $message->addTo($addr, $addrName);
+                }
+                $to_plugin = $to[0];
+            } else {
+                /* Simple recipient, one address */
+                $to_plugin = $to;
+                $to_name = (($to_name == null || $to_name == $to) ? '' : self::mimeEncode($to_name));
+                $message->addTo($to, $to_name);
+            }
+
+            if (isset($bcc) && is_array($bcc)) {
+                foreach ($bcc as $addr) {
+                    $addr = trim($addr);
+                    if (!Validate::isEmail($addr)) {
+                        Tools::dieOrLog(Tools::displayError('Error: invalid e-mail address'), $die);
+                        return false;
+                    }
+                    $message->addBcc($addr);
+                }
+            } elseif (isset($bcc)) {
+                $message->addBcc($bcc);
+            }
+
             /* Connect with the appropriate configuration */
             if ($configuration['PS_MAIL_METHOD'] == 2) {
                 if (empty($configuration['PS_MAIL_SERVER']) || empty($configuration['PS_MAIL_SMTP_PORT'])) {
@@ -404,7 +405,9 @@ class MailCore extends ObjectModel
                 'Swift Error: '.$e->getMessage(),
                 3,
                 null,
-                'Swift_Message'
+                'Swift_Message',
+                null,
+                true
             );
 
             return false;
