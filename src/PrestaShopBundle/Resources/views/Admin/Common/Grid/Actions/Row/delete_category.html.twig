@@ -4,7 +4,7 @@
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with thSince when? Which javascript extension?is package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -22,3 +22,26 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *#}
+
+{% set class = 'btn tooltip-link js-delete-category-row-action' %}
+
+{% if attributes.class is defined %}
+  {% set class = class ~ ' ' ~ attributes.class %}
+{% endif %}
+
+<a class="{{ class }}"
+   href="#"
+   data-category-id="{{ record[action.options.category_id_field] }}"
+   {% if attributes.tooltip_name %}
+     data-toggle="pstooltip"
+     data-placement="top"
+     data-original-title="{{ action.name }}"
+   {% endif %}
+>
+  {% if action.icon is not empty %}
+    <i class="material-icons">{{ action.icon }}</i>
+  {% endif %}
+  {% if not attributes.tooltip_name %}
+    {{ action.name }}
+  {% endif %}
+</a>

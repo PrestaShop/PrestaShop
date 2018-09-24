@@ -34,11 +34,13 @@ import SubmitRowActionExtension from "../../components/grid/extension/action/row
 import LinkRowActionExtension from "../../components/grid/extension/link-row-action-extension";
 import CategoryPositionExtension from "../../components/grid/extension/column/catalog/category-position-extension";
 import AsyncToggleColumnExtension from "../../components/grid/extension/column/common/async-toggle-column-extension";
+import DeleteCategoryRowActionExtension
+  from "../../components/grid/extension/action/row/catalog/category/delete-category-row-action-extension";
 
 const $ = window.$;
 
 $(() => {
-  const categoriesGrid = new Grid('categories');
+  const categoriesGrid = new Grid('Categories');
 
   categoriesGrid.addExtension(new FiltersResetExtension());
   categoriesGrid.addExtension(new SortingExtension());
@@ -50,4 +52,5 @@ $(() => {
   categoriesGrid.addExtension(new SubmitRowActionExtension());
   categoriesGrid.addExtension(new LinkRowActionExtension());
   categoriesGrid.addExtension(new AsyncToggleColumnExtension());
+  categoriesGrid.addExtension(new DeleteCategoryRowActionExtension());
 });

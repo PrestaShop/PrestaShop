@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
@@ -21,29 +22,36 @@
  * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-{% embed 'PrestaShopBundle:Admin/Helpers:bootstrap_popup.html.twig' with {
-  'id': grid.id ~ '_grid_delete_categories_modal',
-  'title': "What do you want to do with the products associated with this category?"|trans({}, 'Admin.Catalog.Notification'),
-  'closable': true,
-  'actions': [{
-    'type': 'button',
-    'label': "Delete"|trans({}, 'Admin.Actions'),
-    'class': 'btn btn-danger btn-lg js-submit-delete-categories',
-  }],
-} %}
-  {% block content %}
-    <div class="modal-body">
-      {{ form_start(deleteCategoriesForm, {'action': path('admin_category_process_delete')}) }}
+namespace PrestaShop\PrestaShop\Core\Grid\Column\Type\Catalog\Category;
 
-      <div class="form-group mb-0">
-        {{ form_widget(deleteCategoriesForm.delete_mode) }}
-      </div>
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\AbstractRowAction;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
-      <div class="d-none">
-        {{ form_widget(deleteCategoriesForm.categories_to_delete) }}
-      </div>
-    </div>
-  {% endblock %}
-{% endembed %}
+/**
+ * Class DeleteCategoryRowAction adds "Delete" action to row.
+ */
+final class DeleteCategoryRowAction extends AbstractRowAction
+{
+    /**
+     * {@inheritdoc}
+     */
+    public function getType()
+    {
+        return 'delete_category';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver
+            ->setRequired([
+                'category_id_field',
+            ])
+            ->setAllowedTypes('category_id_field', 'string')
+        ;
+    }
+}
