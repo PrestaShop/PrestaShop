@@ -240,6 +240,12 @@ class Product extends CommonClient {
       });
   }
 
+  UrlModification(globalVar, productName) {
+    return this.client
+      .pause(1000)
+      .then(() => global.tab[globalVar] = global.URL + "/" + (global.tab[globalVar].split("/"))[(global.tab[globalVar].split("/")).length - 1].replace(".jpg", "/" + productName + ".jpg"));
+  }
+
 }
 
 module.exports = Product;

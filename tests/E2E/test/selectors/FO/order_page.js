@@ -30,6 +30,7 @@ module.exports = {
     quantity_input: '//*[@id="main"]//li[%NUMBER]//div[contains(@class, "input-group")]//input[contains(@class, "js-cart-line-product-quantity")]',
     product_discount_details: '//*[@id="main"]//span[contains(@class, "discount")]',
     alert: '//*[@id="notifications"]//article[contains(@class, "alert-danger")]',
+    product_cart_link: '//div[@class="product-line-info"]/a',
     cart_product_discount: '//*[@id="main"]//span[contains(@class,"discount-percentage")]',
     total_cart: '//*[@id="main"]//div[contains(@class, "cart-total")]/span[@class="value"]',
     product_name: '//*[@id="main"]//li[%NUMBER]//div[@class="product-line-info"]/a',
