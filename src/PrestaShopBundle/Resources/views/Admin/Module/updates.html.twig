@@ -44,7 +44,7 @@
           <a class="btn btn-primary-reverse float-right btn-outline-primary light-button module_action_menu_upgrade_all" href="#" data-confirm_modal="module-modal-confirm-upgrade-all">{{ "Upgrade All"|trans({}, 'Admin.Modules.Feature') }}</a>
         {% endif %}
       </div>
-      {% include 'PrestaShopBundle:Admin/Module/Includes:grid_notification_update.html.twig' with { 'modules': modules, 'display_type': 'list', id: 'update', 'level' : level } %}
+      {% include 'PrestaShopBundle:Admin/Module/Includes:grid_notification_update.html.twig' with { 'modules': modules, 'display_type': 'list', id: 'update', 'level' : level, 'category': 'notification' } %}
     </div>
   </div>
 {% endblock %}
