@@ -88,7 +88,7 @@ class UpdateCategoriesStatusCommand
     private function setCategoryIds(array $categoryIds)
     {
         if (empty($categoryIds)) {
-            throw new CategoryConstraintException(sprintf('Missing categories data for status change'));
+            throw new CategoryConstraintException('Missing categories data for status change');
         }
 
         foreach ($categoryIds as $categoryId) {
