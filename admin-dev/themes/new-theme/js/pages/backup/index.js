@@ -32,7 +32,7 @@ import SubmitRowActionExtension from '../../components/grid/extension/action/row
 const $ = window.$;
 
 $(() => {
-  const backupGrid = new Grid('backup');
+  const backupGrid = new Grid('Backup');
 
   backupGrid.addExtension(new BulkActionCheckboxExtension());
   backupGrid.addExtension(new SubmitBulkExtension());
