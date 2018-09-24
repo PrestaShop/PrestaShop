@@ -45,13 +45,13 @@ final class DeleteCategoriesBulkAction extends AbstractBulkAction
     /**
      * {@inheritdoc}
      */
-    public function configureOptions(OptionsResolver $resolver)
+    protected function configureOptions(OptionsResolver $resolver)
     {
         $resolver
             ->setRequired([
-                'submit_route',
+                'categories_bulk_delete_route',
             ])
-            ->setAllowedTypes('submit_route', 'string')
+            ->setAllowedTypes('categories_bulk_delete_route', 'string')
         ;
     }
 }
