@@ -90,7 +90,7 @@ final class TopCategoryKpi implements KpiInterface
 
         $topCategory = $this->kpiConfiguration->get('TOP_CATEGORY');
 
-        if (false !== $topCategory && isset($topCategory[$this->employeeIdLang])) {
+        if (isset($topCategory[$this->employeeIdLang])) {
             $helper->value = $topCategory[$this->employeeIdLang];
         }
 

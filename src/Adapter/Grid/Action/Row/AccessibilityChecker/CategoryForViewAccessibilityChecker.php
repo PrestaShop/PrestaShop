@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Grid\Action\Row\AccessibilityChecker;
 
+use Category;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\AccessibilityChecker\AccessibilityCheckerInterface;
 
 /**
@@ -53,8 +54,8 @@ final class CategoryForViewAccessibilityChecker implements AccessibilityCheckerI
      */
     public function isGranted(array $category)
     {
-        $childrenCategories = \Category::getChildren($category['id_category'], $this->contextLangId);
+        $hasChildren = Category::getChildren($category['id_category'], $this->contextLangId);
 
-        return !empty($childrenCategories);
+        return !empty($hasChildren);
     }
 }

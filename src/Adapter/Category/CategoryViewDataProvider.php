@@ -93,10 +93,9 @@ class CategoryViewDataProvider
 
         if (empty($categoriesTree)
             && ($category->id != (int) $this->configuration->get('PS_ROOT_CATEGORY') || Tools::isSubmit('id_category'))
-            && ($this->shopContext->isShopContext()
-                && !$this->multishopFeature->isUsed()
-                && $categoriesWithoutParentCount > 1
-            )
+            && $this->shopContext->isShopContext()
+            && !$this->multishopFeature->isUsed()
+            && $categoriesWithoutParentCount > 1
         ) {
             $categoriesTree = [['name' => $category->name[$this->contextLangId]]];
         }
