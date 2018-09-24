@@ -39,7 +39,7 @@ import ShowcaseCardCloseExtension from "../../components/showcase-card/extension
 const $ = window.$;
 
 $(() => {
-  const meta = new Grid('Meta');
+  const meta = new Grid('meta');
   meta.addExtension(new ReloadListActionExtension());
   meta.addExtension(new ExportToSqlManagerExtension());
   meta.addExtension(new FiltersResetExtension());
