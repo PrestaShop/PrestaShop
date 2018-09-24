@@ -82,6 +82,8 @@ class FormHandler implements FormHandlerInterface
      */
     public function getForm()
     {
+        $this->formBuilder = $this->formBuilder->getFormFactory()->createNamedBuilder($this->hookName);
+
         foreach ($this->formTypes as $formName => $formType) {
             $this->formBuilder->add($formName, $formType);
         }
