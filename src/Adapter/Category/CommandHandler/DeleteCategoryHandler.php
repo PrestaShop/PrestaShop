@@ -40,6 +40,10 @@ final class DeleteCategoryHandler extends AbstractDeleteCategoryHandler implemen
 {
     /**
      * {@inheritdoc}
+     *
+     * @throws CategoryNotFoundException
+     * @throws CannotDeleteRootCategoryForShopException
+     * @throws FailedToDeleteCategoryException
      */
     public function handle(DeleteCategoryCommand $command)
     {

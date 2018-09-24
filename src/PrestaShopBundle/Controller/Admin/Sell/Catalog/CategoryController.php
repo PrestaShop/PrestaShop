@@ -30,7 +30,9 @@ use PrestaShop\PrestaShop\Core\Domain\Category\Command\BulkDeleteCategoriesComma
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\DeleteCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\ToggleCategoryStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\UpdateCategoriesStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotDeleteRootCategoryForShopException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotUpdateCategoryStatusException;
+use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryDeleteMode;
@@ -151,18 +153,23 @@ class CategoryController extends FrameworkBundleAdminController
         $deleteCategoriesForm->handleRequest($request);
 
         if ($deleteCategoriesForm->isSubmitted()) {
-            $categoriesDeleteData = $deleteCategoriesForm->getData();
+            try {
+                $categoriesDeleteData = $deleteCategoriesForm->getData();
 
-            $command = new BulkDeleteCategoriesCommand(
-                $categoriesDeleteData['categories_to_delete'],
-                new CategoryDeleteMode($categoriesDeleteData['delete_mode'])
-            );
+                $command = new BulkDeleteCategoriesCommand(
+                    $categoriesDeleteData['categories_to_delete'],
+                    new CategoryDeleteMode($categoriesDeleteData['delete_mode'])
+                );
 
-            $this->getCommandBus()->handle($command);
+                $this->getCommandBus()->handle($command);
 
-            $this->addFlash('success',
-                $this->trans('The selection has been successfully deleted.', 'Admin.Notifications.Success')
-            );
+                $this->addFlash(
+                    'success',
+                    $this->trans('The selection has been successfully deleted.', 'Admin.Notifications.Success')
+                );
+            } catch (CategoryException $e) {
+                $this->handleDeleteException($e);
+            }
         }
 
         return $this->redirectToRoute('admin_category_listing');
@@ -193,7 +200,7 @@ class CategoryController extends FrameworkBundleAdminController
 
                 $this->addFlash('success', $this->trans('Successful deletion.', 'Admin.Notifications.Success'));
             } catch (CategoryException $e) {
-                throw $e;
+                $this->handleDeleteException($e);
             }
         }
 
@@ -309,6 +316,47 @@ class CategoryController extends FrameworkBundleAdminController
         }
 
         return $this->trans('Failed to update the status', 'Admin.Notifications.Error');
+    }
+
+    /**
+     * Handle exception which occurred when deleting category.
+     *
+     * @param CategoryException $e
+     *
+     * @return string
+     */
+    protected function handleDeleteException(CategoryException $e)
+    {
+        $type = get_class($e);
+
+        if (CategoryConstraintException::class === $type) {
+            $constraintErrors = [
+                CategoryConstraintException::EMPTY_BULK_DELETE_DATA =>
+                    $this->trans('You must select at least one element to delete.', 'Admin.Notifications.Error'),
+            ];
+
+            if (isset($constraintErrors[$e->getCode()])) {
+                return $constraintErrors[$e->getCode()];
+            }
+        }
+
+        $errors = [
+            CategoryNotFoundException::class => sprintf(
+                '%s %s',
+                $this->trans('An error occurred while updating the status for an object.', 'Admin.Notifications.Error'),
+                $this->trans('(cannot load object)', 'Admin.Notifications.Error')
+            ),
+            CannotDeleteRootCategoryForShopException::class => $this->trans(
+                'You cannot remove this category because one of your shops uses it as a root category.',
+                'Admin.Catalog.Notification'
+            ),
+        ];
+
+        if (isset($errors[$type])) {
+            return $errors[$type];
+        }
+
+        return $this->trans('An error occurred while deleting this selection.', 'Admin.Notifications.Error');
     }
 
     /**
