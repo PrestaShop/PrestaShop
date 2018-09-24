@@ -23,15 +23,9 @@
   * International Registered Trademark & Property of PrestaShop SA
   *#}
 <div id="modules-list-container-{{ id }}" class="row modules-list" data-name="{{ id }}">
-  {% if app.request.attributes.get('_route') == 'admin_module_catalog_refresh' %}
-    {% for module in modules %}
-      {% include 'PrestaShopBundle:Admin/Module/Includes:card_grid.html.twig' with { 'module': module, 'origin': origin|default('none'), 'level' : level } %}
-    {% endfor %}
-  {% endif %}
-
   {% for index, module in modules %}
     {% block addon_card %}
-      {% include 'PrestaShopBundle:Admin/Module/Includes:card_list.html.twig' with { 'index': index, 'module': module, 'origin': origin|default('none') } %}
+      {% include 'PrestaShopBundle:Admin/Module/Includes:card_list.html.twig' with { 'index': index, 'module': module, 'origin': origin|default('none'), 'category': id } %}
     {% endblock %}
   {% endfor %}
 

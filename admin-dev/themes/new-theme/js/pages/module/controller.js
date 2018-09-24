@@ -224,11 +224,19 @@ class AdminModuleController {
 
   initBOEventRegistering() {
     window.BOEvent.on('Module Disabled', this.onModuleDisabled, this);
+    window.BOEvent.on('Module Uninstalled', this.updateTotalResults, this);
   }
 
   onModuleDisabled() {
-    this.getModuleItemSelector();
-    // Don't care nothing to do?
+    const self = this;
+    const moduleItemSelector = self.getModuleItemSelector();
+
+    $('.modules-list').each(function scanModulesList() {
+      self.updateTotalResults(
+        $(this).find(`${moduleItemSelector}:visible`).length,
+        $(this)
+      );
+    });
   }
 
   initPlaceholderMechanism() {
@@ -320,7 +328,7 @@ class AdminModuleController {
           description: $this.data('description').toLowerCase(),
           techName: $this.data('tech-name').toLowerCase(),
           childCategories: $this.data('child-categories'),
-          categories: String($this.closest('.modules-list').data('name')).toLowerCase(),
+          categories: String($this.data('categories')).toLowerCase(),
           type: $this.data('type'),
           price: parseFloat($this.data('price')),
           active: parseInt($this.data('active'), 10),
@@ -505,6 +513,8 @@ class AdminModuleController {
     if (self.currentTagsList.length) {
       $('.modules-list').append(this.currentDisplay === self.DISPLAY_GRID ? this.addonsCardGrid : this.addonsCardList);
     }
+
+    self.updateTotalResults();
   }
 
   initPageChangeProtection() {
@@ -1123,6 +1133,44 @@ class AdminModuleController {
       $(self.seeMoreSelector).removeClass('d-none');
       self.updateModuleVisibility();
     });
+  }
+
+  updateTotalResults() {
+    // If there are some shortlist: each shortlist count the modules on the next container.
+    const $shortLists = $('.module-short-list');
+    if ($shortLists.length > 0) {
+      $shortLists.each(function shortLists() {
+        const $this = $(this);
+        updateText(
+          $this.find('.module-search-result-wording'),
+          $this.next('.modules-list').find('.module-item').length
+        );
+      });
+
+      // If there is no shortlist: the wording directly update from the only module container.
+    } else {
+      const modulesCount = $('.modules-list').find('.module-item').length;
+      updateText($('.module-search-result-wording'), modulesCount);
+
+      if (self.currentDisplay === self.DISPLAY_LIST) {
+        $(this.addonItemListSelector).toggle(modulesCount !== (this.modulesList.length / 2));
+      } else {
+        $(this.addonItemGridSelector).toggle(modulesCount !== (this.modulesList.length / 2));
+      }
+
+      if (modulesCount === 0) {
+        $('.module-addons-search-link').attr(
+          'href',
+          `${this.bsaeAddonsUrl}search.php?search_query=${encodeURIComponent(this.currentTagsList.join(' '))}`
+        );
+      }
+    }
+
+    function updateText(element, value) {
+      const explodedText = element.text().split(' ');
+      explodedText[0] = value;
+      element.text(explodedText.join(' '));
+    }
   }
 }
 

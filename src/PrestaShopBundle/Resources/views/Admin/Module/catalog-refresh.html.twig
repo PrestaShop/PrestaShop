@@ -22,6 +22,10 @@
   * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
   * International Registered Trademark & Property of PrestaShop SA
   *#}
-{% for category in categories.subMenu %}
-  {% include 'PrestaShopBundle:Admin/Module/Includes:grid.html.twig' with { 'modules': category.modules, 'display_type': 'grid', 'id': category.refMenu } %}
-{% endfor %}
+<div id="modules-list-container-all" class="row modules-list" style="display: flex;" data-name="all">
+  {% for category in categories.subMenu %}
+    {% for module in category.modules %}
+      {% include 'PrestaShopBundle:Admin/Module/Includes:card_grid.html.twig' with { 'module': module, 'origin': origin|default('none'), 'level' : level, 'category': category.refMenu } %}
+    {% endfor %}
+  {% endfor %}
+</div>

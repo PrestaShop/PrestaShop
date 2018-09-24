@@ -7,7 +7,7 @@ module.exports = {
     close_modal_button: '//*[@id="module-modal-import-closing-cross"]',
     search_input: 'div.pstaggerAddTagWrapper > input',
     search_button: '.btn.btn-primary.pull-right.search-button',
-    page_loaded: '.module-search-result-wording',
+    page_loaded: '.module-search-result-title',
     modules_search_input: '.pstaggerAddTagInput',
     module_selection_input: '//input[contains(@class,"pstaggerAddTagInput ")]',
     modules_search_button: '//*[@id="main-div"]//button[contains(@class,"search-button")]',
