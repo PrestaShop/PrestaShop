@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Column\Type\Catalog\Category;
+namespace PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\Category;
 
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\AbstractRowAction;
 use Symfony\Component\OptionsResolver\OptionsResolver;
