@@ -741,7 +741,7 @@ class AdminModuleController {
     self.animateEndUpload(() => {
       if (result.status === true) {
         if (result.is_configurable === true) {
-          const configureLink = window.moduleURLs.configurationPage.replace('1', result.module_name);
+          const configureLink = window.moduleURLs.configurationPage.replace(/:number:/, result.module_name);
           $(self.moduleImportSuccessConfigureBtnSelector).attr('href', configureLink);
           $(self.moduleImportSuccessConfigureBtnSelector).show();
         }
