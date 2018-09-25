@@ -71,7 +71,15 @@
             <div>
               <figure class="figure">
                 <img src="{{ coverImage.path }}" class="figure-img img-fluid img-thumbnail">
-                <figcaption class="figure-caption">{{ 'File size'|trans }} {{ coverImage.size }}</figcaption>
+                <figcaption class="figure-caption">
+                  <p>{{ 'File size'|trans }} {{ coverImage.size }}</p>
+                  <button class="btn btn-outline-danger btn-sm">
+                    <i class="material-icons">
+                      delete_forever
+                    </i>
+                    {{ 'Delete'|trans({}, 'Admin.Actions') }}
+                  </button>
+                </figcaption>
               </figure>
             </div>
           {% endif %}
@@ -97,6 +105,25 @@
       <div class="form-group row">
         {{ ps.label_with_help(('Menu thumbnails'|trans), ('The category thumbnail appears in the menu as a small image representing the category, if the theme allows it.'|trans({}, 'Admin.Catalog.Help'))) }}
         <div class="col-sm">
+          {% if menuThumbnailImages is defined %}
+            <div>
+              {% for menuThumbnail in menuThumbnailImages %}
+                <figure class="figure">
+                  <img src="{{ menuThumbnail.path }}" class="figure-img img-fluid img-thumbnail">
+                  <figcaption class="figure-caption">
+                    <button class="btn btn-outline-danger btn-sm">
+                      <i class="material-icons">
+                        delete_forever
+                      </i>
+                      {{ 'Delete'|trans({}, 'Admin.Actions') }}
+                    </button>
+                  </figcaption>
+                </figure>
+              {% endfor %}
+            </div>
+
+          {% endif %}
+
           {{ form_widget(categoryForm.menu_thumbnail_images) }}
         </div>
       </div>
