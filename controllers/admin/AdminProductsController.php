@@ -4318,7 +4318,9 @@ class AdminProductsControllerCore extends AdminController
                     $attributes = Attribute::getAttributes($this->context->language->id, true);
                     foreach ($attributes as $k => $attribute) {
                         $attribute_js[$attribute['id_attribute_group']][$attribute['id_attribute']] = $attribute['name'];
-                        natsort($attribute_js[$attribute['id_attribute_group']]);
+                    }
+                    foreach (array_keys($attribute_js) as $id_attribute_group) {
+                        natsort($attribute_js[$id_attribute_group]);
                     }
 
                     $currency = $this->context->currency;
