@@ -490,6 +490,7 @@ class CategoryController extends FrameworkBundleAdminController
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Categories/add.html.twig', [
             'categoryForm' => $categoryAddForm->createView(),
             'defaultGroups' => $defaultGroups,
+            'layoutTitle' => $this->trans('Add new', 'Admin.Actions'),
         ]);
     }
 
@@ -544,6 +545,7 @@ class CategoryController extends FrameworkBundleAdminController
         }
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Categories/add_root.html.twig', [
+            'layoutTitle' => $this->trans('Add new', 'Admin.Actions'),
             'rootCategoryForm' => $rootCategoryForm->createView(),
             'defaultGroups' => $defaultGroups,
         ]);
@@ -609,6 +611,13 @@ class CategoryController extends FrameworkBundleAdminController
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Categories/edit.html.twig', [
             'contextLangId' => $this->getContextLangId(),
+            'layoutTitle' => $this->trans(
+                'Edit: %value%',
+                'Admin.Catalog.Feature',
+                [
+                    '%value%' => $editableCategory->getName()[$this->getContextLangId()],
+                ]
+            ),
             'editCategoryForm' => $categoryForm->createView(),
             'editableCategory' => $editableCategory,
             'defaultGroups' => $defaultGroups,

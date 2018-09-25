@@ -432,4 +432,12 @@ class FrameworkBundleAdminController extends Controller
 
         return $response;
     }
+
+    /**
+     * @return int
+     */
+    protected function getContextLangId()
+    {
+        return $this->getContext()->language->id;
+    }
 }
