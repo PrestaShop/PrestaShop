@@ -67,11 +67,11 @@
       <div class="form-group row">
         {{ ps.label_with_help(('Category Cover Image'|trans), ('This is the main image for your category, displayed in the category page. The category description will overlap this image and appear in its top-left corner.'|trans({}, 'Admin.Catalog.Help'))) }}
         <div class="col-sm">
-          {% if thumbnailImage is defined %}
+          {% if coverImage is defined %}
             <div>
               <figure class="figure">
-                <img src=">{{ thumbnailImage.file.pathname }}" class="figure-img img-fluid">
-                <figcaption class="figure-caption">{{ thumbnailImage.file.pathname }}</figcaption>
+                <img src="{{ coverImage.path }}" class="figure-img img-fluid img-thumbnail">
+                <figcaption class="figure-caption">{{ 'File size'|trans }} {{ coverImage.size }}</figcaption>
               </figure>
             </div>
           {% endif %}
@@ -82,6 +82,15 @@
       <div class="form-group row">
         {{ ps.label_with_help(('Category thumbnail'|trans), ('Displays a small image in the parent category\'s page, if the theme allows it.'|trans({}, 'Admin.Catalog.Help'))) }}
         <div class="col-sm">
+          {% if thumbnailImage is defined %}
+            <div>
+              <figure class="figure">
+                <img src="{{ thumbnailImage.path }}" class="figure-img img-fluid img-thumbnail">
+                <figcaption class="figure-caption">{{ 'File size'|trans }} {{ thumbnailImage.size }}</figcaption>
+              </figure>
+            </div>
+          {% endif %}
+
           {{ form_widget(categoryForm.thumbnail_image) }}
         </div>
       </div>

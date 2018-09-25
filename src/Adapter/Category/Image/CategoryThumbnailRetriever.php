@@ -27,9 +27,26 @@
 namespace PrestaShop\PrestaShop\Adapter\Category\Image;
 
 use ImageManager;
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
 
+/**
+ * Class CategoryThumbnailRetriever.
+ */
 class CategoryThumbnailRetriever
 {
+    /**
+     * @var LegacyContext
+     */
+    private $legacyContext;
+
+    /**
+     * @param LegacyContext $legacyContext
+     */
+    public function __construct(LegacyContext $legacyContext)
+    {
+        $this->legacyContext = $legacyContext;
+    }
+
     /**
      * @param int $categoryId
      *
@@ -43,14 +60,20 @@ class CategoryThumbnailRetriever
         $imagePath = $this->getImagePath($categoryId, $imageType, $imageDir);
 
         $thumbnailCachedImageName = $this->makeCachedImageName($categoryId, $imageType, $tableName);
-        ImageManager::thumbnail(
+        $imageTag = ImageManager::thumbnail(
             $imagePath,
             $thumbnailCachedImageName,
             45,
             $imageType
         );
 
-        return ImageManager::getThumbnailPath($thumbnailCachedImageName, false);
+        // because legacy uses relative path to reach a directory under root directory...
+        $replacement = 'src="' . $this->legacyContext->getRootUrl();
+        $imageTag = preg_replace('/src="(\\.\\.\\/)+/', $replacement, $imageTag);
+
+        preg_match( '@src="([^"]+)"@' , $imageTag, $path );
+
+        return $path[1];
     }
 
     /**
