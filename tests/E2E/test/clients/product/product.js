@@ -107,8 +107,8 @@ class Product extends CommonClient {
     return this.client
       .scrollTo(AddProductPage.product_add_feature_btn, 150)
       .waitForExistAndClick(AddProductPage.product_add_feature_btn)
-      .waitForExistAndClick(AddProductPage.feature_select_button)
-      .waitForExistAndClick(AddProductPage.feature_select_option_height)
+      .waitForExistAndClick(AddProductPage.feature_select_button1)
+      .waitForExistAndClick(AddProductPage.feature_select_option_height1)
       .waitAndSetValue(AddProductPage.feature_custom_value_height, data.standard.features.feature1.custom_value);
   }
 
@@ -285,6 +285,30 @@ class Product extends CommonClient {
     }
   }
 
+  checkProductCategory(i) {
+    return this.client
+      .scrollWaitForExistAndClick(ProductList.product_name_link.replace("%ID", global.positionTable[i - 1], 50000))
+      .waitForVisible(AddProductPage.product_name_input)
+      .scrollWaitForExistAndClick(AddProductPage.expand_categories_button)
+  }
+
+  getSubCategoryNumber(i) {
+    return this.client
+      .execute(function (i) {
+        let count;
+        try {
+          count = document.getElementById('choice_tree').getElementsByTagName("ul")[i + 1].children.length;
+          return count;
+        }
+        catch (err) {
+          count = 0;
+          return count;
+        }
+      }, i)
+      .then((count) => {
+        global.subCatNumber = count.value;
+      })
+  }
 }
 
 module.exports = Product;
