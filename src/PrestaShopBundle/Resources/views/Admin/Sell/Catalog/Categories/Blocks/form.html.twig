@@ -40,6 +40,12 @@
         {{ ps.label_with_help(('Displayed'|trans({}, 'Admin.Global')), ('Click on "Displayed" to index the category on your shop.'|trans({}, 'Admin.Catalog.Help'))) }}
         <div class="col-sm">
           {{ form_widget(categoryForm.active) }}
+          <small class="form-text">
+            {{ 'If you want a category to appear in the menu of your shop, go to [1]Modules > Modules & Services > Installed modules.[/1] Then, configure your menu module.'|trans({
+              '[1]': '<a href="' ~ path('admin_module_manage') ~ '" class="_blank">',
+              '[/1]': '</a>'
+            }, 'Admin.Catalog.Help')|raw }}
+          </small>
         </div>
       </div>
       {% if categoryForm.id_parent is defined %}
