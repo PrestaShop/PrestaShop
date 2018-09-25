@@ -61,14 +61,30 @@ class FormHandler implements FormHandlerInterface
      */
     protected $formTypes;
 
+    /**
+     * @var string the form name
+     */
+    protected $formName;
+
+    /**
+     * FormHandler constructor.
+     * @param FormBuilderInterface $formBuilder
+     * @param HookDispatcherInterface $hookDispatcher
+     * @param FormDataProviderInterface $formDataProvider
+     * @param array $formTypes
+     * @param string $hookName
+     * @param string $formName
+     */
     public function __construct(
         FormBuilderInterface $formBuilder,
         HookDispatcherInterface $hookDispatcher,
         FormDataProviderInterface $formDataProvider,
         array $formTypes,
-        $hookName
+        $hookName,
+        $formName = 'form'
     ) {
-        $this->formBuilder = $formBuilder;
+        $this->formName = $formName;
+        $this->formBuilder = $formBuilder->getFormFactory()->createNamedBuilder($formName);
         $this->hookDispatcher = $hookDispatcher;
         $this->formDataProvider = $formDataProvider;
         $this->formTypes = $formTypes;
@@ -82,8 +98,6 @@ class FormHandler implements FormHandlerInterface
      */
     public function getForm()
     {
-        $this->formBuilder = $this->formBuilder->getFormFactory()->createNamedBuilder($this->hookName);
-
         foreach ($this->formTypes as $formName => $formType) {
             $this->formBuilder->add($formName, $formType);
         }

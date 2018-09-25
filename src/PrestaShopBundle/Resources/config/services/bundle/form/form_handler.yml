@@ -164,7 +164,7 @@ services:
             - '@prestashop.adapter.order.delivery.slip.options.form_provider'
             -
               'options': 'PrestaShopBundle\Form\Admin\Sell\Order\Delivery\SlipOptionsType'
-            - 'OrderDeliverySlipPage'
+            - 'OrderDeliverySlipOptions'
 
     prestashop.adapter.order.delivery.slip.pdf.form_handler:
         class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
@@ -174,7 +174,8 @@ services:
             - '@prestashop.adapter.order.delivery.slip.pdf.form_provider'
             -
               'pdf': 'PrestaShopBundle\Form\Admin\Sell\Order\Delivery\SlipPdfType'
-            - 'OrderDeliverySlipPage'
+            - 'OrderDeliverySlipPdf'
+            - 'slip_pdf_form'
 
     prestashop.admin.geolocation.form_handler:
         class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
