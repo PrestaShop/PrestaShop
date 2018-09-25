@@ -11,11 +11,14 @@ module.exports = {
     save_value_button: '//*[@id="feature_value_form_submit_btn"]',
     select_option: '//*[@id="table-feature"]//button[@data-toggle="dropdown"]',
     update_feature_button: '//*[@id="table-feature"]//a[@class="edit"]',
-    update_feature_value_button: '//*[@id="table-feature_value"]//a[contains(@class, "edit")]',
+    update_feature_value_button: '(//*[@id="table-feature_value"]//a[contains(@class, "edit")])[%ID]',
     delete_feature: '//*[@id="table-feature"]//a[@class="delete"]',
     reset_button: '//*[@id="table-feature"]//button[@name="submitResetfeature"]',
     feature_checkbox: '//*[@id="table-feature"]//input[@type="checkbox"]',
     feature_bulk_actions: '//*[@id="bulk_action_menu_feature"]',
-    feature_delete_bulk_action: '//*[@id="form-feature"]//div[contains(@class,"bulk-actions")]//li[4]/a'
+    feature_delete_bulk_action: '//*[@id="form-feature"]//div[contains(@class,"bulk-actions")]//li[4]/a',
+    save_then_add_another_value_button:'//*[@name="submitAddfeature_valueAndStay"]',
+    dropdown_option: '(//*[@id="table-feature_value"]//td[4]//button)[%ID]',
+    delete_btn:'(//*[@id="table-feature_value"]//td[4]//a[contains(@onclick,"Delete")])[1]'
   }
 };
