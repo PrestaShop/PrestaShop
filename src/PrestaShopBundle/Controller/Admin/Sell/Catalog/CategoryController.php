@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Category\Command\ToggleCategoryStatusComma
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotDeleteRootCategoryForShopException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotUpdateCategoryStatusException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Category\Command\AbstractAddCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddRootCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\EditableCategory;
@@ -625,6 +626,7 @@ class CategoryController extends FrameworkBundleAdminController
     }
 
     /**
+<<<<<<< HEAD
      * Show and process category editing.
      *
      * @param int $categoryId
@@ -791,5 +793,48 @@ class CategoryController extends FrameworkBundleAdminController
         }
 
         return $this->trans('Unexpected error occurred', 'Admin.Notifications.Error');
+    }
+
+    /**
+     * @param AbstractAddCategoryCommand $command
+     * @param array $data
+     */
+    protected function fillCommandWithFormData(AbstractAddCategoryCommand $command, array $data)
+    {
+        if (isset($data['description'])) {
+            $command->setDescription($data['description']);
+        }
+
+        if (isset($data['meta_title'])) {
+            $command->setMetaTitle($data['meta_title']);
+        }
+
+        if (isset($data['meta_description'])) {
+            $command->setMetaDescription($data['meta_description']);
+        }
+
+        if (isset($data['meta_keyword'])) {
+            $command->setMetaKeywords($data['meta_keyword']);
+        }
+
+        if (isset($data['group_association'])) {
+            $command->setAssociatedGroupIds($data['group_association']);
+        }
+
+        if (isset($data['shop_association'])) {
+            $command->setAssociatedShopIds($data['shop_association']);
+        }
+
+        if (isset($data['cover_image'])) {
+            $command->setCoverImage($data['cover_image']);
+        }
+
+        if (isset($data['thumbnail_image'])) {
+            $command->setThumbnailImage($data['thumbnail_image']);
+        }
+
+        if (isset($data['menu_thumbnail_images'])) {
+            $command->setMenuThumbnailImages($data['menu_thumbnail_images']);
+        }
     }
 }
