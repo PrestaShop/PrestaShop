@@ -109,6 +109,10 @@ final class GetCategoryForEditingHandler implements GetCategoryForEditingHandler
 
         $imageSize = file_exists($image) ? filesize($image) / 1000 : '';
 
+        if (empty($imageTag) || empty($imageSize)) {
+            return null;
+        }
+
         return [
             'size' => sprintf('%skb', $imageSize),
             'path' => $this->imageTagSourceParser->parse($imageTag),
@@ -126,6 +130,7 @@ final class GetCategoryForEditingHandler implements GetCategoryForEditingHandler
         $imageTypes = ImageType::getImagesTypes('categories');
 
         $thumb = '';
+        $imageTag = '';
         $formatted_small = ImageType::getFormattedName('small');
         foreach ($imageTypes as $k => $image_type) {
             if ($formatted_small == $image_type['name']) {
@@ -150,6 +155,10 @@ final class GetCategoryForEditingHandler implements GetCategoryForEditingHandler
         }
 
         $thumbSize = file_exists($thumb) ? filesize($thumb) / 1000 : false;
+
+        if (empty($imageTag) || false === $thumbSize) {
+            return null;
+        }
 
         return [
             'size' => sprintf('%skb', $thumbSize),
