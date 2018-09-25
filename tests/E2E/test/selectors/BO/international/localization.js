@@ -1,10 +1,22 @@
 module.exports = {
   Localization: {
     Localization: {
-      pack_select: '//*[@id="import_localization_pack_iso_localization_pack"]',
-      pack_search_input: '//*[@id="import_localization_pack_iso_localization_pack"]//div[@class="chosen-search"]//input',
-      pack_option: '//*[@id="import_localization_pack_iso_localization_pack"]//ul[@class="chosen-results"]//li',
-      import_button: '//*[@name="import_localization_pack"]//div[@class="card-footer"]//button'
+      pack_select: '//*[@id="select2-import_localization_pack_iso_localization_pack-container"]',
+      pack_search_input: '/html//input[@class="select2-search__field"]',
+      pack_option: '//*[@id="select2-import_localization_pack_iso_localization_pack-results"]//li[contains(text(),"%B")]',
+      import_button: '//*[@id="main-div"]//form[@name="import_localization_pack"]//button',
+      advanced_language_identifier_input: '//*[@id="form_advanced_language_identifier"]',
+      advanced_country_identifier_input: '//*[@id="form_advanced_country_identifier"]',
+      advanced_save_button: '(//*[@id="main-div"]//div[@class="card"])[4]//button',
+      alert_panel: '//*[@id="main-div"]//div[contains(@class, "%B")]',
+      success_alert_panel: '//*[@id="main-div"]//div[contains(@class, "%B") and @role="alert"]/div[@class="alert-text"]',
+      configuration_selected_option: '//*[@id="%ID"]/option[@selected="selected"]',
+      language_name_input: '//*[@id="table-lang"]//input[@name="langFilter_name"]',
+      search_button: '//*[@id="submitFilterButtonlang"]',
+      language_column: '//*[@id="table-lang"]//td[%ID]',
+      reset_button: '//*[@id="table-lang"]//button[@name="submitResetlang"]',
+      download_pack_data_toggle_button: '//*[@id="main-div"]//form[@name="import_localization_pack"]//span[@class="ps-switch"]/label',
+      content_import_checkbox: '//*[@id="import_localization_pack_content_to_import_%B"]'
     },
     languages: {
       add_new_language_button: '//*[@id="page-header-desc-lang-new_language"]',
@@ -25,6 +37,31 @@ module.exports = {
       dropdown_button: '//*[@id="table-lang"]/tbody//button[@data-toggle="dropdown"]',
       delete_button: '//*[@id="table-lang"]/tbody//a[@title="Delete"]',
       reset_button: '//*[@id="table-lang"]//button[contains(@name, "Reset")]'
+    },
+    Currencies: {
+      new_currency_button: '//*[@id="page-header-desc-currency-new_currency"]',
+      currency_select: '//*[@id="iso_code"]',
+      exchange_rate_input: '//*[@id="conversion_rate"]',
+      status_currency_toggle_button: '//*[@id="currencyStatus"]',
+      save_button: '//*[@id="currency_form_submit_btn"]',
+      success_danger_panel: '//*[@id="content"]/div[@class="bootstrap"]/div[contains(@class, "%B")]',
+      search_iso_code_input: '(//*[@id="table-currency"]//input[@name="currencyFilter_iso_code"])[1]',
+      search_button: '//*[@id="submitFilterButtoncurrency"]',
+      reset_button: '//*[@id="table-currency"]//button[@name="submitResetcurrency"]',
+      currency_number_span: '//*[@id="form-currency"]//span[@class="badge"]',
+      currency_iso_code_column: '//*[@id="table-currency"]//tbody/tr[%ID]/td[3]',
+      sort_icon: '//*[@id="table-currency"]//span[contains(text(),"%B")]/a[%W]',
+      currency_exchange_rate: '//*[@id="table-currency"]//tbody/tr[%ID]/td[4]',
+      enabled_select: '//*[@id="table-currency"]//select[@name="currencyFilter_active"]',
+      search_no_results: '//*[@id="table-currency"]//td[@class="list-empty"]',
+      check_icon: '//*[@id="table-currency"]//tr[%ID]/td[5]/a/i[@class="%ICON"]',
+      edit_button: '//*[@id="table-currency"]//td[6]/div/div',
+      cancel_button: '//*[@id="currency_form_cancel_btn"]',
+      table_currencies: '//*[@id="table-currency"]',
+      action_button: '//*[@id="table-currency"]//div[contains(@class, "pull-right")]/button[contains(@class, "dropdown-toggle")]',
+      delete_action_button: '//*[@id="form-currency"]//a[contains(@onclick, "Delete selected")]',
+      live_exchange_rate_toggle_button: '//*[@id="currencyCronjobLiveExchangeRate"]//div[contains(@class, "checkbox titatoggl")]',
+      update_exchange_rate_button: '//*[@id="currency_form"]/button[@name="SubmitExchangesRates"]'
     }
   }
 };
