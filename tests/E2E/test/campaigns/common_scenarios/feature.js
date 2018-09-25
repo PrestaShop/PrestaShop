@@ -14,7 +14,7 @@ let promise = Promise.resolve();
  *
  */
 module.exports = {
-  createFeature(data) {
+  createFeature(data, dataValueNumber) {
     scenario('Create a new "Feature"', client => {
       test('should go to "Attributes & Features" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.attributes_features_submenu));
       test('should click on "Feature" subtab', () => client.waitForExistAndClick(Menu.Sell.Catalog.feature_tab));
@@ -25,9 +25,15 @@ module.exports = {
       test('should search for the created feature', () => client.searchByValue(FeatureSubMenu.search_input.replace('%SEARCHBY', 'name'), FeatureSubMenu.search_button, data.name + date_time));
       test('should select the created feature', () => client.waitForExistAndClick(FeatureSubMenu.selected_feature));
       test('should click on "Add new feature value" button', () => client.waitForExistAndClick(FeatureSubMenu.add_value_button));
-      test('should set the "Value" input', () => client.waitAndSetValue(FeatureSubMenu.value_input, data.values[1]));
-      test('should click on "Save" button', () => client.waitForExistAndClick(FeatureSubMenu.save_value_button));
-      test('should verify the appearance of the green validation', () => client.checkTextValue(CatalogPage.success_panel, '×\nSuccessful creation.'));
+      for (let i = 0; i < dataValueNumber; i++) {
+        test('should set the "Value" input', () => client.waitAndSetValue(FeatureSubMenu.value_input, data.values[i]));
+        if (i === dataValueNumber - 1) {
+          test('should click on "Save" button', () => client.waitForExistAndClick(FeatureSubMenu.save_value_button));
+          test('should verify the appearance of the green validation', () => client.checkTextValue(CatalogPage.success_panel, '×\nSuccessful creation.'));
+        } else {
+          test('should click on "Save then add another value" button', () => client.waitForExistAndClick(FeatureSubMenu.save_then_add_another_value_button));
+        }
+      }
     }, 'attribute_and_feature');
   },
   checkFeatureInFO(productName, data) {
@@ -36,10 +42,12 @@ module.exports = {
       test('should search for the product', () => client.searchByValue(SearchProductPage.search_input, SearchProductPage.search_button, productName + date_time));
       test('should go to the product page', () => client.waitForExistAndClick(SearchProductPage.product_result_name));
       test('should check the feature name', () => client.checkTextValue(SearchProductPage.feature_name, data.name + date_time));
-      test('should check the feature value', () => client.checkTextValue(SearchProductPage.feature_value, data.values[1]));
+      test('should check the feature first value', () => client.checkTextValue(SearchProductPage.feature_value, data.values[0], 'contain'));
+      test('should check the feature second value', () => client.checkTextValue(SearchProductPage.feature_value, data.values[1], 'contain'));
+      test('should check the feature third value', () => client.checkTextValue(SearchProductPage.feature_value, data.values[2], 'contain'));
     }, 'attribute_and_feature');
   },
-  updateFeature(data) {
+  updateFeature(data, dataValueNumbers) {
     scenario('Update the created "Feature"', client => {
       test('should go to "Attributes & Features" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.attributes_features_submenu));
       test('should click on "Feature" subtab', () => client.waitForExistAndClick(Menu.Sell.Catalog.feature_tab));
@@ -53,12 +61,29 @@ module.exports = {
       test('should click on "Save" button', () => client.waitForExistAndClick(FeatureSubMenu.save_button));
       test('should verify the appearance of the green validation', () => client.checkTextValue(CatalogPage.success_panel, '×\nSuccessful update.'));
       test('should click on "Reset" button', () => client.waitForExistAndClick(FeatureSubMenu.reset_button));
-      test('should search for the updated feature', () => client.searchByValue(FeatureSubMenu.search_input.replace('%SEARCHBY', 'name'), FeatureSubMenu.search_button, data.name + date_time));
+      for (let i = 0; i < dataValueNumbers; i++) {
+        test('should search for the updated feature', () => client.searchByValue(FeatureSubMenu.search_input.replace('%SEARCHBY', 'name'), FeatureSubMenu.search_button, data.name + date_time));
+        test('should select the feature', () => client.waitForExistAndClick(FeatureSubMenu.selected_feature));
+        test('should click on "Edit" action', () => client.waitForExistAndClick(FeatureSubMenu.update_feature_value_button.replace('%ID', i + 1)));
+        test('should set the "Value" input', () => client.waitAndSetValue(FeatureSubMenu.value_input, data.values[i]));
+        test('should click on "Save" button', () => client.waitForExistAndClick(FeatureSubMenu.save_value_button));
+        test('should verify the appearance of the green validation', () => client.checkTextValue(CatalogPage.success_panel, '×\nSuccessful update.'));
+      }
+    }, 'attribute_and_feature');
+  },
+  deleteValue(data) {
+    scenario('Delete the created "Feature"', client => {
+      test('should go to "Attributes & Features" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.attributes_features_submenu));
+      test('should click on "Feature" subtab', () => client.waitForExistAndClick(Menu.Sell.Catalog.feature_tab));
+      test('should search for the created feature', () => client.searchByValue(FeatureSubMenu.search_input.replace('%SEARCHBY', 'name'), FeatureSubMenu.search_button, data.name + date_time));
       test('should select the feature', () => client.waitForExistAndClick(FeatureSubMenu.selected_feature));
-      test('should click on "Edit" action', () => client.waitForExistAndClick(FeatureSubMenu.update_feature_value_button));
-      test('should set the "Value" input', () => client.waitAndSetValue(FeatureSubMenu.value_input, data.values[1]));
-      test('should click on "Save" button', () => client.waitForExistAndClick(FeatureSubMenu.save_value_button));
-      test('should verify the appearance of the green validation', () => client.checkTextValue(CatalogPage.success_panel, '×\nSuccessful update.'));
+      test('should click on "dropdown icon" action', () => client.waitForExistAndClick(FeatureSubMenu.dropdown_option.replace('%ID', 1)));
+      test('should click on "delete" btn', () => {
+        return promise
+          .then(() => client.waitForVisibleAndClick(FeatureSubMenu.delete_button))
+          .then(() => client.alertAccept());
+      });
+      test('should verify the appearance of the green validation', () => client.checkTextValue(CatalogPage.success_panel, '×\nSuccessful deletion.'));
     }, 'attribute_and_feature');
   },
   deleteFeature(data) {
@@ -68,6 +93,14 @@ module.exports = {
       test('should search for the created feature', () => client.searchByValue(FeatureSubMenu.search_input.replace('%SEARCHBY', 'name'), FeatureSubMenu.search_button, data.name + date_time));
       test('should delete the created feature', () => client.clickOnAction(FeatureSubMenu.select_option, FeatureSubMenu.delete_feature, 'delete'));
       test('should verify the appearance of the green validation', () => client.checkTextValue(CatalogPage.success_panel, '×\nSuccessful deletion.'));
+    }, 'attribute_and_feature');
+  },
+  checkDeletedValueInFO(productName, data) {
+    scenario('Check that the feature first value does not exist in the Front Office', client => {
+      test('should set the shop language to "English"', () => client.changeLanguage());
+      test('should search for the product', () => client.searchByValue(SearchProductPage.search_input, SearchProductPage.search_button, productName + date_time));
+      test('should go to the product page', () => client.waitForExistAndClick(SearchProductPage.product_result_name));
+      test('should check the feature first value', () => client.checkTextValue(SearchProductPage.feature_value, data.values[0], 'notequal'));
     }, 'attribute_and_feature');
   },
   checkDeletedFeatureInFO(productName) {

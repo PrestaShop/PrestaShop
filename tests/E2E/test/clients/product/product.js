@@ -126,13 +126,13 @@ class Product extends CommonClient {
       .waitForExistAndClick(addProductPage.save_quantitie_button);
   }
 
-  selectFeature(addProductPage, name, value) {
+  selectFeature(addProductPage, name, value, number) {
     return this.client
-      .scrollWaitForExistAndClick(addProductPage.feature_select)
+      .scrollWaitForExistAndClick(addProductPage.feature_select.replace('%NUMBER', number + 1))
       .waitAndSetValue(addProductPage.select_feature_created, name)
-      .waitForExistAndClick(addProductPage.result_feature_select.replace('%ID', 0))
-      .pause(2000)
-      .selectByVisibleText(addProductPage.feature_value_select, value);
+      .waitForVisibleAndClick(addProductPage.result_feature_select.replace('%ID', number))
+      .pause(4000)
+      .selectByVisibleText(addProductPage.feature_value_select.replace('%ID', number), value);
   }
 
   clickNextOrPrevious(selector) {
