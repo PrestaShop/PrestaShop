@@ -505,6 +505,7 @@ class CommonClient {
     return deca[Math.floor(number / 10) - 2] + 'y-' + special[number % 10];
   }
 
+
   /**
    * This function searches the data in the table in case a filter input exists
    * @param selector
@@ -538,8 +539,9 @@ class CommonClient {
     }
   }
 
-  refresh() {
+  deleteCookie() {
     return this.client
+      .deleteCookie()
       .refresh();
   }
 

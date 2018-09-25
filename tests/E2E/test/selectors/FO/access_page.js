@@ -47,6 +47,7 @@ module.exports = {
     display_top_link_widget:'//*[@id="header"]/div[2]/div/div[1]/div[2]/div[3]/div//p[contains(text(),"%DISPLAYTOP")]',
     second_display_top_link_widget:'//*[@id="header"]/div[2]/div/div[1]/div[2]/div[3]/div/div[2]/p',
     not_found_error_message: '//*[@id="main"]//h1',
-    product_name: '//*[@id="js-product-list"]//h2//a[contains(text(),"%PAGENAME")]'
+    product_name: '//*[@id="js-product-list"]//h2//a[contains(text(),"%PAGENAME")]',
+    personal_info: '//*[@id="footer_account_list"]//a[@title="Personal info"]'
   }
 };
