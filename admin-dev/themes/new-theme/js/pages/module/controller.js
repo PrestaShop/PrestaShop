@@ -1133,6 +1133,12 @@ class AdminModuleController {
   }
 
   updateTotalResults() {
+    const updateText = (element, value) => {
+      const explodedText = element.text().split(' ');
+      explodedText[0] = value;
+      element.text(explodedText.join(' '));
+    };
+
     // If there are some shortlist: each shortlist count the modules on the next container.
     const $shortLists = $('.module-short-list');
     if ($shortLists.length > 0) {
@@ -1161,12 +1167,6 @@ class AdminModuleController {
         );
       }
     }
-
-    const updateText = (element, value) => {
-      const explodedText = element.text().split(' ');
-      explodedText[0] = value;
-      element.text(explodedText.join(' '));
-    };
   }
 }
 
