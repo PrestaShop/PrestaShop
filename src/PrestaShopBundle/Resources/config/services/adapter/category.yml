@@ -19,6 +19,18 @@ services:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Category\Command\UpdateCategoriesStatusCommand
 
+  prestashop.adapter.category.command_handler.enable_categories_status_handler:
+    class: PrestaShop\PrestaShop\Adapter\Category\CommandHandler\UpdateCategoriesStatusHandler
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\Category\Command\EnableCategoriesCommand
+
+  prestashop.adapter.category.command_handler.disable_categories_status_handler:
+    class: PrestaShop\PrestaShop\Adapter\Category\CommandHandler\UpdateCategoriesStatusHandler
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\Category\Command\DisableCategoriesCommand
+
   prestashop.adapter.category.command_handler.toggle_category_status_handler:
     class: PrestaShop\PrestaShop\Adapter\Category\CommandHandler\ToggleCategoryStatusHandler
     tags:
