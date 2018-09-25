@@ -38,8 +38,19 @@ use PrestaShopBundle\Form\Admin\Catalog\Category\RootCategoryType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Class CategoryController handles "Sell > Catalog > Categories" pages.
+ */
 class CategoryController extends FrameworkBundleAdminController
 {
+    /**
+     * Show "Add new" form and handle form submit.
+     *
+     * @param Request $request
+     *
+     * @return Response
+     * @throws CategoryException
+     */
     public function addAction(Request $request)
     {
         $categoryCreateForm = $this->createForm(CategoryType::class);
@@ -104,6 +115,7 @@ class CategoryController extends FrameworkBundleAdminController
         }
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Categories/add.html.twig', [
+            'layoutTitle' => $this->trans('Add new', 'Admin.Actions'),
             'categoryForm' => $categoryCreateForm->createView(),
         ]);
     }
@@ -137,6 +149,7 @@ class CategoryController extends FrameworkBundleAdminController
         }
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Categories/add_root.html.twig', [
+            'layoutTitle' => $this->trans('Add new', 'Admin.Actions'),
             'rootCategoryForm' => $rootCategoryForm->createView(),
         ]);
     }
@@ -160,7 +173,7 @@ class CategoryController extends FrameworkBundleAdminController
             'id_category' => $categoryId->getValue(),
         ];
 
-        $categoryForm = $this->createForm(CategoryType::class, [
+        $categoryFormData = [
             'name' => $editableCategory->getName(),
             'active' => $editableCategory->isActive(),
             'id_parent' => $editableCategory->getParentId(),
@@ -171,10 +184,19 @@ class CategoryController extends FrameworkBundleAdminController
             'link_rewrite' => $editableCategory->getLinkRewrite(),
             'group_association' => $editableCategory->getGroupAssociationIds(),
             'shop_association' => $editableCategory->getShopAssociationIds(),
-        ], $categoryFormOptions);
+        ];
+
+        $categoryForm = $this->createForm(CategoryType::class, $categoryFormData, $categoryFormOptions);
         $categoryForm->handleRequest($request);
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Categories/edit.html.twig', [
+            'layoutTitle' => $this->trans(
+                'Edit: %value%',
+                'Admin.Catalog.Feature',
+                [
+                    '%value%' => $editableCategory->getName()[$this->getContextLangId()],
+                ]
+            ),
             'editCategoryForm' => $categoryForm->createView(),
             'editableCategory' => $editableCategory,
         ]);
