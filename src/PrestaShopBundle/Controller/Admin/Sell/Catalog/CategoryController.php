@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
+use PrestaShop\PrestaShop\Core\Domain\Category\Command\AbstractAddCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddRootCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\EditableCategory;
@@ -66,42 +67,7 @@ class CategoryController extends FrameworkBundleAdminController
                     (bool) $data['active'],
                     (int) $data['id_parent']
                 );
-
-                if (isset($data['description'])) {
-                    $command->setDescription($data['description']);
-                }
-
-                if (isset($data['meta_title'])) {
-                    $command->setMetaTitle($data['meta_title']);
-                }
-
-                if (isset($data['meta_description'])) {
-                    $command->setMetaDescription($data['meta_description']);
-                }
-
-                if (isset($data['meta_keyword'])) {
-                    $command->setMetaKeywords($data['meta_keyword']);
-                }
-
-                if (isset($data['group_association'])) {
-                    $command->setAssociatedGroupIds($data['group_association']);
-                }
-
-                if (isset($data['shop_association'])) {
-                    $command->setAssociatedShopIds($data['shop_association']);
-                }
-
-                if (isset($data['cover_image'])) {
-                    $command->setCoverImage($data['cover_image']);
-                }
-
-                if (isset($data['thumbnail_image'])) {
-                    $command->setThumbnailImage($data['thumbnail_image']);
-                }
-
-                if (isset($data['menu_thumbnail_images'])) {
-                    $command->setMenuThumbnailImages($data['menu_thumbnail_images']);
-                }
+                $this->fillCommandWithFormData($command, $data);
 
                 $this->getCommandBus()->handle($command);
 
@@ -135,17 +101,22 @@ class CategoryController extends FrameworkBundleAdminController
         if ($rootCategoryForm->isSubmitted()) {
             $data = $rootCategoryForm->getData();
 
-            $command = new AddRootCategoryCommand(
-                $data['name'],
-                $data['link_rewrite'],
-                $data['active']
-            );
+            try {
+                $command = new AddRootCategoryCommand(
+                    $data['name'],
+                    $data['link_rewrite'],
+                    $data['active']
+                );
+                $this->fillCommandWithFormData($command, $data);
 
-            $this->getCommandBus()->handle($command);
+                $this->getCommandBus()->handle($command);
 
-            $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
 
-            return $this->redirectToRoute('admin_category_add');
+                return $this->redirectToRoute('admin_category_add');
+            } catch (CategoryException $e) {
+                throw $e; //@todo: handle
+            }
         }
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Categories/add_root.html.twig', [
@@ -200,5 +171,48 @@ class CategoryController extends FrameworkBundleAdminController
             'editCategoryForm' => $categoryForm->createView(),
             'editableCategory' => $editableCategory,
         ]);
+    }
+
+    /**
+     * @param AbstractAddCategoryCommand $command
+     * @param array $data
+     */
+    protected function fillCommandWithFormData(AbstractAddCategoryCommand $command, array $data)
+    {
+        if (isset($data['description'])) {
+            $command->setDescription($data['description']);
+        }
+
+        if (isset($data['meta_title'])) {
+            $command->setMetaTitle($data['meta_title']);
+        }
+
+        if (isset($data['meta_description'])) {
+            $command->setMetaDescription($data['meta_description']);
+        }
+
+        if (isset($data['meta_keyword'])) {
+            $command->setMetaKeywords($data['meta_keyword']);
+        }
+
+        if (isset($data['group_association'])) {
+            $command->setAssociatedGroupIds($data['group_association']);
+        }
+
+        if (isset($data['shop_association'])) {
+            $command->setAssociatedShopIds($data['shop_association']);
+        }
+
+        if (isset($data['cover_image'])) {
+            $command->setCoverImage($data['cover_image']);
+        }
+
+        if (isset($data['thumbnail_image'])) {
+            $command->setThumbnailImage($data['thumbnail_image']);
+        }
+
+        if (isset($data['menu_thumbnail_images'])) {
+            $command->setMenuThumbnailImages($data['menu_thumbnail_images']);
+        }
     }
 }
