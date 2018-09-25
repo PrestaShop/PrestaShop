@@ -49,14 +49,28 @@ services:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Category\Command\BulkDeleteCategoriesCommand
 
-    prestashop.adapter.category.command_handler.add_category_handler:
-        class: 'PrestaShop\PrestaShop\Adapter\Category\CommandHandler\AddCategoryHandler'
+    prestashop.adapter.category.command_handler.abstract_add_category_handler:
+        class: 'PrestaShop\PrestaShop\Adapter\Category\CommandHandler\AbstractAddCategoryHandler'
+        abstract: true
         arguments:
             - '@prestashop.adapter.image.uploader.category_cover_image_uploader'
             - '@prestashop.adapter.image.uploader.category_thumbnail_image_uploader'
             - '@prestashop.adapter.image.uploader.category_menu_thumbnail_image_uploader'
+
+    prestashop.adapter.category.command_handler.add_category_handler:
+        class: 'PrestaShop\PrestaShop\Adapter\Category\CommandHandler\AddCategoryHandler'
+        parent: 'prestashop.adapter.category.command_handler.abstract_add_category_handler'
+        public: true
         tags:
             - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Category\Command\AddCategoryCommand' }
+
+    prestashop.adapter.category.command_handler.add_root_category_handler:
+        class: 'PrestaShop\PrestaShop\Adapter\Category\CommandHandler\AddRootCategoryHandler'
+        parent: 'prestashop.adapter.category.command_handler.abstract_add_category_handler'
+        public: true
+        tags:
+            - name: 'tactician.handler'
+              command: 'PrestaShop\PrestaShop\Core\Domain\Category\Command\AddRootCategoryCommand'
 
     prestashop.adapter.category.query_handler.get_category_for_editing:
         class: 'PrestaShop\PrestaShop\Adapter\Category\QueryHandler\GetCategoryForEditingHandler'
