@@ -31,7 +31,7 @@ class TranslatableInput {
 
         this.localeItemSelector = options.localeItemSelector || '.js-locale-item';
         this.localeButtonSelector = options.localeButtonSelector || '.js-locale-btn';
-        this.localeInputSelector = options.localeInputSelector || 'input.js-locale-input';
+        this.localeInputSelector = options.localeInputSelector || '.js-locale-input';
 
         $('body').on('click', this.localeItemSelector, this.toggleInputs.bind(this));
     }
