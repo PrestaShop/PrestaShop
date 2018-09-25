@@ -92,6 +92,11 @@ class EditableCategory
     private $coverImage;
 
     /**
+     * @var array
+     */
+    private $menuThumbnailImages;
+
+    /**
      * @param string[] $name
      * @param bool $isActive
      * @param string[] $description
@@ -104,6 +109,7 @@ class EditableCategory
      * @param int[] $shopAssociationIds
      * @param mixed $coverImage
      * @param mixed $thumbnailImage
+     * @param array $menuThumbnailImages
      */
     public function __construct(
         array $name,
@@ -117,7 +123,8 @@ class EditableCategory
         array $groupAssociationIds,
         array $shopAssociationIds,
         $coverImage = null,
-        $thumbnailImage = null
+        $thumbnailImage = null,
+        $menuThumbnailImages = []
     ) {
         $this->name = $name;
         $this->isActive = $isActive;
@@ -131,6 +138,7 @@ class EditableCategory
         $this->shopAssociationIds = $shopAssociationIds;
         $this->thumbnailImage = $thumbnailImage;
         $this->coverImage = $coverImage;
+        $this->menuThumbnailImages = $menuThumbnailImages;
     }
 
     /**
@@ -227,5 +235,13 @@ class EditableCategory
     public function getThumbnailImage()
     {
         return $this->thumbnailImage;
+    }
+
+    /**
+     * @return array
+     */
+    public function getMenuThumbnailImages()
+    {
+        return $this->menuThumbnailImages;
     }
 }
