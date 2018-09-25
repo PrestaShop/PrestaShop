@@ -29,30 +29,29 @@ namespace PrestaShop\PrestaShop\Adapter\Category\QueryHandler;
 use Category;
 use ImageManager;
 use ImageType;
-use PrestaShop\PrestaShop\Adapter\Category\Image\CategoryThumbnailRetriever;
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Domain\Category\EditableCategory;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Category\QueryHandler\GetCategoryForEditingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
+use PrestaShop\PrestaShop\Core\Image\Parser\ImageTagSourceParserInterface;
 
 /**
- * Class GetCategoryForEditingHandler
+ * Class GetCategoryForEditingHandler.
  */
 final class GetCategoryForEditingHandler implements GetCategoryForEditingHandlerInterface
 {
     /**
-     * @var LegacyContext
+     * @var ImageTagSourceParserInterface
      */
-    private $legacyContext;
+    private $imageTagSourceParser;
 
     /**
-     * @param LegacyContext $legacyContext
+     * @param ImageTagSourceParserInterface $imageTagSourceParser
      */
-    public function __construct(LegacyContext $legacyContext)
+    public function __construct(ImageTagSourceParserInterface $imageTagSourceParser)
     {
-        $this->legacyContext = $legacyContext;
+        $this->imageTagSourceParser = $imageTagSourceParser;
     }
 
     /**
@@ -82,7 +81,8 @@ final class GetCategoryForEditingHandler implements GetCategoryForEditingHandler
             $category->getGroups(),
             $category->getAssociatedShops(),
             $this->getCoverImage($query->getCategoryId()),
-            $this->getThumbnailImage($query->getCategoryId())
+            $this->getThumbnailImage($query->getCategoryId()),
+            $this->getMenuThumbnailImages($query->getCategoryId())
         );
 
         return $editableCategory;
@@ -109,14 +109,9 @@ final class GetCategoryForEditingHandler implements GetCategoryForEditingHandler
 
         $imageSize = file_exists($image) ? filesize($image) / 1000 : '';
 
-        $replacement = 'src="' . $this->legacyContext->getRootUrl();
-        $imageTag = preg_replace('/src="(\\.\\.\\/)+/', $replacement, $imageTag);
-
-        preg_match( '@src="([^"]+)"@' , $imageTag, $path);
-
         return [
             'size' => sprintf('%skb', $imageSize),
-            'path' => $path[1],
+            'path' => $this->imageTagSourceParser->parse($imageTag),
         ];
     }
 
@@ -156,14 +151,36 @@ final class GetCategoryForEditingHandler implements GetCategoryForEditingHandler
 
         $thumbSize = file_exists($thumb) ? filesize($thumb) / 1000 : false;
 
-        $replacement = 'src="' . $this->legacyContext->getRootUrl();
-        $imageTag = preg_replace('/src="(\\.\\.\\/)+/', $replacement, $imageTag);
-
-        preg_match( '@src="([^"]+)"@' , $imageTag, $path);
-
         return [
             'size' => sprintf('%skb', $thumbSize),
-            'path' => $path[1],
+            'path' => $this->imageTagSourceParser->parse($imageTag),
         ];
+    }
+
+    /**
+     * @param CategoryId $categoryId
+     *
+     * @return array
+     */
+    private function getMenuThumbnailImages(CategoryId $categoryId)
+    {
+        $menuThumbnails = [];
+
+        for ($i = 0; $i < 3; ++$i) {
+            if (file_exists(_PS_CAT_IMG_DIR_ . $categoryId->getValue() . '-' . $i . '_thumb.jpg')) {
+                $imageTag = ImageManager::thumbnail(
+                    _PS_CAT_IMG_DIR_ . $categoryId->getValue() . '-' . $i . '_thumb.jpg',
+                    'category_' . $categoryId->getValue() . '-' . $i . '_thumb.jpg',
+                    100,
+                    'jpg',
+                    true,
+                    true
+                );
+
+                $menuThumbnails[$i]['path'] = $this->imageTagSourceParser->parse($imageTag);
+            }
+        }
+
+        return $menuThumbnails;
     }
 }

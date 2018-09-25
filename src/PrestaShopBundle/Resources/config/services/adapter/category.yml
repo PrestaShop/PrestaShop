@@ -75,11 +75,6 @@ services:
     prestashop.adapter.category.query_handler.get_category_for_editing:
         class: 'PrestaShop\PrestaShop\Adapter\Category\QueryHandler\GetCategoryForEditingHandler'
         arguments:
-            - '@prestashop.adapter.legacy.context'
+            - '@prestashop.core.image.parser.image_tag_source_parser'
         tags:
             - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryForEditing' }
-
-    prestashop.adapter.category.image.category_thumbnail_retriever:
-        class: 'PrestaShop\PrestaShop\Adapter\Category\Image\CategoryThumbnailRetriever'
-        arguments:
-            - '@prestashop.adapter.legacy.context'
