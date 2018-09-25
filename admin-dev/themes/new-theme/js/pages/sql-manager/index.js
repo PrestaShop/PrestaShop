@@ -37,7 +37,7 @@ const $ = window.$;
 
 class SqlManagerPage {
   constructor() {
-    const requestSqlGrid = new Grid('request_sql');
+    const requestSqlGrid = new Grid('sqlrequest');
     requestSqlGrid.addExtension(new ReloadListActionExtension());
     requestSqlGrid.addExtension(new ExportToSqlManagerExtension());
     requestSqlGrid.addExtension(new FiltersResetExtension());

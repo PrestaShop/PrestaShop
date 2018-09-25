@@ -38,7 +38,7 @@ import LinkRowActionExtension from '../../components/grid/extension/link-row-act
 const $ = window.$;
 
 $(() => {
-  const emailLogsGrid = new Grid('email_logs');
+  const emailLogsGrid = new Grid('emaillogs');
 
   emailLogsGrid.addExtension(new ReloadListActionExtension());
   emailLogsGrid.addExtension(new ExportToSqlManagerExtension());
