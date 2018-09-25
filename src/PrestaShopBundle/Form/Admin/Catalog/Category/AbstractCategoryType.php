@@ -26,7 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Catalog\Category;
 
-use PrestaShopBundle\Form\Admin\Type\CategoryChoiceTreeType;
+use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
 use PrestaShopBundle\Form\Admin\Type\Material\MaterialChoiceTableType;
 use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
@@ -39,6 +39,9 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
+/**
+ * Class AbstractCategoryType
+ */
 abstract class AbstractCategoryType extends TranslatorAwareType
 {
     /**
@@ -47,18 +50,26 @@ abstract class AbstractCategoryType extends TranslatorAwareType
     private $customerGroupChoices;
 
     /**
+     * @var FeatureInterface
+     */
+    private $multistoreFeature;
+
+    /**
      * @param TranslatorInterface $translator
      * @param array $locales
      * @param array $customerGroupChoices
+     * @param FeatureInterface $multistoreFeature
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        array $customerGroupChoices
+        array $customerGroupChoices,
+        FeatureInterface $multistoreFeature
     ) {
         parent::__construct($translator, $locales);
 
         $this->customerGroupChoices = $customerGroupChoices;
+        $this->multistoreFeature = $multistoreFeature;
     }
 
     /**
@@ -113,7 +124,10 @@ abstract class AbstractCategoryType extends TranslatorAwareType
                 'choices' => $this->customerGroupChoices,
                 'required' => false,
             ])
-            ->add('shop_association', ShopChoiceTreeType::class)
         ;
+
+        if ($this->multistoreFeature->isUsed()) {
+            $builder->add('shop_association', ShopChoiceTreeType::class);
+        }
     }
 }
