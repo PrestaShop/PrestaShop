@@ -811,14 +811,16 @@ class LinkCore
                 }
         }
 
-        if (empty($routeName)) {
-            $routeName = $this->searchRouteFromRouter($sfRouter, $controller);
-        }
+        if (isset($sfRouter)) {
+            if (empty($routeName)) {
+                $routeName = $this->searchRouteFromRouter($sfRouter, $controller);
+            }
 
-        if (!empty($routeName)) {
-            $sfRoute = array_key_exists('route', $sfRouteParams) ? $sfRouteParams['route'] : $routeName;
+            if (!empty($routeName)) {
+                $sfRoute = array_key_exists('route', $sfRouteParams) ? $sfRouteParams['route'] : $routeName;
 
-            return $sfRouter->generate($sfRoute, $sfRouteParams, UrlGeneratorInterface::ABSOLUTE_URL);
+                return $sfRouter->generate($sfRoute, $sfRouteParams, UrlGeneratorInterface::ABSOLUTE_URL);
+            }
         }
 
         $idLang = Context::getContext()->language->id;
