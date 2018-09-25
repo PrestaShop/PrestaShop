@@ -1834,10 +1834,8 @@ class AdminControllerCore extends Controller
                         'modal_module_list' => $this->context->smarty->fetch($modal_module_list),
                     )
                 );
-
             }
         }
-
 
         $this->context->smarty->assign('baseAdminUrl', __PS_BASE_URI__ . basename(_PS_ADMIN_DIR_) . '/');
 
