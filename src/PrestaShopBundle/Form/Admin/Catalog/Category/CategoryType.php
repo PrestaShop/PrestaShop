@@ -27,17 +27,8 @@
 namespace PrestaShopBundle\Form\Admin\Catalog\Category;
 
 use PrestaShopBundle\Form\Admin\Type\CategoryChoiceTreeType;
-use PrestaShopBundle\Form\Admin\Type\Material\MaterialChoiceTableType;
-use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
-use PrestaShopBundle\Form\Admin\Type\SwitchType;
-use PrestaShopBundle\Form\Admin\Type\TextWithLengthCounterType;
-use PrestaShopBundle\Form\Admin\Type\TranslatableType;
-use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use Symfony\Component\Form\Extension\Core\Type\FileType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Class CategoryType
@@ -52,7 +43,24 @@ class CategoryType extends AbstractCategoryType
         parent::buildForm($builder, $options);
 
         $builder
-            ->add('id_parent', CategoryChoiceTreeType::class)
+            ->add('id_parent', CategoryChoiceTreeType::class, [
+                // when using CategoryType to edit category
+                // user should not be able to select that category as parent
+                'disabled_values' => null !== $options['id_category'] ? [$options['id_category']] : []
+            ])
+        ;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver
+            ->setDefaults([
+                'id_category' => null,
+            ])
+            ->setAllowedTypes('id_category', ['int', 'null'])
         ;
     }
 }
