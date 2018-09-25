@@ -30,6 +30,7 @@ use Category;
 use ImageManager;
 use ImageType;
 use PrestaShop\PrestaShop\Adapter\Category\Image\CategoryThumbnailRetriever;
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Domain\Category\EditableCategory;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryForEditing;
@@ -42,20 +43,22 @@ use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 final class GetCategoryForEditingHandler implements GetCategoryForEditingHandlerInterface
 {
     /**
-     * @var CategoryThumbnailRetriever
+     * @var LegacyContext
      */
-    private $categoryThumbnailRetriever;
+    private $legacyContext;
 
     /**
-     * @param CategoryThumbnailRetriever $categoryThumbnailRetriever
+     * @param LegacyContext $legacyContext
      */
-    public function __construct(CategoryThumbnailRetriever $categoryThumbnailRetriever)
+    public function __construct(LegacyContext $legacyContext)
     {
-        $this->categoryThumbnailRetriever = $categoryThumbnailRetriever;
+        $this->legacyContext = $legacyContext;
     }
 
     /**
      * {@inheritdoc}
+     *
+     * @throws CategoryNotFoundException
      */
     public function handle(GetCategoryForEditing $query)
     {
@@ -78,30 +81,62 @@ final class GetCategoryForEditingHandler implements GetCategoryForEditingHandler
             $category->link_rewrite,
             $category->getGroups(),
             $category->getAssociatedShops(),
+            $this->getCoverImage($query->getCategoryId()),
             $this->getThumbnailImage($query->getCategoryId())
         );
 
         return $editableCategory;
     }
 
+    /**
+     * @param CategoryId $categoryId
+     *
+     * @return array
+     */
+    private function getCoverImage(CategoryId $categoryId)
+    {
+        $imageType = 'jpg';
+        $image = _PS_CAT_IMG_DIR_ . $categoryId->getValue() . '.' . $imageType;
+
+        $imageTag = ImageManager::thumbnail(
+            $image,
+            'category' . '_' . $categoryId->getValue() . '.' . $imageType,
+            350,
+            $imageType,
+            true,
+            true
+        );
+
+        $imageSize = file_exists($image) ? filesize($image) / 1000 : '';
+
+        $replacement = 'src="' . $this->legacyContext->getRootUrl();
+        $imageTag = preg_replace('/src="(\\.\\.\\/)+/', $replacement, $imageTag);
+
+        preg_match( '@src="([^"]+)"@' , $imageTag, $path);
+
+        return [
+            'size' => sprintf('%skb', $imageSize),
+            'path' => $path[1],
+        ];
+    }
+
+    /**
+     * @param CategoryId $categoryId
+     *
+     * @return array
+     */
     private function getThumbnailImage(CategoryId $categoryId)
     {
         $image = _PS_CAT_IMG_DIR_ . $categoryId->getValue() . '.jpg';
-        $image_url = ImageManager::thumbnail($image, 'category_' . (int) $categoryId->getValue() . '.jpg', 350, 'jpg', true, true);
+        $imageTypes = ImageType::getImagesTypes('categories');
 
-        $images_types = ImageType::getImagesTypes('categories');
-        $format = array();
-        $thumb = $thumb_url = '';
-        $formatted_category = ImageType::getFormattedName('category');
+        $thumb = '';
         $formatted_small = ImageType::getFormattedName('small');
-        foreach ($images_types as $k => $image_type) {
-            if ($formatted_category == $image_type['name']) {
-                $format['category'] = $image_type;
-            } elseif ($formatted_small == $image_type['name']) {
-                $format['small'] = $image_type;
+        foreach ($imageTypes as $k => $image_type) {
+            if ($formatted_small == $image_type['name']) {
                 $thumb = _PS_CAT_IMG_DIR_ . $categoryId->getValue() . '-' . $image_type['name'] . '.jpg';
                 if (is_file($thumb)) {
-                    $thumb_url = ImageManager::thumbnail(
+                    $imageTag = ImageManager::thumbnail(
                         $thumb,
                         'category_' . (int) $categoryId->getValue() . '-thumb.jpg',
                         (int) $image_type['width'],
@@ -115,16 +150,20 @@ final class GetCategoryForEditingHandler implements GetCategoryForEditingHandler
 
         if (!is_file($thumb)) {
             $thumb = $image;
-            $thumb_url = ImageManager::thumbnail($image, 'category_' . (int) $categoryId->getValue() . '-thumb.jpg', 125, 'jpg', true, true);
-            ImageManager::resize(_PS_TMP_IMG_DIR_ . 'category_' . (int) $categoryId->getValue() . '-thumb.jpg', _PS_TMP_IMG_DIR_  . 'category_' . (int) $categoryId->getValue() . '-thumb.jpg', (int) $image_type['width'], (int) $image_type['height']);
+            $imageTag = ImageManager::thumbnail($image, 'category_' . $categoryId->getValue() . '-thumb.jpg', 125, 'jpg', true, true);
+            ImageManager::resize(_PS_TMP_IMG_DIR_ . 'category_' . $categoryId->getValue() . '-thumb.jpg', _PS_TMP_IMG_DIR_  . 'category_' . $categoryId->getValue() . '-thumb.jpg', (int) $image_type['width'], (int) $image_type['height']);
         }
 
-        $thumb_size = file_exists($thumb) ? filesize($thumb) / 1000 : false;
+        $thumbSize = file_exists($thumb) ? filesize($thumb) / 1000 : false;
+
+        $replacement = 'src="' . $this->legacyContext->getRootUrl();
+        $imageTag = preg_replace('/src="(\\.\\.\\/)+/', $replacement, $imageTag);
+
+        preg_match( '@src="([^"]+)"@' , $imageTag, $path);
 
         return [
-            'size' => $thumb_size,
-            'path' => $this->categoryThumbnailRetriever->retrieve($categoryId->getValue()),
-            'file' => new \SplFileInfo($thumb)
+            'size' => sprintf('%skb', $thumbSize),
+            'path' => $path[1],
         ];
     }
 }
