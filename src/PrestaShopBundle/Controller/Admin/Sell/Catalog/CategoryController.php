@@ -151,9 +151,14 @@ class CategoryController extends FrameworkBundleAdminController
      */
     public function editAction($categoryId, Request $request)
     {
-        $categoryId = new CategoryId($categoryId);
+        $categoryId = new CategoryId((int) $categoryId);
+
         /** @var EditableCategory $editableCategory */
         $editableCategory = $this->getQueryBus()->handle(new GetCategoryForEditing($categoryId));
+
+        $categoryFormOptions = [
+            'id_category' => $categoryId->getValue(),
+        ];
 
         $categoryForm = $this->createForm(CategoryType::class, [
             'name' => $editableCategory->getName(),
@@ -166,7 +171,7 @@ class CategoryController extends FrameworkBundleAdminController
             'link_rewrite' => $editableCategory->getLinkRewrite(),
             'group_association' => $editableCategory->getGroupAssociationIds(),
             'shop_association' => $editableCategory->getShopAssociationIds(),
-        ]);
+        ], $categoryFormOptions);
         $categoryForm->handleRequest($request);
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Categories/edit.html.twig', [

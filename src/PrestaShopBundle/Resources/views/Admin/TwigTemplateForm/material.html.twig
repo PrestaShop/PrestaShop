@@ -73,9 +73,10 @@
       <label>
         <input type="checkbox"
                {% if choice[choice_value] is not null %}
-               name="{{ form.vars.full_name }}[]"
-               value="{{ choice[choice_value] }}"
+                 name="{{ form.vars.full_name }}[]"
+                 value="{{ choice[choice_value] }}"
                  {% if choice[choice_value] in selected_values %}checked{% endif %}
+                 {% if choice[choice_value] in disabled_values %}disabled{% endif %}
                {% endif %}
         >
         <i class="md-checkbox-control"></i>
@@ -92,6 +93,7 @@
              name="{{ form.vars.full_name }}"
              value="{{ choice[choice_value] }}"
              {% if choice[choice_value] in selected_values %}checked{% endif %}
+             {% if choice[choice_value] in disabled_values %}disabled{% endif %}
       >
       {{ choice[choice_label] }}
     </label>
