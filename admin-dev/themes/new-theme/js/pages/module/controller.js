@@ -1133,7 +1133,7 @@ class AdminModuleController {
   }
 
   updateTotalResults() {
-    const updateText = (element, value) => {
+    const replaceFirstWordBy = (element, value) => {
       const explodedText = element.text().split(' ');
       explodedText[0] = value;
       element.text(explodedText.join(' '));
@@ -1144,7 +1144,7 @@ class AdminModuleController {
     if ($shortLists.length > 0) {
       $shortLists.each(function shortLists() {
         const $this = $(this);
-        updateText(
+        replaceFirstWordBy(
           $this.find('.module-search-result-wording'),
           $this.next('.modules-list').find('.module-item').length
         );
@@ -1153,7 +1153,7 @@ class AdminModuleController {
       // If there is no shortlist: the wording directly update from the only module container.
     } else {
       const modulesCount = $('.modules-list').find('.module-item').length;
-      updateText($('.module-search-result-wording'), modulesCount);
+      replaceFirstWordBy($('.module-search-result-wording'), modulesCount);
 
       const selectorToToggle = (self.currentDisplay === self.DISPLAY_LIST) ?
                                this.addonItemListSelector :
@@ -1163,7 +1163,7 @@ class AdminModuleController {
       if (modulesCount === 0) {
         $('.module-addons-search-link').attr(
           'href',
-          `${this.bsaeAddonsUrl}search.php?search_query=${encodeURIComponent(this.currentTagsList.join(' '))}`
+          `${this.baseAddonsUrl}search.php?search_query=${encodeURIComponent(this.currentTagsList.join(' '))}`
         );
       }
     }
