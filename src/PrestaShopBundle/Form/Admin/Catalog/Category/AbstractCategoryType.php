@@ -102,7 +102,7 @@ abstract class AbstractCategoryType extends TranslatorAwareType
             ->add('meta_title', TranslatableType::class, [
                 'type' => TextWithLengthCounterType::class,
                 'options' => [
-                    'max_length' => 5,
+                    'max_length' => 70,
                 ],
             ])
             ->add('meta_description', TranslatableType::class, [
