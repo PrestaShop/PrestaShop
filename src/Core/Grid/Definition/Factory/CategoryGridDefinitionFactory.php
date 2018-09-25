@@ -32,13 +32,13 @@ use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\SubmitBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\AccessibilityChecker\AccessibilityCheckerInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\Category\DeleteCategoryRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\LinkGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
-use PrestaShop\PrestaShop\Core\Grid\Column\Type\Catalog\Category\DeleteCategoryRowAction;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Category\CategoryPositionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
-use PrestaShop\PrestaShop\Core\Grid\Column\Type\Catalog\PositionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\LinkColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ToggleColumn;
@@ -159,13 +159,13 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
         ;
 
         if ($this->multistoreContextChecker->isSingleShopContext()) {
-            $columns->addAfter('description', (new PositionColumn('position'))
+            $columns->addAfter('description', (new CategoryPositionColumn('position'))
                 ->setName($this->trans('Position', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'position',
                     'id_field' => 'id_category',
                     'id_parent_field' => 'id_parent',
-                    'position_update_route' => 'AdminCategories',
+                    'update_route' => 'AdminCategories',
                 ])
             );
         }

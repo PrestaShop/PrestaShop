@@ -64,6 +64,7 @@ services:
         arguments:
             - '@prestashop.core.grid.query.category_query_builder'
             - '@prestashop.core.hook.dispatcher'
+            - '@prestashop.core.grid.query.doctrine_query_parser'
             - 'categories'
 
     prestashop.core.grid.data.factory.category_decorator:
@@ -225,11 +226,11 @@ services:
     prestashop.core.grid.query_builder.meta:
         class: 'PrestaShop\PrestaShop\Core\Grid\Query\MetaQueryBuilder'
         parent: 'prestashop.core.grid.abstract_query_builder'
-          arguments:
-          - '@prestashop.core.query.doctrine_search_criteria_applicator'
-          - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
-          - "@=service('prestashop.adapter.legacy.context').getContext().shop.id"
-          public: true
+        arguments:
+            - '@prestashop.core.query.doctrine_search_criteria_applicator'
+            - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
+            - "@=service('prestashop.adapter.legacy.context').getContext().shop.id"
+        public: true
 
     prestashop.core.grid.query_builder.webservice:
         class: 'PrestaShop\PrestaShop\Core\Grid\Query\WebserviceQueryBuilder'
