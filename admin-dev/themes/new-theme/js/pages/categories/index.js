@@ -25,16 +25,18 @@
 
 import TranslatableInput from "../../components/translatable-input";
 import ChoiceTable from "../../components/choice-table";
-import ChoiceTree from "../../components/choice-tree";
 import TextWithLengthCounter from "../../components/form/text-with-length-counter";
 import NameToLinkRewriteCopier from "./name-to-link-rewrite-copier";
+import ChoiceTree from "../../components/form/choice-tree";
 
 const $ = window.$;
 
 $(() => {
   new TranslatableInput();
   new ChoiceTable();
-  new ChoiceTree();
   new TextWithLengthCounter();
   new NameToLinkRewriteCopier();
+
+  new ChoiceTree('#category_id_parent');
+  new ChoiceTree('#category_shop_association').enableAutoCheckChildren();
 });
