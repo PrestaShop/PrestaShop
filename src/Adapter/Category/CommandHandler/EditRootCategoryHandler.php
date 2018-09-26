@@ -24,39 +24,36 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Category\Exception;
+namespace PrestaShop\PrestaShop\Adapter\Category\CommandHandler;
 
-use Exception;
-use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
+use Category;
+use PrestaShop\PrestaShop\Core\Domain\Category\Command\EditRootCategoryCommand;
+use PrestaShop\PrestaShop\Core\Domain\Category\CommandHandler\EditRootCategoryHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
 
 /**
- * Class CategoryNotFoundException
+ * Class EditRootCategoryHandler
  */
-class CategoryNotFoundException extends CategoryException
+final class EditRootCategoryHandler extends AbstractCategoryHandler implements EditRootCategoryHandlerInterface
 {
     /**
-     * @var CategoryId
+     * {@inheritdoc}
      */
-    private $categoryId;
-
-    /**
-     * @param CategoryId $categoryId
-     * @param string $message
-     * @param int $code
-     * @param Exception $previous
-     */
-    public function __construct(CategoryId $categoryId, $message = '', $code = 0, $previous = null)
+    public function handle(EditRootCategoryCommand $command)
     {
-        parent::__construct($message, $code, $previous);
+        $category = new Category($command->getCategoryId()->getValue());
 
-        $this->categoryId = $categoryId;
-    }
+        if (!$category->id) {
+            throw new CategoryNotFoundException(
+                $command->getCategoryId(),
+                sprintf('Category with id "%s" cannot be found.', $command->getCategoryId()->getValue())
+            );
+        }
 
-    /**
-     * @return CategoryId
-     */
-    public function getCategoryId()
-    {
-        return $this->categoryId;
+        $this->populateCategoryWithCommandData($category, $command);
+
+        $category->update();
+
+
     }
 }
