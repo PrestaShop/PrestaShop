@@ -60,7 +60,10 @@ final class FilterParametersUpdater
      * @param array $queryFilterParameters
      * @param array $persistedFilterParameters
      * @param array $defaultFilterParameters
+     *
      * @return array
+     *
+     * @throws ProductException
      */
     public function buildFilters(
         array $queryFilterParameters,
@@ -80,7 +83,10 @@ final class FilterParametersUpdater
      * @param array $queryFilterParameters
      * @param array $persistedFilterParameters
      * @param array $defaultFilterParameters
+     *
      * @return string|int
+     *
+     * @throws ProductException
      */
     private function getParameter(
         $parameterName,
@@ -90,9 +96,9 @@ final class FilterParametersUpdater
     ) {
         if (isset($queryFilterParameters[$parameterName])) {
             $value = $queryFilterParameters[$parameterName];
-        } else if (isset($persistedFilterParameters[$parameterName])) {
+        } elseif (isset($persistedFilterParameters[$parameterName])) {
             $value = $persistedFilterParameters[$parameterName];
-        } else if (isset($defaultFilterParameters[$parameterName])) {
+        } elseif (isset($defaultFilterParameters[$parameterName])) {
             $value = $defaultFilterParameters[$parameterName];
         } else {
             throw new ProductException(
@@ -102,8 +108,8 @@ final class FilterParametersUpdater
             );
         }
 
-        if ($value === 'last' && isset($persistedFilterParameters['last_'.$parameterName])) {
-            $value = $persistedFilterParameters['last_'.$parameterName];
+        if ($value === 'last' && isset($persistedFilterParameters['last_' . $parameterName])) {
+            $value = $persistedFilterParameters['last_' . $parameterName];
         }
 
         return $value;
