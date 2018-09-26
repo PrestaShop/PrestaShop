@@ -1004,7 +1004,7 @@ abstract class ModuleCore implements ModuleInterface
     public function registerExceptions($id_hook, $excepts, $shop_list = null)
     {
         // If shop lists is null, we fill it with all shops
-        if (is_null($shop_list)) {
+        if (null === $shop_list) {
             $shop_list = Shop::getContextListShopID();
         }
 
@@ -1149,7 +1149,7 @@ abstract class ModuleCore implements ModuleInterface
      */
     public static function getInstanceById($id_module)
     {
-        if (is_null(self::$id2name)) {
+        if (null === self::$id2name) {
             self::$id2name = [];
             $sql = 'SELECT `id_module`, `name` FROM `' . _DB_PREFIX_ . 'module`';
             if ($results = Db::getInstance()->executeS($sql)) {
@@ -3368,7 +3368,7 @@ abstract class ModuleCore implements ModuleInterface
     public function get($serviceName)
     {
         if ($this->isSymfonyContext()) {
-            if (is_null($this->container)) {
+            if (null === $this->container) {
                 $this->container = SymfonyContainer::getInstance();
             }
 
