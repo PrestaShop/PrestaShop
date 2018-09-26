@@ -338,7 +338,7 @@ class ProductControllerCore extends FrontController
                 $quantity_discount['base_price'] = 0;
             }
             if ($quantity_discount['id_product_attribute']) {
-                $quantity_discount['base_price'] = $this->product->getPrice(Product::$_taxCalculationMethod == PS_TAX_INC, $quantity_discount['id_product_attribute']);
+                $quantity_discount['base_price'] = $this->product->getPrice(Product::$_taxCalculationMethod == PS_TAX_INC, $quantity_discount['id_product_attribute'], 6, null, false, false, $quantity_discount['from_quantity']);
 
                 $combination = new Combination((int)$quantity_discount['id_product_attribute']);
                 $attributes = $combination->getAttributesName((int)$this->context->language->id);
