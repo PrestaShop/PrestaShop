@@ -1,0 +1,6 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.adapter.form.choice_provider.shop_tree_choice_provider:
+    class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\ShopTreeChoiceProvider'
