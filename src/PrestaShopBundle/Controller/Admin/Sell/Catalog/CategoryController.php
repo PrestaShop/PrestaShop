@@ -33,6 +33,8 @@ use PrestaShop\PrestaShop\Core\Domain\Category\EditableCategory;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
+use PrestaShop\PrestaShop\Core\Domain\Group\DataTransferObject\NamesForDefaultGroups;
+use PrestaShop\PrestaShop\Core\Domain\Group\Query\GetNamesForDefaultGroups;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Catalog\Category\CategoryType;
 use PrestaShopBundle\Form\Admin\Catalog\Category\RootCategoryType;
@@ -80,9 +82,13 @@ class CategoryController extends FrameworkBundleAdminController
             }
         }
 
+        /** @var NamesForDefaultGroups $nameForDefaultGroups */
+        $nameForDefaultGroups = $this->getQueryBus()->handle(new GetNamesForDefaultGroups());
+
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Categories/add.html.twig', [
             'layoutTitle' => $this->trans('Add new', 'Admin.Actions'),
             'categoryForm' => $categoryCreateForm->createView(),
+            'namesForDefaultGroups' => $nameForDefaultGroups,
         ]);
     }
 
@@ -119,9 +125,13 @@ class CategoryController extends FrameworkBundleAdminController
             }
         }
 
+        /** @var NamesForDefaultGroups $nameForDefaultGroups */
+        $nameForDefaultGroups = $this->getQueryBus()->handle(new GetNamesForDefaultGroups());
+
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Categories/add_root.html.twig', [
             'layoutTitle' => $this->trans('Add new', 'Admin.Actions'),
             'rootCategoryForm' => $rootCategoryForm->createView(),
+            'namesForDefaultGroups' => $nameForDefaultGroups,
         ]);
     }
 
@@ -160,6 +170,9 @@ class CategoryController extends FrameworkBundleAdminController
         $categoryForm = $this->createForm(CategoryType::class, $categoryFormData, $categoryFormOptions);
         $categoryForm->handleRequest($request);
 
+        /** @var NamesForDefaultGroups $nameForDefaultGroups */
+        $nameForDefaultGroups = $this->getQueryBus()->handle(new GetNamesForDefaultGroups());
+
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Categories/edit.html.twig', [
             'layoutTitle' => $this->trans(
                 'Edit: %value%',
@@ -170,6 +183,7 @@ class CategoryController extends FrameworkBundleAdminController
             ),
             'editCategoryForm' => $categoryForm->createView(),
             'editableCategory' => $editableCategory,
+            'namesForDefaultGroups' => $nameForDefaultGroups,
         ]);
     }
 
