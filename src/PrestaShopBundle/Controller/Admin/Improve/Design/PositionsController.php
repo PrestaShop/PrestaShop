@@ -157,7 +157,7 @@ class PositionsController extends FrameworkBundleAdminController
             $module = $this->get('prestashop.adapter.legacy.module')->getInstanceById($moduleId);
             $hook = new Hook($hookId);
 
-            if (!$validateAdapter->isLoadedObject($module)) {
+            if (!$module) {
                 $errors[] = $this->trans(
                     'This module cannot be loaded.',
                     'Admin.Modules.Notification'
