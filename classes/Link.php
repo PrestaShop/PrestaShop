@@ -841,7 +841,7 @@ class LinkCore
         foreach ($sfRouter->getRouteCollection() as $routeName => $route) {
             if (in_array('GET', $route->getMethods())) {
                 $routeDefaults = $route->getDefaults();
-                if (isset($routeDefaults['_legacy_link']) && $controller == $routeDefaults['_legacy_link']) {
+                if (isset($routeDefaults['_legacy_controller']) && $controller == $routeDefaults['_legacy_controller']) {
                     return $routeName;
                 }
             }
