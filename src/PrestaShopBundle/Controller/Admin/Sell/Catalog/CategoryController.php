@@ -26,9 +26,10 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
-use PrestaShop\PrestaShop\Core\Domain\Category\Command\AbstractCategoryCommand;
+use PrestaShop\PrestaShop\Core\Domain\Category\Command\AbstractRootCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddRootCategoryCommand;
+use PrestaShop\PrestaShop\Core\Domain\Category\Command\EditCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\EditableCategory;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryForEditing;
@@ -80,7 +81,7 @@ class CategoryController extends FrameworkBundleAdminController
                     (bool) $data['active'],
                     (int) $data['id_parent']
                 );
-                $this->fillCommandWithFormData($command, $data);
+                $this->populateCommandWithFormData($command, $data);
 
                 $this->getCommandBus()->handle($command);
 
@@ -121,7 +122,7 @@ class CategoryController extends FrameworkBundleAdminController
                     $data['link_rewrite'],
                     $data['active']
                 );
-                $this->fillCommandWithFormData($command, $data);
+                $this->populateCommandWithFormData($command, $data);
 
                 $this->getCommandBus()->handle($command);
 
@@ -133,13 +134,13 @@ class CategoryController extends FrameworkBundleAdminController
             }
         }
 
-        /** @var DefaultGroups $nameForDefaultGroups */
-        $nameForDefaultGroups = $this->getQueryBus()->handle(new GetDefaultGroups());
+        /** @var DefaultGroups $defaultGroups */
+        $defaultGroups = $this->getQueryBus()->handle(new GetDefaultGroups());
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Categories/add_root.html.twig', [
             'layoutTitle' => $this->trans('Add new', 'Admin.Actions'),
             'rootCategoryForm' => $rootCategoryForm->createView(),
-            'namesForDefaultGroups' => $nameForDefaultGroups,
+            'defaultGroups' => $defaultGroups,
         ]);
     }
 
@@ -178,8 +179,22 @@ class CategoryController extends FrameworkBundleAdminController
         $categoryForm = $this->createForm(CategoryType::class, $categoryFormData, $categoryFormOptions);
         $categoryForm->handleRequest($request);
 
-        /** @var GetDefaultGroups $nameForDefaultGroups */
-        $nameForDefaultGroups = $this->getQueryBus()->handle(new GetDefaultGroups());
+        if ($categoryForm->isSubmitted()) {
+            $data = $categoryForm->getData();
+
+            try {
+                $command = new EditCategoryCommand($categoryId);
+
+                $this->populateCommandWithFormData($command, $data);
+
+                return $this->redirectToRoute('admin_category_add');
+            } catch (CategoryException $e) {
+                throw $e; //@todo: handle
+            }
+        }
+
+        /** @var DefaultGroups $defaultGroups */
+        $defaultGroups = $this->getQueryBus()->handle(new GetDefaultGroups());
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Categories/edit.html.twig', [
             'layoutTitle' => $this->trans(
@@ -191,15 +206,15 @@ class CategoryController extends FrameworkBundleAdminController
             ),
             'editCategoryForm' => $categoryForm->createView(),
             'editableCategory' => $editableCategory,
-            'namesForDefaultGroups' => $nameForDefaultGroups,
+            'defaultGroups' => $defaultGroups,
         ]);
     }
 
     /**
-     * @param AbstractCategoryCommand $command
+     * @param AbstractRootCategoryCommand $command
      * @param array $data
      */
-    protected function fillCommandWithFormData(AbstractCategoryCommand $command, array $data)
+    protected function populateCommandWithFormData(AbstractRootCategoryCommand $command, array $data)
     {
         if (isset($data['description'])) {
             $command->setDescription($data['description']);
