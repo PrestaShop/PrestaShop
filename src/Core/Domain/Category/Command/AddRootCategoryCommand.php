@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryConstraintExcep
 /**
  * Class AddRootCategoryCommand
  */
-class AddRootCategoryCommand extends AbstractCategoryCommand
+class AddRootCategoryCommand extends AbstractRootCategoryCommand
 {
     /**
      * @param string[] $name

@@ -24,15 +24,14 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Category\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Category\Command;
 
-use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 
 /**
- * Class CategoryNotFoundException
+ * Class EditCategoryCommand
  */
-class CategoryNotFoundException extends CategoryException
+class EditCategoryCommand extends AbstractCategoryCommand
 {
     /**
      * @var CategoryId
@@ -41,14 +40,9 @@ class CategoryNotFoundException extends CategoryException
 
     /**
      * @param CategoryId $categoryId
-     * @param string $message
-     * @param int $code
-     * @param Exception $previous
      */
-    public function __construct(CategoryId $categoryId, $message = '', $code = 0, $previous = null)
+    public function __construct(CategoryId $categoryId)
     {
-        parent::__construct($message, $code, $previous);
-
         $this->categoryId = $categoryId;
     }
 
