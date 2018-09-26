@@ -29,22 +29,43 @@ const $ = window.$;
  * Handles UI interactions of choice tree
  */
 export default class ChoiceTree {
-  constructor() {
-    const $container = $('.js-choice-tree-container');
+  /**
+   * @param {String} treeSelector
+   *
+   * @returns {{autoCheckChildrenFor: (function(*=): void)}}
+   */
+  constructor(treeSelector) {
+    this.$container = $(treeSelector);
 
-    $container.on('click', '.js-input-wrapper', (event) => {
+    this.$container.on('click', '.js-input-wrapper', (event) => {
       const $inputWrapper = $(event.currentTarget);
 
       this._toggleChildTree($inputWrapper);
     });
 
-    $container.on('click', '.js-toggle-choice-tree-action', (event) => {
+    this.$container.on('click', '.js-toggle-choice-tree-action', (event) => {
       const $action = $(event.currentTarget);
 
       this._toggleTree($action);
     });
 
-    return {};
+    return {
+      enableAutoCheckChildren: () => this.enableAutoCheckChildren(),
+    };
+  }
+
+  /**
+   * Enable automatic check/uncheck of clicked item's children.
+   */
+  enableAutoCheckChildren() {
+    this.$container.on('change', 'input[type="checkbox"]', (event) => {
+      const $clickedCheckbox = $(event.currentTarget);
+      const $itemWithChildren = $clickedCheckbox.closest('li');
+
+      $itemWithChildren
+        .find('ul input[type="checkbox"]')
+        .prop('checked', $clickedCheckbox.is(':checked'));
+    });
   }
 
   /**
