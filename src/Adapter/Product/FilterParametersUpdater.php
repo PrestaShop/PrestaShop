@@ -26,6 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
+use PrestaShop\PrestaShop\Core\Exception\ProductException;
+
 /**
  * Can manage filter parameters from request in Product Catalogue Page.
  * For internal use only.
@@ -86,12 +88,18 @@ final class FilterParametersUpdater
         array $persistedFilterParameters,
         array $defaultFilterParameters
     ) {
-        if (!empty($queryFilterParameters) && isset($queryFilterParameters[$parameterName])) {
+        if (isset($queryFilterParameters[$parameterName])) {
             $value = $queryFilterParameters[$parameterName];
-        } else if (!empty($persistedFilterParameters) && isset($persistedFilterParameters[$parameterName])) {
+        } else if (isset($persistedFilterParameters[$parameterName])) {
             $value = $persistedFilterParameters[$parameterName];
-        } else {
+        } else if (isset($defaultFilterParameters[$parameterName])) {
             $value = $defaultFilterParameters[$parameterName];
+        } else {
+            throw new ProductException(
+                'Could not find the parameter %s',
+                'Admin.Notifications.Error',
+                [$parameterName]
+            );
         }
 
         if ($value === 'last' && isset($persistedFilterParameters['last_'.$parameterName])) {
