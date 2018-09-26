@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin;
 
 use Exception;
+use PrestaShop\PrestaShop\Adapter\Product\FilterParametersUpdater;
 use PrestaShop\PrestaShop\Adapter\Tax\TaxRuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Warehouse\WarehouseDataProvider;
 use PrestaShopBundle\Component\CsvResponse;
@@ -126,21 +127,14 @@ class ProductController extends FrameworkBundleAdminController
 
         // Set values from persistence and replace in the request
         $persistedFilterParameters = $productProvider->getPersistedFilterParameters();
+        /** @var FilterParametersUpdater $filterParametersUpdater */
         $filterParametersUpdater = $this->get('prestashop.adapter.product.filter_parameters_updater');
-
-        $filters = $filterParametersUpdater->setValues(
+        $filters = $filterParametersUpdater->buildFilters(
+            $request->query->all(),
             $persistedFilterParameters,
-            $offset,
-            $limit,
-            $orderBy,
-            $sortOrder
+            compact('offset', 'limit', 'orderBy', 'sortOrder')
         );
-
-        // mimic native extract() function.
-        $offset = $filters['offset'];
-        $limit = $filters['limit'];
-        $orderBy = $filters['orderBy'];
-        $sortOrder = $filters['sortOrder'];
+        extract($filters);
 
         $persistedFilterParameters = array_replace($persistedFilterParameters, $request->request->all());
 
@@ -181,7 +175,7 @@ class ProductController extends FrameworkBundleAdminController
             }
         }
 
-        $persistedFilterParameters = $filterParametersUpdater->setPositionOrdering($persistedFilterParameters, $orderBy, $hasCategoryFilter);
+        $cleanFilterParameters = $filterParametersUpdater->cleanFiltersForPositionOrdering($persistedFilterParameters, $orderBy, $hasCategoryFilter);
 
         $permissionError = null;
         if ($this->get('session')->getFlashBag()->has('permission_error')) {
@@ -192,7 +186,7 @@ class ProductController extends FrameworkBundleAdminController
             || ('position' === $orderBy && 'asc' === $sortOrder && !$hasColumnFilter);
         // Template vars injection
         return array_merge(
-            $persistedFilterParameters,
+            $cleanFilterParameters,
             [
                 'limit' => $limit,
                 'offset' => $offset,
@@ -258,7 +252,14 @@ class ProductController extends FrameworkBundleAdminController
         if ($products === null) {
             // get old values from persistence (before the current update)
             $persistedFilterParameters = $productProvider->getPersistedFilterParameters();
-            $this->get('prestashop.adapter.filter_parameters_updater')->setValues($persistedFilterParameters, $offset, $limit, $orderBy, $sortOrder);
+            /** @var FilterParametersUpdater $filterParametersUpdater */
+            $filterParametersUpdater = $this->get('prestashop.adapter.product.filter_parameters_updater');
+            $filters = $filterParametersUpdater->buildFilters(
+                $request->query->all(),
+                $persistedFilterParameters,
+                compact('offset', 'limit', 'orderBy', 'sortOrder')
+            );
+            extract($filters);
 
             /**
              * 2 hooks are triggered here:
