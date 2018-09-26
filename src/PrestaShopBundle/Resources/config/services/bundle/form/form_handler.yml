@@ -275,6 +275,7 @@ services:
               'shop_urls': 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta\ShopUrlType'
               'url_schema': 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta\UrlSchemaType'
             - 'MetaPage'
+            - 'meta_settings_form'
 
     # Entity form handler
     prestashop.admin.request_sql.form_handler:
