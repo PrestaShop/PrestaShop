@@ -121,12 +121,14 @@
                 </figure>
               {% endfor %}
             </div>
-
           {% endif %}
 
           {{ form_widget(categoryForm.menu_thumbnail_images) }}
         </div>
       </div>
+
+      {{ renderhook('displayBackOfficeCategory') }}
+
       <div class="form-group row">
         {{ ps.label_with_help(('Meta title'|trans({}, 'Admin.Global')), ('Forbidden characters:'|trans({}, 'Admin.Notifications.Info')) ~ ' <>;=#{}') }}
         <div class="col-sm">
