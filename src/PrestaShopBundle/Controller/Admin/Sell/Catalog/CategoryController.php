@@ -389,8 +389,7 @@ class CategoryController extends FrameworkBundleAdminController
 
         if (CategoryConstraintException::class === $type) {
             $constraintErrors = [
-                CategoryConstraintException::EMPTY_BULK_DELETE_DATA =>
-                    $this->trans('You must select at least one element to delete.', 'Admin.Notifications.Error'),
+                CategoryConstraintException::EMPTY_BULK_DELETE_DATA => $this->trans('You must select at least one element to delete.', 'Admin.Notifications.Error'),
             ];
 
             if (isset($constraintErrors[$e->getCode()])) {

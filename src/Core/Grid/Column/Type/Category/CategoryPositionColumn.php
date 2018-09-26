@@ -41,6 +41,7 @@ final class CategoryPositionColumn extends AbstractColumn
     {
         return 'category_position';
     }
+
     /**
      * {@inheritdoc}
      */
