@@ -31,8 +31,6 @@ const $ = window.$;
 export default class ChoiceTree {
   /**
    * @param {String} treeSelector
-   *
-   * @returns {{autoCheckChildrenFor: (function(*=): void)}}
    */
   constructor(treeSelector) {
     this.$container = $(treeSelector);

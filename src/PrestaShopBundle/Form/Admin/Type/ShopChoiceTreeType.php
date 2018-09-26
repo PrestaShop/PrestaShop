@@ -35,13 +35,26 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class ShopChoiceTreeType extends AbstractType
 {
-    /**445
+    /**
+     * @var array
+     */
+    private $shopTreeChoices;
+
+    /**
+     * @param array $shopTreeChoices
+     */
+    public function __construct(array $shopTreeChoices)
+    {
+        $this->shopTreeChoices = $shopTreeChoices;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'choices_tree' => $this->getShopTreeChoices(),
+            'choices_tree' => $this->shopTreeChoices,
             'multiple' => true,
             'choice_label' => 'name',
             'choice_value' => 'id_shop',
@@ -54,40 +67,5 @@ class ShopChoiceTreeType extends AbstractType
     public function getParent()
     {
         return MaterialChoiceTreeType::class;
-    }
-
-    /**
-     * @todo: refactor into adapter class
-     *
-     * @return array
-     */
-    private function getShopTreeChoices()
-    {
-        $shopGroups = \ShopGroup::getShopGroups();
-        $choices = [];
-
-        /** @var \ShopGroup $shopGroup */
-        foreach ($shopGroups as $shopGroup) {
-            $shopGroupChoices = [
-                'name' => $shopGroup->name,
-                'id_shop' => null,
-                'children' => [],
-            ];
-
-            $shops = \ShopGroup::getShopsFromGroup($shopGroup->id);
-
-            foreach ($shops as $shopId) {
-                $shop = \Shop::getShop($shopId['id_shop']);
-
-                $shopGroupChoices['children'][] = [
-                    'name' => $shop['name'],
-                    'id_shop' => $shop['id_shop'],
-                ];
-            }
-
-            $choices[] = $shopGroupChoices;
-        }
-
-        return $choices;
     }
 }
