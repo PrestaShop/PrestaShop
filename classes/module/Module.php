@@ -186,7 +186,7 @@ abstract class ModuleCore implements ModuleInterface
     private $container;
 
     /** @var array|null used to cache module ids */
-    private static $id2name = null;
+    private static $cachedModuleNames = null;
 
     const CACHE_FILE_MODULES_LIST = '/config/xml/modules_list.xml';
 
@@ -1149,18 +1149,18 @@ abstract class ModuleCore implements ModuleInterface
      */
     public static function getInstanceById($id_module)
     {
-        if (null === self::$id2name) {
-            self::$id2name = [];
+        if (null === self::$cachedModuleNames) {
+            self::$cachedModuleNames = [];
             $sql = 'SELECT `id_module`, `name` FROM `' . _DB_PREFIX_ . 'module`';
             if ($results = Db::getInstance()->executeS($sql)) {
                 foreach ($results as $row) {
-                    self::$id2name[$row['id_module']] = $row['name'];
+                    self::$cachedModuleNames[$row['id_module']] = $row['name'];
                 }
             }
         }
 
-        if (isset(self::$id2name[$id_module])) {
-            return Module::getInstanceByName(self::$id2name[$id_module]);
+        if (isset(self::$cachedModuleNames[$id_module])) {
+            return Module::getInstanceByName(self::$cachedModuleNames[$id_module]);
         }
 
         return false;
@@ -1171,7 +1171,7 @@ abstract class ModuleCore implements ModuleInterface
      */
     public static function clearStaticCache()
     {
-        self::$id2name = null;
+        self::$cachedModuleNames = null;
     }
 
     public static function configXmlStringFormat($string)
