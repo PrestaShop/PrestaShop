@@ -42,6 +42,9 @@ use PrestaShop\PrestaShop\Core\Search\Filters\CategoryFilters;
 use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Sell\Category\DeleteCategoriesType;
+use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Security\Annotation\DemoRestricted;
+use PrestaShopBundle\Security\Voter\PageVoter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -54,6 +57,8 @@ class CategoryController extends FrameworkBundleAdminController
 {
     /**
      * Show categories listing.
+     *
+     * @AdminSecurity("is_granted(['read', 'update', 'create', 'delete'], request.get('_legacy_controller'))")
      *
      * @param Request $request
      * @param CategoryFilters $filters
@@ -87,12 +92,29 @@ class CategoryController extends FrameworkBundleAdminController
     /**
      * Toggle category status.
      *
+     * @param Request $request
      * @param int $categoryId
      *
      * @return JsonResponse
      */
-    public function processStatusToggleAction($categoryId)
+    public function processStatusToggleAction(Request $request, $categoryId)
     {
+        if ($this->isDemoModeEnabled()) {
+            return $this->json([
+                'status' => false,
+                'message' => $this->getDemoModeErrorMessage(),
+            ]);
+        }
+
+        $authLevel = $this->authorizationLevel($request->attributes->get('_legacy_controller'));
+
+        if (!in_array($authLevel, [PageVoter::LEVEL_UPDATE, PageVoter::LEVEL_DELETE])) {
+            return $this->json([
+                'status' => false,
+                'message' => $this->trans('You do not have permission to update this.', 'Admin.Notifications.Error'),
+            ]);
+        }
+
         try {
             $command = new ToggleCategoryStatusCommand(new CategoryId($categoryId));
 
@@ -114,6 +136,13 @@ class CategoryController extends FrameworkBundleAdminController
 
     /**
      * Process bulk action for categories status enabling.
+     *
+     * @AdminSecurity(
+     *     "is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))",
+     *     redirectRoute="admin_category_listing",
+     *     message="You do not have permission to update this."
+     * )
+     * @DemoRestricted(redirectRoute="admin_category_listing")
      *
      * @param Request $request
      *
@@ -142,6 +171,13 @@ class CategoryController extends FrameworkBundleAdminController
     /**
      * Process bulk action for categories status disabling.
      *
+     * @AdminSecurity(
+     *     "is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))",
+     *     redirectRoute="admin_category_listing",
+     *     message="You do not have permission to update this."
+     * )
+     * @DemoRestricted(redirectRoute="admin_category_listing")
+     *
      * @param Request $request
      *
      * @return RedirectResponse
@@ -169,6 +205,13 @@ class CategoryController extends FrameworkBundleAdminController
     /**
      * Processes bulk categories deleting.
      *
+     * @AdminSecurity(
+     *     "is_granted('delete', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_category_listing",
+     *     message="You do not have permission to delete this."
+     * )
+     * @DemoRestricted(redirectRoute="admin_category_listing")
+     *
      * @param Request $request
      *
      * @return RedirectResponse
@@ -194,7 +237,7 @@ class CategoryController extends FrameworkBundleAdminController
                     $this->trans('The selection has been successfully deleted.', 'Admin.Notifications.Success')
                 );
             } catch (CategoryException $e) {
-                $this->handleDeleteException($e);
+                $this->addFlash('error', $this->handleDeleteException($e));
             }
         }
 
@@ -203,6 +246,13 @@ class CategoryController extends FrameworkBundleAdminController
 
     /**
      * Process single category deleting.
+     *
+     * @AdminSecurity(
+     *     "is_granted('delete', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_category_listing",
+     *     message="You do not have permission to delete this."
+     * )
+     * @DemoRestricted(redirectRoute="admin_category_listing")
      *
      * @param Request $request
      *
@@ -226,7 +276,7 @@ class CategoryController extends FrameworkBundleAdminController
 
                 $this->addFlash('success', $this->trans('Successful deletion.', 'Admin.Notifications.Success'));
             } catch (CategoryException $e) {
-                $this->handleDeleteException($e);
+                $this->addFlash('error', $this->handleDeleteException($e));
             }
         }
 
@@ -252,6 +302,13 @@ class CategoryController extends FrameworkBundleAdminController
 
     /**
      * Export filtered categories.
+     *
+     * @AdminSecurity(
+     *     "is_granted(['read', 'update', 'create', 'delete'], request.get('_legacy_controller'))",
+     *     redirectRoute="admin_category_listing",
+     *     message="You do not have permission to view this."
+     * )
+     * @DemoRestricted(redirectRoute="admin_category_listing")
      *
      * @param CategoryFilters $filters
      *
