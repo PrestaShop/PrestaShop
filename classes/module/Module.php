@@ -108,6 +108,9 @@ abstract class ModuleCore implements ModuleInterface
     /** @var array used by AdminTab to determine which lang file to use (admin.php or module lang file) */
     public static $classInModule = array();
 
+    /** @var array|null used to cache module ids */
+    public static $id2name = null;
+
     /** @var array current language translations */
     protected $_lang = array();
 
@@ -1146,20 +1149,18 @@ abstract class ModuleCore implements ModuleInterface
      */
     public static function getInstanceById($id_module)
     {
-        static $id2name = null;
-
-        if (is_null($id2name)) {
-            $id2name = array();
+        if (is_null(self::$id2name)) {
+            self::$id2name = [];
             $sql = 'SELECT `id_module`, `name` FROM `' . _DB_PREFIX_ . 'module`';
             if ($results = Db::getInstance()->executeS($sql)) {
                 foreach ($results as $row) {
-                    $id2name[$row['id_module']] = $row['name'];
+                    self::$id2name[$row['id_module']] = $row['name'];
                 }
             }
         }
 
-        if (isset($id2name[$id_module])) {
-            return Module::getInstanceByName($id2name[$id_module]);
+        if (isset(self::$id2name[$id_module])) {
+            return Module::getInstanceByName(self::$id2name[$id_module]);
         }
 
         return false;

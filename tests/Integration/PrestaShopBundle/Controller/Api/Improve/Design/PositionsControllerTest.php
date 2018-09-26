@@ -26,14 +26,43 @@
 
 namespace Tests\Integration\PrestaShopBundle\Controller\Api\Improve\Design;
 
+use Cache;
+use Module;
+use Hook;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\Integration\PrestaShopBundle\Test\WebTestCase;
+use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManager;
 
 /**
  * @group api
  */
 class PositionsControllerTest extends WebTestCase
 {
+    protected $moduleId;
+    protected $otherModuleId;
+    protected $hookId;
+
+    public function setUp()
+    {
+        Cache::clear();
+        Module::$id2name = null;
+        parent::setUp();
+
+        /* @var ModuleManager */
+        $moduleManager = self::$kernel->getContainer()->get('prestashop.module.manager');
+        if (!Module::isInstalled('bankwire')) {
+            $moduleManager->install('bankwire');
+        }
+
+        if (!Module::isInstalled('ps_featuredproducts')) {
+            $moduleManager->install('ps_featuredproducts');
+        }
+
+        $this->moduleId = Module::getModuleIdByName('bankwire');
+        $this->otherModuleId = Module::getModuleIdByName('ps_featuredproducts');
+        $this->hookId = Hook::getIdByName('displayHome');
+    }
+
     public function testMoveHookPositionWithUnknownModule()
     {
         $this->client->request(
@@ -43,7 +72,7 @@ class PositionsControllerTest extends WebTestCase
             ),
             [
                 'moduleId' => 999999,
-                'hookId' => 184, // dashboardZoneOne hook
+                'hookId' => $this->hookId,
                 'way' => 1,
                 'positions' => []
             ]
@@ -69,8 +98,8 @@ class PositionsControllerTest extends WebTestCase
                 'api_improve_design_positions_update'
             ),
             [
-                'moduleId' => 4,
-                'hookId' => 184, // dashboardZoneOne hook
+                'moduleId' => $this->moduleId,
+                'hookId' => $this->hookId,
                 'way' => 1,
                 'positions' => []
             ]
@@ -96,12 +125,12 @@ class PositionsControllerTest extends WebTestCase
                 'api_improve_design_positions_update'
             ),
             [
-                'moduleId' => 4,
-                'hookId' => 3,
+                'moduleId' => $this->moduleId,
+                'hookId' => $this->otherModuleId,
                 'way' => 1,
                 'positions' => [
-                    '65_3',
-                    '65_4',
+                    sprintf('%d_%d', $this->otherModuleId, $this->hookId),
+                    sprintf('%d_%d', $this->moduleId, $this->hookId),
                 ]
             ]
         );
@@ -125,12 +154,12 @@ class PositionsControllerTest extends WebTestCase
                 'api_improve_design_positions_update'
             ),
             [
-                'moduleId' => 4,
-                'hookId' => 3,
+                'moduleId' => $this->moduleId,
+                'hookId' => $this->hookId,
                 'way' => 0,
                 'positions' => [
-                    '65_4',
-                    '65_3',
+                    sprintf('%d_%d', $this->moduleId, $this->hookId),
+                    sprintf('%d_%d', $this->otherModuleId, $this->hookId),
                 ]
             ]
         );
