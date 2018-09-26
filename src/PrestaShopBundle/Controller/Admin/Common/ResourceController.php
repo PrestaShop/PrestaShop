@@ -24,14 +24,39 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Form;
+namespace PrestaShopBundle\Controller\Admin\Common;
 
-interface EntityIdentifierInterface
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+
+class ResourceController extends Controller
 {
     /**
-     * Get entity id
+     * Add new resource
      *
-     * @return mixed
+     * @param Request $request
+     *
+     * @return Response
      */
-    public function getId();
+    public function addAction(
+        Request $request
+    ) {
+        $resourceForm = $resourceFormFactory->create();
+        $resourceForm->handleRequest($request);
+
+        if ($resourceForm->isSubmitted()) {
+            $resourceData = $resourceForm->getData();
+
+            if (!empty($errors = [])) {
+
+            }
+
+            if (($response = $onSuccessResponseHandler->onSuccess()) instanceof Response) {
+                return $response;
+            }
+        }
+
+        return $entryPointInitializer->start($request, $form, $config);
+    }
 }

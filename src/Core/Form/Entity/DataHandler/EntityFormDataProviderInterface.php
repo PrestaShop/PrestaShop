@@ -24,19 +24,14 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Form;
+namespace PrestaShop\PrestaShop\Core\Form\Entity\DataHandler;
 
-/**
- * Interface EntityFormDataProviderInterface
- */
+use PrestaShop\PrestaShop\Core\Form\Entity\EntityIdentifierInterface;
+use Symfony\Component\HttpFoundation\Request;
+
 interface EntityFormDataProviderInterface
 {
-    /**
-     * Get entity form data
-     *
-     * @param EntityIdentifierInterface $entityId
-     *
-     * @return array
-     */
-    public function getData(EntityIdentifierInterface $entityId);
+    public function getData(Request $request);
+
+    public function getDataFor(EntityIdentifierInterface $entityIdentifier);
 }

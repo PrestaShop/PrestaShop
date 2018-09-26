@@ -24,37 +24,31 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Form;
-
-use Symfony\Component\Form\FormInterface;
+namespace PrestaShop\PrestaShop\Core\Form\Entity;
 
 /**
- * Interface EntityFormHandlerInterface
+ * Class NumericEntityIdentifier stores numeric entity identifier
  */
-interface EntityFormFactoryInterface
+final class NumericEntityIdentifier implements EntityIdentifierInterface
 {
     /**
-     * Get entity form
-     *
-     * @return FormInterface
+     * @var int
      */
-    public function getForm();
+    private $numericId;
 
     /**
-     * Get form with data of given entity
-     *
-     * @param EntityIdentifierInterface $entityId
-     *
-     * @return FormInterface
+     * @param int $numericId
      */
-    public function getFormFor(EntityIdentifierInterface $entityId);
+    public function __construct($numericId)
+    {
+        $this->numericId = (int) $numericId;
+    }
 
     /**
-     * Get entity form with provided data
-     *
-     * @param array $data
-     *
-     * @return FormInterface
+     * {@inheritdoc}
      */
-    public function getFormWith(array $data);
+    public function getId()
+    {
+        return $this->numericId;
+    }
 }

@@ -24,23 +24,23 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Form;
+namespace PrestaShop\PrestaShop\Core\Form\Entity\ResponseHandler;
 
-final class EntityFormDataHandler implements EntityFormDataHandlerInterface
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+
+/**
+ * Interface FailureResponseHandlerInterface
+ */
+interface FailureResponseHandlerInterface
 {
     /**
-     * {@inheritdoc}
+     * Get response when for form handling failure.
+     * In most cases it's error flash message(s) without any response but can by anything.
+     *
+     * @param Request $request
+     *
+     * @return Response|null Response or null to continue request.
      */
-    public function createEntity(array $formData)
-    {
-
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function updateEntity(EntityIdentifierInterface $entityId, array $formData)
-    {
-        // TODO: Implement update() method.
-    }
+    public function getFailureResponse(Request $request);
 }

@@ -26,9 +26,10 @@
 
 namespace PrestaShopBundle\Controller\Admin\Common;
 
-use PrestaShop\PrestaShop\Core\Form\EntityFormDataHandlerInterface;
-use PrestaShop\PrestaShop\Core\Form\EntityFormFactoryInterface;
-use PrestaShop\PrestaShop\Core\Form\NumericEntityIdentifier;
+use PrestaShop\PrestaShop\Core\Form\Entity\FormFactory\EntityFormFactoryInterface;
+use PrestaShop\PrestaShop\Core\Form\Entity\ResponseHandler\EntryResponseHandlerInterface;
+use PrestaShop\PrestaShop\Core\Form\Entity\ResponseHandler\FailureResponseHandlerInterface;
+use PrestaShop\PrestaShop\Core\Form\Entity\ResponseHandler\SuccessResponseHandlerInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -39,81 +40,44 @@ use Symfony\Component\HttpFoundation\Response;
 class EntityController extends FrameworkBundleAdminController
 {
     /**
-     * Create new entity
+     * Add new entity.
      *
      * @param Request $request
+     * @param EntryResponseHandlerInterface $entryResponseHandler
+     * @param SuccessResponseHandlerInterface $successResponseHandler
+     * @param FailureResponseHandlerInterface $failureResponseHandler
      * @param EntityFormFactoryInterface $entityFormFactory
-     * @param EntityFormDataHandlerInterface $entityFormDataHandler
      *
      * @return Response
      */
-    public function createAction(
+    public function addAction(
         Request $request,
-        EntityFormFactoryInterface $entityFormFactory,
-        EntityFormDataHandlerInterface $entityFormDataHandler
+        EntryResponseHandlerInterface $entryResponseHandler,
+        SuccessResponseHandlerInterface $successResponseHandler,
+        FailureResponseHandlerInterface $failureResponseHandler,
+        EntityFormFactoryInterface $entityFormFactory
     ) {
         $entityForm = $entityFormFactory->getForm();
         $entityForm->handleRequest($request);
 
         if ($entityForm->isSubmitted()) {
-            $errors = $entityFormDataHandler->createEntity($entityForm->getData());
+            $errors = []; // @todo: form data saving should be performed here
 
             if (empty($errors)) {
-                $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+                $successResponse = $successResponseHandler->getSuccessResponse($request);
 
-                return $this->redirectToRoute(
-                    $request->attributes->get('redirect_after_create_route')
-                );
+                if ($successResponse instanceof Response) {
+                    return $successResponse;
+                }
+            } else {
+                $failureResponse = $failureResponseHandler->getFailureResponse($request);
+
+                if ($failureResponse instanceof Response) {
+                    return $failureResponse;
+                }
             }
-
-            $this->flashErrors($errors);
         }
 
-        return $this->render($request->attributes->get('template'), [
-            'entityForm' => $entityForm,
-        ]);
-    }
-
-    /**
-     * Update existing entity
-     *
-     * @param int $entityId
-     * @param Request $request
-     * @param EntityFormFactoryInterface $entityFormFactory
-     * @param EntityFormDataHandlerInterface $entityFormDataHandler
-     *
-     * @return Response
-     */
-    public function editAction(
-        $entityId,
-        Request $request,
-        EntityFormFactoryInterface $entityFormFactory,
-        EntityFormDataHandlerInterface $entityFormDataHandler
-    ) {
-        $entityIdentifier = new NumericEntityIdentifier($entityId);
-
-        $entityForm = $entityFormFactory->getFormFor($entityIdentifier);
-        $entityForm->handleRequest($request);
-
-        if ($entityForm->isSubmitted()) {
-            $errors = $entityFormDataHandler->updateEntity(
-                $entityIdentifier,
-                $entityForm->getData()
-            );
-
-            if (empty($errors)) {
-                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
-
-                return $this->redirectToRoute(
-                    $request->attributes->get('redirect_after_update_route')
-                );
-            }
-
-            $this->flashErrors($errors);
-        }
-
-        return $this->render($request->attributes->get('template'), [
-            'entityForm' => $entityForm,
-        ]);
+        return $entryResponseHandler->getEntryResponse($request, $entityForm);
     }
 }

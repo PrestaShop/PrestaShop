@@ -24,9 +24,38 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Form;
+namespace PrestaShop\PrestaShop\Core\Form\Entity\FormFactory;
 
-interface EntityDataHandlerInterface
+use PrestaShop\PrestaShop\Core\Form\Entity\EntityIdentifierInterface;
+use Symfony\Component\Form\FormInterface;
+
+/**
+ * Interface EntityFormHandlerInterface
+ */
+interface EntityFormFactoryInterface
 {
+    /**
+     * Get entity form
+     *
+     * @return FormInterface
+     */
+    public function getForm();
 
+    /**
+     * Get form with data of given entity
+     *
+     * @param EntityIdentifierInterface $entityId
+     *
+     * @return FormInterface
+     */
+    public function getFormFor(EntityIdentifierInterface $entityId);
+
+    /**
+     * Get entity form with provided data
+     *
+     * @param array $data
+     *
+     * @return FormInterface
+     */
+    public function getFormWith(array $data);
 }

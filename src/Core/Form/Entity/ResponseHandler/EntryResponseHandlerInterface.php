@@ -24,31 +24,25 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Form;
+namespace PrestaShop\PrestaShop\Core\Form\Entity\ResponseHandler;
+
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Class NumericEntityIdentifier stores numeric entity identifier
+ * Interface EntryResponseHandlerInterface
  */
-final class NumericEntityIdentifier implements EntityIdentifierInterface
+interface EntryResponseHandlerInterface
 {
     /**
-     * @var int
+     * Get response for not submitted form.
+     * In most cases it's form view with some additional view parameters.
+     *
+     * @param Request $request
+     * @param FormInterface $entityForm
+     *
+     * @return Response
      */
-    private $numericId;
-
-    /**
-     * @param int $numericId
-     */
-    public function __construct($numericId)
-    {
-        $this->numericId = (int) $numericId;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getId()
-    {
-        return $this->numericId;
-    }
+    public function getEntryResponse(Request $request, FormInterface $entityForm);
 }

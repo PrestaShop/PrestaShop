@@ -24,29 +24,23 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Form;
+namespace PrestaShop\PrestaShop\Core\Form\Entity\ResponseHandler;
+
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Interface EntityFormDataHandlerInterface
+ * Interface SuccessResponseHandlerInterface
  */
-interface EntityFormDataHandlerInterface
+interface SuccessResponseHandlerInterface
 {
     /**
-     * Create new entity from form data
+     * Get response after successful form handling.
+     * In most cases it's success flash message with redirect but can by anything.
      *
-     * @param array $formData
+     * @param Request $request
      *
-     * @return mixed
+     * @return Response|null Response or null to continue request.
      */
-    public function createEntity(array $formData);
-
-    /**
-     * Update existing entity with new form data
-     *
-     * @param EntityIdentifierInterface $entityId
-     * @param array $formData
-     *
-     * @return mixed
-     */
-    public function updateEntity(EntityIdentifierInterface $entityId, array $formData);
+    public function getSuccessResponse(Request $request);
 }

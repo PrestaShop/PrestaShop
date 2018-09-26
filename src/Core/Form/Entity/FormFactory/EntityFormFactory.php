@@ -24,8 +24,10 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Form;
+namespace PrestaShop\PrestaShop\Core\Form\Entity\FormFactory;
 
+use PrestaShop\PrestaShop\Core\Form\Entity\DataHandler\EntityFormDataProviderInterface;
+use PrestaShop\PrestaShop\Core\Form\Entity\EntityIdentifierInterface;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
@@ -94,7 +96,7 @@ final class EntityFormFactory implements EntityFormFactoryInterface
      */
     public function getFormFor(EntityIdentifierInterface $entityId)
     {
-        $entityData = $this->entityFormDataProvider->getData($entityId);
+        $entityData = $this->entityFormDataProvider->getDataFor($entityId);
 
         return $this->getEntityForm($entityData);
     }
