@@ -284,6 +284,23 @@ class CategoryController extends FrameworkBundleAdminController
     }
 
     /**
+     * Show category for editing.
+     *
+     * @param int $categoryId
+     *
+     * @return Response
+     */
+    public function editAction($categoryId)
+    {
+        return $this->redirect(
+            $this->getAdminLink('AdminCategories', [
+                'id_category' => $categoryId,
+                'updatecategory' => 1,
+            ])
+        );
+    }
+
+    /**
      * Export filtered categories.
      *
      * @AdminSecurity(
@@ -326,7 +343,7 @@ class CategoryController extends FrameworkBundleAdminController
             ->setData($data)
             ->setHeadersData($headers)
             ->setFileName('category_' . date('Y-m-d_His') . '.csv')
-        ;
+            ;
     }
 
     /**

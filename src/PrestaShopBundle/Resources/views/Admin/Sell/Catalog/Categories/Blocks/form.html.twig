@@ -162,9 +162,9 @@
               <strong>{{ 'You now have three default customer groups.'|trans({}, 'Admin.Catalog.Help') }}</strong>
             </p>
 
-            <p>{{ '%group_name% - All people without a valid customer account.'|trans({'%group_name%': '<strong>' ~ namesForDefaultGroups.visitorsGroupName ~ '</strong>'}, 'Admin.Catalog.Feature')|raw }}</p>
-            <p>{{ '%group_name% - Customer who placed an order with the guest checkout.'|trans({'%group_name%': '<strong>' ~ namesForDefaultGroups.guestsGroupName ~ '</strong>'}, 'Admin.Catalog.Feature')|raw }}</p>
-            <p>{{ '%group_name% - All people who have created an account on this site.'|trans({'%group_name%': '<strong>' ~ namesForDefaultGroups.customersGroupName ~ '</strong>'}, 'Admin.Catalog.Feature')|raw }}</p>
+            <p>{{ '%group_name% - All people without a valid customer account.'|trans({'%group_name%': '<strong>' ~ defaultGroups.visitorsGroup.name ~ '</strong>'}, 'Admin.Catalog.Feature')|raw }}</p>
+            <p>{{ '%group_name% - Customer who placed an order with the guest checkout.'|trans({'%group_name%': '<strong>' ~ defaultGroups.guestsGroup.name ~ '</strong>'}, 'Admin.Catalog.Feature')|raw }}</p>
+            <p>{{ '%group_name% - All people who have created an account on this site.'|trans({'%group_name%': '<strong>' ~ defaultGroups.customersGroup.name ~ '</strong>'}, 'Admin.Catalog.Feature')|raw }}</p>
           </div>
         </div>
       </div>

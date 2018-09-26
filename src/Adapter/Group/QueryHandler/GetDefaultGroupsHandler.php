@@ -28,16 +28,19 @@ namespace PrestaShop\PrestaShop\Adapter\Group\QueryHandler;
 
 use Group;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Domain\Group\DataTransferObject\DefaultGroup;
 use PrestaShop\PrestaShop\Core\Domain\Group\DataTransferObject\NamesForDefaultGroups;
-use PrestaShop\PrestaShop\Core\Domain\Group\Query\GetNamesForDefaultGroups;
-use PrestaShop\PrestaShop\Core\Domain\Group\QueryHandler\GetNamesForDefaultGroupsHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Group\DefaultGroups;
+use PrestaShop\PrestaShop\Core\Domain\Group\Query\GetDefaultGroups;
+use PrestaShop\PrestaShop\Core\Domain\Group\QueryHandler\GetDefaultGroupsHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Group\ValueObject\GroupId;
 
 /**
- * Class GetDefaultGroupsQueryHandler.
+ * Class GetDefaultGroupsHandler.
  *
  * @internal
  */
-final class GetNamesForDefaultGroupsHandler implements GetNamesForDefaultGroupsHandlerInterface
+final class GetDefaultGroupsHandler implements GetDefaultGroupsHandlerInterface
 {
     /**
      * @var ConfigurationInterface
@@ -61,16 +64,31 @@ final class GetNamesForDefaultGroupsHandler implements GetNamesForDefaultGroupsH
     /**
      * {@inheritdoc}
      */
-    public function handle(GetNamesForDefaultGroups $query)
+    public function handle(GetDefaultGroups $query)
     {
         $visitorsGroup = new Group($this->configuration->get('PS_UNIDENTIFIED_GROUP'));
         $guestsGroup = new Group($this->configuration->get('PS_GUEST_GROUP'));
         $customersGroup = new Group($this->configuration->get('PS_CUSTOMER_GROUP'));
 
-        return new NamesForDefaultGroups(
-            $visitorsGroup->name[$this->contextLangId],
-            $guestsGroup->name[$this->contextLangId],
+        $visitorsGroupDto = new DefaultGroup(
+            new GroupId($visitorsGroup->id),
+            $visitorsGroup->name[$this->contextLangId]
+        );
+
+        $guestsGroupDto = new DefaultGroup(
+            new GroupId($guestsGroup->id),
+            $guestsGroup->name[$this->contextLangId]
+        );
+
+        $customersGroupDto = new DefaultGroup(
+            new GroupId($customersGroup->id),
             $customersGroup->name[$this->contextLangId]
+        );
+
+        return new DefaultGroups(
+            $visitorsGroupDto,
+            $guestsGroupDto,
+            $customersGroupDto
         );
     }
 }
