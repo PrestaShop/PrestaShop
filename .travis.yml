@@ -32,7 +32,12 @@ env:
 matrix:
   include:
     - php: 7.2
-      env: EXTRA_DEPS=phpHigh EXTRA_TESTS=functional PRESTASHOP_TEST_TYPE=unit
+      env: EXTRA_DEPS=phpHigh  PRESTASHOP_TEST_TYPE=unit
+    - php: 7.2
+      env: PRESTASHOP_TEST_TYPE=e2e EXTRA_TESTS=functional
+  exclude:
+    - php: 7.2 # Replaced with additional tests
+      env: PRESTASHOP_TEST_TYPE=e2e
 
 before_install:
   # Avoid Composer authentication issues
