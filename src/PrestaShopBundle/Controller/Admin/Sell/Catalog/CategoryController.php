@@ -26,7 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
-use PrestaShop\PrestaShop\Core\Domain\Category\Command\AbstractAddCategoryCommand;
+use PrestaShop\PrestaShop\Core\Domain\Category\Command\AbstractCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddRootCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\EditableCategory;
@@ -133,7 +133,7 @@ class CategoryController extends FrameworkBundleAdminController
             }
         }
 
-        /** @var NamesForDefaultGroups $nameForDefaultGroups */
+        /** @var DefaultGroups $nameForDefaultGroups */
         $nameForDefaultGroups = $this->getQueryBus()->handle(new GetDefaultGroups());
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Categories/add_root.html.twig', [
@@ -178,7 +178,7 @@ class CategoryController extends FrameworkBundleAdminController
         $categoryForm = $this->createForm(CategoryType::class, $categoryFormData, $categoryFormOptions);
         $categoryForm->handleRequest($request);
 
-        /** @var NamesForDefaultGroups $nameForDefaultGroups */
+        /** @var GetDefaultGroups $nameForDefaultGroups */
         $nameForDefaultGroups = $this->getQueryBus()->handle(new GetDefaultGroups());
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Categories/edit.html.twig', [
@@ -196,10 +196,10 @@ class CategoryController extends FrameworkBundleAdminController
     }
 
     /**
-     * @param AbstractAddCategoryCommand $command
+     * @param AbstractCategoryCommand $command
      * @param array $data
      */
-    protected function fillCommandWithFormData(AbstractAddCategoryCommand $command, array $data)
+    protected function fillCommandWithFormData(AbstractCategoryCommand $command, array $data)
     {
         if (isset($data['description'])) {
             $command->setDescription($data['description']);

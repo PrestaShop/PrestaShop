@@ -26,9 +26,26 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Category\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryConstraintException;
+
 /**
  * Class AddRootCategoryCommand
  */
-class AddRootCategoryCommand extends AbstractAddCategoryCommand
+class AddRootCategoryCommand extends AbstractCategoryCommand
 {
+    /**
+     * @param string[] $name
+     * @param string[] $linkRewrite
+     * @param bool $isActive
+     *
+     * @throws CategoryConstraintException
+     */
+    public function __construct(array $name, array $linkRewrite, $isActive)
+    {
+        $this
+            ->setName($name)
+            ->setLinkRewrite($linkRewrite)
+            ->setIsActive($isActive)
+        ;
+    }
 }

@@ -32,7 +32,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 /**
  * Class AbstractAddCategoryCommand defines common command for both simple and root category creation.
  */
-abstract class AbstractAddCategoryCommand
+abstract class AbstractCategoryCommand
 {
     /**
      * @var string[]
@@ -93,22 +93,6 @@ abstract class AbstractAddCategoryCommand
      * @var UploadedFile[]
      */
     private $menuThumbnailImages = [];
-
-    /**
-     * @param string[] $name
-     * @param string[] $linkRewrite
-     * @param bool $isActive
-     *
-     * @throws CategoryConstraintException
-     */
-    public function __construct(array $name, array $linkRewrite, $isActive)
-    {
-        $this
-            ->setName($name)
-            ->setLinkRewrite($linkRewrite)
-            ->setIsActive($isActive)
-        ;
-    }
 
     /**
      * @return string[]

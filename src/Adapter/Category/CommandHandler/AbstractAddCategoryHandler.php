@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Category\CommandHandler;
 
 use Category;
-use PrestaShop\PrestaShop\Core\Domain\Category\Command\AbstractAddCategoryCommand;
+use PrestaShop\PrestaShop\Core\Domain\Category\Command\AbstractCategoryCommand;
 use PrestaShop\PrestaShop\Core\Image\Uploader\ImageUploaderInterface;
 
 /**
@@ -70,11 +70,11 @@ abstract class AbstractAddCategoryHandler
     /**
      * Build (but not save) Category's object model so it can be used to create simple or root category.
      *
-     * @param AbstractAddCategoryCommand $command
+     * @param AbstractCategoryCommand $command
      *
      * @return Category
      */
-    protected function buildCategory(AbstractAddCategoryCommand $command)
+    protected function buildCategory(AbstractCategoryCommand $command)
     {
         $category = new Category();
         $category->name = $command->getName();
@@ -95,9 +95,9 @@ abstract class AbstractAddCategoryHandler
 
     /**
      * @param Category $category
-     * @param AbstractAddCategoryCommand $command
+     * @param AbstractCategoryCommand $command
      */
-    protected function uploadImages(Category $category, AbstractAddCategoryCommand $command)
+    protected function uploadImages(Category $category, AbstractCategoryCommand $command)
     {
         if (null !== $command->getCoverImage()) {
             $this->categoryImageUploader->upload(
