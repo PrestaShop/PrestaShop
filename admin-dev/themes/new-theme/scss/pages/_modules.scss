@@ -195,8 +195,8 @@
     display: flex;
     justify-content: center;
     position: relative;
-    bottom: -10px;
-    
+    bottom: -25px;
+
     .dropdown-menu {
       right: 10px;
       left: 10px;
@@ -326,7 +326,7 @@
 .module-sort-switch {
   color: #C7D6DB;
 }
-.module-search-result-wording {
+.module-search-result-title {
   color: #1E2024 !important;
   font-family: "Open Sans", Helvetica, Arial, sans-serif !important;
   font-weight: bold;

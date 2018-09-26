@@ -224,11 +224,16 @@ class AdminModuleController {
 
   initBOEventRegistering() {
     window.BOEvent.on('Module Disabled', this.onModuleDisabled, this);
+    window.BOEvent.on('Module Uninstalled', this.updateTotalResults, this);
   }
 
   onModuleDisabled() {
-    this.getModuleItemSelector();
-    // Don't care nothing to do?
+    const self = this;
+    const moduleItemSelector = self.getModuleItemSelector();
+
+    $('.modules-list').each(function scanModulesList() {
+      self.updateTotalResults();
+    });
   }
 
   initPlaceholderMechanism() {
@@ -320,7 +325,7 @@ class AdminModuleController {
           description: $this.data('description').toLowerCase(),
           techName: $this.data('tech-name').toLowerCase(),
           childCategories: $this.data('child-categories'),
-          categories: String($this.closest('.modules-list').data('name')).toLowerCase(),
+          categories: String($this.data('categories')).toLowerCase(),
           type: $this.data('type'),
           price: parseFloat($this.data('price')),
           active: parseInt($this.data('active'), 10),
@@ -505,6 +510,8 @@ class AdminModuleController {
     if (self.currentTagsList.length) {
       $('.modules-list').append(this.currentDisplay === self.DISPLAY_GRID ? this.addonsCardGrid : this.addonsCardList);
     }
+
+    self.updateTotalResults();
   }
 
   initPageChangeProtection() {
@@ -546,17 +553,17 @@ class AdminModuleController {
     const self = this;
 
     // Make addons connect modal ready to be clicked
-    if ($(this.addonsConnectModalBtnSelector).attr('href') === '#') {
-      $(this.addonsConnectModalBtnSelector).data('toggle', 'modal');
-      $(this.addonsConnectModalBtnSelector).data('target', this.addonsConnectModalSelector);
+    if ($(self.addonsConnectModalBtnSelector).attr('href') === '#') {
+      $(self.addonsConnectModalBtnSelector).attr('data-toggle', 'modal');
+      $(self.addonsConnectModalBtnSelector).attr('data-target', self.addonsConnectModalSelector);
     }
 
-    if ($(this.addonsLogoutModalBtnSelector).attr('href') === '#') {
-      $(this.addonsLogoutModalBtnSelector).data('toggle', 'modal');
-      $(this.addonsLogoutModalBtnSelector).data('target', this.addonsLogoutModalSelector);
+    if ($(self.addonsLogoutModalBtnSelector).attr('href') === '#') {
+      $(self.addonsLogoutModalBtnSelector).attr('data-toggle', 'modal');
+      $(self.addonsLogoutModalBtnSelector).attr('data-target', self.addonsLogoutModalSelector);
     }
 
-    $('body').on('submit', this.addonsConnectForm, function initializeBodySubmit(event) {
+    $('body').on('submit', self.addonsConnectForm, function initializeBodySubmit(event) {
       event.preventDefault();
       event.stopPropagation();
 
@@ -584,8 +591,8 @@ class AdminModuleController {
   initAddModuleAction() {
     const self = this;
     const addModuleButton = $(self.addonsImportModalBtnSelector);
-    addModuleButton.data('toggle', 'modal');
-    addModuleButton.data('target', self.dropZoneModalSelector);
+    addModuleButton.attr('data-toggle', 'modal');
+    addModuleButton.attr('data-target', self.dropZoneModalSelector);
   }
 
   initDropzone() {
@@ -734,7 +741,7 @@ class AdminModuleController {
     self.animateEndUpload(() => {
       if (result.status === true) {
         if (result.is_configurable === true) {
-          const configureLink = window.moduleURLs.configurationPage.replace('1', result.module_name);
+          const configureLink = window.moduleURLs.configurationPage.replace(/:number:/, result.module_name);
           $(self.moduleImportSuccessConfigureBtnSelector).attr('href', configureLink);
           $(self.moduleImportSuccessConfigureBtnSelector).show();
         }
@@ -952,7 +959,7 @@ class AdminModuleController {
       moduleTechName = $(this).data('tech-name');
       bulkModulesTechNames.push({
         techName: moduleTechName,
-        actionMenuObj: $(this).parent().next(),
+        actionMenuObj: $(this).closest('.module-checkbox-bulk-list').next(),
       });
     });
 
@@ -1123,6 +1130,43 @@ class AdminModuleController {
       $(self.seeMoreSelector).removeClass('d-none');
       self.updateModuleVisibility();
     });
+  }
+
+  updateTotalResults() {
+    const replaceFirstWordBy = (element, value) => {
+      const explodedText = element.text().split(' ');
+      explodedText[0] = value;
+      element.text(explodedText.join(' '));
+    };
+
+    // If there are some shortlist: each shortlist count the modules on the next container.
+    const $shortLists = $('.module-short-list');
+    if ($shortLists.length > 0) {
+      $shortLists.each(function shortLists() {
+        const $this = $(this);
+        replaceFirstWordBy(
+          $this.find('.module-search-result-wording'),
+          $this.next('.modules-list').find('.module-item').length
+        );
+      });
+
+      // If there is no shortlist: the wording directly update from the only module container.
+    } else {
+      const modulesCount = $('.modules-list').find('.module-item').length;
+      replaceFirstWordBy($('.module-search-result-wording'), modulesCount);
+
+      const selectorToToggle = (self.currentDisplay === self.DISPLAY_LIST) ?
+                               this.addonItemListSelector :
+                               this.addonItemGridSelector;
+      $(selectorToToggle).toggle(modulesCount !== (this.modulesList.length / 2));
+
+      if (modulesCount === 0) {
+        $('.module-addons-search-link').attr(
+          'href',
+          `${this.baseAddonsUrl}search.php?search_query=${encodeURIComponent(this.currentTagsList.join(' '))}`
+        );
+      }
+    }
   }
 }
 

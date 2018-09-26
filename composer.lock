@@ -3134,16 +3134,16 @@
         },
         {
             "name": "prestashop/dashproducts",
-            "version": "v2.0.3",
+            "version": "v2.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/dashproducts.git",
-                "reference": "eac47a61b8e7256852b8fc358afbba1abb481523"
+                "reference": "dc07a3385e1f7274e54ad1c8254f0eb5235c9c05"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/dashproducts/zipball/eac47a61b8e7256852b8fc358afbba1abb481523",
-                "reference": "eac47a61b8e7256852b8fc358afbba1abb481523",
+                "url": "https://api.github.com/repos/PrestaShop/dashproducts/zipball/dc07a3385e1f7274e54ad1c8254f0eb5235c9c05",
+                "reference": "dc07a3385e1f7274e54ad1c8254f0eb5235c9c05",
                 "shasum": ""
             },
             "require": {
@@ -3152,7 +3152,7 @@
             "type": "prestashop-module",
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "AFL - Academic Free License (AFL 3.0)"
+                "AFL-3.0"
             ],
             "authors": [
                 {
@@ -3162,7 +3162,7 @@
             ],
             "description": "PrestaShop module dashproducts",
             "homepage": "https://github.com/PrestaShop/dashproducts",
-            "time": "2017-12-08T12:25:41+00:00"
+            "time": "2018-08-14T16:14:27+00:00"
         },
         {
             "name": "prestashop/dashtrends",
@@ -3662,16 +3662,16 @@
         },
         {
             "name": "prestashop/ps_facetedsearch",
-            "version": "v2.1.2",
+            "version": "v2.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_facetedsearch.git",
-                "reference": "d131df75a252948b0f03f39ec59900d8a28fb1c0"
+                "reference": "ff3cb50836afbba5bf1ae2fd286ea9a48072aeea"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_facetedsearch/zipball/d131df75a252948b0f03f39ec59900d8a28fb1c0",
-                "reference": "d131df75a252948b0f03f39ec59900d8a28fb1c0",
+                "url": "https://api.github.com/repos/PrestaShop/ps_facetedsearch/zipball/ff3cb50836afbba5bf1ae2fd286ea9a48072aeea",
+                "reference": "ff3cb50836afbba5bf1ae2fd286ea9a48072aeea",
                 "shasum": ""
             },
             "require": {
@@ -3693,7 +3693,7 @@
             ],
             "description": "PrestaShop module ps_facetedsearch",
             "homepage": "https://github.com/PrestaShop/ps_facetedsearch",
-            "time": "2018-06-05T10:06:18+00:00"
+            "time": "2018-09-03T10:34:18+00:00"
         },
         {
             "name": "prestashop/ps_featuredproducts",
@@ -3793,16 +3793,16 @@
         },
         {
             "name": "prestashop/ps_legalcompliance",
-            "version": "v3.0.0",
+            "version": "v3.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_legalcompliance.git",
-                "reference": "44e88e2c0b339bbc9eae7929cc7cf9f266984582"
+                "reference": "711fd54ca281c2e5924e5b028204a71209cc124b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_legalcompliance/zipball/44e88e2c0b339bbc9eae7929cc7cf9f266984582",
-                "reference": "44e88e2c0b339bbc9eae7929cc7cf9f266984582",
+                "url": "https://api.github.com/repos/PrestaShop/ps_legalcompliance/zipball/711fd54ca281c2e5924e5b028204a71209cc124b",
+                "reference": "711fd54ca281c2e5924e5b028204a71209cc124b",
                 "shasum": ""
             },
             "require": {
@@ -3821,7 +3821,7 @@
             ],
             "description": "PrestaShop module ps_legalcompliance",
             "homepage": "https://github.com/PrestaShop/advancedeucompliance",
-            "time": "2017-12-08T10:30:34+00:00"
+            "time": "2018-09-19T08:24:31+00:00"
         },
         {
             "name": "prestashop/ps_linklist",
@@ -4017,16 +4017,16 @@
         },
         {
             "name": "prestashop/ps_themecusto",
-            "version": "v1.0.8",
+            "version": "v1.0.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_themecusto.git",
-                "reference": "b1a332e8afbb858b1cd54c952d34b27fc82d505d"
+                "reference": "0500e9d3d6afe36a25769bd251a07c52d6be8298"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_themecusto/zipball/b1a332e8afbb858b1cd54c952d34b27fc82d505d",
-                "reference": "b1a332e8afbb858b1cd54c952d34b27fc82d505d",
+                "url": "https://api.github.com/repos/PrestaShop/ps_themecusto/zipball/0500e9d3d6afe36a25769bd251a07c52d6be8298",
+                "reference": "0500e9d3d6afe36a25769bd251a07c52d6be8298",
                 "shasum": ""
             },
             "require": {
@@ -4045,7 +4045,7 @@
             ],
             "description": "PrestaShop module ps_themecusto",
             "homepage": "https://github.com/PrestaShop/ps_themecusto",
-            "time": "2018-07-18T09:53:26+00:00"
+            "time": "2018-09-19T15:46:24+00:00"
         },
         {
             "name": "prestashop/ps_wirepayment",

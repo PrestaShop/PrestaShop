@@ -26,14 +26,38 @@
 
 namespace Tests\Integration\PrestaShopBundle\Controller\Admin\Improve\Design;
 
+use Cache;
+use Hook;
+use Module;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\Integration\PrestaShopBundle\Test\WebTestCase;
+use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManager;
 
 /**
  * @group demo
  */
 class PositionsControllerTest extends WebTestCase
 {
+    protected $moduleId;
+    protected $hookId;
+
+    public function setUp()
+    {
+        Cache::clear();
+        Module::clearStaticCache();
+
+        parent::setUp();
+
+        if (!Module::isInstalled('ps_emailsubscription')) {
+            /* @var ModuleManager */
+            $moduleManager = self::$kernel->getContainer()->get('prestashop.module.manager');
+            $moduleManager->install('ps_emailsubscription');
+        }
+
+        $this->moduleId = Module::getModuleIdByName('ps_emailsubscription');
+        $this->hookId = Hook::getIdByName('displayFooterBefore');
+    }
+
     public function testUnhooksListAction()
     {
         $this->client->request(
@@ -43,10 +67,14 @@ class PositionsControllerTest extends WebTestCase
             ),
             [
                 'unhooks' => [
-                    '41_1',
-                    '65_1000',
-                    '1000000_3',
-                    '65_3',
+                    sprintf('%d_%d', $this->hookId, $this->moduleId),
+                    sprintf('%d_1000', $this->hookId),
+                    sprintf('10000_%d', $this->moduleId),
+                    sprintf(
+                        '%d_%d',
+                        $this->hookId,
+                        $this->moduleId
+                    ),
                     'aa_dd',
                     'something'
                 ],
@@ -86,8 +114,8 @@ class PositionsControllerTest extends WebTestCase
                 'admin_modules_positions_unhook'
             ),
             [
-                'moduleId' => 3,
-                'hookId' => 65,
+                'moduleId' => $this->moduleId,
+                'hookId' => $this->hookId,
             ]
         );
 
