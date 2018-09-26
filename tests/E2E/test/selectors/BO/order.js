@@ -30,7 +30,9 @@ module.exports = {
     delete_button: '(//*[@id="table-cart"]//a[@class="delete"])[1]',
     stock_product: '//*[@id="orderProducts"]//tr[%NUMBER]/td[5]',
     total_order: '//*[@id="total_order"]/td[@class="amount text-right nowrap"]/strong',
-    total_product_price: '//*[@id="orderProducts"]//tr[%NUMBER]/td[6]'
+    total_product_price: '//*[@id="orderProducts"]//tr[%NUMBER]/td[6]',
+    first_shopping_cart_checkbox : '//*[@id="table-cart"]//tr[1]//input[@name="cartBox[]"]',
+    first_dropdown_button: '//*[@id="table-cart"]/tbody//tr[1]//button[@data-toggle="dropdown"]'
   },
 
   CreateOrder: {

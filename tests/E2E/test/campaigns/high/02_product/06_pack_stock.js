@@ -59,5 +59,14 @@ scenario('Check "Orders"', () => {
     test('should search for the product', () => client.searchByValue(SearchProductPage.search_input, SearchProductPage.search_button, productData[1]['name'] + date_time));
     test('should go to the product page', () => client.waitForExistAndClick(SearchProductPage.product_result_name));
     test('should verify that the button "AJOUTER AU PANIER" is DISABLED', () => client.checkEnable(CheckoutOrderPage.add_to_cart_button));
-  }, 'order');
+  }, 'order',true);
+  scenario('Login in the Back Office', client => {
+     test('should open the browser', () => client.open());
+     test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
+  }, 'product/product');
+  scenario('Change reset "Default pack stock management" configuration', client => {
+      test('Should go to "Product settings" page', () => client.goToSubtabMenuPage(Menu.Configure.ShopParameters.shop_parameters_menu, Menu.Configure.ShopParameters.product_settings_submenu));
+      test('Should select "Decrement pack only" of "Default pack stock management"', () => client.waitAndSelectByValue(ProductSettings.stockManagement_button,0));
+      test('Should click "Save" button', () => client.scrollWaitForExistAndClick(ProductSettings.save_button.replace('%POS', 3)));
+  }, 'product/product');
 }, 'product/product', true);

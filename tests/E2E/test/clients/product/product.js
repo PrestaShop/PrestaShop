@@ -99,7 +99,7 @@ class Product extends CommonClient {
       .waitForVisibleAndClick(AddProductPage.related_product_item);
   }
 
-  addFeatureHeight(type) {
+  addFeature(type) {
     if (type === 'pack') {
       this.client
         .scrollTo(AddProductPage.product_add_feature_btn, 50);
@@ -108,7 +108,7 @@ class Product extends CommonClient {
       .scrollTo(AddProductPage.product_add_feature_btn, 150)
       .waitForExistAndClick(AddProductPage.product_add_feature_btn)
       .waitForExistAndClick(AddProductPage.feature_select_button)
-      .waitForExistAndClick(AddProductPage.feature_select_option_height)
+      .waitForExistAndClick(AddProductPage.feature_select_option)
       .waitAndSetValue(AddProductPage.feature_custom_value_height, data.standard.features.feature1.custom_value);
   }
 

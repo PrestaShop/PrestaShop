@@ -5,6 +5,7 @@ const {CreateOrder} = require('../../../selectors/BO/order');
 const orderScenarios = require('../../common_scenarios/order');
 const {AddProductPage} = require('../../../selectors/BO/add_product_page');
 const {Menu} = require('../../../selectors/BO/menu.js');
+const stockCommonScenarios = require('../../common_scenarios/stock');
 
 const common_scenarios = require('../../common_scenarios/product');
 
@@ -30,7 +31,7 @@ scenario('Check order movement', client => {
   }, 'stocks');
 
   scenario('Create "Product"', () => {
-    common_scenarios.createProduct(AddProductPage, productData);
+     stockCommonScenarios.createProduct(AddProductPage, productData);
   }, 'order');
 
   orderScenarios.createOrderBO(OrderPage, CreateOrder, productData);
@@ -44,8 +45,7 @@ scenario('Check order movement', client => {
 
   scenario('Check order movement', client => {
     test('should go to "Stocks" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.stocks_submenu));
-    test('should go to "Movements" tabs', () => client.goToStockMovements(Menu, Movement));
-    test('should check the movements of the delivered product', () => client.checkMovement(Movement, 1, '4', "-", "Customer Order", "mvt"));
+    stockCommonScenarios.checkMovementHistory(client, Menu, Movement, 1, "4", "-",  "Customer Order", "mvt");
   }, 'stocks');
 
 }, 'stocks', true);

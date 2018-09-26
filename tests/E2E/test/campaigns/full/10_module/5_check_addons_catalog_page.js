@@ -1,6 +1,8 @@
 const {AccessPageBO} = require('../../../selectors/BO/access_page');
 const {Menu} = require('../../../selectors/BO/menu');
 const {ModulesCatalogPage} = require('../../../selectors/BO/addons_catalog_page');
+const {AddProductPage} = require('../../../selectors/BO/add_product_page');
+
 let promise = Promise.resolve();
 
 scenario('Check the addons catalog page in the Back Office', () => {
@@ -9,9 +11,20 @@ scenario('Check the addons catalog page in the Back Office', () => {
     test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'common_client');
   scenario('Check the addons catalog page', client => {
-    test('should go to "Modules Catalog" page', () => client.goToSubtabMenuPage(Menu.Improve.Modules.modules_menu, Menu.Improve.Modules.modules_catalog));
-    test('should click on "Modules Selections" tab', () => client.waitForExistAndClick(Menu.Improve.Modules.modules_catalog_submenu));
+    test('should go to "Modules Catalog" page', () => client.goToSubtabMenuPage(Menu.Improve.Modules.modules_menu, Menu.Improve.Modules.modules_catalog_submenu));
+    test('should click on "Modules Selections" tab', () => client.waitForExistAndClick(Menu.Improve.Modules.modules_selections_submenu));
     test('should click on "View all the Traffic modules" link', () => client.waitForExistAndClick(ModulesCatalogPage.view_all_traffic_modules_link));
+    test('should check then close the "Symfony" toolbar', () => {
+        return promise
+            .then(() => client.isVisible(AddProductPage.symfony_toolbar, 3000))
+            .then(() => {
+                if (global.isVisible) {
+                    client.waitForExistAndClick(AddProductPage.symfony_toolbar);
+                }
+            })
+            .then(() => client.pause(1000));
+    });
+
     test('should check that the page is well opened', () => {
       return promise
         .then(() => client.switchWindow(1))

@@ -9,7 +9,7 @@ module.exports = {
     language_button: '//*[@id="conf_id_PS_MAINTENANCE_TEXT"]//button[@type= "button" and contains(@class, "dropdown-toggle")]',
     language_option: '(//a[contains(text(), "%LANG")])[%ID]',
     save_button: '//button[contains(text(), "Save")]',
-    enable_multistore: '//label[contains(@for, "form_general_multishop_feature_active_1")]',
+    enable_disable_multistore_toggle_button: '//label[@for="form_general_multishop_feature_active_%ID"]',
     general_save_button: '//*[@id="configuration_form"]//button',
     textarea_input: '(//*[@id="form_general_maintenance_text"]//div[@class="mce-tinymce mce-container mce-panel"])[%ID]',
     maintenance_message: '//*[@id="content"]',

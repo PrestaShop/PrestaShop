@@ -26,7 +26,7 @@ scenario('Create, edit, delete and check "Contact" in the Back Office', () => {
     }, 'common_client');
     commonScenarios.sendMessageFO(messageData);
     scenario('Go back to the Back Office', client => {
-      test('should go back to the Back Office', () => client.accessToBO(AccessPageBO));
+      test('should go back to the Back Office', () => client.signInBO(AccessPageBO));
     }, 'common_client');
     commonScenarios.checkCustomerService(contactData, messageData);
   }, 'common_client');
@@ -38,7 +38,7 @@ scenario('Create, edit, delete and check "Contact" in the Back Office', () => {
     }, 'common_client');
     commonScenarios.checkContactFO(contactData);
     scenario('Go back to the Back Office', client => {
-      test('should go back to the Back Office', () => client.accessToBO(AccessPageBO));
+      test('should go back to the Back Office', () => client.signInBO(AccessPageBO));
     }, 'common_client');
     commonScenarios.checkTitleCustomerService(contactData, messageData);
     commonScenarios.checkCustomerService(contactData, messageData, false, true);
@@ -52,7 +52,7 @@ scenario('Create, edit, delete and check "Contact" in the Back Office', () => {
   }, 'common_client');
   scenario('Test 4: Delete a "Contact" with bulk action in the Back Office and check it in the Front Office', () => {
     scenario('Go back to the Back Office', client => {
-      test('should go back to the Back Office', () => client.accessToBO(AccessPageBO));
+      test('should go back to the Back Office', () => client.signInBO(AccessPageBO));
     }, 'common_client');
     commonScenarios.createContact(JSON.parse(JSON.stringify(contactData)));
     commonScenarios.deleteContactWithBulkAction(contactData.title);
@@ -62,7 +62,6 @@ scenario('Create, edit, delete and check "Contact" in the Back Office', () => {
     commonScenarios.checkContactFO(contactData, true);
   }, 'common_client');
   scenario('Logout from the Back Office', client => {
-    test('should go back to the Back Office', () => client.accessToBO(AccessPageBO));
     test('should logout successfully from the Back Office', () => client.signOutBO());
   }, 'common_client');
 }, 'common_client', true);

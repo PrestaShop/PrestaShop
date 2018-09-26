@@ -22,7 +22,7 @@ scenario('Configure shop in the Back Office', () => {
           }
         });
     });
-    test('should click on "Enable multistore"', () => client.scrollWaitForExistAndClick(ShopParameters.enable_multistore, 50));
+    test('should click on "Enable multistore"', () => client.scrollWaitForExistAndClick(ShopParameters.enable_disable_multistore_toggle_button.replace("%ID",1), 50));
     test('should click on "Save" button', () => client.waitForExistAndClick(ShopParameters.general_save_button));
     test('should verify the appearance of the green validation', () => client.checkTextValue(ShopParameters.success_box, "Successful update."));
     test('should click on "Maintenance" tab', () => client.waitForExistAndClick(ShopParameters.maintenance_tab));
@@ -54,5 +54,11 @@ scenario('Configure shop in the Back Office', () => {
         .then(() => client.switchWindow(1));
     });
     test('should check that the shop is enabled', () => client.signInFO(AccessPageFO));
+  }, 'common_client');
+  scenario('Disable "MultiStore" in the Back Office', client => {
+    test('should go back to the "Back Office"', () => client.switchWindow(0));
+    test('should go to "General" page', () => client.goToSubtabMenuPage(Menu.Configure.ShopParameters.shop_parameters_menu, Menu.Configure.ShopParameters.general_submenu));
+    test('should disable multistore', () => client.scrollWaitForExistAndClick(ShopParameters.enable_disable_multistore_toggle_button.replace('%ID', 0)));
+    test('should click on "Save" button', () => client.scrollWaitForExistAndClick(ShopParameters.save_button));
   }, 'common_client');
 }, 'common_client', true);

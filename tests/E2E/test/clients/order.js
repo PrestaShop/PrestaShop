@@ -81,6 +81,8 @@ class Order extends CommonClient {
   }
 
   checkExportedFileInfo(pause = 0) {
+    console.log(global.orders);
+    console.log(global.lineFile);
     return this.client
       .pause(pause)
       .then(() => {

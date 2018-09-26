@@ -29,8 +29,8 @@ let productData = [
     summary: 'White Ceramic Mug. 325ml',
     description: 'Add an optimistic touch to your morning coffee and start the day in a good mood! 8,2cm diameter / 9,5cm height / 0.43kg. Dishwasher-proof.',
     feature: {
-      name: 'Frame Size',
-      predefined_value: '',
+      name: 'Color',
+      predefined_value: 'White',
       customized_value: ''
     }
   }, {
@@ -73,8 +73,8 @@ let productData = [
     summary: 'White Ceramic Mug. 325ml',
     description: 'Customize your mug with the text of your choice. A mood, a message, a quote... It\'s up to you! Maximum number of characters:',
     feature: {
-      name: '',
-      predefined_value: '',
+      name: 'Color',
+      predefined_value: 'White',
       customized_value: ''
     }
   }

@@ -11,7 +11,7 @@ scenario('Install "PrestaShop Security" module', () => {
     test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'common_client');
   scenario('Install "PrestaShop Security" module by uploading a ZIP file', client => {
-    test('should go to "Module" page', () => client.goToSubtabMenuPage(Menu.Improve.Modules.modules_menu, Menu.Improve.Modules.modules_services_submenu));
+    test('should go to "Module" page', () => client.goToSubtabMenuPage(Menu.Improve.Modules.modules_menu, Menu.Improve.Modules.modules_manager_submenu));
     test('should click on "Upload a module" button', () => client.waitForExistAndClick(ModulePage.upload_button));
     test('should add zip file', () => client.addFile(ModulePage.zip_file_input, "v1.1.7-prestafraud.zip"));
     test('should verify that the module is installed', () => {
@@ -23,11 +23,23 @@ scenario('Install "PrestaShop Security" module', () => {
     test('should click on "Installed Modules"', () => client.waitForExistAndClick(Menu.Improve.Modules.installed_modules_tabs, 1000));
     test('should search for "PrestaShop Security" module in the installed module tab', () => client.waitAndSetValue(ModulePage.modules_search_input, "prestafraud"));
     test('should click on "Search" button', () => client.waitForExistAndClick(ModulePage.modules_search_button));
-    test('should check if the module "prestafraud" was installed', () => client.checkTextValue(ModulePage.built_in_module_span, "1", "contain"));
+    test('should check if the module "prestafraud" was installed', () => client.isVisible(ModulePage.installed_module_div.replace("%moduleTechName","prestafraud")));
   }, 'common_client');
+    scenario('Close "Symfony" toolbar', client => {
+        test('should check then close the "Symfony" toolbar', () => {
+            return promise
+                .then(() => client.isVisible(AddProductPage.symfony_toolbar, 3000))
+                .then(() => {
+                    if (global.isVisible) {
+                        client.waitForExistAndClick(AddProductPage.symfony_toolbar);
+                    }
+                })
+                .then(() => client.pause(1000));
+        });
+    }, 'common_client');
   scenario('Check Configuration page of "PrestaShop Security" module', client => {
     module_common_scenarios.checkConfigPage(client, ModulePage, "prestafraud");
-  }, 'common_client');
+  }, 'module');
   scenario('Uninstall "PrestaShop Security" module', client => {
     module_common_scenarios.uninstallModule(client, ModulePage, AddProductPage, "prestafraud");
   }, 'common_client');

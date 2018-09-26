@@ -1,6 +1,8 @@
 const {AccessPageBO} = require('../../../../selectors/BO/access_page');
 const {Menu} = require('../../../../selectors/BO/menu');
 const {ThemeCatalog} = require('../../../../selectors/BO/design/theme_catalog');
+const {AddProductPage} = require('../../../../selectors/BO/add_product_page');
+
 let promise = Promise.resolve();
 
 scenario('Check the addons theme in the Back Office', () => {
@@ -28,6 +30,16 @@ scenario('Check the addons theme in the Back Office', () => {
         .then(() => client.switchWindow(2))
         .then(() => client.checkTextValue(ThemeCatalog.theme_header_name, tab['themeName'], 'contain'))
         .then(() => client.switchWindow(0));
+    });
+    test('should check then close the "Symfony" toolbar', () => {
+        return promise
+            .then(() => client.isVisible(AddProductPage.symfony_toolbar, 3000))
+            .then(() => {
+                if (global.isVisible) {
+                    client.waitForExistAndClick(AddProductPage.symfony_toolbar);
+                }
+            })
+            .then(() => client.pause(1000));
     });
     test('should click on "Discover" button of the 17th theme', () => {
       return promise
