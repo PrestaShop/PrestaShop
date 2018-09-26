@@ -215,11 +215,10 @@ $(document).ready(function()
 	}
 });
 
-//find a specific price rule, based on pre calculated dom display array
-function findSpecificPrice(){
+function findSpecificPriceDomNode(){
 	var domData = $("#quantityDiscount table tbody tr").not( ":hidden" );
 	var nbProduct = $('#quantity_wanted').val();
-	var newPrice = false;
+	var domNode = false;
 
 	//construct current specific price for current combination
 	domData.each(function(i){
@@ -234,12 +233,27 @@ function findSpecificPrice(){
 			(dataDiscountNextQuantity != -1 && nbProduct >= dataDiscountQuantity && nbProduct < dataDiscountNextQuantity) ||
 			(dataDiscountNextQuantity == -1 && nbProduct >= dataDiscountQuantity)
 		){
-			newPrice = $(this).attr('data-real-discount-value');
+			domNode = $(this);
 			return false;
 		}
 	});
 
+	return domNode;
+}
+
+//find a specific price rule, based on pre calculated dom display array
+function findSpecificPrice(){
+	var domNode = findSpecificPriceDomNode();
+	var newPrice = domNode ? $(domNode).attr('data-real-discount-value') : false;
+
 	return newPrice;
+}
+
+function findSpecificPriceDiscount(){
+	var domNode = findSpecificPriceDomNode();
+	var newDiscount = domNode ? $(domNode).attr('data-discount') : false;
+	
+	return newDiscount;
 }
 
 $(window).resize(function(){
@@ -292,6 +306,14 @@ $(document).on('change', '#quantity_wanted', function(e){
 
 	if(false !== specificPrice){
 		$('#our_price_display').text(specificPrice);
+		var specificPriceDiscount = findSpecificPriceDiscount();
+		if(specificPriceDiscount) {
+			var toFix = 2;
+			if ((parseFloat(specificPriceDiscount).toFixed(2) - parseFloat(specificPriceDiscount).toFixed(0)) == 0)
+				toFix = 0;
+			$('#reduction_percent_display').html('-' + parseFloat(specificPriceDiscount).toFixed(toFix) + '%');
+			$('#reduction_percent').show();
+		}
 	}else{
 		if (typeof productHasAttributes != 'undefined' && productHasAttributes){
 			updateDisplay();
