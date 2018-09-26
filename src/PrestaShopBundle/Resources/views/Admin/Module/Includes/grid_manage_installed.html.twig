@@ -25,5 +25,5 @@
 {% extends "PrestaShopBundle:Admin/Module/Includes:grid.html.twig" %}
 
 {% block addon_card %}
-  {% include 'PrestaShopBundle:Admin/Module/Includes:card_manage_installed.html.twig' with { 'display_type': display_type, 'module': module, 'origin': origin|default('none') } %}
+  {% include 'PrestaShopBundle:Admin/Module/Includes:card_manage_installed.html.twig' with { 'display_type': display_type, 'module': module, 'origin': origin|default('none'), 'category': id } %}
 {% endblock %}
