@@ -26,18 +26,18 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Group\QueryHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Group\DataTransferObject\NamesForDefaultGroups;
-use PrestaShop\PrestaShop\Core\Domain\Group\Query\GetNamesForDefaultGroups;
+use PrestaShop\PrestaShop\Core\Domain\Group\DefaultGroups;
+use PrestaShop\PrestaShop\Core\Domain\Group\Query\GetDefaultGroups;
 
 /**
  * Interface GetDefaultGroupsHandlerInterface.
  */
-interface GetNamesForDefaultGroupsHandlerInterface
+interface GetDefaultGroupsHandlerInterface
 {
     /**
-     * @param GetNamesForDefaultGroups $query
+     * @param GetDefaultGroups $query
      *
-     * @return NamesForDefaultGroups
+     * @return DefaultGroups
      */
-    public function handle(GetNamesForDefaultGroups $query);
+    public function handle(GetDefaultGroups $query);
 }
