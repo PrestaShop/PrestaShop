@@ -108,9 +108,6 @@ abstract class ModuleCore implements ModuleInterface
     /** @var array used by AdminTab to determine which lang file to use (admin.php or module lang file) */
     public static $classInModule = array();
 
-    /** @var array|null used to cache module ids */
-    public static $id2name = null;
-
     /** @var array current language translations */
     protected $_lang = array();
 
@@ -187,6 +184,9 @@ abstract class ModuleCore implements ModuleInterface
 
     /** @var \Symfony\Component\DependencyInjection\ContainerInterface */
     private $container;
+
+    /** @var array|null used to cache module ids */
+    private static $id2name = null;
 
     const CACHE_FILE_MODULES_LIST = '/config/xml/modules_list.xml';
 
@@ -1164,6 +1164,14 @@ abstract class ModuleCore implements ModuleInterface
         }
 
         return false;
+    }
+
+    /**
+     * Clear static cache
+     */
+    public static function clearStaticCache()
+    {
+        self::$id2name = null;
     }
 
     public static function configXmlStringFormat($string)

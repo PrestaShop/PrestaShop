@@ -44,7 +44,7 @@ class PositionsControllerTest extends WebTestCase
     public function setUp()
     {
         Cache::clear();
-        Module::$id2name = null;
+        Module::clearStaticCache();
 
         parent::setUp();
 
