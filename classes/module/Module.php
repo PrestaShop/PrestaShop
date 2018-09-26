@@ -1167,7 +1167,7 @@ abstract class ModuleCore implements ModuleInterface
     }
 
     /**
-     * Clear static cache
+     * Clear static cache.
      */
     public static function clearStaticCache()
     {
