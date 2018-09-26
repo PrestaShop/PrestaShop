@@ -26,59 +26,46 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Group\DataTransferObject;
 
+use PrestaShop\PrestaShop\Core\Domain\Group\ValueObject\GroupId;
+
 /**
- * Class DefaultGroups.
+ * Class DefaultGroup
  */
-class NamesForDefaultGroups
+class DefaultGroup
 {
     /**
-     * @var string
+     * @var GroupId
      */
-    private $visitorsGroupName;
+    private $groupId;
 
     /**
      * @var string
      */
-    private $guestsGroupName;
+    private $name;
 
     /**
-     * @var string
+     * @param GroupId $groupId
+     * @param string $name
      */
-    private $customersGroupName;
-
-    /**
-     * @param string $visitorsGroupName
-     * @param string $guestsGroupName
-     * @param string $customersGroupName
-     */
-    public function __construct($visitorsGroupName, $guestsGroupName, $customersGroupName)
+    public function __construct(GroupId $groupId, $name)
     {
-        $this->visitorsGroupName = $visitorsGroupName;
-        $this->guestsGroupName = $guestsGroupName;
-        $this->customersGroupName = $customersGroupName;
+        $this->groupId = $groupId;
+        $this->name = $name;
+    }
+
+    /**
+     * @return GroupId
+     */
+    public function getGroupId()
+    {
+        return $this->groupId;
     }
 
     /**
      * @return string
      */
-    public function getVisitorsGroupName()
+    public function getName()
     {
-        return $this->visitorsGroupName;
-    }
-
-    /**
-     * @return string
-     */
-    public function getGuestsGroupName()
-    {
-        return $this->guestsGroupName;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCustomersGroupName()
-    {
-        return $this->customersGroupName;
+        return $this->name;
     }
 }

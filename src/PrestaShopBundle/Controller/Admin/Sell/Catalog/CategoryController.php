@@ -33,8 +33,8 @@ use PrestaShop\PrestaShop\Core\Domain\Category\EditableCategory;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
-use PrestaShop\PrestaShop\Core\Domain\Group\DataTransferObject\NamesForDefaultGroups;
-use PrestaShop\PrestaShop\Core\Domain\Group\Query\GetNamesForDefaultGroups;
+use PrestaShop\PrestaShop\Core\Domain\Group\DefaultGroups;
+use PrestaShop\PrestaShop\Core\Domain\Group\Query\GetDefaultGroups;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Catalog\Category\CategoryType;
 use PrestaShopBundle\Form\Admin\Catalog\Category\RootCategoryType;
@@ -56,11 +56,22 @@ class CategoryController extends FrameworkBundleAdminController
      */
     public function addAction(Request $request)
     {
-        $categoryCreateForm = $this->createForm(CategoryType::class);
-        $categoryCreateForm->handleRequest($request);
+        /** @var DefaultGroups $defaultGroups */
+        $defaultGroups = $this->getQueryBus()->handle(new GetDefaultGroups());
 
-        if ($categoryCreateForm->isSubmitted()) {
-            $data = $categoryCreateForm->getData();
+        $emptyCategoryData = [
+            'group_association' => [
+                $defaultGroups->getVisitorsGroup()->getGroupId()->getValue(),
+                $defaultGroups->getGuestsGroup()->getGroupId()->getValue(),
+                $defaultGroups->getCustomersGroup()->getGroupId()->getValue(),
+            ],
+        ];
+
+        $categoryAddForm = $this->createForm(CategoryType::class, $emptyCategoryData);
+        $categoryAddForm->handleRequest($request);
+
+        if ($categoryAddForm->isSubmitted()) {
+            $data = $categoryAddForm->getData();
 
             try {
                 $command = new AddCategoryCommand(
@@ -82,13 +93,10 @@ class CategoryController extends FrameworkBundleAdminController
             }
         }
 
-        /** @var NamesForDefaultGroups $nameForDefaultGroups */
-        $nameForDefaultGroups = $this->getQueryBus()->handle(new GetNamesForDefaultGroups());
-
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Categories/add.html.twig', [
             'layoutTitle' => $this->trans('Add new', 'Admin.Actions'),
-            'categoryForm' => $categoryCreateForm->createView(),
-            'namesForDefaultGroups' => $nameForDefaultGroups,
+            'categoryForm' => $categoryAddForm->createView(),
+            'defaultGroups' => $defaultGroups,
         ]);
     }
 
@@ -126,7 +134,7 @@ class CategoryController extends FrameworkBundleAdminController
         }
 
         /** @var NamesForDefaultGroups $nameForDefaultGroups */
-        $nameForDefaultGroups = $this->getQueryBus()->handle(new GetNamesForDefaultGroups());
+        $nameForDefaultGroups = $this->getQueryBus()->handle(new GetDefaultGroups());
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Categories/add_root.html.twig', [
             'layoutTitle' => $this->trans('Add new', 'Admin.Actions'),
@@ -171,7 +179,7 @@ class CategoryController extends FrameworkBundleAdminController
         $categoryForm->handleRequest($request);
 
         /** @var NamesForDefaultGroups $nameForDefaultGroups */
-        $nameForDefaultGroups = $this->getQueryBus()->handle(new GetNamesForDefaultGroups());
+        $nameForDefaultGroups = $this->getQueryBus()->handle(new GetDefaultGroups());
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Categories/edit.html.twig', [
             'layoutTitle' => $this->trans(
