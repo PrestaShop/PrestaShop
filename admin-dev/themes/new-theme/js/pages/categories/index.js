@@ -40,6 +40,7 @@ import TranslatableInput from "../../components/translatable-input";
 import ChoiceTable from "../../components/choice-table";
 import ChoiceTree from "../../components/choice-tree";
 import TextWithLengthCounter from "../../components/form/text-with-length-counter";
+import NameToLinkRewriteCopier from "./name-to-link-rewrite-copier";
 
 const $ = window.$;
 
@@ -63,4 +64,5 @@ $(() => {
   new ChoiceTable();
   new ChoiceTree();
   new TextWithLengthCounter();
+  new NameToLinkRewriteCopier();
 });
