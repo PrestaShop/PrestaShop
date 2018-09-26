@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Category\CommandHandler;
 
 use Category;
-use PrestaShop\PrestaShop\Core\Domain\Category\Command\AbstractCategoryCommand;
+use PrestaShop\PrestaShop\Core\Domain\Category\Command\AbstractRootCategoryCommand;
 use PrestaShop\PrestaShop\Core\Image\Uploader\ImageUploaderInterface;
 
 /**
@@ -35,7 +35,7 @@ use PrestaShop\PrestaShop\Core\Image\Uploader\ImageUploaderInterface;
  *
  * @internal
  */
-abstract class AbstractAddCategoryHandler
+abstract class AbstractCategoryHandler
 {
     /**
      * @var ImageUploaderInterface
@@ -70,23 +70,43 @@ abstract class AbstractAddCategoryHandler
     /**
      * Build (but not save) Category's object model so it can be used to create simple or root category.
      *
-     * @param AbstractCategoryCommand $command
+     * @param Category $category
+     * @param AbstractRootCategoryCommand $command
      *
      * @return Category
      */
-    protected function buildCategory(AbstractCategoryCommand $command)
+    protected function populateCategoryWithCommandData(Category $category, AbstractRootCategoryCommand $command)
     {
-        $category = new Category();
-        $category->name = $command->getName();
-        $category->link_rewrite = $command->getLinkRewrite();
-        $category->description = $command->getDescription();
-        $category->meta_title = $command->getMetaTitle();
-        $category->meta_description = $command->getMetaDescription();
-        $category->meta_keywords = $command->getMetaKeywords();
-        $category->groupBox = $command->getAssociatedGroupIds();
+        if (null !== $command->getName()) {
+            $category->name = $command->getName();
+        }
+
+        if (null !== $command->getLinkRewrite()) {
+            $category->link_rewrite = $command->getLinkRewrite();
+        }
+
+        if (null !== $command->getDescription()) {
+            $category->description = $command->getDescription();
+        }
+
+        if (null !== $command->getMetaTitle()) {
+            $category->meta_title = $command->getMetaTitle();
+        }
+
+        if (null !== $command->getMetaDescription()) {
+            $category->meta_description = $command->getMetaDescription();
+        }
+
+        if (null !== $command->getMetaKeywords()) {
+            $category->meta_keywords = $command->getMetaKeywords();
+        }
+
+        if (null !== $command->getAssociatedGroupIds()) {
+            $category->groupBox = $command->getAssociatedGroupIds();
+        }
 
         // This is a workaround to make Category's object model work.
-        // Inside Category::add() method it checks if shop association is submitted
+        // Inside Category::add() & Category::update() method it checks if shop association is submitted
         // by retrieving data directly from $_POST["checkBoxShopAsso_category"].
         $_POST['checkBoxShopAsso_category'] = $command->getAssociatedShopIds();
 
@@ -95,9 +115,9 @@ abstract class AbstractAddCategoryHandler
 
     /**
      * @param Category $category
-     * @param AbstractCategoryCommand $command
+     * @param AbstractRootCategoryCommand $command
      */
-    protected function uploadImages(Category $category, AbstractCategoryCommand $command)
+    protected function uploadImages(Category $category, AbstractRootCategoryCommand $command)
     {
         if (null !== $command->getCoverImage()) {
             $this->categoryImageUploader->upload(

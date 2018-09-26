@@ -26,25 +26,60 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Category\CommandHandler;
 
+use Category;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddRootCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\CommandHandler\AddRootCategoryHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
+use PrestaShop\PrestaShop\Core\Image\Uploader\ImageUploaderInterface;
 
 /**
  * Class AddRootCategoryHandler
  */
-final class AddRootCategoryHandler extends AbstractAddCategoryHandler implements AddRootCategoryHandlerInterface
+final class AddRootCategoryHandler extends AbstractCategoryHandler implements AddRootCategoryHandlerInterface
 {
+    /**
+     * @var ConfigurationInterface
+     */
+    private $configuration;
+
+    /**
+     * @param ImageUploaderInterface $categoryCoverUploader
+     * @param ImageUploaderInterface $categoryThumbnailUploader
+     * @param ImageUploaderInterface $categoryMenuThumbnailUploader
+     * @param ConfigurationInterface $configuration
+     */
+    public function __construct(
+        ImageUploaderInterface $categoryCoverUploader,
+        ImageUploaderInterface $categoryThumbnailUploader,
+        ImageUploaderInterface $categoryMenuThumbnailUploader,
+        ConfigurationInterface $configuration
+    ) {
+        parent::__construct(
+            $categoryCoverUploader,
+            $categoryThumbnailUploader,
+            $categoryMenuThumbnailUploader
+        );
+
+        $this->configuration = $configuration;
+    }
+
     /**
      * {@inheritdoc}
      */
     public function handle(AddRootCategoryCommand $command)
     {
-        $category = $this->buildCategory($command);
+        $category = new Category();
         $category->is_root_category = 1;
-        $category->id_parent = 0;
+        $category->level_depth = 1;
+        $category->id_parent = $this->configuration->get('PS_ROOT_CATEGORY');
+
+        $this->populateCategoryWithCommandData($category, $command);
 
         $category->add();
 
         $this->uploadImages($category, $command);
+
+        return new CategoryId($category->id);
     }
 }

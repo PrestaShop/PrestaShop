@@ -27,30 +27,41 @@
 namespace PrestaShop\PrestaShop\Adapter\Category\CommandHandler;
 
 use Category;
-use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddCategoryCommand;
-use PrestaShop\PrestaShop\Core\Domain\Category\CommandHandler\AddCategoryHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Category\Command\EditCategoryCommand;
+use PrestaShop\PrestaShop\Core\Domain\Category\CommandHandler\EditCategoryHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 
 /**
- * Class AddCategoryHandler
+ * Class EditCategoryHandler
  *
  * @internal
  */
-final class AddCategoryHandler extends AbstractCategoryHandler implements AddCategoryHandlerInterface
+final class EditCategoryHandler extends AbstractCategoryHandler implements EditCategoryHandlerInterface
 {
     /**
      * {@inheritdoc}
+     *
+     * @throws CategoryNotFoundException
      */
-    public function handle(AddCategoryCommand $command)
+    public function handle(EditCategoryCommand $command)
     {
-        $category = new Category();
-        $category->id_parent = $command->getParentCategoryId();
+        $category = new Category($command->getCategoryId()->getValue());
+
+        if (!$category->id) {
+            throw new CategoryNotFoundException(
+                $command->getCategoryId(),
+                sprintf('Category with id "%s" cannot be found.', $command->getCategoryId()->getValue())
+            );
+        }
+
+        if (null !== $command->getParentCategoryId()) {
+            $category->id_parent = $command->getParentCategoryId();
+        }
 
         $this->populateCategoryWithCommandData($category, $command);
 
-        $category->add();
-
-        $this->uploadImages($category, $command);
+        $category->update();
 
         return new CategoryId($category->id);
     }

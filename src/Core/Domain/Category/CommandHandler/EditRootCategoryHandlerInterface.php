@@ -24,39 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Category\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Category\CommandHandler;
 
-use Exception;
-use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
+use PrestaShop\PrestaShop\Core\Domain\Category\Command\EditRootCategoryCommand;
 
 /**
- * Class CategoryNotFoundException
+ * Interface EditRootCategoryHandlerInterface
  */
-class CategoryNotFoundException extends CategoryException
+interface EditRootCategoryHandlerInterface
 {
     /**
-     * @var CategoryId
+     * @param EditRootCategoryCommand $command
      */
-    private $categoryId;
-
-    /**
-     * @param CategoryId $categoryId
-     * @param string $message
-     * @param int $code
-     * @param Exception $previous
-     */
-    public function __construct(CategoryId $categoryId, $message = '', $code = 0, $previous = null)
-    {
-        parent::__construct($message, $code, $previous);
-
-        $this->categoryId = $categoryId;
-    }
-
-    /**
-     * @return CategoryId
-     */
-    public function getCategoryId()
-    {
-        return $this->categoryId;
-    }
+    public function handle(EditRootCategoryCommand $command);
 }
