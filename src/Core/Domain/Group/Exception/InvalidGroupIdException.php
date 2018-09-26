@@ -24,11 +24,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Group\Query;
+namespace PrestaShop\PrestaShop\Core\Domain\Group\Exception;
 
-/**
- * Class GetDefaultGroups returns default groups data.
- */
-class GetNamesForDefaultGroups
+class InvalidGroupIdException extends GroupException
 {
 }
