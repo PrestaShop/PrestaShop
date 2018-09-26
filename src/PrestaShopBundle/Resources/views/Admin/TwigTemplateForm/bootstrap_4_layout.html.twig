@@ -643,7 +643,6 @@
 {% block translatable_widget -%}
   {{ form_errors(form) }}
   <div class="input-group locale-input-group js-locale-input-group d-flex">
-
     {% for translateField in form %}
       {% set classes = translateField.vars.attr.class|default('') ~ ' js-locale-input'%}
       {% set classes = classes ~ ' js-locale-' ~ translateField.vars.label %}
@@ -652,7 +651,11 @@
         {% set classes = classes ~ ' d-none' %}
       {% endif %}
 
-      <div class="{{ classes }}" style="flex-grow: 1;">
+      <div class="{{ classes }}"
+           style="flex-grow: 1;"
+           data-locale="{{ translateField.vars.label }}"
+           data-lang-id="{{ translateField.vars.name }}"
+      >
         {{ form_widget(translateField) }}
       </div>
     {% endfor %}

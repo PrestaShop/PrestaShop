@@ -23,18 +23,20 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import TranslatableInput from "../../components/translatable-input";
-import ChoiceTable from "../../components/choice-table";
-import ChoiceTree from "../../components/choice-tree";
-import TextWithLengthCounter from "../../components/form/text-with-length-counter";
-import NameToLinkRewriteCopier from "./name-to-link-rewrite-copier";
+/**
+ * Copies name of category to link rewrite input.
+ */
+export default class NameToLinkRewriteCopier {
+  constructor() {
+    const $categoryForm = $('form[name="category"]');
 
-const $ = window.$;
+    $categoryForm.on('input', 'input[name^="category[name]"]', (event) => {
+      const $nameInput = $(event.currentTarget);
+      const langId = $nameInput.closest('.js-locale-input').data('lang-id');
 
-$(() => {
-  new TranslatableInput();
-  new ChoiceTable();
-  new ChoiceTree();
-  new TextWithLengthCounter();
-  new NameToLinkRewriteCopier();
-});
+      $categoryForm
+        .find('input[name="category[link_rewrite][' + langId + ']"]')
+        .val(str2url($nameInput.val(), 'UTF-8'));
+    });
+  }
+}
