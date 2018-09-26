@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryConstraintExcep
 /**
  * Class AddCategoryCommand adds new category
  */
-class AddCategoryCommand extends AbstractAddCategoryCommand
+class AddCategoryCommand extends AbstractCategoryCommand
 {
     /**
      * @var int
@@ -48,9 +48,10 @@ class AddCategoryCommand extends AbstractAddCategoryCommand
      */
     public function __construct(array $name, array $linkRewrite, $isActive, $parentCategoryId)
     {
-        parent::__construct($name, $linkRewrite, $isActive);
-
         $this
+            ->setName($name)
+            ->setLinkRewrite($linkRewrite)
+            ->setIsActive($isActive)
             ->setParentCategoryId($parentCategoryId)
         ;
     }
