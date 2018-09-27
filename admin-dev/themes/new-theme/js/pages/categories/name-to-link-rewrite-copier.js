@@ -38,7 +38,7 @@ export default class NameToLinkRewriteCopier {
       $categoryForm.on('input', 'input[name^="' + categoryType + '[name]"]', (event) => {
         const $nameInput = $(event.currentTarget);
         const langId = $nameInput.closest('.js-locale-input').data('lang-id');
-        console.log('test');
+
         $categoryForm
           .find('input[name="' + categoryType + '[link_rewrite][' + langId + ']"]')
           .val(str2url($nameInput.val(), 'UTF-8'));
