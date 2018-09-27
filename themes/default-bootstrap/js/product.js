@@ -858,6 +858,16 @@ function updatePrice()
 			}
 		}
 	}
+	else {
+		var specificPriceDiscount = findSpecificPriceDiscount();
+		if(specificPriceDiscount) {
+			var toFix = 2;
+			if ((parseFloat(specificPriceDiscount).toFixed(2) - parseFloat(specificPriceDiscount).toFixed(0)) == 0)
+				toFix = 0;
+			$('#reduction_percent_display').html('-' + parseFloat(specificPriceDiscount).toFixed(toFix) + '%');
+			$('#reduction_percent').show();
+		}
+	}
 
 	// Green Tax (Eco tax)
 	// Update display of Green Tax
