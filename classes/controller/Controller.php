@@ -783,6 +783,11 @@ abstract class ControllerCore
         return $this->container->getParameter($parameterId);
     }
 
+    /**
+     * Gets the dependency container.
+     *
+     * @return ContainerBuilder
+     */
     public function getContainer()
     {
         return $this->container;

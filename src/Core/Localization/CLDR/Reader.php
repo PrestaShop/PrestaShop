@@ -304,23 +304,25 @@ class Reader implements ReaderInterface
 
         // Geo
         if (isset($xmlLocaleData->identity->language)) {
-            $localeData->localeCode = (string) $xmlLocaleData->identity->language['type'];
+            $localeData->setLocaleCode((string) $xmlLocaleData->identity->language['type']);
         }
         if (isset($xmlLocaleData->identity->territory)) {
-            $localeData->localeCode .= '-' . $xmlLocaleData->identity->territory['type'];
+            $localeData->setLocaleCode(
+                $localeData->getLocaleCode() . '-' . $xmlLocaleData->identity->territory['type']
+            );
         }
 
         // Numbers
         $numbersData = $xmlLocaleData->numbers;
         // Default numbering system.
         if (isset($numbersData->defaultNumberingSystem)) {
-            $localeData->defaultNumberingSystem = (string) $numbersData->defaultNumberingSystem;
+            $localeData->setDefaultNumberingSystem((string) $numbersData->defaultNumberingSystem);
         }
         // Minimum grouping digits value defines when we should start grouping digits.
         // 1 => we start grouping at 4 figures numbers (1,000+) (most frequent)
         // 2 => we start grouping at 5 figures numbers (10,000+)
         if (isset($numbersData->minimumGroupingDigits)) {
-            $localeData->minimumGroupingDigits = (int) $numbersData->minimumGroupingDigits;
+            $localeData->setMinimumGroupingDigits((int) $numbersData->minimumGroupingDigits);
         }
         // Complete numbering systems list with the "others" available for this locale.
         // Possible other systems are "native", "traditional" and "finance".
@@ -328,11 +330,12 @@ class Reader implements ReaderInterface
         if (isset($numbersData->otherNumberingSystems)) {
             foreach ($numbersData->otherNumberingSystems->children() as $system) {
                 /* @var $system SimplexmlElement */
-                $localeData->numberingSystems[$system->getName()] = (string) $system;
+                $localeData->setNumberingSystems([$system->getName() => (string) $system]);
             }
         }
         // Symbols (by numbering system)
         if (isset($numbersData->symbols)) {
+            $numberSymbols = $localeData->getNumberSymbols();
             /** @var SimpleXMLElement $symbolsNode */
             foreach ($numbersData->symbols as $symbolsNode) {
                 if (!isset($symbolsNode['numberSystem'])) {
@@ -352,60 +355,62 @@ class Reader implements ReaderInterface
 
                 $symbolsList = new NumberSymbolsData();
                 if (isset($symbolsNode->decimal)) {
-                    $symbolsList->decimal = (string) $symbolsNode->decimal;
+                    $symbolsList->setDecimal((string) $symbolsNode->decimal);
                 }
                 if (isset($symbolsNode->group)) {
-                    $symbolsList->group = (string) $symbolsNode->group;
+                    $symbolsList->setGroup((string) $symbolsNode->group);
                 }
                 if (isset($symbolsNode->list)) {
-                    $symbolsList->list = (string) $symbolsNode->list;
+                    $symbolsList->setList((string) $symbolsNode->list);
                 }
                 if (isset($symbolsNode->percentSign)) {
-                    $symbolsList->percentSign = (string) $symbolsNode->percentSign;
+                    $symbolsList->setPercentSign((string) $symbolsNode->percentSign);
                 }
                 if (isset($symbolsNode->minusSign)) {
-                    $symbolsList->minusSign = (string) $symbolsNode->minusSign;
+                    $symbolsList->setMinusSign((string) $symbolsNode->minusSign);
                 }
                 if (isset($symbolsNode->plusSign)) {
-                    $symbolsList->plusSign = (string) $symbolsNode->plusSign;
+                    $symbolsList->setPlusSign((string) $symbolsNode->plusSign);
                 }
                 if (isset($symbolsNode->exponential)) {
-                    $symbolsList->exponential = (string) $symbolsNode->exponential;
+                    $symbolsList->setExponential((string) $symbolsNode->exponential);
                 }
                 if (isset($symbolsNode->superscriptingExponent)) {
-                    $symbolsList->superscriptingExponent = (string) $symbolsNode->superscriptingExponent;
+                    $symbolsList->setSuperscriptingExponent((string) $symbolsNode->superscriptingExponent);
                 }
                 if (isset($symbolsNode->perMille)) {
-                    $symbolsList->perMille = (string) $symbolsNode->perMille;
+                    $symbolsList->setPerMille((string) $symbolsNode->perMille);
                 }
                 if (isset($symbolsNode->infinity)) {
-                    $symbolsList->infinity = (string) $symbolsNode->infinity;
+                    $symbolsList->setInfinity((string) $symbolsNode->infinity);
                 }
                 if (isset($symbolsNode->nan)) {
-                    $symbolsList->nan = (string) $symbolsNode->nan;
+                    $symbolsList->setNan((string) $symbolsNode->nan);
                 }
                 if (isset($symbolsNode->timeSeparator)) {
-                    $symbolsList->timeSeparator = (string) $symbolsNode->timeSeparator;
+                    $symbolsList->setTimeSeparator((string) $symbolsNode->timeSeparator);
                 }
                 if (isset($symbolsNode->currencyDecimal)) {
-                    $symbolsList->currencyDecimal = (string) $symbolsNode->currencyDecimal;
+                    $symbolsList->setCurrencyDecimal((string) $symbolsNode->currencyDecimal);
                 }
                 if (isset($symbolsNode->currencyGroup)) {
-                    $symbolsList->currencyGroup = (string) $symbolsNode->currencyGroup;
+                    $symbolsList->setCurrencyGroup((string) $symbolsNode->currencyGroup);
                 }
 
-                $localeData->numberSymbols[$thisNumberingSystem] = $symbolsList;
+                $numberSymbols[$thisNumberingSystem] = $symbolsList;
             }
+            $localeData->setNumberSymbols($numberSymbols);
         }
         // Decimal patterns (by numbering system)
         if (isset($numbersData->decimalFormats)) {
+            $decimalPatterns = $localeData->getDecimalPatterns();
             /** @var SimplexmlElement $format */
             foreach ($numbersData->decimalFormats as $format) {
                 /** @var SimplexmlElement $format */
                 $numberSystem = (string) $format['numberSystem'];
                 $patternResult = $format->xpath('decimalFormatLength[not(@type)]/decimalFormat/pattern');
                 if (isset($patternResult[0])) {
-                    $localeData->decimalPatterns[$numberSystem] = (string) $patternResult[0];
+                    $decimalPatterns[$numberSystem] = (string) $patternResult[0];
                 }
             }
             // Aliases nodes are in root.xml only. They avoid duplicated data.
@@ -424,19 +429,21 @@ class Reader implements ReaderInterface
                     )
                 ) {
                     $aliasNumSys = $matches[1];
-                    $localeData->decimalPatterns[$numberSystem] = $localeData->decimalPatterns[$aliasNumSys];
+                    $decimalPatterns[$numberSystem] = $localeData->getDecimalPatterns()[$aliasNumSys];
 
                     continue;
                 }
             }
+            $localeData->setDecimalPatterns($decimalPatterns);
         }
         // Percent patterns (by numbering system)
         if (isset($numbersData->percentFormats)) {
+            $percentPatterns = $localeData->getPercentPatterns();
             foreach ($numbersData->percentFormats as $format) {
                 $numberSystem = (string) $format['numberSystem'];
                 $patternResult = $format->xpath('percentFormatLength/percentFormat/pattern');
                 if (isset($patternResult[0])) {
-                    $localeData->percentPatterns[$numberSystem] = (string) $patternResult[0];
+                    $percentPatterns[$numberSystem] = (string) $patternResult[0];
                 }
             }
             // Aliases nodes are in root.xml only. They avoid duplicated data.
@@ -455,14 +462,16 @@ class Reader implements ReaderInterface
                     )
                 ) {
                     $aliasNumSys = $matches[1];
-                    $localeData->percentPatterns[$numberSystem] = $localeData->percentPatterns[$aliasNumSys];
+                    $percentPatterns[$numberSystem] = $localeData->getPercentPatterns()[$aliasNumSys];
 
                     continue;
                 }
             }
+            $localeData->setPercentPatterns($percentPatterns);
         }
         // Currency patterns (by numbering system)
         if (isset($numbersData->currencyFormats)) {
+            $currencyPatterns = $localeData->getCurrencyPatterns();
             foreach ($numbersData->currencyFormats as $format) {
                 /** @var SimplexmlElement $format */
                 $numberSystem = (string) $format['numberSystem'];
@@ -470,7 +479,7 @@ class Reader implements ReaderInterface
                     'currencyFormatLength[not(@*)]/currencyFormat[@type="standard"]/pattern'
                 );
                 if (isset($patternResult[0])) {
-                    $localeData->currencyPatterns[$numberSystem] = (string) $patternResult[0];
+                    $currencyPatterns[$numberSystem] = (string) $patternResult[0];
                 }
             }
             // Aliases nodes are in root.xml only. They avoid duplicated data.
@@ -489,39 +498,45 @@ class Reader implements ReaderInterface
                     )
                 ) {
                     $aliasNumSys = $matches[1];
-                    $localeData->currencyPatterns[$numberSystem] = $localeData->currencyPatterns[$aliasNumSys];
+                    $currencyPatterns[$numberSystem] = $localeData->getCurrencyPatterns()[$aliasNumSys];
 
                     continue;
                 }
             }
+            $localeData->setCurrencyPatterns($currencyPatterns);
         }
 
         // Currencies
         $currencyData = $numbersData->currencies;
         if (isset($currencyData->currency)) {
+            $currencies = $localeData->getCurrencies();
             foreach ($currencyData->currency as $currencyNode) {
                 $currencyCode = (string) $currencyNode['type'];
 
                 $currencyData = new CurrencyData();
-                $currencyData->isoCode = $currencyCode;
+                $currencyData->setIsoCode($currencyCode);
 
                 // Symbols
+                $symbols = $currencyData->getSymbols();
                 foreach ($currencyNode->symbol as $symbolNode) {
                     $type = (string) $symbolNode['alt'];
                     if (empty($type)) {
                         $type = 'default';
                     }
-                    $currencyData->symbols[$type] = (string) $symbolNode;
+                    $symbols[$type] = (string) $symbolNode;
                 }
+                $currencyData->setSymbols($symbols);
 
                 // Names
+                $displayNames = $currencyData->getDisplayNames();
                 foreach ($currencyNode->displayName as $nameNode) {
                     $countContext = 'default';
                     if (!empty($nameNode['count'])) {
                         $countContext = (string) $nameNode['count'];
                     }
-                    $currencyData->displayNames[$countContext] = (string) $nameNode;
+                    $displayNames[$countContext] = (string) $nameNode;
                 }
+                $currencyData->setDisplayNames($displayNames);
 
                 // Supplemental (fraction digits and numeric iso code)
                 $codesMapping = $this->supplementalXml->supplementalData->xpath(
@@ -531,7 +546,7 @@ class Reader implements ReaderInterface
                 if (!empty($codesMapping)) {
                     /** @var SimplexmlElement $codesMapping */
                     $codesMapping = $codesMapping[0];
-                    $currencyData->numericIsoCode = (string) $codesMapping->attributes()->numeric;
+                    $currencyData->setNumericIsoCode((string) $codesMapping->attributes()->numeric);
                 }
 
                 $fractionsData = $this->supplementalXml->supplementalData->xpath(
@@ -541,11 +556,12 @@ class Reader implements ReaderInterface
                 if (!empty($fractionsData)) {
                     /** @var SimplexmlElement $fractionsData */
                     $fractionsData = $fractionsData[0];
-                    $currencyData->decimalDigits = (int) (string) $fractionsData->attributes()->digits;
+                    $currencyData->setDecimalDigits((int) (string) $fractionsData->attributes()->digits);
                 }
 
-                $localeData->currencies[$currencyCode] = $currencyData;
+                $currencies[$currencyCode] = $currencyData;
             }
+            $localeData->setCurrencies($currencies);
         }
 
         return $localeData;
