@@ -25,9 +25,9 @@
 
 {% trans_default_domain 'Admin.Advparameters.Feature' %}
 
-{% set dataConfigurationForm = importDataConfigurationForm.import_data_configuration %}
+{% set dataConfigurationForm = importDataConfigurationForm %}
 
-{{ form_start(dataConfigurationForm, {action: path('admin_import_process')}) }}
+{{ form_start(dataConfigurationForm, {action: path('admin_import_process'), attr: {class: 'import-form'}}) }}
 <div class="card">
   <h3 class="card-header">
     <i class="material-icons">list</i> {{ 'Match your data'|trans }}

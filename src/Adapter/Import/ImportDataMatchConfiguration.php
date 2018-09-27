@@ -99,11 +99,16 @@ class ImportDataMatchConfiguration implements DataConfigurationInterface
 
         $configuration = [
             'type_value' => [],
+            'entity' => $this->session->get('entity'),
             'truncate' => $this->session->get('truncate'),
-            'match_reference' => $this->session->get('match_reference'),
+            'match_ref' => $this->session->get('match_ref'),
             'regenerate' => $this->session->get('regenerate'),
-            'force_ids' => $this->session->get('force_ids'),
-            'send_email' => $this->session->get('send_email'),
+            'forceIDs' => $this->session->get('forceIDs'),
+            'sendemail' => $this->session->get('sendemail'),
+            'csv' => $this->session->get('csv'),
+            'separator' => $this->session->get('separator'),
+            'multiple_value_separator' => $this->session->get('multiple_value_separator'),
+            'iso_lang' => $this->session->get('iso_lang'),
         ];
 
         $numberOfValuesAdded = 0;
