@@ -28,15 +28,21 @@
  */
 export default class NameToLinkRewriteCopier {
   constructor() {
-    const $categoryForm = $('form[name="category"]');
+    ['category', 'root_category'].forEach((categoryType) => {
+      const $categoryForm = $('form[name="' + categoryType + '"]');
 
-    $categoryForm.on('input', 'input[name^="category[name]"]', (event) => {
-      const $nameInput = $(event.currentTarget);
-      const langId = $nameInput.closest('.js-locale-input').data('lang-id');
+      if (0 ===  $categoryForm.length) {
+        return;
+      }
 
-      $categoryForm
-        .find('input[name="category[link_rewrite][' + langId + ']"]')
-        .val(str2url($nameInput.val(), 'UTF-8'));
+      $categoryForm.on('input', 'input[name^="' + categoryType + '[name]"]', (event) => {
+        const $nameInput = $(event.currentTarget);
+        const langId = $nameInput.closest('.js-locale-input').data('lang-id');
+        console.log('test');
+        $categoryForm
+          .find('input[name="' + categoryType + '[link_rewrite][' + langId + ']"]')
+          .val(str2url($nameInput.val(), 'UTF-8'));
+      });
     });
   }
 }
