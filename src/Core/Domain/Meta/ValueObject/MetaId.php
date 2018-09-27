@@ -49,7 +49,7 @@ class MetaId
     /**
      * @return int
      */
-    public function getId()
+    public function getValue()
     {
         return $this->id;
     }

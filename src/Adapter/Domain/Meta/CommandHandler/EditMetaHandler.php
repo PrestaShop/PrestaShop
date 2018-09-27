@@ -40,7 +40,7 @@ final class EditMetaHandler implements EditMetaHandlerInterface
      */
     public function handle(EditMetaCommand $command)
     {
-        $entity = new Meta($command->getMetaId()->getId());
+        $entity = new Meta($command->getMetaId()->getValue());
         //todo: validations
         $entity->page = $command->getPageName();
         $entity->title = $command->getPageTitle();

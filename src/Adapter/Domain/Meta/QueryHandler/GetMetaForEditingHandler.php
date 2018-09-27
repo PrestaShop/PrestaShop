@@ -43,7 +43,7 @@ final class GetMetaForEditingHandler implements GetMetaForEditingHandlerInterfac
     {
         $metaId = $query->getMetaId();
         //todo: implement validation
-        $entity = new Meta($metaId->getId());
+        $entity = new Meta($metaId->getValue());
 
         return new EditableMeta(
             $metaId,

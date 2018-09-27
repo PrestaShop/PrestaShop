@@ -137,16 +137,31 @@ class MetaController extends FrameworkBundleAdminController
      *
      * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))", message="You do not have permission to add this.")
      *
+     * @param Request $request
+     *
      * @return Response
      */
-    public function createAction()
+    public function createAction(Request $request)
     {
         $metaFormHandler = $this->get('prestashop.admin.meta.form_handler');
-        return $this->render(
-            '@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/Form/add_edit.html.twig',
-            [
-                'form' => $metaFormHandler->getForm()->createView(),
-                'formAction' => $this->generateUrl('admin_meta_list_save_form')
+        $metaForm = $metaFormHandler->getForm();
+
+        $metaForm->handleRequest($request);
+
+        if ($metaForm->isSubmitted()) {
+            $errors = $metaFormHandler->save($metaForm->getData()['meta']);
+
+            if (empty($errors)) {
+                $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_meta');
+            }
+
+            $this->flashErrors($errors);
+        }
+
+        return $this->render('@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/Form/add_edit.html.twig', [
+                'form' => $metaForm->createView(),
             ]
         );
     }
@@ -158,18 +173,35 @@ class MetaController extends FrameworkBundleAdminController
      *
      * @param int $metaId
      *
+     * @param Request $request
+     *
      * @return Response
      */
-    public function editAction($metaId)
+    public function editAction($metaId, Request $request)
     {
         $metaFormHandler = $this->get('prestashop.admin.meta.form_handler');
-        return $this->render(
-            '@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/Form/add_edit.html.twig',
-            [
-                'form' => $metaFormHandler->getFormFor($metaId)->createView(),
-                'formAction' => $this->generateUrl('admin_meta_list_edit_form', [
-                    'metaId' => $metaId,
-                ])
+
+        $metaForm = $metaFormHandler->getFormFor($metaId);
+
+        $metaForm->handleRequest($request);
+
+        if ($metaForm->isSubmitted()) {
+            $data = $metaForm->getData()['meta'];
+            $data['id'] = $metaId;
+
+            $errors = $metaFormHandler->save($data);
+
+            if (empty($errors)) {
+                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_meta');
+            }
+
+            $this->flashErrors($errors);
+        }
+
+        return $this->render('@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/Form/add_edit.html.twig', [
+                'form' => $metaForm->createView(),
             ]
         );
     }
@@ -298,68 +330,5 @@ class MetaController extends FrameworkBundleAdminController
         );
 
         return $this->redirectToRoute('admin_metas_index');
-    }
-
-    /**
-     * Saves meta form.
-     *
-     * @param Request $request
-     *
-     * @return RedirectResponse
-     */
-    public function processMetaSaveFormAction(Request $request)
-    {
-        $metaFormHandler = $this->get('prestashop.admin.meta.form_handler');
-        $metaForm = $metaFormHandler->getForm();
-
-        $metaForm->handleRequest($request);
-
-        if ($metaForm->isSubmitted()) {
-            $errors = $metaFormHandler->save($metaForm->getData()['meta']);
-
-            if (empty($errors)) {
-                $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
-
-                return $this->redirectToRoute('admin_meta');
-            }
-
-            $this->flashErrors($errors);
-        }
-
-        return $this->redirectToRoute('admin_meta');
-    }
-
-    /**
-     * Edits meta form.
-     *
-     * @param int $metaId
-     *
-     * @param Request $request
-     *
-     * @return RedirectResponse
-     */
-    public function processMetaEditFormAction($metaId, Request $request)
-    {
-        $metaFormHandler = $this->get('prestashop.admin.meta.form_handler');
-        $metaForm = $metaFormHandler->getForm();
-
-        $metaForm->handleRequest($request);
-
-        if ($metaForm->isSubmitted()) {
-            $data = $metaForm->getData()['meta'];
-            $data['id'] = $metaId;
-
-            $errors = $metaFormHandler->save($data);
-
-            if (empty($errors)) {
-                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
-
-                return $this->redirectToRoute('admin_meta');
-            }
-
-            $this->flashErrors($errors);
-        }
-
-        return $this->redirectToRoute('admin_meta');
     }
 }

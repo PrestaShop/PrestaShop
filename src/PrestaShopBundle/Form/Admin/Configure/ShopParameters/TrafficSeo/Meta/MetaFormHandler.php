@@ -51,8 +51,10 @@ class MetaFormHandler
      * @param FormFactoryInterface $formFactory
      * @param MetaFormDataProvider $metaDataProvider
      */
-    public function __construct(FormFactoryInterface $formFactory, MetaFormDataProvider $metaDataProvider)
-    {
+    public function __construct(
+        FormFactoryInterface $formFactory,
+        MetaFormDataProvider $metaDataProvider
+    ) {
         $this->formFactory = $formFactory;
         $this->metaDataProvider = $metaDataProvider;
     }
@@ -77,6 +79,7 @@ class MetaFormHandler
     public function getFormFor($metaId)
     {
         $data = $this->metaDataProvider->getData($metaId);
+        $data['metaId'] = $metaId;
         return $this->getMetaForm($data);
     }
 
