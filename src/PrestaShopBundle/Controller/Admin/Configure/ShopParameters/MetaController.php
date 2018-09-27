@@ -141,7 +141,7 @@ class MetaController extends FrameworkBundleAdminController
      *
      * @return Response
      */
-    public function createAction(Request $request)
+    public function addAction(Request $request)
     {
         $metaFormHandler = $this->get('prestashop.admin.meta.form_handler');
         $metaForm = $metaFormHandler->getForm();
