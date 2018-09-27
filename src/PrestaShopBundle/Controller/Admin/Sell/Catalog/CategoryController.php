@@ -30,6 +30,7 @@ use PrestaShop\PrestaShop\Core\Domain\Category\Command\AbstractRootCategoryComma
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddRootCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\EditCategoryCommand;
+use PrestaShop\PrestaShop\Core\Domain\Category\Command\EditRootCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\EditableCategory;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryForEditing;
@@ -144,7 +145,7 @@ class CategoryController extends FrameworkBundleAdminController
 
                 $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
 
-                //return $this->redirectToRoute('admin_category_add');
+                return $this->redirectToRoute('admin_category_add');
             } catch (CategoryException $e) {
                 throw $e; //@todo: handle
             }
@@ -176,7 +177,7 @@ class CategoryController extends FrameworkBundleAdminController
         $editableCategory = $this->getQueryBus()->handle(new GetCategoryForEditing($categoryId));
 
         if ($editableCategory->isRootCategory()) {
-            return $this->redirectToRoute('admin_category_edit_root', ['categoryId' => $categoryId]);
+            return $this->redirectToRoute('admin_category_edit_root', ['categoryId' => $categoryId->getValue()]);
         }
 
         $categoryFormOptions = [
@@ -207,9 +208,13 @@ class CategoryController extends FrameworkBundleAdminController
 
                 $this->populateCommandWithFormData($command, $data);
 
-                $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+                if (null !== $data['id_parent']) {
+                    $command->setParentCategoryId($data['id_parent']);
+                }
 
-                //return $this->redirectToRoute('admin_category_add');
+                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_category_add');
             } catch (CategoryException $e) {
                 throw $e; //@todo: handle
             }
@@ -248,10 +253,10 @@ class CategoryController extends FrameworkBundleAdminController
         $editableCategory = $this->getQueryBus()->handle(new GetCategoryForEditing($categoryId));
 
         if (!$editableCategory->isRootCategory()) {
-            return $this->redirectToRoute('admin_category_edit', ['categoryId' => $categoryId]);
+            return $this->redirectToRoute('admin_category_edit', ['categoryId' => $categoryId->getValue()]);
         }
 
-        $categoryForm = $this->createForm(RootCategoryType::class, [
+        $rootCategoryForm = $this->createForm(RootCategoryType::class, [
             'name' => $editableCategory->getName(),
             'active' => $editableCategory->isActive(),
             'description' => $editableCategory->getDescription(),
@@ -262,19 +267,19 @@ class CategoryController extends FrameworkBundleAdminController
             'group_association' => $editableCategory->getGroupAssociationIds(),
             'shop_association' => $editableCategory->getShopAssociationIds(),
         ]);
-        $categoryForm->handleRequest($request);
+        $rootCategoryForm->handleRequest($request);
 
-        if ($categoryForm->isSubmitted()) {
-            $data = $categoryForm->getData();
+        if ($rootCategoryForm->isSubmitted()) {
+            $data = $rootCategoryForm->getData();
 
             try {
-                $command = new EditCategoryCommand($categoryId);
+                $command = new EditRootCategoryCommand($categoryId);
 
                 $this->populateCommandWithFormData($command, $data);
 
-                $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
 
-                //return $this->redirectToRoute('admin_category_add');
+                return $this->redirectToRoute('admin_category_add');
             } catch (CategoryException $e) {
                 throw $e; //@todo: handle
             }
@@ -283,7 +288,7 @@ class CategoryController extends FrameworkBundleAdminController
         /** @var DefaultGroups $defaultGroups */
         $defaultGroups = $this->getQueryBus()->handle(new GetDefaultGroups());
 
-        return $this->render('@PrestaShop/Admin/Sell/Catalog/Categories/edit.html.twig', [
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Categories/edit_root.html.twig', [
             'layoutTitle' => $this->trans(
                 'Edit: %value%',
                 'Admin.Catalog.Feature',
@@ -291,7 +296,7 @@ class CategoryController extends FrameworkBundleAdminController
                     '%value%' => $editableCategory->getName()[$this->getContextLangId()],
                 ]
             ),
-            'editCategoryForm' => $categoryForm->createView(),
+            'editRootCategoryForm' => $rootCategoryForm->createView(),
             'editableCategory' => $editableCategory,
             'defaultGroups' => $defaultGroups,
         ]);
@@ -303,39 +308,39 @@ class CategoryController extends FrameworkBundleAdminController
      */
     protected function populateCommandWithFormData(AbstractRootCategoryCommand $command, array $data)
     {
-        if (isset($data['description'])) {
+        if (null !== $data['description']) {
             $command->setDescription($data['description']);
         }
 
-        if (isset($data['meta_title'])) {
+        if (null !== $data['meta_title']) {
             $command->setMetaTitle($data['meta_title']);
         }
 
-        if (isset($data['meta_description'])) {
+        if (null !== $data['meta_description']) {
             $command->setMetaDescription($data['meta_description']);
         }
 
-        if (isset($data['meta_keyword'])) {
+        if (null !== $data['meta_keyword']) {
             $command->setMetaKeywords($data['meta_keyword']);
         }
 
-        if (isset($data['group_association'])) {
+        if (null !== $data['group_association']) {
             $command->setAssociatedGroupIds($data['group_association']);
         }
 
-        if (isset($data['shop_association'])) {
+        if (null !== $data['shop_association']) {
             $command->setAssociatedShopIds($data['shop_association']);
         }
 
-        if (isset($data['cover_image'])) {
+        if (null !== $data['cover_image']) {
             $command->setCoverImage($data['cover_image']);
         }
 
-        if (isset($data['thumbnail_image'])) {
+        if (null !== $data['thumbnail_image']) {
             $command->setThumbnailImage($data['thumbnail_image']);
         }
 
-        if (isset($data['menu_thumbnail_images'])) {
+        if (null !== $data['menu_thumbnail_images']) {
             $command->setMenuThumbnailImages($data['menu_thumbnail_images']);
         }
     }
