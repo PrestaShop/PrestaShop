@@ -11,13 +11,13 @@ services:
     # COMMAND HANDLERS
 
     prestashop.adapter.meta.command_handler.save_meta:
-        class: 'PrestaShop\PrestaShop\Adapter\Domain\Meta\CommandHandler\AddMetaHandler'
+        class: 'PrestaShop\PrestaShop\Adapter\Meta\CommandHandler\AddMetaHandler'
         tags:
             - name: 'tactician.handler'
               command: 'PrestaShop\PrestaShop\Core\Domain\Meta\Command\AddMetaCommand'
 
     prestashop.adapter.meta.command_handler.edit_meta:
-        class: 'PrestaShop\PrestaShop\Adapter\Domain\Meta\CommandHandler\EditMetaHandler'
+        class: 'PrestaShop\PrestaShop\Adapter\Meta\CommandHandler\EditMetaHandler'
         tags:
             - name: 'tactician.handler'
               command: 'PrestaShop\PrestaShop\Core\Domain\Meta\Command\EditMetaCommand'

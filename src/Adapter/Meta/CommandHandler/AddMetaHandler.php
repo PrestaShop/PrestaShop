@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\Domain\Meta\CommandHandler;
+namespace PrestaShop\PrestaShop\Adapter\Meta\CommandHandler;
 
 use Meta;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Command\AddMetaCommand;
@@ -35,7 +35,7 @@ use PrestaShopException;
 /**
  * Class SaveMetaHandler is responsible for saving meta data.
  */
-final class AddMetaHandler implements AddMetaHandlerInterface
+final class AddMetaHandler extends SaveMetaHandler implements AddMetaHandlerInterface
 {
     /**
      * {@inheritdoc}
@@ -45,7 +45,7 @@ final class AddMetaHandler implements AddMetaHandlerInterface
         try {
             $this->saveMetaData($command);
         } catch (PrestaShopDatabaseException $e) {
-//            todo: implement error logging
+
         } catch (PrestaShopException $e) {
         }
     }

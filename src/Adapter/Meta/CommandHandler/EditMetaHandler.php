@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\Domain\Meta\CommandHandler;
+namespace PrestaShop\PrestaShop\Adapter\Meta\CommandHandler;
 
 use Meta;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Command\EditMetaCommand;
@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\Meta\CommandHandler\EditMetaHandlerInterfa
 /**
  * Class EditMetaHandler is responsible for editing meta data,
  */
-final class EditMetaHandler implements EditMetaHandlerInterface
+final class EditMetaHandler extends SaveMetaHandler implements EditMetaHandlerInterface
 {
     /**
      * {@inheritdoc}
@@ -47,6 +47,8 @@ final class EditMetaHandler implements EditMetaHandlerInterface
         $entity->description = $command->getMetaDescription();
         $entity->keywords = $command->getMetaKeywords();
         $entity->url_rewrite = $command->getRewriteUrl();
+
+        $this->validateMetaData($entity);
 
         $entity->update();
     }
