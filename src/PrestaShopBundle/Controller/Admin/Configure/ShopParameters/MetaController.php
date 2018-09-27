@@ -160,7 +160,7 @@ class MetaController extends FrameworkBundleAdminController
             $this->flashErrors($errors);
         }
 
-        return $this->render('@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/Form/add_edit.html.twig', [
+        return $this->render('@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/add.html.twig', [
                 'form' => $metaForm->createView(),
             ]
         );
@@ -200,7 +200,7 @@ class MetaController extends FrameworkBundleAdminController
             $this->flashErrors($errors);
         }
 
-        return $this->render('@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/Form/add_edit.html.twig', [
+        return $this->render('@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/edit.html.twig', [
                 'form' => $metaForm->createView(),
             ]
         );
