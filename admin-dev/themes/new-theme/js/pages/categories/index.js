@@ -67,4 +67,7 @@ $(() => {
 
   new ChoiceTree('#category_id_parent');
   new ChoiceTree('#category_shop_association').enableAutoCheckChildren();
+
+  new ChoiceTree('#root_category_id_parent');
+  new ChoiceTree('#root_category_shop_association').enableAutoCheckChildren();
 });
