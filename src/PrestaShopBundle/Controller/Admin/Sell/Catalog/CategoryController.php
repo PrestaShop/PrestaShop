@@ -32,7 +32,9 @@ use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddRootCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\EditCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\EditRootCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\EditableCategory;
+use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryException;
+use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 use PrestaShop\PrestaShop\Core\Domain\Group\DefaultGroups;
@@ -92,8 +94,7 @@ class CategoryController extends FrameworkBundleAdminController
 
                 return $this->redirectToRoute('admin_category_add');
             } catch (CategoryException $e) {
-                //@todo: handle properly
-                throw $e;
+                $this->addFlash('error', $this->handleAddException($e));
             }
         }
 
@@ -147,7 +148,7 @@ class CategoryController extends FrameworkBundleAdminController
 
                 return $this->redirectToRoute('admin_category_add');
             } catch (CategoryException $e) {
-                throw $e; //@todo: handle
+                $this->addFlash('error', $this->handleAddException($e));
             }
         }
 
@@ -216,7 +217,7 @@ class CategoryController extends FrameworkBundleAdminController
 
                 return $this->redirectToRoute('admin_category_add');
             } catch (CategoryException $e) {
-                throw $e; //@todo: handle
+                $this->addFlash('error', $this->handleEditException($e));
             }
         }
 
@@ -281,7 +282,7 @@ class CategoryController extends FrameworkBundleAdminController
 
                 return $this->redirectToRoute('admin_category_add');
             } catch (CategoryException $e) {
-                throw $e; //@todo: handle
+                $this->addFlash('error', $this->handleEditException($e));
             }
         }
 
@@ -343,5 +344,77 @@ class CategoryController extends FrameworkBundleAdminController
         if (null !== $data['menu_thumbnail_images']) {
             $command->setMenuThumbnailImages($data['menu_thumbnail_images']);
         }
+    }
+
+    /**
+     * @param CategoryException $exception
+     *
+     * @return string User friendly error message for exception
+     */
+    protected function handleAddException(CategoryException $exception)
+    {
+        $type = get_class($exception);
+
+        if (CategoryConstraintException::class === $type) {
+            return $this->handleConstraintException($exception);
+        }
+
+        $messages = [
+            CategoryNotFoundException::class =>
+                $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'),
+        ];
+
+        if (isset($messages[$type])) {
+            return $messages[$type];
+        }
+
+        return $this->trans('An error occurred while creating an object.', 'Admin.Notifications.Error');
+    }
+
+    /**
+     * @param CategoryException $exception
+     *
+     * @return string User friendly error message for exception
+     */
+    protected function handleEditException(CategoryException $exception)
+    {
+        $type = get_class($exception);
+
+        if (CategoryConstraintException::class === $type) {
+            return $this->handleConstraintException($exception);
+        }
+
+        $messages = [
+            CategoryNotFoundException::class =>
+                $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'),
+        ];
+
+        if (isset($messages[$type])) {
+            return $messages[$type];
+        }
+
+        return $this->trans('An error occurred while updating an object.', 'Admin.Notifications.Error');
+    }
+
+    /**
+     * @param CategoryConstraintException $e
+     *
+     * @return string
+     */
+    protected function handleConstraintException(CategoryConstraintException $e)
+    {
+        $messages = [
+            CategoryConstraintException::TOO_MANY_MENU_THUMBNAILS => sprintf(
+                '%s %s',
+                $this->trans('An error occurred while uploading the image:', 'Admin.Catalog.Notification'),
+                $this->trans('You cannot upload more files', 'Admin.Notifications.Error')
+            ),
+        ];
+
+        if (isset($messages[$e->getCode()])) {
+            return $messages[$e->getCode()];
+        }
+
+        return $this->trans('Unexpected error occurred', 'Admin.Notifications.Error');
     }
 }
