@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundExcepti
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 
 /**
- * Class EditCategoryHandler
+ * Class EditCategoryHandler.
  *
  * @internal
  */

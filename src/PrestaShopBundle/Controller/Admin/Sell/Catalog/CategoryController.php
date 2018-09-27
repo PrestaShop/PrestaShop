@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -106,7 +106,7 @@ class CategoryController extends FrameworkBundleAdminController
     }
 
     /**
-     * Show "Add new root category" page & process adding
+     * Show "Add new root category" page & process adding.
      *
      * @param Request $request
      *
@@ -163,7 +163,7 @@ class CategoryController extends FrameworkBundleAdminController
     }
 
     /**
-     * Show & process category editing
+     * Show & process category editing.
      *
      * @param int $categoryId
      * @param Request $request
@@ -360,8 +360,7 @@ class CategoryController extends FrameworkBundleAdminController
         }
 
         $messages = [
-            CategoryNotFoundException::class =>
-                $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'),
+            CategoryNotFoundException::class => $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'),
         ];
 
         if (isset($messages[$type])) {
@@ -385,8 +384,7 @@ class CategoryController extends FrameworkBundleAdminController
         }
 
         $messages = [
-            CategoryNotFoundException::class =>
-                $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'),
+            CategoryNotFoundException::class => $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'),
         ];
 
         if (isset($messages[$type])) {

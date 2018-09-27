@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Category\CommandHandler\EditRootCategoryHa
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
 
 /**
- * Class EditRootCategoryHandler
+ * Class EditRootCategoryHandler.
  */
 final class EditRootCategoryHandler extends AbstractCategoryHandler implements EditRootCategoryHandlerInterface
 {
@@ -53,7 +53,5 @@ final class EditRootCategoryHandler extends AbstractCategoryHandler implements E
         $this->populateCategoryWithCommandData($category, $command);
 
         $category->update();
-
-
     }
 }

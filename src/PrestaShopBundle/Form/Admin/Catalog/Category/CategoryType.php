@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -31,7 +31,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Class CategoryType
+ * Class CategoryType.
  */
 class CategoryType extends AbstractCategoryType
 {
@@ -46,7 +46,7 @@ class CategoryType extends AbstractCategoryType
             ->add('id_parent', CategoryChoiceTreeType::class, [
                 // when using CategoryType to edit category
                 // user should not be able to select that category as parent
-                'disabled_values' => null !== $options['id_category'] ? [$options['id_category']] : []
+                'disabled_values' => null !== $options['id_category'] ? [$options['id_category']] : [],
             ])
         ;
     }

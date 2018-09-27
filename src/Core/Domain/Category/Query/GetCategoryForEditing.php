@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Category\Query;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 
 /**
- * Class GetCategoryForEditing retrieves category data for editing
+ * Class GetCategoryForEditing retrieves category data for editing.
  */
 class GetCategoryForEditing
 {
