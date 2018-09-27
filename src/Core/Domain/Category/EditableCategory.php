@@ -95,6 +95,7 @@ class EditableCategory
      * @var array
      */
     private $menuThumbnailImages;
+    private $isRootCategory;
 
     /**
      * @param string[] $name
@@ -107,6 +108,7 @@ class EditableCategory
      * @param string[] $linkRewrite
      * @param int[] $groupAssociationIds
      * @param int[] $shopAssociationIds
+     * @param bool $isRootCategory
      * @param mixed $coverImage
      * @param mixed $thumbnailImage
      * @param array $menuThumbnailImages
@@ -115,16 +117,17 @@ class EditableCategory
         array $name,
         $isActive,
         array $description,
-        $parentId,  //@todo: should it be CategoryId?
+        $parentId,
         array $metaTitle,
         array $metaDescription,
         array $metaKeywords,
         array $linkRewrite,
         array $groupAssociationIds,
         array $shopAssociationIds,
+        $isRootCategory,
         $coverImage = null,
         $thumbnailImage = null,
-        $menuThumbnailImages = []
+        array $menuThumbnailImages = []
     ) {
         $this->name = $name;
         $this->isActive = $isActive;
@@ -139,6 +142,7 @@ class EditableCategory
         $this->thumbnailImage = $thumbnailImage;
         $this->coverImage = $coverImage;
         $this->menuThumbnailImages = $menuThumbnailImages;
+        $this->isRootCategory = $isRootCategory;
     }
 
     /**
@@ -243,5 +247,13 @@ class EditableCategory
     public function getMenuThumbnailImages()
     {
         return $this->menuThumbnailImages;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isRootCategory()
+    {
+        return $this->isRootCategory;
     }
 }

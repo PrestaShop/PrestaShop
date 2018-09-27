@@ -65,6 +65,7 @@ final class GetCategoryForEditingHandler implements GetCategoryForEditingHandler
 
         if (!$category->id) {
             throw new CategoryNotFoundException(
+                $query->getCategoryId(),
                 sprintf('Category with id "%s" was not found', $query->getCategoryId()->getValue())
             );
         }
@@ -80,6 +81,7 @@ final class GetCategoryForEditingHandler implements GetCategoryForEditingHandler
             $category->link_rewrite,
             $category->getGroups(),
             $category->getAssociatedShops(),
+            (bool) $category->is_root_category,
             $this->getCoverImage($query->getCategoryId()),
             $this->getThumbnailImage($query->getCategoryId()),
             $this->getMenuThumbnailImages($query->getCategoryId())

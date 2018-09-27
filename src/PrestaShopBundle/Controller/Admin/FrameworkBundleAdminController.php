@@ -440,4 +440,12 @@ class FrameworkBundleAdminController extends Controller
     {
         return $this->getContext()->language->id;
     }
+
+    /**
+     * @return int
+     */
+    protected function getContextShopId()
+    {
+        return $this->getContext()->shop->id;
+    }
 }

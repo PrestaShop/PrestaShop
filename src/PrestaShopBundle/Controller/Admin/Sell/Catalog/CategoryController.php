@@ -53,7 +53,6 @@ class CategoryController extends FrameworkBundleAdminController
      * @param Request $request
      *
      * @return Response
-     * @throws CategoryException
      */
     public function addAction(Request $request)
     {
@@ -65,6 +64,9 @@ class CategoryController extends FrameworkBundleAdminController
                 $defaultGroups->getVisitorsGroup()->getGroupId()->getValue(),
                 $defaultGroups->getGuestsGroup()->getGroupId()->getValue(),
                 $defaultGroups->getCustomersGroup()->getGroupId()->getValue(),
+            ],
+            'shop_association' => [
+                $this->getContextShopId(),
             ],
         ];
 
@@ -110,7 +112,21 @@ class CategoryController extends FrameworkBundleAdminController
      */
     public function addRootAction(Request $request)
     {
-        $rootCategoryForm = $this->createForm(RootCategoryType::class);
+        /** @var DefaultGroups $defaultGroups */
+        $defaultGroups = $this->getQueryBus()->handle(new GetDefaultGroups());
+
+        $emptyCategoryData = [
+            'group_association' => [
+                $defaultGroups->getVisitorsGroup()->getGroupId()->getValue(),
+                $defaultGroups->getGuestsGroup()->getGroupId()->getValue(),
+                $defaultGroups->getCustomersGroup()->getGroupId()->getValue(),
+            ],
+            'shop_association' => [
+                $this->getContextShopId(),
+            ],
+        ];
+
+        $rootCategoryForm = $this->createForm(RootCategoryType::class, $emptyCategoryData);
         $rootCategoryForm->handleRequest($request);
 
         if ($rootCategoryForm->isSubmitted()) {
@@ -128,7 +144,7 @@ class CategoryController extends FrameworkBundleAdminController
 
                 $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
 
-                return $this->redirectToRoute('admin_category_add');
+                //return $this->redirectToRoute('admin_category_add');
             } catch (CategoryException $e) {
                 throw $e; //@todo: handle
             }
@@ -159,6 +175,10 @@ class CategoryController extends FrameworkBundleAdminController
         /** @var EditableCategory $editableCategory */
         $editableCategory = $this->getQueryBus()->handle(new GetCategoryForEditing($categoryId));
 
+        if ($editableCategory->isRootCategory()) {
+            return $this->redirectToRoute('admin_category_edit_root', ['categoryId' => $categoryId]);
+        }
+
         $categoryFormOptions = [
             'id_category' => $categoryId->getValue(),
         ];
@@ -187,7 +207,74 @@ class CategoryController extends FrameworkBundleAdminController
 
                 $this->populateCommandWithFormData($command, $data);
 
-                return $this->redirectToRoute('admin_category_add');
+                $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+
+                //return $this->redirectToRoute('admin_category_add');
+            } catch (CategoryException $e) {
+                throw $e; //@todo: handle
+            }
+        }
+
+        /** @var DefaultGroups $defaultGroups */
+        $defaultGroups = $this->getQueryBus()->handle(new GetDefaultGroups());
+
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Categories/edit.html.twig', [
+            'layoutTitle' => $this->trans(
+                'Edit: %value%',
+                'Admin.Catalog.Feature',
+                [
+                    '%value%' => $editableCategory->getName()[$this->getContextLangId()],
+                ]
+            ),
+            'editCategoryForm' => $categoryForm->createView(),
+            'editableCategory' => $editableCategory,
+            'defaultGroups' => $defaultGroups,
+        ]);
+    }
+
+    /**
+     * Show and process category editing.
+     *
+     * @param int $categoryId
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function editRootAction($categoryId, Request $request)
+    {
+        $categoryId = new CategoryId((int) $categoryId);
+
+        /** @var EditableCategory $editableCategory */
+        $editableCategory = $this->getQueryBus()->handle(new GetCategoryForEditing($categoryId));
+
+        if (!$editableCategory->isRootCategory()) {
+            return $this->redirectToRoute('admin_category_edit', ['categoryId' => $categoryId]);
+        }
+
+        $categoryForm = $this->createForm(RootCategoryType::class, [
+            'name' => $editableCategory->getName(),
+            'active' => $editableCategory->isActive(),
+            'description' => $editableCategory->getDescription(),
+            'meta_title' => $editableCategory->getMetaTitle(),
+            'meta_description' => $editableCategory->getMetaDescription(),
+            'meta_keyword' => $editableCategory->getMetaKeywords(),
+            'link_rewrite' => $editableCategory->getLinkRewrite(),
+            'group_association' => $editableCategory->getGroupAssociationIds(),
+            'shop_association' => $editableCategory->getShopAssociationIds(),
+        ]);
+        $categoryForm->handleRequest($request);
+
+        if ($categoryForm->isSubmitted()) {
+            $data = $categoryForm->getData();
+
+            try {
+                $command = new EditCategoryCommand($categoryId);
+
+                $this->populateCommandWithFormData($command, $data);
+
+                $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+
+                //return $this->redirectToRoute('admin_category_add');
             } catch (CategoryException $e) {
                 throw $e; //@todo: handle
             }
