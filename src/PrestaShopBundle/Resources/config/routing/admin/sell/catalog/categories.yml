@@ -79,3 +79,12 @@ admin_category_edit:
         _legacy_controller: AdminCategories
     requirements:
         categoryId: \d+
+
+admin_category_edit_root:
+    path: /{categoryId}/edit-root
+    methods: [GET, POST]
+    defaults:
+        _controller: PrestaShopBundle:Admin\Sell\Catalog\Category:editRoot
+        _legacy_controller: AdminCategories
+    requirements:
+        categoryId: \d+
