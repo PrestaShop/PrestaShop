@@ -147,7 +147,7 @@ class PrestaShopExceptionCore extends Exception
         );
         $hiddenArgs = array();
         try {
-            $class = new \ReflectionClass($trace['class']);
+            $class = new ReflectionClass($trace['class']);
             /** @var \ReflectionMethod $method */
             $method = $class->getMethod($trace['function']);
             /** @var \ReflectionParameter $parameter */
