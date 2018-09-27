@@ -103,7 +103,7 @@
     </div>
 
     {% block import_file_history_block %}
-        {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Blocks/import_file_history.html.twig' %}
+      {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Blocks/import_file_history.html.twig' %}
     {% endblock %}
 
     <hr>
@@ -163,14 +163,14 @@
     </div>
 
     {{ form_rest(importForm) }}
-    </div>
+  </div>
   <div class="card-footer">
     <div class="d-flex justify-content-end">
       <button class="btn btn-primary" name="submitImportFile">
         {{ 'Next step'|trans({}, 'Admin.Advparameters.Feature') }}
         <i class="material-icons">navigate_next</i>
       </button>
-      </div>
+    </div>
   </div>
 </div>
 {{ form_end(importForm) }}
