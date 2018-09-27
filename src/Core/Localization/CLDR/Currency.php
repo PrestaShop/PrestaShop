@@ -95,11 +95,11 @@ class Currency
 
     public function __construct(CurrencyData $currencyData)
     {
-        $this->isoCode = $currencyData->isoCode;
-        $this->numericIsoCode = $currencyData->numericIsoCode;
-        $this->decimalDigits = $currencyData->decimalDigits;
-        $this->displayNames = $currencyData->displayNames;
-        $this->symbols = $currencyData->symbols;
+        $this->isoCode = $currencyData->getIsoCode();
+        $this->numericIsoCode = $currencyData->getNumericIsoCode();
+        $this->decimalDigits = $currencyData->getDecimalDigits();
+        $this->displayNames = $currencyData->getDisplayNames();
+        $this->symbols = $currencyData->getSymbols();
     }
 
     /**
@@ -147,8 +147,12 @@ class Currency
      * @return string
      *                The wanted display name
      */
-    public function getDisplayName($countContext = 'default')
+    public function getDisplayName($countContext = self::DISPLAY_NAME_COUNT_DEFAULT)
     {
+        if (!isset($this->displayNames[$countContext])){
+            $countContext = self::DISPLAY_NAME_COUNT_DEFAULT;
+        }
+
         return $this->displayNames[$countContext];
     }
 
