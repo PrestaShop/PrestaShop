@@ -31,8 +31,13 @@ use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryConstraintExcep
 /**
  * Class AddCategoryCommand adds new category
  */
-class AddCategoryCommand extends AbstractCategoryCommand
+class AddCategoryCommand extends AbstractRootCategoryCommand
 {
+    /**
+     * @var int
+     */
+    private $parentCategoryId;
+
     /**
      * @param string[] $name
      * @param string[] $linkRewrite
@@ -49,5 +54,34 @@ class AddCategoryCommand extends AbstractCategoryCommand
             ->setIsActive($isActive)
             ->setParentCategoryId($parentCategoryId)
         ;
+    }
+
+    /**
+     * @return int
+     */
+    public function getParentCategoryId()
+    {
+        return $this->parentCategoryId;
+    }
+
+    /**
+     * @param int $parentCategoryId
+     *
+     * @return self
+     *
+     * @throws CategoryConstraintException
+     */
+    public function setParentCategoryId($parentCategoryId)
+    {
+        if (!is_int($parentCategoryId) || 0 >= $parentCategoryId) {
+            throw new CategoryConstraintException(
+                sprintf('Invalid Category parent id %s supplied', var_export($parentCategoryId, true)),
+                CategoryConstraintException::INVALID_PARENT_ID
+            );
+        }
+
+        $this->parentCategoryId = $parentCategoryId;
+
+        return $this;
     }
 }

@@ -55,6 +55,16 @@ class CategoryId
     }
 
     /**
+     * @param CategoryId $categoryId
+     *
+     * @return bool
+     */
+    public function isEqual(CategoryId $categoryId)
+    {
+        return $this->getValue() === $categoryId->getValue();
+    }
+
+    /**
      * @param int $categoryId
      */
     private function setCategoryId($categoryId)
