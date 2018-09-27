@@ -40,21 +40,21 @@ class CurrencyData
      *
      * @var string
      */
-    public $isoCode;
+    protected $isoCode;
 
     /**
      * Numeric ISO 4217 currency code.
      *
      * @var string
      */
-    public $numericIsoCode;
+    protected $numericIsoCode;
 
     /**
      * Number of decimal digits to display for a price in this currency.
      *
      * @var int
      */
-    public $decimalDigits;
+    protected $decimalDigits;
 
     /**
      * Possible names depending on count context.
@@ -68,7 +68,7 @@ class CurrencyData
      *
      * @var string[]
      */
-    public $displayNames;
+    protected $displayNames;
 
     /**
      * Possible symbols (PrestaShop is using narrow).
@@ -81,7 +81,7 @@ class CurrencyData
      *
      * @var string[]
      */
-    public $symbols;
+    protected $symbols;
 
     /**
      * Override this object's data with another CurrencyData object.
@@ -94,29 +94,125 @@ class CurrencyData
      */
     public function overrideWith(CurrencyData $currencyData)
     {
-        if (isset($currencyData->isoCode)) {
-            $this->isoCode = $currencyData->isoCode;
+        if (null != $currencyData->getIsoCode()) {
+            $this->setIsoCode($currencyData->getIsoCode());
         }
 
-        if (isset($currencyData->numericIsoCode)) {
-            $this->numericIsoCode = $currencyData->numericIsoCode;
+        if (null !== $currencyData->getNumericIsoCode()) {
+            $this->setNumericIsoCode($currencyData->getNumericIsoCode());
         }
 
-        if (isset($currencyData->decimalDigits)) {
-            $this->decimalDigits = $currencyData->decimalDigits;
+        if (null !== $currencyData->getDecimalDigits()) {
+            $this->setDecimalDigits($currencyData->getDecimalDigits());
         }
 
-        if (isset($currencyData->displayNames)) {
-            foreach ($currencyData->displayNames as $countContext => $name) {
-                $this->displayNames[$countContext] = $name;
-            }
+        if (null !== $currencyData->getDisplayNames()) {
+            $this->setDisplayNames($currencyData->getDisplayNames());
         }
 
-        if (isset($currencyData->symbols)) {
-            foreach ($currencyData->symbols as $type => $symbol) {
-                $this->symbols[$type] = $symbol;
-            }
+        if (null !== $currencyData->getSymbols()) {
+            $this->setSymbols($currencyData->getSymbols());
         }
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getIsoCode()
+    {
+        return $this->isoCode;
+    }
+
+    /**
+     * @param string $isoCode
+     *
+     * @return CurrencyData
+     */
+    public function setIsoCode($isoCode)
+    {
+        $this->isoCode = $isoCode;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNumericIsoCode()
+    {
+        return $this->numericIsoCode;
+    }
+
+    /**
+     * @param string $numericIsoCode
+     *
+     * @return CurrencyData
+     */
+    public function setNumericIsoCode($numericIsoCode)
+    {
+        $this->numericIsoCode = $numericIsoCode;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getDecimalDigits()
+    {
+        return $this->decimalDigits;
+    }
+
+    /**
+     * @param int $decimalDigits
+     *
+     * @return CurrencyData
+     */
+    public function setDecimalDigits($decimalDigits)
+    {
+        $this->decimalDigits = $decimalDigits;
+
+        return $this;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getDisplayNames()
+    {
+        return $this->displayNames;
+    }
+
+    /**
+     * @param string[] $displayNames
+     *
+     * @return CurrencyData
+     */
+    public function setDisplayNames($displayNames)
+    {
+        $this->displayNames = $displayNames;
+
+        return $this;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getSymbols()
+    {
+        return $this->symbols;
+    }
+
+    /**
+     * @param string[] $symbols
+     *
+     * @return CurrencyData
+     */
+    public function setSymbols($symbols)
+    {
+        $this->symbols = $symbols;
 
         return $this;
     }

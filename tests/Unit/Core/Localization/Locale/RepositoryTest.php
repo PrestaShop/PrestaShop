@@ -61,17 +61,17 @@ class RepositoryTest extends TestCase
             ->getMock();
 
         $symbolsDataStub = new NumberSymbolsData();
-        $symbolsDataStub->decimal = ',';
-        $symbolsDataStub->group = ' ';
-        $symbolsDataStub->list = ';';
-        $symbolsDataStub->percentSign = '%';
-        $symbolsDataStub->minusSign = '-';
-        $symbolsDataStub->plusSign = '+';
-        $symbolsDataStub->exponential = 'E';
-        $symbolsDataStub->superscriptingExponent = '^';
-        $symbolsDataStub->perMille = '‰';
-        $symbolsDataStub->infinity = '∞';
-        $symbolsDataStub->nan = 'NaN';
+        $symbolsDataStub->setDecimal(',');
+        $symbolsDataStub->setGroup(' ');
+        $symbolsDataStub->setList(';');
+        $symbolsDataStub->setPercentSign('%');
+        $symbolsDataStub->setMinusSign('-');
+        $symbolsDataStub->setPlusSign('+');
+        $symbolsDataStub->setExponential('E');
+        $symbolsDataStub->setSuperscriptingExponent('^');
+        $symbolsDataStub->setPerMille('‰');
+        $symbolsDataStub->setInfinity('∞');
+        $symbolsDataStub->setNan('NaN');
         $cldrLocale->method('getAllNumberSymbols')->willReturn(['latn' => $symbolsDataStub]);
 
         /** CLDR LocaleRepository (returning the data object) */

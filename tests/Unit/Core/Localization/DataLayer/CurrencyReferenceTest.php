@@ -47,7 +47,7 @@ class CurrencyReferenceTest extends TestCase
     protected function setUp()
     {
         $stubCurrencyData          = new CldrCurrencyData();
-        $stubCurrencyData->isoCode = 'PCE';
+        $stubCurrencyData->setIsoCode('PCE');
         $stubCldrCurrency          = new CldrCurrency($stubCurrencyData);
 
         $stubLocale = $this->createMock(CldrLocale::class);

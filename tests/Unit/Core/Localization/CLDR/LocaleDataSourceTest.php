@@ -93,73 +93,73 @@ class LocaleDataSourceTest extends TestCase
     {
         // Common data
         $localeData                         = new LocaleData();
-        $localeData->numberingSystems       = ['latn'];
-        $localeData->defaultNumberingSystem = 'latn';
-        $localeData->minimumGroupingDigits  = 1;
-        $localeData->decimalPatterns        = ['latn' => '#,##0.###'];
-        $localeData->percentPatterns        = ['latn' => '#,##0.### %'];
+        $localeData->setNumberingSystems(['latn']);
+        $localeData->setDefaultNumberingSystem('latn');
+        $localeData->setMinimumGroupingDigits(1);
+        $localeData->setDecimalPatterns(['latn' => '#,##0.###']);
+        $localeData->setPercentPatterns(['latn' => '#,##0.### %']);
 
-        $stubSymbolsData                         = new NumberSymbolsData();
-        $stubSymbolsData->list                   = ';';
-        $stubSymbolsData->percentSign            = '%';
-        $stubSymbolsData->minusSign              = '-';
-        $stubSymbolsData->plusSign               = '+';
-        $stubSymbolsData->exponential            = '^';
-        $stubSymbolsData->superscriptingExponent = 'E';
-        $stubSymbolsData->perMille               = '‰';
-        $stubSymbolsData->infinity               = '∞';
-        $stubSymbolsData->nan                    = 'NaN';
-        $stubSymbolsData->timeSeparator          = ':';
+        $stubSymbolsData = new NumberSymbolsData();
+        $stubSymbolsData->setList(';');
+        $stubSymbolsData->setPercentSign('%');
+        $stubSymbolsData->setMinusSign('-');
+        $stubSymbolsData->setPlusSign('+');
+        $stubSymbolsData->setExponential('^');
+        $stubSymbolsData->setSuperscriptingExponent('E');
+        $stubSymbolsData->setPerMille('‰');
+        $stubSymbolsData->setInfinity('∞');
+        $stubSymbolsData->setNan('NaN');
+        $stubSymbolsData->setTimeSeparator(':');
 
-        $stubCurrencyData                 = new CurrencyData();
-        $stubCurrencyData->isoCode        = 'PCE';
-        $stubCurrencyData->numericIsoCode = 333;
-        $stubCurrencyData->decimalDigits  = 2;
+        $stubCurrencyData = new CurrencyData();
+        $stubCurrencyData->setIsoCode('PCE');
+        $stubCurrencyData->setNumericIsoCode(333);
+        $stubCurrencyData->setDecimalDigits(2);
 
         // Locale-specific data
         switch ($localeCode) {
             case 'fr-FR':
-                $localeData->localeCode       = 'fr-FR';
-                $localeData->currencyPatterns = ['latn' => '#,##0.00# ¤'];
+                $localeData->setLocaleCode('fr-FR');
+                $localeData->setCurrencyPatterns(['latn' => '#,##0.00# ¤']);
 
-                $stubSymbolsData->decimal       = ',';
-                $stubSymbolsData->group         = ' ';
+                $stubSymbolsData->setDecimal(',');
+                $stubSymbolsData->setGroup(' ');
 
-                $stubCurrencyData->displayNames = [
+                $stubCurrencyData->setDisplayNames([
                     'default' => 'Paix PrestaShop',
                     'one'     => 'paix',
                     'other'   => 'paix',
-                ];
-                $stubCurrencyData->symbols      = [
+                ]);
+                $stubCurrencyData->setSymbols([
                     Currency::SYMBOL_TYPE_DEFAULT => '☮PS',
                     Currency::SYMBOL_TYPE_NARROW  => '☮',
-                ];
+                ]);
                 break;
 
             case 'en-US':
-                $localeData->localeCode = 'en-US';
-                $localeData->currencyPatterns = ['latn' => '¤#,##0.00#'];
+                $localeData->setLocaleCode('en-US');
+                $localeData->setCurrencyPatterns(['latn' => '¤#,##0.00#']);
 
-                $stubSymbolsData->decimal = '.';
-                $stubSymbolsData->group   = ',';
+                $stubSymbolsData->setDecimal('.');
+                $stubSymbolsData->setGroup(',');
 
-                $stubCurrencyData->displayNames = [
+                $stubCurrencyData->setDisplayNames([
                     'default' => 'PrestaShop Peace',
                     'one'     => 'peace',
                     'other'   => 'peaces',
-                ];
-                $stubCurrencyData->symbols      = [
+                ]);
+                $stubCurrencyData->setSymbols([
                     Currency::SYMBOL_TYPE_DEFAULT => 'PS☮',
                     Currency::SYMBOL_TYPE_NARROW  => '☮',
-                ];
+                ]);
                 break;
 
             default:
                 return null;
         }
 
-        $localeData->numberSymbols = ['latn' => $stubSymbolsData];
-        $localeData->currencies    = ['PCE' => $stubCurrencyData];
+        $localeData->setNumberSymbols(['latn' => $stubSymbolsData]);
+        $localeData->setCurrencies(['PCE' => $stubCurrencyData]);
 
         return $localeData;
     }

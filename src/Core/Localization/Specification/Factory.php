@@ -138,7 +138,7 @@ class Factory
     {
         $patterns = explode(';', $pattern);
 
-        return $patterns[0];
+        return isset($patterns[0]) ? $patterns[0] : '';
     }
 
     /**
@@ -196,17 +196,17 @@ class Factory
     protected function getNumberSymbolList(NumberSymbolsData $symbolsData)
     {
         return new NumberSymbolList(
-            $symbolsData->decimal,
-            $symbolsData->group,
-            $symbolsData->list,
-            $symbolsData->percentSign,
-            $symbolsData->minusSign,
-            $symbolsData->plusSign,
-            $symbolsData->exponential,
-            $symbolsData->superscriptingExponent,
-            $symbolsData->perMille,
-            $symbolsData->infinity,
-            $symbolsData->nan
+            $symbolsData->getDecimal(),
+            $symbolsData->getGroup(),
+            $symbolsData->getList(),
+            $symbolsData->getPercentSign(),
+            $symbolsData->getMinusSign(),
+            $symbolsData->getPlusSign(),
+            $symbolsData->getExponential(),
+            $symbolsData->getSuperscriptingExponent(),
+            $symbolsData->getPerMille(),
+            $symbolsData->getInfinity(),
+            $symbolsData->getNan()
         );
     }
 
@@ -237,9 +237,7 @@ class Factory
      */
     protected function getPrimaryGroupSize($pattern)
     {
-        $parts = explode('.', $pattern);
-        $integerPart = $parts[0];
-        $groups = explode(',', $integerPart);
+        $groups = $this->getPatternGroups($pattern);
         $nbGroups = count($groups);
 
         return strlen($groups[$nbGroups - 1]);
@@ -258,9 +256,7 @@ class Factory
      */
     protected function getSecondaryGroupSize($pattern)
     {
-        $parts = explode('.', $pattern);
-        $integerPart = $parts[0];
-        $groups = explode(',', $integerPart);
+        $groups = $this->getPatternGroups($pattern);
         $nbGroups = count($groups);
 
         if ($nbGroups > 2) {
@@ -268,5 +264,14 @@ class Factory
         }
 
         return strlen($groups[$nbGroups - 1]);
+    }
+
+    protected function getPatternGroups($pattern)
+    {
+        $parts = explode('.', $pattern);
+        $integerPart = $parts[0];
+        $groups = explode(',', $integerPart);
+
+        return $groups;
     }
 }

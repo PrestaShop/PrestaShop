@@ -64,41 +64,41 @@ class LocaleTest extends TestCase
     protected function setUp()
     {
         $localeData                         = new LocaleData();
-        $localeData->localeCode             = 'fr-FR';
-        $localeData->numberingSystems       = ['latn'];
-        $localeData->defaultNumberingSystem = 'latn';
-        $localeData->minimumGroupingDigits  = 1;
+        $localeData->setLocaleCode('fr-FR');
+        $localeData->setNumberingSystems(['latn']);
+        $localeData->setDefaultNumberingSystem('latn');
+        $localeData->setMinimumGroupingDigits(1);
 
         $this->stubSymbolsData                         = new NumberSymbolsData();
-        $this->stubSymbolsData->decimal                = ',';
-        $this->stubSymbolsData->group                  = ' ';
-        $this->stubSymbolsData->list                   = ';';
-        $this->stubSymbolsData->percentSign            = '%';
-        $this->stubSymbolsData->minusSign              = '-';
-        $this->stubSymbolsData->plusSign               = '+';
-        $this->stubSymbolsData->exponential            = '^';
-        $this->stubSymbolsData->superscriptingExponent = 'E';
-        $this->stubSymbolsData->perMille               = '‰';
-        $this->stubSymbolsData->infinity               = '∞';
-        $this->stubSymbolsData->nan                    = 'NaN';
-        $this->stubSymbolsData->timeSeparator          = ':';
-        $localeData->numberSymbols                     = ['latn' => $this->stubSymbolsData];
+        $this->stubSymbolsData->setDecimal(',');
+        $this->stubSymbolsData->setGroup(' ');
+        $this->stubSymbolsData->setList(';');
+        $this->stubSymbolsData->setPercentSign('%');
+        $this->stubSymbolsData->setMinusSign('-');
+        $this->stubSymbolsData->setPlusSign('+');
+        $this->stubSymbolsData->setExponential('^');
+        $this->stubSymbolsData->setSuperscriptingExponent('E');
+        $this->stubSymbolsData->setPerMille('‰');
+        $this->stubSymbolsData->setInfinity('∞');
+        $this->stubSymbolsData->setNan('NaN');
+        $this->stubSymbolsData->setTimeSeparator(':');
+        $localeData->setNumberSymbols(['latn' => $this->stubSymbolsData]);
 
-        $localeData->decimalPatterns  = ['latn' => '#,##0.###'];
-        $localeData->percentPatterns  = ['latn' => '#,##0.### %'];
-        $localeData->currencyPatterns = ['latn' => '#,##0.00# ¤'];
+        $localeData->setDecimalPatterns(['latn' => '#,##0.###']);
+        $localeData->setPercentPatterns(['latn' => '#,##0.### %']);
+        $localeData->setCurrencyPatterns(['latn' => '#,##0.00# ¤']);
 
         $this->stubCurrencyData                 = new CurrencyData();
-        $this->stubCurrencyData->isoCode        = 'PCE';
-        $this->stubCurrencyData->numericIsoCode = 333;
-        $this->stubCurrencyData->decimalDigits  = 2;
-        $this->stubCurrencyData->displayNames   = [
+        $this->stubCurrencyData->setIsoCode('PCE');
+        $this->stubCurrencyData->setNumericIsoCode(333);
+        $this->stubCurrencyData->setDecimalDigits(2);
+        $this->stubCurrencyData->setDisplayNames([
             'default' => 'PrestaShop Peace',
             'one'     => 'peace',
             'other'   => 'peaces',
-        ];
-        $this->stubCurrencyData->symbols        = [Currency::SYMBOL_TYPE_DEFAULT => 'PS☮', Currency::SYMBOL_TYPE_NARROW => '☮'];
-        $localeData->currencies                 = ['PCE' => $this->stubCurrencyData];
+        ]);
+        $this->stubCurrencyData->setSymbols([Currency::SYMBOL_TYPE_DEFAULT => 'PS☮', Currency::SYMBOL_TYPE_NARROW => '☮']);
+        $localeData->setCurrencies(['PCE' => $this->stubCurrencyData]);
 
         $this->cldrLocale = new Locale($localeData);
     }
@@ -307,7 +307,7 @@ class LocaleTest extends TestCase
         );
 
         $this->assertSame(
-            $this->stubCurrencyData->isoCode,
+            $this->stubCurrencyData->getIsoCode(),
             $currency->getIsoCode()
         );
 
@@ -332,8 +332,8 @@ class LocaleTest extends TestCase
         );
 
         $this->assertSame(
-            $this->stubCurrencyData->isoCode,
-            $currencyData->isoCode
+            $this->stubCurrencyData->getIsoCode(),
+            $currencyData->getIsoCode()
         );
 
         $this->assertNull(

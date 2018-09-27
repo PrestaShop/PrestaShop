@@ -48,11 +48,11 @@ class CurrencyTest extends TestCase
     protected function setUp()
     {
         $currencyData                 = new CurrencyData();
-        $currencyData->isoCode        = 'PCE';
-        $currencyData->numericIsoCode = 333;
-        $currencyData->decimalDigits  = 2;
-        $currencyData->displayNames   = ['default' => 'PrestaShop Peace', 'one' => 'peace', 'other' => 'peaces'];
-        $currencyData->symbols        = [Currency::SYMBOL_TYPE_DEFAULT => 'PS☮', Currency::SYMBOL_TYPE_NARROW => '☮'];
+        $currencyData->setIsoCode('PCE');
+        $currencyData->setNumericIsoCode(333);
+        $currencyData->setDecimalDigits(2);
+        $currencyData->setDisplayNames(['default' => 'PrestaShop Peace', 'one' => 'peace', 'other' => 'peaces']);
+        $currencyData->setSymbols([Currency::SYMBOL_TYPE_DEFAULT => 'PS☮', Currency::SYMBOL_TYPE_NARROW => '☮']);
 
         $this->cldrCurrency = new Currency($currencyData);
     }
