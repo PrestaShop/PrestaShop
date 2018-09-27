@@ -53,7 +53,7 @@ export default class ImportMatchConfiguration
   save(event) {
     event.preventDefault();
     const ajaxUrl = $('.js-save-import-match').attr('data-url');
-    const formData = $('form[name="import_data_configuration"]').serialize();
+    const formData = $('.import-form').serialize();
 
     $.ajax({
       type: 'POST',
@@ -63,7 +63,7 @@ export default class ImportMatchConfiguration
       if (typeof response.errors !== 'undefined' && response.errors.length) {
         this._showErrorPopUp(response.errors);
       } else if (response.matches.length > 0){
-        let $dataMatchesDropdown = $('#form_import_data_configuration_matches');
+        let $dataMatchesDropdown = this.matchesDropdown;
 
         for (let key in response.matches) {
           let $existingMatch = $dataMatchesDropdown.find('option[value=' + response.matches[key].id_import_match + ']');
@@ -95,16 +95,16 @@ export default class ImportMatchConfiguration
       type: 'GET',
       url: ajaxUrl,
       data: {
-        import_match_id: $('#form_import_data_configuration_matches').val()
+        import_match_id: this.matchesDropdown.val()
       },
     }).then(response => {
       if (response) {
-        $('#form_import_data_configuration_rows_skip').val(response.skip);
+        this.rowsSkipInput.val(response.skip);
 
         let entityFields = response.match.split('|');
 
         for (let i in entityFields) {
-          $('#form_import_data_configuration_type_value_' + i).val(entityFields[i]);
+          $('#type_value_' + i).val(entityFields[i]);
         }
       }
     });
@@ -116,7 +116,7 @@ export default class ImportMatchConfiguration
   delete(event) {
     event.preventDefault();
     const ajaxUrl = $('.js-delete-import-match').attr('data-url');
-    const $dataMatchesDropdown = $('#form_import_data_configuration_matches');
+    const $dataMatchesDropdown = this.matchesDropdown;
     const selectedMatchId = $dataMatchesDropdown.val();
 
     $.ajax({
@@ -140,5 +140,23 @@ export default class ImportMatchConfiguration
    */
   _showErrorPopUp(errors) {
     alert(errors);
+  }
+
+  /**
+   * Get the matches dropdown.
+   *
+   * @returns {*|HTMLElement}
+   */
+  get matchesDropdown() {
+    return $('#matches');
+  }
+
+  /**
+   * Get the "rows to skip" input
+   *
+   * @returns {*|HTMLElement}
+   */
+  get rowsSkipInput() {
+    return $('#rows_skip');
   }
 }

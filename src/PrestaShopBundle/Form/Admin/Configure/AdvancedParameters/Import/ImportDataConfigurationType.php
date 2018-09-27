@@ -97,11 +97,16 @@ class ImportDataConfigurationType extends TranslatorAwareType
                 ],
                 'label' => false,
             ])
+            ->add('entity', HiddenType::class)
+            ->add('csv', HiddenType::class)
+            ->add('iso_lang', HiddenType::class)
             ->add('truncate', HiddenType::class)
             ->add('match_ref', HiddenType::class)
             ->add('regenerate', HiddenType::class)
             ->add('forceIDs', HiddenType::class)
             ->add('sendemail', HiddenType::class)
+            ->add('separator', HiddenType::class)
+            ->add('multiple_value_separator', HiddenType::class)
         ;
     }
 }

@@ -48,6 +48,6 @@ export default class ImportDataPage {
 
     let importer = new Importer();
 
-    importer.import();
+    importer.import($('.import-form').serializeArray());
   }
 }
