@@ -25,8 +25,6 @@
 
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
-{% trans_default_domain "Admin.Shopparameters.Feature" %}
-
 {% block content %}
   {% set metaForm = form.meta %}
   <div class="row justify-content-center">
@@ -40,7 +38,7 @@
           <div class="card-text">
             <div class="form-group row">
               <label class="form-control-label">
-                {{ ps.label_with_help('Page name'|trans, ('Name of the related page.'|trans({}, 'Admin.Shopparameters.Help'))) }}
+                {{ ps.label_with_help('Page name'|trans({}, 'Admin.Shopparameters.Feature'), ('Name of the related page.'|trans({}, 'Admin.Shopparameters.Help'))) }}
               </label>
               <div class="col-sm">
                 {{ form_errors(metaForm.page_name) }}
@@ -54,7 +52,7 @@
                   {{ 'Invalid characters:'|trans({}, 'Admin.Shopparameters.Help') ~ '  &lt;&gt;;=#{}'}}
                 {% endset %}
 
-                {{ ps.label_with_help('Page title'|trans, (pageTilteLabel))}}
+                {{ ps.label_with_help('Page title'|trans({}, 'Admin.Shopparameters.Feature'), (pageTilteLabel))}}
               </label>
               <div class="col-sm">
                 {{ form_errors(metaForm.page_title) }}
@@ -67,7 +65,7 @@
                   {{ 'A short description of your shop.'|trans({}, 'Admin.Shopparameters.Help') }}
                   {{ 'Invalid characters:'|trans({}, 'Admin.Shopparameters.Help') ~ ' &lt;&gt;;=#{}' }}
                 {% endset %}
-                {{ ps.label_with_help('Meta description'|trans, (metaDescriptionLabel))}}
+                {{ ps.label_with_help('Meta description'|trans({}, 'Admin.Global'), (metaDescriptionLabel))}}
               </label>
               <div class="col-sm">
                 {{ form_errors(metaForm.meta_description) }}
@@ -81,7 +79,7 @@
                   {{ 'To add tags, click in the field, write something, and then press the "Enter" key.'|trans({}, 'Admin.Shopparameters.Help') }}
                   {{ 'Invalid characters:'|trans({}, 'Admin.Shopparameters.Help') ~ ' &lt;&gt;;=#{}' }}
                 {% endset %}
-                {{ ps.label_with_help('Meta keywords'|trans, (metaKeywordsLabel))}}
+                {{ ps.label_with_help('Meta keywords'|trans({}, 'Admin.Global'), (metaKeywordsLabel))}}
               </label>
               <div class="col-sm">
                 {{ form_errors(metaForm.meta_keywords) }}
@@ -94,7 +92,7 @@
                   {{ 'For instance, "contacts" for http://example.com/shop/contacts to redirect to http://example.com/shop/contact-form.php'|trans({}, 'Admin.Shopparameters.Help') }}
                   {{ 'Only letters and hyphens are allowed.'|trans({}, 'Admin.Shopparameters.Help') }}
                 {% endset %}
-                {{ ps.label_with_help('Rewritten URL'|trans, (rewriteUrlLabel))}}
+                {{ ps.label_with_help('Rewritten URL'|trans({}, 'Admin.Shopparameters.Feature'), (rewriteUrlLabel))}}
               </label>
               <div class="col-sm">
                 {{ form_errors(metaForm.url_rewrite) }}
