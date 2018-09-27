@@ -170,4 +170,5 @@ services:
   prestashop.core.form.choice_provider.module_page:
     class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ModulePageChoiceProvider'
     arguments:
-    - '@=service("prestashop.adapter.meta.data_provider").getModulePagesExcludingFilled()'
+    - '@request_stack'
+    - '@prestashop.adapter.meta.data_provider'

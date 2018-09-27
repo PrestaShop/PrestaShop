@@ -41,13 +41,22 @@ interface MetaDataProviderInterface
     public function getIdByPage($pageName);
 
     /**
-     * Gets default page name by  meta id.
+     * Gets default page by  meta id.
      *
      * @param int $metaId
      *
      * @return string
      */
     public function getDefaultPageById($metaId);
+
+    /**
+     * Gets module page by meta id.
+     *
+     * @param int $metaId
+     *
+     * @return string
+     */
+    public function getModulePageById($metaId);
 
     /**
      * Gets default pages which are not configured in Seo & urls page.

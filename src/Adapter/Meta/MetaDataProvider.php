@@ -78,6 +78,26 @@ class MetaDataProvider implements MetaDataProviderInterface
     /**
      * {@inheritdoc}
      */
+    public function getModulePageById($metaId)
+    {
+        $query = new DbQuery();
+        $query->select('`page`');
+        $query->from('meta');
+        $query->where('`id_meta`='.(int) $metaId);
+        $query->where('`page` LIKE "module-%"');
+
+        $result = Db::getInstance()->getValue($query);
+
+        if (is_string($result)) {
+            return $result;
+        }
+
+        return '';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getDefaultPagesExcludingFilled()
     {
         $pages = Meta::getPages(true);

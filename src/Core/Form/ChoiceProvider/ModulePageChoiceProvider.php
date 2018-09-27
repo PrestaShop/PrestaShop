@@ -27,6 +27,8 @@
 namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
 
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
+use PrestaShop\PrestaShop\Core\Meta\MetaDataProviderInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Class ModulePageChoiceProvider is responsible for providing module page choices in
@@ -35,18 +37,27 @@ use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 final class ModulePageChoiceProvider implements FormChoiceProviderInterface
 {
     /**
-     * @var array
+     * @var RequestStack
      */
-    private $modulePages;
+    private $requestStack;
 
     /**
-     * ModulePageChoiceProvider constructor.
-     *
-     * @param array $modulePages
+     * @var MetaDataProviderInterface
      */
-    public function __construct(array $modulePages)
-    {
-        $this->modulePages = $modulePages;
+    private $dataProvider;
+
+    /**
+     * DefaultPageChoiceProvider constructor.
+     *
+     * @param RequestStack $requestStack
+     * @param MetaDataProviderInterface $dataProvider
+     */
+    public function __construct(
+        RequestStack $requestStack,
+        MetaDataProviderInterface $dataProvider
+    ) {
+        $this->requestStack = $requestStack;
+        $this->dataProvider = $dataProvider;
     }
 
     /**
@@ -54,6 +65,36 @@ final class ModulePageChoiceProvider implements FormChoiceProviderInterface
      */
     public function getChoices()
     {
-        return $this->modulePages;
+        $defaultPages = $this->dataProvider->getModulePagesExcludingFilled();
+        $currentPage = $this->getCurrentPage();
+
+        if ($currentPage) {
+            $defaultPages[str_replace('module-', '', $currentPage)] = $currentPage;
+            asort($defaultPages);
+        }
+
+        return $defaultPages;
+    }
+
+    /**
+     * Gets current page.
+     *
+     * @return string
+     */
+    private function getCurrentPage()
+    {
+        $currentRequest = $this->requestStack->getCurrentRequest();
+
+        $metaId = null;
+        if (null !== $currentRequest) {
+            $metaId =$currentRequest->attributes->get('metaId');
+        }
+
+        $page = '';
+        if ($metaId) {
+            $page = $this->dataProvider->getModulePageById($metaId);
+        }
+
+        return $page;
     }
 }
