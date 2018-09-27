@@ -43,6 +43,7 @@ class CategoryNotFoundException extends CategoryException
      * @param CategoryId $categoryId
      * @param string $message
      * @param int $code
+     *
      * @param Exception $previous
      */
     public function __construct(CategoryId $categoryId, $message = '', $code = 0, $previous = null)
