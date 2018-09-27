@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,7 +30,7 @@ use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 
 /**
- * Class CategoryNotFoundException
+ * Class CategoryNotFoundException.
  */
 class CategoryNotFoundException extends CategoryException
 {
@@ -43,7 +43,6 @@ class CategoryNotFoundException extends CategoryException
      * @param CategoryId $categoryId
      * @param string $message
      * @param int $code
-     *
      * @param Exception $previous
      */
     public function __construct(CategoryId $categoryId, $message = '', $code = 0, $previous = null)

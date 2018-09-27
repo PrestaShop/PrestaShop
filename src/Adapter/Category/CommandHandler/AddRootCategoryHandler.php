@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 use PrestaShop\PrestaShop\Core\Image\Uploader\ImageUploaderInterface;
 
 /**
- * Class AddRootCategoryHandler
+ * Class AddRootCategoryHandler.
  */
 final class AddRootCategoryHandler extends AbstractCategoryHandler implements AddRootCategoryHandlerInterface
 {

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Image\Uploader\ImageUploaderInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
- * Class CategoryMenuThumbnailUploader
+ * Class CategoryMenuThumbnailUploader.
  */
 final class CategoryMenuThumbnailUploader implements ImageUploaderInterface
 {
