@@ -29,6 +29,7 @@ namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 use PrestaShop\PrestaShop\Core\Import\ImportSettings;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Exception\FileUploadException;
+use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Import\ImportDataConfigurationType;
 use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Import\ImportType;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -89,13 +90,7 @@ class ImportController extends FrameworkBundleAdminController
         $finder = $this->get('prestashop.core.import.file_finder');
         $iniConfiguration = $this->get('prestashop.core.configuration.ini_configuration');
 
-        // add support for preselected entity when import type is available in query
-        $formData = $request->query->has('import_type') ?
-            ['entity' => $request->query->get('import_type')] :
-            []
-        ;
-
-        $form = $this->get('form.factory')->createNamed('', ImportType::class, $formData);
+        $form = $formHandler->getForm();
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
@@ -162,8 +157,12 @@ class ImportController extends FrameworkBundleAdminController
      */
     public function showImportDataAction(Request $request)
     {
-        $formHandler = $this->get('prestashop.admin.import_data_configuration.form_handler');
-        $form = $formHandler->getForm();
+        $formConfiguration = $this->get('prestashop.adapter.import.import_data_match.configuration');
+        $form = $this->get('form.factory')->createNamed(
+            '',
+            ImportDataConfigurationType::class,
+            $formConfiguration->getConfiguration()
+        );
 
         $importDirectory = $this->get('prestashop.core.import.dir');
         $dataRowCollectionFactory = $this->get('prestashop.core.import.factory.data_row.collection_factory');
@@ -291,8 +290,11 @@ class ImportController extends FrameworkBundleAdminController
     {
         $formHandler = $this->get('prestashop.admin.import_data_configuration.form_handler');
         $form = $formHandler->getForm();
-        $requestData = $request->request->all();
-        $form->setData($requestData['form']['import_data_configuration']);
+        $form->setData([
+            'match_name' => $request->request->get('match_name'),
+            'rows_skip' => $request->request->get('rows_skip'),
+            'type_value' => $request->request->get('type_value'),
+        ]);
 
         $errors = $formHandler->save($form->getData());
         $matches = [];

@@ -83,6 +83,7 @@ services:
         arguments:
             - '@session'
             - '@prestashop.core.import.file_finder'
+            - '@request_stack'
 
     prestashop.adapter.order.delivery.slip.options.form_provider:
         class: 'PrestaShopBundle\Form\Admin\Sell\Order\Delivery\SlipOptionsFormDataProvider'

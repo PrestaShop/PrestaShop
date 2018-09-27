@@ -23,72 +23,126 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-export default class Importer {
-  import() {
-    this._updateProgress(0);
-    this._showProgressModal();
+import ImportProgressModal from './ImportProgressModal';
 
-    this._ajaxImport();
+export default class Importer {
+  import(importConfiguration) {
+    this.configuration = importConfiguration;
+    this.progressModal = new ImportProgressModal;
+
+    this.progressModal.reset();
+    this.progressModal.show();
+
+    // Starting the import for 5 elements.
+    this._ajaxImport(0, 5, true);
   }
 
-  _ajaxImport() {
-    let offset = 0,
-        limit = 0,
-        validateOnly = false,
-        moreStep = 0;
+  _ajaxImport(offset, limit, validateOnly = false, nextStepIndex = 0, recurringVariables = {}) {
+    this._mergeConfiguration({
+      ajax: 1,
+      action: 'import',
+      tab: 'AdminImport',
+      token: token,
+      offset: offset,
+      limit: limit,
+      validateOnly: validateOnly ? 1 : 0,
+      moreStep: nextStepIndex,
+      crossStepsVars: JSON.stringify(recurringVariables)
+    });
 
-    //@todo fix parameters
+    // Start time of current import step
+    let startingTime = new Date().getTime();
+
     $.post({
-      url: 'index.php?offset='+offset+'&limit='+limit+(validateOnly?'&validateOnly=1':'')+((moreStep>0)?'&moreStep='+moreStep:''),
-      data: {
-        ajax: 1,
-        action: 'import',
-        tab: 'AdminImport',
-        token: token
+      url: 'index.php',
+      dataType: 'json',
+      data: this.configuration,
+      success: (response) => {
+        // Update import progress
+        this.progressModal.updateProgress(response.doneCount / response.totalCount * 100);
+
+        if (response.informations) {
+          this.progressModal.showInfoMessages(response.informations);
+        }
+
+        if (response.warnings) {
+          this.progressModal.showWarningMessages(response.warnings);
+        }
+
+        if (response.errors) {
+          this.progressModal.showErrorMessages(response.errors);
+
+          // If there are errors and it's not validation step - stop the import.
+          if (!validateOnly) {
+            return false;
+          }
+        }
+
+        if (!response.isFinished) {
+          let timeTaken = new Date().getTime() - startingTime;
+          //@todo finish
+        }
       }
     });
   }
 
   /**
-   * Show the import progress modal window.
-   * @private
+   * Set the import configuration.
+   *
+   * @param importConfiguration
    */
-  _showProgressModal() {
-    this.progressModal.modal('show');
-  }
-
-  _hideProgressModal() {
-    this.progressModal.modal('hide');
+  set configuration(importConfiguration) {
+    this.importConfiguration = importConfiguration;
   }
 
   /**
-   * Updates the import progressbar.
+   * Get the import configuration.
    *
-   * @param {int} percentage
-   * @private
+   * @returns {*}
    */
-  _updateProgress(percentage) {
-    let $progressBar = this.progressBar;
-
-    $progressBar.css('width', percentage + '%');
-    $progressBar.find('> span').text(percentage + ' %');
+  get configuration() {
+    return this.importConfiguration;
   }
 
   /**
-   * Gets import progress modal.
+   * Set progress modal.
    *
-   * @returns {jQuery}
+   * @param {ImportProgressModal} modal
+   */
+  set progressModal(modal) {
+    this.modal = modal;
+  }
+
+  /**
+   * Get progress modal.
+   *
+   * @returns {ImportProgressModal}
    */
   get progressModal() {
-    return $('#import_progress_modal');
+    return this.modal;
   }
 
   /**
-   * Gets import progress bar.
+   * Get the target processing time for one import step.
    *
-   * @returns {jQuery}
+   * @returns {number}
    */
-  get progressBar() {
-    return this.progressModal.find('.progress-bar');
+  get targetTime() {
+    return 5;
+  }
+
+  /**
+   * Merge given configuration into current import configuration.
+   *
+   * @param {Object} configuration
+   * @private
+   */
+  _mergeConfiguration(configuration) {
+    for (let key in configuration) {
+      this.importConfiguration.push({
+        name: key,
+        value: configuration[key]
+      });
+    }
   }
 }
