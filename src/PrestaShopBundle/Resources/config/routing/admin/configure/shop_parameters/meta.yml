@@ -1,4 +1,4 @@
-admin_metas_index:
+admin_meta_index:
     path: /
     methods: GET
     defaults:
@@ -14,14 +14,14 @@ admin_metas_search:
         _legacy_controller: AdminMeta
         _legacy_link: AdminMeta:search
 
-admin_metas_create:
-    path: /new
+admin_meta_add:
+    path: /create
     methods: [GET, POST]
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\Meta:create'
         _legacy_controller: AdminMeta
 
-admin_meta_list_edit:
+admin_meta_edit:
     path: /edit/{metaId}
     methods: [GET, POST]
     defaults:
@@ -32,8 +32,8 @@ admin_meta_list_edit:
     requirements:
         metaId: \d+
 
-admin_metas_delete:
-    path: /{metaId}/delete
+admin_meta_delete:
+    path: /delete/{metaId}
     methods: DELETE
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\Meta:delete'
@@ -44,8 +44,8 @@ admin_metas_delete:
     requirements:
         metaId: \d+
 
-admin_metas_delete_bulk:
-    path: /delete-bulk
+admin_meta_delete_bulk:
+    path: /delete
     methods: POST
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\Meta:deleteBulk'
@@ -60,8 +60,8 @@ admin_metas_save_options:
         _legacy_controller: AdminMeta
         _legacy_link: AdminMeta:update
 
-admin_metas_generate_robots_file:
-    path: /generate-robots-file
+admin_meta_generate_robots_text_file:
+    path: /generate/robots
     methods: POST
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\Meta:generateRobotsFile'

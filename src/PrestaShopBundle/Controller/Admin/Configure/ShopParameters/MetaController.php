@@ -83,7 +83,7 @@ class MetaController extends FrameworkBundleAdminController
         return $this->render('@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/index.html.twig', [
             'layoutHeaderToolbarBtn' => [
                 'add' => [
-                    'href' => $this->generateUrl('admin_meta_list_create'),
+                    'href' => $this->generateUrl('admin_meta_add'),
                     'desc' => $this->trans('Add a new page', 'Admin.Shopparameters.Feature'),
                     'icon' => 'add_circle_outline',
                 ],
@@ -129,7 +129,7 @@ class MetaController extends FrameworkBundleAdminController
             $filters = $searchParametersForm->getData();
         }
 
-        return $this->redirectToRoute('admin_metas_index', ['filters' => $filters]);
+        return $this->redirectToRoute('admin_meta_index', ['filters' => $filters]);
     }
 
     /**
@@ -154,7 +154,7 @@ class MetaController extends FrameworkBundleAdminController
             if (empty($errors)) {
                 $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
 
-                return $this->redirectToRoute('admin_meta');
+                return $this->redirectToRoute('admin_meta_index');
             }
 
             $this->flashErrors($errors);
@@ -194,7 +194,7 @@ class MetaController extends FrameworkBundleAdminController
             if (empty($errors)) {
                 $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
 
-                return $this->redirectToRoute('admin_meta');
+                return $this->redirectToRoute('admin_meta_index');
             }
 
             $this->flashErrors($errors);
@@ -230,7 +230,7 @@ class MetaController extends FrameworkBundleAdminController
             );
         }
 
-        return $this->redirectToRoute('admin_metas_index');
+        return $this->redirectToRoute('admin_meta_index');
     }
 
     /**
@@ -259,7 +259,7 @@ class MetaController extends FrameworkBundleAdminController
             );
         }
 
-        return $this->redirectToRoute('admin_metas_index');
+        return $this->redirectToRoute('admin_meta_index');
     }
 
     /**
@@ -292,7 +292,7 @@ class MetaController extends FrameworkBundleAdminController
             }
         }
 
-        return $this->redirectToRoute('admin_metas_index');
+        return $this->redirectToRoute('admin_meta_index');
     }
 
     /**
@@ -321,7 +321,7 @@ class MetaController extends FrameworkBundleAdminController
                 )
             );
 
-            return $this->redirectToRoute('admin_metas_index');
+            return $this->redirectToRoute('admin_meta_index');
         }
 
         $this->addFlash(
@@ -329,6 +329,6 @@ class MetaController extends FrameworkBundleAdminController
             $this->trans('Successful update.', 'Admin.Notifications.Success')
         );
 
-        return $this->redirectToRoute('admin_metas_index');
+        return $this->redirectToRoute('admin_meta_index');
     }
 }
