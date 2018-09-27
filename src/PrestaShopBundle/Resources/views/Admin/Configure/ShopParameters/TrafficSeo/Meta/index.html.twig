@@ -27,7 +27,6 @@
 {% trans_default_domain "Admin.Shopparameters.Feature" %}
 
 {% block content %}
-  {% set isGridDisplayed = not (isShopFeatureActive and not isShopContext) %}
   <div class="row">
     <div class="col-sm">
       {% include '@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/Blocks/meta_showcase_card.html.twig' %}

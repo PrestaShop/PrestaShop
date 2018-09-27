@@ -29,8 +29,8 @@ namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Command\EditMetaCommand;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Command\AddMetaCommand;
+use PrestaShop\PrestaShop\Core\Domain\Meta\EditableMeta;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Query\GetMetaForEditing;
-use PrestaShop\PrestaShop\Core\Domain\Meta\ValueObject\EditableMeta;
 use PrestaShop\PrestaShop\Core\Domain\Meta\ValueObject\MetaId;
 
 /**

@@ -54,15 +54,25 @@ class MetaController extends FrameworkBundleAdminController
     public function indexAction(MetaFilters $filters)
     {
         $seoUrlsGridFactory = $this->get('prestashop.core.grid.factory.meta');
-        $grid = $seoUrlsGridFactory->getGrid($filters);
 
-        $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
-        $presentedGrid = $gridPresenter->present($grid);
+        $context = $this->get('prestashop.adapter.shop.context');
+
+        $isShopContext = $context->isShopContext();
+        $isShopFeatureActive = $this->get('prestashop.adapter.multistore_feature')->isActive();
+
+        $isGridDisplayed = !($isShopFeatureActive && !$isShopContext);
+
+        $presentedGrid = null;
+        if ($isGridDisplayed) {
+            $grid = $seoUrlsGridFactory->getGrid($filters);
+
+            $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
+            $presentedGrid = $gridPresenter->present($grid);
+        }
 
         $metaForm = $this->get('prestashop.admin.meta_settings.form_handler')->getForm();
 
         $tools = $this->get('prestashop.adapter.tools');
-        $context = $this->get('prestashop.adapter.shop.context');
 
         $urlFileChecker = $this->get('prestashop.core.util.url.url_file_checker');
 
@@ -70,8 +80,7 @@ class MetaController extends FrameworkBundleAdminController
 
         $defaultRoutesProvider = $this->get('prestashop.adapter.data_provider.default_route');
 
-        $isShopContext = $context->isShopContext();
-        $isShopFeatureActive = $this->get('prestashop.adapter.multistore_feature')->isActive();
+
 
         $helperBlockLinkProvider = $this->get('prestashop.core.util.helper_card.documentation_link_provider');
         $metaDataProvider = $this->get('prestashop.adapter.meta.data_provider');
@@ -92,10 +101,11 @@ class MetaController extends FrameworkBundleAdminController
             'metaForm' => $metaForm->createView(),
             'robotsForm' => $this->createFormBuilder()->getForm()->createView(),
             'routeKeywords' => $defaultRoutesProvider->getKeywords(),
+            'isGridDisplayed' => $isGridDisplayed,
             'isModRewriteActive' => $tools->isModRewriteActive(),
+            'isShopContext' => $isShopContext,
             'isHtaccessFileValid' => $urlFileChecker->isHtaccessFileWritable(),
             'isRobotsTextFileValid' => $urlFileChecker->isRobotsFileWritable(),
-            'isShopContext' => $isShopContext,
             'isShopFeatureActive' => $isShopFeatureActive,
             'isHostMode' => $hostingInformation->isHostMode(),
             'enableSidebar' => true,
