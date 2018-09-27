@@ -24,7 +24,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Meta\ValueObject;
+namespace PrestaShop\PrestaShop\Core\Domain\Meta;
+
+use PrestaShop\PrestaShop\Core\Domain\Meta\ValueObject\MetaId;
 
 /**
  * Class EditableMeta
@@ -39,22 +41,22 @@ class EditableMeta
      * @var string
      */
     private $pageName;
-    
+
     /**
      * @var string[]
      */
     private $pageTitle;
-    
+
     /**
      * @var string[]
      */
     private $metaDescription;
-    
+
     /**
      * @var string[]
      */
     private $metaKeywords;
-    
+
     /**
      * @var string[]
      */
@@ -62,7 +64,7 @@ class EditableMeta
 
     /**
      * EditableMeta constructor.
-     * 
+     *
      * @param MetaId $metaId
      * @param string $pageName
      * @param string[] $pageTitle

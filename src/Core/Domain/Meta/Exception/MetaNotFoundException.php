@@ -26,11 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Meta\Exception;
 
-use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
-
 /**
- * Class MetaException
+ * Class MetaNotFoundException
  */
-class MetaException extends DomainException
+class MetaNotFoundException extends MetaException
 {
 }

@@ -30,6 +30,7 @@ use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Command\EditMetaCommand;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Command\AddMetaCommand;
 use PrestaShop\PrestaShop\Core\Domain\Meta\EditableMeta;
+use PrestaShop\PrestaShop\Core\Domain\Meta\Exception\MetaException;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Query\GetMetaForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Meta\ValueObject\MetaId;
 
@@ -65,17 +66,21 @@ class MetaFormDataProvider
 
     public function getData($metaId)
     {
-        $metaId = new MetaId($metaId);
-        /** @var EditableMeta $result */
-        $result = $this->queryBus->handle(new GetMetaForEditing($metaId));
+        try {
+            $metaId = new MetaId($metaId);
+            /** @var EditableMeta $result */
+            $result = $this->queryBus->handle(new GetMetaForEditing($metaId));
 
-        return [
-            'page_name' => $result->getPageName(),
-            'page_title' => $result->getPageTitle(),
-            'meta_description' => $result->getMetaDescription(),
-            'meta_keywords' => $result->getMetaKeywords(),
-            'url_rewrite' => $result->getUrlRewrite(),
-        ];
+            return [
+                'page_name' => $result->getPageName(),
+                'page_title' => $result->getPageTitle(),
+                'meta_description' => $result->getMetaDescription(),
+                'meta_keywords' => $result->getMetaKeywords(),
+                'url_rewrite' => $result->getUrlRewrite(),
+            ];
+        } catch (MetaException $exception) {
+            return [];
+        }
     }
 
 

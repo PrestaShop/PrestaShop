@@ -27,9 +27,10 @@
 namespace PrestaShop\PrestaShop\Adapter\Domain\Meta\QueryHandler;
 
 use Meta;
+use PrestaShop\PrestaShop\Core\Domain\Meta\EditableMeta;
+use PrestaShop\PrestaShop\Core\Domain\Meta\Exception\MetaNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Query\GetMetaForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Meta\QueryHandler\GetMetaForEditingHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Meta\ValueObject\EditableMeta;
 
 /**
  * Class GetMetaForEditingHandler
@@ -42,8 +43,24 @@ final class GetMetaForEditingHandler implements GetMetaForEditingHandlerInterfac
     public function handle(GetMetaForEditing $query)
     {
         $metaId = $query->getMetaId();
-        //todo: implement validation
+
         $entity = new Meta($metaId->getValue());
+
+        if (0 >= $entity->id) {
+            throw new MetaNotFoundException(
+                sprintf('Meta with id "%s" cannot be found', $metaId->getValue())
+            );
+        }
+
+        if ((int) $entity->id !== $metaId->getValue()) {
+            throw new MetaNotFoundException(
+                sprintf(
+                    'The retrieved id "%s" does not match requested Meta id "%s"',
+                    $entity->id,
+                    $metaId->getValue()
+                )
+            );
+        }
 
         return new EditableMeta(
             $metaId,

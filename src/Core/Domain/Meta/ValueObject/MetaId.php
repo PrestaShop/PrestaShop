@@ -26,6 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Meta\ValueObject;
 
+use PrestaShop\PrestaShop\Core\Domain\Meta\Exception\MetaException;
+
 /**
  * Class MetaId
  */
@@ -40,9 +42,17 @@ class MetaId
      * MetaId constructor.
      *
      * @param int $metaId
+     *
+     * @throws MetaException
      */
     public function __construct($metaId)
     {
+        if (!is_numeric($metaId) || $metaId <= 0) {
+            throw new MetaException(
+                sprintf('Invalid meta id: %s', var_export($metaId, true))
+            );
+        }
+
         $this->id = $metaId;
     }
 
