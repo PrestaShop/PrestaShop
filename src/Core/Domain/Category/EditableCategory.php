@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Category;
 
 /**
- * Class EditableCategory
+ * Class EditableCategory.
  */
 class EditableCategory
 {
@@ -35,47 +35,47 @@ class EditableCategory
      * @var string[]
      */
     private $name;
-    
+
     /**
      * @var bool
      */
     private $isActive;
-    
+
     /**
      * @var string[]
      */
     private $description;
-    
+
     /**
      * @var int
      */
     private $parentId;
-    
+
     /**
      * @var string[]
      */
     private $metaTitle;
-    
+
     /**
      * @var string[]
      */
     private $metaDescription;
-    
+
     /**
      * @var string[]
      */
     private $metaKeywords;
-    
+
     /**
      * @var string[]
      */
     private $linkRewrite;
-    
+
     /**
      * @var int[]
      */
     private $groupAssociationIds;
-    
+
     /**
      * @var int[]
      */

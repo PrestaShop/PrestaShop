@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -36,7 +36,7 @@ use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\UploadedImageConstraintE
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
- * Class CategoryCoverImageUploader
+ * Class CategoryCoverImageUploader.
  *
  * @internal
  */
@@ -59,7 +59,7 @@ final class CategoryCoverImageUploader extends AbstractImageUploader
     }
 
     /**
-     * Delete old category image
+     * Delete old category image.
      *
      * @param int $id
      */
@@ -95,7 +95,7 @@ final class CategoryCoverImageUploader extends AbstractImageUploader
 
         $optimizationSucceeded = ImageManager::resize(
             $temporaryImageName,
-            _PS_IMG_DIR_ . 'c'. DIRECTORY_SEPARATOR . $id . '.jpg',
+            _PS_IMG_DIR_ . 'c' . DIRECTORY_SEPARATOR . $id . '.jpg',
             null,
             null,
             'jpg'
