@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -71,7 +71,7 @@ class CategoryThumbnailRetriever
         $replacement = 'src="' . $this->legacyContext->getRootUrl();
         $imageTag = preg_replace('/src="(\\.\\.\\/)+/', $replacement, $imageTag);
 
-        preg_match( '@src="([^"]+)"@' , $imageTag, $path );
+        preg_match('@src="([^"]+)"@', $imageTag, $path);
 
         return $path[1];
     }

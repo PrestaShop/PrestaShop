@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Domain\Category\Command\AbstractRootCategoryComma
 use PrestaShop\PrestaShop\Core\Image\Uploader\ImageUploaderInterface;
 
 /**
- * Class AbstractAddCategoryHandler
+ * Class AbstractAddCategoryHandler.
  *
  * @internal
  */

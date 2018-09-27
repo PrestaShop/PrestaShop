@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -153,7 +153,7 @@ final class GetCategoryForEditingHandler implements GetCategoryForEditingHandler
         if (!is_file($thumb)) {
             $thumb = $image;
             $imageTag = ImageManager::thumbnail($image, 'category_' . $categoryId->getValue() . '-thumb.jpg', 125, 'jpg', true, true);
-            ImageManager::resize(_PS_TMP_IMG_DIR_ . 'category_' . $categoryId->getValue() . '-thumb.jpg', _PS_TMP_IMG_DIR_  . 'category_' . $categoryId->getValue() . '-thumb.jpg', (int) $image_type['width'], (int) $image_type['height']);
+            ImageManager::resize(_PS_TMP_IMG_DIR_ . 'category_' . $categoryId->getValue() . '-thumb.jpg', _PS_TMP_IMG_DIR_ . 'category_' . $categoryId->getValue() . '-thumb.jpg', (int) $image_type['width'], (int) $image_type['height']);
         }
 
         $thumbSize = file_exists($thumb) ? filesize($thumb) / 1000 : false;

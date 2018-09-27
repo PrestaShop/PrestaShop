@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\UploadedImageConstraintE
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
- * Class CategoryThumbnailImageUploader
+ * Class CategoryThumbnailImageUploader.
  */
 final class CategoryThumbnailImageUploader extends AbstractImageUploader
 {
