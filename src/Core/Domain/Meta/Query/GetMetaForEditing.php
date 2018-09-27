@@ -41,11 +41,11 @@ class GetMetaForEditing
     /**
      * GetMetaForEditing constructor.
      *
-     * @param int $metaId
+     * @param MetaId $metaId
      */
-    public function __construct($metaId)
+    public function __construct(MetaId $metaId)
     {
-        $this->metaId = new MetaId($metaId);
+        $this->metaId = $metaId;
     }
 
     /**

@@ -28,9 +28,10 @@ namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Command\EditMetaCommand;
-use PrestaShop\PrestaShop\Core\Domain\Meta\Command\SaveMetaCommand;
+use PrestaShop\PrestaShop\Core\Domain\Meta\Command\AddMetaCommand;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Query\GetMetaForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Meta\ValueObject\EditableMeta;
+use PrestaShop\PrestaShop\Core\Domain\Meta\ValueObject\MetaId;
 
 /**
  * Class MetaFormDataProvider is responsible for providing data for Shop parameters ->
@@ -64,6 +65,7 @@ class MetaFormDataProvider
 
     public function getData($metaId)
     {
+        $metaId = new MetaId($metaId);
         /** @var EditableMeta $result */
         $result = $this->queryBus->handle(new GetMetaForEditing($metaId));
 
@@ -90,11 +92,11 @@ class MetaFormDataProvider
      *
      * @param array $data
      *
-     * @return SaveMetaCommand
+     * @return AddMetaCommand
      */
     private function getSaveMetaCommand(array $data)
     {
-        return new SaveMetaCommand(
+        return new AddMetaCommand(
             $data['page_name'],
             $data['page_title'],
             $data['meta_description'],
@@ -113,7 +115,7 @@ class MetaFormDataProvider
     private function getEditMetaCommand(array $data)
     {
         return new EditMetaCommand(
-            $data['id'],
+            new MetaId($data['id']),
             $data['page_name'],
             $data['page_title'],
             $data['meta_description'],

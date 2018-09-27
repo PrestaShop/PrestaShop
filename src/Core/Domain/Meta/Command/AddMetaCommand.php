@@ -27,9 +27,9 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Meta\Command;
 
 /**
- * Class SaveMetaCommand is responsible for saving meta entities data.
+ * Class AddMetaCommand is responsible for saving meta entities data.
  */
-class SaveMetaCommand
+class AddMetaCommand
 {
     /**
      * @var string
@@ -57,7 +57,7 @@ class SaveMetaCommand
     private $rewriteUrl;
 
     /**
-     * SaveMetaCommand constructor.
+     * AddMetaCommand constructor.
      *
      * @param string $pageName
      * @param string[] $pageTitle

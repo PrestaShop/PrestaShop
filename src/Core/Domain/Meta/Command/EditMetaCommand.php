@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Meta\Command;
 
+use PrestaShop\PrestaShop\Adapter\Entity\Meta;
 use PrestaShop\PrestaShop\Core\Domain\Meta\ValueObject\MetaId;
 
 /**
@@ -66,7 +67,7 @@ class EditMetaCommand
     /**
      * SaveMetaCommand constructor.
      *
-     * @param int $metaId
+     * @param MetaId $metaId
      * @param string $pageName
      * @param string[] $pageTitle
      * @param string[] $metaDescription
@@ -74,7 +75,7 @@ class EditMetaCommand
      * @param string[] $rewriteUrl
      */
     public function __construct(
-        $metaId,
+        MetaId $metaId,
         $pageName,
         array $pageTitle,
         array $metaDescription,
@@ -86,7 +87,7 @@ class EditMetaCommand
         $this->metaDescription = $metaDescription;
         $this->metaKeywords = $metaKeywords;
         $this->rewriteUrl = $rewriteUrl;
-        $this->metaId = new MetaId($metaId);
+        $this->metaId = $metaId;
     }
 
     /**

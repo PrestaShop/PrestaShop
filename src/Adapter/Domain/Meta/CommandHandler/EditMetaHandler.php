@@ -24,21 +24,30 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Meta\CommandHandler;
+namespace PrestaShop\PrestaShop\Adapter\Domain\Meta\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Meta\Command\SaveMetaCommand;
+use Meta;
+use PrestaShop\PrestaShop\Core\Domain\Meta\Command\EditMetaCommand;
+use PrestaShop\PrestaShop\Core\Domain\Meta\CommandHandler\EditMetaHandlerInterface;
 
 /**
- * Interface SaveMetaHandlerInterface defines contract for SaveMetaHandler.
+ * Class EditMetaHandler is responsible for editing meta data,
  */
-interface SaveMetaHandlerInterface
+final class EditMetaHandler implements EditMetaHandlerInterface
 {
     /**
-     * Used to handle the logic required for saving meta data.
-     *
-     * @param SaveMetaCommand $command
-     *
-     * @return void
+     * {@inheritdoc}
      */
-    public function handle(SaveMetaCommand $command);
+    public function handle(EditMetaCommand $command)
+    {
+        $entity = new Meta($command->getMetaId()->getId());
+        //todo: validations
+        $entity->page = $command->getPageName();
+        $entity->title = $command->getPageTitle();
+        $entity->description = $command->getMetaDescription();
+        $entity->keywords = $command->getMetaKeywords();
+        $entity->url_rewrite = $command->getRewriteUrl();
+
+        $entity->update();
+    }
 }

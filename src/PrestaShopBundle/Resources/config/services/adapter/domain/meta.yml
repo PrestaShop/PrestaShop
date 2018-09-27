@@ -1,0 +1,25 @@
+services:
+    _defaults:
+        public: true
+
+    # COMMAND HANDLERS
+
+    prestashop.adapter.domain.meta.command_handler.save_meta:
+        class: 'PrestaShop\PrestaShop\Adapter\Domain\Meta\CommandHandler\AddMetaHandler'
+        tags:
+            - name: 'tactician.handler'
+              command: 'PrestaShop\PrestaShop\Core\Domain\Meta\Command\AddMetaCommand'
+
+    prestashop.adapter.domain.meta.command_handler.edit_meta:
+        class: 'PrestaShop\PrestaShop\Adapter\Domain\Meta\CommandHandler\EditMetaHandler'
+        tags:
+            - name: 'tactician.handler'
+              command: 'PrestaShop\PrestaShop\Core\Domain\Meta\Command\EditMetaCommand'
+
+    # QUERY HANDLERS
+
+    prestashop.adapter.domain.meta.query_handler.get_meta_for_editing:
+        class: 'PrestaShop\PrestaShop\Adapter\Domain\Meta\QueryHandler\GetMetaForEditingHandler'
+        tags:
+            - name: 'tactician.handler'
+              command: 'PrestaShop\PrestaShop\Core\Domain\Meta\Query\GetMetaForEditing'

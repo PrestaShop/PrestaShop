@@ -24,29 +24,34 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Meta\CommandHandler;
+namespace PrestaShop\PrestaShop\Adapter\Domain\Meta\QueryHandler;
 
 use Meta;
-use PrestaShop\PrestaShop\Core\Domain\Meta\Command\EditMetaCommand;
+use PrestaShop\PrestaShop\Core\Domain\Meta\Query\GetMetaForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Meta\QueryHandler\GetMetaForEditingHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Meta\ValueObject\EditableMeta;
 
 /**
- * Class EditMetaHandler
+ * Class GetMetaForEditingHandler
  */
-class EditMetaHandler implements EditMetaHandlerInterface
+final class GetMetaForEditingHandler implements GetMetaForEditingHandlerInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function handle(EditMetaCommand $command)
+    public function handle(GetMetaForEditing $query)
     {
-        $entity = new Meta($command->getMetaId()->getId());
-        //todo: validations
-        $entity->page = $command->getPageName();
-        $entity->title = $command->getPageTitle();
-        $entity->description = $command->getMetaDescription();
-        $entity->keywords = $command->getMetaKeywords();
-        $entity->url_rewrite = $command->getRewriteUrl();
+        $metaId = $query->getMetaId();
+        //todo: implement validation
+        $entity = new Meta($metaId->getId());
 
-        $entity->update();
+        return new EditableMeta(
+            $metaId,
+            $entity->page,
+            $entity->title,
+            $entity->description,
+            $entity->keywords,
+            $entity->url_rewrite
+        );
     }
 }

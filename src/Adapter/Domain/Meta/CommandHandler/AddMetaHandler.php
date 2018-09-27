@@ -24,22 +24,23 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Meta\CommandHandler;
+namespace PrestaShop\PrestaShop\Adapter\Domain\Meta\CommandHandler;
 
 use Meta;
-use PrestaShop\PrestaShop\Core\Domain\Meta\Command\SaveMetaCommand;
+use PrestaShop\PrestaShop\Core\Domain\Meta\Command\AddMetaCommand;
+use PrestaShop\PrestaShop\Core\Domain\Meta\CommandHandler\AddMetaHandlerInterface;
 use PrestaShopDatabaseException;
 use PrestaShopException;
 
 /**
  * Class SaveMetaHandler is responsible for saving meta data.
  */
-final class SaveMetaHandler implements SaveMetaHandlerInterface
+final class AddMetaHandler implements AddMetaHandlerInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function handle(SaveMetaCommand $command)
+    public function handle(AddMetaCommand $command)
     {
         try {
             $this->saveMetaData($command);
@@ -50,12 +51,12 @@ final class SaveMetaHandler implements SaveMetaHandlerInterface
     }
 
     /**
-     * @param SaveMetaCommand $command
+     * @param AddMetaCommand $command
      *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
      */
-    private function saveMetaData(SaveMetaCommand $command)
+    private function saveMetaData(AddMetaCommand $command)
     {
         //todo: shop associations
         $entity = new Meta();
