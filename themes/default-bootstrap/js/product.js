@@ -319,6 +319,7 @@ $(document).on('change', '#quantity_wanted', function(e){
 			updateDisplay();
 		}else{
 			$('#our_price_display').text(formatCurrency(parseFloat($('#our_price_display').attr('content')), currencyFormat, currencySign, currencyBlank));
+			$('#reduction_percent').hide();
 		}
 	}
 });
