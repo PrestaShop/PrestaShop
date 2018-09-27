@@ -26,17 +26,23 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Category\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 
 /**
  * Class EditCategoryCommand
  */
-class EditCategoryCommand extends AbstractCategoryCommand
+class EditCategoryCommand extends AbstractRootCategoryCommand
 {
     /**
      * @var CategoryId
      */
     private $categoryId;
+
+    /**
+     * @var int
+     */
+    private $parentCategoryId;
 
     /**
      * @param CategoryId $categoryId
@@ -52,5 +58,38 @@ class EditCategoryCommand extends AbstractCategoryCommand
     public function getCategoryId()
     {
         return $this->categoryId;
+    }
+
+    /**
+     * @return int
+     */
+    public function getParentCategoryId()
+    {
+        return $this->parentCategoryId;
+    }
+
+    /**
+     * @param int $parentCategoryId
+     *
+     * @return self
+     *
+     * @throws CategoryConstraintException
+     */
+    public function setParentCategoryId($parentCategoryId)
+    {
+        if (!is_int($parentCategoryId) || 0 >= $parentCategoryId) {
+            throw new CategoryConstraintException(
+                sprintf('Invalid Category parent id %s supplied', var_export($parentCategoryId, true)),
+                CategoryConstraintException::INVALID_PARENT_ID
+            );
+        }
+
+        if ($this->categoryId->isEqual(new CategoryId($parentCategoryId))) {
+            throw new CategoryConstraintException('Category cannot be parent of itself.');
+        }
+
+        $this->parentCategoryId = $parentCategoryId;
+
+        return $this;
     }
 }

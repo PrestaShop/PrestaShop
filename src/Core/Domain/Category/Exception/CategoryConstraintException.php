@@ -26,11 +26,38 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Category\Exception;
 
+/**
+ * Class CategoryConstraintException
+ */
 class CategoryConstraintException extends CategoryException
 {
+    /**
+     * Code is used when category does not have name.
+     */
     const EMPTY_NAME = 1;
+
+    /**
+     * Code is used when category does not have link rewrite.
+     */
     const EMPTY_LINK_REWRITE = 2;
+
+    /**
+     * Code is used when invalid status is set to category.
+     */
     const INVALID_STATUS = 4;
-    const INVALID_PARENT_ID = 8;
-    const TOO_MANY_MENU_THUMBNAILS = 16;
+
+    /**
+     * Code is used when invalid parent id is supplied.
+     */
+    const INVALID_PARENT_ID = 6;
+
+    /**
+     * Code is used when too many menu thumbnails is being set for category.
+     */
+    const TOO_MANY_MENU_THUMBNAILS = 8;
+
+    /**
+     * Code is used when category's parent is same category itself.
+     */
+    const CANNOT_BE_PARENT_OF_ITSELF = 10;
 }
