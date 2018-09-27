@@ -41,7 +41,7 @@ class LocaleData
      *
      * @var string
      */
-    public $localeCode;
+    protected $localeCode;
 
     /**
      * List of available numbering systems
@@ -49,14 +49,14 @@ class LocaleData
      *
      * @var string[]
      */
-    public $numberingSystems;
+    protected $numberingSystems;
 
     /**
      * Default numbering system.
      *
      * @var string
      */
-    public $defaultNumberingSystem;
+    protected $defaultNumberingSystem;
 
     /**
      * Used to suppress groupings below a certain value.
@@ -66,14 +66,14 @@ class LocaleData
      *
      * @var int
      */
-    public $minimumGroupingDigits;
+    protected $minimumGroupingDigits;
 
     /**
      * Collection of all available symbols list (by numbering system).
      *
      * @var NumberSymbolsData[]
      */
-    public $numberSymbols;
+    protected $numberSymbols;
 
     /**
      * Collection of all available decimal patterns (by numbering system)
@@ -81,7 +81,7 @@ class LocaleData
      *
      * @var string[]
      */
-    public $decimalPatterns;
+    protected $decimalPatterns;
 
     /**
      * Collection of all available percent patterns (by numbering system)
@@ -89,7 +89,7 @@ class LocaleData
      *
      * @var string[]
      */
-    public $percentPatterns;
+    protected $percentPatterns;
 
     /**
      * Collection of all available currency patterns (by numbering system)
@@ -97,14 +97,14 @@ class LocaleData
      *
      * @var string[]
      */
-    public $currencyPatterns;
+    protected $currencyPatterns;
 
     /**
      * All currencies, by ISO code.
      *
      * @var CurrencyData[]
      */
-    public $currencies;
+    protected $currencies;
 
     /**
      * Override this object's data with another LocaleData object.
@@ -117,26 +117,24 @@ class LocaleData
      */
     public function overrideWith(LocaleData $localeData)
     {
-        if (isset($localeData->localeCode)) {
-            $this->localeCode = $localeData->localeCode;
+        if (null !== $localeData->getLocaleCode()) {
+            $this->setLocaleCode($localeData->getLocaleCode());
         }
 
-        if (isset($localeData->numberingSystems)) {
-            foreach ($localeData->numberingSystems as $name => $value) {
-                $this->numberingSystems[$name] = $value;
-            }
+        if (null !== $localeData->getNumberingSystems()) {
+            $this->setNumberingSystems($localeData->getNumberingSystems());
         }
 
-        if (isset($localeData->defaultNumberingSystem)) {
-            $this->defaultNumberingSystem = $localeData->defaultNumberingSystem;
+        if (null !== $localeData->getDefaultNumberingSystem()) {
+            $this->setDefaultNumberingSystem($localeData->getDefaultNumberingSystem());
         }
 
-        if (isset($localeData->minimumGroupingDigits)) {
-            $this->minimumGroupingDigits = $localeData->minimumGroupingDigits;
+        if (null !== $localeData->getMinimumGroupingDigits()) {
+            $this->setMinimumGroupingDigits($localeData->getMinimumGroupingDigits());
         }
 
-        if (isset($localeData->numberSymbols)) {
-            foreach ($localeData->numberSymbols as $numberingSystem => $symbolsData) {
+        if (null !== $localeData->getNumberSymbols()) {
+            foreach ($localeData->getNumberSymbols() as $numberingSystem => $symbolsData) {
                 if (!isset($this->numberSymbols[$numberingSystem])) {
                     $this->numberSymbols[$numberingSystem] = $symbolsData;
 
@@ -146,26 +144,20 @@ class LocaleData
             }
         }
 
-        if (isset($localeData->decimalPatterns)) {
-            foreach ($localeData->decimalPatterns as $numberingSystem => $pattern) {
-                $this->decimalPatterns[$numberingSystem] = $pattern;
-            }
+        if (null !== $localeData->getDecimalPatterns()) {
+            $this->setDecimalPatterns($localeData->getDecimalPatterns());
         }
 
-        if (isset($localeData->percentPatterns)) {
-            foreach ($localeData->percentPatterns as $numberingSystem => $pattern) {
-                $this->percentPatterns[$numberingSystem] = $pattern;
-            }
+        if (null !== $localeData->getPercentPatterns()) {
+            $this->setPercentPatterns($localeData->getPercentPatterns());
         }
 
-        if (isset($localeData->currencyPatterns)) {
-            foreach ($localeData->currencyPatterns as $numberingSystem => $pattern) {
-                $this->currencyPatterns[$numberingSystem] = $pattern;
-            }
+        if (null !== $localeData->getCurrencyPatterns()) {
+            $this->setCurrencyPatterns($localeData->getCurrencyPatterns());
         }
 
-        if (isset($localeData->currencies)) {
-            foreach ($localeData->currencies as $code => $currencyData) {
+        if (null !== $localeData->getCurrencies()) {
+            foreach ($localeData->getCurrencies() as $code => $currencyData) {
                 if (!isset($this->currencies[$code])) {
                     $this->currencies[$code] = $currencyData;
                     continue;
@@ -176,4 +168,186 @@ class LocaleData
 
         return $this;
     }
+
+    /**
+     * @return string
+     */
+    public function getLocaleCode()
+    {
+        return $this->localeCode;
+    }
+
+    /**
+     * @param string $localeCode
+     *
+     * @return LocaleData
+     */
+    public function setLocaleCode($localeCode)
+    {
+        $this->localeCode = $localeCode;
+
+        return $this;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getNumberingSystems()
+    {
+        return $this->numberingSystems;
+    }
+
+    /**
+     * @param string[] $numberingSystems
+     *
+     * @return LocaleData
+     */
+    public function setNumberingSystems($numberingSystems)
+    {
+        $this->numberingSystems = $numberingSystems;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDefaultNumberingSystem()
+    {
+        return $this->defaultNumberingSystem;
+    }
+
+    /**
+     * @param string $defaultNumberingSystem
+     *
+     * @return LocaleData
+     */
+    public function setDefaultNumberingSystem($defaultNumberingSystem)
+    {
+        $this->defaultNumberingSystem = $defaultNumberingSystem;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getMinimumGroupingDigits()
+    {
+        return $this->minimumGroupingDigits;
+    }
+
+    /**
+     * @param int $minimumGroupingDigits
+     *
+     * @return LocaleData
+     */
+    public function setMinimumGroupingDigits($minimumGroupingDigits)
+    {
+        $this->minimumGroupingDigits = $minimumGroupingDigits;
+
+        return $this;
+    }
+
+    /**
+     * @return \PrestaShop\PrestaShop\Core\Localization\CLDR\NumberSymbolsData[]
+     */
+    public function getNumberSymbols()
+    {
+        return $this->numberSymbols;
+    }
+
+    /**
+     * @param \PrestaShop\PrestaShop\Core\Localization\CLDR\NumberSymbolsData[] $numberSymbols
+     *
+     * @return LocaleData
+     */
+    public function setNumberSymbols($numberSymbols)
+    {
+        $this->numberSymbols = $numberSymbols;
+
+        return $this;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getDecimalPatterns()
+    {
+        return $this->decimalPatterns;
+    }
+
+    /**
+     * @param string[] $decimalPatterns
+     *
+     * @return LocaleData
+     */
+    public function setDecimalPatterns($decimalPatterns)
+    {
+        $this->decimalPatterns = $decimalPatterns;
+
+        return $this;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getPercentPatterns()
+    {
+        return $this->percentPatterns;
+    }
+
+    /**
+     * @param string[] $percentPatterns
+     *
+     * @return LocaleData
+     */
+    public function setPercentPatterns($percentPatterns)
+    {
+        $this->percentPatterns = $percentPatterns;
+
+        return $this;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getCurrencyPatterns()
+    {
+        return $this->currencyPatterns;
+    }
+
+    /**
+     * @param string[] $currencyPatterns
+     *
+     * @return LocaleData
+     */
+    public function setCurrencyPatterns($currencyPatterns)
+    {
+        $this->currencyPatterns = $currencyPatterns;
+
+        return $this;
+    }
+
+    /**
+     * @return \PrestaShop\PrestaShop\Core\Localization\CLDR\CurrencyData[]
+     */
+    public function getCurrencies()
+    {
+        return $this->currencies;
+    }
+
+    /**
+     * @param \PrestaShop\PrestaShop\Core\Localization\CLDR\CurrencyData[] $currencies
+     *
+     * @return LocaleData
+     */
+    public function setCurrencies($currencies)
+    {
+        $this->currencies = $currencies;
+
+        return $this;
+    }
+
+
 }

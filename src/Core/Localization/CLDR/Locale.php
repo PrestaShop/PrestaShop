@@ -42,7 +42,7 @@ class Locale
      *
      * @var string
      */
-    public $localeCode;
+    protected $localeCode;
 
     /**
      * List of available numbering systems
@@ -50,14 +50,14 @@ class Locale
      *
      * @var string[]
      */
-    public $numberingSystems;
+    protected $numberingSystems;
 
     /**
      * Default numbering system.
      *
      * @var string
      */
-    public $defaultNumberingSystem;
+    protected $defaultNumberingSystem;
 
     /**
      * Used to suppress groupings below a certain value.
@@ -67,14 +67,14 @@ class Locale
      *
      * @var int
      */
-    public $minimumGroupingDigits;
+    protected $minimumGroupingDigits;
 
     /**
      * Collection of all available symbols list (by numbering system).
      *
      * @var NumberSymbolsData[]
      */
-    public $numberSymbols;
+    protected $numberSymbols;
 
     /**
      * Collection of all available decimal patterns (by numbering system)
@@ -82,7 +82,7 @@ class Locale
      *
      * @var string[]
      */
-    public $decimalPatterns;
+    protected $decimalPatterns;
 
     /**
      * Collection of all available percent patterns (by numbering system)
@@ -90,7 +90,7 @@ class Locale
      *
      * @var string[]
      */
-    public $percentPatterns;
+    protected $percentPatterns;
 
     /**
      * Collection of all available currency patterns (by numbering system)
@@ -98,26 +98,26 @@ class Locale
      *
      * @var string[]
      */
-    public $currencyPatterns;
+    protected $currencyPatterns;
 
     /**
      * All currencies, by ISO code.
      *
      * @var CurrencyData[]
      */
-    public $currencies;
+    protected $currencies;
 
     public function __construct(LocaleData $localeData)
     {
-        $this->localeCode = $localeData->localeCode;
-        $this->numberingSystems = $localeData->numberingSystems;
-        $this->defaultNumberingSystem = $localeData->defaultNumberingSystem;
-        $this->minimumGroupingDigits = $localeData->minimumGroupingDigits;
-        $this->numberSymbols = $localeData->numberSymbols;
-        $this->decimalPatterns = $localeData->decimalPatterns;
-        $this->percentPatterns = $localeData->percentPatterns;
-        $this->currencyPatterns = $localeData->currencyPatterns;
-        $this->currencies = $localeData->currencies;
+        $this->localeCode = $localeData->getLocaleCode();
+        $this->numberingSystems = $localeData->getNumberingSystems();
+        $this->defaultNumberingSystem = $localeData->getDefaultNumberingSystem();
+        $this->minimumGroupingDigits = $localeData->getMinimumGroupingDigits();
+        $this->numberSymbols = $localeData->getNumberSymbols();
+        $this->decimalPatterns = $localeData->getDecimalPatterns();
+        $this->percentPatterns = $localeData->getPercentPatterns();
+        $this->currencyPatterns = $localeData->getCurrencyPatterns();
+        $this->currencies = $localeData->getCurrencies();
     }
 
     /**
@@ -190,11 +190,11 @@ class Locale
         if (null === $numberingSystem) {
             $numberingSystem = $this->getDefaultNumberingSystem();
         }
-        if (!isset($this->numberSymbols[$numberingSystem])) {
+        if (!isset($this->getAllNumberSymbols()[$numberingSystem])) {
             throw new LocalizationException('Invalid numbering system: ' . $numberingSystem);
         }
 
-        return $this->numberSymbols[$numberingSystem];
+        return $this->getAllNumberSymbols()[$numberingSystem];
     }
 
     /**

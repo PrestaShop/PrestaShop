@@ -66,7 +66,7 @@ class ReaderTest extends TestCase
 
         $this->assertInstanceOf(LocaleData::class, $localeData);
 
-        $dns = $localeData->defaultNumberingSystem;
+        $dns = $localeData->getDefaultNumberingSystem();
 
         $this->assertSame(
             $expectedData['defaultNumberingSystem'],
@@ -75,47 +75,47 @@ class ReaderTest extends TestCase
         );
         $this->assertSame(
             $expectedData['digitsGroupSeparator'],
-            $localeData->numberSymbols[$dns]->group,
+            $localeData->getNumberSymbols()[$dns]->getGroup(),
             'Wrong group separator'
         );
         $this->assertSame(
             $expectedData['decimalSeparator'],
-            $localeData->numberSymbols[$dns]->decimal,
+            $localeData->getNumberSymbols()[$dns]->getDecimal(),
             'Wrong decimal separator'
         );
         $this->assertSame(
             $expectedData['decimalPattern'],
-            $localeData->decimalPatterns[$dns],
+            $localeData->getDecimalPatterns()[$dns],
             'Wrong decimal pattern'
         );
         $this->assertSame(
             $expectedData['currencyPattern'],
-            $localeData->currencyPatterns[$dns],
+            $localeData->getCurrencyPatterns()[$dns],
             'Wrong currency pattern'
         );
         $this->assertSame(
             $expectedData['euroName'],
-            $localeData->currencies['EUR']->displayNames['default'],
+            $localeData->getCurrencies()['EUR']->getDisplayNames()['default'],
             'Wrong name for Euro'
         );
         $this->assertSame(
             $expectedData['euroNarrowSymbol'],
-            $localeData->currencies['EUR']->symbols['narrow'],
+            $localeData->getCurrencies()['EUR']->getSymbols()['narrow'],
             'Wrong narrow symbol for euro'
         );
         $this->assertSame(
             $expectedData['dollarName'],
-            $localeData->currencies['USD']->displayNames['default'],
+            $localeData->getCurrencies()['USD']->getDisplayNames()['default'],
             'Wrong name for US Dollar'
         );
         $this->assertSame(
             $expectedData['dollarDefaultSymbol'],
-            $localeData->currencies['USD']->symbols['default'],
+            $localeData->getCurrencies()['USD']->getSymbols()['default'],
             'Wrong default symbol for dollar'
         );
         $this->assertSame(
             $expectedData['dollarNarrowSymbol'],
-            $localeData->currencies['USD']->symbols['narrow'],
+            $localeData->getCurrencies()['USD']->getSymbols()['narrow'],
             'Wrong narrow symbol for dollar'
         );
     }
