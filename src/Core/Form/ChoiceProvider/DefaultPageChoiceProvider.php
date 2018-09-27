@@ -27,6 +27,8 @@
 namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
 
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
+use PrestaShop\PrestaShop\Core\Meta\MetaDataProviderInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Class DefaultPageChoiceProvider is responsible for providing default page choices in
@@ -34,20 +36,28 @@ use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
  */
 final class DefaultPageChoiceProvider implements FormChoiceProviderInterface
 {
+    /**
+     * @var RequestStack
+     */
+    private $requestStack;
 
     /**
-     * @var array
+     * @var MetaDataProviderInterface
      */
-    private $defaultPages;
+    private $dataProvider;
 
     /**
      * DefaultPageChoiceProvider constructor.
      *
-     * @param array $defaultPages
+     * @param RequestStack $requestStack
+     * @param MetaDataProviderInterface $dataProvider
      */
-    public function __construct(array $defaultPages)
-    {
-        $this->defaultPages = $defaultPages;
+    public function __construct(
+        RequestStack $requestStack,
+        MetaDataProviderInterface $dataProvider
+    ) {
+        $this->requestStack = $requestStack;
+        $this->dataProvider = $dataProvider;
     }
 
     /**
@@ -55,6 +65,36 @@ final class DefaultPageChoiceProvider implements FormChoiceProviderInterface
      */
     public function getChoices()
     {
-        return $this->defaultPages;
+        $defaultPages = $this->dataProvider->getDefaultPagesExcludingFilled();
+        $currentPage = $this->getCurrentPage();
+
+        if ($currentPage) {
+            $defaultPages[$currentPage] = $currentPage;
+            asort($defaultPages);
+        }
+
+        return $defaultPages;
+    }
+
+    /**
+     * Gets current page.
+     *
+     * @return string
+     */
+    private function getCurrentPage()
+    {
+        $currentRequest = $this->requestStack->getCurrentRequest();
+
+        $metaId = null;
+        if (null !== $currentRequest) {
+            $metaId =$currentRequest->attributes->get('metaId');
+        }
+
+        $page = '';
+        if ($metaId) {
+            $page = $this->dataProvider->getDefaultPageById($metaId);
+        }
+
+        return $page;
     }
 }

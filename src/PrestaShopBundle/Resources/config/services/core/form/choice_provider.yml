@@ -164,7 +164,8 @@ services:
   prestashop.core.form.choice_provider.default_page:
     class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\DefaultPageChoiceProvider'
     arguments:
-    - '@=service("prestashop.adapter.meta.data_provider").getDefaultPagesExcludingFilled()'
+    - '@request_stack'
+    - '@prestashop.adapter.meta.data_provider'
 
   prestashop.core.form.choice_provider.module_page:
     class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ModulePageChoiceProvider'

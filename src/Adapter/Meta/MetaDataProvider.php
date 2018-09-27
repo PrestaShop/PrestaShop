@@ -57,9 +57,26 @@ class MetaDataProvider implements MetaDataProviderInterface
     }
 
     /**
-     * Gets default pages which are not configured in Seo & urls page.
-     *
-     * @return array
+     * {@inheritdoc}
+     */
+    public function getDefaultPageById($metaId)
+    {
+        $query = new DbQuery();
+        $query->select('`page`');
+        $query->from('meta');
+        $query->where('`id_meta`='.(int) $metaId);
+        $query->where('`page` NOT LIKE "module-%"');
+        $result = Db::getInstance()->getValue($query);
+
+        if (is_string($result)) {
+            return $result;
+        }
+
+        return '';
+    }
+
+    /**
+     * {@inheritdoc}
      */
     public function getDefaultPagesExcludingFilled()
     {
@@ -76,9 +93,7 @@ class MetaDataProvider implements MetaDataProviderInterface
     }
 
     /**
-     * Gets module pages which are not configured in Seo & urls page.
-     *
-     * @return array
+     * {@inheritdoc}
      */
     public function getModulePagesExcludingFilled()
     {
