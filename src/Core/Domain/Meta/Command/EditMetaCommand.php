@@ -68,25 +68,16 @@ class EditMetaCommand extends SaveMetaCommand
      *
      * @param MetaId $metaId
      * @param string $pageName
-     * @param string[] $pageTitle
-     * @param string[] $metaDescription
-     * @param string[] $metaKeywords
      * @param string[] $rewriteUrl
      */
     public function __construct(
         MetaId $metaId,
         $pageName,
-        array $pageTitle,
-        array $metaDescription,
-        array $metaKeywords,
         array $rewriteUrl
     ) {
-        $this->pageName = $pageName;
-        $this->pageTitle = $pageTitle;
-        $this->metaDescription = $metaDescription;
-        $this->metaKeywords = $metaKeywords;
-        $this->rewriteUrl = $rewriteUrl;
         $this->metaId = $metaId;
+        $this->pageName = $pageName;
+        $this->rewriteUrl = $rewriteUrl;
     }
 
     /**
@@ -106,6 +97,18 @@ class EditMetaCommand extends SaveMetaCommand
     }
 
     /**
+     * @param string[] $pageTitle
+     *
+     * @return self
+     */
+    public function setPageTitle(array $pageTitle)
+    {
+        $this->pageTitle = $pageTitle;
+
+        return $this;
+    }
+
+    /**
      * @return string[]
      */
     public function getPageTitle()
@@ -114,11 +117,35 @@ class EditMetaCommand extends SaveMetaCommand
     }
 
     /**
+     * @param string[] $metaDescription
+     *
+     * @return self
+     */
+    public function setMetaDescription(array $metaDescription)
+    {
+        $this->metaDescription = $metaDescription;
+
+        return $this;
+    }
+
+    /**
      * @return string[]
      */
     public function getMetaDescription()
     {
         return $this->metaDescription;
+    }
+
+    /**
+     * @param string[] $metaKeywords
+     *
+     * @return self
+     */
+    public function setMetaKeywords(array $metaKeywords)
+    {
+        $this->metaKeywords = $metaKeywords;
+
+        return $this;
     }
 
     /**

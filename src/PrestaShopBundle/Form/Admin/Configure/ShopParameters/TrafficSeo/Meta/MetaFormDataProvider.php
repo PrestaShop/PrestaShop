@@ -98,6 +98,8 @@ class MetaFormDataProvider
      * @param array $data
      *
      * @return AddMetaCommand
+     *
+     * @throws MetaException
      */
     private function getSaveMetaCommand(array $data)
     {
@@ -116,16 +118,15 @@ class MetaFormDataProvider
      * @param array $data
      *
      * @return EditMetaCommand
+     *
+     * @throws MetaException
      */
     private function getEditMetaCommand(array $data)
     {
-        return new EditMetaCommand(
-            new MetaId($data['id']),
-            $data['page_name'],
-            $data['page_title'],
-            $data['meta_description'],
-            (array) $data['meta_keywords'], //todo: remove casting once multilang value is fixed.
-            $data['url_rewrite']
-        );
+        return (new EditMetaCommand(new MetaId($data['id']), $data['page_name'], $data['url_rewrite']))
+            ->setPageTitle($data['page_title'])
+            ->setMetaDescription($data['meta_description'])
+            ->setMetaKeywords((array) $data['meta_keywords']) //todo: remove casting once multilang value is fixed.
+        ;
     }
 }
