@@ -90,8 +90,6 @@ class AdminImportControllerCore extends AdminController
 
     public function __construct()
     {
-        $this->preparePostFromSession();
-
         $this->bootstrap = true;
 
         parent::__construct();
@@ -4737,36 +4735,6 @@ class AdminImportControllerCore extends AdminController
              'modal_title' => $this->trans('Importing your data...', array(), 'Admin.Advparameters.Notification'),
              'modal_content' => $modal_content,
          );
-    }
-
-    /**
-     * Prepares $_POST values from session.
-     * Legacy controller expects all values to be in $_POST and migrated controller passes them in session.
-     * This method does the compatibility between the two.
-     */
-    private function preparePostFromSession()
-    {
-        $session = $this->getSession();
-
-        $fields = [
-            'entity',
-            'iso_lang',
-            'separator',
-            'multiple_value_separator',
-            'csv',
-            'truncate',
-            'match_ref',
-            'regenerate',
-            'forceIDs',
-            'sendemail',
-            'skip',
-            'type_value',
-            'import',
-        ];
-
-        foreach ($fields as $field) {
-            $_POST[$field] = $session->get($field);
-        }
     }
 
     /**

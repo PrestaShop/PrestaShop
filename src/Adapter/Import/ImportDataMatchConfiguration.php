@@ -177,7 +177,7 @@ class ImportDataMatchConfiguration implements DataConfigurationInterface
             [
                 '`name`' => $configuration['match_name'],
                 '`match`' => implode('|', $configuration['type_value']),
-                '`skip`' => $configuration['rows_skip'],
+                '`skip`' => $configuration['skip'],
             ]
         );
     }
