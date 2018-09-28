@@ -73,7 +73,7 @@ final class EditMetaHandler implements EditMetaHandlerInterface
             if (false === $entity->update()) {
                 throw new CannotEditMetaException(
                     sprintf(
-                        'Error occurred when updating SqlRequest with id "%s"',
+                        'Error occurred when updating Meta with id "%s"',
                         $command->getMetaId()->getValue()
                     )
                 );
@@ -81,7 +81,7 @@ final class EditMetaHandler implements EditMetaHandlerInterface
         } catch (PrestaShopException $e) {
             throw new CannotEditMetaException(
                 sprintf(
-                    'Error occurred when updating SqlRequest with id "%s"',
+                    'Error occurred when updating Meta with id "%s"',
                     $command->getMetaId()->getValue()
                 )
             );
