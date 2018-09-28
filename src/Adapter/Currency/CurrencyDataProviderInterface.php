@@ -28,7 +28,6 @@ namespace PrestaShop\PrestaShop\Adapter\Currency;
 
 use Currency;
 use Exception;
-use PrestaShop\PrestaShop\Adapter\Configuration as ConfigurationAdapter;
 use PrestaShopException;
 
 /**
@@ -36,7 +35,6 @@ use PrestaShopException;
  */
 interface CurrencyDataProviderInterface
 {
-
     /**
      * Return available currencies.
      *

@@ -149,7 +149,7 @@ class Currency
      */
     public function getDisplayName($countContext = self::DISPLAY_NAME_COUNT_DEFAULT)
     {
-        if (!isset($this->displayNames[$countContext])){
+        if (!isset($this->displayNames[$countContext])) {
             $countContext = self::DISPLAY_NAME_COUNT_DEFAULT;
         }
 
