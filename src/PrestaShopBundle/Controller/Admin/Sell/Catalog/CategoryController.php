@@ -359,12 +359,12 @@ class CategoryController extends FrameworkBundleAdminController
             return $this->handleConstraintException($exception);
         }
 
-        $messages = [
+        $errorMessagesForDisplay = [
             CategoryNotFoundException::class => $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'),
         ];
 
-        if (isset($messages[$type])) {
-            return $messages[$type];
+        if (isset($errorMessagesForDisplay[$type])) {
+            return $errorMessagesForDisplay[$type];
         }
 
         return $this->trans('An error occurred while creating an object.', 'Admin.Notifications.Error');
@@ -383,12 +383,12 @@ class CategoryController extends FrameworkBundleAdminController
             return $this->handleConstraintException($exception);
         }
 
-        $messages = [
+        $errorMessagesForDisplay = [
             CategoryNotFoundException::class => $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'),
         ];
 
-        if (isset($messages[$type])) {
-            return $messages[$type];
+        if (isset($errorMessagesForDisplay[$type])) {
+            return $errorMessagesForDisplay[$type];
         }
 
         return $this->trans('An error occurred while updating an object.', 'Admin.Notifications.Error');
@@ -401,7 +401,7 @@ class CategoryController extends FrameworkBundleAdminController
      */
     protected function handleConstraintException(CategoryConstraintException $e)
     {
-        $messages = [
+        $errorMessagesForDisplay = [
             CategoryConstraintException::TOO_MANY_MENU_THUMBNAILS => sprintf(
                 '%s %s',
                 $this->trans('An error occurred while uploading the image:', 'Admin.Catalog.Notification'),
@@ -409,8 +409,8 @@ class CategoryController extends FrameworkBundleAdminController
             ),
         ];
 
-        if (isset($messages[$e->getCode()])) {
-            return $messages[$e->getCode()];
+        if (isset($errorMessagesForDisplay[$e->getCode()])) {
+            return $errorMessagesForDisplay[$e->getCode()];
         }
 
         return $this->trans('Unexpected error occurred', 'Admin.Notifications.Error');
