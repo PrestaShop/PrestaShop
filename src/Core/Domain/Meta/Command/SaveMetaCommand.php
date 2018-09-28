@@ -56,7 +56,7 @@ abstract class SaveMetaCommand
      */
     protected function validateRewriteUrl(array $rewriteUrl, $pageName)
     {
-        if ('index' !== $pageName && empty($rewriteUrl)) {
+        if ('index' !== $pageName && empty(array_filter($rewriteUrl))) {
             throw new MetaConstraintException(
                 'Meta rewrite url is required',
                 MetaConstraintException::INVALID_URL_REWRITE

@@ -96,7 +96,7 @@ class MetaFormDataProvider
             $this->commandBus->handle($command);
             //todo: hooks ?
         } catch (MetaException $exception) {
-            $errors = $this->handleException($exception);
+            $errors[] = $this->handleException($exception);
         }
 
         return $errors;
@@ -167,19 +167,20 @@ class MetaFormDataProvider
      */
     private function getConstraintErrorByCode(MetaConstraintException $exception)
     {
-        $invalidFieldDictionary = [
-            MetaConstraintException::INVALID_PAGE_NAME => 'page name',
-            MetaConstraintException::INVALID_URL_REWRITE => 'rewritten url',
-        ];
-
         $code = $exception->getCode();
 
-        if (isset($invalidFieldDictionary[$code])) {
+        if (MetaConstraintException::INVALID_PAGE_NAME === $code) {
             return [
                 'key' => 'The %s field is invalid.',
-                'parameters' => [
-                    $invalidFieldDictionary[$code],
-                ],
+                'parameters' => ['page name'],
+                'domain' => 'Admin.Notifications.Error',
+            ];
+        }
+
+        if (MetaConstraintException::INVALID_URL_REWRITE === $code) {
+            return [
+                'key' => 'The URL rewrite field must be filled in either the default or English language.',
+                'parameters' => [],
                 'domain' => 'Admin.Notifications.Error',
             ];
         }
