@@ -114,7 +114,10 @@
         </div>
       </div>
       <div class="row">
-        <table class="table table-bordered js-import-data-table">
+        <table
+          class="table table-bordered js-import-data-table"
+          data-required-fields="{{ requiredFields|json_encode }}"
+        >
           <thead>
             <tr>
               {% for importEntityField in dataConfigurationForm.type_value %}
