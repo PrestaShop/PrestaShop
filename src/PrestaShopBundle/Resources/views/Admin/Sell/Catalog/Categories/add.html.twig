@@ -25,8 +25,6 @@
 
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
-{% trans_default_domain 'Admin.Catalog.Feature' %}
-
 {% block content %}
   <div class="row justify-content-center">
     <div class="col">
@@ -38,8 +36,5 @@
 {% block javascripts %}
   {{ parent() }}
 
-  <script src="{{ asset('themes/new-theme/public/categories.bundle.js') }}"></script>
-  <script src="{{ asset('../js/tiny_mce/tiny_mce.js') }}"></script>
-  <script src="{{ asset('../js/admin/tinymce.inc.js') }}"></script>
-  <script src="{{ asset('../js/admin/tinymce_loader.js') }}"></script>
+  {% include '@PrestaShop/Admin/Sell/Catalog/Categories/Blocks/javascripts.html.twig' %}
 {% endblock %}

@@ -23,6 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
+{% block category_form_block %}
 {{ form_start(categoryForm) }}
 <div class="card">
   <h3 class="card-header">
@@ -180,7 +181,9 @@
         </div>
       {% endif %}
 
-      {{ form_rest(categoryForm) }}
+      {% block category_form_rest %}
+        {{ form_rest(categoryForm) }}
+      {% endblock %}
     </div>
   </div>
   <div class="card-footer">
@@ -190,3 +193,4 @@
   </div>
 </div>
 {{ form_end(categoryForm) }}
+{% endblock %}
