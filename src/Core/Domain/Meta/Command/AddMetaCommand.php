@@ -77,7 +77,7 @@ class AddMetaCommand extends SaveMetaCommand
         array $rewriteUrl
     ) {
         $this->validatePageName($pageName);
-        $this->validateUrlRewrite($rewriteUrl, $pageName);
+        $this->validateRewriteUrl($rewriteUrl, $pageName);
 
         $this->pageName = $pageName;
         $this->pageTitle = $pageTitle;

@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Meta\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\Meta\Exception\MetaConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Meta\ValueObject\MetaId;
 
 /**
@@ -69,12 +70,17 @@ class EditMetaCommand extends SaveMetaCommand
      * @param MetaId $metaId
      * @param string $pageName
      * @param string[] $rewriteUrl
+     *
+     * @throws MetaConstraintException
      */
     public function __construct(
         MetaId $metaId,
         $pageName,
         array $rewriteUrl
     ) {
+        $this->validatePageName($pageName);
+        $this->validateRewriteUrl($rewriteUrl, $pageName);
+
         $this->metaId = $metaId;
         $this->pageName = $pageName;
         $this->rewriteUrl = $rewriteUrl;
