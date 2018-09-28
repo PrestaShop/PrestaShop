@@ -28,7 +28,7 @@
 namespace PrestaShop\PrestaShop\Core\Localization\Currency\DataLayer;
 
 use Currency;
-use PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider;
+use PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProviderInterface;
 
 /**
  * Installed Currencies data layer.
@@ -40,11 +40,11 @@ class CurrencyInstalled
     /**
      * This adapter will provide data from DB / ORM about Currency (via legacy entity).
      *
-     * @var CurrencyDataProvider
+     * @var CurrencyDataProviderInterface
      */
     protected $dataProvider;
 
-    public function __construct(CurrencyDataProvider $dataProvider)
+    public function __construct(CurrencyDataProviderInterface $dataProvider)
     {
         $this->dataProvider = $dataProvider;
     }
