@@ -62,10 +62,6 @@ abstract class AbstractGridDefinitionFactory implements GridDefinitionFactoryInt
             'definition' => $definition,
         ]);
 
-        \Hook::exec('action' . $definition->getId() . 'GridDefinitionModifier', [
-            'definition' => $definition,
-        ]);
-
         return $definition;
     }
 
