@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\Category\CommandHandler;
 use Category;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\CommandHandler\AddCategoryHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotAddCategoryException;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 
 /**
@@ -40,6 +41,8 @@ final class AddCategoryHandler extends AbstractCategoryHandler implements AddCat
 {
     /**
      * {@inheritdoc}
+     *
+     * @throws CannotAddCategoryException
      */
     public function handle(AddCategoryCommand $command)
     {
@@ -49,6 +52,10 @@ final class AddCategoryHandler extends AbstractCategoryHandler implements AddCat
         $this->populateCategoryWithCommandData($category, $command);
 
         $category->add();
+
+        if (!$category->id) {
+            throw new CannotAddCategoryException('Failed to add new category.');
+        }
 
         $this->uploadImages($category, $command);
 
