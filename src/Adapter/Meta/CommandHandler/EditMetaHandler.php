@@ -83,7 +83,9 @@ final class EditMetaHandler implements EditMetaHandlerInterface
                 sprintf(
                     'Error occurred when updating Meta with id "%s"',
                     $command->getMetaId()->getValue()
-                )
+                ),
+                0,
+                $e
             );
         }
     }

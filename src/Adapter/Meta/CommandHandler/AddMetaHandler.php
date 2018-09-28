@@ -29,6 +29,8 @@ namespace PrestaShop\PrestaShop\Adapter\Meta\CommandHandler;
 use Meta;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Command\AddMetaCommand;
 use PrestaShop\PrestaShop\Core\Domain\Meta\CommandHandler\AddMetaHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Meta\Exception\CannotAddMetaException;
+use PrestaShop\PrestaShop\Core\Domain\Meta\Exception\MetaException;
 use PrestaShopDatabaseException;
 use PrestaShopException;
 
@@ -39,32 +41,33 @@ final class AddMetaHandler implements AddMetaHandlerInterface
 {
     /**
      * {@inheritdoc}
+     *
+     * @throws CannotAddMetaException
+     * @throws MetaException
      */
     public function handle(AddMetaCommand $command)
     {
         try {
-            $this->saveMetaData($command);
-        } catch (PrestaShopDatabaseException $e) {
+            $entity = new Meta();
+            $entity->page = $command->getPageName();
+            $entity->title = $command->getPageTitle();
+            $entity->description = $command->getMetaDescription();
+            $entity->keywords = $command->getMetaKeywords();
+            $entity->url_rewrite = $command->getRewriteUrl();
+            $entity->add();
+
+            if (0 >= $entity->id) {
+                throw new CannotAddMetaException(
+                    sprintf('Invalid entity id after creation: %s', $entity->id)
+                );
+            }
 
         } catch (PrestaShopException $e) {
+            throw new MetaException(
+                'Failed to create meta entity',
+                0,
+                $e
+            );
         }
-    }
-
-    /**
-     * @param AddMetaCommand $command
-     *
-     * @throws PrestaShopDatabaseException
-     * @throws PrestaShopException
-     */
-    private function saveMetaData(AddMetaCommand $command)
-    {
-        //todo: shop associations
-        $entity = new Meta();
-        $entity->page = $command->getPageName();
-        $entity->title = $command->getPageTitle();
-        $entity->description = $command->getMetaDescription();
-        $entity->keywords = $command->getMetaKeywords();
-        $entity->url_rewrite = $command->getRewriteUrl();
-        $entity->add();
     }
 }
