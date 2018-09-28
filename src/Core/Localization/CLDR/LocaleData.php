@@ -347,6 +347,4 @@ class LocaleData
 
         return $this;
     }
-
-
 }
