@@ -26,10 +26,12 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Meta\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\Meta\Exception\MetaConstraintException;
+
 /**
  * Class AddMetaCommand is responsible for saving meta entities data.
  */
-class AddMetaCommand
+class AddMetaCommand extends SaveMetaCommand
 {
     /**
      * @var string
@@ -64,6 +66,8 @@ class AddMetaCommand
      * @param string[] $metaDescription
      * @param string[] $metaKeywords
      * @param string[] $rewriteUrl
+     *
+     * @throws MetaConstraintException
      */
     public function __construct(
         $pageName,
@@ -72,6 +76,9 @@ class AddMetaCommand
         array $metaKeywords,
         array $rewriteUrl
     ) {
+        $this->validatePageName($pageName);
+        $this->validateUrlRewrite($rewriteUrl, $pageName);
+
         $this->pageName = $pageName;
         $this->pageTitle = $pageTitle;
         $this->metaDescription = $metaDescription;

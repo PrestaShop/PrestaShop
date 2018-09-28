@@ -39,6 +39,8 @@ final class GetMetaForEditingHandler implements GetMetaForEditingHandlerInterfac
 {
     /**
      * {@inheritdoc}
+     *
+     * @throws MetaNotFoundException
      */
     public function handle(GetMetaForEditing $query)
     {

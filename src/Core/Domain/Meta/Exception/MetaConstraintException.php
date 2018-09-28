@@ -31,9 +31,6 @@ namespace PrestaShop\PrestaShop\Core\Domain\Meta\Exception;
  */
 class MetaConstraintException extends MetaException
 {
-    const INVALID_PAGE = 0;
-    const INVALID_TITLE = 1;
-    const INVALID_DESCRIPTION = 2;
-    const INVALID_KEYWORDS = 3;
-    const INVALID_URL_REWRITE = 4;
+    const INVALID_PAGE_NAME = 1;
+    const INVALID_URL_REWRITE = 2;
 }
