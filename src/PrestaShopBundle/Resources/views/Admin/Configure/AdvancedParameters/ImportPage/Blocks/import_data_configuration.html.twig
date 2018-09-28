@@ -27,7 +27,7 @@
 
 {% set dataConfigurationForm = importDataConfigurationForm %}
 
-{{ form_start(dataConfigurationForm, {action: path('admin_import_process'), attr: {class: 'import-form'}}) }}
+{{ form_start(dataConfigurationForm, {action: path('admin_import_process'), attr: {class: 'import-data-configuration-form'}}) }}
 <div class="card">
   <h3 class="card-header">
     <i class="material-icons">list</i> {{ 'Match your data'|trans }}
@@ -94,7 +94,7 @@
           {{ 'Rows to skip'|trans }}
         </label>
         <div class="col-sm">
-          {{ form_widget(dataConfigurationForm.rows_skip, {'attr': {'class': 'col-xs-12 col-md-4 js-rows-skip', 'min': 0}}) }}
+          {{ form_widget(dataConfigurationForm.skip, {'attr': {'class': 'col-xs-12 col-md-4 js-rows-skip', 'min': 0}}) }}
           <small class="form-text">{{ 'Indicate how many of the first rows of your file should be skipped when importing the data. For instance set it to 1 if the first row of your file contains headers.'|trans }}</small>
         </div>
       </div>
