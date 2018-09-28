@@ -625,13 +625,6 @@ services:
         tags:
             - { name: form.type }
 
-    form.type.common.translate_textarea:
-        class: 'PrestaShopBundle\Form\Admin\Type\TranslateTextareaType'
-        parent: 'form.type.translatable.aware'
-        public: true
-        tags:
-            - { name: form.type }
-
     form.type.common.category_choice_tree:
         class: 'PrestaShopBundle\Form\Admin\Type\CategoryChoiceTreeType'
         arguments:
