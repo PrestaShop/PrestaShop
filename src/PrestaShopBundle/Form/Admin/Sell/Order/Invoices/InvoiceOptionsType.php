@@ -28,12 +28,14 @@ namespace PrestaShopBundle\Form\Admin\Sell\Order\Invoices;
 
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
+use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslateTextType;
 use PrestaShopBundle\Form\Admin\Type\TranslateType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
@@ -82,8 +84,8 @@ class InvoiceOptionsType extends TranslatorAwareType
             ->add('enable_invoices', SwitchType::class)
             ->add('enable_tax_breakdown', SwitchType::class)
             ->add('enable_product_images', SwitchType::class)
-            ->add('invoice_prefix', TranslateTextType::class, [
-                'locales' => $this->locales,
+            ->add('invoice_prefix', TranslatableType::class, [
+                'type' => TextType::class,
             ])
             ->add('add_current_year', SwitchType::class)
             ->add('reset_number_annually', SwitchType::class)
@@ -97,17 +99,11 @@ class InvoiceOptionsType extends TranslatorAwareType
             ->add('invoice_number', NumberType::class, [
                 'required' => false,
             ])
-            ->add('legal_free_text', TranslateType::class,
-                [
-                    'type' => TextareaType::class,
-                    'options' => [
-                        'required' => false,
-                    ],
-                    'locales' => $this->locales,
-                    'hideTabs' => false,
-                ])
-            ->add('footer_text', TranslateTextType::class, [
-                'locales' => $this->locales,
+            ->add('legal_free_text', TranslatableType::class, [
+                'type' => TextareaType::class,
+            ])
+            ->add('footer_text', TranslatableType::class, [
+                'type' => TextType::class,
             ])
             ->add('invoice_model', ChoiceType::class, [
                 'choices' => $this->invoiceModelChoiceProvider->getChoices(),
