@@ -34,7 +34,7 @@ use PrestaShopException;
 /**
  * This class will provide data from DB / ORM about Currency.
  */
-class CurrencyDataProvider
+class CurrencyDataProvider implements CurrencyDataProviderInterface
 {
     /**
      * @var ConfigurationAdapter
