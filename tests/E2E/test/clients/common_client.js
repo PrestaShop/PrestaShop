@@ -332,7 +332,7 @@ class CommonClient {
    * @returns {*}
    */
   checkFile(folderPath, fileName, pause = 0) {
-    fs.stat(folderPath + fileName, function(err, stats) {
+    fs.stat(folderPath + fileName, function (err, stats) {
       err === null && stats.isFile() ? global.existingFile = true : global.existingFile = false;
     });
 
@@ -417,6 +417,14 @@ class CommonClient {
 
   alertAccept() {
     return this.client.alertAccept();
+  }
+
+  getText(selector) {
+    return this.client.getText(selector);
+  }
+
+  alertText() {
+    return this.client.alertText();
   }
 
   showElement(className, order) {
@@ -544,6 +552,11 @@ class CommonClient {
   deleteCookie() {
     return this.client
       .deleteCookie()
+      .refresh();
+  }
+
+  refresh() {
+    return this.client
       .refresh();
   }
 

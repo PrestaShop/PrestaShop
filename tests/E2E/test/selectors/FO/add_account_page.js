@@ -22,6 +22,9 @@ module.exports = {
     adr_save: '//*[@id="content"]//footer/button',
     success_alert: '[data-alert="success"]',
     adr_update: '[data-link-action="edit-address"]',
+    name_firstname_link: '//*[@id="_desktop_user_info"]//a[@class="account"]',
+    selected_country_option_list: '//*[@name="id_country"]//option[@selected and (text()="%D")]',
+    selected_default_country_option_list: '//*[@name="id_country"]//option[@selected and not(@disabled)]',
     //------------------ connect with existing account from checkout ----------------//
     sign_tab: '//*[@id="checkout-personal-information-step"]//a[contains(text(), "Sign in")]',
     signin_email_input: '//*[@id="login-form"]//input[@name="email"]',
