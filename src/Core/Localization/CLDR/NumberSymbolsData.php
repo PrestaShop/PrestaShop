@@ -503,6 +503,4 @@ class NumberSymbolsData
 
         return $this;
     }
-
-
 }
