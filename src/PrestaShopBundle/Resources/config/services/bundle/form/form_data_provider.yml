@@ -172,3 +172,4 @@ services:
         arguments:
             - '@prestashop.core.command_bus'
             - '@prestashop.core.query_bus'
+            - '@prestashop.adapter.meta.meta_form_data_validator'

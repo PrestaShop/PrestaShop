@@ -8,6 +8,9 @@ services:
     prestashop.adapter.meta.data_provider:
         class: 'PrestaShop\PrestaShop\Adapter\Meta\MetaDataProvider'
 
+    prestashop.adapter.meta.meta_form_data_validator:
+        class: 'PrestaShop\PrestaShop\Adapter\Meta\MetaFormDataValidator'
+
     # COMMAND HANDLERS
 
     prestashop.adapter.meta.command_handler.save_meta:

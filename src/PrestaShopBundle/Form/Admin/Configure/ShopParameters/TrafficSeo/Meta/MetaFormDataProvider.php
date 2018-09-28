@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta;
 
+use PrestaShop\PrestaShop\Adapter\Meta\MetaFormDataValidator;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Command\EditMetaCommand;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Command\AddMetaCommand;
@@ -55,17 +56,25 @@ class MetaFormDataProvider
     private $queryBus;
 
     /**
+     * @var MetaFormDataValidator
+     */
+    private $metaFormDataValidator;
+
+    /**
      * MetaFormDataProvider constructor.
      *
      * @param CommandBusInterface $commandBus
      * @param CommandBusInterface $queryBus
+     * @param MetaFormDataValidator $metaFormDataValidator
      */
     public function __construct(
         CommandBusInterface $commandBus,
-        CommandBusInterface $queryBus
+        CommandBusInterface $queryBus,
+        MetaFormDataValidator $metaFormDataValidator
     ) {
         $this->commandBus = $commandBus;
         $this->queryBus = $queryBus;
+        $this->metaFormDataValidator = $metaFormDataValidator;
     }
 
     public function getData($metaId)
@@ -90,11 +99,15 @@ class MetaFormDataProvider
 
     public function saveData(array $data)
     {
-        $errors = [];
+        $errors = $this->metaFormDataValidator->validate($data);
+
+        if (!empty($errors)) {
+            return $errors;
+        }
+
         try {
             $command = !empty($data['id']) ? $this->getEditMetaCommand($data) : $this->getSaveMetaCommand($data);
             $this->commandBus->handle($command);
-            //todo: hooks ?
         } catch (MetaException $exception) {
             $errors[] = $this->handleException($exception);
         }
