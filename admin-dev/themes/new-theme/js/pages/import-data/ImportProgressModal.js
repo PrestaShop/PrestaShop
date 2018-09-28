@@ -109,7 +109,7 @@ export default class ImportProgressModal {
    */
   reset() {
     this.updateProgress(0);
-    this.infoMessageBlock.addClass('d-none');
+    this.infoMessageBlock.addClass('d-none').find('.message').remove();
   }
 
   /**

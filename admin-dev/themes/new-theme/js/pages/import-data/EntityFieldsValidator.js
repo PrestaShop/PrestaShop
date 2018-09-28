@@ -73,6 +73,8 @@ export default class EntityFieldsValidator {
    * @private
    */
   static _checkRequiredFields() {
+    let requiredImportFields = $('.js-import-data-table').data('required-fields');
+
     for (let key in requiredImportFields) {
       if (0 === $('option[value="' + requiredImportFields[key] + '"]:selected').length) {
         $('.js-missing-column-warning').removeClass('d-none');
