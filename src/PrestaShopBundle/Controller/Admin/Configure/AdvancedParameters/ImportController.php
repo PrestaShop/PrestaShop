@@ -292,7 +292,7 @@ class ImportController extends FrameworkBundleAdminController
         $form = $formHandler->getForm();
         $form->setData([
             'match_name' => $request->request->get('match_name'),
-            'rows_skip' => $request->request->get('rows_skip'),
+            'skip' => $request->request->get('skip'),
             'type_value' => $request->request->get('type_value'),
         ]);
 

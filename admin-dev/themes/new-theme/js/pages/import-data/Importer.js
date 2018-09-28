@@ -65,10 +65,6 @@ export default class Importer {
           this.progressModal.showInfoMessages(response.informations);
         }
 
-        if (response.warnings) {
-          this.progressModal.showWarningMessages(response.warnings);
-        }
-
         if (response.errors) {
           this.progressModal.showErrorMessages(response.errors);
 
@@ -76,6 +72,8 @@ export default class Importer {
           if (!validateOnly) {
             return false;
           }
+        } else if (response.warnings) {
+          this.progressModal.showWarningMessages(response.warnings);
         }
 
         if (!response.isFinished) {

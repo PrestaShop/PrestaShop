@@ -82,7 +82,7 @@ class ImportDataConfigurationType extends TranslatorAwareType
             ->add('match_name', TextType::class, [
                 'required' => false,
             ])
-            ->add('rows_skip', IntegerType::class, [
+            ->add('skip', IntegerType::class, [
                 'data' => 1,
             ])
             ->add('type_value', CollectionType::class, [

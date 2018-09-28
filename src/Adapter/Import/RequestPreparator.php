@@ -50,7 +50,7 @@ class RequestPreparator
         $request->getSession()->set('regenerate', $formData['regenerate']);
         $request->getSession()->set('sendemail', $formData['sendemail']);
         $request->getSession()->set('match_ref', $formData['match_ref']);
-        $request->getSession()->set('skip', $formData['rows_skip']);
+        $request->getSession()->set('skip', $formData['skip']);
         $request->getSession()->set('type_value', $formData['type_value']);
         $request->getSession()->set('import', true);
     }
