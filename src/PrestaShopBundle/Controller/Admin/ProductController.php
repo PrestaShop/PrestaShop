@@ -171,7 +171,7 @@ class ProductController extends FrameworkBundleAdminController
                     [
                         'categories' => [
                             'tree' => [0 => $persistedFilterParameters['filter_category']],
-                        ]
+                        ],
                     ]
                 );
             }
