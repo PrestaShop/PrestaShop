@@ -53,7 +53,7 @@ class MetaId
             );
         }
 
-        $this->id = $metaId;
+        $this->id = (int) $metaId;
     }
 
     /**

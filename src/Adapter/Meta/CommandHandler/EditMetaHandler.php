@@ -78,14 +78,14 @@ final class EditMetaHandler implements EditMetaHandlerInterface
                     )
                 );
             }
-        } catch (PrestaShopException $e) {
+        } catch (PrestaShopException $exception) {
             throw new CannotEditMetaException(
                 sprintf(
                     'Error occurred when updating Meta with id "%s"',
                     $command->getMetaId()->getValue()
                 ),
                 0,
-                $e
+                $exception
             );
         }
     }

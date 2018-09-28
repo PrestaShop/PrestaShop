@@ -62,11 +62,11 @@ final class AddMetaHandler implements AddMetaHandlerInterface
                 );
             }
 
-        } catch (PrestaShopException $e) {
+        } catch (PrestaShopException $exception) {
             throw new MetaException(
                 'Failed to create meta entity',
                 0,
-                $e
+                $exception
             );
         }
     }
