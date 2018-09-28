@@ -38,33 +38,39 @@
       {# Contains menu with Selection/Categories/Popular and Tag Search #}
       {% include '@PrestaShop/Admin/Module/Includes/menu_top.html.twig' with { 'topMenuData': topMenuData, 'bulkActions': bulkActions } %}
 
-      <div id="module-recently-used-list" class="module-short-list">
-        <span id="recently-used_modules" class="module-search-result-title">{{ 'Recently Used' | trans({}, 'Admin.Modules.Feature') }}</span>
-        <div class="modules-list" data-name="recently-used"></div>
-      </div>
-
-      {% for category in categories.subMenu %}
-        <div class="module-short-list">
-          <span id="{{ category.refMenu }}_modules" class="module-search-result-title">{{ category.name | trans({}, 'Admin.Modules.Feature') }}</span>
-
-          {% if category.modules is empty %}
-            <div class="modules-list module-list-empty" data-name="{{ category.refMenu }}">
-              <p>
-                {{ 'You do not have module in « %categoryName% ».' | trans({'%categoryName%': category.name}, 'Admin.Modules.Feature') }}<br/>
-                {{ 'Discover the best-selling modules of this category in the %link% page.' | trans({'%link%': '<a href="'~ path('admin_module_catalog', {filterCategoryRef: category.refMenu}) ~ '">'~category.name~'</a>'}, 'Admin.Modules.Feature') | raw }}
-              </p>
-            </div>
-          {% else  %}
-            {% include '@PrestaShop/Admin/Module/Includes/grid_manage_installed.html.twig' with { 'modules': category.modules, 'display_type': 'list', 'origin': 'manage', 'id': category.refMenu } %}
-
-            {% block addon_card_see_more %}
-              {% if (category.modules | length) > maxModulesDisplayed %}
-                {% include '@PrestaShop/Admin/Module/Includes/see_more.html.twig' with { 'id': category.refMenu } %}
-              {% endif %}
-            {% endblock %}
-          {% endif %}
+      {% block catalog_recently_used %}
+        <div id="module-recently-used-list" class="module-short-list">
+          <span id="recently-used_modules" class="module-search-result-title">{{ 'Recently Used' | trans({}, 'Admin.Modules.Feature') }}</span>
+          <div class="modules-list" data-name="recently-used"></div>
         </div>
-      {% endfor %}
+      {% endblock %}
+
+      {% block catalog_categories_listing %}
+        {% for category in categories.subMenu %}
+          <div class="module-short-list">
+            <span id="{{ category.refMenu }}_modules" class="module-search-result-title">{{ category.name | trans({}, 'Admin.Modules.Feature') }}</span>
+
+            {% if category.modules is empty %}
+              {% block catalog_category_empty %}
+                <div class="modules-list module-list-empty" data-name="{{ category.refMenu }}">
+                  <p>
+                    {{ 'You do not have module in « %categoryName% ».' | trans({'%categoryName%': category.name}, 'Admin.Modules.Feature') }}<br/>
+                    {{ 'Discover the best-selling modules of this category in the %link% page.' | trans({'%link%': '<a href="'~ path('admin_module_catalog', {filterCategoryRef: category.refMenu}) ~ '">'~category.name~'</a>'}, 'Admin.Modules.Feature') | raw }}
+                  </p>
+                </div>
+              {% endblock %}
+            {% else  %}
+              {% include '@PrestaShop/Admin/Module/Includes/grid_manage_installed.html.twig' with { 'modules': category.modules, 'display_type': 'list', 'origin': 'manage', 'id': category.refMenu } %}
+
+              {% block addon_card_see_more %}
+                {% if (category.modules | length) > maxModulesDisplayed %}
+                  {% include '@PrestaShop/Admin/Module/Includes/see_more.html.twig' with { 'id': category.refMenu } %}
+                {% endif %}
+              {% endblock %}
+            {% endif %}
+          </div>
+        {% endfor %}
+      {% endblock %}
     </div>
   </div>
 {% endblock %}
