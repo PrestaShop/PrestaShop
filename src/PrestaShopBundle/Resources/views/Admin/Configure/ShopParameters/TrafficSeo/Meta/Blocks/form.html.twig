@@ -27,7 +27,7 @@
     {{ form_start(metaForm) }}
       <div class="card">
         <div class="card-header">
-          {{ 'Meta tags'|trans }}
+          {{ 'Meta tags'|trans({}, 'Admin.Shopparameters.Feature') }}
         </div>
         <div class="card-block row">
           <div class="card-text">
@@ -78,6 +78,7 @@
               </label>
               <div class="col-sm">
                 {{ form_errors(metaForm.meta_keywords) }}
+                {# todo : translation #}
                 {{ form_widget(metaForm.meta_keywords, {'attr':{'class': 'js-token-field', 'placeholder': 'Add tag'|trans({}, 'Admin.Actions')}}) }}
               </div>
             </div>
