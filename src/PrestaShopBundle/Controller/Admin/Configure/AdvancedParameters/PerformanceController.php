@@ -116,7 +116,7 @@ class PerformanceController extends FrameworkBundleAdminController
      */
     public function clearCacheAction()
     {
-        $this->get('prestashop.adapter.cache_clearer')->clearAllCaches();
+        $this->get('prestashop.core.cache.clearer.entire_cache_clearer')->clear();
         $this->addFlash('success', $this->trans('All caches cleared successfully', 'Admin.Advparameters.Notification'));
 
         return $this->redirectToRoute('admin_performance');
