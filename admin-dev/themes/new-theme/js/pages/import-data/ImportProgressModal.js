@@ -46,6 +46,8 @@ export default class ImportProgressModal {
   updateProgress(percentage) {
     let $progressBar = this.progressBar;
 
+    percentage = parseInt(percentage);
+
     $progressBar.css('width', percentage + '%');
     $progressBar.find('> span').text(percentage + ' %');
   }
@@ -85,8 +87,7 @@ export default class ImportProgressModal {
    * @private
    */
   _showMessages($messageBlock, messages) {
-    let showMessagesBlock = false,
-        $messagesBlock = this.infoMessageBlock;
+    let showMessagesBlock = false;
 
     for (let key in messages) {
       // Indicate that the messages block should be displayed
@@ -96,11 +97,11 @@ export default class ImportProgressModal {
       message.text(messages[key]);
       message.addClass('message');
 
-      $messagesBlock.append(message);
+      $messageBlock.append(message);
     }
 
     if (showMessagesBlock) {
-      $messagesBlock.removeClass('d-none');
+      $messageBlock.removeClass('d-none');
     }
   }
 
@@ -145,7 +146,7 @@ export default class ImportProgressModal {
    * @returns {jQuery|HTMLElement}
    */
   get errorMessageBlock() {
-    return $('.js-import-error');
+    return $('.js-import-errors');
   }
 
   /**
