@@ -133,9 +133,9 @@ final class GetCategoryForEditingHandler implements GetCategoryForEditingHandler
 
         $thumb = '';
         $imageTag = '';
-        $formatted_small = ImageType::getFormattedName('small');
+        $formattedSmall = ImageType::getFormattedName('small');
         foreach ($imageTypes as $k => $image_type) {
-            if ($formatted_small == $image_type['name']) {
+            if ($formattedSmall == $image_type['name']) {
                 $thumb = _PS_CAT_IMG_DIR_ . $categoryId->getValue() . '-' . $image_type['name'] . '.jpg';
                 if (is_file($thumb)) {
                     $imageTag = ImageManager::thumbnail(
