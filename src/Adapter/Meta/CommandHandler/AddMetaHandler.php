@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Core\Domain\Meta\Command\AddMetaCommand;
 use PrestaShop\PrestaShop\Core\Domain\Meta\CommandHandler\AddMetaHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Exception\CannotAddMetaException;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Exception\MetaException;
+use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopDatabaseException;
 use PrestaShopException;
 
@@ -39,6 +40,16 @@ use PrestaShopException;
  */
 final class AddMetaHandler implements AddMetaHandlerInterface
 {
+    /**
+     * @var HookDispatcherInterface
+     */
+    private $hookDispatcher;
+
+    public function __construct(HookDispatcherInterface $hookDispatcher)
+    {
+        $this->hookDispatcher = $hookDispatcher;
+    }
+
     /**
      * {@inheritdoc}
      *
@@ -69,5 +80,7 @@ final class AddMetaHandler implements AddMetaHandlerInterface
                 $exception
             );
         }
+
+        $this->hookDispatcher->dispatchWithParameters('actionAdminMetaSave');
     }
 }

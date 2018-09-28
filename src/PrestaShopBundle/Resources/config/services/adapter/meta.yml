@@ -12,6 +12,8 @@ services:
 
     prestashop.adapter.meta.command_handler.save_meta:
         class: 'PrestaShop\PrestaShop\Adapter\Meta\CommandHandler\AddMetaHandler'
+        arguments:
+            - '@prestashop.core.hook.dispatcher'
         tags:
             - name: 'tactician.handler'
               command: 'PrestaShop\PrestaShop\Core\Domain\Meta\Command\AddMetaCommand'
