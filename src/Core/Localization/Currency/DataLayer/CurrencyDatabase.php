@@ -28,7 +28,7 @@
 namespace PrestaShop\PrestaShop\Core\Localization\Currency\DataLayer;
 
 use Exception;
-use PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider;
+use PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProviderInterface;
 use PrestaShop\PrestaShop\Core\Data\Layer\AbstractDataLayer;
 use PrestaShop\PrestaShop\Core\Data\Layer\DataLayerException;
 use PrestaShop\PrestaShop\Core\Localization\Currency\CurrencyData;
@@ -45,7 +45,7 @@ class CurrencyDatabase extends AbstractDataLayer implements CurrencyDataLayerInt
 {
     protected $dataProvider;
 
-    public function __construct(CurrencyDataProvider $dataProvider)
+    public function __construct(CurrencyDataProviderInterface $dataProvider)
     {
         $this->dataProvider = $dataProvider;
     }
