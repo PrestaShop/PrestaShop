@@ -28,7 +28,10 @@ namespace PrestaShop\PrestaShop\Adapter\Image\Uploader;
 
 use HelperImageUploader;
 use ImageManager;
+use PrestaShop\PrestaShop\Adapter\Cache\CacheClearer;
+use PrestaShop\PrestaShop\Core\Domain\Category\Exception\MenuThumbnailsLimitException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageUploadException;
+use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\MemoryLimitException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\ImageUploaderInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
@@ -37,6 +40,19 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
  */
 final class CategoryMenuThumbnailUploader implements ImageUploaderInterface
 {
+    /**
+     * @var CacheClearer
+     */
+    private $cacheClearer;
+
+    /**
+     * @param CacheClearer $cacheClearer
+     */
+    public function __construct(CacheClearer $cacheClearer)
+    {
+        $this->cacheClearer = $cacheClearer;
+    }
+
     /**
      * {@inheritdoc}
      *
@@ -59,7 +75,8 @@ final class CategoryMenuThumbnailUploader implements ImageUploaderInterface
 
         $availableKeys = array_diff($allowedKeys, $usedKeys);
 
-        // HelperImageUploader::process expects
+        // HelperImageUploader::process() expects
+        // uploaded file to be available in $_FILES
         $_FILES['thumbnail'] = [
             'error' => [$uploadedImage->getError()],
             'name' => [$uploadedImage->getClientOriginalName()],
@@ -72,7 +89,9 @@ final class CategoryMenuThumbnailUploader implements ImageUploaderInterface
         $uploadedFiles = $helper->process();
 
         if (count($availableKeys) < count($files)) {
-            //@todo: throw exception
+            throw new MenuThumbnailsLimitException(
+                sprintf('Maximum number of menu thumbnails was reached for category "%s"', $categoryId)
+            );
         }
 
         foreach ($uploadedFiles as &$uploadedFile) {
@@ -80,7 +99,12 @@ final class CategoryMenuThumbnailUploader implements ImageUploaderInterface
 
             // Evaluate the memory required to resize the image: if it's too much, you can't resize it.
             if (isset($uploadedFile['save_path']) && !ImageManager::checkImageMemoryLimit($uploadedFile['save_path'])) {
-                //@todo: throw exception
+                throw new MemoryLimitException(
+                    sprintf(
+                        'Cannot resize menu thumbnail for category with id "%s" due to reached memory limit.',
+                        $categoryId
+                    )
+                );
             }
 
             // Copy new image
@@ -94,7 +118,7 @@ final class CategoryMenuThumbnailUploader implements ImageUploaderInterface
                 unlink($uploadedFile['save_path']);
             }
 
-            //Necesary to prevent hacking
+            // Necessary to prevent hacking
             if (isset($uploadedFile['save_path'])) {
                 unset($uploadedFile['save_path']);
             }
@@ -104,6 +128,6 @@ final class CategoryMenuThumbnailUploader implements ImageUploaderInterface
             }
         }
 
-        \Tools::clearSmartyCache();
+        $this->cacheClearer->clearSmartyCache();
     }
 }
