@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\Category\CommandHandler;
 use Category;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\EditRootCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\CommandHandler\EditRootCategoryHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotEditCategoryException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
 
 /**
@@ -38,6 +39,9 @@ final class EditRootCategoryHandler extends AbstractCategoryHandler implements E
 {
     /**
      * {@inheritdoc}
+     *
+     * @throws CannotEditCategoryException
+     * @throws CategoryNotFoundException
      */
     public function handle(EditRootCategoryCommand $command)
     {
@@ -52,6 +56,8 @@ final class EditRootCategoryHandler extends AbstractCategoryHandler implements E
 
         $this->populateCategoryWithCommandData($category, $command);
 
-        $category->update();
+        if (false === $category->update()) {
+            throw new CannotEditCategoryException(sprintf('Failed to edit Category with id "%s".', $category->id));
+        }
     }
 }
