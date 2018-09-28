@@ -37,6 +37,7 @@
           {{ form_widget(categoryForm.name) }}
         </div>
       </div>
+
       <div class="form-group row">
         {{ ps.label_with_help(('Displayed'|trans({}, 'Admin.Global')), ('Click on "Displayed" to index the category on your shop.'|trans({}, 'Admin.Catalog.Help'))) }}
         <div class="col-sm">
@@ -49,6 +50,7 @@
           </small>
         </div>
       </div>
+
       {% if categoryForm.id_parent is defined %}
       <div class="form-group row">
         <label class="form-control-label">
@@ -59,70 +61,36 @@
         </div>
       </div>
       {% endif %}
+
       <div class="form-group row">
         {{ ps.label_with_help(('Description'|trans({}, 'Admin.Global')), ('Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' <>;=#{}')) }}
         <div class="col-sm">
           {{ form_widget(categoryForm.description) }}
         </div>
       </div>
+
       <div class="form-group row">
         {{ ps.label_with_help(('Category Cover Image'|trans), ('This is the main image for your category, displayed in the category page. The category description will overlap this image and appear in its top-left corner.'|trans({}, 'Admin.Catalog.Help'))) }}
         <div class="col-sm">
-          {% if coverImage is defined and coverImage is not null %}
-            <div>
-              <figure class="figure">
-                <img src="{{ coverImage.path }}" class="figure-img img-fluid img-thumbnail">
-                <figcaption class="figure-caption">
-                  <p>{{ 'File size'|trans }} {{ coverImage.size }}</p>
-                  <button class="btn btn-outline-danger btn-sm">
-                    <i class="material-icons">
-                      delete_forever
-                    </i>
-                    {{ 'Delete'|trans({}, 'Admin.Actions') }}
-                  </button>
-                </figcaption>
-              </figure>
-            </div>
-          {% endif %}
+          {% include '@PrestaShop/Admin/Sell/Catalog/Categories/Blocks/cover_image.html.twig' %}
 
           {{ form_widget(categoryForm.cover_image) }}
         </div>
       </div>
+
       <div class="form-group row">
         {{ ps.label_with_help(('Category thumbnail'|trans), ('Displays a small image in the parent category\'s page, if the theme allows it.'|trans({}, 'Admin.Catalog.Help'))) }}
         <div class="col-sm">
-          {% if thumbnailImage is defined and thumbnailImage is not null %}
-            <div>
-              <figure class="figure">
-                <img src="{{ thumbnailImage.path }}" class="figure-img img-fluid img-thumbnail">
-                <figcaption class="figure-caption">{{ 'File size'|trans }} {{ thumbnailImage.size }}</figcaption>
-              </figure>
-            </div>
-          {% endif %}
+          {% include '@PrestaShop/Admin/Sell/Catalog/Categories/Blocks/thumbnail_image.html.twig' %}
 
           {{ form_widget(categoryForm.thumbnail_image) }}
         </div>
       </div>
+
       <div class="form-group row">
         {{ ps.label_with_help(('Menu thumbnails'|trans), ('The category thumbnail appears in the menu as a small image representing the category, if the theme allows it.'|trans({}, 'Admin.Catalog.Help'))) }}
         <div class="col-sm">
-          {% if menuThumbnailImages is defined and menuThumbnailImages is not empty %}
-            <div>
-              {% for menuThumbnail in menuThumbnailImages %}
-                <figure class="figure">
-                  <img src="{{ menuThumbnail.path }}" class="figure-img img-fluid img-thumbnail">
-                  <figcaption class="figure-caption">
-                    <button class="btn btn-outline-danger btn-sm">
-                      <i class="material-icons">
-                        delete_forever
-                      </i>
-                      {{ 'Delete'|trans({}, 'Admin.Actions') }}
-                    </button>
-                  </figcaption>
-                </figure>
-              {% endfor %}
-            </div>
-          {% endif %}
+          {% include '@PrestaShop/Admin/Sell/Catalog/Categories/Blocks/menu_thumbnail_images.html.twig' %}
 
           {{ form_widget(categoryForm.menu_thumbnail_images) }}
         </div>
@@ -136,24 +104,28 @@
           {{ form_widget(categoryForm.meta_title) }}
         </div>
       </div>
+
       <div class="form-group row">
         {{ ps.label_with_help(('Meta description'|trans({}, 'Admin.Global')), ('Forbidden characters:'|trans({}, 'Admin.Notifications.Info')) ~ ' <>;=#{}') }}
         <div class="col-sm">
           {{ form_widget(categoryForm.meta_description) }}
         </div>
       </div>
+
       <div class="form-group row">
         {{ ps.label_with_help(('Meta keywords'|trans({}, 'Admin.Global')), ('To add "tags," click in the field, write something, and then press "Enter."'|trans({}, 'Admin.Catalog.Help')) ~ ('Forbidden characters:'|trans({}, 'Admin.Notifications.Info')) ~ ' <>;=#{}') }}
         <div class="col-sm">
           {{ form_widget(categoryForm.meta_keyword) }}
         </div>
       </div>
+
       <div class="form-group row">
         {{ ps.label_with_help(('Friendly URL'|trans({}, 'Admin.Global')), ('Only letters, numbers, underscore (_) and the minus (-) character are allowed.'|trans({}, 'Admin.Catalog.Help'))) }}
         <div class="col-sm">
           {{ form_widget(categoryForm.link_rewrite) }}
         </div>
       </div>
+
       <div class="form-group row">
         {{ ps.label_with_help(('Group access'|trans), ('Mark all of the customer groups which you would like to have access to this category.'|trans({}, 'Admin.Catalog.Help'))) }}
         <div class="col-sm">
