@@ -25,7 +25,7 @@ services:
     # QUERY HANDLERS
 
     prestashop.adapter.meta.query_handler.get_meta_for_editing:
-        class: 'PrestaShop\PrestaShop\Adapter\Domain\Meta\QueryHandler\GetMetaForEditingHandler'
+        class: 'PrestaShop\PrestaShop\Adapter\Meta\QueryHandler\GetMetaForEditingHandler'
         tags:
             - name: 'tactician.handler'
               command: 'PrestaShop\PrestaShop\Core\Domain\Meta\Query\GetMetaForEditing'

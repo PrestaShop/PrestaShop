@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\Domain\Meta\QueryHandler;
+namespace PrestaShop\PrestaShop\Adapter\Meta\QueryHandler;
 
 use Meta;
 use PrestaShop\PrestaShop\Core\Domain\Meta\EditableMeta;

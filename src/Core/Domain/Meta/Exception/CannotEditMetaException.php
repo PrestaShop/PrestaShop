@@ -24,21 +24,11 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\Meta\CommandHandler;
-
-use Meta;
+namespace PrestaShop\PrestaShop\Core\Domain\Meta\Exception;
 
 /**
- * Class SaveMetaHandler is responsible for creating the abstraction for AddMetaHandler and EditMetaHandler.
+ * Class CannotEditMetaException
  */
-abstract class SaveMetaHandler
+class CannotEditMetaException extends MetaException
 {
-    public function validateMetaData(Meta $meta)
-    {
-        if (!$meta->validateField('page')) {
-
-        }
-
-        //todo: implement exception throwing.
-    }
 }

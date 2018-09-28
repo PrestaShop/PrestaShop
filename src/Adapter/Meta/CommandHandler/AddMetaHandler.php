@@ -35,7 +35,7 @@ use PrestaShopException;
 /**
  * Class SaveMetaHandler is responsible for saving meta data.
  */
-final class AddMetaHandler extends SaveMetaHandler implements AddMetaHandlerInterface
+final class AddMetaHandler implements AddMetaHandlerInterface
 {
     /**
      * {@inheritdoc}

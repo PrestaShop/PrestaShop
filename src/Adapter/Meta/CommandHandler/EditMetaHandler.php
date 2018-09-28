@@ -29,27 +29,62 @@ namespace PrestaShop\PrestaShop\Adapter\Meta\CommandHandler;
 use Meta;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Command\EditMetaCommand;
 use PrestaShop\PrestaShop\Core\Domain\Meta\CommandHandler\EditMetaHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Meta\Exception\CannotEditMetaException;
+use PrestaShop\PrestaShop\Core\Domain\Meta\Exception\MetaNotFoundException;
+use PrestaShopException;
 
 /**
  * Class EditMetaHandler is responsible for editing meta data,
  */
-final class EditMetaHandler extends SaveMetaHandler implements EditMetaHandlerInterface
+final class EditMetaHandler implements EditMetaHandlerInterface
 {
     /**
      * {@inheritdoc}
+     *
+     * @throws MetaNotFoundException
+     * @throws CannotEditMetaException
      */
     public function handle(EditMetaCommand $command)
     {
-        $entity = new Meta($command->getMetaId()->getValue());
-        //todo: validations
-        $entity->page = $command->getPageName();
-        $entity->title = $command->getPageTitle();
-        $entity->description = $command->getMetaDescription();
-        $entity->keywords = $command->getMetaKeywords();
-        $entity->url_rewrite = $command->getRewriteUrl();
+        try {
+            $entity = new Meta($command->getMetaId()->getValue());
 
-        $this->validateMetaData($entity);
+            if (0 >= $entity->id) {
+                throw new MetaNotFoundException(
+                    sprintf('Meta with id "%s" was not found for edit', $command->getMetaId()->getValue())
+                );
+            }
 
-        $entity->update();
+            $entity->page = $command->getPageName();
+            $entity->url_rewrite = $command->getRewriteUrl();
+
+            if (null !== $command->getPageTitle()) {
+                $entity->title = $command->getPageTitle();
+            }
+
+            if (null !== $command->getMetaDescription()) {
+                $entity->description = $command->getMetaDescription();
+            }
+
+            if (null !== $command->getMetaKeywords()) {
+                $entity->keywords = $command->getMetaKeywords();
+            }
+
+            if (false === $entity->update()) {
+                throw new CannotEditMetaException(
+                    sprintf(
+                        'Error occurred when updating SqlRequest with id "%s"',
+                        $command->getMetaId()->getValue()
+                    )
+                );
+            }
+        } catch (PrestaShopException $e) {
+            throw new CannotEditMetaException(
+                sprintf(
+                    'Error occurred when updating SqlRequest with id "%s"',
+                    $command->getMetaId()->getValue()
+                )
+            );
+        }
     }
 }
