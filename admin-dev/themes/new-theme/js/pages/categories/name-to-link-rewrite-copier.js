@@ -29,18 +29,18 @@
 export default class NameToLinkRewriteCopier {
   constructor() {
     ['category', 'root_category'].forEach((categoryType) => {
-      const $categoryForm = $('form[name="' + categoryType + '"]');
+      const $categoryForm = $(`form[name="${categoryType}"]`);
 
       if (0 ===  $categoryForm.length) {
         return;
       }
 
-      $categoryForm.on('input', 'input[name^="' + categoryType + '[name]"]', (event) => {
+      $categoryForm.on('input', `input[name^="${categoryType}[name]"]`, (event) => {
         const $nameInput = $(event.currentTarget);
         const langId = $nameInput.closest('.js-locale-input').data('lang-id');
 
         $categoryForm
-          .find('input[name="' + categoryType + '[link_rewrite][' + langId + ']"]')
+          .find(`input[name="${categoryType}[link_rewrite][${langId}]"]`)
           .val(str2url($nameInput.val(), 'UTF-8'));
       });
     });
