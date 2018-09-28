@@ -36,7 +36,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 /**
  * Class is responsible for creating translatable text inputs.
  *
- * @deprecated The since version 1.7.6 and will be removed in 1.8. Use the TranslatableType instead.
+ * @deprecated since version 1.7.6 and will be removed in 1.8. Use the TranslatableType instead.
  */
 class TranslateTextType extends AbstractType
 {
