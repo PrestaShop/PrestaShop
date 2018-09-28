@@ -26,11 +26,11 @@
 const $ = window.$;
 
 /**
- * TextWithCounter
+ * TextWithLengthCounter handles input with length counter UI.
  */
 export default class TextWithLengthCounter {
   constructor() {
-    $(document).find('.js-text-with-counter-input-group').on('input', 'input[type="text"]', (e) => {
+    $(document).on('input', '.js-text-with-counter-input-group input[type="text"]', (e) => {
       const $input = $(e.currentTarget);
       const remainingLength = $input.data('max-length') - $input.val().length;
 
