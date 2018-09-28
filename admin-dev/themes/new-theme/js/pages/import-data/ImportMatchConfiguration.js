@@ -53,7 +53,7 @@ export default class ImportMatchConfiguration
   save(event) {
     event.preventDefault();
     const ajaxUrl = $('.js-save-import-match').attr('data-url');
-    const formData = $('.import-form').serialize();
+    const formData = $('.import-data-configuration-form').serialize();
 
     $.ajax({
       type: 'POST',
@@ -157,6 +157,6 @@ export default class ImportMatchConfiguration
    * @returns {*|HTMLElement}
    */
   get rowsSkipInput() {
-    return $('#rows_skip');
+    return $('#skip');
   }
 }
