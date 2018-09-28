@@ -168,9 +168,11 @@ class ProductController extends FrameworkBundleAdminController
             $categoriesForm = $this->createForm(ProductCategories::class);
             if (!empty($persistedFilterParameters['filter_category'])) {
                 $categoriesForm->setData(
-                    array(
-                        'tree' => array(0 => $persistedFilterParameters['filter_category']),
-                    )
+                    [
+                        'categories' => [
+                            'tree' => [0 => $persistedFilterParameters['filter_category']],
+                        ]
+                    ]
                 );
             }
         }
@@ -192,7 +194,7 @@ class ProductController extends FrameworkBundleAdminController
                 'offset' => $offset,
                 'orderBy' => $orderBy,
                 'sortOrder' => $sortOrder,
-                'has_filter' => $hasCategoryFilter | $hasColumnFilter,
+                'has_filter' => $hasCategoryFilter || $hasColumnFilter,
                 'has_category_filter' => $hasCategoryFilter,
                 'has_column_filter' => $hasColumnFilter,
                 'products' => $products,
