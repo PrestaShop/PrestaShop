@@ -28,15 +28,15 @@
   <div class="row justify-content-center">
     <div class="col-lg-10">
       {# Bulk Action confirm modal #}
-      {% include 'PrestaShopBundle:Admin/Module/Includes:modal_confirm_bulk_action.html.twig' %}
+      {% include '@PrestaShop/Admin/Module/Includes/modal_confirm_bulk_action.html.twig' %}
       {# PrestaTrust modal #}
-      {% include 'PrestaShopBundle:Admin/Module/Includes:modal_confirm_prestatrust.html.twig' %}
+      {% include '@PrestaShop/Admin/Module/Includes/modal_confirm_prestatrust.html.twig' %}
       {# Addons connect modal with level authorization#}
-      {% include 'PrestaShopBundle:Admin/Module/Includes:modal_addons_connect.html.twig' with { 'level' : level, 'errorMessage' : errorMessage } %}
+      {% include '@PrestaShop/Admin/Module/Includes/modal_addons_connect.html.twig' with { 'level' : level, 'errorMessage' : errorMessage } %}
       {# Contains toolbar-nav for module page with level authorization #}
-      {% include 'PrestaShopBundle:Admin/Module/Includes:modal_import.html.twig' with { 'level' : level, 'errorMessage' : errorMessage } %}
+      {% include '@PrestaShop/Admin/Module/Includes/modal_import.html.twig' with { 'level' : level, 'errorMessage' : errorMessage } %}
       {# Contains menu with Selection/Categories/Popular and Tag Search #}
-      {% include 'PrestaShopBundle:Admin/Module/Includes:menu_top.html.twig' with { 'topMenuData': topMenuData, 'bulkActions': bulkActions } %}
+      {% include '@PrestaShop/Admin/Module/Includes/menu_top.html.twig' with { 'topMenuData': topMenuData, 'bulkActions': bulkActions } %}
 
       <div id="module-recently-used-list" class="module-short-list">
         <span id="recently-used_modules" class="module-search-result-title">{{ 'Recently Used' | trans({}, 'Admin.Modules.Feature') }}</span>
@@ -55,11 +55,11 @@
               </p>
             </div>
           {% else  %}
-            {% include 'PrestaShopBundle:Admin/Module/Includes:grid_manage_installed.html.twig' with { 'modules': category.modules, 'display_type': 'list', 'origin': 'manage', 'id': category.refMenu } %}
+            {% include '@PrestaShop/Admin/Module/Includes/grid_manage_installed.html.twig' with { 'modules': category.modules, 'display_type': 'list', 'origin': 'manage', 'id': category.refMenu } %}
 
             {% block addon_card_see_more %}
               {% if (category.modules | length) > maxModulesDisplayed %}
-                {% include 'PrestaShopBundle:Admin/Module/Includes:see_more.html.twig' with { 'id': category.refMenu } %}
+                {% include '@PrestaShop/Admin/Module/Includes/see_more.html.twig' with { 'id': category.refMenu } %}
               {% endif %}
             {% endblock %}
           {% endif %}

@@ -26,7 +26,7 @@
   <div class="row">
     {% for category in categories.subMenu|arrayCast %}
       {# Module Card #}
-      {% include 'PrestaShopBundle:Admin/Module/Includes:categories_card.html.twig' with { 'category': category } %}
+      {% include '@PrestaShop/Admin/Module/Includes/categories_card.html.twig' with { 'category': category } %}
     {% endfor %}
   </div>
 </div>

@@ -161,7 +161,7 @@ class ProductController extends FrameworkBundleAdminController
             $legacyUrlGenerator = $this->get('prestashop.core.admin.url_generator_legacy');
 
             return $this->render(
-                'PrestaShopBundle:Admin/Product/CatalogPage:catalog_empty.html.twig',
+                '@PrestaShop/Admin/Product/CatalogPage/catalog_empty.html.twig',
                 [
                     'layoutHeaderToolbarBtn' => $toolbarButtons,
                     'import_url' => $legacyUrlGenerator->generate('AdminImport'),
@@ -1150,7 +1150,7 @@ class ProductController extends FrameworkBundleAdminController
             case 'default':
         }
 
-        return $this->render('PrestaShopBundle:Admin/Common/_partials:_form_field.html.twig', [
+        return $this->render('@PrestaShop/Admin/Common/_partials/_form_field.html.twig', [
             'form' => $form->getForm()->get($step)->get($fieldName)->createView(),
             'formId' => $step . '_' . $fieldName . '_rendered',
         ]);
