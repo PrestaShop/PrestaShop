@@ -31,6 +31,8 @@ use Tools;
 
 /**
  * Class SymfonyCacheClearer clears Symfony cache directly from filesystem.
+ *
+ * @internal
  */
 final class SymfonyCacheClearer implements CacheClearerInterface
 {

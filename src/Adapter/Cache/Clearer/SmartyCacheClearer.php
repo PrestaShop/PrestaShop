@@ -31,6 +31,8 @@ use Tools;
 
 /**
  * Class SmartyCacheClearer clears Smarty cache.
+ *
+ * @internal
  */
 final class SmartyCacheClearer implements CacheClearerInterface
 {

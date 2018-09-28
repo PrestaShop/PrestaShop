@@ -31,6 +31,8 @@ use Tools;
 
 /**
  * Class XmlCacheClearer clears cache under /config/xml/ directory.
+ *
+ * @internal
  */
 final class XmlCacheClearer implements CacheClearerInterface
 {

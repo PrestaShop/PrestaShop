@@ -31,6 +31,8 @@ use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerInterface;
 
 /**
  * Class MediaCacheClearer clears Front Office theme's Javascript & CSS cache.
+ *
+ * @internal
  */
 final class MediaCacheClearer implements CacheClearerInterface
 {

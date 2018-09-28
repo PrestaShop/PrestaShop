@@ -31,6 +31,8 @@ use PrestaShopAutoload;
 
 /**
  * Class ClassIndexCacheClearer clears current class index and generates new one.
+ *
+ * @internal
  */
 final class ClassIndexCacheClearer implements CacheClearerInterface
 {
