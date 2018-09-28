@@ -1,5 +1,5 @@
 imports:
-    - { resource: ../common/services_prod.yml }
+    - { resource: ../../../src/PrestaShopBundle/Resources/config/services/core/cldr.yml }
 
 services:
     filesystem:
