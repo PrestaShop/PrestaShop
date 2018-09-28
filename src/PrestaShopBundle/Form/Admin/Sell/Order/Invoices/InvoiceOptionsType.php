@@ -29,8 +29,6 @@ namespace PrestaShopBundle\Form\Admin\Sell\Order\Invoices;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
-use PrestaShopBundle\Form\Admin\Type\TranslateTextType;
-use PrestaShopBundle\Form\Admin\Type\TranslateType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
