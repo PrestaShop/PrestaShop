@@ -7,8 +7,97 @@ const {Menu} = require('../../selectors/BO/menu.js');
 const {ThemeAndLogo} = require('../../selectors/BO/design/theme_and_logo');
 const Design = require('../../selectors/BO/design/index');
 const {languageFO} = require('../../selectors/FO/index');
+const {AccessPageBO} = require('../../selectors/BO/access_page');
+const {AddProductPage} = require('../../selectors/BO/add_product_page');
+let promise = Promise.resolve();
 
 module.exports = {
+  importLocalization(language, localization, downloadPackData = false, contentImport = false) {
+    scenario('Import a localization pack', client => {
+      test('should go to "Localization" page', () => client.goToSubtabMenuPage(Menu.Improve.International.international_menu, Menu.Improve.International.localization_submenu));
+      test('should click on "Localization pack you want to import" select', () => client.waitForExistAndClick(Localization.Localization.pack_select));
+      test('should search for the localization from the select', () => client.waitAndSetValue(Localization.Localization.pack_search_input, language));
+      test('should click on "' + localization.toUpperCase() + '" option', () => client.waitForExistAndClick(Localization.Localization.pack_option.replace('%B', localization)));
+      if (contentImport === true) {
+        test('should uncheck "States"', () => client.waitForExistAndClick(Localization.Localization.content_import_checkbox.replace('%B', 0)));
+        test('should uncheck "Taxes"', () => client.waitForExistAndClick(Localization.Localization.content_import_checkbox.replace('%B', 1)));
+        test('should uncheck "Units"', () => client.waitForExistAndClick(Localization.Localization.content_import_checkbox.replace('%B', 4)));
+      }
+      if (downloadPackData === true) {
+        test('should put "Download pack data" toggle button on "No"', () => client.waitForExistAndClick(Localization.Localization.download_pack_data_toggle_button));
+      }
+      test('should click on "Import" button', () => client.waitForExistAndClick(Localization.Localization.import_button));
+      test('should verify the appearance of the green validation', () => client.checkTextValue(Localization.Localization.success_alert_panel.replace('%B', 'alert-success'), 'Localization pack imported successfully.'));
+    }, 'common_client');
+  },
+  configureLocalization(defaultConfiguration = false, toggleButton = false, currencyEuro = 'Euro') {
+    scenario('Configuration', client => {
+      if (defaultConfiguration === true) {
+        test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
+      }
+      test('should go to "Localization" page', () => client.goToSubtabMenuPage(Menu.Improve.International.international_menu, Menu.Improve.International.localization_submenu));
+      test('should close symfony toolbar', () => {
+        return promise
+          .then(() => client.isVisible(Localization.Localization.symfony_toolbar, 3000))
+          .then(() => {
+            if (global.isVisible) {
+              client.waitForExistAndClick(Localization.Localization.symfony_toolbar);
+            }
+          });
+      });
+      if (defaultConfiguration === false) {
+        test('should choose "Italian" from default language list', () => client.showSelect('Italiano (Italian)', Localization.Localization.default_language_list));
+        test('should choose "Italy" from default language list', () => client.showSelect('Italy', Localization.Localization.default_country_list));
+        test('should choose "US Dollar (USD) " from default currency list', () => client.showSelect('US Dollar (USD)', Localization.Localization.default_currency_list));
+        test('should verify alert message then click on "Ok" button', () => {
+          return promise
+            .then(() => client.alertText())
+            .then((text) => expect(text).to.equal('Before changing the default currency, we strongly recommend that you enable maintenance mode. Indeed, any change on the default currency requires a manual adjustment of the price of each product and its combinations.'))
+            .then(() => client.alertAccept());
+        });
+      } else {
+        test('should choose "English" from default language list', () => client.showSelect('English (English)', Localization.Localization.default_language_list));
+        test('should set language from browser: "Yes"', () => client.waitForExistAndClick(Localization.Localization.language_browser_yes_label));
+        test('should set default country from browser: "Yes"', () => client.waitForExistAndClick(Localization.Localization.country_browser_yes_label));
+        test('should choose "France" from default language list', () => client.showSelect('France', Localization.Localization.default_country_list));
+      }
+      if (currencyEuro === "Euro") {
+        test('should choose "Euro (EUR) " from default currency list', () => client.showSelect('Euro (EUR)', Localization.Localization.default_currency_list));
+        test('should verify alert message then click on "Ok" button', () => {
+          return promise
+            .then(() => client.alertText())
+            .then((text) => expect(text).to.equal('Before changing the default currency, we strongly recommend that you enable maintenance mode. Indeed, any change on the default currency requires a manual adjustment of the price of each product and its combinations.'))
+            .then(() => client.alertAccept());
+        });
+      }
+      if (toggleButton === true) {
+        test('should set language from browser: "No"', () => client.waitForExistAndClick(Localization.Localization.language_browser_no_label));
+        test('should set default country from browser: "No"', () => client.waitForExistAndClick(Localization.Localization.country_browser_no_label));
+      }
+      test('should click on "Save" button', () => client.waitForExistAndClick(Localization.Localization.save_configuration_btn));
+      test('should verify the appearance of the green validation', () => client.checkTextValue(Localization.Localization.success_alert_panel.replace('%B', 'alert-success'), 'Update successful'));
+    }, 'international');
+  },
+  localUnits(localUnitsData, firstUnit, secondUnit, nb = 1) {
+    scenario('Change local units then go to products page', client => {
+      test('should go to "Localization" page', () => client.goToSubtabMenuPage(Menu.Improve.International.international_menu, Menu.Improve.International.localization_submenu));
+      test('should set the "Weight unit" input', () => client.waitAndSetValue(Localization.Localization.local_unit_input.replace('%D', 'weight'), localUnitsData.weight));
+      test('should set the "Distance unit" input', () => client.waitAndSetValue(Localization.Localization.local_unit_input.replace('%D', 'distance'), localUnitsData.distance));
+      test('should set the "Volume unit" input', () => client.waitAndSetValue(Localization.Localization.local_unit_input.replace('%D', 'volume'), localUnitsData.volume));
+      test('should set the "Dimension unit" input', () => client.waitAndSetValue(Localization.Localization.local_unit_input.replace('%D', 'dimension'), localUnitsData.dimension));
+      test('should click on "Save" button', () => client.waitForExistAndClick(Localization.Localization.save_local_units_button));
+      if (nb === 1) {
+        test('should verify the appearance of the green validation', () => client.checkTextValue(Localization.Localization.success_alert_panel.replace("%B", "alert-success"), "Update successful"));
+        test('should go to "Products" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.products_submenu));
+        test('should click on "New product" button', () => client.waitForExistAndClick(AddProductPage.new_product_button));
+        test('should click on "Shipping" tab', () => client.scrollWaitForExistAndClick(AddProductPage.product_shipping_tab, 50));
+        test('verify it is "' + firstUnit.toUpperCase() + '" for width', () => client.checkTextValue(AddProductPage.shipping_width_unit, firstUnit));
+        test('verify it is "' + firstUnit.toUpperCase() + '" for height', () => client.checkTextValue(AddProductPage.shipping_height_unit, firstUnit));
+        test('verify it is "' + firstUnit.toUpperCase() + '" for depth', () => client.checkTextValue(AddProductPage.shipping_depth_unit, firstUnit));
+        test('verify it is "' + secondUnit.toUpperCase() + '" for weight', () => client.checkTextValue(AddProductPage.shipping_weight_unit, secondUnit));
+      }
+    }, 'common_client');
+  },
   createLanguage: function (languageData) {
     scenario('Create a new "Language"', client => {
       test('should go to "Localization" page', () => client.goToSubtabMenuPage(Menu.Improve.International.international_menu, Menu.Improve.International.localization_submenu));
