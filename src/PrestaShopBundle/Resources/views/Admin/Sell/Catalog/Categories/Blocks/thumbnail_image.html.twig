@@ -23,23 +23,13 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-{% extends '@PrestaShop/Admin/layout.html.twig' %}
-
-{% block content %}
-  <div class="row justify-content-center">
-    <div class="col">
-      {% include '@PrestaShop/Admin/Sell/Catalog/Categories/Blocks/category_form.html.twig' with {
-        'categoryForm': editRootCategoryForm,
-        'thumbnailImage': editableCategory.thumbnailImage,
-        'coverImage': editableCategory.coverImage,
-        'menuThumbnailImages': editableCategory.menuThumbnailImages,
-      } %}
+{% block category_thumbnail_image %}
+  {% if thumbnailImage is defined and thumbnailImage is not null %}
+    <div>
+      <figure class="figure">
+        <img src="{{ thumbnailImage.path }}" class="figure-img img-fluid img-thumbnail">
+        <figcaption class="figure-caption">{{ 'File size'|trans }} {{ thumbnailImage.size }}</figcaption>
+      </figure>
     </div>
-  </div>
-{% endblock %}
-
-{% block javascripts %}
-  {{ parent() }}
-
-  {% include '@PrestaShop/Admin/Sell/Catalog/Categories/Blocks/javascripts.html.twig' %}
+  {% endif %}
 {% endblock %}
