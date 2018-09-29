@@ -13,3 +13,7 @@ _geolocation:
 _language:
     resource: "language.yml"
     prefix: /languages/
+
+_currency:
+    resource: "currency.yml"
+    prefix: /currency/
