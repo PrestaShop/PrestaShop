@@ -4725,18 +4725,6 @@ class AdminImportControllerCore extends AdminController
         die(json_encode($results));
     }
 
-    public function initModal()
-    {
-        parent::initModal();
-        $modal_content = $this->context->smarty->fetch('controllers/import/modal_import_progress.tpl');
-        $this->modals[] = array(
-             'modal_id' => 'importProgress',
-             'modal_class' => 'modal-md',
-             'modal_title' => $this->trans('Importing your data...', array(), 'Admin.Advparameters.Notification'),
-             'modal_content' => $modal_content,
-         );
-    }
-
     /**
      * Gets session from symfony container.
      *
