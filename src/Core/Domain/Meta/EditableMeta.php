@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Meta;
 use PrestaShop\PrestaShop\Core\Domain\Meta\ValueObject\MetaId;
 
 /**
- * Class EditableMeta
+ * Class EditableMeta is responsible for providing data for meta form.
  */
 class EditableMeta
 {
@@ -37,6 +37,7 @@ class EditableMeta
      * @var MetaId
      */
     private $metaId;
+
     /**
      * @var string
      */

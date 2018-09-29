@@ -43,6 +43,7 @@ class MetaType extends TranslatorAwareType
      * @var array
      */
     private $defaultPageChoices;
+
     /**
      * @var array
      */

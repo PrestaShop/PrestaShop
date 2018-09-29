@@ -29,12 +29,12 @@ namespace PrestaShop\PrestaShop\Core\Domain\Meta\CommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Command\AddMetaCommand;
 
 /**
- * Interface AddMetaHandlerInterface defines contract for SaveMetaHandler.
+ * Interface AddMetaHandlerInterface defines contract for AddMetaHandler.
  */
 interface AddMetaHandlerInterface
 {
     /**
-     * Used to handle the logic required for saving meta data.
+     * Used to handle the logic required for adding meta data.
      *
      * @param AddMetaCommand $command
      *

@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Meta\ValueObject;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Exception\MetaException;
 
 /**
- * Class MetaId
+ * Class MetaId is responsible for providing id of meta entity.
  */
 class MetaId
 {

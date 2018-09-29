@@ -34,6 +34,8 @@ use PrestaShop\PrestaShop\Core\Domain\Meta\Exception\MetaConstraintException;
 abstract class SaveMetaCommand
 {
     /**
+     * Validates page name.
+     *
      * @param string $pageName
      *
      * @throws MetaConstraintException
@@ -49,6 +51,8 @@ abstract class SaveMetaCommand
     }
 
     /**
+     * Validates rewrite url in case of it's not the index page which can have empty value as rewrite url.
+     *
      * @param array $rewriteUrl
      * @param string $pageName
      *

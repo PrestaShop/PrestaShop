@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Meta\Query;
 use PrestaShop\PrestaShop\Core\Domain\Meta\ValueObject\MetaId;
 
 /**
- * Class GetMetaForEditing
+ * Class GetMetaForEditing is responsible for providing required data for GetMetaForEditingHandler to return meta data.
  */
 class GetMetaForEditing
 {

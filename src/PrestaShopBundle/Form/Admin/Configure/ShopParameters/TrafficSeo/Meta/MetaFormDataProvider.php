@@ -77,6 +77,13 @@ class MetaFormDataProvider
         $this->metaFormDataValidator = $metaFormDataValidator;
     }
 
+    /**
+     * Gets meta data for editing.
+     *
+     * @param int $metaId
+     *
+     * @return array
+     */
     public function getData($metaId)
     {
         try {
@@ -96,7 +103,13 @@ class MetaFormDataProvider
         }
     }
 
-
+    /**
+     * Saves meta data. Returns error if such appeared during process.
+     *
+     * @param array $data
+     *
+     * @return array
+     */
     public function saveData(array $data)
     {
         $errors = $this->metaFormDataValidator->validate($data);
