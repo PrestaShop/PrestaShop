@@ -28,7 +28,7 @@
 {% embed 'PrestaShopBundle:Admin/Helpers:bootstrap_popup.html.twig' with {
   'id': 'import_progress_modal',
   'title': 'Importing your data...'|trans,
-  'closable': true,
+  'closable': false,
   'progressbar': {
     id: 'import_progress_bar',
     label: 'Validating data...'|trans
@@ -43,6 +43,11 @@
       'type': 'button',
       'label': 'Abort import'|trans,
       'class': 'btn btn-outline-danger btn-lg js-abort-import',
+    },
+    {
+      'type': 'button',
+      'label': 'Close'|trans({}, 'Admin.Actions'),
+      'class': 'btn btn-outline-secondary btn-lg js-close-modal',
     }
   ],
 } %}
