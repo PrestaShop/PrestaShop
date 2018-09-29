@@ -1,0 +1,6 @@
+admin_currency_index:
+    path: /
+    methods: GET
+    defaults:
+        _controller: PrestaShopBundle:Admin\Improve\International\Currency:index
+        _legacy_controller: AdminCurrencies
