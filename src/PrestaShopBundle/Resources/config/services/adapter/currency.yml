@@ -8,3 +8,8 @@ services:
         class: 'PrestaShop\PrestaShop\Adapter\Currency\CommandHandler\ToggleCurrencyStatusHandler'
         tags:
             - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Currency\Command\ToggleCurrencyStatusCommand' }
+
+    prestashop.adapter.currency.command_handler.delete_currency:
+        class: 'PrestaShop\PrestaShop\Adapter\Currency\CommandHandler\DeleteCurrencyHandler'
+        tags:
+            - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Currency\Command\DeleteCurrencyCommand' }
