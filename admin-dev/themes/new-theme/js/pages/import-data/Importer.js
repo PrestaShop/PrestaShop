@@ -213,6 +213,7 @@ export default class Importer {
     }
 
     this.progressModal.hideContinueImportButton();
+    this.progressModal.hideCloseModalButton();
     this.progressModal.clearWarningMessages();
     this._ajaxImport(0, this.defaultBatchSize, false);
   }
