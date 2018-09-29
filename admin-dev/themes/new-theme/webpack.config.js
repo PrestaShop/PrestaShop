@@ -111,6 +111,9 @@ const config = {
     meta: [
       './js/pages/meta'
     ],
+    currency: [
+      './js/pages/currency'
+    ],
   },
   output: {
     path: path.resolve(__dirname, 'public'),

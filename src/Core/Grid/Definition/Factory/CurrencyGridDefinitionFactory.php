@@ -27,8 +27,13 @@
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ToggleColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
+use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
+use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
+use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 /**
  * Class CurrencyGridDefinitionFactory is responsible for defining definition for currency list located in
@@ -36,6 +41,38 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
  */
 final class CurrencyGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
+    /**
+     * @var array
+     */
+    private $statusChoices;
+
+    /**
+     * @var string
+     */
+    private $resetActionUrl;
+
+    /**
+     * @var string
+     */
+    private $redirectionUrl;
+
+    /**
+     * CurrencyGridDefinitionFactory constructor.
+     *
+     * @param array $statusChoices
+     * @param string $resetActionUrl
+     * @param string $redirectionUrl
+     */
+    public function __construct(
+        array $statusChoices,
+        $resetActionUrl,
+        $redirectionUrl
+    ) {
+        $this->statusChoices = $statusChoices;
+        $this->resetActionUrl = $resetActionUrl;
+        $this->redirectionUrl = $redirectionUrl;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -72,6 +109,34 @@ final class CurrencyGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'route' => 'admin_currency_toggle_status',
                     'route_param_id' => 'currencyId',
                 ])
+            )
+            ->add((new ActionColumn('actions'))
+                ->setName($this->trans('Actions', [], 'Admin.Global'))
+            )
+        ;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getFilters()
+    {
+        return (new FilterCollection())
+            ->add((new Filter('active', ChoiceType::class)) //todo: change to YesNoChoiceType::class
+                ->setTypeOptions([
+                    'required' => false,
+                    'choices' => $this->statusChoices,
+                ])
+                ->setAssociatedColumn('active')
+            )
+            ->add((new Filter('actions', SearchAndResetType::class))
+                ->setTypeOptions([
+                    'attr' => [
+                        'data-url' => $this->resetActionUrl,
+                        'data-redirect' => $this->redirectionUrl,
+                    ],
+                ])
+                ->setAssociatedColumn('actions')
             )
         ;
     }

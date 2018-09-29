@@ -36,6 +36,11 @@ use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 final class CurrencyQueryBuilder extends AbstractDoctrineQueryBuilder
 {
     /**
+     * @var DoctrineSearchCriteriaApplicatorInterface
+     */
+    private $searchCriteriaApplicator;
+
+    /**
      * @var array
      */
     private $contextShopIds;
@@ -43,9 +48,12 @@ final class CurrencyQueryBuilder extends AbstractDoctrineQueryBuilder
     public function __construct(
         Connection $connection,
         $dbPrefix,
+        DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator,
         array $contextShopIds
     ) {
         parent::__construct($connection, $dbPrefix);
+
+        $this->searchCriteriaApplicator = $searchCriteriaApplicator;
         $this->contextShopIds = $contextShopIds;
     }
 
@@ -57,6 +65,11 @@ final class CurrencyQueryBuilder extends AbstractDoctrineQueryBuilder
         $qb = $this->getQueryBuilder($searchCriteria->getFilters());
 
         $qb->select('c.`id_currency`, cs.`conversion_rate`, c.`active`');
+
+        $this->searchCriteriaApplicator
+            ->applyPagination($searchCriteria, $qb)
+            ->applySorting($searchCriteria, $qb)
+        ;
 
         return $qb;
     }
