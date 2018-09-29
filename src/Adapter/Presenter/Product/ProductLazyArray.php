@@ -491,7 +491,6 @@ class ProductLazyArray extends AbstractLazyArray
             $color['type'] = 'color';
             $color['html_color_code'] = $color['color'];
             unset($color['color']);
-            unset($color['id_attribute']); // because what is a template supposed to do with it?
 
             return $color;
         }, $colors);
