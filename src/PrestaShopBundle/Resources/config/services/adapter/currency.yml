@@ -1,0 +1,10 @@
+services:
+    _defaults:
+        public: true
+
+    # Command handlers
+
+    prestashop.adapter.currency.command_handler.toggle_currency_status:
+        class: 'PrestaShop\PrestaShop\Adapter\Currency\CommandHandler\ToggleCurrencyStatusHandler'
+        tags:
+            - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Currency\Command\ToggleCurrencyStatusCommand' }
