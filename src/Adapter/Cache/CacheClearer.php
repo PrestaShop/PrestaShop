@@ -30,6 +30,8 @@ use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerInterface;
 
 /**
  * Class able to clear application caches.
+ *
+ * @internal
  */
 class CacheClearer
 {
@@ -73,6 +75,8 @@ class CacheClearer
 
     /**
      * Clear all application caches.
+     *
+     * @deprecated since 1.7.6. Use EntireCacheClearer instead.
      */
     public function clearAllCaches()
     {
@@ -81,6 +85,8 @@ class CacheClearer
 
     /**
      * Clear Symfony cache.
+     *
+     * @deprecated since 1.7.6. Use SymfonyCacheClearer instead.
      */
     public function clearSymfonyCache()
     {
@@ -89,6 +95,8 @@ class CacheClearer
 
     /**
      * Clear media cache only.
+     *
+     * @deprecated since 1.7.6. Use MediaCacheClearer instead.
      */
     public function clearMediaCache()
     {
@@ -97,6 +105,8 @@ class CacheClearer
 
     /**
      * Clear smarty cache only.
+     *
+     * @deprecated since 1.7.6. Use SmartyCacheClearer instead.
      */
     public function clearSmartyCache()
     {
