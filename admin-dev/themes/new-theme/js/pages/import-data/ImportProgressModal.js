@@ -64,8 +64,18 @@ export default class ImportProgressModal {
     this.progressLabel.text(label);
   }
 
+  /**
+   * Sets the progress label to "importing"
+   */
   setImportingProgressLabel() {
     this.updateProgressLabel(this.progressModal.find('.modal-body').data('importing-label'));
+  }
+
+  /**
+   * Sets the progress label to "imported"
+   */
+  setImportedProgressLabel() {
+    this.updateProgressLabel(this.progressModal.find('.modal-body').data('imported-label'));
   }
 
   /**
@@ -129,10 +139,17 @@ export default class ImportProgressModal {
   }
 
   /**
-   * Show the "Ignore warnings" button.
+   * Show the "Ignore warnings and continue" button.
    */
-  showIgnoreWarningsButton() {
-    this.ignoreWarningsButton.removeClass('d-none')
+  showContinueImportButton() {
+    this.continueImportButton.removeClass('d-none')
+  }
+
+  /**
+   * Hide the "Ignore warnings and continue" button.
+   */
+  hideContinueImportButton() {
+    this.continueImportButton.addClass('d-none');
   }
 
   /**
@@ -157,18 +174,30 @@ export default class ImportProgressModal {
   }
 
   /**
+   * Clears all warning messages from the modal.
+   */
+  clearWarningMessages() {
+    this.warningMessageBlock.addClass('d-none').find('.message').remove();
+  }
+
+  /**
    * Reset the modal - resets progress bar and removes messages.
    */
   reset() {
+    // Reset the progress bar
     this.updateProgress(0, 0);
     this.updateProgressLabel(this.progressLabel.attr('default-value'));
-    this.ignoreWarningsButton.addClass('d-none');
+
+    // Hide action buttons
+    this.continueImportButton.addClass('d-none');
     this.abortImportButton.addClass('d-none');
     this.closeModalButton.addClass('d-none');
+
+    // Remove messages
     this.successMessageBlock.addClass('d-none');
     this.infoMessageBlock.addClass('d-none').find('.message').remove();
     this.errorMessageBlock.addClass('d-none').find('.message').remove();
-    this.warningMessageBlock.addClass('d-none').find('.message').remove();
+    this.clearWarningMessages();
   }
 
   /**
@@ -235,12 +264,12 @@ export default class ImportProgressModal {
   }
 
   /**
-   * Gets "Ignore warnings" button.
+   * Gets "Ignore warnings and continue" button.
    *
    * @returns {jQuery|HTMLElement}
    */
-  get ignoreWarningsButton() {
-    return $('.js-ignore-warnings');
+  get continueImportButton() {
+    return $('.js-continue-import');
   }
 
   /**
