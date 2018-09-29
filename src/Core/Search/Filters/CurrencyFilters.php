@@ -1,5 +1,6 @@
-{#**
- * 2007-2018 PrestaShop
+<?php
+/**
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -21,14 +22,28 @@
  * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-{% extends '@PrestaShop/Admin/layout.html.twig' %}
+namespace PrestaShop\PrestaShop\Core\Search\Filters;
 
-{% block content %}
-  <div class="row">
-    <div class="col">
-      {{ include('@PrestaShop/Admin/Common/Grid/grid_panel.html.twig', {'grid': currencyGrid }) }}
-    </div>
-  </div>
-{% endblock %}
+use PrestaShop\PrestaShop\Core\Search\Filters;
+
+/**
+ * Class CurrencyFilters is responsible for providing default filters for currency grid.
+ */
+final class CurrencyFilters extends Filters
+{
+    /**
+     * {@inheritdoc}
+     */
+    public static function getDefaults()
+    {
+        return [
+            'limit' => 50,
+            'offset' => 0,
+            'orderBy' => 'id_currency',
+            'sortOrder' => 'asc',
+            'filters' => [],
+        ];
+    }
+}
