@@ -26,8 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Cache;
 
-use Tools;
-use Media;
+use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerInterface;
 
 /**
  * Class able to clear application caches.
@@ -35,15 +34,49 @@ use Media;
 class CacheClearer
 {
     /**
+     * @var CacheClearerInterface
+     */
+    private $entireCacheClearer;
+
+    /**
+     * @var CacheClearerInterface
+     */
+    private $symfonyCacheClearer;
+
+    /**
+     * @var CacheClearerInterface
+     */
+    private $mediaCacheClearer;
+
+    /**
+     * @var CacheClearerInterface
+     */
+    private $smartyCacheClearer;
+
+    /**
+     * @param CacheClearerInterface $entireCacheClearer
+     * @param CacheClearerInterface $symfonyCacheClearer
+     * @param CacheClearerInterface $mediaCacheClearer
+     * @param CacheClearerInterface $smartyCacheClearer
+     */
+    public function __construct(
+        CacheClearerInterface $entireCacheClearer,
+        CacheClearerInterface $symfonyCacheClearer,
+        CacheClearerInterface $mediaCacheClearer,
+        CacheClearerInterface $smartyCacheClearer
+    ) {
+        $this->entireCacheClearer = $entireCacheClearer;
+        $this->symfonyCacheClearer = $symfonyCacheClearer;
+        $this->mediaCacheClearer = $mediaCacheClearer;
+        $this->smartyCacheClearer = $smartyCacheClearer;
+    }
+
+    /**
      * Clear all application caches.
      */
     public function clearAllCaches()
     {
-        $this->clearSymfonyCache();
-        $this->clearSmartyCache();
-        Tools::clearXMLCache();
-        $this->clearMediaCache();
-        Tools::generateIndex();
+        $this->entireCacheClearer->clear();
     }
 
     /**
@@ -51,7 +84,7 @@ class CacheClearer
      */
     public function clearSymfonyCache()
     {
-        Tools::clearSf2Cache();
+        $this->symfonyCacheClearer->clear();
     }
 
     /**
@@ -59,7 +92,7 @@ class CacheClearer
      */
     public function clearMediaCache()
     {
-        Media::clearCache();
+        $this->mediaCacheClearer->clear();
     }
 
     /**
@@ -67,6 +100,6 @@ class CacheClearer
      */
     public function clearSmartyCache()
     {
-        Tools::clearSmartyCache();
+        $this->smartyCacheClearer->clear();
     }
 }
