@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Query;
 
+use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
@@ -35,13 +36,27 @@ use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 final class CurrencyQueryBuilder extends AbstractDoctrineQueryBuilder
 {
     /**
+     * @var array
+     */
+    private $contextShopIds;
+
+    public function __construct(
+        Connection $connection,
+        $dbPrefix,
+        array $contextShopIds
+    ) {
+        parent::__construct($connection, $dbPrefix);
+        $this->contextShopIds = $contextShopIds;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $qb = $this->getQueryBuilder($searchCriteria->getFilters());
 
-        $qb->select('c.`id_currency`, c.`conversion_rate`, c.`active`');
+        $qb->select('c.`id_currency`, cs.`conversion_rate`, c.`active`');
 
         return $qb;
     }
@@ -52,7 +67,7 @@ final class CurrencyQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $qb = $this->getQueryBuilder($searchCriteria->getFilters());
-        $qb->select('COUNT(c.`id_currency`)');
+        $qb->select('FOUND_ROWS()');
 
         return $qb;
     }
@@ -68,9 +83,19 @@ final class CurrencyQueryBuilder extends AbstractDoctrineQueryBuilder
     {
         $qb = $this->connection
             ->createQueryBuilder()
-            ->from($this->dbPrefix . 'currency', 'c');
+            ->from($this->dbPrefix . 'currency', 'c')
+            ->innerJoin(
+                'c',
+                $this->dbPrefix . 'currency_shop',
+                'cs',
+                'c.`id_currency` = cs.`id_currency` AND cs.`id_shop` IN (' . implode(',', $this->contextShopIds) . ')'
+            )
+        ;
+
+        $qb->select('SQL_CALC_FOUND_ROWS');
 
         $qb->andWhere('c.`deleted` = 0');
+        $qb->groupBy('c.`id_currency`');
 
         foreach ($filters as $filterName => $value) {
             //todo: implement
