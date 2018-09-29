@@ -41,15 +41,31 @@ export default class ImportProgressModal {
   /**
    * Updates the import progressbar.
    *
-   * @param {int} percentage
+   * @param {number} completed number of completed items.
+   * @param {number} total number of items in total.
    */
-  updateProgress(percentage) {
-    let $progressBar = this.progressBar;
+  updateProgress(completed, total) {
+    completed = parseInt(completed);
+    total = parseInt(total);
 
-    percentage = parseInt(percentage);
+    let $progressBar = this.progressBar,
+        percentage = completed / total * 100;
 
     $progressBar.css('width', percentage + '%');
-    $progressBar.find('> span').text(percentage + ' %');
+    $progressBar.find('> span').text(completed + '/' + total);
+  }
+
+  /**
+   * Updates the progress bar label.
+   *
+   * @param {String} label if not provided - will use the default label
+   */
+  updateProgressLabel(label) {
+    this.progressLabel.text(label);
+  }
+
+  setImportingProgressLabel() {
+    this.updateProgressLabel(this.progressModal.find('.modal-body').data('importing-label'));
   }
 
   /**
@@ -80,6 +96,13 @@ export default class ImportProgressModal {
   }
 
   /**
+   * Shows the import success message.
+   */
+  showSuccessMessage() {
+    this.successMessageBlock.removeClass('d-none');
+  }
+
+  /**
    * Show messages in given message block.
    *
    * @param {jQuery} $messageBlock
@@ -106,11 +129,31 @@ export default class ImportProgressModal {
   }
 
   /**
+   * Show the "Ignore warnings" button.
+   */
+  showIgnoreWarningsButton() {
+    this.ignoreWarningsButton.removeClass('d-none')
+  }
+
+  /**
+   * Show the "Abort import" button.
+   */
+  showAbortImportButton() {
+    this.abortImportButton.removeClass('d-none');
+  }
+
+  /**
    * Reset the modal - resets progress bar and removes messages.
    */
   reset() {
-    this.updateProgress(0);
+    this.updateProgress(0, 0);
+    this.updateProgressLabel(this.progressLabel.attr('default-value'));
+    this.ignoreWarningsButton.addClass('d-none');
+    this.abortImportButton.addClass('d-none');
+    this.successMessageBlock.addClass('d-none');
     this.infoMessageBlock.addClass('d-none').find('.message').remove();
+    this.errorMessageBlock.addClass('d-none').find('.message').remove();
+    this.warningMessageBlock.addClass('d-none').find('.message').remove();
   }
 
   /**
@@ -159,11 +202,47 @@ export default class ImportProgressModal {
   }
 
   /**
+   * Gets success messages block.
+   *
+   * @returns {jQuery|HTMLElement}
+   */
+  get successMessageBlock() {
+    return $('.js-import-success');
+  }
+
+  /**
    * Gets post limit message.
    *
    * @returns {jQuery|HTMLElement}
    */
   get postLimitMessage() {
     return $('.js-post-limit-warning');
+  }
+
+  /**
+   * Gets "Ignore warnings" button.
+   *
+   * @returns {jQuery|HTMLElement}
+   */
+  get ignoreWarningsButton() {
+    return $('.js-ignore-warnings');
+  }
+
+  /**
+   * Gets "Abort import" button.
+   *
+   * @returns {jQuery|HTMLElement}
+   */
+  get abortImportButton() {
+    return $('.js-abort-import');
+  }
+
+  /**
+   * Gets progress bar label.
+   *
+   * @returns {jQuery|HTMLElement}
+   */
+  get progressLabel() {
+    return $('#import_progress_bar').find('.progress-details-text');
   }
 }
