@@ -1,6 +1,8 @@
 import Grid from "../../components/grid/grid";
 import SortingExtension from "../../components/grid/extension/sorting-extension";
 import FiltersResetExtension from "../../components/grid/extension/filters-reset-extension";
+import ReloadListActionExtension from "../../components/grid/extension/reload-list-extension";
+import ColumnTogglingExtension from "../../components/grid/extension/column-toggling-extension";
 
 /**
  * 2007-2018 PrestaShop
@@ -33,5 +35,6 @@ $(() => {
   const currency = new Grid('currency');
   currency.addExtension(new SortingExtension());
   currency.addExtension(new FiltersResetExtension());
-
+  currency.addExtension(new ReloadListActionExtension());
+  currency.addExtension(new ColumnTogglingExtension());
 });
