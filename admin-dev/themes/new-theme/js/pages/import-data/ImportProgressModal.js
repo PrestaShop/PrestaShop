@@ -113,6 +113,16 @@ export default class ImportProgressModal {
   }
 
   /**
+   * Shows the post size limit warning message.
+   *
+   * @param {number} postSizeValue to be shown in the warning
+   */
+  showPostLimitMessage(postSizeValue) {
+    this.postLimitMessage.find('#post_limit_value').text(postSizeValue);
+    this.postLimitMessage.removeClass('d-none');
+  }
+
+  /**
    * Show messages in given message block.
    *
    * @param {jQuery} $messageBlock
@@ -197,6 +207,7 @@ export default class ImportProgressModal {
     this.successMessageBlock.addClass('d-none');
     this.infoMessageBlock.addClass('d-none').find('.message').remove();
     this.errorMessageBlock.addClass('d-none').find('.message').remove();
+    this.postLimitMessage.addClass('d-none');
     this.clearWarningMessages();
   }
 

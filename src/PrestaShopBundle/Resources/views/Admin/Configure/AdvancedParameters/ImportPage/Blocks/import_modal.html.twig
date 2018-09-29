@@ -63,9 +63,9 @@
         </span>
       </div>
       <div class="alert alert-warning js-post-limit-warning d-none" role="alert">
-        <span class="alert-text">
+        <div class="alert-text">
           {{ "Warning, the current import may require a PHP setting update, to allow more data to be transferred. If the current import stops before the end, you should increase your PHP \"post_max_size\" setting to [1]%size%[/1]MB at least, and try again."|trans|replace({'[1]': '<span id="post_limit_value">','%size%': '16','[/1]': '</span>'})|raw }}
-        </span>
+        </div>
       </div>
       <div class="alert alert-warning js-import-warnings d-none" role="alert">
         <span class="alert-text">
