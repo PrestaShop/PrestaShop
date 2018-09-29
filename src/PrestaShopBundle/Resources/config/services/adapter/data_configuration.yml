@@ -70,7 +70,7 @@ services:
         arguments:
           - '@prestashop.adapter.memcache_server.manager'
           - '@prestashop.adapter.php_parameters'
-          - '@prestashop.adapter.cache_clearer'
+          - '@prestashop.adapter.cache.clearer.symfony_cache_clearer'
           - '%ps_cache_enable%'
           - '%ps_caching%'
 
