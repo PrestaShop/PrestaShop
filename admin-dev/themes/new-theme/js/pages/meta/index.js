@@ -37,6 +37,7 @@ import ShowcaseCard from "../../components/showcase-card/showcase-card";
 import ShowcaseCardCloseExtension from "../../components/showcase-card/extension/showcase-card-close-extension";
 import TokenField from "../../components/token-field";
 import TranslatableInput from "../../components/translatable-input";
+import PageNameOptionHandler from "./page-name-option-handler";
 
 const $ = window.$;
 
@@ -57,4 +58,5 @@ $(() => {
 
   new TokenField();
   new TranslatableInput();
+  new PageNameOptionHandler();
 });
