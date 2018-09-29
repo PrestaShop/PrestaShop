@@ -99,7 +99,13 @@
           </div>
         </div>
         <div class="card-footer">
-          <div class="d-flex justify-content-end">
+          <div class="d-inline-flex">
+            <a href="{{ path('admin_meta_index') }}" class="btn btn-outline-secondary">
+              <i class="material-icons">cancel</i>
+              {{ 'Cancel'|trans({}, 'Admin.Actions') }}
+            </a>
+          </div>
+          <div class="d-inline-flex float-right">
             <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
           </div>
         </div>
