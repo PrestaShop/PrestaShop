@@ -47,7 +47,7 @@ final class DeleteCurrencyHandler implements DeleteCurrencyHandlerInterface
     public function handle(DeleteCurrencyCommand $command)
     {
         $entity = new Currency($command->getCurrencyId()->getValue());
-
+        //todo: check for default currency
         if (0 >= $entity->id) {
             throw new CurrencyNotFoundException(
                 sprintf(
