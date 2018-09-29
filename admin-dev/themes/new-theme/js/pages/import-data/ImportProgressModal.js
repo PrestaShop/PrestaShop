@@ -184,6 +184,13 @@ export default class ImportProgressModal {
   }
 
   /**
+   * Hide the "Close" button.
+   */
+  hideCloseModalButton() {
+    this.closeModalButton.addClass('d-none');
+  }
+
+  /**
    * Clears all warning messages from the modal.
    */
   clearWarningMessages() {
