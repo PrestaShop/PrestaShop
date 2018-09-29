@@ -32,8 +32,11 @@ export default class ImportDataPage {
   constructor() {
     new ImportMatchConfiguration();
     new ImportDataTable();
+    this.importer = new Importer();
 
     $(document).on('click', '.js-process-import', (e) => this.importHandler(e));
+    $(document).on('click', '.js-abort-import', () => this.importer.requestCancelImport());
+    $(document).on('click', '.js-close-modal', () => this.importer.progressModal.hide());
   }
 
   /**
@@ -46,8 +49,6 @@ export default class ImportDataPage {
       return;
     }
 
-    let importer = new Importer();
-
-    importer.import($('.import-data-configuration-form').serializeArray());
+    this.importer.import($('.import-data-configuration-form').serializeArray());
   }
 }
