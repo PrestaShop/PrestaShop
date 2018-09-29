@@ -50,6 +50,14 @@ export default class ImportDataPage {
       return;
     }
 
-    this.importer.import($('.import-data-configuration-form').serializeArray());
+    let $importForm = $('.import-data-configuration-form');
+
+    this.importer.import(
+      $importForm.find(
+        '#skip, select[name^=type_value], #csv, #iso_lang, #entity,' +
+        '#truncate, #match_ref, #regenerate, #forceIDs, #sendemail,' +
+        '#separator, #multiple_value_separator'
+      )
+    );
   }
 }
