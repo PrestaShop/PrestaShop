@@ -40,16 +40,16 @@ export default class Importer {
   /**
    * Process the import.
    *
-   * @param {jQuery} $configurationInputs configuration inputs.
+   * @param {Object} configuration import configuration.
    */
-  import($configurationInputs) {
+  import(configuration) {
     this.configuration = {
       ajax: 1,
       action: 'import',
       tab: 'AdminImport',
       token: token
     };
-    this._mergeConfigurationFromInputs($configurationInputs);
+    this._mergeConfiguration(configuration);
 
     // Total number of rows to be imported.
     this.totalRowsCount = 0;
@@ -310,21 +310,5 @@ export default class Importer {
     // Marking the start of import operation.
     this.batchSizeCalculator.markImportStart();
     this.progressModal.showAbortImportButton();
-  }
-
-  /**
-   * Merge the configuration values from given inputs into inner configuration array.
-   *
-   * @param {jQuery} $configurationInputs
-   * @private
-   */
-  _mergeConfigurationFromInputs($configurationInputs) {
-    let configuration = {};
-
-    $configurationInputs.each((index, $input) => {
-      configuration[$($input).attr('name')] = $($input).val();
-    });
-
-    this._mergeConfiguration(configuration);
   }
 }
