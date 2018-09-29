@@ -138,7 +138,7 @@ export default class Importer {
 
           // Calculate next import batch size and offset.
           let nextBatchSize = this.batchSizeCalculator.calculateBatchSize(batchSize);
-          let nextOffset = offset + nextBatchSize;
+          let nextOffset = offset + batchSize;
 
           // Showing a warning if post size limit is about to be reached.
           if (this.postSizeChecker.isReachingPostSizeLimit(response.postSizeLimit, response.nextPostSize)) {
