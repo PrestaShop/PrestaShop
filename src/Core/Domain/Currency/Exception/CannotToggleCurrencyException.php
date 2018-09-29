@@ -31,4 +31,5 @@ namespace PrestaShop\PrestaShop\Core\Domain\Currency\Exception;
  */
 class CannotToggleCurrencyException extends CurrencyException
 {
+    const CANNOT_DISABLE_DEFAULT_CURRENCY = 1;
 }
