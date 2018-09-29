@@ -143,6 +143,20 @@ export default class ImportProgressModal {
   }
 
   /**
+   * Hide the "Abort import" button.
+   */
+  hideAbortImportButton() {
+    this.abortImportButton.addClass('d-none');
+  }
+
+  /**
+   * Show the "Close" button of the modal.
+   */
+  showCloseModalButton() {
+    this.closeModalButton.removeClass('d-none');
+  }
+
+  /**
    * Reset the modal - resets progress bar and removes messages.
    */
   reset() {
@@ -150,6 +164,7 @@ export default class ImportProgressModal {
     this.updateProgressLabel(this.progressLabel.attr('default-value'));
     this.ignoreWarningsButton.addClass('d-none');
     this.abortImportButton.addClass('d-none');
+    this.closeModalButton.addClass('d-none');
     this.successMessageBlock.addClass('d-none');
     this.infoMessageBlock.addClass('d-none').find('.message').remove();
     this.errorMessageBlock.addClass('d-none').find('.message').remove();
@@ -235,6 +250,15 @@ export default class ImportProgressModal {
    */
   get abortImportButton() {
     return $('.js-abort-import');
+  }
+
+  /**
+   * Gets "Close" button of the modal.
+   *
+   * @returns {jQuery|HTMLElement}
+   */
+  get closeModalButton() {
+    return $('.js-close-modal');
   }
 
   /**
