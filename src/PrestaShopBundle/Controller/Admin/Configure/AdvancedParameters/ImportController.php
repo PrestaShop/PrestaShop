@@ -30,7 +30,6 @@ use PrestaShop\PrestaShop\Core\Import\ImportSettings;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Exception\FileUploadException;
 use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Import\ImportDataConfigurationType;
-use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Import\ImportType;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -125,8 +124,6 @@ class ImportController extends FrameworkBundleAdminController
             $data = $form->getData();
 
             if (!$errors = $formHandler->save($data)) {
-                //todo: remove legacy request to get the new request available
-//                return $this->fowardRequestToLegacyResponse($request);
                 return $this->redirectToRoute('admin_import_show_data');
             }
 
@@ -422,22 +419,5 @@ class ImportController extends FrameworkBundleAdminController
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($legacyController),
         ];
-    }
-
-    /**
-     * todo: remove
-     * Fowards submitted form data to legacy import page.
-     *
-     * @param Request $request
-     *
-     * @return RedirectResponse
-     */
-    private function fowardRequestToLegacyResponse(Request $request)
-    {
-        $legacyController = $request->attributes->get('_legacy_controller');
-        $legacyContext = $this->get('prestashop.adapter.legacy.context');
-        $legacyImportUrl = $legacyContext->getAdminLink($legacyController);
-
-        return $this->redirect($legacyImportUrl, Response::HTTP_TEMPORARY_REDIRECT);
     }
 }
