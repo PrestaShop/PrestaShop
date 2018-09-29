@@ -111,7 +111,15 @@ final class CurrencyQueryBuilder extends AbstractDoctrineQueryBuilder
         $qb->groupBy('c.`id_currency`');
 
         foreach ($filters as $filterName => $value) {
-            //todo: implement
+            if ('active' === $filterName) {
+                $qb->andWhere('c.`active` = :active');
+                $qb->setParameter('active', $value);
+
+                continue;
+            }
+
+            $qb->andWhere('c.`' . $filterName . '` LIKE :' . $filterName);
+            $qb->setParameter($filterName, '%' . $value . '%');
         }
 
         return $qb;

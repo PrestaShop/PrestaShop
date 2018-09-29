@@ -2,12 +2,19 @@ admin_currency_index:
     path: /
     methods: GET
     defaults:
-        _controller: PrestaShopBundle:Admin\Improve\International\Currency:index
+        _controller: 'PrestaShopBundle:Admin\Improve\International\Currency:index'
         _legacy_controller: AdminCurrencies
+
+admin_currency_search:
+  path: /
+  methods: POST
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Improve\International\Currency:search'
+    _legacy_controller: AdminMeta
 
 admin_currency_toggle_status:
     path: /{currencyId}/toggle/status
     methods: POST
     defaults:
-        _controller: PrestaShopBundle:Admin\Improve\International\Currency:toggleStatus
+        _controller: 'PrestaShopBundle:Admin\Improve\International\Currency:toggleStatus'
         _legacy_controller: AdminCurrencies
