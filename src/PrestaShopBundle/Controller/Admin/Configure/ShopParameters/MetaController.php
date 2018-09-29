@@ -121,6 +121,8 @@ class MetaController extends FrameworkBundleAdminController
     /**
      * Used for applying filtering actions.
      *
+     * @DemoRestricted(redirectRoute="admin_meta_index")
+     *
      * @param Request $request
      *
      * @return RedirectResponse
@@ -159,6 +161,12 @@ class MetaController extends FrameworkBundleAdminController
         $metaForm->handleRequest($request);
 
         if ($metaForm->isSubmitted()) {
+            if ($this->isDemoModeEnabled()) {
+                $this->addFlash('error', $this->getDemoModeErrorMessage());
+
+                return $this->redirectToRoute('admin_meta_index');
+            }
+
             $errors = $metaFormHandler->save($metaForm->getData()['meta']);
 
             if (empty($errors)) {
@@ -196,6 +204,12 @@ class MetaController extends FrameworkBundleAdminController
         $metaForm->handleRequest($request);
 
         if ($metaForm->isSubmitted()) {
+            if ($this->isDemoModeEnabled()) {
+                $this->addFlash('error', $this->getDemoModeErrorMessage());
+
+                return $this->redirectToRoute('admin_meta_index');
+            }
+
             $data = $metaForm->getData()['meta'];
             $data['id'] = $metaId;
 
@@ -221,6 +235,8 @@ class MetaController extends FrameworkBundleAdminController
      *
      * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message="You do not have permission to delete this.")
      * @DemoRestricted(redirectRoute="admin_metas_index")
+     *
+     * @DemoRestricted(redirectRoute="admin_meta_index")
      *
      * @param int $metaId
      *
@@ -248,6 +264,8 @@ class MetaController extends FrameworkBundleAdminController
      *
      * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message="You do not have permission to delete this.")
      * @DemoRestricted(redirectRoute="admin_metas_index")
+     *
+     * @DemoRestricted(redirectRoute="admin_meta_index")
      *
      * @param Request $request
      *
@@ -277,6 +295,8 @@ class MetaController extends FrameworkBundleAdminController
      *
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message="You do not have permission to edit this.")
      * @DemoRestricted(redirectRoute="admin_metas_index")
+     *
+     * @DemoRestricted(redirectRoute="admin_meta_index")
      *
      * @param Request $request
      *
@@ -310,6 +330,8 @@ class MetaController extends FrameworkBundleAdminController
      *
      * @AdminSecurity("is_granted(['create', 'update', 'delete'], request.get('_legacy_controller'))")
      * @DemoRestricted(redirectRoute="admin_metas_index")
+     *
+     * @DemoRestricted(redirectRoute="admin_meta_index")
      *
      * @return RedirectResponse
      */
