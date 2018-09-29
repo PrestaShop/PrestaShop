@@ -30,8 +30,13 @@
  */
 export default class ImportBatchSizeCalculator {
   constructor() {
-    this._targetExecutionTime = 5;
+    // Target execution time in milliseconds.
+    this._targetExecutionTime = 5000;
+
+    // Maximum batch size increase multiplier.
     this._maxAcceleration = 4;
+
+    // Minimum and maximum import batch sizes.
     this._minBatchSize = 5;
     this._maxBatchSize = 100;
   }

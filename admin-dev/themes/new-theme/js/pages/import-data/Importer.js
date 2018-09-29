@@ -25,11 +25,13 @@
 
 import ImportProgressModal from './ImportProgressModal';
 import ImportBatchSizeCalculator from './ImportBatchSizeCalculator';
+import PostSizeChecker from './PostSizeChecker';
 
 export default class Importer {
   constructor() {
     this.progressModal = new ImportProgressModal;
     this.batchSizeCalculator = new ImportBatchSizeCalculator;
+    this.postSizeChecker = new PostSizeChecker();
 
     // Default number of rows in one batch of the import.
     this.defaultBatchSize = 5;
@@ -81,9 +83,7 @@ export default class Importer {
       crossStepsVars: JSON.stringify(recurringVariables)
     });
 
-    // Marking the start of import operation.
-    this.batchSizeCalculator.markImportStart();
-    this.progressModal.showAbortImportButton();
+    this._onImportStart();
 
     $.post({
       url: 'index.php',
@@ -102,11 +102,11 @@ export default class Importer {
           this.totalRowsCount = response.totalCount;
         }
 
-        // Update import progress
+        // Update import progress.
         this.progressModal.updateProgress(response.doneCount, this.totalRowsCount);
 
         if (!validateOnly) {
-          // Set the progress label to "Importing"
+          // Set the progress label to "Importing".
           this.progressModal.setImportingProgressLabel();
         }
 
@@ -138,6 +138,13 @@ export default class Importer {
           let nextBatchSize = this.batchSizeCalculator.calculateBatchSize(batchSize);
           let nextOffset = offset + nextBatchSize;
 
+          // Showing a warning if post size limit is about to be reached.
+          if (this.postSizeChecker.isReachingPostSizeLimit(response.postSizeLimit, response.nextPostSize)) {
+            this.progressModal.showPostLimitMessage(
+              this.postSizeChecker.getRequiredPostSizeInMegabytes(response.nextPostSize)
+            );
+          }
+
           // Run the import again for the next batch.
           return this._ajaxImport(
             nextOffset,
@@ -164,7 +171,7 @@ export default class Importer {
             this._onImportStop();
             return false;
           } else {
-            // Reset the progress bar to 0
+            // Update the progress bar to 100%.
             this.progressModal.updateProgress(this.totalRowsCount, this.totalRowsCount);
 
             // Continue with the data import.
@@ -277,7 +284,7 @@ export default class Importer {
   }
 
   /**
-   * Executed when import is stopped - hides/shows appropriate buttons.
+   * Additional actions when import is stopped.
    * @private
    */
   _onImportStop() {
@@ -294,5 +301,15 @@ export default class Importer {
     this.progressModal.showSuccessMessage();
     this.progressModal.setImportedProgressLabel();
     this.progressModal.updateProgress(this.totalRowsCount, this.totalRowsCount);
+  }
+
+  /**
+   * Additional actions when import is starting.
+   * @private
+   */
+  _onImportStart() {
+    // Marking the start of import operation.
+    this.batchSizeCalculator.markImportStart();
+    this.progressModal.showAbortImportButton();
   }
 }
