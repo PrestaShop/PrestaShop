@@ -24,62 +24,138 @@
  */
 
 import ImportProgressModal from './ImportProgressModal';
+import ImportBatchSizeCalculator from './ImportBatchSizeCalculator';
 
 export default class Importer {
   import(importConfiguration) {
     this.configuration = importConfiguration;
     this.progressModal = new ImportProgressModal;
+    this.batchSizeCalculator = new ImportBatchSizeCalculator;
 
+    // Total number of rows to be imported.
+    this.totalRowsCount = 0;
+
+    // Default number of rows in one batch of the import.
+    this.defaultBatchSize = 5;
+
+    // Flags that mark that there were warnings or errors during import.
+    this.hasWarnings = false;
+    this.hasErrors = false;
+
+    // Resetting the import progress modal and showing it.
     this.progressModal.reset();
     this.progressModal.show();
 
-    // Starting the import for 5 elements.
-    this._ajaxImport(0, 5, true);
+    // Starting the import with 5 elements in batch.
+    this._ajaxImport(0, this.defaultBatchSize);
   }
 
-  _ajaxImport(offset, limit, validateOnly = false, nextStepIndex = 0, recurringVariables = {}) {
+  _ajaxImport(offset, batchSize, validateOnly = true, stepIndex = 0, recurringVariables = {}) {
     this._mergeConfiguration({
       ajax: 1,
       action: 'import',
       tab: 'AdminImport',
       token: token,
       offset: offset,
-      limit: limit,
+      limit: batchSize,
       validateOnly: validateOnly ? 1 : 0,
-      moreStep: nextStepIndex,
+      moreStep: stepIndex,
       crossStepsVars: JSON.stringify(recurringVariables)
     });
 
-    // Start time of current import step
-    let startingTime = new Date().getTime();
+    // Marking the start of import operation.
+    this.batchSizeCalculator.markImportStart();
 
     $.post({
       url: 'index.php',
       dataType: 'json',
       data: this.configuration,
       success: (response) => {
+        let nextStepIndex = response.oneMoreStep !== undefined ? response.oneMoreStep : stepIndex;
+
+        if (response.totalCount !== undefined) {
+          // The total rows count is retrieved only in the first batch response.
+          this.totalRowsCount = response.totalCount;
+        }
+
         // Update import progress
-        this.progressModal.updateProgress(response.doneCount / response.totalCount * 100);
+        this.progressModal.updateProgress(response.doneCount, this.totalRowsCount);
+
+        if (!validateOnly) {
+          // Set the progress label to "Importing"
+          this.progressModal.setImportingProgressLabel();
+        }
 
         if (response.informations) {
           this.progressModal.showInfoMessages(response.informations);
         }
 
         if (response.errors) {
+          this.hasErrors = true;
           this.progressModal.showErrorMessages(response.errors);
 
           // If there are errors and it's not validation step - stop the import.
+          // If it's validation step - we will show all errors once it finishes.
           if (!validateOnly) {
             return false;
           }
         } else if (response.warnings) {
+          this.hasWarnings = true;
           this.progressModal.showWarningMessages(response.warnings);
         }
 
         if (!response.isFinished) {
-          let timeTaken = new Date().getTime() - startingTime;
-          //@todo finish
+          // Marking the end of import operation.
+          this.batchSizeCalculator.markImportEnd();
+
+          // Calculate next import batch size and offset.
+          let nextBatchSize = this.batchSizeCalculator.calculateBatchSize(batchSize);
+          let nextOffset = offset + nextBatchSize;
+
+          // Run the import again for the next batch.
+          return this._ajaxImport(
+            nextOffset,
+            nextBatchSize,
+            validateOnly,
+            nextStepIndex,
+            response.crossStepsVariables
+          );
         }
+
+        // All import batches are finished successfully.
+        // If it was only validating the import data until this point,
+        // we have to run the data import now.
+        if (validateOnly) {
+          // If errors occurred during validation - stop the import.
+          if (this.hasErrors) {
+            return false;
+          }
+
+          if (this.hasWarnings) {
+            // Show the button to ignore warnings.
+            this.progressModal.showIgnoreWarningsButton();
+          } else {
+            // Reset the progress bar to 0
+            this.progressModal.updateProgress(this.totalRowsCount, this.totalRowsCount);
+
+            // Continue with the data import.
+            return this._ajaxImport(0, this.defaultBatchSize, false);
+          }
+        } else if (stepIndex < nextStepIndex) {
+          // If it's still not the last step of the import - continue with the next step.
+          return this._ajaxImport(
+            0,
+            this.defaultBatchSize,
+            false,
+            nextStepIndex,
+            response.crossStepsVariables
+          );
+        }
+
+        // Import is completely finished - update the progress bar.
+        this.progressModal.updateProgress(this.totalRowsCount, this.totalRowsCount);
+        this.progressModal.updateProgressLabel(response.moreStepLabel);
+        this.progressModal.showSuccessMessage();
       }
     });
   }
@@ -90,7 +166,7 @@ export default class Importer {
    * @param importConfiguration
    */
   set configuration(importConfiguration) {
-    this.importConfiguration = importConfiguration;
+    this._importConfiguration = importConfiguration;
   }
 
   /**
@@ -99,7 +175,7 @@ export default class Importer {
    * @returns {*}
    */
   get configuration() {
-    return this.importConfiguration;
+    return this._importConfiguration;
   }
 
   /**
@@ -108,7 +184,7 @@ export default class Importer {
    * @param {ImportProgressModal} modal
    */
   set progressModal(modal) {
-    this.modal = modal;
+    this._modal = modal;
   }
 
   /**
@@ -117,16 +193,7 @@ export default class Importer {
    * @returns {ImportProgressModal}
    */
   get progressModal() {
-    return this.modal;
-  }
-
-  /**
-   * Get the target processing time for one import step.
-   *
-   * @returns {number}
-   */
-  get targetTime() {
-    return 5;
+    return this._modal;
   }
 
   /**
@@ -137,7 +204,7 @@ export default class Importer {
    */
   _mergeConfiguration(configuration) {
     for (let key in configuration) {
-      this.importConfiguration.push({
+      this._importConfiguration.push({
         name: key,
         value: configuration[key]
       });

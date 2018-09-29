@@ -47,7 +47,7 @@
   ],
 } %}
   {% block content %}
-    <div class="modal-body">
+    <div class="modal-body" data-importing-label="{{ 'Importing your data...'|trans }}">
       <div class="alert alert-success js-import-success d-none" role="alert">
         <span class="alert-text">
           {{ 'Data imported!'|trans }}
