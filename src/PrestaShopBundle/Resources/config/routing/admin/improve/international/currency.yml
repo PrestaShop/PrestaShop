@@ -4,3 +4,10 @@ admin_currency_index:
     defaults:
         _controller: PrestaShopBundle:Admin\Improve\International\Currency:index
         _legacy_controller: AdminCurrencies
+
+admin_currency_toggle_status:
+    path: /{currencyId}/toggle/status
+    methods: POST
+    defaults:
+        _controller: PrestaShopBundle:Admin\Improve\International\Currency:toggleStatus
+        _legacy_controller: AdminCurrencies
