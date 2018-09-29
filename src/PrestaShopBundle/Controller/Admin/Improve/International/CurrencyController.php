@@ -26,6 +26,9 @@
 
 namespace PrestaShopBundle\Controller\Admin\Improve\International;
 
+use PrestaShop\PrestaShop\Core\Domain\Currency\Command\ToggleCurrencyStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
+use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 use PrestaShop\PrestaShop\Core\Search\Filters\CurrencyFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -77,8 +80,27 @@ class CurrencyController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_currency_index', ['filters' => $filters]);
     }
 
-    public function toggleStatusAction()
+    public function toggleStatusAction($currencyId)
     {
-        //todo: implement
+        $commandBus = $this->get('prestashop.core.command_bus');
+
+        try {
+            $currencyId = new CurrencyId($currencyId);
+            $commandBus->handle(new ToggleCurrencyStatusCommand($currencyId));
+        } catch (CurrencyException $exception) {
+            $this->addFlash(
+                'error',
+                $this->trans('An error occurred while updating the status.', 'Admin.Notifications.Error')
+            );
+
+            return $this->redirectToRoute('admin_currency_index');
+        }
+
+        $this->addFlash(
+            'success',
+            $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
+        );
+
+        return $this->redirectToRoute('admin_currency_index');
     }
 }

@@ -18,3 +18,5 @@ admin_currency_toggle_status:
     defaults:
         _controller: 'PrestaShopBundle:Admin\Improve\International\Currency:toggleStatus'
         _legacy_controller: AdminCurrencies
+    requirements:
+        currencyId: \d+
