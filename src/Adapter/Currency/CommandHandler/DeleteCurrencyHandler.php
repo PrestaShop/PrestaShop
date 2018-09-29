@@ -27,41 +27,41 @@
 namespace PrestaShop\PrestaShop\Adapter\Currency\CommandHandler;
 
 use Currency;
-use PrestaShop\PrestaShop\Core\Domain\Currency\Command\ToggleCurrencyStatusCommand;
-use PrestaShop\PrestaShop\Core\Domain\Currency\CommandHandler\ToggleCurrencyStatusHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotToggleCurrencyException;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Command\DeleteCurrencyCommand;
+use PrestaShop\PrestaShop\Core\Domain\Currency\CommandHandler\DeleteCurrencyHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotDeleteCurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyNotFoundException;
 use PrestaShopException;
 
 /**
- * Class ToggleCurrencyStatusHandler is responsible for toggling currency status.
+ * Class DeleteCurrencyHandler is responsible for handling the deletion of currency logic.
  */
-final class ToggleCurrencyStatusHandler implements ToggleCurrencyStatusHandlerInterface
+final class DeleteCurrencyHandler implements DeleteCurrencyHandlerInterface
 {
     /**
      * {@inheritdoc}
      *
      * @throws CurrencyException
      */
-    public function handle(ToggleCurrencyStatusCommand $command)
+    public function handle(DeleteCurrencyCommand $command)
     {
         $entity = new Currency($command->getCurrencyId()->getValue());
 
         if (0 >= $entity->id) {
             throw new CurrencyNotFoundException(
                 sprintf(
-                    'Currency object with id "%s" has not been found for toggling.',
+                    'Currency object with id "%s" has not been found for deletion.',
                     $command->getCurrencyId()->getValue()
                 )
             );
         }
 
         try {
-            if (false === $entity->toggleStatus()) {
-                throw new CannotToggleCurrencyException(
+            if (false === $entity->delete()) {
+                throw new CannotDeleteCurrencyException(
                     sprintf(
-                        'Unable to toggle Currency with id "%s"',
+                        'Unable to delete currency object with id "%s"',
                         $command->getCurrencyId()->getValue()
                     )
                 );
@@ -69,7 +69,7 @@ final class ToggleCurrencyStatusHandler implements ToggleCurrencyStatusHandlerIn
         } catch (PrestaShopException $e) {
             throw new CurrencyException(
                 sprintf(
-                    'An error occurred when toggling status for Currency object with id "%s"',
+                    'An error occurred when  deleting Currency object with id "%s"',
                     $command->getCurrencyId()->getValue()
                 ),
                 0,
