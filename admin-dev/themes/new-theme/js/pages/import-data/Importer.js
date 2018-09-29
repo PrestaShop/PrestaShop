@@ -160,8 +160,9 @@ export default class Importer {
 
           if (this.hasWarnings) {
             // Show the button to ignore warnings.
-            this.progressModal.showIgnoreWarningsButton();
+            this.progressModal.showContinueImportButton();
             this._onImportStop();
+            return false;
           } else {
             // Reset the progress bar to 0
             this.progressModal.updateProgress(this.totalRowsCount, this.totalRowsCount);
@@ -180,11 +181,8 @@ export default class Importer {
           );
         }
 
-        // Import is completely finished - update the progress bar and show success message.
-        this.progressModal.updateProgress(this.totalRowsCount, this.totalRowsCount);
-        this.progressModal.updateProgressLabel(response.moreStepLabel);
-        this.progressModal.showSuccessMessage();
-        this._onImportStop();
+        // Import is completely finished.
+        this._onImportFinish();
       },
       error: (XMLHttpRequest, textStatus) => {
         if (textStatus === 'parsererror') {
@@ -195,6 +193,19 @@ export default class Importer {
         this.progressModal.showErrorMessages([textStatus]);
       }
     });
+  }
+
+  /**
+   * Continue the import when it was stopped.
+   */
+  continueImport() {
+    if (!this.configuration) {
+      throw 'Missing import configuration. Make sure the import had started before continuing.';
+    }
+
+    this.progressModal.hideContinueImportButton();
+    this.progressModal.clearWarningMessages();
+    this._ajaxImport(0, this.defaultBatchSize, false);
   }
 
   /**
@@ -272,5 +283,16 @@ export default class Importer {
   _onImportStop() {
     this.progressModal.showCloseModalButton();
     this.progressModal.hideAbortImportButton();
+  }
+
+  /**
+   * Additional actions when import is finished.
+   * @private
+   */
+  _onImportFinish() {
+    this._onImportStop();
+    this.progressModal.showSuccessMessage();
+    this.progressModal.setImportedProgressLabel();
+    this.progressModal.updateProgress(this.totalRowsCount, this.totalRowsCount);
   }
 }

@@ -37,6 +37,7 @@ export default class ImportDataPage {
     $(document).on('click', '.js-process-import', (e) => this.importHandler(e));
     $(document).on('click', '.js-abort-import', () => this.importer.requestCancelImport());
     $(document).on('click', '.js-close-modal', () => this.importer.progressModal.hide());
+    $(document).on('click', '.js-continue-import', () => this.importer.continueImport());
   }
 
   /**
