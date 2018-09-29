@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Improve\International;
 
+use PrestaShop\PrestaShop\Core\Search\Filters\CurrencyFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -43,12 +44,24 @@ class CurrencyController extends FrameworkBundleAdminController
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
+     * @param CurrencyFilters $filters
      * @param Request $request
      *
      * @return array
      */
-    public function indexAction(Request $request)
+    public function indexAction(CurrencyFilters $filters, Request $request)
     {
-        return [];
+        $currencyGridFactory = $this->get('prestashop.core.grid.factory.currency');
+        $currencyGrid = $currencyGridFactory->getGrid($filters);
+        $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
+
+        return [
+            'currencyGrid' => $gridPresenter->present($currencyGrid),
+        ];
+    }
+
+    public function toggleStatusAction()
+    {
+        //todo: implement
     }
 }
