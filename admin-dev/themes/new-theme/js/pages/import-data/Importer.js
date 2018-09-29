@@ -40,10 +40,16 @@ export default class Importer {
   /**
    * Process the import.
    *
-   * @param importConfiguration serialized import data configuration form.
+   * @param {jQuery} $configurationInputs configuration inputs.
    */
-  import(importConfiguration) {
-    this.configuration = importConfiguration;
+  import($configurationInputs) {
+    this.configuration = {
+      ajax: 1,
+      action: 'import',
+      tab: 'AdminImport',
+      token: token
+    };
+    this._mergeConfigurationFromInputs($configurationInputs);
 
     // Total number of rows to be imported.
     this.totalRowsCount = 0;
@@ -72,10 +78,6 @@ export default class Importer {
    */
   _ajaxImport(offset, batchSize, validateOnly = true, stepIndex = 0, recurringVariables = {}) {
     this._mergeConfiguration({
-      ajax: 1,
-      action: 'import',
-      tab: 'AdminImport',
-      token: token,
       offset: offset,
       limit: batchSize,
       validateOnly: validateOnly ? 1 : 0,
@@ -267,10 +269,7 @@ export default class Importer {
    */
   _mergeConfiguration(configuration) {
     for (let key in configuration) {
-      this._importConfiguration.push({
-        name: key,
-        value: configuration[key]
-      });
+      this._importConfiguration[key] = configuration[key];
     }
   }
 
@@ -311,5 +310,21 @@ export default class Importer {
     // Marking the start of import operation.
     this.batchSizeCalculator.markImportStart();
     this.progressModal.showAbortImportButton();
+  }
+
+  /**
+   * Merge the configuration values from given inputs into inner configuration array.
+   *
+   * @param {jQuery} $configurationInputs
+   * @private
+   */
+  _mergeConfigurationFromInputs($configurationInputs) {
+    let configuration = {};
+
+    $configurationInputs.each((index, $input) => {
+      configuration[$($input).attr('name')] = $($input).val();
+    });
+
+    this._mergeConfiguration(configuration);
   }
 }
