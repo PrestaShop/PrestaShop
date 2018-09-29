@@ -1,4 +1,8 @@
-{#**
+import Grid from "../../components/grid/grid";
+import SortingExtension from "../../components/grid/extension/sorting-extension";
+import FiltersResetExtension from "../../components/grid/extension/filters-reset-extension";
+
+/**
  * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
@@ -21,21 +25,13 @@
  * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-{% extends '@PrestaShop/Admin/layout.html.twig' %}
+const $ = window.$;
 
-{% block content %}
-  <div class="row">
-    <div class="col">
-      {{ include('@PrestaShop/Admin/Common/Grid/grid_panel.html.twig', {'grid': currencyGrid }) }}
-    </div>
-  </div>
-{% endblock %}
+$(() => {
+  const currency = new Grid('currency');
+  currency.addExtension(new SortingExtension());
+  currency.addExtension(new FiltersResetExtension());
 
-{% block javascripts %}
-  {{ parent() }}
-
-  <script src="{{ asset('themes/new-theme/public/currency.bundle.js') }}"></script>
-  <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
-{% endblock %}
+});
