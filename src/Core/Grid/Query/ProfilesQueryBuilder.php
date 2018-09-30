@@ -72,6 +72,10 @@ class ProfilesQueryBuilder extends AbstractDoctrineQueryBuilder
             ->select('p.id_profile, pl.name')
         ;
 
+        $this->searchCriteriaApplicator
+            ->applySorting($searchCriteria, $qb)
+            ->applyPagination($searchCriteria, $qb);
+
         return $qb;
     }
 
