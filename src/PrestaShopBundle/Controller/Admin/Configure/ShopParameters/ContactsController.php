@@ -36,7 +36,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 /**
  * ContactsController is responsible for actions and rendering
- * of "Shop Parameters > Contact > Contacts" page
+ * of "Shop Parameters > Contact > Contacts" page.
  */
 class ContactsController extends FrameworkBundleAdminController
 {
@@ -71,7 +71,7 @@ class ContactsController extends FrameworkBundleAdminController
             'requireAddonsSearch' => true,
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
-            'grid' => $gridPresenter->present($contactsGrid)
+            'grid' => $gridPresenter->present($contactsGrid),
         ];
     }
 
