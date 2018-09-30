@@ -32,6 +32,7 @@ import LinkRowActionExtension from "../../components/grid/extension/link-row-act
 import SubmitGridExtension from "../../components/grid/extension/submit-grid-action-extension";
 import SubmitBulkExtension from "../../components/grid/extension/submit-bulk-action-extension";
 import BulkActionCheckboxExtension from "../../components/grid/extension/bulk-action-checkbox-extension";
+import SubmitRowActionExtension from "../../components/grid/extension/action/row/submit-row-action-extension";
 
 /**
  * Responsible for actions in Contacts listing page.
@@ -48,5 +49,6 @@ export default class ContactsPage {
     contactGrid.addExtension(new SubmitGridExtension());
     contactGrid.addExtension(new SubmitBulkExtension());
     contactGrid.addExtension(new BulkActionCheckboxExtension());
+    contactGrid.addExtension(new SubmitRowActionExtension());
   }
 }
