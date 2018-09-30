@@ -109,7 +109,10 @@ const config = {
       './js/pages/module',
     ],
     meta: [
-      './js/pages/meta'
+      './js/pages/meta',
+    ],
+    contacts: [
+      './js/pages/contacts',
     ],
   },
   output: {

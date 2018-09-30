@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -75,6 +75,33 @@ class ContactsController extends FrameworkBundleAdminController
     }
 
     /**
+     * Grid search action.
+     *
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function searchAction(Request $request)
+    {
+        $gridDefinitionFactory = $this->get('prestashop.core.grid.definition.factory.contacts');
+        $contactsGridDefinition = $gridDefinitionFactory->getDefinition();
+
+        $gridFilterFormFactory = $this->get('prestashop.core.grid.filter.form_factory');
+        $filtersForm = $gridFilterFormFactory->create($contactsGridDefinition);
+        $filtersForm->handleRequest($request);
+
+        $filters = [];
+
+        if ($filtersForm->isSubmitted()) {
+            $filters = $filtersForm->getData();
+        }
+
+        return $this->redirectToRoute('admin_contacts', ['filters' => $filters]);
+    }
+
+    /**
      * Display the Contact creation form.
      *
      * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))", message="You do not have permission to add this.")
@@ -113,6 +140,8 @@ class ContactsController extends FrameworkBundleAdminController
      * Delete a contact.
      *
      * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")
+     *
+     * @param int $contactId
      *
      * @return RedirectResponse
      */

@@ -5,6 +5,14 @@ admin_contacts:
         _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\Contacts:index'
         _legacy_controller: AdminContacts
 
+admin_contacts_search:
+    path: /
+    methods: [POST]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\Contacts:search'
+        _legacy_controller: AdminContacts
+
+
 admin_contacts_create:
     path: /create
     methods: GET
