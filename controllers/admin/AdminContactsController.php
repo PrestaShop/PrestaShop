@@ -141,4 +141,11 @@ class AdminContactsControllerCore extends AdminController
 
         parent::initPageHeaderToolbar();
     }
+
+    public function renderList()
+    {
+        // The contact listing page is reworked in Symfony.
+        // If user tries to access legacy list directly, we redirect him to the new controller.
+        $this->redirectToSymfonyControllerWithMessages();
+    }
 }
