@@ -79,8 +79,10 @@ final class CurrencyQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
-        $qb = $this->getQueryBuilder($searchCriteria->getFilters());
-        $qb->select('FOUND_ROWS()');
+        $qb = $this->getQueryBuilder($searchCriteria->getFilters())
+            ->select('SQL_CALC_FOUND_ROWS')
+            ->select('FOUND_ROWS()')
+        ;
 
         return $qb;
     }
@@ -101,13 +103,14 @@ final class CurrencyQueryBuilder extends AbstractDoctrineQueryBuilder
                 'c',
                 $this->dbPrefix . 'currency_shop',
                 'cs',
-                'c.`id_currency` = cs.`id_currency` AND cs.`id_shop` IN (' . implode(',', $this->contextShopIds) . ')'
+                'c.`id_currency` = cs.`id_currency`'
             )
         ;
-
-        $qb->select('SQL_CALC_FOUND_ROWS');
-
+        $qb->andWhere('cs.`id_shop` IN (:shops)');
         $qb->andWhere('c.`deleted` = 0');
+
+        $qb->setParameter('shops', $this->contextShopIds, Connection::PARAM_INT_ARRAY);
+
         $qb->groupBy('c.`id_currency`');
 
         foreach ($filters as $filterName => $value) {
