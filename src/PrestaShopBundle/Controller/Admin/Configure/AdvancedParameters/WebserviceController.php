@@ -63,12 +63,6 @@ class WebserviceController extends FrameworkBundleAdminController
 
         $configurationWarnings = $this->lookForWarnings($request);
 
-        if (false === empty($configurationWarnings)) {
-            foreach ($configurationWarnings as $warningMessage) {
-                $this->addFlash('warning', $warningMessage);
-            }
-        }
-
         $twigValues = [
             'layoutHeaderToolbarBtn' => [
                 'add' => [
@@ -86,6 +80,7 @@ class WebserviceController extends FrameworkBundleAdminController
             'requireFilterStatus' => false,
             'form' => $form->createView(),
             'grid' => $presentedGrid,
+            'configurationWarnings' => $configurationWarnings,
         ];
 
         return $this->render('@AdvancedParameters/WebservicePage/webservice.html.twig', $twigValues);
