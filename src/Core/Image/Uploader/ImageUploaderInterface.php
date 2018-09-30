@@ -28,13 +28,16 @@ namespace PrestaShop\PrestaShop\Core\Image\Uploader;
 
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
+/**
+ * Interface ImageUploaderInterface is contract for entity (e.g. Category, Product & etc.) image uploader.
+ */
 interface ImageUploaderInterface
 {
     /**
      * Upload entity image.
      *
-     * @param int $id
+     * @param int $entityId
      * @param UploadedFile $uploadedImage
      */
-    public function upload($id, UploadedFile $uploadedImage);
+    public function upload($entityId, UploadedFile $uploadedImage);
 }
