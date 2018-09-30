@@ -124,7 +124,7 @@ const config = {
       './js/pages/employee',
     ],
     customer: [
-      './js/pages/customer'
+      './js/pages/customer',
     ],
     language: [
       './js/pages/language',
@@ -137,6 +137,9 @@ const config = {
     ],
     themes: [
       './js/pages/themes',
+    ],
+    profiles: [
+      './js/pages/profiles',
     ]
   },
   output: {
