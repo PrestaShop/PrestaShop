@@ -27,7 +27,9 @@
 namespace PrestaShopBundle\Controller\Admin\Improve\International;
 
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\ToggleCurrencyStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotToggleCurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 use PrestaShop\PrestaShop\Core\Search\Filters\CurrencyFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -88,10 +90,8 @@ class CurrencyController extends FrameworkBundleAdminController
             $currencyId = new CurrencyId($currencyId);
             $commandBus->handle(new ToggleCurrencyStatusCommand($currencyId));
         } catch (CurrencyException $exception) {
-            $this->addFlash(
-                'error',
-                $this->trans('An error occurred while updating the status.', 'Admin.Notifications.Error')
-            );
+            $error = $this->handleException($exception);
+            $this->flashErrors([$error]);
 
             return $this->redirectToRoute('admin_currency_index');
         }
@@ -102,5 +102,89 @@ class CurrencyController extends FrameworkBundleAdminController
         );
 
         return $this->redirectToRoute('admin_currency_index');
+    }
+
+    /**
+     * Handles exceptions that might appear in all actions related to currency controller.
+     *
+     * @param CurrencyException $exception
+     *
+     * @return array
+     */
+    private function handleException(CurrencyException $exception)
+    {
+        if (0 !== $exception->getCode()) {
+            return $this->getExceptionByErrorCodeType($exception);
+        }
+
+        return $this->getErrorByExceptionType($exception);
+    }
+
+    /**
+     * Gets errors by exception type.
+     *
+     * @param CurrencyException $exception
+     *
+     * @return array
+     */
+    private function getErrorByExceptionType(CurrencyException $exception)
+    {
+        $exceptionTypeDictionary = [
+            CurrencyNotFoundException::class => [
+                'key' => 'The object cannot be loaded (or found)',
+                'parameters' => [],
+                'domain' => 'Admin.Notifications.Error',
+            ],
+            CannotToggleCurrencyException::class => [
+                'key' => 'An error occurred while updating the status.',
+                'parameters' => [],
+                'domain' => 'Admin.Notifications.Error',
+            ]
+        ];
+
+        $exceptionType = get_class($exception);
+
+        if (isset($exceptionTypeDictionary[$exceptionType])) {
+            return $exceptionTypeDictionary[$exceptionType];
+        }
+
+        return [
+            'key' => 'Unexpected error occurred.',
+            'parameters' => [],
+            'domain' => 'Admin.Notifications.Error',
+        ];
+    }
+
+    /**
+     * Gets error by error code.
+     *
+     * @param CurrencyException $exception
+     *
+     * @return array
+     */
+    private function getExceptionByErrorCodeType(CurrencyException $exception)
+    {
+        $exceptionTypeDictionary = [
+            CannotToggleCurrencyException::class => [
+                CannotToggleCurrencyException::CANNOT_DISABLE_DEFAULT_CURRENCY => [
+                    'key' => 'You cannot disable the default currency',
+                    'parameters' => [],
+                    'domain' => 'Admin.International.Notification',
+                ]
+            ]
+        ];
+
+        $exceptionType = get_class($exception);
+        $exceptionCode = $exception->getCode();
+
+        if (isset($exceptionTypeDictionary[$exceptionType][$exceptionCode])) {
+            return $exceptionTypeDictionary[$exceptionType][$exceptionCode];
+        }
+
+        return [
+            'key' => 'Unexpected error occurred.',
+            'parameters' => [],
+            'domain' => 'Admin.Notifications.Error',
+        ];
     }
 }

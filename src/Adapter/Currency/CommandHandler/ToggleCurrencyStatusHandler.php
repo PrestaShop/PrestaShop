@@ -40,6 +40,21 @@ use PrestaShopException;
 final class ToggleCurrencyStatusHandler implements ToggleCurrencyStatusHandlerInterface
 {
     /**
+     * @var int
+     */
+    private $defaultCurrencyId;
+
+    /**
+     * ToggleCurrencyStatusHandler constructor.
+     *
+     * @param int $defaultCurrencyId
+     */
+    public function __construct($defaultCurrencyId)
+    {
+        $this->defaultCurrencyId = (int) $defaultCurrencyId;
+    }
+
+    /**
      * {@inheritdoc}
      *
      * @throws CurrencyException
@@ -47,13 +62,23 @@ final class ToggleCurrencyStatusHandler implements ToggleCurrencyStatusHandlerIn
     public function handle(ToggleCurrencyStatusCommand $command)
     {
         $entity = new Currency($command->getCurrencyId()->getValue());
-        //todo: check for default currency
+
         if (0 >= $entity->id) {
             throw new CurrencyNotFoundException(
                 sprintf(
                     'Currency object with id "%s" has not been found for toggling.',
                     $command->getCurrencyId()->getValue()
                 )
+            );
+        }
+
+        if ($entity->active && $command->getCurrencyId()->getValue() === $this->defaultCurrencyId) {
+            throw new CannotToggleCurrencyException(
+                sprintf(
+                    'Currency with id "%s" is the default currency and cannot be disabled.',
+                    $command->getCurrencyId()->getValue()
+                ),
+                CannotToggleCurrencyException::CANNOT_DISABLE_DEFAULT_CURRENCY
             );
         }
 
