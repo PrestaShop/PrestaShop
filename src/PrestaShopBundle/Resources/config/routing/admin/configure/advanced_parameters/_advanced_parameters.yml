@@ -33,3 +33,7 @@ _webservice:
 _backup:
     resource: "backup.yml"
     prefix: /backup
+
+_profiles:
+    resource: "profiles.yml"
+    prefix: /profiles
