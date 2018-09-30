@@ -804,6 +804,7 @@ class LinkCore
                     'AdminMeta' => 'admin_meta',
                     // 'AdminWebservice' => 'admin_webservice', @todo: uncomment when grid and entity form are done.
                     'AdminBackup' => 'admin_backup',
+                    'AdminContacts' => 'admin_contacts',
                 );
 
                 if (isset($routes[$controller])) {
