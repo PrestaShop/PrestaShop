@@ -98,9 +98,8 @@ class ProfilesController extends FrameworkBundleAdminController
     /**
      * Shows profile edit form.
      *
-     * @AdminSecurity("is_granted(
-     *     'update',
-     *     request.get('_legacy_controller'))",
+     * @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller'))",
      *     message="You do not have permission to edit this."
      * )
      *
