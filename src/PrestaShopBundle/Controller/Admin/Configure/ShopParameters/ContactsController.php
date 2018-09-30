@@ -29,6 +29,7 @@ namespace PrestaShopBundle\Controller\Admin\Configure\ShopParameters;
 use PrestaShop\PrestaShop\Core\Search\Filters\ContactFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -140,6 +141,7 @@ class ContactsController extends FrameworkBundleAdminController
      * Delete a contact.
      *
      * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")
+     * @DemoRestricted(redirectRoute="admin_contacts")
      *
      * @param int $contactId
      *
@@ -165,6 +167,7 @@ class ContactsController extends FrameworkBundleAdminController
      * Bulk delete contacts.
      *
      * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")
+     * @DemoRestricted(redirectRoute="admin_contacts")
      *
      * @param Request $request
      *
