@@ -1,6 +1,38 @@
 admin_contacts:
-  path: /
-  methods: GET
-  defaults:
-    _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\Contacts:index'
-    _legacy_controller: AdminContacts
+    path: /
+    methods: GET
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\Contacts:index'
+        _legacy_controller: AdminContacts
+
+admin_contacts_create:
+    path: /create
+    methods: GET
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\Contacts:create'
+        _legacy_controller: AdminContacts
+
+admin_contacts_edit:
+    path: /edit/{contactId}
+    methods: GET
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\Contacts:edit'
+        _legacy_controller: AdminContacts
+    requirements:
+        contactId: \d+
+
+admin_contacts_delete:
+    path: /delete/{contactId}
+    methods: [GET]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\Contacts:delete'
+        _legacy_controller: AdminContacts
+    requirements:
+        contactId: \d+
+
+admin_contacts_delete_bulk:
+    path: /delete/bulk
+    methods: [POST]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\Contacts:deleteBulk'
+        _legacy_controller: AdminContacts

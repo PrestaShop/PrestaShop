@@ -26,9 +26,11 @@
 
 namespace PrestaShopBundle\Controller\Admin\Configure\ShopParameters;
 
+use PrestaShop\PrestaShop\Core\Search\Filters\ContactFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -45,18 +47,93 @@ class ContactsController extends FrameworkBundleAdminController
      * @Template("@PrestaShop/Admin/Configure/ShopParameters/Contact/Contacts/contacts.html.twig")
      *
      * @param Request $request
+     * @param ContactFilters $filters
      *
      * @return array
      */
-    public function indexAction(Request $request)
+    public function indexAction(Request $request, ContactFilters $filters)
     {
-        $legacyController = $request->attributes->get('_legacy_controller');
+        $contactsGridFactory = $this->get('prestashop.core.grid.factory.contacts');
+        $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
+
+        $contactsGrid = $contactsGridFactory->getGrid($filters);
 
         return [
             'layoutTitle' => $this->trans('Contacts', 'Admin.Navigation.Menu'),
+            'layoutHeaderToolbarBtn' => [
+                'add' => [
+                    'href' => $this->generateUrl('admin_contacts_create'),
+                    'desc' => $this->trans('Add new contact', 'Admin.Shopparameters.Feature'),
+                    'icon' => 'add_circle_outline',
+                ],
+            ],
             'requireAddonsSearch' => true,
             'enableSidebar' => true,
-            'help_link' => $this->generateSidebarLink($legacyController),
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+            'grid' => $gridPresenter->present($contactsGrid)
         ];
+    }
+
+    /**
+     * Display the Contact creation form.
+     *
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))", message="You do not have permission to add this.")
+     *
+     * @return RedirectResponse
+     */
+    public function createAction()
+    {
+        $legacyLink = $this->getAdminLink('AdminContacts', [
+            'addcontact' => 1,
+        ]);
+
+        return $this->redirect($legacyLink);
+    }
+
+    /**
+     * Display the contact edit form.
+     *
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message="You do not have permission to edit this.")
+     *
+     * @param int $contactId
+     *
+     * @return RedirectResponse
+     */
+    public function editAction($contactId)
+    {
+        $legacyLink = $this->getAdminLink('AdminContacts', [
+            'id_contact' => $contactId,
+            'updatecontact' => 1,
+        ]);
+
+        return $this->redirect($legacyLink);
+    }
+
+    /**
+     * Delete a contact.
+     *
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")
+     *
+     * @return RedirectResponse
+     */
+    public function deleteAction($contactId)
+    {
+        //@todo implement
+        $this->flashErrors(['not implemented']);
+        return $this->redirectToRoute('admin_contacts');
+    }
+
+    /**
+     * Bulk delete contacts.
+     *
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")
+     *
+     * @return RedirectResponse
+     */
+    public function deleteBulkAction()
+    {
+        //@todo implement
+        $this->flashErrors(['not implemented']);
+        return $this->redirectToRoute('admin_contacts');
     }
 }
