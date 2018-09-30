@@ -37,3 +37,7 @@ _backup:
 _employee:
     resource: "employee.yml"
     prefix: /employees
+
+_profiles:
+    resource: "profiles.yml"
+    prefix: /profiles
