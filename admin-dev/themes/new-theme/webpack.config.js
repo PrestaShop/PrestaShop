@@ -124,10 +124,13 @@ const config = {
       './js/pages/employee',
     ],
     customer: [
-      './js/pages/customer'
+      './js/pages/customer',
     ],
     language: [
-      './js/pages/language'
+      './js/pages/language',
+    ],
+    profiles: [
+      './js/pages/profiles',
     ],
   },
   output: {
