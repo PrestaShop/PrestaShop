@@ -147,8 +147,17 @@ class ContactsController extends FrameworkBundleAdminController
      */
     public function deleteAction($contactId)
     {
-        //@todo implement
-        $this->flashErrors(['not implemented']);
+        $contactDeleter = $this->get('prestashop.adapter.contact.deleter');
+
+        if ($errors = $contactDeleter->delete([$contactId])) {
+            $this->flashErrors($errors);
+        } else {
+            $this->addFlash(
+                'success',
+                $this->trans('Successful deletion.', 'Admin.Notifications.Success')
+            );
+        }
+
         return $this->redirectToRoute('admin_contacts');
     }
 
@@ -157,12 +166,24 @@ class ContactsController extends FrameworkBundleAdminController
      *
      * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")
      *
+     * @param Request $request
+     *
      * @return RedirectResponse
      */
-    public function deleteBulkAction()
+    public function deleteBulkAction(Request $request)
     {
-        //@todo implement
-        $this->flashErrors(['not implemented']);
+        $contactIds = $request->request->get('contact_bulk');
+        $contactDeleter = $this->get('prestashop.adapter.contact.deleter');
+
+        if ($errors = $contactDeleter->delete($contactIds)) {
+            $this->flashErrors($errors);
+        } else {
+            $this->addFlash(
+                'success',
+                $this->trans('The selection has been successfully deleted.', 'Admin.Notifications.Success')
+            );
+        }
+
         return $this->redirectToRoute('admin_contacts');
     }
 }
