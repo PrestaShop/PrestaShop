@@ -46,29 +46,29 @@ final class ContactsQueryBuilder extends AbstractDoctrineQueryBuilder
     private $languageId;
 
     /**
-     * @var int
+     * @var array
      */
-    private $shopId;
+    private $contextShopsIds;
 
     /**
      * @param Connection $connection
      * @param string $dbPrefix
      * @param DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator
      * @param int $languageId
-     * @param int $shopId
+     * @param array $contextShopsIds
      */
     public function __construct(
         Connection $connection,
         $dbPrefix,
         DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator,
         $languageId,
-        $shopId
+        array $contextShopsIds
     ) {
         parent::__construct($connection, $dbPrefix);
 
         $this->searchCriteriaApplicator = $searchCriteriaApplicator;
         $this->languageId = $languageId;
-        $this->shopId = $shopId;
+        $this->contextShopsIds = $contextShopsIds;
     }
 
     /**
@@ -92,8 +92,10 @@ final class ContactsQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
-        $qb = $this->getQueryBuilder($searchCriteria->getFilters());
-        $qb->select('COUNT(c.id_contact)');
+        $qb = $this->getQueryBuilder($searchCriteria->getFilters())
+            ->select('SQL_CALC_FOUND_ROWS')
+            ->select('FOUND_ROWS()')
+        ;
 
         return $qb;
     }
@@ -113,9 +115,10 @@ final class ContactsQueryBuilder extends AbstractDoctrineQueryBuilder
             ->innerJoin('c', $this->dbPrefix . 'contact_lang', 'cl', 'c.id_contact = cl.id_contact')
             ->innerJoin('c', $this->dbPrefix . 'contact_shop', 'cs', 'c.id_contact = cs.id_contact')
             ->andWhere('cl.`id_lang`= :language')
-            ->andWhere('cs.`id_shop`= :shop')
+            ->andWhere('cs.`id_shop` IN (:shops)')
             ->setParameter('language', $this->languageId)
-            ->setParameter('shop', $this->shopId)
+            ->setParameter('shops', $this->contextShopsIds, Connection::PARAM_INT_ARRAY)
+            ->groupBy('c.id_contact')
         ;
 
         foreach ($filters as $name => $value) {
