@@ -120,6 +120,9 @@ const config = {
     employee: [
       './js/pages/employee',
     ],
+    profiles: [
+      './js/pages/profiles',
+    ],
   },
   output: {
     path: path.resolve(__dirname, 'public'),

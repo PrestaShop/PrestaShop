@@ -1,6 +1,5 @@
-<?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -24,26 +23,10 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Search\Filters;
+import ProfilesPage from "./ProfilesPage";
 
-use PrestaShop\PrestaShop\Core\Search\Filters;
+const $ = window.$;
 
-/**
- * Class ProfilesFilters is responsible for providing default filter values for Profiles grid.
- */
-final class ProfilesFilters extends Filters
-{
-    /**
-     * {@inheritdoc}
-     */
-    public static function getDefaults()
-    {
-        return [
-            'limit' => 10,
-            'offset' => 0,
-            'orderBy' => 'id_profile',
-            'sortOrder' => 'asc',
-            'filters' => [],
-        ];
-    }
-}
+$(() => {
+  new ProfilesPage;
+});
