@@ -54,7 +54,7 @@ final class CategoryCoverImageUploader extends AbstractImageUploader
     {
         $this->deleteOldImage($id);
         $this->checkImageIsAllowedForUpload($uploadedImage);
-        $this->uploadImage($uploadedImage, $id);
+        $this->uploadImage($id, $uploadedImage);
         $this->generateDifferentTypes($id);
     }
 
@@ -70,14 +70,14 @@ final class CategoryCoverImageUploader extends AbstractImageUploader
     }
 
     /**
-     * @param UploadedFile $image
      * @param int $id
+     * @param UploadedFile $image
      *
      * @throws ImageOptimizationException
      * @throws ImageUploadException
      * @throws MemoryLimitException
      */
-    private function uploadImage(UploadedFile $image, $id)
+    private function uploadImage($id, UploadedFile $image)
     {
         $temporaryImageName = tempnam(_PS_TMP_IMG_DIR_, 'PS');
 
