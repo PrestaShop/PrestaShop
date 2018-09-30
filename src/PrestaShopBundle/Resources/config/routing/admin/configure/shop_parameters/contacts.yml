@@ -1,0 +1,6 @@
+admin_contacts:
+  path: /
+  methods: GET
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\Contacts:index'
+    _legacy_controller: AdminContacts
