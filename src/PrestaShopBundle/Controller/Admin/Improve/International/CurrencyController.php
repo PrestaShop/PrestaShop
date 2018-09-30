@@ -26,7 +26,9 @@
 
 namespace PrestaShopBundle\Controller\Admin\Improve\International;
 
+use PrestaShop\PrestaShop\Core\Domain\Currency\Command\DeleteCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\ToggleCurrencyStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotDeleteCurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotToggleCurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyNotFoundException;
@@ -80,6 +82,33 @@ class CurrencyController extends FrameworkBundleAdminController
         }
 
         return $this->redirectToRoute('admin_currency_index', ['filters' => $filters]);
+    }
+
+    public function editAction()
+    {
+//        todo: implement
+    }
+
+    public function deleteAction($currencyId)
+    {
+        $commandBus = $this->get('prestashop.core.command_bus');
+
+        try {
+            $currencyId = new CurrencyId($currencyId);
+            $commandBus->handle(new DeleteCurrencyCommand($currencyId));
+        } catch (CurrencyException $exception) {
+            $error = $this->handleException($exception);
+            $this->flashErrors([$error]);
+
+            return $this->redirectToRoute('admin_currency_index');
+        }
+
+        $this->addFlash(
+            'success',
+            $this->trans('Successful deletion.', 'Admin.Notifications.Success')
+        );
+
+        return $this->redirectToRoute('admin_currency_index');
     }
 
     public function toggleStatusAction($currencyId)
@@ -168,6 +197,13 @@ class CurrencyController extends FrameworkBundleAdminController
             CannotToggleCurrencyException::class => [
                 CannotToggleCurrencyException::CANNOT_DISABLE_DEFAULT_CURRENCY => [
                     'key' => 'You cannot disable the default currency',
+                    'parameters' => [],
+                    'domain' => 'Admin.International.Notification',
+                ]
+            ],
+            CannotDeleteCurrencyException::class => [
+                CannotDeleteCurrencyException::CANNOT_DELETE_DEFAULT_CURRENCY => [
+                    'key' => 'You cannot delete the default currency',
                     'parameters' => [],
                     'domain' => 'Admin.International.Notification',
                 ]

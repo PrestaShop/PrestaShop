@@ -27,6 +27,9 @@
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\SubmitRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
@@ -114,6 +117,32 @@ final class CurrencyGridDefinitionFactory extends AbstractGridDefinitionFactory
             )
             ->add((new ActionColumn('actions'))
                 ->setName($this->trans('Actions', [], 'Admin.Global'))
+                ->setOptions([
+                    'actions' => (new RowActionCollection())
+                        ->add((new LinkRowAction('edit'))
+                            ->setIcon('edit')
+                            ->setOptions([
+                                'route' => 'admin_currency_edit',
+                                'route_param_name' => 'currencyId',
+                                'route_param_field' => 'id_currency',
+                            ])
+                        )
+                        ->add((new SubmitRowAction('delete'))
+                            ->setName($this->trans('Delete', [], 'Admin.Actions'))
+                            ->setIcon('delete')
+                            ->setOptions([
+                                'method' => 'DELETE',
+                                'route' => 'admin_currency_delete',
+                                'route_param_name' => 'currencyId',
+                                'route_param_field' => 'id_currency',
+                                'confirm_message' => $this->trans(
+                                    'Delete selected item?',
+                                    [],
+                                    'Admin.Notifications.Warning'
+                                ),
+                            ])
+                        ),
+                ])
             )
         ;
     }

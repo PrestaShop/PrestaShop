@@ -3,6 +3,7 @@ import SortingExtension from "../../components/grid/extension/sorting-extension"
 import FiltersResetExtension from "../../components/grid/extension/filters-reset-extension";
 import ReloadListActionExtension from "../../components/grid/extension/reload-list-extension";
 import ColumnTogglingExtension from "../../components/grid/extension/column-toggling-extension";
+import SubmitRowActionExtension from "../../components/grid/extension/action/row/submit-row-action-extension";
 
 /**
  * 2007-2018 PrestaShop
@@ -37,4 +38,5 @@ $(() => {
   currency.addExtension(new FiltersResetExtension());
   currency.addExtension(new ReloadListActionExtension());
   currency.addExtension(new ColumnTogglingExtension());
+  currency.addExtension(new SubmitRowActionExtension());
 });

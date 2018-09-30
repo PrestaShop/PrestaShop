@@ -31,4 +31,5 @@ namespace PrestaShop\PrestaShop\Core\Domain\Currency\Exception;
  */
 class CannotDeleteCurrencyException extends CurrencyException
 {
+    const CANNOT_DELETE_DEFAULT_CURRENCY = 1;
 }

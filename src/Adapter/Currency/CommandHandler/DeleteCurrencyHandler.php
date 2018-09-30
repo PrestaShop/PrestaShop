@@ -40,6 +40,21 @@ use PrestaShopException;
 final class DeleteCurrencyHandler implements DeleteCurrencyHandlerInterface
 {
     /**
+     * @var int
+     */
+    private $defaultCurrencyId;
+
+    /**
+     * ToggleCurrencyStatusHandler constructor.
+     *
+     * @param int $defaultCurrencyId
+     */
+    public function __construct($defaultCurrencyId)
+    {
+        $this->defaultCurrencyId = (int) $defaultCurrencyId;
+    }
+
+    /**
      * {@inheritdoc}
      *
      * @throws CurrencyException
@@ -47,13 +62,23 @@ final class DeleteCurrencyHandler implements DeleteCurrencyHandlerInterface
     public function handle(DeleteCurrencyCommand $command)
     {
         $entity = new Currency($command->getCurrencyId()->getValue());
-        //todo: check for default currency
+
         if (0 >= $entity->id) {
             throw new CurrencyNotFoundException(
                 sprintf(
                     'Currency object with id "%s" has not been found for deletion.',
                     $command->getCurrencyId()->getValue()
                 )
+            );
+        }
+
+        if ($command->getCurrencyId()->getValue() === $this->defaultCurrencyId) {
+            throw new CannotDeleteCurrencyException(
+                sprintf(
+                    'Currency with id "%s" is the default currency and cannot be deleted.',
+                    $command->getCurrencyId()->getValue()
+                ),
+                CannotDeleteCurrencyException::CANNOT_DELETE_DEFAULT_CURRENCY
             );
         }
 
