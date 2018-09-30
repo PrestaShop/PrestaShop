@@ -111,6 +111,9 @@ const config = {
     meta: [
       './js/pages/meta'
     ],
+    profiles: [
+      './js/pages/profiles',
+    ],
   },
   output: {
     path: path.resolve(__dirname, 'public'),
