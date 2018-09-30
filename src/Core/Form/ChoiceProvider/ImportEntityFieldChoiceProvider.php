@@ -27,8 +27,6 @@
 namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
 
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
-use PrestaShop\PrestaShop\Core\Import\EntityField\EntityFieldCollectionInterface;
-use PrestaShop\PrestaShop\Core\Import\EntityField\EntityFieldInterface;
 use PrestaShop\PrestaShop\Core\Import\EntityField\Provider\EntityFieldsProviderFinderInterface;
 use PrestaShop\PrestaShop\Core\Import\Exception\NotSupportedImportEntityException;
 
