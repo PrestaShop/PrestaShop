@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Core\Import\EntityField\Provider;
 
-use InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Import\Exception\NotSupportedImportEntityException;
 
 /**
