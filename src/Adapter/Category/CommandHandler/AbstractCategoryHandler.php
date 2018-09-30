@@ -68,7 +68,7 @@ abstract class AbstractCategoryHandler
     }
 
     /**
-     * Build (but not save) Category's object model so it can be used to create simple or root category.
+     * Populate Category's object model with data from command so it can be used to create simple or root category.
      *
      * @param Category $category
      * @param AbstractRootCategoryCommand $command
