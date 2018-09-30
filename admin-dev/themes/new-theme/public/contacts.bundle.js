@@ -238,7 +238,7 @@
 /******/ 				};
 /******/ 			});
 /******/ 			hotUpdate = {};
-/******/ 			var chunkId = 7;
+/******/ 			var chunkId = 5;
 /******/ 			{ // eslint-disable-line no-lone-blocks
 /******/ 				/*globals chunkId */
 /******/ 				hotEnsureUpdateChunk(chunkId);
@@ -706,7 +706,7 @@
 /******/ 	__webpack_require__.h = function() { return hotCurrentHash; };
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return hotCreateRequire(451)(__webpack_require__.s = 451);
+/******/ 	return hotCreateRequire(435)(__webpack_require__.s = 435);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -1361,176 +1361,7 @@ var SubmitBulkActionExtension = function () {
 
 /***/ }),
 
-/***/ 231:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_grid_grid__ = __webpack_require__(9);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_grid_extension_filters_reset_extension__ = __webpack_require__(14);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_grid_extension_reload_list_extension__ = __webpack_require__(15);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_grid_extension_export_to_sql_manager_extension__ = __webpack_require__(13);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_grid_extension_bulk_action_checkbox_extension__ = __webpack_require__(12);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__components_grid_extension_submit_bulk_action_extension__ = __webpack_require__(17);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__components_grid_extension_sorting_extension__ = __webpack_require__(16);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__components_grid_extension_action_row_submit_row_action_extension__ = __webpack_require__(26);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__components_grid_extension_column_toggling_extension__ = __webpack_require__(259);
-/**
- * 2007-2018 PrestaShop
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
- *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
- */
-
-
-
-
-
-
-
-
-
-
-
-var $ = window.$;
-
-$(function () {
-  var webserviceGrid = new __WEBPACK_IMPORTED_MODULE_0__components_grid_grid__["a" /* default */]('webservicekey');
-
-  webserviceGrid.addExtension(new __WEBPACK_IMPORTED_MODULE_2__components_grid_extension_reload_list_extension__["a" /* default */]());
-  webserviceGrid.addExtension(new __WEBPACK_IMPORTED_MODULE_3__components_grid_extension_export_to_sql_manager_extension__["a" /* default */]());
-  webserviceGrid.addExtension(new __WEBPACK_IMPORTED_MODULE_1__components_grid_extension_filters_reset_extension__["a" /* default */]());
-  webserviceGrid.addExtension(new __WEBPACK_IMPORTED_MODULE_8__components_grid_extension_column_toggling_extension__["a" /* default */]());
-  webserviceGrid.addExtension(new __WEBPACK_IMPORTED_MODULE_6__components_grid_extension_sorting_extension__["a" /* default */]());
-  webserviceGrid.addExtension(new __WEBPACK_IMPORTED_MODULE_5__components_grid_extension_submit_bulk_action_extension__["a" /* default */]());
-  webserviceGrid.addExtension(new __WEBPACK_IMPORTED_MODULE_7__components_grid_extension_action_row_submit_row_action_extension__["a" /* default */]());
-  webserviceGrid.addExtension(new __WEBPACK_IMPORTED_MODULE_4__components_grid_extension_bulk_action_checkbox_extension__["a" /* default */]());
-});
-
-/***/ }),
-
-/***/ 259:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(global) {var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-/**
- * 2007-2018 PrestaShop
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
- *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
- */
-
-var $ = global.$;
-
-/**
- * Class ReloadListExtension extends grid with "Column toggling" feature
- */
-
-var ColumnTogglingExtension = function () {
-  function ColumnTogglingExtension() {
-    _classCallCheck(this, ColumnTogglingExtension);
-  }
-
-  _createClass(ColumnTogglingExtension, [{
-    key: 'extend',
-
-
-    /**
-     * Extend grid
-     *
-     * @param {Grid} grid
-     */
-    value: function extend(grid) {
-      var _this = this;
-
-      var $table = grid.getContainer().find('table.table');
-      $table.find('.ps-togglable-row').on('click', function (e) {
-        e.preventDefault();
-        _this._toggleValue($(e.delegateTarget));
-      });
-    }
-
-    /**
-     * @param {jQuery} row
-     * @private
-     */
-
-  }, {
-    key: '_toggleValue',
-    value: function _toggleValue(row) {
-      var toggleUrl = row.data('toggleUrl');
-
-      this._submitAsForm(toggleUrl);
-    }
-
-    /**
-     * Submits request url as form
-     *
-     * @param {string} toggleUrl
-     * @private
-     */
-
-  }, {
-    key: '_submitAsForm',
-    value: function _submitAsForm(toggleUrl) {
-      var $form = $('<form>', {
-        action: toggleUrl,
-        method: 'POST'
-      }).appendTo('body');
-
-      $form.submit();
-    }
-  }]);
-
-  return ColumnTogglingExtension;
-}();
-
-/* harmony default export */ __webpack_exports__["a"] = (ColumnTogglingExtension);
-/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(3)))
-
-/***/ }),
-
-/***/ 26:
+/***/ 18:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1566,15 +1397,15 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 var $ = window.$;
 
 /**
- * Class SubmitRowActionExtension handles submitting of row action
+ * Class LinkRowActionExtension handles link row actions
  */
 
-var SubmitRowActionExtension = function () {
-  function SubmitRowActionExtension() {
-    _classCallCheck(this, SubmitRowActionExtension);
+var LinkRowActionExtension = function () {
+  function LinkRowActionExtension() {
+    _classCallCheck(this, LinkRowActionExtension);
   }
 
-  _createClass(SubmitRowActionExtension, [{
+  _createClass(LinkRowActionExtension, [{
     key: 'extend',
 
     /**
@@ -1583,41 +1414,232 @@ var SubmitRowActionExtension = function () {
      * @param {Grid} grid
      */
     value: function extend(grid) {
-      grid.getContainer().on('click', '.js-submit-row-action', function (event) {
-        event.preventDefault();
-
-        var $button = $(event.currentTarget);
-        var confirmMessage = $button.data('confirm-message');
+      grid.getContainer().on('click', '.js-link-row-action', function (event) {
+        var confirmMessage = $(event.currentTarget).data('confirm-message');
 
         if (confirmMessage.length && !confirm(confirmMessage)) {
-          return;
+          event.preventDefault();
         }
-
-        var method = $button.data('method');
-        var isGetOrPostMethod = ['GET', 'POST'].includes(method);
-
-        var $form = $('<form>', {
-          'action': $button.data('url'),
-          'method': isGetOrPostMethod ? method : 'POST'
-        }).appendTo('body');
-
-        if (!isGetOrPostMethod) {
-          $form.append($('<input>', {
-            'type': '_hidden',
-            'name': '_method',
-            'value': method
-          }));
-        }
-
-        $form.submit();
       });
     }
   }]);
 
-  return SubmitRowActionExtension;
+  return LinkRowActionExtension;
 }();
 
-/* harmony default export */ __webpack_exports__["a"] = (SubmitRowActionExtension);
+/* harmony default export */ __webpack_exports__["a"] = (LinkRowActionExtension);
+
+/***/ }),
+
+/***/ 19:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/**
+ * 2007-2018 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2018 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
+
+var $ = window.$;
+
+/**
+ * Class SubmitGridActionExtension handles grid action submits
+ */
+
+var SubmitGridActionExtension = function () {
+  function SubmitGridActionExtension() {
+    var _this = this;
+
+    _classCallCheck(this, SubmitGridActionExtension);
+
+    return {
+      extend: function extend(grid) {
+        return _this.extend(grid);
+      }
+    };
+  }
+
+  _createClass(SubmitGridActionExtension, [{
+    key: 'extend',
+    value: function extend(grid) {
+      var _this2 = this;
+
+      grid.getContainer().on('click', '.js-grid-action-submit-btn', function (event) {
+        _this2.handleSubmit(event, grid);
+      });
+    }
+
+    /**
+     * Handle grid action submit.
+     * It uses grid form to submit actions.
+     *
+     * @param {Event} event
+     * @param {Grid} grid
+     *
+     * @private
+     */
+
+  }, {
+    key: 'handleSubmit',
+    value: function handleSubmit(event, grid) {
+      var $submitBtn = $(event.currentTarget);
+      var confirmMessage = $submitBtn.data('confirm-message');
+
+      if (typeof confirmMessage !== "undefined" && 0 < confirmMessage.length && !confirm(confirmMessage)) {
+        return;
+      }
+
+      var $form = $('#' + grid.getId() + '_filter_form');
+
+      $form.attr('action', $submitBtn.data('url'));
+      $form.attr('method', $submitBtn.data('method'));
+      $form.find('input[name="' + grid.getId() + '[_token]"]').val($submitBtn.data('csrf'));
+      $form.submit();
+    }
+  }]);
+
+  return SubmitGridActionExtension;
+}();
+
+/* harmony default export */ __webpack_exports__["a"] = (SubmitGridActionExtension);
+
+/***/ }),
+
+/***/ 215:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ContactsPage__ = __webpack_require__(269);
+/**
+ * 2007-2018 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2018 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
+
+
+
+var $ = window.$;
+
+$(function () {
+  new __WEBPACK_IMPORTED_MODULE_0__ContactsPage__["a" /* default */]();
+});
+
+/***/ }),
+
+/***/ 269:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_grid_grid__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_grid_extension_reload_list_extension__ = __webpack_require__(15);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_grid_extension_export_to_sql_manager_extension__ = __webpack_require__(13);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_grid_extension_filters_reset_extension__ = __webpack_require__(14);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_grid_extension_sorting_extension__ = __webpack_require__(16);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__components_grid_extension_link_row_action_extension__ = __webpack_require__(18);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__components_grid_extension_submit_grid_action_extension__ = __webpack_require__(19);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__components_grid_extension_submit_bulk_action_extension__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__components_grid_extension_bulk_action_checkbox_extension__ = __webpack_require__(12);
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/**
+ * 2007-2018 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2018 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
+
+
+
+
+
+
+
+
+
+
+
+/**
+ * Responsible for actions in Contacts listing page.
+ */
+
+var ContactsPage = function ContactsPage() {
+  _classCallCheck(this, ContactsPage);
+
+  var contactGrid = new __WEBPACK_IMPORTED_MODULE_0__components_grid_grid__["a" /* default */]('contact');
+
+  contactGrid.addExtension(new __WEBPACK_IMPORTED_MODULE_1__components_grid_extension_reload_list_extension__["a" /* default */]());
+  contactGrid.addExtension(new __WEBPACK_IMPORTED_MODULE_2__components_grid_extension_export_to_sql_manager_extension__["a" /* default */]());
+  contactGrid.addExtension(new __WEBPACK_IMPORTED_MODULE_3__components_grid_extension_filters_reset_extension__["a" /* default */]());
+  contactGrid.addExtension(new __WEBPACK_IMPORTED_MODULE_4__components_grid_extension_sorting_extension__["a" /* default */]());
+  contactGrid.addExtension(new __WEBPACK_IMPORTED_MODULE_5__components_grid_extension_link_row_action_extension__["a" /* default */]());
+  contactGrid.addExtension(new __WEBPACK_IMPORTED_MODULE_6__components_grid_extension_submit_grid_action_extension__["a" /* default */]());
+  contactGrid.addExtension(new __WEBPACK_IMPORTED_MODULE_7__components_grid_extension_submit_bulk_action_extension__["a" /* default */]());
+  contactGrid.addExtension(new __WEBPACK_IMPORTED_MODULE_8__components_grid_extension_bulk_action_checkbox_extension__["a" /* default */]());
+};
+
+/* harmony default export */ __webpack_exports__["a"] = (ContactsPage);
 
 /***/ }),
 
@@ -1649,10 +1671,10 @@ module.exports = g;
 
 /***/ }),
 
-/***/ 451:
+/***/ 435:
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(231);
+module.exports = __webpack_require__(215);
 
 
 /***/ }),
