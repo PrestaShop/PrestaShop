@@ -147,7 +147,7 @@ final class ContactGridDefinitionFactory extends AbstractGridDefinitionFactory
     /**
      * {@inheritdoc}
      */
-    public function getFilters()
+    protected function getFilters()
     {
         return (new FilterCollection())
             ->add((new Filter('id_contact', TextType::class))
@@ -184,7 +184,7 @@ final class ContactGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ])
                 ->setAssociatedColumn('actions')
             )
-            ;
+        ;
     }
 
     /**
@@ -201,7 +201,7 @@ final class ContactGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'confirm_message' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
                 ])
             )
-            ;
+        ;
     }
 
     /**
@@ -222,6 +222,6 @@ final class ContactGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setName($this->trans('Export to SQL Manager', [], 'Admin.Actions'))
                 ->setIcon('storage')
             )
-            ;
+        ;
     }
 }
