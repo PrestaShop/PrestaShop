@@ -29,6 +29,8 @@ namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShop\PrestaShop\Core\Import\EntityField\EntityFieldCollectionInterface;
 use PrestaShop\PrestaShop\Core\Import\EntityField\EntityFieldInterface;
+use PrestaShop\PrestaShop\Core\Import\EntityField\Provider\EntityFieldsProviderFinderInterface;
+use PrestaShop\PrestaShop\Core\Import\Exception\NotSupportedImportEntityException;
 
 /**
  * Class ImportEntityFieldChoiceProvider is responsible for providing entity import field choices.
@@ -36,16 +38,23 @@ use PrestaShop\PrestaShop\Core\Import\EntityField\EntityFieldInterface;
 final class ImportEntityFieldChoiceProvider implements FormChoiceProviderInterface
 {
     /**
-     * @var EntityFieldCollectionInterface
+     * @var EntityFieldsProviderFinderInterface
      */
-    private $entityFieldCollection;
+    private $entityFieldsProviderFinder;
 
     /**
-     * @param EntityFieldCollectionInterface $entityFieldCollection
+     * @var int selected import entity
      */
-    public function __construct(EntityFieldCollectionInterface $entityFieldCollection)
+    private $selectedEntity;
+
+    /**
+     * @param EntityFieldsProviderFinderInterface $entityFieldsProviderFinder
+     * @param int $selectedEntity
+     */
+    public function __construct(EntityFieldsProviderFinderInterface $entityFieldsProviderFinder, $selectedEntity)
     {
-        $this->entityFieldCollection = $entityFieldCollection;
+        $this->entityFieldsProviderFinder = $entityFieldsProviderFinder;
+        $this->selectedEntity = $selectedEntity;
     }
 
     /**
@@ -53,10 +62,15 @@ final class ImportEntityFieldChoiceProvider implements FormChoiceProviderInterfa
      */
     public function getChoices()
     {
+        try {
+            $entityFieldCollection = $this->entityFieldsProviderFinder->find($this->selectedEntity)->getCollection();
+        } catch (NotSupportedImportEntityException $e) {
+            return [];
+        }
+
         $choices = [];
 
-        /** @var EntityFieldInterface $entityField */
-        foreach ($this->entityFieldCollection as $entityField) {
+        foreach ($entityFieldCollection as $entityField) {
             $label = $entityField->getLabel();
 
             if ($entityField->isRequired()) {
