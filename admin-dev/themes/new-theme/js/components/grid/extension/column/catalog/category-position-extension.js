@@ -161,7 +161,7 @@ export default class CategoryPositionExtension {
         showSuccessMessage(response.message);
       } else {
         // use legacy error
-        // update when all category controller is migrated to symfony
+        // @todo: update when all category controller is migrated to symfony
         showErrorMessage(response.errors);
       }
 

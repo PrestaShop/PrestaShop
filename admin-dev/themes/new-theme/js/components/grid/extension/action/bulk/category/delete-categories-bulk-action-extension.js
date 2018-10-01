@@ -47,7 +47,7 @@ export default class DeleteCategoriesBulkActionExtension {
 
       const submitUrl = $(event.currentTarget).data('categories-delete-url');
 
-      const $deleteCategoriesModal = $('#' + grid.getId() + '_grid_delete_categories_modal');
+      const $deleteCategoriesModal = $(`#${grid.getId()}_grid_delete_categories_modal`);
       $deleteCategoriesModal.modal('show');
 
       $deleteCategoriesModal.on('click', '.js-submit-delete-categories', () => {
