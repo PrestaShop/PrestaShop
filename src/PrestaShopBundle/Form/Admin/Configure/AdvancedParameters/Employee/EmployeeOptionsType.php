@@ -27,14 +27,14 @@
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Employee;
 
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use PrestaShopBundle\Form\Admin\Type\TextWithUnitType;
+use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 /**
  * Class EmployeeOptionsType defines form for employee options.
  */
-class EmployeeOptionsType extends AbstractType
+class EmployeeOptionsType extends TranslatorAwareType
 {
     /**
      * {@inheritdoc}
@@ -42,8 +42,9 @@ class EmployeeOptionsType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('password_change_time', NumberType::class, [
+            ->add('password_change_time', TextWithUnitType::class, [
                 'required' => false,
+                'unit' => $this->trans('minutes', 'Admin.Advparameters.Feature'),
             ])
             ->add('allow_employee_specific_language', SwitchType::class, [
                 'required' => false,

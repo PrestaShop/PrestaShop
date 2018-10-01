@@ -26,5 +26,7 @@
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
 {% block content %}
-  OK
+  {% block employee_options %}
+    {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Employee/Blocks/employee_options.html.twig' %}
+  {% endblock %}
 {% endblock %}
