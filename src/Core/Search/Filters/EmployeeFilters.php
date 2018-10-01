@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
@@ -21,18 +22,28 @@
  * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-{% extends '@PrestaShop/Admin/layout.html.twig' %}
+namespace PrestaShop\PrestaShop\Core\Search\Filters;
 
-{% block content %}
-  <div class="row">
-    <div class="col">
-      {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with { 'grid': employeeGrid } %}
-    </div>
-  </div>
+use PrestaShop\PrestaShop\Core\Search\Filters;
 
-  {% block employee_options %}
-    {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Employee/Blocks/employee_options.html.twig' %}
-  {% endblock %}
-{% endblock %}
+/**
+ * Class EmployeeFilters holds search criteria for Employee grid.
+ */
+final class EmployeeFilters extends Filters
+{
+    /**
+     * {@inheritdoc}
+     */
+    public static function getDefaults()
+    {
+        return [
+            'limit' => 50,
+            'offset' => 0,
+            'orderBy' => 'id_employee',
+            'sortOrder' => 'asc',
+            'filters' => [],
+        ];
+    }
+}

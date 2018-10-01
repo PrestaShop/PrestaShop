@@ -1,6 +1,10 @@
 <?php
 /**
+<<<<<<< HEAD
  * 2007-2018 PrestaShop.
+=======
+ * 2007-2018 PrestaShop
+>>>>>>> 365eb8c6c4... add inital employees list
  *
  * NOTICE OF LICENSE
  *
@@ -27,8 +31,10 @@
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use PrestaShop\PrestaShop\Core\Search\Filters\EmployeeFilters;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -39,23 +45,61 @@ class EmployeeController extends FrameworkBundleAdminController
     /**
      * Show employees list & options page.
      *
+     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
+     *
+     * @param EmployeeFilters $filters
+     *
      * @return Response
      */
-    public function indexAction()
+    public function indexAction(EmployeeFilters $filters)
     {
         $employeeOptionsFormHandler = $this->get('prestashop.admin.employee_options.form_handler');
         $employeeOptionsForm = $employeeOptionsFormHandler->getForm();
 
         $employeeOptionsChecker = $this->get('prestashop.core.team.employee.configuration.options_checker');
 
+        $employeeGridFactory = $this->get('prestashop.core.grid.factory.employee');
+        $employeeGrid = $employeeGridFactory->getGrid($filters);
+
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/Employee/index.html.twig', [
             'employeeOptionsForm' => $employeeOptionsForm->createView(),
             'canOptionsBeChanged' => $employeeOptionsChecker->canBeChanged(),
+            'employeeGrid' => $this->presentGrid($employeeGrid),
         ]);
     }
 
     /**
+     * Handles employee list searching.
+     *
+     * @AdminSecurity("is_granted(['read', 'update', 'create', 'delete'], request.get('_legacy_controller'))")
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function searchAction(Request $request)
+    {
+        $definitionFactory = $this->get('prestashop.core.grid.definition.factory.employee');
+
+        $employeeGridDefinition = $definitionFactory->getDefinition();
+        $gridFilterFormFactory = $this->get('prestashop.core.grid.filter.form_factory');
+
+        $filtersForm = $gridFilterFormFactory->create($employeeGridDefinition);
+        $filtersForm->handleRequest($request);
+
+        $filters = [];
+
+        if ($filtersForm->isSubmitted()) {
+            $filters = $filtersForm->getData();
+        }
+
+        return $this->redirectToRoute('admin_employees_index', ['filters' => $filters]);
+    }
+
+    /**
      * Save employee options.
+     *
+     * @AdminSecurity("is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))")
      *
      * @param Request $request
      *
