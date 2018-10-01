@@ -41,6 +41,8 @@ class EmployeeController extends FrameworkBundleAdminController
     /**
      * Show employees list & options page.
      *
+     * @AdminSecurity("is_granted(['read', 'update', 'create', 'delete'], request.get('_legacy_controller'))")
+     *
      * @param Request $request
      * @param EmployeeFilters $filters
      *
@@ -58,7 +60,7 @@ class EmployeeController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(['read', 'update', 'create', 'delete'], request.get('_legacy_controller'))")
      *
      * @param Request $request
      *
