@@ -28,6 +28,11 @@ namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
+use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
+use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 /**
  * Class EmployeeGridDefinitionFactory creates grid definition for Employee data.
@@ -62,13 +67,13 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'field' => 'id_employee',
                 ])
             )
-            ->add((new DataColumn('firstname'))
+            ->add((new DataColumn('first_name'))
                 ->setName($this->trans('First name', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'firstname',
                 ])
             )
-            ->add((new DataColumn('lastname'))
+            ->add((new DataColumn('last_name'))
                 ->setName($this->trans('Last name', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'lastname',
@@ -80,7 +85,7 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'field' => 'email',
                 ])
             )
-            ->add((new DataColumn('profile_name'))
+            ->add((new DataColumn('profile'))
                 ->setName($this->trans('Profile', [], 'Admin.Advparameters.Feature'))
                 ->setOptions([
                     'field' => 'profile_name',
@@ -91,6 +96,51 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setOptions([
                     'field' => 'active',
                 ])
+            )
+        ;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getFilters()
+    {
+        return (new FilterCollection())
+            ->add((new Filter('id_employee', NumberType::class))
+                ->setTypeOptions([
+                    'required' => false,
+                ])
+                ->setAssociatedColumn('id_employee')
+            )
+            ->add((new Filter('first_name', TextType::class))
+                ->setTypeOptions([
+                    'required' => false,
+                ])
+                ->setAssociatedColumn('first_name')
+            )
+            ->add((new Filter('last_name', TextType::class))
+                ->setTypeOptions([
+                    'required' => false,
+                ])
+                ->setAssociatedColumn('last_name')
+            )
+            ->add((new Filter('email', EmailType::class))
+                ->setTypeOptions([
+                    'required' => false,
+                ])
+                ->setAssociatedColumn('email')
+            )
+            ->add((new Filter('profile', TextType::class))
+                ->setTypeOptions([
+                    'required' => false,
+                ])
+                ->setAssociatedColumn('profile')
+            )
+            ->add((new Filter('active', TextType::class))
+                ->setTypeOptions([
+                    'required' => false,
+                ])
+                ->setAssociatedColumn('active')
             )
         ;
     }
