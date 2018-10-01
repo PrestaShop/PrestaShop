@@ -111,6 +111,9 @@ const config = {
     meta: [
       './js/pages/meta'
     ],
+    employee: [
+      './js/pages/employee',
+    ],
   },
   output: {
     path: path.resolve(__dirname, 'public'),
