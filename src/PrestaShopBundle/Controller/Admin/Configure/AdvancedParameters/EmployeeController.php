@@ -28,6 +28,9 @@ namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use PrestaShop\PrestaShop\Core\Search\Filters\EmployeeFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -50,5 +53,30 @@ class EmployeeController extends FrameworkBundleAdminController
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/Employee/index.html.twig', [
             'employeeGrid' => $this->presentGrid($employeeGrid),
         ]);
+    }
+
+    /**
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function searchAction(Request $request)
+    {
+        $definitionFactory = $this->get('prestashop.core.grid.definition.factory.employee');
+        $emailLogsDefinition = $definitionFactory->getDefinition();
+
+        $gridFilterFormFactory = $this->get('prestashop.core.grid.filter.form_factory');
+        $filtersForm = $gridFilterFormFactory->create($emailLogsDefinition);
+        $filtersForm->handleRequest($request);
+
+        $filters = [];
+
+        if ($filtersForm->isSubmitted()) {
+            $filters = $filtersForm->getData();
+        }
+
+        return $this->redirectToRoute('admin_employees_index', ['filters' => $filters]);
     }
 }

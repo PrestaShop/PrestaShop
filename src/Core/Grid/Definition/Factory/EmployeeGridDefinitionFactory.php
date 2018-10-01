@@ -27,11 +27,12 @@
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ToggleColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
-use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
@@ -40,6 +41,26 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
  */
 final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
+    /**
+     * @var string
+     */
+    private $resetUrl;
+
+    /**
+     * @var string
+     */
+    private $redirectUrl;
+
+    /**
+     * @param string $resetUrl
+     * @param string $redirectUrl
+     */
+    public function __construct($resetUrl, $redirectUrl)
+    {
+        $this->resetUrl = $resetUrl;
+        $this->redirectUrl = $redirectUrl;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -101,6 +122,7 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'route_param_id' => 'employeeId',
                 ])
             )
+            ->add((new ActionColumn('actions')))
         ;
     }
 
@@ -128,7 +150,7 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ])
                 ->setAssociatedColumn('last_name')
             )
-            ->add((new Filter('email', EmailType::class))
+            ->add((new Filter('email', TextType::class))
                 ->setTypeOptions([
                     'required' => false,
                 ])
@@ -145,6 +167,15 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'required' => false,
                 ])
                 ->setAssociatedColumn('active')
+            )
+            ->add((new Filter('actions', SearchAndResetType::class))
+                ->setTypeOptions([
+                    'attr' => [
+                        'data-url' => $this->resetUrl,
+                        'data-redirect' => $this->redirectUrl,
+                    ],
+                ])
+                ->setAssociatedColumn('actions')
             )
         ;
     }
