@@ -63,7 +63,7 @@ abstract class AbstractImageUploader implements ImageUploaderInterface
 
         if (!ImageManager::isRealImage($image->getPathname(), $image->getClientMimeType())
             || !ImageManager::isCorrectImageFileExt($image->getClientOriginalName())
-            || preg_match('/\%00/', $image->getClientOriginalName())
+            || preg_match('/\%00/', $image->getClientOriginalName()) // prevent null byte injection
         ) {
             throw new UploadedImageConstraintException(
                 sprintf(
