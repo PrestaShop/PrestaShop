@@ -93,7 +93,7 @@ final class GetCategoryForEditingHandler implements GetCategoryForEditingHandler
     /**
      * @param CategoryId $categoryId
      *
-     * @return array
+     * @return array|null Cover image data or null if category does not have cover.
      */
     private function getCoverImage(CategoryId $categoryId)
     {
@@ -116,7 +116,7 @@ final class GetCategoryForEditingHandler implements GetCategoryForEditingHandler
         }
 
         return [
-            'size' => sprintf('%skb', $imageSize),
+            'size' => sprintf('%skB', $imageSize),
             'path' => $this->imageTagSourceParser->parse($imageTag),
         ];
     }
