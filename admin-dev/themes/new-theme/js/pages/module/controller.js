@@ -67,9 +67,10 @@ class AdminModuleController {
     this.addonsCardGrid = null;
     this.addonsCardList = null;
 
+    this.moduleShortList = '.module-short-list';
     // See more & See less selector
-    this.seeMoreSelector = '.module-short-list .see-more';
-    this.seeLessSelector = '.module-short-list .see-less';
+    this.seeMoreSelector = '.see-more';
+    this.seeLessSelector = '.see-less';
 
     // Selectors into vars to make it easier to change them while keeping same code logic
     this.moduleItemGridSelector = '.module-item-grid';
@@ -394,16 +395,20 @@ class AdminModuleController {
 
     $('.module-short-list').each(function setShortListVisibility() {
       const container = $(this);
+      const nbModulesInContainer = container.find('.module-item').length;
       if (
         (
           self.currentRefCategory
           && self.currentRefCategory !== String(container.find('.modules-list').data('name'))
         ) || (
           self.currentRefStatus !== null
-          && container.find('.module-item').length === 0
+          && nbModulesInContainer === 0
         ) || (
-          container.find('.module-item').length === 0 &&
-          String(container.find('.modules-list').data('name')) === self.CATEGORY_RECENTLY_USED
+          nbModulesInContainer === 0
+          && String(container.find('.modules-list').data('name')) === self.CATEGORY_RECENTLY_USED
+        ) || (
+          self.currentTagsList.length > 0
+          && nbModulesInContainer === 0
         )
       ) {
         container.hide();
@@ -411,10 +416,10 @@ class AdminModuleController {
       }
 
       container.show();
-      if (container.find('.module-item').length >= self.DEFAULT_MAX_RECENTLY_USED) {
-        container.find(`${this.seeMoreSelector}, ${this.seeLessSelector}`).show();
+      if (nbModulesInContainer >= self.DEFAULT_MAX_PER_CATEGORIES) {
+        container.find(`${self.seeMoreSelector}, ${self.seeLessSelector}`).show();
       } else {
-        container.find(`${this.seeMoreSelector}, ${this.seeLessSelector}`).hide();
+        container.find(`${self.seeMoreSelector}, ${self.seeLessSelector}`).hide();
       }
     });
   }
@@ -472,9 +477,9 @@ class AdminModuleController {
         }
 
         /**
-         * If list display we must display only the first 5 modules
+         * If list display without search we must display only the first 5 modules
          */
-        if (self.currentDisplay === self.DISPLAY_LIST) {
+        if (self.currentDisplay === self.DISPLAY_LIST && !self.currentTagsList.length) {
           if (self.currentCategoryDisplay[moduleCategory] === undefined) {
             self.currentCategoryDisplay[moduleCategory] = false;
           }
@@ -1061,7 +1066,7 @@ class AdminModuleController {
 
   initSearchBlock() {
     const self = this;
-    this.pstaggerInput = $('#module-search-bar').pstagger({
+    self.pstaggerInput = $('#module-search-bar').pstagger({
       onTagsChanged: (tagList) => {
         self.currentTagsList = tagList;
         self.updateModuleVisibility();
@@ -1117,17 +1122,17 @@ class AdminModuleController {
   initializeSeeMore() {
     const self = this;
 
-    $(self.seeMoreSelector).on('click', function seeMore() {
+    $(`${self.moduleShortList} ${self.seeMoreSelector}`).on('click', function seeMore() {
       self.currentCategoryDisplay[$(this).data('category')] = true;
       $(this).addClass('d-none');
-      $(self.seeLessSelector).removeClass('d-none');
+      $(this).closest(self.moduleShortList).find(self.seeLessSelector).removeClass('d-none');
       self.updateModuleVisibility();
     });
 
-    $(self.seeLessSelector).on('click', function seeMore() {
+    $(`${self.moduleShortList} ${self.seeLessSelector}`).on('click', function seeMore() {
       self.currentCategoryDisplay[$(this).data('category')] = false;
       $(this).addClass('d-none');
-      $(self.seeMoreSelector).removeClass('d-none');
+      $(this).closest(self.moduleShortList).find(self.seeMoreSelector).removeClass('d-none');
       self.updateModuleVisibility();
     });
   }
