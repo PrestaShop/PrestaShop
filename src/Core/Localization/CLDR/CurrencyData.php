@@ -107,11 +107,15 @@ class CurrencyData
         }
 
         if (null !== $currencyData->getDisplayNames()) {
-            $this->setDisplayNames($currencyData->getDisplayNames());
+            foreach ($currencyData->getDisplayNames() as $countContext => $name) {
+                $this->displayNames[$countContext] = $name;
+            }
         }
 
         if (null !== $currencyData->getSymbols()) {
-            $this->setSymbols($currencyData->getSymbols());
+            foreach ($currencyData->getSymbols() as $type => $symbol) {
+                $this->symbols[$type] = $symbol;
+            }
         }
 
         return $this;
