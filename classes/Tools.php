@@ -3514,7 +3514,8 @@ exit;
         return preg_replace('/\\\[px]\{[a-z]{1,2}\}|(\/[a-z]*)u([a-z]*)$/i', '$1$2', $pattern);
     }
 
-    protected static $is_addons_up = true;
+    protected static $is_addons_up = false;
+
     public static function addonsRequest($request, $params = array())
     {
         if (!self::$is_addons_up) {
