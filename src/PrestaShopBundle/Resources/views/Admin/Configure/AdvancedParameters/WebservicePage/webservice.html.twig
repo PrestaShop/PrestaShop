@@ -28,17 +28,19 @@
 
 {% block content %}
 
-  {% if configurationWarnings is not empty  %}
-    <div class="row">
-      <div class="col">
-        <div class="alert alert-warning" role="alert">
-          {% for warning in configurationWarnings %}
-            <p class="alert-text">{{ warning }}</p>
-          {% endfor %}
+  {% block webservice_list_notifications %}
+    {% if configurationWarnings is not empty  %}
+      <div class="row">
+        <div class="col">
+          <div class="alert alert-warning" role="alert">
+            {% for warning in configurationWarnings %}
+              <p class="alert-text">{{ warning }}</p>
+            {% endfor %}
+          </div>
         </div>
       </div>
-    </div>
-  {% endif %}
+    {% endif %}
+  {% endblock %}
 
   <div class="row">
     <div class="col">
