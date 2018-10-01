@@ -75,6 +75,7 @@ final class WebserviceKeyQueryBuilder extends AbstractDoctrineQueryBuilder
                 $this->getModifiedOrderBy($searchCriteria->getOrderBy()),
                 $searchCriteria->getOrderWay()
             )
+            ->groupBy('wa.`id_webservice_account`');
         ;
 
         $this->searchCriteriaApplicator->applyPagination($searchCriteria, $qb);
@@ -88,8 +89,7 @@ final class WebserviceKeyQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $qb = $this->getQueryBuilder($searchCriteria->getFilters())
-            ->select('SQL_CALC_FOUND_ROWS')
-            ->select('FOUND_ROWS()')
+            ->select('COUNT(DISTINCT wa.`id_webservice_account`)')
         ;
 
         return $qb;
@@ -116,7 +116,6 @@ final class WebserviceKeyQueryBuilder extends AbstractDoctrineQueryBuilder
         ;
 
         $qb->andWhere('was.`id_shop` IN (:shops)');
-        $qb->groupBy('wa.`id_webservice_account`');
 
         $qb->setParameter('shops', $this->contextShopIds, Connection::PARAM_INT_ARRAY);
 
