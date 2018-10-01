@@ -55,7 +55,7 @@ class EmployeeController extends FrameworkBundleAdminController
     }
 
     /**
-     * Save employee options submit.
+     * Save employee options.
      *
      * @param Request $request
      *
