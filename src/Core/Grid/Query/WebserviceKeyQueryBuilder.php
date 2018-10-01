@@ -75,7 +75,7 @@ final class WebserviceKeyQueryBuilder extends AbstractDoctrineQueryBuilder
                 $this->getModifiedOrderBy($searchCriteria->getOrderBy()),
                 $searchCriteria->getOrderWay()
             )
-            ->groupBy('wa.`id_webservice_account`');
+            ->groupBy('wa.`id_webservice_account`')
         ;
 
         $this->searchCriteriaApplicator->applyPagination($searchCriteria, $qb);
