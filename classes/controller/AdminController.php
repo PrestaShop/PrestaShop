@@ -3994,7 +3994,7 @@ class AdminControllerCore extends Controller
      */
     public function isFresh($file, $timeout = 604800)
     {
-        if (($time = @filemtime(_PS_ROOT_DIR_.$file)) && filesize(_PS_ROOT_DIR_.$file) > 0) {
+        if (($time = @filemtime(_PS_ROOT_DIR_.$file))) {
             return ((time() - $time) < $timeout);
         }
 
