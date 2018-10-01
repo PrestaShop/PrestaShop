@@ -7,8 +7,38 @@ const {Menu} = require('../../selectors/BO/menu.js');
 const {ThemeAndLogo} = require('../../selectors/BO/design/theme_and_logo');
 const Design = require('../../selectors/BO/design/index');
 const {languageFO} = require('../../selectors/FO/index');
+const {AddProductPage} = require('../../selectors/BO/add_product_page');
+
+/**** Example of local units data ****
+ * let localUnitsData = {
+ *  weight: 'weight unit',
+ *  distance: 'distance unit',
+ *  volume: 'volume unit',
+ *  dimension: 'dimension unit'
+ * };
+ */
 
 module.exports = {
+  localUnits(localUnitsData, firstUnit, secondUnit, nb = 1) {
+    scenario('Change local units then go to products page', client => {
+      test('should go to "International > Localization" page', () => client.goToSubtabMenuPage(Menu.Improve.International.international_menu, Menu.Improve.International.localization_submenu));
+      test('should set the "Weight unit" input', () => client.waitAndSetValue(Localization.Localization.local_unit_input.replace('%D', 'weight'), localUnitsData.weight));
+      test('should set the "Distance unit" input', () => client.waitAndSetValue(Localization.Localization.local_unit_input.replace('%D', 'distance'), localUnitsData.distance));
+      test('should set the "Volume unit" input', () => client.waitAndSetValue(Localization.Localization.local_unit_input.replace('%D', 'volume'), localUnitsData.volume));
+      test('should set the "Dimension unit" input', () => client.waitAndSetValue(Localization.Localization.local_unit_input.replace('%D', 'dimension'), localUnitsData.dimension));
+      test('should click on "Save" button', () => client.waitForExistAndClick(Localization.Localization.save_local_units_button));
+      if (nb === 1) {
+        test('should verify the appearance of the green validation', () => client.checkTextValue(Localization.Localization.success_alert_panel.replace("%B", "alert-success"), "Update successful"));
+        test('should go to "Products" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.products_submenu));
+        test('should click on "New product" button', () => client.waitForExistAndClick(AddProductPage.new_product_button));
+        test('should click on "Shipping" tab', () => client.scrollWaitForExistAndClick(AddProductPage.product_shipping_tab, 50));
+        test('verify that it is "' + firstUnit.toUpperCase() + '" for width', () => client.checkTextValue(AddProductPage.shipping_width_unit, firstUnit));
+        test('verify that it is "' + firstUnit.toUpperCase() + '" for height', () => client.checkTextValue(AddProductPage.shipping_height_unit, firstUnit));
+        test('verify that it is "' + firstUnit.toUpperCase() + '" for depth', () => client.checkTextValue(AddProductPage.shipping_depth_unit, firstUnit));
+        test('verify that it is "' + secondUnit.toUpperCase() + '" for weight', () => client.checkTextValue(AddProductPage.shipping_weight_unit, secondUnit));
+      }
+    }, 'common_client');
+  },
   createLanguage: function (languageData) {
     scenario('Create a new "Language"', client => {
       test('should go to "Localization" page', () => client.goToSubtabMenuPage(Menu.Improve.International.international_menu, Menu.Improve.International.localization_submenu));

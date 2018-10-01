@@ -142,6 +142,11 @@ class CommonClient {
       .waitForExistAndClick(selector, timeout);
   }
 
+  pause(pause){
+      return this.client
+        .pause(pause)
+  }
+
   waitAndSetValue(selector, value, pause = 0, timeout = 90000) {
     return this.client
       .pause(pause)
@@ -332,7 +337,7 @@ class CommonClient {
    * @returns {*}
    */
   checkFile(folderPath, fileName, pause = 0) {
-    fs.stat(folderPath + fileName, function(err, stats) {
+    fs.stat(folderPath + fileName, function (err, stats) {
       err === null && stats.isFile() ? global.existingFile = true : global.existingFile = false;
     });
 
