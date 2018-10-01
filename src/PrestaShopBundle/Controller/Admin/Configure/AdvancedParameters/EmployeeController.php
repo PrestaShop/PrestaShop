@@ -27,11 +27,57 @@
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Class EmployeeController handles pages under "Configure > Advanced Parameters > Team > Employees".
+ */
 class EmployeeController extends FrameworkBundleAdminController
 {
-    public function indexAction()
+    /**
+     * Show employees list & options page.
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function indexAction(Request $request)
     {
-        return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/Employee/index.html.twig');
+        $employeeOptionsFormHandler = $this->get('prestashop.admin.employee_options.form_handler');
+        $employeeOptionsForm = $employeeOptionsFormHandler->getForm();
+
+        return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/Employee/index.html.twig', [
+            'employeeOptionsForm' => $employeeOptionsForm->createView(),
+        ]);
+    }
+
+    /**
+     * Save employee options submit.
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function saveOptionsAction(Request $request)
+    {
+        $employeeOptionsFormHandler = $this->get('prestashop.admin.employee_options.form_handler');
+        $employeeOptionsForm = $employeeOptionsFormHandler->getForm();
+        $employeeOptionsForm->handleRequest($request);
+
+        if ($employeeOptionsForm->isSubmitted()) {
+            $errors = $employeeOptionsFormHandler->save($employeeOptionsForm->getData());
+
+            if (!empty($errors)) {
+                $this->flashErrors($errors);
+
+                return $this->redirectToRoute('admin_employees_index');
+            }
+
+            $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+        }
+
+        return $this->redirectToRoute('admin_employees_index');
     }
 }
