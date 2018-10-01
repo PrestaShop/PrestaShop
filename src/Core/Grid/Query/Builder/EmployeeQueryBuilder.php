@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -117,7 +117,7 @@ final class EmployeeQueryBuilder extends AbstractDoctrineQueryBuilder
         ;
 
         $qb = $this->connection->createQueryBuilder()
-            ->from($this->dbPrefix .'employee', 'e')
+            ->from($this->dbPrefix . 'employee', 'e')
             ->leftJoin(
                 'e',
                 $this->dbPrefix . 'profile_lang',
@@ -142,7 +142,7 @@ final class EmployeeQueryBuilder extends AbstractDoctrineQueryBuilder
     {
         foreach ($filters as $filterName => $filterValue) {
             if ('id_employee' === $filterName) {
-                $queryBuilder->andWhere('e.id_employee = :'. $filterName);
+                $queryBuilder->andWhere('e.id_employee = :' . $filterName);
                 $queryBuilder->setParameter($filterName, $filterValue);
                 continue;
             }
