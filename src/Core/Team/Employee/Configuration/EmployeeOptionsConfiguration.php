@@ -64,10 +64,10 @@ final class EmployeeOptionsConfiguration implements DataConfigurationInterface
     public function updateConfiguration(array $configuration)
     {
         if ($this->validateConfiguration($configuration)) {
-            $this->configuration->set('PS_PASSWD_TIME_BACK', $configuration['password_change_time']);
+            $this->configuration->set('PS_PASSWD_TIME_BACK', (int) $configuration['password_change_time']);
             $this->configuration->set(
                 'PS_BO_ALLOW_EMPLOYEE_FORM_LANG',
-                $configuration['allow_employee_specific_language']
+                (bool) $configuration['allow_employee_specific_language']
             );
         }
 

@@ -36,5 +36,19 @@ interface MultistoreContextCheckerInterface
      *
      * @return bool
      */
+    public function isAllShopContext();
+
+    /**
+     * Check if current shop is in group shop context.
+     *
+     * @return bool
+     */
+    public function isGroupShopContext();
+
+    /**
+     * Check if current shop is in single shop context.
+     *
+     * @return bool
+     */
     public function isSingleShopContext();
 }

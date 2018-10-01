@@ -575,6 +575,8 @@ services:
     form.type.team.employee.employee_options:
         class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Employee\EmployeeOptionsType'
         parent: 'form.type.translatable.aware'
+        arguments:
+            - '@=service("prestashop.adapter.shop.context").isAllShopContext()'
         public: true
         tags:
             - { name: form.type }
