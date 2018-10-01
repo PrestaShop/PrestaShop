@@ -29,9 +29,9 @@ namespace PrestaShop\PrestaShop\Core\Domain\Category\Command;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryConstraintException;
 
 /**
- * Class AddRootCategoryCommand.
+ * Class AddRootCategoryCommand adds new root category.
  */
-class AddRootCategoryCommand extends AbstractRootCategoryCommand
+class AddRootCategoryCommand extends AbstractCategoryCommand
 {
     /**
      * @param string[] $name

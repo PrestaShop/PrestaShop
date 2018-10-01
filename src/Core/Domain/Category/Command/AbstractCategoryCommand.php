@@ -30,9 +30,9 @@ use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryConstraintExcep
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
- * Class AbstractAddCategoryCommand defines common command for both simple and root category creation.
+ * Class AbstractAddCategoryCommand defines common command for both simple and root category.
  */
-abstract class AbstractRootCategoryCommand
+abstract class AbstractCategoryCommand
 {
     /**
      * @var string[]
