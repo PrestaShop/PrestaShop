@@ -72,6 +72,7 @@ final class CurrencyQueryBuilder extends AbstractDoctrineQueryBuilder
         $this->searchCriteriaApplicator
             ->applyPagination($searchCriteria, $qb)
             ->applySorting($searchCriteria, $qb)
+
         ;
 
         return $qb;
