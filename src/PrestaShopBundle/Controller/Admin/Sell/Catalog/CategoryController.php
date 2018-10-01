@@ -152,9 +152,6 @@ class CategoryController extends FrameworkBundleAdminController
             }
         }
 
-        /** @var DefaultGroups $defaultGroups */
-        $defaultGroups = $this->getQueryBus()->handle(new GetDefaultGroups());
-
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Categories/add_root.html.twig', [
             'layoutTitle' => $this->trans('Add new', 'Admin.Actions'),
             'rootCategoryForm' => $rootCategoryForm->createView(),
