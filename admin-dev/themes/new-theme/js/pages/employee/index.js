@@ -28,6 +28,8 @@ import ReloadListActionExtension from "../../components/grid/extension/reload-li
 import ExportToSqlManagerExtension from "../../components/grid/extension/export-to-sql-manager-extension";
 import FiltersResetExtension from "../../components/grid/extension/filters-reset-extension";
 import SortingExtension from "../../components/grid/extension/sorting-extension";
+import BulkActionCheckboxExtension from "../../components/grid/extension/bulk-action-checkbox-extension";
+import SubmitBulkActionExtension from "../../components/grid/extension/submit-bulk-action-extension";
 
 const $ = window.$;
 
@@ -38,4 +40,6 @@ $(() => {
   employeeGrid.addExtension(new ExportToSqlManagerExtension());
   employeeGrid.addExtension(new FiltersResetExtension());
   employeeGrid.addExtension(new SortingExtension());
+  employeeGrid.addExtension(new BulkActionCheckboxExtension());
+  employeeGrid.addExtension(new SubmitBulkActionExtension());
 });
