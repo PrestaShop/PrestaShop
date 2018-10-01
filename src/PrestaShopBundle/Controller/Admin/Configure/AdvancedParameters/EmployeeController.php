@@ -39,11 +39,9 @@ class EmployeeController extends FrameworkBundleAdminController
     /**
      * Show employees list & options page.
      *
-     * @param Request $request
-     *
      * @return Response
      */
-    public function indexAction(Request $request)
+    public function indexAction()
     {
         $employeeOptionsFormHandler = $this->get('prestashop.admin.employee_options.form_handler');
         $employeeOptionsForm = $employeeOptionsFormHandler->getForm();
