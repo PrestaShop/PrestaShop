@@ -75,7 +75,7 @@ class Context implements MultistoreContextCheckerInterface
      *
      * @return bool
      *
-     * @deprecated Use $this->isGroupShopContext() instead.
+     * @deprecated use $this->isGroupShopContext() instead
      */
     public function isShopGroupContext()
     {
@@ -97,7 +97,7 @@ class Context implements MultistoreContextCheckerInterface
      *
      * @return bool
      *
-     * @deprecated Use $this->isAllShopContext() instead.
+     * @deprecated use $this->isAllShopContext() instead
      */
     public function isAllContext()
     {
