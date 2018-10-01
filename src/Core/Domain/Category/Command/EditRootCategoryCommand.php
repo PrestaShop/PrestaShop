@@ -29,9 +29,9 @@ namespace PrestaShop\PrestaShop\Core\Domain\Category\Command;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 
 /**
- * Class EditRootCategoryCommand.
+ * Class EditRootCategoryCommand edits given root category.
  */
-class EditRootCategoryCommand extends AbstractRootCategoryCommand
+class EditRootCategoryCommand extends AbstractCategoryCommand
 {
     /**
      * @var CategoryId

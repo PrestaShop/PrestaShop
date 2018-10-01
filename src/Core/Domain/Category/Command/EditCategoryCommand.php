@@ -30,9 +30,9 @@ use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryConstraintExcep
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 
 /**
- * Class EditCategoryCommand.
+ * Class EditCategoryCommand edits given category.
  */
-class EditCategoryCommand extends AbstractRootCategoryCommand
+class EditCategoryCommand extends AbstractCategoryCommand
 {
     /**
      * @var CategoryId
