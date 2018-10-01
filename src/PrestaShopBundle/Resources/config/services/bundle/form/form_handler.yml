@@ -275,6 +275,16 @@ services:
               'url_schema': 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta\UrlSchemaType'
             - 'MetaPage'
 
+    prestashop.admin.employee_options.form_handler:
+        class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
+        arguments:
+            - '@=service("form.factory").createBuilder()'
+            - '@prestashop.core.hook.dispatcher'
+            - '@prestashop.admin.traffic_seo.meta_settings.form_data_provider'
+            -
+              'options': 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Employee\EmployeeOptionsType'
+            - 'Employee'
+
     # Entity form handler
     prestashop.admin.request_sql.form_handler:
         class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\RequestSql\SqlRequestFormHandler'
