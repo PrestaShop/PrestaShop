@@ -43,11 +43,12 @@ class EmployeeController extends FrameworkBundleAdminController
      *
      * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
      *
+     * @param Request $request
      * @param EmployeeFilters $filters
      *
      * @return Response
      */
-    public function indexAction(EmployeeFilters $filters)
+    public function indexAction(Request $request, EmployeeFilters $filters)
     {
         $employeeOptionsFormHandler = $this->get('prestashop.admin.employee_options.form_handler');
         $employeeOptionsForm = $employeeOptionsFormHandler->getForm();
@@ -60,6 +61,7 @@ class EmployeeController extends FrameworkBundleAdminController
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/Employee/index.html.twig', [
             'employeeOptionsForm' => $employeeOptionsForm->createView(),
             'canOptionsBeChanged' => $employeeOptionsChecker->canBeChanged(),
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'employeeGrid' => $this->presentGrid($employeeGrid),
         ]);
     }

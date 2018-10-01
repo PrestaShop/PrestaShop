@@ -551,7 +551,6 @@ services:
         tags:
             - { name: form.type }
 
-<<<<<<< HEAD
     form.type.common.translatable:
         class: 'PrestaShopBundle\Form\Admin\Type\TranslatableType'
         arguments:
