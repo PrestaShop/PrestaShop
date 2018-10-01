@@ -148,9 +148,9 @@ services:
     prestashop.core.grid.definition.factory.employee:
         class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\EmployeeGridDefinitionFactory'
         parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
-        #arguments:
-            #- "@=service('router').generate('admin_common_reset_search', {'controller': 'employee', 'action': 'index'})"
-            #- "@=service('router').generate('admin_employees_index')"
+        arguments:
+            - "@=service('router').generate('admin_common_reset_search', {'controller': 'employee', 'action': 'index'})"
+            - "@=service('router').generate('admin_employees_index')"
         public: true
 
     # Grid factories

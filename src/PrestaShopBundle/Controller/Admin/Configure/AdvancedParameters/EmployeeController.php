@@ -1,10 +1,6 @@
 <?php
 /**
-<<<<<<< HEAD
  * 2007-2018 PrestaShop.
-=======
- * 2007-2018 PrestaShop
->>>>>>> 365eb8c6c4... add inital employees list
  *
  * NOTICE OF LICENSE
  *
@@ -86,7 +82,6 @@ class EmployeeController extends FrameworkBundleAdminController
 
         $filtersForm = $gridFilterFormFactory->create($employeeGridDefinition);
         $filtersForm->handleRequest($request);
-
         $filters = [];
 
         if ($filtersForm->isSubmitted()) {

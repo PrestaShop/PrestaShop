@@ -141,7 +141,38 @@ final class EmployeeQueryBuilder extends AbstractDoctrineQueryBuilder
     private function applyFilters(QueryBuilder $queryBuilder, array $filters)
     {
         foreach ($filters as $filterName => $filterValue) {
+            if ('id_employee' === $filterName) {
+                $queryBuilder->andWhere('e.id_employee = :'. $filterName);
+                $queryBuilder->setParameter($filterName, $filterValue);
+                continue;
+            }
 
+            if ('first_name' === $filterName) {
+                $queryBuilder->andWhere('e.firstname = :firstname');
+                $queryBuilder->setParameter('firstname', '%' . $filterValue . '%');
+                continue;
+            }
+
+            if ('last_name' === $filterName) {
+                $queryBuilder->andWhere('e.lastname = :lastname');
+                $queryBuilder->setParameter('lastname', '%' . $filterValue . '%');
+                continue;
+            }
+
+            if ('profile' === $filterName) {
+                $queryBuilder->andWhere('pl.id_profile = :id_profile');
+                $queryBuilder->setParameter('id_profile', $filterValue);
+                continue;
+            }
+
+            if ('active' === $filterName) {
+                $queryBuilder->andWhere('e.active = :active');
+                $queryBuilder->setParameter('active', $filterValue);
+                continue;
+            }
+
+            $queryBuilder->andWhere("$filterName LIKE :$filterName");
+            $queryBuilder->setParameter($filterName, '%' . $filterValue . '%');
         }
     }
 }
