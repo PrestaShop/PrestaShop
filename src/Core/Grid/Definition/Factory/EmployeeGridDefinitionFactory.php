@@ -26,6 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
+use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
+use PrestaShop\PrestaShop\Core\Grid\Action\Type\SubmitGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ToggleColumn;
@@ -177,6 +180,28 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ],
                 ])
                 ->setAssociatedColumn('actions')
+            )
+        ;
+    }
+
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getGridActions()
+    {
+        return (new GridActionCollection())
+            ->add((new SimpleGridAction('common_refresh_list'))
+                ->setName($this->trans('Refresh list', [], 'Admin.Advparameters.Feature'))
+                ->setIcon('refresh')
+            )
+            ->add((new SimpleGridAction('common_show_query'))
+                ->setName($this->trans('Show SQL query', [], 'Admin.Actions'))
+                ->setIcon('code')
+            )
+            ->add((new SimpleGridAction('common_export_sql_manager'))
+                ->setName($this->trans('Export to SQL Manager', [], 'Admin.Actions'))
+                ->setIcon('storage')
             )
         ;
     }
