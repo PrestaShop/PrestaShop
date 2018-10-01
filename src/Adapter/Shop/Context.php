@@ -97,7 +97,7 @@ class Context implements MultistoreContextCheckerInterface
      *
      * @return bool
      *
-     * @deprecated Use $this->isAllShopContext( instead.
+     * @deprecated Use $this->isAllShopContext() instead.
      */
     public function isAllContext()
     {
