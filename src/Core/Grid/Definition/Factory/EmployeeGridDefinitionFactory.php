@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ToggleColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
@@ -91,10 +92,13 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'field' => 'profile_name',
                 ])
             )
-            ->add((new DataColumn('active'))
+            ->add((new ToggleColumn('active'))
                 ->setName($this->trans('Active', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'active',
+                    'primary_field' => 'id_employee',
+                    'route' => 'admin_employees_index',
+                    'route_param_id' => 'employeeId',
                 ])
             )
         ;
