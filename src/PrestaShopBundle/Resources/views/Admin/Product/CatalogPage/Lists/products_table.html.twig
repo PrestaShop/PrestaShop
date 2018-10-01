@@ -22,7 +22,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *#}
-{% import 'PrestaShopBundle:Admin:macros.html.twig' as ps %}
+{% import '@PrestaShop/Admin/macros.html.twig' as ps %}
 <div class="table-responsive">
   <table
     class="table product mt-3"
@@ -82,7 +82,7 @@
       {% block product_catalog_form_table_filters %}
         <tr class="column-filters">
           <th colspan="2">
-            {% include 'PrestaShopBundle:Admin/Helpers:range_inputs.html.twig' with {
+            {% include '@PrestaShop/Admin/Helpers/range_inputs.html.twig' with {
               'input_name': "filter_column_id_product",
               'min': '0',
               'max': '1000000',
@@ -120,7 +120,7 @@
             />
           </th>
           <th class="text-center">
-            {% include 'PrestaShopBundle:Admin/Helpers:range_inputs.html.twig' with {
+            {% include '@PrestaShop/Admin/Helpers/range_inputs.html.twig' with {
               'input_name': "filter_column_price",
               'min': '0',
               'max': '1000000',
@@ -132,7 +132,7 @@
 
           {% if 'PS_STOCK_MANAGEMENT'|configuration %}
           <th class="text-center">
-            {% include 'PrestaShopBundle:Admin/Helpers:range_inputs.html.twig' with {
+            {% include '@PrestaShop/Admin/Helpers/range_inputs.html.twig' with {
               'input_name': "filter_column_sav_quantity",
               'min': '-1000000',
               'max': '1000000',

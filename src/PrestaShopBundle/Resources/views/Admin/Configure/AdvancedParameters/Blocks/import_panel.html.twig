@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-{% import 'PrestaShopBundle:Admin:macros.html.twig' as ps %}
+{% import '@PrestaShop/Admin/macros.html.twig' as ps %}
 {% trans_default_domain 'Admin.Advparameters.Feature' %}
 
 {{ form_start(importForm, {'attr': { 'data-file-upload-url': importFileUploadUrl, 'data-delete-confirm-message': ('Are you sure that you would like to delete this entity:'|trans({}, 'Admin.Advparameters.Notification')), 'class': 'js-import-form' }}) }}

@@ -40,7 +40,7 @@ class AlertsController extends ModuleAbstractController
     public function indexAction()
     {
         return $this->render(
-            'PrestaShopBundle:Admin/Module:alerts.html.twig',
+            '@PrestaShop/Admin/Module/alerts.html.twig',
             $this->getNotificationPageData('to_configure')
         );
     }

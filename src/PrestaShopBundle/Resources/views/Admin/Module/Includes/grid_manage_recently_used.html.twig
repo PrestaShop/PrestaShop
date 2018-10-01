@@ -22,16 +22,10 @@
   * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
   * International Registered Trademark & Property of PrestaShop SA
   *#}
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="UTF-8" />
-    <title>{% block title %}Welcome!{% endblock %}</title>
-    {% block stylesheets %}{% endblock %}
-    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
-  </head>
-  <body>
-    {% block body %}{% endblock %}
-    {% block javascripts %}{% endblock %}
-  </body>
-</html>
+
+{% block catalog_recently_used %}
+  <div id="module-recently-used-list" class="module-short-list">
+    <span id="recently-used_modules" class="module-search-result-title">{{ 'Recently Used' | trans({}, 'Admin.Modules.Feature') }}</span>
+    <div class="modules-list" data-name="recently-used"></div>
+  </div>
+{% endblock %}
