@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryConstraintExcep
 /**
  * Class AddCategoryCommand adds new category.
  */
-class AddCategoryCommand extends AbstractRootCategoryCommand
+class AddCategoryCommand extends AbstractCategoryCommand
 {
     /**
      * @var int
