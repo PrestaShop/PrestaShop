@@ -280,7 +280,7 @@ services:
         arguments:
             - '@=service("form.factory").createBuilder()'
             - '@prestashop.core.hook.dispatcher'
-            - '@prestashop.admin.traffic_seo.meta_settings.form_data_provider'
+            - '@prestashop.admin.employee_options.form_data_provider'
             -
               'options': 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Employee\EmployeeOptionsType'
             - 'Employee'
