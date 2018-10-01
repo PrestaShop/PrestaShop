@@ -184,7 +184,6 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
         ;
     }
 
-
     /**
      * {@inheritdoc}
      */

@@ -41,16 +41,18 @@ class EmployeeController extends FrameworkBundleAdminController
     /**
      * Show employees list & options page.
      *
+     * @param Request $request
      * @param EmployeeFilters $filters
      *
      * @return Response
      */
-    public function indexAction(EmployeeFilters $filters)
+    public function indexAction(Request $request, EmployeeFilters $filters)
     {
         $employeeGridFactory = $this->get('prestashop.core.grid.factory.employee');
         $employeeGrid = $employeeGridFactory->getGrid($filters);
 
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/Employee/index.html.twig', [
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'employeeGrid' => $this->presentGrid($employeeGrid),
         ]);
     }
