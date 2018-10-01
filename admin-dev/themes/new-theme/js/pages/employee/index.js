@@ -1,4 +1,4 @@
-{#**
+/**
  * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
@@ -21,21 +21,21 @@
  * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-{% extends '@PrestaShop/Admin/layout.html.twig' %}
+import Grid from "../../components/grid/grid";
+import ReloadListActionExtension from "../../components/grid/extension/reload-list-extension";
+import ExportToSqlManagerExtension from "../../components/grid/extension/export-to-sql-manager-extension";
+import FiltersResetExtension from "../../components/grid/extension/filters-reset-extension";
+import SortingExtension from "../../components/grid/extension/sorting-extension";
 
-{% block content %}
-  <div class="row">
-    <div class="col">
-      {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with { 'grid': employeeGrid } %}
-    </div>
-  </div>
-{% endblock %}
+const $ = window.$;
 
-{% block javascripts %}
-  {{ parent() }}
+$(() => {
+  const employeeGrid = new Grid('employee');
 
-  <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
-  <script src="{{ asset('themes/new-theme/public/employee.bundle.js') }}"></script>
-{% endblock %}
+  employeeGrid.addExtension(new ReloadListActionExtension());
+  employeeGrid.addExtension(new ExportToSqlManagerExtension());
+  employeeGrid.addExtension(new FiltersResetExtension());
+  employeeGrid.addExtension(new SortingExtension());
+});
