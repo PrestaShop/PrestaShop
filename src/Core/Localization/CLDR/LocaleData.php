@@ -122,7 +122,9 @@ class LocaleData
         }
 
         if (null !== $localeData->getNumberingSystems()) {
-            $this->setNumberingSystems($localeData->getNumberingSystems());
+            foreach ($localeData->getNumberingSystems() as $name => $value) {
+                $this->numberingSystems[$name] = $value;
+            }
         }
 
         if (null !== $localeData->getDefaultNumberingSystem()) {
@@ -153,7 +155,9 @@ class LocaleData
         }
 
         if (null !== $localeData->getCurrencyPatterns()) {
-            $this->setCurrencyPatterns($localeData->getCurrencyPatterns());
+            foreach ($localeData->getCurrencyPatterns() as $numberingSystem => $pattern) {
+                $this->currencyPatterns[$numberingSystem] = $pattern;
+            }
         }
 
         if (null !== $localeData->getCurrencies()) {
