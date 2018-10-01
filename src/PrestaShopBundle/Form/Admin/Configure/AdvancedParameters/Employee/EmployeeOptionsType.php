@@ -30,12 +30,33 @@ use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TextWithUnitType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Class EmployeeOptionsType defines form for employee options.
  */
 class EmployeeOptionsType extends TranslatorAwareType
 {
+    /**
+     * @var bool
+     */
+    private $isAllShopContext;
+
+    /**
+     * @param TranslatorInterface $translator
+     * @param array $locales
+     * @param $isAllShopContext
+     */
+    public function __construct(
+        TranslatorInterface $translator,
+        array $locales,
+        $isAllShopContext
+    ) {
+        parent::__construct($translator, $locales);
+
+        $this->isAllShopContext = $isAllShopContext;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -45,9 +66,11 @@ class EmployeeOptionsType extends TranslatorAwareType
             ->add('password_change_time', TextWithUnitType::class, [
                 'required' => false,
                 'unit' => $this->trans('minutes', 'Admin.Advparameters.Feature'),
+                'disabled' => !$this->isAllShopContext,
             ])
             ->add('allow_employee_specific_language', SwitchType::class, [
                 'required' => false,
+                'disabled' => !$this->isAllShopContext,
             ])
         ;
     }

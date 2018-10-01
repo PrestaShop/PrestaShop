@@ -46,8 +46,11 @@ class EmployeeController extends FrameworkBundleAdminController
         $employeeOptionsFormHandler = $this->get('prestashop.admin.employee_options.form_handler');
         $employeeOptionsForm = $employeeOptionsFormHandler->getForm();
 
+        $multistoreContextChecker = $this->get('prestashop.adapter.shop.context');
+
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/Employee/index.html.twig', [
             'employeeOptionsForm' => $employeeOptionsForm->createView(),
+            'isAllShopContext' => $multistoreContextChecker->isAllShopContext(),
         ]);
     }
 

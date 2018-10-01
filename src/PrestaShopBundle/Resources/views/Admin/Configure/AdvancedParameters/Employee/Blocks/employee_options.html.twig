@@ -36,6 +36,14 @@
         <div class="col-sm">
           {{ form_errors(employeeOptionsForm.options.password_change_time) }}
           {{ form_widget(employeeOptionsForm.options.password_change_time) }}
+
+          {% if not isAllShopContext %}
+          <div class="alert alert-warning mt-2" role="alert">
+            <p class="alert-text">
+              {{ 'You can\'t change the value of this configuration field in the context of this shop.'|trans({}, 'Admin.Notifications.Warning') }}
+            </p>
+          </div>
+          {% endif %}
         </div>
       </div>
 
@@ -44,6 +52,14 @@
         <div class="col-sm">
           {{ form_errors(employeeOptionsForm.options.allow_employee_specific_language) }}
           {{ form_widget(employeeOptionsForm.options.allow_employee_specific_language) }}
+
+          {% if not isAllShopContext %}
+          <div class="alert alert-warning mt-2" role="alert">
+            <p class="alert-text">
+              {{ 'You can\'t change the value of this configuration field in the context of this shop.'|trans({}, 'Admin.Notifications.Warning') }}
+            </p>
+          </div>
+          {% endif %}
         </div>
       </div>
 
