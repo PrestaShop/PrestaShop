@@ -114,6 +114,11 @@ class Repository implements RepositoryInterface
      */
     protected $maxFractionDigits;
 
+    /**
+     * @var SpecificationFactory
+     */
+    protected $specificationFactory;
+
     public function __construct(
         CldrLocaleRepository $cldrLocaleRepository,
         CurrencyRepository $currencyRepository,
@@ -130,6 +135,7 @@ class Repository implements RepositoryInterface
         $this->currencyDisplayType = $currencyDisplayType;
         $this->numberGroupingUsed = $groupingUsed;
         $this->maxFractionDigits = $maxFractionDigits;
+        $this->specificationFactory = new SpecificationFactory();
     }
 
     /**
@@ -170,7 +176,7 @@ class Repository implements RepositoryInterface
             throw new LocalizationException('CLDR locale not found for locale code "' . $localeCode . '"');
         }
 
-        return (new SpecificationFactory())->buildNumberSpecification(
+        return $this->specificationFactory->buildNumberSpecification(
             $cldrLocale,
             $this->maxFractionDigits,
             $this->numberGroupingUsed
