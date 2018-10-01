@@ -26,7 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
-use PrestaShop\PrestaShop\Core\Domain\Category\Command\AbstractRootCategoryCommand;
+use PrestaShop\PrestaShop\Core\Domain\Category\Command\AbstractCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddRootCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\EditCategoryCommand;
@@ -304,10 +304,10 @@ class CategoryController extends FrameworkBundleAdminController
     }
 
     /**
-     * @param AbstractRootCategoryCommand $command
+     * @param AbstractCategoryCommand $command
      * @param array $data
      */
-    protected function populateCommandWithFormData(AbstractRootCategoryCommand $command, array $data)
+    protected function populateCommandWithFormData(AbstractCategoryCommand $command, array $data)
     {
         if (null !== $data['description']) {
             $command->setDescription($data['description']);
