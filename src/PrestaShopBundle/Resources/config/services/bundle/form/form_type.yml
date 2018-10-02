@@ -628,7 +628,7 @@ services:
     form.type.common.category_choice_tree:
         class: 'PrestaShopBundle\Form\Admin\Type\CategoryChoiceTreeType'
         arguments:
-            - '@prestashop.core.api.category.repository'
+            - '@=service("prestashop.adapter.form.choice_provider.category_tree_choice_provider").getChoices()'
         tags:
             - { name: form.type }
 
