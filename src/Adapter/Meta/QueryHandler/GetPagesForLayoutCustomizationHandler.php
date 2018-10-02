@@ -60,6 +60,7 @@ final class GetPagesForLayoutCustomizationHandler implements GetPagesForLayoutCu
         foreach ($metas as $meta) {
             $pages[] = new LayoutCustomizationPage(
                 $meta['page'],
+                $meta['title'],
                 $meta['description']
             );
         }

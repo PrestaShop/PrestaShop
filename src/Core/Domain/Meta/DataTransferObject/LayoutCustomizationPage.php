@@ -42,13 +42,20 @@ class LayoutCustomizationPage
     private $description;
 
     /**
+     * @var string
+     */
+    private $title;
+
+    /**
      * @param string $page
+     * @param string $title
      * @param string $description
      */
-    public function __construct($page, $description)
+    public function __construct($page, $title, $description)
     {
         $this->page = $page;
         $this->description = $description;
+        $this->title = $title;
     }
 
     /**
@@ -57,6 +64,14 @@ class LayoutCustomizationPage
     public function getPage()
     {
         return $this->page;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTitle()
+    {
+        return $this->title;
     }
 
     /**
