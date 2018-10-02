@@ -45,6 +45,7 @@ class PageLayoutCustomizationType extends AbstractType
             ->add('layouts', CollectionType::class, [
                 'entry_type' => ChoiceType::class,
                 'entry_options' => [
+                    'label' => false,
                     'choices' => [
                         'Full width - No side columns, ideal for distraction-free pages such as product pages.' => 'layout-full-width',
                         'Three Columns - One large central column and 2 side columns.' => 'layout-both-columns',
