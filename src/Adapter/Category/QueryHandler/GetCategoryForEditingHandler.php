@@ -163,7 +163,7 @@ final class GetCategoryForEditingHandler implements GetCategoryForEditingHandler
         }
 
         return [
-            'size' => sprintf('%skb', $thumbSize),
+            'size' => sprintf('%skB', $thumbSize),
             'path' => $this->imageTagSourceParser->parse($imageTag),
         ];
     }
