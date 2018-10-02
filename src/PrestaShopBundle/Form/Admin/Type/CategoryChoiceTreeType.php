@@ -26,7 +26,6 @@
 
 namespace PrestaShopBundle\Form\Admin\Type;
 
-use PrestaShopBundle\Entity\Repository\CategoryRepository;
 use PrestaShopBundle\Form\Admin\Type\Material\MaterialChoiceTreeType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -37,16 +36,16 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class CategoryChoiceTreeType extends AbstractType
 {
     /**
-     * @var CategoryRepository
+     * @var array
      */
-    private $categoryRepository;
+    private $categoryTreeChoices;
 
     /**
-     * @param CategoryRepository $categoryRepository
+     * @param array $categoryTreeChoices
      */
-    public function __construct(CategoryRepository $categoryRepository)
+    public function __construct(array $categoryTreeChoices)
     {
-        $this->categoryRepository = $categoryRepository;
+        $this->categoryTreeChoices = $categoryTreeChoices;
     }
 
     /**
@@ -55,7 +54,7 @@ class CategoryChoiceTreeType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'choices_tree' => $this->getCategoryTreeChoices(),
+            'choices_tree' => $this->categoryTreeChoices,
             'choice_label' => 'name',
             'choice_value' => 'id_category',
         ]);
@@ -67,41 +66,5 @@ class CategoryChoiceTreeType extends AbstractType
     public function getParent()
     {
         return MaterialChoiceTreeType::class;
-    }
-
-    /**
-     * @return array
-     */
-    private function getCategoryTreeChoices()
-    {
-        $categories = $this->categoryRepository->getCategories(true);
-        $choices = [];
-
-        foreach ($categories['tree']['children'] as $category) {
-            $choices[] = $this->buildChoiceTree($category);
-        }
-
-        return $choices;
-    }
-
-    /**
-     * @param array $category
-     *
-     * @return array
-     */
-    private function buildChoiceTree(array $category)
-    {
-        $tree = [
-            'id_category' => $category['id_category'],
-            'name' => $category['name'],
-        ];
-
-        if (isset($category['children'])) {
-            foreach ($category['children'] as $childCategory) {
-                $tree['children'][] = $this->buildChoiceTree($childCategory);
-            }
-        }
-
-        return $tree;
     }
 }

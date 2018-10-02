@@ -9,3 +9,8 @@ services:
 
   prestashop.adapter.form.choice_provider.shop_tree_choice_provider:
     class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\ShopTreeChoiceProvider'
+
+  prestashop.adapter.form.choice_provider.category_tree_choice_provider:
+    class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\CategoryTreeChoiceProvider'
+    arguments:
+      - '@prestashop.adapter.data_provider.category'
