@@ -29,6 +29,7 @@ namespace PrestaShopBundle\Controller\Admin\Improve\Design;
 use PrestaShop\PrestaShop\Core\Domain\Meta\DataTransferObject\LayoutCustomizationPage;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Query\GetPagesForLayoutCustomization;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController as AbstractAdminController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -37,11 +38,13 @@ use Symfony\Component\HttpFoundation\Response;
 class ThemeController extends AbstractAdminController
 {
     /**
-     * Show current theme's pages layout customization.
+     * Show Front Office theme's pages layout customization.
+     *
+     * @param Request $request
      *
      * @return Response
      */
-    public function customizePageLayoutsAction()
+    public function customizePageLayoutsAction(Request $request)
     {
         /** @var LayoutCustomizationPage[] $pages */
         $pages = $this->getQueryBus()->handle(new GetPagesForLayoutCustomization());
@@ -49,6 +52,18 @@ class ThemeController extends AbstractAdminController
         $pageLayoutCustomizationFormFactory =
             $this->get('prestashop.bundle.form.admin.improve.design.theme.page_layout_customization_form_factory');
         $pageLayoutCustomizationForm = $pageLayoutCustomizationFormFactory->create($pages);
+        $pageLayoutCustomizationForm->handleRequest($request);
+
+        if ($pageLayoutCustomizationForm->isSubmitted()) {
+            $themePageLayoutsCustomizer = $this->get('prestashop.core.addon.theme.theme.page_layouts_customizer');
+            $themePageLayoutsCustomizer->customize($pageLayoutCustomizationForm->getData()['layouts']);
+
+            \Tools::clearCache();
+
+            $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+
+            return $this->redirectToRoute('admin_theme_customize_page_layouts');
+        }
 
         return $this->render('@PrestaShop/Admin/Improve/Design/Theme/customize_page_layouts.twig', [
             'pageLayoutCustomizationForm' => $pageLayoutCustomizationForm->createView(),
