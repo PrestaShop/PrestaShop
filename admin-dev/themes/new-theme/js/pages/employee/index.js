@@ -30,6 +30,7 @@ import FiltersResetExtension from "../../components/grid/extension/filters-reset
 import SortingExtension from "../../components/grid/extension/sorting-extension";
 import BulkActionCheckboxExtension from "../../components/grid/extension/bulk-action-checkbox-extension";
 import SubmitBulkActionExtension from "../../components/grid/extension/submit-bulk-action-extension";
+import SubmitRowActionExtension from "../../components/grid/extension/action/row/submit-row-action-extension";
 
 const $ = window.$;
 
@@ -42,4 +43,5 @@ $(() => {
   employeeGrid.addExtension(new SortingExtension());
   employeeGrid.addExtension(new BulkActionCheckboxExtension());
   employeeGrid.addExtension(new SubmitBulkActionExtension());
+  employeeGrid.addExtension(new SubmitRowActionExtension());
 });

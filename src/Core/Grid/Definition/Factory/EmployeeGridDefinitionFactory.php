@@ -29,6 +29,9 @@ namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\SubmitBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\SubmitRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
@@ -134,7 +137,29 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'route_param_id' => 'employeeId',
                 ])
             )
-            ->add((new ActionColumn('actions')))
+            ->add((new ActionColumn('actions'))
+                ->setOptions([
+                    'actions' => (new RowActionCollection())
+                        ->add((new LinkRowAction('edit'))
+                            ->setIcon('edit')
+                            ->setOptions([
+                                'route' => 'admin_employees_index',
+                                'route_param_name' => 'employeeId',
+                                'route_param_field' => 'id_employee',
+                            ])
+                        )
+                        ->add((new SubmitRowAction('delete'))
+                            ->setName($this->trans('Delete', [], 'Admin.Actions'))
+                            ->setIcon('delete')
+                            ->setOptions([
+                                'confirm_message' => $this->trans('Delete selected item?', [], 'Admin.Notifications.Warning'),
+                                'route' => 'admin_employees_index',
+                                'route_param_name' => 'employeeId',
+                                'route_param_field' => 'id_employee',
+                            ])
+                        ),
+                ])
+            )
         ;
     }
 
