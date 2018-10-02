@@ -46,9 +46,10 @@ class PageLayoutCustomizationType extends AbstractType
                 'entry_type' => ChoiceType::class,
                 'entry_options' => [
                     'choices' => [
-                        'Full width' => 'fw',
-                        'Left side' => 'ls',
-                        'Right side' => 'rs',
+                        'Full width - No side columns, ideal for distraction-free pages such as product pages.' => 'layout-full-width',
+                        'Three Columns - One large central column and 2 side columns.' => 'layout-both-columns',
+                        'Two Columns, small left column - Two columns with a small left column' => 'layout-left-column',
+                        'Two Columns, small right column - Two columns with a small right column' => 'layout-right-column',
                     ],
                 ],
             ])
