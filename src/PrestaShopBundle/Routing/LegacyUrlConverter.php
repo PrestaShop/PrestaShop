@@ -141,7 +141,10 @@ final class LegacyUrlConverter
             }
         }
 
-        throw new RouteNotFoundException('Could not find a route matching these arguments: %s', [json_encode($arguments)]);
+        throw new RouteNotFoundException(
+            'Could not find a route matching for legacy controller: %s',
+            [$legacyController.(null !== $legacyAction ? ':'.$legacyAction : '')]
+        );
     }
 
     /**
