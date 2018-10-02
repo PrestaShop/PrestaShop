@@ -175,12 +175,22 @@ class LegacyUrlConverterTest extends TestCase
     {
         $router = $this->buildRouterMock('admin_products_create', '/products/create', 'AdminProducts:create');
         $converter = new LegacyUrlConverter($router);
-        $this->expectException(RouteNotFoundException::class);
-        $this->expectExceptionMessage('Could not find a route matching these arguments: %s');
-        $converter->convertByParameters([
-            'controller' => 'AdminModules',
-            'action' => 'configure',
-        ]);
+
+        /** @var RouteNotFoundException $caughtException */
+        $caughtException = null;
+
+        try {
+            $converter->convertByParameters([
+                'controller' => 'AdminModules',
+                'action' => 'configure',
+            ]);
+        } catch (RouteNotFoundException $e) {
+            $caughtException = $e;
+        }
+        $this->assertNotNull($caughtException);
+        $this->assertInstanceOf(RouteNotFoundException::class, $caughtException);
+        $this->assertEquals('Could not find a route matching for legacy controller: %s', $caughtException->getMessage());
+        $this->assertEquals(['AdminModules:configure'], $caughtException->getParameters());
     }
 
     /**
