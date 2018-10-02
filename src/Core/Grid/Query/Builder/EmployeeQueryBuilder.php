@@ -82,10 +82,8 @@ final class EmployeeQueryBuilder extends AbstractDoctrineQueryBuilder
             ->select('e.*, pl.name as profile_name')
         ;
 
-        $this->searchCriteriaApplicator
-            ->applySorting($searchCriteria, $searchQueryBuilder)
-            ->applyPagination($searchCriteria, $searchQueryBuilder)
-        ;
+        $this->searchCriteriaApplicator->applyPagination($searchCriteria, $searchQueryBuilder);
+        $this->applySorting($searchCriteria, $searchQueryBuilder);
 
         return $searchQueryBuilder;
     }
@@ -147,18 +145,6 @@ final class EmployeeQueryBuilder extends AbstractDoctrineQueryBuilder
                 continue;
             }
 
-            if ('first_name' === $filterName) {
-                $queryBuilder->andWhere('e.firstname = :firstname');
-                $queryBuilder->setParameter('firstname', '%' . $filterValue . '%');
-                continue;
-            }
-
-            if ('last_name' === $filterName) {
-                $queryBuilder->andWhere('e.lastname = :lastname');
-                $queryBuilder->setParameter('lastname', '%' . $filterValue . '%');
-                continue;
-            }
-
             if ('profile' === $filterName) {
                 $queryBuilder->andWhere('pl.id_profile = :id_profile');
                 $queryBuilder->setParameter('id_profile', $filterValue);
@@ -173,6 +159,23 @@ final class EmployeeQueryBuilder extends AbstractDoctrineQueryBuilder
 
             $queryBuilder->andWhere("$filterName LIKE :$filterName");
             $queryBuilder->setParameter($filterName, '%' . $filterValue . '%');
+        }
+    }
+
+    /**
+     * @param SearchCriteriaInterface $searchCriteria
+     * @param QueryBuilder $queryBuilder
+     */
+    private function applySorting(SearchCriteriaInterface $searchCriteria, QueryBuilder $queryBuilder)
+    {
+        if ($searchCriteria->getOrderBy() && $searchCriteria->getOrderWay()) {
+            $orderBy = $searchCriteria->getOrderBy();
+
+            if ('profile' === $orderBy) {
+                $orderBy = 'pl.name';
+            }
+
+            $queryBuilder->orderBy($orderBy, $searchCriteria->getOrderWay());
         }
     }
 }

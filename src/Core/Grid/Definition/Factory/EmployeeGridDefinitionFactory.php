@@ -101,13 +101,13 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'field' => 'id_employee',
                 ])
             )
-            ->add((new DataColumn('first_name'))
+            ->add((new DataColumn('firstname'))
                 ->setName($this->trans('First name', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'firstname',
                 ])
             )
-            ->add((new DataColumn('last_name'))
+            ->add((new DataColumn('lastname'))
                 ->setName($this->trans('Last name', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'lastname',
@@ -150,17 +150,17 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ])
                 ->setAssociatedColumn('id_employee')
             )
-            ->add((new Filter('first_name', TextType::class))
+            ->add((new Filter('firstname', TextType::class))
                 ->setTypeOptions([
                     'required' => false,
                 ])
-                ->setAssociatedColumn('first_name')
+                ->setAssociatedColumn('firstname')
             )
-            ->add((new Filter('last_name', TextType::class))
+            ->add((new Filter('lastname', TextType::class))
                 ->setTypeOptions([
                     'required' => false,
                 ])
-                ->setAssociatedColumn('last_name')
+                ->setAssociatedColumn('lastname')
             )
             ->add((new Filter('email', TextType::class))
                 ->setTypeOptions([
