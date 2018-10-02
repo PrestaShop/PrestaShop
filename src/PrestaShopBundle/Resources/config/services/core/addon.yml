@@ -35,7 +35,3 @@ services:
         arguments:
             - '@=service("prestashop.adapter.legacy.context").getContext()'
             - '@prestashop.adapter.legacy_db'
-
-    prestashop.core.addon.theme.theme_repository:
-        class: PrestaShop\PrestaShop\Core\Addon\Theme\ThemeRepository
-        factory: 'prestashop.core.addon.theme.theme_manager_builder:buildRepository'
