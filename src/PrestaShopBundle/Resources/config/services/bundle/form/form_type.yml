@@ -551,3 +551,9 @@ services:
         tags:
             - { name: form.type }
 
+    form.type.design.theme.page_layouts_customization:
+        class: 'PrestaShopBundle\Form\Admin\Improve\Design\Theme\PageLayoutsCustomizationType'
+        arguments:
+            - '@=service("prestashop.core.form.choice_provider.theme_page_layouts").getChoices()'
+        tags:
+            - { name: form.type }

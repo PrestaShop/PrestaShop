@@ -32,10 +32,23 @@ use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 /**
- * Class PageLayoutCustomizationType is used in theme page layout customization form.
+ * Class PageLayoutsCustomizationType is used to customize Front Office theme's page layouts.
  */
-class PageLayoutCustomizationType extends AbstractType
+class PageLayoutsCustomizationType extends AbstractType
 {
+    /**
+     * @var array
+     */
+    private $pageLayoutsChoices;
+
+    /**
+     * @param array $pageLayoutsChoices
+     */
+    public function __construct(array $pageLayoutsChoices)
+    {
+        $this->pageLayoutsChoices = $pageLayoutsChoices;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -44,14 +57,11 @@ class PageLayoutCustomizationType extends AbstractType
         $builder
             ->add('layouts', CollectionType::class, [
                 'entry_type' => ChoiceType::class,
+                'translation_domain' => false,
                 'entry_options' => [
                     'label' => false,
-                    'choices' => [
-                        'Full width - No side columns, ideal for distraction-free pages such as product pages.' => 'layout-full-width',
-                        'Three Columns - One large central column and 2 side columns.' => 'layout-both-columns',
-                        'Two Columns, small left column - Two columns with a small left column' => 'layout-left-column',
-                        'Two Columns, small right column - Two columns with a small right column' => 'layout-right-column',
-                    ],
+                    'translation_domain' => false,
+                    'choices' => $this->pageLayoutsChoices,
                 ],
             ])
         ;
