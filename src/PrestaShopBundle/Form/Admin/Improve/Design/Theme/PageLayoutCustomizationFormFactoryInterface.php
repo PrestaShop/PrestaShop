@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Core\Domain\Meta\DataTransferObject\LayoutCustomizatio
 use Symfony\Component\Form\FormInterface;
 
 /**
- * Interface PageLayoutCustomizationFormFactoryInterface
+ * Interface PageLayoutCustomizationFormFactoryInterface.
  */
 interface PageLayoutCustomizationFormFactoryInterface
 {

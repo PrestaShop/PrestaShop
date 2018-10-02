@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Meta\Query\GetPagesForLayoutCustomization;
 use PrestaShop\PrestaShop\Core\Domain\Meta\QueryHandler\GetPagesForLayoutCustomizationHandlerInterface;
 
 /**
- * Class GetMetaPagesListHandler
+ * Class GetMetaPagesListHandler.
  */
 final class GetPagesForLayoutCustomizationHandler implements GetPagesForLayoutCustomizationHandlerInterface
 {
