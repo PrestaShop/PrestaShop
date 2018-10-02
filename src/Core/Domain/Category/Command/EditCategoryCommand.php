@@ -77,7 +77,7 @@ class EditCategoryCommand extends AbstractCategoryCommand
      */
     public function setParentCategoryId($parentCategoryId)
     {
-        if (!is_int($parentCategoryId) || 0 >= $parentCategoryId) {
+        if (!is_numeric($parentCategoryId) || 0 >= $parentCategoryId) {
             throw new CategoryConstraintException(
                 sprintf('Invalid Category parent id %s supplied', var_export($parentCategoryId, true)),
                 CategoryConstraintException::INVALID_PARENT_ID
