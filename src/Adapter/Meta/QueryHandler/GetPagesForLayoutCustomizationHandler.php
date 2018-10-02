@@ -24,33 +24,46 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Controller\Admin\Improve\Design;
+namespace PrestaShop\PrestaShop\Adapter\Meta\QueryHandler;
 
+use Meta;
+use PrestaShop\PrestaShop\Core\Domain\Meta\DataTransferObject\LayoutCustomizationPage;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Query\GetPagesForLayoutCustomization;
-use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController as AbstractAdminController;
-use PrestaShopBundle\Form\Admin\Improve\Design\Theme\PageLayoutCustomizationType;
-use Symfony\Component\HttpFoundation\Response;
+use PrestaShop\PrestaShop\Core\Domain\Meta\QueryHandler\GetPagesForLayoutCustomizationHandlerInterface;
 
 /**
- * Class ThemeController manages "Improve > Design > Theme & Logo" pages.
+ * Class GetMetaPagesListHandler
  */
-class ThemeController extends AbstractAdminController
+final class GetPagesForLayoutCustomizationHandler implements GetPagesForLayoutCustomizationHandlerInterface
 {
     /**
-     * Show current theme's pages layout customization.
-     *
-     * @return Response
+     * @var int
      */
-    public function customizePageLayoutsAction()
+    private $contextLangId;
+
+    /**
+     * @param int $contextLangId
+     */
+    public function __construct($contextLangId)
     {
-        $pageLayoutCustomizationForm = $this->createForm(PageLayoutCustomizationType::class);
+        $this->contextLangId = $contextLangId;
+    }
 
-        $pages = $this->getQueryBus()->handle(new GetPagesForLayoutCustomization());
+    /**
+     * {@inheritdoc}
+     */
+    public function handle(GetPagesForLayoutCustomization $query)
+    {
+        $metas = Meta::getAllMeta($this->contextLangId);
+        $pages = [];
 
-        dump($pages);
+        foreach ($metas as $meta) {
+            $pages[] = new LayoutCustomizationPage(
+                $meta['page'],
+                $meta['description']
+            );
+        }
 
-        return $this->render('@PrestaShop/Admin/Improve/Design/Theme/customize_page_layouts.twig', [
-            'pageLayoutCustomizationForm' => $pageLayoutCustomizationForm->createView(),
-        ]);
+        return $pages;
     }
 }

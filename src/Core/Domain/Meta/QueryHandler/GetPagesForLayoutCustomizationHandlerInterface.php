@@ -24,33 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Controller\Admin\Improve\Design;
+namespace PrestaShop\PrestaShop\Core\Domain\Meta\QueryHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\Meta\Query\GetPagesForLayoutCustomization;
-use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController as AbstractAdminController;
-use PrestaShopBundle\Form\Admin\Improve\Design\Theme\PageLayoutCustomizationType;
-use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Class ThemeController manages "Improve > Design > Theme & Logo" pages.
+ * Interface GetMetaPagesHandlerInterface
  */
-class ThemeController extends AbstractAdminController
+interface GetPagesForLayoutCustomizationHandlerInterface
 {
     /**
-     * Show current theme's pages layout customization.
-     *
-     * @return Response
+     * @param GetPagesForLayoutCustomization $query
      */
-    public function customizePageLayoutsAction()
-    {
-        $pageLayoutCustomizationForm = $this->createForm(PageLayoutCustomizationType::class);
-
-        $pages = $this->getQueryBus()->handle(new GetPagesForLayoutCustomization());
-
-        dump($pages);
-
-        return $this->render('@PrestaShop/Admin/Improve/Design/Theme/customize_page_layouts.twig', [
-            'pageLayoutCustomizationForm' => $pageLayoutCustomizationForm->createView(),
-        ]);
-    }
+    public function handle(GetPagesForLayoutCustomization $query);
 }
