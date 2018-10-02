@@ -152,7 +152,11 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
                             ->setName($this->trans('Delete', [], 'Admin.Actions'))
                             ->setIcon('delete')
                             ->setOptions([
-                                'confirm_message' => $this->trans('Delete selected item?', [], 'Admin.Notifications.Warning'),
+                                'confirm_message' => $this->trans(
+                                    'Delete selected item?',
+                                    [],
+                                    'Admin.Notifications.Warning'
+                                ),
                                 'route' => 'admin_employees_index',
                                 'route_param_name' => 'employeeId',
                                 'route_param_field' => 'id_employee',

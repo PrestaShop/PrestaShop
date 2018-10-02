@@ -28,11 +28,13 @@
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
 {% block content %}
-  <div class="row">
-    <div class="col">
-      {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with { 'grid': employeeGrid } %}
+  {% block employee_listing %}
+    <div class="row">
+      <div class="col">
+        {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with { 'grid': employeeGrid } %}
+      </div>
     </div>
-  </div>
+  {% endblock %}
 
   {% block employee_options %}
     {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Employee/Blocks/employee_options.html.twig' %}
