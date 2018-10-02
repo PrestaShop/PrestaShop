@@ -60,6 +60,8 @@ class EmployeeController extends FrameworkBundleAdminController
     }
 
     /**
+     * Handles employee list searching.
+     *
      * @AdminSecurity("is_granted(['read', 'update', 'create', 'delete'], request.get('_legacy_controller'))")
      *
      * @param Request $request
