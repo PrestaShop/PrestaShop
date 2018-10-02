@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -61,7 +61,6 @@ final class CategoryTreeChoiceProvider implements FormChoiceProviderInterface
 
         return $choices;
     }
-
 
     /**
      * @param array $category
