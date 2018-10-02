@@ -347,7 +347,7 @@ class CategoryController extends FrameworkBundleAdminController
     }
 
     /**
-     * Handle exception when which occurs when updating category status.
+     * Handle exception which occurs when updating category status.
      *
      * @param CategoryException $e
      *

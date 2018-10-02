@@ -28,12 +28,12 @@
 {% if actions is not empty %}
   <div class="btn-group-action text-right">
     <div class="btn-group">
-      {% set skipedActions, isFirstRendered = 0, false %}
+      {% set skippedActions, isFirstRendered = 0, false %}
 
       {# Render first item that is not in dropwdown #}
       {% for action in actions %}
         {% if not isFirstRendered %}
-          {% set skipedActions = skipedActions + 1 %}
+          {% set skippedActions = skippedActions + 1 %}
         {% endif %}
 
         {% if action.isApplicable(record) and not isFirstRendered %}
@@ -50,7 +50,7 @@
       {% endfor %}
 
       {# Render remaining items in dropdown #}
-      {% if actions|length > skipedActions %}
+      {% if actions|length > skippedActions %}
         <a class="btn btn-link dropdown-toggle dropdown-toggle-split"
            data-toggle="dropdown"
            aria-haspopup="true"
@@ -59,7 +59,7 @@
         </a>
 
         <div class="dropdown-menu dropdown-menu-right">
-          {% for action in actions|slice(skipedActions) if action.isApplicable(record) %}
+          {% for action in actions|slice(skippedActions) if action.isApplicable(record) %}
             {{ include('@PrestaShop/Admin/Common/Grid/Actions/Row/'~action.type~'.html.twig', {
               'grid': grid,
               'column': column,
