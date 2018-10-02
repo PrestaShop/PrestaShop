@@ -73,7 +73,7 @@ final class AddRootCategoryHandler extends AbstractCategoryHandler implements Ad
     public function handle(AddRootCategoryCommand $command)
     {
         $category = new Category();
-        $category->is_root_category = 1;
+        $category->is_root_category = true;
         $category->level_depth = 1;
         $category->id_parent = $this->configuration->get('PS_ROOT_CATEGORY');
 
