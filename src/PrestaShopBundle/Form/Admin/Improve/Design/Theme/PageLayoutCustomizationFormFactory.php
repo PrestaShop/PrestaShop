@@ -29,6 +29,8 @@ namespace PrestaShopBundle\Form\Admin\Improve\Design\Theme;
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeRepository;
 use PrestaShop\PrestaShop\Core\Domain\Meta\DataTransferObject\LayoutCustomizationPage;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormFactoryInterface;
 
 /**
@@ -73,8 +75,8 @@ final class PageLayoutCustomizationFormFactory implements PageLayoutCustomizatio
     {
         $theme = $this->themeRepository->getInstanceByName($this->shopThemeName);
 
-        $pageLayoutCustomizationForm = $this->formFactory->create(PageLayoutCustomizationType::class, [
-            'layouts' => $this->getCustomizablePageLayoutsForTheme($theme, $customizablePages),
+        $pageLayoutCustomizationForm = $this->formFactory->create(PageLayoutsCustomizationType::class, [
+            'layouts' => $this->getCustomizablePageLayouts($theme, $customizablePages),
         ]);
 
         return $pageLayoutCustomizationForm;
@@ -86,7 +88,7 @@ final class PageLayoutCustomizationFormFactory implements PageLayoutCustomizatio
      *
      * @return array
      */
-    private function getCustomizablePageLayoutsForTheme(Theme $theme, array $customizationPages)
+    private function getCustomizablePageLayouts(Theme $theme, array $customizationPages)
     {
         $defaultLayout = $theme->getDefaultLayout();
         $pageLayouts = $theme->getPageLayouts();
@@ -103,5 +105,21 @@ final class PageLayoutCustomizationFormFactory implements PageLayoutCustomizatio
         }
 
         return $layouts;
+    }
+
+    /**
+     * @param Theme $theme
+     *
+     * @return array
+     */
+    private function getAvailableLayoutChoices(Theme $theme)
+    {
+        $choices = [];
+
+        foreach ($theme->getAvailableLayouts() as $layoutId => $availableLayout) {
+            $choices[$layoutId] = sprintf('%s - %s', $availableLayout['name'], $availableLayout['description']);
+        }
+
+        return $choices;
     }
 }

@@ -590,3 +590,10 @@ services:
             - '@=service("prestashop.core.form.choice_provider.import_entity_field").getChoices()'
         tags:
             - { name: form.type }
+
+    form.type.design.theme.page_layouts_customization:
+        class: 'PrestaShopBundle\Form\Admin\Improve\Design\Theme\PageLayoutsCustomizationType'
+        arguments:
+            - '@=service("prestashop.core.form.choice_provider.theme_page_layouts").getChoices()'
+        tags:
+            - { name: form.type }
