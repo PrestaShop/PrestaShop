@@ -29,9 +29,9 @@ namespace PrestaShop\PrestaShop\Core\Exception;
 use Throwable;
 
 /**
- * Class PrestaShopCoreException.
+ * Class ErrorMessageException.
  */
-class PrestaShopCoreException extends \Exception
+class ErrorMessageException extends \Exception
 {
     /**
      * @var string
@@ -50,14 +50,14 @@ class PrestaShopCoreException extends \Exception
 
     /**
      * @param string $key
-     * @param string $domain
+     * @param string|null $domain
      * @param array $parameters
      * @param int $code
      * @param Throwable|null $previous
      */
     public function __construct(
         $key,
-        $domain,
+        $domain = null,
         $parameters = [],
         $code = 0,
         Throwable $previous = null
@@ -79,7 +79,7 @@ class PrestaShopCoreException extends \Exception
     /**
      * @param string $key
      *
-     * @return PrestaShopCoreException
+     * @return ErrorMessageException
      */
     public function setKey($key)
     {
@@ -100,7 +100,7 @@ class PrestaShopCoreException extends \Exception
     /**
      * @param string $domain
      *
-     * @return PrestaShopCoreException
+     * @return ErrorMessageException
      */
     public function setDomain($domain)
     {
@@ -120,7 +120,7 @@ class PrestaShopCoreException extends \Exception
     /**
      * @param array $parameters
      *
-     * @return PrestaShopCoreException
+     * @return ErrorMessageException
      */
     public function setParameters(array $parameters)
     {

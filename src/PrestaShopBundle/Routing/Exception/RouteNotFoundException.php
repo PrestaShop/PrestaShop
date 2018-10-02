@@ -24,11 +24,27 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Exception;
+namespace PrestaShopBundle\Routing\Exception;
+
+
+use PrestaShop\PrestaShop\Core\Exception\ErrorMessageException;
+use Throwable;
 
 /**
- * Class ProductException used when an error linked to a product occurs.
+ * Class RouteNotFoundException.
  */
-class ProductException extends ErrorMessageException
+class RouteNotFoundException extends ErrorMessageException
 {
+    /**
+     * RouteNotFoundException constructor.
+     * @param string $key
+     * @param array $parameters
+     * @param null $domain
+     * @param int $code
+     * @param Throwable|null $previous
+     */
+    public function __construct($key, array $parameters = [], $domain = null, $code = 0, Throwable $previous = null)
+    {
+        parent::__construct($key, $domain, $parameters, $code, $previous);
+    }
 }
