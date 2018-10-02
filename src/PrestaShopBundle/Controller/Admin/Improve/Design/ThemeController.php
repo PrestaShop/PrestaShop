@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Improve\Design;
 
+use PrestaShop\PrestaShop\Core\Domain\Meta\DataTransferObject\LayoutCustomizationPage;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Query\GetPagesForLayoutCustomization;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController as AbstractAdminController;
 use PrestaShopBundle\Form\Admin\Improve\Design\Theme\PageLayoutCustomizationType;
@@ -43,14 +44,30 @@ class ThemeController extends AbstractAdminController
      */
     public function customizePageLayoutsAction()
     {
-        $pageLayoutCustomizationForm = $this->createForm(PageLayoutCustomizationType::class);
-
+        /** @var LayoutCustomizationPage[] $pages */
         $pages = $this->getQueryBus()->handle(new GetPagesForLayoutCustomization());
+        $themeRepository = $this->get('prestashop.core.addon.theme.theme_repository');
 
-        dump($pages);
+        $theme = $themeRepository->getInstanceByName($this->getContext()->shop->theme->getName());
+
+        $defaultLayout = $theme->getDefaultLayout();
+        $pageLayouts = $theme->getPageLayouts();
+
+        $layouts = [];
+
+        foreach ($pages as $page) {
+            $selectedLayout = isset($pageLayouts[$page->getPage()]) ? $pageLayouts[$page->getPage()] : $defaultLayout['key'];
+
+            $layouts[$page->getPage()] = $selectedLayout;
+        }
+
+        $pageLayoutCustomizationForm = $this->createForm(PageLayoutCustomizationType::class, [
+            'layouts' => $layouts,
+        ]);
 
         return $this->render('@PrestaShop/Admin/Improve/Design/Theme/customize_page_layouts.twig', [
             'pageLayoutCustomizationForm' => $pageLayoutCustomizationForm->createView(),
+            'pages' => $pages,
         ]);
     }
 }
