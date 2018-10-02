@@ -24,11 +24,14 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Exception;
+namespace PrestaShopBundle\Routing\Exception;
+
+
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
 
 /**
- * Class ProductException used when an error linked to a product occurs.
+ * Class RoutingException.
  */
-class ProductException extends ErrorMessageException
+class RoutingException extends CoreException
 {
 }

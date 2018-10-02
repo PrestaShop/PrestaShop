@@ -27,8 +27,9 @@
 namespace PrestaShop\PrestaShop\Core\Exception;
 
 /**
- * Class ProductException used when an error linked to a product occurs.
+ * Class CoreException, this is the default base class of every
+ * Exception classes from prestaShop.
  */
-class ProductException extends ErrorMessageException
+class CoreException extends \Exception
 {
 }

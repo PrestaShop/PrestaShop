@@ -26,11 +26,11 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Position\Exception;
 
-use PrestaShop\PrestaShop\Core\Exception\PrestaShopCoreException;
+use PrestaShop\PrestaShop\Core\Exception\ErrorMessageException;
 
 /**
  * Class PositionException used by the GridPositionUpdater component.
  */
-class PositionException extends PrestaShopCoreException
+class PositionException extends ErrorMessageException
 {
 }
