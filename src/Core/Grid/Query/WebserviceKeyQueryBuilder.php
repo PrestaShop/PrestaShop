@@ -41,19 +41,27 @@ final class WebserviceKeyQueryBuilder extends AbstractDoctrineQueryBuilder
     private $searchCriteriaApplicator;
 
     /**
+     * @var array
+     */
+    private $contextShopIds;
+
+    /**
      * WebserviceKeyQueryBuilder constructor.
      *
      * @param Connection $connection
      * @param $dbPrefix
      * @param DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator
+     * @param array $contextShopIds
      */
     public function __construct(
         Connection $connection,
         $dbPrefix,
-        DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator
+        DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator,
+        array $contextShopIds
     ) {
         parent::__construct($connection, $dbPrefix);
         $this->searchCriteriaApplicator = $searchCriteriaApplicator;
+        $this->contextShopIds = $contextShopIds;
     }
 
     /**
@@ -67,6 +75,7 @@ final class WebserviceKeyQueryBuilder extends AbstractDoctrineQueryBuilder
                 $this->getModifiedOrderBy($searchCriteria->getOrderBy()),
                 $searchCriteria->getOrderWay()
             )
+            ->groupBy('wa.`id_webservice_account`')
         ;
 
         $this->searchCriteriaApplicator->applyPagination($searchCriteria, $qb);
@@ -79,8 +88,9 @@ final class WebserviceKeyQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
-        $qb = $this->getQueryBuilder($searchCriteria->getFilters());
-        $qb->select('COUNT(wa.`id_webservice_account`)');
+        $qb = $this->getQueryBuilder($searchCriteria->getFilters())
+            ->select('COUNT(DISTINCT wa.`id_webservice_account`)')
+        ;
 
         return $qb;
     }
@@ -96,7 +106,18 @@ final class WebserviceKeyQueryBuilder extends AbstractDoctrineQueryBuilder
     {
         $qb = $this->connection
             ->createQueryBuilder()
-            ->from($this->dbPrefix . 'webservice_account', 'wa');
+            ->from($this->dbPrefix . 'webservice_account', 'wa')
+            ->innerJoin(
+                'wa',
+                $this->dbPrefix . 'webservice_account_shop',
+                'was',
+                'was.`id_webservice_account` = wa.`id_webservice_account`'
+            )
+        ;
+
+        $qb->andWhere('was.`id_shop` IN (:shops)');
+
+        $qb->setParameter('shops', $this->contextShopIds, Connection::PARAM_INT_ARRAY);
 
         foreach ($filters as $filterName => $value) {
             if ('active' === $filterName && is_numeric($value)) {
