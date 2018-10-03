@@ -3953,16 +3953,16 @@
         },
         {
             "name": "prestashop/ps_shoppingcart",
-            "version": "v2.0.1",
+            "version": "v2.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_shoppingcart.git",
-                "reference": "4830efa98e72fb27de872e165dabefb392541a33"
+                "reference": "56559a21e2df3f65147ae19a36c7a988a7a6af4c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_shoppingcart/zipball/4830efa98e72fb27de872e165dabefb392541a33",
-                "reference": "4830efa98e72fb27de872e165dabefb392541a33",
+                "url": "https://api.github.com/repos/PrestaShop/ps_shoppingcart/zipball/56559a21e2df3f65147ae19a36c7a988a7a6af4c",
+                "reference": "56559a21e2df3f65147ae19a36c7a988a7a6af4c",
                 "shasum": ""
             },
             "require": {
@@ -3981,7 +3981,7 @@
             ],
             "description": "PrestaShop module ps_shoppingcart",
             "homepage": "https://github.com/PrestaShop/ps_shoppingcart",
-            "time": "2017-03-23T10:36:49+00:00"
+            "time": "2018-10-01T13:25:08+00:00"
         },
         {
             "name": "prestashop/ps_socialfollow",
@@ -4876,16 +4876,16 @@
         },
         {
             "name": "prestashop/welcome",
-            "version": "v5.0.1",
+            "version": "v5.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/welcome.git",
-                "reference": "25ff6c075d2975d794363df90edb326806f66c4d"
+                "reference": "04955250748214a001492a9326996a95c725f092"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/welcome/zipball/25ff6c075d2975d794363df90edb326806f66c4d",
-                "reference": "25ff6c075d2975d794363df90edb326806f66c4d",
+                "url": "https://api.github.com/repos/PrestaShop/welcome/zipball/04955250748214a001492a9326996a95c725f092",
+                "reference": "04955250748214a001492a9326996a95c725f092",
                 "shasum": ""
             },
             "require": {
@@ -4910,7 +4910,7 @@
             ],
             "description": "Welcome module for PrestaShop helping the users to create products.",
             "homepage": "https://github.com/PrestaShop/welcome",
-            "time": "2018-06-08T13:29:51+00:00"
+            "time": "2018-09-26T13:52:02+00:00"
         },
         {
             "name": "psr/cache",
