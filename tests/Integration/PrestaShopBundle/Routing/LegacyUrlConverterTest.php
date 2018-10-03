@@ -26,11 +26,13 @@
 
 namespace Tests\Integration\PrestaShopBundle\Routing;
 
-
+use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShopBundle\Routing\LegacyUrlConverter;
-use Tests\Integration\PrestaShopBundle\Test\WebTestCase;
+use Tests\Integration\PrestaShopBundle\Test\LightWebTestCase;
+use Link;
+use ReflectionClass;
 
-class LegacyUrlConverterTest extends WebTestCase
+class LegacyUrlConverterTest extends LightWebTestCase
 {
     public function testServiceExists()
     {
@@ -38,24 +40,60 @@ class LegacyUrlConverterTest extends WebTestCase
         $this->assertInstanceOf(LegacyUrlConverter::class, $converter);
     }
 
+    public function xtestSample()
+    {
+        $this->testLegacyLinkClass('/configure/advanced/backup/create', 'AdminBackup', 'add');
+    }
+
     /**
      * @dataProvider migratedControllers
      * @param string $expectedUrl
      * @param string $controller
      * @param string|null $action
-     * @throws \PrestaShopBundle\Routing\Exception\ArgumentException
-     * @throws \PrestaShopBundle\Routing\Exception\RouteNotFoundException
+     * @param array|null $queryParameters
      */
-    public function testLegacyLink($expectedUrl, $controller, $action = null)
+    public function testConverterByParameters($expectedUrl, $controller, $action = null, array $queryParameters = null)
     {
         /** @var LegacyUrlConverter $converter */
         $converter = self::$kernel->getContainer()->get('prestashop.bundle.routing.legacy_url_converter');
-        $convertedUrl = $converter->convertByParameters([
-            'controller' => $controller,
+
+        $caughtException = null;
+        $caughtExceptionMessage = '';
+        try {
+            $parameters = [
+                'controller' => $controller,
+                'action' => $action,
+            ];
+            if (null !== $queryParameters) {
+                $parameters = array_merge($parameters, $queryParameters);
+            }
+            $convertedUrl = $converter->convertByParameters($parameters);
+        } catch (\Exception $e) {
+            $caughtException = $e;
+            $caughtExceptionMessage = sprintf('Unexpected exception %s: %s', get_class($e), $e->getMessage());
+            $convertedUrl = null;
+        }
+        $this->assertNull($caughtException, $caughtExceptionMessage);
+        $this->assertSameUrl($expectedUrl, $convertedUrl);
+    }
+
+    /**
+     * @dataProvider migratedControllers
+     */
+    public function testLegacyLinkClass($expectedUrl, $controller, $action = null, array $queryParameters = null)
+    {
+        $this->initStaticInstance();
+
+        $link = new Link();
+
+        $parameters = [
             'action' => $action,
-        ]);
-        $parsedUrl = parse_url($convertedUrl);
-        $this->assertEquals($expectedUrl, $parsedUrl['path']);
+        ];
+        if (null !== $queryParameters) {
+            $parameters = array_merge($parameters, $queryParameters);
+        }
+        $linkUrl = $link->getAdminLink($controller, true, [], $parameters);
+        $this->assertSameUrl($expectedUrl, $linkUrl);
     }
 
     /**
@@ -66,6 +104,39 @@ class LegacyUrlConverterTest extends WebTestCase
         return [
             'admin_administration' => ['/configure/advanced/administration/', 'AdminAdminPreferences'],
             'admin_administration_save' => ['/configure/advanced/administration/', 'AdminAdminPreferences', 'save'],
+            'admin_backup' => ['/configure/advanced/backup/', 'AdminBackup'],
+            'admin_backup_create' => ['/configure/advanced/backup/create', 'AdminBackup', 'add'],
+            'admin_backup_delete' => ['/configure/advanced/backup/backup_file.zip', 'AdminBackup', 'delete', ['filename' => 'backup_file.zip']],
+            'admin_backup_delete' => ['/configure/advanced/backup/bulk-delete/', 'AdminBackup', 'submitBulkdeletebackup']
         ];
+    }
+
+    /**
+     * @param string $expectedUrl
+     * @param string $url
+     */
+    private function assertSameUrl($expectedUrl, $url)
+    {
+        $this->assertNotNull($url);
+        $parsedUrl = parse_url($url);
+        $this->assertNotEmpty($parsedUrl['path']);
+        $this->assertTrue($expectedUrl == $parsedUrl['path'], sprintf(
+            'Expected url %s is different with generated one: %s',
+            $expectedUrl,
+            $parsedUrl['path']
+        ));
+    }
+
+    /**
+     * Force the static property SymfonyContainer::instance so that the Link class
+     * has access to the router
+     * @throws \ReflectionException
+     */
+    private function initStaticInstance()
+    {
+        $reflectedClass = new ReflectionClass(SymfonyContainer::class);
+        $instanceProperty = $reflectedClass->getProperty('instance');
+        $instanceProperty->setAccessible(true);
+        $instanceProperty->setValue(self::$kernel->getContainer());
     }
 }

@@ -29,9 +29,7 @@ namespace PrestaShopBundle\Routing;
 
 use PrestaShopBundle\Routing\Exception\ArgumentException;
 use PrestaShopBundle\Routing\Exception\RouteNotFoundException;
-use Symfony\Component\Routing\CompiledRoute;
 use Symfony\Component\Routing\Route;
-use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\RouterInterface;
 
 final class LegacyUrlConverter
@@ -137,6 +135,8 @@ final class LegacyUrlConverter
             if ($this->isIndexAction($legacyAction) && $this->isIndexAction($legacyLink['action'])) {
                 return $routeName;
             } elseif (!empty($legacyAction) && $legacyAction === $legacyLink['action']) {
+                return $routeName;
+            } elseif (!empty($arguments[$legacyLink['action']]) && (bool) $arguments[$legacyLink['action']]) {
                 return $routeName;
             }
         }
