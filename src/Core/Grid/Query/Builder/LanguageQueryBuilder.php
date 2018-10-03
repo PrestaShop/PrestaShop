@@ -26,8 +26,10 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Query\Builder;
 
+use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\PrestaShop\Core\Grid\Query\AbstractDoctrineQueryBuilder;
+use PrestaShop\PrestaShop\Core\Grid\Query\DoctrineSearchCriteriaApplicatorInterface;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
 /**
@@ -36,12 +38,37 @@ use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 final class LanguageQueryBuilder extends AbstractDoctrineQueryBuilder
 {
     /**
+     * @var DoctrineSearchCriteriaApplicatorInterface
+     */
+    private $searchCriteriaApplicator;
+
+    /**
+     * @param Connection $connection
+     * @param string $dbPrefix
+     * @param DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator
+     */
+    public function __construct(
+        Connection $connection,
+        $dbPrefix,
+        DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator
+    ) {
+        parent::__construct($connection, $dbPrefix);
+
+        $this->searchCriteriaApplicator = $searchCriteriaApplicator;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $builder = $this->getLanguageQueryBuilder($searchCriteria)
             ->select('l.*')
+        ;
+
+        $this->searchCriteriaApplicator
+            ->applySorting($searchCriteria, $builder)
+            ->applyPagination($searchCriteria, $builder)
         ;
 
         return $builder;
