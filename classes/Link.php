@@ -800,7 +800,7 @@ class LinkCore
                     'AdminPaymentPreferences' => 'admin_payment_preferences',
                     'AdminInvoices' => 'admin_order_invoices',
                     'AdminEmails' => 'admin_email',
-                    'AdminRequestSql' => 'admin_sql_request',
+                    // 'AdminRequestSql' => 'admin_sql_request', @todo: uncomment when CQRS pages are hookable
                     'AdminMeta' => 'admin_meta',
                     // 'AdminWebservice' => 'admin_webservice', @todo: uncomment when grid and entity form are done.
                     'AdminBackup' => 'admin_backup',
