@@ -39,18 +39,18 @@ class AddCategoryCommand extends AbstractCategoryCommand
     private $parentCategoryId;
 
     /**
-     * @param string[] $name
-     * @param string[] $linkRewrite
+     * @param string[] $localizedNames
+     * @param string[] $localizedLinkRewrites
      * @param bool $isActive
      * @param int $parentCategoryId
      *
      * @throws CategoryConstraintException
      */
-    public function __construct(array $name, array $linkRewrite, $isActive, $parentCategoryId)
+    public function __construct(array $localizedNames, array $localizedLinkRewrites, $isActive, $parentCategoryId)
     {
         $this
-            ->setName($name)
-            ->setLinkRewrite($linkRewrite)
+            ->setLocalizedNames($localizedNames)
+            ->setLocalizedLinkRewrites($localizedLinkRewrites)
             ->setIsActive($isActive)
             ->setParentCategoryId($parentCategoryId)
         ;

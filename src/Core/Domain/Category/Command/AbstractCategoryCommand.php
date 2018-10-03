@@ -37,17 +37,17 @@ abstract class AbstractCategoryCommand
     /**
      * @var string[]
      */
-    private $name;
+    private $localizedNames;
 
     /**
      * @var string[]
      */
-    private $linkRewrite;
+    private $localizedLinkRewrites;
 
     /**
      * @var string[]
      */
-    private $description;
+    private $localizedDescriptions;
 
     /**
      * @var bool
@@ -57,17 +57,17 @@ abstract class AbstractCategoryCommand
     /**
      * @var string[]
      */
-    private $metaTitle;
+    private $localizedMetaTitles;
 
     /**
      * @var string[]
      */
-    private $metaDescription;
+    private $localizedMetaDescriptions;
 
     /**
      * @var string[]
      */
-    private $metaKeywords;
+    private $localizedMetaKeywords;
 
     /**
      * @var int[]
@@ -97,28 +97,28 @@ abstract class AbstractCategoryCommand
     /**
      * @return string[]
      */
-    public function getName()
+    public function getLocalizedNames()
     {
-        return $this->name;
+        return $this->localizedNames;
     }
 
     /**
-     * @param string[] $name
+     * @param string[] $localizedNames
      *
      * @return $this
      *
      * @throws CategoryConstraintException
      */
-    public function setName(array $name)
+    public function setLocalizedNames(array $localizedNames)
     {
-        if (empty($name)) {
+        if (empty($localizedNames)) {
             throw new CategoryConstraintException(
                 'Category name cannot be empty',
                 CategoryConstraintException::EMPTY_NAME
             );
         }
 
-        $this->name = $name;
+        $this->localizedNames = $localizedNames;
 
         return $this;
     }
@@ -126,28 +126,28 @@ abstract class AbstractCategoryCommand
     /**
      * @return string[]
      */
-    public function getLinkRewrite()
+    public function getLocalizedLinkRewrites()
     {
-        return $this->linkRewrite;
+        return $this->localizedLinkRewrites;
     }
 
     /**
-     * @param string[] $linkRewrite
+     * @param string[] $localizedLinkRewrites
      *
      * @return $this
      *
      * @throws CategoryConstraintException
      */
-    public function setLinkRewrite(array $linkRewrite)
+    public function setLocalizedLinkRewrites(array $localizedLinkRewrites)
     {
-        if (empty($linkRewrite)) {
+        if (empty($localizedLinkRewrites)) {
             throw new CategoryConstraintException(
                 'Category link rewrite cannot be empty',
                 CategoryConstraintException::EMPTY_LINK_REWRITE
             );
         }
 
-        $this->linkRewrite = $linkRewrite;
+        $this->localizedLinkRewrites = $localizedLinkRewrites;
 
         return $this;
     }
@@ -155,19 +155,19 @@ abstract class AbstractCategoryCommand
     /**
      * @return string[]
      */
-    public function getDescription()
+    public function getLocalizedDescriptions()
     {
-        return $this->description;
+        return $this->localizedDescriptions;
     }
 
     /**
-     * @param string[] $description
+     * @param string[] $localizedDescriptions
      *
      * @return $this
      */
-    public function setDescription(array $description)
+    public function setLocalizedDescriptions(array $localizedDescriptions)
     {
-        $this->description = $description;
+        $this->localizedDescriptions = $localizedDescriptions;
 
         return $this;
     }
@@ -204,19 +204,19 @@ abstract class AbstractCategoryCommand
     /**
      * @return string[]
      */
-    public function getMetaTitle()
+    public function getLocalizedMetaTitles()
     {
-        return $this->metaTitle;
+        return $this->localizedMetaTitles;
     }
 
     /**
-     * @param string[] $metaTitle
+     * @param string[] $localizedMetaTitles
      *
      * @return $this
      */
-    public function setMetaTitle(array $metaTitle)
+    public function setLocalizedMetaTitles(array $localizedMetaTitles)
     {
-        $this->metaTitle = $metaTitle;
+        $this->localizedMetaTitles = $localizedMetaTitles;
 
         return $this;
     }
@@ -224,19 +224,19 @@ abstract class AbstractCategoryCommand
     /**
      * @return string[]
      */
-    public function getMetaDescription()
+    public function getLocalizedMetaDescriptions()
     {
-        return $this->metaDescription;
+        return $this->localizedMetaDescriptions;
     }
 
     /**
-     * @param string[] $metaDescription
+     * @param string[] $localizedMetaDescriptions
      *
      * @return $this
      */
-    public function setMetaDescription(array $metaDescription)
+    public function setLocalizedMetaDescriptions(array $localizedMetaDescriptions)
     {
-        $this->metaDescription = $metaDescription;
+        $this->localizedMetaDescriptions = $localizedMetaDescriptions;
 
         return $this;
     }
@@ -244,19 +244,19 @@ abstract class AbstractCategoryCommand
     /**
      * @return string[]
      */
-    public function getMetaKeywords()
+    public function getLocalizedMetaKeywords()
     {
-        return $this->metaKeywords;
+        return $this->localizedMetaKeywords;
     }
 
     /**
-     * @param string[] $metaKeywords
+     * @param string[] $localizedMetaKeywords
      *
      * @return $this
      */
-    public function setMetaKeywords(array $metaKeywords)
+    public function setLocalizedMetaKeywords(array $localizedMetaKeywords)
     {
-        $this->metaKeywords = $metaKeywords;
+        $this->localizedMetaKeywords = $localizedMetaKeywords;
 
         return $this;
     }
