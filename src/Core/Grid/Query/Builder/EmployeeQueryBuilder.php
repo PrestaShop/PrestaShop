@@ -138,7 +138,20 @@ final class EmployeeQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     private function applyFilters(QueryBuilder $queryBuilder, array $filters)
     {
+        $allowedFilters = [
+            'id_employee',
+            'firstname',
+            'lastname',
+            'email',
+            'profile',
+            'active',
+        ];
+
         foreach ($filters as $filterName => $filterValue) {
+            if (!in_array($filterName, $allowedFilters)) {
+                continue;
+            }
+
             if ('id_employee' === $filterName) {
                 $queryBuilder->andWhere('e.id_employee = :' . $filterName);
                 $queryBuilder->setParameter($filterName, $filterValue);
