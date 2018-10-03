@@ -36,6 +36,8 @@ use AdminController;
 use Link;
 use Tab;
 use AdminLegacyLayoutControllerCore;
+use Tools as ToolsLegacy;
+use Dispatcher;
 
 /**
  * This adapter will complete the new architecture Context with legacy values.
@@ -100,7 +102,15 @@ class LegacyContext
      */
     public function getAdminLink($controller, $withToken = true, $extraParams = array())
     {
-        return $this->getContext()->link->getAdminLink($controller, $withToken, $extraParams, $extraParams);
+        $id_lang = Context::getContext()->language->id;
+        $params = $extraParams;
+        if ($withToken) {
+            $params['token'] = ToolsLegacy::getAdminTokenLite($controller);
+        }
+
+        $link = new Link();
+
+        return $link->getAdminBaseLink() . basename(_PS_ADMIN_DIR_) . '/' . Dispatcher::getInstance()->createUrl($controller, $id_lang, $params, false);
     }
 
     /**
