@@ -41,7 +41,7 @@ final class LanguageQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $builder = $this->getLanguageQueryBuilder($searchCriteria)
-            ->select('p.*')
+            ->select('l.*')
         ;
 
         return $builder;
