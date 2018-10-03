@@ -1,0 +1,6 @@
+admin_languages_index:
+  path: /
+  methods: [GET]
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Improve\International\Language:index'
+    _legacy_controller: AdminLanguages
