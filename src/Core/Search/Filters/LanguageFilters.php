@@ -24,31 +24,26 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Controller\Admin\Improve\International;
+namespace PrestaShop\PrestaShop\Core\Search\Filters;
 
-use PrestaShop\PrestaShop\Core\Search\Filters\LanguageFilters;
-use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController as AbstractAdminController;
-use Symfony\Component\HttpFoundation\Response;
+use PrestaShop\PrestaShop\Core\Search\Filters;
 
 /**
- * Class LanguageController manages "Improve > International >
+ * Class LanguageFilters define default filters used for languages filtering.
  */
-class LanguageController extends AbstractAdminController
+final class LanguageFilters extends Filters
 {
     /**
-     * Show languages listing page.
-     *
-     * @param LanguageFilters $filters
-     *
-     * @return Response
+     * {@inheritdoc}
      */
-    public function indexAction(LanguageFilters $filters)
+    public static function getDefaults()
     {
-        $languageGridFactory = $this->get('prestashop.core.grid.factory.language');
-        $languageGrid = $languageGridFactory->getGrid($filters);
-
-        return $this->render('@PrestaShop/Admin/Improve/International/Language/index.html.twig', [
-            'languageGrid' => $this->presentGrid($languageGrid),
-        ]);
+        return [
+            'limit' => 50,
+            'offset' => 0,
+            'orderBy' => 'id_lang',
+            'sortOrder' => 'ASC',
+            'filters' => [],
+        ];
     }
 }

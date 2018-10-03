@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ToggleColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
@@ -76,6 +77,12 @@ final class LanguageGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'bulk_field' => 'id_lang',
                 ])
             )
+            ->add((new DataColumn('id_lang'))
+                ->setName($this->trans('ID', [], 'Admin.Global'))
+                ->setOptions([
+                    'field' => 'id_lang',
+                ])
+            )
             ->add((new DataColumn('name'))
                 ->setName($this->trans('Name', [], 'Admin.Global'))
                 ->setOptions([
@@ -103,13 +110,16 @@ final class LanguageGridDefinitionFactory extends AbstractGridDefinitionFactory
             ->add((new DataColumn('date_format_full'))
                 ->setName($this->trans('Date format (full)', [], 'Admin.International.Feature'))
                 ->setOptions([
-                    'field' => 'iso_code',
+                    'field' => 'date_format_full',
                 ])
             )
-            ->add((new DataColumn('active'))
-                ->setName($this->trans('Date format (full)', [], 'Admin.International.Feature'))
+            ->add((new ToggleColumn('active'))
+                ->setName($this->trans('Enabled', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'active',
+                    'primary_field' => 'id_lang',
+                    'route' => 'admin_languages_index',
+                    'route_param_id' => 'languageId',
                 ])
             )
             ->add((new ActionColumn('actions'))
