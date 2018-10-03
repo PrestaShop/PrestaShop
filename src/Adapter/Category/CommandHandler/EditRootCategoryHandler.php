@@ -59,5 +59,7 @@ final class EditRootCategoryHandler extends AbstractCategoryHandler implements E
         if (false === $category->update()) {
             throw new CannotEditCategoryException(sprintf('Failed to edit Category with id "%s".', $category->id));
         }
+
+        $this->uploadImages($category, $command);
     }
 }
