@@ -81,6 +81,13 @@ class AdminFilter
     private $filter;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="class_name", type="string", length=255)
+     */
+    private $className;
+
+    /**
      * Get id.
      *
      * @return int
@@ -208,6 +215,26 @@ class AdminFilter
     public function getFilter()
     {
         return $this->filter;
+    }
+
+    /**
+     * @return string
+     */
+    public function getClassName()
+    {
+        return $this->className;
+    }
+
+    /**
+     * @param string $className
+     *
+     * @return AdminFilter
+     */
+    public function setClassName($className)
+    {
+        $this->className = $className;
+
+        return $this;
     }
 
     /**

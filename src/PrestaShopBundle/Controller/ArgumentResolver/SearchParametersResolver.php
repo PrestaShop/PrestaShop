@@ -111,10 +111,8 @@ class SearchParametersResolver implements ArgumentValueResolverInterface
     {
         $filtersClass = $argument->getType();
         list($controller, $action) = ControllerAction::fromString($request->get('_controller'));
-
         /** @var Filters $filters */
         $filters = new $filtersClass($filtersClass::getDefaults());
-
         //Override with saved filters if present
         if ($request->isMethod('GET')) {
             /** @var Filters $savedFilters */
@@ -125,12 +123,10 @@ class SearchParametersResolver implements ArgumentValueResolverInterface
                 $action,
                 $filtersClass
             );
-
             if ($savedFilters) {
                 $filters->add($savedFilters->all());
             }
         }
-
         //Then override with query filters if present
         $query = $request->query;
         $queryHasFilters = false;
@@ -144,7 +140,6 @@ class SearchParametersResolver implements ArgumentValueResolverInterface
             /** @var Filters $queryFilters */
             $queryFilters = $this->searchParameters->getFiltersFromRequest($request, $filtersClass);
             $filters->add($queryFilters->all());
-
             //Update the saved filters (which have been modified by the query)
             $filtersToSave = $filters->all();
             unset($filtersToSave['offset']); //We don't save the page as it can be confusing for UX
@@ -166,16 +161,16 @@ class SearchParametersResolver implements ArgumentValueResolverInterface
     /**
      * @param TokenStorageInterface $tokenStorage
      *
-     * @return Employee|void
+     * @return Employee|null
      */
     private function getEmployee(TokenStorageInterface $tokenStorage)
     {
         if (null === $token = $tokenStorage->getToken()) {
-            return;
+            return null;
         }
 
         if (!is_object($employee = $token->getUser())) {
-            return;
+            return null;
         }
 
         return $employee;
