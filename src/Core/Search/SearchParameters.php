@@ -72,24 +72,34 @@ final class SearchParameters implements SearchParametersInterface
      */
     public function getFiltersFromRepository($employeeId, $shopId, $controller, $action, $filterClass)
     {
-        $adminFilter = $this->adminFilterRepository
-            ->findByEmployeeAndRouteParams($employeeId, $shopId, $controller, $action)
-        ;
+        return $this->getFiltersFromPersistence($employeeId, $shopId, $filterClass);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getFiltersFromPersistence($employeeId, $shopId, $filtersClassName)
+    {
+        $adminFilter = $this->adminFilterRepository->findOneBy([
+            'employee' => $employeeId,
+            'shop' => $shopId,
+            'className' => $filtersClassName,
+        ]);
 
         $savedFilters = [];
 
-        if ($adminFilter !== null) {
+        if (null !== $adminFilter) {
             $savedFilters = json_decode($adminFilter->getFilter(), true);
         }
 
         $filters = [];
 
-        $defaultValues = $filterClass::getDefaults();
+        $defaultValues = $filtersClassName::getDefaults();
 
         foreach (self::FILTER_TYPES as $type) {
             $filters[$type] = isset($savedFilters[$type]) ? $savedFilters[$type] : $defaultValues[$type];
         }
 
-        return new $filterClass($filters);
+        return new $filtersClassName($filters);
     }
 }

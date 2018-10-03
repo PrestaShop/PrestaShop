@@ -101,7 +101,6 @@ class SearchParametersResolver implements ArgumentValueResolverInterface
     public function resolve(Request $request, ArgumentMetadata $argument)
     {
         $filtersClass = $argument->getType();
-        list($controller, $action) = ControllerAction::fromString($request->get('_controller'));
 
         $query = $request->query;
         $doesTheUrlContainsFilters = ($query->has('filters') || $query->has('limit') || $query->has('sortOrder'));
@@ -109,26 +108,23 @@ class SearchParametersResolver implements ArgumentValueResolverInterface
         if ($doesTheUrlContainsFilters) {
             $filters = $this->searchParameters->getFiltersFromRequest($request, $filtersClass);
 
-            $this->adminFilterRepository->createOrUpdateByEmployeeAndRouteParams(
-                $this->employee->getId(),
-                $this->shopId,
+            $this->adminFilterRepository->persist(
                 $filters->all(),
-                $controller,
-                $action
+                $filtersClass,
+                $this->employee->getId(),
+                $this->shopId
             );
         } else {
             // do we have a saved search in DB?
             if ($request->isMethod('GET')) {
-                $filters = $this->searchParameters->getFiltersFromRepository(
+                $filters = $this->searchParameters->getFiltersFromPersistence(
                     $this->employee->getId(),
                     $this->shopId,
-                    $controller,
-                    $action,
                     $filtersClass
                 );
             }
 
-            if (empty($filters)) {
+            if (!isset($filters)) {
                 $defaultFilters = $filtersClass::getDefaults();
                 $filters = new $filtersClass($defaultFilters);
             }
@@ -140,16 +136,16 @@ class SearchParametersResolver implements ArgumentValueResolverInterface
     /**
      * @param TokenStorageInterface $tokenStorage
      *
-     * @return Employee|void
+     * @return Employee|null
      */
     private function getEmployee(TokenStorageInterface $tokenStorage)
     {
         if (null === $token = $tokenStorage->getToken()) {
-            return;
+            return null;
         }
 
         if (!is_object($employee = $token->getUser())) {
-            return;
+            return null;
         }
 
         return $employee;
