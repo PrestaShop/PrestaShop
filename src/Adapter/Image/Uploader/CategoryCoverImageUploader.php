@@ -52,8 +52,8 @@ final class CategoryCoverImageUploader extends AbstractImageUploader
      */
     public function upload($id, UploadedFile $uploadedImage)
     {
-        $this->deleteOldImage($id);
         $this->checkImageIsAllowedForUpload($uploadedImage);
+        $this->deleteOldImage($id);
         $this->uploadImage($id, $uploadedImage);
         $this->generateDifferentTypes($id);
     }
