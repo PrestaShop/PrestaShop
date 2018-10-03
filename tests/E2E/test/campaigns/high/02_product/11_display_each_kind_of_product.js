@@ -16,9 +16,15 @@ let attributeData = {
   public_name: 'att',
   type: 'color',
   values: {
-    1: 'red',
-    2: 'yellow',
-    3: 'green'
+    1: {
+      value: 'red'
+    },
+    2: {
+      value: 'yellow'
+    },
+    3: {
+      value: 'green'
+    }
   }
 };
 
@@ -46,6 +52,7 @@ let productData = [{
   quantity: '5',
   price: '10',
   image_name: 'combination.jpg',
+  type: "combination",
   attribute: {
     name: 'att',
     variation_quantity: '5'
@@ -69,11 +76,11 @@ scenario('Display each kind of product', () => {
       test('should open the browser', () => client.open());
       test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
     }, 'product/product');
-      commonScenarios.createProduct(AddProductPage, productData[0]);
-      commonScenarios.createProduct(AddProductPage, productData[1]);
-      commonAttributeScenarios.createAttribute(attributeData);
-      commonScenarios.createProduct(AddProductPage, productData[2]);
-      commonScenarios.createProduct(AddProductPage, productData[3]);
+    commonScenarios.createProduct(AddProductPage, productData[0]);
+    commonScenarios.createProduct(AddProductPage, productData[1]);
+    commonAttributeScenarios.createAttribute(attributeData);
+    commonScenarios.createProduct(AddProductPage, productData[2]);
+    commonScenarios.createProduct(AddProductPage, productData[3]);
   }, 'product/product');
 
   scenario('Check the product pagination in the Back Office', client => {

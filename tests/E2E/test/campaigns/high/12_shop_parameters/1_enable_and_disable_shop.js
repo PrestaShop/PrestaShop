@@ -37,7 +37,7 @@ scenario('Configure shop in the Back Office', () => {
         .then(() => client.waitForExistAndClick(AccessPageBO.shopname))
         .then(() => client.switchWindow(1));
     });
-    test('should check that the shop is disabled', () => client.checkTextValue(ShopParameters.maintenance_message, 'Nous avons actuellement désactivés notre boutique et serons de retour très bientôt.', 'contain'));
+    test('should check that the shop is disabled', () => client.checkTextValue(ShopParameters.maintenance_message, 'We are currently disabled our shop and will be back really soon.', 'contain'));
   }, 'common_client');
 
   scenario('Enable shop in the Back Office', client => {

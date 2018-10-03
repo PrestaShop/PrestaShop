@@ -117,7 +117,7 @@ module.exports = {
         scenario('Add Feature', client => {
           test('should click on "Add feature" button', () => {
             return promise
-              .then(() => client.scrollTo(AddProductPage.product_create_category_btn))
+              .then(() => client.scrollTo(AddProductPage.add_feature_to_product_button))
               .then(() => client.waitForExistAndClick(AddProductPage.add_feature_to_product_button));
           });
           test('should select the created feature', () => client.selectFeature(AddProductPage, productData['feature']['name'] + date_time, productData['feature']['value']));

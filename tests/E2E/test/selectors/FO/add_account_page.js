@@ -3,7 +3,7 @@ module.exports = {
     create_button: '[data-link-action="display-register-form"]',
     firstname_input: '//*[@id="customer-form"]//input[@name="firstname"]',
     lastname_input: '//*[@id="customer-form"]//input[@name="lastname"]',
-    email_input: '//*[@id="customer-form"]//input[@name="email"]',
+    email_input: '//input[contains(@name,"email") and @class="form-control"]',
     password_input: '[name="password"]',
     birthday_input: '[name="birthday"]',
     checkout_step: '//*[@id="checkout-personal-information-step"]/h1',
