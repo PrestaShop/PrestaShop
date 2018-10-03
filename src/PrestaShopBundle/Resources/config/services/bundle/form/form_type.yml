@@ -551,3 +551,10 @@ services:
         tags:
             - { name: form.type }
 
+    form.type.common.translatable:
+        class: 'PrestaShopBundle\Form\Admin\Type\TranslatableType'
+        arguments:
+            - "@=service('prestashop.adapter.legacy.context').getLanguages()"
+        tags:
+            - { name: form.type }
+
