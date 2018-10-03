@@ -15,3 +15,7 @@ CREATE TABLE `PREFIX_currency_lang` (
   ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
 /* PHP:ps_1760_copy_data_from_currency_to_currency_lang(); */;
+
+ALTER TABLE `PREFIX_admin_filter`
+	ADD `class_name` VARCHAR (255) DEFAULT '' NOT NULL AFTER `shop`,
+	ADD INDEX `search_idx` (`class_name`, `shop`, `employee`);
