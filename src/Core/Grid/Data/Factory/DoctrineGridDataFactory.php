@@ -63,6 +63,7 @@ final class DoctrineGridDataFactory implements GridDataFactoryInterface
     /**
      * @param DoctrineQueryBuilderInterface $gridQueryBuilder
      * @param HookDispatcherInterface $hookDispatcher
+     * @param QueryParserInterface $queryParser
      * @param string $gridId
      */
     public function __construct(
@@ -91,6 +92,7 @@ final class DoctrineGridDataFactory implements GridDataFactoryInterface
         $this->hookDispatcher->dispatchWithParameters('action' . $this->gridId . 'GridQueryBuilderModifier', [
             'search_query_builder' => $searchQueryBuilder,
             'count_query_builder' => $countQueryBuilder,
+            'search_criteria' => $searchCriteria,
         ]);
 
         $records = new RecordCollection($records);
