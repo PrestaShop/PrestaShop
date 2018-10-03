@@ -31,7 +31,7 @@ use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController as Abstract
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Class LanguageController manages "Improve > International >
+ * Class LanguageController manages "Improve > International > Localization > Languages"
  */
 class LanguageController extends AbstractAdminController
 {
