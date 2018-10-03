@@ -43,8 +43,8 @@ class AddRootCategoryCommand extends AbstractCategoryCommand
     public function __construct(array $name, array $linkRewrite, $isActive)
     {
         $this
-            ->setName($name)
-            ->setLinkRewrite($linkRewrite)
+            ->setLocalizedNames($name)
+            ->setLocalizedLinkRewrites($linkRewrite)
             ->setIsActive($isActive)
         ;
     }
