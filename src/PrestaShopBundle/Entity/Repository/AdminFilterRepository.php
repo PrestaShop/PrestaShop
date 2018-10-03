@@ -113,4 +113,35 @@ class AdminFilterRepository extends EntityRepository
 
         $this->getEntityManager()->flush();
     }
+
+    /**
+     * Persist (create or update) filters into database.
+     *
+     * @param array $filters
+     * @param string $filtersClassName
+     * @param int $employeeId
+     * @param int $shopId
+     */
+    public function persist(array $filters, $filtersClassName, $employeeId, $shopId)
+    {
+        $adminFilter = $this->findOneBy([
+            'employee' => $employeeId,
+            'shop' => $shopId,
+            'className' => $filtersClassName,
+        ]);
+
+        $adminFilter = null === $adminFilter ? new AdminFilter() : $adminFilter;
+
+        $adminFilter
+            ->setController('')
+            ->setAction('')
+            ->setClassName($filtersClassName)
+            ->setEmployee($employeeId)
+            ->setShop($shopId)
+            ->setFilter(json_encode($filters))
+        ;
+
+        $this->getEntityManager()->persist($adminFilter);
+        $this->getEntityManager()->flush();
+    }
 }
