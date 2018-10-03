@@ -414,6 +414,13 @@ class ModuleController extends ModuleAbstractController
                         '%module%' => $module,
                     ]
                 );
+                if ($action != 'uninstall') {
+                    $response[$module]['module_name'] = $module;
+                    $response[$module]['is_configurable'] = (bool) $this->get('prestashop.core.admin.module.repository')
+                                                          ->getModule($module)
+                                                          ->attributes
+                                                          ->get('is_configurable');
+                }
             }
         } catch (UnconfirmedModuleActionException $e) {
             $collection = AddonsCollection::createFrom(array($e->getModule()));

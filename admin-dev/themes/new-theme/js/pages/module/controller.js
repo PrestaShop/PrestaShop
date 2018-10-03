@@ -784,7 +784,7 @@ class AdminModuleController {
    */
   displayPrestaTrustStep(result) {
     const self = this;
-    const modal = this.moduleCardController.replacePrestaTrustPlaceholders(result);
+    const modal = self.moduleCardController._replacePrestaTrustPlaceholders(result);
     const moduleName = result.module.attributes.name;
 
     $(this.moduleImportConfirmSelector).html(modal.find('.modal-body').html()).fadeIn();
