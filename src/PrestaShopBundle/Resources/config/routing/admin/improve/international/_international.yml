@@ -9,3 +9,7 @@ _localization:
 _geolocation:
     resource: "geolocation.yml"
     prefix: /geolocation/
+
+_language:
+    resource: "language.yml"
+    prefix: /languages/
