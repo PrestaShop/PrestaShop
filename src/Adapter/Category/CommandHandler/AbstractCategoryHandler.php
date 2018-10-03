@@ -77,28 +77,28 @@ abstract class AbstractCategoryHandler
      */
     protected function populateCategoryWithCommandData(Category $category, AbstractCategoryCommand $command)
     {
-        if (null !== $command->getName()) {
-            $category->name = $command->getName();
+        if (null !== $command->getLocalizedNames()) {
+            $category->name = $command->getLocalizedNames();
         }
 
-        if (null !== $command->getLinkRewrite()) {
-            $category->link_rewrite = $command->getLinkRewrite();
+        if (null !== $command->getLocalizedLinkRewrites()) {
+            $category->link_rewrite = $command->getLocalizedLinkRewrites();
         }
 
-        if (null !== $command->getDescription()) {
-            $category->description = $command->getDescription();
+        if (null !== $command->getLocalizedDescriptions()) {
+            $category->description = $command->getLocalizedDescriptions();
         }
 
-        if (null !== $command->getMetaTitle()) {
-            $category->meta_title = $command->getMetaTitle();
+        if (null !== $command->getLocalizedMetaTitles()) {
+            $category->meta_title = $command->getLocalizedMetaTitles();
         }
 
-        if (null !== $command->getMetaDescription()) {
-            $category->meta_description = $command->getMetaDescription();
+        if (null !== $command->getLocalizedMetaDescriptions()) {
+            $category->meta_description = $command->getLocalizedMetaDescriptions();
         }
 
-        if (null !== $command->getMetaKeywords()) {
-            $category->meta_keywords = $command->getMetaKeywords();
+        if (null !== $command->getLocalizedMetaKeywords()) {
+            $category->meta_keywords = $command->getLocalizedMetaKeywords();
         }
 
         if (null !== $command->getAssociatedGroupIds()) {
