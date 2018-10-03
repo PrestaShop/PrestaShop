@@ -25,6 +25,24 @@ Release Notes for PrestaShop 1.6
 --------------------------------
 
 ####################################
+#   v1.6.1.21 - (2018-10-03)
+####################################
+
+    Fixed bugs:
+
+    BO: Fix Module configure permission
+    BO: Disallow the negative discounts in orders
+    BO: Replace serialize with json_encode
+
+    FO : Removed duplicate expressions
+    FO : Stop sending a copy of the contact message to the "author" (avoid spam)
+
+    CO: Add a fallback to curl when file_get_content() return an empty response
+    CO: Hide arguments in debug trace page
+    CO: Fix the possibility to create a customer with "造" or "
+    CO: Catch all Swift exceptions in Mail::Send()
+
+####################################
 #   v1.6.1.20 - (2018-06-27)
 ####################################
 
