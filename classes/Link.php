@@ -28,6 +28,7 @@ use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use PrestaShop\PrestaShop\Core\Feature\TokenInUrls;
 use Symfony\Component\Routing\RouterInterface;
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
 
 class LinkCore
 {
@@ -712,8 +713,11 @@ class LinkCore
         // Even if URL rewriting is not enabled, the page handled by Symfony must work !
         // For that, we add an 'index.php' in the URL before the route
         $sfContainer = SymfonyContainer::getInstance();
+        $sfRouter = null;
+        $legacyUrlConverter = null;
         if (!is_null($sfContainer)) {
             $sfRouter = $sfContainer->get('router');
+            $legacyUrlConverter = $sfContainer->get('prestashop.bundle.routing.legacy_url_converter');
         }
 
         $routeName = '';
@@ -803,7 +807,6 @@ class LinkCore
                     // 'AdminRequestSql' => 'admin_sql_request', @todo: uncomment when CQRS pages are hookable
                     'AdminMeta' => 'admin_meta',
                     // 'AdminWebservice' => 'admin_webservice', @todo: uncomment when grid and entity form are done.
-                    'AdminBackup' => 'admin_backup',
                 );
 
                 if (isset($routes[$controller])) {
@@ -811,16 +814,19 @@ class LinkCore
                 }
         }
 
-        if (isset($sfRouter)) {
-            if (empty($routeName)) {
-                $routeName = $this->searchRouteFromRouter($sfRouter, $controller);
-            }
+        if (empty($routeName) && null !== $legacyUrlConverter) {
+            try {
+                $parameters = array_merge(['controller' => $controller], $sfRouteParams, $params);
 
-            if (!empty($routeName)) {
-                $sfRoute = array_key_exists('route', $sfRouteParams) ? $sfRouteParams['route'] : $routeName;
-
-                return $sfRouter->generate($sfRoute, $sfRouteParams, UrlGeneratorInterface::ABSOLUTE_URL);
+                return $legacyUrlConverter->convertByParameters($parameters);
+            } catch (CoreException $e) {
             }
+        }
+
+        if (!empty($routeName)) {
+            $sfRoute = array_key_exists('route', $sfRouteParams) ? $sfRouteParams['route'] : $routeName;
+
+            return $sfRouter->generate($sfRoute, $sfRouteParams, UrlGeneratorInterface::ABSOLUTE_URL);
         }
 
         $idLang = Context::getContext()->language->id;

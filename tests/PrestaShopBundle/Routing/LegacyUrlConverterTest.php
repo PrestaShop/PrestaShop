@@ -34,6 +34,7 @@ use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\Router;
 use Symfony\Component\Routing\RouterInterface;
+use Mockery;
 
 class LegacyUrlConverterTest extends TestCase
 {
@@ -85,6 +86,20 @@ class LegacyUrlConverterTest extends TestCase
         $url = $converter->convertByParameters([
             'controller' => 'AdminProducts',
             'action' => 'create',
+        ]);
+        $this->assertEquals('/products/create', $url);
+
+        $url = $converter->convertByUrl('?controller=AdminProducts&action=create');
+        $this->assertEquals('/products/create', $url);
+    }
+
+    public function testActionWithTrue()
+    {
+        $router = $this->buildRouterMock('admin_products_create', '/products/create', 'AdminProducts:create');
+        $converter = new LegacyUrlConverter($router);
+        $url = $converter->convertByParameters([
+            'controller' => 'AdminProducts',
+            'create' => true,
         ]);
         $this->assertEquals('/products/create', $url);
 
