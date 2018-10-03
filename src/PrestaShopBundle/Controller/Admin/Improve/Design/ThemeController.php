@@ -29,6 +29,7 @@ namespace PrestaShopBundle\Controller\Admin\Improve\Design;
 use PrestaShop\PrestaShop\Core\Domain\Meta\DataTransferObject\LayoutCustomizationPage;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Query\GetPagesForLayoutCustomization;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController as AbstractAdminController;
+use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -39,6 +40,8 @@ class ThemeController extends AbstractAdminController
 {
     /**
      * Show Front Office theme's pages layout customization.
+     *
+     * @AdminSecurity("is_granted(['delete'], request.get('_legacy_controller'))")
      *
      * @param Request $request
      *
@@ -55,6 +58,12 @@ class ThemeController extends AbstractAdminController
         $pageLayoutCustomizationForm->handleRequest($request);
 
         if ($pageLayoutCustomizationForm->isSubmitted()) {
+            if ($this->isDemoModeEnabled()) {
+                $this->addFlash('error', $this->getDemoModeErrorMessage());
+
+                return $this->redirectToRoute('admin_theme_customize_page_layouts');
+            }
+
             $themePageLayoutsCustomizer = $this->get('prestashop.core.addon.theme.theme.page_layouts_customizer');
             $themePageLayoutsCustomizer->customize($pageLayoutCustomizationForm->getData()['layouts']);
 
