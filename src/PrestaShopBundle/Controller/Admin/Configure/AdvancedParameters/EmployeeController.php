@@ -71,10 +71,10 @@ class EmployeeController extends FrameworkBundleAdminController
     public function searchAction(Request $request)
     {
         $definitionFactory = $this->get('prestashop.core.grid.definition.factory.employee');
-        $emailLogsDefinition = $definitionFactory->getDefinition();
+        $employeeGridDefinition = $definitionFactory->getDefinition();
 
         $gridFilterFormFactory = $this->get('prestashop.core.grid.filter.form_factory');
-        $filtersForm = $gridFilterFormFactory->create($emailLogsDefinition);
+        $filtersForm = $gridFilterFormFactory->create($employeeGridDefinition);
         $filtersForm->handleRequest($request);
 
         $filters = [];
