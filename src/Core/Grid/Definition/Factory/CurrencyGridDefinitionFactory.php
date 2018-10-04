@@ -39,6 +39,7 @@ use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 /**
  * Class CurrencyGridDefinitionFactory is responsible for defining definition for currency list located in
@@ -104,12 +105,14 @@ final class CurrencyGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setName($this->trans('Currency', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'currency',
+                    'sortable' => false,
                 ])
             )
             ->add((new DataColumn('symbol'))
                 ->setName($this->trans('Symbol', [], 'Admin.International.Feature'))
                 ->setOptions([
                     'field' => 'symbol',
+                    'sortable' => false,
                 ])
             )
             ->add((new DataColumn('iso_code'))
@@ -171,7 +174,13 @@ final class CurrencyGridDefinitionFactory extends AbstractGridDefinitionFactory
     protected function getFilters()
     {
         return (new FilterCollection())
-            ->add((new Filter('active', ChoiceType::class)) //todo: change to YesNoChoiceType::class
+            ->add((new Filter('iso_code', TextType::class))
+            ->setTypeOptions([
+                'required' => false,
+            ])
+                ->setAssociatedColumn('iso_code')
+            )
+            ->add((new Filter('active', ChoiceType::class)) //todo: change to YesNoChoiceType::class when available
                 ->setTypeOptions([
                     'required' => false,
                     'choices' => $this->statusChoices,
