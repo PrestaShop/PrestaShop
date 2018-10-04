@@ -27,23 +27,21 @@
 namespace PrestaShop\PrestaShop\Core\Util\Url;
 
 /**
- * Class RobotsTextFileChecker checks if robots.txt file for Front Office is writable.
+ * Class RobotsFileChecker checks if robots.txt file for Front Office is writable.
  */
 final class RobotsFileChecker implements UrlFileCheckerInterface
 {
     /**
      * @var string
      */
-    private $rootDirectory;
+    private $robotsFileDir;
 
     /**
-     * RobotsTextFileChecker constructor.
-     *
-     * @param string $rootDirectory
+     * @param string $robotsFileDir
      */
-    public function __construct($rootDirectory)
+    public function __construct($robotsFileDir)
     {
-        $this->rootDirectory = $rootDirectory;
+        $this->robotsFileDir = $robotsFileDir;
     }
 
     /**
@@ -51,12 +49,12 @@ final class RobotsFileChecker implements UrlFileCheckerInterface
      */
     public function isWritable()
     {
-        $filePath = $this->rootDirectory . '/robots.txt';
+        $filePath = $this->robotsFileDir . DIRECTORY_SEPARATOR . 'robots.txt';
 
         if (file_exists($filePath)) {
             return is_writable($filePath);
         }
 
-        return is_writable(dirname($filePath));
+        return is_writable($this->robotsFileDir);
     }
 }

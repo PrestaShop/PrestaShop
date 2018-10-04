@@ -35,16 +35,14 @@ final class HtaccessFileChecker implements UrlFileCheckerInterface
     /**
      * @var string
      */
-    private $rootDirectory;
+    private $htaccessFileDir;
 
     /**
-     * HtaccessFileChecker constructor.
-     *
-     * @param string $rootDirectory
+     * @param string $htaccessFileDir
      */
-    public function __construct($rootDirectory)
+    public function __construct($htaccessFileDir)
     {
-        $this->rootDirectory = $rootDirectory;
+        $this->htaccessFileDir = $htaccessFileDir;
     }
 
     /**
@@ -52,12 +50,12 @@ final class HtaccessFileChecker implements UrlFileCheckerInterface
      */
     public function isWritable()
     {
-        $filePath = $this->rootDirectory . '/.htaccess';
+        $filePath = $this->htaccessFileDir . DIRECTORY_SEPARATOR . '.htaccess';
 
         if (file_exists($filePath)) {
             return is_writable($filePath);
         }
 
-        return is_writable(dirname($filePath));
+        return is_writable($this->htaccessFileDir);
     }
 }
