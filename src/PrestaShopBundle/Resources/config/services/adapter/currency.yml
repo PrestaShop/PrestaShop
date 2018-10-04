@@ -17,8 +17,3 @@ services:
             - '@=service("prestashop.adapter.legacy.configuration").get("PS_CURRENCY_DEFAULT")'
         tags:
             - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Currency\Command\DeleteCurrencyCommand' }
-
-    prestashop.adapter.currency.grid_data_factory:
-        class: 'PrestaShop\PrestaShop\Adapter\Currency\CurrencyGridDataFactory'
-        arguments:
-            - '@prestashop.core.grid.data_provider.currency'
