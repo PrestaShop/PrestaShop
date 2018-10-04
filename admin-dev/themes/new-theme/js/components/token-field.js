@@ -41,7 +41,7 @@ export default class TokenField {
 
     engine.initialize();
 
-    $('.js-token-field').tokenfield({
+    $('input.js-token-field').tokenfield({
       typeahead: [null, { source: engine.ttAdapter() }]
     });
   }
