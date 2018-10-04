@@ -1,10 +1,3 @@
-import Grid from "../../components/grid/grid";
-import SortingExtension from "../../components/grid/extension/sorting-extension";
-import FiltersResetExtension from "../../components/grid/extension/filters-reset-extension";
-import ReloadListActionExtension from "../../components/grid/extension/reload-list-extension";
-import ColumnTogglingExtension from "../../components/grid/extension/column-toggling-extension";
-import SubmitRowActionExtension from "../../components/grid/extension/action/row/submit-row-action-extension";
-
 /**
  * 2007-2018 PrestaShop
  *
@@ -29,6 +22,13 @@ import SubmitRowActionExtension from "../../components/grid/extension/action/row
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
+import Grid from "../../components/grid/grid";
+import SortingExtension from "../../components/grid/extension/sorting-extension";
+import FiltersResetExtension from "../../components/grid/extension/filters-reset-extension";
+import ReloadListActionExtension from "../../components/grid/extension/reload-list-extension";
+import ColumnTogglingExtension from "../../components/grid/extension/column-toggling-extension";
+import SubmitRowActionExtension from "../../components/grid/extension/action/row/submit-row-action-extension";
 
 const $ = window.$;
 
