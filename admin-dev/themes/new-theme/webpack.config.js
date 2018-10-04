@@ -26,7 +26,8 @@
 
 const path = require('path');
 const webpack = require('webpack');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const VueLoaderPlugin = require('vue-loader/lib/plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const keepLicense = require('uglify-save-license');
 
 const config = {
@@ -147,6 +148,21 @@ const config = {
       app: path.resolve(__dirname, 'js/app'),
     },
   },
+  stats: 'minimal',
+  optimization: {
+    // With mini-css-extract-plugin, one file is created for each '.js' where css is imported.
+    // The use of this optimization merge them into one file.
+    splitChunks: {
+      cacheGroups: {
+        styles: {
+          name: 'theme',
+          test: /\.(s*)css$/,
+          chunks: 'all',
+          enforce: true
+        }
+      }
+    }
+  },
   module: {
     rules: [
       {
@@ -155,10 +171,8 @@ const config = {
         use: [{
           loader: 'babel-loader',
           options: {
-            presets: [
-              ['es2015', {modules: false}],
-            ],
-          },
+            presets: ['@babel/preset-env']
+          }
         }],
       },
       {
@@ -204,46 +218,26 @@ const config = {
       },
       {
         test: /\.vue$/,
-        loader: 'vue-loader',
-        options: {
-          loaders: {
-            js: 'babel-loader?presets[]=es2015&presets[]=stage-2',
-            css: 'postcss-loader',
-          },
-        },
+        loader: 'vue-loader'
+      },
+      // STYLES
+      {
+        test:/\.(s*)css$/,
+        use: [
+          MiniCssExtractPlugin.loader,  // extract CSS to theme.css in prod, style-loader in dev
+          'css-loader',
+          'postcss-loader',
+          'sass-loader'
+        ]
       },
       {
-        test: /\.css$/,
-        use: ExtractTextPlugin.extract({
-          fallback: 'style-loader',
-          use: ['css-loader'],
-        }),
-      },
-      {
-        test: /\.scss$/,
-        use: ExtractTextPlugin.extract({
-          use: [
-            {
-              loader: 'css-loader',
-              options: {
-                minimize: true,
-                // sourceMap: true, // uncomment me to generate source maps
-              },
-            },
-            {
-              loader: 'postcss-loader',
-              options: {
-                // sourceMap: true, // uncomment me to generate source maps
-              },
-            },
-            {
-              loader: 'sass-loader',
-              options: {
-                // sourceMap: true, // uncomment me to generate source maps
-              },
-            },
-          ],
-        }),
+        test:/\.sass$/,
+        use: [
+          MiniCssExtractPlugin.loader,  // extract CSS to theme.css in prod, style-loader in dev
+          'css-loader',
+          'postcss-loader',
+          'sass-loader'
+        ]
       },
       {
         test: /.(jpg|png|woff(2)?|eot|otf|ttf|svg|gif)(\?[a-z0-9=.]+)?$/,
@@ -252,34 +246,37 @@ const config = {
     ],
   },
   plugins: [
-    new ExtractTextPlugin('theme.css'),
+    new VueLoaderPlugin(),
     new webpack.ProvidePlugin({
       moment: 'moment', // needed for bootstrap datetime picker
+    }),
+    new MiniCssExtractPlugin({
+      filename: '[name].css'
     }),
   ],
 };
 
-if (process.env.NODE_ENV === 'production') {
-  config.plugins.push(
-    new webpack.optimize.UglifyJsPlugin({
-      sourceMap: false,
-      compress: {
-        sequences: true,
-        conditionals: true,
-        booleans: true,
-        if_return: true,
-        join_vars: true,
-        drop_console: true,
-      },
-      output: {
-        comments: keepLicense,
-      },
-    })
-  );
-} else {
-  config.plugins.push(new webpack.HotModuleReplacementPlugin());
-  config.entry.stock.push('webpack/hot/only-dev-server');
-  config.entry.stock.push('webpack-dev-server/client?http://localhost:8080');
-}
+// if (process.env.NODE_ENV === 'production') {
+//   config.plugins.push(
+//     new webpack.optimize.UglifyJsPlugin({
+//       sourceMap: false,
+//       compress: {
+//         sequences: true,
+//         conditionals: true,
+//         booleans: true,
+//         if_return: true,
+//         join_vars: true,
+//         drop_console: true,
+//       },
+//       output: {
+//         comments: keepLicense,
+//       },
+//     })
+//   );
+// } else {
+//   config.plugins.push(new webpack.HotModuleReplacementPlugin());
+//   config.entry.stock.push('webpack/hot/only-dev-server');
+//   config.entry.stock.push('webpack-dev-server/client?http://localhost:8080');
+// }
 
 module.exports = config;
