@@ -30,6 +30,8 @@ use PHPUnit\Framework\TestCase;
 use PrestaShopBundle\Routing\Exception\ArgumentException;
 use PrestaShopBundle\Routing\Exception\RouteNotFoundException;
 use PrestaShopBundle\Routing\LegacyUrlConverter;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\Router;
@@ -157,6 +159,39 @@ class LegacyUrlConverterTest extends TestCase
         //Mock returns the original path but the parameters are checked
         $url = $converter->convertByUrl('?controller=AdminProducts&action=edit&id=42');
         $this->assertEquals('/products/edit/{id}', $url);
+    }
+
+    public function testConvertByRequest()
+    {
+        $router = $this->buildRouterMock('admin_products_create', '/products/create', 'AdminProducts:create');
+        $request = new Request([
+            'controller' => 'AdminProducts',
+            'action' => 'create',
+        ], [], [], [], [], [
+            'SERVER_PORT' => 80,
+            'SERVER_NAME' => 'localhost',
+        ]);
+        $request->overrideGlobals();
+
+        $contextMock = $this->getMockBuilder(RequestContext::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $contextMock
+            ->expects($this->once())
+            ->method('fromRequest')
+            ->with(
+                $this->equalTo($request)
+            )
+        ;
+        $router
+            ->expects($this->once())
+            ->method('getContext')
+            ->willReturn($contextMock)
+        ;
+
+        $converter = new LegacyUrlConverter($router);
+        $url = $converter->convertByRequest($request);
+        $this->assertEquals('/products/create', $url);
     }
 
     public function testMissingController()

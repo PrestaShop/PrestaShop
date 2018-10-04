@@ -29,6 +29,7 @@ namespace PrestaShopBundle\Routing;
 
 use PrestaShopBundle\Routing\Exception\ArgumentException;
 use PrestaShopBundle\Routing\Exception\RouteNotFoundException;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouterInterface;
@@ -133,6 +134,24 @@ final class LegacyUrlConverter
         }
 
         return $this->convertByParameters($parameters);
+    }
+
+    /**
+     * This conversion method is used by the listener, indeed it needs to update the
+     * router context because it is executed before the RouterListener. Thus the router
+     * does not have the appropriate information to generate an admin url and would redirect
+     * to the front office.
+     *
+     * @param Request $request
+     * @return string
+     * @throws ArgumentException
+     * @throws RouteNotFoundException
+     */
+    public function convertByRequest(Request $request)
+    {
+        $this->router->getContext()->fromRequest($request);
+
+        return $this->convertByUrl($request->getUri());
     }
 
     /**
