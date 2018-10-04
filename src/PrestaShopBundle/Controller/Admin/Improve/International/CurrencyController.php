@@ -36,7 +36,9 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 use PrestaShop\PrestaShop\Core\Search\Filters\CurrencyFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -52,21 +54,34 @@ class CurrencyController extends FrameworkBundleAdminController
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @param CurrencyFilters $filters
-     * @param Request $request
      *
      * @return array
      */
-    public function indexAction(CurrencyFilters $filters, Request $request)
+    public function indexAction(CurrencyFilters $filters)
     {
         $currencyGridFactory = $this->get('prestashop.core.grid.factory.currency');
         $currencyGrid = $currencyGridFactory->getGrid($filters);
         $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
 
         return [
+            'layoutHeaderToolbarBtn' => [
+                'add' => [
+                    'href' => $this->generateUrl('admin_currency_create'),
+                    'desc' => $this->trans('Add new currency', 'Admin.International.Feature'),
+                    'icon' => 'add_circle_outline',
+                ],
+            ],
             'currencyGrid' => $gridPresenter->present($currencyGrid),
         ];
     }
 
+    /**
+     * Provides filters functionality.
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
     public function searchAction(Request $request)
     {
         $definitionFactory = $this->get('prestashop.core.grid.definition.factory.currency');
@@ -84,11 +99,53 @@ class CurrencyController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_currency_index', ['filters' => $filters]);
     }
 
-    public function editAction()
+    /**
+     * Displays currency form.
+     *
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))", message="You do not have permission to add this.")
+     *
+     * @return RedirectResponse
+     */
+    public function createAction()
     {
-//        todo: implement
+        //todo: drop legacy and after having post add @DemoRestricted
+        $legacyLink = $this->getAdminLink('AdminCurrencies', [
+            'addcurrency' => 1,
+        ]);
+
+        return $this->redirect($legacyLink);
     }
 
+    /**
+     * Displays currency form.
+     *
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message="You do not have permission to edit this.")
+     *
+     * @param int $currencyId
+     *
+     * @return RedirectResponse
+     */
+    public function editAction($currencyId)
+    {
+        //todo: drop legacy and after having post add @DemoRestricted
+        $legacyLink = $this->getAdminLink('AdminCurrencies', [
+            'id_currency' => $currencyId,
+            'updatecurrency' => 1,
+        ]);
+
+        return $this->redirect($legacyLink);
+    }
+
+    /**
+     * Deletes currency.
+     *
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message="You do not have permission to delete this.")
+     * @DemoRestricted(redirectRoute="admin_currency_index")
+     *
+     * @param int $currencyId
+     *
+     * @return RedirectResponse
+     */
     public function deleteAction($currencyId)
     {
         $commandBus = $this->get('prestashop.core.command_bus');
@@ -111,6 +168,16 @@ class CurrencyController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_currency_index');
     }
 
+    /**
+     * Toggles status.
+     *
+     * @param int $currencyId
+     *
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message="You do not have permission to edit this.")
+     * @DemoRestricted(redirectRoute="admin_currency_index")
+     *
+     * @return RedirectResponse
+     */
     public function toggleStatusAction($currencyId)
     {
         $commandBus = $this->get('prestashop.core.command_bus');
