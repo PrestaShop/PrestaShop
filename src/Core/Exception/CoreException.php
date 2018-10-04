@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -24,11 +24,13 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Import\Exception;
+namespace PrestaShop\PrestaShop\Core\Exception;
+
+use Exception;
 
 /**
- * Class NotSupportedImportTypeException is thrown when no supported import type is provided.
+ * Class CoreException is the core exception class that other exceptions should extend.
  */
-class NotSupportedImportTypeException extends ImportException
+class CoreException extends Exception
 {
 }

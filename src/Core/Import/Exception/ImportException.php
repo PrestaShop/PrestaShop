@@ -26,9 +26,11 @@
 
 namespace PrestaShop\PrestaShop\Core\Import\Exception;
 
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
+
 /**
- * Interface ExceptionInterface is implemented by all import exceptions.
+ * Class ImportException is extended by all import exceptions.
  */
-interface ExceptionInterface
+class ImportException extends CoreException
 {
 }
