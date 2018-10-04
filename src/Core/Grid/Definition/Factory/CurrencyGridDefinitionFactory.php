@@ -100,6 +100,24 @@ final class CurrencyGridDefinitionFactory extends AbstractGridDefinitionFactory
     protected function getColumns()
     {
         return (new ColumnCollection())
+            ->add((new DataColumn('currency'))
+                ->setName($this->trans('Currency', [], 'Admin.Global'))
+                ->setOptions([
+                    'field' => 'currency',
+                ])
+            )
+            ->add((new DataColumn('symbol'))
+                ->setName($this->trans('Symbol', [], 'Admin.International.Feature'))
+                ->setOptions([
+                    'field' => 'symbol',
+                ])
+            )
+            ->add((new DataColumn('iso_code'))
+                ->setName($this->trans('ISO code', [], 'Admin.International.Feature'))
+                ->setOptions([
+                    'field' => 'iso_code',
+                ])
+            )
             ->add((new DataColumn('conversion_rate'))
                 ->setName($this->trans('Exchange rate', [], 'Admin.International.Feature'))
                 ->setOptions([
