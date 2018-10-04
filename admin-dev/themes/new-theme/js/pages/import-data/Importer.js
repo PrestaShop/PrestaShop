@@ -193,7 +193,7 @@ export default class Importer {
         // Import is completely finished.
         this._onImportFinish();
       },
-      error: (XMLHttpRequest, textStatus) => {
+      error: (XMLHttpRequest, textStatus, errorCode) => {
         if (textStatus === 'parsererror') {
           textStatus = 'Technical error: Unexpected response returned by server. Import stopped.';
         }

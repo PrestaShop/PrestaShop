@@ -63,10 +63,10 @@ export default class ImportDataTable {
    * @private
    */
   _importPaginationHandler(direction) {
-    let $currentPageElements = $importDataTable.find('th:visible,td:visible');
+    const $currentPageElements = $importDataTable.find('th:visible,td:visible');
+    const $oppositePaginationButton = direction === FORWARD ? $('.js-import-next-page') : $('.js-import-previous-page');
     let lastVisibleColumnFound = false;
     let numberOfVisibleColumns = 0;
-    let $oppositePaginationButton = direction === FORWARD ? $('.js-import-next-page') : $('.js-import-previous-page');
     let $tableColumns = $importDataTable.find('th');
 
     if (direction === BACKWARDS) {

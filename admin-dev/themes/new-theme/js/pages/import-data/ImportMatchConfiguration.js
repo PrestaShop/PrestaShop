@@ -27,19 +27,19 @@ const $ = window.$;
 
 /**
  * Class is responsible for import match configuration
- * in Advanced parameters -> Import -> step 2 form
+ * in Advanced parameters -> Import -> step 2 form.
  */
 export default class ImportMatchConfiguration
 {
   /**
-   * Initializes all the processes related with import matches
+   * Initializes all the processes related with import matches.
    */
   constructor() {
     this.loadEvents();
   }
 
   /**
-   * Loads all events data match configuration
+   * Loads all events for data match configuration.
    */
   loadEvents() {
     $(document).on('click', '.js-save-import-match', (event) => this.save(event));
@@ -48,7 +48,7 @@ export default class ImportMatchConfiguration
   }
 
   /**
-   * Save the import match configuration
+   * Save the import match configuration.
    */
   save(event) {
     event.preventDefault();
@@ -66,26 +66,26 @@ export default class ImportMatchConfiguration
         let $dataMatchesDropdown = this.matchesDropdown;
 
         for (let key in response.matches) {
-          let $existingMatch = $dataMatchesDropdown.find('option[value=' + response.matches[key].id_import_match + ']');
+          let $existingMatch = $dataMatchesDropdown.find(`option[value=${response.matches[key].id_import_match}]`);
 
           // If match already exists with same id - do nothing
           if ($existingMatch.length > 0) {
             continue;
           }
 
-          let $newOption = $('<option>');
-          $newOption.attr('value', response.matches[key].id_import_match);
-          $newOption.text(response.matches[key].name);
-
           // Append the new option to the matches dropdown
-          $dataMatchesDropdown.append($newOption);
+          this._appendOptionToDropdown(
+            $dataMatchesDropdown,
+            response.matches[key].name,
+            response.matches[key].id_import_match
+          );
         }
       }
     });
   }
 
   /**
-   * Load the import match
+   * Load the import match.
    */
   load(event) {
     event.preventDefault();
@@ -104,14 +104,14 @@ export default class ImportMatchConfiguration
         let entityFields = response.match.split('|');
 
         for (let i in entityFields) {
-          $('#type_value_' + i).val(entityFields[i]);
+          $(`#type_value_${i}`).val(entityFields[i]);
         }
       }
     });
   }
 
   /**
-   * Delete the import match
+   * Delete the import match.
    */
   delete(event) {
     event.preventDefault();
@@ -127,15 +127,31 @@ export default class ImportMatchConfiguration
       },
     }).then(() => {
         // Delete the match option from matches dropdown
-        $dataMatchesDropdown.find('option[value=' + selectedMatchId + ']').remove();
+        $dataMatchesDropdown.find(`option[value=${selectedMatchId}]`).remove();
     });
   }
 
   /**
-   * Shows error messages in the native error pop-up
+   * Appends a new option to given dropdown.
+   *
+   * @param {jQuery} $dropdown
+   * @param {String} optionText
+   * @param {String} optionValue
+   * @private
+   */
+  _appendOptionToDropdown($dropdown, optionText, optionValue) {
+    let $newOption = $('<option>');
+
+    $newOption.attr('value', optionValue);
+    $newOption.text(optionText);
+
+    $dropdown.append($newOption);
+  }
+
+  /**
+   * Shows error messages in the native error pop-up.
    *
    * @param {Array} errors
-   *
    * @private
    */
   _showErrorPopUp(errors) {
@@ -152,7 +168,7 @@ export default class ImportMatchConfiguration
   }
 
   /**
-   * Get the "rows to skip" input
+   * Get the "rows to skip" input.
    *
    * @returns {*|HTMLElement}
    */
