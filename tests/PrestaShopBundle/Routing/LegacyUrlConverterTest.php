@@ -186,7 +186,7 @@ class LegacyUrlConverterTest extends TestCase
         ]);
     }
 
-    public function testRouteNotFound()
+    public function testControllerNotFound()
     {
         $router = $this->buildRouterMock('admin_products_create', '/products/create', 'AdminProducts:create');
         $converter = new LegacyUrlConverter($router);
@@ -205,7 +205,84 @@ class LegacyUrlConverterTest extends TestCase
         $this->assertNotNull($caughtException);
         $this->assertInstanceOf(RouteNotFoundException::class, $caughtException);
         $this->assertEquals('Could not find a route matching for legacy controller: %s', $caughtException->getMessage());
-        $this->assertEquals(['AdminModules:configure'], $caughtException->getParameters());
+        $this->assertEquals(['AdminModules'], $caughtException->getParameters());
+    }
+
+    public function testActionNotFound()
+    {
+        $router = $this->buildRouterMock('admin_products_create', '/products/create', 'AdminProducts:create');
+        $converter = new LegacyUrlConverter($router);
+
+        /** @var RouteNotFoundException $caughtException */
+        $caughtException = null;
+
+        try {
+            $converter->convertByParameters([
+                'controller' => 'AdminProducts',
+                'action' => 'configure',
+            ]);
+        } catch (RouteNotFoundException $e) {
+            $caughtException = $e;
+        }
+        $this->assertNotNull($caughtException);
+        $this->assertInstanceOf(RouteNotFoundException::class, $caughtException);
+        $this->assertEquals('Could not find a route matching for legacy action: %s', $caughtException->getMessage());
+        $this->assertEquals(['AdminProducts:configure'], $caughtException->getParameters());
+    }
+
+    /**
+     * This tests is used to test the component with a list of routes and mainly to
+     * check possible conflicts when action is
+     * @throws ArgumentException
+     * @throws RouteNotFoundException
+     */
+    public function testMultipleRoutesActionWithTrue()
+    {
+        $router = $this->buildMultipleRouterMock([
+            [
+                'route_name' => 'admin_products',
+                'path' => '/products',
+                '_legacy_link' => 'AdminProducts',
+            ],
+            [
+                'route_name' => 'admin_products_create',
+                'path' => '/products/create',
+                '_legacy_link' => 'AdminProducts:add',
+            ],
+        ]);
+        $converter = new LegacyUrlConverter($router);
+
+        //Test index by parameter
+        $url = $converter->convertByParameters([
+            'controller' => 'AdminProducts',
+        ]);
+        $this->assertEquals('/products', $url);
+
+        //Test index by url
+        $url = $converter->convertByUrl('?controller=AdminProducts');
+        $this->assertEquals('/products', $url);
+
+        //Test create by parameter action
+        $url = $converter->convertByParameters([
+            'controller' => 'AdminProducts',
+            'action' => 'add',
+        ]);
+        $this->assertEquals('/products/create', $url);
+
+        //Test create by boolean value
+        $url = $converter->convertByParameters([
+            'controller' => 'AdminProducts',
+            'add' => true,
+        ]);
+        $this->assertEquals('/products/create', $url);
+
+        //Test url create by parameter action
+        $url = $converter->convertByUrl('?controller=AdminProducts&action=add');
+        $this->assertEquals('/products/create', $url);
+
+        //Test url create by boolean value
+        $url = $converter->convertByUrl('?controller=AdminProducts&add');
+        $this->assertEquals('/products/create', $url);
     }
 
     /**
@@ -218,13 +295,14 @@ class LegacyUrlConverterTest extends TestCase
      */
     private function buildRouterMock($routeName, $routePath, $legacyLink, array $legacyParameters = null, array $expectedParameters = null)
     {
+        $routeCollection = new RouteCollection();
+
         $routeDefaults = [
             '_legacy_link' => $legacyLink,
         ];
         if (null !== $legacyParameters) {
             $routeDefaults['_legacy_parameters'] = $legacyParameters;
         }
-        $routeCollection = new RouteCollection();
         $routeCollection->add($routeName, new Route(
             $routePath,
             $routeDefaults
@@ -263,5 +341,61 @@ class LegacyUrlConverterTest extends TestCase
 
 
         return $mockRouter;
+    }
+
+    /**
+     * @param array $routes
+     * @return \PHPUnit_Framework_MockObject_MockObject|RouterInterface
+     */
+    private function buildMultipleRouterMock(array $routes)
+    {
+        $routeCollection = $this->buildRouteCollection($routes);
+
+        $mockRouter = $this
+            ->getMockBuilder(Router::class)
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
+
+        $mockRouter
+            ->method('getRouteCollection')
+            ->willReturn($routeCollection)
+        ;
+
+        $mockRouter
+            ->method('generate')
+            ->will($this->returnCallback(
+                function($routeName) use ($routeCollection) {
+                    $route = $routeCollection->get($routeName);
+
+                    return null !== $route ? $route->getPath() : null;
+                }
+            ))
+        ;
+
+        return $mockRouter;
+    }
+
+    /**
+     * @param array $routes
+     * @return RouteCollection
+     */
+    private function buildRouteCollection(array $routes)
+    {
+        $routeCollection = new RouteCollection();
+        foreach ($routes as $route) {
+            $routeDefaults = [
+                '_legacy_link' => $route['_legacy_link'],
+            ];
+            if (!empty($route['_legacy_parameters'])) {
+                $routeDefaults['_legacy_parameters'] = $route['_legacy_parameters'];
+            }
+            $routeCollection->add($route['route_name'], new Route(
+                $route['path'],
+                $routeDefaults
+            ));
+        }
+
+        return $routeCollection;
     }
 }

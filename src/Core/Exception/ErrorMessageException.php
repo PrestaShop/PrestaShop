@@ -30,9 +30,9 @@ use Exception;
 use Throwable;
 
 /**
- * Class PrestaShopCoreException.
+ * Class ErrorMessageException.
  */
-class PrestaShopCoreException extends \Exception
+class ErrorMessageException extends CoreException
 {
     /**
      * @var string

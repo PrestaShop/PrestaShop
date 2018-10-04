@@ -26,7 +26,6 @@
 
 namespace PrestaShopBundle\Routing\Exception;
 
-
 use PrestaShop\PrestaShop\Core\Exception\ErrorMessageException;
 use Throwable;
 

@@ -777,7 +777,6 @@ class LinkCore
             default:
                 $routes = array(
                     'AdminAddonsCatalog' => 'admin_module_addons_store',
-                    'AdminAdminPreferences' => 'admin_administration',
                     'AdminCustomerPreferences' => 'admin_customer_preferences',
                     'AdminDeliverySlip' => 'admin_order_delivery_slip',
                     'AdminImport' => 'admin_import',
@@ -816,14 +815,15 @@ class LinkCore
 
         if (empty($routeName) && null !== $legacyUrlConverter) {
             try {
-                $parameters = array_merge(['controller' => $controller], $sfRouteParams, $params);
+                $conversionParameters = array_merge(['controller' => $controller], $sfRouteParams, $params);
+                unset($conversionParameters['token']);
 
-                return $legacyUrlConverter->convertByParameters($parameters);
+                return $legacyUrlConverter->convertByParameters($conversionParameters);
             } catch (CoreException $e) {
             }
         }
 
-        if (!empty($routeName)) {
+        if (!empty($routeName) && null !== $sfRouter) {
             $sfRoute = array_key_exists('route', $sfRouteParams) ? $sfRouteParams['route'] : $routeName;
 
             return $sfRouter->generate($sfRoute, $sfRouteParams, UrlGeneratorInterface::ABSOLUTE_URL);
@@ -832,30 +832,6 @@ class LinkCore
         $idLang = Context::getContext()->language->id;
 
         return $this->getAdminBaseLink() . basename(_PS_ADMIN_DIR_) . '/' . Dispatcher::getInstance()->createUrl($controller, $idLang, $params);
-    }
-
-    /**
-     * @param RouterInterface $sfRouter
-     * @param string $controller
-     *
-     * @return string
-     */
-    private function searchRouteFromRouter(RouterInterface $sfRouter, $controller)
-    {
-        /**
-         * @var string
-         * @var \Symfony\Component\Routing\Route $route
-         */
-        foreach ($sfRouter->getRouteCollection() as $routeName => $route) {
-            if (in_array('GET', $route->getMethods())) {
-                $routeDefaults = $route->getDefaults();
-                if (isset($routeDefaults['_legacy_link']) && $controller == $routeDefaults['_legacy_link']) {
-                    return $routeName;
-                }
-            }
-        }
-
-        return '';
     }
 
     /**
