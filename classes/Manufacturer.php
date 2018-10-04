@@ -213,7 +213,7 @@ class ManufacturerCore extends ObjectModel
             $sqlGroups = '';
             if (!$allGroup) {
                 $groups = FrontController::getCurrentCustomerGroups();
-                $sqlGroups = (count($groups) ? 'IN (' . implode(',', $groups) . ')' : '= 1');
+                $sqlGroups = (count($groups) ? 'IN (' . implode(',', $groups) . ')' : '=' . (int) Group::getCurrent()->id);
             }
 
             $results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
@@ -401,7 +401,7 @@ class ManufacturerCore extends ObjectModel
         }
 
         $groups = FrontController::getCurrentCustomerGroups();
-        $sqlGroups = count($groups) ? 'IN (' . implode(',', $groups) . ')' : '= 1';
+        $sqlGroups = count($groups) ? 'IN (' . implode(',', $groups) . ')' : '=' . (int) Group::getCurrent()->id;
 
         /* Return only the number of products */
         if ($getTotal) {
