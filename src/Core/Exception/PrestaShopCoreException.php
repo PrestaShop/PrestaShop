@@ -53,14 +53,14 @@ class PrestaShopCoreException extends \Exception
      * @param string $domain
      * @param array $parameters
      * @param int $code
-     * @param Throwable|null $previous
+     * @param Throwable|\Exception|null $previous
      */
     public function __construct(
         $key,
         $domain,
         $parameters = [],
         $code = 0,
-        Throwable $previous = null
+        $previous = null
     ) {
         parent::__construct($key, $code, $previous);
         $this->key = $key;
