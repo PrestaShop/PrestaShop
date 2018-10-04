@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
 /**
- * Class CurrencyGridDataFactory
+ * Class CurrencyGridDataFactory is responsible for providing modified currency list grid data.
  */
 final class CurrencyGridDataFactory implements GridDataFactoryInterface
 {

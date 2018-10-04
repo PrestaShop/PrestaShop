@@ -64,7 +64,10 @@ final class CurrencyQueryBuilder extends AbstractDoctrineQueryBuilder
     {
         $qb = $this->getQueryBuilder($searchCriteria->getFilters());
 
-        $qb->select('c.`id_currency`, c.`iso_code`, cs.`conversion_rate`, c.`active`');
+        $qb
+            ->select('c.`id_currency`, c.`iso_code`, cs.`conversion_rate`, c.`active`')
+            ->groupBy('c.`id_currency`')
+        ;
 
         $this->searchCriteriaApplicator
             ->applyPagination($searchCriteria, $qb)
@@ -80,8 +83,7 @@ final class CurrencyQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $qb = $this->getQueryBuilder($searchCriteria->getFilters())
-            ->select('SQL_CALC_FOUND_ROWS')
-            ->select('FOUND_ROWS()')
+            ->select('COUNT(DISTINCT c.`id_currency`)')
         ;
 
         return $qb;
@@ -115,8 +117,6 @@ final class CurrencyQueryBuilder extends AbstractDoctrineQueryBuilder
         $qb->andWhere('c.`deleted` = 0');
 
         $qb->setParameter('shops', $this->contextShopIds, Connection::PARAM_INT_ARRAY);
-
-        $qb->groupBy('c.`id_currency`');
 
         foreach ($filters as $filterName => $value) {
             if (!in_array($filterName, $allowedFilters, true)) {
