@@ -128,7 +128,7 @@ final class LanguageGridDefinitionFactory extends AbstractGridDefinitionFactory
                         ->add((new LinkRowAction('edit'))
                             ->setIcon('edit')
                             ->setOptions([
-                                'route' => 'admin_languages_index',
+                                'route' => 'admin_languages_edit',
                                 'route_param_name' => 'languageId',
                                 'route_param_field' => 'id_lang',
                             ])
@@ -259,6 +259,7 @@ final class LanguageGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
                 ->setOptions([
                     'submit_route' => 'admin_languages_index',
+                    'confirm_message' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
                 ])
             )
         ;
