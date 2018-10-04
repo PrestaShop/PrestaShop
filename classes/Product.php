@@ -1890,10 +1890,14 @@ class ProductCore extends ObjectModel
     {
         return (
             Db::getInstance()->execute(
-                'DELETE `'._DB_PREFIX_.'search_index`, `'._DB_PREFIX_.'search_word`
-				FROM `'._DB_PREFIX_.'search_index` JOIN `'._DB_PREFIX_.'search_word`
-				WHERE `'._DB_PREFIX_.'search_index`.`id_product` = '.(int)$this->id.'
-						AND `'._DB_PREFIX_.'search_word`.`id_word` = `'._DB_PREFIX_.'search_index`.id_word'
+                'DELETE FROM `'._DB_PREFIX_.'search_index`
+                WHERE `id_product` = '.(int)$this->id
+            )
+            &&
+            Db::getInstance()->execute(
+                'DELETE sw FROM `'._DB_PREFIX_.'search_word` sw
+        LEFT JOIN `'._DB_PREFIX_.'search_index` si ON (sw.id_word=si.id_word)
+        WHERE si.id_word IS NULL;'
             )
         );
     }
