@@ -26,12 +26,13 @@
 
 namespace PrestaShop\PrestaShop\Core\Exception;
 
+use Exception;
 use Throwable;
 
 /**
  * Class PrestaShopCoreException.
  */
-class PrestaShopCoreException extends \Exception
+class PrestaShopCoreException extends Exception
 {
     /**
      * @var string
@@ -53,7 +54,7 @@ class PrestaShopCoreException extends \Exception
      * @param string $domain
      * @param array $parameters
      * @param int $code
-     * @param Throwable|\Exception|null $previous
+     * @param Throwable|Exception|null $previous
      */
     public function __construct(
         $key,
