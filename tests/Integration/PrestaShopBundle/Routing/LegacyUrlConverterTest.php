@@ -40,7 +40,7 @@ class LegacyUrlConverterTest extends LightWebTestCase
         $this->assertInstanceOf(LegacyUrlConverter::class, $converter);
     }
 
-    public function xtestSample()
+    public function testSample()
     {
         $this->testLegacyLinkClass('/configure/advanced/backup/create', 'AdminBackup', 'add');
     }
@@ -83,7 +83,6 @@ class LegacyUrlConverterTest extends LightWebTestCase
     public function testLegacyLinkClass($expectedUrl, $controller, $action = null, array $queryParameters = null)
     {
         $this->initStaticInstance();
-
         $link = new Link();
 
         $parameters = [
@@ -93,6 +92,41 @@ class LegacyUrlConverterTest extends LightWebTestCase
             $parameters = array_merge($parameters, $queryParameters);
         }
         $linkUrl = $link->getAdminLink($controller, true, [], $parameters);
+        $this->assertSameUrl($expectedUrl, $linkUrl);
+
+
+    }
+
+    /**
+     * @dataProvider migratedControllers
+     */
+    public function testLegacyClassActionTrue($expectedUrl, $controller, $action = null, array $queryParameters = null)
+    {
+        $this->initStaticInstance();
+        $link = new Link();
+
+        $parameters = null !== $queryParameters ? $queryParameters : [];
+        if (null != $action) {
+            $parameters[$action] = true;
+        }
+        $linkUrl = $link->getAdminLink($controller, true, [], $parameters);
+        $this->assertSameUrl($expectedUrl, $linkUrl);
+    }
+
+    /**
+     * Mainly used to ensure the legacy links are not broken.
+     * @dataProvider legacyControllers
+     * @param string $expectedUrl
+     * @param string $controller
+     * @throws \PrestaShopException
+     * @throws \ReflectionException
+     */
+    public function testLegacyControllers($expectedUrl, $controller)
+    {
+        $this->initStaticInstance();
+        $link = new Link();
+
+        $linkUrl = $link->getAdminLink($controller);
         $this->assertSameUrl($expectedUrl, $linkUrl);
     }
 
@@ -107,7 +141,17 @@ class LegacyUrlConverterTest extends LightWebTestCase
             'admin_backup' => ['/configure/advanced/backup/', 'AdminBackup'],
             'admin_backup_create' => ['/configure/advanced/backup/create', 'AdminBackup', 'add'],
             'admin_backup_delete' => ['/configure/advanced/backup/backup_file.zip', 'AdminBackup', 'delete', ['filename' => 'backup_file.zip']],
-            'admin_backup_delete' => ['/configure/advanced/backup/bulk-delete/', 'AdminBackup', 'submitBulkdeletebackup']
+            'admin_backup_bulk_delete' => ['/configure/advanced/backup/bulk-delete/', 'AdminBackup', 'submitBulkdeletebackup']
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function legacyControllers()
+    {
+        return [
+            ['/admin-dev/index.php?controller=AdminLogin', 'AdminLogin']
         ];
     }
 
@@ -119,11 +163,19 @@ class LegacyUrlConverterTest extends LightWebTestCase
     {
         $this->assertNotNull($url);
         $parsedUrl = parse_url($url);
+        parse_str($parsedUrl['query'], $parameters);
+        unset($parameters['token']);
+        unset($parameters['_token']);
+        $cleanUrl = http_build_url([
+            'path' => $parsedUrl['path'],
+            'query' => http_build_query($parameters),
+        ]);
+
         $this->assertNotEmpty($parsedUrl['path']);
-        $this->assertTrue($expectedUrl == $parsedUrl['path'], sprintf(
+        $this->assertTrue($expectedUrl == $cleanUrl, sprintf(
             'Expected url %s is different with generated one: %s',
             $expectedUrl,
-            $parsedUrl['path']
+            $cleanUrl
         ));
     }
 

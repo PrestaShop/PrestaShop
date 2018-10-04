@@ -31,7 +31,7 @@ use Throwable;
 /**
  * Class ErrorMessageException.
  */
-class ErrorMessageException extends \Exception
+class ErrorMessageException extends CoreException
 {
     /**
      * @var string

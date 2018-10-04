@@ -29,9 +29,15 @@ namespace PrestaShopBundle\Routing;
 
 use PrestaShopBundle\Routing\Exception\ArgumentException;
 use PrestaShopBundle\Routing\Exception\RouteNotFoundException;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouterInterface;
 
+/**
+ * Class LegacyUrlConverter is able to convert query parameters or an url into a
+ * migrated Symfony url. It uses information set in the routes via _legacy_link
+ * to do so.
+ */
 final class LegacyUrlConverter
 {
     /**
@@ -40,21 +46,51 @@ final class LegacyUrlConverter
     private $router;
 
     /**
-     * @var Route[]
+     * @var array
      */
     private $legacyRoutes;
 
+    /**
+     * @var array
+     */
+    private $controllersActions;
+
+    /**
+     * LegacyUrlConverter constructor.
+     * @param RouterInterface $router
+     */
     public function __construct(RouterInterface $router)
     {
         $this->router = $router;
         $this->legacyRoutes = [];
+        $this->controllersActions = [];
         /** @var Route $route */
         foreach ($this->router->getRouteCollection() as $routeName => $route) {
-            $routeDefaults = $route->getDefaults();
-            if (!empty($routeDefaults['_legacy_link'])) {
-                $this->legacyRoutes[$routeName] = $route;
-            }
+            $this->addRoute($routeName, $route);
         }
+    }
+
+    /**
+     * @param string $routeName
+     * @param Route $route
+     */
+    public function addRoute($routeName, Route $route)
+    {
+        $routeDefaults = $route->getDefaults();
+        if (empty($routeDefaults['_legacy_link'])) {
+            return;
+        }
+
+        $this->legacyRoutes[$routeName] = $route;
+
+        $legacyLink = $this->breakLegacyLink($route);
+        $controller = $legacyLink['controller'];
+        if (!isset($this->controllersActions[$controller])) {
+            $this->controllersActions[$controller] = [];
+        }
+
+        $action = $this->isIndexAction($legacyLink['action']) ? 'index' : $legacyLink['action'];
+        $this->controllersActions[$controller][$action] = $routeName;
     }
 
     /**
@@ -65,10 +101,21 @@ final class LegacyUrlConverter
      */
     public function convertByParameters(array $parameters)
     {
-        $routeName = $this->findRouteNameByArguments($parameters);
+        if (empty($parameters['controller'])) {
+            throw new ArgumentException('Missing required controller argument');
+        }
+
+        if (!isset($this->controllersActions[$parameters['controller']])) {
+            throw new RouteNotFoundException(
+                'Could not find a route matching for legacy controller: %s',
+                [$parameters['controller']]
+            );
+        }
+
+        $routeName = $this->findRouteNameByParameters($parameters);
         $parameters = $this->convertParametersForRoute($parameters, $routeName);
 
-        return $this->router->generate($routeName, $parameters);
+        return $this->router->generate($routeName, $parameters, UrlGeneratorInterface::ABSOLUTE_URL);
     }
 
     /**
@@ -106,45 +153,57 @@ final class LegacyUrlConverter
             }
         }
 
+        $legacyAction = $this->getActionFromParameters($parameters);
         unset($parameters['controller']);
         unset($parameters['action']);
+        unset($parameters[$legacyAction]);
 
         return $parameters;
     }
 
     /**
-     * @param array $arguments
+     * @param array $parameters
      * @return string
-     * @throws ArgumentException
      * @throws RouteNotFoundException
      */
-    private function findRouteNameByArguments(array $arguments)
+    private function findRouteNameByParameters(array $parameters)
     {
-        if (empty($arguments['controller'])) {
-            throw new ArgumentException('Missing required controller argument');
-        }
-        $legacyController = $arguments['controller'];
-        $legacyAction = !empty($arguments['action']) ? $arguments['action'] : null;
+        $legacyController = $parameters['controller'];
+        $controllerActions = $this->controllersActions[$legacyController];
 
-        foreach ($this->legacyRoutes as $routeName => $route) {
-            $legacyLink = $this->breakLegacyLink($route);
-            if ($legacyController != $legacyLink['controller']) {
-                continue;
-            }
-
-            if ($this->isIndexAction($legacyAction) && $this->isIndexAction($legacyLink['action'])) {
-                return $routeName;
-            } elseif (!empty($legacyAction) && $legacyAction === $legacyLink['action']) {
-                return $routeName;
-            } elseif (!empty($arguments[$legacyLink['action']]) && (bool) $arguments[$legacyLink['action']]) {
-                return $routeName;
-            }
+        $legacyAction = $this->getActionFromParameters($parameters);
+        if (!isset($controllerActions[$legacyAction])) {
+            throw new RouteNotFoundException(
+                'Could not find a route matching for legacy action: %s',
+                [$legacyController . ':' . $legacyAction]
+            );
         }
 
-        throw new RouteNotFoundException(
-            'Could not find a route matching for legacy controller: %s',
-            [$legacyController.(null !== $legacyAction ? ':'.$legacyAction : '')]
-        );
+        return $controllerActions[$legacyAction];
+    }
+
+    /**
+     * @param array $parameters
+     * @return null|string
+     */
+    private function getActionFromParameters(array $parameters)
+    {
+        $legacyAction = null;
+
+        if (!empty($parameters['action'])) {
+            $legacyAction = $parameters['action'];
+        } else {
+            //Actions can be defined as simple query parameter (e.g: ?controller=AdminProduct&add)
+            $controllerActions = array_keys($this->controllersActions[$parameters['controller']]);
+            foreach ($parameters as $parameter => $value) {
+                if (in_array($parameter, $controllerActions)) {
+                    $legacyAction = $parameter;
+                    break;
+                }
+            }
+        }
+
+        return $this->isIndexAction($legacyAction) ? 'index' : $legacyAction;
     }
 
     /**
