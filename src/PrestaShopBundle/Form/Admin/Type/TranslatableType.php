@@ -34,22 +34,21 @@ use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Class is responsible for creating translatable text inputs.
- *
- * @deprecated since version 1.7.6 and will be removed in 1.8. Use the TranslatableType instead.
+ * Class TranslatableType adds translatable inputs with custom inner type to forms.
  */
-class TranslateTextType extends AbstractType
+class TranslatableType extends AbstractType
 {
-    public function __construct()
+    /**
+     * @var array
+     */
+    private $locales;
+
+    /**
+     * @param array $locales
+     */
+    public function __construct(array $locales)
     {
-        trigger_error(
-            sprintf(
-                'The %s class is deprecated since version 1.7.6 and will be removed in 1.8. Use the %s class instead.',
-                __CLASS__,
-                TranslatableType::class
-            ),
-            E_USER_DEPRECATED
-        );
+        $this->locales = $locales;
     }
 
     /**
@@ -58,14 +57,14 @@ class TranslateTextType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         foreach ($options['locales'] as $locale) {
-            $localeOptions = $options['options'];
-            $localeOptions['label'] = $locale['iso_code'];
+            $typeOptions = $options['options'];
+            $typeOptions['label'] = $locale['iso_code'];
 
-            if (!isset($localeOptions['required'])) {
-                $localeOptions['required'] = false;
+            if (!isset($typeOptions['required'])) {
+                $typeOptions['required'] = false;
             }
 
-            $builder->add($locale['id_lang'], TextType::class, $localeOptions);
+            $builder->add($locale['id_lang'], $options['type'], $typeOptions);
         }
     }
 
@@ -85,12 +84,14 @@ class TranslateTextType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
+            'type' => TextType::class,
             'options' => [],
-            'locales' => [],
+            'locales' => $this->locales,
         ]);
 
         $resolver->setAllowedTypes('locales', 'array');
         $resolver->setAllowedTypes('options', 'array');
+        $resolver->setAllowedTypes('type', 'string');
     }
 
     /**
@@ -98,6 +99,6 @@ class TranslateTextType extends AbstractType
      */
     public function getBlockPrefix()
     {
-        return 'translate_text';
+        return 'translatable';
     }
 }

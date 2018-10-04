@@ -2,6 +2,7 @@ module.exports = {
   CheckoutOrderPage: {
     add_to_cart_button: '//*[@id="add-to-cart-or-refresh"]//button[contains(@class, "add-to-cart")]',
     proceed_to_checkout_modal_button: '//*[@id="blockcart-modal"]//div[@class="cart-content-btn"]//a',
+    blockcart_modal: '#blockcart-modal',
     continue_shopping_button: '//*[@id="blockcart-modal"]//div[@class="cart-content-btn"]//button',
     proceed_to_checkout_button: '//*[@id="main"]//div[contains(@class,"checkout")]//a',
     promo_code_link: '//*[@id="main"]//a[contains(@class, "promo-code")]',

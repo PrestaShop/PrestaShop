@@ -27,6 +27,21 @@
 {% trans_default_domain "Admin.Advparameters.Feature" %}
 
 {% block content %}
+
+  {% block webservice_list_notifications %}
+    {% if configurationWarnings is not empty  %}
+      <div class="row">
+        <div class="col">
+          <div class="alert alert-warning" role="alert">
+            {% for warning in configurationWarnings %}
+              <p class="alert-text">{{ warning }}</p>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    {% endif %}
+  {% endblock %}
+
   <div class="row">
     <div class="col">
       {{ include('@PrestaShop/Admin/Common/Grid/grid_panel.html.twig', {'grid': grid }) }}
