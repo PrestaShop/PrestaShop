@@ -2,22 +2,3 @@
  * Custom code goes here.
  * A template should always ship with an empty custom.css
  */
-@media screen and (max-width: 767px) {
-	.category-cover{
-		display: none !important;
-	}
-
-	.block-category{
-		min-height: 0 !important;
-	}
-
-	.card-block{
-		padding: 0 !important;
-	}
-
-	.card{
-		box-shadow: none !important;
-		background-color: inherit !important;
-		border: none !important;
-	}
-}
