@@ -32,7 +32,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 
 /**
- * Converts any legacy url into a migrated Symfony url (if it exists) and redirect to it
+ * Converts any legacy url into a migrated Symfony url (if it exists) and redirect to it.
  */
 class LegacyUrlListener
 {
