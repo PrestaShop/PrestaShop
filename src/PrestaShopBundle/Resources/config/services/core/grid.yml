@@ -112,6 +112,12 @@ services:
             - '@prestashop.core.grid.query.doctrine_query_parser'
             - 'language'
 
+    prestashop.core.grid.factory.language_decorator:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Data\Factory\LanguageGridDataFactory'
+        arguments:
+            - '@prestashop.core.grid.data.factory.language'
+            - "@=service('prestashop.adapter.legacy.context').getContext().shop.id"
+
     # Grid definition factories
     prestashop.core.grid.definition.factory.abstract_grid_definition:
         class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory'
@@ -295,7 +301,7 @@ services:
         class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
         arguments:
             - '@prestashop.core.grid.definition.factory.language'
-            - '@prestashop.core.grid.data.factory.language'
+            - '@prestashop.core.grid.factory.language_decorator'
             - '@prestashop.core.grid.filter.form_factory'
             - '@prestashop.core.hook.dispatcher'
 

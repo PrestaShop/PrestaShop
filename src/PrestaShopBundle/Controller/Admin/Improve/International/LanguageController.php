@@ -48,6 +48,8 @@ class LanguageController extends AbstractAdminController
         $languageGridFactory = $this->get('prestashop.core.grid.factory.language');
         $languageGrid = $languageGridFactory->getGrid($filters);
 
+        dump($languageGrid->getData()->getRecords());
+
         return $this->render('@PrestaShop/Admin/Improve/International/Language/index.html.twig', [
             'languageGrid' => $this->presentGrid($languageGrid),
         ]);
