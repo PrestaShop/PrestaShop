@@ -143,7 +143,7 @@ class MetaFormDataProvider
             $data['page_name'],
             $data['page_title'],
             $data['meta_description'],
-            (array) $data['meta_keywords'], //todo: remove casting once multilang value is fixed.
+            $data['meta_keywords'],
             $data['url_rewrite']
         );
     }
@@ -162,7 +162,7 @@ class MetaFormDataProvider
         return (new EditMetaCommand(new MetaId($data['id']), $data['page_name'], $data['url_rewrite']))
             ->setPageTitle($data['page_title'])
             ->setMetaDescription($data['meta_description'])
-            ->setMetaKeywords((array) $data['meta_keywords']) //todo: remove casting once multilang value is fixed.
+            ->setMetaKeywords($data['meta_keywords'])
         ;
     }
 

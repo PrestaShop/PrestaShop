@@ -32,7 +32,6 @@ use PrestaShop\PrestaShop\Core\Domain\Meta\CommandHandler\AddMetaHandlerInterfac
 use PrestaShop\PrestaShop\Core\Domain\Meta\Exception\CannotAddMetaException;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Exception\MetaException;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
-use PrestaShopDatabaseException;
 use PrestaShopException;
 
 /**
@@ -66,7 +65,7 @@ final class AddMetaHandler implements AddMetaHandlerInterface
             $entity->keywords = $command->getMetaKeywords();
             $entity->url_rewrite = $command->getRewriteUrl();
             $entity->add();
-
+            // todo: test if multishop is saved correctly.
             if (0 >= $entity->id) {
                 throw new CannotAddMetaException(
                     sprintf('Invalid entity id after creation: %s', $entity->id)

@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta;
 
+use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslateTextType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -81,20 +82,26 @@ class MetaType extends TranslatorAwareType
                 ],
                 'choice_translation_domain' => false,
             ])
-            ->add('page_title', TranslateTextType::class, [
-                'locales' => $this->locales,
-                'required' => false,
+            ->add('page_title', TranslatableType::class, [
+                'options' => [
+                    'required' => false,
+                ],
             ])
-            ->add('meta_description', TranslateTextType::class, [
-                'locales' => $this->locales,
-                'required' => false,
+            ->add('meta_description', TranslatableType::class, [
+                'options' => [
+                    'required' => false,
+                ],
             ])
-            ->add('meta_keywords', TextType::class, [
-                'required' => false, //todo: language support
+            ->add('meta_keywords', TranslatableType::class, [
+                'options' => [
+                    'attr' => [
+                        'class' => 'js-token-field',
+                        'placeholder' => $this->trans('Add tag', 'Admin.Actions'),
+                    ],
+                    'required' => false,
+                ],
             ])
-            ->add('url_rewrite', TranslateTextType::class, [
-                'locales' => $this->locales,
-            ])
+            ->add('url_rewrite', TranslatableType::class)
         ;
     }
 }

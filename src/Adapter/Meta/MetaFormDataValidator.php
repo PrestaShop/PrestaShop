@@ -50,7 +50,7 @@ class MetaFormDataValidator
         $entity->page = $data['page_name'];
         $entity->title = $data['page_title'];
         $entity->description = $data['meta_description'];
-        $entity->keywords = (array) $data['meta_keywords']; //todo: remove casting once multilang field is available
+        $entity->keywords = $data['meta_keywords'];
         $entity->url_rewrite = $data['url_rewrite'];
 
         if (true !== $error = $entity->validateFields(false, true)) {
