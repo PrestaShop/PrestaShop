@@ -64,7 +64,7 @@ final class CurrencyQueryBuilder extends AbstractDoctrineQueryBuilder
     {
         $qb = $this->getQueryBuilder($searchCriteria->getFilters());
 
-        $qb->select('c.`id_currency`, cs.`conversion_rate`, c.`active`');
+        $qb->select('c.`id_currency`, c.`iso_code`, cs.`conversion_rate`, c.`active`');
 
         $this->searchCriteriaApplicator
             ->applyPagination($searchCriteria, $qb)
