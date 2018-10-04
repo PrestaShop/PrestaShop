@@ -28,7 +28,6 @@ const path = require('path');
 const webpack = require('webpack');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const keepLicense = require('uglify-save-license');
 
 module.exports = (env, argvs) => {
   const prodMode = (argvs.mode === 'production');
@@ -164,7 +163,6 @@ module.exports = (env, argvs) => {
           test: /\.vue$/,
           loader: 'vue-loader'
         },
-        // STYLES
         {
           test:/\.(s*)css$/,
           use: [
@@ -203,6 +201,12 @@ module.exports = (env, argvs) => {
   if (prodMode) {
     config.stats = 'minimal';
     config.optimization.minimize = true;
+  }
+
+  if (argvs.analyze) {
+    const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+
+    config.plugins.push(new BundleAnalyzerPlugin());
   }
 
   return config;
