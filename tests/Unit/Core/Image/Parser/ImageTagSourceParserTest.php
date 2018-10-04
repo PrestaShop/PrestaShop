@@ -68,6 +68,18 @@ class ImageTagSourceParserTest extends TestCase
                 '/my-shop/path/to/my_image.jpg?time=123',
             ],
             [
+                '<img class="test" src="../.././path/to/my_image.jpg?time=123" alt="some alt text">',
+                '/my-shop/path/to/my_image.jpg?time=123',
+            ],
+            [
+                '<img class="test" src="../../../../../../../path/to/my_image.jpg?time=123" alt="some alt text">',
+                '/my-shop/path/to/my_image.jpg?time=123',
+            ],
+            [
+                '<img class="test" src="./../../../path/to/my_image.jpg?time=123" alt="some alt text">',
+                '/my-shop/path/to/my_image.jpg?time=123',
+            ],
+            [
                 '<img class="test">',
                 null,
             ],
