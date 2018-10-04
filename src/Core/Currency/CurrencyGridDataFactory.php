@@ -24,8 +24,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\Currency;
+namespace PrestaShop\PrestaShop\Core\Currency;
 
+use PrestaShop\PrestaShop\Core\Cldr\Repository;
 use PrestaShop\PrestaShop\Core\Grid\Data\Factory\GridDataFactoryInterface;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
@@ -40,13 +41,22 @@ final class CurrencyGridDataFactory implements GridDataFactoryInterface
     private $gridDataFactory;
 
     /**
+     * @var Repository
+     */
+    private $cldrRepository;
+
+    /**
      * CurrencyGridDataFactory constructor.
      *
      * @param GridDataFactoryInterface $gridDataFactory
+     * @param Repository $cldrRepository
      */
-    public function __construct(GridDataFactoryInterface $gridDataFactory)
-    {
+    public function __construct(
+        GridDataFactoryInterface $gridDataFactory,
+        Repository $cldrRepository
+    ) {
         $this->gridDataFactory = $gridDataFactory;
+        $this->cldrRepository = $cldrRepository;
     }
 
     /**
