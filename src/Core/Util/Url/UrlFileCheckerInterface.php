@@ -37,5 +37,5 @@ interface UrlFileCheckerInterface
      *
      * @return bool
      */
-    public function isValidFile();
+    public function isWritable();
 }

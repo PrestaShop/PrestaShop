@@ -27,9 +27,9 @@
 namespace PrestaShop\PrestaShop\Core\Util\Url;
 
 /**
- * Class RobotsTextFileChecker.
+ * Class RobotsTextFileChecker checks if robots.txt file for Front Office is writable.
  */
-final class RobotsTextFileChecker implements UrlFileCheckerInterface
+final class RobotsFileChecker implements UrlFileCheckerInterface
 {
     /**
      * @var string
@@ -49,7 +49,7 @@ final class RobotsTextFileChecker implements UrlFileCheckerInterface
     /**
      * {@inheritdoc}
      */
-    public function isValidFile()
+    public function isWritable()
     {
         $filePath = $this->rootDirectory . '/robots.txt';
 

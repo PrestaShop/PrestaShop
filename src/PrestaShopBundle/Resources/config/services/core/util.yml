@@ -7,7 +7,7 @@ services:
         arguments:
             - '@=service("prestashop.adapter.legacy.configuration").get("_PS_ROOT_DIR_")'
 
-    prestashop.core.util.url.robots_text_file_checker:
-        class: 'PrestaShop\PrestaShop\Core\Util\Url\RobotsTextFileChecker'
+    prestashop.core.util.url.robots_file_checker:
+        class: 'PrestaShop\PrestaShop\Core\Util\Url\RobotsFileChecker'
         arguments:
             - '@=service("prestashop.adapter.legacy.configuration").get("_PS_ROOT_DIR_")'

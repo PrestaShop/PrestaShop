@@ -50,7 +50,7 @@ final class HtaccessFileChecker implements UrlFileCheckerInterface
     /**
      * {@inheritdoc}
      */
-    public function isValidFile()
+    public function isWritable()
     {
         $filePath = $this->rootDirectory . '/.htaccess';
 

@@ -523,7 +523,7 @@ services:
         class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta\SetUpUrlType'
         arguments:
             - '@=service("prestashop.core.form.choice_provider.canonical_redirect_type").getChoices()'
-            - '@prestashop.core.util.url.htaccess_file_checker'
+            - '@=service("prestashop.core.util.url.htaccess_file_checker").isWritable()'
             - '@=service("prestashop.adapter.hosting_information").isHostMode()'
         tags:
             - { name: form.type }
