@@ -92,7 +92,7 @@ class MetaController extends FrameworkBundleAdminController
         return $this->render('@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/index.html.twig', [
             'layoutHeaderToolbarBtn' => [
                 'add' => [
-                    'href' => $this->generateUrl('admin_meta_add'),
+                    'href' => $this->generateUrl('admin_meta_create'),
                     'desc' => $this->trans('Add a new page', 'Admin.Shopparameters.Feature'),
                     'icon' => 'add_circle_outline',
                 ],
@@ -153,7 +153,7 @@ class MetaController extends FrameworkBundleAdminController
      *
      * @return Response
      */
-    public function addAction(Request $request)
+    public function createAction(Request $request)
     {
         $metaFormHandler = $this->get('prestashop.admin.meta.form_handler');
         $metaForm = $metaFormHandler->getForm();
@@ -178,7 +178,7 @@ class MetaController extends FrameworkBundleAdminController
             $this->flashErrors($errors);
         }
 
-        return $this->render('@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/add.html.twig', [
+        return $this->render('@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/create.html.twig', [
                 'form' => $metaForm->createView(),
             ]
         );
