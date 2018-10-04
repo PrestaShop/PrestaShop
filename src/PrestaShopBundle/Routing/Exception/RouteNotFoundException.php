@@ -36,6 +36,7 @@ class RouteNotFoundException extends ErrorMessageException
 {
     /**
      * RouteNotFoundException constructor.
+     *
      * @param string $key
      * @param array $parameters
      * @param null $domain

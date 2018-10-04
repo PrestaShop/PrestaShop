@@ -26,7 +26,6 @@
 
 namespace PrestaShopBundle\Routing;
 
-
 use PrestaShopBundle\Routing\Exception\ArgumentException;
 use PrestaShopBundle\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\HttpFoundation\Request;
@@ -58,6 +57,7 @@ final class LegacyUrlConverter
 
     /**
      * LegacyUrlConverter constructor.
+     *
      * @param RouterInterface $router
      */
     public function __construct(RouterInterface $router)
@@ -96,7 +96,9 @@ final class LegacyUrlConverter
 
     /**
      * @param array $parameters
+     *
      * @return string
+     *
      * @throws ArgumentException
      * @throws RouteNotFoundException
      */
@@ -121,7 +123,9 @@ final class LegacyUrlConverter
 
     /**
      * @param string $url
+     *
      * @return string
+     *
      * @throws ArgumentException
      * @throws RouteNotFoundException
      */
@@ -143,7 +147,9 @@ final class LegacyUrlConverter
      * to the front office.
      *
      * @param Request $request
+     *
      * @return string
+     *
      * @throws ArgumentException
      * @throws RouteNotFoundException
      */
@@ -157,6 +163,7 @@ final class LegacyUrlConverter
     /**
      * @param array $parameters
      * @param string $routeName
+     *
      * @return array
      */
     private function convertParametersForRoute(array $parameters, $routeName)
@@ -182,7 +189,9 @@ final class LegacyUrlConverter
 
     /**
      * @param array $parameters
+     *
      * @return string
+     *
      * @throws RouteNotFoundException
      */
     private function findRouteNameByParameters(array $parameters)
@@ -203,6 +212,7 @@ final class LegacyUrlConverter
 
     /**
      * @param array $parameters
+     *
      * @return null|string
      */
     private function getActionFromParameters(array $parameters)
@@ -227,6 +237,7 @@ final class LegacyUrlConverter
 
     /**
      * @param Route $route
+     *
      * @return array
      */
     private function breakLegacyLink(Route $route)
@@ -245,6 +256,7 @@ final class LegacyUrlConverter
 
     /**
      * @param string|null $action
+     *
      * @return bool
      */
     private function isIndexAction($action)

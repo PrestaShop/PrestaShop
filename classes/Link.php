@@ -27,7 +27,6 @@ use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use PrestaShop\PrestaShop\Core\Feature\TokenInUrls;
-use Symfony\Component\Routing\RouterInterface;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 
 class LinkCore
