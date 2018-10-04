@@ -184,6 +184,7 @@ final class CurrencyGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setTypeOptions([
                     'required' => false,
                     'choices' => $this->statusChoices,
+                    'choice_translation_domain' => false,
                 ])
                 ->setAssociatedColumn('active')
             )
