@@ -72,13 +72,20 @@ final class CurrencyGridDataFactory implements GridDataFactoryInterface
         $records = $gridData->getRecords();
 
         return new GridData(
-            $this->getRecordsWithExtendedColumns($records),
+            $this->getModifiedRecords($records),
             $gridData->getRecordsTotal(),
             $gridData->getQuery()
         );
     }
 
-    private function getRecordsWithExtendedColumns(RecordCollectionInterface $records)
+    /**
+     * Gets record collection with extra and modified rows.
+     *
+     * @param RecordCollectionInterface $records
+     *
+     * @return RecordCollection
+     */
+    private function getModifiedRecords(RecordCollectionInterface $records)
     {
         $result = [];
         foreach ($records as $key => $record) {

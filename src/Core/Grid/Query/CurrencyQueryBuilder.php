@@ -96,6 +96,11 @@ final class CurrencyQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     private function getQueryBuilder(array $filters)
     {
+        $allowedFilters = [
+            'iso_code',
+            'active',
+        ];
+
         $qb = $this->connection
             ->createQueryBuilder()
             ->from($this->dbPrefix . 'currency', 'c')
@@ -114,6 +119,10 @@ final class CurrencyQueryBuilder extends AbstractDoctrineQueryBuilder
         $qb->groupBy('c.`id_currency`');
 
         foreach ($filters as $filterName => $value) {
+            if (!in_array($filterName, $allowedFilters, true)) {
+                continue;
+            }
+
             if ('active' === $filterName) {
                 $qb->andWhere('c.`active` = :active');
                 $qb->setParameter('active', $value);
