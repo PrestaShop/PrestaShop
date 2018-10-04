@@ -26,11 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Core\Import\Exception;
 
-use Exception;
-
 /**
  * Class NotSupportedImportEntityException is thrown when not supported import entity is provided.
  */
-class NotSupportedImportEntityException extends Exception implements ExceptionInterface
+class NotSupportedImportEntityException extends ImportException
 {
 }
