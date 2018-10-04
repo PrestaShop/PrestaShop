@@ -65,7 +65,7 @@ final class AddMetaHandler implements AddMetaHandlerInterface
             $entity->keywords = $command->getMetaKeywords();
             $entity->url_rewrite = $command->getRewriteUrl();
             $entity->add();
-            // todo: test if multishop is saved correctly.
+
             if (0 >= $entity->id) {
                 throw new CannotAddMetaException(
                     sprintf('Invalid entity id after creation: %s', $entity->id)
