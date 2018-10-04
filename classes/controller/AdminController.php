@@ -4734,46 +4734,4 @@ class AdminControllerCore extends Controller
 
         return '';
     }
-
-    /**
-     * Redirect to the Symfony controller.
-     *
-     * This method can be useful for partly-migrated controllers,
-     * to prevent the user from accessing the legacy controller
-     * and redirect to the Symfony controller instead.
-     * Forwards the messages (if any) as well.
-     */
-    protected function redirectToSymfonyControllerWithMessages()
-    {
-        $this->addMessagesToFlashBag();
-
-        $url = $this->context->link->getAdminLink(str_replace('Controller', '', get_class($this)));
-        Tools::redirectAdmin($url);
-    }
-
-    /**
-     * Add controller messages to Symfony's flash bag.
-     */
-    private function addMessagesToFlashBag()
-    {
-        $session = SymfonyContainer::getInstance()->get('session');
-        $flashBag = $session->getFlashBag();
-        $successMessages = $this->confirmations;
-
-        if (($confirmationId = Tools::getValue('conf')) && isset($this->_conf[$confirmationId])) {
-            $successMessages[] = $this->_conf[$confirmationId];
-        }
-
-        foreach (array_unique($successMessages) as $message) {
-            $flashBag->add('success', $message);
-        }
-
-        foreach (array_unique($this->warnings) as $message) {
-            $flashBag->add('warning', $message);
-        }
-
-        foreach (array_unique($this->errors) as $message) {
-            $flashBag->add('error', $message);
-        }
-    }
 }
