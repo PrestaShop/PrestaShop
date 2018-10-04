@@ -24,13 +24,19 @@ File: modules/ps_googleanalytics/ps_googleanalytics.php:54</note>
         <source>Account ID updated successfully</source>
         <target>Account ID updated successfully</target>
         <note>Context:
-File: modules/ps_googleanalytics/ps_googleanalytics.php:233</note>
+File: modules/ps_googleanalytics/ps_googleanalytics.php:270</note>
       </trans-unit>
       <trans-unit id="8e7b67b44506b7ac6685da041a603044">
         <source>Settings for User ID updated successfully</source>
         <target>Settings for User ID updated successfully</target>
         <note>Context:
-File: modules/ps_googleanalytics/ps_googleanalytics.php:243</note>
+File: modules/ps_googleanalytics/ps_googleanalytics.php:281</note>
+      </trans-unit>
+      <trans-unit id="20d72bc5caef85d03b256e2abbd80da2">
+        <source>Settings for Anonymize IP updated successfully</source>
+        <target>Settings for Anonymize IP updated successfully</target>
+        <note>Context:
+File: modules/ps_googleanalytics/ps_googleanalytics.php:287</note>
       </trans-unit>
     </body>
   </file>
