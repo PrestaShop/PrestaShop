@@ -139,30 +139,65 @@ export default class FormFieldToggle {
       },
       dataType: 'json',
     }).then(response => {
-      // Hide open popovers
-      $availableFields.find('[data-toggle="popover"]').popover('hide');
-      $availableFields.empty();
+      this._removeAvailableFields($availableFields);
 
       for (let i = 0; i < response.length; i++) {
-        let $field = $('.js-available-field-template').clone();
-        let fieldText = response[i].label + (response[i].required ? '*' : '');
-
-        $field.text(fieldText);
-
-        if (response[i].description) {
-          // Help box next to the field
-          let $fieldHelp = $('.js-available-field-popover-template').clone();
-
-          $fieldHelp.attr('data-content', response[i].description);
-          $fieldHelp.removeClass('js-available-field-popover-template d-none');
-          $field.append($fieldHelp);
-        }
-
-        $field.removeClass('js-available-field-template d-none');
-        $field.appendTo($availableFields);
+        this._appendAvailableField(
+          $availableFields,
+          response[i].label + (response[i].required ? '*' : ''),
+          response[i].description
+        );
       }
 
       $availableFields.find('[data-toggle="popover"]').popover();
     });
+  }
+
+  /**
+   * Remove available fields content from given container.
+   *
+   * @param {jQuery} $container
+   * @private
+   */
+  _removeAvailableFields($container) {
+    $container.find('[data-toggle="popover"]').popover('hide');
+    $container.empty();
+  }
+
+  /**
+   * Append a help box to given field.
+   *
+   * @param {jQuery} $field
+   * @param {String} helpBoxContent
+   * @private
+   */
+  _appendHelpBox($field, helpBoxContent) {
+    let $helpBox = $('.js-available-field-popover-template').clone();
+
+    $helpBox.attr('data-content', helpBoxContent);
+    $helpBox.removeClass('js-available-field-popover-template d-none');
+    $field.append($helpBox);
+  }
+
+  /**
+   * Append available field to given container.
+   *
+   * @param {jQuery} $appendTo field will be appended to this container.
+   * @param {String} fieldText
+   * @param {String} helpBoxContent
+   * @private
+   */
+  _appendAvailableField($appendTo, fieldText, helpBoxContent) {
+    let $field = $('.js-available-field-template').clone();
+
+    $field.text(fieldText);
+
+    if (helpBoxContent) {
+      // Append help box next to the field
+      this._appendHelpBox($field, helpBoxContent);
+    }
+
+    $field.removeClass('js-available-field-template d-none');
+    $field.appendTo($appendTo);
   }
 }
