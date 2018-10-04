@@ -34,6 +34,31 @@ use ReflectionClass;
 
 class LegacyUrlConverterTest extends LightWebTestCase
 {
+    /**
+     * @return array
+     */
+    public static function getMigratedControllers()
+    {
+        return [
+            'admin_administration' => ['/configure/advanced/administration/', 'AdminAdminPreferences'],
+            'admin_administration_save' => ['/configure/advanced/administration/', 'AdminAdminPreferences', 'save'],
+            'admin_backup' => ['/configure/advanced/backup/', 'AdminBackup'],
+            'admin_backup_create' => ['/configure/advanced/backup/create', 'AdminBackup', 'add'],
+            'admin_backup_delete' => ['/configure/advanced/backup/backup_file.zip', 'AdminBackup', 'delete', ['filename' => 'backup_file.zip']],
+            'admin_backup_bulk_delete' => ['/configure/advanced/backup/bulk-delete/', 'AdminBackup', 'submitBulkdeletebackup']
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public static function getLegacyControllers()
+    {
+        return [
+            ['/admin-dev/index.php?controller=AdminLogin', 'AdminLogin']
+        ];
+    }
+
     public function testServiceExists()
     {
         $converter = self::$kernel->getContainer()->get('prestashop.bundle.routing.legacy_url_converter');
@@ -162,14 +187,7 @@ class LegacyUrlConverterTest extends LightWebTestCase
      */
     public function migratedControllers()
     {
-        return [
-            'admin_administration' => ['/configure/advanced/administration/', 'AdminAdminPreferences'],
-            'admin_administration_save' => ['/configure/advanced/administration/', 'AdminAdminPreferences', 'save'],
-            'admin_backup' => ['/configure/advanced/backup/', 'AdminBackup'],
-            'admin_backup_create' => ['/configure/advanced/backup/create', 'AdminBackup', 'add'],
-            'admin_backup_delete' => ['/configure/advanced/backup/backup_file.zip', 'AdminBackup', 'delete', ['filename' => 'backup_file.zip']],
-            'admin_backup_bulk_delete' => ['/configure/advanced/backup/bulk-delete/', 'AdminBackup', 'submitBulkdeletebackup']
-        ];
+        return self::getMigratedControllers();
     }
 
     /**
@@ -177,9 +195,7 @@ class LegacyUrlConverterTest extends LightWebTestCase
      */
     public function legacyControllers()
     {
-        return [
-            ['/admin-dev/index.php?controller=AdminLogin', 'AdminLogin']
-        ];
+        return self::getLegacyControllers();
     }
 
     /**
