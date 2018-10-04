@@ -134,7 +134,7 @@ final class ContactGridDefinitionFactory extends AbstractGridDefinitionFactory
                             ->setName($this->trans('Delete', [], 'Admin.Actions'))
                             ->setIcon('delete')
                             ->setOptions([
-                                'method' => 'DELETE',
+                                'method' => 'POST',
                                 'confirm_message' => $this->trans(
                                     'Delete selected item?',
                                     [],
