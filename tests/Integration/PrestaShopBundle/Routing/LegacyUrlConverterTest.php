@@ -131,6 +131,33 @@ class LegacyUrlConverterTest extends LightWebTestCase
     }
 
     /**
+     * @dataProvider migratedControllers
+     * @param string $expectedUrl
+     * @param string $controller
+     * @param string|null $action
+     * @param array|null $queryParameters
+     * @throws \PrestaShopException
+     */
+    public function testRedirectionListener($expectedUrl, $controller, $action = null, array $queryParameters = null)
+    {
+        $link = new Link();
+        $params = [];
+        if (null !== $action) {
+            $params['action'] = $action;
+        }
+        if (null !== $queryParameters) {
+            $params = array_merge($params, $queryParameters);
+        }
+
+        $legacyUrl = $link->getAdminBaseLink() . basename(_PS_ADMIN_DIR_) . '/' .  \Dispatcher::getInstance()->createUrl($controller, null, $params);
+        $this->client->request('GET', $legacyUrl);
+        $response = $this->client->getResponse();
+        $this->assertTrue($response->isRedirection());
+        $location = $response->headers->get('location');
+        $this->assertSameUrl($expectedUrl, $location);
+    }
+
+    /**
      * @return array
      */
     public function migratedControllers()
