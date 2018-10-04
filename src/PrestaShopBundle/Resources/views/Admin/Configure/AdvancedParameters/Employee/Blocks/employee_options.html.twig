@@ -71,7 +71,11 @@
     </div>
     <div class="card-footer">
       <div class="d-flex justify-content-end">
-        <button class="btn btn-primary pull-right">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+        <button class="btn btn-primary pull-right"
+                {% if not canOptionsBeChanged %}disabled{% endif %}
+        >
+          {{ 'Save'|trans({}, 'Admin.Actions') }}
+        </button>
       </div>
     </div>
   </div>
