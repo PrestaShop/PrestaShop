@@ -51,8 +51,8 @@ export default class ImportProgressModal {
     let $progressBar = this.progressBar,
         percentage = completed / total * 100;
 
-    $progressBar.css('width', percentage + '%');
-    $progressBar.find('> span').text(completed + '/' + total);
+    $progressBar.css('width', `${percentage}%`);
+    $progressBar.find('> span').text(`${completed}/${total}`);
   }
 
   /**

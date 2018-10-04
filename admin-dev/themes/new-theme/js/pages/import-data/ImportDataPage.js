@@ -52,6 +52,7 @@ export default class ImportDataPage {
 
     let configuration = {};
 
+    // Collect the configuration from the form into an array.
     $('.import-data-configuration-form').find(
       '#skip, select[name^=type_value], #csv, #iso_lang, #entity,' +
       '#truncate, #match_ref, #regenerate, #forceIDs, #sendemail,' +
