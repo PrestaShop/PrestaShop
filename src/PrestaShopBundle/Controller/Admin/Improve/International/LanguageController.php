@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Controller\Admin\Improve\International;
 
 use PrestaShop\PrestaShop\Core\Search\Filters\LanguageFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController as AbstractAdminController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -50,5 +51,39 @@ class LanguageController extends AbstractAdminController
         return $this->render('@PrestaShop/Admin/Improve/International/Language/index.html.twig', [
             'languageGrid' => $this->presentGrid($languageGrid),
         ]);
+    }
+
+    /**
+     * Show language creation form page and handle its submit.
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function createAction(Request $request)
+    {
+        return $this->redirect(
+            $this->getAdminLink($request->attributes->get('_legacy_controller'), [
+                'addlang' => 1,
+            ])
+        );
+    }
+
+    /**
+     * Show language edit form page and handle its submit.
+     *
+     * @param int $languageId
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function editAction($languageId, Request $request)
+    {
+        return $this->redirect(
+            $this->getAdminLink($request->attributes->get('_legacy_controller'), [
+                'addlang' => 1,
+                'id_lang' => $languageId,
+            ])
+        );
     }
 }
