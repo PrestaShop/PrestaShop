@@ -45,7 +45,7 @@ class ContactsController extends FrameworkBundleAdminController
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
-     * @Template("@PrestaShop/Admin/Configure/ShopParameters/Contact/Contacts/contacts.html.twig")
+     * @Template("@PrestaShop/Admin/Configure/ShopParameters/Contact/Contacts/index.html.twig")
      *
      * @param Request $request
      * @param ContactFilters $filters
@@ -99,7 +99,7 @@ class ContactsController extends FrameworkBundleAdminController
             $filters = $filtersForm->getData();
         }
 
-        return $this->redirectToRoute('admin_contacts', ['filters' => $filters]);
+        return $this->redirectToRoute('admin_contacts_index', ['filters' => $filters]);
     }
 
     /**
@@ -160,7 +160,7 @@ class ContactsController extends FrameworkBundleAdminController
             );
         }
 
-        return $this->redirectToRoute('admin_contacts');
+        return $this->redirectToRoute('admin_contacts_index');
     }
 
     /**
@@ -187,6 +187,6 @@ class ContactsController extends FrameworkBundleAdminController
             );
         }
 
-        return $this->redirectToRoute('admin_contacts');
+        return $this->redirectToRoute('admin_contacts_index');
     }
 }

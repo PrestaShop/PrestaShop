@@ -805,7 +805,7 @@ class LinkCore
                     // 'AdminWebservice' => 'admin_webservice', @todo: uncomment when grid and entity form are done.
                     'AdminBackup' => 'admin_backup',
                     // 'AdminCategories' => 'admin_category_listing', @todo: enable when export feature works
-                    //'AdminContacts' => 'admin_contacts', @todo: uncomment when the controller is fully migrated.
+                    //'AdminContacts' => 'admin_contacts_index', @todo: uncomment when the controller is fully migrated.
                 );
 
                 if (isset($routes[$controller])) {
