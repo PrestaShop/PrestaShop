@@ -241,3 +241,4 @@ services:
         class: 'PrestaShop\PrestaShop\Core\Team\Employee\Configuration\EmployeeOptionsConfiguration'
         arguments:
             - '@prestashop.adapter.legacy.configuration'
+            - '@prestashop.core.team.employee.configuration.options_checker'

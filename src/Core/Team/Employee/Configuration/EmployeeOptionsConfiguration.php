@@ -40,11 +40,17 @@ final class EmployeeOptionsConfiguration implements DataConfigurationInterface
     private $configuration;
 
     /**
+     * @var OptionsCheckerInterface
+     */
+    private $optionsChecker;
+
+    /**
      * @param ConfigurationInterface $configuration
      */
-    public function __construct(ConfigurationInterface $configuration)
+    public function __construct(ConfigurationInterface $configuration, OptionsCheckerInterface $optionsChecker)
     {
         $this->configuration = $configuration;
+        $this->optionsChecker = $optionsChecker;
     }
 
     /**
@@ -63,6 +69,18 @@ final class EmployeeOptionsConfiguration implements DataConfigurationInterface
      */
     public function updateConfiguration(array $configuration)
     {
+        $errors = [];
+
+        if (!$this->optionsChecker->canBeChanged()) {
+            $errors[] = [
+                'key' => 'You can\'t change the value of this configuration field in the context of this shop .',
+                'parameters' => [],
+                'domain' => 'Admin.Notifications.Warning',
+            ];
+
+            return $errors;
+        }
+
         if ($this->validateConfiguration($configuration)) {
             $this->configuration->set('PS_PASSWD_TIME_BACK', (int) $configuration['password_change_time']);
             $this->configuration->set(
@@ -71,7 +89,7 @@ final class EmployeeOptionsConfiguration implements DataConfigurationInterface
             );
         }
 
-        return [];
+        return $errors;
     }
 
     /**
