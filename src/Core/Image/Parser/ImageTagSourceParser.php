@@ -59,7 +59,7 @@ final class ImageTagSourceParser implements ImageTagSourceParserInterface
             return null;
         }
 
-        preg_match('@src="([^"]+)"@', $imageTag, $path);
+        preg_match('/src="([^"]+)"/', $imageTag, $path);
 
         if (empty($path[1])) {
             return null;
