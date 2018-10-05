@@ -169,6 +169,13 @@ services:
             - "@=service('router').generate('admin_contacts_index')"
         public: true
 
+    prestashop.core.grid.definition.factory.customer:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CustomerGridDefinitionFactory'
+        parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+        arguments:
+          - '@=service("prestashop.core.b2b.b2b_feature").isActive()'
+        public: true
+
     # Grid factories
     prestashop.core.grid.log_factory:
         class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
