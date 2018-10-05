@@ -73,6 +73,7 @@
   {% endblock %}
 {% endblock %}
 {% block javascripts %}
+  {{ parent() }}
   <script src="{{ asset('themes/new-theme/public/logs.bundle.js') }}"></script>
   <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
 {% endblock %}
