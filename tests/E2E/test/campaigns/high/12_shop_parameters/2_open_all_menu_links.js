@@ -97,9 +97,8 @@ scenario('Open all menu links in the Back Office', () => {
    scenario('Check all the menu links of "Shop Parameters" in the Back Office', client => {
         test('should check then close the "Symfony" toolbar', () => {
             return promise
-                .then(() => client.isVisible(AddProductPage.symfony_toolbar, 3000))
                 .then(() => {
-                    if (global.isVisible) {
+                    if (global.ps_mode_dev) {
                         client.waitForExistAndClick(AddProductPage.symfony_toolbar);
                     }
                 })

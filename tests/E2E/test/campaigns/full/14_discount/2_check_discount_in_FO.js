@@ -74,9 +74,8 @@ scenario('Create "Catalog price rule"', () => {
     test('should go to "Products" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.products_submenu));
     test('should close the "Symfony" toolbar', () => {
       return promise
-        .then(() => client.isVisible(AddProductPage.symfony_toolbar, 3000))
         .then(() => {
-          if (global.isVisible) {
+          if (global.ps_mode_dev) {
             client.waitForExistAndClick(AddProductPage.symfony_toolbar);
           }
         })

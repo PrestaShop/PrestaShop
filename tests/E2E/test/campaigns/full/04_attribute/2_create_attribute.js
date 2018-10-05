@@ -97,9 +97,8 @@ scenario('Create "Attributes" in the Back Office', () => {
       return promise
         .then(() => client.isVisible(ProductList.pagination_products, 3000))
         .then(() => client.getProductsNumber(ProductList.pagination_products))
-        .then(() => client.isVisible(AddProductPage.symfony_toolbar, 3000))
         .then(() => {
-          if (global.isVisible) {
+          if (global.ps_mode_dev) {
             client.waitForExistAndClick(AddProductPage.symfony_toolbar)
           }
         });

@@ -45,9 +45,8 @@ scenario('Create product with combination in the Back Office', client => {
     test('should set the "Reference" input', () => client.waitAndSetValue(AddProductPage.product_reference, data.common.product_reference));
     test('should switch the product online', () => {
       return promise
-        .then(() => client.isVisible(AddProductPage.symfony_toolbar))
         .then(() => {
-          if (global.isVisible) {
+          if (global.ps_mode_dev) {
             client.waitForExistAndClick(AddProductPage.symfony_toolbar);
           }
         })

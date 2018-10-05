@@ -46,9 +46,8 @@ module.exports = {
       test('should click on "New Product" button', () => {
         return promise
           .then(() => client.waitForExistAndClick(AddProductPage.new_product_button))
-          .then(() => client.isVisible(AddProductPage.symfony_toolbar, 3000))
           .then(() => {
-            if (global.isVisible) {
+            if (global.ps_mode_dev) {
               client.waitForExistAndClick(AddProductPage.symfony_toolbar)
             }
           });
@@ -100,9 +99,8 @@ module.exports = {
           test('should set the "Variations quantity" input', () => {
             return promise
               .then(() => client.setVariationsQuantity(AddProductPage, productData.attribute[1].variation_quantity))
-              .then(() => client.isVisible(AddProductPage.symfony_toolbar, 3000))
               .then(() => {
-                if (global.isVisible) {
+                if (global.ps_mode_dev) {
                   client.waitForExistAndClick(AddProductPage.symfony_toolbar);
                 }
               });
@@ -249,15 +247,11 @@ module.exports = {
           .then(() => expect(global.productsNumber).to.be.at.most(itemPerPage));
       });
       if (paginateBetweenPages) {
-        test('should close the symfony toolbar if exists', () => {
-          return promise
-            .then(() => client.isVisible(AddProductPage.symfony_toolbar))
-            .then(() => {
-              if (global.isVisible) {
-                client.waitForExistAndClick(AddProductPage.symfony_toolbar);
-              }
-            });
-        });
+          if (global.ps_mode_dev) {
+            test('should close the symfony toolbar if exists', () =>
+                client.waitForExistAndClick(AddProductPage.symfony_toolbar, 2000)
+            );
+          }
         test('should click on "' + nextOrPrevious + '" button', () => {
           return promise
             .then(() => client.isVisible(selectorButton))

@@ -51,9 +51,8 @@ scenario('Create Standard Product in the Back Office', client => {
     test('should switch the product online', () => {
       return promise
         .then(() => client.pause(2000))
-        .then(() => client.isVisible(AddProductPage.symfony_toolbar))
         .then(() => {
-          if (global.isVisible) {
+          if (global.ps_mode_dev) {
             client.waitForExistAndClick(AddProductPage.symfony_toolbar)
           }
         })

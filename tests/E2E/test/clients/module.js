@@ -111,8 +111,6 @@ class Module extends CommonClient {
         }
     }
     clickOnDisableModuleButton(ModulePage, moduleTechName) {
-        console.log(buttonText);
-
         if (buttonText === "DISABLE") {
             return this.client
                 .waitForExistAndClick(ModulePage.disable_module.split('%moduleTechName').join(moduleTechName))

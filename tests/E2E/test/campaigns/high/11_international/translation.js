@@ -17,9 +17,8 @@ scenario('Edit a translation', () => {
     test('should click on "Modify" button', () => client.waitForExistAndClick(Translations.modify_button));
     test('should click on "Shop" button', () =>  {
       return promise
-        .then(() => client.isVisible(AddProductPage.symfony_toolbar, 3000))
         .then(() => {
-          if (global.isVisible) {
+          if (global.ps_mode_dev) {
             client.waitForExistAndClick(AddProductPage.symfony_toolbar)
           }
         })
