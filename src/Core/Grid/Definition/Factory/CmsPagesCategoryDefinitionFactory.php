@@ -32,9 +32,9 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 
 /**
- * Class CmsCategoryDefinitionFactory
+ * Class CmsPagesCategoryDefinitionFactory
  */
-final class CmsCategoryDefinitionFactory extends AbstractGridDefinitionFactory
+final class CmsPagesCategoryDefinitionFactory extends AbstractGridDefinitionFactory
 {
     /**
      * {@inheritdoc}
@@ -79,6 +79,7 @@ final class CmsCategoryDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setName($this->trans('Description', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'description',
+                    'sortable' => false,
                 ])
             )
             ->add((new DataColumn('position'))
@@ -91,6 +92,7 @@ final class CmsCategoryDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setName($this->trans('Displayed', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'active',
+                    'sortable' => false,
                 ])
             )
             ->add((new ActionColumn('actions'))

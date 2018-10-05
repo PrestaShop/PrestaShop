@@ -31,12 +31,12 @@ use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 /**
- * Class CmsController is responsible for handling the logic in "Improve -> Design -> pages" page.
+ * Class CmsPagesController is responsible for handling the logic in "Improve -> Design -> pages" page.
  */
-class CmsController extends FrameworkBundleAdminController
+class CmsPagesController extends FrameworkBundleAdminController
 {
     /**
-     * @Template("@PrestaShop/Admin/Improve/Design/Cms/cms.html.twig")
+     * @Template("@PrestaShop/Admin/Improve/Design/Cms/cms_pages.html.twig")
      *
      * @param int $cmsCategoryParentId
      *
@@ -51,7 +51,7 @@ class CmsController extends FrameworkBundleAdminController
         $filterDefaults['filters']['id_cms_category_parent'] = $cmsCategoryParentId;
         $newSearchCriteria = new CmsCategoryFilters($filterDefaults);
 
-        $cmsCategoryGridFactory = $this->get('prestashop.core.grid.factory.cms_category');
+        $cmsCategoryGridFactory = $this->get('prestashop.core.grid.factory.cms_pages_category');
         $cmsCategoryGrid = $cmsCategoryGridFactory->getGrid($newSearchCriteria);
 
         $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
@@ -59,5 +59,10 @@ class CmsController extends FrameworkBundleAdminController
         return [
             'cmsCategoryGrid' => $gridPresenter->present($cmsCategoryGrid),
         ];
+    }
+
+    public function searchAction()
+    {
+        // todo : implement
     }
 }

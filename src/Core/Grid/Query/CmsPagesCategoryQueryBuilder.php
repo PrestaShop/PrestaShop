@@ -31,9 +31,9 @@ use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
 /**
- * Class CmsCategoryQueryBuilder
+ * Class CmsPagesCategoryQueryBuilder
  */
-final class CmsCategoryQueryBuilder extends AbstractDoctrineQueryBuilder
+final class CmsPagesCategoryQueryBuilder extends AbstractDoctrineQueryBuilder
 {
     /**
      * @var DoctrineSearchCriteriaApplicatorInterface
@@ -88,9 +88,7 @@ final class CmsCategoryQueryBuilder extends AbstractDoctrineQueryBuilder
             )
         ;
 
-        $this->searchCriteriaApplicator
-            ->applyPagination($searchCriteria, $qb)
-        ;
+        $this->searchCriteriaApplicator->applyPagination($searchCriteria, $qb);
 
         return $qb;
     }
