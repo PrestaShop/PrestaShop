@@ -1,9 +1,0 @@
-admin_cms_index:
-    path: /{cmsCategoryParentId}
-    methods: GET
-    defaults:
-        _controller: 'PrestaShopBundle:Admin\Improve\Design\Cms:index'
-        _legacy_controller: AdminCmsContent
-        cmsCategoryParentId: 1
-    requirements:
-      cmsCategoryParentId: \d+
