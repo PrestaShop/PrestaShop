@@ -77,7 +77,10 @@ final class ContactsQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $qb = $this->getQueryBuilder($searchCriteria->getFilters());
-        $qb->select('c.id_contact, c.email, cl.name, cl.description');
+        $qb
+            ->select('c.id_contact, c.email, cl.name, cl.description')
+            ->groupBy('c.id_contact')
+        ;
 
         $this->searchCriteriaApplicator
             ->applySorting($searchCriteria, $qb)
@@ -93,8 +96,7 @@ final class ContactsQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $qb = $this->getQueryBuilder($searchCriteria->getFilters())
-            ->select('SQL_CALC_FOUND_ROWS')
-            ->select('FOUND_ROWS()')
+            ->select('COUNT(DISTINCT c.id_contact)')
         ;
 
         return $qb;
@@ -125,7 +127,6 @@ final class ContactsQueryBuilder extends AbstractDoctrineQueryBuilder
             ->andWhere('cs.`id_shop` IN (:shops)')
             ->setParameter('language', $this->languageId)
             ->setParameter('shops', $this->contextShopsIds, Connection::PARAM_INT_ARRAY)
-            ->groupBy('c.id_contact')
         ;
 
         foreach ($filters as $name => $value) {
