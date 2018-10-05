@@ -202,12 +202,18 @@ module.exports = (env, argvs) => {
   }
 
   if (!prodMode) {
+    const _hostname = argvs.hostname || 'localhost';
+
+    if (!argvs.hostname) console.log('Default host for livereload is set to `localhost`. If you want to use a custom one, just launch the command with hostname option. Ex: `npm run dev -- --hostname="yourUrl"`');
+    console.log('Livereload available on:', _hostname);
+
     config.devServer = {
       contentBase: 'http://localhost/prestashop/admin-dev',
     };
     config.devtool = 'inline-source-map';
     config.plugins.push(new LiveReloadPlugin({
-      appendScriptTag: true
+      appendScriptTag: true,
+      hostname: _hostname
     }));
   }
 
