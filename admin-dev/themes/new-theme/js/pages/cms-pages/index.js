@@ -1,6 +1,5 @@
-/* eslint-disable indent,comma-dangle */
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,19 +18,17 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-/**
- * Three mode available:
- *  build = production mode
- *  build:analyze = production mode with bundler analyzer
- *  dev = development mode
- */
-module.exports = (env, argvs) => (
-  argvs.mode === 'production' ?
-    require('./.webpack/prod.js')(argvs.analyze) :
-    require('./.webpack/dev.js')()
-);
+import Grid from "../../components/grid/grid";
+import SortingExtension from "../../components/grid/extension/sorting-extension";
+
+const $ = window.$;
+
+$(() => {
+  const cmsCategory = new Grid('cms_category');
+  cmsCategory.addExtension(new SortingExtension());
+});
