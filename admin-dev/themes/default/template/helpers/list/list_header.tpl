@@ -107,7 +107,7 @@
 
 <div class="alert alert-warning" id="{$list_id}-empty-filters-alert" style="display:none;">{l s='Please fill at least one field to perform a search in this list.'}</div>
 {if isset($sql) && $sql}
-	<form id="sql_form_{$list_id|escape:'html':'UTF-8'}" action="{url entity='sf' route='admin_sql_request_create' }" method="post" class="hide">
+	<form id="sql_form_{$list_id|escape:'html':'UTF-8'}" action="{$link->getAdminLink('AdminRequestSql')|escape}&amp;addrequest_sql" method="post" class="hide">
 		<input type="hidden" id="sql_query_{$list_id|escape:'html':'UTF-8'}" name="sql" value="{$sql|escape}"/>
 		<input type="hidden" id="sql_name_{$list_id|escape:'html':'UTF-8'}" name="name" value=""/>
 	</form>
@@ -352,37 +352,37 @@
 											});
 										</script>
 									</div>
-                {elseif $params.type == 'datetime'}
-                  <div class="date_range row">
-                    <div class="input-group fixed-width-md center">
-                      <input type="text" class="filter datetimepicker date-input form-control" id="local_{$params.id_date}_0" name="local_{$params.name_date}[0]"  placeholder="{l s='From'}" />
-                      <input type="hidden" id="{$params.id_date}_0" name="{$params.name_date}[0]" value="{if isset($params.value.0)}{$params.value.0}{/if}">
-                      <span class="input-group-addon">
-                    <i class="icon-calendar"></i>
-                  </span>
-                    </div>
-                    <div class="input-group fixed-width-md center">
-                      <input type="text" class="filter datetimepicker date-input form-control" id="local_{$params.id_date}_1" name="local_{$params.name_date}[1]"  placeholder="{l s='To'}" />
-                      <input type="hidden" id="{$params.id_date}_1" name="{$params.name_date}[1]" value="{if isset($params.value.1)}{$params.value.1}{/if}">
-                      <span class="input-group-addon">
-                    <i class="icon-calendar"></i>
-                  </span>
-                    </div>
-                    <script>
-                                                $(function() {
-                                                    var dateStart = parseDate($("#{$params.id_date}_0").val());
-                                                    var dateEnd = parseDate($("#{$params.id_date}_1").val());
-                                                    $("#local_{$params.id_date}_0").datetimepicker({literal}{{/literal}altField: "#{$params.id_date}_0", altFieldTimeOnly: false, dateFormat: 'yy-mm-dd', altFormat: "yy-mm-dd", timeFormat: 'hh:mm:ss'{literal}}{/literal});
-                                                    $("#local_{$params.id_date}_1").datetimepicker({literal}{{/literal}altField: "#{$params.id_date}_1", altFieldTimeOnly: false, dateFormat: 'yy-mm-dd', altFormat: "yy-mm-dd", timeFormat: 'hh:mm:ss'{literal}}{/literal});
-                                                    if (dateStart !== null){
-                                                        $("#local_{$params.id_date}_0").datetimepicker("setDate", dateStart);
-                                                    }
-                                                    if (dateEnd !== null){
-                                                        $("#local_{$params.id_date}_1").datetimepicker("setDate", dateEnd);
-                                                    }
-                                                });
-                    </script>
-                  </div>
+								{elseif $params.type == 'datetime'}
+									<div class="date_range row">
+										<div class="input-group fixed-width-md center">
+											<input type="text" class="filter datetimepicker date-input form-control" id="local_{$params.id_date}_0" name="local_{$params.name_date}[0]"  placeholder="{l s='From'}" />
+											<input type="hidden" id="{$params.id_date}_0" name="{$params.name_date}[0]" value="{if isset($params.value.0)}{$params.value.0}{/if}">
+											<span class="input-group-addon">
+												<i class="icon-calendar"></i>
+											</span>
+										</div>
+										<div class="input-group fixed-width-md center">
+											<input type="text" class="filter datetimepicker date-input form-control" id="local_{$params.id_date}_1" name="local_{$params.name_date}[1]"  placeholder="{l s='To'}" />
+											<input type="hidden" id="{$params.id_date}_1" name="{$params.name_date}[1]" value="{if isset($params.value.1)}{$params.value.1}{/if}">
+											<span class="input-group-addon">
+												<i class="icon-calendar"></i>
+											</span>
+										</div>
+										<script>
+                                            $(function() {
+                                                var dateStart = parseDate($("#{$params.id_date}_0").val());
+                                                var dateEnd = parseDate($("#{$params.id_date}_1").val());
+                                                $("#local_{$params.id_date}_0").datetimepicker({literal}{{/literal}altField: "#{$params.id_date}_0", altFieldTimeOnly: false, dateFormat: 'yy-mm-dd', altFormat: "yy-mm-dd", timeFormat: 'hh:mm:ss'{literal}}{/literal});
+                                                $("#local_{$params.id_date}_1").datetimepicker({literal}{{/literal}altField: "#{$params.id_date}_1", altFieldTimeOnly: false, dateFormat: 'yy-mm-dd', altFormat: "yy-mm-dd", timeFormat: 'hh:mm:ss'{literal}}{/literal});
+                                                if (dateStart !== null){
+                                                    $("#local_{$params.id_date}_0").datetimepicker("setDate", dateStart);
+                                                }
+                                                if (dateEnd !== null){
+                                                    $("#local_{$params.id_date}_1").datetimepicker("setDate", dateEnd);
+                                                }
+                                            });
+										</script>
+									</div>
 								{elseif $params.type == 'select'}
 									{if isset($params.filter_key)}
 										<select class="filter{if isset($params.align) && $params.align == 'center'}center{/if}" onchange="$('#submitFilterButton{$list_id}').focus();$('#submitFilterButton{$list_id}').click();" name="{$list_id}Filter_{$params.filter_key}" {if isset($params.width)} style="width:{$params.width}px"{/if}>
