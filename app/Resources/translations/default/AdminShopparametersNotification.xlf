@@ -278,6 +278,26 @@ File: controllers/admin/AdminGroupsController.php:561</note>
       </trans-unit>
     </body>
   </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/OrderPreferences/OrderPreferencesFormDataProvider.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="85a1ca0031f114f8409d15c6790856f5">
+        <source>Assign a valid page if you want it to be read.</source>
+        <target>Assign a valid page if you want it to be read.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/OrderPreferences/OrderPreferencesFormDataProvider.php:140</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Email/EmailConfigurationFormDataProvider.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="4f0c0475f4b0b0b2b0def4256b8e2300">
+        <source>You must define an SMTP server and an SMTP port. If you do not know it, use the PHP mail() function instead.</source>
+        <target>You must define an SMTP server and an SMTP port. If you do not know it, use the PHP mail() function instead.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Email/EmailConfigurationFormDataProvider.php:100</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="admin-dev/themes/default/template/controllers/shop/helpers/list/list_action_delete.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="b869af59d40b52d2ad275c9f5ed81461">

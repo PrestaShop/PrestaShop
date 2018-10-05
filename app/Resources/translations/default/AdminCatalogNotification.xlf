@@ -634,6 +634,22 @@ File: controllers/admin/AdminSuppliersController.php:499</note>
       </trans-unit>
     </body>
   </file>
+  <file original="src/Adapter/Order/Delivery/SlipPdfConfiguration.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="afe2d0e6d792e09a2d3e6fb85a37af94">
+        <source>Invalid 'to' date</source>
+        <target>Invalid 'to' date</target>
+        <note>Context:
+File: src/Adapter/Order/Delivery/SlipPdfConfiguration.php:66</note>
+      </trans-unit>
+      <trans-unit id="32d3b531ad19ea651820651ca9d40d05">
+        <source>Invalid 'from' date</source>
+        <target>Invalid 'from' date</target>
+        <note>Context:
+File: src/Adapter/Order/Delivery/SlipPdfConfiguration.php:74</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/Adapter/Attribute/AdminAttributeGeneratorControllerWrapper.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="cf3905df049698bb01639e4394e82048">

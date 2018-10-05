@@ -772,25 +772,75 @@ File: controllers/admin/AdminReturnController.php:281</note>
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminSlipController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Form/Admin/Sell/Order/Invoices/InvoicesByDateDataProvider.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="9178a1a9fc82617864593a784163d86a">
         <source>Invalid "From" date</source>
         <target>Invalid "From" date</target>
         <note>Context:
-File: controllers/admin/AdminSlipController.php:149</note>
+File: src/PrestaShopBundle/Form/Admin/Sell/Order/Invoices/InvoicesByDateDataProvider.php:88</note>
       </trans-unit>
       <trans-unit id="915bd2c5cf6e420095a64d309e443849">
         <source>Invalid "To" date</source>
         <target>Invalid "To" date</target>
         <note>Context:
-File: controllers/admin/AdminSlipController.php:152</note>
+File: src/PrestaShopBundle/Form/Admin/Sell/Order/Invoices/InvoicesByDateDataProvider.php:96</note>
       </trans-unit>
+      <trans-unit id="f775c161c8662af8f70a128ad5779036">
+        <source>No invoice has been found for this period.</source>
+        <target>No invoice has been found for this period.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Form/Admin/Sell/Order/Invoices/InvoicesByDateDataProvider.php:104</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminSlipController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
       <trans-unit id="cdbb58c797028e137b1ebf1dcc9efe92">
         <source>No order slips were found for this period.</source>
         <target>No order slips were found for this period.</target>
         <note>Context:
 File: controllers/admin/AdminSlipController.php:159</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/Adapter/Order/Delivery/SlipPdfConfiguration.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="3ffd1b6c5e4ab9c98104475480477307">
+        <source>No delivery slip was found for this period.</source>
+        <target>No delivery slip was found for this period.</target>
+        <note>Context:
+File: src/Adapter/Order/Delivery/SlipPdfConfiguration.php:82</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Sell/Order/Invoices/InvoiceOptionsDataProvider.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="599b433088f71a8712de225a693ce20e">
+        <source>Invalid invoice number.</source>
+        <target>Invalid invoice number.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Form/Admin/Sell/Order/Invoices/InvoiceOptionsDataProvider.php:95</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Sell/Order/Invoices/InvoicesByStatusDataProvider.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="eb9173ba78d315a23d8978a2b772bd9a">
+        <source>You must select at least one order status.</source>
+        <target>You must select at least one order status.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Form/Admin/Sell/Order/Invoices/InvoicesByStatusDataProvider.php:67</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Sell/Order/Invoices/InvoiceByStatusFormHandler.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="7af95cd9cbe318a15ef10e5e30000501">
+        <source>No invoice has been found for this status.</source>
+        <target>No invoice has been found for this status.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Form/Admin/Sell/Order/Invoices/InvoiceByStatusFormHandler.php:95</note>
       </trans-unit>
     </body>
   </file>

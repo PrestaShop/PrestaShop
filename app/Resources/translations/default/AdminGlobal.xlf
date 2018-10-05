@@ -1496,17 +1496,21 @@ File: modules/ps_categorytree/ps_categorytree.php:208</note>
         <note>Context:
 File: modules/ps_categorytree/ps_categorytree.php:213</note>
       </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/PaginationType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
       <trans-unit id="e3cf5ac19407b1a62c6fccaff675a53b">
         <source>Descending</source>
         <target>Descending</target>
         <note>Context:
-File: modules/ps_categorytree/ps_categorytree.php:225</note>
+File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/PaginationType.php:64</note>
       </trans-unit>
       <trans-unit id="cf3fb1ff52ea1eed3347ac5401ee7f0c">
         <source>Ascending</source>
         <target>Ascending</target>
         <note>Context:
-File: modules/ps_categorytree/ps_categorytree.php:230</note>
+File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/PaginationType.php:63</note>
       </trans-unit>
     </body>
   </file>
@@ -1755,6 +1759,22 @@ File: modules/autoupgrade/views/templates/block/channelInfo.twig:11</note>
         <target>(tax excl.)</target>
         <note>Context:
 File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/OrderPreferences/GiftOptionsType.php:81</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/PageType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="336d5ebc5436534e61d16e63ddfca327">
+        <source>-</source>
+        <target>-</target>
+        <note>Context:
+File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/PageType.php:54</note>
+      </trans-unit>
+      <trans-unit id="c0cb5f0fcf239ab3d9c1fcd31fff1efc">
+        <source>,</source>
+        <target>,</target>
+        <note>Context:
+File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/PageType.php:55</note>
       </trans-unit>
     </body>
   </file>
