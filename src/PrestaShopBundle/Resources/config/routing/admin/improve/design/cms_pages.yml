@@ -1,0 +1,14 @@
+admin_cms_pages_index:
+    path: /
+    methods: GET
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Improve\Design\CmsPages:index'
+        _legacy_controller: AdminCmsContent
+
+admin_cms_pages_search:
+    path: /
+    methods: POST
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Improve\Design\CmsPages:search'
+        _legacy_controller: AdminCmsContent
+
