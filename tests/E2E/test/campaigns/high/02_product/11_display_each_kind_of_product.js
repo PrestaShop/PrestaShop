@@ -16,9 +16,15 @@ let attributeData = {
   public_name: 'att',
   type: 'color',
   values: {
-    1: 'red',
-    2: 'yellow',
-    3: 'green'
+    1: {
+      value: 'red'
+    },
+    2: {
+      value: 'yellow'
+    },
+    3: {
+      value: 'green'
+    }
   }
 };
 
@@ -46,6 +52,7 @@ let productData = [{
   quantity: '5',
   price: '10',
   image_name: 'combination.jpg',
+  type:'combination',
   attribute: {
     name: 'att',
     variation_quantity: '5'

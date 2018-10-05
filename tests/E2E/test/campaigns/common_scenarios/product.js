@@ -98,7 +98,7 @@ module.exports = {
           test('should select all the generated variations', () => client.waitForVisibleAndClick(AddProductPage.var_selected));
           test('should set the "Variations quantity" input', () => {
             return promise
-              .then(() => client.setVariationsQuantity(AddProductPage, productData.attribute[1].variation_quantity))
+              .then(() => client.setVariationsQuantity(AddProductPage, productData.attribute.variation_quantity))
               .then(() => client.isVisible(AddProductPage.symfony_toolbar, 3000))
               .then(() => {
                 if (global.isVisible) {
@@ -114,7 +114,7 @@ module.exports = {
         scenario('Add Feature', client => {
           test('should click on "Add feature" button', () => {
             return promise
-              .then(() => client.scrollTo(AddProductPage.product_create_category_btn))
+              .then(() => client.scrollTo(AddProductPage.add_feature_to_product_button))
               .then(() => client.waitForExistAndClick(AddProductPage.add_feature_to_product_button));
           });
           test('should select the created feature', () => client.selectFeature(AddProductPage, productData['feature']['name'] + date_time, productData['feature']['value']));
