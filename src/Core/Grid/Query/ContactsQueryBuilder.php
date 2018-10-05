@@ -109,6 +109,13 @@ final class ContactsQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     private function getQueryBuilder(array $filters)
     {
+        $allowedFilters = [
+            'id_contact',
+            'name',
+            'email',
+            'description',
+        ];
+
         $qb = $this->connection
             ->createQueryBuilder()
             ->from($this->dbPrefix . 'contact', 'c')
@@ -122,6 +129,10 @@ final class ContactsQueryBuilder extends AbstractDoctrineQueryBuilder
         ;
 
         foreach ($filters as $name => $value) {
+            if (!in_array($name, $allowedFilters, true)) {
+                continue;
+            }
+
             if ('id_contact' === $name) {
                 $qb->andWhere('c.`id_contact` = :' . $name);
                 $qb->setParameter($name, $value);
