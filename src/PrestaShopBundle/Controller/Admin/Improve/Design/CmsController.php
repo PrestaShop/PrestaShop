@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Improve\Design;
 
+use PrestaShop\PrestaShop\Core\Search\Filters\CmsCategoryFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
@@ -37,12 +38,26 @@ class CmsController extends FrameworkBundleAdminController
     /**
      * @Template("@PrestaShop/Admin/Improve/Design/Cms/cms.html.twig")
      *
-     * @param int $cmsCategoryId
+     * @param int $cmsCategoryParentId
+     *
+     * @param CmsCategoryFilters $filters
      *
      * @return array
      */
-    public function indexAction($cmsCategoryId)
+    public function indexAction($cmsCategoryParentId, CmsCategoryFilters $filters)
     {
-        return [];
+        //todo : removes this block once SearchCriteriaEvent will be available from Category listing PR.
+        $filterDefaults = $filters::getDefaults();
+        $filterDefaults['filters']['id_cms_category_parent'] = $cmsCategoryParentId;
+        $newSearchCriteria = new CmsCategoryFilters($filterDefaults);
+
+        $cmsCategoryGridFactory = $this->get('prestashop.core.grid.factory.cms_category');
+        $cmsCategoryGrid = $cmsCategoryGridFactory->getGrid($newSearchCriteria);
+
+        $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
+
+        return [
+            'cmsCategoryGrid' => $gridPresenter->present($cmsCategoryGrid),
+        ];
     }
 }
