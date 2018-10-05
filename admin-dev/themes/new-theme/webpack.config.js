@@ -28,6 +28,7 @@ const path = require('path');
 const webpack = require('webpack');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const LiveReloadPlugin = require('webpack-livereload-plugin');
 
 module.exports = (env, argvs) => {
   const prodMode = (argvs.mode === 'production');
@@ -79,11 +80,6 @@ module.exports = (env, argvs) => {
     output: {
       path: path.resolve(__dirname, 'public'),
       filename: '[name].bundle.js',
-    },
-    devServer: {
-      hot: true,
-      contentBase: path.resolve(__dirname, 'public'),
-      publicPath: '/',
     },
     resolve: {
       extensions: ['.js', '.vue', '.json'],
@@ -200,7 +196,16 @@ module.exports = (env, argvs) => {
 
   if (prodMode) {
     config.stats = 'minimal';
-    config.optimization.minimize = true;
+  }
+
+  if (!prodMode) {
+    config.devServer = {
+      contentBase: 'http://localhost/prestashop/admin-dev',
+    };
+    config.devtool = 'inline-source-map';
+    config.plugins.push(new LiveReloadPlugin({
+      appendScriptTag: true
+    }));
   }
 
   if (argvs.analyze) {
