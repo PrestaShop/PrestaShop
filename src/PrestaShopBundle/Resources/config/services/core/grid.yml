@@ -59,6 +59,7 @@ services:
             - '@prestashop.core.grid.query.doctrine_query_parser'
             - 'meta'
 
+
     prestashop.core.grid.data.factory.category:
         class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
         arguments:
@@ -116,6 +117,14 @@ services:
         arguments:
             - '@prestashop.core.grid.data.factory.language'
             - '@prestashop.adapter.language.language_flag_thumbnail_provider'
+
+    prestashop.core.grid.data_provider.cms_category:
+        class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
+        arguments:
+            - '@prestashop.core.grid.query_builder.cms_category'
+            - '@prestashop.core.hook.dispatcher'
+            - '@prestashop.core.grid.query.doctrine_query_parser'
+            - 'Cms_category'
 
     # Grid definition factories
     prestashop.core.grid.definition.factory.abstract_grid_definition:
@@ -207,12 +216,18 @@ services:
             - '@=service("prestashop.adapter.form.choice_provider.gender_by_id_choice_provider").getChoices()'
         public: true
 
+
     prestashop.core.grid.definition.factory.language:
         class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\LanguageGridDefinitionFactory'
         parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
         arguments:
             - "@=service('router').generate('admin_common_reset_search', {'controller': 'language', 'action': 'index'})"
             - "@=service('router').generate('admin_languages_index')"
+        public: true
+
+    prestashop.core.grid.definition.factory.cms_category:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CmsCategoryDefinitionFactory'
+        parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
         public: true
 
     # Grid factories
@@ -296,11 +311,20 @@ services:
             - '@prestashop.core.grid.filter.form_factory'
             - '@prestashop.core.hook.dispatcher'
 
+
     prestashop.core.grid.factory.language:
         class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
         arguments:
             - '@prestashop.core.grid.definition.factory.language'
             - '@prestashop.core.grid.factory.language_decorator'
+            - '@prestashop.core.grid.filter.form_factory'
+            - '@prestashop.core.hook.dispatcher'
+
+    prestashop.core.grid.factory.cms_category:
+        class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
+        arguments:
+            - '@prestashop.core.grid.definition.factory.cms_category'
+            - '@prestashop.core.grid.data_provider.cms_category'
             - '@prestashop.core.grid.filter.form_factory'
             - '@prestashop.core.hook.dispatcher'
 
@@ -382,6 +406,15 @@ services:
         parent: 'prestashop.core.grid.abstract_query_builder'
         arguments:
             - '@prestashop.core.query.doctrine_search_criteria_applicator'
+        public: true
+
+    prestashop.core.grid.query_builder.cms_category:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Query\CmsCategoryQueryBuilder'
+        parent: 'prestashop.core.grid.abstract_query_builder'
+        arguments:
+            - '@prestashop.core.query.doctrine_search_criteria_applicator'
+            - '@=service("prestashop.adapter.shop.context").getContextListShopID()'
+            - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
         public: true
 
     # Grid Query parser
