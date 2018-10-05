@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "build": "webpack --mode='production'",
-    "build:analyze": "webpack --mode='production' --analyze"
+    "build:analyze": "webpack --mode='production' --analyze",
+    "dev": "webpack --mode='development' --watch"
   },
   "author": "PrestaShop",
   "license": "OSL-3.0",
@@ -85,6 +86,6 @@
     "webpack": "^4.19.1",
     "webpack-bundle-analyzer": "^3.0.2",
     "webpack-cli": "^3.1.0",
-    "webpack-dev-server": "^2.6.1"
+    "webpack-livereload-plugin": "^2.1.1"
   }
 }
