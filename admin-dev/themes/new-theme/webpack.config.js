@@ -135,6 +135,9 @@ const config = {
     supplier: [
       './js/pages/supplier',
     ],
+    cms_pages: [
+      './js/pages/cms-pages',
+    ],
   },
   output: {
     path: path.resolve(__dirname, 'public'),
