@@ -24,4 +24,4 @@ var t={};e.m=n,e.c=t,e.i=function(n){return n},e.d=function(n,t,r){e.o(n,t)||Obj
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-var t=n.$,r=function(n,e){t.post(n),window.location.assign(e)};e.a=r}).call(e,t(2))}});
+var t=n.$,r=function(n,e){t.post(n).then(function(){return window.location.assign(e)})};e.a=r}).call(e,t(2))}});
