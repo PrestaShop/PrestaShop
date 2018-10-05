@@ -1,0 +1,6 @@
+admin_customers_index:
+  path: /
+  methods: [GET]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Customer/Customer:index
+    _legacy_controller: AdminCustomers
