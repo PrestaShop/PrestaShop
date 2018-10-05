@@ -34,6 +34,12 @@ use ReflectionClass;
 
 class LegacyUrlConverterTest extends LightWebTestCase
 {
+    public function setUp()
+    {
+        parent::setUp();
+        $this->initStaticInstance();
+    }
+
     /**
      * @return array
      */
@@ -42,10 +48,29 @@ class LegacyUrlConverterTest extends LightWebTestCase
         return [
             'admin_administration' => ['/configure/advanced/administration/', 'AdminAdminPreferences'],
             'admin_administration_save' => ['/configure/advanced/administration/', 'AdminAdminPreferences', 'save'],
+
             'admin_backup' => ['/configure/advanced/backup/', 'AdminBackup'],
             'admin_backup_create' => ['/configure/advanced/backup/create', 'AdminBackup', 'add'],
             'admin_backup_delete' => ['/configure/advanced/backup/backup_file.zip', 'AdminBackup', 'delete', ['filename' => 'backup_file.zip']],
-            'admin_backup_bulk_delete' => ['/configure/advanced/backup/bulk-delete/', 'AdminBackup', 'submitBulkdeletebackup']
+            'admin_backup_bulk_delete' => ['/configure/advanced/backup/bulk-delete/', 'AdminBackup', 'submitBulkdeletebackup'],
+
+            'admin_module_catalog' => ['/improve/modules/catalog', 'AdminModulesCatalog'],
+            'admin_module_catalog_refresh' => ['/improve/modules/catalog/refresh', 'AdminModulesCatalog', 'refresh'],
+            'admin_module_catalog_post' => ['/improve/modules/catalog/recommended', 'AdminModulesCatalog', 'recommended'],
+
+            'admin_module_manage' => ['/improve/modules/manage', 'AdminModulesManage'],
+
+            'admin_module_configure_action' => ['/improve/modules/manage/action/configure/ps_linklist', 'AdminModules', null, ['module_name' => 'ps_linklist']],
+
+            'admin_module_notification' => ['/improve/modules/alerts', 'AdminModulesNotifications'],
+            'admin_module_notification_count' => ['/improve/modules/alerts/count', 'AdminModulesNotifications', 'count'],
+
+            'admin_module_updates' => ['/improve/modules/updates', 'AdminModulesUpdates'],
+
+            'admin_module_addons_store' => ['/improve/modules/addons-store', 'AdminAddonsCatalog'],
+
+            'admin_modules_positions' => ['/improve/design/modules/positions/', 'AdminModulesPositions'],
+            'admin_modules_positions_unhook' => ['/improve/design/modules/positions/unhook', 'AdminModulesPositions', 'unhook'],
         ];
     }
 
@@ -55,7 +80,8 @@ class LegacyUrlConverterTest extends LightWebTestCase
     public static function getLegacyControllers()
     {
         return [
-            ['/admin-dev/index.php?controller=AdminLogin', 'AdminLogin']
+            ['/admin-dev/index.php?controller=AdminLogin', 'AdminLogin'],
+            ['/admin-dev/index.php?controller=AdminModulesPositions&addToHook=', 'AdminModulesPositions', ['addToHook' => '']]
         ];
     }
 
@@ -63,6 +89,13 @@ class LegacyUrlConverterTest extends LightWebTestCase
     {
         $converter = self::$kernel->getContainer()->get('prestashop.bundle.routing.legacy_url_converter');
         $this->assertInstanceOf(LegacyUrlConverter::class, $converter);
+    }
+
+    public function testLegacyWithRoute()
+    {
+        $link = new Link();
+        $routeUrl = $link->getAdminLink("AdminModulesCatalog", true, ['route' => "admin_module_catalog_post"]);
+        $this->assertSameUrl('/improve/modules/catalog/recommended', $routeUrl, ['route']);
     }
 
     public function testSample()
@@ -107,7 +140,6 @@ class LegacyUrlConverterTest extends LightWebTestCase
      */
     public function testLegacyLinkClass($expectedUrl, $controller, $action = null, array $queryParameters = null)
     {
-        $this->initStaticInstance();
         $link = new Link();
 
         $parameters = [
@@ -125,14 +157,13 @@ class LegacyUrlConverterTest extends LightWebTestCase
     /**
      * @dataProvider migratedControllers
      */
-    public function testLegacyClassActionTrue($expectedUrl, $controller, $action = null, array $queryParameters = null)
+    public function testLegacyClassParameterAction($expectedUrl, $controller, $action = null, array $queryParameters = null)
     {
-        $this->initStaticInstance();
         $link = new Link();
 
         $parameters = null !== $queryParameters ? $queryParameters : [];
         if (null != $action) {
-            $parameters[$action] = true;
+            $parameters[$action] = '';
         }
         $linkUrl = $link->getAdminLink($controller, true, [], $parameters);
         $this->assertSameUrl($expectedUrl, $linkUrl);
@@ -143,15 +174,17 @@ class LegacyUrlConverterTest extends LightWebTestCase
      * @dataProvider legacyControllers
      * @param string $expectedUrl
      * @param string $controller
+     * @param array|null $parameters
      * @throws \PrestaShopException
      * @throws \ReflectionException
      */
-    public function testLegacyControllers($expectedUrl, $controller)
+    public function testLegacyControllers($expectedUrl, $controller, array $parameters = null)
     {
         $this->initStaticInstance();
         $link = new Link();
 
-        $linkUrl = $link->getAdminLink($controller);
+        $parameters = null === $parameters ? [] : $parameters;
+        $linkUrl = $link->getAdminLink($controller, true, [], $parameters);
         $this->assertSameUrl($expectedUrl, $linkUrl);
     }
 
@@ -201,14 +234,22 @@ class LegacyUrlConverterTest extends LightWebTestCase
     /**
      * @param string $expectedUrl
      * @param string $url
+     * @param array|null $ignoredParameters
      */
-    private function assertSameUrl($expectedUrl, $url)
+    private function assertSameUrl($expectedUrl, $url, array $ignoredParameters = null)
     {
         $this->assertNotNull($url);
         $parsedUrl = parse_url($url);
         parse_str($parsedUrl['query'], $parameters);
+
         unset($parameters['token']);
         unset($parameters['_token']);
+        if (null !== $ignoredParameters) {
+            foreach ($ignoredParameters as $ignoredParameter) {
+                unset($parameters[$ignoredParameter]);
+            }
+        }
+
         $cleanUrl = http_build_url([
             'path' => $parsedUrl['path'],
             'query' => http_build_query($parameters),

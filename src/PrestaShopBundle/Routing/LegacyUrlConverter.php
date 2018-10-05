@@ -221,11 +221,25 @@ final class LegacyUrlConverter
 
         if (!empty($parameters['action'])) {
             $legacyAction = $parameters['action'];
-        } else {
-            //Actions can be defined as simple query parameter (e.g: ?controller=AdminProduct&add)
+        }
+
+        //Actions can be defined as simple query parameter (e.g: ?controller=AdminProducts&save)
+        if (null === $legacyAction) {
+            //We prioritize the actions defined in the migrated routes
             $controllerActions = array_keys($this->controllersActions[$parameters['controller']]);
             foreach ($parameters as $parameter => $value) {
                 if (in_array($parameter, $controllerActions)) {
+                    $legacyAction = $parameter;
+                    break;
+                }
+            }
+        }
+
+        //Last chance if a non migrated action is present (note: a bit risky since any empty parameter can be
+        //interpreted as an action.. but some old link need this feature, ?controller=AdminModulesPositions&addToHook)
+        if (null === $legacyAction) {
+            foreach ($parameters as $parameter => $value) {
+                if ($value === "") {
                     $legacyAction = $parameter;
                     break;
                 }

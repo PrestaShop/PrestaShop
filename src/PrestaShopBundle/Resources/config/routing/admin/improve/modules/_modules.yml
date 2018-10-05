@@ -16,6 +16,7 @@ admin_module_catalog:
     defaults:
         _controller: PrestaShopBundle:Admin/Improve/Module:catalog
         _legacy_controller: AdminModulesCatalog
+        _legacy_link: AdminModulesCatalog
 
 admin_module_catalog_refresh:
     path:     /catalog/refresh/{category}/{keyword}
@@ -25,6 +26,7 @@ admin_module_catalog_refresh:
         keyword:
         _controller: PrestaShopBundle:Admin/Improve/Module:refreshCatalog
         _legacy_controller: AdminModulesCatalog
+        _legacy_link: AdminModulesCatalog:refresh
 
 admin_module_catalog_post:
     path:     /catalog/recommended
@@ -32,6 +34,7 @@ admin_module_catalog_post:
     defaults:
         _controller: PrestaShopBundle:Admin/Improve/Module:getPreferredModules
         _legacy_controller: AdminModulesCatalog
+        _legacy_link: AdminModulesCatalog:recommended
 
 admin_module_manage:
     path:     /manage/{category}/{keyword}
@@ -41,6 +44,7 @@ admin_module_manage:
         keyword:
         _controller: PrestaShopBundle:Admin/Improve/Module:manage
         _legacy_controller: AdminModulesManage
+        _legacy_link: AdminModulesManage
 
 admin_module_manage_action:
     path:     /manage/action/{action}/{module_name}
@@ -56,6 +60,7 @@ admin_module_configure_action:
     defaults:
         _controller: PrestaShopBundle:Admin/Improve/Module:configureModule
         _legacy_controller: AdminModules
+        _legacy_link: AdminModules
 
 admin_module_manage_action_bulk:
     path:     /manage/bulk/{action}
@@ -84,6 +89,7 @@ admin_module_notification:
     defaults:
         _controller: PrestaShopBundle:Admin/Improve/Modules/Alerts:index
         _legacy_controller: AdminModulesNotifications
+        _legacy_link: AdminModulesNotifications
 
 admin_module_notification_count:
     path:     /alerts/count
@@ -91,6 +97,7 @@ admin_module_notification_count:
     defaults:
         _controller: PrestaShopBundle:Admin\Improve\Modules\Alerts:notificationsCount
         _legacy_controller: AdminModulesNotifications
+        _legacy_link: AdminModulesNotifications:count
 
 admin_module_updates:
     path:     /updates
@@ -98,6 +105,7 @@ admin_module_updates:
     defaults:
         _controller: PrestaShopBundle:Admin/Improve/Modules/Updates:index
         _legacy_controller: AdminModulesUpdates
+        _legacy_link: AdminModulesUpdates
 
 admin_module_addons_store:
     path:     /addons-store
@@ -105,3 +113,4 @@ admin_module_addons_store:
     defaults:
         _controller: 'PrestaShopBundle:Admin\Improve\Modules\AddonsStore:index'
         _legacy_controller: AdminAddonsCatalog
+        _legacy_link: AdminAddonsCatalog

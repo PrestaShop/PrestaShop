@@ -719,6 +719,13 @@ class LinkCore
             $legacyUrlConverter = $sfContainer->get('prestashop.bundle.routing.legacy_url_converter');
         }
 
+        if (!empty($sfRouteParams['route']) && null !== $sfRouter) {
+            $sfRoute = $sfRouteParams['route'];
+            unset($sfRouteParams['route']);
+
+            return $sfRouter->generate($sfRoute, $sfRouteParams, UrlGeneratorInterface::ABSOLUTE_URL);
+        }
+
         $routeName = '';
         switch ($controller) {
             case 'AdminProducts':
@@ -775,18 +782,12 @@ class LinkCore
 
             default:
                 $routes = array(
-                    'AdminAddonsCatalog' => 'admin_module_addons_store',
                     'AdminCustomerPreferences' => 'admin_customer_preferences',
                     'AdminDeliverySlip' => 'admin_order_delivery_slip',
                     'AdminImport' => 'admin_import',
                     'AdminInformation' => 'admin_system_information',
                     'AdminLogs' => 'admin_logs',
                     'AdminMaintenance' => 'admin_maintenance',
-                    'AdminModulesCatalog' => 'admin_module_catalog',
-                    'AdminModulesManage' => 'admin_module_manage',
-                    'AdminModulesNotifications' => 'admin_module_notification',
-                    'AdminModulesUpdates' => 'admin_module_updates',
-                    'AdminModulesPositions' => 'admin_modules_positions',
                     'AdminModulesSf' => 'admin_module_manage',
                     'AdminOrderPreferences' => 'admin_order_preferences',
                     'AdminPPreferences' => 'admin_product_preferences',
@@ -812,6 +813,12 @@ class LinkCore
                 }
         }
 
+        if (!empty($routeName) && null !== $sfRouter) {
+            $sfRoute = array_key_exists('route', $sfRouteParams) ? $sfRouteParams['route'] : $routeName;
+
+            return $sfRouter->generate($sfRoute, $sfRouteParams, UrlGeneratorInterface::ABSOLUTE_URL);
+        }
+
         if (empty($routeName) && null !== $legacyUrlConverter) {
             try {
                 $conversionParameters = array_merge(['controller' => $controller], $sfRouteParams, $params);
@@ -820,12 +827,6 @@ class LinkCore
                 return $legacyUrlConverter->convertByParameters($conversionParameters);
             } catch (CoreException $e) {
             }
-        }
-
-        if (!empty($routeName) && null !== $sfRouter) {
-            $sfRoute = array_key_exists('route', $sfRouteParams) ? $sfRouteParams['route'] : $routeName;
-
-            return $sfRouter->generate($sfRoute, $sfRouteParams, UrlGeneratorInterface::ABSOLUTE_URL);
         }
 
         $idLang = Context::getContext()->language->id;
