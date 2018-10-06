@@ -570,11 +570,19 @@ class ModuleController extends FrameworkBundleAdminController
                     array('Content-Type' => 'application/json')
                 );
             }
+            $ini_max_filesize = ini_get('upload_max_filesize');
+            $filesize_match = null;
+            preg_match('/^([0-9]+)([MGK]){0,1}$/i', $ini_max_filesize, $filesize_match);
+            if (is_array($filesize_match) && count($filesize_match) == 3) {
+                if ($filesize_match[2] == 'G'|| $filesize_match[2] == 'g') {
+                    $ini_max_filesize = ($filesize_match[1]*1024)."M";
+                }
+            }
             $file_uploaded = $request->files->get('file_uploaded');
             $constraints = array(
                 new Assert\NotNull(),
                 new Assert\File(array(
-                    'maxSize' => ini_get('upload_max_filesize'),
+                    'maxSize' => $ini_max_filesize,
                     'mimeTypes' => array(
                         'application/zip',
                         'application/x-gzip',
