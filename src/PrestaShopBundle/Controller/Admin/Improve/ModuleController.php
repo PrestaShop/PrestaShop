@@ -506,12 +506,20 @@ class ModuleController extends ModuleAbstractController
         $moduleZipManager = $this->get('prestashop.module.zip.manager');
 
         try {
+            $ini_max_filesize = ini_get('upload_max_filesize');
+            $filesize_match = null;
+            preg_match('/^([0-9]+)([MGK]){0,1}$/i', $ini_max_filesize, $filesize_match);
+            if (is_array($filesize_match) && count($filesize_match) == 3) {
+                if ($filesize_match[2] == 'G'|| $filesize_match[2] == 'g') {
+                    $ini_max_filesize = ($filesize_match[1] * 1024)."M";
+                }
+            }
             $fileUploaded = $request->files->get('file_uploaded');
             $constraints = [
                 new Assert\NotNull(),
                 new Assert\File(
                     [
-                        'maxSize' => ini_get('upload_max_filesize'),
+                        'maxSize' => $ini_max_filesize,
                         'mimeTypes' => [
                             'application/zip',
                             'application/x-gzip',
