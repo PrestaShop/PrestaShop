@@ -511,7 +511,7 @@ class ModuleController extends ModuleAbstractController
             preg_match('/^([0-9]+)([MGK]){0,1}$/i', $ini_max_filesize, $filesize_match);
             if (is_array($filesize_match) && count($filesize_match) == 3) {
                 if ($filesize_match[2] == 'G'|| $filesize_match[2] == 'g') {
-                    $ini_max_filesize = ($filesize_match[1]*1024)."M";
+                    $ini_max_filesize = ($filesize_match[1]*1024).'M';
                 }
             }
             $fileUploaded = $request->files->get('file_uploaded');
