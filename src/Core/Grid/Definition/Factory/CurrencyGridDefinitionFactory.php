@@ -63,7 +63,6 @@ final class CurrencyGridDefinitionFactory extends AbstractGridDefinitionFactory
     private $redirectionUrl;
 
     /**
-     * CurrencyGridDefinitionFactory constructor.
      *
      * @param array $statusChoices
      * @param string $resetActionUrl

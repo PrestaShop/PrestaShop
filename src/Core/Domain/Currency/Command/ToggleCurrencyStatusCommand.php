@@ -39,7 +39,6 @@ class ToggleCurrencyStatusCommand
     private $currencyId;
 
     /**
-     * ToggleCurrencyStatusCommand constructor.
      *
      * @param CurrencyId $currencyId
      */

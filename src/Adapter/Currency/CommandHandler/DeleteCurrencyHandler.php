@@ -45,7 +45,6 @@ final class DeleteCurrencyHandler implements DeleteCurrencyHandlerInterface
     private $defaultCurrencyId;
 
     /**
-     * ToggleCurrencyStatusHandler constructor.
      *
      * @param int $defaultCurrencyId
      */
