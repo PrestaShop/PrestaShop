@@ -30,12 +30,37 @@ use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
+use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
+use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
+use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 /**
  * Class CmsPagesCategoryDefinitionFactory
  */
 final class CmsPagesCategoryDefinitionFactory extends AbstractGridDefinitionFactory
 {
+    /**
+     * @var string
+     */
+    private $resetActionUrl;
+
+    /**
+     * @var string
+     */
+    private $redirectionUrl;
+
+    /**
+     * @param string $resetActionUrl
+     * @param string $redirectionUrl
+     */
+    public function __construct($resetActionUrl, $redirectionUrl)
+    {
+
+        $this->resetActionUrl = $resetActionUrl;
+        $this->redirectionUrl = $redirectionUrl;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -97,6 +122,36 @@ final class CmsPagesCategoryDefinitionFactory extends AbstractGridDefinitionFact
             )
             ->add((new ActionColumn('actions'))
                 ->setName($this->trans('Actions', [], 'Admin.Global'))
+            )
+        ;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getFilters()
+    {
+        return (new FilterCollection())
+            ->add((new Filter('id_cms_category', TextType::class))
+                ->setTypeOptions([
+                    'required' => false,
+                ])
+                ->setAssociatedColumn('id_cms_category')
+            )
+            ->add((new Filter('name', TextType::class))
+                ->setTypeOptions([
+                    'required' => false,
+                ])
+                ->setAssociatedColumn('name')
+            )
+            ->add((new Filter('actions', SearchAndResetType::class))
+                ->setTypeOptions([
+                    'attr' => [
+                        'data-url' => $this->resetActionUrl,
+                        'data-redirect' => $this->redirectionUrl,
+                    ],
+                ])
+                ->setAssociatedColumn('actions')
             )
         ;
     }
