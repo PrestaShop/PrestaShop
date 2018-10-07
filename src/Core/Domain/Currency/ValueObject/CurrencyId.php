@@ -39,7 +39,6 @@ class CurrencyId
     private $currencyId;
 
     /**
-     * CurrencyId constructor.
      *
      * @param int $currencyId
      *

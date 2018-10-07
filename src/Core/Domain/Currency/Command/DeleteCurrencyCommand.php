@@ -39,7 +39,6 @@ class DeleteCurrencyCommand
     private $currencyId;
 
     /**
-     * ToggleCurrencyStatusCommand constructor.
      *
      * @param CurrencyId $currencyId
      */
