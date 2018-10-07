@@ -50,7 +50,7 @@ class CurrencyController extends FrameworkBundleAdminController
     /**
      * Show currency page.
      *
-     * @Template("@PrestaShop/Admin/Improve/International/Currency/currency.html.twig")
+     * @Template("@PrestaShop/Admin/Improve/International/Currency/index.html.twig")
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
@@ -65,13 +65,6 @@ class CurrencyController extends FrameworkBundleAdminController
         $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
 
         return [
-            'layoutHeaderToolbarBtn' => [
-                'add' => [
-                    'href' => $this->generateUrl('admin_currency_create'),
-                    'desc' => $this->trans('Add new currency', 'Admin.International.Feature'),
-                    'icon' => 'add_circle_outline',
-                ],
-            ],
             'currencyGrid' => $gridPresenter->present($currencyGrid),
         ];
     }

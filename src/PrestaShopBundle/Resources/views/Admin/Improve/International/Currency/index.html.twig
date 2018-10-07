@@ -25,7 +25,17 @@
 
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
+{% set layoutHeaderToolbarBtn = {
+  add: {
+    href: path('admin_currency_create'),
+    desc: 'Add new currency'|trans({}, 'Admin.International.Feature'),
+    icon: 'add_circle_outline',
+  }
+}
+%}
+
 {% block content %}
+
   <div class="row">
     <div class="col">
       {{ include('@PrestaShop/Admin/Common/Grid/grid_panel.html.twig', {'grid': currencyGrid }) }}
