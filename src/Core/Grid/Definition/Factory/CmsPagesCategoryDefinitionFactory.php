@@ -41,7 +41,7 @@ final class CmsPagesCategoryDefinitionFactory extends AbstractGridDefinitionFact
      */
     protected function getId()
     {
-        return 'Cms_category';
+        return 'Cms_pages_category';
     }
 
     /**

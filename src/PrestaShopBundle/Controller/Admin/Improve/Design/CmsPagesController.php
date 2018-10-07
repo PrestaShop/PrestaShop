@@ -29,6 +29,8 @@ namespace PrestaShopBundle\Controller\Admin\Improve\Design;
 use PrestaShop\PrestaShop\Core\Search\Filters\CmsCategoryFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Class CmsPagesController is responsible for handling the logic in "Improve -> Design -> pages" page.
@@ -36,7 +38,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 class CmsPagesController extends FrameworkBundleAdminController
 {
     /**
-     * @Template("@PrestaShop/Admin/Improve/Design/Cms/cms_pages.html.twig")
+     * @Template("@PrestaShop/Admin/Improve/Design/Cms/index.html.twig")
      *
      * @param int $cmsCategoryParentId
      *
@@ -49,6 +51,11 @@ class CmsPagesController extends FrameworkBundleAdminController
         //todo : removes this block once SearchCriteriaEvent will be available from Category listing PR.
         $filterDefaults = $filters::getDefaults();
         $filterDefaults['filters']['id_cms_category_parent'] = $cmsCategoryParentId;
+        $filterDefaults['orderBy'] = $filters->getOrderBy();
+        $filterDefaults['sortOrder'] = $filters->getOrderWay();
+        $filterDefaults['limit'] = $filters->getLimit();
+        $filterDefaults['offset'] = $filters->getOffset();
+
         $newSearchCriteria = new CmsCategoryFilters($filterDefaults);
 
         $cmsCategoryGridFactory = $this->get('prestashop.core.grid.factory.cms_pages_category');
@@ -61,8 +68,28 @@ class CmsPagesController extends FrameworkBundleAdminController
         ];
     }
 
-    public function searchAction()
+    /**
+     * Implements filtering for the cms page category list.
+     *
+     * @param int $cmsCategoryParentId
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function searchCategory($cmsCategoryParentId, Request $request)
     {
-        // todo : implement
+        $definitionFactory = $this->get('prestashop.core.grid.definition.factory.cms_pages_category');
+        $definitionFactory = $definitionFactory->getDefinition();
+
+        $gridFilterFormFactory = $this->get('prestashop.core.grid.filter.form_factory');
+        $searchParametersForm = $gridFilterFormFactory->create($definitionFactory);
+        $searchParametersForm->handleRequest($request);
+
+        $filters = [];
+        if ($searchParametersForm->isSubmitted()) {
+            $filters = $searchParametersForm->getData();
+        }
+
+        return $this->redirectToRoute('admin_cms_pages_index', compact('cmsCategoryParentId', 'filters'));
     }
 }
