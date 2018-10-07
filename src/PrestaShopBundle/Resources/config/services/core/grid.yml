@@ -226,6 +226,9 @@ services:
     prestashop.core.grid.definition.factory.cms_pages_category:
         class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CmsPagesCategoryDefinitionFactory'
         parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+        arguments:
+            - "@=service('router').generate('admin_common_reset_search', {'controller': 'cmsPages', 'action': 'index'})"
+            - "@=service('router').generate('admin_cms_pages_index')"
         public: true
 
     # Grid factories
