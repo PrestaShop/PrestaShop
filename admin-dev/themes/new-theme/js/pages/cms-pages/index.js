@@ -25,10 +25,14 @@
 
 import Grid from "../../components/grid/grid";
 import SortingExtension from "../../components/grid/extension/sorting-extension";
+import SubmitRowActionExtension from "../../components/grid/extension/action/row/submit-row-action-extension";
+import SubmitGridActionExtension from "../../components/grid/extension/submit-grid-action-extension";
 
 const $ = window.$;
 
 $(() => {
-  const cmsCategory = new Grid('cms_category');
+  const cmsCategory = new Grid('cms_pages_category');
   cmsCategory.addExtension(new SortingExtension());
+  cmsCategory.addExtension(new SubmitRowActionExtension());
+  cmsCategory.addExtension(new SubmitGridActionExtension());
 });
