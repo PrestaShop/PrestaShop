@@ -16,4 +16,4 @@ _language:
 
 _currency:
     resource: "currency.yml"
-    prefix: /currency/
+    prefix: /currencies/
