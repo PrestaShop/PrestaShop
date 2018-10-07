@@ -90,7 +90,7 @@ class CurrencyController extends FrameworkBundleAdminController
             $filters = $searchParametersForm->getData();
         }
 
-        return $this->redirectToRoute('admin_currency_index', ['filters' => $filters]);
+        return $this->redirectToRoute('admin_currencies_index', ['filters' => $filters]);
     }
 
     /**
@@ -134,7 +134,7 @@ class CurrencyController extends FrameworkBundleAdminController
      * Deletes currency.
      *
      * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message="You do not have permission to delete this.")
-     * @DemoRestricted(redirectRoute="admin_currency_index")
+     * @DemoRestricted(redirectRoute="admin_currencies_index")
      *
      * @param int $currencyId
      *
@@ -142,16 +142,13 @@ class CurrencyController extends FrameworkBundleAdminController
      */
     public function deleteAction($currencyId)
     {
-        $commandBus = $this->get('prestashop.core.command_bus');
-
         try {
             $currencyId = new CurrencyId($currencyId);
-            $commandBus->handle(new DeleteCurrencyCommand($currencyId));
+            $this->getCommandBus()->handle(new DeleteCurrencyCommand($currencyId));
         } catch (CurrencyException $exception) {
-            $error = $this->getErrorByExceptionType($exception);
-            $this->flashErrors([$error]);
+            $this->addFlash('error', $this->getErrorByExceptionType($exception));
 
-            return $this->redirectToRoute('admin_currency_index');
+            return $this->redirectToRoute('admin_currencies_index');
         }
 
         $this->addFlash(
@@ -159,7 +156,7 @@ class CurrencyController extends FrameworkBundleAdminController
             $this->trans('Successful deletion.', 'Admin.Notifications.Success')
         );
 
-        return $this->redirectToRoute('admin_currency_index');
+        return $this->redirectToRoute('admin_currencies_index');
     }
 
     /**
@@ -168,22 +165,19 @@ class CurrencyController extends FrameworkBundleAdminController
      * @param int $currencyId
      *
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message="You do not have permission to edit this.")
-     * @DemoRestricted(redirectRoute="admin_currency_index")
+     * @DemoRestricted(redirectRoute="admin_currencies_index")
      *
      * @return RedirectResponse
      */
     public function toggleStatusAction($currencyId)
     {
-        $commandBus = $this->get('prestashop.core.command_bus');
-
         try {
             $currencyId = new CurrencyId($currencyId);
-            $commandBus->handle(new ToggleCurrencyStatusCommand($currencyId));
+            $this->getCommandBus()->handle(new ToggleCurrencyStatusCommand($currencyId));
         } catch (CurrencyException $exception) {
-            $error = $this->getErrorByExceptionType($exception);
-            $this->flashErrors([$error]);
+            $this->addFlash('error', $this->getErrorByExceptionType($exception));
 
-            return $this->redirectToRoute('admin_currency_index');
+            return $this->redirectToRoute('admin_currencies_index');
         }
 
         $this->addFlash(
@@ -191,39 +185,35 @@ class CurrencyController extends FrameworkBundleAdminController
             $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
         );
 
-        return $this->redirectToRoute('admin_currency_index');
+        return $this->redirectToRoute('admin_currencies_index');
     }
 
     /**
-     * Gets errors by exception type.
+     * Gets error by exception type.
      *
      * @param CurrencyException $exception
      *
-     * @return array
+     * @return string
      */
     private function getErrorByExceptionType(CurrencyException $exception)
     {
         $exceptionTypeDictionary = [
-            CurrencyNotFoundException::class => [
-                'key' => 'The object cannot be loaded (or found)',
-                'parameters' => [],
-                'domain' => 'Admin.Notifications.Error',
-            ],
-            CannotToggleCurrencyException::class => [
-                'key' => 'An error occurred while updating the status.',
-                'parameters' => [],
-                'domain' => 'Admin.Notifications.Error',
-            ],
-            CannotDeleteDefaultCurrencyException::class => [
-                'key' => 'You cannot delete the default currency',
-                'parameters' => [],
-                'domain' => 'Admin.International.Notification',
-            ],
-            CannotDisableDefaultCurrencyException::class => [
-                'key' => 'You cannot disable the default currency',
-                'parameters' => [],
-                'domain' => 'Admin.International.Notification',
-            ],
+            CurrencyNotFoundException::class => $this->trans(
+                'The object cannot be loaded (or found)',
+                'Admin.Notifications.Error'
+            ),
+            CannotToggleCurrencyException::class => $this->trans(
+                'An error occurred while updating the status.',
+                'Admin.Notifications.Error'
+            ),
+            CannotDeleteDefaultCurrencyException::class => $this->trans(
+                'You cannot delete the default currency',
+                'Admin.International.Notification'
+            ),
+            CannotDisableDefaultCurrencyException::class => $this->trans(
+                'You cannot disable the default currency',
+                'Admin.International.Notification'
+            ),
         ];
 
         $exceptionType = get_class($exception);
@@ -232,10 +222,6 @@ class CurrencyController extends FrameworkBundleAdminController
             return $exceptionTypeDictionary[$exceptionType];
         }
 
-        return [
-            'key' => 'Unexpected error occurred.',
-            'parameters' => [],
-            'domain' => 'Admin.Notifications.Error',
-        ];
+        return $this->trans('Unexpected error occurred.', 'Admin.Notifications.Error');
     }
 }

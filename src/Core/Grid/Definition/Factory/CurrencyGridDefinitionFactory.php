@@ -131,7 +131,7 @@ final class CurrencyGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setOptions([
                     'field' => 'active',
                     'primary_field' => 'id_currency',
-                    'route' => 'admin_currency_toggle_status',
+                    'route' => 'admin_currencies_toggle_status',
                     'route_param_id' => 'currencyId',
                 ])
             )
@@ -142,7 +142,7 @@ final class CurrencyGridDefinitionFactory extends AbstractGridDefinitionFactory
                         ->add((new LinkRowAction('edit'))
                             ->setIcon('edit')
                             ->setOptions([
-                                'route' => 'admin_currency_edit',
+                                'route' => 'admin_currencies_edit',
                                 'route_param_name' => 'currencyId',
                                 'route_param_field' => 'id_currency',
                             ])
@@ -152,7 +152,7 @@ final class CurrencyGridDefinitionFactory extends AbstractGridDefinitionFactory
                             ->setIcon('delete')
                             ->setOptions([
                                 'method' => 'DELETE',
-                                'route' => 'admin_currency_delete',
+                                'route' => 'admin_currencies_delete',
                                 'route_param_name' => 'currencyId',
                                 'route_param_field' => 'id_currency',
                                 'confirm_message' => $this->trans(
