@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Currency\Command;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 
 /**
- * Class ToggleCurrencyStatusCommand is responsible for providing data for ToggleCurrencyStatusCommandHandler.
+ * Class ToggleCurrencyStatusCommand is responsible for changing the status of the currency.
  */
 class ToggleCurrencyStatusCommand
 {

@@ -31,7 +31,7 @@ use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
 /**
- * Class CurrencyQueryBuilder is responsible for providing data for currency list.
+ * Class CurrencyQueryBuilder is responsible for building query for currency list.
  */
 final class CurrencyQueryBuilder extends AbstractDoctrineQueryBuilder
 {
@@ -45,6 +45,12 @@ final class CurrencyQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     private $contextShopIds;
 
+    /**
+     * @param Connection $connection
+     * @param $dbPrefix
+     * @param DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator
+     * @param array $contextShopIds
+     */
     public function __construct(
         Connection $connection,
         $dbPrefix,

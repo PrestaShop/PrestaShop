@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Currency\Command;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 
 /**
- * Class DeleteCurrencyCommand is responsible for providing data required for DeleteCurrencyCommandHandler.
+ * Class DeleteCurrencyCommand is responsible for deleting Currency.
  */
 class DeleteCurrencyCommand
 {
