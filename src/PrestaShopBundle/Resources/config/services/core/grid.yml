@@ -121,7 +121,7 @@ services:
         arguments:
             - '@=service("prestashop.core.form.choice_provider.status").getChoices()'
             - "@=service('router').generate('admin_common_reset_search', {'controller': 'currency', 'action': 'index'})"
-            - "@=service('router').generate('admin_currency_index')"
+            - "@=service('router').generate('admin_currencies_index')"
         public: true
 
     # Grid factories
