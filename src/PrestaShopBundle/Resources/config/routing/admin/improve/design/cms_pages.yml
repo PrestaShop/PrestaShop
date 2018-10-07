@@ -5,10 +5,10 @@ admin_cms_pages_index:
         _controller: 'PrestaShopBundle:Admin\Improve\Design\CmsPages:index'
         _legacy_controller: AdminCmsContent
 
-admin_cms_pages_search:
+admin_cms_pages_search_category:
     path: /
     methods: POST
     defaults:
-        _controller: 'PrestaShopBundle:Admin\Improve\Design\CmsPages:search'
+        _controller: 'PrestaShopBundle:Admin\Improve\Design\CmsPages:searchCategory'
         _legacy_controller: AdminCmsContent
 
