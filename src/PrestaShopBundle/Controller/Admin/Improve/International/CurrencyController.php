@@ -29,6 +29,8 @@ namespace PrestaShopBundle\Controller\Admin\Improve\International;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\DeleteCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\ToggleCurrencyStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotDeleteCurrencyException;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotDeleteDefaultCurrencyException;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotDisableDefaultCurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotToggleCurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyNotFoundException;
@@ -154,7 +156,7 @@ class CurrencyController extends FrameworkBundleAdminController
             $currencyId = new CurrencyId($currencyId);
             $commandBus->handle(new DeleteCurrencyCommand($currencyId));
         } catch (CurrencyException $exception) {
-            $error = $this->handleException($exception);
+            $error = $this->getErrorByExceptionType($exception);
             $this->flashErrors([$error]);
 
             return $this->redirectToRoute('admin_currency_index');
@@ -186,7 +188,7 @@ class CurrencyController extends FrameworkBundleAdminController
             $currencyId = new CurrencyId($currencyId);
             $commandBus->handle(new ToggleCurrencyStatusCommand($currencyId));
         } catch (CurrencyException $exception) {
-            $error = $this->handleException($exception);
+            $error = $this->getErrorByExceptionType($exception);
             $this->flashErrors([$error]);
 
             return $this->redirectToRoute('admin_currency_index');
@@ -198,22 +200,6 @@ class CurrencyController extends FrameworkBundleAdminController
         );
 
         return $this->redirectToRoute('admin_currency_index');
-    }
-
-    /**
-     * Handles exceptions that might appear in all actions related to currency controller.
-     *
-     * @param CurrencyException $exception
-     *
-     * @return array
-     */
-    private function handleException(CurrencyException $exception)
-    {
-        if (0 !== $exception->getCode()) {
-            return $this->getExceptionByErrorCodeType($exception);
-        }
-
-        return $this->getErrorByExceptionType($exception);
     }
 
     /**
@@ -235,53 +221,23 @@ class CurrencyController extends FrameworkBundleAdminController
                 'key' => 'An error occurred while updating the status.',
                 'parameters' => [],
                 'domain' => 'Admin.Notifications.Error',
-            ]
+            ],
+            CannotDeleteDefaultCurrencyException::class => [
+                'key' => 'You cannot delete the default currency',
+                'parameters' => [],
+                'domain' => 'Admin.International.Notification',
+            ],
+            CannotDisableDefaultCurrencyException::class => [
+                'key' => 'You cannot disable the default currency',
+                'parameters' => [],
+                'domain' => 'Admin.International.Notification',
+            ],
         ];
 
         $exceptionType = get_class($exception);
 
         if (isset($exceptionTypeDictionary[$exceptionType])) {
             return $exceptionTypeDictionary[$exceptionType];
-        }
-
-        return [
-            'key' => 'Unexpected error occurred.',
-            'parameters' => [],
-            'domain' => 'Admin.Notifications.Error',
-        ];
-    }
-
-    /**
-     * Gets error by error code.
-     *
-     * @param CurrencyException $exception
-     *
-     * @return array
-     */
-    private function getExceptionByErrorCodeType(CurrencyException $exception)
-    {
-        $exceptionTypeDictionary = [
-            CannotToggleCurrencyException::class => [
-                CannotToggleCurrencyException::CANNOT_DISABLE_DEFAULT_CURRENCY => [
-                    'key' => 'You cannot disable the default currency',
-                    'parameters' => [],
-                    'domain' => 'Admin.International.Notification',
-                ]
-            ],
-            CannotDeleteCurrencyException::class => [
-                CannotDeleteCurrencyException::CANNOT_DELETE_DEFAULT_CURRENCY => [
-                    'key' => 'You cannot delete the default currency',
-                    'parameters' => [],
-                    'domain' => 'Admin.International.Notification',
-                ]
-            ]
-        ];
-
-        $exceptionType = get_class($exception);
-        $exceptionCode = $exception->getCode();
-
-        if (isset($exceptionTypeDictionary[$exceptionType][$exceptionCode])) {
-            return $exceptionTypeDictionary[$exceptionType][$exceptionCode];
         }
 
         return [

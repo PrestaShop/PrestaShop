@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\CommandHandler\DeleteCurrencyHand
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotDeleteCurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotDeleteDefaultCurrencyException;
 use PrestaShopException;
 
 /**
@@ -72,12 +73,11 @@ final class DeleteCurrencyHandler implements DeleteCurrencyHandlerInterface
         }
 
         if ($command->getCurrencyId()->getValue() === $this->defaultCurrencyId) {
-            throw new CannotDeleteCurrencyException(
+            throw new CannotDeleteDefaultCurrencyException(
                 sprintf(
                     'Currency with id "%s" is the default currency and cannot be deleted.',
                     $command->getCurrencyId()->getValue()
-                ),
-                CannotDeleteCurrencyException::CANNOT_DELETE_DEFAULT_CURRENCY
+                )
             );
         }
 

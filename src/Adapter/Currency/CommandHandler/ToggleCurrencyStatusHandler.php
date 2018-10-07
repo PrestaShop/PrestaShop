@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\Currency\CommandHandler;
 use Currency;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\ToggleCurrencyStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\CommandHandler\ToggleCurrencyStatusHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotDisableDefaultCurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotToggleCurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyNotFoundException;
@@ -72,12 +73,11 @@ final class ToggleCurrencyStatusHandler implements ToggleCurrencyStatusHandlerIn
         }
 
         if ($entity->active && $command->getCurrencyId()->getValue() === $this->defaultCurrencyId) {
-            throw new CannotToggleCurrencyException(
+            throw new CannotDisableDefaultCurrencyException(
                 sprintf(
                     'Currency with id "%s" is the default currency and cannot be disabled.',
                     $command->getCurrencyId()->getValue()
-                ),
-                CannotToggleCurrencyException::CANNOT_DISABLE_DEFAULT_CURRENCY
+                )
             );
         }
 
