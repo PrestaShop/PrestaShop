@@ -89,7 +89,19 @@
 							Product(s) now available for download						</p>
 						<span style="color:#777">
 							You have <span style="color:#333"><strong>{nbProducts}</strong></span> product(s) now available for download using the following link(s):<br/><br/>
-							{virtualProducts}
+							<ul>
+								{foreach virtualProducts as product}
+								<li>
+									<a href="{product['link']}">{product['nameUTF8']}</a>
+									{if isset(product['localizedDeadline'])}
+										&nbsp;{product['localizedDeadline']}
+									{/if}
+									{if isset(product['localizedDownloadable'])}
+										&nbsp;{product['localizedDownloadable']}
+									{/if}
+								</li>
+								{/foreach}
+							</ul>
 						</span>
 					</font>
 				</td>
