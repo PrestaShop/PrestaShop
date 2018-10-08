@@ -32,12 +32,13 @@ use Symfony\Component\HttpFoundation\Request;
 
 class CustomerController extends AbstractAdminController
 {
-    public function indexAction(CustomerFilters $filters)
+    public function indexAction(Request $request, CustomerFilters $filters)
     {
         $customerGridFactory = $this->get('prestashop.core.grid.factory.customer');
         $customerGrid = $customerGridFactory->getGrid($filters);
 
         return $this->render('@PrestaShop/Admin/Sell/Customer/index.html.twig', [
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'customerGrid' => $this->presentGrid($customerGrid),
         ]);
     }
