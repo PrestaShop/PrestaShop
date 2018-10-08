@@ -26,3 +26,11 @@
 {% set layoutTitle = 'Manage your Customers'|trans({}, 'Admin.Orderscustomers.Feature') %}
 
 {% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
+
+{% block content %}
+  <div class="row">
+    <div class="col">
+      {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': customerGrid} %}
+    </div>
+  </div>
+{% endblock %}
