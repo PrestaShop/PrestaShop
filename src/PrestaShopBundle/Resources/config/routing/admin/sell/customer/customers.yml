@@ -4,3 +4,28 @@ admin_customers_index:
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/Customer/Customer:index
     _legacy_controller: AdminCustomers
+
+admin_customers_create:
+  path: /new
+  methods: [GET, POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Customer/Customer:create
+    _legacy_controller: AdminCustomers
+
+admin_customers_edit:
+  path: /{customerId}/edit
+  methods: [GET, POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Customer/Customer:edit
+    _legacy_controller: AdminCustomers
+  requirements:
+    customerId: \d+
+
+admin_customers_view:
+  path: /{customerId}/view
+  methods: [GET, POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Customer/Customer:view
+    _legacy_controller: AdminCustomers
+  requirements:
+    customerId: \d+
