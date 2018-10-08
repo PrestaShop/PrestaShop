@@ -571,3 +571,12 @@ services:
         public: true
         tags:
             - { name: form.type }
+
+    form.type.team.employee.employee_options:
+        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Employee\EmployeeOptionsType'
+        parent: 'form.type.translatable.aware'
+        arguments:
+            - '@=service("prestashop.core.team.employee.configuration.options_checker").canBeChanged()'
+        public: true
+        tags:
+            - { name: form.type }

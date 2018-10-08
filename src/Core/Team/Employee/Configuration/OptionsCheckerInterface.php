@@ -24,31 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Multistore;
+namespace PrestaShop\PrestaShop\Core\Team\Employee\Configuration;
 
 /**
- * Interface MultistoreContextCheckerInterface.
+ * Interface OptionsCheckerInterface.
  */
-interface MultistoreContextCheckerInterface
+interface OptionsCheckerInterface
 {
     /**
-     * Check if current shop is in single store context.
+     * Check if employee options can be changed.
      *
      * @return bool
      */
-    public function isAllShopContext();
-
-    /**
-     * Check if current shop is in "Group" shop context.
-     *
-     * @return bool
-     */
-    public function isGroupShopContext();
-
-    /**
-     * Check if current shop is in "Single" shop context.
-     *
-     * @return bool
-     */
-    public function isSingleShopContext();
+    public function canBeChanged();
 }

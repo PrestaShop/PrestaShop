@@ -1,6 +1,5 @@
-<?php
-/**
- * 2007-2018 PrestaShop.
+{#**
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -22,33 +21,12 @@
  * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- */
+ *#}
 
-namespace PrestaShop\PrestaShop\Core\Multistore;
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
 
-/**
- * Interface MultistoreContextCheckerInterface.
- */
-interface MultistoreContextCheckerInterface
-{
-    /**
-     * Check if current shop is in single store context.
-     *
-     * @return bool
-     */
-    public function isAllShopContext();
-
-    /**
-     * Check if current shop is in "Group" shop context.
-     *
-     * @return bool
-     */
-    public function isGroupShopContext();
-
-    /**
-     * Check if current shop is in "Single" shop context.
-     *
-     * @return bool
-     */
-    public function isSingleShopContext();
-}
+{% block content %}
+  {% block employee_options %}
+    {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Employee/Blocks/employee_options.html.twig' %}
+  {% endblock %}
+{% endblock %}
