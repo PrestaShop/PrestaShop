@@ -2658,7 +2658,6 @@ class AdminControllerCore extends Controller
         if ($isNewTheme) {
             $this->addCSS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/new-theme/public/theme.css', 'all', 1);
             $this->addJS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/new-theme/public/main.bundle.js');
-            $this->addJS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/new-theme/public/theme.bundle.js');
             $this->addJqueryPlugin(array('chosen'));
         } else {
             //Bootstrap
