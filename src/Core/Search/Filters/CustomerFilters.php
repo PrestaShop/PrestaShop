@@ -24,20 +24,26 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Controller\Admin\Sell\Customer;
+namespace PrestaShop\PrestaShop\Core\Search\Filters;
 
-use PrestaShop\PrestaShop\Core\Search\Filters\CustomerFilters;
-use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController as AbstractAdminController;
+use PrestaShop\PrestaShop\Core\Search\Filters;
 
-class CustomerController extends AbstractAdminController
+/**
+ * Class CustomerFilters provides default filters for customers grid.
+ */
+final class CustomerFilters extends Filters
 {
-    public function indexAction(CustomerFilters $filters)
+    /**
+     * {@inheritdoc}
+     */
+    public static function getDefaults()
     {
-        $customerGridFactory = $this->get('prestashop.core.grid.factory.customer');
-        $customerGrid = $customerGridFactory->getGrid($filters);
-
-        return $this->render('@PrestaShop/Admin/Sell/Customer/index.html.twig', [
-            'customerGrid' => $this->presentGrid($customerGrid),
-        ]);
+        return [
+            'limit' => 50,
+            'offset' => 0,
+            'orderBy' => 'date_add',
+            'sortOrder' => 'DESC',
+            'filters' => [],
+        ];
     }
 }
