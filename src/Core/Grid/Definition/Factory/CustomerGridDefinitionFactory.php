@@ -34,6 +34,11 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ToggleColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
+use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
+use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
+use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 /**
  * Class CustomerGridDefinitionFactory defines customers grid structure.
@@ -221,5 +226,97 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
         }
 
         return $columns;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getFilters()
+    {
+        $filters = (new FilterCollection())
+            ->add((new Filter('id_customer', NumberType::class))
+                ->setTypeOptions([
+                    'required' => false,
+                ])
+                ->setAssociatedColumn('id_customer')
+            )
+            ->add((new Filter('social_title', TextType::class))
+                ->setTypeOptions([
+                    'required' => false,
+                ])
+                ->setAssociatedColumn('social_title')
+            )
+            ->add((new Filter('firstname', TextType::class))
+                ->setTypeOptions([
+                    'required' => false,
+                ])
+                ->setAssociatedColumn('firstname')
+            )
+            ->add((new Filter('lastname', TextType::class))
+                ->setTypeOptions([
+                    'required' => false,
+                ])
+                ->setAssociatedColumn('lastname')
+            )
+            ->add((new Filter('email', TextType::class))
+                ->setTypeOptions([
+                    'required' => false,
+                ])
+                ->setAssociatedColumn('email')
+            )
+            ->add((new Filter('total_spent', TextType::class))
+                ->setTypeOptions([
+                    'required' => false,
+                ])
+                ->setAssociatedColumn('total_spent')
+            )
+            ->add((new Filter('active', TextType::class))
+                ->setTypeOptions([
+                    'required' => false,
+                ])
+                ->setAssociatedColumn('active')
+            )
+            ->add((new Filter('newsletter', TextType::class))
+                ->setTypeOptions([
+                    'required' => false,
+                ])
+                ->setAssociatedColumn('newsletter')
+            )
+            ->add((new Filter('optin', TextType::class))
+                ->setTypeOptions([
+                    'required' => false,
+                ])
+                ->setAssociatedColumn('optin')
+            )
+            ->add((new Filter('date_add', TextType::class))
+                ->setTypeOptions([
+                    'required' => false,
+                ])
+                ->setAssociatedColumn('date_add')
+            )
+            ->add((new Filter('connect', TextType::class))
+                ->setTypeOptions([
+                    'required' => false,
+                ])
+                ->setAssociatedColumn('connect')
+            )
+            ->add((new Filter('actions', SearchAndResetType::class))
+                ->setTypeOptions([
+                    'required' => false,
+                ])
+                ->setAssociatedColumn('actions')
+            )
+        ;
+
+        if ($this->isB2bFeatureEnabled) {
+            $filters->add((new Filter('company', TextType::class))
+                ->setTypeOptions([
+                    'required' => false,
+                ])
+                ->setAssociatedColumn('company')
+            );
+        }
+
+        return $filters;
     }
 }
