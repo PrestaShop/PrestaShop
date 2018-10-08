@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Customer;
 
 use PrestaShop\PrestaShop\Core\Search\Filters\CustomerFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController as AbstractAdminController;
+use Symfony\Component\HttpFoundation\Request;
 
 class CustomerController extends AbstractAdminController
 {
@@ -39,5 +40,34 @@ class CustomerController extends AbstractAdminController
         return $this->render('@PrestaShop/Admin/Sell/Customer/index.html.twig', [
             'customerGrid' => $this->presentGrid($customerGrid),
         ]);
+    }
+
+    public function createAction(Request $request)
+    {
+        return $this->redirect(
+            $this->getAdminLink($request->attributes->get('_legacy_controller'), [
+                'addcustomer' => 1,
+            ])
+        );
+    }
+
+    public function editAction($customerId, Request $request)
+    {
+        return $this->redirect(
+            $this->getAdminLink($request->attributes->get('_legacy_controller'), [
+                'updatecustomer' => 1,
+                'id_customer' => $customerId,
+            ])
+        );
+    }
+
+    public function viewAction($customerId, Request $request)
+    {
+        return $this->redirect(
+            $this->getAdminLink($request->attributes->get('_legacy_controller'), [
+                'viewcustomer' => 1,
+                'id_customer' => $customerId,
+            ])
+        );
     }
 }
