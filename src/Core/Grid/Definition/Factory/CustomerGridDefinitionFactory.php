@@ -26,7 +26,11 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\SubmitRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ToggleColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
@@ -158,6 +162,43 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'field' => 'connect',
                 ])
             )
+            ->add((new ActionColumn('actions'))
+                ->setOptions([
+                    'actions' => (new RowActionCollection())
+                        ->add((new LinkRowAction('edit'))
+                            ->setIcon('edit')
+                            ->setOptions([
+                                'route' => 'admin_customers_edit',
+                                'route_param_name' => 'customerId',
+                                'route_param_field' => 'id_customer',
+                            ])
+                        )
+                        ->add((new LinkRowAction('view'))
+                            ->setName($this->trans('View', [], 'Admin.Actions'))
+                            ->setIcon('zoom_in')
+                            ->setOptions([
+                                'route' => 'admin_customers_view',
+                                'route_param_name' => 'customerId',
+                                'route_param_field' => 'id_customer',
+                            ])
+                        )
+                        ->add((new SubmitRowAction('delete'))
+                            ->setName($this->trans('Delete', [], 'Admin.Actions'))
+                            ->setIcon('delete')
+                            ->setOptions([
+                                'method' => 'DELETE',
+                                'route' => 'admin_customers_index',
+                                'route_param_name' => 'customerId',
+                                'route_param_field' => 'id_customer',
+                                'confirm_message' => $this->trans(
+                                    'Delete selected item?',
+                                    [],
+                                    'Admin.Notifications.Warning'
+                                ),
+                            ])
+                        )
+                ])
+            )
         ;
 
         if ($this->isB2bFeatureEnabled) {
@@ -170,7 +211,7 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
         }
 
         if ($this->isMultistoreFeatureEnabled) {
-            $columns->add((new DataColumn('shop_name'))
+            $columns->addBefore('actions', (new DataColumn('shop_name'))
                 ->setName($this->trans('Shop', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'shop_name',
