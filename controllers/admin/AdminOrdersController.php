@@ -451,25 +451,20 @@ class AdminOrdersControllerCore extends AdminController
     
     private function canRemoveQuantitiesIfNeeded($products, $old_os, $new_os)
     {
-        if(Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
-        {
-          if($new_os->shipped == 1 && (!Validate::isLoadedObject($old_os) || $old_os->shipped == 0))
-          {
-            $manager = StockManagerFactory::getManager();
-            foreach($products as $product)
-            {
-              if((int)$product['advanced_stock_management'] == 1 && Warehouse::exists($product['id_warehouse']))
-              {
-                $quantity_in_stock = (int)$manager->getProductPhysicalQuantities($product['product_id'], $product['product_attribute_id'], array($product['id_warehouse']), true);
+        if(Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')) {
+            if ($new_os->shipped == 1 && (!Validate::isLoadedObject($old_os) || $old_os->shipped == 0)) {
+                $manager = StockManagerFactory::getManager();
+                foreach ($products as $product) {
+                    if ((int)$product['advanced_stock_management'] == 1 && Warehouse::exists($product['id_warehouse'])) {
+                        $quantity_in_stock = (int)$manager->getProductPhysicalQuantities($product['product_id'], $product['product_attribute_id'], array($product['id_warehouse']), true);
 
-                // checks if it's possible to remove the given quantity
-                if($quantity_in_stock < ($product['product_quantity'] - $product['product_quantity_refunded'] - $product['product_quantity_return']))
-                {
-                    return false;
+                        // checks if it's possible to remove the given quantity
+                        if ($quantity_in_stock < ($product['product_quantity'] - $product['product_quantity_refunded'] - $product['product_quantity_return'])) {
+                            return false;
+                        }
+                    }
                 }
-              }
             }
-          }
         }
 
         return true;
