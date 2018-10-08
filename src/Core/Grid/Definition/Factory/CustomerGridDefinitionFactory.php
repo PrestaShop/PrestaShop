@@ -36,7 +36,9 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ToggleColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
+use PrestaShopBundle\Form\Admin\Type\DateRangeType;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
@@ -56,13 +58,31 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
     private $isMultistoreFeatureEnabled;
 
     /**
+     * @var array
+     */
+    private $genderChoices;
+
+    /**
+     * @var array
+     */
+    private $statusChoices;
+
+    /**
      * @param bool $isB2bFeatureEnabled
      * @param bool $isMultistoreFeatureEnabled
+     * @param array $genderChoices
+     * @param array $statusChoices
      */
-    public function __construct($isB2bFeatureEnabled, $isMultistoreFeatureEnabled)
-    {
+    public function __construct(
+        $isB2bFeatureEnabled,
+        $isMultistoreFeatureEnabled,
+        array $genderChoices,
+        array $statusChoices
+    ) {
         $this->isB2bFeatureEnabled = $isB2bFeatureEnabled;
         $this->isMultistoreFeatureEnabled = $isMultistoreFeatureEnabled;
+        $this->genderChoices = $genderChoices;
+        $this->statusChoices = $statusChoices;
     }
 
     /**
@@ -240,8 +260,11 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ])
                 ->setAssociatedColumn('id_customer')
             )
-            ->add((new Filter('social_title', TextType::class))
+            ->add((new Filter('social_title', ChoiceType::class))
                 ->setTypeOptions([
+                    'choices' => $this->genderChoices,
+                    'expanded' => false,
+                    'multiple' => false,
                     'required' => false,
                 ])
                 ->setAssociatedColumn('social_title')
@@ -270,35 +293,38 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ])
                 ->setAssociatedColumn('total_spent')
             )
-            ->add((new Filter('active', TextType::class))
+            ->add((new Filter('active', ChoiceType::class))
                 ->setTypeOptions([
+                    'choices' => $this->statusChoices,
+                    'expanded' => false,
+                    'multiple' => false,
                     'required' => false,
                 ])
                 ->setAssociatedColumn('active')
             )
-            ->add((new Filter('newsletter', TextType::class))
+            ->add((new Filter('newsletter', ChoiceType::class))
                 ->setTypeOptions([
+                    'choices' => $this->statusChoices,
+                    'expanded' => false,
+                    'multiple' => false,
                     'required' => false,
                 ])
                 ->setAssociatedColumn('newsletter')
             )
-            ->add((new Filter('optin', TextType::class))
+            ->add((new Filter('optin', ChoiceType::class))
                 ->setTypeOptions([
+                    'choices' => $this->statusChoices,
+                    'expanded' => false,
+                    'multiple' => false,
                     'required' => false,
                 ])
                 ->setAssociatedColumn('optin')
             )
-            ->add((new Filter('date_add', TextType::class))
+            ->add((new Filter('date_add', DateRangeType::class))
                 ->setTypeOptions([
                     'required' => false,
                 ])
                 ->setAssociatedColumn('date_add')
-            )
-            ->add((new Filter('connect', TextType::class))
-                ->setTypeOptions([
-                    'required' => false,
-                ])
-                ->setAssociatedColumn('connect')
             )
             ->add((new Filter('actions', SearchAndResetType::class))
                 ->setTypeOptions([
