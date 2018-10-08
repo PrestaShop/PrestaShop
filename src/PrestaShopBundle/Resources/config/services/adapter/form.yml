@@ -1,0 +1,6 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.adapter.form.choice_provider.gender_by_id_choice_provider:
+    class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\GenderByIdChoiceProvider'
