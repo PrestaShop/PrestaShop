@@ -1,5 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 
 module.exports = {
@@ -122,6 +123,9 @@ module.exports = {
     ],
   },
   plugins: [
+    new CleanWebpackPlugin(['public'], {
+      root: path.resolve(__dirname, '../')
+    }),
     new VueLoaderPlugin(),
     new webpack.ProvidePlugin({
       moment: 'moment', // needed for bootstrap datetime picker
