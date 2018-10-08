@@ -59,6 +59,8 @@ use PrestaShopBundle\Model\Product\AdminModelAdapter as ProductAdminModelAdapter
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use PrestaShopBundle\Form\Admin\Product\ProductCategories;
+use FOS\RestBundle\Controller\Annotations\QueryParam;
+use FOS\RestBundle\Request\ParamFetcher;
 use Product;
 use Tools;
 
@@ -89,7 +91,13 @@ class ProductController extends FrameworkBundleAdminController
      *
      * @Template("@PrestaShop/Admin/Product/CatalogPage/catalog.html.twig")
      *
+     * @QueryParam(name="limit", requirements="_limit|last|\d+", default="10")
+     * @QueryParam(name="offset", requirements="last|\d+", default="0")
+     * @QueryParam(name="orderBy", requirements="last|id_product|name|reference|name_category|price|sav_quantity|position|active|position_ordering", default="id_product")
+     * @QueryParam(name="sortOrder", requirements="last|asc|desc", default="last")
+     *
      * @param Request $request
+     * @param ParamFetcher $paramFetcher
      *
      * @return array|Template|RedirectResponse|Response
      *
@@ -101,16 +109,16 @@ class ProductController extends FrameworkBundleAdminController
      * @throws \Symfony\Component\Form\Exception\LogicException
      * @throws \Symfony\Component\Form\Exception\AlreadySubmittedException
      */
-    public function catalogAction(Request $request)
+    public function catalogAction(Request $request, ParamFetcher $paramFetcher)
     {
         if (!$this->isGranted(array(PageVoter::READ, PageVoter::UPDATE, PageVoter::CREATE), self::PRODUCT_OBJECT)) {
             return $this->redirect('admin_dashboard');
         }
 
-        $limit = $request->query->get('limit', 10);
-        $offset = $request->query->get('offset', 0);
-        $orderBy = $request->query->get('orderBy', 'id_product');
-        $sortOrder = $request->query->get('sortOrder', 'desc');
+        $limit = $paramFetcher->get('limit');
+        $offset = $paramFetcher->get('offset');
+        $orderBy = $paramFetcher->get('orderBy');
+        $sortOrder = $paramFetcher->get('sortOrder');
 
         $language = $this->getContext()->language;
         $request->getSession()->set('_locale', $language->locale);
