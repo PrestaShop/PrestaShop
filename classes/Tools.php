@@ -26,6 +26,8 @@
 
 class ToolsCore
 {
+    const CACERT_LOCATION = 'https://curl.haxx.se/ca/cacert.pem';
+
     protected static $file_exists_cache = array();
     protected static $_forceCompile;
     protected static $_caching;
