@@ -186,8 +186,10 @@ services:
         class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CustomerGridDefinitionFactory'
         parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
         arguments:
-          - '@=service("prestashop.core.b2b.b2b_feature").isActive()'
-          - '@=service("prestashop.adapter.multistore_feature").isActive()'
+            - '@=service("prestashop.core.b2b.b2b_feature").isActive()'
+            - '@=service("prestashop.adapter.multistore_feature").isActive()'
+            - '@=service("prestashop.adapter.form.choice_provider.gender_by_id_choice_provider").getChoices()'
+            - '@=service("prestashop.core.form.choice_provider.status").getChoices()'
         public: true
 
     # Grid factories
