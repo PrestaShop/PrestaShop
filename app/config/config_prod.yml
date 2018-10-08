@@ -21,7 +21,7 @@ monolog:
             handler:      nested
         nested:
             type:  stream
-            path:  '%env(_PS_LOG_OUTPUT_)%'
+            path:  '%env(PS_LOG_OUTPUT)%'
             level: debug
         console:
             type:  console

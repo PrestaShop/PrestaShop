@@ -10,7 +10,7 @@ parameters:
     translator.class: PrestaShopBundle\Translation\Translator
     translator.data_collector: PrestaShopBundle\Translation\DataCollectorTranslator
     admin_page: "%kernel.root_dir%/../src/PrestaShopBundle/Resources/views/Admin"
-    env(_PS_LOG_OUTPUT_): "%kernel.logs_dir%/%kernel.environment%.log"
+    env(PS_LOG_OUTPUT): "%kernel.logs_dir%/%kernel.environment%.log"
 
 framework:
     assets:
@@ -40,7 +40,7 @@ monolog:
     handlers:
         main:
             type: stream
-            path: '%env(_PS_LOG_OUTPUT_)%'
+            path: '%env(PS_LOG_OUTPUT)%'
             level: notice
         legacy:
             type: service
