@@ -175,12 +175,26 @@ final class CustomerQueryBuilder extends AbstractDoctrineQueryBuilder
                 continue;
             }
 
-            if (in_array($filterName, ['active', 'newsletter', 'optin'])) {
-
+            if (in_array($filterName, ['active', 'newsletter', 'optin', 'id_customer'])) {
+                $qb->andWhere('c.`' . $filterName . '` = :' . $filterName);
+                $qb->setParameter($filterName, $filterValue);
                 continue;
             }
 
-            $qb->andWhere('l.`' . $filterName . '` LIKE :' . $filterName);
+            if ('social_title' === $filterName) {
+                $qb->andWhere('gl.id_gender = :' . $filterName);
+                $qb->setParameter($filterName, $filterValue);
+                continue;
+            }
+
+            if ('date_add' === $filterName) {
+                $qb->andWhere('c.date_add BETWEEN :date_from AND :date_to');
+                $qb->setParameter('date_from', $filterValue['from']);
+                $qb->setParameter( 'date_to', $filterValue['to']);
+                continue;
+            }
+
+            $qb->andWhere('`' . $filterName . '` LIKE :' . $filterName);
             $qb->setParameter($filterName, '%' . $filterValue . '%');
         }
     }

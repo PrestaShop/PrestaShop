@@ -322,7 +322,10 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
             )
             ->add((new Filter('actions', SearchAndResetType::class))
                 ->setTypeOptions([
-                    'required' => false,
+                    'attr' => [
+                        'data-url' => '',
+                        'data-redirect' => '',
+                    ],
                 ])
                 ->setAssociatedColumn('actions')
             )
