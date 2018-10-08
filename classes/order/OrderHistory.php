@@ -165,6 +165,7 @@ class OrderHistoryCore extends ObjectModel
                     '{order_name}' => $order->getUniqReference(),
                     '{nbProducts}' => count($virtual_products),
                     '{virtualProducts}' => $links,
+                    '{virtualProductsArray}' => $assign,
                 );
                 // If there is at least one downloadable file
                 if (!empty($assign)) {
