@@ -30,6 +30,7 @@ use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
+use PrestaShopBundle\Security\Voter\PageVoter;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -63,6 +64,20 @@ class PerformanceController extends FrameworkBundleAdminController
         ];
 
         $form = is_null($form) ? $this->get('prestashop.adapter.performance.form_handler')->getForm() : $form;
+
+        if (!in_array(
+            $this->authorizationLevel($this::CONTROLLER_NAME),
+            array(
+                PageVoter::LEVEL_READ,
+                PageVoter::LEVEL_UPDATE,
+                PageVoter::LEVEL_CREATE,
+                PageVoter::LEVEL_DELETE,
+            )
+        )) {
+            $this->addFlash('error', $this->trans('Access denied.', 'Admin.Notifications.Error'));
+
+            return $this->redirect('admin_dashboard');
+        }
 
         return [
             'layoutHeaderToolbarBtn' => $toolbarButtons,
@@ -116,8 +131,19 @@ class PerformanceController extends FrameworkBundleAdminController
      */
     public function clearCacheAction()
     {
-        $this->get('prestashop.adapter.cache_clearer')->clearAllCaches();
-        $this->addFlash('success', $this->trans('All caches cleared successfully', 'Admin.Advparameters.Notification'));
+        if (!in_array(
+           $this->authorizationLevel($this::CONTROLLER_NAME),
+           array(
+               PageVoter::LEVEL_DELETE,
+           )
+       )) {
+            $this->addFlash('error', $this->trans('You do not have permission to update this.', 'Admin.Notifications.Error'));
+
+            return $this->redirectToRoute('admin_performance');
+        } else {
+            $this->get('prestashop.adapter.cache_clearer')->clearAllCaches();
+            $this->addFlash('success', $this->trans('All caches cleared successfully', 'Admin.Advparameters.Notification'));
+        }
 
         return $this->redirectToRoute('admin_performance');
     }
