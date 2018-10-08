@@ -27,12 +27,9 @@
 module.exports = (env, argvs) => {
   if (argvs.mode === 'production') {
     const prodConfig = require('./.webpack/prod.js');
-
     return prodConfig(argvs.analyze);
   } else {
     const devConfig = require('./.webpack/dev.js');
-    const hostname = argvs.hostname;
-
-    return devConfig(hostname);
+    return devConfig(argvs.hostname);
   }
 };
