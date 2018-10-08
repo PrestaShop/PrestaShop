@@ -119,15 +119,26 @@ class OrderHistoryCore extends ObjectModel
                     // If this virtual item has an associated file, we'll provide the link to download the file in the email
                     if ($product_download->display_filename != '') {
                         $assign[$key]['name'] = $product_download->display_filename;
+                        $assign[$key]['nameUTF8'] = Tools::htmlentitiesUTF8($product_download->display_filename);
                         $dl_link = $product_download->getTextLink(false, $virtual_product['download_hash'])
                             . '&id_order=' . (int) $order->id
                             . '&secure_key=' . $order->secure_key;
                         $assign[$key]['link'] = $dl_link;
                         if (isset($virtual_product['download_deadline']) && $virtual_product['download_deadline'] != '0000-00-00 00:00:00') {
                             $assign[$key]['deadline'] = Tools::displayDate($virtual_product['download_deadline']);
+                            $assign[$key]['localizedDeadline'] = $this->trans(
+                                'expires on %s.',
+                                array(Tools::displayDate($virtual_product['download_deadline'])),
+                                'Admin.Orderscustomers.Notification'
+                            );
                         }
                         if ($product_download->nb_downloadable != 0) {
                             $assign[$key]['downloadable'] = (int) $product_download->nb_downloadable;
+                            $assign[$key]['localizedDownloadable'] = $this->trans(
+                                'downloadable %d time(s)',
+                                array((int) $product_download->nb_downloadable),
+                                'Admin.Orderscustomers.Notification'
+                            );
                         }
                     }
                 }
@@ -137,12 +148,12 @@ class OrderHistoryCore extends ObjectModel
                 $links = '<ul>';
                 foreach ($assign as $product) {
                     $links .= '<li>';
-                    $links .= '<a href="' . $product['link'] . '">' . Tools::htmlentitiesUTF8($product['name']) . '</a>';
-                    if (isset($product['deadline'])) {
-                        $links .= '&nbsp;' . $this->trans('expires on %s.', array($product['deadline']), 'Admin.Orderscustomers.Notification');
+                    $links .= '<a href="' . $product['link'] . '">' . $product['nameUTF8'] . '</a>';
+                    if (isset($product['localizedDeadline'])) {
+                        $links .= '&nbsp;' . $product['localizedDeadline'];
                     }
-                    if (isset($product['downloadable'])) {
-                        $links .= '&nbsp;' . $this->trans('downloadable %d time(s)', array((int) $product['downloadable']), 'Admin.Orderscustomers.Notification');
+                    if (isset($product['localizedDownloadable'])) {
+                        $links .= '&nbsp;' . $product['localizedDownloadable'];
                     }
                     $links .= '</li>';
                 }
