@@ -388,35 +388,39 @@ class AdminOrdersControllerCore extends AdminController
                             if ($current_order_state->id == $order_state->id) {
                                 $this->errors[] = $this->trans('Order #%d has already been assigned this status.', array('#%d' => $id_order), 'Admin.Orderscustomers.Notification');
                             } else {
-                                $history = new OrderHistory();
-                                $history->id_order = $order->id;
-                                $history->id_employee = (int) $this->context->employee->id;
+                                if(!$this->canRemoveQuantitiesIfNeeded($order->getProductsDetail(), $current_order_state, $order_state)) {
+                                    $this->errors[] = $this->trans('Some quantities from order #%d cannot be removed from the stock.', array('#%d' => $id_order), 'Admin.Orderscustomers.Notification');
+                                } else {
+                                    $history = new OrderHistory();
+                                    $history->id_order = $order->id;
+                                    $history->id_employee = (int) $this->context->employee->id;
 
-                                $use_existings_payment = !$order->hasInvoice();
-                                $history->changeIdOrderState((int) $order_state->id, $order, $use_existings_payment);
+                                    $use_existings_payment = !$order->hasInvoice();
+                                    $history->changeIdOrderState((int) $order_state->id, $order, $use_existings_payment);
 
-                                $carrier = new Carrier($order->id_carrier, $order->id_lang);
-                                $templateVars = array();
-                                if ($history->id_order_state == Configuration::get('PS_OS_SHIPPING') && $order->shipping_number) {
-                                    $templateVars = array('{followup}' => str_replace('@', $order->shipping_number, $carrier->url));
-                                }
+                                    $carrier = new Carrier($order->id_carrier, $order->id_lang);
+                                    $templateVars = array();
+                                    if ($history->id_order_state == Configuration::get('PS_OS_SHIPPING') && $order->shipping_number) {
+                                        $templateVars = array('{followup}' => str_replace('@', $order->shipping_number, $carrier->url));
+                                    }
 
-                                if ($history->addWithemail(true, $templateVars)) {
-                                    if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')) {
-                                        foreach ($order->getProducts() as $product) {
-                                            if (StockAvailable::dependsOnStock($product['product_id'])) {
-                                                StockAvailable::synchronize($product['product_id'], (int) $product['id_shop']);
+                                    if ($history->addWithemail(true, $templateVars)) {
+                                        if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')) {
+                                            foreach ($order->getProducts() as $product) {
+                                                if (StockAvailable::dependsOnStock($product['product_id'])) {
+                                                    StockAvailable::synchronize($product['product_id'], (int) $product['id_shop']);
+                                                }
                                             }
                                         }
+                                    } else {
+                                        $this->errors[] = $this->trans(
+                                            'An error occurred while changing the status for order #%d, or we were unable to send an email to the customer.',
+                                            array(
+                                                '#%d' => $id_order,
+                                            ),
+                                            'Admin.Orderscustomers.Notification'
+                                        );
                                     }
-                                } else {
-                                    $this->errors[] = $this->trans(
-                                        'An error occurred while changing the status for order #%d, or we were unable to send an email to the customer.',
-                                        array(
-                                            '#%d' => $id_order,
-                                        ),
-                                        'Admin.Orderscustomers.Notification'
-                                    );
                                 }
                             }
                         }
@@ -443,6 +447,32 @@ class AdminOrdersControllerCore extends AdminController
         }
 
         return parent::renderList();
+    }
+    
+    private function canRemoveQuantitiesIfNeeded($products, $old_os, $new_os)
+    {
+        if(Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
+        {
+          if($new_os->shipped == 1 && (!Validate::isLoadedObject($old_os) || $old_os->shipped == 0))
+          {
+            $manager = StockManagerFactory::getManager();
+            foreach($products as $product)
+            {
+              if((int)$product['advanced_stock_management'] == 1 && Warehouse::exists($product['id_warehouse']))
+              {
+                $quantity_in_stock = (int)$manager->getProductPhysicalQuantities($product['product_id'], $product['product_attribute_id'], array($product['id_warehouse']), true);
+
+                // checks if it's possible to remove the given quantity
+                if($quantity_in_stock < ($product['product_quantity'] - $product['product_quantity_refunded'] - $product['product_quantity_return']))
+                {
+                    return false;
+                }
+              }
+            }
+          }
+        }
+
+        return true;
     }
 
     public function postProcess()
@@ -523,37 +553,41 @@ class AdminOrdersControllerCore extends AdminController
                 } else {
                     $current_order_state = $order->getCurrentOrderState();
                     if ($current_order_state->id != $order_state->id) {
-                        // Create new OrderHistory
-                        $history = new OrderHistory();
-                        $history->id_order = $order->id;
-                        $history->id_employee = (int) $this->context->employee->id;
+                        if($this->canRemoveQuantitiesIfNeeded($order->getProductsDetail(), $current_order_state, $order_state)) {
+                            // Create new OrderHistory
+                            $history = new OrderHistory();
+                            $history->id_order = $order->id;
+                            $history->id_employee = (int) $this->context->employee->id;
 
-                        $use_existings_payment = false;
-                        if (!$order->hasInvoice()) {
-                            $use_existings_payment = true;
-                        }
-                        $history->changeIdOrderState((int) $order_state->id, $order, $use_existings_payment);
+                            $use_existings_payment = false;
+                            if (!$order->hasInvoice()) {
+                                $use_existings_payment = true;
+                            }
+                            $history->changeIdOrderState((int) $order_state->id, $order, $use_existings_payment);
 
-                        $carrier = new Carrier($order->id_carrier, $order->id_lang);
-                        $templateVars = array();
-                        if ($history->id_order_state == Configuration::get('PS_OS_SHIPPING') && $order->shipping_number) {
-                            $templateVars = array('{followup}' => str_replace('@', $order->shipping_number, $carrier->url));
-                        }
-
-                        // Save all changes
-                        if ($history->addWithemail(true, $templateVars)) {
-                            // synchronizes quantities if needed..
-                            if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')) {
-                                foreach ($order->getProducts() as $product) {
-                                    if (StockAvailable::dependsOnStock($product['product_id'])) {
-                                        StockAvailable::synchronize($product['product_id'], (int) $product['id_shop']);
-                                    }
-                                }
+                            $carrier = new Carrier($order->id_carrier, $order->id_lang);
+                            $templateVars = array();
+                            if ($history->id_order_state == Configuration::get('PS_OS_SHIPPING') && $order->shipping_number) {
+                                $templateVars = array('{followup}' => str_replace('@', $order->shipping_number, $carrier->url));
                             }
 
-                            Tools::redirectAdmin(self::$currentIndex . '&id_order=' . (int) $order->id . '&vieworder&token=' . $this->token);
+                            // Save all changes
+                            if ($history->addWithemail(true, $templateVars)) {
+                                // synchronizes quantities if needed..
+                                if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')) {
+                                    foreach ($order->getProducts() as $product) {
+                                        if (StockAvailable::dependsOnStock($product['product_id'])) {
+                                            StockAvailable::synchronize($product['product_id'], (int) $product['id_shop']);
+                                        }
+                                    }
+                                }
+
+                                Tools::redirectAdmin(self::$currentIndex . '&id_order=' . (int) $order->id . '&vieworder&token=' . $this->token);
+                            }
+                            $this->errors[] = $this->trans('An error occurred while changing order status, or we were unable to send an email to the customer.', array(), 'Admin.Orderscustomers.Notification');
+                        } else {
+                            $this->errors[] = $this->trans('Some quantities from order #%d cannot be removed from the stock.', array('#%d' => $id_order), 'Admin.Orderscustomers.Notification');   
                         }
-                        $this->errors[] = $this->trans('An error occurred while changing order status, or we were unable to send an email to the customer.', array(), 'Admin.Orderscustomers.Notification');
                     } else {
                         $this->errors[] = $this->trans('The order has already been assigned this status.', array(), 'Admin.Orderscustomers.Notification');
                     }
