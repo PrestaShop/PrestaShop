@@ -12,6 +12,7 @@ function devConfig(hostname) {
   dev.module.rules.push({
     test:/\.(s*)css$/,
     use: [
+      'style-loader',
       'css-loader',
       'postcss-loader',
       'sass-loader'
