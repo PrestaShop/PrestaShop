@@ -773,12 +773,6 @@ File: controllers/admin/AdminTabsController.php:136</note>
         <note>Context:
 File: controllers/admin/AdminTabsController.php:102</note>
       </trans-unit>
-      <trans-unit id="8cf04a9734132302f96da8e113e80ce5">
-        <source>Home</source>
-        <target>Home</target>
-        <note>Context:
-File: controllers/admin/AdminTabsController.php:130</note>
-      </trans-unit>
       <trans-unit id="6252c0f2c2ed83b7b06dfca86d4650bb">
         <source>Invalid characters:</source>
         <target>Invalid characters:</target>
@@ -805,43 +799,421 @@ File: controllers/admin/AdminTabsController.php:198</note>
       </trans-unit>
     </body>
   </file>
-  <file original="admin-dev/themes/default/template/controllers/modules/favorites.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="modules/psgdpr/views/templates/admin/tabs/dataConfig.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="e55f75a29310d7b60f7ac1d390c8ae42">
         <source>Module</source>
         <target>Module</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/modules/favorites.tpl:51</note>
+File: modules/psgdpr/views/templates/admin/tabs/dataConfig.tpl:465</note>
       </trans-unit>
-      <trans-unit id="7e4a9cd054588a95b0394d92a2030e72">
-        <source>Normal view</source>
-        <target>Normal view</target>
+      <trans-unit id="019ec3132cdf8ee0f2e2a75cf5d3e459">
+        <source>Gender</source>
+        <target>Gender</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/modules/favorites.tpl:35</note>
+File: modules/psgdpr/views/templates/admin/tabs/dataConfig.tpl:141</note>
       </trans-unit>
-      <trans-unit id="d7af23f5f349f2c4eace4927943b2760">
-        <source>Favorites view</source>
-        <target>Favorites view</target>
+      <trans-unit id="49ee3087348e8d44e1feda1917443987">
+        <source>Name</source>
+        <target>Name</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/modules/favorites.tpl:39</note>
+File: modules/psgdpr/views/templates/admin/tabs/dataConfig.tpl:229</note>
       </trans-unit>
-      <trans-unit id="5c6ba25104401c9ee0650230fc6ba413">
-        <source>Tab</source>
-        <target>Tab</target>
+      <trans-unit id="9c37b7b6ff829e977df287900543ea54">
+        <source>Birth date</source>
+        <target>Birth date</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/modules/favorites.tpl:52</note>
+File: modules/psgdpr/views/templates/admin/tabs/dataConfig.tpl:153</note>
       </trans-unit>
-      <trans-unit id="920beb5dda21b04a332e0457cb0cfbec">
-        <source>Interest</source>
-        <target>Interest</target>
+      <trans-unit id="9d8d2d5ab12b515182a505f54db7f538">
+        <source>Age</source>
+        <target>Age</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/modules/favorites.tpl:54</note>
+File: modules/psgdpr/views/templates/admin/tabs/dataConfig.tpl:159</note>
       </trans-unit>
-      <trans-unit id="01165dcf77c191e6c69b31d98b0ec6ff">
-        <source>Favorite</source>
-        <target>Favorite</target>
+      <trans-unit id="4994a8ffeba4ac3140beb89e8d41f174">
+        <source>Language</source>
+        <target>Language</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/modules/favorites.tpl:55</note>
+File: modules/psgdpr/views/templates/admin/tabs/dataConfig.tpl:171</note>
+      </trans-unit>
+      <trans-unit id="5e5914912e8d2f2765525840acf98bea">
+        <source>Last visit</source>
+        <target>Last visit</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/dataConfig.tpl:187</note>
+      </trans-unit>
+      <trans-unit id="60adc330494a66981dec101c81e27f03">
+        <source>Siret</source>
+        <target>Siret</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/dataConfig.tpl:193</note>
+      </trans-unit>
+      <trans-unit id="6c5a79a30b5c5c4fb6ec45735d32edc2">
+        <source>Ape</source>
+        <target>Ape</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/dataConfig.tpl:199</note>
+      </trans-unit>
+      <trans-unit id="1c76cbfe21c6f44c1d1e59d54f3e4420">
+        <source>Company</source>
+        <target>Company</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/dataConfig.tpl:228</note>
+      </trans-unit>
+      <trans-unit id="15bbb9d0bbf25e8d2978de1168c749dc">
+        <source>Website</source>
+        <target>Website</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/dataConfig.tpl:211</note>
+      </trans-unit>
+      <trans-unit id="284b47b0bb63ae2df3b29f0e691d6fcf">
+        <source>Addresses</source>
+        <target>Addresses</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/dataConfig.tpl:222</note>
+      </trans-unit>
+      <trans-unit id="effdb9ce6c5d44df31b89d7069c8e0fb">
+        <source>Alias</source>
+        <target>Alias</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/dataConfig.tpl:227</note>
+      </trans-unit>
+      <trans-unit id="dd7bf230fde8d4836917806aff6a6b27">
+        <source>Address</source>
+        <target>Address</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/dataConfig.tpl:230</note>
+      </trans-unit>
+      <trans-unit id="fac322c3b42d04806299ae195f8a9238">
+        <source>Phone(s)</source>
+        <target>Phone(s)</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/dataConfig.tpl:231</note>
+      </trans-unit>
+      <trans-unit id="59716c97497eb9694541f7c3d37b1a4d">
+        <source>Country</source>
+        <target>Country</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/dataConfig.tpl:232</note>
+      </trans-unit>
+      <trans-unit id="44749712dbec183e983dcd78a7736c41">
+        <source>Date</source>
+        <target>Date</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/dataConfig.tpl:347</note>
+      </trans-unit>
+      <trans-unit id="587bb937485e3dbe02ea0d281600bb52">
+        <source>No addresses</source>
+        <target>No addresses</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/dataConfig.tpl:250</note>
+      </trans-unit>
+      <trans-unit id="7442e29d7d53e549b78d93c46b8cdcfc">
+        <source>Orders</source>
+        <target>Orders</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/dataConfig.tpl:256</note>
+      </trans-unit>
+      <trans-unit id="63d5049791d9d79d86e9a108b0a999ca">
+        <source>Reference</source>
+        <target>Reference</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/dataConfig.tpl:261</note>
+      </trans-unit>
+      <trans-unit id="c453a4b8e8d98e82f35b67f433e3b4da">
+        <source>Payment</source>
+        <target>Payment</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/dataConfig.tpl:262</note>
+      </trans-unit>
+      <trans-unit id="d02bbc3cb147c272b0445ac5ca7d1a36">
+        <source>Order state</source>
+        <target>Order state</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/dataConfig.tpl:263</note>
+      </trans-unit>
+      <trans-unit id="ea067eb37801c5aab1a1c685eb97d601">
+        <source>Total paid</source>
+        <target>Total paid</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/dataConfig.tpl:264</note>
+      </trans-unit>
+      <trans-unit id="08cfa7751d1812e961560f623e082aba">
+        <source>No orders</source>
+        <target>No orders</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/dataConfig.tpl:280</note>
+      </trans-unit>
+      <trans-unit id="fc26e55e0993a75e892175deb02aae15">
+        <source>Carts</source>
+        <target>Carts</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/dataConfig.tpl:286</note>
+      </trans-unit>
+      <trans-unit id="490aa6e856ccf208a054389e47ce0d06">
+        <source>Id</source>
+        <target>Id</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/dataConfig.tpl:291</note>
+      </trans-unit>
+      <trans-unit id="bbd47e26c95290218b2fc449e54e8cdc">
+        <source>No carts</source>
+        <target>No carts</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/dataConfig.tpl:306</note>
+      </trans-unit>
+      <trans-unit id="41de6d6cfb8953c021bbe4ba0701c8a1">
+        <source>Messages</source>
+        <target>Messages</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/dataConfig.tpl:312</note>
+      </trans-unit>
+      <trans-unit id="a12a3079e14ced46e69ba52b8a90b21a">
+        <source>IP</source>
+        <target>IP</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/dataConfig.tpl:317</note>
+      </trans-unit>
+      <trans-unit id="4c2a8fe7eaf24721cc7a9f0175115bd4">
+        <source>Message</source>
+        <target>Message</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/dataConfig.tpl:318</note>
+      </trans-unit>
+      <trans-unit id="58a747ef5d07d22101bdcd058e772ff9">
+        <source>No messages</source>
+        <target>No messages</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/dataConfig.tpl:332</note>
+      </trans-unit>
+      <trans-unit id="93bd48ecb9c4d5c4eec7fefffbb2070f">
+        <source>Last connections</source>
+        <target>Last connections</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/dataConfig.tpl:338</note>
+      </trans-unit>
+      <trans-unit id="33e29c1d042c0923008f78b46af94984">
+        <source>Origin request</source>
+        <target>Origin request</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/dataConfig.tpl:343</note>
+      </trans-unit>
+      <trans-unit id="57f32d7d0e6672cc2b60bc7a49f91453">
+        <source>Page viewed</source>
+        <target>Page viewed</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/dataConfig.tpl:344</note>
+      </trans-unit>
+      <trans-unit id="fae6aba9bc4e69842be0ac98e15c4c99">
+        <source>Time on the page</source>
+        <target>Time on the page</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/dataConfig.tpl:345</note>
+      </trans-unit>
+      <trans-unit id="75ba8d70e3692ba200f0e0df37b4d2ae">
+        <source>IP address</source>
+        <target>IP address</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/dataConfig.tpl:346</note>
+      </trans-unit>
+      <trans-unit id="c51e6bdf66e5d601e85d055301014410">
+        <source>No connections</source>
+        <target>No connections</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/dataConfig.tpl:362</note>
+      </trans-unit>
+      <trans-unit id="aa4de6aaed26c361322b279d34d8a7dd">
+        <source>Data visualization and automatic actions</source>
+        <target>Data visualization and automatic actions</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/dataConfig.tpl:18</note>
+      </trans-unit>
+      <trans-unit id="c32a80e0c500e5a7537f5b70fe8129fd">
+        <source>Find here listed all personal data collected by PrestaShop and your installed modules.</source>
+        <target>Find here listed all personal data collected by PrestaShop and your installed modules.</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/dataConfig.tpl:22</note>
+      </trans-unit>
+      <trans-unit id="3a7a2fb701b6c416ccfd2328cb1461d6">
+        <source>These data will be used at 2 different levels :</source>
+        <target>These data will be used at 2 different levels :</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/dataConfig.tpl:23</note>
+      </trans-unit>
+      <trans-unit id="34c7656d69407f8ff8bc0ae5ad35daca">
+        <source>When a customer requests access to his data: he gets a copy of his personal data collected on your store.</source>
+        <target>When a customer requests access to his data: he gets a copy of his personal data collected on your store.</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/dataConfig.tpl:25</note>
+      </trans-unit>
+      <trans-unit id="d61bbb8ed4a9c97a676591d853b71488">
+        <source>When a customer requests data erasure: if you accept his request, his data will be removed permanently.</source>
+        <target>When a customer requests data erasure: if you accept his request, his data will be removed permanently.</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/dataConfig.tpl:26</note>
+      </trans-unit>
+      <trans-unit id="5680774f084e3133256426b423793cdf">
+        <source>Compliant module list</source>
+        <target>Compliant module list</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/dataConfig.tpl:32</note>
+      </trans-unit>
+      <trans-unit id="fbc7f08ab791ff80697db8706f83ac05">
+        <source>Find here listed all the elements that are GDPR compliant.</source>
+        <target>Find here listed all the elements that are GDPR compliant.</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/dataConfig.tpl:34</note>
+      </trans-unit>
+      <trans-unit id="e7040e6151b9ba04bebf1ac35a3b9773">
+        <source>PrestaShop data</source>
+        <target>PrestaShop data</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/dataConfig.tpl:43</note>
+      </trans-unit>
+      <trans-unit id="007798f2b7231fa9572e704aa3e2b864">
+        <source>Please find below the list of your installed modules which are not displayed above: If you consider that one or several of these modules collect personal data (</source>
+        <target>Please find below the list of your installed modules which are not displayed above: If you consider that one or several of these modules collect personal data (</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/dataConfig.tpl:63</note>
+      </trans-unit>
+      <trans-unit id="a4ea91cd0d1ea33d8113457644dd6157">
+        <source>click here</source>
+        <target>click here</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/dataConfig.tpl:63</note>
+      </trans-unit>
+      <trans-unit id="b1cb373e07897abad098c86e8f026b20">
+        <source>to know which data is defined as personal):</source>
+        <target>to know which data is defined as personal):</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/dataConfig.tpl:63</note>
+      </trans-unit>
+      <trans-unit id="d50e4299564d3d86275eaa685cc64a0b">
+        <source>Please make sure that you have access to the latest version of these modules to fully benefit the GDPR update.</source>
+        <target>Please make sure that you have access to the latest version of these modules to fully benefit the GDPR update.</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/dataConfig.tpl:64</note>
+      </trans-unit>
+      <trans-unit id="9f776b9ffe1e70cc7e59acbc33dff365">
+        <source>If they are still not displayed in the block above, we invite you to contact their respective developers to have more information about these modules. </source>
+        <target>If they are still not displayed in the block above, we invite you to contact their respective developers to have more information about these modules. </target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/dataConfig.tpl:65</note>
+      </trans-unit>
+      <trans-unit id="47e3d0b9fb896965dcac1b891d69181d">
+        <source>Manage customer's personal data</source>
+        <target>Manage customer's personal data</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/dataConfig.tpl:76</note>
+      </trans-unit>
+      <trans-unit id="2e0a7d4ff8913a1d22b0c74c72c7008c">
+        <source>Search for an existing customer by typing the first letters of his/her name or email.</source>
+        <target>Search for an existing customer by typing the first letters of his/her name or email.</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/dataConfig.tpl:87</note>
+      </trans-unit>
+      <trans-unit id="bac34a31ff6a35a479858c60dffe3705">
+        <source>Search for a customer name OR email</source>
+        <target>Search for a customer name OR email</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/dataConfig.tpl:88</note>
+      </trans-unit>
+      <trans-unit id="d69e451e32539a7b9b79381d327fc028">
+        <source>Eg: john doe ...</source>
+        <target>Eg: john doe ...</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/dataConfig.tpl:96</note>
+      </trans-unit>
+      <trans-unit id="2f43ddb446e84df137be34b78029835f">
+        <source>To visualize all the data that your store has collected from a specific customer, please click on the corresponding customer block</source>
+        <target>To visualize all the data that your store has collected from a specific customer, please click on the corresponding customer block</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/dataConfig.tpl:108</note>
+      </trans-unit>
+      <trans-unit id="261e15beaa4972092243d9a678afa8a3">
+        <source>Orders number</source>
+        <target>Orders number</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/dataConfig.tpl:119</note>
+      </trans-unit>
+      <trans-unit id="3ec365dd533ddb7ef3d1c111186ce872">
+        <source>Details</source>
+        <target>Details</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/dataConfig.tpl:122</note>
+      </trans-unit>
+      <trans-unit id="596403b61367ca30d6de75812275f9cd">
+        <source>Remove data</source>
+        <target>Remove data</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/dataConfig.tpl:458</note>
+      </trans-unit>
+      <trans-unit id="5fde470e78d8f75e778801d4ec4bd91b">
+        <source>Download invoices</source>
+        <target>Download invoices</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/dataConfig.tpl:124</note>
+      </trans-unit>
+      <trans-unit id="997c785cce775d7c1014ffbd6e446d50">
+        <source>General information</source>
+        <target>General information</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/dataConfig.tpl:135</note>
+      </trans-unit>
+      <trans-unit id="6370c5a9859b827de2be9d30ec4b997e">
+        <source>Personal data</source>
+        <target>Personal data</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/dataConfig.tpl:465</note>
+      </trans-unit>
+      <trans-unit id="3112209b2dd9b55cf5dbc4865dd15afd">
+        <source>Creation date</source>
+        <target>Creation date</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/dataConfig.tpl:181</note>
+      </trans-unit>
+      <trans-unit id="1070734fc83ac44f690c17af28986fb7">
+        <source>Total product(s)</source>
+        <target>Total product(s)</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/dataConfig.tpl:292</note>
+      </trans-unit>
+      <trans-unit id="42a7b2626eae970122e01f65af2f5092">
+        <source>No data</source>
+        <target>No data</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/dataConfig.tpl:488</note>
+      </trans-unit>
+      <trans-unit id="61a649a33f2869e5e35fbb7aff3a80d9">
+        <source>EMAIL</source>
+        <target>EMAIL</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/dataConfig.tpl:402</note>
+      </trans-unit>
+      <trans-unit id="f9dd946cc89c1f3b41a0edbe0f36931d">
+        <source>PHONE</source>
+        <target>PHONE</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/dataConfig.tpl:451</note>
+      </trans-unit>
+      <trans-unit id="f3f5e3b297c7980c5af3c17a4c0ebcf2">
+        <source>There is no result in the customer data base for</source>
+        <target>There is no result in the customer data base for</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/dataConfig.tpl:499</note>
+      </trans-unit>
+      <trans-unit id="e9a837cf85ac119ec97ac242df3ce0d3">
+        <source>If you are looking for someone without a customer account, please search for the complete email address or phone number he left.</source>
+        <target>If you are looking for someone without a customer account, please search for the complete email address or phone number he left.</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/dataConfig.tpl:500</note>
+      </trans-unit>
+      <trans-unit id="f049593e15945e4e954d5a8803ec1e9f">
+        <source>However you can continue the erasure process for this address (only for modules that have done the GDPR update).</source>
+        <target>However you can continue the erasure process for this address (only for modules that have done the GDPR update).</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/dataConfig.tpl:501</note>
       </trans-unit>
     </body>
   </file>
@@ -864,12 +1236,6 @@ File: classes/controller/AdminController.php:3028</note>
         <target>Disable selection</target>
         <note>Context:
 File: classes/controller/AdminController.php:3032</note>
-      </trans-unit>
-      <trans-unit id="c9cc8cce247e49bae79f15173ce97354">
-        <source>Save</source>
-        <target>Save</target>
-        <note>Context:
-File: classes/controller/AdminController.php:1628</note>
       </trans-unit>
       <trans-unit id="b9804794cbfeea33c6d9b2ce85100b48">
         <source>Do you really want to uninstall this module?</source>
@@ -1077,6 +1443,82 @@ File: classes/controller/AdminController.php:2677</note>
       </trans-unit>
     </body>
   </file>
+  <file original="modules/psgdpr/views/templates/front/customerPersonalData16.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="8cf04a9734132302f96da8e113e80ce5">
+        <source>Home</source>
+        <target>Home</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/front/customerPersonalData16.tpl:49</note>
+      </trans-unit>
+      <trans-unit id="c654dacdea4ad6f75ad36553a8a947cd">
+        <source>My personal data</source>
+        <target>My personal data</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/front/customerPersonalData16.tpl:26</note>
+      </trans-unit>
+      <trans-unit id="a8308387f3ffc2d045d2b6125e74317d">
+        <source>Access to my data</source>
+        <target>Access to my data</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/front/customerPersonalData16.tpl:28</note>
+      </trans-unit>
+      <trans-unit id="915f4446a47b51378e37374cfbb72d7f">
+        <source>At any time, you have the right to retrieve the data you have provided to our site. Click on "Get my data" to automatically download a copy of your personal data on a pdf or csv file.</source>
+        <target>At any time, you have the right to retrieve the data you have provided to our site. Click on "Get my data" to automatically download a copy of your personal data on a pdf or csv file.</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/front/customerPersonalData16.tpl:29</note>
+      </trans-unit>
+      <trans-unit id="49b5d04f5f20820830f080d4674c8669">
+        <source>GET MY DATA TO CSV</source>
+        <target>GET MY DATA TO CSV</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/front/customerPersonalData16.tpl:30</note>
+      </trans-unit>
+      <trans-unit id="7b0b06bfe69473081553bcccb12ca068">
+        <source>GET MY DATA TO PDF</source>
+        <target>GET MY DATA TO PDF</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/front/customerPersonalData16.tpl:31</note>
+      </trans-unit>
+      <trans-unit id="91a49c1d45a5d37e85658d01b6f37423">
+        <source><![CDATA[Rectification & Erasure requests]]></source>
+        <target><![CDATA[Rectification & Erasure requests]]></target>
+        <note>Context:
+File: modules/psgdpr/views/templates/front/customerPersonalData16.tpl:35</note>
+      </trans-unit>
+      <trans-unit id="01cb324ae91e9bd16213cc2945334249">
+        <source>You have the right to modify all the personal information found in the "My Account" page. For any other request you might have regarding the rectification and/or erasure of your personal data, please contact us through our</source>
+        <target>You have the right to modify all the personal information found in the "My Account" page. For any other request you might have regarding the rectification and/or erasure of your personal data, please contact us through our</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/front/customerPersonalData16.tpl:36</note>
+      </trans-unit>
+      <trans-unit id="af5efea250326c1c34d69aa9364b482c">
+        <source>contact page</source>
+        <target>contact page</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/front/customerPersonalData16.tpl:36</note>
+      </trans-unit>
+      <trans-unit id="332087a4991d8bc866abd3fd78a2e514">
+        <source>We will review your request and reply as soon as possible.</source>
+        <target>We will review your request and reply as soon as possible.</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/front/customerPersonalData16.tpl:36</note>
+      </trans-unit>
+      <trans-unit id="4e94c8ad46c8aef1ca637841dfbe2159">
+        <source>GDPR</source>
+        <target>GDPR</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/front/customerPersonalData16.tpl:21</note>
+      </trans-unit>
+      <trans-unit id="0b3db27bc15f682e92ff250ebb167d4b">
+        <source>Back to Your Account</source>
+        <target>Back to Your Account</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/front/customerPersonalData16.tpl:43</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="admin-dev/themes/default/template/controllers/import/helpers/form/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="801ab24683a4a8c433c6eb40c48bcd9d">
@@ -1108,6 +1550,441 @@ File: admin-dev/themes/default/template/controllers/import/helpers/form/form.tpl
         <target>Multiple value separator</target>
         <note>Context:
 File: admin-dev/themes/default/template/controllers/import/helpers/form/form.tpl:208</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/psgdpr/views/templates/admin/tabs/dataConsent.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="c9cc8cce247e49bae79f15173ce97354">
+        <source>Save</source>
+        <target>Save</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/dataConsent.tpl:229</note>
+      </trans-unit>
+      <trans-unit id="9aa5e987f351139f2b4e3d14b9353e56">
+        <source>Configure your checkboxes</source>
+        <target>Configure your checkboxes</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/dataConsent.tpl:17</note>
+      </trans-unit>
+      <trans-unit id="62442110c88c18b3645145cee9211474">
+        <source>Please customize your consent request messages in the dedicated fields below :</source>
+        <target>Please customize your consent request messages in the dedicated fields below :</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/dataConsent.tpl:21</note>
+      </trans-unit>
+      <trans-unit id="40cfa1617e59da6c05189eb33fd19b34">
+        <source>We recommend you to put a link to your confidentiality policy page in each of your custom messages. Be aware that a dedicated confidentiality policy page is required on your website; if you do not have one yet, please click</source>
+        <target>We recommend you to put a link to your confidentiality policy page in each of your custom messages. Be aware that a dedicated confidentiality policy page is required on your website; if you do not have one yet, please click</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/dataConsent.tpl:23</note>
+      </trans-unit>
+      <trans-unit id="6c92285fa6d3e827b198d120ea3ac674">
+        <source>here</source>
+        <target>here</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/dataConsent.tpl:23</note>
+      </trans-unit>
+      <trans-unit id="b1e293bbb668bf8c149fff2865d0273d">
+        <source>Account creation form</source>
+        <target>Account creation form</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/dataConsent.tpl:30</note>
+      </trans-unit>
+      <trans-unit id="7469a286259799e5b37e5db9296f00b3">
+        <source>YES</source>
+        <target>YES</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/dataConsent.tpl:166</note>
+      </trans-unit>
+      <trans-unit id="c2f3f489a00553e7a01d369c103c7251">
+        <source>NO</source>
+        <target>NO</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/dataConsent.tpl:169</note>
+      </trans-unit>
+      <trans-unit id="f782036f044fe2a6de1677dcac0868c2">
+        <source>Consent request message</source>
+        <target>Consent request message</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/dataConsent.tpl:189</note>
+      </trans-unit>
+      <trans-unit id="c7ad735a42df6942cbad2402dd3fad2a">
+        <source>This message will be displayed on the customer creation form</source>
+        <target>This message will be displayed on the customer creation form</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/dataConsent.tpl:66</note>
+      </trans-unit>
+      <trans-unit id="27fb780f8fef2ffc1767a0a75cc12b65">
+        <source>Customer account area</source>
+        <target>Customer account area</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/dataConsent.tpl:94</note>
+      </trans-unit>
+      <trans-unit id="361f761e0f718800272dc62901fd06dd">
+        <source>This message will be displayed in the My personal information tab in the customer account</source>
+        <target>This message will be displayed in the My personal information tab in the customer account</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/dataConsent.tpl:130</note>
+      </trans-unit>
+      <trans-unit id="5562e13c7ff921bf7907e1d5e0ffc294">
+        <source>This message will be accomplanied by a checkbox</source>
+        <target>This message will be accomplanied by a checkbox</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/dataConsent.tpl:197</note>
+      </trans-unit>
+      <trans-unit id="a8b79d64d6a4c3e13b3c805542292d78">
+        <source>For other installed modules requiring consent confirmation, they will be displayed in this tab only if they have done the GDPR update. The corresponding fields will automatically appear in order for you to customize the consent confirmation checkboxes.</source>
+        <target>For other installed modules requiring consent confirmation, they will be displayed in this tab only if they have done the GDPR update. The corresponding fields will automatically appear in order for you to customize the consent confirmation checkboxes.</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/dataConsent.tpl:225</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/psgdpr/views/templates/front/pdf/personalData.generalInfo-tab.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="3bcfe5c02494f4ff326c5dbd1dcffa91">
+        <source>General info</source>
+        <target>General info</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/front/pdf/personalData.generalInfo-tab.tpl:52</note>
+      </trans-unit>
+      <trans-unit id="c4aebdbba922c239df53567d2991e510">
+        <source>Creation account date</source>
+        <target>Creation account date</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/front/pdf/personalData.generalInfo-tab.tpl:113</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/gamification/views/templates/admin/gamification/helpers/view/view.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="ce8ae9da5b7cd6c3df2929543a9af92d">
+        <source>Email</source>
+        <target>Email</target>
+        <note>Context:
+File: modules/gamification/views/templates/admin/gamification/helpers/view/view.tpl:61</note>
+      </trans-unit>
+      <trans-unit id="a0db49ba470c1c9ae2128c3470339153">
+        <source>Level</source>
+        <target>Level</target>
+        <note>Context:
+File: modules/gamification/views/templates/admin/gamification/helpers/view/view.tpl:70</note>
+      </trans-unit>
+      <trans-unit id="2a0ab6a9172272d54f0d601b0ac157f3">
+        <source>Become an e-commerce expert in leaps and bounds!</source>
+        <target>Become an e-commerce expert in leaps and bounds!</target>
+        <note>Context:
+File: modules/gamification/views/templates/admin/gamification/helpers/view/view.tpl:49</note>
+      </trans-unit>
+      <trans-unit id="cb3d475bd997e38c100704631dbab020">
+        <source>With all of the great features and benefits that PrestaShop offers, it's important to keep up!</source>
+        <target>With all of the great features and benefits that PrestaShop offers, it's important to keep up!</target>
+        <note>Context:
+File: modules/gamification/views/templates/admin/gamification/helpers/view/view.tpl:51</note>
+      </trans-unit>
+      <trans-unit id="2c3193c85bb2555c333adfcfb824804a">
+        <source>The main goal of all of the features we offer is to make you succeed in the e-commerce world. In order to accomplish this, we have created a system of badges and points that make it easy to monitor your progress as a merchant. We have broken down the system into three levels, all of which are integral to success in the e-commerce world: (i) Your use of key e-commerce features on your store; (ii) Your sales performance; (iii) Your presence in international markets.</source>
+        <target>The main goal of all of the features we offer is to make you succeed in the e-commerce world. In order to accomplish this, we have created a system of badges and points that make it easy to monitor your progress as a merchant. We have broken down the system into three levels, all of which are integral to success in the e-commerce world: (i) Your use of key e-commerce features on your store; (ii) Your sales performance; (iii) Your presence in international markets.</target>
+        <note>Context:
+File: modules/gamification/views/templates/admin/gamification/helpers/view/view.tpl:52</note>
+      </trans-unit>
+      <trans-unit id="6b766dc388ad21053bde0f8fd95d1e04">
+        <source>The more progress your store makes, the more badges and points you earn. No need to submit any information or fill out any forms; we know how busy you are, everything is automatic!</source>
+        <target>The more progress your store makes, the more badges and points you earn. No need to submit any information or fill out any forms; we know how busy you are, everything is automatic!</target>
+        <note>Context:
+File: modules/gamification/views/templates/admin/gamification/helpers/view/view.tpl:53</note>
+      </trans-unit>
+      <trans-unit id="21dc1cfc9ef1cdfbb665cab323d5e1a9">
+        <source>Now, with the click of a button, you will be able to see sales-enhancing features that you may be missing out on. Take advantage and check it out below!</source>
+        <target>Now, with the click of a button, you will be able to see sales-enhancing features that you may be missing out on. Take advantage and check it out below!</target>
+        <note>Context:
+File: modules/gamification/views/templates/admin/gamification/helpers/view/view.tpl:54</note>
+      </trans-unit>
+      <trans-unit id="bcc5a331e758a60ad298b4b18a26d0e0">
+        <source>Our team is available to help. Contact us today!</source>
+        <target>Our team is available to help. Contact us today!</target>
+        <note>Context:
+File: modules/gamification/views/templates/admin/gamification/helpers/view/view.tpl:58</note>
+      </trans-unit>
+      <trans-unit id="7d6d8e6610fd23b684be7e95a6cc5c39">
+        <source>Fill out a contact form</source>
+        <target>Fill out a contact form</target>
+        <note>Context:
+File: modules/gamification/views/templates/admin/gamification/helpers/view/view.tpl:62</note>
+      </trans-unit>
+      <trans-unit id="6b6ac7834d96afefbca5677814769109">
+        <source>Completion level</source>
+        <target>Completion level</target>
+        <note>Context:
+File: modules/gamification/views/templates/admin/gamification/helpers/view/view.tpl:68</note>
+      </trans-unit>
+      <trans-unit id="82338dd23ce2fd2f6d3606c20f4ee96e">
+        <source>No badge in this section</source>
+        <target>No badge in this section</target>
+        <note>Context:
+File: modules/gamification/views/templates/admin/gamification/helpers/view/view.tpl:93</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/psgdpr/controllers/front/ExportDataToCsv.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="7d9f5730d745285016630376deebcbd8">
+        <source>Creation account data</source>
+        <target>Creation account data</target>
+        <note>Context:
+File: modules/psgdpr/controllers/front/ExportDataToCsv.php:63</note>
+      </trans-unit>
+      <trans-unit id="c8be451a5698956a0e78b5c2caab4821">
+        <source>Products bought</source>
+        <target>Products bought</target>
+        <note>Context:
+File: modules/psgdpr/controllers/front/ExportDataToCsv.php:175</note>
+      </trans-unit>
+      <trans-unit id="79af0c77f8ce8cbb17006e22e8e9494b">
+        <source>Order ref</source>
+        <target>Order ref</target>
+        <note>Context:
+File: modules/psgdpr/controllers/front/ExportDataToCsv.php:179</note>
+      </trans-unit>
+      <trans-unit id="2cc349f141e8c9932281bf573f2c40ef">
+        <source>Product ref</source>
+        <target>Product ref</target>
+        <note>Context:
+File: modules/psgdpr/controllers/front/ExportDataToCsv.php:180</note>
+      </trans-unit>
+      <trans-unit id="89ac4bd26e975229032206877db1f027">
+        <source>Product(s) still in cart</source>
+        <target>Product(s) still in cart</target>
+        <note>Context:
+File: modules/psgdpr/controllers/front/ExportDataToCsv.php:241
+ Comment: PRODUCTS IN CART</note>
+      </trans-unit>
+      <trans-unit id="75ed578ac3cb02b0ba40002a25bc0403">
+        <source>Product reference</source>
+        <target>Product reference</target>
+        <note>Context:
+File: modules/psgdpr/controllers/front/ExportDataToCsv.php:246</note>
+      </trans-unit>
+      <trans-unit id="09dc02ecbb078868a3a86dded030076d">
+        <source>No products</source>
+        <target>No products</target>
+        <note>Context:
+File: modules/psgdpr/controllers/front/ExportDataToCsv.php:268</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/psgdpr/views/templates/front/pdf/personalData.carts-tab.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="694e8d1f2ee056f98ee488bdc4982d73">
+        <source>Quantity</source>
+        <target>Quantity</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/front/pdf/personalData.carts-tab.tpl:54</note>
+      </trans-unit>
+      <trans-unit id="db205f01b4fd580fb5daa9072d96849d">
+        <source>Total products</source>
+        <target>Total products</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/front/pdf/personalData.carts-tab.tpl:31</note>
+      </trans-unit>
+      <trans-unit id="83a234de54312687bf9ab33fe4168f6c">
+        <source>Product(s) in the cart</source>
+        <target>Product(s) in the cart</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/front/pdf/personalData.carts-tab.tpl:44</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/new-theme/template/components/layout/search_form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="fc6dfe4f8b07fc04c99e27425f780754">
+        <source>Cart ID</source>
+        <target>Cart ID</target>
+        <note>Context:
+File: admin-dev/themes/new-theme/template/components/layout/search_form.tpl:49</note>
+      </trans-unit>
+      <trans-unit id="03de6422045e4ed3ac822c673ace32d1">
+        <source>123.45.67.89</source>
+        <target>123.45.67.89</target>
+        <note>Context:
+File: admin-dev/themes/new-theme/template/components/layout/search_form.tpl:46</note>
+      </trans-unit>
+      <trans-unit id="e6d0e1c8fc6a4fcf47869df87e04cd88">
+        <source>Customers</source>
+        <target>Customers</target>
+        <note>Context:
+File: admin-dev/themes/new-theme/template/components/layout/search_form.tpl:46</note>
+      </trans-unit>
+      <trans-unit id="f5945546981ef6e50e1fade1b386da04">
+        <source>Search (e.g.: product reference, customer name…)</source>
+        <target>Search (e.g.: product reference, customer name…)</target>
+        <note>Context:
+File: admin-dev/themes/new-theme/template/components/layout/search_form.tpl:36</note>
+      </trans-unit>
+      <trans-unit id="13787cfb1a15ae6690a29d3895c54de9">
+        <source>Everywhere</source>
+        <target>Everywhere</target>
+        <note>Context:
+File: admin-dev/themes/new-theme/template/components/layout/search_form.tpl:42</note>
+      </trans-unit>
+      <trans-unit id="2e67c0a79d35c15af2436c8d80ca072d">
+        <source>What are you looking for?</source>
+        <target>What are you looking for?</target>
+        <note>Context:
+File: admin-dev/themes/new-theme/template/components/layout/search_form.tpl:42</note>
+      </trans-unit>
+      <trans-unit id="c32516babc5b6c47eb8ce1bfc223253c">
+        <source>Catalog</source>
+        <target>Catalog</target>
+        <note>Context:
+File: admin-dev/themes/new-theme/template/components/layout/search_form.tpl:44</note>
+      </trans-unit>
+      <trans-unit id="7f704ff8964f7b5f3f9a6444d450b5f7">
+        <source>Product name, SKU, reference...</source>
+        <target>Product name, SKU, reference...</target>
+        <note>Context:
+File: admin-dev/themes/new-theme/template/components/layout/search_form.tpl:44</note>
+      </trans-unit>
+      <trans-unit id="855d2bf59043b81e76bc931e685a4f58">
+        <source>by name</source>
+        <target>by name</target>
+        <note>Context:
+File: admin-dev/themes/new-theme/template/components/layout/search_form.tpl:45</note>
+      </trans-unit>
+      <trans-unit id="a3681587c5320489b6a3dd21282e254d">
+        <source>Email, name...</source>
+        <target>Email, name...</target>
+        <note>Context:
+File: admin-dev/themes/new-theme/template/components/layout/search_form.tpl:45</note>
+      </trans-unit>
+      <trans-unit id="399574be0ed95657dfac0e8d38374c62">
+        <source>by ip address</source>
+        <target>by ip address</target>
+        <note>Context:
+File: admin-dev/themes/new-theme/template/components/layout/search_form.tpl:46</note>
+      </trans-unit>
+      <trans-unit id="16b2494238f8f996b09417d1dc56c795">
+        <source>by IP address</source>
+        <target>by IP address</target>
+        <note>Context:
+File: admin-dev/themes/new-theme/template/components/layout/search_form.tpl:46</note>
+      </trans-unit>
+      <trans-unit id="d79cf3f429596f77db95c65074663a54">
+        <source>Order ID</source>
+        <target>Order ID</target>
+        <note>Context:
+File: admin-dev/themes/new-theme/template/components/layout/search_form.tpl:47</note>
+      </trans-unit>
+      <trans-unit id="fce9a6a1bd2a2050eb86d33103f46fd3">
+        <source>Invoices</source>
+        <target>Invoices</target>
+        <note>Context:
+File: admin-dev/themes/new-theme/template/components/layout/search_form.tpl:48</note>
+      </trans-unit>
+      <trans-unit id="4e065ba1bec1d62b2d5450256612fa96">
+        <source>Invoice Number</source>
+        <target>Invoice Number</target>
+        <note>Context:
+File: admin-dev/themes/new-theme/template/components/layout/search_form.tpl:48</note>
+      </trans-unit>
+      <trans-unit id="bf17ac149e2e7a530c677e9bd51d3fd2">
+        <source>Modules</source>
+        <target>Modules</target>
+        <note>Context:
+File: admin-dev/themes/new-theme/template/components/layout/search_form.tpl:50</note>
+      </trans-unit>
+      <trans-unit id="07403a8bc81d7865c8e040e718ec7828">
+        <source>Module name</source>
+        <target>Module name</target>
+        <note>Context:
+File: admin-dev/themes/new-theme/template/components/layout/search_form.tpl:50</note>
+      </trans-unit>
+      <trans-unit id="0f544d682c3a664870f025f48c4b04b5">
+        <source>SEARCH</source>
+        <target>SEARCH</target>
+        <note>Context:
+File: admin-dev/themes/new-theme/template/components/layout/search_form.tpl:52</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/psgdpr/classes/GDPRLog.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="ba2c992afac038de48cb8866fb819fd6">
+        <source>Guest client : ID</source>
+        <target>Guest client : ID</target>
+        <note>Context:
+File: modules/psgdpr/classes/GDPRLog.php:75</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/psgdpr/psgdpr.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="5966265f35dd87febf4d59029bc9ef66">
+        <source>Official GDPR compliance</source>
+        <target>Official GDPR compliance</target>
+        <note>Context:
+File: modules/psgdpr/psgdpr.php:67</note>
+      </trans-unit>
+      <trans-unit id="dbf90f78fc135d723570a4a43041a3dc">
+        <source>Comply with the main requirements of the European General Data Protection Regulation thanks to this module developed by PrestaShop.</source>
+        <target>Comply with the main requirements of the European General Data Protection Regulation thanks to this module developed by PrestaShop.</target>
+        <note>Context:
+File: modules/psgdpr/psgdpr.php:68</note>
+      </trans-unit>
+      <trans-unit id="e9415612c1d72517733c98e6877a6b46">
+        <source>There was an error during the uninstallation. Please contact us through Addons website.</source>
+        <target>There was an error during the uninstallation. Please contact us through Addons website.</target>
+        <note>Context:
+File: modules/psgdpr/psgdpr.php:131
+ Comment: if something wrong return false</note>
+      </trans-unit>
+      <trans-unit id="78d320af42aca685d1fcd1113f09939e">
+        <source>There was an error during the desinstallation. Please contact us through Addons website</source>
+        <target>There was an error during the desinstallation. Please contact us through Addons website</target>
+        <note>Context:
+File: modules/psgdpr/psgdpr.php:155</note>
+      </trans-unit>
+      <trans-unit id="e7502bc086a11cfa8789053af27eab2d">
+        <source>Saved with success !</source>
+        <target>Saved with success !</target>
+        <note>Context:
+File: modules/psgdpr/psgdpr.php:408</note>
+      </trans-unit>
+      <trans-unit id="a59aa7fb037f2498e36a6d687869e83e">
+        <source>Customer data deleted by official GDPR module.</source>
+        <target>Customer data deleted by official GDPR module.</target>
+        <note>Context:
+File: modules/psgdpr/psgdpr.php:429</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_faviconnotificationbo/ps_faviconnotificationbo.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="bb8956c67b82c7444a80c6b2433dd8b4">
+        <source>Are you sure you want to uninstall this module?</source>
+        <target>Are you sure you want to uninstall this module?</target>
+        <note>Context:
+File: modules/ps_faviconnotificationbo/ps_faviconnotificationbo.php:71
+ Comment: Confirm uninstall</note>
+      </trans-unit>
+      <trans-unit id="87cc29282288a147a6c6a8fca50ba414">
+        <source>Order Notifications on the Favicon</source>
+        <target>Order Notifications on the Favicon</target>
+        <note>Context:
+File: modules/ps_faviconnotificationbo/ps_faviconnotificationbo.php:58</note>
+      </trans-unit>
+      <trans-unit id="421c53421b5ea9820af60bb4dba58584">
+        <source>Get notified when you get new order, new client or new message directly on your browser tab of your back office even if you are working on another page</source>
+        <target>Get notified when you get new order, new client or new message directly on your browser tab of your back office even if you are working on another page</target>
+        <note>Context:
+File: modules/ps_faviconnotificationbo/ps_faviconnotificationbo.php:59</note>
+      </trans-unit>
+      <trans-unit id="faaa79afdd5385b4ff3db080a88b0dc8">
+        <source>There was an error during the uninstallation.</source>
+        <target>There was an error during the uninstallation.</target>
+        <note>Context:
+File: modules/ps_faviconnotificationbo/ps_faviconnotificationbo.php:101</note>
       </trans-unit>
     </body>
   </file>
@@ -2552,35 +3429,6 @@ File: modules/gsitemap/gsitemap.php:696</note>
       </trans-unit>
     </body>
   </file>
-  <file original="modules/ps_faviconnotificationbo/ps_faviconnotificationbo.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="87cc29282288a147a6c6a8fca50ba414">
-        <source>Order Notifications on the Favicon</source>
-        <target>Order Notifications on the Favicon</target>
-        <note>Context:
-File: modules/ps_faviconnotificationbo/ps_faviconnotificationbo.php:58</note>
-      </trans-unit>
-      <trans-unit id="421c53421b5ea9820af60bb4dba58584">
-        <source>Get notified when you get new order, new client or new message directly on your browser tab of your back office even if you are working on another page</source>
-        <target>Get notified when you get new order, new client or new message directly on your browser tab of your back office even if you are working on another page</target>
-        <note>Context:
-File: modules/ps_faviconnotificationbo/ps_faviconnotificationbo.php:59</note>
-      </trans-unit>
-      <trans-unit id="bb8956c67b82c7444a80c6b2433dd8b4">
-        <source>Are you sure you want to uninstall this module?</source>
-        <target>Are you sure you want to uninstall this module?</target>
-        <note>Context:
-File: modules/ps_faviconnotificationbo/ps_faviconnotificationbo.php:71
- Comment: Confirm uninstall</note>
-      </trans-unit>
-      <trans-unit id="faaa79afdd5385b4ff3db080a88b0dc8">
-        <source>There was an error during the uninstallation.</source>
-        <target>There was an error during the uninstallation.</target>
-        <note>Context:
-File: modules/ps_faviconnotificationbo/ps_faviconnotificationbo.php:101</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="modules/gamification/views/templates/hook/notification.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="ca96b4f8d13722aac99da25f94ea1711">
@@ -3109,16 +3957,6 @@ File: modules/ps_mbo/views/templates/admin/include/admin-end-content-footer-lega
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/memcache_servers.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="75ba8d70e3692ba200f0e0df37b4d2ae">
-        <source>IP address</source>
-        <target>IP address</target>
-        <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/memcache_servers.html.twig:79</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="admin-dev/themes/new-theme/template/components/layout/error_messages.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="2169b4627df97333ed94d1e30a9b8148">
@@ -3157,130 +3995,6 @@ File: admin-dev/themes/default/template/layout-ajax.tpl:88</note>
       </trans-unit>
     </body>
   </file>
-  <file original="admin-dev/themes/new-theme/template/components/layout/search_form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="03de6422045e4ed3ac822c673ace32d1">
-        <source>123.45.67.89</source>
-        <target>123.45.67.89</target>
-        <note>Context:
-File: admin-dev/themes/new-theme/template/components/layout/search_form.tpl:46</note>
-      </trans-unit>
-      <trans-unit id="e6d0e1c8fc6a4fcf47869df87e04cd88">
-        <source>Customers</source>
-        <target>Customers</target>
-        <note>Context:
-File: admin-dev/themes/new-theme/template/components/layout/search_form.tpl:46</note>
-      </trans-unit>
-      <trans-unit id="7442e29d7d53e549b78d93c46b8cdcfc">
-        <source>Orders</source>
-        <target>Orders</target>
-        <note>Context:
-File: admin-dev/themes/new-theme/template/components/layout/search_form.tpl:47</note>
-      </trans-unit>
-      <trans-unit id="f5945546981ef6e50e1fade1b386da04">
-        <source>Search (e.g.: product reference, customer name…)</source>
-        <target>Search (e.g.: product reference, customer name…)</target>
-        <note>Context:
-File: admin-dev/themes/new-theme/template/components/layout/search_form.tpl:36</note>
-      </trans-unit>
-      <trans-unit id="13787cfb1a15ae6690a29d3895c54de9">
-        <source>Everywhere</source>
-        <target>Everywhere</target>
-        <note>Context:
-File: admin-dev/themes/new-theme/template/components/layout/search_form.tpl:42</note>
-      </trans-unit>
-      <trans-unit id="2e67c0a79d35c15af2436c8d80ca072d">
-        <source>What are you looking for?</source>
-        <target>What are you looking for?</target>
-        <note>Context:
-File: admin-dev/themes/new-theme/template/components/layout/search_form.tpl:42</note>
-      </trans-unit>
-      <trans-unit id="c32516babc5b6c47eb8ce1bfc223253c">
-        <source>Catalog</source>
-        <target>Catalog</target>
-        <note>Context:
-File: admin-dev/themes/new-theme/template/components/layout/search_form.tpl:44</note>
-      </trans-unit>
-      <trans-unit id="7f704ff8964f7b5f3f9a6444d450b5f7">
-        <source>Product name, SKU, reference...</source>
-        <target>Product name, SKU, reference...</target>
-        <note>Context:
-File: admin-dev/themes/new-theme/template/components/layout/search_form.tpl:44</note>
-      </trans-unit>
-      <trans-unit id="855d2bf59043b81e76bc931e685a4f58">
-        <source>by name</source>
-        <target>by name</target>
-        <note>Context:
-File: admin-dev/themes/new-theme/template/components/layout/search_form.tpl:45</note>
-      </trans-unit>
-      <trans-unit id="a3681587c5320489b6a3dd21282e254d">
-        <source>Email, name...</source>
-        <target>Email, name...</target>
-        <note>Context:
-File: admin-dev/themes/new-theme/template/components/layout/search_form.tpl:45</note>
-      </trans-unit>
-      <trans-unit id="399574be0ed95657dfac0e8d38374c62">
-        <source>by ip address</source>
-        <target>by ip address</target>
-        <note>Context:
-File: admin-dev/themes/new-theme/template/components/layout/search_form.tpl:46</note>
-      </trans-unit>
-      <trans-unit id="16b2494238f8f996b09417d1dc56c795">
-        <source>by IP address</source>
-        <target>by IP address</target>
-        <note>Context:
-File: admin-dev/themes/new-theme/template/components/layout/search_form.tpl:46</note>
-      </trans-unit>
-      <trans-unit id="d79cf3f429596f77db95c65074663a54">
-        <source>Order ID</source>
-        <target>Order ID</target>
-        <note>Context:
-File: admin-dev/themes/new-theme/template/components/layout/search_form.tpl:47</note>
-      </trans-unit>
-      <trans-unit id="fce9a6a1bd2a2050eb86d33103f46fd3">
-        <source>Invoices</source>
-        <target>Invoices</target>
-        <note>Context:
-File: admin-dev/themes/new-theme/template/components/layout/search_form.tpl:48</note>
-      </trans-unit>
-      <trans-unit id="4e065ba1bec1d62b2d5450256612fa96">
-        <source>Invoice Number</source>
-        <target>Invoice Number</target>
-        <note>Context:
-File: admin-dev/themes/new-theme/template/components/layout/search_form.tpl:48</note>
-      </trans-unit>
-      <trans-unit id="fc26e55e0993a75e892175deb02aae15">
-        <source>Carts</source>
-        <target>Carts</target>
-        <note>Context:
-File: admin-dev/themes/new-theme/template/components/layout/search_form.tpl:49</note>
-      </trans-unit>
-      <trans-unit id="fc6dfe4f8b07fc04c99e27425f780754">
-        <source>Cart ID</source>
-        <target>Cart ID</target>
-        <note>Context:
-File: admin-dev/themes/new-theme/template/components/layout/search_form.tpl:49</note>
-      </trans-unit>
-      <trans-unit id="bf17ac149e2e7a530c677e9bd51d3fd2">
-        <source>Modules</source>
-        <target>Modules</target>
-        <note>Context:
-File: admin-dev/themes/new-theme/template/components/layout/search_form.tpl:50</note>
-      </trans-unit>
-      <trans-unit id="07403a8bc81d7865c8e040e718ec7828">
-        <source>Module name</source>
-        <target>Module name</target>
-        <note>Context:
-File: admin-dev/themes/new-theme/template/components/layout/search_form.tpl:50</note>
-      </trans-unit>
-      <trans-unit id="0f544d682c3a664870f025f48c4b04b5">
-        <source>SEARCH</source>
-        <target>SEARCH</target>
-        <note>Context:
-File: admin-dev/themes/new-theme/template/components/layout/search_form.tpl:52</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="admin-dev/themes/new-theme/template/helpers/shops_list/list.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="804ccd6219996d12eda865d1c0707423">
@@ -3304,12 +4018,6 @@ File: admin-dev/themes/new-theme/template/helpers/shops_list/list.tpl:38</note>
         <target>Income</target>
         <note>Context:
 File: admin-dev/themes/default/template/helpers/dataviz/graph.tpl:45</note>
-      </trans-unit>
-      <trans-unit id="4c2a8fe7eaf24721cc7a9f0175115bd4">
-        <source>Message</source>
-        <target>Message</target>
-        <note>Context:
-File: admin-dev/themes/default/template/helpers/dataviz/graph.tpl:51</note>
       </trans-unit>
       <trans-unit id="e7935ae6c516d89405ec532359d2d75a">
         <source>Traffic</source>
@@ -4989,6 +5697,40 @@ File: admin-dev/themes/new-theme/template/components/layout/non-responsive.tpl:3
       </trans-unit>
     </body>
   </file>
+  <file original="admin-dev/themes/default/template/controllers/modules/favorites.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="7e4a9cd054588a95b0394d92a2030e72">
+        <source>Normal view</source>
+        <target>Normal view</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/modules/favorites.tpl:35</note>
+      </trans-unit>
+      <trans-unit id="d7af23f5f349f2c4eace4927943b2760">
+        <source>Favorites view</source>
+        <target>Favorites view</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/modules/favorites.tpl:39</note>
+      </trans-unit>
+      <trans-unit id="5c6ba25104401c9ee0650230fc6ba413">
+        <source>Tab</source>
+        <target>Tab</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/modules/favorites.tpl:52</note>
+      </trans-unit>
+      <trans-unit id="920beb5dda21b04a332e0457cb0cfbec">
+        <source>Interest</source>
+        <target>Interest</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/modules/favorites.tpl:54</note>
+      </trans-unit>
+      <trans-unit id="01165dcf77c191e6c69b31d98b0ec6ff">
+        <source>Favorite</source>
+        <target>Favorite</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/modules/favorites.tpl:55</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="modules/ps_mbo/views/templates/admin/include/dropdown_categories.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="af1b98adf7f686b84cd0b443e022b7a0">
@@ -5801,6 +6543,374 @@ File: admin-dev/themes/new-theme/template/layout.tpl:93</note>
       </trans-unit>
     </body>
   </file>
+  <file original="modules/psgdpr/views/templates/front/pdf/personalData.orders-tab.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="0e166fe6d96b79167a1cdc0dcecb43dd">
+        <source>Product(s) in the order</source>
+        <target>Product(s) in the order</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/front/pdf/personalData.orders-tab.tpl:47</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/psgdpr/views/templates/admin/tabs/help.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="c2ba71bfcb3f9d58df2ccacc5b949c2d">
+        <source><![CDATA[Help & contact]]></source>
+        <target><![CDATA[Help & contact]]></target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/help.tpl:18</note>
+      </trans-unit>
+      <trans-unit id="a19f5b117715d61a9fe7474260e1f6bf">
+        <source>This module allows you to :</source>
+        <target>This module allows you to :</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/help.tpl:26</note>
+      </trans-unit>
+      <trans-unit id="129d6406c710afbbd8e26fdfdec211e5">
+        <source>Erase any customer account with his/her personal data collected by your shop if requested by the customer</source>
+        <target>Erase any customer account with his/her personal data collected by your shop if requested by the customer</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/help.tpl:32</note>
+      </trans-unit>
+      <trans-unit id="cd66b7179c438249ca40ff6498bb28c4">
+        <source>Add a consent confirmation checkbox in a module form that collects personal data and customize it</source>
+        <target>Add a consent confirmation checkbox in a module form that collects personal data and customize it</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/help.tpl:40</note>
+      </trans-unit>
+      <trans-unit id="bd47684406e8441b4e2e354ad3adafa7">
+        <source>Allow your customer to consult and export their personal data collected by your shop on their customer account</source>
+        <target>Allow your customer to consult and export their personal data collected by your shop on their customer account</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/help.tpl:48</note>
+      </trans-unit>
+      <trans-unit id="38dfa44543ebf8ab68578ead08b1c19a">
+        <source>View all your customers’ actions related to their personal data</source>
+        <target>View all your customers’ actions related to their personal data</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/help.tpl:56</note>
+      </trans-unit>
+      <trans-unit id="73878c19cdc6ef2ab0d0fac6943cc958">
+        <source>Need help ?</source>
+        <target>Need help ?</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/help.tpl:64</note>
+      </trans-unit>
+      <trans-unit id="5eaa63820c162e960a23700319f7e3cc">
+        <source>Find here the documentation of this module</source>
+        <target>Find here the documentation of this module</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/help.tpl:65</note>
+      </trans-unit>
+      <trans-unit id="5b6cf869265c13af8566f192b4ab3d2a">
+        <source>Documentation</source>
+        <target>Documentation</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/help.tpl:67</note>
+      </trans-unit>
+      <trans-unit id="1fe917b01f9a3f87fa2d7d3b7643fac1">
+        <source>FAQ</source>
+        <target>FAQ</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/help.tpl:71</note>
+      </trans-unit>
+      <trans-unit id="d11557a79f3f22cdd119600241e20a52">
+        <source>You couldn't find any answer to your question ?</source>
+        <target>You couldn't find any answer to your question ?</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/help.tpl:89</note>
+      </trans-unit>
+      <trans-unit id="0b4f23e625077174e2bda0b340e02632">
+        <source>Contact us on PrestaShop Addons</source>
+        <target>Contact us on PrestaShop Addons</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/help.tpl:90</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/psgdpr/views/templates/admin/menu.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="be11c74c1dd7f307bb80183a90dc2067">
+        <source>Get started</source>
+        <target>Get started</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/menu.tpl:30</note>
+      </trans-unit>
+      <trans-unit id="949de8585e0cc176f0e47317ce985023">
+        <source>Personal data management</source>
+        <target>Personal data management</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/menu.tpl:31</note>
+      </trans-unit>
+      <trans-unit id="04d691f0f2b299343d6431e23cfe6be4">
+        <source>Consent checkbox customization</source>
+        <target>Consent checkbox customization</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/menu.tpl:32</note>
+      </trans-unit>
+      <trans-unit id="e898759faaefeae772f161b7dbdc31ec">
+        <source>Customer activity tracking</source>
+        <target>Customer activity tracking</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/menu.tpl:33</note>
+      </trans-unit>
+      <trans-unit id="34b6cd75171affba6957e308dcbd92be">
+        <source>Version</source>
+        <target>Version</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/menu.tpl:39</note>
+      </trans-unit>
+      <trans-unit id="4fb72931ca985b1f33b9b2b5b604c6ef">
+        <source>Url has been copied to the clipboard!</source>
+        <target>Url has been copied to the clipboard!</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/menu.tpl:82</note>
+      </trans-unit>
+      <trans-unit id="cdec11f09fb339e01121a4ef5224594c">
+        <source>Invoices have been successfully downloaded.</source>
+        <target>Invoices have been successfully downloaded.</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/menu.tpl:83</note>
+      </trans-unit>
+      <trans-unit id="f0a90a69e73126cef322ef544ebb641f">
+        <source>No invoices available for this customer.</source>
+        <target>No invoices available for this customer.</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/menu.tpl:84</note>
+      </trans-unit>
+      <trans-unit id="729a51874fe901b092899e9e8b31c97a">
+        <source>Are you sure?</source>
+        <target>Are you sure?</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/menu.tpl:85</note>
+      </trans-unit>
+      <trans-unit id="7db050b741b6de7a1f955472f33d8325">
+        <source>Attention! This action is irreversible. Please make sure you have downloaded all of the customer’s invoices (if he has any) before clicking on Confirm erasure.</source>
+        <target>Attention! This action is irreversible. Please make sure you have downloaded all of the customer’s invoices (if he has any) before clicking on Confirm erasure.</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/menu.tpl:86</note>
+      </trans-unit>
+      <trans-unit id="1bf87e44da33943a3baad59edd51f4a0">
+        <source>Cancel action</source>
+        <target>Cancel action</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/menu.tpl:87</note>
+      </trans-unit>
+      <trans-unit id="0cac91b206582769ea4876fbbae5f2ab">
+        <source>Confirm Erasure</source>
+        <target>Confirm Erasure</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/menu.tpl:88</note>
+      </trans-unit>
+      <trans-unit id="a5d79cef10bbfc4e501d8f6728de7fa3">
+        <source>The customer's data has been successfully deleted!</source>
+        <target>The customer's data has been successfully deleted!</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/menu.tpl:89</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/psgdpr/views/templates/admin/tabs/getStarted.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="20719d3a43ec43a93df59b1bbfdecb98">
+        <source>Welcome to your GDPR module</source>
+        <target>Welcome to your GDPR module</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/getStarted.tpl:19</note>
+      </trans-unit>
+      <trans-unit id="4d47947737e64fb8d082cd23e655c58c">
+        <source>This interface will help you to become familiar with the GDPR and give you some guidance to help you become compliant with this regulation.</source>
+        <target>This interface will help you to become familiar with the GDPR and give you some guidance to help you become compliant with this regulation.</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/getStarted.tpl:21</note>
+      </trans-unit>
+      <trans-unit id="c04cc4c3ffc62872b7ad64f7bb379831">
+        <source>This module meets the main regulation's requirements concerning personal data of your customers including :</source>
+        <target>This module meets the main regulation's requirements concerning personal data of your customers including :</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/getStarted.tpl:22</note>
+      </trans-unit>
+      <trans-unit id="d743912f3dd67b05698f902990065dc2">
+        <source>The right to access their personal data and data portability</source>
+        <target>The right to access their personal data and data portability</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/getStarted.tpl:24</note>
+      </trans-unit>
+      <trans-unit id="674eec70af9feb40728481ce959ca7ea">
+        <source>The right to obtain rectification and/or erasure of their personal data</source>
+        <target>The right to obtain rectification and/or erasure of their personal data</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/getStarted.tpl:25</note>
+      </trans-unit>
+      <trans-unit id="56ebf6e5564c6b92e4d77e88949fd52c">
+        <source>The right to give and withdraw consent</source>
+        <target>The right to give and withdraw consent</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/getStarted.tpl:26</note>
+      </trans-unit>
+      <trans-unit id="eff0cc2d13389da1aa5ae9405418354f">
+        <source>It also allows you to keep a record of processing activities (especially for access, consent and erasure).</source>
+        <target>It also allows you to keep a record of processing activities (especially for access, consent and erasure).</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/getStarted.tpl:28</note>
+      </trans-unit>
+      <trans-unit id="cb5830c9314fa880d3607bbac3d78af8">
+        <source>Follow our 3 steps to configure your module and help you to become GDPR compliant !</source>
+        <target>Follow our 3 steps to configure your module and help you to become GDPR compliant !</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/getStarted.tpl:29</note>
+      </trans-unit>
+      <trans-unit id="34e34c43ec6b943c10a3cc1a1a16fb11">
+        <source>Manage</source>
+        <target>Manage</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/getStarted.tpl:36</note>
+      </trans-unit>
+      <trans-unit id="604c6226ffa8d05ba2e9d637852673a6">
+        <source>See our Personal data management tab to visualize the data collected by PrestaShop and community modules and manage your customers’ personal data.</source>
+        <target>See our Personal data management tab to visualize the data collected by PrestaShop and community modules and manage your customers’ personal data.</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/getStarted.tpl:39</note>
+      </trans-unit>
+      <trans-unit id="63a78ed4647f7c63c2929e35ec1c95e3">
+        <source>Customize</source>
+        <target>Customize</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/getStarted.tpl:46</note>
+      </trans-unit>
+      <trans-unit id="232c8c9b71d0a7d5197d29735ef4b903">
+        <source>Customize the consent confirmation checkboxes and consent request message on the different forms of your store, especially for account creation and newsletter subscription.</source>
+        <target>Customize the consent confirmation checkboxes and consent request message on the different forms of your store, especially for account creation and newsletter subscription.</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/getStarted.tpl:49</note>
+      </trans-unit>
+      <trans-unit id="afc9168648f61aa6abd0bf76b84abc3b">
+        <source>Keep track</source>
+        <target>Keep track</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/getStarted.tpl:56</note>
+      </trans-unit>
+      <trans-unit id="c9c1dc03aed08d4c60bde968b3417f60">
+        <source>Visualize all of your customers’ actions related to their data and manage the erasure requests.</source>
+        <target>Visualize all of your customers’ actions related to their data and manage the erasure requests.</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/getStarted.tpl:59</note>
+      </trans-unit>
+      <trans-unit id="eb36499a1ed94957bf4988899d45aa1a">
+        <source>Note : Please make sure that you have access to the latest version of your installed module(s) to fully benefit the features of our GDPR module. If one or several of your modules do not provide their data list, we invite you to contact directly the developers of these modules.</source>
+        <target>Note : Please make sure that you have access to the latest version of your installed module(s) to fully benefit the features of our GDPR module. If one or several of your modules do not provide their data list, we invite you to contact directly the developers of these modules.</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/getStarted.tpl:68</note>
+      </trans-unit>
+      <trans-unit id="011400bd7b57639a3aa5a2dd70f275ee">
+        <source>More information about GDPR</source>
+        <target>More information about GDPR</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/getStarted.tpl:73</note>
+      </trans-unit>
+      <trans-unit id="75ab3e8ff5e5eb97d91eb14e5c82beb2">
+        <source>Data protection authorities websites</source>
+        <target>Data protection authorities websites</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/getStarted.tpl:81</note>
+      </trans-unit>
+      <trans-unit id="47d4e5149c64dfa18b87cf6dc464e5ee">
+        <source>PrestaShop GDPR whitepaper</source>
+        <target>PrestaShop GDPR whitepaper</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/getStarted.tpl:89</note>
+      </trans-unit>
+      <trans-unit id="907661878122df0c0271c89d6d2e0751">
+        <source>Module's documentation</source>
+        <target>Module's documentation</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/getStarted.tpl:97</note>
+      </trans-unit>
+      <trans-unit id="34e2d1989a1dbf75cd631596133ee5ee">
+        <source>Video</source>
+        <target>Video</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/getStarted.tpl:105</note>
+      </trans-unit>
+      <trans-unit id="712b9d33de9cca47077a2d2b1831edb8">
+        <source>Build article</source>
+        <target>Build article</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/getStarted.tpl:113</note>
+      </trans-unit>
+      <trans-unit id="1972bd6acee82b7e9fc7af320ae4e673">
+        <source>Note : These features are intended to help you to become GDPR compliant. However using them does not guarantee that your site is fully compliant with GDPR requirements. It is </source>
+        <target>Note : These features are intended to help you to become GDPR compliant. However using them does not guarantee that your site is fully compliant with GDPR requirements. It is </target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/getStarted.tpl:121</note>
+      </trans-unit>
+      <trans-unit id="85e3340d54570d5167c2daaff75308c6">
+        <source>It is your own responsibility</source>
+        <target>It is your own responsibility</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/getStarted.tpl:121</note>
+      </trans-unit>
+      <trans-unit id="651f509e8c074849330167fa1dd41c19">
+        <source>to configure the modules and take all necessary actions to ensure compliance. For any questions, we recommend you to contact a lawyer specializing in personal data legislation questions.</source>
+        <target>to configure the modules and take all necessary actions to ensure compliance. For any questions, we recommend you to contact a lawyer specializing in personal data legislation questions.</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/getStarted.tpl:121</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/psgdpr/views/templates/admin/tabs/customerActivity.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="f5a289ea76ecee6abfd43c2e7eddf58f">
+        <source>Customer activity list</source>
+        <target>Customer activity list</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/customerActivity.tpl:17</note>
+      </trans-unit>
+      <trans-unit id="f078af4e0b76b98d53f3820e0ce629b2">
+        <source>Keep track of your customer activity related to data accessibility, consent and erasure.</source>
+        <target>Keep track of your customer activity related to data accessibility, consent and erasure.</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/customerActivity.tpl:20</note>
+      </trans-unit>
+      <trans-unit id="9579cdef0bf63ffa6b1e3e3c616d9cac">
+        <source>Client name/ID</source>
+        <target>Client name/ID</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/customerActivity.tpl:27</note>
+      </trans-unit>
+      <trans-unit id="b9263f280c2c2ef949e10b7aa7a61549">
+        <source>Type of request</source>
+        <target>Type of request</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/customerActivity.tpl:28</note>
+      </trans-unit>
+      <trans-unit id="f0dc5a7e50af112eee854e8cee968e06">
+        <source>Submission date</source>
+        <target>Submission date</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/customerActivity.tpl:29</note>
+      </trans-unit>
+      <trans-unit id="b62799f8fdbb9329b450c490004a6213">
+        <source>Consent confirmation</source>
+        <target>Consent confirmation</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/customerActivity.tpl:37</note>
+      </trans-unit>
+      <trans-unit id="e0e4fc6213e8b3593495a7260c3a4c2e">
+        <source>Accessibility</source>
+        <target>Accessibility</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/customerActivity.tpl:43</note>
+      </trans-unit>
+      <trans-unit id="530479efffb195651bdbfbd50cfb8a4c">
+        <source>Erasure</source>
+        <target>Erasure</target>
+        <note>Context:
+File: modules/psgdpr/views/templates/admin/tabs/customerActivity.tpl:46</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="modules/ps_mbo/views/templates/admin/admin-end-content-theme.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="bbb572a770006c9e0e57c9e5d4bcda90">
@@ -6258,76 +7368,6 @@ File: modules/gsitemap/views/templates/admin/configuration.tpl:101</note>
         <target>uncheck all</target>
         <note>Context:
 File: modules/gsitemap/views/templates/admin/configuration.tpl:113</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="modules/gamification/views/templates/admin/gamification/helpers/view/view.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="a0db49ba470c1c9ae2128c3470339153">
-        <source>Level</source>
-        <target>Level</target>
-        <note>Context:
-File: modules/gamification/views/templates/admin/gamification/helpers/view/view.tpl:70</note>
-      </trans-unit>
-      <trans-unit id="2a0ab6a9172272d54f0d601b0ac157f3">
-        <source>Become an e-commerce expert in leaps and bounds!</source>
-        <target>Become an e-commerce expert in leaps and bounds!</target>
-        <note>Context:
-File: modules/gamification/views/templates/admin/gamification/helpers/view/view.tpl:49</note>
-      </trans-unit>
-      <trans-unit id="cb3d475bd997e38c100704631dbab020">
-        <source>With all of the great features and benefits that PrestaShop offers, it's important to keep up!</source>
-        <target>With all of the great features and benefits that PrestaShop offers, it's important to keep up!</target>
-        <note>Context:
-File: modules/gamification/views/templates/admin/gamification/helpers/view/view.tpl:51</note>
-      </trans-unit>
-      <trans-unit id="2c3193c85bb2555c333adfcfb824804a">
-        <source>The main goal of all of the features we offer is to make you succeed in the e-commerce world. In order to accomplish this, we have created a system of badges and points that make it easy to monitor your progress as a merchant. We have broken down the system into three levels, all of which are integral to success in the e-commerce world: (i) Your use of key e-commerce features on your store; (ii) Your sales performance; (iii) Your presence in international markets.</source>
-        <target>The main goal of all of the features we offer is to make you succeed in the e-commerce world. In order to accomplish this, we have created a system of badges and points that make it easy to monitor your progress as a merchant. We have broken down the system into three levels, all of which are integral to success in the e-commerce world: (i) Your use of key e-commerce features on your store; (ii) Your sales performance; (iii) Your presence in international markets.</target>
-        <note>Context:
-File: modules/gamification/views/templates/admin/gamification/helpers/view/view.tpl:52</note>
-      </trans-unit>
-      <trans-unit id="6b766dc388ad21053bde0f8fd95d1e04">
-        <source>The more progress your store makes, the more badges and points you earn. No need to submit any information or fill out any forms; we know how busy you are, everything is automatic!</source>
-        <target>The more progress your store makes, the more badges and points you earn. No need to submit any information or fill out any forms; we know how busy you are, everything is automatic!</target>
-        <note>Context:
-File: modules/gamification/views/templates/admin/gamification/helpers/view/view.tpl:53</note>
-      </trans-unit>
-      <trans-unit id="21dc1cfc9ef1cdfbb665cab323d5e1a9">
-        <source>Now, with the click of a button, you will be able to see sales-enhancing features that you may be missing out on. Take advantage and check it out below!</source>
-        <target>Now, with the click of a button, you will be able to see sales-enhancing features that you may be missing out on. Take advantage and check it out below!</target>
-        <note>Context:
-File: modules/gamification/views/templates/admin/gamification/helpers/view/view.tpl:54</note>
-      </trans-unit>
-      <trans-unit id="bcc5a331e758a60ad298b4b18a26d0e0">
-        <source>Our team is available to help. Contact us today!</source>
-        <target>Our team is available to help. Contact us today!</target>
-        <note>Context:
-File: modules/gamification/views/templates/admin/gamification/helpers/view/view.tpl:58</note>
-      </trans-unit>
-      <trans-unit id="ce8ae9da5b7cd6c3df2929543a9af92d">
-        <source>Email</source>
-        <target>Email</target>
-        <note>Context:
-File: modules/gamification/views/templates/admin/gamification/helpers/view/view.tpl:61</note>
-      </trans-unit>
-      <trans-unit id="7d6d8e6610fd23b684be7e95a6cc5c39">
-        <source>Fill out a contact form</source>
-        <target>Fill out a contact form</target>
-        <note>Context:
-File: modules/gamification/views/templates/admin/gamification/helpers/view/view.tpl:62</note>
-      </trans-unit>
-      <trans-unit id="6b6ac7834d96afefbca5677814769109">
-        <source>Completion level</source>
-        <target>Completion level</target>
-        <note>Context:
-File: modules/gamification/views/templates/admin/gamification/helpers/view/view.tpl:68</note>
-      </trans-unit>
-      <trans-unit id="82338dd23ce2fd2f6d3606c20f4ee96e">
-        <source>No badge in this section</source>
-        <target>No badge in this section</target>
-        <note>Context:
-File: modules/gamification/views/templates/admin/gamification/helpers/view/view.tpl:93</note>
       </trans-unit>
     </body>
   </file>
