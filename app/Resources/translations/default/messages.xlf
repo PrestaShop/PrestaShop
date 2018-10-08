@@ -813,12 +813,6 @@ File: controllers/admin/AdminTabsController.php:198</note>
         <note>Context:
 File: admin-dev/themes/default/template/controllers/modules/favorites.tpl:51</note>
       </trans-unit>
-      <trans-unit id="6afd80bf62a1b8bdfe729af8a0159fee">
-        <source>Modules list</source>
-        <target>Modules list</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/modules/favorites.tpl:28</note>
-      </trans-unit>
       <trans-unit id="7e4a9cd054588a95b0394d92a2030e72">
         <source>Normal view</source>
         <target>Normal view</target>
@@ -836,12 +830,6 @@ File: admin-dev/themes/default/template/controllers/modules/favorites.tpl:39</no
         <target>Tab</target>
         <note>Context:
 File: admin-dev/themes/default/template/controllers/modules/favorites.tpl:52</note>
-      </trans-unit>
-      <trans-unit id="af1b98adf7f686b84cd0b443e022b7a0">
-        <source>Categories</source>
-        <target>Categories</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/modules/favorites.tpl:53</note>
       </trans-unit>
       <trans-unit id="920beb5dda21b04a332e0457cb0cfbec">
         <source>Interest</source>
@@ -882,6 +870,72 @@ File: classes/controller/AdminController.php:3032</note>
         <target>Save</target>
         <note>Context:
 File: classes/controller/AdminController.php:1628</note>
+      </trans-unit>
+      <trans-unit id="b9804794cbfeea33c6d9b2ce85100b48">
+        <source>Do you really want to uninstall this module?</source>
+        <target>Do you really want to uninstall this module?</target>
+        <note>Context:
+File: classes/controller/AdminController.php:4334</note>
+      </trans-unit>
+      <trans-unit id="b2f31ef3065bf40b2da9fa8525c6adb9">
+        <source>Disable this module</source>
+        <target>Disable this module</target>
+        <note>Context:
+File: classes/controller/AdminController.php:4336</note>
+      </trans-unit>
+      <trans-unit id="668c99c1164d5348f99c0878770b53a8">
+        <source>Enable this module for all shops</source>
+        <target>Enable this module for all shops</target>
+        <note>Context:
+File: classes/controller/AdminController.php:4337</note>
+      </trans-unit>
+      <trans-unit id="112b842b7d5dda8d3fed05c0e5aaf983">
+        <source>Disable on mobiles</source>
+        <target>Disable on mobiles</target>
+        <note>Context:
+File: classes/controller/AdminController.php:4340</note>
+      </trans-unit>
+      <trans-unit id="2ef92962bd1ac0c81675f10568ad5cca">
+        <source>Disable on tablets</source>
+        <target>Disable on tablets</target>
+        <note>Context:
+File: classes/controller/AdminController.php:4341</note>
+      </trans-unit>
+      <trans-unit id="5e3ffb3123b3f23a33804d41e38745a0">
+        <source>Disable on computers</source>
+        <target>Disable on computers</target>
+        <note>Context:
+File: classes/controller/AdminController.php:4342</note>
+      </trans-unit>
+      <trans-unit id="862e2caedb77ba14d86f180ca7fa90a8">
+        <source>Display on mobiles</source>
+        <target>Display on mobiles</target>
+        <note>Context:
+File: classes/controller/AdminController.php:4343</note>
+      </trans-unit>
+      <trans-unit id="732ebdb0f33a8153b51ac58cac8f3563">
+        <source>Display on tablets</source>
+        <target>Display on tablets</target>
+        <note>Context:
+File: classes/controller/AdminController.php:4344</note>
+      </trans-unit>
+      <trans-unit id="7f0f7c79f1d7b01b1d8a89f392e93d36">
+        <source>Display on computers</source>
+        <target>Display on computers</target>
+        <note>Context:
+File: classes/controller/AdminController.php:4345</note>
+      </trans-unit>
+      <trans-unit id="f2a6c498fb90ee345d997f888fce3b18">
+        <source>Delete</source>
+        <target>Delete</target>
+        <note>Context:
+File: classes/controller/AdminController.php:4348</note>
+      </trans-unit>
+      <trans-unit id="85687c63fd82afbc21632f288e53a6e4">
+        <source>This action will permanently remove the module from the server. Are you sure you want to do this?</source>
+        <target>This action will permanently remove the module from the server. Are you sure you want to do this?</target>
+        <note>Context:
+File: classes/controller/AdminController.php:4352</note>
       </trans-unit>
       <trans-unit id="ec211f7c20af43e742bf2570c3cb84f9">
         <source>Add</source>
@@ -1021,72 +1075,6 @@ File: classes/controller/AdminController.php:2676</note>
         <note>Context:
 File: classes/controller/AdminController.php:2677</note>
       </trans-unit>
-      <trans-unit id="b9804794cbfeea33c6d9b2ce85100b48">
-        <source>Do you really want to uninstall this module?</source>
-        <target>Do you really want to uninstall this module?</target>
-        <note>Context:
-File: classes/controller/AdminController.php:4334</note>
-      </trans-unit>
-      <trans-unit id="b2f31ef3065bf40b2da9fa8525c6adb9">
-        <source>Disable this module</source>
-        <target>Disable this module</target>
-        <note>Context:
-File: classes/controller/AdminController.php:4336</note>
-      </trans-unit>
-      <trans-unit id="668c99c1164d5348f99c0878770b53a8">
-        <source>Enable this module for all shops</source>
-        <target>Enable this module for all shops</target>
-        <note>Context:
-File: classes/controller/AdminController.php:4337</note>
-      </trans-unit>
-      <trans-unit id="112b842b7d5dda8d3fed05c0e5aaf983">
-        <source>Disable on mobiles</source>
-        <target>Disable on mobiles</target>
-        <note>Context:
-File: classes/controller/AdminController.php:4340</note>
-      </trans-unit>
-      <trans-unit id="2ef92962bd1ac0c81675f10568ad5cca">
-        <source>Disable on tablets</source>
-        <target>Disable on tablets</target>
-        <note>Context:
-File: classes/controller/AdminController.php:4341</note>
-      </trans-unit>
-      <trans-unit id="5e3ffb3123b3f23a33804d41e38745a0">
-        <source>Disable on computers</source>
-        <target>Disable on computers</target>
-        <note>Context:
-File: classes/controller/AdminController.php:4342</note>
-      </trans-unit>
-      <trans-unit id="862e2caedb77ba14d86f180ca7fa90a8">
-        <source>Display on mobiles</source>
-        <target>Display on mobiles</target>
-        <note>Context:
-File: classes/controller/AdminController.php:4343</note>
-      </trans-unit>
-      <trans-unit id="732ebdb0f33a8153b51ac58cac8f3563">
-        <source>Display on tablets</source>
-        <target>Display on tablets</target>
-        <note>Context:
-File: classes/controller/AdminController.php:4344</note>
-      </trans-unit>
-      <trans-unit id="7f0f7c79f1d7b01b1d8a89f392e93d36">
-        <source>Display on computers</source>
-        <target>Display on computers</target>
-        <note>Context:
-File: classes/controller/AdminController.php:4345</note>
-      </trans-unit>
-      <trans-unit id="f2a6c498fb90ee345d997f888fce3b18">
-        <source>Delete</source>
-        <target>Delete</target>
-        <note>Context:
-File: classes/controller/AdminController.php:4348</note>
-      </trans-unit>
-      <trans-unit id="85687c63fd82afbc21632f288e53a6e4">
-        <source>This action will permanently remove the module from the server. Are you sure you want to do this?</source>
-        <target>This action will permanently remove the module from the server. Are you sure you want to do this?</target>
-        <note>Context:
-File: classes/controller/AdminController.php:4352</note>
-      </trans-unit>
     </body>
   </file>
   <file original="admin-dev/themes/default/template/controllers/import/helpers/form/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
@@ -1139,379 +1127,209 @@ File: modules/ps_emailalerts/ps_emailalerts.php:1102</note>
       </trans-unit>
     </body>
   </file>
-  <file original="modules/cronjobs/classes/CronJobsForms.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="modules/ps_mbo/ps_mbo.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="d4169d52732e9ae8df56d2cbcad81a94">
-        <source>Task description</source>
-        <target>Task description</target>
+      <trans-unit id="42667b4f4303551b1d51722fe58bf14c">
+        <source>PrestaShop Marketplace in your Back Office</source>
+        <target>PrestaShop Marketplace in your Back Office</target>
         <note>Context:
-File: modules/cronjobs/classes/CronJobsForms.php:225</note>
+File: modules/ps_mbo/ps_mbo.php:66</note>
       </trans-unit>
-      <trans-unit id="70d4968bea9a6e76c0333904b9d385e4">
-        <source>Update my currencies</source>
-        <target>Update my currencies</target>
+      <trans-unit id="598771837d403181383aa25c5b3ca84c">
+        <source>Discover the best PrestaShop modules to optimize your online store.</source>
+        <target>Discover the best PrestaShop modules to optimize your online store.</target>
         <note>Context:
-File: modules/cronjobs/classes/CronJobsForms.php:107</note>
+File: modules/ps_mbo/ps_mbo.php:67</note>
       </trans-unit>
-      <trans-unit id="0eff773cf33456a033e913f6ed18045c">
-        <source>Target link</source>
-        <target>Target link</target>
+      <trans-unit id="6b5f8217a806956477c81322bb07b9a9">
+        <source>There was an error during the installation.</source>
+        <target>There was an error during the installation.</target>
         <note>Context:
-File: modules/cronjobs/classes/CronJobsForms.php:226</note>
+File: modules/ps_mbo/ps_mbo.php:97</note>
       </trans-unit>
-      <trans-unit id="07045abc579615634804f42bc0b2b4bb">
-        <source>Enter a description for this task.</source>
-        <target>Enter a description for this task.</target>
+      <trans-unit id="757ae773751eb1eeefe7827b466e49dc">
+        <source>There was an error during the desinstallation.</source>
+        <target>There was an error during the desinstallation.</target>
         <note>Context:
-File: modules/cronjobs/classes/CronJobsForms.php:106</note>
-      </trans-unit>
-      <trans-unit id="43773e69610c99be6c15daa4a2036443">
-        <source>Set the link of your cron task.</source>
-        <target>Set the link of your cron task.</target>
-        <note>Context:
-File: modules/cronjobs/classes/CronJobsForms.php:97</note>
-      </trans-unit>
-      <trans-unit id="3a21e2309e8e6aa3759e466154508f2c">
-        <source>Do not forget to use an absolute URL to make it valid! The link also has to be on the same domain as the shop.</source>
-        <target>Do not forget to use an absolute URL to make it valid! The link also has to be on the same domain as the shop.</target>
-        <note>Context:
-File: modules/cronjobs/classes/CronJobsForms.php:114</note>
-      </trans-unit>
-      <trans-unit id="be938fb8c5582085599dfa95368fb489">
-        <source>Task frequency</source>
-        <target>Task frequency</target>
-        <note>Context:
-File: modules/cronjobs/classes/CronJobsForms.php:122</note>
-      </trans-unit>
-      <trans-unit id="b3364fad867d47ca61265fd315e4071e">
-        <source>At what time should this task be executed?</source>
-        <target>At what time should this task be executed?</target>
-        <note>Context:
-File: modules/cronjobs/classes/CronJobsForms.php:123</note>
-      </trans-unit>
-      <trans-unit id="6c5d30049c4d8d644bd35650be4ac13a">
-        <source>On which day of the month should this task be executed?</source>
-        <target>On which day of the month should this task be executed?</target>
-        <note>Context:
-File: modules/cronjobs/classes/CronJobsForms.php:132</note>
-      </trans-unit>
-      <trans-unit id="a1457ee25ec20fa032d37509b5a90a4e">
-        <source>On what month should this task be executed?</source>
-        <target>On what month should this task be executed?</target>
-        <note>Context:
-File: modules/cronjobs/classes/CronJobsForms.php:141</note>
-      </trans-unit>
-      <trans-unit id="65f768d204a3118f426c756056bef1e1">
-        <source>On which day of the week should this task be executed?</source>
-        <target>On which day of the week should this task be executed?</target>
-        <note>Context:
-File: modules/cronjobs/classes/CronJobsForms.php:150</note>
-      </trans-unit>
-      <trans-unit id="b3419e63398ccc41c062f36631bebd9a">
-        <source>Cron mode</source>
-        <target>Cron mode</target>
-        <note>Context:
-File: modules/cronjobs/classes/CronJobsForms.php:172</note>
-      </trans-unit>
-      <trans-unit id="972e73b7a882d0802a4e3a16946a2f94">
-        <source>Basic</source>
-        <target>Basic</target>
-        <note>Context:
-File: modules/cronjobs/classes/CronJobsForms.php:174</note>
-      </trans-unit>
-      <trans-unit id="eaf1dc6d93a18adb2619233d8e99c197">
-        <source>Use the PrestaShop cron tasks webservice to execute your tasks.</source>
-        <target>Use the PrestaShop cron tasks webservice to execute your tasks.</target>
-        <note>Context:
-File: modules/cronjobs/classes/CronJobsForms.php:175</note>
-      </trans-unit>
-      <trans-unit id="9b6545e4cea9b4ad4979d41bb9170e2b">
-        <source>Advanced</source>
-        <target>Advanced</target>
-        <note>Context:
-File: modules/cronjobs/classes/CronJobsForms.php:176</note>
-      </trans-unit>
-      <trans-unit id="b6610b26530c9ee3d7bc4a478cf35299">
-        <source>For advanced users only: use your own crontab manager instead of PrestaShop cron tasks service.</source>
-        <target>For advanced users only: use your own crontab manager instead of PrestaShop cron tasks service.</target>
-        <note>Context:
-File: modules/cronjobs/classes/CronJobsForms.php:177</note>
-      </trans-unit>
-      <trans-unit id="2257d36bcb68362b24cf74f626bac599">
-        <source>The Advanced mode enables you to use your own cron tasks manager instead of PrestaShop cron tasks webservice.</source>
-        <target>The Advanced mode enables you to use your own cron tasks manager instead of PrestaShop cron tasks webservice.</target>
-        <note>Context:
-File: modules/cronjobs/classes/CronJobsForms.php:210</note>
-      </trans-unit>
-      <trans-unit id="43009010c8282eadc3f19f4b9c7c5ee4">
-        <source>First of all, make sure the 'curl' library is installed on your server.</source>
-        <target>First of all, make sure the 'curl' library is installed on your server.</target>
-        <note>Context:
-File: modules/cronjobs/classes/CronJobsForms.php:211</note>
-      </trans-unit>
-      <trans-unit id="18028ef85b7ce8fbde749a2c49c6d18a">
-        <source>To execute your cron tasks, please insert the following line in your cron tasks manager:</source>
-        <target>To execute your cron tasks, please insert the following line in your cron tasks manager:</target>
-        <note>Context:
-File: modules/cronjobs/classes/CronJobsForms.php:212</note>
-      </trans-unit>
-      <trans-unit id="03727ac48595a24daed975559c944a44">
-        <source>Day</source>
-        <target>Day</target>
-        <note>Context:
-File: modules/cronjobs/classes/CronJobsForms.php:228</note>
-      </trans-unit>
-      <trans-unit id="7cbb885aa1164b390a0bc050a64e1812">
-        <source>Month</source>
-        <target>Month</target>
-        <note>Context:
-File: modules/cronjobs/classes/CronJobsForms.php:229</note>
-      </trans-unit>
-      <trans-unit id="e59278675b8f1e052b22b7e5e7d65da7">
-        <source>Day of week</source>
-        <target>Day of week</target>
-        <note>Context:
-File: modules/cronjobs/classes/CronJobsForms.php:230</note>
-      </trans-unit>
-      <trans-unit id="8cebfac3b4821cbc83041f5df54d7730">
-        <source>Last execution</source>
-        <target>Last execution</target>
-        <note>Context:
-File: modules/cronjobs/classes/CronJobsForms.php:231</note>
-      </trans-unit>
-      <trans-unit id="1e3208e0b0d5de9281f88c34169cda6b">
-        <source>One shot</source>
-        <target>One shot</target>
-        <note>Context:
-File: modules/cronjobs/classes/CronJobsForms.php:232</note>
-      </trans-unit>
-      <trans-unit id="4d3d769b812b6faa6b76e1a8abaece2d">
-        <source>Active</source>
-        <target>Active</target>
-        <note>Context:
-File: modules/cronjobs/classes/CronJobsForms.php:233</note>
-      </trans-unit>
-      <trans-unit id="bdb6ae0d03e6793183349e00f67657f6">
-        <source>Module - Hook</source>
-        <target>Module - Hook</target>
-        <note>Context:
-File: modules/cronjobs/classes/CronJobsForms.php:300</note>
-      </trans-unit>
-      <trans-unit id="02fd27d2951d00b83f111f63611ea863">
-        <source>Every hour</source>
-        <target>Every hour</target>
-        <note>Context:
-File: modules/cronjobs/classes/CronJobsForms.php:319</note>
-      </trans-unit>
-      <trans-unit id="48bf14c419a1d441412510faf39c326d">
-        <source>Every day</source>
-        <target>Every day</target>
-        <note>Context:
-File: modules/cronjobs/classes/CronJobsForms.php:306</note>
-      </trans-unit>
-      <trans-unit id="8ed91b71d01993965915f3b296c20336">
-        <source>Every month</source>
-        <target>Every month</target>
-        <note>Context:
-File: modules/cronjobs/classes/CronJobsForms.php:341</note>
-      </trans-unit>
-      <trans-unit id="50875e72e1477618055d1508112199b4">
-        <source>Every day of the week</source>
-        <target>Every day of the week</target>
-        <note>Context:
-File: modules/cronjobs/classes/CronJobsForms.php:352</note>
-      </trans-unit>
-      <trans-unit id="6e7b34fa59e1bd229b207892956dc41c">
-        <source>Never</source>
-        <target>Never</target>
-        <note>Context:
-File: modules/cronjobs/classes/CronJobsForms.php:309</note>
-      </trans-unit>
-      <trans-unit id="16ed0a7b977ec3bbd23badfb5580d56f">
-        <source>Every day of the month</source>
-        <target>Every day of the month</target>
-        <note>Context:
-File: modules/cronjobs/classes/CronJobsForms.php:330</note>
+File: modules/ps_mbo/ps_mbo.php:371</note>
       </trans-unit>
     </body>
   </file>
-  <file original="modules/ps_googleanalytics/ps_googleanalytics.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="modules/ps_themecusto/views/templates/admin/controllers/configuration/elem/module_actions.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="f4f70727dc34561dfde1a3c529b6205c">
-        <source>Settings</source>
-        <target>Settings</target>
+      <trans-unit id="bcfaccebf745acfd5e75351095a5394a">
+        <source>Disable</source>
+        <target>Disable</target>
         <note>Context:
-File: modules/ps_googleanalytics/ps_googleanalytics.php:179</note>
+File: modules/ps_themecusto/views/templates/admin/controllers/configuration/elem/module_actions.tpl:59</note>
       </trans-unit>
-      <trans-unit id="851bd83a102d143ee17d97f9e15e15af">
-        <source>Google Analytics Tracking ID</source>
-        <target>Google Analytics Tracking ID</target>
+      <trans-unit id="2faec1f9f8cc7f8f40d521c4dd574f49">
+        <source>Enable</source>
+        <target>Enable</target>
         <note>Context:
-File: modules/ps_googleanalytics/ps_googleanalytics.php:184</note>
+File: modules/ps_themecusto/views/templates/admin/controllers/configuration/elem/module_actions.tpl:71</note>
       </trans-unit>
-      <trans-unit id="ad8e83a47926dcb12e8a8fccd7fcf604">
-        <source>This information is available in your Google Analytics account</source>
-        <target>This information is available in your Google Analytics account</target>
+      <trans-unit id="526d688f37a86d3c3f27d0c5016eb71d">
+        <source>Reset</source>
+        <target>Reset</target>
         <note>Context:
-File: modules/ps_googleanalytics/ps_googleanalytics.php:188</note>
+File: modules/ps_themecusto/views/templates/admin/controllers/configuration/elem/module_actions.tpl:61</note>
       </trans-unit>
-      <trans-unit id="bcd08e73ca9d8bfed2cccd50dd6d8328">
-        <source>Enable User ID tracking</source>
-        <target>Enable User ID tracking</target>
+      <trans-unit id="349838fb1d851d3e2014b9fe39203275">
+        <source>Install</source>
+        <target>Install</target>
         <note>Context:
-File: modules/ps_googleanalytics/ps_googleanalytics.php:192</note>
+File: modules/ps_themecusto/views/templates/admin/controllers/configuration/elem/module_actions.tpl:91</note>
       </trans-unit>
-      <trans-unit id="00d23a76e43b46dae9ec7aa9dcbebb32">
-        <source>Enabled</source>
-        <target>Enabled</target>
+      <trans-unit id="a27dfe771799a09fd55fea73286eb6ab">
+        <source>Uninstall</source>
+        <target>Uninstall</target>
         <note>Context:
-File: modules/ps_googleanalytics/ps_googleanalytics.php:239</note>
+File: modules/ps_themecusto/views/templates/admin/controllers/configuration/elem/module_actions.tpl:57</note>
       </trans-unit>
-      <trans-unit id="b9f5c797ebbf55adccdd8539a65a0241">
-        <source>Disabled</source>
-        <target>Disabled</target>
+      <trans-unit id="9be8056e65ba01c83ca85c4552f86abe">
+        <source>Disable mobile</source>
+        <target>Disable mobile</target>
         <note>Context:
-File: modules/ps_googleanalytics/ps_googleanalytics.php:244</note>
+File: modules/ps_themecusto/views/templates/admin/controllers/configuration/elem/module_actions.tpl:75</note>
       </trans-unit>
-      <trans-unit id="62d498990ba9938425763b6314b5c42a">
-        <source>Anonymize IP</source>
-        <target>Anonymize IP</target>
+      <trans-unit id="4c9cf94737c0f429f2e85d2c100950f2">
+        <source>Enable mobile</source>
+        <target>Enable mobile</target>
         <note>Context:
-File: modules/ps_googleanalytics/ps_googleanalytics.php:208</note>
-      </trans-unit>
-      <trans-unit id="86b9320b6ef4da2e8845a6e77e7341d3">
-        <source>Use this option to anonymize the visitor’s IP to comply with data privacy laws in some countries</source>
-        <target>Use this option to anonymize the visitor’s IP to comply with data privacy laws in some countries</target>
-        <note>Context:
-File: modules/ps_googleanalytics/ps_googleanalytics.php:210</note>
-      </trans-unit>
-      <trans-unit id="eaa289807715dff623c794d83941f3ab">
-        <source>Enable Cross-Domain tracking</source>
-        <target>Enable Cross-Domain tracking</target>
-        <note>Context:
-File: modules/ps_googleanalytics/ps_googleanalytics.php:233</note>
+File: modules/ps_themecusto/views/templates/admin/controllers/configuration/elem/module_actions.tpl:79</note>
       </trans-unit>
     </body>
   </file>
-  <file original="admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="modules/ps_themecusto/views/templates/admin/controllers/configuration/index.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="b55e509c697e4cca0e1d160a7806698f">
-        <source>Hour</source>
-        <target>Hour</target>
+      <trans-unit id="f1206f9fadc5ce41694f69129aecac26">
+        <source>Configure</source>
+        <target>Configure</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:1387</note>
+File: modules/ps_themecusto/views/templates/admin/controllers/configuration/index.tpl:74</note>
       </trans-unit>
-      <trans-unit id="1e1cc9bdeb2f29f5480106aec7e9bc48">
-        <source>Now</source>
-        <target>Now</target>
+      <trans-unit id="d870f342dc67dbd123d09f0e0021b94a">
+        <source>Change colors, typography and your logo position</source>
+        <target>Change colors, typography and your logo position</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:1378</note>
+File: modules/ps_themecusto/views/templates/admin/controllers/configuration/index.tpl:20</note>
       </trans-unit>
-      <trans-unit id="f92965e2c8a7afb3c1b9a5c09a263636">
-        <source>Done</source>
-        <target>Done</target>
+      <trans-unit id="8e76275236fbf24dc81757217865154f">
+        <source>Use the Theme configurator module to customize the main graphic elements of your website : colors, buttons, typography, logo position.</source>
+        <target>Use the Theme configurator module to customize the main graphic elements of your website : colors, buttons, typography, logo position.</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:1379</note>
+File: modules/ps_themecusto/views/templates/admin/controllers/configuration/index.tpl:28</note>
       </trans-unit>
-      <trans-unit id="3964fd83339fec5014c831822005653a">
-        <source>Choose Time</source>
-        <target>Choose Time</target>
+      <trans-unit id="fd0b96315f3fce324c4eff21f4cdce73">
+        <source>Main theme modules cartography</source>
+        <target>Main theme modules cartography</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:1385</note>
+File: modules/ps_themecusto/views/templates/admin/controllers/configuration/index.tpl:39</note>
       </trans-unit>
-      <trans-unit id="a76d4ef5f3f6a672bbfab2865563e530">
-        <source>Time</source>
-        <target>Time</target>
+      <trans-unit id="177b5a89de341b08186e5f5d45aa8292">
+        <source>There is no module for this section</source>
+        <target>There is no module for this section</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:1386</note>
+File: modules/ps_themecusto/views/templates/admin/controllers/configuration/index.tpl:112</note>
       </trans-unit>
-      <trans-unit id="62902641c38f3a4a8eb3212454360e24">
-        <source>Minute</source>
-        <target>Minute</target>
+      <trans-unit id="0fae3206c90bed3220123bb3d760fb4c">
+        <source>You can install a module for this section from our Modules Selection</source>
+        <target>You can install a module for this section from our Modules Selection</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:1388</note>
+File: modules/ps_themecusto/views/templates/admin/controllers/configuration/index.tpl:115</note>
       </trans-unit>
-      <trans-unit id="730224c4825ae2c174f4cdaff321520e">
-        <source>Transform a guest into a customer</source>
-        <target>Transform a guest into a customer</target>
+      <trans-unit id="573b936f93b0f7f5096571aaf26e75cd">
+        <source>See modules selection</source>
+        <target>See modules selection</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:598</note>
+File: modules/ps_themecusto/views/templates/admin/controllers/configuration/index.tpl:119</note>
       </trans-unit>
-      <trans-unit id="e5bd639f4d74cf2c52afada77086f788">
-        <source>Process a standard refund</source>
-        <target>Process a standard refund</target>
+      <trans-unit id="3a2b523f93eff3923fc9e70adc347777">
+        <source>See all theme's modules</source>
+        <target>See all theme's modules</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:902</note>
-      </trans-unit>
-      <trans-unit id="c4b689eeebf8e942907a1cc1d086dba6">
-        <source>Process a partial refund</source>
-        <target>Process a partial refund</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:903</note>
-      </trans-unit>
-      <trans-unit id="cc61945cbbf46721a053467c395c666f">
-        <source>Refunded</source>
-        <target>Refunded</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:931</note>
-      </trans-unit>
-      <trans-unit id="6a5efd211a422296eab4adc476c98f0e">
-        <source>Return products</source>
-        <target>Return products</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:1196</note>
-      </trans-unit>
-      <trans-unit id="74c06eb18eeb118d7b3c623d0c717290">
-        <source>Refund products</source>
-        <target>Refund products</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:1196</note>
-      </trans-unit>
-      <trans-unit id="4b8def9be8f45a8d6baea36b26868965">
-        <source>Cancel products</source>
-        <target>Cancel products</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:1196</note>
-      </trans-unit>
-      <trans-unit id="867343577fa1f33caa632a19543bd252">
-        <source>Keywords</source>
-        <target>Keywords</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:1265</note>
+File: modules/ps_themecusto/views/templates/admin/controllers/configuration/index.tpl:130</note>
       </trans-unit>
     </body>
   </file>
-  <file original="modules/cronjobs/cronjobs.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="admin-dev/themes/default/template/controllers/modules/js.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="682ee2e41e510efdbced967430173c66">
-        <source>Cron tasks manager</source>
-        <target>Cron tasks manager</target>
+      <trans-unit id="45e06e5610d29d675a875a6f7731b73d">
+        <source>Would you like to delete the content related to this module ?</source>
+        <target>Would you like to delete the content related to this module ?</target>
         <note>Context:
-File: modules/cronjobs/cronjobs.php:67</note>
+File: admin-dev/themes/default/template/controllers/modules/js.tpl:29</note>
       </trans-unit>
-      <trans-unit id="c75e110ddb05aea61563c50d7baf0ae0">
-        <source>Manage all your automated web tasks from a single interface.</source>
-        <target>Manage all your automated web tasks from a single interface.</target>
+      <trans-unit id="c0d19e251d0ff55ecb860e7349f779a4">
+        <source>Confirm reset</source>
+        <target>Confirm reset</target>
         <note>Context:
-File: modules/cronjobs/cronjobs.php:68</note>
+File: admin-dev/themes/default/template/controllers/modules/js.tpl:28</note>
       </trans-unit>
-      <trans-unit id="4093808c9781fb6ca2ed5ade71deff4d">
-        <source>To be able to use this module, please activate cURL (PHP extension).</source>
-        <target>To be able to use this module, please activate cURL (PHP extension).</target>
+      <trans-unit id="d65c99010166606287266e4af4f0b934">
+        <source>No - reset only the parameters</source>
+        <target>No - reset only the parameters</target>
         <note>Context:
-File: modules/cronjobs/cronjobs.php:71</note>
+File: admin-dev/themes/default/template/controllers/modules/js.tpl:30</note>
       </trans-unit>
-      <trans-unit id="035d5cdab2c65ad42b303f8125025160">
-        <source>Cron tasks</source>
-        <target>Cron tasks</target>
+      <trans-unit id="0426ba52f94430cf093652d1ea18fedf">
+        <source>Yes - reset everything</source>
+        <target>Yes - reset everything</target>
         <note>Context:
-File: modules/cronjobs/cronjobs.php:412</note>
+File: admin-dev/themes/default/template/controllers/modules/js.tpl:31</note>
       </trans-unit>
-      <trans-unit id="6588952424b58b4c9fc9df026b668991">
-        <source>Add new task</source>
-        <target>Add new task</target>
+      <trans-unit id="25b22a00db3085743f478140b8281a26">
+        <source>Preferences saved</source>
+        <target>Preferences saved</target>
         <note>Context:
-File: modules/cronjobs/cronjobs.php:427</note>
+File: admin-dev/themes/default/template/controllers/modules/js.tpl:38</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/modules/list.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="4f9b5fa08f2ef86fdc5d0ceefc271981">
+        <source>Remove from Favorites</source>
+        <target>Remove from Favorites</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/modules/list.tpl:168</note>
+      </trans-unit>
+      <trans-unit id="7263f59f5d8aeaf7d2117fcd4b70930a">
+        <source>Mark as Favorite</source>
+        <target>Mark as Favorite</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/modules/list.tpl:171</note>
+      </trans-unit>
+      <trans-unit id="59fcbc24a474d290fa540a3a27e2ff05">
+        <source>Module %1s </source>
+        <target>Module %1s </target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/modules/list.tpl:41</note>
+      </trans-unit>
+      <trans-unit id="3846bafee4cc9ce49c24a0b499d3e08d">
+        <source>Official, PrestaShop certified module. Free, secure and includes updates!</source>
+        <target>Official, PrestaShop certified module. Free, secure and includes updates!</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/modules/list.tpl:61</note>
+      </trans-unit>
+      <trans-unit id="52dd3893c24e9cf4be761dcaee6bea39">
+        <source>Update it!</source>
+        <target>Update it!</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/modules/list.tpl:90</note>
+      </trans-unit>
+      <trans-unit id="29c632cf1c7f140b6e86f3af04df48d4">
+        <source>Install the selection</source>
+        <target>Install the selection</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/modules/list.tpl:196</note>
+      </trans-unit>
+      <trans-unit id="7245ac07bbd56e6d0f7489a7dddb836f">
+        <source>Uninstall the selection</source>
+        <target>Uninstall the selection</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/modules/list.tpl:202</note>
       </trans-unit>
     </body>
   </file>
@@ -2434,6 +2252,64 @@ File: modules/autoupgrade/classes/UpgradeTools/SettingsFileWriter.php:71</note>
       </trans-unit>
     </body>
   </file>
+  <file original="modules/ps_googleanalytics/ps_googleanalytics.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="f4f70727dc34561dfde1a3c529b6205c">
+        <source>Settings</source>
+        <target>Settings</target>
+        <note>Context:
+File: modules/ps_googleanalytics/ps_googleanalytics.php:179</note>
+      </trans-unit>
+      <trans-unit id="851bd83a102d143ee17d97f9e15e15af">
+        <source>Google Analytics Tracking ID</source>
+        <target>Google Analytics Tracking ID</target>
+        <note>Context:
+File: modules/ps_googleanalytics/ps_googleanalytics.php:184</note>
+      </trans-unit>
+      <trans-unit id="ad8e83a47926dcb12e8a8fccd7fcf604">
+        <source>This information is available in your Google Analytics account</source>
+        <target>This information is available in your Google Analytics account</target>
+        <note>Context:
+File: modules/ps_googleanalytics/ps_googleanalytics.php:188</note>
+      </trans-unit>
+      <trans-unit id="bcd08e73ca9d8bfed2cccd50dd6d8328">
+        <source>Enable User ID tracking</source>
+        <target>Enable User ID tracking</target>
+        <note>Context:
+File: modules/ps_googleanalytics/ps_googleanalytics.php:192</note>
+      </trans-unit>
+      <trans-unit id="00d23a76e43b46dae9ec7aa9dcbebb32">
+        <source>Enabled</source>
+        <target>Enabled</target>
+        <note>Context:
+File: modules/ps_googleanalytics/ps_googleanalytics.php:239</note>
+      </trans-unit>
+      <trans-unit id="b9f5c797ebbf55adccdd8539a65a0241">
+        <source>Disabled</source>
+        <target>Disabled</target>
+        <note>Context:
+File: modules/ps_googleanalytics/ps_googleanalytics.php:244</note>
+      </trans-unit>
+      <trans-unit id="62d498990ba9938425763b6314b5c42a">
+        <source>Anonymize IP</source>
+        <target>Anonymize IP</target>
+        <note>Context:
+File: modules/ps_googleanalytics/ps_googleanalytics.php:208</note>
+      </trans-unit>
+      <trans-unit id="86b9320b6ef4da2e8845a6e77e7341d3">
+        <source>Use this option to anonymize the visitor’s IP to comply with data privacy laws in some countries</source>
+        <target>Use this option to anonymize the visitor’s IP to comply with data privacy laws in some countries</target>
+        <note>Context:
+File: modules/ps_googleanalytics/ps_googleanalytics.php:210</note>
+      </trans-unit>
+      <trans-unit id="eaa289807715dff623c794d83941f3ab">
+        <source>Enable Cross-Domain tracking</source>
+        <target>Enable Cross-Domain tracking</target>
+        <note>Context:
+File: modules/ps_googleanalytics/ps_googleanalytics.php:233</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="modules/ps_emailsubscription/ps_emailsubscription.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="2df860f82be52de57fc5e3f7ecac9431">
@@ -2475,104 +2351,6 @@ File: modules/ps_themecusto/ps_themecusto.php:95</note>
         <target>There was an error during the uninstall. Please contact us through Addons website</target>
         <note>Context:
 File: modules/ps_themecusto/ps_themecusto.php:113</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="modules/ps_themecusto/views/templates/admin/controllers/configuration/elem/module_actions.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="a27dfe771799a09fd55fea73286eb6ab">
-        <source>Uninstall</source>
-        <target>Uninstall</target>
-        <note>Context:
-File: modules/ps_themecusto/views/templates/admin/controllers/configuration/elem/module_actions.tpl:57</note>
-      </trans-unit>
-      <trans-unit id="349838fb1d851d3e2014b9fe39203275">
-        <source>Install</source>
-        <target>Install</target>
-        <note>Context:
-File: modules/ps_themecusto/views/templates/admin/controllers/configuration/elem/module_actions.tpl:91</note>
-      </trans-unit>
-      <trans-unit id="2faec1f9f8cc7f8f40d521c4dd574f49">
-        <source>Enable</source>
-        <target>Enable</target>
-        <note>Context:
-File: modules/ps_themecusto/views/templates/admin/controllers/configuration/elem/module_actions.tpl:71</note>
-      </trans-unit>
-      <trans-unit id="bcfaccebf745acfd5e75351095a5394a">
-        <source>Disable</source>
-        <target>Disable</target>
-        <note>Context:
-File: modules/ps_themecusto/views/templates/admin/controllers/configuration/elem/module_actions.tpl:59</note>
-      </trans-unit>
-      <trans-unit id="526d688f37a86d3c3f27d0c5016eb71d">
-        <source>Reset</source>
-        <target>Reset</target>
-        <note>Context:
-File: modules/ps_themecusto/views/templates/admin/controllers/configuration/elem/module_actions.tpl:61</note>
-      </trans-unit>
-      <trans-unit id="9be8056e65ba01c83ca85c4552f86abe">
-        <source>Disable mobile</source>
-        <target>Disable mobile</target>
-        <note>Context:
-File: modules/ps_themecusto/views/templates/admin/controllers/configuration/elem/module_actions.tpl:75</note>
-      </trans-unit>
-      <trans-unit id="4c9cf94737c0f429f2e85d2c100950f2">
-        <source>Enable mobile</source>
-        <target>Enable mobile</target>
-        <note>Context:
-File: modules/ps_themecusto/views/templates/admin/controllers/configuration/elem/module_actions.tpl:79</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="modules/ps_themecusto/views/templates/admin/controllers/configuration/index.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="f1206f9fadc5ce41694f69129aecac26">
-        <source>Configure</source>
-        <target>Configure</target>
-        <note>Context:
-File: modules/ps_themecusto/views/templates/admin/controllers/configuration/index.tpl:74</note>
-      </trans-unit>
-      <trans-unit id="d870f342dc67dbd123d09f0e0021b94a">
-        <source>Change colors, typography and your logo position</source>
-        <target>Change colors, typography and your logo position</target>
-        <note>Context:
-File: modules/ps_themecusto/views/templates/admin/controllers/configuration/index.tpl:20</note>
-      </trans-unit>
-      <trans-unit id="8e76275236fbf24dc81757217865154f">
-        <source>Use the Theme configurator module to customize the main graphic elements of your website : colors, buttons, typography, logo position.</source>
-        <target>Use the Theme configurator module to customize the main graphic elements of your website : colors, buttons, typography, logo position.</target>
-        <note>Context:
-File: modules/ps_themecusto/views/templates/admin/controllers/configuration/index.tpl:28</note>
-      </trans-unit>
-      <trans-unit id="fd0b96315f3fce324c4eff21f4cdce73">
-        <source>Main theme modules cartography</source>
-        <target>Main theme modules cartography</target>
-        <note>Context:
-File: modules/ps_themecusto/views/templates/admin/controllers/configuration/index.tpl:39</note>
-      </trans-unit>
-      <trans-unit id="177b5a89de341b08186e5f5d45aa8292">
-        <source>There is no module for this section</source>
-        <target>There is no module for this section</target>
-        <note>Context:
-File: modules/ps_themecusto/views/templates/admin/controllers/configuration/index.tpl:112</note>
-      </trans-unit>
-      <trans-unit id="0fae3206c90bed3220123bb3d760fb4c">
-        <source>You can install a module for this section from our Modules Selection</source>
-        <target>You can install a module for this section from our Modules Selection</target>
-        <note>Context:
-File: modules/ps_themecusto/views/templates/admin/controllers/configuration/index.tpl:115</note>
-      </trans-unit>
-      <trans-unit id="573b936f93b0f7f5096571aaf26e75cd">
-        <source>See modules selection</source>
-        <target>See modules selection</target>
-        <note>Context:
-File: modules/ps_themecusto/views/templates/admin/controllers/configuration/index.tpl:119</note>
-      </trans-unit>
-      <trans-unit id="3a2b523f93eff3923fc9e70adc347777">
-        <source>See all theme's modules</source>
-        <target>See all theme's modules</target>
-        <note>Context:
-File: modules/ps_themecusto/views/templates/admin/controllers/configuration/index.tpl:130</note>
       </trans-unit>
     </body>
   </file>
@@ -2957,92 +2735,6 @@ File: modules/ps_themecusto/views/templates/admin/controllers/configuration/elem
       </trans-unit>
     </body>
   </file>
-  <file original="admin-dev/themes/default/template/controllers/modules/js.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="45e06e5610d29d675a875a6f7731b73d">
-        <source>Would you like to delete the content related to this module ?</source>
-        <target>Would you like to delete the content related to this module ?</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/modules/js.tpl:29</note>
-      </trans-unit>
-      <trans-unit id="c0d19e251d0ff55ecb860e7349f779a4">
-        <source>Confirm reset</source>
-        <target>Confirm reset</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/modules/js.tpl:28</note>
-      </trans-unit>
-      <trans-unit id="d65c99010166606287266e4af4f0b934">
-        <source>No - reset only the parameters</source>
-        <target>No - reset only the parameters</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/modules/js.tpl:30</note>
-      </trans-unit>
-      <trans-unit id="0426ba52f94430cf093652d1ea18fedf">
-        <source>Yes - reset everything</source>
-        <target>Yes - reset everything</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/modules/js.tpl:31</note>
-      </trans-unit>
-      <trans-unit id="25b22a00db3085743f478140b8281a26">
-        <source>Preferences saved</source>
-        <target>Preferences saved</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/modules/js.tpl:38</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/modules/list.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="4f9b5fa08f2ef86fdc5d0ceefc271981">
-        <source>Remove from Favorites</source>
-        <target>Remove from Favorites</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/modules/list.tpl:168</note>
-      </trans-unit>
-      <trans-unit id="7263f59f5d8aeaf7d2117fcd4b70930a">
-        <source>Mark as Favorite</source>
-        <target>Mark as Favorite</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/modules/list.tpl:171</note>
-      </trans-unit>
-      <trans-unit id="2c422a499f038293ed0c5a1e085cd827">
-        <source>No modules available in this section.</source>
-        <target>No modules available in this section.</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/modules/list.tpl:212</note>
-      </trans-unit>
-      <trans-unit id="59fcbc24a474d290fa540a3a27e2ff05">
-        <source>Module %1s </source>
-        <target>Module %1s </target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/modules/list.tpl:41</note>
-      </trans-unit>
-      <trans-unit id="3846bafee4cc9ce49c24a0b499d3e08d">
-        <source>Official, PrestaShop certified module. Free, secure and includes updates!</source>
-        <target>Official, PrestaShop certified module. Free, secure and includes updates!</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/modules/list.tpl:61</note>
-      </trans-unit>
-      <trans-unit id="52dd3893c24e9cf4be761dcaee6bea39">
-        <source>Update it!</source>
-        <target>Update it!</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/modules/list.tpl:90</note>
-      </trans-unit>
-      <trans-unit id="29c632cf1c7f140b6e86f3af04df48d4">
-        <source>Install the selection</source>
-        <target>Install the selection</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/modules/list.tpl:196</note>
-      </trans-unit>
-      <trans-unit id="7245ac07bbd56e6d0f7489a7dddb836f">
-        <source>Uninstall the selection</source>
-        <target>Uninstall the selection</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/modules/list.tpl:202</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="classes/helper/HelperOptions.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="c770d8e0d1d1943ce239c64dbd6acc20">
@@ -3375,11 +3067,45 @@ File: admin-dev/themes/default/template/controllers/modules/tab_modules_list.tpl
         <note>Context:
 File: admin-dev/themes/default/template/controllers/modules/tab_modules_list.tpl:40</note>
       </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_mbo/views/templates/admin/include/admin-end-content-footer-legacy.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
       <trans-unit id="4d2fa24347806e2bcc9925a040f78382">
         <source>More modules on addons.prestashop.com</source>
         <target>More modules on addons.prestashop.com</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/modules/tab_modules_list.tpl:69</note>
+File: modules/ps_mbo/views/templates/admin/include/admin-end-content-footer-legacy.tpl:50</note>
+      </trans-unit>
+      <trans-unit id="6afd80bf62a1b8bdfe729af8a0159fee">
+        <source>Modules list</source>
+        <target>Modules list</target>
+        <note>Context:
+File: modules/ps_mbo/views/templates/admin/include/admin-end-content-footer-legacy.tpl:5</note>
+      </trans-unit>
+      <trans-unit id="c0ebffb294bb46f8800a899e04c73f17">
+        <source>View all available payments solutions</source>
+        <target>View all available payments solutions</target>
+        <note>Context:
+File: modules/ps_mbo/views/templates/admin/include/admin-end-content-footer-legacy.tpl:23</note>
+      </trans-unit>
+      <trans-unit id="98a52c00a9fb228601f8b423436d36e0">
+        <source>It seems there are no recommended payment solutions for your country.</source>
+        <target>It seems there are no recommended payment solutions for your country.</target>
+        <note>Context:
+File: modules/ps_mbo/views/templates/admin/include/admin-end-content-footer-legacy.tpl:34</note>
+      </trans-unit>
+      <trans-unit id="39efbaa2f3600dd82a031d7ab5138f73">
+        <source>Do you think there should be one? Let us know!</source>
+        <target>Do you think there should be one? Let us know!</target>
+        <note>Context:
+File: modules/ps_mbo/views/templates/admin/include/admin-end-content-footer-legacy.tpl:35</note>
+      </trans-unit>
+      <trans-unit id="2c422a499f038293ed0c5a1e085cd827">
+        <source>No modules available in this section.</source>
+        <target>No modules available in this section.</target>
+        <note>Context:
+File: modules/ps_mbo/views/templates/admin/include/admin-end-content-footer-legacy.tpl:36</note>
       </trans-unit>
     </body>
   </file>
@@ -4123,35 +3849,13 @@ File: admin-dev/themes/default/template/helpers/uploader/simple.tpl:134</note>
       </trans-unit>
     </body>
   </file>
-  <file original="admin-dev/themes/default/template/helpers/modules_list/modal.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="modules/ps_mbo/views/templates/admin/toolbar.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="4b33fbf5ea2c4ced9800228574cfcc50">
         <source>Recommended Modules and Services</source>
         <target>Recommended Modules and Services</target>
         <note>Context:
-File: admin-dev/themes/default/template/helpers/modules_list/modal.tpl:30</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/helpers/modules_list/list.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="c0ebffb294bb46f8800a899e04c73f17">
-        <source>View all available payments solutions</source>
-        <target>View all available payments solutions</target>
-        <note>Context:
-File: admin-dev/themes/default/template/helpers/modules_list/list.tpl:45</note>
-      </trans-unit>
-      <trans-unit id="98a52c00a9fb228601f8b423436d36e0">
-        <source>It seems there are no recommended payment solutions for your country.</source>
-        <target>It seems there are no recommended payment solutions for your country.</target>
-        <note>Context:
-File: admin-dev/themes/default/template/helpers/modules_list/list.tpl:56</note>
-      </trans-unit>
-      <trans-unit id="39efbaa2f3600dd82a031d7ab5138f73">
-        <source>Do you think there should be one? Let us know!</source>
-        <target>Do you think there should be one? Let us know!</target>
-        <note>Context:
-File: admin-dev/themes/default/template/helpers/modules_list/list.tpl:57</note>
+File: modules/ps_mbo/views/templates/admin/toolbar.tpl:30</note>
       </trans-unit>
     </body>
   </file>
@@ -4280,6 +3984,94 @@ File: admin-dev/themes/default/template/helpers/form/form.tpl:604</note>
         <target>Invalid password confirmation</target>
         <note>Context:
 File: admin-dev/themes/default/template/helpers/form/form.tpl:641</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="1e1cc9bdeb2f29f5480106aec7e9bc48">
+        <source>Now</source>
+        <target>Now</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:1378</note>
+      </trans-unit>
+      <trans-unit id="f92965e2c8a7afb3c1b9a5c09a263636">
+        <source>Done</source>
+        <target>Done</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:1379</note>
+      </trans-unit>
+      <trans-unit id="3964fd83339fec5014c831822005653a">
+        <source>Choose Time</source>
+        <target>Choose Time</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:1385</note>
+      </trans-unit>
+      <trans-unit id="a76d4ef5f3f6a672bbfab2865563e530">
+        <source>Time</source>
+        <target>Time</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:1386</note>
+      </trans-unit>
+      <trans-unit id="b55e509c697e4cca0e1d160a7806698f">
+        <source>Hour</source>
+        <target>Hour</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:1387</note>
+      </trans-unit>
+      <trans-unit id="62902641c38f3a4a8eb3212454360e24">
+        <source>Minute</source>
+        <target>Minute</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:1388</note>
+      </trans-unit>
+      <trans-unit id="730224c4825ae2c174f4cdaff321520e">
+        <source>Transform a guest into a customer</source>
+        <target>Transform a guest into a customer</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:598</note>
+      </trans-unit>
+      <trans-unit id="e5bd639f4d74cf2c52afada77086f788">
+        <source>Process a standard refund</source>
+        <target>Process a standard refund</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:902</note>
+      </trans-unit>
+      <trans-unit id="c4b689eeebf8e942907a1cc1d086dba6">
+        <source>Process a partial refund</source>
+        <target>Process a partial refund</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:903</note>
+      </trans-unit>
+      <trans-unit id="cc61945cbbf46721a053467c395c666f">
+        <source>Refunded</source>
+        <target>Refunded</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:931</note>
+      </trans-unit>
+      <trans-unit id="6a5efd211a422296eab4adc476c98f0e">
+        <source>Return products</source>
+        <target>Return products</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:1196</note>
+      </trans-unit>
+      <trans-unit id="74c06eb18eeb118d7b3c623d0c717290">
+        <source>Refund products</source>
+        <target>Refund products</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:1196</note>
+      </trans-unit>
+      <trans-unit id="4b8def9be8f45a8d6baea36b26868965">
+        <source>Cancel products</source>
+        <target>Cancel products</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:1196</note>
+      </trans-unit>
+      <trans-unit id="867343577fa1f33caa632a19543bd252">
+        <source>Keywords</source>
+        <target>Keywords</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:1265</note>
       </trans-unit>
     </body>
   </file>
@@ -4879,19 +4671,37 @@ File: admin-dev/themes/default/template/controllers/modules/modal_not_trusted_co
       </trans-unit>
     </body>
   </file>
-  <file original="admin-dev/themes/default/template/controllers/modules/readmore-header.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="modules/ps_mbo/views/templates/admin/page.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="df3f079de6961496f0460dcfdbf9bca3">
         <source>by</source>
         <target>by</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/modules/readmore-header.tpl:30</note>
+File: modules/ps_mbo/views/templates/admin/page.tpl:94</note>
       </trans-unit>
-      <trans-unit id="9e3669d19b675bd57058fd4664205d2a">
-        <source>v</source>
-        <target>v</target>
+      <trans-unit id="75c9cc6412fa19e10f1e79edbcbde954">
+        <source>Service by</source>
+        <target>Service by</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/modules/readmore-header.tpl:30</note>
+File: modules/ps_mbo/views/templates/admin/page.tpl:91</note>
+      </trans-unit>
+      <trans-unit id="24a25a6b874647087c51ea00b7992def">
+        <source>Exit to PrestaShop Addons Marketplace</source>
+        <target>Exit to PrestaShop Addons Marketplace</target>
+        <note>Context:
+File: modules/ps_mbo/views/templates/admin/page.tpl:150</note>
+      </trans-unit>
+      <trans-unit id="754475030b0733378b9347e8f9da8bf9">
+        <source>See all results for your search on</source>
+        <target>See all results for your search on</target>
+        <note>Context:
+File: modules/ps_mbo/views/templates/admin/page.tpl:152</note>
+      </trans-unit>
+      <trans-unit id="3aaeb3f0458cf2580c5f75fefdb86ab6">
+        <source>PrestaShop Addons Marketplace</source>
+        <target>PrestaShop Addons Marketplace</target>
+        <note>Context:
+File: modules/ps_mbo/views/templates/admin/page.tpl:153</note>
       </trans-unit>
     </body>
   </file>
@@ -4997,117 +4807,101 @@ File: admin-dev/themes/default/template/controllers/modules/configure.tpl:107</n
       </trans-unit>
     </body>
   </file>
-  <file original="admin-dev/themes/default/template/controllers/modules/tab_module_line.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="modules/ps_mbo/views/templates/admin/include/tab_module_line.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="ba6b1bc4d8bfe5e6e835afa72f102a02">
         <source>You bought this module on PrestaShop Addons. Thank You.</source>
         <target>You bought this module on PrestaShop Addons. Thank You.</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/modules/tab_module_line.tpl:36</note>
+File: modules/ps_mbo/views/templates/admin/include/tab_module_line.tpl:37</note>
       </trans-unit>
       <trans-unit id="fe5a7fc9d9c907efdf6a384a71cd53fc">
         <source>Bought</source>
         <target>Bought</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/modules/tab_module_line.tpl:36</note>
+File: modules/ps_mbo/views/templates/admin/include/tab_module_line.tpl:37</note>
       </trans-unit>
       <trans-unit id="0461779839539a8ee8fb2dca43cf5bec">
         <source>This module is available on PrestaShop Addons</source>
         <target>This module is available on PrestaShop Addons</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/modules/tab_module_line.tpl:38</note>
+File: modules/ps_mbo/views/templates/admin/include/tab_module_line.tpl:39</note>
       </trans-unit>
       <trans-unit id="2cc1943d4c0b46bfcf503a75c44f988b">
         <source>Popular</source>
         <target>Popular</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/modules/tab_module_line.tpl:38</note>
+File: modules/ps_mbo/views/templates/admin/include/tab_module_line.tpl:39</note>
       </trans-unit>
       <trans-unit id="0008feba81a131902ece95d59f1b8f21">
         <source>Official</source>
         <target>Official</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/modules/tab_module_line.tpl:40</note>
+File: modules/ps_mbo/views/templates/admin/include/tab_module_line.tpl:41</note>
       </trans-unit>
       <trans-unit id="28f60d4760851bab00345a3cb86871f7">
         <source>Need update</source>
         <target>Need update</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/modules/tab_module_line.tpl:43</note>
+File: modules/ps_mbo/views/templates/admin/include/tab_module_line.tpl:44</note>
+      </trans-unit>
+      <trans-unit id="43340e6cc4e88197d57f8d6d5ea50a46">
+        <source>Read more</source>
+        <target>Read more</target>
+        <note>Context:
+File: modules/ps_mbo/views/templates/admin/include/tab_module_line.tpl:53</note>
       </trans-unit>
       <trans-unit id="b24ce0cd392a5b0b8dedc66c25213594">
         <source>Free</source>
         <target>Free</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/modules/tab_module_line.tpl:64</note>
+File: modules/ps_mbo/views/templates/admin/include/tab_module_line.tpl:63</note>
       </trans-unit>
       <trans-unit id="f248df0d4d7e4ae98485c5df8af58945">
         <source>This module is available for free thanks to our partner.</source>
         <target>This module is available for free thanks to our partner.</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/modules/tab_module_line.tpl:40</note>
+File: modules/ps_mbo/views/templates/admin/include/tab_module_line.tpl:41</note>
       </trans-unit>
     </body>
   </file>
-  <file original="admin-dev/themes/default/template/controllers/dashboard/helpers/view/view.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="43340e6cc4e88197d57f8d6d5ea50a46">
-        <source>Read more</source>
-        <target>Read more</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/dashboard/helpers/view/view.tpl:30</note>
-      </trans-unit>
-      <trans-unit id="908f8d9f34f375a55dd5b6a86489d364">
-        <source>No result</source>
-        <target>No result</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/dashboard/helpers/view/view.tpl:28</note>
-      </trans-unit>
-      <trans-unit id="37a502907cd750af8c65517a75d00030">
-        <source>Real Time</source>
-        <target>Real Time</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/dashboard/helpers/view/view.tpl:62</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/modules/readmore-body.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="modules/ps_mbo/views/templates/admin/quickview.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="3424c86a3f3fdfcff4d8f310912ee82b">
         <source>(%s votes)</source>
         <target>(%s votes)</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/modules/readmore-body.tpl:35</note>
+File: modules/ps_mbo/views/templates/admin/quickview.tpl:52</note>
       </trans-unit>
       <trans-unit id="268cb3857932e260b03bf1334220f3bc">
         <source>(%s vote)</source>
         <target>(%s vote)</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/modules/readmore-body.tpl:35</note>
+File: modules/ps_mbo/views/templates/admin/quickview.tpl:52</note>
       </trans-unit>
       <trans-unit id="b5a7adde1af5c87d7fd797b6245c2a39">
         <source>Description</source>
         <target>Description</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/modules/readmore-body.tpl:52</note>
+File: modules/ps_mbo/views/templates/admin/quickview.tpl:64</note>
       </trans-unit>
       <trans-unit id="7a66d21cf5a4354933980f6d79ec78a4">
         <source>Merchant benefits</source>
         <target>Merchant benefits</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/modules/readmore-body.tpl:59</note>
+File: modules/ps_mbo/views/templates/admin/quickview.tpl:68</note>
       </trans-unit>
       <trans-unit id="8530d0ebaf22889c1b42061824f3769b">
         <source>Install module</source>
         <target>Install module</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/modules/readmore-body.tpl:92</note>
+File: modules/ps_mbo/views/templates/admin/quickview.tpl:99</note>
       </trans-unit>
       <trans-unit id="a6642661dcfc0e354c61f4e8b8b9ec5a">
         <source>View on PrestaShop Addons</source>
         <target>View on PrestaShop Addons</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/modules/readmore-body.tpl:94</note>
+File: modules/ps_mbo/views/templates/admin/quickview.tpl:101</note>
       </trans-unit>
     </body>
   </file>
@@ -5133,13 +4927,31 @@ File: admin-dev/themes/default/template/controllers/modules/page_header_toolbar-
       </trans-unit>
     </body>
   </file>
-  <file original="admin-dev/themes/new-theme/template/page_header_toolbar.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="modules/ps_mbo/views/templates/admin/module-toolbar.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="6a26f548831e6a8c26bfbbd9f6ec61e0">
         <source>Help</source>
         <target>Help</target>
         <note>Context:
-File: admin-dev/themes/new-theme/template/page_header_toolbar.tpl:78</note>
+File: modules/ps_mbo/views/templates/admin/module-toolbar.tpl:23</note>
+      </trans-unit>
+      <trans-unit id="1c0b7f4d79e06a46c12312615fc4ab14">
+        <source>Connect to Addons marketplace</source>
+        <target>Connect to Addons marketplace</target>
+        <note>Context:
+File: modules/ps_mbo/views/templates/admin/module-toolbar.tpl:17</note>
+      </trans-unit>
+      <trans-unit id="76881586f05f3b21d67b0c2332539634">
+        <source>Install a module</source>
+        <target>Install a module</target>
+        <note>Context:
+File: modules/ps_mbo/views/templates/admin/module-toolbar.tpl:5</note>
+      </trans-unit>
+      <trans-unit id="957c752dd2c9466beff247b9cae7f715">
+        <source>Synchronized with Addons marketplace</source>
+        <target>Synchronized with Addons marketplace</target>
+        <note>Context:
+File: modules/ps_mbo/views/templates/admin/module-toolbar.tpl:10</note>
       </trans-unit>
     </body>
   </file>
@@ -5174,6 +4986,26 @@ File: admin-dev/themes/new-theme/template/components/layout/non-responsive.tpl:3
         <target>Thank you.</target>
         <note>Context:
 File: admin-dev/themes/new-theme/template/components/layout/non-responsive.tpl:34</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_mbo/views/templates/admin/include/dropdown_categories.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="af1b98adf7f686b84cd0b443e022b7a0">
+        <source>Categories</source>
+        <target>Categories</target>
+        <note>Context:
+File: modules/ps_mbo/views/templates/admin/include/dropdown_categories.tpl:28</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/modules/readmore-header.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="9e3669d19b675bd57058fd4664205d2a">
+        <source>v</source>
+        <target>v</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/modules/readmore-header.tpl:30</note>
       </trans-unit>
     </body>
   </file>
@@ -5252,6 +5084,22 @@ File: admin-dev/themes/default/template/controllers/webservice/helpers/form/form
         <target>[undefined]</target>
         <note>Context:
 File: admin-dev/themes/default/template/controllers/carrier_wizard/summary.tpl:27</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/dashboard/helpers/view/view.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="908f8d9f34f375a55dd5b6a86489d364">
+        <source>No result</source>
+        <target>No result</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/dashboard/helpers/view/view.tpl:28</note>
+      </trans-unit>
+      <trans-unit id="37a502907cd750af8c65517a75d00030">
+        <source>Real Time</source>
+        <target>Real Time</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/dashboard/helpers/view/view.tpl:62</note>
       </trans-unit>
     </body>
   </file>
@@ -5653,14 +5501,72 @@ File: admin-dev/themes/default/template/controllers/groups/helpers/view/view.tpl
       </trans-unit>
     </body>
   </file>
-  <file original="admin-dev/themes/default/template/controllers/login/content.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="modules/ps_mbo/views/templates/admin/include/modal_addons_connect.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="dc647eb65e6711e155375218212b3964">
         <source>Password</source>
         <target>Password</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/login/content.tpl:68</note>
+File: modules/ps_mbo/views/templates/admin/include/modal_addons_connect.tpl:60</note>
       </trans-unit>
+      <trans-unit id="7234d2a9a27b5e8dba609efe02ee9548">
+        <source>Link your shop to your Addons account to automatically receive important updates for the modules you purchased. Don't have an account yet?</source>
+        <target>Link your shop to your Addons account to automatically receive important updates for the modules you purchased. Don't have an account yet?</target>
+        <note>Context:
+File: modules/ps_mbo/views/templates/admin/include/modal_addons_connect.tpl:50</note>
+      </trans-unit>
+      <trans-unit id="cedcf6fe65a8f2849fe11e316d6c9923">
+        <source>Sign up now</source>
+        <target>Sign up now</target>
+        <note>Context:
+File: modules/ps_mbo/views/templates/admin/include/modal_addons_connect.tpl:51</note>
+      </trans-unit>
+      <trans-unit id="b357b524e740bc85b9790a0712d84a30">
+        <source>Email address</source>
+        <target>Email address</target>
+        <note>Context:
+File: modules/ps_mbo/views/templates/admin/include/modal_addons_connect.tpl:56</note>
+      </trans-unit>
+      <trans-unit id="878530871f0db73f004f5bd6591eeb76">
+        <source>Remember me</source>
+        <target>Remember me</target>
+        <note>Context:
+File: modules/ps_mbo/views/templates/admin/include/modal_addons_connect.tpl:65</note>
+      </trans-unit>
+      <trans-unit id="634efc0701950e9b2b97384327c8d5d2">
+        <source>Let's go!</source>
+        <target>Let's go!</target>
+        <note>Context:
+File: modules/ps_mbo/views/templates/admin/include/modal_addons_connect.tpl:68</note>
+      </trans-unit>
+      <trans-unit id="01a569ddc6cf67ddec2a683f0a5f5956">
+        <source>Forgot your password?</source>
+        <target>Forgot your password?</target>
+        <note>Context:
+File: modules/ps_mbo/views/templates/admin/include/modal_addons_connect.tpl:72</note>
+      </trans-unit>
+      <trans-unit id="b09249132bbed9baecd987cf73200b44">
+        <source>Confirm logout</source>
+        <target>Confirm logout</target>
+        <note>Context:
+File: modules/ps_mbo/views/templates/admin/include/modal_addons_connect.tpl:88</note>
+      </trans-unit>
+      <trans-unit id="df776a9024ce6c10ec1d1d763cee0301">
+        <source>You are about to log out your Addons account. You might miss important updates of Addons you've bought.</source>
+        <target>You are about to log out your Addons account. You might miss important updates of Addons you've bought.</target>
+        <note>Context:
+File: modules/ps_mbo/views/templates/admin/include/modal_addons_connect.tpl:94</note>
+      </trans-unit>
+      <trans-unit id="6be2c07aa891bbaafc828e43e336abb4">
+        <source>Yes, log out</source>
+        <target>Yes, log out</target>
+        <note>Context:
+File: modules/ps_mbo/views/templates/admin/include/modal_addons_connect.tpl:102</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/login/content.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
       <trans-unit id="685de99eb748aa2bba879a87af2ffed4">
         <source>Your password has been successfully changed.</source>
         <target>Your password has been successfully changed.</target>
@@ -5895,57 +5801,105 @@ File: admin-dev/themes/new-theme/template/layout.tpl:93</note>
       </trans-unit>
     </body>
   </file>
-  <file original="modules/cronjobs/views/templates/admin/task.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="modules/ps_mbo/views/templates/admin/admin-end-content-theme.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="b43ff85c4fc17955aa3ba90827d65430">
-        <source>Do not forget to use an absolute URL in the target link to make it valid! The link also has to be on the same domain as the shop.</source>
-        <target>Do not forget to use an absolute URL in the target link to make it valid! The link also has to be on the same domain as the shop.</target>
+      <trans-unit id="bbb572a770006c9e0e57c9e5d4bcda90">
+        <source>Live from PrestaShop Addons!</source>
+        <target>Live from PrestaShop Addons!</target>
         <note>Context:
-File: modules/cronjobs/views/templates/admin/task.tpl:29</note>
+File: modules/ps_mbo/views/templates/admin/admin-end-content-theme.tpl:40</note>
       </trans-unit>
     </body>
   </file>
-  <file original="modules/cronjobs/views/templates/admin/configure.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="modules/ps_mbo/views/templates/admin/include/modal_import.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="27c1f598c2b2b0a8e64424d257e8b398">
-        <source>What does this module do?</source>
-        <target>What does this module do?</target>
+      <trans-unit id="76ab1ee2aacc1b9bbc0a70bf6cca7004">
+        <source>Upload a module</source>
+        <target>Upload a module</target>
         <note>Context:
-File: modules/cronjobs/views/templates/admin/configure.tpl:27</note>
+File: modules/ps_mbo/views/templates/admin/include/modal_import.tpl:30</note>
       </trans-unit>
-      <trans-unit id="c22203a97c7dd88dd68d1e864d46ee0c">
-        <source>Originally, cron is a Unix system tool that provides time-based job scheduling: you can create many cron jobs, which are then run periodically at fixed times, dates, or intervals.</source>
-        <target>Originally, cron is a Unix system tool that provides time-based job scheduling: you can create many cron jobs, which are then run periodically at fixed times, dates, or intervals.</target>
+      <trans-unit id="5d863819c3f3055dd8fca884f087caf7">
+        <source>Drop your module archive here or</source>
+        <target>Drop your module archive here or</target>
         <note>Context:
-File: modules/cronjobs/views/templates/admin/configure.tpl:30</note>
+File: modules/ps_mbo/views/templates/admin/include/modal_import.tpl:51</note>
       </trans-unit>
-      <trans-unit id="d24ca73e026491b9610193f36d5edec8">
-        <source>This module provides you with a cron-like tool: you can create jobs which will call a given set of secure URLs to your PrestaShop store, thus triggering updates and other automated tasks.</source>
-        <target>This module provides you with a cron-like tool: you can create jobs which will call a given set of secure URLs to your PrestaShop store, thus triggering updates and other automated tasks.</target>
+      <trans-unit id="2b11276d6a162d7c1b9894abe5febfdc">
+        <source>Please upload one file at a time, .zip or tarball format (.tar, .tar.gz or .tgz).</source>
+        <target>Please upload one file at a time, .zip or tarball format (.tar, .tar.gz or .tgz).</target>
         <note>Context:
-File: modules/cronjobs/views/templates/admin/configure.tpl:32</note>
+File: modules/ps_mbo/views/templates/admin/include/modal_import.tpl:55</note>
+      </trans-unit>
+      <trans-unit id="e781acd6cefcfbbfce5aa2804d59a4c5">
+        <source>Your module will be installed right after that.</source>
+        <target>Your module will be installed right after that.</target>
+        <note>Context:
+File: modules/ps_mbo/views/templates/admin/include/modal_import.tpl:56</note>
+      </trans-unit>
+      <trans-unit id="c3dbf8925ec4c77ef5317e1e27317b70">
+        <source>Installing module...</source>
+        <target>Installing module...</target>
+        <note>Context:
+File: modules/ps_mbo/views/templates/admin/include/modal_import.tpl:63</note>
+      </trans-unit>
+      <trans-unit id="a26f56145fea2d3af35bf0d6ac83c28a">
+        <source>It will close as soon as the module is installed. It won't be long!</source>
+        <target>It will close as soon as the module is installed. It won't be long!</target>
+        <note>Context:
+File: modules/ps_mbo/views/templates/admin/include/modal_import.tpl:66</note>
+      </trans-unit>
+      <trans-unit id="f48a5ae14fa2b0c85442d1199a08b3b4">
+        <source>Module installed!</source>
+        <target>Module installed!</target>
+        <note>Context:
+File: modules/ps_mbo/views/templates/admin/include/modal_import.tpl:71</note>
       </trans-unit>
     </body>
   </file>
-  <file original="modules/cronjobs/views/templates/admin/_configure/helpers/form/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="modules/ps_themecusto/views/templates/admin/controllers/advanced/elem/modal.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="ef7bd68a02b6b5656554f7a27d1c7bdf">
-        <source>Error!</source>
-        <target>Error!</target>
+      <trans-unit id="ec2dab4ec46156a390cbe0652004f410">
+        <source>select file</source>
+        <target>select file</target>
         <note>Context:
-File: modules/cronjobs/views/templates/admin/_configure/helpers/form/form.tpl:32</note>
+File: modules/ps_themecusto/views/templates/admin/controllers/advanced/elem/modal.tpl:33</note>
       </trans-unit>
-      <trans-unit id="dc3fd488f03d423a04da27ce66274c1b">
-        <source>Warning!</source>
-        <target>Warning!</target>
+      <trans-unit id="824e2fcb263ee94399a6a261ee1ec7c1">
+        <source>Oops... Upload failed.</source>
+        <target>Oops... Upload failed.</target>
         <note>Context:
-File: modules/cronjobs/views/templates/admin/_configure/helpers/form/form.tpl:43</note>
+File: modules/ps_themecusto/views/templates/admin/controllers/advanced/elem/modal.tpl:41</note>
       </trans-unit>
-      <trans-unit id="402e7a087747cb56c718bde84651f96a">
-        <source>Success!</source>
-        <target>Success!</target>
+      <trans-unit id="fa692d85f08c92a585ed8b3fed7f1d52">
+        <source>What happened?</source>
+        <target>What happened?</target>
         <note>Context:
-File: modules/cronjobs/views/templates/admin/_configure/helpers/form/form.tpl:54</note>
+File: modules/ps_themecusto/views/templates/admin/controllers/advanced/elem/modal.tpl:42</note>
+      </trans-unit>
+      <trans-unit id="f915a95e609bbd517a8a1e7bdcceef37">
+        <source>Try again</source>
+        <target>Try again</target>
+        <note>Context:
+File: modules/ps_themecusto/views/templates/admin/controllers/advanced/elem/modal.tpl:45</note>
+      </trans-unit>
+      <trans-unit id="24c7cfc7a44dee945b7e52f1c9df09a1">
+        <source>Drop your child theme archive here or</source>
+        <target>Drop your child theme archive here or</target>
+        <note>Context:
+File: modules/ps_themecusto/views/templates/admin/controllers/advanced/elem/modal.tpl:33</note>
+      </trans-unit>
+      <trans-unit id="2c5b5cb39879603f5ecbcc0e63d91928">
+        <source>Please upload one file at a time, .zip. Your child theme will be installed right after that.</source>
+        <target>Please upload one file at a time, .zip. Your child theme will be installed right after that.</target>
+        <note>Context:
+File: modules/ps_themecusto/views/templates/admin/controllers/advanced/elem/modal.tpl:36</note>
+      </trans-unit>
+      <trans-unit id="c69732cc923305ac0684ac8fc05a4bca">
+        <source>An error has occurred.</source>
+        <target>An error has occurred.</target>
+        <note>Context:
+File: modules/ps_themecusto/views/templates/admin/controllers/advanced/elem/modal.tpl:43</note>
       </trans-unit>
     </body>
   </file>
@@ -6090,52 +6044,6 @@ File: modules/ps_themecusto/views/templates/admin/controllers/advanced/index.tpl
         <target><![CDATA[Once uploaded, the child theme will be available in your Theme & Logo section]]></target>
         <note>Context:
 File: modules/ps_themecusto/views/templates/admin/controllers/advanced/index.tpl:90</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="modules/ps_themecusto/views/templates/admin/controllers/advanced/elem/modal.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="24c7cfc7a44dee945b7e52f1c9df09a1">
-        <source>Drop your child theme archive here or</source>
-        <target>Drop your child theme archive here or</target>
-        <note>Context:
-File: modules/ps_themecusto/views/templates/admin/controllers/advanced/elem/modal.tpl:33</note>
-      </trans-unit>
-      <trans-unit id="ec2dab4ec46156a390cbe0652004f410">
-        <source>select file</source>
-        <target>select file</target>
-        <note>Context:
-File: modules/ps_themecusto/views/templates/admin/controllers/advanced/elem/modal.tpl:33</note>
-      </trans-unit>
-      <trans-unit id="2c5b5cb39879603f5ecbcc0e63d91928">
-        <source>Please upload one file at a time, .zip. Your child theme will be installed right after that.</source>
-        <target>Please upload one file at a time, .zip. Your child theme will be installed right after that.</target>
-        <note>Context:
-File: modules/ps_themecusto/views/templates/admin/controllers/advanced/elem/modal.tpl:36</note>
-      </trans-unit>
-      <trans-unit id="824e2fcb263ee94399a6a261ee1ec7c1">
-        <source>Oops... Upload failed.</source>
-        <target>Oops... Upload failed.</target>
-        <note>Context:
-File: modules/ps_themecusto/views/templates/admin/controllers/advanced/elem/modal.tpl:41</note>
-      </trans-unit>
-      <trans-unit id="fa692d85f08c92a585ed8b3fed7f1d52">
-        <source>What happened?</source>
-        <target>What happened?</target>
-        <note>Context:
-File: modules/ps_themecusto/views/templates/admin/controllers/advanced/elem/modal.tpl:42</note>
-      </trans-unit>
-      <trans-unit id="c69732cc923305ac0684ac8fc05a4bca">
-        <source>An error has occurred.</source>
-        <target>An error has occurred.</target>
-        <note>Context:
-File: modules/ps_themecusto/views/templates/admin/controllers/advanced/elem/modal.tpl:43</note>
-      </trans-unit>
-      <trans-unit id="f915a95e609bbd517a8a1e7bdcceef37">
-        <source>Try again</source>
-        <target>Try again</target>
-        <note>Context:
-File: modules/ps_themecusto/views/templates/admin/controllers/advanced/elem/modal.tpl:45</note>
       </trans-unit>
     </body>
   </file>

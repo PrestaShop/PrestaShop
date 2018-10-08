@@ -22,13 +22,19 @@ File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/card_list_addon
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Module/Includes/action_menu.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="modules/ps_mbo/views/templates/admin/include/action_menu.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="abfc3a65538a6ec86502b2b498b6b4a6">
         <source>Discover</source>
         <target>Discover</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/action_menu.html.twig:36</note>
+File: modules/ps_mbo/views/templates/admin/include/action_menu.tpl:28</note>
+      </trans-unit>
+      <trans-unit id="349838fb1d851d3e2014b9fe39203275">
+        <source>Install</source>
+        <target>Install</target>
+        <note>Context:
+File: modules/ps_mbo/views/templates/admin/include/action_menu.tpl:34</note>
       </trans-unit>
     </body>
   </file>
@@ -210,12 +216,6 @@ File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_confirm.h
         <note>Context:
 File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/card_list.html.twig:76</note>
       </trans-unit>
-      <trans-unit id="decbe415d8accca7c2c16d48a79ee934">
-        <source>Read More</source>
-        <target>Read More</target>
-        <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/card_list.html.twig:91</note>
-      </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Improve/Payment/PaymentMethods/Blocks/payment_modules_list.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
@@ -252,45 +252,39 @@ File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/grid_manage_emp
         <note>Context:
 File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/dropdown_categories.html.twig:47</note>
       </trans-unit>
-      <trans-unit id="a6a2a55bea8760389dfca77132905b7c">
-        <source>All Categories</source>
-        <target>All Categories</target>
-        <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/dropdown_categories.html.twig:39</note>
-      </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Module/Includes/sorting.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="modules/ps_mbo/views/templates/admin/include/menu_top.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="9adfc354d13f70ca8172da3cd2d9c06e">
         <source>%nbModules% modules and services selected for you</source>
         <target>%nbModules% modules and services selected for you</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/sorting.html.twig:29</note>
+File: modules/ps_mbo/views/templates/admin/include/menu_top.tpl:52</note>
       </trans-unit>
       <trans-unit id="6ff9dd0d34f65181173c1e4bc39939de">
         <source>Selection</source>
         <target>Selection</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/sorting.html.twig:31</note>
+File: modules/ps_mbo/views/templates/admin/include/menu_top.tpl:54</note>
       </trans-unit>
       <trans-unit id="3d7c1883e8f497290c2aafa2086f49ff">
         <source>Increasing Price</source>
         <target>Increasing Price</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/sorting.html.twig:41</note>
+File: modules/ps_mbo/views/templates/admin/include/menu_top.tpl:64</note>
       </trans-unit>
       <trans-unit id="8e7cce37e14aea45d6d88e8c4aaa1b98">
         <source>Decreasing Price</source>
         <target>Decreasing Price</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/sorting.html.twig:42</note>
+File: modules/ps_mbo/views/templates/admin/include/menu_top.tpl:65</note>
       </trans-unit>
       <trans-unit id="e22269bb51f9f2394e148716babbafbb">
         <source>Popularity</source>
         <target>Popularity</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/sorting.html.twig:43</note>
+File: modules/ps_mbo/views/templates/admin/include/menu_top.tpl:66</note>
       </trans-unit>
     </body>
   </file>
@@ -316,37 +310,37 @@ File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/dropdown_status
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_confirm_prestatrust.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="modules/ps_mbo/views/templates/admin/include/modal_confirm_prestatrust.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="80c1f30ef63bc79dd32b654e7b85c112">
         <source>Module verification</source>
         <target>Module verification</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_confirm_prestatrust.html.twig:30</note>
+File: modules/ps_mbo/views/templates/admin/include/modal_confirm_prestatrust.tpl:5</note>
       </trans-unit>
       <trans-unit id="a517747c3d12f99244ae598910d979c5">
         <source>Author</source>
         <target>Author</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_confirm_prestatrust.html.twig:46</note>
+File: modules/ps_mbo/views/templates/admin/include/modal_confirm_prestatrust.tpl:21</note>
       </trans-unit>
       <trans-unit id="249212ebba2907c6087887db076179e6">
         <source>Back to modules list</source>
         <target>Back to modules list</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_confirm_prestatrust.html.twig:63</note>
+File: modules/ps_mbo/views/templates/admin/include/modal_confirm_prestatrust.tpl:38</note>
       </trans-unit>
       <trans-unit id="34afcb42ab73990082d328d9b34811b5">
         <source>Proceed with the installation</source>
         <target>Proceed with the installation</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_confirm_prestatrust.html.twig:67</note>
+File: modules/ps_mbo/views/templates/admin/include/modal_confirm_prestatrust.tpl:42</note>
       </trans-unit>
       <trans-unit id="0c18217e480e74369a0b21d29052574e">
         <source>Buy module</source>
         <target>Buy module</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_confirm_prestatrust.html.twig:68</note>
+File: modules/ps_mbo/views/templates/admin/include/modal_confirm_prestatrust.tpl:43</note>
       </trans-unit>
     </body>
   </file>
@@ -399,6 +393,26 @@ File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_read_more
         <target>Changelog</target>
         <note>Context:
 File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_read_more_content.html.twig:105</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_mbo/views/templates/admin/page.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="decbe415d8accca7c2c16d48a79ee934">
+        <source>Read More</source>
+        <target>Read More</target>
+        <note>Context:
+File: modules/ps_mbo/views/templates/admin/page.tpl:106</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_mbo/views/templates/admin/include/dropdown_categories.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="a6a2a55bea8760389dfca77132905b7c">
+        <source>All Categories</source>
+        <target>All Categories</target>
+        <note>Context:
+File: modules/ps_mbo/views/templates/admin/include/dropdown_categories.tpl:36</note>
       </trans-unit>
     </body>
   </file>

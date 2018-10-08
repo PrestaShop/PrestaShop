@@ -308,13 +308,19 @@ File: admin-dev/themes/default/template/controllers/customers/helpers/view/view.
       </trans-unit>
     </body>
   </file>
-  <file original="admin-dev/themes/default/template/controllers/currencies/status.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="modules/ps_mbo/views/templates/admin/include/modal_confirm_prestatrust.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="ec53a8c4f07baed5d8825072c89799be">
         <source>Status</source>
         <target>Status</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/currencies/status.tpl:29</note>
+File: modules/ps_mbo/views/templates/admin/include/modal_confirm_prestatrust.tpl:23</note>
+      </trans-unit>
+      <trans-unit id="e55f75a29310d7b60f7ac1d390c8ae42">
+        <source>Module</source>
+        <target>Module</target>
+        <note>Context:
+File: modules/ps_mbo/views/templates/admin/include/modal_confirm_prestatrust.tpl:17</note>
       </trans-unit>
     </body>
   </file>
@@ -1857,16 +1863,6 @@ File: src/PrestaShopBundle/Resources/views/Admin/Product/CatalogPage/catalog.htm
         <target>Remember me</target>
         <note>Context:
 File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_addons_connect.html.twig:62</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/translations/helpers/view/translation_modules.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="e55f75a29310d7b60f7ac1d390c8ae42">
-        <source>Module</source>
-        <target>Module</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/translations/helpers/view/translation_modules.tpl:179</note>
       </trans-unit>
     </body>
   </file>
