@@ -66,6 +66,14 @@ class PrestaShopExtension extends Extension
     /**
      * {@inheritdoc}
      */
+    public function getConfiguration(array $config, ContainerBuilder $container)
+    {
+        return new AddOnsConfiguration($this->getAlias());
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getAlias()
     {
         return 'prestashop';
