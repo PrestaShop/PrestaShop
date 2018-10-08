@@ -61,7 +61,7 @@
   };
 </script>
 
-<style lang="sass">
+<style lang="scss">
   @import "../../../scss/config/_settings.scss";
 
   .date {

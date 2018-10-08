@@ -18,16 +18,6 @@ function devConfig(hostname) {
     ]
   });
 
-  // @toDo: remove sass support in vue files
-  dev.module.rules.push({
-    test:/\.sass$/,
-    use: [
-      'css-loader',
-      'postcss-loader',
-      'sass-loader'
-    ]
-  });
-
   dev.plugins.push(new LiveReloadPlugin({
     appendScriptTag: true,
     hostname: hostname || 'localhost'

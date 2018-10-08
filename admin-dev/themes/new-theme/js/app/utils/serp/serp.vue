@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  *-->
 <template>
-  <div id="serp"">
+  <div id="serp">
     <div class="serp-preview">
       <div class="serp-title">{{title}}</div>
       <div class="serp-url">{{url}}<span class="serp-arrow"></span></div>
@@ -70,7 +70,7 @@
   };
 </script>
 
-<style lang="sass" type="text/scss" scoped>
+<style lang="scss" type="text/scss" scoped>
     .serp-preview {
         margin-top: 15px;
         margin-bottom: 15px;

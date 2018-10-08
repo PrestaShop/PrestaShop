@@ -30,17 +30,6 @@ function prodConfig(analyze) {
     ]
   });
 
-  // @toDo: remove sass support in vue files
-  prod.module.rules.push({
-    test:/\.sass$/,
-    use: [
-      MiniCssExtractPlugin.loader,  // extract CSS to theme.css in prod, style-loader in dev
-      'css-loader',
-      'postcss-loader',
-      'sass-loader'
-    ]
-  });
-
   prod.plugins.push(
     new MiniCssExtractPlugin({
       filename: '[name].css'

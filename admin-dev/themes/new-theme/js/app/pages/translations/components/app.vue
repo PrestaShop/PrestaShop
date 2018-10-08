@@ -134,7 +134,7 @@
   };
 </script>
 
-<style lang="sass" type="text/scss">
+<style lang="scss" type="text/scss">
   @import "../../../../../scss/config/_settings.scss";
   // hide the layout header
   #main-div > .header-toolbar {
