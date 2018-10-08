@@ -1105,6 +1105,12 @@ class AdminThemesControllerCore extends AdminController
             if (Tools::getValue('PS_FAVICON')) {
                 $this->logo_uploader->updateFavicon();
                 $this->redirect_after = self::$currentIndex . '&token=' . $this->token;
+                try {
+                    $this->logo_uploader->updateFavicon();
+                    $this->redirect_after = self::$currentIndex . '&token=' . $this->token;
+                } catch (Exception $e) {
+                    $this->errors[] = $e->getMessage();
+                }
             }
 
             Hook::exec('actionAdminThemesControllerUpdate_optionsAfter');
