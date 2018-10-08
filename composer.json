@@ -57,6 +57,7 @@
         "prestashop/ps_customtext": "^4",
         "prestashop/ps_emailsubscription": "^2",
         "prestashop/ps_facetedsearch": "^2",
+        "prestashop/ps_faviconnotificationbo": "^1",
         "prestashop/ps_featuredproducts": "^2",
         "prestashop/ps_imageslider": "^3",
         "prestashop/ps_languageselector": "^2",
