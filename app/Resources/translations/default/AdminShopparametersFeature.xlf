@@ -1000,61 +1000,61 @@ File: modules/ps_mainmenu/ps_mainmenu.php:1330</note>
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminPreferencesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/General/PreferencesType.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="843fbaec27e324378999e09cc665a7f4">
         <source>Round up away from zero, when it is half way there (recommended)</source>
         <target>Round up away from zero, when it is half way there (recommended)</target>
         <note>Context:
-File: controllers/admin/AdminPreferencesController.php:45</note>
+File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/General/PreferencesType.php:70</note>
       </trans-unit>
       <trans-unit id="9d70eb834e3574ca07a1f28083ecba1e">
         <source>Round down towards zero, when it is half way there</source>
         <target>Round down towards zero, when it is half way there</target>
         <note>Context:
-File: controllers/admin/AdminPreferencesController.php:49</note>
+File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/General/PreferencesType.php:71</note>
       </trans-unit>
       <trans-unit id="5f9d1d092dc5658734b8af7187460b32">
         <source>Round towards the next even value</source>
         <target>Round towards the next even value</target>
         <note>Context:
-File: controllers/admin/AdminPreferencesController.php:53</note>
+File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/General/PreferencesType.php:72</note>
       </trans-unit>
       <trans-unit id="8700a0015f3fc1c5d96ccc5140475dc3">
         <source>Round towards the next odd value</source>
         <target>Round towards the next odd value</target>
         <note>Context:
-File: controllers/admin/AdminPreferencesController.php:57</note>
+File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/General/PreferencesType.php:73</note>
       </trans-unit>
       <trans-unit id="6186ae4fe9ec55025a9777dd973e0af2">
         <source>Round up to the nearest value</source>
         <target>Round up to the nearest value</target>
         <note>Context:
-File: controllers/admin/AdminPreferencesController.php:61</note>
+File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/General/PreferencesType.php:74</note>
       </trans-unit>
       <trans-unit id="35853630b5da054ef55e8e02d8df4954">
         <source>Round down to the nearest value</source>
         <target>Round down to the nearest value</target>
         <note>Context:
-File: controllers/admin/AdminPreferencesController.php:65</note>
+File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/General/PreferencesType.php:75</note>
       </trans-unit>
       <trans-unit id="41032c67b9a3d88ff9a824a1f0845513">
         <source>Round on each item</source>
         <target>Round on each item</target>
         <note>Context:
-File: controllers/admin/AdminPreferencesController.php:160</note>
+File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/General/PreferencesType.php:81</note>
       </trans-unit>
       <trans-unit id="a899eacfb98f1740127be5fe16bee5c7">
         <source>Round on each line</source>
         <target>Round on each line</target>
         <note>Context:
-File: controllers/admin/AdminPreferencesController.php:164</note>
+File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/General/PreferencesType.php:82</note>
       </trans-unit>
       <trans-unit id="6d19eb8a9ca35d858824737173ebd011">
         <source>Round on the total</source>
         <target>Round on the total</target>
         <note>Context:
-File: controllers/admin/AdminPreferencesController.php:168</note>
+File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/General/PreferencesType.php:83</note>
       </trans-unit>
     </body>
   </file>
@@ -1460,13 +1460,77 @@ File: modules/statsforecast/statsforecast.php:529</note>
       </trans-unit>
     </body>
   </file>
-  <file original="modules/statsproduct/statsproduct.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/PaginationType.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="df644ae155e79abf54175bd15d75f363">
         <source>Product name</source>
         <target>Product name</target>
         <note>Context:
-File: modules/statsproduct/statsproduct.php:290</note>
+File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/PaginationType.php:50</note>
+      </trans-unit>
+      <trans-unit id="290b7c47045d269e2ccfa69e6477acfe">
+        <source>Product price</source>
+        <target>Product price</target>
+        <note>Context:
+File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/PaginationType.php:51</note>
+      </trans-unit>
+      <trans-unit id="0cffebd3c32f4467e14759b2b7d3d515">
+        <source>Product add date</source>
+        <target>Product add date</target>
+        <note>Context:
+File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/PaginationType.php:52</note>
+      </trans-unit>
+      <trans-unit id="d920ec381c352d9d92a53ed3d261e8c6">
+        <source>Product modified date</source>
+        <target>Product modified date</target>
+        <note>Context:
+File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/PaginationType.php:53</note>
+      </trans-unit>
+      <trans-unit id="3cfcde53f39184634bc7b2344479fbc4">
+        <source>Position inside category</source>
+        <target>Position inside category</target>
+        <note>Context:
+File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/PaginationType.php:54</note>
+      </trans-unit>
+      <trans-unit id="1be6f9eb563f3bf85c78b4219bf09de9">
+        <source>Brand</source>
+        <target>Brand</target>
+        <note>Context:
+File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/PaginationType.php:55</note>
+      </trans-unit>
+      <trans-unit id="7b541de13ca0229406e134a373dd6382">
+        <source>Product quantity</source>
+        <target>Product quantity</target>
+        <note>Context:
+File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/PaginationType.php:56</note>
+      </trans-unit>
+      <trans-unit id="75ed578ac3cb02b0ba40002a25bc0403">
+        <source>Product reference</source>
+        <target>Product reference</target>
+        <note>Context:
+File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/PaginationType.php:57</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/StockType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="175db77b6b3ecd9633e85b5efc28bbc1">
+        <source>Decrement pack only.</source>
+        <target>Decrement pack only.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/StockType.php:67</note>
+      </trans-unit>
+      <trans-unit id="1ba020dea4ce06fa139a471db21f41a7">
+        <source>Decrement products in pack only.</source>
+        <target>Decrement products in pack only.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/StockType.php:68</note>
+      </trans-unit>
+      <trans-unit id="61b912928e920c280798dc648d4068fe">
+        <source>Decrement both.</source>
+        <target>Decrement both.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/StockType.php:69</note>
       </trans-unit>
     </body>
   </file>

@@ -74,12 +74,6 @@ File: src/Core/Import/File/FileUploader.php:90</note>
         <note>Context:
 File: controllers/admin/AdminImportController.php:731</note>
       </trans-unit>
-      <trans-unit id="197f1953efd11637a634a7f9b269eac3">
-        <source>To proceed, please upload a file first.</source>
-        <target>To proceed, please upload a file first.</target>
-        <note>Context:
-File: controllers/admin/AdminImportController.php:4566</note>
-      </trans-unit>
       <trans-unit id="a080a85258618039d010a2136f85e69f">
         <source>There is an empty row in the file that won't be imported.</source>
         <target>There is an empty row in the file that won't be imported.</target>
@@ -472,6 +466,16 @@ File: controllers/admin/AdminImportController.php:4687</note>
       </trans-unit>
     </body>
   </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Import/ImportFormDataProvider.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="197f1953efd11637a634a7f9b269eac3">
+        <source>To proceed, please upload a file first.</source>
+        <target>To proceed, please upload a file first.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Import/ImportFormDataProvider.php:81</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="admin-dev/themes/default/template/controllers/import/modal_import_progress.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="d85366190ecd2aebf8363980ad9d6740">
@@ -756,65 +760,69 @@ File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/Re
         <note>Context:
 File: controllers/admin/AdminRequestSqlController.php:363</note>
       </trans-unit>
+    </body>
+  </file>
+  <file original="src/Adapter/SqlManager/SqlQueryValidator.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
       <trans-unit id="a0e587425d03db434bd7ad7081913cb4">
         <source>The "%tablename%" table does not exist.</source>
         <target>The "%tablename%" table does not exist.</target>
         <note>Context:
-File: controllers/admin/AdminRequestSqlController.php:405</note>
+File: src/Adapter/SqlManager/SqlQueryValidator.php:166</note>
       </trans-unit>
       <trans-unit id="9caefacc2d658e65a31461564c163624">
         <source>The "%attribute%" attribute does not exist in the "%table%" table.</source>
         <target>The "%attribute%" attribute does not exist in the "%table%" table.</target>
         <note>Context:
-File: controllers/admin/AdminRequestSqlController.php:491</note>
+File: src/Adapter/SqlManager/SqlQueryValidator.php:320</note>
       </trans-unit>
       <trans-unit id="b162612cdcbf01c01421bad2e8b39432">
         <source>Undefined "%s" error</source>
         <target>Undefined "%s" error</target>
         <note>Context:
-File: controllers/admin/AdminRequestSqlController.php:499</note>
+File: src/Adapter/SqlManager/SqlQueryValidator.php:330</note>
       </trans-unit>
       <trans-unit id="dbea0ef67609a60a1f71f8d19e132d1e">
         <source>The "*" operator cannot be used in a nested query.</source>
         <target>The "*" operator cannot be used in a nested query.</target>
         <note>Context:
-File: controllers/admin/AdminRequestSqlController.php:421</note>
+File: src/Adapter/SqlManager/SqlQueryValidator.php:187</note>
       </trans-unit>
       <trans-unit id="20cc3893d65fa16fcd2fe317c555e28a">
         <source>The operator "%s" is incorrect.</source>
         <target>The operator "%s" is incorrect.</target>
         <note>Context:
-File: controllers/admin/AdminRequestSqlController.php:430</note>
+File: src/Adapter/SqlManager/SqlQueryValidator.php:213</note>
       </trans-unit>
       <trans-unit id="dde2543d498ef763b41a2e5ddad7ecdd">
         <source>The "%operator%" operator is incorrect.</source>
         <target>The "%operator%" operator is incorrect.</target>
         <note>Context:
-File: controllers/admin/AdminRequestSqlController.php:453</note>
+File: src/Adapter/SqlManager/SqlQueryValidator.php:252</note>
       </trans-unit>
       <trans-unit id="19681d28ed1cc72479bc26b7e76ad240">
         <source>The LIMIT clause must contain numeric arguments.</source>
         <target>The LIMIT clause must contain numeric arguments.</target>
         <note>Context:
-File: controllers/admin/AdminRequestSqlController.php:504</note>
+File: src/Adapter/SqlManager/SqlQueryValidator.php:346</note>
       </trans-unit>
       <trans-unit id="37074dedaa80ce0e038f92b668fb2350">
         <source>The "%reference%" reference does not exist in the "%table%" table.</source>
         <target>The "%reference%" reference does not exist in the "%table%" table.</target>
         <note>Context:
-File: controllers/admin/AdminRequestSqlController.php:510</note>
+File: src/Adapter/SqlManager/SqlQueryValidator.php:363</note>
       </trans-unit>
       <trans-unit id="7b4dd672e3b87269079894e693ce9b76">
         <source>When multiple tables are used, each attribute must refer back to a table.</source>
         <target>When multiple tables are used, each attribute must refer back to a table.</target>
         <note>Context:
-File: controllers/admin/AdminRequestSqlController.php:518</note>
+File: src/Adapter/SqlManager/SqlQueryValidator.php:373</note>
       </trans-unit>
       <trans-unit id="8ff8844bb02822975904934598298987">
         <source>"%key%" is an unauthorized keyword.</source>
         <target>"%key%" is an unauthorized keyword.</target>
         <note>Context:
-File: controllers/admin/AdminRequestSqlController.php:527</note>
+File: src/Adapter/SqlManager/SqlQueryValidator.php:407</note>
       </trans-unit>
     </body>
   </file>
@@ -849,6 +857,32 @@ File: admin-dev/backup.php:85</note>
         <target>Unable to display backup file(s).</target>
         <note>Context:
 File: admin-dev/backup.php:105</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/Adapter/Upload/UploadQuotaConfiguration.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="c3ecc0e8b4dc11a1d2c66d81439b4a42">
+        <source>The limit chosen is larger than the server's maximum upload limit. Please increase the limits of your server.</source>
+        <target>The limit chosen is larger than the server's maximum upload limit. Please increase the limits of your server.</target>
+        <note>Context:
+File: src/Adapter/Upload/UploadQuotaConfiguration.php:94</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/Adapter/Debug/DebugModeConfiguration.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="667685497be44ab0fc2d4334a512405b">
+        <source>Error: Could not write to file. Make sure that the correct permissions are set on the file %s</source>
+        <target>Error: Could not write to file. Make sure that the correct permissions are set on the file %s</target>
+        <note>Context:
+File: src/Adapter/Debug/DebugModeConfiguration.php:111</note>
+      </trans-unit>
+      <trans-unit id="d4fb191ef219af010cc664bf47393e97">
+        <source>Error: Could not find whether debug mode is enabled. Make sure that the correct permissions are set on the file %s</source>
+        <target>Error: Could not find whether debug mode is enabled. Make sure that the correct permissions are set on the file %s</target>
+        <note>Context:
+File: src/Adapter/Debug/DebugModeConfiguration.php:97</note>
       </trans-unit>
     </body>
   </file>
@@ -1057,6 +1091,54 @@ File: src/Adapter/Requirement/CheckRequirements.php:133</note>
         <target>Enable the Apache mod_rewrite module</target>
         <note>Context:
 File: src/Adapter/Requirement/CheckRequirements.php:134</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/Adapter/Media/MediaServerConfiguration.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="ea030df6cb392bef66cde22c94578ae4">
+        <source>Media server #1 is invalid</source>
+        <target>Media server #1 is invalid</target>
+        <note>Context:
+File: src/Adapter/Media/MediaServerConfiguration.php:100</note>
+      </trans-unit>
+      <trans-unit id="32d841e578ff7560bbaeda96f5328e9e">
+        <source>Media server #2 is invalid</source>
+        <target>Media server #2 is invalid</target>
+        <note>Context:
+File: src/Adapter/Media/MediaServerConfiguration.php:108</note>
+      </trans-unit>
+      <trans-unit id="63ae8982fa76c668cbfc774ccf083d26">
+        <source>Media server #3 is invalid</source>
+        <target>Media server #3 is invalid</target>
+        <note>Context:
+File: src/Adapter/Media/MediaServerConfiguration.php:116</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/Adapter/Cache/CombineCompressCacheConfiguration.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="525bb5c93bbb92dd0a3e8378a43ee1e7">
+        <source>To use Smarty Cache, the directory %directorypath% must be writable.</source>
+        <target>To use Smarty Cache, the directory %directorypath% must be writable.</target>
+        <note>Context:
+File: src/Adapter/Cache/CombineCompressCacheConfiguration.php:103</note>
+      </trans-unit>
+      <trans-unit id="91e3dffab90db947ea156087dadaa9c0">
+        <source>Before being able to use this tool, you need to:[1][2]Create a blank .htaccess in your root directory.[/2][2]Give it write permissions (CHMOD 666 on Unix system).[/2][/1]</source>
+        <target>Before being able to use this tool, you need to:[1][2]Create a blank .htaccess in your root directory.[/2][2]Give it write permissions (CHMOD 666 on Unix system).[/2][/1]</target>
+        <note>Context:
+File: src/Adapter/Cache/CombineCompressCacheConfiguration.php:203</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/Adapter/Cache/CachingConfiguration.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="6f6a61bc2bf0a0f7a104f8c526d86206">
+        <source>The settings file cannot be overwritten.</source>
+        <target>The settings file cannot be overwritten.</target>
+        <note>Context:
+File: src/Adapter/Cache/CachingConfiguration.php:138</note>
       </trans-unit>
     </body>
   </file>

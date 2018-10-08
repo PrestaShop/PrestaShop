@@ -32,19 +32,19 @@ File: controllers/admin/AdminAttachmentsController.php:220</note>
         <source>You do not have permission to edit this.</source>
         <target>You do not have permission to edit this.</target>
         <note>Context:
-File: classes/controller/AdminController.php:3063</note>
+File: classes/controller/AdminController.php:3069</note>
       </trans-unit>
       <trans-unit id="11a257a80f8c8d76132470b171de6795">
         <source>You do not have permission to delete this.</source>
         <target>You do not have permission to delete this.</target>
         <note>Context:
-File: classes/controller/AdminController.php:3056</note>
+File: classes/controller/AdminController.php:3062</note>
       </trans-unit>
       <trans-unit id="d8d4c3b79181fdcca8cb5159208fa56a">
         <source>You do not have permission to add this.</source>
         <target>You do not have permission to add this.</target>
         <note>Context:
-File: classes/controller/AdminController.php:2979</note>
+File: classes/controller/AdminController.php:2985</note>
       </trans-unit>
       <trans-unit id="d9b5b2302d57f3d13d5387ba9c99daae">
         <source>An error occurred while creating an object.</source>
@@ -86,25 +86,25 @@ File: classes/controller/AdminController.php:1346</note>
         <source>An error occurred while deleting this selection.</source>
         <target>An error occurred while deleting this selection.</target>
         <note>Context:
-File: classes/controller/AdminController.php:4034</note>
+File: classes/controller/AdminController.php:4040</note>
       </trans-unit>
       <trans-unit id="ddd4e7f16c2032d59cb4fb4b86576bc5">
         <source>You must select at least one element to delete.</source>
         <target>You must select at least one element to delete.</target>
         <note>Context:
-File: classes/controller/AdminController.php:4037</note>
+File: classes/controller/AdminController.php:4043</note>
       </trans-unit>
       <trans-unit id="b1367942aa02ea8c9d4aa07cdf5e473c">
         <source>You need at least one object.</source>
         <target>You need at least one object.</target>
         <note>Context:
-File: classes/controller/AdminController.php:4004</note>
+File: classes/controller/AdminController.php:4010</note>
       </trans-unit>
       <trans-unit id="ec5f6f7f65190788d12ef16ab6135009">
         <source>You cannot delete all of the items.</source>
         <target>You cannot delete all of the items.</target>
         <note>Context:
-File: classes/controller/AdminController.php:4006</note>
+File: classes/controller/AdminController.php:4012</note>
       </trans-unit>
       <trans-unit id="bc33aa1314e7dcd3472db72472b909b2">
         <source>An error occurred during deletion.</source>
@@ -122,13 +122,19 @@ File: classes/controller/AdminController.php:1256</note>
         <source>You do not have permission to view this.</source>
         <target>You do not have permission to view this.</target>
         <note>Context:
-File: classes/controller/AdminController.php:2998</note>
+File: classes/controller/AdminController.php:3004</note>
       </trans-unit>
       <trans-unit id="3452da55a90ccedd184c7ba264b2afd5">
         <source>Due to memory limit restrictions, this image cannot be loaded. Please increase your memory_limit value via your server's configuration settings. </source>
         <target>Due to memory limit restrictions, this image cannot be loaded. Please increase your memory_limit value via your server's configuration settings.</target>
         <note>Context:
-File: classes/controller/AdminController.php:3966</note>
+File: classes/controller/AdminController.php:3972</note>
+      </trans-unit>
+      <trans-unit id="7c422404cb037e6781b5a553060670a6">
+        <source>Can't delete #%id%</source>
+        <target>Can't delete #%id%</target>
+        <note>Context:
+File: classes/controller/AdminController.php:4034</note>
       </trans-unit>
       <trans-unit id="fa4611fb85bb8f118f562d107ab790d4">
         <source>The object cannot be loaded (or found)</source>
@@ -136,12 +142,6 @@ File: classes/controller/AdminController.php:3966</note>
         <note>Context:
 File: classes/controller/AdminController.php:1670
  Comment: throw exception</note>
-      </trans-unit>
-      <trans-unit id="7c422404cb037e6781b5a553060670a6">
-        <source>Can't delete #%id%</source>
-        <target>Can't delete #%id%</target>
-        <note>Context:
-File: classes/controller/AdminController.php:4028</note>
       </trans-unit>
       <trans-unit id="df2751083713a6a971814c07d88c3eb5">
         <source>The 'From' date format is invalid (YYYY-MM-DD)</source>
@@ -202,31 +202,31 @@ File: classes/controller/AdminController.php:1680</note>
         <source>The field %field_name% is required at least in %lang%.</source>
         <target>The field %field_name% is required at least in %lang%.</target>
         <note>Context:
-File: classes/controller/AdminController.php:3652</note>
+File: classes/controller/AdminController.php:3658</note>
       </trans-unit>
       <trans-unit id="114eadc70de249729e9287a6b450c6e0">
         <source>The %field_name% field (%lang%) is invalid.</source>
         <target>The %field_name% field (%lang%) is invalid.</target>
         <note>Context:
-File: classes/controller/AdminController.php:3685</note>
+File: classes/controller/AdminController.php:3691</note>
       </trans-unit>
       <trans-unit id="b4186b9ed7c957a1cd9f4e7ce916e603">
         <source>%s: Incorrect value</source>
         <target>%s: Incorrect value</target>
         <note>Context:
-File: classes/controller/AdminController.php:3890</note>
+File: classes/controller/AdminController.php:3896</note>
       </trans-unit>
       <trans-unit id="c87956ad745e55231c633c03fe0f0d5b">
         <source>An error occurred while assigning a zone to the selection.</source>
         <target>An error occurred while assigning a zone to the selection.</target>
         <note>Context:
-File: classes/controller/AdminController.php:4134</note>
+File: classes/controller/AdminController.php:4140</note>
       </trans-unit>
       <trans-unit id="93463ceee9a3d376b18ee618bc2fffe4">
         <source>You must select at least one element to assign a new zone.</source>
         <target>You must select at least one element to assign a new zone.</target>
         <note>Context:
-File: classes/controller/AdminController.php:4136</note>
+File: classes/controller/AdminController.php:4142</note>
       </trans-unit>
     </body>
   </file>
@@ -934,13 +934,13 @@ File: controllers/admin/AdminThemesController.php:315</note>
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminRequestSqlController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/Adapter/SqlManager/SqlQueryValidator.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="0b5512610b0c8548345f37a58bf51360">
         <source>"%key%" does not exist.</source>
         <target>"%key%" does not exist.</target>
         <note>Context:
-File: controllers/admin/AdminRequestSqlController.php:523</note>
+File: src/Adapter/SqlManager/SqlQueryValidator.php:389</note>
       </trans-unit>
     </body>
   </file>
@@ -1033,6 +1033,22 @@ File: modules/ps_emailsubscription/ps_emailsubscription.php:158</note>
         <target>Invalid selection</target>
         <note>Context:
 File: src/Core/Localization/Pack/Import/LocalizationPackImporter.php:159</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/RequestSql/SqlRequestFormDataProvider.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="ddb7f719baea8c9f335937b683e8f155">
+        <source>Invalid data supplied.</source>
+        <target>Invalid data supplied.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/RequestSql/SqlRequestFormDataProvider.php:191</note>
+      </trans-unit>
+      <trans-unit id="777e4c7c4a3cc47eb332a7a4022c983e">
+        <source>Unexpected error occurred.</source>
+        <target>Unexpected error occurred.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/RequestSql/SqlRequestFormDataProvider.php:231</note>
       </trans-unit>
     </body>
   </file>

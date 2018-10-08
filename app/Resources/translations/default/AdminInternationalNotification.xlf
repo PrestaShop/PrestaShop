@@ -184,67 +184,71 @@ File: controllers/admin/AdminTaxRulesGroupController.php:490</note>
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminTranslationsController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/Adapter/Language/LanguageCopier.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="4d7541fb66c9fc832a20a6f48b4d5613">
         <source>Cannot create the folder "%folder%". Please check your directory writing permissions.</source>
         <target>Cannot create the folder "%folder%". Please check your directory writing permissions.</target>
         <note>Context:
-File: controllers/admin/AdminTranslationsController.php:306</note>
+File: src/Adapter/Language/LanguageCopier.php:102</note>
       </trans-unit>
       <trans-unit id="102c75f83994f206179912d118b8bc3c">
         <source>You must select two languages in order to copy data from one to another.</source>
         <target>You must select two languages in order to copy data from one to another.</target>
         <note>Context:
-File: controllers/admin/AdminTranslationsController.php:398</note>
+File: src/Adapter/Language/LanguageCopier.php:173</note>
       </trans-unit>
       <trans-unit id="fc15f62c244c6d8035874d556e6a7f7b">
         <source>You must select two themes in order to copy data from one to another.</source>
         <target>You must select two themes in order to copy data from one to another.</target>
         <note>Context:
-File: controllers/admin/AdminTranslationsController.php:400</note>
+File: src/Adapter/Language/LanguageCopier.php:179</note>
       </trans-unit>
+      <trans-unit id="0a7402299bf78a7624da443a12cd78ab">
+        <source>There is nothing to copy (same language and theme).</source>
+        <target>There is nothing to copy (same language and theme).</target>
+        <note>Context:
+File: src/Adapter/Language/LanguageCopier.php:188</note>
+      </trans-unit>
+      <trans-unit id="6b5324e2e711f17c4d3db1f625178e86">
+        <source>Theme(s) not found</source>
+        <target>Theme(s) not found</target>
+        <note>Context:
+File: src/Adapter/Language/LanguageCopier.php:211</note>
+      </trans-unit>
+      <trans-unit id="434464e4353199dd20af7bd3cf8e6c64">
+        <source>Impossible to copy "%source%" to "%dest%".</source>
+        <target>Impossible to copy "%source%" to "%dest%".</target>
+        <note>Context:
+File: src/Adapter/Language/LanguageCopier.php:115</note>
+      </trans-unit>
+      <trans-unit id="07b33077111c506cf81b6cc5ef42a170">
+        <source>Impossible to translate "%dest%".</source>
+        <target>Impossible to translate "%dest%".</target>
+        <note>Context:
+File: src/Adapter/Language/LanguageCopier.php:134</note>
+      </trans-unit>
+      <trans-unit id="c7254dc1193c25493aa0a09df285b43c">
+        <source>A part of the data has been copied but some of the language files could not be found.</source>
+        <target>A part of the data has been copied but some of the language files could not be found.</target>
+        <note>Context:
+File: src/Adapter/Language/LanguageCopier.php:146</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminTranslationsController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
       <trans-unit id="c4e5aa158727e2041778d545424797da">
         <source>An error occurred while copying data.</source>
         <target>An error occurred while copying data.</target>
         <note>Context:
 File: controllers/admin/AdminTranslationsController.php:402</note>
       </trans-unit>
-      <trans-unit id="0a7402299bf78a7624da443a12cd78ab">
-        <source>There is nothing to copy (same language and theme).</source>
-        <target>There is nothing to copy (same language and theme).</target>
-        <note>Context:
-File: controllers/admin/AdminTranslationsController.php:404</note>
-      </trans-unit>
-      <trans-unit id="6b5324e2e711f17c4d3db1f625178e86">
-        <source>Theme(s) not found</source>
-        <target>Theme(s) not found</target>
-        <note>Context:
-File: controllers/admin/AdminTranslationsController.php:416</note>
-      </trans-unit>
       <trans-unit id="b5f3291b6db7481e8ca0da4a00718cf9">
         <source>Impossible to create the directory "%folder%".</source>
         <target>Impossible to create the directory "%folder%".</target>
         <note>Context:
 File: controllers/admin/AdminTranslationsController.php:427</note>
-      </trans-unit>
-      <trans-unit id="434464e4353199dd20af7bd3cf8e6c64">
-        <source>Impossible to copy "%source%" to "%dest%".</source>
-        <target>Impossible to copy "%source%" to "%dest%".</target>
-        <note>Context:
-File: controllers/admin/AdminTranslationsController.php:429</note>
-      </trans-unit>
-      <trans-unit id="07b33077111c506cf81b6cc5ef42a170">
-        <source>Impossible to translate "%dest%".</source>
-        <target>Impossible to translate "%dest%".</target>
-        <note>Context:
-File: controllers/admin/AdminTranslationsController.php:432</note>
-      </trans-unit>
-      <trans-unit id="c7254dc1193c25493aa0a09df285b43c">
-        <source>A part of the data has been copied but some of the language files could not be found.</source>
-        <target>A part of the data has been copied but some of the language files could not be found.</target>
-        <note>Context:
-File: controllers/admin/AdminTranslationsController.php:439</note>
       </trans-unit>
       <trans-unit id="ec531fd2b656df91f11e8f94b2bd2f9b">
         <source>An error occurred while creating archive.</source>
@@ -517,6 +521,28 @@ File: src/PrestaShopBundle/Twig/TranslationsExtension.php:220</note>
         <target>Failed to update translation</target>
         <note>Context:
 File: src/PrestaShopBundle/Twig/TranslationsExtension.php:225</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Improve/International/Geolocation/GeolocationFormDataProvider.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="7e093dcb7a9f75c8124b2adc265c5302">
+        <source>The geolocation database is unavailable.</source>
+        <target>The geolocation database is unavailable.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Form/Admin/Improve/International/Geolocation/GeolocationFormDataProvider.php:105</note>
+      </trans-unit>
+      <trans-unit id="493ce56d58c4880dc32df56f12585a23">
+        <source>Country selection is invalid.</source>
+        <target>Country selection is invalid.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Form/Admin/Improve/International/Geolocation/GeolocationFormDataProvider.php:113</note>
+      </trans-unit>
+      <trans-unit id="0861a67f819158c5690a1844d95390b4">
+        <source>Invalid whitelist</source>
+        <target>Invalid whitelist</target>
+        <note>Context:
+File: src/PrestaShopBundle/Form/Admin/Improve/International/Geolocation/GeolocationFormDataProvider.php:121</note>
       </trans-unit>
     </body>
   </file>
