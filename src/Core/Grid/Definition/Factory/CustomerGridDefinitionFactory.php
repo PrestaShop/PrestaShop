@@ -287,12 +287,6 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ])
                 ->setAssociatedColumn('email')
             )
-            ->add((new Filter('total_spent', TextType::class))
-                ->setTypeOptions([
-                    'required' => false,
-                ])
-                ->setAssociatedColumn('total_spent')
-            )
             ->add((new Filter('active', ChoiceType::class))
                 ->setTypeOptions([
                     'choices' => $this->statusChoices,
