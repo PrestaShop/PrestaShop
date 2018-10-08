@@ -239,7 +239,7 @@ final class LegacyUrlConverter
         //interpreted as an action.. but some old link need this feature, ?controller=AdminModulesPositions&addToHook)
         if (null === $legacyAction) {
             foreach ($parameters as $parameter => $value) {
-                if ($value === "" || 1 === (int) $value) {
+                if ($value === '' || 1 === (int) $value) {
                     $legacyAction = $parameter;
                     break;
                 }
