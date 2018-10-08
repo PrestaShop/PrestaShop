@@ -70,16 +70,9 @@ if ((!is_dir(_PS_CORE_DIR_.DIRECTORY_SEPARATOR.'vendor') ||
     die('Error : please install <a href="https://getcomposer.org/">composer</a>. Then run "php composer.phar install"');
 }
 
-$themes = glob(dirname(dirname(__FILE__)).'/themes/*/config/theme.yml', GLOB_NOSORT);
-usort($themes, function ($a, $b) {
-    return strcmp($b, $a);
-});
-if (!defined('_THEME_NAME_')) {
-    define('_THEME_NAME_', basename(substr($themes[0], 0, -strlen('/config/theme.yml'))));
-}
-
 require_once _PS_CORE_DIR_.'/config/defines.inc.php';
 require_once _PS_CORE_DIR_.'/config/autoload.php';
+
 if (file_exists(_PS_CORE_DIR_.'/app/config/parameters.php')) {
     require_once _PS_CORE_DIR_.'/config/bootstrap.php';
 
@@ -92,6 +85,24 @@ if (file_exists(_PS_CORE_DIR_.'/app/config/parameters.php')) {
     $kernel->loadClassCache();
     $kernel->boot();
 }
+
+if (!defined('_THEME_NAME_')) {
+    if (getenv('_PS_THEME_NAME_') !== false) {
+        define('_THEME_NAME_', getenv('_PS_THEME_NAME_'));
+    } else {
+        /**
+         * @deprecated since 1.7.5.x to be removed in 1.8.x
+         * Rely on _PS_THEME_NAME environment variable value
+         */
+        $themes = glob(dirname(__DIR__).'/themes/*/config/theme.yml', GLOB_NOSORT);
+        usort($themes, function ($a, $b) {
+            return strcmp($b, $a);
+        });
+
+        define('_THEME_NAME_', basename(substr($themes[0], 0, -strlen('/config/theme.yml'))));
+    }
+}
+
 require_once _PS_CORE_DIR_.'/config/defines_uri.inc.php';
 
 // Generate common constants
