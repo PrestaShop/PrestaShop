@@ -24,7 +24,7 @@ module.exports = {
   resetWelcomeModule: function (OnBoarding) {
     scenario('Reset the module "Welcome" ', client => {
       resetModule(client, ModulePage, AddProductPage, "Welcome", "welcome");
-      test('should click on "RESUME" button', () => client.waitForExistAndClick(OnBoarding.resume_button, 1000));
+      test('should click on "RESUME" button', () => client.waitForExistAndClick(OnBoarding.resume_button, 3000));
     }, 'common_client');
   },
   onBoardingSteps: function (OnBoarding, AddProductPage) {
@@ -67,8 +67,11 @@ module.exports = {
         test('should click on "Next" button', () => client.waitForExistAndClick(OnBoarding.welcomeSteps.next_button));
         test('should check that the step number is equal to "5"', () => client.checkTextValue(OnBoarding.welcomeSteps.tooltip_step, '5', 'contain', 3000));
         test('should check the fifth onboarding-tooltip message', () => client.checkTextValue(OnBoarding.welcomeSteps.message_value, 'Yay! You just created your first product. Looks good, right?'));
-        test('should search for the product"' + 'productTest' + date_time + '"', () => client.waitAndSetValue(AddProductPage.catalogue_filter_by_name_input, 'productTest' + date_time));
-        test('should click on "Apply" button', () => client.waitForExistAndClick(AddProductPage.catalog_submit_filter));
+        test('should search for the product"' + 'productTest' + date_time + '"', () => {
+            return promise
+                .then(() => client.waitAndSetValue(AddProductPage.catalogue_filter_by_name_input, 'productTest' + date_time))
+                .then(() => client.waitForExistAndClick(AddProductPage.catalogue_submit_filter_button));
+        });
         test('should check the product', () => client.checkTextValue(ProductList.product_name.replace("%ID", '1'), 'productTest' + date_time));
         test('should click on "Reset" button', () => client.waitForExistAndClick(AddProductPage.catalog_reset_filter));
       }, 'common_client');
@@ -77,14 +80,14 @@ module.exports = {
       scenario('Step 1/2', client => {
         test('should check that the current step has started', () => client.checkAttributeValue(OnBoarding.welcomeSteps.tutorial_step.replace("%P", '1'), 'class', 'id -done'));
         test('should click on "Next" button', () => client.scrollWaitForExistAndClick(OnBoarding.welcomeSteps.next_button));
-        test('should check that the step number is equal to "1" ', () => client.checkTextValue(OnBoarding.welcomeSteps.tooltip_step, '1/2', 'contain', 1000));
-        test('should check the first  onboarding-tooltip message', () => client.checkTextValue(OnBoarding.welcomeSteps.message_value, 'A good way to start is to add your own logo here!'));
+        test('should check that the step number is equal to "1" ', () => client.checkTextValue(OnBoarding.welcomeSteps.tooltip_step, '1/2', 'contain', 4000));
+        test('should check the first onboarding-tooltip message', () => client.checkTextValue(OnBoarding.welcomeSteps.message_value, 'A good way to start is to add your own logo here!'));
         test('should upload the header logo', () => client.uploadPicture('image_test.jpg', OnBoarding.welcomeSteps.header_logo));
         test('should click on "Next" button', () => client.scrollWaitForExistAndClick(OnBoarding.welcomeSteps.next_button));
       }, 'common_client');
 
       scenario('Step 2/2', client => {
-        test('should check that the step number is equal to "2"', () => client.checkTextValue(OnBoarding.welcomeSteps.tooltip_step, '2/2', 'contain', 2000));
+        test('should check that the step number is equal to "2"', () => client.checkTextValue(OnBoarding.welcomeSteps.tooltip_step, '2/2', 'contain', 4000));
         test('should check the second onboarding-tooltip message', () => client.checkTextValue(OnBoarding.welcomeSteps.message_value, 'If you want something really special, have a look at the theme catalog!'));
         test('should click on "Next" button', () => client.waitForExistAndClick(OnBoarding.welcomeSteps.next_button));
       }, 'common_client');
@@ -94,7 +97,7 @@ module.exports = {
       test('should check that the current step has started', () => client.checkAttributeValue(OnBoarding.welcomeSteps.tutorial_step.replace("%P", '2'), 'class', 'id -done', 'equal'));
       test('should check that the step number is equal to "1"', () => client.checkTextValue(OnBoarding.welcomeSteps.tooltip_step, '1/1', 'contain', 2000));
       test('should check the first onboarding-tooltip message', () => client.checkTextValue(OnBoarding.welcomeSteps.message_value, 'These payment methods are already available to your customers.', 'equal', 2000));
-      test('should click on the configure button of the check payment module', () => client.waitForExistAndClick(OnBoarding.payement_check_button.replace("%s", "check")));
+      test('should click on the configure button of the check payment module', () => client.waitForExistAndClick(OnBoarding.payement_check_button.replace("%moduleTechName", "ps_checkpayment")));
       test('should click on "RESUME" button', () => client.waitForVisibleAndClick(OnBoarding.resume_button));
       test('should click on "Next" button', () => client.waitForExistAndClick(OnBoarding.welcomeSteps.next_button));
     }, 'common_client');

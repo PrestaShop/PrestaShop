@@ -46,9 +46,8 @@ module.exports = {
       test('should click on "New Product" button', () => {
         return promise
           .then(() => client.waitForExistAndClick(AddProductPage.new_product_button))
-          .then(() => client.isVisible(AddProductPage.symfony_toolbar, 3000))
           .then(() => {
-            if (global.isVisible) {
+            if (global.ps_mode_dev) {
               client.waitForExistAndClick(AddProductPage.symfony_toolbar)
             }
           });
@@ -82,7 +81,7 @@ module.exports = {
               } else {
                 Object.keys(productData.attribute).forEach(function (key) {
                   if (productData.attribute[key].name === attributeData[key - 1].name) {
-                    promise = client.scrollWaitForExistAndClick(AddProductPage.attribute_group_name.replace('%NAME', productData.attribute[key].name + date_time, 150, 3000));
+                    promise = client.scrollWaitForExistAndClick(AddProductPage.attribute_group_name.replace('%NAME', productData.attribute[key].name + date_time), 150, 3000);
                     Object.keys(attributeData[key - 1].values).forEach(function (index) {
                       promise
                         .then(() => client.scrollWaitForVisibleAndClick(AddProductPage.attribute_value_checkbox.replace('%ID', global.tab[productData.attribute[key].name + '_id']).replace('%S', index)));
@@ -95,13 +94,13 @@ module.exports = {
           });
           test('should click on "Generate" button', () => client.scrollWaitForExistAndClick(AddProductPage.variations_generate));
           test('should verify the appearance of the green validation', () => client.checkTextValue(AddProductPage.validation_msg, 'Settings updated.'));
+          test('should get the combination data', () => client.getCombinationData(1));
           test('should select all the generated variations', () => client.waitForVisibleAndClick(AddProductPage.var_selected));
           test('should set the "Variations quantity" input', () => {
             return promise
               .then(() => client.setVariationsQuantity(AddProductPage, productData.attribute[1].variation_quantity))
-              .then(() => client.isVisible(AddProductPage.symfony_toolbar, 3000))
               .then(() => {
-                if (global.isVisible) {
+                if (global.ps_mode_dev) {
                   client.waitForExistAndClick(AddProductPage.symfony_toolbar);
                 }
               });
@@ -114,8 +113,7 @@ module.exports = {
         scenario('Add Feature', client => {
           test('should click on "Add feature" button', () => {
             return promise
-              .then(() => client.scrollTo(AddProductPage.product_create_category_btn))
-              .then(() => client.waitForExistAndClick(AddProductPage.add_feature_to_product_button));
+              .then(() => client.scrollWaitForExistAndClick(AddProductPage.add_feature_to_product_button));
           });
           test('should select the created feature', () => client.selectFeature(AddProductPage, productData['feature']['name'] + date_time, productData['feature']['value']));
         }, 'product/product');
@@ -127,7 +125,7 @@ module.exports = {
           test('should set the "Price per unit (tax excl.)"', () => client.waitAndSetValue(AddProductPage.unit_price, productData['pricing']['unitPrice']));
           test('should set the "Unit"', () => client.waitAndSetValue(AddProductPage.unity, productData['pricing']['unity']));
           test('should set the "Price (tax excl.)"', () => client.waitAndSetValue(AddProductPage.pricing_wholesale, productData['pricing']['wholesale']));
-          test('should click on "Add specific price" button', () => client.waitForExistAndClick(AddProductPage.pricing_add_specific_price_button));
+          test('should click on "Add specific price" button', () => client.scrollWaitForExistAndClick(AddProductPage.pricing_add_specific_price_button));
           test('should change the reduction type to "Percentage"', () => {
             return promise
               .then(() => client.pause(3000))
@@ -249,15 +247,11 @@ module.exports = {
           .then(() => expect(global.productsNumber).to.be.at.most(itemPerPage));
       });
       if (paginateBetweenPages) {
-        test('should close the symfony toolbar if exists', () => {
-          return promise
-            .then(() => client.isVisible(AddProductPage.symfony_toolbar))
-            .then(() => {
-              if (global.isVisible) {
-                client.waitForExistAndClick(AddProductPage.symfony_toolbar);
-              }
-            });
-        });
+          if (global.ps_mode_dev) {
+            test('should close the symfony toolbar if exists', () =>
+                client.waitForExistAndClick(AddProductPage.symfony_toolbar, 2000)
+            );
+          }
         test('should click on "' + nextOrPrevious + '" button', () => {
           return promise
             .then(() => client.isVisible(selectorButton))

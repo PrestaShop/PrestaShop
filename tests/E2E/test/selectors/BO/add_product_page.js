@@ -56,7 +56,7 @@ module.exports = {
     search_add_related_product_input: '//*[@id="form_step1_related_products"]',
     related_product_item: '//*[@id="related-content"]/div[2]/fieldset/div/div[1]/span/div/div/div[1]',
     product_add_feature_btn: '//*[@id="add_feature_button"]',
-    feature_select_option_height: '//*[@id="select2-form_step1_features_0_feature-results"]/li[2]',
+    feature_select_option: '//*[@id="select2-form_step1_features_0_feature-results"]/li[2]',
     feature_custom_value_height: '//*[@id="form_step1_features_0_custom_value_1"]',
     priceTE_shortcut: '#form_step1_price_shortcut',
     priceTTC_shortcut: '#form_step1_price_ttc_shortcut',
@@ -244,6 +244,7 @@ module.exports = {
     product_category: '//*[@id="product_catalog_list"]//div//tr[%I]/td[6]',
     reset_button: '//*[@id="product_catalog_list"]//tr[2]/th[9]/button[@name="products_filter_reset"]',
     status_filter: '//*[@id="product_filter_column_active"]//select[@name=\'filter_column_active\']',
-    item_per_page_select: '//*[@id="paginator_select_page_limit"]'
+    item_per_page_select: '//*[@id="paginator_select_page_limit"]',
+    search_product_button: '//button[@name="filter_column_name"]'
   }
 };

@@ -26,11 +26,11 @@ scenario('Create product with combination in the Back Office', client => {
     test('should click on "CREATE A CATEGORY"', () => client.scrollWaitForExistAndClick(AddProductPage.product_create_category_btn, 50));
     test('should set the "New category name"', () => client.waitAndSetValue(AddProductPage.product_category_name_input, data.standard.new_category_name + 'C' + date_time));
     test('should click on "Create"', () => client.createCategory());
-    test('should open all categories', () => client.openAllCategories());
+    //test('should open all categories', () => client.openAllCategories()); //TODO: Verify if we should close then open all categories
     test('should choose the created category as default', () => {
       return promise
         .then(() => client.waitForVisible(AddProductPage.created_category))
-        .then(() => client.waitForExistAndClick(AddProductPage.home_delete_button));
+        .then(() => client.scrollWaitForExistAndClick(AddProductPage.home_delete_button));
     });
     test('should click on "ADD A BRAND" button', () => client.scrollWaitForExistAndClick(AddProductPage.product_add_brand_btn, 50));
     test('should select brand', () => {
@@ -40,14 +40,13 @@ scenario('Create product with combination in the Back Office', client => {
     });
     test('should click on "ADD RELATED PRODUCT" button', () => client.waitForExistAndClick(AddProductPage.add_related_product_btn));
     test('should search and add a related product', () => client.searchAndAddRelatedProduct());
-    test('should click on "ADD A FEATURE" and select one', () => client.addFeatureHeight('combination'));
+    test('should click on "ADD A FEATURE" and select one', () => client.addFeature('combination'));
     test('should set "Tax exclude" price', () => client.setPrice(AddProductPage.priceTE_shortcut, data.common.priceTE));
     test('should set the "Reference" input', () => client.waitAndSetValue(AddProductPage.product_reference, data.common.product_reference));
     test('should switch the product online', () => {
       return promise
-        .then(() => client.isVisible(AddProductPage.symfony_toolbar))
         .then(() => {
-          if (global.isVisible) {
+          if (global.ps_mode_dev) {
             client.waitForExistAndClick(AddProductPage.symfony_toolbar);
           }
         })
@@ -132,7 +131,6 @@ scenario('Create product with combination in the Back Office', client => {
      **/
     test('should check that combination\'s picture is well updated (BOOM-4469)', () => client.checkAttributeValue(AddProductPage.combination_attribute_image.replace('%NUMBER', combinationId), 'src', title_image, 'contain'));
     /**** END ****/
-    test('should go back to combination list', () => client.backToProduct());
     test('should click on "Availability preferences" button', () => client.scrollWaitForExistAndClick(AddProductPage.combination_availability_preferences, 50));
     test('should set the available label in stock', () => client.waitAndSetValue(AddProductPage.combination_label_in_stock, data.common.qty_msg_stock));
     test('should set the available label out of stock', () => client.waitAndSetValue(AddProductPage.combination_label_out_stock, data.common.qty_msg_unstock));
@@ -204,7 +202,7 @@ scenario('Check the product with combination in the Front Office', () => {
   scenario('Check that the product with combination is well displayed in the Front Office', client => {
     test('should set the shop language to "English"', () => client.changeLanguage());
     test('should search for the product', () => client.searchByValue(SearchProductPage.search_input, SearchProductPage.search_button, data.standard.name + 'C' + date_time));
-    test('should go to the product page', () => client.waitForExistAndClick(SearchProductPage.product_result_name));
+    test('should go to the product page', () => client.waitForExistAndClick(SearchProductPage.product_result_name,2000));
     test('should check that the product name is equal to "' + (data.standard.name + 'C' + date_time).toUpperCase() + '"', () => client.checkTextValue(productPage.product_name, (data.standard.name + 'C' + date_time).toUpperCase()));
     test('should check that the product price is equal to "€27.00"', () => client.checkTextValue(productPage.product_price, '€27.00'));
     test('should set the product size to "S"', () => client.waitAndSelectByAttribute(productPage.product_size, 'title', productVariations[0][0], 3000));
