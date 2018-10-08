@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ToggleColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 
 /**
@@ -41,11 +42,18 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
     private $isB2bFeatureEnabled;
 
     /**
-     * @param bool $isB2bFeatureEnabled
+     * @var bool
      */
-    public function __construct($isB2bFeatureEnabled)
+    private $isMultistoreFeatureEnabled;
+
+    /**
+     * @param bool $isB2bFeatureEnabled
+     * @param bool $isMultistoreFeatureEnabled
+     */
+    public function __construct($isB2bFeatureEnabled, $isMultistoreFeatureEnabled)
     {
         $this->isB2bFeatureEnabled = $isB2bFeatureEnabled;
+        $this->isMultistoreFeatureEnabled = $isMultistoreFeatureEnabled;
     }
 
     /**
@@ -96,7 +104,7 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
             ->add((new DataColumn('lastname'))
                 ->setName($this->trans('Last name', [], 'Admin.Global'))
                 ->setOptions([
-                    'field' => 'total_spent',
+                    'field' => 'lastname',
                 ])
             )
             ->add((new DataColumn('email'))
@@ -111,22 +119,31 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'field' => 'total_spent',
                 ])
             )
-            ->add((new DataColumn('active'))
+            ->add((new ToggleColumn('active'))
                 ->setName($this->trans('Enabled', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'active',
+                    'primary_field' => 'id_customer',
+                    'route' => 'admin_customers_index',
+                    'route_param_id' => 'customerId',
                 ])
             )
-            ->add((new DataColumn('newsletter'))
+            ->add((new ToggleColumn('newsletter'))
                 ->setName($this->trans('Newsletter', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'newsletter',
+                    'primary_field' => 'id_customer',
+                    'route' => 'admin_customers_index',
+                    'route_param_id' => 'customerId',
                 ])
             )
-            ->add((new DataColumn('optin'))
+            ->add((new ToggleColumn('optin'))
                 ->setName($this->trans('Partner offers', [], 'Admin.Orderscustomers.Feature'))
                 ->setOptions([
                     'field' => 'optin',
+                    'primary_field' => 'id_customer',
+                    'route' => 'admin_customers_index',
+                    'route_param_id' => 'customerId',
                 ])
             )
             ->add((new DataColumn('date_add'))
@@ -148,6 +165,16 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setName($this->trans('Company', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'company',
+                ])
+            );
+        }
+
+        if ($this->isMultistoreFeatureEnabled) {
+            $columns->add((new DataColumn('shop_name'))
+                ->setName($this->trans('Shop', [], 'Admin.Global'))
+                ->setOptions([
+                    'field' => 'shop_name',
+                    'sortable' => false,
                 ])
             );
         }
