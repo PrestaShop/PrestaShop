@@ -40,7 +40,7 @@ import DeleteCategoriesBulkActionExtension from "../../components/grid/extension
 const $ = window.$;
 
 $(() => {
-  const categoriesGrid = new Grid('Categories');
+  const categoriesGrid = new Grid('categories');
 
   categoriesGrid.addExtension(new FiltersResetExtension());
   categoriesGrid.addExtension(new SortingExtension());
