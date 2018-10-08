@@ -5,6 +5,13 @@ admin_customers_index:
     _controller: PrestaShopBundle:Admin/Sell/Customer/Customer:index
     _legacy_controller: AdminCustomers
 
+admin_customers_index_search:
+  path: /
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Customer/Customer:search
+    _legacy_controller: AdminCustomers
+
 admin_customers_create:
   path: /new
   methods: [GET, POST]
@@ -29,3 +36,5 @@ admin_customers_view:
     _legacy_controller: AdminCustomers
   requirements:
     customerId: \d+
+
+

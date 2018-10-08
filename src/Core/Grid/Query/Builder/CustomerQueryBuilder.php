@@ -122,6 +122,8 @@ final class CustomerQueryBuilder extends AbstractDoctrineQueryBuilder
             ->setParameter('context_lang_id', $this->contextLangId)
         ;
 
+        $this->applyFilters($searchCriteria->getFilters(), $queryBuilder);
+
         return $queryBuilder;
     }
 
@@ -151,5 +153,35 @@ final class CustomerQueryBuilder extends AbstractDoctrineQueryBuilder
         ;
 
         $queryBuilder->addSelect('(' . $lastVisitQueryBuilder->getSQL() . ') as connect');
+    }
+
+    private function applyFilters(array $filters, QueryBuilder $qb)
+    {
+        $allowedFilters = [
+            'id_customer',
+            'social_title',
+            'firstname',
+            'lastname',
+            'email',
+            'active',
+            'newsletter',
+            'optin',
+            'date_add',
+            'company',
+        ];
+
+        foreach ($filters as $filterName => $filterValue) {
+            if (!in_array($filterName, $allowedFilters)) {
+                continue;
+            }
+
+            if (in_array($filterName, ['active', 'newsletter', 'optin'])) {
+
+                continue;
+            }
+
+            $qb->andWhere('l.`' . $filterName . '` LIKE :' . $filterName);
+            $qb->setParameter($filterName, '%' . $filterValue . '%');
+        }
     }
 }
