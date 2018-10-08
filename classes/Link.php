@@ -779,38 +779,6 @@ class LinkCore
                 $routeName = 'admin_international_translations_show_settings';
 
                 break;
-
-            default:
-                $routes = array(
-                    'AdminCustomerPreferences' => 'admin_customer_preferences',
-                    'AdminDeliverySlip' => 'admin_order_delivery_slip',
-                    'AdminImport' => 'admin_import',
-                    'AdminInformation' => 'admin_system_information',
-                    'AdminLogs' => 'admin_logs',
-                    'AdminMaintenance' => 'admin_maintenance',
-                    'AdminModulesSf' => 'admin_module_manage',
-                    'AdminOrderPreferences' => 'admin_order_preferences',
-                    'AdminPPreferences' => 'admin_product_preferences',
-                    'AdminPerformance' => 'admin_performance',
-                    'AdminPreferences' => 'admin_preferences',
-                    'AdminShipping' => 'admin_shipping_preferences',
-                    'AdminStockManagement' => 'admin_stock_overview',
-                    'AdminThemesCatalog' => 'admin_theme_catalog',
-                    'AdminTranslationSf' => 'admin_international_translation_overview',
-                    'AdminPayment' => 'admin_payment_methods',
-                    'AdminLocalization' => 'admin_localization_show_settings',
-                    'AdminGeolocation' => 'admin_geolocation',
-                    'AdminPaymentPreferences' => 'admin_payment_preferences',
-                    'AdminInvoices' => 'admin_order_invoices',
-                    'AdminEmails' => 'admin_email',
-                    // 'AdminRequestSql' => 'admin_sql_request', @todo: uncomment when CQRS pages are hookable
-                    'AdminMeta' => 'admin_meta',
-                    // 'AdminWebservice' => 'admin_webservice', @todo: uncomment when grid and entity form are done.
-                );
-
-                if (isset($routes[$controller])) {
-                    $routeName = $routes[$controller];
-                }
         }
 
         if (!empty($routeName) && null !== $sfRouter) {

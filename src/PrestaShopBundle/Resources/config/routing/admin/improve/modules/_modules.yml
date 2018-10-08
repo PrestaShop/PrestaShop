@@ -46,6 +46,16 @@ admin_module_manage:
         _legacy_controller: AdminModulesManage
         _legacy_link: AdminModulesManage
 
+admin_module_manage_alias:
+    path:     /manage/{category}/{keyword}
+    methods:  [GET]
+    defaults:
+        category:
+        keyword:
+        _controller: PrestaShopBundle:Admin/Improve/Module:manage
+        _legacy_controller: AdminModulesManage
+        _legacy_link: AdminModulesSf
+
 admin_module_manage_action:
     path:     /manage/action/{action}/{module_name}
     methods:  [POST]
@@ -60,7 +70,11 @@ admin_module_configure_action:
     defaults:
         _controller: PrestaShopBundle:Admin/Improve/Module:configureModule
         _legacy_controller: AdminModules
-        _legacy_link: AdminModules
+# WARNING: This controller is not fully migrated yet, it is an overlay that redirects to the legacy controller,
+# but here is the proper configuration when it will be really migrated
+#        _legacy_link: AdminModules:configure
+#        _legacy_parameters:
+#            configure: module_name
 
 admin_module_manage_action_bulk:
     path:     /manage/bulk/{action}

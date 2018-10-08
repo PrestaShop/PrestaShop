@@ -12,4 +12,4 @@ admin_administration_save:
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Administration:processForm'
         _legacy_controller: AdminAdminPreferences
-        _legacy_link: AdminAdminPreferences:save
+        _legacy_link: AdminAdminPreferences:update

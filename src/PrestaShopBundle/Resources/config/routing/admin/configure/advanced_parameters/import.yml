@@ -4,6 +4,7 @@ admin_import:
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Import:import'
         _legacy_controller: AdminImport
+        _legacy_link: AdminImport
 
 admin_import_file_upload:
     path: /file/upload
@@ -11,6 +12,7 @@ admin_import_file_upload:
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Import:upload'
         _legacy_controller: AdminImport
+        _legacy_link: AdminImport:uploadCsv
 
 admin_import_file_delete:
     path: /file/delete
@@ -18,6 +20,7 @@ admin_import_file_delete:
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Import:delete'
         _legacy_controller: AdminImport
+        _legacy_link: AdminImport:delete
 
 admin_import_file_download:
     path: /file/download
@@ -25,6 +28,7 @@ admin_import_file_download:
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Import:download'
         _legacy_controller: AdminImport
+        _legacy_link: AdminImport:download
 
 admin_import_sample_download:
     path: /sample/download/{sampleName}
@@ -32,3 +36,4 @@ admin_import_sample_download:
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Import:downloadSample'
         _legacy_controller: AdminImport
+        _legacy_link: AdminImport:sampleDownload

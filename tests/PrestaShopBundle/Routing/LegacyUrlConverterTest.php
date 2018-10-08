@@ -105,8 +105,86 @@ class LegacyUrlConverterTest extends TestCase
         ]);
         $this->assertEquals('/products/create', $url);
 
-        $url = $converter->convertByUrl('?controller=AdminProducts&action=create');
+        $url = $converter->convertByUrl('?controller=AdminProducts&create=1');
         $this->assertEquals('/products/create', $url);
+    }
+
+    public function testActionWithEmptyString()
+    {
+        $router = $this->buildRouterMock('admin_products_create', '/products/create', 'AdminProducts:create');
+        $converter = new LegacyUrlConverter($router);
+        $url = $converter->convertByParameters([
+            'controller' => 'AdminProducts',
+            'create' => '',
+        ]);
+        $this->assertEquals('/products/create', $url);
+
+        $url = $converter->convertByUrl('?controller=AdminProducts&create');
+        $this->assertEquals('/products/create', $url);
+    }
+
+    /**
+     * If a non existent action is used in the url (meaning one that has not been
+     * migrated yet) it must not return the index
+     * @throws ArgumentException
+     * @throws RouteNotFoundException
+     */
+    public function testNonExistentAction()
+    {
+        $router = $this->buildRouterMock('admin_products_index', '/products', 'AdminProducts');
+        $converter = new LegacyUrlConverter($router);
+
+        $caughtException = null;
+        try {
+            $converter->convertByParameters([
+                'controller' => 'AdminProducts',
+                'action' => 'create',
+            ]);
+        } catch (RouteNotFoundException $e) {
+            $caughtException = $e;
+        }
+        $this->assertNotNull($caughtException);
+
+        try {
+            $converter->convertByParameters([
+                'controller' => 'AdminProducts',
+                'create' => true,
+            ]);
+        } catch (RouteNotFoundException $e) {
+            $caughtException = $e;
+        }
+        $this->assertNotNull($caughtException);
+
+        try {
+            $converter->convertByParameters([
+                'controller' => 'AdminProducts',
+                'create' => '',
+            ]);
+        } catch (RouteNotFoundException $e) {
+            $caughtException = $e;
+        }
+        $this->assertNotNull($caughtException);
+
+        try {
+            $converter->convertByUrl('?controller=AdminProducts&action=create');
+        } catch (RouteNotFoundException $e) {
+            $caughtException = $e;
+        }
+        $this->assertNotNull($caughtException);
+
+        try {
+            $converter->convertByUrl('?controller=AdminProducts&create=1');
+        } catch (RouteNotFoundException $e) {
+            $caughtException = $e;
+        }
+        $this->assertNotNull($caughtException);
+
+        try {
+            $converter->convertByUrl('?controller=AdminProducts&create');
+        } catch (RouteNotFoundException $e) {
+            $caughtException = $e;
+        }
+        $this->assertNotNull($caughtException);
     }
 
     public function testActionWithArgument()

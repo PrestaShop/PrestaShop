@@ -12,7 +12,7 @@ admin_backup_process:
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Backup:processForm'
         _legacy_controller: 'AdminBackup'
-        _legacy_link: 'AdminBackup:save'
+        _legacy_link: 'AdminBackup:update'
 
 admin_backup_create:
     path: /create
@@ -20,7 +20,7 @@ admin_backup_create:
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Backup:processBackupCreate'
         _legacy_controller: 'AdminBackup'
-        _legacy_link: 'AdminBackup:add'
+        _legacy_link: 'AdminBackup:addbackup'
 
 admin_backup_view_download:
     path: /view/{downloadFileName}
