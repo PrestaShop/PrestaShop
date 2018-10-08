@@ -39,7 +39,7 @@ function prodConfig(analyze) {
   if (analyze) {
     const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
-    config.plugins.push(new BundleAnalyzerPlugin());
+    prod.plugins.push(new BundleAnalyzerPlugin());
   }
 
   return prod;
