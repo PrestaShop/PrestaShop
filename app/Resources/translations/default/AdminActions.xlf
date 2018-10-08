@@ -248,19 +248,13 @@ File: modules/ps_emailsubscription/ps_emailsubscription.php:995</note>
       </trans-unit>
     </body>
   </file>
-  <file original="modules/ps_mbo/views/templates/admin/include/menu_top.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="admin-dev/themes/default/template/controllers/modules/page.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="13348442cc6a27032d2b4aa28b75a5d3">
         <source>Search</source>
         <target>Search</target>
         <note>Context:
-File: modules/ps_mbo/views/templates/admin/include/menu_top.tpl:34</note>
-      </trans-unit>
-      <trans-unit id="33d8042bd735c559cc3206f4bc99aedc">
-        <source>Sort by</source>
-        <target>Sort by</target>
-        <note>Context:
-File: modules/ps_mbo/views/templates/admin/include/menu_top.tpl:62</note>
+File: admin-dev/themes/default/template/controllers/modules/page.tpl:103</note>
       </trans-unit>
     </body>
   </file>
@@ -484,6 +478,22 @@ File: src/PrestaShopBundle/Resources/views/Admin/TwigTemplateForm/bootstrap_4_ho
       </trans-unit>
     </body>
   </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Improve/Shipping/Preferences/Blocks/shipping_preferences_carrier_options.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="33d8042bd735c559cc3206f4bc99aedc">
+        <source>Sort by</source>
+        <target>Sort by</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Improve/Shipping/Preferences/Blocks/shipping_preferences_carrier_options.html.twig:45</note>
+      </trans-unit>
+      <trans-unit id="01fda57aa6c7e9f07f5aa36b108e95cb">
+        <source>Order by</source>
+        <target>Order by</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Improve/Shipping/Preferences/Blocks/shipping_preferences_carrier_options.html.twig:53</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Module/Includes/see_more.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="891ad007e2e9f2d55be6669cd9abc7a0">
@@ -609,16 +619,6 @@ File: src/PrestaShopBundle/Resources/views/Admin/Product/ProductPage/Panels/comb
         <target>Check / Uncheck all</target>
         <note>Context:
 File: src/PrestaShopBundle/Resources/views/Admin/Product/ProductPage/Forms/form_warehouse_combination.html.twig:44</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Improve/Shipping/Preferences/Blocks/shipping_preferences_carrier_options.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="01fda57aa6c7e9f07f5aa36b108e95cb">
-        <source>Order by</source>
-        <target>Order by</target>
-        <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Improve/Shipping/Preferences/Blocks/shipping_preferences_carrier_options.html.twig:53</note>
       </trans-unit>
     </body>
   </file>

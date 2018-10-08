@@ -20,13 +20,13 @@ File: src/PrestaShopBundle/Resources/views/Admin/Module/alerts.html.twig:41</not
       </trans-unit>
     </body>
   </file>
-  <file original="modules/ps_mbo/views/templates/admin/include/menu_top.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Module/Includes/sorting.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="677b5abd7f9265257543a0f7258bc477">
         <source>Customize your store with this selection of modules recommended for your shop, based on your country, language and version of PrestaShop. It includes the most popular modules from our Addons marketplace, and free partner modules.</source>
         <target>Customize your store with this selection of modules recommended for your shop, based on your country, language and version of PrestaShop. It includes the most popular modules from our Addons marketplace, and free partner modules.</target>
         <note>Context:
-File: modules/ps_mbo/views/templates/admin/include/menu_top.tpl:55</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/sorting.html.twig:32</note>
       </trans-unit>
     </body>
   </file>
