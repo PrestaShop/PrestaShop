@@ -43,6 +43,24 @@ class CustomerController extends AbstractAdminController
         ]);
     }
 
+    public function searchAction(Request $request)
+    {
+        $definitionFactory = $this->get('prestashop.core.grid.definition.factory.customer');
+        $customerDefinition = $definitionFactory->getDefinition();
+
+        $gridFilterFormFactory = $this->get('prestashop.core.grid.filter.form_factory');
+        $filtersForm = $gridFilterFormFactory->create($customerDefinition);
+        $filtersForm->handleRequest($request);
+
+        $filters = [];
+
+        if ($filtersForm->isSubmitted()) {
+            $filters = $filtersForm->getData();
+        }
+
+        return $this->redirectToRoute('admin_customers_index', ['filters' => $filters]);
+    }
+
     public function createAction(Request $request)
     {
         return $this->redirect(
