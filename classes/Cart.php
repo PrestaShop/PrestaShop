@@ -2605,7 +2605,7 @@ class CartCore extends ObjectModel
                             $validated = true;
 
                             if (!isset($delivery_option[$id_address])) {
-                                $delivery_option              = [];
+                                $delivery_option              = array();
                                 $delivery_option[$id_address] = $key;
                             }
 

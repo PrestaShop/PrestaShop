@@ -212,6 +212,7 @@ GitHub contributors:
 - Joep Hendrix
 - Jonadabe
 - Jonathan Danse
+- Jonathan Lelievre
 - Jonathan SAHM
 - Jorge Vargas
 - joseantgv
@@ -332,6 +333,7 @@ GitHub contributors:
 - PhpMadman
 - Pierre
 - Pierre RAMBAUD
+- Pierre Joube
 - Pierre-Olivier Vares
 - Piotr Kaczor
 - Piotr Moćko
@@ -424,6 +426,7 @@ GitHub contributors:
 - thoma202
 - Thomas
 - Thomas Blanc
+- Thomas LEVIANDIER
 - Thomas N
 - Thomas Nabord
 - thomas-aw
