@@ -26,13 +26,14 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Shop;
 
+use PrestaShop\PrestaShop\Core\Multistore\MultistoreContextCheckerInterface;
 use Shop;
 use ShopGroup;
 
 /**
  * This class will provide legacy shop context.
  */
-class Context
+class Context implements MultistoreContextCheckerInterface
 {
     /**
      * Get shops list.

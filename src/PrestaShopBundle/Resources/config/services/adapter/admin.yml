@@ -8,5 +8,3 @@ services:
             - "@session"
         decorates: prestashop.core.admin.page_preference_interface
         public: false
-    prestashop.adapter.admin.controller.category:
-        class: PrestaShop\PrestaShop\Adapter\Category\AdminCategoryControllerWrapper

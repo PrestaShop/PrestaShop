@@ -26,14 +26,14 @@
 {% set id_primary_key = record[id_property_name] %}
 {% set record_id = record[id_property_name] %}
 
-{% set valid = (record[column.id] is same as('1')) %}
+{% set isValid = record[column.id] is same as('1') %}
 
 <div class="text-center">
   <i
-    class="material-icons ps-togglable-row grid-toggler-icon-{% if valid == true %}valid{% else %}not-valid{% endif %}"
-    data-toggle-url="{{ path(column.options.route, {(column.options.route_param_id) : id_primary_key})}}"
+    class="material-icons ps-togglable-row grid-toggler-icon-{% if isValid == true %}valid{% else %}not-valid{% endif %}"
+    data-toggle-url="{{ path(column.options.route, {(column.options.route_param_name) : id_primary_key})}}"
   >
-    {% if valid %}
+    {% if isValid %}
       check
     {% else %}
       clear

@@ -27,25 +27,19 @@
 namespace PrestaShop\PrestaShop\Core\Grid\Column\Type\Common;
 
 use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
-use PrestaShop\PrestaShop\Core\Grid\Position\GridPositionUpdater;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Class PositionColumn defines a position column used to sort elements in a grid,
- * it is associated to a special template, and works well with the PositionExtension
- * javascript extension and the GridPositionUpdater service.
- *
- * @see admin-dev/themes/new-theme/js/components/grid/extension/position-extension.js
- * @see GridPositionUpdater
+ * Class LinkColumn is used to define column which is link to record action (view, edit, add.
  */
-final class PositionColumn extends AbstractColumn
+final class LinkColumn extends AbstractColumn
 {
     /**
      * {@inheritdoc}
      */
     public function getType()
     {
-        return 'position';
+        return 'link';
     }
 
     /**
@@ -54,23 +48,20 @@ final class PositionColumn extends AbstractColumn
     protected function configureOptions(OptionsResolver $resolver)
     {
         $resolver
-            ->setRequired([
-                'field',
-                'id_field',
-                'id_parent_field',
-                'update_route',
-            ])
             ->setDefaults([
                 'sortable' => true,
-                'update_method' => 'GET',
             ])
-            ->setAllowedTypes('sortable', 'bool')
-            ->setAllowedTypes('update_method', 'string')
+            ->setRequired([
+                'field',
+                'route',
+                'route_param_name',
+                'route_param_field',
+            ])
             ->setAllowedTypes('field', 'string')
-            ->setAllowedTypes('id_field', 'string')
-            ->setAllowedTypes('id_parent_field', 'string')
-            ->setAllowedTypes('update_route', 'string')
-            ->setAllowedValues('update_method', ['GET', 'POST'])
+            ->setAllowedTypes('route', 'string')
+            ->setAllowedTypes('route_param_name', 'string')
+            ->setAllowedTypes('route_param_field', 'string')
+            ->setAllowedTypes('sortable', 'bool')
         ;
     }
 }

@@ -30,6 +30,7 @@ use PrestaShop\PrestaShop\Core\Addon\AddonsCollection;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Core\Kpi\Row\KpiRowInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -276,5 +277,44 @@ class CommonController extends FrameworkBundleAdminController
             'form' => $form->getForm()->get($formName)->get($fieldName)->createView(),
             'formId' => $formName . '_' . $fieldName . '_rendered',
         ]);
+    }
+
+    /**
+     * Process Grid search.
+     *
+     * @param Request $request
+     * @param string $gridDefinitionFactoryService
+     * @param string $redirectRoute
+     * @param array $redirectQueryParamsToKeep
+     *
+     * @return RedirectResponse
+     */
+    public function searchGridAction(
+        Request $request,
+        $gridDefinitionFactoryService,
+        $redirectRoute,
+        array $redirectQueryParamsToKeep
+    ) {
+        $definitionFactory = $this->get($gridDefinitionFactoryService);
+        $definition = $definitionFactory->getDefinition();
+
+        $gridFilterFormFactory = $this->get('prestashop.core.grid.filter.form_factory');
+
+        $filtersForm = $gridFilterFormFactory->create($definition);
+        $filtersForm->handleRequest($request);
+
+        $redirectParams = [];
+
+        if ($filtersForm->isSubmitted()) {
+            $redirectParams['filters'] = $filtersForm->getData();
+        }
+
+        foreach ($redirectQueryParamsToKeep as $paramName) {
+            if ($request->query->has($paramName)) {
+                $redirectParams[$paramName] = $request->query->get($paramName);
+            }
+        }
+
+        return $this->redirectToRoute($redirectRoute, $redirectParams);
     }
 }

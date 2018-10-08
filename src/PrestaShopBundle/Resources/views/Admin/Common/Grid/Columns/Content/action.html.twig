@@ -28,14 +28,29 @@
 {% if actions is not empty %}
   <div class="btn-group-action text-right">
     <div class="btn-group">
-      {{ include('@PrestaShop/Admin/Common/Grid/Actions/Row/'~actions|first.type~'.html.twig', {
-        'grid': grid,
-        'column': column,
-        'record': record,
-        'action': actions|first
-      }) }}
+      {% set skippedActions, isFirstRendered = 0, false %}
 
-      {% if actions|length > 1 %}
+      {# Render first item that is not in dropwdown #}
+      {% for action in actions %}
+        {% if not isFirstRendered %}
+          {% set skippedActions = skippedActions + 1 %}
+        {% endif %}
+
+        {% if action.isApplicable(record) and not isFirstRendered %}
+          {{ include('@PrestaShop/Admin/Common/Grid/Actions/Row/'~action.type~'.html.twig', {
+            'grid': grid,
+            'column': column,
+            'attributes': {'class': 'dropdown-item', 'tooltip_name': true},
+            'record': record,
+            'action': action
+          }) }}
+
+          {% set isFirstRendered = true %}
+        {% endif %}
+      {% endfor %}
+
+      {# Render remaining items in dropdown #}
+      {% if actions|length > skippedActions %}
         <a class="btn btn-link dropdown-toggle dropdown-toggle-split"
            data-toggle="dropdown"
            aria-haspopup="true"
@@ -44,14 +59,14 @@
         </a>
 
         <div class="dropdown-menu dropdown-menu-right">
-          {% for action in actions|slice(1) %}
-              {{ include('@PrestaShop/Admin/Common/Grid/Actions/Row/'~action.type~'.html.twig', {
-                'grid': grid,
-                'column': column,
-                'attributes': {'class': 'dropdown-item'},
-                'record': record,
-                'action': action
-              }) }}
+          {% for action in actions|slice(skippedActions) if action.isApplicable(record) %}
+            {{ include('@PrestaShop/Admin/Common/Grid/Actions/Row/'~action.type~'.html.twig', {
+              'grid': grid,
+              'column': column,
+              'attributes': {'class': 'dropdown-item', 'tooltip_name': false},
+              'record': record,
+              'action': action
+            }) }}
           {% endfor %}
         </div>
       {% endif %}
