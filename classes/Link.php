@@ -794,6 +794,7 @@ class LinkCore
 
                 return $legacyUrlConverter->convertByParameters($conversionParameters);
             } catch (CoreException $e) {
+                //The url could not be converted so we fallback on legacy url
             }
         }
 

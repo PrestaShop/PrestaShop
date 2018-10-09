@@ -63,35 +63,6 @@ final class LegacyUrlConverter
     public function __construct(RouterInterface $router)
     {
         $this->router = $router;
-        $this->legacyRoutes = [];
-        $this->controllersActions = [];
-        /** @var Route $route */
-        foreach ($this->router->getRouteCollection() as $routeName => $route) {
-            $this->addRoute($routeName, $route);
-        }
-    }
-
-    /**
-     * @param string $routeName
-     * @param Route $route
-     */
-    public function addRoute($routeName, Route $route)
-    {
-        $routeDefaults = $route->getDefaults();
-        if (empty($routeDefaults['_legacy_link'])) {
-            return;
-        }
-
-        $this->legacyRoutes[$routeName] = $route;
-
-        $legacyLink = $this->breakLegacyLink($route);
-        $controller = $legacyLink['controller'];
-        if (!isset($this->controllersActions[$controller])) {
-            $this->controllersActions[$controller] = [];
-        }
-
-        $action = $this->isIndexAction($legacyLink['action']) ? 'index' : $legacyLink['action'];
-        $this->controllersActions[$controller][$action] = $routeName;
     }
 
     /**
@@ -108,6 +79,7 @@ final class LegacyUrlConverter
             throw new ArgumentException('Missing required controller argument');
         }
 
+        $this->initRoutes();
         if (!isset($this->controllersActions[$parameters['controller']])) {
             throw new RouteNotFoundException(
                 'Could not find a route matching for legacy controller: %s',
@@ -260,7 +232,7 @@ final class LegacyUrlConverter
         $legacyLink = $routeDefaults['_legacy_link'];
         $linkParts = explode(':', $legacyLink);
         $legacyController = $linkParts[0];
-        $legacyAction = count($linkParts) > 1 ? $linkParts[1] : null;
+        $legacyAction = isset($linkParts[1]) ? $linkParts[1] : null;
 
         return [
             'controller' => $legacyController,
@@ -278,5 +250,45 @@ final class LegacyUrlConverter
         $indexAliases = ['list', 'index'];
 
         return empty($action) || in_array(strtolower($action), $indexAliases);
+    }
+
+    /**
+     * Delay initialisation of routes and controller action
+     */
+    private function initRoutes()
+    {
+        if (null !== $this->legacyRoutes && null !== $this->controllersActions) {
+            return;
+        }
+
+        $this->legacyRoutes = [];
+        $this->controllersActions = [];
+        /** @var Route $route */
+        foreach ($this->router->getRouteCollection() as $routeName => $route) {
+            $this->addRoute($routeName, $route);
+        }
+    }
+
+    /**
+     * @param string $routeName
+     * @param Route $route
+     */
+    private function addRoute($routeName, Route $route)
+    {
+        $routeDefaults = $route->getDefaults();
+        if (empty($routeDefaults['_legacy_link'])) {
+            return;
+        }
+
+        $this->legacyRoutes[$routeName] = $route;
+
+        $legacyLink = $this->breakLegacyLink($route);
+        $controller = $legacyLink['controller'];
+        if (!isset($this->controllersActions[$controller])) {
+            $this->controllersActions[$controller] = [];
+        }
+
+        $action = $this->isIndexAction($legacyLink['action']) ? 'index' : $legacyLink['action'];
+        $this->controllersActions[$controller][$action] = $routeName;
     }
 }
