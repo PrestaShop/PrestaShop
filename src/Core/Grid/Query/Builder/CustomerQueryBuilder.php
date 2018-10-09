@@ -76,6 +76,7 @@ final class CustomerQueryBuilder extends AbstractDoctrineQueryBuilder
 
         $this->appendTotalSpentQuery($searchQueryBuilder);
         $this->appendLastVisitQuery($searchQueryBuilder);
+        $this->applySorting($searchQueryBuilder, $searchCriteria);
 
         return $searchQueryBuilder;
     }
@@ -189,5 +190,36 @@ final class CustomerQueryBuilder extends AbstractDoctrineQueryBuilder
             $qb->andWhere('`' . $filterName . '` LIKE :' . $filterName);
             $qb->setParameter($filterName, '%' . $filterValue . '%');
         }
+    }
+
+    /**
+     * Apply sorting so search query builder for customers.
+     *
+     * @param QueryBuilder $searchQueryBuilder
+     * @param SearchCriteriaInterface $searchCriteria
+     */
+    private function applySorting(QueryBuilder $searchQueryBuilder, SearchCriteriaInterface $searchCriteria)
+    {
+        switch ($searchCriteria->getOrderBy()) {
+            case 'id_customer':
+            case 'firstname':
+            case 'lastname':
+            case 'email':
+            case 'date_add':
+            case 'company':
+                $orderBy = 'c.' . $searchCriteria->getOrderBy();
+                break;
+            case 'social_title':
+                $orderBy = 'gl.name';
+                break;
+            case 'connect':
+            case 'total_spent':
+            $orderBy = $searchCriteria->getOrderBy();
+                break;
+            default:
+                return;
+        }
+
+        $searchQueryBuilder->orderBy($orderBy, $searchCriteria->getOrderWay());
     }
 }
