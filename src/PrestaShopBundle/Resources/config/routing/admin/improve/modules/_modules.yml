@@ -44,17 +44,9 @@ admin_module_manage:
         keyword:
         _controller: PrestaShopBundle:Admin/Improve/Module:manage
         _legacy_controller: AdminModulesManage
-        _legacy_link: AdminModulesManage
-
-admin_module_manage_alias:
-    path:     /manage/{category}/{keyword}
-    methods:  [GET]
-    defaults:
-        category:
-        keyword:
-        _controller: PrestaShopBundle:Admin/Improve/Module:manage
-        _legacy_controller: AdminModulesManage
-        _legacy_link: AdminModulesSf
+        _legacy_link:
+            - AdminModulesManage
+            - AdminModulesSf
 
 admin_module_manage_action:
     path:     /manage/action/{action}/{module_name}

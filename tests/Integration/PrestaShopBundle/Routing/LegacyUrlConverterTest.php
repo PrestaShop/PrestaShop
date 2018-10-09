@@ -253,8 +253,6 @@ class LegacyUrlConverterTest extends LightWebTestCase
         }
         $linkUrl = $link->getAdminLink($controller, true, [], $parameters);
         $this->assertSameUrl($expectedUrl, $linkUrl);
-
-
     }
 
     /**

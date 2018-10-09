@@ -123,6 +123,33 @@ class LegacyUrlConverterTest extends TestCase
         $this->assertEquals('/products/create', $url);
     }
 
+    public function testMultipleLegacyLinks()
+    {
+        $router = $this->buildRouterMock('admin_module_manage', '/manage/{category}/{keyword}', [
+            'AdminModulesManage',
+            'AdminModulesSf',
+        ]);
+        $converter = new LegacyUrlConverter($router);
+
+        //First controller
+        $url = $converter->convertByParameters([
+            'controller' => 'AdminModulesManage'
+        ]);
+        $this->assertEquals('/manage/{category}/{keyword}', $url);
+
+        $url = $converter->convertByUrl('?controller=AdminModulesManage');
+        $this->assertEquals('/manage/{category}/{keyword}', $url);
+
+        //Second controller
+        $url = $converter->convertByParameters([
+            'controller' => 'AdminModulesSf'
+        ]);
+        $this->assertEquals('/manage/{category}/{keyword}', $url);
+
+        $url = $converter->convertByUrl('?controller=AdminModulesSf');
+        $this->assertEquals('/manage/{category}/{keyword}', $url);
+    }
+
     /**
      * If a non existent action is used in the url (meaning one that has not been
      * migrated yet) it must not return the index
@@ -399,7 +426,7 @@ class LegacyUrlConverterTest extends TestCase
     /**
      * @param string $routeName
      * @param string $routePath
-     * @param string $legacyLink
+     * @param string|array $legacyLink
      * @param array|null $legacyParameters
      * @param array|null $expectedParameters
      * @return \PHPUnit_Framework_MockObject_MockObject|RouterInterface

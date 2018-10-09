@@ -224,18 +224,26 @@ final class LegacyUrlConverter
      *
      * @return array
      */
-    private function breakLegacyLink(Route $route)
+    private function breakLegacyLinks(Route $route)
     {
         $routeDefaults = $route->getDefaults();
-        $legacyLink = $routeDefaults['_legacy_link'];
-        $linkParts = explode(':', $legacyLink);
-        $legacyController = $linkParts[0];
-        $legacyAction = isset($linkParts[1]) ? $linkParts[1] : null;
+        $legacyLinks = $routeDefaults['_legacy_link'];
+        if (!is_array($legacyLinks)) {
+            $legacyLinks = [$legacyLinks];
+        }
 
-        return [
-            'controller' => $legacyController,
-            'action' => $legacyAction,
-        ];
+        $brokenLegacyLinks = [];
+        foreach ($legacyLinks as $legacyLink) {
+            $linkParts = explode(':', $legacyLink);
+            $legacyController = $linkParts[0];
+            $legacyAction = isset($linkParts[1]) ? $linkParts[1] : null;
+            $brokenLegacyLinks[] = [
+                'controller' => $legacyController,
+                'action' => $legacyAction,
+            ];
+        }
+
+        return $brokenLegacyLinks;
     }
 
     /**
@@ -280,13 +288,15 @@ final class LegacyUrlConverter
 
         $this->legacyRoutes[$routeName] = $route;
 
-        $legacyLink = $this->breakLegacyLink($route);
-        $controller = $legacyLink['controller'];
-        if (!isset($this->controllersActions[$controller])) {
-            $this->controllersActions[$controller] = [];
-        }
+        $legacyLinks = $this->breakLegacyLinks($route);
+        foreach ($legacyLinks as $legacyLink) {
+            $controller = $legacyLink['controller'];
+            if (!isset($this->controllersActions[$controller])) {
+                $this->controllersActions[$controller] = [];
+            }
 
-        $action = $this->isIndexAction($legacyLink['action']) ? 'index' : $legacyLink['action'];
-        $this->controllersActions[$controller][$action] = $routeName;
+            $action = $this->isIndexAction($legacyLink['action']) ? 'index' : $legacyLink['action'];
+            $this->controllersActions[$controller][$action] = $routeName;
+        }
     }
 }
