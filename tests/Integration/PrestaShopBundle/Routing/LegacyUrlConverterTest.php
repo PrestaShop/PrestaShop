@@ -341,7 +341,10 @@ class LegacyUrlConverterTest extends LightWebTestCase
     {
         $this->assertNotNull($url);
         $parsedUrl = parse_url($url);
-        parse_str($parsedUrl['query'], $parameters);
+        $parameters = [];
+        if (isset($parsedUrl['query'])) {
+            parse_str($parsedUrl['query'], $parameters);
+        }
 
         unset($parameters['token']);
         unset($parameters['_token']);
