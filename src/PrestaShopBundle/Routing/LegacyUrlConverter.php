@@ -251,7 +251,7 @@ final class LegacyUrlConverter
     }
 
     /**
-     * Delay initialisation of routes and controller action
+     * Delay initialisation of routes and controller action.
      */
     private function initRoutes()
     {
