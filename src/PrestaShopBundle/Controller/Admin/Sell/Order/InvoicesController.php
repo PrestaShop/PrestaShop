@@ -133,7 +133,7 @@ class InvoicesController extends FrameworkBundleAdminController
     private function processForm(FormHandlerInterface $formHandler, Request $request)
     {
         $form = $formHandler->getForm();
-        $form->handleRequest($request);
+        $form->submit($request->request->get($form->getName()));
 
         if ($form->isSubmitted()) {
             if ($errors = $formHandler->save($form->getData())) {
