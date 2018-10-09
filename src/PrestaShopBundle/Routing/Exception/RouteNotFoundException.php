@@ -26,25 +26,11 @@
 
 namespace PrestaShopBundle\Routing\Exception;
 
-use PrestaShop\PrestaShop\Core\Exception\ErrorMessageException;
-use Throwable;
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
 
 /**
  * Class RouteNotFoundException.
  */
-class RouteNotFoundException extends ErrorMessageException
+class RouteNotFoundException extends CoreException
 {
-    /**
-     * RouteNotFoundException constructor.
-     *
-     * @param string $key
-     * @param array $parameters
-     * @param null $domain
-     * @param int $code
-     * @param Throwable|null $previous
-     */
-    public function __construct($key, array $parameters = [], $domain = null, $code = 0, Throwable $previous = null)
-    {
-        parent::__construct($key, $domain, $parameters, $code, $previous);
-    }
 }

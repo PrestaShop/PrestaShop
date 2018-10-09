@@ -317,8 +317,7 @@ class LegacyUrlConverterTest extends TestCase
         }
         $this->assertNotNull($caughtException);
         $this->assertInstanceOf(RouteNotFoundException::class, $caughtException);
-        $this->assertEquals('Could not find a route matching for legacy controller: %s', $caughtException->getMessage());
-        $this->assertEquals(['AdminModules'], $caughtException->getParameters());
+        $this->assertEquals('Could not find a route matching for legacy controller: AdminModules', $caughtException->getMessage());
     }
 
     public function testActionNotFound()
@@ -339,8 +338,7 @@ class LegacyUrlConverterTest extends TestCase
         }
         $this->assertNotNull($caughtException);
         $this->assertInstanceOf(RouteNotFoundException::class, $caughtException);
-        $this->assertEquals('Could not find a route matching for legacy action: %s', $caughtException->getMessage());
-        $this->assertEquals(['AdminProducts:configure'], $caughtException->getParameters());
+        $this->assertEquals('Could not find a route matching for legacy action: AdminProducts:configure', $caughtException->getMessage());
     }
 
     /**

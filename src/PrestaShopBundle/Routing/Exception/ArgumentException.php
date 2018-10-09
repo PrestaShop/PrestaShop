@@ -26,6 +26,9 @@
 
 namespace PrestaShopBundle\Routing\Exception;
 
+/**
+ * Class ArgumentException.
+ */
 class ArgumentException extends RoutingException
 {
 }

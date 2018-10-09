@@ -30,9 +30,9 @@ use Exception;
 use Throwable;
 
 /**
- * Class ErrorMessageException.
+ * Class TranslatableCoreException.
  */
-class ErrorMessageException extends CoreException
+class TranslatableCoreException extends CoreException
 {
     /**
      * @var string
@@ -51,7 +51,7 @@ class ErrorMessageException extends CoreException
 
     /**
      * @param string $key
-     * @param string|null $domain
+     * @param string $domain
      * @param array $parameters
      * @param int $code
      * @param Throwable|Exception|null $previous

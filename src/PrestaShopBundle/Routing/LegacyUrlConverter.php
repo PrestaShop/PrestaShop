@@ -82,8 +82,7 @@ final class LegacyUrlConverter
         $this->initRoutes();
         if (!isset($this->controllersActions[$parameters['controller']])) {
             throw new RouteNotFoundException(
-                'Could not find a route matching for legacy controller: %s',
-                [$parameters['controller']]
+                sprintf('Could not find a route matching for legacy controller: %s', $parameters['controller'])
             );
         }
 
@@ -174,8 +173,7 @@ final class LegacyUrlConverter
         $legacyAction = $this->getActionFromParameters($parameters);
         if (!isset($controllerActions[$legacyAction])) {
             throw new RouteNotFoundException(
-                'Could not find a route matching for legacy action: %s',
-                [$legacyController . ':' . $legacyAction]
+                sprintf('Could not find a route matching for legacy action: %s', $legacyController . ':' . $legacyAction)
             );
         }
 
