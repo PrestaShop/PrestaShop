@@ -134,7 +134,7 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'field' => 'active',
                     'primary_field' => 'id_employee',
                     'route' => 'admin_employees_index',
-                    'route_param_id' => 'employeeId',
+                    'route_param_name' => 'employeeId',
                 ])
             )
             ->add((new ActionColumn('actions'))

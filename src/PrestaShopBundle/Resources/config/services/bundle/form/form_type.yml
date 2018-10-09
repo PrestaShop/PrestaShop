@@ -578,6 +578,8 @@ services:
         arguments:
             - '@=service("prestashop.core.team.employee.configuration.options_checker").canBeChanged()'
         public: true
+        tags:
+            - { name: form.type }
 
     form.type.common.team.profile_choice:
         class: 'PrestaShopBundle\Form\Admin\Type\Common\Team\ProfileChoiceType'
