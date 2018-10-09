@@ -1,5 +1,6 @@
-{#**
- * 2007-2018 PrestaShop
+<?php
+/**
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -21,29 +22,43 @@
  * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-{% set enableSidebar = true %}
+namespace PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider;
 
-{% extends '@PrestaShop/Admin/layout.html.twig' %}
+use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
+use Profile;
 
-{% block content %}
-  {% block employee_listing %}
-    <div class="row">
-      <div class="col">
-        {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with { 'grid': employeeGrid } %}
-      </div>
-    </div>
-  {% endblock %}
+/**
+ * Class ProfileByIdChoiceProvider provides employee profile choices with name as label and profile id as value.
+ */
+final class ProfileByIdChoiceProvider implements FormChoiceProviderInterface
+{
+    /**
+     * @var int
+     */
+    private $contextLangId;
 
-  {% block employee_options %}
-    {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Employee/Blocks/employee_options.html.twig' %}
-  {% endblock %}
-{% endblock %}
+    /**
+     * @param int $contextLangId
+     */
+    public function __construct($contextLangId)
+    {
+        $this->contextLangId = $contextLangId;
+    }
 
-{% block javascripts %}
-  {{ parent() }}
+    /**
+     * {@inheritdoc}
+     */
+    public function getChoices()
+    {
+        $profiles = Profile::getProfiles($this->contextLangId);
+        $choices = [];
 
-  <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
-  <script src="{{ asset('themes/new-theme/public/employee.bundle.js') }}"></script>
-{% endblock %}
+        foreach ($profiles as $profile) {
+            $choices[$profile['name']] = $profile['id_profile'];
+        }
+
+        return $choices;
+    }
+}

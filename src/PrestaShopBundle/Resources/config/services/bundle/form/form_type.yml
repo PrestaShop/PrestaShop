@@ -580,3 +580,10 @@ services:
         public: true
         tags:
             - { name: form.type }
+
+    form.type.common.team.profile_choice:
+        class: 'PrestaShopBundle\Form\Admin\Type\Common\Team\ProfileChoiceType'
+        arguments:
+            - '@=service("prestashop.adapter.form.choice_provider.profile_by_id_choice_provider").getChoices()'
+        tags:
+            - { name: form.type }

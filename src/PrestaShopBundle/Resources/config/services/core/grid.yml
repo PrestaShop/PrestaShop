@@ -72,6 +72,14 @@ services:
         arguments:
             - '@prestashop.core.grid.data.factory.category'
 
+    prestashop.core.grid.data_provider.employee:
+        class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
+        arguments:
+            - '@prestashop.core.grid.query.builder.employee_query_builder'
+            - '@prestashop.core.hook.dispatcher'
+            - '@prestashop.core.grid.query.doctrine_query_parser'
+            - 'employee'
+
     # Grid definition factories
     prestashop.core.grid.definition.factory.abstract_grid_definition:
         class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory'
@@ -137,6 +145,14 @@ services:
             - '@prestashop.adapter.grid.action.row.accessibility_checker.category_for_view'
         public: true
 
+    prestashop.core.grid.definition.factory.employee:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\EmployeeGridDefinitionFactory'
+        parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+        arguments:
+            - "@=service('router').generate('admin_common_reset_search', {'controller': 'employee', 'action': 'index'})"
+            - "@=service('router').generate('admin_employees_index')"
+        public: true
+
     # Grid factories
     prestashop.core.grid.log_factory:
         class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
@@ -194,6 +210,14 @@ services:
             - '@prestashop.core.grid.filter.category_form_factory'
             - '@prestashop.core.hook.dispatcher'
 
+    prestashop.core.grid.factory.employee:
+        class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
+        arguments:
+            - '@prestashop.core.grid.definition.factory.employee'
+            - '@prestashop.core.grid.data_provider.employee'
+            - '@prestashop.core.grid.filter.form_factory'
+            - '@prestashop.core.hook.dispatcher'
+
     # Grid presenter
     prestashop.core.grid.presenter.grid_presenter:
         class: 'PrestaShop\PrestaShop\Core\Grid\Presenter\GridPresenter'
@@ -236,9 +260,18 @@ services:
         class: 'PrestaShop\PrestaShop\Core\Grid\Query\WebserviceQueryBuilder'
         parent: 'prestashop.core.grid.abstract_query_builder'
         arguments:
+        - '@prestashop.core.query.doctrine_search_criteria_applicator'
+        - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
+        - "@=service('prestashop.adapter.legacy.context').getContext().shop.id"
+        public: true
+
+    prestashop.core.grid.query.builder.employee_query_builder:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Query\Builder\EmployeeQueryBuilder'
+        parent: 'prestashop.core.grid.abstract_query_builder'
+        arguments:
             - '@prestashop.core.query.doctrine_search_criteria_applicator'
             - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
-            - "@=service('prestashop.adapter.legacy.context').getContext().shop.id"
+            - "@=service('prestashop.adapter.legacy.context').getContext().shop.getContextListShopID()"
         public: true
 
     # Grid Query parser
