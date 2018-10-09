@@ -21,3 +21,7 @@ _maintenance:
 _seo_urls:
     resource: "meta.yml"
     prefix: /seo-urls/
+
+_contacts:
+    resource: "contacts.yml"
+    prefix: /contacts/

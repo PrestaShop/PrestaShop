@@ -80,6 +80,14 @@ services:
             - '@prestashop.core.grid.query.doctrine_query_parser'
             - 'employee'
 
+    prestashop.core.grid.data_provider.contacts:
+        class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
+        arguments:
+            - '@prestashop.core.grid.query_builder.contacts'
+            - '@prestashop.core.hook.dispatcher'
+            - '@prestashop.core.grid.query.doctrine_query_parser'
+            - 'contacts'
+
     # Grid definition factories
     prestashop.core.grid.definition.factory.abstract_grid_definition:
         class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory'
@@ -153,6 +161,14 @@ services:
             - "@=service('router').generate('admin_employees_index')"
         public: true
 
+    prestashop.core.grid.definition.factory.contacts:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ContactGridDefinitionFactory'
+        parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+        arguments:
+            - "@=service('router').generate('admin_common_reset_search', {'controller': 'contacts', 'action': 'index'})"
+            - "@=service('router').generate('admin_contacts_index')"
+        public: true
+
     # Grid factories
     prestashop.core.grid.log_factory:
         class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
@@ -218,6 +234,14 @@ services:
             - '@prestashop.core.grid.filter.form_factory'
             - '@prestashop.core.hook.dispatcher'
 
+    prestashop.core.grid.factory.contacts:
+        class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
+        arguments:
+            - '@prestashop.core.grid.definition.factory.contacts'
+            - '@prestashop.core.grid.data_provider.contacts'
+            - '@prestashop.core.grid.filter.form_factory'
+            - '@prestashop.core.hook.dispatcher'
+
     # Grid presenter
     prestashop.core.grid.presenter.grid_presenter:
         class: 'PrestaShop\PrestaShop\Core\Grid\Presenter\GridPresenter'
@@ -273,6 +297,15 @@ services:
             - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
             - "@=service('prestashop.adapter.legacy.context').getContext().shop.getContextListShopID()"
         public: true
+
+    prestashop.core.grid.query_builder.contacts:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Query\ContactsQueryBuilder'
+        parent: 'prestashop.core.grid.abstract_query_builder'
+        public: true
+        arguments:
+            - '@prestashop.core.query.doctrine_search_criteria_applicator'
+            - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
+            - "@=service('prestashop.adapter.shop.context').getContextListShopID()"
 
     # Grid Query parser
     prestashop.core.grid.query.doctrine_query_parser:
