@@ -39,11 +39,6 @@ final class CustomerQueryBuilder extends AbstractDoctrineQueryBuilder
     /**
      * @var int
      */
-    private $contextShopId;
-
-    /**
-     * @var int
-     */
     private $contextLangId;
 
     /**
@@ -54,20 +49,17 @@ final class CustomerQueryBuilder extends AbstractDoctrineQueryBuilder
     /**
      * @param Connection $connection
      * @param string $dbPrefix
-     * @param int $contextShopId
      * @param int $contextLangId
      * @param int[] $contextShopIds
      */
     public function __construct(
         Connection $connection,
         $dbPrefix,
-        $contextShopId,
         $contextLangId,
         $contextShopIds
     ) {
         parent::__construct($connection, $dbPrefix);
 
-        $this->contextShopId = $contextShopId;
         $this->contextLangId = $contextLangId;
         $this->contextShopIds = $contextShopIds;
     }
