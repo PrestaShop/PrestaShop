@@ -32,12 +32,15 @@ use Tests\Integration\PrestaShopBundle\Test\LightWebTestCase;
 use Link;
 use ReflectionClass;
 
+/**
+ * @group demo
+ */
 class LegacyUrlConverterTest extends LightWebTestCase
 {
     public function setUp()
     {
         parent::setUp();
-        $this->initStaticInstance();
+        $this->initContainerInstance();
     }
 
     /**
@@ -281,7 +284,6 @@ class LegacyUrlConverterTest extends LightWebTestCase
      */
     public function testLegacyControllers($expectedUrl, $controller, array $parameters = null)
     {
-        $this->initStaticInstance();
         $link = new Link();
 
         $parameters = null === $parameters ? [] : $parameters;
@@ -372,7 +374,7 @@ class LegacyUrlConverterTest extends LightWebTestCase
      * has access to the router
      * @throws \ReflectionException
      */
-    private function initStaticInstance()
+    private function initContainerInstance()
     {
         $reflectedClass = new ReflectionClass(SymfonyContainer::class);
         $instanceProperty = $reflectedClass->getProperty('instance');
