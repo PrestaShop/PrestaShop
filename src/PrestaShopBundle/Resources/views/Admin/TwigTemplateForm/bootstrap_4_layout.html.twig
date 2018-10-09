@@ -324,8 +324,8 @@
             <button type="reset"
                     name="{{ full_name }}[reset]"
                     class="btn btn-link js-reset-search btn d-block"
-                    data-url="{{ form.vars.attr['data-url'] }}"
-                    data-redirect="{{ form.vars.attr['data-redirect'] }}"
+                    data-url="{{ reset_url }}"
+                    data-redirect="{{ redirect_url }}"
             >
               <i class="material-icons">clear</i>
               {{ 'Reset'|trans({}, 'Admin.Global') }}

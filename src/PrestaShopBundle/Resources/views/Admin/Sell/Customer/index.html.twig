@@ -42,3 +42,11 @@
     </div>
   </div>
 {% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+
+  <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
+  <script src="{{ asset('themes/new-theme/public/customer.bundle.js') }}"></script>
+{% endblock %}
+
