@@ -1966,15 +1966,15 @@ File: src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/Blocks
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/TrafficSeo/Meta/Blocks/meta_showcase_card.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="186e1caf82488c7d9c636a5c4ba5116c">
-        <source>Improve your Seo</source>
-        <target>Improve your Seo</target>
+      <trans-unit id="f2fa247c9f424452552992222c0b8137">
+        <source>Improve your SEO</source>
+        <target>Improve your SEO</target>
         <note>Context:
 File: src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/TrafficSeo/Meta/Blocks/meta_showcase_card.html.twig:34</note>
       </trans-unit>
-      <trans-unit id="889a128ef1b96ac113ffac5063a669c4">
-        <source>Edit information about your pages to gain visibility and therefore reach more visitors. We advice you to start with the index page, it stand for your homepage.</source>
-        <target>Edit information about your pages to gain visibility and therefore reach more visitors. We advice you to start with the index page, it stand for your homepage.</target>
+      <trans-unit id="4f43f191a80a8b1d7ee512646f98544f">
+        <source>Edit information about your pages to gain visibility and therefore reach more visitors. We advise you to start with the index page, it stands for your homepage.</source>
+        <target>Edit information about your pages to gain visibility and therefore reach more visitors. We advise you to start with the index page, it stands for your homepage.</target>
         <note>Context:
 File: src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/TrafficSeo/Meta/Blocks/meta_showcase_card.html.twig:35</note>
       </trans-unit>
