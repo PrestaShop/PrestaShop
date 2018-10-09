@@ -56,15 +56,9 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:157</note>
         <note>Context:
 File: modules/ps_buybuttonlite/ps_buybuttonlite.php:158</note>
       </trans-unit>
-      <trans-unit id="46fa564bb1eed5cd3992cac85e8f094b">
-        <source>Screenshots</source>
-        <target>Screenshots</target>
-        <note>Context:
-File: modules/ps_buybuttonlite/ps_buybuttonlite.php:164</note>
-      </trans-unit>
       <trans-unit id="d93566e8812ea9469fa4cabaa10a21a6">
-        <source>Want to go further</source>
-        <target>Want to go further</target>
+        <source>Want to go further?</source>
+        <target>Want to go further?</target>
         <note>Context:
 File: modules/ps_buybuttonlite/ps_buybuttonlite.php:165</note>
       </trans-unit>
