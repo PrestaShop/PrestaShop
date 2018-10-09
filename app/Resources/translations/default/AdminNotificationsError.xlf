@@ -1072,16 +1072,6 @@ File: src/PrestaShopBundle/Controller/Admin/FrameworkBundleAdminController.php:3
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Controller/Admin/Configure/ShopParameters/OrderPreferencesController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="5a6013a735465600cb2b695361009999">
-        <source>You do not have permission to edit this</source>
-        <target>You do not have permission to edit this</target>
-        <note>Context:
-File: src/PrestaShopBundle/Controller/Admin/Configure/ShopParameters/OrderPreferencesController.php:87</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="src/PrestaShopBundle/Controller/Admin/Improve/ModuleController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="dbf373dd3565accf2d2fd19700f6a5ae">
