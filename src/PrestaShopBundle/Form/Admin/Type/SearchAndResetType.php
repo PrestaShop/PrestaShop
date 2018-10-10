@@ -97,6 +97,9 @@ class SearchAndResetType extends AbstractType
         $view->vars['reset_url'] = $resetUrl;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver
