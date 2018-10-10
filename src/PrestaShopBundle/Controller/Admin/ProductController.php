@@ -466,6 +466,7 @@ class ProductController extends FrameworkBundleAdminController
                 if ($form->isValid()) {
                     //define POST values for keeping legacy adminController skills
                     $_POST = $modelMapper->getModelData($formData, $isMultiShopContext) + $_POST;
+                    $_POST['form'] = $formData;
                     $_POST['state'] = Product::STATE_SAVED;
 
                     $adminProductController = $adminProductWrapper->getInstance();
