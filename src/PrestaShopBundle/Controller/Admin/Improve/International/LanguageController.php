@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -33,7 +33,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Class LanguageController manages "Improve > International > Localization > Languages"
+ * Class LanguageController manages "Improve > International > Localization > Languages".
  */
 class LanguageController extends AbstractAdminController
 {
