@@ -714,22 +714,6 @@ File: admin-dev/themes/default/template/controllers/import/helpers/form/form.tpl
       </trans-unit>
     </body>
   </file>
-  <file original="modules/ps_emailsubscription/ps_emailsubscription.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="2df860f82be52de57fc5e3f7ecac9431">
-        <source>Newsletter subscription: Unable to delete customer using email.</source>
-        <target>Newsletter subscription: Unable to delete customer using email.</target>
-        <note>Context:
-File: modules/ps_emailsubscription/ps_emailsubscription.php:1267</note>
-      </trans-unit>
-      <trans-unit id="0b6664aa3bb3e3130368b120a8adfa91">
-        <source>Newsletter subscription: Unable to export customer using email.</source>
-        <target>Newsletter subscription: Unable to export customer using email.</target>
-        <note>Context:
-File: modules/ps_emailsubscription/ps_emailsubscription.php:1277</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="modules/gsitemap/gsitemap.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="3aaaafde6f9b2701f9e6eb9292e95521">
@@ -3534,16 +3518,6 @@ File: admin-dev/themes/new-theme/template/layout.tpl:61</note>
         <target>For security reasons, you must also delete the /install folder.</target>
         <note>Context:
 File: admin-dev/themes/new-theme/template/layout.tpl:93</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="modules/ps_emailsubscription/views/templates/front/subscription_execution.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="7bf7f18afabb5122fa68fbab617e509b">
-        <source>Newsletter subscription</source>
-        <target>Newsletter subscription</target>
-        <note>Context:
-File: modules/ps_emailsubscription/views/templates/front/subscription_execution.tpl:29</note>
       </trans-unit>
     </body>
   </file>

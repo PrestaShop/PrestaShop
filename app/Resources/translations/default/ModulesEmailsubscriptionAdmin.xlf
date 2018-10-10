@@ -230,6 +230,18 @@ File: modules/ps_emailsubscription/ps_emailsubscription.php:1118</note>
         <note>Context:
 File: modules/ps_emailsubscription/ps_emailsubscription.php:1131</note>
       </trans-unit>
+      <trans-unit id="2df860f82be52de57fc5e3f7ecac9431">
+        <source>Newsletter subscription: Unable to delete customer using email.</source>
+        <target>Newsletter subscription: Unable to delete customer using email.</target>
+        <note>Context:
+          File: modules/ps_emailsubscription/ps_emailsubscription.php:1267</note>
+      </trans-unit>
+      <trans-unit id="0b6664aa3bb3e3130368b120a8adfa91">
+        <source>Newsletter subscription: Unable to export customer using email.</source>
+        <target>Newsletter subscription: Unable to export customer using email.</target>
+        <note>Context:
+          File: modules/ps_emailsubscription/ps_emailsubscription.php:1277</note>
+      </trans-unit>
     </body>
   </file>
 </xliff>
