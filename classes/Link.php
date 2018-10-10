@@ -705,6 +705,10 @@ class LinkCore
             return '';
         }
 
+        if (!is_array($sfRouteParams)) {
+            $sfRouteParams = [];
+        }
+
         if ($withToken && !TokenInUrls::isDisabled()) {
             $params['token'] = Tools::getAdminTokenLite($controller);
         }

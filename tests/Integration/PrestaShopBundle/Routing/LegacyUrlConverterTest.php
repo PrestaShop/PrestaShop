@@ -148,14 +148,15 @@ class LegacyUrlConverterTest extends LightWebTestCase
 
             'admin_meta' => ['/configure/shop/seo-urls/', 'AdminMeta'],
             'admin_meta_search' => ['/configure/shop/seo-urls/', 'AdminMeta', 'search'],
-            'admin_meta_list_create' => ['/configure/shop/seo-urls/create', 'AdminMeta', 'addmeta'],
-            'admin_meta_list_edit' => ['/configure/shop/seo-urls/edit/42', 'AdminMeta', 'updatemeta', ['id_meta' => 42]],
             'admin_meta_list_delete_single' => ['/configure/shop/seo-urls/delete/42', 'AdminMeta', 'deletemeta', ['id_meta' => 42]],
             'admin_meta_list_delete_multiple' => ['/configure/shop/seo-urls/delete', 'AdminMeta', 'submitBulkdeletmeta'],
             'admin_meta_process' => ['/configure/shop/seo-urls/settings', 'AdminMeta', 'update'],
             'admin_meta_generate_robots_file' => ['/configure/shop/seo-urls/generate/robots', 'AdminMeta', 'submitRobots'],
 
             //This url is not ready to be migrated yet, the SF controller redirects to the legacy url
+            // 'admin_meta_list_create' => ['/configure/shop/seo-urls/create', 'AdminMeta', 'addmeta'],
+            // 'admin_meta_list_edit' => ['/configure/shop/seo-urls/edit/42', 'AdminMeta', 'updatemeta', ['id_meta' => 42]],
+
             //'admin_module_configure_action' => ['/improve/modules/manage/action/configure/ps_linklist', 'AdminModules', 'configure', ['module_name' => 'ps_linklist']],
             //'admin_module_configure_action_legacy' => ['/improve/modules/manage/action/configure/ps_linklist', 'AdminModules', 'configure', ['configure' => 'ps_linklist']],
 

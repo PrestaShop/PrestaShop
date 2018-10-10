@@ -20,7 +20,6 @@ admin_meta_list_create:
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\Meta:create'
         _legacy_controller: AdminMeta
-        _legacy_link: AdminMeta:addmeta
 
 admin_meta_list_edit:
     path: /edit/{metaId}
@@ -28,7 +27,6 @@ admin_meta_list_edit:
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\Meta:edit'
         _legacy_controller: AdminMeta
-        _legacy_link: AdminMeta:updatemeta
         _legacy_parameters:
             id_meta: metaId
     requirements:
