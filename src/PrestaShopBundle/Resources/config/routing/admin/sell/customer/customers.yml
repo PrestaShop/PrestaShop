@@ -9,8 +9,10 @@ admin_customers_index_search:
   path: /
   methods: [POST]
   defaults:
-    _controller: PrestaShopBundle:Admin/Sell/Customer/Customer:search
+    _controller: PrestaShopBundle:Admin\Common:searchGrid
     _legacy_controller: AdminCustomers
+    gridDefinitionFactoryService: prestashop.core.grid.definition.factory.customer
+    redirectRoute: admin_customers_index
 
 admin_customers_create:
   path: /new
