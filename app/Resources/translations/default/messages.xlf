@@ -905,16 +905,6 @@ File: admin-dev/themes/default/template/controllers/modules/tab_modules_list.tpl
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/memcache_servers.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="75ba8d70e3692ba200f0e0df37b4d2ae">
-        <source>IP address</source>
-        <target>IP address</target>
-        <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/memcache_servers.html.twig:79</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="admin-dev/themes/new-theme/template/components/layout/error_messages.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="2169b4627df97333ed94d1e30a9b8148">
