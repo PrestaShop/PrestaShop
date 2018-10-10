@@ -29,9 +29,21 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Customer;
 use PrestaShop\PrestaShop\Core\Search\Filters\CustomerFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController as AbstractAdminController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Class CustomerController manages "Sell > Customers" page.
+ */
 class CustomerController extends AbstractAdminController
 {
+    /**
+     * Show customers listing.
+     *
+     * @param Request $request
+     * @param CustomerFilters $filters
+     *
+     * @return Response
+     */
     public function indexAction(Request $request, CustomerFilters $filters)
     {
         $customerGridFactory = $this->get('prestashop.core.grid.factory.customer');
@@ -43,6 +55,13 @@ class CustomerController extends AbstractAdminController
         ]);
     }
 
+    /**
+     * Show customer create form & handle processing of it.
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
     public function createAction(Request $request)
     {
         return $this->redirect(
@@ -52,6 +71,14 @@ class CustomerController extends AbstractAdminController
         );
     }
 
+    /**
+     * Show customer edit form & handle processing of it.
+     *
+     * @param int $customerId
+     * @param Request $request
+     *
+     * @return Response
+     */
     public function editAction($customerId, Request $request)
     {
         return $this->redirect(
@@ -62,6 +89,14 @@ class CustomerController extends AbstractAdminController
         );
     }
 
+    /**
+     * Show customer details page.
+     *
+     * @param int $customerId
+     * @param Request $request
+     *
+     * @return Response
+     */
     public function viewAction($customerId, Request $request)
     {
         return $this->redirect(

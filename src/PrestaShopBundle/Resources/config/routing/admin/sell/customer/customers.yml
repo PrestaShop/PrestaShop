@@ -38,5 +38,3 @@ admin_customers_view:
     _legacy_controller: AdminCustomers
   requirements:
     customerId: \d+
-
-
