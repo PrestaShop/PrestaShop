@@ -14,9 +14,9 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:49</note>
         <note>Context:
 File: modules/ps_buybuttonlite/ps_buybuttonlite.php:50</note>
       </trans-unit>
-      <trans-unit id="d401ff02b78a8ecc9b835168f697b6e7">
-        <source>Select Product</source>
-        <target>Select Product</target>
+      <trans-unit id="fa0e92ab3c39a4fbdf81351af8d377ef">
+        <source>Select a product</source>
+        <target>Select a product</target>
         <note>Context:
 File: modules/ps_buybuttonlite/ps_buybuttonlite.php:150</note>
       </trans-unit>
