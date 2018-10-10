@@ -31,7 +31,7 @@ scenario('Check order movement', client => {
   }, 'stocks');
 
   scenario('Create "Product"', () => {
-     stockCommonScenarios.createProduct(AddProductPage, productData);
+    common_scenarios.createProduct(AddProductPage, productData);
   }, 'order');
 
   orderScenarios.createOrderBO(OrderPage, CreateOrder, productData);
