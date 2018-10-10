@@ -100,6 +100,8 @@ services:
         class: 'PrestaShop\PrestaShop\Core\Grid\Data\Factory\CustomerGridDataFactoryDecorator'
         arguments:
             - '@prestashop.core.grid.data_provider.customer'
+            - '@prestashop.core.localization.cldr.repository'
+            - "@=service('prestashop.adapter.legacy.context').getContext().currency.iso_code"
 
     # Grid definition factories
     prestashop.core.grid.definition.factory.abstract_grid_definition:

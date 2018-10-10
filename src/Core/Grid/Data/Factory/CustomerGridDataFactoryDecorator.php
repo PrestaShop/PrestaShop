@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Data\Factory;
 
+use PrestaShop\PrestaShop\Core\Cldr\Repository;
 use PrestaShop\PrestaShop\Core\Grid\Data\GridData;
 use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollection;
 use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollectionInterface;
@@ -42,11 +43,28 @@ final class CustomerGridDataFactoryDecorator implements GridDataFactoryInterface
     private $customerDoctrineGridDataFactory;
 
     /**
-     * @param GridDataFactoryInterface $customerDoctrineGridDataFactory
+     * @var Repository
      */
-    public function __construct(GridDataFactoryInterface $customerDoctrineGridDataFactory)
-    {
+    private $cldrRepository;
+
+    /**
+     * @var string
+     */
+    private $contextCurrencyIsoCode;
+
+    /**
+     * @param GridDataFactoryInterface $customerDoctrineGridDataFactory
+     * @param Repository $cldrRepository
+     * @param string $contextCurrencyIsoCode
+     */
+    public function __construct(
+        GridDataFactoryInterface $customerDoctrineGridDataFactory,
+        Repository $cldrRepository,
+        $contextCurrencyIsoCode
+    ) {
         $this->customerDoctrineGridDataFactory = $customerDoctrineGridDataFactory;
+        $this->cldrRepository = $cldrRepository;
+        $this->contextCurrencyIsoCode = $contextCurrencyIsoCode;
     }
 
     /**
@@ -83,8 +101,11 @@ final class CustomerGridDataFactoryDecorator implements GridDataFactoryInterface
                 $customer['company'] = '--';
             }
 
-            if (null === $customer['total_spent']) {
-                $customer['total_spent'] = '--';
+            if (!empty($customer['total_spent'])) {
+                $customer['total_spent'] = $this->cldrRepository->getPrice(
+                    $customer['total_spent'],
+                    $this->contextCurrencyIsoCode
+                );
             }
 
             if (null === $customer['connect']) {
