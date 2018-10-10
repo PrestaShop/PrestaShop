@@ -1,0 +1,9 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.adapter.language.language_flag_thumbnail_provider:
+    class: 'PrestaShop\PrestaShop\Adapter\Language\LanguageFlagThumbnailProvider'
+    arguments:
+      - '@prestashop.core.image.parser.image_tag_source_parser'
+      - "@=service('prestashop.adapter.legacy.context').getContext().shop.id"

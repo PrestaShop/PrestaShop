@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Grid\Data\Factory;
 use PrestaShop\PrestaShop\Core\Grid\Data\GridData;
 use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollection;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
-use PrestaShop\PrestaShop\Core\Image\Parser\ImageTagSourceParserInterface;
+use PrestaShop\PrestaShop\Core\Image\ImageProviderInterface;
 
 /**
  * Class LanguageGridDataFactory gets data for languages grid.
@@ -42,28 +42,20 @@ final class LanguageGridDataFactory implements GridDataFactoryInterface
     private $doctrineLanguageDataFactory;
 
     /**
-     * @var int
+     * @var ImageProviderInterface
      */
-    private $contextShopId;
-
-    /**
-     * @var ImageTagSourceParserInterface
-     */
-    private $imageTagSourceParser;
+    private $languageFlagThumbnailProvider;
 
     /**
      * @param GridDataFactoryInterface $doctrineLanguageDataFactory
-     * @param int $contextShopId
-     * @param ImageTagSourceParserInterface $imageTagSourceParser
+     * @param ImageProviderInterface $languageFlagThumbnailProvider
      */
     public function __construct(
         GridDataFactoryInterface $doctrineLanguageDataFactory,
-        $contextShopId,
-        ImageTagSourceParserInterface $imageTagSourceParser
+        ImageProviderInterface $languageFlagThumbnailProvider
     ) {
         $this->doctrineLanguageDataFactory = $doctrineLanguageDataFactory;
-        $this->contextShopId = $contextShopId;
-        $this->imageTagSourceParser = $imageTagSourceParser;
+        $this->languageFlagThumbnailProvider = $languageFlagThumbnailProvider;
     }
 
     /**
@@ -92,30 +84,9 @@ final class LanguageGridDataFactory implements GridDataFactoryInterface
     private function applyModification(array $languages)
     {
         foreach ($languages as $i => $language) {
-            $languages[$i]['flag'] = $this->getFlagImagePath($language['id_lang']);
+            $languages[$i]['flag'] = $this->languageFlagThumbnailProvider->getPath($language['id_lang']);
         }
 
         return $languages;
-    }
-
-    /**
-     * @param int $languageId
-     *
-     * @return string
-     */
-    private function getFlagImagePath($languageId)
-    {
-        //@todo: to be refactored into adapter
-
-        $pathToImage = _PS_IMG_DIR_ . 'l' . '/' . $languageId. '.jpg';
-
-        $image = \ImageManager::thumbnail(
-            $pathToImage,
-            'lang_mini_' . $languageId . '_' . $this->contextShopId . '.jpg',
-            45,
-            'jpg'
-        );
-
-        return $this->imageTagSourceParser->parse($image);
     }
 }
