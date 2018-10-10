@@ -714,35 +714,7 @@ File: admin-dev/themes/default/template/controllers/import/helpers/form/form.tpl
       </trans-unit>
     </body>
   </file>
-  <file original="modules/ps_faviconnotificationbo/ps_faviconnotificationbo.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="87cc29282288a147a6c6a8fca50ba414">
-        <source>Order Notifications on the Favicon</source>
-        <target>Order Notifications on the Favicon</target>
-        <note>Context:
-File: modules/ps_faviconnotificationbo/ps_faviconnotificationbo.php:58</note>
-      </trans-unit>
-      <trans-unit id="421c53421b5ea9820af60bb4dba58584">
-        <source>Get notified when you get new order, new client or new message directly on your browser tab of your back office even if you are working on another page</source>
-        <target>Get notified when you get new order, new client or new message directly on your browser tab of your back office even if you are working on another page</target>
-        <note>Context:
-File: modules/ps_faviconnotificationbo/ps_faviconnotificationbo.php:59</note>
-      </trans-unit>
-      <trans-unit id="bb8956c67b82c7444a80c6b2433dd8b4">
-        <source>Are you sure you want to uninstall this module?</source>
-        <target>Are you sure you want to uninstall this module?</target>
-        <note>Context:
-File: modules/ps_faviconnotificationbo/ps_faviconnotificationbo.php:71
- Comment: Confirm uninstall</note>
-      </trans-unit>
-      <trans-unit id="faaa79afdd5385b4ff3db080a88b0dc8">
-        <source>There was an error during the uninstallation.</source>
-        <target>There was an error during the uninstallation.</target>
-        <note>Context:
-File: modules/ps_faviconnotificationbo/ps_faviconnotificationbo.php:101</note>
-      </trans-unit>
-    </body>
-  </file>
+
   <file original="src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Email/SmtpConfigurationType.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="6adf97f83acf6453d4a6a4b1070f3754">
