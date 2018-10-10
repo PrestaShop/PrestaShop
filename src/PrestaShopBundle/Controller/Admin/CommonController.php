@@ -293,7 +293,7 @@ class CommonController extends FrameworkBundleAdminController
         Request $request,
         $gridDefinitionFactoryService,
         $redirectRoute,
-        array $redirectQueryParamsToKeep
+        array $redirectQueryParamsToKeep = []
     ) {
         $definitionFactory = $this->get($gridDefinitionFactoryService);
         $definition = $definitionFactory->getDefinition();
