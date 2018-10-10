@@ -1245,6 +1245,28 @@ File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Email/EmailCo
       </trans-unit>
     </body>
   </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Email/SmtpConfigurationType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="6adf97f83acf6453d4a6a4b1070f3754">
+        <source>None</source>
+        <target>None</target>
+        <note>Context:
+          File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Email/SmtpConfigurationType.php:63</note>
+      </trans-unit>
+      <trans-unit id="099d7d04319e5191b7473e016c55e320">
+        <source>TLS</source>
+        <target>TLS</target>
+        <note>Context:
+          File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Email/SmtpConfigurationType.php:64</note>
+      </trans-unit>
+      <trans-unit id="ea52c36203c5f99c3ce2442d531b1a22">
+        <source>SSL</source>
+        <target>SSL</target>
+        <note>Context:
+          File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Email/SmtpConfigurationType.php:65</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/Core/Grid/Definition/Factory/BackupDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="9d8d2d5ab12b515182a505f54db7f538">
