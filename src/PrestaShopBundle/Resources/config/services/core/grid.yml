@@ -59,7 +59,6 @@ services:
             - '@prestashop.core.grid.query.doctrine_query_parser'
             - 'meta'
 
-<<<<<<< HEAD
     prestashop.core.grid.data.factory.category:
         class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
         arguments:

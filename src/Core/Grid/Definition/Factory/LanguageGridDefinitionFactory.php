@@ -119,7 +119,7 @@ final class LanguageGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'field' => 'active',
                     'primary_field' => 'id_lang',
                     'route' => 'admin_languages_index',
-                    'route_param_id' => 'languageId',
+                    'route_param_name' => 'languageId',
                 ])
             )
             ->add((new ActionColumn('actions'))
