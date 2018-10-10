@@ -115,8 +115,7 @@ services:
         class: 'PrestaShop\PrestaShop\Core\Grid\Data\Factory\LanguageGridDataFactory'
         arguments:
             - '@prestashop.core.grid.data.factory.language'
-            - "@=service('prestashop.adapter.legacy.context').getContext().shop.id"
-            - '@prestashop.core.image.parser.image_tag_source_parser'
+            - '@prestashop.adapter.language.language_flag_thumbnail_provider'
 
     # Grid definition factories
     prestashop.core.grid.definition.factory.abstract_grid_definition:
