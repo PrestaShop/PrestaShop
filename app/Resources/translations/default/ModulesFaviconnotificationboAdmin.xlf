@@ -47,8 +47,8 @@ File: modules/ps_faviconnotificationbo/views/templates/admin/menu.tpl:30</note>
           File: modules/ps_faviconnotificationbo/ps_faviconnotificationbo.php:58</note>
       </trans-unit>
       <trans-unit id="421c53421b5ea9820af60bb4dba58584">
-        <source>Get notified when you get new order, new client or new message directly on your browser tab of your back office even if you are working on another page</source>
-        <target>Get notified when you get new order, new client or new message directly on your browser tab of your back office even if you are working on another page</target>
+        <source>Be notified of each new order, client or message directly in the browser tab of your back office, even when working on another page</source>
+        <target>Be notified of each new order, client or message directly in the browser tab of your back office, even when working on another page</target>
         <note>Context:
           File: modules/ps_faviconnotificationbo/ps_faviconnotificationbo.php:59</note>
       </trans-unit>
@@ -58,12 +58,6 @@ File: modules/ps_faviconnotificationbo/views/templates/admin/menu.tpl:30</note>
         <note>Context:
           File: modules/ps_faviconnotificationbo/ps_faviconnotificationbo.php:71
           Comment: Confirm uninstall</note>
-      </trans-unit>
-      <trans-unit id="faaa79afdd5385b4ff3db080a88b0dc8">
-        <source>There was an error during the uninstallation.</source>
-        <target>There was an error during the uninstallation.</target>
-        <note>Context:
-          File: modules/ps_faviconnotificationbo/ps_faviconnotificationbo.php:101</note>
       </trans-unit>
     </body>
   </file>
