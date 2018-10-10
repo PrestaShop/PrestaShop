@@ -634,6 +634,7 @@ var form = (function() {
         $('ul.text-danger').remove();
         $('*.has-danger').removeClass('has-danger');
         $('#form-nav li.has-error').removeClass('has-error');
+        updateDisplayGlobalErrors(null);
       },
       success: function(response) {
         if (callBack) {
@@ -680,12 +681,14 @@ var form = (function() {
           tabsWithErrors.push(key);
 
           var html = '<ul class="list-unstyled text-danger">';
-          $.each(errors, function(key, error) {
+          $.each(errors, function(unusedKey, error) {
             html += '<li>' + error + '</li>';
           });
           html += '</ul>';
 
-          if (key.match(/^combination_.*/)) {
+          if (0 === key.localeCompare('error')) {
+            updateDisplayGlobalErrors(html);
+          } else if (key.match(/^combination_.*/)) {
             $('#' + key).parent().addClass('has-danger').append(html);
           } else {
             $('#form_' + key).parent().addClass('has-danger').append(html);
@@ -750,6 +753,20 @@ var form = (function() {
               $(this).val(defaultLanguageValue);
           }
       });
+  }
+
+  /**
+   * Depending on the provided params, this method displays or hides
+   * an error panel with the form errors not linked to a specific field.
+   * 
+   * @param {string} content The HTML content to display
+   */
+  function updateDisplayGlobalErrors(content) {
+    const target = $("#form_bubbling_errors");
+    target.html('');
+    if (content) {
+      target.html(`<div class="alert alert-danger">${content}</div>`);
+    }
   }
 
   return {
