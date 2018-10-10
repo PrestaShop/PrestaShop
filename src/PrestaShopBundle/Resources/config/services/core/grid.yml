@@ -116,6 +116,7 @@ services:
         arguments:
             - '@prestashop.core.grid.data.factory.language'
             - "@=service('prestashop.adapter.legacy.context').getContext().shop.id"
+            - '@prestashop.core.image.parser.image_tag_source_parser'
 
     # Grid definition factories
     prestashop.core.grid.definition.factory.abstract_grid_definition:

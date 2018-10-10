@@ -36,6 +36,8 @@ use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ImageColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\LinkColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ToggleColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
@@ -83,10 +85,19 @@ final class LanguageGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'field' => 'id_lang',
                 ])
             )
-            ->add((new DataColumn('name'))
+            ->add((new ImageColumn('flag'))
+                ->setName($this->trans('Flag', [], 'Admin.International.Feature'))
+                ->setOptions([
+                    'src_field' => 'flag',
+                ])
+            )
+            ->add((new LinkColumn('name'))
                 ->setName($this->trans('Name', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'name',
+                    'route' => 'admin_languages_edit',
+                    'route_param_name' => 'languageId',
+                    'route_param_field' => 'id_lang',
                 ])
             )
             ->add((new DataColumn('iso_code'))
@@ -126,6 +137,7 @@ final class LanguageGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setOptions([
                     'actions' => (new RowActionCollection())
                         ->add((new LinkRowAction('edit'))
+                            ->setName($this->trans('Edit', [], 'Admin.Actions'))
                             ->setIcon('edit')
                             ->setOptions([
                                 'route' => 'admin_languages_edit',

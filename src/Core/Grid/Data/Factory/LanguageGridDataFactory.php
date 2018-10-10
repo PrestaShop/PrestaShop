@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Grid\Data\Factory;
 use PrestaShop\PrestaShop\Core\Grid\Data\GridData;
 use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollection;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
+use PrestaShop\PrestaShop\Core\Image\Parser\ImageTagSourceParserInterface;
 
 /**
  * Class LanguageGridDataFactory gets data for languages grid.
@@ -46,13 +47,23 @@ final class LanguageGridDataFactory implements GridDataFactoryInterface
     private $contextShopId;
 
     /**
+     * @var ImageTagSourceParserInterface
+     */
+    private $imageTagSourceParser;
+
+    /**
      * @param GridDataFactoryInterface $doctrineLanguageDataFactory
      * @param int $contextShopId
+     * @param ImageTagSourceParserInterface $imageTagSourceParser
      */
-    public function __construct(GridDataFactoryInterface $doctrineLanguageDataFactory, $contextShopId)
-    {
+    public function __construct(
+        GridDataFactoryInterface $doctrineLanguageDataFactory,
+        $contextShopId,
+        ImageTagSourceParserInterface $imageTagSourceParser
+    ) {
         $this->doctrineLanguageDataFactory = $doctrineLanguageDataFactory;
         $this->contextShopId = $contextShopId;
+        $this->imageTagSourceParser = $imageTagSourceParser;
     }
 
     /**
@@ -105,6 +116,6 @@ final class LanguageGridDataFactory implements GridDataFactoryInterface
             'jpg'
         );
 
-        return $image;
+        return $this->imageTagSourceParser->parse($image);
     }
 }
