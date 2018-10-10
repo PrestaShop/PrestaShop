@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Image\ImageProviderInterface;
 use PrestaShop\PrestaShop\Core\Image\Parser\ImageTagSourceParserInterface;
 
 /**
- * Class LanguageThumbnailProvider provides path to language's flag thumbnail. -
+ * Class LanguageThumbnailProvider provides path to language's flag thumbnail.
  */
 final class LanguageFlagThumbnailProvider implements ImageProviderInterface
 {
@@ -62,7 +62,7 @@ final class LanguageFlagThumbnailProvider implements ImageProviderInterface
      */
     public function getPath($languageId)
     {
-        $pathToImage = _PS_IMG_DIR_ . 'l' . DIRECTORY_SEPARATOR . $languageId. '.jpg';
+        $pathToImage = _PS_IMG_DIR_ . 'l' . DIRECTORY_SEPARATOR . $languageId . '.jpg';
 
         $imageTag = ImageManager::thumbnail(
             $pathToImage,

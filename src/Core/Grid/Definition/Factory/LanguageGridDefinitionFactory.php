@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -103,7 +103,7 @@ final class LanguageGridDefinitionFactory extends AbstractGridDefinitionFactory
             ->add((new DataColumn('iso_code'))
                 ->setName($this->trans('ISO code', [], 'Admin.International.Feature'))
                 ->setOptions([
-                    'field' => 'iso_code'
+                    'field' => 'iso_code',
                 ])
             )
             ->add((new DataColumn('language_code'))
@@ -169,7 +169,7 @@ final class LanguageGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getFilters()
     {
-         return (new FilterCollection())
+        return (new FilterCollection())
              ->add((new Filter('id_lang', NumberType::class))
                  ->setTypeOptions([
                      'required' => false,
@@ -249,6 +249,7 @@ final class LanguageGridDefinitionFactory extends AbstractGridDefinitionFactory
             )
         ;
     }
+
     /**
      * {@inheritdoc}
      */
