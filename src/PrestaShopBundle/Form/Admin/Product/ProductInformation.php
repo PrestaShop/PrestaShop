@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Product;
 
+use PrestaShopBundle\Form\Admin\Feature\ProductFeature;
 use PrestaShopBundle\Form\Admin\Category\SimpleCategory;
 use PrestaShopBundle\Form\Admin\Type\ChoiceCategoriesTreeType;
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
@@ -210,7 +211,7 @@ class ProductInformation extends CommonAbstractType
             ])
             //FEATURES & ATTRIBUTES
             ->add('features', FormType\CollectionType::class, [
-                'entry_type' => 'PrestaShopBundle\Form\Admin\Feature\ProductFeature',
+                'entry_type' => ProductFeature::class,
                 'prototype' => true,
                 'allow_add' => true,
                 'allow_delete' => true,
@@ -293,6 +294,20 @@ class ProductInformation extends CommonAbstractType
 
             if (!isset($data['type_product'])) {
                 $data['type_product'] = 0;
+                $event->setData($data);
+            }
+
+            if (isset($data['features'])) {
+                $ids = [];
+                foreach ($data['features'] as $idx => $feature) {
+                    $id = sprintf('%d-%d', $feature['feature'], $feature['value']);
+                    if (in_array($id, $ids)) {
+                        unset($data['features'][$idx]);
+                    } else {
+                        $ids[] = $id;
+                    }
+                }
+
                 $event->setData($data);
             }
 

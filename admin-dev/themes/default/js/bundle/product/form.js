@@ -398,7 +398,7 @@ var featuresCollection = (function() {
 
         if('' !== $(this).val()) {
           $.ajax({
-            url: $(this).attr('data-action').replace(/\/\d+(?=\?.*)/, '/' + $(this).val()),
+            url: $(this).attr('data-action').replace(/\/\d+(?=\?.*)?$/, '/' + $(this).val()),
             success: function(response) {
               $selector.prop('disabled', response.length === 0);
               $selector.empty();
