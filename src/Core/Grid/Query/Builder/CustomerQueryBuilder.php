@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -183,7 +183,7 @@ final class CustomerQueryBuilder extends AbstractDoctrineQueryBuilder
             if ('date_add' === $filterName) {
                 $qb->andWhere('c.date_add BETWEEN :date_from AND :date_to');
                 $qb->setParameter('date_from', $filterValue['from']);
-                $qb->setParameter( 'date_to', $filterValue['to']);
+                $qb->setParameter('date_to', $filterValue['to']);
                 continue;
             }
 
