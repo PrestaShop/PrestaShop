@@ -199,6 +199,7 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setOptions([
                     'actions' => (new RowActionCollection())
                         ->add((new LinkRowAction('edit'))
+                            ->setName($this->trans('Edit', [], 'Admin.Actions'))
                             ->setIcon('edit')
                             ->setOptions([
                                 'route' => 'admin_customers_edit',
