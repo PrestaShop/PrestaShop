@@ -214,7 +214,7 @@ final class CustomerQueryBuilder extends AbstractDoctrineQueryBuilder
                 break;
             case 'connect':
             case 'total_spent':
-            $orderBy = $searchCriteria->getOrderBy();
+                $orderBy = $searchCriteria->getOrderBy();
                 break;
             default:
                 return;

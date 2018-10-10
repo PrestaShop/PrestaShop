@@ -37,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Grid\Action\Type\LinkGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BadgeColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ToggleColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
@@ -148,10 +149,11 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'field' => 'email',
                 ])
             )
-            ->add((new DataColumn('total_spent'))
+            ->add((new BadgeColumn('total_spent'))
                 ->setName($this->trans('Sales', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'total_spent',
+                    'empty_value' => '--',
                 ])
             )
             ->add((new ToggleColumn('active'))
