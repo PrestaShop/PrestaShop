@@ -52,13 +52,6 @@ File: modules/ps_faviconnotificationbo/views/templates/admin/menu.tpl:30</note>
         <note>Context:
           File: modules/ps_faviconnotificationbo/ps_faviconnotificationbo.php:59</note>
       </trans-unit>
-      <trans-unit id="bb8956c67b82c7444a80c6b2433dd8b4">
-        <source>Are you sure you want to uninstall this module?</source>
-        <target>Are you sure you want to uninstall this module?</target>
-        <note>Context:
-          File: modules/ps_faviconnotificationbo/ps_faviconnotificationbo.php:71
-          Comment: Confirm uninstall</note>
-      </trans-unit>
     </body>
   </file>
 </xliff>
