@@ -59,7 +59,6 @@ services:
             - '@prestashop.core.grid.query.doctrine_query_parser'
             - 'meta'
 
-<<<<<<< HEAD
     prestashop.core.grid.data.factory.category:
         class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
         arguments:
@@ -158,7 +157,6 @@ services:
             - "@=service('router').generate('admin_meta')"
         public: true
 
-<<<<<<< HEAD
     prestashop.core.grid.definition.factory.category:
         class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CategoryGridDefinitionFactory'
         parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
