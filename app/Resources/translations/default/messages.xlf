@@ -1082,64 +1082,6 @@ File: modules/ps_emailalerts/ps_emailalerts.php:1102</note>
       </trans-unit>
     </body>
   </file>
-  <file original="modules/ps_googleanalytics/ps_googleanalytics.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="f4f70727dc34561dfde1a3c529b6205c">
-        <source>Settings</source>
-        <target>Settings</target>
-        <note>Context:
-File: modules/ps_googleanalytics/ps_googleanalytics.php:179</note>
-      </trans-unit>
-      <trans-unit id="851bd83a102d143ee17d97f9e15e15af">
-        <source>Google Analytics Tracking ID</source>
-        <target>Google Analytics Tracking ID</target>
-        <note>Context:
-File: modules/ps_googleanalytics/ps_googleanalytics.php:184</note>
-      </trans-unit>
-      <trans-unit id="ad8e83a47926dcb12e8a8fccd7fcf604">
-        <source>This information is available in your Google Analytics account</source>
-        <target>This information is available in your Google Analytics account</target>
-        <note>Context:
-File: modules/ps_googleanalytics/ps_googleanalytics.php:188</note>
-      </trans-unit>
-      <trans-unit id="bcd08e73ca9d8bfed2cccd50dd6d8328">
-        <source>Enable User ID tracking</source>
-        <target>Enable User ID tracking</target>
-        <note>Context:
-File: modules/ps_googleanalytics/ps_googleanalytics.php:192</note>
-      </trans-unit>
-      <trans-unit id="00d23a76e43b46dae9ec7aa9dcbebb32">
-        <source>Enabled</source>
-        <target>Enabled</target>
-        <note>Context:
-File: modules/ps_googleanalytics/ps_googleanalytics.php:239</note>
-      </trans-unit>
-      <trans-unit id="b9f5c797ebbf55adccdd8539a65a0241">
-        <source>Disabled</source>
-        <target>Disabled</target>
-        <note>Context:
-File: modules/ps_googleanalytics/ps_googleanalytics.php:244</note>
-      </trans-unit>
-      <trans-unit id="62d498990ba9938425763b6314b5c42a">
-        <source>Anonymize IP</source>
-        <target>Anonymize IP</target>
-        <note>Context:
-File: modules/ps_googleanalytics/ps_googleanalytics.php:208</note>
-      </trans-unit>
-      <trans-unit id="86b9320b6ef4da2e8845a6e77e7341d3">
-        <source>Use this option to anonymize the visitor’s IP to comply with data privacy laws in some countries</source>
-        <target>Use this option to anonymize the visitor’s IP to comply with data privacy laws in some countries</target>
-        <note>Context:
-File: modules/ps_googleanalytics/ps_googleanalytics.php:210</note>
-      </trans-unit>
-      <trans-unit id="eaa289807715dff623c794d83941f3ab">
-        <source>Enable Cross-Domain tracking</source>
-        <target>Enable Cross-Domain tracking</target>
-        <note>Context:
-File: modules/ps_googleanalytics/ps_googleanalytics.php:233</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="modules/ps_emailsubscription/ps_emailsubscription.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="2df860f82be52de57fc5e3f7ecac9431">
