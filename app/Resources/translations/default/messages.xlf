@@ -714,22 +714,6 @@ File: admin-dev/themes/default/template/controllers/import/helpers/form/form.tpl
       </trans-unit>
     </body>
   </file>
-  <file original="modules/ps_emailalerts/ps_emailalerts.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="fb95520fa4829e9de86209dcf5ddd754">
-        <source>Mail alert: Unable to delete customer using email.</source>
-        <target>Mail alert: Unable to delete customer using email.</target>
-        <note>Context:
-File: modules/ps_emailalerts/ps_emailalerts.php:1091</note>
-      </trans-unit>
-      <trans-unit id="cbaab5c1b41cd9f8199743faa5ba58d2">
-        <source>Mail alert: Unable to export customer using email.</source>
-        <target>Mail alert: Unable to export customer using email.</target>
-        <note>Context:
-File: modules/ps_emailalerts/ps_emailalerts.php:1102</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="modules/ps_emailsubscription/ps_emailsubscription.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="2df860f82be52de57fc5e3f7ecac9431">
