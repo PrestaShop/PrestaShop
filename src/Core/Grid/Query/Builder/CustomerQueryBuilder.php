@@ -93,6 +93,11 @@ final class CustomerQueryBuilder extends AbstractDoctrineQueryBuilder
         return $countQueryBuilder;
     }
 
+    /**
+     * @param SearchCriteriaInterface $searchCriteria
+     *
+     * @return QueryBuilder
+     */
     private function getCustomerQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $queryBuilder = $this->connection->createQueryBuilder()
@@ -120,6 +125,9 @@ final class CustomerQueryBuilder extends AbstractDoctrineQueryBuilder
         return $queryBuilder;
     }
 
+    /**
+     * @param QueryBuilder $queryBuilder
+     */
     private function appendTotalSpentQuery(QueryBuilder $queryBuilder)
     {
         $totalSpentQueryBuilder = $this->connection->createQueryBuilder()
@@ -134,6 +142,11 @@ final class CustomerQueryBuilder extends AbstractDoctrineQueryBuilder
         $queryBuilder->addSelect('(' . $totalSpentQueryBuilder->getSQL() . ') as total_spent');
     }
 
+    /**
+     * Append "last visit" column to customers query builder.
+     *
+     * @param QueryBuilder $queryBuilder
+     */
     private function appendLastVisitQuery(QueryBuilder $queryBuilder)
     {
         $lastVisitQueryBuilder = $this->connection->createQueryBuilder()
@@ -148,6 +161,12 @@ final class CustomerQueryBuilder extends AbstractDoctrineQueryBuilder
         $queryBuilder->addSelect('(' . $lastVisitQueryBuilder->getSQL() . ') as connect');
     }
 
+    /**
+     * Apply filters to customers query builder.
+     *
+     * @param array $filters
+     * @param QueryBuilder $qb
+     */
     private function applyFilters(array $filters, QueryBuilder $qb)
     {
         $allowedFilters = [
