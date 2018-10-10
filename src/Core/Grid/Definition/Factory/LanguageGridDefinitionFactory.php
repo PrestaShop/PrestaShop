@@ -53,6 +53,26 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 final class LanguageGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
     /**
+     * @var string
+     */
+    private $resetUrl;
+
+    /**
+     * @var string
+     */
+    private $redirectUrl;
+
+    /**
+     * @param string $resetUrl
+     * @param string $redirectUrl
+     */
+    public function __construct($resetUrl, $redirectUrl)
+    {
+        $this->resetUrl = $resetUrl;
+        $this->redirectUrl = $redirectUrl;
+    }
+
+    /**
      * {@inheritdoc}
      */
     protected function getId()
@@ -220,8 +240,8 @@ final class LanguageGridDefinitionFactory extends AbstractGridDefinitionFactory
              ->add((new Filter('actions', SearchAndResetType::class))
                  ->setTypeOptions([
                      'attr' => [
-                         'data-url' => '',
-                         'data-redirect' => '',
+                         'data-url' => $this->resetUrl,
+                         'data-redirect' => $this->redirectUrl,
                      ],
                  ])
                  ->setAssociatedColumn('actions')
