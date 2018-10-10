@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -59,7 +59,7 @@ final class BadgeColumn extends AbstractColumn
             ])
             ->setAllowedTypes('field', 'string')
             ->setAllowedTypes('empty_value', 'string')
-            ->setAllowedValues('badge_type', ['success', 'info', 'danger', 'warning',])
+            ->setAllowedValues('badge_type', ['success', 'info', 'danger', 'warning'])
         ;
     }
 }
