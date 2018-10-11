@@ -29,9 +29,13 @@
   {% set class = class ~ ' ' ~ attributes.class %}
 {% endif %}
 
+{% set routeParameters = [] %}
+{% set routeParameters = routeParameters|merge({(action.options.route_param_name) : record[action.options.route_param_field]}) %}
+{% set routeParameters = routeParameters|merge(action.options.route_param_extra_fields)%}
+
 <a class="{{ class }}"
    href="#"
-   data-url="{{ path(action.options.route, { (action.options.route_param_name) : record[action.options.route_param_field]}) }}"
+   data-url="{{ path(action.options.route, routeParameters) }}"
    data-confirm-message="{{ action.options.confirm_message }}"
    data-method="{{ action.options.method }}"
    {% if attributes.tooltip_name %}
