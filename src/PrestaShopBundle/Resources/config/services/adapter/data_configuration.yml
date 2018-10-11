@@ -238,7 +238,7 @@ services:
             - '@=service("prestashop.adapter.data_provider.default_route").getRules()'
 
     prestashop.adapter.import.import_data_match.configuration:
-        class: 'PrestaShop\PrestaShop\Adapter\Import\ImportDataMatchConfiguration'
+        class: 'PrestaShop\PrestaShop\Core\Import\Configuration\ImportDataMatchConfiguration'
         arguments:
             - '@translator'
             - '@=service("prestashop.core.form.choice_provider.import_entity_field").getChoices()'

@@ -32,9 +32,9 @@ use SplFileInfo;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
- * Class ExcelToCsvFileConverter defines an excel to CSV file converter.
+ * Class ExcelToCsvFileConverter converts excel files to CSV.
  */
-class ExcelToCsvFileConverter implements FileConverterInterface
+final class ExcelToCsvFileConverter implements FileConverterInterface
 {
     /**
      * @var Filesystem
