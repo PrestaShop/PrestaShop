@@ -78,7 +78,7 @@ final class CmsPageCategoryQueryBuilder extends AbstractDoctrineQueryBuilder
         $qb = $this->getQueryBuilder($searchCriteria->getFilters());
 
         $qb
-            ->select('cc.`id_cms_category`, cc.`active`, cc.`position`, ccl.`name`, ccl.`description`')
+            ->select('cc.`id_cms_category`, cc.`id_parent`, cc.`active`, cc.`position`, ccl.`name`, ccl.`description`')
             ->groupBy('cc.`id_cms_category`')
             ->orderBy(
                 $this->getModifiedOrderBy($searchCriteria->getOrderBy()),
