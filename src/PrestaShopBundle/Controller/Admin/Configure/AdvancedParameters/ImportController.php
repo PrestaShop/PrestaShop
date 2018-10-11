@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
+use PrestaShop\PrestaShop\Core\Import\Exception\NotSupportedImportEntityException;
 use PrestaShop\PrestaShop\Core\Import\Exception\UnreadableFileException;
 use PrestaShop\PrestaShop\Core\Import\ImportSettings;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -365,10 +366,16 @@ class ImportController extends FrameworkBundleAdminController
     public function getAvailableEntityFieldsAction(Request $request)
     {
         $fieldsProviderFinder = $this->get('prestashop.core.import.fields_provider_finder');
-        $fieldsProvider = $fieldsProviderFinder->find($request->get('entity'));
-        $fieldsCollection = $fieldsProvider->getCollection();
 
-        return $this->json($fieldsCollection->toArray());
+        try {
+            $fieldsProvider = $fieldsProviderFinder->find($request->get('entity'));
+            $fieldsCollection = $fieldsProvider->getCollection();
+            $entityFields = $fieldsCollection->toArray();
+        } catch (NotSupportedImportEntityException $e) {
+            $entityFields = [];
+        }
+
+        return $this->json($entityFields);
     }
 
     /**
