@@ -175,30 +175,20 @@ class SqlManagerController extends FrameworkBundleAdminController
      */
     public function createAction(Request $request)
     {
-        $requestSqlFormHandler = $this->getRequestSqlFormHandler();
+        $sqlRequestFormDataHandler = $this->get('prestashop.core.sql_manager.form.sql_request_form_data_handler');
+        $sqlRequestFormFactory = $this->get('prestashop.core.sql_manager.form.sql_request_form_factory');
 
-        $requestSqlData = [];
+        $sqlRequestForm = $sqlRequestFormFactory->create([]);
+        $sqlRequestForm->handleRequest($request);
 
-        // handle "Export to SQL Manager" action data
-        if ($request->request->has('sql')) {
-            $requestSqlData['request_sql'] = [
-                'sql' => $request->request->get('sql'),
-                'name' => $request->request->get('name'),
-            ];
-        }
-
-        $requestSqlForm = $requestSqlFormHandler->getForm();
-        $requestSqlForm->setData($requestSqlData);
-        $requestSqlForm->handleRequest($request);
-
-        if ($requestSqlForm->isSubmitted()) {
+        if ($sqlRequestForm->isSubmitted()) {
             if ($this->isDemoModeEnabled()) {
                 $this->addFlash('error', $this->getDemoModeErrorMessage());
 
                 return $this->redirectToRoute('admin_sql_request');
             }
 
-            $errors = $requestSqlFormHandler->save($requestSqlForm->getData());
+            $errors = $sqlRequestFormDataHandler->save($sqlRequestForm->getData());
 
             if (empty($errors)) {
                 $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
@@ -214,7 +204,7 @@ class SqlManagerController extends FrameworkBundleAdminController
             'requireAddonsSearch' => true,
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
-            'requestSqlForm' => $requestSqlForm->createView(),
+            'requestSqlForm' => $sqlRequestForm->createView(),
             'dbTableNames' => $this->getDatabaseTables(),
         ]);
     }

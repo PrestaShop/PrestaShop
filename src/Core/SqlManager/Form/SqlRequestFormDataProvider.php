@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Core\Domain\SqlManagement\EditableSqlRequest;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlRequestException;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetSqlRequestForEditing;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObjectFormDataProviderInterface;
+use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -49,25 +50,50 @@ final class SqlRequestFormDataProvider implements IdentifiableObjectFormDataProv
     private $queryBus;
 
     /**
+     * @var HookDispatcherInterface
+     */
+    private $hookDispatcher;
+
+    /**
      * @param CommandBusInterface $queryBus
+     * @param HookDispatcherInterface $hookDispatcher
      * @param Request $request
      */
-    public function __construct(CommandBusInterface $queryBus, Request $request = null)
-    {
+    public function __construct(
+        CommandBusInterface $queryBus,
+        HookDispatcherInterface $hookDispatcher,
+        Request $request = null
+    ) {
         $this->request = $request;
         $this->queryBus = $queryBus;
+        $this->hookDispatcher = $hookDispatcher;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getData($id = null)
+    public function getData($sqlRequestId = null)
     {
-        if (null === $id) {
-            return $this->getEmptyData();
+        $sqlRequestFormData = $this->getSqlRequestFormData($sqlRequestId);
+
+        $this->hookDispatcher->dispatchWithParameters('actionSqlRequestFormDataModifier', [
+            'id' => $sqlRequestId,
+            'data' => &$sqlRequestFormData,
+        ]);
+    }
+
+    /**
+     * @param int|null $sqlRequestId
+     *
+     * @return array
+     */
+    private function getSqlRequestFormData($sqlRequestId)
+    {
+        if (null === $sqlRequestId) {
+            return $this->getEmptySqlRequestFormData();
         }
 
-        return $this->getSqlRequestFormData($id);
+        return $this->getPersistedSqlRequestFormData($sqlRequestId);
     }
 
     /**
@@ -75,7 +101,7 @@ final class SqlRequestFormDataProvider implements IdentifiableObjectFormDataProv
      *
      * @return array
      */
-    private function getEmptyData()
+    private function getEmptySqlRequestFormData()
     {
         if ($this->request && $this->request->request->has('sql')) {
             return [
@@ -92,7 +118,7 @@ final class SqlRequestFormDataProvider implements IdentifiableObjectFormDataProv
      *
      * @return array
      */
-    private function getSqlRequestFormData($sqlRequestId)
+    private function getPersistedSqlRequestFormData($sqlRequestId)
     {
         try {
             $getRequestSqlForEditingQuery = new GetSqlRequestForEditing($sqlRequestId);
