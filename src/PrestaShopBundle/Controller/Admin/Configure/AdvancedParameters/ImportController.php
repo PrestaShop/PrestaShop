@@ -401,27 +401,6 @@ class ImportController extends FrameworkBundleAdminController
     }
 
     /**
-     * Process the import.
-     *
-     * @DemoRestricted(redirectRoute="admin_import")
-     *
-     * @param Request $request
-     *
-     * @return RedirectResponse
-     */
-    public function processImportAction(Request $request)
-    {
-        $requestPreparator = $this->get('prestashop.adapter.import.request_preparator');
-        $requestPreparator->prepare($request);
-
-        $legacyController = $request->attributes->get('_legacy_controller');
-        $legacyContext = $this->get('prestashop.adapter.legacy.context');
-        $legacyImportUrl = $legacyContext->getAdminLink($legacyController);
-
-        return $this->redirect($legacyImportUrl, Response::HTTP_TEMPORARY_REDIRECT);
-    }
-
-    /**
      * Get generic template parameters.
      *
      * @param Request $request
