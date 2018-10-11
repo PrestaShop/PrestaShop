@@ -140,17 +140,20 @@ final class CmsPagesCategoryDefinitionFactory extends AbstractGridDefinitionFact
             )
             ->add((new ActionColumn('actions'))
                 ->setName($this->trans('Actions', [], 'Admin.Global'))
-//                ->setOptions([
-//                    'actions' => (new RowActionCollection())
-//                        ->add((new LinkRowAction('edit'))
-//                            ->setIcon('edit')
-//                            ->setOptions([
-//                                'route' => 'admin_meta_list_edit',
-//                                'route_param_name' => 'metaId',
-//                                'route_param_field' => 'id_meta',
-//                            ])
-//                        )
-//                ])
+                ->setOptions([
+                    'actions' => (new RowActionCollection())
+                        ->add((new LinkRowAction('edit'))
+                            ->setIcon('edit')
+                            ->setOptions([
+                                'route' => 'admin_cms_pages_edit_cms_category',
+                                'route_param_name' => 'cmsCategoryId',
+                                'route_param_field' => 'id_cms_category',
+                                'route_param_extra_fields' => [
+                                    'cmsCategoryParentId' => $this->cmsCategoryParentId,
+                                ],
+                            ])
+                        )
+                ])
             )
         ;
     }
