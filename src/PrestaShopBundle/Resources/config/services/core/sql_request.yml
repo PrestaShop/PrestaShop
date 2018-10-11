@@ -12,3 +12,9 @@ services:
         arguments:
             - '@prestashop.core.command_bus'
             - '@prestashop.core.query_bus'
+
+    prestashop.core.sql_manager.form.sql_request_form_data_provider:
+        class: 'PrestaShop\PrestaShop\Core\SqlManager\Form\SqlRequestFormDataProvider'
+        arguments:
+            - '@prestashop.core.query_bus'
+            - '@=service("request_stack").getMasterRequest()'
