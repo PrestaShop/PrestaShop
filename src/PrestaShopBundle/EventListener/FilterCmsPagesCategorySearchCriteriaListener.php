@@ -61,8 +61,13 @@ class FilterCmsPagesCategorySearchCriteriaListener
         $searchCriteria = $event->getSearchCriteria();
 
         $filters = $searchCriteria->getFilters();
-        $filters['id_cms_category_parent'] =
-            $this->requestStack->getCurrentRequest()->attributes->get('cmsCategoryParentId');
+
+        $request = $this->requestStack->getCurrentRequest();
+
+        if (null !== $request) {
+            $filters['id_cms_category_parent'] =
+                $this->requestStack->getCurrentRequest()->attributes->get('cmsCategoryParentId');
+        }
 
         $newSearchCriteria = new CmsCategoryFilters([
             'orderBy' => $searchCriteria->getOrderBy(),
