@@ -172,14 +172,16 @@ export default class Importer {
             this.progressModal.showContinueImportButton();
             this._onImportStop();
             return false;
-          } else {
-            // Update the progress bar to 100%.
-            this.progressModal.updateProgress(this.totalRowsCount, this.totalRowsCount);
-
-            // Continue with the data import.
-            return this._ajaxImport(0, this.defaultBatchSize, false);
           }
-        } else if (stepIndex < nextStepIndex) {
+
+          // Update the progress bar to 100%.
+          this.progressModal.updateProgress(this.totalRowsCount, this.totalRowsCount);
+
+          // Continue with the data import.
+          return this._ajaxImport(0, this.defaultBatchSize, false);
+        }
+
+        if (stepIndex < nextStepIndex) {
           // If it's still not the last step of the import - continue with the next step.
           return this._ajaxImport(
             0,

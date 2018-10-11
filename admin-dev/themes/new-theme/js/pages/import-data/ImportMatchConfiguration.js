@@ -140,7 +140,7 @@ export default class ImportMatchConfiguration
    * @private
    */
   _appendOptionToDropdown($dropdown, optionText, optionValue) {
-    let $newOption = $('<option>');
+    const $newOption = $('<option>');
 
     $newOption.attr('value', optionValue);
     $newOption.text(optionText);
