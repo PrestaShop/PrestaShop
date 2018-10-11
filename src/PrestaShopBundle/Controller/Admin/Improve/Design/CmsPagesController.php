@@ -48,7 +48,7 @@ class CmsPagesController extends FrameworkBundleAdminController
     {
         $cmsCategoryGridFactory = $this->get('prestashop.core.grid.factory.cms_pages_category');
         $cmsCategoryGrid = $cmsCategoryGridFactory->getGrid($filters);
-        
+
         $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
 
         return [
@@ -64,7 +64,7 @@ class CmsPagesController extends FrameworkBundleAdminController
      *
      * @return RedirectResponse
      */
-    public function searchCategory($cmsCategoryParentId, Request $request)
+    public function searchCategoryAction($cmsCategoryParentId, Request $request)
     {
         $definitionFactory = $this->get('prestashop.core.grid.definition.factory.cms_pages_category');
         $definitionFactory = $definitionFactory->getDefinition();
