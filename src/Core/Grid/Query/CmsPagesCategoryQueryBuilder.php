@@ -119,6 +119,8 @@ final class CmsPagesCategoryQueryBuilder extends AbstractDoctrineQueryBuilder
             'id_cms_category',
             'active',
             'position',
+            'name',
+            'description',
         ];
 
         $qb = $this->connection
@@ -163,6 +165,9 @@ final class CmsPagesCategoryQueryBuilder extends AbstractDoctrineQueryBuilder
 
                 continue;
             }
+
+            $qb->andWhere('ccl.`' . $filterName . '` LIKE :' . $filterName);
+            $qb->setParameter($filterName, '%' . $value . '%');
         }
 
         return $qb;
