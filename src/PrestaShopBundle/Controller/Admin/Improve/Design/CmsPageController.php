@@ -27,7 +27,9 @@
 namespace PrestaShopBundle\Controller\Admin\Improve\Design;
 
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\DeleteCmsPageCategoryCommand;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\ToggleCmsPageCategoryStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CannotDeleteCmsPageCategoryException;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CannotToggleCmsPageCategoryStatusException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategoryId;
@@ -118,6 +120,27 @@ class CmsPageController extends FrameworkBundleAdminController
         return $redirectTo;
     }
 
+    public function toggleCmsPageCategoryAction($cmsCategoryParentId, $cmsCategoryId)
+    {
+        $redirectTo = $this->redirectToRoute('admin_cms_page_index', compact('cmsCategoryParentId'));
+
+        try {
+            $cmsPageCategoryId = new CmsPageCategoryId($cmsCategoryId);
+            $this->getCommandBus()->handle(new ToggleCmsPageCategoryStatusCommand($cmsPageCategoryId));
+        } catch (CmsPageCategoryException $exception) {
+            $this->addFlash('error', $this->getCmsPageCategoryErrorByExceptionType($exception));
+
+            return $redirectTo;
+        }
+
+        $this->addFlash(
+            'success',
+            $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
+        );
+
+        return $redirectTo;
+    }
+
     /**
      * Gets error by exception type.
      *
@@ -134,6 +157,10 @@ class CmsPageController extends FrameworkBundleAdminController
             ),
             CannotDeleteCmsPageCategoryException::class => $this->trans(
                 'You cannot delete this item.',
+                'Admin.Notifications.Error'
+            ),
+            CannotToggleCmsPageCategoryStatusException::class => $this->trans(
+                'An error occurred while updating the status.',
                 'Admin.Notifications.Error'
             )
         ];
