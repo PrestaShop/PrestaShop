@@ -77,3 +77,10 @@ services:
             - '@prestashop.adapter.grid.search.factory.search_criteria_with_category_parent_id'
         tags:
             - { name: kernel.event_listener, event: prestashop.search_criteria.filter, method: onFilterSearchCriteria }
+
+    prestashop.bundle.event_listener.filter_cms_pages_category_search_criteria:
+        class: PrestaShopBundle\EventListener\FilterCmsPagesCategorySearchCriteriaListener
+        arguments:
+            - '@request_stack'
+        tags:
+            - { name: kernel.event_listener, event: prestashop.search_criteria.filter, method: onFilterSearchCriteria }
