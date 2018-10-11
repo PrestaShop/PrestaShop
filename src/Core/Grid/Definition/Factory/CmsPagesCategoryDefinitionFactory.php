@@ -36,6 +36,8 @@ use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * Class CmsPagesCategoryDefinitionFactory
@@ -53,14 +55,23 @@ final class CmsPagesCategoryDefinitionFactory extends AbstractGridDefinitionFact
     private $redirectionUrl;
 
     /**
-     * @param string $resetActionUrl
-     * @param string $redirectionUrl
+     * @var int
      */
-    public function __construct($resetActionUrl, $redirectionUrl)
-    {
+    private $cmsCategoryParentId;
 
-        $this->resetActionUrl = $resetActionUrl;
-        $this->redirectionUrl = $redirectionUrl;
+
+    public function __construct(RouterInterface $router, RequestStack $requestStack)
+    {
+        $this->resetActionUrl =  $router->generate('admin_common_reset_search', [
+            'controller' => 'CmsPages',
+            'action' => 'index',
+        ]);
+
+        $this->cmsCategoryParentId = $requestStack->getCurrentRequest()->attributes->get('cmsCategoryParentId');
+
+        $this->redirectionUrl = $router->generate('admin_cms_pages_index', [
+            'cmsCategoryParentId' => $this->cmsCategoryParentId,
+        ]);
     }
 
     /**
