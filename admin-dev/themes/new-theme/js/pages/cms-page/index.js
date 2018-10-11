@@ -26,13 +26,24 @@
 import Grid from "../../components/grid/grid";
 import SortingExtension from "../../components/grid/extension/sorting-extension";
 import SubmitRowActionExtension from "../../components/grid/extension/action/row/submit-row-action-extension";
-import SubmitGridActionExtension from "../../components/grid/extension/submit-grid-action-extension";
+import FiltersResetExtension from "../../components/grid/extension/filters-reset-extension";
+import ReloadListActionExtension from "../../components/grid/extension/reload-list-extension";
+import ExportToSqlManagerExtension from "../../components/grid/extension/export-to-sql-manager-extension";
+import LinkRowActionExtension from "../../components/grid/extension/link-row-action-extension";
+import SubmitBulkExtension from "../../components/grid/extension/submit-bulk-action-extension";
+import BulkActionCheckboxExtension from "../../components/grid/extension/bulk-action-checkbox-extension";
 
 const $ = window.$;
 
 $(() => {
-  const cmsCategory = new Grid('cms_pages_category');
+  const cmsCategory = new Grid('cms_page_category');
+
+  cmsCategory.addExtension(new ReloadListActionExtension());
+  cmsCategory.addExtension(new ExportToSqlManagerExtension());
+  cmsCategory.addExtension(new FiltersResetExtension());
   cmsCategory.addExtension(new SortingExtension());
+  cmsCategory.addExtension(new LinkRowActionExtension());
+  cmsCategory.addExtension(new SubmitBulkExtension());
+  cmsCategory.addExtension(new BulkActionCheckboxExtension());
   cmsCategory.addExtension(new SubmitRowActionExtension());
-  cmsCategory.addExtension(new SubmitGridActionExtension());
 });

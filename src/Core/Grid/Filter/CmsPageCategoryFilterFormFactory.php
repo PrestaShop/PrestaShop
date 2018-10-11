@@ -33,9 +33,9 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
- * Class CmsPagesCategoryFilterFormFactory is responsible for changing form action to the custom one.
+ * Class CmsPageCategoryFilterFormFactory is responsible for changing form action to the custom one.
  */
-class CmsPagesCategoryFilterFormFactory implements GridFilterFormFactoryInterface
+class CmsPageCategoryFilterFormFactory implements GridFilterFormFactoryInterface
 {
     /**
      * @var GridFilterFormFactoryInterface
@@ -91,7 +91,7 @@ class CmsPagesCategoryFilterFormFactory implements GridFilterFormFactoryInterfac
         $request = $this->requestStack->getCurrentRequest();
 
         if (null !== $request) {
-            $newActionUrl = $this->urlGenerator->generate('admin_cms_pages_search_category', [
+            $newActionUrl = $this->urlGenerator->generate('admin_cms_page_search_category', [
                 'cmsCategoryParentId' => $request->attributes->get('cmsCategoryParentId'),
             ]);
 

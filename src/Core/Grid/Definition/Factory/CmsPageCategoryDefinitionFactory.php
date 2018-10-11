@@ -42,9 +42,9 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
- * Class CmsPagesCategoryDefinitionFactory
+ * Class CmsPageCategoryDefinitionFactory
  */
-final class CmsPagesCategoryDefinitionFactory extends AbstractGridDefinitionFactory
+final class CmsPageCategoryDefinitionFactory extends AbstractGridDefinitionFactory
 {
     /**
      * @var string
@@ -61,11 +61,14 @@ final class CmsPagesCategoryDefinitionFactory extends AbstractGridDefinitionFact
      */
     private $cmsCategoryParentId;
 
-
+    /**
+     * @param UrlGeneratorInterface $urlGenerator
+     * @param RequestStack $requestStack
+     */
     public function __construct(UrlGeneratorInterface $urlGenerator, RequestStack $requestStack)
     {
         $this->resetActionUrl =  $urlGenerator->generate('admin_common_reset_search', [
-            'controller' => 'CmsPages',
+            'controller' => 'CmsPage',
             'action' => 'index',
         ]);
 
@@ -75,7 +78,7 @@ final class CmsPagesCategoryDefinitionFactory extends AbstractGridDefinitionFact
             $this->cmsCategoryParentId = $request->attributes->get('cmsCategoryParentId');
         }
 
-        $this->redirectionUrl = $urlGenerator->generate('admin_cms_pages_index', [
+        $this->redirectionUrl = $urlGenerator->generate('admin_cms_page_index', [
             'cmsCategoryParentId' => $this->cmsCategoryParentId,
         ]);
     }
@@ -85,7 +88,7 @@ final class CmsPagesCategoryDefinitionFactory extends AbstractGridDefinitionFact
      */
     protected function getId()
     {
-        return 'Cms_pages_category';
+        return 'Cms_page_category';
     }
 
     /**
@@ -147,7 +150,7 @@ final class CmsPagesCategoryDefinitionFactory extends AbstractGridDefinitionFact
                             ->setName($this->trans('Edit', [], 'Admin.Actions'))
                             ->setIcon('edit')
                             ->setOptions([
-                                'route' => 'admin_cms_pages_edit_cms_category',
+                                'route' => 'admin_cms_page_edit_cms_category',
                                 'route_param_name' => 'cmsCategoryId',
                                 'route_param_field' => 'id_cms_category',
                                 'route_param_extra_fields' => [
@@ -160,7 +163,7 @@ final class CmsPagesCategoryDefinitionFactory extends AbstractGridDefinitionFact
                             ->setIcon('delete')
                             ->setOptions([
                                 'method' => 'DELETE',
-                                'route' => 'admin_cms_pages_delete_cms_category',
+                                'route' => 'admin_cms_page_delete_cms_category',
                                 'route_param_name' => 'cmsCategoryId',
                                 'route_param_field' => 'id_cms_category',
                                 'route_param_extra_fields' => [

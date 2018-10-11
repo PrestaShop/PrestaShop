@@ -1,31 +1,31 @@
-admin_cms_pages_index:
+admin_cms_page_index:
     path: /
     methods: GET
     defaults:
-        _controller: 'PrestaShopBundle:Admin\Improve\Design\CmsPages:index'
+        _controller: 'PrestaShopBundle:Admin\Improve\Design\CmsPage:index'
         _legacy_controller: AdminCmsContent
 
-admin_cms_pages_search_category:
+admin_cms_page_search_category:
     path: /search-category
     methods: POST
     defaults:
-        _controller: 'PrestaShopBundle:Admin\Improve\Design\CmsPages:searchCategory'
+        _controller: 'PrestaShopBundle:Admin\Improve\Design\CmsPage:searchCategory'
         _legacy_controller: AdminCmsContent
 
-admin_cms_pages_edit_cms_category:
+admin_cms_page_edit_cms_category:
     path: /category/{cmsCategoryId}/edit
     methods: [GET, POST]
     defaults:
-        _controller: 'PrestaShopBundle:Admin\Improve\Design\CmsPages:editCmsCategory'
+        _controller: 'PrestaShopBundle:Admin\Improve\Design\CmsPage:editCmsPageCategory'
         _legacy_controller: AdminCmsContent
     requirements:
         cmsCategoryId: \d+
 
-admin_cms_pages_delete_cms_category:
+admin_cms_page_delete_cms_category:
     path: /category/{cmsCategoryId}/delete
     methods: DELETE
     defaults:
-        _controller: 'PrestaShopBundle:Admin\Improve\Design\CmsPages:deleteCmsCategory'
+        _controller: 'PrestaShopBundle:Admin\Improve\Design\CmsPage:deleteCmsPageCategory'
         _legacy_controller: AdminCmsContent
     requirements:
         cmsCategoryId: \d+

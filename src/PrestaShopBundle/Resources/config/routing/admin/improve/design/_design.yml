@@ -6,8 +6,8 @@ _positions:
     resource: "positions.yml"
     prefix: /modules/positions
 
-_cms_pages:
-    resource: "cms_pages.yml"
+_cms_page:
+    resource: "cms_page.yml"
     prefix: /cms-pages/{cmsCategoryParentId}
     requirements:
         cmsCategoryParentId: \d+
