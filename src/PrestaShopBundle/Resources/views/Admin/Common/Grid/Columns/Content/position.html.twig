@@ -24,12 +24,21 @@
  *#}
 
 {% if grid.sorting.order_by == 'position' and grid.sorting.order_way == 'asc' %}
+  {% set routeParameters = [] %}
+
+  {% if column.options.route_params_extra_by_record is not empty %}
+    {% for routeName, routeRecordName in column.options.route_params_extra_by_record %}
+      {% set routeRecord = record[routeRecordName] %}
+      {% set routeParameters = routeParameters|merge({(routeName) : routeRecord}) %}
+    {% endfor %}
+  {% endif %}
+
   <div class="js-drag-handle js-{{ grid.id }}-position"
        style="cursor: move;"
        data-id="{{ record[column.options.id_field] }}"
        data-id-parent="{{ record[column.options.id_parent_field] }}"
        data-position="{{ record[column.options.field] }}"
-       data-update-url="{{ url(column.options.update_route) }}"
+       data-update-url="{{ url(column.options.update_route, routeParameters) }}"
        data-update-method="{{ column.options.update_method }}"
        data-pagination-offset="{{ grid.pagination.offset }}"
   >
