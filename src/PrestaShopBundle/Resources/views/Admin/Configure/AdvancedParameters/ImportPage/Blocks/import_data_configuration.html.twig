@@ -27,7 +27,7 @@
 
 {% set dataConfigurationForm = importDataConfigurationForm %}
 
-{{ form_start(dataConfigurationForm, {action: path('admin_import_process'), attr: {class: 'import-data-configuration-form'}}) }}
+{{ form_start(dataConfigurationForm, {attr: {class: 'import-data-configuration-form'}}) }}
 <div class="card">
   <h3 class="card-header">
     <i class="material-icons">list</i> {{ 'Match your data'|trans }}
