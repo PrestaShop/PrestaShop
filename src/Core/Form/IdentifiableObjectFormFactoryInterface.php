@@ -36,5 +36,5 @@ interface IdentifiableObjectFormFactoryInterface
      * @param null $id
      * @return mixed
      */
-    public function getForm(array $data, $id = null);
+    public function create(array $data, $id = null);
 }
