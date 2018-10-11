@@ -87,12 +87,13 @@ if (file_exists(_PS_CORE_DIR_.'/app/config/parameters.php')) {
 }
 
 if (!defined('_THEME_NAME_')) {
-    if (getenv('_PS_THEME_NAME_') !== false) {
-        define('_THEME_NAME_', getenv('_PS_THEME_NAME_'));
+    // @see app/config.yml _PS_THEME_NAME default value is "classic".
+    if (getenv('PS_THEME_NAME') !== false) {
+        define('_THEME_NAME_', getenv('PS_THEME_NAME'));
     } else {
         /**
          * @deprecated since 1.7.5.x to be removed in 1.8.x
-         * Rely on _PS_THEME_NAME environment variable value
+         * Rely on "PS_THEME_NAME" environment variable value
          */
         $themes = glob(dirname(__DIR__).'/themes/*/config/theme.yml', GLOB_NOSORT);
         usort($themes, function ($a, $b) {
