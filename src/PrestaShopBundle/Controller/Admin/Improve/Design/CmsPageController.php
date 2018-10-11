@@ -26,6 +26,11 @@
 
 namespace PrestaShopBundle\Controller\Admin\Improve\Design;
 
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\DeleteCmsPageCategoryCommand;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CannotDeleteCmsPageCategoryException;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryException;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategoryId;
 use PrestaShop\PrestaShop\Core\Search\Filters\CmsCategoryFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -94,5 +99,49 @@ class CmsPageController extends FrameworkBundleAdminController
 
     public function deleteCmsPageCategoryAction($cmsCategoryParentId, $cmsCategoryId)
     {
+        $redirectTo = $this->redirectToRoute('admin_cms_page_index', compact('cmsCategoryParentId'));
+
+        try {
+            $cmsPageCategoryId = new CmsPageCategoryId($cmsCategoryId);
+            $this->getCommandBus()->handle(new DeleteCmsPageCategoryCommand($cmsPageCategoryId));
+        } catch (CmsPageCategoryException $exception) {
+            $this->addFlash('error', $this->getCmsPageCategoryErrorByExceptionType($exception));
+
+            return $redirectTo;
+        }
+
+        $this->addFlash(
+            'success',
+            $this->trans('Successful deletion.', 'Admin.Notifications.Success')
+        );
+
+        return $redirectTo;
+    }
+
+    /**
+     * Gets error by exception type.
+     *
+     * @param CmsPageCategoryException $exception
+     *
+     * @return string
+     */
+    private function getCmsPageCategoryErrorByExceptionType(CmsPageCategoryException $exception)
+    {
+        $exceptionTypeDictionary = [
+            CmsPageCategoryNotFoundException::class => $this->trans(
+                'The object cannot be loaded (or found)',
+                'Admin.Notifications.Error'
+            ),
+            CannotDeleteCmsPageCategoryException::class => $this->trans(
+                'You cannot delete this item.',
+                'Admin.Notifications.Error'
+            )
+        ];
+
+        $exceptionType = get_class($exception);
+        if (isset($exceptionTypeDictionary[$exceptionType])) {
+            return $exceptionTypeDictionary[$exceptionType];
+        }
+        return $this->trans('Unexpected error occurred.', 'Admin.Notifications.Error');
     }
 }
