@@ -2656,7 +2656,8 @@
 	                (0, _jquery2['default'])('#product-details').replaceWith(data.product_details);
 	                replaceAddToCartSections(data);
 	                var minimalProductQuantity = parseInt(data.product_minimal_quantity, 10);
-	
+                        quantityInput.attr('min',minimalProductQuantity);
+        
 	                // Prevent quantity input from blinking with classic theme.
 	                if (!isNaN(minimalProductQuantity) && $quantityWantedInput.val() < minimalProductQuantity && eventType !== 'updatedProductQuantity') {
 	                    $quantityWantedInput.attr('min', minimalProductQuantity);
