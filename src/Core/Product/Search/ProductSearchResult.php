@@ -106,7 +106,7 @@ class ProductSearchResult
     }
 
     /**
-     * @return mixed
+     * @return FacetCollection
      */
     public function getFacetCollection()
     {

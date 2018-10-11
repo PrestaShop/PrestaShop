@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Product\Search;
 
-use Exception;
+use PrestaShop\PrestaShop\Core\Product\Search\Exception\InvalidSortOrderDirectionException;
 
 /**
  * This class define in which order the list of products will be sorted.
@@ -196,10 +196,7 @@ class SortOrder
     {
         $formattedDirection = strtolower($direction);
         if (!in_array($formattedDirection, ['asc', 'desc', 'random'])) {
-            throw new Exception(sprintf(
-                'Invalid SortOrder direction `%s`. Expecting one of: `ASC`, `DESC`, or `RANDOM`.',
-                $direction
-            ));
+            throw new InvalidSortOrderDirectionException($direction);
         }
 
         $this->direction = $formattedDirection;

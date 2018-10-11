@@ -32,6 +32,40 @@ namespace PrestaShop\PrestaShop\Core\Product\Search;
 class URLFragmentSerializer
 {
     /**
+     * @param array $fragment
+     *
+     * @return string
+     */
+    public function serialize(array $fragment)
+    {
+        $parts = [];
+        foreach ($fragment as $key => $values) {
+            array_unshift($values, $key);
+            $parts[] = $this->serializeListOfStrings('-', '-', $values);
+        }
+
+        return $this->serializeListOfStrings('/', '/', $parts);
+    }
+
+    /**
+     * @param string $string
+     *
+     * @return array
+     */
+    public function unserialize($string)
+    {
+        $fragment = [];
+        $parts = $this->unserializeListOfStrings('/', '/', $string);
+        foreach ($parts as $part) {
+            $values = $this->unserializeListOfStrings('-', '-', $part);
+            $key = array_shift($values);
+            $fragment[$key] = $values;
+        }
+
+        return $fragment;
+    }
+
+    /**
      * @param string $separator the string separator
      * @param string $escape the string escape
      * @param array $list
@@ -93,39 +127,5 @@ class URLFragmentSerializer
         }
 
         return $list;
-    }
-
-    /**
-     * @param array $fragment
-     *
-     * @return string
-     */
-    public function serialize(array $fragment)
-    {
-        $parts = [];
-        foreach ($fragment as $key => $values) {
-            array_unshift($values, $key);
-            $parts[] = $this->serializeListOfStrings('-', '-', $values);
-        }
-
-        return $this->serializeListOfStrings('/', '/', $parts);
-    }
-
-    /**
-     * @param string $string
-     *
-     * @return array
-     */
-    public function unserialize($string)
-    {
-        $fragment = [];
-        $parts = $this->unserializeListOfStrings('/', '/', $string);
-        foreach ($parts as $part) {
-            $values = $this->unserializeListOfStrings('-', '-', $part);
-            $key = array_shift($values);
-            $fragment[$key] = $values;
-        }
-
-        return $fragment;
     }
 }
