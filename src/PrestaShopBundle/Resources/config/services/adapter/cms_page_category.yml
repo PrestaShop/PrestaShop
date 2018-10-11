@@ -7,3 +7,10 @@ services:
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\DeleteCmsPageCategoryCommand
+
+    prestashop.adapter.cms_page_category.command_handler.toggle_cms_page_category_status_handler:
+        class: PrestaShop\PrestaShop\Adapter\CMS\PageCategory\CommandHandler\ToggleCmsPageCategoryStatusHandler
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\ToggleCmsPageCategoryStatusCommand
+
