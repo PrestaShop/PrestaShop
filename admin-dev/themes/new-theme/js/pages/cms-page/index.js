@@ -32,6 +32,7 @@ import ExportToSqlManagerExtension from "../../components/grid/extension/export-
 import LinkRowActionExtension from "../../components/grid/extension/link-row-action-extension";
 import SubmitBulkExtension from "../../components/grid/extension/submit-bulk-action-extension";
 import BulkActionCheckboxExtension from "../../components/grid/extension/bulk-action-checkbox-extension";
+import ColumnTogglingExtension from "../../components/grid/extension/column-toggling-extension";
 
 const $ = window.$;
 
@@ -46,4 +47,5 @@ $(() => {
   cmsCategory.addExtension(new SubmitBulkExtension());
   cmsCategory.addExtension(new BulkActionCheckboxExtension());
   cmsCategory.addExtension(new SubmitRowActionExtension());
+  cmsCategory.addExtension(new ColumnTogglingExtension());
 });
