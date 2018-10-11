@@ -40,27 +40,15 @@ class CmsPagesController extends FrameworkBundleAdminController
     /**
      * @Template("@PrestaShop/Admin/Improve/Design/Cms/index.html.twig")
      *
-     * @param int $cmsCategoryParentId
-     *
      * @param CmsCategoryFilters $filters
      *
      * @return array
      */
-    public function indexAction($cmsCategoryParentId, CmsCategoryFilters $filters)
+    public function indexAction(CmsCategoryFilters $filters)
     {
-        //todo : removes this block once SearchCriteriaEvent will be available from Category listing PR.
-        $filterDefaults = $filters::getDefaults();
-        $filterDefaults['filters']['id_cms_category_parent'] = $cmsCategoryParentId;
-        $filterDefaults['orderBy'] = $filters->getOrderBy();
-        $filterDefaults['sortOrder'] = $filters->getOrderWay();
-        $filterDefaults['limit'] = $filters->getLimit();
-        $filterDefaults['offset'] = $filters->getOffset();
-
-        $newSearchCriteria = new CmsCategoryFilters($filterDefaults);
-
         $cmsCategoryGridFactory = $this->get('prestashop.core.grid.factory.cms_pages_category');
-        $cmsCategoryGrid = $cmsCategoryGridFactory->getGrid($newSearchCriteria);
-
+        $cmsCategoryGrid = $cmsCategoryGridFactory->getGrid($filters);
+        
         $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
 
         return [
