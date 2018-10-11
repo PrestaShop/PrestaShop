@@ -27,28 +27,24 @@
 namespace PrestaShop\PrestaShop\Adapter\CMS\PageCategory\CommandHandler;
 
 use CMSCategory;
-use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\DeleteCmsPageCategoryCommand;
-use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\CommandHandler\DeleteCmsPageCategoryHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CannotDeleteCmsPageCategoryException;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\ToggleCmsPageCategoryStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\CommandHandler\ToggleCmsPageCategoryStatusHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CannotToggleCmsPageCategoryStatusException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryNotFoundException;
 use PrestaShopException;
 
 /**
- * Class DeleteCmsPageCategoryHandler is responsible for deleting cms page category.
+ * Class ToggleCmsPageCategoryStatusHandler is responsible for turning on and off cms page category status.
  */
-class DeleteCmsPageCategoryHandler implements DeleteCmsPageCategoryHandlerInterface
+class ToggleCmsPageCategoryStatusHandler implements ToggleCmsPageCategoryStatusHandlerInterface
 {
     /**
      * {@inheritdoc}
      *
-     * @param DeleteCmsPageCategoryCommand $command
-     *
-     * @throws CannotDeleteCmsPageCategoryException
      * @throws CmsPageCategoryException
-     * @throws CmsPageCategoryNotFoundException
      */
-    public function handle(DeleteCmsPageCategoryCommand $command)
+    public function handle(ToggleCmsPageCategoryStatusCommand $command)
     {
         try {
             $entity = new CMSCategory($command->getCmsPageCategoryId()->getValue());
@@ -66,29 +62,29 @@ class DeleteCmsPageCategoryHandler implements DeleteCmsPageCategoryHandlerInterf
         if (0 >= $entity->id) {
             throw new CmsPageCategoryNotFoundException(
                 sprintf(
-                    'Cms category object with id "%s" has not been found for deletion.',
+                    'Cms category object with id "%s" has not been found for status changing.',
                     $command->getCmsPageCategoryId()->getValue()
                 )
             );
         }
 
         try {
-            if (false === $entity->delete()) {
-                throw new CannotDeleteCmsPageCategoryException(
+            if (false === $entity->toggleStatus()) {
+                throw new CannotToggleCmsPageCategoryStatusException(
                     sprintf(
-                        'Unable to delete  cms category object with id "%s"',
+                        'Unable to toggle cms category with id "%s"',
                         $command->getCmsPageCategoryId()->getValue()
                     )
                 );
             }
-        } catch (PrestaShopException $exception) {
+        } catch (PrestaShopException $e) {
             throw new CmsPageCategoryException(
                 sprintf(
-                    'An error occurred when  deleting  cms category object with id "%s"',
+                    'An error occurred when toggling status for cms page object with id "%s"',
                     $command->getCmsPageCategoryId()->getValue()
                 ),
                 0,
-                $exception
+                $e
             );
         }
     }

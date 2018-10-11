@@ -24,19 +24,33 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\CommandHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\DeleteCmsPageCategoryCommand;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategoryId;
 
 /**
- * Interface DeleteCmsPageCategoryHandlerInterface defines contract for DeleteCmsPageCategoryHandler.
+ * Class ToggleCmsPageCategoryStatusCommand is responsible for turning on and off cms page category status.
  */
-interface DeleteCmsPageCategoryHandlerInterface
+class ToggleCmsPageCategoryStatusCommand
 {
     /**
-     * @param DeleteCmsPageCategoryCommand $command
-     *
-     * @return void
+     * @var CmsPageCategoryId
      */
-    public function handle(DeleteCmsPageCategoryCommand $command);
+    private $cmsPageCategoryId;
+
+    /**
+     * @param CmsPageCategoryId $cmsPageCategoryId
+     */
+    public function __construct(CmsPageCategoryId $cmsPageCategoryId)
+    {
+        $this->cmsPageCategoryId = $cmsPageCategoryId;
+    }
+
+    /**
+     * @return CmsPageCategoryId
+     */
+    public function getCmsPageCategoryId()
+    {
+        return $this->cmsPageCategoryId;
+    }
 }
