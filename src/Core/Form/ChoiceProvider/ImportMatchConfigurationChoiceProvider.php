@@ -52,7 +52,7 @@ final class ImportMatchConfigurationChoiceProvider implements FormChoiceProvider
      */
     public function getChoices()
     {
-        $choices  = [];
+        $choices = [];
 
         foreach ($this->matchConfigurations as $configuration) {
             $choices[$configuration['name']] = $configuration['id_import_match'];
