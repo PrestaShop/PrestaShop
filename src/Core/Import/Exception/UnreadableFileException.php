@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -24,25 +24,11 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Import\File;
-
-use Generator;
-use PrestaShop\PrestaShop\Core\Import\Exception\UnreadableFileException;
-use SplFileInfo;
+namespace PrestaShop\PrestaShop\Core\Import\Exception;
 
 /**
- * Interface FileReaderInterface describes a file reader.
+ * Class UnreadableFileException is thrown when the import file cannot be read.
  */
-interface FileReaderInterface
+class UnreadableFileException extends ImportException
 {
-    /**
-     * Read the file.
-     *
-     * @param SplFileInfo $file
-     *
-     * @return Generator
-     *
-     * @throws UnreadableFileException
-     */
-    public function read(SplFileInfo $file);
 }
