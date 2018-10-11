@@ -17,12 +17,14 @@ services:
         class: 'PrestaShop\PrestaShop\Core\SqlManager\Form\SqlRequestFormDataProvider'
         arguments:
             - '@prestashop.core.query_bus'
+            - '@prestashop.core.hook.dispatcher'
             - '@=service("request_stack").getMasterRequest()'
 
     prestashop.core.sql_manager.form.sql_request_form_data_handler:
         class: 'PrestaShop\PrestaShop\Core\SqlManager\Form\SqlRequestFormDataHandler'
         arguments:
             - '@prestashop.core.query_bus'
+            - '@prestashop.core.hook.dispatcher'
 
     prestashop.core.sql_manager.form.sql_request_form_factory:
         class: 'PrestaShop\PrestaShop\Core\SqlManager\Form\SqlRequestFormFactory'

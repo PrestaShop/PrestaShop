@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlRequestConstrai
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlRequestException;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlRequestNotFoundException;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObjectFormDataHandlerInterface;
+use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 
 /**
  * Class SqlRequestFormDataHandler
@@ -47,11 +48,20 @@ final class SqlRequestFormDataHandler implements IdentifiableObjectFormDataHandl
     private $commandBus;
 
     /**
-     * @param CommandBusInterface $commandBus
+     * @var HookDispatcherInterface
      */
-    public function __construct(CommandBusInterface $commandBus)
-    {
+    private $hookDispatcher;
+
+    /**
+     * @param CommandBusInterface $commandBus
+     * @param HookDispatcherInterface $hookDispatcher
+     */
+    public function __construct(
+        CommandBusInterface $commandBus,
+        HookDispatcherInterface $hookDispatcher
+    ) {
         $this->commandBus = $commandBus;
+        $this->hookDispatcher = $hookDispatcher;
     }
 
     /**
@@ -63,10 +73,15 @@ final class SqlRequestFormDataHandler implements IdentifiableObjectFormDataHandl
 
         try {
             $command = $sqlRequestId ?
-                $this->getEditRequestSqlCommand($sqlRequestId, $sqlRequestFormData) :
-                $this->getAddRequestSqlCommand($sqlRequestFormData);
+                $this->getEditRequestSqlCommand($sqlRequestId, $sqlRequestFormData['request_sql']) :
+                $this->getAddRequestSqlCommand($sqlRequestFormData['request_sql']);
 
             $this->commandBus->handle($command);
+
+            $this->hookDispatcher->dispatchWithParameters('actionSqlRequestSave', [
+                'id' => $sqlRequestId,
+                'data' => $sqlRequestFormData,
+            ]);
         } catch (SqlRequestException $e) {
             $errors[] = $this->handleException($e);
         }
