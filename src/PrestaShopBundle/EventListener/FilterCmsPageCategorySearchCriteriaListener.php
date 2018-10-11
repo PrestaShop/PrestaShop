@@ -31,10 +31,10 @@ use PrestaShopBundle\Event\FilterSearchCriteriaEvent;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
- * Class FilterCmsPagesCategorySearchCriteriaListener is responsible for updating CmsCategoryFilters filter with
+ * Class FilterCmsPageCategorySearchCriteriaListener is responsible for updating CmsCategoryFilters filter with
  * cms page category id.
  */
-class FilterCmsPagesCategorySearchCriteriaListener
+class FilterCmsPageCategorySearchCriteriaListener
 {
     /**
      * @var RequestStack
