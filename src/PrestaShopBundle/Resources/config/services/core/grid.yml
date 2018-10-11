@@ -18,6 +18,13 @@ services:
             - '@router'
             - '@request_stack'
 
+    prestashop.core.grid.filter.cms_pages_category_form_factory:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Filter\CmsPagesCategoryFilterFormFactory'
+        arguments:
+            - '@prestashop.core.grid.filter.form_factory'
+            - '@router'
+            - '@request_stack'
+
     # Grid data factories
     prestashop.core.grid.data_provider.log:
         class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
@@ -325,7 +332,7 @@ services:
         arguments:
             - '@prestashop.core.grid.definition.factory.cms_pages_category'
             - '@prestashop.core.grid.data_provider.cms_pages_category'
-            - '@prestashop.core.grid.filter.form_factory'
+            - '@prestashop.core.grid.filter.cms_pages_category_form_factory'
             - '@prestashop.core.hook.dispatcher'
 
     # Grid presenter
