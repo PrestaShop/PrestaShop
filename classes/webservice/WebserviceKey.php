@@ -79,13 +79,26 @@ class WebserviceKeyCore extends ObjectModel
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT p.*
 			FROM `' . _DB_PREFIX_ . 'webservice_permission` p
-			LEFT JOIN `' . _DB_PREFIX_ . 'webservice_account` a ON (a.id_webservice_account = p.id_webservice_account)
+			INNER JOIN `' . _DB_PREFIX_ . 'webservice_account` a ON (a.id_webservice_account = p.id_webservice_account)
 			WHERE a.key = \'' . pSQL($auth_key) . '\'
 		');
         $permissions = array();
         if ($result) {
             foreach ($result as $row) {
                 $permissions[$row['resource']][] = $row['method'];
+            }
+        }
+
+        if (!empty($permissions['employees'])) {
+            if (count($permissions) > 1) {
+                unset($permissions['employees']);
+                    Db::getInstance()->execute('
+                        DELETE p.*
+                        FROM `'._DB_PREFIX_.'webservice_permission` p
+                        INNER JOIN `'._DB_PREFIX_.'webservice_account` a ON (a.id_webservice_account = p.id_webservice_account)
+                        WHERE a.key = \''.pSQL($auth_key).'\'
+                        AND p.resource = "employees"
+                    ');
             }
         }
 
