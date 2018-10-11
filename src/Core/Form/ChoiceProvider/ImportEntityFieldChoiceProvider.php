@@ -49,8 +49,10 @@ final class ImportEntityFieldChoiceProvider implements FormChoiceProviderInterfa
      * @param EntityFieldsProviderFinderInterface $entityFieldsProviderFinder
      * @param int $selectedEntity
      */
-    public function __construct(EntityFieldsProviderFinderInterface $entityFieldsProviderFinder, $selectedEntity)
-    {
+    public function __construct(
+        EntityFieldsProviderFinderInterface $entityFieldsProviderFinder,
+        $selectedEntity
+    ) {
         $this->entityFieldsProviderFinder = $entityFieldsProviderFinder;
         $this->selectedEntity = $selectedEntity;
     }
