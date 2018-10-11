@@ -41,7 +41,7 @@ final class CmsCategoryFilters extends Filters
         return [
             'limit' => 50,
             'offset' => 0,
-            'orderBy' => 'id_cms_category',
+            'orderBy' => 'position',
             'sortOrder' => 'asc',
             'filters' => [],
         ];
