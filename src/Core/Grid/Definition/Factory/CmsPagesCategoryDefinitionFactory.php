@@ -26,6 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
@@ -122,6 +124,17 @@ final class CmsPagesCategoryDefinitionFactory extends AbstractGridDefinitionFact
             )
             ->add((new ActionColumn('actions'))
                 ->setName($this->trans('Actions', [], 'Admin.Global'))
+//                ->setOptions([
+//                    'actions' => (new RowActionCollection())
+//                        ->add((new LinkRowAction('edit'))
+//                            ->setIcon('edit')
+//                            ->setOptions([
+//                                'route' => 'admin_meta_list_edit',
+//                                'route_param_name' => 'metaId',
+//                                'route_param_field' => 'id_meta',
+//                            ])
+//                        )
+//                ])
             )
         ;
     }
