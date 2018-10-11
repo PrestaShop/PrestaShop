@@ -26,17 +26,17 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\DeleteCmsPageCategoryCommand;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\ToggleCmsPageCategoryStatusCommand;
 
 /**
- * Interface DeleteCmsPageCategoryHandlerInterface defines contract for DeleteCmsPageCategoryHandler.
+ * Interface ToggleCmsPageCategoryStatusHandlerInterface defines contract for ToggleCmsPageCategoryStatusHandler.
  */
-interface DeleteCmsPageCategoryHandlerInterface
+interface ToggleCmsPageCategoryStatusHandlerInterface
 {
     /**
-     * @param DeleteCmsPageCategoryCommand $command
+     * @param ToggleCmsPageCategoryStatusCommand $command
      *
      * @return void
      */
-    public function handle(DeleteCmsPageCategoryCommand $command);
+    public function handle(ToggleCmsPageCategoryStatusCommand $command);
 }

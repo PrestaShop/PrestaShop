@@ -24,19 +24,11 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\CommandHandler;
-
-use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\DeleteCmsPageCategoryCommand;
+namespace PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception;
 
 /**
- * Interface DeleteCmsPageCategoryHandlerInterface defines contract for DeleteCmsPageCategoryHandler.
+ * Class CannotToggleCmsPageCategoryStatusException
  */
-interface DeleteCmsPageCategoryHandlerInterface
+class CannotToggleCmsPageCategoryStatusException extends CmsPageCategoryException
 {
-    /**
-     * @param DeleteCmsPageCategoryCommand $command
-     *
-     * @return void
-     */
-    public function handle(DeleteCmsPageCategoryCommand $command);
 }
