@@ -147,7 +147,7 @@ class ImportDataMatchConfiguration implements DataConfigurationInterface
     public function validateConfiguration(array $configuration)
     {
         $errors = [];
-        if (!isset($configuration['match_name']) || !$configuration['match_name']) {
+        if (empty($configuration['match_name'])) {
             $errors[] = $this->translator->trans(
                 'Please name your data matching configuration in order to save it.',
                 [],
