@@ -44,10 +44,10 @@ export default class EntityFieldsValidator {
    * @private
    */
   static _checkDuplicateSelectedValues() {
-    let uniqueFields = [];
+    const uniqueFields = [];
     let valid = true;
 
-    $('.js-entity-field').find('select').each(function () {
+    $('.js-entity-field select').each(function () {
       let value = $(this).val();
 
       if (value === 'no') {
