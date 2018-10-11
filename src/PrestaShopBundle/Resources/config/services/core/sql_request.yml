@@ -23,3 +23,10 @@ services:
         class: 'PrestaShop\PrestaShop\Core\SqlManager\Form\SqlRequestFormDataHandler'
         arguments:
             - '@prestashop.core.query_bus'
+
+    prestashop.core.sql_manager.form.sql_request_form_factory:
+        class: 'PrestaShop\PrestaShop\Core\SqlManager\Form\SqlRequestFormFactory'
+        arguments:
+            - '@form.factory'
+            - '@prestashop.core.hook.dispatcher'
+            - '@prestashop.core.sql_manager.form.sql_request_form_data_provider'
