@@ -76,6 +76,10 @@ script:
 after_script:
   - sudo cat /var/log/apache2/error.log
 
+after_success:
+  # If tests pass, create a tag to trigger a release.
+  - bash nightly/create-tag.sh
+
 after_failure:
   - curl -L http://localhost/
   - cat /etc/apache2/envvars
