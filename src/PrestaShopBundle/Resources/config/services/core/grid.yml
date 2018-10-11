@@ -123,7 +123,7 @@ services:
             - '@prestashop.core.grid.query_builder.cms_pages_category'
             - '@prestashop.core.hook.dispatcher'
             - '@prestashop.core.grid.query.doctrine_query_parser'
-            - 'Cms_category'
+            - 'cms_pages_category'
 
     # Grid definition factories
     prestashop.core.grid.definition.factory.abstract_grid_definition:
@@ -227,8 +227,8 @@ services:
         class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CmsPagesCategoryDefinitionFactory'
         parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
         arguments:
-            - "@=service('router').generate('admin_common_reset_search', {'controller': 'cmsPages', 'action': 'index'})"
-            - "@=service('router').generate('admin_cms_pages_index')"
+            - '@router'
+            - '@request_stack'
         public: true
 
     # Grid factories
