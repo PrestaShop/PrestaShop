@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Import\File;
 
+use PrestaShop\PrestaShop\Core\Import\Exception\UnreadableFileException;
 use PrestaShop\PrestaShop\Core\Import\File\DataRow\DataRow;
 use SplFileInfo;
 
@@ -74,6 +75,10 @@ final class CsvFileReader implements FileReaderInterface
     public function read(SplFileInfo $file)
     {
         $handle = fopen($file->getPathname(), 'r');
+
+        if (false === $handle) {
+            throw new UnreadableFileException('The file cannot be read.');
+        }
 
         while ($row = fgetcsv($handle, $this->length, $this->delimiter, $this->enclosure, $this->escape)) {
             yield DataRow::createFromArray($row);
