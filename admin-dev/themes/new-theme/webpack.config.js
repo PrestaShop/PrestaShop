@@ -135,8 +135,8 @@ const config = {
     supplier: [
       './js/pages/supplier',
     ],
-    cms_pages: [
-      './js/pages/cms-pages',
+    cms_page: [
+      './js/pages/cms-page',
     ],
   },
   output: {
