@@ -95,7 +95,7 @@ final class DataRowCollection implements DataRowCollectionInterface
     /**
      * {@inheritdoc}
      */
-    public function getBiggestRowSize()
+    public function getLargestRowSize()
     {
         $maxSize = 0;
 

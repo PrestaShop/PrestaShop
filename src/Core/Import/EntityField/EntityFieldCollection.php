@@ -31,7 +31,7 @@ use ArrayIterator;
 /**
  * Class EntityFieldCollection defines an entity field collection.
  */
-class EntityFieldCollection implements EntityFieldCollectionInterface
+final class EntityFieldCollection implements EntityFieldCollectionInterface
 {
     /**
      * @var array

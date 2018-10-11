@@ -44,9 +44,9 @@ interface DataRowCollectionInterface extends ArrayAccess, IteratorAggregate
     public function addDataRow(DataRowInterface $dataRow);
 
     /**
-     * Get the number of cells in the biggest row of collection.
+     * Get the number of cells in the largest row of collection.
      *
      * @return int
      */
-    public function getBiggestRowSize();
+    public function getLargestRowSize();
 }
