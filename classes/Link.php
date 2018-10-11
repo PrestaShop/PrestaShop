@@ -27,7 +27,7 @@ use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use PrestaShop\PrestaShop\Core\Feature\TokenInUrls;
-use Symfony\Component\Routing\RouterInterface;
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
 
 class LinkCore
 {
@@ -705,6 +705,10 @@ class LinkCore
             return '';
         }
 
+        if (!is_array($sfRouteParams)) {
+            $sfRouteParams = [];
+        }
+
         if ($withToken && !TokenInUrls::isDisabled()) {
             $params['token'] = Tools::getAdminTokenLite($controller);
         }
@@ -712,8 +716,18 @@ class LinkCore
         // Even if URL rewriting is not enabled, the page handled by Symfony must work !
         // For that, we add an 'index.php' in the URL before the route
         $sfContainer = SymfonyContainer::getInstance();
+        $sfRouter = null;
+        $legacyUrlConverter = null;
         if (!is_null($sfContainer)) {
             $sfRouter = $sfContainer->get('router');
+            $legacyUrlConverter = $sfContainer->get('prestashop.bundle.routing.legacy_url_converter');
+        }
+
+        if (!empty($sfRouteParams['route']) && null !== $sfRouter) {
+            $sfRoute = $sfRouteParams['route'];
+            unset($sfRouteParams['route']);
+
+            return $sfRouter->generate($sfRoute, $sfRouteParams, UrlGeneratorInterface::ABSOLUTE_URL);
         }
 
         $routeName = '';
@@ -769,87 +783,28 @@ class LinkCore
                 $routeName = 'admin_international_translations_show_settings';
 
                 break;
-
-            default:
-                $routes = array(
-                    'AdminAddonsCatalog' => 'admin_module_addons_store',
-                    'AdminAdminPreferences' => 'admin_administration',
-                    'AdminCustomerPreferences' => 'admin_customer_preferences',
-                    'AdminDeliverySlip' => 'admin_order_delivery_slip',
-                    'AdminImport' => 'admin_import',
-                    'AdminInformation' => 'admin_system_information',
-                    'AdminLogs' => 'admin_logs',
-                    'AdminMaintenance' => 'admin_maintenance',
-                    'AdminModulesCatalog' => 'admin_module_catalog',
-                    'AdminModulesManage' => 'admin_module_manage',
-                    'AdminModulesNotifications' => 'admin_module_notification',
-                    'AdminModulesUpdates' => 'admin_module_updates',
-                    'AdminModulesPositions' => 'admin_modules_positions',
-                    'AdminModulesSf' => 'admin_module_manage',
-                    'AdminOrderPreferences' => 'admin_order_preferences',
-                    'AdminPPreferences' => 'admin_product_preferences',
-                    'AdminPerformance' => 'admin_performance',
-                    'AdminPreferences' => 'admin_preferences',
-                    'AdminShipping' => 'admin_shipping_preferences',
-                    'AdminStockManagement' => 'admin_stock_overview',
-                    'AdminThemesCatalog' => 'admin_theme_catalog',
-                    'AdminTranslationSf' => 'admin_international_translation_overview',
-                    'AdminPayment' => 'admin_payment_methods',
-                    'AdminLocalization' => 'admin_localization_show_settings',
-                    'AdminGeolocation' => 'admin_geolocation',
-                    'AdminPaymentPreferences' => 'admin_payment_preferences',
-                    'AdminInvoices' => 'admin_order_invoices',
-                    'AdminEmails' => 'admin_email',
-                    // 'AdminRequestSql' => 'admin_sql_request', @todo: uncomment when CQRS pages are hookable
-                    'AdminMeta' => 'admin_meta',
-                    // 'AdminWebservice' => 'admin_webservice', @todo: uncomment when grid and entity form are done.
-                    'AdminBackup' => 'admin_backup',
-                );
-
-                if (isset($routes[$controller])) {
-                    $routeName = $routes[$controller];
-                }
         }
 
-        if (isset($sfRouter)) {
-            if (empty($routeName)) {
-                $routeName = $this->searchRouteFromRouter($sfRouter, $controller);
-            }
+        if (!empty($routeName) && null !== $sfRouter) {
+            $sfRoute = array_key_exists('route', $sfRouteParams) ? $sfRouteParams['route'] : $routeName;
 
-            if (!empty($routeName)) {
-                $sfRoute = array_key_exists('route', $sfRouteParams) ? $sfRouteParams['route'] : $routeName;
+            return $sfRouter->generate($sfRoute, $sfRouteParams, UrlGeneratorInterface::ABSOLUTE_URL);
+        }
 
-                return $sfRouter->generate($sfRoute, $sfRouteParams, UrlGeneratorInterface::ABSOLUTE_URL);
+        if (empty($routeName) && null !== $legacyUrlConverter) {
+            try {
+                $conversionParameters = array_merge(['controller' => $controller], $sfRouteParams, $params);
+                unset($conversionParameters['token']);
+
+                return $legacyUrlConverter->convertByParameters($conversionParameters);
+            } catch (CoreException $e) {
+                //The url could not be converted so we fallback on legacy url
             }
         }
 
         $idLang = Context::getContext()->language->id;
 
         return $this->getAdminBaseLink() . basename(_PS_ADMIN_DIR_) . '/' . Dispatcher::getInstance()->createUrl($controller, $idLang, $params);
-    }
-
-    /**
-     * @param RouterInterface $sfRouter
-     * @param string $controller
-     *
-     * @return string
-     */
-    private function searchRouteFromRouter(RouterInterface $sfRouter, $controller)
-    {
-        /**
-         * @var string
-         * @var \Symfony\Component\Routing\Route $route
-         */
-        foreach ($sfRouter->getRouteCollection() as $routeName => $route) {
-            if (in_array('GET', $route->getMethods())) {
-                $routeDefaults = $route->getDefaults();
-                if (isset($routeDefaults['_legacy_link']) && $controller == $routeDefaults['_legacy_link']) {
-                    return $routeName;
-                }
-            }
-        }
-
-        return '';
     }
 
     /**

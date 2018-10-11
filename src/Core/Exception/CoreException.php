@@ -24,13 +24,12 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Position\Exception;
-
-use PrestaShop\PrestaShop\Core\Exception\TranslatableCoreException;
+namespace PrestaShop\PrestaShop\Core\Exception;
 
 /**
- * Class PositionException used by the GridPositionUpdater component.
+ * Class CoreException, this is the default base class of every
+ * Exception classes from prestaShop.
  */
-class PositionException extends TranslatableCoreException
+class CoreException extends \Exception
 {
 }

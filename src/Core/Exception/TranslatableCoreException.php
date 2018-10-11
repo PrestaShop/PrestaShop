@@ -30,9 +30,9 @@ use Exception;
 use Throwable;
 
 /**
- * Class PrestaShopCoreException.
+ * Class TranslatableCoreException.
  */
-class PrestaShopCoreException extends Exception
+class TranslatableCoreException extends CoreException
 {
     /**
      * @var string
@@ -80,7 +80,7 @@ class PrestaShopCoreException extends Exception
     /**
      * @param string $key
      *
-     * @return PrestaShopCoreException
+     * @return $this
      */
     public function setKey($key)
     {
@@ -101,7 +101,7 @@ class PrestaShopCoreException extends Exception
     /**
      * @param string $domain
      *
-     * @return PrestaShopCoreException
+     * @return $this
      */
     public function setDomain($domain)
     {
@@ -121,7 +121,7 @@ class PrestaShopCoreException extends Exception
     /**
      * @param array $parameters
      *
-     * @return PrestaShopCoreException
+     * @return $this
      */
     public function setParameters(array $parameters)
     {

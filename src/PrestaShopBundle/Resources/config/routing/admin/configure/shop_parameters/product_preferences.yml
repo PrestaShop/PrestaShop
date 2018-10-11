@@ -4,6 +4,7 @@ admin_product_preferences:
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\ProductPreferences:index'
         _legacy_controller: AdminPPreferences
+        _legacy_link: AdminPPreferences
 
 admin_product_preferences_process:
     path: /
@@ -11,3 +12,4 @@ admin_product_preferences_process:
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\ProductPreferences:process'
         _legacy_controller: AdminPPreferences
+        _legacy_link: AdminPPreferences:update

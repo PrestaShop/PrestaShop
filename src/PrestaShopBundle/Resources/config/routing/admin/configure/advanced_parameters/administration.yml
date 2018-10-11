@@ -4,6 +4,7 @@ admin_administration:
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Administration:index'
         _legacy_controller: AdminAdminPreferences
+        _legacy_link: AdminAdminPreferences
 
 admin_administration_save:
     path: /
@@ -11,3 +12,4 @@ admin_administration_save:
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Administration:processForm'
         _legacy_controller: AdminAdminPreferences
+        _legacy_link: AdminAdminPreferences:update

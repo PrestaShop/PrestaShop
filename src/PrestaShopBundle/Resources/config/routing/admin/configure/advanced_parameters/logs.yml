@@ -4,6 +4,7 @@ admin_logs:
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Logs:index'
         _legacy_controller: AdminLogs
+        _legacy_link: AdminLogs
 
 admin_logs_save:
     path: /settings
@@ -11,6 +12,7 @@ admin_logs_save:
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Logs:processForm'
         _legacy_controller: AdminLogs
+        _legacy_link: AdminLogs:update
 
 admin_logs_delete:
     path: /erase-all
@@ -18,6 +20,7 @@ admin_logs_delete:
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Logs:deleteAll'
         _legacy_controller: AdminLogs
+        _legacy_link: AdminLogs:deletelog
 
 admin_search_logs:
     path: /

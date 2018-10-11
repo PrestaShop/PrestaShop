@@ -4,6 +4,7 @@ admin_backup:
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Backup:index'
         _legacy_controller: 'AdminBackup'
+        _legacy_link: 'AdminBackup'
 
 admin_backup_process:
     path: /
@@ -11,6 +12,7 @@ admin_backup_process:
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Backup:processForm'
         _legacy_controller: 'AdminBackup'
+        _legacy_link: 'AdminBackup:update'
 
 admin_backup_create:
     path: /create
@@ -18,6 +20,7 @@ admin_backup_create:
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Backup:processBackupCreate'
         _legacy_controller: 'AdminBackup'
+        _legacy_link: 'AdminBackup:addbackup'
 
 admin_backup_view_download:
     path: /view/{downloadFileName}
@@ -32,6 +35,9 @@ admin_backup_delete:
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Backup:processDelete'
         _legacy_controller: 'AdminBackup'
+        _legacy_link: 'AdminBackup:delete'
+        _legacy_parameters:
+            filename: deleteFileName
 
 admin_backup_bulk_delete:
     path: /bulk-delete/
@@ -39,3 +45,4 @@ admin_backup_bulk_delete:
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Backup:processBulkDelete'
         _legacy_controller: 'AdminBackup'
+        _legacy_link: 'AdminBackup:submitBulkdeletebackup'
