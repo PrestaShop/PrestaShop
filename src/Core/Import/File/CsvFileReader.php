@@ -35,16 +35,37 @@ use SplFileInfo;
 final class CsvFileReader implements FileReaderInterface
 {
     /**
-     * @var string the data separator in the CSV row
+     * @var string the data delimiter in the CSV row
      */
-    private $separator;
+    private $delimiter;
 
     /**
-     * @param string $separator
+     * @var int
      */
-    public function __construct($separator)
+    private $length;
+
+    /**
+     * @var string
+     */
+    private $enclosure;
+
+    /**
+     * @var string
+     */
+    private $escape;
+
+    /**
+     * @param string $delimiter
+     * @param int $length
+     * @param string $enclosure
+     * @param string $escape
+     */
+    public function __construct($delimiter = ';', $length = 0, $enclosure = '"', $escape = '\\')
     {
-        $this->separator = $separator;
+        $this->delimiter = $delimiter;
+        $this->length = $length;
+        $this->enclosure = $enclosure;
+        $this->escape = $escape;
     }
 
     /**
@@ -54,7 +75,7 @@ final class CsvFileReader implements FileReaderInterface
     {
         $handle = fopen($file->getPathname(), 'r');
 
-        while ($row = fgetcsv($handle, 0, $this->separator)) {
+        while ($row = fgetcsv($handle, $this->length, $this->delimiter, $this->enclosure, $this->escape)) {
             yield DataRow::createFromArray($row);
         }
 
