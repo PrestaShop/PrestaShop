@@ -74,10 +74,14 @@ final class CsvFileReader implements FileReaderInterface
      */
     public function read(SplFileInfo $file)
     {
+        if (!$file->isReadable()) {
+            throw new UnreadableFileException();
+        }
+
         $handle = fopen($file->getPathname(), 'r');
 
         if (false === $handle) {
-            throw new UnreadableFileException('The file cannot be read.');
+            throw new UnreadableFileException();
         }
 
         while ($row = fgetcsv($handle, $this->length, $this->delimiter, $this->enclosure, $this->escape)) {
