@@ -1,0 +1,77 @@
+<?php
+/**
+ * 2007-2018 PrestaShop.
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2018 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
+
+namespace PrestaShopBundle\EventListener;
+
+use PrestaShop\PrestaShop\Core\Search\Filters\CmsCategoryFilters;
+use PrestaShopBundle\Event\FilterSearchCriteriaEvent;
+use Symfony\Component\HttpFoundation\RequestStack;
+
+/**
+ * Class FilterCmsPagesCategorySearchCriteriaListener is responsible for updating CmsCategoryFilters filter with
+ * cms page category id.
+ */
+class FilterCmsPagesCategorySearchCriteriaListener
+{
+    /**
+     * @var RequestStack
+     */
+    private $requestStack;
+
+    /**
+     * @param RequestStack $requestStack
+     */
+    public function __construct(RequestStack $requestStack)
+    {
+        $this->requestStack = $requestStack;
+    }
+
+    /**
+     * @param FilterSearchCriteriaEvent $event
+     */
+    public function onFilterSearchCriteria(FilterSearchCriteriaEvent $event)
+    {
+        if (!$event->getSearchCriteria() instanceof CmsCategoryFilters) {
+            return;
+        }
+
+        $searchCriteria = $event->getSearchCriteria();
+
+        $filters = $searchCriteria->getFilters();
+        $filters['id_cms_category_parent'] =
+            $this->requestStack->getCurrentRequest()->attributes->get('cmsCategoryParentId');
+
+        $newSearchCriteria = new CmsCategoryFilters([
+            'orderBy' => $searchCriteria->getOrderBy(),
+            'sortOrder' => $searchCriteria->getOrderWay(),
+            'offset' => $searchCriteria->getOffset(),
+            'limit' => $searchCriteria->getLimit(),
+            'filters' => $filters,
+        ]);
+
+        $event->setSearchCriteria($newSearchCriteria);
+    }
+}
