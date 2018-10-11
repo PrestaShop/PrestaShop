@@ -28,10 +28,10 @@ const $ = window.$;
 const $importDataTable = $('.js-import-data-table');
 
 /**
- * Pagination directions - forward and backwards.
+ * Pagination directions - forward and backward.
  */
 const FORWARD = 'forward';
-const BACKWARDS = 'backwards';
+const BACKWARD = 'backward';
 
 export default class ImportDataTable {
   constructor() {
@@ -53,7 +53,7 @@ export default class ImportDataTable {
    * Handle the previous page action in import data table.
    */
   importPreviousPageHandler() {
-    this._importPaginationHandler(BACKWARDS);
+    this._importPaginationHandler(BACKWARD);
   }
 
   /**
@@ -69,8 +69,8 @@ export default class ImportDataTable {
     let numberOfVisibleColumns = 0;
     let $tableColumns = $importDataTable.find('th');
 
-    if (direction === BACKWARDS) {
-      // If going backwards - reverse the table columns array and use the same logic as forward
+    if (direction === BACKWARD) {
+      // If going backward - reverse the table columns array and use the same logic as forward
       $tableColumns = $($tableColumns.toArray().reverse());
     }
 
@@ -89,8 +89,8 @@ export default class ImportDataTable {
 
       // If last visible column was found - show the column after it
       if (lastVisibleColumnFound) {
-        // If going backwards, the column index must be counted from the last element
-        let showColumnIndex = direction === BACKWARDS ? this.totalNumberOfColumns - 1 - index :  index;
+        // If going backward, the column index must be counted from the last element
+        let showColumnIndex = direction === BACKWARD ? this.totalNumberOfColumns - 1 - index :  index;
         this._showTableColumnByIndex(showColumnIndex);
         numberOfVisibleColumns++;
 
