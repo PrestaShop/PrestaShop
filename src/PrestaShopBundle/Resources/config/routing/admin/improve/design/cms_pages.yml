@@ -6,9 +6,18 @@ admin_cms_pages_index:
         _legacy_controller: AdminCmsContent
 
 admin_cms_pages_search_category:
-    path: /
+    path: /search-category
     methods: POST
     defaults:
         _controller: 'PrestaShopBundle:Admin\Improve\Design\CmsPages:searchCategory'
         _legacy_controller: AdminCmsContent
+
+admin_cms_pages_edit_cms_category:
+    path: /{cmsCategoryId}/edit
+    methods: [GET, POST]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Improve\Design\CmsPages:editCmsCategory'
+        _legacy_controller: AdminCmsContent
+    requirements:
+        cmsCategoryId: \d+
 
