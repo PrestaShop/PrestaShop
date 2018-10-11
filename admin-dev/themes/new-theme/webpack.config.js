@@ -120,8 +120,8 @@ const config = {
     employee: [
       './js/pages/employee',
     ],
-    cms_pages: [
-      './js/pages/cms-pages',
+    cms_page: [
+      './js/pages/cms-page',
     ],
   },
   output: {
