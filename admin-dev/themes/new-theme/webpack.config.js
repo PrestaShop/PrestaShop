@@ -129,8 +129,8 @@ const config = {
     language: [
       './js/pages/language',
     ],
-    cms_pages: [
-      './js/pages/cms-pages',
+    cms_page: [
+      './js/pages/cms-page',
     ],
   },
   output: {
