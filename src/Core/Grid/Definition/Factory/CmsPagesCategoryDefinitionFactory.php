@@ -35,9 +35,10 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
+use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Class CmsPagesCategoryDefinitionFactory
@@ -60,16 +61,20 @@ final class CmsPagesCategoryDefinitionFactory extends AbstractGridDefinitionFact
     private $cmsCategoryParentId;
 
 
-    public function __construct(RouterInterface $router, RequestStack $requestStack)
+    public function __construct(UrlGeneratorInterface $urlGenerator, RequestStack $requestStack)
     {
-        $this->resetActionUrl =  $router->generate('admin_common_reset_search', [
+        $this->resetActionUrl =  $urlGenerator->generate('admin_common_reset_search', [
             'controller' => 'CmsPages',
             'action' => 'index',
         ]);
 
-        $this->cmsCategoryParentId = $requestStack->getCurrentRequest()->attributes->get('cmsCategoryParentId');
+        $request = $requestStack->getCurrentRequest();
 
-        $this->redirectionUrl = $router->generate('admin_cms_pages_index', [
+        if (null !== $request) {
+            $this->cmsCategoryParentId = $request->attributes->get('cmsCategoryParentId');
+        }
+
+        $this->redirectionUrl = $urlGenerator->generate('admin_cms_pages_index', [
             'cmsCategoryParentId' => $this->cmsCategoryParentId,
         ]);
     }
@@ -167,6 +172,21 @@ final class CmsPagesCategoryDefinitionFactory extends AbstractGridDefinitionFact
                     'required' => false,
                 ])
                 ->setAssociatedColumn('name')
+            )
+            ->add((new Filter('description', TextType::class))
+                ->setTypeOptions([
+                    'required' => false,
+                ])
+                ->setAssociatedColumn('description')
+            )
+            ->add((new Filter('position', TextType::class))
+                ->setTypeOptions([
+                    'required' => false,
+                ])
+                ->setAssociatedColumn('position')
+            )
+            ->add((new Filter('active', YesAndNoChoiceType::class))
+                ->setAssociatedColumn('active')
             )
             ->add((new Filter('actions', SearchAndResetType::class))
                 ->setTypeOptions([
