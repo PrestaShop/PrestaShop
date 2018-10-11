@@ -28,7 +28,7 @@
 
 {% set routeParameters = [] %}
 {% set routeParameters = routeParameters|merge({(column.options.route_param_name) : id_primary_key}) %}
-{% set routeParameters = routeParameters|merge(column.options.route_param_extra_fields)%}
+{% set routeParameters = routeParameters|merge(column.options.route_params_extra)%}
 
 
 {% set isValid = record[column.id] is same as('1') %}

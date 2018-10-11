@@ -38,3 +38,6 @@ admin_cms_page_toggle_cms_category:
         _legacy_controller: AdminCmsContent
     requirements:
         cmsCategoryId: \d+
+
+admin_cms_page_update_position_cms_category:
+    path: /category/{cmsCategoryId}/update-position

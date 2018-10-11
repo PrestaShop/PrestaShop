@@ -30,6 +30,7 @@ use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\SubmitRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Catalog\PositionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ToggleColumn;
@@ -130,10 +131,18 @@ final class CmsPageCategoryDefinitionFactory extends AbstractGridDefinitionFacto
                     'sortable' => false,
                 ])
             )
-            ->add((new DataColumn('position'))
+            ->add((new PositionColumn('position'))
                 ->setName($this->trans('Position', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'position',
+                    'id_field' => 'id_cms_category',
+                    'id_parent_field' => 'id_parent',
+                    'update_method' => 'POST',
+                    'update_route' => 'admin_cms_page_update_position_cms_category',
+                    'route_params_extra_by_record' => [
+                        'cmsCategoryId' => 'id_cms_category',
+                        'cmsCategoryParentId' => 'id_parent',
+                    ],
                 ])
             )
             ->add((new ToggleColumn('active'))
@@ -143,7 +152,7 @@ final class CmsPageCategoryDefinitionFactory extends AbstractGridDefinitionFacto
                     'route' => 'admin_cms_page_toggle_cms_category',
                     'primary_field' => 'id_cms_category',
                     'route_param_name' => 'cmsCategoryId',
-                    'route_param_extra_fields' => [
+                    'route_params_extra' => [
                         'cmsCategoryParentId' => $this->cmsCategoryParentId,
                     ],
                 ])
@@ -159,7 +168,7 @@ final class CmsPageCategoryDefinitionFactory extends AbstractGridDefinitionFacto
                                 'route' => 'admin_cms_page_edit_cms_category',
                                 'route_param_name' => 'cmsCategoryId',
                                 'route_param_field' => 'id_cms_category',
-                                'route_param_extra_fields' => [
+                                'route_params_extra' => [
                                     'cmsCategoryParentId' => $this->cmsCategoryParentId,
                                 ],
                             ])
@@ -172,7 +181,7 @@ final class CmsPageCategoryDefinitionFactory extends AbstractGridDefinitionFacto
                                 'route' => 'admin_cms_page_delete_cms_category',
                                 'route_param_name' => 'cmsCategoryId',
                                 'route_param_field' => 'id_cms_category',
-                                'route_param_extra_fields' => [
+                                'route_params_extra' => [
                                     'cmsCategoryParentId' => $this->cmsCategoryParentId,
                                 ],
                                 'confirm_message' => $this->trans(
