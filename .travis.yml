@@ -35,6 +35,26 @@ matrix:
       env: EXTRA_DEPS=phpHigh  PRESTASHOP_TEST_TYPE=unit
     - php: 7.2
       env: PRESTASHOP_TEST_TYPE=e2e EXTRA_TESTS=functional
+    - stage: deploy
+      php: 7.2
+      before_install: skip
+      script:
+        - mkdir -p /tmp/ps-release
+        - php tools/build/CreateRelease.php --destination-dir=/tmp/ps-release
+        - cd /tmp/ps-release
+          && today=`date +%Y-%m-%d-`; for i in *; do mv $i $today$i; done
+          && cd -
+      if: type = cron
+      deploy: 
+        provider: gcs
+        access_key_id: $GCS_ACCESS_KEY
+        secret_access_key: $GCS_ACCESS_SECRET
+        bucket: prestashop-core-nightly
+        skip_cleanup: true
+        acl: public-read
+        local-dir: "/tmp/ps-release"
+        on:
+          all_branches: true
   exclude:
     - php: 7.2 # Replaced with additional tests
       env: PRESTASHOP_TEST_TYPE=e2e
