@@ -29,3 +29,12 @@ admin_cms_page_delete_cms_category:
         _legacy_controller: AdminCmsContent
     requirements:
         cmsCategoryId: \d+
+
+admin_cms_page_toggle_cms_category:
+    path: /category/{cmsCategoryId}/toggle-status
+    methods: POST
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Improve\Design\CmsPage:toggleCmsPageCategory'
+        _legacy_controller: AdminCmsContent
+    requirements:
+        cmsCategoryId: \d+

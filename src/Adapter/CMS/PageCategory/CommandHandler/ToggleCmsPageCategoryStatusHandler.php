@@ -77,14 +77,14 @@ class ToggleCmsPageCategoryStatusHandler implements ToggleCmsPageCategoryStatusH
                     )
                 );
             }
-        } catch (PrestaShopException $e) {
+        } catch (PrestaShopException $exception) {
             throw new CmsPageCategoryException(
                 sprintf(
                     'An error occurred when toggling status for cms page object with id "%s"',
                     $command->getCmsPageCategoryId()->getValue()
                 ),
                 0,
-                $e
+                $exception
             );
         }
     }
