@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
+use PrestaShop\PrestaShop\Core\Import\Exception\UnreadableFileException;
 use PrestaShop\PrestaShop\Core\Import\ImportSettings;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Exception\FileUploadException;
@@ -155,19 +156,33 @@ class ImportController extends FrameworkBundleAdminController
     public function showImportDataAction(Request $request)
     {
         $formConfiguration = $this->get('prestashop.adapter.import.import_data_match.configuration');
-        $form = $this->get('form.factory')->createNamed(
-            '',
-            ImportDataConfigurationType::class,
-            $formConfiguration->getConfiguration()
-        );
-
         $importDirectory = $this->get('prestashop.core.import.dir');
         $dataRowCollectionFactory = $this->get('prestashop.core.import.factory.data_row.collection_factory');
         $dataRowCollectionPresenter = $this->get('prestashop.core.import.data_row.collection_presenter');
         $entityFieldsProviderFinder = $this->get('prestashop.core.import.fields_provider_finder');
 
         $importFile = new SplFileInfo($importDirectory . $request->getSession()->get('csv'));
-        $dataRowCollection = $dataRowCollectionFactory->buildFromFile($importFile, ImportSettings::MAX_VISIBLE_ROWS);
+
+        try {
+            $form = $this->get('form.factory')->createNamed(
+                '',
+                ImportDataConfigurationType::class,
+                $formConfiguration->getConfiguration()
+            );
+
+            $dataRowCollection = $dataRowCollectionFactory->buildFromFile(
+                $importFile,
+                ImportSettings::MAX_VISIBLE_ROWS
+            );
+        } catch (UnreadableFileException $e) {
+            $this->addFlash(
+                'error',
+                $this->trans('The import file cannot be read.', 'Admin.Advparameters.Notification')
+            );
+
+            return $this->redirectToRoute('admin_import');
+        }
+
         $presentedDataRowCollection = $dataRowCollectionPresenter->present($dataRowCollection);
         $entityFieldsProvider = $entityFieldsProviderFinder->find($request->getSession()->get('entity'));
 
