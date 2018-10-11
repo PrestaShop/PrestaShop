@@ -92,4 +92,8 @@ class CmsPagesController extends FrameworkBundleAdminController
 
         return $this->redirectToRoute('admin_cms_pages_index', compact('cmsCategoryParentId', 'filters'));
     }
+
+    public function editCmsCategoryAction()
+    {
+    }
 }
