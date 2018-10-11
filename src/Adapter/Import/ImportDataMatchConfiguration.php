@@ -191,6 +191,6 @@ class ImportDataMatchConfiguration implements DataConfigurationInterface
      */
     private function configurationNameExists($matchName)
     {
-        return $this->importMatchRepository->findOneByName($matchName) ? true : false;
+        return (bool) $this->importMatchRepository->findOneByName($matchName);
     }
 }
