@@ -88,7 +88,7 @@ class CmsPageController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_cms_page_index', compact('cmsCategoryParentId', 'filters'));
     }
 
-    public function editCmsPageCategoryAction($cmsCategoryParentId, $cmsCategoryId)
+    public function editCmsCategoryAction($cmsCategoryParentId, $cmsCategoryId)
     {
 //        todo: remove legacy parts once form is ready
         $legacyLink = $this->getAdminLink('AdminMeta', [
@@ -99,7 +99,7 @@ class CmsPageController extends FrameworkBundleAdminController
         return $this->redirect($legacyLink);
     }
 
-    public function deleteCmsPageCategoryAction($cmsCategoryParentId, $cmsCategoryId)
+    public function deleteCmsCategoryAction($cmsCategoryParentId, $cmsCategoryId)
     {
         $redirectTo = $this->redirectToRoute('admin_cms_page_index', compact('cmsCategoryParentId'));
 
@@ -120,7 +120,7 @@ class CmsPageController extends FrameworkBundleAdminController
         return $redirectTo;
     }
 
-    public function toggleCmsPageCategoryAction($cmsCategoryParentId, $cmsCategoryId)
+    public function toggleCmsCategoryAction($cmsCategoryParentId, $cmsCategoryId)
     {
         $redirectTo = $this->redirectToRoute('admin_cms_page_index', compact('cmsCategoryParentId'));
 
@@ -139,6 +139,11 @@ class CmsPageController extends FrameworkBundleAdminController
         );
 
         return $redirectTo;
+    }
+
+    public function updateCmsCategoryPositionAction($cmsCategoryParentId, $cmsCategoryId)
+    {
+        // todo : implement
     }
 
     /**
