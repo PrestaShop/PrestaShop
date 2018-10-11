@@ -33,9 +33,9 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Class CmsPagesController is responsible for handling the logic in "Improve -> Design -> pages" page.
+ * Class CmsPageController is responsible for handling the logic in "Improve -> Design -> pages" page.
  */
-class CmsPagesController extends FrameworkBundleAdminController
+class CmsPageController extends FrameworkBundleAdminController
 {
     /**
      * @Template("@PrestaShop/Admin/Improve/Design/Cms/index.html.twig")
@@ -46,7 +46,7 @@ class CmsPagesController extends FrameworkBundleAdminController
      */
     public function indexAction(CmsCategoryFilters $filters)
     {
-        $cmsCategoryGridFactory = $this->get('prestashop.core.grid.factory.cms_pages_category');
+        $cmsCategoryGridFactory = $this->get('prestashop.core.grid.factory.cms_page_category');
         $cmsCategoryGrid = $cmsCategoryGridFactory->getGrid($filters);
 
         $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
@@ -66,7 +66,7 @@ class CmsPagesController extends FrameworkBundleAdminController
      */
     public function searchCategoryAction($cmsCategoryParentId, Request $request)
     {
-        $definitionFactory = $this->get('prestashop.core.grid.definition.factory.cms_pages_category');
+        $definitionFactory = $this->get('prestashop.core.grid.definition.factory.cms_page_category');
         $definitionFactory = $definitionFactory->getDefinition();
 
         $gridFilterFormFactory = $this->get('prestashop.core.grid.filter.form_factory');
@@ -78,10 +78,10 @@ class CmsPagesController extends FrameworkBundleAdminController
             $filters = $searchParametersForm->getData();
         }
 
-        return $this->redirectToRoute('admin_cms_pages_index', compact('cmsCategoryParentId', 'filters'));
+        return $this->redirectToRoute('admin_cms_page_index', compact('cmsCategoryParentId', 'filters'));
     }
 
-    public function editCmsCategoryAction($cmsCategoryParentId, $cmsCategoryId)
+    public function editCmsPageCategoryAction($cmsCategoryParentId, $cmsCategoryId)
     {
 //        todo: remove legacy parts once form is ready
         $legacyLink = $this->getAdminLink('AdminMeta', [
@@ -92,7 +92,7 @@ class CmsPagesController extends FrameworkBundleAdminController
         return $this->redirect($legacyLink);
     }
 
-    public function deleteCmsCategoryAction($cmsCategoryParentId, $cmsCategoryId)
+    public function deleteCmsPageCategoryAction($cmsCategoryParentId, $cmsCategoryId)
     {
     }
 }
