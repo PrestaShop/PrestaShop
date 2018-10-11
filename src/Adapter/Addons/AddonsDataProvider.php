@@ -41,7 +41,7 @@ use PhpEncryption;
  */
 class AddonsDataProvider implements AddonsInterface
 {
-    protected static $is_addons_up = true;
+    protected static $is_addons_up = false;
 
     private $marketplaceClient;
 
