@@ -31,9 +31,9 @@ use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
 /**
- * Class CmsPagesCategoryQueryBuilder
+ * Class CmsPageCategoryQueryBuilder
  */
-final class CmsPagesCategoryQueryBuilder extends AbstractDoctrineQueryBuilder
+final class CmsPageCategoryQueryBuilder extends AbstractDoctrineQueryBuilder
 {
     /**
      * @var DoctrineSearchCriteriaApplicatorInterface
@@ -51,8 +51,6 @@ final class CmsPagesCategoryQueryBuilder extends AbstractDoctrineQueryBuilder
     private $contextIdLang;
 
     /**
-     * CmsCategoryQueryBuilder constructor.
-     *
      * @param Connection $connection
      * @param $dbPrefix
      * @param DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator

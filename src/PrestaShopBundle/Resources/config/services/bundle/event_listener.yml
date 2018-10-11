@@ -78,8 +78,8 @@ services:
         tags:
             - { name: kernel.event_listener, event: prestashop.search_criteria.filter, method: onFilterSearchCriteria }
 
-    prestashop.bundle.event_listener.filter_cms_pages_category_search_criteria:
-        class: PrestaShopBundle\EventListener\FilterCmsPagesCategorySearchCriteriaListener
+    prestashop.bundle.event_listener.filter_cms_page_category_search_criteria:
+        class: PrestaShopBundle\EventListener\FilterCmsPageCategorySearchCriteriaListener
         arguments:
             - '@request_stack'
         tags:
