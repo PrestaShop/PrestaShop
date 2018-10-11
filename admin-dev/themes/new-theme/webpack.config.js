@@ -132,8 +132,8 @@ const config = {
     currency: [
       './js/pages/currency',
     ],
-    cms_pages: [
-      './js/pages/cms-pages',
+    cms_page: [
+      './js/pages/cms-page',
     ],
   },
   output: {
