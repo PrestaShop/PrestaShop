@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -27,13 +27,14 @@
 namespace PrestaShop\PrestaShop\Core\Form;
 
 /**
- * Interface IdentifiableObjectFormFactoryInterface
+ * Interface IdentifiableObjectFormFactoryInterface.
  */
 interface IdentifiableObjectFormFactoryInterface
 {
     /**
      * @param array $data
      * @param null $id
+     *
      * @return mixed
      */
     public function create(array $data, $id = null);

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -35,7 +35,7 @@ use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Class SqlRequestFormDataProvider
+ * Class SqlRequestFormDataProvider.
  */
 final class SqlRequestFormDataProvider implements IdentifiableObjectFormDataProviderInterface
 {
@@ -97,7 +97,7 @@ final class SqlRequestFormDataProvider implements IdentifiableObjectFormDataProv
     }
 
     /**
-     * Get data for empty form
+     * Get data for empty form.
      *
      * @return array
      */
