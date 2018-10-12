@@ -24,12 +24,19 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\CommandHandler;
+
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\BulkDeleteCmsPageCategoryCommand;
 
 /**
- * Class CannotDeleteCmsPageCategoryException
+ * Interface BulkDeleteCmsPageCategoryHandlerInterface defines contract for BulkDeleteCmsPageCategoryHandler.
  */
-class CannotDeleteCmsPageCategoryException extends CmsPageCategoryException
+interface BulkDeleteCmsPageCategoryHandlerInterface
 {
-    const CANNOT_BULK_DELETE = 1;
+    /**
+     * @param BulkDeleteCmsPageCategoryCommand $command
+     *
+     * @return void
+     */
+    public function handle(BulkDeleteCmsPageCategoryCommand $command);
 }
