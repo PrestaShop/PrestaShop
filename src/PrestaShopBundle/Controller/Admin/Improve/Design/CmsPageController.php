@@ -85,7 +85,7 @@ class CmsPageController extends FrameworkBundleAdminController
             $filters = $searchParametersForm->getData();
         }
 
-        return $this->redirectToRoute('admin_cms_page_index', compact('cmsCategoryParentId', 'filters'));
+        return $this->redirectToRoute('admin_cms_pages_index', compact('cmsCategoryParentId', 'filters'));
     }
 
     public function editCmsCategoryAction($cmsCategoryParentId, $cmsCategoryId)
@@ -101,7 +101,7 @@ class CmsPageController extends FrameworkBundleAdminController
 
     public function deleteCmsCategoryAction($cmsCategoryParentId, $cmsCategoryId)
     {
-        $redirectTo = $this->redirectToRoute('admin_cms_page_index', compact('cmsCategoryParentId'));
+        $redirectTo = $this->redirectToRoute('admin_cms_pages_index', compact('cmsCategoryParentId'));
 
         try {
             $cmsPageCategoryId = new CmsPageCategoryId($cmsCategoryId);
@@ -120,9 +120,19 @@ class CmsPageController extends FrameworkBundleAdminController
         return $redirectTo;
     }
 
+    public function deleteBulkCmsCategoryAction($cmsCategoryParentId)
+    {
+
+    }
+
+    public function updateCmsCategoryPositionAction($cmsCategoryParentId, $cmsCategoryId)
+    {
+        // todo : implement
+    }
+
     public function toggleCmsCategoryAction($cmsCategoryParentId, $cmsCategoryId)
     {
-        $redirectTo = $this->redirectToRoute('admin_cms_page_index', compact('cmsCategoryParentId'));
+        $redirectTo = $this->redirectToRoute('admin_cms_pages_index', compact('cmsCategoryParentId'));
 
         try {
             $cmsPageCategoryId = new CmsPageCategoryId($cmsCategoryId);
@@ -139,11 +149,6 @@ class CmsPageController extends FrameworkBundleAdminController
         );
 
         return $redirectTo;
-    }
-
-    public function updateCmsCategoryPositionAction($cmsCategoryParentId, $cmsCategoryId)
-    {
-        // todo : implement
     }
 
     /**
