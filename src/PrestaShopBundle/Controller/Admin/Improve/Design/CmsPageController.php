@@ -38,6 +38,7 @@ use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CannotToggleCmsP
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Query\GetCmsPageCategoriesForBreadcrumbs;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategoryId;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 use PrestaShop\PrestaShop\Core\Search\Filters\CmsCategoryFilters;
@@ -54,20 +55,26 @@ class CmsPageController extends FrameworkBundleAdminController
     /**
      * @Template("@PrestaShop/Admin/Improve/Design/Cms/index.html.twig")
      *
+     * @param int $cmsCategoryParentId
      * @param CmsCategoryFilters $filters
      *
      * @return array
      */
-    public function indexAction(CmsCategoryFilters $filters)
+    public function indexAction($cmsCategoryParentId, CmsCategoryFilters $filters)
     {
         $cmsCategoryGridFactory = $this->get('prestashop.core.grid.factory.cms_page_category');
         $cmsCategoryGrid = $cmsCategoryGridFactory->getGrid($filters);
 
         $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
 
+        //todo: add view data provider
+        $cmsPageCategoryId = new CmsPageCategoryId($cmsCategoryParentId);
+        $cmsPageBreadcrumbs = $this->getQueryBus()->handle(new GetCmsPageCategoriesForBreadcrumbs($cmsPageCategoryId));
+
         return [
             'rootCmsPageCategoryId' => CmsPageRootCategorySettings::ROOT_CMS_PAGE_CATEGORY_ID,
             'cmsCategoryGrid' => $gridPresenter->present($cmsCategoryGrid),
+
         ];
     }
 
