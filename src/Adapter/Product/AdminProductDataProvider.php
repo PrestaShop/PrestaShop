@@ -202,7 +202,7 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
         $sqlSelect = array(
             'id_product' => array('table' => 'p', 'field' => 'id_product', 'filtering' => ' %s '),
             'reference' => array('table' => 'p', 'field' => 'reference', 'filtering' => self::FILTERING_LIKE_BOTH),
-            'price' => array('table' => 'p', 'field' => 'price', 'filtering' => ' %s '),
+            'price' => array('table' => 'sa', 'field' => 'price', 'filtering' => ' %s '),
             'id_shop_default' => array('table' => 'p', 'field' => 'id_shop_default'),
             'is_virtual' => array('table' => 'p', 'field' => 'is_virtual'),
             'name' => array('table' => 'pl', 'field' => 'name', 'filtering' => self::FILTERING_LIKE_BOTH),
