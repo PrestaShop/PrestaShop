@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Customer\Dto\CustomerInformation;
+namespace PrestaShop\PrestaShop\Core\Domain\Customer\Dto;
 
 /**
  * Class PersonalInformation holds personal customer information.

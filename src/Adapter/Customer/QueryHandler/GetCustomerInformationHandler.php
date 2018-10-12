@@ -26,13 +26,17 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Customer\QueryHandler;
 
+use Currency;
 use Customer;
 use Db;
 use Gender;
 use Language;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\CustomerInformation\CustomerInformation;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\CustomerInformation\PersonalInformation;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\CustomerInformation\Subscriptions;
+use Order;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\CustomerInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\CustomerOrderInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\CustomerOrdersInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\PersonalInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\Subscriptions;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryHandler\GetCustomerInformationHandlerInterface;
@@ -84,7 +88,8 @@ final class GetCustomerInformationHandler implements GetCustomerInformationHandl
 
         return new CustomerInformation(
             $customerId,
-            $this->getGeneralInformation($customer)
+            $this->getGeneralInformation($customer),
+            $this->getOrders($customer)
         );
     }
 
@@ -170,5 +175,56 @@ final class GetCustomerInformationHandler implements GetCustomerInformationHandl
         }
 
         return null;
+    }
+
+    /**
+     * @param Customer $customer
+     *
+     * @return CustomerOrdersInformation
+     */
+    private function getOrders(Customer $customer)
+    {
+        $validOrders = [];
+        $invalidOrders = [];
+
+        $orders = Order::getCustomerOrders($customer->id, true);
+        $totalSpent = 0;
+
+        foreach ($orders as $order) {
+            $order['total_paid_real'] = Tools::displayPrice(
+                $order['total_paid_real'],
+                new Currency((int) $order['id_currency'])
+            );
+
+            if (!isset($order['order_state'])) {
+                $order['order_state'] = $this->translator->trans(
+                    'There is no status defined for this order.',
+                    [],
+                    'Admin.Orderscustomers.Notification'
+                );
+            }
+
+            $customerOrderInformation = new CustomerOrderInformation(
+                (int) $order['id_order'],
+                $order['date_add'],
+                $order['payment'],
+                $order['order_state'],
+                (int) $order['nb_products'],
+                $order['total_paid_real']
+            );
+
+            if ($order['valid']) {
+                $validOrders[] = $customerOrderInformation;
+                $totalSpent += $order['total_paid_real_not_formated'] / $order['conversion_rate'];
+            } else {
+                $invalidOrders[] = $customerOrderInformation;
+            }
+        }
+
+        return new CustomerOrdersInformation(
+            Tools::displayPrice($totalSpent),
+            $validOrders,
+            $invalidOrders
+        );
     }
 }

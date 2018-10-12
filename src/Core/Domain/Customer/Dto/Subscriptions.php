@@ -24,15 +24,43 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Customer\Dto\CustomerInformation;
+namespace PrestaShop\PrestaShop\Core\Domain\Customer\Dto;
 
-use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
-
-class CustomerInformation
+class Subscriptions
 {
-    public function __construct(
-        CustomerId $customerId,
-        PersonalInformation $generalInformation
-    ) {
+    /**
+     * @var bool
+     */
+    private $isNewsletterSubscribed;
+
+    /**
+     * @var bool
+     */
+    private $isPartnerOffersSubscribed;
+
+    /**
+     * @param bool $isNewsletterSubscribed
+     * @param bool $isPartnerOffersSubscribed
+     */
+    public function __construct($isNewsletterSubscribed, $isPartnerOffersSubscribed)
+    {
+        $this->isNewsletterSubscribed = $isNewsletterSubscribed;
+        $this->isPartnerOffersSubscribed = $isPartnerOffersSubscribed;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isNewsletterSubscribed()
+    {
+        return $this->isNewsletterSubscribed;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isPartnerOffersSubscribed()
+    {
+        return $this->isPartnerOffersSubscribed;
     }
 }
