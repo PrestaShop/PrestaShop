@@ -181,7 +181,7 @@ class SqlManagerController extends FrameworkBundleAdminController
         $sqlRequestForm = $sqlRequestFormFactory->create([]);
         $sqlRequestForm->handleRequest($request);
 
-        if ($sqlRequestForm->isSubmitted()) {
+        if ($sqlRequestForm->isSubmitted() && $sqlRequestForm->isValid()) {
             if ($this->isDemoModeEnabled()) {
                 $this->addFlash('error', $this->getDemoModeErrorMessage());
 

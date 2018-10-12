@@ -587,3 +587,10 @@ services:
             - '@=service("prestashop.adapter.form.choice_provider.profile_by_id_choice_provider").getChoices()'
         tags:
             - { name: form.type }
+
+    form.type.database.sql_request:
+        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\RequestSql\SqlRequestType'
+        calls:
+            - { method: setTranslator, arguments: ['@translator'] }
+        tags:
+          - { name: form.type }
