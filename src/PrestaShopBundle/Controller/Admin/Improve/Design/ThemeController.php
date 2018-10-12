@@ -29,7 +29,7 @@ namespace PrestaShopBundle\Controller\Admin\Improve\Design;
 use PrestaShop\PrestaShop\Core\Domain\Meta\DataTransferObject\LayoutCustomizationPage;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Query\GetPagesForLayoutCustomization;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController as AbstractAdminController;
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Security\Voter\PageVoter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -41,14 +41,21 @@ class ThemeController extends AbstractAdminController
     /**
      * Show Front Office theme's pages layout customization.
      *
-     * @AdminSecurity("is_granted(['delete'], request.get('_legacy_controller'))")
-     *
      * @param Request $request
      *
      * @return Response
      */
     public function customizePageLayoutsAction(Request $request)
     {
+        $canCustomizeLayout = $this->canCustomizePageLayouts($request);
+
+        if (!$canCustomizeLayout) {
+            $this->addFlash(
+                'error',
+                $this->trans('You do not have permission to edit this.', 'Admin.Notifications.Error')
+            );
+        }
+
         /** @var LayoutCustomizationPage[] $pages */
         $pages = $this->getQueryBus()->handle(new GetPagesForLayoutCustomization());
 
@@ -57,7 +64,7 @@ class ThemeController extends AbstractAdminController
         $pageLayoutCustomizationForm = $pageLayoutCustomizationFormFactory->create($pages);
         $pageLayoutCustomizationForm->handleRequest($request);
 
-        if ($pageLayoutCustomizationForm->isSubmitted()) {
+        if ($canCustomizeLayout && $pageLayoutCustomizationForm->isSubmitted()) {
             if ($this->isDemoModeEnabled()) {
                 $this->addFlash('error', $this->getDemoModeErrorMessage());
 
@@ -74,9 +81,21 @@ class ThemeController extends AbstractAdminController
             return $this->redirectToRoute('admin_theme_customize_page_layouts');
         }
 
-        return $this->render('@PrestaShop/Admin/Improve/Design/Theme/customize_page_layouts.twig', [
+        return $this->render('@PrestaShop/Admin/Improve/Design/Theme/customize_page_layouts.html.twig', [
             'pageLayoutCustomizationForm' => $pageLayoutCustomizationForm->createView(),
             'pages' => $pages,
         ]);
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return bool
+     */
+    protected function canCustomizePageLayouts(Request $request)
+    {
+        return !$this->isDemoModeEnabled() &&
+            $this->isGranted(PageVoter::UPDATE, $request->attributes->get('_legacy_controller'))
+        ;
     }
 }
