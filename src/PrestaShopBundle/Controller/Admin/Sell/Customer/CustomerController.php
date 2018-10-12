@@ -99,11 +99,6 @@ class CustomerController extends AbstractAdminController
      */
     public function viewAction($customerId, Request $request)
     {
-        return $this->redirect(
-            $this->getAdminLink($request->attributes->get('_legacy_controller'), [
-                'viewcustomer' => 1,
-                'id_customer' => $customerId,
-            ])
-        );
+        return $this->render('@PrestaShop/Admin/Sell/Customer/view.html.twig');
     }
 }
