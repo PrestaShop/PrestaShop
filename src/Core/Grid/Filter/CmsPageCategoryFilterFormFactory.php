@@ -91,7 +91,7 @@ class CmsPageCategoryFilterFormFactory implements GridFilterFormFactoryInterface
         $request = $this->requestStack->getCurrentRequest();
 
         if (null !== $request) {
-            $newActionUrl = $this->urlGenerator->generate('admin_cms_page_search_category', [
+            $newActionUrl = $this->urlGenerator->generate('admin_cms_pages_search_cms_category', [
                 'cmsCategoryParentId' => $request->attributes->get('cmsCategoryParentId'),
             ]);
 
