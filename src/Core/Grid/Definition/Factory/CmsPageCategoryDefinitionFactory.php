@@ -255,15 +255,15 @@ final class CmsPageCategoryDefinitionFactory extends AbstractGridDefinitionFacto
                     ],
                 ])
             )
-//            ->add((new SubmitBulkAction('disable_selection'))
-//                ->setName($this->trans('Disable selection', [], 'Admin.Actions'))
-//                ->setOptions([
-//                    'submit_route' => 'admin_cms_pages_bulk_status_disable',
-//                    'route_params_extra' => [
-//                        'cmsCategoryParentId' => $this->cmsCategoryParentId,
-//                    ],
-//                ])
-//            )
+            ->add((new SubmitBulkAction('disable_selection'))
+                ->setName($this->trans('Disable selection', [], 'Admin.Actions'))
+                ->setOptions([
+                    'submit_route' => 'admin_cms_pages_bulk_status_disable',
+                    'route_params_extra' => [
+                        'cmsCategoryParentId' => $this->cmsCategoryParentId,
+                    ],
+                ])
+            )
             ->add((new SubmitBulkAction('delete_bulk'))
                 ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
                 ->setOptions([
