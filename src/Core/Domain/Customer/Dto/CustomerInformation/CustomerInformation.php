@@ -24,8 +24,15 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Customer\Dto;
+namespace PrestaShop\PrestaShop\Core\Domain\Customer\Dto\CustomerInformation;
+
+use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 
 class CustomerInformation
 {
+    public function __construct(
+        CustomerId $customerId,
+        PersonalInformation $generalInformation
+    ) {
+    }
 }
