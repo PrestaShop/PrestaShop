@@ -26,6 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
+use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\SubmitBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\SubmitRowAction;
@@ -80,7 +82,7 @@ final class CmsPageCategoryDefinitionFactory extends AbstractGridDefinitionFacto
             $this->cmsCategoryParentId = $request->attributes->get('cmsCategoryParentId');
         }
 
-        $this->redirectionUrl = $urlGenerator->generate('admin_cms_page_index', [
+        $this->redirectionUrl = $urlGenerator->generate('admin_cms_pages_index', [
             'cmsCategoryParentId' => $this->cmsCategoryParentId,
         ]);
     }
@@ -138,7 +140,7 @@ final class CmsPageCategoryDefinitionFactory extends AbstractGridDefinitionFacto
                     'id_field' => 'id_cms_category',
                     'id_parent_field' => 'id_parent',
                     'update_method' => 'POST',
-                    'update_route' => 'admin_cms_page_update_position_cms_category',
+                    'update_route' => 'admin_cms_pages_update_position_cms_category',
                     'route_params_extra_by_record' => [
                         'cmsCategoryId' => 'id_cms_category',
                         'cmsCategoryParentId' => 'id_parent',
@@ -149,7 +151,7 @@ final class CmsPageCategoryDefinitionFactory extends AbstractGridDefinitionFacto
                 ->setName($this->trans('Displayed', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'active',
-                    'route' => 'admin_cms_page_toggle_cms_category',
+                    'route' => 'admin_cms_pages_toggle_cms_category',
                     'primary_field' => 'id_cms_category',
                     'route_param_name' => 'cmsCategoryId',
                     'route_params_extra' => [
@@ -165,7 +167,7 @@ final class CmsPageCategoryDefinitionFactory extends AbstractGridDefinitionFacto
                             ->setName($this->trans('Edit', [], 'Admin.Actions'))
                             ->setIcon('edit')
                             ->setOptions([
-                                'route' => 'admin_cms_page_edit_cms_category',
+                                'route' => 'admin_cms_pages_edit_cms_category',
                                 'route_param_name' => 'cmsCategoryId',
                                 'route_param_field' => 'id_cms_category',
                                 'route_params_extra' => [
@@ -178,7 +180,7 @@ final class CmsPageCategoryDefinitionFactory extends AbstractGridDefinitionFacto
                             ->setIcon('delete')
                             ->setOptions([
                                 'method' => 'DELETE',
-                                'route' => 'admin_cms_page_delete_cms_category',
+                                'route' => 'admin_cms_pages_delete_cms_category',
                                 'route_param_name' => 'cmsCategoryId',
                                 'route_param_field' => 'id_cms_category',
                                 'route_params_extra' => [
@@ -239,5 +241,18 @@ final class CmsPageCategoryDefinitionFactory extends AbstractGridDefinitionFacto
                 ->setAssociatedColumn('actions')
             )
         ;
+    }
+
+    public function getBulkActions()
+    {
+        return (new BulkActionCollection())
+            ->add((new SubmitBulkAction('delete_bulk'))
+                ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
+                ->setOptions([
+                    'submit_route' => 'admin_cms_page_delete',
+                    'confirm_message' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
+                ])
+            )
+            ;
     }
 }
