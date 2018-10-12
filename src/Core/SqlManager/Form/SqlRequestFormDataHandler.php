@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -38,7 +38,7 @@ use PrestaShop\PrestaShop\Core\Form\IdentifiableObjectFormDataHandlerInterface;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 
 /**
- * Class SqlRequestFormDataHandler
+ * Class SqlRequestFormDataHandler.
  */
 final class SqlRequestFormDataHandler implements IdentifiableObjectFormDataHandlerInterface
 {
