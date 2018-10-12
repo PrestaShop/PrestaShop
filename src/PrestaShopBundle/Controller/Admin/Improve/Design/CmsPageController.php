@@ -26,7 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Improve\Design;
 
-use GeoIp2\Model\Domain;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\CmsPageRootCategorySettings;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\BulkDeleteCmsPageCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\BulkDisableCmsPageCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\BulkEnableCmsPageCategoryCommand;
@@ -54,11 +54,12 @@ class CmsPageController extends FrameworkBundleAdminController
     /**
      * @Template("@PrestaShop/Admin/Improve/Design/Cms/index.html.twig")
      *
+     * @param int $cmsCategoryParentId
      * @param CmsCategoryFilters $filters
      *
      * @return array
      */
-    public function indexAction(CmsCategoryFilters $filters)
+    public function indexAction($cmsCategoryParentId, CmsCategoryFilters $filters)
     {
         $cmsCategoryGridFactory = $this->get('prestashop.core.grid.factory.cms_page_category');
         $cmsCategoryGrid = $cmsCategoryGridFactory->getGrid($filters);
@@ -66,6 +67,7 @@ class CmsPageController extends FrameworkBundleAdminController
         $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
 
         return [
+            'isRootCmsPageCategory' => CmsPageRootCategorySettings::ROOT_CMS_PAGE_CATEGORY_ID === $cmsCategoryParentId,
             'cmsCategoryGrid' => $gridPresenter->present($cmsCategoryGrid),
         ];
     }
