@@ -27,9 +27,9 @@
 namespace PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception;
 
 /**
- * Class CannotDeleteCmsPageCategoryException
+ * Class CmsPageCategoryConstraintException
  */
-class CannotDeleteCmsPageCategoryException extends CmsPageCategoryException
+class CmsPageCategoryConstraintException extends CmsPageCategoryException
 {
-    const CANNOT_BULK_DELETE = 1;
+    const MISSING_BULK_DATA = 1;
 }
