@@ -24,43 +24,61 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Customer\Dto\CustomerInformation;
+namespace PrestaShop\PrestaShop\Core\Domain\Customer\Dto;
 
-class Subscriptions
+/**
+ * Class CustomerOrders
+ */
+class CustomerOrdersInformation
 {
     /**
-     * @var bool
+     * @var array|CustomerOrderInformation[]
      */
-    private $isNewsletterSubscribed;
+    private $validOrders;
 
     /**
-     * @var bool
+     * @var array|CustomerOrderInformation[]
      */
-    private $isPartnerOffersSubscribed;
+    private $invalidOrders;
 
     /**
-     * @param bool $isNewsletterSubscribed
-     * @param bool $isPartnerOffersSubscribed
+     * @var string
      */
-    public function __construct($isNewsletterSubscribed, $isPartnerOffersSubscribed)
+    private $totalSpent;
+
+    /**
+     * @param string $totalSpent
+     * @param CustomerOrderInformation[] $validOrders
+     * @param CustomerOrderInformation[] $invalidOrders
+     */
+    public function __construct($totalSpent, array $validOrders, array $invalidOrders)
     {
-        $this->isNewsletterSubscribed = $isNewsletterSubscribed;
-        $this->isPartnerOffersSubscribed = $isPartnerOffersSubscribed;
+        $this->validOrders = $validOrders;
+        $this->invalidOrders = $invalidOrders;
+        $this->totalSpent = $totalSpent;
     }
 
     /**
-     * @return bool
+     * @return CustomerOrderInformation[]
      */
-    public function isNewsletterSubscribed()
+    public function getValidOrders()
     {
-        return $this->isNewsletterSubscribed;
+        return $this->validOrders;
     }
 
     /**
-     * @return bool
+     * @return CustomerOrderInformation[]
      */
-    public function isPartnerOffersSubscribed()
+    public function getInvalidOrders()
     {
-        return $this->isPartnerOffersSubscribed;
+        return $this->invalidOrders;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTotalSpent()
+    {
+        return $this->totalSpent;
     }
 }
