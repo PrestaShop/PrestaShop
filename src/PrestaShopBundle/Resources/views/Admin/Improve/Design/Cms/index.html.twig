@@ -31,9 +31,12 @@
     <div class="row">
       <div class="col">
         {% embed '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': cmsCategoryGrid} %}
-          {% block grid_panel_footer %}
-            {% include '@PrestaShop/Admin/Improve/Design/Cms/Blocks/listing_panel_footer.html.twig' %}
-          {% endblock %}
+
+            {% block grid_panel_footer %}
+              {% if app.request.attributes.get('cmsCategoryParentId') != rootCmsPageCategoryId %}
+                {% include '@PrestaShop/Admin/Improve/Design/Cms/Blocks/listing_panel_footer.html.twig' %}
+              {% endif %}
+            {% endblock %}
         {% endembed %}
       </div>
     </div>
