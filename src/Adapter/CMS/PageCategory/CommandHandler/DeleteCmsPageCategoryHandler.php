@@ -37,7 +37,7 @@ use PrestaShopException;
 /**
  * Class DeleteCmsPageCategoryHandler is responsible for deleting cms page category.
  */
-class DeleteCmsPageCategoryHandler implements DeleteCmsPageCategoryHandlerInterface
+final class DeleteCmsPageCategoryHandler implements DeleteCmsPageCategoryHandlerInterface
 {
     /**
      * {@inheritdoc}

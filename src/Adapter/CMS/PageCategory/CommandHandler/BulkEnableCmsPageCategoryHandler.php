@@ -27,43 +27,41 @@
 namespace PrestaShop\PrestaShop\Adapter\CMS\PageCategory\CommandHandler;
 
 use CMSCategory;
-use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\BulkDeleteCmsPageCategoryCommand;
-use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\CommandHandler\BulkDeleteCmsPageCategoryHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CannotBulkDeleteCmsPageCategoryException;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\BulkEnableCmsPageCategoryCommand;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\CommandHandler\BulkEnableCmsPageCategoryHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CannotBulkEnableCmsPageCategoryException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryException;
 use PrestaShopException;
 
 /**
- * Class BulkDeleteCmsPageCategoryHandler is responsible for deleting multiple cms page categories.
+ * Class BulkEnableCmsPageCategoryCommand is responsible for enabling cms category pages.
  */
-final class BulkDeleteCmsPageCategoryHandler implements BulkDeleteCmsPageCategoryHandlerInterface
+final class BulkEnableCmsPageCategoryHandler implements BulkEnableCmsPageCategoryHandlerInterface
 {
     /**
      * {@inheritdoc}
      *
      * @throws CmsPageCategoryException
      */
-    public function handle(BulkDeleteCmsPageCategoryCommand $command)
+    public function handle(BulkEnableCmsPageCategoryCommand $command)
     {
         try {
             foreach ($command->getCmsPageCategoryIds() as $cmsPageCategoryId) {
                 $entity = new CMSCategory($cmsPageCategoryId->getValue());
+                $entity->active = 1;
 
-                if (false === $entity->delete()) {
-                    throw new CannotBulkDeleteCmsPageCategoryException(
+                if (false === $entity->update()) {
+                    throw new CannotBulkEnableCmsPageCategoryException(
                         sprintf(
-                            'Unable to delete  cms category object with id "%s"',
+                            'Unable to enable cms category object with id "%s"',
                             $cmsPageCategoryId->getValue()
-                        ),
-                        0,
-                        null,
-                        $cmsPageCategoryId->getValue()
+                        )
                     );
                 }
             }
         } catch (PrestaShopException $e) {
             throw new CmsPageCategoryException(
-                'Unexpected error occurred when handling bulk delete cms category',
+                'Unexpected error occurred when handling bulk enable cms category',
                 0,
                 $e
             );
