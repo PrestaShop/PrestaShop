@@ -26,13 +26,18 @@
 
 namespace PrestaShopBundle\Controller\Admin\Improve\Design;
 
+use GeoIp2\Model\Domain;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\BulkDeleteCmsPageCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\DeleteCmsPageCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\ToggleCmsPageCategoryStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CannotBulkDeleteCmsPageCategoryException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CannotDeleteCmsPageCategoryException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CannotToggleCmsPageCategoryStatusException;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategoryId;
+use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 use PrestaShop\PrestaShop\Core\Search\Filters\CmsCategoryFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -107,7 +112,7 @@ class CmsPageController extends FrameworkBundleAdminController
             $cmsPageCategoryId = new CmsPageCategoryId($cmsCategoryId);
             $this->getCommandBus()->handle(new DeleteCmsPageCategoryCommand($cmsPageCategoryId));
         } catch (CmsPageCategoryException $exception) {
-            $this->addFlash('error', $this->getCmsPageCategoryErrorByExceptionType($exception));
+            $this->addFlash('error', $this->handleException($exception));
 
             return $redirectTo;
         }
@@ -120,9 +125,26 @@ class CmsPageController extends FrameworkBundleAdminController
         return $redirectTo;
     }
 
-    public function deleteBulkCmsCategoryAction($cmsCategoryParentId)
+    public function deleteBulkCmsCategoryAction($cmsCategoryParentId, Request $request)
     {
+        $redirectTo = $this->redirectToRoute('admin_cms_pages_index', compact('cmsCategoryParentId'));
 
+        $cmsCategoriesToDelete = $request->request->get('cms_page_category_bulk');
+
+        try {
+            $this->getCommandBus()->handle(new BulkDeleteCmsPageCategoryCommand($cmsCategoriesToDelete));
+        } catch (CmsPageCategoryException $exception) {
+            $this->addFlash('error', $this->handleException($exception));
+
+            return $redirectTo;
+        }
+
+        $this->addFlash(
+            'success',
+            $this->trans('The selection has been successfully deleted.', 'Admin.Notifications.Success')
+        );
+
+        return $redirectTo;
     }
 
     public function updateCmsCategoryPositionAction($cmsCategoryParentId, $cmsCategoryId)
@@ -138,7 +160,7 @@ class CmsPageController extends FrameworkBundleAdminController
             $cmsPageCategoryId = new CmsPageCategoryId($cmsCategoryId);
             $this->getCommandBus()->handle(new ToggleCmsPageCategoryStatusCommand($cmsPageCategoryId));
         } catch (CmsPageCategoryException $exception) {
-            $this->addFlash('error', $this->getCmsPageCategoryErrorByExceptionType($exception));
+            $this->addFlash('error', $this->handleException($exception));
 
             return $redirectTo;
         }
@@ -149,6 +171,29 @@ class CmsPageController extends FrameworkBundleAdminController
         );
 
         return $redirectTo;
+    }
+
+    /**
+     * Handles commands exceptions and formats to user friendly error message.
+     *
+     * @param DomainException $exception
+     *
+     * @return string
+     */
+    private function handleException(DomainException $exception)
+    {
+        $errorMessage = $this->trans('Unexpected error occurred.', 'Admin.Notifications.Error');
+        $statusCode = $exception->getCode();
+
+        if ($exception instanceof CmsPageCategoryException && 0 === $statusCode) {
+            $errorMessage = $this->getCmsPageCategoryErrorByExceptionType($exception);
+        }
+
+        if ($exception instanceof CmsPageCategoryException && 0 !== $statusCode) {
+            $errorMessage = $this->getCmsPageCategoryErrorByExceptionTypeAndCode($exception, $statusCode);
+        }
+
+        return $errorMessage;
     }
 
     /**
@@ -172,13 +217,52 @@ class CmsPageController extends FrameworkBundleAdminController
             CannotToggleCmsPageCategoryStatusException::class => $this->trans(
                 'An error occurred while updating the status.',
                 'Admin.Notifications.Error'
-            )
+            ),
         ];
+
+        if ($exception instanceof CannotBulkDeleteCmsPageCategoryException) {
+            return $this->trans(
+                'Can\'t delete #%id%',
+                'Admin.Notifications.Error',
+                [
+                    '%id%' => $exception->getCmsPageCategoryId(),
+                ]
+            );
+        }
 
         $exceptionType = get_class($exception);
         if (isset($exceptionTypeDictionary[$exceptionType])) {
             return $exceptionTypeDictionary[$exceptionType];
         }
+        return $this->trans('Unexpected error occurred.', 'Admin.Notifications.Error');
+    }
+
+    /**
+     * Gets exception of cms page category by its type and status code.
+     *
+     * @param CmsPageCategoryException $exception
+     * @param int $statusCode
+     *
+     * @return string
+     */
+    private function getCmsPageCategoryErrorByExceptionTypeAndCode(CmsPageCategoryException $exception, $statusCode)
+    {
+        $exceptionTypeDictionary = [
+            CmsPageCategoryConstraintException::class => [
+                CmsPageCategoryConstraintException::MISSING_BULK_DATA =>
+                $this->trans(
+                    'You must select at least one element to delete.',
+                    'Admin.Notifications.Error'
+                ),
+            ],
+        ];
+
+        $exceptionType = get_class($exception);
+
+        if (isset($exceptionTypeDictionary[$exceptionType][$statusCode])) {
+            return $exceptionTypeDictionary[$exceptionType][$statusCode];
+        }
+
         return $this->trans('Unexpected error occurred.', 'Admin.Notifications.Error');
     }
 }
