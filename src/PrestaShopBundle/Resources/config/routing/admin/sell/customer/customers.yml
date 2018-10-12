@@ -1,0 +1,6 @@
+admin_customers_view:
+  path: /{customerId}/view
+  methods: [GET]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Customer/Customer:view
+    _legacy_controller: AdminCustomers
