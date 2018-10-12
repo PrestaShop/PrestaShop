@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\CMS\PageCategory\CommandHandler;
 use CMSCategory;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\BulkDeleteCmsPageCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\CommandHandler\BulkDeleteCmsPageCategoryHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CannotDeleteCmsPageCategoryException;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CannotBulkDeleteCmsPageCategoryException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryException;
 use PrestaShopException;
 
@@ -50,12 +50,14 @@ class BulkDeleteCmsPageCategoryHandler implements BulkDeleteCmsPageCategoryHandl
                 $entity = new CMSCategory($cmsPageCategoryId->getValue());
 
                 if (false === $entity->delete()) {
-                    throw new CannotDeleteCmsPageCategoryException(
+                    throw new CannotBulkDeleteCmsPageCategoryException(
                         sprintf(
                             'Unable to delete  cms category object with id "%s"',
                             $cmsPageCategoryId->getValue()
                         ),
-                        CannotDeleteCmsPageCategoryException::CANNOT_BULK_DELETE
+                        0,
+                        null,
+                        $cmsPageCategoryId->getValue()
                     );
                 }
             }
