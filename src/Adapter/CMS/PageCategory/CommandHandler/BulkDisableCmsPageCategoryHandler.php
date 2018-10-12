@@ -48,7 +48,7 @@ class BulkDisableCmsPageCategoryHandler implements BulkDisableCmsPageCategoryHan
         try {
             foreach ($command->getCmsPageCategoryIds() as $cmsPageCategoryId) {
                 $entity = new CMSCategory($cmsPageCategoryId->getValue());
-                $entity->active = 0;
+                $entity->active = false;
 
                 if (false === $entity->update()) {
                     throw new CannotBulkDisableCmsPageCategoryException(

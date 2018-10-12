@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Catalog\PositionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\LinkColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ToggleColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
@@ -69,8 +70,10 @@ final class CmsPageCategoryDefinitionFactory extends AbstractGridDefinitionFacto
      * @param UrlGeneratorInterface $urlGenerator
      * @param RequestStack $requestStack
      */
-    public function __construct(UrlGeneratorInterface $urlGenerator, RequestStack $requestStack)
-    {
+    public function __construct(
+        UrlGeneratorInterface $urlGenerator,
+        RequestStack $requestStack
+    ) {
         $this->resetActionUrl =  $urlGenerator->generate('admin_common_reset_search', [
             'controller' => 'CmsPage',
             'action' => 'index',
@@ -120,10 +123,16 @@ final class CmsPageCategoryDefinitionFactory extends AbstractGridDefinitionFacto
                     'field' => 'id_cms_category',
                 ])
             )
-            ->add((new DataColumn('name'))
+            ->add((new LinkColumn('name'))
                 ->setName($this->trans('Name', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'name',
+                    'route' => 'admin_cms_pages_edit_cms_category',
+                    'route_param_name' => 'cmsCategoryId',
+                    'route_param_field' => 'id_cms_category',
+                    'route_params_extra' => [
+                        'cmsCategoryParentId' => $this->cmsCategoryParentId,
+                    ],
                 ])
             )
             ->add((new DataColumn('description'))
@@ -163,6 +172,15 @@ final class CmsPageCategoryDefinitionFactory extends AbstractGridDefinitionFacto
                 ->setName($this->trans('Actions', [], 'Admin.Global'))
                 ->setOptions([
                     'actions' => (new RowActionCollection())
+                        ->add((new LinkRowAction('view'))
+                            ->setName($this->trans('View', [], 'Admin.Actions'))
+                            ->setIcon('zoom_in')
+                            ->setOptions([
+                                'route' => 'admin_cms_pages_index',
+                                'route_param_name' => 'cmsCategoryParentId',
+                                'route_param_field' => 'id_cms_category',
+                            ])
+                        )
                         ->add((new LinkRowAction('edit'))
                             ->setName($this->trans('Edit', [], 'Admin.Actions'))
                             ->setIcon('edit')

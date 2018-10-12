@@ -25,7 +25,7 @@
 
 {% if grid.sorting.order_by == 'position' and grid.sorting.order_way == 'asc' %}
   {% set routeParameters = [] %}
-  {# todo : force to have the default values route_param_name and route_param_field #}
+  {# todo : force to have the default values route_param_name and route_param_field maybe? #}
   {% if column.options.route_params_extra_by_record is not empty %}
     {% for routeName, routeRecordName in column.options.route_params_extra_by_record %}
       {% set routeRecord = record[routeRecordName] %}
