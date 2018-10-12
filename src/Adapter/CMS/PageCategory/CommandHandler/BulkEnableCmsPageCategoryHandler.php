@@ -48,7 +48,7 @@ final class BulkEnableCmsPageCategoryHandler implements BulkEnableCmsPageCategor
         try {
             foreach ($command->getCmsPageCategoryIds() as $cmsPageCategoryId) {
                 $entity = new CMSCategory($cmsPageCategoryId->getValue());
-                $entity->active = 1;
+                $entity->active = true;
 
                 if (false === $entity->update()) {
                     throw new CannotBulkEnableCmsPageCategoryException(
