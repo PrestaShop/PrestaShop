@@ -26,6 +26,15 @@
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 {% trans_default_domain "Admin.Design.Feature" %}
 
+{% set layoutHeaderToolbarBtn = {
+  add: {
+    href: path('admin_cms_pages_create_cms_category', {'cmsCategoryParentId' : app.request.attributes.get('cmsCategoryParentId')}),
+    desc: 'Add new page category'|trans({}, 'Admin.Design.Help'),
+    icon: 'add_circle_outline',
+  }
+}
+%}
+
 {% block content %}
   {% block cms_category_grid %}
     <div class="row">

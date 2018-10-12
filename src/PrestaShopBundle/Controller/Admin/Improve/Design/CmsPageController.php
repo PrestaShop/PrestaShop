@@ -96,6 +96,16 @@ class CmsPageController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_cms_pages_index', compact('cmsCategoryParentId', 'filters'));
     }
 
+    public function createCmsCategoryAction($cmsCategoryParentId)
+    {
+        //        todo: remove legacy parts once form is ready
+        $legacyLink = $this->getAdminLink('AdminMeta', [
+            'addcms_category' => 1,
+        ]);
+
+        return $this->redirect($legacyLink);
+    }
+
     public function editCmsCategoryAction($cmsCategoryParentId, $cmsCategoryId)
     {
 //        todo: remove legacy parts once form is ready
