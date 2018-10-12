@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Controller\Admin\Improve\Design;
 
 use GeoIp2\Model\Domain;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\BulkDeleteCmsPageCategoryCommand;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\BulkEnableCmsPageCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\DeleteCmsPageCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\ToggleCmsPageCategoryStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CannotBulkDeleteCmsPageCategoryException;
@@ -106,45 +107,37 @@ class CmsPageController extends FrameworkBundleAdminController
 
     public function deleteCmsCategoryAction($cmsCategoryParentId, $cmsCategoryId)
     {
-        $redirectTo = $this->redirectToRoute('admin_cms_pages_index', compact('cmsCategoryParentId'));
-
         try {
             $cmsPageCategoryId = new CmsPageCategoryId($cmsCategoryId);
             $this->getCommandBus()->handle(new DeleteCmsPageCategoryCommand($cmsPageCategoryId));
+
+            $this->addFlash(
+                'success',
+                $this->trans('Successful deletion.', 'Admin.Notifications.Success')
+            );
         } catch (CmsPageCategoryException $exception) {
             $this->addFlash('error', $this->handleException($exception));
-
-            return $redirectTo;
         }
 
-        $this->addFlash(
-            'success',
-            $this->trans('Successful deletion.', 'Admin.Notifications.Success')
-        );
-
-        return $redirectTo;
+        return $this->redirectToRoute('admin_cms_pages_index', compact('cmsCategoryParentId'));
     }
 
     public function deleteBulkCmsCategoryAction($cmsCategoryParentId, Request $request)
     {
-        $redirectTo = $this->redirectToRoute('admin_cms_pages_index', compact('cmsCategoryParentId'));
-
         $cmsCategoriesToDelete = $request->request->get('cms_page_category_bulk');
 
         try {
             $this->getCommandBus()->handle(new BulkDeleteCmsPageCategoryCommand($cmsCategoriesToDelete));
+
+            $this->addFlash(
+                'success',
+                $this->trans('The selection has been successfully deleted.', 'Admin.Notifications.Success')
+            );
         } catch (CmsPageCategoryException $exception) {
             $this->addFlash('error', $this->handleException($exception));
-
-            return $redirectTo;
         }
 
-        $this->addFlash(
-            'success',
-            $this->trans('The selection has been successfully deleted.', 'Admin.Notifications.Success')
-        );
-
-        return $redirectTo;
+        return $this->redirectToRoute('admin_cms_pages_index', compact('cmsCategoryParentId'));
     }
 
     public function updateCmsCategoryPositionAction($cmsCategoryParentId, $cmsCategoryId)
@@ -154,23 +147,32 @@ class CmsPageController extends FrameworkBundleAdminController
 
     public function toggleCmsCategoryAction($cmsCategoryParentId, $cmsCategoryId)
     {
-        $redirectTo = $this->redirectToRoute('admin_cms_pages_index', compact('cmsCategoryParentId'));
-
         try {
             $cmsPageCategoryId = new CmsPageCategoryId($cmsCategoryId);
             $this->getCommandBus()->handle(new ToggleCmsPageCategoryStatusCommand($cmsPageCategoryId));
+
+            $this->addFlash(
+                'success',
+                $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
+            );
         } catch (CmsPageCategoryException $exception) {
             $this->addFlash('error', $this->handleException($exception));
-
-            return $redirectTo;
         }
 
-        $this->addFlash(
-            'success',
-            $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
-        );
+        return $this->redirectToRoute('admin_cms_pages_index', compact('cmsCategoryParentId'));
+    }
 
-        return $redirectTo;
+    public function bulkCmsPageStatusEnableAction($cmsCategoryParentId, Request $request)
+    {
+        $cmsCategoriesToEnable = $request->request->get('cms_page_category_bulk');
+
+        try {
+            $this->getCommandBus()->handle(new BulkEnableCmsPageCategoryCommand($cmsCategoriesToEnable));
+        } catch (CmsPageCategoryException $exception) {
+            $this->addFlash('error', $this->handleException($exception));
+        }
+
+        return $this->redirectToRoute('admin_cms_pages_index', compact('cmsCategoryParentId'));
     }
 
     /**

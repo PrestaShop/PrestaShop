@@ -37,7 +37,7 @@ use PrestaShopException;
 /**
  * Class ToggleCmsPageCategoryStatusHandler is responsible for turning on and off cms page category status.
  */
-class ToggleCmsPageCategoryStatusHandler implements ToggleCmsPageCategoryStatusHandlerInterface
+final class ToggleCmsPageCategoryStatusHandler implements ToggleCmsPageCategoryStatusHandlerInterface
 {
     /**
      * {@inheritdoc}
