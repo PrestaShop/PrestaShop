@@ -23,25 +23,6 @@
   * International Registered Trademark & Property of PrestaShop SA
   *#}
 
-{% extends '@PrestaShop/Admin/layout.html.twig' %}
-{% trans_default_domain "Admin.Design.Feature" %}
+<div class="card-footer">
 
-{% block content %}
-  {% block cms_category_grid %}
-    <div class="row">
-      <div class="col">
-        {% embed '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': cmsCategoryGrid} %}
-          {% block grid_panel_footer %}
-            {% include '@PrestaShop/Admin/Improve/Design/Cms/Blocks/listing_panel_footer.html.twig' %}
-          {% endblock %}
-        {% endembed %}
-      </div>
-    </div>
-  {% endblock %}
-{% endblock %}
-
-{% block javascripts %}
-  {{ parent() }}
-  <script src="{{ asset('themes/new-theme/public/cms_page.bundle.js') }}"></script>
-  <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
-{% endblock %}
+</div>

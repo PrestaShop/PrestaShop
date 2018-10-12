@@ -1,5 +1,6 @@
-{#**
- * 2007-2018 PrestaShop
+<?php
+/**
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -21,12 +22,17 @@
  * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-{% set routeParameters = [] %}
-{% set routeParameters = routeParameters|merge({(column.options.route_param_name) : record[column.options.route_param_field]}) %}
-{% set routeParameters = routeParameters|merge(column.options.route_params_extra)%}
+namespace PrestaShop\PrestaShop\Core\Domain\CmsPageCategory;
 
-<a href="{{ path(column.options.route, routeParameters) }}">
-  {{ record[column.options.field] }}
-</a>
+/**
+ * Class CmsPageRootCategorySettings is responsible for holding the settings related with cms page root category.
+ */
+class CmsPageRootCategorySettings
+{
+    /**
+     * The cms page root category id which from which every other cms page and categories are derived.
+     */
+    const ROOT_CMS_PAGE_CATEGORY_ID = 1;
+}
