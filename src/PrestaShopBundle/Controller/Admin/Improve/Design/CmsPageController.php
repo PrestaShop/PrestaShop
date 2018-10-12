@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Controller\Admin\Improve\Design;
 
 use GeoIp2\Model\Domain;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\BulkDeleteCmsPageCategoryCommand;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\BulkDisableCmsPageCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\BulkEnableCmsPageCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\DeleteCmsPageCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\ToggleCmsPageCategoryStatusCommand;
@@ -168,6 +169,19 @@ class CmsPageController extends FrameworkBundleAdminController
 
         try {
             $this->getCommandBus()->handle(new BulkEnableCmsPageCategoryCommand($cmsCategoriesToEnable));
+        } catch (CmsPageCategoryException $exception) {
+            $this->addFlash('error', $this->handleException($exception));
+        }
+
+        return $this->redirectToRoute('admin_cms_pages_index', compact('cmsCategoryParentId'));
+    }
+
+    public function bulkCmsPageStatusDisableAction($cmsCategoryParentId, Request $request)
+    {
+        $cmsCategoriesToDisable = $request->request->get('cms_page_category_bulk');
+
+        try {
+            $this->getCommandBus()->handle(new BulkDisableCmsPageCategoryCommand($cmsCategoriesToDisable));
         } catch (CmsPageCategoryException $exception) {
             $this->addFlash('error', $this->handleException($exception));
         }
