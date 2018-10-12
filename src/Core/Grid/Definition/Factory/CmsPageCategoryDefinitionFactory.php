@@ -249,8 +249,11 @@ final class CmsPageCategoryDefinitionFactory extends AbstractGridDefinitionFacto
             ->add((new SubmitBulkAction('delete_bulk'))
                 ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
                 ->setOptions([
-                    'submit_route' => 'admin_cms_page_delete',
+                    'submit_route' => 'admin_cms_pages_delete_bulk_cms_category',
                     'confirm_message' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
+                    'route_params_extra' => [
+                        'cmsCategoryParentId' => $this->cmsCategoryParentId,
+                    ],
                 ])
             )
             ;

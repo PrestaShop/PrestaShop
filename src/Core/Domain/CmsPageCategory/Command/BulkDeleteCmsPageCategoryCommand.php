@@ -56,7 +56,6 @@ class BulkDeleteCmsPageCategoryCommand
         }
 
         $this->setCmsPageCategoryIds($cmsPageCategoryIds);
-        $this->cmsPageCategoryIds = $cmsPageCategoryIds;
     }
 
     /**

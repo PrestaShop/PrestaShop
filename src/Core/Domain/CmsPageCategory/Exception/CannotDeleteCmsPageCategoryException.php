@@ -31,5 +31,4 @@ namespace PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception;
  */
 class CannotDeleteCmsPageCategoryException extends CmsPageCategoryException
 {
-    const CANNOT_BULK_DELETE = 1;
 }

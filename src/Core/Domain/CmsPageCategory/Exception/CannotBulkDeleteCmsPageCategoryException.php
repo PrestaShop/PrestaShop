@@ -1,5 +1,6 @@
-{#**
- * 2007-2018 PrestaShop
+<?php
+/**
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -21,14 +22,43 @@
  * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-<button id="{{ '%s_grid_bulk_action_%s'|format(grid.id, action.id) }}"
-        class="dropdown-item js-bulk-action-submit-btn"
-        type="button"
-        data-form-url="{{ path(action.options.submit_route, action.options.route_params_extra) }}"
-        data-form-method="{{ action.options.submit_method }}"
-        data-confirm-message="{{ action.options.confirm_message }}"
->
-  {{ action.name }}
-</button>
+namespace PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception;
+
+use Throwable;
+
+/**
+ * Class CannotBulkDeleteCmsPageCategoryException
+ */
+class CannotBulkDeleteCmsPageCategoryException extends CmsPageCategoryException
+{
+    /**
+     * @var int
+     */
+    private $cmsPageCategoryId;
+
+    /**
+     * @param string $message
+     * @param int $code
+     * @param Throwable|null $previous
+     * @param int $cmsPageCategoryId
+     */
+    public function __construct(
+        $message = "",
+        $code = 0,
+        Throwable $previous = null,
+        $cmsPageCategoryId
+    ) {
+        parent::__construct($message, $code, $previous);
+        $this->cmsPageCategoryId = $cmsPageCategoryId;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCmsPageCategoryId()
+    {
+        return $this->cmsPageCategoryId;
+    }
+}

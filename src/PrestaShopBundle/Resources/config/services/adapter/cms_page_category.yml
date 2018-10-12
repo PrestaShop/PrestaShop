@@ -14,3 +14,9 @@ services:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\ToggleCmsPageCategoryStatusCommand
 
+    prestashop.adapter.cms_page_category.command_handler.bulk_delete_cms_page_category_handler:
+        class: PrestaShop\PrestaShop\Adapter\CMS\PageCategory\CommandHandler\BulkDeleteCmsPageCategoryHandler
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\BulkDeleteCmsPageCategoryCommand
+
