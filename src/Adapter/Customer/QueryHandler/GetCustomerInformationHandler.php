@@ -27,16 +27,46 @@
 namespace PrestaShop\PrestaShop\Adapter\Customer\QueryHandler;
 
 use Customer;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\CustomerInformation;
+use Db;
+use Gender;
+use Language;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\CustomerInformation\CustomerInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\CustomerInformation\PersonalInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\CustomerInformation\Subscriptions;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryHandler\GetCustomerInformationHandlerInterface;
+use Shop;
+use Symfony\Component\Translation\TranslatorInterface;
+use Tools;
 
 /**
  * Class GetCustomerInformationHandler
  */
 final class GetCustomerInformationHandler implements GetCustomerInformationHandlerInterface
 {
+    /**
+     * @var int
+     */
+    private $contextLangId;
+
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
+     * @param TranslatorInterface $translator
+     * @param $contextLangId
+     */
+    public function __construct(
+        TranslatorInterface $translator,
+        $contextLangId
+    ) {
+        $this->contextLangId = $contextLangId;
+        $this->translator = $translator;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -51,5 +81,94 @@ final class GetCustomerInformationHandler implements GetCustomerInformationHandl
                 sprintf('Customer with id "%s" was not found.', $customerId->getValue())
             );
         }
+
+        return new CustomerInformation(
+            $customerId,
+            $this->getGeneralInformation($customer)
+        );
+    }
+
+    /**
+     * @param Customer $customer
+     *
+     * @return PersonalInformation
+     */
+    private function getGeneralInformation(Customer $customer)
+    {
+        $customerStats = $customer->getStats();
+
+        $gender = new Gender($customer->id_gender, $this->contextLangId);
+        $socialTitle = $gender->name ?: $this->translator->trans('Unknown', [], 'Admin.Orderscustomers.Feature');
+
+        if ($customer->birthday && '0000-00-00' !== $customer->birthday) {
+            $birthday = $this->translator->trans(
+                '%1$d years old (birth date: %2$s)',
+                [
+                    Tools::displayDate($customer->birthday),
+                    $customerStats
+                ],
+                'Admin.Orderscustomers.Feature'
+            );
+        } else {
+            $birthday = $this->translator->trans('Unknown', [], 'Admin.Orderscustomers.Feature');
+        }
+
+        $registrationDate = Tools::displayDate($customer->date_add, null, true);
+        $lastUpdateDate = Tools::displayDate($customer->date_upd, null, true);
+        $lastVisitDate = $customerStats['last_visit'] ?
+            Tools::displayDate($customerStats['last_visit'], null, true) :
+            $this->translator->trans('Never', [], 'Admin.Global')
+        ;
+
+        $customerShop = new Shop($customer->id_shop);
+        $customerLanguage = new Language($customer->id_lang);
+
+        $customerSubscriptions = new Subscriptions(
+            (bool) $customer->newsletter,
+            (bool) $customer->optin
+        );
+
+        return new PersonalInformation(
+            $customer->firstname,
+            $customer->lastname,
+            $customer->email,
+            $customer->isGuest(),
+            $socialTitle,
+            $birthday,
+            $registrationDate,
+            $lastUpdateDate,
+            $lastVisitDate,
+            $this->getCustomerRankBySales($customer->id),
+            $customerShop->name,
+            $customerLanguage->name,
+            $customerSubscriptions
+        );
+    }
+
+    /**
+     * @param int $customerId
+     *
+     * @return int|null Customer rank or null if customer is not ranked.
+     */
+    private function getCustomerRankBySales($customerId)
+    {
+        $sql = 'SELECT SUM(total_paid_real) FROM ' . _DB_PREFIX_ . 'orders WHERE id_customer = ' . (int) $customerId . ' AND valid = 1';
+
+        if ($totalPaid = Db::getInstance()->getValue($sql)) {
+            $sql = '
+                SELECT SQL_CALC_FOUND_ROWS COUNT(*)
+                FROM ' . _DB_PREFIX_ . 'orders
+                WHERE valid = 1
+                    AND id_customer != ' . (int) $customerId . '
+                GROUP BY id_customer
+                HAVING SUM(total_paid_real) > ' . (int) $totalPaid
+            ;
+
+            Db::getInstance()->getValue($sql);
+
+            return (int) Db::getInstance()->getValue('SELECT FOUND_ROWS()') + 1;
+        }
+
+        return null;
     }
 }
