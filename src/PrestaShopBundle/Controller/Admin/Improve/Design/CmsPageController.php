@@ -54,12 +54,11 @@ class CmsPageController extends FrameworkBundleAdminController
     /**
      * @Template("@PrestaShop/Admin/Improve/Design/Cms/index.html.twig")
      *
-     * @param int $cmsCategoryParentId
      * @param CmsCategoryFilters $filters
      *
      * @return array
      */
-    public function indexAction($cmsCategoryParentId, CmsCategoryFilters $filters)
+    public function indexAction(CmsCategoryFilters $filters)
     {
         $cmsCategoryGridFactory = $this->get('prestashop.core.grid.factory.cms_page_category');
         $cmsCategoryGrid = $cmsCategoryGridFactory->getGrid($filters);
@@ -67,7 +66,7 @@ class CmsPageController extends FrameworkBundleAdminController
         $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
 
         return [
-            'isRootCmsPageCategory' => CmsPageRootCategorySettings::ROOT_CMS_PAGE_CATEGORY_ID === $cmsCategoryParentId,
+            'rootCmsPageCategoryId' => CmsPageRootCategorySettings::ROOT_CMS_PAGE_CATEGORY_ID,
             'cmsCategoryGrid' => $gridPresenter->present($cmsCategoryGrid),
         ];
     }
