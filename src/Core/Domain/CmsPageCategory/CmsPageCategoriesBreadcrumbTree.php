@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\CmsPageCategory;
 
 /**
- * Class CmsPageCategoriesForBreadcrumb
+ * Class CmsPageCategoriesForBreadcrumb is a DTO which is used in building cms page categories breadcrumb.
  */
 class CmsPageCategoriesBreadcrumbTree
 {
@@ -45,6 +45,8 @@ class CmsPageCategoriesBreadcrumbTree
     }
 
     /**
+     * Gets cms page categories tree.
+     *
      * @return array
      */
     public function getTree()
