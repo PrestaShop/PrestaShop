@@ -132,7 +132,7 @@ final class CurrencyGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'field' => 'active',
                     'primary_field' => 'id_currency',
                     'route' => 'admin_currencies_toggle_status',
-                    'route_param_id' => 'currencyId',
+                    'route_param_name' => 'currencyId',
                 ])
             )
             ->add((new ActionColumn('actions'))
