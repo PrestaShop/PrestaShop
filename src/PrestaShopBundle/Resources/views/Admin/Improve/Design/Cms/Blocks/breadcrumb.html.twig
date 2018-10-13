@@ -23,30 +23,33 @@
   * International Registered Trademark & Property of PrestaShop SA
   *#}
 
-<div class="row">
-  <div class="col">
-    <div class="card">
-      <div class="card-block">
-        <nav>
-          <ol class="breadcrumb">
-            {% set previousCategory = false %}
-            {% for category in breadcrumb_tree %}
-              <li class="breadcrumb-item">
-                {% if previousCategory %}
-                  <a href="{{ path('admin_cms_pages_edit_cms_category', {'cmsCategoryParentId' : previousCategory.id_cms_category, 'cmsCategoryId' : category.id_cms_category}) }}">
-                    <i style="font-size: 16px;" class="material-icons">edit</i>
-                  </a>
-                {% endif %}
+{% if cmsPageView.breadcrumb_tree is not empty %}
+  <div class="row">
+    <div class="col">
+      <div class="card">
+        <div class="card-block">
+          <nav>
+            <ol class="breadcrumb">
+              {% set previousCategory = false %}
+              {% for category in cmsPageView.breadcrumb_tree %}
+                <li class="breadcrumb-item">
+                  {% if previousCategory %}
+                    <a href="{{ path('admin_cms_pages_edit_cms_category', {'cmsCategoryParentId' : previousCategory.id_cms_category, 'cmsCategoryId' : category.id_cms_category}) }}">
+                      <i style="font-size: 16px;" class="material-icons">edit</i>
+                    </a>
+                  {% endif %}
 
-                <a href="{{ path('admin_cms_pages_index', {'cmsCategoryParentId' : category.id_cms_category}) }}">
-                  {{ category.name }}
-                </a>
-              </li>
-              {% set previousCategory = category %}
-            {% endfor %}
-          </ol>
-        </nav>
+                  <a href="{{ path('admin_cms_pages_index', {'cmsCategoryParentId' : category.id_cms_category}) }}">
+                    {{ category.name }}
+                  </a>
+                </li>
+                {% set previousCategory = category %}
+              {% endfor %}
+            </ol>
+          </nav>
+        </div>
       </div>
     </div>
   </div>
-</div>
+{% endif %}
+
