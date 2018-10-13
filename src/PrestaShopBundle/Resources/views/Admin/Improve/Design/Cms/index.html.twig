@@ -46,7 +46,7 @@
         {% embed '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': cmsCategoryGrid} %}
 
             {% block grid_panel_footer %}
-              {% if app.request.attributes.get('cmsCategoryParentId') != rootCmsPageCategoryId %}
+              {% if app.request.attributes.get('cmsCategoryParentId') != cmsPageView.rootCategoryId %}
                 {% include '@PrestaShop/Admin/Improve/Design/Cms/Blocks/listing_panel_footer.html.twig' %}
               {% endif %}
             {% endblock %}
