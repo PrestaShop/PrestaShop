@@ -36,6 +36,10 @@
 %}
 
 {% block content %}
+  {% block cms_page_category_breadcrumb %}
+    {% include '@PrestaShop/Admin/Improve/Design/Cms/Blocks/breadcrumb.html.twig' %}
+  {% endblock %}
+
   {% block cms_category_grid %}
     <div class="row">
       <div class="col">
