@@ -37,10 +37,12 @@ services:
 # Query handlers
 
     prestashop.adapter.cms_page.query_handler.get_cms_page_categories_for_breadcrumbs:
-        class: PrestaShop\PrestaShop\Adapter\CMS\PageCategory\QueryHandler\GetCmsPageCategoriesForBreadcrumbsHandler
+        class: PrestaShop\PrestaShop\Adapter\CMS\PageCategory\QueryHandler\GetCmsPageCategoriesForBreadcrumbHandler
         arguments:
             - '@doctrine.dbal.default_connection'
             - '%database_prefix%'
+            - '@=service("prestashop.adapter.shop.context").getContextListShopID()'
+            - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
         tags:
             - name: tactician.handler
-              command: PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Query\GetCmsPageCategoriesForBreadcrumbs
+              command: PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Query\GetCmsPageCategoriesForBreadcrumb
