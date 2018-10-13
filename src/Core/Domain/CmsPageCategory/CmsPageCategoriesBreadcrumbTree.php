@@ -24,19 +24,31 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\QueryHandler;
-
-use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Query\GetCmsPageCategoriesForBreadcrumbs;
+namespace PrestaShop\PrestaShop\Core\Domain\CmsPageCategory;
 
 /**
- * Interface GetCmsPageCategoriesForBreadcrumbsHandlerInterface defines contract for GetCmsPageCategoriesForBreadcrumbsHandler.
+ * Class CmsPageCategoriesForBreadcrumb
  */
-interface GetCmsPageCategoriesForBreadcrumbsHandlerInterface
+class CmsPageCategoriesBreadcrumbTree
 {
     /**
-     * @param GetCmsPageCategoriesForBreadcrumbs $query
-     *
-     * @return mixed todo:
+     * @var array
      */
-    public function handle(GetCmsPageCategoriesForBreadcrumbs $query);
+    private $cmsPageCategories;
+
+    /**
+     * @param array $cmsPageCategories
+     */
+    public function __construct(array $cmsPageCategories)
+    {
+        $this->cmsPageCategories = $cmsPageCategories;
+    }
+
+    /**
+     * @return array
+     */
+    public function getTree()
+    {
+        return $this->cmsPageCategories;
+    }
 }

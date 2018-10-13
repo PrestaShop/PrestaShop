@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Improve\Design;
 
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\CmsPageCategoriesBreadcrumbTree;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\CmsPageRootCategorySettings;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\BulkDeleteCmsPageCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\BulkDisableCmsPageCategoryCommand;
@@ -38,7 +39,7 @@ use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CannotToggleCmsP
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Query\GetCmsPageCategoriesForBreadcrumbs;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Query\GetCmsPageCategoriesForBreadcrumb;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategoryId;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 use PrestaShop\PrestaShop\Core\Search\Filters\CmsCategoryFilters;
@@ -69,12 +70,13 @@ class CmsPageController extends FrameworkBundleAdminController
 
         //todo: add view data provider
         $cmsPageCategoryId = new CmsPageCategoryId($cmsCategoryParentId);
-        $cmsPageBreadcrumbs = $this->getQueryBus()->handle(new GetCmsPageCategoriesForBreadcrumbs($cmsPageCategoryId));
+        /** @var CmsPageCategoriesBreadcrumbTree $breadrcumbTree */
+        $breadrcumbTree = $this->getQueryBus()->handle(new GetCmsPageCategoriesForBreadcrumb($cmsPageCategoryId));
 
         return [
             'rootCmsPageCategoryId' => CmsPageRootCategorySettings::ROOT_CMS_PAGE_CATEGORY_ID,
             'cmsCategoryGrid' => $gridPresenter->present($cmsCategoryGrid),
-
+            'breadcrumb_tree' => $breadrcumbTree->getTree(),
         ];
     }
 
@@ -106,7 +108,7 @@ class CmsPageController extends FrameworkBundleAdminController
     public function createCmsCategoryAction($cmsCategoryParentId)
     {
         //        todo: remove legacy parts once form is ready
-        $legacyLink = $this->getAdminLink('AdminMeta', [
+        $legacyLink = $this->getAdminLink('AdminCmsContent', [
             'addcms_category' => 1,
         ]);
 
@@ -116,7 +118,7 @@ class CmsPageController extends FrameworkBundleAdminController
     public function editCmsCategoryAction($cmsCategoryParentId, $cmsCategoryId)
     {
 //        todo: remove legacy parts once form is ready
-        $legacyLink = $this->getAdminLink('AdminMeta', [
+        $legacyLink = $this->getAdminLink('AdminCmsContent', [
             'id_cms_category' => $cmsCategoryId,
             'updatecms_category' => 1,
         ]);
