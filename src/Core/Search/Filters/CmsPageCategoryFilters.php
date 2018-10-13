@@ -29,9 +29,9 @@ namespace PrestaShop\PrestaShop\Core\Search\Filters;
 use PrestaShop\PrestaShop\Core\Search\Filters;
 
 /**
- * Class CmsCategoryFilters
+ * Class CmsPageCategoryFilters defines default filters for cms page category grid.
  */
-final class CmsCategoryFilters extends Filters
+final class CmsPageCategoryFilters extends Filters
 {
     /**
      * {@inheritdoc}
