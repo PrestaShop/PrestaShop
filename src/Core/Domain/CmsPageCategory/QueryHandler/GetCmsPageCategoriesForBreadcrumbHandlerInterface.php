@@ -24,33 +24,20 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Query;
+namespace PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\QueryHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategoryId;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\CmsPageCategoriesBreadcrumbTree;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Query\GetCmsPageCategoriesForBreadcrumb;
 
 /**
- * Class GetCmsPageCategoriesForBreadcrumbs
+ * Interface GetCmsPageCategoriesForBreadcrumbHandlerInterface defines contract for GetCmsPageCategoriesForBreadcrumbHandlerInterface.
  */
-class GetCmsPageCategoriesForBreadcrumbs
+interface GetCmsPageCategoriesForBreadcrumbHandlerInterface
 {
     /**
-     * @var CmsPageCategoryId
+     * @param GetCmsPageCategoriesForBreadcrumb $query
+     *
+     * @return CmsPageCategoriesBreadcrumbTree
      */
-    private $currentCategoryId;
-
-    /**
-     * @param CmsPageCategoryId $currentCategoryId
-     */
-    public function __construct(CmsPageCategoryId $currentCategoryId)
-    {
-        $this->currentCategoryId = $currentCategoryId;
-    }
-
-    /**
-     * @return CmsPageCategoryId
-     */
-    public function getCurrentCategoryId()
-    {
-        return $this->currentCategoryId;
-    }
+    public function handle(GetCmsPageCategoriesForBreadcrumb $query);
 }
