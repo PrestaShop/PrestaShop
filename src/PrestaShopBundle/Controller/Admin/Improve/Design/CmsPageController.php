@@ -26,8 +26,6 @@
 
 namespace PrestaShopBundle\Controller\Admin\Improve\Design;
 
-use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\CmsPageCategoriesBreadcrumbTree;
-use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\CmsPageRootCategorySettings;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\BulkDeleteCmsPageCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\BulkDisableCmsPageCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\BulkEnableCmsPageCategoryCommand;
@@ -39,7 +37,6 @@ use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CannotToggleCmsP
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Query\GetCmsPageCategoriesForBreadcrumb;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategoryId;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 use PrestaShop\PrestaShop\Core\Search\Filters\CmsCategoryFilters;
@@ -68,15 +65,11 @@ class CmsPageController extends FrameworkBundleAdminController
 
         $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
 
-        //todo: add view data provider
-        $cmsPageCategoryId = new CmsPageCategoryId($cmsCategoryParentId);
-        /** @var CmsPageCategoriesBreadcrumbTree $breadrcumbTree */
-        $breadrcumbTree = $this->getQueryBus()->handle(new GetCmsPageCategoriesForBreadcrumb($cmsPageCategoryId));
+        $viewData = $this->get('prestashop.core.cms_page.data_provider.cms_page_view')->getView($cmsCategoryParentId);
 
         return [
-            'rootCmsPageCategoryId' => CmsPageRootCategorySettings::ROOT_CMS_PAGE_CATEGORY_ID,
             'cmsCategoryGrid' => $gridPresenter->present($cmsCategoryGrid),
-            'breadcrumb_tree' => $breadrcumbTree->getTree(),
+            'cmsPageView' => $viewData,
         ];
     }
 
@@ -107,7 +100,7 @@ class CmsPageController extends FrameworkBundleAdminController
 
     public function createCmsCategoryAction($cmsCategoryParentId)
     {
-        //        todo: remove legacy parts once form is ready
+//        todo: remove legacy parts once form is ready and demoRestricted on post action
         $legacyLink = $this->getAdminLink('AdminCmsContent', [
             'addcms_category' => 1,
         ]);
@@ -117,7 +110,7 @@ class CmsPageController extends FrameworkBundleAdminController
 
     public function editCmsCategoryAction($cmsCategoryParentId, $cmsCategoryId)
     {
-//        todo: remove legacy parts once form is ready
+//        todo: remove legacy parts once form is ready and demoRestricted on post action
         $legacyLink = $this->getAdminLink('AdminCmsContent', [
             'id_cms_category' => $cmsCategoryId,
             'updatecms_category' => 1,
