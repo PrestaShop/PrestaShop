@@ -42,11 +42,7 @@ final class DeleteCmsPageCategoryHandler implements DeleteCmsPageCategoryHandler
     /**
      * {@inheritdoc}
      *
-     * @param DeleteCmsPageCategoryCommand $command
-     *
-     * @throws CannotDeleteCmsPageCategoryException
      * @throws CmsPageCategoryException
-     * @throws CmsPageCategoryNotFoundException
      */
     public function handle(DeleteCmsPageCategoryCommand $command)
     {
