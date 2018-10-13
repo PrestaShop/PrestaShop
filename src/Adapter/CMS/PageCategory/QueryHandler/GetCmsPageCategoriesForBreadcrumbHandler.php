@@ -37,7 +37,8 @@ use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\QueryHandler\GetCmsPageCat
 use PrestaShopException;
 
 /**
- * Class GetCmsPageCategoriesForBreadcrumbHandler
+ * Class GetCmsPageCategoriesForBreadcrumbHandler is responsible for providing required data for displaying cms page category
+ * breadcrumbs.
  */
 final class GetCmsPageCategoriesForBreadcrumbHandler implements GetCmsPageCategoriesForBreadcrumbHandlerInterface
 {

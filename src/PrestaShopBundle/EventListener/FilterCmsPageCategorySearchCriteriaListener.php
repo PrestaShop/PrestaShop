@@ -26,7 +26,7 @@
 
 namespace PrestaShopBundle\EventListener;
 
-use PrestaShop\PrestaShop\Core\Search\Filters\CmsCategoryFilters;
+use PrestaShop\PrestaShop\Core\Search\Filters\CmsPageCategoryFilters;
 use PrestaShopBundle\Event\FilterSearchCriteriaEvent;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -54,7 +54,7 @@ class FilterCmsPageCategorySearchCriteriaListener
      */
     public function onFilterSearchCriteria(FilterSearchCriteriaEvent $event)
     {
-        if (!$event->getSearchCriteria() instanceof CmsCategoryFilters) {
+        if (!$event->getSearchCriteria() instanceof CmsPageCategoryFilters) {
             return;
         }
 
@@ -69,7 +69,7 @@ class FilterCmsPageCategorySearchCriteriaListener
                 $this->requestStack->getCurrentRequest()->attributes->get('cmsCategoryParentId');
         }
 
-        $newSearchCriteria = new CmsCategoryFilters([
+        $newSearchCriteria = new CmsPageCategoryFilters([
             'orderBy' => $searchCriteria->getOrderBy(),
             'sortOrder' => $searchCriteria->getOrderWay(),
             'offset' => $searchCriteria->getOffset(),

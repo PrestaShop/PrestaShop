@@ -29,7 +29,8 @@ namespace PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Query;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategoryId;
 
 /**
- * Class GetCmsPageCategoriesForBreadcrumb
+ * Class GetCmsPageCategoriesForBreadcrumb is responsible for providing required data for displaying cms page category
+ * breadcrumbs.
  */
 class GetCmsPageCategoriesForBreadcrumb
 {
@@ -47,6 +48,8 @@ class GetCmsPageCategoriesForBreadcrumb
     }
 
     /**
+     * Gets current category id.
+     *
      * @return CmsPageCategoryId
      */
     public function getCurrentCategoryId()

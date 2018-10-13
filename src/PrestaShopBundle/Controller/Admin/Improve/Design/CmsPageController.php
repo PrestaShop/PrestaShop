@@ -39,7 +39,7 @@ use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryE
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategoryId;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
-use PrestaShop\PrestaShop\Core\Search\Filters\CmsCategoryFilters;
+use PrestaShop\PrestaShop\Core\Search\Filters\CmsPageCategoryFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -59,11 +59,11 @@ class CmsPageController extends FrameworkBundleAdminController
      * @Template("@PrestaShop/Admin/Improve/Design/Cms/index.html.twig")
      *
      * @param int $cmsCategoryParentId
-     * @param CmsCategoryFilters $filters
+     * @param CmsPageCategoryFilters $filters
      *
      * @return array
      */
-    public function indexAction($cmsCategoryParentId, CmsCategoryFilters $filters)
+    public function indexAction($cmsCategoryParentId, CmsPageCategoryFilters $filters)
     {
         $cmsCategoryGridFactory = $this->get('prestashop.core.grid.factory.cms_page_category');
         $cmsCategoryGrid = $cmsCategoryGridFactory->getGrid($filters);
@@ -145,7 +145,7 @@ class CmsPageController extends FrameworkBundleAdminController
 
     /**
      * Deletes cms page category and all its children categories.
-     *
+     * //todo: modify annotations so they have current controller routes
      * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message="You do not have permission to delete this.")
      *
      * @param int $cmsCategoryParentId
