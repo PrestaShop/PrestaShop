@@ -52,7 +52,10 @@ class CurrencyController extends FrameworkBundleAdminController
      *
      * @Template("@PrestaShop/Admin/Improve/International/Currency/index.html.twig")
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     * @AdminSecurity(
+     *     "is_granted('read', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_currencies_index"
+     * )
      *
      * @param CurrencyFilters $filters
      *
@@ -96,7 +99,11 @@ class CurrencyController extends FrameworkBundleAdminController
     /**
      * Displays currency form.
      *
-     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))", message="You do not have permission to add this.")
+     * @AdminSecurity(
+     *     "is_granted('create', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_currencies_index",
+     *     message="You do not have permission to add this."
+     * )
      *
      * @return RedirectResponse
      */
@@ -113,7 +120,11 @@ class CurrencyController extends FrameworkBundleAdminController
     /**
      * Displays currency form.
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message="You do not have permission to edit this.")
+     * @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_currencies_index",
+     *     message="You do not have permission to edit this."
+     * )
      *
      * @param int $currencyId
      *
@@ -133,7 +144,11 @@ class CurrencyController extends FrameworkBundleAdminController
     /**
      * Deletes currency.
      *
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message="You do not have permission to delete this.")
+     * @AdminSecurity(
+     *     "is_granted('delete', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_currencies_index",
+     *     message="You do not have permission to delete this."
+     * )
      * @DemoRestricted(redirectRoute="admin_currencies_index")
      *
      * @param int $currencyId
@@ -164,7 +179,11 @@ class CurrencyController extends FrameworkBundleAdminController
      *
      * @param int $currencyId
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message="You do not have permission to edit this.")
+     * @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_currencies_index",
+     *     message="You do not have permission to edit this."
+     * )
      * @DemoRestricted(redirectRoute="admin_currencies_index")
      *
      * @return RedirectResponse
