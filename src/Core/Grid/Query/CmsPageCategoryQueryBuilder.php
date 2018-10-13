@@ -31,7 +31,7 @@ use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
 /**
- * Class CmsPageCategoryQueryBuilder
+ * Class CmsPageCategoryQueryBuilder builds search & count queries for cms page categories grid.
  */
 final class CmsPageCategoryQueryBuilder extends AbstractDoctrineQueryBuilder
 {
