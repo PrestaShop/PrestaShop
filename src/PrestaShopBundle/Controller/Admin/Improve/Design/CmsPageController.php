@@ -41,6 +41,7 @@ use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategor
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 use PrestaShop\PrestaShop\Core\Search\Filters\CmsCategoryFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -51,6 +52,10 @@ use Symfony\Component\HttpFoundation\Request;
 class CmsPageController extends FrameworkBundleAdminController
 {
     /**
+     * Responsible for displaying page content.
+     *
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     *
      * @Template("@PrestaShop/Admin/Improve/Design/Cms/index.html.twig")
      *
      * @param int $cmsCategoryParentId
@@ -98,6 +103,15 @@ class CmsPageController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_cms_pages_index', compact('cmsCategoryParentId', 'filters'));
     }
 
+    /**
+     * Displays cms category page form and handles create new cms page category logic.
+     *
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))", message="You do not have permission to add this.")
+     *
+     * @param int $cmsCategoryParentId
+     *
+     * @return RedirectResponse
+     */
     public function createCmsCategoryAction($cmsCategoryParentId)
     {
 //        todo: remove legacy parts once form is ready and demoRestricted on post action
@@ -108,6 +122,16 @@ class CmsPageController extends FrameworkBundleAdminController
         return $this->redirect($legacyLink);
     }
 
+    /**
+     * Displays cms category page form and handles update cms page category logic.
+     *
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message="You do not have permission to edit this.")
+     *
+     * @param int $cmsCategoryParentId
+     * @param int $cmsCategoryId
+     *
+     * @return RedirectResponse
+     */
     public function editCmsCategoryAction($cmsCategoryParentId, $cmsCategoryId)
     {
 //        todo: remove legacy parts once form is ready and demoRestricted on post action
@@ -119,6 +143,16 @@ class CmsPageController extends FrameworkBundleAdminController
         return $this->redirect($legacyLink);
     }
 
+    /**
+     * Deletes cms page category and all its children categories.
+     *
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message="You do not have permission to delete this.")
+     *
+     * @param int $cmsCategoryParentId
+     * @param int $cmsCategoryId
+     *
+     * @return RedirectResponse
+     */
     public function deleteCmsCategoryAction($cmsCategoryParentId, $cmsCategoryId)
     {
         try {
@@ -136,6 +170,16 @@ class CmsPageController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_cms_pages_index', compact('cmsCategoryParentId'));
     }
 
+    /**
+     * Deletes multiple cms page categories.
+     *
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message="You do not have permission to delete this.")
+     *
+     * @param int $cmsCategoryParentId
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
     public function deleteBulkCmsCategoryAction($cmsCategoryParentId, Request $request)
     {
         $cmsCategoriesToDelete = $request->request->get('cms_page_category_bulk');
@@ -154,11 +198,27 @@ class CmsPageController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_cms_pages_index', compact('cmsCategoryParentId'));
     }
 
+    /**
+     * Updates cms page category position.
+     *
+     * @param int $cmsCategoryParentId
+     * @param int $cmsCategoryId
+     */
     public function updateCmsCategoryPositionAction($cmsCategoryParentId, $cmsCategoryId)
     {
-        // todo : implement
+        // todo : implement with access checking
     }
 
+    /**
+     * Toggles cms page category status.
+     *
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message="You do not have permission to edit this.")
+     *
+     * @param int $cmsCategoryParentId
+     * @param int $cmsCategoryId
+     *
+     * @return RedirectResponse
+     */
     public function toggleCmsCategoryAction($cmsCategoryParentId, $cmsCategoryId)
     {
         try {
@@ -176,6 +236,16 @@ class CmsPageController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_cms_pages_index', compact('cmsCategoryParentId'));
     }
 
+    /**
+     * Changes multiple cms page category statuses to enabled.
+     *
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message="You do not have permission to edit this.")
+     *
+     * @param int $cmsCategoryParentId
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
     public function bulkCmsPageStatusEnableAction($cmsCategoryParentId, Request $request)
     {
         $cmsCategoriesToEnable = $request->request->get('cms_page_category_bulk');
@@ -189,6 +259,16 @@ class CmsPageController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_cms_pages_index', compact('cmsCategoryParentId'));
     }
 
+    /**
+     * Changes multiple cms page category statuses to disabled.
+     *
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message="You do not have permission to edit this.")
+     *
+     * @param int $cmsCategoryParentId
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
     public function bulkCmsPageStatusDisableAction($cmsCategoryParentId, Request $request)
     {
         $cmsCategoriesToDisable = $request->request->get('cms_page_category_bulk');
@@ -263,6 +343,7 @@ class CmsPageController extends FrameworkBundleAdminController
         if (isset($exceptionTypeDictionary[$exceptionType])) {
             return $exceptionTypeDictionary[$exceptionType];
         }
+
         return $this->trans('Unexpected error occurred.', 'Admin.Notifications.Error');
     }
 
