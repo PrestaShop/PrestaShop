@@ -42,34 +42,12 @@ use PrestaShopException;
 final class GetCmsPageCategoriesForBreadcrumbHandler implements GetCmsPageCategoriesForBreadcrumbHandlerInterface
 {
     /**
-     * @var Connection
-     */
-    private $connection;
-
-    /**
-     * @var string
-     */
-    private $dbPrefix;
-
-    /**
-     * @var array
-     */
-    private $contextShopIds;
-
-    /**
      * @var int
      */
     private $contextLanguageId;
 
-    public function __construct(
-        Connection $connection,
-        $dbPrefix,
-        array $contextShopIds,
-        $contextLanguageId
-    ) {
-        $this->connection = $connection;
-        $this->dbPrefix = $dbPrefix;
-        $this->contextShopIds = $contextShopIds;
+    public function __construct($contextLanguageId)
+    {
         $this->contextLanguageId = $contextLanguageId;
     }
 
