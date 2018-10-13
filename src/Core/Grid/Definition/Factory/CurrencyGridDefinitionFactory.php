@@ -38,7 +38,7 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 /**
@@ -47,11 +47,6 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
  */
 final class CurrencyGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
-    /**
-     * @var array
-     */
-    private $statusChoices;
-
     /**
      * @var string
      */
@@ -63,17 +58,13 @@ final class CurrencyGridDefinitionFactory extends AbstractGridDefinitionFactory
     private $redirectionUrl;
 
     /**
-     *
-     * @param array $statusChoices
      * @param string $resetActionUrl
      * @param string $redirectionUrl
      */
     public function __construct(
-        array $statusChoices,
         $resetActionUrl,
         $redirectionUrl
     ) {
-        $this->statusChoices = $statusChoices;
         $this->resetActionUrl = $resetActionUrl;
         $this->redirectionUrl = $redirectionUrl;
     }
@@ -179,10 +170,9 @@ final class CurrencyGridDefinitionFactory extends AbstractGridDefinitionFactory
             ])
                 ->setAssociatedColumn('iso_code')
             )
-            ->add((new Filter('active', ChoiceType::class)) //todo: change to YesNoChoiceType::class when available
+            ->add((new Filter('active', YesAndNoChoiceType::class))
                 ->setTypeOptions([
                     'required' => false,
-                    'choices' => $this->statusChoices,
                     'choice_translation_domain' => false,
                 ])
                 ->setAssociatedColumn('active')
