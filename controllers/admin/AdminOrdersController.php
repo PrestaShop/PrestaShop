@@ -389,7 +389,7 @@ class AdminOrdersControllerCore extends AdminController
                                 $this->errors[] = $this->trans('Order #%d has already been assigned this status.', array('#%d' => $id_order), 'Admin.Orderscustomers.Notification');
                             } else {
                                 if(!$this->canRemoveQuantitiesIfNeeded($order->getProductsDetail(), $current_order_state, $order_state)) {
-                                    $this->errors[] = $this->trans('Some quantities from order #%d cannot be removed from the stock.', array('#%d' => $id_order), 'Admin.Orderscustomers.Notification');
+                                    $this->errors[] = $this->trans('Order #%d cannot be changed to a delivered status, because at least one product cannot be removed from the stock. Verify the usable quantities for this order in the stock manager.', array('#%d' => $id_order), 'Admin.Orderscustomers.Notification');
                                 } else {
                                     $history = new OrderHistory();
                                     $history->id_order = $order->id;
@@ -581,7 +581,7 @@ class AdminOrdersControllerCore extends AdminController
                             }
                             $this->errors[] = $this->trans('An error occurred while changing order status, or we were unable to send an email to the customer.', array(), 'Admin.Orderscustomers.Notification');
                         } else {
-                            $this->errors[] = $this->trans('Some quantities from order #%d cannot be removed from the stock.', array('#%d' => $id_order), 'Admin.Orderscustomers.Notification');   
+                            $this->errors[] = $this->trans('Order #%d cannot be changed to a delivered status, because at least one product cannot be removed from the stock. Verify the usable quantities for this order in the stock manager.', array('#%d' => $id_order), 'Admin.Orderscustomers.Notification');   
                         }
                     } else {
                         $this->errors[] = $this->trans('The order has already been assigned this status.', array(), 'Admin.Orderscustomers.Notification');
