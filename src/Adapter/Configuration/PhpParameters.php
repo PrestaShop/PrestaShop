@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,10 +29,10 @@ namespace PrestaShop\PrestaShop\Adapter\Configuration;
 use Symfony\Component\Filesystem\Filesystem;
 use Shudrum\Component\ArrayFinder\ArrayFinder;
 use Symfony\Component\Filesystem\Exception\IOException;
-use \InvalidArgumentException;
+use InvalidArgumentException;
 
 /**
- * Class able to manage configuration stored in Php files
+ * Class able to manage configuration stored in Php files.
  */
 class PhpParameters
 {
@@ -53,12 +53,12 @@ class PhpParameters
         }
 
         $this->filename = $filename;
-        $phpArray = require($this->filename);
+        $phpArray = require $this->filename;
         $this->configuration = new ArrayFinder($phpArray);
     }
 
     /**
-     * @return array Return the complete configuration.
+     * @return array return the complete configuration
      */
     public function getConfiguration()
     {
@@ -85,7 +85,7 @@ class PhpParameters
     {
         try {
             $filesystem = new Filesystem();
-            $filesystem->dumpFile($this->filename, '<?php return '.var_export($this->configuration->get(), true).';'."\n");
+            $filesystem->dumpFile($this->filename, '<?php return ' . var_export($this->configuration->get(), true) . ';' . "\n");
 
             if (function_exists('opcache_invalidate')) {
                 opcache_invalidate($this->filename);

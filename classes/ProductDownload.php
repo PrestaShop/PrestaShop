@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -25,7 +25,7 @@
  */
 
 /**
- * Class ProductDownloadCore
+ * Class ProductDownloadCore.
  */
 class ProductDownloadCore extends ObjectModel
 {
@@ -78,7 +78,7 @@ class ProductDownloadCore extends ObjectModel
     );
 
     /**
-     * Build a virtual product
+     * Build a virtual product.
      *
      * @param int $idProductDownload Existing productDownload id in order to load object (optional)
      */
@@ -90,6 +90,7 @@ class ProductDownloadCore extends ObjectModel
 
     /**
      * @see ObjectModel::getFields()
+     *
      * @return array
      */
     public function getFields()
@@ -114,6 +115,7 @@ class ProductDownloadCore extends ObjectModel
             //Configuration::updateGlobalValue('PS_VIRTUAL_PROD_FEATURE_ACTIVE', ProductDownload::isCurrentlyUsed($this->def['table'], true));
             return true;
         }
+
         return false;
     }
 
@@ -128,7 +130,7 @@ class ProductDownloadCore extends ObjectModel
     }
 
     /**
-     * Delete the file
+     * Delete the file.
      *
      * @param int $idProductDownload : if we need to delete a specific product attribute file
      *
@@ -140,12 +142,12 @@ class ProductDownloadCore extends ObjectModel
             return false;
         }
 
-        return unlink(_PS_DOWNLOAD_DIR_.$this->filename)
-            && Db::getInstance()->delete('product_download', 'id_product_download = '.(int) $idProductDownload);
+        return unlink(_PS_DOWNLOAD_DIR_ . $this->filename)
+            && Db::getInstance()->delete('product_download', 'id_product_download = ' . (int) $idProductDownload);
     }
 
     /**
-     * Check if file exists
+     * Check if file exists.
      *
      * @return bool
      */
@@ -155,11 +157,11 @@ class ProductDownloadCore extends ObjectModel
             return false;
         }
 
-        return file_exists(_PS_DOWNLOAD_DIR_.$this->filename);
+        return file_exists(_PS_DOWNLOAD_DIR_ . $this->filename);
     }
 
     /**
-     * Check if download repository is writable
+     * Check if download repository is writable.
      *
      * @return bool
      */
@@ -169,7 +171,7 @@ class ProductDownloadCore extends ObjectModel
     }
 
     /**
-     * Return the id_product_download from an id_product
+     * Return the id_product_download from an id_product.
      *
      * @param int $idProduct Product the id
      *
@@ -181,20 +183,21 @@ class ProductDownloadCore extends ObjectModel
             return false;
         }
 
-        self::$_productIds[$idProduct] = (int)Db::getInstance()->getValue('
+        self::$_productIds[$idProduct] = (int) Db::getInstance()->getValue('
 		SELECT `id_product_download`
-		FROM `'._DB_PREFIX_.'product_download`
-		WHERE `id_product` = '.(int) $idProduct.'
-		'.($active ? ' AND `active` = 1' : '').'
+		FROM `' . _DB_PREFIX_ . 'product_download`
+		WHERE `id_product` = ' . (int) $idProduct . '
+		' . ($active ? ' AND `active` = 1' : '') . '
 		ORDER BY `id_product_download` DESC');
 
         return self::$_productIds[$idProduct];
     }
 
     /**
-     * Return the display filename from a physical filename
+     * Return the display filename from a physical filename.
      *
      * @param string $filename Filename physically
+     *
      * @return int Product the id for this virtual product
      *
      * @since 1.5.0.1
@@ -203,12 +206,12 @@ class ProductDownloadCore extends ObjectModel
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 		SELECT `id_product_download`
-		FROM `'._DB_PREFIX_.'product_download`
-		WHERE `filename` = \''.pSQL($filename).'\'');
+		FROM `' . _DB_PREFIX_ . 'product_download`
+		WHERE `filename` = \'' . pSQL($filename) . '\'');
     }
 
     /**
-     * Return the filename from a Product ID
+     * Return the filename from a Product ID.
      *
      * @param int $idProduct Product ID
      *
@@ -218,28 +221,29 @@ class ProductDownloadCore extends ObjectModel
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 			SELECT `filename`
-			FROM `'._DB_PREFIX_.'product_download`
-			WHERE `id_product` = '.(int) $idProduct.'
+			FROM `' . _DB_PREFIX_ . 'product_download`
+			WHERE `id_product` = ' . (int) $idProduct . '
 				AND `active` = 1
 		');
     }
 
     /**
-     * Return the display filename from a physical filename
+     * Return the display filename from a physical filename.
      *
      * @param string $filename Filename physically
+     *
      * @return string Filename the display filename for this virtual product
      */
     public static function getFilenameFromFilename($filename)
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 		SELECT `display_filename`
-		FROM `'._DB_PREFIX_.'product_download`
-		WHERE `filename` = \''.pSQL($filename).'\'');
+		FROM `' . _DB_PREFIX_ . 'product_download`
+		WHERE `filename` = \'' . pSQL($filename) . '\'');
     }
 
     /**
-     * Return text link
+     * Return text link.
      *
      * @param bool $admin specific to backend (optionnal)
      * @param string $hash hash code in table order detail (optionnal)
@@ -248,36 +252,36 @@ class ProductDownloadCore extends ObjectModel
      */
     public function getTextLink($admin = true, $hash = false)
     {
-        $key = $this->filename.'-'.($hash ? $hash : 'orderdetail');
-        $link = ($admin) ? 'get-file-admin.php?' : _PS_BASE_URL_.__PS_BASE_URI__.'index.php?controller=get-file&';
-        $link .= ($admin) ? 'file='.$this->filename : 'key='.$key;
+        $key = $this->filename . '-' . ($hash ? $hash : 'orderdetail');
+        $link = ($admin) ? 'get-file-admin.php?' : _PS_BASE_URL_ . __PS_BASE_URI__ . 'index.php?controller=get-file&';
+        $link .= ($admin) ? 'file=' . $this->filename : 'key=' . $key;
 
         return $link;
     }
 
     /**
-     * Return html link
+     * Return html link.
      *
      * @param string $class CSS selector
-     * @param bool   $admin specific to backend
-     * @param bool   $hash  hash code in table order detail
+     * @param bool $admin specific to backend
+     * @param bool $hash hash code in table order detail
      *
      * @return string Html all the code for print a link to the file
      */
     public function getHtmlLink($class = false, $admin = true, $hash = false)
     {
         $link = $this->getTextLink($admin, $hash);
-        $html = '<a href="'.$link.'" title=""';
+        $html = '<a href="' . $link . '" title=""';
         if ($class) {
-            $html .= ' class="'.$class.'"';
+            $html .= ' class="' . $class . '"';
         }
-        $html .= '>'.$this->display_filename.'</a>';
+        $html .= '>' . $this->display_filename . '</a>';
 
         return $html;
     }
 
     /**
-     * Return a deadline
+     * Return a deadline.
      *
      * @return string Datetime in SQL format
      */
@@ -286,24 +290,24 @@ class ProductDownloadCore extends ObjectModel
         if (!(int) $this->nb_days_accessible) {
             return '0000-00-00 00:00:00';
         }
-        $timestamp = strtotime('+'.(int) $this->nb_days_accessible.' day');
+        $timestamp = strtotime('+' . (int) $this->nb_days_accessible . ' day');
 
         return date('Y-m-d H:i:s', $timestamp);
     }
 
     /**
-     * Return a hash for control download access
+     * Return a hash for control download access.
      *
      * @return string Hash ready to insert in database
      */
     public function getHash()
     {
         // TODO check if this hash not already in database
-        return sha1(microtime().$this->id);
+        return sha1(microtime() . $this->id);
     }
 
     /**
-     * Return a sha1 filename
+     * Return a sha1 filename.
      *
      * @return string Sha1 unique filename
      */
@@ -311,13 +315,13 @@ class ProductDownloadCore extends ObjectModel
     {
         do {
             $filename = sha1(microtime());
-        } while (file_exists(_PS_DOWNLOAD_DIR_.$filename));
+        } while (file_exists(_PS_DOWNLOAD_DIR_ . $filename));
 
         return $filename;
     }
 
     /**
-     * This method is allow to know if a feature is used or active
+     * This method is allow to know if a feature is used or active.
      *
      * @return bool
      *

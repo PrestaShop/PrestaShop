@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -32,7 +32,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * This form class generates the "Combine Compress Cache" form in Performance page
+ * This form class generates the "Combine Compress Cache" form in Performance page.
  */
 class CombineCompressCacheType extends CommonAbstractType
 {

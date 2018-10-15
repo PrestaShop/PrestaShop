@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 trans('Webmaster', 'Admin.Shopparameters.Feature');
 trans('Customer service', 'Admin.Shopparameters.Feature');
 trans('If a technical problem occurs on this website', 'Admin.Shopparameters.Feature');

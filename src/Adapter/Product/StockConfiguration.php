@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Class StockConfiguration is responsible for saving & loading products stock configuration
+ * Class StockConfiguration is responsible for saving & loading products stock configuration.
  */
 class StockConfiguration implements DataConfigurationInterface
 {
@@ -84,7 +84,6 @@ class StockConfiguration implements DataConfigurationInterface
     }
 
     /**
-     *
      * {@inheritdoc}
      */
     public function validateConfiguration(array $configuration)

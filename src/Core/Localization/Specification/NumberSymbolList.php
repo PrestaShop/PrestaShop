@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -35,7 +35,7 @@ use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 class NumberSymbolList
 {
     /**
-     * Decimal separator character
+     * Decimal separator character.
      *
      * Separates the integer and fractional part of the number.
      *
@@ -44,7 +44,7 @@ class NumberSymbolList
     protected $decimal;
 
     /**
-     * Digits group separator character
+     * Digits group separator character.
      *
      * separates clusters of integer digits to make large numbers more legible; commonly used for thousands(grouping
      * size 3, e.g. "100,000,000") or in some locales, ten-thousands (grouping size 4, e.g. "1,0000,0000").
@@ -54,7 +54,7 @@ class NumberSymbolList
     protected $group;
 
     /**
-     * List elements separator character
+     * List elements separator character.
      *
      * Symbol used to separate numbers in a list intended to represent structured data such as an array.
      *
@@ -63,7 +63,7 @@ class NumberSymbolList
     protected $list;
 
     /**
-     * Percent sign character
+     * Percent sign character.
      *
      * Used to indicate a percentage (1/100th) amount.
      *
@@ -72,7 +72,7 @@ class NumberSymbolList
     protected $percentSign;
 
     /**
-     * Minus sign character
+     * Minus sign character.
      *
      * Symbol used to denote negative value.
      *
@@ -81,7 +81,7 @@ class NumberSymbolList
     protected $minusSign;
 
     /**
-     * Plus sign character
+     * Plus sign character.
      *
      * Symbol used to denote positive value.
      * It can be used to produce modified patterns, so that 3.12 is formatted as "+3.12", for example.
@@ -91,7 +91,7 @@ class NumberSymbolList
     protected $plusSign;
 
     /**
-     * Exponential character
+     * Exponential character.
      *
      * Symbol separating the mantissa and exponent values.
      *
@@ -100,7 +100,7 @@ class NumberSymbolList
     protected $exponential;
 
     /**
-     * Superscripting exponent character
+     * Superscripting exponent character.
      *
      * Used in numbers to show a format like "1.23 × 10^4"
      * (exponential character is a shortcut for "× 10^n" notation)
@@ -110,7 +110,7 @@ class NumberSymbolList
     protected $superscriptingExponent;
 
     /**
-     * Permille sign character
+     * Permille sign character.
      *
      * Used to define them as a per-mille (1/1000th) amount.
      *
@@ -136,37 +136,27 @@ class NumberSymbolList
      * NumberSymbolList constructor.
      *
      * @param string $decimal
-     *  Decimal separator character
-     *
+     *                        Decimal separator character
      * @param string $group
-     *  Digits group separator character
-     *
+     *                      Digits group separator character
      * @param string $list
-     *  List elements separator character
-     *
+     *                     List elements separator character
      * @param string $percentSign
-     *  Percent sign character
-     *
+     *                            Percent sign character
      * @param string $minusSign
-     *  Minus sign character
-     *
+     *                          Minus sign character
      * @param string $plusSign
-     *  Plus sign character
-     *
+     *                         Plus sign character
      * @param string $exponential
-     *  Exponential character
-     *
+     *                            Exponential character
      * @param string $superscriptingExponent
-     *  Superscripting exponent character
-     *
+     *                                       Superscripting exponent character
      * @param string $perMille
-     *  Permille sign character
-     *
+     *                         Permille sign character
      * @param string $infinity
-     *  The infinity sign. Corresponds to the IEEE infinity bit pattern.
-     *
+     *                         The infinity sign. Corresponds to the IEEE infinity bit pattern.
      * @param string $nan
-     *  The NaN (Not A Number) sign. Corresponds to the IEEE NaN bit pattern.
+     *                    The NaN (Not A Number) sign. Corresponds to the IEEE NaN bit pattern.
      *
      * @throws LocalizationException
      */
@@ -183,23 +173,23 @@ class NumberSymbolList
         $infinity,
         $nan
     ) {
-        $this->decimal                = $decimal;
-        $this->group                  = $group;
-        $this->list                   = $list;
-        $this->percentSign            = $percentSign;
-        $this->minusSign              = $minusSign;
-        $this->plusSign               = $plusSign;
-        $this->exponential            = $exponential;
+        $this->decimal = $decimal;
+        $this->group = $group;
+        $this->list = $list;
+        $this->percentSign = $percentSign;
+        $this->minusSign = $minusSign;
+        $this->plusSign = $plusSign;
+        $this->exponential = $exponential;
         $this->superscriptingExponent = $superscriptingExponent;
-        $this->perMille               = $perMille;
-        $this->infinity               = $infinity;
-        $this->nan                    = $nan;
+        $this->perMille = $perMille;
+        $this->infinity = $infinity;
+        $this->nan = $nan;
 
         $this->validateData();
     }
 
     /**
-     * Get the decimal separator
+     * Get the decimal separator.
      *
      * @return string
      */
@@ -209,7 +199,7 @@ class NumberSymbolList
     }
 
     /**
-     * Get the digit groups separator
+     * Get the digit groups separator.
      *
      * @return string
      */
@@ -219,7 +209,7 @@ class NumberSymbolList
     }
 
     /**
-     * Get the list elements separator
+     * Get the list elements separator.
      *
      * @return string
      */
@@ -229,7 +219,7 @@ class NumberSymbolList
     }
 
     /**
-     * Get the percent sign
+     * Get the percent sign.
      *
      * @return string
      */
@@ -239,7 +229,7 @@ class NumberSymbolList
     }
 
     /**
-     * Get the minus sign
+     * Get the minus sign.
      *
      * @return string
      */
@@ -249,7 +239,7 @@ class NumberSymbolList
     }
 
     /**
-     * Get the plus sign
+     * Get the plus sign.
      *
      * @return string
      */
@@ -259,7 +249,7 @@ class NumberSymbolList
     }
 
     /**
-     * Get the exponential character
+     * Get the exponential character.
      *
      * @return string
      */
@@ -269,7 +259,7 @@ class NumberSymbolList
     }
 
     /**
-     * Get the exponent character
+     * Get the exponent character.
      *
      * @return string
      */
@@ -279,7 +269,7 @@ class NumberSymbolList
     }
 
     /**
-     * Gert the per mille symbol (often "‰")
+     * Gert the per mille symbol (often "‰").
      *
      * @see https://en.wikipedia.org/wiki/Per_mille
      *
@@ -291,7 +281,7 @@ class NumberSymbolList
     }
 
     /**
-     * Get the infinity symbol (often "∞")
+     * Get the infinity symbol (often "∞").
      *
      * @see https://en.wikipedia.org/wiki/Infinity_symbol
      *
@@ -313,7 +303,7 @@ class NumberSymbolList
     }
 
     /**
-     * Symbols list validation
+     * Symbols list validation.
      *
      * @throws LocalizationException
      */

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -52,7 +52,22 @@ class CategoryControllerCore extends ProductListingFrontController
 
     public function getCanonicalURL()
     {
-        return $this->context->link->getCategoryLink($this->category);
+        $canonicalUrl = $this->context->link->getCategoryLink($this->category);
+        $parsedUrl = parse_url($canonicalUrl);
+        if (isset($parsedUrl['query'])) {
+            parse_str($parsedUrl['query'], $params);
+        } else {
+            $params = array();
+        }
+        $page = (int) Tools::getValue('page');
+        if ($page > 1) {
+            $params['page'] = $page;
+        } else {
+            unset($params['page']);
+        }
+        $canonicalUrl = http_build_url($parsedUrl, ['query' => http_build_query($params)]);
+
+        return $canonicalUrl;
     }
 
     /**
@@ -108,19 +123,44 @@ class CategoryControllerCore extends ProductListingFrontController
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function initContent()
     {
         parent::initContent();
 
-        $this->doProductSearch(
-            'catalog/listing/category',
-            array(
-                'entity' => 'category',
-                'id' => $this->category->id
-            )
-        );
+        if ($this->category->checkAccess($this->context->customer->id)) {
+            $this->doProductSearch(
+                'catalog/listing/category',
+                [
+                    'entity' => 'category',
+                    'id' => $this->category->id,
+                ]
+            );
+        }
+    }
+
+    /**
+     * overrides layout if category is not visible.
+     *
+     * @return bool|string
+     */
+    public function getLayout()
+    {
+        if (!$this->category->checkAccess($this->context->customer->id)) {
+            return 'layouts/layout-full-width.tpl';
+        }
+
+        return parent::getLayout();
+    }
+
+    protected function getAjaxProductSearchVariables()
+    {
+        $data = parent::getAjaxProductSearchVariables();
+        $rendered_products_header = $this->render('catalog/_partials/category-header', array('listing' => $data));
+        $data['rendered_products_header'] = $rendered_products_header;
+
+        return $data;
     }
 
     protected function getProductSearchQuery()
@@ -208,10 +248,10 @@ class CategoryControllerCore extends ProductListingFrontController
     {
         $page = parent::getTemplateVarPage();
 
-        $page['body_classes']['category-id-'.$this->category->id] = true;
-        $page['body_classes']['category-'.$this->category->name] = true;
-        $page['body_classes']['category-id-parent-'.$this->category->id_parent] = true;
-        $page['body_classes']['category-depth-level-'.$this->category->level_depth] = true;
+        $page['body_classes']['category-id-' . $this->category->id] = true;
+        $page['body_classes']['category-' . $this->category->name] = true;
+        $page['body_classes']['category-id-parent-' . $this->category->id_parent] = true;
+        $page['body_classes']['category-depth-level-' . $this->category->level_depth] = true;
 
         return $page;
     }

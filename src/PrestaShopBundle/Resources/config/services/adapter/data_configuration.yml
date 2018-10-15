@@ -112,11 +112,33 @@ services:
         arguments:
             - '@prestashop.adapter.legacy.configuration'
 
+    prestashop.adapter.order.invoice_options.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Invoice\InvoiceOptionsConfiguration'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+
     prestashop.adapter.data_provider.language:
         class: 'PrestaShop\PrestaShop\Adapter\Language\LanguageDataProvider'
 
     prestashop.adapter.language.activator:
         class: 'PrestaShop\PrestaShop\Adapter\Language\LanguageActivator'
+
+    prestashop.adapter.language.language_pack_installer:
+        class: 'PrestaShop\PrestaShop\Adapter\Language\LanguagePackInstaller'
+        arguments:
+            - '@translator'
+            - '@prestashop.core.foundation.version'
+
+    prestashop.adapter.language.validator:
+        class: 'PrestaShop\PrestaShop\Adapter\Language\LanguageValidator'
+
+    prestashop.adapter.language.copier:
+        class: 'PrestaShop\PrestaShop\Adapter\Language\LanguageCopier'
+        arguments:
+            - '@prestashop.adapter.data_provider.language'
+            - '@translator'
+            - '@filesystem'
+            - '@=service("prestashop.core.addon.theme.repository").getListAsCollection()'
 
     prestashop.adapter.manager.currency:
         class: 'PrestaShop\PrestaShop\Adapter\Currency\CurrencyManager'
@@ -166,3 +188,63 @@ services:
         class: 'PrestaShop\PrestaShop\Adapter\Carrier\CarrierOptionsConfiguration'
         arguments:
             - '@prestashop.adapter.legacy.configuration'
+
+    prestashop.core.email.email_configurator:
+        class: 'PrestaShop\PrestaShop\Core\Email\EmailDataConfigurator'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+
+    prestashop.core.email.smtp_configurator:
+        class: 'PrestaShop\PrestaShop\Core\Email\SmtpDataConfigurator'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+
+    prestashop.adapter.webservice.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Webservice\WebserviceConfiguration'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+
+    prestashop.adapter.language.pack.importer:
+        class: 'PrestaShop\PrestaShop\Adapter\Language\Pack\LanguagePackImporter'
+        arguments:
+            - '@prestashop.adapter.language.language_pack_installer'
+            - '@prestashop.adapter.data_provider.language'
+            - '@prestashop.adapter.cache_clearer'
+            - '@=service("prestashop.adapter.legacy.configuration").get("_PS_TRANSLATIONS_DIR_")'
+
+    prestashop.adapter.meta.set_up_urls.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Meta\SetUpUrlsDataConfiguration'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+            - '@prestashop.adapter.file.htaccess_file_generator'
+            - '@translator'
+
+    prestashop.adapter.meta.shop_url.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Meta\ShopUrlDataConfiguration'
+        arguments:
+            - '@=service("prestashop.adapter.shop.shop_url").getMainShopUrl()'
+            - '@prestashop.adapter.legacy.configuration'
+
+    prestashop.adapter.meta.url_schema.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Meta\UrlSchemaDataConfiguration'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+            - '@=service("prestashop.adapter.data_provider.default_route").getRules()'
+
+    prestashop.core.team.employee.configuration.employee_options_configuration:
+        class: 'PrestaShop\PrestaShop\Core\Team\Employee\Configuration\EmployeeOptionsConfiguration'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+            - '@prestashop.core.team.employee.configuration.options_checker'
+
+    prestashop.adapter.import.import_data_match.configuration:
+        class: 'PrestaShop\PrestaShop\Core\Import\Configuration\ImportDataMatchConfiguration'
+        arguments:
+            - '@translator'
+            - '@=service("prestashop.core.form.choice_provider.import_entity_field").getChoices()'
+            - '@=service("prestashop.core.import.dir")'
+            - '@prestashop.core.import.factory.data_row.collection_factory'
+            - '@doctrine.dbal.default_connection'
+            - '%database_prefix%'
+            - '@prestashop.core.admin.import_match.repository'
+            - '@session'

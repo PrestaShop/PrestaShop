@@ -62,7 +62,11 @@ class bankwire extends PaymentModule
 
     public function install()
     {
-        if (!parent::install() || !$this->registerHook('paymentReturn') || !$this->registerHook('paymentOptions')) {
+        if (!parent::install()
+            || !$this->registerHook('paymentReturn')
+            || !$this->registerHook('paymentOptions')
+            || !$this->registerHook('displayHome')
+        ) {
             return false;
         }
         return true;

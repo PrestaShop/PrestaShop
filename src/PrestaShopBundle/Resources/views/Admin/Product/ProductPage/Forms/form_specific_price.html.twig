@@ -22,6 +22,20 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *#}
+{% if is_modal is not defined %}
+  {% set is_modal = false %}
+{% endif %}
+
+{% if is_modal == false %}
+  {% set column_default_md_3 = 'col-md-3' %}
+  {% set column_default_md_2 = 'col-md-2' %}
+  {% set column_default_xl_2 = 'col-xl-2' %}
+{% else %}
+  {% set column_default_md_3 = 'col-md-9' %}
+  {% set column_default_md_2 = 'col-md-4' %}
+  {% set column_default_xl_2 = 'col-xl-4' %}
+{% endif %}
+
 <div class="card card-block">
   <h4><b>{{ 'Specific price conditions'|trans({}, 'Admin.Catalog.Feature') }}</b></h4>
   {{ form_errors(form) }}
@@ -41,21 +55,21 @@
   {% endif %}
 
   <div class="row">
-    <div class="col-md-3">
+    <div class="{{ column_default_md_3 }}">
       <fieldset class="form-group">
         <label>{{ 'For'|trans({}, 'Admin.Global') }}</label>
         {{ form_errors(form.sp_id_currency) }}
         {{ form_widget(form.sp_id_currency) }}
       </fieldset>
     </div>
-    <div class="col-md-3">
+    <div class="{{ column_default_md_3 }}">
       <fieldset class="form-group">
         <label>&nbsp;</label>
         {{ form_errors(form.sp_id_country) }}
         {{ form_widget(form.sp_id_country) }}
       </fieldset>
     </div>
-    <div class="col-md-3">
+    <div class="{{ column_default_md_3 }}">
       <fieldset class="form-group">
         <label>&nbsp;</label>
         {{ form_errors(form.sp_id_group) }}
@@ -79,21 +93,25 @@
       </fieldset>
     </div>
     <div class="clearfix"></div>
-    <div class="col-md-3">
+    <div class="{{ column_default_md_3 }}">
       <fieldset class="form-group">
         <label>{{ form.sp_from.vars.label }}</label>
         {{ form_errors(form.sp_from) }}
         {{ form_widget(form.sp_from) }}
       </fieldset>
     </div>
-    <div class="col-md-3">
+    <div class="{{ column_default_md_3 }}">
       <fieldset class="form-group">
         <label>{{ 'to'|trans({}, 'Admin.Global')|raw }}</label>
         {{ form_errors(form.sp_to) }}
         {{ form_widget(form.sp_to) }}
       </fieldset>
     </div>
-    <div class="col-md-2">
+  {% if is_modal == true %}
+  </div>
+  <div class="row">
+  {% endif %}
+    <div class="{{ column_default_md_2 }}">
       <fieldset class="form-group">
         <label>{{ form.sp_from_quantity.vars.label }}</label>
         {{ form_errors(form.sp_from_quantity) }}
@@ -110,14 +128,14 @@
 
   <h4><b>{{ 'Impact on price'|trans({}, 'Admin.Catalog.Feature') }}</b></h4>
   <div class="row">
-    <div class="col-md-3">
+    <div class="{{ column_default_md_3 }}">
       <fieldset class="form-group">
         <label>{{ form.sp_price.vars.label }}</label>
         {{ form_errors(form.sp_price) }}
         {{ form_widget(form.sp_price) }}
       </fieldset>
     </div>
-    <div class="col-md-3">
+    <div class="{{ column_default_md_3 }}">
       <fieldset class="form-group">
         <label>&nbsp;</label>
         {{ form_errors(form.leave_bprice) }}
@@ -126,21 +144,21 @@
     </div>
   </div>
   <div class="row">
-    <div class="col-xl-2 col-lg-3">
+    <div class="{{ column_default_xl_2 }} col-lg-3">
       <fieldset class="form-group">
         <label>{{ 'Apply a discount of'|trans({}, 'Admin.Catalog.Feature') }}</label>
         {{ form_errors(form.sp_reduction) }}
         {{ form_widget(form.sp_reduction) }}
       </fieldset>
     </div>
-    <div class="col-xl-2 col-lg-3">
+    <div class="{{ column_default_xl_2 }} col-lg-3">
       <fieldset class="form-group">
         <label>&nbsp;</label>
         {{ form_errors(form.sp_reduction_type) }}
         {{ form_widget(form.sp_reduction_type) }}
       </fieldset>
     </div>
-    <div class="col-xl-2 col-lg-3">
+    <div class="{{ column_default_xl_2 }} col-lg-3">
       <fieldset class="form-group">
         <label>&nbsp;</label>
         {{ form_errors(form.sp_reduction_tax) }}

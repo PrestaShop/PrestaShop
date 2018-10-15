@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,27 +23,33 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
 use Pack;
 use Product;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 
+/**
+ * Class responsible of getting information about Pack Items.
+ */
 class PackItemsManager
 {
     /**
      * Get the Products contained in the given Pack.
      *
      * @param \Pack $pack
-     * @param integer $id_lang Optional
+     * @param int $id_lang Optional
+     *
      * @return array(Product) The products contained in this Pack, with special dynamic attributes [pack_quantity, id_pack_product_attribute]
      */
     public function getPackItems($pack, $id_lang = false)
     {
         if ($id_lang === false) {
             $configuration = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\ConfigurationInterface');
-            $id_lang = (int)$configuration->get('PS_LANG_DEFAULT');
+            $id_lang = (int) $configuration->get('PS_LANG_DEFAULT');
         }
+
         return Pack::getItems($pack->id, $id_lang);
     }
 
@@ -51,16 +57,18 @@ class PackItemsManager
      * Get all Packs that contains the given item in the corresponding declination.
      *
      * @param Product $item
-     * @param integer $item_attribute_id
-     * @param boolean|integer $id_lang Optional
+     * @param int $item_attribute_id
+     * @param bool|int $id_lang Optional
+     *
      * @return array(Pack) The packs that contains the given item, with special dynamic attribute [pack_item_quantity]
      */
     public function getPacksContainingItem($item, $item_attribute_id, $id_lang = false)
     {
         if ($id_lang === false) {
             $configuration = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\ConfigurationInterface');
-            $id_lang = (int)$configuration->get('PS_LANG_DEFAULT');
+            $id_lang = (int) $configuration->get('PS_LANG_DEFAULT');
         }
+
         return Pack::getPacksContainingItem($item->id, $item_attribute_id, $id_lang);
     }
 
@@ -68,7 +76,8 @@ class PackItemsManager
      * Is this product a pack?
      *
      * @param Product $product
-     * @return boolean
+     *
+     * @return bool
      */
     public function isPack($product)
     {
@@ -81,8 +90,9 @@ class PackItemsManager
      * else this method will match a product if at least one of all its combination is in a pack.
      *
      * @param Product $product
-     * @param integer $id_product_attribute Optional combination of the product
-     * @return boolean
+     * @param int $id_product_attribute Optional combination of the product
+     *
+     * @return bool
      */
     public function isPacked($product, $id_product_attribute = false)
     {

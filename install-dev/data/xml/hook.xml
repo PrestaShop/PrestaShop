@@ -801,5 +801,120 @@
       <title>Processing Maintenance page form</title>
       <description>This hook is called when the Maintenance Page form is processed</description>
     </hook>
+    <hook id="actionWebserviceKeyGridPresenterModifier">
+      <name>actionWebserviceKeyGridPresenterModifier</name>
+      <title>Modify Webservice grid view data</title>
+      <description>This hook allows to alter presented Webservice grid data</description>
+    </hook>
+    <hook id="actionWebserviceKeyGridDefinitionModifier">
+      <name>actionWebserviceKeyGridDefinitionModifier</name>
+      <title>Modifying Webservice grid definition</title>
+      <description>This hook allows to alter Webservice grid columns, actions and filters</description>
+    </hook>
+    <hook id="actionWebserviceKeyGridQueryBuilderModifier">
+      <name>actionWebserviceKeyGridQueryBuilderModifier</name>
+      <title>Modify Webservice grid query builder</title>
+      <description>This hook allows to alter Doctrine query builder for Webservice grid</description>
+    </hook>
+    <hook id="actionWebserviceKeyGridFilterFormModifier">
+      <name>actionWebserviceKeyGridFilterFormModifier</name>
+      <title>Modify filters form for Webservice grid</title>
+      <description>This hook allows to alter filters form used in Webservice</description>
+    </hook>
+    <hook id="actionSqlRequestGridPresenterModifier">
+      <name>actionSqlRequestGridPresenterModifier</name>
+      <title>Modify SQL Manager grid view data</title>
+      <description>This hook allows to alter presented SQL Manager grid data</description>
+    </hook>
+    <hook id="actionSqlRequestGridDefinitionModifier">
+      <name>actionSqlRequestGridDefinitionModifier</name>
+      <title>Modifying SQL Manager grid definition</title>
+      <description>This hook allows to alter SQL Manager grid columns, actions and filters</description>
+    </hook>
+    <hook id="actionSqlRequestGridQueryBuilderModifier">
+      <name>actionSqlRequestGridQueryBuilderModifier</name>
+      <title>Modify SQL Manager grid query builder</title>
+      <description>This hook allows to alter Doctrine query builder for SQL Manager grid</description>
+    </hook>
+    <hook id="actionSqlRequestGridFilterFormModifier">
+      <name>actionSqlRequestGridFilterFormModifier</name>
+      <title>Modify filters form for SQL Manager grid</title>
+      <description>This hook allows to alter filters form used in SQL Manager</description>
+    </hook>
+    <hook id="actionMetaGridPresenterModifier">
+      <name>actionMetaGridPresenterModifier</name>
+      <title>Modify SEO and URLs grid view data</title>
+      <description>This hook allows to alter presented SEO and URLs grid data</description>
+    </hook>
+    <hook id="actionMetaGridDefinitionModifier">
+      <name>actionMetaGridDefinitionModifier</name>
+      <title>Modifying SEO and URLs grid definition</title>
+      <description>This hook allows to alter SEO and URLs grid columns, actions and filters</description>
+    </hook>
+    <hook id="actionMetaGridQueryBuilderModifier">
+      <name>actionMetaGridQueryBuilderModifier</name>
+      <title>Modify SEO and URLs grid query builder</title>
+      <description>This hook allows to alter Doctrine query builder for SEO and URLs grid</description>
+    </hook>
+    <hook id="actionMetaGridFilterFormModifier">
+      <name>actionMetaGridFilterFormModifier</name>
+      <title>Modify filters form for SEO and URLs grid</title>
+      <description>This hook allows to alter filters form used in SEO and URLs</description>
+    </hook>
+    <hook id="actionLogsGridPresenterModifier">
+      <name>actionLogsGridPresenterModifier</name>
+      <title>Modify Logs grid view data</title>
+      <description>This hook allows to alter presented Logs grid data</description>
+    </hook>
+    <hook id="actionLogsGridDefinitionModifier">
+      <name>actionLogsGridDefinitionModifier</name>
+      <title>Modifying Logs grid definition</title>
+      <description>This hook allows to alter Logs grid columns, actions and filters</description>
+    </hook>
+    <hook id="actionLogsGridQueryBuilderModifier">
+      <name>actionLogsGridQueryBuilderModifier</name>
+      <title>Modify Logs grid query builder</title>
+      <description>This hook allows to alter Doctrine query builder for Logs grid</description>
+    </hook>
+    <hook id="actionLogsGridFilterFormModifier">
+      <name>actionLogsGridFilterFormModifier</name>
+      <title>Modify filters form for Logs grid</title>
+      <description>This hook allows to alter filters form used in Logs</description>
+    </hook>
+    <hook id="actionEmailLogsGridPresenterModifier">
+      <name>actionEmailLogsGridPresenterModifier</name>
+      <title>Modify E-mail grid view data</title>
+      <description>This hook allows to alter presented E-mail grid data</description>
+    </hook>
+    <hook id="actionEmailLogsGridDefinitionModifier">
+      <name>actionEmailLogsGridDefinitionModifier</name>
+      <title>Modifying E-mail grid definition</title>
+      <description>This hook allows to alter E-mail grid columns, actions and filters</description>
+    </hook>
+    <hook id="actionEmailLogsGridQueryBuilderModifier">
+      <name>actionEmailLogsGridQueryBuilderModifier</name>
+      <title>Modify E-mail grid query builder</title>
+      <description>This hook allows to alter Doctrine query builder for E-mail grid</description>
+    </hook>
+    <hook id="actionEmailLogsGridFilterFormModifier">
+      <name>actionEmailLogsGridFilterFormModifier</name>
+      <title>Modify filters form for E-mail grid</title>
+      <description>This hook allows to alter filters form used in E-mail</description>
+    </hook>
+    <hook id="actionBackupGridPresenterModifier">
+      <name>actionBackupGridPresenterModifier</name>
+      <title>Modify DB Backup grid view data</title>
+      <description>This hook allows to alter presented DB Backup grid data</description>
+    </hook>
+    <hook id="actionBackupGridDefinitionModifier">
+      <name>actionBackupGridDefinitionModifier</name>
+      <title>Modifying DB Backup grid definition</title>
+      <description>This hook allows to alter DB Backup grid columns, actions and filters</description>
+    </hook>
+    <hook id="actionBackupGridFilterFormModifier">
+      <name>actionBackupGridFilterFormModifier</name>
+      <title>Modify filters form for DB Backup grid</title>
+      <description>This hook allows to alter filters form used in DB Backup</description>
+    </hook>
   </entities>
 </entity_hook>

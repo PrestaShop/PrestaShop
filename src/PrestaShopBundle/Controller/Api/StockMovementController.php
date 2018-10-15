@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -47,6 +47,7 @@ class StockMovementController extends ApiController
 
     /**
      * @param Request $request
+     *
      * @return JsonResponse
      */
     public function listMovementsAction(Request $request)
@@ -65,6 +66,7 @@ class StockMovementController extends ApiController
 
     /**
      * @param Request $request
+     *
      * @return JsonResponse
      */
     public function listMovementsEmployeesAction(Request $request)
@@ -74,11 +76,12 @@ class StockMovementController extends ApiController
 
     /**
      * @param Request $request
+     *
      * @return JsonResponse
      */
     public function listMovementsTypesAction(Request $request)
     {
-        $grouped = (bool)$request->get('grouped');
+        $grouped = (bool) $request->get('grouped');
 
         return $this->jsonResponse($this->stockMovementRepository->getTypes($grouped), $request);
     }

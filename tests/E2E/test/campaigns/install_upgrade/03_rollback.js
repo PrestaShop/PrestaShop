@@ -59,7 +59,7 @@ scenario('The shop installation', () => {
     test('should login successfully in the Front Office', () => client.signInFO(AccessPageFO, UrlLastStableVersion));
   }, 'installation');
 
-  orderCommonScenarios.createOrderFO();
+  orderCommonScenarios.createOrderFO("connected");
 
   scenario('Logout from the back office', client => {
     test('should logout successfully from the Front Office', () => client.signOutFO(AccessPageFO));

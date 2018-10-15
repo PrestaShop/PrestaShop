@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -56,14 +56,18 @@ class FormattedTextareaType extends AbstractType
      */
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
+        if (!isset($view->vars['attr']['class'])) {
+            $view->vars['attr']['class'] = '';
+        }
+
         if (true === $options['autoload']) {
-            $view->vars['attr']['class'] = 'autoload_rte';
+            $view->vars['attr']['class'] .= ' autoload_rte';
         }
         $view->vars['attr']['counter'] = $options['limit'];
         $view->vars['constraints'] = [
             new TinyMceMaxLength([
                 'max' => $options['limit'],
-            ])
+            ]),
         ];
     }
 

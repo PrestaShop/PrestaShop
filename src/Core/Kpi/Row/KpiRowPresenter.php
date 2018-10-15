@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Kpi\Row;
 use PrestaShop\PrestaShop\Core\Kpi\KpiInterface;
 
 /**
- * Class KpiRowPresenter presents a KPI row
+ * Class KpiRowPresenter presents a KPI row.
  */
 final class KpiRowPresenter implements KpiRowPresenterInterface
 {

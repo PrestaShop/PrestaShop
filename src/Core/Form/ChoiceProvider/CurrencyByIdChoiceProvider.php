@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 
 /**
- * Class CurrencyByIdChoiceProvider provides currency choices with ID values
+ * Class CurrencyByIdChoiceProvider provides currency choices with ID values.
  */
 final class CurrencyByIdChoiceProvider implements FormChoiceProviderInterface
 {
@@ -48,7 +48,7 @@ final class CurrencyByIdChoiceProvider implements FormChoiceProviderInterface
     }
 
     /**
-     * Get currency choices
+     * Get currency choices.
      *
      * @return array
      */

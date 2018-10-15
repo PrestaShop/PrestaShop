@@ -1,1 +1,1 @@
-require('../../high/02_product/8_sort_product');
+require('../../high/02_product/08_sort_product');

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -24,7 +24,6 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-
 namespace PrestaShop\PrestaShop\Adapter\Presenter\Product;
 
 use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
@@ -37,10 +36,29 @@ use Link;
 
 class ProductPresenter
 {
+    /**
+     * @var ImageRetriever
+     */
     protected $imageRetriever;
+
+    /**
+     * @var Link
+     */
     protected $link;
+
+    /**
+     * @var PriceFormatter
+     */
     protected $priceFormatter;
+
+    /**
+     * @var ProductColorsRetriever
+     */
     protected $productColorsRetriever;
+
+    /**
+     * @var TranslatorInterface
+     */
     protected $translator;
 
     public function __construct(

@@ -1,0 +1,31 @@
+# Invoices
+admin_order_invoices:
+    path: /
+    methods: [GET]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Sell\Order\Invoices:index'
+        _legacy_controller: AdminInvoices
+
+# Process Invoice Options form
+admin_order_invoices_process:
+    path: /
+    methods: [POST]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Sell\Order\Invoices:process'
+        _legacy_controller: AdminInvoices
+
+# Generate PDF by date
+admin_order_invoices_generate_by_date:
+    path: /by_date
+    methods: [POST]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Sell\Order\Invoices:generatePdfByDate'
+        _legacy_controller: AdminInvoices
+
+# Generate PDF by status
+admin_order_invoices_generate_by_status:
+    path: /by_status
+    methods: [POST]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Sell\Order\Invoices:generatePdfByStatus'
+        _legacy_controller: AdminInvoices

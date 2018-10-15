@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -25,7 +25,7 @@
  */
 
 /**
- * Class ZoneCore
+ * Class ZoneCore.
  */
 class ZoneCore extends ObjectModel
 {
@@ -50,7 +50,7 @@ class ZoneCore extends ObjectModel
     protected $webserviceParameters = array();
 
     /**
-     * Get all available geographical zones
+     * Get all available geographical zones.
      *
      * @param bool $active
      * @param bool $activeFirst
@@ -59,13 +59,13 @@ class ZoneCore extends ObjectModel
      */
     public static function getZones($active = false, $activeFirst = false)
     {
-        $cacheId = 'Zone::getZones_'.(bool) $active;
+        $cacheId = 'Zone::getZones_' . (bool) $active;
         if (!Cache::isStored($cacheId)) {
             $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 				SELECT *
-				FROM `'._DB_PREFIX_.'zone`
-				'.($active ? 'WHERE active = 1' : '').'
-				ORDER BY '.($activeFirst ? '`active` DESC,' : '').' `name` ASC
+				FROM `' . _DB_PREFIX_ . 'zone`
+				' . ($active ? 'WHERE active = 1' : '') . '
+				ORDER BY ' . ($activeFirst ? '`active` DESC,' : '') . ' `name` ASC
 			');
             Cache::store($cacheId, $result);
 
@@ -76,7 +76,7 @@ class ZoneCore extends ObjectModel
     }
 
     /**
-     * Get a zone ID from its default language name
+     * Get a zone ID from its default language name.
      *
      * @param string $name
      *
@@ -86,26 +86,26 @@ class ZoneCore extends ObjectModel
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 			SELECT `id_zone`
-			FROM `'._DB_PREFIX_.'zone`
-			WHERE `name` = \''.pSQL($name).'\'
+			FROM `' . _DB_PREFIX_ . 'zone`
+			WHERE `name` = \'' . pSQL($name) . '\'
 		');
     }
 
     /**
-    * Delete a zone
-    *
-    * @return bool Deletion result
-    */
+     * Delete a zone.
+     *
+     * @return bool Deletion result
+     */
     public function delete()
     {
         if (parent::delete()) {
             // Delete regarding delivery preferences
-            $result = Db::getInstance()->delete('carrier_zone', 'id_zone = '.(int) $this->id);
-            $result &= Db::getInstance()->delete('delivery', 'id_zone = '.(int) $this->id);
+            $result = Db::getInstance()->delete('carrier_zone', 'id_zone = ' . (int) $this->id);
+            $result &= Db::getInstance()->delete('delivery', 'id_zone = ' . (int) $this->id);
 
             // Update Country & state zone with 0
-            $result &= Db::getInstance()->update('country', array('id_zone' => 0), 'id_zone = '.(int) $this->id);
-            $result &= Db::getInstance()->update('state', array('id_zone' => 0), 'id_zone = '.(int) $this->id);
+            $result &= Db::getInstance()->update('country', array('id_zone' => 0), 'id_zone = ' . (int) $this->id);
+            $result &= Db::getInstance()->update('state', array('id_zone' => 0), 'id_zone = ' . (int) $this->id);
 
             return $result;
         }

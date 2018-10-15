@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -38,6 +38,7 @@ class StockMovementRepository extends StockManagementRepository
 {
     /**
      * StockMovementRepository constructor.
+     *
      * @param ContainerInterface $container
      * @param Connection $connection
      * @param EntityManager $entityManager
@@ -67,6 +68,7 @@ class StockMovementRepository extends StockManagementRepository
      * @param string $andWhereClause
      * @param string $having
      * @param null $orderByClause
+     *
      * @return mixed
      */
     protected function selectSql(
@@ -86,14 +88,14 @@ class StockMovementRepository extends StockManagementRepository
                 '{having}',
                 '{order_by}',
                 '{table_prefix}',
-                '{combination_name}'
+                '{combination_name}',
             ),
             array(
                 $andWhereClause,
                 $having,
                 $orderByClause,
                 $this->tablePrefix,
-                $combinationNameQuery
+                $combinationNameQuery,
             ),
             'SELECT SQL_CALC_FOUND_ROWS
               sm.id_stock_mvt,
@@ -175,6 +177,7 @@ class StockMovementRepository extends StockManagementRepository
 
     /**
      * @param array $rows
+     *
      * @return array
      */
     protected function addAdditionalData(array $rows)
@@ -188,6 +191,7 @@ class StockMovementRepository extends StockManagementRepository
 
     /**
      * @param array $rows
+     *
      * @return array
      */
     private function addOrderLink(array $rows)
@@ -198,7 +202,7 @@ class StockMovementRepository extends StockManagementRepository
                     'AdminOrders',
                     true,
                     array(),
-                    array('vieworder' => true, 'id_order' => (int)$row['id_order'])
+                    array('vieworder' => true, 'id_order' => (int) $row['id_order'])
                 );
             } else {
                 $row['order_link'] = 'N/A';
@@ -209,7 +213,8 @@ class StockMovementRepository extends StockManagementRepository
     }
 
     /**
-     * Get movements from employees
+     * Get movements from employees.
+     *
      * @return mixed
      */
     public function getEmployees()
@@ -237,9 +242,10 @@ class StockMovementRepository extends StockManagementRepository
     }
 
     /**
-     * Get type of movements from employees
+     * Get type of movements from employees.
      *
      * @param bool $grouped
+     *
      * @return mixed
      */
     public function getTypes($grouped = false)
@@ -255,7 +261,7 @@ class StockMovementRepository extends StockManagementRepository
         $query = str_replace(
             '{table_prefix}',
             $this->tablePrefix,
-            'SELECT '.$select.'
+            'SELECT ' . $select . '
             FROM {table_prefix}stock_mvt sm
             INNER JOIN {table_prefix}stock_available sa ON (sa.id_stock_available = sm.id_stock)
             INNER JOIN {table_prefix}stock_mvt_reason_lang smrl ON (
@@ -263,7 +269,7 @@ class StockMovementRepository extends StockManagementRepository
               AND smrl.id_lang = :language_id)
             WHERE
             sa.id_shop = :shop_id
-            '.$groupBy.'
+            ' . $groupBy . '
             ORDER BY name ASC'
         );
 
@@ -286,6 +292,7 @@ class StockMovementRepository extends StockManagementRepository
 
     /**
      * @param StockMvt $stockMvt
+     *
      * @return int
      */
     public function saveStockMvt(StockMvt $stockMvt)

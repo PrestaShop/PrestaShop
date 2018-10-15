@@ -6,10 +6,12 @@
     <tab id="DEFAULT" name="More" />
     <tab id="Addresses" name="Addresses" />
     <tab id="Administration" name="Administration" />
-    <tab id="Module_Page" name="Modules &amp; Services" />
-    <tab id="Module_Page_Catalog" name="Selection" />
-    <tab id="Module_Page_Manage" name="Installed modules" />
-    <tab id="Module_Page_Notifications" name="Notifications" />
+    <tab id="Module_Catalog" name="Module Catalog" />
+    <tab id="Module_Page" name="Module Manager" />
+    <tab id="Module_Page_Catalog" name="Module Catalog" />
+    <tab id="Module_Page_Manage" name="Modules" />
+    <tab id="Module_Page_Notifications" name="Alerts" />
+    <tab id="Module_Page_Updates" name="Updates" />
     <tab id="Advanced_Parameters" name="Advanced Parameters" />
     <tab id="Attachments" name="Files" />
     <tab id="Attributes_and_features" name="Attributes &amp; Features" />
@@ -127,5 +129,5 @@
     <tab id="Warehouses" name="Warehouses" />
     <tab id="Webservice" name="Webservice" />
     <tab id="Zones" name="Zones" />
-    <tab id="Marketing_tools" name="Modules Catalog" />
+    <tab id="Marketing_tools" name="Module Selections" />
 </entity_tab>

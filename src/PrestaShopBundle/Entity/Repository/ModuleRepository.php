@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,7 +30,7 @@ use Doctrine\DBAL\Connection;
 use PDO;
 
 /**
- * Class ModuleRepository is responsible for retrieving module data from database
+ * Class ModuleRepository is responsible for retrieving module data from database.
  */
 class ModuleRepository
 {
@@ -57,11 +57,11 @@ class ModuleRepository
     {
         $this->connection = $connection;
         $this->databasePrefix = $databasePrefix;
-        $this->table = $this->databasePrefix.'module';
+        $this->table = $this->databasePrefix . 'module';
     }
 
     /**
-     * Find enabled countries for module in shop
+     * Find enabled countries for module in shop.
      *
      * @param int $moduleId
      * @param int $shopId
@@ -72,7 +72,7 @@ class ModuleRepository
     {
         $qb = $this->connection->createQueryBuilder()
             ->select('mc.id_country')
-            ->from($this->table.'_country', 'mc')
+            ->from($this->table . '_country', 'mc')
             ->where('mc.id_module = :id_module')
             ->setParameter('id_module', $moduleId)
             ->andWhere('mc.id_shop = :id_shop')
@@ -83,7 +83,7 @@ class ModuleRepository
     }
 
     /**
-     * Find enabled currencies for module in shop
+     * Find enabled currencies for module in shop.
      *
      * @param int $moduleId
      * @param int $shopId
@@ -94,7 +94,7 @@ class ModuleRepository
     {
         $qb = $this->connection->createQueryBuilder()
             ->select('mc.id_currency')
-            ->from($this->table.'_currency', 'mc')
+            ->from($this->table . '_currency', 'mc')
             ->where('mc.id_module = :id_module')
             ->setParameter('id_module', $moduleId)
             ->andWhere('mc.id_shop = :id_shop')
@@ -105,7 +105,7 @@ class ModuleRepository
     }
 
     /**
-     * Find enabled groups for module in shop
+     * Find enabled groups for module in shop.
      *
      * @param int $moduleId
      * @param int $shopId
@@ -116,7 +116,7 @@ class ModuleRepository
     {
         $qb = $this->connection->createQueryBuilder()
             ->select('mg.id_group')
-            ->from($this->table.'_group', 'mg')
+            ->from($this->table . '_group', 'mg')
             ->where('mg.id_module = :id_module')
             ->setParameter('id_module', $moduleId)
             ->andWhere('mg.id_shop = :id_shop')
@@ -127,7 +127,7 @@ class ModuleRepository
     }
 
     /**
-     * Find enabled carriers for module in shop
+     * Find enabled carriers for module in shop.
      *
      * @param int $moduleId
      * @param int $shopId
@@ -138,7 +138,7 @@ class ModuleRepository
     {
         $qb = $this->connection->createQueryBuilder()
             ->select('mc.id_reference')
-            ->from($this->table.'_carrier', 'mc')
+            ->from($this->table . '_carrier', 'mc')
             ->where('mc.id_module = :id_module')
             ->setParameter('id_module', $moduleId)
             ->andWhere('mc.id_shop = :id_shop')

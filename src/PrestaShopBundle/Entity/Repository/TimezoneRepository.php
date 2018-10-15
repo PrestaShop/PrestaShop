@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,7 +30,7 @@ use Doctrine\DBAL\Connection;
 use PrestaShop\PrestaShop\Core\Repository\RepositoryInterface;
 
 /**
- * Class TimezoneRepository
+ * Class TimezoneRepository.
  */
 class TimezoneRepository implements RepositoryInterface
 {
@@ -57,11 +57,11 @@ class TimezoneRepository implements RepositoryInterface
     {
         $this->connection = $connection;
         $this->tablePrefix = $tablePrefix;
-        $this->timezoneTable = $tablePrefix.'timezone';
+        $this->timezoneTable = $tablePrefix . 'timezone';
     }
 
     /**
-     * Final all timezones from database
+     * Final all timezones from database.
      *
      * @return array
      */

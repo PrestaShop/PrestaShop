@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -36,7 +36,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 
 /**
  * Class returning the content of the form in the maintenance page.
- * To be found in Configure > Shop parameters > General > Maintenance
+ * To be found in Configure > Shop parameters > General > Maintenance.
  */
 class MaintenanceType extends TranslatorAwareType
 {

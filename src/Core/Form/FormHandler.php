@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -27,43 +27,43 @@
 namespace PrestaShop\PrestaShop\Core\Form;
 
 use Exception;
-use PrestaShopBundle\Service\Hook\HookDispatcher;
+use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\Exception\UndefinedOptionsException;
 
 /**
- * Complete implementation of FormHandlerInterface
+ * Complete implementation of FormHandlerInterface.
  */
 class FormHandler implements FormHandlerInterface
 {
     /**
-     * @var FormBuilderInterface the form builder.
+     * @var FormBuilderInterface the form builder
      */
     protected $formBuilder;
 
     /**
-     * @var FormDataProviderInterface the form data provider.
+     * @var FormDataProviderInterface the form data provider
      */
     protected $formDataProvider;
 
     /**
-     * @var HookDispatcher the event dispatcher.
+     * @var HookDispatcherInterface the event dispatcher
      */
     protected $hookDispatcher;
 
     /**
-     * @var string the hook name.
+     * @var string the hook name
      */
     protected $hookName;
 
     /**
-     * @var array the list of Form Types.
+     * @var array the list of Form Types
      */
     protected $formTypes;
 
     public function __construct(
         FormBuilderInterface $formBuilder,
-        HookDispatcher $hookDispatcher,
+        HookDispatcherInterface $hookDispatcher,
         FormDataProviderInterface $formDataProvider,
         array $formTypes,
         $hookName
@@ -77,6 +77,7 @@ class FormHandler implements FormHandlerInterface
 
     /**
      * {@inheritdoc}
+     *
      * @throws Exception
      */
     public function getForm()
@@ -86,7 +87,7 @@ class FormHandler implements FormHandlerInterface
         }
 
         $this->formBuilder->setData($this->formDataProvider->getData());
-        $this->hookDispatcher->dispatchForParameters(
+        $this->hookDispatcher->dispatchWithParameters(
             "action{$this->hookName}Form",
             [
                 'form_builder' => &$this->formBuilder,
@@ -98,6 +99,7 @@ class FormHandler implements FormHandlerInterface
 
     /**
      * {@inheritdoc}
+     *
      * @throws Exception
      * @throws UndefinedOptionsException
      */
@@ -105,7 +107,7 @@ class FormHandler implements FormHandlerInterface
     {
         $errors = $this->formDataProvider->setData($data);
 
-        $this->hookDispatcher->dispatchForParameters(
+        $this->hookDispatcher->dispatchWithParameters(
             "action{$this->hookName}Save",
             [
                 'errors' => &$errors,

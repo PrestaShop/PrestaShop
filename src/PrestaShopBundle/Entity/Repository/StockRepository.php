@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -59,15 +59,16 @@ class StockRepository extends StockManagementRepository
     private $totalCombinations = array();
 
     /**
-      * StockRepository constructor.
-      * @param ContainerInterface $container
-      * @param Connection $connection
-      * @param EntityManager $entityManager
-      * @param ContextAdapter $contextAdapter
-      * @param ImageManager $imageManager
-      * @param StockManager $stockManager
-      * @param $tablePrefix
-      */
+     * StockRepository constructor.
+     *
+     * @param ContainerInterface $container
+     * @param Connection $connection
+     * @param EntityManager $entityManager
+     * @param ContextAdapter $contextAdapter
+     * @param ImageManager $imageManager
+     * @param StockManager $stockManager
+     * @param $tablePrefix
+     */
     public function __construct(
         ContainerInterface $container,
         Connection $connection,
@@ -89,12 +90,13 @@ class StockRepository extends StockManagementRepository
         $this->stockManager = $stockManager;
 
         $configuration = new Configuration();
-        $this->orderStates['error'] = (int)$configuration->get('PS_OS_ERROR');
-        $this->orderStates['cancellation'] = (int)$configuration->get('PS_OS_CANCELED');
+        $this->orderStates['error'] = (int) $configuration->get('PS_OS_ERROR');
+        $this->orderStates['cancellation'] = (int) $configuration->get('PS_OS_CANCELED');
     }
 
     /**
      * @param MovementsCollection $movements
+     *
      * @return array
      */
     public function bulkUpdateStock(MovementsCollection $movements)
@@ -109,6 +111,7 @@ class StockRepository extends StockManagementRepository
     /**
      * @param Movement $movement
      * @param bool $syncStock
+     *
      * @return mixed
      */
     public function updateStock(Movement $movement, $syncStock = true)
@@ -143,7 +146,7 @@ class StockRepository extends StockManagementRepository
     }
 
     /**
-     * Sync all stock with Manager
+     * Sync all stock with Manager.
      */
     private function syncAllStock($idProduct)
     {
@@ -151,12 +154,13 @@ class StockRepository extends StockManagementRepository
             $this->contextAdapter->getContext()->shop->id,
             $this->orderStates['error'],
             $this->orderStates['cancellation'],
-            (int)$idProduct
+            (int) $idProduct
         );
     }
 
     /**
      * @param ProductIdentity $productIdentity
+     *
      * @return mixed
      */
     private function selectStockBy(ProductIdentity $productIdentity)
@@ -191,6 +195,7 @@ class StockRepository extends StockManagementRepository
 
     /**
      * @param QueryParamsCollection $queryParams
+     *
      * @return mixed
      */
     public function getData(QueryParamsCollection $queryParams)
@@ -208,6 +213,7 @@ class StockRepository extends StockManagementRepository
      * @param $offset int
      * @param $limit int
      * @param QueryParamsCollection $queryParams
+     *
      * @return array
      */
     public function getDataExport($offset, $limit, QueryParamsCollection $queryParams)
@@ -222,6 +228,7 @@ class StockRepository extends StockManagementRepository
      * @param string $andWhereClause
      * @param string $having
      * @param null $orderByClause
+     *
      * @return mixed
      */
     protected function selectSql(
@@ -241,14 +248,14 @@ class StockRepository extends StockManagementRepository
                 '{having}',
                 '{order_by}',
                 '{table_prefix}',
-                '{combination_name}'
+                '{combination_name}',
             ),
             array(
                 $andWhereClause,
                 $having,
                 $orderByClause,
                 $this->tablePrefix,
-                $combinationNameQuery
+                $combinationNameQuery,
             ),
             'SELECT SQL_CALC_FOUND_ROWS
           p.id_product                                                                      AS product_id,
@@ -296,6 +303,7 @@ class StockRepository extends StockManagementRepository
 
     /**
      * @param QueryParamsCollection $queryParams
+     *
      * @return string
      */
     protected function andWhere(QueryParamsCollection $queryParams)
@@ -313,6 +321,7 @@ class StockRepository extends StockManagementRepository
 
     /**
      * @param array $rows
+     *
      * @return array
      */
     protected function addAdditionalData(array $rows)
@@ -339,7 +348,7 @@ class StockRepository extends StockManagementRepository
     }
 
     /**
-     * Compute the number of combinations associated with a product
+     * Compute the number of combinations associated with a product.
      *
      * @param array $row
      *
@@ -352,7 +361,7 @@ class StockRepository extends StockManagementRepository
                         FROM ' . $this->tablePrefix . 'product_attribute pa
                         WHERE id_product=:id_product';
             $statement = $this->connection->prepare($query);
-            $statement->bindValue('id_product', (int)$row['product_id'], \PDO::PARAM_INT);
+            $statement->bindValue('id_product', (int) $row['product_id'], \PDO::PARAM_INT);
             $statement->execute();
             $this->totalCombinations[$row['product_id']] = $statement->fetchColumn(0);
             $statement->closeCursor();

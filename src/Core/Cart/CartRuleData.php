@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2017 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -38,7 +38,7 @@ class CartRuleData
     public function __construct($rowData)
     {
         $this->setRuleData($rowData);
-        $this->discountApplied = new AmountImmutable;
+        $this->discountApplied = new AmountImmutable();
     }
 
     /**

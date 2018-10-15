@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,31 +30,31 @@ namespace PrestaShop\PrestaShop\Core\Filter\FrontEndObject;
 use PrestaShop\PrestaShop\Core\Filter\HashMapWhitelistFilter;
 
 /**
- * Filters Customer objects that will be sent to the client
+ * Filters Customer objects that will be sent to the client.
  */
 class CustomerFilter extends HashMapWhitelistFilter
 {
     public function __construct()
     {
         $whitelist = array(
-            "addresses",
-            "ape",
-            "birthday",
-            "company",
-            "email",
-            "firstname",
-            "gender" => (new HashMapWhitelistFilter())
+            'addresses',
+            'ape',
+            'birthday',
+            'company',
+            'email',
+            'firstname',
+            'gender' => (new HashMapWhitelistFilter())
                 ->whitelist(array(
-                    "type",
-                    "name",
+                    'type',
+                    'name',
                 )),
-            "is_logged",
-            "lastname",
-            "newsletter",
-            "newsletter_date_add",
-            "optin",
-            "siret",
-            "website",
+            'is_logged',
+            'lastname',
+            'newsletter',
+            'newsletter_date_add',
+            'optin',
+            'siret',
+            'website',
         );
 
         $this->whitelist($whitelist);

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,12 +23,11 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Core\Crypto;
 
 /**
  * Class Hashing to manage hash and crypto of user (clients/merchants) passwords.
- *
- * @package PrestaShop\PrestaShop\Core\Crypto
  */
 class Hashing
 {
@@ -36,13 +35,13 @@ class Hashing
     private $hashMethods = array();
 
     /**
-     * Check if it's the first function of the array that was used for hashing
+     * Check if it's the first function of the array that was used for hashing.
      *
-     * @param  string $passwd     The password you want to check
-     * @param  string $hash       The hash you want to check
-     * @param  string $staticSalt A static salt
+     * @param string $passwd The password you want to check
+     * @param string $hash The hash you want to check
+     * @param string $staticSalt A static salt
      *
-     * @return bool              Result of the verify function
+     * @return bool Result of the verify function
      */
     public function isFirstHash($passwd, $hash, $staticSalt = _COOKIE_KEY_)
     {
@@ -56,13 +55,13 @@ class Hashing
     }
 
     /**
-     * Iterate on hash_methods array and return true if it matches
+     * Iterate on hash_methods array and return true if it matches.
      *
-     * @param  string $passwd     The password you want to check
-     * @param  string $hash       The hash you want to check
-     * @param  string $staticSalt A static salt
+     * @param string $passwd The password you want to check
+     * @param string $hash The hash you want to check
+     * @param string $staticSalt A static salt
      *
-     * @return bool               `true` is returned if the function find a match else false
+     * @return bool `true` is returned if the function find a match else false
      */
     public function checkHash($passwd, $hash, $staticSalt = _COOKIE_KEY_)
     {
@@ -81,10 +80,10 @@ class Hashing
 
     /**
      * Hash the `$plaintextPassword` string and return the result of the 1st hashing method
-     * contained in PrestaShop\PrestaShop\Core\Crypto\Hashing::hash_methods
+     * contained in PrestaShop\PrestaShop\Core\Crypto\Hashing::hash_methods.
      *
      * @param string $plaintextPassword The password you want to hash
-     * @param string $staticSalt        The static salt
+     * @param string $staticSalt The static salt
      *
      * @return string
      */
@@ -100,9 +99,7 @@ class Hashing
     }
 
     /**
-     * Init $hash_methods
-     *
-     * @return void
+     * Init $hash_methods.
      */
     private function initHashMethods()
     {
@@ -119,10 +116,10 @@ class Hashing
             'md5' => array(
                 'option' => array(),
                 'hash' => function ($passwd, $staticSalt, $option) {
-                    return md5($staticSalt.$passwd);
+                    return md5($staticSalt . $passwd);
                 },
                 'verify' => function ($passwd, $hash, $staticSalt) {
-                    return md5($staticSalt.$passwd) === $hash;
+                    return md5($staticSalt . $passwd) === $hash;
                 },
             ),
         );

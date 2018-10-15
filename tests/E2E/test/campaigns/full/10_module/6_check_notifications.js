@@ -26,7 +26,7 @@ scenario('Check notification module in the Back Office', () => {
   scenario('Check that the module is well configured', client => {
     test('should go to "Modules" page', () => client.goToSubtabMenuPage(Menu.Improve.Modules.modules_menu, Menu.Improve.Modules.modules_services_submenu));
     test('should click on "Notifications" tab', () => client.waitForExistAndClick(Menu.Improve.Modules.notifications_tabs));
-    test('should check that the "Notifications number" is decremented with 1', () => client.checkTextValue(ModulePage.notification_number, (tab['notification'] - 1).toString() ));
+    test('should check that the "Notifications number" is decremented with 1', () => client.checkTextValue(ModulePage.notification_number, (tab['notification'] - 1 ).toString(),'equal',1000));
     test('should check that the configured module is not visible in the "Notifications" tab', () => client.checkIsNotVisible(ModulePage.configure_module.replace('%moduleTechName', 'ps_wirepayment')));
   }, 'common_client');
   scenario('Reset the configured module', client => {

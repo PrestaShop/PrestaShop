@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Core\Addon\Module;
 
 use PrestaShop\PrestaShop\Core\Addon\AddonInterface;
@@ -30,6 +31,7 @@ use PrestaShop\PrestaShop\Core\Addon\AddonInterface;
 interface ModuleInterface extends AddonInterface
 {
     public function onInstall();
+
     public function onUninstall();
 
     /**

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Adapter\Entity\Tab;
 use PrestaShop\PrestaShop\Core\Module\DataProvider\TabModuleListProviderInterface;
 
 /**
- * Class TabModuleListProvider is responsible for providing tab modules
+ * Class TabModuleListProvider is responsible for providing tab modules.
  */
 final class TabModuleListProvider implements TabModuleListProviderInterface
 {

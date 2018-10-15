@@ -80,4 +80,75 @@ class AddStandardProductTest extends AbstractCartTest
         Configuration::set('PS_ORDER_OUT_OF_STOCK', $oldOrderOutOfStock);
     }
 
+    /**
+     * @dataProvider updateQuantitiesProvider
+     */
+    public function testNumberOfProductsInCartIsReportedCorrectlyWhenUpdatingTheirQuantityOnce(
+        $quantity,
+        $operator,
+        $expected,
+        $quantityExpected
+    ) {
+        $product = $this->getProductFromFixtureId(1);
+        $result = $this->cart->updateQty(
+            $quantity,
+            $product->id,
+            $id_product_attribute = null,
+            $id_customization = false,
+            $operator
+        );
+        $cartProductQuantity = $this->cart->getProductQuantity(
+            $product->id,
+            $id_product_attribute,
+            (int) $id_customization,
+            $id_address_delivery = 0
+        );
+
+        $this->assertEquals($expected, $result);
+        $this->assertEquals($quantityExpected, $cartProductQuantity['quantity']);
+    }
+
+    public function updateQuantitiesProvider()
+    {
+        return [
+            [1, 'up', true, 1],
+            [2, 'up', true, 2],
+            [2, 'down', true, 0],
+            [0, 'down', true, 0],
+        ];
+    }
+
+    /**
+     * @dataProvider multipleUpdateQuantitiesProvider
+     */
+    public function testNumberOfProductsInCartIsReportedCorrectlyWhenUpdatingTheirQuantityTwice($first, $second)
+    {
+        list($quantity, $operator, $expected, $quantityExpected) = $first;
+        $this->testNumberOfProductsInCartIsReportedCorrectlyWhenUpdatingTheirQuantityOnce(
+            $quantity,
+            $operator,
+            $expected,
+            $quantityExpected
+        );
+
+        list($quantity, $operator, $expected, $quantityExpected) = $second;
+        $this->testNumberOfProductsInCartIsReportedCorrectlyWhenUpdatingTheirQuantityOnce(
+            $quantity,
+            $operator,
+            $expected,
+            $quantityExpected
+        );
+    }
+
+    public function multipleUpdateQuantitiesProvider()
+    {
+        return [
+            [[1, 'up', true, 1], [1, 'up', true, 2]],
+            [[2, 'up', true, 2], [2, 'down', true, 0]],
+            [[2, 'down', true, 0], [2, 'up', true, 2]],
+            [[0, 'down', true, 0], [1, 'nothing', true, 0]],
+            [[1, 'down', true, 0], [1, 'nothing', true, 0]],
+            [[1, 'up', true, 1], [10, 'nothing', false, 1]],
+        ];
+    }
 }

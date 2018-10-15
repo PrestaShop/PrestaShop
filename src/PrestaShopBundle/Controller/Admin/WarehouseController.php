@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,14 +30,15 @@ use Symfony\Component\HttpFoundation\Response;
 use PrestaShopBundle\Model\Product\AdminModelAdapter as ProductAdminModelAdapter;
 
 /**
- * Admin controller for warehouse on the /product/form page
+ * Admin controller for warehouse on the /product/form page.
  */
 class WarehouseController extends FrameworkBundleAdminController
 {
     /**
-     * Refresh the WarehouseCombination data for the given product ID
+     * Refresh the WarehouseCombination data for the given product ID.
      *
      * @param int $idProduct
+     *
      * @return string|Response
      */
     public function refreshProductWarehouseCombinationFormAction($idProduct)
@@ -47,9 +48,10 @@ class WarehouseController extends FrameworkBundleAdminController
         $response = new Response();
 
         //get product and all warehouses
-        $product = $productAdapter->getProduct((int)$idProduct);
+        $product = $productAdapter->getProduct((int) $idProduct);
         if (!is_object($product) || empty($product->id)) {
             $response->setStatusCode(400);
+
             return $response;
         }
         $warehouses = $warehouseAdapter->getWarehouses();
@@ -73,8 +75,8 @@ class WarehouseController extends FrameworkBundleAdminController
         $simpleSubForm = $form->create('step4', 'form');
 
         foreach ($warehouses as $warehouse) {
-            $simpleSubForm->add('warehouse_combination_'.$warehouse['id_warehouse'], 'Symfony\Component\Form\Extension\Core\Type\CollectionType', array(
-                'entry_type' =>'PrestaShopBundle\Form\Admin\Product\ProductWarehouseCombination',
+            $simpleSubForm->add('warehouse_combination_' . $warehouse['id_warehouse'], 'Symfony\Component\Form\Extension\Core\Type\CollectionType', array(
+                'entry_type' => 'PrestaShopBundle\Form\Admin\Product\ProductWarehouseCombination',
                 'entry_options' => array(
                     'id_warehouse' => $warehouse['id_warehouse'],
                 ),
@@ -88,7 +90,7 @@ class WarehouseController extends FrameworkBundleAdminController
 
         return $this->render('@Product/ProductPage/Forms/form_warehouse_combination.html.twig', array(
             'warehouses' => $warehouses,
-            'form' => $form->getForm()['step4']->createView()
+            'form' => $form->getForm()['step4']->createView(),
         ));
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -47,9 +47,10 @@ class TranslationController extends ApiController
     public $translationService;
 
     /**
-     * Show translations for 1 domain & 1 locale given & 1 theme given (optional)
+     * Show translations for 1 domain & 1 locale given & 1 theme given (optional).
      *
      * @param Request $request
+     *
      * @return JsonResponse
      */
     public function listDomainTranslationAction(Request $request)
@@ -68,7 +69,7 @@ class TranslationController extends ApiController
 
             $catalog = $translationService->listDomainTranslation($locale, $domain, $theme, $search);
             $info = array(
-                'Total-Pages' => ceil(count($catalog['data']) / $queryParams['page_size'])
+                'Total-Pages' => ceil(count($catalog['data']) / $queryParams['page_size']),
             );
 
             $catalog['info'] = array_merge(
@@ -84,7 +85,7 @@ class TranslationController extends ApiController
 
             foreach ($catalog['data'] as $message) {
                 if (empty($message['xliff']) && empty($message['database'])) {
-                    $catalog['info']['total_missing_translations']++;
+                    ++$catalog['info']['total_missing_translations'];
                 }
             }
 
@@ -101,9 +102,10 @@ class TranslationController extends ApiController
     }
 
     /**
-     * Show tree for translation page with some params
+     * Show tree for translation page with some params.
      *
      * @param Request $request
+     *
      * @return JsonResponse
      */
     public function listTreeAction(Request $request)
@@ -137,7 +139,7 @@ class TranslationController extends ApiController
     }
 
     /**
-     * Route to edit translation
+     * Route to edit translation.
      *
      * @param Request $request
      *
@@ -173,19 +175,19 @@ class TranslationController extends ApiController
                 );
             }
 
-             $this->clearCache();
+            $this->clearCache();
 
             return new JsonResponse($response, 200);
-
         } catch (BadRequestHttpException $exception) {
             return $this->handleException($exception);
         }
     }
 
     /**
-     * Route to reset translation
+     * Route to reset translation.
      *
      * @param Request $request
+     *
      * @return JsonResponse
      */
     public function translationResetAction(Request $request)
@@ -218,10 +220,9 @@ class TranslationController extends ApiController
                 );
             }
 
-             $this->clearCache();
+            $this->clearCache();
 
             return new JsonResponse($response, 200);
-
         } catch (BadRequestHttpException $exception) {
             return $this->handleException($exception);
         }
@@ -229,6 +230,7 @@ class TranslationController extends ApiController
 
     /**
      * @param Request $request
+     *
      * @return mixed
      */
     private function guardAgainstInvalidTranslationBulkRequest(Request $request)
@@ -254,7 +256,7 @@ class TranslationController extends ApiController
     private function guardAgainstInvalidTranslationEditRequest($content)
     {
         $message = 'Each item of JSON-encoded array in the request body should contain ' .
-            'a "locale", a "domain", a "default" and a "edited" values. '.
+            'a "locale", a "domain", a "default" and a "edited" values. ' .
             'The item of index #%d is invalid.';
 
         array_walk($content, function ($item, $index) use ($message) {
@@ -274,7 +276,7 @@ class TranslationController extends ApiController
     protected function guardAgainstInvalidTranslationResetRequest($content)
     {
         $message = 'Each item of JSON-encoded array in the request body should contain ' .
-            'a "locale", a "domain" and a "default" values. '.
+            'a "locale", a "domain" and a "default" values. ' .
             'The item of index #%d is invalid.';
 
         array_walk($content, function ($item, $index) use ($message) {
@@ -323,7 +325,7 @@ class TranslationController extends ApiController
     }
 
     /**
-     * Make final tree
+     * Make final tree.
      *
      * @param TreeBuilder $treeBuilder
      * @param $catalogue

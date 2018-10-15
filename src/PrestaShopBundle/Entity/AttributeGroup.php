@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -24,14 +24,13 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-
 namespace PrestaShopBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * AttributeGroup
+ * AttributeGroup.
  *
  * @ORM\Table()
  * @ORM\Entity(repositoryClass="PrestaShopBundle\Entity\Repository\AttributeGroupRepository")
@@ -39,7 +38,7 @@ use Doctrine\ORM\Mapping as ORM;
 class AttributeGroup
 {
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Id
      * @ORM\Column(name="id_attribute_group", type="integer")
@@ -48,7 +47,7 @@ class AttributeGroup
     private $id;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="is_color_group", type="boolean")
      */
@@ -62,7 +61,7 @@ class AttributeGroup
     private $groupType;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="position", type="integer")
      */
@@ -96,11 +95,10 @@ class AttributeGroup
         $this->shops = new ArrayCollection();
     }
 
-
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -108,9 +106,9 @@ class AttributeGroup
     }
 
     /**
-     * Set isColorGroup
+     * Set isColorGroup.
      *
-     * @param boolean $isColorGroup
+     * @param bool $isColorGroup
      *
      * @return AttributeGroup
      */
@@ -122,9 +120,9 @@ class AttributeGroup
     }
 
     /**
-     * Get isColorGroup
+     * Get isColorGroup.
      *
-     * @return boolean
+     * @return bool
      */
     public function getIsColorGroup()
     {
@@ -132,7 +130,7 @@ class AttributeGroup
     }
 
     /**
-     * Set groupType
+     * Set groupType.
      *
      * @param string $groupType
      *
@@ -141,7 +139,7 @@ class AttributeGroup
     public function setGroupType($groupType)
     {
         if (!in_array($groupType, $this->groupTypeAvailable)) {
-            throw new \InvalidArgumentException("Invalid group type");
+            throw new \InvalidArgumentException('Invalid group type');
         }
 
         $this->groupType = $groupType;
@@ -150,7 +148,7 @@ class AttributeGroup
     }
 
     /**
-     * Get groupType
+     * Get groupType.
      *
      * @return string
      */
@@ -160,9 +158,9 @@ class AttributeGroup
     }
 
     /**
-     * Set position
+     * Set position.
      *
-     * @param integer $position
+     * @param int $position
      *
      * @return AttributeGroup
      */
@@ -174,9 +172,9 @@ class AttributeGroup
     }
 
     /**
-     * Get position
+     * Get position.
      *
-     * @return integer
+     * @return int
      */
     public function getPosition()
     {
@@ -184,7 +182,7 @@ class AttributeGroup
     }
 
     /**
-     * Add shop
+     * Add shop.
      *
      * @param \PrestaShopBundle\Entity\Shop $shop
      *
@@ -198,7 +196,7 @@ class AttributeGroup
     }
 
     /**
-     * Remove shop
+     * Remove shop.
      *
      * @param \PrestaShopBundle\Entity\Shop $shop
      */
@@ -208,7 +206,7 @@ class AttributeGroup
     }
 
     /**
-     * Get shops
+     * Get shops.
      *
      * @return \Doctrine\Common\Collections\Collection
      */

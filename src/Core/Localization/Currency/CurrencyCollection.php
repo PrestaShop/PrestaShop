@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -42,7 +42,7 @@ class CurrencyCollection implements IteratorAggregate, Countable
      * It implements \IteratorAggregate.
      *
      * @return Currency[] (needed for auto-completion)
-     *  An ArrayIterator object for iterating over currencies
+     *                    An ArrayIterator object for iterating over currencies
      */
     public function getIterator()
     {
@@ -56,7 +56,7 @@ class CurrencyCollection implements IteratorAggregate, Countable
      * Gets the number of Currencies in this collection.
      *
      * @return int
-     *  The number of currencies
+     *             The number of currencies
      */
     public function count()
     {
@@ -66,11 +66,11 @@ class CurrencyCollection implements IteratorAggregate, Countable
     /**
      * Adds a currency at the end of the collection.
      *
-     * @param Currency $currency
-     *  The currency to add.
+     * @param currency $currency
+     *                           The currency to add
      *
      * @return CurrencyCollection
-     *  Fluent interface
+     *                            Fluent interface
      */
     public function add(Currency $currency)
     {
@@ -83,7 +83,7 @@ class CurrencyCollection implements IteratorAggregate, Countable
      * Returns all currencies in this collection.
      *
      * @return Currency[]
-     *  An array of currencies
+     *                    An array of currencies
      */
     public function all()
     {
@@ -94,10 +94,10 @@ class CurrencyCollection implements IteratorAggregate, Countable
      * Gets a currency by ISO code.
      *
      * @param string $isoCode
-     *  The currency code (alphabetic ISO 4217 code)
+     *                        The currency code (alphabetic ISO 4217 code)
      *
      * @return Currency|null
-     *  A Currency instance or null when not found
+     *                       A Currency instance or null when not found
      */
     public function get($isoCode)
     {
@@ -110,14 +110,14 @@ class CurrencyCollection implements IteratorAggregate, Countable
      * Removes a currency or an array of currencies by iso code from the collection.
      *
      * @param string|string[] $isoCode
-     *  The currency ISO code or an array of currency ISO codes
+     *                                 The currency ISO code or an array of currency ISO codes
      *
      * @return CurrencyCollection
-     *  Fluent interface
+     *                            Fluent interface
      */
     public function remove($isoCode)
     {
-        foreach ((array)$isoCode as $c) {
+        foreach ((array) $isoCode as $c) {
             unset($this->currencies[$c]);
         }
 
@@ -129,10 +129,10 @@ class CurrencyCollection implements IteratorAggregate, Countable
      * currencies of the added collection.
      *
      * @param CurrencyCollection $collection
-     *  The CurrencyCollection to append at the end of the current one
+     *                                       The CurrencyCollection to append at the end of the current one
      *
      * @return CurrencyCollection
-     *  Fluent interface
+     *                            Fluent interface
      */
     public function addCollection(CurrencyCollection $collection)
     {
@@ -150,7 +150,7 @@ class CurrencyCollection implements IteratorAggregate, Countable
      * Clear the collection, removing all contained currencies.
      *
      * @return CurrencyCollection
-     *  Fluent interface
+     *                            Fluent interface
      */
     public function clear()
     {

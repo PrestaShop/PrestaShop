@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,19 +23,17 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
-
 class FormFieldCore
 {
-    private $name               = '';
-    private $type               = 'text';
-    private $required           = false;
-    private $label              = '';
-    private $value              = null;
-    private $availableValues    = [];
-    private $maxLength          = null;
-    private $errors             = [];
-    private $constraints        = [];
+    private $name = '';
+    private $type = 'text';
+    private $required = false;
+    private $label = '';
+    private $value = null;
+    private $availableValues = [];
+    private $maxLength = null;
+    private $errors = [];
+    private $constraints = [];
 
     public function toArray()
     {
@@ -54,6 +52,7 @@ class FormFieldCore
     public function setName($name)
     {
         $this->name = $name;
+
         return $this;
     }
 
@@ -65,6 +64,7 @@ class FormFieldCore
     public function setType($type)
     {
         $this->type = $type;
+
         return $this;
     }
 
@@ -76,6 +76,7 @@ class FormFieldCore
     public function setRequired($required)
     {
         $this->required = $required;
+
         return $this;
     }
 
@@ -87,6 +88,7 @@ class FormFieldCore
     public function setLabel($label)
     {
         $this->label = $label;
+
         return $this;
     }
 
@@ -98,6 +100,7 @@ class FormFieldCore
     public function setValue($value)
     {
         $this->value = $value;
+
         return $this;
     }
 
@@ -109,6 +112,7 @@ class FormFieldCore
     public function setAvailableValues(array $availableValues)
     {
         $this->availableValues = $availableValues;
+
         return $this;
     }
 
@@ -124,12 +128,14 @@ class FormFieldCore
         }
 
         $this->availableValues[$availableValue] = $label;
+
         return $this;
     }
 
     public function setMaxLength($max)
     {
-        $this->maxLength = (int)$max;
+        $this->maxLength = (int) $max;
+
         return $this;
     }
 
@@ -141,6 +147,7 @@ class FormFieldCore
     public function setErrors(array $errors)
     {
         $this->errors = $errors;
+
         return $this;
     }
 
@@ -152,18 +159,21 @@ class FormFieldCore
     public function addError($errorString)
     {
         $this->errors[] = $errorString;
+
         return $this;
     }
 
     public function setConstraints(array $constraints)
     {
         $this->constraints = $constraints;
+
         return $this;
     }
 
     public function addConstraint($constraint)
     {
         $this->constraints[] = $constraint;
+
         return $this;
     }
 

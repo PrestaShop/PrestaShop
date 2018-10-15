@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,7 +30,7 @@ use Language;
 use PrestaShop\PrestaShop\Core\Language\LanguageActivatorInterface;
 
 /**
- * Class LanguageActivator is responsible for activating/deactivating language
+ * Class LanguageActivator is responsible for activating/deactivating language.
  */
 final class LanguageActivator implements LanguageActivatorInterface
 {
@@ -51,7 +51,7 @@ final class LanguageActivator implements LanguageActivatorInterface
     }
 
     /**
-     * Enable/disable language
+     * Enable/disable language.
      *
      * @param int $langId
      * @param bool $status

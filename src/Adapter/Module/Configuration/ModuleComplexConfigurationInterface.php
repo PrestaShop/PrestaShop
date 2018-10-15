@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -36,6 +36,7 @@ interface ModuleComplexConfigurationInterface
     /**
      * @param Module $module
      * @param array $params
+     *
      * @return mixed
      */
     public function run(Module $module, array $params);

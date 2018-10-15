@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -33,7 +33,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * This form class generates the "Caching" form in Performance page
+ * This form class generates the "Caching" form in Performance page.
  */
 class CachingType extends TranslatorAwareType
 {
@@ -62,6 +62,7 @@ class CachingType extends TranslatorAwareType
                     $disabled = false;
                     foreach ($this->extensionsList[$index] as $extensionName) {
                         if (extension_loaded($extensionName)) {
+                            $disabled = false;
                             break;
                         }
                         $disabled = true;
@@ -73,6 +74,7 @@ class CachingType extends TranslatorAwareType
                     $disabled = false;
                     foreach ($this->extensionsList[$index] as $extensionName) {
                         if (extension_loaded($extensionName)) {
+                            $disabled = false;
                             break;
                         }
                         $disabled = true;
@@ -82,7 +84,7 @@ class CachingType extends TranslatorAwareType
                 },
                 'expanded' => true,
                 'required' => false,
-                'placeholder' => false
+                'placeholder' => false,
             ]);
     }
 

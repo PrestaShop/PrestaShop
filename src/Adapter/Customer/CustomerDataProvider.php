@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,18 +23,19 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Adapter\Customer;
 
 use Symfony\Component\Process\Exception\LogicException;
 use Customer;
 
 /**
- * This class will provide data from DB / ORM about Customer
+ * This class will provide data from DB / ORM about Customer.
  */
 class CustomerDataProvider
 {
     /**
-     * Get a customer
+     * Get a customer.
      *
      * @param int $id
      *
@@ -49,6 +50,7 @@ class CustomerDataProvider
         }
 
         $customer = new Customer($id);
+
         return $customer;
     }
 

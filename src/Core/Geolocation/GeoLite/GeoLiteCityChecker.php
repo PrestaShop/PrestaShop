@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Geolocation\GeoLite;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 
 /**
- * Class GeoLiteCityChecker is responsible for checking if GeoLiteCity data is available
+ * Class GeoLiteCityChecker is responsible for checking if GeoLiteCity data is available.
  */
 final class GeoLiteCityChecker implements GeoLiteCityCheckerInterface
 {
@@ -54,6 +54,6 @@ final class GeoLiteCityChecker implements GeoLiteCityCheckerInterface
         $geoIpDir = $this->configuration->get('_PS_GEOIP_DIR_');
         $geoLiteCityFile = $this->configuration->get('_PS_GEOIP_CITY_FILE_');
 
-        return file_exists($geoIpDir.$geoLiteCityFile);
+        return file_exists($geoIpDir . $geoLiteCityFile);
     }
 }

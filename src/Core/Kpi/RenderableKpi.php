@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -27,12 +27,12 @@
 namespace PrestaShop\PrestaShop\Core\Kpi;
 
 /**
- * Interface RenderableKpi describes a renderable KPI
+ * Interface RenderableKpi describes a renderable KPI.
  */
 interface RenderableKpi
 {
     /**
-     * Renders the KPI's view
+     * Renders the KPI's view.
      *
      * @return string
      */

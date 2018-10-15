@@ -32,10 +32,10 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class AppKernel extends Kernel
 {
-    const VERSION = '1.7.4.0';
+    const VERSION = '1.7.5.0';
     const MAJOR_VERSION_STRING = '1.7';
     const MAJOR_VERSION = 17;
-    const MINOR_VERSION = 4;
+    const MINOR_VERSION = 5;
     const RELEASE_VERSION = 0;
 
     /**
@@ -57,6 +57,7 @@ class AppKernel extends Kernel
             new PrestaShop\TranslationToolsBundle\TranslationToolsBundle(),
             // REST API consumer
             new Csa\Bundle\GuzzleBundle\CsaGuzzleBundle(),
+            new League\Tactician\Bundle\TacticianBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'), true)) {
@@ -73,7 +74,8 @@ class AppKernel extends Kernel
         if ($this->parametersFileExists()) {
             try {
                 $this->enableComposerAutoloaderOnModules($this->getActiveModules());
-            } catch (\Exception $e) {}
+            } catch (\Exception $e) {
+            }
         }
 
         return $bundles;
@@ -93,7 +95,8 @@ class AppKernel extends Kernel
             try {
                 $this->getConnection()->connect();
                 $activeModules = $this->getActiveModules();
-            } catch (\Exception $e) {}
+            } catch (\Exception $e) {
+            }
         }
 
         return array_merge(
@@ -224,5 +227,18 @@ class AppKernel extends Kernel
                 include_once $autoloader;
             }
         }
+    }
+
+    /**
+     * Gets the application root dir.
+     * Override Kernel due to the fact that we remove the composer.json in
+     * downloaded package. More we are not a framework and the root directory
+     * should always be the parent of this file.
+     *
+     * @return string The project root dir
+     */
+    public function getProjectDir()
+    {
+        return realpath(__DIR__ . '/..');
     }
 }

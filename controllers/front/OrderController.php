@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -44,7 +44,8 @@ class OrderControllerCore extends FrontController
     protected $cartChecksum;
 
     /**
-     * Initialize order controller
+     * Initialize order controller.
+     *
      * @see FrontController::init()
      */
     public function init()
@@ -157,16 +158,16 @@ class OrderControllerCore extends FrontController
     }
 
     /**
-     * Persists cart-related data in checkout session
+     * Persists cart-related data in checkout session.
      *
      * @param CheckoutProcess $process
      */
     protected function saveDataToPersist(CheckoutProcess $process)
     {
-        $data             = $process->getDataToPersist();
+        $data = $process->getDataToPersist();
         $addressValidator = new AddressValidator($this->context);
-        $customer         = $this->context->customer;
-        $cart             = $this->context->cart;
+        $customer = $this->context->customer;
+        $cart = $this->context->cart;
 
         $shouldGenerateChecksum = false;
 
@@ -185,35 +186,35 @@ class OrderControllerCore extends FrontController
 
         Db::getInstance()->execute(
             'UPDATE ' . _DB_PREFIX_ . 'cart SET checkout_session_data = "' . pSQL(json_encode($data)) . '"
-                WHERE id_cart = ' . (int)$cart->id
+                WHERE id_cart = ' . (int) $cart->id
         );
     }
 
     /**
-     * Restores from checkout session some previously persisted cart-related data
+     * Restores from checkout session some previously persisted cart-related data.
      *
      * @param CheckoutProcess $process
      */
     protected function restorePersistedData(CheckoutProcess $process)
     {
-        $cart     = $this->context->cart;
+        $cart = $this->context->cart;
         $customer = $this->context->customer;
-        $rawData  = Db::getInstance()->getValue(
-            'SELECT checkout_session_data FROM ' . _DB_PREFIX_ . 'cart WHERE id_cart = ' . (int)$cart->id
+        $rawData = Db::getInstance()->getValue(
+            'SELECT checkout_session_data FROM ' . _DB_PREFIX_ . 'cart WHERE id_cart = ' . (int) $cart->id
         );
-        $data     = json_decode($rawData, true);
+        $data = json_decode($rawData, true);
         if (!is_array($data)) {
             $data = array();
         }
 
-        $addressValidator  = new AddressValidator();
+        $addressValidator = new AddressValidator();
         $invalidAddressIds = $addressValidator->validateCartAddresses($cart);
 
         // Build the currently selected address' warning message (if relevant)
         if (!$customer->isGuest() && !empty($invalidAddressIds)) {
             $this->checkoutWarning['address'] = array(
-                'id_address' => (int)reset($invalidAddressIds),
-                'exception'  => $this->trans(
+                'id_address' => (int) reset($invalidAddressIds),
+                'exception' => $this->trans(
                     'Your address is incomplete, please update it.',
                     array(),
                     'Shop.Notifications.Error'
@@ -247,7 +248,7 @@ class OrderControllerCore extends FrontController
             'preview' => $this->render('checkout/_partials/cart-summary', array(
                 'cart' => $cart,
                 'static_token' => Tools::getToken(false),
-            ))
+            )),
         )));
 
         return;
@@ -307,7 +308,7 @@ class OrderControllerCore extends FrontController
     {
         $addressForm = $this->makeAddressForm();
 
-        if (Tools::getIsset('id_address') && ($id_address = (int)Tools::getValue('id_address'))) {
+        if (Tools::getIsset('id_address') && ($id_address = (int) Tools::getValue('id_address'))) {
             $addressForm->loadAddressById($id_address);
         }
 

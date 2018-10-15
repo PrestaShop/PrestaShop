@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,11 +23,12 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
 use PrestaShopBundle\Service\DataUpdater\Admin\ProductInterface;
 use PrestaShopBundle\Exception\UpdateProductException;
-use PrestaShopBundle\Service\Hook\HookDispatcher;
+use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use Product;
 use Validate;
 use Shop;
@@ -46,7 +47,7 @@ use Image;
 class AdminProductDataUpdater implements ProductInterface
 {
     /**
-     * @var HookDispatcher
+     * @var HookDispatcherInterface
      */
     private $hookDispatcher;
 
@@ -55,13 +56,13 @@ class AdminProductDataUpdater implements ProductInterface
      *
      * @param HookDispatcher $hookDispatcher
      */
-    public function __construct(HookDispatcher $hookDispatcher)
+    public function __construct(HookDispatcherInterface $hookDispatcher)
     {
         $this->hookDispatcher = $hookDispatcher;
     }
 
-    /* (non-PHPdoc)
-     * @see \PrestaShopBundle\Service\DataUpdater\Admin\ProductInterface::activateProductIdList()
+    /**
+     * {@inheritdoc}
      */
     public function activateProductIdList(array $productListId, $activate = true)
     {
@@ -76,19 +77,20 @@ class AdminProductDataUpdater implements ProductInterface
                 $failedIdList[] = $productId;
                 continue;
             }
-            $product->active = ($activate?1:0);
+            $product->active = ($activate ? 1 : 0);
             $product->update();
-            $this->hookDispatcher->dispatchForParameters('actionProductActivation', array('id_product' => (int)$product->id, 'product' => $product, 'activated' => $activate));
+            $this->hookDispatcher->dispatchWithParameters('actionProductActivation', array('id_product' => (int) $product->id, 'product' => $product, 'activated' => $activate));
         }
 
         if (count($failedIdList) > 0) {
             throw new UpdateProductException('Cannot change activation state on many requested products', 5004);
         }
+
         return true;
     }
 
-    /* (non-PHPdoc)
-     * @see \PrestaShopBundle\Service\DataUpdater\Admin\ProductInterface::deleteProductIdList()
+    /**
+     * {@inheritdoc}
      */
     public function deleteProductIdList(array $productIdList)
     {
@@ -103,12 +105,13 @@ class AdminProductDataUpdater implements ProductInterface
         if ($result === 0) {
             throw new UpdateProductException('Cannot delete many requested products.', 5006);
         }
+
         return true;
     }
 
-    /* (non-PHPdoc)
-         * @see \PrestaShopBundle\Service\DataUpdater\Admin\ProductInterface::duplicateProductIdList()
-         */
+    /**
+     * {@inheritdoc}
+     */
     public function duplicateProductIdList(array $productIdList)
     {
         if (count($productIdList) < 1) {
@@ -128,11 +131,12 @@ class AdminProductDataUpdater implements ProductInterface
         if (count($failedIdList) > 0) {
             throw new UpdateProductException('Cannot duplicate many requested products', 5004);
         }
+
         return true;
     }
 
-    /* (non-PHPdoc)
-     * @see \PrestaShopBundle\Service\DataUpdater\Admin\ProductInterface::deleteProduct()
+    /**
+     * {@inheritdoc}
      */
     public function deleteProduct($productId)
     {
@@ -148,11 +152,12 @@ class AdminProductDataUpdater implements ProductInterface
         if ($result === 0) {
             throw new UpdateProductException('Cannot delete the requested product.', 5007);
         }
+
         return true;
     }
 
-    /* (non-PHPdoc)
-     * @see \PrestaShopBundle\Service\DataUpdater\Admin\ProductInterface::duplicateProduct()
+    /**
+     * {@inheritdoc}
      */
     public function duplicateProduct($productId, $namePattern = 'copy of %s')
     {
@@ -207,10 +212,11 @@ class AdminProductDataUpdater implements ProductInterface
             if (!Image::duplicateProductImages($id_product_old, $product->id, $combination_images)) {
                 throw new UpdateProductException('An error occurred while copying images.', 5008);
             } else {
-                $this->hookDispatcher->dispatchForParameters('actionProductAdd', array('id_product' => (int)$product->id, 'product' => $product));
+                $this->hookDispatcher->dispatchWithParameters('actionProductAdd', array('id_product' => (int) $product->id, 'product' => $product));
                 if (in_array($product->visibility, array('both', 'search')) && Configuration::get('PS_SEARCH_INDEXATION')) {
                     Search::indexation(false, $product->id);
                 }
+
                 return $product->id;
             }
         } else {
@@ -218,8 +224,8 @@ class AdminProductDataUpdater implements ProductInterface
         }
     }
 
-    /* (non-PHPdoc)
-     * @see \PrestaShopBundle\Service\DataUpdater\Admin\ProductInterface::sortProductIdList()
+    /**
+     * {@inheritdoc}
      */
     public function sortProductIdList(array $productList, $filterParams)
     {
@@ -278,26 +284,26 @@ class AdminProductDataUpdater implements ProductInterface
         $combinedOldNewPositions = array_combine(array_values($productList), $sortedPositions);
         ksort($combinedOldNewPositions); // (keys: old positions starting at '1', values: new positions)
         $positionsMatcher = array_replace(array_pad(array(), $maxPosition, 0), $combinedOldNewPositions); // pad holes with 0
-        array_shift($positionsMatcher);// shift because [0] is not used in MySQL FIELD()
+        array_shift($positionsMatcher); // shift because [0] is not used in MySQL FIELD()
         $fields = implode(',', $positionsMatcher);
 
         // update current pages.
-        $updatePositions = 'UPDATE `'._DB_PREFIX_.'category_product` cp
-            INNER JOIN `'._DB_PREFIX_.'product` p ON (cp.`id_product` = p.`id_product`)
-            '.Shop::addSqlAssociation('product', 'p').'
-            SET cp.`position` = ELT(cp.`position`, '.$fields.'),
-                p.`date_upd` = "'.date('Y-m-d H:i:s').'",
-                product_shop.`date_upd` = "'.date('Y-m-d H:i:s').'"
-            WHERE cp.`id_category` = '.(int)$categoryId.' AND cp.`id_product` IN ('.implode(',', array_map('intval', array_keys($productList))).')';
+        $updatePositions = 'UPDATE `' . _DB_PREFIX_ . 'category_product` cp
+            INNER JOIN `' . _DB_PREFIX_ . 'product` p ON (cp.`id_product` = p.`id_product`)
+            ' . Shop::addSqlAssociation('product', 'p') . '
+            SET cp.`position` = ELT(cp.`position`, ' . $fields . '),
+                p.`date_upd` = "' . date('Y-m-d H:i:s') . '",
+                product_shop.`date_upd` = "' . date('Y-m-d H:i:s') . '"
+            WHERE cp.`id_category` = ' . (int) $categoryId . ' AND cp.`id_product` IN (' . implode(',', array_map('intval', array_keys($productList))) . ')';
 
         Db::getInstance()->execute($updatePositions);
 
         // Fixes duplicates on all pages
         Db::getInstance()->query('SET @i := 0');
-        $selectPositions = 'UPDATE`'._DB_PREFIX_.'category_product` cp
+        $selectPositions = 'UPDATE`' . _DB_PREFIX_ . 'category_product` cp
             SET cp.`position` = (SELECT @i := @i + 1)
-            WHERE cp.`id_category` = '.(int)$categoryId.'
-            ORDER BY cp.`id_product` NOT IN ('.implode(',', array_map('intval', array_keys($productList))).'), cp.`position` ASC';
+            WHERE cp.`id_category` = ' . (int) $categoryId . '
+            ORDER BY cp.`id_product` NOT IN (' . implode(',', array_map('intval', array_keys($productList))) . '), cp.`position` ASC';
         Db::getInstance()->execute($selectPositions);
 
         return true;

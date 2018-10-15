@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 
 /**
- * This class loads and saves data configuration for the Maintenance page
+ * This class loads and saves data configuration for the Maintenance page.
  */
 class MaintenanceConfiguration implements DataConfigurationInterface
 {
@@ -61,15 +61,13 @@ class MaintenanceConfiguration implements DataConfigurationInterface
      */
     public function updateConfiguration(array $configuration)
     {
-        $errors = array();
-
         if ($this->validateConfiguration($configuration)) {
             $this->configuration->set('PS_SHOP_ENABLE', $configuration['enable_shop']);
             $this->configuration->set('PS_MAINTENANCE_IP', $configuration['maintenance_ip']);
-            $this->configuration->set('PS_MAINTENANCE_TEXT', $configuration['maintenance_text']);
+            $this->configuration->set('PS_MAINTENANCE_TEXT', $configuration['maintenance_text'], ['html' => true]);
         }
 
-        return $errors;
+        return [];
     }
 
     /**

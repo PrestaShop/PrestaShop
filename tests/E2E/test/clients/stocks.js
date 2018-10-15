@@ -9,7 +9,13 @@ class ModifyQuantity extends CommonClient {
       .waitForExistAndClick(Menu.Sell.Catalog.movement_tab)
       .waitForExist(Movement.variation, 90000)
       .pause(1000)
-      .waitForExistAndClick(Movement.sort_data_time_icon, 2000);
+      .isVisible(Movement.sort_data_time_icon, 2000)
+      .then(() => {
+        if (global.isVisible) {
+          this.client.waitForVisibleAndClick(Movement.sort_data_time_icon);
+        }
+        this.client.pause(1000);
+      });
   }
 
   modifyProductQuantity(Stock, order, quantity) {
@@ -23,7 +29,7 @@ class ModifyQuantity extends CommonClient {
       .then((text) => expect(text.substring(14)).to.be.equal((Number(global.tab["productQuantity"]) + quantity).toString()));
   }
 
-  checkMovement(selector, order, quantity, variation, type) {
+  checkMovement(selector, order, quantity, variation, type, reference = "") {
     return this.client
       .waitForVisible(selector.variation_value.replace('%P', order), 90000)
       .then(() => this.client.getText(selector.variation_value.replace('%P', order)))
@@ -32,6 +38,8 @@ class ModifyQuantity extends CommonClient {
       .then((text) => expect(text.substring(2)).to.be.equal(quantity))
       .then(() => this.client.getText(selector.type_value.replace('%P', order)))
       .then((text) => expect(text.indexOf(type)).to.not.equal(-1))
+      .then(() => this.client.getText(selector.reference_value.replace('%P', order)))
+      .then((text) => expect(text).to.be.equal(reference));
   }
 
   changeOrderState(selector, state) {
@@ -46,11 +54,11 @@ class ModifyQuantity extends CommonClient {
 
   checkOrderMovement(Movement, client) {
     if (global.tab['firstMovementDate'] === global.tab['secondMovementDate']) {
-      promise = client.checkMovement(Movement, 1, "15", "+", "Employee Edition");
-      return promise.then(() => client.checkMovement(Movement, 2, "50", "+", "Employee Edition"));
+      promise = client.checkMovement(Movement, 1, "15", "+", "Employee Edition", "firstProduct");
+      return promise.then(() => client.checkMovement(Movement, 2, "50", "+", "Employee Edition", 'secondProduct'));
     } else {
-      promise = client.checkMovement(Movement, 1, "50", "+", "Employee Edition");
-      return promise.then(() => client.checkMovement(Movement, 2, "15", "+", "Employee Edition"));
+      promise = client.checkMovement(Movement, 1, "50", "+", "Employee Edition", 'secondProduct');
+      return promise.then(() => client.checkMovement(Movement, 2, "15", "+", "Employee Edition", "firstProduct"));
     }
   }
 }

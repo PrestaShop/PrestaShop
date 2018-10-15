@@ -177,7 +177,7 @@ function install_error(step, errors)
 			list_errors = [];
 			list_errors[0] = errors;
 		} else if ($.type(list_errors) == 'array') {
-			list_errors = list_errors[0];
+			list_errors = [list_errors[0]];
 		}
 
 		var display = '<ol>';

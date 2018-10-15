@@ -64,13 +64,13 @@ scenario('Open all menu links in the Back Office', () => {
       common.clickOnMenuLinksAndCheckElement(client, Menu.Improve.Design.design_menu, Menu.Improve.Design.theme_logo_submenu, PagesForm.Design.design_form, "Design");
       common.clickOnMenuLinksAndCheckElement(client, Menu.Improve.Design.design_menu, Menu.Improve.Design.theme_catalog_submenu, PagesForm.Design.catalog_theme, "Theme catalog");
       common.clickOnMenuLinksAndCheckElement(client, Menu.Improve.Design.design_menu, Menu.Improve.Design.pages_submenu, PagesForm.Design.cms_category_form, "Pages");
-      common.clickOnMenuLinksAndCheckElement(client, Menu.Improve.Design.design_menu, Menu.Improve.Design.positions_submenu, PagesForm.Design.position_filter_form, "Positions");
+      common.clickOnMenuLinksAndCheckElement(client, Menu.Improve.Design.design_menu, Menu.Improve.Design.positions_submenu, PagesForm.Design.position_module_form, "Positions");
       common.clickOnMenuLinksAndCheckElement(client, Menu.Improve.Design.design_menu, Menu.Improve.Design.image_settings_submenu, PagesForm.Design.image_type_form, "Image settings");
       common.clickOnMenuLinksAndCheckElement(client, Menu.Improve.Design.design_menu, Menu.Improve.Design.link_widget_submenu, PagesForm.Design.configuration_link_form, "Link widget");
     }, 'common_client');
     scenario('Check all the menu links of "Shipping" in the Back Office', client => {
       common.clickOnMenuLinksAndCheckElement(client, Menu.Improve.Shipping.shipping_menu, Menu.Improve.Shipping.carriers_submenu, PagesForm.Shipping.carrier_form, "Shipping", "Carrier");
-      common.clickOnMenuLinksAndCheckElement(client, Menu.Improve.Shipping.shipping_menu, Menu.Improve.Shipping.preferences_submenu, PagesForm.Shipping.delivery_form, "Delivery");
+      common.clickOnMenuLinksAndCheckElement(client, Menu.Improve.Shipping.shipping_menu, Menu.Improve.Shipping.preferences_submenu, PagesForm.Shipping.configuration_form, "Delivery");
     }, 'common_client');
     scenario('Check all the menu links of "Payment" in the Back Office', client => {
       common.clickOnMenuLinksAndCheckElement(client, Menu.Improve.Payment.payment_menu, Menu.Improve.Payment.payment_methods_submenu, PagesForm.Payment.active_payment, "Payment");

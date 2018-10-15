@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -99,13 +99,13 @@ class ThemeValidator
     private function hasRequiredFiles(Theme $theme)
     {
         $themeName = $theme->getName();
-        $parentDir = realpath($this->appConfiguration->get('_PS_ALL_THEMES_DIR_').$theme->get('parent')).'/';
+        $parentDir = realpath($this->appConfiguration->get('_PS_ALL_THEMES_DIR_') . $theme->get('parent')) . '/';
         $parentFile = false;
 
         foreach ($this->getRequiredFiles() as $file) {
-            $childFile = $theme->getDirectory().$file;
+            $childFile = $theme->getDirectory() . $file;
             if ($theme->get('parent')) {
-                $parentFile = $parentDir.$file;
+                $parentFile = $parentDir . $file;
             }
 
             if (!file_exists($childFile) && !file_exists($parentFile)) {

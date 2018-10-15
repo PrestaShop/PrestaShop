@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,12 +30,12 @@ use ConfigurationKPI;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 
 /**
- * Class KpiConfiguration provides access to legacy ConfigurationKpi methods
+ * Class KpiConfiguration provides access to legacy ConfigurationKpi methods.
  */
 class KpiConfiguration extends Configuration
 {
     /**
-     * Changes configuration definition before calling it's methods
+     * Changes configuration definition before calling it's methods.
      *
      * @param $name
      * @param $arguments

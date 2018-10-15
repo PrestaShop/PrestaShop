@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
- * Class SymfonyContainer
+ * Class SymfonyContainer.
  *
  * This is a TEMPORARY class for quick access to the Symfony Container
  */
@@ -39,14 +39,13 @@ final class SymfonyContainer
     private static $instance = null;
 
     /**
-     * Get a singleton instance of SymfonyContainer
+     * Get a singleton instance of SymfonyContainer.
      *
      * @return \Symfony\Component\DependencyInjection\ContainerInterface;
      */
     public static function getInstance()
     {
         if (!isset(self::$instance)) {
-
             global $kernel;
 
             if (!is_null($kernel) && $kernel instanceof KernelInterface) {

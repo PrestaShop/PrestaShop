@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,15 +23,22 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Core\Addon;
 
 interface AddonManagerInterface
 {
     public function install($source);
+
     public function uninstall($name);
+
     public function upgrade($name, $version, $source = null);
+
     public function enable($name);
+
     public function disable($name);
+
     public function reset($name);
+
     public function getError($name);
 }

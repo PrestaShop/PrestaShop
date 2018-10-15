@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -32,9 +32,22 @@ use PrestaShop\PrestaShop\Adapter\Presenter\PresenterInterface;
 
 class OrderReturnPresenter implements PresenterInterface
 {
+    /**
+     * @var string
+     */
     private $prefix;
+
+    /**
+     * @var Link
+     */
     private $link;
 
+    /**
+     * OrderReturnPresenter constructor.
+     *
+     * @param $prefix
+     * @param Link $link
+     */
     public function __construct($prefix, Link $link)
     {
         $this->prefix = $prefix;
@@ -45,6 +58,7 @@ class OrderReturnPresenter implements PresenterInterface
      * @param $orderReturn
      *
      * @return OrderReturnLazyArray
+     *
      * @throws \ReflectionException
      */
     public function present($orderReturn)

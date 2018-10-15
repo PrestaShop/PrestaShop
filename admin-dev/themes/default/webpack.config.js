@@ -22,35 +22,42 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-var path = require('path');
-var webpack = require('webpack');
-var ExtractTextPlugin = require('extract-text-webpack-plugin');
+const path = require('path');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const keepLicense = require('uglify-save-license');
+const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 
-module.exports = {
-  entry: [
-    './js/theme.js'
-  ],
-  output: {
-    path: path.resolve(__dirname, 'public'),
-    filename: 'bundle.js'
-  },
-  //devtool: 'source-map', // uncomment me to build source maps (really slow)
-  module: {
-    loaders: [{
-      test: path.join(__dirname, 'js'),
-      loader: 'babel-loader',
-      query: {
-        presets: ['es2015']
-      }
-    }, {
-      test: /\.(scss|sass)$/,
-      use: ExtractTextPlugin.extract({
-        fallback: 'style-loader',
+module.exports = (env, argv) => {
+  const devMode = argv.mode === 'development';
+
+  const config = {
+    entry: [
+      './js/theme.js'
+    ],
+    output: {
+      path: path.resolve(__dirname, 'public'),
+      filename: 'bundle.js'
+    },
+    //devtool: 'source-map', // uncomment me to build source maps (really slow)
+    module: {
+      rules: [{
+        test: path.join(__dirname, 'js'),
+        use: [{
+          loader: 'babel-loader',
+          options: {
+            presets: [
+              ['@babel/preset-env', {modules: false}]
+            ]
+          }
+        }]
+      }, {
+        test: /\.(scss|sass)$/,
         use: [
+          MiniCssExtractPlugin.loader,
           {
             loader: 'css-loader',
             options: {
-              minimize: true,
               //sourceMap: true, // uncomment me to generate source maps
             }
           },
@@ -67,27 +74,37 @@ module.exports = {
             }
           }
         ]
+      }, {
+        test: /.(gif|png|woff(2)?|eot|ttf|svg)(\?[a-z0-9=\.]+)?$/,
+        loader: 'file-loader?name=[hash].[ext]'
+      }]
+    },
+    optimization: {
+
+    },
+    plugins: [
+      new MiniCssExtractPlugin({
+        filename: 'theme.css'
       })
-    }, {
-      test: /.(gif|png|woff(2)?|eot|ttf|svg)(\?[a-z0-9=\.]+)?$/,
-      loader: 'file-loader?name=[hash].[ext]'
-    }]
-  },
-  plugins: [
-    new ExtractTextPlugin('theme.css'),
-    new webpack.optimize.UglifyJsPlugin({
-      sourceMap: false,
-      compress: {
-        sequences: true,
-        conditionals: true,
-        booleans: true,
-        if_return: true,
-        join_vars: true,
-        drop_console: true
-      },
-      output: {
-        comments: false
-      }
-    })
-  ]
+    ]
+  };
+
+  if (!devMode) {
+    config.optimization.minimizer = [
+      new UglifyJsPlugin({
+        sourceMap: false,
+        uglifyOptions: {
+          compress: {
+            drop_console: true
+          },
+          output: {
+            comments: keepLicense
+          }
+        },
+      }),
+      new OptimizeCSSAssetsPlugin()
+    ];
+  }
+
+  return config;
 };

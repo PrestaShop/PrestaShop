@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -36,7 +36,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 /**
  * Class returning the content of the form in the maintenance page.
- * To be found in Configure > Shop parameters > General > Maintenance
+ * To be found in Configure > Shop parameters > General > Maintenance.
  */
 class PreferencesType extends TranslatorAwareType
 {
@@ -67,18 +67,12 @@ class PreferencesType extends TranslatorAwareType
             ->add('price_round_mode', ChoiceType::class, [
                 'choices_as_values' => true,
                 'choices' => [
-                    'Round up away from zero, when it is half way there (recommended)' =>
-                        $configuration->get('PS_ROUND_HALF_UP'),
-                    'Round down towards zero, when it is half way there' =>
-                        $configuration->get('PS_ROUND_HALF_DOWN'),
-                    'Round towards the next even value' =>
-                        $configuration->get('PS_ROUND_HALF_EVEN'),
-                    'Round towards the next odd value' =>
-                        $configuration->get('PS_ROUND_HALF_ODD'),
-                    'Round up to the nearest value' =>
-                        $configuration->get('PS_ROUND_UP'),
-                    'Round down to the nearest value' =>
-                        $configuration->get('PS_ROUND_DOWN'),
+                    'Round up away from zero, when it is half way there (recommended)' => $configuration->get('PS_ROUND_HALF_UP'),
+                    'Round down towards zero, when it is half way there' => $configuration->get('PS_ROUND_HALF_DOWN'),
+                    'Round towards the next even value' => $configuration->get('PS_ROUND_HALF_EVEN'),
+                    'Round towards the next odd value' => $configuration->get('PS_ROUND_HALF_ODD'),
+                    'Round up to the nearest value' => $configuration->get('PS_ROUND_UP'),
+                    'Round down to the nearest value' => $configuration->get('PS_ROUND_DOWN'),
                 ],
             ])
             ->add('price_round_type', ChoiceType::class, [
@@ -129,6 +123,7 @@ class PreferencesType extends TranslatorAwareType
 
     /**
      * Enabled only if the form is accessed using HTTPS protocol.
+     *
      * @var bool
      */
     public function setIsSecure($isSecure)

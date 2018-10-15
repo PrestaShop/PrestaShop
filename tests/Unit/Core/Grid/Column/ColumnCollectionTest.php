@@ -178,6 +178,20 @@ class ColumnCollectionTest extends TestCase
         (new ColumnCollection())->addBefore('non_existing', $this->createColumnMock('first'));
     }
 
+    public function testColumnsCanBeRetrievedAsArray()
+    {
+        $columns = (new ColumnCollection())
+            ->add($this->createColumnMock('test_1'))
+            ->add($this->createColumnMock('test_2'))
+            ->add($this->createColumnMock('test_3'))
+        ;
+
+        $columnsArray = $columns->toArray();
+
+        $this->assertInternalType('array', $columnsArray);
+        $this->assertCount(3, $columnsArray);
+    }
+
     /**
      * @param string $id
      *

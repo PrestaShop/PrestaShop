@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -71,15 +71,16 @@ use PrestaShop\PrestaShop\Adapter\Presenter\AbstractLazyArray;
  */
 class HashMapWhitelistFilter implements FilterInterface
 {
-
     /**
-     * Index of $keyToKeep => true
+     * Index of $keyToKeep => true.
+     *
      * @var true[]
      */
     protected $whitelistItems = [];
 
     /**
-     * Nested filters, indexed by $keyToKeep
+     * Nested filters, indexed by $keyToKeep.
+     *
      * @var FilterInterface[]
      */
     protected $filters = [];
@@ -106,7 +107,7 @@ class HashMapWhitelistFilter implements FilterInterface
     }
 
     /**
-     * Removes the provided key from the whitelist
+     * Removes the provided key from the whitelist.
      *
      * @param string|int $key
      *
@@ -118,7 +119,7 @@ class HashMapWhitelistFilter implements FilterInterface
     {
         if (!is_scalar($key)) {
             throw new FilterException(
-                sprintf("Invalid parameter %s", print_r($key, true))
+                sprintf('Invalid parameter %s', print_r($key, true))
             );
         }
 
@@ -129,7 +130,7 @@ class HashMapWhitelistFilter implements FilterInterface
     }
 
     /**
-     * Returns the white list
+     * Returns the white list.
      *
      * @return true[]
      */
@@ -139,7 +140,7 @@ class HashMapWhitelistFilter implements FilterInterface
     }
 
     /**
-     * Returns the nested filters, indexed by $keyToKeep
+     * Returns the nested filters, indexed by $keyToKeep.
      *
      * @return FilterInterface[]
      */
@@ -149,11 +150,12 @@ class HashMapWhitelistFilter implements FilterInterface
     }
 
     /**
-     * Filters the subject
+     * Filters the subject.
      *
      * @param array $subject
      *
      * @return array The filtered subject
+     *
      * @throws \RuntimeException
      */
     public function filter($subject)
@@ -182,7 +184,7 @@ class HashMapWhitelistFilter implements FilterInterface
     }
 
     /**
-     * Adds an element to the whitelist
+     * Adds an element to the whitelist.
      *
      * @param int|string $paramKey
      * @param string|FilterInterface $paramValue

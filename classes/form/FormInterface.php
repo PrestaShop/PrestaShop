@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,17 +23,21 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
-
 use PrestaShop\PrestaShop\Core\Foundation\Templating\RenderableInterface;
 
 interface FormInterface extends RenderableInterface
 {
     public function setAction($action);
+
     public function fillWith(array $params = []);
+
     public function submit();
+
     public function getErrors();
+
     public function hasErrors();
+
     public function render(array $extraVariables = []);
+
     public function setTemplate($template);
 }

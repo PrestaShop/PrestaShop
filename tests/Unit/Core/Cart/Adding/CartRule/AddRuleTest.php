@@ -29,6 +29,7 @@ namespace Tests\Unit\Core\Cart\Adding\CartRule;
 use Cart;
 use Configuration;
 use Tests\Unit\Core\Cart\AbstractCartTest;
+use CartRule;
 
 class AddRuleTest extends AbstractCartTest
 {
@@ -76,6 +77,7 @@ class AddRuleTest extends AbstractCartTest
             $this->cart->addCartRule($cartRule->id);
         }
         $this->assertEquals($shouldRulesBeApplied, $result);
+        $this->assertTrue(CartRule::haveCartRuleToday(0));
         $this->assertEquals($expectedProductCountAfterRules, Cart::getNbProducts($this->cart->id));
     }
 

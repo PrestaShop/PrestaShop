@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Adapter;
 
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
@@ -33,8 +34,14 @@ use Combination;
 use Feature;
 use Configuration as ConfigurationLegacy;
 
+/**
+ * Adapter of Configuration ObjectModel.
+ */
 class Configuration extends ParameterBag implements ConfigurationInterface
 {
+    /**
+     * @var Shop
+     */
     private $shop;
 
     public function __construct(array $parameters = array())
@@ -52,7 +59,7 @@ class Configuration extends ParameterBag implements ConfigurationInterface
     {
         throw new NotImplementedException();
     }
-    
+
     /**
      * {@inheritdoc}
      */
@@ -81,10 +88,11 @@ class Configuration extends ParameterBag implements ConfigurationInterface
 
     /**
      * Returns constant defined by given $key if exists or check directly into PrestaShop
-     * \Configuration
+     * \Configuration.
      *
      * @param string $key
      * @param mixed $default The default value if the parameter key does not exist
+     *
      * @return mixed
      */
     public function get($key, $default = null)
@@ -107,33 +115,39 @@ class Configuration extends ParameterBag implements ConfigurationInterface
     }
 
     /**
-     * Set configuration value
-     * @param $key
-     * @param $value
+     * Set configuration value.
+     *
+     * @param string $key
+     * @param mixed $value
+     * @param array $options Options
+     *
      * @return $this
+     *
      * @throws \Exception
      */
-    public function set($key, $value)
+    public function set($key, $value, array $options = [])
     {
         // By default, set a piece of configuration for all available shops and shop groups
-        $shopGroupId = 0;
-        $shopId = 0;
+        $shopGroupId = null;
+        $shopId = null;
 
         if ($this->shop instanceof Shop) {
             $shopGroupId = $this->shop->id_shop_group;
             $shopId = $this->shop->id;
         }
 
+        $html = isset($options['html']) ? (bool) $options['html'] : false;
+
         $success = ConfigurationLegacy::updateValue(
             $key,
             $value,
-            false,
+            $html,
             $shopGroupId,
             $shopId
         );
 
         if (!$success) {
-            throw new \Exception("Could not update configuration");
+            throw new \Exception('Could not update configuration');
         }
 
         return $this;
@@ -149,8 +163,9 @@ class Configuration extends ParameterBag implements ConfigurationInterface
 
     /**
      * Removes a configuration key.
-     * 
+     *
      * @param type $key
+     *
      * @return type
      */
     public function remove($key)
@@ -160,16 +175,19 @@ class Configuration extends ParameterBag implements ConfigurationInterface
         );
 
         if (!$success) {
-            throw new \Exception("Could not update configuration");
+            throw new \Exception('Could not update configuration');
         }
 
         return $this;
     }
 
     /**
-     * Unset configuration value
+     * Unset configuration value.
+     *
      * @param $key
+     *
      * @return $this
+     *
      * @throws \Exception
      *
      * @deprecated since version 1.7.4.0
@@ -196,7 +214,8 @@ class Configuration extends ParameterBag implements ConfigurationInterface
     }
 
     /**
-     * Return if Feature feature is active or not
+     * Return if Feature feature is active or not.
+     *
      * @return bool
      */
     public function featureIsActive()
@@ -205,7 +224,8 @@ class Configuration extends ParameterBag implements ConfigurationInterface
     }
 
     /**
-     * Return if Combination feature is active or not
+     * Return if Combination feature is active or not.
+     *
      * @return bool
      */
     public function combinationIsActive()
@@ -215,6 +235,7 @@ class Configuration extends ParameterBag implements ConfigurationInterface
 
     /**
      * Restrict updates of a piece of configuration to a single shop.
+     *
      * @param Shop $shop
      */
     public function restrictUpdatesTo(Shop $shop)

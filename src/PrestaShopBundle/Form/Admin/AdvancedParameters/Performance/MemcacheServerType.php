@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -32,7 +32,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 /**
- * This form class generates the "Memcache server" form in Performance page
+ * This form class generates the "Memcache server" form in Performance page.
  */
 class MemcacheServerType extends CommonAbstractType
 {
@@ -62,7 +62,7 @@ class MemcacheServerType extends CommonAbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'translation_domain' => 'Admin.Advparameters.Feature'
+            'translation_domain' => 'Admin.Advparameters.Feature',
         ]);
     }
 

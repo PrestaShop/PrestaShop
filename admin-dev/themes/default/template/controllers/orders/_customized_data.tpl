@@ -71,6 +71,7 @@
 		{if $display_warehouse}<td>&nbsp;</td>{/if}
 		{if ($order->hasBeenPaid())}<td class="productQuantity text-center">{$product['customizationQuantityRefunded']}</td>{/if}
 		{if ($order->hasBeenDelivered() || $order->hasProductReturned())}<td class="productQuantity text-center">{$product['customizationQuantityReturned']}</td>{/if}
+		{if $stock_location_is_available}<td class="productQuantity location text-center">{$product['location']}</td>{/if}
 		{if $stock_management}<td class="text-center">{$product['current_stock']}</td>{/if}
 		<td class="total_product">
 		{if ($order->getTaxCalculationMethod() == $smarty.const.PS_TAX_EXC)}
@@ -168,6 +169,7 @@
 				{/if}
 				{if ($order->hasBeenDelivered())}<td class="text-center">{$customization['quantity_returned']}</td>{/if}
 				<td class="text-center">-</td>
+				{if $stock_location_is_available}<td class="text-center">-</td>{$product['location']}</td>{/if}
 				<td class="total_product">
 					{if ($order->getTaxCalculationMethod() == $smarty.const.PS_TAX_EXC)}
 						{displayPrice price=Tools::ps_round($product['product_price'] * $customization['quantity'], 2) currency=$currency->id|intval}

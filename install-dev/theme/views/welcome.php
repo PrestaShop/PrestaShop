@@ -34,7 +34,7 @@
 		<img src="theme/img/pict_error.png" alt="" style="vertical-align: middle;" /> &nbsp;
 		<?php echo $this->translator->trans(
 			'<b>Warning: You cannot use this tool to upgrade your store anymore.</b><br /><br />You already have <b>PrestaShop version %version% installed</b>.<br /><br />If you want to upgrade to the latest version, please read our documentation: <a href="%doc%">%doc%</a>',
-			array('version' => $this->ps_version, '%doc%' => $this->getDocumentationUpgradeLink()), 'Install'); ?></div>
+			array('%version%' => $this->ps_version, '%doc%' => $this->getDocumentationUpgradeLink()), 'Install'); ?></div>
 <?php endif; ?>
 
 <h2><?php echo $this->translator->trans('Welcome to the PrestaShop %version% Installer', array('%version%' => _PS_INSTALL_VERSION_), 'Install') ?></h2>

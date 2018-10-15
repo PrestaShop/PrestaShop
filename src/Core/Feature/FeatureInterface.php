@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -24,11 +24,10 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-
 namespace PrestaShop\PrestaShop\Core\Feature;
 
 /**
- * Defines how we should access to a feature
+ * Defines how we should access to a feature.
  */
 interface FeatureInterface
 {
@@ -42,19 +41,12 @@ interface FeatureInterface
      */
     public function isActive();
 
-    /**
-     * @return void
-     */
     public function enable();
 
-    /**
-     * @return void
-     */
     public function disable();
 
     /**
      * @param $status bool
-     * @return void
      */
     public function update($status);
 }

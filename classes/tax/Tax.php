@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,8 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
-
 class TaxCore extends ObjectModel
 {
     /** @var string Name */
@@ -47,14 +45,13 @@ class TaxCore extends ObjectModel
         'primary' => 'id_tax',
         'multilang' => true,
         'fields' => array(
-            'rate' =>            array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat', 'required' => true),
-            'active' =>        array('type' => self::TYPE_BOOL),
-            'deleted' =>        array('type' => self::TYPE_BOOL),
+            'rate' => array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat', 'required' => true),
+            'active' => array('type' => self::TYPE_BOOL),
+            'deleted' => array('type' => self::TYPE_BOOL),
             /* Lang fields */
-            'name' =>            array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 32),
+            'name' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 32),
         ),
     );
-
 
     protected static $_product_country_tax = array();
     protected static $_product_tax_via_rules = array();
@@ -66,7 +63,7 @@ class TaxCore extends ObjectModel
     public function delete()
     {
         /* Clean associations */
-        TaxRule::deleteTaxRuleByIdTax((int)$this->id);
+        TaxRule::deleteTaxRuleByIdTax((int) $this->id);
 
         if ($this->isUsed()) {
             return $this->historize();
@@ -76,13 +73,14 @@ class TaxCore extends ObjectModel
     }
 
     /**
-     * Save the object with the field deleted to true
+     * Save the object with the field deleted to true.
      *
      *  @return bool
      */
     public function historize()
     {
         $this->deleted = true;
+
         return parent::update();
     }
 
@@ -107,6 +105,7 @@ class TaxCore extends ObjectModel
 
             // change tax id in the tax rule table
             $res &= TaxRule::swapTaxId($historized_tax->id, $this->id);
+
             return $res;
         } elseif (parent::update($null_values)) {
             return $this->_onStatusChange();
@@ -125,7 +124,7 @@ class TaxCore extends ObjectModel
     }
 
     /**
-     * Returns true if the tax is used in an order details
+     * Returns true if the tax is used in an order details.
      *
      * @return bool
      */
@@ -133,16 +132,16 @@ class TaxCore extends ObjectModel
     {
         return Db::getInstance()->getValue('
 		SELECT `id_tax`
-		FROM `'._DB_PREFIX_.'order_detail_tax`
-		WHERE `id_tax` = '.(int)$this->id
+		FROM `' . _DB_PREFIX_ . 'order_detail_tax`
+		WHERE `id_tax` = ' . (int) $this->id
         );
     }
 
     /**
-    * Get all available taxes
-    *
-    * @return array Taxes
-    */
+     * Get all available taxes.
+     *
+     * @return array Taxes
+     */
     public static function getTaxes($id_lang = false, $active_only = true)
     {
         $sql = new DbQuery();
@@ -152,7 +151,7 @@ class TaxCore extends ObjectModel
 
         if ($id_lang) {
             $sql->select('tl.name, tl.id_lang');
-            $sql->leftJoin('tax_lang', 'tl', 't.`id_tax` = tl.`id_tax` AND tl.`id_lang` = '.(int)$id_lang);
+            $sql->leftJoin('tax_lang', 'tl', 't.`id_tax` = tl.`id_tax` AND tl.`id_lang` = ' . (int) $id_lang);
             $sql->orderBy('`name` ASC');
         }
 
@@ -169,49 +168,51 @@ class TaxCore extends ObjectModel
     }
 
     /**
-    * Return the tax id associated to the specified name
-    *
-    * @param string $tax_name
-    * @param bool $active (true by default)
-    */
+     * Return the tax id associated to the specified name.
+     *
+     * @param string $tax_name
+     * @param bool $active (true by default)
+     */
     public static function getTaxIdByName($tax_name, $active = 1)
     {
         $tax = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 			SELECT t.`id_tax`
-			FROM `'._DB_PREFIX_.'tax` t
-			LEFT JOIN `'._DB_PREFIX_.'tax_lang` tl ON (tl.id_tax = t.id_tax)
-			WHERE tl.`name` = \''.pSQL($tax_name).'\' '.
+			FROM `' . _DB_PREFIX_ . 'tax` t
+			LEFT JOIN `' . _DB_PREFIX_ . 'tax_lang` tl ON (tl.id_tax = t.id_tax)
+			WHERE tl.`name` = \'' . pSQL($tax_name) . '\' ' .
             ($active == 1 ? ' AND t.`active` = 1' : ''));
 
-        return $tax ? (int)$tax['id_tax'] : false;
+        return $tax ? (int) $tax['id_tax'] : false;
     }
 
     /**
-    * Returns the ecotax tax rate
-    *
-    * @param id_address
-    * @return float $tax_rate
-    */
+     * Returns the ecotax tax rate.
+     *
+     * @param id_address
+     *
+     * @return float $tax_rate
+     */
     public static function getProductEcotaxRate($id_address = null)
     {
         $address = Address::initialize($id_address);
 
-        $tax_manager = TaxManagerFactory::getManager($address, (int)Configuration::get('PS_ECOTAX_TAX_RULES_GROUP_ID'));
+        $tax_manager = TaxManagerFactory::getManager($address, (int) Configuration::get('PS_ECOTAX_TAX_RULES_GROUP_ID'));
         $tax_calculator = $tax_manager->getTaxCalculator();
 
         return $tax_calculator->getTotalRate();
     }
 
     /**
-    * Returns the carrier tax rate
-    *
-    * @param id_address
-    * @return float $tax_rate
-    */
+     * Returns the carrier tax rate.
+     *
+     * @param id_address
+     *
+     * @return float $tax_rate
+     */
     public static function getCarrierTaxRate($id_carrier, $id_address = null)
     {
         $address = Address::initialize($id_address);
-        $id_tax_rules = (int)Carrier::getIdTaxRulesGroupByIdCarrier((int)$id_carrier);
+        $id_tax_rules = (int) Carrier::getIdTaxRulesGroupByIdCarrier((int) $id_carrier);
 
         $tax_manager = TaxManagerFactory::getManager($address, $id_tax_rules);
         $tax_calculator = $tax_manager->getTaxCalculator();
@@ -220,10 +221,11 @@ class TaxCore extends ObjectModel
     }
 
     /**
-     * Return the product tax rate using the tax rules system
+     * Return the product tax rate using the tax rules system.
      *
      * @param int $id_product
      * @param int $id_country
+     *
      * @return Tax
      *
      * @deprecated since 1.5
@@ -232,19 +234,20 @@ class TaxCore extends ObjectModel
     {
         Tools::displayAsDeprecated();
 
-        if (!isset(self::$_product_tax_via_rules[$id_product.'-'.$id_country.'-'.$id_state.'-'.$zipcode])) {
-            $tax_rate = TaxRulesGroup::getTaxesRate((int)Product::getIdTaxRulesGroupByIdProduct((int)$id_product), (int)$id_country, (int)$id_state, $zipcode);
-            self::$_product_tax_via_rules[$id_product.'-'.$id_country.'-'.$zipcode] = $tax_rate;
+        if (!isset(self::$_product_tax_via_rules[$id_product . '-' . $id_country . '-' . $id_state . '-' . $zipcode])) {
+            $tax_rate = TaxRulesGroup::getTaxesRate((int) Product::getIdTaxRulesGroupByIdProduct((int) $id_product), (int) $id_country, (int) $id_state, $zipcode);
+            self::$_product_tax_via_rules[$id_product . '-' . $id_country . '-' . $zipcode] = $tax_rate;
         }
 
-        return self::$_product_tax_via_rules[$id_product.'-'.$id_country.'-'.$zipcode];
+        return self::$_product_tax_via_rules[$id_product . '-' . $id_country . '-' . $zipcode];
     }
 
     /**
-     * Returns the product tax
+     * Returns the product tax.
      *
      * @param int $id_product
      * @param int $id_country
+     *
      * @return Tax
      */
     public static function getProductTaxRate($id_product, $id_address = null, Context $context = null)
@@ -254,7 +257,7 @@ class TaxCore extends ObjectModel
         }
 
         $address = Address::initialize($id_address);
-        $id_tax_rules = (int)Product::getIdTaxRulesGroupByIdProduct($id_product, $context);
+        $id_tax_rules = (int) Product::getIdTaxRulesGroupByIdProduct($id_product, $context);
 
         $tax_manager = TaxManagerFactory::getManager($address, $id_tax_rules);
         $tax_calculator = $tax_manager->getTaxCalculator();

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -33,26 +33,25 @@ class TaxCalculatorCore
 {
     /**
      * COMBINE_METHOD sum taxes
-     * eg: 100€ * (10% + 15%)
+     * eg: 100€ * (10% + 15%).
      */
     const COMBINE_METHOD = 1;
 
     /**
      * ONE_AFTER_ANOTHER_METHOD apply taxes one after another
-     * eg: (100€ * 10%) * 15%
+     * eg: (100€ * 10%) * 15%.
      */
     const ONE_AFTER_ANOTHER_METHOD = 2;
 
     /**
-     * @var array $taxes
+     * @var array
      */
     public $taxes;
 
     /**
-     * @var int $computation_method (COMBINE_METHOD | ONE_AFTER_ANOTHER_METHOD)
+     * @var int (COMBINE_METHOD | ONE_AFTER_ANOTHER_METHOD)
      */
     public $computation_method;
-
 
     /**
      * @param array $taxes
@@ -68,13 +67,14 @@ class TaxCalculatorCore
         }
 
         $this->taxes = $taxes;
-        $this->computation_method = (int)$computation_method;
+        $this->computation_method = (int) $computation_method;
     }
 
     /**
-     * Compute and add the taxes to the specified price
+     * Compute and add the taxes to the specified price.
      *
      * @param float $price_te price tax excluded
+     *
      * @return float price with taxes
      */
     public function addTaxes($price_te)
@@ -82,11 +82,11 @@ class TaxCalculatorCore
         return $price_te * (1 + ($this->getTotalRate() / 100));
     }
 
-
     /**
-     * Compute and remove the taxes to the specified price
+     * Compute and remove the taxes to the specified price.
      *
      * @param float $price_ti price tax inclusive
+     *
      * @return float price without taxes
      */
     public function removeTaxes($price_ti)
@@ -114,14 +114,14 @@ class TaxCalculatorCore
             }
         }
 
-        return (float)$taxes;
+        return (float) $taxes;
     }
 
     public function getTaxesName()
     {
         $name = '';
         foreach ($this->taxes as $tax) {
-            $name .= $tax->name[(int)Context::getContext()->language->id].' - ';
+            $name .= $tax->name[(int) Context::getContext()->language->id] . ' - ';
         }
 
         $name = rtrim($name, ' - ');
@@ -130,9 +130,10 @@ class TaxCalculatorCore
     }
 
     /**
-     * Return the tax amount associated to each taxes of the TaxCalculator
+     * Return the tax amount associated to each taxes of the TaxCalculator.
      *
      * @param float $price_te
+     *
      * @return array $taxes_amount
      */
     public function getTaxesAmount($price_te)
@@ -152,9 +153,10 @@ class TaxCalculatorCore
     }
 
     /**
-     * Return the total taxes amount
+     * Return the total taxes amount.
      *
      * @param float $price_te
+     *
      * @return float $amount
      */
     public function getTaxesTotalAmount($price_te)

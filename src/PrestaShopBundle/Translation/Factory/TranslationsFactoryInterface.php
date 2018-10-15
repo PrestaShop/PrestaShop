@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -37,7 +37,7 @@ interface TranslationsFactoryInterface
      * Generates extract of global Catalogue, using domain's identifiers.
      *
      * @param string $identifier Domain identifier
-     * @param string $locale     Locale identifier
+     * @param string $locale Locale identifier
      *
      * @return MessageCatalogue
      */
@@ -47,9 +47,10 @@ interface TranslationsFactoryInterface
      * Generates Translation tree in Back Office.
      *
      * @param string $domainIdentifier Domain identifier
-     * @param string $locale           Locale identifier
+     * @param string $locale Locale identifier
      * @param null $theme
      * @param null $search
+     *
      * @@return array Translation tree structure
      */
     public function createTranslationsArray($domainIdentifier, $locale = self::DEFAULT_LOCALE, $theme = null, $search = null);

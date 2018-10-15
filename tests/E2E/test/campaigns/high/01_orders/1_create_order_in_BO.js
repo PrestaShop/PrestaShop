@@ -15,8 +15,10 @@ let productData = {
   reference: 'test_1',
   type: 'combination',
   attribute: {
-    name: 'color',
-    variation_quantity: '10'
+    1: {
+      name: 'color',
+      variation_quantity: '10'
+    }
   }
 };
 

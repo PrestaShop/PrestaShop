@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -24,7 +24,6 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-
 namespace PrestaShop\PrestaShop\Adapter\Presenter\Order;
 
 use PrestaShop\PrestaShop\Adapter\Presenter\PresenterInterface;
@@ -37,6 +36,7 @@ class OrderPresenter implements PresenterInterface
      * @param Order $order
      *
      * @return OrderLazyArray
+     *
      * @throws Exception
      */
     public function present($order)

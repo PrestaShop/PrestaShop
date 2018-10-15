@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\Service\Hook;
 
 use AppKernel;
@@ -41,12 +42,14 @@ class HookEvent extends Event
     /**
      * Sets the Hook parameters.
      *
-     * @param array Hook parameters.
-     * @return $this, for fluent use of object.
+     * @param array hook parameters
+     *
+     * @return $this, for fluent use of object
      */
     public function setHookParameters($parameters)
     {
         $this->hookParameters = $parameters;
+
         return $this;
     }
 
@@ -57,7 +60,7 @@ class HookEvent extends Event
      * - _ps_version contains PrestaShop version, and is here only if the Hook is triggered by Symfony architecture.
      * These values can either be overriden by setHookParameters using the same parameter key.
      *
-     * @return array The array of hook parameters, more default fixed values.
+     * @return array the array of hook parameters, more default fixed values
      */
     public function getHookParameters()
     {

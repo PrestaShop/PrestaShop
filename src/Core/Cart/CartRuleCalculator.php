@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2017 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -70,7 +70,7 @@ class CartRuleCalculator
     protected function applyCartRule(CartRuleData $cartRuleData)
     {
         $cartRule = $cartRuleData->getCartRule();
-        $cart     = $this->calculator->getCart();
+        $cart = $this->calculator->getCart();
 
         if (!\CartRule::isFeatureActive()) {
             return;
@@ -78,9 +78,9 @@ class CartRuleCalculator
 
         // Free shipping on selected carriers
         if ($cartRule->free_shipping) {
-            $this->calculator->getFees()->subDiscountValueShipping(
-                $this->calculator->getFees()->getInitialShippingFees()
-            );
+            $initialShippingFees = $this->calculator->getFees()->getInitialShippingFees();
+            $this->calculator->getFees()->subDiscountValueShipping($initialShippingFees);
+            $cartRuleData->addDiscountApplied($initialShippingFees);
         }
 
         // Free gift
@@ -133,7 +133,7 @@ class CartRuleCalculator
                                        * $cartRule->reduction_percent / 100;
                 $discountTaxExcluded = $cartRowCheapest->getInitialUnitPrice()->getTaxIncluded()
                                        * $cartRule->reduction_percent / 100;
-                $amount              = new AmountImmutable($discountTaxIncluded, $discountTaxExcluded);
+                $amount = new AmountImmutable($discountTaxIncluded, $discountTaxExcluded);
                 $cartRowCheapest->applyFlatDiscount($amount);
                 $cartRuleData->addDiscountApplied($amount);
             }

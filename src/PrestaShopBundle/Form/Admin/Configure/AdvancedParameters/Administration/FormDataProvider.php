@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -51,7 +51,6 @@ final class FormDataProvider implements FormDataProviderInterface
      * @var NotificationsConfiguration
      */
     private $notificationsConfiguration;
-
 
     public function __construct(
         GeneralConfiguration $generalConfiguration,

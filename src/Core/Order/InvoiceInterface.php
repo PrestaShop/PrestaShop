@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -28,4 +28,13 @@ namespace PrestaShop\PrestaShop\Core\Order;
 
 interface InvoiceInterface
 {
+    /**
+     * Return collection of Invoice.
+     *
+     * @param string $dateFrom Date From
+     * @param string $dateTo Date To
+     *
+     * @return array[InvoiceLegacy]
+     */
+    public static function getByDeliveryDateInterval($dateFrom, $dateTo);
 }

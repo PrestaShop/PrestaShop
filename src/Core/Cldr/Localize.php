@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,11 +23,11 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Core\Cldr;
 
 /**
- * Class Localize
- * @package PrestaShop\PrestaShop\Core\Cldr
+ * Class Localize.
  */
 class Localize
 {
@@ -37,23 +37,20 @@ class Localize
         'language' => array('filter' => 'strtolower'),
         'script' => array('filter' => array('strtolower', 'ucfirst')),
         'territory' => array('filter' => 'strtoupper'),
-        'variant' => array('filter' => 'strtoupper')
+        'variant' => array('filter' => 'strtoupper'),
     );
 
     private static $browserLocales;
     private static $environmentLocale;
     private static $locale;
 
-    /**
-     * {@inheritdoc}
-     */
     public function __toString()
     {
         return self::toString();
     }
 
     /**
-     * Get the Browser locales (checking the HTTP header 'accept language')
+     * Get the Browser locales (checking the HTTP header 'accept language').
      *
      * @return array The accepted locales
      */
@@ -63,7 +60,7 @@ class Localize
             return self::$browserLocales;
         }
 
-        $regex  = '(?P<locale>[\w\-]+)+(?:;q=(?P<quality>[0-9]+\.[0-9]+))?';
+        $regex = '(?P<locale>[\w\-]+)+(?:;q=(?P<quality>[0-9]+\.[0-9]+))?';
         $result = array();
 
         $httpLanguages = getenv('HTTP_ACCEPT_LANGUAGE');
@@ -86,6 +83,7 @@ class Localize
         arsort($result);
         $result = array_keys($result);
         self::$browserLocales = $result;
+
         return $result;
     }
 
@@ -103,17 +101,19 @@ class Localize
         if ($value != 'C' && $value != 'POSIX' && preg_match("/{$regex}/", $value, $matches)) {
             $result = (array) $matches['locale'];
 
-        // TODO: Add region handle
+            // TODO: Add region handle
         }
 
         self::$environmentLocale = $result;
+
         return $result;
     }
 
     /**
-     * Parse the language part of a given locale string
+     * Parse the language part of a given locale string.
      *
      * @param null|string $locale The local to parse
+     *
      * @return string The language parsed from the $locale input
      */
     public static function getLanguage($locale = null)
@@ -123,11 +123,12 @@ class Localize
         }
 
         $locale = explode('_', $locale);
+
         return $locale[0];
     }
 
     /**
-     * Sets a locale value as a singleton
+     * Sets a locale value as a singleton.
      *
      * @param string $value The local to set
      */
@@ -141,7 +142,7 @@ class Localize
     }
 
     /**
-     * Gets the locale value (singleton)
+     * Gets the locale value (singleton).
      *
      * @return string The locale singleton
      */
@@ -158,6 +159,7 @@ class Localize
      * Gets the best locale value, looking after the input, the browser and the environment locales.
      *
      * @param null|string|Localize $locale
+     *
      * @return string The best fitting locale
      */
     public static function getPreferedLocale($locale = null)
@@ -188,13 +190,14 @@ class Localize
             $locale = self::DEFAULT_LOCALE;
         }
 
-        return (string)self::canonicalize($locale);
+        return (string) self::canonicalize($locale);
     }
 
     /**
      * Parse the region part of the given locale string.
      *
      * @param null|string $locale The locale value to parse
+     *
      * @return string The region parsed from the input
      */
     public static function getRegion($locale = null)
@@ -215,18 +218,19 @@ class Localize
     /**
      * Cast the current Localize instance into a string.
      *
-     * @return string The locale of the current Localize instance, in a string format.
+     * @return string the locale of the current Localize instance, in a string format
      */
     public static function toString()
     {
-        return (string)self::getLocale();
+        return (string) self::getLocale();
     }
 
     /**
      * Parse and fix the given locale to ensure format.
      *
-     * @param $locale The locale to fix.
-     * @return array|null|string The fixed locale format.
+     * @param $locale the locale to fix
+     *
+     * @return array|null|string the fixed locale format
      */
     private static function canonicalize($locale)
     {
@@ -237,13 +241,13 @@ class Localize
         $regex = '(?P<language>[a-z]{2,3})(?:[_-](?P<script>[a-z]{4}))?(?:[_-](?P<territory>[a-z]{2}))?(?:[_-](?P<variant>[a-z]{5,}))?';
 
         if (!preg_match("/^{$regex}$/i", $locale, $matches)) {
-            throw new \InvalidArgumentException('Locale "'.$locale.'" could not be parsed');
+            throw new \InvalidArgumentException('Locale "' . $locale . '" could not be parsed');
         }
 
         $tags = array_filter(array_intersect_key($matches, static::$filters));
 
         foreach ($tags as $name => &$tag) {
-            foreach ((array)static::$filters[$name]['filter'] as $filter) {
+            foreach ((array) static::$filters[$name]['filter'] as $filter) {
                 $tag = $filter($tag);
             }
         }

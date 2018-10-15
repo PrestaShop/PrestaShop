@@ -103,7 +103,6 @@ class InstallControllerHttpSystem extends InstallControllerHttp implements HttpC
                         'simplexml' => $this->translator->trans('SimpleXML extension is not loaded', array(), 'Install'),
                         'zip' => $this->translator->trans('ZIP extension is not enabled', array(), 'Install'),
                         'fileinfo' => $this->translator->trans('Fileinfo extension is not enabled', array(), 'Install'),
-                        'fopen' => $this->translator->trans('Cannot open external URLs (requires allow_url_fopen as On)', array(), 'Install'),
                     )
                 ),
                 array(
@@ -149,6 +148,7 @@ class InstallControllerHttpSystem extends InstallControllerHttp implements HttpC
                         'gz' => $this->translator->trans('GZIP compression is not activated', array(), 'Install'),
                         'mbstring' => $this->translator->trans('Mbstring extension is not enabled', array(), 'Install'),
                         'dom' => $this->translator->trans('Dom extension is not loaded', array(), 'Install'),
+                        'fopen' => $this->translator->trans('Cannot open external URLs (requires allow_url_fopen as On)', array(), 'Install'),
                     )
                 ),
             ),
