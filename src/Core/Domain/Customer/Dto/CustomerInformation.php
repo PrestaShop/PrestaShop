@@ -49,7 +49,7 @@ class CustomerInformation
     private $customerOrdersInformation;
 
     /**
-     * @var CustomerCartsInformation
+     * @var CartInformation[]
      */
     private $cartsInformation;
 
@@ -133,5 +133,101 @@ class CustomerInformation
         $this->groupsInformation = $groupsInformation;
         $this->referrersInformation = $referrersInformation;
         $this->addressesInformation = $addressesInformation;
+    }
+
+    /**
+     * @return CustomerId
+     */
+    public function getCustomerId()
+    {
+        return $this->customerId;
+    }
+
+    /**
+     * @return PersonalInformation
+     */
+    public function getPersonalInformation()
+    {
+        return $this->personalInformation;
+    }
+
+    /**
+     * @return OrdersInformation
+     */
+    public function getCustomerOrdersInformation()
+    {
+        return $this->customerOrdersInformation;
+    }
+
+    /**
+     * @return CartInformation[]
+     */
+    public function getCartsInformation()
+    {
+        return $this->cartsInformation;
+    }
+
+    /**
+     * @return ProductsInformation
+     */
+    public function getCustomerProductsInformation()
+    {
+        return $this->customerProductsInformation;
+    }
+
+    /**
+     * @return MessageInformation[]
+     */
+    public function getCustomerMessagesInformation()
+    {
+        return $this->customerMessagesInformation;
+    }
+
+    /**
+     * @return DiscountInformation[]
+     */
+    public function getDiscountsInformation()
+    {
+        return $this->discountsInformation;
+    }
+
+    /**
+     * @return SentEmailInformation[]
+     */
+    public function getSentEmailsInformation()
+    {
+        return $this->sentEmailsInformation;
+    }
+
+    /**
+     * @return LastConnectionInformation[]
+     */
+    public function getLastConnectionsInformation()
+    {
+        return $this->lastConnectionsInformation;
+    }
+
+    /**
+     * @return GroupInformation[]
+     */
+    public function getGroupsInformation()
+    {
+        return $this->groupsInformation;
+    }
+
+    /**
+     * @return ReferrerInformation[]
+     */
+    public function getReferrersInformation()
+    {
+        return $this->referrersInformation;
+    }
+
+    /**
+     * @return AddressInformation[]
+     */
+    public function getAddressesInformation()
+    {
+        return $this->addressesInformation;
     }
 }
