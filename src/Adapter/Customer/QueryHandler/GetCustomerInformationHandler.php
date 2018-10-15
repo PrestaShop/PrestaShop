@@ -42,7 +42,6 @@ use Order;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\AddressInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\BoughtProductInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\CartInformation;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\CustomerCartsInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\CustomerInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\MessageInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\OrderInformation;
