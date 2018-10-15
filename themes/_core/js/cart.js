@@ -29,11 +29,11 @@ $(document).ready(() => {
   prestashop.on('updateCart', (event) => {
     prestashop.cart = event.reason.cart;
     var getCartViewUrl = $('.js-cart').data('refresh-url');
-    
+
     if (!getCartViewUrl) {
       return;
     }
-    
+
     var requestData = {};
 
     if (event && event.reason) {
@@ -57,6 +57,29 @@ $(document).ready(() => {
         var $input = $(input);
         $input.attr('value', $input.val());
       });
+
+      if ($('.cart-payment-step-refresh').length) {
+        // we get the refresh flag : on payment step we need to refresh page to be sure
+        // amount is correctly updated on payemnt modules
+        var results = new RegExp('[\?&]' + name + '=([^&#]*)')
+          .exec(window.location.search);
+        var queryParams = (results !== null) ? results[1] || {} : {};
+        if (queryParams['updatedTransaction'] !== undefined) {
+          // this parameter is used to display some info message
+          // already set : just refresh page
+          window.location.reload();
+        } else {
+          // not set : add it to the url
+          queryParams['updatedTransaction'] = 1;
+          var joined = [];
+          for (var key in queryParams) {
+            var val = queryParams[key]; // gets the value by looking for the key in the object
+            joined.push(key + "=" + val);
+          }
+          var newUrl = window.location.pathname + "?" + joined.join("&");
+          window.location.href = newUrl;
+        }
+      }
 
       prestashop.emit('updatedCart', {eventType: 'updateCart', resp: resp});
     }).fail((resp) => {
