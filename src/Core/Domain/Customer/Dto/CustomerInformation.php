@@ -51,20 +51,28 @@ class CustomerInformation
     private $customerCartsInformation;
 
     /**
+     * @var CustomerProductsInformation
+     */
+    private $customerProductsInformation;
+
+    /**
      * @param CustomerId $customerId
      * @param PersonalInformation $generalInformation
      * @param CustomerOrdersInformation $customerOrdersInformation
      * @param CustomerCartsInformation $customerCartsInformation
+     * @param CustomerProductsInformation $customerProductsInformation
      */
     public function __construct(
         CustomerId $customerId,
         PersonalInformation $generalInformation,
         CustomerOrdersInformation $customerOrdersInformation,
-        CustomerCartsInformation $customerCartsInformation
+        CustomerCartsInformation $customerCartsInformation,
+        CustomerProductsInformation $customerProductsInformation
     ) {
         $this->customerId = $customerId;
         $this->personalInformation = $generalInformation;
         $this->customerOrdersInformation = $customerOrdersInformation;
         $this->customerCartsInformation = $customerCartsInformation;
+        $this->customerProductsInformation = $customerProductsInformation;
     }
 }
