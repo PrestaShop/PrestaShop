@@ -81,6 +81,11 @@ class CustomerInformation
     private $groupsInformation;
 
     /**
+     * @var ReferrerInformation[]
+     */
+    private $referrersInformation;
+
+    /**
      * @param CustomerId $customerId
      * @param PersonalInformation $generalInformation
      * @param CustomerOrdersInformation $customerOrdersInformation
@@ -91,6 +96,7 @@ class CustomerInformation
      * @param SentEmailInformation[] $sentEmailsInformation
      * @param LastConnectionInformation[] $lastConnectionsInformation
      * @param GroupInformation[] $groupsInformation
+     * @param ReferrerInformation[] $referrersInformation
      */
     public function __construct(
         CustomerId $customerId,
@@ -102,7 +108,8 @@ class CustomerInformation
         array $discountsInformation,
         array $sentEmailsInformation,
         array $lastConnectionsInformation,
-        array $groupsInformation
+        array $groupsInformation,
+        array $referrersInformation
     ) {
         $this->customerId = $customerId;
         $this->personalInformation = $generalInformation;
@@ -114,5 +121,6 @@ class CustomerInformation
         $this->sentEmailsInformation = $sentEmailsInformation;
         $this->lastConnectionsInformation = $lastConnectionsInformation;
         $this->groupsInformation = $groupsInformation;
+        $this->referrersInformation = $referrersInformation;
     }
 }

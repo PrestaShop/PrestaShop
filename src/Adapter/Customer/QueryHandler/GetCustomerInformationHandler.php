@@ -51,6 +51,7 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\DiscountInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\GroupInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\LastConnectionInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\PersonalInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\ReferrerInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\SentEmailInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\Subscriptions;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\ViewedProductInformation;
@@ -58,6 +59,7 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundExcepti
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryHandler\GetCustomerInformationHandlerInterface;
 use Product;
+use Referrer;
 use Shop;
 use Symfony\Component\Translation\TranslatorInterface;
 use Tools;
@@ -123,7 +125,8 @@ final class GetCustomerInformationHandler implements GetCustomerInformationHandl
             $this->getCustomerDiscounts($customer),
             $this->getLastEmailsSentToCustomer($customer),
             $this->getLastCustomerConnections($customer),
-            $this->getCustomerGroups($customer)
+            $this->getCustomerGroups($customer),
+            $this->getCustomerReferrers($customer)
         );
     }
 
@@ -491,5 +494,26 @@ final class GetCustomerInformationHandler implements GetCustomerInformationHandl
         }
 
         return $customerGroups;
+    }
+
+    /**
+     * @param Customer $customer
+     *
+     * @return ReferrerInformation[]
+     */
+    private function getCustomerReferrers(Customer $customer)
+    {
+        $referrers = Referrer::getReferrers($customer->id);
+        $customerReferrers = [];
+
+        foreach ($referrers as $referrer) {
+            $customerReferrers[] = new ReferrerInformation(
+                Tools::displayDate($referrer['date_add'], null, true),
+                $referrer['name'],
+                $referrer['shop_name']
+            );
+        }
+
+        return $customerReferrers;
     }
 }
