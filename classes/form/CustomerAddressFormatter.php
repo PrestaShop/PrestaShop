@@ -96,17 +96,17 @@ class CustomerAddressFormatterCore implements FormFormatterInterface
                     if ($this->country->need_zip_code) {
                         $formField->setRequired(true);
                     }
+                } elseif ($field === 'dni') {
+                    if ($this->country->need_identification_number) {
+                        $formField->setRequired(true);
+                    }
                 } elseif ($field === 'phone') {
                     $formField->setType('tel');
                 }
             } elseif (count($fieldParts) === 2) {
                 list($entity, $entityField) = $fieldParts;
 
-                if ($field === 'dni') {
-                    if ($this->country->need_identification_number) {
-                        $formField->setRequired(true);
-                    }
-                }
+
 
                 // Fields specified using the Entity:field
                 // notation are actually references to other
