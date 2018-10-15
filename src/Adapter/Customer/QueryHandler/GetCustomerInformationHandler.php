@@ -35,6 +35,7 @@ use Customer;
 use CustomerThread;
 use Db;
 use Gender;
+use Group;
 use Language;
 use Link;
 use Order;
@@ -47,6 +48,7 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\CustomerOrderInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\CustomerOrdersInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\CustomerProductsInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\DiscountInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\GroupInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\LastConnectionInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\PersonalInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\SentEmailInformation;
@@ -120,7 +122,8 @@ final class GetCustomerInformationHandler implements GetCustomerInformationHandl
             $this->getCustomerMessages($customer),
             $this->getCustomerDiscounts($customer),
             $this->getLastEmailsSentToCustomer($customer),
-            $this->getLastCustomerConnections($customer)
+            $this->getLastCustomerConnections($customer),
+            $this->getCustomerGroups($customer)
         );
     }
 
@@ -456,7 +459,7 @@ final class GetCustomerInformationHandler implements GetCustomerInformationHandl
             ;
 
             $lastConnections[] = new LastConnectionInformation(
-                $connection['id_connection'],
+                $connection['id_connections'],
                 Tools::displayDate($connection['date_add']),
                 $connection['pages'],
                 $connection['time'],
@@ -466,5 +469,27 @@ final class GetCustomerInformationHandler implements GetCustomerInformationHandl
         }
 
         return $lastConnections;
+    }
+
+    /**
+     * @param Customer $customer
+     *
+     * @return GroupInformation[]
+     */
+    private function getCustomerGroups(Customer $customer)
+    {
+        $groups = $customer->getGroups();
+        $customerGroups = [];
+
+        foreach ($groups as $group) {
+            $group = new Group($group['id_group']);
+
+            $customerGroups[] = new GroupInformation(
+                (int) $group->id,
+                $group->name[$this->contextLangId]
+            );
+        }
+
+        return $customerGroups;
     }
 }
