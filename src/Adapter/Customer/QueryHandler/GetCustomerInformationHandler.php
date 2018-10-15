@@ -28,25 +28,32 @@ namespace PrestaShop\PrestaShop\Adapter\Customer\QueryHandler;
 
 use Carrier;
 use Cart;
+use Category;
 use Currency;
 use Customer;
 use Db;
 use Gender;
 use Language;
+use Link;
 use Order;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\BoughtProductInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\CustomerCartInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\CustomerCartsInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\CustomerInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\CustomerOrderInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\CustomerOrdersInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\CustomerProductsInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\PersonalInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\Subscriptions;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\ViewedProductInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryHandler\GetCustomerInformationHandlerInterface;
+use Product;
 use Shop;
 use Symfony\Component\Translation\TranslatorInterface;
 use Tools;
+use Validate;
 
 /**
  * Class GetCustomerInformationHandler
@@ -64,15 +71,23 @@ final class GetCustomerInformationHandler implements GetCustomerInformationHandl
     private $translator;
 
     /**
+     * @var Link
+     */
+    private $link;
+
+    /**
      * @param TranslatorInterface $translator
-     * @param $contextLangId
+     * @param int $contextLangId
+     * @param Link $link
      */
     public function __construct(
         TranslatorInterface $translator,
-        $contextLangId
+        $contextLangId,
+        Link $link
     ) {
         $this->contextLangId = $contextLangId;
         $this->translator = $translator;
+        $this->link = $link;
     }
 
     /**
@@ -94,7 +109,8 @@ final class GetCustomerInformationHandler implements GetCustomerInformationHandl
             $customerId,
             $this->getPersonalInformation($customer),
             $this->getCustomerOrders($customer),
-            $this->getCustomerCarts($customer)
+            $this->getCustomerCarts($customer),
+            $this->getCustomerProducts($customer)
         );
     }
 
@@ -257,5 +273,74 @@ final class GetCustomerInformationHandler implements GetCustomerInformationHandl
         }
 
         return new CustomerCartsInformation($customerCarts);
+    }
+
+    /**
+     * @param Customer $customer
+     *
+     * @return CustomerProductsInformation
+     */
+    private function getCustomerProducts(Customer $customer)
+    {
+        $boughtProducts = [];
+        $viewedProducts = [];
+
+        $products = $customer->getBoughtProducts();
+        foreach ($products as $product) {
+            $boughtProducts[] = new BoughtProductInformation(
+                (int) $product['id_order'],
+                Tools::displayDate($product['date_add'], null, false),
+                $product['product_name'],
+                $product['product_quantity']
+            );
+        }
+
+        $sql = '
+            SELECT DISTINCT cp.id_product, c.id_cart, c.id_shop, cp.id_shop AS cp_id_shop
+            FROM ' . _DB_PREFIX_ . 'cart_product cp
+            JOIN ' . _DB_PREFIX_ . 'cart c ON (c.id_cart = cp.id_cart)
+            JOIN ' . _DB_PREFIX_ . 'product p ON (cp.id_product = p.id_product)
+            WHERE c.id_customer = ' . (int) $customer->id . '
+                AND NOT EXISTS (
+                        SELECT 1
+                        FROM ' . _DB_PREFIX_ . 'orders o
+                        JOIN ' . _DB_PREFIX_ . 'order_detail od ON (o.id_order = od.id_order)
+                        WHERE product_id = cp.id_product AND o.valid = 1 AND o.id_customer = ' . (int) $customer->id . '
+                )
+        ';
+
+        $viewedProductsData = Db::getInstance()->executeS($sql);
+        foreach ($viewedProductsData as $productData) {
+            $product = new Product(
+                $productData['id_product'],
+                false,
+                $this->contextLangId,
+                $productData['id_shop']
+            );
+
+            if (!Validate::isLoadedObject($product)) {
+                continue;
+            }
+
+            $productUrl = $this->link->getProductLink(
+                $product->id,
+                $product->link_rewrite,
+                Category::getLinkRewrite($product->id_category_default, $this->contextLangId),
+                null,
+                null,
+                $productData['cp_id_shop']
+            );
+
+            $viewedProducts[] = new ViewedProductInformation(
+                (int) $product->id,
+                Tools::htmlentitiesUTF8($product->name),
+                $productUrl
+            );
+        }
+
+        return new CustomerProductsInformation(
+            $boughtProducts,
+            $viewedProducts
+        );
     }
 }
