@@ -1772,8 +1772,8 @@ File: modules/autoupgrade/classes/TaskRunner/AbstractTask.php:114</note>
           File: modules/autoupgrade/classes/UpgradePage.php:386</note>
       </trans-unit>
       <trans-unit id="774fc7a0f56391abc5d8856f2436ca07">
-        <source>Data integrity is not valided. Hack attempt?</source>
-        <target>Data integrity is not valided. Hack attempt?</target>
+        <source>Data integrity is not valid. Hack attempt?</source>
+        <target>Data integrity is not valid. Hack attempt?</target>
         <note>Context:
           File: modules/autoupgrade/classes/UpgradePage.php:387</note>
       </trans-unit>
@@ -2479,7 +2479,7 @@ File: modules/autoupgrade/classes/TaskRunner/AbstractTask.php:114</note>
           File: modules/autoupgrade/views/templates/block/checklist.twig:106</note>
       </trans-unit>
       <trans-unit id="b0413d0367ee66a39e19daaa65aba913">
-        <source>PrestaShop requirements are satisfied. </source>
+        <source>PrestaShop requirements are satisfied.</source>
         <target>PrestaShop requirements are satisfied.</target>
         <note>Context:
           File: modules/autoupgrade/views/templates/block/checklist.twig:120</note>
