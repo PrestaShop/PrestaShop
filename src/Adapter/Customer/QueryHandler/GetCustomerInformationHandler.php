@@ -48,6 +48,7 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\CustomerOrdersInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\CustomerProductsInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\DiscountInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\PersonalInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\SentEmailInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\Subscriptions;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\ViewedProductInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
@@ -116,7 +117,8 @@ final class GetCustomerInformationHandler implements GetCustomerInformationHandl
             $this->getCustomerCarts($customer),
             $this->getCustomerProducts($customer),
             $this->getCustomerMessages($customer),
-            $this->getCustomerDiscounts($customer)
+            $this->getCustomerDiscounts($customer),
+            $this->getLastEmailsSentToCustomer($customer)
         );
     }
 
@@ -407,5 +409,27 @@ final class GetCustomerInformationHandler implements GetCustomerInformationHandl
         }
 
         return $customerDiscounts;
+    }
+
+    /**
+     * @param Customer $customer
+     *
+     * @return SentEmailInformation[]
+     */
+    private function getLastEmailsSentToCustomer(Customer $customer)
+    {
+        $emails = $customer->getLastEmails();
+        $customerEmails = [];
+
+        foreach ($emails as $email) {
+            $customerEmails[] = new SentEmailInformation(
+                Tools::displayDate($email['date_add'], null, true),
+                $email['language'],
+                $email['subject'],
+                $email['template']
+            );
+        }
+
+        return $customerEmails;
     }
 }
