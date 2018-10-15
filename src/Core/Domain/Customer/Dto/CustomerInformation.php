@@ -44,22 +44,22 @@ class CustomerInformation
     private $personalInformation;
 
     /**
-     * @var CustomerOrdersInformation
+     * @var OrdersInformation
      */
     private $customerOrdersInformation;
 
     /**
      * @var CustomerCartsInformation
      */
-    private $customerCartsInformation;
+    private $cartsInformation;
 
     /**
-     * @var CustomerProductsInformation
+     * @var ProductsInformation
      */
     private $customerProductsInformation;
 
     /**
-     * @var CustomerMessageInformation[]
+     * @var MessageInformation[]
      */
     private $customerMessagesInformation;
 
@@ -96,10 +96,10 @@ class CustomerInformation
     /**
      * @param CustomerId $customerId
      * @param PersonalInformation $generalInformation
-     * @param CustomerOrdersInformation $customerOrdersInformation
-     * @param CustomerCartsInformation $customerCartsInformation
-     * @param CustomerProductsInformation $customerProductsInformation
-     * @param CustomerMessageInformation[] $customerMessagesInformation
+     * @param OrdersInformation $customerOrdersInformation
+     * @param CartInformation[] $cartsInformation
+     * @param ProductsInformation $customerProductsInformation
+     * @param MessageInformation[] $customerMessagesInformation
      * @param DiscountInformation[] $discountsInformation
      * @param SentEmailInformation[] $sentEmailsInformation
      * @param LastConnectionInformation[] $lastConnectionsInformation
@@ -110,9 +110,9 @@ class CustomerInformation
     public function __construct(
         CustomerId $customerId,
         PersonalInformation $generalInformation,
-        CustomerOrdersInformation $customerOrdersInformation,
-        CustomerCartsInformation $customerCartsInformation,
-        CustomerProductsInformation $customerProductsInformation,
+        OrdersInformation $customerOrdersInformation,
+        array $cartsInformation,
+        ProductsInformation $customerProductsInformation,
         array $customerMessagesInformation,
         array $discountsInformation,
         array $sentEmailsInformation,
@@ -124,7 +124,7 @@ class CustomerInformation
         $this->customerId = $customerId;
         $this->personalInformation = $generalInformation;
         $this->customerOrdersInformation = $customerOrdersInformation;
-        $this->customerCartsInformation = $customerCartsInformation;
+        $this->cartsInformation = $cartsInformation;
         $this->customerProductsInformation = $customerProductsInformation;
         $this->customerMessagesInformation = $customerMessagesInformation;
         $this->discountsInformation = $discountsInformation;

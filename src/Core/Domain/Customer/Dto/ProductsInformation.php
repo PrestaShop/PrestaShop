@@ -27,55 +27,27 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Customer\Dto;
 
 /**
- * Class CustomerOrderInformation.
+ * Class CustomerProductsInformation holds information about products that customers has bought and viewed.
  */
-class CustomerOrderInformation
+class ProductsInformation
 {
     /**
-     * @var int
+     * @var BoughtProductInformation[]
      */
-    private $orderId;
+    private $boughtProductsInformation;
 
     /**
-     * @var string
+     * @var ViewedProductInformation[]
      */
-    private $orderPlacedDate;
+    private $viewedProductsInformation;
 
     /**
-     * @var string
+     * @param BoughtProductInformation[] $boughtProductsInformation
+     * @param ViewedProductInformation[] $viewedProductsInformation
      */
-    private $paymentMethodName;
-
-    /**
-     * @var string
-     */
-    private $orderStatus;
-
-    /**
-     * @var int
-     */
-    private $orderProductsCount;
-
-    /**
-     * @var string
-     */
-    private $totalPaid;
-
-    /**
-     * @param int $orderId
-     * @param string $orderPlacedDate
-     * @param string $paymentMethodName
-     * @param string $orderStatus
-     * @param int $orderProductsCount
-     * @param string $totalPaid
-     */
-    public function __construct($orderId, $orderPlacedDate, $paymentMethodName, $orderStatus, $orderProductsCount, $totalPaid)
+    public function __construct(array $boughtProductsInformation, array $viewedProductsInformation)
     {
-        $this->orderId = $orderId;
-        $this->orderPlacedDate = $orderPlacedDate;
-        $this->paymentMethodName = $paymentMethodName;
-        $this->orderStatus = $orderStatus;
-        $this->orderProductsCount = $orderProductsCount;
-        $this->totalPaid = $totalPaid;
+        $this->boughtProductsInformation = $boughtProductsInformation;
+        $this->viewedProductsInformation = $viewedProductsInformation;
     }
 }
