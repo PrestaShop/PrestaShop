@@ -28,6 +28,9 @@ namespace PrestaShop\PrestaShop\Core\Domain\Customer\Dto;
 
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 
+/**
+ * Class CustomerInformation stores customer information for viewing in Back Office.
+ */
 class CustomerInformation
 {
     /**
@@ -86,6 +89,11 @@ class CustomerInformation
     private $referrersInformation;
 
     /**
+     * @var AddressInformation[]
+     */
+    private $addressesInformation;
+
+    /**
      * @param CustomerId $customerId
      * @param PersonalInformation $generalInformation
      * @param CustomerOrdersInformation $customerOrdersInformation
@@ -97,6 +105,7 @@ class CustomerInformation
      * @param LastConnectionInformation[] $lastConnectionsInformation
      * @param GroupInformation[] $groupsInformation
      * @param ReferrerInformation[] $referrersInformation
+     * @param AddressInformation[] $addressesInformation
      */
     public function __construct(
         CustomerId $customerId,
@@ -109,7 +118,8 @@ class CustomerInformation
         array $sentEmailsInformation,
         array $lastConnectionsInformation,
         array $groupsInformation,
-        array $referrersInformation
+        array $referrersInformation,
+        array $addressesInformation
     ) {
         $this->customerId = $customerId;
         $this->personalInformation = $generalInformation;
@@ -122,5 +132,6 @@ class CustomerInformation
         $this->lastConnectionsInformation = $lastConnectionsInformation;
         $this->groupsInformation = $groupsInformation;
         $this->referrersInformation = $referrersInformation;
+        $this->addressesInformation = $addressesInformation;
     }
 }
