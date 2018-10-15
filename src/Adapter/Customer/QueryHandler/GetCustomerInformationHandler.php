@@ -47,6 +47,7 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\CustomerOrderInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\CustomerOrdersInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\CustomerProductsInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\DiscountInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\LastConnectionInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\PersonalInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\SentEmailInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\Subscriptions;
@@ -118,7 +119,8 @@ final class GetCustomerInformationHandler implements GetCustomerInformationHandl
             $this->getCustomerProducts($customer),
             $this->getCustomerMessages($customer),
             $this->getCustomerDiscounts($customer),
-            $this->getLastEmailsSentToCustomer($customer)
+            $this->getLastEmailsSentToCustomer($customer),
+            $this->getLastCustomerConnections($customer)
         );
     }
 
@@ -431,5 +433,38 @@ final class GetCustomerInformationHandler implements GetCustomerInformationHandl
         }
 
         return $customerEmails;
+    }
+
+    /**
+     * @param Customer $customer
+     *
+     * @return LastConnectionInformation[]
+     */
+    private function getLastCustomerConnections(Customer $customer)
+    {
+        $connections = $customer->getLastConnections();
+        $lastConnections = [];
+
+        if (!is_array($connections)) {
+            $connections = [];
+        }
+
+        foreach ($connections as $connection) {
+            $httpReferer = $connection['http_referer'] ?
+                preg_replace('/^www./', '', parse_url($connection['http_referer'], PHP_URL_HOST)) :
+                $this->translator->trans('Direct link', [], 'Admin.Orderscustomers.Notification')
+            ;
+
+            $lastConnections[] = new LastConnectionInformation(
+                $connection['id_connection'],
+                Tools::displayDate($connection['date_add']),
+                $connection['pages'],
+                $connection['time'],
+                $httpReferer,
+                $connection['ipaddress']
+            );
+        }
+
+        return $lastConnections;
     }
 }
