@@ -29,7 +29,7 @@ services:
     prestashop.adapter.cache_clearer:
         class: 'PrestaShop\PrestaShop\Adapter\Cache\CacheClearer'
         arguments:
-            - '@prestashop.core.cache.clearer.entire_cache_clearer'
+            - '@prestashop.core.cache.clearer.cache_clearer_chain'
             - '@prestashop.adapter.cache.clearer.symfony_cache_clearer'
             - '@prestashop.adapter.cache.clearer.media_cache_clearer'
             - '@prestashop.adapter.cache.clearer.smarty_cache_clearer'

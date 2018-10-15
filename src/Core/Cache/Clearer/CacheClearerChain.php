@@ -27,9 +27,9 @@
 namespace PrestaShop\PrestaShop\Core\Cache\Clearer;
 
 /**
- * Class EntireCacheClearer clears entire PrestaShop cache.
+ * Class CacheClearerChain clears entire PrestaShop cache.
  */
-final class EntireCacheClearer implements CacheClearerInterface
+final class CacheClearerChain implements CacheClearerInterface
 {
     /**
      * @var CacheClearerInterface[]
