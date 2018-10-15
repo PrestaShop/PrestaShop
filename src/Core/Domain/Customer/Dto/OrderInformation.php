@@ -27,73 +27,55 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Customer\Dto;
 
 /**
- * Class CustomerMessageInformation holds customer message information.
+ * Class CustomerOrderInformation.
  */
-class CustomerMessageInformation
+class OrderInformation
 {
     /**
      * @var int
      */
-    private $customerThreadId;
+    private $orderId;
 
     /**
      * @var string
      */
-    private $message;
+    private $orderPlacedDate;
 
     /**
      * @var string
      */
-    private $status;
+    private $paymentMethodName;
 
     /**
      * @var string
      */
-    private $date;
+    private $orderStatus;
 
     /**
-     * @param int $customerThreadId
-     * @param string $message
-     * @param string $status
-     * @param string $date
+     * @var int
      */
-    public function __construct($customerThreadId, $message, $status, $date)
-    {
-        $this->customerThreadId = $customerThreadId;
-        $this->message = $message;
-        $this->status = $status;
-        $this->date = $date;
-    }
+    private $orderProductsCount;
 
     /**
-     * @return int
+     * @var string
      */
-    public function getCustomerThreadId()
-    {
-        return $this->customerThreadId;
-    }
+    private $totalPaid;
 
     /**
-     * @return string
+     * @param int $orderId
+     * @param string $orderPlacedDate
+     * @param string $paymentMethodName
+     * @param string $orderStatus
+     * @param int $orderProductsCount
+     * @param string $totalPaid
      */
-    public function getMessage()
+    public function __construct($orderId, $orderPlacedDate, $paymentMethodName, $orderStatus, $orderProductsCount, $totalPaid)
     {
-        return $this->message;
-    }
-
-    /**
-     * @return string
-     */
-    public function getStatus()
-    {
-        return $this->status;
-    }
-
-    /**
-     * @return string
-     */
-    public function getDate()
-    {
-        return $this->date;
+        $this->orderId = $orderId;
+        $this->orderPlacedDate = $orderPlacedDate;
+        $this->paymentMethodName = $paymentMethodName;
+        $this->orderStatus = $orderStatus;
+        $this->orderProductsCount = $orderProductsCount;
+        $this->totalPaid = $totalPaid;
     }
 }

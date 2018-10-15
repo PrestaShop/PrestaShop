@@ -26,26 +26,59 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Customer\Dto;
 
-class CustomerCartsInformation
+/**
+ * Class CustomerOrders.
+ */
+class OrdersInformation
 {
     /**
-     * @var array|CustomerCartInformation[]
+     * @var array|OrderInformation[]
      */
-    private $cartsInformation;
+    private $validOrders;
 
     /**
-     * @param CustomerCartInformation[] $cartsInformation
+     * @var array|OrderInformation[]
      */
-    public function __construct(array $cartsInformation)
+    private $invalidOrders;
+
+    /**
+     * @var string
+     */
+    private $totalSpent;
+
+    /**
+     * @param string $totalSpent
+     * @param OrderInformation[] $validOrders
+     * @param OrderInformation[] $invalidOrders
+     */
+    public function __construct($totalSpent, array $validOrders, array $invalidOrders)
     {
-        $this->cartsInformation = $cartsInformation;
+        $this->validOrders = $validOrders;
+        $this->invalidOrders = $invalidOrders;
+        $this->totalSpent = $totalSpent;
     }
 
     /**
-     * @return array|CustomerCartInformation[]
+     * @return OrderInformation[]
      */
-    public function getCartsInformation()
+    public function getValidOrders()
     {
-        return $this->cartsInformation;
+        return $this->validOrders;
+    }
+
+    /**
+     * @return OrderInformation[]
+     */
+    public function getInvalidOrders()
+    {
+        return $this->invalidOrders;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTotalSpent()
+    {
+        return $this->totalSpent;
     }
 }
