@@ -199,12 +199,6 @@ services:
         arguments:
             - '@prestashop.adapter.legacy.configuration'
 
-    prestashop.adapter.sql_manager_settings.configuration:
-        class: 'PrestaShop\PrestaShop\Adapter\Configuration\SqlRequestConfiguration'
-        arguments:
-            - '@prestashop.core.command_bus'
-            - '@prestashop.core.query_bus'
-
     prestashop.adapter.webservice.configuration:
         class: 'PrestaShop\PrestaShop\Adapter\Webservice\WebserviceConfiguration'
         arguments:
@@ -242,3 +236,15 @@ services:
         arguments:
             - '@prestashop.adapter.legacy.configuration'
             - '@prestashop.core.team.employee.configuration.options_checker'
+
+    prestashop.adapter.import.import_data_match.configuration:
+        class: 'PrestaShop\PrestaShop\Core\Import\Configuration\ImportDataMatchConfiguration'
+        arguments:
+            - '@translator'
+            - '@=service("prestashop.core.form.choice_provider.import_entity_field").getChoices()'
+            - '@=service("prestashop.core.import.dir")'
+            - '@prestashop.core.import.factory.data_row.collection_factory'
+            - '@doctrine.dbal.default_connection'
+            - '%database_prefix%'
+            - '@prestashop.core.admin.import_match.repository'
+            - '@session'

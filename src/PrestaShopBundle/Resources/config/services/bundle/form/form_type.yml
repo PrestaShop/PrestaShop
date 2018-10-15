@@ -544,13 +544,6 @@ services:
         tags:
             - { name: form.type }
 
-    form.type.shop.traffic_seo.meta:
-        class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta\MetaType'
-        parent: 'form.type.translatable.aware'
-        public: true
-        tags:
-            - { name: form.type }
-
     form.type.common.translatable:
         class: 'PrestaShopBundle\Form\Admin\Type\TranslatableType'
         arguments:
@@ -585,5 +578,15 @@ services:
         class: 'PrestaShopBundle\Form\Admin\Type\Common\Team\ProfileChoiceType'
         arguments:
             - '@=service("prestashop.adapter.form.choice_provider.profile_by_id_choice_provider").getChoices()'
+        tags:
+            - { name: form.type }
+
+    form.type.import.import_data_configuration:
+        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Import\ImportDataConfigurationType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        arguments:
+            - '@=service("prestashop.core.form.choice_provider.import_match_configuration").getChoices()'
+            - '@=service("prestashop.core.form.choice_provider.import_entity_field").getChoices()'
         tags:
             - { name: form.type }

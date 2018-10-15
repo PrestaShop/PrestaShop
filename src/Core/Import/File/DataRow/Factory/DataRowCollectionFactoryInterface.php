@@ -24,11 +24,23 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Import\Exception;
+namespace PrestaShop\PrestaShop\Core\Import\File\DataRow\Factory;
+
+use PrestaShop\PrestaShop\Core\Import\File\DataRow\DataRowCollectionInterface;
+use SplFileInfo;
 
 /**
- * Interface ExceptionInterface is implemented by all import exceptions.
+ * Interface DataRowCollectionFactoryInterface describes a data row collection factory.
  */
-interface ExceptionInterface
+interface DataRowCollectionFactoryInterface
 {
+    /**
+     * Builds a data row collection.
+     *
+     * @param SplFileInfo $file
+     * @param int $maxRowsInCollection maximum number of rows this collection can have. Unlimited if not provided.
+     *
+     * @return DataRowCollectionInterface
+     */
+    public function buildFromFile(SplFileInfo $file, $maxRowsInCollection = null);
 }

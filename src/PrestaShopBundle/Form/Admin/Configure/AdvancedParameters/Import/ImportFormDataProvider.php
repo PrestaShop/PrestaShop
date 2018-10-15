@@ -28,6 +28,9 @@ namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Import;
 
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 use PrestaShop\PrestaShop\Core\Import\File\FileFinder;
+use PrestaShop\PrestaShop\Core\Import\ImportSettings;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
@@ -45,10 +48,21 @@ final class ImportFormDataProvider implements FormDataProviderInterface
      */
     private $importFileFinder;
 
-    public function __construct(SessionInterface $session, FileFinder $importFileFinder)
+    /**
+     * @var null|Request current request
+     */
+    private $request;
+
+    /**
+     * @param SessionInterface $session
+     * @param FileFinder $importFileFinder
+     * @param RequestStack $requestStack
+     */
+    public function __construct(SessionInterface $session, FileFinder $importFileFinder, RequestStack $requestStack)
     {
         $this->session = $session;
         $this->importFileFinder = $importFileFinder;
+        $this->request = $requestStack->getCurrentRequest();
     }
 
     /**
@@ -56,12 +70,28 @@ final class ImportFormDataProvider implements FormDataProviderInterface
      */
     public function getData()
     {
+        // If import entity is available in the query - grab it and preselect in the form,
+        // otherwise - take it from the session.
+        if (null !== $this->request && $this->request->query->has('import_type')) {
+            $entity = $this->request->query->get('import_type');
+        } else {
+            $entity = $this->session->get('entity');
+        }
+
         return [
             'csv' => $this->getSelectedFile(),
-            'entity' => $this->session->get('entity'),
+            'entity' => $entity,
             'iso_lang' => $this->session->get('iso_lang'),
-            'separator' => $this->session->get('separator', ImportType::DEFAULT_SEPARATOR),
-            'multiple_value_separator' => $this->session->get('multiple_value_separator', ImportType::DEFAULT_MULTIVALUE_SEPARATOR),
+            'separator' => $this->session->get('separator', ImportSettings::DEFAULT_SEPARATOR),
+            'multiple_value_separator' => $this->session->get(
+                'multiple_value_separator',
+                ImportSettings::DEFAULT_MULTIVALUE_SEPARATOR
+            ),
+            'truncate' => $this->session->get('truncate', false),
+            'regenerate' => $this->session->get('regenerate', false),
+            'match_ref' => $this->session->get('match_ref', false),
+            'forceIDs' => $this->session->get('forceIDs', false),
+            'sendemail' => $this->session->get('sendemail', true),
         ];
     }
 
@@ -90,6 +120,11 @@ final class ImportFormDataProvider implements FormDataProviderInterface
         $this->session->set('iso_lang', $data['iso_lang']);
         $this->session->set('separator', $data['separator']);
         $this->session->set('multiple_value_separator', $data['multiple_value_separator']);
+        $this->session->set('truncate', $data['truncate']);
+        $this->session->set('match_ref', $data['match_ref']);
+        $this->session->set('regenerate', $data['regenerate']);
+        $this->session->set('forceIDs', $data['forceIDs']);
+        $this->session->set('sendemail', $data['sendemail']);
 
         return $errors;
     }

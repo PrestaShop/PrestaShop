@@ -83,6 +83,7 @@ services:
         arguments:
             - '@session'
             - '@prestashop.core.import.file_finder'
+            - '@request_stack'
 
     prestashop.adapter.order.delivery.slip.options.form_provider:
         class: 'PrestaShopBundle\Form\Admin\Sell\Order\Delivery\SlipOptionsFormDataProvider'
@@ -150,3 +151,8 @@ services:
         class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Employee\EmployeeOptionsFormDataProvider'
         arguments:
             - '@prestashop.core.team.employee.configuration.employee_options_configuration'
+
+    prestashop.admin.import_data_configuration.data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Import\ImportDataConfigurationFormDataProvider'
+        arguments:
+            - '@prestashop.adapter.import.import_data_match.configuration'

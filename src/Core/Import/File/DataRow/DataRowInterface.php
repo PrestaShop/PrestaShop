@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -24,12 +24,33 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
-header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
+namespace PrestaShop\PrestaShop\Core\Import\File\DataRow;
 
-header('Cache-Control: no-store, no-cache, must-revalidate');
-header('Cache-Control: post-check=0, pre-check=0', false);
-header('Pragma: no-cache');
+use Countable;
+use IteratorAggregate;
+use PrestaShop\PrestaShop\Core\Import\File\DataCell\DataCellInterface;
+use ArrayAccess;
 
-header('Location: ../../../../../../../');
-exit;
+/**
+ * Interface DataRowInterface describes a data row from imported file.
+ */
+interface DataRowInterface extends ArrayAccess, IteratorAggregate, Countable
+{
+    /**
+     * Add a cell to this row.
+     *
+     * @param DataCellInterface $cell
+     *
+     * @return self
+     */
+    public function addCell(DataCellInterface $cell);
+
+    /**
+     * Create a data row from given array.
+     *
+     * @param array $data
+     *
+     * @return self
+     */
+    public static function createFromArray(array $data);
+}

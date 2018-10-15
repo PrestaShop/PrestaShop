@@ -80,6 +80,14 @@ class AdminImportControllerCore extends AdminController
     public $convert;
     public $multiple_value_separator;
 
+    /**
+     * This flag shows if import was executed in current request.
+     * Used for symfony migration purposes.
+     *
+     * @var bool
+     */
+    private $importExecuted = false;
+
     public function __construct()
     {
         $this->bootstrap = true;
@@ -610,6 +618,31 @@ class AdminImportControllerCore extends AdminController
 
     public function renderForm()
     {
+        // If import was executed - collect errors or success message
+        // and send them to the migrated controller.
+        if ($this->importExecuted) {
+            $session = $this->getSession();
+
+            if ($this->errors) {
+                foreach ($this->errors as $error) {
+                    $session->getFlashBag()->add('error', $error);
+                }
+            } else {
+                foreach ($this->warnings as $warning) {
+                    $session->getFlashBag()->add('warning', $warning);
+                }
+
+                $session->getFlashBag()->add(
+                    'success',
+                    $this->trans(
+                        'Your file has been successfully imported into your shop. Don\'t forget to re-build the products\' search index.',
+                        [],
+                        'Admin.Advparameters.Notification'
+                    )
+                );
+            }
+        }
+
         // Import form is reworked in Symfony.
         // If user tries to access legacy form directly,
         // we redirect him to new form.
@@ -4393,6 +4426,7 @@ class AdminImportControllerCore extends AdminController
         }
 
         if (Tools::isSubmit('import')) {
+            $this->importExecuted = true;
             $this->importByGroups();
         } elseif ($filename = Tools::getValue('csvfilename')) {
             $filename = urldecode($filename);
@@ -4691,15 +4725,13 @@ class AdminImportControllerCore extends AdminController
         die(json_encode($results));
     }
 
-    public function initModal()
+    /**
+     * Gets session from symfony container.
+     *
+     * @return \Symfony\Component\HttpFoundation\Session\Session
+     */
+    private function getSession()
     {
-        parent::initModal();
-        $modal_content = $this->context->smarty->fetch('controllers/import/modal_import_progress.tpl');
-        $this->modals[] = array(
-             'modal_id' => 'importProgress',
-             'modal_class' => 'modal-md',
-             'modal_title' => $this->trans('Importing your data...', array(), 'Admin.Advparameters.Notification'),
-             'modal_content' => $modal_content,
-         );
+        return \PrestaShop\PrestaShop\Adapter\SymfonyContainer::getInstance()->get('session');
     }
 }
