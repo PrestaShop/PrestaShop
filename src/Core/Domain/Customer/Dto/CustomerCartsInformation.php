@@ -26,45 +26,26 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Customer\Dto;
 
-use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
-
-class CustomerInformation
+class CustomerCartsInformation
 {
     /**
-     * @var CustomerId
+     * @var array|CustomerCartInformation[]
      */
-    private $customerId;
+    private $cartsInformation;
 
     /**
-     * @var PersonalInformation
+     * @param CustomerCartInformation[] $cartsInformation
      */
-    private $personalInformation;
+    public function __construct(array $cartsInformation)
+    {
+        $this->cartsInformation = $cartsInformation;
+    }
 
     /**
-     * @var CustomerOrdersInformation
+     * @return array|CustomerCartInformation[]
      */
-    private $customerOrdersInformation;
-
-    /**
-     * @var CustomerCartsInformation
-     */
-    private $customerCartsInformation;
-
-    /**
-     * @param CustomerId $customerId
-     * @param PersonalInformation $generalInformation
-     * @param CustomerOrdersInformation $customerOrdersInformation
-     * @param CustomerCartsInformation $customerCartsInformation
-     */
-    public function __construct(
-        CustomerId $customerId,
-        PersonalInformation $generalInformation,
-        CustomerOrdersInformation $customerOrdersInformation,
-        CustomerCartsInformation $customerCartsInformation
-    ) {
-        $this->customerId = $customerId;
-        $this->personalInformation = $generalInformation;
-        $this->customerOrdersInformation = $customerOrdersInformation;
-        $this->customerCartsInformation = $customerCartsInformation;
+    public function getCartsInformation()
+    {
+        return $this->cartsInformation;
     }
 }

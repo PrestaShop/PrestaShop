@@ -26,45 +26,78 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Customer\Dto;
 
-use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
-
-class CustomerInformation
+/**
+ * Class CustomerCartInformation
+ */
+class CustomerCartInformation
 {
     /**
-     * @var CustomerId
+     * @var string
      */
-    private $customerId;
+    private $cartId;
 
     /**
-     * @var PersonalInformation
+     * @var string
      */
-    private $personalInformation;
+    private $cartCreationDate;
 
     /**
-     * @var CustomerOrdersInformation
+     * @var string
      */
-    private $customerOrdersInformation;
+    private $cartTotal;
 
     /**
-     * @var CustomerCartsInformation
+     * @var string
      */
-    private $customerCartsInformation;
+    private $carrierName;
 
     /**
-     * @param CustomerId $customerId
-     * @param PersonalInformation $generalInformation
-     * @param CustomerOrdersInformation $customerOrdersInformation
-     * @param CustomerCartsInformation $customerCartsInformation
+     * @param string $cartId
+     * @param string $cartCreationDate
+     * @param string $cartTotal
+     * @param string $carrierName
      */
     public function __construct(
-        CustomerId $customerId,
-        PersonalInformation $generalInformation,
-        CustomerOrdersInformation $customerOrdersInformation,
-        CustomerCartsInformation $customerCartsInformation
+        $cartId,
+        $cartCreationDate,
+        $cartTotal,
+        $carrierName
     ) {
-        $this->customerId = $customerId;
-        $this->personalInformation = $generalInformation;
-        $this->customerOrdersInformation = $customerOrdersInformation;
-        $this->customerCartsInformation = $customerCartsInformation;
+        $this->cartId = $cartId;
+        $this->cartCreationDate = $cartCreationDate;
+        $this->cartTotal = $cartTotal;
+        $this->carrierName = $carrierName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCartId()
+    {
+        return $this->cartId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCartCreationDate()
+    {
+        return $this->cartCreationDate;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCartTotal()
+    {
+        return $this->cartTotal;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCarrierName()
+    {
+        return $this->carrierName;
     }
 }
