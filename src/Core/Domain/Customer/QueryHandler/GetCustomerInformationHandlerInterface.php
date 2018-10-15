@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -26,11 +26,10 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Customer\QueryHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Customer\Dto;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerInformation;
 
 /**
- * Class GetCustomerInformationHandlerInterface
+ * Class GetCustomerInformationHandlerInterface.
  */
 interface GetCustomerInformationHandlerInterface
 {

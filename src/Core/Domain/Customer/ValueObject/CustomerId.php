@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\InvalidCustomerIdException;
 
 /**
- * Class CustomerId
+ * Class CustomerId.
  */
 class CustomerId
 {
