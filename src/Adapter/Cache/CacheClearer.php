@@ -38,7 +38,7 @@ class CacheClearer
     /**
      * @var CacheClearerInterface
      */
-    private $entireCacheClearer;
+    private $cacheClearerChain;
 
     /**
      * @var CacheClearerInterface
@@ -56,18 +56,18 @@ class CacheClearer
     private $smartyCacheClearer;
 
     /**
-     * @param CacheClearerInterface $entireCacheClearer
+     * @param CacheClearerInterface $cacheClearerChain
      * @param CacheClearerInterface $symfonyCacheClearer
      * @param CacheClearerInterface $mediaCacheClearer
      * @param CacheClearerInterface $smartyCacheClearer
      */
     public function __construct(
-        CacheClearerInterface $entireCacheClearer,
+        CacheClearerInterface $cacheClearerChain,
         CacheClearerInterface $symfonyCacheClearer,
         CacheClearerInterface $mediaCacheClearer,
         CacheClearerInterface $smartyCacheClearer
     ) {
-        $this->entireCacheClearer = $entireCacheClearer;
+        $this->cacheClearerChain = $cacheClearerChain;
         $this->symfonyCacheClearer = $symfonyCacheClearer;
         $this->mediaCacheClearer = $mediaCacheClearer;
         $this->smartyCacheClearer = $smartyCacheClearer;
@@ -76,11 +76,16 @@ class CacheClearer
     /**
      * Clear all application caches.
      *
-     * @deprecated since 1.7.6. Use EntireCacheClearer instead.
+     * @deprecated since 1.7.6. Use CacheClearerChain instead.
      */
     public function clearAllCaches()
     {
-        $this->entireCacheClearer->clear();
+        trigger_error(
+            'Deprecated since 1.7.6, to be removed in 1.8. Use CacheClearerChain instead.',
+            E_USER_DEPRECATED
+        );
+
+        $this->cacheClearerChain->clear();
     }
 
     /**
@@ -90,6 +95,11 @@ class CacheClearer
      */
     public function clearSymfonyCache()
     {
+        trigger_error(
+            'Deprecated since 1.7.6, to be removed in 1.8. Use SymfonyCacheClearer instead.',
+            E_USER_DEPRECATED
+        );
+
         $this->symfonyCacheClearer->clear();
     }
 
@@ -100,6 +110,11 @@ class CacheClearer
      */
     public function clearMediaCache()
     {
+        trigger_error(
+            'Deprecated since 1.7.6, to be removed in 1.8. Use MediaCacheClearer instead.',
+            E_USER_DEPRECATED
+        );
+
         $this->mediaCacheClearer->clear();
     }
 
@@ -110,6 +125,11 @@ class CacheClearer
      */
     public function clearSmartyCache()
     {
+        trigger_error(
+            'Deprecated since 1.7.6, to be removed in 1.8. Use SmartyCacheClearer instead.',
+            E_USER_DEPRECATED
+        );
+
         $this->smartyCacheClearer->clear();
     }
 }
