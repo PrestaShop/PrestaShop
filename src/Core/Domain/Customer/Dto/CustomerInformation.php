@@ -66,6 +66,11 @@ class CustomerInformation
     private $discountsInformation;
 
     /**
+     * @var array|SentEmailInformation[]
+     */
+    private $sentEmailsInformation;
+
+    /**
      * @param CustomerId $customerId
      * @param PersonalInformation $generalInformation
      * @param CustomerOrdersInformation $customerOrdersInformation
@@ -73,6 +78,7 @@ class CustomerInformation
      * @param CustomerProductsInformation $customerProductsInformation
      * @param CustomerMessageInformation[] $customerMessagesInformation
      * @param DiscountInformation[] $discountsInformation
+     * @param SentEmailInformation[] $sentEmailsInformation
      */
     public function __construct(
         CustomerId $customerId,
@@ -81,7 +87,8 @@ class CustomerInformation
         CustomerCartsInformation $customerCartsInformation,
         CustomerProductsInformation $customerProductsInformation,
         array $customerMessagesInformation,
-        array $discountsInformation
+        array $discountsInformation,
+        array $sentEmailsInformation
     ) {
         $this->customerId = $customerId;
         $this->personalInformation = $generalInformation;
@@ -90,5 +97,6 @@ class CustomerInformation
         $this->customerProductsInformation = $customerProductsInformation;
         $this->customerMessagesInformation = $customerMessagesInformation;
         $this->discountsInformation = $discountsInformation;
+        $this->sentEmailsInformation = $sentEmailsInformation;
     }
 }
