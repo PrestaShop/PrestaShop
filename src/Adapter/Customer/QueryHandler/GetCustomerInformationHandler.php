@@ -39,6 +39,7 @@ use Group;
 use Language;
 use Link;
 use Order;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\AddressInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\BoughtProductInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\CustomerCartInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\CustomerCartsInformation;
@@ -126,7 +127,8 @@ final class GetCustomerInformationHandler implements GetCustomerInformationHandl
             $this->getLastEmailsSentToCustomer($customer),
             $this->getLastCustomerConnections($customer),
             $this->getCustomerGroups($customer),
-            $this->getCustomerReferrers($customer)
+            $this->getCustomerReferrers($customer),
+            $this->getCustomerAddresses($customer)
         );
     }
 
@@ -515,5 +517,38 @@ final class GetCustomerInformationHandler implements GetCustomerInformationHandl
         }
 
         return $customerReferrers;
+    }
+
+    /**
+     * @param Customer $customer
+     *
+     * @return AddressInformation[]
+     */
+    private function getCustomerAddresses(Customer $customer)
+    {
+        $addresses = $customer->getAddresses($this->contextLangId);
+        $customerAddresses = [];
+
+        foreach ($addresses as $address) {
+            $company = $address['company'] ?: '--';
+            $fullAddress = sprintf(
+                '%s %s %s %s',
+                $address['address1'],
+                $address['address2'] ?: '',
+                $address['postcode'],
+                $address['city']
+            );
+
+            $customerAddresses[] = new AddressInformation(
+                $company,
+                sprintf('%s %s', $address['firstname'], $address['lastname']),
+                $fullAddress,
+                $address['country'],
+                (string) $address['phone'],
+                (string) $address['phone_mobile']
+            );
+        }
+
+        return $customerAddresses;
     }
 }
