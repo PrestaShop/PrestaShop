@@ -27,27 +27,73 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Customer\Dto;
 
 /**
- * Class CustomerProductsInformation holds information about products that customers has bought and viewed.
+ * Class CustomerMessageInformation holds customer message information.
  */
-class CustomerProductsInformation
+class MessageInformation
 {
     /**
-     * @var BoughtProductInformation[]
+     * @var int
      */
-    private $boughtProductsInformation;
+    private $customerThreadId;
 
     /**
-     * @var ViewedProductInformation[]
+     * @var string
      */
-    private $viewedProductsInformation;
+    private $message;
 
     /**
-     * @param BoughtProductInformation[] $boughtProductsInformation
-     * @param ViewedProductInformation[] $viewedProductsInformation
+     * @var string
      */
-    public function __construct(array $boughtProductsInformation, array $viewedProductsInformation)
+    private $status;
+
+    /**
+     * @var string
+     */
+    private $date;
+
+    /**
+     * @param int $customerThreadId
+     * @param string $message
+     * @param string $status
+     * @param string $date
+     */
+    public function __construct($customerThreadId, $message, $status, $date)
     {
-        $this->boughtProductsInformation = $boughtProductsInformation;
-        $this->viewedProductsInformation = $viewedProductsInformation;
+        $this->customerThreadId = $customerThreadId;
+        $this->message = $message;
+        $this->status = $status;
+        $this->date = $date;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCustomerThreadId()
+    {
+        return $this->customerThreadId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMessage()
+    {
+        return $this->message;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDate()
+    {
+        return $this->date;
     }
 }

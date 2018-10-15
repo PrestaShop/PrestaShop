@@ -41,13 +41,13 @@ use Link;
 use Order;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\AddressInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\BoughtProductInformation;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\CustomerCartInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\CartInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\CustomerCartsInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\CustomerInformation;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\CustomerMessageInformation;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\CustomerOrderInformation;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\CustomerOrdersInformation;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\CustomerProductsInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\MessageInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\OrderInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\OrdersInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\ProductsInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\DiscountInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\GroupInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\LastConnectionInformation;
@@ -216,7 +216,7 @@ final class GetCustomerInformationHandler implements GetCustomerInformationHandl
     /**
      * @param Customer $customer
      *
-     * @return CustomerOrdersInformation
+     * @return OrdersInformation
      */
     private function getCustomerOrders(Customer $customer)
     {
@@ -241,7 +241,7 @@ final class GetCustomerInformationHandler implements GetCustomerInformationHandl
                 );
             }
 
-            $customerOrderInformation = new CustomerOrderInformation(
+            $customerOrderInformation = new OrderInformation(
                 (int) $order['id_order'],
                 $order['date_add'],
                 $order['payment'],
@@ -258,7 +258,7 @@ final class GetCustomerInformationHandler implements GetCustomerInformationHandl
             }
         }
 
-        return new CustomerOrdersInformation(
+        return new OrdersInformation(
             Tools::displayPrice($totalSpent),
             $validOrders,
             $invalidOrders
@@ -268,7 +268,7 @@ final class GetCustomerInformationHandler implements GetCustomerInformationHandl
     /**
      * @param Customer $customer
      *
-     * @return CustomerCartsInformation
+     * @return CartInformation[]
      */
     private function getCustomerCarts(Customer $customer)
     {
@@ -282,7 +282,7 @@ final class GetCustomerInformationHandler implements GetCustomerInformationHandl
 
             $summary = $cart->getSummaryDetails();
 
-            $customerCarts[] = new CustomerCartInformation(
+            $customerCarts[] = new CartInformation(
                 sprintf('%06d', $cart->id),
                 Tools::displayDate($cart->date_add, null, true),
                 Tools::displayPrice($summary['total_price'], $currency),
@@ -290,13 +290,13 @@ final class GetCustomerInformationHandler implements GetCustomerInformationHandl
             );
         }
 
-        return new CustomerCartsInformation($customerCarts);
+        return $customerCarts;
     }
 
     /**
      * @param Customer $customer
      *
-     * @return CustomerProductsInformation
+     * @return ProductsInformation
      */
     private function getCustomerProducts(Customer $customer)
     {
@@ -356,7 +356,7 @@ final class GetCustomerInformationHandler implements GetCustomerInformationHandl
             );
         }
 
-        return new CustomerProductsInformation(
+        return new ProductsInformation(
             $boughtProducts,
             $viewedProducts
         );
@@ -365,7 +365,7 @@ final class GetCustomerInformationHandler implements GetCustomerInformationHandl
     /**
      * @param Customer $customer
      *
-     * @return CustomerMessageInformation[]
+     * @return MessageInformation[]
      */
     private function getCustomerMessages(Customer $customer)
     {
@@ -385,7 +385,7 @@ final class GetCustomerInformationHandler implements GetCustomerInformationHandl
                 $message['status']
             ;
 
-            $customerMessages[] = new CustomerMessageInformation(
+            $customerMessages[] = new MessageInformation(
                 (int) $message['id_customer_thread'],
                 substr(strip_tags(html_entity_decode($message['message'], ENT_NOQUOTES, 'UTF-8')), 0, 75),
                 $status,
