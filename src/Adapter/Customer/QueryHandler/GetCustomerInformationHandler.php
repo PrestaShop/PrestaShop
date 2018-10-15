@@ -26,12 +26,16 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Customer\QueryHandler;
 
+use Carrier;
+use Cart;
 use Currency;
 use Customer;
 use Db;
 use Gender;
 use Language;
 use Order;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\CustomerCartInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\CustomerCartsInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\CustomerInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\CustomerOrderInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\CustomerOrdersInformation;
@@ -88,8 +92,9 @@ final class GetCustomerInformationHandler implements GetCustomerInformationHandl
 
         return new CustomerInformation(
             $customerId,
-            $this->getGeneralInformation($customer),
-            $this->getOrders($customer)
+            $this->getPersonalInformation($customer),
+            $this->getCustomerOrders($customer),
+            $this->getCustomerCarts($customer)
         );
     }
 
@@ -98,7 +103,7 @@ final class GetCustomerInformationHandler implements GetCustomerInformationHandl
      *
      * @return PersonalInformation
      */
-    private function getGeneralInformation(Customer $customer)
+    private function getPersonalInformation(Customer $customer)
     {
         $customerStats = $customer->getStats();
 
@@ -106,13 +111,10 @@ final class GetCustomerInformationHandler implements GetCustomerInformationHandl
         $socialTitle = $gender->name ?: $this->translator->trans('Unknown', [], 'Admin.Orderscustomers.Feature');
 
         if ($customer->birthday && '0000-00-00' !== $customer->birthday) {
-            $birthday = $this->translator->trans(
-                '%1$d years old (birth date: %2$s)',
-                [
-                    Tools::displayDate($customer->birthday),
-                    $customerStats
-                ],
-                'Admin.Orderscustomers.Feature'
+            $birthday = sprintf(
+                $this->translator->trans('%1$d years old (birth date: %2$s)', [], 'Admin.Orderscustomers.Feature'),
+                $customerStats['age'],
+                Tools::displayDate($customer->birthday)
             );
         } else {
             $birthday = $this->translator->trans('Unknown', [], 'Admin.Orderscustomers.Feature');
@@ -182,7 +184,7 @@ final class GetCustomerInformationHandler implements GetCustomerInformationHandl
      *
      * @return CustomerOrdersInformation
      */
-    private function getOrders(Customer $customer)
+    private function getCustomerOrders(Customer $customer)
     {
         $validOrders = [];
         $invalidOrders = [];
@@ -191,6 +193,7 @@ final class GetCustomerInformationHandler implements GetCustomerInformationHandl
         $totalSpent = 0;
 
         foreach ($orders as $order) {
+            $order['total_paid_real_not_formated'] = $order['total_paid_real'];
             $order['total_paid_real'] = Tools::displayPrice(
                 $order['total_paid_real'],
                 new Currency((int) $order['id_currency'])
@@ -226,5 +229,33 @@ final class GetCustomerInformationHandler implements GetCustomerInformationHandl
             $validOrders,
             $invalidOrders
         );
+    }
+
+    /**
+     * @param Customer $customer
+     *
+     * @return CustomerCartsInformation
+     */
+    private function getCustomerCarts(Customer $customer)
+    {
+        $carts = Cart::getCustomerCarts($customer->id);
+        $customerCarts = [];
+
+        foreach ($carts as $cart) {
+            $cart = new Cart((int) $cart['id_cart']);
+            $currency = new Currency($cart->id_currency);
+            $carrier = new Carrier($cart->id_carrier);
+
+            $summary = $cart->getSummaryDetails();
+
+            $customerCarts[] = new CustomerCartInformation(
+                sprintf('%06d', $cart->id),
+                Tools::displayDate($cart->date_add, null, true),
+                Tools::displayPrice($summary['total_price'], $currency),
+                $carrier->name
+            );
+        }
+
+        return new CustomerCartsInformation($customerCarts);
     }
 }
