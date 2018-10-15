@@ -26,6 +26,8 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Customer;
 
+use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController as AbstractAdminController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -36,12 +38,17 @@ use Symfony\Component\HttpFoundation\Response;
 class CustomerController extends AbstractAdminController
 {
     /**
+     * @param int $customerId
      * @param Request $request
      *
      * @return Response
      */
-    public function viewAction(Request $request)
+    public function viewAction($customerId, Request $request)
     {
-        return $this->render('@PrestaShop/Admin/Sell/Customer/view.html.twig');
+        $customerInformation = $this->getQueryBus()->handle(new GetCustomerInformation(new CustomerId($customerId)));
+
+        return $this->render('@PrestaShop/Admin/Sell/Customer/view.html.twig', [
+            'customerInformation' => $customerInformation,
+        ]);
     }
 }
