@@ -106,8 +106,6 @@ class CustomerAddressFormatterCore implements FormFormatterInterface
             } elseif (count($fieldParts) === 2) {
                 list($entity, $entityField) = $fieldParts;
 
-
-
                 // Fields specified using the Entity:field
                 // notation are actually references to other
                 // entities, so they should be displayed as a select
