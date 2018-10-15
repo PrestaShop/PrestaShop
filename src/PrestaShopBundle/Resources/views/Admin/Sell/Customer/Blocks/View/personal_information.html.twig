@@ -23,18 +23,35 @@
   * International Registered Trademark & Property of PrestaShop SA
   *#}
 
-{% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
+<div class="card">
+  <h3 class="card-header">
+    <i class="material-icons">person</i>
+    {{ customerInformation.personalInformation.firstName }}
+    {{ customerInformation.personalInformation.lastName }}
+    {{ '[%06d]'|format(customerInformation.customerId.value) }}
+    -
+    <a href="mailto:{{ customerInformation.personalInformation.email }}">
+      {{ customerInformation.personalInformation.email }}
+    </a>
 
-{% block content %}
-  {{ dump(customerInformation) }}
+    <a href="{{ getAdminLink('AdminCustomers', true, {'id_customer': customerInformation.customerId.value, 'updatecustomer': 1}) }}"
+       class="tooltip-link float-right"
+       data-toggle="pstooltip"
+       title=""
+       data-placement="top"
+       data-original-title="{{ 'Edit'|trans({}, 'Admin.Actions') }}"
+    >
+      <i class="material-icons">edit</i>
+    </a>
+  </h3>
+  <div class="card-body">
+    <div class="row">
+      <div class="col-3">
+        {{ 'Social Title'|trans({}, 'Admin.Global') }}
+      </div>
+      <div class="col-9">
 
-  <div class="row">
-    <div class="col">
-      {% include '@PrestaShop/Admin/Sell/Customer/Blocks/View/personal_information.html.twig' %}
-    </div>
-
-    <div class="col">
-
+      </div>
     </div>
   </div>
-{% endblock %}
+</div>
