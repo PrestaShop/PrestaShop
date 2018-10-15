@@ -31,6 +31,7 @@ use Cart;
 use Category;
 use Currency;
 use Customer;
+use CustomerThread;
 use Db;
 use Gender;
 use Language;
@@ -40,6 +41,7 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\BoughtProductInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\CustomerCartInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\CustomerCartsInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\CustomerInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\CustomerMessageInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\CustomerOrderInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\CustomerOrdersInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\CustomerProductsInformation;
@@ -110,7 +112,8 @@ final class GetCustomerInformationHandler implements GetCustomerInformationHandl
             $this->getPersonalInformation($customer),
             $this->getCustomerOrders($customer),
             $this->getCustomerCarts($customer),
-            $this->getCustomerProducts($customer)
+            $this->getCustomerProducts($customer),
+            $this->getCustomerMessages($customer)
         );
     }
 
@@ -342,5 +345,39 @@ final class GetCustomerInformationHandler implements GetCustomerInformationHandl
             $boughtProducts,
             $viewedProducts
         );
+    }
+
+    /**
+     * @param Customer $customer
+     *
+     * @return CustomerMessageInformation[]
+     */
+    private function getCustomerMessages(Customer $customer)
+    {
+        $customerMessages = [];
+        $messages = CustomerThread::getCustomerMessages((int) $customer->id);
+
+        $messageStatues = [
+            'open' => $this->translator->trans('Open', [], 'Admin.Orderscustomers.Feature'),
+            'closed' => $this->translator->trans('Closed', [], 'Admin.Orderscustomers.Feature'),
+            'pending1' => $this->translator->trans('Pending 1', [], 'Admin.Orderscustomers.Feature'),
+            'pending2' => $this->translator->trans('Pending 2', [], 'Admin.Orderscustomers.Feature'),
+        ];
+
+        foreach ($messages as $message) {
+            $status = isset($messageStatues[$message['status']]) ?
+                $messageStatues[$message['status']] :
+                $message['status']
+            ;
+
+            $customerMessages[] = new CustomerMessageInformation(
+                (int) $message['id_customer_thread'],
+                substr(strip_tags(html_entity_decode($message['message'], ENT_NOQUOTES, 'UTF-8')), 0, 75),
+                $status,
+                Tools::displayDate($message['date_add'], null, true)
+            );
+        }
+
+        return $customerMessages;
     }
 }
