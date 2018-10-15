@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -66,7 +66,7 @@ use Tools;
 use Validate;
 
 /**
- * Class GetCustomerInformationHandler
+ * Class GetCustomerInformationHandler.
  */
 final class GetCustomerInformationHandler implements GetCustomerInformationHandlerInterface
 {
@@ -187,7 +187,7 @@ final class GetCustomerInformationHandler implements GetCustomerInformationHandl
     /**
      * @param int $customerId
      *
-     * @return int|null Customer rank or null if customer is not ranked.
+     * @return int|null customer rank or null if customer is not ranked
      */
     private function getCustomerRankBySales($customerId)
     {
