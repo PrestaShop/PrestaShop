@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter\Customer\QueryHandler;
 
 use Carrier;
 use Cart;
+use CartRule;
 use Category;
 use Currency;
 use Customer;
@@ -45,6 +46,7 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\CustomerMessageInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\CustomerOrderInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\CustomerOrdersInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\CustomerProductsInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\DiscountInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\PersonalInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\Subscriptions;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\ViewedProductInformation;
@@ -113,7 +115,8 @@ final class GetCustomerInformationHandler implements GetCustomerInformationHandl
             $this->getCustomerOrders($customer),
             $this->getCustomerCarts($customer),
             $this->getCustomerProducts($customer),
-            $this->getCustomerMessages($customer)
+            $this->getCustomerMessages($customer),
+            $this->getCustomerDiscounts($customer)
         );
     }
 
@@ -379,5 +382,30 @@ final class GetCustomerInformationHandler implements GetCustomerInformationHandl
         }
 
         return $customerMessages;
+    }
+
+    /**
+     * @param Customer $customer
+     *
+     * @return DiscountInformation[]
+     */
+    private function getCustomerDiscounts(Customer $customer)
+    {
+        $discounts = CartRule::getCustomerCartRules($this->contextLangId, $customer->id, false, false);
+        $customerDiscounts = [];
+
+        foreach ($discounts as $discount) {
+            $availableQuantity = $discount['quantity'] > 0 ? (int) $discount['quantity_for_user'] : 0;
+
+            $customerDiscounts[] = new DiscountInformation(
+                (int) $discount['id_cart_rule'],
+                $discount['code'],
+                $discount['name'],
+                (bool) $discount['active'],
+                $availableQuantity
+            );
+        }
+
+        return $customerDiscounts;
     }
 }

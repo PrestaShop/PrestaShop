@@ -61,12 +61,18 @@ class CustomerInformation
     private $customerMessagesInformation;
 
     /**
+     * @var DiscountInformation[]
+     */
+    private $discountsInformation;
+
+    /**
      * @param CustomerId $customerId
      * @param PersonalInformation $generalInformation
      * @param CustomerOrdersInformation $customerOrdersInformation
      * @param CustomerCartsInformation $customerCartsInformation
      * @param CustomerProductsInformation $customerProductsInformation
      * @param CustomerMessageInformation[] $customerMessagesInformation
+     * @param DiscountInformation[] $discountsInformation
      */
     public function __construct(
         CustomerId $customerId,
@@ -74,7 +80,8 @@ class CustomerInformation
         CustomerOrdersInformation $customerOrdersInformation,
         CustomerCartsInformation $customerCartsInformation,
         CustomerProductsInformation $customerProductsInformation,
-        array $customerMessagesInformation
+        array $customerMessagesInformation,
+        array $discountsInformation
     ) {
         $this->customerId = $customerId;
         $this->personalInformation = $generalInformation;
@@ -82,5 +89,6 @@ class CustomerInformation
         $this->customerCartsInformation = $customerCartsInformation;
         $this->customerProductsInformation = $customerProductsInformation;
         $this->customerMessagesInformation = $customerMessagesInformation;
+        $this->discountsInformation = $discountsInformation;
     }
 }
