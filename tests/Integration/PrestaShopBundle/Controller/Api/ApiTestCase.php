@@ -31,6 +31,7 @@ use Language;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use Shop;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\HttpFoundation\Response;
 
 // bin/phpunit -c tests/phpunit-admin.xml --group api --stop-on-error --stop-on-failure --verbose --debug
 abstract class ApiTestCase extends WebTestCase
@@ -254,13 +255,13 @@ abstract class ApiTestCase extends WebTestCase
         $message = 'Unexpected status code.';
 
         switch ($expectedStatusCode) {
-            case 200:
+            case Response::HTTP_OK:
                 $message = 'It should return a response with "OK" Status.';
                 break;
-            case 400:
+            case Response::HTTP_NOT_FOUND:
                 $message = 'It should return a response with "Bad Request" Status.';
                 break;
-            case 404:
+            case Response::HTTP_BAD_REQUEST:
                 $message = 'It should return a response with "Not Found" Status.';
                 break;
 
@@ -268,9 +269,9 @@ abstract class ApiTestCase extends WebTestCase
                 $this->fail($message);
         }
 
-        $this->assertEquals($expectedStatusCode, $response->getStatusCode(), $message);
-
         $content = json_decode($response->getContent(), true);
+
+        $this->assertEquals($expectedStatusCode, $response->getStatusCode(), $message);
 
         $this->assertEquals(
             JSON_ERROR_NONE,
