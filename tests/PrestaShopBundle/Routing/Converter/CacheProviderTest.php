@@ -159,6 +159,39 @@ class CacheProviderTest extends TestCase
         $this->assertNotEmpty($legacyRoutes['admin_products_create']);
     }
 
+    public function testGetControllersActions()
+    {
+        $cacheKey = preg_replace('@\\\\@', '_', CacheProvider::class);
+        $cache = new ArrayAdapter();
+        $mockProvider = $this->buildMockRouterProvider($this->legacyRoutes);
+        $cacheProvider = new CacheProvider($mockProvider, $cache);
+
+        $this->assertFalse($cache->hasItem($cacheKey));
+        //Just perform the test twice to be sure the result and the cache are correct
+        for ($i = 0; $i < 2; $i++) {
+            $controllerActions = $cacheProvider->getControllersActions();
+            $this->assertCount(1, $controllerActions);
+            $this->assertNotEmpty($controllerActions['AdminProducts']);
+            $this->assertNotEmpty($controllerActions['AdminProducts']['index']);
+            $this->assertTrue($cache->hasItem($cacheKey));
+            $cacheItem = $cache->getItem($cacheKey);
+            $this->assertEquals($this->expectedCacheValue, $cacheItem->get());
+        }
+
+        //Now empty the private field to force CacheProvider to call the cache
+        $reflectionClass = new \ReflectionClass(CacheProvider::class);
+        $routesProperty = $reflectionClass->getProperty('legacyRoutes');
+        $routesProperty->setAccessible(true);
+        $routesProperty->setValue($cacheProvider, null);
+        $routesProperty->setAccessible(false);
+
+        //Retry to get the value, the cache will be used hence the mockRouterProvider won't be called
+        $controllerActions = $cacheProvider->getControllersActions();
+        $this->assertCount(1, $controllerActions);
+        $this->assertNotEmpty($controllerActions['AdminProducts']);
+        $this->assertNotEmpty($controllerActions['AdminProducts']['index']);
+    }
+
     /**
      * @return \PHPUnit_Framework_MockObject_MockObject|AdapterInterface
      */
