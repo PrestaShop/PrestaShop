@@ -56,7 +56,7 @@ final class CustomerQueryBuilder extends AbstractDoctrineQueryBuilder
         Connection $connection,
         $dbPrefix,
         $contextLangId,
-        $contextShopIds
+        array $contextShopIds
     ) {
         parent::__construct($connection, $dbPrefix);
 
