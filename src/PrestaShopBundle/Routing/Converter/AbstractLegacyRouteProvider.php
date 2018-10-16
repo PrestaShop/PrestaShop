@@ -54,7 +54,7 @@ abstract class AbstractLegacyRouteProvider implements LegacyRouteProviderInterfa
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function getActionsByController($controller)
     {
@@ -70,7 +70,7 @@ abstract class AbstractLegacyRouteProvider implements LegacyRouteProviderInterfa
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function getLegacyRouteByAction($controller, $action)
     {
@@ -96,7 +96,7 @@ abstract class AbstractLegacyRouteProvider implements LegacyRouteProviderInterfa
     }
 
     /**
-     * Init the controller actions has map
+     * Init the controller actions has map.
      */
     private function initControllerActions()
     {

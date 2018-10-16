@@ -44,8 +44,10 @@ interface LegacyRouteProviderInterface
     public function getControllersActions();
 
     /**
-     * List of action for a defined controller
+     * List of action for a defined controller.
+     *
      * @param string $controller
+     *
      * @return string[]
      */
     public function getActionsByController($controller);
@@ -55,7 +57,9 @@ interface LegacyRouteProviderInterface
      *
      * @param string $controller
      * @param string $action
+     *
      * @return LegacyRoute
+     *
      * @throws RouteNotFoundException
      */
     public function getLegacyRouteByAction($controller, $action);

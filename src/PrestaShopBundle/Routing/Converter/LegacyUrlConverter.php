@@ -119,7 +119,9 @@ final class LegacyUrlConverter
 
     /**
      * @param array $parameters
+     *
      * @return string
+     *
      * @throws RouteNotFoundException
      */
     private function searchConversionForParameters(array $parameters)
