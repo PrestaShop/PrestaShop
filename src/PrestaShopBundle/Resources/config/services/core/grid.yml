@@ -104,7 +104,7 @@ services:
         parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
         arguments:
             - "@=service('router').generate('admin_common_reset_search', {'controller': 'meta', 'action': 'index'})"
-            - "@=service('router').generate('admin_meta')"
+            - "@=service('router').generate('admin_metas_index')"
         public: true
 
     # Grid factories
