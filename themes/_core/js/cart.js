@@ -58,7 +58,7 @@ $(document).ready(() => {
         $input.attr('value', $input.val());
       });
 
-      if ($('.cart-payment-step-refresh').length) {
+      if ($('.js-cart-payment-step-refresh').length) {
         // we get the refresh flag : on payment step we need to refresh page to be sure
         // amount is correctly updated on payemnt modules
         var results = new RegExp('[\?&]' + name + '=([^&#]*)')
