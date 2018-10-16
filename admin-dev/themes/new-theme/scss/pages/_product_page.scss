@@ -303,6 +303,7 @@
     z-index: 1;
     &.col-md-8 {
       border-right: solid 1px $gray-light;
+      min-height: 200px;
     }
     &.dropzone {
       .dz-preview {
