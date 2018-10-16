@@ -24,13 +24,13 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Routing\Exception;
+namespace PrestaShopBundle\Routing\Converter\Exception;
 
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 
 /**
- * Class RouteNotFoundException.
+ * Class RoutingException.
  */
-class RouteNotFoundException extends CoreException
+class RoutingException extends CoreException
 {
 }

@@ -6,6 +6,12 @@ services:
         tags: [routing.loader]
 
     prestashop.bundle.routing.legacy_url_converter:
-        class: 'PrestaShopBundle\Routing\LegacyUrlConverter'
+        class: 'PrestaShopBundle\Routing\Converter\LegacyUrlConverter'
+        arguments:
+            $router: '@router'
+            $legacyRouteProvider: '@prestashop.bundle.routing.route_provider'
+
+    prestashop.bundle.routing.route_provider:
+        class: 'PrestaShopBundle\Routing\Converter\RouterProvider'
         arguments:
             $router: '@router'
