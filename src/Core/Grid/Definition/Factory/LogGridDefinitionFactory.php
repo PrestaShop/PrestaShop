@@ -222,7 +222,7 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setName($this->trans('Erase all', [], 'Admin.Advparameters.Feature'))
                 ->setIcon('delete')
                 ->setOptions([
-                    'submit_route' => 'admin_logs_delete',
+                    'submit_route' => 'admin_logs_delete_all',
                     'confirm_message' => $this->trans('Are you sure?', [], 'Admin.Notifications.Warning'),
                 ])
             )
