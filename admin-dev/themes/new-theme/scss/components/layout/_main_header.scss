@@ -2,7 +2,7 @@ $header-text-color: #4e6167;
 
 .main-header {
   position: fixed;
-  z-index: 503;
+  z-index: 1100; // 1070 is the highest z-index in bootstrap v4.0.0 (help popover)
   background: #ffffff;
   height: $size-header-height;
   width: 100%;
