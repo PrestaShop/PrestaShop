@@ -24,10 +24,10 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Integration\PrestaShopBundle\Routing;
+namespace Tests\Integration\PrestaShopBundle\Routing\Converter;
 
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
-use PrestaShopBundle\Routing\LegacyUrlConverter;
+use PrestaShopBundle\Routing\Converter\LegacyUrlConverter;
 use Tests\Integration\PrestaShopBundle\Test\LightWebTestCase;
 use Link;
 use ReflectionClass;
@@ -210,6 +210,31 @@ class LegacyUrlConverterTest extends LightWebTestCase
         $this->assertSameUrl('/improve/modules/catalog/recommended', $routeUrl, ['route']);
     }
 
+    public function testDifferentLinkArguments()
+    {
+        $link = new Link();
+        $routeUrl = $link->getAdminLink("AdminModulesCatalog");
+        $this->assertSameUrl('/improve/modules/catalog', $routeUrl);
+
+        $routeUrl = $link->getAdminLink("AdminModulesCatalog", true);
+        $this->assertSameUrl('/improve/modules/catalog', $routeUrl);
+
+        $routeUrl = $link->getAdminLink("AdminModulesCatalog", false);
+        $this->assertSameUrl('/improve/modules/catalog', $routeUrl);
+
+        $routeUrl = $link->getAdminLink("AdminModulesCatalog", true, []);
+        $this->assertSameUrl('/improve/modules/catalog', $routeUrl);
+
+        $routeUrl = $link->getAdminLink("AdminModulesCatalog", true, null);
+        $this->assertSameUrl('/improve/modules/catalog', $routeUrl);
+
+        $routeUrl = $link->getAdminLink("AdminModulesCatalog", true, [], []);
+        $this->assertSameUrl('/improve/modules/catalog', $routeUrl);
+
+        $routeUrl = $link->getAdminLink("AdminModulesCatalog", true, [], null);
+        $this->assertSameUrl('/improve/modules/catalog', $routeUrl);
+    }
+
     /**
      * @dataProvider migratedControllers
      * @param string $expectedUrl
@@ -317,6 +342,32 @@ class LegacyUrlConverterTest extends LightWebTestCase
         $this->assertTrue($response->isRedirection());
         $location = $response->headers->get('location');
         $this->assertSameUrl($expectedUrl, $location);
+    }
+
+    /**
+     * @dataProvider legacyControllers
+     * @param string $expectedUrl
+     * @param string $controller
+     * @param string|null $action
+     * @param array|null $queryParameters
+     * @throws \PrestaShopException
+     */
+    public function testNoRedirectionListener($expectedUrl, $controller, $action = null, array $queryParameters = null)
+    {
+        $link = new Link();
+        $params = [];
+        if (null !== $action) {
+            $params['action'] = $action;
+        }
+        if (null !== $queryParameters) {
+            $params = array_merge($params, $queryParameters);
+        }
+
+        $legacyUrl = $link->getAdminBaseLink() . basename(_PS_ADMIN_DIR_) . '/' .  \Dispatcher::getInstance()->createUrl($controller, null, $params);
+        $this->client->request('GET', $legacyUrl);
+        $response = $this->client->getResponse();
+        $this->assertFalse($response->isRedirection());
+        $this->assertNull($response->headers->get('location'));
     }
 
     /**
