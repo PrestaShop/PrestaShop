@@ -24,46 +24,39 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\EventListener;
+namespace PrestaShopBundle\Routing\Converter;
 
-use PrestaShop\PrestaShop\Core\Exception\CoreException;
-use PrestaShopBundle\Routing\Converter\LegacyUrlConverter;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use PrestaShopBundle\Routing\Converter\Exception\RouteNotFoundException;
 
 /**
- * Converts any legacy url into a migrated Symfony url (if it exists) and redirect to it.
+ * Interface LegacyRouteProviderInterface.
  */
-class LegacyUrlListener
+interface LegacyRouteProviderInterface
 {
     /**
-     * @var LegacyUrlConverter
+     * @return LegacyRoute[]
      */
-    private $converter;
+    public function getLegacyRoutes();
 
     /**
-     * @param LegacyUrlConverter $converter
+     * @return array
      */
-    public function __construct(LegacyUrlConverter $converter)
-    {
-        $this->converter = $converter;
-    }
+    public function getControllersActions();
 
     /**
-     * @param GetResponseEvent $event
+     * List of action for a defined controller
+     * @param string $controller
+     * @return string[]
      */
-    public function onKernelRequest(GetResponseEvent $event)
-    {
-        if (!$event->isMasterRequest()) {
-            return;
-        }
+    public function getActionsByController($controller);
 
-        try {
-            $convertedUrl = $this->converter->convertByRequest($event->getRequest());
-        } catch (CoreException $e) {
-            return;
-        }
-
-        $event->setResponse(new RedirectResponse($convertedUrl));
-    }
+    /**
+     * Return the LegacyRoute object matching $controller and $action.
+     *
+     * @param string $controller
+     * @param string $action
+     * @return LegacyRoute
+     * @throws RouteNotFoundException
+     */
+    public function getLegacyRouteByAction($controller, $action);
 }

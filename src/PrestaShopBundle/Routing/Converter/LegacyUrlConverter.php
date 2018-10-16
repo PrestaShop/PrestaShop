@@ -24,13 +24,12 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Routing;
+namespace PrestaShopBundle\Routing\Converter;
 
-use PrestaShopBundle\Routing\Exception\ArgumentException;
-use PrestaShopBundle\Routing\Exception\RouteNotFoundException;
+use PrestaShopBundle\Routing\Converter\Exception\ArgumentException;
+use PrestaShopBundle\Routing\Converter\Exception\RouteNotFoundException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouterInterface;
 
 /**
@@ -41,28 +40,25 @@ use Symfony\Component\Routing\RouterInterface;
 final class LegacyUrlConverter
 {
     /**
+     * @var LegacyRouteProviderInterface
+     */
+    private $legacyRouteProvider;
+
+    /**
      * @var RouterInterface
      */
     private $router;
 
     /**
-     * @var array
-     */
-    private $legacyRoutes;
-
-    /**
-     * @var array
-     */
-    private $controllersActions;
-
-    /**
      * LegacyUrlConverter constructor.
      *
      * @param RouterInterface $router
+     * @param LegacyRouteProviderInterface $legacyRouteProvider
      */
-    public function __construct(RouterInterface $router)
+    public function __construct(RouterInterface $router, LegacyRouteProviderInterface $legacyRouteProvider)
     {
         $this->router = $router;
+        $this->legacyRouteProvider = $legacyRouteProvider;
     }
 
     /**
@@ -79,17 +75,7 @@ final class LegacyUrlConverter
             throw new ArgumentException('Missing required controller argument');
         }
 
-        $this->initRoutes();
-        if (!isset($this->controllersActions[$parameters['controller']])) {
-            throw new RouteNotFoundException(
-                sprintf('Could not find a route matching for legacy controller: %s', $parameters['controller'])
-            );
-        }
-
-        $routeName = $this->findRouteNameByParameters($parameters);
-        $parameters = $this->convertParametersForRoute($parameters, $routeName);
-
-        return $this->router->generate($routeName, $parameters, UrlGeneratorInterface::ABSOLUTE_URL);
+        return $this->searchConversionForParameters($parameters);
     }
 
     /**
@@ -133,24 +119,35 @@ final class LegacyUrlConverter
 
     /**
      * @param array $parameters
-     * @param string $routeName
+     * @return string
+     * @throws RouteNotFoundException
+     */
+    private function searchConversionForParameters(array $parameters)
+    {
+        /** @var LegacyRoute $legacyRoute */
+        $legacyRoute = $this->findLegacyRouteNameByParameters($parameters);
+        $parameters = $this->convertLegacyParameters($parameters, $legacyRoute);
+
+        return $this->router->generate($legacyRoute->getRouteName(), $parameters, UrlGeneratorInterface::ABSOLUTE_URL);
+    }
+
+    /**
+     * @param array $parameters
+     * @param LegacyRoute $legacyRoute
      *
      * @return array
      */
-    private function convertParametersForRoute(array $parameters, $routeName)
+    private function convertLegacyParameters(array $parameters, LegacyRoute $legacyRoute)
     {
-        $route = $this->legacyRoutes[$routeName];
-        $routeDefaults = $route->getDefaults();
-        if (!empty($routeDefaults['_legacy_parameters']) && is_array($routeDefaults['_legacy_parameters'])) {
-            foreach ($routeDefaults['_legacy_parameters'] as $legacyParameter => $parameter) {
-                if (isset($parameters[$legacyParameter])) {
-                    $parameters[$parameter] = $parameters[$legacyParameter];
-                    unset($parameters[$legacyParameter]);
-                }
+        $legacyAction = $this->getActionFromParameters($parameters);
+
+        foreach ($legacyRoute->getRouteParameters() as $legacyParameter => $parameter) {
+            if (isset($parameters[$legacyParameter])) {
+                $parameters[$parameter] = $parameters[$legacyParameter];
+                unset($parameters[$legacyParameter]);
             }
         }
 
-        $legacyAction = $this->getActionFromParameters($parameters);
         unset($parameters['controller']);
         unset($parameters['action']);
         unset($parameters[$legacyAction]);
@@ -161,23 +158,16 @@ final class LegacyUrlConverter
     /**
      * @param array $parameters
      *
-     * @return string
+     * @return LegacyRoute
      *
      * @throws RouteNotFoundException
      */
-    private function findRouteNameByParameters(array $parameters)
+    private function findLegacyRouteNameByParameters(array $parameters)
     {
         $legacyController = $parameters['controller'];
-        $controllerActions = $this->controllersActions[$legacyController];
-
         $legacyAction = $this->getActionFromParameters($parameters);
-        if (!isset($controllerActions[$legacyAction])) {
-            throw new RouteNotFoundException(
-                sprintf('Could not find a route matching for legacy action: %s', $legacyController . ':' . $legacyAction)
-            );
-        }
 
-        return $controllerActions[$legacyAction];
+        return $this->legacyRouteProvider->getLegacyRouteByAction($legacyController, $legacyAction);
     }
 
     /**
@@ -196,7 +186,7 @@ final class LegacyUrlConverter
         //Actions can be defined as simple query parameter (e.g: ?controller=AdminProducts&save)
         if (null === $legacyAction) {
             //We prioritize the actions defined in the migrated routes
-            $controllerActions = array_keys($this->controllersActions[$parameters['controller']]);
+            $controllerActions = $this->legacyRouteProvider->getActionsByController($parameters['controller']);
             foreach ($parameters as $parameter => $value) {
                 if (in_array($parameter, $controllerActions)) {
                     $legacyAction = $parameter;
@@ -216,87 +206,6 @@ final class LegacyUrlConverter
             }
         }
 
-        return $this->isIndexAction($legacyAction) ? 'index' : $legacyAction;
-    }
-
-    /**
-     * @param Route $route
-     *
-     * @return array
-     */
-    private function breakLegacyLinks(Route $route)
-    {
-        $routeDefaults = $route->getDefaults();
-        $legacyLinks = $routeDefaults['_legacy_link'];
-        if (!is_array($legacyLinks)) {
-            $legacyLinks = [$legacyLinks];
-        }
-
-        $brokenLegacyLinks = [];
-        foreach ($legacyLinks as $legacyLink) {
-            $linkParts = explode(':', $legacyLink);
-            $legacyController = $linkParts[0];
-            $legacyAction = isset($linkParts[1]) ? $linkParts[1] : null;
-            $brokenLegacyLinks[] = [
-                'controller' => $legacyController,
-                'action' => $legacyAction,
-            ];
-        }
-
-        return $brokenLegacyLinks;
-    }
-
-    /**
-     * @param string|null $action
-     *
-     * @return bool
-     */
-    private function isIndexAction($action)
-    {
-        $indexAliases = ['list', 'index'];
-
-        return empty($action) || in_array(strtolower($action), $indexAliases);
-    }
-
-    /**
-     * Delay initialisation of routes and controller action.
-     */
-    private function initRoutes()
-    {
-        if (null !== $this->legacyRoutes && null !== $this->controllersActions) {
-            return;
-        }
-
-        $this->legacyRoutes = [];
-        $this->controllersActions = [];
-        /** @var Route $route */
-        foreach ($this->router->getRouteCollection() as $routeName => $route) {
-            $this->addRoute($routeName, $route);
-        }
-    }
-
-    /**
-     * @param string $routeName
-     * @param Route $route
-     */
-    private function addRoute($routeName, Route $route)
-    {
-        $routeDefaults = $route->getDefaults();
-        if (empty($routeDefaults['_legacy_link'])) {
-            return;
-        }
-
-        $this->legacyRoutes[$routeName] = $route;
-
-        $legacyLinks = $this->breakLegacyLinks($route);
-        foreach ($legacyLinks as $legacyLink) {
-            $controller = $legacyLink['controller'];
-            if (!isset($this->controllersActions[$controller])) {
-                $this->controllersActions[$controller] = [];
-            }
-
-            $action = $this->isIndexAction($legacyLink['action']) ? 'index' : $legacyLink['action'];
-            $this->controllersActions[$controller][$action] = $routeName;
-        }
+        return LegacyRoute::isIndexAction($legacyAction) ? 'index' : $legacyAction;
     }
 }
