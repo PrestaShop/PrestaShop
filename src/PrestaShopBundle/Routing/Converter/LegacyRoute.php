@@ -68,6 +68,7 @@ class LegacyRoute
     /**
      * @param $routeName
      * @param array $routeDefaults
+     *
      * @return LegacyRoute
      */
     public static function buildLegacyRoute($routeName, array $routeDefaults)
@@ -87,6 +88,7 @@ class LegacyRoute
 
     /**
      * LegacyRoute constructor.
+     *
      * @param string $routeName
      * @param array $legacyLinks
      * @param array $routeParameters
@@ -133,6 +135,7 @@ class LegacyRoute
 
     /**
      * @param array $legacyLinks
+     *
      * @return array
      */
     private function buildLegacyLinks(array $legacyLinks)
@@ -154,6 +157,7 @@ class LegacyRoute
     /**
      * @param array $legacyLinks
      * @param string $routeName
+     *
      * @return array
      */
     private function buildControllerActions(array $legacyLinks, $routeName)

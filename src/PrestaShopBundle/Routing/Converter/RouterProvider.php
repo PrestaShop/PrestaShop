@@ -46,6 +46,7 @@ class RouterProvider extends AbstractLegacyRouteProvider
 
     /**
      * RouterProvider constructor.
+     *
      * @param RouterInterface $router
      */
     public function __construct(RouterInterface $router)
@@ -54,7 +55,7 @@ class RouterProvider extends AbstractLegacyRouteProvider
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function getLegacyRoutes()
     {
