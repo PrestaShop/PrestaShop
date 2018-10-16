@@ -75,7 +75,11 @@ final class LegacyUrlConverter
             throw new ArgumentException('Missing required controller argument');
         }
 
-        return $this->searchConversionForParameters($parameters);
+        /** @var LegacyRoute $legacyRoute */
+        $legacyRoute = $this->findLegacyRouteNameByParameters($parameters);
+        $parameters = $this->convertLegacyParameters($parameters, $legacyRoute);
+
+        return $this->router->generate($legacyRoute->getRouteName(), $parameters, UrlGeneratorInterface::ABSOLUTE_URL);
     }
 
     /**
@@ -115,22 +119,6 @@ final class LegacyUrlConverter
         $this->router->getContext()->fromRequest($request);
 
         return $this->convertByUrl($request->getUri());
-    }
-
-    /**
-     * @param array $parameters
-     *
-     * @return string
-     *
-     * @throws RouteNotFoundException
-     */
-    private function searchConversionForParameters(array $parameters)
-    {
-        /** @var LegacyRoute $legacyRoute */
-        $legacyRoute = $this->findLegacyRouteNameByParameters($parameters);
-        $parameters = $this->convertLegacyParameters($parameters, $legacyRoute);
-
-        return $this->router->generate($legacyRoute->getRouteName(), $parameters, UrlGeneratorInterface::ABSOLUTE_URL);
     }
 
     /**
