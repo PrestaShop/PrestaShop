@@ -76,9 +76,6 @@ class CacheProvider extends AbstractLegacyRouteProvider
             } else {
                 $this->legacyRoutes = $this->unserializeLegacyRoutes($cacheItem->get());
             }
-
-            //Nullify controllersActions to force it to regenerate
-            $this->controllersActions = null;
         }
 
         return $this->legacyRoutes;

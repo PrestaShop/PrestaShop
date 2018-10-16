@@ -9,9 +9,15 @@ services:
         class: 'PrestaShopBundle\Routing\Converter\LegacyUrlConverter'
         arguments:
             $router: '@router'
-            $legacyRouteProvider: '@prestashop.bundle.routing.route_provider'
+            $legacyRouteProvider: '@=parameter("kernel.environment") == "prod" ? service("prestashop.bundle.routing.cache_provider") : service("prestashop.bundle.routing.router_provider")'
 
-    prestashop.bundle.routing.route_provider:
+    prestashop.bundle.routing.router_provider:
         class: 'PrestaShopBundle\Routing\Converter\RouterProvider'
         arguments:
             $router: '@router'
+
+    prestashop.bundle.routing.cache_provider:
+        class: 'PrestaShopBundle\Routing\Converter\CacheProvider'
+        arguments:
+            $legacyRouteProvider: '@prestashop.bundle.routing.router_provider'
+            $cache: '@cache.app'
