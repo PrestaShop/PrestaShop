@@ -3263,7 +3263,7 @@
         },
         {
             "name": "prestashop/gsitemap",
-            "version": "v3.2.2",
+            "version": "v4.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/gsitemap.git",
@@ -3276,7 +3276,7 @@
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.2"
+                "php": ">=5.6.0"
             },
             "type": "prestashop-module",
             "notification-url": "https://packagist.org/downloads/",
