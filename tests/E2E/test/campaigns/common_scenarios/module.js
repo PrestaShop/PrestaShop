@@ -4,19 +4,19 @@ let promise = Promise.resolve();
 module.exports = {
   checkConfigPage: function (client, ModulePage, moduleTechName) {
     test('should click on "see more" link if existing', () => {
-        return promise
-            .then(() => client.isVisible(ModulePage.see_more_link, 3000))
-            .then(() => {
-                if (global.isVisible) {
-                    client.scrollWaitForVisibleAndClick(ModulePage.see_more_link);
-                }
-            })
-            .then(() => client.pause(1000));
+      return promise
+        .then(() => client.isVisible(ModulePage.see_more_link, 3000))
+        .then(() => {
+          if (global.isVisible) {
+            client.scrollWaitForVisibleAndClick(ModulePage.see_more_link);
+          }
+        })
+        .then(() => client.pause(1000));
     });
     test('should click on "Configure" button', () => {
-        return promise
-            .then(() => client.getModuleButtonName(ModulePage, moduleTechName))
-            .then(() => client.clickOnConfigureModuleButton(ModulePage, moduleTechName));
+      return promise
+        .then(() => client.getModuleButtonName(ModulePage, moduleTechName))
+        .then(() => client.clickOnConfigureModuleButton(ModulePage, moduleTechName));
     });
     test('should check the configuration page', () => client.checkTextValue(ModulePage.config_legend.replace("%moduleTechName", moduleTechName), moduleTechName));
   },
@@ -32,14 +32,14 @@ module.exports = {
     test('should set the name of the module in the search input', () => client.waitAndSetValue(ModulePage.module_selection_input, moduleTechName));
     test('should click on "Search" button', () => client.waitForExistAndClick(ModulePage.selection_search_button));
     test('should click on "see more" link if existing', () => {
-        return promise
-            .then(() => client.isVisible(ModulePage.see_more_link, 3000))
-            .then(() => {
-                if (global.isVisible) {
-                    client.scrollWaitForVisibleAndClick(ModulePage.see_more_link);
-                }
-            })
-            .then(() => client.pause(1000));
+      return promise
+        .then(() => client.isVisible(ModulePage.see_more_link, 3000))
+        .then(() => {
+          if (global.isVisible) {
+            client.scrollWaitForVisibleAndClick(ModulePage.see_more_link);
+          }
+        })
+        .then(() => client.pause(1000));
     });
     test('should check if the module ' + moduleTechName + ' was installed', () => client.isExisting(ModulePage.installed_module_div.replace('%moduleTechName', moduleTechName)));
   },
@@ -49,14 +49,14 @@ module.exports = {
     test('should search for ' + moduleTechName + ' module in the installed module tab', () => client.waitAndSetValue(ModulePage.modules_search_input, moduleTechName));
     test('should click on "Search" button', () => client.waitForExistAndClick(ModulePage.modules_search_button));
     test('should click on "see more" link if existing', () => {
-        return promise
-            .then(() => client.isVisible(ModulePage.see_more_link, 3000))
-            .then(() => {
-                if (global.isVisible) {
-                    client.scrollWaitForVisibleAndClick(ModulePage.see_more_link);
-                }
-            })
-            .then(() => client.pause(1000));
+      return promise
+        .then(() => client.isVisible(ModulePage.see_more_link, 3000))
+        .then(() => {
+          if (global.isVisible) {
+            client.scrollWaitForVisibleAndClick(ModulePage.see_more_link);
+          }
+        })
+        .then(() => client.pause(1000));
     });
     test('should click on module dropdown', () => client.scrollWaitForVisibleAndClick(ModulePage.action_dropdown.replace('%moduleTechName', moduleTechName)));
     test('should click on "Uninstall" button', () => client.scrollWaitForVisibleAndClick(ModulePage.uninstall_button.split('%moduleTechName').join(moduleTechName)));
@@ -71,19 +71,19 @@ module.exports = {
     test('should search for ' + moduleTechName + ' module in the installed module tab', () => client.waitAndSetValue(ModulePage.modules_search_input, moduleTechName));
     test('should click on "Search" button', () => client.waitForExistAndClick(ModulePage.modules_search_button));
     test('should click on "see more" link if existing', () => {
-        return promise
-            .then(() => client.isVisible(ModulePage.see_more_link, 3000))
-            .then(() => {
-                if (global.isVisible) {
-                    client.scrollWaitForVisibleAndClick(ModulePage.see_more_link);
-                }
-            })
-            .then(() => client.pause(1000));
+      return promise
+        .then(() => client.isVisible(ModulePage.see_more_link, 3000))
+        .then(() => {
+          if (global.isVisible) {
+            client.scrollWaitForVisibleAndClick(ModulePage.see_more_link);
+          }
+        })
+        .then(() => client.pause(1000));
     });
     test('should click on "Disable" button', () => {
-        return promise
-            .then(() => client.getModuleButtonName(ModulePage, moduleTechName))
-            .then(() => client.clickOnDisableModuleButton(ModulePage, moduleTechName));
+      return promise
+        .then(() => client.getModuleButtonName(ModulePage, moduleTechName))
+        .then(() => client.clickOnDisableModuleButton(ModulePage, moduleTechName));
     });
     test('should click on "Yes, disable it" button', () => client.waitForVisibleAndClick(ModulePage.confirmation_disable_module));
     test('should check that the success alert message is well displayed', () => client.waitForExistAndClick(AddProductPage.close_validation_button));
@@ -94,19 +94,19 @@ module.exports = {
     test('should search for ' + moduleTechName + ' module in the installed module tab', () => client.waitAndSetValue(ModulePage.modules_search_input, moduleTechName));
     test('should click on "Search" button', () => client.waitForExistAndClick(ModulePage.modules_search_button));
     test('should click on "see more" link if existing', () => {
-        return promise
-            .then(() => client.isVisible(ModulePage.see_more_link, 3000))
-            .then(() => {
-                if (global.isVisible) {
-                    client.scrollWaitForVisibleAndClick(ModulePage.see_more_link);
-                }
-            })
-            .then(() => client.pause(1000));
+      return promise
+        .then(() => client.isVisible(ModulePage.see_more_link, 3000))
+        .then(() => {
+          if (global.isVisible) {
+            client.scrollWaitForVisibleAndClick(ModulePage.see_more_link);
+          }
+        })
+        .then(() => client.pause(1000));
     });
     test('should click on "Enable" button', () => {
-        return promise
-            .then(() => client.getModuleButtonName(ModulePage, moduleTechName))
-            .then(() => client.clickOnEnableModuleButton(ModulePage, moduleTechName));
+      return promise
+        .then(() => client.getModuleButtonName(ModulePage, moduleTechName))
+        .then(() => client.clickOnEnableModuleButton(ModulePage, moduleTechName));
     });
     test('should check that the success alert message is well displayed', () => client.waitForExistAndClick(AddProductPage.close_validation_button));
   },
@@ -139,7 +139,7 @@ module.exports = {
       }
     });
   },
-  clickOnReadMore: function(ModulePage, moduleName, moduleTechName) {
+  clickOnReadMore: function (ModulePage, moduleName, moduleTechName) {
     //BOOM: 9722
     scenario('Check that the click on "Read more" button is working well', client => {
       test('should go to "Modules Catalog" page', () => client.goToSubtabMenuPage(Menu.Improve.Modules.modules_menu, Menu.Improve.Modules.modules_catalog_submenu));

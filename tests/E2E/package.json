@@ -41,7 +41,7 @@
   "devDependencies": {
     "chai": "^4.1.2",
     "chai-string": "^1.4.0",
-    "dateformat": "^2.0.0",
+    "dateformat": "^2.2.0",
     "gulp": "^3.9.1",
     "gulp-cli": "^2.0.1",
     "gulp-rename": "^1.2.2",

@@ -60,7 +60,7 @@ module.exports = {
       currency_form: '//*[@id="main-div"]/div[@class="content-div  "]//form'
     },
     International: {
-      localization_pack_select: '//*[@id="main-div"]/div[3]/div/div/div[2]/div/form',
+      localization_pack_select: '//*[@id="main-div"]//form[@name="import_localization_pack"]',
       languages_form: '//*[@id="form-lang"]',
       currency_form: '//*[@id="form-currency"]',
       geolocation_by_address: '//*[@id="main-div"]/div[@class="content-div  with-tabs"]//form',
