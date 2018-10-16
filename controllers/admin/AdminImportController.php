@@ -1878,12 +1878,11 @@ class AdminImportControllerCore extends AdminController
             $product->id_category = array_values(array_unique($product->id_category));
         }
 
-        // Will update default category if there is none set here. Home if no category at all.
-        if (!isset($product->id_category_default) || !$product->id_category_default) {
-            // this if will avoid ereasing default category if category column is not present in the CSV file (or ignored)
-            if (isset($product->id_category[0])) {
-                $product->id_category_default = (int) $product->id_category[0];
-            } else {
+        // Category default now takes the value of the first new category during import
+        if (isset($product->id_category[0])) {
+            $product->id_category_default = (int) $product->id_category[0];
+        } else {
+            if (!isset($product->id_category_default) || !$product->id_category_default) {
                 $defaultProductShop = new Shop($product->id_shop_default);
                 $product->id_category_default = Category::getRootCategory(null, Validate::isLoadedObject($defaultProductShop) ? $defaultProductShop : null)->id;
             }
