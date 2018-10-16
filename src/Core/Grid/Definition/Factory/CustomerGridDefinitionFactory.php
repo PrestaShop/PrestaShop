@@ -44,6 +44,7 @@ use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShopBundle\Form\Admin\Type\DateRangeType;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
+use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -274,6 +275,7 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'expanded' => false,
                     'multiple' => false,
                     'required' => false,
+                    'choice_translation_domain' => false,
                 ])
                 ->setAssociatedColumn('social_title')
             )
@@ -295,31 +297,13 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ])
                 ->setAssociatedColumn('email')
             )
-            ->add((new Filter('active', ChoiceType::class))
-                ->setTypeOptions([
-                    'choices' => $this->statusChoices,
-                    'expanded' => false,
-                    'multiple' => false,
-                    'required' => false,
-                ])
+            ->add((new Filter('active', YesAndNoChoiceType::class))
                 ->setAssociatedColumn('active')
             )
-            ->add((new Filter('newsletter', ChoiceType::class))
-                ->setTypeOptions([
-                    'choices' => $this->statusChoices,
-                    'expanded' => false,
-                    'multiple' => false,
-                    'required' => false,
-                ])
+            ->add((new Filter('newsletter', YesAndNoChoiceType::class))
                 ->setAssociatedColumn('newsletter')
             )
-            ->add((new Filter('optin', ChoiceType::class))
-                ->setTypeOptions([
-                    'choices' => $this->statusChoices,
-                    'expanded' => false,
-                    'multiple' => false,
-                    'required' => false,
-                ])
+            ->add((new Filter('optin', YesAndNoChoiceType::class))
                 ->setAssociatedColumn('optin')
             )
             ->add((new Filter('date_add', DateRangeType::class))
