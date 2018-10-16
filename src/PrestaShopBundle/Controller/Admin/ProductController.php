@@ -60,6 +60,10 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use PrestaShopBundle\Form\Admin\Product\ProductCategories;
 use Product;
 use Tools;
+use Shop;
+use Combination;
+use ObjectModel;
+use Context;
 
 /**
  * Admin controller for the Product pages using the Symfony architecture:
@@ -396,6 +400,9 @@ class ProductController extends FrameworkBundleAdminController
 
         $productAdapter = $this->get('prestashop.adapter.data_provider.product');
         $product = $productAdapter->getProduct($id);
+        if (Context::getContext()->shop->getContext() == Shop::CONTEXT_SHOP && !$product->isAssociatedToShop()) {
+            $product = $this->duplicateProductFromDefaultShop($product);
+        }
 
         if (!$product || empty($product->id)) {
             return $this->redirectToRoute('admin_product_catalog');
@@ -602,6 +609,48 @@ class ProductController extends FrameworkBundleAdminController
             'drawerModules' => $drawerModules,
             'layoutTitle' => $this->trans('Product', 'Admin.Global'),
         ];
+    }
+
+    /**
+     * Duplicate product info from one shop to another
+     *
+     * @param Product $product
+     * @throws \LogicException
+     */
+    private function duplicateProductFromDefaultShop(Product $product)
+    {
+        $productAdapter = $this->get('prestashop.adapter.data_provider.product');
+        $product = $productAdapter->getProduct($product->id, null, null, $product->id_shop_default);
+        $this->duplicateProductCombinationsFromDefaultShop($product);
+
+        return $product;
+    }
+    /**
+     * Duplicate combinations from one shop to another
+     *
+     * @param Product $product
+     */
+    private function duplicateProductCombinationsFromDefaultShop(Product $product)
+    {
+        $combinations = Product::getProductAttributesIds($product->id);
+        if ($combinations) {
+            foreach ($combinations as $id_combination) {
+                $combination = new Combination((int)$id_combination['id_product_attribute']);
+
+                $default_combination = new Combination(
+                    (int)$id_combination['id_product_attribute'],
+                    null,
+                    (int)$product->id_shop_default
+                );
+
+                $def = ObjectModel::getDefinition($default_combination);
+                foreach ($def['fields'] as $field_name => $row) {
+                    $combination->$field_name = ObjectModel::formatValue($default_combination->$field_name, $def['fields'][$field_name]['type']);
+                }
+
+                $combination->save();
+            }
+        }
     }
 
     /**

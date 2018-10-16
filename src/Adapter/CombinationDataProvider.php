@@ -32,6 +32,8 @@ use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use Tools as ToolsLegacy;
 use Product;
 use Combination;
+use Shop;
+use Context;
 
 /**
  * This class will provide data from DB / ORM about product combination.
@@ -72,6 +74,9 @@ class CombinationDataProvider
     public function getFormCombination($combinationId)
     {
         $product = new Product((new Combination($combinationId))->id_product);
+        if (Context::getContext()->shop->getContext() == Shop::CONTEXT_SHOP && !$product->isAssociatedToShop()) {
+            $product = new Product($product->id, null, null, $product->id_shop_default);
+        }
 
         return $this->completeCombination(
             $product->getAttributeCombinationsById(
@@ -97,6 +102,9 @@ class CombinationDataProvider
     {
         $productId = (new Combination($combinationIds[0]))->id_product;
         $product = new Product($productId);
+        if (Context::getContext()->shop->getContext() == Shop::CONTEXT_SHOP && !$product->isAssociatedToShop()) {
+            $product = new Product($productId, null, null, $product->id_shop_default);
+        }
         $combinations = array();
 
         foreach ($combinationIds as $combinationId) {

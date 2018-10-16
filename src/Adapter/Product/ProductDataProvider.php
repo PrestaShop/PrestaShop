@@ -30,6 +30,8 @@ use Image;
 use Product;
 use Context;
 use StockAvailable;
+use Shop;
+use Configuration;
 
 /**
  * This class will provide data from DB / ORM about Product, for both Front and Admin interfaces.
@@ -134,7 +136,16 @@ class ProductDataProvider
     public function getImages($id_product, $id_lang)
     {
         $data = [];
-        foreach (Image::getImages($id_lang, $id_product) as $image) {
+        $context = Context::getContext();
+        $isMultiShopContext = count($context->shop->getContextListShopID()) > 1;
+        if ($isMultiShopContext) {
+            $images = Image::getImages($id_lang, $id_product);
+        } else {
+            $product = new Product($id_product);
+            $images = $product->getImages($id_lang);
+        }
+
+        foreach ($images as $image) {
             $data[] = $this->getImage($image['id_image']);
         }
 
