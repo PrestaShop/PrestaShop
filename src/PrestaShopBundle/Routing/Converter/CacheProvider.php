@@ -63,7 +63,7 @@ class CacheProvider extends AbstractLegacyRouteProvider
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function getLegacyRoutes()
     {
@@ -83,6 +83,7 @@ class CacheProvider extends AbstractLegacyRouteProvider
 
     /**
      * @param LegacyRoute[] $legacyRoutes
+     *
      * @return string
      */
     private function serializeLegacyRoutes(array $legacyRoutes)
@@ -106,6 +107,7 @@ class CacheProvider extends AbstractLegacyRouteProvider
 
     /**
      * @param string $serializedLegacyRoutes
+     *
      * @return LegacyRoute[]
      */
     private function unserializeLegacyRoutes($serializedLegacyRoutes)
