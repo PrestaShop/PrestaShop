@@ -1224,4 +1224,33 @@ class ValidateCore
     {
         return (bool) preg_match('/^[\w-]{3,255}$/u', $theme_name);
     }
+
+    /**
+     * Calls a hook for undefined methods on the Validate class. This hook is
+     * of the form `actionValidate + $name`.
+     *
+     * # Examples
+     * * `isUuid`, which is called as `actionValidateIsUuid`
+     * * `isEan8`, which is called as `actionValidateIsEan8`
+     *
+     * @param string $name Validation method name (used for hook)
+     * @param array $arguments Arguments passed to method
+     *
+     * @return bool Validation result
+     */
+    public static function __callStatic($name, $arguments)
+    {
+        $name = lcfirst($name);
+
+        $results = Hook::exec('actionValidate'.$name, $arguments, null, true);
+
+        if (empty($results)) { // there are no registered modules to validate
+            return false;      // the argument.
+        }
+
+        // it's unlikely many modules will register to any specific validation
+        // method, but if they do they should at the very least agree on the
+        // outcome.
+        return !in_array(false, $results, true);
+    }
 }

@@ -115,6 +115,13 @@ class ValidateCoreTest extends TestCase
         $this->assertSame($expected, Validate::isOptFloat($input));
     }
 
+    public function testNonExistentMethod()
+    {
+        // Does not exist, but there is also no registered module for it,
+        // which implies it should return false.
+        $this->assertFalse(Validate::isUuid('test'));
+    }
+
     // --- providers ---
 
     public function isIp2LongDataProvider()
