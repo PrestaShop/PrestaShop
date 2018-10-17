@@ -105,7 +105,7 @@ class CategoryControllerCore extends FrontController
             header('HTTP/1.1 404 Not Found');
             header('Status: 404 Not Found');
             $this->errors[] = Tools::displayError('Category not found');
-        } else
+        } else {
             // Check if category can be accessible by current customer and return 403 if not
             if (!$this->category->checkAccess($this->context->customer->id)) {
                 header('HTTP/1.1 403 Forbidden');
@@ -113,6 +113,7 @@ class CategoryControllerCore extends FrontController
                 $this->errors[] = Tools::displayError('You do not have access to this category.');
                 $this->customer_access = false;
             }
+        }
     }
 
     /**
