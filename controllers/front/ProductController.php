@@ -400,7 +400,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     public function displayAjaxRefresh()
     {
         $product = $this->getTemplateVarProduct();
-        $minimalProductQuantity = $this->getMinimalProductOrDeclinationQuantity($product);
+        $minimalProductQuantity = $this->getProductMinimalQuantity($product);
         $isPreview = ('1' === Tools::getValue('preview'));
 
         ob_end_clean();
@@ -439,30 +439,6 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         )));
 
         return;
-    }
-
-    /**
-     * Get minimal product quantity or minimal product combination quantity.
-     *
-     * @param $product
-     *
-     * @return int
-     */
-    protected function getMinimalProductOrDeclinationQuantity($product)
-    {
-        $productAttributeId = $product['id_product_attribute'];
-        $minimalProductQuantity = 1;
-
-        if ($this->combinations) {
-            $minimalCombinationProductQuantity = (int) ($this->combinations[$productAttributeId]['minimal_quantity']);
-            if ($minimalCombinationProductQuantity) { // Ensure the minimal product combination quantity is not 0;
-                $minimalProductQuantity = $minimalCombinationProductQuantity;
-            }
-        } elseif (array_key_exists('minimal_quantity', $product)) {
-            $minimalProductQuantity = $product['minimal_quantity'];
-        }
-
-        return $minimalProductQuantity;
     }
 
     /**
