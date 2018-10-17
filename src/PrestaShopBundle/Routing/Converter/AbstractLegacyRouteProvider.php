@@ -91,8 +91,9 @@ abstract class AbstractLegacyRouteProvider implements LegacyRouteProviderInterfa
         }
 
         $routeName = $controllerActions[$action];
+        $legacyRoutes = $this->getLegacyRoutes();
 
-        return ($this->getLegacyRoutes())[$routeName];
+        return $legacyRoutes[$routeName];
     }
 
     /**
