@@ -980,4 +980,21 @@ File: admin-dev/themes/default/template/controllers/modules/configuration_bar.tp
       </trans-unit>
     </body>
   </file>
+  <file original="modules/ps_faviconnotificationbo/ps_faviconnotificationbo.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="bb8956c67b82c7444a80c6b2433dd8b4">
+        <source>Are you sure you want to uninstall this module?</source>
+        <target>Are you sure you want to uninstall this module?</target>
+        <note>Context:
+          File: modules/ps_faviconnotificationbo/ps_faviconnotificationbo.php:71
+          Comment: Confirm uninstall</note>
+      </trans-unit>
+      <trans-unit id="faaa79afdd5385b4ff3db080a88b0dc8">
+        <source>There was an error during the uninstallation.</source>
+        <target>There was an error during the uninstallation.</target>
+        <note>Context:
+          File: modules/ps_faviconnotificationbo/ps_faviconnotificationbo.php:101</note>
+      </trans-unit>
+    </body>
+  </file>
 </xliff>

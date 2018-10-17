@@ -91,7 +91,7 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
     {
         return (new ColumnCollection())
             ->add((new DataColumn('id_log'))
-                ->setName($this->trans('ID', [], 'Global.Actions'))
+                ->setName($this->trans('ID', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'id_log',
                 ])
