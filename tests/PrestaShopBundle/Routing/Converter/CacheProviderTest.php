@@ -27,6 +27,7 @@
 namespace Tests\PrestaShopBundle\Routing\Converter;
 
 use PHPUnit\Framework\TestCase;
+use PrestaShopBundle\Routing\Converter\CacheKeyGeneratorInterface;
 use PrestaShopBundle\Routing\Converter\CacheProvider;
 use PrestaShopBundle\Routing\Converter\LegacyRoute;
 use PrestaShopBundle\Routing\Converter\LegacyRouteProviderInterface;
@@ -36,6 +37,8 @@ use Symfony\Component\Cache\Adapter\ArrayAdapter;
 
 class CacheProviderTest extends TestCase
 {
+    const CACHE_KEY = 'test_cache_key';
+
     /**
      * @var array
      */
@@ -98,12 +101,14 @@ class CacheProviderTest extends TestCase
                 ]
             )
         ];
+
+
     }
 
     public function testGetLegacyRoutesAndSaveCache()
     {
         $mockProvider = $this->buildMockRouterProvider($this->legacyRoutes);
-        $cacheProvider = new CacheProvider($mockProvider, $this->buildSavingCache());
+        $cacheProvider = new CacheProvider($mockProvider, $this->buildSavingCache(), $this->buildCacheKeyGenerator());
 
         $legacyRoutes = $cacheProvider->getLegacyRoutes();
         $this->assertCount(2, $legacyRoutes);
@@ -116,7 +121,7 @@ class CacheProviderTest extends TestCase
 
     public function testGetFromCache()
     {
-        $cacheProvider = new CacheProvider($this->buildCachedRouterProvider(), $this->buildExistingCache());
+        $cacheProvider = new CacheProvider($this->buildCachedRouterProvider(), $this->buildExistingCache(), $this->buildCacheKeyGenerator());
         $legacyRoutes = $cacheProvider->getLegacyRoutes();
         $this->assertCount(2, $legacyRoutes);
         $this->assertNotEmpty($legacyRoutes['admin_products']);
@@ -128,20 +133,19 @@ class CacheProviderTest extends TestCase
 
     public function testWithRealCache()
     {
-        $cacheKey = preg_replace('@\\\\@', '_', CacheProvider::class);
         $cache = new ArrayAdapter();
         $mockProvider = $this->buildMockRouterProvider($this->legacyRoutes);
-        $cacheProvider = new CacheProvider($mockProvider, $cache);
+        $cacheProvider = new CacheProvider($mockProvider, $cache, $this->buildCacheKeyGenerator());
 
-        $this->assertFalse($cache->hasItem($cacheKey));
+        $this->assertFalse($cache->hasItem(self::CACHE_KEY));
         //Just perform the test twice to be sure the result and the cache are correct
         for ($i = 0; $i < 2; $i++) {
             $legacyRoutes = $cacheProvider->getLegacyRoutes();
             $this->assertCount(2, $legacyRoutes);
             $this->assertNotEmpty($legacyRoutes['admin_products']);
             $this->assertNotEmpty($legacyRoutes['admin_products_create']);
-            $this->assertTrue($cache->hasItem($cacheKey));
-            $cacheItem = $cache->getItem($cacheKey);
+            $this->assertTrue($cache->hasItem(self::CACHE_KEY));
+            $cacheItem = $cache->getItem(self::CACHE_KEY);
             $this->assertEquals($this->expectedCacheValue, $cacheItem->get());
         }
 
@@ -161,20 +165,19 @@ class CacheProviderTest extends TestCase
 
     public function testGetControllersActions()
     {
-        $cacheKey = preg_replace('@\\\\@', '_', CacheProvider::class);
         $cache = new ArrayAdapter();
         $mockProvider = $this->buildMockRouterProvider($this->legacyRoutes);
-        $cacheProvider = new CacheProvider($mockProvider, $cache);
+        $cacheProvider = new CacheProvider($mockProvider, $cache, $this->buildCacheKeyGenerator());
 
-        $this->assertFalse($cache->hasItem($cacheKey));
+        $this->assertFalse($cache->hasItem(self::CACHE_KEY));
         //Just perform the test twice to be sure the result and the cache are correct
         for ($i = 0; $i < 2; $i++) {
             $controllerActions = $cacheProvider->getControllersActions();
             $this->assertCount(1, $controllerActions);
             $this->assertNotEmpty($controllerActions['AdminProducts']);
             $this->assertNotEmpty($controllerActions['AdminProducts']['index']);
-            $this->assertTrue($cache->hasItem($cacheKey));
-            $cacheItem = $cache->getItem($cacheKey);
+            $this->assertTrue($cache->hasItem(self::CACHE_KEY));
+            $cacheItem = $cache->getItem(self::CACHE_KEY);
             $this->assertEquals($this->expectedCacheValue, $cacheItem->get());
         }
 
@@ -324,5 +327,23 @@ class CacheProviderTest extends TestCase
         ;
 
         return $providerMock;
+    }
+
+    /**
+     * @return \PHPUnit_Framework_MockObject_MockObject|CacheKeyGeneratorInterface
+     */
+    private function buildCacheKeyGenerator()
+    {
+        $generatorMock = $this
+            ->getMockBuilder(CacheKeyGeneratorInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $generatorMock
+            ->method('getCacheKey')
+            ->willReturn(self::CACHE_KEY)
+        ;
+
+        return $generatorMock;
     }
 }
