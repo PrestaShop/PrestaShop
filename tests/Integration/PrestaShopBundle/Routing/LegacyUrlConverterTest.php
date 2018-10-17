@@ -55,8 +55,8 @@ class LegacyUrlConverterTest extends LightWebTestCase
             'admin_backups' => ['/configure/advanced/backups/', 'AdminBackup'],
             'admin_backups_save_options' => ['/configure/advanced/backups/', 'AdminBackup', 'update'],
             'admin_backups_create' => ['/configure/advanced/backups/new', 'AdminBackup', 'addbackup'],
-            'admin_backups_delete' => ['/configure/advanced/backup/backup_file.zip', 'AdminBackup', 'delete', ['filename' => 'backup_file.zip']],
-            'admin_backups_bulk_delete' => ['/configure/advanced/backup/bulk-delete/', 'AdminBackup', 'submitBulkdeletebackup'],
+            'admin_backups_delete' => ['/configure/advanced/backups/backup_file.zip', 'AdminBackup', 'delete', ['filename' => 'backup_file.zip']],
+            'admin_backups_bulk_delete' => ['/configure/advanced/backups/bulk-delete/', 'AdminBackup', 'submitBulkdeletebackup'],
 
             'admin_module_catalog' => ['/improve/modules/catalog', 'AdminModulesCatalog'],
             'admin_module_catalog_refresh' => ['/improve/modules/catalog/refresh', 'AdminModulesCatalog', 'refresh'],
@@ -148,7 +148,7 @@ class LegacyUrlConverterTest extends LightWebTestCase
 
             'admin_metas_index' => ['/configure/shop/seo-urls/', 'AdminMeta'],
             'admin_metas_search' => ['/configure/shop/seo-urls/', 'AdminMeta', 'search'],
-            'admin_metas_delete' => ['/configure/shop/seo-urls/42/delete/', 'AdminMeta', 'deletemeta', ['id_meta' => 42]],
+            'admin_metas_delete' => ['/configure/shop/seo-urls/42/delete', 'AdminMeta', 'deletemeta', ['id_meta' => 42]],
             'admin_metas_delete_bulk' => ['/configure/shop/seo-urls/delete-bulk', 'AdminMeta', 'submitBulkdeletmeta'],
             'admin_metas_save_options' => ['/configure/shop/seo-urls/options', 'AdminMeta', 'update'],
             'admin_metas_generate_robots_file' => ['/configure/shop/seo-urls/generate-robots-file', 'AdminMeta', 'submitRobots'],

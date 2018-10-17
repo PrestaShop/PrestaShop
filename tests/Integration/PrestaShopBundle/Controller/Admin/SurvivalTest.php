@@ -126,7 +126,7 @@ class SurvivalTest extends WebTestCase
             'admin_module_updates' => ['Module notifications', 'admin_module_updates'],
             'admin_customer_preferences' => ['Customer Preferences', 'admin_customer_preferences'],
             'admin_order_delivery_slip' => ['Delivery Slips', 'admin_order_delivery_slip'],
-            'admin_logs_index' => ['Logs', 'admin_logs'],
+            'admin_logs_index' => ['Logs', 'admin_logs_index'],
             'admin_system_information' => ['Information', 'admin_system_information'],
             // @todo: something is missing for Vuejs application in translations page.
             //'admin_international_translation_overview' => ['Translations', 'admin_international_translation_overview'],
@@ -135,11 +135,11 @@ class SurvivalTest extends WebTestCase
             'admin_module_manage' => ['Module Manager', 'admin_module_manage'],
             'admin_shipping_preferences' => ['Shipping Preferences', 'admin_shipping_preferences'],
             'admin_payment_methods' => ['Payment Methods', 'admin_payment_methods'],
-            'admin_geolocation_index' => ['Geolocation', 'admin_geolocation'],
-            'admin_localization_index' => ['Localization', 'admin_localization_show_settings'],
+            'admin_geolocation_index' => ['Geolocation', 'admin_geolocation_index'],
+            'admin_localization_index' => ['Localization', 'admin_localization_index'],
             'admin_payment_preferences' => ['Payment preferences', 'admin_payment_preferences'],
             'admin_modules_positions' => ['Positions', 'admin_modules_positions'],
-            'admin_backups_index' => ['DB Backup', 'admin_backup'],
+            'admin_backups_index' => ['DB Backup', 'admin_backups_index'],
         ];
     }
 
