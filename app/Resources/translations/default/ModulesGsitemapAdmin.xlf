@@ -3,214 +3,232 @@
   <file original="modules/gsitemap/views/templates/admin/configuration.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="67ddb0d12fa1963b202d4ac310547709">
-        <source>Your Sitemaps were successfully created. Please do not forget to setup the URL</source>
-        <target>Your Sitemaps were successfully created. Please do not forget to setup the URL</target>
+        <source>Your sitemaps were successfully created. Please do not forget to setup the URL</source>
+        <target>Your sitemaps were successfully created. Please do not forget to setup the URL</target>
         <note>Context:
-          File: modules/gsitemap/views/templates/admin/configuration.tpl:5</note>
+          File: modules/gsitemap/views/templates/admin/configuration.tpl</note>
       </trans-unit>
       <trans-unit id="9d934413d2737c2a15f58de573657ce3">
         <source>in your Google Webmaster account.</source>
         <target>in your Google Webmaster account.</target>
         <note>Context:
-          File: modules/gsitemap/views/templates/admin/configuration.tpl:5</note>
+          File: modules/gsitemap/views/templates/admin/configuration.tpl</note>
       </trans-unit>
       <trans-unit id="1c95b77d135b55c84429588c11697ea4">
-        <source>Your Sitemaps</source>
-        <target>Your Sitemaps</target>
+        <source>Your sitemaps</source>
+        <target>Your sitemaps</target>
         <note>Context:
-          File: modules/gsitemap/views/templates/admin/configuration.tpl:28</note>
+          File: modules/gsitemap/views/templates/admin/configuration.tpl</note>
       </trans-unit>
       <trans-unit id="aa17b80751f4ae53ab8e3ed2fe99e94d">
         <source>Sitemaps were already created.</source>
         <target>Sitemaps were already created.</target>
         <note>Context:
-          File: modules/gsitemap/views/templates/admin/configuration.tpl:17</note>
+          File: modules/gsitemap/views/templates/admin/configuration.tpl</note>
       </trans-unit>
       <trans-unit id="a0bfb8e59e6c13fc8d990781f77694fe">
         <source>Continue</source>
         <target>Continue</target>
         <note>Context:
-          File: modules/gsitemap/views/templates/admin/configuration.tpl:22</note>
+          File: modules/gsitemap/views/templates/admin/configuration.tpl</note>
       </trans-unit>
       <trans-unit id="9ab08b9ceeef857df07ad10e1de9301e">
-        <source>Please set up the following Sitemap URL in your Google Webmaster account:</source>
-        <target>Please set up the following Sitemap URL in your Google Webmaster account:</target>
+        <source>Please set up the following sitemap URL in your Google Webmaster account:</source>
+        <target>Please set up the following sitemap URL in your Google Webmaster account:</target>
         <note>Context:
-          File: modules/gsitemap/views/templates/admin/configuration.tpl:29</note>
+          File: modules/gsitemap/views/templates/admin/configuration.tpl</note>
       </trans-unit>
       <trans-unit id="aef717e48ecd01989c92849d44bff9b6">
-        <source>This URL is the master Sitemaps file. It refers to the following sub-sitemap files:</source>
-        <target>This URL is the master Sitemaps file. It refers to the following sub-sitemap files:</target>
+        <source>This URL is the master sitemaps file. It refers to the following sub-sitemap files:</source>
+        <target>This URL is the master sitemaps file. It refers to the following sub-sitemap files:</target>
         <note>Context:
-          File: modules/gsitemap/views/templates/admin/configuration.tpl:31</note>
+          File: modules/gsitemap/views/templates/admin/configuration.tpl</note>
       </trans-unit>
       <trans-unit id="0dbf904a2b27f036cf06741aad221ecc">
         <source>Your last update was made on this date:</source>
         <target>Your last update was made on this date:</target>
         <note>Context:
-          File: modules/gsitemap/views/templates/admin/configuration.tpl:39</note>
+          File: modules/gsitemap/views/templates/admin/configuration.tpl</note>
       </trans-unit>
       <trans-unit id="6d37779958434303f8397436a1484ed8">
         <source>For a better use of the module, please make sure that you have</source>
         <target>For a better use of the module, please make sure that you have</target>
         <note>Context:
-          File: modules/gsitemap/views/templates/admin/configuration.tpl:45</note>
+          File: modules/gsitemap/views/templates/admin/configuration.tpl</note>
       </trans-unit>
       <trans-unit id="6a3282611e5ffb8539ce434133073f15">
-        <source>a minimum memory_limit value of 128 MB.</source>
-        <target>a minimum memory_limit value of 128 MB.</target>
+        <source>A minimum memory_limit value of 128 MB.</source>
+        <target>A minimum memory_limit value of 128 MB.</target>
         <note>Context:
-          File: modules/gsitemap/views/templates/admin/configuration.tpl:48</note>
+          File: modules/gsitemap/views/templates/admin/configuration.tpl</note>
       </trans-unit>
       <trans-unit id="f891951357d4892887f0e416c54f972d">
-        <source>a minimum max_execution_time value of 30 seconds.</source>
-        <target>a minimum max_execution_time value of 30 seconds.</target>
+        <source>A minimum max_execution_time value of 30 seconds.</source>
+        <target>A minimum max_execution_time value of 30 seconds.</target>
         <note>Context:
-          File: modules/gsitemap/views/templates/admin/configuration.tpl:51</note>
+          File: modules/gsitemap/views/templates/admin/configuration.tpl</note>
       </trans-unit>
       <trans-unit id="8156303464de0fba7cb8306cc768e998">
         <source>You can edit these limits in your php.ini file. For more details, please contact your hosting provider.</source>
         <target>You can edit these limits in your php.ini file. For more details, please contact your hosting provider.</target>
         <note>Context:
-          File: modules/gsitemap/views/templates/admin/configuration.tpl:54</note>
+          File: modules/gsitemap/views/templates/admin/configuration.tpl</note>
       </trans-unit>
       <trans-unit id="0b9b4b91e0a8f59e264202a23d9c57a6">
-        <source>Configure your Sitemap</source>
-        <target>Configure your Sitemap</target>
+        <source>Configure your sitemap</source>
+        <target>Configure your sitemap</target>
         <note>Context:
-          File: modules/gsitemap/views/templates/admin/configuration.tpl:60</note>
+          File: modules/gsitemap/views/templates/admin/configuration.tpl</note>
       </trans-unit>
       <trans-unit id="fe242b3dd3f455778072dc7042637a5e">
-        <source>Several Sitemaps files will be generated depending on how your server is configured and on the number of activated products in your catalog.</source>
-        <target>Several Sitemaps files will be generated depending on how your server is configured and on the number of activated products in your catalog.</target>
+        <source>Several sitemap files will be generated depending on how your server is configured and on the number of activated products in your catalog.</source>
+        <target>Several sitemap files will be generated depending on how your server is configured and on the number of activated products in your catalog.</target>
         <note>Context:
-          File: modules/gsitemap/views/templates/admin/configuration.tpl:61</note>
+          File: modules/gsitemap/views/templates/admin/configuration.tpl</note>
       </trans-unit>
       <trans-unit id="7f751d19f85d49a411d5691f5bb0b5f2">
         <source>How often do you update your store?</source>
         <target>How often do you update your store?</target>
         <note>Context:
-          File: modules/gsitemap/views/templates/admin/configuration.tpl:63</note>
+          File: modules/gsitemap/views/templates/admin/configuration.tpl</note>
       </trans-unit>
       <trans-unit id="f9f90eeaf400d228facde6bc48da5cfb">
         <source>always</source>
         <target>always</target>
         <note>Context:
-          File: modules/gsitemap/views/templates/admin/configuration.tpl:65</note>
+          File: modules/gsitemap/views/templates/admin/configuration.tpl</note>
       </trans-unit>
       <trans-unit id="745fd0ea7f576f350a0eed4b8c48a8e2">
         <source>hourly</source>
         <target>hourly</target>
         <note>Context:
-          File: modules/gsitemap/views/templates/admin/configuration.tpl:66</note>
+          File: modules/gsitemap/views/templates/admin/configuration.tpl</note>
       </trans-unit>
       <trans-unit id="bea79186fd7af2da67e59b4b15df5a26">
         <source>daily</source>
         <target>daily</target>
         <note>Context:
-          File: modules/gsitemap/views/templates/admin/configuration.tpl:67</note>
+          File: modules/gsitemap/views/templates/admin/configuration.tpl</note>
       </trans-unit>
       <trans-unit id="4a11fc05ed694c195f0703605b64da90">
         <source>weekly</source>
         <target>weekly</target>
         <note>Context:
-          File: modules/gsitemap/views/templates/admin/configuration.tpl:68</note>
+          File: modules/gsitemap/views/templates/admin/configuration.tpl</note>
       </trans-unit>
       <trans-unit id="708638881f3bac9d9c8c742c79502811">
         <source>monthly</source>
         <target>monthly</target>
         <note>Context:
-          File: modules/gsitemap/views/templates/admin/configuration.tpl:69</note>
+          File: modules/gsitemap/views/templates/admin/configuration.tpl</note>
       </trans-unit>
       <trans-unit id="1bf712896e6077fa0b708e911d8ee0b3">
         <source>yearly</source>
         <target>yearly</target>
         <note>Context:
-          File: modules/gsitemap/views/templates/admin/configuration.tpl:70</note>
+          File: modules/gsitemap/views/templates/admin/configuration.tpl</note>
       </trans-unit>
       <trans-unit id="c7561db7a418dd39b2201dfe110ab4a4">
         <source>never</source>
         <target>never</target>
         <note>Context:
-          File: modules/gsitemap/views/templates/admin/configuration.tpl:71</note>
+          File: modules/gsitemap/views/templates/admin/configuration.tpl</note>
       </trans-unit>
       <trans-unit id="e51d91c7bfa9fc658b11afca4d84653c">
         <source>Check this box if you wish to check the presence of the image files on the server</source>
         <target>Check this box if you wish to check the presence of the image files on the server</target>
         <note>Context:
-          File: modules/gsitemap/views/templates/admin/configuration.tpl:74</note>
+          File: modules/gsitemap/views/templates/admin/configuration.tpl</note>
       </trans-unit>
       <trans-unit id="05ff8159ccaef6f0f8391c61a6d0e631">
-        <source>check all</source>
-        <target>check all</target>
+        <source>Check all</source>
+        <target>Check all</target>
         <note>Context:
-          File: modules/gsitemap/views/templates/admin/configuration.tpl:116</note>
+          File: modules/gsitemap/views/templates/admin/configuration.tpl</note>
       </trans-unit>
       <trans-unit id="0dfcf5f2f5b9ab7c909f9bdca2b53b56">
-        <source>Indicate the pages that you do not want to include in your Sitemaps file:</source>
-        <target>Indicate the pages that you do not want to include in your Sitemaps file:</target>
+        <source>Indicate the pages that you do not want to include in your sitemap files:</source>
+        <target>Indicate the pages that you do not want to include in your sitemap files:</target>
         <note>Context:
-          File: modules/gsitemap/views/templates/admin/configuration.tpl:79</note>
+          File: modules/gsitemap/views/templates/admin/configuration.tpl</note>
       </trans-unit>
       <trans-unit id="2ec111ec9826a83509c02bf5e6b797f1">
-        <source>Generate Sitemap</source>
-        <target>Generate Sitemap</target>
+        <source>Generate sitemap</source>
+        <target>Generate sitemap</target>
         <note>Context:
-          File: modules/gsitemap/views/templates/admin/configuration.tpl:89</note>
+          File: modules/gsitemap/views/templates/admin/configuration.tpl</note>
       </trans-unit>
       <trans-unit id="ca99f8a0d484faef3a057fe7a5da3141">
         <source>This can take several minutes</source>
         <target>This can take several minutes</target>
         <note>Context:
-          File: modules/gsitemap/views/templates/admin/configuration.tpl:89</note>
+          File: modules/gsitemap/views/templates/admin/configuration.tpl</note>
       </trans-unit>
       <trans-unit id="162b34489ed8df561be1720f04fe6d42">
-        <source>You have two ways to generate Sitemap:</source>
-        <target>You have two ways to generate Sitemap:</target>
+        <source>You have two ways to generate sitemaps.</source>
+        <target>You have two ways to generate sitemaps.</target>
         <note>Context:
-          File: modules/gsitemap/views/templates/admin/configuration.tpl:96</note>
+          File: modules/gsitemap/views/templates/admin/configuration.tpl</note>
       </trans-unit>
       <trans-unit id="6caa369fd774beef106abbc5cc1e3368">
         <source>Manually:</source>
         <target>Manually:</target>
         <note>Context:
-          File: modules/gsitemap/views/templates/admin/configuration.tpl:97</note>
+          File: modules/gsitemap/views/templates/admin/configuration.tpl</note>
       </trans-unit>
       <trans-unit id="4ed0b6a0097c3d38c43d756fe2653962">
-        <source>using the form above (as often as needed)</source>
-        <target>using the form above (as often as needed)</target>
+        <source>Using the form above (as often as needed)</source>
+        <target>Using the form above (as often as needed)</target>
         <note>Context:
-          File: modules/gsitemap/views/templates/admin/configuration.tpl:97</note>
+          File: modules/gsitemap/views/templates/admin/configuration.tpl</note>
       </trans-unit>
       <trans-unit id="3d263eb0233f14872193733387840c80">
         <source>-or-</source>
         <target>-or-</target>
         <note>Context:
-          File: modules/gsitemap/views/templates/admin/configuration.tpl:98</note>
+          File: modules/gsitemap/views/templates/admin/configuration.tpl</note>
       </trans-unit>
       <trans-unit id="957d27165d1dc5947fb00e57967ffcce">
         <source>Automatically:</source>
         <target>Automatically:</target>
         <note>Context:
-          File: modules/gsitemap/views/templates/admin/configuration.tpl:99</note>
+          File: modules/gsitemap/views/templates/admin/configuration.tpl</note>
       </trans-unit>
       <trans-unit id="024d2d2f6d7fd575701fd1b30cc5c0c2">
         <source>Ask your hosting provider to setup a "Cron task" to load the following URL at the time you would like:</source>
         <target>Ask your hosting provider to setup a "Cron task" to load the following URL at the time you would like:</target>
         <note>Context:
-          File: modules/gsitemap/views/templates/admin/configuration.tpl:99</note>
+          File: modules/gsitemap/views/templates/admin/configuration.tpl</note>
       </trans-unit>
       <trans-unit id="8076be06e575e50c7f9585271c8842ad">
-        <source>It will automatically generate your XML Sitemaps.</source>
-        <target>It will automatically generate your XML Sitemaps.</target>
+        <source>It will automatically generate your XML sitemaps.</source>
+        <target>It will automatically generate your XML sitemaps.</target>
         <note>Context:
-          File: modules/gsitemap/views/templates/admin/configuration.tpl:101</note>
+          File: modules/gsitemap/views/templates/admin/configuration.tpl</note>
       </trans-unit>
       <trans-unit id="98a9d595be84a0687c4b26887977e0c3">
-        <source>uncheck all</source>
-        <target>uncheck all</target>
+        <source>Uncheck all</source>
+        <target>Uncheck all</target>
         <note>Context:
-          File: modules/gsitemap/views/templates/admin/configuration.tpl:113</note>
+          File: modules/gsitemap/views/templates/admin/configuration.tpl</note>
+      </trans-unit>
+      <trans-unit id="d951cc0b515817adc578b427d5ddb0b7">
+        <source>This shop has no sitemap yet.</source>
+        <target>This shop has no sitemap yet.</target>
+        <note>Context:
+          File: modules/gsitemap/views/templates/admin/configuration.tpl</note>
+      </trans-unit>
+      <trans-unit id="8e7838224d6ce9ecc533ee9e3a5c73d5">
+        <source>Generating a sitemap can take several minutes</source>
+        <target>Generating a sitemap can take several minutes</target>
+        <note>Context:
+          File: modules/gsitemap/views/templates/admin/configuration.tpl</note>
+      </trans-unit>
+      <trans-unit id="031b845f225dc2d5f21757dc66d14f4b">
+        <source>Information</source>
+        <target>Information</target>
+        <note>Context:
+          File: modules/gsitemap/views/templates/admin/configuration.tpl</note>
       </trans-unit>
     </body>
   </file>
@@ -220,19 +238,19 @@
         <source>Google sitemap</source>
         <target>Google sitemap</target>
         <note>Context:
-          File: modules/gsitemap/gsitemap.php:46</note>
+          File: modules/gsitemap/gsitemap.php</note>
       </trans-unit>
       <trans-unit id="935a6bc13704a117d22333c3155b5dae">
         <source>Generate your Google sitemap file</source>
         <target>Generate your Google sitemap file</target>
         <note>Context:
-          File: modules/gsitemap/gsitemap.php:47</note>
+          File: modules/gsitemap/gsitemap.php</note>
       </trans-unit>
       <trans-unit id="b52bf50c73995780892b9945ddc98708">
         <source>An error occured while trying to check your file permissions. Please adjust your permissions to allow PrestaShop to write a file in your root directory.</source>
         <target>An error occured while trying to check your file permissions. Please adjust your permissions to allow PrestaShop to write a file in your root directory.</target>
         <note>Context:
-          File: modules/gsitemap/gsitemap.php:696</note>
+          File: modules/gsitemap/gsitemap.php</note>
       </trans-unit>
     </body>
   </file>
