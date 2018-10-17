@@ -58,7 +58,7 @@ class YamlRoutesInModuleTest extends KernelTestCase
 
         $this->module = $this->container->get('prestashop.core.admin.module.repository')->getModule('demo');
         $this->module->onInstall();
-        $this->container->get('prestashop.adapter.cache_clearer')->clearAllCaches();
+        $this->container->get('prestashop.core.cache.clearer.cache_clearer_chain')->clear();
     }
 
     /**
