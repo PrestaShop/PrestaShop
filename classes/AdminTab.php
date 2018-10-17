@@ -1193,6 +1193,9 @@ abstract class AdminTabCore
             $language_ids = Language::getIDs(false);
             foreach ($language_ids as $id_lang) {
                 foreach (array_keys($rules['validateLang']) as $field) {
+                    if (!is_array($object->{$field})) {
+                        $object->{$field} = array();
+                    }
                     if (Tools::isSubmit($field.'_'.(int)$id_lang)) {
                         $object->{$field}[(int)$id_lang] = Tools::getValue($field.'_'.(int)$id_lang);
                     }

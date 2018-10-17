@@ -3578,6 +3578,9 @@ class AdminControllerCore extends Controller
 
         foreach ($fields as $field => $params) {
             if (array_key_exists('lang', $params) && $params['lang']) {
+                if (!is_array($object->{$field})) {
+                    $object->{$field} = array();
+                }
                 foreach (Language::getIDs(false) as $id_lang) {
                     if (Tools::isSubmit($field.'_'.(int)$id_lang)) {
                         $object->{$field}[(int)$id_lang] = Tools::getValue($field.'_'.(int)$id_lang);
