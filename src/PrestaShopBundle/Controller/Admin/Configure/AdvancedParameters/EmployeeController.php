@@ -58,11 +58,15 @@ class EmployeeController extends FrameworkBundleAdminController
         $employeeGridFactory = $this->get('prestashop.core.grid.factory.employee');
         $employeeGrid = $employeeGridFactory->getGrid($filters);
 
+        $helperCardDocumentationLinkProvider =
+            $this->get('prestashop.core.util.helper_card.team_helper_card_documentation_link_provider');
+
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/Employee/index.html.twig', [
             'employeeOptionsForm' => $employeeOptionsForm->createView(),
             'canOptionsBeChanged' => $employeeOptionsChecker->canBeChanged(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'employeeGrid' => $this->presentGrid($employeeGrid),
+            'helperCardDocumentationLink' => $helperCardDocumentationLinkProvider->getLink(),
         ]);
     }
 

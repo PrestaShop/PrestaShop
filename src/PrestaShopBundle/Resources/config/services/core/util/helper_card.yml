@@ -1,0 +1,14 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.core.util.helper_card.team_helper_card_documentation_link_provider:
+    class: 'PrestaShop\PrestaShop\Core\Util\HelperCard\HelperCardDocumentationLinkProvider'
+    arguments:
+      - '@=service("prestashop.adapter.legacy.context").getContext().language.iso_code'
+      -
+        'en': 'http://doc.prestashop.com/display/PS17/Team'
+        'fr': 'http://doc.prestashop.com/pages/viewpage.action?pageId=51840334'
+        'es': 'http://doc.prestashop.com/display/PS17/Equipo'
+        'it': 'http://doc.prestashop.com/pages/viewpage.action?pageId=54266520'
+      - 'http://doc.prestashop.com/display/PS17/Team'
