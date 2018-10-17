@@ -1,4 +1,4 @@
-{#**
+/**
  * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
@@ -21,18 +21,18 @@
  * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-<div class="helper-card card">
-  <div class="helper-card__left shape-one">
-    <img src="{{ asset('themes/new-theme/scss/img/helper-card/team@3x.png') }}" class="img-fluid">
-  </div>
-  <div class="helper-card__right">
-    <h2>{{ 'Manage your team'|trans({}, 'Admin.Advparameters.Feature') }}</h2>
-    <p>{{ 'Create profiles for your employees with specific rights. SuperAdmin can access the entire store while other people can only be dedicated to the catalog or orders pages.'|trans({}, 'Admin.Advparameters.Feature') }}</p>
-    <a class="btn btn-outline-secondary" href="{{ helperCardDocumentationLink }}" target="_blank">
-      {{ 'Learn more'|trans({}, 'Admin.Actions') }}
-    </a>
-  </div>
-  <i class="helper-card__close material-icons js-close-helper-card">close</i>
-</div>
+const $ = window.$;
+
+/**
+ * Manages Helper cards on page.
+ */
+export default class HelperCard {
+  constructor() {
+    $(document).on('click', '.js-close-helper-card', (event) => {
+      console.log($(event.target));
+      $(event.currentTarget).closest('.helper-card').remove();
+    });
+  }
+}
