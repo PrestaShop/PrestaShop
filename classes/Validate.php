@@ -1240,7 +1240,7 @@ class ValidateCore
      */
     public static function __callStatic($name, $arguments)
     {
-        $name = lcfirst($name);
+        $name = ucfirst($name);
 
         $results = Hook::exec('actionValidate'.$name, $arguments, null, true);
 
