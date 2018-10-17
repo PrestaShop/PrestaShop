@@ -52,11 +52,11 @@ class LegacyUrlConverterTest extends LightWebTestCase
             'admin_administration' => ['/configure/advanced/administration/', 'AdminAdminPreferences'],
             'admin_administration_save' => ['/configure/advanced/administration/', 'AdminAdminPreferences', 'update'],
 
-            'admin_backup' => ['/configure/advanced/backup/', 'AdminBackup'],
-            'admin_backup_process' => ['/configure/advanced/backup/', 'AdminBackup', 'update'],
-            'admin_backup_create' => ['/configure/advanced/backup/create', 'AdminBackup', 'addbackup'],
-            'admin_backup_delete' => ['/configure/advanced/backup/backup_file.zip', 'AdminBackup', 'delete', ['filename' => 'backup_file.zip']],
-            'admin_backup_bulk_delete' => ['/configure/advanced/backup/bulk-delete/', 'AdminBackup', 'submitBulkdeletebackup'],
+            'admin_backups' => ['/configure/advanced/backups/', 'AdminBackup'],
+            'admin_backups_save_options' => ['/configure/advanced/backups/', 'AdminBackup', 'update'],
+            'admin_backups_create' => ['/configure/advanced/backups/new', 'AdminBackup', 'addbackup'],
+            'admin_backups_delete' => ['/configure/advanced/backups/backup_file.zip', 'AdminBackup', 'delete', ['filename' => 'backup_file.zip']],
+            'admin_backups_bulk_delete' => ['/configure/advanced/backups/bulk-delete/', 'AdminBackup', 'submitBulkdeletebackup'],
 
             'admin_module_catalog' => ['/improve/modules/catalog', 'AdminModulesCatalog'],
             'admin_module_catalog_refresh' => ['/improve/modules/catalog/refresh', 'AdminModulesCatalog', 'refresh'],
@@ -90,9 +90,9 @@ class LegacyUrlConverterTest extends LightWebTestCase
             'admin_system_information' => ['/configure/advanced/system-information/', 'AdminInformation'],
             'admin_system_information_check_files' => ['/configure/advanced/system-information/files', 'AdminInformation', 'checkFiles'],
 
-            'admin_logs' => ['/configure/advanced/logs/', 'AdminLogs'],
-            'admin_logs_save' => ['/configure/advanced/logs/settings', 'AdminLogs', 'update'],
-            'admin_logs_delete' => ['/configure/advanced/logs/erase-all', 'AdminLogs', 'deletelog'],
+            'admin_logs_index' => ['/configure/advanced/logs/', 'AdminLogs'],
+            'admin_logs_save_settings' => ['/configure/advanced/logs/settings', 'AdminLogs', 'update'],
+            'admin_logs_delete_all' => ['/configure/advanced/logs/delete-all', 'AdminLogs', 'deletelog'],
 
             'admin_maintenance' => ['/configure/shop/maintenance/', 'AdminMaintenance'],
             'admin_maintenance_save' => ['/configure/shop/maintenance/', 'AdminMaintenance', 'update'],
@@ -123,12 +123,12 @@ class LegacyUrlConverterTest extends LightWebTestCase
 
             'admin_payment_methods' => ['/improve/payment/payment_methods', 'AdminPayment'],
 
-            'admin_localization_show_settings' => ['/improve/international/localization/', 'AdminLocalization'],
-            'admin_localization_save_settings' => ['/improve/international/localization/', 'AdminLocalization', 'update'],
-            'admin_localization_import_pack' => ['/improve/international/localization/import_pack', 'AdminLocalization', 'submitLocalizationPack'],
+            'admin_localization_index' => ['/improve/international/localization/', 'AdminLocalization'],
+            'admin_localization_save_options' => ['/improve/international/localization/options', 'AdminLocalization', 'update'],
+            'admin_localization_import_pack' => ['/improve/international/localization/import-pack', 'AdminLocalization', 'submitLocalizationPack'],
 
-            'admin_geolocation' => ['/improve/international/geolocation/', 'AdminGeolocation'],
-            'admin_geolocation_process_form' => ['/improve/international/geolocation/process_form', 'AdminGeolocation', 'update'],
+            'admin_geolocation_index' => ['/improve/international/geolocation/', 'AdminGeolocation'],
+            'admin_geolocation_save_options' => ['/improve/international/geolocation/process_form', 'AdminGeolocation', 'update'],
 
             'admin_payment_preferences' => ['/improve/payment/preferences', 'AdminPaymentPreferences'],
             'admin_payment_preferences_process' => ['/improve/payment/preferences', 'AdminPaymentPreferences', 'update'],
@@ -138,20 +138,20 @@ class LegacyUrlConverterTest extends LightWebTestCase
             'admin_order_invoices_generate_by_date' => ['/sell/orders/invoices/by_date', 'AdminInvoices', 'submitAddinvoice_date'],
             'admin_order_invoices_generate_by_status' => ['/sell/orders/invoices/by_status', 'AdminInvoices', 'submitAddinvoice_status'],
 
-            'admin_email' => ['/configure/advanced/emails/', 'AdminEmails'],
-            'admin_email_search' => ['/configure/advanced/emails/', 'AdminEmails', 'search'],
-            'admin_email_process' => ['/configure/advanced/emails/settings', 'AdminEmails', 'update'],
-            'admin_send_test_email' => ['/configure/advanced/emails/send-testing-email', 'AdminEmails', 'testEmail'],
-            'admin_delete_selected_email_logs' => ['/configure/advanced/emails/delete/selected', 'AdminEmails', 'submitBulkdeletemail'],
-            'admin_delete_all_email_logs' => ['/configure/advanced/emails/delete/all', 'AdminEmails', 'deleteAll'],
-            'admin_delete_single_email_log' => ['/configure/advanced/emails/delete/42', 'AdminEmails', 'deletemail', ['id_mail' => 42]],
+            'admin_emails_index' => ['/configure/advanced/emails/', 'AdminEmails'],
+            'admin_emails_search' => ['/configure/advanced/emails/', 'AdminEmails', 'search'],
+            'admin_emails_save_options' => ['/configure/advanced/emails/options', 'AdminEmails', 'update'],
+            'admin_emails_send_test' => ['/configure/advanced/emails/send-testing-email', 'AdminEmails', 'testEmail'],
+            'admin_emails_delete_bulk' => ['/configure/advanced/emails/delete-bulk', 'AdminEmails', 'submitBulkdeletemail'],
+            'admin_emails_delete_all' => ['/configure/advanced/emails/delete-all', 'AdminEmails', 'deleteAll'],
+            'admin_emails_delete' => ['/configure/advanced/emails/delete/42', 'AdminEmails', 'deletemail', ['id_mail' => 42]],
 
-            'admin_meta' => ['/configure/shop/seo-urls/', 'AdminMeta'],
-            'admin_meta_search' => ['/configure/shop/seo-urls/', 'AdminMeta', 'search'],
-            'admin_meta_list_delete_single' => ['/configure/shop/seo-urls/delete/42', 'AdminMeta', 'deletemeta', ['id_meta' => 42]],
-            'admin_meta_list_delete_multiple' => ['/configure/shop/seo-urls/delete', 'AdminMeta', 'submitBulkdeletmeta'],
-            'admin_meta_process' => ['/configure/shop/seo-urls/settings', 'AdminMeta', 'update'],
-            'admin_meta_generate_robots_file' => ['/configure/shop/seo-urls/generate/robots', 'AdminMeta', 'submitRobots'],
+            'admin_metas_index' => ['/configure/shop/seo-urls/', 'AdminMeta'],
+            'admin_metas_search' => ['/configure/shop/seo-urls/', 'AdminMeta', 'search'],
+            'admin_metas_delete' => ['/configure/shop/seo-urls/42/delete', 'AdminMeta', 'deletemeta', ['id_meta' => 42]],
+            'admin_metas_delete_bulk' => ['/configure/shop/seo-urls/delete-bulk', 'AdminMeta', 'submitBulkdeletmeta'],
+            'admin_metas_save_options' => ['/configure/shop/seo-urls/options', 'AdminMeta', 'update'],
+            'admin_metas_generate_robots_file' => ['/configure/shop/seo-urls/generate-robots-file', 'AdminMeta', 'submitRobots'],
 
             //This url is not ready to be migrated yet, the SF controller redirects to the legacy url
             // 'admin_meta_list_create' => ['/configure/shop/seo-urls/create', 'AdminMeta', 'addmeta'],

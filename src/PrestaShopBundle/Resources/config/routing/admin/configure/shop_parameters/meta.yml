@@ -1,4 +1,4 @@
-admin_meta:
+admin_metas_index:
     path: /
     methods: GET
     defaults:
@@ -6,7 +6,7 @@ admin_meta:
         _legacy_controller: AdminMeta
         _legacy_link: AdminMeta
 
-admin_meta_search:
+admin_metas_search:
     path: /
     methods: POST
     defaults:
@@ -14,15 +14,15 @@ admin_meta_search:
         _legacy_controller: AdminMeta
         _legacy_link: AdminMeta:search
 
-admin_meta_list_create:
-    path: /create
+admin_metas_create:
+    path: /new
     methods: GET
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\Meta:create'
         _legacy_controller: AdminMeta
 
-admin_meta_list_edit:
-    path: /edit/{metaId}
+admin_metas_edit:
+    path: /{metaId}/edit
     methods: GET
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\Meta:edit'
@@ -32,11 +32,11 @@ admin_meta_list_edit:
     requirements:
         metaId: \d+
 
-admin_meta_list_delete_single:
-    path: /delete/{metaId}
+admin_metas_delete:
+    path: /{metaId}/delete
     methods: DELETE
     defaults:
-        _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\Meta:deleteSingleListItem'
+        _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\Meta:delete'
         _legacy_controller: AdminMeta
         _legacy_link: AdminMeta:deletemeta
         _legacy_parameters:
@@ -44,26 +44,26 @@ admin_meta_list_delete_single:
     requirements:
         metaId: \d+
 
-admin_meta_list_delete_multiple:
-    path: /delete
+admin_metas_delete_bulk:
+    path: /delete-bulk
     methods: POST
     defaults:
-        _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\Meta:deleteMultipleListItems'
+        _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\Meta:deleteBulk'
         _legacy_controller: AdminMeta
         _legacy_link: AdminMeta:submitBulkdeletmeta
 
-admin_meta_process:
-    path: /settings
+admin_metas_save_options:
+    path: /options
     methods: [POST]
     defaults:
-        _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\Meta:processForm'
+        _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\Meta:saveOptions'
         _legacy_controller: AdminMeta
         _legacy_link: AdminMeta:update
 
-admin_meta_generate_robots_file:
-    path: /generate/robots
+admin_metas_generate_robots_file:
+    path: /generate-robots-file
     methods: POST
     defaults:
-        _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\Meta:generateRobotsTextFile'
+        _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\Meta:generateRobotsFile'
         _legacy_controller: AdminMeta
         _legacy_link: AdminMeta:submitRobots
