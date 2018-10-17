@@ -23,35 +23,14 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-{% set enableSidebar = true %}
-
-{% extends '@PrestaShop/Admin/layout.html.twig' %}
-
-{% block content %}
-  {% block employee_helper_card %}
-    <div class="row">
-      <div class="col">
-        {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Employee/Blocks/helper_card.html.twig' %}
-      </div>
-    </div>
-  {% endblock %}
-
-  {% block employee_listing %}
-    <div class="row">
-      <div class="col">
-        {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with { 'grid': employeeGrid } %}
-      </div>
-    </div>
-  {% endblock %}
-
-  {% block employee_options %}
-    {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Employee/Blocks/employee_options.html.twig' %}
-  {% endblock %}
-{% endblock %}
-
-{% block javascripts %}
-  {{ parent() }}
-
-  <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
-  <script src="{{ asset('themes/new-theme/public/employee.bundle.js') }}"></script>
-{% endblock %}
+<div class="helper-card card">
+  <div class="helper-card__left shape-one helper-card__meta-background">
+    <img src="{{ asset('themes/new-theme/scss/img/helper-card/team@3x.png') }}" class="img-fluid">
+  </div>
+  <div class="helper-card__right">
+    <h2>{{ 'Manage your team'|trans({}, 'Admin.Advparameters.Feature') }}</h2>
+    <p>{{ 'Create profiles for your employees with specific rights. SuperAdmin can access the entire store while other people can only be dedicated to the catalog or orders pages.'|trans({}, 'Admin.Advparameters.Feature') }}</p>
+    <a class="btn btn-outline-secondary" href="#" target="_blank">{{ 'Learn more'|trans({}, 'Admin.Actions') }}</a>
+  </div>
+  <i class="helper-card__close material-icons">close</i>
+</div>
