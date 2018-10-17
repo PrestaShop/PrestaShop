@@ -5,19 +5,28 @@ services:
           - '@=service("prestashop.module_kernel.repository").getActiveModulesPaths()'
         tags: [routing.loader]
 
-    prestashop.bundle.routing.legacy_url_converter:
+    prestashop.bundle.routing.converter.legacy_url_converter:
         class: 'PrestaShopBundle\Routing\Converter\LegacyUrlConverter'
         arguments:
             $router: '@router'
-            $legacyRouteProvider: '@=parameter("kernel.environment") == "prod" ? service("prestashop.bundle.routing.cache_provider") : service("prestashop.bundle.routing.router_provider")'
+            $legacyRouteProvider: '@prestashop.bundle.routing.converter.cache_provider'
 
-    prestashop.bundle.routing.router_provider:
+    prestashop.bundle.routing.converter.router_provider:
         class: 'PrestaShopBundle\Routing\Converter\RouterProvider'
         arguments:
             $router: '@router'
 
-    prestashop.bundle.routing.cache_provider:
+    prestashop.bundle.routing.converter.cache_provider:
         class: 'PrestaShopBundle\Routing\Converter\CacheProvider'
         arguments:
-            $legacyRouteProvider: '@prestashop.bundle.routing.router_provider'
+            $legacyRouteProvider: '@prestashop.bundle.routing.converter.router_provider'
             $cache: '@cache.app'
+            $cacheKeyGenerator: '@prestashop.bundle.routing.converter.routing_cache_key_generator'
+
+    prestashop.bundle.routing.converter.routing_cache_key_generator:
+        class: 'PrestaShopBundle\Routing\Converter\RoutingCacheKeyGenerator'
+        arguments:
+            $coreRoutingPaths:
+                - "%kernel.root_dir%/../src/PrestashopBundle/Resources/config/routing/admin"
+            $activeModulesPaths: '@=service("prestashop.module_kernel.repository").getActiveModulesPaths()'
+            $environment: '%kernel.environment%'

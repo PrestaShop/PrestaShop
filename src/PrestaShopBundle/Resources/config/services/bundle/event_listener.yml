@@ -28,7 +28,7 @@ services:
     prestashop.legacy_url_listener:
         class: PrestaShopBundle\EventListener\LegacyUrlListener
         arguments:
-        - "@prestashop.bundle.routing.legacy_url_converter"
+        - "@prestashop.bundle.routing.converter.legacy_url_converter"
         tags:
         - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 40 }
 

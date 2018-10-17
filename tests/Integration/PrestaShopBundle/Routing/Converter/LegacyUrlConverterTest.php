@@ -199,7 +199,7 @@ class LegacyUrlConverterTest extends LightWebTestCase
 
     public function testServiceExists()
     {
-        $converter = self::$kernel->getContainer()->get('prestashop.bundle.routing.legacy_url_converter');
+        $converter = self::$kernel->getContainer()->get('prestashop.bundle.routing.converter.legacy_url_converter');
         $this->assertInstanceOf(LegacyUrlConverter::class, $converter);
     }
 
@@ -245,7 +245,7 @@ class LegacyUrlConverterTest extends LightWebTestCase
     public function testConverterByParameters($expectedUrl, $controller, $action = null, array $queryParameters = null)
     {
         /** @var LegacyUrlConverter $converter */
-        $converter = self::$kernel->getContainer()->get('prestashop.bundle.routing.legacy_url_converter');
+        $converter = self::$kernel->getContainer()->get('prestashop.bundle.routing.converter.legacy_url_converter');
 
         $caughtException = null;
         $caughtExceptionMessage = '';

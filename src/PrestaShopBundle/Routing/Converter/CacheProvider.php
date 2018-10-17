@@ -39,14 +39,14 @@ class CacheProvider extends AbstractLegacyRouteProvider
     private $cache;
 
     /**
-     * @var string
-     */
-    private $cacheId;
-
-    /**
      * @var LegacyRouteProviderInterface
      */
     private $legacyRouteProvider;
+
+    /**
+     * @var CacheKeyGeneratorInterface
+     */
+    private $cacheKeyGenerator;
 
     /**
      * @var LegacyRoute[]
@@ -55,11 +55,12 @@ class CacheProvider extends AbstractLegacyRouteProvider
 
     public function __construct(
         LegacyRouteProviderInterface $legacyRouteProvider,
-        AdapterInterface $cache
+        AdapterInterface $cache,
+        CacheKeyGeneratorInterface $cacheKeyGenerator
     ) {
         $this->legacyRouteProvider = $legacyRouteProvider;
         $this->cache = $cache;
-        $this->cacheId = preg_replace('@\\\\@', '_', __CLASS__);
+        $this->cacheKeyGenerator = $cacheKeyGenerator;
     }
 
     /**
@@ -68,7 +69,7 @@ class CacheProvider extends AbstractLegacyRouteProvider
     public function getLegacyRoutes()
     {
         if (null === $this->legacyRoutes) {
-            $cacheItem = $this->cache->getItem($this->cacheId);
+            $cacheItem = $this->cache->getItem($this->cacheKeyGenerator->getCacheKey());
             if (!$cacheItem->isHit()) {
                 $this->legacyRoutes = $this->legacyRouteProvider->getLegacyRoutes();
                 $cacheItem->set($this->serializeLegacyRoutes($this->legacyRoutes));
