@@ -1,6 +1,5 @@
 const {AccessPageBO} = require('../../../selectors/BO/access_page');
 const {Menu} = require('../../../selectors/BO/menu.js');
-const {ProductList} = require('../../../selectors/BO/add_product_page');
 const {AddProductPage} = require('../../../selectors/BO/add_product_page');
 const commonProduct = require('../../common_scenarios/product');
 let promise = Promise.resolve();
@@ -30,10 +29,10 @@ scenario('Navigate between the catalog pages in the back office', () => {
               commonProduct.createProduct(AddProductPage, productData);
             }
           }
-        })
-        .then(() => commonProduct.checkPaginationBO('Next', '1', 20, false, true))
-        .then(() => commonProduct.checkPaginationBO('Next', '1', 50))
-        .then(() => commonProduct.checkPaginationBO('Next', '1', 100, true));
+        });
     });
   }, 'product/product');
-}, 'common_client');
+  commonProduct.checkPaginationBO('Next', '1', 20, false, true);
+  commonProduct.checkPaginationBO('Next', '1', 50);
+  commonProduct.checkPaginationBO('Next', '1', 100, true);
+}, 'common_client', true);

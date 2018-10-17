@@ -163,36 +163,28 @@ module.exports = {
       test('should check shipping method', () => client.checkTextValue(OrderPage.shipping_method, global.tab["method"].split('\n')[0], 'contain'));
     }, "order");
   },
-  getShoppingCartsInfo: function () {
-    scenario('Get all informations about the ' + global.shoppingCartsNumber + ' shopping carts', client => {
-      for (let i = 1; i <= global.shoppingCartsNumber; i++) {
-        test('Get the information of the ' + client.stringifyNumber(i) + ' shopping cart', () => {
-          return promise
-            .then(() => client.getTextInVar(ShoppingCart.id.replace('%NUMBER', i), "id"))
-            .then(() => client.getTextInVar(ShoppingCart.order_id.replace('%NUMBER', i), "order_id"))
-            .then(() => client.getTextInVar(ShoppingCart.customer.replace('%NUMBER', i), "customer"))
-            .then(() => client.getTextInVar(ShoppingCart.total.replace('%NUMBER', i), "total"))
-            .then(() => client.getTextInVar(ShoppingCart.carrier.replace('%NUMBER', i), "carrier"))
-            .then(() => client.getTextInVar(ShoppingCart.date.replace('%NUMBER', i), "date"))
-            .then(() => client.getTextInVar(ShoppingCart.customer_online.replace('%NUMBER', i), "customer_online"))
-            .then(() => {
-              parseInt(global.tab["order_id"]) ? global.tab["order_id"] = parseInt(global.tab["order_id"]) : global.tab["order_id"] = '"' + global.tab["order_id"] + '"';
-              global.tab["carrier"] === '--' ? global.tab["carrier"] = '' : global.tab["carrier"] = '"' + global.tab["carrier"] + '"';
-              global.tab["customer_online"] === 'Yes' ? global.tab["customer_online"] = 1 : global.tab["customer_online"] = 0;
-              global.tab["date"] = dateFormat(global.tab["date"], "yyyy-mm-dd hh:MM:ss");
-              global.orders.push(parseInt(global.tab["id"]) + ';' + global.tab["order_id"] + ';' + '"' + global.tab["customer"] + '"' + ';' + global.tab["total"] + ';' + global.tab["carrier"] + ';' + '"' + global.tab["date"] + '"' + ';' + global.tab["customer_online"]);
-            });
-        });
-      }
-    }, 'order');
+
+  getShoppingCartsInfo: async function (client) {
+    for (let i = 1; i <= global.shoppingCartsNumber; i++) {
+      await client.getTextInVar(ShoppingCart.id.replace('%NUMBER', i), "id");
+      await client.getTextInVar(ShoppingCart.order_id.replace('%NUMBER', i), "order_id");
+      await client.getTextInVar(ShoppingCart.customer.replace('%NUMBER', i), "customer");
+      await client.getTextInVar(ShoppingCart.total.replace('%NUMBER', i), "total");
+      await client.getTextInVar(ShoppingCart.carrier.replace('%NUMBER', i), "carrier");
+      await client.getTextInVar(ShoppingCart.date.replace('%NUMBER', i), "date");
+      await client.getTextInVar(ShoppingCart.customer_online.replace('%NUMBER', i), "customer_online");
+      await  parseInt(global.tab["order_id"]) ? global.tab["order_id"] = parseInt(global.tab["order_id"]) : global.tab["order_id"] = '"' + global.tab["order_id"] + '"';
+      await  global.tab["carrier"] === '--' ? global.tab["carrier"] = '' : global.tab["carrier"] = '"' + global.tab["carrier"] + '"';
+      await  global.tab["customer_online"] === 'Yes' ? global.tab["customer_online"] = 1 : global.tab["customer_online"] = 0;
+      global.tab["date"] = await dateFormat(global.tab["date"], "yyyy-mm-dd HH:MM:ss");
+      await global.orders.push(parseInt(global.tab["id"]) + ';' + global.tab["order_id"] + ';' + '"' + global.tab["customer"] + '"' + ';' + global.tab["total"] + ';' + global.tab["carrier"] + ';' + '"' + global.tab["date"] + '"' + ';' + global.tab["customer_online"]);
+    }
   },
-  checkExportedFile: function () {
-    scenario('Check that the exported shopping carts file contains exactly the same shopping carts information', client => {
-      test('should export carts', () => client.downloadCart(ShoppingCart.export_carts_button));
-      test('should check the file name', () => client.checkFile(global.downloadsFolderPath, global.exportCartFileName));
-      test('should read the file', () => client.readFile(global.downloadsFolderPath, global.exportCartFileName, 1000));
-      test('should compare both informations', () => client.checkExportedFileInfo(1000));
-      test('should reset filter', () => client.waitForExistAndClick(ShoppingCart.reset_button));
-    }, 'order', true);
+  checkExportedFile: async function (client) {
+    await client.downloadCart(ShoppingCart.export_carts_button);
+    await client.checkFile(global.downloadsFolderPath, global.exportCartFileName);
+    await client.readFile(global.downloadsFolderPath, global.exportCartFileName, 1000);
+    await client.checkExportedFileInfo(1000);
+    await client.waitForExistAndClick(ShoppingCart.reset_button);
   }
 };
