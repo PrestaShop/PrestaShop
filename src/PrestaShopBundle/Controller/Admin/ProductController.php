@@ -646,7 +646,7 @@ class ProductController extends FrameworkBundleAdminController
             if ($combinationsInputs > $maxInputVars) {
                 $this->addFlash('error', $this->trans(
                     'The value of the PHP.ini setting "max_input_vars" must be increased to %value% in order to be able to submit the product form.',
-                    'Admin.Global.Error',
+                    'Admin.Notifications.Error',
                     array('%value%' => $combinationsInputs)
                 ));
             }
