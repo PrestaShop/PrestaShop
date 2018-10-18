@@ -442,6 +442,30 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     }
 
     /**
+     * Get minimal product quantity or minimal product combination quantity.
+     *
+     * @deprecated This method is deprecated since 1.7.5 and will be dropped in 1.8.0, please use getProductMinimalQuantity instead.
+     * @param $product
+     *
+     * @return int
+     */
+    protected function getMinimalProductOrDeclinationQuantity($product)
+    {
+        @trigger_error('This method is deprecated since 1.7.5 and will be dropped in 1.8.0, please use getProductMinimalQuantity instead.', E_USER_DEPRECATED);
+        $productAttributeId = $product['id_product_attribute'];
+        $minimalProductQuantity = 1;
+        if ($this->combinations) {
+            $minimalCombinationProductQuantity = (int) ($this->combinations[$productAttributeId]['minimal_quantity']);
+            if ($minimalCombinationProductQuantity) { // Ensure the minimal product combination quantity is not 0;
+                $minimalProductQuantity = $minimalCombinationProductQuantity;
+            }
+        } elseif (array_key_exists('minimal_quantity', $product)) {
+            $minimalProductQuantity = $product['minimal_quantity'];
+        }
+        return $minimalProductQuantity;
+    }
+
+    /**
      * Assign price and tax to the template.
      */
     protected function assignPriceAndTax()
