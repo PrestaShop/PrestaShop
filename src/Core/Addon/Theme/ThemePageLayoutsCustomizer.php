@@ -26,6 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Addon\Theme;
 
+use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerInterface;
+
 /**
  * Class PagesLayoutCustomizer customizes pages layout for shop's Front Office theme.
  */
@@ -42,13 +44,20 @@ final class ThemePageLayoutsCustomizer implements ThemePageLayoutsCustomizerInte
     private $themeManager;
 
     /**
+     * @var CacheClearerInterface
+     */
+    private $smartyCacheClearer;
+
+    /**
      * @param Theme $theme
      * @param ThemeManager $themeManager
+     * @param CacheClearerInterface $smartyCacheClearer
      */
-    public function __construct(Theme $theme, ThemeManager $themeManager)
+    public function __construct(Theme $theme, ThemeManager $themeManager, CacheClearerInterface $smartyCacheClearer)
     {
         $this->theme = $theme;
         $this->themeManager = $themeManager;
+        $this->smartyCacheClearer = $smartyCacheClearer;
     }
 
     /**
@@ -58,5 +67,7 @@ final class ThemePageLayoutsCustomizer implements ThemePageLayoutsCustomizerInte
     {
         $this->theme->setPageLayouts($pageLayouts);
         $this->themeManager->saveTheme($this->theme);
+
+        $this->smartyCacheClearer->clear();
     }
 }

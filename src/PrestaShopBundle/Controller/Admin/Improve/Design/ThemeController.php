@@ -74,8 +74,6 @@ class ThemeController extends AbstractAdminController
             $themePageLayoutsCustomizer = $this->get('prestashop.core.addon.theme.theme.page_layouts_customizer');
             $themePageLayoutsCustomizer->customize($pageLayoutCustomizationForm->getData()['layouts']);
 
-            \Tools::clearCache();
-
             $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
 
             return $this->redirectToRoute('admin_theme_customize_page_layouts');

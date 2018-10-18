@@ -45,3 +45,4 @@ services:
         arguments:
            - '@=service("prestashop.adapter.legacy.context").getContext().shop.theme'
            - '@prestashop.core.addon.theme.theme_manager'
+           - '@prestashop.adapter.cache.clearer.smarty_cache_clearer'
