@@ -52,10 +52,12 @@ class CategoriesProvider
     public static $categories;
     public static $categoriesFromApi;
 
-    public function __construct(ApiClient $apiClient, LoggerInterface $logger)
+    public function __construct(ApiClient $apiClient, LoggerInterface $logger, array $addonsCategories)
     {
         $this->apiClient = $apiClient;
         $this->logger = $logger;
+        var_dump($addonsCategories);
+        die();
     }
 
     /**

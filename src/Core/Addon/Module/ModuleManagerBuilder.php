@@ -183,8 +183,13 @@ class ModuleManagerBuilder
 
         self::$cacheProvider = new FilesystemCache(self::$addonsDataProvider->cacheDir . '/doctrine');
 
+        var_dump($config['prestashop']['addons']['categories']);
+        die();
         self::$legacyLogger = new LegacyLogger();
-        self::$categoriesProvider = new CategoriesProvider($marketPlaceClient, self::$legacyLogger);
+        self::$categoriesProvider = new CategoriesProvider(
+            $marketPlaceClient,
+            self::$legacyLogger
+        );
         self::$lecacyContext = new LegacyContext();
 
         if (is_null(self::$adminModuleDataProvider)) {
