@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryE
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Query\GetCmsPageCategoriesForBreadcrumb;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\QueryHandler\GetCmsPageCategoriesForBreadcrumbHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategory;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategoryId;
 use PrestaShopException;
 
 /**
@@ -90,7 +91,10 @@ final class GetCmsPageCategoriesForBreadcrumbHandler implements GetCmsPageCatego
 
         if (CmsPageRootCategorySettings::ROOT_CMS_PAGE_CATEGORY_ID === $query->getCurrentCategoryId()->getValue()) {
             return new CmsPageCategoriesBreadcrumbTree([
-                new CmsPageCategory($rootCategoryData['id_cms_category'], $rootCategoryData['name']),
+                new CmsPageCategory(
+                    new CmsPageCategoryId($rootCategoryData['id_cms_category']),
+                    $rootCategoryData['name']
+                ),
             ]);
         }
 
@@ -100,7 +104,10 @@ final class GetCmsPageCategoriesForBreadcrumbHandler implements GetCmsPageCatego
 
         $categories = [];
         foreach ($parentCategories as $category) {
-            $categories[] = new CmsPageCategory($category['id_cms_category'], $category['name']);
+            $categories[] = new CmsPageCategory(
+                new CmsPageCategoryId($category['id_cms_category']),
+                $category['name']
+            );
         }
 
         return new CmsPageCategoriesBreadcrumbTree($categories);
