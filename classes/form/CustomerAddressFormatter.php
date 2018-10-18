@@ -67,22 +67,22 @@ class CustomerAddressFormatterCore implements FormFormatterInterface
 
         $format = [
             'id_address' => (new FormField())
-                ->setName('id_address')
-                ->setType('hidden'),
+            ->setName('id_address')
+            ->setType('hidden'),
             'id_customer' => (new FormField())
-                ->setName('id_customer')
-                ->setType('hidden'),
+            ->setName('id_customer')
+            ->setType('hidden'),
             'back' => (new FormField())
-                ->setName('back')
-                ->setType('hidden'),
+            ->setName('back')
+            ->setType('hidden'),
             'token' => (new FormField())
-                ->setName('token')
-                ->setType('hidden'),
+            ->setName('token')
+            ->setType('hidden'),
             'alias' => (new FormField())
-                ->setName('alias')
-                ->setLabel(
-                    $this->getFieldLabel('alias')
-                ),
+            ->setName('alias')
+            ->setLabel(
+            $this->getFieldLabel('alias')
+        ),
         ];
 
         foreach ($fields as $field) {
@@ -153,9 +153,9 @@ class CustomerAddressFormatterCore implements FormFormatterInterface
         }
 
         return $this->addConstraints(
-                $this->addMaxLength(
-                    $format
-                )
+            $this->addMaxLength(
+            $format
+        )
         );
     }
 
