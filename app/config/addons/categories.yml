@@ -1,783 +1,590 @@
 ---
-parameters:
-  addons_categories:
-    '79':
-      id_category: 79
-      name: Natif
-      link: "/en/79-natif"
-      parent_link: "/en/2-modules-prestashop"
-      id_parent: 2
-      categories: []
-      tab: native
-    '440':
-      id_category: 440
-      name: Administration
-      link: "/en/440-administration"
-      parent_link: "/en/2-prestashop-modules"
-      id_parent: 2
-      categories:
-      - id_category: '435'
-        name: Legal
-        id_parent: '440'
-        link_rewrite: legal
-        link: "/en/435-legal"
+prestashop:
+  addons:
+    categories:
+      '440':
+        id_category: 440
+        order: 10
+        name: Administration
+        link: "/en/440-administration"
+        parent_link: "/en/2-prestashop-modules"
+        id_parent: 2
+        categories:
+        - id_category: '435'
+          name: Legal
+          id_parent: '440'
+          link_rewrite: legal
+          link: "/en/435-legal"
+          tab: administration
+        - id_category: '527'
+          name: Registration & Ordering Process
+          id_parent: '440'
+          link_rewrite: registration-ordering-process
+          link: "/en/527-registration-ordering-process"
+          tab: checkout
+        - id_category: '437'
+          name: Notifications & Automatic Emails
+          id_parent: '440'
+          link_rewrite: emails-notifications
+          link: "/en/437-emails-notifications"
+          tab: emailing
+        - id_category: '448'
+          name: Price Management
+          id_parent: '440'
+          link_rewrite: price-management
+          link: "/en/448-price-management"
+          tab: administration
+        - id_category: '441'
+          name: Order Management
+          id_parent: '440'
+          link_rewrite: order-management
+          link: "/en/441-order-management"
+          tab: administration
+        - id_category: '446'
+          name: Accounting & Invoicing
+          id_parent: '440'
+          link_rewrite: accounting-invoicing
+          link: "/en/446-accounting-invoicing"
+          tab: billing_invoicing
+        - id_category: '433'
+          name: Fast & Mass Update
+          id_parent: '440'
+          link_rewrite: fast-mass-updates
+          link: "/en/433-fast-mass-updates"
+          tab: quick_bulk_update
+        - id_category: '451'
+          name: Data Import & Export
+          id_parent: '440'
+          link_rewrite: data-import-export
+          link: "/en/451-data-import-export"
+          tab: export
+        - id_category: '452'
+          name: Third-party Data Integration (CRM, ERP...)
+          id_parent: '440'
+          link_rewrite: third-party-data-integrations-crm-erp
+          link: "/en/452-third-party-data-integrations-crm-erp"
+          tab: export
+        - id_category: '453'
+          name: Analytics & Statistics
+          id_parent: '440'
+          link_rewrite: analytics-statistics
+          link: "/en/453-analytics-statistics"
+          tab: analytics_stats
+        - id_category: '209'
+          name: Dashboards
+          id_parent: '440'
+          link_rewrite: dashboards
+          link: "/en/209-dashboards"
+          tab: administration
+        - id_category: '432'
+          name: Website Performance
+          id_parent: '440'
+          link_rewrite: website-performance
+          link: "/en/432-website-performance"
+          tab: administration
+        - id_category: '436'
+          name: International & Localization
+          id_parent: '440'
+          link_rewrite: international-localization
+          link: "/en/436-international-localization"
+          tab: i18n_localization
+        - id_category: '431'
+          name: Data migration & Backup
+          id_parent: '440'
+          link_rewrite: data-migration-backup
+          link: "/en/431-data-migration-backup"
+          tab: migration_tools
+        - id_category: '543'
+          name: Administrative Tools
+          id_parent: '440'
+          link_rewrite: administrative-tools
+          link: "/en/543-administrative-tools"
+          tab: administration
+        - id_category: '429'
+          name: Security & Access
+          id_parent: '440'
+          link_rewrite: website-security-access
+          link: "/en/429-website-security-access"
+          tab: administration
         tab: administration
-      - id_category: '527'
-        name: Registration & Ordering Process
-        id_parent: '440'
-        link_rewrite: registration-ordering-process
-        link: "/en/527-registration-ordering-process"
+      '455':
+        id_category: 455
+        order: 90
+        name: Facebook & Social Networks
+        link: "/en/455-facebook-social-networks"
+        parent_link: "/en/2-prestashop-modules"
+        id_parent: 2
+        categories:
+        - id_category: '456'
+          name: Share Buttons & Comments
+          id_parent: '455'
+          link_rewrite: share-buttons-comments
+          link: "/en/456-share-buttons-comments"
+          tab: social_networks
+        - id_category: '457'
+          name: Social Login & Connect
+          id_parent: '455'
+          link_rewrite: social-login-connect
+          link: "/en/457-social-login-connect"
+          tab: social_networks
+        - id_category: '458'
+          name: Social Rewards & Coupons
+          id_parent: '455'
+          link_rewrite: social-rewards-coupons
+          link: "/en/458-social-rewards-coupons"
+          tab: social_networks
+        - id_category: '459'
+          name: Products on Facebook & Social Networks
+          id_parent: '455'
+          link_rewrite: products-on-facebook-social-networks
+          link: "/en/459-products-on-facebook-social-networks"
+          tab: social_networks
+        - id_category: '539'
+          name: Social Widgets
+          id_parent: '455'
+          link_rewrite: social-widgets
+          link: "/en/539-social-widgets"
+          tab: social_networks
+        tab: advertising_marketing
+      '460':
+        id_category: 460
+        order: 40
+        name: Product Page
+        link: "/en/460-product-page"
+        parent_link: "/en/2-prestashop-modules"
+        id_parent: 2
+        categories:
+        - id_category: '462'
+          name: Visual Products
+          id_parent: '460'
+          link_rewrite: visual-products
+          link: "/en/462-visual-products"
+          tab: front_office_features
+        - id_category: '463'
+          name: Videos & Music
+          id_parent: '460'
+          link_rewrite: videos-music
+          link: "/en/463-videos-music"
+          tab: front_office_features
+        - id_category: '467'
+          name: Combinations & Product Customization
+          id_parent: '460'
+          link_rewrite: combinaisons-customization
+          link: "/en/467-combinaisons-customization"
+          tab: front_office_features
+        - id_category: '465'
+          name: Badges & Logos
+          id_parent: '460'
+          link_rewrite: labels-logos
+          link: "/en/465-labels-logos"
+          tab: front_office_features
+        - id_category: '466'
+          name: Sizes & Units
+          id_parent: '460'
+          link_rewrite: sizes-units
+          link: "/en/466-sizes-units"
+          tab: front_office_features
+        - id_category: '545'
+          name: Additional Information & Product Tab
+          id_parent: '460'
+          link_rewrite: additional-information-product-tab
+          link: "/en/545-additional-information-product-tab"
+          tab: front_office_features
+        tab: administration
+      '469':
+        id_category: 469
+        order: 100
+        name: Specialized Platforms
+        link: "/en/469-specialized-platforms"
+        parent_link: "/en/2-prestashop-modules"
+        id_parent: 2
+        categories:
+        - id_category: '434'
+          name: B2B
+          id_parent: '469'
+          link_rewrite: b2b
+          link: "/en/434-b2b"
+          tab: administration
+        - id_category: '443'
+          name: Dropshipping
+          id_parent: '469'
+          link_rewrite: dropshipping
+          link: "/en/443-dropshipping"
+          tab: shipping_logistics
+        - id_category: '474'
+          name: Virtual Products
+          id_parent: '469'
+          link_rewrite: virtual-products
+          link: "/en/474-virtual-products"
+          tab: administration
+        - id_category: '529'
+          name: Subscription Products (box)
+          id_parent: '469'
+          link_rewrite: subscription-products
+          link: "/en/529-subscription-products"
+          tab: pricing_promotion
+        - id_category: '472'
+          name: Marketplace Creation
+          id_parent: '469'
+          link_rewrite: marketplace-creation
+          link: "/en/472-marketplace-creation"
+          tab: administration
+        - id_category: '473'
+          name: Reservation & Rental System
+          id_parent: '469'
+          link_rewrite: reservation-rental-system
+          link: "/en/473-reservation-rental-system"
+          tab: administration
+        - id_category: '470'
+          name: Auction Site
+          id_parent: '469'
+          link_rewrite: build-auction-site
+          link: "/en/470-build-auction-site"
+          tab: pricing_promotion
+        - id_category: '623'
+          name: Food & Restaurants
+          id_parent: '469'
+          link_rewrite: food-restaurants
+          link: "/en/623-food-restaurants"
+        tab: others
+      '475':
+        id_category: 475
+        order: 80
+        name: Customers
+        link: "/en/475-customers"
+        parent_link: "/en/2-prestashop-modules"
+        id_parent: 2
+        categories:
+        - id_category: '480'
+          name: Customer Reviews
+          id_parent: '475'
+          link_rewrite: customer-reviews
+          link: "/en/480-customer-reviews"
+          tab: front_office_features
+        - id_category: '537'
+          name: Customer Administration
+          id_parent: '475'
+          link_rewrite: customer-administration
+          link: "/en/537-customer-administration"
+          tab: administration
+        - id_category: '438'
+          name: Quotes
+          id_parent: '475'
+          link_rewrite: quotes
+          link: "/en/438-quotes"
+          tab: front_office_features
+        - id_category: '442'
+          name: Customer Service
+          id_parent: '475'
+          link_rewrite: customer-service
+          link: "/en/442-customer-service"
+          tab: administration
+        - id_category: '476'
+          name: Contact Forms & Surveys
+          id_parent: '475'
+          link_rewrite: contact-forms-surveys
+          link: "/en/476-contact-forms-surveys"
+          tab: front_office_features
+        - id_category: '479'
+          name: FAQ (Frequently Asked Questions)
+          id_parent: '475'
+          link_rewrite: faq-frequently-asked-questions
+          link: "/en/479-faq-frequently-asked-questions"
+          tab: front_office_features
+        - id_category: '477'
+          name: Support & Online Chat
+          id_parent: '475'
+          link_rewrite: support-online-chat
+          link: "/en/477-support-online-chat"
+          tab: front_office_features
+        tab: administration
+      '481':
+        id_category: 481
+        order: 70
+        name: Payment
+        link: "/en/481-payment"
+        parent_link: "/en/2-prestashop-modules"
+        id_parent: 2
+        categories:
+        - id_category: '482'
+          name: Payment by Card or Wallet
+          id_parent: '481'
+          link_rewrite: payment-card-wallet
+          link: "/en/482-payment-card-wallet"
+          tab: payments_gateways
+        - id_category: '534'
+          name: Bank Transfer Payment
+          id_parent: '481'
+          link_rewrite: bank-transfer-payment
+          link: "/en/534-bank-transfer-payment"
+          tab: payments_gateways
+        - id_category: '483'
+          name: Payment by Invoice
+          id_parent: '481'
+          link_rewrite: payment-invoice
+          link: "/en/483-payment-invoice"
+          tab: payments_gateways
+        - id_category: '486'
+          name: Prepayment
+          id_parent: '481'
+          link_rewrite: prepayment
+          link: "/en/486-prepayment"
+          tab: payments_gateways
+        - id_category: '485'
+          name: Cash On Delivery (COD)
+          id_parent: '481'
+          link_rewrite: cash-on-delivery-cod
+          link: "/en/485-cash-on-delivery-cod"
+          tab: payments_gateways
+        - id_category: '484'
+          name: Payment in Physical Stores
+          id_parent: '481'
+          link_rewrite: payment-physical-stores
+          link: "/en/484-payment-physical-stores"
+          tab: payments_gateways
+        - id_category: '487'
+          name: Point of Sale (POS)
+          id_parent: '481'
+          link_rewrite: point-of-sale-pos
+          link: "/en/487-point-of-sale-pos"
+          tab: payments_gateways
+        - id_category: '530'
+          name: Other Payment Methods
+          id_parent: '481'
+          link_rewrite: other-payment-methods
+          link: "/en/530-other-payment-methods"
+          tab: payments_gateways
+        - id_category: '627'
+          name: Recurring payment (subscription)
+          id_parent: '481'
+          link_rewrite: recurring-payment-subscription
+          link: "/en/627-recurring-payment-subscription"
+        tab: payments_gateways
+      '488':
+        id_category: 488
+        order: 50
+        name: Traffic & Marketplaces
+        link: "/en/488-traffic-marketplaces"
+        parent_link: "/en/2-prestashop-modules"
+        id_parent: 2
+        categories:
+        - id_category: '489'
+          name: Marketplaces
+          id_parent: '488'
+          link_rewrite: marketplaces
+          link: "/en/489-marketplaces"
+          tab: market_place
+        - id_category: '490'
+          name: Price Comparison
+          id_parent: '488'
+          link_rewrite: price-comparison
+          link: "/en/490-price-comparison"
+          tab: smart_shopping
+        - id_category: '491'
+          name: SEO
+          id_parent: '488'
+          link_rewrite: seo-natural-search-engine-optimization
+          link: "/en/491-seo-natural-search-engine-optimization"
+          tab: seo
+        - id_category: '531'
+          name: URL & Redirects
+          id_parent: '488'
+          link_rewrite: url-redirects
+          link: "/en/531-url-redirects"
+          tab: seo
+        - id_category: '495'
+          name: Blog, Forum & News
+          id_parent: '488'
+          link_rewrite: blog-forum-new
+          link: "/en/495-blog-forum-new"
+          tab: content_management
+        - id_category: '493'
+          name: SEA SEM (paid advertising) & Affiliation Platforms
+          id_parent: '488'
+          link_rewrite: sea-paid-advertising-affiliation-platforms
+          link: "/en/493-sea-paid-advertising-affiliation-platforms"
+          tab: advertising_marketing
         tab: checkout
-      - id_category: '437'
-        name: Notifications & Automatic Emails
-        id_parent: '440'
-        link_rewrite: emails-notifications
-        link: "/en/437-emails-notifications"
-        tab: emailing
-      - id_category: '448'
-        name: Price Management
-        id_parent: '440'
-        link_rewrite: price-management
-        link: "/en/448-price-management"
-        tab: administration
-      - id_category: '441'
-        name: Order Management
-        id_parent: '440'
-        link_rewrite: order-management
-        link: "/en/441-order-management"
-        tab: administration
-      - id_category: '446'
-        name: Accounting & Invoicing
-        id_parent: '440'
-        link_rewrite: accounting-invoicing
-        link: "/en/446-accounting-invoicing"
-        tab: billing_invoicing
-      - id_category: '433'
-        name: Fast & Mass Update
-        id_parent: '440'
-        link_rewrite: fast-mass-updates
-        link: "/en/433-fast-mass-updates"
-        tab: quick_bulk_update
-      - id_category: '451'
-        name: Data Import & Export
-        id_parent: '440'
-        link_rewrite: data-import-export
-        link: "/en/451-data-import-export"
-        tab: export
-      - id_category: '452'
-        name: Third-party Data Integration (CRM, ERP...)
-        id_parent: '440'
-        link_rewrite: third-party-data-integrations-crm-erp
-        link: "/en/452-third-party-data-integrations-crm-erp"
-        tab: export
-      - id_category: '453'
-        name: Analytics & Statistics
-        id_parent: '440'
-        link_rewrite: analytics-statistics
-        link: "/en/453-analytics-statistics"
-        tab: analytics_stats
-      - id_category: '209'
-        name: Dashboards
-        id_parent: '440'
-        link_rewrite: dashboards
-        link: "/en/209-dashboards"
-        tab: administration
-      - id_category: '432'
-        name: Website Performance
-        id_parent: '440'
-        link_rewrite: website-performance
-        link: "/en/432-website-performance"
-        tab: administration
-      - id_category: '436'
-        name: International & Localization
-        id_parent: '440'
-        link_rewrite: international-localization
-        link: "/en/436-international-localization"
-        tab: i18n_localization
-      - id_category: '431'
-        name: Data migration & Backup
-        id_parent: '440'
-        link_rewrite: data-migration-backup
-        link: "/en/431-data-migration-backup"
-        tab: migration_tools
-      - id_category: '543'
-        name: Administrative Tools
-        id_parent: '440'
-        link_rewrite: administrative-tools
-        link: "/en/543-administrative-tools"
-        tab: administration
-      - id_category: '429'
-        name: Security & Access
-        id_parent: '440'
-        link_rewrite: website-security-access
-        link: "/en/429-website-security-access"
-        tab: administration
-      tab: administration
-    '455':
-      id_category: 455
-      name: Facebook & Social Networks
-      link: "/en/455-facebook-social-networks"
-      parent_link: "/en/2-prestashop-modules"
-      id_parent: 2
-      categories:
-      - id_category: '456'
-        name: Share Buttons & Comments
-        id_parent: '455'
-        link_rewrite: share-buttons-comments
-        link: "/en/456-share-buttons-comments"
-        tab: social_networks
-      - id_category: '457'
-        name: Social Login & Connect
-        id_parent: '455'
-        link_rewrite: social-login-connect
-        link: "/en/457-social-login-connect"
-        tab: social_networks
-      - id_category: '458'
-        name: Social Rewards & Coupons
-        id_parent: '455'
-        link_rewrite: social-rewards-coupons
-        link: "/en/458-social-rewards-coupons"
-        tab: social_networks
-      - id_category: '459'
-        name: Products on Facebook & Social Networks
-        id_parent: '455'
-        link_rewrite: products-on-facebook-social-networks
-        link: "/en/459-products-on-facebook-social-networks"
-        tab: social_networks
-      - id_category: '539'
-        name: Social Widgets
-        id_parent: '455'
-        link_rewrite: social-widgets
-        link: "/en/539-social-widgets"
-        tab: social_networks
-      tab: advertising_marketing
-    '460':
-      id_category: 460
-      name: Product Page
-      link: "/en/460-product-page"
-      parent_link: "/en/2-prestashop-modules"
-      id_parent: 2
-      categories:
-      - id_category: '462'
-        name: Visual Products
-        id_parent: '460'
-        link_rewrite: visual-products
-        link: "/en/462-visual-products"
-        tab: front_office_features
-      - id_category: '463'
-        name: Videos & Music
-        id_parent: '460'
-        link_rewrite: videos-music
-        link: "/en/463-videos-music"
-        tab: front_office_features
-      - id_category: '467'
-        name: Combinations & Product Customization
-        id_parent: '460'
-        link_rewrite: combinaisons-customization
-        link: "/en/467-combinaisons-customization"
-        tab: front_office_features
-      - id_category: '465'
-        name: Badges & Logos
-        id_parent: '460'
-        link_rewrite: labels-logos
-        link: "/en/465-labels-logos"
-        tab: front_office_features
-      - id_category: '466'
-        name: Sizes & Units
-        id_parent: '460'
-        link_rewrite: sizes-units
-        link: "/en/466-sizes-units"
-        tab: front_office_features
-      - id_category: '545'
-        name: Additional Information & Product Tab
-        id_parent: '460'
-        link_rewrite: additional-information-product-tab
-        link: "/en/545-additional-information-product-tab"
-        tab: front_office_features
-      tab: administration
-    '469':
-      id_category: 469
-      name: Specialized Platforms
-      link: "/en/469-specialized-platforms"
-      parent_link: "/en/2-prestashop-modules"
-      id_parent: 2
-      categories:
-      - id_category: '434'
-        name: B2B
-        id_parent: '469'
-        link_rewrite: b2b
-        link: "/en/434-b2b"
-        tab: administration
-      - id_category: '443'
-        name: Dropshipping
-        id_parent: '469'
-        link_rewrite: dropshipping
-        link: "/en/443-dropshipping"
-        tab: shipping_logistics
-      - id_category: '474'
-        name: Virtual Products
-        id_parent: '469'
-        link_rewrite: virtual-products
-        link: "/en/474-virtual-products"
-        tab: administration
-      - id_category: '529'
-        name: Subscription Products (box)
-        id_parent: '469'
-        link_rewrite: subscription-products
-        link: "/en/529-subscription-products"
+      '496':
+        id_category: 496
+        order: 30
+        name: Promotions & Marketing
+        link: "/en/496-promotions-marketing"
+        parent_link: "/en/2-prestashop-modules"
+        id_parent: 2
+        categories:
+        - id_category: '500'
+          name: Newsletter & SMS
+          id_parent: '496'
+          link_rewrite: newsletter-sms
+          link: "/en/500-newsletter-sms"
+          tab: emailing
+        - id_category: '497'
+          name: Promotions & Gifts
+          id_parent: '496'
+          link_rewrite: promotions-gifts
+          link: "/en/497-promotions-gifts"
+          tab: pricing_promotion
+        - id_category: '503'
+          name: Referral & Loyalty Programs
+          id_parent: '496'
+          link_rewrite: referral-loyalty-programs
+          link: "/en/503-referral-loyalty-programs"
+          tab: advertising_marketing
+        - id_category: '499'
+          name: Flash & Private Sales
+          id_parent: '496'
+          link_rewrite: private-sales-flash-sales
+          link: "/en/499-private-sales-flash-sales"
+          tab: pricing_promotion
+        - id_category: '501'
+          name: Remarketing & Shopping Cart Abandonment
+          id_parent: '496'
+          link_rewrite: remarketing-shopping-cart-abandonment
+          link: "/en/501-remarketing-shopping-cart-abandonment"
+          tab: advertising_marketing
+        - id_category: '505'
+          name: Cross-selling & Product Bundles
+          id_parent: '496'
+          link_rewrite: cross-selling-product-bundles
+          link: "/en/505-cross-selling-product-bundles"
+          tab: merchandizing
+        - id_category: '502'
+          name: Pop-up
+          id_parent: '496'
+          link_rewrite: pop-up
+          link: "/en/502-pop-up"
+          tab: front_office_features
+        - id_category: '533'
+          name: Contests
+          id_parent: '496'
+          link_rewrite: contests
+          link: "/en/533-contests"
+          tab: advertising_marketing
+        - id_category: '504'
+          name: 'Wishlist & Gift Card '
+          id_parent: '496'
+          link_rewrite: wishlist-gift-card
+          link: "/en/504-wishlist-gift-card"
+          tab: front_office_features
         tab: pricing_promotion
-      - id_category: '472'
-        name: Marketplace Creation
-        id_parent: '469'
-        link_rewrite: marketplace-creation
-        link: "/en/472-marketplace-creation"
-        tab: administration
-      - id_category: '473'
-        name: Reservation & Rental System
-        id_parent: '469'
-        link_rewrite: reservation-rental-system
-        link: "/en/473-reservation-rental-system"
-        tab: administration
-      - id_category: '470'
-        name: Auction Site
-        id_parent: '469'
-        link_rewrite: build-auction-site
-        link: "/en/470-build-auction-site"
-        tab: pricing_promotion
-      - id_category: '623'
-        name: Food & Restaurants
-        id_parent: '469'
-        link_rewrite: food-restaurants
-        link: "/en/623-food-restaurants"
-      tab: others
-    '475':
-      id_category: 475
-      name: Customers
-      link: "/en/475-customers"
-      parent_link: "/en/2-prestashop-modules"
-      id_parent: 2
-      categories:
-      - id_category: '480'
-        name: Customer Reviews
-        id_parent: '475'
-        link_rewrite: customer-reviews
-        link: "/en/480-customer-reviews"
+      '507':
+        id_category: 507
+        order: 20
+        name: Design & Navigation
+        link: "/en/507-design-navigation"
+        parent_link: "/en/2-prestashop-modules"
+        id_parent: 2
+        categories:
+        - id_category: '513'
+          name: Menu
+          id_parent: '507'
+          link_rewrite: menu
+          link: "/en/513-menu"
+          tab: front_office_features
+        - id_category: '517'
+          name: Blocks, Tabs & Banners
+          id_parent: '507'
+          link_rewrite: blocks-tabs-banners
+          link: "/en/517-blocks-tabs-banners"
+          tab: front_office_features
+        - id_category: '461'
+          name: Sliders & Galleries
+          id_parent: '507'
+          link_rewrite: sliders-galleries
+          link: "/en/461-sliders-galleries"
+          tab: slideshows
+        - id_category: '510'
+          name: Search & Filters
+          id_parent: '507'
+          link_rewrite: search-filters
+          link: "/en/510-search-filters"
+          tab: search_filter
+        - id_category: '516'
+          name: Page Customization
+          id_parent: '507'
+          link_rewrite: page-customization
+          link: "/en/516-page-customization"
+          tab: front_office_features
+        - id_category: '511'
+          name: Navigation Tools
+          id_parent: '507'
+          link_rewrite: navigation-tools
+          link: "/en/511-navigation-tools"
+          tab: front_office_features
+        - id_category: '538'
+          name: Products on Homepage
+          id_parent: '507'
+          link_rewrite: products-homepage
+          link: "/en/538-products-homepage"
+          tab: front_office_features
+        - id_category: '512'
+          name: Brands & Manufacturers
+          id_parent: '507'
+          link_rewrite: brands-manufacturers
+          link: "/en/512-brands-manufacturers"
+          tab: front_office_features
+        - id_category: '509'
+          name: Express Checkout Process
+          id_parent: '507'
+          link_rewrite: express-checkout-process
+          link: "/en/509-express-checkout-process"
+          tab: checkout
+        - id_category: '508'
+          name: Mobile
+          id_parent: '507'
+          link_rewrite: mobile
+          link: "/en/508-mobile"
+          tab: mobile
         tab: front_office_features
-      - id_category: '537'
-        name: Customer Administration
-        id_parent: '475'
-        link_rewrite: customer-administration
-        link: "/en/537-customer-administration"
-        tab: administration
-      - id_category: '438'
-        name: Quotes
-        id_parent: '475'
-        link_rewrite: quotes
-        link: "/en/438-quotes"
-        tab: front_office_features
-      - id_category: '442'
-        name: Customer Service
-        id_parent: '475'
-        link_rewrite: customer-service
-        link: "/en/442-customer-service"
-        tab: administration
-      - id_category: '476'
-        name: Contact Forms & Surveys
-        id_parent: '475'
-        link_rewrite: contact-forms-surveys
-        link: "/en/476-contact-forms-surveys"
-        tab: front_office_features
-      - id_category: '479'
-        name: FAQ (Frequently Asked Questions)
-        id_parent: '475'
-        link_rewrite: faq-frequently-asked-questions
-        link: "/en/479-faq-frequently-asked-questions"
-        tab: front_office_features
-      - id_category: '477'
-        name: Support & Online Chat
-        id_parent: '475'
-        link_rewrite: support-online-chat
-        link: "/en/477-support-online-chat"
-        tab: front_office_features
-      tab: administration
-    '481':
-      id_category: 481
-      name: Payment
-      link: "/en/481-payment"
-      parent_link: "/en/2-prestashop-modules"
-      id_parent: 2
-      categories:
-      - id_category: '482'
-        name: Payment by Card or Wallet
-        id_parent: '481'
-        link_rewrite: payment-card-wallet
-        link: "/en/482-payment-card-wallet"
-        tab: payments_gateways
-      - id_category: '534'
-        name: Bank Transfer Payment
-        id_parent: '481'
-        link_rewrite: bank-transfer-payment
-        link: "/en/534-bank-transfer-payment"
-        tab: payments_gateways
-      - id_category: '483'
-        name: Payment by Invoice
-        id_parent: '481'
-        link_rewrite: payment-invoice
-        link: "/en/483-payment-invoice"
-        tab: payments_gateways
-      - id_category: '486'
-        name: Prepayment
-        id_parent: '481'
-        link_rewrite: prepayment
-        link: "/en/486-prepayment"
-        tab: payments_gateways
-      - id_category: '485'
-        name: Cash On Delivery (COD)
-        id_parent: '481'
-        link_rewrite: cash-on-delivery-cod
-        link: "/en/485-cash-on-delivery-cod"
-        tab: payments_gateways
-      - id_category: '484'
-        name: Payment in Physical Stores
-        id_parent: '481'
-        link_rewrite: payment-physical-stores
-        link: "/en/484-payment-physical-stores"
-        tab: payments_gateways
-      - id_category: '487'
-        name: Point of Sale (POS)
-        id_parent: '481'
-        link_rewrite: point-of-sale-pos
-        link: "/en/487-point-of-sale-pos"
-        tab: payments_gateways
-      - id_category: '530'
-        name: Other Payment Methods
-        id_parent: '481'
-        link_rewrite: other-payment-methods
-        link: "/en/530-other-payment-methods"
-        tab: payments_gateways
-      - id_category: '627'
-        name: Recurring payment (subscription)
-        id_parent: '481'
-        link_rewrite: recurring-payment-subscription
-        link: "/en/627-recurring-payment-subscription"
-      tab: payments_gateways
-    '488':
-      id_category: 488
-      name: Traffic & Marketplaces
-      link: "/en/488-traffic-marketplaces"
-      parent_link: "/en/2-prestashop-modules"
-      id_parent: 2
-      categories:
-      - id_category: '489'
-        name: Marketplaces
-        id_parent: '488'
-        link_rewrite: marketplaces
-        link: "/en/489-marketplaces"
-        tab: market_place
-      - id_category: '490'
-        name: Price Comparison
-        id_parent: '488'
-        link_rewrite: price-comparison
-        link: "/en/490-price-comparison"
-        tab: smart_shopping
-      - id_category: '491'
-        name: SEO
-        id_parent: '488'
-        link_rewrite: seo-natural-search-engine-optimization
-        link: "/en/491-seo-natural-search-engine-optimization"
-        tab: seo
-      - id_category: '531'
-        name: URL & Redirects
-        id_parent: '488'
-        link_rewrite: url-redirects
-        link: "/en/531-url-redirects"
-        tab: seo
-      - id_category: '495'
-        name: Blog, Forum & News
-        id_parent: '488'
-        link_rewrite: blog-forum-new
-        link: "/en/495-blog-forum-new"
-        tab: content_management
-      - id_category: '493'
-        name: SEA SEM (paid advertising) & Affiliation Platforms
-        id_parent: '488'
-        link_rewrite: sea-paid-advertising-affiliation-platforms
-        link: "/en/493-sea-paid-advertising-affiliation-platforms"
-        tab: advertising_marketing
-      tab: checkout
-    '496':
-      id_category: 496
-      name: Promotions & Marketing
-      link: "/en/496-promotions-marketing"
-      parent_link: "/en/2-prestashop-modules"
-      id_parent: 2
-      categories:
-      - id_category: '500'
-        name: Newsletter & SMS
-        id_parent: '496'
-        link_rewrite: newsletter-sms
-        link: "/en/500-newsletter-sms"
-        tab: emailing
-      - id_category: '497'
-        name: Promotions & Gifts
-        id_parent: '496'
-        link_rewrite: promotions-gifts
-        link: "/en/497-promotions-gifts"
-        tab: pricing_promotion
-      - id_category: '503'
-        name: Referral & Loyalty Programs
-        id_parent: '496'
-        link_rewrite: referral-loyalty-programs
-        link: "/en/503-referral-loyalty-programs"
-        tab: advertising_marketing
-      - id_category: '499'
-        name: Flash & Private Sales
-        id_parent: '496'
-        link_rewrite: private-sales-flash-sales
-        link: "/en/499-private-sales-flash-sales"
-        tab: pricing_promotion
-      - id_category: '501'
-        name: Remarketing & Shopping Cart Abandonment
-        id_parent: '496'
-        link_rewrite: remarketing-shopping-cart-abandonment
-        link: "/en/501-remarketing-shopping-cart-abandonment"
-        tab: advertising_marketing
-      - id_category: '505'
-        name: Cross-selling & Product Bundles
-        id_parent: '496'
-        link_rewrite: cross-selling-product-bundles
-        link: "/en/505-cross-selling-product-bundles"
-        tab: merchandizing
-      - id_category: '502'
-        name: Pop-up
-        id_parent: '496'
-        link_rewrite: pop-up
-        link: "/en/502-pop-up"
-        tab: front_office_features
-      - id_category: '533'
-        name: Contests
-        id_parent: '496'
-        link_rewrite: contests
-        link: "/en/533-contests"
-        tab: advertising_marketing
-      - id_category: '504'
-        name: 'Wishlist & Gift Card '
-        id_parent: '496'
-        link_rewrite: wishlist-gift-card
-        link: "/en/504-wishlist-gift-card"
-        tab: front_office_features
-      tab: pricing_promotion
-    '507':
-      id_category: 507
-      name: Design & Navigation
-      link: "/en/507-design-navigation"
-      parent_link: "/en/2-prestashop-modules"
-      id_parent: 2
-      categories:
-      - id_category: '513'
-        name: Menu
-        id_parent: '507'
-        link_rewrite: menu
-        link: "/en/513-menu"
-        tab: front_office_features
-      - id_category: '517'
-        name: Blocks, Tabs & Banners
-        id_parent: '507'
-        link_rewrite: blocks-tabs-banners
-        link: "/en/517-blocks-tabs-banners"
-        tab: front_office_features
-      - id_category: '461'
-        name: Sliders & Galleries
-        id_parent: '507'
-        link_rewrite: sliders-galleries
-        link: "/en/461-sliders-galleries"
-        tab: slideshows
-      - id_category: '510'
-        name: Search & Filters
-        id_parent: '507'
-        link_rewrite: search-filters
-        link: "/en/510-search-filters"
-        tab: search_filter
-      - id_category: '516'
-        name: Page Customization
-        id_parent: '507'
-        link_rewrite: page-customization
-        link: "/en/516-page-customization"
-        tab: front_office_features
-      - id_category: '511'
-        name: Navigation Tools
-        id_parent: '507'
-        link_rewrite: navigation-tools
-        link: "/en/511-navigation-tools"
-        tab: front_office_features
-      - id_category: '538'
-        name: Products on Homepage
-        id_parent: '507'
-        link_rewrite: products-homepage
-        link: "/en/538-products-homepage"
-        tab: front_office_features
-      - id_category: '512'
-        name: Brands & Manufacturers
-        id_parent: '507'
-        link_rewrite: brands-manufacturers
-        link: "/en/512-brands-manufacturers"
-        tab: front_office_features
-      - id_category: '509'
-        name: Express Checkout Process
-        id_parent: '507'
-        link_rewrite: express-checkout-process
-        link: "/en/509-express-checkout-process"
-        tab: checkout
-      - id_category: '508'
-        name: Mobile
-        id_parent: '507'
-        link_rewrite: mobile
-        link: "/en/508-mobile"
-        tab: mobile
-      tab: front_office_features
-    '518':
-      id_category: 518
-      name: Shipping & Logistics
-      link: "/en/518-shipping-logistics"
-      parent_link: "/en/2-prestashop-modules"
-      id_parent: 2
-      categories:
-      - id_category: '444'
-        name: Stock & Supplier Management
-        id_parent: '518'
-        link_rewrite: stock-supplier-management
-        link: "/en/444-stock-supplier-management"
-        tab: administration
-      - id_category: '519'
-        name: Preparation & Shipping
-        id_parent: '518'
-        link_rewrite: preparation-shipping
-        link: "/en/519-preparation-shipping"
+      '518':
+        id_category: 518
+        order: 60
+        name: Shipping & Logistics
+        link: "/en/518-shipping-logistics"
+        parent_link: "/en/2-prestashop-modules"
+        id_parent: 2
+        categories:
+        - id_category: '444'
+          name: Stock & Supplier Management
+          id_parent: '518'
+          link_rewrite: stock-supplier-management
+          link: "/en/444-stock-supplier-management"
+          tab: administration
+        - id_category: '519'
+          name: Preparation & Shipping
+          id_parent: '518'
+          link_rewrite: preparation-shipping
+          link: "/en/519-preparation-shipping"
+          tab: shipping_logistics
+        - id_category: '520'
+          name: Shipping Carriers
+          id_parent: '518'
+          link_rewrite: shipping-carriers
+          link: "/en/520-shipping-carriers"
+          tab: shipping_logistics
+        - id_category: '523'
+          name: Shipping Costs
+          id_parent: '518'
+          link_rewrite: shipping-costs
+          link: "/en/523-shipping-costs"
+          tab: shipping_logistics
+        - id_category: '521'
+          name: Collection Points & In-Store Pick Up
+          id_parent: '518'
+          link_rewrite: collection-points-in-store-pick-up
+          link: "/en/521-collection-points-in-store-pick-up"
+          tab: shipping_logistics
+        - id_category: '522'
+          name: Delivery Date
+          id_parent: '518'
+          link_rewrite: delivery-date
+          link: "/en/522-delivery-date"
+          tab: shipping_logistics
+        - id_category: '524'
+          name: Delivery Tracking
+          id_parent: '518'
+          link_rewrite: delivery-tracking
+          link: "/en/524-delivery-tracking"
+          tab: shipping_logistics
         tab: shipping_logistics
-      - id_category: '520'
-        name: Shipping Carriers
-        id_parent: '518'
-        link_rewrite: shipping-carriers
-        link: "/en/520-shipping-carriers"
-        tab: shipping_logistics
-      - id_category: '523'
-        name: Shipping Costs
-        id_parent: '518'
-        link_rewrite: shipping-costs
-        link: "/en/523-shipping-costs"
-        tab: shipping_logistics
-      - id_category: '521'
-        name: Collection Points & In-Store Pick Up
-        id_parent: '518'
-        link_rewrite: collection-points-in-store-pick-up
-        link: "/en/521-collection-points-in-store-pick-up"
-        tab: shipping_logistics
-      - id_category: '522'
-        name: Delivery Date
-        id_parent: '518'
-        link_rewrite: delivery-date
-        link: "/en/522-delivery-date"
-        tab: shipping_logistics
-      - id_category: '524'
-        name: Delivery Tracking
-        id_parent: '518'
-        link_rewrite: delivery-tracking
-        link: "/en/524-delivery-tracking"
-        tab: shipping_logistics
-      tab: shipping_logistics
-  theme:
-    '43':
-      id_category: 43
-      name: Electronics & Computers
-      link: "/en/43-electronics-computers-themes"
-      parent_link: "/en/3-templates-prestashop"
-      id_parent: 3
-      categories: []
-    '45':
-      id_category: 45
-      name: Art & Culture
-      link: "/en/45-art-culture-themes"
-      parent_link: "/en/3-templates-prestashop"
-      id_parent: 3
-      categories: []
-    '46':
-      id_category: 46
-      name: Health & Beauty
-      link: "/en/46-health-beauty-themes"
-      parent_link: "/en/3-templates-prestashop"
-      id_parent: 3
-      categories: []
-    '47':
-      id_category: 47
-      name: Fashion & Shoes
-      link: "/en/47-fashion-shoes-templates"
-      parent_link: "/en/3-templates-prestashop"
-      id_parent: 3
-      categories: []
-    '48':
-      id_category: 48
-      name: Sports, Activities & Travel
-      link: "/en/48-sports-activities-travel-themes"
-      parent_link: "/en/3-templates-prestashop"
-      id_parent: 3
-      categories: []
-    '50':
-      id_category: 50
-      name: Gifts, Flowers & Celebrations
-      link: "/en/50-gifts-flowers-celebrations-themes"
-      parent_link: "/en/3-templates-prestashop"
-      id_parent: 3
-      categories: []
-    '51':
-      id_category: 51
-      name: Kids & Toys
-      link: "/en/51-kids-toys-themes"
-      parent_link: "/en/3-templates-prestashop"
-      id_parent: 3
-      categories: []
-    '52':
-      id_category: 52
-      name: Food & Restaurant
-      link: "/en/52-food-restaurant-themes"
-      parent_link: "/en/3-templates-prestashop"
-      id_parent: 3
-      categories: []
-    '53':
-      id_category: 53
-      name: Animals & Pets
-      link: "/en/53-animals-pets-themes"
-      parent_link: "/en/3-templates-prestashop"
-      id_parent: 3
-      categories: []
-    '54':
-      id_category: 54
-      name: Automotive & Cars
-      link: "/en/54-automotive-cars-themes"
-      parent_link: "/en/3-templates-prestashop"
-      id_parent: 3
-      categories: []
-    '55':
-      id_category: 55
-      name: Home & Garden
-      link: "/en/55-home-garden-themes"
-      parent_link: "/en/3-templates-prestashop"
-      id_parent: 3
-      categories: []
-    '56':
-      id_category: 56
-      name: Lingerie & Adult
-      link: "/en/56-lingerie-adult-themes"
-      parent_link: "/en/3-templates-prestashop"
-      id_parent: 3
-      categories: []
-    '57':
-      id_category: 57
-      name: Jewelry & Accessories
-      link: "/en/57-jewelry-accessories-themes"
-      parent_link: "/en/3-templates-prestashop"
-      id_parent: 3
-      categories: []
-    '205':
-      id_category: 205
-      name: Premium Templates
-      link: "/en/205-premium-templates"
-      parent_link: "/en/3-templates-prestashop"
-      id_parent: 3
-      categories: []
-    '554':
-      id_category: 554
-      name: Drink & Tobacco
-      link: "/en/554-drink-tobacco-themes"
-      parent_link: "/en/3-templates-prestashop"
-      id_parent: 3
-      categories: []
-  guidance:
-    '373':
-      id_category: 373
-      name: PrestaShop Training
-      link: "/en/373-training"
-      parent_link: "/en/35-services"
-      id_parent: 35
-      categories:
-      - id_category: '592'
-        name: User Training
-        id_parent: '373'
-        link_rewrite: user-training
-        link: "/en/592-user-training"
-      - id_category: '593'
-        name: Technical Training
-        id_parent: '373'
-        link_rewrite: technical-training
-        link: "/en/593-technical-training"
-      - id_category: '594'
-        name: Online User Training
-        id_parent: '373'
-        link_rewrite: online-user-training
-        link: "/en/594-online-user-training"
-      - id_category: '595'
-        name: Online Technical Training
-        id_parent: '373'
-        link_rewrite: online-technical-training
-        link: "/en/595-online-technical-training"
-    '374':
-      id_category: 374
-      name: User Guide
-      link: "/en/374-user-guide"
-      parent_link: "/en/35-services"
-      id_parent: 35
-      categories: []
-    '375':
-      id_category: 375
-      name: e-Commerce Calendar
-      link: "/en/375-e-commerce-calendar"
-      parent_link: "/en/35-services"
-      id_parent: 35
-      categories: []
-    '388':
-      id_category: 388
-      name: PrestaShop Support
-      link: "/en/388-support"
-      parent_link: "/en/35-services"
-      id_parent: 35
-      categories:
-      - id_category: '596'
-        name: Starter Pack
-        id_parent: '388'
-        link_rewrite: starter-pack
-        link: "/en/596-starter-pack"
-      - id_category: '597'
-        name: Support Plans
-        id_parent: '388'
-        link_rewrite: support-plans
-        link: "/en/597-support-plans"
-      - id_category: '598'
-        name: Migration & Upgrade
-        id_parent: '388'
-        link_rewrite: migration-upgrade
-        link: "/en/598-migration-upgrade"
-      - id_category: '599'
-        name: Tickets
-        id_parent: '388'
-        link_rewrite: tickets
-        link: "/en/599-tickets"
-    '417':
-      id_category: 417
-      name: Hosting
-      link: "/en/417-hosting"
-      parent_link: "/en/35-services"
-      id_parent: 35
-      categories: []
-    '421':
-      id_category: 421
-      name: Graphics for Sales
-      link: "/en/421-graphics-for-sales"
-      parent_link: "/en/35-services"
-      id_parent: 35
-      categories: []
-    '546':
-      id_category: 546
-      name: Website audit and optimization
-      link: "/en/546-website-audit-optimization"
-      parent_link: "/en/35-services"
-      id_parent: 35
-      categories: []

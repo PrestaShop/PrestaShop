@@ -135,12 +135,12 @@ class ModuleManagerBuilder
     {
         $phpConfigFile = $this->getConfigDir() . '/config.php';
         if (file_exists($phpConfigFile)
-            && filemtime($phpConfigFile) >= filemtime(_PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'config.yml')) {
+            && filemtime($phpConfigFile) >= filemtime($this->getConfigDir() . DIRECTORY_SEPARATOR . 'config.yml')) {
             $config = require $phpConfigFile;
         } else {
             $config = Yaml::parse(
                 file_get_contents(
-                    _PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'config.yml'
+                    $this->getConfigDir() . DIRECTORY_SEPARATOR . 'config.yml'
                 )
             );
             try {
@@ -151,6 +151,11 @@ class ModuleManagerBuilder
             }
         }
 
+        $prestashopAddonsConfig = Yaml::parse(
+            file_get_contents(
+                $this->getConfigDir() . DIRECTORY_SEPARATOR . 'addons/categories.yml'
+            )
+        );
         $clientConfig = $config['csa_guzzle']['clients']['addons_api']['config'];
 
         self::$translator = Context::getContext()->getTranslator();
@@ -175,7 +180,7 @@ class ModuleManagerBuilder
         self::$moduleZipManager = new ModuleZipManager(new Filesystem(), self::$translator, new NullDispatcher());
         self::$addonsDataProvider = new AddonsDataProvider($marketPlaceClient, self::$moduleZipManager);
 
-        $kernelDir = dirname(__FILE__) . '/../../../../var';
+        $kernelDir = realpath($this->getConfigDir() . '/../../var');
         self::$addonsDataProvider->cacheDir = $kernelDir . '/cache/prod';
         if (_PS_MODE_DEV_) {
             self::$addonsDataProvider->cacheDir = $kernelDir . '/cache/dev';
@@ -183,12 +188,11 @@ class ModuleManagerBuilder
 
         self::$cacheProvider = new FilesystemCache(self::$addonsDataProvider->cacheDir . '/doctrine');
 
-        var_dump($config['prestashop']['addons']['categories']);
-        die();
         self::$legacyLogger = new LegacyLogger();
         self::$categoriesProvider = new CategoriesProvider(
             $marketPlaceClient,
-            self::$legacyLogger
+            self::$legacyLogger,
+            $prestashopAddonsConfig['prestashop']['addons']['categories']
         );
         self::$lecacyContext = new LegacyContext();
 
@@ -212,7 +216,8 @@ class ModuleManagerBuilder
                 self::$adminModuleDataProvider,
                 self::$lecacyContext,
                 self::$legacyLogger,
-                self::$translator);
+                self::$translator
+            );
         }
     }
 
