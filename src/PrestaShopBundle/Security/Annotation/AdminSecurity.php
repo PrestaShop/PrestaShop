@@ -63,6 +63,13 @@ class AdminSecurity extends Security
     protected $url = 'admin_domain';
 
     /**
+     * The route params which are used together to generate the redirect route.
+     *
+     * @var array
+     */
+    protected $routeParams = [];
+
+    /**
      * @return string
      */
     public function getDomain()
@@ -108,5 +115,21 @@ class AdminSecurity extends Security
     public function setUrl($url)
     {
         $this->url = $url;
+    }
+
+    /**
+     * @return array
+     */
+    public function getRouteParams()
+    {
+        return $this->routeParams;
+    }
+
+    /**
+     * @param array $routeParams
+     */
+    public function setRouteParams($routeParams)
+    {
+        $this->routeParams = $routeParams;
     }
 }
