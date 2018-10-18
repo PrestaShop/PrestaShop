@@ -27,8 +27,8 @@
 namespace PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception;
 
 /**
- * Class CannotBulkEnableCmsPageCategoryException
+ * Class CannotDisableCmsPageCategoryException
  */
-class CannotBulkEnableCmsPageCategoryException extends CmsPageCategoryException
+class CannotDisableCmsPageCategoryException extends CmsPageCategoryException
 {
 }

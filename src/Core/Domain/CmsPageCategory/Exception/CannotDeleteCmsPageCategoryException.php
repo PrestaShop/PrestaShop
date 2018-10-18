@@ -31,4 +31,29 @@ namespace PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception;
  */
 class CannotDeleteCmsPageCategoryException extends CmsPageCategoryException
 {
+    /**
+     * @var int
+     */
+    private $cmsPageCategoryId;
+
+    /**
+     * @param int $cmsPageCategoryId
+     * @param string $message
+     * @param int $code
+     * @param null $previous
+     */
+    public function __construct($cmsPageCategoryId, $message = "", $code = 0, $previous = null)
+    {
+        parent::__construct($message, $code, $previous);
+
+        $this->cmsPageCategoryId = $cmsPageCategoryId;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCmsPageCategoryId()
+    {
+        return $this->cmsPageCategoryId;
+    }
 }
