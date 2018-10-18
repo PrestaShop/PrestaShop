@@ -329,7 +329,7 @@ class CmsPageController extends FrameworkBundleAdminController
                 'Can\'t delete #%id%',
                 'Admin.Notifications.Error',
                 [
-                    '%id%' => $exception->getCmsPageCategoryId(),
+                    '%id%' => $exception->getCmsPageCategoryId()->getValue(),
                 ]
             );
         }
