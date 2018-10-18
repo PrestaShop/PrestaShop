@@ -24,35 +24,19 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\CmsPageCategory;
-
-use ArrayIterator;
-use IteratorAggregate;
-use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategory;
+namespace PrestaShop\PrestaShop\Core\CMS;
 
 /**
- * Class CmsPageCategoriesForBreadcrumb is a DTO which is used in building cms page categories breadcrumb.
+ * Interface CmsPageViewDataProviderInterface defines contract for CmsPageViewDataProvider.
  */
-class CmsPageCategoriesBreadcrumbTree implements IteratorAggregate
+interface CmsPageViewDataProviderInterface
 {
     /**
-     * @var CmsPageCategory[]
+     * Gets data required for rendering the view.
+     *
+     * @param int $cmsCategoryParentId
+     *
+     * @return array
      */
-    private $cmsPageCategories;
-
-    /**
-     * @param CmsPageCategory[] $cmsPageCategories
-     */
-    public function __construct(array $cmsPageCategories)
-    {
-        $this->cmsPageCategories = $cmsPageCategories;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getIterator()
-    {
-        return new ArrayIterator($this->cmsPageCategories);
-    }
+    public function getView($cmsCategoryParentId);
 }
