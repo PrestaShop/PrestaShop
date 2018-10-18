@@ -47,6 +47,7 @@ class PrestaShopExtension extends Extension
         $loader = new YamlFileLoader($container, new FileLocator(dirname(__DIR__) . '/Resources/config'));
         $loader->load('services.yml');
 
+        $container->setParameter('prestashop.addons.categories', $config['addons']['categories']);
         $container->setParameter('prestashop.addons.prestatrust.enabled', $config['addons']['prestatrust']['enabled']);
 
         $hasVerifySslParameter = $container->hasParameter('addons.api_client.verify_ssl');
