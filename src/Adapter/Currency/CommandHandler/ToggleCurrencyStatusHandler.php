@@ -46,7 +46,6 @@ final class ToggleCurrencyStatusHandler implements ToggleCurrencyStatusHandlerIn
     private $defaultCurrencyId;
 
     /**
-     *
      * @param int $defaultCurrencyId
      */
     public function __construct($defaultCurrencyId)

@@ -39,7 +39,6 @@ class DeleteCurrencyCommand
     private $currencyId;
 
     /**
-     *
      * @param CurrencyId $currencyId
      */
     public function __construct(CurrencyId $currencyId)

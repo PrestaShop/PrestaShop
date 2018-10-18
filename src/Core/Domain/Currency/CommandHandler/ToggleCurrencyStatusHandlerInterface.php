@@ -37,8 +37,6 @@ interface ToggleCurrencyStatusHandlerInterface
      * Handles currency status toggling logic.
      *
      * @param ToggleCurrencyStatusCommand $command
-     *
-     * @return void
      */
     public function handle(ToggleCurrencyStatusCommand $command);
 }

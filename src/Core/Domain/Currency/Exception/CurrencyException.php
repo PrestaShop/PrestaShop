@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Currency\Exception;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 
 /**
- * Class CurrencyException
+ * Class CurrencyException.
  */
 class CurrencyException extends DomainException
 {

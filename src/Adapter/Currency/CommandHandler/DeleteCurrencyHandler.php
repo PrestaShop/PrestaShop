@@ -46,7 +46,6 @@ final class DeleteCurrencyHandler implements DeleteCurrencyHandlerInterface
     private $defaultCurrencyId;
 
     /**
-     *
      * @param int $defaultCurrencyId
      */
     public function __construct($defaultCurrencyId)

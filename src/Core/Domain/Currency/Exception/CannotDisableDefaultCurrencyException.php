@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Currency\Exception;
 
 /**
- * Class CannotDisableDefaultCurrencyException
+ * Class CannotDisableDefaultCurrencyException.
  */
 class CannotDisableDefaultCurrencyException extends CurrencyException
 {

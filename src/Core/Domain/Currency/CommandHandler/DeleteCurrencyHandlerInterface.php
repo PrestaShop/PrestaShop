@@ -37,8 +37,6 @@ interface DeleteCurrencyHandlerInterface
      * Handles the deletion logic of currency.
      *
      * @param DeleteCurrencyCommand $command
-     *
-     * @return void
      */
     public function handle(DeleteCurrencyCommand $command);
 }
