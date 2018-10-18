@@ -71,6 +71,7 @@ final class DeleteCmsPageCategoryHandler implements DeleteCmsPageCategoryHandler
         try {
             if (false === $entity->delete()) {
                 throw new CannotDeleteCmsPageCategoryException(
+                    $command->getCmsPageCategoryId()->getValue(),
                     sprintf(
                         'Unable to delete  cms category object with id "%s"',
                         $command->getCmsPageCategoryId()->getValue()

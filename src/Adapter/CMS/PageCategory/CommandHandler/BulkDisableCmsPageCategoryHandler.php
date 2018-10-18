@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\CMS\PageCategory\CommandHandler;
 use CMSCategory;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\BulkDisableCmsPageCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\CommandHandler\BulkDisableCmsPageCategoryHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CannotBulkDisableCmsPageCategoryException;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CannotDisableCmsPageCategoryException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryException;
 use PrestaShopException;
 
@@ -51,7 +51,7 @@ class BulkDisableCmsPageCategoryHandler implements BulkDisableCmsPageCategoryHan
                 $entity->active = false;
 
                 if (false === $entity->update()) {
-                    throw new CannotBulkDisableCmsPageCategoryException(
+                    throw new CannotDisableCmsPageCategoryException(
                         sprintf(
                             'Unable to disable cms category object with id "%s"',
                             $cmsPageCategoryId->getValue()

@@ -26,39 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception;
 
-use Throwable;
-
 /**
- * Class CannotBulkDeleteCmsPageCategoryException
+ * Class CannotEnableCmsPageCategoryException
  */
-class CannotBulkDeleteCmsPageCategoryException extends CmsPageCategoryException
+class CannotEnableCmsPageCategoryException extends CmsPageCategoryException
 {
-    /**
-     * @var int
-     */
-    private $cmsPageCategoryId;
-
-    /**
-     * @param string $message
-     * @param int $code
-     * @param Throwable|null $previous
-     * @param int $cmsPageCategoryId
-     */
-    public function __construct(
-        $message = "",
-        $code = 0,
-        Throwable $previous = null,
-        $cmsPageCategoryId
-    ) {
-        parent::__construct($message, $code, $previous);
-        $this->cmsPageCategoryId = $cmsPageCategoryId;
-    }
-
-    /**
-     * @return int
-     */
-    public function getCmsPageCategoryId()
-    {
-        return $this->cmsPageCategoryId;
-    }
 }
