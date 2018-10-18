@@ -9,8 +9,9 @@ admin_employees_search:
   path: /
   methods: [POST]
   defaults:
-    _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Employee:search'
-    _legacy_controller: AdminEmployees
+    _controller: 'PrestaShopBundle:Admin\Common:searchGrid'
+    gridDefinitionFactoryService: prestashop.core.grid.definition.factory.employee
+    redirectRoute: admin_employees_index
 
 admin_employees_save_options:
   path: /save-options
