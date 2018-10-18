@@ -34,12 +34,12 @@
               {% for category in cmsPageView.breadcrumb_tree %}
                 <li class="breadcrumb-item">
                   {% if previousCategory %}
-                    <a href="{{ path('admin_cms_pages_edit_cms_category', {'cmsCategoryParentId' : previousCategory.cmsPageCategoryId, 'cmsCategoryId' : category.cmsPageCategoryId}) }}">
+                    <a href="{{ path('admin_cms_pages_edit_cms_category', {'cmsCategoryParentId' : previousCategory.cmsPageCategoryId.value, 'cmsCategoryId' : category.cmsPageCategoryId.value}) }}">
                       <i style="font-size: 16px;" class="material-icons">edit</i>
                     </a>
                   {% endif %}
 
-                  <a href="{{ path('admin_cms_pages_index', {'cmsCategoryParentId' : category.cmsPageCategoryId}) }}">
+                  <a href="{{ path('admin_cms_pages_index', {'cmsCategoryParentId' : category.cmsPageCategoryId.value}) }}">
                     {{ category.name }}
                   </a>
                 </li>
