@@ -445,6 +445,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
      * Get minimal product quantity or minimal product combination quantity.
      *
      * @deprecated This method is deprecated since 1.7.5 and will be dropped in 1.8.0, please use getProductMinimalQuantity instead.
+     *
      * @param $product
      *
      * @return int
@@ -462,6 +463,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         } elseif (array_key_exists('minimal_quantity', $product)) {
             $minimalProductQuantity = $product['minimal_quantity'];
         }
+
         return $minimalProductQuantity;
     }
 
