@@ -31,7 +31,6 @@ use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\BulkDisableCmsPage
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\BulkEnableCmsPageCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\DeleteCmsPageCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\ToggleCmsPageCategoryStatusCommand;
-use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CannotBulkDeleteCmsPageCategoryException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CannotDeleteCmsPageCategoryException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CannotToggleCmsPageCategoryStatusException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryConstraintException;
@@ -319,17 +318,13 @@ class CmsPageController extends FrameworkBundleAdminController
                 'The object cannot be loaded (or found)',
                 'Admin.Notifications.Error'
             ),
-            CannotDeleteCmsPageCategoryException::class => $this->trans(
-                'You cannot delete this item.',
-                'Admin.Notifications.Error'
-            ),
             CannotToggleCmsPageCategoryStatusException::class => $this->trans(
                 'An error occurred while updating the status.',
                 'Admin.Notifications.Error'
             ),
         ];
 
-        if ($exception instanceof CannotBulkDeleteCmsPageCategoryException) {
+        if ($exception instanceof CannotDeleteCmsPageCategoryException) {
             return $this->trans(
                 'Can\'t delete #%id%',
                 'Admin.Notifications.Error',

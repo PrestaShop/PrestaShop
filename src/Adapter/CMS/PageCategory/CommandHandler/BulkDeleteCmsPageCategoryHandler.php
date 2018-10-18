@@ -30,7 +30,9 @@ use CMSCategory;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\BulkDeleteCmsPageCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\CommandHandler\BulkDeleteCmsPageCategoryHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CannotBulkDeleteCmsPageCategoryException;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CannotDeleteCmsPageCategoryException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryException;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryNotFoundException;
 use PrestaShopException;
 
 /**
@@ -49,15 +51,22 @@ final class BulkDeleteCmsPageCategoryHandler implements BulkDeleteCmsPageCategor
             foreach ($command->getCmsPageCategoryIds() as $cmsPageCategoryId) {
                 $entity = new CMSCategory($cmsPageCategoryId->getValue());
 
+                if (0 >= $entity->id) {
+                    throw new CmsPageCategoryNotFoundException(
+                        sprintf(
+                            'Cms category object with id "%s" has not been found for status changing.',
+                            $cmsPageCategoryId->getValue()
+                        )
+                    );
+                }
+
                 if (false === $entity->delete()) {
-                    throw new CannotBulkDeleteCmsPageCategoryException(
+                    throw new CannotDeleteCmsPageCategoryException(
+                        $cmsPageCategoryId->getValue(),
                         sprintf(
                             'Unable to delete  cms category object with id "%s"',
                             $cmsPageCategoryId->getValue()
-                        ),
-                        0,
-                        null,
-                        $cmsPageCategoryId->getValue()
+                        )
                     );
                 }
             }
