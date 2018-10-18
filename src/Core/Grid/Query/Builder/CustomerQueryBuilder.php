@@ -200,9 +200,9 @@ final class CustomerQueryBuilder extends AbstractDoctrineQueryBuilder
             }
 
             if ('date_add' === $filterName) {
-                $qb->andWhere('c.date_add BETWEEN :date_from AND :date_to');
-                $qb->setParameter('date_from', $filterValue['from']);
-                $qb->setParameter('date_to', $filterValue['to']);
+                $qb->andWhere('c.date_add >= :date_from AND c.date_add <= :date_to');
+                $qb->setParameter('date_from', sprintf('%s 0:0:0', $filterValue['from']));
+                $qb->setParameter('date_to', sprintf('%s 23:59:59', $filterValue['to']));
                 continue;
             }
 
