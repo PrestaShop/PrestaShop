@@ -147,11 +147,11 @@ class CategoriesProvider
         }
 
         foreach ($categoriesListing as $category) {
-            $categories['categories']->subMenu[$category['name']] = $this->createMenuObject(
-                $category['id_category'],
-                $category['name'],
+            $categories['categories']->subMenu[$category->name] = $this->createMenuObject(
+                $category->id_category,
+                $category->name,
                 [],
-                isset($category['tab']) ? $category['tab'] : null
+                isset($category->tab) ? $category->tab : null
             );
         }
 
@@ -181,9 +181,9 @@ class CategoriesProvider
     public function getParentCategory($categoryName)
     {
         foreach ($this->getCategories() as $parentCategory) {
-            foreach ($parentCategory['categories'] as $childCategory) {
-                if ($childCategory['name'] === $categoryName) {
-                    return $parentCategory['name'];
+            foreach ($parentCategory->categories as $childCategory) {
+                if ($childCategory->name === $categoryName) {
+                    return $parentCategory->name;
                 }
             }
         }
@@ -264,8 +264,8 @@ class CategoriesProvider
         uasort(
             $categories,
             function ($a, $b) {
-                $a = !isset($a['order']) ? 0 : $a['order'];
-                $b = !isset($b['order']) ? 0 : $b['order'];
+                $a = !isset($a->order) ? 0 : $a->order;
+                $b = !isset($b->order) ? 0 : $b->order;
 
                 if ($a === $b) {
                     return 0;
@@ -274,6 +274,9 @@ class CategoriesProvider
                 return ($a < $b) ? -1 : 1;
             }
         );
+
+        // Convert array to object to be consistent with current API call
+        $categories = json_decode(json_encode($categories));
 
         return $categories;
     }
