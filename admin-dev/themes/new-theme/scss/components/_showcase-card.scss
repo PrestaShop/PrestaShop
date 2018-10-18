@@ -14,6 +14,10 @@
     vertical-align: top;
   }
 
+  &__team {
+    background-image: url('img/helper-card/team-background.png');
+  }
+
   &__left {
     width: 320px;
     animation: showcase-img-appearance 1s;
