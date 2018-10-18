@@ -260,6 +260,11 @@ class CmsPageController extends FrameworkBundleAdminController
 
         try {
             $this->getCommandBus()->handle(new BulkEnableCmsPageCategoryCommand($cmsCategoriesToEnable));
+
+            $this->addFlash(
+                'success',
+                $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
+            );
         } catch (CmsPageCategoryException $exception) {
             $this->addFlash('error', $this->handleException($exception));
         }
@@ -285,6 +290,11 @@ class CmsPageController extends FrameworkBundleAdminController
 
         try {
             $this->getCommandBus()->handle(new BulkDisableCmsPageCategoryCommand($cmsCategoriesToDisable));
+
+            $this->addFlash(
+                'success',
+                $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
+            );
         } catch (CmsPageCategoryException $exception) {
             $this->addFlash('error', $this->handleException($exception));
         }
