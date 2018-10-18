@@ -32,7 +32,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject;
 class CmsPageCategory
 {
     /**
-     * @var int
+     * @var CmsPageCategoryId
      */
     private $cmsPageCategoryId;
 
@@ -42,17 +42,17 @@ class CmsPageCategory
     private $name;
 
     /**
-     * @param int $cmsPageCategoryId
+     * @param CmsPageCategoryId $cmsPageCategoryId
      * @param string $name
      */
-    public function __construct($cmsPageCategoryId, $name)
+    public function __construct(CmsPageCategoryId $cmsPageCategoryId, $name)
     {
         $this->cmsPageCategoryId = $cmsPageCategoryId;
         $this->name = $name;
     }
 
     /**
-     * @return int
+     * @return CmsPageCategoryId
      */
     public function getCmsPageCategoryId()
     {
