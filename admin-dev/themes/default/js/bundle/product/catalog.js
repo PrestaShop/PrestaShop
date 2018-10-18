@@ -56,7 +56,7 @@ $(document).ready(function() {
 	 * Checkboxes behavior with bulk actions
 	 */
 	$('input:checkbox[name="bulk_action_selected_products[]"]', form).change(function() {
-		updateBulkMenu();
+        updateBulkMenu();
 	});
 
 	/*
@@ -71,8 +71,9 @@ $(document).ready(function() {
 	 * Sortable case when ordered by position ASC
 	 */
 
-	$("body").on("mousedown", "tbody.sortable [data-uniturl]", function () {
-		$(this).find('input:checkbox[name="bulk_action_selected_products[]"]').attr("checked", true);
+	$("body").on("mousedown", "tbody.sortable [data-uniturl] td.placeholder", function () {
+	    const trParent = $(this).closest('tr');
+        trParent.find('input:checkbox[name="bulk_action_selected_products[]"]').attr("checked", true);
 	});
 
 	$('tbody.sortable', form).sortable({
@@ -90,8 +91,8 @@ $(document).ready(function() {
 	form.submit(function(e) {
     e.preventDefault();
 		$('#filter_column_id_product', form).val($('#filter_column_id_product', form).attr('sql'));
-    $('#filter_column_price', form).val($('#filter_column_price', form).attr('sql'));
-    $('#filter_column_sav_quantity', form).val($('#filter_column_sav_quantity', form).attr('sql'));
+        $('#filter_column_price', form).val($('#filter_column_price', form).attr('sql'));
+        $('#filter_column_sav_quantity', form).val($('#filter_column_sav_quantity', form).attr('sql'));
 		productCatalogFilterChanged = false;
 	    this.submit();
 	    return false;
