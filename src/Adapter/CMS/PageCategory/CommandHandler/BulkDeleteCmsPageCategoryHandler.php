@@ -54,7 +54,7 @@ final class BulkDeleteCmsPageCategoryHandler implements BulkDeleteCmsPageCategor
                 if (0 >= $entity->id) {
                     throw new CmsPageCategoryNotFoundException(
                         sprintf(
-                            'Cms category object with id "%s" has not been found for status changing.',
+                            'Cms category object with id "%s" has not been found for deleting.',
                             $cmsPageCategoryId->getValue()
                         )
                     );
