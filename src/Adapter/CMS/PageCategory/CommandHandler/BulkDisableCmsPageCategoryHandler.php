@@ -31,12 +31,13 @@ use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\BulkDisableCmsPage
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\CommandHandler\BulkDisableCmsPageCategoryHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CannotDisableCmsPageCategoryException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryException;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryNotFoundException;
 use PrestaShopException;
 
 /**
  * Class BulkDisableCmsPageCategoryHandler is responsible for deleting multiple cms page categories.
  */
-class BulkDisableCmsPageCategoryHandler implements BulkDisableCmsPageCategoryHandlerInterface
+final class BulkDisableCmsPageCategoryHandler implements BulkDisableCmsPageCategoryHandlerInterface
 {
     /**
      * {@inheritdoc}
@@ -48,6 +49,16 @@ class BulkDisableCmsPageCategoryHandler implements BulkDisableCmsPageCategoryHan
         try {
             foreach ($command->getCmsPageCategoryIds() as $cmsPageCategoryId) {
                 $entity = new CMSCategory($cmsPageCategoryId->getValue());
+
+                if (0 >= $entity->id) {
+                    throw new CmsPageCategoryNotFoundException(
+                        sprintf(
+                            'Cms category object with id "%s" has not been found for disabling status.',
+                            $cmsPageCategoryId->getValue()
+                        )
+                    );
+                }
+
                 $entity->active = false;
 
                 if (false === $entity->update()) {
