@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\BulkEnableCmsPageC
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\CommandHandler\BulkEnableCmsPageCategoryHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CannotEnableCmsPageCategoryException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryException;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryNotFoundException;
 use PrestaShopException;
 
 /**
@@ -48,6 +49,16 @@ final class BulkEnableCmsPageCategoryHandler implements BulkEnableCmsPageCategor
         try {
             foreach ($command->getCmsPageCategoryIds() as $cmsPageCategoryId) {
                 $entity = new CMSCategory($cmsPageCategoryId->getValue());
+
+                if (0 >= $entity->id) {
+                    throw new CmsPageCategoryNotFoundException(
+                        sprintf(
+                            'Cms category object with id "%s" has not been found for enabling status.',
+                            $cmsPageCategoryId->getValue()
+                        )
+                    );
+                }
+
                 $entity->active = true;
 
                 if (false === $entity->update()) {
