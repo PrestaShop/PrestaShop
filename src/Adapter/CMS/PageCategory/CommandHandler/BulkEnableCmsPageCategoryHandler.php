@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\CMS\PageCategory\CommandHandler;
 use CMSCategory;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\BulkEnableCmsPageCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\CommandHandler\BulkEnableCmsPageCategoryHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CannotBulkEnableCmsPageCategoryException;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CannotEnableCmsPageCategoryException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryException;
 use PrestaShopException;
 
@@ -51,7 +51,7 @@ final class BulkEnableCmsPageCategoryHandler implements BulkEnableCmsPageCategor
                 $entity->active = true;
 
                 if (false === $entity->update()) {
-                    throw new CannotBulkEnableCmsPageCategoryException(
+                    throw new CannotEnableCmsPageCategoryException(
                         sprintf(
                             'Unable to enable cms category object with id "%s"',
                             $cmsPageCategoryId->getValue()
