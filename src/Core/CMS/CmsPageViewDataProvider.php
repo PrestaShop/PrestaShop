@@ -36,32 +36,28 @@ use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategor
 /**
  * Class CmsPageViewDataProvider provides cms page view data for cms listing page.
  */
-class CmsPageViewDataProvider
+final class CmsPageViewDataProvider implements CmsPageViewDataProviderInterface
 {
     /**
      * @var CommandBusInterface
      */
-    private $queryBuss;
+    private $queryBus;
 
     /**
-     * @param CommandBusInterface $queryBuss
+     * @param CommandBusInterface $queryBus
      */
-    public function __construct(CommandBusInterface $queryBuss)
+    public function __construct(CommandBusInterface $queryBus)
     {
-        $this->queryBuss = $queryBuss;
+        $this->queryBus = $queryBus;
     }
 
     /**
-     * Gets view data.
-     *
-     * @param int $cmsCategoryParentId
-     *
-     * @return array
+     * {@inheritdoc}
      */
     public function getView($cmsCategoryParentId)
     {
         return [
-            'rootCategoryId' => CmsPageRootCategorySettings::ROOT_CMS_PAGE_CATEGORY_ID,
+            'root_category_id' => CmsPageRootCategorySettings::ROOT_CMS_PAGE_CATEGORY_ID,
             'breadcrumb_tree' => $this->getBreadcrumbTree($cmsCategoryParentId),
         ];
     }
@@ -71,16 +67,14 @@ class CmsPageViewDataProvider
      *
      * @param int $cmsCategoryParentId
      *
-     * @return array
+     * @return CmsPageCategoriesBreadcrumbTree|array
      */
     private function getBreadcrumbTree($cmsCategoryParentId)
     {
         try {
             $cmsPageCategoryId = new CmsPageCategoryId($cmsCategoryParentId);
-            /** @var CmsPageCategoriesBreadcrumbTree $result */
-            $result = $this->queryBuss->handle(new GetCmsPageCategoriesForBreadcrumb($cmsPageCategoryId));
 
-            return $result->getTree();
+            return $this->queryBus->handle(new GetCmsPageCategoriesForBreadcrumb($cmsPageCategoryId));
         } catch (CmsPageCategoryException $exception) {
             return [];
         }
