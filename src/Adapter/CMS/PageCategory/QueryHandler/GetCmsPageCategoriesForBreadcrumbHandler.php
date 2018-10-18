@@ -27,13 +27,12 @@
 namespace PrestaShop\PrestaShop\Adapter\CMS\PageCategory\QueryHandler;
 
 use CMSCategory;
-use Doctrine\DBAL\Connection;
-use function ICanBoogie\array_insert;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\CmsPageCategoriesBreadcrumbTree;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\CmsPageRootCategorySettings;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Query\GetCmsPageCategoriesForBreadcrumb;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\QueryHandler\GetCmsPageCategoriesForBreadcrumbHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategory;
 use PrestaShopException;
 
 /**
@@ -47,6 +46,9 @@ final class GetCmsPageCategoriesForBreadcrumbHandler implements GetCmsPageCatego
      */
     private $contextLanguageId;
 
+    /**
+     * @param int $contextLanguageId
+     */
     public function __construct($contextLanguageId)
     {
         $this->contextLanguageId = $contextLanguageId;
@@ -87,12 +89,20 @@ final class GetCmsPageCategoriesForBreadcrumbHandler implements GetCmsPageCatego
         ];
 
         if (CmsPageRootCategorySettings::ROOT_CMS_PAGE_CATEGORY_ID === $query->getCurrentCategoryId()->getValue()) {
-            return new CmsPageCategoriesBreadcrumbTree([$rootCategoryData]);
+            return new CmsPageCategoriesBreadcrumbTree([
+                new CmsPageCategory($rootCategoryData['id_cms_category'], $rootCategoryData['name']),
+            ]);
         }
 
         $parentCategories = $currentCategory->getParentsCategories($this->contextLanguageId);
         $parentCategories[] = $rootCategoryData;
+        $parentCategories = array_reverse($parentCategories);
 
-        return new CmsPageCategoriesBreadcrumbTree(array_reverse($parentCategories));
+        $categories = [];
+        foreach ($parentCategories as $category) {
+            $categories[] = new CmsPageCategory($category['id_cms_category'], $category['name']);
+        }
+
+        return new CmsPageCategoriesBreadcrumbTree($categories);
     }
 }

@@ -24,35 +24,46 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\CmsPageCategory;
-
-use ArrayIterator;
-use IteratorAggregate;
-use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategory;
+namespace PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject;
 
 /**
- * Class CmsPageCategoriesForBreadcrumb is a DTO which is used in building cms page categories breadcrumb.
+ * Class CmsPageCategory is responsible for providing data in a comfortable way.
  */
-class CmsPageCategoriesBreadcrumbTree implements IteratorAggregate
+class CmsPageCategory
 {
     /**
-     * @var CmsPageCategory[]
+     * @var int
      */
-    private $cmsPageCategories;
+    private $cmsPageCategoryId;
 
     /**
-     * @param CmsPageCategory[] $cmsPageCategories
+     * @var string
      */
-    public function __construct(array $cmsPageCategories)
+    private $name;
+
+    /**
+     * @param int $cmsPageCategoryId
+     * @param string $name
+     */
+    public function __construct($cmsPageCategoryId, $name)
     {
-        $this->cmsPageCategories = $cmsPageCategories;
+        $this->cmsPageCategoryId = $cmsPageCategoryId;
+        $this->name = $name;
     }
 
     /**
-     * {@inheritdoc}
+     * @return int
      */
-    public function getIterator()
+    public function getCmsPageCategoryId()
     {
-        return new ArrayIterator($this->cmsPageCategories);
+        return $this->cmsPageCategoryId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
     }
 }
