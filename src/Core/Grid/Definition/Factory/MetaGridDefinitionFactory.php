@@ -129,7 +129,7 @@ final class MetaGridDefinitionFactory extends AbstractGridDefinitionFactory
                         ->add((new LinkRowAction('edit'))
                             ->setIcon('edit')
                             ->setOptions([
-                                'route' => 'admin_meta_list_edit',
+                                'route' => 'admin_metas_edit',
                                 'route_param_name' => 'metaId',
                                 'route_param_field' => 'id_meta',
                             ])
@@ -139,7 +139,7 @@ final class MetaGridDefinitionFactory extends AbstractGridDefinitionFactory
                             ->setIcon('delete')
                             ->setOptions([
                                 'method' => 'DELETE',
-                                'route' => 'admin_meta_list_delete_single',
+                                'route' => 'admin_metas_delete',
                                 'route_param_name' => 'metaId',
                                 'route_param_field' => 'id_meta',
                                 'confirm_message' => $this->trans(
@@ -226,7 +226,7 @@ final class MetaGridDefinitionFactory extends AbstractGridDefinitionFactory
             ->add((new SubmitBulkAction('delete_seo_urls'))
                 ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
                 ->setOptions([
-                    'submit_route' => 'admin_meta_list_delete_multiple',
+                    'submit_route' => 'admin_metas_delete_bulk',
                     'confirm_message' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
                 ])
             )

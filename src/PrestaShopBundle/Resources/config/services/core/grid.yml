@@ -101,7 +101,7 @@ services:
         parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
         arguments:
           - "@=service('router').generate('admin_common_reset_search', {'controller': 'logs', 'action': 'index'})"
-          - "@=service('router').generate('admin_logs')"
+          - "@=service('router').generate('admin_logs_index')"
         public: true
 
     prestashop.core.grid.definition.factory.email_logs:
@@ -109,7 +109,7 @@ services:
         parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
         arguments:
           - "@=service('router').generate('admin_common_reset_search', {'controller': 'email', 'action': 'index'})"
-          - "@=service('router').generate('admin_email')"
+          - "@=service('router').generate('admin_emails_index')"
           - '@prestashop.core.form.choice_provider.language_by_id'
         public: true
 
@@ -140,7 +140,7 @@ services:
         parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
         arguments:
             - "@=service('router').generate('admin_common_reset_search', {'controller': 'meta', 'action': 'index'})"
-            - "@=service('router').generate('admin_meta')"
+            - "@=service('router').generate('admin_metas_index')"
         public: true
 
     prestashop.core.grid.definition.factory.category:

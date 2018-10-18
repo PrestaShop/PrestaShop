@@ -315,6 +315,10 @@ services:
     form.type.shop_parameters.general:
         class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\General\PreferencesType'
         parent: 'form.type.translatable.aware'
+        arguments:
+          - '@=service("prestashop.adapter.multistore_feature").isUsed()'
+          - '@=service("prestashop.adapter.shop.context").isShopContext()'
+          - '@=service("prestashop.adapter.shop.context").isAllContext()'
         public: true
         calls:
             - ['setIsSecure', ["@=service('request_stack').getCurrentRequest().isSecure()"]]

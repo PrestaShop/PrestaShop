@@ -2,81 +2,23 @@
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
   <file original="controllers/admin/AdminCmsController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="2acc315907b6b57c444b1885666f5bdd">
+        <source>Used in the h1 page tag, and as the default title tag value.</source>
+        <target>Used in the h1 page tag, and as the default title tag value.</target>
+        <note>Context:
+File: controllers/admin/AdminCmsController.php:146</note>
+      </trans-unit>
+      <trans-unit id="27043bc0eeca71692edf6c51fef16ee0">
+        <source>Used to override the title tag value. If left blank, the default title value is used.</source>
+        <target>Used to override the title tag value. If left blank, the default title value is used.</target>
+        <note>Context:
+File: controllers/admin/AdminCmsController.php:156</note>
+      </trans-unit>
       <trans-unit id="3ed349365d718a59eadb9df9d5c339f2">
         <source>To add "tags" click in the field, write something, and then press "Enter."</source>
         <target>To add "tags" click in the field, write something, and then press "Enter."</target>
         <note>Context:
-File: controllers/admin/AdminCmsController.php:159</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminThemesController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="8ed0c1461337919e3cf576591d74b687">
-        <source>Will appear on main page. Recommended size for the default theme: height %height% and width %width%.</source>
-        <target>Will appear on main page. Recommended size for the default theme: height %height% and width %width%.</target>
-        <note>Context:
-File: controllers/admin/AdminThemesController.php:410</note>
-      </trans-unit>
-      <trans-unit id="aeec498c2bb6b53e8eb24752af092828">
-        <source>Will appear on email headers. If undefined, the header logo will be used.</source>
-        <target>Will appear on email headers. If undefined, the header logo will be used.</target>
-        <note>Context:
-File: controllers/admin/AdminThemesController.php:424</note>
-      </trans-unit>
-      <trans-unit id="544cd7788ebd8916e7191e7a8fd0db57">
-        <source>Warning: if no invoice logo is available, the main logo will be used instead.</source>
-        <target>Warning: if no invoice logo is available, the main logo will be used instead.</target>
-        <note>Context:
-File: controllers/admin/AdminThemesController.php:432</note>
-      </trans-unit>
-      <trans-unit id="b0297d22aade28eda5efbeb5c2e21e97">
-        <source>Will appear on invoice headers.</source>
-        <target>Will appear on invoice headers.</target>
-        <note>Context:
-File: controllers/admin/AdminThemesController.php:433</note>
-      </trans-unit>
-      <trans-unit id="d4d7bd35b17411da70ed5e76bcb4c3da">
-        <source>Warning: you can use a PNG file for transparency, but it can take up to 1 second per page for processing. Please consider using JPG instead.</source>
-        <target>Warning: you can use a PNG file for transparency, but it can take up to 1 second per page for processing. Please consider using JPG instead.</target>
-        <note>Context:
-File: controllers/admin/AdminThemesController.php:433</note>
-      </trans-unit>
-      <trans-unit id="9d365da5a530a9f2607be1d3ba79235c">
-        <source>It is the small icon that appears in browser tabs, next to the web address</source>
-        <target>It is the small icon that appears in browser tabs, next to the web address</target>
-        <note>Context:
-File: controllers/admin/AdminThemesController.php:441</note>
-      </trans-unit>
-      <trans-unit id="1a4e6f83162563ba06213015f4f503ed">
-        <source>Be careful! Please check your theme in an RTL language before generating the RTL stylesheet: your theme could be already adapted to RTL.\nOnce you click on "Adapt to RTL", any RTL-specific file that you might have added to your theme might be deleted by the created stylesheet.</source>
-        <target>Be careful! Please check your theme in an RTL language before generating the RTL stylesheet: your theme could be already adapted to RTL.\nOnce you click on "Adapt to RTL", any RTL-specific file that you might have added to your theme might be deleted by the created stylesheet.</target>
-        <note>Context:
-File: controllers/admin/AdminThemesController.php:476</note>
-      </trans-unit>
-      <trans-unit id="6894e313abf58dc29e27e6aef50b2f03">
-        <source>You must select a shop from the above list if you wish to choose a theme.</source>
-        <target>You must select a shop from the above list if you wish to choose a theme.</target>
-        <note>Context:
-File: controllers/admin/AdminThemesController.php:503</note>
-      </trans-unit>
-      <trans-unit id="0d03fc8cc7c22c4ff80c5cda6f56ce8e">
-        <source>Browse your computer files and select the Zip file for your new theme.</source>
-        <target>Browse your computer files and select the Zip file for your new theme.</target>
-        <note>Context:
-File: controllers/admin/AdminThemesController.php:567</note>
-      </trans-unit>
-      <trans-unit id="f545e8220cd6f37617c495e59695f7f3">
-        <source>Indicate the complete URL to an online Zip file that contains your new theme. For instance, "http://example.com/files/theme.zip".</source>
-        <target>Indicate the complete URL to an online Zip file that contains your new theme. For instance, "http://example.com/files/theme.zip".</target>
-        <note>Context:
-File: controllers/admin/AdminThemesController.php:589</note>
-      </trans-unit>
-      <trans-unit id="87c309a4d1deb851c8522127c1aeae54">
-        <source>This selector lists the Zip files that you uploaded in the '/themes' folder.</source>
-        <target>This selector lists the Zip files that you uploaded in the '/themes' folder.</target>
-        <note>Context:
-File: controllers/admin/AdminThemesController.php:624</note>
+File: controllers/admin/AdminCmsController.php:173</note>
       </trans-unit>
     </body>
   </file>
@@ -86,23 +28,7 @@ File: controllers/admin/AdminThemesController.php:624</note>
         <source>E.g. address, addresses, attachment</source>
         <target>E.g. address, addresses, attachment</target>
         <note>Context:
-File: controllers/admin/AdminModulesPositionsController.php:425</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminCmsContentController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="cabfe7563d12c3e047000dc5703d9709">
-        <source>Add new page category</source>
-        <target>Add new page category</target>
-        <note>Context:
-File: controllers/admin/AdminCmsContentController.php:108</note>
-      </trans-unit>
-      <trans-unit id="aa6f77f824eff8e896510f1bbaf9f8e5">
-        <source>Add new page</source>
-        <target>Add new page</target>
-        <note>Context:
-File: controllers/admin/AdminCmsContentController.php:113</note>
+File: controllers/admin/AdminModulesPositionsController.php:428</note>
       </trans-unit>
     </body>
   </file>
@@ -236,37 +162,95 @@ File: controllers/admin/AdminImagesController.php:313</note>
       </trans-unit>
     </body>
   </file>
-  <file original="admin-dev/themes/default/template/controllers/modules_positions/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="controllers/admin/AdminThemesController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="0a4dbce7e33277b97c5f5667715e0b46">
-        <source>Please select a module</source>
-        <target>Please select a module</target>
+      <trans-unit id="8ed0c1461337919e3cf576591d74b687">
+        <source>Will appear on main page. Recommended size for the default theme: height %height% and width %width%.</source>
+        <target>Will appear on main page. Recommended size for the default theme: height %height% and width %width%.</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/modules_positions/form.tpl:42</note>
+File: controllers/admin/AdminThemesController.php:414</note>
       </trans-unit>
-      <trans-unit id="0b08e9b451b556f1bdd62b285ee2a9df">
-        <source>Select a module above before choosing from available hooks</source>
-        <target>Select a module above before choosing from available hooks</target>
+      <trans-unit id="aeec498c2bb6b53e8eb24752af092828">
+        <source>Will appear on email headers. If undefined, the header logo will be used.</source>
+        <target>Will appear on email headers. If undefined, the header logo will be used.</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/modules_positions/form.tpl:55</note>
+File: controllers/admin/AdminThemesController.php:428</note>
       </trans-unit>
-      <trans-unit id="74cd700f9b419dd789dc7d8d1cbf49ef">
-        <source>Please specify the files for which you do not want the module to be displayed.</source>
-        <target>Please specify the files for which you do not want the module to be displayed.</target>
+      <trans-unit id="544cd7788ebd8916e7191e7a8fd0db57">
+        <source>Warning: if no invoice logo is available, the main logo will be used instead.</source>
+        <target>Warning: if no invoice logo is available, the main logo will be used instead.</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/modules_positions/form.tpl:69</note>
+File: controllers/admin/AdminThemesController.php:436</note>
       </trans-unit>
-      <trans-unit id="07b7dbb810d745fc3891d68448f3f213">
-        <source>Please input each filename, separated by a comma (",").</source>
-        <target>Please input each filename, separated by a comma (",").</target>
+      <trans-unit id="b0297d22aade28eda5efbeb5c2e21e97">
+        <source>Will appear on invoice headers.</source>
+        <target>Will appear on invoice headers.</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/modules_positions/form.tpl:70</note>
+File: controllers/admin/AdminThemesController.php:437</note>
       </trans-unit>
-      <trans-unit id="804a997021a16e79a9e6ef9a2bf39e3d">
-        <source>You can also click the filename in the list below, and even make a multiple selection by keeping the Ctrl key pressed while clicking, or choose a whole range of filename by keeping the Shift key pressed while clicking.</source>
-        <target>You can also click the filename in the list below, and even make a multiple selection by keeping the Ctrl key pressed while clicking, or choose a whole range of filename by keeping the Shift key pressed while clicking.</target>
+      <trans-unit id="d4d7bd35b17411da70ed5e76bcb4c3da">
+        <source>Warning: you can use a PNG file for transparency, but it can take up to 1 second per page for processing. Please consider using JPG instead.</source>
+        <target>Warning: you can use a PNG file for transparency, but it can take up to 1 second per page for processing. Please consider using JPG instead.</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/modules_positions/form.tpl:71</note>
+File: controllers/admin/AdminThemesController.php:437</note>
+      </trans-unit>
+      <trans-unit id="3fb044d8f9136df5b2f0087f8a8fb0c9">
+        <source>Use our [1]favicon generator on PrestaShop Marketplace[/1] to boost your brand image!</source>
+        <target>Use our [1]favicon generator on PrestaShop Marketplace[/1] to boost your brand image!</target>
+        <note>Context:
+File: controllers/admin/AdminThemesController.php:445</note>
+      </trans-unit>
+      <trans-unit id="9d365da5a530a9f2607be1d3ba79235c">
+        <source>It is the small icon that appears in browser tabs, next to the web address</source>
+        <target>It is the small icon that appears in browser tabs, next to the web address</target>
+        <note>Context:
+File: controllers/admin/AdminThemesController.php:446</note>
+      </trans-unit>
+      <trans-unit id="1a4e6f83162563ba06213015f4f503ed">
+        <source>Be careful! Please check your theme in an RTL language before generating the RTL stylesheet: your theme could be already adapted to RTL.\nOnce you click on "Adapt to RTL", any RTL-specific file that you might have added to your theme might be deleted by the created stylesheet.</source>
+        <target>Be careful! Please check your theme in an RTL language before generating the RTL stylesheet: your theme could be already adapted to RTL.\nOnce you click on "Adapt to RTL", any RTL-specific file that you might have added to your theme might be deleted by the created stylesheet.</target>
+        <note>Context:
+File: controllers/admin/AdminThemesController.php:481</note>
+      </trans-unit>
+      <trans-unit id="6894e313abf58dc29e27e6aef50b2f03">
+        <source>You must select a shop from the above list if you wish to choose a theme.</source>
+        <target>You must select a shop from the above list if you wish to choose a theme.</target>
+        <note>Context:
+File: controllers/admin/AdminThemesController.php:508</note>
+      </trans-unit>
+      <trans-unit id="0d03fc8cc7c22c4ff80c5cda6f56ce8e">
+        <source>Browse your computer files and select the Zip file for your new theme.</source>
+        <target>Browse your computer files and select the Zip file for your new theme.</target>
+        <note>Context:
+File: controllers/admin/AdminThemesController.php:571</note>
+      </trans-unit>
+      <trans-unit id="f545e8220cd6f37617c495e59695f7f3">
+        <source>Indicate the complete URL to an online Zip file that contains your new theme. For instance, "http://example.com/files/theme.zip".</source>
+        <target>Indicate the complete URL to an online Zip file that contains your new theme. For instance, "http://example.com/files/theme.zip".</target>
+        <note>Context:
+File: controllers/admin/AdminThemesController.php:593</note>
+      </trans-unit>
+      <trans-unit id="87c309a4d1deb851c8522127c1aeae54">
+        <source>This selector lists the Zip files that you uploaded in the '/themes' folder.</source>
+        <target>This selector lists the Zip files that you uploaded in the '/themes' folder.</target>
+        <note>Context:
+File: controllers/admin/AdminThemesController.php:628</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminCmsContentController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="cabfe7563d12c3e047000dc5703d9709">
+        <source>Add new page category</source>
+        <target>Add new page category</target>
+        <note>Context:
+File: controllers/admin/AdminCmsContentController.php:108</note>
+      </trans-unit>
+      <trans-unit id="aa6f77f824eff8e896510f1bbaf9f8e5">
+        <source>Add new page</source>
+        <target>Add new page</target>
+        <note>Context:
+File: controllers/admin/AdminCmsContentController.php:113</note>
       </trans-unit>
     </body>
   </file>
@@ -301,6 +285,40 @@ File: admin-dev/themes/default/template/controllers/images/content.tpl:69</note>
         <target>Select "No" only if your server timed out and you need to resume the regeneration.</target>
         <note>Context:
 File: admin-dev/themes/default/template/controllers/images/content.tpl:122</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/modules_positions/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="0a4dbce7e33277b97c5f5667715e0b46">
+        <source>Please select a module</source>
+        <target>Please select a module</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/modules_positions/form.tpl:42</note>
+      </trans-unit>
+      <trans-unit id="0b08e9b451b556f1bdd62b285ee2a9df">
+        <source>Select a module above before choosing from available hooks</source>
+        <target>Select a module above before choosing from available hooks</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/modules_positions/form.tpl:55</note>
+      </trans-unit>
+      <trans-unit id="74cd700f9b419dd789dc7d8d1cbf49ef">
+        <source>Please specify the files for which you do not want the module to be displayed.</source>
+        <target>Please specify the files for which you do not want the module to be displayed.</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/modules_positions/form.tpl:69</note>
+      </trans-unit>
+      <trans-unit id="07b7dbb810d745fc3891d68448f3f213">
+        <source>Please input each filename, separated by a comma (",").</source>
+        <target>Please input each filename, separated by a comma (",").</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/modules_positions/form.tpl:70</note>
+      </trans-unit>
+      <trans-unit id="804a997021a16e79a9e6ef9a2bf39e3d">
+        <source>You can also click the filename in the list below, and even make a multiple selection by keeping the Ctrl key pressed while clicking, or choose a whole range of filename by keeping the Shift key pressed while clicking.</source>
+        <target>You can also click the filename in the list below, and even make a multiple selection by keeping the Ctrl key pressed while clicking, or choose a whole range of filename by keeping the Shift key pressed while clicking.</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/modules_positions/form.tpl:71</note>
       </trans-unit>
     </body>
   </file>

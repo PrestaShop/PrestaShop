@@ -91,7 +91,7 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
     {
         return (new ColumnCollection())
             ->add((new DataColumn('id_log'))
-                ->setName($this->trans('ID', [], 'Global.Actions'))
+                ->setName($this->trans('ID', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'id_log',
                 ])
@@ -222,7 +222,7 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setName($this->trans('Erase all', [], 'Admin.Advparameters.Feature'))
                 ->setIcon('delete')
                 ->setOptions([
-                    'submit_route' => 'admin_logs_delete',
+                    'submit_route' => 'admin_logs_delete_all',
                     'confirm_message' => $this->trans('Are you sure?', [], 'Admin.Notifications.Warning'),
                 ])
             )

@@ -55,10 +55,10 @@ module.exports = {
   },
   configureMainMenu() {
     scenario('Add the created category to the top menu link', client => {
-      test('should go to "Modules" page', () => client.goToSubtabMenuPage(Menu.Improve.Modules.modules_menu, Menu.Improve.Modules.modules_services_submenu));
+      test('should go to "Modules" page', () => client.goToSubtabMenuPage(Menu.Improve.Modules.modules_menu, Menu.Improve.Modules.modules_manager_submenu));
       test('should set the module name in the search input', () => client.waitAndSetValue(ModulePage.module_selection_input, "ps_mainmenu"));
       test('should click on "Search" button', () => client.waitForExistAndClick(ModulePage.modules_search_button));
-      test('should click on "Configure" button', () => client.waitForExistAndClick(ModulePage.configure_module_theme_button));
+      test('should click on "Configure" button', () => client.waitForExistAndClick(ModulePage.configure_module_theme_button.split('%moduleTechName').join("ps_mainmenu")));
       test('should choose the created category from the available items', () => client.waitForExistAndClick(ModulePage.MainMenuPage.available_item_list.replace('%ID', param['id_category'])));
       test('should click on "Add item" button', () => client.waitForExistAndClick(ModulePage.MainMenuPage.add_item_button));
       test('should check that the menu is well added to the selected items list', () => client.isExisting(ModulePage.MainMenuPage.selected_item_list.replace('%ID', param['id_category']), 1000));

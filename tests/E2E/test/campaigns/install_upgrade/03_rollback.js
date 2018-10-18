@@ -25,7 +25,7 @@ scenario('The shop installation', () => {
   }, 'installation');
 
   scenario('Rollback to the old version ', client => {
-    test('should go to "Module" page', () => client.goToSubtabMenuPage(Menu.Improve.Modules.modules_menu, Menu.Improve.Modules.modules_services_submenu));
+    test('should go to "Module" page', () => client.goToSubtabMenuPage(Menu.Improve.Modules.modules_menu, Menu.Improve.Modules.modules_manager_submenu));
     test('should click on "Configure" button', () => client.waitForExistAndClick(ModulePage.configure_module_button.split('%moduleTechName').join("autoupgrade")));
     test('should deactivate the shop', () => {
       return promise

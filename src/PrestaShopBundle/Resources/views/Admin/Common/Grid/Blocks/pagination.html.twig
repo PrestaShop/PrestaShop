@@ -24,7 +24,7 @@
  *#}
 
 {% block grid_pagination %}
-  {% if grid.data.records_total > 10 %}
+  {% if grid.data.records_total > 10 or grid.pagination.offset %}
     <div class="row">
       <div class="col-md-12">
         {{ render(controller('PrestaShopBundle:Admin\\Common:pagination', {

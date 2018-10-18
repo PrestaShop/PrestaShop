@@ -14,12 +14,6 @@ File: admin-dev/themes/default/template/footer.tpl:34</note>
         <note>Context:
 File: admin-dev/themes/default/template/footer.tpl:57</note>
       </trans-unit>
-      <trans-unit id="3e937d04c1c83492260a33d926ca587c">
-        <source>Bug Tracker</source>
-        <target>Bug Tracker</target>
-        <note>Context:
-File: admin-dev/themes/default/template/footer.tpl:62</note>
-      </trans-unit>
       <trans-unit id="74baec1f24fb00ec864d0344e73347d6">
         <source>User Club</source>
         <target>User Club</target>
