@@ -99,7 +99,10 @@ class CmsPageController extends FrameworkBundleAdminController
             $filters = $searchParametersForm->getData();
         }
 
-        return $this->redirectToRoute('admin_cms_pages_index', compact('cmsCategoryParentId', 'filters'));
+        return $this->redirectToRoute('admin_cms_pages_index', [
+            'cmsCategoryParentId' => $cmsCategoryParentId,
+            'filters' => $filters,
+        ]);
     }
 
     /**
@@ -166,7 +169,9 @@ class CmsPageController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->handleException($exception));
         }
 
-        return $this->redirectToRoute('admin_cms_pages_index', compact('cmsCategoryParentId'));
+        return $this->redirectToRoute('admin_cms_pages_index', [
+            'cmsCategoryParentId' => $cmsCategoryParentId,
+        ]);
     }
 
     /**
@@ -194,7 +199,9 @@ class CmsPageController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->handleException($exception));
         }
 
-        return $this->redirectToRoute('admin_cms_pages_index', compact('cmsCategoryParentId'));
+        return $this->redirectToRoute('admin_cms_pages_index', [
+            'cmsCategoryParentId' => $cmsCategoryParentId,
+        ]);
     }
 
     /**
@@ -232,7 +239,9 @@ class CmsPageController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->handleException($exception));
         }
 
-        return $this->redirectToRoute('admin_cms_pages_index', compact('cmsCategoryParentId'));
+        return $this->redirectToRoute('admin_cms_pages_index', [
+            'cmsCategoryParentId' => $cmsCategoryParentId,
+        ]);
     }
 
     /**
@@ -255,7 +264,9 @@ class CmsPageController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->handleException($exception));
         }
 
-        return $this->redirectToRoute('admin_cms_pages_index', compact('cmsCategoryParentId'));
+        return $this->redirectToRoute('admin_cms_pages_index', [
+            'cmsCategoryParentId' => $cmsCategoryParentId,
+        ]);
     }
 
     /**
@@ -278,7 +289,9 @@ class CmsPageController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->handleException($exception));
         }
 
-        return $this->redirectToRoute('admin_cms_pages_index', compact('cmsCategoryParentId'));
+        return $this->redirectToRoute('admin_cms_pages_index', [
+            'cmsCategoryParentId' => $cmsCategoryParentId,
+        ]);
     }
 
     /**
