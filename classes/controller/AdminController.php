@@ -3375,7 +3375,7 @@ class AdminControllerCore extends Controller
             $orderBySplit = preg_split('/[.!]/', $orderBy);
             $orderBy = bqSQL($orderBySplit[0]) . '.`' . bqSQL($orderBySplit[1]) . '`';
         } elseif ($orderBy) {
-            $orderBy = bqSQL($orderBy);
+            $orderBy = '`' . bqSQL($orderBy) . '`';
         }
 
         return $orderBy;
