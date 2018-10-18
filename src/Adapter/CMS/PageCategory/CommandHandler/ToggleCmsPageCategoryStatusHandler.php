@@ -48,27 +48,16 @@ final class ToggleCmsPageCategoryStatusHandler implements ToggleCmsPageCategoryS
     {
         try {
             $entity = new CMSCategory($command->getCmsPageCategoryId()->getValue());
-        } catch (PrestaShopException $exception) {
-            throw new CmsPageCategoryException(
-                sprintf(
-                    'An error occurred when finding cms category object with id "%s"',
-                    $command->getCmsPageCategoryId()->getValue()
-                ),
-                0,
-                $exception
-            );
-        }
 
-        if (0 >= $entity->id) {
-            throw new CmsPageCategoryNotFoundException(
-                sprintf(
-                    'Cms category object with id "%s" has not been found for status changing.',
-                    $command->getCmsPageCategoryId()->getValue()
-                )
-            );
-        }
+            if (0 >= $entity->id) {
+                throw new CmsPageCategoryNotFoundException(
+                    sprintf(
+                        'Cms category object with id "%s" has not been found for status changing.',
+                        $command->getCmsPageCategoryId()->getValue()
+                    )
+                );
+            }
 
-        try {
             if (false === $entity->toggleStatus()) {
                 throw new CannotToggleCmsPageCategoryStatusException(
                     sprintf(
