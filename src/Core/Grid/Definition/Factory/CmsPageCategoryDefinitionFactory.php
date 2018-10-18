@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\CmsPageRootCategorySettings;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\SubmitBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
@@ -54,19 +55,14 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 final class CmsPageCategoryDefinitionFactory extends AbstractGridDefinitionFactory
 {
     /**
-     * @var string
-     */
-    private $resetActionUrl;
-
-    /**
-     * @var string
-     */
-    private $redirectionUrl;
-
-    /**
      * @var int
      */
     private $cmsCategoryParentId;
+
+    /**
+     * @var UrlGeneratorInterface
+     */
+    private $urlGenerator;
 
     /**
      * @param UrlGeneratorInterface $urlGenerator
@@ -76,20 +72,8 @@ final class CmsPageCategoryDefinitionFactory extends AbstractGridDefinitionFacto
         UrlGeneratorInterface $urlGenerator,
         RequestStack $requestStack
     ) {
-        $this->resetActionUrl =  $urlGenerator->generate('admin_common_reset_search', [
-            'controller' => 'CmsPage',
-            'action' => 'index',
-        ]);
-
-        $request = $requestStack->getCurrentRequest();
-
-        if (null !== $request) {
-            $this->cmsCategoryParentId = $request->attributes->get('cmsCategoryParentId');
-        }
-
-        $this->redirectionUrl = $urlGenerator->generate('admin_cms_pages_index', [
-            'cmsCategoryParentId' => $this->cmsCategoryParentId,
-        ]);
+        $this->urlGenerator = $urlGenerator;
+        $this->setCmsPageCategoryParentId($requestStack);
     }
 
     /**
@@ -223,6 +207,15 @@ final class CmsPageCategoryDefinitionFactory extends AbstractGridDefinitionFacto
      */
     protected function getFilters()
     {
+        $resetActionUrl =  $this->urlGenerator->generate('admin_common_reset_search', [
+            'controller' => 'CmsPage',
+            'action' => 'index',
+        ]);
+
+        $redirectionUrl = $this->urlGenerator->generate('admin_cms_pages_index', [
+            'cmsCategoryParentId' => $this->cmsCategoryParentId,
+        ]);
+
         return (new FilterCollection())
             ->add((new Filter('id_cms_category', TextType::class))
                 ->setTypeOptions([
@@ -254,8 +247,8 @@ final class CmsPageCategoryDefinitionFactory extends AbstractGridDefinitionFacto
             ->add((new Filter('actions', SearchAndResetType::class))
                 ->setTypeOptions([
                     'attr' => [
-                        'data-url' => $this->resetActionUrl,
-                        'data-redirect' => $this->redirectionUrl,
+                        'data-url' => $resetActionUrl,
+                        'data-redirect' => $redirectionUrl,
                     ],
                 ])
                 ->setAssociatedColumn('actions')
@@ -263,7 +256,10 @@ final class CmsPageCategoryDefinitionFactory extends AbstractGridDefinitionFacto
         ;
     }
 
-    public function getBulkActions()
+    /**
+     * {@inheritdoc}
+     */
+    protected function getBulkActions()
     {
         return (new BulkActionCollection())
             ->add((new SubmitBulkAction('enable_selection'))
@@ -297,7 +293,10 @@ final class CmsPageCategoryDefinitionFactory extends AbstractGridDefinitionFacto
         ;
     }
 
-    public function getGridActions()
+    /**
+     * {@inheritdoc}
+     */
+    protected function getGridActions()
     {
         return (new GridActionCollection())
             ->add((new SimpleGridAction('common_refresh_list'))
@@ -313,5 +312,23 @@ final class CmsPageCategoryDefinitionFactory extends AbstractGridDefinitionFacto
                 ->setIcon('storage')
             )
         ;
+    }
+
+    /**
+     * Sets cms page category parent id directly from request attribute. On not found case, it assigns the default one.
+     *
+     * @param RequestStack $requestStack
+     */
+    private function setCmsPageCategoryParentId(RequestStack $requestStack)
+    {
+        $request = $requestStack->getCurrentRequest();
+
+        if (null !== $request) {
+            $this->cmsCategoryParentId = $request->attributes->get('cmsCategoryParentId');
+
+            return;
+        }
+
+        $this->cmsCategoryParentId = CmsPageRootCategorySettings::ROOT_CMS_PAGE_CATEGORY_ID;
     }
 }

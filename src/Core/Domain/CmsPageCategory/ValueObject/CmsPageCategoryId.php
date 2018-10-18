@@ -53,6 +53,9 @@ class CmsPageCategoryId
         $this->cmsPageCategoryId = (int) $cmsPageCategoryId;
     }
 
+    /**
+     * @return int
+     */
     public function getValue()
     {
         return $this->cmsPageCategoryId;
