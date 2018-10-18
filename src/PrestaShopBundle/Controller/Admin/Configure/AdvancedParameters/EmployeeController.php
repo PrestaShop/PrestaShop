@@ -71,33 +71,6 @@ class EmployeeController extends FrameworkBundleAdminController
     }
 
     /**
-     * Handles employee list searching.
-     *
-     * @AdminSecurity("is_granted(['read', 'update', 'create', 'delete'], request.get('_legacy_controller'))")
-     *
-     * @param Request $request
-     *
-     * @return RedirectResponse
-     */
-    public function searchAction(Request $request)
-    {
-        $definitionFactory = $this->get('prestashop.core.grid.definition.factory.employee');
-
-        $employeeGridDefinition = $definitionFactory->getDefinition();
-        $gridFilterFormFactory = $this->get('prestashop.core.grid.filter.form_factory');
-
-        $filtersForm = $gridFilterFormFactory->create($employeeGridDefinition);
-        $filtersForm->handleRequest($request);
-        $filters = [];
-
-        if ($filtersForm->isSubmitted()) {
-            $filters = $filtersForm->getData();
-        }
-
-        return $this->redirectToRoute('admin_employees_index', ['filters' => $filters]);
-    }
-
-    /**
      * Save employee options.
      *
      * @AdminSecurity("is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))")
