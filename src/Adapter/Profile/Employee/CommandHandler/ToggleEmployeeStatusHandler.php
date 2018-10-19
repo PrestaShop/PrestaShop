@@ -48,7 +48,7 @@ final class ToggleEmployeeStatusHandler implements ToggleEmployeeStatusHandlerIn
         $employee = new Employee($employeeId->getValue());
 
         $this->assertEmployeeWasFoundById($employeeId, $employee);
-        $this->assertLoggedInEmployeeCannotChangeItselfStatus($employee);
+        $this->assertLoggedInEmployeeIsNotTheSameAsToggledEmployee($employee);
         $this->assertEmployeeIsNotTheLastAdmin($employee);
 
         $employee->toggleStatus();
@@ -96,7 +96,7 @@ final class ToggleEmployeeStatusHandler implements ToggleEmployeeStatusHandlerIn
      *
      * @param Employee $employee
      */
-    private function assertLoggedInEmployeeCannotChangeItselfStatus(Employee $employee)
+    private function assertLoggedInEmployeeIsNotTheSameAsToggledEmployee(Employee $employee)
     {
         if (\Context::getContext()->employee->id === $employee->id) {
             throw new EmployeeCannotChangeItselfException(
