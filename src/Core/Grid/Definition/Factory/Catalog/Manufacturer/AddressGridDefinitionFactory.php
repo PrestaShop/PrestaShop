@@ -64,7 +64,7 @@ final class AddressGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getId()
     {
-        return 'manufacturer_addresses';
+        return 'Manufacturer_addresses';
     }
 
     /**
@@ -127,51 +127,51 @@ final class AddressGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'field' => 'city',
                 ])
             )
-            ->add((new DataColumn('id_country'))
-                ->setName($this->trans('Country', [], 'Admin.Global'))
-                ->setOptions([
-                    'field' => 'country_name',
-                    'filter' => new ColumnFilterOption(CountryChoiceType::class),
-                ])
-            )
-            ->add((new ActionColumn('actions'))
-                ->setName($this->trans('Actions', [], 'Admin.Global'))
-                ->setOptions([
-                    'filter' => new ColumnFilterOption(SearchAndResetFormType::class, [
-                        'attr' => [
-                            'data-url' => $this->searchResetUrl,
-                            'data-redirect' => $this->redirectUrl,
-                        ],
-                    ]),
-                ])
-            )
+//            ->add((new DataColumn('id_country'))
+//                ->setName($this->trans('Country', [], 'Admin.Global'))
+//                ->setOptions([
+//                    'field' => 'country_name',
+//                    'filter' => new ColumnFilterOption(CountryChoiceType::class),
+//                ])
+//            )
+//            ->add((new ActionColumn('actions'))
+//                ->setName($this->trans('Actions', [], 'Admin.Global'))
+//                ->setOptions([
+//                    'filter' => new ColumnFilterOption(SearchAndResetFormType::class, [
+//                        'attr' => [
+//                            'data-url' => $this->searchResetUrl,
+//                            'data-redirect' => $this->redirectUrl,
+//                        ],
+//                    ]),
+//                ])
+//            )
         ;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function getGridActions()
-    {
-        return (new GridActionCollection())
-            ->add(new GridAction(
-                'common_refresh_list',
-                $this->trans('Refresh list', [], 'Admin.Advparameters.Feature'),
-                'refresh',
-                'simple'
-            ))
-            ->add(new GridAction(
-                'common_show_query',
-                $this->trans('Show SQL query', [], 'Admin.Actions'),
-                'code',
-                'simple'
-            ))
-            ->add(new GridAction(
-                'common_export_sql_manager',
-                $this->trans('Export to SQL Manager', [], 'Admin.Actions'),
-                'storage',
-                'simple'
-            ))
-            ;
-    }
+//    /**
+//     * {@inheritdoc}
+//     */
+//    protected function getGridActions()
+//    {
+//        return (new GridActionCollection())
+//            ->add(new GridAction(
+//                'common_refresh_list',
+//                $this->trans('Refresh list', [], 'Admin.Advparameters.Feature'),
+//                'refresh',
+//                'simple'
+//            ))
+//            ->add(new GridAction(
+//                'common_show_query',
+//                $this->trans('Show SQL query', [], 'Admin.Actions'),
+//                'code',
+//                'simple'
+//            ))
+//            ->add(new GridAction(
+//                'common_export_sql_manager',
+//                $this->trans('Export to SQL Manager', [], 'Admin.Actions'),
+//                'storage',
+//                'simple'
+//            ))
+//        ;
+//    }
 }

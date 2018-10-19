@@ -24,45 +24,33 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Query\Doctrine;
+namespace PrestaShop\PrestaShop\Core\Grid\Query;
 
 use Doctrine\DBAL\Connection;
-use PrestaShop\PrestaShop\Core\Grid\Query\DoctrineQueryBuilderInterface;
+use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
-final class ManufacturerAddressQueryBuilder implements DoctrineQueryBuilderInterface
+final class ManufacturerAddressQueryBuilder extends AbstractDoctrineQueryBuilder
 {
     /**
-     * @var Connection
+     * @var int
      */
-    private $connection;
+    private $contextLangId;
 
-    /**
-     * @var string
-     */
-    private $tablePrefix;
+    public function __construct(
+        Connection $connection,
+        $dbPrefix,
+        $contextLangId
+    ) {
+        parent::__construct($connection, $dbPrefix);
 
-    /**
-     * @var string
-     */
-    private $langId;
-
-    /**
-     * @param Connection $connection
-     * @param string $tablePrefix
-     * @param string $langId
-     */
-    public function __construct(Connection $connection, $tablePrefix)
-    {
-        $this->connection = $connection;
-        $this->tablePrefix = $tablePrefix;
-        $this->langId = \Context::getContext()->language->id;
+        $this->contextLangId = $contextLangId;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria = null)
+    public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $qb = $this->getQueryBuilderByFilters($searchCriteria->getFilters());
         $qb->select('a.id_address, m.name, a.firstname, a.lastname, a.postcode, a.city, cl.name as country_name')
@@ -80,7 +68,7 @@ final class ManufacturerAddressQueryBuilder implements DoctrineQueryBuilderInter
     /**
      * {@inheritdoc}
      */
-    public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria = null)
+    public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $qb = $this->getQueryBuilderByFilters($searchCriteria->getFilters());
         $qb->select('COUNT(*)');
@@ -88,32 +76,47 @@ final class ManufacturerAddressQueryBuilder implements DoctrineQueryBuilderInter
         return $qb;
     }
 
+    /**
+     * Gets query builder with common sql needed for manufacturer addresses grid.
+     *
+     * @param array $filters
+     *
+     * @return QueryBuilder
+     */
     private function getQueryBuilderByFilters(array $filters)
     {
+        $allowedFilters = [
+            'id_address',
+            'brand',
+            'firstname',
+            'lastname',
+            'postcode',
+            'city',
+            'country',
+        ];
+
         $qb = $this->connection
             ->createQueryBuilder()
-            ->from($this->tablePrefix . 'address', 'a')
-            ->leftJoin('a', $this->tablePrefix . 'country_lang', 'cl', 'cl.id_country = a.id_country AND cl.id_lang = :lang')
-                ->setParameter('lang', $this->langId)
-            ->leftJoin('a', $this->tablePrefix . 'manufacturer', 'm', 'm.id_manufacturer = a.id_manufacturer')
+            ->from($this->dbPrefix . 'address', 'a')
+            ->leftJoin('a', $this->dbPrefix . 'country_lang', 'cl', 'cl.id_country = a.id_country AND cl.id_lang = :lang')
+                ->setParameter('lang', $this->contextLangId)
+            ->leftJoin('a', $this->dbPrefix . 'manufacturer', 'm', 'm.id_manufacturer = a.id_manufacturer')
         ;
 
         foreach ($filters as $name => $value) {
-            if (in_array($name, ['id_address'])) {
-                $qb->andWhere("$name = :$name");
-                $qb->setParameter($name, $value);
-
+            if (!in_array($name, $allowedFilters, true)) {
                 continue;
             }
-
-            $qb->andWhere("$name LIKE :$name");
-            $qb->setParameter($name, '%' . $value . '%');
+            if ('id_address' === $name) {
+                $qb->andWhere("$name = :$name");
+                $qb->setParameter($name, $value);
+                continue;
+            }
+            if ('name' === $name) {
+                $qb->andHaving("m.$name LIKE :$name");
+                $qb->setParameter($name, '%' . $value . '%');
+            }
         }
-
-        $qb->andWhere('a.id_customer = 0')
-            ->andWhere('a.id_supplier = 0')
-            ->andWhere('a.id_warehouse = 0')
-            ->andWhere('a.deleted = 0');
 
         return $qb;
     }
