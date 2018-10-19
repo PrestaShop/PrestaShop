@@ -324,9 +324,9 @@ class WebserviceRequestCore
             'customizations' => array('description' => 'Customization values', 'class' => 'Customization'),
         );
         $extra_resources = Hook::exec('addWebserviceResources', array('resources' => $resources), null, true, false);
-        if (is_array($extra_resources) && count($extra_resources)) {
+        if ((is_array($extra_resources) || $extra_resources instanceOf Countable) && count($extra_resources)) {
             foreach ($extra_resources as $new_resources) {
-                if (is_array($new_resources) && count($new_resources)) {
+                if ((is_array($new_resources) || $new_resources instanceOf Countable) && count($new_resources)) {
                     $resources = array_merge($resources, $new_resources);
                 }
             }
@@ -601,7 +601,7 @@ class WebserviceRequestCore
      * @param int $num
      * @param string $label
      * @param array $value
-     * @param array $values
+     * @param array $available_values
      * @param int $code
      * @return void
      */
@@ -797,7 +797,7 @@ class WebserviceRequestCore
 
     protected function shopExists($params)
     {
-        if (count(self::$shopIDs)) {
+        if ((is_array(self::$shopIDs) || self::$shopIDs instanceof Countable) && count(self::$shopIDs)) {
             return true;
         }
 
@@ -824,7 +824,7 @@ class WebserviceRequestCore
         if (isset($params['id_group_shop']) && is_numeric($params['id_group_shop'])) {
             Shop::setContext(Shop::CONTEXT_GROUP, (int)$params['id_group_shop']);
             self::$shopIDs = Shop::getShops(true, (int)$params['id_group_shop'], true);
-            if (count(self::$shopIDs) == 0) {
+            if ( (!is_array(self::$shopIDs) || !(self::$shopIDs instanceof Countable)) || count(self::$shopIDs) == 0) {
                 // @FIXME Set ErrorCode !
                 $this->setError(500, 'This group shop doesn\'t have shops', 999);
                 return false;

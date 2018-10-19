@@ -145,7 +145,7 @@ class WebserviceOutputJSONCore implements WebserviceOutputInterface
             }
             $this->currentEntity = array();
         }
-        if (count($this->currentAssociatedEntity)) {
+        if ((is_array($this->currentAssociatedEntity) || $this->currentAssociatedEntity instanceof Countable) && count($this->currentAssociatedEntity)) {
             $current = array();
             foreach ($this->currentAssociatedEntity as $element) {
                 $current[$element['key']] = $element['value'];
