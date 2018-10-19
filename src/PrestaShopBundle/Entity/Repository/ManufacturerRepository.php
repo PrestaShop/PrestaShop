@@ -34,7 +34,7 @@ use PrestaShopBundle\Exception\NotImplementedException;
 use PrestaShop\PrestaShop\Adapter\LegacyContext as ContextAdapter;
 use RuntimeException;
 use Shop;
-
+//todo: remove if not used.
 class ManufacturerRepository implements DoctrineQueryBuilderInterface
 {
     use NormalizeFieldTrait;

@@ -27,6 +27,13 @@
 {% trans_default_domain 'Admin.Catalog.Feature' %}
 
 {% block content %}
+  {% block manufacturers_listing %}
+    <div class="row">
+      <div class="col">
+        {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': manufacturer_grid} %}
+      </div>
+    </div>
+  {% endblock %}
 {% endblock %}
 
 {% block javascripts %}

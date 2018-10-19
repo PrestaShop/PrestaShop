@@ -1,4 +1,4 @@
-admin_manufacturers:
+admin_manufacturers_index:
     path: /
     methods: [GET, POST]
     defaults:
