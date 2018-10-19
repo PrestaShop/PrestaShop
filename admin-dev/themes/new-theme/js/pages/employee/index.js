@@ -31,6 +31,7 @@ import SortingExtension from "../../components/grid/extension/sorting-extension"
 import BulkActionCheckboxExtension from "../../components/grid/extension/bulk-action-checkbox-extension";
 import SubmitBulkActionExtension from "../../components/grid/extension/submit-bulk-action-extension";
 import SubmitRowActionExtension from "../../components/grid/extension/action/row/submit-row-action-extension";
+import ColumnTogglingExtension from "../../components/grid/extension/column-toggling-extension";
 
 const $ = window.$;
 
@@ -44,4 +45,5 @@ $(() => {
   employeeGrid.addExtension(new BulkActionCheckboxExtension());
   employeeGrid.addExtension(new SubmitBulkActionExtension());
   employeeGrid.addExtension(new SubmitRowActionExtension());
+  employeeGrid.addExtension(new ColumnTogglingExtension());
 });

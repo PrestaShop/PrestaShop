@@ -19,3 +19,10 @@ admin_employees_save_options:
   defaults:
     _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Employee:saveOptions'
     _legacy_controller: AdminEmployees
+
+admin_employees_toggle_status:
+  path: /{employeeId}/toggle-status
+  methods: [POST]
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Employee:toggleStatus'
+    _legacy_controller: AdminEmployees

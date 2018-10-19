@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\Profile\Employee\CommandHandler;
 use Employee;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Command\ToggleEmployeeStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\CommandHandler\ToggleEmployeeStatusHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception\EmployeeCannotChangeItselfException;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception\EmployeeNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception\AdminEmployeeException;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject\EmployeeId;
@@ -47,8 +48,8 @@ final class ToggleEmployeeStatusHandler implements ToggleEmployeeStatusHandlerIn
         $employee = new Employee($employeeId->getValue());
 
         $this->assertEmployeeWasFoundById($employeeId, $employee);
+        $this->assertLoggedInEmployeeCannotChangeItselfStatus($employee);
         $this->assertEmployeeIsNotTheLastAdmin($employee);
-        $this->assertLoggedInEmployeeCannotToggleItself($employee);
 
         $employee->toggleStatus();
     }
@@ -91,9 +92,17 @@ final class ToggleEmployeeStatusHandler implements ToggleEmployeeStatusHandlerIn
     }
 
     /**
+     * If logged in employee is trying to toggle itself, then terminate execution.
+     *
      * @param Employee $employee
      */
-    private function assertLoggedInEmployeeCannotToggleItself(Employee $employee)
+    private function assertLoggedInEmployeeCannotChangeItselfStatus(Employee $employee)
     {
+        if (\Context::getContext()->employee->id === $employee->id) {
+            throw new EmployeeCannotChangeItselfException(
+                'Employee cannot change status of itself.',
+                EmployeeCannotChangeItselfException::CANNOT_CHANGE_STATUS
+            );
+        }
     }
 }
