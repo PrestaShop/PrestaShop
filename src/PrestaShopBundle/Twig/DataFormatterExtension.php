@@ -42,7 +42,7 @@ class DataFormatterExtension extends \Twig_Extension
             new \Twig_SimpleFilter('arrayCast', array($this, 'arrayCast')),
             new \Twig_SimpleFilter('intCast', array($this, 'intCast')),
             new \Twig_SimpleFilter('unsetElement', array($this, 'unsetElement')),
-            new \Twig_SimpleFilter('array_pluck', array($this, 'array_pluck')),
+            new \Twig_SimpleFilter('array_pluck', array($this, 'arrayPluck')),
         );
     }
 
@@ -57,7 +57,7 @@ class DataFormatterExtension extends \Twig_Extension
             new \Twig_SimpleFunction('arrayCast', array($this, 'arrayCast')),
             new \Twig_SimpleFunction('intCast', array($this, 'intCast')),
             new \Twig_SimpleFunction('unsetElement', array($this, 'unsetElement')),
-            new \Twig_SimpleFunction('array_pluck', array($this, 'array_pluck')),
+            new \Twig_SimpleFunction('array_pluck', array($this, 'arrayPluck')),
         );
     }
 
@@ -104,15 +104,15 @@ class DataFormatterExtension extends \Twig_Extension
      * keys of the extracted array.
      *
      * ex:
-     *  array_pluck(['first_name' => 'John', 'last_name' => 'Doe'], ['first_name']) => ['first_name' => 'John']
-     *  array_pluck(['first_name' => 'John', 'last_name' => 'Doe'], ['first_name' => 'name']) => ['name' => 'John']
+     *  arrayPluck(['first_name' => 'John', 'last_name' => 'Doe'], ['first_name']) => ['first_name' => 'John']
+     *  arrayPluck(['first_name' => 'John', 'last_name' => 'Doe'], ['first_name' => 'name']) => ['name' => 'John']
      *
      * @param array $array
      * @param array $extractedKeys
      *
      * @return array
      */
-    public function array_pluck(array $array, array $extractedKeys)
+    public function arrayPluck(array $array, array $extractedKeys)
     {
         $extractedArray = [];
         foreach ($extractedKeys as $key => $value) {
