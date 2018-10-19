@@ -27,6 +27,13 @@
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use PrestaShop\PrestaShop\Core\Search\Filters\EmployeeFilters;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Command\ToggleEmployeeStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception\AdminEmployeeException;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception\EmployeeCannotChangeItselfException;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception\EmployeeException;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception\EmployeeNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception\InvalidEmployeeIdException;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject\EmployeeId;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -98,5 +105,69 @@ class EmployeeController extends FrameworkBundleAdminController
         }
 
         return $this->redirectToRoute('admin_employees_index');
+    }
+
+    /**
+     * Toggle given employee status.
+     *
+     * @param int $employeeId
+     *
+     * @return RedirectResponse
+     */
+    public function toggleStatusAction($employeeId)
+    {
+        try {
+            $this->getCommandBus()->handle(new ToggleEmployeeStatusCommand(new EmployeeId($employeeId)));
+
+            $this->addFlash(
+                'success',
+                $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
+            );
+        } catch (EmployeeException $e) {
+            $this->addFlash('error', $this->getErrorForEmployeeException($e));
+        }
+
+        return $this->redirectToRoute('admin_employees_index');
+    }
+
+    /**
+     * Get human readable error message for thrown employee exception.
+     *
+     * @param EmployeeException $exception
+     *
+     * @return string
+     */
+    protected function getErrorForEmployeeException(EmployeeException $exception)
+    {
+        $type = get_class($exception);
+        $code = $exception->getCode();
+
+        $errorMessages = [
+            InvalidEmployeeIdException::class =>
+                $this->trans('The object cannot be loaded (the identifier is missing or invalid)', 'Admin.Notifications.Error'),
+            EmployeeNotFoundException::class =>
+                $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'),
+            AdminEmployeeException::class => [
+                AdminEmployeeException::CANNOT_CHANGE_LAST_ADMIN =>
+                    $this->trans('You cannot disable or delete the administrator account.', 'Admin.Advparameters.Notification'),
+            ],
+            EmployeeCannotChangeItselfException::class => [
+                EmployeeCannotChangeItselfException::CANNOT_CHANGE_STATUS =>
+                    $this->trans('You cannot disable or delete your own account.', 'Admin.Advparameters.Notification'),
+            ],
+        ];
+
+        if (isset($errorMessages[$type])) {
+            if (is_array($errorMessages[$type]) && isset($errorMessages[$type][$code])) {
+                return $errorMessages[$type][$code];
+            }
+
+            return $errorMessages[$type];
+        }
+
+        return $this->getFallbackErrorMessage(
+            $type,
+            $exception->getCode()
+        );
     }
 }

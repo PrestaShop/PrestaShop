@@ -1,0 +1,8 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.adapter.profile.employee.command_handler.toggle_employee_status_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Profile\Employee\CommandHandler\ToggleEmployeeStatusHandler'
+    tags:
+      - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Command\ToggleEmployeeStatusCommand }

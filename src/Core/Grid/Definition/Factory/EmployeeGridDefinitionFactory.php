@@ -42,7 +42,7 @@ use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShopBundle\Form\Admin\Type\Common\Team\ProfileChoiceType;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
@@ -140,7 +140,7 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setOptions([
                     'field' => 'active',
                     'primary_field' => 'id_employee',
-                    'route' => 'admin_employees_index',
+                    'route' => 'admin_employees_toggle_status',
                     'route_param_name' => 'employeeId',
                 ])
             )
@@ -227,6 +227,8 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'required' => false,
                     'choice_translation_domain' => false,
                 ])
+            )
+            ->add((new Filter('active', YesAndNoChoiceType::class))
                 ->setAssociatedColumn('active')
             )
             ->add(
