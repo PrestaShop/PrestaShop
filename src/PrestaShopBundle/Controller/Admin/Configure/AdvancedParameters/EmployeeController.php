@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception\InvalidEmployee
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject\EmployeeId;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -80,6 +81,7 @@ class EmployeeController extends FrameworkBundleAdminController
     /**
      * Save employee options.
      *
+     * @DemoRestricted(redirectRoute="admin_employees_index")
      * @AdminSecurity("is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))")
      *
      * @param Request $request
@@ -109,6 +111,9 @@ class EmployeeController extends FrameworkBundleAdminController
 
     /**
      * Toggle given employee status.
+     *
+     * @DemoRestricted(redirectRoute="admin_employees_index")
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_employees_index")
      *
      * @param int $employeeId
      *
