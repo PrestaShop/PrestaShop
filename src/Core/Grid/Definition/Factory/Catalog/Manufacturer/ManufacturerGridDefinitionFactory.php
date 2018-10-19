@@ -37,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ContentColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetFormType;
+use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 
 /**
  * Class ManufacturerGridDefinitionFactory is responsible for creating Manufacturers grid definition
@@ -75,7 +76,7 @@ final class ManufacturerGridDefinitionFactory extends AbstractGridDefinitionFact
      */
     protected function getId()
     {
-        return 'manufacturers';
+        return 'Manufacturers';
     }
 
     /**
@@ -150,44 +151,44 @@ final class ManufacturerGridDefinitionFactory extends AbstractGridDefinitionFact
                     'field' => 'active',
                 ])
             )
-            ->add((new ActionColumn('actions'))
-                ->setName($this->trans('Actions', [], 'Admin.Global'))
-                ->setOptions([
-                    'filter' => new ColumnFilterOption(SearchAndResetFormType::class, [
-                        'attr' => [
-                            'data-url' => $this->searchResetUrl,
-                            'data-redirect' => $this->redirectUrl,
-                        ],
-                    ]),
-                ])
-            )
+//            ->add((new ActionColumn('actions'))
+//                ->setName($this->trans('Actions', [], 'Admin.Global'))
+//                ->setOptions([
+//                    'filter' => new ColumnFilterOption(SearchAndResetType::class, [
+//                        'attr' => [
+//                            'data-url' => $this->searchResetUrl,
+//                            'data-redirect' => $this->redirectUrl,
+//                        ],
+//                    ]),
+//                ])
+//            )
         ;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function getGridActions()
-    {
-        return (new GridActionCollection())
-            ->add(new GridAction(
-                'common_refresh_list',
-                $this->trans('Refresh list', [], 'Admin.Advparameters.Feature'),
-                'refresh',
-                'simple'
-            ))
-            ->add(new GridAction(
-                'common_show_query',
-                $this->trans('Show SQL query', [], 'Admin.Actions'),
-                'code',
-                'simple'
-            ))
-            ->add(new GridAction(
-                'common_export_sql_manager',
-                $this->trans('Export to SQL Manager', [], 'Admin.Actions'),
-                'storage',
-                'simple'
-            ))
-        ;
-    }
+//    /**
+//     * {@inheritdoc}
+//     */
+//    protected function getGridActions()
+//    {
+//        return (new GridActionCollection())
+//            ->add(new GridAction(
+//                'common_refresh_list',
+//                $this->trans('Refresh list', [], 'Admin.Advparameters.Feature'),
+//                'refresh',
+//                'simple'
+//            ))
+//            ->add(new GridAction(
+//                'common_show_query',
+//                $this->trans('Show SQL query', [], 'Admin.Actions'),
+//                'code',
+//                'simple'
+//            ))
+//            ->add(new GridAction(
+//                'common_export_sql_manager',
+//                $this->trans('Export to SQL Manager', [], 'Admin.Actions'),
+//                'storage',
+//                'simple'
+//            ))
+//        ;
+//    }
 }

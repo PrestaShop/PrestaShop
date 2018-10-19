@@ -53,39 +53,39 @@ class ManufacturerController extends FrameworkBundleAdminController
         ]);
     }
 
-    /**
-     * Render manufacturers grid
-     *
-     * @param ManufacturerFilters $filters
-     *
-     * @return Response
-     */
-    public function renderManufacturersGridAction(ManufacturerFilters $filters)
-    {
-        $manufacturerGridFactory = $this->get('prestashop.core.grid.manufacturer_factory');
-        $manufacturerGrid = $manufacturerGridFactory->createUsingSearchCriteria($filters);
-
-        return $this->render('@PrestaShop/Admin/Common/Grid/grid_panel.html.twig', [
-            'grid' => $this->getGridPresenter()->present($manufacturerGrid),
-        ]);
-    }
-
-    /**
-     * Render manufacturer addresses grid
-     *
-     * @param ManufacturerAddressFilters $filters
-     *
-     * @return Response
-     */
-    public function renderAddressesGridAction(ManufacturerAddressFilters $filters)
-    {
-        $addressesGridFactory = $this->get('prestashop.core.grid.manufacturer_address_factory');
-        $addressesGrid = $addressesGridFactory->createUsingSearchCriteria($filters);
-
-        return $this->render('@PrestaShop/Admin/Common/Grid/grid_panel.html.twig', [
-            'grid' => $this->getGridPresenter()->present($addressesGrid),
-        ]);
-    }
+//    /**
+//     * Render manufacturers grid
+//     *
+//     * @param ManufacturerFilters $filters
+//     *
+//     * @return Response
+//     */
+//    public function renderManufacturersGridAction(ManufacturerFilters $filters)
+//    {
+//        $manufacturerGridFactory = $this->get('prestashop.core.grid.manufacturer_factory');
+//        $manufacturerGrid = $manufacturerGridFactory->getGrid($filters);
+//
+//        return $this->render('@PrestaShop/Admin/Common/Grid/grid_panel.html.twig', [
+//            'grid' => $this->getGridPresenter()->present($manufacturerGrid),
+//        ]);
+//    }
+//
+//    /**
+//     * Render manufacturer addresses grid
+//     *
+//     * @param ManufacturerAddressFilters $filters
+//     *
+//     * @return Response
+//     */
+//    public function renderAddressesGridAction(ManufacturerAddressFilters $filters)
+//    {
+//        $addressesGridFactory = $this->get('prestashop.core.grid.manufacturer_address_factory');
+//        $addressesGrid = $addressesGridFactory->getGrid($filters);
+//
+//        return $this->render('@PrestaShop/Admin/Common/Grid/grid_panel.html.twig', [
+//            'grid' => $this->getGridPresenter()->present($addressesGrid),
+//        ]);
+//    }
 
     /**
      * Get grid presenter
