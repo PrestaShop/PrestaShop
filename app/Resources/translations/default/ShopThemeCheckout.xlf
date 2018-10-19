@@ -514,6 +514,12 @@ File: themes/StarterTheme/templates/checkout/_partials/steps/addresses.tpl:41</n
   </file>
   <file original="themes/classic/templates/checkout/_partials/steps/payment.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="238150e8bd467ab9cb6c7e5618db54e9">
+        <source>Transaction amount has been correctly updated</source>
+        <target>Transaction amount has been correctly updated</target>
+        <note>Context:
+File: themes/classic/templates/checkout/_partials/steps/payment.tpl:12</note>
+      </trans-unit>
       <trans-unit id="9ea465e939c30ceba6e0d46810913142">
         <source>By confirming the order, you certify that you have read and agree with all of the conditions below:</source>
         <target>By confirming the order, you certify that you have read and agree with all of the conditions below:</target>
