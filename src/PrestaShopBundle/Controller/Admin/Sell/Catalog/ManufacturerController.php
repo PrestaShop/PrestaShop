@@ -42,14 +42,19 @@ class ManufacturerController extends FrameworkBundleAdminController
      * Show manufacturers listing page
      *
      * @param Request $request
+     * @param ManufacturerFilters $filters
      *
      * @return Response
      */
-    public function indexAction(Request $request)
+    public function indexAction(Request $request, ManufacturerFilters $filters)
     {
-        return $this->render('@PrestaShop/Admin/Sell/Catalog/Manufacturer/listing.html.twig', [
+        $manufacturerGridFactory = $this->get('prestashop.core.grid.factory.manufacturer');
+        $manufacturerGrid = $manufacturerGridFactory->getGrid($filters);
+
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Manufacturer/index.html.twig', [
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+            'manufacturer_grid' => $this->getGridPresenter()->present($manufacturerGrid),
         ]);
     }
 
@@ -62,7 +67,7 @@ class ManufacturerController extends FrameworkBundleAdminController
 //     */
 //    public function renderManufacturersGridAction(ManufacturerFilters $filters)
 //    {
-//        $manufacturerGridFactory = $this->get('prestashop.core.grid.manufacturer_factory');
+//        $manufacturerGridFactory = $this->get('prestashop.core.grid.factory.manufacturer');
 //        $manufacturerGrid = $manufacturerGridFactory->getGrid($filters);
 //
 //        return $this->render('@PrestaShop/Admin/Common/Grid/grid_panel.html.twig', [

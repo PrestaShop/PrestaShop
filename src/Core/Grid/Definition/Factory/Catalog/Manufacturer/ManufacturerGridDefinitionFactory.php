@@ -106,45 +106,45 @@ final class ManufacturerGridDefinitionFactory extends AbstractGridDefinitionFact
                     'field' => 'id_manufacturer',
                 ])
             )
-            ->add((new ContentColumn('logo'))
-                ->setName($this->trans('Logo', [], 'Admin.Global'))
-                ->setOptions([
-                    'field' => 'logo',
-                    'modifier' => function (array $row) use ($imageManager) {
-                        $row['logo'] = $imageManager->getThumbnailForListing(
-                            $row['id_manufacturer'],
-                            'jpg',
-                            'manufacturer',
-                            'm'
-                        );
-
-                        return $row;
-                    }
-                ])
-            )
+//            ->add((new ContentColumn('logo'))
+//                ->setName($this->trans('Logo', [], 'Admin.Global'))
+//                ->setOptions([
+//                    'field' => 'logo',
+//                    'modifier' => function (array $row) use ($imageManager) {
+//                        $row['logo'] = $imageManager->getThumbnailForListing(
+//                            $row['id_manufacturer'],
+//                            'jpg',
+//                            'manufacturer',
+//                            'm'
+//                        );
+//
+//                        return $row;
+//                    }
+//                ])
+//            )
             ->add((new DataColumn('name'))
                 ->setName($this->trans('Name', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'name',
                 ])
             )
-            ->add((new DataColumn('addresses'))
-                ->setName($this->trans('Addresses', [], 'Admin.Catalog.Feature'))
-                ->setOptions([
-                    'field' => 'addresses_count',
-                    'modifier' => function (array $row) {
-                        $row['addresses_count'] = $row['addresses_count'] ?: '--';
-
-                        return $row;
-                    },
-                ])
-            )
-            ->add((new DataColumn('products'))
-                ->setName($this->trans('Products', [], 'Admin.Catalog.Feature'))
-                ->setOptions([
-                    'field' => 'products_count',
-                ])
-            )
+//            ->add((new DataColumn('addresses'))
+//                ->setName($this->trans('Addresses', [], 'Admin.Catalog.Feature'))
+//                ->setOptions([
+//                    'field' => 'addresses_count',
+//                    'modifier' => function (array $row) {
+//                        $row['addresses_count'] = $row['addresses_count'] ?: '--';
+//
+//                        return $row;
+//                    },
+//                ])
+//            )
+//            ->add((new DataColumn('products'))
+//                ->setName($this->trans('Products', [], 'Admin.Catalog.Feature'))
+//                ->setOptions([
+//                    'field' => 'products_count',
+//                ])
+//            )
             ->add((new DataColumn('status'))
                 ->setName($this->trans('Enabled', [], 'Admin.Global'))
                 ->setOptions([
