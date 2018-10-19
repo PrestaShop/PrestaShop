@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\EventListener;
 
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
@@ -116,9 +117,9 @@ class DemoModeEnabledListener
 
         $this->showNotificationMessage($demoRestricted);
 
-        $routeParametersToKeep = $this->getQueryParamsFromRequestAttributes(
+        $routeParametersToKeep = $this->getQueryParamsFromRequestQuery(
             $demoRestricted->getRedirectQueryParamsToKeep(),
-            $event->getRequest()->attributes->all()
+            $event->getRequest()
         );
 
         $url = $this->router->generate($demoRestricted->getRedirectRoute(), $routeParametersToKeep);
@@ -175,16 +176,21 @@ class DemoModeEnabledListener
     /**
      * Gets query parameters by comparing them to the current request attributes.
      *
-     * E.g (['mandatoryRouteId'], ['mandatoryRouteId' => 1, 'anotherId' => 2]) => ['mandatoryRouteId' => 1] where
-     * the first array is $queryParametersToKeep and the second is $requestAttributes
-     *
      * @param array $queryParametersToKeep
-     * @param array $requestAttributes
+     * @param Request $request
      *
      * @return array
      */
-    private function getQueryParamsFromRequestAttributes(array $queryParametersToKeep, array $requestAttributes)
+    private function getQueryParamsFromRequestQuery(array $queryParametersToKeep, Request $request)
     {
-        return array_intersect_key($requestAttributes, array_flip($queryParametersToKeep));
+        $result = [];
+
+        foreach ($queryParametersToKeep as $queryParameterName) {
+            if ($value = $request->get($queryParameterName)) {
+                $result[$queryParameterName] = $value;
+            }
+        }
+
+        return $result;
     }
 }
