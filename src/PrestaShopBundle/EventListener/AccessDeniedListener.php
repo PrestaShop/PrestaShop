@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\EventListener;
 
+use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -78,7 +79,7 @@ class AccessDeniedListener
                 $event->allowCustomResponseCode();
 
                 $this->showNotificationMessage($securityConfiguration);
-                $url = $this->computeRedirectionUrl($securityConfiguration);
+                $url = $this->computeRedirectionUrl($securityConfiguration, $event->getRequest()->attributes);
 
                 $event->setResponse(new RedirectResponse($url));
 
@@ -91,17 +92,22 @@ class AccessDeniedListener
      * Compute the url for the redirection.
      *
      * @param AdminSecurity $adminSecurity
+     * @param ParameterBag $requestAttributes
      *
      * @return string
      */
-    private function computeRedirectionUrl(AdminSecurity $adminSecurity)
+    private function computeRedirectionUrl(AdminSecurity $adminSecurity, ParameterBag $requestAttributes)
     {
         $route = $adminSecurity->getRedirectRoute();
 
         if ($route !== null) {
-            $routeParameters = $adminSecurity->getRouteParams();
+            $redirectQueryParameters = $adminSecurity->getRedirectQueryParamsToKeep();
+            $routeParamsToKeep = $this->getQueryParamsFromRequestAttributes(
+                $redirectQueryParameters,
+                $requestAttributes->all()
+            );
 
-            return $this->router->generate($route, $routeParameters);
+            return $this->router->generate($route, $routeParamsToKeep);
         }
 
         return $adminSecurity->getUrl();
@@ -122,5 +128,21 @@ class AccessDeniedListener
                 $adminSecurity->getDomain()
             )
         );
+    }
+
+    /**
+     * Gets query parameters by comparing them to the current request attributes.
+     *
+     * E.g (['mandatoryRouteId' => 1, 'anotherId' => 2], ['mandatoryRouteId']) => ['mandatoryRouteId' => 1] where
+     * the first array is $queryParametersToKeep and the second is $requestAttributes
+     *
+     * @param array $queryParametersToKeep
+     * @param array $requestAttributes
+     *
+     * @return array
+     */
+    private function getQueryParamsFromRequestAttributes(array $queryParametersToKeep, array $requestAttributes)
+    {
+        return array_intersect_key($requestAttributes, array_flip($queryParametersToKeep));
     }
 }

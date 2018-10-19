@@ -67,7 +67,7 @@ class AdminSecurity extends Security
      *
      * @var array
      */
-    protected $routeParams = [];
+    protected $redirectQueryParamsToKeep = [];
 
     /**
      * @return string
@@ -120,16 +120,16 @@ class AdminSecurity extends Security
     /**
      * @return array
      */
-    public function getRouteParams()
+    public function getRedirectQueryParamsToKeep()
     {
-        return $this->routeParams;
+        return $this->redirectQueryParamsToKeep;
     }
 
     /**
-     * @param array $routeParams
+     * @param array $redirectQueryParamsToKeep
      */
-    public function setRouteParams($routeParams)
+    public function setRedirectQueryParamsToKeep($redirectQueryParamsToKeep)
     {
-        $this->routeParams = $routeParams;
+        $this->redirectQueryParamsToKeep = $redirectQueryParamsToKeep;
     }
 }
