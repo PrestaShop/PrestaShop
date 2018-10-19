@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
  {% if grid.sorting.order_by == 'position' and grid.sorting.order_way == 'asc' %}
-     {% set updateRouteParams = extractArray(record, column.options.route_params) %}
+     {% set updateRouteParams = record|arrayPluck(column.options.route_params) %}
 
      <div class="js-drag-handle js-{{ grid.id }}-position"
           style="cursor: move;"
