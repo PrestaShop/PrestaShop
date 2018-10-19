@@ -8,9 +8,9 @@
         <note>Context:
 File: modules/ps_buybuttonlite/ps_buybuttonlite.php:49</note>
       </trans-unit>
-      <trans-unit id="8af512526d65869be03472e0fd440117">
-        <source>Increase your conversation rate and boost your sales, generate links and add them to your content so that visitors can easily proceed to checkout</source>
-        <target>Increase your conversation rate and boost your sales, generate links and add them to your content so that visitors can easily proceed to checkout</target>
+      <trans-unit id="0bb2845aebaa9f02016153983fb35dd8">
+        <source>Increase your conversion rate and boost your sales, generate links and add them to your content so that visitors can easily proceed to checkout</source>
+        <target>Increase your conversion rate and boost your sales, generate links and add them to your content so that visitors can easily proceed to checkout</target>
         <note>Context:
 File: modules/ps_buybuttonlite/ps_buybuttonlite.php:50</note>
       </trans-unit>
