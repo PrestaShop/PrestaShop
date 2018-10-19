@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-use PrestaShop\PrestaShop\Adapter\Order\OrderPresenter;
+use PrestaShop\PrestaShop\Adapter\Presenter\Order\OrderPresenter;
 
 class HistoryControllerCore extends FrontController
 {
@@ -83,9 +83,9 @@ class HistoryControllerCore extends FrontController
         $url_to_invoice = '';
 
         if ((bool) Configuration::get('PS_INVOICE') && OrderState::invoiceAvailable($order->current_state) && count($order->getInvoicesCollection())) {
-            $url_to_invoice = $context->link->getPageLink('pdf-invoice', true, null, 'id_order='.$order->id);
+            $url_to_invoice = $context->link->getPageLink('pdf-invoice', true, null, 'id_order=' . $order->id);
             if ($context->cookie->is_guest) {
-                $url_to_invoice .= '&amp;secure_key='.$order->secure_key;
+                $url_to_invoice .= '&amp;secure_key=' . $order->secure_key;
             }
         }
 
@@ -96,7 +96,7 @@ class HistoryControllerCore extends FrontController
     {
         $url_to_reorder = '';
         if (!(bool) Configuration::get('PS_DISALLOW_HISTORY_REORDERING')) {
-            $url_to_reorder = $context->link->getPageLink('order', true, null, 'submitReorder&id_order='.(int) $id_order);
+            $url_to_reorder = $context->link->getPageLink('order', true, null, 'submitReorder&id_order=' . (int) $id_order);
         }
 
         return $url_to_reorder;

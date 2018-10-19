@@ -8,7 +8,7 @@ scenario('Create a customer account in the Front Office', client => {
     test('should change the Front Office language to "English"', () => client.changeLanguage());
     test('should click on the "Sign in" link', () => client.waitForExistAndClick(AccessPageFO.sign_in_button));
     test('should click on "No account? Create one here" link', () => client.waitForExistAndClick(accountPage.create_button));
-    test('should choose a "Social title" option', () => client.waitForExistAndClick(accountPage.radio_button_gender));
+    test('should choose a "Social title" option', () => client.waitForExistAndClick(accountPage.gender_radio_button));
     test('should set the "First name" input', () => client.waitAndSetValue(accountPage.firstname_input, data.customer.firstname));
     test('should set the "Last name" input', () => client.waitAndSetValue(accountPage.lastname_input, data.customer.lastname));
     test('should set the "Email" input', () => client.waitAndSetValue(accountPage.email_input, 'new' + data.customer.email.replace("%ID", date_time)));
@@ -31,7 +31,7 @@ scenario('Create "Address"', client => {
     test('should set the "Zip/Postal Code" input', () => client.waitAndSetValue(accountPage.adr_postcode, data.address.postalCode));
     test('should set the "City" input', () => client.waitAndSetValue(accountPage.adr_city, data.address.city));
     test('should click on "SAVE" button', () => client.waitForExistAndClick(accountPage.adr_save));
-    test('should check that the success alert message is well displayed', () => client.checkTextValue(accountPage.notification_save_adr, 'Address successfully added!'));
+    test('should check that the success alert message is well displayed', () => client.checkTextValue(accountPage.save_notification, 'Address successfully added!'));
 }, 'common_client');
 
 scenario('Check the creation of the address', client => {

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 @ini_set('max_execution_time', 3600);
 
 /**
@@ -49,34 +48,35 @@ class AdminAttributeGeneratorControllerCore extends AdminController
     public function setMedia($isNewTheme = false)
     {
         parent::setMedia($isNewTheme);
-        $this->addJS(_PS_JS_DIR_.'admin/attributes.js');
+        $this->addJS(_PS_JS_DIR_ . 'admin/attributes.js');
     }
 
     protected function addAttribute($attributes, $price = 0, $weight = 0)
     {
         foreach ($attributes as $attribute) {
-            $price += (float)preg_replace('/[^0-9.-]/', '', str_replace(',', '.', Tools::getValue('price_impact_'.(int)$attribute)));
-            $weight += (float)preg_replace('/[^0-9.]/', '', str_replace(',', '.', Tools::getValue('weight_impact_'.(int)$attribute)));
+            $price += (float) preg_replace('/[^0-9.-]/', '', str_replace(',', '.', Tools::getValue('price_impact_' . (int) $attribute)));
+            $weight += (float) preg_replace('/[^0-9.]/', '', str_replace(',', '.', Tools::getValue('weight_impact_' . (int) $attribute)));
         }
         if ($this->product->id) {
             return array(
-                'id_product' => (int)$this->product->id,
-                'price' => (float)$price,
-                'weight' => (float)$weight,
+                'id_product' => (int) $this->product->id,
+                'price' => (float) $price,
+                'weight' => (float) $weight,
                 'ecotax' => 0,
-                'quantity' => (int)Tools::getValue('quantity'),
+                'quantity' => (int) Tools::getValue('quantity'),
                 'reference' => pSQL($_POST['reference']),
                 'default_on' => 0,
-                'available_date' => '0000-00-00'
+                'available_date' => '0000-00-00',
             );
         }
+
         return array();
     }
 
     public static function createCombinations($list)
     {
         if (count($list) <= 1) {
-            return count($list) ? array_map(function ($v) { return (array($v)); }, $list[0]) : $list;
+            return count($list) ? array_map(function ($v) { return array($v); }, $list[0]) : $list;
         }
         $res = array();
         $first = array_pop($list);
@@ -86,6 +86,7 @@ class AdminAttributeGeneratorControllerCore extends AdminController
                 $res[] = is_array($to_add) ? array_merge($to_add, array($attribute)) : array($to_add, $attribute);
             }
         }
+
         return $res;
     }
 
@@ -107,7 +108,7 @@ class AdminAttributeGeneratorControllerCore extends AdminController
 
     public function postProcess()
     {
-        $this->product = new Product((int)Tools::getValue('id_product'));
+        $this->product = new Product((int) Tools::getValue('id_product'));
         $this->product->loadStockData();
         parent::postProcess();
     }
@@ -143,19 +144,19 @@ class AdminAttributeGeneratorControllerCore extends AdminController
                 // @since 1.5.0
                 if ($this->product->depends_on_stock == 0) {
                     $attributes = Product::getProductAttributesIds($this->product->id, true);
-                    $quantity = (int)Tools::getValue('quantity');
+                    $quantity = (int) Tools::getValue('quantity');
                     foreach ($attributes as $attribute) {
                         if (Shop::getContext() == Shop::CONTEXT_ALL) {
                             $shops_list = Shop::getShops();
                             if (is_array($shops_list)) {
                                 foreach ($shops_list as $current_shop) {
-                                    if (isset($current_shop['id_shop']) && (int)$current_shop['id_shop'] > 0) {
-                                        StockAvailable::setQuantity($this->product->id, (int)$attribute['id_product_attribute'], $quantity, (int)$current_shop['id_shop']);
+                                    if (isset($current_shop['id_shop']) && (int) $current_shop['id_shop'] > 0) {
+                                        StockAvailable::setQuantity($this->product->id, (int) $attribute['id_product_attribute'], $quantity, (int) $current_shop['id_shop']);
                                     }
                                 }
                             }
                         } else {
-                            StockAvailable::setQuantity($this->product->id, (int)$attribute['id_product_attribute'], $quantity);
+                            StockAvailable::setQuantity($this->product->id, (int) $attribute['id_product_attribute'], $quantity);
                         }
                     }
                 } else {
@@ -163,9 +164,9 @@ class AdminAttributeGeneratorControllerCore extends AdminController
                 }
 
                 SpecificPriceRule::enableAnyApplication();
-                SpecificPriceRule::applyAllRules(array((int)$this->product->id));
+                SpecificPriceRule::applyAllRules(array((int) $this->product->id));
 
-                Tools::redirectAdmin($this->context->link->getAdminLink('AdminProducts').'&id_product='.(int)Tools::getValue('id_product').'&updateproduct&key_tab=Combinations&conf=4');
+                Tools::redirectAdmin($this->context->link->getAdminLink('AdminProducts') . '&id_product=' . (int) Tools::getValue('id_product') . '&updateproduct&key_tab=Combinations&conf=4');
             } else {
                 $this->errors[] = $this->trans('Unable to initialize these parameters. A combination is missing or an object cannot be loaded.', array(), 'Admin.Catalog.Notification');
             }
@@ -177,15 +178,15 @@ class AdminAttributeGeneratorControllerCore extends AdminController
         $attributes = array();
         foreach ($tab as $group) {
             foreach ($group as $attribute) {
-                $price = preg_replace('/[^0-9.]/', '', str_replace(',', '.', Tools::getValue('price_impact_'.(int)$attribute)));
-                $weight = preg_replace('/[^0-9.]/', '', str_replace(',', '.', Tools::getValue('weight_impact_'.(int)$attribute)));
-                $attributes[] = '('.(int)$id_product.', '.(int)$attribute.', '.(float)$price.', '.(float)$weight.')';
+                $price = preg_replace('/[^0-9.]/', '', str_replace(',', '.', Tools::getValue('price_impact_' . (int) $attribute)));
+                $weight = preg_replace('/[^0-9.]/', '', str_replace(',', '.', Tools::getValue('weight_impact_' . (int) $attribute)));
+                $attributes[] = '(' . (int) $id_product . ', ' . (int) $attribute . ', ' . (float) $price . ', ' . (float) $weight . ')';
             }
         }
 
         return Db::getInstance()->execute('
-		INSERT INTO `'._DB_PREFIX_.'attribute_impact` (`id_product`, `id_attribute`, `price`, `weight`)
-		VALUES '.implode(',', $attributes).'
+		INSERT INTO `' . _DB_PREFIX_ . 'attribute_impact` (`id_product`, `id_attribute`, `price`, `weight`)
+		VALUES ' . implode(',', $attributes) . '
 		ON DUPLICATE KEY UPDATE `price` = VALUES(price), `weight` = VALUES(weight)');
     }
 
@@ -215,26 +216,27 @@ class AdminAttributeGeneratorControllerCore extends AdminController
 
         $this->page_header_toolbar_title = $this->trans('Attributes generator', array(), 'Admin.Catalog.Feature');
         $this->page_header_toolbar_btn['back'] = array(
-            'href' => $this->context->link->getAdminLink('AdminProducts').'&id_product='.(int)Tools::getValue('id_product').'&updateproduct&key_tab=Combinations',
-            'desc' => $this->trans('Back to the product', array(), 'Admin.Catalog.Feature')
+            'href' => $this->context->link->getAdminLink('AdminProducts') . '&id_product=' . (int) Tools::getValue('id_product') . '&updateproduct&key_tab=Combinations',
+            'desc' => $this->trans('Back to the product', array(), 'Admin.Catalog.Feature'),
         );
     }
 
     public function initBreadcrumbs($tab_id = null, $tabs = null)
     {
         $this->display = 'generator';
+
         return parent::initBreadcrumbs();
     }
 
     public function initContent()
     {
-
         if (!Combination::isFeatureActive()) {
             $adminPerformanceUrl = $this->context->link->getAdminLink('AdminPerformance');
 
-            $url = '<a href="'.$adminPerformanceUrl.'#featuresDetachables">'.
-                    $this->trans('Performance', array(), 'Admin.Global').'</a>';
+            $url = '<a href="' . $adminPerformanceUrl . '#featuresDetachables">' .
+                    $this->trans('Performance', array(), 'Admin.Global') . '</a>';
             $this->displayWarning($this->trans('This feature has been disabled. You can activate it here: %link%.', array('%link%' => $url), 'Admin.Catalog.Notification'));
+
             return;
         }
 
@@ -250,7 +252,7 @@ class AdminAttributeGeneratorControllerCore extends AdminController
         }
 
         $attribute_groups = AttributeGroup::getAttributesGroups($this->context->language->id);
-        $this->product = new Product((int)Tools::getValue('id_product'));
+        $this->product = new Product((int) Tools::getValue('id_product'));
 
         $this->context->smarty->assign(array(
             'tax_rates' => $this->product->getTaxesRate(),
@@ -258,14 +260,14 @@ class AdminAttributeGeneratorControllerCore extends AdminController
             'combinations_size' => count($this->combinations),
             'product_name' => $this->product->name[$this->context->language->id],
             'product_reference' => $this->product->reference,
-            'url_generator' => self::$currentIndex.'&id_product='.(int)Tools::getValue('id_product').'&attributegenerator&token='.Tools::getValue('token'),
+            'url_generator' => self::$currentIndex . '&id_product=' . (int) Tools::getValue('id_product') . '&attributegenerator&token=' . Tools::getValue('token'),
             'attribute_groups' => $attribute_groups,
             'attribute_js' => $attribute_js,
             'toolbar_btn' => $this->toolbar_btn,
             'toolbar_scroll' => true,
             'show_page_header_toolbar' => $this->show_page_header_toolbar,
             'page_header_toolbar_title' => $this->page_header_toolbar_title,
-            'page_header_toolbar_btn' => $this->page_header_toolbar_btn
+            'page_header_toolbar_btn' => $this->page_header_toolbar_btn,
         ));
     }
 }

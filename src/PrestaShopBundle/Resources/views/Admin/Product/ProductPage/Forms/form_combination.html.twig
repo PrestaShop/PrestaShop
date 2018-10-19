@@ -57,7 +57,7 @@
             </div>
             <div class="panel col-md-12 p-2">
                 <div class="float-left">
-                    <button id="back_to_product" type="button" class="btn btn-outline-secondary btn-back"><i class="material-icons">arrow_back</i> {{ 'Back to product'|trans({}, 'Admin.Catalog.Feature') }}</button>
+                    <button type="button" class="back-to-product btn btn-outline-secondary btn-back"><i class="material-icons">arrow_back</i> {{ 'Back to product'|trans({}, 'Admin.Catalog.Feature') }}</button>
                 </div>
                 <h2 class="title pt-2">
                   {{ "Combination details"|trans({}, 'Admin.Catalog.Feature') }} -
@@ -103,9 +103,16 @@
                     </div>
                 </div>
                 <h2 class="title">
-                  {{ 'Stock alerts'|trans({}, 'Admin.Catalog.Feature') }}
+                  {{ 'Stock'|trans({}, 'Admin.Catalog.Feature') }}
                 </h2>
                 <div class="row">
+                  <div class="col-md-3">
+                    <fieldset class="form-group">
+                      <label class="form-control-label">{{ form.attribute_location.vars.label }}</label>
+                      {{ form_errors(form.attribute_location) }}
+                      {{ form_widget(form.attribute_location) }}
+                    </fieldset>
+                  </div>
                   <div class="col-md-3">
                     <fieldset class="form-group">
                       <label class="form-control-label">{{ form.attribute_low_stock_threshold.vars.label }}</label>

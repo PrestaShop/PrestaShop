@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Import\File\FileFinder;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
- * Class ImportFormDataProvider is responsible for providing Import's 1st step form data
+ * Class ImportFormDataProvider is responsible for providing Import's 1st step form data.
  */
 final class ImportFormDataProvider implements FormDataProviderInterface
 {
@@ -61,14 +61,13 @@ final class ImportFormDataProvider implements FormDataProviderInterface
             'entity' => $this->session->get('entity'),
             'iso_lang' => $this->session->get('iso_lang'),
             'separator' => $this->session->get('separator', ImportType::DEFAULT_SEPARATOR),
-            'multiple_value_separator' =>
-                $this->session->get('multiple_value_separator', ImportType::DEFAULT_MULTIVALUE_SEPARATOR),
+            'multiple_value_separator' => $this->session->get('multiple_value_separator', ImportType::DEFAULT_MULTIVALUE_SEPARATOR),
         ];
     }
 
     /**
      * Data is persisted into session,
-     * so when user comes from 2nd import step to 1st one, data is still saved
+     * so when user comes from 2nd import step to 1st one, data is still saved.
      *
      * @param array $data
      *

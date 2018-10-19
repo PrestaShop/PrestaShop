@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2017 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Logs;
 
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
@@ -49,7 +50,7 @@ final class LogsFormDataProvider implements FormDataProviderInterface
      */
     public function getData()
     {
-        return array('logs_by_email' => $this->logsConfiguration->getConfiguration());
+        return ['logs_by_email' => $this->logsConfiguration->getConfiguration()];
     }
 
     /**

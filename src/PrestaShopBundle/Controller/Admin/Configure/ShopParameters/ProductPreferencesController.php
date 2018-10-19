@@ -34,12 +34,12 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Responsible of "Configure > Shop Parameters > Product Settings" page
+ * Responsible of "Configure > Shop Parameters > Product Settings" page.
  */
 class ProductPreferencesController extends FrameworkBundleAdminController
 {
     /**
-     * Show product preferences form
+     * Show product preferences form.
      *
      * @param Request $request
      *
@@ -79,7 +79,7 @@ class ProductPreferencesController extends FrameworkBundleAdminController
     }
 
     /**
-     * Process product preferences form
+     * Process product preferences form.
      *
      * @param Request $request
      *

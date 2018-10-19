@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Core\Addon\Module;
 
 use PrestaShop\PrestaShop\Core\Addon\AddonInterface;
@@ -30,11 +31,46 @@ use PrestaShop\PrestaShop\Core\Addon\AddonInterface;
 interface ModuleInterface extends AddonInterface
 {
     public function onInstall();
+
     public function onUninstall();
+
+    /**
+     * Called when switching the current theme of the selected shop.
+     * You can update configuration, enable/disable modules...
+     *
+     * @return bool true for success
+     */
     public function onEnable();
+
+    /**
+     * Not necessarily the opposite of enable. Use this method if
+     * something must be done when switching to another theme (like uninstall
+     * very specific modules for example).
+     *
+     * @return bool true for success
+     */
     public function onDisable();
+
+    /**
+     * @return bool
+     */
     public function onMobileEnable();
+
+    /**
+     * @return bool
+     */
     public function onMobileDisable();
+
+    /**
+     * @return bool
+     */
     public function onReset();
+
+    /**
+     * Execute up files. You can update configuration, update sql schema.
+     * No file modification.
+     *
+     * @return bool true for success
+     */
     public function onUpgrade($version);
 }

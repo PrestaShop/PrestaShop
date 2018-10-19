@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -82,6 +82,18 @@ class ThemeRepository implements AddonRepositoryInterface
         return $this->themes;
     }
 
+    /**
+     * Gets list of themes as a collection.
+     *
+     * @return ThemeCollection
+     */
+    public function getListAsCollection()
+    {
+        $list = $this->getList();
+
+        return ThemeCollection::createFrom($list);
+    }
+
     public function getListExcluding(array $exclude)
     {
         $filter = (new AddonListFilter())
@@ -112,7 +124,7 @@ class ThemeRepository implements AddonRepositoryInterface
     private function getThemesOnDisk()
     {
         $suffix = 'config/theme.yml';
-        $themeDirectories = glob($this->appConfiguration->get('_PS_ALL_THEMES_DIR_').'*/'.$suffix);
+        $themeDirectories = glob($this->appConfiguration->get('_PS_ALL_THEMES_DIR_') . '*/' . $suffix, GLOB_NOSORT);
 
         $themes = array();
         foreach ($themeDirectories as $directory) {

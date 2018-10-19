@@ -1,0 +1,26 @@
+services:
+    _defaults:
+        public: true
+
+    prestashop.core.localozation.pack.factory.localization_pack:
+        class: 'PrestaShop\PrestaShop\Core\Localization\Pack\Factory\LocalizationPackFactory'
+
+    prestashop.core.localization.pack.import.importer:
+        class: 'PrestaShop\PrestaShop\Core\Localization\Pack\Import\LocalizationPackImporter'
+        arguments:
+            - '@prestashop.core.localization.pack.loader.remote'
+            - '@prestashop.core.localization.pack.loader.local'
+            - '@prestashop.core.localozation.pack.factory.localization_pack'
+            - '@translator'
+            - '@prestashop.adapter.legacy.configuration'
+
+    prestashop.core.localization.pack.loader.local:
+        class: 'PrestaShop\PrestaShop\Core\Localization\Pack\Loader\LocalLocalizationPackLoader'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+
+    prestashop.core.localization.pack.loader.remote:
+        class: 'PrestaShop\PrestaShop\Core\Localization\Pack\Loader\RemoteLocalizationPackLoader'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+            - '@prestashop.core.foundation.version'

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\Service\DataProvider\Admin;
 
 /**
@@ -42,7 +43,7 @@ interface ProductInterface
     /**
      * Is there a specific category selected to filter product?
      *
-     * @return boolean True if a category is selected.
+     * @return bool true if a category is selected
      */
     public function isCategoryFiltered();
 
@@ -51,7 +52,7 @@ interface ProductInterface
      *
      * A filter with empty string '' is considered as not filtering, but 0 or '0' is a filter value!
      *
-     * @return boolean True if at least one column is filtered (except categories)
+     * @return bool True if at least one column is filtered (except categories)
      */
     public function isColumnFiltered();
 
@@ -66,7 +67,8 @@ interface ProductInterface
      * Combines new filter values with old ones (persisted), then persists the combination and returns it.
      *
      * @param string[]|null $paramsIn New filter params values to take into account. If not given, the method will simply return persisted values.
-     * @param boolean $avoidPersistence True to avoid persisting these preferences (for an export for example).
+     * @param bool $avoidPersistence true to avoid persisting these preferences (for an export for example)
+     *
      * @return string[] The new filter params values
      */
     public function combinePersistentCatalogProductFilter($paramsIn = array(), $avoidPersistence = false);
@@ -74,14 +76,15 @@ interface ProductInterface
     /**
      * Returns a collection of products, using default language, currency and others, from Context.
      *
-     * @param integer|string $offset an offset, or the 'last' token
-     * @param integer|string $limit a limit, or the 'last' token
+     * @param int|string $offset an offset, or the 'last' token
+     * @param int|string $limit a limit, or the 'last' token
      * @param string $orderBy Field name to sort during SQL query
      * @param string $sortOrder 'asc' or 'desc'
-     * @param string[] $post filter params values to take into acount (often comes from POST data).
-     * @param boolean $avoidPersistence True to avoid persisting these preferences (for an export for example)
-     * @param boolean $formatCldr False to avoid CLDR formatting (heavy memory usage)
-     * @return array[mixed[]] A list of products, as an array of arrays of raw data.
+     * @param string[] $post filter params values to take into acount (often comes from POST data)
+     * @param bool $avoidPersistence True to avoid persisting these preferences (for an export for example)
+     * @param bool $formatCldr False to avoid CLDR formatting (heavy memory usage)
+     *
+     * @return array[mixed[]] A list of products, as an array of arrays of raw data
      */
     public function getCatalogProductList($offset, $limit, $orderBy, $sortOrder, $post = array(), $avoidPersistence = false, $formatCldr = true);
 
@@ -90,7 +93,7 @@ interface ProductInterface
      *
      * No filtering/limit/offset is applied to give this count.
      *
-     * @return integer The product count on the current shop
+     * @return int The product count on the current shop
      */
     public function countAllProducts();
 
@@ -99,7 +102,7 @@ interface ProductInterface
      * depending on the memory_limit allocated to PHP.
      * This will return Elements per page that are recommended to fetch products on the Admin catalog page.
      *
-     * @return array[int] A list of pagination limits to show in the select dropbox in paginator component.
+     * @return array[int] A list of pagination limits to show in the select dropbox in paginator component
      */
     public function getPaginationLimitChoices();
 
@@ -115,7 +118,7 @@ interface ProductInterface
      *
      * Duplication process could be different since duplicated product is always deactivated after duplication.
      *
-     * @return boolean True if a newly created product should be activated by default.
+     * @return bool true if a newly created product should be activated by default
      */
     public function isNewProductDefaultActivated();
 }

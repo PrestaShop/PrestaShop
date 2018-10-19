@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -43,24 +43,28 @@ class StockMvtCore extends ObjectModel
 
     /**
      * @since 1.5.0
+     *
      * @var string The first name of the employee responsible of the movement
      */
     public $employee_firstname;
 
     /**
      * @since 1.5.0
+     *
      * @var string The last name of the employee responsible of the movement
      */
     public $employee_lastname;
 
     /**
      * @since 1.5.0
+     *
      * @var int The stock id on wtich the movement is applied
      */
     public $id_stock;
 
     /**
      * @since 1.5.0
+     *
      * @var int the quantity of product with is moved
      */
     public $physical_quantity;
@@ -77,36 +81,42 @@ class StockMvtCore extends ObjectModel
 
     /**
      * @since 1.5.0
+     *
      * @var int detrmine if the movement is a positive or negative operation
      */
     public $sign;
 
     /**
      * @since 1.5.0
+     *
      * @var int Used when the movement is due to a supplier order
      */
     public $id_supply_order = null;
 
     /**
      * @since 1.5.0
+     *
      * @var float Last value of the weighted-average method
      */
     public $last_wa = null;
 
     /**
      * @since 1.5.0
+     *
      * @var float Current value of the weighted-average method
      */
     public $current_wa = null;
 
     /**
      * @since 1.5.0
+     *
      * @var float The unit price without tax of the product associated to the movement
      */
     public $price_te;
 
     /**
      * @since 1.5.0
+     *
      * @var int Refers to an other id_stock_mvt : used for LIFO/FIFO implementation in StockManager
      */
     public $referer;
@@ -120,6 +130,7 @@ class StockMvtCore extends ObjectModel
     /**
      * @deprecated since 1.5.0
      * @see physical_quantity
+     *
      * @var int
      */
     public $quantity;
@@ -131,20 +142,20 @@ class StockMvtCore extends ObjectModel
         'table' => 'stock_mvt',
         'primary' => 'id_stock_mvt',
         'fields' => array(
-            'id_employee' =>        array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+            'id_employee' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
             'employee_firstname' => array('type' => self::TYPE_STRING, 'validate' => 'isName'),
-            'employee_lastname' =>    array('type' => self::TYPE_STRING, 'validate' => 'isName'),
-            'id_stock' =>            array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'physical_quantity' =>    array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'required' => true),
-            'id_stock_mvt_reason' =>array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'id_order' =>            array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-            'id_supply_order' =>    array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-            'sign' =>                array('type' => self::TYPE_INT, 'validate' => 'isInt', 'required' => true),
-            'last_wa' =>            array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
-            'current_wa' =>        array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
-            'price_te' =>            array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true),
-            'referer' =>            array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-            'date_add' =>            array('type' => self::TYPE_DATE, 'validate' => 'isDate', 'required' => true),
+            'employee_lastname' => array('type' => self::TYPE_STRING, 'validate' => 'isName'),
+            'id_stock' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+            'physical_quantity' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'required' => true),
+            'id_stock_mvt_reason' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+            'id_order' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+            'id_supply_order' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+            'sign' => array('type' => self::TYPE_INT, 'validate' => 'isInt', 'required' => true),
+            'last_wa' => array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
+            'current_wa' => array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
+            'price_te' => array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true),
+            'referer' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+            'date_add' => array('type' => self::TYPE_DATE, 'validate' => 'isDate', 'required' => true),
         ),
     );
 
@@ -152,11 +163,11 @@ class StockMvtCore extends ObjectModel
         'objectsNodeName' => 'stock_movements',
         'objectNodeName' => 'stock_movement',
         'fields' => array(
-            'id_employee' => array('xlink_resource'=> 'employees'),
-            'id_stock' => array('xlink_resource'=> 'stock'),
-            'id_stock_mvt_reason' => array('xlink_resource'=> 'stock_movement_reasons'),
-            'id_order' => array('xlink_resource'=> 'orders'),
-            'id_supply_order' => array('xlink_resource'=> 'supply_order'),
+            'id_employee' => array('xlink_resource' => 'employees'),
+            'id_stock' => array('xlink_resource' => 'stock'),
+            'id_stock_mvt_reason' => array('xlink_resource' => 'stock_movement_reasons'),
+            'id_order' => array('xlink_resource' => 'orders'),
+            'id_supply_order' => array('xlink_resource' => 'supply_order'),
         ),
     );
 
@@ -177,12 +188,14 @@ class StockMvtCore extends ObjectModel
      * the given product, in the given quantity.
      *
      * @since 1.5.0
+     *
      * @param int $id_order
      * @param int $id_product
      * @param int $id_product_attribute Use 0 if the product does not have attributes
      * @param int $quantity
      * @param int $id_warehouse Optional
-     * @return Array mvts
+     *
+     * @return array mvts
      */
     public static function getNegativeStockMvts($id_order, $id_product, $id_product_attribute, $quantity, $id_warehouse = null)
     {
@@ -195,12 +208,12 @@ class StockMvtCore extends ObjectModel
         $query->from('stock_mvt', 'sm');
         $query->innerJoin('stock', 's', 's.id_stock = sm.id_stock');
         $query->where('sm.sign = -1');
-        $query->where('sm.id_order = '.(int)$id_order);
-        $query->where('s.id_product = '.(int)$id_product.' AND s.id_product_attribute = '.(int)$id_product_attribute);
+        $query->where('sm.id_order = ' . (int) $id_order);
+        $query->where('s.id_product = ' . (int) $id_product . ' AND s.id_product_attribute = ' . (int) $id_product_attribute);
 
         // if filer by warehouse
         if (!is_null($id_warehouse)) {
-            $query->where('s.id_warehouse = '.(int)$id_warehouse);
+            $query->where('s.id_warehouse = ' . (int) $id_warehouse);
         }
 
         // orders the movements by date
@@ -214,7 +227,7 @@ class StockMvtCore extends ObjectModel
             if ($quantity_total >= $quantity) {
                 break;
             }
-            $quantity_total += (int)$row['physical_quantity'];
+            $quantity_total += (int) $row['physical_quantity'];
             $movements[] = $row;
         }
 
@@ -222,11 +235,13 @@ class StockMvtCore extends ObjectModel
     }
 
     /**
-     * For a given product, gets the last positive stock mvt
+     * For a given product, gets the last positive stock mvt.
      *
      * @since 1.5.0
+     *
      * @param int $id_product
      * @param int $id_product_attribute Use 0 if the product does not have attributes
+     *
      * @return bool|array
      */
     public static function getLastPositiveStockMvt($id_product, $id_product_attribute)
@@ -238,9 +253,9 @@ class StockMvtCore extends ObjectModel
         $query->innerJoin('warehouse', 'w', 'w.id_warehouse = s.id_warehouse');
         $query->where('sm.sign = 1');
         if ($id_product_attribute) {
-            $query->where('s.id_product = '.(int)$id_product.' AND s.id_product_attribute = '.(int)$id_product_attribute);
+            $query->where('s.id_product = ' . (int) $id_product . ' AND s.id_product_attribute = ' . (int) $id_product_attribute);
         } else {
-            $query->where('s.id_product = '.(int)$id_product);
+            $query->where('s.id_product = ' . (int) $id_product);
         }
         $query->orderBy('date_add DESC');
 
@@ -249,6 +264,7 @@ class StockMvtCore extends ObjectModel
         if ($res != false) {
             return $res['0'];
         }
+
         return false;
     }
 }

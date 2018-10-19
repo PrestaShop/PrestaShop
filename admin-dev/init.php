@@ -74,7 +74,7 @@ try {
             $context->employee->bo_theme = 'default';
         } else {
             // if default theme doesn't exists, try to find one, otherwise throw exception
-            foreach (scandir($path) as $theme) {
+            foreach (scandir($path, SCANDIR_SORT_NONE) as $theme) {
                 if ($theme[0] != '.' && file_exists($path.$theme.'/template/layout.tpl')) {
                     $context->employee->bo_theme = $theme;
                     break;

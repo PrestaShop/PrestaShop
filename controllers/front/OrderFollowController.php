@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-use PrestaShop\PrestaShop\Adapter\Order\OrderReturnPresenter;
+use PrestaShop\PrestaShop\Adapter\Presenter\Order\OrderReturnPresenter;
 
 class OrderFollowControllerCore extends FrontController
 {
@@ -48,15 +48,15 @@ class OrderFollowControllerCore extends FrontController
                 Tools::redirect('index.php?controller=history');
             }
             if (!($ids_order_detail = Tools::getValue('ids_order_detail')) && !$customizationQtyInput && !$customizationIds) {
-                Tools::redirect('index.php?controller=order-detail&id_order='.$id_order.'&errorDetail1');
+                Tools::redirect('index.php?controller=order-detail&id_order=' . $id_order . '&errorDetail1');
             }
             if (!$customizationIds && !$order_qte_input) {
-                Tools::redirect('index.php?controller=order-detail&id_order='.$id_order.'&errorDetail2');
+                Tools::redirect('index.php?controller=order-detail&id_order=' . $id_order . '&errorDetail2');
             }
 
             $order = new Order((int) $id_order);
             if (!$order->isReturnable()) {
-                Tools::redirect('index.php?controller=order-detail&id_order='.$id_order.'&errorNotReturnable');
+                Tools::redirect('index.php?controller=order-detail&id_order=' . $id_order . '&errorNotReturnable');
             }
             if ($order->id_customer != $this->context->customer->id) {
                 die(Tools::displayError());
@@ -66,7 +66,7 @@ class OrderFollowControllerCore extends FrontController
             $orderReturn->id_order = $id_order;
             $orderReturn->question = htmlspecialchars(Tools::getValue('returnText'));
             if (empty($orderReturn->question)) {
-                Tools::redirect('index.php?controller=order-detail&id_order='.$id_order.'&errorMsg&'.
+                Tools::redirect('index.php?controller=order-detail&id_order=' . $id_order . '&errorMsg&' .
                     http_build_query(array(
                         'ids_order_detail' => $ids_order_detail,
                         'order_qte_input' => $order_qte_input,
@@ -75,7 +75,7 @@ class OrderFollowControllerCore extends FrontController
             }
 
             if (!$orderReturn->checkEnoughProduct($ids_order_detail, $order_qte_input, $customizationIds, $customizationQtyInput)) {
-                Tools::redirect('index.php?controller=order-detail&id_order='.$id_order.'&errorQuantity');
+                Tools::redirect('index.php?controller=order-detail&id_order=' . $id_order . '&errorQuantity');
             }
 
             $orderReturn->state = 1;
@@ -99,7 +99,7 @@ class OrderFollowControllerCore extends FrontController
 
         $ordersReturn = $this->getTemplateVarOrdersReturns();
         if (count($ordersReturn) <= 0) {
-            $this->errors[] = $this->trans(
+            $this->warning[] = $this->trans(
                 'You have no merchandise return authorizations.', array(), 'Shop.Notifications.Error'
             );
         }

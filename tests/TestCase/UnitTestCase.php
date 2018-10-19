@@ -57,6 +57,11 @@ class UnitTestCase extends \PHPUnit\Framework\TestCase
     public $context;
 
     /**
+     * @var \ContextCore
+     */
+    public $oldContext;
+
+    /**
      * @var Db
      */
     public $database;
@@ -99,6 +104,7 @@ class UnitTestCase extends \PHPUnit\Framework\TestCase
 
     protected function setUp()
     {
+        $this->oldContext = Context::getContext();
         $this->container = new Container();
         ServiceLocator::setServiceContainerInstance($this->container);
 
@@ -216,6 +222,7 @@ class UnitTestCase extends \PHPUnit\Framework\TestCase
         $container_builder = new ContainerBuilder();
         $container = $container_builder->build();
         ServiceLocator::setServiceContainerInstance($container);
+        Context::setInstanceForTesting($this->oldContext);
     }
 
     /**

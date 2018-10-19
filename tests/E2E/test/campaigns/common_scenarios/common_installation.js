@@ -3,7 +3,7 @@ let promise = Promise.resolve();
 module.exports = {
   prestaShopInstall: function (selector, language, country) {
     scenario('Step 1 : Choosing language', client => {
-      test('should choose "English" language', () => client.waitAndSelectByValue(selector.language_select, language));
+      test('should choose "' + language + '" language', () => client.waitAndSelectByValue(selector.language_select, language));
       test('should click on "Next" button', () => client.waitForVisibleAndClick(selector.next_step_button));
     }, 'installation');
     scenario('Step 2 : Agreeing license agreements', client => {
@@ -11,7 +11,7 @@ module.exports = {
       test('should click on "Next" button', () => client.waitForVisibleAndClick(selector.next_step_button));
     }, 'installation');
     scenario('Step 3 : Checking system compatibility', client => {
-      test('should check the test compatibility green box', () => client.checkTextValue(selector.compatibility_green_box, "PrestaShop compatibility with your system environment has been verified!"));
+      test('should check the test compatibility green box', () => client.isExisting(selector.compatibility_green_box));
       test('should click on "Next" button', () => client.waitForVisibleAndClick(selector.next_step_button));
     }, 'installation');
     scenario('Step 4 : Inserting the shop information', client => {
@@ -24,13 +24,13 @@ module.exports = {
       });
       test('should set the "First name" input', () => client.waitAndSetValue(selector.first_name_input, "demo"));
       test('should set the "Last name" input', () => client.waitAndSetValue(selector.last_name_input, "prestashop"));
-      test('should set the "E-mail address" input', () => client.waitAndSetValue(selector.email_address_input, "demo@prestashop.com"));
-      test('should set the "Shop password" input', () => client.waitAndSetValue(selector.shop_password_input, "prestashop_demo"));
-      test('should set the "Re-type to confirm" input', () => client.waitAndSetValue(selector.retype_password_input, "prestashop_demo"));
+      test('should set the "E-mail address" input', () => client.waitAndSetValue(selector.email_address_input, global.adminEmail));
+      test('should set the "Shop password" input', () => client.waitAndSetValue(selector.shop_password_input, global.adminPassword));
+      test('should set the "Re-type to confirm" input', () => client.waitAndSetValue(selector.retype_password_input, global.adminPassword));
       test('should click on "Next" button', () => client.waitForVisibleAndClick(selector.next_step_button));
     }, 'installation');
     scenario('Step 5 : Setting the BD configuration', client => {
-      test('should set the "Database server address" input', () => client.setNameInput(selector.database_address_input, db_server));
+      test('should set the "Database server address" input', () => client.setNameInput(selector.database_address_input, global.db_server));
       test('should set the "Database name" input', () => client.waitAndSetValue(selector.database_name_input, 'database' + new Date().getTime()));
       test('should set the "Database login" input', () => client.waitAndSetValue(selector.database_login_input, db_user));
       test('should set the "Database password" input', () => {
@@ -60,7 +60,7 @@ module.exports = {
       test('should finish installation', () => client.waitForVisibleElement(selector.finish_step));
     }, 'installation');
     scenario('Step 7 : Checking that installation finished', client => {
-      test('should check that the installation is finished!', () => client.checkTextValue(selector.finished_installation_msg, 'Your installation is finished!'));
+      test('should check that the installation is finished!', () => client.isExisting(selector.finished_installation_msg));
     }, 'installation');
   }
 };

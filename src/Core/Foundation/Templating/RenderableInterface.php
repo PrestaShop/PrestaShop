@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -24,12 +24,13 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-
 namespace PrestaShop\PrestaShop\Core\Foundation\Templating;
 
 interface RenderableInterface
 {
     public function setTemplate($templatePath);
+
     public function getTemplate();
+
     public function render(array $extraParams = []);
 }

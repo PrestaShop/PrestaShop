@@ -63,8 +63,7 @@ class GeneralType extends TranslatorAwareType
                 'required' => true,
             ])
             ->add('force_friendly_url', SwitchType::class)
-            ->add('default_status', SwitchType::class)
-        ;
+            ->add('default_status', SwitchType::class);
     }
 
     /**

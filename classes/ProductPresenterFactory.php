@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,16 +23,15 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
-use PrestaShop\PrestaShop\Core\Product\ProductPresenter;
-use PrestaShop\PrestaShop\Core\Product\ProductListingPresenter;
+use PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductPresenter;
+use PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductListingPresenter;
 use PrestaShop\PrestaShop\Core\Product\ProductPresentationSettings;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShop\PrestaShop\Adapter\Product\ProductColorsRetriever;
 use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
 
 /**
- * Class ProductPresenterFactoryCore
+ * Class ProductPresenterFactoryCore.
  */
 class ProductPresenterFactoryCore
 {
@@ -42,7 +41,7 @@ class ProductPresenterFactoryCore
     /**
      * ProductPresenterFactoryCore constructor.
      *
-     * @param Context                $context
+     * @param Context $context
      * @param \TaxConfiguration|null $taxConfiguration
      */
     public function __construct(Context $context, \TaxConfiguration $taxConfiguration = null)
@@ -52,7 +51,7 @@ class ProductPresenterFactoryCore
     }
 
     /**
-     * Get presentation settings
+     * Get presentation settings.
      *
      * @return ProductPresentationSettings
      */
@@ -71,7 +70,7 @@ class ProductPresenterFactoryCore
     }
 
     /**
-     * Get presenter
+     * Get presenter.
      *
      * @return ProductListingPresenter|ProductPresenter
      */

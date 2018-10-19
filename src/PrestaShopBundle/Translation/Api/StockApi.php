@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -44,7 +44,7 @@ class StockApi extends AbstractApi
             'filter_datepicker_to' => $this->translator->trans('To', array(), 'Admin.Global'),
             'filter_low_stock' => $this->translator->trans('Display products below low stock level first', array(), 'Admin.Catalog.Feature'),
             'filter_movements_type' => $this->translator->trans('Filter by movement type', array(), 'Admin.Catalog.Feature'),
-            'filter_movements_employee'=> $this->translator->trans('Filter by employee', array(), 'Admin.Catalog.Feature'),
+            'filter_movements_employee' => $this->translator->trans('Filter by employee', array(), 'Admin.Catalog.Feature'),
             'filter_movements_period' => $this->translator->trans('Filter by period', array(), 'Admin.Catalog.Feature'),
             'filter_search_category' => $this->translator->trans('Search a category', array(), 'Admin.Catalog.Feature'),
             'filter_search_suppliers' => $this->translator->trans('Search a supplier', array(), 'Admin.Catalog.Feature'),
@@ -68,23 +68,23 @@ class StockApi extends AbstractApi
             'product_low_stock' => $this->translator->trans('This product is below the low stock level you have defined.', array(), 'Admin.Catalog.Feature'),
             'product_low_stock_level' => $this->translator->trans('Low stock level:', array(), 'Admin.Catalog.Feature'),
             'product_low_stock_alert' => $this->translator->trans('Low stock alert:', array(), 'Admin.Catalog.Feature'),
-            'title_available'  => $this->translator->trans('Available', array(), 'Admin.Global'),
-            'title_bulk'  => $this->translator->trans('Bulk edit quantity', array(), 'Admin.Catalog.Feature'),
+            'title_available' => $this->translator->trans('Available', array(), 'Admin.Global'),
+            'title_bulk' => $this->translator->trans('Bulk edit quantity', array(), 'Admin.Catalog.Feature'),
             'title_date' => $this->translator->trans('Date & Time', array(), 'Admin.Catalog.Feature'),
-            'title_edit_quantity'  => $this->translator->trans('Edit quantity', array(), 'Admin.Catalog.Feature'),
+            'title_edit_quantity' => $this->translator->trans('Edit quantity', array(), 'Admin.Catalog.Feature'),
             'title_employee' => $this->translator->trans('Employee', array(), 'Admin.Global'),
             'title_import' => $this->translator->trans('Go to the import system', array(), 'Admin.Catalog.Feature'),
             'title_export' => $this->translator->trans('Export data into CSV', array(), 'Admin.Catalog.Feature'),
             'title_movements_type' => $this->translator->trans('Type', array(), 'Admin.Global'),
-            'title_physical'  => $this->translator->trans('Physical', array(), 'Admin.Catalog.Feature'),
+            'title_physical' => $this->translator->trans('Physical', array(), 'Admin.Catalog.Feature'),
             'title_product' => $this->translator->trans('Product', array(), 'Admin.Global'),
-            'title_reference'  => $this->translator->trans('Reference', array(), 'Admin.Global'),
-            'title_reserved'  => $this->translator->trans('Reserved', array(), 'Admin.Catalog.Feature'),
+            'title_reference' => $this->translator->trans('Reference', array(), 'Admin.Global'),
+            'title_reserved' => $this->translator->trans('Reserved', array(), 'Admin.Catalog.Feature'),
             'title_status' => $this->translator->trans('Status', array(), 'Admin.Global'),
-            'title_supplier'  => $this->translator->trans('Supplier', array(), 'Admin.Global'),
-            'title_quantity'=> $this->translator->trans('Quantity', array(), 'Admin.Global'),
-            'tree_expand'=> $this->translator->trans('Expand', array(), 'Admin.Actions'),
-            'tree_reduce'=> $this->translator->trans('Collapse', array(), 'Admin.Actions'),
+            'title_supplier' => $this->translator->trans('Supplier', array(), 'Admin.Global'),
+            'title_quantity' => $this->translator->trans('Quantity', array(), 'Admin.Global'),
+            'tree_expand' => $this->translator->trans('Expand', array(), 'Admin.Actions'),
+            'tree_reduce' => $this->translator->trans('Collapse', array(), 'Admin.Actions'),
         );
     }
 }

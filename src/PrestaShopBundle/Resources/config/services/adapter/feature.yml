@@ -1,0 +1,20 @@
+services:
+    _defaults:
+        public: true
+
+    prestashop.adapter.combination_feature:
+        class: 'PrestaShop\PrestaShop\Adapter\Feature\CombinationFeature'
+        arguments: ['@prestashop.adapter.legacy.configuration']
+
+    prestashop.adapter.feature.feature:
+        class: 'PrestaShop\PrestaShop\Adapter\Feature\FeatureFeature'
+        arguments: ['@prestashop.adapter.legacy.configuration']
+
+    prestashop.adapter.group.feature:
+        class: 'PrestaShop\PrestaShop\Adapter\Feature\GroupFeature'
+        arguments: ['@prestashop.adapter.legacy.configuration']
+
+    prestashop.adapter.multistore_feature:
+        class: 'PrestaShop\PrestaShop\Adapter\Feature\MultistoreFeature'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'

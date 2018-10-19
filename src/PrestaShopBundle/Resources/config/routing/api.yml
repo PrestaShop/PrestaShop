@@ -1,0 +1,39 @@
+_api_stocks:
+    resource: "api/stocks.yml"
+    prefix: /stocks
+
+_api_stock_movements:
+    resource: "api/stock_movements.yml"
+    prefix: /stock-movements
+
+_api_suppliers:
+    resource: "api/suppliers.yml"
+    prefix: /suppliers
+
+_api_manufacturers:
+    resource: "api/manufacturers.yml"
+    prefix: /manufacturers
+
+_api_categories:
+    resource: "api/categories.yml"
+    prefix: /categories
+
+_api_attributes:
+    resource: "api/attributes.yml"
+    prefix: /attributes
+
+_api_features:
+    resource: "api/features.yml"
+    prefix: /features
+
+_api_i18n:
+    resource: "api/i18n.yml"
+    prefix: /i18n
+
+_api_translations:
+    resource: "api/translations.yml"
+    prefix: /translations
+
+_api_positions:
+    resource: "api/improve/design/positions.yml"
+    prefix: /improve/design/positions

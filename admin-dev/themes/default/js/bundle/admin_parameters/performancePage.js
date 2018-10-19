@@ -92,7 +92,7 @@ function PerformancePage(addServerUrl, removeServerUrl, testServerUrl) {
         var app = this;
 
         this.send(this.getTestServerUrl(), 'GET', this.getFormValues(), function(results) {
-            if (!results.hasOwnProperty('error') || results.test === "false") {
+            if (results.hasOwnProperty('error') || results.test === false) {
                 app.addClass('is-invalid');
                 return;
             }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,10 +23,9 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 class AdminPatternsControllerCore extends AdminController
 {
-    public $name = "patterns";
+    public $name = 'patterns';
 
     public function __construct()
     {
@@ -59,13 +58,13 @@ class AdminPatternsControllerCore extends AdminController
             'groupBox_6' => false,
             'type_color' => '#8BC954',
             'tab_note' => 'The tabs are always pushed to the top of the form, wherever they are in the fields_form array.',
-            'type_free' => '<p class="form-control-static">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc lacinia in enim iaculis malesuada. Quisque congue fermentum leo et porta. Pellentesque a quam dui. Pellentesque sed augue id sem aliquet faucibus eu vel odio. Nullam non libero volutpat, pulvinar turpis non, gravida mauris. Nullam tincidunt id est at euismod. Quisque euismod quam in pellentesque mollis. Nulla suscipit porttitor massa, nec eleifend risus egestas in. Aenean luctus porttitor tempus. Morbi dolor leo, dictum id interdum vel, semper ac est. Maecenas justo augue, accumsan in velit nec, consectetur fringilla orci. Nunc ut ante erat. Curabitur dolor augue, eleifend a luctus non, aliquet a mi. Curabitur ultricies lectus in rhoncus sodales. Maecenas quis dictum erat. Suspendisse blandit lacus sed felis facilisis, in interdum quam congue.<p>'
+            'type_free' => '<p class="form-control-static">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc lacinia in enim iaculis malesuada. Quisque congue fermentum leo et porta. Pellentesque a quam dui. Pellentesque sed augue id sem aliquet faucibus eu vel odio. Nullam non libero volutpat, pulvinar turpis non, gravida mauris. Nullam tincidunt id est at euismod. Quisque euismod quam in pellentesque mollis. Nulla suscipit porttitor massa, nec eleifend risus egestas in. Aenean luctus porttitor tempus. Morbi dolor leo, dictum id interdum vel, semper ac est. Maecenas justo augue, accumsan in velit nec, consectetur fringilla orci. Nunc ut ante erat. Curabitur dolor augue, eleifend a luctus non, aliquet a mi. Curabitur ultricies lectus in rhoncus sodales. Maecenas quis dictum erat. Suspendisse blandit lacus sed felis facilisis, in interdum quam congue.<p>',
         );
 
         $this->fields_form = array(
             'legend' => array(
                 'title' => 'patterns of helper form.tpl',
-                'icon' => 'icon-edit'
+                'icon' => 'icon-edit',
             ),
             'tabs' => array(
                 'small' => 'Small Inputs',
@@ -76,97 +75,97 @@ class AdminPatternsControllerCore extends AdminController
                 array(
                     'type' => 'text',
                     'label' => 'simple input text',
-                    'name' => 'type_text'
+                    'name' => 'type_text',
                 ),
                 array(
                     'type' => 'text',
                     'label' => 'input text with desc',
                     'name' => 'type_text_desc',
-                    'desc' => 'desc input text'
+                    'desc' => 'desc input text',
                 ),
                 array(
                     'type' => 'text',
                     'label' => 'required input text',
                     'name' => 'type_text_required',
-                    'required' => true
+                    'required' => true,
                 ),
                 array(
                     'type' => 'text',
                     'label' => 'input text with hint',
                     'name' => 'type_text_hint',
-                    'hint' => 'hint input text'
+                    'hint' => 'hint input text',
                 ),
                 array(
                     'type' => 'text',
                     'label' => 'input text with prefix',
                     'name' => 'type_text_prefix',
-                    'prefix' => 'prefix'
+                    'prefix' => 'prefix',
                 ),
                 array(
                     'type' => 'text',
                     'label' => 'input text with suffix',
                     'name' => 'type_text_suffix',
-                    'suffix' => 'suffix'
+                    'suffix' => 'suffix',
                 ),
                 array(
                     'type' => 'text',
                     'label' => 'input text with placeholder',
                     'name' => 'type_text_placeholder',
-                    'placeholder' => 'placeholder'
+                    'placeholder' => 'placeholder',
                 ),
                 array(
                     'type' => 'text',
                     'label' => 'input text with character counter',
                     'name' => 'type_text_maxchar',
-                    'maxchar' => 30
+                    'maxchar' => 30,
                 ),
                 array(
                     'type' => 'text',
                     'lang' => true,
                     'label' => 'input text multilang',
-                    'name' => 'type_text_multilang'
+                    'name' => 'type_text_multilang',
                 ),
                 array(
                     'type' => 'text',
                     'label' => 'input readonly',
                     'readonly' => true,
-                    'name' => 'type_text_readonly'
+                    'name' => 'type_text_readonly',
                 ),
                 array(
                     'type' => 'text',
                     'label' => 'input fixed-width-xs',
                     'name' => 'type_text_xs',
-                    'class' => 'input fixed-width-xs'
+                    'class' => 'input fixed-width-xs',
                 ),
                 array(
                     'type' => 'text',
                     'label' => 'input fixed-width-sm',
                     'name' => 'type_text_sm',
-                    'class' => 'input fixed-width-sm'
+                    'class' => 'input fixed-width-sm',
                 ),
                 array(
                     'type' => 'text',
                     'label' => 'input fixed-width-md',
                     'name' => 'type_text_md',
-                    'class' => 'input fixed-width-md'
+                    'class' => 'input fixed-width-md',
                 ),
                 array(
                     'type' => 'text',
                     'label' => 'input fixed-width-lg',
                     'name' => 'type_text_lg',
-                    'class' => 'input fixed-width-lg'
+                    'class' => 'input fixed-width-lg',
                 ),
                 array(
                     'type' => 'text',
                     'label' => 'input fixed-width-xl',
                     'name' => 'type_text_xl',
-                    'class' => 'input fixed-width-xl'
+                    'class' => 'input fixed-width-xl',
                 ),
                 array(
                     'type' => 'text',
                     'label' => 'input fixed-width-xxl',
                     'name' => 'type_text_xxl',
-                    'class' => 'fixed-width-xxl'
+                    'class' => 'fixed-width-xxl',
                 ),
                 array(
                     'type' => 'text',
@@ -214,19 +213,19 @@ class AdminPatternsControllerCore extends AdminController
                     'label' => 'input fixed-width-md with prefix',
                     'name' => 'type_text_md',
                     'class' => 'input fixed-width-md',
-                    'prefix' => 'prefix'
+                    'prefix' => 'prefix',
                 ),
                 array(
                     'type' => 'text',
                     'label' => 'input fixed-width-md with sufix',
                     'name' => 'type_text_md',
                     'class' => 'input fixed-width-md',
-                    'suffix' => 'suffix'
+                    'suffix' => 'suffix',
                 ),
                 array(
                     'type' => 'tags',
                     'label' => 'input tags',
-                    'name' => 'type_text_tags'
+                    'name' => 'type_text_tags',
                 ),
                 array(
                     'type' => 'textbutton',
@@ -235,9 +234,9 @@ class AdminPatternsControllerCore extends AdminController
                     'button' => array(
                         'label' => 'do something',
                         'attributes' => array(
-                            'onclick' => 'alert(\'something done\');'
-                        )
-                    )
+                            'onclick' => 'alert(\'something done\');',
+                        ),
+                    ),
                 ),
                 array(
                     'type' => 'select',
@@ -246,7 +245,7 @@ class AdminPatternsControllerCore extends AdminController
                     'options' => array(
                         'query' => Zone::getZones(),
                         'id' => 'id_zone',
-                        'name' => 'name'
+                        'name' => 'name',
                     ),
                 ),
                 array(
@@ -255,9 +254,9 @@ class AdminPatternsControllerCore extends AdminController
                     'name' => 'type_select_chosen',
                     'class' => 'chosen',
                     'options' => array(
-                        'query' => Country::getCountries((int)Context::getContext()->cookie->id_lang),
+                        'query' => Country::getCountries((int) Context::getContext()->cookie->id_lang),
                         'id' => 'id_zone',
-                        'name' => 'name'
+                        'name' => 'name',
                     ),
                 ),
                 array(
@@ -267,9 +266,9 @@ class AdminPatternsControllerCore extends AdminController
                     'class' => 'chosen',
                     'multiple' => true,
                     'options' => array(
-                        'query' => Country::getCountries((int)Context::getContext()->cookie->id_lang),
+                        'query' => Country::getCountries((int) Context::getContext()->cookie->id_lang),
                         'id' => 'id_zone',
-                        'name' => 'name'
+                        'name' => 'name',
                     ),
                 ),
                 array(
@@ -280,19 +279,19 @@ class AdminPatternsControllerCore extends AdminController
                         array(
                             'id' => 'type_male',
                             'value' => 0,
-                            'label' => 'first'
+                            'label' => 'first',
                         ),
                         array(
                             'id' => 'type_female',
                             'value' => 1,
-                            'label' => 'second'
+                            'label' => 'second',
                         ),
                         array(
                             'id' => 'type_neutral',
                             'value' => 2,
-                            'label' => 'third'
-                        )
-                    )
+                            'label' => 'third',
+                        ),
+                    ),
                 ),
                 array(
                     'type' => 'checkbox',
@@ -301,8 +300,8 @@ class AdminPatternsControllerCore extends AdminController
                     'values' => array(
                         'query' => Zone::getZones(),
                         'id' => 'id_zone',
-                        'name' => 'name'
-                    )
+                        'name' => 'name',
+                    ),
                 ),
                 array(
                     'type' => 'switch',
@@ -311,13 +310,13 @@ class AdminPatternsControllerCore extends AdminController
                     'values' => array(
                         array(
                             'id' => 'type_switch_on',
-                            'value' => 1
+                            'value' => 1,
                         ),
                         array(
                             'id' => 'type_switch_off',
-                            'value' => 0
-                        )
-                    )
+                            'value' => 0,
+                        ),
+                    ),
                 ),
                 array(
                     'type' => 'switch',
@@ -327,29 +326,29 @@ class AdminPatternsControllerCore extends AdminController
                     'values' => array(
                         array(
                             'id' => 'type_switch_disabled_on',
-                            'value' => 1
+                            'value' => 1,
                         ),
                         array(
                             'id' => 'type_switch_disabled_off',
-                            'value' => 0
-                        )
-                    )
+                            'value' => 0,
+                        ),
+                    ),
                 ),
                 array(
                     'type' => 'textarea',
                     'label' => 'text area (with autoresize)',
-                    'name' => 'type_textarea'
+                    'name' => 'type_textarea',
                 ),
                 array(
                     'type' => 'textarea',
                     'label' => 'text area with rich text editor',
                     'name' => 'type_textarea_rte',
-                    'autoload_rte' => true
+                    'autoload_rte' => true,
                 ),
                 array(
                     'type' => 'password',
                     'label' => 'input password',
-                    'name' => 'type_password'
+                    'name' => 'type_password',
                 ),
                 array(
                     'type' => 'birthday',
@@ -358,14 +357,14 @@ class AdminPatternsControllerCore extends AdminController
                     'options' => array(
                         'days' => Tools::dateDays(),
                         'months' => Tools::dateMonths(),
-                        'years' => Tools::dateYears()
-                    )
+                        'years' => Tools::dateYears(),
+                    ),
                 ),
                 array(
                     'type' => 'group',
                     'label' => 'group',
                     'name' => 'type_group',
-                    'values' => Group::getGroups(Context::getContext()->language->id)
+                    'values' => Group::getGroups(Context::getContext()->language->id),
                 ),
                 array(
                     'type' => 'categories',
@@ -376,37 +375,37 @@ class AdminPatternsControllerCore extends AdminController
                         'id' => 'id_category',
                         'name' => 'name_category',
                         'selected_categories' => array(3),
-                    )
+                    ),
                 ),
                 array(
                     'type' => 'file',
                     'label' => 'input file',
-                    'name' => 'type_file'
+                    'name' => 'type_file',
                 ),
                 array(
                     'type' => 'color',
                     'label' => 'input color',
-                    'name' => 'type_color'
+                    'name' => 'type_color',
                 ),
                 array(
                     'type' => 'date',
                     'label' => 'input date',
-                    'name' => 'type_date'
+                    'name' => 'type_date',
                 ),
                 array(
                     'type' => 'datetime',
                     'label' => 'input date and time',
-                    'name' => 'type_datetime'
+                    'name' => 'type_datetime',
                 ),
                 array(
                     'type' => 'html',
                     'name' => 'html_data',
-                    'html_content' => '<hr><strong>html:</strong> for writing free html like this <span class="label label-danger">i\'m a label</span> <span class="badge badge-info">i\'m a badge</span> <button type="button" class="btn btn-default">i\'m a button</button><hr>'
+                    'html_content' => '<hr><strong>html:</strong> for writing free html like this <span class="label label-danger">i\'m a label</span> <span class="badge badge-info">i\'m a badge</span> <button type="button" class="btn btn-default">i\'m a button</button><hr>',
                 ),
                 array(
                     'type' => 'free',
                     'label' => 'input free',
-                    'name' => 'type_free'
+                    'name' => 'type_free',
                 ),
                 //...
             ),
@@ -427,7 +426,7 @@ class AdminPatternsControllerCore extends AdminController
 
     public function renderList()
     {
-        $return  = '';
+        $return = '';
 
         $return .= $this->renderListSimpleHeader();
         $return .= $this->renderListSmallColumns();
@@ -440,28 +439,28 @@ class AdminPatternsControllerCore extends AdminController
     {
         $content = array(
             array(
-                "id_carrier" => 5,
-                "name" => "Lorem ipsum dolor, sit amet, consectetur adipiscing elit. Nunc lacinia in enim iaculis malesuada. Quisque congue ferm",
-                "type_name" => "Azerty",
-                "active" => 1,
+                'id_carrier' => 5,
+                'name' => 'Lorem ipsum dolor, sit amet, consectetur adipiscing elit. Nunc lacinia in enim iaculis malesuada. Quisque congue ferm',
+                'type_name' => 'Azerty',
+                'active' => 1,
             ),
             array(
-                "id_carrier" => 6,
-                "name" => "Lorem ipsum dolor sit amet, consectetur lacinia in enim iaculis malesuada. Quisque congue ferm",
-                "type_name" => "Qwerty",
-                "active" => 1,
+                'id_carrier' => 6,
+                'name' => 'Lorem ipsum dolor sit amet, consectetur lacinia in enim iaculis malesuada. Quisque congue ferm',
+                'type_name' => 'Qwerty',
+                'active' => 1,
             ),
             array(
-                "id_carrier" => 9,
-                "name" => "Lorem ipsum dolor sit amet: \ / : * ? \" < > |",
-                "type_name" => "Azerty",
-                "active" => 0,
+                'id_carrier' => 9,
+                'name' => "Lorem ipsum dolor sit amet: \ / : * ? \" < > |",
+                'type_name' => 'Azerty',
+                'active' => 0,
             ),
             array(
-                "id_carrier" => 3,
-                "name" => "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc lacinia in enim iaculis malesuada. Quisque congue ferm",
-                "type_name" => "Azerty",
-                "active" => 1,
+                'id_carrier' => 3,
+                'name' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc lacinia in enim iaculis malesuada. Quisque congue ferm',
+                'type_name' => 'Azerty',
+                'active' => 1,
             ),
         );
 
@@ -469,10 +468,10 @@ class AdminPatternsControllerCore extends AdminController
             'id_carrier' => array(
                 'title' => 'ID',
                 'align' => 'center',
-                'class' => 'fixed-width-xs'
+                'class' => 'fixed-width-xs',
             ),
             'name' => array(
-                'title' => 'Name'
+                'title' => 'Name',
             ),
             'type_name' => array(
                 'title' => 'Type',
@@ -488,7 +487,7 @@ class AdminPatternsControllerCore extends AdminController
         $helper = new HelperList();
         $helper->shopLinkType = '';
         $helper->simple_header = true;
-        $helper->actions = array("edit", "delete");
+        $helper->actions = array('edit', 'delete');
         $helper->show_toolbar = false;
         $helper->module = $this;
         $helper->listTotal = count($content);
@@ -496,7 +495,7 @@ class AdminPatternsControllerCore extends AdminController
         $helper->title = 'This list use a simple Header with no toolbar';
         $helper->table = $this->name;
         $helper->token = Tools::getAdminTokenLite('AdminModules');
-        $helper->currentIndex = AdminController::$currentIndex.'&configure='.$this->name;
+        $helper->currentIndex = AdminController::$currentIndex . '&configure=' . $this->name;
 
         return $helper->generateList($content, $fields_list);
     }
@@ -513,7 +512,7 @@ class AdminPatternsControllerCore extends AdminController
                 'color_value' => 'red',
                 'blue' => 'Content in custom color in blue field',
                 'activeVisu_field' => 1,
-                'editable_text' => "PrestaShop",
+                'editable_text' => 'PrestaShop',
             ),
             array(
                 'id' => 1,
@@ -524,7 +523,7 @@ class AdminPatternsControllerCore extends AdminController
                 'color_value' => 'blue',
                 'blue' => 'Content in custom color in blue field',
                 'activeVisu_field' => 0,
-                'editable_text' => "PrestaShop",
+                'editable_text' => 'PrestaShop',
             ),
             array(
                 'id' => 2,
@@ -535,7 +534,7 @@ class AdminPatternsControllerCore extends AdminController
                 'color_value' => 'yellow',
                 'blue' => 'Content in custom color in blue field',
                 'activeVisu_field' => 1,
-                'editable_text' => "PrestaShop Lorem ipsum dolor sit amet, consectetur adipiscing elit. ",
+                'editable_text' => 'PrestaShop Lorem ipsum dolor sit amet, consectetur adipiscing elit. ',
             ),
             array(
                 'id' => 9,
@@ -546,7 +545,7 @@ class AdminPatternsControllerCore extends AdminController
                 'color_value' => '#CCCC99',
                 'blue' => 'Content in custom color in blue field',
                 'activeVisu_field' => 1,
-                'editable_text' => "PrestaShop",
+                'editable_text' => 'PrestaShop',
             ),
         );
 
@@ -557,34 +556,33 @@ class AdminPatternsControllerCore extends AdminController
                 'class' => 'fixed-width-xs',
             ),
             'badge_success' => array(
-                'title' => "Success",
+                'title' => 'Success',
                 'badge_success' => true,
             ),
             'badge_warning' => array(
-                'title' => "Warning",
+                'title' => 'Warning',
                 'badge_warning' => true,
             ),
             'badge_danger' => array(
-                'title' => "Danger",
+                'title' => 'Danger',
                 'badge_danger' => true,
             ),
             'text' => array(
-                'title' => "Content with prefix",
-                'prefix' => "This is a prefix: ",
-                'class' => "class-prefix",
+                'title' => 'Content with prefix',
+                'prefix' => 'This is a prefix: ',
+                'class' => 'class-prefix',
             ),
             'blue' => array(
-                'title' => "Content with no link",
-                'color' => "color_value",
-                'class' => "class-custom-nolink",
+                'title' => 'Content with no link',
+                'color' => 'color_value',
+                'class' => 'class-custom-nolink',
             ),
             'activeVisu_field' => array(
-                'title' => "ActiveVisu",
+                'title' => 'ActiveVisu',
                 'activeVisu' => true,
-
             ),
             'editable_text' => array(
-                'title' => "edit this !",
+                'title' => 'edit this !',
                 'type' => 'editable',
                 'class' => 'another-custom_class',
             ),
@@ -601,7 +599,7 @@ class AdminPatternsControllerCore extends AdminController
         $helper->title = 'This list shows a lot of small columns';
         $helper->table = $this->name;
         $helper->token = Tools::getAdminTokenLite('AdminModules');
-        $helper->currentIndex = AdminController::$currentIndex.'&configure='.$this->name;
+        $helper->currentIndex = AdminController::$currentIndex . '&configure=' . $this->name;
 
         return $helper->generateList($content, $fields_list);
     }
@@ -623,7 +621,7 @@ class AdminPatternsControllerCore extends AdminController
         $helper->title = 'Moderate Comments';
         $helper->table = $this->name;
         $helper->token = Tools::getAdminTokenLite('AdminModules');
-        $helper->currentIndex = AdminController::$currentIndex.'&configure='.$this->name;
+        $helper->currentIndex = AdminController::$currentIndex . '&configure=' . $this->name;
 
         return $helper->generateList($content, $fields_list);
     }
@@ -634,14 +632,14 @@ class AdminPatternsControllerCore extends AdminController
             'delete' => array(
                 'text' => 'Delete selected',
                 'confirm' => 'Delete selected items?',
-                'icon' => 'icon-trash'
-            )
+                'icon' => 'icon-trash',
+            ),
         );
         $this->fields_list = array(
             'id_carrier' => array(
                 'title' => 'ID',
                 'align' => 'center',
-                'class' => 'fixed-width-xs'
+                'class' => 'fixed-width-xs',
             ),
             'image' => array(
                 'title' => 'Logo',
@@ -649,10 +647,10 @@ class AdminPatternsControllerCore extends AdminController
                 'image' => 's',
                 'class' => 'fixed-width-xs',
                 'orderby' => false,
-                'search' => false
+                'search' => false,
             ),
             'name' => array(
-                'title' => 'Name'
+                'title' => 'Name',
             ),
         );
 
@@ -663,12 +661,13 @@ class AdminPatternsControllerCore extends AdminController
     {
         $this->fields_options = array(
             'general' => array(
-                'title' =>    'General',
-                'icon' =>    'icon-cogs',
-                'fields' =>    array(),
-                'submit' => array('title' => 'Save')
-            )
+                'title' => 'General',
+                'icon' => 'icon-cogs',
+                'fields' => array(),
+                'submit' => array('title' => 'Save'),
+            ),
         );
+
         return parent::renderOptions();
     }
 

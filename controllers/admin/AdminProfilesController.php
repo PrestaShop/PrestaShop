@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -47,17 +47,17 @@ class AdminProfilesControllerCore extends AdminController
             'delete' => array(
                 'text' => $this->trans('Delete selected', array(), 'Admin.Actions'),
                 'confirm' => $this->trans('Delete selected items?', array(), 'Admin.Notifications.Warning'),
-                'icon' => 'icon-trash'
-            )
+                'icon' => 'icon-trash',
+            ),
         );
 
         $this->fields_list = array(
             'id_profile' => array(
                         'title' => $this->trans('ID', array(), 'Admin.Global'),
                         'align' => 'center',
-                        'class' => 'fixed-width-xs'
+                        'class' => 'fixed-width-xs',
                         ),
-            'name' => array('title' => $this->trans('Name', array(), 'Admin.Global'))
+            'name' => array('title' => $this->trans('Name', array(), 'Admin.Global')),
             );
 
         $this->identifier = 'id_profile';
@@ -65,7 +65,7 @@ class AdminProfilesControllerCore extends AdminController
         $this->fields_form = array(
             'legend' => array(
                 'title' => $this->trans('Profile', array(), 'Admin.Advparameters.Feature'),
-                'icon' => 'icon-group'
+                'icon' => 'icon-group',
             ),
             'input' => array(
                 array(
@@ -74,11 +74,11 @@ class AdminProfilesControllerCore extends AdminController
                     'name' => 'name',
                     'required' => true,
                     'lang' => true,
-                )
+                ),
             ),
             'submit' => array(
                 'title' => $this->trans('Save', array(), 'Admin.Actions'),
-            )
+            ),
         );
 
         $list_profile = array();
@@ -92,11 +92,12 @@ class AdminProfilesControllerCore extends AdminController
         /* PrestaShop demo mode */
         if (_PS_MODE_DEMO_) {
             $this->errors[] = $this->trans('This functionality has been disabled.', array(), 'Admin.Notifications.Error');
+
             return;
         }
         /* PrestaShop demo mode*/
 
-        if (isset($_GET['delete'.$this->table]) && $_GET[$this->identifier] == (int)(_PS_ADMIN_PROFILE_)) {
+        if (isset($_GET['delete' . $this->table]) && $_GET[$this->identifier] == (int) (_PS_ADMIN_PROFILE_)) {
             $this->errors[] = $this->trans('For security reasons, you cannot delete the Administrator\'s profile.', array(), 'Admin.Advparameters.Notification');
         } else {
             parent::postProcess();
@@ -107,9 +108,9 @@ class AdminProfilesControllerCore extends AdminController
     {
         if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_profile'] = array(
-                'href' => self::$currentIndex.'&addprofile&token='.$this->token,
+                'href' => self::$currentIndex . '&addprofile&token=' . $this->token,
                 'desc' => $this->trans('Add new profile', array(), 'Admin.Advparameters.Feature'),
-                'icon' => 'process-icon-new'
+                'icon' => 'process-icon-new',
             );
         }
 

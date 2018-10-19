@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 trans('Sell', 'Admin.Navigation.Menu');
 trans('Improve', 'Admin.Navigation.Menu');
 trans('Configure', 'Admin.Navigation.Menu');
@@ -39,7 +38,7 @@ trans('Carriers', 'Admin.Navigation.Menu');
 trans('Carrier', 'Admin.Navigation.Menu');
 trans('Cart Rules', 'Admin.Navigation.Menu');
 trans('Catalog Price Rules', 'Admin.Navigation.Menu');
-trans('Catalog', 'Admin.Navigation.Menu');
+trans('Module Catalog', 'Admin.Navigation.Menu');
 trans('Categories', 'Admin.Navigation.Menu');
 trans('Page Categories', 'Admin.Navigation.Menu');
 trans('Pages', 'Admin.Navigation.Menu');
@@ -133,8 +132,9 @@ trans('Warehouses', 'Admin.Navigation.Menu');
 trans('Webservice', 'Admin.Navigation.Menu');
 trans('Zones', 'Admin.Navigation.Menu');
 trans('Modules Catalog', 'Admin.Navigation.Menu');
+trans('Module manager', 'Admin.Navigation.Menu');
 
 // subtab
-trans('Selection', 'Admin.Navigation.Menu');
-trans('Installed modules', 'Admin.Navigation.Menu');
-trans('Notifications', 'Admin.Navigation.Menu');
+trans('Modules', 'Admin.Navigation.Menu');
+trans('Updates', 'Admin.Navigation.Menu');
+trans('Alerts', 'Admin.Navigation.Menu');

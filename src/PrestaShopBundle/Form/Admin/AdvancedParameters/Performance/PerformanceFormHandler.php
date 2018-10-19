@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\Form\Admin\AdvancedParameters\Performance;
 
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
@@ -69,17 +70,16 @@ final class PerformanceFormHandler extends AbstractFormHandler
         $formBuilder = $this->formFactory->createBuilder()
             ->add('smarty', SmartyType::class)
             ->add('debug_mode', DebugModeType::class)
-            ->add('optional_features', OptionalFeaturesType::class, array(
-                'are_combinations_used' => $this->combinationFeature->isUsed()
-            ))
+            ->add('optional_features', OptionalFeaturesType::class, [
+                'are_combinations_used' => $this->combinationFeature->isUsed(),
+            ])
             ->add('ccc', CombineCompressCacheType::class)
             ->add('media_servers', MediaServersType::class)
             ->add('caching', CachingType::class)
             ->add('add_memcache_server', MemcacheServerType::class)
-            ->setData($this->formDataProvider->getData())
-        ;
+            ->setData($this->formDataProvider->getData());
 
-        $this->hookDispatcher->dispatchForParameters('displayPerformancePageForm', ['form_builder' => &$formBuilder]);
+        $this->hookDispatcher->dispatchWithParameters('displayPerformancePageForm', ['form_builder' => &$formBuilder]);
 
         return $formBuilder->setData($formBuilder->getData())->getForm();
     }
@@ -90,7 +90,7 @@ final class PerformanceFormHandler extends AbstractFormHandler
     public function save(array $data)
     {
         $errors = $this->formDataProvider->setData($data);
-        $this->hookDispatcher->dispatchForParameters(
+        $this->hookDispatcher->dispatchWithParameters(
             'actionPerformancePageFormSave',
             ['errors' => &$errors, 'form_data' => &$data]
         );

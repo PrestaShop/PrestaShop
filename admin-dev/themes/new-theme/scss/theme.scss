@@ -11,6 +11,7 @@
 @import "mixins/stars";
 // Settings
 @import "config/settings";
+@import "config/keyframes";
 
 // Components
 @import "components/layout/content_div";
@@ -32,12 +33,18 @@
 @import "components/ps_spinner";
 @import "components/ps_tree";
 @import "components/translatable_input";
+@import "components/choice_table";
+@import "components/form";
+@import "components/grid";
+@import "components/showcase-card";
 
 // Pages specifics SCSS files
 @import "pages/product_page";
 @import "pages/products_catalog";
 @import "pages/translation_page";
 @import "pages/stock_page";
+@import "pages/invoices";
+@import "pages/meta";
 
 // Main Layout
 @import "pages/modules";
@@ -72,9 +79,7 @@ body {
 #product_filter_column_active .select2 {
   min-width: 4.375rem;
 }
-.nav-pills {
-  font-weight: 400;
-}
+
 // Needed to override the default inline style of typeahead and take all the width
 span.twitter-typeahead {
   display: block !important;
@@ -100,7 +105,7 @@ span.twitter-typeahead {
   &:after {
     content: "settings";
     font-size: 1.375rem;
-    color: #6b868f;
+    color: $medium-gray;
   }
 }
 

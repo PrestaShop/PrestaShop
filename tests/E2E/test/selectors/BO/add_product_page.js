@@ -56,9 +56,10 @@ module.exports = {
     search_add_related_product_input: '//*[@id="form_step1_related_products"]',
     related_product_item: '//*[@id="related-content"]/div[2]/fieldset/div/div[1]/span/div/div/div[1]',
     product_add_feature_btn: '//*[@id="add_feature_button"]',
-    feature_select_option_height: '//*[@id="select2-form_step1_features_0_feature-results"]/li[2]',
+    feature_select_option: '//*[@id="select2-form_step1_features_0_feature-results"]/li[2]',
     feature_custom_value_height: '//*[@id="form_step1_features_0_custom_value_1"]',
     priceTE_shortcut: '#form_step1_price_shortcut',
+    priceTTC_shortcut: '#form_step1_price_ttc_shortcut',
     product_reference: '//*[@id="form_step6_reference"]',
     product_quantities_tab: '//*[@id="tab_step3"]/a',
     product_quantity_input: '//*[@id="form_step3_qty_0"]',
@@ -89,6 +90,8 @@ module.exports = {
     combination_size_m: '//*[@id="attribute-group-1"]//label[@for="attribute-2"]',
     combination_color_grey: '//*[@id="attribute-group-2"]//label[@for="attribute-5"]',
     combination_color_beige: '//*[@id="attribute-group-2"]//label[@for="attribute-7"]',
+    combination_color_green: '//label[@for="attribute-15"]',
+    combination_color_red: '//label[@for="attribute-10"]',
     combination_generate_button: '//*[@id="create-combinations"]',
     combination_impact_price_input: '//*[@id="attribute_%NUMBER"]/td[@class="attribute-price"]//input',
     combination_final_price_span: '//*[@id="attribute_%NUMBER"]/td[contains(@class, "attribute-finalprice")]/span',
@@ -158,6 +161,7 @@ module.exports = {
     options_file_description: '//*[@id="form_step6_attachment_product_description"]',
     options_file_add_button: '//*[@id="form_step6_attachment_product_add"]',
     options_file_checkbox: '//*[@id="form_step6_attachments_0"]',
+    attached_file_checkbox: '//*[@id="product-attachment-file"]/tbody//label[contains(text(),"%FileName")]/input',
     catalog_product_table: '#product_catalog_list table.product',
     get catalog_product_name() {
       return this.catalog_product_table + ' > tbody tr:first-child > td:nth-child(4) > a';
@@ -181,7 +185,7 @@ module.exports = {
       return this.catalog_product_table + ' .column-filters button[name="products_filter_reset"]';
     },
     get catalog_submit_filter() {
-      return this.catalog_product_table + ' .column-filters button[name="products_filter_submit"]';
+      return this.catalog_product_table + '.column-filters button[name="products_filter_submit"]';
     },
     catalog_home: '//*[@id="form_step1_categories"]/ul/li/div/label',
     catalog_first_element_radio: '//*[@id="form_step1_categories"]/ul/li/ul/li[1]/div',
@@ -193,16 +197,30 @@ module.exports = {
     duplicate_button: '//*[@aria-labelledby="dropdownMenu"]//a[contains(@class, "duplicate")]',
     success_panel: '//div[contains(@class, "alert-success")]//p',
     delete_button: '//*[@id="product_form_delete_btn"]',
-    delete_confirmation_button: '//*[@id="confirmation_modal"]//button[contains(text(), "Yes")]',
+    delete_confirmation_button: '//*[@id="confirmation_modal"]//button[contains(text(), "%BUTTON")]',
     symfony_toolbar: '//*[contains (@id, "sfToolbarMainContent")]/a',
     summary_tinymce_buttons: '//*[@id="description_short"]//div[contains(@class, "mce-toolbar-grp")]',
     combination_first_table: '//*[@id="accordion_combinations"]',
     combination_second_table: '//*[@id="accordion_combinations"]//tr[2]',
     home_delete_button: '//*[@id="ps_categoryTags"]/span[1]/a',
     created_category: '//*[@id="ps_categoryTags"]/span[2]/span',
-    continue_confirmation: '//*[@id="confirmation_modal"]//button[2]'
+    preview_link: '//a',
+    continue_confirmation: '//*[@id="confirmation_modal"]//button[2]',
+    search_categories: '//*[@id="ps-select-product-category"]',
+    list_categories: '//*[@id="ui-id-1"]/li',
+    default_category: '//*[@id="ps_categoryTags"]/span[1]/a',
+    image_combination_src: '(//*[@id="combination_%ID_id_image_attr"]//img)[%POS]',
+    img_added_product_pack: '//*[@id="form_step1_inputPackItems-data"]/li[%ID]//img',
+    product_type_option: '//*[@id="form_step1_type_product"]/option[%POS]',
+    tax_rule_taux_standard_option: '//*[@id="step2_id_tax_rules_group_rendered"]/option[5]',
+    predefined_value_option: '//*[@id="form_step1_features_0_value"]/option[text()="%V"]',
+    custom_value_input: '//*[@id="form_step1_features_0_custom_value_1"]',
+    background_picture: '//*[@id="product-images-dropzone"]//div[@class="dz-image bg"]',
+    product_pack_items: '//*[@id="form_step1_inputPackItems-data"]',
+    add_products_to_pack: '//*[@id="js_form_step1_inputPackItems"]/div',
+    attribute_group_name: '//*[@id="attributes-list"]//a[text()[contains(.,"%NAME")]]',
+    attribute_value_checkbox: '//*[@id="attribute-group-%ID"]/div/div[%S]//label'
   },
-
   ProductList: {
     product_id: '//*[@id="product_catalog_list"]//tr[%ID]/td[2]/label',
     product_name: '//*[@id="product_catalog_list"]//tbody/tr[%ID]/td[4]/a',
@@ -210,7 +228,7 @@ module.exports = {
     sort_by_icon: '//*[@id="product_catalog_list"]//div[@data-sort-col-name="%B" and @data-sort-direction="%W"]/span[@role="button"]',
     sort_button: '//*[@id="product_catalog_list"]//div[@data-sort-col-name="%B"]/span[@role="button"]',
     status_select: '//*[@id="product_filter_column_active"]//select[@name="filter_column_active"]',
-    first_product_status: '//*[@id="product_catalog_list"]//tr/td[9]/a/i[contains(@class, "action-%ACTION")]',
+    product_status: '//*[@id="product_catalog_list"]//tr[%I]/td[9]/a/i[contains(@class, "action-%ACTION")]',
     edit_button: '//*[@id="product_catalog_list"]//i[text()="mode_edit"]',
     pagination_products: '//*[@id="product_catalog_list"]//div[contains(@class, "justify-content-center")]/div[1]',
     dropdown_button: '(//*[@id="product_catalog_list"]//tbody//div[@class="btn-group-action"]//button[@data-toggle="dropdown"])[%POS]',
@@ -218,6 +236,15 @@ module.exports = {
     action_duplicate_button: '(//*[@id="product_catalog_list"]//tbody//div[@class="btn-group-action"]//a[contains(@onclick,"duplicate")])[%POS]',
     action_delete_button: '(//*[@id="product_catalog_list"]//tbody//div[@class="btn-group-action"]//a[contains(@onclick,"delete")])[%POS]',
     delete_now_modal_button: '//*[@id="catalog_deletion_modal"]//button[contains(text(), "Delete now")]',
-    search_no_results: '//*[@id="product_catalog_list"]//tbody/tr[1]/td'
+    search_no_results: '//*[@id="product_catalog_list"]//tbody/tr[1]/td',
+    pagination_next: '//*[@id="pagination_next_url"]',
+    pagination_previous: '//*[@id="product_catalog_list"]//li[@class="page-item previous "]//a',
+    page_active_number: '//*[@id="product_catalog_list"]//li[@class="page-item active"]//input',
+    item_per_page: '//*[@id="paginator_select_page_limit"]',
+    product_category: '//*[@id="product_catalog_list"]//div//tr[%I]/td[6]',
+    reset_button: '//*[@id="product_catalog_list"]//tr[2]/th[9]/button[@name="products_filter_reset"]',
+    status_filter: '//*[@id="product_filter_column_active"]//select[@name=\'filter_column_active\']',
+    item_per_page_select: '//*[@id="paginator_select_page_limit"]',
+    search_product_button: '//button[@name="filter_column_name"]'
   }
 };

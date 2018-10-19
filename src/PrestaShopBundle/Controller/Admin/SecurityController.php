@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -48,7 +48,7 @@ class SecurityController extends FrameworkBundleAdminController
 
         $newUri = PrestaShopRouter::generateTokenizedUrl($requestUri, $newToken);
 
-        return $this->render('PrestaShopBundle:Admin/Security:compromised.html.twig', array(
+        return $this->render('@PrestaShop/Admin/Security/compromised.html.twig', array(
             'requestUri' => $newUri,
         ));
     }

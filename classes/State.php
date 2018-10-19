@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -25,7 +25,7 @@
  */
 
 /**
- * Class StateCore
+ * Class StateCore.
  */
 class StateCore extends ObjectModel
 {
@@ -70,13 +70,13 @@ class StateCore extends ObjectModel
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT `id_state`, `id_country`, `id_zone`, `iso_code`, `name`, `active`
-		FROM `'._DB_PREFIX_.'state`
-		'.($active ? 'WHERE active = 1' : '').'
+		FROM `' . _DB_PREFIX_ . 'state`
+		' . ($active ? 'WHERE active = 1' : '') . '
 		ORDER BY `name` ASC');
     }
 
     /**
-     * Get a state name with its ID
+     * Get a state name with its ID.
      *
      * @param int $idState Country ID
      *
@@ -87,12 +87,12 @@ class StateCore extends ObjectModel
         if (!$idState) {
             return false;
         }
-        $cacheId = 'State::getNameById_'.(int) $idState;
+        $cacheId = 'State::getNameById_' . (int) $idState;
         if (!Cache::isStored($cacheId)) {
             $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 				SELECT `name`
-				FROM `'._DB_PREFIX_.'state`
-				WHERE `id_state` = '.(int) $idState
+				FROM `' . _DB_PREFIX_ . 'state`
+				WHERE `id_state` = ' . (int) $idState
             );
             Cache::store($cacheId, $result);
 
@@ -103,7 +103,7 @@ class StateCore extends ObjectModel
     }
 
     /**
-     * Get State ID with its name
+     * Get State ID with its name.
      *
      * @param string $state State ID
      *
@@ -114,12 +114,12 @@ class StateCore extends ObjectModel
         if (empty($state)) {
             return false;
         }
-        $cacheId = 'State::getIdByName_'.pSQL($state);
+        $cacheId = 'State::getIdByName_' . pSQL($state);
         if (!Cache::isStored($cacheId)) {
             $result = (int) Db::getInstance()->getValue('
 				SELECT `id_state`
-				FROM `'._DB_PREFIX_.'state`
-				WHERE `name` = \''.pSQL($state).'\'
+				FROM `' . _DB_PREFIX_ . 'state`
+				WHERE `name` = \'' . pSQL($state) . '\'
 			');
             Cache::store($cacheId, $result);
 
@@ -130,38 +130,38 @@ class StateCore extends ObjectModel
     }
 
     /**
-    * Get a state id with its iso code
-    *
-    * @param string $isoCode Iso code
-    *
-    * @return int state id
-    */
+     * Get a state id with its iso code.
+     *
+     * @param string $isoCode Iso code
+     *
+     * @return int state id
+     */
     public static function getIdByIso($isoCode, $idCountry = null)
     {
         return Db::getInstance()->getValue('
 		SELECT `id_state`
-		FROM `'._DB_PREFIX_.'state`
-		WHERE `iso_code` = \''.pSQL($isoCode).'\'
-		'.($idCountry ? 'AND `id_country` = '.(int)$idCountry : ''));
+		FROM `' . _DB_PREFIX_ . 'state`
+		WHERE `iso_code` = \'' . pSQL($isoCode) . '\'
+		' . ($idCountry ? 'AND `id_country` = ' . (int) $idCountry : ''));
     }
 
     /**
-    * Delete a state only if is not in use
-    *
-    * @return bool
-    */
+     * Delete a state only if is not in use.
+     *
+     * @return bool
+     */
     public function delete()
     {
         if (!$this->isUsed()) {
             // Database deletion
-            $result = Db::getInstance()->delete($this->def['table'], '`'.$this->def['primary'].'` = '.(int) $this->id);
+            $result = Db::getInstance()->delete($this->def['table'], '`' . $this->def['primary'] . '` = ' . (int) $this->id);
             if (!$result) {
                 return false;
             }
 
             // Database deletion for multilingual fields related to the object
             if (!empty($this->def['multilang'])) {
-                Db::getInstance()->delete(bqSQL($this->def['table']).'_lang', '`'.$this->def['primary'].'` = '.(int) $this->id);
+                Db::getInstance()->delete(bqSQL($this->def['table']) . '_lang', '`' . $this->def['primary'] . '` = ' . (int) $this->id);
             }
 
             return $result;
@@ -171,17 +171,17 @@ class StateCore extends ObjectModel
     }
 
     /**
-     * Check if a state is used
+     * Check if a state is used.
      *
      * @return bool
      */
     public function isUsed()
     {
-        return ($this->countUsed() > 0);
+        return $this->countUsed() > 0;
     }
 
     /**
-     * Returns the number of utilisation of a state
+     * Returns the number of utilisation of a state.
      *
      * @return int count for this state
      */
@@ -189,18 +189,19 @@ class StateCore extends ObjectModel
     {
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 			SELECT COUNT(*)
-			FROM `'._DB_PREFIX_.'address`
-			WHERE `'.$this->def['primary'].'` = '.(int) $this->id
+			FROM `' . _DB_PREFIX_ . 'address`
+			WHERE `' . $this->def['primary'] . '` = ' . (int) $this->id
         );
 
         return $result;
     }
 
     /**
-     * Get states by Country ID
+     * Get states by Country ID.
      *
      * @param int $idCountry Country ID
      * @param bool $active true if the state must be active
+     *
      * @return array|false|mysqli_result|null|PDOStatement|resource
      */
     public static function getStatesByIdCountry($idCountry, $active = false)
@@ -211,13 +212,13 @@ class StateCore extends ObjectModel
 
         return Db::getInstance()->executeS('
 			SELECT *
-			FROM `'._DB_PREFIX_.'state` s
-			WHERE s.`id_country` = '.(int) $idCountry . ($active ?  ' AND s.active = 1' : "")
+			FROM `' . _DB_PREFIX_ . 'state` s
+			WHERE s.`id_country` = ' . (int) $idCountry . ($active ? ' AND s.active = 1' : '')
         );
     }
 
     /**
-     * Has Counties
+     * Has Counties.
      *
      * @param int $idState
      *
@@ -225,11 +226,11 @@ class StateCore extends ObjectModel
      */
     public static function hasCounties($idState)
     {
-        return count(County::getCounties((int)$idState));
+        return count(County::getCounties((int) $idState));
     }
 
     /**
-     * Get Zone ID
+     * Get Zone ID.
      *
      * @param int $idState State ID
      *
@@ -243,14 +244,14 @@ class StateCore extends ObjectModel
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 			SELECT `id_zone`
-			FROM `'._DB_PREFIX_.'state`
-			WHERE `id_state` = '.(int) $idState
+			FROM `' . _DB_PREFIX_ . 'state`
+			WHERE `id_state` = ' . (int) $idState
         );
     }
 
     /**
      * @param array $idsStates State IDs
-     * @param int   $idZone    Zone ID
+     * @param int $idZone Zone ID
      *
      * @return bool
      */
@@ -258,8 +259,9 @@ class StateCore extends ObjectModel
     {
         // cast every array values to int (security)
         $idsStates = array_map('intval', $idsStates);
+
         return Db::getInstance()->execute('
-		UPDATE `'._DB_PREFIX_.'state` SET `id_zone` = '.(int) $idZone.' WHERE `id_state` IN ('.implode(',', $idsStates).')
+		UPDATE `' . _DB_PREFIX_ . 'state` SET `id_zone` = ' . (int) $idZone . ' WHERE `id_state` IN (' . implode(',', $idsStates) . ')
 		');
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -51,14 +51,13 @@ class PageType extends AbstractType
             ->add('allow_add_variant_to_cart_from_listing', SwitchType::class)
             ->add('attribute_anchor_separator', ChoiceType::class, [
                 'choices' => [
-                   '-' => '-',
-                   ',' => ',',
+                    '-' => '-',
+                    ',' => ',',
                 ],
                 'required' => true,
                 'choice_translation_domain' => 'Admin.Global',
             ])
-            ->add('display_discount_price', SwitchType::class)
-        ;
+            ->add('display_discount_price', SwitchType::class);
     }
 
     /**

@@ -1,0 +1,21 @@
+parameters:
+    prestashop.security.voter.product.class: PrestaShopBundle\Security\Voter\PageVoter
+
+services:
+    _defaults:
+        public: true
+
+    prestashop.security.admin.provider:
+        class: PrestaShopBundle\Security\Admin\EmployeeProvider
+        arguments:
+            - "@prestashop.adapter.legacy.context"
+            - "@prestashop.static_cache.adapter"
+
+    prestashop.security.role.dynamic_role_hierarchy:
+        class: PrestaShopBundle\Security\Role\DynamicRoleHierarchy
+
+    prestashop.security.voter.product:
+        class: "%prestashop.security.voter.product.class%"
+        tags:
+            - { name: security.voter }
+        public: false

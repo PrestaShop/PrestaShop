@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -44,7 +44,7 @@ class AdminZonesControllerCore extends AdminController
             'id_zone' => array(
                 'title' => $this->trans('ID', array(), 'Admin.Global'),
                 'align' => 'center',
-                'class' => 'fixed-width-xs'
+                'class' => 'fixed-width-xs',
             ),
             'name' => array(
                 'title' => $this->trans('Zone', array(), 'Admin.Global'),
@@ -55,15 +55,15 @@ class AdminZonesControllerCore extends AdminController
                 'active' => 'status',
                 'type' => 'bool',
                 'orderby' => false,
-                'class' => 'fixed-width-sm'
-            )
+                'class' => 'fixed-width-sm',
+            ),
         );
         $this->bulk_actions = array(
             'delete' => array(
                 'text' => $this->trans('Delete selected', array(), 'Admin.Actions'),
                 'confirm' => $this->trans('Delete selected items?', array(), 'Admin.Notifications.Warning'),
-                'icon' => 'icon-trash'
-            )
+                'icon' => 'icon-trash',
+            ),
         );
     }
 
@@ -71,9 +71,9 @@ class AdminZonesControllerCore extends AdminController
     {
         if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_zone'] = array(
-                'href' => self::$currentIndex.'&addzone&token='.$this->token,
+                'href' => self::$currentIndex . '&addzone&token=' . $this->token,
                 'desc' => $this->trans('Add new zone', array(), 'Admin.International.Feature'),
-                'icon' => 'process-icon-new'
+                'icon' => 'process-icon-new',
             );
         }
 
@@ -93,7 +93,7 @@ class AdminZonesControllerCore extends AdminController
         $this->fields_form = array(
             'legend' => array(
                 'title' => $this->trans('Zones', array(), 'Admin.International.Feature'),
-                'icon' => 'icon-globe'
+                'icon' => 'icon-globe',
             ),
             'input' => array(
                 array(
@@ -113,17 +113,17 @@ class AdminZonesControllerCore extends AdminController
                         array(
                             'id' => 'active_on',
                             'value' => 1,
-                            'label' => $this->trans('Enabled', array(), 'Admin.Global')
+                            'label' => $this->trans('Enabled', array(), 'Admin.Global'),
                         ),
                         array(
                             'id' => 'active_off',
                             'value' => 0,
-                            'label' => $this->trans('Disabled', array(), 'Admin.Global')
-                        )
+                            'label' => $this->trans('Disabled', array(), 'Admin.Global'),
+                        ),
                     ),
-                    'hint' => $this->trans('Allow or disallow shipping to this zone.', array(), 'Admin.International.Help')
-                )
-            )
+                    'hint' => $this->trans('Allow or disallow shipping to this zone.', array(), 'Admin.International.Help'),
+                ),
+            ),
         );
 
         if (Shop::isFeatureActive()) {

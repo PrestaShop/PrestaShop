@@ -55,11 +55,13 @@
 {% macro label_with_help(label, help, class = '') %}
 <label class="form-control-label {{ class }}">
   {{ label }}
-  <span class="help-box" data-toggle="popover"
-    data-title="{{ label }}"
+  <span
+    class="help-box"
+    data-toggle="popover"
     data-content="{{ help }}">
   </span>
 </label>
+<p class="sr-only">{{ help }}</p>
 {% endmacro %}
 
 {# Table column headers with sorting indicators #}
@@ -81,7 +83,7 @@
 
 {# Show link to import file sample #}
 {% macro import_file_sample(label, filename) %}
-    <a class="list-group-item list-group-item-action _blank" href="../../../../docs/csv_import/{{ filename }}.csv">
+    <a class="list-group-item list-group-item-action" href="{{ path('admin_import_sample_download', {'sampleName': filename}) }}">
         {{ label|trans({}, 'Admin.Advparameters.Feature') }}
     </a>
 {% endmacro %}

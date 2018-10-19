@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,6 +30,9 @@ use Symfony\Component\Form\AbstractTypeExtension;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\DataTransformerInterface;
 
+/**
+ * @deprecated 1.7.5, to be removed in 1.8
+ */
 class TextareaEmptyType extends AbstractTypeExtension implements DataTransformerInterface
 {
     public function buildForm(FormBuilderInterface $builder, array $options)

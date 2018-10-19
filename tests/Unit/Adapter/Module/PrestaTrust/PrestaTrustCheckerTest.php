@@ -55,7 +55,7 @@ class PrestaTrustCheckerTest extends UnitTestCase
     protected $apiClientS;
 
     /**
-     * @var \PrestaShop\PrestaShop\Adapter\Module\ModulePresenter
+     * @var \PrestaShop\PrestaShop\Adapter\Presenter\Module\ModulePresenter
      */
     protected $modulePresenter;
 

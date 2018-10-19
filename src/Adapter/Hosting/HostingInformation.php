@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,14 +23,14 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Adapter\Hosting;
 
 use Tools;
 use Db;
 
 /**
- * Provides hosting system information
- *
+ * Provides hosting system information.
  */
 class HostingInformation
 {
@@ -55,10 +55,10 @@ class HostingInformation
      */
     public function getServerInformation()
     {
-        return array(
-            'version' => $_SERVER['SERVER_SOFTWARE'],
+        return [
+            'version' => isset($_SERVER['SERVER_SOFTWARE']) ? $_SERVER['SERVER_SOFTWARE'] : 'n/a',
             'php' => $this->getPhpInformation(),
-        );
+        ];
     }
 
     /**
@@ -79,7 +79,7 @@ class HostingInformation
      */
     public function getUname()
     {
-        return function_exists('php_uname') ? php_uname('s').' '.php_uname('v').' '.php_uname('m') : '';
+        return function_exists('php_uname') ? php_uname('s') . ' ' . php_uname('v') . ' ' . php_uname('m') : '';
     }
 
     /**
@@ -91,7 +91,7 @@ class HostingInformation
     }
 
     /**
-     * Check if the shop is hosted on PrestaCloud
+     * Check if the shop is hosted on PrestaCloud.
      *
      * @return bool
      */

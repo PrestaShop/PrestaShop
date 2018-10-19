@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -42,30 +42,30 @@ class AdminTagsControllerCore extends AdminController
             'id_tag' => array(
                 'title' => $this->trans('ID', array(), 'Admin.Global'),
                 'align' => 'center',
-                'class' => 'fixed-width-xs'
+                'class' => 'fixed-width-xs',
             ),
             'lang' => array(
                 'title' => $this->trans('Language', array(), 'Admin.Global'),
-                'filter_key' => 'l!name'
+                'filter_key' => 'l!name',
             ),
             'name' => array(
                 'title' => $this->trans('Name', array(), 'Admin.Global'),
-                'filter_key' => 'a!name'
+                'filter_key' => 'a!name',
             ),
             'products' => array(
                 'title' => $this->trans('Products', array(), 'Admin.Global'),
                 'align' => 'center',
                 'class' => 'fixed-width-xs',
-                'havingFilter' => true
-            )
+                'havingFilter' => true,
+            ),
         );
 
         $this->bulk_actions = array(
             'delete' => array(
                 'text' => $this->trans('Delete selected', array(), 'Admin.Actions'),
                 'icon' => 'icon-trash',
-                'confirm' => $this->trans('Delete selected items?', array(), 'Admin.Notifications.Warning')
-            )
+                'confirm' => $this->trans('Delete selected items?', array(), 'Admin.Notifications.Warning'),
+            ),
         );
     }
 
@@ -73,9 +73,9 @@ class AdminTagsControllerCore extends AdminController
     {
         if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_tag'] = array(
-                'href' => self::$currentIndex.'&addtag&token='.$this->token,
+                'href' => self::$currentIndex . '&addtag&token=' . $this->token,
                 'desc' => $this->trans('Add new tag', array(), 'Admin.Shopparameters.Feature'),
-                'icon' => 'process-icon-new'
+                'icon' => 'process-icon-new',
             );
         }
 
@@ -89,9 +89,9 @@ class AdminTagsControllerCore extends AdminController
 
         $this->_select = 'l.name as lang, COUNT(pt.id_product) as products';
         $this->_join = '
-			LEFT JOIN `'._DB_PREFIX_.'product_tag` pt
+			LEFT JOIN `' . _DB_PREFIX_ . 'product_tag` pt
 				ON (a.`id_tag` = pt.`id_tag`)
-			LEFT JOIN `'._DB_PREFIX_.'lang` l
+			LEFT JOIN `' . _DB_PREFIX_ . 'lang` l
 				ON (l.`id_lang` = a.`id_lang`)';
         $this->_group = 'GROUP BY a.name, a.id_lang';
 
@@ -100,8 +100,8 @@ class AdminTagsControllerCore extends AdminController
 
     public function postProcess()
     {
-        if ($this->access('edit') && Tools::getValue('submitAdd'.$this->table)) {
-            if (($id = (int)Tools::getValue($this->identifier)) && ($obj = new $this->className($id)) && Validate::isLoadedObject($obj)) {
+        if ($this->access('edit') && Tools::getValue('submitAdd' . $this->table)) {
+            if (($id = (int) Tools::getValue($this->identifier)) && ($obj = new $this->className($id)) && Validate::isLoadedObject($obj)) {
                 /** @var Tag $obj */
                 $previous_products = $obj->getProducts();
                 $removed_products = array();
@@ -133,14 +133,14 @@ class AdminTagsControllerCore extends AdminController
         $this->fields_form = array(
             'legend' => array(
                 'title' => $this->trans('Tag', array(), 'Admin.Shopparameters.Feature'),
-                'icon' => 'icon-tag'
+                'icon' => 'icon-tag',
             ),
             'input' => array(
                 array(
                     'type' => 'text',
                     'label' => $this->trans('Name', array(), 'Admin.Global'),
                     'name' => 'name',
-                    'required' => true
+                    'required' => true,
                 ),
                 array(
                     'type' => 'select',
@@ -150,17 +150,17 @@ class AdminTagsControllerCore extends AdminController
                     'options' => array(
                         'query' => Language::getLanguages(false),
                         'id' => 'id_lang',
-                        'name' => 'name'
-                    )
+                        'name' => 'name',
+                    ),
                 ),
             ),
             'selects' => array(
                 'products' => $obj->getProducts(true),
-                'products_unselected' => $obj->getProducts(false)
+                'products_unselected' => $obj->getProducts(false),
             ),
             'submit' => array(
                 'title' => $this->trans('Save', array(), 'Admin.Actions'),
-            )
+            ),
         );
 
         return parent::renderForm();

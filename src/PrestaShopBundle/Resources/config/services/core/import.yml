@@ -1,4 +1,7 @@
 services:
+    _defaults:
+        public: true
+
     prestashop.core.import.file_uploader:
         class: 'PrestaShop\PrestaShop\Core\Import\File\FileUploader'
         arguments:
@@ -19,3 +22,8 @@ services:
         class: 'PrestaShop\PrestaShop\Core\Import\File\FileRemoval'
         arguments:
             - '@prestashop.core.import.dir'
+
+    prestashop.core.import.sample.file_provider:
+        class: 'PrestaShop\PrestaShop\Core\Import\Sample\SampleFileProvider'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'

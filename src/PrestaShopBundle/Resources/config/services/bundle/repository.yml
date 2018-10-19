@@ -1,0 +1,117 @@
+services:
+    _defaults:
+        public: true
+
+    prestashop.module_kernel.repository:
+        class: 'PrestaShopBundle\Kernel\ModuleRepository'
+        arguments: ['@doctrine.dbal.default_connection', '%database_prefix%']
+
+    prestashop.core.admin.tab.repository:
+        class: PrestaShopBundle\Entity\Repository\TabRepository
+        factory: ['@doctrine.orm.default_entity_manager', getRepository]
+        arguments:
+            - PrestaShopBundle\Entity\Tab
+
+    prestashop.core.admin.shop.repository:
+        class: 'PrestaShopBundle\Entity\Repository\ShopRepository'
+        factory: ['@doctrine.orm.default_entity_manager', getRepository]
+        arguments:
+        - 'PrestaShopBundle\Entity\Shop'
+
+    prestashop.core.admin.translation.repository:
+        class: PrestaShopBundle\Entity\Repository\TranslationRepository
+        factory: ['@doctrine.orm.default_entity_manager', getRepository]
+        arguments:
+            - PrestaShopBundle\Entity\Translation
+
+    prestashop.core.admin.lang.repository:
+        class: PrestaShopBundle\Entity\Repository\LangRepository
+        factory: ['@doctrine.orm.default_entity_manager', getRepository]
+        arguments:
+            - PrestaShopBundle\Entity\Lang
+
+    prestashop.core.admin.log.repository:
+        class: PrestaShopBundle\Entity\Repository\LogRepository
+        arguments:
+            - '@doctrine.dbal.default_connection'
+            - '%database_prefix%'
+            - '@prestashop.core.query.doctrine_search_criteria_applicator'
+
+    prestashop.core.api.stock.repository:
+        class: PrestaShopBundle\Entity\Repository\StockRepository
+        arguments:
+            - "@service_container"
+            - "@doctrine.dbal.default_connection"
+            - "@doctrine.orm.default_entity_manager"
+            - "@prestashop.adapter.legacy.context"
+            - "@prestashop.adapter.image_manager"
+            - "@prestashop.adapter.stock_manager"
+            - "%database_prefix%"
+
+    prestashop.core.api.stock_movement.repository:
+        class: PrestaShopBundle\Entity\Repository\StockMovementRepository
+        arguments:
+            - "@service_container"
+            - "@doctrine.dbal.default_connection"
+            - "@doctrine.orm.default_entity_manager"
+            - "@prestashop.adapter.legacy.context"
+            - "@prestashop.adapter.image_manager"
+            - "%database_prefix%"
+
+    prestashop.core.api.supplier.repository:
+        class: PrestaShopBundle\Entity\Repository\SupplierRepository
+        arguments:
+            - "@doctrine.dbal.default_connection"
+            - "@prestashop.adapter.legacy.context"
+            - "%database_prefix%"
+
+    prestashop.core.api.manufacturer.repository:
+        class: PrestaShopBundle\Entity\Repository\ManufacturerRepository
+        arguments:
+            - "@doctrine.dbal.default_connection"
+            - "@prestashop.adapter.legacy.context"
+            - "%database_prefix%"
+
+    prestashop.core.api.category.repository:
+        class: PrestaShopBundle\Entity\Repository\CategoryRepository
+        arguments:
+            - "@doctrine.dbal.default_connection"
+            - "@prestashop.adapter.legacy.context"
+            - "%database_prefix%"
+
+    prestashop.core.api.feature_attribute.repository:
+        class: PrestaShopBundle\Entity\Repository\FeatureAttributeRepository
+        arguments:
+            - "@doctrine.dbal.default_connection"
+            - "@prestashop.adapter.legacy.context"
+            - "%database_prefix%"
+
+    prestashop.core.admin.timezone.repository:
+        class: PrestaShopBundle\Entity\Repository\TimezoneRepository
+        arguments:
+            - '@doctrine.dbal.default_connection'
+            - '%database_prefix%'
+
+    prestashop.bundle.repository.module:
+            class: PrestaShopBundle\Entity\Repository\ModuleRepository
+            arguments:
+                - '@doctrine.dbal.default_connection'
+                - '%database_prefix%'
+
+    prestashop.core.admin.request_sql.repository:
+        class: PrestaShopBundle\Entity\Repository\RequestSqlRepository
+        arguments:
+            - '@doctrine.dbal.default_connection'
+            - '%database_prefix%'
+
+    prestashop.core.admin.admin_filter.repository:
+        class: PrestaShopBundle\Entity\Repository\AdminFilterRepository
+        factory: ['@doctrine.orm.default_entity_manager', getRepository]
+        arguments:
+            - PrestaShopBundle\Entity\AdminFilter
+
+    prestashop.core.api.order_invoice.repository:
+        class: PrestaShopBundle\Entity\Repository\OrderInvoiceRepository
+        arguments:
+            - "@doctrine.dbal.default_connection"
+            - "%database_prefix%"

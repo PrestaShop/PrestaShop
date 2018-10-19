@@ -48,7 +48,7 @@ module.exports = {
       test('should click on "Save" button', () => client.waitForExistAndClick(Pages.Category.save_button));
       test('should verify the appearance of the green validation', () => client.checkTextValue(Pages.Common.success_panel, '×\nSuccessful creation.'));
       if (categoryData.hasOwnProperty('sub_category')) {
-        scenario('Create the CMS sub category', client => {
+        scenario('Create the CMS sub-category', client => {
           test('should go back to the "Home" page', () => client.waitForExistAndClick(Pages.Category.home_icon));
           test('should get the parent category ID', () => {
             return promise
@@ -80,9 +80,9 @@ module.exports = {
           .then(() => client.checkExistence(Pages.Category.search_name_result, categoryData.name + date_time, 3));
       });
       if (categoryData.hasOwnProperty('sub_category')) {
-        scenario('Check the CMS sub category existence in the Back Office', client => {
+        scenario('Check the CMS sub-category existence in the Back Office', client => {
           test('should click on "View" button', () => client.waitForExistAndClick(Pages.Category.view_button));
-          test('should Check the CMS sub category existence', () => {
+          test('should Check the CMS sub-category existence', () => {
             return promise
               .then(() => client.isVisible(Pages.Category.name_filter))
               .then(() => client.search(Pages.Category.name_filter, categoryData.sub_category.name + date_time))
@@ -168,7 +168,7 @@ module.exports = {
     }, 'design');
   },
   categoryBulkActions: function (categoryName, action = "delete") {
-    scenario('Category bulk actions', client => {
+    scenario('Category bulk actions ' + action, client => {
       test('should go to "Design > Pages" page', () => client.goToSubtabMenuPage(Menu.Improve.Design.design_menu, Menu.Improve.Design.pages_submenu));
       test('should search for the category in the "Categories" table', () => {
         return promise
@@ -203,14 +203,15 @@ module.exports = {
       }
     }, 'design');
   },
-  createPage: function (pageData) {
-    scenario('Create a CMS page', client => {
-      test('should go to "Design > Pages" page', () => client.goToSubtabMenuPage(Menu.Improve.Design.design_menu, Menu.Improve.Design.pages_submenu));
-      test('should click on the "Add new page" button', () => client.waitForExistAndClick(Pages.Page.add_new_page_button));
+  createAndPreviewPage: function (pageData, category = "", pageID = 1) {
+    scenario('Create a CMS page and check the preview ', client => {
+      test('should click on "Add new page" button', () => client.waitForExistAndClick(Pages.Page.add_new_page_button));
       if (pageData.hasOwnProperty('page_category')) {
-        test('should select the "page category"', () => client.waitAndSelectByValue(Pages.Page.page_category, pageData.page_category));
-      } else {
-        test('should select the "page category"', () => client.waitAndSelectByValue(Pages.Page.page_category, global.categoryID));
+        test('should select the "Parent category" option ', () => {
+          return promise
+            .then(() => client.getAttributeInVar(Pages.Page.category_option.replace('%CATEGORY_NAME', pageData.page_category), "value", "categoryNameID"))
+            .then(() => client.waitAndSelectByValue(Pages.Page.page_category, global.tab['categoryNameID']))
+        });
       }
       test('should set "Meta title" input', () => client.waitAndSetValue(Pages.Common.name_input, pageData.meta_title + date_time));
       test('should set "Meta description" input', () => client.waitAndSetValue(Pages.Common.meta_description_input, pageData.meta_description));
@@ -225,13 +226,20 @@ module.exports = {
       test('should set the "Page content"', () => client.setEditorText(Pages.Page.page_content, pageData.page_content));
       test('should switch "Indexation by search engines" option to "Yes"', () => client.waitForExistAndClick(Pages.Page.enable_indexation_option));
       test('should set the option "Displayed" to "Yes"', () => client.waitForExistAndClick(Pages.Common.enable_display_option));
-      test('should click on the "Save" button', () => client.waitForExistAndClick(Pages.Page.save_button));
+      test('should click on "Save and preview" button', () => client.waitForExistAndClick(Pages.Page.save_and_preview_button));
       test('should verify the appearance of the green validation', () => client.checkTextValue(Pages.Common.success_panel, '×\nSuccessful creation.'));
+      test('should go to the review page in the Front Office', () => client.switchWindow(pageID));
+      test('should check the page content', () => client.checkTextValue(AccessPageFO.page_content, pageData.page_content));
+      if (category !== "") {
+        test('should check the page category', () => client.waitForExistAndClick(AccessPageFO.page_category.replace('%CATEGORY', category), 2000));
+        test('should check the review page link', () => client.waitForExist(AccessPageFO.review_page_link.replace('%PAGENAME', pageData.meta_title), 2000));
+      }
+      test('should go to the Back Office', () => client.switchTab(0));
+      test('should click on "Cancel" button', () => client.waitForExistAndClick(Pages.Page.cancel_button));
     }, 'design');
   },
   checkPageBO: function (pageMetaTitle) {
     scenario('Check the CMS page existence in the Back Office', client => {
-      test('should go to "Design > Pages" page', () => client.goToSubtabMenuPage(Menu.Improve.Design.design_menu, Menu.Improve.Design.pages_submenu));
       test('should check the existence of the page', () => {
         return promise
           .then(() => client.isVisible(Pages.Page.title_filter_input))
@@ -240,18 +248,7 @@ module.exports = {
       });
     }, 'design');
   },
-  checkPageFO: function (pageData) {
-    scenario('Check the CMS page existence in the Front Office', client => {
-      test('should go to the Front Office', () => client.waitForExistAndClick(AccessPageBO.shopname, 2000));
-      test('should switch to the Front Office window', () => client.switchWindow(1));
-      test('should change the Front Office language to "English"', () => client.changeLanguage());
-      test('should click on the "sitemap" menu', () => client.scrollWaitForExistAndClick(AccessPageFO.sitemap));
-      test('should check the existence of the page link in "PAGES" menu', () => client.waitForExistAndClick(AccessPageFO.page_link.replace("%pageName", pageData.meta_title + date_time)));
-      test('should check the page content', () => client.checkTextValue(AccessPageFO.page_content, pageData.page_content));
-      test('should go back to the Back Office', () => client.switchWindow(0));
-    }, 'design');
-  },
-  editPage: function (pageData, newPageData) {
+  editPage: function (pageData, newPageData, category = "", pageID) {
     scenario('Edit the CMS page', client => {
       test('should set the new "Meta title" input', () => client.waitAndSetValue(Pages.Common.name_input, newPageData.meta_title + date_time));
       test('should set the new "Meta description" input', () => client.waitAndSetValue(Pages.Common.meta_description_input, newPageData.meta_description));
@@ -269,8 +266,16 @@ module.exports = {
       test('should set the "Page content"', () => client.setEditorText(Pages.Page.page_content, newPageData.page_content));
       test('should switch the "Indexation by search engines" option to "Yes"', () => client.waitForExistAndClick(Pages.Page.enable_indexation_option));
       test('should switch the "Displayed" option to "Yes"', () => client.waitForExistAndClick(Pages.Common.enable_display_option));
-      test('should click on "Save" button', () => client.waitForExistAndClick(Pages.Page.save_button));
-      test('should verify the appearance of the green validation', () => client.checkTextValue(Pages.Common.success_panel, '×\nSuccessful update.'))
+      test('should click on the "Save and preview" button', () => client.waitForExistAndClick(Pages.Page.save_and_preview_button));
+      test('should verify the appearance of the green validation', () => client.checkTextValue(Pages.Common.success_panel, '×\nSuccessful creation.'));
+      test('should go to the review page in the Front Office', () => client.switchWindow(pageID));
+      test('should check the page content', () => client.checkTextValue(AccessPageFO.page_content, newPageData.page_content));
+      if (category !== "") {
+        test('should check the page category', () => client.waitForExistAndClick(AccessPageFO.page_category.replace('%CATEGORY', category), 2000));
+        test('should check the page category', () => client.waitForExist(AccessPageFO.review_page_link.replace('%PAGENAME', newPageData.meta_title), 2000));
+      }
+      test('should go to the Back Office', () => client.switchTab(0));
+      test('should click on "Cancel" button', () => client.waitForExistAndClick(Pages.Page.cancel_button));
     }, 'design');
   },
   deletePage: function () {
@@ -284,26 +289,26 @@ module.exports = {
       test('should verify the appearance of the green validation', () => client.checkTextValue(Pages.Common.success_panel, '×\nSuccessful deletion.'));
     }, 'design');
   },
-  PageBulkActions: function (pageMetaTitle, action) {
-    scenario('Page Bulk actions', client => {
+  PageBulkActions: function (pageMetaTitle, action = "Delete") {
+    scenario('"'+action+'" Page Bulk actions', client => {
       test('should go to "Design > Pages" page', () => client.goToSubtabMenuPage(Menu.Improve.Design.design_menu, Menu.Improve.Design.pages_submenu));
       test('should search for the page in "pages list"', () => {
         return promise
           .then(() => client.isVisible(Pages.Page.title_filter_input))
-          .then(() => client.search(Pages.Page.title_filter_input, pageMetaTitle));
+          .then(() => client.search(Pages.Page.title_filter_input, pageMetaTitle + date_time));
       });
       test('should click on "Bulk actions > Select all" button"', () => {
         return promise
           .then(() => client.waitForExistAndClick(Pages.Page.bulk_actions_button))
           .then(() => client.waitForExistAndClick(Pages.Page.bulk_actions_select_all_button));
       });
-      if (action === "disable") {
+      if (action === "Disable") {
         test('should click on "Bulk actions > Disable selected" button"', () => {
           return promise
             .then(() => client.waitForExistAndClick(Pages.Page.bulk_actions_button))
             .then(() => client.waitForExistAndClick(Pages.Page.bulk_actions_disable_button));
         });
-      } else if (action === "enable") {
+      } else if (action === "Enable") {
         test('should click on "Bulk actions > Enable selected" button"', () => {
           return promise
             .then(() => client.waitForExistAndClick(Pages.Page.bulk_actions_button))

@@ -1,0 +1,8 @@
+services:
+    _defaults:
+        public: true
+
+    prestashop.core.geolocation.geo_lite_city.checker:
+        class: 'PrestaShop\PrestaShop\Core\Geolocation\GeoLite\GeoLiteCityChecker'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'

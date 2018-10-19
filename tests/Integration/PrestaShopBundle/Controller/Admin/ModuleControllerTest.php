@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -81,6 +81,7 @@ class ModuleControllerTest extends WebTestCase
 
     public function testRecommendedModules()
     {
+        $oldContext = Context::getContext();
         Context::setInstanceForTesting(self::$kernel->getContainer()->get('prestashop.adapter.legacy.context')->getContext());
         $recommendedModuleRoute = $this->router->generate('admin_module_catalog_post', array(
             'tab_modules_list' => 'fianetsceau,trustedshops,trustedshopsintegration,ebadgeletitbuy,protectedshops,ebadgeletitbuy,emailverify,allinone_rewards,allexport,apiway,zendesk',
@@ -89,7 +90,7 @@ class ModuleControllerTest extends WebTestCase
 
         $response = $this->client->getResponse();
         $this->assertEquals(200, $response->getStatusCode());
-        Context::deleteTestingInstance();
+        Context::setInstanceForTesting($oldContext);
     }
 
     /**

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration;
 
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
@@ -38,16 +39,15 @@ class NotificationsType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('show_notifs_new_orders', SwitchType::class, array(
+            ->add('show_notifs_new_orders', SwitchType::class, [
                 'required' => true,
-            ))
-            ->add('show_notifs_new_customers', SwitchType::class, array(
+            ])
+            ->add('show_notifs_new_customers', SwitchType::class, [
                 'required' => true,
-            ))
-            ->add('show_notifs_new_messages', SwitchType::class, array(
+            ])
+            ->add('show_notifs_new_messages', SwitchType::class, [
                 'required' => true,
-            ))
-        ;
+            ]);
     }
 
     /**
@@ -55,9 +55,9 @@ class NotificationsType extends TranslatorAwareType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'translation_domain' => 'Admin.Advparameters.Feature',
-        ));
+        ]);
     }
 
     /**

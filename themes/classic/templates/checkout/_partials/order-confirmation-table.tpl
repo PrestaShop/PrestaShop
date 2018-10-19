@@ -42,7 +42,7 @@
             {if $add_product_link}<a href="{$product.url}" target="_blank">{/if}
               <span>{$product.name}</span>
             {if $add_product_link}</a>{/if}
-            {if $product.customizations|count}
+            {if is_array($product.customizations) && $product.customizations|count}
               {foreach from=$product.customizations item="customization"}
                 <div class="customizations">
                   <a href="#" data-toggle="modal" data-target="#product-customizations-modal-{$customization.id_customization}">{l s='Product customization' d='Shop.Theme.Catalog'}</a>
@@ -97,7 +97,7 @@
 
       <table>
         {foreach $subtotals as $subtotal}
-          {if $subtotal.type !== 'tax'}
+          {if $subtotal.type !== 'tax' && $subtotal.label !== null}
             <tr>
               <td>{$subtotal.label}</td>
               <td>{$subtotal.value}</td>

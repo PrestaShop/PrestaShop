@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 class DiscountControllerCore extends FrontController
 {
     public $auth = true;
@@ -32,7 +31,8 @@ class DiscountControllerCore extends FrontController
     public $ssl = true;
 
     /**
-     * Assign template vars related to page content
+     * Assign template vars related to page content.
+     *
      * @see FrontController::initContent()
      */
     public function initContent()
@@ -69,9 +69,8 @@ class DiscountControllerCore extends FrontController
         foreach ($vouchers as $key => $voucher) {
             $cart_rules[$key] = $voucher;
             $cart_rules[$key]['voucher_date'] = Tools::displayDate($voucher['date_to'], null, false);
-            $cart_rules[$key]['voucher_minimal'] = ($voucher['minimum_amount'] > 0) ? Tools::displayPrice($voucher['minimum_amount'], (int)$voucher['minimum_amount_currency']) : $this->trans('None', array(), 'Shop.Theme.Global');
+            $cart_rules[$key]['voucher_minimal'] = ($voucher['minimum_amount'] > 0) ? Tools::displayPrice($voucher['minimum_amount'], (int) $voucher['minimum_amount_currency']) : $this->trans('None', array(), 'Shop.Theme.Global');
             $cart_rules[$key]['voucher_cumulable'] = $this->getCombinableVoucherTranslation($voucher);
-            ;
 
             $cartRuleValue = $this->accumulateCartRuleValue($voucher);
 
@@ -96,6 +95,7 @@ class DiscountControllerCore extends FrontController
 
     /**
      * @param $voucher
+     *
      * @return mixed
      */
     protected function getCombinableVoucherTranslation($voucher)
@@ -113,6 +113,7 @@ class DiscountControllerCore extends FrontController
      * @param $hasTaxIncluded
      * @param $amount
      * @param $currencyId
+     *
      * @return string
      */
     protected function formatReductionAmount($hasTaxIncluded, $amount, $currencyId)
@@ -121,7 +122,7 @@ class DiscountControllerCore extends FrontController
             $taxTranslation = $this->trans('Tax included', array(), 'Shop.Theme.Checkout');
         } else {
             $taxTranslation = $this->trans('Tax excluded', array(), 'Shop.Theme.Checkout');
-        };
+        }
 
         return sprintf(
             '%s ' . $taxTranslation,
@@ -131,6 +132,7 @@ class DiscountControllerCore extends FrontController
 
     /**
      * @param $percentage
+     *
      * @return string
      */
     protected function formatReductionInPercentage($percentage)
@@ -140,6 +142,7 @@ class DiscountControllerCore extends FrontController
 
     /**
      * @param $voucher
+     *
      * @return array
      */
     protected function accumulateCartRuleValue($voucher)

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 class IdentityControllerCore extends FrontController
 {
     public $auth = true;
@@ -34,7 +33,8 @@ class IdentityControllerCore extends FrontController
     public $passwordRequired = true;
 
     /**
-     * Assign template vars related to page content
+     * Assign template vars related to page content.
+     *
      * @see FrontController::initContent()
      */
     public function initContent()
@@ -66,7 +66,7 @@ class IdentityControllerCore extends FrontController
         }
 
         $this->context->smarty->assign([
-            'customer_form' => $customer_form->getProxy()
+            'customer_form' => $customer_form->getProxy(),
         ]);
 
         if ($should_redirect) {

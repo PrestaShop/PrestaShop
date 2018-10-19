@@ -125,6 +125,7 @@
 			{/if}
 		</td>
 	{/if}
+	{if $stock_location_is_available}<td class="productQuantity location text-center">{$product['location']}</td>{/if}
 	{if $stock_management}<td class="productQuantity product_stock text-center">{$product['current_stock']}</td>{/if}
 	<td class="total_product">
 		{displayPrice price=(Tools::ps_round($product_price, 2) * ($product['product_quantity'] - $product['customizationQuantityTotal'])) currency=$currency->id}
@@ -161,7 +162,7 @@
 		0/{$productQuantity}
 	{/if}
 	</td>
-	<td class="partial_refund_fields current-edit" colspan="2" style="display:none; width: 250px;">
+	<td class="partial_refund_fields current-edit" colspan="2" style="display:none; width: 250px; min-width: 250px;">
 		{if $product['quantity_refundable'] > 0}
 		{if ($order->getTaxCalculationMethod() == $smarty.const.PS_TAX_EXC)}
 			{assign var='amount_refundable' value=$product['amount_refundable']}

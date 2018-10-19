@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,16 +23,16 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\Form\Admin\Type;
 
-use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * This form class is responsible to create a translatable form
+ * This form class is responsible to create a translatable form.
  */
 class TranslateType extends CommonAbstractType
 {
@@ -43,16 +43,18 @@ class TranslateType extends CommonAbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $i=0;
+        $i = 0;
         foreach ($options['locales'] as $locale) {
+            $options['options']['empty_data'] = '';
             $locale_options = $options['options'];
             $locale_options['label'] = $locale['iso_code'];
-            if ($i>0) {
+            if ($i > 0) {
                 $locale_options['required'] = false;
                 unset($locale_options['constraints']);
             }
+
             $builder->add($locale['id_lang'], $options['type'], $locale_options);
-            $i++;
+            ++$i;
         }
     }
 
@@ -73,12 +75,12 @@ class TranslateType extends CommonAbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'type' => null,
             'options' => [],
             'locales' => [],
             'hideTabs' => true,
-        ));
+        ]);
     }
 
     /**

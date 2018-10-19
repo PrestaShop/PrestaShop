@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -64,12 +64,11 @@ class StockType extends TranslatorAwareType
             ])
             ->add('pack_stock_management', ChoiceType::class, [
                 'choices' => [
-                      'Decrement pack only.' => 0,
-                      'Decrement products in pack only.' => 1,
-                      'Decrement both.' => 2,
+                    'Decrement pack only.' => 0,
+                    'Decrement products in pack only.' => 1,
+                    'Decrement both.' => 2,
                 ],
-            ])
-        ;
+            ]);
     }
 
     /**

@@ -32,6 +32,12 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class AppKernel extends Kernel
 {
+    const VERSION = '1.7.5.0';
+    const MAJOR_VERSION_STRING = '1.7';
+    const MAJOR_VERSION = 17;
+    const MINOR_VERSION = 5;
+    const RELEASE_VERSION = 0;
+
     /**
      * @{inheritdoc}
      */
@@ -51,6 +57,7 @@ class AppKernel extends Kernel
             new PrestaShop\TranslationToolsBundle\TranslationToolsBundle(),
             // REST API consumer
             new Csa\Bundle\GuzzleBundle\CsaGuzzleBundle(),
+            new League\Tactician\Bundle\TacticianBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'), true)) {

@@ -18,7 +18,7 @@
         {/if}
       </div>
     {/if}
-    {if isset($product.reference_to_display)}
+    {if isset($product.reference_to_display) && $product.reference_to_display neq ''}
       <div class="product-reference">
         <label class="label">{l s='Reference' d='Shop.Theme.Catalog'} </label>
         <span itemprop="sku">{$product.reference_to_display}</span>
@@ -66,7 +66,7 @@
 
   {* if product have specific references, a table will be added to product details section *}
   {block name='product_specific_references'}
-    {if isset($product.specific_references)}
+    {if !empty($product.specific_references)}
       <section class="product-features">
         <p class="h6">{l s='Specific References' d='Shop.Theme.Catalog'}</p>
           <dl class="data-sheet">

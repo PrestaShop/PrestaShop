@@ -9,6 +9,7 @@ module.exports = {
     },
     Category: {
       add_category_button: '//*[@id="page-header-desc-cms-new_cms_category"]',
+      parent_category_select_option: '//select[@name="id_parent"]/option[contains(text(), "%CATEGORY_NAME")]',
       parent_category_select: '//select[@name="id_parent"]',
       description_textarea: '//*[@id="description_1"]',
       meta_title_input: '//*[@id="meta_title_1"]',
@@ -35,6 +36,7 @@ module.exports = {
       delete_tag_button: '//div[@class="tagify-container"]//span[%POS]/a',
       enable_indexation_option: '//label[@for="indexation_on"]',
       save_button: '//*[@id="cms_form_submit_btn"]',
+      save_and_preview_button: '//button[contains(@name, "viewcms")]',
       title_filter_input: '//input[@name="cmsFilter_b!meta_title"]',
       search_title_result: '//*[@id="table-cms"]//td[%ID]',
       edit_button: '//*[@id="table-cms"]//a[@title="Edit"]',
@@ -46,7 +48,9 @@ module.exports = {
       bulk_actions_delete_button: '//*[@id="form-cms"]//div[contains(@class,\'bulk-actions\')]//ul[@class="dropdown-menu"]//a[contains(@onclick, "submitBulkdeletecms")]',
       bulk_actions_disable_button: '//*[@id="form-cms"]//div[contains(@class,\'bulk-actions\')]//ul[@class="dropdown-menu"]//a[contains(@onclick, "submitBulkdisableSelectioncms")]',
       bulk_actions_enable_button: '//*[@id="form-cms"]//div[contains(@class,\'bulk-actions\')]//ul[@class="dropdown-menu"]//a[contains(@onclick, "submitBulkenableSelectioncms")]',
-      reset_button: '//button[@name="submitResetcms"]'
+      reset_button: '//button[@name="submitResetcms"]',
+      category_option: '//select/option[contains(text(), "%CATEGORY_NAME")]',
+      cancel_button: '//*[@id="cms_form_cancel_btn"]',
     }
   }
 };

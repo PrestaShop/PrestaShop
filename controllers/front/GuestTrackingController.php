@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-use PrestaShop\PrestaShop\Adapter\Order\OrderPresenter;
+use PrestaShop\PrestaShop\Adapter\Presenter\Order\OrderPresenter;
 
 class GuestTrackingControllerCore extends FrontController
 {
@@ -121,7 +121,7 @@ class GuestTrackingControllerCore extends FrontController
     public function initContent()
     {
         parent::initContent();
-        
+
         if (!Validate::isLoadedObject($this->order)) {
             return $this->setTemplate('customer/guest-login');
         }

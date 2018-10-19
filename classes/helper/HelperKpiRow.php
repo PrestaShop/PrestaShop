@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 class HelperKpiRowCore extends Helper
 {
     public $base_folder = 'helpers/kpi/';
@@ -38,6 +37,7 @@ class HelperKpiRowCore extends Helper
 
         $this->tpl->assign('kpis', $this->kpis);
         $this->tpl->assign('refresh', $this->refresh);
+
         return $this->tpl->fetch();
     }
 }

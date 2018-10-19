@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Core\Email;
 
 use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem;
@@ -38,9 +39,11 @@ class EmailLister
     }
 
     /**
-     * Return the list of available mails
+     * Return the list of available mails.
+     *
      * @param null $lang
      * @param null $dir
+     *
      * @return array|null
      */
     public function getAvailableMails($dir)
@@ -72,9 +75,9 @@ class EmailLister
         return $mail_list;
     }
 
-
     /**
-     * Give in input getAvailableMails(), will output a human readable and proper string name
+     * Give in input getAvailableMails(), will output a human readable and proper string name.
+     *
      * @return string
      */
     public function getCleanedMailName($mail_name)

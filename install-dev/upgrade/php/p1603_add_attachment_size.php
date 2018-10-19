@@ -26,9 +26,9 @@
 
 function p1603_add_attachment_size()
 {
-    $attachments = Db::getInstance()->ExecuteS('SELECT id_attachment, file FROM '._DB_PREFIX_.'attachment');
+    $attachments = Db::getInstance()->executeS('SELECT id_attachment, file FROM '._DB_PREFIX_.'attachment');
     foreach ($attachments as $attachment) {
         $file_size = @filesize(_PS_DOWNLOAD_DIR_.$attachment['file']);
-        Db::getInstance()->Execute('UPDATE '._DB_PREFIX_.'attachment SET file_size = '.(int)$file_size.' WHERE id_attachement = '.(int)$attachment['id_attachment']);
+        Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'attachment SET file_size = '.(int)$file_size.' WHERE id_attachement = '.(int)$attachment['id_attachment']);
     }
 }

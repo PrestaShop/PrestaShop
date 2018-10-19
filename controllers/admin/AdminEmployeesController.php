@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -32,7 +32,7 @@ class AdminEmployeesControllerCore extends AdminController
     /** @var array profiles list */
     protected $profiles_array = array();
 
-    /** @var array tabs list*/
+    /** @var array tabs list */
     protected $tabs_list = array();
 
     protected $restrict_edition = false;
@@ -48,14 +48,14 @@ class AdminEmployeesControllerCore extends AdminController
 
         $this->addRowAction('edit');
         $this->addRowAction('delete');
-        $this->addRowActionSkipList('delete', array((int)$this->context->employee->id));
+        $this->addRowActionSkipList('delete', array((int) $this->context->employee->id));
 
         $this->bulk_actions = array(
             'delete' => array(
                 'text' => $this->trans('Delete selected', array(), 'Admin.Actions'),
                 'confirm' => $this->trans('Delete selected items?', array(), 'Admin.Notifications.Warning'),
-                'icon' => 'icon-trash'
-            )
+                'icon' => 'icon-trash',
+            ),
         );
         /*
         check if there are more than one superAdmin
@@ -86,22 +86,22 @@ class AdminEmployeesControllerCore extends AdminController
             'lastname' => array('title' => $this->trans('Last name', array(), 'Admin.Global')),
             'email' => array('title' => $this->trans('Email address', array(), 'Admin.Global')),
             'profile' => array('title' => $this->trans('Profile', array(), 'Admin.Advparameters.Feature'), 'type' => 'select', 'list' => $this->profiles_array,
-                'filter_key' => 'pl!name', 'class' => 'fixed-width-lg'),
+                'filter_key' => 'pl!name', 'class' => 'fixed-width-lg', ),
             'active' => array('title' => $this->trans('Active', array(), 'Admin.Global'), 'align' => 'center', 'active' => 'status',
-                'type' => 'bool', 'class' => 'fixed-width-sm'),
+                'type' => 'bool', 'class' => 'fixed-width-sm', ),
         );
 
         $this->fields_options = array(
             'general' => array(
-                'title' =>    $this->trans('Employee options', array(), 'Admin.Advparameters.Feature'),
-                'fields' =>    array(
+                'title' => $this->trans('Employee options', array(), 'Admin.Advparameters.Feature'),
+                'fields' => array(
                     'PS_PASSWD_TIME_BACK' => array(
                         'title' => $this->trans('Password regeneration', array(), 'Admin.Advparameters.Feature'),
                         'hint' => $this->trans('Security: Minimum time to wait between two password changes.', array(), 'Admin.Advparameters.Feature'),
                         'cast' => 'intval',
                         'type' => 'text',
-                        'suffix' => ' '.$this->trans('minutes', array(), 'Admin.Advparameters.Feature'),
-                        'visibility' => Shop::CONTEXT_ALL
+                        'suffix' => ' ' . $this->trans('minutes', array(), 'Admin.Advparameters.Feature'),
+                        'visibility' => Shop::CONTEXT_ALL,
                     ),
                     'PS_BO_ALLOW_EMPLOYEE_FORM_LANG' => array(
                         'title' => $this->trans('Memorize the language used in Admin panel forms', array(), 'Admin.Advparameters.Feature'),
@@ -111,12 +111,12 @@ class AdminEmployeesControllerCore extends AdminController
                         'identifier' => 'value',
                         'list' => array(
                             '0' => array('value' => 0, 'name' => $this->trans('No', array(), 'Admin.Global')),
-                            '1' => array('value' => 1, 'name' => $this->trans('Yes', array(), 'Admin.Global')
-                        )
-                    ), 'visibility' => Shop::CONTEXT_ALL)
+                            '1' => array('value' => 1, 'name' => $this->trans('Yes', array(), 'Admin.Global'),
+                        ),
+                    ), 'visibility' => Shop::CONTEXT_ALL, ),
                 ),
-                'submit' => array('title' => $this->trans('Save', array(), 'Admin.Actions'))
-            )
+                'submit' => array('title' => $this->trans('Save', array(), 'Admin.Actions')),
+            ),
         );
 
         $home_tab = Tab::getInstanceFromClassName('AdminDashboard', $this->context->language->id);
@@ -125,8 +125,8 @@ class AdminEmployeesControllerCore extends AdminController
             'id_tab' => $home_tab->id,
             'children' => array(array(
                 'id_tab' => $home_tab->id,
-                'name' => $home_tab->name
-            ))
+                'name' => $home_tab->name,
+            )),
         );
         foreach (Tab::getTabs($this->context->language->id, 0) as $tab) {
             if (Tab::checkTabRights($tab['id_tab'])) {
@@ -154,9 +154,9 @@ class AdminEmployeesControllerCore extends AdminController
     public function setMedia($isNewTheme = false)
     {
         parent::setMedia($isNewTheme);
-        $this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/vendor/jquery-passy.js');
+        $this->addJS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/' . $this->bo_theme . '/js/vendor/jquery-passy.js');
         $this->addjQueryPlugin('validate');
-        $this->addJS(_PS_JS_DIR_.'jquery/plugins/validate/localization/messages_'.$this->context->language->iso_code.'.js');
+        $this->addJS(_PS_JS_DIR_ . 'jquery/plugins/validate/localization/messages_' . $this->context->language->iso_code . '.js');
     }
 
     public function initPageHeaderToolbar()
@@ -165,16 +165,16 @@ class AdminEmployeesControllerCore extends AdminController
 
         if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_employee'] = array(
-                'href' => self::$currentIndex.'&addemployee&token='.$this->token,
+                'href' => self::$currentIndex . '&addemployee&token=' . $this->token,
                 'desc' => $this->trans('Add new employee', array(), 'Admin.Advparameters.Feature'),
-                'icon' => 'process-icon-new'
+                'icon' => 'process-icon-new',
             );
         }
 
         if ($this->display == 'edit') {
             $obj = $this->loadObject(true);
             if (Validate::isLoadedObject($obj)) {
-                /** @var Employee $obj */
+                /* @var Employee $obj */
                 array_pop($this->toolbar_title);
                 $this->toolbar_title[] = $this->trans('Edit: %lastname% %firstname%',
                     array(
@@ -183,7 +183,7 @@ class AdminEmployeesControllerCore extends AdminController
                     ),
                     'Admin.Advparameters.Feature'
                 );
-                $this->page_header_toolbar_title = implode(' '.Configuration::get('PS_NAVIGATION_PIPE').' ',
+                $this->page_header_toolbar_title = implode(' ' . Configuration::get('PS_NAVIGATION_PIPE') . ' ',
                     $this->toolbar_title);
             }
         }
@@ -192,9 +192,9 @@ class AdminEmployeesControllerCore extends AdminController
     public function renderList()
     {
         $this->_select = 'pl.`name` AS profile';
-        $this->_join = 'LEFT JOIN `'._DB_PREFIX_.'profile` p ON a.`id_profile` = p.`id_profile`
-		LEFT JOIN `'._DB_PREFIX_.'profile_lang` pl ON (pl.`id_profile` = p.`id_profile` AND pl.`id_lang` = '
-            .(int)$this->context->language->id.')';
+        $this->_join = 'LEFT JOIN `' . _DB_PREFIX_ . 'profile` p ON a.`id_profile` = p.`id_profile`
+		LEFT JOIN `' . _DB_PREFIX_ . 'profile_lang` pl ON (pl.`id_profile` = p.`id_profile` AND pl.`id_lang` = '
+            . (int) $this->context->language->id . ')';
         $this->_use_found_rows = false;
 
         return parent::renderList();
@@ -211,13 +211,14 @@ class AdminEmployeesControllerCore extends AdminController
 
         if ($obj->id_profile == _PS_ADMIN_PROFILE_ && $this->context->employee->id_profile != _PS_ADMIN_PROFILE_) {
             $this->errors[] = $this->trans('You cannot edit the SuperAdmin profile.', array(), 'Admin.Advparameters.Notification');
+
             return parent::renderForm();
         }
 
         $this->fields_form = array(
             'legend' => array(
                 'title' => $this->trans('Employees', array(), 'Admin.Advparameters.Feature'),
-                'icon' => 'icon-user'
+                'icon' => 'icon-user',
             ),
             'input' => array(
                 array(
@@ -225,37 +226,37 @@ class AdminEmployeesControllerCore extends AdminController
                     'class' => 'fixed-width-xl',
                     'label' => $this->trans('First name', array(), 'Admin.Global'),
                     'name' => 'firstname',
-                    'required' => true
+                    'required' => true,
                 ),
                 array(
                     'type' => 'text',
                     'class' => 'fixed-width-xl',
                     'label' => $this->trans('Last name', array(), 'Admin.Global'),
                     'name' => 'lastname',
-                    'required' => true
+                    'required' => true,
                 ),
                 array(
                     'type' => 'html',
                     'name' => 'employee_avatar',
-                    'html_content' => '<div id="employee-thumbnail"><a href="http://www.prestashop.com/forums/index.php?app=core&amp;module=usercp" target="_blank" style="background-image:url('.$obj->getImage().')"></a></div>
-					<div id="employee-avatar-thumbnail" class="alert alert-info">'.$this->trans(
+                    'html_content' => '<div id="employee-thumbnail"><a href="http://www.prestashop.com/forums/index.php?app=core&amp;module=usercp" target="_blank" style="background-image:url(' . $obj->getImage() . ')"></a></div>
+					<div id="employee-avatar-thumbnail" class="alert alert-info">' . $this->trans(
                         'Your avatar in PrestaShop 1.7.x is your profile picture on %url%. To change your avatar, log in to PrestaShop.com with your email %email% and follow the on-screen instructions.',
                         array(
                             '%url%' => '<a href="http://www.prestashop.com/forums/index.php?app=core&amp;module=usercp" class="alert-link" target="_blank">PrestaShop.com</a>',
                             '%email%' => $obj->email,
                         ),
                         'Admin.Advparameters.Help'
-                        ).'
+                        ) . '
                     </div>',
                 ),
                 array(
                     'type' => 'text',
-                    'class'=> 'fixed-width-xxl',
+                    'class' => 'fixed-width-xxl',
                     'prefix' => '<i class="icon-envelope-o"></i>',
                     'label' => $this->trans('Email address', array(), 'Admin.Global'),
                     'name' => 'email',
                     'required' => true,
-                    'autocomplete' => false
+                    'autocomplete' => false,
                 ),
             ),
         );
@@ -264,7 +265,7 @@ class AdminEmployeesControllerCore extends AdminController
             $this->fields_form['input'][] = array(
                 'type' => 'change-password',
                 'label' => $this->trans('Password', array(), 'Admin.Global'),
-                'name' => 'passwd'
+                'name' => 'passwd',
                 );
 
             if (Tab::checkTabRights(Tab::getIdFromClassName('AdminModulesController'))) {
@@ -279,7 +280,7 @@ class AdminEmployeesControllerCore extends AdminController
                 'type' => 'password',
                 'label' => $this->trans('Password', array(), 'Admin.Global'),
                 'hint' => $this->trans('Password should be at least %num% characters long.', array('%num%' => Validate::ADMIN_PASSWORD_LENGTH), 'Admin.Advparameters.Help'),
-                'name' => 'passwd'
+                'name' => 'passwd',
                 );
         }
 
@@ -294,22 +295,22 @@ class AdminEmployeesControllerCore extends AdminController
                     array(
                         'id' => 'optin_on',
                         'value' => 1,
-                        'label' => $this->trans('Yes', array(), 'Admin.Global')
+                        'label' => $this->trans('Yes', array(), 'Admin.Global'),
                     ),
                     array(
                         'id' => 'optin_off',
                         'value' => 0,
-                        'label' => $this->trans('No', array(), 'Admin.Global')
-                    )
+                        'label' => $this->trans('No', array(), 'Admin.Global'),
+                    ),
                 ),
-                'hint' => $this->trans('PrestaShop can provide you with guidance on a regular basis by sending you tips on how to optimize the management of your store which will help you grow your business. If you do not wish to receive these tips, you can disable this option.', array(), 'Admin.Advparameters.Help')
+                'hint' => $this->trans('PrestaShop can provide you with guidance on a regular basis by sending you tips on how to optimize the management of your store which will help you grow your business. If you do not wish to receive these tips, you can disable this option.', array(), 'Admin.Advparameters.Help'),
             ),
             array(
                 'type' => 'default_tab',
                 'label' => $this->trans('Default page', array(), 'Admin.Advparameters.Feature'),
                 'name' => 'default_tab',
                 'hint' => $this->trans('This page will be displayed just after login.', array(), 'Admin.Advparameters.Help'),
-                'options' => $this->tabs_list
+                'options' => $this->tabs_list,
             ),
             array(
                 'type' => 'select',
@@ -319,12 +320,12 @@ class AdminEmployeesControllerCore extends AdminController
                 'options' => array(
                     'query' => Language::getLanguages(false),
                     'id' => 'id_lang',
-                    'name' => 'name'
-                )
+                    'name' => 'name',
+                ),
             ),
         ));
 
-        if ((int)$this->access('edit') && !$this->restrict_edition) {
+        if ((int) $this->access('edit') && !$this->restrict_edition) {
             $this->fields_form['input'][] = array(
                 'type' => 'switch',
                 'label' => $this->trans('Active', array(), 'Admin.Global'),
@@ -335,15 +336,15 @@ class AdminEmployeesControllerCore extends AdminController
                     array(
                         'id' => 'active_on',
                         'value' => 1,
-                        'label' => $this->trans('Enabled', array(), 'Admin.Global')
+                        'label' => $this->trans('Enabled', array(), 'Admin.Global'),
                     ),
                     array(
                         'id' => 'active_off',
                         'value' => 0,
-                        'label' => $this->trans('Disabled', array(), 'Admin.Global')
-                    )
+                        'label' => $this->trans('Disabled', array(), 'Admin.Global'),
+                    ),
                 ),
-                'hint' => $this->trans('Allow or disallow this employee to log in to the Admin panel.', array(), 'Admin.Advparameters.Help')
+                'hint' => $this->trans('Allow or disallow this employee to log in to the Admin panel.', array(), 'Admin.Advparameters.Help'),
             );
 
             // if employee is not SuperAdmin (id_profile = 1), don't make it possible to select the admin profile
@@ -367,12 +368,12 @@ class AdminEmployeesControllerCore extends AdminController
                     'default' => array(
                         'value' => '',
                         'label' => $this->trans('-- Choose --', array(), 'Admin.Advparameters.Help'),
-                    )
-                )
+                    ),
+                ),
             );
 
             if (Shop::isFeatureActive()) {
-                $this->context->smarty->assign('_PS_ADMIN_PROFILE_', (int)_PS_ADMIN_PROFILE_);
+                $this->context->smarty->assign('_PS_ADMIN_PROFILE_', (int) _PS_ADMIN_PROFILE_);
                 $this->fields_form['input'][] = array(
                     'type' => 'shop',
                     'label' => $this->trans('Shop association', array(), 'Admin.Global'),
@@ -387,7 +388,7 @@ class AdminEmployeesControllerCore extends AdminController
         );
 
         $this->fields_value['passwd'] = false;
-        $this->fields_value['bo_theme_css'] = $obj->bo_theme.'|'.$obj->bo_css;
+        $this->fields_value['bo_theme_css'] = $obj->bo_theme . '|' . $obj->bo_css;
 
         if (empty($obj->id)) {
             $this->fields_value['id_lang'] = $this->context->language->id;
@@ -408,8 +409,8 @@ class AdminEmployeesControllerCore extends AdminController
 
         $email = $this->getFieldValue($obj, 'email');
         if (Validate::isEmail($email) && Employee::employeeExists($email) && (!Tools::getValue('id_employee')
-            || ($employee = new Employee((int)Tools::getValue('id_employee'))) && $employee->email != $email)) {
-            $this->errors[] = $this->trans('An account already exists for this email address:', array(), 'Admin.Orderscustomers.Notification').' '.$email;
+            || ($employee = new Employee((int) Tools::getValue('id_employee'))) && $employee->email != $email)) {
+            $this->errors[] = $this->trans('An account already exists for this email address:', array(), 'Admin.Orderscustomers.Notification') . ' ' . $email;
         }
     }
 
@@ -435,8 +436,9 @@ class AdminEmployeesControllerCore extends AdminController
     {
         if (is_array($this->boxes) && !empty($this->boxes)) {
             foreach ($this->boxes as $id_employee) {
-                if ((int)$this->context->employee->id == (int)$id_employee) {
+                if ((int) $this->context->employee->id == (int) $id_employee) {
                     $this->restrict_edition = true;
+
                     return $this->canModifyEmployee();
                 }
             }
@@ -449,19 +451,22 @@ class AdminEmployeesControllerCore extends AdminController
     {
         if ($this->restrict_edition) {
             $this->errors[] = $this->trans('You cannot disable or delete your own account.', array(), 'Admin.Advparameters.Notification');
+
             return false;
         }
 
         $employee = new Employee(Tools::getValue('id_employee'));
         if ($employee->isLastAdmin()) {
             $this->errors[] = $this->trans('You cannot disable or delete the administrator account.', array(), 'Admin.Advparameters.Notification');
+
             return false;
         }
 
         // It is not possible to delete an employee if he manages warehouses
-        $warehouses = Warehouse::getWarehousesByEmployee((int)Tools::getValue('id_employee'));
+        $warehouses = Warehouse::getWarehousesByEmployee((int) Tools::getValue('id_employee'));
         if (Tools::isSubmit('deleteemployee') && count($warehouses) > 0) {
             $this->errors[] = $this->trans('You cannot delete this account because it manages warehouses. Check your warehouses first.', array(), 'Admin.Advparameters.Notification');
+
             return false;
         }
 
@@ -470,7 +475,7 @@ class AdminEmployeesControllerCore extends AdminController
 
     public function processSave()
     {
-        $employee = new Employee((int)Tools::getValue('id_employee'));
+        $employee = new Employee((int) Tools::getValue('id_employee'));
 
         // If the employee is editing its own account
         if ($this->restrict_edition) {
@@ -486,20 +491,20 @@ class AdminEmployeesControllerCore extends AdminController
 
             // Unset set shops
             foreach ($_POST as $postkey => $postvalue) {
-                if (strstr($postkey, 'checkBoxShopAsso_'.$this->table) !== false) {
+                if (strstr($postkey, 'checkBoxShopAsso_' . $this->table) !== false) {
                     unset($_POST[$postkey]);
                 }
             }
             foreach ($_GET as $postkey => $postvalue) {
-                if (strstr($postkey, 'checkBoxShopAsso_'.$this->table) !== false) {
+                if (strstr($postkey, 'checkBoxShopAsso_' . $this->table) !== false) {
                     unset($_GET[$postkey]);
                 }
             }
 
             // Add current shops associated to the employee
-            $result = Shop::getShopById((int)$employee->id, $this->identifier, $this->table);
+            $result = Shop::getShopById((int) $employee->id, $this->identifier, $this->table);
             foreach ($result as $row) {
-                $key = 'checkBoxShopAsso_'.$this->table;
+                $key = 'checkBoxShopAsso_' . $this->table;
                 if (!isset($_POST[$key])) {
                     $_POST[$key] = array();
                 }
@@ -517,9 +522,9 @@ class AdminEmployeesControllerCore extends AdminController
 
         //if profile is super admin, manually fill checkBoxShopAsso_employee because in the form they are disabled.
         if ($_POST['id_profile'] == _PS_ADMIN_PROFILE_) {
-            $result = Db::getInstance()->executeS('SELECT id_shop FROM '._DB_PREFIX_.'shop');
+            $result = Db::getInstance()->executeS('SELECT id_shop FROM ' . _DB_PREFIX_ . 'shop');
             foreach ($result as $row) {
-                $key = 'checkBoxShopAsso_'.$this->table;
+                $key = 'checkBoxShopAsso_' . $this->table;
                 if (!isset($_POST[$key])) {
                     $_POST[$key] = array();
                 }
@@ -532,13 +537,15 @@ class AdminEmployeesControllerCore extends AdminController
         }
 
         if ($employee->isLastAdmin()) {
-            if (Tools::getValue('id_profile') != (int)_PS_ADMIN_PROFILE_) {
+            if (Tools::getValue('id_profile') != (int) _PS_ADMIN_PROFILE_) {
                 $this->errors[] = $this->trans('You should have at least one employee in the administrator group.', array(), 'Admin.Advparameters.Notification');
+
                 return false;
             }
 
-            if (Tools::getvalue('active') == 0) {
+            if (Tools::getValue('active') == 0) {
                 $this->errors[] = $this->trans('You cannot disable or delete the administrator account.', array(), 'Admin.Advparameters.Notification');
+
                 return false;
             }
         }
@@ -559,9 +566,9 @@ class AdminEmployeesControllerCore extends AdminController
 
     public function validateRules($class_name = false)
     {
-        $employee = new Employee((int)Tools::getValue('id_employee'));
+        $employee = new Employee((int) Tools::getValue('id_employee'));
 
-        if (!Validate::isLoadedObject($employee) && !Validate::isPasswd(Tools::getvalue('passwd'), Validate::ADMIN_PASSWORD_LENGTH)) {
+        if (!Validate::isLoadedObject($employee) && !Validate::isPasswd(Tools::getValue('passwd'), Validate::ADMIN_PASSWORD_LENGTH)) {
             return !($this->errors[] = $this->trans('The password must be at least %length% characters long.', array('%length%' => Validate::ADMIN_PASSWORD_LENGTH), 'Admin.Advparameters.Notification'));
         }
 
@@ -573,6 +580,7 @@ class AdminEmployeesControllerCore extends AdminController
         /* PrestaShop demo mode */
         if ((Tools::isSubmit('submitBulkdeleteemployee') || Tools::isSubmit('submitBulkdisableSelectionemployee') || Tools::isSubmit('deleteemployee') || Tools::isSubmit('status') || Tools::isSubmit('statusemployee') || Tools::isSubmit('submitAddemployee')) && _PS_MODE_DEMO_) {
             $this->errors[] = $this->trans('This functionality has been disabled.', array(), 'Admin.Notifications.Error');
+
             return;
         }
 
@@ -607,7 +615,7 @@ class AdminEmployeesControllerCore extends AdminController
 
     protected function ajaxProcessFormLanguage()
     {
-        $this->context->cookie->employee_form_lang = (int)Tools::getValue('form_language_id');
+        $this->context->cookie->employee_form_lang = (int) Tools::getValue('form_language_id');
         if (!$this->context->cookie->write()) {
             die('Error while updating cookie.');
         }
@@ -616,9 +624,10 @@ class AdminEmployeesControllerCore extends AdminController
 
     protected function ajaxProcessToggleMenu()
     {
-        $this->context->cookie->collapse_menu = (int)Tools::getValue('collapse');
+        $this->context->cookie->collapse_menu = (int) Tools::getValue('collapse');
         $this->context->cookie->write();
     }
+
     public function ajaxProcessGetTabByIdProfile()
     {
         $id_profile = Tools::getValue('id_profile');

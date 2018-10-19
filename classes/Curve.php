@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 class CurveCore
 {
     protected $values = array();
@@ -41,15 +40,16 @@ class CurveCore
         ksort($this->values);
         $string = '';
         foreach ($this->values as $key => $value) {
-            $string .= '['.addslashes((string)$key).($time_mode ? '000' : '').','.(float)$value.'],';
+            $string .= '[' . addslashes((string) $key) . ($time_mode ? '000' : '') . ',' . (float) $value . '],';
         }
-        return '{data:['.rtrim($string, ',').']'.(!empty($this->label) ? ',label:"'.$this->label.'"' : '').''.(!empty($this->type) ? ','.$this->type : '').'}';
+
+        return '{data:[' . rtrim($string, ',') . ']' . (!empty($this->label) ? ',label:"' . $this->label . '"' : '') . '' . (!empty($this->type) ? ',' . $this->type : '') . '}';
     }
 
     /** @prototype void public function setPoint(float $x, float $y) */
     public function setPoint($x, $y)
     {
-        $this->values[(string)$x] = (float)$y;
+        $this->values[(string) $x] = (float) $y;
     }
 
     public function setLabel($label)
@@ -70,8 +70,8 @@ class CurveCore
 
     public function getPoint($x)
     {
-        if (array_key_exists((string)$x, $this->values)) {
-            return $this->values[(string)$x];
+        if (array_key_exists((string) $x, $this->values)) {
+            return $this->values[(string) $x];
         }
     }
 }

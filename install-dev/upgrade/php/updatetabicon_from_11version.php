@@ -30,7 +30,7 @@ function updatetabicon_from_11version()
     if (version_compare($oldversion, '1.5.0.0', '<')) {
         $rows = Db::getInstance()->executeS('SELECT `id_tab`,`class_name` FROM '._DB_PREFIX_.'tab');
         if (sizeof($rows)) {
-            $img_dir = scandir(_PS_ROOT_DIR_.'/img/t/');
+            $img_dir = scandir(_PS_ROOT_DIR_ . '/img/t/', SCANDIR_SORT_NONE);
             $result = true;
             foreach ($rows as $tab) {
                 if (file_exists(_PS_ROOT_DIR_.'/img/t/'.$tab['id_tab'].'.gif')

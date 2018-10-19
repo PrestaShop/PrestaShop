@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\Form\Admin\Product;
 
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
@@ -33,7 +34,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Form\Extension\Core\Type as FormType;
 
 /**
- * This form class is responsible to generate the product shipping form
+ * This form class is responsible to generate the product shipping form.
  */
 class ProductShipping extends CommonAbstractType
 {
@@ -42,7 +43,7 @@ class ProductShipping extends CommonAbstractType
     private $warehouses;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param object $translator
      * @param object $legacyContext
@@ -67,7 +68,7 @@ class ProductShipping extends CommonAbstractType
         );
         $this->carriersChoices = [];
         foreach ($carriers as $carrier) {
-            $this->carriersChoices[$carrier['name'].' ('.$carrier['delay'].')'] = $carrier['id_reference'];
+            $this->carriersChoices[$carrier['name'] . ' (' . $carrier['delay'] . ')'] = $carrier['id_reference'];
         }
     }
 
@@ -81,136 +82,135 @@ class ProductShipping extends CommonAbstractType
         $builder->add(
             'width',
             FormType\NumberType::class,
-            array(
+            [
                 'required' => false,
                 'label' => $this->translator->trans('Width', [], 'Admin.Catalog.Feature'),
-                'constraints' => array(
+                'constraints' => [
                     new Assert\NotBlank(),
-                    new Assert\Type(array('type' => 'numeric'))
-                )
-            )
+                    new Assert\Type(['type' => 'numeric']),
+                ],
+            ]
         )
-        ->add(
-            'height',
-            FormType\NumberType::class,
-            array(
-                'required' => false,
-                'label' => $this->translator->trans('Height', [], 'Admin.Catalog.Feature'),
-                'constraints' => array(
-                    new Assert\NotBlank(),
-                    new Assert\Type(array('type' => 'numeric'))
-                )
+            ->add(
+                'height',
+                FormType\NumberType::class,
+                [
+                    'required' => false,
+                    'label' => $this->translator->trans('Height', [], 'Admin.Catalog.Feature'),
+                    'constraints' => [
+                        new Assert\NotBlank(),
+                        new Assert\Type(['type' => 'numeric']),
+                    ],
+                ]
             )
-        )
-        ->add(
-            'depth',
-            FormType\NumberType::class,
-            array(
-                'required' => false,
-                'label' => $this->translator->trans('Depth', [], 'Admin.Catalog.Feature'),
-                'constraints' => array(
-                    new Assert\NotBlank(),
-                    new Assert\Type(array('type' => 'numeric'))
-                )
+            ->add(
+                'depth',
+                FormType\NumberType::class,
+                [
+                    'required' => false,
+                    'label' => $this->translator->trans('Depth', [], 'Admin.Catalog.Feature'),
+                    'constraints' => [
+                        new Assert\NotBlank(),
+                        new Assert\Type(['type' => 'numeric']),
+                    ],
+                ]
             )
-        )
-        ->add(
-            'weight',
-            FormType\NumberType::class,
-            array(
-                'required' => false,
-                'label' => $this->translator->trans('Weight', [], 'Admin.Catalog.Feature'),
-                'constraints' => array(
-                    new Assert\NotBlank(),
-                    new Assert\Type(array('type' => 'numeric'))
-                )
+            ->add(
+                'weight',
+                FormType\NumberType::class,
+                [
+                    'required' => false,
+                    'label' => $this->translator->trans('Weight', [], 'Admin.Catalog.Feature'),
+                    'constraints' => [
+                        new Assert\NotBlank(),
+                        new Assert\Type(['type' => 'numeric']),
+                    ],
+                ]
             )
-        )
-        ->add(
-            'additional_shipping_cost',
-            FormType\MoneyType::class,
-            array(
-                'required' => false,
-                'label' => $this->translator->trans('Shipping fees', [], 'Admin.Catalog.Feature'),
-                'currency' => $this->currency->iso_code,
-                'constraints' => array(
-                    new Assert\NotBlank(),
-                    new Assert\Type(array('type' => 'float'))
-                )
+            ->add(
+                'additional_shipping_cost',
+                FormType\MoneyType::class,
+                [
+                    'required' => false,
+                    'label' => $this->translator->trans('Shipping fees', [], 'Admin.Catalog.Feature'),
+                    'currency' => $this->currency->iso_code,
+                    'constraints' => [
+                        new Assert\NotBlank(),
+                        new Assert\Type(['type' => 'float']),
+                    ],
+                ]
             )
-        )
-        ->add(
-            'selectedCarriers',
-            FormType\ChoiceType::class,
-            array(
-                'choices' =>  $this->carriersChoices,
-                'expanded' =>  true,
-                'multiple' =>  true,
-                'required' =>  false,
-                'label' => $this->translator->trans('Available carriers', [], 'Admin.Catalog.Feature')
+            ->add(
+                'selectedCarriers',
+                FormType\ChoiceType::class,
+                [
+                    'choices' => $this->carriersChoices,
+                    'expanded' => true,
+                    'multiple' => true,
+                    'required' => false,
+                    'label' => $this->translator->trans('Available carriers', [], 'Admin.Catalog.Feature'),
+                ]
             )
-        )
-        ->add(
-            'additional_delivery_times',
-            FormType\ChoiceType::class,
-            array(
-                'choices' =>  array(
-                    $this->translator->trans('None', [], 'Admin.Catalog.Feature') => 0,
-                    $this->translator->trans('Default delivery time', [], 'Admin.Catalog.Feature') => 1,
-                    $this->translator->trans('Specific delivery time to this product', [], 'Admin.Catalog.Feature') => 2,
-                ),
-                'expanded' =>  true,
-                'multiple' =>  false,
-                'required' =>  false,
-                'placeholder' => null,
-                'preferred_choices' => array('default'),
-                'label' => $this->translator->trans('Delivery Time', [], 'Admin.Catalog.Feature'),
+            ->add(
+                'additional_delivery_times',
+                FormType\ChoiceType::class,
+                [
+                    'choices' => [
+                        $this->translator->trans('None', [], 'Admin.Catalog.Feature') => 0,
+                        $this->translator->trans('Default delivery time', [], 'Admin.Catalog.Feature') => 1,
+                        $this->translator->trans('Specific delivery time to this product', [], 'Admin.Catalog.Feature') => 2,
+                    ],
+                    'expanded' => true,
+                    'multiple' => false,
+                    'required' => false,
+                    'placeholder' => null,
+                    'preferred_choices' => ['default'],
+                    'label' => $this->translator->trans('Delivery Time', [], 'Admin.Catalog.Feature'),
+                ]
             )
-        )
-        ->add(
-            'delivery_out_stock',
-            TranslateType::class,
-            array(
-                'type' => FormType\TextType::class,
-                'options' => array(
-                    'attr' => array(
-                        'placeholder' => $this->translator->trans('Delivered within 5-7 days', [], 'Admin.Catalog.Feature'),
-                    )
-                ),
-                'locales' => $this->locales,
-                'hideTabs' => true,
-                'required' => false,
-                'label' => $this->translator->trans(
-                    'Delivery time of out-of-stock products with allowed orders:',
-                    [],
-                    'Admin.Catalog.Feature'
-                ),
+            ->add(
+                'delivery_out_stock',
+                TranslateType::class,
+                [
+                    'type' => FormType\TextType::class,
+                    'options' => [
+                        'attr' => [
+                            'placeholder' => $this->translator->trans('Delivered within 5-7 days', [], 'Admin.Catalog.Feature'),
+                        ],
+                    ],
+                    'locales' => $this->locales,
+                    'hideTabs' => true,
+                    'required' => false,
+                    'label' => $this->translator->trans(
+                        'Delivery time of out-of-stock products with allowed orders:',
+                        [],
+                        'Admin.Catalog.Feature'
+                    ),
+                ]
             )
-        )
-        ->add(
-            'delivery_in_stock',
-            TranslateType::class,
-            array(
-                'type' => FormType\TextType::class,
-                'options' => array(
-                    'attr' => array(
-                        'placeholder' => $this->translator->trans('Delivered within 3-4 days', [], 'Admin.Catalog.Feature'),
-                    )
-                ),
-                'locales' => $this->locales,
-                'hideTabs' => true,
-                'required' => false,
-                'label' => $this->translator->trans('Delivery time of in-stock products:', [], 'Admin.Catalog.Feature'),
-            )
-        );
-
+            ->add(
+                'delivery_in_stock',
+                TranslateType::class,
+                [
+                    'type' => FormType\TextType::class,
+                    'options' => [
+                        'attr' => [
+                            'placeholder' => $this->translator->trans('Delivered within 3-4 days', [], 'Admin.Catalog.Feature'),
+                        ],
+                    ],
+                    'locales' => $this->locales,
+                    'hideTabs' => true,
+                    'required' => false,
+                    'label' => $this->translator->trans('Delivery time of in-stock products:', [], 'Admin.Catalog.Feature'),
+                ]
+            );
 
         foreach ($this->warehouses as $warehouse) {
             $builder->add(
-                'warehouse_combination_'.$warehouse['id_warehouse'],
+                'warehouse_combination_' . $warehouse['id_warehouse'],
                 CollectionType::class,
                 [
-                    'entry_type' =>'PrestaShopBundle\Form\Admin\Product\ProductWarehouseCombination',
+                    'entry_type' => 'PrestaShopBundle\Form\Admin\Product\ProductWarehouseCombination',
                     'entry_options' => [
                         'id_warehouse' => $warehouse['id_warehouse'],
                     ],

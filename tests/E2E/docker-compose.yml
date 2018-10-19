@@ -2,52 +2,57 @@ version: '3'
 
 services:
   tests:
-    build: .
+    build: .docker
     environment:
       SELENIUM_HOST: selenium-chrome
       URL: prestashop-web
     depends_on:
       - "prestashop"
       - "selenium-chrome"
-    command: ["/tmp/wait-for-it.sh", "--timeout=120", "--strict", "prestashop:80", "--", "/tmp/node_modules/mocha/bin/mocha /tmp/test/campaigns/high/*", "--URL=prestashop-web", "--SELENIUM=selenium-chrome"]
+    command: ["/tmp/wait-for-it.sh", "--timeout=360", "--strict", "prestashop-web:80", "--", "/tmp/prepare-prestashop.sh"]
+    tty: true
     volumes:
-      - ./screenshots/:/home/test/screenshots/
+      - .docker:/tmp/docker
+      - ../../:/tmp/data-ps/prestashop/
     networks:
       - default
 
   prestashop:
-    build: docker_prestashop/
+    build: .docker/prestashop
     environment:
       DB_SERVER: db
       PS_INSTALL_AUTO: 1
       PS_COUNTRY: fr
       PS_DEV_MODE: 0
+      PS_ERASE_DB: 1
       PS_DOMAIN: prestashop-web
       PS_FOLDER_ADMIN: admin-dev
       PS_FOLDER_INSTALL: install-dev
     depends_on:
       - "db"
     command: ["/tmp/wait-for-it.sh", "--timeout=60", "--strict", "db:3306", "--", "/tmp/docker_run.sh"]
+    volumes:
+      - .docker:/tmp/docker
+      - ../../:/tmp/data-ps/prestashop/
     networks:
       default:
-          aliases:
-              - prestashop-web
+        aliases:
+          - prestashop-web
 
   selenium-chrome:
     image: selenium/standalone-chrome
-    ports:
-      - 4444:4444
+    depends_on:
+      - "prestashop"
+    volumes:
+      - /dev/shm:/dev/shm
     networks:
       default:
-          aliases:
-              - selenium-chrome
+        aliases:
+          - selenium-chrome
 
   db:
-    image: mysql
+    image: mysql:5.7.22
     environment:
       MYSQL_ROOT_PASSWORD: admin
     networks:
       - default
-
-networks:
-  default:

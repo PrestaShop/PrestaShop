@@ -35,7 +35,7 @@ use PHPUnit\Framework\TestCase;
 class ModuleTemplateLoaderTest extends TestCase
 {
     /**
-     * @var TemplateModuleLoader
+     * @var ModuleTemplateLoader
      */
     private $loader;
 
@@ -55,9 +55,7 @@ class ModuleTemplateLoaderTest extends TestCase
             __DIR__.'/../Fixtures/module3',
         ];
 
-        $rootPath = null;
-
-        $this->loader = new ModuleTemplateLoader($namespaces, $paths, $rootPath);
+        $this->loader = new ModuleTemplateLoader($namespaces, $paths);
     }
 
     /**

@@ -6,43 +6,43 @@
         <source>Dashboard</source>
         <target>Dashboard</target>
         <note>Context:
-File: controllers/admin/AdminDashboardController.php:58</note>
+File: controllers/admin/AdminDashboardController.php:57</note>
       </trans-unit>
       <trans-unit id="948a2986c50ad6bb8c90b4d93ae5c04d">
         <source>Demo mode</source>
         <target>Demo mode</target>
         <note>Context:
-File: controllers/admin/AdminDashboardController.php:60</note>
+File: controllers/admin/AdminDashboardController.php:59</note>
       </trans-unit>
       <trans-unit id="6894510fe0d12804bb8c93f374a485c0">
         <source>Average bank fees per payment method</source>
         <target>Average bank fees per payment method</target>
         <note>Context:
-File: controllers/admin/AdminDashboardController.php:79</note>
+File: controllers/admin/AdminDashboardController.php:78</note>
       </trans-unit>
       <trans-unit id="dc04176957901a0f880e073ea5187187">
         <source>Average shipping fees per shipping method</source>
         <target>Average shipping fees per shipping method</target>
         <note>Context:
-File: controllers/admin/AdminDashboardController.php:80</note>
+File: controllers/admin/AdminDashboardController.php:79</note>
       </trans-unit>
       <trans-unit id="cb3c93351f1f20809fdd6e938a4319c7">
         <source>Other settings</source>
         <target>Other settings</target>
         <note>Context:
-File: controllers/admin/AdminDashboardController.php:81</note>
+File: controllers/admin/AdminDashboardController.php:80</note>
       </trans-unit>
       <trans-unit id="e7c89563e25ff383dddc384817a7b857">
         <source>Average gross margin percentage</source>
         <target>Average gross margin percentage</target>
         <note>Context:
-File: controllers/admin/AdminDashboardController.php:197</note>
+File: controllers/admin/AdminDashboardController.php:196</note>
       </trans-unit>
       <trans-unit id="719d7270f0014508129eecfe03ffd84e">
         <source>Other fees per order</source>
         <target>Other fees per order</target>
         <note>Context:
-File: controllers/admin/AdminDashboardController.php:207</note>
+File: controllers/admin/AdminDashboardController.php:206</note>
       </trans-unit>
     </body>
   </file>
@@ -107,12 +107,6 @@ File: admin-dev/themes/default/template/controllers/dashboard/helpers/view/view.
         <target><![CDATA[Enhance your store with templates & modules]]></target>
         <note>Context:
 File: admin-dev/themes/default/template/controllers/dashboard/helpers/view/view.tpl:119</note>
-      </trans-unit>
-      <trans-unit id="f76e3bc0ddc043c3abdd4d40245172e4">
-        <source>The Forge</source>
-        <target>The Forge</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/dashboard/helpers/view/view.tpl:122</note>
       </trans-unit>
       <trans-unit id="13df627c018625ce68ca2200a869dd65">
         <source>Report issues in the Bug Tracker</source>

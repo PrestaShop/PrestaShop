@@ -86,7 +86,7 @@
         data-content="{{ "Display delivery time for a product is advised for merchants selling in Europe to comply with the local laws."|trans({}, 'Admin.Catalog.Help') }}" ></span>
     </h2>
     <div class="row">
-       <div class="col-md-12" {{ block('widget_container_attributes') }}>
+       <div class="col-md-12" {% if block('widget_container_attributes') is defined %} {{ block('widget_container_attributes') }} {% endif %}>
           {% for child in form.additional_delivery_times %}
             {% if child.vars.value == 1 %}
               <div class="widget-radio-inline">
@@ -153,7 +153,7 @@
 <div class="col-md-12">
   <div id="warehouse_combination_collection" class="col-md-12 form-group" data-url="{{ path('admin_warehouse_refresh_product_warehouse_combination_form') }}">
     {% if asm_globally_activated and isNotVirtual and isChecked %}
-      {{ include('PrestaShopBundle:Admin:Product/Include/form-warehouse-combination.html.twig', { 'warehouses': warehouses, 'form': form }) }}
+      {{ include('@PrestaShop/Admin:Product/ProductPage/Forms/form_warehouse_combination.html.twig', { 'warehouses': warehouses, 'form': form }) }}
     {% endif %}
   </div>
 </div>

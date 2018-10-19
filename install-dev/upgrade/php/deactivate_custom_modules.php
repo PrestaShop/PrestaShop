@@ -28,7 +28,7 @@ function deactivate_custom_modules()
 {
     $db = Db::getInstance();
     $modulesDirOnDisk = array();
-    $modules = scandir(_PS_MODULE_DIR_);
+    $modules = scandir(_PS_MODULE_DIR_, SCANDIR_SORT_NONE);
     foreach ($modules as $name) {
         if (!in_array($name, array('.', '..', 'index.php', '.htaccess')) && @is_dir(_PS_MODULE_DIR_.$name.DIRECTORY_SEPARATOR) && @file_exists(_PS_MODULE_DIR_.$name.DIRECTORY_SEPARATOR.$name.'.php')) {
             if (!preg_match('/^[a-zA-Z0-9_-]+$/', $name)) {

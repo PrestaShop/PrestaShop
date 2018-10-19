@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\Form\Admin\AdvancedParameters\Performance;
 
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
@@ -32,16 +33,16 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * This form class generates the "Caching" form in Performance page
+ * This form class generates the "Caching" form in Performance page.
  */
 class CachingType extends TranslatorAwareType
 {
-    private $extensionsList = array(
-        'CacheMemcache' => array('memcache'),
-        'CacheMemcached' => array('memcached'),
-        'CacheApc' => array('apc', 'apcu'),
-        'CacheXcache' => array('xcache'),
-    );
+    private $extensionsList = [
+        'CacheMemcache' => ['memcache'],
+        'CacheMemcached' => ['memcached'],
+        'CacheApc' => ['apc', 'apcu'],
+        'CacheXcache' => ['xcache'],
+    ];
 
     /**
      * {@inheritdoc}
@@ -50,13 +51,13 @@ class CachingType extends TranslatorAwareType
     {
         $builder
             ->add('use_cache', SwitchType::class)
-            ->add('caching_system', ChoiceType::class, array(
-                'choices'  => array(
+            ->add('caching_system', ChoiceType::class, [
+                'choices' => [
                     'Memcached via PHP::Memcache' => 'CacheMemcache',
                     'Memcached via PHP::Memcached' => 'CacheMemcached',
                     'APC' => 'CacheApc',
                     'Xcache' => 'CacheXcache',
-                ),
+                ],
                 'choice_label' => function ($value, $key, $index) {
                     $disabled = false;
                     foreach ($this->extensionsList[$index] as $extensionName) {
@@ -79,13 +80,12 @@ class CachingType extends TranslatorAwareType
                         $disabled = true;
                     }
 
-                    return $disabled === true ? array('disabled' => $disabled) : array();
+                    return $disabled === true ? ['disabled' => $disabled] : [];
                 },
                 'expanded' => true,
                 'required' => false,
-                'placeholder' => false
-            ))
-        ;
+                'placeholder' => false,
+            ]);
     }
 
     /**
@@ -93,9 +93,9 @@ class CachingType extends TranslatorAwareType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'translation_domain' => 'Admin.Advparameters.Feature',
-        ));
+        ]);
     }
 
     /**
@@ -113,47 +113,47 @@ class CachingType extends TranslatorAwareType
      */
     private function getErrorsMessages()
     {
-        return array(
+        return [
             'CacheMemcache' => $this->trans('Memcached via PHP::Memcache', 'Admin.Advparameters.Feature')
                 . ' '
                 . $this->trans(
                     '(you must install the [a]Memcache PECL extension[/a])',
                     'Admin.Advparameters.Notification',
-                    array(
+                    [
                         '[a]' => '<a href="http://www.php.net/manual/en/memcache.installation.php" target="_blank">',
                         '[/a]' => '</a>',
-                    )
+                    ]
                 ),
             'CacheMemcached' => $this->trans('Memcached via PHP::Memcached', 'Admin.Advparameters.Feature')
                 . ' '
                 . $this->trans(
                     '(you must install the [a]Memcached PECL extension[/a])',
                     'Admin.Advparameters.Notification',
-                    array(
+                    [
                         '[a]' => '<a href="http://www.php.net/manual/en/memcached.installation.php" target="_blank">',
                         '[/a]' => '</a>',
-                    )
+                    ]
                 ),
             'CacheApc' => $this->trans('APC', 'Admin.Advparameters.Feature')
                 . ' '
                 . $this->trans(
                     '(you must install the [a]APC PECL extension[/a])',
                     'Admin.Advparameters.Notification',
-                    array(
+                    [
                         '[a]' => '<a href="http://www.php.net/manual/en/apc.installation.php" target="_blank">',
                         '[/a]' => '</a>',
-                    )
+                    ]
                 ),
             'CacheXcache' => $this->trans('Xcache', 'Admin.Advparameters.Feature')
                 . ' '
                 . $this->trans(
                     '(you must install the [a]Xcache extension[/a])',
                     'Admin.Advparameters.Notification',
-                    array(
+                    [
                         '[a]' => '<a href="http://xcache.lighttpd.net" target="_blank">',
                         '[/a]' => '</a>',
-                    )
+                    ]
                 ),
-        );
+        ];
     }
 }

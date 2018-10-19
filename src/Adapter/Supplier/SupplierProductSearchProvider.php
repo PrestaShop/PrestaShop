@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -24,7 +24,6 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-
 namespace PrestaShop\PrestaShop\Adapter\Supplier;
 
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchProviderInterface;
@@ -35,10 +34,26 @@ use PrestaShop\PrestaShop\Core\Product\Search\SortOrderFactory;
 use Symfony\Component\Translation\TranslatorInterface;
 use Supplier;
 
+/**
+ * Class responsible of retrieving products in Suppliers page of Front Office.
+ *
+ * @see SupplierController
+ */
 class SupplierProductSearchProvider implements ProductSearchProviderInterface
 {
+    /**
+     * @var TranslatorInterface
+     */
     private $translator;
+
+    /**
+     * @var Supplier
+     */
     private $supplier;
+
+    /**
+     * @var SortOrderFactory
+     */
     private $sortOrderFactory;
 
     public function __construct(
@@ -50,6 +65,13 @@ class SupplierProductSearchProvider implements ProductSearchProviderInterface
         $this->sortOrderFactory = new SortOrderFactory($this->translator);
     }
 
+    /**
+     * @param ProductSearchContext $context
+     * @param ProductSearchQuery $query
+     * @param string $type
+     *
+     * @return array|bool
+     */
     private function getProductsOrCount(
         ProductSearchContext $context,
         ProductSearchQuery $query,
@@ -66,6 +88,9 @@ class SupplierProductSearchProvider implements ProductSearchProviderInterface
         );
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function runQuery(
         ProductSearchContext $context,
         ProductSearchQuery $query

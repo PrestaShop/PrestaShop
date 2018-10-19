@@ -36,6 +36,7 @@ use Currency;
 use Language;
 use Link;
 use Phake;
+use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use Product;
 use Shop;
 use Smarty;
@@ -88,6 +89,7 @@ class ContextMocker
         CartRule::resetStaticCache();
         Currency::resetStaticCache();
         Shop::resetContext();
+        SymfonyContainer::resetStaticCache();
         Pack::resetStaticCache();
         Tools::$round_mode = null;
 

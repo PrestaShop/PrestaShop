@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,98 +27,89 @@
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
+use PrestaShop\PrestaShop\Core\Search\Filters\LogsFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Logs\FilterLogsByAttributeType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use PrestaShopBundle\Entity\Repository\LogRepository;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Responsible of "Configure > Advanced Parameters > Logs" page display
+ * Responsible of "Configure > Advanced Parameters > Logs" page display.
  */
 class LogsController extends FrameworkBundleAdminController
 {
     /**
-     * @var string The controller name for routing.
+     * @var string the controller name for routing
      */
     const CONTROLLER_NAME = 'AdminLogs';
 
     /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller')~'_')", message="Access denied.")
-     * @param \Symfony\Component\HttpFoundation\Request
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
+     *
+     * @param LogsFilters $filters the list of filters from the request
+     *
+     * @return Response
      */
-    public function indexAction(Request $request)
+    public function indexAction(LogsFilters $filters)
     {
-        $searchParametersForm = $this->createForm(FilterLogsByAttributeType::class, $request->get('filters', array()));
+        $gridLogFactory = $this->get('prestashop.core.grid.log_factory');
+        $grid = $gridLogFactory->getGrid($filters);
+
         $logsByEmailForm = $this->getFormHandler()->getForm();
 
-        $filters = $this->get('prestashop.core.admin.search_parameters')->getFiltersFromRequest($request, array(
-            'limit' => 10,
-            'offset' => 0,
-            'orderBy' => 'id_log',
-            'sortOrder' => 'desc',
-            'filters' => array()
-        ));
-
-        $twigValues = array(
+        return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/LogsPage/index.html.twig', [
             'layoutHeaderToolbarBtn' => [],
-            'layoutTitle' => $this->get('translator')->trans('Logs', array(), 'Admin.Navigation.Menu'),
+            'layoutTitle' => $this->trans('Logs', 'Admin.Navigation.Menu'),
             'requireAddonsSearch' => true,
             'requireBulkActions' => false,
             'showContentHeader' => true,
             'enableSidebar' => true,
-            'orderBy' => $filters['orderBy'],
-            'sortOrder' => $filters['sortOrder'],
             'help_link' => $this->generateSidebarLink('AdminLogs'),
             'logsByEmailForm' => $logsByEmailForm->createView(),
-            'searchParametersForm' => $searchParametersForm->createView(),
-            'logsSum' => count($this->getLogRepository()->findAll()),
-            'logs' => $this->getLogRepository()->findAllWithEmployeeInformation($filters),
-            'sql_query' => $this->getLogRepository()->findAllWithEmployeeInformationQuery($filters),
-            'sql_manager_add_link' => $this->get('prestashop.adapter.legacy.context')->getAdminLink(
-                'AdminRequestSql',
-                true,
-                array(
-                'addrequest_sql' => 1
-            )),
-        );
-
-        return $this->render('@AdvancedParameters/LogsPage/logs.html.twig', $twigValues);
+            'grid' => $this->presentGrid($grid),
+        ]);
     }
 
     /**
-     * @AdminSecurity("is_granted(['read', 'update', 'create', 'delete'], request.get('_legacy_controller')~'_')", message="You do not have permission to update this.", redirectRoute="admin_logs")
-     * @DemoRestricted(redirectRoute="admin_logs")
+     * @AdminSecurity("is_granted(['read', 'update', 'create', 'delete'], request.get('_legacy_controller'))", message="You do not have permission to update this.", redirectRoute="admin_logs")
+     * @DemoRestricted(redirectRoute="admin_logs_index")
+     *
      * @param Request $request
+     *
      * @return RedirectResponse
      */
     public function searchAction(Request $request)
     {
-        $searchParametersForm = $this->createForm(FilterLogsByAttributeType::class);
+        $definitionFactory = $this->get('prestashop.core.grid.definition.factory.logs');
+        $logsDefinition = $definitionFactory->getDefinition();
+
+        $gridFilterFormFactory = $this->get('prestashop.core.grid.filter.form_factory');
+        $searchParametersForm = $gridFilterFormFactory->create($logsDefinition);
+
         $searchParametersForm->handleRequest($request);
         $filters = array();
 
-        $this->dispatchHook('actionAdminLogsControllerPostProcessBefore', array('controller' => $this));
+        $this->dispatchHook('actionAdminLogsControllerPostProcessBefore', ['controller' => $this]);
 
         if ($searchParametersForm->isSubmitted()) {
             $filters = $searchParametersForm->getData();
         }
 
-        return $this->redirectToRoute('admin_logs', array('filters' => $filters));
+        return $this->redirectToRoute('admin_logs_index', ['filters' => $filters]);
     }
 
     /**
-     * @AdminSecurity("is_granted(['read','update', 'create','delete'], request.get('_legacy_controller')~'_')", message="You do not have permission to update this.", redirectRoute="admin_logs")
-     * @DemoRestricted(redirectRoute="admin_logs")
+     * @AdminSecurity("is_granted(['update', 'create','delete'], request.get('_legacy_controller'))", message="You do not have permission to update this.", redirectRoute="admin_logs")
+     * @DemoRestricted(redirectRoute="admin_logs_index")
      *
      * @param Request $request
+     *
      * @return RedirectResponse
-     * @throws \Exception
      */
-    public function processFormAction(Request $request)
+    public function saveSettingsAction(Request $request)
     {
         $logsByEmailForm = $this->getFormHandler()->getForm();
         $logsByEmailForm->handleRequest($request);
@@ -133,30 +124,33 @@ class LogsController extends FrameworkBundleAdminController
             if (0 === count($saveErrors)) {
                 $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
 
-                return $this->redirectToRoute('admin_logs');
+                return $this->redirectToRoute('admin_logs_index');
             }
 
             $this->flashErrors($saveErrors);
         }
 
-        return $this->redirectToRoute('admin_logs');
+        return $this->redirectToRoute('admin_logs_index');
     }
 
     /**
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller')~'_')", message="You do not have permission to update this.", redirectRoute="admin_logs")
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message="You do not have permission to update this.", redirectRoute="admin_logs")
      *
      * @return RedirectResponse
+     *
      * @throws \Doctrine\DBAL\Exception\InvalidArgumentException
      */
     public function deleteAllAction()
     {
         $this->getLogRepository()->deleteAll();
 
-        return $this->redirectToRoute('admin_logs');
+        $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+
+        return $this->redirectToRoute('admin_logs_index');
     }
 
     /**
-     * @return FormHandlerInterface the form handler to set the severity level.
+     * @return FormHandlerInterface the form handler to set the severity level
      */
     private function getFormHandler()
     {
@@ -164,7 +158,7 @@ class LogsController extends FrameworkBundleAdminController
     }
 
     /**
-     * @return LogRepository the repository to retrieve logs from database.
+     * @return LogRepository the repository to retrieve logs from database
      */
     private function getLogRepository()
     {

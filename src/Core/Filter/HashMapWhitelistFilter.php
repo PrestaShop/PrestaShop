@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -26,6 +26,8 @@
  */
 
 namespace PrestaShop\PrestaShop\Core\Filter;
+
+use PrestaShop\PrestaShop\Adapter\Presenter\AbstractLazyArray;
 
 /**
  * This class filters associative arrays.
@@ -69,15 +71,16 @@ namespace PrestaShop\PrestaShop\Core\Filter;
  */
 class HashMapWhitelistFilter implements FilterInterface
 {
-
     /**
-     * Index of $keyToKeep => true
+     * Index of $keyToKeep => true.
+     *
      * @var true[]
      */
     protected $whitelistItems = [];
 
     /**
-     * Nested filters, indexed by $keyToKeep
+     * Nested filters, indexed by $keyToKeep.
+     *
      * @var FilterInterface[]
      */
     protected $filters = [];
@@ -104,7 +107,7 @@ class HashMapWhitelistFilter implements FilterInterface
     }
 
     /**
-     * Removes the provided key from the whitelist
+     * Removes the provided key from the whitelist.
      *
      * @param string|int $key
      *
@@ -116,7 +119,7 @@ class HashMapWhitelistFilter implements FilterInterface
     {
         if (!is_scalar($key)) {
             throw new FilterException(
-                sprintf( "Invalid parameter %s", print_r($key, true))
+                sprintf('Invalid parameter %s', print_r($key, true))
             );
         }
 
@@ -127,7 +130,7 @@ class HashMapWhitelistFilter implements FilterInterface
     }
 
     /**
-     * Returns the white list
+     * Returns the white list.
      *
      * @return true[]
      */
@@ -137,7 +140,7 @@ class HashMapWhitelistFilter implements FilterInterface
     }
 
     /**
-     * Returns the nested filters, indexed by $keyToKeep
+     * Returns the nested filters, indexed by $keyToKeep.
      *
      * @return FilterInterface[]
      */
@@ -147,21 +150,33 @@ class HashMapWhitelistFilter implements FilterInterface
     }
 
     /**
-     * Filters the subject
+     * Filters the subject.
      *
      * @param array $subject
      *
      * @return array The filtered subject
+     *
+     * @throws \RuntimeException
      */
     public function filter($subject)
     {
         // keep whitelisted items
-        $subject = array_intersect_key($subject, $this->whitelistItems);
-
-        // run nested filters
-        foreach ($this->filters as $key => $filter) {
-            if (array_key_exists($key, $subject)) {
-                $subject[$key] = $filter->filter($subject[$key]);
+        if ($subject instanceof AbstractLazyArray) {
+            $subject->intersectKey($this->whitelistItems);
+            // run nested filters
+            foreach ($this->filters as $key => $filter) {
+                if ($subject->offsetExists($key)) {
+                    $filteredValue = $filter->filter($subject->offsetGet($key));
+                    $subject->offsetSet($key, $filteredValue, true);
+                }
+            }
+        } else {
+            $subject = array_intersect_key($subject, $this->whitelistItems);
+            // run nested filters
+            foreach ($this->filters as $key => $filter) {
+                if (array_key_exists($key, $subject)) {
+                    $subject[$key] = $filter->filter($subject[$key]);
+                }
             }
         }
 
@@ -169,7 +184,7 @@ class HashMapWhitelistFilter implements FilterInterface
     }
 
     /**
-     * Adds an element to the whitelist
+     * Adds an element to the whitelist.
      *
      * @param int|string $paramKey
      * @param string|FilterInterface $paramValue

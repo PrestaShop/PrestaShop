@@ -1,0 +1,11 @@
+_translations:
+    resource: "translations.yml"
+    prefix: /translations/
+
+_localization:
+    resource: "localization.yml"
+    prefix: /localization/
+
+_geolocation:
+    resource: "geolocation.yml"
+    prefix: /geolocation/

@@ -1,0 +1,8 @@
+services:
+    _defaults:
+        public: true
+
+    prestashop.core.helper_doc.meta_page_link_provider:
+        class: 'PrestaShop\PrestaShop\Core\HelperDoc\MetaPageHelperDocLinkProvider'
+        arguments:
+            - '@=service("prestashop.adapter.legacy.context").getContext().language.iso_code'

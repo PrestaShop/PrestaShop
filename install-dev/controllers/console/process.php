@@ -308,7 +308,7 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
     private function clearConfigXML()
     {
         $configXMLPath = _PS_ROOT_DIR_.'/config/xml/';
-        $cacheFiles = scandir($configXMLPath);
+        $cacheFiles = scandir($configXMLPath, SCANDIR_SORT_NONE);
         $excludes = ['.htaccess', 'index.php'];
 
         foreach($cacheFiles as $file) {
@@ -322,7 +322,7 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
     private function clearConfigThemes()
     {
         $themesPath = _PS_ROOT_DIR_.'/config/themes/';
-        $cacheFiles = scandir($themesPath);
+        $cacheFiles = scandir($themesPath, SCANDIR_SORT_NONE);
         foreach($cacheFiles as $file) {
             $file = $themesPath.$file;
             if (is_file($file)) {

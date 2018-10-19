@@ -935,14 +935,14 @@ class imageLib
 
           $x1 = 0;
           $y1 = 0;
-          $x2 = ImageSX($this->imageResized) - 1;
-          $y2 = ImageSY($this->imageResized) - 1;
+          $x2 = imagesx($this->imageResized) - 1;
+          $y2 = imagesy($this->imageResized) - 1;
 
-          $rgbArray = ImageColorAllocate($this->imageResized, $r, $g, $b);
+          $rgbArray = imagecolorallocate($this->imageResized, $r, $g, $b);
 
 
           for ($i = 0; $i < $thickness; $i++) {
-              ImageRectangle($this->imageResized, $x1++, $y1++, $x2--, $y2--, $rgbArray);
+              imagerectangle($this->imageResized, $x1++, $y1++, $x2--, $y2--, $rgbArray);
           }
       }
   }
@@ -1160,16 +1160,16 @@ class imageLib
 
   public function image_colorize($rgb)
   {
-      imageTrueColorToPalette($this->imageResized, true, 256);
-      $numColors = imageColorsTotal($this->imageResized);
+      imagetruecolortopalette($this->imageResized, true, 256);
+      $numColors = imagecolorstotal($this->imageResized);
 
       for ($x = 0; $x < $numColors; $x++) {
-          list($r, $g, $b) = array_values(imageColorsForIndex($this->imageResized, $x));
+          list($r, $g, $b) = array_values(imagecolorsforindex($this->imageResized, $x));
 
     // calculate grayscale in percent
     $grayscale = ($r + $g + $b) / 3 / 0xff;
 
-          imageColorSet($this->imageResized, $x,
+          imagecolorset($this->imageResized, $x,
       $grayscale * $rgb[0],
       $grayscale * $rgb[1],
       $grayscale * $rgb[2]
@@ -1321,16 +1321,16 @@ class imageLib
       $degrees = 360 - $degrees;
 
       // *** Create background color
-      $bg = ImageColorAllocateAlpha($this->imageResized, $r, $g, $b, $a);
+      $bg = imagecolorallocatealpha($this->imageResized, $r, $g, $b, $a);
 
       // *** Fill with background
-      ImageFill($this->imageResized, 0, 0, $bg);
+      imagefill($this->imageResized, 0, 0, $bg);
 
       // *** Rotate
       $this->imageResized = imagerotate($this->imageResized, $degrees, $bg); // Rotate 45 degrees and allocated the transparent colour as the one to make transparent (obviously)
 
       // Ensure alpha transparency
-      ImageSaveAlpha($this->imageResized, true);
+      imagesavealpha($this->imageResized, true);
       }
   }
 
@@ -2202,7 +2202,7 @@ class imageLib
   {
 
     // *** Define box (so we can get the width)
-    $box = @imageTTFBbox($fontSize, $angle, $font, $text);
+    $box = @imagettfbbox($fontSize, $angle, $font, $text);
 
     // ***  Get width of text from dimensions
     $textWidth = abs($box[4] - $box[0]);
@@ -2463,7 +2463,7 @@ class imageLib
                 $img = @imagecreatefrompng($file);
                 break;
             case '.bmp':
-                $img = @$this->imagecreatefrombmp($file);
+                $img = @$this->ImageCreateFromBMP($file);
                 break;
             case '.psd':
                 $img = @$this->imagecreatefrompsd($file);
@@ -2521,7 +2521,7 @@ class imageLib
             throw new Exception();
         }
     }
-        $fileInfoArray = pathInfo($savePath);
+        $fileInfoArray = pathinfo($savePath);
         clearstatcache();
         if (!is_writable($fileInfoArray['dirname'])) {
             if ($this->debug) {
@@ -3068,8 +3068,8 @@ class imageLib
   #       avoid dependancies.
     #
   {
-      $imageX = ImageSX($gd_image);
-      $imageY = ImageSY($gd_image);
+      $imageX = imagesx($gd_image);
+      $imageY = imagesy($gd_image);
 
       $BMP = '';
       for ($y = ($imageY - 1); $y >= 0; $y--) {
@@ -3122,7 +3122,7 @@ class imageLib
       if (!is_resource($img)) {
           return false;
       }
-      return @ImageColorsForIndex($img, @ImageColorAt($img, $x, $y));
+      return @imagecolorsforindex($img, @imagecolorat($img, $x, $y));
   }
 
 ## --------------------------------------------------------

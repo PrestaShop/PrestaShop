@@ -1,0 +1,3 @@
+prestashop-source
+nginx_fpm/prestashop
+nginx_fpm_supervisord/prestashop

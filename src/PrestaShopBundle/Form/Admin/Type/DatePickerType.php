@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,13 +23,15 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\Form\Admin\Type;
 
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * This form class is responsible to create a date picker field
+ * This form class is responsible to create a date picker field.
  */
 class DatePickerType extends AbstractType
 {
@@ -38,7 +40,7 @@ class DatePickerType extends AbstractType
      */
     public function getParent()
     {
-        return'Symfony\Component\Form\Extension\Core\Type\TextType';
+        return TextType::class;
     }
 
     /**
@@ -46,9 +48,9 @@ class DatePickerType extends AbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
-            'widget' => 'single_text'
-        ));
+        $resolver->setDefaults([
+            'widget' => 'single_text',
+        ]);
     }
 
     /**

@@ -51,7 +51,7 @@ function update_order_detail_taxes()
             $create_tax = !(bool)Db::getInstance()->getValue('SELECT count(*)
 				FROM `'._DB_PREFIX_.'tax`
 				WHERE id_tax = '. (int)$id_tax .'
-					AND rate = "'.pSql($order_detail_tax['tax_rate']).'"
+					AND rate = "'.pSQL($order_detail_tax['tax_rate']).'"
 			');
         }
 

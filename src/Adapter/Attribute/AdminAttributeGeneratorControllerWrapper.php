@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Attribute;
 
 use Context;
+use Symfony\Component\Translation\TranslatorInterface;
 use Validate;
 use Product;
 use SpecificPriceRule;
@@ -41,6 +42,9 @@ use Stock;
  */
 class AdminAttributeGeneratorControllerWrapper
 {
+    /**
+     * @var TranslatorInterface
+     */
     private $translator;
 
     public function __construct()
@@ -50,7 +54,7 @@ class AdminAttributeGeneratorControllerWrapper
     }
 
     /**
-     * Generate product attributes
+     * Generate product attributes.
      *
      * @param object $product The product
      * @param array $options The array with all attributes combinations
@@ -63,7 +67,7 @@ class AdminAttributeGeneratorControllerWrapper
         $combinations = array_values(AdminAttributeGeneratorController::createCombinations(array_values($options)));
         $combinationsValues = array_values(array_map(function () use ($product) {
             return array(
-                'id_product' => $product->id
+                'id_product' => $product->id,
             );
         }, $combinations));
 
@@ -71,11 +75,11 @@ class AdminAttributeGeneratorControllerWrapper
 
         Product::updateDefaultAttribute($product->id);
         SpecificPriceRule::enableAnyApplication();
-        SpecificPriceRule::applyAllRules(array((int)$product->id));
+        SpecificPriceRule::applyAllRules(array((int) $product->id));
     }
 
     /**
-     * Delete a product attribute
+     * Delete a product attribute.
      *
      * @param int $idAttribute The attribute ID
      * @param int $idProduct The product ID
@@ -92,12 +96,12 @@ class AdminAttributeGeneratorControllerWrapper
             if (($depends_on_stock = StockAvailable::dependsOnStock($idProduct)) && StockAvailable::getQuantityAvailableByProduct($idProduct, $idAttribute)) {
                 return array(
                     'status' => 'error',
-                    'message'=> $this->translator->trans('It is not possible to delete a combination while it still has some quantities in the Advanced Stock Management. You must delete its stock first.', array(), 'Admin.Catalog.Notification'),
+                    'message' => $this->translator->trans('It is not possible to delete a combination while it still has some quantities in the Advanced Stock Management. You must delete its stock first.', array(), 'Admin.Catalog.Notification'),
                 );
             } else {
-                $product->deleteAttributeCombination((int)$idAttribute);
+                $product->deleteAttributeCombination((int) $idAttribute);
                 $product->checkDefaultAttributes();
-                Tools::clearColorListCache((int)$product->id);
+                Tools::clearColorListCache((int) $product->id);
                 if (!$product->hasAttributes()) {
                     $product->cache_default_attribute = 0;
                     $product->update();
@@ -108,19 +112,19 @@ class AdminAttributeGeneratorControllerWrapper
                 if ($depends_on_stock && !Stock::deleteStockByIds($idProduct, $idAttribute)) {
                     return array(
                         'status' => 'error',
-                        'message'=> $this->translator->trans('Error while deleting the stock', array(), 'Admin.Catalog.Notification'),
+                        'message' => $this->translator->trans('Error while deleting the stock', array(), 'Admin.Catalog.Notification'),
                     );
                 } else {
                     return array(
                         'status' => 'ok',
-                        'message'=> $this->translator->trans('Successful deletion', array(), 'Admin.Catalog.Notification'),
+                        'message' => $this->translator->trans('Successful deletion', array(), 'Admin.Catalog.Notification'),
                     );
                 }
             }
         } else {
             return array(
                 'status' => 'error',
-                'message'=> $this->translator->trans('You cannot delete this attribute.', array(), 'Admin.Catalog.Notification'),
+                'message' => $this->translator->trans('You cannot delete this attribute.', array(), 'Admin.Catalog.Notification'),
             );
         }
     }

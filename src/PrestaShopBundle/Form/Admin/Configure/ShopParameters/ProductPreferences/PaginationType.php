@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -65,8 +65,7 @@ class PaginationType extends AbstractType
                 ],
                 'required' => true,
                 'choice_translation_domain' => 'Admin.Global',
-            ])
-        ;
+            ]);
     }
 
     /**

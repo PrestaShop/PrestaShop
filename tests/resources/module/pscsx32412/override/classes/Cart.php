@@ -94,7 +94,7 @@ class Cart extends CartCore
 			WHERE `id_cart` = '.(int)$this->id
         );
 
-        if (!Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'cart_cart_rule` WHERE `id_cart` = '.(int)$this->id)
+        if (!Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'cart_rule` WHERE `id_cart` = '.(int)$this->id)
          || !Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'cart_product` WHERE `id_cart` = '.(int)$this->id)) {
             return false;
         }

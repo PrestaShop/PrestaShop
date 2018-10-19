@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 class WebserviceKeyCore extends ObjectModel
 {
     /** @var string Key */
@@ -42,9 +41,9 @@ class WebserviceKeyCore extends ObjectModel
         'table' => 'webservice_account',
         'primary' => 'id_webservice_account',
         'fields' => array(
-            'active' =>            array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'key' =>            array('type' => self::TYPE_STRING, 'required' => true, 'size' => 32),
-            'description' =>    array('type' => self::TYPE_STRING),
+            'active' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+            'key' => array('type' => self::TYPE_STRING, 'required' => true, 'size' => 32),
+            'description' => array('type' => self::TYPE_STRING),
         ),
     );
 
@@ -53,6 +52,7 @@ class WebserviceKeyCore extends ObjectModel
         if (WebserviceKey::keyExists($this->key)) {
             return false;
         }
+
         return parent::add($autodate = true, $nullValues = false);
     }
 
@@ -60,27 +60,27 @@ class WebserviceKeyCore extends ObjectModel
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 		SELECT `key`
-		FROM '._DB_PREFIX_.'webservice_account
-		WHERE `key` = "'.pSQL($key).'"');
+		FROM ' . _DB_PREFIX_ . 'webservice_account
+		WHERE `key` = "' . pSQL($key) . '"');
     }
 
     public function delete()
     {
-        return (parent::delete() && ($this->deleteAssociations() !== false));
+        return parent::delete() && ($this->deleteAssociations() !== false);
     }
 
     public function deleteAssociations()
     {
-        return Db::getInstance()->delete('webservice_permission', 'id_webservice_account = '.(int)$this->id);
+        return Db::getInstance()->delete('webservice_permission', 'id_webservice_account = ' . (int) $this->id);
     }
 
     public static function getPermissionForAccount($auth_key)
     {
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT p.*
-			FROM `'._DB_PREFIX_.'webservice_permission` p
-			LEFT JOIN `'._DB_PREFIX_.'webservice_account` a ON (a.id_webservice_account = p.id_webservice_account)
-			WHERE a.key = \''.pSQL($auth_key).'\'
+			FROM `' . _DB_PREFIX_ . 'webservice_permission` p
+			LEFT JOIN `' . _DB_PREFIX_ . 'webservice_account` a ON (a.id_webservice_account = p.id_webservice_account)
+			WHERE a.key = \'' . pSQL($auth_key) . '\'
 		');
         $permissions = array();
         if ($result) {
@@ -88,6 +88,7 @@ class WebserviceKeyCore extends ObjectModel
                 $permissions[$row['resource']][] = $row['method'];
             }
         }
+
         return $permissions;
     }
 
@@ -95,22 +96,22 @@ class WebserviceKeyCore extends ObjectModel
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 		SELECT active
-		FROM `'._DB_PREFIX_.'webservice_account`
-		WHERE `key` = "'.pSQL($auth_key).'"');
+		FROM `' . _DB_PREFIX_ . 'webservice_account`
+		WHERE `key` = "' . pSQL($auth_key) . '"');
     }
 
     public static function getClassFromKey($auth_key)
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 		SELECT class_name
-		FROM `'._DB_PREFIX_.'webservice_account`
-		WHERE `key` = "'.pSQL($auth_key).'"');
+		FROM `' . _DB_PREFIX_ . 'webservice_account`
+		WHERE `key` = "' . pSQL($auth_key) . '"');
     }
 
     public static function setPermissionForAccount($id_account, $permissions_to_set)
     {
         $ok = true;
-        $sql = 'DELETE FROM `'._DB_PREFIX_.'webservice_permission` WHERE `id_webservice_account` = '.(int)$id_account;
+        $sql = 'DELETE FROM `' . _DB_PREFIX_ . 'webservice_permission` WHERE `id_webservice_account` = ' . (int) $id_account;
         if (!Db::getInstance()->execute($sql)) {
             $ok = false;
         }
@@ -129,9 +130,9 @@ class WebserviceKeyCore extends ObjectModel
             }
             $account = new WebserviceKey($id_account);
             if ($account->deleteAssociations() && $permissions) {
-                $sql = 'INSERT INTO `'._DB_PREFIX_.'webservice_permission` (`id_webservice_permission` ,`resource` ,`method` ,`id_webservice_account`) VALUES ';
+                $sql = 'INSERT INTO `' . _DB_PREFIX_ . 'webservice_permission` (`id_webservice_permission` ,`resource` ,`method` ,`id_webservice_account`) VALUES ';
                 foreach ($permissions as $permission) {
-                    $sql .= '(NULL , \''.pSQL($permission[1]).'\', \''.pSQL($permission[0]).'\', '.(int)$id_account.'), ';
+                    $sql .= '(NULL , \'' . pSQL($permission[1]) . '\', \'' . pSQL($permission[0]) . '\', ' . (int) $id_account . '), ';
                 }
                 $sql = rtrim($sql, ', ');
                 if (!Db::getInstance()->execute($sql)) {
@@ -139,6 +140,7 @@ class WebserviceKeyCore extends ObjectModel
                 }
             }
         }
+
         return $ok;
     }
 }

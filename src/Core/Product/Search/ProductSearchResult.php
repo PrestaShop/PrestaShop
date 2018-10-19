@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -24,7 +24,6 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-
 namespace PrestaShop\PrestaShop\Core\Product\Search;
 
 class ProductSearchResult
@@ -39,6 +38,7 @@ class ProductSearchResult
     public function setProducts(array $products)
     {
         $this->products = $products;
+
         return $this;
     }
 
@@ -50,6 +50,7 @@ class ProductSearchResult
     public function setTotalProductsCount($totalProductsCount)
     {
         $this->totalProductsCount = $totalProductsCount;
+
         return $this;
     }
 
@@ -61,6 +62,7 @@ class ProductSearchResult
     public function setFacetCollection(FacetCollection $facetCollection)
     {
         $this->facetCollection = $facetCollection;
+
         return $this;
     }
 
@@ -72,6 +74,7 @@ class ProductSearchResult
     public function setEncodedFacets($encodedFacets)
     {
         $this->encodedFacets = $encodedFacets;
+
         return $this;
     }
 
@@ -83,6 +86,7 @@ class ProductSearchResult
     public function addAvailableSortOrder(SortOrder $sortOrder)
     {
         $this->availableSortOrders[] = $sortOrder;
+
         return $this;
     }
 
@@ -105,6 +109,7 @@ class ProductSearchResult
     public function setCurrentSortOrder(SortOrder $currentSortOrder)
     {
         $this->currentSortOrder = $currentSortOrder;
+
         return $this;
     }
 

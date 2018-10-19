@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\Service\TransitionalBehavior;
 
 use Symfony\Component\Routing\Router;
@@ -56,7 +57,8 @@ class AdminUrlGeneratorFactory
      * Gets the UrlGeneratorInterface subclass for Legacy Admin controllers.
      *
      * @param LegacyContext $legacyContext The legacy context needed by Legacy UrlGenerator
-     * @return UrlGeneratorInterface The UrlGenerator instance for Admin legacy controllers.
+     *
+     * @return UrlGeneratorInterface the UrlGenerator instance for Admin legacy controllers
      */
     public function forLegacy(LegacyContext $legacyContext)
     {
@@ -66,7 +68,7 @@ class AdminUrlGeneratorFactory
     /**
      * Gets the UrlGeneratorInterface subclass for Symfony routes.
      *
-     * @return UrlGeneratorInterface The UrlGenerator instance for Admin Symfony routes.
+     * @return UrlGeneratorInterface the UrlGenerator instance for Admin Symfony routes
      */
     public function forSymfony()
     {

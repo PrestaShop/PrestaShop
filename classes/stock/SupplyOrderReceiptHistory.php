@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -25,7 +25,8 @@
  */
 
 /**
- * History of receipts
+ * History of receipts.
+ *
  * @since 1.5.0
  */
 class SupplyOrderReceiptHistoryCore extends ObjectModel
@@ -73,12 +74,12 @@ class SupplyOrderReceiptHistoryCore extends ObjectModel
         'primary' => 'id_supply_order_receipt_history',
         'fields' => array(
             'id_supply_order_detail' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'id_supply_order_state' =>    array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'id_employee' =>            array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'employee_firstname' =>    array('type' => self::TYPE_STRING, 'validate' => 'isName'),
-            'employee_lastname' =>        array('type' => self::TYPE_STRING, 'validate' => 'isName'),
-            'quantity' =>                array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'required' => true),
-            'date_add' =>                array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
+            'id_supply_order_state' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+            'id_employee' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+            'employee_firstname' => array('type' => self::TYPE_STRING, 'validate' => 'isName'),
+            'employee_lastname' => array('type' => self::TYPE_STRING, 'validate' => 'isName'),
+            'quantity' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'required' => true),
+            'date_add' => array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
         ),
     );
 

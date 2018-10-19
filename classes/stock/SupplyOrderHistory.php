@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -66,12 +66,12 @@ class SupplyOrderHistoryCore extends ObjectModel
         'table' => 'supply_order_history',
         'primary' => 'id_supply_order_history',
         'fields' => array(
-            'id_supply_order' =>    array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'id_employee' =>        array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+            'id_supply_order' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+            'id_employee' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
             'employee_firstname' => array('type' => self::TYPE_STRING, 'validate' => 'isName'),
-            'employee_lastname' =>    array('type' => self::TYPE_STRING, 'validate' => 'isName'),
-            'id_state' =>            array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'date_add' =>            array('type' => self::TYPE_DATE, 'validate' => 'isDate', 'required' => true),
+            'employee_lastname' => array('type' => self::TYPE_STRING, 'validate' => 'isName'),
+            'id_state' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+            'date_add' => array('type' => self::TYPE_DATE, 'validate' => 'isDate', 'required' => true),
         ),
     );
 

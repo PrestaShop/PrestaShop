@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Adapter\Admin;
 
 use Symfony\Component\Routing\Router;
@@ -65,8 +66,8 @@ class UrlGenerator implements UrlGeneratorInterface
         $this->router = $router;
     }
 
-    /* (non-PHPdoc)
-     * @see \Symfony\Component\Routing\Generator\UrlGeneratorInterface::generate()
+    /**
+     * {@inheritdoc}
      */
     public function generate($name, $parameters = array(), $referenceType = self::ABSOLUTE_PATH)
     {
@@ -87,6 +88,7 @@ class UrlGenerator implements UrlGeneratorInterface
      *
      * @param string $routeName
      * @param string[] $parameters The route parameters to convert
+     *
      * @return array[] An array with: the legacy controller name, then the parameters array
      */
     final public function getLegacyOptions($routeName, $parameters = array())
@@ -101,24 +103,25 @@ class UrlGenerator implements UrlGeneratorInterface
                 if ($route->hasDefault('_legacy_param_mapper_class') && $route->hasDefault('_legacy_param_mapper_method')) {
                     $class = $route->getDefault('_legacy_param_mapper_class');
                     $method = $route->getDefault('_legacy_param_mapper_method');
-                    $method = (new ReflectionClass('\\'.$class))->getMethod($method);
-                    $legacyParameters = $method->invoke(($method->isStatic())?null:$method->getDeclaringClass()->newInstance(), $parameters);
+                    $method = (new ReflectionClass('\\' . $class))->getMethod($method);
+                    $legacyParameters = $method->invoke(($method->isStatic()) ? null : $method->getDeclaringClass()->newInstance(), $parameters);
                 }
             }
         }
+
         return array($legacyController, $legacyParameters);
     }
 
-    /* (non-PHPdoc)
-     * @see \Symfony\Component\Routing\RequestContextAwareInterface::setContext()
+    /**
+     * {@inheritdoc}
      */
     public function setContext(RequestContext $context)
     {
         throw new LogicException('Cannot use this UrlGeneratorInterface implementation with a Symfony context. Please call AdminUrlGeneratorFactory::forLegacy() to reach the right instance.');
     }
 
-    /* (non-PHPdoc)
-     * @see \Symfony\Component\Routing\RequestContextAwareInterface::getContext()
+    /**
+     * {@inheritdoc}
      */
     public function getContext()
     {

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\General;
 
 use PrestaShopBundle\Form\Admin\Type\IpAddressType;
@@ -35,7 +36,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 
 /**
  * Class returning the content of the form in the maintenance page.
- * To be found in Configure > Shop parameters > General > Maintenance
+ * To be found in Configure > Shop parameters > General > Maintenance.
  */
 class MaintenanceType extends TranslatorAwareType
 {
@@ -75,8 +76,7 @@ class MaintenanceType extends TranslatorAwareType
                     'hideTabs' => false,
                     'required' => true,
                 ]
-            )
-        ;
+            );
     }
 
     /**

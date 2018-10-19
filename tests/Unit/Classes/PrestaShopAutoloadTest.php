@@ -28,6 +28,7 @@ namespace Tests\Unit\Classes;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShopAutoload;
+use Configuration;
 
 class PrestaShopAutoloadTest extends TestCase
 {
@@ -55,10 +56,40 @@ class PrestaShopAutoloadTest extends TestCase
         $this->assertTrue(class_exists('RequestSql', false));
     }
 
+    /**
+     * Given PS_DISABLE_OVERRIDES is enabled
+     * When the class index is regenerated and we have override
+     * Then the override shouldn't be include in the class index
+     */
+    public function testGenerateIndexWithoutOverride()
+    {
+        Configuration::updateGlobalValue('PS_DISABLE_OVERRIDES', 1);
+        @mkdir(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'override/classes/', 0777, true);
+        define('_PS_HOST_MODE_', 1);
+        file_put_contents(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'override/classes/Connection.php',
+            '<?php 
+            class Connection extends ConnectionCore {
+        }');
+        PrestaShopAutoload::getInstance()->generateIndex();
+        $this->assertTrue(file_exists($this->file_index));
+        $data = include($this->file_index);
+        $this->assertEquals($data['OrderControllerCore']['path'], 'controllers/front/OrderController.php');
+        $this->assertEquals($data['Connection']['override'], false);
+        Configuration::updateGlobalValue('PS_DISABLE_OVERRIDES', 0);
+        PrestaShopAutoload::getInstance()->generateIndex();
+        $data = include($this->file_index);
+        $this->assertEquals($data['Connection']['override'], true);
+    }
+
     public function testClassFromCoreDirShouldntBeLoaded()
     {
         PrestaShopAutoload::getInstance()->load('\\PrestaShop\\PrestaShop\\Core\\Payment\\PaymentOption');
 
         $this->assertFalse(class_exists('\\PrestaShop\\PrestaShop\\Core\\Payment\\PaymentOption', false));
+    }
+
+    public static function tearDownAfterClass()
+    {
+        @unlink(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'override/classes/Connection.php');
     }
 }
