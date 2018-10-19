@@ -107,6 +107,7 @@ class CustomerController extends AbstractAdminController
 
         return $this->render('@PrestaShop/Admin/Sell/Customer/view.html.twig', [
             'customerInformation' => $customerInformation,
+            'isMultistoreEnabled' => $this->get('prestashop.adapter.feature.multistore')->isActive(),
         ]);
     }
 }
