@@ -115,7 +115,13 @@ class DemoModeEnabledListener
         }
 
         $this->showNotificationMessage($demoRestricted);
-        $url = $this->router->generate($demoRestricted->getRedirectRoute());
+
+        $routeParametersToKeep = $this->getQueryParamsFromRequestAttributes(
+            $demoRestricted->getRedirectQueryParamsToKeep(),
+            $event->getRequest()->attributes->all()
+        );
+
+        $url = $this->router->generate($demoRestricted->getRedirectRoute(), $routeParametersToKeep);
 
         $event->setController(function () use ($url) {
             return new RedirectResponse($url);
@@ -164,5 +170,21 @@ class DemoModeEnabledListener
         $reflectionMethod = $controllerReflectionObject->getMethod($methodName);
 
         return $this->annotationReader->getMethodAnnotation($reflectionMethod, $tokenAnnotation);
+    }
+
+    /**
+     * Gets query parameters by comparing them to the current request attributes.
+     *
+     * E.g (['mandatoryRouteId' => 1, 'anotherId' => 2], ['mandatoryRouteId']) => ['mandatoryRouteId' => 1] where
+     * the first array is $queryParametersToKeep and the second is $requestAttributes
+     *
+     * @param array $queryParametersToKeep
+     * @param array $requestAttributes
+     *
+     * @return array
+     */
+    private function getQueryParamsFromRequestAttributes(array $queryParametersToKeep, array $requestAttributes)
+    {
+        return array_intersect_key($requestAttributes, array_flip($queryParametersToKeep));
     }
 }
