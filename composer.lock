@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "772edb53dca2b962c908871433ca6464",
+    "content-hash": "3a33c96f005a7d48ec3c85885b2a20a9",
     "packages": [
         {
             "name": "analog/analog",
@@ -3310,20 +3310,20 @@
         },
         {
             "name": "prestashop/gsitemap",
-            "version": "v3.2.2",
+            "version": "v4.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/gsitemap.git",
-                "reference": "c32921ab637e00c1d9d3a175f5c1b3944916fb3f"
+                "reference": "68af0cce29ff90dee34da0047af741784a50fc02"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/gsitemap/zipball/c32921ab637e00c1d9d3a175f5c1b3944916fb3f",
-                "reference": "c32921ab637e00c1d9d3a175f5c1b3944916fb3f",
+                "url": "https://api.github.com/repos/PrestaShop/gsitemap/zipball/68af0cce29ff90dee34da0047af741784a50fc02",
+                "reference": "68af0cce29ff90dee34da0047af741784a50fc02",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.2"
+                "php": ">=5.6.0"
             },
             "type": "prestashop-module",
             "notification-url": "https://packagist.org/downloads/",
@@ -3338,7 +3338,7 @@
             ],
             "description": "PrestaShop module gsitemap",
             "homepage": "https://github.com/PrestaShop/gsitemap",
-            "time": "2018-06-05T09:52:50+00:00"
+            "time": "2018-10-18T16:00:02+00:00"
         },
         {
             "name": "prestashop/pagesnotfound",
