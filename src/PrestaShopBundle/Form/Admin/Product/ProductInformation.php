@@ -303,6 +303,10 @@ class ProductInformation extends CommonAbstractType
             if (isset($data['features'])) {
                 $ids = [];
                 foreach ($data['features'] as $idx => $feature) {
+                    if (empty($feature['value'])) {
+                        continue;
+                    }
+
                     $id = sprintf('%d-%d', $feature['feature'], $feature['value']);
                     if (in_array($id, $ids)) {
                         unset($data['features'][$idx]);
