@@ -69,8 +69,6 @@ export default class PositionExtension {
         const paginationOffset = parseInt($rowPositionContainer.data('pagination-offset'));
         const positions = this._getRowsPositions(paginationOffset);
         const params = {
-            updatedRowId: $rowPositionContainer.data('id'),
-            parentId: $rowPositionContainer.data('id-parent'),
             positions: positions,
         };
 
@@ -136,19 +134,6 @@ export default class PositionExtension {
             'method': isGetOrPostMethod ? method : 'POST',
         }).appendTo('body');
 
-        $form.append(
-            $('<input>', {
-                'type': 'hidden',
-                'name': 'updatedRowId',
-                'value': params.updatedRowId
-            }),
-            $('<input>', {
-                'type': 'hidden',
-                'name': 'parentId',
-                'value': params.parentId
-            })
-        );
-
         const positionsNb = params.positions.length;
         let position;
         for (let i = 0; i < positionsNb; ++i) {
@@ -172,7 +157,7 @@ export default class PositionExtension {
             );
         }
 
-
+        //This _method param is used by Symfony to simulate DELETE and PUT methods
         if (!isGetOrPostMethod) {
             $form.append($('<input>', {
                 'type': 'hidden',
