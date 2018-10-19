@@ -255,7 +255,7 @@ class CategoriesProvider
     }
 
     /**
-     * Sort addons categories by order field
+     * Sort addons categories by order field.
      *
      * @param array $categories
      */
