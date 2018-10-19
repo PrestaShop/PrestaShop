@@ -9,7 +9,7 @@ set -euo pipefail
 # ext-curl ext-intl
 
 PS_BRANCH=develop
-PS_VERSION=1.7.4.0
+PS_VERSION=1.7.5.0
 DB_SERVER=db
 DB_USER=prestashop
 DB_PASSWORD=prestashop
@@ -26,9 +26,9 @@ function usage {
     echo ""
     echo "$0 -c "
     echo ""
-    echo "Build version 1.7.4.0 from branch 1.7.4.x and deploy it to $CURRENT_DIR/nginx_fpm_supervisord/prestashop"
+    echo "Build version 1.7.5.0 from branch 1.7.5.x and deploy it to $CURRENT_DIR/nginx_fpm_supervisord/prestashop"
     echo ""
-    echo "$0 -b 1.7.4.x -v 1.7.4.0 -d nginx_fpm_supervisord"
+    echo "$0 -b 1.7.5.x -v 1.7.5.0 -d nginx_fpm_supervisord"
     echo ""
 }
 

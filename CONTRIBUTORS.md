@@ -37,8 +37,11 @@ GitHub contributors:
 - amatosg
 - Amazzing
 - anat
+- Anas Mammeri
 - Anatole
 - Andrew
+- Andy Pieters
+- anegoda1995
 - Angel Guzman Maeso
 - Anthony Girard
 - Antoine LA
@@ -58,12 +61,14 @@ GitHub contributors:
 - Axome
 - Aylab
 - Aymeric AUBERTON
+- azisyus
 - Azouz-Jribi
 - Balestrino
 - Bastien Bieri
 - bbsimon
 - bellini13
 - Benjamin PONGY
+- Ben Wallis
 - bercik999
 - Bersam Karbasion
 - BigZ
@@ -75,8 +80,10 @@ GitHub contributors:
 - bumbu
 - Burhan
 - Caleydon Media
+- can
 - cam.lafit
 - Captain FLAM
+- Captain Youz
 - Captain-FLAM
 - Carlos Addis
 - Casper Olsen
@@ -139,6 +146,7 @@ GitHub contributors:
 - DevNet
 - devyk
 - Dh42
+- Dhavalkumar Prajapati
 - Dheeraj
 - Dheeraj Sharma
 - Dickriven Chellemboyee
@@ -203,9 +211,11 @@ GitHub contributors:
 - Fourat ACHOUR
 - fram
 - Francisco Jiménez Cabrera
+- FranckRIBEIRO
 - FrancMunoz
 - Francois Gaillard
 - Francois-Marie de Jouvencel
+- Fransuisse
 - Frederic BENOIST
 - Gabriel Arama
 - Gabriel Schwardy
@@ -232,6 +242,7 @@ GitHub contributors:
 - gskema
 - Guilhem Fanton
 - Guillaume DELOINCE
+- Guillaume Durand
 - Guillaume Germain
 - GuillaumeKadolis
 - Guillaume Lafarge
@@ -260,8 +271,10 @@ GitHub contributors:
 - iNem0o
 - Inetbiz
 - iqit-commerce
+- iqit-commerce (Marcin Sz)
 - ironwo0d
 - Ish Gupta
+- Ishiki
 - ITBpro.com
 - Ivan
 - ivancasasempere
@@ -283,6 +296,7 @@ GitHub contributors:
 - Jerome Nadaud
 - jessylenne
 - jestemradek
+- jf-viguier
 - jGissinger
 - Joan
 - Joan Juvanteny
@@ -292,6 +306,7 @@ GitHub contributors:
 - joemartin247
 - Joep Hendrix
 - Joe Siwiak
+- Johannes Schramm
 - Jonadabe
 - Jonatan Nunez
 - Jonathan Danse
@@ -300,6 +315,7 @@ GitHub contributors:
 - Jorge Vargas
 - joseantgv
 - jtogrul
+- JuanjoSCu
 - Juan G. Jordan
 - Juha Remes
 - Julien
@@ -309,6 +325,7 @@ GitHub contributors:
 - Julien Deniau
 - Julien Martin
 - julvernois
+- Jérôme H
 - Kamil Szymański
 - Karel Faille
 - Kelly Karnetsky
@@ -325,6 +342,7 @@ GitHub contributors:
 - Ladel
 - Lathanao
 - ldecoker
+- Leandro F. L
 - Lea Mendes Da Silva
 - Leo
 - Lesley Paone
@@ -345,6 +363,7 @@ GitHub contributors:
 - MacRoy
 - Madef
 - Madman
+- mahdi
 - Mahdi Shad
 - Mainmich
 - makk1ntosh
@@ -370,6 +389,7 @@ GitHub contributors:
 - Matteo
 - Matteo Spreafico
 - MatthieuB
+- Matthieu Mota
 - MattLoyeD
 - mauglee
 - MaX3315
@@ -388,6 +408,7 @@ GitHub contributors:
 - MDWeb
 - Mehdi
 - Mehdi Badrani
+- mehdi-ghezal
 - Mehrshad
 - mehrshadz
 - melvin
@@ -413,6 +434,7 @@ GitHub contributors:
 - moncef102
 - montes
 - mplh
+- Mreker
 - MustangZhong
 - nache
 - natrim
@@ -438,6 +460,7 @@ GitHub contributors:
 - okom3pom
 - oleacorner
 - Olivier Bonvalet
+- Oskar Andersson
 - Otto Nascarella
 - Pablo Borowicz
 - paeddl
@@ -453,6 +476,7 @@ GitHub contributors:
 - pbirnzain
 - Pedro Câmara
 - Pedro J. Parra
+- Pedro Rendeiro
 - Per Lejontand
 - peterept
 - Peter Schaeffer
@@ -508,6 +532,7 @@ GitHub contributors:
 - Riviere Serge
 - Robbie Thompson
 - robert
+- Rokas Zygmantas
 - Rokas
 - Roland Schütz
 - romainberger
@@ -515,11 +540,13 @@ GitHub contributors:
 - Roy
 - RS
 - Ruben Martins
+- Rudra Sarkar
 - runningz
 - Sacha
 - Sacha FROMENT
 - sadlyblue
 - sagaradonis
+- sallemiines
 - Samir Shah
 - Sam Sanchez
 - Samy Rabih
@@ -537,7 +564,9 @@ GitHub contributors:
 - Sebastien Monterisi
 - Sébastien Rufer
 - SebSept
+- seleda
 - Sergio Quinonez
+- Sergey P
 - Serhat Durum
 - Serhii Polishchuk
 - seynaeve
@@ -548,6 +577,7 @@ GitHub contributors:
 - Shipow
 - Shudrum
 - sidhujag
+- Simone
 - sjousse
 - sLorenzini
 - smartdatasoft
@@ -569,6 +599,7 @@ GitHub contributors:
 - Sylvain Gougouzian
 - Sylvain WITMEYER
 - Symeon
+- Sébastien LE BRUCHEC
 - Tanguy JACQUET
 - tchauviere
 - TechhDan
@@ -593,6 +624,8 @@ GitHub contributors:
 - timsit
 - tmackay
 - TMMeilleur
+- tolispy
+- Tomas Ilginis
 - Tomas Liska
 - Tomas Votruba
 - Tomasz Slominski
@@ -625,6 +658,7 @@ GitHub contributors:
 - Wayann
 - webbax
 - webmake
+- Web Premiere
 - web-plus
 - Wojciech Grzebieniowski
 - Xavier
