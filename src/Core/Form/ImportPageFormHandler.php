@@ -31,7 +31,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 
 /**
  * Dedicated FormHandler
- * Temporary fix, it will be replaced by global FormHandler soon
+ * Temporary fix, it will be replaced by global FormHandler soon.
  */
 class ImportPageFormHandler extends FormHandler
 {
