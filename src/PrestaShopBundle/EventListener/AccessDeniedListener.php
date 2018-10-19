@@ -133,7 +133,7 @@ class AccessDeniedListener
     /**
      * Gets query parameters by comparing them to the current request attributes.
      *
-     * E.g (['mandatoryRouteId' => 1, 'anotherId' => 2], ['mandatoryRouteId']) => ['mandatoryRouteId' => 1] where
+     * E.g (['mandatoryRouteId'], ['mandatoryRouteId' => 1, 'anotherId' => 2]) => ['mandatoryRouteId' => 1] where
      * the first array is $queryParametersToKeep and the second is $requestAttributes
      *
      * @param array $queryParametersToKeep
