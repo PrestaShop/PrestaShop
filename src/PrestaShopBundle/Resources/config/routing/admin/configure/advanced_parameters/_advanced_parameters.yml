@@ -32,7 +32,7 @@ _webservice:
 
 _backup:
     resource: "backup.yml"
-    prefix: /backup
+    prefix: /backups
 
 _employee:
     resource: "employee.yml"
