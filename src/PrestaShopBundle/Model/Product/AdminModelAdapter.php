@@ -871,11 +871,14 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
         foreach ($product->getFeatures() as $featureData) {
             $itemForm = [
                 'feature' => $featureData['id_feature'],
-                'value' => $featureData['id_feature_value'],
+                'value' => null,
                 'custom_value' => null,
             ];
 
-            if ($featureData['custom'] == 1) {
+            if ($featureData['custom'] == 0) {
+                // use id_feature_value only if this value isn't custom
+                $itemForm['value'] = $featureData['id_feature_value'];
+            } else {
                 $customLangs = [];
                 $featureLangsData = $this->featureAdapter->getFeatureValueLang($featureData['id_feature_value']);
                 foreach ($featureLangsData as $langData) {
