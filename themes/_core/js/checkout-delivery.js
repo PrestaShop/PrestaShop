@@ -24,6 +24,7 @@
  */
 import $ from 'jquery'
 import prestashop from 'prestashop'
+import { refreshCheckoutPage } from './common';
 
 export default function () {
   let $body = $('body');
@@ -44,25 +45,8 @@ export default function () {
 
       if ($('.js-cart-payment-step-refresh').length) {
         // we get the refresh flag : on payment step we need to refresh page to be sure
-        // amount is correctly updated on payemnt modules
-        var results = new RegExp('[\?&]' + name + '=([^&#]*)')
-          .exec(window.location.search);
-        var queryParams = (results !== null) ? results[1] || {} : {};
-        if (queryParams['updatedTransaction'] !== undefined) {
-          // this parameter is used to display some info message
-          // already set : just refresh page
-          window.location.reload();
-        } else {
-          // not set : add it to the url
-          queryParams['updatedTransaction'] = 1;
-          var joined = [];
-          for (var key in queryParams) {
-            var val = queryParams[key]; // gets the value by looking for the key in the object
-            joined.push(key + "=" + val);
-          }
-          var newUrl = window.location.pathname + "?" + joined.join("&");
-          window.location.href = newUrl;
-        }
+        // amount is correctly updated on payment modules
+        refreshCheckoutPage();
       }
 
       prestashop.emit('updatedDeliveryForm', {
