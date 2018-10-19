@@ -29,7 +29,11 @@ namespace PrestaShop\PrestaShop\Core\Form;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use Symfony\Component\Form\FormBuilderInterface;
 
-class TemporarySpookyHotFixFormHandler extends FormHandler
+/**
+ * Dedicated FormHandler
+ * Temporary fix, it will be replaced by global FormHandler soon
+ */
+class ImportPageFormHandler extends FormHandler
 {
     /**
      * @param FormBuilderInterface $formBuilder
