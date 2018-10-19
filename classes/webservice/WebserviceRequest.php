@@ -1,4 +1,5 @@
 <?php
+
 /**
  * 2007-2018 PrestaShop.
  *
@@ -352,9 +353,9 @@ class WebserviceRequestCore
             'customizations' => array('description' => 'Customization values', 'class' => 'Customization'),
         );
         $extra_resources = Hook::exec('addWebserviceResources', array('resources' => $resources), null, true, false);
-        if ((is_array($extra_resources) || $extra_resources instanceOf Countable) && count($extra_resources)) {
+        if ((is_array($extra_resources) || $extra_resources instanceof Countable) && count($extra_resources)) {
             foreach ($extra_resources as $new_resources) {
-                if ((is_array($new_resources) || $new_resources instanceOf Countable) && count($new_resources)) {
+                if ((is_array($new_resources) || $new_resources instanceof Countable) && count($new_resources)) {
                     $resources = array_merge($resources, $new_resources);
                 }
             }
@@ -425,7 +426,7 @@ class WebserviceRequestCore
             $specific_price_output = null;
             $id_county = (int) (isset($value['county']) ? $value['county'] : 0);
             $return_value = Product::priceCalculation($id_shop, $value['object_id'], $id_product_attribute, $id_country, $id_state, $id_county, $id_currency, $id_group, $quantity,
-                                    $use_tax, $decimals, $only_reduc, $use_reduc, $use_ecotax, $specific_price_output, null);
+                $use_tax, $decimals, $only_reduc, $use_reduc, $use_ecotax, $specific_price_output, null);
             $arr_return[$name] = array('sqlId' => strtolower($name), 'value' => sprintf('%f', $return_value));
         }
 
@@ -588,7 +589,7 @@ class WebserviceRequestCore
                     } else {
                         $this->objectSpecificManagement = new $specificObjectName();
                         $this->objectSpecificManagement->setObjectOutput($this->objOutput)
-                                                       ->setWsObject($this);
+                            ->setWsObject($this);
 
                         try {
                             $this->objectSpecificManagement->manage();
@@ -876,7 +877,7 @@ class WebserviceRequestCore
         if (isset($params['id_group_shop']) && is_numeric($params['id_group_shop'])) {
             Shop::setContext(Shop::CONTEXT_GROUP, (int) $params['id_group_shop']);
             self::$shopIDs = Shop::getShops(true, (int) $params['id_group_shop'], true);
-            if ( (!is_array(self::$shopIDs) || !(self::$shopIDs instanceof Countable)) || count(self::$shopIDs) == 0) {
+            if ((!is_array(self::$shopIDs) || !(self::$shopIDs instanceof Countable)) || count(self::$shopIDs) == 0) {
                 // @FIXME Set ErrorCode !
                 $this->setError(500, 'This group shop doesn\'t have shops', 999);
 
@@ -1063,7 +1064,7 @@ class WebserviceRequestCore
             if ((!isset($this->resourceConfiguration['hidden_fields']) ||
                 (isset($this->resourceConfiguration['hidden_fields']) && !in_array($fieldName, $this->resourceConfiguration['hidden_fields'])))) {
                 if ((!isset($field['i18n']) ||
-                (isset($field['i18n']) && !$field['i18n']))) {
+                    (isset($field['i18n']) && !$field['i18n']))) {
                     $available_filters[] = $fieldName;
                 } else {
                     $i18n_available_filters[] = $fieldName;
@@ -1741,9 +1742,9 @@ class WebserviceRequestCore
 
         // write headers
         $this->objOutput->setHeaderParams('Access-Time', time())
-                        ->setHeaderParams('X-Powered-By', 'PrestaShop Webservice')
-                        ->setHeaderParams('PSWS-Version', _PS_VERSION_)
-                        ->setHeaderParams('Execution-Time', round(microtime(true) - $this->_startTime, 3));
+            ->setHeaderParams('X-Powered-By', 'PrestaShop Webservice')
+            ->setHeaderParams('PSWS-Version', _PS_VERSION_)
+            ->setHeaderParams('Execution-Time', round(microtime(true) - $this->_startTime, 3));
 
         $return['type'] = strtolower($this->outputFormat);
 
