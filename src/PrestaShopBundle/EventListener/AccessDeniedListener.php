@@ -26,7 +26,6 @@
 
 namespace PrestaShopBundle\EventListener;
 
-use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
