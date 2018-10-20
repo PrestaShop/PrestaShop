@@ -27,3 +27,9 @@ admin_manufacturers_delete:
       _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Manufacturer:deleteManufacturer'
   requirements:
       manufacturerId: \d+
+
+admin_manufacturers_export:
+  path: /export
+  methods: GET
+  defaults:
+      _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Manufacturer:exportManufacturer'
