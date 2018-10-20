@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Catalog\Manufacturer;
 
 use PrestaShop\PrestaShop\Adapter\ImageManager;
-use PrestaShop\PrestaShop\Core\Grid\Action\GridAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
@@ -35,14 +34,15 @@ use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\SubmitRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\LinkGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
-use PrestaShop\PrestaShop\Core\Grid\Column\ColumnFilterOption;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
-use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ContentColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory;
-use PrestaShopBundle\Form\Admin\Type\SearchAndResetFormType;
+use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
+use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
+use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 /**
  * Class ManufacturerGridDefinitionFactory is responsible for creating Manufacturers grid definition
@@ -52,12 +52,12 @@ final class ManufacturerGridDefinitionFactory extends AbstractGridDefinitionFact
     /**
      * @var string
      */
-    private $searchResetUrl;
+    private $redirectActionUrl;
 
     /**
      * @var string
      */
-    private $redirectUrl;
+    private $resetActionUrl;
 
     /**
      * @var ImageManager
@@ -66,13 +66,13 @@ final class ManufacturerGridDefinitionFactory extends AbstractGridDefinitionFact
 
     /**
      * @param ImageManager $imageManager
-     * @param string       $searchResetUrl
-     * @param string       $redirectUrl
+     * @param string $resetActionUrl
+     * @param string $redirectActionUrl
      */
-    public function __construct(ImageManager $imageManager, $searchResetUrl, $redirectUrl)
+    public function __construct(ImageManager $imageManager, $resetActionUrl, $redirectActionUrl)
     {
-        $this->searchResetUrl = $searchResetUrl;
-        $this->redirectUrl = $redirectUrl;
+        $this->redirectActionUrl = $redirectActionUrl;
+        $this->resetActionUrl = $resetActionUrl;
         $this->imageManager = $imageManager;
     }
 
@@ -145,7 +145,7 @@ final class ManufacturerGridDefinitionFactory extends AbstractGridDefinitionFact
                     'field' => 'products_count',
                 ])
             )
-            ->add((new DataColumn('status'))
+            ->add((new DataColumn('active'))
                 ->setName($this->trans('Enabled', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'active',
@@ -228,6 +228,39 @@ final class ManufacturerGridDefinitionFactory extends AbstractGridDefinitionFact
                 ->setName($this->trans('Export to SQL Manager', [], 'Admin.Actions'))
                 ->setIcon('storage')
             )
-            ;
+        ;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getFilters()
+    {
+        return (new FilterCollection())
+            ->add((new Filter('id_manufacturer', TextType::class))
+                ->setTypeOptions([
+                    'required' => false,
+                ])
+                ->setAssociatedColumn('id_manufacturer')
+            )
+            ->add((new Filter('name', TextType::class))
+                ->setTypeOptions([
+                    'required' => false,
+                ])
+                ->setAssociatedColumn('name')
+            )
+            ->add((new Filter('active', YesAndNoChoiceType::class))
+                ->setAssociatedColumn('active')
+            )
+            ->add((new Filter('actions', SearchAndResetType::class))
+                ->setAssociatedColumn('actions')
+                ->setTypeOptions([
+                    'attr' => [
+                        'data-url' => $this->resetActionUrl,
+                        'data-redirect' => $this->redirectActionUrl,
+                    ],
+                ])
+            )
+        ;
     }
 }
