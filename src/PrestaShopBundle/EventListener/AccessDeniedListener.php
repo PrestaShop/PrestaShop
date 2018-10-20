@@ -143,7 +143,8 @@ class AccessDeniedListener
         $result = [];
 
         foreach ($queryParametersToKeep as $queryParameterName) {
-            if ($value = $request->get($queryParameterName)) {
+            $value = $request->get($queryParameterName);
+            if (null !== $value) {
                 $result[$queryParameterName] = $value;
             }
         }
