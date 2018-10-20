@@ -59,6 +59,22 @@ class ValidateCoreTest extends TestCase
     }
 
     /**
+     * @dataProvider isEan8DataProvider
+     */
+    public function testIsEan8($expected, $input)
+    {
+        $this->assertSame($expected, Validate::isEan8($input));
+    }
+
+    /**
+     * @dataProvider isEan13DataProvider
+     */
+    public function testIsEan13($expected, $input)
+    {
+        $this->assertSame($expected, Validate::isEan13($input));
+    }
+
+    /**
      * @dataProvider isBirthDateProvider
      */
     public function testIsBirthDate($expected, $input)
@@ -162,6 +178,30 @@ class ValidateCoreTest extends TestCase
             array(false, 'john.doe@prestashop'),
             array(false, 123456789),
             array(false, false),
+        );
+    }
+
+    /**
+     * @see https://www.getnewidentity.com/validate-ean.php for the test data
+     */
+    public function isEan13DataProvider()
+    {
+        return array(
+            array(true, "9780471117094"),
+            array(true, "4006381333931"),
+            array(true, "0000073513537"),
+            array(false, "0000073513536"),
+        );
+    }
+
+    /**
+     * @see https://www.getnewidentity.com/validate-ean.php for the test data
+     */
+    public function isEan8DataProvider()
+    {
+        return array(
+            array(true, "73513537"),
+            array(false, "73513536"),
         );
     }
 

@@ -641,6 +641,25 @@ class ValidateCore
     }
 
     /**
+     * Check for barcode validity (EAN-8).
+     *
+     * @param string $ean8 Barcode to validate
+     * @see Validate::isEan13
+     *
+     * @return bool Validity is ok or not
+     */
+    public static function isEan8($ean8)
+    {
+        if (!$ean8 || !preg_match('/^[0-9]{0,8}$/', $ean8)) {
+            return false; // an Ean8 code is *always* 8 digits in length
+        }
+
+        $ean13 = str_pad($ean8, 13, '0', STR_PAD_LEFT);
+
+        return Validate::isEan13($ean13);
+    }
+
+    /**
      * Check for barcode validity (EAN-13).
      *
      * @param string $ean13 Barcode to validate
@@ -649,7 +668,34 @@ class ValidateCore
      */
     public static function isEan13($ean13)
     {
-        return !$ean13 || preg_match('/^[0-9]{0,13}$/', $ean13);
+        if (!$ean13 || !preg_match('/^[0-9]{0,13}$/', $ean13)) {
+            return false; // an Ean13 code is *always* 13 digits in length
+        }
+
+        $ean13 = array_map('intval', str_split($ean13));
+
+        $controlDigit = end($ean13);
+        $ean12 = array_splice($ean13, 0, 12);
+
+        // 1. Sum even-numbered values (human counting, so first index is 1)
+        $evenSum = 0;
+
+        foreach ($ean12 as $idx => $value) {
+            $evenSum += $idx % 2 != 0 ? $value : 0;
+        }
+
+        // 2. Sum odd-numbered values (i.e., the rest)
+        $oddSum = array_sum($ean12) - $evenSum;
+
+        // 3. Get the total as 3 * even + odd
+        $total = 3 * $evenSum + $oddSum;
+
+        // 4. Compute the check sum
+        $checkSum = $total % 10 != 0
+            ? 10 - $total % 10
+            : 0;
+
+        return $checkSum == $controlDigit;
     }
 
     /**
