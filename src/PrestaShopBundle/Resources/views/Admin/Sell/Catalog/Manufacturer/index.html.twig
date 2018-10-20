@@ -24,7 +24,15 @@
  *#}
 
 {% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
-{% trans_default_domain 'Admin.Catalog.Feature' %}
+
+{% set layoutHeaderToolbarBtn = {
+  add: {
+    href: path('admin_manufacturers_create'),
+    desc: 'Add new brand'|trans({}, 'Admin.Catalog.Feature'),
+    icon: 'add_circle_outline',
+  }
+}
+%}
 
 {% block content %}
   {% block manufacturers_listing %}
