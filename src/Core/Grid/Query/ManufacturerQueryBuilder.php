@@ -38,21 +38,21 @@ final class ManufacturerQueryBuilder extends AbstractDoctrineQueryBuilder
     /**
      * @var int
      */
-    private $contextLangId;
+    private $contextShopId;
 
     /**
      * @param Connection $connection
      * @param string $dbPrefix
-     * @param int $contextLangId
+     * @param int $contextShopId
      */
     public function __construct(
         Connection $connection,
         $dbPrefix,
-        $contextLangId
+        $contextShopId
     ) {
         parent::__construct($connection, $dbPrefix);
-        //todo: single shop context only?
-        $this->contextLangId = $contextLangId;
+
+        $this->contextShopId = $contextShopId;
     }
 
     /**
@@ -61,7 +61,12 @@ final class ManufacturerQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $qb = $this->getQueryBuilder($searchCriteria->getFilters());
-        $qb->select('m.`id_manufacturer`, m.`name`, m.`active`');
+        $qb
+            ->select('m.`id_manufacturer`, m.`name`, m.`active`')
+            ->addSelect('COUNT(p.`id_product`) AS `products_count`')
+            ->addSelect('COUNT(DISTINCT a.`id_manufacturer`) AS `addresses_count`')
+            ->groupBy('m.`id_manufacturer`')
+        ;
 
         return $qb;
     }
@@ -89,7 +94,27 @@ final class ManufacturerQueryBuilder extends AbstractDoctrineQueryBuilder
         $qb = $this->connection
             ->createQueryBuilder()
             ->from($this->dbPrefix . 'manufacturer', 'm')
+            ->innerJoin(
+                'm',
+                $this->dbPrefix . 'manufacturer_shop',
+                'ms',
+                'ms.`id_shop` = :contextShopId AND ms.`id_manufacturer` = m.`id_manufacturer`'
+            )
+            ->leftJoin(
+                'm',
+                $this->dbPrefix . 'product',
+                'p',
+                'm.`id_manufacturer` = p.`id_manufacturer`'
+            )
+            ->leftJoin(
+                'm',
+                $this->dbPrefix . 'address',
+                'a',
+                'a.`id_manufacturer` = m.`id_manufacturer`'
+            )
         ;
+
+        $qb->setParameter('contextShopId', $this->contextShopId);
 
         return $qb;
     }

@@ -128,23 +128,18 @@ final class ManufacturerGridDefinitionFactory extends AbstractGridDefinitionFact
                     'field' => 'name',
                 ])
             )
-//            ->add((new DataColumn('addresses'))
-//                ->setName($this->trans('Addresses', [], 'Admin.Catalog.Feature'))
-//                ->setOptions([
-//                    'field' => 'addresses_count',
-//                    'modifier' => function (array $row) {
-//                        $row['addresses_count'] = $row['addresses_count'] ?: '--';
-//
-//                        return $row;
-//                    },
-//                ])
-//            )
-//            ->add((new DataColumn('products'))
-//                ->setName($this->trans('Products', [], 'Admin.Catalog.Feature'))
-//                ->setOptions([
-//                    'field' => 'products_count',
-//                ])
-//            )
+            ->add((new DataColumn('addresses'))
+                ->setName($this->trans('Addresses', [], 'Admin.Catalog.Feature'))
+                ->setOptions([
+                    'field' => 'addresses_count',
+                ])
+            )
+            ->add((new DataColumn('products'))
+                ->setName($this->trans('Products', [], 'Admin.Catalog.Feature'))
+                ->setOptions([
+                    'field' => 'products_count',
+                ])
+            )
             ->add((new DataColumn('status'))
                 ->setName($this->trans('Enabled', [], 'Admin.Global'))
                 ->setOptions([
