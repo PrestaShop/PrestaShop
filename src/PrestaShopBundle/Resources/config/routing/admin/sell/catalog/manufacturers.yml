@@ -2,5 +2,9 @@ admin_manufacturers_index:
     path: /
     methods: [GET, POST]
     defaults:
-        _controller: PrestaShopBundle:Admin/Sell/Catalog/Manufacturer:index
+        _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Manufacturer:index'
         _legacy_controller: AdminManufacturers
+
+_manufacturers_actions:
+  resource: "manufacturers_actions.yml"
+  prefix: /manufacturers/
