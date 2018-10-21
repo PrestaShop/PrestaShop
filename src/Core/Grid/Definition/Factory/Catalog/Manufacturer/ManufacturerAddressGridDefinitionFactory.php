@@ -31,6 +31,8 @@ use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\SubmitRowAction;
+use PrestaShop\PrestaShop\Core\Grid\Action\Type\LinkGridAction;
+use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnFilterOption;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
@@ -179,30 +181,41 @@ final class ManufacturerAddressGridDefinitionFactory extends AbstractGridDefinit
         ;
     }
 
-//    /**
-//     * {@inheritdoc}
-//     */
-//    protected function getGridActions()
-//    {
-//        return (new GridActionCollection())
-//            ->add(new GridAction(
-//                'common_refresh_list',
-//                $this->trans('Refresh list', [], 'Admin.Advparameters.Feature'),
-//                'refresh',
-//                'simple'
-//            ))
-//            ->add(new GridAction(
-//                'common_show_query',
-//                $this->trans('Show SQL query', [], 'Admin.Actions'),
-//                'code',
-//                'simple'
-//            ))
-//            ->add(new GridAction(
-//                'common_export_sql_manager',
-//                $this->trans('Export to SQL Manager', [], 'Admin.Actions'),
-//                'storage',
-//                'simple'
-//            ))
-//        ;
-//    }
+    /**
+     * {@inheritdoc}
+     */
+    protected function getGridActions()
+    {
+        return (new GridActionCollection())
+            ->add((new LinkGridAction('import'))
+                ->setName($this->trans('Import', [], 'Admin.Actions'))
+                ->setIcon('cloud_upload')
+                ->setOptions([
+                    'route' => 'admin_import',
+                    'route_params' => [
+                        'import_type' => 'manufacturers',
+                    ],
+                ])
+            )
+            ->add((new LinkGridAction('export'))
+                ->setName($this->trans('Export', [], 'Admin.Actions'))
+                ->setIcon('cloud_download')
+                ->setOptions([
+                    'route' => 'admin_manufacturers_export',
+                ])
+            )
+            ->add((new SimpleGridAction('common_refresh_list'))
+                ->setName($this->trans('Refresh list', [], 'Admin.Advparameters.Feature'))
+                ->setIcon('refresh')
+            )
+            ->add((new SimpleGridAction('common_show_query'))
+                ->setName($this->trans('Show SQL query', [], 'Admin.Actions'))
+                ->setIcon('code')
+            )
+            ->add((new SimpleGridAction('common_export_sql_manager'))
+                ->setName($this->trans('Export to SQL Manager', [], 'Admin.Actions'))
+                ->setIcon('storage')
+            )
+        ;
+    }
 }
