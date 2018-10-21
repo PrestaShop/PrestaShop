@@ -85,7 +85,7 @@ final class ManufacturerAddressQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $qb = $this->getQueryBuilderByFilters($searchCriteria->getFilters());
-        $qb->select('COUNT(a.`id_address`)');
+        $qb->select('COUNT(DISTINCT a.`id_address`)');
 
         return $qb;
     }
