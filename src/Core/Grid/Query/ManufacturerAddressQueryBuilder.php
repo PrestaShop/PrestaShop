@@ -36,6 +36,11 @@ use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 final class ManufacturerAddressQueryBuilder extends AbstractDoctrineQueryBuilder
 {
     /**
+     * @var DoctrineSearchCriteriaApplicatorInterface
+     */
+    private $searchCriteriaApplicator;
+
+    /**
      * @var int
      */
     private $contextLangId;
@@ -43,15 +48,18 @@ final class ManufacturerAddressQueryBuilder extends AbstractDoctrineQueryBuilder
     /**
      * @param Connection $connection
      * @param string $dbPrefix
+     * @param DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator
      * @param int $contextLangId
      */
     public function __construct(
         Connection $connection,
         $dbPrefix,
+        DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator,
         $contextLangId
     ) {
         parent::__construct($connection, $dbPrefix);
 
+        $this->searchCriteriaApplicator = $searchCriteriaApplicator;
         $this->contextLangId = $contextLangId;
     }
 
@@ -61,13 +69,11 @@ final class ManufacturerAddressQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $qb = $this->getQueryBuilderByFilters($searchCriteria->getFilters());
-        $qb->select('a.id_address, m.name, a.firstname, a.lastname, a.postcode, a.city, cl.name as country_name')
-            ->orderBy(
-                $searchCriteria->getOrderBy(),
-                $searchCriteria->getOrderWay()
-            )
-            ->setFirstResult($searchCriteria->getOffset())
-            ->setMaxResults($searchCriteria->getLimit())
+        $qb->select('a.id_address, m.name, a.firstname, a.lastname, a.postcode, a.city, cl.name as country_name');
+
+        $this->searchCriteriaApplicator
+            ->applyPagination($searchCriteria, $qb)
+            ->applySorting($searchCriteria, $qb) //todo: test sorting
         ;
 
         return $qb;
