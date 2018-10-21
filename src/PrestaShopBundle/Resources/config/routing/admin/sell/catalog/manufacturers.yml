@@ -9,6 +9,6 @@ _manufacturers_actions:
     resource: "manufacturers_actions.yml"
     prefix: /manufacturers/
 
-_manufacturers_address_actions:
-    resource: "manufacturers_address_actions.yml"
+_manufacturers_addresses_actions:
+    resource: "manufacturers_addresses_actions.yml"
     prefix: /addresses/
