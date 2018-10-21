@@ -45,7 +45,7 @@ use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 /**
- * Class ManufacturerGridDefinitionFactory is responsible for creating Manufacturers grid definition
+ * Class ManufacturerGridDefinitionFactory is responsible for creating Manufacturers grid definition.
  */
 final class ManufacturerGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
@@ -60,20 +60,13 @@ final class ManufacturerGridDefinitionFactory extends AbstractGridDefinitionFact
     private $resetActionUrl;
 
     /**
-     * @var ImageManager
-     */
-    private $imageManager;
-
-    /**
-     * @param ImageManager $imageManager
      * @param string $resetActionUrl
      * @param string $redirectActionUrl
      */
-    public function __construct(ImageManager $imageManager, $resetActionUrl, $redirectActionUrl)
+    public function __construct($resetActionUrl, $redirectActionUrl)
     {
         $this->redirectActionUrl = $redirectActionUrl;
         $this->resetActionUrl = $resetActionUrl;
-        $this->imageManager = $imageManager;
     }
 
     /**
@@ -97,8 +90,6 @@ final class ManufacturerGridDefinitionFactory extends AbstractGridDefinitionFact
      */
     protected function getColumns()
     {
-        $imageManager = $this->imageManager;
-
         return (new ColumnCollection())
             ->add((new BulkActionColumn('bulk'))
                 ->setOptions([
@@ -111,22 +102,7 @@ final class ManufacturerGridDefinitionFactory extends AbstractGridDefinitionFact
                     'field' => 'id_manufacturer',
                 ])
             )
-//            ->add((new ContentColumn('logo'))
-//                ->setName($this->trans('Logo', [], 'Admin.Global'))
-//                ->setOptions([
-//                    'field' => 'logo',
-//                    'modifier' => function (array $row) use ($imageManager) {
-//                        $row['logo'] = $imageManager->getThumbnailForListing(
-//                            $row['id_manufacturer'],
-//                            'jpg',
-//                            'manufacturer',
-//                            'm'
-//                        );
-//
-//                        return $row;
-//                    }
-//                ])
-//            )
+            //todo: ImageColumn
             ->add((new DataColumn('name'))
                 ->setName($this->trans('Name', [], 'Admin.Global'))
                 ->setOptions([
