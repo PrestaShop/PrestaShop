@@ -3,12 +3,14 @@ admin_manufacturers_create:
   methods: [GET, POST]
   defaults:
       _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Manufacturer:createManufacturer'
+      _legacy_controller: AdminManufacturers
 
 admin_manufacturers_view:
   path: /{manufacturerId}/view
   methods: GET
   defaults:
       _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Manufacturer:viewManufacturer'
+      _legacy_controller: AdminManufacturers
   requirements:
       manufacturerId: \d+
 
@@ -17,6 +19,7 @@ admin_manufacturers_edit:
   methods: [GET, POST]
   defaults:
       _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Manufacturer:editManufacturer'
+      _legacy_controller: AdminManufacturers
   requirements:
       manufacturerId: \d+
 
@@ -25,6 +28,7 @@ admin_manufacturers_delete:
   methods: DELETE
   defaults:
       _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Manufacturer:deleteManufacturer'
+      _legacy_controller: AdminManufacturers
   requirements:
       manufacturerId: \d+
 
@@ -33,3 +37,4 @@ admin_manufacturers_export:
   methods: GET
   defaults:
       _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Manufacturer:exportManufacturer'
+      _legacy_controller: AdminManufacturers

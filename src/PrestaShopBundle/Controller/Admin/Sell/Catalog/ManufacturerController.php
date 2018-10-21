@@ -96,6 +96,24 @@ class ManufacturerController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_manufacturers_index');
     }
 
+    public function createManufacturerAddressAction()
+    {
+        //todo: implement
+        return $this->redirectToRoute('admin_manufacturers_index');
+    }
+
+    public function editManufacturerAddressAction()
+    {
+        //todo: implement
+        return $this->redirectToRoute('admin_manufacturers_index');
+    }
+
+    public function deleteManufacturerAddressAction()
+    {
+        //todo: implement
+        return $this->redirectToRoute('admin_manufacturers_index');
+    }
+
     /**
      * Get grid presenter
      *

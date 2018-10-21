@@ -6,5 +6,9 @@ admin_manufacturers_index:
         _legacy_controller: AdminManufacturers
 
 _manufacturers_actions:
-  resource: "manufacturers_actions.yml"
-  prefix: /manufacturers/
+    resource: "manufacturers_actions.yml"
+    prefix: /manufacturers/
+
+_manufacturers_address_actions:
+    resource: "manufacturers_address_actions.yml"
+    prefix: /addresses/
