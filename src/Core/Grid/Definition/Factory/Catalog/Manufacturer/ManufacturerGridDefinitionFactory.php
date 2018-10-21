@@ -38,6 +38,7 @@ use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ToggleColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
@@ -123,10 +124,13 @@ final class ManufacturerGridDefinitionFactory extends AbstractGridDefinitionFact
                     'field' => 'products_count',
                 ])
             )
-            ->add((new DataColumn('active'))
+            ->add((new ToggleColumn('active'))
                 ->setName($this->trans('Enabled', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'active',
+                    'primary_field' => 'id_manufacturer',
+                    'route' => 'admin_manufacturers_toggle_status',
+                    'route_param_name' => 'manufacturerId',
                 ])
             )
             ->add((new ActionColumn('actions'))
