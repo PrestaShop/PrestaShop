@@ -28,6 +28,9 @@ namespace PrestaShop\PrestaShop\Core\Search\Filters;
 
 use PrestaShop\PrestaShop\Core\Search\Filters;
 
+/**
+ * Class ManufacturerFilters is responsible for providing filter values for manufacturer grid.
+ */
 final class ManufacturerFilters extends Filters
 {
     /**
