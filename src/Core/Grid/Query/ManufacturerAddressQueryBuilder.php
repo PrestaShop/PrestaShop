@@ -117,7 +117,7 @@ final class ManufacturerAddressQueryBuilder extends AbstractDoctrineQueryBuilder
         ;
 
         foreach ($filters as $name => $value) {
-            if (in_array($name, ['id_address'])) {
+            if ('id_address' === $name) {
                 $qb->andWhere("$name = :$name");
                 $qb->setParameter($name, $value);
 
