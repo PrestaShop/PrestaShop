@@ -34,12 +34,12 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Class ManufacturerController is responsible for "Sell > Catalog > Brands & Suppliers" page
+ * Class ManufacturerController is responsible for "Sell > Catalog > Brands & Suppliers" page.
  */
 class ManufacturerController extends FrameworkBundleAdminController
 {
     /**
-     * Show manufacturers listing page
+     * Show manufacturers listing page.
      *
      * @param Request $request
      * @param ManufacturerFilters $manufacturerFilters
@@ -109,6 +109,12 @@ class ManufacturerController extends FrameworkBundleAdminController
     }
 
     public function deleteManufacturerAddressAction()
+    {
+        //todo: implement
+        return $this->redirectToRoute('admin_manufacturers_index');
+    }
+
+    public function exportManufacturerAddressAction()
     {
         //todo: implement
         return $this->redirectToRoute('admin_manufacturers_index');
