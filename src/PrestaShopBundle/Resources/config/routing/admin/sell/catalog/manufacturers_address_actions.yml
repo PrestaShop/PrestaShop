@@ -23,6 +23,13 @@ admin_manufacturers_addresses_delete:
     requirements:
         manufacturerAddressId: \d+
 
+admin_manufacturers_addresses_bulk_delete:
+    path: /bulk-delete
+    methods: POST
+    defaults:
+        _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Manufacturer:bulkDeleteManufacturerAddress'
+        _legacy_controller: AdminManufacturers
+
 admin_manufacturers_addresses_export:
     path: /export
     methods: GET

@@ -120,6 +120,12 @@ class ManufacturerController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_manufacturers_index');
     }
 
+    public function bulkDeleteManufacturerAddressAction()
+    {
+        //todo: implement
+        return $this->redirectToRoute('admin_manufacturers_index');
+    }
+
     /**
      * Get grid presenter
      *
