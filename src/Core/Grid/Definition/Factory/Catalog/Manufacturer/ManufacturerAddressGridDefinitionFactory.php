@@ -26,6 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Catalog\Manufacturer;
 
+use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\SubmitBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
@@ -234,6 +236,22 @@ final class ManufacturerAddressGridDefinitionFactory extends AbstractGridDefinit
                         'data-url' => $this->resetActionUrl,
                         'data-redirect' => $this->redirectActionUrl,
                     ],
+                ])
+            )
+        ;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getBulkActions()
+    {
+        return (new BulkActionCollection())
+            ->add((new SubmitBulkAction('delete_manufacturer_address'))
+                ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
+                ->setOptions([
+                    'submit_route' => 'admin_manufacturers_addresses_bulk_delete',
+                    'confirm_message' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
                 ])
             )
         ;
