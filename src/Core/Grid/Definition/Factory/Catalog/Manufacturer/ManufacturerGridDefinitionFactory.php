@@ -27,6 +27,8 @@
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Catalog\Manufacturer;
 
 use PrestaShop\PrestaShop\Adapter\ImageManager;
+use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\SubmitBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
@@ -235,6 +237,34 @@ final class ManufacturerGridDefinitionFactory extends AbstractGridDefinitionFact
                         'data-url' => $this->resetActionUrl,
                         'data-redirect' => $this->redirectActionUrl,
                     ],
+                ])
+            )
+        ;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getBulkActions()
+    {
+        return (new BulkActionCollection())
+            ->add((new SubmitBulkAction('manufacturers_enable'))
+                ->setName($this->trans('Enable selection', [], 'Admin.Actions'))
+                ->setOptions([
+                    'submit_route' => 'admin_manufacturers_bulk_enable',
+                ])
+            )
+            ->add((new SubmitBulkAction('manufacturers_disable'))
+                ->setName($this->trans('Disable selection', [], 'Admin.Actions'))
+                ->setOptions([
+                    'submit_route' => 'admin_manufacturers_bulk_disable',
+                ])
+            )
+            ->add((new SubmitBulkAction('manufacturers_delete'))
+                ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
+                ->setOptions([
+                    'submit_route' => 'admin_manufacturers_bulk_delete',
+                    'confirm_message' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
                 ])
             )
         ;
