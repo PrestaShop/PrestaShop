@@ -36,23 +36,23 @@ use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 final class ManufacturerQueryBuilder extends AbstractDoctrineQueryBuilder
 {
     /**
-     * @var int
+     * @var int[]
      */
-    private $contextShopId;
+    private $contextShopIds;
 
     /**
      * @param Connection $connection
      * @param string $dbPrefix
-     * @param int $contextShopId
+     * @param int[] $contextShopIds
      */
     public function __construct(
         Connection $connection,
         $dbPrefix,
-        $contextShopId
+        array $contextShopIds
     ) {
         parent::__construct($connection, $dbPrefix);
 
-        $this->contextShopId = $contextShopId;
+        $this->contextShopIds = $contextShopIds;
     }
 
     /**
@@ -63,7 +63,7 @@ final class ManufacturerQueryBuilder extends AbstractDoctrineQueryBuilder
         $qb = $this->getQueryBuilder($searchCriteria->getFilters());
         $qb
             ->select('m.`id_manufacturer`, m.`name`, m.`active`')
-            ->addSelect('COUNT(p.`id_product`) AS `products_count`')
+            ->addSelect('COUNT(DISTINCT p.`id_product`) AS `products_count`')
             ->addSelect('COUNT(DISTINCT a.`id_manufacturer`) AS `addresses_count`')
             ->groupBy('m.`id_manufacturer`')
         ;
@@ -98,7 +98,7 @@ final class ManufacturerQueryBuilder extends AbstractDoctrineQueryBuilder
                 'm',
                 $this->dbPrefix . 'manufacturer_shop',
                 'ms',
-                'ms.`id_shop` = :contextShopId AND ms.`id_manufacturer` = m.`id_manufacturer`'
+                'ms.`id_manufacturer` = m.`id_manufacturer`'
             )
             ->leftJoin(
                 'm',
@@ -114,7 +114,9 @@ final class ManufacturerQueryBuilder extends AbstractDoctrineQueryBuilder
             )
         ;
 
-        $qb->setParameter('contextShopId', $this->contextShopId);
+        $qb->where('ms.`id_shop` IN (:contextShopIds)');
+
+        $qb->setParameter('contextShopIds', $this->contextShopIds, Connection::PARAM_INT_ARRAY);
 
         return $qb;
     }
