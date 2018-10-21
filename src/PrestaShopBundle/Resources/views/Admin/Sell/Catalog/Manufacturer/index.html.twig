@@ -26,11 +26,16 @@
 {% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
 
 {% set layoutHeaderToolbarBtn = {
-  add: {
+  add_manufacturer: {
     href: path('admin_manufacturers_create'),
     desc: 'Add new brand'|trans({}, 'Admin.Catalog.Feature'),
     icon: 'add_circle_outline',
-  }
+  },
+  add_manufacturer_address: {
+    href: path('admin_manufacturers_addresses_create'),
+    desc: 'Add new brand address'|trans({}, 'Admin.Catalog.Feature'),
+    icon: 'add_circle_outline',
+  },
 }
 %}
 
