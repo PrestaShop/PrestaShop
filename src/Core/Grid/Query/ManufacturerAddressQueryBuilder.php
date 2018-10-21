@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Grid\Query;
 
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
 /**
@@ -39,6 +40,11 @@ final class ManufacturerAddressQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     private $contextLangId;
 
+    /**
+     * @param Connection $connection
+     * @param string $dbPrefix
+     * @param int $contextLangId
+     */
     public function __construct(
         Connection $connection,
         $dbPrefix,
@@ -78,6 +84,13 @@ final class ManufacturerAddressQueryBuilder extends AbstractDoctrineQueryBuilder
         return $qb;
     }
 
+    /**
+     * Gets query builder with common sql needed for manufacturer addresses grid.
+     *
+     * @param array $filters
+     *
+     * @return QueryBuilder
+     */
     private function getQueryBuilderByFilters(array $filters)
     {
         $qb = $this->connection
