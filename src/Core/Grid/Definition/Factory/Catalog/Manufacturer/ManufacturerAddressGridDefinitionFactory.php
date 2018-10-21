@@ -259,7 +259,7 @@ final class ManufacturerAddressGridDefinitionFactory extends AbstractGridDefinit
                 ->setName($this->trans('Export', [], 'Admin.Actions'))
                 ->setIcon('cloud_download')
                 ->setOptions([
-                    'route' => 'admin_manufacturers_export',
+                    'route' => 'admin_manufacturers_addresses_export',
                 ])
             )
             ->add((new SimpleGridAction('common_refresh_list'))
