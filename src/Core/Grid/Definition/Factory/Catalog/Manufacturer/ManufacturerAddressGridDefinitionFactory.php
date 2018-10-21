@@ -37,7 +37,10 @@ use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFac
 use PrestaShopBundle\Form\Admin\Type\CountryChoiceType;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetFormType;
 
-final class AddressGridDefinitionFactory extends AbstractGridDefinitionFactory
+/**
+ * Class ManufacturerAddressGridDefinitionFactory is responsible for creating Manufacturers address grid definition.
+ */
+final class ManufacturerAddressGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
     /**
      * @var string
