@@ -52,6 +52,15 @@ admin_manufacturers_bulk_disable:
         _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Manufacturer:bulkDisableManufacturer'
         _legacy_controller: AdminManufacturers
 
+admin_manufacturers_toggle_status:
+    path: /{manufacturerId}/toggle-status
+    methods: POST
+    defaults:
+        _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Manufacturer:toggleManufacturerStatus'
+        _legacy_controller: AdminManufacturers
+    requirements:
+        manufacturerId: \d+
+
 admin_manufacturers_export:
     path: /export
     methods: GET
