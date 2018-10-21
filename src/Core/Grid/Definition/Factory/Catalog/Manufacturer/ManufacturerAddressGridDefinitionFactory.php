@@ -39,8 +39,12 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory;
+use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
+use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShopBundle\Form\Admin\Type\CountryChoiceType;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetFormType;
+use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 /**
  * Class ManufacturerAddressGridDefinitionFactory is responsible for creating Manufacturers address grid definition.
@@ -50,21 +54,21 @@ final class ManufacturerAddressGridDefinitionFactory extends AbstractGridDefinit
     /**
      * @var string
      */
-    private $searchResetUrl;
+    private $resetActionUrl;
 
     /**
      * @var string
      */
-    private $redirectUrl;
+    private $redirectActionUrl;
 
     /**
-     * @param string $searchResetUrl
-     * @param string $redirectUrl
+     * @param string $resetActionUrl
+     * @param string $redirectActionUrl
      */
-    public function __construct($searchResetUrl, $redirectUrl)
+    public function __construct($resetActionUrl, $redirectActionUrl)
     {
-        $this->searchResetUrl = $searchResetUrl;
-        $this->redirectUrl = $redirectUrl;
+        $this->resetActionUrl = $resetActionUrl;
+        $this->redirectActionUrl = $redirectActionUrl;
     }
 
     /**
@@ -171,13 +175,67 @@ final class ManufacturerAddressGridDefinitionFactory extends AbstractGridDefinit
                         ),
                 ])
             )
-//            ->add((new DataColumn('id_country'))
-//                ->setName($this->trans('Country', [], 'Admin.Global'))
-//                ->setOptions([
-//                    'field' => 'country_name',
-//                    'filter' => new ColumnFilterOption(CountryChoiceType::class),
-//                ])
-//            )
+        ;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getFilters()
+    {
+        return (new FilterCollection())
+            ->add((new Filter('id_address', TextType::class))
+                ->setTypeOptions([
+                    'required' => false,
+                ])
+                ->setAssociatedColumn('id_address')
+            )
+            ->add((new Filter('name', TextType::class))
+                ->setTypeOptions([
+                    'required' => false,
+                ])
+                ->setAssociatedColumn('name')
+            )
+            ->add((new Filter('firstname', TextType::class))
+                ->setTypeOptions([
+                    'required' => false,
+                ])
+                ->setAssociatedColumn('firstname')
+            )
+            ->add((new Filter('lastname', TextType::class))
+                ->setTypeOptions([
+                    'required' => false,
+                ])
+                ->setAssociatedColumn('lastname')
+            )
+            ->add((new Filter('postcode', TextType::class))
+                ->setTypeOptions([
+                    'required' => false,
+                ])
+                ->setAssociatedColumn('postcode')
+            )
+            ->add((new Filter('city', TextType::class))
+                ->setTypeOptions([
+                    'required' => false,
+                ])
+                ->setAssociatedColumn('city')
+            )
+            ->add((new Filter('country', CountryChoiceType::class))
+                ->setTypeOptions([
+                    'required' => false,
+                    'choice_translation_domain' => false,
+                ])
+                ->setAssociatedColumn('country')
+            )
+            ->add((new Filter('actions', SearchAndResetType::class))
+                ->setAssociatedColumn('actions')
+                ->setTypeOptions([
+                    'attr' => [
+                        'data-url' => $this->resetActionUrl,
+                        'data-redirect' => $this->redirectActionUrl,
+                    ],
+                ])
+            )
         ;
     }
 
