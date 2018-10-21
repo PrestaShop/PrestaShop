@@ -107,11 +107,6 @@ final class ManufacturerAddressGridDefinitionFactory extends AbstractGridDefinit
                 ->setName($this->trans('Brand', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'name',
-                    'modifier' => function ($row) {
-                        $row['name'] = $row['name'] ?: '--';
-
-                        return $row;
-                    },
                 ])
             )
             ->add((new DataColumn('firstname'))
