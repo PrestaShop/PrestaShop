@@ -40,6 +40,11 @@ final class ManufacturerAddressQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     private $contextLangId;
 
+    /**
+     * @param Connection $connection
+     * @param string $dbPrefix
+     * @param int $contextLangId
+     */
     public function __construct(
         Connection $connection,
         $dbPrefix,
