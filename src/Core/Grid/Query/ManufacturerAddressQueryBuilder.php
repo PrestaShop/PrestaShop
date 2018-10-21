@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -119,7 +119,7 @@ final class ManufacturerAddressQueryBuilder extends AbstractDoctrineQueryBuilder
             }
 
             $qb->andWhere("$name LIKE :$name");
-            $qb->setParameter($name, '%'.$value.'%');
+            $qb->setParameter($name, '%' . $value . '%');
         }
 
         $qb->andWhere('a.id_customer = 0')

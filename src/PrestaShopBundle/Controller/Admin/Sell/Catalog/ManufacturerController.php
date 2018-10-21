@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -154,7 +154,7 @@ class ManufacturerController extends FrameworkBundleAdminController
     }
 
     /**
-     * Get grid presenter
+     * Get grid presenter.
      *
      * @return GridPresenter
      */

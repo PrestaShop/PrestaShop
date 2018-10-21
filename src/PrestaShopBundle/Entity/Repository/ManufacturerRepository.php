@@ -121,7 +121,7 @@ class ManufacturerRepository implements DoctrineQueryBuilderInterface
         $qb->select('m.id_manufacturer, m.name, m.active, COUNT(p.id_product) as products_count')
             ->addSelect('(
                 SELECT COUNT(a.id_manufacturer) as addresses_count
-                FROM '.$this->tablePrefix.'address a
+                FROM ' . $this->tablePrefix . 'address a
                 WHERE a.id_manufacturer = m.id_manufacturer
                     AND a.deleted = 0
                 GROUP BY a.id_manufacturer    
@@ -156,8 +156,8 @@ class ManufacturerRepository implements DoctrineQueryBuilderInterface
     private function createQueryBuilderFromSearchCriteria(SearchCriteriaInterface $searchCriteria)
     {
         $qb = $this->connection->createQueryBuilder()
-            ->from($this->tablePrefix.'manufacturer', 'm')
-            ->leftJoin('m', $this->tablePrefix.'product', 'p', 'm.id_manufacturer = p.id_manufacturer')
+            ->from($this->tablePrefix . 'manufacturer', 'm')
+            ->leftJoin('m', $this->tablePrefix . 'product', 'p', 'm.id_manufacturer = p.id_manufacturer')
             ->groupBy('m.id_manufacturer');
 
         foreach ($searchCriteria->getFilters() as $name => $value) {
@@ -167,7 +167,7 @@ class ManufacturerRepository implements DoctrineQueryBuilderInterface
             }
 
             $qb->andWhere("$name LIKE :$name");
-            $qb->setParameter($name, '%'.$value.'%');
+            $qb->setParameter($name, '%' . $value . '%');
         }
 
         return $qb;
