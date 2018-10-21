@@ -28,6 +28,9 @@ namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Catalog\Manufacture
 
 use PrestaShop\PrestaShop\Core\Grid\Action\GridAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\SubmitRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnFilterOption;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
@@ -130,22 +133,47 @@ final class ManufacturerAddressGridDefinitionFactory extends AbstractGridDefinit
                     'field' => 'city',
                 ])
             )
+            ->add((new DataColumn('country'))
+                ->setName($this->trans('Country', [], 'Admin.Global'))
+                ->setOptions([
+                    'field' => 'country_name',
+                ])
+            )
+            ->add((new ActionColumn('actions'))
+                ->setName($this->trans('Actions', [], 'Admin.Global'))
+                ->setOptions([
+                    'actions' => (new RowActionCollection())
+                        ->add((new LinkRowAction('edit'))
+                            ->setName($this->trans('Edit', [], 'Admin.Actions'))
+                            ->setIcon('edit')
+                            ->setOptions([
+                                'route' => 'admin_manufacturers_addresses_edit',
+                                'route_param_name' => 'manufacturerAddressId',
+                                'route_param_field' => 'id_address',
+                            ])
+                        )
+                        ->add((new SubmitRowAction('delete'))
+                            ->setName($this->trans('Delete', [], 'Admin.Actions'))
+                            ->setIcon('delete')
+                            ->setOptions([
+                                'method' => 'DELETE',
+                                'route' => 'admin_manufacturers_addresses_delete',
+                                'route_param_name' => 'manufacturerAddressId',
+                                'route_param_field' => 'id_address',
+                                'confirm_message' => $this->trans(
+                                    'Delete selected item?',
+                                    [],
+                                    'Admin.Notifications.Warning'
+                                ),
+                            ])
+                        ),
+                ])
+            )
 //            ->add((new DataColumn('id_country'))
 //                ->setName($this->trans('Country', [], 'Admin.Global'))
 //                ->setOptions([
 //                    'field' => 'country_name',
 //                    'filter' => new ColumnFilterOption(CountryChoiceType::class),
-//                ])
-//            )
-//            ->add((new ActionColumn('actions'))
-//                ->setName($this->trans('Actions', [], 'Admin.Global'))
-//                ->setOptions([
-//                    'filter' => new ColumnFilterOption(SearchAndResetFormType::class, [
-//                        'attr' => [
-//                            'data-url' => $this->searchResetUrl,
-//                            'data-redirect' => $this->redirectUrl,
-//                        ],
-//                    ]),
 //                ])
 //            )
         ;

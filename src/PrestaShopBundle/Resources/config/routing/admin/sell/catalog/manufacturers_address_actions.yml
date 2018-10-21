@@ -1,0 +1,24 @@
+admin_manufacturers_addresses_create:
+    path: /add
+    methods: [GET, POST]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Manufacturer:createManufacturerAddress'
+        _legacy_controller: AdminManufacturers
+
+admin_manufacturers_addresses_edit:
+    path: /{manufacturerAddressId}/edit
+    methods: [GET, POST]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Manufacturer:editManufacturerAddress'
+        _legacy_controller: AdminManufacturers
+    requirements:
+        manufacturerAddressId: \d+
+
+admin_manufacturers_addresses_delete:
+    path: /{manufacturerAddressId}/delete
+    methods: DELETE
+    defaults:
+        _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Manufacturer:deleteManufacturerAddress'
+        _legacy_controller: AdminManufacturers
+    requirements:
+        manufacturerAddressId: \d+
