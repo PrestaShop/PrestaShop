@@ -30,6 +30,9 @@ use Doctrine\DBAL\Connection;
 use PrestaShop\PrestaShop\Core\Grid\Query\DoctrineQueryBuilderInterface;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
+/**
+ * Class ManufacturerAddressQueryBuilder is responsible for building queries for manufacturers addresses grid data.
+ */
 final class ManufacturerAddressQueryBuilder extends AbstractDoctrineQueryBuilder
 {
     /**
@@ -71,7 +74,7 @@ final class ManufacturerAddressQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $qb = $this->getQueryBuilderByFilters($searchCriteria->getFilters());
-        $qb->select('COUNT(*)');
+        $qb->select('COUNT(a.`id_address`)');
 
         return $qb;
     }
@@ -81,9 +84,18 @@ final class ManufacturerAddressQueryBuilder extends AbstractDoctrineQueryBuilder
         $qb = $this->connection
             ->createQueryBuilder()
             ->from($this->dbPrefix . 'address', 'a')
-            ->leftJoin('a', $this->dbPrefix . 'country_lang', 'cl', 'cl.id_country = a.id_country AND cl.id_lang = :lang')
-                ->setParameter('lang', $this->contextLangId)
-            ->leftJoin('a', $this->dbPrefix . 'manufacturer', 'm', 'm.id_manufacturer = a.id_manufacturer')
+            ->leftJoin(
+                'a',
+                $this->dbPrefix . 'country_lang',
+                'cl',
+                'cl.id_country = a.id_country AND cl.id_lang = :lang'
+            )
+            ->setParameter('lang', $this->contextLangId)
+            ->leftJoin(
+                'a',
+                $this->dbPrefix . 'manufacturer',
+                'm', 'm.id_manufacturer = a.id_manufacturer'
+            )
         ;
 
         foreach ($filters as $name => $value) {
