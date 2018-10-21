@@ -32,7 +32,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Class CountryChoiceType.
+ * Class CountryChoiceType is responsible for providing country choices with -- symbol in front of array.
  */
 class CountryChoiceType extends AbstractType
 {
