@@ -53,11 +53,7 @@ final class DataColumn extends AbstractColumn
             ->setRequired([
                 'field',
             ])
-            ->setDefaults([
-                'modifier' => null,
-            ])
             ->setAllowedTypes('field', 'string')
-            ->setAllowedTypes('modifier', ['null', 'callable'])
         ;
     }
 }
