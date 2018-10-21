@@ -42,19 +42,27 @@ class ManufacturerController extends FrameworkBundleAdminController
      * Show manufacturers listing page
      *
      * @param Request $request
-     * @param ManufacturerFilters $filters
+     * @param ManufacturerFilters $manufacturerFilters
+     * @param ManufacturerAddressFilters $manufacturerAddressFilters
      *
      * @return Response
      */
-    public function indexAction(Request $request, ManufacturerFilters $filters)
-    {
+    public function indexAction(
+        Request $request,
+        ManufacturerFilters $manufacturerFilters,
+        ManufacturerAddressFilters $manufacturerAddressFilters
+    ) {
         $manufacturerGridFactory = $this->get('prestashop.core.grid.factory.manufacturer');
-        $manufacturerGrid = $manufacturerGridFactory->getGrid($filters);
+        $manufacturerGrid = $manufacturerGridFactory->getGrid($manufacturerFilters);
+
+        $manufacturerAddressFactory = $this->get('prestashop.core.grid.factory.manufacturer_address');
+        $manufacturerAddressGrid = $manufacturerAddressFactory->getGrid($manufacturerAddressFilters);
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Manufacturer/index.html.twig', [
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'manufacturer_grid' => $this->getGridPresenter()->present($manufacturerGrid),
+            'manufacturer_address_grid' => $this->getGridPresenter()->present($manufacturerAddressGrid),
         ]);
     }
 
