@@ -810,6 +810,7 @@ class CartCore extends ObjectModel
 
                 $additionalRow = Product::getProductProperties((int) $this->id_lang, $row);
                 $row['reduction'] = $additionalRow['reduction'];
+                $row['reduction_without_tax'] = $additionalRow['reduction_without_tax'];
                 $row['price_without_reduction'] = $additionalRow['price_without_reduction'];
                 $row['specific_prices'] = $additionalRow['specific_prices'];
                 unset($additionalRow);
@@ -895,6 +896,27 @@ class CartCore extends ObjectModel
         $row['price_without_reduction'] = Product::getPriceStatic(
             (int) $row['id_product'],
             true,
+            isset($row['id_product_attribute']) ? (int) $row['id_product_attribute'] : null,
+            6,
+            null,
+            false,
+            false,
+            $productQuantity,
+            false,
+            (int) $this->id_customer ? (int) $this->id_customer : null,
+            (int) $this->id,
+            $address_id,
+            $specific_price_output,
+            true,
+            true,
+            $shopContext,
+            true,
+            $row['id_customization']
+        );
+
+        $row['price_without_reduction_without_tax'] = Product::getPriceStatic(
+            (int) $row['id_product'],
+            false,
             isset($row['id_product_attribute']) ? (int) $row['id_product_attribute'] : null,
             6,
             null,

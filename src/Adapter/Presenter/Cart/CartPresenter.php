@@ -131,6 +131,7 @@ class CartPresenter implements PresenterInterface
             'customizable',
             'online_only',
             'reduction',
+            'reduction_without_tax',
             'new',
             'condition',
             'pack',

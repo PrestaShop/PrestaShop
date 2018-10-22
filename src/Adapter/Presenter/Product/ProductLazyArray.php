@@ -623,12 +623,18 @@ class ProductLazyArray extends AbstractLazyArray
             // TODO: add percent sign according to locale preferences
             $this->product['discount_percentage'] = Tools::displayNumber($presNegativeReduction) . '%';
             $this->product['discount_percentage_absolute'] = Tools::displayNumber($presAbsoluteReduction) . '%';
-            // TODO: Fix issue with tax calculation
-            $this->product['discount_amount'] = $this->priceFormatter->format(
-                $product['reduction']
-            );
+            if ($settings->include_taxes) {
+                $regular_price = $product['price_without_reduction'];
+                $this->product['discount_amount'] = $this->priceFormatter->format(
+                    $product['reduction']
+                );
+            } else {
+                $regular_price = $product['price_without_reduction_without_tax'];
+                $this->product['discount_amount'] = $this->priceFormatter->format(
+                    $product['reduction_without_tax']
+                );
+            }
             $this->product['discount_amount_to_display'] = '-' . $this->product['discount_amount'];
-            $regular_price = $product['price_without_reduction'];
         }
 
         $this->product['price_amount'] = $price;
