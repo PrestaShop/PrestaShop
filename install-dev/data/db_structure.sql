@@ -2500,7 +2500,7 @@ CREATE TABLE `PREFIX_stock_available` (
     `id_shop`, 
     `id_shop_group`
   )
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
+) ENGINE = ENGINE_TYPE DEFAULT CHARSET = utf8 COLLATION;
 
 CREATE TABLE `PREFIX_supply_order` (
   `id_supply_order` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, 
