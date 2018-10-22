@@ -541,6 +541,7 @@ final class GetCustomerInformationHandler implements GetCustomerInformationHandl
             );
 
             $customerAddresses[] = new AddressInformation(
+                (int) $address['id_address'],
                 $company,
                 sprintf('%s %s', $address['firstname'], $address['lastname']),
                 $fullAddress,
