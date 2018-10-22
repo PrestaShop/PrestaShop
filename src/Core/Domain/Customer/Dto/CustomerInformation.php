@@ -94,7 +94,13 @@ class CustomerInformation
     private $addressesInformation;
 
     /**
+     * @var bool
+     */
+    private $customerExists;
+
+    /**
      * @param CustomerId $customerId
+     * @param bool $customerExists
      * @param PersonalInformation $generalInformation
      * @param OrdersInformation $customerOrdersInformation
      * @param CartInformation[] $cartsInformation
@@ -109,6 +115,7 @@ class CustomerInformation
      */
     public function __construct(
         CustomerId $customerId,
+        $customerExists,
         PersonalInformation $generalInformation,
         OrdersInformation $customerOrdersInformation,
         array $cartsInformation,
@@ -133,6 +140,7 @@ class CustomerInformation
         $this->groupsInformation = $groupsInformation;
         $this->referrersInformation = $referrersInformation;
         $this->addressesInformation = $addressesInformation;
+        $this->customerExists = $customerExists;
     }
 
     /**
@@ -229,5 +237,13 @@ class CustomerInformation
     public function getAddressesInformation()
     {
         return $this->addressesInformation;
+    }
+
+    /**
+     * @return bool
+     */
+    public function customerExists()
+    {
+        return $this->customerExists;
     }
 }
