@@ -23,25 +23,23 @@
   * International Registered Trademark & Property of PrestaShop SA
   *#}
 
-{% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
 
 {% block content %}
-  {{ dump(customerInformation) }}
-
   <div class="row">
     <div class="col">
       {% include '@PrestaShop/Admin/Sell/Customer/Blocks/View/personal_information.html.twig' %}
-      {% include '@PrestaShop/Admin/Sell/Customer/Blocks/View/orders_information.html.twig' %}
-      {% include '@PrestaShop/Admin/Sell/Customer/Blocks/View/carts_information.html.twig' %}
-      {% include '@PrestaShop/Admin/Sell/Customer/Blocks/View/bought_products_information.html.twig' %}
-      {% include '@PrestaShop/Admin/Sell/Customer/Blocks/View/viewed_products_information.html.twig' %}
+      {% include '@PrestaShop/Admin/Sell/Customer/Blocks/View/orders.html.twig' %}
+      {% include '@PrestaShop/Admin/Sell/Customer/Blocks/View/carts.html.twig' %}
+      {% include '@PrestaShop/Admin/Sell/Customer/Blocks/View/bought_products.html.twig' %}
+      {% include '@PrestaShop/Admin/Sell/Customer/Blocks/View/viewed_products.html.twig' %}
     </div>
 
     <div class="col">
-      {% include '@PrestaShop/Admin/Sell/Customer/Blocks/View/private_note_block.html.twig' %}
-      {% include '@PrestaShop/Admin/Sell/Customer/Blocks/View/messages_information.html.twig' %}
-      {% include '@PrestaShop/Admin/Sell/Customer/Blocks/View/discounts_information.html.twig' %}
-      {% include '@PrestaShop/Admin/Sell/Customer/Blocks/View/sent_emails_information.html.twig' %}
+      {% include '@PrestaShop/Admin/Sell/Customer/Blocks/View/private_note.html.twig' %}
+      {% include '@PrestaShop/Admin/Sell/Customer/Blocks/View/messages.html.twig' %}
+      {% include '@PrestaShop/Admin/Sell/Customer/Blocks/View/discounts.html.twig' %}
+      {% include '@PrestaShop/Admin/Sell/Customer/Blocks/View/sent_emails.html.twig' %}
       {% include '@PrestaShop/Admin/Sell/Customer/Blocks/View/last_connections.html.twig' %}
       {% include '@PrestaShop/Admin/Sell/Customer/Blocks/View/groups.html.twig' %}
     </div>
@@ -51,7 +49,7 @@
     {{ renderhook('displayAdminCustomers', {'id_customer': customerInformation.customerId.value}) }}
 
     <div class="col">
-      {% include '@PrestaShop/Admin/Sell/Customer/Blocks/View/addresses_information.html.twig' %}
+      {% include '@PrestaShop/Admin/Sell/Customer/Blocks/View/addresses.html.twig' %}
     </div>
   </div>
 {% endblock %}
