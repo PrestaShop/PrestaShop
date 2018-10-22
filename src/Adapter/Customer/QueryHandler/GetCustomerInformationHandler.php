@@ -501,8 +501,8 @@ final class GetCustomerInformationHandler implements GetCustomerInformationHandl
         $groups = $customer->getGroups();
         $customerGroups = [];
 
-        foreach ($groups as $group) {
-            $group = new Group($group['id_group']);
+        foreach ($groups as $groupId) {
+            $group = new Group($groupId);
 
             $customerGroups[] = new GroupInformation(
                 (int) $group->id,
