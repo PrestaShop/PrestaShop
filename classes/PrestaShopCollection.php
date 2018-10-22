@@ -636,6 +636,7 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
      */
     protected function getFieldInfo($field)
     {
+        $field = strtolower($field);
         if (!isset($this->fields[$field])) {
             $split = explode('.', $field);
             $total = count($split);
