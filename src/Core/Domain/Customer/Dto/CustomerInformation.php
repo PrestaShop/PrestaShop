@@ -46,7 +46,7 @@ class CustomerInformation
     /**
      * @var OrdersInformation
      */
-    private $customerOrdersInformation;
+    private $ordersInformation;
 
     /**
      * @var CartInformation[]
@@ -56,12 +56,12 @@ class CustomerInformation
     /**
      * @var ProductsInformation
      */
-    private $customerProductsInformation;
+    private $productsInformation;
 
     /**
      * @var MessageInformation[]
      */
-    private $customerMessagesInformation;
+    private $messagesInformation;
 
     /**
      * @var DiscountInformation[]
@@ -101,11 +101,11 @@ class CustomerInformation
     /**
      * @param CustomerId $customerId
      * @param bool $customerExists
-     * @param PersonalInformation $generalInformation
-     * @param OrdersInformation $customerOrdersInformation
+     * @param PersonalInformation $personalInformation
+     * @param OrdersInformation $ordersInformation
      * @param CartInformation[] $cartsInformation
-     * @param ProductsInformation $customerProductsInformation
-     * @param MessageInformation[] $customerMessagesInformation
+     * @param ProductsInformation $productsInformation
+     * @param MessageInformation[] $messagesInformation
      * @param DiscountInformation[] $discountsInformation
      * @param SentEmailInformation[] $sentEmailsInformation
      * @param LastConnectionInformation[] $lastConnectionsInformation
@@ -116,11 +116,11 @@ class CustomerInformation
     public function __construct(
         CustomerId $customerId,
         $customerExists,
-        PersonalInformation $generalInformation,
-        OrdersInformation $customerOrdersInformation,
+        PersonalInformation $personalInformation,
+        OrdersInformation $ordersInformation,
         array $cartsInformation,
-        ProductsInformation $customerProductsInformation,
-        array $customerMessagesInformation,
+        ProductsInformation $productsInformation,
+        array $messagesInformation,
         array $discountsInformation,
         array $sentEmailsInformation,
         array $lastConnectionsInformation,
@@ -129,11 +129,11 @@ class CustomerInformation
         array $addressesInformation
     ) {
         $this->customerId = $customerId;
-        $this->personalInformation = $generalInformation;
-        $this->customerOrdersInformation = $customerOrdersInformation;
+        $this->personalInformation = $personalInformation;
+        $this->ordersInformation = $ordersInformation;
         $this->cartsInformation = $cartsInformation;
-        $this->customerProductsInformation = $customerProductsInformation;
-        $this->customerMessagesInformation = $customerMessagesInformation;
+        $this->productsInformation = $productsInformation;
+        $this->messagesInformation = $messagesInformation;
         $this->discountsInformation = $discountsInformation;
         $this->sentEmailsInformation = $sentEmailsInformation;
         $this->lastConnectionsInformation = $lastConnectionsInformation;
@@ -162,9 +162,9 @@ class CustomerInformation
     /**
      * @return OrdersInformation
      */
-    public function getCustomerOrdersInformation()
+    public function getOrdersInformation()
     {
-        return $this->customerOrdersInformation;
+        return $this->ordersInformation;
     }
 
     /**
@@ -178,17 +178,17 @@ class CustomerInformation
     /**
      * @return ProductsInformation
      */
-    public function getCustomerProductsInformation()
+    public function getProductsInformation()
     {
-        return $this->customerProductsInformation;
+        return $this->productsInformation;
     }
 
     /**
      * @return MessageInformation[]
      */
-    public function getCustomerMessagesInformation()
+    public function getMessagesInformation()
     {
-        return $this->customerMessagesInformation;
+        return $this->messagesInformation;
     }
 
     /**
