@@ -117,6 +117,7 @@ final class GetCustomerInformationHandler implements GetCustomerInformationHandl
 
         return new CustomerInformation(
             $customerId,
+            Customer::customerExists($customer->email),
             $this->getPersonalInformation($customer),
             $this->getCustomerOrders($customer),
             $this->getCustomerCarts($customer),
@@ -181,7 +182,8 @@ final class GetCustomerInformationHandler implements GetCustomerInformationHandl
             $this->getCustomerRankBySales($customer->id),
             $customerShop->name,
             $customerLanguage->name,
-            $customerSubscriptions
+            $customerSubscriptions,
+            (bool) $customer->active
         );
     }
 
