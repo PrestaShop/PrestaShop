@@ -143,11 +143,42 @@
 
     <div class="row">
       <div class="col-4 text-right">
-        {{ 'Latest Update'|trans({}, 'Admin.Orderscustomers.Feature') }}
+        {{ 'Status'|trans({}, 'Admin.Global') }}
       </div>
       <div class="col-8">
-        {{ customerInformation.personalInformation.lastUpdateDate }}
+        {% set isCustomerActive = customerInformation.personalInformation.active %}
+
+        <span class="badge badge-{% if isCustomerActive %}success{% else %}danger{% endif %}">
+          {% if isCustomerActive %}
+            <i class="material-icons">check</i>
+            {{ 'Active'|trans({}, 'Admin.Global') }}
+          {% else %}
+            <i class="material-icons">cancel</i>
+            {{ 'Inactive'|trans({}, 'Admin.Global') }}
+          {% endif %}
+        </span>
       </div>
     </div>
+
+    {% if customerInformation.personalInformation.guest %}
+      <div class="row">
+        <div class="col-4 text-right">
+          {{ 'This customer is registered as a Guest.'|trans({}, 'Admin.Orderscustomers.Feature') }}
+        </div>
+        <div class="col-8">
+          {% if customerInformation.customerExists %}
+            <p>{{ 'A registered customer account using the defined email address already exists. '|trans({}, 'Admin.Orderscustomers.Notification') }}</p>
+          {% else %}
+            {{ form_start(transferGuestAccountForm) }}
+              <button class="btn btn-primary btn-sm">
+                {{ 'Transform to a customer account'|trans({}, 'Admin.Orderscustomers.Feature') }}
+              </button>
+
+              <p>{{ 'This feature generates a random password before sending an email to your customer.'|trans({}, 'Admin.Orderscustomers.Help') }}</p>
+            {{ form_end(transferGuestAccountForm) }}
+          {% endif %}
+        </div>
+      </div>
+    {% endif %}
   </div>
 </div>
