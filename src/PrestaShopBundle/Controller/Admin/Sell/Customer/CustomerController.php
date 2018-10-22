@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\CustomerInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController as AbstractAdminController;
+use PrestaShopBundle\Form\Admin\Sell\Customer\PrivateNoteType;
 use PrestaShopBundle\Form\Admin\Sell\Customer\TransferGuestAccountType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -113,10 +114,15 @@ class CustomerController extends AbstractAdminController
             ])->createView();
         }
 
+        $privateNoteForm = $this->createForm(PrivateNoteType::class, [
+            'note' => $customerInformation->getGeneralInformation()->getPrivateNote(),
+        ]);
+
         return $this->render('@PrestaShop/Admin/Sell/Customer/view.html.twig', [
             'customerInformation' => $customerInformation,
             'isMultistoreEnabled' => $this->get('prestashop.adapter.feature.multistore')->isActive(),
             'transferGuestAccountForm' => $transferGuestAccountForm,
+            'privateNoteForm' => $privateNoteForm->createView(),
         ]);
     }
 }
