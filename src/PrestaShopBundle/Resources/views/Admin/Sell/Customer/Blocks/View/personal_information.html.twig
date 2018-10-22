@@ -166,7 +166,7 @@
           {{ 'This customer is registered as a Guest.'|trans({}, 'Admin.Orderscustomers.Feature') }}
         </div>
         <div class="col-8">
-          {% if customerInformation.customerExists %}
+          {% if customerInformation.generalInformation.customerBySameEmailExists %}
             <p>{{ 'A registered customer account using the defined email address already exists. '|trans({}, 'Admin.Orderscustomers.Notification') }}</p>
           {% else %}
             {{ form_start(transferGuestAccountForm) }}
