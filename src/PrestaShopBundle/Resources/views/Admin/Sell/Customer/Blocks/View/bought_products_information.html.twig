@@ -23,39 +23,36 @@
   * International Registered Trademark & Property of PrestaShop SA
   *#}
 
+{% if customerInformation.productsInformation.boughtProductsInformation is not empty %}
 <div class="card">
   <h3 class="card-header">
     <i class="material-icons">shopping_cart</i>
-    {{ 'Carts'|trans({}, 'Admin.Global') }}
-    <span class="badge badge-primary rounded">{{ customerInformation.cartsInformation|length }}</span>
+    {{ 'Purchased products'|trans({}, 'Admin.Orderscustomers.Feature') }}
+    <span class="badge badge-primary rounded">{{ customerInformation.productsInformation.boughtProductsInformation|length }}</span>
   </h3>
   <div class="card-body">
-    {% if customerInformation.cartsInformation is not empty %}
       <table class="table">
         <thead>
           <tr>
-            <th>{{ 'ID'|trans({}, 'Admin.Global') }}</th>
             <th>{{ 'Date'|trans({}, 'Admin.Global') }}</th>
-            <th>{{ 'Carrier'|trans({}, 'Admin.Global') }}</th>
-            <th>{{ 'Total'|trans({}, 'Admin.Global') }}</th>
-            <th></th>
+            <th>{{ 'Name'|trans({}, 'Admin.Global') }}</th>
+            <th>{{ 'Quantity'|trans({}, 'Admin.Global') }}</th>
           </tr>
         </thead>
         <tbody>
-        {% for cart in customerInformation.cartsInformation %}
+        {% for product in customerInformation.productsInformation.boughtProductsInformation %}
           <tr>
-            <td>{{ cart.cartId }}</td>
+            <td>{{ product.boughtDate }}</td>
             <td>
-              <a href="{{ getAdminLink('AdminCarts', true, {'id_cart': cart.cartId, 'viewcart': 1}) }}">{{ cart.cartCreationDate }}</a>
+              <a href="{{ getAdminLink('AdminOrders', true, {'id_order': product.orderId, 'vieworder': 1}) }}">
+                {{ product.productName }}
+              </a>
             </td>
-            <td>{{ cart.carrierName }}</td>
-            <td>{{ cart.cartTotal }}</td>
+            <td>{{ product.boughtQuantity }}</td>
           </tr>
         {% endfor %}
         </tbody>
       </table>
-    {% else %}
-      {{ 'No cart is available'|trans({}, 'Admin.Orderscustomers.Notification') }}
-    {% endif %}
   </div>
 </div>
+{% endif %}

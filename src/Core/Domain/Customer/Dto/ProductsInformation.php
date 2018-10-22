@@ -50,4 +50,20 @@ class ProductsInformation
         $this->boughtProductsInformation = $boughtProductsInformation;
         $this->viewedProductsInformation = $viewedProductsInformation;
     }
+
+    /**
+     * @return BoughtProductInformation[]
+     */
+    public function getBoughtProductsInformation()
+    {
+        return $this->boughtProductsInformation;
+    }
+
+    /**
+     * @return ViewedProductInformation[]
+     */
+    public function getViewedProductsInformation()
+    {
+        return $this->viewedProductsInformation;
+    }
 }
