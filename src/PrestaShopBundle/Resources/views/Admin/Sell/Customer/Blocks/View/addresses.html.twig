@@ -74,14 +74,14 @@
               <td class="text-right">
                 <div class="btn-group">
                   <a href="{{ getAdminLink('AdminAddresses', true, {'id_address': address.addressId, 'addaddress': 1}) }}"
-                     class="btn btn-sm btn-outline-secondary"
+                     class="btn btn-sm btn-outline-primary"
                   >
                     <i class="material-icons">edit</i>
                     {{ 'Edit'|trans({}, 'Admin.Actions') }}
                   </a>
 
                   <button type="button"
-                          class="btn btn-sm btn-outline-secondary dropdown-toggle dropdown-toggle-split"
+                          class="btn btn-sm btn-outline-primary dropdown-toggle dropdown-toggle-split"
                           data-toggle="dropdown"
                           aria-haspopup="true"
                           aria-expanded="false"
@@ -103,7 +103,9 @@
         </tbody>
       </table>
     {% else %}
-      <p>{{ '%firstname% %lastname% has not registered any addresses yet'|trans({'%firstname%': customerInformation.personalInformation.firstName, '%lastname%': customerInformation.personalInformation.lastName}, 'Admin.Orderscustomers.Feature') }}</p>
+      <p class="text-muted text-center mb-0">
+        {{ '%firstname% %lastname% has not registered any addresses yet'|trans({'%firstname%': customerInformation.personalInformation.firstName, '%lastname%': customerInformation.personalInformation.lastName}, 'Admin.Orderscustomers.Feature') }}
+      </p>
     {% endif %}
   </div>
 </div>
