@@ -24,7 +24,7 @@
  *#}
 
 {% block backup_creation_form %}
-<form action="{{ path('admin_backup_create') }}" method="post">
+<form action="{{ path('admin_backups_create') }}" method="post">
   <input type="hidden" name="_token" value="{{ csrf_token('backup') }}">
 
   <button type="submit" class="btn btn-outline-primary">

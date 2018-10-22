@@ -204,7 +204,8 @@ class ImportController extends FrameworkBundleAdminController
      */
     public function deleteAction(Request $request)
     {
-        if ($filename = $request->query->get('filename')) {
+        $filename = $request->query->get('filename', $request->query->get('csvfilename'));
+        if ($filename) {
             $fileRemoval = $this->get('prestashop.core.import.file_removal');
             $fileRemoval->remove($filename);
         }

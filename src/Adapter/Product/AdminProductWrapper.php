@@ -164,6 +164,7 @@ class AdminProductWrapper
 
         StockAvailable::setProductDependsOnStock((int) $product->id, $product->depends_on_stock, null, $id_product_attribute);
         StockAvailable::setProductOutOfStock((int) $product->id, $product->out_of_stock, null, $id_product_attribute);
+        StockAvailable::setLocation((int) $product->id, $combinationValues['attribute_location'], null, $id_product_attribute);
 
         $product->checkDefaultAttributes();
 
@@ -213,6 +214,15 @@ class AdminProductWrapper
     public function processProductOutOfStock(Product $product, $out_of_stock)
     {
         StockAvailable::setProductOutOfStock((int) $product->id, (int) $out_of_stock);
+    }
+
+    /**
+     * @param Product $product
+     * @param string $location
+     */
+    public function processLocation(Product $product, $location)
+    {
+        StockAvailable::setLocation($product->id, $location);
     }
 
     /**

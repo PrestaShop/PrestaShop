@@ -1,27 +1,27 @@
 {#**
- * 2007-2018 PrestaShop
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
- *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
- *#}
+  * 2007-2018 PrestaShop
+  *
+  * NOTICE OF LICENSE
+  *
+  * This source file is subject to the Open Software License (OSL 3.0)
+  * that is bundled with this package in the file LICENSE.txt.
+  * It is also available through the world-wide-web at this URL:
+  * https://opensource.org/licenses/OSL-3.0
+  * If you did not receive a copy of the license and are unable to
+  * obtain it through the world-wide-web, please send an email
+  * to license@prestashop.com so we can send you a copy immediately.
+  *
+  * DISCLAIMER
+  *
+  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+  * versions in the future. If you wish to customize PrestaShop for your
+  * needs please refer to http://www.prestashop.com for more information.
+  *
+  * @author    PrestaShop SA <contact@prestashop.com>
+  * @copyright 2007-2018 PrestaShop SA
+  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+  * International Registered Trademark & Property of PrestaShop SA
+  *#}
 {% set isModuleActive = module.database.active|default('0') %}
 
 <div
@@ -35,7 +35,7 @@
   data-description="{{ module.attributes.description }}"
   data-tech-name="{{ module.attributes.name }}"
   data-child-categories="{{ module.attributes.categoryName }}"
-  data-categories="{{ module.attributes.categoryParent }}"
+  data-categories="{{ category }}"
   data-type="{{ module.attributes.productType }}"
   data-price="{{ module.attributes.price.raw }}"
   data-active="{{ isModuleActive }}"
@@ -95,14 +95,17 @@
         </div>
         <div class="col-sm-12 col-md-12 col-lg-3 text-md-right">
           {% if requireBulkActions is defined and requireBulkActions == true %}
-            <div class="float-right module-checkbox-bulk-list">
-              <input type="checkbox" data-name="{{ module.attributes.displayName }}" data-tech-name="{{module.attributes.name}}" />
+            <div class="module-checkbox-bulk-list md-checkbox">
+              <label>
+                <input type="checkbox" data-name="{{ module.attributes.displayName }}" data-tech-name="{{module.attributes.name}}" />
+                <i class="md-checkbox-control"></i>
+              </label>
             </div>
           {% endif %}
-          {% include 'PrestaShopBundle:Admin/Module/Includes:action_menu.html.twig' with { 'module': module } %}
+          {% include '@PrestaShop/Admin/Module/Includes/action_menu.html.twig' with { 'module': module } %}
         </div>
-        {% include 'PrestaShopBundle:Admin/Module/Includes:modal_read_more.html.twig' with { 'module': module, 'additionalModalSuffix': additionalModalSuffix|default('') } %}
-        {% include 'PrestaShopBundle:Admin/Module/Includes:modal_confirm.html.twig' with { 'module': module } %}
+        {% include '@PrestaShop/Admin/Module/Includes/modal_read_more.html.twig' with { 'module': module, 'additionalModalSuffix': additionalModalSuffix|default('') } %}
+        {% include '@PrestaShop/Admin/Module/Includes/modal_confirm.html.twig' with { 'module': module } %}
       </div>
     </div>
   </div>

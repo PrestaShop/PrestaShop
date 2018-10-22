@@ -56,9 +56,10 @@ module.exports = {
     search_add_related_product_input: '//*[@id="form_step1_related_products"]',
     related_product_item: '//*[@id="related-content"]/div[2]/fieldset/div/div[1]/span/div/div/div[1]',
     product_add_feature_btn: '//*[@id="add_feature_button"]',
-    feature_select_option_height: '//*[@id="select2-form_step1_features_0_feature-results"]/li[2]',
+    feature_select_option: '//*[@id="select2-form_step1_features_0_feature-results"]/li[2]',
     feature_custom_value_height: '//*[@id="form_step1_features_0_custom_value_1"]',
     priceTE_shortcut: '#form_step1_price_shortcut',
+    priceTTC_shortcut: '#form_step1_price_ttc_shortcut',
     product_reference: '//*[@id="form_step6_reference"]',
     product_quantities_tab: '//*[@id="tab_step3"]/a',
     product_quantity_input: '//*[@id="form_step3_qty_0"]',
@@ -209,7 +210,16 @@ module.exports = {
     list_categories: '//*[@id="ui-id-1"]/li',
     default_category: '//*[@id="ps_categoryTags"]/span[1]/a',
     image_combination_src: '(//*[@id="combination_%ID_id_image_attr"]//img)[%POS]',
-    img_added_product_pack: '//*[@id="form_step1_inputPackItems-data"]/li[%ID]//img'
+    img_added_product_pack: '//*[@id="form_step1_inputPackItems-data"]/li[%ID]//img',
+    product_type_option: '//*[@id="form_step1_type_product"]/option[%POS]',
+    tax_rule_taux_standard_option: '//*[@id="step2_id_tax_rules_group_rendered"]/option[5]',
+    predefined_value_option: '//*[@id="form_step1_features_0_value"]/option[text()="%V"]',
+    custom_value_input: '//*[@id="form_step1_features_0_custom_value_1"]',
+    background_picture: '//*[@id="product-images-dropzone"]//div[@class="dz-image bg"]',
+    product_pack_items: '//*[@id="form_step1_inputPackItems-data"]',
+    add_products_to_pack: '//*[@id="js_form_step1_inputPackItems"]/div',
+    attribute_group_name: '//*[@id="attributes-list"]//a[text()[contains(.,"%NAME")]]',
+    attribute_value_checkbox: '//*[@id="attribute-group-%ID"]/div/div[%S]//label'
   },
   ProductList: {
     product_id: '//*[@id="product_catalog_list"]//tr[%ID]/td[2]/label',
@@ -232,6 +242,9 @@ module.exports = {
     page_active_number: '//*[@id="product_catalog_list"]//li[@class="page-item active"]//input',
     item_per_page: '//*[@id="paginator_select_page_limit"]',
     product_category: '//*[@id="product_catalog_list"]//div//tr[%I]/td[6]',
-    reset_button: '//*[@id="product_catalog_list"]//tr[2]/th[9]/button[@name="products_filter_reset"]'
+    reset_button: '//*[@id="product_catalog_list"]//tr[2]/th[9]/button[@name="products_filter_reset"]',
+    status_filter: '//*[@id="product_filter_column_active"]//select[@name=\'filter_column_active\']',
+    item_per_page_select: '//*[@id="paginator_select_page_limit"]',
+    search_product_button: '//button[@name="filter_column_name"]'
   }
 };

@@ -146,7 +146,7 @@ class CommonController extends FrameworkBundleAdminController
             'limit_choices' => $limitChoices,
         );
         if ($view != 'full') {
-            return $this->render('PrestaShopBundle:Admin:Common/pagination_' . $view . '.html.twig', $vars);
+            return $this->render('@PrestaShop/Admin/Common/pagination_' . $view . '.html.twig', $vars);
         }
 
         return $vars;
@@ -272,7 +272,7 @@ class CommonController extends FrameworkBundleAdminController
         $form = $this->createFormBuilder($formData);
         $form->add($formName, $formType);
 
-        return $this->render('PrestaShopBundle:Admin/Common/_partials:_form_field.html.twig', [
+        return $this->render('@PrestaShop/Admin/Common/_partials/_form_field.html.twig', [
             'form' => $form->getForm()->get($formName)->get($fieldName)->createView(),
             'formId' => $formName . '_' . $fieldName . '_rendered',
         ]);

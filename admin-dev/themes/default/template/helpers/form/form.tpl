@@ -34,7 +34,7 @@
 {if isset($identifier_bk) && $identifier_bk == $identifier}{capture name='identifier_count'}{counter name='identifier_count'}{/capture}{/if}
 {assign var='identifier_bk' value=$identifier scope='parent'}
 {if isset($table_bk) && $table_bk == $table}{capture name='table_count'}{counter name='table_count'}{/capture}{/if}
-{assign var='table_bk' value=$table scope='parent'}
+{assign var='table_bk' value=$table scope='root'}
 <form id="{if isset($fields.form.form.id_form)}{$fields.form.form.id_form|escape:'html':'UTF-8'}{else}{if $table == null}configuration_form{else}{$table}_form{/if}{if isset($smarty.capture.table_count) && $smarty.capture.table_count}_{$smarty.capture.table_count|intval}{/if}{/if}" class="defaultForm form-horizontal{if isset($name_controller) && $name_controller} {$name_controller}{/if}"{if isset($current) && $current} action="{$current|escape:'html':'UTF-8'}{if isset($token) && $token}&amp;token={$token|escape:'html':'UTF-8'}{/if}"{/if} method="post" enctype="multipart/form-data"{if isset($style)} style="{$style}"{/if} novalidate>
 	{if $form_id}
 		<input type="hidden" name="{$identifier}" id="{$identifier}{if isset($smarty.capture.identifier_count) && $smarty.capture.identifier_count}_{$smarty.capture.identifier_count|intval}{/if}" value="{$form_id}" />
@@ -430,7 +430,6 @@
 										<a class="slide-button btn"></a>
 									</span>
 								{elseif $input.type == 'textarea'}
-									{if isset($input.maxchar) && $input.maxchar}<div class="input-group">{/if}
 									{assign var=use_textarea_autosize value=true}
 									{if isset($input.lang) AND $input.lang}
 										{foreach $languages as $language}
@@ -439,11 +438,15 @@
 												<div class="col-lg-9">
 											{/if}
 													{if isset($input.maxchar) && $input.maxchar}
+													<div class="input-group">
 														<span id="{if isset($input.id)}{$input.id}_{$language.id_lang}{else}{$input.name}_{$language.id_lang}{/if}_counter" class="input-group-addon">
 															<span class="text-count-down">{$input.maxchar|intval}</span>
 														</span>
 													{/if}
 													<textarea{if isset($input.readonly) && $input.readonly} readonly="readonly"{/if} name="{$input.name}_{$language.id_lang}" id="{if isset($input.id)}{$input.id}{else}{$input.name}{/if}_{$language.id_lang}" class="{if isset($input.autoload_rte) && $input.autoload_rte}rte autoload_rte{else}textarea-autosize{/if}{if isset($input.class)} {$input.class}{/if}"{if isset($input.maxlength) && $input.maxlength} maxlength="{$input.maxlength|intval}"{/if}{if isset($input.maxchar) && $input.maxchar} data-maxchar="{$input.maxchar|intval}"{/if}>{$fields_value[$input.name][$language.id_lang]|escape:'html':'UTF-8'}</textarea>
+													{if isset($input.maxchar) && $input.maxchar}
+													</div>
+													{/if}
 											{if $languages|count > 1}
 												</div>
 												<div class="col-lg-2">
@@ -486,7 +489,6 @@
 											</script>
 										{/if}
 									{/if}
-									{if isset($input.maxchar) && $input.maxchar}</div>{/if}
 								{elseif $input.type == 'checkbox'}
 									{if isset($input.expand)}
 										<a class="btn btn-default show_checkbox{if strtolower($input.expand.default) == 'hide'} hidden{/if}" href="#">

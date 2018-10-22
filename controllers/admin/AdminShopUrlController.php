@@ -66,6 +66,7 @@ class AdminShopUrlControllerCore extends AdminController
                 'title' => $this->trans('URL', array(), 'Admin.Global'),
                 'filter_key' => 'url',
                 'havingFilter' => true,
+                'remove_onclick' => true,
             ),
             'main' => array(
                 'title' => $this->trans('Is it the main URL?', array(), 'Admin.Advparameters.Feature'),

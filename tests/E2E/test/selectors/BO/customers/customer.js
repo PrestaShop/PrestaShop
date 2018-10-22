@@ -19,9 +19,13 @@ module.exports = {
     dropdown_toggle: '//*[@id="form-customer"]//button[@data-toggle="dropdown"]',
     delete_button: '//*[@id="form-customer"]//a[@title="Delete"]',
     delete_first_option: '//*[@id="deleteMode_real"]',
+    delete_second_option: '//*[@id="deleteMode_deleted"]',
     delete_confirmation_button: '//*[@id="content"]//input[@value="Delete"]',
     select_customer: '//*[@id="form-customer"]//input[@name="customerBox[]"]',
     bulk_actions_button: '//*[@id="bulk_action_menu_customer"]',
-    bulk_actions_delete_button: '//*[@id="form-customer"]//div[contains(@class,"bulk-actions")]//a[contains(@onclick,"submitBulkdeletecustomer")]'
+    bulk_actions_delete_button: '//*[@id="form-customer"]//div[contains(@class,"bulk-actions")]//a[contains(@onclick,"submitBulkdeletecustomer")]',
+    empty_list_icon: '//*[@id="table-customer"]//div[contains(@class,"list-empty-msg")]',
+    customer_link: '//*[@id="table-address"]//td[contains(text(),"%ID")]',
+    Partner_offers: '//*[@id="fieldset_0"]//label[contains(@for,"optin_on")]'
   }
 };

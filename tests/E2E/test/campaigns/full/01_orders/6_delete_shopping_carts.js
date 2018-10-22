@@ -51,7 +51,7 @@ scenario('Delete shopping carts', () => {
       return promise
         .then(() => client.switchWindow(1))
     });
-    commonOrder.createOrderFO();
+    commonOrder.createOrderFO("connected");
   }, 'order');
   scenario('Delete a shopping cart related to an order', client => {
     test('should go back to the Back office', () => {
@@ -60,13 +60,7 @@ scenario('Delete shopping carts', () => {
         .then(() => client.refresh())
     });
     test('should go to "Shopping cart" page', () => client.goToSubtabMenuPage(Menu.Sell.Orders.orders_menu, Menu.Sell.Orders.shopping_carts_submenu));
-    test('should click on "Dropdown" button', () => {
-      return promise
-        .then(() => client.pause(1000))
-        .then(() => client.waitForVisibleAndClick(OrderPage.dropdown_button))
-    });
-    test('should click on "Delete" action', () => client.waitForVisibleAndClick(OrderPage.delete_button));
-    test('should accept the confirmation alert', () => client.alertAccept());
-    test('should verify the appearance of the red alert', () => client.checkTextValue(CatalogPage.danger_panel, '×\nAn error occurred during deletion.'));
+    test('should check that th "Dropdown" button does not exist', () => client.isNotExisting(OrderPage.first_dropdown_button,2000));
+    test('should check that th "CheckBox" does not exist', () => client.isNotExisting(OrderPage.first_shopping_cart_checkbox,2000));
   }, 'order');
 }, 'order', true);

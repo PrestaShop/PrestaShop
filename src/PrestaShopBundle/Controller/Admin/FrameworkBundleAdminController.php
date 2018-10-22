@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\Grid\GridInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Form;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use PrestaShop\PrestaShop\Adapter\Configuration;
@@ -415,5 +416,20 @@ class FrameworkBundleAdminController extends Controller
     protected function getQueryBus()
     {
         return $this->get('prestashop.core.query_bus');
+    }
+
+    /**
+     * @param array $errors
+     * @param int $httpStatusCode
+     *
+     * @return JsonResponse
+     */
+    protected function returnErrorJsonResponse(array $errors, $httpStatusCode)
+    {
+        $response = new JsonResponse();
+        $response->setStatusCode($httpStatusCode);
+        $response->setData($errors);
+
+        return $response;
     }
 }

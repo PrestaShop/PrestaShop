@@ -27,8 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
-use PrestaShop\PrestaShop\Core\Search\Filters\WebserviceFilters;
-use PrestaShop\PrestaShop\Core\Webservice\WebserviceCanBeEnabledConfigurationChecker;
+use PrestaShop\PrestaShop\Core\Search\Filters\WebserviceKeyFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -48,15 +47,15 @@ class WebserviceController extends FrameworkBundleAdminController
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
-     * @param WebserviceFilters $filters - filters for webservice list
+     * @param WebserviceKeyFilters $filters - filters for webservice list
      * @param Request $request
      *
      * @return Response
      */
-    public function indexAction(WebserviceFilters $filters, Request $request)
+    public function indexAction(WebserviceKeyFilters $filters, Request $request)
     {
         $form = $this->getFormHandler()->getForm();
-        $gridWebserviceFactory = $this->get('prestashop.core.grid.factory.webservice');
+        $gridWebserviceFactory = $this->get('prestashop.core.grid.factory.webservice_key');
         $grid = $gridWebserviceFactory->getGrid($filters);
 
         $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
@@ -99,13 +98,12 @@ class WebserviceController extends FrameworkBundleAdminController
      *
      * @return RedirectResponse
      */
-    public function listCreateAction()
+    public function createAction()
     {
-        $legacyContext = $this->get('prestashop.adapter.legacy.context');
         //@todo: this action should point to new add page
-        $legacyLink = $legacyContext->getAdminLink(
-                'AdminWebservice'
-            ) . '&addwebservice_account';
+        $legacyLink = $this->getAdminLink('AdminWebservice', [
+            'addwebservice_account' => 1,
+        ]);
 
         return $this->redirect($legacyLink);
     }
@@ -119,17 +117,12 @@ class WebserviceController extends FrameworkBundleAdminController
      *
      * @return RedirectResponse
      */
-    public function listEditAction($webserviceAccountId)
+    public function editAction($webserviceAccountId)
     {
-        $legacyContext = $this->get('prestashop.adapter.legacy.context');
-        //@todo: this action should point to new edit page
-        $legacyLink = $legacyContext->getAdminLink(
-            'AdminWebservice',
-            true,
-            [
-                'id_webservice_account' => $webserviceAccountId,
-            ]
-        ) . '&updatewebservice_account';
+        $legacyLink = $this->getAdminLink('AdminWebservice', [
+            'id_webservice_account' => $webserviceAccountId,
+            'updatewebservice_account' => 1,
+        ]);
 
         return $this->redirect($legacyLink);
     }
@@ -145,7 +138,7 @@ class WebserviceController extends FrameworkBundleAdminController
      */
     public function searchAction(Request $request)
     {
-        $definitionFactory = $this->get('prestashop.core.grid.definition.factory.webservice');
+        $definitionFactory = $this->get('prestashop.core.grid.definition.factory.webservice_key');
         $webserviceDefinition = $definitionFactory->getDefinition();
 
         $gridFilterFormFactory = $this->get('prestashop.core.grid.filter.form_factory');
@@ -175,7 +168,7 @@ class WebserviceController extends FrameworkBundleAdminController
      */
     public function deleteSingleWebserviceAction($webserviceAccountId)
     {
-        $webserviceEraser = $this->get('prestashop.adapter.webservice.webservice_account_eraser');
+        $webserviceEraser = $this->get('prestashop.adapter.webservice.webservice_key_eraser');
         $errors = $webserviceEraser->erase([$webserviceAccountId]);
 
         if (!empty($errors)) {
@@ -204,9 +197,9 @@ class WebserviceController extends FrameworkBundleAdminController
      */
     public function deleteMultipleWebserviceAction(Request $request)
     {
-        $webserviceToDelete = $request->request->get('webservice_bulk_action');
+        $webserviceToDelete = $request->request->get('webservice_key_bulk_action');
 
-        $webserviceEraser = $this->get('prestashop.adapter.webservice.webservice_account_eraser');
+        $webserviceEraser = $this->get('prestashop.adapter.webservice.webservice_key_eraser');
         $errors = $webserviceEraser->erase($webserviceToDelete);
 
         if (!empty($errors)) {
@@ -236,10 +229,10 @@ class WebserviceController extends FrameworkBundleAdminController
      */
     public function enableMultipleStatusAction(Request $request)
     {
-        $webserviceToEnable = $request->request->get('webservice_bulk_action');
-        $statusModifier = $this->get('prestashop.adapter.webservice.webservice_account_status_modifier');
+        $webserviceToEnable = $request->request->get('webservice_key_bulk_action');
+        $statusModifier = $this->get('prestashop.adapter.webservice.webservice_key_status_modifier');
 
-        $statusModifier->toggleMultipleStatus($webserviceToEnable, 1);
+        $statusModifier->setStatus($webserviceToEnable, 1);
 
         return $this->redirectToRoute('admin_webservice');
     }
@@ -259,10 +252,10 @@ class WebserviceController extends FrameworkBundleAdminController
      */
     public function disableMultipleStatusAction(Request $request)
     {
-        $webserviceToEnable = $request->request->get('webservice_bulk_action');
-        $statusModifier = $this->get('prestashop.adapter.webservice.webservice_account_status_modifier');
+        $webserviceToEnable = $request->request->get('webservice_key_bulk_action');
+        $statusModifier = $this->get('prestashop.adapter.webservice.webservice_key_status_modifier');
 
-        $statusModifier->toggleMultipleStatus($webserviceToEnable, 0);
+        $statusModifier->setStatus($webserviceToEnable, 0);
 
         return $this->redirectToRoute('admin_webservice');
     }
@@ -282,7 +275,7 @@ class WebserviceController extends FrameworkBundleAdminController
      */
     public function toggleStatusAction($webserviceAccountId)
     {
-        $statusModifier = $this->get('prestashop.adapter.webservice.webservice_account_status_modifier');
+        $statusModifier = $this->get('prestashop.adapter.webservice.webservice_key_status_modifier');
         $errors = $statusModifier->toggleStatus($webserviceAccountId);
 
         if (!empty($errors)) {
@@ -309,7 +302,7 @@ class WebserviceController extends FrameworkBundleAdminController
      *
      * @throws \Exception
      */
-    public function processSettingsFormAction(Request $request)
+    public function processFormAction(Request $request)
     {
         $this->dispatchHook('actionAdminAdminWebserviceControllerPostProcessBefore', array('controller' => $this));
 
@@ -324,8 +317,6 @@ class WebserviceController extends FrameworkBundleAdminController
             } else {
                 $this->flashErrors($saveErrors);
             }
-
-            return $this->redirectToRoute('admin_webservice');
         }
 
         return $this->redirectToRoute('admin_webservice');
@@ -340,17 +331,12 @@ class WebserviceController extends FrameworkBundleAdminController
     }
 
     /**
-     * @param Request $request
-     *
      * @return string[]
      */
-    private function lookForWarnings(Request $request)
+    private function lookForWarnings()
     {
-        /** @var WebserviceCanBeEnabledConfigurationChecker $configurationChecker */
-        $configurationChecker = $this->get('prestashop.core.configuration.webservice_can_be_enabled_configuration_checker');
+        $configurationChecker = $this->get('prestashop.core.webservice.server_requirements_checker');
 
-        $warningMessages = $configurationChecker->getErrors($request);
-
-        return $warningMessages;
+        return $configurationChecker->checkForErrors();
     }
 }

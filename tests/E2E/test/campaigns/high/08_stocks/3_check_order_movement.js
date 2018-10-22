@@ -1,12 +1,11 @@
 const {AccessPageBO} = require('../../../selectors/BO/access_page');
-const {CatalogPage} = require('../../../selectors/BO/catalogpage/index');
-const {Stock} = require('../../../selectors/BO/catalogpage/stocksubmenu/stock');
 const {Movement} = require('../../../selectors/BO/catalogpage/stocksubmenu/movements');
 const {OrderPage} = require('../../../selectors/BO/order');
 const {CreateOrder} = require('../../../selectors/BO/order');
 const orderScenarios = require('../../common_scenarios/order');
 const {AddProductPage} = require('../../../selectors/BO/add_product_page');
 const {Menu} = require('../../../selectors/BO/menu.js');
+const stockCommonScenarios = require('../../common_scenarios/stock');
 
 const common_scenarios = require('../../common_scenarios/product');
 
@@ -18,8 +17,10 @@ let productData = {
   reference: 'mvt',
   type: 'combination',
   attribute: {
-    name: 'color',
-    variation_quantity: '4'
+    1: {
+      name: 'color',
+      variation_quantity: '4'
+    }
   }
 };
 
@@ -44,8 +45,7 @@ scenario('Check order movement', client => {
 
   scenario('Check order movement', client => {
     test('should go to "Stocks" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.stocks_submenu));
-    test('should go to "Movements" tabs', () => client.goToStockMovements(Menu, Movement));
-    test('should check the movements of the delivered product', () => client.checkMovement(Movement, 1, '4', "-", "Customer Order"));
+    stockCommonScenarios.checkMovementHistory(client, Menu, Movement, 1, "4", "-",  "Customer Order", "mvt");
   }, 'stocks');
 
 }, 'stocks', true);
