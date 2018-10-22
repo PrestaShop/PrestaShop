@@ -30,6 +30,7 @@ use Carrier;
 use Cart;
 use CartRule;
 use Category;
+use Context;
 use Currency;
 use Customer;
 use CustomerThread;
@@ -59,6 +60,7 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\ViewedProductInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryHandler\GetCustomerInformationHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 use Product;
 use Referrer;
 use Shop;
@@ -109,12 +111,9 @@ final class GetCustomerInformationHandler implements GetCustomerInformationHandl
         $customerId = $query->getCustomerId();
         $customer = new Customer($customerId->getValue());
 
-        if (!$customer->id) {
-            throw new CustomerNotFoundException(
-                $customerId,
-                sprintf('Customer with id "%s" was not found.', $customerId->getValue())
-            );
-        }
+        $this->assertCustomerWasFound($customerId, $customer);
+
+        Context::getContext()->customer = $customer;
 
         return new CustomerInformation(
             $customerId,
@@ -292,9 +291,12 @@ final class GetCustomerInformationHandler implements GetCustomerInformationHandl
 
         foreach ($carts as $cart) {
             $cart = new Cart((int) $cart['id_cart']);
-            $currency = new Currency($cart->id_currency);
-            $carrier = new Carrier($cart->id_carrier);
+            Context::getContext()->cart = $cart;
 
+            $currency = new Currency($cart->id_currency);
+            Context::getContext()->currency = $currency;
+
+            $carrier = new Carrier($cart->id_carrier);
             $summary = $cart->getSummaryDetails();
 
             $customerCarts[] = new CartInformation(
@@ -304,6 +306,8 @@ final class GetCustomerInformationHandler implements GetCustomerInformationHandl
                 $carrier->name
             );
         }
+
+        Context::getContext()->currency = Currency::getDefaultCurrency();
 
         return $customerCarts;
     }
@@ -566,5 +570,21 @@ final class GetCustomerInformationHandler implements GetCustomerInformationHandl
         }
 
         return $customerAddresses;
+    }
+
+    /**
+     * @param CustomerId $customerId
+     * @param Customer $customer
+     *
+     * @throws CustomerNotFoundException
+     */
+    private function assertCustomerWasFound(CustomerId $customerId, Customer $customer)
+    {
+        if (!$customer->id) {
+            throw new CustomerNotFoundException(
+                $customerId,
+                sprintf('Customer with id "%s" was not found.', $customerId->getValue())
+            );
+        }
     }
 }
