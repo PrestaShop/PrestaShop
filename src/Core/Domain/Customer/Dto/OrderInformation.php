@@ -78,4 +78,52 @@ class OrderInformation
         $this->orderProductsCount = $orderProductsCount;
         $this->totalPaid = $totalPaid;
     }
+
+    /**
+     * @return int
+     */
+    public function getOrderId()
+    {
+        return $this->orderId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOrderPlacedDate()
+    {
+        return $this->orderPlacedDate;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPaymentMethodName()
+    {
+        return $this->paymentMethodName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOrderStatus()
+    {
+        return $this->orderStatus;
+    }
+
+    /**
+     * @return int
+     */
+    public function getOrderProductsCount()
+    {
+        return $this->orderProductsCount;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTotalPaid()
+    {
+        return $this->totalPaid;
+    }
 }
