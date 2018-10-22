@@ -62,6 +62,12 @@ class AddressInformation
     private $phoneMobile;
 
     /**
+     * @var int
+     */
+    private $addressId;
+
+    /**
+     * @param int $addressId
      * @param string $company
      * @param string $fullName
      * @param string $fullAddress
@@ -69,14 +75,23 @@ class AddressInformation
      * @param string $phone
      * @param string $phoneMobile
      */
-    public function __construct($company, $fullName, $fullAddress, $countryName, $phone, $phoneMobile)
+    public function __construct($addressId, $company, $fullName, $fullAddress, $countryName, $phone, $phoneMobile)
     {
+        $this->addressId = $addressId;
         $this->company = $company;
         $this->fullName = $fullName;
         $this->fullAddress = $fullAddress;
         $this->countryName = $countryName;
         $this->phone = $phone;
         $this->phoneMobile = $phoneMobile;
+    }
+
+    /**
+     * @return int
+     */
+    public function getAddressId()
+    {
+        return $this->addressId;
     }
 
     /**
