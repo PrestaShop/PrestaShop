@@ -537,10 +537,11 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
                 $asso = $split[$i];
 
                 // Check is current association exists in current definition
-                if (!isset($definition['associations'][$asso])) {
-                    throw new PrestaShopException('Association '.$asso.' not found for class '.$this->definition['classname']);
+                if (isset($definition['associations'][$asso])) {
+                    $current_def = $definition['associations'][$asso];
+                } else {
+                    $current_def = array();
                 }
-                $current_def = $definition['associations'][$asso];
 
                 // Special case for lang alias
                 if ($asso == self::LANG_ALIAS) {
