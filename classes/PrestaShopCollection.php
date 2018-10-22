@@ -125,6 +125,8 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
         if (!$association) {
             return;
         }
+        //Prevent sensitive case array
+        $association = strtolower($association);
 
         if (!isset($this->join_list[$association])) {
             $definition = $this->getDefinition($association);
