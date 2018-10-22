@@ -23,6 +23,8 @@
   * International Registered Trademark & Property of PrestaShop SA
   *#}
 
+{% set layoutTitle = 'Information about customer %name%'|trans({'%name%': customerInformation.personalInformation.firstName[0:1] ~ '. ' ~ customerInformation.personalInformation.lastName}, 'Admin.Orderscustomers.Feature') %}
+
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
 {% block content %}

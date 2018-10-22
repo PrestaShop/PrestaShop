@@ -29,7 +29,7 @@
 
 <div class="card">
   <h3 class="card-header">
-    <i class="material-icons">person</i>
+    <i class="material-icons">shopping_basket</i>
     {{ 'Orders'|trans({}, 'Admin.Global') }}
     <span class="badge badge-primary rounded">{{ ordersCount }}</span>
   </h3>
@@ -40,12 +40,12 @@
           <div class="row">
             <div class="col">
               {{ 'Valid orders:'|trans({}, 'Admin.Orderscustomers.Feature') }}
-              <span class="badge badge-success">{{ validOrdersCount }}</span>
+              <span class="badge badge-success rounded">{{ validOrdersCount }}</span>
               {{ 'for a total amount of %s'|trans({}, 'Admin.Orderscustomers.Feature')|format(customerInformation.ordersInformation.totalSpent) }}
             </div>
             <div class="col">
               {{ 'Invalid orders:'|trans({}, 'Admin.Orderscustomers.Feature') }}
-              <span class="badge badge-danger">{{ invalidOrdersCount }}</span>
+              <span class="badge badge-danger rounded">{{ invalidOrdersCount }}</span>
             </div>
           </div>
         </div>
@@ -75,10 +75,11 @@
                   <td>{{ order.orderStatus }}</td>
                   <td>{{ order.orderProductsCount }}</td>
                   <td>{{ order.totalPaid }}</td>
-                  <td>
+                  <td class="text-right">
                     <a href="{{ getAdminLink('AdminOrders', true, {'id_order': order.orderId, 'viewcustomer': 1}) }}"
                        class="btn btn-sm btn-outline-primary"
                     >
+                      <i class="material-icons">search</i>
                       {{ 'View'|trans({}, 'Admin.Actions') }}
                     </a>
                   </td>
@@ -114,10 +115,11 @@
                   <td>{{ order.orderStatus }}</td>
                   <td>{{ order.orderProductsCount }}</td>
                   <td>{{ order.totalPaid }}</td>
-                  <td>
+                  <td class="text-right">
                     <a href="{{ getAdminLink('AdminOrders', true, {'id_order': order.orderId, 'viewcustomer': 1}) }}"
                        class="btn btn-sm btn-outline-primary"
                     >
+                      <i class="material-icons">search</i>
                       {{ 'View'|trans({}, 'Admin.Actions') }}
                     </a>
                   </td>

@@ -119,6 +119,8 @@ class CustomerController extends AbstractAdminController
         ]);
 
         return $this->render('@PrestaShop/Admin/Sell/Customer/view.html.twig', [
+            'enableSidebar' => true,
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'customerInformation' => $customerInformation,
             'isMultistoreEnabled' => $this->get('prestashop.adapter.feature.multistore')->isActive(),
             'transferGuestAccountForm' => $transferGuestAccountForm,
