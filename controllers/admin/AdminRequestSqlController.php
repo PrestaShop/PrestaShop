@@ -50,7 +50,10 @@ class AdminRequestSqlControllerCore extends AdminController
         $this->fields_list = array(
             'id_request_sql' => array('title' => $this->trans('ID', array(), 'Admin.Global'), 'class' => 'fixed-width-xs'),
             'name' => array('title' => $this->trans('SQL query Name', array(), 'Admin.Advparameters.Feature')),
-            'sql' => array('title' => $this->trans('SQL query', array(), 'Admin.Advparameters.Feature')),
+            'sql' => array(
+                'title' => $this->trans('SQL query', array(), 'Admin.Advparameters.Feature'),
+                'filter_key' => 'a!sql',
+            ),
         );
 
         $this->fields_options = array(
