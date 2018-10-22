@@ -26,6 +26,7 @@
 {% if customerInformation.lastConnectionsInformation is not empty %}
   <div class="card">
     <h3 class="card-header">
+      <i class="material-icons">access_time</i>
       {{ 'Last connections'|trans({}, 'Admin.Orderscustomers.Feature') }}
       <span class="badge badge-primary rounded">{{ customerInformation.lastConnectionsInformation|length }}</span>
     </h3>

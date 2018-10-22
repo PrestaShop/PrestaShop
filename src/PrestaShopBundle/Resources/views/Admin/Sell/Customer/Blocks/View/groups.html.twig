@@ -61,7 +61,9 @@
         </tbody>
       </table>
     {% else %}
-      {{ 'No cart is available'|trans({}, 'Admin.Orderscustomers.Notification') }}
+      <p class="text-muted text-center mb-0">
+        {{ 'No cart is available'|trans({}, 'Admin.Orderscustomers.Notification') }}
+      </p>
     {% endif %}
   </div>
 </div>
