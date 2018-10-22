@@ -43,6 +43,7 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\AddressInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\BoughtProductInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\CartInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\CustomerInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\GeneralInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\MessageInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\OrderInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\OrdersInformation;
@@ -117,7 +118,7 @@ final class GetCustomerInformationHandler implements GetCustomerInformationHandl
 
         return new CustomerInformation(
             $customerId,
-            Customer::customerExists($customer->email),
+            $this->getGeneralInformation($customer),
             $this->getPersonalInformation($customer),
             $this->getCustomerOrders($customer),
             $this->getCustomerCarts($customer),
@@ -129,6 +130,19 @@ final class GetCustomerInformationHandler implements GetCustomerInformationHandl
             $this->getCustomerGroups($customer),
             $this->getCustomerReferrers($customer),
             $this->getCustomerAddresses($customer)
+        );
+    }
+
+    /**
+     * @param Customer $customer
+     *
+     * @return GeneralInformation
+     */
+    private function getGeneralInformation(Customer $customer)
+    {
+        return new GeneralInformation(
+            $customer->note,
+            Customer::customerExists($customer->email)
         );
     }
 
