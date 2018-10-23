@@ -77,6 +77,9 @@ Release Notes for PrestaShop 1.7
     - #9137: Improve routing of PrestaShop application
     - #9139: Migrate Sell > Orders > Delivery Slips
   - Bug fix:
+    - #11123: Make the E2E tests wait for the first load of the BO with welcome module enabled
+    - #11111: Revert "Apply quotes around the column names would make all the SQL r…
+    - #11071: Avoid glitch on checkbox click
     - #10991: Fix sorting issue in the SQL Manager page
     - #10861: Fix fixed height of TinyMce fields
     - #10718: Add missing styles on empty state SEO & Traffic page
