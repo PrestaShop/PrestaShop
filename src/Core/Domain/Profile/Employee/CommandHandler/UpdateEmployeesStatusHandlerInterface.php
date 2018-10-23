@@ -24,49 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Command;
+namespace PrestaShop\PrestaShop\Core\Domain\Profile\Employee\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject\EmployeeStatus;
-use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject\EmployeeId;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Command\UpdateEmployeesStatusCommand;
 
 /**
- * Class UpdateEmployeeStatusCommand
+ * Interface UpdateEmployeeStatusHandlerInterface
  */
-class UpdateEmployeeStatusCommand
+interface UpdateEmployeesStatusHandlerInterface
 {
     /**
-     * @var EmployeeId
+     * @param UpdateEmployeesStatusCommand $command
      */
-    private $employeeId;
-
-    /**
-     * @var EmployeeStatus
-     */
-    private $status;
-
-    /**
-     * @param EmployeeId $employeeId
-     * @param EmployeeStatus $status
-     */
-    public function __construct(EmployeeId $employeeId, EmployeeStatus $status)
-    {
-        $this->employeeId = $employeeId;
-        $this->status = $status;
-    }
-
-    /**
-     * @return EmployeeId
-     */
-    public function getEmployeeId()
-    {
-        return $this->employeeId;
-    }
-
-    /**
-     * @return EmployeeStatus
-     */
-    public function getStatus()
-    {
-        return $this->status;
-    }
+    public function handle(UpdateEmployeesStatusCommand $command);
 }
