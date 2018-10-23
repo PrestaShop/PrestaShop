@@ -52,7 +52,7 @@ scenario('Create, edit and delete "Attribute"', () => {
 
   /* Update the created attribute */
   scenario('Go back to the Back Office', client => {
-    test('should go back to the Back Office', () => client.accessToBO(AccessPageBO));
+    test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'attribute_and_feature');
   commonAttribute.updateAttribute(attributeData);
 
@@ -64,7 +64,7 @@ scenario('Create, edit and delete "Attribute"', () => {
 
   /* Delete attribute value */
   scenario('Go back to the Back Office', client => {
-    test('should lgo back to the Back Office', () => client.accessToBO(AccessPageBO));
+    test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'attribute_and_feature');
   commonAttribute.deleteAttributeValue(attributeData);
 
@@ -76,7 +76,7 @@ scenario('Create, edit and delete "Attribute"', () => {
 
   /* Delete the created attribute */
   scenario('Go back to the Back Office', client => {
-    test('should go back to the Back Office', () => client.accessToBO(AccessPageBO));
+    test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'attribute_and_feature');
   commonAttribute.deleteAttribute(attributeData);
   scenario('Logout from the Back Office', client => {

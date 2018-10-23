@@ -126,7 +126,11 @@ class ProductSeo extends CommonAbstractType
                 TranslateType::class,
                 [
                     'type' => FormType\TextType::class,
-                    'options' => [],
+                    'options' => [
+                        'attr' => [
+                            'class' => 'serp-watched-url',
+                        ],
+                    ],
                     'locales' => $this->locales,
                     'hideTabs' => true,
                     'label' => $this->translator->trans('Friendly URL', [], 'Admin.Catalog.Feature'),

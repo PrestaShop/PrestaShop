@@ -26,9 +26,8 @@ scenario('Check product page buttons', () => {
   scenario('Testing "Preview" button', client => {
     test('should click on "Preview" button', () => {
       return promise
-        .then(() => client.isVisible(AddProductPage.symfony_toolbar))
         .then(() => {
-          if (global.isVisible) {
+          if (global.ps_mode_dev) {
             client.waitForExistAndClick(AddProductPage.symfony_toolbar)
           }
         })

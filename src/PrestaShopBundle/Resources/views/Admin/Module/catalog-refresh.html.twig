@@ -25,7 +25,7 @@
 <div id="modules-list-container-all" class="row modules-list" style="display: flex;" data-name="all">
   {% for category in categories.subMenu %}
     {% for module in category.modules %}
-      {% include 'PrestaShopBundle:Admin/Module/Includes:card_grid.html.twig' with { 'module': module, 'origin': origin|default('none'), 'level' : level, 'category': category.refMenu } %}
+      {% include '@PrestaShop/Admin/Module/Includes/card_grid.html.twig' with { 'module': module, 'origin': origin|default('none'), 'level' : level, 'category': category.refMenu } %}
     {% endfor %}
   {% endfor %}
 </div>

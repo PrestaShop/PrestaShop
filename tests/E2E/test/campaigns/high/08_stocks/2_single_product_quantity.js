@@ -31,11 +31,11 @@ scenario('Modify quantity and check movement for single product', () => {
         .then(() => client.waitForVisible(Stock.product_selector.replace("%ProductName", "SingleProduct" + date_time)));
     });
     stock_common_scenarios.changeStockProductQuantity(client, Stock, 1, 4, 'checkBtn');
-    stock_common_scenarios.checkMovementHistory(client, Menu, Movement, 1, "4", "+", "Employee Edition");
+    stock_common_scenarios.checkMovementHistory(client, Menu, Movement, 1, "4", "+", "Employee Edition","SingleProduct");
     test('should go to "Stock" tab', () => client.waitForExistAndClick(Menu.Sell.Catalog.stock_tab));
     test('should set the "Search products" input', () => client.waitAndSetValue(Stock.search_input, "SingleProduct" + date_time));
     test('should click on "Search" button', () => client.waitForExistAndClick(Stock.search_button));
     stock_common_scenarios.changeStockProductQuantity(client, Stock, 1, 4, 'checkBtn', "remove");
-    stock_common_scenarios.checkMovementHistory(client, Menu, Movement, 1, "4", "-", "Employee Edition");
+    stock_common_scenarios.checkMovementHistory(client, Menu, Movement, 1, "4", "-", "Employee Edition", "SingleProduct");
   }, 'stocks');
 }, 'stocks', true);

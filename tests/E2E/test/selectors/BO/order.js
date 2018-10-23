@@ -30,7 +30,9 @@ module.exports = {
     delete_button: '(//*[@id="table-cart"]//a[@class="delete"])[1]',
     stock_product: '//*[@id="orderProducts"]//tr[%NUMBER]/td[5]',
     total_order: '//*[@id="total_order"]/td[@class="amount text-right nowrap"]/strong',
-    total_product_price: '//*[@id="orderProducts"]//tr[%NUMBER]/td[6]'
+    total_product_price: '//*[@id="orderProducts"]//tr[%NUMBER]/td[6]',
+    first_shopping_cart_checkbox : '//*[@id="table-cart"]//tr[1]//input[@name="cartBox[]"]',
+    first_dropdown_button: '//*[@id="table-cart"]/tbody//tr[1]//button[@data-toggle="dropdown"]'
   },
 
   CreateOrder: {
@@ -65,13 +67,13 @@ module.exports = {
     export_carts_button: '//*[@id="page-header-desc-cart-export_cart"]',
     search_input: '//*[@id="table-cart"]//thead//input[@name="cartFilter_%searchParam"]',
     search_button: '//*[@id="submitFilterButtoncart"]',
-    id: '//*[@id="table-cart"]//tr[%NUMBER]/td[2]',
-    order_id: '//*[@id="table-cart"]//tr[%NUMBER]/td[3]',
-    customer: '//*[@id="table-cart"]//tr[%NUMBER]/td[4]',
-    total: '//*[@id="table-cart"]//tr[%NUMBER]/td[5]',
-    carrier: '//*[@id="table-cart"]//tr[%NUMBER]/td[6]',
-    date: '//*[@id="table-cart"]//tr[%NUMBER]/td[7]',
-    customer_online: '//*[@id="table-cart"]//tr[%NUMBER]/td[8]',
+    id: '//*[@id="table-cart"]//tr[%NUMBER]/td[1]',
+    order_id: '//*[@id="table-cart"]//tr[%NUMBER]/td[2]',
+    customer: '//*[@id="table-cart"]//tr[%NUMBER]/td[3]',
+    total: '//*[@id="table-cart"]//tr[%NUMBER]/td[4]',
+    carrier: '//*[@id="table-cart"]//tr[%NUMBER]/td[5]',
+    date: '//*[@id="table-cart"]//tr[%NUMBER]/td[6]',
+    customer_online: '//*[@id="table-cart"]//tr[%NUMBER]/td[7]',
     id_shopping_carts: 'table-cart',
     reset_button: '//*[@name="submitResetcart"]'
   }

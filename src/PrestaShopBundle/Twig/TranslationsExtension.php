@@ -253,7 +253,7 @@ class TranslationsExtension extends \Twig_Extension
         $breadcrumbParts = explode('_', Inflector::tableize($domain));
 
         return $this->container->get('templating')->render(
-            'PrestaShopBundle:Admin:Translations/include/form-edit-message.html.twig',
+            '@PrestaShop/Admin/Translations/include/form-edit-message.html.twig',
             array(
                 'default_translation_value' => $defaultTranslationValue,
                 'domain' => $domain,
@@ -360,7 +360,7 @@ class TranslationsExtension extends \Twig_Extension
 
         if ($hasMessagesSubtree) {
             $output .= $this->container->get('templating')->render(
-                'PrestaShopBundle:Admin:Translations/include/button-toggle-messages-visibility.html.twig',
+                '@PrestaShop/Admin/Translations/include/button-toggle-messages-visibility.html.twig',
                 array(
                     'label_show_messages' => $this->translator->trans('Show messages', array(), 'Admin.International.Feature'),
                     'label_hide_messages' => $this->translator->trans('Hide messages', array(), 'Admin.International.Feature'),
@@ -372,7 +372,7 @@ class TranslationsExtension extends \Twig_Extension
 
         $formStart = $this->getTranslationsFormStart($subtree, $output);
         $output = $this->container->get('templating')->render(
-            'PrestaShopBundle:Admin:Translations/include/translations-form-end.html.twig',
+            '@PrestaShop/Admin/Translations/include/translations-form-end.html.twig',
             array(
                 'form_start' => $formStart,
                 'subtree' => $this->makeSubtree($subtree, $level + 1),
@@ -433,7 +433,7 @@ class TranslationsExtension extends \Twig_Extension
         }
 
         return $this->container->get('templating')->render(
-            'PrestaShopBundle:Admin:Translations/include/translations-form-start.html.twig',
+            '@PrestaShop/Admin/Translations/include/translations-form-start.html.twig',
             array(
                 'id' => $id,
                 'domain' => $domainAttribute,
@@ -529,7 +529,7 @@ class TranslationsExtension extends \Twig_Extension
     protected function getNavigation($id)
     {
         return $this->container->get('templating')->render(
-            'PrestaShopBundle:Admin:Translations/include/pagination-bar.html.twig',
+            '@PrestaShop/Admin/Translations/include/pagination-bar.html.twig',
             array('page_id' => $id)
         );
     }

@@ -36,7 +36,7 @@
       {{ 'Discover'|trans({}, 'Admin.Modules.Feature') }}
     </a>
   {% elseif urls|length %}
-    {% include 'PrestaShopBundle:Admin/Module/Includes:action_button.html.twig' with {
+    {% include '@PrestaShop/Admin/Module/Includes/action_button.html.twig' with {
         'name': name,
         'classes_form': 'btn-group',
         'classes' : 'btn btn-primary-reverse btn-outline-primary',
@@ -51,7 +51,7 @@
           {% for module_action, module_url in urls %}
             {% if module_action != url_active %}
                 <li>
-                  {% include 'PrestaShopBundle:Admin/Module/Includes:action_button.html.twig' with {
+                  {% include '@PrestaShop/Admin/Module/Includes/action_button.html.twig' with {
                       'name': name,
                       'classes' : 'dropdown-item',
                       'url': module_url,

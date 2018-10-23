@@ -303,6 +303,7 @@
     z-index: 1;
     &.col-md-8 {
       border-right: solid 1px $gray-light;
+      min-height: 200px;
     }
     &.dropzone {
       .dz-preview {
@@ -1098,12 +1099,12 @@
 
 #description_short {
   #form_step1_description_short_1_ifr {
-    height: 80px !important;
+    min-height: 80px;
   }
 }
 
 #description {
   #form_step1_description_1_ifr {
-    height: 80px !important;
+    min-height: 80px;
   }
 }

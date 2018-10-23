@@ -102,7 +102,7 @@ final class BackupDefinitionFactory extends AbstractGridDefinitionFactory
                         ->add((new LinkRowAction('view'))
                             ->setIcon('remove_red_eye')
                             ->setOptions([
-                                'route' => 'admin_backup_view_download',
+                                'route' => 'admin_backups_download_view',
                                 'route_param_name' => 'downloadFileName',
                                 'route_param_field' => 'file_name',
                             ])
@@ -112,7 +112,7 @@ final class BackupDefinitionFactory extends AbstractGridDefinitionFactory
                             ->setIcon('delete')
                             ->setOptions([
                                 'method' => 'DELETE',
-                                'route' => 'admin_backup_delete',
+                                'route' => 'admin_backups_delete',
                                 'route_param_name' => 'deleteFileName',
                                 'route_param_field' => 'file_name',
                                 'confirm_message' => $this->trans(
@@ -136,7 +136,7 @@ final class BackupDefinitionFactory extends AbstractGridDefinitionFactory
             ->add((new SubmitBulkAction('delete_backups'))
                 ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
                 ->setOptions([
-                    'submit_route' => 'admin_backup_bulk_delete',
+                    'submit_route' => 'admin_backups_bulk_delete',
                     'confirm_message' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
                 ])
             )

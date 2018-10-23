@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "605a7bbfc4441374e67911777bff3eee",
+    "content-hash": "772edb53dca2b962c908871433ca6464",
     "packages": [
         {
             "name": "analog/analog",
@@ -3694,6 +3694,38 @@
             "description": "PrestaShop module ps_facetedsearch",
             "homepage": "https://github.com/PrestaShop/ps_facetedsearch",
             "time": "2018-09-03T10:34:18+00:00"
+        },
+        {
+            "name": "prestashop/ps_faviconnotificationbo",
+            "version": "v1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/ps_faviconnotificationbo.git",
+                "reference": "03e639f4248d551693827dd50576dbb961ecfdb7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/ps_faviconnotificationbo/zipball/03e639f4248d551693827dd50576dbb961ecfdb7",
+                "reference": "03e639f4248d551693827dd50576dbb961ecfdb7",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0"
+            },
+            "type": "prestashop-module",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "AFL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop - Favicon notification BO",
+            "homepage": "https://github.com/PrestaShop/ps_faviconnotificationbo",
+            "time": "2018-10-03T12:42:08+00:00"
         },
         {
             "name": "prestashop/ps_featuredproducts",
