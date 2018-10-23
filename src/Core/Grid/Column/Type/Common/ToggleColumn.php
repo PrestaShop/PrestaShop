@@ -50,6 +50,9 @@ final class ToggleColumn extends AbstractColumn
     protected function configureOptions(OptionsResolver $resolver)
     {
         $resolver
+            ->setDefaults([
+                'sortable' => true,
+            ])
             ->setRequired([
                 'field',
                 'primary_field',
@@ -59,6 +62,7 @@ final class ToggleColumn extends AbstractColumn
             ->setAllowedTypes('field', 'string')
             ->setAllowedTypes('primary_field', 'string')
             ->setAllowedTypes('route', 'string')
-            ->setAllowedTypes('route_param_name', 'string');
+            ->setAllowedTypes('route_param_name', 'string')
+            ->setAllowedTypes('sortable', 'bool');
     }
 }
