@@ -296,7 +296,12 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
                 (new SubmitBulkAction('delete_selection'))
                 ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
                 ->setOptions([
-                    'submit_route' => 'admin_employees_index',
+                    'submit_route' => 'admin_employees_bulk_delete',
+                    'confirm_message' => $this->trans(
+                        'Delete selected item?',
+                        [],
+                        'Admin.Notifications.Warning'
+                    ),
                 ])
             );
     }

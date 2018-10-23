@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use PrestaShop\PrestaShop\Core\Search\Filters\EmployeeFilters;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Command\BulkDeleteEmployeeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Command\DeleteEmployeeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Command\ToggleEmployeeStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Command\BulkUpdateEmployeeStatusCommand;
@@ -179,6 +180,31 @@ class EmployeeController extends FrameworkBundleAdminController
             $this->getCommandBus()->handle(new DeleteEmployeeCommand(new EmployeeId($employeeId)));
 
             $this->addFlash('succcess', $this->trans('Successful deletion.', 'Admin.Notifications.Success'));
+        } catch (EmployeeException $e) {
+            $this->addFlash('error', $this->getErrorForEmployeeException($e));
+        }
+
+        return $this->redirectToRoute('admin_employees_index');
+    }
+
+    /**
+     * Delete employees in bulk actions.
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function bulkDeleteAction(Request $request)
+    {
+        $employeeIds = $request->request->get('employee_employee_bulk');
+
+        try {
+            $this->getCommandBus()->handle(new BulkDeleteEmployeeCommand($employeeIds));
+
+            $this->addFlash(
+                'success',
+                $this->trans('The selection has been successfully deleted.', 'Admin.Notifications.Success')
+            );
         } catch (EmployeeException $e) {
             $this->addFlash('error', $this->getErrorForEmployeeException($e));
         }
