@@ -27,27 +27,28 @@
 namespace PrestaShop\PrestaShop\Adapter\Profile\Employee\CommandHandler;
 
 use Employee;
-use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Command\UpdateEmployeeStatusCommand;
-use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\CommandHandler\UpdateEmployeeStatusHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Command\UpdateEmployeesStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\CommandHandler\UpdateEmployeesStatusHandlerInterface;
 
 /**
- * Class UpdateEmployeeStatusHandler
+ * Class UpdateEmployeesStatusHandler
  */
-final class UpdateEmployeeStatusHandler extends AbstractEmployeeStatusHandler implements UpdateEmployeeStatusHandlerInterface
+final class UpdateEmployeesStatusHandler extends AbstractEmployeeStatusHandler implements UpdateEmployeesStatusHandlerInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function handle(UpdateEmployeeStatusCommand $command)
+    public function handle(UpdateEmployeesStatusCommand $command)
     {
-        $employeeId = $command->getEmployeeId();
-        $employee = new Employee($employeeId->getValue());
+        foreach ($command->getEmployeeIds() as $employeeId) {
+            $employee = new Employee($employeeId->getValue());
 
-        $this->assertEmployeeWasFoundById($employeeId, $employee);
-        $this->assertLoggedInEmployeeIsNotTheSameAsBeingUpdatedEmployee($employee);
-        $this->assertEmployeeIsNotTheOnlyAdminInShop($employee);
+            $this->assertEmployeeWasFoundById($employeeId, $employee);
+            $this->assertLoggedInEmployeeIsNotTheSameAsBeingUpdatedEmployee($employee);
+            $this->assertEmployeeIsNotTheOnlyAdminInShop($employee);
 
-        $employee->active = $command->getStatus()->isEnabled();
-        $employee->save();
+            $employee->active = $command->getStatus()->isEnabled();
+            $employee->save();
+        }
     }
 }
