@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Customer;
 
 use PrestaShop\PrestaShop\Core\Search\Filters\CustomerFilters;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\CustomerInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController as AbstractAdminController;
@@ -109,13 +110,22 @@ class CustomerController extends AbstractAdminController
      */
     public function viewAction($customerId, Request $request)
     {
-        /** @var CustomerInformation $customerInformation */
-        $customerInformation = $this->getQueryBus()->handle(new GetCustomerInformation(new CustomerId($customerId)));
+        try {
+            /** @var CustomerInformation $customerInformation */
+            $customerInformation = $this->getQueryBus()->handle(new GetCustomerInformation(new CustomerId($customerId)));
+        } catch (CustomerNotFoundException $e) {
+            $this->addFlash(
+                'error',
+                $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error')
+            );
+
+            return $this->redirectToRoute('admin_customers_index');
+        }
 
         $transferGuestAccountForm = null;
         if ($customerInformation->getPersonalInformation()->isGuest()) {
             $transferGuestAccountForm = $this->createForm(TransferGuestAccountType::class, [
-                'id_customer' => $customerInformation->getCustomerId()->getValue(),
+                'id_customer' => $customerId
             ])->createView();
         }
 
