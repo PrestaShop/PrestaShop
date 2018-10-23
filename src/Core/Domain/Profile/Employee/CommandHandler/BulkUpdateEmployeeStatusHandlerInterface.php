@@ -26,15 +26,15 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Profile\Employee\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Command\UpdateEmployeesStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Command\BulkUpdateEmployeeStatusCommand;
 
 /**
  * Interface UpdateEmployeeStatusHandlerInterface
  */
-interface UpdateEmployeesStatusHandlerInterface
+interface BulkUpdateEmployeeStatusHandlerInterface
 {
     /**
-     * @param UpdateEmployeesStatusCommand $command
+     * @param BulkUpdateEmployeeStatusCommand $command
      */
-    public function handle(UpdateEmployeesStatusCommand $command);
+    public function handle(BulkUpdateEmployeeStatusCommand $command);
 }

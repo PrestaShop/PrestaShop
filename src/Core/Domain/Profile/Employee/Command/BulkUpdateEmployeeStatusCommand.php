@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject\EmployeeId;
 /**
  * Class UpdateEmployeesStatusCommand updates employees status.
  */
-class UpdateEmployeesStatusCommand
+class BulkUpdateEmployeeStatusCommand
 {
     /**
      * @var EmployeeStatus

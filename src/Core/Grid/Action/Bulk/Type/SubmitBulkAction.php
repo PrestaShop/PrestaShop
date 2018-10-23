@@ -54,9 +54,12 @@ final class SubmitBulkAction extends AbstractBulkAction
             ->setDefaults([
                 'confirm_message' => null,
                 'submit_method' => 'POST',
+                'route_params' => [],
             ])
             ->setAllowedTypes('submit_route', 'string')
             ->setAllowedTypes('confirm_message', ['string', 'null'])
-            ->setAllowedValues('submit_method', ['POST', 'GET']);
+            ->setAllowedValues('submit_method', ['POST', 'GET'])
+            ->setAllowedTypes('route_params', 'array')
+        ;
     }
 }
