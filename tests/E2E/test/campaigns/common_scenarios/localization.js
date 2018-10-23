@@ -7,6 +7,7 @@ const {Menu} = require('../../selectors/BO/menu.js');
 const {ThemeAndLogo} = require('../../selectors/BO/design/theme_and_logo');
 const Design = require('../../selectors/BO/design/index');
 const {languageFO} = require('../../selectors/FO/index');
+
 let promise = Promise.resolve();
 
 module.exports = {
