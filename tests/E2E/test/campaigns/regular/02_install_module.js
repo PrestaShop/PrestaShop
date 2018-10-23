@@ -5,8 +5,9 @@ const {OnBoarding} = require('../../selectors/BO/onboarding.js');
 const module_common_scenarios = require('../common_scenarios/module');
 const welcomeScenarios = require('../common_scenarios/welcome');
 
-let promise = Promise.resolve();
-
+/**
+ * If there is no module to install, return immediately.
+ */
 if (global.test_addons) {
   return;
 }

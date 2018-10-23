@@ -46,7 +46,7 @@ scenario('The shop installation', () => {
     test('should log in successfully in BO', () => client.signInBO(AccessPageBO, UrlLastStableVersion));
   }, 'installation');
 
-  welcomeScenarios.findAndCloseWelcomeModal();
+  welcomeScenarios.findAndCloseWelcomeModal('installation');
 
   /**
    * This scenario is based on the bug described in this ticket

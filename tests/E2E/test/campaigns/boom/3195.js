@@ -34,7 +34,7 @@ scenario('BOOM-3195: The shop installation', () => {
     test('should log in successfully in BO', () => client.signInBO(AccessPageBO, UrlLastStableVersion));
   }, 'installation');
 
-  welcomeScenarios.findAndCloseWelcomeModal();
+  welcomeScenarios.findAndCloseWelcomeModal('installation');
 
   scenario('Install "Top-sellers block" and "New products block" modules From Cross selling', client => {
     moduleCommonScenarios.installModule(client, ModulePage, AddProductPage, "ps_bestsellers");
