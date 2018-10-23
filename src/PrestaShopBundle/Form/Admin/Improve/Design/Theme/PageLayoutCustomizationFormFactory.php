@@ -104,20 +104,4 @@ final class PageLayoutCustomizationFormFactory implements PageLayoutCustomizatio
 
         return $layouts;
     }
-
-    /**
-     * @param Theme $theme
-     *
-     * @return array
-     */
-    private function getAvailableLayoutChoices(Theme $theme)
-    {
-        $choices = [];
-
-        foreach ($theme->getAvailableLayouts() as $layoutId => $availableLayout) {
-            $choices[$layoutId] = sprintf('%s - %s', $availableLayout['name'], $availableLayout['description']);
-        }
-
-        return $choices;
-    }
 }
