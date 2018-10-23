@@ -50,6 +50,9 @@ final class ToggleColumn extends AbstractColumn
     protected function configureOptions(OptionsResolver $resolver)
     {
         $resolver
+            ->setDefaults([
+                'sortable' => true,
+            ])
             ->setRequired([
                 'field',
                 'primary_field',

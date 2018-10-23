@@ -142,6 +142,6 @@ final class WebserviceKeyQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     private function getModifiedOrderBy($orderBy)
     {
-        return $orderBy === 'key' ? 'wa.`key`' : $orderBy;
+        return 'wa.`' . $orderBy . '`';
     }
 }
