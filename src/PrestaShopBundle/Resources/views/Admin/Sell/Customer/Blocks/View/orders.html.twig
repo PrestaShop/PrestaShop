@@ -93,7 +93,7 @@
 
       <div class="row">
         <div class="col">
-          {% if validOrdersCount %}
+          {% if invalidOrdersCount %}
             <table class="table">
               <thead>
                 <tr>
@@ -131,7 +131,9 @@
         </div>
       </div>
     {% else %}
-      {{ '%firstname% %lastname% has not placed any orders yet'|trans({'%firstname%': customerInformation.personalInformation.firstName, '%lastname%': customerInformation.personalInformation.lastName}, 'Admin.Orderscustomers.Feature') }}
+      <p class="text-muted text-center">
+        {{ '%firstname% %lastname% has not placed any orders yet'|trans({'%firstname%': customerInformation.personalInformation.firstName, '%lastname%': customerInformation.personalInformation.lastName}, 'Admin.Orderscustomers.Feature') }}
+      </p>
     {% endif %}
   </div>
 </div>
