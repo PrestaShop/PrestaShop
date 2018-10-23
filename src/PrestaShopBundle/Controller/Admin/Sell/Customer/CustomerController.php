@@ -125,7 +125,7 @@ class CustomerController extends AbstractAdminController
         $transferGuestAccountForm = null;
         if ($customerInformation->getPersonalInformation()->isGuest()) {
             $transferGuestAccountForm = $this->createForm(TransferGuestAccountType::class, [
-                'id_customer' => $customerId
+                'id_customer' => $customerId,
             ])->createView();
         }
 
