@@ -300,7 +300,7 @@ prestashop:
         tab: administration
       '481':
         id_category: 481
-        order: 70
+        order: 50
         name: Payment
         link: "/en/481-payment"
         parent_link: "/en/2-prestashop-modules"
@@ -362,7 +362,7 @@ prestashop:
         tab: payments_gateways
       '488':
         id_category: 488
-        order: 50
+        order: 70
         name: Traffic & Marketplaces
         link: "/en/488-traffic-marketplaces"
         parent_link: "/en/2-prestashop-modules"
