@@ -83,7 +83,6 @@ GitHub contributors:
 - can
 - cam.lafit
 - Captain FLAM
-- Captain Youz
 - Captain-FLAM
 - Carlos Addis
 - Casper Olsen
@@ -271,7 +270,6 @@ GitHub contributors:
 - iNem0o
 - Inetbiz
 - iqit-commerce
-- iqit-commerce (Marcin Sz)
 - ironwo0d
 - Ish Gupta
 - Ishiki
@@ -383,6 +381,7 @@ GitHub contributors:
 - martinfojtik
 - Martin Fojtik
 - Mateusz Nastalski
+- Mathias Reker
 - Mathieu Ferment
 - matiasiglesias
 - Mats Rynge
@@ -434,7 +433,6 @@ GitHub contributors:
 - moncef102
 - montes
 - mplh
-- Mreker
 - MustangZhong
 - nache
 - natrim
