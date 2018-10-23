@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter\Profile\Employee\CommandHandler;
 
 use Employee;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception\AdminEmployeeException;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception\CannotDeleteWarehouseManagerException;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception\EmployeeCannotChangeItselfException;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception\EmployeeNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject\EmployeeId;
@@ -100,7 +101,9 @@ abstract class AbstractEmployeeHandler
         $warehouses = Warehouse::getWarehousesByEmployee($employee->id);
 
         if (count($warehouses) > 0) {
-
+            throw new CannotDeleteWarehouseManagerException(
+                sprintf('Employee with id %s is warehouse manager and cannot be deleted.', $employee->id)
+            );
         }
     }
 }
