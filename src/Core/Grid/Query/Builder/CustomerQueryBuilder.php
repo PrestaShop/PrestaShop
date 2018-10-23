@@ -226,6 +226,9 @@ final class CustomerQueryBuilder extends AbstractDoctrineQueryBuilder
             case 'email':
             case 'date_add':
             case 'company':
+            case 'active':
+            case 'newsletter':
+            case 'optin':
                 $orderBy = 'c.' . $searchCriteria->getOrderBy();
                 break;
             case 'social_title':
