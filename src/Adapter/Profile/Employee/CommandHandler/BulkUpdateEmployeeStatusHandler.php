@@ -27,18 +27,18 @@
 namespace PrestaShop\PrestaShop\Adapter\Profile\Employee\CommandHandler;
 
 use Employee;
-use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Command\UpdateEmployeesStatusCommand;
-use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\CommandHandler\UpdateEmployeesStatusHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Command\BulkUpdateEmployeeStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\CommandHandler\BulkUpdateEmployeeStatusHandlerInterface;
 
 /**
- * Class UpdateEmployeesStatusHandler
+ * Class BulkUpdateEmployeeStatusHandler
  */
-final class UpdateEmployeesStatusHandler extends AbstractEmployeeStatusHandler implements UpdateEmployeesStatusHandlerInterface
+final class BulkUpdateEmployeeStatusHandler extends AbstractEmployeeStatusHandler implements BulkUpdateEmployeeStatusHandlerInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function handle(UpdateEmployeesStatusCommand $command)
+    public function handle(BulkUpdateEmployeeStatusCommand $command)
     {
         foreach ($command->getEmployeeIds() as $employeeId) {
             $employee = new Employee($employeeId->getValue());

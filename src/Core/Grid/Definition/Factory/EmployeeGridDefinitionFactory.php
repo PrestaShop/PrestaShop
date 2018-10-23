@@ -141,6 +141,7 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setOptions([
                     'actions' => (new RowActionCollection())
                         ->add((new LinkRowAction('edit'))
+                            ->setName($this->trans('Edit', [], 'Admin.Global'))
                             ->setIcon('edit')
                             ->setOptions([
                                 'route' => 'admin_employees_index',
@@ -248,13 +249,19 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
             ->add((new SubmitBulkAction('enable_selection'))
                 ->setName($this->trans('Enable selection', [], 'Admin.Actions'))
                 ->setOptions([
-                    'submit_route' => 'admin_employees_index',
+                    'submit_route' => 'admin_employees_bulk_status_update',
+                    'route_params' => [
+                        'newStatus' => 'enabled',
+                    ],
                 ])
             )
             ->add((new SubmitBulkAction('disable_selection'))
                 ->setName($this->trans('Disable selection', [], 'Admin.Actions'))
                 ->setOptions([
-                    'submit_route' => 'admin_employees_index',
+                    'submit_route' => 'admin_employees_bulk_status_update',
+                    'route_params' => [
+                        'newStatus' => 'disabled',
+                    ],
                 ])
             )
             ->add((new SubmitBulkAction('delete_selection'))
