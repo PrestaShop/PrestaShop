@@ -264,8 +264,8 @@ class CategoriesProvider
         uasort(
             $categories,
             function ($a, $b) {
-                $a = !isset($a->order) ? 0 : $a->order;
-                $b = !isset($b->order) ? 0 : $b->order;
+                $a = !isset($a['order']) ? 0 : $a['order'];
+                $b = !isset($b['order']) ? 0 : $b['order'];
 
                 if ($a === $b) {
                     return 0;
