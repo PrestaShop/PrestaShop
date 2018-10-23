@@ -489,7 +489,6 @@
 											</script>
 										{/if}
 									{/if}
-									<div class="input-group">
 									{if isset($input.maxchar) && $input.maxchar}</div>{/if}
 								{elseif $input.type == 'checkbox'}
 									{if isset($input.expand)}
