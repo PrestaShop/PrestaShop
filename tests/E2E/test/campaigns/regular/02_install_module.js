@@ -2,25 +2,21 @@ const {AccessPageBO} = require('../../selectors/BO/access_page');
 const {ModulePage} = require('../../selectors/BO/module_page');
 const {AddProductPage} = require('../../selectors/BO/add_product_page');
 const {OnBoarding} = require('../../selectors/BO/onboarding.js');
-let promise = Promise.resolve();
 const module_common_scenarios = require('../common_scenarios/module');
+const welcomeScenarios = require('../common_scenarios/welcome');
+
+let promise = Promise.resolve();
+
+if (global.test_addons) {
+  return;
+}
 
 scenario('Install and Uninstall Module from cross selling', () => {
   scenario('Login in the Back Office', client => {
     test('should open the browser', () => client.open());
     test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'common_client');
-  scenario('Close the onboarding modal if exist ', client => {
-    test('should close the onboarding modal if exist', () => {
-      return promise
-        .then(() => client.isVisible(OnBoarding.welcome_modal))
-        .then(() => client.closeBoarding(OnBoarding.popup_close_button))
-    });
-  }, 'order');
-
-  if (global.test_addons) {
-    return;
-  }
+  welcomeScenarios.findAndCloseWelcomeModal();
 
   scenario('Install "'+module_tech_name+'" From Cross selling', client => {
     module_common_scenarios.installModule(client, ModulePage, AddProductPage, module_tech_name);
