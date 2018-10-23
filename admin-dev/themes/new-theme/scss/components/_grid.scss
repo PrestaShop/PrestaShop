@@ -8,8 +8,48 @@
   cursor: pointer;
 }
 
-.position-row-while-drag {
-  opacity: 0.5;
-  background: #202226;
-  color: #bebebe;
+table.grid-ordering-position tr {
+  transition-property: all;
+  transition-duration: 0.2s;
+  transition-timing-function: ease-out;
+  &.hover {
+    background-color: $gray-soft;
+  }
+}
+
+table.grid-ordering-position tr.position-row-while-drag {
+  border-radius: 3px;
+  box-shadow: 3px 3px 8px 0 rgba(0, 0, 0, 0.2);
+  background-color: $medium-gray;
+  color: white;
+  transform: translate(11px,16px);
+  .position-drag-handle,
+  .position-drag-handle:hover,
+  .btn, .btn:after, .btn .material-icons {
+    color: white;
+  }
+}
+
+.position-drag-handle {
+  color: $gray-medium;
+  cursor: move;
+
+  &:hover {
+    color: $primary;
+  }
+}
+
+.btn-group-action {
+  a.dropdown-toggle,
+  button.dropdown-toggle,
+  .dropdown-toggle {
+    color: $gray-medium;
+    &:after {
+      content: "more_vert";
+    }
+
+    &:hover {
+      color: $primary;
+    }
+  }
 }

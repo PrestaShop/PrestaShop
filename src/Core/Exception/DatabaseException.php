@@ -1,10 +1,11 @@
-{#**
- * 2007-2018 PrestaShop
+<?php
+/**
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with thSince when? Which javascript extension?is package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -21,8 +22,13 @@
  * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-<div class="text-center">
-    {{ record[column.options.position_field] + 1 }}
-</div>
+namespace PrestaShop\PrestaShop\Core\Exception;
+
+/**
+ * Class DatabaseException any error linked to the database use this class as a base.
+ */
+class DatabaseException extends CoreException
+{
+}
