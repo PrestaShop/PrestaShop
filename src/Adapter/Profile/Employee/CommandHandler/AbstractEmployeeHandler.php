@@ -31,11 +31,12 @@ use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception\AdminEmployeeEx
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception\EmployeeCannotChangeItselfException;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception\EmployeeNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject\EmployeeId;
+use Warehouse;
 
 /**
  * Class AbstractEmployeeStatusHandler
  */
-abstract class AbstractEmployeeStatusHandler
+abstract class AbstractEmployeeHandler
 {
     /**
      * @param EmployeeId $employeeId
@@ -86,6 +87,20 @@ abstract class AbstractEmployeeStatusHandler
                 'Employee cannot change status of itself.',
                 EmployeeCannotChangeItselfException::CANNOT_CHANGE_STATUS
             );
+        }
+    }
+
+    /**
+     * Make sure that given employee does not manage any wherehouses.
+     *
+     * @param Employee $employee
+     */
+    protected function assertEmployeeDoesNotManageWarehouse(Employee $employee)
+    {
+        $warehouses = Warehouse::getWarehousesByEmployee($employee->id);
+
+        if (count($warehouses) > 0) {
+
         }
     }
 }
