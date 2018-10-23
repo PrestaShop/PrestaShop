@@ -33,6 +33,8 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController as AbstractAdminController;
 use PrestaShopBundle\Form\Admin\Sell\Customer\PrivateNoteType;
 use PrestaShopBundle\Form\Admin\Sell\Customer\TransferGuestAccountType;
+use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -95,7 +97,10 @@ class CustomerController extends AbstractAdminController
     }
 
     /**
-     * Show customer details page.
+     * View customer information.
+     *
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute="admin_customers_index")
+     * @DemoRestricted(redirectRoute="admin_customers_index")
      *
      * @param int $customerId
      * @param Request $request
