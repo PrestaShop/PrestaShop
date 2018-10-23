@@ -68,6 +68,14 @@ class EmployeeStatus
     }
 
     /**
+     * @return bool
+     */
+    public function isEnabled()
+    {
+        return $this->getStatus() === self::ENABLED;
+    }
+
+    /**
      * @param string $status
      */
     private function assertStatusExists($status)

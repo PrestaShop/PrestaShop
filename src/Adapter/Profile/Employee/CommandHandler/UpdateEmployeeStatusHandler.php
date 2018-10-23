@@ -46,5 +46,8 @@ final class UpdateEmployeeStatusHandler extends AbstractEmployeeStatusHandler im
         $this->assertEmployeeWasFoundById($employeeId, $employee);
         $this->assertLoggedInEmployeeIsNotTheSameAsBeingUpdatedEmployee($employee);
         $this->assertEmployeeIsNotTheOnlyAdminInShop($employee);
+
+        $employee->active = $command->getStatus()->isEnabled();
+        $employee->save();
     }
 }
