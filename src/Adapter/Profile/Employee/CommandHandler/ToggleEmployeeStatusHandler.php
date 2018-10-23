@@ -29,15 +29,11 @@ namespace PrestaShop\PrestaShop\Adapter\Profile\Employee\CommandHandler;
 use Employee;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Command\ToggleEmployeeStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\CommandHandler\ToggleEmployeeStatusHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception\EmployeeCannotChangeItselfException;
-use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception\EmployeeNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception\AdminEmployeeException;
-use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject\EmployeeId;
 
 /**
  * Class ToggleEmployeeStatusHandler encapsulates Employee status toggling using legacy Employee object model.
  */
-final class ToggleEmployeeStatusHandler implements ToggleEmployeeStatusHandlerInterface
+final class ToggleEmployeeStatusHandler extends AbstractEmployeeStatusHandler implements ToggleEmployeeStatusHandlerInterface
 {
     /**
      * {@inheritdoc}
@@ -48,61 +44,9 @@ final class ToggleEmployeeStatusHandler implements ToggleEmployeeStatusHandlerIn
         $employee = new Employee($employeeId->getValue());
 
         $this->assertEmployeeWasFoundById($employeeId, $employee);
-        $this->assertLoggedInEmployeeIsNotTheSameAsToggledEmployee($employee);
-        $this->assertEmployeeIsNotTheLastAdmin($employee);
+        $this->assertLoggedInEmployeeIsNotTheSameAsBeingUpdatedEmployee($employee);
+        $this->assertEmployeeIsNotTheOnlyAdminInShop($employee);
 
         $employee->toggleStatus();
-    }
-
-    /**
-     * @param EmployeeId $employeeId
-     * @param Employee $employee
-     *
-     * @throws EmployeeNotFoundException
-     */
-    private function assertEmployeeWasFoundById(EmployeeId $employeeId, Employee $employee)
-    {
-        if (!$employee->id) {
-            throw new EmployeeNotFoundException(
-                $employeeId,
-                sprintf(
-                    'Employee with id "%s" cannot be found.',
-                    $employeeId->getValue()
-                )
-            );
-        }
-    }
-
-    /**
-     * If employee is admin and no other admins exists, then terminate command execution.
-     *
-     * @param Employee $employee
-     */
-    private function assertEmployeeIsNotTheLastAdmin(Employee $employee)
-    {
-        if ($employee->isLastAdmin()) {
-            throw new AdminEmployeeException(
-                sprintf(
-                    'Employee with id %s is the only admin in shop and status cannot be changed.',
-                    $employee->id
-                ),
-                AdminEmployeeException::CANNOT_CHANGE_LAST_ADMIN
-            );
-        }
-    }
-
-    /**
-     * If logged in employee is trying to toggle itself, then terminate execution.
-     *
-     * @param Employee $employee
-     */
-    private function assertLoggedInEmployeeIsNotTheSameAsToggledEmployee(Employee $employee)
-    {
-        if (\Context::getContext()->employee->id === $employee->id) {
-            throw new EmployeeCannotChangeItselfException(
-                'Employee cannot change status of itself.',
-                EmployeeCannotChangeItselfException::CANNOT_CHANGE_STATUS
-            );
-        }
     }
 }

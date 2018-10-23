@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\CommandHandler\UpdateEmpl
 /**
  * Class UpdateEmployeeStatusHandler
  */
-final class UpdateEmployeeStatusHandler implements UpdateEmployeeStatusHandlerInterface
+final class UpdateEmployeeStatusHandler extends AbstractEmployeeStatusHandler implements UpdateEmployeeStatusHandlerInterface
 {
     /**
      * {@inheritdoc}
@@ -42,5 +42,9 @@ final class UpdateEmployeeStatusHandler implements UpdateEmployeeStatusHandlerIn
     {
         $employeeId = $command->getEmployeeId();
         $employee = new Employee($employeeId->getValue());
+
+        $this->assertEmployeeWasFoundById($employeeId, $employee);
+        $this->assertLoggedInEmployeeIsNotTheSameAsBeingUpdatedEmployee($employee);
+        $this->assertEmployeeIsNotTheOnlyAdminInShop($employee);
     }
 }
