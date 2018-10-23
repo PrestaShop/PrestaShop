@@ -105,7 +105,7 @@
 
     <div class="row mb-1">
       <div class="col-4 text-right">
-        {{ 'Language'|trans({}, 'Admin.Orderscustomers.Feature') }}
+        {{ 'Language'|trans({}, 'Admin.Global') }}
       </div>
       <div class="col-8">
         {{ customerInformation.personalInformation.languageName }}
@@ -114,7 +114,7 @@
 
     <div class="row mb-1">
       <div class="col-4 text-right">
-        {{ 'Registrations'|trans({}, 'Admin.Global') }}
+        {{ 'Registrations'|trans({}, 'Admin.Orderscustomers.Feature') }}
       </div>
       <div class="col-8">
         {% set isNewsletterSubscribed = customerInformation.personalInformation.subscriptions.newsletterSubscribed %}
