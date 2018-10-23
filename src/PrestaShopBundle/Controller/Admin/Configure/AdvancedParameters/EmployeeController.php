@@ -28,12 +28,14 @@ namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use PrestaShop\PrestaShop\Core\Search\Filters\EmployeeFilters;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Command\ToggleEmployeeStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Command\BulkUpdateEmployeeStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception\AdminEmployeeException;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception\EmployeeCannotChangeItselfException;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception\EmployeeException;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception\EmployeeNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception\InvalidEmployeeIdException;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject\EmployeeId;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject\EmployeeStatus;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
@@ -123,6 +125,34 @@ class EmployeeController extends FrameworkBundleAdminController
     {
         try {
             $this->getCommandBus()->handle(new ToggleEmployeeStatusCommand(new EmployeeId($employeeId)));
+
+            $this->addFlash(
+                'success',
+                $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
+            );
+        } catch (EmployeeException $e) {
+            $this->addFlash('error', $this->getErrorForEmployeeException($e));
+        }
+
+        return $this->redirectToRoute('admin_employees_index');
+    }
+
+    /**
+     * Update status for employees in bulk action.
+     *
+     * @param Request $request
+     * @param string $newStatus
+     *
+     * @return RedirectResponse
+     */
+    public function bulkStatusUpdateAction(Request $request, $newStatus)
+    {
+        $employeeIds = $request->request->get('employee_employee_bulk');
+
+        try {
+            $this->getCommandBus()->handle(
+                new BulkUpdateEmployeeStatusCommand($employeeIds, new EmployeeStatus($newStatus))
+            );
 
             $this->addFlash(
                 'success',
