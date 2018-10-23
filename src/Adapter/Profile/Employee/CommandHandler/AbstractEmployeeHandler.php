@@ -92,7 +92,7 @@ abstract class AbstractEmployeeHandler
     }
 
     /**
-     * Make sure that given employee does not manage any wherehouses.
+     * Make sure that given employee does not manage any warehouse.
      *
      * @param Employee $employee
      */
