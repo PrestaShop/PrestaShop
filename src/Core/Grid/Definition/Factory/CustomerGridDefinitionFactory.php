@@ -70,26 +70,18 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
     private $genderChoices;
 
     /**
-     * @var array
-     */
-    private $statusChoices;
-
-    /**
      * @param bool $isB2bFeatureEnabled
      * @param bool $isMultistoreFeatureEnabled
      * @param array $genderChoices
-     * @param array $statusChoices
      */
     public function __construct(
         $isB2bFeatureEnabled,
         $isMultistoreFeatureEnabled,
-        array $genderChoices,
-        array $statusChoices
+        array $genderChoices
     ) {
         $this->isB2bFeatureEnabled = $isB2bFeatureEnabled;
         $this->isMultistoreFeatureEnabled = $isMultistoreFeatureEnabled;
         $this->genderChoices = $genderChoices;
-        $this->statusChoices = $statusChoices;
     }
 
     /**
