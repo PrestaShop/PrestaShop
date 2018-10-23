@@ -35,3 +35,10 @@ admin_employees_bulk_status_update:
     _legacy_controller: AdminEmployees
   requirements:
     newStatus: enabled|disabled
+
+admin_employees_delete:
+  path: /{employeeId}/delete
+  methods: [POST]
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Employee:delete'
+    _legacy_controller: AdminEmployees

@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use PrestaShop\PrestaShop\Core\Search\Filters\EmployeeFilters;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Command\DeleteEmployeeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Command\ToggleEmployeeStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Command\BulkUpdateEmployeeStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception\AdminEmployeeException;
@@ -166,6 +167,26 @@ class EmployeeController extends FrameworkBundleAdminController
     }
 
     /**
+     * Delete employee.
+     *
+     * @param int $employeeId
+     *
+     * @return RedirectResponse
+     */
+    public function deleteAction($employeeId)
+    {
+        try {
+            $this->getCommandBus()->handle(new DeleteEmployeeCommand(new EmployeeId($employeeId)));
+
+            $this->addFlash('succcess', $this->trans('Successful deletion.', 'Admin.Notifications.Success'));
+        } catch (EmployeeException $e) {
+            $this->addFlash('error', $this->getErrorForEmployeeException($e));
+        }
+
+        return $this->redirectToRoute('admin_employees_index');
+    }
+
+    /**
      * Get human readable error message for thrown employee exception.
      *
      * @param EmployeeException $exception
@@ -192,17 +213,18 @@ class EmployeeController extends FrameworkBundleAdminController
             ],
         ];
 
-        if (isset($errorMessages[$type])) {
-            if (is_array($errorMessages[$type]) && isset($errorMessages[$type][$code])) {
-                return $errorMessages[$type][$code];
-            }
+        if (!isset($errorMessages[$type])) {
+            return $this->getFallbackErrorMessage($type, $exception->getCode());
+        }
 
+        if (!is_array($errorMessages[$type])) {
             return $errorMessages[$type];
         }
 
-        return $this->getFallbackErrorMessage(
-            $type,
-            $exception->getCode()
-        );
+        if (isset($errorMessages[$type][$code])) {
+            return $errorMessages[$type][$code];
+        }
+
+        return $this->getFallbackErrorMessage($type, $exception->getCode());
     }
 }

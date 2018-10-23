@@ -167,7 +167,7 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
                                     [],
                                     'Admin.Notifications.Warning'
                                 ),
-                                'route' => 'admin_employees_index',
+                                'route' => 'admin_employees_delete',
                                 'route_param_name' => 'employeeId',
                                 'route_param_field' => 'id_employee',
                             ])
