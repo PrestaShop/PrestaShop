@@ -27,18 +27,18 @@
 namespace PrestaShop\PrestaShop\Adapter\Profile\Employee\CommandHandler;
 
 use Employee;
-use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Command\ToggleEmployeeStatusCommand;
-use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\CommandHandler\ToggleEmployeeStatusHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Command\DeleteEmployeeCommand;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\CommandHandler\DeleteEmployeeHandlerInterface;
 
 /**
- * Class ToggleEmployeeStatusHandler encapsulates Employee status toggling using legacy Employee object model.
+ * Class DeleteEmployeeHandler
  */
-final class ToggleEmployeeStatusHandler extends AbstractEmployeeStatusHandler implements ToggleEmployeeStatusHandlerInterface
+final class DeleteEmployeeHandler extends AbstractEmployeeHandler implements DeleteEmployeeHandlerInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function handle(ToggleEmployeeStatusCommand $command)
+    public function handle(DeleteEmployeeCommand $command)
     {
         $employeeId = $command->getEmployeeId();
         $employee = new Employee($employeeId->getValue());
@@ -46,7 +46,11 @@ final class ToggleEmployeeStatusHandler extends AbstractEmployeeStatusHandler im
         $this->assertEmployeeWasFoundById($employeeId, $employee);
         $this->assertLoggedInEmployeeIsNotTheSameAsBeingUpdatedEmployee($employee);
         $this->assertEmployeeIsNotTheOnlyAdminInShop($employee);
+        // Warehouse feature was removed from 1.7
+        // but the code related to still exists
+        // thus assertion is kept for BC i guess
+        $this->assertEmployeeDoesNotManageWarehouse($employee);
 
-        $employee->toggleStatus();
+        $employee->delete();
     }
 }

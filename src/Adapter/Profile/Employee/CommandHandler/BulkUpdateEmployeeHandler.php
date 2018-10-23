@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\CommandHandler\BulkUpdate
 /**
  * Class BulkUpdateEmployeeStatusHandler
  */
-final class BulkUpdateEmployeeStatusHandler extends AbstractEmployeeStatusHandler implements BulkUpdateEmployeeStatusHandlerInterface
+final class BulkUpdateEmployeeHandler extends AbstractEmployeeHandler implements BulkUpdateEmployeeStatusHandlerInterface
 {
     /**
      * {@inheritdoc}
