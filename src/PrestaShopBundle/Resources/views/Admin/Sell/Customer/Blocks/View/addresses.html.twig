@@ -73,7 +73,7 @@
               </td>
               <td class="text-right">
                 <div class="btn-group">
-                  <a href="{{ getAdminLink('AdminAddresses', true, {'id_address': address.addressId, 'addaddress': 1}) }}"
+                  <a href="{{ getAdminLink('AdminAddresses', true, {'id_address': address.addressId, 'addaddress': 1, 'back': app.request.uri}) }}"
                      class="btn btn-sm btn-outline-primary"
                   >
                     <i class="material-icons">edit</i>
@@ -89,7 +89,7 @@
                   </button>
 
                   <div class="dropdown-menu menu-sm">
-                    <a class="dropdown-item" href="{{ getAdminLink('AdminAddresses', true, {'id_address': address.addressId, 'deleteaddress': 1}) }}">
+                    <a class="dropdown-item" href="{{ getAdminLink('AdminAddresses', true, {'id_address': address.addressId, 'deleteaddress': 1, 'back': app.request.uri}) }}">
                       <i class="material-icons">delete</i>
                       {{ 'Delete'|trans({}, 'Admin.Actions') }}
                     </a>
