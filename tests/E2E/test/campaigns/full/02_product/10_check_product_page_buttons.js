@@ -34,7 +34,14 @@ scenario('Check product page buttons', () => {
         .then(() => client.waitForExistAndClick(AddProductPage.preview_buttons));
     });
     test('should switch to the Front Office', () => client.switchWindow(1));
-    test('should click on the "Preview" link', () => client.waitForExistAndClick(AddProductPage.preview_link));
+    test('should click on the "Preview" link', () => {
+      return promise
+        .then(() => {
+          if (global.ps_mode_dev) {
+            client.waitForExistAndClick(AddProductPage.preview_link)
+          }
+        })
+    });
     test('should check that the product name is equal to "TEST PRODUCT' + date_time + '"', () => client.checkTextValue(productPage.product_name, firstProductData.name, "contain"));
     test('should go to the Back Office', () => client.switchWindow(0));
   }, 'product/product');

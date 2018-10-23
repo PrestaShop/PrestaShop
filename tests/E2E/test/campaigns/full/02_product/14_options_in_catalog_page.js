@@ -32,6 +32,14 @@ scenario('Check the options in the catalog page', () => {
         .then(() => client.waitForVisibleAndClick(ProductList.action_preview_button.replace('%POS', 1)))
         .then(() => client.switchWindow(1));
     });
+    test('should click on the "Preview" link', () => {
+      return promise
+        .then(() => {
+          if (global.ps_mode_dev) {
+            client.waitForExistAndClick(AddProductPage.preview_link)
+          }
+        })
+    });
     test('should check that the first product is well opened', () => {
       return promise
         .then(() => client.checkTextValue(productPage.product_name, tab['productName'].toUpperCase()))

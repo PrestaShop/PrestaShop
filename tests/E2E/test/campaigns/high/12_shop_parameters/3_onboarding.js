@@ -21,7 +21,7 @@ scenario('Welcome Module', () => {
 
   scenario('The first tutorial step : Create the first product ', () => {
     scenario('Step 1/5', client => {
-      test('should click on "Start" button', () => client.waitForExistAndClick(OnBoarding.start_button));
+      test('should click on "Start" button', () => client.waitForExistAndClick(OnBoarding.start_button, 2000));
       test('should check that the current step has started', () => client.checkAttributeValue(OnBoarding.welcomeSteps.tutorial_step.replace("%P", '0'), 'class', 'id -done'));
       test('should check the existence of the onboarding-tooltip', () => client.isExisting(OnBoarding.welcomeSteps.onboarding_tooltip, 2000));
       test('should check the first onboarding-tooltip message', () => client.checkTextValue(OnBoarding.welcomeSteps.message_value, 'Give your product a catchy name.'));
@@ -30,14 +30,14 @@ scenario('Welcome Module', () => {
     }, 'common_client');
 
     scenario('Step 2/5', client => {
-      test('should click on "Next" button', () => client.waitForExistAndClick(OnBoarding.welcomeSteps.next_button));
+      test('should click on "Next" button', () => client.waitForExistAndClick(OnBoarding.welcomeSteps.next_button, 2000));
       test('should check that the step number is equal to "2"', () => client.checkTextValue(OnBoarding.welcomeSteps.tooltip_step, '2', 'contain', 2000));
       test('should check the second onboarding-tooltip message', () => client.checkTextValue(OnBoarding.welcomeSteps.message_value, 'Fill out the essential details in this tab. The other tabs are for more advanced information.'));
       test('should select "Product with combinations"', () => client.waitForExistAndClick(AddProductPage.variations_type_button));
     }, 'common_client');
 
     scenario('Step 3/5 ', client => {
-      test('should click on "Next" button', () => client.waitForExistAndClick(OnBoarding.welcomeSteps.next_button));
+      test('should click on "Next" button', () => client.waitForExistAndClick(OnBoarding.welcomeSteps.next_button, 2000));
       test('should check that the step number is equal to "3"', () => client.checkTextValue(OnBoarding.welcomeSteps.tooltip_step, '3', 'contain', 2000));
       test('should check the third  onboarding-tooltip message', () => client.checkTextValue(OnBoarding.welcomeSteps.message_value, 'Add one or more pictures so your product looks tempting!'));
       test('should upload the picture of product', () => client.uploadPicture('image_test.jpg', AddProductPage.picture));
@@ -105,7 +105,7 @@ scenario('Welcome Module', () => {
       test('should check that the current step has started', () => client.checkAttributeValue(OnBoarding.welcomeSteps.tutorial_step.replace("%P", '4'), 'class', 'id -done', 'equal'));
       test('should check that the step number is equal to "1"', () => client.checkTextValue(OnBoarding.welcomeSteps.tooltip_step, '1/2', 'contain', 2000));
       test('should check the first onboarding-tooltip message', () => client.checkTextValue(OnBoarding.welcomeSteps.message_value, 'Discover our module selection in the first tab. Manage your modules on the second one and be aware of notifications in the third tab.', 'equal', 2000));
-      test('should click on "Next" button', () => client.scrollWaitForExistAndClick(OnBoarding.welcomeSteps.next_button));
+      test('should click on "Next" button', () => client.scrollWaitForExistAndClick(OnBoarding.welcomeSteps.next_button, 150, 2000));
     }, 'common_client');
     scenario('Step 2/2 : Get the shop ready for payments', client => {
       test('should click on "Starter Guide" button', () => {
