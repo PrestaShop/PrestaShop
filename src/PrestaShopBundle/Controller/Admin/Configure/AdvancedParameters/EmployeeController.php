@@ -142,6 +142,9 @@ class EmployeeController extends FrameworkBundleAdminController
     /**
      * Update status for employees in bulk action.
      *
+     * @DemoRestricted(redirectRoute="admin_employees_index")
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
+     *
      * @param Request $request
      * @param string $newStatus
      *
@@ -170,6 +173,9 @@ class EmployeeController extends FrameworkBundleAdminController
     /**
      * Delete employee.
      *
+     * @DemoRestricted(redirectRoute="admin_employees_index")
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")
+     *
      * @param int $employeeId
      *
      * @return RedirectResponse
@@ -189,6 +195,9 @@ class EmployeeController extends FrameworkBundleAdminController
 
     /**
      * Delete employees in bulk actions.
+     *
+     * @DemoRestricted(redirectRoute="admin_employees_index")
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
      *
      * @param Request $request
      *
