@@ -117,6 +117,7 @@ export default class PositionExtension {
         const position = $positionWrapper.data('position');
         const id = `row_${rowId}_${position}`;
         $positionWrapper.closest('tr').attr('id', id);
+        $positionWrapper.closest('td').addClass('js-drag-handle');
       });
   }
 

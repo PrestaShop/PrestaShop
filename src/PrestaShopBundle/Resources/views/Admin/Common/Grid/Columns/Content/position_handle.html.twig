@@ -23,9 +23,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-{% set updateRouteParams = record|array_pluck(column.options.route_params) %}
+{% set updateRouteParams = record|array_pluck(column.options.record_route_params) %}
 
-<div class="js-drag-handle position-drag-handle js-{{ grid.id }}-position"
+<div class="position-drag-handle js-{{ grid.id }}-position"
      data-id="{{ record[column.options.id_field] }}"
      data-position="{{ record[column.options.position_field] }}"
      data-update-url="{{ url(column.options.update_route, updateRouteParams) }}"
