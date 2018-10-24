@@ -249,7 +249,7 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
             ->add((new SubmitBulkAction('enable_selection'))
                 ->setName($this->trans('Enable selection', [], 'Admin.Actions'))
                 ->setOptions([
-                    'submit_route' => 'admin_employees_bulk_status_update',
+                    'submit_route' => 'admin_employees_bulk_update_status',
                     'route_params' => [
                         'newStatus' => 'enabled',
                     ],
@@ -258,7 +258,7 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
             ->add((new SubmitBulkAction('disable_selection'))
                 ->setName($this->trans('Disable selection', [], 'Admin.Actions'))
                 ->setOptions([
-                    'submit_route' => 'admin_employees_bulk_status_update',
+                    'submit_route' => 'admin_employees_bulk_update_status',
                     'route_params' => [
                         'newStatus' => 'disabled',
                     ],
