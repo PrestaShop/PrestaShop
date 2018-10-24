@@ -124,3 +124,8 @@ services:
         arguments:
             - '@=service("prestashop.core.import.fields_provider_finder")'
             - '@=service("session").get("entity")'
+
+    prestashop.core.form.choice_provider.theme_page_layouts:
+        class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ThemePageLayoutsChoiceProvider'
+        arguments:
+            - '@=service("prestashop.adapter.legacy.context").getContext().shop.theme'
