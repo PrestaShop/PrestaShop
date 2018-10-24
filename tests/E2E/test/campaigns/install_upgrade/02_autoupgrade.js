@@ -10,6 +10,7 @@ const commonScenarios = require('../common_scenarios/product');
 const commonInstallation = require('../common_scenarios/common_installation');
 const moduleCommonScenarios = require('../common_scenarios/module');
 const orderCommonScenarios = require('../common_scenarios/order');
+const welcomeScenarios = require('../common_scenarios/welcome');
 
 let promise = Promise.resolve();
 
@@ -45,13 +46,7 @@ scenario('The shop installation', () => {
     test('should log in successfully in BO', () => client.signInBO(AccessPageBO, UrlLastStableVersion));
   }, 'installation');
 
-  scenario('Close the onboarding modal ', client => {
-    test('should close the onboarding modal', () => {
-      return promise
-        .then(() => client.isVisible(OnBoarding.welcome_modal))
-        .then(() => client.closeBoarding(OnBoarding.popup_close_button));
-    });
-  }, 'installation');
+  welcomeScenarios.findAndCloseWelcomeModal('installation');
 
   /**
    * This scenario is based on the bug described in this ticket

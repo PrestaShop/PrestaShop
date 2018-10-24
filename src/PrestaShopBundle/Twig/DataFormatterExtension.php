@@ -42,6 +42,7 @@ class DataFormatterExtension extends \Twig_Extension
             new \Twig_SimpleFilter('arrayCast', array($this, 'arrayCast')),
             new \Twig_SimpleFilter('intCast', array($this, 'intCast')),
             new \Twig_SimpleFilter('unsetElement', array($this, 'unsetElement')),
+            new \Twig_SimpleFilter('array_pluck', array($this, 'arrayPluck')),
         );
     }
 
@@ -56,6 +57,7 @@ class DataFormatterExtension extends \Twig_Extension
             new \Twig_SimpleFunction('arrayCast', array($this, 'arrayCast')),
             new \Twig_SimpleFunction('intCast', array($this, 'intCast')),
             new \Twig_SimpleFunction('unsetElement', array($this, 'unsetElement')),
+            new \Twig_SimpleFunction('array_pluck', array($this, 'arrayPluck')),
         );
     }
 
@@ -94,6 +96,39 @@ class DataFormatterExtension extends \Twig_Extension
         unset($array[$key]);
 
         return $array;
+    }
+
+    /**
+     * Extract a subset of an array and returns only the wanted keys.
+     * If $extractedKeys is an associative array you can even rename the
+     * keys of the extracted array.
+     *
+     * ex:
+     *  arrayPluck(['first_name' => 'John', 'last_name' => 'Doe'], ['first_name']) => ['first_name' => 'John']
+     *  arrayPluck(['first_name' => 'John', 'last_name' => 'Doe'], ['first_name' => 'name']) => ['name' => 'John']
+     *
+     * @param array $array
+     * @param array $extractedKeys
+     *
+     * @return array
+     */
+    public function arrayPluck(array $array, array $extractedKeys)
+    {
+        $extractedArray = [];
+        foreach ($extractedKeys as $key => $value) {
+            if (is_int($key)) {
+                $oldKey = $value;
+                $newKey = $value;
+            } else {
+                $oldKey = $key;
+                $newKey = $value;
+            }
+            if (isset($array[$oldKey])) {
+                $extractedArray[$newKey] = $array[$oldKey];
+            }
+        }
+
+        return $extractedArray;
     }
 
     /**
