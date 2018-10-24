@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\CommandHandler\ToggleEmpl
 /**
  * Class ToggleEmployeeStatusHandler encapsulates Employee status toggling using legacy Employee object model.
  */
-final class ToggleEmployeeHandler extends AbstractEmployeeHandler implements ToggleEmployeeStatusHandlerInterface
+final class ToggleEmployeeStatusHandler extends AbstractEmployeeHandler implements ToggleEmployeeStatusHandlerInterface
 {
     /**
      * {@inheritdoc}
