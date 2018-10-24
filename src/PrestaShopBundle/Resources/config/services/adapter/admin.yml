@@ -15,3 +15,4 @@ services:
     prestashop.adapter.legacy_db:
         class: 'Db'
         factory: ['Db', 'getInstance']
+        deprecated: '%service_id% service is deprecated and will be removed in 1.8.'
