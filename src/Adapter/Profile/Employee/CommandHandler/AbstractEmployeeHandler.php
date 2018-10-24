@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Profile\Employee\CommandHandler;
 
+use Context;
 use Employee;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception\AdminEmployeeException;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception\CannotDeleteWarehouseManagerException;
@@ -83,7 +84,7 @@ abstract class AbstractEmployeeHandler
      */
     protected function assertLoggedInEmployeeIsNotTheSameAsBeingUpdatedEmployee(Employee $employee)
     {
-        if (\Context::getContext()->employee->id === $employee->id) {
+        if (Context::getContext()->employee->id === $employee->id) {
             throw new EmployeeCannotChangeItselfException(
                 'Employee cannot change status of itself.',
                 EmployeeCannotChangeItselfException::CANNOT_CHANGE_STATUS
@@ -93,6 +94,10 @@ abstract class AbstractEmployeeHandler
 
     /**
      * Make sure that given employee does not manage any warehouse.
+     *
+     * Even though Warehouse feature was removed in 1.7
+     * but the code related to it still exists
+     * thus assertion is kept for BC i guess.
      *
      * @param Employee $employee
      */
