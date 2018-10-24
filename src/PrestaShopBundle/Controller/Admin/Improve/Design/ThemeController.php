@@ -44,19 +44,17 @@ class ThemeController extends AbstractAdminController
      *
      * @return Response
      */
-    public function index()
+    public function indexAction()
     {
-        $shopLogosType = $this->createForm(ShopLogosType::class);
+        $shopLogosForm = $this->createForm(ShopLogosType::class);
 
         $themeProvider = $this->get('prestashop.adapter.addons.theme.theme_provider');
 
         $installedTheme = $themeProvider->getInstalledTheme();
         $notInstalledThemes = $themeProvider->getNotInstalledThemes();
 
-        dump($notInstalledThemes);
-
         return $this->render('@PrestaShop/Admin/Improve/Design/Theme/index.html.twig', [
-            'shopLogosType' => $shopLogosType->createView(),
+            'shopLogosForm' => $shopLogosForm->createView(),
         ]);
     }
 
