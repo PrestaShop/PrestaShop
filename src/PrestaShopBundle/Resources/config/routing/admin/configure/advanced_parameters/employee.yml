@@ -27,8 +27,8 @@ admin_employees_toggle_status:
     _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Employee:toggleStatus'
     _legacy_controller: AdminEmployees
 
-admin_employees_bulk_status_update:
-  path: /bulk-status-update/{newStatus}
+admin_employees_bulk_update_status:
+  path: /bulk-update-status/{newStatus}
   methods: [POST]
   defaults:
     _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Employee:bulkStatusUpdate'
