@@ -185,7 +185,7 @@ class EmployeeController extends FrameworkBundleAdminController
         try {
             $this->getCommandBus()->handle(new DeleteEmployeeCommand(new EmployeeId($employeeId)));
 
-            $this->addFlash('succcess', $this->trans('Successful deletion.', 'Admin.Notifications.Success'));
+            $this->addFlash('success', $this->trans('Successful deletion.', 'Admin.Notifications.Success'));
         } catch (EmployeeException $e) {
             $this->addFlash('error', $this->getErrorForEmployeeException($e));
         }
