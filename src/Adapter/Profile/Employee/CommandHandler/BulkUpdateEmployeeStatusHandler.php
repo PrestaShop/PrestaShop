@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -31,10 +31,9 @@ use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Command\BulkUpdateEmploye
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\CommandHandler\BulkUpdateEmployeeStatusHandlerInterface;
 
 /**
- * Class BulkUpdateEmployeeStatusHandler
+ * Class BulkUpdateEmployeeStatusHandler.
  */
-final class BulkUpdateEmployeeStatusHandler extends AbstractEmployeeHandler implements
-    BulkUpdateEmployeeStatusHandlerInterface
+final class BulkUpdateEmployeeStatusHandler extends AbstractEmployeeHandler implements BulkUpdateEmployeeStatusHandlerInterface
 {
     /**
      * {@inheritdoc}

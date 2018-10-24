@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Command\DeleteEmployeeCom
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\CommandHandler\DeleteEmployeeHandlerInterface;
 
 /**
- * Class DeleteEmployeeHandler
+ * Class DeleteEmployeeHandler.
  */
 final class DeleteEmployeeHandler extends AbstractEmployeeHandler implements DeleteEmployeeHandlerInterface
 {

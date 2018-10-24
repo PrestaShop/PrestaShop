@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Exception\ProfileException;
 
 /**
- * Class EmployeeException
+ * Class EmployeeException.
  */
 class EmployeeException extends ProfileException
 {
