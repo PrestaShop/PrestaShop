@@ -925,7 +925,7 @@ class StockAvailableCore extends ObjectModel
         if ($id_product_attribute === null) {
             $id_product_attribute = 0;
         }  
-        $sql='  SELECT SUM(od.product_quantity - od.product_quantity_refunded) AS reserved
+        $sql ='  SELECT SUM(od.product_quantity - od.product_quantity_refunded) AS reserved
                 FROM ps_orders o
                 INNER JOIN ps_order_detail od ON od.id_order = o.id_order
                 INNER JOIN ps_order_history oh ON (
@@ -937,11 +937,11 @@ class StockAvailableCore extends ObjectModel
                 WHERE o.id_shop = '.(int)$order->id_shop.'
                 AND os.shipped != 1 AND (
                     o.valid = 1 OR (
-                        os.id_order_state != '.(int)Configuration::get('PS_OS_ERROR').' AND
-                        os.id_order_state != '.(int)Configuration::get('PS_OS_CANCELED').'
+                        os.id_order_state != '.(int) Configuration::get('PS_OS_ERROR').' AND
+                        os.id_order_state != '.(int) Configuration::get('PS_OS_CANCELED').'
                     )
-                ) AND od.product_id='.(int)$id_product.' AND od.product_attribute_id='.(int)$id_product_attribute.' AND o.id_order>='.(int)$order->id;
+                ) AND od.product_id='.(int)$id_product.' AND od.product_attribute_id=' . (int) $id_product_attribute . ' AND o.id_order>=' . (int) $order->id;
         
-        return (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
+        return (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
     } 	
 }
