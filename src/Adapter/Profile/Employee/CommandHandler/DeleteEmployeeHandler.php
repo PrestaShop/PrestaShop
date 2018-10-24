@@ -46,9 +46,6 @@ final class DeleteEmployeeHandler extends AbstractEmployeeHandler implements Del
         $this->assertEmployeeWasFoundById($employeeId, $employee);
         $this->assertLoggedInEmployeeIsNotTheSameAsBeingUpdatedEmployee($employee);
         $this->assertEmployeeIsNotTheOnlyAdminInShop($employee);
-        // Warehouse feature was removed from 1.7
-        // but the code related to still exists
-        // thus assertion is kept for BC i guess
         $this->assertEmployeeDoesNotManageWarehouse($employee);
 
         $employee->delete();
