@@ -26,6 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception;
 
+/**
+ * Class InvalidEmployeeIdException is thrown when EmployeeId with invalid value is being created.
+ */
 class InvalidEmployeeIdException extends EmployeeException
 {
 }
