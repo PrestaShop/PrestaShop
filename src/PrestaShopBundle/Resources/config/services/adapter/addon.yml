@@ -1,0 +1,8 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.adapter.addons.theme.theme_provider:
+    class: 'PrestaShop\PrestaShop\Adapter\Addons\Theme\ThemeProvider'
+    arguments:
+      - '@prestashop.core.addon.theme.repository'
