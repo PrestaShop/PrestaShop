@@ -48,14 +48,17 @@ class CategoriesProvider
 
     private $apiClient;
     private $logger;
+    private $modulesTheme;
 
     public static $categories;
     public static $categoriesFromApi;
 
-    public function __construct(ApiClient $apiClient, LoggerInterface $logger, array $addonsCategories)
+    public function __construct(ApiClient $apiClient, LoggerInterface $logger, array $addonsCategories, array $modulesTheme)
     {
         $this->apiClient = $apiClient;
         $this->logger = $logger;
+        $this->modulesTheme = $modulesTheme;
+        // We now avoid calling the API. This data is loaded from a local YML file
         self::$categoriesFromApi = empty($addonsCategories) ? null : $this->sortCategories($addonsCategories);
     }
 
@@ -94,7 +97,7 @@ class CategoriesProvider
             foreach ($modules as $module) {
                 if (empty($categoriesListing)) {
                     // No result from Addons, check module type
-                    $category = $this->findModuleType($module, $categories);
+                    $category = $this->findModuleType($module, $this->modulesTheme);
                 } else {
                     $category = $this->findModuleCategory($module, $categories);
                 }
@@ -238,17 +241,15 @@ class CategoriesProvider
         $moduleCategory = $installedProduct->attributes->get('categoryName');
         $moduleCategoryParent = $this->getParentCategory($moduleCategory);
         if (!isset($categories['categories']->subMenu[$moduleCategoryParent])) {
-            if (in_array($installedProduct->attributes->get('name'), $categories)) {
+            if (in_array($installedProduct->attributes->get('name'), $this->modulesTheme)) {
                 $moduleCategoryParent = self::CATEGORY_THEME;
             } else {
                 $moduleCategoryParent = self::CATEGORY_OTHER;
             }
         }
 
-        foreach ($categories['categories']->subMenu as $category) {
-            if ($category->name === $moduleCategoryParent) {
-                return $category->name;
-            }
+        if (array_key_exists($moduleCategoryParent, $categories['categories']->subMenu)) {
+            return $moduleCategoryParent;
         }
 
         return CategoriesProvider::CATEGORY_OTHER;

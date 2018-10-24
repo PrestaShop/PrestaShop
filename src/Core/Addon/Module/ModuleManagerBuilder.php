@@ -1,4 +1,5 @@
 <?php
+
 /**
  * 2007-2018 PrestaShop.
  *
@@ -27,6 +28,7 @@
 namespace PrestaShop\PrestaShop\Core\Addon\Module;
 
 use Context;
+use Db;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use Doctrine\Common\Cache\FilesystemCache;
 use PrestaShop\PrestaShop\Adapter\Configuration;
@@ -38,6 +40,7 @@ use PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleZipManager;
 use PrestaShop\PrestaShop\Adapter\Addons\AddonsDataProvider;
 use PrestaShop\PrestaShop\Adapter\Tools;
+use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
 use PrestaShopBundle\Event\Dispatcher\NullDispatcher;
 use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
 use PrestaShopBundle\Service\DataProvider\Marketplace\ApiClient;
@@ -188,11 +191,18 @@ class ModuleManagerBuilder
 
         self::$cacheProvider = new FilesystemCache(self::$addonsDataProvider->cacheDir . '/doctrine');
 
+        $themeManagerBuilder = new ThemeManagerBuilder(Context::getContext(), Db::getInstance());
+        $themeName = Context::getContext()->shop->theme_name;
+        $themeModules = $themeName ?
+                        $themeManagerBuilder->buildRepository()->getInstanceByName($themeName)->getModulesToEnable() :
+                        [];
+
         self::$legacyLogger = new LegacyLogger();
         self::$categoriesProvider = new CategoriesProvider(
             $marketPlaceClient,
             self::$legacyLogger,
-            $prestashopAddonsConfig['prestashop']['addons']['categories']
+            $prestashopAddonsConfig['prestashop']['addons']['categories'],
+            $themeModules
         );
         self::$lecacyContext = new LegacyContext();
 
@@ -211,13 +221,6 @@ class ModuleManagerBuilder
 
             self::$translator = Context::getContext()->getTranslator();
             self::$moduleDataUpdater = new ModuleDataUpdater(self::$addonsDataProvider, self::$adminModuleDataProvider);
-            self::$moduleDataUpdater = new ModuleDataUpdater(
-                self::$addonsDataProvider,
-                self::$adminModuleDataProvider,
-                self::$lecacyContext,
-                self::$legacyLogger,
-                self::$translator
-            );
         }
     }
 
