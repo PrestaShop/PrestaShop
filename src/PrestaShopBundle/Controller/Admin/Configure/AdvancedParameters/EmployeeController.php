@@ -234,17 +234,13 @@ class EmployeeController extends FrameworkBundleAdminController
         $code = $exception->getCode();
 
         $errorMessages = [
-            InvalidEmployeeIdException::class =>
-                $this->trans('The object cannot be loaded (the identifier is missing or invalid)', 'Admin.Notifications.Error'),
-            EmployeeNotFoundException::class =>
-                $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'),
+            InvalidEmployeeIdException::class => $this->trans('The object cannot be loaded (the identifier is missing or invalid)', 'Admin.Notifications.Error'),
+            EmployeeNotFoundException::class => $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'),
             AdminEmployeeException::class => [
-                AdminEmployeeException::CANNOT_CHANGE_LAST_ADMIN =>
-                    $this->trans('You cannot disable or delete the administrator account.', 'Admin.Advparameters.Notification'),
+                AdminEmployeeException::CANNOT_CHANGE_LAST_ADMIN => $this->trans('You cannot disable or delete the administrator account.', 'Admin.Advparameters.Notification'),
             ],
             EmployeeCannotChangeItselfException::class => [
-                EmployeeCannotChangeItselfException::CANNOT_CHANGE_STATUS =>
-                    $this->trans('You cannot disable or delete your own account.', 'Admin.Advparameters.Notification'),
+                EmployeeCannotChangeItselfException::CANNOT_CHANGE_STATUS => $this->trans('You cannot disable or delete your own account.', 'Admin.Advparameters.Notification'),
             ],
         ];
 
