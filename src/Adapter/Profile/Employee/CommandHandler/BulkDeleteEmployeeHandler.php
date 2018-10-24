@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Command\BulkDeleteEmploye
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\CommandHandler\BulkDeleteEmployeeHandlerInterface;
 
 /**
- * Class BulkDeleteEmployeeHandler
+ * Class BulkDeleteEmployeeHandler.
  */
 final class BulkDeleteEmployeeHandler extends AbstractEmployeeHandler implements BulkDeleteEmployeeHandlerInterface
 {

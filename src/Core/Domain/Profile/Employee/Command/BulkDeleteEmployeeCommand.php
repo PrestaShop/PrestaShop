@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Command;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject\EmployeeId;
 
 /**
- * Class BulkDeleteEmployeeCommand
+ * Class BulkDeleteEmployeeCommand.
  */
 class BulkDeleteEmployeeCommand
 {
