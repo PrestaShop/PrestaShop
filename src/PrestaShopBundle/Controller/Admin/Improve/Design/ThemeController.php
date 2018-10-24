@@ -29,6 +29,7 @@ namespace PrestaShopBundle\Controller\Admin\Improve\Design;
 use PrestaShop\PrestaShop\Core\Domain\Meta\DataTransferObject\LayoutCustomizationPage;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Query\GetPagesForLayoutCustomization;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController as AbstractAdminController;
+use PrestaShopBundle\Form\Admin\Improve\Design\Theme\ShopLogosType;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -38,6 +39,27 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class ThemeController extends AbstractAdminController
 {
+    /**
+     * Show main themes page.
+     *
+     * @return Response
+     */
+    public function index()
+    {
+        $shopLogosType = $this->createForm(ShopLogosType::class);
+
+        $themeProvider = $this->get('prestashop.adapter.addons.theme.theme_provider');
+
+        $installedTheme = $themeProvider->getInstalledTheme();
+        $notInstalledThemes = $themeProvider->getNotInstalledThemes();
+
+        dump($notInstalledThemes);
+
+        return $this->render('@PrestaShop/Admin/Improve/Design/Theme/index.html.twig', [
+            'shopLogosType' => $shopLogosType->createView(),
+        ]);
+    }
+
     /**
      * Show Front Office theme's pages layout customization.
      *

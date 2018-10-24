@@ -1,0 +1,8 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.core.shop.logo.logo_provider:
+    class: 'PrestaShop\PrestaShop\Core\Shop\Logo\LogoProvider'
+    arguments:
+      - '@prestashop.adapter.legacy.configuration'

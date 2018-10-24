@@ -1,3 +1,10 @@
+admin_themes_index:
+  path: /
+  methods: [GET]
+  defaults:
+    _controller: PrestaShopBundle:Admin\Improve\Design\Theme:index
+    _legacy_controller: AdminThemes
+
 admin_theme_customize_page_layouts:
   path: /page-layout-customization
   methods: [GET, POST]
