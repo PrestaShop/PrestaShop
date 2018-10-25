@@ -76,6 +76,18 @@ class SupplierController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_suppliers_index', ['filters' => $filters]);
     }
 
+    public function createAction()
+    {
+    }
+
+    public function deleteAction()
+    {
+    }
+
+    public function editAction()
+    {
+    }
+
     public function toggleStatusAction($supplierId)
     {
     }
