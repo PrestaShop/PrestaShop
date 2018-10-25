@@ -24,28 +24,26 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
+namespace PrestaShop\PrestaShop\Core\Search\Filters;
 
-use PrestaShop\PrestaShop\Core\Search\Filters\SupplierFilters;
-use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use PrestaShop\PrestaShop\Core\Search\Filters;
 
 /**
- * Class SupplierController is responsible for "Sell > Catalog > Brands & Suppliers > Suppliers" page.
+ * Class SupplierFilters  defines default filters for Suppliers grid.
  */
-class SupplierController extends FrameworkBundleAdminController
+final class SupplierFilters extends Filters
 {
     /**
-     * Show suppliers listing.
-     *
-     * @Template("@PrestaShop/Admin/Sell/Catalog/Suppliers/index.html.twig")
-     *
-     * @param SupplierFilters $filters
-     *
-     * @return array
+     * {@inheritdoc}
      */
-    public function indexAction(SupplierFilters $filters)
+    public static function getDefaults()
     {
-        return [];
+        return [
+            'limit' => 50,
+            'offset' => 0,
+            'orderBy' => 'name',
+            'sortOrder' => 'asc',
+            'filters' => [],
+        ];
     }
 }
