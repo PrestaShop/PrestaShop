@@ -28,6 +28,6 @@ import SortingExtension from "../../components/grid/extension/sorting-extension"
 const $ = window.$;
 
 $(() => {
-  const supplierGrid =  new Grid('supplier');
+  const supplierGrid =  new Grid('suppliers');
   supplierGrid.addExtension(new SortingExtension());
 });
