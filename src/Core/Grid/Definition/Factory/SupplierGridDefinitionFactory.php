@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ToggleColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 
 /**
@@ -62,10 +63,25 @@ final class SupplierGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'bulk_field' => 'id_supplier',
                 ])
             )
-            ->add((new DataColumn('id_contact'))
+            ->add((new DataColumn('id_supplier'))
                 ->setName($this->trans('ID', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'id_supplier',
+                ])
+            )
+            ->add((new DataColumn('name'))
+                ->setName($this->trans('Name', [], 'Admin.Global'))
+                ->setOptions([
+                    'field' => 'name',
+                ])
+            )
+            ->add((new ToggleColumn('active'))
+                ->setName($this->trans('Enabled', [], 'Admin.Global'))
+                ->setOptions([
+                    'field' => 'active',
+                    'primary_field' => 'id_supplier',
+                    'route' => 'admin_suppliers_toggle_status',
+                    'route_param_name' => 'supplierId',
                 ])
             )
         ;

@@ -1,6 +1,13 @@
 admin_suppliers_index:
-    path: /
-    methods: GET
-    defaults:
-        _controller: 'PrestaShopBundle:Admin\Sell\Catalog\Supplier:index'
-        _legacy_controller: AdminCategories
+  path: /
+  methods: GET
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Sell\Catalog\Supplier:index'
+    _legacy_controller: AdminCategories
+
+admin_suppliers_toggle_status:
+  path: /{supplierId}/toggle-status
+  methods: POST
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Sell\Catalog\Supplier:toggleStatus'
+    _legacy_controller: AdminCategories

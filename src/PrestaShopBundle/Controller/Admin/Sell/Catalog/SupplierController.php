@@ -56,4 +56,8 @@ class SupplierController extends FrameworkBundleAdminController
             'supplierGrid' => $gridPresenter->present($supplierGrid),
         ];
     }
+
+    public function toggleStatusAction($supplierId)
+    {
+    }
 }

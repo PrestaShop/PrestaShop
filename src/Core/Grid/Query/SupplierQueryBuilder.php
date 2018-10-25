@@ -70,7 +70,7 @@ final class SupplierQueryBuilder extends AbstractDoctrineQueryBuilder
         $qb = $this->getQueryBuilder($searchCriteria->getFilters());
 
         $qb
-            ->select('s.`id_supplier`')
+            ->select('s.`id_supplier`, s.`name`, s.`active`')
             ->groupBy('s.`id_supplier`')
         ;
 
