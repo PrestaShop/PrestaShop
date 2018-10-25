@@ -104,4 +104,35 @@
       {{ form_end(shopLogosForm) }}
     </div>
   </div>
+
+  {% if notInstalledThemes is not empty %}
+    <div class="row">
+      <div class="col">
+        <div class="card">
+          <div class="card-body">
+            {% if not isSingleShopContext %}
+              <div class="alert alert-info mb-0">
+                <p class="alert-text">
+                  {{ 'You must select a shop from the above list if you wish to choose a theme.'|trans({}, 'Admin.Design.Help') }}
+                </p>
+              </div>
+            {% else %}
+              <div class="row">
+                {% for theme in notInstalledThemes %}
+                  <div class="col-3">
+                    <div class="card" style="max-width: 350px; max-height: 250px; overflow-y: hidden;">
+                      <h3 class="card-header text-center">
+                        {{ theme.name }}
+                      </h3>
+                      <img src="{{ baseShopUrl }}{{ installedTheme.get('preview') }}" alt="{{ theme.name }}" class="card-img-top">
+                    </div>
+                  </div>
+                {% endfor %}
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
 {% endblock %}
