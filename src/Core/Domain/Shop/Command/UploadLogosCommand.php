@@ -114,6 +114,13 @@ class UploadLogosCommand
      */
     public function setUploadedFavicon(UploadedFile $uploadedFavicon)
     {
+        if ('ico' !== $uploadedFavicon->getClientOriginalExtension()) {
+            throw new NotSupportedFaviconExtensionException(sprintf(
+                'Not supported "%s" favicon extension. Supported extension is "ico".',
+                $uploadedFavicon->getClientOriginalExtension()
+            ));
+        }
+
         $this->uploadedFavicon = $uploadedFavicon;
     }
 }
