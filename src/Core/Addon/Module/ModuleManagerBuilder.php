@@ -136,6 +136,15 @@ class ModuleManagerBuilder
 
     private function __construct()
     {
+        /**
+         * If the Symfony container is available, it will be used for the other methods
+         * build & buildRepository. No need to init manually all the dependancies.
+         */
+        $sfContainer = SymfonyContainer::getInstance();
+        if (!is_null($sfContainer)) {
+            return;
+        }
+
         $phpConfigFile = $this->getConfigDir() . '/config.php';
         if (file_exists($phpConfigFile)
             && filemtime($phpConfigFile) >= filemtime($this->getConfigDir() . DIRECTORY_SEPARATOR . 'config.yml')) {
