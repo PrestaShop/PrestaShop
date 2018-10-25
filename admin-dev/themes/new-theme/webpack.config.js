@@ -127,7 +127,10 @@ const config = {
       './js/pages/customer'
     ],
     language: [
-      './js/pages/language'
+      './js/pages/language',
+    ],
+    supplier: [
+      './js/pages/supplier',
     ],
   },
   output: {
