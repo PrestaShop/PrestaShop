@@ -26,26 +26,71 @@
 
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Import;
 
-use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
+use PrestaShop\PrestaShop\Core\Import\Configuration\ImportConfigInterface;
+use PrestaShop\PrestaShop\Core\Import\File\DataRow\Factory\DataRowCollectionFactoryInterface;
+use PrestaShop\PrestaShop\Core\Import\File\FileFinder;
+use PrestaShop\PrestaShop\Core\Import\ImportDirectory;
+use SplFileInfo;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
- * Class ImportDataConfigurationFormDataProvider is responsible for providing or updating
- * data for import match configuration.
+ * Class ImportDataConfigurationFormDataProvider is responsible for providing Import's 2nd step form data.
  */
 final class ImportDataConfigurationFormDataProvider implements FormDataProviderInterface
 {
     /**
-     * @var DataConfigurationInterface
+     * @var FileFinder
      */
-    private $dataConfiguration;
+    private $importFileFinder;
 
     /**
-     * @param DataConfigurationInterface $dataConfiguration
+     * @var ImportConfigInterface
      */
-    public function __construct(DataConfigurationInterface $dataConfiguration)
-    {
-        $this->dataConfiguration = $dataConfiguration;
+    private $importConfig;
+
+    /**
+     * @var SessionInterface
+     */
+    private $session;
+
+    /**
+     * @var ImportDirectory
+     */
+    private $importDirectory;
+
+    /**
+     * @var DataRowCollectionFactoryInterface
+     */
+    private $dataRowCollectionFactory;
+
+    /**
+     * @var array
+     */
+    private $entityFieldChoices;
+
+    /**
+     * @param FileFinder $importFileFinder
+     * @param ImportConfigInterface $importConfig
+     * @param SessionInterface $session
+     * @param ImportDirectory $importDirectory
+     * @param DataRowCollectionFactoryInterface $dataRowCollectionFactory
+     * @param array $entityFieldChoices
+     */
+    public function __construct(
+        FileFinder $importFileFinder,
+        ImportConfigInterface $importConfig,
+        SessionInterface $session,
+        ImportDirectory $importDirectory,
+        DataRowCollectionFactoryInterface $dataRowCollectionFactory,
+        array $entityFieldChoices
+    ) {
+        $this->importFileFinder = $importFileFinder;
+        $this->importConfig = $importConfig;
+        $this->session = $session;
+        $this->importDirectory = $importDirectory;
+        $this->dataRowCollectionFactory = $dataRowCollectionFactory;
+        $this->entityFieldChoices = $entityFieldChoices;
     }
 
     /**
@@ -53,9 +98,41 @@ final class ImportDataConfigurationFormDataProvider implements FormDataProviderI
      */
     public function getData()
     {
-        return [
-            'import_data_configuration' => $this->dataConfiguration->getConfiguration(),
+        $importFile = new SplFileInfo($this->importDirectory . $this->importConfig->getFileName());
+        $dataRowCollection = $this->dataRowCollectionFactory->buildFromFile($importFile, 1);
+
+        // Getting the number of cells in the first row
+        $rowSize = count($dataRowCollection->offsetGet(0));
+
+        $data = [
+            'csv' => $this->importConfig->getFileName(),
+            'entity' => $this->importConfig->getEntityType(),
+            'iso_lang' => $this->importConfig->getLanguageIso(),
+            'separator' => $this->importConfig->getSeparator(),
+            'multiple_value_separator' => $this->importConfig->getMultipleValueSeparator(),
+            'truncate' => $this->importConfig->truncate(),
+            'regenerate' => $this->importConfig->skipThumbnailRegeneration(),
+            'match_ref' => $this->importConfig->matchReferences(),
+            'forceIDs' => $this->importConfig->forceIds(),
+            'sendemail' => $this->importConfig->sendEmail(),
+            'type_value' => [],
         ];
+
+
+        $numberOfValuesAdded = 0;
+
+        // Add as many values to the configuration as the are cells in the row
+        foreach ($this->entityFieldChoices as $choice) {
+            // If we already added the required number of values - stop adding them
+            if ($numberOfValuesAdded >= $rowSize) {
+                break;
+            }
+
+            $data['type_value'][] = $choice;
+            ++$numberOfValuesAdded;
+        }
+
+        return $data;
     }
 
     /**
@@ -63,6 +140,16 @@ final class ImportDataConfigurationFormDataProvider implements FormDataProviderI
      */
     public function setData(array $data)
     {
-        return $this->dataConfiguration->updateConfiguration($data);
+        $errors = [];
+
+        if (empty($data['csv'])) {
+            $errors[] = [
+                'key' => 'To proceed, please upload a file first.',
+                'domain' => 'Admin.Advparameters.Notification',
+                'parameters' => [],
+            ];
+        }
+
+        return $errors;
     }
 }
