@@ -5,3 +5,7 @@ _products:
 _categories:
     resource: "categories.yml"
     prefix: /categories/
+
+_suppliers:
+    resource: "suppliers.yml"
+    prefix: /suppliers/
