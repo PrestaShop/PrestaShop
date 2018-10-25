@@ -24,50 +24,28 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
+namespace PrestaShop\PrestaShop\Core\Grid\Query;
 
-use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
-use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
-use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
+use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
 /**
- * Class SupplierGridDefinitionFactory
+ * Class SupplierQueryBuilder
  */
-final class SupplierGridDefinitionFactory extends AbstractGridDefinitionFactory
+final class SupplierQueryBuilder extends AbstractDoctrineQueryBuilder
 {
     /**
      * {@inheritdoc}
      */
-    protected function getId()
+    public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
-        return 'Suppliers';
+        // TODO: Implement getSearchQueryBuilder() method.
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function getName()
+    public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
-        return $this->trans('Suppliers', [], 'Admin.Navigation.Menu');
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function getColumns()
-    {
-        return (new ColumnCollection())
-            ->add((new BulkActionColumn('bulk'))
-                ->setOptions([
-                    'bulk_field' => 'id_supplier',
-                ])
-            )
-            ->add((new DataColumn('id_contact'))
-                ->setName($this->trans('ID', [], 'Admin.Global'))
-                ->setOptions([
-                    'field' => 'id_supplier',
-                ])
-            )
-        ;
+        // TODO: Implement getCountQueryBuilder() method.
     }
 }

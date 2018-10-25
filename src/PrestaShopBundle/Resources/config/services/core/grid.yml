@@ -117,6 +117,14 @@ services:
             - '@prestashop.core.grid.data.factory.language'
             - '@prestashop.adapter.language.language_flag_thumbnail_provider'
 
+    prestashop.core.grid.data_provider.supplier:
+        class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
+        arguments:
+            - '@prestashop.core.grid.query_builder.supplier'
+            - '@prestashop.core.hook.dispatcher'
+            - '@prestashop.core.grid.query.doctrine_query_parser'
+            - 'suppliers'
+
     # Grid definition factories
     prestashop.core.grid.definition.factory.abstract_grid_definition:
         class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory'
@@ -315,7 +323,7 @@ services:
         class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
         arguments:
             - '@prestashop.core.grid.definition.factory.supplier'
-            - ''
+            - '@prestashop.core.grid.data_provider.supplier'
             - '@prestashop.core.grid.filter.form_factory'
             - '@prestashop.core.hook.dispatcher'
 
@@ -436,4 +444,9 @@ services:
             - "@=service('prestashop.adapter.legacy.context').getContext().shop.id"
             - '@prestashop.adapter.shop.context'
             - '@prestashop.adapter.feature.multistore'
+        public: true
+
+    prestashop.core.grid.query_builder.supplier:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Query\SupplierQueryBuilder'
+        parent: 'prestashop.core.grid.abstract_query_builder'
         public: true
