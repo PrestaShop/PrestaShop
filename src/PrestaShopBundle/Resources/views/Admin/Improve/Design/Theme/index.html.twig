@@ -32,12 +32,23 @@
     <div class="col">
       {{ form_start(shopLogosForm, {'action': path('admin_themes_upload_logos')}) }}
       <div class="card">
+        <h3 class="card-header">
+          <i class="material-icons">layers</i>
+          {{ 'Your current theme'|trans({}, 'Admin.Design.Feature') }}
+        </h3>
         <div class="card-body">
           <div class="row">
             <div class="col-3">
-
+              <a href="{{ baseShopUrl }}" target="_blank">
+                <img src="{{ baseShopUrl }}{{ installedTheme.get('preview') }}" alt="{{ installedTheme.name }}" class="img-thumbnail">
+              </a>
             </div>
             <div class="col-9">
+              <p class="h1">{{ installedTheme.name }} <span class="small-text text-muted">{{ 'version'|trans({}, 'Admin.Global') }} {{ installedTheme.get('version') }}</span></p>
+              <p>{{ 'Designed by %s'|trans({'%s': installedTheme.get('author.name')}, 'Admin.Design.Feature') }}</p>
+
+              <hr>
+
               {% include '@PrestaShop/Admin/Improve/Design/Theme/Blocks/logo_configuration.html.twig' %}
             </div>
           </div>

@@ -10,3 +10,6 @@ services:
       - '@prestashop.core.hook.dispatcher'
     tags:
       - { name: tactician.handler, command: 'PrestaShop\PrestaShop\Core\Domain\Shop\Command\UploadLogosCommand' }
+
+  prestashop.adapter.shop.url.base_url_provider:
+    class: 'PrestaShop\PrestaShop\Adapter\Shop\Url\BaseUrlProvider'

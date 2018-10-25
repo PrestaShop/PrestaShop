@@ -52,12 +52,13 @@ class ThemeController extends AbstractAdminController
         $themeProvider = $this->get('prestashop.adapter.addons.theme.theme_provider');
         $logoProvider = $this->get('prestashop.core.shop.logo.logo_provider');
 
-        $installedTheme = $themeProvider->getInstalledTheme();
         $notInstalledThemes = $themeProvider->getNotInstalledThemes();
 
         return $this->render('@PrestaShop/Admin/Improve/Design/Theme/index.html.twig', [
+            'baseShopUrl' => $this->get('prestashop.adapter.shop.url.base_url_provider')->getUrl(),
             'shopLogosForm' => $this->getLogosUploadForm()->createView(),
             'logoProvider' => $logoProvider,
+            'installedTheme' => $themeProvider->getInstalledTheme()
         ]);
     }
 
