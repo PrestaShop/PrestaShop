@@ -6,3 +6,8 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Shop\Logo\LogoProvider'
     arguments:
       - '@prestashop.adapter.legacy.configuration'
+
+  prestashop.core.shop.logo_uploader:
+    class: 'PrestaShop\PrestaShop\Core\Shop\LogoUploader'
+    arguments:
+      - '@=service("prestashop.adapter.legacy.context").getContext().shop'

@@ -24,35 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Form\Admin\Improve\Design\Theme;
+namespace PrestaShop\PrestaShop\Core\Domain\Shop\CommandHandler;
 
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\FileType;
-use Symfony\Component\Form\FormBuilderInterface;
+use PrestaShop\PrestaShop\Core\Domain\Shop\Command\UploadLogosCommand;
 
 /**
- * Class ThemeLogosType is used to configure theme's logos.
+ * Interface UploadCommandHandlerInterface
  */
-class ShopLogosType extends AbstractType
+interface UploadLogosHandlerInterface
 {
     /**
-     * {@inheritdoc}
+     * @param UploadLogosCommand $command
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
-    {
-        $builder
-            ->add('header_logo', FileType::class, [
-                'required' => false,
-            ])
-            ->add('mail_logo', FileType::class, [
-                'required' => false,
-            ])
-            ->add('invoice_logo', FileType::class, [
-                'required' => false,
-            ])
-            ->add('favicon', FileType::class, [
-                'required' => false,
-            ])
-        ;
-    }
+    public function handle(UploadLogosCommand $command);
 }

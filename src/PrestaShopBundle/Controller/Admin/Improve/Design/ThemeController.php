@@ -28,9 +28,12 @@ namespace PrestaShopBundle\Controller\Admin\Improve\Design;
 
 use PrestaShop\PrestaShop\Core\Domain\Meta\DataTransferObject\LayoutCustomizationPage;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Query\GetPagesForLayoutCustomization;
+use PrestaShop\PrestaShop\Core\Domain\Shop\Command\UploadLogosCommand;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController as AbstractAdminController;
 use PrestaShopBundle\Form\Admin\Improve\Design\Theme\ShopLogosType;
 use PrestaShopBundle\Security\Voter\PageVoter;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -46,8 +49,6 @@ class ThemeController extends AbstractAdminController
      */
     public function indexAction()
     {
-        $shopLogosForm = $this->createForm(ShopLogosType::class);
-
         $themeProvider = $this->get('prestashop.adapter.addons.theme.theme_provider');
         $logoProvider = $this->get('prestashop.core.shop.logo.logo_provider');
 
@@ -55,9 +56,47 @@ class ThemeController extends AbstractAdminController
         $notInstalledThemes = $themeProvider->getNotInstalledThemes();
 
         return $this->render('@PrestaShop/Admin/Improve/Design/Theme/index.html.twig', [
-            'shopLogosForm' => $shopLogosForm->createView(),
+            'shopLogosForm' => $this->getLogosUploadForm()->createView(),
             'logoProvider' => $logoProvider,
         ]);
+    }
+
+    /**
+     * Upload shop logos.
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function uploadLogosAction(Request $request)
+    {
+        $logosUploadForm = $this->getLogosUploadForm();
+        $logosUploadForm->handleRequest($request);
+
+        if ($logosUploadForm->isSubmitted()) {
+            $data = $logosUploadForm->getData();
+            $command = new UploadLogosCommand();
+
+            if ($data['header_logo']) {
+                $command->setUploadedHeaderLogo($data['header_logo']);
+            }
+
+            if ($data['mail_logo']) {
+                $command->setUploadedMailLogo($data['mail_logo']);
+            }
+
+            if ($data['invoice_logo']) {
+                $command->setUploadedInvoiceLogo($data['invoice_logo']);
+            }
+
+            if ($data['favicon']) {
+                $command->setUploadedFavicon($data['favicon']);
+            }
+
+            $this->getCommandBus()->handle($command);
+        }
+
+        return $this->redirectToRoute('admin_themes_index');
     }
 
     /**
@@ -116,5 +155,13 @@ class ThemeController extends AbstractAdminController
     {
         return !$this->isDemoModeEnabled() &&
             $this->isGranted(PageVoter::UPDATE, $request->attributes->get('_legacy_controller'));
+    }
+
+    /**
+     * @return FormInterface
+     */
+    protected function getLogosUploadForm()
+    {
+        return $this->createForm(ShopLogosType::class);
     }
 }

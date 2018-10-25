@@ -41,6 +41,11 @@ class LogoUploader
     /** @var $shop the shop */
     private $shop;
 
+    /**
+     * @var array
+     */
+    private $errors = [];
+
     public function __construct(Shop $shop)
     {
         $this->shop = $shop;
