@@ -30,7 +30,7 @@
 {% block content %}
   <div class="row">
     <div class="col">
-      {{ form_start(shopLogosForm) }}
+      {{ form_start(shopLogosForm, {'action': path('admin_themes_upload_logos')}) }}
       <div class="card">
         <div class="card-body">
           <div class="row">
@@ -40,6 +40,14 @@
             <div class="col-9">
               {% include '@PrestaShop/Admin/Improve/Design/Theme/Blocks/logo_configuration.html.twig' %}
             </div>
+          </div>
+        </div>
+        <div class="card-footer">
+          <div class="d-flex justify-content-end">
+            <button class="btn btn-primary">
+              <i class="material-icons">save</i>
+              {{ 'Save'|trans({}, 'Admin.Actions') }}
+            </button>
           </div>
         </div>
       </div>

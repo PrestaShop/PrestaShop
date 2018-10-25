@@ -5,6 +5,13 @@ admin_themes_index:
     _controller: PrestaShopBundle:Admin\Improve\Design\Theme:index
     _legacy_controller: AdminThemes
 
+admin_themes_upload_logos:
+  path: /upload-logos
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin\Improve\Design\Theme:uploadLogos
+    _legacy_controller: AdminThemes
+
 admin_theme_customize_page_layouts:
   path: /page-layout-customization
   methods: [GET, POST]
