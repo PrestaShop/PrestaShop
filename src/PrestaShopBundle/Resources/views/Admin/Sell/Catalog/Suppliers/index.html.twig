@@ -26,7 +26,13 @@
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
 {% block content %}
-
+  {% block supplier_grid %}
+    <div class="row">
+      <div class="col">
+        {% include'@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': supplierGrid} %}
+      </div>
+    </div>
+  {% endblock %}
 {% endblock %}
 
 {% block javascripts %}
