@@ -59,7 +59,7 @@ final class LogoProvider implements LogoProviderInterface
      */
     public function getMailLogoPath()
     {
-        if (false === $mailLogo = $this->configuration->get('PS_LOGO_MAIL')) {
+        if (!$mailLogo = $this->configuration->get('PS_LOGO_MAIL')) {
             return $this->getLogoPath();
         }
 
@@ -77,7 +77,7 @@ final class LogoProvider implements LogoProviderInterface
      */
     public function getInvoiceLogoPath()
     {
-        if (false === $invoiceLogo = $this->configuration->get('PS_LOGO_INVOICE')) {
+        if (!$invoiceLogo = $this->configuration->get('PS_LOGO_INVOICE')) {
             return $this->getLogoPath();
         }
 
