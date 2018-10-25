@@ -71,6 +71,7 @@ final class SupplierQueryBuilder extends AbstractDoctrineQueryBuilder
 
         $qb
             ->select('s.`id_supplier`, s.`name`, s.`active`')
+            ->addSelect('COUNT(DISTINCT ps.`id_product`) AS `product_count`')
             ->groupBy('s.`id_supplier`')
         ;
 
@@ -112,6 +113,12 @@ final class SupplierQueryBuilder extends AbstractDoctrineQueryBuilder
                 $this->dbPrefix . 'supplier_shop',
                 'ss',
                 'ss.`id_supplier` = s.`id_supplier`'
+            )
+            ->leftJoin(
+                's',
+                $this->dbPrefix . 'product_supplier',
+                'ps',
+                'ps.`id_supplier` = s.`id_supplier`'
             )
             ->andWhere('sl.`id_lang` = :contextLangId')
             ->andWhere('ss.`id_shop` IN (:contextShopIds)')

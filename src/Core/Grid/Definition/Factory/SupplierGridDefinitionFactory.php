@@ -75,6 +75,12 @@ final class SupplierGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'field' => 'name',
                 ])
             )
+            ->add((new DataColumn('product_count'))
+                ->setName($this->trans('Number of products', [], 'Admin.Catalog.Feature'))
+                ->setOptions([
+                    'field' => 'product_count',
+                ])
+            )
             ->add((new ToggleColumn('active'))
                 ->setName($this->trans('Enabled', [], 'Admin.Global'))
                 ->setOptions([
