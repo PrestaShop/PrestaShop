@@ -198,6 +198,7 @@ services:
             - "@=service('router').generate('admin_contacts_index')"
         public: true
 
+
     prestashop.core.grid.definition.factory.customer:
         class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CustomerGridDefinitionFactory'
         parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
@@ -213,6 +214,11 @@ services:
         arguments:
             - "@=service('router').generate('admin_common_reset_search', {'controller': 'language', 'action': 'index'})"
             - "@=service('router').generate('admin_languages_index')"
+        public: true
+
+    prestashop.core.grid.definition.factory.supplier:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\SupplierGridDefinitionFactory'
+        parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
         public: true
 
     # Grid factories
@@ -288,6 +294,7 @@ services:
             - '@prestashop.core.grid.filter.form_factory'
             - '@prestashop.core.hook.dispatcher'
 
+
     prestashop.core.grid.factory.customer:
         class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
         arguments:
@@ -301,6 +308,14 @@ services:
         arguments:
             - '@prestashop.core.grid.definition.factory.language'
             - '@prestashop.core.grid.factory.language_decorator'
+            - '@prestashop.core.grid.filter.form_factory'
+            - '@prestashop.core.hook.dispatcher'
+
+    prestashop.core.grid.factory.supplier:
+        class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
+        arguments:
+            - '@prestashop.core.grid.definition.factory.supplier'
+            - ''
             - '@prestashop.core.grid.filter.form_factory'
             - '@prestashop.core.hook.dispatcher'
 
