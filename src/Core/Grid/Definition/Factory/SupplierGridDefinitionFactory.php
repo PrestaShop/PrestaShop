@@ -35,12 +35,37 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\LinkColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ToggleColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
+use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
+use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
+use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
+use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 /**
  * Class SupplierGridDefinitionFactory
  */
 final class SupplierGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
+    /**
+     * @var string
+     */
+    private $resetActionUrl;
+
+    /**
+     * @var string
+     */
+    private $redirectActionUrl;
+
+    /**
+     * @param string $resetActionUrl
+     * @param string $redirectActionUrl
+     */
+    public function __construct($resetActionUrl, $redirectActionUrl)
+    {
+        $this->resetActionUrl = $resetActionUrl;
+        $this->redirectActionUrl = $redirectActionUrl;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -83,10 +108,10 @@ final class SupplierGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'route_param_field' => 'id_supplier',
                 ])
             )
-            ->add((new DataColumn('product_count'))
+            ->add((new DataColumn('products_count'))
                 ->setName($this->trans('Number of products', [], 'Admin.Catalog.Feature'))
                 ->setOptions([
-                    'field' => 'product_count',
+                    'field' => 'products_count',
                 ])
             )
             ->add((new ToggleColumn('active'))
@@ -135,6 +160,45 @@ final class SupplierGridDefinitionFactory extends AbstractGridDefinitionFactory
                                 ),
                             ])
                         ),
+                ])
+            )
+        ;
+    }
+
+    protected function getFilters()
+    {
+        return (new FilterCollection())
+            ->add((new Filter('id_supplier', TextType::class))
+                ->setAssociatedColumn('id_supplier')
+                ->setTypeOptions([
+                    'required' => false,
+                ])
+            )
+            ->add((new Filter('name', TextType::class))
+                ->setAssociatedColumn('name')
+                ->setTypeOptions([
+                    'required' => false,
+                ])
+            )
+            ->add((new Filter('products_count', TextType::class))
+                ->setAssociatedColumn('products_count')
+                ->setTypeOptions([
+                    'required' => false,
+                ])
+            )
+            ->add((new Filter('active', YesAndNoChoiceType::class))
+                ->setAssociatedColumn('active')
+                ->setTypeOptions([
+                    'required' => false,
+                ])
+            )
+            ->add((new Filter('actions', SearchAndResetType::class))
+                ->setAssociatedColumn('actions')
+                ->setTypeOptions([
+                    'attr' => [
+                        'data-url' => $this->resetActionUrl,
+                        'data-redirect' => $this->redirectActionUrl,
+                    ],
                 ])
             )
         ;

@@ -80,7 +80,7 @@ final class SupplierQueryBuilder extends AbstractDoctrineQueryBuilder
 
         $qb
             ->select('s.`id_supplier`, s.`name`, s.`active`')
-            ->addSelect('COUNT(DISTINCT ps.`id_product`) AS `product_count`')
+            ->addSelect('COUNT(DISTINCT ps.`id_product`) AS `products_count`')
             ->groupBy('s.`id_supplier`')
         ;
 

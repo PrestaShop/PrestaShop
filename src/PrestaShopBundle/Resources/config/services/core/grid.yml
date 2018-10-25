@@ -227,6 +227,9 @@ services:
     prestashop.core.grid.definition.factory.supplier:
         class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\SupplierGridDefinitionFactory'
         parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+        arguments:
+            - "@=service('router').generate('admin_common_reset_search', {'controller': 'supplier', 'action': 'index'})"
+            - "@=service('router').generate('admin_suppliers_index')"
         public: true
 
     # Grid factories
