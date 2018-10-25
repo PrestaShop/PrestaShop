@@ -41,7 +41,7 @@ class CategoriesProvider
     const CATEGORY_OTHER_NAME = 'Other';
 
     const CATEGORY_THEME = 'theme_modules';
-    const CATEGORY_THEME_NAME = 'Theme Modules';
+    const CATEGORY_THEME_NAME = 'Theme modules';
 
     const CATEGORY_MY_MODULES = 'my_modules';
     const CATEGORY_MY_MODULES_NAME = 'My Modules';
