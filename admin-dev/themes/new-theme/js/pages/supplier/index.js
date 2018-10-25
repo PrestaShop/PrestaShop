@@ -24,10 +24,14 @@
  */
 import Grid from "../../components/grid/grid";
 import SortingExtension from "../../components/grid/extension/sorting-extension";
+import FiltersResetExtension from "../../components/grid/extension/filters-reset-extension";
+import SubmitGridActionExtension from "../../components/grid/extension/submit-grid-action-extension";
 
 const $ = window.$;
 
 $(() => {
   const supplierGrid =  new Grid('suppliers');
   supplierGrid.addExtension(new SortingExtension());
+  supplierGrid.addExtension(new SubmitGridActionExtension());
+  supplierGrid.addExtension(new FiltersResetExtension());
 });
