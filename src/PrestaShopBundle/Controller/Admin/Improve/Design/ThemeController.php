@@ -58,7 +58,8 @@ class ThemeController extends AbstractAdminController
             'baseShopUrl' => $this->get('prestashop.adapter.shop.url.base_url_provider')->getUrl(),
             'shopLogosForm' => $this->getLogosUploadForm()->createView(),
             'logoProvider' => $logoProvider,
-            'installedTheme' => $themeProvider->getInstalledTheme()
+            'installedTheme' => $themeProvider->getInstalledTheme(),
+            'isDevModeOn' => $this->get('prestashop.adapter.legacy.configuration')->get('_PS_MODE_DEV_'),
         ]);
     }
 
@@ -138,7 +139,7 @@ class ThemeController extends AbstractAdminController
 
             $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
 
-            return $this->redirectToRoute('admin_theme_customize_page_layouts');
+            return $this->redirectToRoute('admin_themes_index');
         }
 
         return $this->render('@PrestaShop/Admin/Improve/Design/Theme/customize_page_layouts.html.twig', [
