@@ -26,19 +26,55 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Query;
 
+use Doctrine\DBAL\Connection;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
+use Doctrine\DBAL\Query\QueryBuilder;
 
 /**
- * Class SupplierQueryBuilder
+ * Class SupplierQueryBuilder builds search & count queries for suppliers grid.
  */
 final class SupplierQueryBuilder extends AbstractDoctrineQueryBuilder
 {
+    /**
+     * @var int
+     */
+    private $contextLangId;
+
+    /**
+     * @var array
+     */
+    private $contextShopIds;
+
+    /**
+     * @param Connection $connection
+     * @param string $dbPrefix
+     * @param int $contextLangId
+     * @param array $contextShopIds
+     */
+    public function __construct(
+        Connection $connection,
+        $dbPrefix,
+        $contextLangId,
+        array $contextShopIds
+    ) {
+        parent::__construct($connection, $dbPrefix);
+        $this->contextLangId = $contextLangId;
+        $this->contextShopIds = $contextShopIds;
+    }
+
     /**
      * {@inheritdoc}
      */
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
-        // TODO: Implement getSearchQueryBuilder() method.
+        $qb = $this->getQueryBuilder($searchCriteria->getFilters());
+
+        $qb
+            ->select('s.`id_supplier`')
+            ->groupBy('s.`id_supplier`')
+        ;
+
+        return $qb;
     }
 
     /**
@@ -46,6 +82,46 @@ final class SupplierQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
-        // TODO: Implement getCountQueryBuilder() method.
+        $qb = $this->getQueryBuilder($searchCriteria->getFilters());
+
+        $qb->select('COUNT(DISTINCT s.`id_supplier`)');
+
+        return $qb;
+    }
+
+    /**
+     * Get generic query builder.
+     *
+     * @param array $filters
+     *
+     * @return QueryBuilder
+     */
+    private function getQueryBuilder(array $filters)
+    {
+        $qb = $this->connection
+            ->createQueryBuilder()
+            ->from($this->dbPrefix . 'supplier', 's')
+            ->innerJoin(
+                's',
+                $this->dbPrefix . 'supplier_lang',
+                'sl',
+                'sl.`id_supplier` = s.`id_supplier`'
+            )
+            ->innerJoin(
+                's',
+                $this->dbPrefix . 'supplier_shop',
+                'ss',
+                'ss.`id_supplier` = s.`id_supplier`'
+            )
+            ->andWhere('sl.`id_lang` = :contextLangId')
+            ->andWhere('ss.`id_shop` IN (:contextShopIds)')
+        ;
+
+        $qb
+            ->setParameter('contextLangId', $this->contextLangId)
+            ->setParameter('contextShopIds', $this->contextShopIds, Connection::PARAM_INT_ARRAY)
+        ;
+
+        return $qb;
     }
 }
