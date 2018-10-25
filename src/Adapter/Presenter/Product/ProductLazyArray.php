@@ -721,7 +721,7 @@ class ProductLazyArray extends AbstractLazyArray
             $ean13,
             $language->id,
             null,
-            $canonical ? Product::getDefaultAttribute($this->product['id_product']) : $product['id_product_attribute'],
+            $canonical ? null : $product['id_product_attribute'],
             false,
             false,
             true
