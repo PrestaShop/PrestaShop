@@ -46,6 +46,14 @@ class SupplierController extends FrameworkBundleAdminController
      */
     public function indexAction(SupplierFilters $filters)
     {
-        return [];
+        $supplierGridFactory = $this->get('prestashop.core.grid.factory.supplier');
+
+        $supplierGrid = $supplierGridFactory->getGrid($filters);
+
+        $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
+
+        return [
+            'supplierGrid' => $gridPresenter->present($supplierGrid),
+        ];
     }
 }
