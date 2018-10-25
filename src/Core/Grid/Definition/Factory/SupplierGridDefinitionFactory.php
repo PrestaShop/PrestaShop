@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\SubmitRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\LinkColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ToggleColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 
@@ -73,10 +74,13 @@ final class SupplierGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'field' => 'id_supplier',
                 ])
             )
-            ->add((new DataColumn('name'))
+            ->add((new LinkColumn('name'))
                 ->setName($this->trans('Name', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'name',
+                    'route' => 'admin_suppliers_edit',
+                    'route_param_name' => 'supplierId',
+                    'route_param_field' => 'id_supplier',
                 ])
             )
             ->add((new DataColumn('product_count'))
