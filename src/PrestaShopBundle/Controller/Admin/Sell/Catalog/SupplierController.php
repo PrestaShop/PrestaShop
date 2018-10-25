@@ -78,17 +78,35 @@ class SupplierController extends FrameworkBundleAdminController
 
     public function createAction()
     {
+        $legacyLink = $this->getAdminLink('AdminSuppliers', [
+            'addsupplier' => 1,
+        ]);
+
+        return $this->redirect($legacyLink);
     }
 
     public function deleteAction()
     {
+        //todo: implement
     }
 
-    public function editAction()
+    public function editAction($supplierId)
     {
+        $legacyLink = $this->getAdminLink('AdminSuppliers', [
+            'id_supplier' => $supplierId,
+            'updatesupplier' => 1,
+        ]);
+
+        return $this->redirect($legacyLink);
     }
 
     public function toggleStatusAction($supplierId)
     {
+        //todo: implement
+    }
+
+    public function viewAction()
+    {
+        //todo: implement
     }
 }
