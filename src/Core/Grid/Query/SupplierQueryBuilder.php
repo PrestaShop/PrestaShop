@@ -46,20 +46,29 @@ final class SupplierQueryBuilder extends AbstractDoctrineQueryBuilder
     private $contextShopIds;
 
     /**
+     * @var DoctrineSearchCriteriaApplicatorInterface
+     */
+    private $searchCriteriaApplicator;
+
+    /**
      * @param Connection $connection
      * @param string $dbPrefix
+     * @param DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator
      * @param int $contextLangId
      * @param array $contextShopIds
      */
     public function __construct(
         Connection $connection,
         $dbPrefix,
+        DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator,
         $contextLangId,
         array $contextShopIds
     ) {
         parent::__construct($connection, $dbPrefix);
+
         $this->contextLangId = $contextLangId;
         $this->contextShopIds = $contextShopIds;
+        $this->searchCriteriaApplicator = $searchCriteriaApplicator;
     }
 
     /**
@@ -73,6 +82,11 @@ final class SupplierQueryBuilder extends AbstractDoctrineQueryBuilder
             ->select('s.`id_supplier`, s.`name`, s.`active`')
             ->addSelect('COUNT(DISTINCT ps.`id_product`) AS `product_count`')
             ->groupBy('s.`id_supplier`')
+        ;
+
+        $this->searchCriteriaApplicator
+            ->applySorting($searchCriteria, $qb)
+            ->applyPagination($searchCriteria, $qb)
         ;
 
         return $qb;
