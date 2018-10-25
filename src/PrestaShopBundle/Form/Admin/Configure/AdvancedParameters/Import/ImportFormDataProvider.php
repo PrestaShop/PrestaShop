@@ -27,10 +27,8 @@
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Import;
 
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
+use PrestaShop\PrestaShop\Core\Import\Configuration\ImportConfigInterface;
 use PrestaShop\PrestaShop\Core\Import\File\FileFinder;
-use PrestaShop\PrestaShop\Core\Import\ImportSettings;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
@@ -39,30 +37,33 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 final class ImportFormDataProvider implements FormDataProviderInterface
 {
     /**
-     * @var SessionInterface
-     */
-    private $session;
-
-    /**
      * @var FileFinder
      */
     private $importFileFinder;
 
     /**
-     * @var null|Request current request
+     * @var ImportConfigInterface
      */
-    private $request;
+    private $importConfig;
 
     /**
-     * @param SessionInterface $session
-     * @param FileFinder $importFileFinder
-     * @param RequestStack $requestStack
+     * @var SessionInterface
      */
-    public function __construct(SessionInterface $session, FileFinder $importFileFinder, RequestStack $requestStack)
-    {
-        $this->session = $session;
+    private $session;
+
+    /**
+     * @param FileFinder $importFileFinder
+     * @param ImportConfigInterface $importConfig
+     * @param SessionInterface $session
+     */
+    public function __construct(
+        FileFinder $importFileFinder,
+        ImportConfigInterface $importConfig,
+        SessionInterface $session
+    ) {
         $this->importFileFinder = $importFileFinder;
-        $this->request = $requestStack->getCurrentRequest();
+        $this->importConfig = $importConfig;
+        $this->session = $session;
     }
 
     /**
@@ -70,78 +71,61 @@ final class ImportFormDataProvider implements FormDataProviderInterface
      */
     public function getData()
     {
-        // If import entity is available in the query - grab it and preselect in the form,
-        // otherwise - take it from the session.
-        if (null !== $this->request && $this->request->query->has('import_type')) {
-            $entity = $this->request->query->get('import_type');
-        } else {
-            $entity = $this->session->get('entity');
-        }
-
         return [
             'csv' => $this->getSelectedFile(),
-            'entity' => $entity,
-            'iso_lang' => $this->session->get('iso_lang'),
-            'separator' => $this->session->get('separator', ImportSettings::DEFAULT_SEPARATOR),
-            'multiple_value_separator' => $this->session->get(
-                'multiple_value_separator',
-                ImportSettings::DEFAULT_MULTIVALUE_SEPARATOR
-            ),
-            'truncate' => $this->session->get('truncate', false),
-            'regenerate' => $this->session->get('regenerate', false),
-            'match_ref' => $this->session->get('match_ref', false),
-            'forceIDs' => $this->session->get('forceIDs', false),
-            'sendemail' => $this->session->get('sendemail', true),
+            'entity' => $this->importConfig->getEntityType(),
+            'iso_lang' => $this->importConfig->getLanguageIso(),
+            'separator' => $this->importConfig->getSeparator(),
+            'multiple_value_separator' => $this->importConfig->getMultipleValueSeparator(),
+            'truncate' => $this->importConfig->truncate(),
+            'regenerate' => $this->importConfig->skipThumbnailRegeneration(),
+            'match_ref' => $this->importConfig->matchReferences(),
+            'forceIDs' => $this->importConfig->forceIds(),
+            'sendemail' => $this->importConfig->sendEmail(),
+            'type_value' => [],
         ];
     }
 
     /**
-     * Data is persisted into session,
-     * so when user comes from 2nd import step to 1st one, data is still saved.
-     *
-     * @param array $data
-     *
-     * @return array
+     * {@inheritdoc}
      */
     public function setData(array $data)
     {
         $errors = [];
 
-        if (!isset($data['csv']) || empty($data['csv'])) {
+        if (empty($data['csv'])) {
             $errors[] = [
                 'key' => 'To proceed, please upload a file first.',
                 'domain' => 'Admin.Advparameters.Notification',
                 'parameters' => [],
             ];
+        } else {
+            $this->session->set('csv', $data['csv']);
+            $this->session->set('entity', $data['entity']);
+            $this->session->set('iso_lang', $data['iso_lang']);
+            $this->session->set('separator', $data['separator']);
+            $this->session->set('multiple_value_separator', $data['multiple_value_separator']);
+            $this->session->set('truncate', $data['truncate']);
+            $this->session->set('match_ref', $data['match_ref']);
+            $this->session->set('regenerate', $data['regenerate']);
+            $this->session->set('forceIDs', $data['forceIDs']);
+            $this->session->set('sendemail', $data['sendemail']);
         }
-
-        $this->session->set('csv', $data['csv']);
-        $this->session->set('entity', $data['entity']);
-        $this->session->set('iso_lang', $data['iso_lang']);
-        $this->session->set('separator', $data['separator']);
-        $this->session->set('multiple_value_separator', $data['multiple_value_separator']);
-        $this->session->set('truncate', $data['truncate']);
-        $this->session->set('match_ref', $data['match_ref']);
-        $this->session->set('regenerate', $data['regenerate']);
-        $this->session->set('forceIDs', $data['forceIDs']);
-        $this->session->set('sendemail', $data['sendemail']);
 
         return $errors;
     }
 
     /**
-     * Get selected file from session if it exists
-     * and check if file is available in file system.
+     * Get selected file after confirming that it is available in file system.
      *
      * @return string|null
      */
-    protected function getSelectedFile()
+    private function getSelectedFile()
     {
         $importFiles = $this->importFileFinder->getImportFileNames();
-        $selectedFile = $this->session->get('csv');
+        $selectedFile = $this->importConfig->getFileName();
 
         if ($selectedFile && !in_array($selectedFile, $importFiles)) {
-            $this->session->remove('csv');
             $selectedFile = null;
         }
 
