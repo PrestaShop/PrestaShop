@@ -132,6 +132,9 @@ const config = {
     currency: [
       './js/pages/currency',
     ],
+    supplier: [
+      './js/pages/supplier',
+    ],
   },
   output: {
     path: path.resolve(__dirname, 'public'),
