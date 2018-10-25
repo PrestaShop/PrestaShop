@@ -44,12 +44,51 @@
               </a>
             </div>
             <div class="col-9">
-              <p class="h1">{{ installedTheme.name }} <span class="small-text text-muted">{{ 'version'|trans({}, 'Admin.Global') }} {{ installedTheme.get('version') }}</span></p>
-              <p>{{ 'Designed by %s'|trans({'%s': installedTheme.get('author.name')}, 'Admin.Design.Feature') }}</p>
+              <div class="row">
+                <div class="col">
+                  <p class="h1">{{ installedTheme.name }} <span class="small-text text-muted">{{ 'version'|trans({}, 'Admin.Global') }} {{ installedTheme.get('version') }}</span></p>
+                  <p class="mb-0">{{ 'Designed by %s'|trans({'%s': installedTheme.get('author.name')}, 'Admin.Design.Feature') }}</p>
+                </div>
+              </div>
 
-              <hr>
+              <div class="row">
+                <div class="col-12">
+                  <hr class="mb-3 mt-3">
+                </div>
 
-              {% include '@PrestaShop/Admin/Improve/Design/Theme/Blocks/logo_configuration.html.twig' %}
+                <div class="col-6">
+                  <p class="mb-0">{{ 'Configure your page layouts'|trans({}, 'Admin.Design.Feature') }}</p>
+                  <p class="mb-0 small-text">{{ 'Each page can use a different layout, choose it among the layouts bundled in your theme.'|trans({}, 'Admin.Design.Feature') }}</p>
+                </div>
+
+                <div class="col-6">
+                  {% if isDevModeOn %}
+                    <a href="#"
+                       class="btn btn-outline-primary float-right ml-1"
+                    >
+                      <i class="material-icons">settings_backup_restore</i>
+                      {{ 'Reset to defaults'|trans({}, 'Admin.Design.Feature') }}
+                    </a>
+                  {% endif %}
+
+                  <a href="{{ path('admin_theme_customize_page_layouts') }}"
+                     class="btn btn-outline-primary float-right"
+                  >
+                    <i class="material-icons">settings</i>
+                    {{ 'Choose layouts'|trans({}, 'Admin.Design.Feature') }}
+                  </a>
+                </div>
+
+                <div class="col-12">
+                  <hr class="mb-3 mt-3">
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col">
+                  {% include '@PrestaShop/Admin/Improve/Design/Theme/Blocks/logo_configuration.html.twig' %}
+                </div>
+              </div>
             </div>
           </div>
         </div>
