@@ -29,6 +29,7 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 use PrestaShop\PrestaShop\Core\Search\Filters\SupplierFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Class SupplierController is responsible for "Sell > Catalog > Brands & Suppliers > Suppliers" page.
@@ -55,6 +56,24 @@ class SupplierController extends FrameworkBundleAdminController
         return [
             'supplierGrid' => $gridPresenter->present($supplierGrid),
         ];
+    }
+
+    public function searchAction(Request $request)
+    {
+        $definitionFactory = $this->get('prestashop.core.grid.definition.factory.supplier');
+        $supplierDefinition = $definitionFactory->getDefinition();
+
+        $gridFilterFormFactory = $this->get('prestashop.core.grid.filter.form_factory');
+        $searchParametersForm = $gridFilterFormFactory->create($supplierDefinition);
+
+        $searchParametersForm->handleRequest($request);
+        $filters = [];
+
+        if ($searchParametersForm->isSubmitted()) {
+            $filters = $searchParametersForm->getData();
+        }
+
+        return $this->redirectToRoute('admin_suppliers_index', ['filters' => $filters]);
     }
 
     public function toggleStatusAction($supplierId)

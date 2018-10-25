@@ -5,6 +5,13 @@ admin_suppliers_index:
     _controller: 'PrestaShopBundle:Admin\Sell\Catalog\Supplier:index'
     _legacy_controller: AdminCategories
 
+admin_suppliers_search:
+  path: /
+  methods: POST
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Sell\Catalog\Supplier:search'
+    _legacy_controller: AdminCategories
+
 admin_suppliers_toggle_status:
   path: /{supplierId}/toggle-status
   methods: POST
