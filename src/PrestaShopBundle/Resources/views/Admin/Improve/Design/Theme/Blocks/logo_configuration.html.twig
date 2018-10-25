@@ -23,6 +23,8 @@
   * International Registered Trademark & Property of PrestaShop SA
   *#}
 
+{% import '@PrestaShop/Admin/macros.html.twig' as ps %}
+
 <div>
   <ul class="nav nav-tabs" role="tablist">
     <li class="nav-item">
@@ -38,7 +40,7 @@
         {{ 'Logo'|trans({}, 'Admin.Global') }}
       </a>
     </li>
-    <li>
+    <li class="nav-item">
       <a class="nav-link"
          id="invoice-and-mail-tab"
          data-toggle="tab"
@@ -51,7 +53,7 @@
         {{ 'Invoice & Email Logos'|trans({}, 'Admin.Design.Feature') }}
       </a>
     </li>
-    <li>
+    <li class="nav-item">
       <a class="nav-link"
          id="invoice-and-mail-tab"
          data-toggle="tab"
@@ -67,14 +69,58 @@
   </ul>
 
   <div class="tab-content">
-    <div class="tab-pane fade active show" id="logo-configuration" role="tabpanel" aria-labelledby="logo-tab">
-      logo tab
+    <div class="tab-pane active show" id="logo-configuration" role="tabpanel" aria-labelledby="logo-tab">
+      <div class="form-group">
+        <div class="form-control-label">
+          {{ ps.label_with_help(('Header logo'|trans({}, 'Admin.Design.Feature')), ('Will appear on main page. Recommended size for the default theme: height %height% and width %width%.'|trans({'%height%': '40px', '%width%': '200px'}, 'Admin.Design.Help'))) }}
+
+          <img src="{{ logoProvider.logoPath }}" alt="{{ 'Header logo'|trans({}, 'Admin.Design.Feature') }}" title="{{ 'Header logo'|trans({}, 'Admin.Design.Feature') }}">
+        </div>
+
+        {{ form_widget(shopLogosForm.header_logo) }}
+      </div>
     </div>
-    <div class="tab-pane fade" id="invoice-and-mail-configuration" role="tabpanel" aria-labelledby="invoice-and-mail-tab">
-      invoice and mail tab
+    <div class="tab-pane" id="invoice-and-mail-configuration" role="tabpanel" aria-labelledby="invoice-and-mail-tab">
+      <div class="form-group">
+        <div class="form-control-label">
+          {{ ps.label_with_help(('Mail logo'|trans({}, 'Admin.Design.Feature')), ('Will appear on email headers. If undefined, the header logo will be used.'|trans({}, 'Admin.Design.Help'))) }}
+
+          <img src="{{ logoProvider.logoPath }}" alt="{{ 'Mail logo'|trans({}, 'Admin.Design.Feature') }}" title="{{ 'Mail logo'|trans({}, 'Admin.Design.Feature') }}">
+        </div>
+
+        {{ form_widget(shopLogosForm.mail_logo) }}
+
+        {% if logoProvider.logoPath == logoProvider.mailLogoPath %}
+          <p class="form-text  mt-3">{{ 'Warning: if no email logo is available, the main logo will be used instead.'|trans({}, 'Admin.Design.Notification') }}</p>
+        {% endif %}
+      </div>
+
+      <div class="form-group">
+        <div class="form-control-label">
+          {{ ps.label_with_help(('Invoice logo'|trans({}, 'Admin.Design.Feature')), ('Will appear on invoice headers.'|trans({}, 'Admin.Design.Help')) ~ ('Warning: you can use a PNG file for transparency, but it can take up to 1 second per page for processing. Please consider using JPG instead.'|trans({}, 'Admin.Design.Help'))) }}
+
+          <img src="{{ logoProvider.logoPath }}" alt="{{ 'Invoice logo'|trans({}, 'Admin.Design.Feature') }}" title="{{ 'Invoice logo'|trans({}, 'Admin.Design.Feature') }}">
+        </div>
+
+        {{ form_widget(shopLogosForm.invoice_logo) }}
+
+        {% if logoProvider.logoPath == logoProvider.invoiceLogoPath %}
+          <p class="form-text  mt-3">{{ 'Warning: if no invoice logo is available, the main logo will be used instead.'|trans({}, 'Admin.Design.Help') }}</p>
+        {% endif %}
+      </div>
     </div>
-    <div class="tab-pane fade" id="favicon-configuration" role="tabpanel" aria-labelledby="favicon-tab">
-      invoice and mail tab
+    <div class="tab-pane" id="favicon-configuration" role="tabpanel" aria-labelledby="favicon-tab">
+      <div class="form-group">
+        <div class="form-control-label">
+          {{ ps.label_with_help(('Favicon'|trans({}, 'Admin.Design.Feature')), ('It is the small icon that appears in browser tabs, next to the web address'|trans({}, 'Admin.Design.Help'))) }}
+
+          <img src="{{ logoProvider.faviconPath }}" alt="{{ 'Invoice logo'|trans({}, 'Admin.Design.Feature') }}" title="{{ 'Invoice logo'|trans({}, 'Admin.Design.Feature') }}">
+        </div>
+
+        {{ form_widget(shopLogosForm.favicon) }}
+
+        <p class="form-text mt-3">{{ 'Use our [1]favicon generator on PrestaShop Marketplace[/1] to boost your brand image!'|trans({'[1]': '<a href="https://addons.prestashop.com/create-favicon.php?pab=1" target="_blank">', '[/1]': '</a>'}, 'Admin.Design.Help')|raw }}</p>
+      </div>
     </div>
   </div>
 </div>
