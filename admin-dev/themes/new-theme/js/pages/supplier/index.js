@@ -29,6 +29,8 @@ import FiltersResetExtension from "../../components/grid/extension/filters-reset
 import SubmitGridActionExtension from "../../components/grid/extension/submit-grid-action-extension";
 import ColumnTogglingExtension from "../../components/grid/extension/column-toggling-extension";
 import SubmitRowActionExtension from "../../components/grid/extension/action/row/submit-row-action-extension";
+import BulkActionCheckboxExtension from "../../components/grid/extension/bulk-action-checkbox-extension";
+import SubmitBulkActionExtension from "../../components/grid/extension/submit-bulk-action-extension";
 
 const $ = window.$;
 
@@ -39,4 +41,6 @@ $(() => {
   supplierGrid.addExtension(new FiltersResetExtension());
   supplierGrid.addExtension(new ColumnTogglingExtension());
   supplierGrid.addExtension(new SubmitRowActionExtension());
+  supplierGrid.addExtension(new BulkActionCheckboxExtension());
+  supplierGrid.addExtension(new SubmitBulkActionExtension());
 });
