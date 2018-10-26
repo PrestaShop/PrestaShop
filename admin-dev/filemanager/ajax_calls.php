@@ -27,15 +27,18 @@ if (isset($_GET['action'])) {
             break;
         case 'save_img':
             $info = pathinfo($_POST['name']);
-            if (strpos($_POST['path'], '/') === 0
-                || strpos($_POST['path'], '../') !== false
-                || strpos($_POST['path'], './') === 0
-                || strpos($_POST['url'], 'http://featherfiles.aviary.com/') !== 0
-                || $_POST['name'] != fix_filename($_POST['name'], $transliteration)
+            $filename = $_POST['name'];
+            $path_pos = $_POST['path'];
+
+            if (preg_match('/\.{1,2}[\/|\\\]/', $path_pos) !== 0
+                || $filename !== fix_filename($filename, $transliteration)
                 || !in_array(strtolower($info['extension']), array('jpg', 'jpeg', 'png'))
+                || strpos($_POST['url'], 'http://featherfiles.aviary.com/') !== 0
+
             ) {
                 die('wrong data');
             }
+
             $image_data = get_file_by_url($_POST['url']);
             if ($image_data === false) {
                 die('file could not be loaded');
