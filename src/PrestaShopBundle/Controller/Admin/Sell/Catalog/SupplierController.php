@@ -113,7 +113,7 @@ class SupplierController extends FrameworkBundleAdminController
 
     public function bulkDeleteAction(Request $request)
     {
-        $suppliersToDelete = $request->request->get('supplier_bulk');
+        $suppliersToDelete = $request->request->get('suppliers_bulk');
 
         try {
             $this->getCommandBus()->handle(new BulkDeleteSupplierCommand($suppliersToDelete));

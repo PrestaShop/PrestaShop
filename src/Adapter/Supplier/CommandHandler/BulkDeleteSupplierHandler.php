@@ -37,7 +37,7 @@ use Supplier;
 /**
  * Class BulkDeleteSupplierHandler is responsible for deleting multiple suppliers.
  */
-class BulkDeleteSupplierHandler implements BulkDeleteSupplierHandlerInterface
+final class BulkDeleteSupplierHandler implements BulkDeleteSupplierHandlerInterface
 {
     /**
      * {@inheritdoc}
