@@ -80,7 +80,7 @@ module.exports = {
   },
   localUnits(localUnitsData, firstUnit, secondUnit, nb = 1) {
     scenario('Change local units then go to products page', client => {
-      test('should go to "Localization" page', () => client.goToSubtabMenuPage(Menu.Improve.International.international_menu, Menu.Improve.International.localization_submenu));
+      test('should go to "International > Localization" page', () => client.goToSubtabMenuPage(Menu.Improve.International.international_menu, Menu.Improve.International.localization_submenu));
       test('should set the "Weight unit" input', () => client.waitAndSetValue(Localization.Localization.local_unit_input.replace('%D', 'weight'), localUnitsData.weight));
       test('should set the "Distance unit" input', () => client.waitAndSetValue(Localization.Localization.local_unit_input.replace('%D', 'distance'), localUnitsData.distance));
       test('should set the "Volume unit" input', () => client.waitAndSetValue(Localization.Localization.local_unit_input.replace('%D', 'volume'), localUnitsData.volume));
@@ -91,10 +91,10 @@ module.exports = {
         test('should go to "Products" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.products_submenu));
         test('should click on "New product" button', () => client.waitForExistAndClick(AddProductPage.new_product_button));
         test('should click on "Shipping" tab', () => client.scrollWaitForExistAndClick(AddProductPage.product_shipping_tab, 50));
-        test('verify it is "' + firstUnit.toUpperCase() + '" for width', () => client.checkTextValue(AddProductPage.shipping_width_unit, firstUnit));
-        test('verify it is "' + firstUnit.toUpperCase() + '" for height', () => client.checkTextValue(AddProductPage.shipping_height_unit, firstUnit));
-        test('verify it is "' + firstUnit.toUpperCase() + '" for depth', () => client.checkTextValue(AddProductPage.shipping_depth_unit, firstUnit));
-        test('verify it is "' + secondUnit.toUpperCase() + '" for weight', () => client.checkTextValue(AddProductPage.shipping_weight_unit, secondUnit));
+        test('verify that it is "' + firstUnit.toUpperCase() + '" for width', () => client.checkTextValue(AddProductPage.shipping_width_unit, firstUnit));
+        test('verify that it is "' + firstUnit.toUpperCase() + '" for height', () => client.checkTextValue(AddProductPage.shipping_height_unit, firstUnit));
+        test('verify that it is "' + firstUnit.toUpperCase() + '" for depth', () => client.checkTextValue(AddProductPage.shipping_depth_unit, firstUnit));
+        test('verify that it is "' + secondUnit.toUpperCase() + '" for weight', () => client.checkTextValue(AddProductPage.shipping_weight_unit, secondUnit));
       }
     }, 'common_client');
   },

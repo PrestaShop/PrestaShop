@@ -27,7 +27,7 @@ scenario('"Configuration"', () => {
       test('should verify that the distance unit is km', () => client.checkAttributeValue(Localization.Localization.local_unit_input.replace('%D', 'distance'), 'value', 'km'));
       test('should verify that the volume unit is L', () => client.checkAttributeValue(Localization.Localization.local_unit_input.replace('%D', 'volume'), 'value', 'L'));
       test('should verify that the dimension unit is cm', () => client.checkAttributeValue(Localization.Localization.local_unit_input.replace('%D', 'dimension'), 'value', 'cm'));
-      test('should click on "View my shop" then go to the Front Office', () => {
+      test('should click on "View my shop" button then go to the Front Office', () => {
         return promise
           .then(() => client.waitForExistAndClick(AccessPageBO.shopname))
           .then(() => client.switchWindow(1))
