@@ -26,7 +26,6 @@
 
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Import;
 
-use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 use PrestaShop\PrestaShop\Core\Import\Configuration\ImportConfigInterface;
 use PrestaShop\PrestaShop\Core\Import\File\FileFinder;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -34,17 +33,12 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 /**
  * Class ImportFormDataProvider is responsible for providing Import's 1st step form data.
  */
-final class ImportFormDataProvider implements FormDataProviderInterface
+final class ImportFormDataProvider implements ImportFormDataProviderInterface
 {
     /**
      * @var FileFinder
      */
     private $importFileFinder;
-
-    /**
-     * @var ImportConfigInterface
-     */
-    private $importConfig;
 
     /**
      * @var SessionInterface
@@ -53,35 +47,32 @@ final class ImportFormDataProvider implements FormDataProviderInterface
 
     /**
      * @param FileFinder $importFileFinder
-     * @param ImportConfigInterface $importConfig
      * @param SessionInterface $session
      */
     public function __construct(
         FileFinder $importFileFinder,
-        ImportConfigInterface $importConfig,
         SessionInterface $session
     ) {
         $this->importFileFinder = $importFileFinder;
-        $this->importConfig = $importConfig;
         $this->session = $session;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getData()
+    public function getData(ImportConfigInterface $importConfig)
     {
         return [
-            'csv' => $this->getSelectedFile(),
-            'entity' => $this->importConfig->getEntityType(),
-            'iso_lang' => $this->importConfig->getLanguageIso(),
-            'separator' => $this->importConfig->getSeparator(),
-            'multiple_value_separator' => $this->importConfig->getMultipleValueSeparator(),
-            'truncate' => $this->importConfig->truncate(),
-            'regenerate' => $this->importConfig->skipThumbnailRegeneration(),
-            'match_ref' => $this->importConfig->matchReferences(),
-            'forceIDs' => $this->importConfig->forceIds(),
-            'sendemail' => $this->importConfig->sendEmail(),
+            'csv' => $this->getSelectedFile($importConfig),
+            'entity' => $importConfig->getEntityType(),
+            'iso_lang' => $importConfig->getLanguageIso(),
+            'separator' => $importConfig->getSeparator(),
+            'multiple_value_separator' => $importConfig->getMultipleValueSeparator(),
+            'truncate' => $importConfig->truncate(),
+            'regenerate' => $importConfig->skipThumbnailRegeneration(),
+            'match_ref' => $importConfig->matchReferences(),
+            'forceIDs' => $importConfig->forceIds(),
+            'sendemail' => $importConfig->sendEmail(),
             'type_value' => [],
         ];
     }
@@ -118,12 +109,14 @@ final class ImportFormDataProvider implements FormDataProviderInterface
     /**
      * Get selected file after confirming that it is available in file system.
      *
+     * @param ImportConfigInterface $importConfig
+     *
      * @return string|null
      */
-    private function getSelectedFile()
+    private function getSelectedFile(ImportConfigInterface $importConfig)
     {
         $importFiles = $this->importFileFinder->getImportFileNames();
-        $selectedFile = $this->importConfig->getFileName();
+        $selectedFile = $importConfig->getFileName();
 
         if ($selectedFile && !in_array($selectedFile, $importFiles)) {
             $selectedFile = null;

@@ -32,8 +32,6 @@ use PrestaShop\PrestaShop\Core\Import\ImportDirectory;
 use PrestaShop\PrestaShop\Core\Import\ImportSettings;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Exception\FileUploadException;
-use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Import\ImportDataConfigurationFormDataProvider;
-use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Import\ImportFormDataProvider;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -78,13 +76,7 @@ class ImportController extends FrameworkBundleAdminController
         $importConfigFactory = $this->get('prestashop.core.import.config_factory');
 
         $importConfig = $importConfigFactory->buildFromRequest($request);
-
-        $formDataProvider = new ImportFormDataProvider(
-            $finder,
-            $importConfig,
-            $request->getSession()
-        );
-        $form = $formHandler->getForm($formDataProvider);
+        $form = $formHandler->getForm($importConfig);
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
@@ -94,7 +86,7 @@ class ImportController extends FrameworkBundleAdminController
 
             $data = $form->getData();
 
-            if (!$errors = $formHandler->save($formDataProvider, $data)) {
+            if (!$errors = $formHandler->save($data)) {
                 return $this->redirectToRoute('admin_import_show_data', [], Response::HTTP_TEMPORARY_REDIRECT);
             }
 
@@ -125,27 +117,16 @@ class ImportController extends FrameworkBundleAdminController
      */
     public function showImportDataAction(Request $request)
     {
-        $this->get('prestashop.adapter.import.import_data_match.configuration');
         $importDirectory = $this->get('prestashop.core.import.dir');
         $dataRowCollectionFactory = $this->get('prestashop.core.import.factory.data_row.collection_factory');
         $dataRowCollectionPresenter = $this->get('prestashop.core.import.data_row.collection_presenter');
         $entityFieldsProviderFinder = $this->get('prestashop.core.import.fields_provider_finder');
         $formHandler = $this->get('prestashop.admin.import_data_configuration.form_handler');
         $importConfigFactory = $this->get('prestashop.core.import.config_factory');
-        $importFileFinder = $this->get('prestashop.core.import.file_finder');
-        $choiceProvider = $this->get('prestashop.core.form.choice_provider.import_entity_field');
 
         $importFile = new SplFileInfo($importDirectory . $request->getSession()->get('csv'));
         $importConfig = $importConfigFactory->buildFromRequest($request);
-        $formDataProvider = new ImportDataConfigurationFormDataProvider(
-            $importFileFinder,
-            $importConfig,
-            $request->getSession(),
-            $importDirectory,
-            $dataRowCollectionFactory,
-            $choiceProvider->getChoices()
-        );
-        $form = $formHandler->getForm($formDataProvider);
+        $form = $formHandler->getForm($importConfig);
 
         try {
             $dataRowCollection = $dataRowCollectionFactory->buildFromFile(
@@ -162,7 +143,7 @@ class ImportController extends FrameworkBundleAdminController
         }
 
         $presentedDataRowCollection = $dataRowCollectionPresenter->present($dataRowCollection);
-        $entityFieldsProvider = $entityFieldsProviderFinder->find($request->getSession()->get('entity'));
+        $entityFieldsProvider = $entityFieldsProviderFinder->find($importConfig->getEntityType());
 
         return [
             'importDataConfigurationForm' => $form->createView(),
@@ -280,7 +261,10 @@ class ImportController extends FrameworkBundleAdminController
     public function saveImportMatchAction(Request $request)
     {
         $formHandler = $this->get('prestashop.admin.import_data_configuration.form_handler');
-        $form = $formHandler->getForm();
+        $importConfigFactory = $this->get('prestashop.core.import.config_factory');
+
+        $importConfig = $importConfigFactory->buildFromRequest($request);
+        $form = $formHandler->getForm($importConfig);
         $form->setData([
             'match_name' => $request->request->get('match_name'),
             'skip' => $request->request->get('skip'),

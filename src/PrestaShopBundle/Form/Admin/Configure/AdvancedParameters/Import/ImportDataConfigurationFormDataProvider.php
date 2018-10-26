@@ -26,34 +26,18 @@
 
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Import;
 
-use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
+use PrestaShop\PrestaShop\Adapter\Import\DataMatchSaver;
 use PrestaShop\PrestaShop\Core\Import\Configuration\ImportConfigInterface;
 use PrestaShop\PrestaShop\Core\Import\File\DataRow\Factory\DataRowCollectionFactoryInterface;
-use PrestaShop\PrestaShop\Core\Import\File\FileFinder;
 use PrestaShop\PrestaShop\Core\Import\ImportDirectory;
+use PrestaShopBundle\Entity\Repository\ImportMatchRepository;
 use SplFileInfo;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
  * Class ImportDataConfigurationFormDataProvider is responsible for providing Import's 2nd step form data.
  */
-final class ImportDataConfigurationFormDataProvider implements FormDataProviderInterface
+final class ImportDataConfigurationFormDataProvider implements ImportFormDataProviderInterface
 {
-    /**
-     * @var FileFinder
-     */
-    private $importFileFinder;
-
-    /**
-     * @var ImportConfigInterface
-     */
-    private $importConfig;
-
-    /**
-     * @var SessionInterface
-     */
-    private $session;
-
     /**
      * @var ImportDirectory
      */
@@ -70,54 +54,60 @@ final class ImportDataConfigurationFormDataProvider implements FormDataProviderI
     private $entityFieldChoices;
 
     /**
-     * @param FileFinder $importFileFinder
-     * @param ImportConfigInterface $importConfig
-     * @param SessionInterface $session
+     * @var ImportMatchRepository
+     */
+    private $importMatchRepository;
+
+    /**
+     * @var DataMatchSaver
+     */
+    private $dataMatchSaver;
+
+    /**
      * @param ImportDirectory $importDirectory
      * @param DataRowCollectionFactoryInterface $dataRowCollectionFactory
+     * @param ImportMatchRepository $importMatchRepository
+     * @param DataMatchSaver $dataMatchSaver
      * @param array $entityFieldChoices
      */
     public function __construct(
-        FileFinder $importFileFinder,
-        ImportConfigInterface $importConfig,
-        SessionInterface $session,
         ImportDirectory $importDirectory,
         DataRowCollectionFactoryInterface $dataRowCollectionFactory,
+        ImportMatchRepository $importMatchRepository,
+        DataMatchSaver $dataMatchSaver,
         array $entityFieldChoices
     ) {
-        $this->importFileFinder = $importFileFinder;
-        $this->importConfig = $importConfig;
-        $this->session = $session;
         $this->importDirectory = $importDirectory;
         $this->dataRowCollectionFactory = $dataRowCollectionFactory;
         $this->entityFieldChoices = $entityFieldChoices;
+        $this->importMatchRepository = $importMatchRepository;
+        $this->dataMatchSaver = $dataMatchSaver;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getData()
+    public function getData(ImportConfigInterface $importConfig)
     {
-        $importFile = new SplFileInfo($this->importDirectory . $this->importConfig->getFileName());
+        $importFile = new SplFileInfo($this->importDirectory . $importConfig->getFileName());
         $dataRowCollection = $this->dataRowCollectionFactory->buildFromFile($importFile, 1);
 
         // Getting the number of cells in the first row
         $rowSize = count($dataRowCollection->offsetGet(0));
 
         $data = [
-            'csv' => $this->importConfig->getFileName(),
-            'entity' => $this->importConfig->getEntityType(),
-            'iso_lang' => $this->importConfig->getLanguageIso(),
-            'separator' => $this->importConfig->getSeparator(),
-            'multiple_value_separator' => $this->importConfig->getMultipleValueSeparator(),
-            'truncate' => $this->importConfig->truncate(),
-            'regenerate' => $this->importConfig->skipThumbnailRegeneration(),
-            'match_ref' => $this->importConfig->matchReferences(),
-            'forceIDs' => $this->importConfig->forceIds(),
-            'sendemail' => $this->importConfig->sendEmail(),
+            'csv' => $importConfig->getFileName(),
+            'entity' => $importConfig->getEntityType(),
+            'iso_lang' => $importConfig->getLanguageIso(),
+            'separator' => $importConfig->getSeparator(),
+            'multiple_value_separator' => $importConfig->getMultipleValueSeparator(),
+            'truncate' => $importConfig->truncate(),
+            'regenerate' => $importConfig->skipThumbnailRegeneration(),
+            'match_ref' => $importConfig->matchReferences(),
+            'forceIDs' => $importConfig->forceIds(),
+            'sendemail' => $importConfig->sendEmail(),
             'type_value' => [],
         ];
-
 
         $numberOfValuesAdded = 0;
 
@@ -142,14 +132,42 @@ final class ImportDataConfigurationFormDataProvider implements FormDataProviderI
     {
         $errors = [];
 
-        if (empty($data['csv'])) {
+        if (empty($data['match_name'])) {
             $errors[] = [
-                'key' => 'To proceed, please upload a file first.',
-                'domain' => 'Admin.Advparameters.Notification',
+                'key' => 'Please name your data matching configuration in order to save it.',
+                'domain' => 'Admin.Advparameters.Feature',
                 'parameters' => [],
             ];
         }
 
+        if ($this->configurationNameExists($data['match_name'])) {
+            $errors[] = [
+                'key' => 'This name already exists.',
+                'domain' => 'Admin.Design.Notification',
+                'parameters' => [],
+            ];
+        }
+
+        if (empty($errors)) {
+            $this->dataMatchSaver->save(
+                $data['match_name'],
+                $data['type_value'],
+                $data['skip']
+            );
+        }
+
         return $errors;
+    }
+
+    /**
+     * Checks if the configuration is already saved with the same name.
+     *
+     * @param string $matchName
+     *
+     * @return bool
+     */
+    private function configurationNameExists($matchName)
+    {
+        return (bool) $this->importMatchRepository->findOneByName($matchName);
     }
 }
