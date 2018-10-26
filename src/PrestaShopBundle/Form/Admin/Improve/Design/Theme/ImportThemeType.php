@@ -38,6 +38,19 @@ use Symfony\Component\Form\FormBuilderInterface;
 class ImportThemeType extends AbstractType
 {
     /**
+     * @var array
+     */
+    private $themeZipsChoices;
+
+    /**
+     * @param array $themeZipsChoices
+     */
+    public function __construct(array $themeZipsChoices)
+    {
+        $this->themeZipsChoices = $themeZipsChoices;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -52,6 +65,8 @@ class ImportThemeType extends AbstractType
             ->add('import_from_ftp', ChoiceType::class, [
                 'required' => false,
                 'placeholder' => '-',
+                'choices' => $this->themeZipsChoices,
+                'translation_domain' => false,
             ])
         ;
     }
