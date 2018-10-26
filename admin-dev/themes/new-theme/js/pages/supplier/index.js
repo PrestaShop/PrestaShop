@@ -28,6 +28,7 @@ import SortingExtension from "../../components/grid/extension/sorting-extension"
 import FiltersResetExtension from "../../components/grid/extension/filters-reset-extension";
 import SubmitGridActionExtension from "../../components/grid/extension/submit-grid-action-extension";
 import ColumnTogglingExtension from "../../components/grid/extension/column-toggling-extension";
+import SubmitRowActionExtension from "../../components/grid/extension/action/row/submit-row-action-extension";
 
 const $ = window.$;
 
@@ -37,4 +38,5 @@ $(() => {
   supplierGrid.addExtension(new SubmitGridActionExtension());
   supplierGrid.addExtension(new FiltersResetExtension());
   supplierGrid.addExtension(new ColumnTogglingExtension());
+  supplierGrid.addExtension(new SubmitRowActionExtension());
 });

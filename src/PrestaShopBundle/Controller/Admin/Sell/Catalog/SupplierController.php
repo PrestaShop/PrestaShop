@@ -26,7 +26,9 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
+use PrestaShop\PrestaShop\Core\Domain\Supplier\Command\DeleteSupplierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Command\ToggleSupplierStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\CannotDeleteSupplierException;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\CannotToggleSupplierStatusException;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierException;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierNotFoundException;
@@ -90,9 +92,21 @@ class SupplierController extends FrameworkBundleAdminController
         return $this->redirect($legacyLink);
     }
 
-    public function deleteAction()
+    public function deleteAction($supplierId)
     {
-        //todo: implement
+        try {
+            $supplierId = new SupplierId($supplierId);
+            $this->getCommandBus()->handle(new DeleteSupplierCommand($supplierId));
+
+            $this->addFlash(
+                'success',
+                $this->trans('Successful deletion.', 'Admin.Notifications.Success')
+            );
+        } catch (SupplierException $exception) {
+            $this->addFlash('error', $this->handleException($exception));
+        }
+
+        return $this->redirectToRoute('admin_suppliers_index');
     }
 
     public function editAction($supplierId)
@@ -146,6 +160,16 @@ class SupplierController extends FrameworkBundleAdminController
                 'Admin.Notifications.Error'
             ),
         ];
+
+        if ($exception instanceof CannotDeleteSupplierException) {
+            return $this->trans(
+                'Can\'t delete #%id%',
+                'Admin.Notifications.Error',
+                [
+                    '%id%' => $exception->getSupplierId()->getValue(),
+                ]
+            );
+        }
 
         $exceptionType = get_class($exception);
         if (isset($exceptionTypeDictionary[$exceptionType])) {
