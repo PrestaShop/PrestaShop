@@ -178,4 +178,8 @@ class SupplierController extends FrameworkBundleAdminController
 
         return $this->trans('Unexpected error occurred.', 'Admin.Notifications.Error');
     }
+
+    public function bulkDeleteAction()
+    {
+    }
 }
