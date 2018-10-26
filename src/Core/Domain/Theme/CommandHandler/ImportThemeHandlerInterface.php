@@ -24,19 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Addon\Theme;
+namespace PrestaShop\PrestaShop\Core\Domain\Theme\CommandHandler;
 
-use Symfony\Component\HttpFoundation\File\UploadedFile;
+use PrestaShop\PrestaShop\Core\Domain\Theme\Command\ImportThemeCommand;
 
 /**
- * Interface ThemeUploaderInterface
+ * Interface ImportThemeHandlerInterface
  */
-interface ThemeUploaderInterface
+interface ImportThemeHandlerInterface
 {
     /**
-     * @param UploadedFile $uploadedTheme
-     *
-     * @return string Path to uploaded theme
+     * @param ImportThemeCommand $command
      */
-    public function upload(UploadedFile $uploadedTheme);
+    public function handle(ImportThemeCommand $command);
 }
