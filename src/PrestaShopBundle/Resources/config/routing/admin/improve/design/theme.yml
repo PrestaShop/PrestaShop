@@ -19,6 +19,13 @@ admin_themes_export_current:
     _controller: PrestaShopBundle:Admin\Improve\Design\Theme:export
     _legacy_controller: AdminThemes
 
+admin_themes_import:
+  path: /import
+  methods: [GET, POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin\Improve\Design\Theme:import
+    _legacy_controller: AdminThemes
+
 admin_theme_customize_page_layouts:
   path: /page-layout-customization
   methods: [GET, POST]
