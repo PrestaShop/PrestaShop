@@ -80,3 +80,10 @@ ALTER TABLE `PREFIX_supply_order_detail`
 
 ALTER TABLE `PREFIX_product_supplier`
   CHANGE `product_supplier_reference` `product_supplier_reference` varchar(64) DEFAULT NULL;
+
+ALTER TABLE `PREFIX_product_lang` (
+  CHANGE `meta_description` varchar(512) DEFAULT NULL, 
+  CHANGE `meta_keywords` varchar(255) DEFAULT NULL; 
+
+ALTER TABLE `PREFIX_stock_available`
+  ADD `location` VARCHAR(255) NOT NULL DEFAULT '' AFTER `out_of_stock`;
