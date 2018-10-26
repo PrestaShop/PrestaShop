@@ -76,13 +76,20 @@ final class SupplierQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
-        $qb = $this->getQueryBuilder($searchCriteria->getFilters());
+        $filters = $searchCriteria->getFilters();
+        $isCountFilter = array_key_exists('products_count', $filters);
 
-        $qb
-            ->select('s.`id_supplier`, s.`name`, s.`active`')
-            ->addSelect('COUNT(DISTINCT ps.`id_product`) AS `products_count`')
-            ->groupBy('s.`id_supplier`')
-        ;
+        if ($isCountFilter) {
+            $qb = $this->getQueryBuilderByProductsCount($filters);
+            $qb->select('*');
+            $this->applyFilters($qb, $filters, 'subQuery');
+            $this->applyListQueryParameters($qb);
+        } else {
+            $qb = $this->getQueryBuilder();
+            $this->applyListQuerySelection($qb);
+            $this->applyListQueryParameters($qb);
+            $this->applyFilters($qb, $filters, 's');
+        }
 
         $this->searchCriteriaApplicator
             ->applySorting($searchCriteria, $qb)
@@ -97,9 +104,22 @@ final class SupplierQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
-        $qb = $this->getQueryBuilder($searchCriteria->getFilters());
+        $filters = $searchCriteria->getFilters();
+        $isCountFilter = array_key_exists('products_count', $filters);
 
-        $qb->select('COUNT(DISTINCT s.`id_supplier`)');
+        if ($isCountFilter) {
+            $alias = 'subQuery';
+            $qb = $this->getQueryBuilderByProductsCount($filters);
+            $this->applyFilters($qb, $filters, $alias);
+            $this->applyListQueryParameters($qb);
+        } else {
+            $qb = $this->getQueryBuilder();
+            $this->applyListQueryParameters($qb);
+            $this->applyFilters($qb, $filters, 's');
+            $alias = 's';
+        }
+
+        $qb->select('COUNT(DISTINCT ' . $alias . '.`id_supplier`)');
 
         return $qb;
     }
@@ -107,13 +127,11 @@ final class SupplierQueryBuilder extends AbstractDoctrineQueryBuilder
     /**
      * Get generic query builder.
      *
-     * @param array $filters
-     *
      * @return QueryBuilder
      */
-    private function getQueryBuilder(array $filters)
+    private function getQueryBuilder()
     {
-        $qb = $this->connection
+        return $this->connection
             ->createQueryBuilder()
             ->from($this->dbPrefix . 'supplier', 's')
             ->innerJoin(
@@ -137,12 +155,92 @@ final class SupplierQueryBuilder extends AbstractDoctrineQueryBuilder
             ->andWhere('sl.`id_lang` = :contextLangId')
             ->andWhere('ss.`id_shop` IN (:contextShopIds)')
         ;
+    }
 
+    /**
+     * Gets query builder by product count which uses the main query as the sub-query in FROM condition.
+     *
+     * @param array $filters
+     *
+     * @return QueryBuilder
+     */
+    private function getQueryBuilderByProductsCount(array $filters)
+    {
+        $subQuery = $this->getQueryBuilder();
+        $this->applyListQuerySelection($subQuery);
+
+        $alias = 'subQuery';
+
+        $qb = $this->connection
+            ->createQueryBuilder()
+            ->from(
+                '(' . $subQuery->getSQL() . ')',
+                $alias
+            )
+            ->where('subQuery.`products_count` = :productsCountFilter')
+        ;
+
+        $qb->setParameter('productsCountFilter', $filters['products_count']);
+
+        return $qb;
+    }
+
+    /**
+     * Adds select and group by statements.
+     *
+     * @param QueryBuilder $qb
+     */
+    private function applyListQuerySelection(QueryBuilder $qb)
+    {
+        $qb
+            ->select('s.`id_supplier`, s.`name`, s.`active`')
+            ->addSelect('COUNT(DISTINCT ps.`id_product`) AS `products_count`')
+            ->groupBy('s.`id_supplier`')
+        ;
+    }
+
+    /**
+     * Sets the parameters which are used in the queries.
+     *
+     * @param QueryBuilder $qb
+     */
+    private function applyListQueryParameters(QueryBuilder $qb)
+    {
         $qb
             ->setParameter('contextLangId', $this->contextLangId)
             ->setParameter('contextShopIds', $this->contextShopIds, Connection::PARAM_INT_ARRAY)
         ;
+    }
 
-        return $qb;
+    /**
+     * Adds filter restrictions.
+     *
+     * @param QueryBuilder $qb
+     * @param array $filters
+     * @param string $alias
+     */
+    private function applyFilters(QueryBuilder $qb, array $filters, $alias)
+    {
+        $availableFilters = [
+            'id_supplier',
+            'name',
+            'active',
+        ];
+
+        foreach ($filters as $filterName => $value) {
+            if (!in_array($filterName, $availableFilters, true)) {
+                continue;
+            }
+
+            if (in_array($filterName, ['id_supplier', 'active'], true)) {
+                $qb->andWhere($alias . '.`' . $filterName .'` = :' . $filterName);
+                $qb->setParameter($filterName, $value);
+
+                continue;
+            }
+
+            $qb->andWhere($alias . '.`name` LIKE :' . $filterName);
+            $qb->setParameter($filterName, '%' . $value . '%');
+        }
     }
 }
