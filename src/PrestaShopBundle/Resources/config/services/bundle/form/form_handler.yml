@@ -152,12 +152,16 @@ services:
         arguments:
             - '@prestashop.admin.import.form_builder'
             - '@prestashop.core.hook.dispatcher'
+            - '@prestashop.admin.import.form_data_provider'
+            - 'ImportPage'
 
     prestashop.admin.import_data_configuration.form_handler:
-        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Import\ImportDataConfigurationFormHandler'
+        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Import\ImportFormHandler'
         arguments:
             - '@prestashop.admin.import_data_configuration.form_builder'
             - '@prestashop.core.hook.dispatcher'
+            - '@prestashop.admin.import_data_configuration.form_data_provider'
+            - 'ImportDataConfiguration'
 
     prestashop.adapter.order.delivery.slip.options.form_handler:
         class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'

@@ -82,6 +82,16 @@ services:
         class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Import\ImportFormDataProvider'
         arguments:
             - '@prestashop.core.import.file_finder'
+            - '@session'
+
+    prestashop.admin.import_data_configuration.form_data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Import\ImportDataConfigurationFormDataProvider'
+        arguments:
+            - '@prestashop.core.import.dir'
+            - '@prestashop.core.import.factory.data_row.collection_factory'
+            - '@prestashop.core.admin.import_match.repository'
+            - '@prestashop.adapter.import.data_match_saver'
+            - '@=service("prestashop.core.form.choice_provider.import_entity_field").getChoices()'
 
     prestashop.adapter.order.delivery.slip.options.form_provider:
         class: 'PrestaShopBundle\Form\Admin\Sell\Order\Delivery\SlipOptionsFormDataProvider'

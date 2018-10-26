@@ -29,25 +29,25 @@ namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Import;
 use PrestaShop\PrestaShop\Core\Import\Configuration\ImportConfigInterface;
 
 /**
- * Interface ImportFormHandlerInterface describes an import form handler.
+ * Interface ImportFormDataProviderInterface describes a data provider for import forms.
  */
-interface ImportFormHandlerInterface
+interface ImportFormDataProviderInterface
 {
     /**
-     * Get the import form.
+     * Get form's data.
      *
      * @param ImportConfigInterface $importConfig
      *
-     * @return mixed
+     * @return array
      */
-    public function getForm(ImportConfigInterface $importConfig);
+    public function getData(ImportConfigInterface $importConfig);
 
     /**
      * Save the form's data.
      *
      * @param array $data
      *
-     * @return array of errors
+     * @return array of errors, if occurred.
      */
-    public function save(array $data);
+    public function setData(array $data);
 }
