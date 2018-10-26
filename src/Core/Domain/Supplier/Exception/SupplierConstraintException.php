@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 /**
  * Class SupplierConstraintException
  */
-class SupplierConstraintException extends DomainException
+class SupplierConstraintException extends SupplierException
 {
     const MISSING_BULK_DATA = 1;
 }

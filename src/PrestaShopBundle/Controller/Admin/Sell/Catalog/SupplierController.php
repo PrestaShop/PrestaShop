@@ -26,10 +26,12 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
+use PrestaShop\PrestaShop\Core\Domain\Supplier\Command\BulkDeleteSupplierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Command\DeleteSupplierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Command\ToggleSupplierStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\CannotDeleteSupplierException;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\CannotToggleSupplierStatusException;
+use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierException;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\SupplierId;
@@ -109,6 +111,24 @@ class SupplierController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_suppliers_index');
     }
 
+    public function bulkDeleteAction(Request $request)
+    {
+        $suppliersToDelete = $request->request->get('supplier_bulk');
+
+        try {
+            $this->getCommandBus()->handle(new BulkDeleteSupplierCommand($suppliersToDelete));
+
+            $this->addFlash(
+                'success',
+                $this->trans('The selection has been successfully deleted.', 'Admin.Notifications.Success')
+            );
+        } catch (SupplierException $exception) {
+            $this->addFlash('error', $this->handleException($exception));
+        }
+
+        return $this->redirectToRoute('admin_suppliers_index');
+    }
+
     public function editAction($supplierId)
     {
         $legacyLink = $this->getAdminLink('AdminSuppliers', [
@@ -150,6 +170,22 @@ class SupplierController extends FrameworkBundleAdminController
      */
     private function handleException(SupplierException $exception)
     {
+        if (0 !== $exception->getCode()) {
+            return $this->getExceptionMessageByExceptionCode($exception);
+        }
+
+        return $this->getExceptionMessageByType($exception);
+    }
+
+    /**
+     * Gets by exception type
+     *
+     * @param SupplierException $exception
+     *
+     * @return string
+     */
+    private function getExceptionMessageByType(SupplierException $exception)
+    {
         $exceptionTypeDictionary = [
             SupplierNotFoundException::class => $this->trans(
                 'The object cannot be loaded (or found)',
@@ -179,7 +215,31 @@ class SupplierController extends FrameworkBundleAdminController
         return $this->trans('Unexpected error occurred.', 'Admin.Notifications.Error');
     }
 
-    public function bulkDeleteAction()
+    /**
+     * Gets exception message by exception code.
+     *
+     * @param SupplierException $exception
+     *
+     * @return string
+     */
+    private function getExceptionMessageByExceptionCode(SupplierException $exception)
     {
+        $exceptionConstraintDictionary = [
+            SupplierConstraintException::class => [
+                SupplierConstraintException::MISSING_BULK_DATA => $this->trans(
+                    'You must select at least one element to delete.',
+                    'Admin.Notifications.Error'
+                ),
+            ],
+        ];
+
+        $exceptionType = get_class($exception);
+        $exceptionCode = $exception->getCode();
+
+        if (isset($exceptionConstraintDictionary[$exceptionType][$exceptionCode])) {
+            return $exceptionConstraintDictionary[$exceptionType][$exceptionCode];
+        }
+
+        return $this->trans('Unexpected error occurred.', 'Admin.Notifications.Error');
     }
 }
