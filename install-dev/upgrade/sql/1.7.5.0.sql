@@ -6,7 +6,6 @@ SET NAMES 'utf8';
 /* PHP:ps_1750_update_module_tabs(); */;
 
 ALTER TABLE `PREFIX_cms_lang`
-
   ADD `head_seo_title` varchar(255) DEFAULT NULL AFTER `meta_title`,
   CHANGE `meta_title` `meta_title` VARCHAR(255) NOT NULL,
   CHANGE `meta_description` `meta_description` VARCHAR(512) DEFAULT NULL;
@@ -78,6 +77,10 @@ ALTER TABLE `PREFIX_supply_order_detail`
 
 ALTER TABLE `PREFIX_product_supplier`
   CHANGE `product_supplier_reference` `product_supplier_reference` varchar(64) DEFAULT NULL;
+
+ALTER TABLE `PREFIX_product_lang` (
+  CHANGE `meta_description` varchar(512) DEFAULT NULL, 
+  CHANGE `meta_keywords` varchar(255) DEFAULT NULL; 
 
 ALTER TABLE `PREFIX_stock_available`
   ADD `location` VARCHAR(255) NOT NULL DEFAULT '' AFTER `out_of_stock`;
