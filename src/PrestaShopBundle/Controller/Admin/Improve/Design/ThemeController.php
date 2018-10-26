@@ -31,6 +31,8 @@ use PrestaShop\PrestaShop\Core\Domain\Meta\Query\GetPagesForLayoutCustomization;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Command\UploadLogosCommand;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController as AbstractAdminController;
 use PrestaShopBundle\Form\Admin\Improve\Design\Theme\ShopLogosType;
+use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -97,6 +99,36 @@ class ThemeController extends AbstractAdminController
 
             $this->getCommandBus()->handle($command);
         }
+
+        return $this->redirectToRoute('admin_themes_index');
+    }
+
+    /**
+     * Export current theme.
+     *
+     * @AdminSecurity(
+     *     "is_granted('create', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_themes_index",
+     *     message="You do not have permission to view this."
+     * )
+     *
+     * @return RedirectResponse
+     */
+    public function exportAction()
+    {
+        $themeProvider = $this->get('prestashop.adapter.addons.theme.theme_provider');
+        $exporter = $this->get('prestashop.core.addon.theme.exporter');
+
+        $path = $exporter->export($themeProvider->getInstalledTheme());
+
+        $this->addFlash(
+            'success',
+            $this->trans(
+                'Your theme has been correctly exported: %path%',
+                'Admin.Notifications.Success',
+                ['%path%' => $path]
+            )
+        );
 
         return $this->redirectToRoute('admin_themes_index');
     }

@@ -12,6 +12,13 @@ admin_themes_upload_logos:
     _controller: PrestaShopBundle:Admin\Improve\Design\Theme:uploadLogos
     _legacy_controller: AdminThemes
 
+admin_themes_export_current:
+  path: /export
+  methods: [GET]
+  defaults:
+    _controller: PrestaShopBundle:Admin\Improve\Design\Theme:export
+    _legacy_controller: AdminThemes
+
 admin_theme_customize_page_layouts:
   path: /page-layout-customization
   methods: [GET, POST]

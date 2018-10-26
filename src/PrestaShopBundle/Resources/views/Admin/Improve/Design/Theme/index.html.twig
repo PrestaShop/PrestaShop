@@ -26,6 +26,18 @@
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
 {% set layoutTitle = 'Theme & Logo'|trans({}, 'Admin.Navigation.Menu') ~ ' > ' ~ 'Theme'|trans({}, 'Admin.Design.Feature') %}
+{% set layoutHeaderToolbarBtn = {
+  'add': {
+    'href': '#',
+    'desc': 'Add new theme'|trans({}, 'Admin.Design.Feature'),
+    'icon': 'add'
+  },
+  'export': {
+    'href': path('admin_themes_export_current'),
+    'desc': 'Export current theme'|trans({}, 'Admin.Design.Feature'),
+    'icon': 'cloud_download'
+  }
+} %}
 
 {% block content %}
   <div class="row">
