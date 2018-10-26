@@ -28,7 +28,7 @@
 {% set layoutTitle = 'Theme & Logo'|trans({}, 'Admin.Navigation.Menu') ~ ' > ' ~ 'Theme'|trans({}, 'Admin.Design.Feature') %}
 {% set layoutHeaderToolbarBtn = {
   'add': {
-    'href': '#',
+    'href': path('admin_themes_import'),
     'desc': 'Add new theme'|trans({}, 'Admin.Design.Feature'),
     'icon': 'add'
   },

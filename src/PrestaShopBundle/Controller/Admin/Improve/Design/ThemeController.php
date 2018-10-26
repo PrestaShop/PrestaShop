@@ -30,6 +30,7 @@ use PrestaShop\PrestaShop\Core\Domain\Meta\DataTransferObject\LayoutCustomizatio
 use PrestaShop\PrestaShop\Core\Domain\Meta\Query\GetPagesForLayoutCustomization;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Command\UploadLogosCommand;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController as AbstractAdminController;
+use PrestaShopBundle\Form\Admin\Improve\Design\Theme\ImportThemeType;
 use PrestaShopBundle\Form\Admin\Improve\Design\Theme\ShopLogosType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
@@ -131,6 +132,27 @@ class ThemeController extends AbstractAdminController
         );
 
         return $this->redirectToRoute('admin_themes_index');
+    }
+
+    /**
+     * Import new theme.
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function importAction(Request $request)
+    {
+        $importThemeForm = $this->createForm(ImportThemeType::class);
+        $importThemeForm->handleRequest($request);
+
+        if ($importThemeForm->isSubmitted()) {
+
+        }
+
+        return $this->render('@PrestaShop/Admin/Improve/Design/Theme/import.html.twig', [
+            'importThemeForm' => $importThemeForm->createView(),
+        ]);
     }
 
     /**
