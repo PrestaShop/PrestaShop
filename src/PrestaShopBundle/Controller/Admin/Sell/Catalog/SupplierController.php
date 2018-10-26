@@ -26,6 +26,11 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
+use PrestaShop\PrestaShop\Core\Domain\Supplier\Command\ToggleSupplierStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\CannotToggleSupplierStatusException;
+use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierException;
+use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\SupplierId;
 use PrestaShop\PrestaShop\Core\Search\Filters\SupplierFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -99,14 +104,54 @@ class SupplierController extends FrameworkBundleAdminController
 
         return $this->redirect($legacyLink);
     }
-
+    
     public function toggleStatusAction($supplierId)
     {
-        //todo: implement
+        try {
+            $supplierId = new SupplierId($supplierId);
+            $this->getCommandBus()->handle(new ToggleSupplierStatusCommand($supplierId));
+
+            $this->addFlash(
+                'success',
+                $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
+            );
+        } catch (SupplierException $exception) {
+            $this->addFlash('error', $this->handleException($exception));
+        }
+
+        return $this->redirectToRoute('admin_suppliers_index');
     }
 
     public function viewAction()
     {
         //todo: implement
+    }
+
+    /**
+     * Gets error by exception type.
+     *
+     * @param SupplierException $exception
+     *
+     * @return string
+     */
+    private function handleException(SupplierException $exception)
+    {
+        $exceptionTypeDictionary = [
+            SupplierNotFoundException::class => $this->trans(
+                'The object cannot be loaded (or found)',
+                'Admin.Notifications.Error'
+            ),
+            CannotToggleSupplierStatusException::class => $this->trans(
+                'An error occurred while updating the status.',
+                'Admin.Notifications.Error'
+            ),
+        ];
+
+        $exceptionType = get_class($exception);
+        if (isset($exceptionTypeDictionary[$exceptionType])) {
+            return $exceptionTypeDictionary[$exceptionType];
+        }
+
+        return $this->trans('Unexpected error occurred.', 'Admin.Notifications.Error');
     }
 }
