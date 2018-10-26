@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -40,6 +40,7 @@ interface ImportConfigInterface
 
     /**
      * Get the import entity type.
+     *
      * @see constants defined in \PrestaShop\PrestaShop\Core\Import\Entity for available types.
      *
      * @return int
@@ -61,7 +62,7 @@ interface ImportConfigInterface
     public function getSeparator();
 
     /**
-     * Get import file's multiple value separator
+     * Get import file's multiple value separator.
      *
      * @return string
      */
