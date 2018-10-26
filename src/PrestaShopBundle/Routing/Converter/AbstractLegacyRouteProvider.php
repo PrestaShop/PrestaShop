@@ -34,7 +34,7 @@ use PrestaShopBundle\Routing\Converter\Exception\RouteNotFoundException;
 abstract class AbstractLegacyRouteProvider implements LegacyRouteProviderInterface
 {
     /**
-     * @var array
+     * @var array|null
      */
     protected $controllersActions;
 

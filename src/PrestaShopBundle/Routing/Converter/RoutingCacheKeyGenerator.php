@@ -29,6 +29,14 @@ namespace PrestaShopBundle\Routing\Converter;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 
+/**
+ * Class RoutingCacheKeyGenerator generates the cache key for the CacheProvider.
+ * In prod environment the key never changes so you need to use cache:clear if you
+ * need to update the cache.
+ * In dev environment this class inspects the routing files to get their last modification
+ * date which is then used to generate the key, hence each time a routing file is modified
+ * the cache key changes so the cache is regenerated.
+ */
 class RoutingCacheKeyGenerator implements CacheKeyGeneratorInterface
 {
     /**
@@ -81,13 +89,12 @@ class RoutingCacheKeyGenerator implements CacheKeyGeneratorInterface
         }
 
         foreach ($this->activeModulesPaths as $modulePath) {
-            $routingFile = $modulePath . '/config/routes.yml';
-            if (file_exists($routingFile)) {
-                $routingFiles[$routingFile] = filemtime($routingFile);
-            }
-            $routingFile = $modulePath . '/config/routes.yaml';
-            if (file_exists($routingFile)) {
-                $routingFiles[$routingFile] = filemtime($routingFile);
+            $extensions = ['yml', 'yaml'];
+            foreach ($extensions as $extension) {
+                $routingFile = $modulePath . '/config/routes.' . $extension;
+                if (file_exists($routingFile)) {
+                    $routingFiles[$routingFile] = filemtime($routingFile);
+                }
             }
         }
 
@@ -127,6 +134,6 @@ class RoutingCacheKeyGenerator implements CacheKeyGeneratorInterface
             }
         }
 
-        return  $cacheKey;
+        return $cacheKey;
     }
 }

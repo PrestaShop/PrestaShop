@@ -28,7 +28,7 @@ namespace PrestaShopBundle\Routing\Converter;
 
 /**
  * Class LegacyRoute contains the info about a route, its legacyLinks, legacyParameters
- * and controller actions has map. This class can be built simply based on the routeDefaults
+ * and controller actions hash map. This class can be built simply based on the routeDefaults
  * parameters and its name.
  */
 class LegacyRoute
