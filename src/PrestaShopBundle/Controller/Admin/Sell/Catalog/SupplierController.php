@@ -104,7 +104,7 @@ class SupplierController extends FrameworkBundleAdminController
 
         return $this->redirect($legacyLink);
     }
-    
+
     public function toggleStatusAction($supplierId)
     {
         try {
