@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -47,7 +47,7 @@ interface ImportFormDataProviderInterface
      *
      * @param array $data
      *
-     * @return array of errors, if occurred.
+     * @return array of errors, if occurred
      */
     public function setData(array $data);
 }

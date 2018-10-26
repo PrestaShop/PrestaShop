@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -57,9 +57,9 @@ final class DataMatchSaver
     /**
      * Save data match.
      *
-     * @param string $name name of the match.
-     * @param array $value value of the match.
-     * @param int $skipRows number of rows to skip from the import file.
+     * @param string $name name of the match
+     * @param array $value value of the match
+     * @param int $skipRows number of rows to skip from the import file
      *
      * @return bool
      */
