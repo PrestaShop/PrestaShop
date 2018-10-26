@@ -24,19 +24,13 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Addon\Theme;
+namespace PrestaShop\PrestaShop\Core\Domain\Theme\Exception;
 
-use Symfony\Component\HttpFoundation\File\UploadedFile;
+use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 
 /**
- * Interface ThemeUploaderInterface
+ * Class ThemeException is base exception for theme sub-domain.
  */
-interface ThemeUploaderInterface
+class ThemeException extends DomainException
 {
-    /**
-     * @param UploadedFile $uploadedTheme
-     *
-     * @return string Path to uploaded theme
-     */
-    public function upload(UploadedFile $uploadedTheme);
 }

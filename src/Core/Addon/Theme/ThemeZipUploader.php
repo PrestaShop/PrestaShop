@@ -28,7 +28,6 @@ namespace PrestaShop\PrestaShop\Core\Addon\Theme;
 
 use PrestaShop\PrestaShop\Core\Addon\Theme\Exception\ThemeUploadException;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
-use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
@@ -64,15 +63,10 @@ final class ThemeZipUploader implements ThemeUploaderInterface
             $destination = $themesDir . sha1_file($uploadedTheme->getPathname()) . '.zip';
         }
 
-        try {
-            $uploadedTheme->move($destination);
-        } catch (FileException $fileException) {
-            throw new ThemeUploadException(
-                'Failed to move imported theme file.',
-                ThemeUploadException::FAILED_TO_MOVE_FILE,
-                $fileException
-            );
-        }
+        move_uploaded_file(
+            $uploadedTheme->getPathname(),
+            $destination
+        );
 
         return $destination;
     }

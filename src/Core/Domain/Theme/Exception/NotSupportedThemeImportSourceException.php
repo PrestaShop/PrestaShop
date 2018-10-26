@@ -24,19 +24,11 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Addon\Theme;
-
-use Symfony\Component\HttpFoundation\File\UploadedFile;
+namespace PrestaShop\PrestaShop\Core\Domain\Theme\Exception;
 
 /**
- * Interface ThemeUploaderInterface
+ * Class NotSupportedThemeImportSourceException is thrown when not supported theme import source is being used.
  */
-interface ThemeUploaderInterface
+class NotSupportedThemeImportSourceException extends ThemeException
 {
-    /**
-     * @param UploadedFile $uploadedTheme
-     *
-     * @return string Path to uploaded theme
-     */
-    public function upload(UploadedFile $uploadedTheme);
 }
