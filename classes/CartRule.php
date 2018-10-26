@@ -1484,7 +1484,7 @@ class CartRuleCore extends ObjectModel
                     $shop_list
                     . (in_array($type, array('carrier', 'shop')) ? ' AND t.deleted = 0' : '') .
                     (in_array($type, array('carrier', 'shop')) ? ' ORDER BY t.name ASC ' : '') .
-                    (in_array($type, array('country', 'group', 'cart_rule')) && $i18n ? ' ORDER BY tl.name ASC ' : '') .
+                    (in_array($type, array('country', 'group')) && $i18n ? ' ORDER BY tl.name ASC ' : '') .
                     $sql_limit,
                     false);
                 while ($row = Db::getInstance()->nextRow($resource)) {
