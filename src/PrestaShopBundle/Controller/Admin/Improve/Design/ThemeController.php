@@ -137,6 +137,13 @@ class ThemeController extends AbstractAdminController
     /**
      * Import new theme.
      *
+     * @AdminSecurity(
+     *     "is_granted('create', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_themes_index",
+     *     message="You do not have permission to add this."
+     * )
+     * @DemoRestricted(redirectRoute="admin_themes_index")
+     *
      * @param Request $request
      *
      * @return Response
