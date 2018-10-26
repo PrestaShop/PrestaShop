@@ -26,6 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
+use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\SubmitBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\SubmitRowAction;
@@ -165,6 +167,9 @@ final class SupplierGridDefinitionFactory extends AbstractGridDefinitionFactory
         ;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function getFilters()
     {
         return (new FilterCollection())
@@ -199,6 +204,22 @@ final class SupplierGridDefinitionFactory extends AbstractGridDefinitionFactory
                         'data-url' => $this->resetActionUrl,
                         'data-redirect' => $this->redirectActionUrl,
                     ],
+                ])
+            )
+        ;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getBulkActions()
+    {
+        return (new BulkActionCollection())
+            ->add((new SubmitBulkAction('delete_supplier'))
+                ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
+                ->setOptions([
+                    'submit_route' => 'admin_suppliers_bulk_delete',
+                    'confirm_message' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
                 ])
             )
         ;
