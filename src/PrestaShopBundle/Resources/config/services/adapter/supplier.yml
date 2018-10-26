@@ -10,3 +10,9 @@ services:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Supplier\Command\ToggleSupplierStatusCommand
 
+  prestashop.adapter.supplier.command_handler.delete_supplier_handler:
+    class: PrestaShop\PrestaShop\Adapter\Supplier\CommandHandler\DeleteSupplierHandler
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\Supplier\Command\DeleteSupplierCommand
+
