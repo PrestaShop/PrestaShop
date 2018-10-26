@@ -370,6 +370,16 @@ class LegacyUrlConverterTest extends LightWebTestCase
         $this->assertNull($response->headers->get('location'));
     }
 
+    public function testPostParameters()
+    {
+        $link = new Link();
+        $legacyUrl = $link->getAdminBaseLink() . basename(_PS_ADMIN_DIR_) . '/' .  \Dispatcher::getInstance()->createUrl('AdminModulesPositions');
+        $this->client->request('POST', $legacyUrl, ['submitAddToHook' => '']);
+        $response = $this->client->getResponse();
+        $this->assertFalse($response->isRedirection());
+        $this->assertNull($response->headers->get('location'));
+    }
+
     /**
      * @return array
      */

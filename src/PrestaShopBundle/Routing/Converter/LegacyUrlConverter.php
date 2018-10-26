@@ -117,8 +117,9 @@ final class LegacyUrlConverter
     public function convertByRequest(Request $request)
     {
         $this->router->getContext()->fromRequest($request);
+        $parameters = array_merge($request->query->all(), $request->request->all());
 
-        return $this->convertByUrl($request->getUri());
+        return $this->convertByParameters($parameters);
     }
 
     /**
