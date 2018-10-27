@@ -33,7 +33,7 @@ admin_themes_enable:
     _controller: PrestaShopBundle:Admin\Improve\Design\Theme:enable
     _legacy_controller: AdminThemes
   requirements:
-    themeName: \^[a-zA-Z0-9_.-]+$\
+    themeName: "^[a-zA-Z0-9_.-]+$"
 
 admin_theme_customize_page_layouts:
   path: /page-layout-customization

@@ -138,6 +138,14 @@
                       </h3>
                       <img src="{{ baseShopUrl }}{{ theme.get('preview') }}" alt="{{ theme.name }}" class="card-img-top">
                     </div>
+                    <form action="{{ path('admin_themes_enable', {'themeName': theme.name}) }}" method="post">
+                      <input type="hidden" name="token" value="{{ csrf_token('enable-theme') }}" />
+
+                      <button type="submit" class="btn btn-outline-primary btn-sm">
+                        <i class="material-icons">check</i>
+                        {{ 'Use this theme'|trans({}, 'Admin.Design.Feature') }}
+                      </button>
+                    </form>
                   </div>
                 {% endfor %}
               </div>

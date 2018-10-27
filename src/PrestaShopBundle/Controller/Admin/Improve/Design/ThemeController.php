@@ -189,7 +189,7 @@ class ThemeController extends AbstractAdminController
      *
      * @return RedirectResponse
      */
-    public function enable($themeName)
+    public function enableAction($themeName)
     {
         try {
             $this->getCommandBus()->handle(new EnableThemeCommand($themeName));
