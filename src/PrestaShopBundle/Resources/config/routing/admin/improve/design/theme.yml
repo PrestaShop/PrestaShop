@@ -26,6 +26,15 @@ admin_themes_import:
     _controller: PrestaShopBundle:Admin\Improve\Design\Theme:import
     _legacy_controller: AdminThemes
 
+admin_themes_enable:
+  path: /enable/{themeName}
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin\Improve\Design\Theme:enable
+    _legacy_controller: AdminThemes
+  requirements:
+    themeName: \^[a-zA-Z0-9_.-]+$\
+
 admin_theme_customize_page_layouts:
   path: /page-layout-customization
   methods: [GET, POST]
