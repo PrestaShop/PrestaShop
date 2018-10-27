@@ -24,9 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Shop\Command;
-
-use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException;
+namespace PrestaShop\PrestaShop\Core\Domain\Shop\Exception;
 
 /**
  * Class NotSupportedFaviconExtensionException
