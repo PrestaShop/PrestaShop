@@ -10,3 +10,11 @@ services:
       - '@prestashop.adapter.legacy.configuration'
     tags:
       - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\Theme\Command\ImportThemeCommand }
+
+  prestashop.adapter.theme.command_handler.enable_theme_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Theme\CommandHandler\EnableThemeHandler'
+    arguments:
+      - '@prestashop.core.addon.theme.theme_manager'
+      - '@prestashop.adapter.cache.clearer.smarty_cache_clearer'
+    tags:
+      - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\Theme\Command\EnableThemeCommand }

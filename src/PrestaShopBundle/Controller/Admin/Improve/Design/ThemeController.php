@@ -29,6 +29,7 @@ namespace PrestaShopBundle\Controller\Admin\Improve\Design;
 use PrestaShop\PrestaShop\Core\Domain\Meta\DataTransferObject\LayoutCustomizationPage;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Query\GetPagesForLayoutCustomization;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Command\UploadLogosCommand;
+use PrestaShop\PrestaShop\Core\Domain\Theme\Command\EnableThemeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Theme\Command\ImportThemeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Theme\Exception\ThemeException;
 use PrestaShop\PrestaShop\Core\Domain\Theme\ValueObject\ThemeImportSource;
@@ -179,6 +180,24 @@ class ThemeController extends AbstractAdminController
         return $this->render('@PrestaShop/Admin/Improve/Design/Theme/import.html.twig', [
             'importThemeForm' => $importThemeForm->createView(),
         ]);
+    }
+
+    /**
+     * Enable theme.
+     *
+     * @param string $themeName
+     *
+     * @return RedirectResponse
+     */
+    public function enable($themeName)
+    {
+        try {
+            $this->getCommandBus()->handle(new EnableThemeCommand($themeName));
+        } catch (ThemeException $e) {
+
+        }
+
+        return $this->redirectToRoute('admin_themes_index');
     }
 
     /**
