@@ -111,6 +111,8 @@ class UploadLogosCommand
 
     /**
      * @param UploadedFile $uploadedFavicon
+     *
+     * @throws NotSupportedFaviconExtensionException
      */
     public function setUploadedFavicon(UploadedFile $uploadedFavicon)
     {
