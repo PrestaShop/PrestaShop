@@ -30,6 +30,7 @@ use PrestaShop\PrestaShop\Core\Domain\Meta\DataTransferObject\LayoutCustomizatio
 use PrestaShop\PrestaShop\Core\Domain\Meta\Query\GetPagesForLayoutCustomization;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Command\UploadLogosCommand;
 use PrestaShop\PrestaShop\Core\Domain\Theme\Command\ImportThemeCommand;
+use PrestaShop\PrestaShop\Core\Domain\Theme\Exception\ThemeException;
 use PrestaShop\PrestaShop\Core\Domain\Theme\ValueObject\ThemeImportSource;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController as AbstractAdminController;
 use PrestaShopBundle\Form\Admin\Improve\Design\Theme\ImportThemeType;
@@ -158,15 +159,21 @@ class ThemeController extends AbstractAdminController
         if ($importThemeForm->isSubmitted()) {
             $data = $importThemeForm->getData();
 
-            if ($data['import_from_computer']) {
-                $importSource = ThemeImportSource::fromArchive($data['import_from_computer']);
-            } elseif ($data['import_from_web']) {
-                $importSource = ThemeImportSource::fromWeb($data['import_from_web']);
-            } elseif ($data['import_from_ftp']) {
-                $importSource = ThemeImportSource::fromFtp($data['import_from_ftp']);
-            }
+            try {
+                if ($data['import_from_computer']) {
+                    $importSource = ThemeImportSource::fromArchive($data['import_from_computer']);
+                } elseif ($data['import_from_web']) {
+                    $importSource = ThemeImportSource::fromWeb($data['import_from_web']);
+                } elseif ($data['import_from_ftp']) {
+                    $importSource = ThemeImportSource::fromFtp($data['import_from_ftp']);
+                }
 
-            $this->getCommandBus()->handle(new ImportThemeCommand($importSource));
+                $this->getCommandBus()->handle(new ImportThemeCommand($importSource));
+
+                return $this->redirectToRoute('admin_themes_index');
+            } catch (ThemeException $e) {
+                throw $e; //@todo: handle properly
+            }
         }
 
         return $this->render('@PrestaShop/Admin/Improve/Design/Theme/import.html.twig', [

@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Addon\Theme;
 
+use PrestaShop\PrestaShop\Core\Addon\Theme\Exception\ThemeAlreadyExistsException;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Module\HookConfigurator;
 use PrestaShop\PrestaShop\Core\Image\ImageTypeRepository;
@@ -379,7 +380,8 @@ class ThemeManager implements AddonManagerInterface
 
         $themePath = $this->appConfiguration->get('_PS_ALL_THEMES_DIR_') . $theme->getName();
         if ($this->filesystem->exists($themePath)) {
-            throw new PrestaShopException(
+            throw new ThemeAlreadyExistsException(
+                $theme->getName(),
                 $this->translator->trans(
                     'There is already a theme named '
                     . $theme->getName()
