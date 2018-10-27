@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Shop\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\NotSupportedFaviconExtensionException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**

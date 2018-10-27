@@ -29,6 +29,8 @@ namespace PrestaShopBundle\Controller\Admin\Improve\Design;
 use PrestaShop\PrestaShop\Core\Domain\Meta\DataTransferObject\LayoutCustomizationPage;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Query\GetPagesForLayoutCustomization;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Command\UploadLogosCommand;
+use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\NotSupportedFaviconExtensionException;
+use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException;
 use PrestaShop\PrestaShop\Core\Domain\Theme\Command\EnableThemeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Theme\Command\ImportThemeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Theme\Exception\ThemeException;
@@ -84,25 +86,30 @@ class ThemeController extends AbstractAdminController
 
         if ($logosUploadForm->isSubmitted()) {
             $data = $logosUploadForm->getData();
-            $command = new UploadLogosCommand();
 
-            if ($data['header_logo']) {
-                $command->setUploadedHeaderLogo($data['header_logo']);
+            try {
+                $command = new UploadLogosCommand();
+
+                if ($data['header_logo']) {
+                    $command->setUploadedHeaderLogo($data['header_logo']);
+                }
+
+                if ($data['mail_logo']) {
+                    $command->setUploadedMailLogo($data['mail_logo']);
+                }
+
+                if ($data['invoice_logo']) {
+                    $command->setUploadedInvoiceLogo($data['invoice_logo']);
+                }
+
+                if ($data['favicon']) {
+                    $command->setUploadedFavicon($data['favicon']);
+                }
+
+                $this->getCommandBus()->handle($command);
+            } catch (ShopException $e) {
+                $this->addFlash('error', $this->handleUploadLogosException($e));
             }
-
-            if ($data['mail_logo']) {
-                $command->setUploadedMailLogo($data['mail_logo']);
-            }
-
-            if ($data['invoice_logo']) {
-                $command->setUploadedInvoiceLogo($data['invoice_logo']);
-            }
-
-            if ($data['favicon']) {
-                $command->setUploadedFavicon($data['favicon']);
-            }
-
-            $this->getCommandBus()->handle($command);
         }
 
         return $this->redirectToRoute('admin_themes_index');
@@ -264,5 +271,28 @@ class ThemeController extends AbstractAdminController
     protected function getLogosUploadForm()
     {
         return $this->createForm(ShopLogosType::class);
+    }
+
+    /**
+     * Handles exception that was thrown when uploading shop logos.
+     *
+     * @param ShopException $e
+     *
+     * @return string Error message for exception.
+     */
+    private function handleUploadLogosException(ShopException $e)
+    {
+        $type = get_class($e);
+
+        $errorMessages = [
+            NotSupportedFaviconExtensionException::class =>
+                $this->trans('Image format not recognized, allowed formats are: .ico', 'Admin.Notifications.Error'),
+        ];
+
+        if (isset($errorMessages[$type])) {
+            return $errorMessages[$type];
+        }
+
+        return $this->getFallbackErrorMessage($type, $e->getCode());
     }
 }
