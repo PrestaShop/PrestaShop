@@ -133,7 +133,7 @@ class CustomerFormCore extends AbstractForm
 
     protected function validateFieldsLengths()
     {
-        $this->validateFieldLength('email', 128, $this->getEmailMaxLengthViolationMessage());
+        $this->validateFieldLength('email', 255, $this->getEmailMaxLengthViolationMessage());
         $this->validateFieldLength('firstname', 255, $this->getFirstNameMaxLengthViolationMessage());
         $this->validateFieldLength('lastname', 255, $this->getLastNameMaxLengthViolationMessage());
     }
@@ -158,7 +158,7 @@ class CustomerFormCore extends AbstractForm
     {
         return $this->translator->trans(
             'The %1$s field is too long (%2$d chars max).',
-            array('email', 128),
+            array('email', 255),
             'Shop.Notifications.Error'
         );
     }
