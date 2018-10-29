@@ -164,15 +164,15 @@
         ],
         "phpunit-admin": [
             "@composer create-test-db",
-            "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests/phpunit-admin.xml"
+            "@php -d date.timezone=UTC -d memory_limit=-1 ./vendor/bin/phpunit -c tests/phpunit-admin.xml"
         ],
         "phpunit-sf": [
             "@composer create-test-db",
-            "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests/sf-tests.xml"
+            "@php -d date.timezone=UTC -d memory_limit=-1 ./vendor/bin/phpunit -c tests/sf-tests.xml"
         ],
         "phpunit-controllers": [
             "@composer create-test-db",
-            "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests/old-controllers.xml"
+            "@php -d date.timezone=UTC -d memory_limit=-1 ./vendor/bin/phpunit -c tests/old-controllers.xml"
         ],
         "create-release": "@php tools/build/CreateRelease.php",
         "git-hook-install": "@php .github/contrib/install.php",
