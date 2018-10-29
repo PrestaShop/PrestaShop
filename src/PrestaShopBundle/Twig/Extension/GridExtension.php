@@ -163,6 +163,7 @@ class GridExtension extends AbstractExtension
 
     /**
      * @param array $grid
+     *
      * @return bool
      */
     public function isOrderingPosition(array $grid)

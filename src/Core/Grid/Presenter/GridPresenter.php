@@ -94,6 +94,7 @@ final class GridPresenter implements GridPresenterInterface
      * column when needed.
      *
      * @param GridInterface $grid
+     *
      * @return array
      */
     private function getColumns(GridInterface $grid)
@@ -115,6 +116,7 @@ final class GridPresenter implements GridPresenterInterface
 
     /**
      * @param GridInterface $grid
+     *
      * @return ColumnInterface|null
      */
     public function getOrderingPosition(GridInterface $grid)
