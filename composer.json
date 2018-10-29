@@ -160,7 +160,7 @@
         ],
         "phpunit-legacy": [
             "@composer create-test-db",
-            "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests/phpunit.xml"
+            "@php -d date.timezone=UTC -d memory_limit=-1 ./vendor/bin/phpunit -c tests/phpunit.xml"
         ],
         "phpunit-admin": [
             "@composer create-test-db",
