@@ -81,7 +81,14 @@ class AdminCmsControllerCore extends AdminController
                 'class' => 'fixed-width-sm',
                 'position' => 'position',
             ),
-            'active' => array('title' => $this->trans('Displayed', array(), 'Admin.Global'), 'align' => 'center', 'active' => 'status', 'class' => 'fixed-width-sm', 'type' => 'bool', 'orderby' => false),
+            'active' => array(
+                'title' => $this->trans('Displayed', array(), 'Admin.Global'),
+                'align' => 'center',
+                'active' => 'status',
+                'class' => 'fixed-width-sm',
+                'type' => 'bool',
+                'orderby' => false,
+            ),
         );
 
         // The controller can't be call directly
