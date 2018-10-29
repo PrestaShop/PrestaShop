@@ -61,7 +61,7 @@ class RoutingCacheKeyGeneratorTest extends TestCase
             'admin/sell/catalog/products/categories.yaml' => 5,
             'admin/configure/shop_parameters/product_preferences.config' => 2,
             'admin/configure/shop_parameters/product_preferences.yml' => -3,
-            'admin/configure/advanced_parameters/webservice.yml' => 10,
+            'admin/configure/advanced_parameters/webservice.yml' => 8,
             'admin/improve/payment/payment_methods.yaml' => 0,
             'admin/configure/advanced_parameters/README.md' => 10,
             'admin/improve/international/translations.yml' => 3200,
@@ -237,7 +237,7 @@ class RoutingCacheKeyGeneratorTest extends TestCase
 
             'modules/ps_linklist/config/routes.yml' => 42,
             'modules/ps_featuredproducts/config/routes.yaml' => -20,
-            'modules/ps_viewedproducs/config/routes.yml' => 10,
+            'modules/ps_viewedproducs/config/routes.yml' => 8,
             'modules/ps_gamification/config/routes.yml' => 0,
         ];
         $this->generateFiles($testFiles, $originalTime);
