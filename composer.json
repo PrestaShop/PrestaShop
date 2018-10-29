@@ -155,6 +155,8 @@
         "test-all": [
             "composer phpunit-legacy",
             "composer phpunit-admin",
+            "composer phpunit-demo",
+            "composer phpunit-api",
             "composer phpunit-sf",
             "composer phpunit-controllers"
         ],
@@ -165,6 +167,14 @@
         "phpunit-admin": [
             "@composer create-test-db",
             "@php -d date.timezone=UTC -d memory_limit=-1 ./vendor/bin/phpunit -c tests/phpunit-admin.xml"
+        ],
+        "phpunit-api": [
+            "@composer create-test-db",
+            "@php -d date.timezone=UTC -d memory_limit=-1 ./vendor/bin/phpunit -c tests/phpunit-api.xml"
+        ],
+        "phpunit-demo": [
+            "@composer create-test-db",
+            "@php -d date.timezone=UTC -d memory_limit=-1 ./vendor/bin/phpunit -c tests/phpunit-demo.xml"
         ],
         "phpunit-sf": [
             "@composer create-test-db",

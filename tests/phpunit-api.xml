@@ -10,7 +10,7 @@
     </php>
     <groups>
       <include>
-        <group>admin</group>
+        <group>api</group>
       </include>
     </groups>
     <testsuites>

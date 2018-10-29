@@ -34,7 +34,7 @@ use Tests\Integration\PrestaShopBundle\Test\WebTestCase;
 /**
  * @group demo
  *
- * To execute these tests: use "./vendor/bin/phpunit -c tests/phpunit-admin.xml --filter=SurvivalTest" command.
+ * To execute these tests: use "./vendor/bin/phpunit -c tests/phpunit-demo.xml --filter=SurvivalTest" command.
  */
 class SurvivalTest extends WebTestCase
 {
