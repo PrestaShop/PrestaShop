@@ -127,6 +127,7 @@ class ReleaseCreator
         'app/cache/..*$',
         '.idea',
         'tools/build$',
+        'tools/foreignkeyGenerator$',
         '.*node_modules.*',
     ];
 
