@@ -142,11 +142,6 @@ class CommonClient {
       .waitForExistAndClick(selector, timeout);
   }
 
-  pause(pause){
-      return this.client
-        .pause(pause)
-  }
-
   waitAndSetValue(selector, value, pause = 0, timeout = 90000) {
     return this.client
       .pause(pause)
