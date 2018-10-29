@@ -4,6 +4,8 @@ const {Menu} = require('../../../selectors/BO/menu.js');
 const {ProductList} = require('../../../selectors/BO/add_product_page');
 const {productPage} = require('../../../selectors/FO/product_page');
 const {AddProductPage} = require('../../../selectors/BO/add_product_page');
+const common_scenarios = require('../../common_scenarios/product');
+
 let promise = Promise.resolve();
 
 scenario('Check the options in the catalog page', () => {
@@ -32,6 +34,7 @@ scenario('Check the options in the catalog page', () => {
         .then(() => client.waitForVisibleAndClick(ProductList.action_preview_button.replace('%POS', 1)))
         .then(() => client.switchWindow(1));
     });
+    common_scenarios.clickOnPreviewLink(client, AddProductPage.preview_link, productPage.product_name);
     test('should check that the first product is well opened', () => {
       return promise
         .then(() => client.checkTextValue(productPage.product_name, tab['productName'].toUpperCase()))
