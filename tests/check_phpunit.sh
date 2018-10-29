@@ -6,11 +6,8 @@ LEGACY=$?
 composer run-script phpunit-admin --timeout=0;
 ADMIN=$?
 
-composer run-script phpunit-api --timeout=0;
-API=$?
-
-composer run-script phpunit-demo --timeout=0;
-DEMO=$?
+composer run-script phpunit-routing --timeout=0;
+ROUTING=$?
 
 composer run-script phpunit-sf --timeout=0;
 SF=$?
@@ -18,7 +15,7 @@ SF=$?
 composer run-script phpunit-controllers --timeout=0;
 CONTROLLERS=$?
 
-if [[ "$LEGACY" == "0" && "$ADMIN" == "0" && "$API" == "0" && "$DEMO" == "0" && "$SF" == "0" && "$CONTROLLERS" == "0" ]]; then
+if [[ "$LEGACY" == "0" && "$ADMIN" == "0" && "$ROUTING" == "0" && "$SF" == "0" && "$CONTROLLERS" == "0" ]]; then
   echo -e "\e[92mPHPUNIT TESTS OK"
   exit 0;
 else

@@ -11,6 +11,8 @@
     <groups>
       <include>
         <group>admin</group>
+        <group>api</group>
+        <group>demo</group>
       </include>
     </groups>
     <testsuites>

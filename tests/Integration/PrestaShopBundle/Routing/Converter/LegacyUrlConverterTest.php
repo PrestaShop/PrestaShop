@@ -33,7 +33,7 @@ use Link;
 use ReflectionClass;
 
 /**
- * @group admin
+ * @group routing
  */
 class LegacyUrlConverterTest extends LightWebTestCase
 {

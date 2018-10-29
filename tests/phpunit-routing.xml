@@ -10,7 +10,7 @@
     </php>
     <groups>
       <include>
-        <group>demo</group>
+        <group>routing</group>
       </include>
     </groups>
     <testsuites>

@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use Shop;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-// bin/phpunit -c tests/phpunit-api.xml --group api --stop-on-error --stop-on-failure --verbose --debug
+// bin/phpunit -c tests/phpunit-admin.xml --group api --stop-on-error --stop-on-failure --verbose --debug
 abstract class ApiTestCase extends WebTestCase
 {
     /**
