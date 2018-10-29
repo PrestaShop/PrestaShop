@@ -64,7 +64,7 @@ class RoutingCacheKeyGeneratorTest extends TestCase
             'admin/configure/advanced_parameters/webservice.yml' => 10,
             'admin/improve/payment/payment_methods.yaml' => 0,
             'admin/configure/advanced_parameters/README.md' => 10,
-            'admin/improve/international/translations.yml' => 4200,
+            'admin/improve/international/translations.yml' => 3200,
             'api/stock_movements.yml' => 10,
             'api/features.yaml' => 5
         ];
@@ -87,8 +87,8 @@ class RoutingCacheKeyGeneratorTest extends TestCase
         $lastModifications = $generator->getLastModifications();
         $this->assertCount(6, $lastModifications);
         $this->assertSame([
-            $this->filesTestDir . DIRECTORY_SEPARATOR . 'admin/improve/international/translations.yml',
             $this->filesTestDir . DIRECTORY_SEPARATOR . 'admin/improve/payment/payment_methods.yaml',
+            $this->filesTestDir . DIRECTORY_SEPARATOR . 'admin/improve/international/translations.yml',
             $this->filesTestDir . DIRECTORY_SEPARATOR . 'admin/sell/catalog/products/products.yml',
             $this->filesTestDir . DIRECTORY_SEPARATOR . 'admin/configure/advanced_parameters/webservice.yml',
             $this->filesTestDir . DIRECTORY_SEPARATOR . 'admin/sell/catalog/products/categories.yaml',
@@ -107,7 +107,7 @@ class RoutingCacheKeyGeneratorTest extends TestCase
             'admin/configure/advanced_parameters/webservice.yml' => 10,
             'admin/improve/payment/payment_methods.yaml' => 0,
             'admin/configure/advanced_parameters/README.md' => 10,
-            'admin/improve/international/translations.yml' => 4200,
+            'admin/improve/international/translations.yml' => 3200,
             'api/stock_movements.yml' => 10,
             'api/features.yaml' => 5
         ];
@@ -116,7 +116,7 @@ class RoutingCacheKeyGeneratorTest extends TestCase
         $generator = new RoutingCacheKeyGenerator([$this->filesTestDir . DIRECTORY_SEPARATOR . 'admin'], []);
         $latestModification = $generator->getLatestModification();
         $this->assertEquals($this->filesTestDir . DIRECTORY_SEPARATOR . 'admin/improve/international/translations.yml', $latestModification['file_path']);
-        $this->assertEquals($originalTime + 4200, $latestModification['modified_time']);
+        $this->assertEquals($originalTime + 3200, $latestModification['modified_time']);
     }
 
     public function testCacheKeyCoreFile()
@@ -130,7 +130,7 @@ class RoutingCacheKeyGeneratorTest extends TestCase
             'admin/configure/advanced_parameters/webservice.yml' => 10,
             'admin/improve/payment/payment_methods.yaml' => 0,
             'admin/configure/advanced_parameters/README.md' => 10,
-            'admin/improve/international/translations.yml' => 4200,
+            'admin/improve/international/translations.yml' => 3200,
             'api/stock_movements.yml' => 10,
             'api/features.yaml' => 5
         ];
@@ -138,7 +138,7 @@ class RoutingCacheKeyGeneratorTest extends TestCase
 
         $generator = new RoutingCacheKeyGenerator([$this->filesTestDir . DIRECTORY_SEPARATOR . 'admin'], []);
         $cacheKey = $generator->getCacheKey();
-        $this->assertEquals('PrestaShopBundle_Routing_Converter_' . ($originalTime + 4200), $cacheKey);
+        $this->assertEquals('PrestaShopBundle_Routing_Converter_' . ($originalTime + 3200), $cacheKey);
     }
 
     public function testModuleFilesOrder()
@@ -231,7 +231,7 @@ class RoutingCacheKeyGeneratorTest extends TestCase
             'admin/sell/catalog/products/products.yml' => 10,
             'admin/sell/catalog/products/categories.yaml' => 5,
             'admin/configure/shop_parameters/product_preferences.yml' => -3,
-            'admin/improve/international/translations.yml' => 4200,
+            'admin/improve/international/translations.yml' => 3200,
             'api/stock_movements.yml' => 10,
             'api/features.yaml' => 5,
 
@@ -264,8 +264,8 @@ class RoutingCacheKeyGeneratorTest extends TestCase
 
         $latestModification = $generator->getLatestModification();
         $this->assertEquals($this->filesTestDir . DIRECTORY_SEPARATOR . 'admin/improve/international/translations.yml', $latestModification['file_path']);
-        $this->assertEquals($originalTime + 4200, $latestModification['modified_time']);
-        $this->assertEquals('PrestaShopBundle_Routing_Converter_' . ($originalTime + 4200), $generator->getCacheKey());
+        $this->assertEquals($originalTime + 3200, $latestModification['modified_time']);
+        $this->assertEquals('PrestaShopBundle_Routing_Converter_' . ($originalTime + 3200), $generator->getCacheKey());
 
         $this->fs->touch($this->filesTestDir . DIRECTORY_SEPARATOR . 'admin/improve/international/translations.yml', $originalTime);
 
@@ -303,7 +303,7 @@ class RoutingCacheKeyGeneratorTest extends TestCase
             'admin/sell/catalog/products/products.yml' => 10,
             'admin/sell/catalog/products/categories.yaml' => 5,
             'admin/configure/shop_parameters/product_preferences.yml' => -3,
-            'admin/improve/international/translations.yml' => 4200,
+            'admin/improve/international/translations.yml' => 3200,
             'api/stock_movements.yml' => 10,
             'api/features.yaml' => 5,
 
@@ -321,7 +321,7 @@ class RoutingCacheKeyGeneratorTest extends TestCase
         ];
 
         $generator = new RoutingCacheKeyGenerator([$this->filesTestDir . DIRECTORY_SEPARATOR . 'admin'], $modules);
-        $this->assertEquals('PrestaShopBundle_Routing_Converter_' . ($originalTime + 4200), $generator->getCacheKey());
+        $this->assertEquals('PrestaShopBundle_Routing_Converter_' . ($originalTime + 3200), $generator->getCacheKey());
 
         $generator = new RoutingCacheKeyGenerator([$this->filesTestDir . DIRECTORY_SEPARATOR . 'admin'], $modules, 'prod');
         $this->assertEquals('PrestaShopBundle_Routing_Converter', $generator->getCacheKey());
