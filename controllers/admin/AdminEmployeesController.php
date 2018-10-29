@@ -84,7 +84,7 @@ class AdminEmployeesControllerCore extends AdminController
             'id_employee' => array(
                 'title' => $this->trans('ID', array(), 'Admin.Global'),
                 'align' => 'center',
-                'class' => 'fixed-width-xs'
+                'class' => 'fixed-width-xs',
             ),
             'firstname' => array(
                 'title' => $this->trans('First name', array(), 'Admin.Global'),
