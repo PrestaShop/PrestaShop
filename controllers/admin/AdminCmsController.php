@@ -56,11 +56,31 @@ class AdminCmsControllerCore extends AdminController
             ),
         );
         $this->fields_list = array(
-            'id_cms' => array('title' => $this->trans('ID', array(), 'Admin.Global'), 'align' => 'center', 'class' => 'fixed-width-xs'),
-            'link_rewrite' => array('title' => $this->trans('URL', array(), 'Admin.Global')),
-            'meta_title' => array('title' => $this->trans('Title', array(), 'Admin.Global'), 'filter_key' => 'b!meta_title'),
-            'head_seo_title' => array('title' => $this->trans('Meta title', array(), 'Admin.Global'), 'filter_key' => 'b!head_seo_title'),
-            'position' => array('title' => $this->trans('Position', array(), 'Admin.Global'), 'filter_key' => 'position', 'align' => 'center', 'class' => 'fixed-width-sm', 'position' => 'position'),
+            'id_cms' => array(
+                'title' => $this->trans('ID', array(), 'Admin.Global'),
+                'align' => 'center',
+                'class' => 'fixed-width-xs',
+            ),
+            'link_rewrite' => array(
+                'title' => $this->trans('URL', array(), 'Admin.Global'),
+            ),
+            'meta_title' => array(
+                'title' => $this->trans('Title', array(), 'Admin.Global'),
+                'filter_key' => 'b!meta_title',
+                'maxlength' => 50,
+            ),
+            'head_seo_title' => array(
+                'title' => $this->trans('Meta title', array(), 'Admin.Global'),
+                'filter_key' => 'b!head_seo_title',
+                'maxlength' => 50,
+            ),
+            'position' => array(
+                'title' => $this->trans('Position', array(), 'Admin.Global'),
+                'filter_key' => 'position',
+                'align' => 'center',
+                'class' => 'fixed-width-sm',
+                'position' => 'position',
+            ),
             'active' => array('title' => $this->trans('Displayed', array(), 'Admin.Global'), 'align' => 'center', 'active' => 'status', 'class' => 'fixed-width-sm', 'type' => 'bool', 'orderby' => false),
         );
 
