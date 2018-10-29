@@ -44,6 +44,7 @@ use Profile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
 
@@ -64,7 +65,7 @@ class ModuleController extends ModuleAbstractController
     public function catalogAction()
     {
         return $this->render(
-            'PrestaShopBundle:Admin/Module:catalog.html.twig',
+            '@PrestaShop/Admin/Module/catalog.html.twig',
             [
                 'layoutHeaderToolbarBtn' => $this->getToolbarButtons(),
                 'layoutTitle' => $this->trans('Modules catalog', 'Admin.Navigation.Menu'),
@@ -125,7 +126,7 @@ class ModuleController extends ModuleAbstractController
         ];
 
         return $this->render(
-            'PrestaShopBundle:Admin/Module:manage.html.twig',
+            '@PrestaShop/Admin/Module/manage.html.twig',
             [
                 'maxModulesDisplayed' => self::MAX_MODULES_DISPLAYED,
                 'bulkActions' => $bulkActions,
@@ -199,7 +200,7 @@ class ModuleController extends ModuleAbstractController
         }
 
         return $this->render(
-            'PrestaShopBundle:Admin/Module:tab-modules-list.html.twig',
+            '@PrestaShop/Admin/Module/tab-modules-list.html.twig',
             $twigParams
         );
     }
@@ -213,7 +214,7 @@ class ModuleController extends ModuleAbstractController
      */
     public function configureModuleAction($module_name)
     {
-        /* @var $legacyUrlGenerator UrlGeneratorInterface */
+        /* @var UrlGeneratorInterface $legacyUrlGenerator */
         $legacyUrlGenerator = $this->get('prestashop.core.admin.url_generator_legacy');
         $legacyContextProvider = $this->get('prestashop.adapter.legacy.context');
         $legacyContext = $legacyContextProvider->getContext();
@@ -414,6 +415,13 @@ class ModuleController extends ModuleAbstractController
                         '%module%' => $module,
                     ]
                 );
+                if ($action != 'uninstall') {
+                    $response[$module]['module_name'] = $module;
+                    $response[$module]['is_configurable'] = (bool) $this->get('prestashop.core.admin.module.repository')
+                                                          ->getModule($module)
+                                                          ->attributes
+                                                          ->get('is_configurable');
+                }
             }
         } catch (UnconfirmedModuleActionException $e) {
             $collection = AddonsCollection::createFrom(array($e->getModule()));
@@ -455,7 +463,7 @@ class ModuleController extends ModuleAbstractController
             $moduleInstance = $moduleRepository->getModule($module);
             $collection = AddonsCollection::createFrom([$moduleInstance]);
             $response[$module]['action_menu_html'] = $this->container->get('templating')->render(
-                'PrestaShopBundle:Admin/Module/Includes:action_menu.html.twig',
+                '@PrestaShop/Admin/Module/Includes/action_menu.html.twig',
                 [
                     'module' => $this->container->get('prestashop.adapter.presenter.module')
                     ->presentCollection($modulesProvider->generateAddonsUrls($collection))[0],
@@ -698,7 +706,7 @@ class ModuleController extends ModuleAbstractController
         $formattedContent = [];
         $formattedContent['selector'] = '.module-catalog-page';
         $formattedContent['content'] = $this->render(
-            'PrestaShopBundle:Admin/Module/Includes:sorting.html.twig',
+            '@PrestaShop/Admin/Module/Includes/sorting.html.twig',
             array(
                 'totalModules' => count($modules),
             )
@@ -707,7 +715,7 @@ class ModuleController extends ModuleAbstractController
         $errorMessage = $this->trans('You do not have permission to add this.', 'Admin.Notifications.Error');
 
         $formattedContent['content'] .= $this->render(
-            'PrestaShopBundle:Admin/Module:catalog-refresh.html.twig',
+            '@PrestaShop/Admin/Module/catalog-refresh.html.twig',
             array(
                 'categories' => $categories['categories'],
                 'requireAddonsSearch' => true,
@@ -731,7 +739,7 @@ class ModuleController extends ModuleAbstractController
         $formattedContent = [];
         $formattedContent['selector'] = '.module-menu-item';
         $formattedContent['content'] = $this->render(
-            'PrestaShopBundle:Admin/Module/Includes:dropdown_categories_catalog.html.twig',
+            '@PrestaShop/Admin/Module/Includes/dropdown_categories_catalog.html.twig',
             array(
                 'topMenuData' => $this->getTopMenuData($categories),
             )

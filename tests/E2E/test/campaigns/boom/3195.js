@@ -2,10 +2,10 @@ const {Installation} = require('../../selectors/BO/installation');
 const {AccessPageBO} = require('../../selectors/BO/access_page');
 const {ModulePage} = require('../../selectors/BO/module_page');
 const {AddProductPage} = require('../../selectors/BO/add_product_page');
-const {OnBoarding} = require('../../selectors/BO/onboarding.js');
 const {AccessPageFO} = require('../../selectors/FO/access_page');
 const commonInstallation = require('../common_scenarios/common_installation');
 const moduleCommonScenarios = require('../common_scenarios/module');
+const welcomeScenarios = require('../common_scenarios/welcome');
 
 let promise = Promise.resolve();
 
@@ -34,13 +34,7 @@ scenario('BOOM-3195: The shop installation', () => {
     test('should log in successfully in BO', () => client.signInBO(AccessPageBO, UrlLastStableVersion));
   }, 'installation');
 
-  scenario('Close the onboarding modal ', client => {
-    test('should close the onboarding modal', () => {
-      return promise
-        .then(() => client.isVisible(OnBoarding.welcome_modal))
-        .then(() => client.closeBoarding(OnBoarding.popup_close_button));
-    });
-  }, 'installation');
+  welcomeScenarios.findAndCloseWelcomeModal('installation');
 
   scenario('Install "Top-sellers block" and "New products block" modules From Cross selling', client => {
     moduleCommonScenarios.installModule(client, ModulePage, AddProductPage, "ps_bestsellers");

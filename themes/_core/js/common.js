@@ -48,3 +48,28 @@ export function psGetRequestParameter(paramName) {
 
   return vars;
 }
+
+/**
+ * on checkout page, when we get the refresh flag :
+ * on payment step we need to refresh page to be sure
+ * amount is correctly updated on payment modules
+ */
+export function refreshCheckoutPage() {
+  // we get the refresh flag : on payment step we need to refresh page to be sure
+  // amount is correctly updated on payemnt modules
+  if (psGetRequestParameter('updatedTransaction') !== null) {
+    // this parameter is used to display some info message
+    // already set : just refresh page
+    window.location.reload();
+  } else {
+    // not set : add it to the url
+    let queryParams = psGetRequestParameter();
+    queryParams['updatedTransaction'] = 1;
+    const joined = [];
+    for (let key in queryParams) {
+      let val = queryParams[key]; // gets the value by looking for the key in the object
+      joined.push(key + "=" + val);
+    }
+    window.location.href = window.location.pathname + "?" + joined.join("&");
+  }
+}

@@ -9,8 +9,8 @@ scenario('Search "Contact form Modules"', () => {
     test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'module');
   scenario('Check that the result of search modules is correct', client => {
-    test('should go to "Module Catalog" page', () => client.goToSubtabMenuPage(Menu.Improve.Modules.modules_menu, Menu.Improve.Modules.modules_catalog));
-    test('should click on "Modules Catalog" tab', () => client.waitForExistAndClick(Menu.Improve.Modules.modules_catalog));
+    test('should go to "Module Catalog" page', () => client.goToSubtabMenuPage(Menu.Improve.Modules.modules_menu, Menu.Improve.Modules.modules_catalog_submenu));
+    test('should click on "Modules Catalog" tab', () => client.waitForExistAndClick(Menu.Improve.Modules.modules_catalog_submenu));
     test('should set the name of the module in the search input', () => client.waitAndSetValue(ModulePage.module_selection_input, "contact form"));
     test('should click on "Search" button', () => {
       return promise

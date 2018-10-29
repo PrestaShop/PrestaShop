@@ -45,7 +45,7 @@
         "prestashop/decimal": "^1.0.0",
         "prestashop/graphnvd3": "^2",
         "prestashop/gridhtml": "^2",
-        "prestashop/gsitemap": "^3",
+        "prestashop/gsitemap": "^4.0",
         "prestashop/pagesnotfound": "^2",
         "prestashop/ps_banner": "^2",
         "prestashop/ps_categorytree": "^2",
@@ -57,6 +57,7 @@
         "prestashop/ps_customtext": "^4",
         "prestashop/ps_emailsubscription": "^2",
         "prestashop/ps_facetedsearch": "^2",
+        "prestashop/ps_faviconnotificationbo": "^1",
         "prestashop/ps_featuredproducts": "^2",
         "prestashop/ps_imageslider": "^3",
         "prestashop/ps_languageselector": "^2",
@@ -138,7 +139,6 @@
         "post-install-cmd": [
             "PrestaShop\\PrestaShop\\Core\\Cldr\\Composer\\Hook::init",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget"
         ],
         "post-update-cmd": [
@@ -146,11 +146,11 @@
             "PrestaShopBundle\\Install\\Upgrade::migrateSettingsFile",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget"
         ],
         "create-test-db": [
-            "Tests\\PrestaShopBundle\\Utils\\DatabaseCreator::createTestDB"
+            "@php ./tests/create-test-db.php",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache"
         ],
         "test-all": [
             "composer phpunit-legacy",

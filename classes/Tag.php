@@ -129,8 +129,8 @@ class TagCore extends ObjectModel
         foreach ($list as $tag) {
             $data[] = array(
                 'id_tag' => (int) $tag,
-                'id_product' => (int) $id_product,
-                'id_lang' => (int) $id_lang,
+                'id_product' => (int) $idProduct,
+                'id_lang' => (int) $idLang,
             );
         }
         $result = Db::getInstance()->insert('product_tag', $data);

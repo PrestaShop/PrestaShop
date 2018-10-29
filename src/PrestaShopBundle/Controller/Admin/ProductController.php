@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin;
 
 use Exception;
+use PrestaShop\PrestaShop\Adapter\Product\FilterParametersUpdater;
 use PrestaShop\PrestaShop\Adapter\Tax\TaxRuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Warehouse\WarehouseDataProvider;
 use PrestaShopBundle\Component\CsvResponse;
@@ -126,21 +127,14 @@ class ProductController extends FrameworkBundleAdminController
 
         // Set values from persistence and replace in the request
         $persistedFilterParameters = $productProvider->getPersistedFilterParameters();
+        /** @var FilterParametersUpdater $filterParametersUpdater */
         $filterParametersUpdater = $this->get('prestashop.adapter.product.filter_parameters_updater');
-
-        $filters = $filterParametersUpdater->setValues(
+        $filters = $filterParametersUpdater->buildFilters(
+            $request->query->all(),
             $persistedFilterParameters,
-            $offset,
-            $limit,
-            $orderBy,
-            $sortOrder
+            compact('offset', 'limit', 'orderBy', 'sortOrder')
         );
-
-        // mimic native extract() function.
-        $offset = $filters['offset'];
-        $limit = $filters['limit'];
-        $orderBy = $filters['orderBy'];
-        $sortOrder = $filters['sortOrder'];
+        extract($filters);
 
         $persistedFilterParameters = array_replace($persistedFilterParameters, $request->request->all());
 
@@ -161,7 +155,7 @@ class ProductController extends FrameworkBundleAdminController
             $legacyUrlGenerator = $this->get('prestashop.core.admin.url_generator_legacy');
 
             return $this->render(
-                'PrestaShopBundle:Admin/Product/CatalogPage:catalog_empty.html.twig',
+                '@PrestaShop/Admin/Product/CatalogPage/catalog_empty.html.twig',
                 [
                     'layoutHeaderToolbarBtn' => $toolbarButtons,
                     'import_url' => $legacyUrlGenerator->generate('AdminImport'),
@@ -174,14 +168,16 @@ class ProductController extends FrameworkBundleAdminController
             $categoriesForm = $this->createForm(ProductCategories::class);
             if (!empty($persistedFilterParameters['filter_category'])) {
                 $categoriesForm->setData(
-                    array(
-                        'tree' => array(0 => $persistedFilterParameters['filter_category']),
-                    )
+                    [
+                        'categories' => [
+                            'tree' => [0 => $persistedFilterParameters['filter_category']],
+                        ],
+                    ]
                 );
             }
         }
 
-        $persistedFilterParameters = $filterParametersUpdater->setPositionOrdering($persistedFilterParameters, $orderBy, $hasCategoryFilter);
+        $cleanFilterParameters = $filterParametersUpdater->cleanFiltersForPositionOrdering($persistedFilterParameters, $orderBy, $hasCategoryFilter);
 
         $permissionError = null;
         if ($this->get('session')->getFlashBag()->has('permission_error')) {
@@ -192,13 +188,13 @@ class ProductController extends FrameworkBundleAdminController
             || ('position' === $orderBy && 'asc' === $sortOrder && !$hasColumnFilter);
         // Template vars injection
         return array_merge(
-            $persistedFilterParameters,
+            $cleanFilterParameters,
             [
                 'limit' => $limit,
                 'offset' => $offset,
                 'orderBy' => $orderBy,
                 'sortOrder' => $sortOrder,
-                'has_filter' => $hasCategoryFilter | $hasColumnFilter,
+                'has_filter' => $hasCategoryFilter || $hasColumnFilter,
                 'has_category_filter' => $hasCategoryFilter,
                 'has_column_filter' => $hasColumnFilter,
                 'products' => $products,
@@ -211,7 +207,7 @@ class ProductController extends FrameworkBundleAdminController
                 'categories' => $categoriesForm->createView(),
                 'pagination_limit_choices' => $productProvider->getPaginationLimitChoices(),
                 'import_link' => $this->generateUrl('admin_import', ['import_type' => 'products']),
-                'sql_manager_add_link' => $this->generateUrl('admin_sql_request_create', ['addrequest_sql' => 1]),
+                'sql_manager_add_link' => $this->get('prestashop.adapter.legacy.context')->getAdminLink('AdminRequestSql', true, ['addrequest_sql' => 1]),
                 'enableSidebar' => true,
                 'help_link' => $this->generateSidebarLink('AdminProducts'),
                 'is_shop_context' => $this->get('prestashop.adapter.shop.context')->isShopContext(),
@@ -258,7 +254,14 @@ class ProductController extends FrameworkBundleAdminController
         if ($products === null) {
             // get old values from persistence (before the current update)
             $persistedFilterParameters = $productProvider->getPersistedFilterParameters();
-            $this->get('prestashop.adapter.filter_parameters_updater')->setValues($persistedFilterParameters, $offset, $limit, $orderBy, $sortOrder);
+            /** @var FilterParametersUpdater $filterParametersUpdater */
+            $filterParametersUpdater = $this->get('prestashop.adapter.product.filter_parameters_updater');
+            $filters = $filterParametersUpdater->buildFilters(
+                $request->query->all(),
+                $persistedFilterParameters,
+                compact('offset', 'limit', 'orderBy', 'sortOrder')
+            );
+            extract($filters);
 
             /**
              * 2 hooks are triggered here:
@@ -644,7 +647,7 @@ class ProductController extends FrameworkBundleAdminController
             if ($combinationsInputs > $maxInputVars) {
                 $this->addFlash('error', $this->trans(
                     'The value of the PHP.ini setting "max_input_vars" must be increased to %value% in order to be able to submit the product form.',
-                    'Admin.Global.Error',
+                    'Admin.Notifications.Error',
                     array('%value%' => $combinationsInputs)
                 ));
             }
@@ -1151,7 +1154,7 @@ class ProductController extends FrameworkBundleAdminController
             case 'default':
         }
 
-        return $this->render('PrestaShopBundle:Admin/Common/_partials:_form_field.html.twig', [
+        return $this->render('@PrestaShop/Admin/Common/_partials/_form_field.html.twig', [
             'form' => $form->getForm()->get($step)->get($fieldName)->createView(),
             'formId' => $step . '_' . $fieldName . '_rendered',
         ]);

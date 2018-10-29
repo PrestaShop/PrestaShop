@@ -330,16 +330,16 @@ class ProductLazyArray extends AbstractLazyArray
      */
     public function getReferenceToDisplay()
     {
-        if ('' !== $this->product['reference']) {
-            return $this->product['reference'];
-        }
-
         if (isset($this->product['attributes'])) {
             foreach ($this->product['attributes'] as $attribute) {
                 if (isset($attribute['reference']) && $attribute['reference'] != null) {
                     return $attribute['reference'];
                 }
             }
+        }
+
+        if ('' !== $this->product['reference']) {
+            return $this->product['reference'];
         }
 
         return null;
@@ -720,7 +720,7 @@ class ProductLazyArray extends AbstractLazyArray
             $ean13,
             $language->id,
             null,
-            $canonical ? Product::getDefaultAttribute($this->product['id_product']) : $product['id_product_attribute'],
+            $canonical ? null : $product['id_product_attribute'],
             false,
             false,
             true

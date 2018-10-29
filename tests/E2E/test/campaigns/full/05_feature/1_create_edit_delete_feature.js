@@ -5,7 +5,7 @@ const commonFeature = require('../../common_scenarios/feature');
 const commonProduct = require('../../common_scenarios/product');
 
 let productData = {
-  name: 'Feat',
+  name: 'Feat2',
   quantity: "10",
   price: '5',
   image_name: 'image_test.jpg',

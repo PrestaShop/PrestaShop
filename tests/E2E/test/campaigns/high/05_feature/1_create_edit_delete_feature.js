@@ -40,7 +40,7 @@ scenario('Create "Feature"', () => {
 
   /* Update the created feature */
   scenario('Go back to the Back Office', client => {
-    test('should go back to the Back Office', () => client.accessToBO(AccessPageBO));
+    test('should go back to the Back Office', () => client.signInBO(AccessPageBO));
   }, 'attribute_and_feature');
   commonFeature.updateFeature(featureData);
 
@@ -52,7 +52,7 @@ scenario('Create "Feature"', () => {
 
   /* Delete feature */
   scenario('Go back to the Back Office', client => {
-    test('should go back to the Back Office', () => client.accessToBO(AccessPageBO));
+    test('should go back to the Back Office', () => client.signInBO(AccessPageBO));
   }, 'attribute_and_feature');
   commonFeature.deleteFeature(featureData);
   scenario('Logout from the Back Office', client => {

@@ -10,8 +10,8 @@ class ModifyQuantity extends CommonClient {
       .waitForExist(Movement.variation, 90000)
       .pause(1000)
       .isVisible(Movement.sort_data_time_icon, 2000)
-      .then(() => {
-        if (global.isVisible) {
+      .then((isVisible) => {
+        if (isVisible) {
           this.client.waitForVisibleAndClick(Movement.sort_data_time_icon);
         }
         this.client.pause(1000);

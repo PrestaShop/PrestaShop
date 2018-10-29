@@ -35,8 +35,6 @@ use Language;
 use AdminController;
 use Link;
 use Tab;
-use Tools as ToolsLegacy;
-use Dispatcher;
 use AdminLegacyLayoutControllerCore;
 
 /**
@@ -102,15 +100,7 @@ class LegacyContext
      */
     public function getAdminLink($controller, $withToken = true, $extraParams = array())
     {
-        $id_lang = Context::getContext()->language->id;
-        $params = $extraParams;
-        if ($withToken) {
-            $params['token'] = ToolsLegacy::getAdminTokenLite($controller);
-        }
-
-        $link = new Link();
-
-        return $link->getAdminBaseLink() . basename(_PS_ADMIN_DIR_) . '/' . Dispatcher::getInstance()->createUrl($controller, $id_lang, $params, false);
+        return $this->getContext()->link->getAdminLink($controller, $withToken, $extraParams, $extraParams);
     }
 
     /**
