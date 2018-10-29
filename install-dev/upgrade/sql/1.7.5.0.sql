@@ -85,5 +85,8 @@ ALTER TABLE `PREFIX_product_lang`
   CHANGE `meta_description` `meta_description` varchar(512) DEFAULT NULL, 
   CHANGE `meta_keywords` `meta_keywords` varchar(255) DEFAULT NULL; 
 
+ALTER TABLE `PREFIX_customer_thread`
+  CHANGE `email` `email` varchar(255) NOT NULL;
+
 ALTER TABLE `PREFIX_stock_available`
   ADD `location` VARCHAR(255) NOT NULL DEFAULT '' AFTER `out_of_stock`;
