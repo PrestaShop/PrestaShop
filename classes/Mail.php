@@ -72,7 +72,7 @@ class MailCore extends ObjectModel
                 'validate' => 'isMailSubject',
                 'copy_post' => false,
                 'required' => true,
-                'size' => 254,
+                'size' => 255,
             ],
             'id_lang' => [
                 'type' => self::TYPE_INT,
