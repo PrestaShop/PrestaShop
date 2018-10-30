@@ -58,7 +58,7 @@ class MailCore extends ObjectModel
                 'validate' => 'isEmail',
                 'copy_post' => false,
                 'required' => true,
-                'size' => 126,
+                'size' => 255,
             ],
             'template' => [
                 'type' => self::TYPE_STRING,
