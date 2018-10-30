@@ -205,11 +205,19 @@ class OrderHistoryCore extends ObjectModel
             // foreach products of the order
             foreach ($order->getProductsDetail() as $product) {
                 if (Validate::isLoadedObject($old_os)) {
+                    $allow_update_pack_stock = !Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT');
+					if(	$allow_update_pack_stock &&
+						Pack::isPack($product['product_id']) &&
+						((int)$product->pack_stock_type === 1 ||
+						((int)$product->pack_stock_type === 3 && (int)Configuration::get('PS_PACK_STOCK_TYPE') === 1))) {
+						$allow_update_pack_stock = false;
+					}
+                    
                     // if becoming logable => adds sale
                     if ($new_os->logable && !$old_os->logable) {
                         ProductSale::addProductSale($product['product_id'], $product['product_quantity']);
                         // @since 1.5.0 - Stock Management
-                        if (!Pack::isPack($product['product_id']) &&
+                        if ((!Pack::isPack($product['product_id']) || $allow_update_pack_stock) &&
                             in_array($old_os->id, $error_or_canceled_statuses) &&
                             !StockAvailable::dependsOnStock($product['id_product'], (int) $order->id_shop)) {
                             StockAvailable::updateQuantity($product['product_id'], $product['product_attribute_id'], -(int) $product['product_quantity'], $order->id_shop);
@@ -219,7 +227,7 @@ class OrderHistoryCore extends ObjectModel
                         ProductSale::removeProductSale($product['product_id'], $product['product_quantity']);
 
                         // @since 1.5.0 - Stock Management
-                        if (!Pack::isPack($product['product_id']) &&
+                        if ((!Pack::isPack($product['product_id']) || $allow_update_pack_stock) &&
                             in_array($new_os->id, $error_or_canceled_statuses) &&
                             !StockAvailable::dependsOnStock($product['id_product'])) {
                             StockAvailable::updateQuantity($product['product_id'], $product['product_attribute_id'], (int) $product['product_quantity'], $order->id_shop);
