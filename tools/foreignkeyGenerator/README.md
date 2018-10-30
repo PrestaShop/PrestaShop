@@ -10,7 +10,7 @@ Once you have executed it, you can use modelisation tools like MySQL Workbench t
 ## How to use it?
 
 ```
-./tools/foreignKeyGenerator/foreign.php
+./tools/foreignkeyGenerator/foreign.php
 ```
 
 * *relations.php* file contains the relations between tables;
