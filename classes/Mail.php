@@ -607,7 +607,7 @@ class MailCore extends ObjectModel
                 foreach (array_merge($recipientsTo, $recipientsCc, $recipientsBcc) as $email => $recipient_name) {
                     /* @var Swift_Address $recipient */
                     $mail->id = null;
-                    $mail->recipient = Tools::substr($email, 0, 126);
+                    $mail->recipient = Tools::substr($email, 0, 255);
                     $mail->add();
                 }
             }
