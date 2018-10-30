@@ -50,8 +50,8 @@ class AdminStoresControllerCore extends AdminController
 
         $this->fields_list = array(
             'id_store' => array('title' => $this->trans('ID', array(), 'Admin.Global'), 'align' => 'center', 'class' => 'fixed-width-xs'),
-            'name' => array('title' => $this->trans('Name', array(), 'Admin.Global'), 'filter_key' => 'a!name'),
-            'address1' => array('title' => $this->trans('Address', array(), 'Admin.Global'), 'filter_key' => 'a!address1'),
+            'name' => array('title' => $this->trans('Name', array(), 'Admin.Global'), 'filter_key' => 'sl!name'),
+            'address1' => array('title' => $this->trans('Address', array(), 'Admin.Global'), 'filter_key' => 'sl!address1'),
             'city' => array('title' => $this->trans('City', array(), 'Admin.Global')),
             'postcode' => array('title' => $this->trans('Zip/postal code', array(), 'Admin.Global')),
             'state' => array('title' => $this->trans('State', array(), 'Admin.Global'), 'filter_key' => 'st!name'),

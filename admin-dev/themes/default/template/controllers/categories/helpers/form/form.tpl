@@ -45,7 +45,7 @@
 		<div class="col-lg-12">
 			<div class="help-block">
 				{l
-                    s='If you want a category to appear in the menu of your shop, go to [1]Modules > Modules & Services > Installed modules.[/1] Then, configure your menu module.'
+                    s='If you want a category to appear in the menu of your shop, go to [1]Modules > Modules Manager.[/1] Then, configure your menu module.'
                     sprintf=[
                     '[1]' => "<a href=\"{$link->getAdminLink('AdminModulesSf')}\" class=\"_blank\">",
                     '[/1]' => '</a>'

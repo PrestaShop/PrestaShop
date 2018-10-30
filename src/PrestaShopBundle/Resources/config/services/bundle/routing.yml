@@ -4,3 +4,8 @@ services:
         arguments:
           - '@=service("prestashop.module_kernel.repository").getActiveModulesPaths()'
         tags: [routing.loader]
+
+    prestashop.bundle.routing.legacy_url_converter:
+        class: 'PrestaShopBundle\Routing\LegacyUrlConverter'
+        arguments:
+            $router: '@router'

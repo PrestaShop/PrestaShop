@@ -62,7 +62,6 @@ scenario('Create, edit, delete and check "Contact" in the Back Office', () => {
     commonScenarios.checkContactFO(contactData, true);
   }, 'common_client');
   scenario('Logout from the Back Office', client => {
-    test('should go back to the Back Office', () => client.accessToBO(AccessPageBO));
     test('should logout successfully from the Back Office', () => client.signOutBO());
   }, 'common_client');
 }, 'common_client', true);

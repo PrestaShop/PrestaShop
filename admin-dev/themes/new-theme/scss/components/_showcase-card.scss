@@ -16,7 +16,10 @@
 
   &__left {
     width: 320px;
+    animation: showcase-img-appearance 1s;
+
     img {
+      animation: showcase-img-appearance 1.5s;
       padding: 40px;
       width: 100%;
     }

@@ -147,7 +147,7 @@ final class EmailLogsDefinitionFactory extends AbstractGridDefinitionFactory
                         ->add((new LinkRowAction('delete'))
                             ->setIcon('delete')
                             ->setOptions([
-                                'route' => 'admin_delete_single_email_log',
+                                'route' => 'admin_emails_delete',
                                 'route_param_name' => 'mailId',
                                 'route_param_field' => 'id_mail',
                                 'confirm_message' => $this->trans(
@@ -228,7 +228,7 @@ final class EmailLogsDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setName($this->trans('Erase all', [], 'Admin.Advparameters.Feature'))
                 ->setIcon('delete')
                 ->setOptions([
-                    'submit_route' => 'admin_delete_all_email_logs',
+                    'submit_route' => 'admin_emails_delete_all',
                     'confirm_message' => $this->trans('Are you sure?', [], 'Admin.Notifications.Warning'),
                 ])
             )
@@ -256,7 +256,7 @@ final class EmailLogsDefinitionFactory extends AbstractGridDefinitionFactory
             ->add((new SubmitBulkAction('delete_email_logs'))
                 ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
                 ->setOptions([
-                    'submit_route' => 'admin_delete_selected_email_logs',
+                    'submit_route' => 'admin_emails_delete_bulk',
                     'confirm_message' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
                 ])
             )

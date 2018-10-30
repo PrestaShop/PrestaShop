@@ -194,6 +194,7 @@ module.exports = {
           for (let j = 0; j < global.filesNumber; j++) {
             promise = client.getFileInformations(Files.files_table.replace('%R', j + 1).replace('%D', index), j, false);
           }
+          // BOOM: 9607
           return promise
             .then(() => client.checkFilterFile(searchValue));
         } else {

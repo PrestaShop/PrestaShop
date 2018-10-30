@@ -420,27 +420,27 @@ class AdminControllerCore extends Controller
             $this->multishop_context = Shop::CONTEXT_ALL | Shop::CONTEXT_GROUP | Shop::CONTEXT_SHOP;
         }
 
-        if (defined('_PS_BO_DEFAULT_THEME_') && _PS_BO_DEFAULT_THEME_
-            && @filemtime(_PS_BO_ALL_THEMES_DIR_ . _PS_BO_DEFAULT_THEME_ . DIRECTORY_SEPARATOR . 'template')) {
-            $default_theme_name = _PS_BO_DEFAULT_THEME_;
-        }
-
-        $this->bo_theme = $default_theme_name;
-
-        if (!@filemtime(_PS_BO_ALL_THEMES_DIR_ . $this->bo_theme . DIRECTORY_SEPARATOR . 'template')) {
-            $this->bo_theme = 'default';
-        }
-
-        $this->bo_css = ((Validate::isLoadedObject($this->context->employee)
-            && $this->context->employee->bo_css) ? $this->context->employee->bo_css : 'theme.css');
-
-        $adminThemeCSSFile = _PS_BO_ALL_THEMES_DIR_ . $this->bo_theme . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . $this->bo_css;
-
-        if (file_exists($adminThemeCSSFile)) {
-            $this->bo_css = 'theme.css';
-        }
-
         if (defined('_PS_BO_ALL_THEMES_DIR_')) {
+            if (defined('_PS_BO_DEFAULT_THEME_') && _PS_BO_DEFAULT_THEME_
+                && @filemtime(_PS_BO_ALL_THEMES_DIR_ . _PS_BO_DEFAULT_THEME_ . DIRECTORY_SEPARATOR . 'template')) {
+                $default_theme_name = _PS_BO_DEFAULT_THEME_;
+            }
+
+            $this->bo_theme = $default_theme_name;
+
+            if (!@filemtime(_PS_BO_ALL_THEMES_DIR_ . $this->bo_theme . DIRECTORY_SEPARATOR . 'template')) {
+                $this->bo_theme = 'default';
+            }
+
+            $this->bo_css = ((Validate::isLoadedObject($this->context->employee)
+                && $this->context->employee->bo_css) ? $this->context->employee->bo_css : 'theme.css');
+
+            $adminThemeCSSFile = _PS_BO_ALL_THEMES_DIR_ . $this->bo_theme . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . $this->bo_css;
+
+            if (file_exists($adminThemeCSSFile)) {
+                $this->bo_css = 'theme.css';
+            }
+
             $this->context->smarty->setTemplateDir(array(
                 _PS_BO_ALL_THEMES_DIR_ . $this->bo_theme . DIRECTORY_SEPARATOR . 'template',
                 _PS_OVERRIDE_DIR_ . 'controllers' . DIRECTORY_SEPARATOR . 'admin' . DIRECTORY_SEPARATOR . 'templates',
@@ -1786,7 +1786,7 @@ class AdminControllerCore extends Controller
         $header_tpl = file_exists($dir . 'header.tpl') ? $dir . 'header.tpl' : 'header.tpl';
         $page_header_toolbar = file_exists($dir . 'page_header_toolbar.tpl') ? $dir . 'page_header_toolbar.tpl' : 'page_header_toolbar.tpl';
         $footer_tpl = file_exists($dir . 'footer.tpl') ? $dir . 'footer.tpl' : 'footer.tpl';
-        $modal_module_list = file_exists($module_list_dir . 'modal.tpl') ? $module_list_dir . 'modal.tpl' : 'modal.tpl';
+        $modal_module_list = file_exists($module_list_dir . 'modal.tpl') ? $module_list_dir . 'modal.tpl' : '';
         $tpl_action = $this->tpl_folder . $this->display . '.tpl';
 
         // Check if action template has been overridden
@@ -1826,9 +1826,15 @@ class AdminControllerCore extends Controller
             $this->context->smarty->assign(
                 array(
                     'page_header_toolbar' => $this->context->smarty->fetch($page_header_toolbar),
-                    'modal_module_list' => $this->context->smarty->fetch($modal_module_list),
                 )
             );
+            if (!empty($modal_module_list)) {
+                $this->context->smarty->assign(
+                    array(
+                        'modal_module_list' => $this->context->smarty->fetch($modal_module_list),
+                    )
+                );
+            }
         }
 
         $this->context->smarty->assign('baseAdminUrl', __PS_BASE_URI__ . basename(_PS_ADMIN_DIR_) . '/');

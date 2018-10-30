@@ -64,29 +64,13 @@ File: modules/ps_legalcompliance/ps_legalcompliance.php:928</note>
       </trans-unit>
     </body>
   </file>
-  <file original="themes/classic/modules/ps_legalcompliance/views/templates/hook/hookDisplayFooter.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="modules/ps_legalcompliance/views/templates/hook/hookDisplayCMSPrintButton.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="a82be0f551b8708bc08eb33cd9ded0cf">
-        <source>Information</source>
-        <target>Information</target>
+      <trans-unit id="427e29628d9f5d9bfde0e58b32569619">
+        <source>Print this page</source>
+        <target>Print this page</target>
         <note>Context:
-File: themes/classic/modules/ps_legalcompliance/views/templates/hook/hookDisplayFooter.tpl:29</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="modules/ps_legalcompliance/views/templates/hook/hookDisplayCMSDisputeInformation.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="ded564687a6602917eb07c460577f456">
-        <source>Information regarding online dispute resolution pursuant to Art. 14 Para. 1 of the ODR (Online Dispute Resolution Regulation):</source>
-        <target>Information regarding online dispute resolution pursuant to Art. 14 Para. 1 of the ODR (Online Dispute Resolution Regulation):</target>
-        <note>Context:
-File: modules/ps_legalcompliance/views/templates/hook/hookDisplayCMSDisputeInformation.tpl:27</note>
-      </trans-unit>
-      <trans-unit id="29bd9770285cd28ad9e55714db33e8bd">
-        <source>The European Commission gives consumers the opportunity to resolve online disputes pursuant to Art. 14 Para. 1 of the ODR on one of their platforms. The platform ([1]http://ec.europa.eu/consumers/odr[/1]) serves as a site where consumers can try to reach out-of-court settlements of disputes arising from online purchases and contracts for services.</source>
-        <target>The European Commission gives consumers the opportunity to resolve online disputes pursuant to Art. 14 Para. 1 of the ODR on one of their platforms. The platform ([1]http://ec.europa.eu/consumers/odr[/1]) serves as a site where consumers can try to reach out-of-court settlements of disputes arising from online purchases and contracts for services.</target>
-        <note>Context:
-File: modules/ps_legalcompliance/views/templates/hook/hookDisplayCMSDisputeInformation.tpl:31</note>
+File: modules/ps_legalcompliance/views/templates/hook/hookDisplayCMSPrintButton.tpl:29</note>
       </trans-unit>
     </body>
   </file>
@@ -100,13 +84,23 @@ File: modules/ps_legalcompliance/views/templates/hook/hookDisplayCheckoutSummary
       </trans-unit>
     </body>
   </file>
-  <file original="modules/ps_legalcompliance/views/templates/hook/hookDisplayCMSPrintButton.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="modules/ps_legalcompliance/views/templates/hook/hookDisplayCartPriceBlock_shipping_details.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="427e29628d9f5d9bfde0e58b32569619">
-        <source>Print this page</source>
-        <target>Print this page</target>
+      <trans-unit id="6af90b162bd8ab1c547c76492d8a2380">
+        <source>(Under conditions)</source>
+        <target>(Under conditions)</target>
         <note>Context:
-File: modules/ps_legalcompliance/views/templates/hook/hookDisplayCMSPrintButton.tpl:29</note>
+File: modules/ps_legalcompliance/views/templates/hook/hookDisplayCartPriceBlock_shipping_details.tpl:27</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/classic/modules/ps_legalcompliance/views/templates/hook/hookDisplayFooter.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="a82be0f551b8708bc08eb33cd9ded0cf">
+        <source>Information</source>
+        <target>Information</target>
+        <note>Context:
+File: themes/classic/modules/ps_legalcompliance/views/templates/hook/hookDisplayFooter.tpl:29</note>
       </trans-unit>
     </body>
   </file>
@@ -144,13 +138,19 @@ File: modules/ps_legalcompliance/views/templates/hook/hookDisplayFooterAfter.tpl
       </trans-unit>
     </body>
   </file>
-  <file original="modules/ps_legalcompliance/views/templates/hook/hookDisplayCartPriceBlock_shipping_details.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="modules/ps_legalcompliance/views/templates/hook/hookDisplayCMSDisputeInformation.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="6af90b162bd8ab1c547c76492d8a2380">
-        <source>(Under conditions)</source>
-        <target>(Under conditions)</target>
+      <trans-unit id="ded564687a6602917eb07c460577f456">
+        <source>Information regarding online dispute resolution pursuant to Art. 14 Para. 1 of the ODR (Online Dispute Resolution Regulation):</source>
+        <target>Information regarding online dispute resolution pursuant to Art. 14 Para. 1 of the ODR (Online Dispute Resolution Regulation):</target>
         <note>Context:
-File: modules/ps_legalcompliance/views/templates/hook/hookDisplayCartPriceBlock_shipping_details.tpl:27</note>
+File: modules/ps_legalcompliance/views/templates/hook/hookDisplayCMSDisputeInformation.tpl:27</note>
+      </trans-unit>
+      <trans-unit id="29bd9770285cd28ad9e55714db33e8bd">
+        <source>The European Commission gives consumers the opportunity to resolve online disputes pursuant to Art. 14 Para. 1 of the ODR on one of their platforms. The platform ([1]http://ec.europa.eu/consumers/odr[/1]) serves as a site where consumers can try to reach out-of-court settlements of disputes arising from online purchases and contracts for services.</source>
+        <target>The European Commission gives consumers the opportunity to resolve online disputes pursuant to Art. 14 Para. 1 of the ODR on one of their platforms. The platform ([1]http://ec.europa.eu/consumers/odr[/1]) serves as a site where consumers can try to reach out-of-court settlements of disputes arising from online purchases and contracts for services.</target>
+        <note>Context:
+File: modules/ps_legalcompliance/views/templates/hook/hookDisplayCMSDisputeInformation.tpl:31</note>
       </trans-unit>
     </body>
   </file>

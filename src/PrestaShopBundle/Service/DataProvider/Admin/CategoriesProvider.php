@@ -101,6 +101,13 @@ class CategoriesProvider
                 $categories['categories']->subMenu[$category]->modules[] = $module;
             }
 
+            // Clear custom categories if there is no module inside
+            foreach ([self::CATEGORY_THEME, self::CATEGORY_MY_MODULES] as $category) {
+                if (empty($categories['categories']->subMenu[$category]->modules)) {
+                    unset($categories['categories']->subMenu[$category]);
+                }
+            }
+
             self::$categories = $categories;
         }
 
