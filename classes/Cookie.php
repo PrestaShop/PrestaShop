@@ -28,7 +28,7 @@ use Defuse\Crypto\Key;
 class CookieCore
 {
     /** @var array Contain cookie content in a key => value format */
-    protected $_content;
+    protected $_content = array();
 
     /** @var array Crypted cookie name for setcookie() */
     protected $_name;
@@ -188,7 +188,7 @@ class CookieCore
     }
 
     /**
-     * Magic method wich delete data into _content array.
+     * Magic method which delete data into _content array.
      *
      * @param string $key key wanted
      */
