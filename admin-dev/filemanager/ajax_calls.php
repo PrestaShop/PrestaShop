@@ -27,6 +27,7 @@ if (isset($_GET['action'])) {
             break;
         case 'save_img':
             $info = pathinfo($_POST['name']);
+
             $filename = $_POST['name'];
             $path_pos = $_POST['path'];
 
@@ -34,6 +35,8 @@ if (isset($_GET['action'])) {
                 || $filename !== fix_filename($filename, $transliteration)
                 || !in_array(strtolower($info['extension']), array('jpg', 'jpeg', 'png'))
                 || strpos($_POST['url'], 'http://featherfiles.aviary.com/') !== 0
+                || !isset($info['extension'])
+                || !in_array(mime_content_type($filename), $mime_img)
 
             ) {
                 die('wrong data');
