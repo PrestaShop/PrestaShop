@@ -87,7 +87,7 @@ class AdminCmsControllerCore extends AdminController
                 'active' => 'status',
                 'class' => 'fixed-width-sm',
                 'type' => 'bool',
-                'orderby' => false
+                'orderby' => false,
             ),
         );
 
