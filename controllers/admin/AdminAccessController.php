@@ -140,23 +140,25 @@ class AdminAccessControllerCore extends AdminController
         if (_PS_MODE_DEMO_) {
             throw new PrestaShopException($this->trans('This functionality has been disabled.', array(), 'Admin.Notifications.Error'));
         }
-        if ($this->access('edit') != '1') {
+
+        $tab_id = (int) Tools::getValue('id_tab');
+        $profile_id = (int) Tools::getValue('id_profile');
+        $permission = Tools::getValue('perm');
+
+        if (!$this->isAllowedToEditPermissions($tab_id, $permission, $profile_id)) {
             throw new PrestaShopException($this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error'));
         }
 
         if (Tools::isSubmit('submitAddAccess')) {
             $access = new Access();
-            $perm = Tools::getValue('perm');
-            if (!in_array($perm, array('view', 'add', 'edit', 'delete', 'all'))) {
+            if (!in_array($permission, array('view', 'add', 'edit', 'delete', 'all'))) {
                 throw new PrestaShopException('permission does not exist');
             }
 
             $enabled = (int) Tools::getValue('enabled');
-            $id_tab = (int) Tools::getValue('id_tab');
-            $id_profile = (int) Tools::getValue('id_profile');
             $addFromParent = (int) Tools::getValue('addFromParent');
 
-            die($access->updateLgcAccess((int) $id_profile, $id_tab, $perm, $enabled, $addFromParent));
+            die($access->updateLgcAccess($profile_id, $tab_id, $permission, $enabled, $addFromParent));
         }
     }
 
@@ -165,22 +167,23 @@ class AdminAccessControllerCore extends AdminController
         if (_PS_MODE_DEMO_) {
             throw new PrestaShopException($this->trans('This functionality has been disabled.', array(), 'Admin.Notifications.Error'));
         }
-        if ($this->access('edit') != '1') {
+
+        if (!$this->access('edit')) {
             throw new PrestaShopException($this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error'));
         }
 
         if (Tools::isSubmit('changeModuleAccess')) {
             $access = new Access();
-            $perm = Tools::getValue('perm');
+            $permission = Tools::getValue('perm');
             $enabled = (int) Tools::getValue('enabled');
             $id_module = (int) Tools::getValue('id_module');
             $id_profile = (int) Tools::getValue('id_profile');
 
-            if (!in_array($perm, array('view', 'configure', 'uninstall'))) {
+            if (!in_array($permission, array('view', 'configure', 'uninstall'))) {
                 throw new PrestaShopException('permission does not exist');
             }
 
-            die($access->updateLgcModuleAccess((int) $id_profile, $id_module, $perm, $enabled));
+            die($access->updateLgcModuleAccess($id_profile, $id_module, $permission, $enabled));
         }
     }
 
@@ -222,5 +225,46 @@ class AdminAccessControllerCore extends AdminController
         }
 
         return $children;
+    }
+
+    /**
+     * @param int $tab_id
+     * @param string $permission
+     * @param int $profile_id
+     *
+     * @return bool
+     *
+     * @throws Exception
+     */
+    private function isAllowedToEditPermissions($tab_id, $permission, $profile_id)
+    {
+        if ($tab_id === -1) {
+            return false;
+        }
+
+        $currentProfile = (int) ContextCore::getContext()->employee->id_profile;
+
+        /**
+         * The current employee can't change its own permissions
+         */
+        if ($profile_id === $currentProfile) {
+            throw new PrestaShopException($this->trans('You do not have permission to edit your own permissions.', array(), 'Admin.Notifications.Error'));
+        }
+
+        $slug = Access::findSlugByIdTab($tab_id);
+
+        /*
+         * The current employee must have the permission himself before granting it to someone else.
+         */
+        foreach ((array) Access::getAuthorizationFromLegacy($permission) as $legacyAuthorization) {
+            if (!Access::isGranted($slug . $legacyAuthorization, $currentProfile)) {
+                return false;
+            }
+        }
+
+        /*
+         * The current employee must be granted edit permission on the Access controller.
+         */
+        return $this->access('edit');
     }
 }
