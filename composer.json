@@ -7,6 +7,7 @@
         "ext-curl": "*",
         "ext-intl": "*",
         "ext-zip": "*",
+        "ext-fileinfo": "*",
         "beberlei/DoctrineExtensions": "^1.0",
         "composer/ca-bundle": "^1.0",
         "composer/installers": "^1.0.21",

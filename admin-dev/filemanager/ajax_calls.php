@@ -36,13 +36,22 @@ if (isset($_GET['action'])) {
                 || !in_array(strtolower($info['extension']), array('jpg', 'jpeg', 'png'))
                 || strpos($_POST['url'], 'http://featherfiles.aviary.com/') !== 0
                 || !isset($info['extension'])
-                || !in_array(mime_content_type($filename), $mime_img)
 
             ) {
                 die('wrong data');
             }
 
             $image_data = get_file_by_url($_POST['url']);
+
+            $tmp = tempnam(sys_get_temp_dir(), 'img');
+            file_put_contents($tmp, $image_data);
+            $mime = mime_content_type($tmp);
+            unlink($tmp);
+
+            if (!in_array($mime, $mime_img)) {
+                die('wrong data');
+            }
+
             if ($image_data === false) {
                 die('file could not be loaded');
             }
