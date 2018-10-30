@@ -81,8 +81,7 @@ class AdminEmployeesControllerCore extends AdminController
         }
 
         $this->fields_list = array(
-            'id_employee' => array(
-                'title' => $this->trans('ID', array(), 'Admin.Global'),
+                'id_employee' => array('title' => $this->trans('ID', array(), 'Admin.Global'),
                 'align' => 'center',
                 'class' => 'fixed-width-xs',
             ),
@@ -100,7 +99,8 @@ class AdminEmployeesControllerCore extends AdminController
             ),
             'profile' => array(
                 'title' => $this->trans('Profile', array(), 'Admin.Advparameters.Feature'),
-                'type' => 'select', 'list' => $this->profiles_array,
+                'type' => 'select',
+                'list' => $this->profiles_array,
                 'filter_key' => 'pl!name',
                 'class' => 'fixed-width-lg',
             ),
