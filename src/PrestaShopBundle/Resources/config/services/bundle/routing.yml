@@ -30,6 +30,6 @@ services:
     prestashop.bundle.routing.converter.routing_cache_key_generator:
         class: 'PrestaShopBundle\Routing\Converter\RoutingCacheKeyGenerator'
         arguments:
-            - ["%kernel.project_dir%/src/PrestashopBundle/Resources/config/routing/admin"]
+            - ["%kernel.project_dir%/src/PrestaShopBundle/Resources/config/routing/admin"]
             - '@=service("prestashop.module_kernel.repository").getActiveModulesPaths()'
             - '%kernel.environment%'
