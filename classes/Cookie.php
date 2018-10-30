@@ -181,7 +181,7 @@ class CookieCore
         if (preg_match('/¤|\|/', $key . $value)) {
             throw new Exception('Forbidden chars in cookie');
         }
-        if (!$this->_modified && (!isset($this->_content[$key]) || (isset($this->_content[$key]) && $this->_content[$key] != $value))) {
+        if (!$this->_modified && (!array_key_exists($key, $this->_content) || $this->_content[$key] != $value)) {
             $this->_modified = true;
         }
         $this->_content[$key] = $value;
