@@ -178,10 +178,12 @@ class AdminManufacturersControllerCore extends AdminController
             ),
             'firstname' => array(
                 'title' => $this->trans('First name', array(), 'Admin.Global'),
+                'maxlength' => 30,
             ),
             'lastname' => array(
                 'title' => $this->trans('Last name', array(), 'Admin.Global'),
                 'filter_key' => 'a!lastname',
+                'maxlength' => 30,
             ),
             'postcode' => array(
                 'title' => $this->trans('Zip/Postal code', array(), 'Admin.Global'),
