@@ -191,8 +191,15 @@ final class LegacyUrlConverter
         if (null === $legacyAction) {
             foreach ($parameters as $parameter => $value) {
                 if ($value === '' || 1 === (int) $value) {
-                    $legacyAction = $parameter;
-                    break;
+                    //Avoid confusing an entity/row id with an action
+                    // e.g.
+                    //  create=1 is an action
+                    //  id_product=1 is NOT an action
+                    if (false === strpos($parameter, 'id_')
+                        && false === strpos($parameter, '_id')) {
+                        $legacyAction = $parameter;
+                        break;
+                    }
                 }
             }
         }

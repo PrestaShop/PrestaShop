@@ -285,6 +285,16 @@ class LegacyUrlConverterTest extends LightWebTestCase
         $this->assertSameUrl($expectedUrl, $convertedUrl);
     }
 
+    public function testIdEqualToOne()
+    {
+        /** @var LegacyUrlConverter $converter */
+        $converter = self::$kernel->getContainer()->get('prestashop.bundle.routing.converter.legacy_url_converter');
+
+        $legacyUrl = $this->link->getAdminBaseLink() . basename(_PS_ADMIN_DIR_) . '/' .  \Dispatcher::getInstance()->createUrl('AdminMeta') . '&id_meta=1&conf=4';
+        $convertedUrl = $converter->convertByUrl($legacyUrl);
+        $this->assertSameUrl('/configure/shop/seo-urls/?id_meta=1&conf=4', $convertedUrl);
+    }
+
     public function testLegacyLinkClass()
     {
         $migratedControllers = $this->getMigratedControllers();

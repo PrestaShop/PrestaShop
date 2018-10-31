@@ -220,6 +220,23 @@ class LegacyUrlConverterTest extends TestCase
         $this->assertNotNull($caughtException);
     }
 
+    /**
+     *  The parameter id_product|product_id must not be considered as a non migrated action
+     *  (as would have been ?controller=AdminProducts&export_products_xml=1)
+     * @throws ArgumentException
+     * @throws RouteNotFoundException
+     */
+    public function testIdEqualToOne()
+    {
+        $router = $this->buildRouterMock('admin_products_index', '/products', 'AdminProducts');
+        $converter = new LegacyUrlConverter($router, new RouterProvider($router));
+        $convertedUrl = $converter->convertByUrl('?controller=AdminProducts&id_product=1');
+        $this->assertEquals('/products', $convertedUrl);
+
+        $convertedUrl = $converter->convertByUrl('?controller=AdminProducts&product_id=1');
+        $this->assertEquals('/products', $convertedUrl);
+    }
+
     public function testActionWithArgument()
     {
         $router = $this->buildRouterMock(
