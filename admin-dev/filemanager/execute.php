@@ -10,10 +10,13 @@ if (!isset($_POST['path_thumb']) && trim($_POST['path_thumb']) == '') {
     die('wrong path');
 }
 
+$realPath = realpath($current_path.$_POST['path']);
+$realPathThumb = realpath($_POST['path_thumb']);
+
 if (preg_match('/\.{1,2}[\/|\\\]/', $_POST['path_thumb']) !== 0
     || preg_match('/\.{1,2}[\/|\\\]/', $_POST['path']) !== 0
-    || strpos(realpath($current_path.$_POST['path']), realpath($current_path)) !== 0
-    || strpos(realpath($_POST['path_thumb']), realpath($thumbs_base_path)) !== 0
+    || ($realPath && strpos($realPath, realpath($current_path)) !== 0)
+    || ($realPathThumb && strpos($realPathThumb, realpath($thumbs_base_path)) !== 0)
 ) {
     die('wrong path');
 }
