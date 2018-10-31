@@ -43,17 +43,19 @@
 													<i class="icon-check"></i> {l s='Use this theme'}
 												</a>
 
-												<button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-													<i class="icon-caret-down"></i>&nbsp;
-												</button>
-												<ul class="dropdown-menu">
-													<li>
-														<a href="{$link->getAdminLink('AdminThemes')|escape:'html':'UTF-8'}&amp;action=deleteTheme&amp;theme_name={$theme->getName()|urlencode}" title="{l s='Delete this theme'}" class="delete">
-															<i class="icon-trash"></i> {l s='Delete this theme'}
-														</a>
-													</li>
-												</ul>
+												{if $field['can_delete_themes']}
+                          <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                            <i class="icon-caret-down"></i>&nbsp;
+                          </button>
 
+                          <ul class="dropdown-menu">
+                            <li>
+                              <a href="{$link->getAdminLink('AdminThemes')|escape:'html':'UTF-8'}&amp;action=deleteTheme&amp;theme_name={$theme->getName()|urlencode}" title="{l s='Delete this theme'}" class="delete">
+                                <i class="icon-trash"></i> {l s='Delete this theme'}
+                              </a>
+                            </li>
+                          </ul>
+												{/if}
 											</div>
 										</div>
 									</div>
