@@ -94,7 +94,11 @@ class CacheProvider extends AbstractLegacyRouteProvider
         foreach ($legacyRoutes as $legacyRoute) {
             $legacyLinks = [];
             foreach ($legacyRoute->getLegacyLinks() as $legacyLink) {
-                $legacyLinks[] = $legacyLink['controller'] . (!empty($legacyLink['action']) ? ':' . $legacyLink['action'] : '');
+                if (empty($legacyLink['action'])) {
+                    $legacyLinks[] = $legacyLink['controller'];
+                } else {
+                    $legacyLinks[] = $legacyLink['controller'] . ':' . $legacyLink['action'];
+                }
             }
             $flattenRoutes[] = [
                 'route_name' => $legacyRoute->getRouteName(),

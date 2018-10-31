@@ -101,8 +101,6 @@ class CacheProviderTest extends TestCase
                 ]
             )
         ];
-
-
     }
 
     public function testGetLegacyRoutesAndSaveCache()

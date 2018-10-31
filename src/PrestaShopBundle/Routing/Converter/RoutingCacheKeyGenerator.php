@@ -104,21 +104,16 @@ class RoutingCacheKeyGenerator implements CacheKeyGeneratorInterface
     }
 
     /**
-     * @return array|null
+     * @return int|null
      */
-    public function getLatestModification()
+    public function getLatestModificationTime()
     {
         $lastModifications = $this->getLastModifications();
         if (!count($lastModifications)) {
             return null;
         }
 
-        $filePaths = array_keys($lastModifications);
-
-        return [
-            'file_path' => $filePaths[0],
-            'modified_time' => $lastModifications[$filePaths[0]],
-        ];
+        return reset($lastModifications);
     }
 
     /**
@@ -128,9 +123,9 @@ class RoutingCacheKeyGenerator implements CacheKeyGeneratorInterface
     {
         $cacheKey = preg_replace('@\\\\@', '_', __NAMESPACE__);
         if ('prod' !== $this->environment) {
-            $latestModification = $this->getLatestModification();
+            $latestModification = $this->getLatestModificationTime();
             if (null !== $latestModification) {
-                $cacheKey .= '_' . $latestModification['modified_time'];
+                $cacheKey .= '_' . $latestModification;
             }
         }
 

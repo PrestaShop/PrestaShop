@@ -51,7 +51,7 @@ class RoutingCacheKeyGeneratorTest extends TestCase
     public function tearDown()
     {
         parent::tearDown();
-        //$this->cleanTestDir();
+        $this->cleanTestDir();
     }
 
     public function testCoreFilesOrder()
@@ -114,9 +114,7 @@ class RoutingCacheKeyGeneratorTest extends TestCase
         $this->generateFiles($testFiles, $originalTime);
 
         $generator = new RoutingCacheKeyGenerator([$this->filesTestDir . DIRECTORY_SEPARATOR . 'admin'], []);
-        $latestModification = $generator->getLatestModification();
-        $this->assertEquals($this->filesTestDir . DIRECTORY_SEPARATOR . 'admin/improve/international/translations.yml', $latestModification['file_path']);
-        $this->assertEquals($originalTime + 3200, $latestModification['modified_time']);
+        $this->assertEquals($originalTime + 3200, $generator->getLatestModificationTime());
     }
 
     public function testCacheKeyCoreFile()
@@ -197,9 +195,7 @@ class RoutingCacheKeyGeneratorTest extends TestCase
         ];
 
         $generator = new RoutingCacheKeyGenerator([], $modules);
-        $latestModification = $generator->getLatestModification();
-        $this->assertEquals($this->filesTestDir . DIRECTORY_SEPARATOR . 'modules/ps_linklist/config/routes.yml', $latestModification['file_path']);
-        $this->assertEquals($originalTime + 42, $latestModification['modified_time']);
+        $this->assertEquals($originalTime + 42, $generator->getLatestModificationTime());
     }
 
     public function testCacheKeyModulesFile()
@@ -262,23 +258,17 @@ class RoutingCacheKeyGeneratorTest extends TestCase
             $this->filesTestDir . DIRECTORY_SEPARATOR . 'modules/ps_featuredproducts/config/routes.yaml',
         ], array_keys($lastModifications));
 
-        $latestModification = $generator->getLatestModification();
-        $this->assertEquals($this->filesTestDir . DIRECTORY_SEPARATOR . 'admin/improve/international/translations.yml', $latestModification['file_path']);
-        $this->assertEquals($originalTime + 3200, $latestModification['modified_time']);
+        $this->assertEquals($originalTime + 3200, $generator->getLatestModificationTime());
         $this->assertEquals('PrestaShopBundle_Routing_Converter_' . ($originalTime + 3200), $generator->getCacheKey());
 
         $this->fs->touch($this->filesTestDir . DIRECTORY_SEPARATOR . 'admin/improve/international/translations.yml', $originalTime);
 
-        $latestModification = $generator->getLatestModification();
-        $this->assertEquals($this->filesTestDir . DIRECTORY_SEPARATOR . 'modules/ps_linklist/config/routes.yml', $latestModification['file_path']);
-        $this->assertEquals($originalTime + 42, $latestModification['modified_time']);
+        $this->assertEquals($originalTime + 42, $generator->getLatestModificationTime());
         $this->assertEquals('PrestaShopBundle_Routing_Converter_' . ($originalTime + 42), $generator->getCacheKey());
 
         $now = time();
         $this->fs->touch($this->filesTestDir . DIRECTORY_SEPARATOR . 'modules/ps_featuredproducts/config/routes.yaml', $now);
-        $latestModification = $generator->getLatestModification();
-        $this->assertEquals($this->filesTestDir . DIRECTORY_SEPARATOR . 'modules/ps_featuredproducts/config/routes.yaml', $latestModification['file_path']);
-        $this->assertEquals($now, $latestModification['modified_time']);
+        $this->assertEquals($now, $generator->getLatestModificationTime());
         $this->assertEquals('PrestaShopBundle_Routing_Converter_' . $now, $generator->getCacheKey());
     }
 
@@ -289,8 +279,7 @@ class RoutingCacheKeyGeneratorTest extends TestCase
         $this->assertNotNull($lastModifications);
         $this->assertEmpty($lastModifications);
 
-        $latestModification = $generator->getLatestModification();
-        $this->assertNull($latestModification);
+        $this->assertNull($generator->getLatestModificationTime());
 
         $cacheKey = $generator->getCacheKey();
         $this->assertEquals('PrestaShopBundle_Routing_Converter', $cacheKey);
