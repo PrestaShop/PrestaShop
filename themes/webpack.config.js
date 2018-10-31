@@ -22,38 +22,36 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-var webpack = require('webpack');
+module.exports = (env, argv) => {
 
-var plugins = [];
+  const path = require('path');
+  const mode = argv.mode || 'production';
 
-var production = false;
-
-if (production) {
-    plugins.push(
-        new webpack.optimize.UglifyJsPlugin({
-            compress: {
-                warnings: false
-            }
-        })
-    );
-}
-
-module.exports = {
+  return {
+    mode: mode,
     entry: [
       './_core/js/theme.js'
     ],
     output: {
-        path: '.',
-        filename: 'core.js'
+      path: path.resolve(__dirname),
+      filename: 'core.js'
     },
     module: {
-        loaders: [
-            {test: /\.js$/     , loaders: ['babel-loader']},
-        ]
+      rules: [
+        {
+          test: /\.js$/,
+          use: {
+            loader: 'babel-loader',
+            options: {
+              presets: ['@babel/preset-env']
+            }
+          },
+        },
+      ]
     },
     externals: {
-        prestashop: 'prestashop'
+      prestashop: 'prestashop'
     },
-    devtool: 'source-map',
-    plugins: plugins
+    devtool: 'source-map'
+  };
 };

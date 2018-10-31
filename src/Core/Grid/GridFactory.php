@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -26,13 +26,13 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid;
 
-use PrestaShop\PrestaShop\Core\Grid\DataProvider\GridDataProviderInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\GridDefinitionFactoryInterface;
+use PrestaShop\PrestaShop\Core\Grid\Data\Factory\GridDataFactoryInterface;
+use PrestaShop\PrestaShop\Core\Grid\Filter\GridFilterFormFactoryInterface;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
-use PrestaShopBundle\Service\Hook\HookDispatcher;
 
 /**
- * Class GridFactory is responsible for creating final Grid instance
+ * Class GridFactory is responsible for creating final Grid instance.
  */
 final class GridFactory implements GridFactoryInterface
 {
@@ -42,47 +42,46 @@ final class GridFactory implements GridFactoryInterface
     private $definitionFactory;
 
     /**
-     * @var GridDataProviderInterface
+     * @var GridDataFactoryInterface
      */
-    private $dataProvider;
+    private $dataFactory;
 
     /**
-     * @var HookDispatcher
+     * @var GridFilterFormFactoryInterface
      */
-    private $dispatcher;
+    private $filterFormFactory;
 
     /**
      * @param GridDefinitionFactoryInterface $definitionFactory
-     * @param GridDataProviderInterface      $dataProvider
-     * @param HookDispatcher                 $dispatcher
+     * @param GridDataFactoryInterface $dataFactory
+     * @param GridFilterFormFactoryInterface $filterFormFactory
      */
     public function __construct(
         GridDefinitionFactoryInterface $definitionFactory,
-        GridDataProviderInterface $dataProvider,
-        HookDispatcher $dispatcher
+        GridDataFactoryInterface $dataFactory,
+        GridFilterFormFactoryInterface $filterFormFactory
     ) {
         $this->definitionFactory = $definitionFactory;
-        $this->dataProvider = $dataProvider;
-        $this->dispatcher = $dispatcher;
+        $this->dataFactory = $dataFactory;
+        $this->filterFormFactory = $filterFormFactory;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function createUsingSearchCriteria(SearchCriteriaInterface $searchCriteria)
+    public function getGrid(SearchCriteriaInterface $searchCriteria)
     {
-        $definition = $this->definitionFactory->create();
+        $definition = $this->definitionFactory->getDefinition();
+        $data = $this->dataFactory->getData($searchCriteria);
 
-        $this->dispatcher->dispatchForParameters('modifyGridDefinition', [
-            'definition' => $definition,
-        ]);
-
-        $data = $this->dataProvider->getData($searchCriteria);
+        $filterForm = $this->filterFormFactory->create($definition);
+        $filterForm->setData($searchCriteria->getFilters());
 
         return new Grid(
             $definition,
             $data,
-            $searchCriteria
+            $searchCriteria,
+            $filterForm
         );
     }
 }

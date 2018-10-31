@@ -87,6 +87,7 @@
               'formStockQuantity': formStockQuantity,
               'formStockMinimalQuantity': form.step3.minimal_quantity,
               'formLowStockThreshold': form.step3.low_stock_threshold,
+              'formLocation': form.step3.location,
               'formLowStockAlert': form.step3.low_stock_alert,
               'formVirtualProduct': form.step3.virtual_product,
               'asm_globally_activated': asm_globally_activated,
@@ -263,7 +264,7 @@
   </form>
 
 
-  {% embed 'PrestaShopBundle:Admin/Helpers:bootstrap_popup.html.twig' with {
+  {% embed '@PrestaShop/Admin/Helpers/bootstrap_popup.html.twig' with {
     'id': 'confirmation_modal',
     'title': "Warning"|trans({}, 'Admin.Notifications.Warning'),
     'closable': false,
@@ -290,6 +291,7 @@
 {% block javascripts %}
   {{ parent() }}
   <script src="{{ asset('themes/default/js/bundle/product/form.js') }}"></script>
+  <script src="{{ asset('themes/new-theme/public/catalog_product.bundle.js') }}"></script>
 
   <script src="{{ asset('themes/default/js/bundle/product/product-manufacturer.js') }}"></script>
   <script src="{{ asset('themes/default/js/bundle/product/product-related.js') }}"></script>

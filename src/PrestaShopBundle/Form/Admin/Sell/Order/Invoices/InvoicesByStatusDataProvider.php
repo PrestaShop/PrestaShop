@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -26,7 +26,6 @@
 
 namespace PrestaShopBundle\Form\Admin\Sell\Order\Invoices;
 
-use PrestaShop\PrestaShop\Adapter\Invoice\OrderInvoiceDataProvider;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 
 /**
@@ -53,7 +52,7 @@ final class InvoicesByStatusDataProvider implements FormDataProviderInterface
     }
 
     /**
-     * Perform validations on form data
+     * Perform validations on form data.
      *
      * @param array $data
      *

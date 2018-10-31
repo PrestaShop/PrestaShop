@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -25,7 +25,7 @@
  */
 
 /**
- * Class DateRangeCore
+ * Class DateRangeCore.
  */
 class DateRangeCore extends ObjectModel
 {
@@ -48,7 +48,7 @@ class DateRangeCore extends ObjectModel
     );
 
     /**
-     * Get current range
+     * Get current range.
      *
      * @return mixed
      */
@@ -56,8 +56,8 @@ class DateRangeCore extends ObjectModel
     {
         $result = Db::getInstance()->getRow('
 		SELECT `id_date_range`, `time_end`
-		FROM `'._DB_PREFIX_.'date_range`
-		WHERE `time_end` = (SELECT MAX(`time_end`) FROM `'._DB_PREFIX_.'date_range`)');
+		FROM `' . _DB_PREFIX_ . 'date_range`
+		WHERE `time_end` = (SELECT MAX(`time_end`) FROM `' . _DB_PREFIX_ . 'date_range`)');
         if (!$result['id_date_range'] || strtotime($result['time_end']) < strtotime(date('Y-m-d H:i:s'))) {
             // The default range is set to 1 day less 1 second (in seconds)
             $rangeSize = 86399;

@@ -3,16 +3,17 @@
  * Created by PhpStorm.
  * User: dev
  * Date: 04/07/18
- * Time: 12:24
+ * Time: 12:24.
  */
 
 namespace PrestaShop\PrestaShop\Core\Search;
-use Symfony\Component\HttpFoundation\Request;
 
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Contract that define how we can retrieve Grid filters
  * from an User request or Repository.
+ *
  * @see SearchParametersResolver class for usage.
  */
 interface SearchParametersInterface

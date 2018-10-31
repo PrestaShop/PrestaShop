@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,9 +23,11 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\Security\Admin;
 
 use Access;
+use Psr\Cache\CacheItemPoolInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
@@ -33,8 +35,7 @@ use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 
 /**
- * Class EmployeeProvider To retrieve Employee entities for the Symfony security components
- * @package PrestaShopBundle\Security\Admin
+ * Class EmployeeProvider To retrieve Employee entities for the Symfony security components.
  */
 class EmployeeProvider implements UserProviderInterface
 {
@@ -43,29 +44,49 @@ class EmployeeProvider implements UserProviderInterface
     private $legacyContext;
 
     /**
-     * Constructor.
-     *
-     * @param LegacyContext $context
+     * @var CacheItemPoolInterface
      */
-    public function __construct(LegacyContext $context)
+    private $cache;
+
+    public function __construct(LegacyContext $context, CacheItemPoolInterface $cache)
     {
         $this->legacyContext = $context->getContext();
+        $this->cache = $cache;
     }
 
     /**
      * Fetch the Employee entity that matches the given username.
+     * Cache system doesn't supports "@" character, so we rely on a sha1 expression.
      *
      * @param string $username
+     *
      * @return Employee
+     *
+     * @throws \Psr\Cache\InvalidArgumentException
+     * @throws \Symfony\Component\Security\Core\Exception\UsernameNotFoundException
      */
     public function loadUserByUsername($username)
     {
-        if (isset($this->legacyContext->employee) && $this->legacyContext->employee->email == $username) {
+        $cacheKey = sha1($username);
+        $cachedEmployee = $this->cache->getItem("app.employees_${cacheKey}");
+
+        if ($cachedEmployee->isHit()) {
+            return $cachedEmployee->get();
+        }
+
+        if (
+            null !== $this->legacyContext->employee
+            && $this->legacyContext->employee->email === $username
+        ) {
             $employee = new Employee($this->legacyContext->employee);
             $employee->setRoles(
                 array_merge([self::ROLE_EMPLOYEE], Access::getRoles($this->legacyContext->employee->id_profile))
             );
-            return $employee;
+
+            $cachedEmployee->set($employee);
+            $this->cache->save($cachedEmployee);
+
+            return $cachedEmployee->get();
         }
 
         throw new UsernameNotFoundException(
@@ -77,6 +98,7 @@ class EmployeeProvider implements UserProviderInterface
      * Reload an Employee and returns a fresh instance.
      *
      * @param UserInterface $employee
+     *
      * @return Employee
      */
     public function refreshUser(UserInterface $employee)
@@ -94,6 +116,7 @@ class EmployeeProvider implements UserProviderInterface
      * Tests if the given class supports the security layer. Here, only Employee class is allowed to be used to authenticate.
      *
      * @param string $class
+     *
      * @return bool
      */
     public function supportsClass($class)

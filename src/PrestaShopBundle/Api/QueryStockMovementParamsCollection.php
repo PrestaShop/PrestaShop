@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -26,7 +26,7 @@
 
 namespace PrestaShopBundle\Api;
 
-class QueryStockMovementParamsCollection  extends QueryStockParamsCollection
+class QueryStockMovementParamsCollection extends QueryStockParamsCollection
 {
     /**
      * @return array
@@ -61,6 +61,7 @@ class QueryStockMovementParamsCollection  extends QueryStockParamsCollection
 
     /**
      * @param $queryParams
+     *
      * @return mixed
      */
     protected function setDefaultOrderParam($queryParams)

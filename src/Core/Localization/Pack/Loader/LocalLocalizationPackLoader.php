@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Localization\Pack\Loader;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 
 /**
- * Class LocalLocalizationPackLoader is responsible for loading localization pack data from local host
+ * Class LocalLocalizationPackLoader is responsible for loading localization pack data from local host.
  */
 final class LocalLocalizationPackLoader extends AbstractLocalizationPackLoader
 {

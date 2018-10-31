@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,7 +30,7 @@ use Doctrine\DBAL\Connection;
 use PrestaShop\PrestaShop\Core\Module\DataProvider\PaymentModuleListProviderInterface;
 
 /**
- * Class PaymentRestrictionsConfigurator is responsible for configuring restrictions for payment modules
+ * Class PaymentRestrictionsConfigurator is responsible for configuring restrictions for payment modules.
  */
 final class PaymentRestrictionsConfigurator implements PaymentRestrictionsConfiguratorInterface
 {
@@ -117,10 +117,10 @@ final class PaymentRestrictionsConfigurator implements PaymentRestrictionsConfig
     }
 
     /**
-     * Clear current configuration for given restriction type
+     * Clear current configuration for given restriction type.
      *
      * @param string $restrictionType
-     * @param int[]  $moduleIds
+     * @param int[] $moduleIds
      *
      * @return int
      */
@@ -128,14 +128,14 @@ final class PaymentRestrictionsConfigurator implements PaymentRestrictionsConfig
     {
         $clearSql = '
             DELETE FROM ' . $this->getTableNameForRestriction($restrictionType) . '
-            WHERE id_shop = '.(int) $this->shopId.' AND id_module IN ('.implode(',', array_map('intval', $moduleIds)).')
+            WHERE id_shop = ' . (int) $this->shopId . ' AND id_module IN (' . implode(',', array_map('intval', $moduleIds)) . ')
         ';
 
         return $this->connection->executeUpdate($clearSql);
     }
 
     /**
-     * Insert new configuration for given restriction type
+     * Insert new configuration for given restriction type.
      *
      * @param string $restrictionType
      * @param array $newConfiguration
@@ -146,14 +146,14 @@ final class PaymentRestrictionsConfigurator implements PaymentRestrictionsConfig
             $fieldName = 'carrier' === $restrictionType ? 'reference' : $restrictionType;
 
             $this->connection->executeUpdate('
-                INSERT INTO `'.$this->getTableNameForRestriction($restrictionType).'`
-                (`id_module`, `id_shop`, `id_'.$fieldName.'`)
-                VALUES '.implode(',', $newConfiguration));
+                INSERT INTO `' . $this->getTableNameForRestriction($restrictionType) . '`
+                (`id_module`, `id_shop`, `id_' . $fieldName . '`)
+                VALUES ' . implode(',', $newConfiguration));
         }
     }
 
     /**
-     * Get table name for module restrictions
+     * Get table name for module restrictions.
      *
      * @param string $restrictionType
      *
@@ -165,7 +165,7 @@ final class PaymentRestrictionsConfigurator implements PaymentRestrictionsConfig
     }
 
     /**
-     * Parse data from restrictions
+     * Parse data from restrictions.
      *
      * @param array $restrictions
      *
@@ -189,7 +189,7 @@ final class PaymentRestrictionsConfigurator implements PaymentRestrictionsConfig
                 }
 
                 foreach ($restriction as $restrictionValues) {
-                    $insertValues[] = '('.(int) $moduleId.', '.(int) $this->shopId.', '.(int) $restrictionValues.')';
+                    $insertValues[] = '(' . (int) $moduleId . ', ' . (int) $this->shopId . ', ' . (int) $restrictionValues . ')';
                 }
             }
         }

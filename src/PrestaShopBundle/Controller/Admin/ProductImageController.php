@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\Controller\Admin;
 
 use Symfony\Component\Form\Extension\Core\Type\FormType;
@@ -31,13 +32,14 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Validator\Constraints as Assert;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+
 /**
- * Admin controller for product images
+ * Admin controller for product images.
  */
 class ProductImageController extends FrameworkBundleAdminController
 {
     /**
-     * Manage upload for product image
+     * Manage upload for product image.
      *
      * @param int $idProduct
      * @param Request $request
@@ -59,8 +61,8 @@ class ProductImageController extends FrameworkBundleAdminController
                 'error_bubbling' => true,
                 'constraints' => [
                     new Assert\NotNull(array('message' => $this->trans('Please select a file', 'Admin.Catalog.Feature'))),
-                    new Assert\Image(array('maxSize' => $this->configuration->get('PS_ATTACHMENT_MAXIMUM_SIZE').'M')),
-                ]
+                    new Assert\Image(array('maxSize' => $this->configuration->get('PS_ATTACHMENT_MAXIMUM_SIZE') . 'M')),
+                ],
             ))
             ->getForm();
 
@@ -78,7 +80,7 @@ class ProductImageController extends FrameworkBundleAdminController
                 foreach ($form->getErrors() as $error) {
                     $error_msg[] = $error->getMessage();
                 }
-                $return_data = array('message' => implode(" ", $error_msg));
+                $return_data = array('message' => implode(' ', $error_msg));
                 $response->setStatusCode(400);
             }
         }
@@ -87,7 +89,7 @@ class ProductImageController extends FrameworkBundleAdminController
     }
 
     /**
-     * Update images positions
+     * Update images positions.
      *
      * @param Request $request
      *
@@ -107,11 +109,13 @@ class ProductImageController extends FrameworkBundleAdminController
     }
 
     /**
-     * Manage form image
+     * Manage form image.
      *
      * @Template("@PrestaShop/Admin/ProductImage/form.html.twig")
+     *
      * @param $idImage
      * @param Request $request
+     *
      * @return array|JsonResponse|Response
      */
     public function formAction($idImage, Request $request)
@@ -124,7 +128,7 @@ class ProductImageController extends FrameworkBundleAdminController
             return new Response();
         }
 
-        $image = $productAdapter->getImage((int)$idImage);
+        $image = $productAdapter->getImage((int) $idImage);
 
         $form = $this->get('form.factory')->createNamedBuilder('form_image', FormType::class, $image, array('csrf_protection' => false))
             ->add('legend', 'PrestaShopBundle\Form\Admin\Type\TranslateType', array(
@@ -136,7 +140,7 @@ class ProductImageController extends FrameworkBundleAdminController
                 'required' => false,
             ))
             ->add('cover', 'Symfony\Component\Form\Extension\Core\Type\CheckboxType', array(
-                'label'    => $this->trans('Cover image', 'Admin.Catalog.Feature'),
+                'label' => $this->trans('Cover image', 'Admin.Catalog.Feature'),
                 'required' => false,
             ))
             ->getForm();
@@ -154,7 +158,7 @@ class ProductImageController extends FrameworkBundleAdminController
                     $error_msg[] = $error->getMessage();
                 }
 
-                $jsonResponse->setData(array('message' => implode(" ", $error_msg)));
+                $jsonResponse->setData(array('message' => implode(' ', $error_msg)));
                 $jsonResponse->setStatusCode(400);
             }
 
@@ -168,7 +172,7 @@ class ProductImageController extends FrameworkBundleAdminController
     }
 
     /**
-     * Delete an image from its ID
+     * Delete an image from its ID.
      *
      * @param int $idImage
      * @param Request $request

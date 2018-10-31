@@ -9,6 +9,7 @@
   background-color: $card-bg;
   border: $card-border-width solid $card-border-color;
   border-radius: $card-border-radius;
+  box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.06);
 }
 
 .card-block {
@@ -71,6 +72,8 @@
   padding: $card-spacer-y $card-spacer-x;
   background-color: $card-cap-bg;
   border-bottom: $card-border-width solid $card-border-color;
+  font-weight: 600;
+  line-height: 1.5rem; // same as material icons
 
   &:first-child {
     border-radius: $card-border-radius-inner $card-border-radius-inner 0 0;
@@ -78,6 +81,8 @@
 
   .material-icons {
     vertical-align: text-bottom;
+    color: $medium-gray;
+    margin-right: 5px;
   }
 
   h3 {
@@ -93,7 +98,7 @@
 }
 
 .card-footer {
-  padding: $card-spacer-y $card-spacer-x;
+  padding: $card-spacer-y $card-spacer-x * 1.5;
   background-color: $card-cap-bg;
   border-top: $card-border-width solid $card-border-color;
 

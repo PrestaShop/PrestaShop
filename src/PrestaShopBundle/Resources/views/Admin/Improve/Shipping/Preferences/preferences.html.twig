@@ -28,15 +28,13 @@
 {% set handlingForm, carrierOptionsForm = form.handling, form.carrier_options %}
 
 {% block content %}
-    <div class="container">
-        {{ form_start(form, {'attr': {'class': 'form', 'id': 'configuration_form'}}) }}
-        <div class="row">
-            {# Block for "Handling" fieldset #}
-            {% include '@PrestaShop/Admin/Improve/Shipping/Preferences/Blocks/shipping_preferences_handling.html.twig' %}
+  {{ form_start(form, {'attr': {'class': 'form', 'id': 'configuration_form'}}) }}
+    <div class="row justify-content-center">
+      {# Block for "Handling" fieldset #}
+      {% include '@PrestaShop/Admin/Improve/Shipping/Preferences/Blocks/shipping_preferences_handling.html.twig' %}
 
-            {# Block for "Carrier options" fieldset #}
-            {% include '@PrestaShop/Admin/Improve/Shipping/Preferences/Blocks/shipping_preferences_carrier_options.html.twig' %}
-        </div>
-        {{ form_end(form) }}
+      {# Block for "Carrier options" fieldset #}
+      {% include '@PrestaShop/Admin/Improve/Shipping/Preferences/Blocks/shipping_preferences_carrier_options.html.twig' %}
     </div>
+  {{ form_end(form) }}
 {% endblock %}

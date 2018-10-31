@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -35,7 +35,7 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\Extension\Core\Type as FormType;
 
 /**
- * This Class is responsible to generate the product Features form
+ * This Class is responsible to generate the product Features form.
  */
 class ProductFeature extends CommonAbstractType
 {
@@ -46,7 +46,7 @@ class ProductFeature extends CommonAbstractType
     private $features;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param object $translator
      * @param object $legacyContext

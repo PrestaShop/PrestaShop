@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -31,12 +31,12 @@ use ObjectModel;
 use Shop;
 
 /**
- * Class CurrencyManager is responsible for dealing with currency data using legacy classes
+ * Class CurrencyManager is responsible for dealing with currency data using legacy classes.
  */
 class CurrencyManager
 {
     /**
-     * Updates currency data after default currency has changed
+     * Updates currency data after default currency has changed.
      */
     public function updateDefaultCurrency()
     {

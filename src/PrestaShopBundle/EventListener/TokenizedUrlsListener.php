@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\EventListener;
 
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
@@ -32,13 +33,12 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\Security\Csrf\CsrfToken;
 use PrestaShop\PrestaShop\Core\Feature\TokenInUrls;
-
 use Employee;
 use Symfony\CS\Tokenizer\Token;
 use Tools;
 
 /**
- * Each Symfony url is automatically tokenized to avoid CSRF fails using XSS failures
+ * Each Symfony url is automatically tokenized to avoid CSRF fails using XSS failures.
  *
  * If token in url is not found or invalid, the user is redirected to a warning page
  */
@@ -82,7 +82,7 @@ class TokenizedUrlsListener
         $route = $request->get('_route');
         $uri = $request->getUri();
 
-        /**
+        /*
          * every route prefixed by '_' won't be secured
          */
         if (
@@ -92,7 +92,7 @@ class TokenizedUrlsListener
             return;
         }
 
-        /**
+        /*
          * every uri which contains 'token' should use the old validation system
          */
         if ($request->query->has('token')) {
@@ -108,7 +108,6 @@ class TokenizedUrlsListener
             if (false !== strpos($uri, '_token=')) {
                 $uri = substr($uri, 0, strpos($uri, '_token='));
             }
-
 
             $response = new RedirectResponse($this->router->generate('admin_security_compromised', array('uri' => urlencode($uri))));
             $event->setResponse($response);

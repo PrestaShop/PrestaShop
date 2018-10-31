@@ -83,6 +83,7 @@ services:
         arguments:
             - '@session'
             - '@prestashop.core.import.file_finder'
+            - '@request_stack'
 
     prestashop.adapter.order.delivery.slip.options.form_provider:
         class: 'PrestaShopBundle\Form\Admin\Sell\Order\Delivery\SlipOptionsFormDataProvider'
@@ -114,3 +115,44 @@ services:
         class: 'PrestaShopBundle\Form\Admin\Improve\Payment\Preferences\PaymentPreferencesFormDataProvider'
         arguments:
             - '@prestashop.adapter.payment_module_preferences.configuration'
+
+    prestashop.admin.email_configuration.form_data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Email\EmailConfigurationFormDataProvider'
+        arguments:
+            - '@prestashop.core.email.email_configurator'
+            - '@prestashop.core.email.smtp_configurator'
+
+    prestashop.admin.request_sql_settings.form_data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\RequestSql\SqlRequestSettingsFormDataProvider'
+        arguments:
+          - '@prestashop.core.sql_manager.configuration.sql_request_configuration'
+
+    prestashop.admin.webservice.form_data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Webservice\WebserviceFormDataProvider'
+        arguments:
+            - '@prestashop.adapter.webservice.configuration'
+
+    prestashop.admin.backup.form_data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Backup\BackupDataProvider'
+        arguments:
+            - '@prestashop.core.backup.options_configuration'
+
+    prestashop.admin.traffic_seo.meta_settings.form_data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta\MetaSettingsFormDataProvider'
+        arguments:
+            - '@prestashop.adapter.meta.set_up_urls.configuration'
+            - '@prestashop.adapter.meta.shop_url.configuration'
+            - '@prestashop.adapter.meta.url_schema.configuration'
+            - '@translator'
+            - '@prestashop.adapter.routes.route_validator'
+            - '@prestashop.adapter.validate'
+
+    prestashop.admin.employee_options.form_data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Employee\EmployeeOptionsFormDataProvider'
+        arguments:
+            - '@prestashop.core.team.employee.configuration.employee_options_configuration'
+
+    prestashop.admin.import_data_configuration.data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Import\ImportDataConfigurationFormDataProvider'
+        arguments:
+            - '@prestashop.adapter.import.import_data_match.configuration'

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2017 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -37,30 +37,29 @@ use PrestaShop\PrestaShop\Adapter\Product\PriceCalculator;
 use PrestaShop\PrestaShop\Adapter\Tools;
 
 /**
- * represent a cart row, ie a product and a quantity, and some post-process data like cart rule applied
+ * represent a cart row, ie a product and a quantity, and some post-process data like cart rule applied.
  */
 class CartRow
 {
-
     /**
-     * row round mode by item
+     * row round mode by item.
      */
-    const ROUND_MODE_ITEM  = 'item';
+    const ROUND_MODE_ITEM = 'item';
 
     /**
-     * row round mode by line
+     * row round mode by line.
      */
-    const ROUND_MODE_LINE  = 'line';
+    const ROUND_MODE_LINE = 'line';
 
     /**
-     * row round mode by all lines
+     * row round mode by all lines.
      */
     const ROUND_MODE_TOTAL = 'total';
 
     /**
-     * static cache key pattern
+     * static cache key pattern.
      */
-    const PRODUCT_PRICE_CACHE_ID_PATTERN = "Product::getPriceStatic_%d-%d";
+    const PRODUCT_PRICE_CACHE_ID_PATTERN = 'Product::getPriceStatic_%d-%d';
 
     /**
      * @var PriceCalculator adapter to calculate price
@@ -133,16 +132,16 @@ class CartRow
     protected $isProcessed = false;
 
     /**
-     * @param array                $rowData array item given by Cart::getProducts()
-     * @param PriceCalculator      $priceCalculator
-     * @param AddressFactory       $addressFactory
+     * @param array $rowData array item given by Cart::getProducts()
+     * @param PriceCalculator $priceCalculator
+     * @param AddressFactory $addressFactory
      * @param CustomerDataProvider $customerDataProvider
-     * @param CacheAdapter         $cacheAdapter
-     * @param GroupDataProvider    $groupDataProvider
-     * @param Database             $databaseAdapter
-     * @param bool                 $useEcotax
-     * @param int                  $precision
-     * @param string               $roundType see self::ROUND_MODE_*
+     * @param CacheAdapter $cacheAdapter
+     * @param GroupDataProvider $groupDataProvider
+     * @param Database $databaseAdapter
+     * @param bool $useEcotax
+     * @param int $precision
+     * @param string $roundType see self::ROUND_MODE_*
      */
     public function __construct(
         $rowData,
@@ -157,15 +156,15 @@ class CartRow
         $roundType
     ) {
         $this->setRowData($rowData);
-        $this->priceCalculator      = $priceCalculator;
-        $this->addressFactory       = $addressFactory;
+        $this->priceCalculator = $priceCalculator;
+        $this->addressFactory = $addressFactory;
         $this->customerDataProvider = $customerDataProvider;
-        $this->cacheAdapter         = $cacheAdapter;
-        $this->groupDataProvider    = $groupDataProvider;
-        $this->databaseAdapter      = $databaseAdapter;
-        $this->useEcotax            = $useEcotax;
-        $this->precision            = $precision;
-        $this->roundType            = $roundType;
+        $this->cacheAdapter = $cacheAdapter;
+        $this->groupDataProvider = $groupDataProvider;
+        $this->databaseAdapter = $databaseAdapter;
+        $this->useEcotax = $useEcotax;
+        $this->precision = $precision;
+        $this->roundType = $roundType;
     }
 
     /**
@@ -189,9 +188,10 @@ class CartRow
     }
 
     /**
-     * Returns the initial unit price (ie without applying cart rules)
+     * Returns the initial unit price (ie without applying cart rules).
      *
      * @return AmountImmutable
+     *
      * @throws \Exception
      */
     public function getInitialUnitPrice()
@@ -204,9 +204,10 @@ class CartRow
     }
 
     /**
-     * return final price: initial minus the cart rule discounts
+     * return final price: initial minus the cart rule discounts.
      *
      * @return AmountImmutable
+     *
      * @throws \Exception
      */
     public function getFinalUnitPrice()
@@ -219,9 +220,10 @@ class CartRow
     }
 
     /**
-     * return final price: initial minus the cart rule discounts
+     * return final price: initial minus the cart rule discounts.
      *
      * @return AmountImmutable
+     *
      * @throws \Exception
      */
     public function getFinalTotalPrice()
@@ -234,7 +236,7 @@ class CartRow
     }
 
     /**
-     * run initial row calculation
+     * run initial row calculation.
      *
      * @param Cart $cart
      *
@@ -242,8 +244,8 @@ class CartRow
      */
     public function processCalculation(Cart $cart)
     {
-        $rowData                = $this->getRowData();
-        $quantity               = (int) $rowData['cart_quantity'];
+        $rowData = $this->getRowData();
+        $quantity = (int) $rowData['cart_quantity'];
         $this->initialUnitPrice = $this->getProductPrice($cart, $rowData);
         // store not rounded values
         $this->finalTotalPrice = new AmountImmutable(
@@ -258,18 +260,18 @@ class CartRow
     protected function getProductPrice(Cart $cart, $rowData)
     {
         $productId = (int) $rowData['id_product'];
-        $quantity  = (int) $rowData['cart_quantity'];
+        $quantity = (int) $rowData['cart_quantity'];
 
         $addressId = $cart->getProductAddressId($rowData);
         if (!$addressId) {
             $addressId = $cart->getTaxAddressId();
         }
-        $address   = $this->addressFactory->findOrCreate($addressId, true);
+        $address = $this->addressFactory->findOrCreate($addressId, true);
         $countryId = (int) $address->id_country;
-        $stateId   = (int) $address->id_state;
-        $zipCode   = $address->postcode;
+        $stateId = (int) $address->id_state;
+        $zipCode = $address->postcode;
 
-        $shopId     = (int) $rowData['id_shop'];
+        $shopId = (int) $rowData['id_shop'];
         $currencyId = (int) $cart->id_currency;
 
         $groupId = null;
@@ -286,7 +288,7 @@ class CartRow
             if (!$this->cacheAdapter->isStored($cacheId)
                 || ($cartQuantity = $this->cacheAdapter->retrieve($cacheId)
                                     != (int) $quantity)) {
-                $sql          = 'SELECT SUM(`quantity`)
+                $sql = 'SELECT SUM(`quantity`)
 				FROM `' . _DB_PREFIX_ . 'cart_product`
 				WHERE `id_product` = ' . (int) $productId . '
 				AND `id_cart` = ' . (int) $cart->id;
@@ -353,16 +355,16 @@ class CartRow
     }
 
     /**
-     * depending on attribute roundType, rounds the item/line value
+     * depending on attribute roundType, rounds the item/line value.
      */
     protected function applyRound()
     {
         // ROUNDING MODE
-        $this->finalUnitPrice = clone($this->initialUnitPrice);
+        $this->finalUnitPrice = clone $this->initialUnitPrice;
 
-        $rowData  = $this->getRowData();
+        $rowData = $this->getRowData();
         $quantity = (int) $rowData['cart_quantity'];
-        $tools    = new Tools;
+        $tools = new Tools();
         switch ($this->roundType) {
             case self::ROUND_MODE_TOTAL:
                 // do not round the line
@@ -386,7 +388,7 @@ class CartRow
                     $tools->round($this->initialUnitPrice->getTaxIncluded(), $this->precision),
                     $tools->round($this->initialUnitPrice->getTaxExcluded(), $this->precision)
                 );
-                $this->finalTotalPrice  = new AmountImmutable(
+                $this->finalTotalPrice = new AmountImmutable(
                     $this->initialUnitPrice->getTaxIncluded() * $quantity,
                     $this->initialUnitPrice->getTaxExcluded() * $quantity
                 );
@@ -396,7 +398,7 @@ class CartRow
 
     /**
      * substract discount from the row
-     * if discount exceeds amount, we keep 0 (no use of negative amounts)
+     * if discount exceeds amount, we keep 0 (no use of negative amounts).
      *
      * @param AmountImmutable $amount
      */
@@ -431,21 +433,21 @@ class CartRow
         }
         $discountTaxIncluded = $this->finalTotalPrice->getTaxIncluded() * $percent / 100;
         $discountTaxExcluded = $this->finalTotalPrice->getTaxExcluded() * $percent / 100;
-        $amount              = new AmountImmutable($discountTaxIncluded, $discountTaxExcluded);
+        $amount = new AmountImmutable($discountTaxIncluded, $discountTaxExcluded);
         $this->applyFlatDiscount($amount);
 
         return $amount;
     }
 
     /**
-     * when final row price is calculated, we need to update unit price
+     * when final row price is calculated, we need to update unit price.
      */
     protected function updateFinalUnitPrice()
     {
-        $rowData              = $this->getRowData();
-        $quantity             = (int) $rowData['cart_quantity'];
-        $taxIncluded          = $this->finalTotalPrice->getTaxIncluded();
-        $taxExcluded          = $this->finalTotalPrice->getTaxExcluded();
+        $rowData = $this->getRowData();
+        $quantity = (int) $rowData['cart_quantity'];
+        $taxIncluded = $this->finalTotalPrice->getTaxIncluded();
+        $taxExcluded = $this->finalTotalPrice->getTaxExcluded();
         $this->finalUnitPrice = new AmountImmutable(
             $taxIncluded / $quantity,
             $taxExcluded / $quantity

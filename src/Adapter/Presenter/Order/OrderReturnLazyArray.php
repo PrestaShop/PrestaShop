@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -33,21 +33,40 @@ use Tools;
 
 class OrderReturnLazyArray extends AbstractLazyArray
 {
+    /**
+     * @var string
+     */
     private $prefix;
+
+    /**
+     * @var Link
+     */
     private $link;
+
     /** @var array */
     private $orderReturn;
 
-    public function __construct($prefix, Link $link, $orderReturn)
+    /**
+     * OrderReturnLazyArray constructor.
+     *
+     * @param string $prefix
+     * @param Link $link
+     * @param array $orderReturn
+     *
+     * @throws \ReflectionException
+     */
+    public function __construct($prefix, Link $link, array $orderReturn)
     {
         $this->prefix = $prefix;
         $this->link = $link;
         $this->orderReturn = $orderReturn;
         parent::__construct();
+        $this->appendArray($orderReturn);
     }
 
     /**
      * @arrayAccess
+     *
      * @return mixed
      */
     public function getId()
@@ -57,6 +76,7 @@ class OrderReturnLazyArray extends AbstractLazyArray
 
     /**
      * @arrayAccess
+     *
      * @return string
      */
     public function getDetailsUrl()
@@ -65,12 +85,13 @@ class OrderReturnLazyArray extends AbstractLazyArray
             'order-detail',
             true,
             null,
-            'id_order='.(int) $this->orderReturn['id_order']
+            'id_order=' . (int) $this->orderReturn['id_order']
         );
     }
 
     /**
      * @arrayAccess
+     *
      * @return string
      */
     public function getReturnUrl()
@@ -79,22 +100,25 @@ class OrderReturnLazyArray extends AbstractLazyArray
             'order-return',
             true,
             null,
-            'id_order_return='.(int) $this->orderReturn['id_order_return']
+            'id_order_return=' . (int) $this->orderReturn['id_order_return']
         );
     }
 
     /**
      * @arrayAccess
+     *
      * @return string
      */
     public function getReturnNumber()
     {
-        return $this->prefix.sprintf('%06d', $this->orderReturn['id_order_return']);
+        return $this->prefix . sprintf('%06d', $this->orderReturn['id_order_return']);
     }
 
     /**
      * @arrayAccess
+     *
      * @return string
+     *
      * @throws PrestaShopException
      */
     public function getReturnDate()
@@ -104,6 +128,7 @@ class OrderReturnLazyArray extends AbstractLazyArray
 
     /**
      * @arrayAccess
+     *
      * @return string
      */
     public function getPrintUrl()
@@ -113,7 +138,7 @@ class OrderReturnLazyArray extends AbstractLazyArray
                 'pdf-order-return',
                 true,
                 null,
-                'id_order_return='.(int) $this->orderReturn['id_order_return']
+                'id_order_return=' . (int) $this->orderReturn['id_order_return']
             )
             : '';
     }

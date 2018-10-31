@@ -2,9 +2,9 @@ module.exports = {
   Translations:{
     translations_menu:'//*[@id="subtab-AdminTranslations"]/a',
     international_menu:'//*[@id="subtab-AdminInternational"]/a',
-    translations_type:'//*[@id="type"]',
-    translations_language:'//*[@id="translations-languages"]',
-    modify_button:'//*[@id="modify-translations"]',
+    translations_type:'//*[@id="form_modify_translations_translation_type"]',
+    translations_language:'//*[@id="form_modify_translations_language"]',
+    modify_button:'//*[@id="main-div"]//form[@name="modify_translations"]//button[@class="btn btn-primary"]/span',
     shop_button:'(//div[@label="Shop"])[31]',
     theme_button:'//div[@label="Theme"]',
     action_button:'//div[@label="Actions"]',

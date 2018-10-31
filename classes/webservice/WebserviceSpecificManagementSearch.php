@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 class WebserviceSpecificManagementSearchCore implements WebserviceSpecificManagementInterface
 {
     /** @var WebserviceOutputBuilder */
@@ -39,17 +38,20 @@ class WebserviceSpecificManagementSearchCore implements WebserviceSpecificManage
 
     /**
      * @param WebserviceOutputBuilderCore $obj
+     *
      * @return WebserviceSpecificManagementInterface
      */
     public function setObjectOutput(WebserviceOutputBuilderCore $obj)
     {
         $this->objOutput = $obj;
+
         return $this;
     }
 
     public function setWsObject(WebserviceRequestCore $obj)
     {
         $this->wsObject = $obj;
+
         return $this;
     }
 
@@ -57,6 +59,7 @@ class WebserviceSpecificManagementSearchCore implements WebserviceSpecificManage
     {
         return $this->wsObject;
     }
+
     public function getObjectOutput()
     {
         return $this->objOutput;
@@ -65,6 +68,7 @@ class WebserviceSpecificManagementSearchCore implements WebserviceSpecificManage
     public function setUrlSegment($segments)
     {
         $this->urlSegment = $segments;
+
         return $this;
     }
 
@@ -74,8 +78,7 @@ class WebserviceSpecificManagementSearchCore implements WebserviceSpecificManage
     }
 
     /**
-     * Management of search
-     *
+     * Management of search.
      */
     public function manage()
     {
@@ -114,7 +117,7 @@ class WebserviceSpecificManagementSearchCore implements WebserviceSpecificManage
         // @todo allow fields of type category and product
         // $this->_resourceConfiguration = $objects_categories['empty']->getWebserviceParameters();
         // if (!$this->setFieldsToDisplay())
-            // return false;
+        // return false;
 
         $this->output .= $this->objOutput->getContent($objects_categories, null, $this->wsObject->fieldsToDisplay, $this->wsObject->depth, WebserviceOutputBuilder::VIEW_LIST, false);
     }

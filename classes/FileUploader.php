@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 class FileUploaderCore
 {
     protected $allowedExtensions = array();
@@ -62,11 +61,12 @@ class FileUploaderCore
             case 'k':
                 $val *= 1024;
         }
+
         return $val;
     }
 
     /**
-     * Returns array('success'=>true) or array('error'=>'error message')
+     * Returns array('success'=>true) or array('error'=>'error message').
      */
     public function handleUpload()
     {

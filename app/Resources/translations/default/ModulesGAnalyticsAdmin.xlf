@@ -20,17 +20,59 @@ File: modules/ps_googleanalytics/ps_googleanalytics.php:52</note>
         <note>Context:
 File: modules/ps_googleanalytics/ps_googleanalytics.php:54</note>
       </trans-unit>
+      <trans-unit id="851bd83a102d143ee17d97f9e15e15af">
+        <source>Google Analytics Tracking ID</source>
+        <target>Google Analytics Tracking ID</target>
+        <note>Context:
+          File: modules/ps_googleanalytics/ps_googleanalytics.php:184</note>
+      </trans-unit>
+      <trans-unit id="ad8e83a47926dcb12e8a8fccd7fcf604">
+        <source>This information is available in your Google Analytics account</source>
+        <target>This information is available in your Google Analytics account</target>
+        <note>Context:
+          File: modules/ps_googleanalytics/ps_googleanalytics.php:188</note>
+      </trans-unit>
+      <trans-unit id="bcd08e73ca9d8bfed2cccd50dd6d8328">
+        <source>Enable User ID tracking</source>
+        <target>Enable User ID tracking</target>
+        <note>Context:
+          File: modules/ps_googleanalytics/ps_googleanalytics.php:192</note>
+      </trans-unit>
+      <trans-unit id="62d498990ba9938425763b6314b5c42a">
+        <source>Anonymize IP</source>
+        <target>Anonymize IP</target>
+        <note>Context:
+          File: modules/ps_googleanalytics/ps_googleanalytics.php:208</note>
+      </trans-unit>
+      <trans-unit id="86b9320b6ef4da2e8845a6e77e7341d3">
+        <source>Use this option to anonymize the visitor’s IP to comply with data privacy laws in some countries</source>
+        <target>Use this option to anonymize the visitor’s IP to comply with data privacy laws in some countries</target>
+        <note>Context:
+          File: modules/ps_googleanalytics/ps_googleanalytics.php:210</note>
+      </trans-unit>
+      <trans-unit id="eaa289807715dff623c794d83941f3ab">
+        <source>Enable Cross-Domain tracking</source>
+        <target>Enable Cross-Domain tracking</target>
+        <note>Context:
+          File: modules/ps_googleanalytics/ps_googleanalytics.php:233</note>
+      </trans-unit>
       <trans-unit id="612e1a524ec979815b12182c34e2daa0">
         <source>Account ID updated successfully</source>
         <target>Account ID updated successfully</target>
         <note>Context:
-File: modules/ps_googleanalytics/ps_googleanalytics.php:233</note>
+File: modules/ps_googleanalytics/ps_googleanalytics.php:270</note>
       </trans-unit>
       <trans-unit id="8e7b67b44506b7ac6685da041a603044">
         <source>Settings for User ID updated successfully</source>
         <target>Settings for User ID updated successfully</target>
         <note>Context:
-File: modules/ps_googleanalytics/ps_googleanalytics.php:243</note>
+File: modules/ps_googleanalytics/ps_googleanalytics.php:281</note>
+      </trans-unit>
+      <trans-unit id="20d72bc5caef85d03b256e2abbd80da2">
+        <source>Settings for Anonymize IP updated successfully</source>
+        <target>Settings for Anonymize IP updated successfully</target>
+        <note>Context:
+File: modules/ps_googleanalytics/ps_googleanalytics.php:287</note>
       </trans-unit>
     </body>
   </file>

@@ -107,7 +107,7 @@ class ProductPreferencesFormDataProvider implements FormDataProviderInterface
     }
 
     /**
-     * Perform validation on form data before saving it
+     * Perform validation on form data before saving it.
      *
      * @param array $data
      *

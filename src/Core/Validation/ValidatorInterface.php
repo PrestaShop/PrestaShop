@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Validation;
 interface ValidatorInterface
 {
     /**
-     * Check if HTML is clean
+     * Check if HTML is clean.
      *
      * @param string $html
      * @param array $options
@@ -37,4 +37,13 @@ interface ValidatorInterface
      * @return bool
      */
     public function isCleanHtml($html, array $options = []);
+
+    /**
+     * Check if Module name is valid.
+     *
+     * @param string $name
+     *
+     * @return bool
+     */
+    public function isModuleName($name);
 }

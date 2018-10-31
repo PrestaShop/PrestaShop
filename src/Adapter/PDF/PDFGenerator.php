@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\PDF\PDFGeneratorInterface;
 use Smarty;
 
 /**
- * Class PDFManager responsible for PDF generation using legacy code
+ * Class PDFManager responsible for PDF generation using legacy code.
  */
 final class PDFGenerator implements PDFGeneratorInterface
 {

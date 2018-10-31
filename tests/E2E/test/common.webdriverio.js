@@ -3,6 +3,7 @@
 let client;
 let webdriverio = require('webdriverio');
 let globals = require('./globals.webdriverio.js');
+let fs = require('fs');
 
 let options = {
   logLevel: 'silent',
@@ -13,27 +14,9 @@ let options = {
   port: 4444,
   deprecationWarnings: false
 };
-if (typeof global.selenium_url !== 'undefined') {
-  options.host = global.selenium_url;
-}
 
-let options2 = {
-  logLevel: 'silent',
-  waitForTimeout: 30000,
-  desiredCapabilities: {
-    browserName: 'chrome',
-    'tunnel-identifier': process.env.TRAVIS_JOB_NUMBER,
-    username: process.env.SAUCE_USERNAME,
-    access_key: process.env.SAUCE_ACCESS_KEY,
-    screenResolution: "1680x1050",
-    platform: "Windows 7"
-  },
-  port: 4445,
-  deprecationWarnings: false
-};
 
 function initCommands(client) {
-
   client.addCommand('linkAccess', function (link) {
     return client
       .url(link);
@@ -150,16 +133,18 @@ function initCommands(client) {
       .refresh();
   });
 
+  client.addCommand('closeWindow', function (id) {
+    return client
+      .getTabIds()
+      .then(ids => client.close(ids[id]));
+  });
+
   client.addCommand('isOpen', function (selector) {
     return client
       .getAttribute(selector + '/..', 'class')
       .then((text) => {
-        global.isOpen = text.indexOf('open');
-        if (global.isOpen !== -1) {
-          return global.isOpen = true;
-        } else {
-          return global.isOpen = false;
-        }
+        global.isOpen = text.indexOf('open') !== -1;
+        return global.isOpen;
       });
   });
 
@@ -169,19 +154,34 @@ module.exports = {
   getClient: function () {
     if (client) {
       return client;
-    } else {
-      if (typeof headless !== 'undefined' && headless) {
-        options["desiredCapabilities"] = {
-          browserName: 'chrome',
-          chromeOptions: {
-            args: ['--headless', '--disable-gpu', '--window-size=1270,899']
-          }
-        };
-      }
-      client = webdriverio.remote(options);
-      initCommands(client);
-      return client;
     }
+
+    if (typeof global.headless !== 'undefined' && global.headless) {
+      options["desiredCapabilities"] = {
+        browserName: 'chrome',
+        chromeOptions: {
+          args: ['--headless', '--disable-gpu', '--window-size=1270,899']
+        }
+      };
+    }
+
+    if (typeof global.selenium_protocol !== 'undefined') {
+      options.protocol = global.selenium_protocol;
+    }
+
+    if (typeof global.selenium_host !== 'undefined') {
+      options.host = global.selenium_host;
+    }
+
+    if (typeof global.selenium_port !== 'undefined') {
+      options.port = global.selenium_port;
+    }
+    fs.readFile(_projectdir + '/../config/defines.inc.php', 'utf8', (err, content) => {
+        global.ps_mode_dev = (content.substring(content.indexOf("define('_PS_MODE_DEV_', "), content.indexOf(");")).split(', ')[1]) === 'true' ? true : false;
+    });
+    client = webdriverio.remote(options);
+    initCommands(client);
+    return client;
   },
   getCustomDate: function (numberOfDay) {
     let today = new Date();
@@ -198,8 +198,7 @@ module.exports = {
       mm = '0' + mm;
     }
 
-    today = yyyy + '-' + mm + '-' + dd;
-    return today;
+    return yyyy + '-' + mm + '-' + dd;
   },
   browser: function () {
     return options.desiredCapabilities.browserName;

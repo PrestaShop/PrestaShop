@@ -1,34 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="controllers/admin/AdminCarriersController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="controllers/admin/AdminCustomersController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="1412292b09d3cd39f32549afb1f5f102">
-        <source>Delete selected item?</source>
-        <target>Delete selected item?</target>
-        <note>Context:
-File: controllers/admin/AdminCarriersController.php:701</note>
-      </trans-unit>
       <trans-unit id="d3b206d196cd6be3a2764c1fb90b200f">
         <source>Delete selected</source>
         <target>Delete selected</target>
         <note>Context:
-File: controllers/admin/AdminCarriersController.php:55</note>
+File: controllers/admin/AdminCustomersController.php:65</note>
       </trans-unit>
       <trans-unit id="e25f0ecd41211b01c83e5fec41df4fe7">
         <source>Delete selected items?</source>
         <target>Delete selected items?</target>
         <note>Context:
-File: controllers/admin/AdminCarriersController.php:56</note>
+File: controllers/admin/AdminCustomersController.php:66</note>
+      </trans-unit>
+      <trans-unit id="b3ebc4fbc081856600b6b9ecbb0a99fb">
+        <source>Delete the selected item?</source>
+        <target>Delete the selected item?</target>
+        <note>Context:
+File: controllers/admin/AdminCustomersController.php:1045</note>
       </trans-unit>
     </body>
   </file>
-  <file original="modules/statsbestsuppliers/statsbestsuppliers.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="controllers/admin/AdminGroupsController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="4f29d8c727dcf2022ac241cb96c31083">
-        <source>Empty recordset returned</source>
-        <target>Empty recordset returned</target>
+      <trans-unit id="3e053943605d9e4bf7dd7588ea19e9d2">
+        <source>Forbidden characters:</source>
+        <target>Forbidden characters:</target>
         <note>Context:
-File: modules/statsbestsuppliers/statsbestsuppliers.php:53</note>
+File: controllers/admin/AdminGroupsController.php:280</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminTaxesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="6252c0f2c2ed83b7b06dfca86d4650bb">
+        <source>Invalid characters:</source>
+        <target>Invalid characters:</target>
+        <note>Context:
+File: controllers/admin/AdminTaxesController.php:212</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="classes/helper/HelperList.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="1412292b09d3cd39f32549afb1f5f102">
+        <source>Delete selected item?</source>
+        <target>Delete selected item?</target>
+        <note>Context:
+File: classes/helper/HelperList.php:524</note>
       </trans-unit>
     </body>
   </file>
@@ -42,33 +62,13 @@ File: modules/statsbestmanufacturers/statsbestmanufacturers.php:53</note>
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminAttributesGroupsController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="modules/statsbestsuppliers/statsbestsuppliers.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="6252c0f2c2ed83b7b06dfca86d4650bb">
-        <source>Invalid characters:</source>
-        <target>Invalid characters:</target>
+      <trans-unit id="4f29d8c727dcf2022ac241cb96c31083">
+        <source>Empty recordset returned</source>
+        <target>Empty recordset returned</target>
         <note>Context:
-File: controllers/admin/AdminAttributesGroupsController.php:277</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminCustomersController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="b3ebc4fbc081856600b6b9ecbb0a99fb">
-        <source>Delete the selected item?</source>
-        <target>Delete the selected item?</target>
-        <note>Context:
-File: controllers/admin/AdminCustomersController.php:1038</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminQuickAccessesController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="3e053943605d9e4bf7dd7588ea19e9d2">
-        <source>Forbidden characters:</source>
-        <target>Forbidden characters:</target>
-        <note>Context:
-File: controllers/admin/AdminQuickAccessesController.php:90</note>
+File: modules/statsbestsuppliers/statsbestsuppliers.php:53</note>
       </trans-unit>
     </body>
   </file>

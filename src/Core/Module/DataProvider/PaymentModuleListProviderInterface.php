@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -27,12 +27,12 @@
 namespace PrestaShop\PrestaShop\Core\Module\DataProvider;
 
 /**
- * Interface PaymentModuleProviderInterface defines contract for payment module list provider
+ * Interface PaymentModuleProviderInterface defines contract for payment module list provider.
  */
 interface PaymentModuleListProviderInterface
 {
     /**
-     * Get payment module data
+     * Get payment module data.
      *
      * @return array
      */

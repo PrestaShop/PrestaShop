@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -27,12 +27,12 @@
 namespace PrestaShop\PrestaShop\Core\PDF;
 
 /**
- * Interface PDFDataProviderInterface describes a PDF template type provider
+ * Interface PDFDataProviderInterface describes a PDF template type provider.
  */
 interface PDFTemplateTypeProviderInterface
 {
     /**
-     * Gets PDF template type
+     * Gets PDF template type.
      *
      * @return string
      */

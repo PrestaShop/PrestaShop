@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,7 +29,7 @@ namespace PrestaShopBundle\Translation;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * Trait TranslatorAwareTrait is used for services that depends on translator
+ * Trait TranslatorAwareTrait is used for services that depends on translator.
  */
 trait TranslatorAwareTrait
 {
@@ -39,12 +39,26 @@ trait TranslatorAwareTrait
     protected $translator;
 
     /**
-     * Set translator instance
+     * Set translator instance.
      *
      * @param TranslatorInterface $translator
      */
     public function setTranslator(TranslatorInterface $translator)
     {
         $this->translator = $translator;
+    }
+
+    /**
+     * Shortcut method to translate text.
+     *
+     * @param string $id
+     * @param array $options
+     * @param string $domain
+     *
+     * @return string
+     */
+    protected function trans($id, array $options, $domain)
+    {
+        return $this->translator->trans($id, $options, $domain);
     }
 }

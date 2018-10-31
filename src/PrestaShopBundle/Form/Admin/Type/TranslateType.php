@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -32,7 +32,7 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * This form class is responsible to create a translatable form
+ * This form class is responsible to create a translatable form.
  */
 class TranslateType extends CommonAbstractType
 {
@@ -54,7 +54,7 @@ class TranslateType extends CommonAbstractType
             }
 
             $builder->add($locale['id_lang'], $options['type'], $locale_options);
-            $i++;
+            ++$i;
         }
     }
 

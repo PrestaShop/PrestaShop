@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -59,6 +59,7 @@ abstract class ApiController
 
     /**
      * @param HttpException $exception
+     *
      * @return JsonResponse
      */
     protected function handleException(HttpException $exception)
@@ -70,6 +71,7 @@ abstract class ApiController
 
     /**
      * @param $content
+     *
      * @return mixed
      */
     protected function guardAgainstInvalidJsonBody($content)
@@ -100,11 +102,12 @@ abstract class ApiController
     }
 
     /**
-     * Add additional info to JSON return
+     * Add additional info to JSON return.
      *
      * @param Request $request
      * @param QueryParamsCollection|null $queryParams
      * @param array $headers
+     *
      * @return array
      */
     protected function addAdditionalInfo(
@@ -131,13 +134,13 @@ abstract class ApiController
             'current_url_without_pagination' => $router->generate(
                 $request->attributes->get('_route'),
                 $allParamsWithoutPagination
-            )
+            ),
         );
 
         if (array_key_exists('page_index', $allParams) && $allParams['page_index'] > 1) {
             $previousParams = $allParams;
             if (array_key_exists('page_index', $previousParams)) {
-                $previousParams['page_index']--;
+                --$previousParams['page_index'];
             }
             $info['previous_url'] = $router->generate($request->attributes->get('_route'), $previousParams);
         }
@@ -147,7 +150,7 @@ abstract class ApiController
             $headers['Total-Pages'] > $allParams['page_index']) {
             $nextParams = $allParams;
             if (array_key_exists('page_index', $nextParams)) {
-                $nextParams['page_index']++;
+                ++$nextParams['page_index'];
             }
             $info['next_url'] = $router->generate($request->attributes->get('_route'), $nextParams);
         }
@@ -170,6 +173,7 @@ abstract class ApiController
      * @param null $data
      * @param int $status
      * @param array $headers
+     *
      * @return JsonResponse
      */
     protected function jsonResponse(
@@ -181,7 +185,7 @@ abstract class ApiController
     ) {
         $response = array(
             'info' => $this->addAdditionalInfo($request, $queryParams, $headers),
-            'data' => $data
+            'data' => $data,
         );
 
         return new JsonResponse($response, $status, $headers);

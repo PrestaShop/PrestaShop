@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -38,7 +38,7 @@ abstract class TranslatorAwareType extends CommonAbstractType
     private $translator;
 
     /**
-     * All languages available on shop. Used for translations
+     * All languages available on shop. Used for translations.
      *
      * @param array $locales
      */
@@ -51,7 +51,7 @@ abstract class TranslatorAwareType extends CommonAbstractType
     }
 
     /**
-     * Get the translated chain from key
+     * Get the translated chain from key.
      *
      * @param $key the key to be translated
      * @param $domain the domain to be selected
@@ -65,7 +65,7 @@ abstract class TranslatorAwareType extends CommonAbstractType
     }
 
     /**
-     * Get locales to be used in form type
+     * Get locales to be used in form type.
      *
      * @return array
      */

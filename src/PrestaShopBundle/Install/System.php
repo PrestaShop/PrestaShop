@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -24,13 +24,12 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-
 namespace PrestaShopBundle\Install;
 
 use ConfigurationTest;
 use SymfonyRequirements;
 
-require_once(__DIR__.'/../../../var/SymfonyRequirements.php');
+require_once __DIR__ . '/../../../var/SymfonyRequirements.php';
 
 class System extends AbstractInstall
 {
@@ -57,6 +56,7 @@ class System extends AbstractInstall
     public function checkSf2Recommendations()
     {
         $symfonyRequirements = new SymfonyRequirements();
+
         return $symfonyRequirements->getFailedRecommendations();
     }
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -34,7 +34,7 @@ use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 
 /**
- * This form class is responsible to create a product, with or without attribute field
+ * This form class is responsible to create a product, with or without attribute field.
  */
 class TypeaheadProductPackCollectionType extends CommonAbstractType
 {

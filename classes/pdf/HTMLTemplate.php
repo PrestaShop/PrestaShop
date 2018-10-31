@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -40,7 +40,7 @@ abstract class HTMLTemplateCore
     public $shop;
 
     /**
-     * Returns the template's HTML header
+     * Returns the template's HTML header.
      *
      * @return string HTML header
      */
@@ -52,7 +52,7 @@ abstract class HTMLTemplateCore
     }
 
     /**
-     * Returns the template's HTML footer
+     * Returns the template's HTML footer.
      *
      * @return string HTML footer
      */
@@ -60,7 +60,7 @@ abstract class HTMLTemplateCore
     {
         $shop_address = $this->getShopAddress();
 
-        $id_shop = (int)$this->shop->id;
+        $id_shop = (int) $this->shop->id;
 
         $this->smarty->assign(array(
             'available_in_your_account' => $this->available_in_your_account,
@@ -68,14 +68,14 @@ abstract class HTMLTemplateCore
             'shop_fax' => Configuration::get('PS_SHOP_FAX', null, null, $id_shop),
             'shop_phone' => Configuration::get('PS_SHOP_PHONE', null, null, $id_shop),
             'shop_email' => Configuration::get('PS_SHOP_EMAIL', null, null, $id_shop),
-            'free_text' => Configuration::get('PS_INVOICE_FREE_TEXT', (int)Context::getContext()->language->id, null, $id_shop)
+            'free_text' => Configuration::get('PS_INVOICE_FREE_TEXT', (int) Context::getContext()->language->id, null, $id_shop),
         ));
 
         return $this->smarty->fetch($this->getTemplate('footer'));
     }
 
     /**
-     * Returns the shop address
+     * Returns the shop address.
      *
      * @return string
      */
@@ -92,30 +92,30 @@ abstract class HTMLTemplateCore
     }
 
     /**
-     * Returns the invoice logo
+     * Returns the invoice logo.
      */
     protected function getLogo()
     {
         $logo = '';
 
-        $id_shop = (int)$this->shop->id;
+        $id_shop = (int) $this->shop->id;
 
-        if (Configuration::get('PS_LOGO_INVOICE', null, null, $id_shop) != false && file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO_INVOICE', null, null, $id_shop))) {
-            $logo = _PS_IMG_DIR_.Configuration::get('PS_LOGO_INVOICE', null, null, $id_shop);
-        } elseif (Configuration::get('PS_LOGO', null, null, $id_shop) != false && file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO', null, null, $id_shop))) {
-            $logo = _PS_IMG_DIR_.Configuration::get('PS_LOGO', null, null, $id_shop);
+        if (Configuration::get('PS_LOGO_INVOICE', null, null, $id_shop) != false && file_exists(_PS_IMG_DIR_ . Configuration::get('PS_LOGO_INVOICE', null, null, $id_shop))) {
+            $logo = _PS_IMG_DIR_ . Configuration::get('PS_LOGO_INVOICE', null, null, $id_shop);
+        } elseif (Configuration::get('PS_LOGO', null, null, $id_shop) != false && file_exists(_PS_IMG_DIR_ . Configuration::get('PS_LOGO', null, null, $id_shop))) {
+            $logo = _PS_IMG_DIR_ . Configuration::get('PS_LOGO', null, null, $id_shop);
         }
+
         return $logo;
     }
 
     /**
-     * Assign common header data to smarty variables
+     * Assign common header data to smarty variables.
      */
-
     public function assignCommonHeaderData()
     {
         $this->setShopId();
-        $id_shop = (int)$this->shop->id;
+        $id_shop = (int) $this->shop->id;
         $shop_name = Configuration::get('PS_SHOP_NAME', null, null, $id_shop);
 
         $path_logo = $this->getLogo();
@@ -136,49 +136,48 @@ abstract class HTMLTemplateCore
 
         $this->smarty->assign(array(
             'logo_path' => $path_logo,
-            'img_ps_dir' => 'http://'.Tools::getMediaServer(_PS_IMG_)._PS_IMG_,
+            'img_ps_dir' => 'http://' . Tools::getMediaServer(_PS_IMG_) . _PS_IMG_,
             'img_update_time' => Configuration::get('PS_IMG_UPDATE_TIME'),
             'date' => $this->date,
             'title' => $this->title,
             'shop_name' => $shop_name,
-            'shop_details' => Configuration::get('PS_SHOP_DETAILS', null, null, (int)$id_shop),
+            'shop_details' => Configuration::get('PS_SHOP_DETAILS', null, null, (int) $id_shop),
             'width_logo' => $width,
-            'height_logo' => $height
+            'height_logo' => $height,
         ));
     }
 
     /**
-     * Assign hook data
+     * Assign hook data.
      *
      * @param ObjectModel $object generally the object used in the constructor
      */
     public function assignHookData($object)
     {
         $template = ucfirst(str_replace('HTMLTemplate', '', get_class($this)));
-        $hook_name = 'displayPDF'.$template;
+        $hook_name = 'displayPDF' . $template;
 
         $this->smarty->assign(array(
-            'HOOK_DISPLAY_PDF' => Hook::exec($hook_name, array('object' => $object))
+            'HOOK_DISPLAY_PDF' => Hook::exec($hook_name, array('object' => $object)),
         ));
     }
 
     /**
-     * Returns the template's HTML content
+     * Returns the template's HTML content.
      *
      * @return string HTML content
      */
     abstract public function getContent();
 
-
     /**
-     * Returns the template filename
+     * Returns the template filename.
      *
      * @return string filename
      */
     abstract public function getFilename();
 
     /**
-     * Returns the template filename when using bulk rendering
+     * Returns the template filename when using bulk rendering.
      *
      * @return string filename
      */
@@ -186,7 +185,7 @@ abstract class HTMLTemplateCore
 
     /**
      * If the template is not present in the theme directory, it will return the default template
-     * in _PS_PDF_DIR_ directory
+     * in _PS_PDF_DIR_ directory.
      *
      * @param $template_name
      *
@@ -195,8 +194,8 @@ abstract class HTMLTemplateCore
     protected function getTemplate($template_name)
     {
         $template = false;
-        $default_template = rtrim(_PS_PDF_DIR_, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.$template_name.'.tpl';
-        $overridden_template = _PS_ALL_THEMES_DIR_.$this->shop->theme->getName().DIRECTORY_SEPARATOR.'pdf'.DIRECTORY_SEPARATOR.$template_name.'.tpl';
+        $default_template = rtrim(_PS_PDF_DIR_, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $template_name . '.tpl';
+        $overridden_template = _PS_ALL_THEMES_DIR_ . $this->shop->theme->getName() . DIRECTORY_SEPARATOR . 'pdf' . DIRECTORY_SEPARATOR . $template_name . '.tpl';
         if (file_exists($overridden_template)) {
             $template = $overridden_template;
         } elseif (file_exists($default_template)) {
@@ -206,9 +205,8 @@ abstract class HTMLTemplateCore
         return $template;
     }
 
-
     /**
-     * Translation method
+     * Translation method.
      *
      * @param string $string
      *
@@ -222,19 +220,19 @@ abstract class HTMLTemplateCore
     protected function setShopId()
     {
         if (isset($this->order) && Validate::isLoadedObject($this->order)) {
-            $id_shop = (int)$this->order->id_shop;
+            $id_shop = (int) $this->order->id_shop;
         } else {
-            $id_shop = (int)Context::getContext()->shop->id;
+            $id_shop = (int) Context::getContext()->shop->id;
         }
 
         $this->shop = new Shop($id_shop);
         if (Validate::isLoadedObject($this->shop)) {
-            Shop::setContext(Shop::CONTEXT_SHOP, (int)$this->shop->id);
+            Shop::setContext(Shop::CONTEXT_SHOP, (int) $this->shop->id);
         }
     }
 
     /**
-     * Returns the template's HTML pagination block
+     * Returns the template's HTML pagination block.
      *
      * @return string HTML pagination block
      */

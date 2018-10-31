@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -33,12 +33,12 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Controller responsible of "Improve > Shipping > Preferences" page
+ * Controller responsible of "Improve > Shipping > Preferences" page.
  */
 class PreferencesController extends FrameworkBundleAdminController
 {
     /**
-     * Show shipping preferences page
+     * Show shipping preferences page.
      *
      * @param Request $request
      *
@@ -62,7 +62,7 @@ class PreferencesController extends FrameworkBundleAdminController
     }
 
     /**
-     * Handle form submit
+     * Handle form submit.
      *
      * @param Request $request
      *

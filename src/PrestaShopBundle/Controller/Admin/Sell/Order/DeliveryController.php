@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\Controller\Admin\Sell\Order;
 
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -34,7 +35,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Form;
 
 /**
- * Admin controller for the Order Delivery
+ * Admin controller for the Order Delivery.
  */
 class DeliveryController extends FrameworkBundleAdminController
 {
@@ -42,7 +43,7 @@ class DeliveryController extends FrameworkBundleAdminController
      * Main page for Delivery slips.
      *
      * @Template("@PrestaShop/Admin/Sell/Order/Delivery/slip.html.twig")
-     * @AdminSecurity("is_granted(['read', 'update', 'create', 'delete'], request.get('_legacy_controller')~'_')", message="Access denied.")
+     * @AdminSecurity("is_granted(['read', 'update', 'create', 'delete'], request.get('_legacy_controller'))", message="Access denied.")
      *
      * @param Request $request
      *
@@ -83,9 +84,9 @@ class DeliveryController extends FrameworkBundleAdminController
     }
 
     /**
-     * Delivery slips PDF generator
+     * Delivery slips PDF generator.
      *
-     * @AdminSecurity("is_granted(['read', 'update', 'create', 'delete'], request.get('_legacy_controller')~'_')", message="Access denied.")
+     * @AdminSecurity("is_granted(['read', 'update', 'create', 'delete'], request.get('_legacy_controller'))", message="Access denied.")
      *
      * @param Request $request
      *
@@ -103,6 +104,7 @@ class DeliveryController extends FrameworkBundleAdminController
             $errors = $formHandler->save($form->getData());
             if (empty($errors)) {
                 $pdf = $form->get('pdf')->getData();
+
                 return $this->redirect(
                     $this->get('prestashop.adapter.legacy.context')->getAdminLink(
                         'AdminPdf',
@@ -110,7 +112,7 @@ class DeliveryController extends FrameworkBundleAdminController
                         [
                             'date_from' => $pdf['date_from'],
                             'date_to' => $pdf['date_to'],
-                            'submitAction' => 'generateDeliverySlipsPDF'
+                            'submitAction' => 'generateDeliverySlipsPDF',
                         ]
                     )
                 );

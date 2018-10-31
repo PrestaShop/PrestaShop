@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -40,14 +40,14 @@ class DateRangeType extends AbstractType
             ->add('from', DatePickerType::class, [
                 'required' => false,
                 'attr' => [
-                    'placeholder' => 'From'
+                    'placeholder' => 'From',
                 ],
                 'translation_domain' => 'Admin.Global',
             ])
             ->add('to', DatePickerType::class, [
                 'required' => false,
                 'attr' => [
-                    'placeholder' => 'To'
+                    'placeholder' => 'To',
                 ],
                 'translation_domain' => 'Admin.Global',
             ])

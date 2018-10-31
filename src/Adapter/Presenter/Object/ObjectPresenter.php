@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -37,6 +37,7 @@ class ObjectPresenter implements PresenterInterface
      * @param ObjectModel $object
      *
      * @return array
+     *
      * @throws Exception
      */
     public function present($object)
@@ -66,7 +67,7 @@ class ObjectPresenter implements PresenterInterface
     }
 
     /**
-     * Execute filterHtml hook for html Content for objectPresenter
+     * Execute filterHtml hook for html Content for objectPresenter.
      *
      * @param $type
      * @param $presentedObject

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Core\Grid\Collection\AbstractCollection;
 use PrestaShop\PrestaShop\Core\Grid\Exception\ColumnNotFoundException;
 
 /**
- * Class ColumnCollection holds collection of columns for grid
+ * Class ColumnCollection holds collection of columns for grid.
  *
  * @property ColumnInterface[] $items
  */
@@ -89,11 +89,30 @@ final class ColumnCollection extends AbstractCollection implements ColumnCollect
     }
 
     /**
-     * Insert new column into collection at given position
+     * {@inheritdoc}
+     */
+    public function toArray()
+    {
+        $columns = [];
+
+        foreach ($this->items as $item) {
+            $columns[] = [
+                'id' => $item->getId(),
+                'name' => $item->getName(),
+                'type' => $item->getType(),
+                'options' => $item->getOptions(),
+            ];
+        }
+
+        return $columns;
+    }
+
+    /**
+     * Insert new column into collection at given position.
      *
-     * @param string          $id        Existing column id
+     * @param string $id Existing column id
      * @param ColumnInterface $newColumn Column to insert
-     * @param string          $position  Position: "before" or "after"
+     * @param string $position Position: "before" or "after"
      *
      * @throws ColumnNotFoundException When column with gieven $id does not exist
      */
@@ -108,7 +127,7 @@ final class ColumnCollection extends AbstractCollection implements ColumnCollect
         $existingColumnKeyPosition = array_search($id, array_keys($this->items));
 
         if (self::POSITION_AFTER === $position) {
-            $existingColumnKeyPosition++;
+            ++$existingColumnKeyPosition;
         }
 
         $columns = array_slice($this->items, 0, $existingColumnKeyPosition, true) +

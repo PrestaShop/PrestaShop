@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,12 +23,11 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 class HelperTreeShopsCore extends TreeCore
 {
-    const DEFAULT_TEMPLATE             = 'tree_shops.tpl';
+    const DEFAULT_TEMPLATE = 'tree_shops.tpl';
     const DEFAULT_NODE_FOLDER_TEMPLATE = 'tree_node_folder_checkbox_shops.tpl';
-    const DEFAULT_NODE_ITEM_TEMPLATE   = 'tree_node_item_checkbox_shops.tpl';
+    const DEFAULT_NODE_ITEM_TEMPLATE = 'tree_node_item_checkbox_shops.tpl';
 
     private $_lang;
     private $_selected_shops;
@@ -56,6 +55,7 @@ class HelperTreeShopsCore extends TreeCore
     public function setLang($value)
     {
         $this->_lang = $value;
+
         return $this;
     }
 
@@ -93,6 +93,7 @@ class HelperTreeShopsCore extends TreeCore
         }
 
         $this->_selected_shops = $value;
+
         return $this;
     }
 
@@ -125,27 +126,27 @@ class HelperTreeShopsCore extends TreeCore
                 new TreeToolbarLink(
                     'Collapse All',
                     '#',
-                    '$(\'#'.$this->getId().'\').tree(\'collapseAll\'); return false;',
+                    '$(\'#' . $this->getId() . '\').tree(\'collapseAll\'); return false;',
                     'icon-collapse-alt'
                 ),
                 new TreeToolbarLink(
                     'Expand All',
                     '#',
-                    '$(\'#'.$this->getId().'\').tree(\'expandAll\'); return false;',
+                    '$(\'#' . $this->getId() . '\').tree(\'expandAll\'); return false;',
                     'icon-expand-alt'
                 ),
                 new TreeToolbarLink(
                     'Check All',
                     '#',
-                    'checkAllAssociatedShops($(\'#'.$this->getId().'\')); return false;',
+                    'checkAllAssociatedShops($(\'#' . $this->getId() . '\')); return false;',
                     'icon-check-sign'
                 ),
                 new TreeToolbarLink(
                     'Uncheck All',
                     '#',
-                    'uncheckAllAssociatedShops($(\'#'.$this->getId().'\')); return false;',
+                    'uncheckAllAssociatedShops($(\'#' . $this->getId() . '\')); return false;',
                     'icon-check-empty'
-                )
+                ),
             ));
         }
 
@@ -176,14 +177,14 @@ class HelperTreeShopsCore extends TreeCore
                     $this->getContext()->smarty
                 )->assign($this->getAttributes())->assign(array(
                     'children' => $this->renderNodes($item['shops']),
-                    'node'     => $item
+                    'node' => $item,
                 ))->fetch();
             } else {
                 $html .= $this->getContext()->smarty->createTemplate(
                     $this->getTemplateFile($this->getNodeItemTemplate()),
                     $this->getContext()->smarty
                 )->assign($this->getAttributes())->assign(array(
-                    'node' => $item
+                    'node' => $item,
                 ))->fetch();
             }
         }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,30 +30,34 @@ use Exception;
 use PrestaShop\PrestaShop\Adapter\Module\Module;
 
 /**
- * This class is used for the module page, which allows to ask for a confirmation from the employee
+ * This class is used for the module page, which allows to ask for a confirmation from the employee.
  */
 class UnconfirmedModuleActionException extends Exception
 {
     /**
-     * Concerned module by the exception
+     * Concerned module by the exception.
+     *
      * @var Module
      */
     protected $module;
-    
+
     /**
-     * Action requested by the employee
+     * Action requested by the employee.
+     *
      * @var string
      */
     protected $action;
 
     /**
-     * Subject to send in order to confirm
+     * Subject to send in order to confirm.
+     *
      * @var string
      */
     protected $subject;
 
     /**
-     * Module getter
+     * Module getter.
+     *
      * @return Module
      */
     public function getModule()
@@ -62,7 +66,8 @@ class UnconfirmedModuleActionException extends Exception
     }
 
     /**
-     * Action getter (install, uninstall, reset ...)
+     * Action getter (install, uninstall, reset ...).
+     *
      * @return string
      */
     public function getAction()
@@ -71,7 +76,8 @@ class UnconfirmedModuleActionException extends Exception
     }
 
     /**
-     * Subject getter (PrestaTrust...)
+     * Subject getter (PrestaTrust...).
+     *
      * @return string
      */
     public function getSubject()
@@ -80,35 +86,44 @@ class UnconfirmedModuleActionException extends Exception
     }
 
     /**
-     * Module setter
+     * Module setter.
+     *
      * @param Module $module
+     *
      * @return $this
      */
     public function setModule(Module $module)
     {
         $this->module = $module;
+
         return $this;
     }
 
     /**
-     * Action setter
+     * Action setter.
+     *
      * @param string $action
+     *
      * @return $this
      */
     public function setAction($action)
     {
         $this->action = $action;
+
         return $this;
     }
 
     /**
-     * Subject setter
+     * Subject setter.
+     *
      * @param string $subject
+     *
      * @return $this
      */
     public function setSubject($subject)
     {
         $this->subject = $subject;
+
         return $this;
     }
 }

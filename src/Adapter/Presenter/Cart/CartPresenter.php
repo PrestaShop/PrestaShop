@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -24,7 +24,6 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-
 namespace PrestaShop\PrestaShop\Adapter\Presenter\Cart;
 
 use PrestaShop\PrestaShop\Adapter\Presenter\PresenterInterface;
@@ -37,6 +36,7 @@ use Context;
 use Cart;
 use Product;
 use Configuration;
+use Symfony\Component\Translation\TranslatorInterface;
 use TaxConfiguration;
 use CartRule;
 use Tools;
@@ -44,10 +44,29 @@ use Hook;
 
 class CartPresenter implements PresenterInterface
 {
+    /**
+     * @var PriceFormatter
+     */
     private $priceFormatter;
+
+    /**
+     * @var \Link
+     */
     private $link;
+
+    /**
+     * @var TranslatorInterface
+     */
     private $translator;
+
+    /**
+     * @var ImageRetriever
+     */
     private $imageRetriever;
+
+    /**
+     * @var TaxConfiguration
+     */
     private $taxConfiguration;
 
     public function __construct()
@@ -60,11 +79,19 @@ class CartPresenter implements PresenterInterface
         $this->taxConfiguration = new TaxConfiguration();
     }
 
+    /**
+     * @return bool
+     */
     private function includeTaxes()
     {
         return $this->taxConfiguration->includeTaxes();
     }
 
+    /**
+     * @param array $rawProduct
+     *
+     * @return \PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductLazyArray|\PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductListingLazyArray
+     */
     private function presentProduct(array $rawProduct)
     {
         $settings = new ProductPresentationSettings();
@@ -151,7 +178,7 @@ class CartPresenter implements PresenterInterface
 
     /**
      * @param array $products
-     * @param Cart  $cart
+     * @param Cart $cart
      *
      * @return array
      */
@@ -271,7 +298,9 @@ class CartPresenter implements PresenterInterface
     /**
      * @param Cart $cart
      * @param bool $shouldSeparateGifts
+     *
      * @return array
+     *
      * @throws \Exception
      */
     public function present($cart, $shouldSeparateGifts = false)
@@ -391,7 +420,7 @@ class CartPresenter implements PresenterInterface
         $minimalPurchase = $this->priceFormatter->convertAmount((float) Configuration::get('PS_PURCHASE_MINIMUM'));
 
         Hook::exec('overrideMinimalPurchasePrice', array(
-            'minimalPurchase' => &$minimalPurchase
+            'minimalPurchase' => &$minimalPurchase,
         ));
 
         // TODO: move it to a common parent, since it's copied in OrderPresenter and ProductPresenter
@@ -470,12 +499,12 @@ class CartPresenter implements PresenterInterface
             }
 
             if (isset($cartVoucher['reduction_percent']) && $cartVoucher['reduction_amount'] == '0.00') {
-                $cartVoucher['reduction_formatted'] = $cartVoucher['reduction_percent'].'%';
+                $cartVoucher['reduction_formatted'] = $cartVoucher['reduction_percent'] . '%';
             } elseif (isset($cartVoucher['reduction_amount']) && $cartVoucher['reduction_amount'] > 0) {
                 $cartVoucher['reduction_formatted'] = $this->priceFormatter->convertAndFormat($cartVoucher['reduction_amount']);
             }
 
-            $vouchers[$cartVoucher['id_cart_rule']]['reduction_formatted'] = '-'.$cartVoucher['reduction_formatted'];
+            $vouchers[$cartVoucher['id_cart_rule']]['reduction_formatted'] = '-' . $cartVoucher['reduction_formatted'];
             $vouchers[$cartVoucher['id_cart_rule']]['delete_url'] = $this->link->getPageLink(
                 'cart',
                 true,
@@ -494,18 +523,19 @@ class CartPresenter implements PresenterInterface
     }
 
     /**
-     * Receives a string containing a list of attributes affected to the product and returns them as an array
+     * Receives a string containing a list of attributes affected to the product and returns them as an array.
      *
      * @param string $attributes
+     *
      * @return array Converted attributes in an array
      */
     protected function getAttributesArrayFromString($attributes)
     {
         $separator = Configuration::get('PS_ATTRIBUTE_ANCHOR_SEPARATOR');
-        $pattern = '/(?>(?P<attribute>[^:]+:[^:]+)'.$separator.'+(?!'.$separator.'([^:'.$separator.'])+:))/';
+        $pattern = '/(?>(?P<attribute>[^:]+:[^:]+)' . $separator . '+(?!' . $separator . '([^:' . $separator . '])+:))/';
         $attributesArray = array();
         $matches = array();
-        if (!preg_match_all($pattern, $attributes.$separator, $matches)) {
+        if (!preg_match_all($pattern, $attributes . $separator, $matches)) {
             return $attributesArray;
         }
 

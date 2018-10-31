@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -24,12 +24,11 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-
 namespace PrestaShop\PrestaShop\Adapter\Presenter\Product;
-
 
 use PrestaShop\Decimal\Number;
 use PrestaShop\Decimal\Operation\Rounding;
+use PrestaShop\PrestaShop\Adapter\Entity\Product;
 use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
 use PrestaShop\PrestaShop\Adapter\Presenter\AbstractLazyArray;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
@@ -44,13 +43,44 @@ use Tools;
 
 class ProductLazyArray extends AbstractLazyArray
 {
+    /**
+     * @var ImageRetriever
+     */
     private $imageRetriever;
+
+    /**
+     * @var Link
+     */
     private $link;
+
+    /**
+     * @var PriceFormatter
+     */
     private $priceFormatter;
+
+    /**
+     * @var ProductColorsRetriever
+     */
     private $productColorsRetriever;
+
+    /**
+     * @var TranslatorInterface
+     */
     private $translator;
+
+    /**
+     * @var ProductPresentationSettings
+     */
     protected $settings;
+
+    /**
+     * @var array
+     */
     protected $product;
+
+    /**
+     * @var Language
+     */
     private $language;
 
     public function __construct(
@@ -96,6 +126,7 @@ class ProductLazyArray extends AbstractLazyArray
 
     /**
      * @arrayAccess
+     *
      * @return mixed
      */
     public function getId()
@@ -105,6 +136,7 @@ class ProductLazyArray extends AbstractLazyArray
 
     /**
      * @arrayAccess
+     *
      * @return array|mixed
      */
     public function getAttributes()
@@ -118,6 +150,7 @@ class ProductLazyArray extends AbstractLazyArray
 
     /**
      * @arrayAccess
+     *
      * @return bool
      */
     public function getShowPrice()
@@ -127,6 +160,7 @@ class ProductLazyArray extends AbstractLazyArray
 
     /**
      * @arrayAccess
+     *
      * @return string
      */
     public function getWeightUnit()
@@ -136,6 +170,7 @@ class ProductLazyArray extends AbstractLazyArray
 
     /**
      * @arrayAccess
+     *
      * @return string
      */
     public function getUrl()
@@ -145,6 +180,7 @@ class ProductLazyArray extends AbstractLazyArray
 
     /**
      * @arrayAccess
+     *
      * @return string
      */
     public function getCanonicalUrl()
@@ -154,6 +190,7 @@ class ProductLazyArray extends AbstractLazyArray
 
     /**
      * @arrayAccess
+     *
      * @return null|string
      */
     public function getAddToCartUrl()
@@ -170,7 +207,9 @@ class ProductLazyArray extends AbstractLazyArray
 
     /**
      * @arrayAccess
+     *
      * @return array|bool
+     *
      * @throws InvalidArgumentException
      */
     public function getCondition()
@@ -207,6 +246,7 @@ class ProductLazyArray extends AbstractLazyArray
 
     /**
      * @arrayAccess
+     *
      * @return null|string
      */
     public function getDeliveryInformation()
@@ -222,6 +262,7 @@ class ProductLazyArray extends AbstractLazyArray
 
     /**
      * @arrayAccess
+     *
      * @return array
      */
     public function getEmbeddedAttributes()
@@ -239,6 +280,7 @@ class ProductLazyArray extends AbstractLazyArray
 
     /**
      * @arrayAccess
+     *
      * @return null|string
      */
     public function getFileSizeFormatted()
@@ -255,6 +297,25 @@ class ProductLazyArray extends AbstractLazyArray
 
     /**
      * @arrayAccess
+     *
+     * @return array
+     *
+     * @throws \ReflectionException
+     */
+    public function getAttachments()
+    {
+        foreach ($this->product['attachments'] as &$attachment) {
+            if (!isset($attachment['file_size_formatted'])) {
+                $attachment['file_size_formatted'] = Tools::formatBytes($attachment['file_size'], 2);
+            }
+        }
+
+        return $this->product['attachments'];
+    }
+
+    /**
+     * @arrayAccess
+     *
      * @return array|mixed
      */
     public function getQuantityDiscounts()
@@ -264,14 +325,11 @@ class ProductLazyArray extends AbstractLazyArray
 
     /**
      * @arrayAccess
+     *
      * @return mixed|null
      */
     public function getReferenceToDisplay()
     {
-        if ('' !== $this->product['reference']) {
-            return $this->product['reference'];
-        }
-
         if (isset($this->product['attributes'])) {
             foreach ($this->product['attributes'] as $attribute) {
                 if (isset($attribute['reference']) && $attribute['reference'] != null) {
@@ -280,11 +338,16 @@ class ProductLazyArray extends AbstractLazyArray
             }
         }
 
+        if ('' !== $this->product['reference']) {
+            return $this->product['reference'];
+        }
+
         return null;
     }
 
     /**
      * @arrayAccess
+     *
      * @return array|null
      */
     public function getGroupedFeatures()
@@ -298,6 +361,7 @@ class ProductLazyArray extends AbstractLazyArray
 
     /**
      * @arrayAccess
+     *
      * @return string
      */
     public function getSeoAvailability()
@@ -316,7 +380,9 @@ class ProductLazyArray extends AbstractLazyArray
 
     /**
      * @arrayAccess
+     *
      * @return array
+     *
      * @throws InvalidArgumentException
      */
     public function getLabels()
@@ -333,6 +399,7 @@ class ProductLazyArray extends AbstractLazyArray
 
     /**
      * @arrayAccess
+     *
      * @return array|null
      */
     public function getEcotax()
@@ -350,7 +417,9 @@ class ProductLazyArray extends AbstractLazyArray
 
     /**
      * @arrayAccess
+     *
      * @return array
+     *
      * @throws InvalidArgumentException
      */
     public function getFlags()
@@ -402,6 +471,7 @@ class ProductLazyArray extends AbstractLazyArray
 
     /**
      * @arrayAccess
+     *
      * @return array
      */
     public function getMainVariants()
@@ -421,7 +491,6 @@ class ProductLazyArray extends AbstractLazyArray
             $color['type'] = 'color';
             $color['html_color_code'] = $color['color'];
             unset($color['color']);
-            unset($color['id_attribute']); // because what is a template supposed to do with it?
 
             return $color;
         }, $colors);
@@ -429,6 +498,7 @@ class ProductLazyArray extends AbstractLazyArray
 
     /**
      * @arrayAccess
+     *
      * @return 0|null
      */
     public function getSpecificReferences()
@@ -458,6 +528,7 @@ class ProductLazyArray extends AbstractLazyArray
             if (empty($specificReferences)) {
                 $specificReferences = null;
             }
+
             return $specificReferences;
         }
 
@@ -470,6 +541,7 @@ class ProductLazyArray extends AbstractLazyArray
      *
      * @param ProductPresentationSettings $settings
      * @param array $product
+     *
      * @return bool
      */
     private function shouldShowPrice(
@@ -483,6 +555,7 @@ class ProductLazyArray extends AbstractLazyArray
      * The "Add to cart" button should be shown for products available for order.
      *
      * @param $product
+     *
      * @return mixed
      */
     private function shouldShowAddToCartButton($product)
@@ -541,9 +614,9 @@ class ProductLazyArray extends AbstractLazyArray
             $this->product['has_discount'] = (0 != $product['reduction']);
             $this->product['discount_type'] = $product['specific_prices']['reduction_type'];
 
-            $absoluteReduction     = new Number($product['specific_prices']['reduction']);
-            $absoluteReduction     = $absoluteReduction->times(new Number('100'));
-            $negativeReduction     = $absoluteReduction->toNegative();
+            $absoluteReduction = new Number($product['specific_prices']['reduction']);
+            $absoluteReduction = $absoluteReduction->times(new Number('100'));
+            $negativeReduction = $absoluteReduction->toNegative();
             $presAbsoluteReduction = $absoluteReduction->round(2, Rounding::ROUND_HALF_UP);
             $presNegativeReduction = $negativeReduction->round(2, Rounding::ROUND_HALF_UP);
 
@@ -572,12 +645,18 @@ class ProductLazyArray extends AbstractLazyArray
         if (isset($product['unit_price']) && $product['unit_price']) {
             $this->product['unit_price'] = $this->priceFormatter->format($product['unit_price']);
             $this->product['unit_price_full'] = $this->priceFormatter->format($product['unit_price'])
-                .' '.$product['unity'];
+                . ' ' . $product['unity'];
         } else {
             $this->product['unit_price'] = $this->product['unit_price_full'] = '';
         }
     }
 
+    /**
+     * @param array $product
+     * @param ProductPresentationSettings $settings
+     *
+     * @return bool
+     */
     protected function shouldEnableAddToCartButton(array $product, ProductPresentationSettings $settings)
     {
         if (($product['customizable'] == 2 || !empty($product['customization_required']))) {
@@ -617,10 +696,12 @@ class ProductLazyArray extends AbstractLazyArray
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
+     *
      * @param array $product
      * @param Language $language
      * @param bool $canonical
+     *
      * @return string
      */
     private function getProductURL(
@@ -628,9 +709,9 @@ class ProductLazyArray extends AbstractLazyArray
         Language $language,
         $canonical = false
     ) {
-        $linkRewrite = isset($product['link_rewrite'])?$product['link_rewrite']:null;
-        $category = isset($product['category'])?$product['category']:null;
-        $ean13 = isset($product['ean13'])?$product['ean13']:null;
+        $linkRewrite = isset($product['link_rewrite']) ? $product['link_rewrite'] : null;
+        $category = isset($product['category']) ? $product['category'] : null;
+        $ean13 = isset($product['ean13']) ? $product['ean13'] : null;
 
         return $this->link->getProductLink(
             $product['id_product'],
@@ -639,7 +720,7 @@ class ProductLazyArray extends AbstractLazyArray
             $ean13,
             $language->id,
             null,
-            (!$canonical) ? $product['id_product_attribute'] : null,
+            $canonical ? null : $product['id_product_attribute'],
             false,
             false,
             true
@@ -666,7 +747,7 @@ class ProductLazyArray extends AbstractLazyArray
         }
 
         if ($show_availability) {
-            if ($product['quantity'] - $product['quantity_wanted'] > 0) {
+            if ($product['quantity'] - $product['quantity_wanted'] >= 0) {
                 $this->product['availability_date'] = $product['available_date'];
 
                 if ($product['quantity'] < $settings->lastRemainingItems) {
@@ -711,8 +792,7 @@ class ProductLazyArray extends AbstractLazyArray
     }
 
     /**
-     * Override availability message
-     *
+     * Override availability message.
      */
     protected function applyLastItemsInStockDisplayRule()
     {
@@ -724,6 +804,11 @@ class ProductLazyArray extends AbstractLazyArray
         $this->product['availability'] = 'last_remaining_items';
     }
 
+    /**
+     * @param string $key
+     *
+     * @return string
+     */
     private function getTranslatedKey($key)
     {
         switch ($key) {
@@ -762,108 +847,108 @@ class ProductLazyArray extends AbstractLazyArray
             'name',
             'description',
             'description_short',
-            "on_sale",
-            "online_only",
-            "ecotax",
-            "minimal_quantity",
-            "low_stock_threshold",
-            "low_stock_alert",
-            "price",
-            "unity",
-            "unit_price_ratio",
-            "additional_shipping_cost",
-            "customizable",
-            "text_fields",
-            "uploadable_files",
-            "redirect_type",
-            "id_type_redirected",
-            "available_for_order",
-            "available_date",
-            "show_condition",
-            "condition",
-            "show_price",
-            "indexed",
-            "visibility",
-            "cache_default_attribute",
-            "advanced_stock_management",
-            "date_add",
-            "date_upd",
-            "pack_stock_type",
-            "meta_description",
-            "meta_keywords",
-            "meta_title",
-            "link_rewrite",
-            "name",
-            "description",
-            "description_short",
-            "available_now",
-            "available_later",
-            "id",
-            "out_of_stock",
-            "new",
-            "quantity_wanted",
-            "extraContent",
-            "allow_oosp",
-            "category",
-            "category_name",
-            "link",
-            "attribute_price",
-            "price_tax_exc",
-            "price_without_reduction",
-            "reduction",
-            "specific_prices",
-            "quantity",
-            "quantity_all_versions",
-            "id_image",
-            "features",
-            "attachments",
-            "virtual",
-            "pack",
-            "packItems",
-            "nopackprice",
-            "customization_required",
-            "attributes",
-            "rate",
-            "tax_name",
-            "ecotax_rate",
-            "unit_price",
-            "customizations",
-            "is_customizable",
-            "show_quantities",
-            "quantity_label",
-            "quantity_discounts",
-            "customer_group_discount",
-            "weight_unit",
-            "images",
-            "cover",
-            "url",
-            "canonical_url",
-            "has_discount",
-            "discount_type",
-            "discount_percentage",
-            "discount_percentage_absolute",
-            "discount_amount",
-            "discount_amount_to_display",
-            "price_amount",
-            "unit_price_full",
-            "add_to_cart_url",
-            "main_variants",
-            "flags",
-            "labels",
-            "show_availability",
-            "availability_date",
-            "availability_message",
-            "availability",
-            "reference_to_display",
-            "delivery_in_stock",
-            "delivery_out_stock",
+            'on_sale',
+            'online_only',
+            'ecotax',
+            'minimal_quantity',
+            'low_stock_threshold',
+            'low_stock_alert',
+            'price',
+            'unity',
+            'unit_price_ratio',
+            'additional_shipping_cost',
+            'customizable',
+            'text_fields',
+            'uploadable_files',
+            'redirect_type',
+            'id_type_redirected',
+            'available_for_order',
+            'available_date',
+            'show_condition',
+            'condition',
+            'show_price',
+            'indexed',
+            'visibility',
+            'cache_default_attribute',
+            'advanced_stock_management',
+            'date_add',
+            'date_upd',
+            'pack_stock_type',
+            'meta_description',
+            'meta_keywords',
+            'meta_title',
+            'link_rewrite',
+            'name',
+            'description',
+            'description_short',
+            'available_now',
+            'available_later',
+            'id',
+            'out_of_stock',
+            'new',
+            'quantity_wanted',
+            'extraContent',
+            'allow_oosp',
+            'category',
+            'category_name',
+            'link',
+            'attribute_price',
+            'price_tax_exc',
+            'price_without_reduction',
+            'reduction',
+            'specific_prices',
+            'quantity',
+            'quantity_all_versions',
+            'id_image',
+            'features',
+            'attachments',
+            'virtual',
+            'pack',
+            'packItems',
+            'nopackprice',
+            'customization_required',
+            'attributes',
+            'rate',
+            'tax_name',
+            'ecotax_rate',
+            'unit_price',
+            'customizations',
+            'is_customizable',
+            'show_quantities',
+            'quantity_label',
+            'quantity_discounts',
+            'customer_group_discount',
+            'weight_unit',
+            'images',
+            'cover',
+            'url',
+            'canonical_url',
+            'has_discount',
+            'discount_type',
+            'discount_percentage',
+            'discount_percentage_absolute',
+            'discount_amount',
+            'discount_amount_to_display',
+            'price_amount',
+            'unit_price_full',
+            'add_to_cart_url',
+            'main_variants',
+            'flags',
+            'labels',
+            'show_availability',
+            'availability_date',
+            'availability_message',
+            'availability',
+            'reference_to_display',
+            'delivery_in_stock',
+            'delivery_out_stock',
         );
     }
 
     /**
-     * Assemble the same features in one array
+     * Assemble the same features in one array.
      *
-     * @param  array $productFeatures
+     * @param array $productFeatures
      *
      * @return array
      */

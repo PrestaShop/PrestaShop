@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,21 +23,20 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 abstract class CacheCore
 {
     /**
-     * Name of keys index
+     * Name of keys index.
      */
     const KEYS_NAME = '__keys__';
 
     /**
-     * Name of SQL cache index
+     * Name of SQL cache index.
      */
     const SQL_TABLES_NAME = 'tablesCached';
 
     /**
-     * Store the number of time a query is fetched from the cache
+     * Store the number of time a query is fetched from the cache.
      *
      * @var array
      */
@@ -49,14 +48,14 @@ abstract class CacheCore
     protected static $instance;
 
     /**
-     * Max number of queries cached in memcached, for each SQL table
+     * Max number of queries cached in memcached, for each SQL table.
      *
      * @var int
      */
     protected $maxCachedObjectsByTable = 10000;
 
     /**
-     * If a cache set this variable to true, we need to adjust the size of the table cache object
+     * If a cache set this variable to true, we need to adjust the size of the table cache object.
      *
      * @var bool
      */
@@ -98,41 +97,45 @@ abstract class CacheCore
     protected static $local = array();
 
     /**
-     * Cache a data
+     * Cache a data.
      *
      * @param string $key
      * @param mixed $value
      * @param int $ttl
+     *
      * @return bool
      */
     abstract protected function _set($key, $value, $ttl = 0);
 
     /**
-     * Retrieve a cached data by key
+     * Retrieve a cached data by key.
      *
      * @param string $key
+     *
      * @return mixed
      */
     abstract protected function _get($key);
 
     /**
-     * Check if a data is cached by key
+     * Check if a data is cached by key.
      *
      * @param string $key
+     *
      * @return bool
      */
     abstract protected function _exists($key);
 
     /**
-     * Delete a data from the cache by key
+     * Delete a data from the cache by key.
      *
      * @param string $key
+     *
      * @return bool
      */
     abstract protected function _delete($key);
 
     /**
-     * Delete multiple keys from the cache
+     * Delete multiple keys from the cache.
      *
      * @param array $keyArray
      */
@@ -144,12 +147,12 @@ abstract class CacheCore
     }
 
     /**
-     * Write keys index
+     * Write keys index.
      */
     abstract protected function _writeKeys();
 
     /**
-     * Clean all cached data
+     * Clean all cached data.
      *
      * @return bool
      */
@@ -180,11 +183,13 @@ abstract class CacheCore
             $caching_system = _PS_CACHING_SYSTEM_;
             self::$instance = new $caching_system();
         }
+
         return self::$instance;
     }
 
     /**
-     * Unit testing purpose only
+     * Unit testing purpose only.
+     *
      * @param $test_instance Cache
      */
     public static function setInstanceForTesting($test_instance)
@@ -194,17 +199,17 @@ abstract class CacheCore
 
     /**
      * If a cache set this variable to true, we need to adjust the size of the table cache object
-     * Useful when the cache is reported to be full (e.g. memcached::RES_E2BIG error message)
+     * Useful when the cache is reported to be full (e.g. memcached::RES_E2BIG error message).
      *
      * @param bool $value
      */
     protected function setAdjustTableCacheSize($value)
     {
-        $this->adjustTableCacheSize = (bool)$value;
+        $this->adjustTableCacheSize = (bool) $value;
     }
 
     /**
-     * Unit testing purpose only
+     * Unit testing purpose only.
      */
     public static function deleteTestingInstance()
     {
@@ -212,11 +217,12 @@ abstract class CacheCore
     }
 
     /**
-     * Store a data in cache
+     * Store a data in cache.
      *
      * @param string $key
      * @param mixed $value
      * @param int $ttl
+     *
      * @return bool
      */
     public function set($key, $value, $ttl = 0)
@@ -228,6 +234,7 @@ abstract class CacheCore
 
             $this->keys[$key] = ($ttl == 0) ? 0 : time() + $ttl;
             $this->_writeKeys();
+
             return true;
         }
 
@@ -235,9 +242,10 @@ abstract class CacheCore
     }
 
     /**
-     * Retrieve a data from cache
+     * Retrieve a data from cache.
      *
      * @param string $key
+     *
      * @return mixed
      */
     public function get($key)
@@ -250,9 +258,10 @@ abstract class CacheCore
     }
 
     /**
-     * Check if a data is cached
+     * Check if a data is cached.
      *
      * @param string $key
+     *
      * @return bool
      */
     public function exists($key)
@@ -265,7 +274,7 @@ abstract class CacheCore
     }
 
     /**
-     * Delete several keys at once from the cache
+     * Delete several keys at once from the cache.
      *
      * @param array $keyArray
      */
@@ -276,9 +285,10 @@ abstract class CacheCore
 
     /**
      * Delete one or several data from cache (* joker can be used)
-     *  E.g.: delete('*'); delete('my_prefix_*'); delete('my_key_name');
+     *  E.g.: delete('*'); delete('my_prefix_*'); delete('my_key_name');.
      *
      * @param string $key
+     *
      * @return array List of deleted keys
      */
     public function delete($key)
@@ -292,7 +302,7 @@ abstract class CacheCore
         } else {
             $pattern = str_replace('\\*', '.*', preg_quote($key));
             foreach ($this->keys as $k => $ttl) {
-                if (preg_match('#^'.$pattern.'$#', $k)) {
+                if (preg_match('#^' . $pattern . '$#', $k)) {
                     $keys[] = $k;
                 }
             }
@@ -310,29 +320,29 @@ abstract class CacheCore
         }
 
         $this->_writeKeys();
+
         return $keys;
     }
 
     /**
-     * Increment the query counter for the given query
+     * Increment the query counter for the given query.
      *
      * @param string $query
      */
     public function incrementQueryCounter($query)
     {
         if (isset($this->queryCounter[$query])) {
-            $this->queryCounter[$query]++;
+            ++$this->queryCounter[$query];
         } else {
             $this->queryCounter[$query] = 1;
         }
     }
 
     /**
-     * Store a query in cache
+     * Store a query in cache.
      *
      * @param string $query
-     * @param array  $result
-     *
+     * @param array $result
      */
     public function setQuery($query, $result)
     {
@@ -356,7 +366,7 @@ abstract class CacheCore
     }
 
     /**
-     * Return the hash associated with a query, used to store data into the cache
+     * Return the hash associated with a query, used to store data into the cache.
      *
      * @param string $query
      *
@@ -368,7 +378,7 @@ abstract class CacheCore
     }
 
     /**
-     * Return the hash associated with a table name, used to store the "table to query hash" map
+     * Return the hash associated with a table name, used to store the "table to query hash" map.
      *
      * @param string $table
      *
@@ -376,7 +386,7 @@ abstract class CacheCore
      */
     public function getTableMapCacheKey($table)
     {
-        return Tools::hashIV(self::SQL_TABLES_NAME.'_'.$table);
+        return Tools::hashIV(self::SQL_TABLES_NAME . '_' . $table);
     }
 
     /**
@@ -401,11 +411,11 @@ abstract class CacheCore
     }
 
     /**
-     * Add the given query hash to the table to query key map
+     * Add the given query hash to the table to query key map.
      *
      * @param string $key query hash
      * @param string $table table name
-     * @param array  $tables the tables associated with the query
+     * @param array $tables the tables associated with the query
      */
     private function addQueryKeyToTableMap($key, $table, $tables)
     {
@@ -423,7 +433,7 @@ abstract class CacheCore
             unset($otherTables[array_search($table, $tables)]);
             $this->sql_tables_cached[$table][$key] = array(
                 'count' => 1,
-                'otherTables' => $otherTables
+                'otherTables' => $otherTables,
             );
             $this->set($cacheKey, $this->sql_tables_cached[$table]);
             // if the set fails because the object is too big, the adjustTableCacheSize flag is set
@@ -436,7 +446,7 @@ abstract class CacheCore
 
     /**
      * Use the query counter to update the query cache statistics
-     * So far its only called during a set operation to avoid overloading / slowing down the cache server
+     * So far its only called during a set operation to avoid overloading / slowing down the cache server.
      */
     protected function updateQueryCacheStatistics()
     {
@@ -465,7 +475,7 @@ abstract class CacheCore
     }
 
     /**
-     * Remove the first less used query results from the cache
+     * Remove the first less used query results from the cache.
      *
      * @param string $table
      * @param string $keyToKeep the keep we want to keep inside the table cache
@@ -509,7 +519,7 @@ abstract class CacheCore
     }
 
     /**
-     * Get the tables used in a SQL query
+     * Get the tables used in a SQL query.
      *
      * @param string $string
      *
@@ -517,14 +527,15 @@ abstract class CacheCore
      */
     public function getTables($string)
     {
-        if (preg_match_all('/(?:from|join|update|into)\s+`?('._DB_PREFIX_.
-            '[0-9a-z_-]+)(?:`?\s{0,},\s{0,}`?('._DB_PREFIX_.
+        if (preg_match_all('/(?:from|join|update|into)\s+`?(' . _DB_PREFIX_ .
+            '[0-9a-z_-]+)(?:`?\s{0,},\s{0,}`?(' . _DB_PREFIX_ .
             '[0-9a-z_-]+)`?)?(?:`|\s+|\Z)(?!\s*,)/Umsi', $string, $res)) {
             foreach ($res[2] as $table) {
                 if ($table != '') {
                     $res[1][] = $table;
                 }
             }
+
             return array_unique($res[1]);
         } else {
             return false;
@@ -532,7 +543,7 @@ abstract class CacheCore
     }
 
     /**
-     * Delete a query from cache
+     * Delete a query from cache.
      *
      * @param string $query
      */
@@ -551,7 +562,7 @@ abstract class CacheCore
                 if (!empty($this->sql_tables_cached[$table])) {
                     foreach ($this->sql_tables_cached[$table] as $fs_key => $tableMapInfos) {
                         $invalidKeys[] = $fs_key;
-                        $invalidKeys[] = $fs_key.'_nrows';
+                        $invalidKeys[] = $fs_key . '_nrows';
 
                         foreach ($tableMapInfos['otherTables'] as $otherTable) {
                             if ($this->removeEntryInTableMapCache($fs_key, $otherTable)) {
@@ -569,7 +580,7 @@ abstract class CacheCore
     }
 
     /**
-     * Flush into the cache the updated entries from the sql_tables_caches
+     * Flush into the cache the updated entries from the sql_tables_caches.
      *
      * @param array $tableKeysToUpdate
      */
@@ -586,7 +597,7 @@ abstract class CacheCore
     }
 
     /**
-     * Initialize the table cache entry associated with $table
+     * Initialize the table cache entry associated with $table.
      *
      * @param string $table
      *
@@ -607,7 +618,7 @@ abstract class CacheCore
     }
 
     /**
-     * Remove $key from the tableMap
+     * Remove $key from the tableMap.
      *
      * @param string $key
      * @param string $table
@@ -626,18 +637,20 @@ abstract class CacheCore
     }
 
     /**
-     * Check if a query contain blacklisted tables
+     * Check if a query contain blacklisted tables.
      *
      * @param string $query
+     *
      * @return bool
      */
     protected function isBlacklist($query)
     {
         foreach ($this->blacklist as $find) {
-            if (false !== strpos($query, _DB_PREFIX_.$find)) {
+            if (false !== strpos($query, _DB_PREFIX_ . $find)) {
                 return true;
             }
         }
+
         return false;
     }
 
@@ -697,7 +710,7 @@ abstract class CacheCore
         if (strpos($key, '*') !== false) {
             $regexp = str_replace('\\*', '.*', preg_quote($key, '#'));
             foreach (array_keys(Cache::$local) as $key) {
-                if (preg_match('#^'.$regexp.'$#', $key)) {
+                if (preg_match('#^' . $regexp . '$#', $key)) {
                     unset(Cache::$local[$key]);
                 }
             }

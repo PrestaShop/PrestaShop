@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Core\Foundation\IoC;
 
 use ReflectionClass;
@@ -53,7 +54,7 @@ class Container
 
         $this->bindings[$serviceName] = array(
             'constructor' => $constructor,
-            'shared' => $shared
+            'shared' => $shared,
         );
 
         return $this;
@@ -71,6 +72,7 @@ class Container
         }
 
         $this->namespaceAliases[$alias] = $namespacePrefix;
+
         return $this;
     }
 
@@ -81,6 +83,7 @@ class Container
             $alias = substr($className, 0, $colonPos);
             if ($this->knowsNamespaceAlias($alias)) {
                 $class = ltrim(substr($className, $colonPos + 1), '\\');
+
                 return $this->namespaceAliases[$alias] . '\\' . $class;
             }
         }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -41,34 +41,35 @@ final class ModuleRepository
     private $connection;
 
     /**
-     * @var string the `modules` table name.
+     * @var string the `modules` table name
      */
     private $tableName;
 
     public function __construct(Connection $connection, $databasePrefix)
     {
         $this->connection = $connection;
-        $this->tableName = $databasePrefix.'module';
+        $this->tableName = $databasePrefix . 'module';
     }
 
     /**
-     * @return array the list of installed modules.
+     * @return array the list of installed modules
      */
     public function getActiveModules()
     {
-        $sth = $this->connection->query('SELECT name FROM '. $this->tableName. ' WHERE active = 1');
+        $sth = $this->connection->query('SELECT name FROM ' . $this->tableName . ' WHERE active = 1');
 
         return $sth->fetchAll(\PDO::FETCH_COLUMN);
     }
 
     /**
-     * Returns installed module file paths
+     * Returns installed module file paths.
+     *
      * @return array
      */
     public function getActiveModulesPaths()
     {
         $paths = array();
-        $modulesFiles = Finder::create()->directories()->in(__DIR__.'/../../../modules')->depth(0);
+        $modulesFiles = Finder::create()->directories()->in(__DIR__ . '/../../../modules')->depth(0);
         $activeModules = $this->getActiveModules();
 
         foreach ($modulesFiles as $moduleFile) {
@@ -76,6 +77,7 @@ final class ModuleRepository
                 $paths[] = $moduleFile->getPathname();
             }
         }
+
         return $paths;
     }
 }

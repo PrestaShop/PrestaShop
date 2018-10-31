@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -96,7 +96,7 @@ class ThemeExtractor
     }
 
     /**
-     * Add default catalogue in this &$catalogue when the translation exists
+     * Add default catalogue in this &$catalogue when the translation exists.
      *
      * @param string $locale
      * @param MessageCatalogue $catalogue
@@ -138,11 +138,12 @@ class ThemeExtractor
     }
 
     /**
-     * Add database catalogue in this &$catalogue
+     * Add database catalogue in this &$catalogue.
      *
      * @param string $themeName
      * @param string $locale
      * @param MessageCatalogue $catalogue
+     *
      * @throws \Exception
      */
     private function overrideFromDatabase($themeName, $locale, &$catalogue)

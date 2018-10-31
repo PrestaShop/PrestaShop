@@ -108,14 +108,14 @@ class DeliveryControllerTest extends WebTestCase
 
     public function testPdfActionWithInvalidData()
     {
-        $token = $this->client->getContainer()->get('security.csrf.token_manager')->getToken('form');
+        $token = $this->client->getContainer()->get('security.csrf.token_manager')->getToken('slip_pdf_form');
         $this->client->request(
             'POST',
             $this->router->generate(
                 'admin_order_delivery_slip_pdf'
             ),
             [
-                'form' => [
+                'slip_pdf_form' => [
                     'pdf' => [
                         'date_from' => 'foo'
                     ],
@@ -137,14 +137,14 @@ class DeliveryControllerTest extends WebTestCase
 
     public function testPdfActionWithEmptyData()
     {
-        $token = $this->client->getContainer()->get('security.csrf.token_manager')->getToken('form');
+        $token = $this->client->getContainer()->get('security.csrf.token_manager')->getToken('slip_pdf_form');
         $this->client->request(
             'POST',
             $this->router->generate(
                 'admin_order_delivery_slip_pdf'
             ),
             [
-                'form' => [
+                'slip_pdf_form' => [
                     'pdf' => [],
                     '_token' => $token
                 ],

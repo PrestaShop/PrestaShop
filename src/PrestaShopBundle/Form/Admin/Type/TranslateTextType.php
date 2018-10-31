@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -34,10 +34,24 @@ use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Class is responsible for creating translatable text inputs
+ * Class is responsible for creating translatable text inputs.
+ *
+ * @deprecated since version 1.7.6 and will be removed in 1.8. Use the TranslatableType instead.
  */
 class TranslateTextType extends AbstractType
 {
+    public function __construct()
+    {
+        trigger_error(
+            sprintf(
+                'The %s class is deprecated since version 1.7.6 and will be removed in 1.8. Use the %s class instead.',
+                __CLASS__,
+                TranslatableType::class
+            ),
+            E_USER_DEPRECATED
+        );
+    }
+
     /**
      * {@inheritdoc}
      */

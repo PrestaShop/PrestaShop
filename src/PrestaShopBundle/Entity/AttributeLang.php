@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -24,13 +24,12 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-
 namespace PrestaShopBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * AttributeLang
+ * AttributeLang.
  *
  * @ORM\Table()
  * @ORM\Entity(repositoryClass="PrestaShopBundle\Entity\Repository\AttributeLangRepository")
@@ -46,7 +45,6 @@ class AttributeLang
 
     /**
      * @ORM\Id
-     * @ORM\Column(name="id_lang", type="integer")
      * @ORM\ManyToOne(targetEntity="PrestaShopBundle\Entity\Lang")
      * @ORM\JoinColumn(name="id_lang", referencedColumnName="id_lang", nullable=false, onDelete="CASCADE")
      */
@@ -59,11 +57,10 @@ class AttributeLang
      */
     private $name;
 
-
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -71,7 +68,7 @@ class AttributeLang
     }
 
     /**
-     * Set name
+     * Set name.
      *
      * @param string $name
      *
@@ -85,7 +82,7 @@ class AttributeLang
     }
 
     /**
-     * Get name
+     * Get name.
      *
      * @return string
      */
@@ -95,7 +92,7 @@ class AttributeLang
     }
 
     /**
-     * Set attribute
+     * Set attribute.
      *
      * @param \PrestaShopBundle\Entity\Attribute $attribute
      *
@@ -109,7 +106,7 @@ class AttributeLang
     }
 
     /**
-     * Get attribute
+     * Get attribute.
      *
      * @return \PrestaShopBundle\Entity\Attribute
      */
@@ -119,7 +116,7 @@ class AttributeLang
     }
 
     /**
-     * Set lang
+     * Set lang.
      *
      * @param \PrestaShopBundle\Entity\Lang $lang
      *
@@ -133,7 +130,7 @@ class AttributeLang
     }
 
     /**
-     * Get lang
+     * Get lang.
      *
      * @return \PrestaShopBundle\Entity\Lang
      */

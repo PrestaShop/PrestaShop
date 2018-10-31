@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -80,7 +80,7 @@ final class InvoiceOptionsDataProvider implements FormDataProviderInterface
     }
 
     /**
-     * Perform validations on form data
+     * Perform validations on form data.
      *
      * @param array $data
      *
@@ -92,7 +92,7 @@ final class InvoiceOptionsDataProvider implements FormDataProviderInterface
         $invoiceNumber = $data['invoice_options']['invoice_number'];
 
         if ($invoiceNumber > 0 && $invoiceNumber <= $this->nextInvoiceNumber) {
-            $errors[] =  [
+            $errors[] = [
                 'key' => 'Invalid invoice number.',
                 'domain' => 'Admin.Orderscustomers.Notification',
                 'parameters' => [],

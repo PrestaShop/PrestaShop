@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -106,6 +106,7 @@ abstract class StockManagementRepository
      * @param ContextAdapter $contextAdapter
      * @param ImageManager $imageManager
      * @param $tablePrefix
+     *
      * @throws NotImplementedException
      */
     public function __construct(
@@ -130,7 +131,7 @@ abstract class StockManagementRepository
         }
 
         $languageId = $this->context->employee->id_lang;
-        $this->languageId = (int)$languageId;
+        $this->languageId = (int) $languageId;
 
         if (!$this->context->shop instanceof Shop) {
             throw new RuntimeException('Determining the active shop requires a contextual shop instance.');
@@ -146,6 +147,7 @@ abstract class StockManagementRepository
 
     /**
      * @param array $rows
+     *
      * @return array
      */
     protected function addAdditionalData(array $rows)
@@ -158,6 +160,7 @@ abstract class StockManagementRepository
 
     /**
      * @param array $rows
+     *
      * @return array
      */
     protected function addImageThumbnailPaths(array $rows)
@@ -166,13 +169,13 @@ abstract class StockManagementRepository
             $row['product_thumbnail'] = 'N/A';
             $row['combination_thumbnail'] = 'N/A';
 
-            if ((int)$row['product_cover_id'] > 0) {
+            if ((int) $row['product_cover_id'] > 0) {
                 $row['product_thumbnail'] = $this->imageManager->getThumbnailPath(
                     $row['product_cover_id']
                 );
             }
 
-            if ((int)$row['combination_cover_id'] > 0) {
+            if ((int) $row['combination_cover_id'] > 0) {
                 $row['combination_thumbnail'] = $this->imageManager->getThumbnailPath(
                     $row['combination_cover_id']
                 );
@@ -184,6 +187,7 @@ abstract class StockManagementRepository
 
     /**
      * @param QueryParamsCollection $queryParams
+     *
      * @return mixed
      */
     public function getData(QueryParamsCollection $queryParams)
@@ -211,6 +215,7 @@ abstract class StockManagementRepository
      * @param string $andWhereClause
      * @param string $having
      * @param null $orderByClause
+     *
      * @return mixed
      */
     protected function selectSql(
@@ -223,6 +228,7 @@ abstract class StockManagementRepository
 
     /**
      * @param QueryParamsCollection $queryParams
+     *
      * @return bool|string
      */
     public function countPages(QueryParamsCollection $queryParams)
@@ -238,7 +244,7 @@ abstract class StockManagementRepository
 
         $statement->execute();
 
-        $count = (int)$statement->fetchColumn();
+        $count = (int) $statement->fetchColumn();
         $statement->closeCursor();
 
         return $count;
@@ -246,6 +252,7 @@ abstract class StockManagementRepository
 
     /**
      * @param QueryParamsCollection $queryParams
+     *
      * @return string
      */
     protected function andWhere(QueryParamsCollection $queryParams)
@@ -265,6 +272,7 @@ abstract class StockManagementRepository
 
     /**
      * @param QueryParamsCollection $queryParams
+     *
      * @return string
      */
     protected function having(QueryParamsCollection $queryParams)
@@ -279,12 +287,13 @@ abstract class StockManagementRepository
             '{combination_name}' => 'combination_name',
             '{product_reference}' => 'product_reference',
             '{supplier_name}' => 'supplier_name',
-            '{product_name}' => 'product_name'
+            '{product_name}' => 'product_name',
         ));
     }
 
     /**
      * @param QueryParamsCollection $queryParams
+     *
      * @return string
      */
     protected function orderBy(QueryParamsCollection $queryParams)
@@ -393,20 +402,20 @@ abstract class StockManagementRepository
     }
 
     /**
-     * Store the number of rows found in a previous query executed with SQL_CALC_FOUND_ROWS
+     * Store the number of rows found in a previous query executed with SQL_CALC_FOUND_ROWS.
      */
     protected function getFoundRows()
     {
         $statement = $this->connection->prepare('SELECT FOUND_ROWS()');
         $statement->execute();
-        $rowCount = (int)$statement->fetchColumn();
+        $rowCount = (int) $statement->fetchColumn();
         $statement->closeCursor();
 
         return $rowCount;
     }
 
     /**
-     * Get the combination name subquery to be used in the select field of the main query
+     * Get the combination name subquery to be used in the select field of the main query.
      *
      * @return string
      */
@@ -416,21 +425,21 @@ abstract class StockManagementRepository
                         DISTINCT CONCAT(agl.name, " - ", al.name)
                         SEPARATOR ", "
                     )
-                    FROM '.$this->tablePrefix.'product_attribute pa2
-                    JOIN '.$this->tablePrefix.'product_attribute_combination pac ON (
+                    FROM ' . $this->tablePrefix . 'product_attribute pa2
+                    JOIN ' . $this->tablePrefix . 'product_attribute_combination pac ON (
                         pac.id_product_attribute = pa2.id_product_attribute
                     )                    
-                    JOIN '.$this->tablePrefix.'attribute a ON (
+                    JOIN ' . $this->tablePrefix . 'attribute a ON (
                         a.id_attribute = pac.id_attribute
                     )
-                    JOIN '.$this->tablePrefix.'attribute_lang al ON (
+                    JOIN ' . $this->tablePrefix . 'attribute_lang al ON (
                         a.id_attribute = al.id_attribute
                         AND al.id_lang = :language_id
                     )
-                    JOIN '.$this->tablePrefix.'attribute_group ag ON (
+                    JOIN ' . $this->tablePrefix . 'attribute_group ag ON (
                         ag.id_attribute_group = a.id_attribute_group
                     )
-                    JOIN '.$this->tablePrefix.'attribute_group_lang agl ON (
+                    JOIN ' . $this->tablePrefix . 'attribute_group_lang agl ON (
                         ag.id_attribute_group = agl.id_attribute_group
                         AND agl.id_lang = :language_id
                     )                    
@@ -464,14 +473,14 @@ abstract class StockManagementRepository
                             )
                         WHERE fv.custom = 0 AND fp.id_product=:id_product';
             $statement = $this->connection->prepare($query);
-            $statement->bindValue('id_product', (int)$row['product_id'], \PDO::PARAM_INT);
+            $statement->bindValue('id_product', (int) $row['product_id'], \PDO::PARAM_INT);
             $statement->bindValue('shop_id', $this->shopId, \PDO::PARAM_INT);
             $statement->execute();
             $this->productFeatures[$row['product_id']] = $statement->fetchColumn(0);
             $statement->closeCursor();
         }
 
-        return (string)$this->productFeatures[$row['product_id']];
+        return (string) $this->productFeatures[$row['product_id']];
     }
 
     /**
@@ -482,13 +491,13 @@ abstract class StockManagementRepository
     protected function getCombinationCoverId(array $row)
     {
         $query = 'SELECT id_image 
-                  FROM '.$this->tablePrefix.'product_attribute_image pai
+                  FROM ' . $this->tablePrefix . 'product_attribute_image pai
                   WHERE id_product_attribute=:id_product_attribute
                   LIMIT 1';
         $statement = $this->connection->prepare($query);
-        $statement->bindValue('id_product_attribute', (int)$row['combination_id'], \PDO::PARAM_INT);
+        $statement->bindValue('id_product_attribute', (int) $row['combination_id'], \PDO::PARAM_INT);
         $statement->execute();
-        $combinationCoverId = (int)$statement->fetchColumn(0);
+        $combinationCoverId = (int) $statement->fetchColumn(0);
         $statement->closeCursor();
 
         return $combinationCoverId;
@@ -505,21 +514,21 @@ abstract class StockManagementRepository
                     CONCAT(ag.id_attribute_group, ":", a.id_attribute)
                     ORDER BY ag.id_attribute_group, a.id_attribute
                 ) AS attributes
-                    FROM '.$this->tablePrefix.'product_attribute_combination pac
-                        JOIN '.$this->tablePrefix.'attribute a ON (
+                    FROM ' . $this->tablePrefix . 'product_attribute_combination pac
+                        JOIN ' . $this->tablePrefix . 'attribute a ON (
                             pac.id_attribute = a.id_attribute
                         )
-                        JOIN '.$this->tablePrefix.'attribute_group ag ON (
+                        JOIN ' . $this->tablePrefix . 'attribute_group ag ON (
                             ag.id_attribute_group = a.id_attribute_group
                         )                    
                     WHERE pac.id_product_attribute=:id_product_attribute';
         $statement = $this->connection->prepare($query);
-        $statement->bindValue('id_product_attribute', (int)$row['combination_id'], \PDO::PARAM_INT);
+        $statement->bindValue('id_product_attribute', (int) $row['combination_id'], \PDO::PARAM_INT);
         $statement->execute();
         $productAttributes = $statement->fetchColumn(0);
         $statement->closeCursor();
 
-        return (string)$productAttributes;
+        return (string) $productAttributes;
     }
 
     /**

@@ -94,8 +94,6 @@ $plugins = array(
                     array('new_file' => 'admin/dashboard.js', 'name' => 'dashboard'),
                 'admin-products.js' =>
                     array('new_file' => 'admin/products.js', 'name' => 'products'),
-                'adminImport.js' =>
-                    array('new_file' => 'admin/import.js', 'name' => 'import'),
                 'admin_carrier_wizard.js' =>
                     array('new_file' => 'admin/carrier_wizard.js', 'name' => 'carrier_wizard'),
                 'admin_order.js' =>

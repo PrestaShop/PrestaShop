@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -35,7 +35,7 @@ use PrestaShop\PrestaShop\Core\Language\LanguageActivatorInterface;
 
 /**
  * Class LocalizationConfiguration is responsible for 'Improve > International > Localization' page
- * 'Configuration' form data
+ * 'Configuration' form data.
  */
 class LocalizationConfiguration implements DataConfigurationInterface
 {

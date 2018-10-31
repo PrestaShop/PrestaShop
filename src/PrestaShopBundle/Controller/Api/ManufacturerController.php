@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -39,6 +39,7 @@ class ManufacturerController extends ApiController
 
     /**
      * @param Request $request
+     *
      * @return JsonResponse
      */
     public function listManufacturersAction(Request $request)

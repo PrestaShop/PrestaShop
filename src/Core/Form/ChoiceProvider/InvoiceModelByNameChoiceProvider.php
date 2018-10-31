@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Core\File\FileFinderInterface;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 
 /**
- * Class InvoiceModelByNameChoiceProvider provides invoice model choices with name values
+ * Class InvoiceModelByNameChoiceProvider provides invoice model choices with name values.
  */
 final class InvoiceModelByNameChoiceProvider implements FormChoiceProviderInterface
 {
@@ -48,7 +48,7 @@ final class InvoiceModelByNameChoiceProvider implements FormChoiceProviderInterf
     }
 
     /**
-     * Get invoice model choices
+     * Get invoice model choices.
      *
      * @return array
      */

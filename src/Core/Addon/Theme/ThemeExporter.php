@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -54,13 +54,13 @@ class ThemeExporter
 
     public function export(Theme $theme)
     {
-        $cacheDir = $this->configuration->get('_PS_CACHE_DIR_').'export-'.$theme->getName().'-'.time().DIRECTORY_SEPARATOR;
+        $cacheDir = $this->configuration->get('_PS_CACHE_DIR_') . 'export-' . $theme->getName() . '-' . time() . DIRECTORY_SEPARATOR;
 
         $this->copyTheme($theme->getDirectory(), $cacheDir);
         $this->copyModuleDependencies((array) $theme->get('dependencies.modules'), $cacheDir);
         $this->copyTranslations($theme, $cacheDir);
 
-        $finalFile = $this->configuration->get('_PS_ALL_THEMES_DIR_'). DIRECTORY_SEPARATOR .$theme->getName().'.zip';
+        $finalFile = $this->configuration->get('_PS_ALL_THEMES_DIR_') . DIRECTORY_SEPARATOR . $theme->getName() . '.zip';
         $this->createZip($cacheDir, $finalFile);
 
         $this->fileSystem->remove($cacheDir);
@@ -84,12 +84,12 @@ class ThemeExporter
             return;
         }
 
-        $dependencyDir = $cacheDir.'/dependencies/modules/';
+        $dependencyDir = $cacheDir . '/dependencies/modules/';
         $this->fileSystem->mkdir($dependencyDir);
         $moduleDir = $this->configuration->get('_PS_MODULE_DIR_');
 
         foreach ($moduleList as $moduleName) {
-            $this->fileSystem->mirror($moduleDir.$moduleName, $dependencyDir.$moduleName);
+            $this->fileSystem->mirror($moduleDir . $moduleName, $dependencyDir . $moduleName);
         }
     }
 
@@ -106,8 +106,8 @@ class ThemeExporter
 
         $languages = $this->langRepository->findAll();
         if (count($languages) > 0) {
-            /**
-             * @var \PrestaShopBundle\Entity\Lang $lang
+            /*
+             * @var \PrestaShopBundle\Entity\Lang
              */
             foreach ($languages as $lang) {
                 $locale = $lang->getLocale();

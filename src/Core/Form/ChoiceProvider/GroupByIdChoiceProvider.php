@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Adapter\Group\GroupDataProvider;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 
 /**
- * Class GroupByIdChoiceProvider is responsible for providing customer group choices with Id values
+ * Class GroupByIdChoiceProvider is responsible for providing customer group choices with Id values.
  */
 final class GroupByIdChoiceProvider implements FormChoiceProviderInterface
 {

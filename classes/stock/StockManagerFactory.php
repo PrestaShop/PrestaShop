@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -31,12 +31,12 @@
 class StockManagerFactoryCore
 {
     /**
-     * @var $stock_manager : instance of the current StockManager.
+     * @var : instance of the current StockManager
      */
     protected static $stock_manager;
 
     /**
-     * Returns a StockManager
+     * Returns a StockManager.
      *
      * @return StockManagerInterface
      */
@@ -49,6 +49,7 @@ class StockManagerFactoryCore
             }
             StockManagerFactory::$stock_manager = $stock_manager;
         }
+
         return StockManagerFactory::$stock_manager;
     }
 

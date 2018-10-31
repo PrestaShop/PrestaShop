@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,20 +30,20 @@ namespace PrestaShop\PrestaShop\Core\Filter\FrontEndObject;
 use PrestaShop\PrestaShop\Core\Filter\HashMapWhitelistFilter;
 
 /**
- * Filters Configuration objects that will be sent to the client
+ * Filters Configuration objects that will be sent to the client.
  */
 class ConfigurationFilter extends HashMapWhitelistFilter
 {
     public function __construct()
     {
         $whitelist = array(
-            "display_taxes_label",
-            "is_catalog",
-            "opt_in",
-            "quantity_discount",
-            "return_enabled",
-            "show_prices",
-            "voucher_enabled",
+            'display_taxes_label',
+            'is_catalog',
+            'opt_in',
+            'quantity_discount',
+            'return_enabled',
+            'show_prices',
+            'voucher_enabled',
         );
 
         $this->whitelist($whitelist);

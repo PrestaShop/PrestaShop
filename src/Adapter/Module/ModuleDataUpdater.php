@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Adapter\Module;
 
 use PrestaShopBundle\Service\DataProvider\Admin\AddonsInterface;
@@ -53,6 +54,7 @@ class ModuleDataUpdater
 
     /**
      * @param $name
+     *
      * @return bool
      */
     public function setModuleOnDiskFromAddons($name)
@@ -70,13 +72,15 @@ class ModuleDataUpdater
 
     /**
      * @param $name
+     *
      * @return bool
      */
     public function removeModuleFromDisk($name)
     {
         $fs = new FileSystem();
         try {
-            $fs->remove(_PS_MODULE_DIR_ .'/'. $name);
+            $fs->remove(_PS_MODULE_DIR_ . '/' . $name);
+
             return true;
         } catch (IOException $e) {
             return false;
@@ -85,6 +89,7 @@ class ModuleDataUpdater
 
     /**
      * @param $name
+     *
      * @return bool
      */
     public function upgrade($name)
@@ -103,10 +108,11 @@ class ModuleDataUpdater
 
                 LegacyModule::upgradeModuleVersion($name, $module->version);
 
-                return (!count($legacy_instance->getErrors()));
+                return !count($legacy_instance->getErrors());
             } elseif (LegacyModule::getUpgradeStatus($name)) {
                 return true;
             }
+
             return true;
         }
 

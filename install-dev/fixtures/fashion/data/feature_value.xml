@@ -5,23 +5,22 @@
     <field name="custom"/>
   </fields>
   <entities>
-    <feature_value id="Polyester" id_feature="5" custom="0"/>
-    <feature_value id="Wool" id_feature="5" custom="0"/>
-    <feature_value id="Elastane" id_feature="5" custom="0"/>
-    <feature_value id="Cotton" id_feature="5" custom="0"/>
-    <feature_value id="Ruled" id_feature="8" custom="0"/>
-    <feature_value id="Plain" id_feature="8" custom="0"/>
-    <feature_value id="Squarred" id_feature="8" custom="0"/>
-    <feature_value id="Doted" id_feature="8" custom="0"/>
-    <feature_value id="White" id_feature="9" custom="0"/>
-    <feature_value id="Black" id_feature="9" custom="0"/>
-    <feature_value id="S" id_feature="10" custom="0"/>
-    <feature_value id="M" id_feature="10" custom="0"/>
-    <feature_value id="L" id_feature="10" custom="0"/>
-    <feature_value id="XL" id_feature="10" custom="0"/>
-    <feature_value id="40x60cm" id_feature="11" custom="0"/>
-    <feature_value id="60x90cm" id_feature="11" custom="0"/>
-    <feature_value id="80x120cm" id_feature="11" custom="0"/>
-    <feature_value id="80x120cm_1" id_feature="11" custom="0"/>
+    <feature_value id="Polyester" id_feature="1" custom="0"/>
+    <feature_value id="Wool" id_feature="1" custom="0"/>
+    <feature_value id="Elastane" id_feature="1" custom="0"/>
+    <feature_value id="Cotton" id_feature="1" custom="0"/>
+    <feature_value id="Ruled" id_feature="2" custom="0"/>
+    <feature_value id="Plain" id_feature="2" custom="0"/>
+    <feature_value id="Squarred" id_feature="2" custom="0"/>
+    <feature_value id="Doted" id_feature="2" custom="0"/>
+    <feature_value id="White" id_feature="3" custom="0"/>
+    <feature_value id="Black" id_feature="3" custom="0"/>
+    <feature_value id="S" id_feature="4" custom="0"/>
+    <feature_value id="M" id_feature="4" custom="0"/>
+    <feature_value id="L" id_feature="4" custom="0"/>
+    <feature_value id="XL" id_feature="4" custom="0"/>
+    <feature_value id="40x60cm" id_feature="5" custom="0"/>
+    <feature_value id="60x90cm" id_feature="5" custom="0"/>
+    <feature_value id="80x120cm" id_feature="5" custom="0"/>
   </entities>
 </entity_feature_value>

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2017 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -28,11 +28,10 @@ namespace PrestaShop\PrestaShop\Core\Cart;
 
 class CartRuleCollection implements \Iterator
 {
-
     /**
      * @var CartRuleData[]
      */
-    protected $cartRules        = array();
+    protected $cartRules = array();
     protected $iteratorPosition = 0;
 
     public function addCartRule(CartRuleData $cartRule)
@@ -81,5 +80,4 @@ class CartRuleCollection implements \Iterator
             return $keys[$iteratorPosition];
         }
     }
-
 }

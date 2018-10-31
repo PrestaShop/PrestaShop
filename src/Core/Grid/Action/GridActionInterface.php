@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -27,35 +27,69 @@
 namespace PrestaShop\PrestaShop\Core\Grid\Action;
 
 /**
- * Interface PanelActionInterface
+ * Interface GridActionInterface.
  */
 interface GridActionInterface
 {
     /**
-     * Return unique action identifier
+     * Return unique action identifier.
      *
      * @return string
      */
     public function getId();
 
     /**
-     * Returns translated action name
+     * Returns translated action name.
      *
      * @return string
      */
     public function getName();
 
     /**
-     * Returns action icon name
+     * Set action name.
+     *
+     * @param string $name
+     *
+     * @return self
+     */
+    public function setName($name);
+
+    /**
+     * Returns action icon name.
      *
      * @return string
      */
     public function getIcon();
 
     /**
-     * Returns grid action type
+     * Set action icon name.
+     *
+     * @param string $icon
+     *
+     * @return string
+     */
+    public function setIcon($icon);
+
+    /**
+     * Returns grid action type.
      *
      * @return string
      */
     public function getType();
+
+    /**
+     * Get action options.
+     *
+     * @return array
+     */
+    public function getOptions();
+
+    /**
+     * Set action options.
+     *
+     * @param array $options
+     *
+     * @return self
+     */
+    public function setOptions(array $options);
 }

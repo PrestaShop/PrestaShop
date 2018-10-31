@@ -7,7 +7,7 @@ module.exports = {
     start_button: '//div[@class="onboarding-welcome"]//button[contains(text(), "Start")]',
     resume_button: '//*[@id="nav-sidebar"]//button[contains(@class, "resume")]',
     ready_button: '//*[@id="onboarding-welcome"]//button[contains(@class, "onboarding-button-next") and contains(text(), "I\'m ready")]',
-    payement_check_button: '//*[@id="content"]//a[contains(@href,"%s")]',
+    payement_check_button: '//*[@id="main-div"]//a[contains(@href,"action/configure/%moduleTechName")]',
     welcomeSteps: {
       next_button: '//div[contains(@class, "onboarding-tooltip")]//button[contains(@class, "onboarding-button-next")]',
       message_value: '//div[contains(@class, "onboarding-tooltip")]/div[@class="content"]',
@@ -23,7 +23,7 @@ module.exports = {
     },
     externals: {
       documentation_title: '//span[@class="plugin_pagetree_children_span"]//a[contains (@href, "English+documentation")] ',
-      training_title: '//h1[@class="title-highlights"]',
+      discover_training_button: '(//a[contains(@href, "training/list")])[1]',
       forum_title: '//*[@id="ipsLayout_mainArea"]//h1[@class="ipsType_pageTitle"]',
       youtube_channel_title: '//*[@id="channel-title"]'
     }

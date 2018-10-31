@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 
 /**
- * Class PaymentPreferencesFormDataProvider is responsible for handling "Improve > Payment > Preferences" form data
+ * Class PaymentPreferencesFormDataProvider is responsible for handling "Improve > Payment > Preferences" form data.
  */
 final class PaymentPreferencesFormDataProvider implements FormDataProviderInterface
 {

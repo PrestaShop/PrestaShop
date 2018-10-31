@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Adapter\Entity\OrderInvoice;
 use PrestaShop\PrestaShop\Core\Order\OrderInvoiceDataProviderInterface;
 
 /**
- * Class OrderInvoiceDataProvider provides OrderInvoice data using legacy code
+ * Class OrderInvoiceDataProvider provides OrderInvoice data using legacy code.
  */
 final class OrderInvoiceDataProvider implements OrderInvoiceDataProviderInterface
 {

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 
 /**
- * This class manages Order delivery slip pdf configuration
+ * This class manages Order delivery slip pdf configuration.
  */
 final class SlipPdfConfiguration implements DataConfigurationInterface
 {
@@ -47,7 +47,7 @@ final class SlipPdfConfiguration implements DataConfigurationInterface
     }
 
     /**
-     * Returns configuration used to manage Slip pdf in back office
+     * Returns configuration used to manage Slip pdf in back office.
      *
      * @return array
      */

@@ -27,15 +27,21 @@ scenario('Modify quantity and check the movement of a group of product', client 
   }, 'stocks');
 
   common_scenarios.createProduct(AddProductPage, productData[0]);
-
   common_scenarios.createProduct(AddProductPage, productData[1]);
 
   scenario('Modify quantity and check the movement of a group of product', client => {
     test('should go to "Stocks" page', () => {
       return promise
+
         .then(() => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.stocks_submenu))
-        .then(() => client.waitForExistAndClick(Stock.sort_product_icon, 2000))
-        .then(() => client.pause(5000));
+        .then(() => client.pause(3000))
+        .then(() => client.isVisible(Stock.sort_product_icon, 2000))
+        .then(() => {
+          if (global.isVisible) {
+            client.waitForVisibleAndClick(Stock.sort_product_icon);
+            client.pause(3000);
+          }
+        })
     });
     test('should set the "Quantity" of the first product to 15', () => client.modifyProductQuantity(Stock, 2, 15));
     test('should set the "Quantity" of the second product to 50', () => client.modifyProductQuantity(Stock, 1, 50));

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -25,14 +25,14 @@
  */
 
 /**
- * Class AddressChecksumCore
+ * Class AddressChecksumCore.
  */
 class AddressChecksumCore implements ChecksumInterface
 {
     const SEPARATOR = '_';
 
     /**
-     * Generate a checksum
+     * Generate a checksum.
      *
      * @param Address $address
      *
@@ -47,7 +47,7 @@ class AddressChecksumCore implements ChecksumInterface
         $uniqId = '';
         $fields = $address->getFields();
         foreach ($fields as $name => $value) {
-            $uniqId .= $value.self::SEPARATOR;
+            $uniqId .= $value . self::SEPARATOR;
         }
         $uniqId = rtrim($uniqId, self::SEPARATOR);
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -31,25 +31,29 @@ use PrestaShopBundle\Service\Hook\HookContentClassInterface;
 class ProductAdminDrawer implements HookContentClassInterface
 {
     /**
-     * Material icon reference to display above the title
+     * Material icon reference to display above the title.
+     *
      * @var string
      */
     protected $icon;
 
     /**
-     * ID suffix to add in the generated DOM element
+     * ID suffix to add in the generated DOM element.
+     *
      * @var string
      */
     protected $id;
 
     /**
-     * Destination of the link
+     * Destination of the link.
+     *
      * @var string
      */
     protected $link;
 
     /**
      * Title of the button. Should be short.
+     *
      * @var string
      */
     protected $title;
@@ -93,24 +97,28 @@ class ProductAdminDrawer implements HookContentClassInterface
     public function setIcon($icon)
     {
         $this->icon = $icon;
+
         return $this;
     }
 
     public function setId($id)
     {
         $this->id = $id;
+
         return $this;
     }
 
     public function setLink($link)
     {
         $this->link = $link;
+
         return $this;
     }
 
     public function setTitle($title)
     {
         $this->title = $title;
+
         return $this;
     }
 

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "91b9f927f3ffb1bd0a9cf100a60174dc",
+    "content-hash": "3a33c96f005a7d48ec3c85885b2a20a9",
     "packages": [
         {
             "name": "analog/analog",
@@ -1285,6 +1285,53 @@
             "time": "2017-12-17T02:57:51+00:00"
         },
         {
+            "name": "ezyang/htmlpurifier",
+            "version": "v4.10.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ezyang/htmlpurifier.git",
+                "reference": "d85d39da4576a6934b72480be6978fb10c860021"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ezyang/htmlpurifier/zipball/d85d39da4576a6934b72480be6978fb10c860021",
+                "reference": "d85d39da4576a6934b72480be6978fb10c860021",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.2"
+            },
+            "require-dev": {
+                "simpletest/simpletest": "^1.1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "HTMLPurifier": "library/"
+                },
+                "files": [
+                    "library/HTMLPurifier.composer.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL"
+            ],
+            "authors": [
+                {
+                    "name": "Edward Z. Yang",
+                    "email": "admin@htmlpurifier.org",
+                    "homepage": "http://ezyang.com"
+                }
+            ],
+            "description": "Standards compliant HTML filter written in PHP",
+            "homepage": "http://htmlpurifier.org/",
+            "keywords": [
+                "html"
+            ],
+            "time": "2018-02-23T01:58:20+00:00"
+        },
+        {
             "name": "fig/link-util",
             "version": "1.0.0",
             "source": {
@@ -2074,6 +2121,132 @@
                 "sql"
             ],
             "time": "2014-01-12T16:20:24+00:00"
+        },
+        {
+            "name": "league/tactician",
+            "version": "v1.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/thephpleague/tactician.git",
+                "reference": "d0339e22fd9252fb0fa53102b488d2c514483b8a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/thephpleague/tactician/zipball/d0339e22fd9252fb0fa53102b488d2c514483b8a",
+                "reference": "d0339e22fd9252fb0fa53102b488d2c514483b8a",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.5"
+            },
+            "require-dev": {
+                "mockery/mockery": "~0.9",
+                "phpunit/phpunit": "^4.8.35",
+                "squizlabs/php_codesniffer": "~2.3"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "League\\Tactician\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Ross Tuck",
+                    "homepage": "http://tactician.thephpleague.com"
+                }
+            ],
+            "description": "A small, flexible command bus. Handy for building service layers.",
+            "keywords": [
+                "command",
+                "command bus",
+                "service layer"
+            ],
+            "time": "2017-11-30T09:17:20+00:00"
+        },
+        {
+            "name": "league/tactician-bundle",
+            "version": "v0.4.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/thephpleague/tactician-bundle.git",
+                "reference": "14b38eb1d855fdd805eee2f6c1c20e956534381f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/thephpleague/tactician-bundle/zipball/14b38eb1d855fdd805eee2f6c1c20e956534381f",
+                "reference": "14b38eb1d855fdd805eee2f6c1c20e956534381f",
+                "shasum": ""
+            },
+            "require": {
+                "league/tactician": "^1.0",
+                "php": ">=5.5",
+                "symfony/config": "^2.3|^3.0",
+                "symfony/dependency-injection": "^2.3|^3.0",
+                "symfony/http-kernel": "^2.3|^3.0",
+                "symfony/yaml": "^2.3|^3.0"
+            },
+            "require-dev": {
+                "league/tactician-doctrine": "^1.0",
+                "matthiasnoback/symfony-config-test": "~1.0",
+                "matthiasnoback/symfony-dependency-injection-test": "^0.7",
+                "mockery/mockery": "~0.9.4",
+                "phpunit/phpunit": "~4.5",
+                "symfony/validator": "^2.3|^3.0"
+            },
+            "suggest": {
+                "league/tactician-doctrine": "For doctrine transaction middleware",
+                "symfony/validator": "For command validator middleware"
+            },
+            "type": "symfony-bundle",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "League\\Tactician\\Bundle\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Rafael Dohms",
+                    "homepage": "http://doh.ms"
+                },
+                {
+                    "name": "Xander Smalbil",
+                    "email": "xander@videofunk.nl"
+                },
+                {
+                    "name": "Richard Tuin",
+                    "homepage": "http://www.rtuin.nl/"
+                },
+                {
+                    "name": "Ross Tuck",
+                    "email": "me@rosstuck.com"
+                }
+            ],
+            "description": "Bundle to integrate Tactician with Symfony projects",
+            "keywords": [
+                "bundle",
+                "symfony",
+                "tactician"
+            ],
+            "time": "2016-04-21T08:00:01+00:00"
         },
         {
             "name": "matthiasmullie/minify",
@@ -2961,16 +3134,16 @@
         },
         {
             "name": "prestashop/dashproducts",
-            "version": "v2.0.3",
+            "version": "v2.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/dashproducts.git",
-                "reference": "eac47a61b8e7256852b8fc358afbba1abb481523"
+                "reference": "dc07a3385e1f7274e54ad1c8254f0eb5235c9c05"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/dashproducts/zipball/eac47a61b8e7256852b8fc358afbba1abb481523",
-                "reference": "eac47a61b8e7256852b8fc358afbba1abb481523",
+                "url": "https://api.github.com/repos/PrestaShop/dashproducts/zipball/dc07a3385e1f7274e54ad1c8254f0eb5235c9c05",
+                "reference": "dc07a3385e1f7274e54ad1c8254f0eb5235c9c05",
                 "shasum": ""
             },
             "require": {
@@ -2979,7 +3152,7 @@
             "type": "prestashop-module",
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "AFL - Academic Free License (AFL 3.0)"
+                "AFL-3.0"
             ],
             "authors": [
                 {
@@ -2989,7 +3162,7 @@
             ],
             "description": "PrestaShop module dashproducts",
             "homepage": "https://github.com/PrestaShop/dashproducts",
-            "time": "2017-12-08T12:25:41+00:00"
+            "time": "2018-08-14T16:14:27+00:00"
         },
         {
             "name": "prestashop/dashtrends",
@@ -3134,6 +3307,38 @@
             "description": "PrestaShop module gridhtml",
             "homepage": "https://github.com/PrestaShop/gridhtml",
             "time": "2017-02-22T11:03:13+00:00"
+        },
+        {
+            "name": "prestashop/gsitemap",
+            "version": "v4.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/gsitemap.git",
+                "reference": "68af0cce29ff90dee34da0047af741784a50fc02"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/gsitemap/zipball/68af0cce29ff90dee34da0047af741784a50fc02",
+                "reference": "68af0cce29ff90dee34da0047af741784a50fc02",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.6.0"
+            },
+            "type": "prestashop-module",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "AFL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop module gsitemap",
+            "homepage": "https://github.com/PrestaShop/gsitemap",
+            "time": "2018-10-18T16:00:02+00:00"
         },
         {
             "name": "prestashop/pagesnotfound",
@@ -3457,16 +3662,16 @@
         },
         {
             "name": "prestashop/ps_facetedsearch",
-            "version": "v2.1.2",
+            "version": "v2.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_facetedsearch.git",
-                "reference": "d131df75a252948b0f03f39ec59900d8a28fb1c0"
+                "reference": "ff3cb50836afbba5bf1ae2fd286ea9a48072aeea"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_facetedsearch/zipball/d131df75a252948b0f03f39ec59900d8a28fb1c0",
-                "reference": "d131df75a252948b0f03f39ec59900d8a28fb1c0",
+                "url": "https://api.github.com/repos/PrestaShop/ps_facetedsearch/zipball/ff3cb50836afbba5bf1ae2fd286ea9a48072aeea",
+                "reference": "ff3cb50836afbba5bf1ae2fd286ea9a48072aeea",
                 "shasum": ""
             },
             "require": {
@@ -3488,7 +3693,39 @@
             ],
             "description": "PrestaShop module ps_facetedsearch",
             "homepage": "https://github.com/PrestaShop/ps_facetedsearch",
-            "time": "2018-06-05T10:06:18+00:00"
+            "time": "2018-09-03T10:34:18+00:00"
+        },
+        {
+            "name": "prestashop/ps_faviconnotificationbo",
+            "version": "v1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/ps_faviconnotificationbo.git",
+                "reference": "03e639f4248d551693827dd50576dbb961ecfdb7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/ps_faviconnotificationbo/zipball/03e639f4248d551693827dd50576dbb961ecfdb7",
+                "reference": "03e639f4248d551693827dd50576dbb961ecfdb7",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0"
+            },
+            "type": "prestashop-module",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "AFL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop - Favicon notification BO",
+            "homepage": "https://github.com/PrestaShop/ps_faviconnotificationbo",
+            "time": "2018-10-03T12:42:08+00:00"
         },
         {
             "name": "prestashop/ps_featuredproducts",
@@ -3588,16 +3825,16 @@
         },
         {
             "name": "prestashop/ps_legalcompliance",
-            "version": "v3.0.0",
+            "version": "v3.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_legalcompliance.git",
-                "reference": "44e88e2c0b339bbc9eae7929cc7cf9f266984582"
+                "reference": "711fd54ca281c2e5924e5b028204a71209cc124b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_legalcompliance/zipball/44e88e2c0b339bbc9eae7929cc7cf9f266984582",
-                "reference": "44e88e2c0b339bbc9eae7929cc7cf9f266984582",
+                "url": "https://api.github.com/repos/PrestaShop/ps_legalcompliance/zipball/711fd54ca281c2e5924e5b028204a71209cc124b",
+                "reference": "711fd54ca281c2e5924e5b028204a71209cc124b",
                 "shasum": ""
             },
             "require": {
@@ -3616,7 +3853,7 @@
             ],
             "description": "PrestaShop module ps_legalcompliance",
             "homepage": "https://github.com/PrestaShop/advancedeucompliance",
-            "time": "2017-12-08T10:30:34+00:00"
+            "time": "2018-09-19T08:24:31+00:00"
         },
         {
             "name": "prestashop/ps_linklist",
@@ -3748,16 +3985,16 @@
         },
         {
             "name": "prestashop/ps_shoppingcart",
-            "version": "v2.0.1",
+            "version": "v2.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_shoppingcart.git",
-                "reference": "4830efa98e72fb27de872e165dabefb392541a33"
+                "reference": "56559a21e2df3f65147ae19a36c7a988a7a6af4c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_shoppingcart/zipball/4830efa98e72fb27de872e165dabefb392541a33",
-                "reference": "4830efa98e72fb27de872e165dabefb392541a33",
+                "url": "https://api.github.com/repos/PrestaShop/ps_shoppingcart/zipball/56559a21e2df3f65147ae19a36c7a988a7a6af4c",
+                "reference": "56559a21e2df3f65147ae19a36c7a988a7a6af4c",
                 "shasum": ""
             },
             "require": {
@@ -3776,7 +4013,7 @@
             ],
             "description": "PrestaShop module ps_shoppingcart",
             "homepage": "https://github.com/PrestaShop/ps_shoppingcart",
-            "time": "2017-03-23T10:36:49+00:00"
+            "time": "2018-10-01T13:25:08+00:00"
         },
         {
             "name": "prestashop/ps_socialfollow",
@@ -3812,16 +4049,16 @@
         },
         {
             "name": "prestashop/ps_themecusto",
-            "version": "v1.0.8",
+            "version": "v1.0.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_themecusto.git",
-                "reference": "b1a332e8afbb858b1cd54c952d34b27fc82d505d"
+                "reference": "0500e9d3d6afe36a25769bd251a07c52d6be8298"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_themecusto/zipball/b1a332e8afbb858b1cd54c952d34b27fc82d505d",
-                "reference": "b1a332e8afbb858b1cd54c952d34b27fc82d505d",
+                "url": "https://api.github.com/repos/PrestaShop/ps_themecusto/zipball/0500e9d3d6afe36a25769bd251a07c52d6be8298",
+                "reference": "0500e9d3d6afe36a25769bd251a07c52d6be8298",
                 "shasum": ""
             },
             "require": {
@@ -3840,7 +4077,7 @@
             ],
             "description": "PrestaShop module ps_themecusto",
             "homepage": "https://github.com/PrestaShop/ps_themecusto",
-            "time": "2018-07-18T09:53:26+00:00"
+            "time": "2018-09-19T15:46:24+00:00"
         },
         {
             "name": "prestashop/ps_wirepayment",
@@ -4671,16 +4908,16 @@
         },
         {
             "name": "prestashop/welcome",
-            "version": "v5.0.1",
+            "version": "v5.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/welcome.git",
-                "reference": "25ff6c075d2975d794363df90edb326806f66c4d"
+                "reference": "04955250748214a001492a9326996a95c725f092"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/welcome/zipball/25ff6c075d2975d794363df90edb326806f66c4d",
-                "reference": "25ff6c075d2975d794363df90edb326806f66c4d",
+                "url": "https://api.github.com/repos/PrestaShop/welcome/zipball/04955250748214a001492a9326996a95c725f092",
+                "reference": "04955250748214a001492a9326996a95c725f092",
                 "shasum": ""
             },
             "require": {
@@ -4705,7 +4942,7 @@
             ],
             "description": "Welcome module for PrestaShop helping the users to create products.",
             "homepage": "https://github.com/PrestaShop/welcome",
-            "time": "2018-06-08T13:29:51+00:00"
+            "time": "2018-09-26T13:52:02+00:00"
         },
         {
             "name": "psr/cache",
@@ -5200,16 +5437,16 @@
         },
         {
             "name": "smarty/smarty",
-            "version": "v3.1.32",
+            "version": "v3.1.33",
             "source": {
                 "type": "git",
                 "url": "https://github.com/smarty-php/smarty.git",
-                "reference": "ac9d4b587e5bf53381e21881820a9830765cb459"
+                "reference": "dd55b23121e55a3b4f1af90a707a6c4e5969530f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/smarty-php/smarty/zipball/ac9d4b587e5bf53381e21881820a9830765cb459",
-                "reference": "ac9d4b587e5bf53381e21881820a9830765cb459",
+                "url": "https://api.github.com/repos/smarty-php/smarty/zipball/dd55b23121e55a3b4f1af90a707a6c4e5969530f",
+                "reference": "dd55b23121e55a3b4f1af90a707a6c4e5969530f",
                 "shasum": ""
             },
             "require": {
@@ -5249,7 +5486,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2018-04-24T14:53:33+00:00"
+            "time": "2018-09-12T20:54:16+00:00"
         },
         {
             "name": "swiftmailer/swiftmailer",
@@ -5824,20 +6061,20 @@
         },
         {
             "name": "symfony/symfony",
-            "version": "v3.4.12",
+            "version": "v3.4.17",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/symfony.git",
-                "reference": "c36f8cb21b5f1661a14fdb8cef9cc611d54a3494"
+                "reference": "de239d25e0bb3be451a17b627705a5970c6c59e6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/symfony/zipball/c36f8cb21b5f1661a14fdb8cef9cc611d54a3494",
-                "reference": "c36f8cb21b5f1661a14fdb8cef9cc611d54a3494",
+                "url": "https://api.github.com/repos/symfony/symfony/zipball/de239d25e0bb3be451a17b627705a5970c6c59e6",
+                "reference": "de239d25e0bb3be451a17b627705a5970c6c59e6",
                 "shasum": ""
             },
             "require": {
-                "doctrine/common": "~2.4@stable",
+                "doctrine/common": "~2.4",
                 "ext-xml": "*",
                 "fig/link-util": "^1.0",
                 "php": "^5.5.9|>=7.0.8",
@@ -5856,7 +6093,7 @@
             },
             "conflict": {
                 "phpdocumentor/reflection-docblock": "<3.0||>=3.2.0,<3.2.2",
-                "phpdocumentor/type-resolver": "<0.2.1",
+                "phpdocumentor/type-resolver": "<0.3.0",
                 "phpunit/phpunit": "<4.8.35|<5.4.3,>=5.0"
             },
             "provide": {
@@ -5975,20 +6212,20 @@
             "keywords": [
                 "framework"
             ],
-            "time": "2018-06-25T12:29:33+00:00"
+            "time": "2018-10-03T12:03:55+00:00"
         },
         {
             "name": "tecnickcom/tcpdf",
-            "version": "6.2.17",
+            "version": "6.2.26",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tecnickcom/TCPDF.git",
-                "reference": "64fc19439863e1b1314487a72a74d9bfd0b55a53"
+                "reference": "367241059ca166e3a76490f4448c284e0a161f15"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tecnickcom/TCPDF/zipball/64fc19439863e1b1314487a72a74d9bfd0b55a53",
-                "reference": "64fc19439863e1b1314487a72a74d9bfd0b55a53",
+                "url": "https://api.github.com/repos/tecnickcom/TCPDF/zipball/367241059ca166e3a76490f4448c284e0a161f15",
+                "reference": "367241059ca166e3a76490f4448c284e0a161f15",
                 "shasum": ""
             },
             "require": {
@@ -6037,7 +6274,7 @@
                 "pdf417",
                 "qrcode"
             ],
-            "time": "2018-02-24T11:48:20+00:00"
+            "time": "2018-10-16T17:24:05+00:00"
         },
         {
             "name": "twig/twig",

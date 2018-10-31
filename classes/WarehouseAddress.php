@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -25,7 +25,7 @@
  */
 
 /**
- * Class WarehouseAddressCore
+ * Class WarehouseAddressCore.
  *
  * Holds address info of a Warehouse.
  * This class extends AddressCore to be differentiated from other AddressCore objects in DB.

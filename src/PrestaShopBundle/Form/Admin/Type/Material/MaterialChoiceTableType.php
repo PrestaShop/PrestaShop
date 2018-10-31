@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -31,7 +31,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Class MaterialChoiceTableType renders checkbox choices using table layout
+ * Class MaterialChoiceTableType renders checkbox choices using table layout.
  */
 class MaterialChoiceTableType extends AbstractType
 {

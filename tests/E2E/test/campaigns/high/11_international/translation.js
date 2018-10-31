@@ -17,9 +17,8 @@ scenario('Edit a translation', () => {
     test('should click on "Modify" button', () => client.waitForExistAndClick(Translations.modify_button));
     test('should click on "Shop" button', () =>  {
       return promise
-        .then(() => client.isVisible(AddProductPage.symfony_toolbar, 3000))
         .then(() => {
-          if (global.isVisible) {
+          if (global.ps_mode_dev) {
             client.waitForExistAndClick(AddProductPage.symfony_toolbar)
           }
         })
@@ -38,7 +37,7 @@ scenario('Edit a translation', () => {
     test('should login successfully in the Front Office', () => client.signInFO(AccessPageFO));
   }, 'common_client');
   scenario('Check the change of "Sign out" to "Sign out English" ', client => {
-    test('should set the shop language to "English"', () => client.changeLanguage('english'));
+    test('should set the shop language to "English"', () => client.changeLanguage());
     test('should check the "Sign out" button text is equal to "Sign out English"', () => client.checkTextValue(Translations.sign_out_FO_text, 'Sign out English', "contain"));
   }, 'common_client');
   scenario('Logout from the Front Office', client => {

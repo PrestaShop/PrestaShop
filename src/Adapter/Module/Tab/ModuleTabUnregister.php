@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -72,7 +72,7 @@ class ModuleTabUnregister
      *
      * This is done automatically as part of the module uninstallation.
      *
-     * @return bool Returns true if the module tabs were successfully uninstalled, false if any of them failed to do so.
+     * @return bool returns true if the module tabs were successfully uninstalled, false if any of them failed to do so
      */
     public function unregisterTabs(Module $module)
     {
@@ -89,8 +89,7 @@ class ModuleTabUnregister
     /**
      * Uninstalls a tab given its defined structure.
      *
-     * @param Tab $tab The instance of entity tab.
-     *
+     * @param Tab $tab the instance of entity tab
      */
     private function unregisterTab(Tab $tab)
     {
@@ -125,7 +124,7 @@ class ModuleTabUnregister
         $child = end($remainingChildren);
 
         // We know we have a tab to delete if the parent name is the remaining child name+_MTR
-        if ($parent->getClassName() === $child->getClassName().ModuleTabRegister::SUFFIX) {
+        if ($parent->getClassName() === $child->getClassName() . ModuleTabRegister::SUFFIX) {
             $legacyTabParent = new TabClass($parent->getId());
             // Setting a wrong id_parent will prevent the children to move
             $legacyTabParent->id_parent = -1;

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -31,7 +31,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
  * This class subscribes to the events module installation / uninstallation
- * in order to install or remove its tabs as well
+ * in order to install or remove its tabs as well.
  */
 class ModuleEventSubscriber implements EventSubscriberInterface
 {
@@ -41,10 +41,11 @@ class ModuleEventSubscriber implements EventSubscriberInterface
     private $checker;
 
     /**
-     * These events can be enabled/disabled via the config file
-     * @var boolean
+     * These events can be enabled/disabled via the config file.
+     *
+     * @var bool
      */
-    public $enabled;
+    private $enabled;
 
     public function __construct(PrestaTrustChecker $checker)
     {
@@ -52,7 +53,7 @@ class ModuleEventSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public static function getSubscribedEvents()
     {
@@ -67,14 +68,37 @@ class ModuleEventSubscriber implements EventSubscriberInterface
      * if the module is compliant.
      *
      * @param ModuleZipManagementEvent $event
-     * @return void
      */
     public function onNewModule(ModuleZipManagementEvent $event)
     {
         if (!$this->enabled) {
             return;
         }
-        
+
         $this->checker->checkModuleZip($event->getModuleZip());
+    }
+
+    /**
+     * Check if the feature is enabled.
+     *
+     * @return bool
+     */
+    public function isEnabled()
+    {
+        return $this->enabled;
+    }
+
+    /**
+     * Enable / disable the PrestaTrust feature.
+     *
+     * @param bool $enabled
+     *
+     * @return $this
+     */
+    public function setEnabled($enabled)
+    {
+        $this->enabled = (bool) $enabled;
+
+        return $this;
     }
 }

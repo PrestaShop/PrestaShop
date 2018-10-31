@@ -11,7 +11,7 @@ export default function() {
     const idsProductAttribute = $jsCombinationsList.data('ids-product-attribute').toString().split(',');
     const refreshImagesUrl = $jsCombinationsList
       .attr('data-action-refresh-images')
-      .replace(/product-form-images\/\d+/, 'product-form-images/' + $jsCombinationsList.data('id-product'));
+      .replace(/form-images\/\d+/, 'form-images/' + $jsCombinationsList.data('id-product'));
     const idsCount = idsProductAttribute.length;
     const step = 50;
     let currentCount = 0;
@@ -68,16 +68,19 @@ export default function() {
         $jsCombinationsBulkForm.addClass('inactive');
       }
 
-      $.get(getCombinationsUrl()).then(function (resp) {
+      const $combinationsUrl = getCombinationsUrl();
+      if ($combinationsUrl === false) {
+        return;
+      }
+
+      $.get($combinationsUrl).then(function (resp) {
         $('#loading-attribute').before(resp);
         refreshImagesCombination(combinationsImages, idsProductAttribute.slice(currentCount, currentCount+step));
         currentCount += step;
         if (currentCount < idsCount) {
           getCombinations(combinationsImages);
         } else {
-          $jsCombinationsBulkForm.removeClass('inactive');
-          $('#loading-attribute').fadeOut(1000).remove();
-          $('[data-toggle="popover"]').popover();
+          activateCombinationsBulk();
         }
       });
     };
@@ -87,14 +90,28 @@ export default function() {
      * Concatenate ids_product_attribute to load from a slice of idsProductAttribute depending of step and last set
      */
     const getCombinationsUrl = () => {
+      const $numbers = idsProductAttribute.slice(currentCount, currentCount+step).join('-');
+      if ($numbers.length === 0) {
+        return false;
+      }
+
       return $jsCombinationsList
         .data('combinations-url')
         .replace(
           ':numbers',
-          idsProductAttribute.slice(currentCount, currentCount+step).join('-')
+          $numbers
         );
     };
   });
+
+  const activateCombinationsBulk = () => {
+    let $jsCombinationsBulkForm = $('#combinations-bulk-form');
+    if ($jsCombinationsBulkForm.hasClass('inactive')) {
+      $jsCombinationsBulkForm.removeClass('inactive');
+      $('#loading-attribute').fadeOut(1000).remove();
+      $('[data-toggle="popover"]').popover();
+    }
+  }
 
   const refreshImagesCombination = (combinationsImages, idsProductAttribute) => {
     $.each(idsProductAttribute, function (index, value) {
@@ -166,7 +183,7 @@ export default function() {
         refreshTotalCombinations(1, $(response.form).filter('.combination.loaded').length);
         $('#accordion_combinations').append(response.form);
         displayFieldsManager.refresh();
-        const url = $('.js-combinations-list').attr('data-action-refresh-images').replace(/product-form-images\/\d+/, 'product-form-images/' + $('.js-combinations-list').data('id-product'));
+        const url = $('.js-combinations-list').attr('data-action-refresh-images').replace(/form-images\/\d+/, 'form-images/' + $('.js-combinations-list').data('id-product'));
         $.get(url)
           .then(function(combinationsImages) {
             refreshImagesCombination(combinationsImages, response.ids_product_attribute);
@@ -183,6 +200,7 @@ export default function() {
       },
       complete: function() {
         $('#create-combinations, #submit, .btn-submit').removeAttr('disabled');
+        activateCombinationsBulk();
         supplierCombinations.refresh();
         warehouseCombinations.refresh();
       }
