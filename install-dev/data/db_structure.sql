@@ -557,7 +557,7 @@ CREATE TABLE `PREFIX_contact` (
 CREATE TABLE `PREFIX_contact_lang` (
   `id_contact` int(10) unsigned NOT NULL, 
   `id_lang` int(10) unsigned NOT NULL, 
-  `name` varchar(32) NOT NULL, 
+  `name` varchar(255) NOT NULL, 
   `description` text, 
   PRIMARY KEY (`id_contact`, `id_lang`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
@@ -690,7 +690,7 @@ CREATE TABLE `PREFIX_customer_thread` (
   `status` enum(
     'open', 'closed', 'pending1', 'pending2'
   ) NOT NULL DEFAULT 'open', 
-  `email` varchar(128) NOT NULL, 
+  `email` varchar(255) NOT NULL, 
   `token` varchar(12) DEFAULT NULL, 
   `date_add` datetime NOT NULL, 
   `date_upd` datetime NOT NULL, 
