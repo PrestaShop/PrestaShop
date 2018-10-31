@@ -108,7 +108,7 @@ scenario('Open all menu links in the Back Office', () => {
       common.clickOnMenuLinksAndCheckElement(client, Menu.Configure.ShopParameters.shop_parameters_menu, Menu.Configure.ShopParameters.search_submenu, PagesForm.ShopParameters.tags_form, "Search", "Tags", 0, Menu.Configure.ShopParameters.tags_tab);
       common.clickOnMenuLinksAndCheckElement(client, Menu.Configure.ShopParameters.shop_parameters_menu, Menu.Configure.ShopParameters.merchant_expertise_submenu, PagesForm.ShopParameters.gamification_box, "Merchant Expertise", "Gamification");
     }, 'common_client');
-    scenario('Check all the menu links of "Informations" in the Back Office', client => {
+    scenario('Check all the menu links of "Advanced parameters" in the Back Office', client => {
       common.clickOnMenuLinksAndCheckElement(client, Menu.Configure.AdvancedParameters.advanced_parameters_menu, Menu.Configure.AdvancedParameters.information_submenu, PagesForm.AdvancedParameters.check_configuration_box, "Informations");
       common.clickOnMenuLinksAndCheckElement(client, Menu.Configure.AdvancedParameters.advanced_parameters_menu, Menu.Configure.AdvancedParameters.performance_submenu, PagesForm.AdvancedParameters.debug_mode_button, "Performance");
       common.clickOnMenuLinksAndCheckElement(client, Menu.Configure.AdvancedParameters.advanced_parameters_menu, Menu.Configure.AdvancedParameters.administration_submenu, PagesForm.AdvancedParameters.administration_form, "Administration");

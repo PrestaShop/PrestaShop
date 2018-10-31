@@ -27,7 +27,7 @@ scenario('Install "PrestaShop Security" module', () => {
   }, 'common_client');
   scenario('Check Configuration page of "PrestaShop Security" module', client => {
     module_common_scenarios.checkConfigPage(client, ModulePage, "prestafraud");
-  }, 'common_client');
+  }, 'module');
   scenario('Uninstall "PrestaShop Security" module', client => {
     module_common_scenarios.uninstallModule(client, ModulePage, AddProductPage, "prestafraud");
   }, 'common_client');

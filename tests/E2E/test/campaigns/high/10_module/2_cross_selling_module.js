@@ -19,13 +19,13 @@ scenario('Install and Uninstall Module from cross selling', () => {
   }, 'common_client');
   scenario('Check Configuration page of "' + module_tech_name + '"', client => {
     module_common_scenarios.checkConfigPage(client, ModulePage, module_tech_name);
-  }, 'common_client');
+  }, 'module');
   scenario('Disable Module "' + module_tech_name + '"', client => {
     module_common_scenarios.disableModule(client, ModulePage, AddProductPage, module_tech_name);
-  }, 'common_client');
+  }, 'module');
   scenario('Enable Module " ' + module_tech_name + '"', client => {
     module_common_scenarios.enableModule(client, ModulePage, AddProductPage, module_tech_name);
-  }, 'common_client');
+  }, 'module');
   scenario('Uninstall "' + module_tech_name + '"', client => {
     module_common_scenarios.uninstallModule(client, ModulePage, AddProductPage, module_tech_name);
   }, 'common_client');
@@ -37,13 +37,13 @@ scenario('Install,disable,enable and Uninstall "PayPal" module', () => {
   }, 'common_client');
   scenario('Check Configuration page of "PayPal" module', client => {
     module_common_scenarios.checkConfigPage(client, ModulePage, "paypal");
-  }, 'common_client');
+  }, 'module');
   scenario('Disable Module', client => {
     module_common_scenarios.disableModule(client, ModulePage, AddProductPage, "paypal");
-  }, 'common_client');
+  }, 'module');
   scenario('Enable Module', client => {
     module_common_scenarios.enableModule(client, ModulePage, AddProductPage, "paypal");
-  }, 'common_client');
+  }, 'module');
   scenario('Uninstall "PayPal" module', client => {
     module_common_scenarios.uninstallModule(client, ModulePage, AddProductPage, "paypal");
   }, 'common_client');

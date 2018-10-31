@@ -36,7 +36,7 @@ module.exports = {
       test('should search for the product', () => client.searchByValue(SearchProductPage.search_input, SearchProductPage.search_button, productName + date_time));
       test('should go to the product page', () => client.waitForExistAndClick(SearchProductPage.product_result_name));
       test('should check the feature name', () => client.checkTextValue(SearchProductPage.feature_name, data.name + date_time));
-      test('should check the feature value', () => client.checkTextValue(SearchProductPage.feature_value, data.values[1]));
+      test('should check the feature value', () => client.checkTextValue(SearchProductPage.feature_value, data.values[1], 'equal', 2000));
     }, 'attribute_and_feature');
   },
   updateFeature(data) {
