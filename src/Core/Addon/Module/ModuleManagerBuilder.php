@@ -60,6 +60,12 @@ class ModuleManagerBuilder
      * @var \PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository
      */
     public static $modulesRepository = null;
+    /**
+     * Singleton of ModuleManager.
+     *
+     * @var \PrestaShop\PrestaShop\Core\Addon\Module\ModuleManager
+     */
+    public static $moduleManager = null;
     public static $adminModuleDataProvider = null;
     public static $lecacyContext;
     public static $legacyLogger = null;
@@ -91,20 +97,24 @@ class ModuleManagerBuilder
      */
     public function build()
     {
-        $sfContainer = SymfonyContainer::getInstance();
-        if (!is_null($sfContainer)) {
-            return $sfContainer->get('prestashop.module.manager');
-        } else {
-            return new ModuleManager(
-                self::$adminModuleDataProvider,
-                self::$moduleDataProvider,
-                self::$moduleDataUpdater,
-                $this->buildRepository(),
-                self::$moduleZipManager,
-                self::$translator,
-                new NullDispatcher()
-            );
+        if (is_null(self::$moduleManager)) {
+            $sfContainer = SymfonyContainer::getInstance();
+            if (!is_null($sfContainer)) {
+                self::$moduleManager = $sfContainer->get('prestashop.module.manager');
+            } else {
+                self::$moduleManager = new ModuleManager(
+                    self::$adminModuleDataProvider,
+                    self::$moduleDataProvider,
+                    self::$moduleDataUpdater,
+                    $this->buildRepository(),
+                    self::$moduleZipManager,
+                    self::$translator,
+                    new NullDispatcher()
+                );
+            }
         }
+
+        return self::$moduleManager;
     }
 
     /**
