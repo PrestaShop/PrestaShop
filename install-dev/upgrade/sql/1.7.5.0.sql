@@ -19,6 +19,9 @@ ALTER TABLE `PREFIX_store`
 ALTER TABLE `PREFIX_contact`
   CHANGE `email` `email` VARCHAR(255) NOT NULL;
 
+ALTER TABLE `PREFIX_contact_lang`
+  CHANGE `name` `name` varchar(255) NOT NULL;
+
 ALTER TABLE `PREFIX_category_lang`
   CHANGE `meta_title` `meta_title` VARCHAR(255) DEFAULT NULL,
   CHANGE `meta_description` `meta_description` VARCHAR(512) DEFAULT NULL;
