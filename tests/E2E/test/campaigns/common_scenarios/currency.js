@@ -44,31 +44,29 @@ module.exports = {
     }, 'common_client');
   },
 
-  sortCurrency(selector, sortBy, number = false) {
+  sortCurrency: async function (selector, sortBy, isNumber = false) {
     global.elementsSortedTable = [];
     global.elementsTable = [];
     scenario('Check the sort of currencies by "' + sortBy.toUpperCase() + '"', client => {
-      test('should click on "Sort by ASC" icon', () => {
+      test('should get the number of currencies', () => client.getTextInVar(Localization.Currencies.currency_number_span, 'number_currency'));
+      test('should click on "Sort by ASC" icon', async () => {
         for (let j = 0; j < (parseInt(tab['number_currency'])); j++) {
-          promise = client.getTableField(selector, j);
+          await client.getTableField(selector, j);
         }
-        return promise
-          .then(() => client.waitForExistAndClick(Localization.Currencies.sort_icon.replace('%B', sortBy).replace('%W', 2)));
+        await client.waitForExistAndClick(Localization.Currencies.sort_icon.replace('%B', sortBy).replace('%W', 2));
       });
-      test('should check that the currencies are well sorted by ASC', () => {
+      test('should check that the currencies are well sorted by ASC', async () => {
         for (let j = 0; j < (parseInt(tab['number_currency'])); j++) {
-          promise = client.getTableField(selector, j, true);
+          await client.getTableField(selector, j, true);
         }
-        return promise
-          .then(() => client.checkSortTable(parseInt(tab['number_currency']), number));
+        await client.checkSortTable(isNumber);
       });
       test('should click on "Sort by DESC" icon', () => client.waitForExistAndClick(Localization.Currencies.sort_icon.replace('%B', sortBy).replace('%W', 1)));
-      test('should check that the currencies are well sorted by DESC', () => {
+      test('should check that the currencies are well sorted by DESC', async () => {
         for (let j = 0; j < (parseInt(tab['number_currency'])); j++) {
-          promise = client.getTableField(selector, j, true);
+          await client.getTableField(selector, j, true);
         }
-        return promise
-          .then(() => client.checkSortTable(parseInt(tab['number_currency']), number, 'DESC'));
+        await client.checkSortTable(isNumber, 'DESC');
       });
     }, 'currency');
   },

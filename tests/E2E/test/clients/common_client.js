@@ -605,45 +605,40 @@ class CommonClient {
     return this.client
       .getText(element_list.replace("%ID", i + 1)).then(function (name) {
         if (sorted) {
-          elementsSortedTable[i] = name.toLowerCase();
+          elementsSortedTable[i] = name.normalize('NFKD').replace(/[\u0300-\u036F]/g, '').toLowerCase();
         }
         else {
-          elementsTable[i] = name.toLowerCase();
+          elementsTable[i] = name.normalize('NFKD').replace(/[\u0300-\u036F]/g, '').toLowerCase();
         }
       });
   }
 
   /**
    * This function checks the sort of a table
-   * @param numberElements number of rows in the table
-   * @param sortBy= true if we sort by a number, sortBy= false if we sort by a string
+   * @param isNumber= true if we sort by a number, isNumber= false if we sort by a string
    * @param sortWay equal to 'ASC' or 'DESC'
    */
-  checkSortTable(numberElements, sortBy = false, sortWay = 'ASC') {
-    return this.client
+  async checkSortTable(isNumber = false, sortWay = 'ASC') {
+    return await this.client
       .pause(2000)
-      .then(() => {
-        this.client
-          .pause(3000)
-          .waitUntil(function () {
-            if (sortBy) {
-              if (sortWay === 'ASC') {
-                expect(elementsTable.sort(function (a, b) {
-                  return a - b
-                })).to.deep.equal(elementsSortedTable);
-              } else {
-                expect(elementsTable.sort(function (a, b) {
-                  return a - b
-                }).reverse()).to.deep.equal(elementsSortedTable);
-              }
-            } else {
-              if (sortWay === 'ASC') {
-                expect(elementsTable.sort()).to.deep.equal(elementsSortedTable);
-              } else {
-                expect(elementsTable.sort().reverse()).to.deep.equal(elementsSortedTable);
-              }
-            }
-          }, 1000 * numberElements);
+      .then(async () => {
+        if (isNumber) {
+          if (sortWay === 'ASC') {
+            await expect(elementsTable.sort(function (a, b) {
+              return a - b;
+            })).to.deep.equal(elementsSortedTable);
+          } else {
+            await expect(elementsTable.sort(function (a, b) {
+              return a - b
+            }).reverse()).to.deep.equal(elementsSortedTable);
+          }
+        } else {
+          if (sortWay === 'ASC') {
+            await expect(elementsTable.sort()).to.deep.equal(elementsSortedTable);
+          } else {
+            await expect(elementsTable.sort().reverse()).to.deep.equal(elementsSortedTable);
+          }
+        }
       });
   }
 

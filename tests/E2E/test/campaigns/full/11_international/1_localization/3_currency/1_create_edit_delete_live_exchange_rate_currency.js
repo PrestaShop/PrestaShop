@@ -47,9 +47,8 @@ scenario('Create, edit, delete and live exchange rate currency', () => {
     commonCurrency.checkCurrencyByIsoCode(secondCurrencyData);
     commonCurrency.checkCurrencyFO(secondCurrencyData);
     commonCurrency.accessToCurrencies();
-    scenario('Click on "Reset" button then get the number of currencies', client => {
+    scenario('Click on "Reset" button', client => {
       test('should click on reset button', () => client.waitForExistAndClick(Localization.Currencies.reset_button));
-      test('should get the number', () => client.getTextInVar(Localization.Currencies.currency_number_span, 'number_currency'));
     }, 'common_client');
     commonCurrency.sortCurrency(Localization.Currencies.currency_iso_code_column, 'ISO code');
     commonCurrency.sortCurrency(Localization.Currencies.currency_exchange_rate, 'Exchange rate', true);
