@@ -138,7 +138,8 @@ class CustomerThreadCore extends ObjectModel
         }
 
         $return = true;
-        $result = Db::getInstance()->executeS('
+        $result = Db::getInstance()->executeS(
+            '
 			SELECT `id_customer_message`
 			FROM `' . _DB_PREFIX_ . 'customer_message`
 			WHERE `id_customer_thread` = ' . (int) $this->id
@@ -179,7 +180,8 @@ class CustomerThreadCore extends ObjectModel
 
     public static function getIdCustomerThreadByEmailAndIdOrder($email, $id_order)
     {
-        return Db::getInstance()->getValue('
+        return Db::getInstance()->getValue(
+            '
 			SELECT cm.id_customer_thread
 			FROM ' . _DB_PREFIX_ . 'customer_thread cm
 			WHERE cm.email = \'' . pSQL($email) . '\'
@@ -213,13 +215,15 @@ class CustomerThreadCore extends ObjectModel
     public static function getTotalCustomerThreads($where = null)
     {
         if (is_null($where)) {
-            return (int) Db::getInstance()->getValue('
+            return (int) Db::getInstance()->getValue(
+                '
 				SELECT COUNT(*)
 				FROM ' . _DB_PREFIX_ . 'customer_thread
 				WHERE 1 ' . Shop::addSqlRestriction()
             );
         } else {
-            return (int) Db::getInstance()->getValue('
+            return (int) Db::getInstance()->getValue(
+                '
 				SELECT COUNT(*)
 				FROM ' . _DB_PREFIX_ . 'customer_thread
 				WHERE ' . $where . Shop::addSqlRestriction()
