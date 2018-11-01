@@ -23,7 +23,7 @@ module.exports = {
     },
     externals: {
       documentation_title: '//span[@class="plugin_pagetree_children_span"]//a[contains (@href, "English+documentation")] ',
-      training_title: '//h1[@class="title-highlights"]',
+      discover_training_button: '(//a[contains(@href, "training/list")])[1]',
       forum_title: '//*[@id="ipsLayout_mainArea"]//h1[@class="ipsType_pageTitle"]',
       youtube_channel_title: '//*[@id="channel-title"]'
     }

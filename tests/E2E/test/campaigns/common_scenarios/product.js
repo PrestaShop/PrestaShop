@@ -61,7 +61,7 @@ module.exports = {
           });
           test('should click on "Generate" button', () => {
             return promise
-              .then(() => client.waitForExistAndClick(AddProductPage.variations_generate))
+              .then(() => client.waitForExistAndClick(AddProductPage.variations_generate, 2000))
               .then(() => client.getCombinationData(1));
           });
           test('should verify the appearance of the green validation', () => client.checkTextValue(AddProductPage.validation_msg, 'Settings updated.'));
@@ -175,5 +175,18 @@ module.exports = {
     });
     test('should check that the current page is equal to "' + pageNumber + '"', () => client.checkTextValue(productPage.current_page, pageNumber));
     test('should check that the value page in URL is equal to "' + pageNumber + '"', () => client.checkParamFromURL('page', pageNumber));
+  },
+  clickOnPreviewLink(client, selector, productSelector) {
+    test('should click on the "Preview" link', () => {
+      return promise
+        .then(() => client.isVisible(productSelector))
+        .then(() => {
+          if (global.ps_mode_dev && !isVisible) {
+            client.waitForExistAndClick(selector)
+          } else {
+            client.pause(0);
+          }
+        });
+    });
   }
 };

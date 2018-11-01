@@ -18,7 +18,7 @@ module.exports = {
         database_login_input: '//*[@id="dbLogin"]',
         database_password_input: '//*[@id="dbPassword"]',
         test_connection_button: '#btTestDB',
-        create_DB_button: '//*[@id="btCreateDB"]',
+        create_DB_button: '//*[@id="dbResultCheck"]',
         create_file_parameter_step: '//li[@id="process_step_generateSettingsFile" and @class="process_step success"]',
         create_database_step: '//li[@id="process_step_installDatabase" and @class="process_step success"]',
         create_default_shop_step: '//li[@id="process_step_installDefaultData" and @class="process_step success"]',
