@@ -14,7 +14,7 @@ scenario('Check the addons catalog page in the Back Office', () => {
     test('should check that the page is well opened', () => {
       return promise
         .then(() => client.switchWindow(1))
-        .then(() => client.checkTextValue(ModulesCatalogPage.category_name_text, "Traffic", 'contain'))
+        .then(() => client.checkTextValue(ModulesCatalogPage.category_name_text, "Traffic", 'contain', 3000))
         .then(() => client.switchWindow(0));
     });
     test('should click on "Discover" button of the "SEO Expert" module', () => client.waitForExistAndClick(ModulesCatalogPage.discover_button));

@@ -3,6 +3,8 @@ const {PagesForm} = require('../../../selectors/BO/pages_form.js');
 const {Menu} = require('../../../selectors/BO/menu.js');
 const {OnBoarding} = require('../../../selectors/BO/onboarding');
 const common = require('../../common_scenarios/shop_parameters');
+const {AddProductPage} = require('../../../selectors/BO/add_product_page');
+
 let promise = Promise.resolve();
 
 scenario('Open all menu links in the Back Office', () => {
@@ -26,7 +28,7 @@ scenario('Open all menu links in the Back Office', () => {
       common.clickOnMenuLinksAndCheckElement(client, Menu.Sell.Orders.orders_menu, Menu.Sell.Orders.delivery_slips_submenu, PagesForm.Orders.delivery_form, "Delivery slips");
       common.clickOnMenuLinksAndCheckElement(client, Menu.Sell.Orders.orders_menu, Menu.Sell.Orders.shopping_carts_submenu, PagesForm.Orders.shopping_cart_form, "Shopping cart");
     }, 'common_client');
-   scenario('Check all the menu links of "Catalog" in the Back Office', client => {
+    scenario('Check all the menu links of "Catalog" in the Back Office', client => {
       common.clickOnMenuLinksAndCheckElement(client, Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.products_submenu, PagesForm.Catalog.product_form, "Catalog", "Products");
       common.clickOnMenuLinksAndCheckElement(client, Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.category_submenu, PagesForm.Catalog.category_form, "Category");
       common.clickOnMenuLinksAndCheckElement(client, Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.monitoring_submenu, PagesForm.Catalog.empty_category_form, "Monitoring");
@@ -91,6 +93,15 @@ scenario('Open all menu links in the Back Office', () => {
   }, 'common_client');
   scenario('Check all the menu links of "CONFIGURE"', () => {
     scenario('Check all the menu links of "Shop Parameters" in the Back Office', client => {
+      test('should check then close the "Symfony" toolbar', () => {
+        return promise
+          .then(() => {
+            if (global.ps_mode_dev) {
+              client.waitForExistAndClick(AddProductPage.symfony_toolbar, 2000);
+            }
+          })
+          .then(() => client.pause(1000));
+      });
       common.clickOnMenuLinksAndCheckElement(client, Menu.Configure.ShopParameters.shop_parameters_menu, Menu.Configure.ShopParameters.general_submenu, PagesForm.ShopParameters.general_form, "Shop Parameters", "General");
       common.clickOnMenuLinksAndCheckElement(client, Menu.Configure.ShopParameters.shop_parameters_menu, Menu.Configure.ShopParameters.general_submenu, PagesForm.ShopParameters.maintenance_tab_form, "Shop Parameters", "Maintenance", 0, Menu.Configure.ShopParameters.maintenance_tab);
       common.clickOnMenuLinksAndCheckElement(client, Menu.Configure.ShopParameters.shop_parameters_menu, Menu.Configure.ShopParameters.order_settings_submenu, PagesForm.ShopParameters.order_settings_form, "Order settings");
@@ -109,6 +120,7 @@ scenario('Open all menu links in the Back Office', () => {
       common.clickOnMenuLinksAndCheckElement(client, Menu.Configure.ShopParameters.shop_parameters_menu, Menu.Configure.ShopParameters.merchant_expertise_submenu, PagesForm.ShopParameters.gamification_box, "Merchant Expertise", "Gamification");
     }, 'common_client');
     scenario('Check all the menu links of "Advanced parameters" in the Back Office', client => {
+      test('should click on "Shop Parameters" menu', () => client.waitForExistAndClick(Menu.Configure.ShopParameters.shop_parameters_menu));
       common.clickOnMenuLinksAndCheckElement(client, Menu.Configure.AdvancedParameters.advanced_parameters_menu, Menu.Configure.AdvancedParameters.information_submenu, PagesForm.AdvancedParameters.check_configuration_box, "Informations");
       common.clickOnMenuLinksAndCheckElement(client, Menu.Configure.AdvancedParameters.advanced_parameters_menu, Menu.Configure.AdvancedParameters.performance_submenu, PagesForm.AdvancedParameters.debug_mode_button, "Performance");
       common.clickOnMenuLinksAndCheckElement(client, Menu.Configure.AdvancedParameters.advanced_parameters_menu, Menu.Configure.AdvancedParameters.administration_submenu, PagesForm.AdvancedParameters.administration_form, "Administration");

@@ -14,14 +14,13 @@ class CreateCombinations extends Product {
       .pause(3000)
   }
 
-  getCombinationData(number) {
+  getCombinationData(number, pause = 2000) {
     return this.client
-      .pause(2000)
-      .waitForExist(AddProductPage.combination_panel.replace('%NUMBER', number), 90000)
+      .pause(pause)
+      .waitForVisible(AddProductPage.combination_panel.replace('%NUMBER', number), 90000)
       .then(() => this.client.getAttribute(AddProductPage.combination_panel.replace('%NUMBER', number), 'data'))
       .then((text) => global.combinationId = text);
   }
-
   goToEditCombination() {
     return this.client
       .waitForExistAndClick(AddProductPage.combination_edit.replace('%NUMBER', global.combinationId))

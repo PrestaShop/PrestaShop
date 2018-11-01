@@ -105,9 +105,9 @@ module.exports = {
           .then(() => client.isVisible(Customer.customer_filter_by_email_input))
           .then(() => client.search(Customer.customer_filter_by_email_input, date_time + customerEmail));
       });
-      test('should select the searched client', () => client.waitForExistAndClick(Customer.select_customer));
-      test('should click on the "Bulk actions" button', () => client.waitForExistAndClick(Customer.bulk_actions_button));
-      test('should click on the "Delete selected" button', () => client.waitForExistAndClick(Customer.bulk_actions_delete_button));
+      test('should select the searched client', () => client.waitForExistAndClick(Customer.select_customer, 2000));
+      test('should click on the "Bulk actions" button', () => client.waitForExistAndClick(Customer.bulk_actions_button, 2000));
+      test('should click on the "Delete selected" button', () => client.waitForExistAndClick(Customer.bulk_actions_delete_button, 2000));
       test('should accept the currently displayed alert dialog', () => client.alertAccept());
       test('should choose the option that allows customers to register again with the same email address', () => client.waitForExistAndClick(Customer.delete_first_option));
       test('should click on "Delete" button', () => client.waitForExistAndClick(Customer.delete_confirmation_button));

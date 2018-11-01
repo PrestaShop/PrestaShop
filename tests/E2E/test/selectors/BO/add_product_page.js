@@ -159,6 +159,7 @@ module.exports = {
     options_file_add_button: '//*[@id="form_step6_attachment_product_add"]',
     options_file_checkbox: '//*[@id="form_step6_attachments_0"]',
     catalog_product_table: '#product_catalog_list table.product',
+    preview_link: "//a",
     get catalog_product_name() {
       return this.catalog_product_table + ' > tbody tr:first-child > td:nth-child(4) > a';
     },
