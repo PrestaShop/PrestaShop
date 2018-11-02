@@ -527,8 +527,8 @@ File: classes/stock/SupplyOrderDetail.php:339</note>
 File: classes/form/CustomerForm.php:178</note>
       </trans-unit>
       <trans-unit id="b99c284c2a24cf024e5811c89706bf79">
-        <source>The email "%mail%" is already used, please choose another one or sign in</source>
-        <target>The email "%mail%" is already used, please choose another one or sign in</target>
+        <source>The email is already used, please choose another one or sign in</source>
+        <target>The email is already used, please choose another one or sign in</target>
         <note>Context:
 File: classes/form/CustomerForm.php:112</note>
       </trans-unit>

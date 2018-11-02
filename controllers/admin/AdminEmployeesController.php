@@ -81,14 +81,36 @@ class AdminEmployeesControllerCore extends AdminController
         }
 
         $this->fields_list = array(
-            'id_employee' => array('title' => $this->trans('ID', array(), 'Admin.Global'), 'align' => 'center', 'class' => 'fixed-width-xs'),
-            'firstname' => array('title' => $this->trans('First name', array(), 'Admin.Global')),
-            'lastname' => array('title' => $this->trans('Last name', array(), 'Admin.Global')),
-            'email' => array('title' => $this->trans('Email address', array(), 'Admin.Global')),
-            'profile' => array('title' => $this->trans('Profile', array(), 'Admin.Advparameters.Feature'), 'type' => 'select', 'list' => $this->profiles_array,
-                'filter_key' => 'pl!name', 'class' => 'fixed-width-lg', ),
-            'active' => array('title' => $this->trans('Active', array(), 'Admin.Global'), 'align' => 'center', 'active' => 'status',
-                'type' => 'bool', 'class' => 'fixed-width-sm', ),
+                'id_employee' => array('title' => $this->trans('ID', array(), 'Admin.Global'),
+                'align' => 'center',
+                'class' => 'fixed-width-xs',
+            ),
+            'firstname' => array(
+                'title' => $this->trans('First name', array(), 'Admin.Global'),
+                'maxlength' => 30,
+            ),
+            'lastname' => array(
+                'title' => $this->trans('Last name', array(), 'Admin.Global'),
+                'maxlength' => 30,
+            ),
+            'email' => array(
+                'title' => $this->trans('Email address', array(), 'Admin.Global'),
+                'maxlength' => 50,
+            ),
+            'profile' => array(
+                'title' => $this->trans('Profile', array(), 'Admin.Advparameters.Feature'),
+                'type' => 'select',
+                'list' => $this->profiles_array,
+                'filter_key' => 'pl!name',
+                'class' => 'fixed-width-lg',
+            ),
+            'active' => array(
+                'title' => $this->trans('Active', array(), 'Admin.Global'),
+                'align' => 'center',
+                'active' => 'status',
+                'type' => 'bool',
+                'class' => 'fixed-width-sm',
+            ),
         );
 
         $this->fields_options = array(

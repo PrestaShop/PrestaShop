@@ -67,13 +67,38 @@ class AdminAddressesControllerCore extends AdminController
         }
 
         $this->fields_list = array(
-            'id_address' => array('title' => $this->trans('ID', array(), 'Admin.Global'), 'align' => 'center', 'class' => 'fixed-width-xs'),
-            'firstname' => array('title' => $this->trans('First Name', array(), 'Admin.Global'), 'filter_key' => 'a!firstname'),
-            'lastname' => array('title' => $this->trans('Last Name', array(), 'Admin.Global'), 'filter_key' => 'a!lastname'),
-            'address1' => array('title' => $this->trans('Address', array(), 'Admin.Global')),
-            'postcode' => array('title' => $this->trans('Zip/postal code', array(), 'Admin.Global'), 'align' => 'right'),
-            'city' => array('title' => $this->trans('City', array(), 'Admin.Global')),
-            'country' => array('title' => $this->trans('Country', array(), 'Admin.Global'), 'type' => 'select', 'list' => $this->countries_array, 'filter_key' => 'cl!id_country'), );
+            'id_address' => array(
+                'title' => $this->trans('ID', array(), 'Admin.Global'),
+                'align' => 'center',
+                'class' => 'fixed-width-xs',
+            ),
+            'firstname' => array(
+                'title' => $this->trans('First Name', array(), 'Admin.Global'),
+                'filter_key' => 'a!firstname',
+                'maxlength' => 30,
+            ),
+            'lastname' => array(
+                'title' => $this->trans('Last Name', array(), 'Admin.Global'),
+                'filter_key' => 'a!lastname',
+                'maxlength' => 30,
+            ),
+            'address1' => array(
+                'title' => $this->trans('Address', array(), 'Admin.Global'),
+            ),
+            'postcode' => array(
+                'title' => $this->trans('Zip/postal code', array(), 'Admin.Global'),
+                'align' => 'right',
+            ),
+            'city' => array(
+                'title' => $this->trans('City', array(), 'Admin.Global'),
+            ),
+            'country' => array(
+                'title' => $this->trans('Country', array(), 'Admin.Global'),
+                'type' => 'select',
+                'list' => $this->countries_array,
+                'filter_key' => 'cl!id_country',
+            ),
+        );
 
         $this->_select = 'cl.`name` as country';
         $this->_join = '
