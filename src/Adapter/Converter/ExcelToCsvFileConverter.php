@@ -81,7 +81,7 @@ final class ExcelToCsvFileConverter implements FileConverterInterface
         $destinationFilePath = $this->excelDirectory . $destinationFilename;
 
         if (!$this->filesystem->exists($destinationFilePath)) {
-            $excelReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReaderForFile($sourceFile->getFilename());
+            $excelReader = IOFactory::createReaderForFile($sourceFile->getFilename());
             $excelReader->setReadDataOnly(true);
             $excelFile = $excelReader->load($sourceFile->getFilename() . $destinationFilename);
             $csvWriter = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($excelFile, 'Csv');
