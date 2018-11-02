@@ -720,7 +720,7 @@ class LinkCore
         $legacyUrlConverter = null;
         if (!is_null($sfContainer)) {
             $sfRouter = $sfContainer->get('router');
-            $legacyUrlConverter = $sfContainer->get('prestashop.bundle.routing.legacy_url_converter');
+            $legacyUrlConverter = $sfContainer->get('prestashop.bundle.routing.converter.legacy_url_converter');
         }
 
         if (!empty($sfRouteParams['route']) && null !== $sfRouter) {

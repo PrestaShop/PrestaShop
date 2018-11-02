@@ -95,12 +95,15 @@ class AdminCustomersControllerCore extends AdminController
             ),
             'firstname' => array(
                 'title' => $this->trans('First name', array(), 'Admin.Global'),
+                'maxlength' => 30,
             ),
             'lastname' => array(
                 'title' => $this->trans('Last name', array(), 'Admin.Global'),
+                'maxlength' => 30,
             ),
             'email' => array(
                 'title' => $this->trans('Email address', array(), 'Admin.Global'),
+                'maxlength' => 50,
             ),
         );
 

@@ -34,8 +34,8 @@ scenario('Check product page buttons', () => {
         .then(() => client.waitForExistAndClick(AddProductPage.preview_buttons));
     });
     test('should switch to the Front Office', () => client.switchWindow(1));
-    test('should click on the "Preview" link', () => client.waitForExistAndClick(AddProductPage.preview_link));
-    test('should check that the product name is equal to "TEST PRODUCT' + date_time + '"', () => client.checkTextValue(productPage.product_name, firstProductData.name, "contain"));
+    common_scenarios.clickOnPreviewLink(client, AddProductPage.preview_link, productPage.product_name);
+    test('should check that the product name is equal to "TEST PRODUCT' + date_time + '"', () => client.checkTextValue(productPage.product_name, firstProductData.name, "contain", 1000));
     test('should go to the Back Office', () => client.switchWindow(0));
   }, 'product/product');
 

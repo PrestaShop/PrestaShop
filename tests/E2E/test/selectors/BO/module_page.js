@@ -93,6 +93,6 @@ module.exports = {
       save_button: '//*[@id="module_form_submit_btn"]'
     },
     see_more_link: '//*[@id="main-div"]//button[contains(@class,"see-more")]',
-    configure_link: '(//*[@id="main-div"]//a[contains(@href,"/action/configure")]) | (//*[@id="main-div"]//a[contains(@href,"/action/configure/%moduleTechName")])',
+    configure_link: '(//*[@id="main-div"]//div[@data-tech-name="%moduleTechName"]//a[contains(@href,"/action/configure")])',
   }
 };

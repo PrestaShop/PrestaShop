@@ -18,3 +18,7 @@ web_profiler:
 
 swiftmailer:
     disable_delivery: true
+
+services:
+    prestashop.bundle.routing.converter.cache:
+        class: Symfony\Component\Cache\Adapter\ArrayAdapter

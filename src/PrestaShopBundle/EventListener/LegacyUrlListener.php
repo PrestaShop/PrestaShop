@@ -27,7 +27,7 @@
 namespace PrestaShopBundle\EventListener;
 
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
-use PrestaShopBundle\Routing\LegacyUrlConverter;
+use PrestaShopBundle\Routing\Converter\LegacyUrlConverter;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 

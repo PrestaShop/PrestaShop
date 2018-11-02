@@ -250,11 +250,11 @@ module.exports = {
           .then(() => expect(global.productsNumber).to.be.at.most(itemPerPage));
       });
       if (paginateBetweenPages) {
-          if (global.ps_mode_dev) {
-            test('should close the symfony toolbar if exists', () =>
-                client.waitForExistAndClick(AddProductPage.symfony_toolbar, 2000)
-            );
-          }
+        if (global.ps_mode_dev) {
+          test('should close the symfony toolbar if exists', () =>
+            client.waitForExistAndClick(AddProductPage.symfony_toolbar, 2000)
+          );
+        }
         test('should click on "' + nextOrPrevious + '" button', () => {
           return promise
             .then(() => client.isVisible(selectorButton))
@@ -507,5 +507,18 @@ module.exports = {
       test('should go to "Catalog" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.products_submenu));
       test('should click on "Reset" button', () => client.waitForExistAndClick(AddProductPage.catalog_reset_filter));
     }, 'product/check_product');
+  },
+  clickOnPreviewLink(client, selector, productSelector) {
+    test('should click on the "Preview" link', () => {
+      return promise
+        .then(() => client.isVisible(productSelector))
+        .then(() => {
+          if (global.ps_mode_dev && !isVisible) {
+            client.waitForExistAndClick(selector)
+          } else {
+            client.pause(0);
+          }
+        });
+    });
   }
 };

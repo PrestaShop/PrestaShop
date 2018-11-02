@@ -92,13 +92,13 @@ module.exports = {
       });
       test('should click on "Delete" button', () => {
         return promise
-          .then(() => client.waitForExistAndClick(Customer.dropdown_toggle))
+          .then(() => client.scrollWaitForExistAndClick(Customer.dropdown_toggle, 50, 2000))
           .then(() => client.waitForExistAndClick(Customer.delete_button, 1000));
       });
       test('should accept the currently displayed alert dialog', () => client.alertAccept());
       test('should choose the option that allows customers to register again with the same email address', () => client.waitForExistAndClick(Customer.delete_first_option));
       test('should click on "Delete" button', () => client.waitForExistAndClick(Customer.delete_confirmation_button));
-      test('should verify the appearance of the green validation', () => client.checkTextValue(BO.success_panel, '×\nSuccessful deletion.'));
+      test('should verify the appearance of the green validation', () => client.checkTextValue(BO.success_panel, '×\nSuccessful deletion.', 'equal', 2000));
     }, 'customer');
   },
   deleteCustomerWithBulkActions: function (customerEmail) {
