@@ -23,6 +23,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+use PhpOffice\PhpSpreadsheet\IOFactory;
+
 @ini_set('max_execution_time', 0);
 /* No max line limit since the lines can be more than 4096. Performance impact is not significant. */
 define('MAX_LINE_SIZE', 0);
@@ -4280,11 +4282,11 @@ class AdminImportControllerCore extends AdminController
             }
 
             if (!is_file($dest_file)) {
-                $reader_excel = \PhpOffice\PhpSpreadsheet\IOFactory::createReaderForFile($csv_folder . $filename);
+                $reader_excel = IOFactory::createReaderForFile($csv_folder . $filename);
                 $reader_excel->setReadDataOnly(true);
                 $excel_file = $reader_excel->load($csv_folder . $filename);
 
-                $csv_writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($excel_file, 'Csv');
+                $csv_writer = IOFactory::createWriter($excel_file, 'Csv');
 
                 $csv_writer->setSheetIndex(0);
                 $csv_writer->setDelimiter(';');
