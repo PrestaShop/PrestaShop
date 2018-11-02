@@ -4280,11 +4280,11 @@ class AdminImportControllerCore extends AdminController
             }
 
             if (!is_file($dest_file)) {
-                $reader_excel = PHPExcel_IOFactory::createReaderForFile($csv_folder . $filename);
+                $reader_excel = \PhpOffice\PhpSpreadsheet\IOFactory::createReaderForFile($csv_folder . $filename);
                 $reader_excel->setReadDataOnly(true);
                 $excel_file = $reader_excel->load($csv_folder . $filename);
 
-                $csv_writer = PHPExcel_IOFactory::createWriter($excel_file, 'CSV');
+                $csv_writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($excel_file, 'CSV');
 
                 $csv_writer->setSheetIndex(0);
                 $csv_writer->setDelimiter(';');
