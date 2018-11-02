@@ -24,46 +24,13 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\EventListener;
+namespace PrestaShopBundle\Routing\Converter\Exception;
 
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
-use PrestaShopBundle\Routing\Converter\LegacyUrlConverter;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 
 /**
- * Converts any legacy url into a migrated Symfony url (if it exists) and redirect to it.
+ * Class RoutingException.
  */
-class LegacyUrlListener
+class RoutingException extends CoreException
 {
-    /**
-     * @var LegacyUrlConverter
-     */
-    private $converter;
-
-    /**
-     * @param LegacyUrlConverter $converter
-     */
-    public function __construct(LegacyUrlConverter $converter)
-    {
-        $this->converter = $converter;
-    }
-
-    /**
-     * @param GetResponseEvent $event
-     */
-    public function onKernelRequest(GetResponseEvent $event)
-    {
-        if (!$event->isMasterRequest()) {
-            return;
-        }
-
-        try {
-            $convertedUrl = $this->converter->convertByRequest($event->getRequest());
-        } catch (CoreException $e) {
-            return;
-        }
-
-        $event->setResponse(new RedirectResponse($convertedUrl));
-    }
 }

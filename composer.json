@@ -166,6 +166,10 @@
             "@composer create-test-db",
             "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests/phpunit-admin.xml"
         ],
+        "phpunit-routing": [
+            "@composer create-test-db",
+            "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests/phpunit-routing.xml"
+        ],
         "phpunit-sf": [
             "@composer create-test-db",
             "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests/sf-tests.xml"

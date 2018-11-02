@@ -24,12 +24,13 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\PrestaShopBundle\Routing;
+namespace Tests\PrestaShopBundle\Routing\Converter;
 
 use PHPUnit\Framework\TestCase;
-use PrestaShopBundle\Routing\Exception\ArgumentException;
-use PrestaShopBundle\Routing\Exception\RouteNotFoundException;
-use PrestaShopBundle\Routing\LegacyUrlConverter;
+use PrestaShopBundle\Routing\Converter\Exception\ArgumentException;
+use PrestaShopBundle\Routing\Converter\Exception\RouteNotFoundException;
+use PrestaShopBundle\Routing\Converter\RouterProvider;
+use PrestaShopBundle\Routing\Converter\LegacyUrlConverter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\Route;
@@ -43,7 +44,7 @@ class LegacyUrlConverterTest extends TestCase
     public function testBasic()
     {
         $router = $this->buildRouterMock('admin_products_index', '/products', 'AdminProducts');
-        $converter = new LegacyUrlConverter($router);
+        $converter = new LegacyUrlConverter($router, new RouterProvider($router));
         $url = $converter->convertByParameters([
             'controller' => 'AdminProducts'
         ]);
@@ -56,7 +57,7 @@ class LegacyUrlConverterTest extends TestCase
     public function testIndexAlias()
     {
         $router = $this->buildRouterMock('admin_products_index', '/products', 'AdminProducts');
-        $converter = new LegacyUrlConverter($router);
+        $converter = new LegacyUrlConverter($router, new RouterProvider($router));
         $url = $converter->convertByParameters([
             'controller' => 'AdminProducts',
             'action' => 'index',
@@ -70,7 +71,7 @@ class LegacyUrlConverterTest extends TestCase
     public function testInsensitiveListAlias()
     {
         $router = $this->buildRouterMock('admin_products_index', '/products', 'AdminProducts');
-        $converter = new LegacyUrlConverter($router);
+        $converter = new LegacyUrlConverter($router, new RouterProvider($router));
         $url = $converter->convertByParameters([
             'controller' => 'AdminProducts',
             'action' => 'LIST',
@@ -84,7 +85,7 @@ class LegacyUrlConverterTest extends TestCase
     public function testAction()
     {
         $router = $this->buildRouterMock('admin_products_create', '/products/create', 'AdminProducts:create');
-        $converter = new LegacyUrlConverter($router);
+        $converter = new LegacyUrlConverter($router, new RouterProvider($router));
         $url = $converter->convertByParameters([
             'controller' => 'AdminProducts',
             'action' => 'create',
@@ -98,7 +99,7 @@ class LegacyUrlConverterTest extends TestCase
     public function testActionWithTrue()
     {
         $router = $this->buildRouterMock('admin_products_create', '/products/create', 'AdminProducts:create');
-        $converter = new LegacyUrlConverter($router);
+        $converter = new LegacyUrlConverter($router, new RouterProvider($router));
         $url = $converter->convertByParameters([
             'controller' => 'AdminProducts',
             'create' => true,
@@ -112,7 +113,7 @@ class LegacyUrlConverterTest extends TestCase
     public function testActionWithEmptyString()
     {
         $router = $this->buildRouterMock('admin_products_create', '/products/create', 'AdminProducts:create');
-        $converter = new LegacyUrlConverter($router);
+        $converter = new LegacyUrlConverter($router, new RouterProvider($router));
         $url = $converter->convertByParameters([
             'controller' => 'AdminProducts',
             'create' => '',
@@ -129,7 +130,7 @@ class LegacyUrlConverterTest extends TestCase
             'AdminModulesManage',
             'AdminModulesSf',
         ]);
-        $converter = new LegacyUrlConverter($router);
+        $converter = new LegacyUrlConverter($router, new RouterProvider($router));
 
         //First controller
         $url = $converter->convertByParameters([
@@ -152,14 +153,12 @@ class LegacyUrlConverterTest extends TestCase
 
     /**
      * If a non existent action is used in the url (meaning one that has not been
-     * migrated yet) it must not return the index
-     * @throws ArgumentException
-     * @throws RouteNotFoundException
+     * migrated yet) it must not return the index route but throw an Exception instead
      */
     public function testNonExistentAction()
     {
         $router = $this->buildRouterMock('admin_products_index', '/products', 'AdminProducts');
-        $converter = new LegacyUrlConverter($router);
+        $converter = new LegacyUrlConverter($router, new RouterProvider($router));
 
         $caughtException = null;
         try {
@@ -207,11 +206,35 @@ class LegacyUrlConverterTest extends TestCase
         $this->assertNotNull($caughtException);
 
         try {
+            $converter->convertByUrl('?controller=AdminProducts&create=');
+        } catch (RouteNotFoundException $e) {
+            $caughtException = $e;
+        }
+        $this->assertNotNull($caughtException);
+
+        try {
             $converter->convertByUrl('?controller=AdminProducts&create');
         } catch (RouteNotFoundException $e) {
             $caughtException = $e;
         }
         $this->assertNotNull($caughtException);
+    }
+
+    /**
+     *  The parameter id_product|product_id must not be considered as a non migrated action
+     *  (as would have been ?controller=AdminProducts&export_products_xml=1)
+     * @throws ArgumentException
+     * @throws RouteNotFoundException
+     */
+    public function testIdEqualToOne()
+    {
+        $router = $this->buildRouterMock('admin_products_index', '/products', 'AdminProducts');
+        $converter = new LegacyUrlConverter($router, new RouterProvider($router));
+        $convertedUrl = $converter->convertByUrl('?controller=AdminProducts&id_product=1');
+        $this->assertEquals('/products', $convertedUrl);
+
+        $convertedUrl = $converter->convertByUrl('?controller=AdminProducts&product_id=1');
+        $this->assertEquals('/products', $convertedUrl);
     }
 
     public function testActionWithArgument()
@@ -224,7 +247,7 @@ class LegacyUrlConverterTest extends TestCase
             ['id' => 2]
         );
 
-        $converter = new LegacyUrlConverter($router);
+        $converter = new LegacyUrlConverter($router, new RouterProvider($router));
         $url = $converter->convertByParameters([
             'controller' => 'AdminProducts',
             'action' => 'edit',
@@ -252,7 +275,7 @@ class LegacyUrlConverterTest extends TestCase
             ['id' => 42]
         );
 
-        $converter = new LegacyUrlConverter($router);
+        $converter = new LegacyUrlConverter($router, new RouterProvider($router));
         $url = $converter->convertByParameters([
             'controller' => 'AdminProducts',
             'action' => 'edit',
@@ -294,7 +317,7 @@ class LegacyUrlConverterTest extends TestCase
             ->willReturn($contextMock)
         ;
 
-        $converter = new LegacyUrlConverter($router);
+        $converter = new LegacyUrlConverter($router, new RouterProvider($router));
         $url = $converter->convertByRequest($request);
         $this->assertEquals('/products/create', $url);
     }
@@ -302,7 +325,7 @@ class LegacyUrlConverterTest extends TestCase
     public function testMissingController()
     {
         $router = $this->buildRouterMock('admin_products_create', '/products/create', 'AdminProducts:create');
-        $converter = new LegacyUrlConverter($router);
+        $converter = new LegacyUrlConverter($router, new RouterProvider($router));
         $this->expectException(ArgumentException::class);
         $this->expectExceptionMessage('Missing required controller argument');
         $converter->convertByParameters([
@@ -310,26 +333,10 @@ class LegacyUrlConverterTest extends TestCase
         ]);
     }
 
-    public function testMissingArgument()
-    {
-        $router = $this->buildRouterMock(
-            'admin_products_edit',
-            '/products/edit/{id}',
-            'AdminProducts:edit'
-        );
-
-        $converter = new LegacyUrlConverter($router);
-        $url = $converter->convertByParameters([
-            'controller' => 'AdminProducts',
-            'action' => 'edit',
-            'id' => '42'
-        ]);
-    }
-
     public function testControllerNotFound()
     {
         $router = $this->buildRouterMock('admin_products_create', '/products/create', 'AdminProducts:create');
-        $converter = new LegacyUrlConverter($router);
+        $converter = new LegacyUrlConverter($router, new RouterProvider($router));
 
         /** @var RouteNotFoundException $caughtException */
         $caughtException = null;
@@ -350,7 +357,7 @@ class LegacyUrlConverterTest extends TestCase
     public function testActionNotFound()
     {
         $router = $this->buildRouterMock('admin_products_create', '/products/create', 'AdminProducts:create');
-        $converter = new LegacyUrlConverter($router);
+        $converter = new LegacyUrlConverter($router, new RouterProvider($router));
 
         /** @var RouteNotFoundException $caughtException */
         $caughtException = null;
@@ -388,7 +395,7 @@ class LegacyUrlConverterTest extends TestCase
                 '_legacy_link' => 'AdminProducts:add',
             ],
         ]);
-        $converter = new LegacyUrlConverter($router);
+        $converter = new LegacyUrlConverter($router, new RouterProvider($router));
 
         //Test index by parameter
         $url = $converter->convertByParameters([
