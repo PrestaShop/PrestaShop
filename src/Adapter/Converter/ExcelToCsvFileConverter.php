@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Converter;
 
-use \PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 use PrestaShop\PrestaShop\Core\File\Converter\FileConverterInterface;
 use SplFileInfo;
 use Symfony\Component\Filesystem\Filesystem;
