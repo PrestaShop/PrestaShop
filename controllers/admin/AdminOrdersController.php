@@ -3041,7 +3041,7 @@ class AdminOrdersControllerCore extends AdminController
     protected function getCarrierList($order)
     {
         $cart = $this->context->cart;
-        $id_customer = $cart->id_customer;
+        $id_customer = (int) $cart->id_customer;
         $groups = Customer::getGroupsStatic($id_customer);
         $address = new Address((int) $cart->id_address_delivery);
         return Carrier::getCarriersForOrder(Address::getZoneById((int) $address->id), $groups, $cart);
