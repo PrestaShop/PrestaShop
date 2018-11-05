@@ -296,10 +296,6 @@ class FrontControllerCore extends Controller
 
         ob_start();
 
-        // Init cookie language
-        // @TODO This method must be moved into switchLanguage
-        Tools::setCookieLanguage($this->context->cookie);
-
         $protocol_link = (Configuration::get('PS_SSL_ENABLED') || Tools::usingSecureMode()) ? 'https://' : 'http://';
         $useSSL = ((isset($this->ssl) && $this->ssl && Configuration::get('PS_SSL_ENABLED')) || Tools::usingSecureMode()) ? true : false;
         $protocol_content = ($useSSL) ? 'https://' : 'http://';
