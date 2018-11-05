@@ -27,10 +27,19 @@ admin_themes_import:
     _legacy_controller: AdminThemes
 
 admin_themes_enable:
-  path: /enable/{themeName}
+  path: /{themeName}/enable/
   methods: [POST]
   defaults:
     _controller: PrestaShopBundle:Admin\Improve\Design\Theme:enable
+    _legacy_controller: AdminThemes
+  requirements:
+    themeName: "^[a-zA-Z0-9_.-]+$"
+
+admin_themes_delete:
+  path: /{themeName}/delete/
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin\Improve\Design\Theme:delete
     _legacy_controller: AdminThemes
   requirements:
     themeName: "^[a-zA-Z0-9_.-]+$"

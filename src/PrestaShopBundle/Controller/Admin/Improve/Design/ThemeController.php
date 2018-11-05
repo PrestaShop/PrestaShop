@@ -31,8 +31,10 @@ use PrestaShop\PrestaShop\Core\Domain\Meta\Query\GetPagesForLayoutCustomization;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Command\UploadLogosCommand;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\NotSupportedFaviconExtensionException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException;
+use PrestaShop\PrestaShop\Core\Domain\Theme\Command\DeleteThemeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Theme\Command\EnableThemeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Theme\Command\ImportThemeCommand;
+use PrestaShop\PrestaShop\Core\Domain\Theme\Exception\CannotDeleteThemeException;
 use PrestaShop\PrestaShop\Core\Domain\Theme\Exception\CannotEnableThemeException;
 use PrestaShop\PrestaShop\Core\Domain\Theme\Exception\ImportedThemeAlreadyExistsException;
 use PrestaShop\PrestaShop\Core\Domain\Theme\Exception\InvalidThemeNameException;
@@ -63,12 +65,11 @@ class ThemeController extends AbstractAdminController
     public function indexAction()
     {
         $themeProvider = $this->get('prestashop.adapter.addons.theme.theme_provider');
-        $logoProvider = $this->get('prestashop.core.shop.logo.logo_provider');
 
         return $this->render('@PrestaShop/Admin/Improve/Design/Theme/index.html.twig', [
             'baseShopUrl' => $this->get('prestashop.adapter.shop.url.base_url_provider')->getUrl(),
             'shopLogosForm' => $this->getLogosUploadForm()->createView(),
-            'logoProvider' => $logoProvider,
+            'logoProvider' => $this->get('prestashop.core.shop.logo.logo_provider'),
             'installedTheme' => $themeProvider->getInstalledTheme(),
             'notInstalledThemes' => $themeProvider->getNotInstalledThemes(),
             'isDevModeOn' => $this->get('prestashop.adapter.legacy.configuration')->get('_PS_MODE_DEV_'),
@@ -226,6 +227,26 @@ class ThemeController extends AbstractAdminController
     }
 
     /**
+     * Delete selected theme.
+     *
+     * @param string $themeName
+     *
+     * @return RedirectResponse
+     */
+    public function deleteAction($themeName)
+    {
+        try {
+            $this->getCommandBus()->handle(new DeleteThemeCommand($themeName));
+        } catch (ThemeException $e) {
+            $this->addFlash('error', $this->handleThemeDeleteException($e));
+
+            return $this->redirectToRoute('admin_themes_index');
+        }
+
+        return $this->redirectToRoute('admin_themes_index');
+    }
+
+    /**
      * Show Front Office theme's pages layout customization.
      *
      * @param Request $request
@@ -351,6 +372,29 @@ class ThemeController extends AbstractAdminController
 
         $errorMessages = [
             CannotEnableThemeException::class => $e->getMessage(),
+        ];
+
+        if (isset($errorMessages[$type])) {
+            return $errorMessages[$type];
+        }
+
+        return $this->getFallbackErrorMessage($type, $e->getCode());
+    }
+
+    /**
+     * @param ThemeException $e
+     *
+     * @return string
+     */
+    private function handleThemeDeleteException(ThemeException $e)
+    {
+        $type = get_class($e);
+
+        $errorMessages = [
+            CannotDeleteThemeException::class => $this->trans(
+                'Failed to delete theme. Make sure you have permissions and theme is not used.',
+                'Admin.Design.Notification'
+            ),
         ];
 
         if (isset($errorMessages[$type])) {
