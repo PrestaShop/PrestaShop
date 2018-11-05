@@ -391,7 +391,7 @@ final class GetCustomerInformationHandler implements GetCustomerInformationHandl
         $customerMessages = [];
         $messages = CustomerThread::getCustomerMessages((int) $customer->id);
 
-        $messageStatues = [
+        $messageStatuses = [
             'open' => $this->translator->trans('Open', [], 'Admin.Orderscustomers.Feature'),
             'closed' => $this->translator->trans('Closed', [], 'Admin.Orderscustomers.Feature'),
             'pending1' => $this->translator->trans('Pending 1', [], 'Admin.Orderscustomers.Feature'),
@@ -399,8 +399,8 @@ final class GetCustomerInformationHandler implements GetCustomerInformationHandl
         ];
 
         foreach ($messages as $message) {
-            $status = isset($messageStatues[$message['status']]) ?
-                $messageStatues[$message['status']] :
+            $status = isset($messageStatuses[$message['status']]) ?
+                $messageStatuses[$message['status']] :
                 $message['status']
             ;
 
