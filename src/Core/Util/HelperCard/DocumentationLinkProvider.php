@@ -26,12 +26,10 @@
 
 namespace PrestaShop\PrestaShop\Core\Util\HelperCard;
 
-use PrestaShop\PrestaShop\Core\HelperDoc\HelperDocLinkProviderInterface;
-
 /**
  * Class HelperCardDocumentationLinkProvider provides documentation links for helper cards.
  */
-final class HelperCardDocumentationLinkProvider implements HelperDocLinkProviderInterface
+final class DocumentationLinkProvider implements DocumentationLinkProviderInterface
 {
     /**
      * @var string
@@ -41,37 +39,39 @@ final class HelperCardDocumentationLinkProvider implements HelperDocLinkProvider
     /**
      * @var array
      */
-    private $availableDocumentationLinks;
-
-    /**
-     * @var string
-     */
-    private $fallbackDocumentationLink;
+    private $documentationLinks;
 
     /**
      * @param string $contextLangIsoCode
-     * @param array $availableDocumentationLinks
-     * @param string $fallbackDocumentationLink
+     * @param array $documentationLinks
      */
     public function __construct(
         $contextLangIsoCode,
-        array $availableDocumentationLinks,
-        $fallbackDocumentationLink
+        array $documentationLinks
     ) {
         $this->contextLangIsoCode = $contextLangIsoCode;
-        $this->availableDocumentationLinks = $availableDocumentationLinks;
-        $this->fallbackDocumentationLink = $fallbackDocumentationLink;
+        $this->documentationLinks = $documentationLinks;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getLink()
+    public function getLink($cardType)
     {
-        if (isset($this->availableDocumentationLinks[$this->contextLangIsoCode])) {
-            return $this->availableDocumentationLinks[$this->contextLangIsoCode];
+        if (isset($this->documentationLinks[$cardType])) {
+            $cardLinks = $this->documentationLinks[$cardType];
+
+            if (isset($cardLinks[$this->contextLangIsoCode])) {
+                return$cardLinks[$this->contextLangIsoCode];
+            }
+
+            if (isset($cardLinks['_fallback'])) {
+                return $cardLinks[$this->contextLangIsoCode];
+            }
         }
 
-        return $this->fallbackDocumentationLink;
+        throw new HelperCardDocumentationDoesNotExistException(
+            sprintf('Documentation for helper card "%s" does not exist', $cardType)
+        );
     }
 }
