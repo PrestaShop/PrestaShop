@@ -30,6 +30,7 @@ use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManager;
 use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Theme\Command\EnableThemeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Theme\CommandHandler\EnableThemeHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Theme\Exception\CannotEnableThemeException;
 
 /**
  * Class EnableThemeHandler
@@ -63,8 +64,9 @@ final class EnableThemeHandler implements EnableThemeHandlerInterface
     {
         if (!$this->themeManager->enable($command->getThemeName())) {
             $errors = $this->themeManager->getErrors($command->getThemeName());
+            $error = is_array($errors) ? reset($errors) : '';
 
-            //@todo: throw exception when enable fails
+            throw new CannotEnableThemeException(reset($error));
         }
 
         $this->smartyCacheClearer->clear();
