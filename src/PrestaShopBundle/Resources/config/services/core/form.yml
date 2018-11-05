@@ -1,6 +1,11 @@
+<<<<<<< HEAD
 imports:
   - { resource: form/*.yml }
+<<<<<<< HEAD
 
+=======
+=======
+>>>>>>> 29eb65fc34... add form for theme adaptation for rtl language
 services:
     _defaults:
         public: true
@@ -116,6 +121,7 @@ services:
         class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CategoryDeleteModeChoiceProvider'
         arguments:
             - '@translator'
+<<<<<<< HEAD
 
     prestashop.core.form.choice_provider.import_match_configuration:
         class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ImportMatchConfigurationChoiceProvider'
@@ -137,3 +143,5 @@ services:
         class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CustomerDeleteMethodChoiceProvider'
         arguments:
           - '@translator'
+=======
+>>>>>>> 29eb65fc34... add form for theme adaptation for rtl language

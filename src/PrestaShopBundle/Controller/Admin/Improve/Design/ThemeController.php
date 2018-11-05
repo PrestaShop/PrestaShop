@@ -37,11 +37,10 @@ use PrestaShop\PrestaShop\Core\Domain\Theme\Command\ImportThemeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Theme\Exception\CannotDeleteThemeException;
 use PrestaShop\PrestaShop\Core\Domain\Theme\Exception\CannotEnableThemeException;
 use PrestaShop\PrestaShop\Core\Domain\Theme\Exception\ImportedThemeAlreadyExistsException;
-use PrestaShop\PrestaShop\Core\Domain\Theme\Exception\InvalidThemeNameException;
-use PrestaShop\PrestaShop\Core\Domain\Theme\Exception\NotSupportedThemeImportSourceException;
 use PrestaShop\PrestaShop\Core\Domain\Theme\Exception\ThemeException;
 use PrestaShop\PrestaShop\Core\Domain\Theme\ValueObject\ThemeImportSource;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController as AbstractAdminController;
+use PrestaShopBundle\Form\Admin\Improve\Design\Theme\AdaptThemeToRTLLanguagesType;
 use PrestaShopBundle\Form\Admin\Improve\Design\Theme\ImportThemeType;
 use PrestaShopBundle\Form\Admin\Improve\Design\Theme\ShopLogosType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -65,6 +64,7 @@ class ThemeController extends AbstractAdminController
     public function indexAction()
     {
         $themeProvider = $this->get('prestashop.adapter.addons.theme.theme_provider');
+        $installedRtlLanguageChecker = $this->get('prestashop.adapter.language.rtl.installed_language_checker');
 
         return $this->render('@PrestaShop/Admin/Improve/Design/Theme/index.html.twig', [
             'baseShopUrl' => $this->get('prestashop.adapter.shop.url.base_url_provider')->getUrl(),
@@ -74,6 +74,8 @@ class ThemeController extends AbstractAdminController
             'notInstalledThemes' => $themeProvider->getNotInstalledThemes(),
             'isDevModeOn' => $this->get('prestashop.adapter.legacy.configuration')->get('_PS_MODE_DEV_'),
             'isSingleShopContext' => $this->get('prestashop.adapter.shop.context')->isSingleShopContext(),
+            'adaptThemeToRtlLanguagesForm' => $this->getAdaptThemeToRtlLanguageForm()->createView(),
+            'isInstalledRtlLanguage' => $installedRtlLanguageChecker->isInstalledRtlLanguage(),
         ]);
     }
 
@@ -310,6 +312,14 @@ class ThemeController extends AbstractAdminController
     protected function getLogosUploadForm()
     {
         return $this->createForm(ShopLogosType::class);
+    }
+
+    /**
+     * @return FormInterface
+     */
+    protected function getAdaptThemeToRtlLanguageForm()
+    {
+        return $this->createForm(AdaptThemeToRTLLanguagesType::class);
     }
 
     /**
