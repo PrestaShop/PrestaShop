@@ -62,11 +62,11 @@ final class DocumentationLinkProvider implements DocumentationLinkProviderInterf
             $cardLinks = $this->documentationLinks[$cardType];
 
             if (isset($cardLinks[$this->contextLangIsoCode])) {
-                return$cardLinks[$this->contextLangIsoCode];
+                return $cardLinks[$this->contextLangIsoCode];
             }
 
             if (isset($cardLinks['_fallback'])) {
-                return $cardLinks[$this->contextLangIsoCode];
+                return $cardLinks['_fallback'];
             }
         }
 
