@@ -33,6 +33,8 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\NotSupportedFaviconExtensio
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException;
 use PrestaShop\PrestaShop\Core\Domain\Theme\Command\EnableThemeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Theme\Command\ImportThemeCommand;
+use PrestaShop\PrestaShop\Core\Domain\Theme\Exception\ImportedThemeAlreadyExistsException;
+use PrestaShop\PrestaShop\Core\Domain\Theme\Exception\NotSupportedThemeImportSourceException;
 use PrestaShop\PrestaShop\Core\Domain\Theme\Exception\ThemeException;
 use PrestaShop\PrestaShop\Core\Domain\Theme\ValueObject\ThemeImportSource;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController as AbstractAdminController;
@@ -166,6 +168,7 @@ class ThemeController extends AbstractAdminController
 
         if ($importThemeForm->isSubmitted()) {
             $data = $importThemeForm->getData();
+            $importSource = null;
 
             try {
                 if ($data['import_from_computer']) {
@@ -176,11 +179,22 @@ class ThemeController extends AbstractAdminController
                     $importSource = ThemeImportSource::fromFtp($data['import_from_ftp']);
                 }
 
+                if (null === $importSource) {
+                    $this->addFlash(
+                        'warning',
+                        $this->trans('Please select theme\'s import source.', 'Admin.Notifications.Warning')
+                    );
+
+                    return $this->redirectToRoute('admin_themes_import');
+                }
+
                 $this->getCommandBus()->handle(new ImportThemeCommand($importSource));
 
                 return $this->redirectToRoute('admin_themes_index');
             } catch (ThemeException $e) {
-                throw $e; //@todo: handle properly
+                $this->addFlash('error', $this->handleImportThemeException($e));
+
+                return $this->redirectToRoute('admin_themes_import');
             }
         }
 
@@ -290,6 +304,32 @@ class ThemeController extends AbstractAdminController
         ];
 
         if (isset($errorMessages[$type])) {
+            return $errorMessages[$type];
+        }
+
+        return $this->getFallbackErrorMessage($type, $e->getCode());
+    }
+
+    /**
+     * @param ThemeException $e
+     *
+     * @return string
+     */
+    private function handleImportThemeException(ThemeException $e)
+    {
+        $type = get_class($e);
+
+        $errorMessages = [
+            ImportedThemeAlreadyExistsException::class => $this->trans(
+                'There is already a theme %theme_name% in your themes/ folder. Remove it if you want to continue.',
+                'Admin.Design.Notification',
+                [
+                    '%theme_name%' => $e instanceof ImportedThemeAlreadyExistsException ? $e->getThemeName() : '',
+                ]
+            ),
+        ];
+
+        if ($errorMessages[$type]) {
             return $errorMessages[$type];
         }
 
