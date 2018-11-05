@@ -134,14 +134,14 @@ final class GetCategoryForEditingHandler implements GetCategoryForEditingHandler
         $thumb = '';
         $imageTag = '';
         $formattedSmall = ImageType::getFormattedName('small');
-        foreach ($imageTypes as $k => $image_type) {
-            if ($formattedSmall == $image_type['name']) {
-                $thumb = _PS_CAT_IMG_DIR_ . $categoryId->getValue() . '-' . $image_type['name'] . '.jpg';
+        foreach ($imageTypes as $k => $imageType) {
+            if ($formattedSmall == $imageType['name']) {
+                $thumb = _PS_CAT_IMG_DIR_ . $categoryId->getValue() . '-' . $imageType['name'] . '.jpg';
                 if (is_file($thumb)) {
                     $imageTag = ImageManager::thumbnail(
                         $thumb,
                         'category_' . (int) $categoryId->getValue() . '-thumb.jpg',
-                        (int) $image_type['width'],
+                        (int) $imageType['width'],
                         'jpg',
                         true,
                         true
@@ -152,8 +152,15 @@ final class GetCategoryForEditingHandler implements GetCategoryForEditingHandler
 
         if (!is_file($thumb)) {
             $thumb = $image;
-            $imageTag = ImageManager::thumbnail($image, 'category_' . $categoryId->getValue() . '-thumb.jpg', 125, 'jpg', true, true);
-            ImageManager::resize(_PS_TMP_IMG_DIR_ . 'category_' . $categoryId->getValue() . '-thumb.jpg', _PS_TMP_IMG_DIR_ . 'category_' . $categoryId->getValue() . '-thumb.jpg', (int) $image_type['width'], (int) $image_type['height']);
+            $imageName = 'category_' . $categoryId->getValue() . '-thumb.jpg';
+
+            $imageTag = ImageManager::thumbnail($image, $imageName, 125, 'jpg', true, true);
+            ImageManager::resize(
+                _PS_TMP_IMG_DIR_ . $imageName,
+                _PS_TMP_IMG_DIR_ . $imageName,
+                (int) $imageType['width'],
+                (int) $imageType['height']
+            );
         }
 
         $thumbSize = file_exists($thumb) ? filesize($thumb) / 1000 : false;

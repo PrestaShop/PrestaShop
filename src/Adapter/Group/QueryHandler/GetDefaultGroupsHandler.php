@@ -53,7 +53,7 @@ final class GetDefaultGroupsHandler implements GetDefaultGroupsHandlerInterface
 
     /**
      * @param ConfigurationInterface $configuration
-     * @param $contextLangId
+     * @param int $contextLangId
      */
     public function __construct(ConfigurationInterface $configuration, $contextLangId)
     {
