@@ -33,7 +33,9 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\NotSupportedFaviconExtensio
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException;
 use PrestaShop\PrestaShop\Core\Domain\Theme\Command\EnableThemeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Theme\Command\ImportThemeCommand;
+use PrestaShop\PrestaShop\Core\Domain\Theme\Exception\CannotEnableThemeException;
 use PrestaShop\PrestaShop\Core\Domain\Theme\Exception\ImportedThemeAlreadyExistsException;
+use PrestaShop\PrestaShop\Core\Domain\Theme\Exception\InvalidThemeNameException;
 use PrestaShop\PrestaShop\Core\Domain\Theme\Exception\NotSupportedThemeImportSourceException;
 use PrestaShop\PrestaShop\Core\Domain\Theme\Exception\ThemeException;
 use PrestaShop\PrestaShop\Core\Domain\Theme\ValueObject\ThemeImportSource;
@@ -204,7 +206,7 @@ class ThemeController extends AbstractAdminController
     }
 
     /**
-     * Enable theme.
+     * Enable selected theme.
      *
      * @param string $themeName
      *
@@ -215,7 +217,9 @@ class ThemeController extends AbstractAdminController
         try {
             $this->getCommandBus()->handle(new EnableThemeCommand($themeName));
         } catch (ThemeException $e) {
+            $this->addFlash('error', $this->handleThemeEnableException($e));
 
+            return $this->redirectToRoute('admin_themes_index');
         }
 
         return $this->redirectToRoute('admin_themes_index');
@@ -330,6 +334,26 @@ class ThemeController extends AbstractAdminController
         ];
 
         if ($errorMessages[$type]) {
+            return $errorMessages[$type];
+        }
+
+        return $this->getFallbackErrorMessage($type, $e->getCode());
+    }
+
+    /**
+     * @param ThemeException $e
+     *
+     * @return string
+     */
+    private function handleThemeEnableException(ThemeException $e)
+    {
+        $type = get_class($e);
+
+        $errorMessages = [
+            CannotEnableThemeException::class => $e->getMessage(),
+        ];
+
+        if (isset($errorMessages[$type])) {
             return $errorMessages[$type];
         }
 

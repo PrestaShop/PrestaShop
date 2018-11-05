@@ -24,47 +24,11 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Theme\Command;
-
-use PrestaShop\PrestaShop\Core\Domain\Theme\Exception\InvalidThemeNameException;
+namespace PrestaShop\PrestaShop\Core\Domain\Theme\Exception;
 
 /**
- * Class EnableThemeCommand enables given Front Office theme for context's shop.
+ * Class CannotEnableThemeException
  */
-class EnableThemeCommand
+class CannotEnableThemeException extends ThemeException
 {
-    /**
-     * @var string
-     */
-    private $themeName;
-
-    /**
-     * @param string $themeName
-     */
-    public function __construct($themeName)
-    {
-        $this->assertThemeNameIsNonEmptyString($themeName);
-
-        $this->themeName = $themeName;
-    }
-
-    /**
-     * @return string
-     */
-    public function getThemeName()
-    {
-        return $this->themeName;
-    }
-
-    /**
-     * @param string $themeName
-     */
-    private function assertThemeNameIsNonEmptyString($themeName)
-    {
-        if (empty($themeName) || !preg_match('/^[a-zA-Z0-9_.-]+$/', $themeName)) {
-            throw new InvalidThemeNameException(
-                sprintf('Invalid theme name %s provided.', var_export($themeName, true))
-            );
-        }
-    }
 }
