@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Theme\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\Theme\Exception\InvalidThemeNameException;
+use PrestaShop\PrestaShop\Core\Domain\Theme\ValueObject\ThemeName;
 
 /**
  * Class EnableThemeCommand enables given Front Office theme for context's shop.
@@ -34,37 +34,23 @@ use PrestaShop\PrestaShop\Core\Domain\Theme\Exception\InvalidThemeNameException;
 class EnableThemeCommand
 {
     /**
-     * @var string
+     * @var ThemeName
      */
     private $themeName;
 
     /**
-     * @param string $themeName
+     * @param ThemeName $themeName
      */
-    public function __construct($themeName)
+    public function __construct(ThemeName $themeName)
     {
-        $this->assertThemeNameIsNonEmptyString($themeName);
-
         $this->themeName = $themeName;
     }
 
     /**
-     * @return string
+     * @return ThemeName
      */
     public function getThemeName()
     {
         return $this->themeName;
-    }
-
-    /**
-     * @param string $themeName
-     */
-    private function assertThemeNameIsNonEmptyString($themeName)
-    {
-        if (empty($themeName) || !preg_match('/^[a-zA-Z0-9_.-]+$/', $themeName)) {
-            throw new InvalidThemeNameException(
-                sprintf('Invalid theme name %s provided.', var_export($themeName, true))
-            );
-        }
     }
 }

@@ -54,9 +54,11 @@ final class DeleteThemeHandler implements DeleteThemeHandlerInterface
      */
     public function handle(DeleteThemeCommand $command)
     {
-        if (!$this->themeManager->uninstall($command->getThemeName())) {
+        $plainThemeName = $command->getThemeName()->getValue();
+
+        if (!$this->themeManager->uninstall($plainThemeName)) {
             throw new CannotDeleteThemeException(
-                sprintf('Theme "%s" is used and thus cannot be deleted.', $command->getThemeName())
+                sprintf('Theme "%s" is used and thus cannot be deleted.', $plainThemeName)
             );
         }
     }
