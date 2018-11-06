@@ -66,7 +66,7 @@ class ThemeController extends AbstractAdminController
      */
     public function indexAction()
     {
-        $themeProvider = $this->get('prestashop.adapter.addons.theme.theme_provider');
+        $themeProvider = $this->get('prestashop.core.addon.theme.theme_provider');
         $installedRtlLanguageChecker = $this->get('prestashop.adapter.language.rtl.installed_language_checker');
 
         return $this->render('@PrestaShop/Admin/Improve/Design/Theme/index.html.twig', [
@@ -138,7 +138,7 @@ class ThemeController extends AbstractAdminController
      */
     public function exportAction()
     {
-        $themeProvider = $this->get('prestashop.adapter.addons.theme.theme_provider');
+        $themeProvider = $this->get('prestashop.core.addon.theme.theme_provider');
         $exporter = $this->get('prestashop.core.addon.theme.exporter');
 
         $path = $exporter->export($themeProvider->getCurrentlyUsedTheme());

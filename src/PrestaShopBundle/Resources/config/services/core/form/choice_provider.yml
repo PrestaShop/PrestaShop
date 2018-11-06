@@ -155,3 +155,8 @@ services:
       class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ThemeChoiceProvider'
       arguments:
         - '@prestashop.adapter.addons.theme.theme_provider'
+
+  prestashop.core.form.choice_provider.customer_delete_method:
+    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CustomerDeleteMethodChoiceProvider'
+    arguments:
+      - '@translator'

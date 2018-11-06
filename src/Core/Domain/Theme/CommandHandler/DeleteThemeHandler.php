@@ -24,11 +24,10 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\Theme\CommandHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Theme\CommandHandler;
 
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManager;
 use PrestaShop\PrestaShop\Core\Domain\Theme\Command\DeleteThemeCommand;
-use PrestaShop\PrestaShop\Core\Domain\Theme\CommandHandler\DeleteThemeHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Theme\Exception\CannotDeleteThemeException;
 
 /**
