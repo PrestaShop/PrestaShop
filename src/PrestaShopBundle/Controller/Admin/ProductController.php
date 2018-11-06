@@ -27,7 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin;
 
 use Exception;
-use PrestaShop\PrestaShop\Adapter\Product\FilterParametersUpdater;
+use PrestaShop\PrestaShop\Adapter\Product\ListParametersUpdater;
 use PrestaShop\PrestaShop\Adapter\Tax\TaxRuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Warehouse\WarehouseDataProvider;
 use PrestaShopBundle\Component\CsvResponse;
@@ -46,6 +46,7 @@ use PrestaShopBundle\Service\DataProvider\StockInterface;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormView;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -127,16 +128,24 @@ class ProductController extends FrameworkBundleAdminController
 
         // Set values from persistence and replace in the request
         $persistedFilterParameters = $productProvider->getPersistedFilterParameters();
-        /** @var FilterParametersUpdater $filterParametersUpdater */
-        $filterParametersUpdater = $this->get('prestashop.adapter.product.filter_parameters_updater');
-        $filters = $filterParametersUpdater->buildFilters(
+        /** @var ListParametersUpdater $listParametersUpdater */
+        $listParametersUpdater = $this->get('prestashop.adapter.product.list_parameters_updater');
+        $listParameters = $listParametersUpdater->buildListParameters(
             $request->query->all(),
             $persistedFilterParameters,
             compact('offset', 'limit', 'orderBy', 'sortOrder')
         );
-        extract($filters);
+        /*
+         * @var int $offset
+         * @var int $limit
+         * @var string $orderBy
+         * @var string $sortOrder
+         */
+        extract($listParameters);
 
-        $persistedFilterParameters = array_replace($persistedFilterParameters, $request->request->all());
+        //The product provider performs the same merge internally, so we do the same so that the displayed filters are
+        //consistent with the request ones
+        $combinedFilterParameters = array_replace($persistedFilterParameters, $request->request->all());
 
         $toolbarButtons = $this->getToolbarButtons();
 
@@ -166,26 +175,31 @@ class ProductController extends FrameworkBundleAdminController
             $paginationParameters = $request->attributes->all();
             $paginationParameters['_route'] = 'admin_product_catalog';
             $categoriesForm = $this->createForm(ProductCategories::class);
-            if (!empty($persistedFilterParameters['filter_category'])) {
+            if (!empty($combinedFilterParameters['filter_category'])) {
                 $categoriesForm->setData(
                     [
                         'categories' => [
-                            'tree' => [0 => $persistedFilterParameters['filter_category']],
+                            'tree' => [0 => $combinedFilterParameters['filter_category']],
                         ],
                     ]
                 );
             }
         }
 
-        $cleanFilterParameters = $filterParametersUpdater->cleanFiltersForPositionOrdering($persistedFilterParameters, $orderBy, $hasCategoryFilter);
+        $cleanFilterParameters = $listParametersUpdater->cleanFiltersForPositionOrdering($combinedFilterParameters, $orderBy, $hasCategoryFilter);
 
         $permissionError = null;
         if ($this->get('session')->getFlashBag()->has('permission_error')) {
             $permissionError = $this->get('session')->getFlashBag()->get('permission_error')[0];
         }
 
-        $activateDragAndDrop = ('position_ordering' === $orderBy)
-            || ('position' === $orderBy && 'asc' === $sortOrder && !$hasColumnFilter);
+        $categoriesFormView = $categoriesForm->createView();
+        $selectedCategory = $this->extractSelectCategory($categoriesFormView);
+
+        //Drag and drop is ONLY activated when EXPLICITLY requested by the user
+        //Meaning a category is selected and the user clicks on REORDER button
+        $activateDragAndDrop = 'position_ordering' === $orderBy && $hasCategoryFilter;
+
         // Template vars injection
         return array_merge(
             $cleanFilterParameters,
@@ -196,6 +210,7 @@ class ProductController extends FrameworkBundleAdminController
                 'sortOrder' => $sortOrder,
                 'has_filter' => $hasCategoryFilter || $hasColumnFilter,
                 'has_category_filter' => $hasCategoryFilter,
+                'selected_column' => $selectedCategory,
                 'has_column_filter' => $hasColumnFilter,
                 'products' => $products,
                 'last_sql' => $lastSql,
@@ -204,7 +219,7 @@ class ProductController extends FrameworkBundleAdminController
                 'activate_drag_and_drop' => $activateDragAndDrop,
                 'pagination_parameters' => $paginationParameters,
                 'layoutHeaderToolbarBtn' => $toolbarButtons,
-                'categories' => $categoriesForm->createView(),
+                'categories' => $categoriesFormView,
                 'pagination_limit_choices' => $productProvider->getPaginationLimitChoices(),
                 'import_link' => $this->generateUrl('admin_import', ['import_type' => 'products']),
                 'sql_manager_add_link' => $this->get('prestashop.adapter.legacy.context')->getAdminLink('AdminRequestSql', true, ['addrequest_sql' => 1]),
@@ -215,6 +230,47 @@ class ProductController extends FrameworkBundleAdminController
                 'layoutTitle' => $this->trans('Products', 'Admin.Global'),
             ]
         );
+    }
+
+    /**
+     * @param FormView $categoriesFormView
+     *
+     * @return array|null
+     */
+    private function extractSelectCategory(FormView $categoriesFormView)
+    {
+        $categories = $categoriesFormView->offsetGet('categories');
+        if (empty($categories->vars['value']['tree'])) {
+            return null;
+        }
+        $categoryId = $categories->vars['value']['tree'][0];
+        $tree = $categories->vars['choices'];
+
+        return $this->searchChild($tree, $categoryId);
+    }
+
+    /**
+     * @param array $children
+     * @param int $childId
+     *
+     * @return array|null
+     */
+    private function searchChild(array $children, $childId)
+    {
+        if (isset($children[$childId])) {
+            return $children[$childId];
+        }
+
+        foreach ($children as $child) {
+            if (!empty($child['children'])) {
+                $searchedChild = $this->searchChild($child['children'], $childId);
+                if ($searchedChild) {
+                    return $searchedChild;
+                }
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -254,14 +310,20 @@ class ProductController extends FrameworkBundleAdminController
         if ($products === null) {
             // get old values from persistence (before the current update)
             $persistedFilterParameters = $productProvider->getPersistedFilterParameters();
-            /** @var FilterParametersUpdater $filterParametersUpdater */
-            $filterParametersUpdater = $this->get('prestashop.adapter.product.filter_parameters_updater');
-            $filters = $filterParametersUpdater->buildFilters(
+            /** @var ListParametersUpdater $listParametersUpdater */
+            $listParametersUpdater = $this->get('prestashop.adapter.product.list_parameters_updater');
+            $listParameters = $listParametersUpdater->buildListParameters(
                 $request->query->all(),
                 $persistedFilterParameters,
                 compact('offset', 'limit', 'orderBy', 'sortOrder')
             );
-            extract($filters);
+            /*
+             * @var int $offset
+             * @var int $limit
+             * @var string $orderBy
+             * @var string $sortOrder
+             */
+            extract($listParameters);
 
             /**
              * 2 hooks are triggered here:
@@ -291,10 +353,13 @@ class ProductController extends FrameworkBundleAdminController
             $product['preview_url'] = $adminProductWrapper->getPreviewUrlFromId($product['id_product']);
         }
 
+        //Drag and drop is ONLY activated when EXPLICITLY requested by the user
+        //Meaning a category is selected and the user clicks on REORDER button
+        $activateDragAndDrop = 'position_ordering' === $orderBy && $hasCategoryFilter;
+
         // Template vars injection
         $vars = array(
-            'activate_drag_and_drop' => ('position_ordering' === $orderBy)
-            || ('position' === $orderBy && 'asc' === $sortOrder && !$hasColumnFilter),
+            'activate_drag_and_drop' => $activateDragAndDrop,
             'products' => $products,
             'product_count' => $totalCount,
             'last_sql_query' => $lastSql,
