@@ -120,7 +120,7 @@
   {% if isInstalledRtlLanguage %}
     <div class="row">
       <div class="col">
-        {{ form_start(adaptThemeToRtlLanguagesForm) }}
+        {{ form_start(adaptThemeToRtlLanguagesForm, {'action': path('admin_themes_adapt_to_rtl_languages')}) }}
         <div class="card">
           <h3 class="card-header">
             <i class="material-icons">language</i>

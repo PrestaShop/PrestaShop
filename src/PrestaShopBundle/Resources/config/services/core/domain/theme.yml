@@ -1,0 +1,13 @@
+services:
+  _defaults:
+    public: true
+
+  # COMMAND HANDLERS
+
+  prestashop.core.domain.theme.command_handler.adapt_theme_to_rtl_languages_handler:
+    class: 'PrestaShop\PrestaShop\Core\Domain\Theme\CommandHandler\AdaptThemeToRTLLanguagesHandler'
+    arguments:
+      - '@prestashop.core.localization.rtl.processor_factory'
+    tags:
+      - name: 'tactician.handler'
+        command: 'PrestaShop\PrestaShop\Core\Domain\Theme\Command\AdaptThemeToRTLLanguagesCommand'
