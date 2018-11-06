@@ -52,14 +52,14 @@
           <div class="row">
             <div class="col-3">
               <a href="{{ baseShopUrl }}" target="_blank">
-                <img src="{{ baseShopUrl }}{{ installedTheme.get('preview') }}" alt="{{ installedTheme.name }}" class="img-thumbnail">
+                <img src="{{ baseShopUrl }}{{ currentlyUsedTheme.get('preview') }}" alt="{{ currentlyUsedTheme.name }}" class="img-thumbnail">
               </a>
             </div>
             <div class="col-9">
               <div class="row">
                 <div class="col">
-                  <p class="h1">{{ installedTheme.name }} <span class="small-text text-muted">{{ 'version'|trans({}, 'Admin.Global') }} {{ installedTheme.get('version') }}</span></p>
-                  <p class="mb-0">{{ 'Designed by %s'|trans({'%s': installedTheme.get('author.name')}, 'Admin.Design.Feature') }}</p>
+                  <p class="h1">{{ currentlyUsedTheme.name }} <span class="small-text text-muted">{{ 'version'|trans({}, 'Admin.Global') }} {{ currentlyUsedTheme.get('version') }}</span></p>
+                  <p class="mb-0">{{ 'Designed by %s'|trans({'%s': currentlyUsedTheme.get('author.name')}, 'Admin.Design.Feature') }}</p>
                 </div>
               </div>
 
@@ -161,7 +161,7 @@
     </div>
   {% endif %}
 
-  {% if notInstalledThemes is not empty %}
+  {% if notUsedThemes is not empty %}
     <div class="row">
       <div class="col">
         <div class="card">
@@ -174,7 +174,7 @@
               </div>
             {% else %}
               <div class="row">
-                {% for theme in notInstalledThemes %}
+                {% for theme in notUsedThemes %}
                   <div class="col-3">
                     <div class="card" style="max-width: 350px; max-height: 250px; overflow-y: hidden;">
                       <h3 class="card-header text-center">

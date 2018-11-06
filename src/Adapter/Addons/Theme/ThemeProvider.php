@@ -52,7 +52,7 @@ final class ThemeProvider implements ThemeProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getInstalledTheme()
+    public function getCurrentlyUsedTheme()
     {
         return \Context::getContext()->shop->theme;
     }
@@ -60,10 +60,10 @@ final class ThemeProvider implements ThemeProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getNotInstalledThemes()
+    public function getNotUsedThemes()
     {
         return $this->themeRepository->getListExcluding([
-            $this->getInstalledTheme()->getName(),
+            $this->getCurrentlyUsedTheme()->getName(),
         ]);
     }
 }

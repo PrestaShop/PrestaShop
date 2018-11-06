@@ -32,16 +32,16 @@ namespace PrestaShop\PrestaShop\Core\Addon\Theme;
 interface ThemeProviderInterface
 {
     /**
-     * Get currently installed theme for context shop.
+     * Get currently used theme for context shop.
      *
      * @return Theme
      */
-    public function getInstalledTheme();
+    public function getCurrentlyUsedTheme();
 
     /**
-     * Get not installed themes for context shop.
+     * Get not used themes for context shop.
      *
      * @return Theme[]
      */
-    public function getNotInstalledThemes();
+    public function getNotUsedThemes();
 }
