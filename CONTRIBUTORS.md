@@ -283,6 +283,7 @@ GitHub contributors:
 - Jerome Nadaud
 - jessylenne
 - jestemradek
+- jolelievre
 - jGissinger
 - Joan
 - Joan Juvanteny
@@ -593,6 +594,7 @@ GitHub contributors:
 - timsit
 - tmackay
 - TMMeilleur
+- tolispy
 - Tomas Liska
 - Tomas Votruba
 - Tomasz Slominski
