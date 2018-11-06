@@ -31,9 +31,11 @@ use PrestaShop\PrestaShop\Core\Domain\Meta\Query\GetPagesForLayoutCustomization;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Command\UploadLogosCommand;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\NotSupportedFaviconExtensionException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException;
+use PrestaShop\PrestaShop\Core\Domain\Theme\Command\AdaptThemeToRTLLanguagesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Theme\Command\DeleteThemeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Theme\Command\EnableThemeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Theme\Command\ImportThemeCommand;
+use PrestaShop\PrestaShop\Core\Domain\Theme\Exception\CannotAdaptThemeToRTLLanguagesException;
 use PrestaShop\PrestaShop\Core\Domain\Theme\Exception\CannotDeleteThemeException;
 use PrestaShop\PrestaShop\Core\Domain\Theme\Exception\CannotEnableThemeException;
 use PrestaShop\PrestaShop\Core\Domain\Theme\Exception\ImportedThemeAlreadyExistsException;
@@ -249,6 +251,42 @@ class ThemeController extends AbstractAdminController
     }
 
     /**
+     * Adapts selected theme to RTL languages.
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function adaptToRTLLanguagesAction(Request $request)
+    {
+        $form = $this->getAdaptThemeToRtlLanguageForm();
+        $form->handleRequest($request);
+
+        if (!$form->isSubmitted()) {
+            return $this->redirectToRoute('admin_themes_index');
+        }
+
+        $data = $form->getData();
+
+        if (!$data['generate_rtl_css']) {
+            return $this->redirectToRoute('admin_themes_index');
+        }
+
+        try {
+            $this->getCommandBus()->handle(new AdaptThemeToRTLLanguagesCommand($data['theme_to_adapt']));
+
+            $this->addFlash(
+                'success',
+                $this->trans('Your RTL stylesheets has been generated successfully', 'Admin.Design.Notification')
+            );
+        } catch (ThemeException $e) {
+            $this->addFlash('error', $this->handleAdaptThemeToRTLLanguagesException($e));
+        }
+
+        return $this->redirectToRoute('admin_themes_index');
+    }
+
+    /**
      * Show Front Office theme's pages layout customization.
      *
      * @param Request $request
@@ -405,6 +443,27 @@ class ThemeController extends AbstractAdminController
                 'Failed to delete theme. Make sure you have permissions and theme is not used.',
                 'Admin.Design.Notification'
             ),
+        ];
+
+        if (isset($errorMessages[$type])) {
+            return $errorMessages[$type];
+        }
+
+        return $this->getFallbackErrorMessage($type, $e->getCode());
+    }
+
+    /**
+     * @param ThemeException $e
+     *
+     * @return string
+     */
+    private function handleAdaptThemeToRTLLanguagesException(ThemeException $e)
+    {
+        $type = get_class($e);
+
+        $errorMessages = [
+            CannotAdaptThemeToRTLLanguagesException::class =>
+                $this->trans('Cannot adapt theme to RTL languages.', 'Admin.Design.Notification'),
         ];
 
         if (isset($errorMessages[$type])) {

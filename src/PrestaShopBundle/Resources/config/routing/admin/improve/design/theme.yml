@@ -44,6 +44,15 @@ admin_themes_delete:
   requirements:
     themeName: "^[a-zA-Z0-9_.-]+$"
 
+admin_themes_adapt_to_rtl_languages:
+  path: /adapt-to-rtl-languages/
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin\Improve\Design\Theme:adaptToRTLLanguages
+    _legacy_controller: AdminThemes
+  requirements:
+    themeName: "^[a-zA-Z0-9_.-]+$"
+
 admin_theme_customize_page_layouts:
   path: /page-layout-customization
   methods: [GET, POST]
