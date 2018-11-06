@@ -334,7 +334,7 @@ class ProductController extends FrameworkBundleAdminController
             $lastSql = $productProvider->getLastCompiledSql();
         }
 
-        $hasColumnFilter = $productProvider->isColumnFiltered();
+        $hasCategoryFilter = $productProvider->isCategoryFiltered();
 
         // Adds controller info (URLs, etc...) to product list
         foreach ($products as &$product) {
