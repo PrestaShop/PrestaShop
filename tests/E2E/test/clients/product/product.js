@@ -135,6 +135,15 @@ class Product extends CommonClient {
       .selectByVisibleText(addProductPage.feature_value_select.replace('%ID', number), value);
   }
 
+  selectFeatureCustomizedValue(addProductPage, name, customizedValue, number) {
+    return this.client
+      .scrollWaitForExistAndClick(addProductPage.feature_select.replace('%NUMBER', number + 1))
+      .waitAndSetValue(addProductPage.select_feature_created, name)
+      .waitForVisibleAndClick(addProductPage.result_feature_select.replace('%ID', number))
+      .waitAndSetValue(addProductPage.customized_value_input.replace('%ID', number), customizedValue)
+
+  }
+
   clickNextOrPrevious(selector) {
     if (global.isVisible) {
       return this.client
@@ -250,7 +259,7 @@ class Product extends CommonClient {
   getProductName(selector, i) {
     return this.client
       .getText(selector).then(function (name) {
-        global.productInfo.push({'name':name, 'status':'false'})
+        global.productInfo.push({'name': name, 'status': 'false'})
       });
   }
 
@@ -268,8 +277,8 @@ class Product extends CommonClient {
   }
 
   checkFeatureValue(predefinedValueSelector, customValueSelector, featureData) {
-    if(global.isVisible) {
-      if(featureData.predefined_value !== '') {
+    if (global.isVisible) {
+      if (featureData.predefined_value !== '') {
         return this.client
           .isSelected(predefinedValueSelector)
           .then((value) => expect(value).to.be.equal(true));
@@ -309,6 +318,18 @@ class Product extends CommonClient {
         global.subCatNumber = count.value;
       })
   }
+
+  checkValuesFeature(selector,value) {
+    return this.client
+      .execute(function (selector) {
+        return document.querySelector(selector).innerText;
+      }, selector)
+      .then((values) => {
+        expect(values.value).to.contains(value)
+      });
+  }
+
+
 }
 
 module.exports = Product;

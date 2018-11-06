@@ -36,6 +36,7 @@ module.exports = {
     select_feature_created: '/html/body//span/span[1]/input',
     feature_select_button: '//*[@id="select2-form_step1_features_%ID_feature-container"]',
     feature_select_button1: '//*[@id="features-content"]/div/div/div[1]/fieldset/span/span[1]/span',
+    customized_value_input: '//*[@id="form_step1_features_%ID_custom_value_1"]',
     feature_btn:'//*[@id="add_feature_button"]',
     result_feature_select: '//*[@id="select2-form_step1_features_%ID_feature-results"]/li',
     summary_textarea: '(//*[@id="form_step1_description_short"]//div[@class="mce-tinymce mce-container mce-panel"])[1]',
@@ -227,7 +228,10 @@ module.exports = {
     product_pack_items: '//*[@id="form_step1_inputPackItems-data"]',
     add_products_to_pack: '//*[@id="js_form_step1_inputPackItems"]/div',
     attribute_group_name: '//*[@id="attributes-list"]//a[text()[contains(.,"%NAME")]]',
-    attribute_value_checkbox: '//*[@id="attribute-group-%ID"]/div/div[%S]//label'
+    attribute_value_checkbox: '//*[@id="attribute-group-%ID"]/div/div[%S]//label',
+    price_tax_included_input: '//*[@id="form_step1_price_ttc_shortcut"]',
+    delete_feature_button: '(//*[@id="features-content"]//a[contains(@class,"delete")])[%ID]',
+    alert_button: '//*[@id="confirmation_modal"]//button[contains(@class,"%B")]',
   },
   ProductList: {
     product_id: '//*[@id="product_catalog_list"]//tr[%ID]/td[2]/label',

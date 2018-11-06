@@ -14,24 +14,24 @@ let productData = {
   reference: 'feat',
   feature: [
     {
-      name: 'Feature',
+      name: 'Feature1',
       value: 'Value 1'
     }, {
-      name: 'Feature',
+      name: 'Feature1',
       value: 'Value 2'
     }, {
-      name: 'Feature',
+      name: 'Feature1',
       value: 'Value 3'
     }
   ]
 };
 
 let featureData = {
-  name: 'Feature',
+  name: 'Feature1',
   values: ['Value 1', 'Value 2', 'Value 3']
 };
 
-scenario('Create "Feature"', () => {
+scenario('Create, edit, delete "Feature"', () => {
   /* Create feature */
   scenario('Login in the Back Office', client => {
     test('should open the browser', () => client.open());

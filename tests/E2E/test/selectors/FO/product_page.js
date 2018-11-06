@@ -47,7 +47,10 @@ module.exports = {
     category_page: '//*[@id="category"]',
     left_column_block: '//*[@id="left-column"]',
     pagination_block: '//*[@id="js-product-list"]/nav',
-    filename_link: '(//*[@id="attachments"]//a)[1]',
-    productLink: '//*[@id="js-product-list"]//a[contains(text(), "%PRODUCTNAME")]'
+    productLink: '//*[@id="js-product-list"]//a[contains(text(), "%PRODUCTNAME")]',
+    product_feature_block: '#product-details > section > dl',
+    value_feature_text: '//*[@id="product-details"]/section//dd/br',
+    product_value_text: '#product-details > section dd:%B-of-type',
+    product_feature_text: '#product-details > section dt:%B-of-type',
   }
 };

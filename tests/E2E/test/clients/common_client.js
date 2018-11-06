@@ -332,7 +332,7 @@ class CommonClient {
    * @returns {*}
    */
   checkFile(folderPath, fileName, pause = 0) {
-    fs.stat(folderPath + fileName, function(err, stats) {
+    fs.stat(folderPath + fileName, function (err, stats) {
       err === null && stats.isFile() ? global.existingFile = true : global.existingFile = false;
     });
 
@@ -592,6 +592,52 @@ class CommonClient {
     }
   }
 
+
+  /**
+   * These functions are used to sort table then check the sorted table
+   * elementsTable, elementsSortedTable are two global variables that must be initialized in the sort table function
+   * "normalize('NFKD').replace(/[\u0300-\u036F]/g, '')" is used to replace special characters example ô to o
+   */
+  getTableField(element_list, i, sorted = false) {
+    return this.client
+      .getText(element_list.replace("%ID", i + 1)).then(function (name) {
+        if (sorted) {
+          elementsSortedTable[i] = name.normalize('NFKD').replace(/[\u0300-\u036F]/g, '').toLowerCase();
+        }
+        else {
+          elementsTable[i] = name.normalize('NFKD').replace(/[\u0300-\u036F]/g, '').toLowerCase();
+        }
+      });
+  }
+
+  /**
+   * This function checks the sort of a table
+   * @param isNumber= true if we sort by a number, isNumber= false if we sort by a string
+   * @param sortWay equal to 'ASC' or 'DESC'
+   */
+  async checkSortTable(isNumber = false, sortWay = 'ASC') {
+    return await this.client
+      .pause(2000)
+      .then(async () => {
+        if (isNumber) {
+          if (sortWay === 'ASC') {
+            await expect(elementsTable.sort(function (a, b) {
+              return a - b;
+            })).to.deep.equal(elementsSortedTable);
+          } else {
+            await expect(elementsTable.sort(function (a, b) {
+              return a - b
+            }).reverse()).to.deep.equal(elementsSortedTable);
+          }
+        } else {
+          if (sortWay === 'ASC') {
+            await expect(elementsTable.sort()).to.deep.equal(elementsSortedTable);
+          } else {
+            await expect(elementsTable.sort().reverse()).to.deep.equal(elementsSortedTable);
+          }
+        }
+      });
+  }
 
 }
 
