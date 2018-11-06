@@ -35,7 +35,7 @@ scenario('Check the click on "Read more" button', () => {
         });
     });
   }, 'common_client');
-  commonModule.clickOnReadMore(ModulePage, "Mailchimp", module_tech_name);
+  commonModule.clickOnReadMore(ModulePage, "Mailchimp", 'mailchimpintegration');
   scenario('Uninstall MBO module if it\'s installed', client => {
     test('should go to "Module manager" page', () => {
       return promise
@@ -66,7 +66,7 @@ scenario('Check the click on "Read more" button', () => {
         });
     });
   }, 'common_client');
-  commonModule.clickOnReadMore(ModulePage, "Mailchimp", module_tech_name);
+  commonModule.clickOnReadMore(ModulePage, "Mailchimp", 'mailchimpintegration');
 
   scenario('Logout from the Back Office', client => {
     test('should logout successfully from the Back Office', () => client.signOutBO());
