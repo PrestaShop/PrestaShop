@@ -215,6 +215,7 @@ GitHub contributors:
 - Jonathan Lelievre
 - Jonathan SAHM
 - Jorge Vargas
+- jolelievre
 - joseantgv
 - jtogrul
 - Julien
