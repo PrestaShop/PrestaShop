@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\Theme\Command\AdaptThemeToRTLLanguagesComm
 use PrestaShop\PrestaShop\Core\Domain\Theme\Command\DeleteThemeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Theme\Command\EnableThemeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Theme\Command\ImportThemeCommand;
+use PrestaShop\PrestaShop\Core\Domain\Theme\Command\ResetThemeLayoutsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Theme\Exception\CannotAdaptThemeToRTLLanguagesException;
 use PrestaShop\PrestaShop\Core\Domain\Theme\Exception\CannotDeleteThemeException;
 use PrestaShop\PrestaShop\Core\Domain\Theme\Exception\CannotEnableThemeException;
@@ -286,6 +287,22 @@ class ThemeController extends AbstractAdminController
         } catch (ThemeException $e) {
             $this->addFlash('error', $this->handleAdaptThemeToRTLLanguagesException($e));
         }
+
+        return $this->redirectToRoute('admin_themes_index');
+    }
+
+    /**
+     * Reset theme's page layouts.
+     *
+     * @param string $themeName
+     *
+     * @return RedirectResponse
+     */
+    public function resetLayoutsAction($themeName)
+    {
+        $this->getCommandBus()->handle(new ResetThemeLayoutsCommand(new ThemeName($themeName)));
+
+        $this->addFlash('success', $this->trans('Your theme has been correctly reset to its default settings. You may want to regenerate your images. See the Improve > Design > Images Settings screen for the \'Regenerate thumbnails\' button.', 'Admin.Design.Notification'));
 
         return $this->redirectToRoute('admin_themes_index');
     }

@@ -59,3 +59,12 @@ admin_theme_customize_page_layouts:
   defaults:
     _controller: PrestaShopBundle:Admin\Improve\Design\Theme:customizePageLayouts
     _legacy_controller: AdminThemes
+
+admin_themes_reset_layouts:
+  path: /{themeName}/reset-layouts
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin\Improve\Design\Theme:resetLayouts
+    _legacy_controller: AdminThemes
+  requirements:
+    themeName: "^[a-zA-Z0-9_.-]+$"

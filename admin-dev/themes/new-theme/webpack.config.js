@@ -123,6 +123,9 @@ const config = {
     employee: [
       './js/pages/employee',
     ],
+    themes: [
+      './js/pages/themes',
+    ]
   },
   output: {
     path: path.resolve(__dirname, 'public'),
