@@ -79,6 +79,7 @@ class ThemeController extends AbstractAdminController
             'isSingleShopContext' => $this->get('prestashop.adapter.shop.context')->isSingleShopContext(),
             'adaptThemeToRtlLanguagesForm' => $this->getAdaptThemeToRtlLanguageForm()->createView(),
             'isInstalledRtlLanguage' => $installedRtlLanguageChecker->isInstalledRtlLanguage(),
+            'shopName' => $this->get('prestashop.adapter.shop.context')->getName(),
         ]);
     }
 
