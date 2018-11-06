@@ -57,13 +57,13 @@ class ModuleManagerBuilder
     /**
      * Singleton of ModuleRepository.
      *
-     * @var \PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository
+     * @var ModuleRepository
      */
     public static $modulesRepository = null;
     /**
      * Singleton of ModuleManager.
      *
-     * @var \PrestaShop\PrestaShop\Core\Addon\Module\ModuleManager
+     * @var ModuleManager
      */
     public static $moduleManager = null;
     public static $adminModuleDataProvider = null;
@@ -91,15 +91,15 @@ class ModuleManagerBuilder
     }
 
     /**
-     * Returns an instance of \PrestaShop\PrestaShop\Core\Addon\Module\ModuleManager.
+     * Returns an instance of ModuleManager.
      *
-     * @return \PrestaShop\PrestaShop\Core\Addon\Module\ModuleManager
+     * @return ModuleManager
      */
     public function build()
     {
-        if (is_null(self::$moduleManager)) {
+        if (null ===  self::$moduleManager) {
             $sfContainer = SymfonyContainer::getInstance();
-            if (!is_null($sfContainer)) {
+            if (null !== $sfContainer) {
                 self::$moduleManager = $sfContainer->get('prestashop.module.manager');
             } else {
                 self::$moduleManager = new ModuleManager(
@@ -118,9 +118,9 @@ class ModuleManagerBuilder
     }
 
     /**
-     * Returns an instance of \PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository.
+     * Returns an instance of ModuleRepository.
      *
-     * @return \PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository
+     * @return ModuleRepository
      */
     public function buildRepository()
     {
