@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Theme\Command;
 use PrestaShop\PrestaShop\Core\Domain\Theme\ValueObject\ThemeImportSource;
 
 /**
- * Class ImportThemeCommand
+ * Class ImportThemeCommand imports theme from given source.
  */
 class ImportThemeCommand
 {

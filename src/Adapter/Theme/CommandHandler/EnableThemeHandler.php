@@ -62,8 +62,10 @@ final class EnableThemeHandler implements EnableThemeHandlerInterface
      */
     public function handle(EnableThemeCommand $command)
     {
-        if (!$this->themeManager->enable($command->getThemeName())) {
-            $errors = $this->themeManager->getErrors($command->getThemeName());
+        $plainThemeName = $command->getThemeName()->getValue();
+
+        if (!$this->themeManager->enable($plainThemeName)) {
+            $errors = $this->themeManager->getErrors($plainThemeName);
             $error = is_array($errors) ? reset($errors) : '';
 
             throw new CannotEnableThemeException(reset($error));

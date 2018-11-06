@@ -26,6 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Theme\Exception;
 
+use PrestaShop\PrestaShop\Core\Domain\Theme\ValueObject\ThemeName;
+
 /**
  * Class ImportedThemeAlreadyExistsException
  */
@@ -34,12 +36,12 @@ class ImportedThemeAlreadyExistsException extends ThemeException
     private $themeName;
 
     /**
-     * @param string $themeName
+     * @param ThemeName $themeName
      * @param string $message
      * @param int $code
      * @param null $previous
      */
-    public function __construct($themeName, $message = '', $code = 0, $previous = null)
+    public function __construct(ThemeName $themeName, $message = '', $code = 0, $previous = null)
     {
         parent::__construct($message, $code, $previous);
 
@@ -47,7 +49,7 @@ class ImportedThemeAlreadyExistsException extends ThemeException
     }
 
     /**
-     * @return string
+     * @return ThemeName
      */
     public function getThemeName()
     {

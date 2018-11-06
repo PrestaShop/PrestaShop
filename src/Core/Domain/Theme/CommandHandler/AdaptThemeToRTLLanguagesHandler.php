@@ -54,16 +54,18 @@ final class AdaptThemeToRTLLanguagesHandler implements AdaptThemeToRTLLanguagesH
      */
     public function handle(AdaptThemeToRTLLanguagesCommand $command)
     {
+        $plainThemeName = $command->getThemeName()->getValue();
+
         try {
             $this->stylesheetProcessorFactory
                 ->create()
-                ->setProcessFOThemes([$command->getThemeName()])
+                ->setProcessFOThemes([$plainThemeName])
                 ->setRegenerate(true)
                 ->process()
             ;
         } catch (GenerationException $e) {
             throw new CannotAdaptThemeToRTLLanguagesException(
-                sprintf('Cannot adapt "%s" theme to RTL languages.', $command->getThemeName()),
+                sprintf('Cannot adapt "%s" theme to RTL languages.', $plainThemeName),
                 0,
                 $e
             );

@@ -41,6 +41,7 @@ use PrestaShop\PrestaShop\Core\Domain\Theme\Exception\CannotEnableThemeException
 use PrestaShop\PrestaShop\Core\Domain\Theme\Exception\ImportedThemeAlreadyExistsException;
 use PrestaShop\PrestaShop\Core\Domain\Theme\Exception\ThemeException;
 use PrestaShop\PrestaShop\Core\Domain\Theme\ValueObject\ThemeImportSource;
+use PrestaShop\PrestaShop\Core\Domain\Theme\ValueObject\ThemeName;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController as AbstractAdminController;
 use PrestaShopBundle\Form\Admin\Improve\Design\Theme\AdaptThemeToRTLLanguagesType;
 use PrestaShopBundle\Form\Admin\Improve\Design\Theme\ImportThemeType;
@@ -220,7 +221,7 @@ class ThemeController extends AbstractAdminController
     public function enableAction($themeName)
     {
         try {
-            $this->getCommandBus()->handle(new EnableThemeCommand($themeName));
+            $this->getCommandBus()->handle(new EnableThemeCommand(new ThemeName($themeName)));
         } catch (ThemeException $e) {
             $this->addFlash('error', $this->handleThemeEnableException($e));
 
@@ -240,7 +241,7 @@ class ThemeController extends AbstractAdminController
     public function deleteAction($themeName)
     {
         try {
-            $this->getCommandBus()->handle(new DeleteThemeCommand($themeName));
+            $this->getCommandBus()->handle(new DeleteThemeCommand(new ThemeName($themeName)));
         } catch (ThemeException $e) {
             $this->addFlash('error', $this->handleThemeDeleteException($e));
 
@@ -273,7 +274,9 @@ class ThemeController extends AbstractAdminController
         }
 
         try {
-            $this->getCommandBus()->handle(new AdaptThemeToRTLLanguagesCommand($data['theme_to_adapt']));
+            $this->getCommandBus()->handle(new AdaptThemeToRTLLanguagesCommand(
+                new ThemeName($data['theme_to_adapt'])
+            ));
 
             $this->addFlash(
                 'success',
@@ -397,7 +400,8 @@ class ThemeController extends AbstractAdminController
                 'There is already a theme %theme_name% in your themes/ folder. Remove it if you want to continue.',
                 'Admin.Design.Notification',
                 [
-                    '%theme_name%' => $e instanceof ImportedThemeAlreadyExistsException ? $e->getThemeName() : '',
+                    '%theme_name%' =>
+                        $e instanceof ImportedThemeAlreadyExistsException ? $e->getThemeName()->getValue() : '',
                 ]
             ),
         ];

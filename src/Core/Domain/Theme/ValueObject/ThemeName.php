@@ -24,33 +24,62 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Theme\Command;
+namespace PrestaShop\PrestaShop\Core\Domain\Theme\ValueObject;
 
-use PrestaShop\PrestaShop\Core\Domain\Theme\ValueObject\ThemeName;
+use PrestaShop\PrestaShop\Core\Domain\Theme\Exception\InvalidThemeNameException;
 
 /**
- * Class AdaptThemeToRTLLanguagesCommand adapts given theme to RTL languages.
+ * Class ThemeName
  */
-class AdaptThemeToRTLLanguagesCommand
+class ThemeName
 {
     /**
-     * @var ThemeName
+     * @var string
      */
     private $themeName;
 
     /**
-     * @param ThemeName $themeName
+     * @param string $themeName
      */
-    public function __construct(ThemeName $themeName)
+    public function __construct($themeName)
     {
+        $this->assertThemeNameIsNotEmptyString($themeName);
+        $this->assertThemeNameMatchesPattern($themeName);
+
         $this->themeName = $themeName;
     }
 
     /**
-     * @return ThemeName
+     * @return string
      */
-    public function getThemeName()
+    public function getValue()
     {
         return $this->themeName;
+    }
+
+    /**
+     * @param string $themeName
+     *
+     * @throws InvalidThemeNameException
+     */
+    private function assertThemeNameIsNotEmptyString($themeName)
+    {
+        if (!is_string($themeName) || empty($themeName)) {
+            throw new InvalidThemeNameException('Theme name cannot be empty.');
+        }
+    }
+
+    /**
+     * @param string $themeName
+     *
+     * @throws InvalidThemeNameException
+     */
+    private function assertThemeNameMatchesPattern($themeName)
+    {
+        if (!preg_match('/^[a-zA-Z0-9_.-]+$/', $themeName)) {
+            throw new InvalidThemeNameException(
+                sprintf('Invalid theme name %s provided.', var_export($themeName, true))
+            );
+        }
     }
 }
