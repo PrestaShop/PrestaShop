@@ -128,6 +128,12 @@
           </h3>
           <div class="card-block row">
             <div class="card-text">
+              <div class="alert alert-info">
+                <p class="alert-text">
+                  {{ 'Be careful! Please check your theme in an RTL language before generating the RTL stylesheet: your theme could be already adapted to RTL.\nOnce you click on "Adapt to RTL", any RTL-specific file that you might have added to your theme might be deleted by the created stylesheet.'|trans({}, 'Admin.Design.Help') }}
+                </p>
+              </div>
+
               <div class="form-group row">
                 <label class="form-control-label">
                   {{ 'Theme to adapt'|trans({}, 'Admin.Design.Feature') }}
@@ -165,6 +171,10 @@
     <div class="row">
       <div class="col">
         <div class="card">
+          <h3 class="card-header">
+            <i class="material-icons">settings</i>
+            {{ 'Select a theme for the "%name%" shop'|trans({'%name%': shopName}, 'Admin.Design.Feature') }}
+          </h3>
           <div class="card-body">
             {% if not isSingleShopContext %}
               <div class="alert alert-info mb-0">
@@ -192,7 +202,7 @@
                     </form>
 
                     <form action="{{ path('admin_themes_delete', {'themeName': theme.name}) }}" method="post" class="d-inline">
-                      <input type="hidden" name="token" value="{{ csrf_token('enable-theme') }}" />
+                      <input type="hidden" name="token" value="{{ csrf_token('delete-theme') }}" />
 
                       <button type="submit" class="btn btn-outline-primary btn-sm">
                         <i class="material-icons">delete</i>
