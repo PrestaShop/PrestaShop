@@ -97,7 +97,7 @@ class ModuleManagerBuilder
      */
     public function build()
     {
-        if (null ===  self::$moduleManager) {
+        if (null === self::$moduleManager) {
             $sfContainer = SymfonyContainer::getInstance();
             if (null !== $sfContainer) {
                 self::$moduleManager = $sfContainer->get('prestashop.module.manager');
