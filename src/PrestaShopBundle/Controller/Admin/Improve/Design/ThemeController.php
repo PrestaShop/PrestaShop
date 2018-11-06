@@ -73,8 +73,8 @@ class ThemeController extends AbstractAdminController
             'baseShopUrl' => $this->get('prestashop.adapter.shop.url.base_url_provider')->getUrl(),
             'shopLogosForm' => $this->getLogosUploadForm()->createView(),
             'logoProvider' => $this->get('prestashop.core.shop.logo.logo_provider'),
-            'installedTheme' => $themeProvider->getInstalledTheme(),
-            'notInstalledThemes' => $themeProvider->getNotInstalledThemes(),
+            'currentlyUsedTheme' => $themeProvider->getCurrentlyUsedTheme(),
+            'notUsedThemes' => $themeProvider->getNotUsedThemes(),
             'isDevModeOn' => $this->get('prestashop.adapter.legacy.configuration')->get('_PS_MODE_DEV_'),
             'isSingleShopContext' => $this->get('prestashop.adapter.shop.context')->isSingleShopContext(),
             'adaptThemeToRtlLanguagesForm' => $this->getAdaptThemeToRtlLanguageForm()->createView(),
@@ -141,7 +141,7 @@ class ThemeController extends AbstractAdminController
         $themeProvider = $this->get('prestashop.adapter.addons.theme.theme_provider');
         $exporter = $this->get('prestashop.core.addon.theme.exporter');
 
-        $path = $exporter->export($themeProvider->getInstalledTheme());
+        $path = $exporter->export($themeProvider->getCurrentlyUsedTheme());
 
         $this->addFlash(
             'success',

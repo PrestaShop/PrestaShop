@@ -52,8 +52,8 @@ final class ThemeChoiceProvider implements FormChoiceProviderInterface
      */
     public function getChoices()
     {
-        $usedTheme = $this->themeProvider->getInstalledTheme();
-        $notUsedThemes = $this->themeProvider->getNotInstalledThemes();
+        $usedTheme = $this->themeProvider->getCurrentlyUsedTheme();
+        $notUsedThemes = $this->themeProvider->getNotUsedThemes();
 
         $choices = [];
         $choices[$usedTheme->getName()] = $usedTheme->getName();
