@@ -231,7 +231,11 @@ class CategoryCore extends ObjectModel
         }
 
         // Update group selection
-        $this->updateGroup($this->groupBox);
+        global $webservice_call;
+        if (!$webservice_call) {
+            // It couldn't be updated by webservice cause it doesn't have access to group associations
+            $this->updateGroup($this->groupBox);
+        }
 
         if ($this->level_depth != $this->calcLevelDepth()) {
             $this->level_depth = $this->calcLevelDepth();
