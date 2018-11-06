@@ -4,6 +4,30 @@ services:
 
   # COMMAND HANDLERS
 
+  prestashop.core.domain.theme.command_handler.import_theme_handler:
+    class: 'PrestaShop\PrestaShop\Core\Domain\Theme\CommandHandler\ImportThemeHandler'
+    arguments:
+      - '@prestashop.core.addon.theme.theme_zip_uploader'
+      - '@prestashop.core.addon.theme.theme_manager'
+      - '@prestashop.adapter.legacy.configuration'
+    tags:
+      - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\Theme\Command\ImportThemeCommand }
+
+  prestashop.core.domain.theme.command_handler.enable_theme_handler:
+    class: 'PrestaShop\PrestaShop\Core\Domain\Theme\CommandHandler\EnableThemeHandler'
+    arguments:
+      - '@prestashop.core.addon.theme.theme_manager'
+      - '@prestashop.adapter.cache.clearer.smarty_cache_clearer'
+    tags:
+      - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\Theme\Command\EnableThemeCommand }
+
+  prestashop.core.domain.theme.command_handler.delete_theme_handler:
+    class: 'PrestaShop\PrestaShop\Core\Domain\Theme\CommandHandler\DeleteThemeHandler'
+    arguments:
+      - '@prestashop.core.addon.theme.theme_manager'
+    tags:
+      - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\Theme\Command\DeleteThemeCommand }
+
   prestashop.core.domain.theme.command_handler.adapt_theme_to_rtl_languages_handler:
     class: 'PrestaShop\PrestaShop\Core\Domain\Theme\CommandHandler\AdaptThemeToRTLLanguagesHandler'
     arguments:

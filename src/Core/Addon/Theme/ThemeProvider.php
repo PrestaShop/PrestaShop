@@ -24,15 +24,10 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\Addons\Theme;
-
-use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeProviderInterface;
-use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeRepository;
+namespace PrestaShop\PrestaShop\Core\Addon\Theme;
 
 /**
  * Class ThemeProvider
- *
- * @internal
  */
 final class ThemeProvider implements ThemeProviderInterface
 {
@@ -42,11 +37,18 @@ final class ThemeProvider implements ThemeProviderInterface
     private $themeRepository;
 
     /**
-     * @param ThemeRepository $themeRepository
+     * @var Theme
      */
-    public function __construct(ThemeRepository $themeRepository)
+    private $theme;
+
+    /**
+     * @param ThemeRepository $themeRepository
+     * @param Theme $theme
+     */
+    public function __construct(ThemeRepository $themeRepository, Theme $theme)
     {
         $this->themeRepository = $themeRepository;
+        $this->theme = $theme;
     }
 
     /**
@@ -54,7 +56,7 @@ final class ThemeProvider implements ThemeProviderInterface
      */
     public function getCurrentlyUsedTheme()
     {
-        return \Context::getContext()->shop->theme;
+        return $this->theme;
     }
 
     /**

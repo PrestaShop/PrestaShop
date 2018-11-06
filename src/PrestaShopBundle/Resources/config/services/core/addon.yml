@@ -51,3 +51,9 @@ services:
         class: PrestaShop\PrestaShop\Core\Addon\Theme\ThemeZipUploader
         arguments:
             - '@prestashop.adapter.legacy.configuration'
+
+    prestashop.core.addon.theme.theme_provider:
+        class: PrestaShop\PrestaShop\Core\Addon\Theme\ThemeProvider
+        arguments:
+            - '@prestashop.core.addon.theme.repository'
+            - '@=service("prestashop.adapter.legacy.context").getContext().shop.theme'

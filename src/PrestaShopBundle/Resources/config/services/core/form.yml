@@ -138,4 +138,4 @@ services:
     prestashop.core.form.choice_provider.theme:
         class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ThemeChoiceProvider'
         arguments:
-          - '@prestashop.adapter.addons.theme.theme_provider'
+          - '@prestashop.core.addon.theme.theme_provider'
