@@ -24,6 +24,14 @@ International Registered Trademark & Property of PrestaShop SA
 Release Notes for PrestaShop 1.7
 --------------------------------
 ####################################
+#   v1.7.4.4 - (2018-11-06)
+####################################
+- Back Office:
+  - Bug fix:
+    - #11228: Avoid warning in WebServiceRequest
+    - #11285: Fix filemanager security breaches
+
+####################################
 #   v1.7.4.3 - (2018-07-27)
 ####################################
 - Core:
