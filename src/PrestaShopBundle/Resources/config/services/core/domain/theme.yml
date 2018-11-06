@@ -34,4 +34,12 @@ services:
       - '@prestashop.core.localization.rtl.processor_factory'
     tags:
       - name: 'tactician.handler'
-        command: 'PrestaShop\PrestaShop\Core\Domain\Theme\Command\AdaptThemeToRTLLanguagesCommand'
+        command: PrestaShop\PrestaShop\Core\Domain\Theme\Command\AdaptThemeToRTLLanguagesCommand
+
+  prestashop.core.domain.theme.command_handler.reset_theme_layouts_handler:
+    class: 'PrestaShop\PrestaShop\Core\Domain\Theme\CommandHandler\ResetThemeLayoutsHandler'
+    arguments:
+      - '@prestashop.core.addon.theme.theme_manager'
+    tags:
+      - name: 'tactician.handler'
+        command: PrestaShop\PrestaShop\Core\Domain\Theme\Command\ResetThemeLayoutsCommand

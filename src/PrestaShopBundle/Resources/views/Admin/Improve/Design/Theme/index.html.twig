@@ -75,12 +75,14 @@
 
                 <div class="col-6">
                   {% if isDevModeOn %}
-                    <a href="#"
-                       class="btn btn-outline-primary float-right ml-1"
+                    <button class="btn btn-outline-primary float-right ml-1 js-reset-theme-layouts-btn"
+                            type="button"
+                            data-submit-url="{{ path('admin_themes_reset_layouts', {'themeName': currentlyUsedTheme.name}) }}"
+                            data-csrf-token="{{ csrf_token('reset-theme-layouts') }}"
                     >
                       <i class="material-icons">settings_backup_restore</i>
                       {{ 'Reset to defaults'|trans({}, 'Admin.Design.Feature') }}
-                    </a>
+                    </button>
                   {% endif %}
 
                   <a href="{{ path('admin_theme_customize_page_layouts') }}"
@@ -218,4 +220,10 @@
       </div>
     </div>
   {% endif %}
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+
+  <script src="{{ asset('themes/new-theme/public/themes.bundle.js') }}"></script>
 {% endblock %}
