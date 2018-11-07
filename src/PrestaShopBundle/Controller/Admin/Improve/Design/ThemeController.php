@@ -69,9 +69,11 @@ class ThemeController extends AbstractAdminController
      *     message="You do not have permission to edit this."
      * )
      *
+     * @param Request $request
+     *
      * @return Response
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
         $themeProvider = $this->get('prestashop.core.addon.theme.theme_provider');
         $installedRtlLanguageChecker = $this->get('prestashop.adapter.language.rtl.installed_language_checker');
@@ -87,6 +89,8 @@ class ThemeController extends AbstractAdminController
             'adaptThemeToRtlLanguagesForm' => $this->getAdaptThemeToRtlLanguageForm()->createView(),
             'isInstalledRtlLanguage' => $installedRtlLanguageChecker->isInstalledRtlLanguage(),
             'shopName' => $this->get('prestashop.adapter.shop.context')->getName(),
+            'enableSidebar' => true,
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
         ]);
     }
 
