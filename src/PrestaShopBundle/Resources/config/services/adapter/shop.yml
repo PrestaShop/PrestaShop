@@ -13,3 +13,5 @@ services:
 
   prestashop.adapter.shop.url.base_url_provider:
     class: 'PrestaShop\PrestaShop\Adapter\Shop\Url\BaseUrlProvider'
+    arguments:
+      - "@=service('prestashop.adapter.legacy.context').getContext().link"

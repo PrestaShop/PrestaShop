@@ -33,6 +33,9 @@ use PrestaShop\PrestaShop\Core\Domain\Theme\ValueObject\ThemeName;
  */
 class ImportedThemeAlreadyExistsException extends ThemeException
 {
+    /**
+     * @var ThemeName
+     */
     private $themeName;
 
     /**

@@ -30,3 +30,5 @@ services:
 
     prestashop.core.localization.rtl.processor_factory:
         class: 'PrestaShop\PrestaShop\Core\Localization\RTL\ProcessorFactory'
+        arguments:
+          - '@prestashop.adapter.legacy.configuration'
