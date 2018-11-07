@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Command\DeleteEmployeeCom
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Command\ToggleEmployeeStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Command\BulkUpdateEmployeeStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception\AdminEmployeeException;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception\CannotDeleteEmployeeException;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception\EmployeeCannotChangeItselfException;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception\EmployeeException;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception\EmployeeNotFoundException;
@@ -220,14 +221,14 @@ class EmployeeController extends FrameworkBundleAdminController
     /**
      * Get human readable error message for thrown employee exception.
      *
-     * @param EmployeeException $exception
+     * @param EmployeeException $e
      *
      * @return string
      */
-    protected function getErrorForEmployeeException(EmployeeException $exception)
+    protected function getErrorForEmployeeException(EmployeeException $e)
     {
-        $type = get_class($exception);
-        $code = $exception->getCode();
+        $type = get_class($e);
+        $code = $e->getCode();
 
         $errorMessages = [
             InvalidEmployeeIdException::class => $this->trans('The object cannot be loaded (the identifier is missing or invalid)', 'Admin.Notifications.Error'),
@@ -238,10 +239,17 @@ class EmployeeController extends FrameworkBundleAdminController
             EmployeeCannotChangeItselfException::class => [
                 EmployeeCannotChangeItselfException::CANNOT_CHANGE_STATUS => $this->trans('You cannot disable or delete your own account.', 'Admin.Advparameters.Notification'),
             ],
+            CannotDeleteEmployeeException::class => $this->trans(
+                'Can\'t delete #%id%',
+                'Admin.Notifications.Error',
+                [
+                    '%id%' => $e instanceof CannotDeleteEmployeeException ? $e->getEmployeeId()->getValue() : 0,
+                ],
+            ),
         ];
 
         if (!isset($errorMessages[$type])) {
-            return $this->getFallbackErrorMessage($type, $exception->getCode());
+            return $this->getFallbackErrorMessage($type, $e->getCode());
         }
 
         if (!is_array($errorMessages[$type])) {
@@ -252,6 +260,6 @@ class EmployeeController extends FrameworkBundleAdminController
             return $errorMessages[$type][$code];
         }
 
-        return $this->getFallbackErrorMessage($type, $exception->getCode());
+        return $this->getFallbackErrorMessage($type, $e->getCode());
     }
 }
