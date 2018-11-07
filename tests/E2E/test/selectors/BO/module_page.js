@@ -35,7 +35,7 @@ module.exports = {
     upgrade_button: '//*[@id="upgradeNow"]',
     loader_tag: '//*[@id="pleaseWait" and contains(@style,"display: none;")]',
     upgrade_block: '//*[@id="upgradeButtonBlock"]',
-    refresh_button: '//*[@id="upgradeButtonBlock"]/div/p[2]/a',
+    refresh_button: '//*[@id="upgradeButtonBlock"]//div//p/a',
     module_import_success: '//*[@id="importDropzone"]/div[3]/p[1]',
     config_legend: '//*[@id="content"]//ul[contains(@class, "breadcrumb")]/li[text()="%moduleTechName"]',
     uninstall_module_modal: '//a[contains(@class,"module_action_modal_uninstall")]',

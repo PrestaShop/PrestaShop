@@ -3,6 +3,8 @@ const {PagesForm} = require('../../../selectors/BO/pages_form.js');
 const {Menu} = require('../../../selectors/BO/menu.js');
 const {OnBoarding} = require('../../../selectors/BO/onboarding');
 const common = require('../../common_scenarios/shop_parameters');
+const {AddProductPage} = require('../../../selectors/BO/add_product_page');
+
 let promise = Promise.resolve();
 
 scenario('Open all menu links in the Back Office', () => {
@@ -95,7 +97,7 @@ scenario('Open all menu links in the Back Office', () => {
         return promise
           .then(() => {
             if (global.ps_mode_dev) {
-              client.waitForExistAndClick(AddProductPage.symfony_toolbar);
+              client.waitForExistAndClick(AddProductPage.symfony_toolbar, 2000);
             }
           })
           .then(() => client.pause(1000));

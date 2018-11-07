@@ -52,7 +52,7 @@ module.exports = {
           test('should select the variation', () => {
             if (productData.type === 'combination') {
               return promise
-                .then(() => client.createCombination(AddProductPage.combination_size_m, AddProductPage.combination_color_beige));
+                .then(() => client.createCombination(AddProductPage.combination_size_m, AddProductPage.combination_color_beige))
             } else {
               return promise
                 .then(() => client.waitAndSetValue(AddProductPage.variations_input, productData['attribute']['name'] + date_time + " : All"))
@@ -62,10 +62,22 @@ module.exports = {
           test('should click on "Generate" button', () => {
             return promise
               .then(() => client.waitForExistAndClick(AddProductPage.variations_generate, 2000))
-              .then(() => client.getCombinationData(1));
           });
           test('should verify the appearance of the green validation', () => client.checkTextValue(AddProductPage.validation_msg, 'Settings updated.'));
-          test('should select all the generated variations', () => client.waitForVisibleAndClick(AddProductPage.var_selected));
+          // should refresh the page because of the issue here: #9826
+          test('should refresh the page if "Debug" mode is active', () => {
+            return promise
+              .then(() => client.isVisible(AddProductPage.var_selected))
+              .then(() => {
+                if (global.ps_mode_dev && !isVisible) {
+                  client.refresh();
+                } else {
+                  client.pause(0);
+                }
+              })
+              .then(() => client.getCombinationData(1, 5000));
+          });
+          test('should select all the generated variations', () => client.waitForVisibleAndClick(AddProductPage.var_selected, 5000));
           test('should set the "Variations quantity" input', () => client.setVariationsQuantity(AddProductPage, productData['attribute']['variation_quantity']));
         }, 'product/create_combinations');
       }
