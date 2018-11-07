@@ -63,6 +63,12 @@ class ThemeController extends AbstractAdminController
     /**
      * Show main themes page.
      *
+     * @AdminSecurity(
+     *     "is_granted('read', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_themes_index",
+     *     message="You do not have permission to edit this."
+     * )
+     *
      * @return Response
      */
     public function indexAction()
@@ -86,6 +92,9 @@ class ThemeController extends AbstractAdminController
 
     /**
      * Upload shop logos.
+     *
+     * @AdminSecurity("is_granted(['update'], request.get('_legacy_controller'))", redirectRoute="admin_themes_index")
+     * @DemoRestricted(redirectRoute="admin_themes_index")
      *
      * @param Request $request
      *
@@ -135,6 +144,7 @@ class ThemeController extends AbstractAdminController
      *     redirectRoute="admin_themes_index",
      *     message="You do not have permission to view this."
      * )
+     * @DemoRestricted(redirectRoute="admin_themes_index")
      *
      * @return RedirectResponse
      */
@@ -216,6 +226,13 @@ class ThemeController extends AbstractAdminController
     /**
      * Enable selected theme.
      *
+     * @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_themes_index",
+     *     message="You do not have permission to edit this."
+     * )
+     * @DemoRestricted(redirectRoute="admin_themes_index")
+     *
      * @param string $themeName
      *
      * @return RedirectResponse
@@ -236,6 +253,13 @@ class ThemeController extends AbstractAdminController
     /**
      * Delete selected theme.
      *
+     * @AdminSecurity(
+     *     "is_granted('delete', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_themes_index",
+     *     message="You do not have permission to delete this."
+     * )
+     * @DemoRestricted(redirectRoute="admin_themes_index")
+     *
      * @param string $themeName
      *
      * @return RedirectResponse
@@ -255,6 +279,13 @@ class ThemeController extends AbstractAdminController
 
     /**
      * Adapts selected theme to RTL languages.
+     *
+     * @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_themes_index",
+     *     message="You do not have permission to edit this."
+     * )
+     * @DemoRestricted(redirectRoute="admin_themes_index")
      *
      * @param Request $request
      *
@@ -294,6 +325,13 @@ class ThemeController extends AbstractAdminController
     /**
      * Reset theme's page layouts.
      *
+     * @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_themes_index",
+     *     message="You do not have permission to edit this."
+     * )
+     * @DemoRestricted(redirectRoute="admin_themes_index")
+     *
      * @param string $themeName
      *
      * @return RedirectResponse
@@ -309,6 +347,13 @@ class ThemeController extends AbstractAdminController
 
     /**
      * Show Front Office theme's pages layout customization.
+     *
+     * @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_themes_index",
+     *     message="You do not have permission to edit this."
+     * )
+     * @DemoRestricted(redirectRoute="admin_themes_index")
      *
      * @param Request $request
      *
