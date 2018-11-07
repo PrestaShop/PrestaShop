@@ -426,15 +426,14 @@ class ThemeController extends AbstractAdminController
      *
      * @param ShopException $e
      *
-     * @return string Error message for exception.
+     * @return string error message for exception
      */
     private function handleUploadLogosException(ShopException $e)
     {
         $type = get_class($e);
 
         $errorMessages = [
-            NotSupportedFaviconExtensionException::class =>
-                $this->trans('Image format not recognized, allowed formats are: .ico', 'Admin.Notifications.Error'),
+            NotSupportedFaviconExtensionException::class => $this->trans('Image format not recognized, allowed formats are: .ico', 'Admin.Notifications.Error'),
         ];
 
         if (isset($errorMessages[$type])) {
@@ -458,8 +457,7 @@ class ThemeController extends AbstractAdminController
                 'There is already a theme %theme_name% in your themes/ folder. Remove it if you want to continue.',
                 'Admin.Design.Notification',
                 [
-                    '%theme_name%' =>
-                        $e instanceof ImportedThemeAlreadyExistsException ? $e->getThemeName()->getValue() : '',
+                    '%theme_name%' => $e instanceof ImportedThemeAlreadyExistsException ? $e->getThemeName()->getValue() : '',
                 ]
             ),
         ];
@@ -524,8 +522,7 @@ class ThemeController extends AbstractAdminController
         $type = get_class($e);
 
         $errorMessages = [
-            CannotAdaptThemeToRTLLanguagesException::class =>
-                $this->trans('Cannot adapt theme to RTL languages.', 'Admin.Design.Notification'),
+            CannotAdaptThemeToRTLLanguagesException::class => $this->trans('Cannot adapt theme to RTL languages.', 'Admin.Design.Notification'),
         ];
 
         if (isset($errorMessages[$type])) {
