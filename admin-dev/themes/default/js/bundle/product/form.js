@@ -361,11 +361,13 @@ var formCategory = (function() {
 var featuresCollection = (function() {
 
   var collectionHolder = $('.feature-collection');
+  var maxCollectionChildren = collectionHolder.children('.row').length;
 
   /** Add a feature */
   function add() {
-    var newForm = collectionHolder.attr('data-prototype').replace(/__name__/g, collectionHolder.children('.row').length);
+    var newForm = collectionHolder.attr('data-prototype').replace(/__name__/g, maxCollectionChildren);
     collectionHolder.append(newForm);
+    maxCollectionChildren += 1;
     prestaShopUiKit.initSelects();
   }
 
@@ -941,10 +943,12 @@ var form = (function() {
 var customFieldCollection = (function() {
 
   var collectionHolder = $('ul.customFieldCollection');
+  var maxCollectionChildren = collectionHolder.children().length;
 
   /** Add a custom field */
   function add() {
-    var newForm = collectionHolder.attr('data-prototype').replace(/__name__/g, collectionHolder.children().length);
+    var newForm = collectionHolder.attr('data-prototype').replace(/__name__/g, maxCollectionChildren);
+    maxCollectionChildren += 1;
     collectionHolder.append('<li>' + newForm + '</li>');
   }
 
