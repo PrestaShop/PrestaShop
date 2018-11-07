@@ -39,7 +39,7 @@ class EmployeeStatus
     /**
      * @internal
      */
-    const AVAILABLE_STATUS = [
+    const AVAILABLE_STATUSES = [
         self::ENABLED,
         self::DISABLED,
     ];
@@ -80,12 +80,12 @@ class EmployeeStatus
      */
     private function assertStatusExists($status)
     {
-        if (!in_array($status, self::AVAILABLE_STATUS)) {
+        if (!in_array($status, self::AVAILABLE_STATUSES)) {
             throw new UndefinedEmployeeStatusException(sprintf(
                 sprintf(
                     'Undefined employee status %s supplied. Supported statuses are: "%s"',
                     var_export($status, true),
-                    implode(',', self::AVAILABLE_STATUS)
+                    implode(',', self::AVAILABLE_STATUSES)
                 )
             ));
         }
