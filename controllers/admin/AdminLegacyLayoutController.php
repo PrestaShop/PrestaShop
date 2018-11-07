@@ -93,7 +93,7 @@ class AdminLegacyLayoutControllerCore extends AdminController
             'page_header_toolbar_btn' => $this->page_header_toolbar_btn,
         );
 
-        if (!empty($this->helpLink)) {
+        if ($this->helpLink === false || !empty($this->helpLink)) {
             $vars['help_link'] = $this->helpLink;
         }
 
