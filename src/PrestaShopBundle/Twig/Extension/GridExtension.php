@@ -168,7 +168,7 @@ class GridExtension extends AbstractExtension
      */
     public function isOrderingPosition(array $grid)
     {
-        if (!isset($grid['columns']) || !count($grid['columns'])) {
+        if (empty($grid['columns'])) {
             return false;
         }
 
@@ -183,12 +183,10 @@ class GridExtension extends AbstractExtension
             return false;
         }
 
-        if (isset($grid['sorting']['order_by']) && 'position' == strtolower($grid['sorting']['order_by']) &&
-            isset($grid['sorting']['order_way']) && 'asc' == strtolower($grid['sorting']['order_way'])) {
-            return true;
-        }
-
-        return false;
+        return
+            isset($grid['sorting']['order_by']) && 'position' == strtolower($grid['sorting']['order_by']) &&
+            isset($grid['sorting']['order_way']) && 'asc' == strtolower($grid['sorting']['order_way'])
+        ;
     }
 
     /**

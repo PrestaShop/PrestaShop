@@ -50,12 +50,14 @@ export default class PositionExtension {
       dragHandle: '.js-drag-handle',
       onDrop: (table, row) => this._handlePositionChange(row),
     });
-    grid.getContainer().find('.js-drag-handle').on('mouseenter', (event) => {
-      $(event.target).closest('tr').addClass('hover');
-    });
-    grid.getContainer().find('.js-drag-handle').on('mouseleave', (event) => {
-      $(event.target).closest('tr').removeClass('hover');
-    });
+    grid.getContainer().find('.js-drag-handle').hover(
+      function() {
+        $(this).closest('tr').addClass('hover');
+      },
+      function() {
+        $(this).closest('tr').removeClass('hover');
+      }
+    );
   }
 
   /**
@@ -69,11 +71,9 @@ export default class PositionExtension {
     const $rowPositionContainer = $(row).find('.js-' + this.grid.getId() + '-position:first');
     const updateUrl = $rowPositionContainer.data('update-url');
     const method = $rowPositionContainer.data('update-method');
-    const paginationOffset = parseInt($rowPositionContainer.data('pagination-offset'));
+    const paginationOffset = parseInt($rowPositionContainer.data('pagination-offset'), 10);
     const positions = this._getRowsPositions(paginationOffset);
-    const params = {
-      positions: positions,
-    };
+    const params = {positions};
 
     this._updatePosition(updateUrl, params, method);
   }
@@ -89,14 +89,14 @@ export default class PositionExtension {
     const regex = /^row_(\d+)_(\d+)$/;
 
     const rowsNb = rowsData.length;
-    let positions = [];
+    const positions = [];
     let rowData, i;
     for (i = 0; i < rowsNb; ++i) {
       rowData = regex.exec(rowsData[i]);
       positions.push({
         rowId: rowData[1],
         newPosition: paginationOffset + i,
-        oldPosition: parseInt(rowData[2])
+        oldPosition: parseInt(rowData[2], 10)
       });
     }
 
