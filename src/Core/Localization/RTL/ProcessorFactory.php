@@ -26,32 +26,48 @@
 
 namespace PrestaShop\PrestaShop\Core\Localization\RTL;
 
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+
 /**
  * Class ProcessorFactory
  */
 final class ProcessorFactory implements ProcessorFactoryInterface
 {
     /**
+     * @var ConfigurationInterface
+     */
+    private $configuration;
+
+    /**
+     * @param ConfigurationInterface $configuration
+     */
+    public function __construct(ConfigurationInterface $configuration)
+    {
+        $this->configuration = $configuration;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function create()
     {
-        if (defined('_PS_ADMIN_DIR_')) {
-            $adminDir = _PS_ADMIN_DIR_;
-        } else {
-            $adminDir = _PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . 'admin';
+        $rootDir = $this->configuration->get('_PS_ROOT_DIR_');
+        $moduleDir = $this->configuration->get('_PS_MODULE_DIR_');
+
+        if (null === $adminDir = $this->configuration->get('_PS_ADMIN_DIR_')) {
+            $adminDir = $rootDir . DIRECTORY_SEPARATOR . 'admin';
             $adminDir = is_dir($adminDir) ? $adminDir : ($adminDir . '-dev');
         }
 
-        $themesDir = _PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . 'themes';
+        $themesDir = $this->configuration->get('_PS_ROOT_DIR_') . DIRECTORY_SEPARATOR . 'themes';
 
         return new Processor(
             $adminDir,
             $themesDir,
             [
-                _PS_MODULE_DIR_ . 'gamification',
-                _PS_MODULE_DIR_ . 'welcome',
-                _PS_MODULE_DIR_ . 'cronjobs',
+                $moduleDir . 'gamification',
+                $moduleDir . 'welcome',
+                $moduleDir . 'cronjobs',
             ]
         );
     }

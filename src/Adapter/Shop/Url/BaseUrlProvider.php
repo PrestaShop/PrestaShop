@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Shop\Url;
 
+use Link;
 use PrestaShop\PrestaShop\Core\Shop\Url\UrlProviderInterface;
 
 /**
@@ -34,10 +35,23 @@ use PrestaShop\PrestaShop\Core\Shop\Url\UrlProviderInterface;
 final class BaseUrlProvider implements UrlProviderInterface
 {
     /**
+     * @var Link
+     */
+    private $link;
+
+    /**
+     * @param Link $link
+     */
+    public function __construct(Link $link)
+    {
+        $this->link = $link;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function getUrl()
     {
-        return \Context::getContext()->link->getBaseLink();
+        return $this->link->getBaseLink();
     }
 }
