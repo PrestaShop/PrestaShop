@@ -1,8 +1,0 @@
-services:
-  _defaults:
-    public: true
-
-  prestashop.adapter.addon.authentication.user_logged_in_checker:
-    class: PrestaShop\PrestaShop\Adapter\Addons\Authentication\UserLoggedInChecker
-    arguments:
-      - '@=service("prestashop.adapter.legacy.context").getContext().cookie'
