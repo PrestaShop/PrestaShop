@@ -242,7 +242,7 @@ class ThemeController extends AbstractAdminController
         try {
             $this->getCommandBus()->handle(new EnableThemeCommand(new ThemeName($themeName)));
         } catch (ThemeException $e) {
-            $this->addFlash('error', $this->handleThemeEnableException($e));
+            $this->addFlash('error', $this->handleEnableThemeException($e));
 
             return $this->redirectToRoute('admin_themes_index');
         }
@@ -269,7 +269,7 @@ class ThemeController extends AbstractAdminController
         try {
             $this->getCommandBus()->handle(new DeleteThemeCommand(new ThemeName($themeName)));
         } catch (ThemeException $e) {
-            $this->addFlash('error', $this->handleThemeDeleteException($e));
+            $this->addFlash('error', $this->handleDeleteThemeException($e));
 
             return $this->redirectToRoute('admin_themes_index');
         }
@@ -348,18 +348,13 @@ class ThemeController extends AbstractAdminController
     /**
      * Show Front Office theme's pages layout customization.
      *
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_themes_index",
-     *     message="You do not have permission to edit this."
-     * )
      * @DemoRestricted(redirectRoute="admin_themes_index")
      *
      * @param Request $request
      *
      * @return Response
      */
-    public function customizePageLayoutsAction(Request $request)
+    public function customizeLayoutsAction(Request $request)
     {
         $canCustomizeLayout = $this->canCustomizePageLayouts($request);
 
@@ -382,7 +377,7 @@ class ThemeController extends AbstractAdminController
             if ($this->isDemoModeEnabled()) {
                 $this->addFlash('error', $this->getDemoModeErrorMessage());
 
-                return $this->redirectToRoute('admin_theme_customize_page_layouts');
+                return $this->redirectToRoute('admin_theme_customize_layouts');
             }
 
             $themePageLayoutsCustomizer = $this->get('prestashop.core.addon.theme.theme.page_layouts_customizer');
@@ -481,7 +476,7 @@ class ThemeController extends AbstractAdminController
      *
      * @return string
      */
-    private function handleThemeEnableException(ThemeException $e)
+    private function handleEnableThemeException(ThemeException $e)
     {
         $type = get_class($e);
 
@@ -501,7 +496,7 @@ class ThemeController extends AbstractAdminController
      *
      * @return string
      */
-    private function handleThemeDeleteException(ThemeException $e)
+    private function handleDeleteThemeException(ThemeException $e)
     {
         $type = get_class($e);
 
