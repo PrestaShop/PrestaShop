@@ -53,11 +53,11 @@ admin_themes_adapt_to_rtl_languages:
   requirements:
     themeName: "^[a-zA-Z0-9_.-]+$"
 
-admin_theme_customize_page_layouts:
-  path: /page-layout-customization
+admin_theme_customize_layouts:
+  path: /customize-layouts
   methods: [GET, POST]
   defaults:
-    _controller: PrestaShopBundle:Admin\Improve\Design\Theme:customizePageLayouts
+    _controller: PrestaShopBundle:Admin\Improve\Design\Theme:customizeLayouts
     _legacy_controller: AdminThemes
 
 admin_themes_reset_layouts:
