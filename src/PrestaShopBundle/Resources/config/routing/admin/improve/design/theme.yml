@@ -4,6 +4,7 @@ admin_themes_index:
   defaults:
     _controller: PrestaShopBundle:Admin\Improve\Design\Theme:index
     _legacy_controller: AdminThemes
+    _legacy_link: AdminThemes
 
 admin_themes_upload_logos:
   path: /upload-logos
