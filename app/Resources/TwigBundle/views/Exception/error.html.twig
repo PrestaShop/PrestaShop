@@ -34,18 +34,27 @@
 
 {% block body %}
   <div class="container">
-    <div class="row justify-content-md-center">
+    <div class="row justify-content-md-center mt-5">
       <div class="col-12">
         <div class="card">
           <div class="card-body text-center">
-            <h1 class="card-title">{{ status_text }}</h1>
-            <h3 class="card-subtitle mb-2 text-muted">{{ 'Status code:'|trans({}, 'Admin.Global') }}{{ status_code }}</h3>
+            <p class="h1 mb-0">{{ 'Oops...' }}</p>
+            <p class="h1">{{ 'looks like an error occurred' }}</p>
 
             {% if exception %}
-              <p class="lead mb-0">{{ 'See additional error information below.'|trans({}, 'Admin.Global') }}</p>
-              <p class="mb-0"><strong>{{ 'Message'|trans({}, 'Admin.Global') }}:</strong> {{ exception.message }}</p>
-              <p class="mb-0"><strong>{{ 'Code'|trans({}, 'Admin.Global') }}:</strong> {{ exception.code }}</p>
+              <p class="mb-0">{{ 'Error code:' }} <em>{{ exception.code }}</em></p>
+              <p class="mb-0">{{ 'Error message:' }} <em>{{ exception.message }}</em></p>
+              <p class="mb-0">{{ 'Enable debug mode and try again to track the issue.' }}</p>
             {% endif %}
+
+            <div class="mt-4">
+              <button class="btn btn-outline-primary mr-1">
+                {{ 'Back to previous page' }}
+              </button>
+              <button class="btn btn-primary">
+                {{ 'Enable debug mode' }}
+              </button>
+            </div>
           </div>
         </div>
       </div>
