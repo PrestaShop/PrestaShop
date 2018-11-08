@@ -180,7 +180,6 @@ class TranslationService
         } else {
             $defaultCatalog = current($translationProvider->getDefaultCatalogue()->all());
         }
-
         $xliffCatalog = current($translationProvider->getXliffCatalogue()->all());
 
         if ('EmailsSubject' === $domain) {
