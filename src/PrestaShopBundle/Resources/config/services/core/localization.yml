@@ -29,6 +29,6 @@ services:
             - '@prestashop.core.foundation.version'
 
     prestashop.core.localization.rtl.processor_factory:
-        class: 'PrestaShop\PrestaShop\Core\Localization\RTL\ProcessorFactory'
+        class: 'PrestaShop\PrestaShop\Core\Localization\RTL\StyleSheetProcessorFactory'
         arguments:
           - '@prestashop.adapter.legacy.configuration'
