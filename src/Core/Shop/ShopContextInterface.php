@@ -36,5 +36,5 @@ interface ShopContextInterface
      *
      * @return string
      */
-    public function getName();
+    public function getShopName();
 }
