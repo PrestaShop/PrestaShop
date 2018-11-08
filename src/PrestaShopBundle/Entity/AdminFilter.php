@@ -83,9 +83,9 @@ class AdminFilter
     /**
      * @var string
      *
-     * @ORM\Column(name="class_name", type="string", length=255)
+     * @ORM\Column(name="unique_key", type="string", length=255)
      */
-    private $className;
+    private $uniqueKey = '';
 
     /**
      * Get id.
@@ -220,19 +220,19 @@ class AdminFilter
     /**
      * @return string
      */
-    public function getClassName()
+    public function getUniqueKey()
     {
-        return $this->className;
+        return $this->uniqueKey;
     }
 
     /**
-     * @param string $className
+     * @param string $uniqueKey
      *
      * @return AdminFilter
      */
-    public function setClassName($className)
+    public function setUniqueKey($uniqueKey)
     {
-        $this->className = $className;
+        $this->uniqueKey = $uniqueKey;
 
         return $this;
     }
