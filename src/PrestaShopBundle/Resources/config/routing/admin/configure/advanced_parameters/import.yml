@@ -10,7 +10,7 @@ admin_import_show_data:
     path: /data
     methods: [POST]
     defaults:
-        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Import:showImportData'
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\ImportDataConfiguration:index'
         _legacy_controller: AdminImport
 
 # This redirect prevents an error (redirects to import first page instead) when
@@ -60,7 +60,7 @@ admin_import_save_import_match:
     path: /match
     methods: [POST]
     defaults:
-        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Import:saveImportMatch'
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\ImportDataConfiguration:create'
         _legacy_controller: AdminImport
         _legacy_link: AdminImport:saveImportMatch
 
@@ -68,7 +68,7 @@ admin_import_get_import_match:
     path: /match
     methods: [GET]
     defaults:
-        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Import:getImportMatch'
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\ImportDataConfiguration:get'
         _legacy_controller: AdminImport
         _legacy_link: AdminImport:getImportMatch
 
@@ -76,7 +76,7 @@ admin_import_delete_import_match:
   path: /match
   methods: [DELETE]
   defaults:
-    _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Import:deleteImportMatch'
+    _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\ImportDataConfiguration:delete'
     _legacy_controller: AdminImport
     _legacy_link: AdminImport:deleteImportMatch
 
