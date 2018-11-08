@@ -83,7 +83,7 @@ class ImportController extends FrameworkBundleAdminController
             $data = $form->getData();
 
             if (!$errors = $formHandler->save($data)) {
-                return $this->redirectToRoute('admin_import_show_data', [], Response::HTTP_TEMPORARY_REDIRECT);
+                return $this->redirectToRoute('admin_import_data_configuration_index', [], Response::HTTP_TEMPORARY_REDIRECT);
             }
 
             $this->flashErrors($errors);

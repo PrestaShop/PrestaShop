@@ -6,7 +6,7 @@ admin_import:
         _legacy_controller: AdminImport
         _legacy_link: AdminImport
 
-admin_import_show_data:
+admin_import_data_configuration_index:
     path: /data
     methods: [POST]
     defaults:
@@ -17,7 +17,7 @@ admin_import_show_data:
 # trying to access import data page with GET http method.
 # It happens on direct access or when the session token expires and
 # the user clicks "I understand the risk" in the warning page.
-admin_import_show_data_redirect:
+admin_import_data_configuration_index_redirect:
     path: /data
     methods: [GET]
     controller: 'Symfony\Bundle\FrameworkBundle\Controller\RedirectController::redirectAction'
@@ -56,7 +56,7 @@ admin_import_sample_download:
         _legacy_controller: AdminImport
         _legacy_link: AdminImport:sampleDownload
 
-admin_import_save_import_match:
+admin_import_data_configuration_create:
     path: /match
     methods: [POST]
     defaults:
@@ -64,7 +64,7 @@ admin_import_save_import_match:
         _legacy_controller: AdminImport
         _legacy_link: AdminImport:saveImportMatch
 
-admin_import_get_import_match:
+admin_import_data_configuration_get:
     path: /match
     methods: [GET]
     defaults:
@@ -72,7 +72,7 @@ admin_import_get_import_match:
         _legacy_controller: AdminImport
         _legacy_link: AdminImport:getImportMatch
 
-admin_import_delete_import_match:
+admin_import_data_configuration_delete:
   path: /match
   methods: [DELETE]
   defaults:
