@@ -96,7 +96,7 @@ export default class PositionExtension {
       positions.push({
         rowId: rowData[1],
         newPosition: paginationOffset + i,
-        oldPosition: parseInt(rowData[2], 10)
+        oldPosition: parseInt(rowData[2], 10),
       });
     }
 
@@ -161,12 +161,12 @@ export default class PositionExtension {
       );
     }
 
-    //This _method param is used by Symfony to simulate DELETE and PUT methods
+    // This _method param is used by Symfony to simulate DELETE and PUT methods
     if (!isGetOrPostMethod) {
       $form.append($('<input>', {
         'type': 'hidden',
         'name': '_method',
-        'value': method
+        'value': method,
       }));
     }
 

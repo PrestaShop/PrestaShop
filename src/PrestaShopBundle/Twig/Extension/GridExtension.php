@@ -176,7 +176,7 @@ class GridExtension extends AbstractExtension
         }
 
         foreach ($grid['columns'] as $column) {
-            if ('position' == $column['type']) {dump($column);
+            if ('position' == $column['type']) {
                 $positionField = $column['id'];
                 if (strtolower($positionField) == strtolower($grid['sorting']['order_by'])) {
                     return true;
