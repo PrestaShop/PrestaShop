@@ -53,10 +53,8 @@ class MetaController extends FrameworkBundleAdminController
      *
      * @return Response
      */
-    public function indexAction(MetaFilters $filters, LogsFilters $logsFilters)
+    public function indexAction(MetaFilters $filters)
     {
-        dump($filters, $logsFilters);
-
         $seoUrlsGridFactory = $this->get('prestashop.core.grid.factory.meta');
         $grid = $seoUrlsGridFactory->getGrid($filters);
 
