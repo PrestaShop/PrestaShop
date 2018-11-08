@@ -46,4 +46,12 @@ final class EmailLogsFilter extends Filters
             'filters' => [],
         ];
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function getKey()
+    {
+        return 'email_logs';
+    }
 }
