@@ -8,7 +8,7 @@
   cursor: pointer;
 }
 
-table.grid-ordering-position tr {
+table.grid-ordering-column tr {
   transition-property: all;
   transition-duration: 0.2s;
   transition-timing-function: ease-out;
@@ -22,7 +22,7 @@ table.grid-ordering-position tr {
   }
 }
 
-table.grid-ordering-position tr.position-row-while-drag {
+table.grid-ordering-column tr.position-row-while-drag {
   box-shadow: 3px 3px 8px 0 rgba(0, 0, 0, 0.2);
   color: white;
   transform: translate(5px,10px);

@@ -75,7 +75,7 @@ class GridExtension extends AbstractExtension
             new SimpleFunction('column_header', [$this, 'renderColumnHeader'], [
                 'is_safe' => ['html'],
             ]),
-            new SimpleFunction('is_ordering_position', [$this, 'isOrderingPosition'], [
+            new SimpleFunction('is_ordering_column', [$this, 'isOrderingColumn'], [
                 'is_safe' => ['html'],
             ]),
         ];
@@ -166,27 +166,25 @@ class GridExtension extends AbstractExtension
      *
      * @return bool
      */
-    public function isOrderingPosition(array $grid)
+    public function isOrderingColumn(array $grid)
     {
-        if (empty($grid['columns'])) {
+        if (empty($grid['columns'])
+            || empty($grid['sorting']['order_by'])
+            || empty($grid['sorting']['order_way'])
+            || 'asc' != strtolower($grid['sorting']['order_way'])) {
             return false;
         }
 
-        $hasPositionColumn = false;
         foreach ($grid['columns'] as $column) {
-            if ('position' == $column['type']) {
-                $hasPositionColumn = true;
-                break;
+            if ('position' == $column['type']) {dump($column);
+                $positionField = $column['id'];
+                if (strtolower($positionField) == strtolower($grid['sorting']['order_by'])) {
+                    return true;
+                }
             }
         }
-        if (!$hasPositionColumn) {
-            return false;
-        }
 
-        return
-            isset($grid['sorting']['order_by']) && 'position' == strtolower($grid['sorting']['order_by']) &&
-            isset($grid['sorting']['order_way']) && 'asc' == strtolower($grid['sorting']['order_way'])
-        ;
+        return false;
     }
 
     /**
