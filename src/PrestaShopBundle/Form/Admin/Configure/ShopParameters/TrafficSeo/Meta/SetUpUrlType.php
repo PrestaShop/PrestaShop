@@ -26,7 +26,6 @@
 
 namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta;
 
-use PrestaShop\PrestaShop\Core\Util\Url\UrlFileCheckerInterface;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -44,9 +43,9 @@ class SetUpUrlType extends AbstractType
     private $canonicalUrlChoices;
 
     /**
-     * @var UrlFileCheckerInterface
+     * @var bool
      */
-    private $htaccessFileChecker;
+    private $isHtaccessFileWritable;
 
     /**
      * @var bool
@@ -57,16 +56,16 @@ class SetUpUrlType extends AbstractType
      * SetUpUrlType constructor.
      *
      * @param array $canonicalUrlChoices
-     * @param UrlFileCheckerInterface $htaccessFileChecker
+     * @param bool $isHtaccessFileWritable
      * @param bool $isHostMode
      */
     public function __construct(
         array $canonicalUrlChoices,
-        UrlFileCheckerInterface $htaccessFileChecker,
+        $isHtaccessFileWritable,
         $isHostMode
     ) {
         $this->canonicalUrlChoices = $canonicalUrlChoices;
-        $this->htaccessFileChecker = $htaccessFileChecker;
+        $this->isHtaccessFileWritable = $isHtaccessFileWritable;
         $this->isHostMode = $isHostMode;
     }
 
@@ -85,7 +84,7 @@ class SetUpUrlType extends AbstractType
             )
         ;
 
-        if (!$this->isHostMode && $this->htaccessFileChecker->isValidFile()) {
+        if (!$this->isHostMode && $this->isHtaccessFileWritable) {
             $builder
                 ->add('disable_apache_multiview', SwitchType::class)
                 ->add('disable_apache_mod_security', SwitchType::class)

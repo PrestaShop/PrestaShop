@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -27,37 +27,52 @@
 namespace PrestaShop\PrestaShop\Core\Util\Url;
 
 /**
- * Class HtaccessFileChecker is responsible for checking files validity which are related with
- * urls generation (.htaccess) file.
+ * Class UrlFileChecker
  */
-final class HtaccessFileChecker implements UrlFileCheckerInterface
+final class UrlFileChecker implements UrlFileCheckerInterface
 {
     /**
      * @var string
      */
-    private $rootDirectory;
+    private $fileDir;
 
     /**
-     * HtaccessFileChecker constructor.
-     *
-     * @param string $rootDirectory
+     * @param string $fileDir
      */
-    public function __construct($rootDirectory)
+    public function __construct($fileDir)
     {
-        $this->rootDirectory = $rootDirectory;
+        $this->fileDir = $fileDir;
     }
 
     /**
-     * {@inheritdoc}
+     * @return bool
      */
-    public function isValidFile()
+    public function isHtaccessFileWritable()
     {
-        $filePath = $this->rootDirectory . '/.htaccess';
+        return $this->isFileWritable('.htaccess');
+    }
+
+    /**
+     * @return bool
+     */
+    public function isRobotsFileWritable()
+    {
+        return $this->isFileWritable('robots.txt');
+    }
+
+    /**
+     * @param string $fileName
+     *
+     * @return bool
+     */
+    private function isFileWritable($fileName)
+    {
+        $filePath = $this->fileDir . DIRECTORY_SEPARATOR . $fileName;
 
         if (file_exists($filePath)) {
             return is_writable($filePath);
         }
 
-        return is_writable(dirname($filePath));
+        return is_writable($this->fileDir);
     }
 }

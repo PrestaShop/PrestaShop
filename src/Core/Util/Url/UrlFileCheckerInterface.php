@@ -32,10 +32,16 @@ namespace PrestaShop\PrestaShop\Core\Util\Url;
 interface UrlFileCheckerInterface
 {
     /**
-     * Checks if the file is valid - it can check whenever is file or file directory
-     * is writable or certain server configs are enabled.
+     * Check if .htaccess file for Front Office is writable.
      *
      * @return bool
      */
-    public function isValidFile();
+    public function isHtaccessFileWritable();
+
+    /**
+     * Check if robots.txt file for Front Office is writable.
+     *
+     * @return bool
+     */
+    public function isRobotsFileWritable();
 }
