@@ -78,7 +78,7 @@ final class SearchParameters implements SearchParametersInterface
         $adminFilter = $this->adminFilterRepository->findOneBy([
             'employee' => $employeeId,
             'shop' => $shopId,
-            'className' => $filtersClassName,
+            'uniqueKey' => $filtersClassName::getKey(),
         ]);
 
         $savedFilters = [];
