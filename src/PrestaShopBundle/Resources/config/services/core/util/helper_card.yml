@@ -1,0 +1,20 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.core.util.helper_card.documentation_link_provider:
+    class: 'PrestaShop\PrestaShop\Core\Util\HelperCard\DocumentationLinkProvider'
+    arguments:
+      - '@=service("prestashop.adapter.legacy.context").getContext().language.iso_code'
+      -
+        'team':
+          'en': 'http://doc.prestashop.com/display/PS17/Team'
+          'fr': 'http://doc.prestashop.com/pages/viewpage.action?pageId=51840334'
+          'es': 'http://doc.prestashop.com/display/PS17/Equipo'
+          'it': 'http://doc.prestashop.com/pages/viewpage.action?pageId=54266520'
+          '_fallback': 'http://doc.prestashop.com/display/PS17/Team'
+        'meta':
+          'fr': 'http://doc.prestashop.com/display/PS17/SEO+et+URL'
+          'es': 'http://doc.prestashop.com/display/PS17/SEO+y+URLs'
+          'it': 'http://doc.prestashop.com/display/PS17/SEO+e+URL'
+          '_fallback': 'http://doc.prestashop.com/display/PS17/SEO+and+URLs'

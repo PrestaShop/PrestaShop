@@ -1,6 +1,6 @@
 @import "../mixins/breakpoints";
 
-.showcase-card {
+.showcase-card, .helper-card {
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.06);
   max-width: 810px;
   position: relative;
@@ -12,6 +12,10 @@
     text-align: center;
     display: inline-block;
     vertical-align: top;
+  }
+
+  &__team {
+    background-image: url('img/helper-card/team-background.png');
   }
 
   &__left {
