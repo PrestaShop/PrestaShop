@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Theme\CommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Theme\Command\AdaptThemeToRTLLanguagesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Theme\Exception\CannotAdaptThemeToRTLLanguagesException;
 use PrestaShop\PrestaShop\Core\Localization\RTL\Exception\GenerationException;
-use PrestaShop\PrestaShop\Core\Localization\RTL\ProcessorFactoryInterface;
+use PrestaShop\PrestaShop\Core\Localization\RTL\StyleSheetProcessorFactoryInterface;
 
 /**
  * Class AdaptThemeToRTLLanguagesHandler
@@ -37,14 +37,14 @@ use PrestaShop\PrestaShop\Core\Localization\RTL\ProcessorFactoryInterface;
 final class AdaptThemeToRTLLanguagesHandler implements AdaptThemeToRTLLanguagesHandlerInterface
 {
     /**
-     * @var ProcessorFactoryInterface
+     * @var StyleSheetProcessorFactoryInterface
      */
     private $stylesheetProcessorFactory;
 
     /**
-     * @param ProcessorFactoryInterface $stylesheetProcessorFactory
+     * @param StyleSheetProcessorFactoryInterface $stylesheetProcessorFactory
      */
-    public function __construct(ProcessorFactoryInterface $stylesheetProcessorFactory)
+    public function __construct(StyleSheetProcessorFactoryInterface $stylesheetProcessorFactory)
     {
         $this->stylesheetProcessorFactory = $stylesheetProcessorFactory;
     }

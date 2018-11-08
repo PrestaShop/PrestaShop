@@ -27,9 +27,9 @@
 namespace PrestaShop\PrestaShop\Core\Localization\RTL;
 
 /**
- * Interface ProcessorFactoryInterface creates RTL stylesheet processor.
+ * Interface StyleSheetProcessorFactoryInterface creates RTL stylesheet processor.
  */
-interface ProcessorFactoryInterface
+interface StyleSheetProcessorFactoryInterface
 {
     /**
      * @return Processor

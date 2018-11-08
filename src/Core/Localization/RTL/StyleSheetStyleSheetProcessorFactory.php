@@ -29,9 +29,9 @@ namespace PrestaShop\PrestaShop\Core\Localization\RTL;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 
 /**
- * Class ProcessorFactory
+ * Class StyleSheetStyleSheetProcessorFactory
  */
-final class ProcessorFactory implements ProcessorFactoryInterface
+final class StyleSheetStyleSheetProcessorFactory implements StyleSheetProcessorFactoryInterface
 {
     /**
      * @var ConfigurationInterface
