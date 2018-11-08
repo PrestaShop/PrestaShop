@@ -46,4 +46,12 @@ final class WebserviceKeyFilters extends Filters
             'filters' => [],
         ];
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function getKey()
+    {
+        return 'webservice_key';
+    }
 }
