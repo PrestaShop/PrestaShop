@@ -37,3 +37,5 @@ admin_common_reset_search:
     methods: [POST]
     defaults:
         _controller: 'PrestaShopBundle\Controller\Admin\CommonController::resetSearchAction'
+        controller: ''
+        action: ''

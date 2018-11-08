@@ -83,6 +83,25 @@ class AdminFilterRepository extends EntityRepository
     }
 
     /**
+     * @param string $key
+     *
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function removeByUniqueKey($key)
+    {
+        $adminFilter = $this->findOneBy([
+            'uniqueKey' => $key,
+        ]);
+
+        if (null === $adminFilter) {
+            return;
+        }
+
+        $this->getEntityManager()->remove($adminFilter);
+        $this->getEntityManager()->flush();
+    }
+
+    /**
      * @param $employeeId
      * @param $shopId
      * @param $filters

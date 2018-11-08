@@ -47,4 +47,12 @@ final class LogsFilters extends Filters
             'filters' => [],
         ];
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function getKey()
+    {
+        return 'logs';
+    }
 }
