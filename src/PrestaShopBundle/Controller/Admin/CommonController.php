@@ -236,7 +236,6 @@ class CommonController extends FrameworkBundleAdminController
 
     /**
      * @param Request $request
-     *
      * @param string $controller
      * @param string $action
      *
@@ -252,7 +251,6 @@ class CommonController extends FrameworkBundleAdminController
         if (!empty($controller) && !empty($action)) {
             $employeeId = $this->getUser()->getId();
             $shopId = $this->getContext()->shop->id;
-
 
             $adminFiltersRepository->removeByEmployeeAndRouteParams($employeeId, $shopId, $controller, $action);
 
