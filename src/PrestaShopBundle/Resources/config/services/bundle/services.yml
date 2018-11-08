@@ -3,6 +3,7 @@ parameters:
     ps_config_dir:            "%ps_root_dir%config"
     translations_dir:         "%kernel.root_dir%/Resources/translations"
     themes_translations_dir:  "%kernel.cache_dir%/themes"
+    modules_dir:              "%kernel.root_dir%/../modules"
     themes_dir:               "%kernel.root_dir%/../themes"
 
 services:

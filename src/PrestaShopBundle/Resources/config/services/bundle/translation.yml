@@ -57,11 +57,11 @@ services:
             - "@prestashop.translation.database_loader"
             - "%themes_translations_dir%"
         properties:
-            themeResourcesDirectory:  "%themes_dir%"
-            filesystem:               "@filesystem"
-            themeRepository:          "@prestashop.core.addon.theme.repository"
-            themeExtractor:           "@prestashop.translation.theme_extractor"
-            defaultTranslationDir:    "%translations_dir%"
+            - "%themes_dir%"
+            - "@filesystem"
+            - "@prestashop.core.addon.theme.repository"
+            - "@prestashop.translation.theme_extractor"
+            - "%translations_dir%"
 
     prestashop.translation.modules_provider:
         class: PrestaShopBundle\Translation\Provider\ModulesProvider
@@ -70,6 +70,14 @@ services:
             - "%translations_dir%"
         tags:
             - { name: "ps.translation_provider" }
+
+    prestashop.translation.external_module_provider:
+        class: PrestaShopBundle\Translation\Provider\ExternalModuleProvider
+        arguments:
+        - "@prestashop.translation.database_loader"
+        - "%modules_dir%"
+        tags:
+        - { name: "ps.translation_provider" }
 
     prestashop.translation.module_provider:
         class: PrestaShopBundle\Translation\Provider\ModuleProvider
@@ -84,6 +92,10 @@ services:
         arguments:
             - "@prestashop.translation.database_loader"
             - "%translations_dir%"
+        calls:
+            - method: setModulesDirectory
+              arguments:
+                - '%modules_dir%'
         tags:
             - { name: "ps.translation_provider" }
 

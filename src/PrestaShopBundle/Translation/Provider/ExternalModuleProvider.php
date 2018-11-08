@@ -28,35 +28,9 @@ namespace PrestaShopBundle\Translation\Provider;
 
 use Symfony\Component\Translation\MessageCatalogue;
 
-class SearchProvider extends AbstractProvider implements UseDefaultCatalogueInterface
+class ExternalModuleProvider extends AbstractProvider implements UseDefaultCatalogueInterface
 {
-    private $domain;
-
-    private $modulesDirectory;
-
-    /**
-     * Set domain.
-     *
-     * @param $domain
-     *
-     * @return $this
-     */
-    public function setDomain($domain)
-    {
-        $this->domain = $domain;
-
-        return $this;
-    }
-
-    /**
-     * Get domain.
-     *
-     * @return mixed
-     */
-    public function getDomain()
-    {
-        return $this->domain;
-    }
+    private $moduleName;
 
     /**
      * {@inheritdoc}
@@ -64,7 +38,7 @@ class SearchProvider extends AbstractProvider implements UseDefaultCatalogueInte
     public function getTranslationDomains()
     {
         return array(
-            '^' . $this->getDomain(),
+            '^Modules' . $this->getModuleDomain() . '*',
         );
     }
 
@@ -74,7 +48,7 @@ class SearchProvider extends AbstractProvider implements UseDefaultCatalogueInte
     public function getFilters()
     {
         return array(
-            '#^' . $this->getDomain() . '#',
+            '#^Modules' . $this->getModuleDomain() . '*#i',
         );
     }
 
@@ -83,7 +57,14 @@ class SearchProvider extends AbstractProvider implements UseDefaultCatalogueInte
      */
     public function getIdentifier()
     {
-        return 'search';
+        return 'external_module';
+    }
+
+    public function setModuleName($moduleName)
+    {
+        $this->moduleName = $moduleName;
+
+        return $this;
     }
 
     /**
@@ -93,12 +74,11 @@ class SearchProvider extends AbstractProvider implements UseDefaultCatalogueInte
     {
         $defaultCatalogue = new MessageCatalogue($this->getLocale());
 
+
+
         foreach ($this->getFilters() as $filter) {
             $filteredCatalogue = $this->getCatalogueFromPaths(
-                array(
-                    $this->getDefaultResourceDirectory(),
-                    $this->getModulesDirectory(),
-                ),
+                array($this->getDefaultResourceDirectory()),
                 $this->getLocale(),
                 $filter
             );
@@ -112,21 +92,22 @@ class SearchProvider extends AbstractProvider implements UseDefaultCatalogueInte
         return $defaultCatalogue;
     }
 
+    public function getXliffCatalogue()
+    {
+        return new MessageCatalogue($this->locale);
+    }
+
+
     /**
      * {@inheritdoc}
      */
     public function getDefaultResourceDirectory()
     {
-        return $this->resourceDirectory . DIRECTORY_SEPARATOR . 'default';
+        return $this->resourceDirectory . DIRECTORY_SEPARATOR . $this->moduleName . DIRECTORY_SEPARATOR . 'translations';
     }
 
-    public function getModulesDirectory()
+    private function getModuleDomain()
     {
-        return $this->modulesDirectory;
-    }
-
-    public function setModulesDirectory($modulesDirectory)
-    {
-        $this->modulesDirectory = $modulesDirectory;
+        return ucfirst($this->moduleName);
     }
 }

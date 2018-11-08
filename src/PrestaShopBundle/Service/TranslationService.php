@@ -175,12 +175,12 @@ class TranslationService
         );
         $treeDomain = preg_split('/(?=[A-Z])/', $domain, -1, PREG_SPLIT_NO_EMPTY);
 
+
         if (!empty($theme) && 'classic' !== $theme) {
             $defaultCatalog = current($translationProvider->getThemeCatalogue()->all());
         } else {
             $defaultCatalog = current($translationProvider->getDefaultCatalogue()->all());
         }
-
         $xliffCatalog = current($translationProvider->getXliffCatalogue()->all());
 
         if ('EmailsSubject' === $domain) {

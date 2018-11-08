@@ -54,6 +54,7 @@ class TranslationsFactory implements TranslationsFactoryInterface
     {
         foreach ($this->providers as $provider) {
             if ($domainIdentifier === $provider->getIdentifier()) {
+                dump($domainIdentifier);
                 return $provider->setLocale($locale)->getMessageCatalogue();
             }
         }
