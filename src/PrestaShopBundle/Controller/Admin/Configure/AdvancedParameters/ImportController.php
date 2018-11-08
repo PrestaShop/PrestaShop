@@ -27,16 +27,13 @@
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use PrestaShop\PrestaShop\Core\Import\Exception\NotSupportedImportEntityException;
-use PrestaShop\PrestaShop\Core\Import\Exception\UnreadableFileException;
 use PrestaShop\PrestaShop\Core\Import\ImportDirectory;
-use PrestaShop\PrestaShop\Core\Import\ImportSettings;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Exception\FileUploadException;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use SplFileInfo;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -101,56 +98,6 @@ class ImportController extends FrameworkBundleAdminController
         ];
 
         return $this->getTemplateParams($request) + $params;
-    }
-
-    /**
-     * Shows import data page where the configuration of importable data and the final step of import is handled.
-     *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     * @DemoRestricted(redirectRoute="admin_import")
-     * @Template("@PrestaShop/Admin/Configure/AdvancedParameters/ImportPage/import_data.html.twig")
-     *
-     * @param Request $request
-     *
-     * @return array|RedirectResponse
-     */
-    public function showImportDataAction(Request $request)
-    {
-        $importDirectory = $this->get('prestashop.core.import.dir');
-        $dataRowCollectionFactory = $this->get('prestashop.core.import.factory.data_row.collection_factory');
-        $dataRowCollectionPresenter = $this->get('prestashop.core.import.data_row.collection_presenter');
-        $entityFieldsProviderFinder = $this->get('prestashop.core.import.fields_provider_finder');
-        $formHandler = $this->get('prestashop.admin.import_data_configuration.form_handler');
-        $importConfigFactory = $this->get('prestashop.core.import.config_factory');
-
-        $importFile = new SplFileInfo($importDirectory . $request->getSession()->get('csv'));
-        $importConfig = $importConfigFactory->buildFromRequest($request);
-        $form = $formHandler->getForm($importConfig);
-
-        try {
-            $dataRowCollection = $dataRowCollectionFactory->buildFromFile(
-                $importFile,
-                ImportSettings::MAX_VISIBLE_ROWS
-            );
-        } catch (UnreadableFileException $e) {
-            $this->addFlash(
-                'error',
-                $this->trans('The import file cannot be read.', 'Admin.Advparameters.Notification')
-            );
-
-            return $this->redirectToRoute('admin_import');
-        }
-
-        $presentedDataRowCollection = $dataRowCollectionPresenter->present($dataRowCollection);
-        $entityFieldsProvider = $entityFieldsProviderFinder->find($importConfig->getEntityType());
-
-        return [
-            'importDataConfigurationForm' => $form->createView(),
-            'dataRowCollection' => $presentedDataRowCollection,
-            'maxVisibleColumns' => ImportSettings::MAX_VISIBLE_COLUMNS,
-            'showPagingArrows' => $presentedDataRowCollection['row_size'] > ImportSettings::MAX_VISIBLE_COLUMNS,
-            'requiredFields' => $entityFieldsProvider->getCollection()->getRequiredFields(),
-        ];
     }
 
     /**
@@ -245,76 +192,6 @@ class ImportController extends FrameworkBundleAdminController
         }
 
         return $this->redirectToRoute('admin_import');
-    }
-
-    /**
-     * Save import data match configuration.
-     *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message="You do not have permission to update this.", redirectRoute="admin_import")
-     * @DemoRestricted(redirectRoute="admin_import")
-     *
-     * @param Request $request
-     *
-     * @return JsonResponse
-     */
-    public function saveImportMatchAction(Request $request)
-    {
-        $formHandler = $this->get('prestashop.admin.import_data_configuration.form_handler');
-        $importConfigFactory = $this->get('prestashop.core.import.config_factory');
-
-        $importConfig = $importConfigFactory->buildFromRequest($request);
-        $form = $formHandler->getForm($importConfig);
-        $form->setData([
-            'match_name' => $request->request->get('match_name'),
-            'skip' => $request->request->get('skip'),
-            'type_value' => $request->request->get('type_value'),
-        ]);
-
-        $errors = $formHandler->save($form->getData());
-        $matches = [];
-
-        if (!$errors) {
-            $importMatchRepository = $this->get('prestashop.core.admin.import_match.repository');
-            $matches = $importMatchRepository->findAll();
-        }
-
-        return $this->json([
-            'errors' => $errors,
-            'matches' => $matches,
-        ]);
-    }
-
-    /**
-     * Delete import data match configuration.
-     *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message="You do not have permission to update this.", redirectRoute="admin_import")
-     * @DemoRestricted(redirectRoute="admin_import")
-     *
-     * @param Request $request
-     *
-     * @return JsonResponse
-     */
-    public function deleteImportMatchAction(Request $request)
-    {
-        $importMatchRepository = $this->get('prestashop.core.admin.import_match.repository');
-        $importMatchRepository->deleteById($request->get('import_match_id'));
-
-        return $this->json([]);
-    }
-
-    /**
-     * Get import data match configuration.
-     *
-     * @param Request $request
-     *
-     * @return JsonResponse
-     */
-    public function getImportMatchAction(Request $request)
-    {
-        $importMatchRepository = $this->get('prestashop.core.admin.import_match.repository');
-        $importMatch = $importMatchRepository->findOneById($request->get('import_match_id'));
-
-        return $this->json($importMatch);
     }
 
     /**
