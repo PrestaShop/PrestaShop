@@ -28,6 +28,8 @@ namespace PrestaShopBundle\Controller\Admin\Configure\ShopParameters;
 
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Query\GetShowcaseCardIsClosed;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ValueObject\ShowcaseCard;
+use Exception;
+use PrestaShop\PrestaShop\Core\Search\Filters\LogsFilters;
 use PrestaShop\PrestaShop\Core\Search\Filters\MetaFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -51,8 +53,10 @@ class MetaController extends FrameworkBundleAdminController
      *
      * @return Response
      */
-    public function indexAction(MetaFilters $filters)
+    public function indexAction(MetaFilters $filters, LogsFilters $logsFilters)
     {
+        dump($filters, $logsFilters);
+
         $seoUrlsGridFactory = $this->get('prestashop.core.grid.factory.meta');
         $grid = $seoUrlsGridFactory->getGrid($filters);
 

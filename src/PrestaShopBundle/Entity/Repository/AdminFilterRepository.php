@@ -110,7 +110,6 @@ class AdminFilterRepository extends EntityRepository
             ->setFilter(json_encode($filters));
 
         $this->getEntityManager()->persist($adminFilter);
-
         $this->getEntityManager()->flush();
     }
 
@@ -118,16 +117,16 @@ class AdminFilterRepository extends EntityRepository
      * Persist (create or update) filters into database.
      *
      * @param array $filters
-     * @param string $filtersClassName
+     * @param string $uniqueKey
      * @param int $employeeId
      * @param int $shopId
      */
-    public function persist(array $filters, $filtersClassName, $employeeId, $shopId)
+    public function persist(array $filters, $uniqueKey, $employeeId, $shopId)
     {
         $adminFilter = $this->findOneBy([
             'employee' => $employeeId,
             'shop' => $shopId,
-            'className' => $filtersClassName,
+            'uniqueKey' => $uniqueKey,
         ]);
 
         $adminFilter = null === $adminFilter ? new AdminFilter() : $adminFilter;
@@ -135,7 +134,7 @@ class AdminFilterRepository extends EntityRepository
         $adminFilter
             ->setController('')
             ->setAction('')
-            ->setClassName($filtersClassName)
+            ->setUniqueKey($uniqueKey)
             ->setEmployee($employeeId)
             ->setShop($shopId)
             ->setFilter(json_encode($filters))

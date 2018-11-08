@@ -48,6 +48,22 @@ abstract class Filters extends ParameterBag implements SearchCriteriaInterface
     }
 
     /**
+     * Unique filters key.
+     *
+     * By default it's fully qualified class name,
+     * but can be overridden to anything.
+     * If you decide to override it,
+     * it's recommended to prefix it with your vendor name
+     * to avoid name collisions.
+     *
+     * @return string
+     */
+    public static function getKey()
+    {
+        return static::class;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function getOrderBy()
