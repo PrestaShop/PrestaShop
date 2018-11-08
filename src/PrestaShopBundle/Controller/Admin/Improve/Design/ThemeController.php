@@ -88,7 +88,7 @@ class ThemeController extends AbstractAdminController
             'isSingleShopContext' => $this->get('prestashop.adapter.shop.context')->isSingleShopContext(),
             'adaptThemeToRtlLanguagesForm' => $this->getAdaptThemeToRtlLanguageForm()->createView(),
             'isInstalledRtlLanguage' => $installedRtlLanguageChecker->isInstalledRtlLanguage(),
-            'shopName' => $this->get('prestashop.adapter.shop.context')->getName(),
+            'shopName' => $this->get('prestashop.adapter.shop.context')->getShopName(),
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
         ]);

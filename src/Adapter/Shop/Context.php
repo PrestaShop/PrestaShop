@@ -208,7 +208,7 @@ class Context implements MultistoreContextCheckerInterface, ShopContextInterface
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getShopName()
     {
         return LegacyContext::getContext()->shop->name;
     }
