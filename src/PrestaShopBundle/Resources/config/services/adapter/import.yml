@@ -7,3 +7,11 @@ services:
         arguments:
             - '@doctrine.dbal.default_connection'
             - '%database_prefix%'
+
+    prestashop.adapter.import.entity_deleter:
+        class: 'PrestaShop\PrestaShop\Adapter\Import\ImportEntityDeleter'
+        arguments:
+            - '@doctrine.dbal.default_connection'
+            - '%database_prefix%'
+            - '@prestashop.adapter.legacy.configuration'
+            - '@prestashop.core.image.file_deleter'

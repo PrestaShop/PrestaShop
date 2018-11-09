@@ -105,3 +105,6 @@ services:
 
     prestashop.core.import.config_factory:
         class: 'PrestaShop\PrestaShop\Core\Import\Configuration\ImportConfigFactory'
+
+    prestashop.core.import.request_validator:
+        class: 'PrestaShop\PrestaShop\Core\Import\Validator\ImportRequestValidator'

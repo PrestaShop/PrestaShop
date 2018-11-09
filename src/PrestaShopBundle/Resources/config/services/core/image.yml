@@ -1,0 +1,6 @@
+services:
+    _defaults:
+        public: true
+
+    prestashop.core.image.file_deleter:
+        class: 'PrestaShop\PrestaShop\Core\Image\Deleter\ImageFileDeleter'
