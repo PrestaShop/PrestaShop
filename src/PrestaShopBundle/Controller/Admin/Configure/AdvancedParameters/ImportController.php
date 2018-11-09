@@ -86,14 +86,6 @@ class ImportController extends FrameworkBundleAdminController
         $finder = $this->get('prestashop.core.import.file_finder');
         $iniConfiguration = $this->get('prestashop.core.configuration.ini_configuration');
 
-        /* NO_PROD
-        // add support for preselected entity when import type is available in query
-        $formData = $request->query->has('import_type') ?
-            ['entity' => $request->query->get('import_type')] :
-            []
-        ;
-        $form = $this->get('form.factory')->createNamed('', ImportType::class, $formData);
-        **/
         $form = $formHandler->getForm();
         $form->handleRequest($request);
 
