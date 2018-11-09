@@ -118,6 +118,7 @@
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^2.12",
         "johnkary/phpunit-speedtrap": "^1.1",
+        "mikey179/vfsStream": "^1.6",
         "phake/phake": "@stable",
         "phpunit/phpunit": "~5.7",
         "symfony/phpunit-bridge": "^3.0"
