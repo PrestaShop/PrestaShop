@@ -29,6 +29,7 @@ import PostSizeChecker from './PostSizeChecker';
 
 export default class Importer {
   constructor() {
+    this.configuration = {};
     this.progressModal = new ImportProgressModal;
     this.batchSizeCalculator = new ImportBatchSizeCalculator;
     this.postSizeChecker = new PostSizeChecker();
@@ -40,16 +41,12 @@ export default class Importer {
   /**
    * Process the import.
    *
+   * @param {String} importUrl url of the controller, processing the import.
    * @param {Object} configuration import configuration.
    */
-  import(configuration) {
-    this.configuration = {
-      ajax: 1,
-      action: 'import',
-      tab: 'AdminImport',
-      token: token
-    };
+  import(importUrl, configuration) {
     this._mergeConfiguration(configuration);
+    this.importUrl = importUrl;
 
     // Total number of rows to be imported.
     this.totalRowsCount = 0;
@@ -88,7 +85,7 @@ export default class Importer {
     this._onImportStart();
 
     $.post({
-      url: 'index.php',
+      url: this.importUrl,
       dataType: 'json',
       data: this.configuration,
       success: (response) => {

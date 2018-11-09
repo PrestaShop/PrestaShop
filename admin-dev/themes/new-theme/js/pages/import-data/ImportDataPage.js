@@ -61,6 +61,9 @@ export default class ImportDataPage {
       configuration[$($input).attr('name')] = $($input).val();
     });
 
-    this.importer.import(configuration);
+    this.importer.import(
+      $('.js-import-process-button').data('import_url'),
+      configuration
+    );
   }
 }
