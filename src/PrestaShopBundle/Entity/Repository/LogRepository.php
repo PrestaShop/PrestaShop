@@ -218,7 +218,7 @@ class LogRepository implements RepositoryInterface, DoctrineQueryBuilderInterfac
         $qb = $this->connection
             ->createQueryBuilder()
             ->from($this->logTable, 'l')
-            ->innerJoin('l', $employeeTable, 'e', 'l.id_employee = e.id_employee');
+            ->leftJoin('l', $employeeTable, 'e', 'l.id_employee = e.id_employee');
 
         if (null === $searchCriteria) {
             return $qb;

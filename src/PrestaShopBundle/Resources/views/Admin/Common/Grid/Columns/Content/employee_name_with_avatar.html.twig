@@ -23,10 +23,14 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-{%
-  set employeeName, employeeImage = record.employee, 'http://profile.prestashop.com/'~record.email|url_encode~'.jpg'
-%}
-<span class="employee_avatar_small">
-    <img class="img rounded-circle" alt="{{ employeeName }}" src="{{ employeeImage }}" height="32" width="32" />
-</span>
-{{ employeeName }}
+{% if record.employee is not null %}
+    {%
+      set employeeName, employeeImage = record.employee, 'http://profile.prestashop.com/'~record.email|url_encode~'.jpg'
+    %}
+    <span class="employee_avatar_small">
+        <img class="img rounded-circle" alt="{{ employeeName }}" src="{{ employeeImage }}" height="32" width="32" />
+    </span>
+    {{ employeeName }}
+{% else %}
+    N/A
+{% endif %}
