@@ -33,8 +33,8 @@
  */
 function validateInput($argv)
 {
-    if (count($argv) !== 2) {
-        echo 'php compile.php <PS_VERSION>' . PHP_EOL;
+    if (count($argv) !== 3) {
+        echo 'php compile.php <PS_VERSION> <RELEASE_TYPE>' . PHP_EOL;
         die(1);
     }
 }
@@ -42,6 +42,7 @@ function validateInput($argv)
 validateInput($argv);
 
 $psVersion = $argv[1];
+$releaseType = $argv[2];
 
 $template = file_get_contents(__DIR__ . '/index_template.php');
 
@@ -69,8 +70,9 @@ if ($handle = opendir(__DIR__ . '/content')) {
     }
 }
 
-// insert Prestashop version
+// replace placeholders
 $template = str_replace('%ps-version-placeholder%', $psVersion, $template);
+$template = str_replace('%ps-release-type-placeholder%', $releaseType, $template);
 
 // compute inline php classes
 // @todo: remove duplicate license headers

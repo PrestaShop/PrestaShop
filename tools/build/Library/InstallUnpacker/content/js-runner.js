@@ -88,8 +88,9 @@ function checkWhetherThereIsAMoreRecentVersion() {
     if (msg.error) {
       fallbackToExtraction();
     } else {
-      if (msg.thereIsAMoreRecentPSVersionAndItCanBeInstalled == true) {
-        showFormToDownloadLatestPSVersion();
+      if ((msg.thereIsAMoreRecentPSVersionAndItCanBeInstalled == true)
+          && (msg.currentReleaseType)) {
+        showFormToDownloadLatestPSVersion(msg.currentReleaseType);
       } else {
         fallbackToExtraction();
       }
@@ -101,9 +102,20 @@ function checkWhetherThereIsAMoreRecentVersion() {
   });
 }
 
-function showFormToDownloadLatestPSVersion() {
+/**
+ * @param string releaseType
+ */
+function showFormToDownloadLatestPSVersion(releaseType) {
   $('#content-install-in-progress').hide();
   $('#content-install-form').show();
+
+  if (releaseType == 'stable') {
+    $('#header-not-stable').hide();
+    $('#question-not-stable').hide();
+  } else {
+    $('#header').hide();
+    $('#question').hide();
+  }
 }
 
 function skipFormToDownloadLatestPSVersion() {

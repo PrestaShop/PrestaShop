@@ -52,6 +52,10 @@ class ReleaseCreator
      */
     const PRESTASHOP_TMP_DIR = 'prestashop';
 
+    const RELEASE_TYPE_STABLE = 'stable';
+    const RELEASE_TYPE_ALPHA = 'alpha';
+    const RELEASE_TYPE_BETA = 'beta';
+
     /**
      * Use to write on terminal.
      *
@@ -159,6 +163,13 @@ class ReleaseCreator
     protected $version;
 
     /**
+     * Release type which user wants: stable, beta ..?
+     *
+     * @var string
+     */
+    protected $type;
+
+    /**
      * Do we include the installer?
      * Do not work with $useZip = false.
      *
@@ -191,11 +202,12 @@ class ReleaseCreator
      * Set the release wanted version, and some options.
      *
      * @param string $version
+     * @param string $type enum
      * @param bool $useInstaller
      * @param bool $useZip
      * @param string $destinationDir
      */
-    public function __construct($version = null, $useInstaller = true, $useZip = true, $destinationDir = '')
+    public function __construct($version = null, $type = null, $useInstaller = true, $useZip = true, $destinationDir = '')
     {
         $this->consoleWriter = new ConsoleWriter();
         $tmpDir = sys_get_temp_dir();
@@ -208,9 +220,18 @@ class ReleaseCreator
         $this->projectPath = realpath(__DIR__ . '/../../..');
         $this->version = $version ? $version : $this->getCurrentVersion();
         $this->zipFileName = "prestashop_$this->version.zip";
+        $this->type = $type;
 
         if (empty($this->version)) {
             throw new Exception('Version is not provided and cannot be found in project.');
+        }
+
+        if (empty($this->type)) {
+            throw new Exception('Type is not provided and cannot be found in project.');
+        }
+        $authorizedTypes = [self::RELEASE_TYPE_ALPHA, self::RELEASE_TYPE_BETA, self::RELEASE_TYPE_STABLE];
+        if (!in_array($this->type, $authorizedTypes)) {
+            throw new Exception(sprintf('Invalid release type: must be one of: %s', implode(', ', $authorizedTypes)));
         }
 
         if (empty($destinationDir)) {
@@ -714,7 +735,7 @@ class ReleaseCreator
         exec($cmd);
 
         if ($this->useInstaller) {
-            exec("cd {$argProjectPath}/tools/build/Library/InstallUnpacker && php compile.php {$this->version} && cd -");
+            exec("cd {$argProjectPath}/tools/build/Library/InstallUnpacker && php compile.php {$this->version} {$this->type} && cd -");
             $zip = new ZipArchive();
             $zip->open("{$this->tempProjectPath}/{$this->zipFileName}", ZipArchive::CREATE | ZipArchive::OVERWRITE);
             $zip->addFile("{$this->tempProjectPath}/{$installerZipFilename}", $installerZipFilename);

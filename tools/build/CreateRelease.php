@@ -45,6 +45,10 @@ $releaseOptions = [
         'description' => 'Desired release version of PrestaShop',
         'longopt' => 'version:',
     ],
+    'type' => [
+        'description' => 'Desired release type',
+        'longopt' => 'type:',
+    ],
     'no-zip' => [
         'description' => 'Do not zip the release directory. Default: false.',
         'longopt' => 'no-zip',
@@ -109,6 +113,12 @@ if (isset($userOptions['version'])) {
     $version = null;
 }
 
+if (isset($userOptions['type'])) {
+    $type = $userOptions['type'];
+} else {
+    $type = null;
+}
+
 if (isset($userOptions['no-zip'])) {
     $useZip = false;
 }
@@ -122,7 +132,7 @@ if (isset($userOptions['no-installer'])) {
 }
 
 try {
-    $releaseCreator = new ReleaseCreator($version, $useInstaller, $useZip, $destinationDir);
+    $releaseCreator = new ReleaseCreator($version, $type, $useInstaller, $useZip, $destinationDir);
     $releaseCreator->createRelease();
 } catch (Exception $e) {
     $consoleWrite->displayText(

@@ -20,11 +20,12 @@ This tool needs these system commands:
 To create a release:
 
 ```
-php tools/build/CreateRelease.php --version="1.7.2.4"
+php tools/build/CreateRelease.php --version="1.7.2.4" --type="stable"
 ```
 
 Available options:
 * --version: Desired release version of PrestaShop. Required.
+* --type: Desired release type: alpha, beta or stable. Required.
 * --no-installer: Do not put the installer in the release. Default: false.
 * --no-zip: Do not zip the release directory. Default: false.
 * --destination-dir: Path where the release will be stored. Default: tools/build/releases/prestashop_{version}.

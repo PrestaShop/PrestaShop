@@ -28,6 +28,7 @@ set_time_limit(0);
 define('_PS_INSTALL_MINIMUM_PHP_VERSION_ID_', 50600);
 define('_PS_INSTALL_MINIMUM_PHP_VERSION_', '5.6');
 define('_PS_VERSION_', '%ps-version-placeholder%');
+define('_PS_RELEASE_TYPE_', '%ps-release-type-placeholder%');
 
 define('ZIP_NAME', 'prestashop.zip');
 define('TARGET_FOLDER', __DIR__ . '/');
@@ -99,6 +100,7 @@ if (isset($_GET['run']) && ($_GET['run'] === 'check-version')) {
 
         die(json_encode([
             'thereIsAMoreRecentPSVersionAndItCanBeInstalled' => true,
+            'currentReleaseType' => _PS_RELEASE_TYPE_,
         ]));
     } catch (\Exception $e) {
         die(json_encode([
@@ -269,6 +271,13 @@ if (isset($_GET['element'])) {
         </div>
         <div id="question">
           Do you want to install the latest version instead? (recommended)
+        </div>
+        <div id="header-not-stable">
+          The version you are about to install is a BETA BUILD version of PrestaShop,
+          only for testing purpose, and should not be used in production.
+        </div>
+        <div id="question-not-stable">
+          Do you want to install the latest stable version instead?
         </div>
         <div id="form-panel">
           <div id="form">
