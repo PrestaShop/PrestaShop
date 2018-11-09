@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use PrestaShop\PrestaShop\Core\Import\Exception\NotSupportedImportEntityException;
+use PrestaShop\PrestaShop\Core\Import\Exception\UnavailableImportFileException;
 use PrestaShop\PrestaShop\Core\Import\ImportDirectory;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Exception\FileUploadException;
@@ -240,6 +241,46 @@ class ImportController extends FrameworkBundleAdminController
         $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $sampleFile->getFilename());
 
         return $response;
+    }
+
+    /**
+     * Process the import.
+     *
+     * @AdminSecurity("is_granted(['read','update', 'create','delete'], request.get('_legacy_controller'))", redirectRoute="admin_import")
+     * @DemoRestricted(redirectRoute="admin_import")
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function processImportAction(Request $request)
+    {
+        $errors = [];
+        $requestValidator = $this->get('prestashop.core.import.request_validator');
+
+        try {
+            $requestValidator->validate($request);
+        } catch (UnavailableImportFileException $e) {
+            $errors[] = $this->trans('To proceed, please upload a file first.', 'Admin.Advparameters.Notification');
+        }
+
+        if (!empty($errors)) {
+            return $this->json([
+                'errors' => $errors,
+                'isFinished' => true,
+            ]);
+        }
+
+        $importConfigFactory = $this->get('prestashop.core.import.config_factory');
+
+        $importConfig = $importConfigFactory->buildFromRequest($request);
+        $entityFields = $request->request->get('type_value');
+
+        //@todo WIP.
+
+        return $this->json([
+            'errors' => $errors,
+        ]);
     }
 
     /**

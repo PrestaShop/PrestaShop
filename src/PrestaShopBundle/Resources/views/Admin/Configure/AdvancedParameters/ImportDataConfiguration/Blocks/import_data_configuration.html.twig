@@ -157,10 +157,12 @@
   </div>
   <div class="card-footer">
     <div class="d-flex justify-content-between">
-      <a href="{{ path('admin_import') }}" class="btn btn-outline-secondary">
+      <button class="btn btn-outline-secondary js-import-process-button"
+              data-import_url="{{ path('admin_import_process') }}"
+      >
         <i class="material-icons">cancel</i>
         {{ 'Cancel'|trans({}, 'Admin.Actions') }}
-      </a>
+      </button>
       <button class="btn btn-primary js-process-import">
         <i class="material-icons">check</i>
         {{ 'Import'|trans({}, 'Admin.Actions') }}
