@@ -42,7 +42,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class ImportType extends TranslatorAwareType
 {
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
