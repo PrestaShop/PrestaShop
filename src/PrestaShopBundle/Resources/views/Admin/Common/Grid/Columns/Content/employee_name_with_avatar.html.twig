@@ -32,5 +32,5 @@
     </span>
     {{ employeeName }}
 {% else %}
-    N/A
+    {{ 'N/A'|trans({}, 'Admin.Global') }}
 {% endif %}
