@@ -143,7 +143,7 @@ class AdminAccessControllerCore extends AdminController
 
         $tab_id = (int) Tools::getValue('id_tab');
         $permission = Tools::getValue('perm');
-        if ($this->isAllowedToEditPermissions($tab_id, $permission)) {
+        if (!$this->isAllowedToEditPermissions($tab_id, $permission)) {
             throw new PrestaShopException($this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error'));
         }
 
