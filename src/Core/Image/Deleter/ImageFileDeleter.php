@@ -39,6 +39,7 @@ final class ImageFileDeleter implements ImageFileDeleterInterface
         if (!$path || !$format || !is_dir($path)) {
             return false;
         }
+
         foreach (scandir($path, SCANDIR_SORT_NONE) as $file) {
             $pattern = '/^[0-9]+(\-(.*))?\.' . $format . '$/';
 
@@ -48,10 +49,11 @@ final class ImageFileDeleter implements ImageFileDeleterInterface
             }
 
             // Delete the file by regex pattern
-            $this->deleteByPattern($pattern, $file);
+            $this->deleteByPattern($pattern, $path, $file);
         }
 
         // Can we remove the image folder?
+
         if ($deleteDirectory && is_numeric(basename($path))) {
             $removeFolder = true;
             foreach (scandir($path, SCANDIR_SORT_NONE) as $file) {
@@ -74,28 +76,16 @@ final class ImageFileDeleter implements ImageFileDeleterInterface
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function deleteAllImages($path, $format = 'jpg')
-    {
-        $this->deleteByPattern(
-            '/(.*)\.'.$format.'$/',
-            $path
-        );
-    }
-
-    /**
      * Delete images by given regex pattern from given path.
      *
      * @param string $pattern regex pattern
-     * @param string $path
+     * @param string $path file directory path
+     * @param string $filename
      */
-    private function deleteByPattern($pattern, $path)
+    private function deleteByPattern($pattern, $path, $filename)
     {
-        foreach (scandir($path, SCANDIR_SORT_NONE) as $d) {
-            if (preg_match($pattern, $d)) {
-                unlink($path . $d);
-            }
+        if (preg_match($pattern, $filename)) {
+            unlink($path.$filename);
         }
     }
 }
