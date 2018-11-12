@@ -133,6 +133,9 @@ final class ImportEntityDeleter implements ImportEntityDeleterInterface
         return true;
     }
 
+    /**
+     * Delete all suppliers data and images.
+     */
     private function deleteSuppliers()
     {
         $this->truncateTables([
