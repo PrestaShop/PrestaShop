@@ -24,12 +24,12 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Form;
+namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 
 /**
- * Interface IdentifiableObjectFormFactoryInterface.
+ * Interface IdentifiableObjectFormDataHandlerInterface.
  */
-interface IdentifiableObjectFormFactoryInterface
+interface FormDataHandlerInterface
 {
     /**
      * @param array $data
@@ -37,5 +37,15 @@ interface IdentifiableObjectFormFactoryInterface
      *
      * @return mixed
      */
-    public function create(array $data, $id = null);
+    public function create(array $data);
+
+    /**
+     * Update object
+     *
+     * @param $id
+     * @param array $data
+     *
+     * @return mixed
+     */
+    public function update($id, array $data);
 }

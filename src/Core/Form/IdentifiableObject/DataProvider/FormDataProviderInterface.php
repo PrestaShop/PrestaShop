@@ -24,18 +24,19 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Form;
+namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
 /**
- * Interface IdentifiableObjectFormDataHandlerInterface.
+ * Interface IdentifiableObjectFormDataProviderInterface.
  */
-interface IdentifiableObjectFormDataHandlerInterface
+interface FormDataProviderInterface
 {
     /**
-     * @param array $data
-     * @param null $id
+     * @param mixed $id
      *
      * @return mixed
      */
-    public function save(array $data, $id = null);
+    public function getData($id);
+
+    public function getDefaultData();
 }

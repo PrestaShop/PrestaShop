@@ -34,13 +34,13 @@ use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\CannotEditSqlReque
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlRequestConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlRequestException;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlRequestNotFoundException;
-use PrestaShop\PrestaShop\Core\Form\IdentifiableObjectFormDataHandlerInterface;
+use PrestaShop\PrestaShop\Core\Form\FormDataHandlerInterface;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 
 /**
  * Class SqlRequestFormDataHandler.
  */
-final class SqlRequestFormDataHandler implements IdentifiableObjectFormDataHandlerInterface
+final class SqlRequestFormDataHandler implements FormDataHandlerInterface
 {
     /**
      * @var CommandBusInterface
