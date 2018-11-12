@@ -36,12 +36,12 @@ interface ImageFileDeleterInterface
      *
      * @param string $path images directory.
      * @param bool $recursively if true deletes images from subdirectories.
-     * @param bool $deleteDirectory if true deletes the images directory as well.
+     * @param bool $deleteSubdirectories if true deletes the subdirectories as well.
      * @param string $format image format.
      *
      * @return bool
      */
-    public function deleteFromPath($path, $recursively = false, $deleteDirectory = false, $format = 'jpg');
+    public function deleteFromPath($path, $recursively = false, $deleteSubdirectories = false, $format = 'jpg');
 
     /**
      * Delete all images from given path.
