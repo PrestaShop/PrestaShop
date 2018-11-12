@@ -30,14 +30,10 @@ use Employee;
 use RuntimeException;
 use Smarty;
 use Symfony\Component\Process\Exception\LogicException;
-use PrestaShop\PrestaShop\Core\Feature\TokenInUrls;
 use Context;
 use Language;
 use AdminController;
-use Link;
 use Tab;
-use Tools;
-use Dispatcher;
 use AdminLegacyLayoutControllerCore;
 
 /**

@@ -814,6 +814,7 @@ class LinkCore
      * @param $controller
      * @param bool $withToken
      * @param array $params
+     *
      * @return string
      */
     public function getLegacyAdminLink($controller, $withToken = true, $params = array())
