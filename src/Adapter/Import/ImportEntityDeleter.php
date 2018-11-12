@@ -244,10 +244,6 @@ final class ImportEntityDeleter implements ImportEntityDeleterInterface
 
         $imgDir = $this->configuration->get('_PS_PROD_IMG_DIR_');
         $this->imageFileDeleter->deleteFromPath($imgDir, true, true);
-
-        if (!file_exists($imgDir)) {
-            mkdir($imgDir);
-        }
     }
 
     /**

@@ -34,7 +34,7 @@ final class ImageFileDeleter implements ImageFileDeleterInterface
     /**
      * {@inheritdoc}
      */
-    public function deleteFromPath($path, $recursively = false, $deleteDirectory = false, $format = 'jpg')
+    public function deleteFromPath($path, $recursively = false, $deleteSubdirectories = false, $format = 'jpg')
     {
         if (!$path || !$format || !is_dir($path)) {
             return false;
@@ -45,7 +45,7 @@ final class ImageFileDeleter implements ImageFileDeleterInterface
 
             if ($recursively && is_dir($path . $file) && (preg_match('/^[0-9]$/', $file))) {
                 // Recursion
-                $this->deleteFromPath($path . $file . '/', $recursively, $deleteDirectory, $format);
+                $this->deleteFromPath($path . $file . '/', $recursively, $deleteSubdirectories, $format);
             }
 
             // Delete the file by regex pattern
@@ -53,8 +53,7 @@ final class ImageFileDeleter implements ImageFileDeleterInterface
         }
 
         // Can we remove the image folder?
-
-        if ($deleteDirectory && is_numeric(basename($path))) {
+        if ($deleteSubdirectories && is_numeric(basename($path))) {
             $removeFolder = true;
             foreach (scandir($path, SCANDIR_SORT_NONE) as $file) {
                 if (($file != '.' && $file != '..' && $file != 'index.php')) {
