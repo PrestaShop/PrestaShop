@@ -24,17 +24,50 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Form;
+namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject;
+
+use Symfony\Component\Form\FormInterface;
 
 /**
- * Interface IdentifiableObjectFormDataProviderInterface.
+ * Interface FormHandlerInterface
  */
-interface IdentifiableObjectFormDataProviderInterface
+interface FormHandlerInterface
 {
     /**
-     * @param mixed $id
+     * Get create form for identifiable object.
      *
-     * @return mixed
+     * @param array $options
+     *
+     * @return FormInterface
      */
-    public function getData($id = null);
+    public function getForm(array $options = []);
+
+    /**
+     * Get update form for identifiable object.
+     *
+     * @param int $id
+     * @param array $options
+     *
+     * @return FormInterface
+     */
+    public function getFormFor($id, array $options = []);
+
+    /**
+     * Handles form by creating new object.
+     *
+     * @param FormInterface $form
+     *
+     * @return int Identifiable object ID
+     */
+    public function handle(FormInterface $form);
+
+    /**
+     * Handles form for given object.
+     *
+     * @param int $id
+     * @param FormInterface $form
+     *
+     * @return int Identifiable object ID
+     */
+    public function handleFor($id, FormInterface $form);
 }
