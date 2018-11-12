@@ -115,7 +115,7 @@ class Download
     }
 
     /**
-     * @return string
+     * @return VersionNumber
      */
     public function getLatestStableAvailableVersion()
     {
@@ -124,7 +124,7 @@ class Download
         $branch = $this->getLatestStableBranchObjectFromFeed($feed);
         $versionNumberAsString = (string) $branch->num;
 
-        return VersionNumber::fromString($versionNumberAsString)->__toString();
+        return VersionNumber::fromString($versionNumberAsString);
     }
 
     /**
