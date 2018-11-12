@@ -117,13 +117,7 @@ class LegacyContext
      */
     public function getLegacyAdminLink($controller, $withToken = true, $extraParams = array())
     {
-        $idLang = $this->getContext()->language->id;
-
-        if ($withToken && !TokenInUrls::isDisabled()) {
-            $extraParams['token'] = Tools::getAdminTokenLite($controller);
-        }
-
-        return $this->getContext()->link->getAdminBaseLink() . basename(_PS_ADMIN_DIR_) . '/' . Dispatcher::getInstance()->createUrl($controller, $idLang, $extraParams);
+        return $this->getContext()->link->getLegacyAdminLink($controller, $withToken, $extraParams);
     }
 
     /**

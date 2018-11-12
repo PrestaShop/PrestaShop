@@ -808,6 +808,26 @@ class LinkCore
     }
 
     /**
+     * Used when you explicitly want to create a LEGACY admin link, this should be deprecated
+     * in 1.8.0.
+     *
+     * @param $controller
+     * @param bool $withToken
+     * @param array $params
+     * @return string
+     */
+    public function getLegacyAdminLink($controller, $withToken = true, $params = array())
+    {
+        $idLang = Context::getContext()->language->id;
+
+        if ($withToken && !TokenInUrls::isDisabled()) {
+            $params['token'] = Tools::getAdminTokenLite($controller);
+        }
+
+        return $this->getAdminBaseLink() . basename(_PS_ADMIN_DIR_) . '/' . Dispatcher::getInstance()->createUrl($controller, $idLang, $params);
+    }
+
+    /**
      * @param int|null $idShop
      * @param bool|null $ssl
      * @param bool $relativeProtocol
