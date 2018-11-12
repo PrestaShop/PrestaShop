@@ -35,8 +35,8 @@
                   aria-expanded="false"
           >
               {{ 'Filter by categories'|trans({}, 'Admin.Actions') }}
-              {% if selected_column.name is defined %}
-                  ({{ selected_column.name }})
+              {% if selected_category is defined %}
+                  ({{ selected_category.getName() }})
               {% endif %}
           </button>
           <div id="tree-categories" class="dropdown-menu">
