@@ -42,4 +42,12 @@ interface ImageFileDeleterInterface
      * @return bool
      */
     public function deleteFromPath($path, $recursively = false, $deleteDirectory = false, $format = 'jpg');
+
+    /**
+     * Delete all images from given path.
+     *
+     * @param string $path
+     * @param string $format
+     */
+    public function deleteAllImages($path, $format = 'jpg');
 }

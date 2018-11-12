@@ -76,6 +76,20 @@ final class ImageFileDeleter implements ImageFileDeleterInterface
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function deleteAllImages($path, $format = 'jpg')
+    {
+        foreach (scandir($path, SCANDIR_SORT_NONE) as $file) {
+            $this->deleteByPattern(
+                '/(.*)\.'.$format.'$/',
+                $path,
+                $file
+            );
+        }
+    }
+
+    /**
      * Delete images by given regex pattern from given path.
      *
      * @param string $pattern regex pattern

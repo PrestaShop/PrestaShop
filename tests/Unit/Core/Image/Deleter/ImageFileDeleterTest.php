@@ -108,4 +108,28 @@ class ImageFileDeleterTest extends TestCase
             );
         }
     }
+
+    public function testItDeletesAllImagesWithAnyName()
+    {
+        $deleteFiles = [
+            $this->root->url().'/tmp/manufacturer_mini_1_1.jpg',
+            $this->root->url().'/tmp/manufacturer_mini_2_1.jpg',
+            $this->root->url().'/tmp/carrier_mini_1_1.jpg',
+            $this->root->url().'/tmp/carrier_mini_2_1.jpg',
+            $this->root->url().'/tmp/'.str_shuffle(md5(time())).'.jpg',
+        ];
+
+        $this->fs->mkdir($this->root->url().'/tmp');
+        $this->fs->touch($deleteFiles);
+
+        $imageFileDeleter = new ImageFileDeleter();
+        $imageFileDeleter->deleteAllImages($this->root->url().'/tmp/');
+
+        foreach ($deleteFiles as $filePath) {
+            $this->assertFalse(
+                $this->fs->exists($filePath),
+                sprintf('Expected file "%s" to be deleted, but it exists.', $filePath)
+            );
+        }
+    }
 }
