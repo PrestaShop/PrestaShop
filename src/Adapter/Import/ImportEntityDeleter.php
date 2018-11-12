@@ -30,11 +30,12 @@ use Doctrine\DBAL\Connection;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Image\Deleter\ImageFileDeleterInterface;
 use PrestaShop\PrestaShop\Core\Import\Entity;
+use PrestaShop\PrestaShop\Core\Import\Entity\ImportEntityDeleterInterface;
 
 /**
  * Class ImportEntityDeleter is responsible for deleting import entities.
  */
-final class ImportEntityDeleter implements Entity\ImportEntityDeleterInterface
+final class ImportEntityDeleter implements ImportEntityDeleterInterface
 {
     /**
      * @var Connection
@@ -140,7 +141,7 @@ final class ImportEntityDeleter implements Entity\ImportEntityDeleterInterface
             'supplier_shop',
         ]);
 
-        $this->imageFileDeleter->deleteFromPath(_PS_SUPP_IMG_DIR_);
+        $this->imageFileDeleter->deleteFromPath($this->configuration->get('_PS_SUPP_IMG_DIR_'));
     }
 
     /**
@@ -154,7 +155,7 @@ final class ImportEntityDeleter implements Entity\ImportEntityDeleterInterface
             'manufacturer_shop',
         ]);
 
-        $this->imageFileDeleter->deleteFromPath(_PS_MANU_IMG_DIR_);
+        $this->imageFileDeleter->deleteFromPath($this->configuration->get('_PS_MANU_IMG_DIR_'));
     }
 
     /**
