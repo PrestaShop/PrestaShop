@@ -1,3 +1,5 @@
+{% import '@PrestaShop/Admin/macros.html.twig' as ps %}
+
 {{ form_start(requestSqlForm) }}
   <div class="card">
     <h3 class="card-header">
@@ -6,32 +8,18 @@
     <div class="card-block row">
       <div class="card-text">
         <div class="form-group row">
-          {% set errorClass = requestSqlForm.name.vars.errors is not empty ? 'is-invalid' : '' %}
           <label for="{{ requestSqlForm.name.vars.id }}" class="form-control-label">{{ 'SQL query name'|trans }}</label>
 
           <div class="col-sm">
-            {{ form_widget(requestSqlForm.name, {'attr': {'class': errorClass}}) }}
-
-            {% for error in requestSqlForm.name.vars.errors %}
-              <div class="invalid-feedback">
-                {{ error.message }}
-              </div>
-            {% endfor %}
+            {{ ps.form_widget_with_error(requestSqlForm.name) }}
           </div>
         </div>
 
         <div class="form-group row">
-          {% set errorClass = requestSqlForm.sql.vars.errors is not empty ? 'is-invalid' : '' %}
           <label for="{{ requestSqlForm.sql.vars.id }}" class="form-control-label">{{ 'SQL query'|trans }}</label>
 
           <div class="col-sm">
-            {{ form_widget(requestSqlForm.sql, {'attr': {'rows': 10, 'class': errorClass}}) }}
-
-            {% for error in requestSqlForm.sql.vars.errors %}
-              <div class="invalid-feedback">
-                {{ error.message }}
-              </div>
-            {% endfor %}
+            {{ ps.form_widget_with_error(requestSqlForm.sql, {'attr': {'rows': 10}}) }}
           </div>
         </div>
       </div>
