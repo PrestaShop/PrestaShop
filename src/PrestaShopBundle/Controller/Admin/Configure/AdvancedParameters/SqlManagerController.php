@@ -62,10 +62,7 @@ class SqlManagerController extends FrameworkBundleAdminController
     /**
      * Show list of saved SQL's.
      *
-     * @AdminSecurity(
-     *     "is_granted(['read','update', 'create','delete'], request.get('_legacy_controller')~'_')",
-     *      message="Access denied."
-     * )
+     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
      *
      * @param Request $request
      * @param RequestSqlFilters $filters
@@ -87,10 +84,10 @@ class SqlManagerController extends FrameworkBundleAdminController
 
         $settingsForm = $this->getSettingsFormHandler()->getForm();
 
-        return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/RequestSql/list.html.twig', [
+        return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/RequestSql/index.html.twig', [
             'layoutHeaderToolbarBtn' => [
                 'add' => [
-                    'href' => $this->generateUrl('admin_sql_request_create'),
+                    'href' => $this->generateUrl('admin_sql_requests_create'),
                     'desc' => $this->trans('Add new SQL query', 'Admin.Advparameters.Feature'),
                     'icon' => 'add_circle_outline',
                 ],
@@ -105,8 +102,8 @@ class SqlManagerController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted(['read', 'update', 'create', 'delete'], request.get('_legacy_controller')~'_')", message="You do not have permission to update this.", redirectRoute="admin_logs")
-     * @DemoRestricted(redirectRoute="admin_logs")
+     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))", redirectRoute="admin_sql_requests_index")
+     * @DemoRestricted(redirectRoute="admin_sql_requests_index")
      *
      * @param Request $request
      *
@@ -127,16 +124,16 @@ class SqlManagerController extends FrameworkBundleAdminController
             $filters = $filtersForm->getData();
         }
 
-        return $this->redirectToRoute('admin_sql_request', ['filters' => $filters]);
+        return $this->redirectToRoute('admin_sql_requests_index', ['filters' => $filters]);
     }
 
     /**
      * Process Request SQL settings save.
      *
-     * @DemoRestricted(redirectRoute="admin_sql_request")
+     * @DemoRestricted(redirectRoute="admin_sql_requests_index")
      * @AdminSecurity(
-     *     "is_granted(['update', 'create','delete'], request.get('_legacy_controller')~'_')",
-     *      message="You do not have permission to edit this."
+     *     "is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))",
+     *      redirectRoute="admin_sql_requests_index"
      * )
      *
      * @param Request $request
@@ -157,15 +154,16 @@ class SqlManagerController extends FrameworkBundleAdminController
             }
         }
 
-        return $this->redirectToRoute('admin_sql_request');
+        return $this->redirectToRoute('admin_sql_requests_index');
     }
 
     /**
      * Show Request SQL create page.
      *
      * @AdminSecurity(
-     *     "is_granted(['create'], request.get('_legacy_controller')~'_')",
-     *      message="You do not have permission to create this."
+     *     "is_granted(['create'], request.get('_legacy_controller'))",
+     *      message="You do not have permission to create this.",
+     *      redirectRoute="admin_sql_requests_index"
      * )
      *
      * @param Request $request
@@ -180,7 +178,7 @@ class SqlManagerController extends FrameworkBundleAdminController
         if ($this->getSqlRequestFormHandler()->handle($sqlRequestForm)) {
             $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
 
-            return $this->redirectToRoute('admin_sql_request');
+            return $this->redirectToRoute('admin_sql_requests_index');
         }
 
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/RequestSql/create.html.twig', [
@@ -196,9 +194,11 @@ class SqlManagerController extends FrameworkBundleAdminController
     /**
      * Show Request SQL edit page.
      *
+     * @DemoRestricted(redirectRoute="admin_sql_requests_index")
      * @AdminSecurity(
-     *     "is_granted(['update'], request.get('_legacy_controller')~'_')",
-     *     message="You do not have permission to edit this."
+     *     "is_granted(['update'], request.get('_legacy_controller'))",
+     *     message="You do not have permission to edit this.",
+     *     redirectRoute="admin_sql_requests_index"
      * )
      *
      * @param int $sqlRequestId
@@ -217,13 +217,13 @@ class SqlManagerController extends FrameworkBundleAdminController
                 $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error')
             );
 
-            return $this->redirectToRoute('admin_sql_request');
+            return $this->redirectToRoute('admin_sql_requests_index');
         }
 
         if ($this->getSqlRequestFormHandler()->handleFor($sqlRequestId, $sqlRequestForm)) {
             $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
 
-            return $this->redirectToRoute('admin_sql_request');
+            return $this->redirectToRoute('admin_sql_requests_index');
         }
 
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/RequestSql/edit.html.twig', [
@@ -240,10 +240,11 @@ class SqlManagerController extends FrameworkBundleAdminController
      * Delete selected Request SQL.
      *
      * @AdminSecurity(
-     *     "is_granted(['delete'], request.get('_legacy_controller')~'_')",
-     *     message="You do not have permission to edit this."
+     *     "is_granted(['delete'], request.get('_legacy_controller'))",
+     *     message="You do not have permission to edit this.",
+     *     redirectRoute="admin_sql_requests_index"
      * )
-     * @DemoRestricted(redirectRoute="admin_sql_request")
+     * @DemoRestricted(redirectRoute="admin_sql_requests_index")
      *
      * @param int $sqlRequestId ID of selected Request SQL
      *
@@ -263,17 +264,18 @@ class SqlManagerController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->handleDeleteException($e));
         }
 
-        return $this->redirectToRoute('admin_sql_request');
+        return $this->redirectToRoute('admin_sql_requests_index');
     }
 
     /**
      * Process bulk action delete of RequestSql's.
      *
      * @AdminSecurity(
-     *     "is_granted(['delete'], request.get('_legacy_controller')~'_')",
-     *     message="You do not have permission to edit this."
+     *     "is_granted(['delete'], request.get('_legacy_controller'))",
+     *     message="You do not have permission to edit this.",
+     *     redirectRoute="admin_sql_requests_index"
      * )
-     * @DemoRestricted(redirectRoute="admin_sql_request")
+     * @DemoRestricted(redirectRoute="admin_sql_requests_index")
      *
      * @param Request $request
      *
@@ -295,15 +297,16 @@ class SqlManagerController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->handleDeleteException($e));
         }
 
-        return $this->redirectToRoute('admin_sql_request');
+        return $this->redirectToRoute('admin_sql_requests_index');
     }
 
     /**
      * View Request SQL query data.
      *
      * @AdminSecurity(
-     *     "is_granted(['read'], request.get('_legacy_controller')~'_')",
-     *     message="You do not have permission to view this."
+     *     "is_granted(['read'], request.get('_legacy_controller'))",
+     *     message="You do not have permission to view this.",
+     *     redirectRoute="admin_sql_requests_index"
      * )
      *
      * @param Request $request
@@ -320,7 +323,7 @@ class SqlManagerController extends FrameworkBundleAdminController
         } catch (SqlRequestException $e) {
             $this->addFlash('error', $this->handleViewException($e));
 
-            return $this->redirectToRoute('admin_sql_request');
+            return $this->redirectToRoute('admin_sql_requests_index');
         }
 
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/RequestSql/view.html.twig', [
@@ -338,9 +341,9 @@ class SqlManagerController extends FrameworkBundleAdminController
      *
      * @AdminSecurity(
      *     "is_granted(['read'], request.get('_legacy_controller'))",
-     *     message="Access denied."
+     *     redirectRoute="admin_sql_requests_index"
      * )
-     * @DemoRestricted(redirectRoute="admin_sql_request")
+     * @DemoRestricted(redirectRoute="admin_sql_requests_index")
      *
      * @param int $sqlRequestId Request SQL id
      *
@@ -365,7 +368,7 @@ class SqlManagerController extends FrameworkBundleAdminController
         } catch (SqlRequestException $e) {
             $this->addFlash('error', $this->handleExportException($e));
 
-            return $this->redirectToRoute('admin_sql_request');
+            return $this->redirectToRoute('admin_sql_requests_index');
         }
 
         $response = new BinaryFileResponse($exportedFile->getPathname());
@@ -378,7 +381,7 @@ class SqlManagerController extends FrameworkBundleAdminController
     /**
      * Get MySQL table columns data.
      *
-     * @param string $mySqlTableName Database tabe name
+     * @param string $mySqlTableName Database table name
      *
      * @return JsonResponse
      */
