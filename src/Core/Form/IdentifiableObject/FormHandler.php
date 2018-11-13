@@ -102,11 +102,7 @@ final class FormHandler implements FormHandlerInterface
     }
 
     /**
-     * Get form for object creation with default data.
-     *
-     * @param array $options
-     *
-     * @return FormInterface
+     * {@inheritdoc}
      */
     public function getForm(array $options = [])
     {
@@ -118,12 +114,7 @@ final class FormHandler implements FormHandlerInterface
     }
 
     /**
-     * Get form for given object with pre-filled data.
-     *
-     * @param mixed $id
-     * @param array $options
-     *
-     * @return FormInterface
+     * {@inheritdoc}
      */
     public function getFormFor($id, array $options = [])
     {
@@ -135,11 +126,7 @@ final class FormHandler implements FormHandlerInterface
     }
 
     /**
-     * Handle create form.
-     *
-     * @param FormInterface $form
-     *
-     * @return int ID of created object
+     * {@inheritdoc}
      */
     public function handle(FormInterface $form)
     {
@@ -147,12 +134,7 @@ final class FormHandler implements FormHandlerInterface
     }
 
     /**
-     * Update existing object with given form data.
-     *
-     * @param int $id
-     * @param FormInterface $form
-     *
-     * @return int ID of updated object
+     * {@inheritdoc}
      */
     public function handleFor($id, FormInterface $form)
     {

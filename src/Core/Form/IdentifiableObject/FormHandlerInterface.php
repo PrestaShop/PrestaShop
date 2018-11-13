@@ -34,7 +34,7 @@ use Symfony\Component\Form\FormInterface;
 interface FormHandlerInterface
 {
     /**
-     * Get create form for identifiable object.
+     * Get form for object creation with default data.
      *
      * @param array $options
      *
@@ -43,7 +43,7 @@ interface FormHandlerInterface
     public function getForm(array $options = []);
 
     /**
-     * Get update form for identifiable object.
+     * Get form for given object with pre-filled data.
      *
      * @param int $id
      * @param array $options

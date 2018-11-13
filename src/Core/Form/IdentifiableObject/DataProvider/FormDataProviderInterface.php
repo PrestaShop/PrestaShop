@@ -32,11 +32,18 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 interface FormDataProviderInterface
 {
     /**
-     * @param mixed $id
+     * Get form data for given object with given id.
+     *
+     * @param int $id
      *
      * @return mixed
      */
     public function getData($id);
 
+    /**
+     * Get default form data.
+     *
+     * @return mixed
+     */
     public function getDefaultData();
 }

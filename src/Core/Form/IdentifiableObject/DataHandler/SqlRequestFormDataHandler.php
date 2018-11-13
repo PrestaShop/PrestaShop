@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command\EditSqlRequestComman
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\ValueObject\SqlRequestId;
 
 /**
- * Class SqlRequestFormDataHandler
+ * Class SqlRequestFormDataHandler creates or updates SqlRequest with form data.
  */
 final class SqlRequestFormDataHandler implements FormDataHandlerInterface
 {

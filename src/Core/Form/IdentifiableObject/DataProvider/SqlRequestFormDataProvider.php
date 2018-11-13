@@ -76,6 +76,11 @@ final class SqlRequestFormDataProvider implements FormDataProviderInterface
     }
 
     /**
+     * When "Export to SQL Manager" feature is used,
+     * it adds "name" and "sql" to request's POST data
+     * which is used as default form data
+     * when creating RequestSql.
+     *
      * {@inheritdoc}
      */
     public function getDefaultData()
