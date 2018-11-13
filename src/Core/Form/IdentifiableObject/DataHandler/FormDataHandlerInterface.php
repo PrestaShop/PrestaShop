@@ -32,6 +32,8 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 interface FormDataHandlerInterface
 {
     /**
+     * Create object from form data.
+     *
      * @param array $data
      *
      * @return mixed
@@ -39,9 +41,9 @@ interface FormDataHandlerInterface
     public function create(array $data);
 
     /**
-     * Update object
+     * Update object with form data.
      *
-     * @param $id
+     * @param int $id
      * @param array $data
      *
      * @return mixed
