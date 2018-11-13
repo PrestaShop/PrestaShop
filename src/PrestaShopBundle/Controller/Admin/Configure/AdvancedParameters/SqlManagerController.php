@@ -45,8 +45,6 @@ use PrestaShop\PrestaShop\Core\Export\Exception\FileWritingException;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\RequestSqlFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\RequestSql\SqlRequestFormHandler;
-use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\RequestSql\SqlRequestType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -176,28 +174,13 @@ class SqlManagerController extends FrameworkBundleAdminController
      */
     public function createAction(Request $request)
     {
-        $sqlRequestFormDataHandler = $this->get('prestashop.core.sql_manager.form.sql_request_form_data_handler');
-        $sqlRequestFormFactory = $this->get('prestashop.core.sql_manager.form.sql_request_form_factory');
-
-        $sqlRequestForm = $sqlRequestFormFactory->create([]);
+        $sqlRequestForm = $this->getSqlRequestFormHandler()->getForm();
         $sqlRequestForm->handleRequest($request);
 
-        if ($sqlRequestForm->isSubmitted() && $sqlRequestForm->isValid()) {
-            if ($this->isDemoModeEnabled()) {
-                $this->addFlash('error', $this->getDemoModeErrorMessage());
+        if ($this->getSqlRequestFormHandler()->handle($sqlRequestForm)) {
+            $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
 
-                return $this->redirectToRoute('admin_sql_request');
-            }
-
-            $errors = $sqlRequestFormDataHandler->save($sqlRequestForm->getData());
-
-            if (empty($errors)) {
-                $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
-
-                return $this->redirectToRoute('admin_sql_request');
-            }
-
-            $this->flashErrors($errors);
+            return $this->redirectToRoute('admin_sql_request');
         }
 
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/RequestSql/form.html.twig', [
@@ -225,30 +208,13 @@ class SqlManagerController extends FrameworkBundleAdminController
      */
     public function editAction($sqlRequestId, Request $request)
     {
-        $requestSqlFormHandler = $this->getRequestSqlFormHandler();
+        $sqlRequestForm = $this->getSqlRequestFormHandler()->getFormFor($sqlRequestId);
+        $sqlRequestForm->handleRequest($request);
 
-        $editRequestSqlForm = $requestSqlFormHandler->getFormFor($sqlRequestId);
-        $editRequestSqlForm->handleRequest($request);
+        if ($this->getSqlRequestFormHandler()->handleFor($sqlRequestId, $sqlRequestForm)) {
+            $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
 
-        if ($editRequestSqlForm->isSubmitted()) {
-            if ($this->isDemoModeEnabled()) {
-                $this->addFlash('error', $this->getDemoModeErrorMessage());
-
-                return $this->redirectToRoute('admin_sql_request');
-            }
-
-            $errors = $requestSqlFormHandler->save($editRequestSqlForm->getData());
-
-            if (empty($errors)) {
-                $this->addFlash(
-                    'success',
-                    $this->trans('Successful update.', 'Admin.Notifications.Success')
-                );
-
-                return $this->redirectToRoute('admin_sql_request');
-            }
-
-            $this->flashErrors($errors);
+            return $this->redirectToRoute('admin_sql_request');
         }
 
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/RequestSql/form.html.twig', [
@@ -256,7 +222,7 @@ class SqlManagerController extends FrameworkBundleAdminController
             'requireAddonsSearch' => true,
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
-            'requestSqlForm' => $editRequestSqlForm->createView(),
+            'requestSqlForm' => $sqlRequestForm->createView(),
             'dbTableNames' => $this->getDatabaseTables(),
         ]);
     }
@@ -437,11 +403,11 @@ class SqlManagerController extends FrameworkBundleAdminController
     }
 
     /**
-     * @return SqlRequestFormHandler
+     * @return \PrestaShop\PrestaShop\Core\Form\IdentifiableObject\FormHandlerInterface
      */
-    protected function getRequestSqlFormHandler()
+    protected function getSqlRequestFormHandler()
     {
-        return $this->get('prestashop.admin.request_sql.form_handler');
+        return $this->get('prestashop.core.form.identifiable_object.sql_request_form_handler');
     }
 
     /**
