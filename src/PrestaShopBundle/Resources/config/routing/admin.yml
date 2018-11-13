@@ -17,3 +17,8 @@ _admin_configure_routing:
 _admin_improve_routing:
     resource: "admin/improve/_improve.yml"
     prefix: /improve
+
+admin_example:
+  path: example
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\ExampleController::index

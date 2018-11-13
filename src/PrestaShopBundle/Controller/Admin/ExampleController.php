@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
@@ -21,30 +22,37 @@
  * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
-{% use '@PrestaShop/Admin/TwigTemplateForm/bootstrap_4_horizontal_layout.html.twig' %}
+ */
 
-{%- block form_widget_compound -%}
-  {%- if form.parent is empty -%}
-    {{ form_errors(form) }}
-  {%- endif -%}
-  {{- block('form_rows') -}}
-  {{- form_rest(form) -}}
-{%- endblock form_widget_compound -%}
+namespace PrestaShopBundle\Controller\Admin;
 
-{% block form_row -%}
-  {% spaceless %}
-    <div class="form-group row {% if (not compound or force_error|default(false)) and not valid %} has-error{% endif %}">
-      {{ form_label(form) }}
-      <div class="col-sm">
-        {{ form_widget(form) }}
-        {{ form_errors(form) }}
-      </div>
-    </div>
-  {% endspaceless %}
-{%- endblock form_row %}
+use PrestaShopBundle\Form\Admin\Type\SwitchType;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 
-{% block form_label -%}
-  {%- set label_attr = label_attr|merge({class: (label_attr.class|default('') ~ ' control-label')|trim}) -%}
-  {{- parent() -}}
-{%- endblock form_label %}
+class ExampleController extends Controller
+{
+    public function index()
+    {
+        $form = $this->createFormBuilder()
+            ->add('text', TextType::class)
+            ->add('switch', SwitchType::class)
+            ->add('select', ChoiceType::class, [
+                'multiple' => false,
+                'expanded' => false,
+                'choices' => [
+                    'Select 1' => 1,
+                    'Select 2' => 2,
+                ],
+            ])
+            ->getForm()
+        ;
+
+        dump($form);
+
+        return $this->render('@PrestaShop/Admin/example.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+}
