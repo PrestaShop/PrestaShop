@@ -27,63 +27,22 @@
 {% trans_default_domain 'Admin.Advparameters.Feature' %}
 
 {% block content %}
-  <div class="container">
-    <div class="row">
-      <div class="col">
-      {% block sql_manager_form_panel %}
-        {{ form_start(requestSqlForm) }}
-        <div class="card">
-          <h3 class="card-header">
-              {{ 'SQL query'|trans }}
-          </h3>
-          <div class="card-block p-3">
-            <div class="form-group">
-              {% set errorClass = requestSqlForm.request_sql.name.vars.errors is not empty ? 'is-invalid' : '' %}
-
-              <label for="{{ requestSqlForm.request_sql.name.vars.id }}" class="form-control-label">{{ 'SQL query name'|trans }}</label>
-              {{ form_widget(requestSqlForm.request_sql.name, {'attr': {'class': errorClass}}) }}
-
-              {% for error in requestSqlForm.request_sql.name.vars.errors %}
-                <div class="invalid-feedback">
-                  {{ error.message }}
-                </div>
-              {% endfor %}
-            </div>
-
-            <div class="form-group">
-              {% set errorClass = requestSqlForm.request_sql.sql.vars.errors is not empty ? 'is-invalid' : '' %}
-
-              <label for="{{ requestSqlForm.request_sql.sql.vars.id }}" class="form-control-label">{{ 'SQL query'|trans }}</label>
-              {{ form_widget(requestSqlForm.request_sql.sql, {'attr': {'rows': 10, 'class': errorClass}}) }}
-
-              {% for error in requestSqlForm.request_sql.sql.vars.errors %}
-                <div class="invalid-feedback">
-                  {{ error.message }}
-                </div>
-              {% endfor %}
-            </div>
-
-            {{ form_rest(requestSqlForm) }}
-          </div>
-          <div class="card-footer">
-            <a href="{{ path('admin_sql_request') }}" class="btn btn-outline-secondary">
-              <i class="material-icons">cancel</i>
-              {{ 'Cancel'|trans({}, 'Admin.Actions') }}
-            </a>
-            <button class="btn btn-primary float-right">
-              <i class="material-icons">save</i>
-              {{ 'Save'|trans({}, 'Admin.Actions') }}
-            </button>
-          </div>
-        </div>
-        {{ form_end(requestSqlForm) }}
-      {% endblock %}
-      </div>
+  {% if requestSqlForm.vars.errors is not empty %}
+    <div class="alert alert-danger">
+      {% for error in requestSqlForm.vars.errors %}
+        <div class="alert-text">{{ error.message }}</div>
+      {% endfor %}
     </div>
+  {% endif %}
 
-    {% block sql_manager_db_tables_panel %}
-      {% include '@PrestaShop/Admin/Configure/AdvancedParameters/RequestSql/Blocks/db_tables_panel.html.twig' %}
-    {% endblock %}
+  <div class="row justify-content-center">
+    <div class="col">
+      {% include '@PrestaShop/Admin/Configure/AdvancedParameters/RequestSql/Blocks/form.html.twig' %}
+
+      {% block sql_manager_db_tables_panel %}
+        {% include '@PrestaShop/Admin/Configure/AdvancedParameters/RequestSql/Blocks/db_tables_panel.html.twig' %}
+      {% endblock %}
+    </div>
   </div>
 {% endblock %}
 

@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject;
 
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\FormDataHandlerInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\FormDataProviderInterface;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
@@ -71,9 +70,9 @@ final class FormHandler implements FormHandlerInterface
     private $translator;
 
     /**
-     * @var ConfigurationInterface
+     * @var bool
      */
-    private $configuration;
+    private $isDemoModeEnabled;
 
     /**
      * @param string $formType
@@ -82,7 +81,7 @@ final class FormHandler implements FormHandlerInterface
      * @param FormFactoryInterface $formFactory
      * @param HookDispatcherInterface $hookDispatcher
      * @param TranslatorInterface $translator
-     * @param ConfigurationInterface $configuration
+     * @param bool $isDemoModeEnabled
      */
     public function __construct(
         $formType,
@@ -91,15 +90,15 @@ final class FormHandler implements FormHandlerInterface
         FormFactoryInterface $formFactory,
         HookDispatcherInterface $hookDispatcher,
         TranslatorInterface $translator,
-        ConfigurationInterface $configuration
+        $isDemoModeEnabled
     ) {
         $this->formFactory = $formFactory;
         $this->dataProvider = $dataProvider;
         $this->dataHandler = $dataHandler;
         $this->hookDispatcher = $hookDispatcher;
         $this->translator = $translator;
-        $this->configuration = $configuration;
         $this->formType = $formType;
+        $this->isDemoModeEnabled = $isDemoModeEnabled;
     }
 
     /**
@@ -161,13 +160,13 @@ final class FormHandler implements FormHandlerInterface
     }
 
     /**
-     * @param array $data
+     * @param mixed $data
      * @param int|null $id
      * @param array $options
      *
      * @return FormInterface
      */
-    private function buildForm(array $data, $id = null, array $options = [])
+    private function buildForm($data, $id = null, array $options = [])
     {
         $formBuilder = $this->formFactory->createBuilder($this->formType, $data, $options);
 
@@ -183,30 +182,79 @@ final class FormHandler implements FormHandlerInterface
     /**
      * @param FormInterface $form
      * @param int|null $id
+     *
+     * @return int
      */
     private function handleForm(FormInterface $form, $id = null)
     {
         if (!$form->isSubmitted()) {
-            return;
+            return 0;
         }
 
-        if ($this->configuration->get('_PS_MODE_DEMO_')) {
+        if ($this->isDemoModeEnabled) {
             $form->addError(
                 new FormError(
                     $this->translator->trans('This functionality has been disabled.', [], 'Admin.Notifications.Error')
                 )
             );
 
-            return;
+            return 0;
         }
 
         if (!$form->isValid()) {
-            return;
+            return 0;
         }
 
-        // form is submitted, demo mode is off, data is valid
-        // we can dispatch hooks
-        // persist data
-        // return id
+        if (null !== $id) {
+            return $this->handleFormUpdate($form, $id);
+        }
+
+        return $this->handleFormCreate($form);
+    }
+
+    /**
+     * @param FormInterface $form
+     * @param int $id
+     *
+     * @return int
+     */
+    private function handleFormUpdate(FormInterface $form, $id)
+    {
+        $data = $form->getData();
+
+        $this->hookDispatcher->dispatchWithParameters('actionBeforeUpdate'.$form->getName().'FormHandler', [
+            'form_data' => &$data,
+            'id' => $id,
+        ]);
+
+        $this->dataHandler->update($id, $data);
+
+        $this->hookDispatcher->dispatchWithParameters('actionAfterUpdate'.$form->getName().'FormHandler', [
+            'id' => $id,
+        ]);
+
+        return $id;
+    }
+
+    /**
+     * @param FormInterface $form
+     *
+     * @return int
+     */
+    private function handleFormCreate(FormInterface $form)
+    {
+        $data = $form->getData();
+
+        $this->hookDispatcher->dispatchWithParameters('actionBeforeCreate'.$form->getName().'FormHandler', [
+            'form_data' => &$data,
+        ]);
+
+        $id = $this->dataHandler->create($data);
+
+        $this->hookDispatcher->dispatchWithParameters('actionAfterCreate'.$form->getName().'FormHandler', [
+            'id' => $id,
+        ]);
+
+        return $id;
     }
 }

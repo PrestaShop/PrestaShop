@@ -1,0 +1,52 @@
+{{ form_start(requestSqlForm) }}
+  <div class="card">
+    <h3 class="card-header">
+      {{ 'SQL query'|trans }}
+    </h3>
+    <div class="card-block row">
+      <div class="card-text">
+        <div class="form-group row">
+          {% set errorClass = requestSqlForm.name.vars.errors is not empty ? 'is-invalid' : '' %}
+          <label for="{{ requestSqlForm.name.vars.id }}" class="form-control-label">{{ 'SQL query name'|trans }}</label>
+
+          <div class="col-sm">
+            {{ form_widget(requestSqlForm.name, {'attr': {'class': errorClass}}) }}
+
+            {% for error in requestSqlForm.name.vars.errors %}
+              <div class="invalid-feedback">
+                {{ error.message }}
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+
+        <div class="form-group row">
+          {% set errorClass = requestSqlForm.sql.vars.errors is not empty ? 'is-invalid' : '' %}
+          <label for="{{ requestSqlForm.sql.vars.id }}" class="form-control-label">{{ 'SQL query'|trans }}</label>
+
+          <div class="col-sm">
+            {{ form_widget(requestSqlForm.sql, {'attr': {'rows': 10, 'class': errorClass}}) }}
+
+            {% for error in requestSqlForm.sql.vars.errors %}
+              <div class="invalid-feedback">
+                {{ error.message }}
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+
+      {{ form_rest(requestSqlForm) }}
+    </div>
+    <div class="card-footer">
+      <a href="{{ path('admin_sql_request') }}" class="btn btn-outline-secondary">
+        <i class="material-icons">cancel</i>
+        {{ 'Cancel'|trans({}, 'Admin.Actions') }}
+      </a>
+      <button class="btn btn-primary float-right">
+        <i class="material-icons">save</i>
+        {{ 'Save'|trans({}, 'Admin.Actions') }}
+      </button>
+    </div>
+  </div>
+{{ form_end(requestSqlForm) }}

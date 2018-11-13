@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -24,27 +24,22 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
+namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject;
+
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\FormDataHandlerInterface;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\FormDataProviderInterface;
 
 /**
- * Interface IdentifiableObjectFormDataHandlerInterface.
+ * Interface FormHandlerFactoryInterface
  */
-interface FormDataHandlerInterface
+interface FormHandlerFactoryInterface
 {
     /**
-     * @param array $data
+     * @param string $formType Fully-qualified form type class name
+     * @param FormDataProviderInterface $dataProvider
+     * @param FormDataHandlerInterface $dataHandler
      *
-     * @return mixed
+     * @return FormHandlerInterface
      */
-    public function create(array $data);
-
-    /**
-     * Update object
-     *
-     * @param $id
-     * @param array $data
-     *
-     * @return mixed
-     */
-    public function update($id, array $data);
+    public function create($formType, FormDataProviderInterface $dataProvider, FormDataHandlerInterface $dataHandler);
 }
