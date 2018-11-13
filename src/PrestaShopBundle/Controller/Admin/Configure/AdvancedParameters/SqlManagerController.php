@@ -208,8 +208,17 @@ class SqlManagerController extends FrameworkBundleAdminController
      */
     public function editAction($sqlRequestId, Request $request)
     {
-        $sqlRequestForm = $this->getSqlRequestFormHandler()->getFormFor($sqlRequestId);
-        $sqlRequestForm->handleRequest($request);
+        try {
+            $sqlRequestForm = $this->getSqlRequestFormHandler()->getFormFor($sqlRequestId);
+            $sqlRequestForm->handleRequest($request);
+        } catch (SqlRequestNotFoundException $e) {
+            $this->addFlash(
+                'error',
+                $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error')
+            );
+
+            return $this->redirectToRoute('admin_sql_request');
+        }
 
         if ($this->getSqlRequestFormHandler()->handleFor($sqlRequestId, $sqlRequestForm)) {
             $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
