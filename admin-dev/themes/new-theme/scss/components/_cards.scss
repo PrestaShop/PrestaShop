@@ -75,6 +75,11 @@
   font-weight: 600;
   line-height: 1.5rem; // same as material icons
 
+  .card-header-title {
+    font-weight: 600;
+    line-height: 1.5rem;
+  }
+
   &:first-child {
     border-radius: $card-border-radius-inner $card-border-radius-inner 0 0;
   }

@@ -50,7 +50,7 @@
   </category>
   <category id="Art" id_shop="1">
     <name>Art</name>
-    <description>&lt;p&gt;&lt;span style="font-size:10pt;font-style:normal;color:#000000;"&gt;Framed poster and vector images, all you need to give personality to your walls or bring your creative projects to life.&lt;/span&gt;&lt;/p&gt;</description>
+    <description>&lt;p&gt;&lt;span style="font-size:10pt;font-style:normal;"&gt;Framed poster and vector images, all you need to give personality to your walls or bring your creative projects to life.&lt;/span&gt;&lt;/p&gt;</description>
     <link_rewrite>art</link_rewrite>
     <meta_title/>
     <meta_keywords/>

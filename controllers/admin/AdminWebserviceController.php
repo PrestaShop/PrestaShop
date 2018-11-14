@@ -57,6 +57,7 @@ class AdminWebserviceControllerCore extends AdminController
             'key' => array(
                 'title' => $this->trans('Key', array(), 'Admin.Advparameters.Feature'),
                 'class' => 'fixed-width-md',
+                'filter_key' => 'a!key',
             ),
             'description' => array(
                 'title' => $this->trans('Key description', array(), 'Admin.Advparameters.Feature'),

@@ -79,6 +79,7 @@ class SurvivalTest extends WebTestCase
     {
         $this->logIn();
 
+        $this->client->catchExceptions(false);
         $this->client->request(
             'GET',
             $this->router->generate(

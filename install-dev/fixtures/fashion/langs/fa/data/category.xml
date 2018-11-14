@@ -50,7 +50,7 @@
   </category>
   <category id="Art" id_shop="1">
     <name>هنر</name>
-    <description>&lt;p&gt;&lt;span style="font-size:10pt;font-style:normal;color:#000000;"&gt;پوسترهای همراه قاب و تصاویر خطی، تمام چیزهایی که برای شخصیت دادن به دیوارهای خود و آوردن پروژه های خلاق خود به زندگی نیاز دارید.&lt;/span&gt;&lt;/p&gt;</description>
+    <description>&lt;p&gt;&lt;span style="font-size:10pt;font-style:normal;"&gt;پوسترهای همراه قاب و تصاویر خطی، تمام چیزهایی که برای شخصیت دادن به دیوارهای خود و آوردن پروژه های خلاق خود به زندگی نیاز دارید.&lt;/span&gt;&lt;/p&gt;</description>
     <link_rewrite>art</link_rewrite>
     <meta_title/>
     <meta_keywords/>
