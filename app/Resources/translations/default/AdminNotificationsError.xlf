@@ -1153,15 +1153,6 @@ Comment: check if some ids are in list_skip_actions and forbid deletion</note>
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Controller/Admin/Improve/Shipping/PreferencesController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="5a6013a735465600cb2b695361009999">
-        <source>You do not have permission to edit this</source>
-        <target>You do not have permission to edit this</target>
-        <note>Line: 85</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="src/PrestaShopBundle/Controller/Admin/ProductController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="1bdd228669c9dd995eb664737e60786e">
