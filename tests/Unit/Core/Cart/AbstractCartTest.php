@@ -36,6 +36,8 @@ use CustomizationField;
 use DateInterval;
 use DateTime;
 use Db;
+use Order;
+use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use Tests\TestCase\IntegrationTestCase;
 use Product;
 use Pack;
@@ -120,6 +122,13 @@ abstract class AbstractCartTest extends IntegrationTestCase
      */
     protected $customizationFields = [];
 
+    /**
+     * Order::ROUND_TOTAL
+     * Order::ROUND_LINE
+     * Order::ROUND_ITEM
+     */
+    protected $defaultRoundingType;
+
     public function setUp()
     {
         parent::setUp();
@@ -132,6 +141,11 @@ abstract class AbstractCartTest extends IntegrationTestCase
         $this->resetCart();
         $this->insertProductsFromFixtures();
         $this->insertCartRulesFromFixtures();
+
+        // force roundType to lock behavior
+        Configuration::set('PS_ROUND_TYPE', Order::ROUND_ITEM);
+        $configuration = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\ConfigurationInterface');
+        $configuration->set('PS_ROUND_TYPE', Order::ROUND_LINE);
     }
 
     public function tearDown()
@@ -172,6 +186,11 @@ abstract class AbstractCartTest extends IntegrationTestCase
         }
 
         parent::tearDown();
+
+        // using Configuration instead of Adapter\Configuration because of different behavior
+        Configuration::set('PS_ROUND_TYPE', $this->defaultRoundingType);
+        $configuration = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\ConfigurationInterface');
+        $configuration->set('PS_ROUND_TYPE', $this->defaultRoundingType);
     }
 
     protected function resetCart()

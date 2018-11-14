@@ -43,18 +43,18 @@ class RoundingTypeTest extends AbstractCartCalculationTest
 
     public function setUp()
     {
+        parent::setUp();
+
         // using Configuration instead of Adapter\Configuration because of different behavior
         $this->defaultRoundingType = Configuration::get('PS_ROUND_TYPE');
-
-        parent::setUp();
     }
 
     public function tearDown()
     {
+        parent::tearDown();
+
         // using Configuration instead of Adapter\Configuration because of different behavior
         Configuration::set('PS_ROUND_TYPE', $this->defaultRoundingType);
-
-        parent::tearDown();
     }
 
     /**

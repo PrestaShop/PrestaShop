@@ -27,8 +27,6 @@
 namespace Tests\Unit\Core\Cart\Calculation\Modes;
 
 use Configuration;
-use Order;
-use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use Tests\Unit\Core\Cart\Calculation\AbstractCartCalculationTest;
 use Tools;
 
@@ -45,23 +43,11 @@ class RoundingModeTest extends AbstractCartCalculationTest
      */
     protected $defaultRoundingMode;
 
-    /**
-     * Order::ROUND_TOTAL
-     * Order::ROUND_LINE
-     * Order::ROUND_ITEM
-     */
-    protected $defaultRoundingType;
-
     public function setUp()
     {
         // using Configuration instead of Adapter\Configuration because of different behavior
         $this->defaultRoundingMode = Configuration::get('PS_PRICE_ROUND_MODE');
         $this->defaultRoundingType = Configuration::get('PS_ROUND_TYPE');
-
-        // force roundType to lock behavior
-        Configuration::set('PS_ROUND_TYPE', Order::ROUND_ITEM);
-        $configuration = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\ConfigurationInterface');
-        $configuration->set('PS_ROUND_TYPE', Order::ROUND_LINE);
 
         parent::setUp();
     }
@@ -70,9 +56,6 @@ class RoundingModeTest extends AbstractCartCalculationTest
     {
         // using Configuration instead of Adapter\Configuration because of different behavior
         Configuration::set('PS_PRICE_ROUND_MODE', $this->defaultRoundingMode);
-        Configuration::set('PS_ROUND_TYPE', $this->defaultRoundingType);
-        $configuration = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\ConfigurationInterface');
-        $configuration->set('PS_ROUND_TYPE', $this->defaultRoundingType);
 
         parent::tearDown();
     }
