@@ -37,14 +37,65 @@
     <div class="form-group row {% if (not compound or force_error|default(false)) and not valid %} has-error{% endif %}">
       {{ form_label(form) }}
       <div class="col-sm">
-        {{ form_widget(form) }}
+        {% if not valid %}
+          {% set class = 'is-invalid' %}
+        {% else %}
+          {% set class = '' %}
+        {% endif %}
+
+        {{ form_widget(form, {'attr': {'class': class}}) }}
         {{ form_errors(form) }}
       </div>
     </div>
   {% endspaceless %}
 {%- endblock form_row %}
 
-{% block form_label -%}
-  {%- set label_attr = label_attr|merge({class: (label_attr.class|default('') ~ ' control-label')|trim}) -%}
-  {{- parent() -}}
-{%- endblock form_label %}
+{%- block form_label -%}
+  {% set label_attr = label_attr|merge({'class': (label_attr.class|default('') ~ ' form-control-label')|trim}) %}
+
+  {% if label is not same as(false) -%}
+    {% if not compound -%}
+      {% set label_attr = label_attr|merge({'for': id}) %}
+    {%- endif %}
+    {% if required -%}
+      {% set label_attr = label_attr|merge({'class': (label_attr.class|default('') ~ ' required')|trim}) %}
+    {%- endif %}
+    {% if label is empty -%}
+      {%- if label_format is not empty -%}
+        {% set label = label_format|replace({
+          '%name%': name,
+          '%id%': id,
+        }) %}
+      {%- else -%}
+        {% set label = name|humanize %}
+      {%- endif -%}
+    {%- endif -%}
+    <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>{{ translation_domain is same as(false) ? label|raw : label|raw }}
+    {% if label_attr['tooltip'] is defined %}
+      {% set placement = label_attr['tooltip_placement'] is defined ? label_attr['tooltip_placement'] : 'top' %}
+      <i class="icon-question" data-toggle="pstooltip" data-placement="{{ placement }}"
+         title="{{ label_attr['tooltip'] }}"></i>
+    {% endif %}
+
+    {% if label_attr['popover'] is defined %}
+      {% set placement = label_attr['popover_placement'] is defined ? label_attr['popover_placement'] : 'top' %}
+      <span class="help-box" data-toggle="popover" data-placement="{{ placement }}"
+            data-content="{{ label_attr['popover'] }}"></span>
+    {% endif %}
+    </label>
+
+  {%- endif -%}
+{%- endblock form_label -%}
+
+{% block form_errors -%}
+  {% if errors|length > 0 -%}
+      {%- for error in errors -%}
+        <div class="invalid-feedback"> {{
+          error.messagePluralization is null
+          ? error.messageTemplate|trans(error.messageParameters, 'form_error')
+          : error.messageTemplate|transchoice(error.messagePluralization, error.messageParameters, 'form_error')
+          }}
+        </div>
+      {%- endfor -%}
+  {%- endif %}
+{%- endblock form_errors %}

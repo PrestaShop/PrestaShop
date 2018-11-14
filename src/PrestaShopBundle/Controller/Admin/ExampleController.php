@@ -27,32 +27,93 @@
 namespace PrestaShopBundle\Controller\Admin;
 
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
+use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class ExampleController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $form = $this->createFormBuilder()
-            ->add('text', TextType::class)
-            ->add('switch', SwitchType::class)
-            ->add('select', ChoiceType::class, [
-                'multiple' => false,
-                'expanded' => false,
-                'choices' => [
-                    'Select 1' => 1,
-                    'Select 2' => 2,
-                ],
-            ])
-            ->getForm()
-        ;
-
-        dump($form);
+        $form = $this->getForm();
+        $form->handleRequest($request);
 
         return $this->render('@PrestaShop/Admin/example.html.twig', [
             'form' => $form->createView(),
         ]);
+    }
+
+    private function getForm()
+    {
+        return $this->createFormBuilder(null, ['csrf_protection' => false,])
+            ->add('text', TextType::class, [
+                'label' => 'You can enter anything you want',
+                'required' => false,
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Yoooo, you cannot leave text blank!',
+                    ])
+                ]
+            ])
+            ->add('translatable_text', TranslatableType::class, [
+                'required' => true,
+                'label' => 'Enter me in any language',
+            ])
+            ->add('translatable_textarea', TranslatableType::class, [
+                'type' => TextareaType::class,
+                'label' => 'Enter me in any language again',
+            ])
+            ->add('switch', SwitchType::class, [
+                'label' => 'Go ahead and switch the box',
+                'data' => 1,
+            ])
+            ->add('select', ChoiceType::class, [
+                'multiple' => false,
+                'expanded' => false,
+                'choices' => [
+                    'Please select me' => 1,
+                    'Don not select me' => 2,
+                ],
+                'label' => 'Best selection',
+            ])
+            ->add('textarea', TextareaType::class, [
+                'attr' => [
+                    'rows' => 5,
+                ],
+                'label' => 'Write a letter',
+            ])
+            ->add('checkboxes', ChoiceType::class, [
+                'multiple' => true,
+                'expanded' => true,
+                'choices' => [
+                    'One Material' => 1,
+                    'Two Material' => 2,
+                ],
+                'label' => 'Choose your material',
+            ])
+            ->add('radios', ChoiceType::class, [
+                'multiple' => false,
+                'expanded' => true,
+                'choices' => [
+                    'Rounded' => 1,
+                    'And rounded' => 2,
+                ],
+                'label' => 'Choose your circle',
+            ])
+            ->add('multiple_select', ChoiceType::class, [
+                'multiple' => true,
+                'expanded' => false,
+                'choices' => [
+                    'My thing' => 1,
+                    'Your thing' => 2,
+                ],
+                'label' => 'Select things here',
+            ])
+            ->getForm()
+        ;
     }
 }
