@@ -123,8 +123,7 @@ try {
 define('_THEME_NAME_', $context->shop->theme->getName());
 define('_PARENT_THEME_NAME_', $context->shop->theme->get('parent') ?: '');
 
-define('__PS_BASE_URI__', $context->shop->getBaseURI());
-
+define('__PS_BASE_URI__', htmlentities($context->shop->getBaseURI(), ENT_QUOTES, 'UTF-8'));
 /* Include all defines related to base uri and theme name */
 require_once($currentDir.'/defines_uri.inc.php');
 
