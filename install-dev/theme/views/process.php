@@ -66,7 +66,7 @@ var admin = '<?php echo(file_exists('../admin-dev') ? '../admin-dev' : '../admin
 			<tr class="odd">
 				<td class="label"><?php echo $this->translator->trans('E-mail', array(), 'Install') ?></td>
 				<td class="resultEnd"><?php echo htmlspecialchars($this->session->admin_email) ?></td>
-				<td rowspan="2" class="print" onclick="$('#password_content').html('<?php echo htmlspecialchars(addslashes($this->session->admin_password)) ?>'); $('#password_display').hide(); window.print();">
+				<td rowspan="2" class="print" onclick="$('#password_content').text('<?php echo htmlspecialchars(addslashes($this->session->admin_password)) ?>'); $('#password_display').hide(); window.print();">
 					<img src="theme/img/print.png" alt="" style="vertical-align:top">
 					<?php echo $this->translator->trans('Print my login information', array(), 'Install') ?>
 				</td>
@@ -76,7 +76,7 @@ var admin = '<?php echo(file_exists('../admin-dev') ? '../admin-dev' : '../admin
 				<td class="resultEnd">
 					<span id="password_content"><?php echo preg_replace('#.#', '*', $this->session->admin_password) ?></span>
 					<span id="password_display">
-						(<a href="#" onclick="$('#password_content').html('<?php echo htmlspecialchars(addslashes($this->session->admin_password)) ?>'); $('#password_display').hide(); return false"><?php echo $this->translator->trans('Display', array(), 'Install'); ?></a>)
+						(<a href="#" onclick="$('#password_content').text('<?php echo htmlspecialchars(addslashes($this->session->admin_password)) ?>'); $('#password_display').hide(); return false"><?php echo $this->translator->trans('Display', array(), 'Install'); ?></a>)
 					</span>
 				</td>
 			</tr>

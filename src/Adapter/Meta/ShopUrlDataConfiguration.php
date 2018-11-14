@@ -107,6 +107,6 @@ final class ShopUrlDataConfiguration implements DataConfigurationInterface
         return isset(
             $configuration['domain'],
             $configuration['domain_ssl']
-        );
+        ) && preg_match('#^(?:[~\-_\/&\.]|\w|%\d+|\s)+$#', $configuration['physical_uri']);
     }
 }
