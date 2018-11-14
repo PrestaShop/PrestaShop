@@ -241,7 +241,7 @@ class SqlManagerController extends FrameworkBundleAdminController
      *
      * @AdminSecurity(
      *     "is_granted(['delete'], request.get('_legacy_controller'))",
-     *     message="You do not have permission to edit this.",
+     *     message="You do not have permission to delete this.",
      *     redirectRoute="admin_sql_requests_index"
      * )
      * @DemoRestricted(redirectRoute="admin_sql_requests_index")
@@ -272,7 +272,7 @@ class SqlManagerController extends FrameworkBundleAdminController
      *
      * @AdminSecurity(
      *     "is_granted(['delete'], request.get('_legacy_controller'))",
-     *     message="You do not have permission to edit this.",
+     *     message="You do not have permission to delete this.",
      *     redirectRoute="admin_sql_requests_index"
      * )
      * @DemoRestricted(redirectRoute="admin_sql_requests_index")
