@@ -31,8 +31,6 @@ use PrestaShopBundle\Api\QueryStockParamsCollection;
 /**
  * @group api
  * @group stockmanagement
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
  */
 class StockManagementControllerTest extends ApiTestCase
 {
