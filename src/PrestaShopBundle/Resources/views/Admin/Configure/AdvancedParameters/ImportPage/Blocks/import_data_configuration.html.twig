@@ -25,7 +25,9 @@
 
 {% trans_default_domain 'Admin.Advparameters.Feature' %}
 
-{{ form_start(importDataConfigurationForm, {attr: {class: 'import-data-configuration-form'}}) }}
+{% set dataConfigurationForm = importDataConfigurationForm %}
+
+{{ form_start(dataConfigurationForm, {attr: {class: 'import-data-configuration-form'}}) }}
 <div class="card">
   <h3 class="card-header">
     <i class="material-icons">list</i> {{ 'Match your data'|trans }}
@@ -48,7 +50,7 @@
         <div class="col-sm">
           <div class="form-row">
             <div class="col">
-              {{ form_widget(importDataConfigurationForm.matches) }}
+              {{ form_widget(dataConfigurationForm.matches) }}
             </div>
             <div class="col">
               <button
@@ -74,7 +76,7 @@
         <div class="col-sm">
           <div class="form-row">
             <div class="col">
-              {{ form_widget(importDataConfigurationForm.match_name, {'attr': {'class': 'js-import-match-input', 'type': 'button'}}) }}
+              {{ form_widget(dataConfigurationForm.match_name, {'attr': {'class': 'js-import-match-input', 'type': 'button'}}) }}
             </div>
             <div class="col">
               <button
@@ -92,7 +94,7 @@
           {{ 'Rows to skip'|trans }}
         </label>
         <div class="col-sm">
-          {{ form_widget(importDataConfigurationForm.skip, {'attr': {'class': 'col-xs-12 col-md-4 js-rows-skip', 'min': 0}}) }}
+          {{ form_widget(dataConfigurationForm.skip, {'attr': {'class': 'col-xs-12 col-md-4 js-rows-skip', 'min': 0}}) }}
           <small class="form-text">{{ 'Indicate how many of the first rows of your file should be skipped when importing the data. For instance set it to 1 if the first row of your file contains headers.'|trans }}</small>
         </div>
       </div>
@@ -118,7 +120,7 @@
         >
           <thead>
             <tr>
-              {% for importEntityField in importDataConfigurationForm.type_value %}
+              {% for importEntityField in dataConfigurationForm.type_value %}
                 <th class="js-entity-field {% if loop.index > maxVisibleColumns %} d-none{% endif %}">
                   {{ form_errors(importEntityField) }}
                   {{ form_widget(importEntityField) }}
@@ -152,7 +154,7 @@
           </button>
         </div>
       </div>
-      {{ form_rest(importDataConfigurationForm) }}
+      {{ form_rest(dataConfigurationForm) }}
     </div>
   </div>
   <div class="card-footer">
@@ -168,4 +170,4 @@
     </div>
   </div>
 </div>
-{{ form_end(importDataConfigurationForm) }}
+{{ form_end(dataConfigurationForm) }}
