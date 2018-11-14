@@ -58,15 +58,6 @@ export default class Grid {
   }
 
   /**
-   * Get grid header container
-   *
-   * @returns {jQuery}
-   */
-  getHeaderContainer() {
-    return this.$container.closest('.js-grid-panel').find('.js-grid-header');
-  }
-
-  /**
    * Extend grid with external extensions
    *
    * @param {object} extension

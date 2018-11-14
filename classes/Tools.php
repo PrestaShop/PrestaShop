@@ -628,10 +628,8 @@ class ToolsCore
 
         // Only switch if new ID is different from old ID
         $newLanguageId = (int) Tools::getValue('id_lang');
-
         if (
             Validate::isUnsignedId($newLanguageId) &&
-            $newLanguageId !== 0 &&
             $context->cookie->id_lang !== $newLanguageId
         ) {
             $context->cookie->id_lang = $newLanguageId;
@@ -640,8 +638,6 @@ class ToolsCore
                 $context->language = $language;
             }
         }
-
-        Tools::setCookieLanguage($context->cookie);
     }
 
     public static function getCountry($address = null)

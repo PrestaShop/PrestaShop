@@ -33,7 +33,7 @@ export default class ReloadListExtension {
    * @param {Grid} grid
    */
   extend(grid) {
-    grid.getHeaderContainer().on('click', '.js-common_refresh_list-grid-action', () => {
+    grid.getContainer().on('click', '.js-common_refresh_list-grid-action', () => {
       location.reload();
     });
   }

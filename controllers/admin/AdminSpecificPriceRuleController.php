@@ -123,15 +123,11 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
                 'title' => $this->trans('Beginning', array(), 'Admin.Catalog.Feature'),
                 'align' => 'right',
                 'type' => 'datetime',
-                'filter_key' => 'a!from',
-                'order_key' => 'a!from',
             ),
             'to' => array(
                 'title' => $this->trans('End', array(), 'Admin.Catalog.Feature'),
                 'align' => 'right',
                 'type' => 'datetime',
-                'filter_key' => 'a!to',
-                'order_key' => 'a!to',
             ),
         );
     }
