@@ -57,7 +57,7 @@ final class GridPresenter implements GridPresenterInterface
         $searchCriteria = $grid->getSearchCriteria();
         $data = $grid->getData();
         $presentedGrid = [
-            'id' => strtolower($definition->getId()),
+            'id' => $definition->getId(),
             'name' => $definition->getName(),
             'filter_form' => $grid->getFilterForm()->createView(),
             'columns' => $this->getColumns($grid),
