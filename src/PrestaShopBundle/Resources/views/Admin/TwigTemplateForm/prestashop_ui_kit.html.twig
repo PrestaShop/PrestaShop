@@ -25,6 +25,7 @@
 {% use '@PrestaShop/Admin/TwigTemplateForm/bootstrap_4_horizontal_layout.html.twig' %}
 
 {%- block form_widget_compound -%}
+
   {%- if form.parent is empty -%}
     {{ form_errors(form) }}
   {%- endif -%}

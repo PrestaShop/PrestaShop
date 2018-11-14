@@ -49,7 +49,7 @@ class ExampleController extends Controller
 
     private function getForm()
     {
-        return $this->createFormBuilder(null, ['csrf_protection' => false,])
+        return $this->createFormBuilder()
             ->add('text', TextType::class, [
                 'label' => 'You can enter anything you want',
                 'required' => false,

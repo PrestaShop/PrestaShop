@@ -601,3 +601,8 @@ services:
             - '@=service("prestashop.core.form.choice_provider.theme_page_layouts").getChoices()'
         tags:
             - { name: form.type }
+
+    form.extension.form_type:
+      class: 'PrestaShopBundle\Form\Admin\Extension\HelpTextExtension'
+      tags:
+        - { name: form.type_extension, extended_type: Symfony\Component\Form\Extension\Core\Type\FormType }
