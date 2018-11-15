@@ -1,14 +1,6 @@
 <?php
 /**
-<<<<<<< HEAD
-<<<<<<< HEAD
- * 2007-2018 PrestaShop.
-=======
  * 2007-2018 PrestaShop
->>>>>>> b0d0a91707... implement image source parser
-=======
- * 2007-2018 PrestaShop.
->>>>>>> 4e23a23570... cs fixer
  *
  * NOTICE OF LICENSE
  *
