@@ -24,23 +24,26 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Import;
+namespace PrestaShop\PrestaShop\Core\Import\Configuration;
 
-use PrestaShop\PrestaShop\Core\Import\Configuration\ImportConfigInterface;
-use PrestaShop\PrestaShop\Core\Import\Configuration\ImportRuntimeConfigInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Interface ImporterInterface describes an import processing unit.
+ * Class ImportRuntimeConfigFactory is responsible for building import runtime config.
  */
-interface ImporterInterface
+final class ImportRuntimeConfigFactory implements ImportRuntimeConfigFactoryInterface
 {
     /**
-     * Process the import.
-     *
-     * @param ImportConfigInterface $importConfig
-     * @param ImportRuntimeConfigInterface $runtimeConfig
-     *
-     * @return
+     * {@inheritdoc}
      */
-    public function import(ImportConfigInterface $importConfig, ImportRuntimeConfigInterface $runtimeConfig);
+    public function buildFromRequest(Request $request)
+    {
+        return new ImportRuntimeConfig(
+            $request->request->get('validate'),
+            $request->request->get('offset'),
+            $request->request->get('limit'),
+            $request->request->get('moreStep'),
+            $request->request->get('type_value', [])
+        );
+    }
 }

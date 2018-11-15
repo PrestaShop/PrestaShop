@@ -24,23 +24,49 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Import;
-
-use PrestaShop\PrestaShop\Core\Import\Configuration\ImportConfigInterface;
-use PrestaShop\PrestaShop\Core\Import\Configuration\ImportRuntimeConfigInterface;
+namespace PrestaShop\PrestaShop\Core\Import\Configuration;
 
 /**
- * Interface ImporterInterface describes an import processing unit.
+ * Interface ImportRuntimeConfigInterface describes import runtime configuration.
+ * Since import is a multi-process operation, this configuration can change
+ * during each import process.
  */
-interface ImporterInterface
+interface ImportRuntimeConfigInterface
 {
     /**
-     * Process the import.
+     * Checks if import should validate the data instead of importing it.
      *
-     * @param ImportConfigInterface $importConfig
-     * @param ImportRuntimeConfigInterface $runtimeConfig
-     *
-     * @return
+     * @return bool
      */
-    public function import(ImportConfigInterface $importConfig, ImportRuntimeConfigInterface $runtimeConfig);
+    public function shouldValidateData();
+
+    /**
+     * Get current import offset.
+     * Works similarly to SQL offset.
+     *
+     * @return int
+     */
+    public function getOffset();
+
+    /**
+     * Get current import limit.
+     * Similar to SQL limit.
+     *
+     * @return int
+     */
+    public function getLimit();
+
+    /**
+     * Get current import process index.
+     *
+     * @return int
+     */
+    public function getProcessIndex();
+
+    /**
+     * Get import entity fields.
+     *
+     * @return array
+     */
+    public function getEntityFields();
 }

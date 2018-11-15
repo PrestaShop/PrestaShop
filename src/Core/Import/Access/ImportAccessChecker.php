@@ -24,23 +24,33 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Import;
+namespace PrestaShop\PrestaShop\Core\Import\Access;
 
-use PrestaShop\PrestaShop\Core\Import\Configuration\ImportConfigInterface;
-use PrestaShop\PrestaShop\Core\Import\Configuration\ImportRuntimeConfigInterface;
+use PrestaShop\PrestaShop\Core\Employee\ContextEmployeeProviderInterface;
 
 /**
- * Interface ImporterInterface describes an import processing unit.
+ * Class ImportAccessChecker is responsible for checking import access.
  */
-interface ImporterInterface
+final class ImportAccessChecker implements ImportAccessCheckerInterface
 {
     /**
-     * Process the import.
-     *
-     * @param ImportConfigInterface $importConfig
-     * @param ImportRuntimeConfigInterface $runtimeConfig
-     *
-     * @return
+     * @var ContextEmployeeProviderInterface
      */
-    public function import(ImportConfigInterface $importConfig, ImportRuntimeConfigInterface $runtimeConfig);
+    private $contextEmployeeProvider;
+
+    /**
+     * @param ContextEmployeeProviderInterface $contextEmployeeProvider
+     */
+    public function __construct(ContextEmployeeProviderInterface $contextEmployeeProvider)
+    {
+        $this->contextEmployeeProvider = $contextEmployeeProvider;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function canTruncateData()
+    {
+        return $this->contextEmployeeProvider->isSuperAdmin();
+    }
 }

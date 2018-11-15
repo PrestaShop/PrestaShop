@@ -26,13 +26,16 @@
 
 namespace PrestaShop\PrestaShop\Core\Import;
 
+use PrestaShop\PrestaShop\Core\Import\Access\ImportAccessCheckerInterface;
 use PrestaShop\PrestaShop\Core\Import\Configuration\ImportConfig;
+use PrestaShop\PrestaShop\Core\Import\Configuration\ImportConfigInterface;
+use PrestaShop\PrestaShop\Core\Import\Configuration\ImportRuntimeConfigInterface;
 use PrestaShop\PrestaShop\Core\Import\Entity\ImportEntityDeleterInterface;
 
 /**
  * Class Importer is responsible for data import.
  */
-class Importer implements ImporterInterface
+final class Importer implements ImporterInterface
 {
     /**
      * @var ImportEntityDeleterInterface
@@ -40,20 +43,50 @@ class Importer implements ImporterInterface
     private $entityDeleter;
 
     /**
+     * @var ImportAccessCheckerInterface
+     */
+    private $accessChecker;
+
+    /**
+     * @param ImportAccessCheckerInterface $accessChecker
      * @param ImportEntityDeleterInterface $entityDeleter
      */
-    public function __construct(ImportEntityDeleterInterface $entityDeleter)
-    {
+    public function __construct(
+        ImportAccessCheckerInterface $accessChecker,
+        ImportEntityDeleterInterface $entityDeleter
+    ) {
         $this->entityDeleter = $entityDeleter;
+        $this->accessChecker = $accessChecker;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function import(ImportConfig $importConfig)
+    public function import(ImportConfigInterface $importConfig, ImportRuntimeConfigInterface $runtimeConfig)
     {
-        if ($importConfig->truncate()) {
+        if ($this->shouldTruncateData($importConfig, $runtimeConfig) && $this->accessChecker->canTruncateData()) {
             $this->entityDeleter->deleteAll($importConfig->getEntityType());
         }
+    }
+
+    /**
+     * Checks if data should be truncated.
+     * Data should be truncated only when it's not validation step
+     * and it's the first batch of the first process of the import.
+     *
+     * @param ImportConfigInterface $importConfig
+     * @param ImportRuntimeConfigInterface $runtimeConfig
+     *
+     * @return bool
+     */
+    private function shouldTruncateData(
+        ImportConfigInterface $importConfig,
+        ImportRuntimeConfigInterface $runtimeConfig
+    ) {
+        return $importConfig->truncate() &&
+            !$runtimeConfig->shouldValidateData() &&
+            0 === $runtimeConfig->getOffset() &&
+            0 === $runtimeConfig->getProcessIndex()
+        ;
     }
 }

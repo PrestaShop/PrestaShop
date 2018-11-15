@@ -24,23 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Import;
-
-use PrestaShop\PrestaShop\Core\Import\Configuration\ImportConfigInterface;
-use PrestaShop\PrestaShop\Core\Import\Configuration\ImportRuntimeConfigInterface;
+namespace PrestaShop\PrestaShop\Core\Employee;
 
 /**
- * Interface ImporterInterface describes an import processing unit.
+ * Interface ContextEmployeeProviderInterface describes a context employee provider.
  */
-interface ImporterInterface
+interface ContextEmployeeProviderInterface
 {
     /**
-     * Process the import.
+     * Check if context employee is super admin.
      *
-     * @param ImportConfigInterface $importConfig
-     * @param ImportRuntimeConfigInterface $runtimeConfig
-     *
-     * @return
+     * @return bool
      */
-    public function import(ImportConfigInterface $importConfig, ImportRuntimeConfigInterface $runtimeConfig);
+    public function isSuperAdmin();
 }
