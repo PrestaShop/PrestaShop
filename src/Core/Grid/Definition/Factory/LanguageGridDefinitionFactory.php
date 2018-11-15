@@ -154,6 +154,7 @@ final class LanguageGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ])
             )
             ->add((new ActionColumn('actions'))
+                ->setName($this->trans('Actions', [], 'Admin.Global'))
                 ->setOptions([
                     'actions' => (new RowActionCollection())
                         ->add((new LinkRowAction('edit'))
@@ -193,36 +194,56 @@ final class LanguageGridDefinitionFactory extends AbstractGridDefinitionFactory
              ->add((new Filter('id_lang', NumberType::class))
                  ->setTypeOptions([
                      'required' => false,
+                     'attr' => [
+                        'placeholder' => $this->translator->trans('Search ID', [], 'Admin.International.Help'),
+                     ],
                  ])
                  ->setAssociatedColumn('id_lang')
              )
              ->add((new Filter('name', TextType::class))
                  ->setTypeOptions([
                      'required' => false,
+                     'attr' => [
+                         'placeholder' => $this->translator->trans('Search name', [], 'Admin.International.Help'),
+                     ],
                  ])
                  ->setAssociatedColumn('name')
              )
              ->add((new Filter('iso_code', TextType::class))
                  ->setTypeOptions([
                      'required' => false,
+                     'attr' => [
+                         'placeholder' => $this->translator->trans('Search iso code', [], 'Admin.International.Help'),
+                     ],
                  ])
                  ->setAssociatedColumn('iso_code')
              )
              ->add((new Filter('language_code', TextType::class))
                  ->setTypeOptions([
                      'required' => false,
+                     'attr' => [
+                         'placeholder' => $this->translator->trans('Search code', [], 'Admin.International.Help'),
+                     ],
                  ])
                  ->setAssociatedColumn('language_code')
              )
              ->add((new Filter('date_format_lite', TextType::class))
                  ->setTypeOptions([
                      'required' => false,
+                     'attr' => [
+                         'placeholder' =>
+                             $this->translator->trans('Search date format', [], 'Admin.International.Help'),
+                     ],
                  ])
                  ->setAssociatedColumn('date_format_lite')
              )
              ->add((new Filter('date_format_full', TextType::class))
                  ->setTypeOptions([
                      'required' => false,
+                     'attr' => [
+                         'placeholder' =>
+                             $this->translator->trans('Search date format', [], 'Admin.International.Help'),
+                     ],
                  ])
                  ->setAssociatedColumn('date_format_full')
              )
