@@ -76,7 +76,7 @@ final class MetaGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getId()
     {
-        return 'Meta';
+        return 'meta';
     }
 
     /**

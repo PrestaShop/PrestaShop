@@ -36,7 +36,7 @@ import ColumnTogglingExtension from "../../components/grid/extension/column-togg
 const $ = window.$;
 
 $(() => {
-  const webserviceGrid = new Grid('webservicekey');
+  const webserviceGrid = new Grid('webservice_key');
 
   webserviceGrid.addExtension(new ReloadListActionExtension());
   webserviceGrid.addExtension(new ExportToSqlManagerExtension());

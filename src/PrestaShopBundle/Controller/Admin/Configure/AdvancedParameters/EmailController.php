@@ -155,7 +155,7 @@ class EmailController extends FrameworkBundleAdminController
      */
     public function deleteBulkAction(Request $request)
     {
-        $mailLogsToDelete = $request->request->get('emaillogs_delete_email_logs');
+        $mailLogsToDelete = $request->request->get('email_logs_delete_email_logs');
 
         $mailLogsEraser = $this->get('prestashop.adapter.email.email_log_eraser');
         $errors = $mailLogsEraser->erase($mailLogsToDelete);

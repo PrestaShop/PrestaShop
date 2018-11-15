@@ -46,7 +46,7 @@ final class BackupDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getId()
     {
-        return 'Backup';
+        return 'backup';
     }
 
     /**
