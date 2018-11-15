@@ -456,4 +456,86 @@ File: admin-dev/themes/default/template/controllers/modules/configure.tpl:109</n
       </trans-unit>
     </body>
   </file>
+    <file original="src/PrestaShopBundle/Resources/views/Admin/Module/manage.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="e81c2cdc82ffc65ff71448a30970bf2f">
+        <source>Recently Used</source>
+        <target>Recently Used</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Module/manage.html.twig:4</note>
+      </trans-unit>
+      <trans-unit id="ec27083a80b8bf3fc0ed8ec10b31a337">
+        <source>Administration</source>
+        <target>Administration</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Module/manage.html.twig:4</note>
+      </trans-unit>
+      <trans-unit id="e582d103bd28a074278423e12c40b22e">
+        <source><![CDATA[Design & Navigation]]></source>
+        <target><![CDATA[Design & Navigation]]></target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Module/manage.html.twig:4</note>
+      </trans-unit>
+      <trans-unit id="88239db3724f8d461639153da744d532">
+        <source><![CDATA[Promotions & Marketing]]></source>
+        <target><![CDATA[Promotions & Marketing]]></target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Module/manage.html.twig:4</note>
+      </trans-unit>
+      <trans-unit id="db7e79d107275d433a452ee35d25ba78">
+        <source>Product Page</source>
+        <target>Product Page</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Module/manage.html.twig:4</note>
+      </trans-unit>
+      <trans-unit id="274eedab4cea78918b89a144a8bb9eaa">
+        <source>Payment</source>
+        <target>Payment</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Module/manage.html.twig:4</note>
+      </trans-unit>
+      <trans-unit id="dd5c51359997af51467f2415830edf01">
+        <source><![CDATA[Shipping & Logistics]]></source>
+        <target><![CDATA[Shipping & Logistics]]></target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Module/manage.html.twig:4</note>
+      </trans-unit>
+      <trans-unit id="459fc29b4488e6dd5003189978e7d188">
+        <source><![CDATA[Traffic & Marketplaces]]></source>
+        <target><![CDATA[Traffic & Marketplaces]]></target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Module/manage.html.twig:4</note>
+      </trans-unit>
+      <trans-unit id="d55c3fa1661004c89e3483e7ddfad894">
+        <source>Customers</source>
+        <target>Customers</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Module/manage.html.twig:4</note>
+      </trans-unit>
+      <trans-unit id="cee17c454c0e482ba8aed25296acdd6e">
+        <source><![CDATA[Facebook & Social Networks]]></source>
+        <target><![CDATA[Facebook & Social Networks]]></target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Module/manage.html.twig:4</note>
+      </trans-unit>
+      <trans-unit id="7db92468983b4faedadd62d4e74636e6">
+        <source>Specialized Platforms</source>
+        <target>Specialized Platforms</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Module/manage.html.twig:4</note>
+      </trans-unit>
+      <trans-unit id="621953a5fa1ba7aa3f4e7cf0fc46be64">
+        <source>Theme modules</source>
+        <target>Theme modules</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Module/manage.html.twig:4</note>
+      </trans-unit>
+      <trans-unit id="ec6fbb422f684a89c81e9522e87db426">
+        <source>Other</source>
+        <target>Other</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Module/manage.html.twig:4</note>
+      </trans-unit>
+    </body>
+  </file>
 </xliff>

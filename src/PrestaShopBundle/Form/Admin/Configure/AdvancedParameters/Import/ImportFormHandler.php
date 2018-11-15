@@ -26,56 +26,64 @@
 
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Import;
 
-use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
-use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
+use PrestaShop\PrestaShop\Core\Import\Configuration\ImportConfigInterface;
 use Symfony\Component\Form\FormBuilderInterface;
 
 /**
- * Class ImportDataConfigurationFormHandler defines a form handler for import data configuration form.
+ * Class ImportFormHandler defines a form handler of import forms.
  */
-final class ImportDataConfigurationFormHandler implements FormHandlerInterface
+class ImportFormHandler implements ImportFormHandlerInterface
 {
     /**
-     * @var FormBuilderInterface the form builder
+     * Form builder.
+     *
+     * @var FormBuilderInterface
      */
-    protected $formBuilder;
+    private $formBuilder;
 
     /**
-     * @var FormDataProviderInterface the form data provider
+     * Hook dispatcher.
+     *
+     * @var HookDispatcherInterface
      */
-    protected $formDataProvider;
+    private $hookDispatcher;
 
     /**
-     * @var HookDispatcherInterface the event dispatcher
+     * @var ImportFormDataProviderInterface
      */
-    protected $hookDispatcher;
+    private $formDataProvider;
+    /**
+     * @var string
+     */
+    private $hookName;
 
     /**
      * @param FormBuilderInterface $formBuilder
      * @param HookDispatcherInterface $hookDispatcher
-     * @param FormDataProviderInterface $formDataProvider
+     * @param ImportFormDataProviderInterface $formDataProvider
+     * @param string $hookName
      */
     public function __construct(
         FormBuilderInterface $formBuilder,
         HookDispatcherInterface $hookDispatcher,
-        FormDataProviderInterface $formDataProvider
+        ImportFormDataProviderInterface $formDataProvider,
+        $hookName
     ) {
         $this->formBuilder = $formBuilder;
         $this->hookDispatcher = $hookDispatcher;
         $this->formDataProvider = $formDataProvider;
+        $this->hookName = $hookName;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getForm()
+    public function getForm(ImportConfigInterface $importConfig)
     {
-        $this->formBuilder->add('import_data_configuration', ImportDataConfigurationType::class);
-
-        $this->formBuilder->setData($this->formDataProvider->getData());
+        $this->formBuilder->setData($this->formDataProvider->getData($importConfig));
         $this->hookDispatcher->dispatchWithParameters(
-            'actionImportDataConfigurationForm',
+            "action{$this->hookName}Form",
             [
                 'form_builder' => $this->formBuilder,
             ]
@@ -92,10 +100,10 @@ final class ImportDataConfigurationFormHandler implements FormHandlerInterface
         $errors = $this->formDataProvider->setData($data);
 
         $this->hookDispatcher->dispatchWithParameters(
-            'actionImportDataConfigurationSave',
+            "action{$this->hookName}Save",
             [
                 'errors' => &$errors,
-                'form_data' => &$data,
+                'form_data' => $data,
             ]
         );
 

@@ -24,47 +24,54 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\HelperDoc;
+namespace PrestaShop\PrestaShop\Adapter\Import;
+
+use Doctrine\DBAL\Connection;
 
 /**
- * Class MetaPageHelperDocLinkProvider is responsible for providing "Learn more" link in different languages for helper
- * block located in Shop parameters -> Traffic & Seo -> Seo & Urls page.
+ * Class DataMatchSaver saves data configuration match.
+ * This class will be removed with CQRS introduction.
  */
-class MetaPageHelperDocLinkProvider implements HelperDocLinkProviderInterface
+final class DataMatchSaver
 {
+    /**
+     * @var Connection
+     */
+    private $connection;
+
     /**
      * @var string
      */
-    private $contextIsoCode;
+    private $dbPrefix;
 
     /**
-     * MetaPageHelperDocLinkProvider constructor.
-     *
-     * @param string $contextIsoCode
+     * @param Connection $connection
+     * @param string $dbPrefix
      */
-    public function __construct($contextIsoCode)
+    public function __construct(Connection $connection, $dbPrefix)
     {
-        $this->contextIsoCode = $contextIsoCode;
+        $this->connection = $connection;
+        $this->dbPrefix = $dbPrefix;
     }
 
     /**
-     * {@inheritdoc}
+     * Save data match.
+     *
+     * @param string $name name of the match
+     * @param array $value value of the match
+     * @param int $skipRows number of rows to skip from the import file
+     *
+     * @return bool
      */
-    public function getLink()
+    public function save($name, array $value, $skipRows)
     {
-        $link = 'http://doc.prestashop.com/display/PS17/SEO+and+URLs';
-
-        switch ($this->contextIsoCode) {
-            case 'fr':
-                $link = 'http://doc.prestashop.com/display/PS17/SEO+et+URL';
-                break;
-            case 'es':
-                $link = 'http://doc.prestashop.com/display/PS17/SEO+y+URLs';
-                break;
-            case 'it':
-                $link = 'http://doc.prestashop.com/display/PS17/SEO+e+URL';
-        }
-
-        return $link;
+        return (bool) $this->connection->insert(
+            $this->dbPrefix . 'import_match',
+            [
+                '`name`' => pSQL($name),
+                '`match`' => pSQL(implode('|', $value)),
+                '`skip`' => (int) $skipRows,
+            ]
+        );
     }
 }

@@ -24,17 +24,30 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\HelperDoc;
+namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Import;
+
+use PrestaShop\PrestaShop\Core\Import\Configuration\ImportConfigInterface;
 
 /**
- * Interface HelperDocLinkProviderInterface defines contract for retrieving "Learn more" links for helper blocks.
+ * Interface ImportFormDataProviderInterface describes a data provider for import forms.
  */
-interface HelperDocLinkProviderInterface
+interface ImportFormDataProviderInterface
 {
     /**
-     * Gets link of helper doc.
+     * Get form's data.
      *
-     * @return string
+     * @param ImportConfigInterface $importConfig
+     *
+     * @return array
      */
-    public function getLink();
+    public function getData(ImportConfigInterface $importConfig);
+
+    /**
+     * Save the form's data.
+     *
+     * @param array $data
+     *
+     * @return array of errors, if occurred
+     */
+    public function setData(array $data);
 }

@@ -14,3 +14,6 @@ services:
     class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\CategoryTreeChoiceProvider'
     arguments:
       - '@prestashop.adapter.data_provider.category'
+
+  prestashop.adapter.form.choice_provider.gender_by_id_choice_provider:
+    class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\GenderByIdChoiceProvider'

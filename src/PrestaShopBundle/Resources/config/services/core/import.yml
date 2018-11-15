@@ -102,3 +102,6 @@ services:
               6: '@prestashop.core.import.fields_provider.supplier'
               7: '@prestashop.core.import.fields_provider.alias'
               8: '@prestashop.core.import.fields_provider.store_contact'
+
+    prestashop.core.import.config_factory:
+        class: 'PrestaShop\PrestaShop\Core\Import\Configuration\ImportConfigFactory'

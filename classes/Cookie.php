@@ -28,7 +28,7 @@ use Defuse\Crypto\Key;
 class CookieCore
 {
     /** @var array Contain cookie content in a key => value format */
-    protected $_content;
+    protected $_content = array();
 
     /** @var array Crypted cookie name for setcookie() */
     protected $_name;
@@ -181,14 +181,14 @@ class CookieCore
         if (preg_match('/¤|\|/', $key . $value)) {
             throw new Exception('Forbidden chars in cookie');
         }
-        if (!$this->_modified && (!isset($this->_content[$key]) || (isset($this->_content[$key]) && $this->_content[$key] != $value))) {
+        if (!$this->_modified && (!array_key_exists($key, $this->_content) || $this->_content[$key] != $value)) {
             $this->_modified = true;
         }
         $this->_content[$key] = $value;
     }
 
     /**
-     * Magic method wich delete data into _content array.
+     * Magic method which delete data into _content array.
      *
      * @param string $key key wanted
      */

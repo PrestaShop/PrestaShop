@@ -1653,8 +1653,8 @@ class CartCore extends ObjectModel
      */
     public function deleteProduct(
         $id_product,
-        $id_product_attribute = null,
-        $id_customization = null,
+        $id_product_attribute = 0,
+        $id_customization = 0,
         $id_address_delivery = 0
     ) {
         if (isset(self::$_nbProducts[$this->id])) {

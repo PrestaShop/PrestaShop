@@ -123,9 +123,9 @@ const config = {
     employee: [
       './js/pages/employee',
     ],
-    categories: [
-      './js/pages/categories'
-    ],
+    customer: [
+      './js/pages/customer'
+    ]
   },
   output: {
     path: path.resolve(__dirname, 'public'),

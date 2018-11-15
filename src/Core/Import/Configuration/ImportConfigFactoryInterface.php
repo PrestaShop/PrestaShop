@@ -1,5 +1,6 @@
-{#**
- * 2007-2018 PrestaShop
+<?php
+/**
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -21,25 +22,23 @@
  * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-{% if grid.sorting.order_by == 'position' and grid.sorting.order_way == 'asc' %}
-  <div class="js-drag-handle js-{{ grid.id }}-position"
-       style="cursor: move;"
-       data-id="{{ record[column.options.id_field] }}"
-       data-id-parent="{{ record[column.options.id_parent_field] }}"
-       data-position="{{ record[column.options.field] }}"
-       data-update-url="{{ url(column.options.update_route) }}"
-       data-update-method="{{ column.options.update_method }}"
-       data-pagination-offset="{{ grid.pagination.offset }}"
-  >
-    <i class="material-icons">swap_vert</i>
-    <span class="badge badge-secondary rounded js-position">
-      {{ record[column.options.field] + 1 }}
-    </span>
-  </div>
-{% else %}
-  <div class="text-center">
-    {{ record[column.options.field] + 1 }}
-  </div>
-{% endif %}
+namespace PrestaShop\PrestaShop\Core\Import\Configuration;
+
+use Symfony\Component\HttpFoundation\Request;
+
+/**
+ * Interface ImportConfigFactoryInterface defines an import configuration factory.
+ */
+interface ImportConfigFactoryInterface
+{
+    /**
+     * Build import configuration VO out of form data.
+     *
+     * @param Request $request
+     *
+     * @return ImportConfigInterface
+     */
+    public function buildFromRequest(Request $request);
+}

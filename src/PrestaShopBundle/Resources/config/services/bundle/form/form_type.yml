@@ -645,3 +645,10 @@ services:
             - "@=service('prestashop.adapter.form.choice_provider.shop_tree_choice_provider').getChoices()"
         tags:
             - { name: form.type }
+
+    form.type.search_and_reset:
+        class: 'PrestaShopBundle\Form\Admin\Type\SearchAndResetType'
+        arguments:
+            - '@router.default'
+        tags:
+            - { name: form.type }

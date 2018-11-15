@@ -7,6 +7,15 @@ const {Menu} = require('../../selectors/BO/menu.js');
 const {ThemeAndLogo} = require('../../selectors/BO/design/theme_and_logo');
 const Design = require('../../selectors/BO/design/index');
 const {languageFO} = require('../../selectors/FO/index');
+const {AddProductPage} = require('../../selectors/BO/add_product_page')
+let promise = Promise.resolve();
+
+/**** Example of advanced data ****
+ * let advancedData = {
+ *  languageIdentifier: 'language',
+ *  countryIdentifier: 'country',
+ * }
+ */
 
 module.exports = {
   createLanguage: function (languageData) {
@@ -136,6 +145,23 @@ module.exports = {
       test('should switch the "Generate RTL stylesheet" to "YES"', () => client.scrollWaitForExistAndClick(ThemeAndLogo.generate_rtl_stylesheet_button.replace('%S', 'on')));
       test('should click on "Save" button', () => client.waitForExistAndClick(ThemeAndLogo.save_button));
       test('should verify the appearance of the green validation', () => client.checkTextValue(Design.success_panel, 'Your RTL stylesheets has been generated successfully'));
+    }, 'common_client');
+  },
+  updateAdvancedData(advancedData) {
+    scenario('Update advanced data', client => {
+      test('should set "Language identifier" input', () => client.waitAndSetValue(Localization.Localization.advanced_language_identifier_input, advancedData.languageIdentifier));
+      test('should set "Country identifier" input', () => client.waitAndSetValue(Localization.Localization.advanced_country_identifier_input, advancedData.countryIdentifier));
+      test('should close symfony toolbar', () => {
+        return promise
+          .then(() => client.isVisible(AddProductPage.symfony_toolbar, 3000))
+          .then(() => {
+            if (global.isVisible) {
+              client.waitForExistAndClick(AddProductPage.symfony_toolbar);
+            }
+          });
+      });
+      test('should click on "Save" button', () => client.waitForExistAndClick(Localization.Localization.advanced_save_button));
+      test('should verify the appearance of the green validation', () => client.checkTextValue(Localization.Localization.alert_panel.replace("%B", "alert-text"), 'Update successful'));
     }, 'common_client');
   }
 };
