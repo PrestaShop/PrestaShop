@@ -104,12 +104,18 @@ class PositionsController extends FrameworkBundleAdminController
         }
 
         $legacyContextService = $this->get('prestashop.adapter.legacy.context');
+        $saveUrlParams = [
+             'addToHook' => '',
+        ];
+        if ($this->selectedModule) {
+            $saveUrlParams['show_modules'] = $this->selectedModule;
+        }
+        $saveUrl = $legacyContextService->getAdminLink('AdminModulesPositions', true, $saveUrlParams);
 
         return [
             'layoutHeaderToolbarBtn' => [
                 'save' => [
-                    'href' => $legacyContextService->getAdminLink('AdminModulesPositions') .
-                    '&addToHook' . ($this->selectedModule ? '&show_modules=' . $this->selectedModule : ''),
+                    'href' => $saveUrl,
                     'desc' => $this->trans('Transplant a module', 'Admin.Design.Feature'),
                 ],
             ],
@@ -157,7 +163,7 @@ class PositionsController extends FrameworkBundleAdminController
             $module = $this->get('prestashop.adapter.legacy.module')->getInstanceById($moduleId);
             $hook = new Hook($hookId);
 
-            if (!$validateAdapter->isLoadedObject($module)) {
+            if (!$module) {
                 $errors[] = $this->trans(
                     'This module cannot be loaded.',
                     'Admin.Modules.Notification'

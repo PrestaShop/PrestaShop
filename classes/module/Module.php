@@ -185,6 +185,9 @@ abstract class ModuleCore implements ModuleInterface
     /** @var \Symfony\Component\DependencyInjection\ContainerInterface */
     private $container;
 
+    /** @var array|null used to cache module ids */
+    private static $cachedModuleNames = null;
+
     const CACHE_FILE_MODULES_LIST = '/config/xml/modules_list.xml';
 
     const CACHE_FILE_TAB_MODULES_LIST = '/config/xml/tab_modules_list.xml';
@@ -1001,7 +1004,7 @@ abstract class ModuleCore implements ModuleInterface
     public function registerExceptions($id_hook, $excepts, $shop_list = null)
     {
         // If shop lists is null, we fill it with all shops
-        if (is_null($shop_list)) {
+        if (null === $shop_list) {
             $shop_list = Shop::getContextListShopID();
         }
 
@@ -1146,23 +1149,29 @@ abstract class ModuleCore implements ModuleInterface
      */
     public static function getInstanceById($id_module)
     {
-        static $id2name = null;
-
-        if (is_null($id2name)) {
-            $id2name = array();
+        if (null === self::$cachedModuleNames) {
+            self::$cachedModuleNames = [];
             $sql = 'SELECT `id_module`, `name` FROM `' . _DB_PREFIX_ . 'module`';
             if ($results = Db::getInstance()->executeS($sql)) {
                 foreach ($results as $row) {
-                    $id2name[$row['id_module']] = $row['name'];
+                    self::$cachedModuleNames[$row['id_module']] = $row['name'];
                 }
             }
         }
 
-        if (isset($id2name[$id_module])) {
-            return Module::getInstanceByName($id2name[$id_module]);
+        if (isset(self::$cachedModuleNames[$id_module])) {
+            return Module::getInstanceByName(self::$cachedModuleNames[$id_module]);
         }
 
         return false;
+    }
+
+    /**
+     * Clear static cache.
+     */
+    public static function clearStaticCache()
+    {
+        self::$cachedModuleNames = null;
     }
 
     public static function configXmlStringFormat($string)
@@ -2084,7 +2093,7 @@ abstract class ModuleCore implements ModuleInterface
     /**
      * Helper displaying warning message(s).
      *
-     * @param string|array $error
+     * @param string|array $warning
      *
      * @return string
      */
@@ -2111,6 +2120,13 @@ abstract class ModuleCore implements ModuleInterface
         return $output;
     }
 
+    /**
+     * Helper displaying confirmation message.
+     *
+     * @param string $string
+     *
+     * @return string
+     */
     public function displayConfirmation($string)
     {
         $output = '
@@ -2710,12 +2726,16 @@ abstract class ModuleCore implements ModuleInterface
      *
      * @return array|null
      */
-    public static function getAuthorizedModules($group_id)
+    public static function getAuthorizedModules($group_id, $shops = array(1))
     {
-        return Db::getInstance()->executeS('
-        SELECT m.`id_module`, m.`name` FROM `' . _DB_PREFIX_ . 'module_group` mg
-        LEFT JOIN `' . _DB_PREFIX_ . 'module` m ON (m.`id_module` = mg.`id_module`)
-        WHERE mg.`id_group` = ' . (int) $group_id);
+        return Db::getInstance()->executeS(
+            'SELECT m.`id_module`, m.`name` FROM `' . _DB_PREFIX_ . 'module_group` mg
+            LEFT JOIN `' . _DB_PREFIX_ . 'module` m ON (m.`id_module` = mg.`id_module`)
+            WHERE mg.`id_group` = ' . (int) $group_id . '
+            AND `id_shop` IN ('
+                . (implode(',', array_map('intval', $shops)))
+            . ')'
+        );
     }
 
     /**
@@ -3348,7 +3368,7 @@ abstract class ModuleCore implements ModuleInterface
     public function get($serviceName)
     {
         if ($this->isSymfonyContext()) {
-            if (is_null($this->container)) {
+            if (null === $this->container) {
                 $this->container = SymfonyContainer::getInstance();
             }
 

@@ -98,3 +98,34 @@ services:
         class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ModuleByNameChoiceProvider'
         arguments:
             - '@=service("prestashop.core.admin.module.repository").getInstalledModulesCollection()'
+
+    prestashop.core.form.choice_provider.status:
+        class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\StatusChoiceProvider'
+        arguments:
+            - '@translator'
+
+    prestashop.core.form.choice_provider.canonical_redirect_type:
+        class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CanonicalRedirectTypeChoiceProvider'
+        arguments:
+            - '@translator'
+
+    prestashop.core.form.choice_provider.category_delete_mode:
+        class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CategoryDeleteModeChoiceProvider'
+        arguments:
+            - '@translator'
+
+    prestashop.core.form.choice_provider.import_match_configuration:
+        class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ImportMatchConfigurationChoiceProvider'
+        arguments:
+            - '@=service("prestashop.core.admin.import_match.repository").findAll()'
+
+    prestashop.core.form.choice_provider.import_entity_field:
+        class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ImportEntityFieldChoiceProvider'
+        arguments:
+            - '@=service("prestashop.core.import.fields_provider_finder")'
+            - '@=service("session").get("entity")'
+
+    prestashop.core.form.choice_provider.theme_page_layouts:
+        class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ThemePageLayoutsChoiceProvider'
+        arguments:
+            - '@=service("prestashop.adapter.legacy.context").getContext().shop.theme'

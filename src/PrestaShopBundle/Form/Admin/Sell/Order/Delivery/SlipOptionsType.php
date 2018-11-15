@@ -27,9 +27,10 @@
 namespace PrestaShopBundle\Form\Admin\Sell\Order\Delivery;
 
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
-use PrestaShopBundle\Form\Admin\Type\TranslateTextType;
+use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type as FormType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 /**
@@ -45,9 +46,9 @@ class SlipOptionsType extends TranslatorAwareType
         $builder
             ->add(
                 'prefix',
-                TranslateTextType::class,
+                TranslatableType::class,
                 [
-                    'locales' => $this->locales,
+                    'type' => TextType::class,
                 ]
             )
             ->add(

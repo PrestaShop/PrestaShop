@@ -315,6 +315,10 @@ services:
     form.type.shop_parameters.general:
         class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\General\PreferencesType'
         parent: 'form.type.translatable.aware'
+        arguments:
+          - '@=service("prestashop.adapter.multistore_feature").isUsed()'
+          - '@=service("prestashop.adapter.shop.context").isShopContext()'
+          - '@=service("prestashop.adapter.shop.context").isAllContext()'
         public: true
         calls:
             - ['setIsSecure', ["@=service('request_stack').getCurrentRequest().isSecure()"]]
@@ -516,5 +520,91 @@ services:
         public: true
         arguments:
             - '@=service("prestashop.core.form.choice_provider.theme_by_name").getChoices()'
+        tags:
+            - { name: form.type }
+
+    form.type.shop.traffic_seo.meta.set_up_url:
+        class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta\SetUpUrlType'
+        arguments:
+            - '@=service("prestashop.core.form.choice_provider.canonical_redirect_type").getChoices()'
+            - '@prestashop.core.util.url.htaccess_file_checker'
+            - '@=service("prestashop.adapter.hosting_information").isHostMode()'
+        tags:
+            - { name: form.type }
+
+    form.type.shop.traffic_seo.meta.shop_url:
+        class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta\ShopUrlType'
+        arguments:
+            - '@=service("prestashop.adapter.hosting_information").isHostMode()'
+            - '@=service("prestashop.adapter.multistore_feature").isActive()'
+            - '@=service("prestashop.adapter.shop.shop_url").doesMainShopUrlExist()'
+        tags:
+            - { name: form.type }
+
+    form.type.shop.traffic_seo.meta.url_schema:
+        class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta\UrlSchemaType'
+        arguments:
+            - '@=service("prestashop.adapter.legacy.configuration").get("PS_REWRITING_SETTINGS")'
+        tags:
+            - { name: form.type }
+
+    form.type.common.translatable:
+        class: 'PrestaShopBundle\Form\Admin\Type\TranslatableType'
+        arguments:
+            - "@=service('prestashop.adapter.legacy.context').getLanguages()"
+        tags:
+            - { name: form.type }
+
+    form.type.category.delete_categories:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Category\DeleteCategoriesType'
+        arguments:
+            - '@=service("prestashop.core.form.choice_provider.category_delete_mode").getChoices()'
+        tags:
+            - { name: form.type }
+
+    from.type.yes_and_no_choice:
+        class: 'PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        tags:
+            - { name: form.type }
+
+    form.type.team.employee.employee_options:
+        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Employee\EmployeeOptionsType'
+        parent: 'form.type.translatable.aware'
+        arguments:
+            - '@=service("prestashop.core.team.employee.configuration.options_checker").canBeChanged()'
+        public: true
+        tags:
+            - { name: form.type }
+
+    form.type.common.team.profile_choice:
+        class: 'PrestaShopBundle\Form\Admin\Type\Common\Team\ProfileChoiceType'
+        arguments:
+            - '@=service("prestashop.adapter.form.choice_provider.profile_by_id_choice_provider").getChoices()'
+        tags:
+            - { name: form.type }
+
+    form.type.import.import_data_configuration:
+        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Import\ImportDataConfigurationType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        arguments:
+            - '@=service("prestashop.core.form.choice_provider.import_match_configuration").getChoices()'
+            - '@=service("prestashop.core.form.choice_provider.import_entity_field").getChoices()'
+        tags:
+            - { name: form.type }
+
+    form.type.design.theme.page_layouts_customization:
+        class: 'PrestaShopBundle\Form\Admin\Improve\Design\Theme\PageLayoutsCustomizationType'
+        arguments:
+            - '@=service("prestashop.core.form.choice_provider.theme_page_layouts").getChoices()'
+        tags:
+            - { name: form.type }
+
+    form.type.search_and_reset:
+        class: 'PrestaShopBundle\Form\Admin\Type\SearchAndResetType'
+        arguments:
+            - '@router.default'
         tags:
             - { name: form.type }

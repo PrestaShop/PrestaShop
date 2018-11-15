@@ -26,8 +26,10 @@
 
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Import;
 
+use PrestaShop\PrestaShop\Core\Import\Entity;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -40,24 +42,24 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class ImportType extends TranslatorAwareType
 {
-    const DEFAULT_SEPARATOR = ';';
-    const DEFAULT_MULTIVALUE_SEPARATOR = ',';
-
+    /**
+     * {@inheritdoc}
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->add('csv', HiddenType::class)
             ->add('entity', ChoiceType::class, [
                 'choices' => [
-                    $this->trans('Categories', 'Admin.Global') => 0,
-                    $this->trans('Products', 'Admin.Global') => 1,
-                    $this->trans('Combinations', 'Admin.Global') => 2,
-                    $this->trans('Customers', 'Admin.Global') => 3,
-                    $this->trans('Addresses', 'Admin.Global') => 4,
-                    $this->trans('Brands', 'Admin.Global') => 5,
-                    $this->trans('Suppliers', 'Admin.Global') => 6,
-                    $this->trans('Alias', 'Admin.Shopparameters.Feature') => 7,
-                    $this->trans('Store contacts', 'Admin.Advparameters.Feature') => 8,
+                    $this->trans('Categories', 'Admin.Global') => Entity::TYPE_CATEGORIES,
+                    $this->trans('Products', 'Admin.Global') => Entity::TYPE_PRODUCTS,
+                    $this->trans('Combinations', 'Admin.Global') => Entity::TYPE_COMBINATIONS,
+                    $this->trans('Customers', 'Admin.Global') => Entity::TYPE_CUSTOMERS,
+                    $this->trans('Addresses', 'Admin.Global') => Entity::TYPE_ADDRESSES,
+                    $this->trans('Brands', 'Admin.Global') => Entity::TYPE_MANUFACTURERS,
+                    $this->trans('Suppliers', 'Admin.Global') => Entity::TYPE_SUPPLIERS,
+                    $this->trans('Alias', 'Admin.Shopparameters.Feature') => Entity::TYPE_ALIAS,
+                    $this->trans('Store contacts', 'Admin.Advparameters.Feature') => Entity::TYPE_STORE_CONTACTS,
                 ],
             ])
             ->add('file', FileType::class, [
@@ -68,23 +70,32 @@ class ImportType extends TranslatorAwareType
             ])
             ->add('separator', TextType::class)
             ->add('multiple_value_separator', TextType::class)
-            ->add('truncate', SwitchType::class, [
-                'data' => false,
-            ])
-            ->add('match_ref', SwitchType::class, [
-                'data' => false,
-            ])
-            ->add('regenerate', SwitchType::class, [
-                'data' => false,
-            ])
-            ->add('forceIDs', SwitchType::class, [
-                'data' => false,
-            ])
-            ->add('sendemail', SwitchType::class, [
-                'data' => true,
-            ]);
+            ->add('truncate', SwitchType::class)
+            ->add('match_ref', SwitchType::class)
+            ->add('regenerate', SwitchType::class)
+            ->add('forceIDs', SwitchType::class)
+            ->add('sendemail', SwitchType::class)
+        ;
+
+        $builder->get('entity')
+            ->addModelTransformer(new CallbackTransformer(
+                function ($entity) {
+                    if (null === $entity) {
+                        return $entity;
+                    }
+
+                    return is_numeric($entity) ? $entity : Entity::getFromName($entity);
+                },
+                function ($entity) {
+                    return $entity;
+                }
+            ))
+        ;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([

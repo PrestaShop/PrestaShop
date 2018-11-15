@@ -163,7 +163,7 @@ class MediaCore
             $limit = Media::getBackTrackLimit();
             $cssContent = preg_replace_callback(Media::$pattern_callback, array('Media', 'replaceByAbsoluteURL'), $cssContent, $limit);
             $cssContent = str_replace('\'images_ie/', '\'images/', $cssContent);
-            $cssContent = preg_replace_callback('#(AlphaImageLoader\(src=\')([^\']*\',)#s', array('Tools', 'replaceByAbsoluteURL'), $cssContent);
+            $cssContent = preg_replace_callback('#(AlphaImageLoader\(src=\')([^\']*\',)#s', array('Media', 'replaceByAbsoluteURL'), $cssContent);
 
             // Store all import url
             preg_match_all('#@(import|charset) .*?;#i', $cssContent, $m);

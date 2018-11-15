@@ -126,7 +126,7 @@ module.exports = {
           .then(() => client.waitForExistAndClick(AccessPageBO.shopname, pause))
           .then(() => client.switchWindow(1));
       });
-      test('should set the shop language to "English"', () => client.changeLanguage('english'));
+      test('should set the shop language to "English"', () => client.changeLanguage());
       test('should search for the product', () => client.searchByValue(SearchProductPage.search_input, SearchProductPage.search_button, productName + date_time));
       test('should go to the product page', () => client.waitForExistAndClick(SearchProductPage.product_result_name));
       test('should click on "Attachments" tab', () => client.scrollWaitForExistAndClick(productPage.attachments_tab, 50));
@@ -194,6 +194,7 @@ module.exports = {
           for (let j = 0; j < global.filesNumber; j++) {
             promise = client.getFileInformations(Files.files_table.replace('%R', j + 1).replace('%D', index), j, false);
           }
+          // BOOM: 9607
           return promise
             .then(() => client.checkFilterFile(searchValue));
         } else {

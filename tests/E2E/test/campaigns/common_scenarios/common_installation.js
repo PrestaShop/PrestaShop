@@ -3,7 +3,7 @@ let promise = Promise.resolve();
 module.exports = {
   prestaShopInstall: function (selector, language, country) {
     scenario('Step 1 : Choosing language', client => {
-      test('should choose "English" language', () => client.waitAndSelectByValue(selector.language_select, language));
+      test('should choose "' + language + '" language', () => client.waitAndSelectByValue(selector.language_select, language));
       test('should click on "Next" button', () => client.waitForVisibleAndClick(selector.next_step_button));
     }, 'installation');
     scenario('Step 2 : Agreeing license agreements', client => {
@@ -11,7 +11,7 @@ module.exports = {
       test('should click on "Next" button', () => client.waitForVisibleAndClick(selector.next_step_button));
     }, 'installation');
     scenario('Step 3 : Checking system compatibility', client => {
-      test('should check the test compatibility green box', () => client.checkTextValue(selector.compatibility_green_box, "PrestaShop compatibility with your system environment has been verified!"));
+      test('should check the test compatibility green box', () => client.isExisting(selector.compatibility_green_box));
       test('should click on "Next" button', () => client.waitForVisibleAndClick(selector.next_step_button));
     }, 'installation');
     scenario('Step 4 : Inserting the shop information', client => {
@@ -60,7 +60,7 @@ module.exports = {
       test('should finish installation', () => client.waitForVisibleElement(selector.finish_step));
     }, 'installation');
     scenario('Step 7 : Checking that installation finished', client => {
-      test('should check that the installation is finished!', () => client.checkTextValue(selector.finished_installation_msg, 'Your installation is finished!'));
+      test('should check that the installation is finished!', () => client.isExisting(selector.finished_installation_msg));
     }, 'installation');
   }
 };

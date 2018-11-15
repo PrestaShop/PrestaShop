@@ -4,3 +4,6 @@ services:
 
     prestashop.adapter.contact.repository:
         class: 'PrestaShop\PrestaShop\Adapter\Support\ContactRepository'
+
+    prestashop.adapter.contact.deleter:
+        class: 'PrestaShop\PrestaShop\Adapter\Support\ContactDeleter'

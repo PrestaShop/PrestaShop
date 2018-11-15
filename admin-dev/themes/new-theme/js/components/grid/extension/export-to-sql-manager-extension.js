@@ -35,8 +35,8 @@ export default class ExportToSqlManagerExtension {
    * @param {Grid} grid
    */
   extend(grid) {
-    grid.getContainer().on('click', '.js-common_show_query-grid-action', () => this._onShowSqlQueryClick(grid));
-    grid.getContainer().on('click', '.js-common_export_sql_manager-grid-action', () => this._onExportSqlManagerClick(grid));
+    grid.getHeaderContainer().on('click', '.js-common_show_query-grid-action', () => this._onShowSqlQueryClick(grid));
+    grid.getHeaderContainer().on('click', '.js-common_export_sql_manager-grid-action', () => this._onExportSqlManagerClick(grid));
   }
 
   /**

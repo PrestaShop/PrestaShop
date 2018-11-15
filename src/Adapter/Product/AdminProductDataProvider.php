@@ -117,7 +117,7 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
     {
         $filters = $this->getPersistedFilterParameters();
 
-        return isset($filters['filter_category']) && $filters['filter_category'] > 0;
+        return !empty($filters['filter_category']) && $filters['filter_category'] > 0;
     }
 
     /**
@@ -163,6 +163,12 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
         }
 
         $this->entityManager->flush();
+
+        //Flush cache
+        $employee = Context::getContext()->employee;
+        $employeeId = $employee->id ?: 0;
+
+        $this->cache->deleteItem("app.product_filters_${employeeId}");
     }
 
     /**

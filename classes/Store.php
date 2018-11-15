@@ -99,7 +99,7 @@ class StoreCore extends ObjectModel
             'longitude' => array('type' => self::TYPE_FLOAT, 'validate' => 'isCoordinate', 'size' => 13),
             'phone' => array('type' => self::TYPE_STRING, 'validate' => 'isPhoneNumber', 'size' => 16),
             'fax' => array('type' => self::TYPE_STRING, 'validate' => 'isPhoneNumber', 'size' => 16),
-            'email' => array('type' => self::TYPE_STRING, 'validate' => 'isEmail', 'size' => 128),
+            'email' => array('type' => self::TYPE_STRING, 'validate' => 'isEmail', 'size' => 255),
             'active' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool', 'required' => true),
             'date_add' => array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
             'date_upd' => array('type' => self::TYPE_DATE, 'validate' => 'isDate'),

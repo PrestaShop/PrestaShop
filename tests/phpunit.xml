@@ -13,6 +13,7 @@
             <group>admin</group>
             <group>demo</group>
             <group>api</group>
+            <group>routing</group>
             <group>sf</group>
         </exclude>
     </groups>

@@ -1,52 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="classes/controller/FrontController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="controllers/admin/AdminCmsController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="c402321a8e5818b776007e8a2d00474a">
-        <source>Current theme is unavailable. Please check your theme's directory name ("%s") and permissions.</source>
-        <target>Current theme is unavailable. Please check your theme's directory name ("%s") and permissions.</target>
+      <trans-unit id="5ece607071fe59ddc4c88dc6abfe2310">
+        <source>No items found</source>
+        <target>No items found</target>
         <note>Context:
-File: classes/controller/FrontController.php:323</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminThemesController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="6e9550e40cc317663fbe81e759d098e8">
-        <source>The uploaded file is too large.</source>
-        <target>The uploaded file is too large.</target>
-        <note>Context:
-File: controllers/admin/AdminThemesController.php:915</note>
-      </trans-unit>
-      <trans-unit id="1ecb89bb5b6dce906edaf8e12968c167">
-        <source>Invalid file format.</source>
-        <target>Invalid file format.</target>
-        <note>Context:
-File: controllers/admin/AdminThemesController.php:364</note>
-      </trans-unit>
-      <trans-unit id="d4c8009943f24c4318bef97058cc6ffa">
-        <source>Failed to move uploaded file.</source>
-        <target>Failed to move uploaded file.</target>
-        <note>Context:
-File: controllers/admin/AdminThemesController.php:377</note>
-      </trans-unit>
-      <trans-unit id="3cb5c48f468125102a98fe83a277029d">
-        <source>Warning: if no email logo is available, the main logo will be used instead.</source>
-        <target>Warning: if no email logo is available, the main logo will be used instead.</target>
-        <note>Context:
-File: controllers/admin/AdminThemesController.php:423</note>
-      </trans-unit>
-      <trans-unit id="4a9fdf95b29176bd9260016655a80852">
-        <source>Your RTL stylesheets has been generated successfully</source>
-        <target>Your RTL stylesheets has been generated successfully</target>
-        <note>Context:
-File: controllers/admin/AdminThemesController.php:1052</note>
-      </trans-unit>
-      <trans-unit id="9ccfef29efe298e9a48295a69436e11f">
-        <source><![CDATA[Your theme has been correctly reset to its default settings. You may want to regenerate your images. See the Improve > Design > Images Settings screen for the 'Regenerate thumbnails' button.]]></source>
-        <target><![CDATA[Your theme has been correctly reset to its default settings. You may want to regenerate your images. See the Improve > Design > Images Settings screen for the 'Regenerate thumbnails' button.]]></target>
-        <note>Context:
-File: controllers/admin/AdminThemesController.php:1071</note>
+File: controllers/admin/AdminCmsController.php:289</note>
       </trans-unit>
     </body>
   </file>
@@ -56,17 +16,7 @@ File: controllers/admin/AdminThemesController.php:1071</note>
         <source>The page Category cannot be moved here.</source>
         <target>The page Category cannot be moved here.</target>
         <note>Context:
-File: controllers/admin/AdminCmsCategoriesController.php:105</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminCmsController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="5ece607071fe59ddc4c88dc6abfe2310">
-        <source>No items found</source>
-        <target>No items found</target>
-        <note>Context:
-File: controllers/admin/AdminCmsController.php:274</note>
+File: controllers/admin/AdminCmsCategoriesController.php:106</note>
       </trans-unit>
     </body>
   </file>
@@ -94,105 +44,129 @@ File: controllers/admin/AdminImagesController.php:364</note>
         <source>This name already exists.</source>
         <target>This name already exists.</target>
         <note>Context:
-File: controllers/admin/AdminImagesController.php:389</note>
+File: controllers/admin/AdminImagesController.php:390</note>
       </trans-unit>
       <trans-unit id="b88862891dbf9c20a73bc59258407d0b">
         <source>Source file does not exist or is empty (%filepath%)</source>
         <target>Source file does not exist or is empty (%filepath%)</target>
         <note>Context:
-File: controllers/admin/AdminImagesController.php:500</note>
+File: controllers/admin/AdminImagesController.php:502</note>
       </trans-unit>
       <trans-unit id="985b5b995c4574ae5eba2062a13ef168">
         <source>Failed to resize image file (%filepath%)</source>
         <target>Failed to resize image file (%filepath%)</target>
         <note>Context:
-File: controllers/admin/AdminImagesController.php:502</note>
+File: controllers/admin/AdminImagesController.php:504</note>
       </trans-unit>
       <trans-unit id="c5e7d0c13104eed0a195c175f2edfdd2">
         <source>Failed to resize image file to high resolution (%filepath%)</source>
         <target>Failed to resize image file to high resolution (%filepath%)</target>
         <note>Context:
-File: controllers/admin/AdminImagesController.php:507</note>
+File: controllers/admin/AdminImagesController.php:509</note>
       </trans-unit>
       <trans-unit id="103d86044b78fa59e02ff8480a3a2f46">
         <source>Original image is corrupt (%filename%) for product ID %id% or bad permission on folder.</source>
         <target>Original image is corrupt (%filename%) for product ID %id% or bad permission on folder.</target>
         <note>Context:
-File: controllers/admin/AdminImagesController.php:539</note>
+File: controllers/admin/AdminImagesController.php:541</note>
       </trans-unit>
       <trans-unit id="2934958a3f658892ee502aaf8258a6f7">
         <source>Original image is missing or empty (%filename%) for product ID %id%</source>
         <target>Original image is missing or empty (%filename%) for product ID %id%</target>
         <note>Context:
-File: controllers/admin/AdminImagesController.php:552</note>
+File: controllers/admin/AdminImagesController.php:554</note>
       </trans-unit>
       <trans-unit id="8b772dad7cc4ed15eaf0c433f861e55c">
         <source>Cannot write images for this type: %1$s. Please check the %2$s folder's writing permissions.</source>
         <target>Cannot write images for this type: %1$s. Please check the %2$s folder's writing permissions.</target>
         <note>Context:
-File: controllers/admin/AdminImagesController.php:672</note>
+File: controllers/admin/AdminImagesController.php:676</note>
       </trans-unit>
       <trans-unit id="d4f225ec09e4b0eba6558753f4bd8edd">
         <source>Only part of the images have been regenerated. The server timed out before finishing.</source>
         <target>Only part of the images have been regenerated. The server timed out before finishing.</target>
         <note>Context:
-File: controllers/admin/AdminImagesController.php:675</note>
+File: controllers/admin/AdminImagesController.php:679</note>
       </trans-unit>
       <trans-unit id="f2febdafe25d3517afc3c6dd3d815562">
         <source>Server timed out. The watermark may not have been applied to all images.</source>
         <target>Server timed out. The watermark may not have been applied to all images.</target>
         <note>Context:
-File: controllers/admin/AdminImagesController.php:679</note>
+File: controllers/admin/AdminImagesController.php:683</note>
       </trans-unit>
       <trans-unit id="606495559093a136ed6f2c9daee2645f">
         <source>Cannot write "No picture" image to %s images folder. Please check the folder's writing permissions.</source>
         <target>Cannot write "No picture" image to %s images folder. Please check the folder's writing permissions.</target>
         <note>Context:
-File: controllers/admin/AdminImagesController.php:684</note>
+File: controllers/admin/AdminImagesController.php:688</note>
       </trans-unit>
       <trans-unit id="4004c7590c68a8cbbe499736c56bc33c">
         <source>Error: Your server configuration is not compatible with the new image system. No images were moved.</source>
         <target>Error: Your server configuration is not compatible with the new image system. No images were moved.</target>
         <note>Context:
-File: controllers/admin/AdminImagesController.php:711</note>
+File: controllers/admin/AdminImagesController.php:716</note>
       </trans-unit>
       <trans-unit id="4c9f49243d6dc02028801d9767abe3c1">
         <source>Not all images have been moved. The server timed out before finishing. Click on "Move images" again to resume the moving process.</source>
         <target>Not all images have been moved. The server timed out before finishing. Click on "Move images" again to resume the moving process.</target>
         <note>Context:
-File: controllers/admin/AdminImagesController.php:717</note>
+File: controllers/admin/AdminImagesController.php:722</note>
       </trans-unit>
       <trans-unit id="95871efade00fbd0243355ce7937c40a">
         <source>Error: Some -- or all -- images cannot be moved.</source>
         <target>Error: Some -- or all -- images cannot be moved.</target>
         <note>Context:
-File: controllers/admin/AdminImagesController.php:719</note>
+File: controllers/admin/AdminImagesController.php:724</note>
       </trans-unit>
       <trans-unit id="cb2f901ceed5c3365d056794a1b5047f">
         <source>After modification, do not forget to regenerate thumbnails</source>
         <target>After modification, do not forget to regenerate thumbnails</target>
         <note>Context:
-File: controllers/admin/AdminImagesController.php:737</note>
+File: controllers/admin/AdminImagesController.php:743</note>
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Command/ExportThemeCommand.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="modules/ps_themecusto/controllers/admin/AdminPsThemeCustoAdvanced.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="ebc7584c0a97bc4aa867c11fc4760b3f">
-        <source>Your theme has been correctly exported: %path%</source>
-        <target>Your theme has been correctly exported: %path%</target>
+      <trans-unit id="6e9550e40cc317663fbe81e759d098e8">
+        <source>The uploaded file is too large.</source>
+        <target>The uploaded file is too large.</target>
         <note>Context:
-File: src/PrestaShopBundle/Command/ExportThemeCommand.php:58</note>
+File: modules/ps_themecusto/controllers/admin/AdminPsThemeCustoAdvanced.php:264</note>
+      </trans-unit>
+      <trans-unit id="1ecb89bb5b6dce906edaf8e12968c167">
+        <source>Invalid file format.</source>
+        <target>Invalid file format.</target>
+        <note>Context:
+File: modules/ps_themecusto/controllers/admin/AdminPsThemeCustoAdvanced.php:285</note>
+      </trans-unit>
+      <trans-unit id="d4c8009943f24c4318bef97058cc6ffa">
+        <source>Failed to move uploaded file.</source>
+        <target>Failed to move uploaded file.</target>
+        <note>Context:
+File: modules/ps_themecusto/controllers/admin/AdminPsThemeCustoAdvanced.php:298</note>
       </trans-unit>
     </body>
   </file>
-  <file original="src/Core/Shop/LogoUploader.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="controllers/admin/AdminThemesController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="f003149576f4755d74550952febe14bb">
-        <source>An error occurred while uploading the favicon: cannot copy file "%s" to folder "%s".</source>
-        <target>An error occurred while uploading the favicon: cannot copy file "%s" to folder "%s".</target>
+      <trans-unit id="3cb5c48f468125102a98fe83a277029d">
+        <source>Warning: if no email logo is available, the main logo will be used instead.</source>
+        <target>Warning: if no email logo is available, the main logo will be used instead.</target>
         <note>Context:
-File: src/Core/Shop/LogoUploader.php:172</note>
+File: controllers/admin/AdminThemesController.php:427</note>
+      </trans-unit>
+      <trans-unit id="4a9fdf95b29176bd9260016655a80852">
+        <source>Your RTL stylesheets has been generated successfully</source>
+        <target>Your RTL stylesheets has been generated successfully</target>
+        <note>Context:
+File: controllers/admin/AdminThemesController.php:1057</note>
+      </trans-unit>
+      <trans-unit id="9ccfef29efe298e9a48295a69436e11f">
+        <source><![CDATA[Your theme has been correctly reset to its default settings. You may want to regenerate your images. See the Improve > Design > Images Settings screen for the 'Regenerate thumbnails' button.]]></source>
+        <target><![CDATA[Your theme has been correctly reset to its default settings. You may want to regenerate your images. See the Improve > Design > Images Settings screen for the 'Regenerate thumbnails' button.]]></target>
+        <note>Context:
+File: controllers/admin/AdminThemesController.php:1076</note>
       </trans-unit>
     </body>
   </file>
@@ -218,7 +192,37 @@ File: src/Core/Addon/Theme/ThemeValidator.php:116</note>
         <source>This theme is not valid for PrestaShop 1.7</source>
         <target>This theme is not valid for PrestaShop 1.7</target>
         <note>Context:
-File: src/Core/Addon/Theme/ThemeManager.php:357</note>
+File: src/Core/Addon/Theme/ThemeManager.php:359</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/Core/Shop/LogoUploader.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="f003149576f4755d74550952febe14bb">
+        <source>An error occurred while uploading the favicon: cannot copy file "%s" to folder "%s".</source>
+        <target>An error occurred while uploading the favicon: cannot copy file "%s" to folder "%s".</target>
+        <note>Context:
+File: src/Core/Shop/LogoUploader.php:170</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Command/ExportThemeCommand.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="ebc7584c0a97bc4aa867c11fc4760b3f">
+        <source>Your theme has been correctly exported: %path%</source>
+        <target>Your theme has been correctly exported: %path%</target>
+        <note>Context:
+File: src/PrestaShopBundle/Command/ExportThemeCommand.php:58</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="classes/controller/FrontController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="c402321a8e5818b776007e8a2d00474a">
+        <source>Current theme is unavailable. Please check your theme's directory name ("%s") and permissions.</source>
+        <target>Current theme is unavailable. Please check your theme's directory name ("%s") and permissions.</target>
+        <note>Context:
+File: classes/controller/FrontController.php:321</note>
       </trans-unit>
     </body>
   </file>

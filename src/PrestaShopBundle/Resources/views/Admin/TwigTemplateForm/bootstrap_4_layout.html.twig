@@ -22,8 +22,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *#}
-{% use "PrestaShopBundle:Admin/TwigTemplateForm:form_div_layout.html.twig" %}
-{% use 'PrestaShopBundle:Admin/TwigTemplateForm:typeahead.html.twig' %}
+{% use '@PrestaShop/Admin/TwigTemplateForm/form_div_layout.html.twig' %}
+{% use '@PrestaShop/Admin/TwigTemplateForm/typeahead.html.twig' %}
 
 {# Widgets #}
 
@@ -313,22 +313,22 @@
     {% spaceless %}
         <button type="submit"
                 class="btn btn-primary d-block"
-                title="{{ 'Search'|trans({}, 'Admin.Global') }}"
+                title="{{ 'Search'|trans({}, 'Admin.Actions') }}"
                 name="{{ full_name }}[search]"
         >
           <i class="material-icons">search</i>
-          {{ 'Search'|trans({}, 'Admin.Global') }}
+          {{ 'Search'|trans({}, 'Admin.Actions') }}
         </button>
 
         {% if show_reset_button %}
             <button type="reset"
                     name="{{ full_name }}[reset]"
                     class="btn btn-link js-reset-search btn d-block"
-                    data-url="{{ form.vars.attr['data-url'] }}"
-                    data-redirect="{{ form.vars.attr['data-redirect'] }}"
+                    data-url="{{ reset_url }}"
+                    data-redirect="{{ redirect_url }}"
             >
               <i class="material-icons">clear</i>
-              {{ 'Reset'|trans({}, 'Admin.Global') }}
+              {{ 'Reset'|trans({}, 'Admin.Actions') }}
             </button>
         {% endif %}
     {% endspaceless %}
@@ -596,3 +596,37 @@
     </div>
   {% endspaceless %}
 {% endblock material_multiple_choice_table_widget %}
+
+{% block translatable_widget -%}
+  {{ form_errors(form) }}
+  <div class="input-group locale-input-group js-locale-input-group d-flex">
+    {% for translateField in form %}
+      {% set classes = translateField.vars.attr.class|default('') ~ ' js-locale-input'%}
+      {% set classes = classes ~ ' js-locale-' ~ translateField.vars.label %}
+      {% if default_locale.id_lang != translateField.vars.name %}
+        {% set classes = classes ~ ' d-none' %}
+      {% endif %}
+      <div class="{{ classes }}" style="flex-grow: 1;">
+        {{ form_widget(translateField) }}
+      </div>
+    {% endfor %}
+    {% if not hide_locales %}
+      <div class="dropdown">
+        <button class="btn btn-outline-secondary dropdown-toggle js-locale-btn"
+                type="button"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+                id="{{ form.vars.id }}"
+        >
+          {{ form.vars.default_locale.iso_code }}
+        </button>
+        <div class="dropdown-menu" aria-labelledby="{{ form.vars.id }}">
+          {% for locale in locales %}
+            <span class="dropdown-item js-locale-item" data-locale="{{ locale.iso_code }}">{{ locale.name }}</span>
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+  </div>
+{%- endblock translatable_widget %}

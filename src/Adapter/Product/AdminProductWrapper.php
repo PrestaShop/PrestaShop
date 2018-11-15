@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product;
 use Attachment;
 use PrestaShop\PrestaShop\Adapter\Entity\Customization;
 use PrestaShop\PrestaShop\Core\Foundation\Database\EntityNotFoundException;
+use PrestaShopBundle\Utils\FloatParser;
 use SpecificPrice;
 use Customer;
 use Combination;
@@ -163,6 +164,7 @@ class AdminProductWrapper
 
         StockAvailable::setProductDependsOnStock((int) $product->id, $product->depends_on_stock, null, $id_product_attribute);
         StockAvailable::setProductOutOfStock((int) $product->id, $product->out_of_stock, null, $id_product_attribute);
+        StockAvailable::setLocation((int) $product->id, $combinationValues['attribute_location'], null, $id_product_attribute);
 
         $product->checkDefaultAttributes();
 
@@ -215,6 +217,15 @@ class AdminProductWrapper
     }
 
     /**
+     * @param Product $product
+     * @param string $location
+     */
+    public function processLocation(Product $product, $location)
+    {
+        StockAvailable::setLocation($product->id, $location);
+    }
+
+    /**
      * Set if a product depends on stock (ASM). For a product or a combination.
      *
      * Does work only in Advanced stock management.
@@ -239,6 +250,8 @@ class AdminProductWrapper
      */
     public function processProductSpecificPrice($id_product, $specificPriceValues, $idSpecificPrice = null)
     {
+        $floatParser = new FloatParser();
+
         // ---- data formatting ----
         $id_product_attribute = $specificPriceValues['sp_id_product_attribute'];
         $id_shop = $specificPriceValues['sp_id_shop'] ? $specificPriceValues['sp_id_shop'] : 0;
@@ -246,9 +259,9 @@ class AdminProductWrapper
         $id_country = $specificPriceValues['sp_id_country'] ? $specificPriceValues['sp_id_country'] : 0;
         $id_group = $specificPriceValues['sp_id_group'] ? $specificPriceValues['sp_id_group'] : 0;
         $id_customer = !empty($specificPriceValues['sp_id_customer']['data']) ? $specificPriceValues['sp_id_customer']['data'][0] : 0;
-        $price = isset($specificPriceValues['leave_bprice']) ? '-1' : $specificPriceValues['sp_price'];
+        $price = isset($specificPriceValues['leave_bprice']) ? '-1' : $floatParser->fromString($specificPriceValues['sp_price']);
         $from_quantity = $specificPriceValues['sp_from_quantity'];
-        $reduction = (float) $specificPriceValues['sp_reduction'];
+        $reduction = $floatParser->fromString($specificPriceValues['sp_reduction']);
         $reduction_tax = $specificPriceValues['sp_reduction_tax'];
         $reduction_type = !$reduction ? 'amount' : $specificPriceValues['sp_reduction_type'];
         $reduction_type = $reduction_type == '-' ? 'amount' : $reduction_type;

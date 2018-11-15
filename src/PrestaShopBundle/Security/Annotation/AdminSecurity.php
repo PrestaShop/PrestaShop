@@ -55,12 +55,19 @@ class AdminSecurity extends Security
     protected $redirectRoute;
 
     /**
-     * @deprecated Once the back office is migrated, rely only on route.
-     * The url for the redirection.
+     * @deprecated once the back office is migrated, rely only on route.
+     * The url for the redirection
      *
      * @return string
      */
     protected $url = 'admin_domain';
+
+    /**
+     * The route params which are used together to generate the redirect route.
+     *
+     * @var array
+     */
+    protected $redirectQueryParamsToKeep = [];
 
     /**
      * @return string
@@ -108,5 +115,21 @@ class AdminSecurity extends Security
     public function setUrl($url)
     {
         $this->url = $url;
+    }
+
+    /**
+     * @return array
+     */
+    public function getRedirectQueryParamsToKeep()
+    {
+        return $this->redirectQueryParamsToKeep;
+    }
+
+    /**
+     * @param array $redirectQueryParamsToKeep
+     */
+    public function setRedirectQueryParamsToKeep($redirectQueryParamsToKeep)
+    {
+        $this->redirectQueryParamsToKeep = $redirectQueryParamsToKeep;
     }
 }

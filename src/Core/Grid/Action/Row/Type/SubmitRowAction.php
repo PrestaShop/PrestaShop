@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Grid\Action\Row\Type;
 
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\AbstractRowAction;
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\AccessibilityChecker\AccessibilityCheckerInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -56,12 +57,32 @@ final class SubmitRowAction extends AbstractRowAction
             ->setDefaults([
                 'method' => 'POST',
                 'confirm_message' => '',
+                'accessibility_checker' => null,
             ])
             ->setAllowedTypes('route', 'string')
             ->setAllowedTypes('route_param_name', 'string')
             ->setAllowedTypes('route_param_field', 'string')
             ->setAllowedTypes('method', 'string')
             ->setAllowedTypes('confirm_message', 'string')
+            ->setAllowedTypes('accessibility_checker', [AccessibilityCheckerInterface::class, 'callable', 'null'])
         ;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isApplicable(array $record)
+    {
+        $accessibilityChecker = $this->getOptions()['accessibility_checker'];
+
+        if ($accessibilityChecker instanceof AccessibilityCheckerInterface) {
+            return $accessibilityChecker->isGranted($record);
+        }
+
+        if (is_callable($accessibilityChecker)) {
+            return call_user_func($accessibilityChecker, $record);
+        }
+
+        return parent::isApplicable($record);
     }
 }

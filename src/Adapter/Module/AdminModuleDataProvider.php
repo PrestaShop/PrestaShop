@@ -462,14 +462,16 @@ class AdminModuleDataProvider implements ModuleInterface
                     }
                 }
 
-                $this->catalog_modules = $listAddons;
-                if ($this->cacheProvider) {
-                    $this->cacheProvider->save($this->languageISO . self::_CACHEKEY_MODULES_, $this->catalog_modules, self::_DAY_IN_SECONDS_);
+                if (!empty($listAddons)) {
+                    $this->catalog_modules = $listAddons;
+                    if ($this->cacheProvider) {
+                        $this->cacheProvider->save($this->languageISO . self::_CACHEKEY_MODULES_, $this->catalog_modules, self::_DAY_IN_SECONDS_);
+                    }
+                } else {
+                    $this->fallbackOnCatalogCache();
                 }
             } catch (\Exception $e) {
                 if (!$this->fallbackOnCatalogCache()) {
-                    $this->catalog_modules = array();
-                    $this->failed = true;
                     $this->logger->error('Data from PrestaShop Addons is invalid, and cannot fallback on cache. ', array('exception' => $e->getMessage()));
                 }
             }
@@ -479,7 +481,7 @@ class AdminModuleDataProvider implements ModuleInterface
     /**
      * If cache exists, get the Catalogue from the cache.
      *
-     * @return array|false|mixed
+     * @return array Module loaded from the cache
      */
     protected function fallbackOnCatalogCache()
     {
@@ -487,6 +489,12 @@ class AdminModuleDataProvider implements ModuleInterface
         if ($this->cacheProvider) {
             $this->catalog_modules = $this->cacheProvider->fetch($this->languageISO . self::_CACHEKEY_MODULES_);
         }
+
+        if (!$this->catalog_modules) {
+            $this->catalog_modules = array();
+        }
+
+        $this->failed = true;
 
         return $this->catalog_modules;
     }

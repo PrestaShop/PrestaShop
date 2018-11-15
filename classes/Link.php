@@ -27,6 +27,7 @@ use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use PrestaShop\PrestaShop\Core\Feature\TokenInUrls;
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
 
 class LinkCore
 {
@@ -704,6 +705,10 @@ class LinkCore
             return '';
         }
 
+        if (!is_array($sfRouteParams)) {
+            $sfRouteParams = [];
+        }
+
         if ($withToken && !TokenInUrls::isDisabled()) {
             $params['token'] = Tools::getAdminTokenLite($controller);
         }
@@ -711,11 +716,21 @@ class LinkCore
         // Even if URL rewriting is not enabled, the page handled by Symfony must work !
         // For that, we add an 'index.php' in the URL before the route
         $sfContainer = SymfonyContainer::getInstance();
+        $sfRouter = null;
+        $legacyUrlConverter = null;
         if (!is_null($sfContainer)) {
             $sfRouter = $sfContainer->get('router');
+            $legacyUrlConverter = $sfContainer->get('prestashop.bundle.routing.converter.legacy_url_converter');
         }
 
-        $routeName = null;
+        if (!empty($sfRouteParams['route']) && null !== $sfRouter) {
+            $sfRoute = $sfRouteParams['route'];
+            unset($sfRouteParams['route']);
+
+            return $sfRouter->generate($sfRoute, $sfRouteParams, UrlGeneratorInterface::ABSOLUTE_URL);
+        }
+
+        $routeName = '';
         switch ($controller) {
             case 'AdminProducts':
                 // New architecture modification: temporary behavior to switch between old and new controllers.
@@ -768,50 +783,23 @@ class LinkCore
                 $routeName = 'admin_international_translations_show_settings';
 
                 break;
-
-            default:
-                $routes = array(
-                    'AdminAdminPreferences' => 'admin_administration',
-                    'AdminCustomerPreferences' => 'admin_customer_preferences',
-                    'AdminDeliverySlip' => 'admin_order_delivery_slip',
-                    'AdminImport' => 'admin_import',
-                    'AdminInformation' => 'admin_system_information',
-                    'AdminLogs' => 'admin_logs',
-                    'AdminMaintenance' => 'admin_maintenance',
-                    'AdminModulesCatalog' => 'admin_module_catalog',
-                    'AdminModulesManage' => 'admin_module_manage',
-                    'AdminModulesNotifications' => 'admin_module_notification',
-                    'AdminModulesUpdates' => 'admin_module_updates',
-                    'AdminModulesPositions' => 'admin_modules_positions',
-                    'AdminModulesSf' => 'admin_module_manage',
-                    'AdminOrderPreferences' => 'admin_order_preferences',
-                    'AdminPPreferences' => 'admin_product_preferences',
-                    'AdminPerformance' => 'admin_performance',
-                    'AdminPreferences' => 'admin_preferences',
-                    'AdminShipping' => 'admin_shipping_preferences',
-                    'AdminStockManagement' => 'admin_stock_overview',
-                    'AdminThemesCatalog' => 'admin_theme_catalog',
-                    'AdminTranslationSf' => 'admin_international_translation_overview',
-                    'AdminPayment' => 'admin_payment_methods',
-                    'AdminLocalization' => 'admin_localization_show_settings',
-                    'AdminGeolocation' => 'admin_geolocation',
-                    'AdminPaymentPreferences' => 'admin_payment_preferences',
-                    'AdminInvoices' => 'admin_order_invoices',
-                    'AdminEmails' => 'admin_email',
-                    'AdminRequestSql' => 'admin_request_sql',
-                    // 'AdminWebservice' => 'admin_webservice', @todo: uncomment when grid and entity form are done.
-                    'AdminBackup' => 'admin_backup',
-                );
-
-                if (isset($routes[$controller])) {
-                    $routeName = $routes[$controller];
-                }
         }
 
-        if (!is_null($routeName)) {
+        if (!empty($routeName) && null !== $sfRouter) {
             $sfRoute = array_key_exists('route', $sfRouteParams) ? $sfRouteParams['route'] : $routeName;
 
             return $sfRouter->generate($sfRoute, $sfRouteParams, UrlGeneratorInterface::ABSOLUTE_URL);
+        }
+
+        if (empty($routeName) && null !== $legacyUrlConverter) {
+            try {
+                $conversionParameters = array_merge(['controller' => $controller], $sfRouteParams, $params);
+                unset($conversionParameters['token']);
+
+                return $legacyUrlConverter->convertByParameters($conversionParameters);
+            } catch (CoreException $e) {
+                //The url could not be converted so we fallback on legacy url
+            }
         }
 
         $idLang = Context::getContext()->language->id;

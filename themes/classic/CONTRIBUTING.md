@@ -22,8 +22,6 @@ There are few things to do before you are ready to contribute.
 
 ### Reporting issues
 
-The _Starter Theme_ project is the only PrestaShop project that **use GitHub issues**. Please don't report any bug on the forge but open an issue here.
-
 Open an issue:
 
 1. To report a bug.

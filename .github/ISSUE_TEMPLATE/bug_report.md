@@ -1,11 +1,14 @@
 ---
 name: Bug report
-about: Create a report to help us improve
+about: Report an issue in PrestaShop or in one of the native modules.
 
 ---
-> **Reminder**
-> 
-> DO NOT create security issues here, but contact security@prestashop.com instead!
+
+<!--
+****************************
+DO NOT disclose security issues here, contact security@prestashop.com instead!
+****************************
+-->
 
 **Describe the bug**
 A clear and concise description of what the bug is.

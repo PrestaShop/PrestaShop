@@ -143,12 +143,12 @@ class AdminManufacturersControllerCore extends AdminController
         $this->addRowAction('delete');
 
         $this->_select = '
-			COUNT(`id_product`) AS `products`, (
-				SELECT COUNT(ad.`id_manufacturer`) as `addresses`
-				FROM `' . _DB_PREFIX_ . 'address` ad
-				WHERE ad.`id_manufacturer` = a.`id_manufacturer`
-					AND ad.`deleted` = 0
-				GROUP BY ad.`id_manufacturer`) as `addresses`';
+            COUNT(`id_product`) AS `products`, (
+                SELECT COUNT(ad.`id_manufacturer`) as `addresses`
+                FROM `' . _DB_PREFIX_ . 'address` ad
+                WHERE ad.`id_manufacturer` = a.`id_manufacturer`
+                    AND ad.`deleted` = 0
+                GROUP BY ad.`id_manufacturer`) as `addresses`';
         $this->_join = 'LEFT JOIN `' . _DB_PREFIX_ . 'product` p ON (a.`id_manufacturer` = p.`id_manufacturer`)';
         $this->_group = 'GROUP BY a.`id_manufacturer`';
 
@@ -178,10 +178,12 @@ class AdminManufacturersControllerCore extends AdminController
             ),
             'firstname' => array(
                 'title' => $this->trans('First name', array(), 'Admin.Global'),
+                'maxlength' => 30,
             ),
             'lastname' => array(
                 'title' => $this->trans('Last name', array(), 'Admin.Global'),
                 'filter_key' => 'a!lastname',
+                'maxlength' => 30,
             ),
             'postcode' => array(
                 'title' => $this->trans('Zip/Postal code', array(), 'Admin.Global'),

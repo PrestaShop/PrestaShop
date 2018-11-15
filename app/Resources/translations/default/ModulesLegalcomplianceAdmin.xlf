@@ -1,28 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="modules/ps_legalcompliance/controllers/AdminAEUCController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="modules/ps_legalcompliance/ps_legalcompliance.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="de2cd9f1dfad85516edd95679af377fd">
         <source>Legal Compliance</source>
         <target>Legal Compliance</target>
         <note>Context:
-File: modules/ps_legalcompliance/controllers/AdminAEUCController.php:33</note>
+File: modules/ps_legalcompliance/ps_legalcompliance.php:79</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="modules/ps_legalcompliance/ps_legalcompliance.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
       <trans-unit id="3abc778d1eb09576ba6b26848520bbdd">
         <source>This module helps merchants comply with applicable e-commerce laws.</source>
         <target>This module helps merchants comply with applicable e-commerce laws.</target>
         <note>Context:
 File: modules/ps_legalcompliance/ps_legalcompliance.php:80</note>
-      </trans-unit>
-      <trans-unit id="bb8956c67b82c7444a80c6b2433dd8b4">
-        <source>Are you sure you want to uninstall this module?</source>
-        <target>Are you sure you want to uninstall this module?</target>
-        <note>Context:
-File: modules/ps_legalcompliance/ps_legalcompliance.php:81</note>
       </trans-unit>
       <trans-unit id="3b528a3fe35bcd29ad2ab0e77fe01d4d">
         <source>Could not install new hook</source>
@@ -329,6 +319,17 @@ File: modules/ps_legalcompliance/ps_legalcompliance.php:1575</note>
         <target>-- Select associated page --</target>
         <note>Context:
 File: modules/ps_legalcompliance/ps_legalcompliance.php:1638</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_buybuttonlite/ps_buybuttonlite.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="bb8956c67b82c7444a80c6b2433dd8b4">
+        <source>Are you sure you want to uninstall this module?</source>
+        <target>Are you sure you want to uninstall this module?</target>
+        <note>Context:
+File: modules/ps_buybuttonlite/ps_buybuttonlite.php:57
+ Comment: Confirm uninstall</note>
       </trans-unit>
     </body>
   </file>

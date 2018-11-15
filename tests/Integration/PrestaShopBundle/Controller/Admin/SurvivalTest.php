@@ -79,6 +79,7 @@ class SurvivalTest extends WebTestCase
     {
         $this->logIn();
 
+        $this->client->catchExceptions(false);
         $this->client->request(
             'GET',
             $this->router->generate(
@@ -122,24 +123,24 @@ class SurvivalTest extends WebTestCase
             'admin_order_preferences' => ['Order Preferences', 'admin_order_preferences'],
             'admin_maintenance' => ['Maintenance', 'admin_maintenance'],
             'admin_product_preferences' => ['Product Preferences', 'admin_product_preferences'],
-            'admin_module_notification' => ['Alerts', 'admin_module_notification'],
-            'admin_module_updates' => ['Alerts', 'admin_module_updates'],
+            'admin_module_notification' => ['Module notifications', 'admin_module_notification'],
+            'admin_module_updates' => ['Module notifications', 'admin_module_updates'],
             'admin_customer_preferences' => ['Customer Preferences', 'admin_customer_preferences'],
             'admin_order_delivery_slip' => ['Delivery Slips', 'admin_order_delivery_slip'],
-            'admin_logs' => ['Logs', 'admin_logs'],
+            'admin_logs_index' => ['Logs', 'admin_logs_index'],
             'admin_system_information' => ['Information', 'admin_system_information'],
             // @todo: something is missing for Vuejs application in translations page.
             //'admin_international_translation_overview' => ['Translations', 'admin_international_translation_overview'],
             'admin_theme_catalog' => ['Themes Catalog', 'admin_theme_catalog'],
             'admin_module_catalog' => ['Module selection', 'admin_module_catalog'],
-            'admin_module_notification' => ['Module notifications', 'admin_module_notification'],
-            'admin_module_manage' => ['Manage installed modules', 'admin_module_manage'],
+            'admin_module_manage' => ['Module Manager', 'admin_module_manage'],
             'admin_shipping_preferences' => ['Shipping Preferences', 'admin_shipping_preferences'],
             'admin_payment_methods' => ['Payment Methods', 'admin_payment_methods'],
-            'admin_geolocation' => ['Geolocation', 'admin_geolocation'],
-            'admin_localization_show_settings' => ['Localization', 'admin_localization_show_settings'],
+            'admin_geolocation_index' => ['Geolocation', 'admin_geolocation_index'],
+            'admin_localization_index' => ['Localization', 'admin_localization_index'],
             'admin_payment_preferences' => ['Payment preferences', 'admin_payment_preferences'],
             'admin_modules_positions' => ['Positions', 'admin_modules_positions'],
+            'admin_backups_index' => ['DB Backup', 'admin_backups_index'],
         ];
     }
 

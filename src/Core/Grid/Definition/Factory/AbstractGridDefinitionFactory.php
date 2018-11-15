@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollectionInterface;
-use PrestaShop\PrestaShop\Core\Grid\Definition\Definition;
+use PrestaShop\PrestaShop\Core\Grid\Definition\GridDefinition;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollectionInterface;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherAwareTrait;
@@ -49,7 +49,7 @@ abstract class AbstractGridDefinitionFactory implements GridDefinitionFactoryInt
      */
     final public function getDefinition()
     {
-        $definition = new Definition(
+        $definition = new GridDefinition(
             $this->getId(),
             $this->getName(),
             $this->getColumns(),

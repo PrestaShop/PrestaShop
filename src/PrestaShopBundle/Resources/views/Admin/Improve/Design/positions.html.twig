@@ -209,5 +209,6 @@
 {% endblock %}
 
 {% block javascripts %}
+  {{ parent() }}
   <script src="{{ asset('themes/new-theme/public/improve_design_positions.bundle.js') }}"></script>
 {% endblock %}

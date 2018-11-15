@@ -498,7 +498,7 @@ class CartRuleCore extends ObjectModel
         $customerId,
         Cart $cart
     ) {
-        return self::getCustomerCartRules(
+        return static::getCustomerCartRules(
            $languageId,
            $customerId,
            $active = true,
@@ -850,10 +850,10 @@ class CartRuleCore extends ObjectModel
      * @param \Cart $cart
      * @param bool $returnProducts [default=false]
      *                             If true, this method will return an array of eligible products.
-     *                             Otherwise, it returns TRUE on success and string|false on errors (depending on the value of $displayError).
+     *                             Otherwise, it returns TRUE on success and string|false on errors (depending on the value of $displayError)
      * @param bool $displayError [default=false]
      *                           If true, this method will return an error message instead of FALSE on errors.
-     *                           Otherwise, it returns FALSE on errors.
+     *                           Otherwise, it returns FALSE on errors
      * @param bool $alreadyInCart
      *
      * @return array|bool|string
@@ -1484,7 +1484,7 @@ class CartRuleCore extends ObjectModel
                     $shop_list
                     . (in_array($type, array('carrier', 'shop')) ? ' AND t.deleted = 0' : '') .
                     (in_array($type, array('carrier', 'shop')) ? ' ORDER BY t.name ASC ' : '') .
-                    (in_array($type, array('country', 'group', 'cart_rule')) && $i18n ? ' ORDER BY tl.name ASC ' : '') .
+                    (in_array($type, array('country', 'group')) && $i18n ? ' ORDER BY tl.name ASC ' : '') .
                     $sql_limit,
                     false);
                 while ($row = Db::getInstance()->nextRow($resource)) {
@@ -1514,7 +1514,7 @@ class CartRuleCore extends ObjectModel
 		SELECT SQL_NO_CACHE cr.*
 		FROM ' . _DB_PREFIX_ . 'cart_rule cr
 		LEFT JOIN ' . _DB_PREFIX_ . 'cart_rule_shop crs ON cr.id_cart_rule = crs.id_cart_rule
-		' . (!$context->customer->id && Group::isFeatureActive() ? ' LEFT JOIN ' . _DB_PREFIX_ . 'cart_rule_group crg ON cr.id_cart_rule = crg.id_cart_rule' : '') . '
+		' . (!Validate::isLoadedObject($context->customer) && Group::isFeatureActive() ? ' LEFT JOIN ' . _DB_PREFIX_ . 'cart_rule_group crg ON cr.id_cart_rule = crg.id_cart_rule' : '') . '
 		LEFT JOIN ' . _DB_PREFIX_ . 'cart_rule_carrier crca ON cr.id_cart_rule = crca.id_cart_rule
 		' . ($context->cart->id_carrier ? 'LEFT JOIN ' . _DB_PREFIX_ . 'carrier c ON (c.id_reference = crca.id_carrier AND c.deleted = 0)' : '') . '
 		LEFT JOIN ' . _DB_PREFIX_ . 'cart_rule_country crco ON cr.id_cart_rule = crco.id_cart_rule
@@ -1524,7 +1524,7 @@ class CartRuleCore extends ObjectModel
 		AND NOW() BETWEEN cr.date_from AND cr.date_to
 		AND (
 			cr.id_customer = 0
-			' . ($context->customer->id ? 'OR cr.id_customer = ' . (int) $context->cart->id_customer : '') . '
+			' . (Validate::isLoadedObject($context->customer) ? 'OR cr.id_customer = ' . (int) $context->cart->id_customer : '') . '
 		)
 		AND (
 			cr.`carrier_restriction` = 0
@@ -1536,7 +1536,7 @@ class CartRuleCore extends ObjectModel
 		)
 		AND (
 			cr.`group_restriction` = 0
-			' . ($context->customer->id ? 'OR EXISTS (
+			' . (Validate::isLoadedObject($context->customer) ? 'OR EXISTS (
 				SELECT 1
 				FROM `' . _DB_PREFIX_ . 'customer_group` cg
 				INNER JOIN `' . _DB_PREFIX_ . 'cart_rule_group` crg ON cg.id_group = crg.id_group

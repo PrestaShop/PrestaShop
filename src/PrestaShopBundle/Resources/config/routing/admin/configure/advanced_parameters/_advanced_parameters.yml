@@ -23,7 +23,7 @@ _email:
     prefix: /emails
 
 _sql_manager:
-    resource: "request_sql.yml"
+    resource: "sql_request.yml"
     prefix: /request-sql/
 
 _webservice:
@@ -32,4 +32,8 @@ _webservice:
 
 _backup:
     resource: "backup.yml"
-    prefix: /backup
+    prefix: /backups
+
+_employee:
+    resource: "employee.yml"
+    prefix: /employees

@@ -29,7 +29,9 @@ namespace PrestaShopBundle\Controller\ArgumentResolver;
 use PrestaShop\PrestaShop\Core\Search\ControllerAction;
 use PrestaShop\PrestaShop\Core\Search\SearchParametersInterface;
 use PrestaShopBundle\Entity\Repository\AdminFilterRepository;
+use PrestaShopBundle\Event\FilterSearchCriteriaEvent;
 use PrestaShopBundle\Security\Admin\Employee;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\HttpFoundation\Request;
 use PrestaShop\PrestaShop\Core\Search\Filters;
@@ -58,6 +60,11 @@ class SearchParametersResolver implements ArgumentValueResolverInterface
     private $employee;
 
     /**
+     * @var EventDispatcherInterface
+     */
+    private $dispatcher;
+
+    /**
      * @var int
      */
     private $shopId;
@@ -68,18 +75,21 @@ class SearchParametersResolver implements ArgumentValueResolverInterface
      * @param SearchParametersInterface $searchParameters
      * @param TokenStorageInterface $tokenStorage
      * @param AdminFilterRepository $adminFilterRepository
+     * @param EventDispatcherInterface $dispatcher
      * @param int $shopId The Shop id
      */
     public function __construct(
         SearchParametersInterface $searchParameters,
         TokenStorageInterface $tokenStorage,
         AdminFilterRepository $adminFilterRepository,
+        EventDispatcherInterface $dispatcher,
         $shopId
     ) {
         $this->searchParameters = $searchParameters;
         $this->adminFilterRepository = $adminFilterRepository;
         $this->employee = $this->getEmployee($tokenStorage);
         $this->shopId = $shopId;
+        $this->dispatcher = $dispatcher;
     }
 
     /**
@@ -134,7 +144,10 @@ class SearchParametersResolver implements ArgumentValueResolverInterface
             }
         }
 
-        yield $filters;
+        $filterSearchParametersEvent = new FilterSearchCriteriaEvent($filters);
+        $this->dispatcher->dispatch(FilterSearchCriteriaEvent::NAME, $filterSearchParametersEvent);
+
+        yield $filterSearchParametersEvent->getSearchCriteria();
     }
 
     /**

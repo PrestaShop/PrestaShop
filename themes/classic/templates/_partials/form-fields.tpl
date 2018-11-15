@@ -136,6 +136,7 @@
             <input
               class="form-control js-child-focus js-visible-password"
               name="{$field.name}"
+              title="{l s='At least 5 characters long' d='Shop.Forms.Help'}"
               type="password"
               value=""
               pattern=".{literal}{{/literal}5,{literal}}{/literal}"

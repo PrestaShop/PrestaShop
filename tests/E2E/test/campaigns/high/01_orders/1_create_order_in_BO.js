@@ -1,9 +1,9 @@
 const {AccessPageBO} = require('../../../selectors/BO/access_page');
 const {OrderPage} = require('../../../selectors/BO/order');
 const {CreateOrder} = require('../../../selectors/BO/order');
-const {OnBoarding} = require('../../../selectors/BO/onboarding.js');
 const orderScenarios = require('../../common_scenarios/order');
 const common_scenarios = require('../../common_scenarios/product');
+const welcomeScenarios = require('../../common_scenarios/welcome');
 const {AddProductPage} = require('../../../selectors/BO/add_product_page');
 let promise = Promise.resolve();
 
@@ -15,8 +15,10 @@ let productData = {
   reference: 'test_1',
   type: 'combination',
   attribute: {
-    name: 'color',
-    variation_quantity: '10'
+    1: {
+      name: 'color',
+      variation_quantity: '10'
+    }
   }
 };
 
@@ -26,13 +28,7 @@ scenario('Create order in the Back Office', () => {
       test('should open the browser', () => client.open());
       test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
     }, 'order');
-    scenario('Close the onboarding modal if exist ', client => {
-      test('should close the onboarding modal if exist', () => {
-        return promise
-          .then(() => client.isVisible(OnBoarding.welcome_modal))
-          .then(() => client.closeBoarding(OnBoarding.popup_close_button));
-      });
-    }, 'order');
+    welcomeScenarios.findAndCloseWelcomeModal();
     common_scenarios.createProduct(AddProductPage, productData);
     scenario('Logout from the Back Office', client => {
       test('should logout successfully from the Back Office', () => client.signOutBO());

@@ -58,7 +58,7 @@ class MailCore extends ObjectModel
                 'validate' => 'isEmail',
                 'copy_post' => false,
                 'required' => true,
-                'size' => 126,
+                'size' => 255,
             ],
             'template' => [
                 'type' => self::TYPE_STRING,
@@ -72,7 +72,7 @@ class MailCore extends ObjectModel
                 'validate' => 'isMailSubject',
                 'copy_post' => false,
                 'required' => true,
-                'size' => 254,
+                'size' => 255,
             ],
             'id_lang' => [
                 'type' => self::TYPE_INT,
@@ -117,7 +117,7 @@ class MailCore extends ObjectModel
      * @param string $toName To name
      * @param string $from From email
      * @param string $fromName To email
-     * @param array $fileAttachment Array with three parameters (content, mime and name).
+     * @param array $fileAttachment array with three parameters (content, mime and name).
      *                              You can use an array of array to attach multiple files
      * @param bool $mode_smtp SMTP mode (deprecated)
      * @param string $templatePath Template path
@@ -590,7 +590,7 @@ class MailCore extends ObjectModel
             if ($send && Configuration::get('PS_LOG_EMAILS')) {
                 $mail = new Mail();
                 $mail->template = Tools::substr($template, 0, 62);
-                $mail->subject = Tools::substr($subject, 0, 254);
+                $mail->subject = Tools::substr($subject, 0, 255);
                 $mail->id_lang = (int) $idLang;
                 $recipientsTo = $message->getTo();
                 $recipientsCc = $message->getCc();
@@ -607,7 +607,7 @@ class MailCore extends ObjectModel
                 foreach (array_merge($recipientsTo, $recipientsCc, $recipientsBcc) as $email => $recipient_name) {
                     /* @var Swift_Address $recipient */
                     $mail->id = null;
-                    $mail->recipient = Tools::substr($email, 0, 126);
+                    $mail->recipient = Tools::substr($email, 0, 255);
                     $mail->add();
                 }
             }

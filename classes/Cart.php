@@ -1653,8 +1653,8 @@ class CartCore extends ObjectModel
      */
     public function deleteProduct(
         $id_product,
-        $id_product_attribute = null,
-        $id_customization = null,
+        $id_product_attribute = 0,
+        $id_customization = 0,
         $id_address_delivery = 0
     ) {
         if (isset(self::$_nbProducts[$this->id])) {
@@ -3285,7 +3285,7 @@ class CartCore extends ObjectModel
      * @param int $id_carrier Carrier ID (default : current carrier)
      * @param bool $use_tax
      * @param Country|null $default_country
-     * @param array|null $product_list List of product concerned by the shipping.
+     * @param array|null $product_list list of product concerned by the shipping.
      *                                 If null, all the product of the cart are used to calculate the shipping cost
      * @param int|null $id_zone Zone ID
      *
@@ -3652,7 +3652,7 @@ class CartCore extends ObjectModel
             $this->updateProductWeight($this->id);
         }
 
-        return self::$_totalWeight[$this->id];
+        return self::$_totalWeight[(int) $this->id];
     }
 
     /**

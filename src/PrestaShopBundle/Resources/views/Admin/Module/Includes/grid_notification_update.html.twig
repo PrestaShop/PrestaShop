@@ -22,10 +22,10 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *#}
-{% extends "PrestaShopBundle:Admin/Module/Includes:grid.html.twig" %}
+{% extends '@PrestaShop/Admin/Module/Includes/grid.html.twig' %}
 
 {% block addon_card %}
-    {% include 'PrestaShopBundle:Admin/Module/Includes:card_notification_update.html.twig'
+    {% include '@PrestaShop/Admin/Module/Includes/card_notification_update.html.twig'
         with {
             'module': module,
             'display_type': display_type,

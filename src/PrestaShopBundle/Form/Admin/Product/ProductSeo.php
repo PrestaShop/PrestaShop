@@ -81,6 +81,7 @@ class ProductSeo extends CommonAbstractType
                         'placeholder' => $this->translator->trans('To have a different title from the product name, enter it here.', [], 'Admin.Catalog.Help'),
                         'counter' => 70,
                         'counter_type' => 'recommended',
+                        'class' => 'serp-watched-title',
                     ],
                     'required' => false,
                 ],
@@ -105,6 +106,7 @@ class ProductSeo extends CommonAbstractType
                             'placeholder' => $this->translator->trans('To have a different description than your product summary in search results pages, write it here.', [], 'Admin.Catalog.Help'),
                             'counter' => 160,
                             'counter_type' => 'recommended',
+                            'class' => 'serp-watched-description',
                         ],
                         'required' => false,
                     ],
@@ -124,7 +126,11 @@ class ProductSeo extends CommonAbstractType
                 TranslateType::class,
                 [
                     'type' => FormType\TextType::class,
-                    'options' => [],
+                    'options' => [
+                        'attr' => [
+                            'class' => 'serp-watched-url',
+                        ],
+                    ],
                     'locales' => $this->locales,
                     'hideTabs' => true,
                     'label' => $this->translator->trans('Friendly URL', [], 'Admin.Catalog.Feature'),

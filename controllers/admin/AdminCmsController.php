@@ -56,11 +56,39 @@ class AdminCmsControllerCore extends AdminController
             ),
         );
         $this->fields_list = array(
-            'id_cms' => array('title' => $this->trans('ID', array(), 'Admin.Global'), 'align' => 'center', 'class' => 'fixed-width-xs'),
-            'link_rewrite' => array('title' => $this->trans('URL', array(), 'Admin.Global')),
-            'meta_title' => array('title' => $this->trans('Title', array(), 'Admin.Global'), 'filter_key' => 'b!meta_title'),
-            'position' => array('title' => $this->trans('Position', array(), 'Admin.Global'), 'filter_key' => 'position', 'align' => 'center', 'class' => 'fixed-width-sm', 'position' => 'position'),
-            'active' => array('title' => $this->trans('Displayed', array(), 'Admin.Global'), 'align' => 'center', 'active' => 'status', 'class' => 'fixed-width-sm', 'type' => 'bool', 'orderby' => false),
+            'id_cms' => array(
+                'title' => $this->trans('ID', array(), 'Admin.Global'),
+                'align' => 'center',
+                'class' => 'fixed-width-xs',
+            ),
+            'link_rewrite' => array(
+                'title' => $this->trans('URL', array(), 'Admin.Global'),
+            ),
+            'meta_title' => array(
+                'title' => $this->trans('Title', array(), 'Admin.Global'),
+                'filter_key' => 'b!meta_title',
+                'maxlength' => 50,
+            ),
+            'head_seo_title' => array(
+                'title' => $this->trans('Meta title', array(), 'Admin.Global'),
+                'filter_key' => 'b!head_seo_title',
+                'maxlength' => 50,
+            ),
+            'position' => array(
+                'title' => $this->trans('Position', array(), 'Admin.Global'),
+                'filter_key' => 'position',
+                'align' => 'center',
+                'class' => 'fixed-width-sm',
+                'position' => 'position',
+            ),
+            'active' => array(
+                'title' => $this->trans('Displayed', array(), 'Admin.Global'),
+                'align' => 'center',
+                'active' => 'status',
+                'class' => 'fixed-width-sm',
+                'type' => 'bool',
+                'orderby' => false,
+            ),
         );
 
         // The controller can't be call directly
@@ -135,13 +163,26 @@ class AdminCmsControllerCore extends AdminController
                 ),
                 array(
                     'type' => 'text',
-                    'label' => $this->trans('Meta title', array(), 'Admin.Global'),
+                    'label' => $this->trans('Title', array(), 'Admin.Global'),
                     'name' => 'meta_title',
                     'id' => 'name', // for copyMeta2friendlyURL compatibility
                     'lang' => true,
                     'required' => true,
                     'class' => 'copyMeta2friendlyURL',
-                    'hint' => $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info') . ' &lt;&gt;;=#{}',
+                    'hint' => array(
+                        $this->trans('Used in the h1 page tag, and as the default title tag value.', array(), 'Admin.Design.Help'),
+                        $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info') . ' &lt;&gt;;=#{}',
+                    ),
+                ),
+                array(
+                    'type' => 'text',
+                    'label' => $this->trans('Meta title', array(), 'Admin.Global'),
+                    'name' => 'head_seo_title',
+                    'lang' => true,
+                    'hint' => array(
+                        $this->trans('Used to override the title tag value. If left blank, the default title value is used.', array(), 'Admin.Design.Help'),
+                        $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info') . ' &lt;&gt;;=#{}',
+                    ),
                 ),
                 array(
                     'type' => 'text',

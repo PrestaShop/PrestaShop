@@ -127,6 +127,7 @@ class ReleaseCreator
         'app/cache/..*$',
         '.idea',
         'tools/build$',
+        'tools/foreignkeyGenerator$',
         '.*node_modules.*',
     ];
 
@@ -195,7 +196,7 @@ class ReleaseCreator
      * @param bool $useZip
      * @param string $destinationDir
      */
-    public function __construct($version, $useInstaller = true, $useZip = true, $destinationDir = '')
+    public function __construct($version = null, $useInstaller = true, $useZip = true, $destinationDir = '')
     {
         $this->consoleWriter = new ConsoleWriter();
         $tmpDir = sys_get_temp_dir();
@@ -206,8 +207,12 @@ class ReleaseCreator
             ConsoleWriter::COLOR_GREEN
         );
         $this->projectPath = realpath(__DIR__ . '/../../..');
-        $this->version = $version;
+        $this->version = $version ? $version : $this->getCurrentVersion();
         $this->zipFileName = "prestashop_$this->version.zip";
+
+        if (empty($this->version)) {
+            throw new Exception('Version is not provided and cannot be found in project.');
+        }
 
         if (empty($destinationDir)) {
             $releasesDir = self::RELEASES_DIR_RELATIVE_PATH;
@@ -341,6 +346,26 @@ class ReleaseCreator
         }
 
         return $this;
+    }
+
+    /**
+     * Get the current version in the project
+     * 
+     * @return string PrestaShop version
+     */
+    protected function getCurrentVersion()
+    {
+        $kernelFile = $this->projectPath.'/app/AppKernel.php';
+        $matches = [];
+
+        $kernelFileContent = file_get_contents($kernelFile);
+        $kernelFileContent = preg_match(
+            '~const VERSION = \'(.*)\';~',
+            $kernelFileContent,
+            $matches
+        ); 
+
+        return $matches[1];
     }
 
     /**
@@ -690,7 +715,7 @@ class ReleaseCreator
         exec($cmd);
 
         if ($this->useInstaller) {
-            exec("cd {$argProjectPath}/tools/build/Library/InstallUnpacker && php compile.php && cd -");
+            exec("cd {$argProjectPath}/tools/build/Library/InstallUnpacker && php compile.php {$this->version} && cd -");
             $zip = new ZipArchive();
             $zip->open("{$this->tempProjectPath}/{$this->zipFileName}", ZipArchive::CREATE | ZipArchive::OVERWRITE);
             $zip->addFile("{$this->tempProjectPath}/{$installerZipFilename}", $installerZipFilename);

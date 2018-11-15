@@ -31,19 +31,26 @@ function ps_1750_update_module_tabs()
 {
     // STEP 1: Add new sub menus for modules
     $moduleTabsToBeAdded = array(
-        'AdminModulesUpdates' => 'en:Updates|fr:Mises à jour|es:Actualizaciones|de:Aktualisierung|it:Aggiornamenti',
+        'AdminModulesUpdates' => array(
+            'translations' => 'en:Updates|fr:Mises à jour|es:Actualizaciones|de:Aktualisierung|it:Aggiornamenti',
+            'parent' => 'AdminModulesSf'
+        ),
+        'AdminParentModulesCatalog' => array(
+            'translations' => 'en:Module Catalog|fr:Catalogue de modules|es:Catálogo de módulos|de:Modulkatalog|it:Catalogo dei moduli',
+            'parent' => 'AdminParentModulesSf'
+        ),
     );
 
     include_once 'add_new_tab.php';
-    foreach ($moduleTabsToBeAdded as $className => $translations) {
-        add_new_tab_17($className, $translations, 0, false, 'AdminModulesSf');
+    foreach ($moduleTabsToBeAdded as $className => $tabDetails) {
+        add_new_tab_17($className, $tabDetails['translations'], 0, false, $tabDetails['parent']);
         Db::getInstance()->execute(
             'UPDATE `'._DB_PREFIX_.'tab` SET `active`= 1 WHERE `class_name` = "' . $className . '"'
         );
     }
 
 
-    // STEP 2: Rename Notifications as Alerts
+    // STEP 2: Rename module tabs (Notifications as Alerts, Module selection as Module Catalog, Module Catalog as Module Selections)
     include_once 'clean_tabs_15.php';
     $adminModulesNotificationsTabId = Db::getInstance()->getValue(
         'SELECT id_tab FROM '._DB_PREFIX_.'tab WHERE class_name = "AdminModulesNotifications"'
@@ -69,12 +76,12 @@ function ps_1750_update_module_tabs()
         renameTab(
             $adminModulesCatalogTabId,
             [
-                'fr' => 'Catalogue',
-                'es' => 'Catálogo',
-                'en' => 'Catalog',
-                'gb' => 'Catalog',
-                'de' => 'Catalogus',
-                'it' => 'Catalogo',
+                'fr' => 'Catalogue de modules',
+                'es' => 'Catálogo de módulos',
+                'en' => 'Module Catalog',
+                'gb' => 'Module Catalog',
+                'de' => 'Versanddienst',
+                'it' => 'Catalogo dei moduli',
             ]
         );
     }
@@ -93,6 +100,34 @@ function ps_1750_update_module_tabs()
                 'de' => 'Modules',
                 'it' => 'Moduli',
             ]
+        );
+    }
+
+    $adminModulesAddonsSelectionsTabId = Db::getInstance()->getValue(
+        'SELECT id_tab FROM '._DB_PREFIX_.'tab WHERE class_name = "AdminAddonsCatalog"'
+    );
+    if (!empty($adminModulesAddonsSelectionsTabId)) {
+        renameTab(
+            $adminModulesAddonsSelectionsTabId,
+            [
+                'fr' => 'Sélections de modules',
+                'es' => 'Selecciones de módulos',
+                'en' => 'Module Selections',
+                'gb' => 'Module Selections',
+                'de' => 'Auswahl von Modulen',
+                'it' => 'Selezioni Moduli',
+            ]
+        );
+    }
+
+    // STEP 3: Move the 2 module catalog controllers in the parent one
+    // Get The ID of the parent
+    $adminParentModuleCatalogTabId = Db::getInstance()->getValue(
+        'SELECT id_tab FROM '._DB_PREFIX_.'tab WHERE class_name = "AdminParentModulesCatalog"'
+    );
+    foreach (array('AdminModulesCatalog', 'AdminAddonsCatalog') as $key => $className) {
+        Db::getInstance()->execute(
+            'UPDATE `'._DB_PREFIX_.'tab` SET `id_parent`= ' . (int) $adminParentModuleCatalogTabId . ', position = '. $key . ' WHERE `class_name` = "' . $className . '"'
         );
     }
 }

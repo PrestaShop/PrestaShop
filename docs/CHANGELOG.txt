@@ -24,6 +24,13 @@ International Registered Trademark & Property of PrestaShop SA
 Release Notes for PrestaShop 1.7
 --------------------------------
 ####################################
+#   v1.7.4.3 - (2018-07-27)
+####################################
+- Core:
+  - Bug fix:
+    - #10829: Hide arguments in debug trace page
+
+####################################
 #   v1.7.4.2 - (2018-07-27)
 ####################################
 - Back Office:

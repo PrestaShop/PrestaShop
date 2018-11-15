@@ -628,8 +628,10 @@ class ToolsCore
 
         // Only switch if new ID is different from old ID
         $newLanguageId = (int) Tools::getValue('id_lang');
+
         if (
             Validate::isUnsignedId($newLanguageId) &&
+            $newLanguageId !== 0 &&
             $context->cookie->id_lang !== $newLanguageId
         ) {
             $context->cookie->id_lang = $newLanguageId;
@@ -638,6 +640,8 @@ class ToolsCore
                 $context->language = $language;
             }
         }
+
+        Tools::setCookieLanguage($context->cookie);
     }
 
     public static function getCountry($address = null)
@@ -2334,7 +2338,7 @@ class ToolsCore
             $cache_control = (int) Configuration::get('PS_HTACCESS_CACHE_CONTROL');
         }
         if (is_null($disable_multiviews)) {
-            $disable_multiviews = (int) Configuration::get('PS_HTACCESS_DISABLE_MULTIVIEWS');
+            $disable_multiviews = (bool) Configuration::get('PS_HTACCESS_DISABLE_MULTIVIEWS');
         }
 
         if ($disable_modsec === null) {
@@ -3679,32 +3683,25 @@ exit;
 
         $post_data = http_build_query($post_query_data);
 
-        $protocols = array('https');
         $end_point = 'api.addons.prestashop.com';
 
         switch ($request) {
             case 'native':
-                $protocols[] = 'http';
                 $post_data .= '&method=listing&action=native';
                 break;
             case 'partner':
-                $protocols[] = 'http';
                 $post_data .= '&method=listing&action=partner';
                 break;
             case 'service':
-                $protocols[] = 'http';
                 $post_data .= '&method=listing&action=service';
                 break;
             case 'native_all':
-                $protocols[] = 'http';
                 $post_data .= '&method=listing&action=native&iso_code=all';
                 break;
             case 'must-have':
-                $protocols[] = 'http';
                 $post_data .= '&method=listing&action=must-have';
                 break;
             case 'must-have-themes':
-                $protocols[] = 'http';
                 $post_data .= '&method=listing&action=must-have-themes';
                 break;
             case 'customer':
@@ -3725,8 +3722,6 @@ exit;
                 $post_data .= '&method=module&id_module=' . urlencode($params['id_module']);
                 if (isset($params['username_addons']) && isset($params['password_addons'])) {
                     $post_data .= '&username=' . urlencode($params['username_addons']) . '&password=' . urlencode($params['password_addons']);
-                } else {
-                    $protocols[] = 'http';
                 }
                 break;
             case 'hosted_module':
@@ -3734,10 +3729,8 @@ exit;
                     . '&password=' . urlencode($params['password_addons'])
                     . '&shop_url=' . urlencode(isset($params['shop_url']) ? $params['shop_url'] : Tools::getShopDomain())
                     . '&mail=' . urlencode(isset($params['email']) ? $params['email'] : Configuration::get('PS_SHOP_EMAIL'));
-                $protocols[] = 'https';
                 break;
             case 'install-modules':
-                $protocols[] = 'http';
                 $post_data .= '&method=listing&action=install-modules';
                 $post_data .= defined('_PS_HOST_MODE_') ? '-od' : '';
                 break;
@@ -3754,10 +3747,8 @@ exit;
             ),
         ));
 
-        foreach ($protocols as $protocol) {
-            if ($content = Tools::file_get_contents($protocol . '://' . $end_point, false, $context)) {
-                return $content;
-            }
+        if ($content = Tools::file_get_contents('https://' . $end_point, false, $context)) {
+            return $content;
         }
 
         self::$is_addons_up = false;
@@ -3922,8 +3913,6 @@ exit;
 
     public static function purifyHTML($html, $uri_unescape = null, $allow_style = false)
     {
-        require_once _PS_TOOL_DIR_ . 'htmlpurifier/HTMLPurifier.standalone.php';
-
         static $use_html_purifier = null;
         static $purifier = null;
 

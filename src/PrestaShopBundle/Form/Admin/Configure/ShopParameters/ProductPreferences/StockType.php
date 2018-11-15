@@ -27,9 +27,10 @@
 namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\ProductPreferences;
 
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
-use PrestaShopBundle\Form\Admin\Type\TranslateTextType;
+use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -47,20 +48,20 @@ class StockType extends TranslatorAwareType
         $builder
             ->add('allow_ordering_oos', SwitchType::class)
             ->add('stock_management', SwitchType::class)
-            ->add('in_stock_label', TranslateTextType::class, [
-                'locales' => $this->locales,
+            ->add('in_stock_label', TranslatableType::class, [
+                'type' => TextType::class,
             ])
-            ->add('oos_allowed_backorders', TranslateTextType::class, [
-                'locales' => $this->locales,
+            ->add('oos_allowed_backorders', TranslatableType::class, [
+                'type' => TextType::class,
             ])
-            ->add('oos_denied_backorders', TranslateTextType::class, [
-                'locales' => $this->locales,
+            ->add('oos_denied_backorders', TranslatableType::class, [
+                'type' => TextType::class,
             ])
-            ->add('delivery_time', TranslateTextType::class, [
-                'locales' => $this->locales,
+            ->add('delivery_time', TranslatableType::class, [
+                'type' => TextType::class,
             ])
-            ->add('oos_delivery_time', TranslateTextType::class, [
-                'locales' => $this->locales,
+            ->add('oos_delivery_time', TranslatableType::class, [
+                'type' => TextType::class,
             ])
             ->add('pack_stock_management', ChoiceType::class, [
                 'choices' => [

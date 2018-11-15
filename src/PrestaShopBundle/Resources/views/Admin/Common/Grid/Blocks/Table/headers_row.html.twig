@@ -24,15 +24,9 @@
  *#}
 
 <tr class="column-headers">
-  {% set orderBy, orderWay = grid.sorting.order_by, grid.sorting.order_way %}
-
   {% for column in grid.columns %}
     <th scope="col">
-      {% if column.options.sortable is defined and column.options.sortable and grid.data.records_total > 0 %}
-        {{ ps.sortable_column_header(column.name, column.id, orderBy, orderWay) }}
-      {% else %}
-        {{ column.name }}
-      {% endif %}
+      {{ column_header(column, grid) }}
     </th>
   {% endfor %}
 </tr>

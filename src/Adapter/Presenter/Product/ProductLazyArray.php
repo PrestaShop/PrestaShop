@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter\Presenter\Product;
 
 use PrestaShop\Decimal\Number;
 use PrestaShop\Decimal\Operation\Rounding;
+use PrestaShop\PrestaShop\Adapter\Entity\Product;
 use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
 use PrestaShop\PrestaShop\Adapter\Presenter\AbstractLazyArray;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
@@ -329,16 +330,16 @@ class ProductLazyArray extends AbstractLazyArray
      */
     public function getReferenceToDisplay()
     {
-        if ('' !== $this->product['reference']) {
-            return $this->product['reference'];
-        }
-
         if (isset($this->product['attributes'])) {
             foreach ($this->product['attributes'] as $attribute) {
                 if (isset($attribute['reference']) && $attribute['reference'] != null) {
                     return $attribute['reference'];
                 }
             }
+        }
+
+        if ('' !== $this->product['reference']) {
+            return $this->product['reference'];
         }
 
         return null;
@@ -490,7 +491,6 @@ class ProductLazyArray extends AbstractLazyArray
             $color['type'] = 'color';
             $color['html_color_code'] = $color['color'];
             unset($color['color']);
-            unset($color['id_attribute']); // because what is a template supposed to do with it?
 
             return $color;
         }, $colors);
@@ -720,7 +720,7 @@ class ProductLazyArray extends AbstractLazyArray
             $ean13,
             $language->id,
             null,
-            (!$canonical) ? $product['id_product_attribute'] : null,
+            $canonical ? null : $product['id_product_attribute'],
             false,
             false,
             true

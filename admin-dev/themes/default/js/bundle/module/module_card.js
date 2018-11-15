@@ -24,6 +24,8 @@ var AdminModuleCard = function () {
     this.moduleActionMenuUpdateLinkSelector = 'button.module_action_menu_upgrade';
     this.moduleItemListSelector = '.module-item-list';
     this.moduleItemGridSelector = '.module-item-grid';
+    this.moduleItemActionsSelector = '.module-actions';
+
 
     /* Selectors only for modal buttons */
     this.moduleActionModalDisableLinkSelector = 'a.module_action_modal_disable';
@@ -180,7 +182,7 @@ var AdminModuleCard = function () {
 
     this.requestToController = function (action, element, forceDeletion) {
         var _this = this;
-        var jqElementObj = element.closest("div.btn-group");
+        var jqElementObj = element.closest(this.moduleItemActionsSelector);
         var form = element.closest("form");
         var spinnerObj = $("<button class=\"btn-primary-reverse onclick unbind spinner \"></button>");
         var url = "//" + window.location.host + form.attr("action");

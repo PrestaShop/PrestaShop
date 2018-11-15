@@ -7,6 +7,7 @@
         "ext-curl": "*",
         "ext-intl": "*",
         "ext-zip": "*",
+        "ext-fileinfo": "*",
         "beberlei/DoctrineExtensions": "^1.0",
         "composer/ca-bundle": "^1.0",
         "composer/installers": "^1.0.21",
@@ -19,6 +20,7 @@
         "doctrine/dbal": "^2.5.3",
         "doctrine/doctrine-bundle": "^1.6",
         "doctrine/orm": "~2.5.3",
+        "ezyang/htmlpurifier": "^4.10",
         "geoip2/geoip2": "~2.4.2",
         "greenlion/php-sql-parser": "^4.1",
         "guzzlehttp/guzzle": "~5.0",
@@ -27,13 +29,14 @@
         "ircmaxell/password-compat": "^1.0.4",
         "ircmaxell/random-lib": "^1.2.0",
         "jakeasmith/http_build_url": "^1",
+        "league/tactician-bundle": "^0.4.1",
         "matthiasmullie/minify": "~1.3.0",
         "mobiledetect/mobiledetectlib": "~2.8.22",
         "mrclay/minify": "~2.3.0",
         "nikic/php-parser": "^2.1",
         "paragonie/random_compat": "^1.4|^2.0",
         "pear/archive_tar": "~1.4.2",
-        "phpoffice/phpexcel": "~1.8",
+        "phpoffice/phpspreadsheet": "~1.5",
         "prestashop/blockreassurance": "^3",
         "prestashop/contactform": "^4",
         "prestashop/dashactivity": "^2",
@@ -43,7 +46,7 @@
         "prestashop/decimal": "^1.0.0",
         "prestashop/graphnvd3": "^2",
         "prestashop/gridhtml": "^2",
-        "prestashop/gsitemap": "^3",
+        "prestashop/gsitemap": "^4.0",
         "prestashop/pagesnotfound": "^2",
         "prestashop/ps_banner": "^2",
         "prestashop/ps_categorytree": "^2",
@@ -55,6 +58,7 @@
         "prestashop/ps_customtext": "^4",
         "prestashop/ps_emailsubscription": "^2",
         "prestashop/ps_facetedsearch": "^2",
+        "prestashop/ps_faviconnotificationbo": "^1",
         "prestashop/ps_featuredproducts": "^2",
         "prestashop/ps_imageslider": "^3",
         "prestashop/ps_languageselector": "^2",
@@ -136,7 +140,6 @@
         "post-install-cmd": [
             "PrestaShop\\PrestaShop\\Core\\Cldr\\Composer\\Hook::init",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget"
         ],
         "post-update-cmd": [
@@ -144,11 +147,11 @@
             "PrestaShopBundle\\Install\\Upgrade::migrateSettingsFile",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget"
         ],
         "create-test-db": [
-            "Tests\\PrestaShopBundle\\Utils\\DatabaseCreator::createTestDB"
+            "@php ./tests/create-test-db.php",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache"
         ],
         "test-all": [
             "composer phpunit-legacy",
@@ -163,6 +166,10 @@
         "phpunit-admin": [
             "@composer create-test-db",
             "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests/phpunit-admin.xml"
+        ],
+        "phpunit-routing": [
+            "@composer create-test-db",
+            "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests/phpunit-routing.xml"
         ],
         "phpunit-sf": [
             "@composer create-test-db",
