@@ -50,6 +50,11 @@ final class ImageFileDeleter implements ImageFileDeleterInterface
 
             // Delete the file by regex pattern
             $this->deleteByPattern($pattern, $path, $file);
+
+            // Delete fileType file if it exists in the same directory.
+            if (file_exists($path.'fileType')) {
+                unlink($path.'fileType');
+            }
         }
 
         // Can we remove the image folder?
