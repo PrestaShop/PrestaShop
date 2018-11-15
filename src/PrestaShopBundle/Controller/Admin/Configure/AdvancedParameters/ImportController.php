@@ -273,11 +273,12 @@ class ImportController extends FrameworkBundleAdminController
 
         $importer = $this->get('prestashop.core.import.importer');
         $importConfigFactory = $this->get('prestashop.core.import.config_factory');
+        $runtimeConfigFactory = $this->get('prestashop.core.import.runtime_config_factory');
 
         $importConfig = $importConfigFactory->buildFromRequest($request);
-        $entityFields = $request->request->get('type_value');
+        $runtimeConfig = $runtimeConfigFactory->buildFromRequest($request);
 
-        $importer->import($importConfig);
+        $importer->import($importConfig, $runtimeConfig);
 
         //@todo WIP.
 

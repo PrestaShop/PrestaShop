@@ -24,23 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Import;
-
-use PrestaShop\PrestaShop\Core\Import\Configuration\ImportConfigInterface;
-use PrestaShop\PrestaShop\Core\Import\Configuration\ImportRuntimeConfigInterface;
+namespace PrestaShop\PrestaShop\Core\Import\Access;
 
 /**
- * Interface ImporterInterface describes an import processing unit.
+ * Interface ImportAccessCheckerInterface checks import access.
  */
-interface ImporterInterface
+interface ImportAccessCheckerInterface
 {
     /**
-     * Process the import.
+     * Checks if data truncation is allowed.
      *
-     * @param ImportConfigInterface $importConfig
-     * @param ImportRuntimeConfigInterface $runtimeConfig
-     *
-     * @return
+     * @return bool
      */
-    public function import(ImportConfigInterface $importConfig, ImportRuntimeConfigInterface $runtimeConfig);
+    public function canTruncateData();
 }
