@@ -125,7 +125,8 @@ class ImportController extends FrameworkBundleAdminController
             }
 
             $formData = $form->getData();
-            if (!$errors = $formHandler->save($formData)) {
+            $errors = $formHandler->save($formData);
+            if (empty($errors)) {
                 return $this->fowardRequestToLegacyResponse($request);
             }
 
@@ -293,7 +294,7 @@ class ImportController extends FrameworkBundleAdminController
         $legacyController = $request->attributes->get('_legacy_controller');
         $legacyContext = $this->get('prestashop.adapter.legacy.context');
 
-        $legacyImportUrl = $legacyContext->getAdminLink($legacyController);
+        $legacyImportUrl = $legacyContext->getLegacyAdminLink($legacyController);
 
         return $this->redirect($legacyImportUrl, Response::HTTP_TEMPORARY_REDIRECT);
     }
