@@ -24,23 +24,34 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Import;
+namespace PrestaShop\PrestaShop\Adapter\Employee;
 
-use PrestaShop\PrestaShop\Core\Import\Configuration\ImportConfigInterface;
-use PrestaShop\PrestaShop\Core\Import\Configuration\ImportRuntimeConfigInterface;
+use Employee;
+use PrestaShop\PrestaShop\Core\Employee\ContextEmployeeProviderInterface;
 
 /**
- * Interface ImporterInterface describes an import processing unit.
+ * Class ContextEmployeeProvider provides context employee data.
  */
-interface ImporterInterface
+final class ContextEmployeeProvider implements ContextEmployeeProviderInterface
 {
     /**
-     * Process the import.
-     *
-     * @param ImportConfigInterface $importConfig
-     * @param ImportRuntimeConfigInterface $runtimeConfig
-     *
-     * @return
+     * @var Employee
      */
-    public function import(ImportConfigInterface $importConfig, ImportRuntimeConfigInterface $runtimeConfig);
+    private $contextEmployee;
+
+    /**
+     * @param Employee $contextEmployee
+     */
+    public function __construct(Employee $contextEmployee)
+    {
+        $this->contextEmployee = $contextEmployee;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isSuperAdmin()
+    {
+        return $this->contextEmployee->isSuperAdmin();
+    }
 }
