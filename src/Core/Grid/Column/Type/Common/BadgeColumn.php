@@ -30,18 +30,16 @@ use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * This Column is used to display booleans.
- * - it will display an icon instead of the value
- * - if user clicks on it, this triggers a toggle of the boolean value.
+ * Class BadgeColumn displays column with badge.
  */
-final class ToggleColumn extends AbstractColumn
+final class BadgeColumn extends AbstractColumn
 {
     /**
      * {@inheritdoc}
      */
     public function getType()
     {
-        return 'toggle';
+        return 'badge';
     }
 
     /**
@@ -49,20 +47,19 @@ final class ToggleColumn extends AbstractColumn
      */
     protected function configureOptions(OptionsResolver $resolver)
     {
+        parent::configureOptions($resolver);
+
         $resolver
-            ->setDefaults([
-                'sortable' => true,
-            ])
             ->setRequired([
                 'field',
-                'primary_field',
-                'route',
-                'route_param_name',
+            ])
+            ->setDefaults([
+                'badge_type' => 'success',
+                'empty_value' => '',
             ])
             ->setAllowedTypes('field', 'string')
-            ->setAllowedTypes('primary_field', 'string')
-            ->setAllowedTypes('route', 'string')
-            ->setAllowedTypes('route_param_name', 'string')
-            ->setAllowedTypes('sortable', 'bool');
+            ->setAllowedTypes('empty_value', 'string')
+            ->setAllowedValues('badge_type', ['success', 'info', 'danger', 'warning'])
+        ;
     }
 }

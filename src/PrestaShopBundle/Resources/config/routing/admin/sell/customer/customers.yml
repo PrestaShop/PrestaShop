@@ -1,0 +1,40 @@
+admin_customers_index:
+  path: /
+  methods: [GET]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Customer/Customer:index
+    _legacy_controller: AdminCustomers
+
+admin_customers_index_search:
+  path: /
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin\Common:searchGrid
+    _legacy_controller: AdminCustomers
+    gridDefinitionFactoryService: prestashop.core.grid.definition.factory.customer
+    redirectRoute: admin_customers_index
+
+admin_customers_create:
+  path: /new
+  methods: [GET, POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Customer/Customer:create
+    _legacy_controller: AdminCustomers
+
+admin_customers_edit:
+  path: /{customerId}/edit
+  methods: [GET, POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Customer/Customer:edit
+    _legacy_controller: AdminCustomers
+  requirements:
+    customerId: \d+
+
+admin_customers_view:
+  path: /{customerId}/view
+  methods: [GET, POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Customer/Customer:view
+    _legacy_controller: AdminCustomers
+  requirements:
+    customerId: \d+

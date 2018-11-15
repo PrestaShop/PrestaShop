@@ -601,3 +601,10 @@ services:
             - '@=service("prestashop.core.form.choice_provider.theme_page_layouts").getChoices()'
         tags:
             - { name: form.type }
+
+    form.type.search_and_reset:
+        class: 'PrestaShopBundle\Form\Admin\Type\SearchAndResetType'
+        arguments:
+            - '@router.default'
+        tags:
+            - { name: form.type }

@@ -24,45 +24,66 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Column\Type\Common;
+namespace PrestaShop\PrestaShop\Core\B2b;
 
-use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
 
 /**
- * This Column is used to display booleans.
- * - it will display an icon instead of the value
- * - if user clicks on it, this triggers a toggle of the boolean value.
+ * Class B2bFeature checks manages B2B status.
  */
-final class ToggleColumn extends AbstractColumn
+final class B2bFeature implements FeatureInterface
 {
     /**
-     * {@inheritdoc}
+     * @var ConfigurationInterface
      */
-    public function getType()
+    private $configuration;
+
+    /**
+     * @param ConfigurationInterface $configuration
+     */
+    public function __construct(ConfigurationInterface $configuration)
     {
-        return 'toggle';
+        $this->configuration = $configuration;
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function configureOptions(OptionsResolver $resolver)
+    public function isUsed()
     {
-        $resolver
-            ->setDefaults([
-                'sortable' => true,
-            ])
-            ->setRequired([
-                'field',
-                'primary_field',
-                'route',
-                'route_param_name',
-            ])
-            ->setAllowedTypes('field', 'string')
-            ->setAllowedTypes('primary_field', 'string')
-            ->setAllowedTypes('route', 'string')
-            ->setAllowedTypes('route_param_name', 'string')
-            ->setAllowedTypes('sortable', 'bool');
+        return $this->isActive();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isActive()
+    {
+        return (bool) $this->configuration->get('PS_B2B_ENABLE');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function enable()
+    {
+        $this->configuration->set('PS_B2B_ENABLE', 1);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function disable()
+    {
+        $this->configuration->set('PS_B2B_ENABLE', 0);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function update($status)
+    {
+        $status ? $this->enable() : $this->disable();
     }
 }
