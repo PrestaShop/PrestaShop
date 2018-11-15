@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Image\Deleter\ImageFileDeleterInterface;
 use PrestaShop\PrestaShop\Core\Import\Entity;
 use PrestaShop\PrestaShop\Core\Import\Entity\ImportEntityDeleterInterface;
+use PrestaShop\PrestaShop\Core\Import\Exception\NotSupportedImportEntityException;
 
 /**
  * Class ImportEntityDeleter is responsible for deleting import entities.
@@ -126,11 +127,12 @@ final class ImportEntityDeleter implements ImportEntityDeleterInterface
                 ]);
 
                 break;
+
+            default:
+                throw new NotSupportedImportEntityException("Import entity \"{$importEntity}\" is not supported");
         }
 
         $this->imageFileDeleter->deleteAllImages($this->configuration->get('_PS_TMP_IMG_DIR_'));
-
-        return true;
     }
 
     /**

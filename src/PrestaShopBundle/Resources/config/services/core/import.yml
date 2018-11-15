@@ -108,3 +108,8 @@ services:
 
     prestashop.core.import.request_validator:
         class: 'PrestaShop\PrestaShop\Core\Import\Validator\ImportRequestValidator'
+
+    prestashop.core.import.importer:
+        class: 'PrestaShop\PrestaShop\Core\Import\Importer'
+        arguments:
+            - '@prestashop.adapter.import.entity_deleter'
