@@ -1,5 +1,8 @@
 const {Menu} = require('../../selectors/BO/menu.js');
 const {Customer} = require('../../selectors/BO/customers/customer');
+const {accountPage} = require('../../selectors/FO/add_account_page');
+const {productPage} = require('../../selectors/FO/product_page');
+const {CheckoutOrderPage} = require('../../selectors/FO/order_page');
 const {BO} = require('../../selectors/BO/customers/index');
 
 let promise = Promise.resolve();
@@ -34,12 +37,13 @@ module.exports = {
           .then(() => client.waitAndSelectByValue(Customer.month_select, customerData.birthday.month))
           .then(() => client.waitAndSelectByValue(Customer.years_select, customerData.birthday.year));
       });
+      test('should activate "Partner offers" option ', () => client.waitForExistAndClick(Customer.Partner_offers));
       test('should click on "Save" button', () => client.waitForExistAndClick(Customer.save_button));
       test('should verify the appearance of the green validation', () => client.checkTextValue(BO.success_panel, '×\nSuccessful creation.'));
     }, 'customer');
   },
   checkCustomerBO: function (customerData) {
-    scenario('Check the customer creation in the back office', client => {
+    scenario('Check the customer creation in the Back Office', client => {
       test('should check the email existence in the "Customers list"', () => {
         return promise
           .then(() => client.isVisible(Customer.customer_filter_by_email_input))
@@ -88,13 +92,13 @@ module.exports = {
       });
       test('should click on "Delete" button', () => {
         return promise
-          .then(() => client.waitForExistAndClick(Customer.dropdown_toggle))
+          .then(() => client.scrollWaitForExistAndClick(Customer.dropdown_toggle, 50, 2000))
           .then(() => client.waitForExistAndClick(Customer.delete_button, 1000));
       });
       test('should accept the currently displayed alert dialog', () => client.alertAccept());
       test('should choose the option that allows customers to register again with the same email address', () => client.waitForExistAndClick(Customer.delete_first_option));
       test('should click on "Delete" button', () => client.waitForExistAndClick(Customer.delete_confirmation_button));
-      test('should verify the appearance of the green validation', () => client.checkTextValue(BO.success_panel, '×\nSuccessful deletion.'));
+      test('should verify the appearance of the green validation', () => client.checkTextValue(BO.success_panel, '×\nSuccessful deletion.', 'equal', 2000));
     }, 'customer');
   },
   deleteCustomerWithBulkActions: function (customerEmail) {
@@ -113,5 +117,21 @@ module.exports = {
       test('should click on "Delete" button', () => client.waitForExistAndClick(Customer.delete_confirmation_button));
       test('should verify the appearance of the green validation', () => client.checkTextValue(BO.success_panel, '×\nThe selection has been successfully deleted.'));
     }, 'customer');
+  },
+  checkCustomerFO: function (client, customerData) {
+    test('should check the customer "First name"', () => client.checkAttributeValue(accountPage.firstname_input, 'value', customerData.first_name));
+    test('should check the customer "Last name"', () => client.checkAttributeValue(accountPage.lastname_input, 'value', customerData.last_name));
+    test('should check that the customer "Email" is equal to "' + date_time + customerData.email_address + '"', () => client.checkAttributeValue(accountPage.email_input, 'value', date_time + customerData.email_address));
+    test('should check that the customer "Birthday" is equal to "' + customerData.birthday.month + '/' + customerData.birthday.day + '/' + customerData.birthday.year + '"', () => client.checkAttributeValue(accountPage.birthday_input, 'value', customerData.birthday.month + '/' + customerData.birthday.day + '/' + customerData.birthday.year, "contain"));
+  },
+  fillGuestInfo: function (message, client) {
+    test(message, () => {
+      return promise
+        .then(() => client.waitAndSetValue(accountPage.firstname_input, "I am"))
+        .then(() => client.waitAndSetValue(accountPage.lastname_input, "a Guest"))
+        .then(() => client.waitAndSetValue(accountPage.email_input, "guest@example.com"))
+        .then(() => client.waitForExistAndClick(accountPage.customer_form_continue_button))
+        .then(() => client.waitForVisible(accountPage.checkout_step_complete));
+    });
   }
 };

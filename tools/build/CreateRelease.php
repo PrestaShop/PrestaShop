@@ -42,7 +42,6 @@ if (php_sapi_name() !== 'cli') {
 
 $releaseOptions = [
     'version' => [
-        'required' => true,
         'description' => 'Desired release version of PrestaShop',
         'longopt' => 'version:',
     ],
@@ -65,7 +64,7 @@ $releaseOptions = [
         'longopt' => 'help',
     ],
 ];
-$helpMessage = "Usage: php {prestashop_root_path}/tools/build/CreateRelease.php --version=<version> [options]{$lineSeparator}{$lineSeparator}"
+$helpMessage = "Usage: php {prestashop_root_path}/tools/build/CreateRelease.php [--version=<version>] [options]{$lineSeparator}{$lineSeparator}"
     . "Available options are:{$lineSeparator}{$lineSeparator}";
 
 foreach ($releaseOptions as $optionName => $option) {
@@ -83,7 +82,6 @@ $userOptions = getopt(implode('', array_column($releaseOptions, 'opt')), array_c
 // Show help and exit
 if (isset($userOptions['h'])
     || isset($userOptions['help'])
-    || empty($userOptions)
 ) {
     echo $helpMessage;
 
@@ -102,9 +100,14 @@ foreach ($releaseOptions as $optionName => $option) {
         exit(1);
     }
 }
-$version = $userOptions['version'];
 $destinationDir = '';
 $useZip = $useInstaller = true;
+
+if (isset($userOptions['version'])) {
+    $version = $userOptions['version'];
+} else {
+    $version = null;
+}
 
 if (isset($userOptions['no-zip'])) {
     $useZip = false;

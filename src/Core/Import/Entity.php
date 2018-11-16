@@ -68,11 +68,13 @@ final class Entity
             return self::AVAILABLE_TYPES[$importType];
         }
 
-        throw new NotSupportedImportTypeException(sprintf('Import type with name "%s" is not supported.', $importType));
+        throw new NotSupportedImportTypeException(
+            sprintf('Import type with name "%s" is not supported.', $importType)
+        );
     }
 
     /**
-     * Class is not suppose to be initialized as it only use case.
+     * Class is not supposed to be initialized.
      */
     private function __construct()
     {

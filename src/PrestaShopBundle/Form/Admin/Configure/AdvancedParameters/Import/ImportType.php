@@ -42,9 +42,9 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class ImportType extends TranslatorAwareType
 {
-    const DEFAULT_SEPARATOR = ';';
-    const DEFAULT_MULTIVALUE_SEPARATOR = ',';
-
+    /**
+     * {@inheritdoc}
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -70,21 +70,11 @@ class ImportType extends TranslatorAwareType
             ])
             ->add('separator', TextType::class)
             ->add('multiple_value_separator', TextType::class)
-            ->add('truncate', SwitchType::class, [
-                'data' => false,
-            ])
-            ->add('match_ref', SwitchType::class, [
-                'data' => false,
-            ])
-            ->add('regenerate', SwitchType::class, [
-                'data' => false,
-            ])
-            ->add('forceIDs', SwitchType::class, [
-                'data' => false,
-            ])
-            ->add('sendemail', SwitchType::class, [
-                'data' => true,
-            ])
+            ->add('truncate', SwitchType::class)
+            ->add('match_ref', SwitchType::class)
+            ->add('regenerate', SwitchType::class)
+            ->add('forceIDs', SwitchType::class)
+            ->add('sendemail', SwitchType::class)
         ;
 
         $builder->get('entity')
@@ -103,6 +93,9 @@ class ImportType extends TranslatorAwareType
         ;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([

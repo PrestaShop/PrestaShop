@@ -1,0 +1,19 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.adapter.form.choice_provider.profile_by_id_choice_provider:
+    class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\ProfileByIdChoiceProvider'
+    arguments:
+      - '@=service("prestashop.adapter.legacy.context").getLanguage().id'
+
+  prestashop.adapter.form.choice_provider.shop_tree_choice_provider:
+    class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\ShopTreeChoiceProvider'
+
+  prestashop.adapter.form.choice_provider.category_tree_choice_provider:
+    class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\CategoryTreeChoiceProvider'
+    arguments:
+      - '@prestashop.adapter.data_provider.category'
+
+  prestashop.adapter.form.choice_provider.gender_by_id_choice_provider:
+    class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\GenderByIdChoiceProvider'

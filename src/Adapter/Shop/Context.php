@@ -26,13 +26,14 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Shop;
 
+use PrestaShop\PrestaShop\Core\Multistore\MultistoreContextCheckerInterface;
 use Shop;
 use ShopGroup;
 
 /**
  * This class will provide legacy shop context.
  */
-class Context
+class Context implements MultistoreContextCheckerInterface
 {
     /**
      * Get shops list.
@@ -73,10 +74,12 @@ class Context
      * Get if it's a GroupShop context.
      *
      * @return bool
+     *
+     * @deprecated since 1.7.6.0, to be removed in 1.8. Use $this->isGroupShopContext() instead.
      */
     public function isShopGroupContext()
     {
-        return Shop::getContext() === Shop::CONTEXT_GROUP;
+        return $this->isGroupShopContext();
     }
 
     /**
@@ -93,10 +96,12 @@ class Context
      * Get if it's a All context.
      *
      * @return bool
+     *
+     * @deprecated since 1.7.6.0, to be removed in 1.8. Use $this->isAllShopContext() instead.
      */
     public function isAllContext()
     {
-        return Shop::getContext() === Shop::CONTEXT_ALL;
+        return $this->isAllShopContext();
     }
 
     /**
@@ -169,5 +174,21 @@ class Context
     public function ShopGroup($shopGroupId)
     {
         return new ShopGroup($shopGroupId);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isAllShopContext()
+    {
+        return Shop::getContext() === Shop::CONTEXT_ALL;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isGroupShopContext()
+    {
+        return Shop::getContext() === Shop::CONTEXT_GROUP;
     }
 }

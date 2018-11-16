@@ -4,3 +4,4 @@ admin_theme_catalog:
     defaults:
         _controller: 'PrestaShopBundle:Admin\Improve\Design\ThemeCatalog:index'
         _legacy_controller: AdminThemesCatalog
+        _legacy_link: AdminThemesCatalog

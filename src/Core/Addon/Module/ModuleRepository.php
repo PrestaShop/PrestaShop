@@ -30,6 +30,7 @@ use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\CacheProvider;
 use Exception;
 use PrestaShop\PrestaShop\Core\Addon\AddonsCollection;
+use Module as LegacyModule;
 use Psr\Log\LoggerInterface;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\Module;
@@ -42,7 +43,6 @@ use PrestaShop\PrestaShop\Core\Addon\AddonListFilterStatus;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterType;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Translation\TranslatorInterface;
-use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 
 class ModuleRepository implements ModuleRepositoryInterface
 {
@@ -469,10 +469,8 @@ class ModuleRepository implements ModuleRepositoryInterface
             $main_class_attributes = array();
 
             if (!$skip_main_class_attributes && $this->moduleProvider->isModuleMainClassValid($name)) {
-                require_once $php_file_path;
-
                 // We load the main class of the module, and get its properties
-                $tmp_module = ServiceLocator::get($name);
+                $tmp_module = LegacyModule::getInstanceByName($name);
                 foreach (array('warning', 'name', 'tab', 'displayName', 'description', 'author', 'author_address',
                     'limited_countries', 'need_instance', 'confirmUninstall', ) as $data_to_get) {
                     if (isset($tmp_module->{$data_to_get})) {

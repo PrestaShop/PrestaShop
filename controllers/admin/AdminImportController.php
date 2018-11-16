@@ -23,6 +23,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+use PhpOffice\PhpSpreadsheet\IOFactory;
+
 @ini_set('max_execution_time', 0);
 /* No max line limit since the lines can be more than 4096. Performance impact is not significant. */
 define('MAX_LINE_SIZE', 0);
@@ -79,6 +81,14 @@ class AdminImportControllerCore extends AdminController
     public $separator;
     public $convert;
     public $multiple_value_separator;
+
+    /**
+     * This flag shows if import was executed in current request.
+     * Used for symfony migration purposes.
+     *
+     * @var bool
+     */
+    private $importExecuted = false;
 
     public function __construct()
     {
@@ -610,6 +620,31 @@ class AdminImportControllerCore extends AdminController
 
     public function renderForm()
     {
+        // If import was executed - collect errors or success message
+        // and send them to the migrated controller.
+        if ($this->importExecuted) {
+            $session = $this->getSession();
+
+            if ($this->errors) {
+                foreach ($this->errors as $error) {
+                    $session->getFlashBag()->add('error', $error);
+                }
+            } else {
+                foreach ($this->warnings as $warning) {
+                    $session->getFlashBag()->add('warning', $warning);
+                }
+
+                $session->getFlashBag()->add(
+                    'success',
+                    $this->trans(
+                        'Your file has been successfully imported into your shop. Don\'t forget to re-build the products\' search index.',
+                        [],
+                        'Admin.Advparameters.Notification'
+                    )
+                );
+            }
+        }
+
         // Import form is reworked in Symfony.
         // If user tries to access legacy form directly,
         // we redirect him to new form.
@@ -1845,12 +1880,11 @@ class AdminImportControllerCore extends AdminController
             $product->id_category = array_values(array_unique($product->id_category));
         }
 
-        // Will update default category if there is none set here. Home if no category at all.
-        if (!isset($product->id_category_default) || !$product->id_category_default) {
-            // this if will avoid ereasing default category if category column is not present in the CSV file (or ignored)
-            if (isset($product->id_category[0])) {
-                $product->id_category_default = (int) $product->id_category[0];
-            } else {
+        // Category default now takes the value of the first new category during import
+        if (isset($product->id_category[0])) {
+            $product->id_category_default = (int) $product->id_category[0];
+        } else {
+            if (!isset($product->id_category_default) || !$product->id_category_default) {
                 $defaultProductShop = new Shop($product->id_shop_default);
                 $product->id_category_default = Category::getRootCategory(null, Validate::isLoadedObject($defaultProductShop) ? $defaultProductShop : null)->id;
             }
@@ -4248,11 +4282,11 @@ class AdminImportControllerCore extends AdminController
             }
 
             if (!is_file($dest_file)) {
-                $reader_excel = PHPExcel_IOFactory::createReaderForFile($csv_folder . $filename);
+                $reader_excel = IOFactory::createReaderForFile($csv_folder . $filename);
                 $reader_excel->setReadDataOnly(true);
                 $excel_file = $reader_excel->load($csv_folder . $filename);
 
-                $csv_writer = PHPExcel_IOFactory::createWriter($excel_file, 'CSV');
+                $csv_writer = IOFactory::createWriter($excel_file, 'Csv');
 
                 $csv_writer->setSheetIndex(0);
                 $csv_writer->setDelimiter(';');
@@ -4393,6 +4427,7 @@ class AdminImportControllerCore extends AdminController
         }
 
         if (Tools::isSubmit('import')) {
+            $this->importExecuted = true;
             $this->importByGroups();
         } elseif ($filename = Tools::getValue('csvfilename')) {
             $filename = urldecode($filename);
@@ -4691,15 +4726,13 @@ class AdminImportControllerCore extends AdminController
         die(json_encode($results));
     }
 
-    public function initModal()
+    /**
+     * Gets session from symfony container.
+     *
+     * @return \Symfony\Component\HttpFoundation\Session\Session
+     */
+    private function getSession()
     {
-        parent::initModal();
-        $modal_content = $this->context->smarty->fetch('controllers/import/modal_import_progress.tpl');
-        $this->modals[] = array(
-             'modal_id' => 'importProgress',
-             'modal_class' => 'modal-md',
-             'modal_title' => $this->trans('Importing your data...', array(), 'Admin.Advparameters.Notification'),
-             'modal_content' => $modal_content,
-         );
+        return \PrestaShop\PrestaShop\Adapter\SymfonyContainer::getInstance()->get('session');
     }
 }

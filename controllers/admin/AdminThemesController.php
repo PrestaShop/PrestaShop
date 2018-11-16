@@ -183,6 +183,7 @@ class AdminThemesControllerCore extends AdminController
         if ($this->display == 'list') {
             $this->display = '';
         }
+
         if (isset($this->display) && method_exists($this, 'render' . $this->display)) {
             $this->content .= $this->initPageHeaderToolbar();
 
@@ -511,6 +512,7 @@ class AdminThemesControllerCore extends AdminController
                         'type' => 'theme',
                         'themes' => $other_themes,
                         'can_display_themes' => $this->can_display_themes,
+                        'can_delete_themes' => $this->isDeleteGranted(),
                         'no_multishop_checkbox' => true,
                     ),
                 ),

@@ -592,8 +592,8 @@ class AdminCategoriesControllerCore extends AdminController
                     'type' => 'text',
                     'label' => $this->trans('Meta title', array(), 'Admin.Global'),
                     'name' => 'meta_title',
-                    'maxlength' => 70,
-                    'maxchar' => 70,
+                    'maxlength' => 255,
+                    'maxchar' => 255,
                     'lang' => true,
                     'rows' => 5,
                     'cols' => 100,
@@ -603,8 +603,8 @@ class AdminCategoriesControllerCore extends AdminController
                     'type' => 'textarea',
                     'label' => $this->trans('Meta description', array(), 'Admin.Global'),
                     'name' => 'meta_description',
-                    'maxlength' => 160,
-                    'maxchar' => 160,
+                    'maxlength' => 512,
+                    'maxchar' => 512,
                     'lang' => true,
                     'rows' => 5,
                     'cols' => 100,
@@ -875,9 +875,9 @@ class AdminCategoriesControllerCore extends AdminController
     {
         /* Delete or link products which were not in others categories */
         $fatherless_products = Db::getInstance()->executeS('
-			SELECT p.`id_product` FROM `' . _DB_PREFIX_ . 'product` p
-			' . Shop::addSqlAssociation('product', 'p') . '
-			WHERE NOT EXISTS (SELECT 1 FROM `' . _DB_PREFIX_ . 'category_product` cp WHERE cp.`id_product` = p.`id_product`)');
+            SELECT p.`id_product` FROM `' . _DB_PREFIX_ . 'product` p
+            ' . Shop::addSqlAssociation('product', 'p') . '
+            WHERE NOT EXISTS (SELECT 1 FROM `' . _DB_PREFIX_ . 'category_product` cp WHERE cp.`id_product` = p.`id_product`)');
 
         foreach ($fatherless_products as $id_poor_product) {
             $poor_product = new Product((int) $id_poor_product['id_product']);
@@ -1003,7 +1003,9 @@ class AdminCategoriesControllerCore extends AdminController
                     $category->cleanPositions((int) $category->id_parent);
                 }
 
-                die(true);
+                die(json_encode([
+                    'message' => $this->trans('Successful update.', [], 'Admin.Notifications.Success'),
+                ]));
             } else {
                 die('{"hasError" : true, errors : "Cannot update categories position"}');
             }

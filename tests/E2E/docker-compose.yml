@@ -9,11 +9,11 @@ services:
     depends_on:
       - "prestashop"
       - "selenium-chrome"
-    command: ["/tmp/wait-for-it.sh", "--timeout=360", "--strict", "prestashop-web:80", "--", "/tmp/prepare-prestashop.sh"]
+    command: ["/tmp/wait-for-it.sh", "--timeout=360", "--strict", "prestashop-web:80", "--", "/bin/bash"]
     tty: true
     volumes:
       - .docker:/tmp/docker
-      - ../../:/tmp/data-ps/prestashop/
+      - ../../:/var/www/html/
     networks:
       - default
 

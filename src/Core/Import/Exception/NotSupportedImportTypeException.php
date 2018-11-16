@@ -26,11 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Core\Import\Exception;
 
-use Exception;
-
 /**
  * Class NotSupportedImportTypeException is thrown when no supported import type is provided.
  */
-class NotSupportedImportTypeException extends Exception implements ExceptionInterface
+class NotSupportedImportTypeException extends ImportException
 {
 }

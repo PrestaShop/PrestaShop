@@ -26,17 +26,16 @@ scenario('Check product page buttons', () => {
   scenario('Testing "Preview" button', client => {
     test('should click on "Preview" button', () => {
       return promise
-        .then(() => client.isVisible(AddProductPage.symfony_toolbar))
         .then(() => {
-          if (global.isVisible) {
+          if (global.ps_mode_dev) {
             client.waitForExistAndClick(AddProductPage.symfony_toolbar)
           }
         })
         .then(() => client.waitForExistAndClick(AddProductPage.preview_buttons));
     });
     test('should switch to the Front Office', () => client.switchWindow(1));
-    test('should click on the "Preview" link', () => client.waitForExistAndClick(AddProductPage.preview_link));
-    test('should check that the product name is equal to "TEST PRODUCT' + date_time + '"', () => client.checkTextValue(productPage.product_name, firstProductData.name, "contain"));
+    common_scenarios.clickOnPreviewLink(client, AddProductPage.preview_link, productPage.product_name);
+    test('should check that the product name is equal to "TEST PRODUCT' + date_time + '"', () => client.checkTextValue(productPage.product_name, firstProductData.name, "contain", 1000));
     test('should go to the Back Office', () => client.switchWindow(0));
   }, 'product/product');
 
@@ -82,7 +81,7 @@ scenario('Check product page buttons', () => {
     scenario('Check when clicking on "Yes" of the delete confirmation modal', client => {
       test('should click on "Delete" icon', () => client.waitForExistAndClick(AddProductPage.delete_button));
       test('should click on "Yes" of the confirmation modal', () => client.waitForVisibleAndClick(AddProductPage.delete_confirmation_button.replace('%BUTTON', 'Yes')));
-      test('should verify the appearance of the green validation', () => client.checkTextValue(AddProductPage.success_panel, "Product successfully deleted."));
+      test('should verify the appearance of the green validation (BOOM-4950)', () => client.checkTextValue(AddProductPage.success_panel, "Product successfully deleted."));
       test('should click on "Reset" button', () => client.waitForExistAndClick(AddProductPage.catalog_reset_filter));
       scenario('Check that the duplicated product is deleted', client => {
         test('should search for product by name', () => client.searchProductByName("copy of " + firstProductData.name + date_time));

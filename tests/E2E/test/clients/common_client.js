@@ -1,5 +1,6 @@
 const {getClient} = require('../common.webdriverio.js');
 const {selector} = require('../globals.webdriverio.js');
+const {languageFO} = require('../../test/selectors/FO/index');
 let path = require('path');
 let fs = require('fs');
 let pdfUtil = require('pdf-to-text');
@@ -90,19 +91,27 @@ class CommonClient {
       });
   }
 
+  isVisibleWithinViewport(selector) {
+    return this.client
+      .isVisibleWithinViewport(selector);
+  }
+
   takeScreenshot() {
     return this.client.saveScreenshot(`test/screenshots/${this.client.desiredCapabilities.browserName}_exception_${new Date().getTime()}.png`);
   }
 
-  changeLanguage(language) {
-    if (language === "francais") {
-      return this.client
-        .waitForExistAndClick(selector.languageFO.language_selector)
-        .waitForVisibleAndClick(selector.languageFO.language_FR)
-    }
+  changeLanguage(language = 'en') {
     return this.client
-       .waitForExistAndClick(selector.languageFO.language_selector)
-       .waitForVisibleAndClick(selector.languageFO.language_EN)
+      .waitForExistAndClick(languageFO.language_selector, 2000)
+      .pause(2000)
+      .isVisible(languageFO.language_option.replace('%LANG', language))
+      .then((isVisible) => {
+        expect(isVisible, "This language is not existing").to.be.true;
+        if (isVisible) {
+          this.client.waitForVisibleAndClick(languageFO.language_option.replace('%LANG', language));
+        }
+      })
+      .then(() => this.client.pause(3000));
   }
 
   selectLanguage(selector, option, language, id) {
@@ -121,6 +130,10 @@ class CommonClient {
 
   close() {
     return this.client.end();
+  }
+
+  closeWindow(id) {
+    return this.client.closeWindow(id);
   }
 
   waitForExistAndClick(selector, pause = 0, timeout = 90000) {
@@ -148,6 +161,13 @@ class CommonClient {
   waitForVisibleAndClick(selector, pause = 0, timeout = 90000) {
     return this.client
       .pause(pause)
+      .waitForVisibleAndClick(selector, timeout);
+  }
+
+  scrollWaitForVisibleAndClick(selector, pause = 0, timeout = 90000) {
+    return this.client
+      .pause(pause)
+      .scrollTo(selector)
       .waitForVisibleAndClick(selector, timeout);
   }
 
@@ -240,6 +260,29 @@ class CommonClient {
           .waitForExist(selector, 90000)
           .then(() => this.client.getAttribute(selector, attribute))
           .then((text) => expect(text).to.be.equal(value));
+      case "notequal":
+        return this.client
+          .pause(pause)
+          .waitForExist(selector, 90000)
+          .then(() => this.client.getAttribute(selector, attribute))
+          .then((text) => expect(text).to.not.equal(value));
+    }
+  }
+
+  checkCssPropertyValue(selector, property, value, parameter = 'equal', pause = 0) {
+    switch (parameter) {
+      case "contain":
+        return this.client
+          .pause(pause)
+          .waitForExist(selector, 90000)
+          .then(() => this.client.getCssProperty(selector, property))
+          .then((property) => expect(property.value).to.be.contain(value));
+      case "equal":
+        return this.client
+          .pause(pause)
+          .waitForExist(selector, 90000)
+          .then(() => this.client.getCssProperty(selector, property))
+          .then((property) => expect(property.value).to.be.equal(value));
     }
   }
 
@@ -260,6 +303,7 @@ class CommonClient {
    */
   searchByValue(search_input, search_button, value) {
     return this.client
+      .pause(2000)
       .waitAndSetValue(search_input, value)
       .waitForExistAndClick(search_button);
   }
@@ -339,6 +383,14 @@ class CommonClient {
       .then((isExisting) => expect(isExisting).to.be.true);
   }
 
+  isNotSelected(selector, pause = 0) {
+    return this.client
+      .pause(pause)
+      .scrollTo(selector)
+      .isSelected(selector)
+      .then((isExisting) => expect(isExisting).to.be.false);
+  }
+
   isNotExisting(selector, pause = 0) {
     return this.client
       .pause(pause)
@@ -370,7 +422,7 @@ class CommonClient {
   showElement(className, order) {
     return this.client
       .execute(function (className, order) {
-        document.querySelectorAll(className)[order].style.display = 'block';
+        document.querySelectorAll(className)[order].style.display = 'inherit';
       }, className, order);
   }
 
@@ -408,6 +460,17 @@ class CommonClient {
       }, content);
   }
 
+  checkTextEditor(selector, content, pause = 0) {
+    return this.client
+      .pause(pause)
+      .scrollTo(selector)
+      .waitForExistAndClick(selector)
+      .execute(function () {
+        return (tinyMCE.activeEditor.getContent());
+      })
+      .then((values) => expect(values.value.indexOf(content) >= 0).to.equal(true));
+  }
+
   editObjectData(object, type = '') {
     for (let key in object) {
       if (object.hasOwnProperty(key) && key !== 'type') {
@@ -429,13 +492,21 @@ class CommonClient {
     delete object[pos];
   }
 
+  setAttributeById(selector) {
+    return this.client
+      .execute(function (selector) {
+        document.getElementById(selector).style.display = 'none';
+      }, selector);
+  }
+
   stringifyNumber(number) {
-    let special = ['zeroth','first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth', 'ninth', 'tenth', 'eleventh', 'twelfth', 'thirteenth', 'fourteenth', 'fifteenth', 'sixteenth', 'seventeenth', 'eighteenth', 'nineteenth'];
+    let special = ['zeroth', 'first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth', 'ninth', 'tenth', 'eleventh', 'twelfth', 'thirteenth', 'fourteenth', 'fifteenth', 'sixteenth', 'seventeenth', 'eighteenth', 'nineteenth'];
     let deca = ['twent', 'thirt', 'fort', 'fift', 'sixt', 'sevent', 'eight', 'ninet'];
     if (number < 20) return special[number];
-    if (number%10 === 0) return deca[Math.floor(number/10)-2] + 'ieth';
-    return deca[Math.floor(number/10)-2] + 'y-' + special[number%10];
+    if (number % 10 === 0) return deca[Math.floor(number / 10) - 2] + 'ieth';
+    return deca[Math.floor(number / 10) - 2] + 'y-' + special[number % 10];
   }
+
 
   /**
    * This function searches the data in the table in case a filter input exists
@@ -470,9 +541,21 @@ class CommonClient {
     }
   }
 
-  refresh() {
+  deleteCookie() {
     return this.client
+      .deleteCookie()
       .refresh();
+  }
+
+  middleClick(selector, globalVisibility = true, pause = 2000) {
+    if (globalVisibility) {
+      return this.client
+        .moveToObject(selector)
+        .pause(pause)
+        .middleClick(selector);
+    } else {
+      return this.client.pause(1000);
+    }
   }
 
   getParamFromURL(param, pause = 0) {
@@ -484,6 +567,29 @@ class CommonClient {
         expect(current_url).to.contain(param);
         global.param[param] = current_url.split(param + '=')[1].split("&")[0];
       });
+  }
+
+  dragAndDrop(sourceElement, destinationElement) {
+    return this.client
+      .pause(2000)
+      .moveToObject(sourceElement)
+      .buttonDown()
+      .moveToObject(destinationElement)
+      .buttonUp()
+      .pause(2000);
+  }
+
+  selectByVisibleText(selector, text, timeout = 90000) {
+    return this.client
+      .waitForExist(selector, timeout)
+      .selectByVisibleText(selector, text)
+  }
+
+  middleClickWhenVisible(selector) {
+    if (global.isVisible) {
+      return this.client
+        .middleClick(selector)
+    }
   }
 
 }

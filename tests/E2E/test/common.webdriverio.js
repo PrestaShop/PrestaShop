@@ -3,6 +3,7 @@
 let client;
 let webdriverio = require('webdriverio');
 let globals = require('./globals.webdriverio.js');
+let fs = require('fs');
 
 let options = {
   logLevel: 'silent',
@@ -132,6 +133,12 @@ function initCommands(client) {
       .refresh();
   });
 
+  client.addCommand('closeWindow', function (id) {
+    return client
+      .getTabIds()
+      .then(ids => client.close(ids[id]));
+  });
+
   client.addCommand('isOpen', function (selector) {
     return client
       .getAttribute(selector + '/..', 'class')
@@ -169,8 +176,9 @@ module.exports = {
     if (typeof global.selenium_port !== 'undefined') {
       options.port = global.selenium_port;
     }
-
-
+    fs.readFile(_projectdir + '/../config/defines.inc.php', 'utf8', (err, content) => {
+        global.ps_mode_dev = (content.substring(content.indexOf("define('_PS_MODE_DEV_', "), content.indexOf(");")).split(', ')[1]) === 'true' ? true : false;
+    });
     client = webdriverio.remote(options);
     initCommands(client);
     return client;

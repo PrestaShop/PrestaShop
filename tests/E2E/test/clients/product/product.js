@@ -7,6 +7,7 @@ let path = require('path');
 global.productIdElement = [];
 global.productsTable = [];
 global.productsSortedTable = [];
+global.productStatus = [];
 
 class Product extends CommonClient {
 
@@ -31,7 +32,7 @@ class Product extends CommonClient {
       .then((text) => expect(text).to.be.true);
   }
 
-  openAllCategory() {
+  openAllCategories() {
     return this.client
       .scrollTo(AddProductPage.catalog_home, 50)
       .waitForExistAndClick(AddProductPage.catalog_home)
@@ -98,7 +99,7 @@ class Product extends CommonClient {
       .waitForVisibleAndClick(AddProductPage.related_product_item);
   }
 
-  addFeatureHeight(type) {
+  addFeature(type) {
     if (type === 'pack') {
       this.client
         .scrollTo(AddProductPage.product_add_feature_btn, 50);
@@ -107,7 +108,7 @@ class Product extends CommonClient {
       .scrollTo(AddProductPage.product_add_feature_btn, 150)
       .waitForExistAndClick(AddProductPage.product_add_feature_btn)
       .waitForExistAndClick(AddProductPage.feature_select_button)
-      .waitForExistAndClick(AddProductPage.feature_select_option_height)
+      .waitForExistAndClick(AddProductPage.feature_select_option)
       .waitAndSetValue(AddProductPage.feature_custom_value_height, data.standard.features.feature1.custom_value);
   }
 
@@ -139,6 +140,8 @@ class Product extends CommonClient {
       return this.client
         .click(selector)
         .pause(2000);
+    } else {
+      return this.client.pause(0)
     }
   }
 
@@ -162,11 +165,10 @@ class Product extends CommonClient {
   getProductPageNumber(selector) {
     return this.client
       .execute(function (selector) {
-        let count = document.getElementById(selector).getElementsByTagName("tbody")[0].children.length;
-        return count;
+        return document.getElementById(selector).getElementsByTagName("tbody")[0].children.length;
       }, selector)
       .then((count) => {
-        global.productsPageNumber = count.value;
+        global.productsNumber = count.value;
       });
   }
 
@@ -221,7 +223,7 @@ class Product extends CommonClient {
         this.client
           .waitUntil(function () {
             sort_mode === 'ASC' ? this.sortByAsc(type) : this.sortByDesc(type);
-          }, 1000 * global.productsPageNumber);
+          }, 1000 * global.productsNumber);
       });
   }
 
@@ -236,10 +238,77 @@ class Product extends CommonClient {
         this.client
           .waitUntil(function () {
             expect(productsTable).to.deep.equal(productsSortedTable);
-          }, 1000 * global.productsPageNumber);
+          }, 1000 * global.productsNumber);
       });
   }
 
+  clickPageNext(selector) {
+    return this.client
+      .scrollWaitForExistAndClick(selector);
+  }
+
+  getProductName(selector, i) {
+    return this.client
+      .getText(selector).then(function (name) {
+        global.productInfo.push({'name':name, 'status':'false'})
+      });
+  }
+
+  UrlModification(globalVar, productName) {
+    return this.client
+      .pause(1000)
+      .then(() => global.tab[globalVar] = global.URL + "/" + (global.tab[globalVar].split("/"))[(global.tab[globalVar].split("/")).length - 1].replace(".jpg", "/" + productName + ".jpg"));
+  }
+
+  getProductStatus(selector, i) {
+    return this.client
+      .getText(selector).then(function (status) {
+        global.productStatus[i] = status;
+      });
+  }
+
+  checkFeatureValue(predefinedValueSelector, customValueSelector, featureData) {
+    if(global.isVisible) {
+      if(featureData.predefined_value !== '') {
+        return this.client
+          .isSelected(predefinedValueSelector)
+          .then((value) => expect(value).to.be.equal(true));
+      } else if (featureData.customized_value !== '') {
+        return this.client
+          .getAttribute(customValueSelector, 'value')
+          .then((value) => expect(value).to.be.equal(featureData.customized_value));
+      } else {
+        return this.client
+          .pause(0)
+          .then(() => expect(featureData.predefined_value !== '' && featureData.customized_value !== '', "You must choose a pre-defined value or set the customized value").to.be.equal(true));
+      }
+    }
+  }
+
+  checkProductCategory(i) {
+    return this.client
+      .scrollWaitForExistAndClick(ProductList.product_name_link.replace("%ID", global.positionTable[i - 1], 50000))
+      .waitForVisible(AddProductPage.product_name_input)
+      .scrollWaitForExistAndClick(AddProductPage.expand_categories_button)
+  }
+
+  getSubCategoryNumber(i) {
+    return this.client
+      .execute(function (i) {
+        let count;
+        try {
+          count = document.getElementById('choice_tree').getElementsByTagName("ul")[i + 1].children.length;
+          return count;
+        }
+        catch (err) {
+          count = 0;
+          return count;
+        }
+      }, i)
+      .then((count) => {
+        global.subCatNumber = count.value;
+      })
+  }
 }
 
 module.exports = Product;

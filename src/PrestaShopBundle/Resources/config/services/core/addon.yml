@@ -29,3 +29,20 @@ services:
           - "@filesystem"
           - "@prestashop.core.admin.lang.repository"
           - "@prestashop.translation.theme.exporter"
+
+    prestashop.core.addon.theme.theme_manager_builder:
+        class: PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder
+        arguments:
+            - '@=service("prestashop.adapter.legacy.context").getContext()'
+            - '@prestashop.adapter.legacy_db'
+
+    prestashop.core.addon.theme.theme_manager:
+        class: PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManager
+        factory: 'prestashop.core.addon.theme.theme_manager_builder:build'
+
+    prestashop.core.addon.theme.theme.page_layouts_customizer:
+        class: PrestaShop\PrestaShop\Core\Addon\Theme\ThemePageLayoutsCustomizer
+        arguments:
+           - '@=service("prestashop.adapter.legacy.context").getContext().shop.theme'
+           - '@prestashop.core.addon.theme.theme_manager'
+           - '@prestashop.adapter.cache.clearer.smarty_cache_clearer'

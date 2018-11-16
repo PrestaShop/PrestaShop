@@ -932,6 +932,7 @@
                   {if ($order->hasBeenDelivered() || $order->hasProductReturned())}
                     <th class="text-center"><span class="title_box ">{l s='Returned' d='Admin.Orderscustomers.Feature'}</span></th>
                   {/if}
+                  {if $stock_location_is_available}<th class="text-center"><span class="title_box ">{l s='Stock location' d='Admin.Orderscustomers.Feature'}</span></th>{/if}
                   {if $stock_management}<th class="text-center"><span class="title_box ">{l s='Available quantity' d='Admin.Orderscustomers.Feature'}</span></th>{/if}
                   <th>
                     <span class="title_box ">{l s='Total' d='Admin.Global'}</span>

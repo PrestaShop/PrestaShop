@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\EventListener;
 
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
@@ -115,7 +116,13 @@ class DemoModeEnabledListener
         }
 
         $this->showNotificationMessage($demoRestricted);
-        $url = $this->router->generate($demoRestricted->getRedirectRoute());
+
+        $routeParametersToKeep = $this->getQueryParamsFromRequestQuery(
+            $demoRestricted->getRedirectQueryParamsToKeep(),
+            $event->getRequest()
+        );
+
+        $url = $this->router->generate($demoRestricted->getRedirectRoute(), $routeParametersToKeep);
 
         $event->setController(function () use ($url) {
             return new RedirectResponse($url);
@@ -164,5 +171,27 @@ class DemoModeEnabledListener
         $reflectionMethod = $controllerReflectionObject->getMethod($methodName);
 
         return $this->annotationReader->getMethodAnnotation($reflectionMethod, $tokenAnnotation);
+    }
+
+    /**
+     * Gets query parameters by comparing them to the current request attributes.
+     *
+     * @param array $queryParametersToKeep
+     * @param Request $request
+     *
+     * @return array
+     */
+    private function getQueryParamsFromRequestQuery(array $queryParametersToKeep, Request $request)
+    {
+        $result = [];
+
+        foreach ($queryParametersToKeep as $queryParameterName) {
+            $value = $request->get($queryParameterName);
+            if (null !== $value) {
+                $result[$queryParameterName] = $value;
+            }
+        }
+
+        return $result;
     }
 }

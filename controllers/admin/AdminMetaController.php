@@ -416,8 +416,6 @@ class AdminMetaControllerCore extends AdminController
 
             if (!$defaultLangIsValidated && !$englishLangIsValidated) {
                 $this->errors[] = $this->trans('The URL rewrite field must be filled in either the default or English language.', array(), 'Admin.Notifications.Error');
-
-                return false;
             }
 
             foreach (Language::getIDs(false) as $id_lang) {

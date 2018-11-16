@@ -71,7 +71,7 @@ final class RequestSqlGridDefinitionFactory extends AbstractGridDefinitionFactor
      */
     protected function getId()
     {
-        return 'request_sql';
+        return 'SqlRequest';
     }
 
     /**
@@ -112,7 +112,7 @@ final class RequestSqlGridDefinitionFactory extends AbstractGridDefinitionFactor
                 ])
             )
             ->add((new ActionColumn('actions'))
-                ->setName($this->trans('Actions', [], 'Global.Actions'))
+                ->setName($this->trans('Actions', [], 'Admin.Global'))
                 ->setOptions([
                     'actions' => (new RowActionCollection())
                         ->add((new LinkRowAction('export'))
