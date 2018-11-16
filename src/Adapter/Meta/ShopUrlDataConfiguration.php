@@ -26,9 +26,10 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Meta;
 
-use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShopException;
+use PrestaShop\PrestaShop\Adapter\File\HtaccessFileGenerator;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 use ShopUrl;
 
 /**
@@ -40,6 +41,11 @@ final class ShopUrlDataConfiguration implements DataConfigurationInterface
      * @var ShopUrl
      */
     private $mainShopUrl;
+
+    /**
+     * @var HtaccessFileGenerator
+     */
+    private $htaccessFileGenerator;
 
     /**
      * @var ConfigurationInterface
@@ -54,10 +60,12 @@ final class ShopUrlDataConfiguration implements DataConfigurationInterface
      */
     public function __construct(
         ShopUrl $mainShopUrl,
-        ConfigurationInterface $configuration
+        ConfigurationInterface $configuration,
+        HtaccessFileGenerator $htaccessFileGenerator
     ) {
         $this->mainShopUrl = $mainShopUrl;
         $this->configuration = $configuration;
+        $this->htaccessFileGenerator = $htaccessFileGenerator;
     }
 
     /**
@@ -91,6 +99,7 @@ final class ShopUrlDataConfiguration implements DataConfigurationInterface
 
                 $this->configuration->set('PS_SHOP_DOMAIN', $configuration['domain']);
                 $this->configuration->set('PS_SHOP_DOMAIN_SSL', $configuration['domain_ssl']);
+                $this->htaccessFileGenerator->generateFile();
             }
         } catch (PrestaShopException $exception) {
             $errors[] = $exception->getMessage();
