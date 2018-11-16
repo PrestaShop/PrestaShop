@@ -24,13 +24,30 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Customer\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Customer\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
+use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 
-/**
- * Class CustomerException is base "Customer" context exception.
- */
-class CustomerException extends DomainException
+class EnableCustomerCommand
 {
+    /**
+     * @var CustomerId
+     */
+    private $customerId;
+
+    /**
+     * @param CustomerId $customerId
+     */
+    public function __construct(CustomerId $customerId)
+    {
+        $this->customerId = $customerId;
+    }
+
+    /**
+     * @return CustomerId
+     */
+    public function getCustomerId()
+    {
+        return $this->customerId;
+    }
 }

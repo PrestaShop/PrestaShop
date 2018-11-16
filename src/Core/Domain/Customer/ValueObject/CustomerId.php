@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -26,10 +26,11 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject;
 
-use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\InvalidCustomerIdException;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerException;
 
 /**
- * Class CustomerId.
+ * Defines Customer ID with it's constraints
+
  */
 class CustomerId
 {
@@ -43,7 +44,10 @@ class CustomerId
      */
     public function __construct($customerId)
     {
-        $this->setCustomerId($customerId);
+        $this->assertIntegerIsGreaterThanZero($customerId);
+
+        $this->customerId = $customerId;
+
     }
 
     /**
@@ -57,15 +61,15 @@ class CustomerId
     /**
      * @param int $customerId
      */
-    private function setCustomerId($customerId)
+    private function assertIntegerIsGreaterThanZero($customerId)
     {
         if (!is_int($customerId) || 0 > $customerId) {
-            throw new InvalidCustomerIdException(sprintf(
-                'Invalid Customer id value %s supplied. Customer id should be positive integer.',
-                var_export($customerId, true)
-            ));
+            throw new CustomerException(
+                sprintf(
+                    'Customer id %s is invalid. Customer id must be number that is greater than zero.',
+                    var_export($customerId, true)
+                )
+            );
         }
-
-        $this->customerId = $customerId;
     }
 }

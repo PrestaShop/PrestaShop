@@ -24,13 +24,36 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Customer\Exception;
+namespace PrestaShop\PrestaShop\Adapter\Customer\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
+use Customer;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Command\EnableCustomerCommand;
+use PrestaShop\PrestaShop\Core\Domain\Customer\CommandHandler\EnableCustomerHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
 
 /**
- * Class CustomerException is base "Customer" context exception.
+ * Handles command which enables given customer.
+ *
+ * @internal 
  */
-class CustomerException extends DomainException
+final class EnableCustomerHandler implements EnableCustomerHandlerInterface
 {
+    /**
+     * {@inheritdoc}
+     */
+    public function handle(EnableCustomerCommand $command)
+    {
+        $customerId = $command->getCustomerId();
+        $customer = new Customer($command->getCustomerId()->getValue());
+
+        if (!$customer->id) {
+            throw new CustomerNotFoundException(
+                $customerId,
+                sprintf('Customer with id "%s" was not found.', $customerId->getValue())
+            );
+        }
+
+        $customer->active = true;
+        $customer->save();
+    }
 }

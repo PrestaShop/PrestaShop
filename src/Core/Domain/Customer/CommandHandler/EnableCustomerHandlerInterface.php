@@ -24,13 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Customer\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Customer\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Command\EnableCustomerCommand;
 
 /**
- * Class CustomerException is base "Customer" context exception.
+ * Defines API for EnableCustomerCommand command handler
  */
-class CustomerException extends DomainException
+interface EnableCustomerHandlerInterface
 {
+    /**
+     * @param EnableCustomerCommand $command
+     */
+    public function handle(EnableCustomerCommand $command);
 }

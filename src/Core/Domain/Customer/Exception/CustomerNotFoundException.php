@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Customer\Exception;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 
 /**
- * Class CustomerNotFoundException is thrown when customer is not found.
+ * Is thrown when customer is not found
  */
 class CustomerNotFoundException extends CustomerException
 {
@@ -42,13 +42,13 @@ class CustomerNotFoundException extends CustomerException
      * @param CustomerId $customerId
      * @param string $message
      * @param int $code
-     * @param null $previouse
+     * @param \Exception|null $previous
      */
-    public function __construct(CustomerId $customerId, $message = '', $code = 0, $previouse = null)
+    public function __construct(CustomerId $customerId, $message = '', $code = 0, $previous = null)
     {
-        parent::__construct($message, $code, $previouse);
-
         $this->customerId = $customerId;
+
+        parent::__construct($message, $code, $previous);
     }
 
     /**
