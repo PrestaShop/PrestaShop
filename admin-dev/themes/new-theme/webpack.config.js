@@ -125,7 +125,7 @@ const config = {
     ],
     customer: [
       './js/pages/customer'
-    ],
+    ]
   },
   output: {
     path: path.resolve(__dirname, 'public'),
