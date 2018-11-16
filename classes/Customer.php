@@ -289,7 +289,8 @@ class CustomerCore extends ObjectModel
             $addresses = $this->getAddresses((int) Configuration::get('PS_LANG_DEFAULT'));
             foreach ($addresses as $address) {
                 $obj = new Address((int) $address['id_address']);
-                $obj->delete();
+                $obj->deleted = true;
+                $obj->save();
             }
         }
 
