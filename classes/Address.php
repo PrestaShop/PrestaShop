@@ -221,21 +221,29 @@ class AddressCore extends ObjectModel
         }
 
         if (!$this->isUsed()) {
-            // keep pending carts, but unlink it from current address
-            $sql = 'UPDATE ' . _DB_PREFIX_ . 'cart
-                    SET id_address_delivery = 0
-                    WHERE id_address_delivery = ' . $this->id;
-            Db::getInstance()->execute($sql);
-            $sql = 'UPDATE ' . _DB_PREFIX_ . 'cart
-                    SET id_address_invoice = 0
-                    WHERE id_address_invoice = ' . $this->id;
-            Db::getInstance()->execute($sql);
+            $this->deleteCartAddress();
             return parent::delete();
         } else {
             $this->deleted = true;
 
             return $this->update();
         }
+    }
+
+    /**
+     * removes the address from carts using it, to avoid errors on not existing address
+     */
+    protected function deleteCartAddress()
+    {
+        // keep pending carts, but unlink it from current address
+        $sql = 'UPDATE ' . _DB_PREFIX_ . 'cart
+                    SET id_address_delivery = 0
+                    WHERE id_address_delivery = ' . $this->id;
+        Db::getInstance()->execute($sql);
+        $sql = 'UPDATE ' . _DB_PREFIX_ . 'cart
+                    SET id_address_invoice = 0
+                    WHERE id_address_invoice = ' . $this->id;
+        Db::getInstance()->execute($sql);
     }
 
     /**
