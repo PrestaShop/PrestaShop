@@ -116,6 +116,18 @@ final class ShopUrlDataConfiguration implements DataConfigurationInterface
         return isset(
             $configuration['domain'],
             $configuration['domain_ssl']
-        );
+        ) && $this->isValidUri($configuration['physical_uri']);
+    }
+
+    /**
+     * Check if it's a valid URI.
+     *
+     * @param string $uri
+     *
+     * @return bool
+     */
+    private function isValidUri($uri)
+    {
+        return preg_match('#^(?:[~\-_\/&\.]|\w|%\d+|\s)+$#', $uri);
     }
 }
