@@ -68,11 +68,12 @@ class ModulesGetOverrideTest extends IntegrationTestCase
     {
         HelperModule::addModule('pscsx3241');
         $module = Module::getInstanceByName('pscsx3241');
-        self::assertSame([
-            'Cart',
-            'AdminProductsController'
-        ], $module->getOverrides()
-        );
+        $overrides = $module->getOverrides();
+
+        self::assertContains('Cart', $overrides);
+        self::assertContains('AdminProductsController', $overrides);
+        self::assertCount(2, $overrides);
+
         HelperModule::removeModule('pscsx3241');
     }
 }

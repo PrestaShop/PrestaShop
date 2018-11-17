@@ -1284,12 +1284,16 @@ class CarrierCore extends ObjectModel
      *
      * @since 1.5
      *
-     * @param Address $address Address
+     * @param Address $address Address optional
      *
      * @return float Total Tax rate for this Carrier
      */
-    public function getTaxesRate(Address $address)
+    public function getTaxesRate(Address $address = null)
     {
+        if (!$address || !$address->id_country) {
+            $address = Address::initialize();
+        }
+
         $tax_calculator = $this->getTaxCalculator($address);
 
         return $tax_calculator->getTotalRate();
