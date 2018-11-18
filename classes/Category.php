@@ -539,7 +539,7 @@ class CategoryCore extends ObjectModel
      *
      * @return bool Indicates whether the sub tree of categories has been successfully updated
      *
-     * @deprecated 1.7.6.0 use getNTreeInfos + sql query instead
+     * @deprecated 1.7.6.0 use computeNTreeInfos + sql query instead
      */
     protected static function subTree(&$categories, $idCategory, &$n)
     {
