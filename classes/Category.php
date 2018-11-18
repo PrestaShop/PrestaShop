@@ -513,7 +513,6 @@ class CategoryCore extends ObjectModel
      * @param array $categories
      * @param int $idCategory
      * @param int $n
-     * @param array $queries
      *
      * @return array ntree infos
      */
