@@ -3043,6 +3043,7 @@ class AdminOrdersControllerCore extends AdminController
         $cart = $this->context->cart;
         $groups = Customer::getGroupsStatic((int) $cart->id_customer);
         $address = new Address((int) $cart->id_address_delivery);
+
         return Carrier::getCarriersForOrder(Address::getZoneById((int) $address->id), $groups, $cart);
     }
 }
