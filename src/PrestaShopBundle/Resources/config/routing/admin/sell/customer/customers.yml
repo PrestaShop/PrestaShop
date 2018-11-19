@@ -86,3 +86,10 @@ admin_customers_toggle_partner_offer_subscription:
     _legacy_controller: AdminCustomers
   requirements:
     customerId: \d+
+
+admin_customers_delete_bulk:
+  path: /delete-bulk
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Customer/Customer:deleteBulk
+    _legacy_controller: AdminCustomers

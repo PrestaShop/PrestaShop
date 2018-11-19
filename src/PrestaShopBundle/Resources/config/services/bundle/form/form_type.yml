@@ -679,3 +679,10 @@ services:
             - { method: setTranslator, arguments: ['@translator'] }
         tags:
             - { name: form.type }
+
+    form.type.customer.delete_customer:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Customer\DeleteCustomersType'
+        arguments:
+          - '@=service("prestashop.core.form.choice_provider.customer_delete_method").getChoices()'
+        tags:
+          - { name: form.type }

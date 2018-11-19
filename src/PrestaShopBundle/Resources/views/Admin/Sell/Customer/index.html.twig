@@ -63,8 +63,14 @@
       </div>
     {% endif %}
 
-    <div class="col-md-12">
-      {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': customerGrid} %}
+    <div class="row">
+      <div class="col">
+        {% embed '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': customerGrid} %}
+          {% block grid_panel_extra_content %}
+            {% include '@PrestaShop/Admin/Sell/Customer/Blocks/delete_modal.html.twig' %}
+          {% endblock %}
+        {% endembed %}
+      </div>
     </div>
   {% endblock %}
 

@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\Customer\DeleteCustomersBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\SubmitBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
@@ -420,11 +421,10 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'submit_route' => 'admin_customers_index',
                 ])
             )
-            ->add(
-                (new SubmitBulkAction('delete_selection'))
+            ->add((new DeleteCustomersBulkAction('delete_selection'))
                 ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
                 ->setOptions([
-                    'submit_route' => 'admin_customers_index',
+                    'customers_bulk_delete_route' => 'admin_customers_delete_bulk',
                 ])
             );
     }
