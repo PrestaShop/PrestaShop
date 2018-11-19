@@ -27,32 +27,28 @@
 namespace PrestaShop\PrestaShop\Adapter\Customer\CommandHandler;
 
 use Customer;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Command\DeleteCustomerCommand;
-use PrestaShop\PrestaShop\Core\Domain\Customer\CommandHandler\DeleteCustomerHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Command\EditCustomerCommand;
+use PrestaShop\PrestaShop\Core\Domain\Customer\CommandHandler\EditCustomerHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 
-final class DeleteCustomerHandler implements DeleteCustomerHandlerInterface
+/**
+ * @internal
+ */
+final class EditCustomerHandler implements EditCustomerHandlerInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function handle(DeleteCustomerCommand $command)
+    public function handle(EditCustomerCommand $command)
     {
         $customerId = $command->getCustomerId();
         $customer = new Customer($customerId->getValue());
 
         $this->assertCustomerWasFound($customerId, $customer);
 
-        if ($command->getDeleteMethod()->isAllowedToRegisterAfterDelete()) {
-            $customer->delete();
+        $this->updateCustomerWithCommandData($customer, $command);
 
-            return;
-        }
-
-        // soft delete customer
-        // in order to forbid signing in again
-        $customer->deleted = 1;
         $customer->update();
     }
 
@@ -69,6 +65,25 @@ final class DeleteCustomerHandler implements DeleteCustomerHandlerInterface
                 $customerId,
                 sprintf('Customer with id "%s" was not found.', $customerId->getValue())
             );
+        }
+    }
+
+    /**
+     * @param Customer $customer
+     * @param EditCustomerCommand $command
+     */
+    private function updateCustomerWithCommandData(Customer $customer, EditCustomerCommand $command)
+    {
+        if (is_bool($command->isEnabled())) {
+            $customer->active = $command->isEnabled();
+        }
+
+        if (is_bool($command->isNewsletterSubscribed())) {
+            $customer->newsletter = $command->isNewsletterSubscribed();
+        }
+
+        if (is_bool($command->isPartnerOfferSubscribed())) {
+            $customer->optin = $command->isPartnerOfferSubscribed();
         }
     }
 }
