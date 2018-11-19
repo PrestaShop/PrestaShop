@@ -5,7 +5,7 @@ admin_customers_index:
     _controller: PrestaShopBundle:Admin/Sell/Customer/Customer:index
     _legacy_controller: AdminCustomers
 
-admin_customers_index_search:
+admin_customers_search:
   path: /
   methods: [POST]
   defaults:
