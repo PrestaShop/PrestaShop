@@ -41,6 +41,8 @@ use PrestaShop\PrestaShop\Adapter\Entity\DbQuery;
 
 class XmlLoader
 {
+    const FALLBACK_LANGUAGE = 'en';
+
     /**
      * @var LanguageList
      */
@@ -269,9 +271,13 @@ class XmlLoader
             $multilang_columns = $this->getColumns($entity, true);
             $xml_langs = array();
             $default_lang = null;
+            $fallback_lang = null;
             foreach ($this->languages as $id_lang => $iso) {
                 if ($iso == $this->language->getLanguageIso()) {
                     $default_lang = $id_lang;
+                }
+                if ($iso == self::FALLBACK_LANGUAGE) {
+                    $fallback_lang = $id_lang;
                 }
 
                 try {
@@ -309,7 +315,16 @@ class XmlLoader
                         continue;
                     }
 
-                    if (($node_lang = $xml_lang->xpath($xpath_query)) || ($node_lang = $xml_langs[$default_lang]->xpath($xpath_query))) {
+                    //Triple safety, first requested language, then default one, finally fallback language (en)
+                    $node_lang = $xml_lang->xpath($xpath_query);
+                    if (!$node_lang && $default_lang && isset($xml_langs[$default_lang])) {
+                        $node_lang = $xml_langs[$default_lang]->xpath($xpath_query);
+                    }
+                    if (!$node_lang && $fallback_lang && isset($xml_langs[$fallback_lang])) {
+                        $node_lang = $xml_langs[$fallback_lang]->xpath($xpath_query);
+                    }
+
+                    if ($node_lang) {
                         $node_lang = $node_lang[0];
                         foreach ($multilang_columns as $column => $is_text) {
                             $value = '';
@@ -356,16 +371,16 @@ class XmlLoader
 
     protected function getFallBackToDefaultLanguage($iso)
     {
-        return file_exists($this->lang_path . $iso . '/data/') ? $iso : 'en';
+        return file_exists($this->lang_path . $iso . '/data/') ? $iso : self::FALLBACK_LANGUAGE;
     }
 
     protected function getFallBackToDefaultEntityLanguage($iso, $entity)
     {
-        if ($this->getFallBackToDefaultLanguage($iso) === 'en') {
-            return 'en';
+        if ($this->getFallBackToDefaultLanguage($iso) === self::FALLBACK_LANGUAGE) {
+            return self::FALLBACK_LANGUAGE;
         }
 
-        return file_exists($this->lang_path . $this->getFallBackToDefaultLanguage($iso) . '/data/' . $entity . '.xml') ? $iso : 'en';
+        return file_exists($this->lang_path . $this->getFallBackToDefaultLanguage($iso) . '/data/' . $entity . '.xml') ? $iso : self::FALLBACK_LANGUAGE;
     }
 
     /**
