@@ -32,15 +32,13 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Command\EditCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\CommandHandler\EditCustomerHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerDefaultGroupAccessException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerException;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\DuplicateCustomerEmailException;
-use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\Email;
 
 /**
  * Handles command which edits customer's data
  */
-final class EditCustomerHandler implements EditCustomerHandlerInterface
+final class EditCustomerHandler extends AbstractCustomerHandler implements EditCustomerHandlerInterface
 {
     /**
      * @var Hashing
@@ -179,24 +177,6 @@ final class EditCustomerHandler implements EditCustomerHandlerInterface
         }
 
         $this->updateCustomerWithCommandData($customer, $command);
-
-        $customer->update();
-    }
-
-    /**
-     * @param CustomerId $customerId
-     * @param Customer $customer
-     *
-     * @throws CustomerNotFoundException
-     */
-    private function assertCustomerWasFound(CustomerId $customerId, Customer $customer)
-    {
-        if (!$customer->id) {
-            throw new CustomerNotFoundException(
-                $customerId,
-                sprintf('Customer with id "%s" was not found.', $customerId->getValue())
-            );
-        }
     }
 
     /**

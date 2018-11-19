@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\CommandHandler\BulkDeleteCustomer
 /**
  * @internal
  */
-final class BulkDeleteCustomerCustomerHandler extends AbstractCustomerHandler implements BulkDeleteCustomerHandlerInterface
+final class BulkDeleteCustomerHandler extends AbstractCustomerHandler implements BulkDeleteCustomerHandlerInterface
 {
     /**
      * {@inheritdoc}
