@@ -38,6 +38,7 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 use PrestaShop\PrestaShop\Core\Search\Filters\CustomerFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController as AbstractAdminController;
 use PrestaShopBundle\Form\Admin\Sell\Customer\DeleteCustomersType;
+use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -49,6 +50,12 @@ class CustomerController extends AbstractAdminController
 {
     /**
      * Show customers listing.
+     *
+     * @AdminSecurity(
+     *     "is_granted('read', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_customers_index",
+     *     message="You do not have permission to view this."
+     * )
      *
      * @param Request $request
      * @param CustomerFilters $filters
@@ -124,6 +131,12 @@ class CustomerController extends AbstractAdminController
     /**
      * Toggle customer status.
      *
+     * @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_customers_index",
+     *     message="You do not have permission to edit this."
+     * )
+     *
      * @param int $customerId
      *
      * @return RedirectResponse
@@ -149,6 +162,12 @@ class CustomerController extends AbstractAdminController
 
     /**
      * Toggle customer newsletter subscription status.
+     *
+     * @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_customers_index",
+     *     message="You do not have permission to edit this."
+     * )
      *
      * @param int $customerId
      *
@@ -176,6 +195,12 @@ class CustomerController extends AbstractAdminController
     /**
      * Toggle customer partner offer subscription status.
      *
+     * @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_customers_index",
+     *     message="You do not have permission to edit this."
+     * )
+     *
      * @param int $customerId
      *
      * @return RedirectResponse
@@ -202,6 +227,12 @@ class CustomerController extends AbstractAdminController
     /**
      * Delete customers in bulk action.
      *
+     * @AdminSecurity(
+     *     "is_granted('delete', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_customers_index",
+     *     message="You do not have permission to delete this."
+     * )
+     *
      * @param Request $request
      *
      * @return RedirectResponse
@@ -220,6 +251,11 @@ class CustomerController extends AbstractAdminController
             );
 
             $this->getCommandBus()->handle($command);
+
+            $this->addFlash(
+                'success',
+                $this->trans('The selection has been successfully deleted.', 'Admin.Notifications.Success')
+            );
         }
 
         return $this->redirectToRoute('admin_customers_index');
@@ -227,6 +263,12 @@ class CustomerController extends AbstractAdminController
 
     /**
      * Delete customer.
+     *
+     * @AdminSecurity(
+     *     "is_granted('delete', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_customers_index",
+     *     message="You do not have permission to delete this."
+     * )
      *
      * @param Request $request
      *
@@ -248,6 +290,8 @@ class CustomerController extends AbstractAdminController
             );
 
             $this->getCommandBus()->handle($command);
+
+            $this->addFlash('success', $this->trans('Successful deletion.', 'Admin.Notifications.Success'));
         }
 
         return $this->redirectToRoute('admin_customers_index');
@@ -255,6 +299,12 @@ class CustomerController extends AbstractAdminController
 
     /**
      * Enable customers in bulk action.
+     *
+     * @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_customers_index",
+     *     message="You do not have permission to edit this."
+     * )
      *
      * @param Request $request
      *
@@ -275,6 +325,12 @@ class CustomerController extends AbstractAdminController
 
     /**
      * Disable customers in bulk action.
+     *
+     * @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_customers_index",
+     *     message="You do not have permission to edit this."
+     * )
      *
      * @param Request $request
      *
