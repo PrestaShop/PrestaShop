@@ -26,12 +26,15 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Customer;
 
+use PrestaShop\PrestaShop\Core\Domain\Customer\Command\BulkDeleteCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\EditCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\EditableCustomer;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerDeleteMethod;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 use PrestaShop\PrestaShop\Core\Search\Filters\CustomerFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController as AbstractAdminController;
+use PrestaShopBundle\Form\Admin\Sell\Customer\DeleteCustomersType;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -54,9 +57,12 @@ class CustomerController extends AbstractAdminController
         $customerGridFactory = $this->get('prestashop.core.grid.factory.customer');
         $customerGrid = $customerGridFactory->getGrid($filters);
 
+        $deleteCustomerForm = $this->createForm(DeleteCustomersType::class);
+
         return $this->render('@PrestaShop/Admin/Sell/Customer/index.html.twig', [
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'customerGrid' => $this->presentGrid($customerGrid),
+            'deleteCustomersForm' => $deleteCustomerForm->createView(),
         ]);
     }
 
@@ -186,6 +192,32 @@ class CustomerController extends AbstractAdminController
             'success',
             $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
         );
+
+        return $this->redirectToRoute('admin_customers_index');
+    }
+
+    /**
+     * Delete customers in bulk action.
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function deleteBulkAction(Request $request)
+    {
+        $form = $this->createForm(DeleteCustomersType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted()) {
+            $data = $form->getData();
+
+            $command = new BulkDeleteCustomerCommand(
+                $data['customers_to_delete'],
+                new CustomerDeleteMethod($data['delete_method'])
+            );
+
+            $this->getCommandBus()->handle($command);
+        }
 
         return $this->redirectToRoute('admin_customers_index');
     }
