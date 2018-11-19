@@ -29,10 +29,8 @@ namespace PrestaShop\PrestaShop\Adapter\Customer\CommandHandler;
 use Customer;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\DeleteCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\CommandHandler\DeleteCustomerHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 
-final class DeleteCustomerHandler implements DeleteCustomerHandlerInterface
+final class DeleteCustomerHandler extends AbstractCustomerHandler implements DeleteCustomerHandlerInterface
 {
     /**
      * {@inheritdoc}
@@ -54,21 +52,5 @@ final class DeleteCustomerHandler implements DeleteCustomerHandlerInterface
         // in order to forbid signing in again
         $customer->deleted = 1;
         $customer->update();
-    }
-
-    /**
-     * @param CustomerId $customerId
-     * @param Customer $customer
-     *
-     * @throws CustomerNotFoundException
-     */
-    private function assertCustomerWasFound(CustomerId $customerId, Customer $customer)
-    {
-        if (!$customer->id) {
-            throw new CustomerNotFoundException(
-                $customerId,
-                sprintf('Customer with id "%s" was not found.', $customerId->getValue())
-            );
-        }
     }
 }

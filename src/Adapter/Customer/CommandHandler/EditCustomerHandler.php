@@ -29,13 +29,11 @@ namespace PrestaShop\PrestaShop\Adapter\Customer\CommandHandler;
 use Customer;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\EditCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\CommandHandler\EditCustomerHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 
 /**
  * @internal
  */
-final class EditCustomerHandler implements EditCustomerHandlerInterface
+final class EditCustomerHandler extends AbstractCustomerHandler implements EditCustomerHandlerInterface
 {
     /**
      * {@inheritdoc}
@@ -50,22 +48,6 @@ final class EditCustomerHandler implements EditCustomerHandlerInterface
         $this->updateCustomerWithCommandData($customer, $command);
 
         $customer->update();
-    }
-
-    /**
-     * @param CustomerId $customerId
-     * @param Customer $customer
-     *
-     * @throws CustomerNotFoundException
-     */
-    private function assertCustomerWasFound(CustomerId $customerId, Customer $customer)
-    {
-        if (!$customer->id) {
-            throw new CustomerNotFoundException(
-                $customerId,
-                sprintf('Customer with id "%s" was not found.', $customerId->getValue())
-            );
-        }
     }
 
     /**

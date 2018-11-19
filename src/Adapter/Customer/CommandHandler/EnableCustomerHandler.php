@@ -29,14 +29,13 @@ namespace PrestaShop\PrestaShop\Adapter\Customer\CommandHandler;
 use Customer;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\EnableCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\CommandHandler\EnableCustomerHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
 
 /**
  * Handles command which enables given customer.
  *
  * @internal
  */
-final class EnableCustomerHandler implements EnableCustomerHandlerInterface
+final class EnableCustomerHandler extends AbstractCustomerHandler implements EnableCustomerHandlerInterface
 {
     /**
      * {@inheritdoc}
@@ -46,12 +45,7 @@ final class EnableCustomerHandler implements EnableCustomerHandlerInterface
         $customerId = $command->getCustomerId();
         $customer = new Customer($command->getCustomerId()->getValue());
 
-        if (!$customer->id) {
-            throw new CustomerNotFoundException(
-                $customerId,
-                sprintf('Customer with id "%s" was not found.', $customerId->getValue())
-            );
-        }
+        $this->assertCustomerWasFound($customerId, $customer);
 
         $customer->active = true;
         $customer->save();
