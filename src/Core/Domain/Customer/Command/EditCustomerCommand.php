@@ -87,6 +87,11 @@ class EditCustomerCommand
     /**
      * @var bool|null
      */
+    private $isNewsletterSubscribed;
+
+    /**
+     * @var bool
+     */
     private $isEnabled;
 
     /**
@@ -135,11 +140,11 @@ class EditCustomerCommand
     private $riskId;
 
     /**
-     * @param int $customerId
+     * @param CustomerId $customerId
      */
-    public function __construct($customerId)
+    public function __construct(CustomerId $customerId)
     {
-        $this->customerId = new CustomerId($customerId);
+        $this->customerId = $customerId;
     }
 
     /**
@@ -288,6 +293,22 @@ class EditCustomerCommand
         $this->genderId = $genderId;
 
         return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isNewsletterSubscribed()
+    {
+        return $this->isNewsletterSubscribed;
+    }
+
+    /**
+     * @param bool $isNewsletterSubscribed
+     */
+    public function setNewsletterSubscribed($isNewsletterSubscribed)
+    {
+        $this->isNewsletterSubscribed = $isNewsletterSubscribed;
     }
 
     /**

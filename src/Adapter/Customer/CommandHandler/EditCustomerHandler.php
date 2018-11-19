@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerDefaultGroupAcc
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\DuplicateCustomerEmailException;
+use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\Email;
 
 /**
@@ -69,12 +70,7 @@ final class EditCustomerHandler implements EditCustomerHandlerInterface
         $customerId = $command->getCustomerId();
         $customer = new Customer($customerId->getValue());
 
-        if ($customer->id !== $customerId->getValue()) {
-            throw new CustomerNotFoundException(
-                $customerId,
-                sprintf('Customer with id "%s" was not found', $customerId->getValue())
-            );
-        }
+        $this->assertCustomerWasFound($customerId, $customer);
 
         $this->assertCustomerWithUpdatedEmailDoesNotExist($customer, $command);
         $this->assertCustomerCanAccessDefaultGroup($customer, $command);
@@ -141,6 +137,10 @@ final class EditCustomerHandler implements EditCustomerHandlerInterface
             $customer->id_default_group = $command->getDefaultGroupId();
         }
 
+        if (null !== $command->isNewsletterSubscribed()) {
+            $customer->newsletter = $command->isNewsletterSubscribed();
+        }
+
         $this->updateCustomerB2bData($customer, $command);
     }
 
@@ -176,6 +176,26 @@ final class EditCustomerHandler implements EditCustomerHandlerInterface
 
         if (null !== $command->getRiskId()) {
             $customer->id_risk = $command->getRiskId();
+        }
+
+        $this->updateCustomerWithCommandData($customer, $command);
+
+        $customer->update();
+    }
+
+    /**
+     * @param CustomerId $customerId
+     * @param Customer $customer
+     *
+     * @throws CustomerNotFoundException
+     */
+    private function assertCustomerWasFound(CustomerId $customerId, Customer $customer)
+    {
+        if (!$customer->id) {
+            throw new CustomerNotFoundException(
+                $customerId,
+                sprintf('Customer with id "%s" was not found.', $customerId->getValue())
+            );
         }
     }
 
@@ -234,6 +254,7 @@ final class EditCustomerHandler implements EditCustomerHandlerInterface
             throw new CustomerDefaultGroupAccessException(
                 sprintf('Customer default group with id "%s" must be in access groups', $command->getDefaultGroupId())
             );
+
         }
     }
 }
