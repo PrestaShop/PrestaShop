@@ -24,36 +24,46 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\Customer\CommandHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Customer\Command;
 
-use Customer;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Command\EnableCustomerCommand;
-use PrestaShop\PrestaShop\Core\Domain\Customer\CommandHandler\EnableCustomerHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerDeleteMethod;
+use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 
-/**
- * Handles command which enables given customer.
- *
- * @internal
- */
-final class EnableCustomerHandler implements EnableCustomerHandlerInterface
+class DeleteCustomerCommand
 {
     /**
-     * {@inheritdoc}
+     * @var CustomerId
      */
-    public function handle(EnableCustomerCommand $command)
+    private $customerId;
+
+    /**
+     * @var CustomerDeleteMethod
+     */
+    private $deleteMethod;
+
+    /**
+     * @param CustomerId $customerId
+     * @param CustomerDeleteMethod $deleteMethod
+     */
+    public function __construct(CustomerId $customerId, CustomerDeleteMethod $deleteMethod)
     {
-        $customerId = $command->getCustomerId();
-        $customer = new Customer($command->getCustomerId()->getValue());
+        $this->customerId = $customerId;
+        $this->deleteMethod = $deleteMethod;
+    }
 
-        if (!$customer->id) {
-            throw new CustomerNotFoundException(
-                $customerId,
-                sprintf('Customer with id "%s" was not found.', $customerId->getValue())
-            );
-        }
+    /**
+     * @return CustomerId
+     */
+    public function getCustomerId()
+    {
+        return $this->customerId;
+    }
 
-        $customer->active = true;
-        $customer->save();
+    /**
+     * @return CustomerDeleteMethod
+     */
+    public function getDeleteMethod()
+    {
+        return $this->deleteMethod;
     }
 }

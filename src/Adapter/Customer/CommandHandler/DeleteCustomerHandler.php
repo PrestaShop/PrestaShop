@@ -27,24 +27,19 @@
 namespace PrestaShop\PrestaShop\Adapter\Customer\CommandHandler;
 
 use Customer;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Command\EnableCustomerCommand;
-use PrestaShop\PrestaShop\Core\Domain\Customer\CommandHandler\EnableCustomerHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Command\DeleteCustomerCommand;
+use PrestaShop\PrestaShop\Core\Domain\Customer\CommandHandler\DeleteCustomerHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
 
-/**
- * Handles command which enables given customer.
- *
- * @internal
- */
-final class EnableCustomerHandler implements EnableCustomerHandlerInterface
+final class DeleteCustomerHandler implements DeleteCustomerHandlerInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function handle(EnableCustomerCommand $command)
+    public function handle(DeleteCustomerCommand $command)
     {
         $customerId = $command->getCustomerId();
-        $customer = new Customer($command->getCustomerId()->getValue());
+        $customer = new Customer($customerId->getValue());
 
         if (!$customer->id) {
             throw new CustomerNotFoundException(
@@ -53,7 +48,15 @@ final class EnableCustomerHandler implements EnableCustomerHandlerInterface
             );
         }
 
-        $customer->active = true;
-        $customer->save();
+        if ($command->getDeleteMethod()->isAllowedToRegisterAfterDelete()) {
+            $customer->delete();
+
+            return;
+        }
+
+        // soft delete customer
+        // in order to forbid signing in again
+        $customer->deleted = 1;
+        $customer->update();
     }
 }
