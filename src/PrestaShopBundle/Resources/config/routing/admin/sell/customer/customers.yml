@@ -93,3 +93,10 @@ admin_customers_delete_bulk:
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/Customer/Customer:deleteBulk
     _legacy_controller: AdminCustomers
+
+admin_customers_delete:
+  path: /delete
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Customer/Customer:delete
+    _legacy_controller: AdminCustomers

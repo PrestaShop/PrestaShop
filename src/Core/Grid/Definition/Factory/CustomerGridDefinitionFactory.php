@@ -31,8 +31,8 @@ use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\Customer\DeleteCustomersBul
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\SubmitBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\Customer\DeleteCustomerRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
-use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\SubmitRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\LinkGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
@@ -224,20 +224,13 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
                                 'route_param_field' => 'id_customer',
                             ])
                         )
-                        ->add(
-                            (new SubmitRowAction('delete'))
+                        ->add((new DeleteCustomerRowAction('delete'))
+
                             ->setName($this->trans('Delete', [], 'Admin.Actions'))
                             ->setIcon('delete')
                             ->setOptions([
-                                'method' => 'DELETE',
-                                'route' => 'admin_customers_index',
-                                'route_param_name' => 'customerId',
-                                'route_param_field' => 'id_customer',
-                                'confirm_message' => $this->trans(
-                                    'Delete selected item?',
-                                    [],
-                                    'Admin.Notifications.Warning'
-                                ),
+                                'customer_id_field' => 'id_customer',
+                                'customer_delete_route' => 'admin_customers_delete',
                             ])
                         ),
                 ])
