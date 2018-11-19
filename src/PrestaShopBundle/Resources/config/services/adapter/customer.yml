@@ -62,10 +62,15 @@ services:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\Customer\Command\EditCustomerCommand'
 
-  prestashop.adapter.customer.command_handler.enable_customer_handler:
-    class: 'PrestaShop\PrestaShop\Adapter\Customer\CommandHandler\EnableCustomerHandler'
+  prestashop.adapter.customer.command_handler.bulk_enable_customer_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Customer\CommandHandler\BulkEnableCustomerHandler'
     tags:
-      - { name: tactician.handler, command: 'PrestaShop\PrestaShop\Core\Domain\Customer\Command\EnableCustomerCommand' }
+      - { name: tactician.handler, command: 'PrestaShop\PrestaShop\Core\Domain\Customer\Command\BulkEnableCustomerCommand' }
+
+  prestashop.adapter.customer.command_handler.bulk_disable_customer_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Customer\CommandHandler\BulkDisableCustomerHandler'
+    tags:
+      - { name: tactician.handler, command: 'PrestaShop\PrestaShop\Core\Domain\Customer\Command\BulkDisableCustomerCommand' }
 
   prestashop.adapter.customer.command_handler.delete_customer_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Customer\CommandHandler\DeleteCustomerHandler'

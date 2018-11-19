@@ -404,14 +404,14 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
                 (new SubmitBulkAction('enable_selection'))
                 ->setName($this->trans('Enable selection', [], 'Admin.Actions'))
                 ->setOptions([
-                    'submit_route' => 'admin_customers_index',
+                    'submit_route' => 'admin_customers_enable_bulk',
                 ])
             )
             ->add(
                 (new SubmitBulkAction('disable_selection'))
                 ->setName($this->trans('Disable selection', [], 'Admin.Actions'))
                 ->setOptions([
-                    'submit_route' => 'admin_customers_index',
+                    'submit_route' => 'admin_customers_disable_bulk',
                 ])
             )
             ->add((new DeleteCustomersBulkAction('delete_selection'))

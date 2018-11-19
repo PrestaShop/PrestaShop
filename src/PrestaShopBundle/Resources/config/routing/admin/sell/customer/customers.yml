@@ -100,3 +100,17 @@ admin_customers_delete:
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/Customer/Customer:delete
     _legacy_controller: AdminCustomers
+
+admin_customers_enable_bulk:
+  path: /enable-bulk
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Customer/Customer:enableBulk
+    _legacy_controller: AdminCustomers
+
+admin_customers_disable_bulk:
+  path: /disable-bulk
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Customer/Customer:disableBulk
+    _legacy_controller: AdminCustomers

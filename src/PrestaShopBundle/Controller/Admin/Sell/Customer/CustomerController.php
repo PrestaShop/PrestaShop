@@ -37,6 +37,8 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetRequiredFieldsForCustome
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\Password;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\BulkDeleteCustomerCommand;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Command\BulkDisableCustomerCommand;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Command\BulkEnableCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\DeleteCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\EditCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\EditableCustomer;
@@ -550,6 +552,46 @@ class CustomerController extends AbstractAdminController
 
             $this->getCommandBus()->handle($command);
         }
+
+        return $this->redirectToRoute('admin_customers_index');
+    }
+
+    /**
+     * Enable customers in bulk action.
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function enableBulkAction(Request $request)
+    {
+        $customerIds = $request->request->get('customer_customers_bulk', []);
+
+        $command = new BulkEnableCustomerCommand($customerIds);
+
+        $this->getCommandBus()->handle($command);
+
+        $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+
+        return $this->redirectToRoute('admin_customers_index');
+    }
+
+    /**
+     * Disable customers in bulk action.
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function disableBulkAction(Request $request)
+    {
+        $customerIds = $request->request->get('customer_customers_bulk', []);
+
+        $command = new BulkDisableCustomerCommand($customerIds);
+
+        $this->getCommandBus()->handle($command);
+
+        $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
 
         return $this->redirectToRoute('admin_customers_index');
     }
