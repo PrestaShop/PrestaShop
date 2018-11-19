@@ -24,30 +24,31 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Customer\Command;
+namespace PrestaShop\PrestaShop\Adapter\Customer\QueryHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
+use Customer;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\EditableCustomer;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Customer\QueryHandler\GetCustomerForEditingHandlerInterface;
 
-class EnableCustomerCommand
+/**
+ * @internal
+ */
+final class GetCustomerForEditingHandler implements GetCustomerForEditingHandlerInterface
 {
     /**
-     * @var CustomerId
+     * {@inheritdoc}
      */
-    private $customerId;
-
-    /**
-     * @param CustomerId $customerId
-     */
-    public function __construct(CustomerId $customerId)
+    public function handle(GetCustomerForEditing $query)
     {
-        $this->customerId = $customerId;
-    }
+        $customerId = $query->getCustomerId();
+        $customer = new Customer($customerId->getValue());
 
-    /**
-     * @return CustomerId
-     */
-    public function getCustomerId()
-    {
-        return $this->customerId;
+        return new EditableCustomer(
+            $customerId,
+            (bool) $customer->active,
+            (bool) $customer->newsletter,
+            (bool) $customer->optin
+        );
     }
 }

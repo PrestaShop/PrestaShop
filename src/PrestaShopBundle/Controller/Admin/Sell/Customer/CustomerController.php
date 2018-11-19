@@ -26,8 +26,13 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Customer;
 
+use PrestaShop\PrestaShop\Core\Domain\Customer\Command\EditCustomerCommand;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\EditableCustomer;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 use PrestaShop\PrestaShop\Core\Search\Filters\CustomerFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController as AbstractAdminController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -105,5 +110,83 @@ class CustomerController extends AbstractAdminController
                 'id_customer' => $customerId,
             ])
         );
+    }
+
+    /**
+     * Toggle customer status.
+     *
+     * @param int $customerId
+     *
+     * @return RedirectResponse
+     */
+    public function toggleStatusAction($customerId)
+    {
+        $customerId = new CustomerId($customerId);
+        /** @var EditableCustomer $editableCustomer */
+        $editableCustomer = $this->getQueryBus()->handle(new GetCustomerForEditing($customerId));
+
+        $editCustomerCommand = new EditCustomerCommand($customerId);
+        $editCustomerCommand->setEnabled(!$editableCustomer->isEnabled());
+
+        $this->getCommandBus()->handle($editCustomerCommand);
+
+        $this->addFlash(
+            'success',
+            $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
+        );
+
+        return $this->redirectToRoute('admin_customers_index');
+    }
+
+    /**
+     * Toggle customer newsletter subscription status.
+     *
+     * @param int $customerId
+     *
+     * @return RedirectResponse
+     */
+    public function toggleNewsletterSubscriptionAction($customerId)
+    {
+        $customerId = new CustomerId($customerId);
+        /** @var EditableCustomer $editableCustomer */
+        $editableCustomer = $this->getQueryBus()->handle(new GetCustomerForEditing($customerId));
+
+        $editCustomerCommand = new EditCustomerCommand($customerId);
+        $editCustomerCommand->setNewsletterSubscribed(!$editableCustomer->isNewsletterSubscribed());
+
+        $this->getCommandBus()->handle($editCustomerCommand);
+
+        $this->addFlash(
+            'success',
+            $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
+        );
+
+        return $this->redirectToRoute('admin_customers_index');
+    }
+
+    /**
+     * Toggle customer partner offer subscription status.
+     *
+     * @param int $customerId
+     *
+     * @return RedirectResponse
+     */
+    public function togglePartnerOfferSubscriptionAction($customerId)
+    {
+        $customerId = new CustomerId($customerId);
+        /** @var EditableCustomer $editableCustomer */
+        $editableCustomer = $this->getQueryBus()->handle(new GetCustomerForEditing($customerId));
+
+        $editCustomerCommand = new EditCustomerCommand($customerId);
+        $editCustomerCommand->setPartnerOfferSubscribed(!$editableCustomer->isPartnerOfferSubscribed());
+
+        $this->getCommandBus()->handle($editCustomerCommand);
+
+        $this->addFlash(
+            'success',
+            $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
+        );
+
+        return $this->redirectToRoute('admin_customers_index');
     }
 }

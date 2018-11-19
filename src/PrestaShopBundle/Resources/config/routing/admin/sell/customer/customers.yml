@@ -38,3 +38,30 @@ admin_customers_view:
     _legacy_controller: AdminCustomers
   requirements:
     customerId: \d+
+
+admin_customers_toggle_status:
+  path: /{customerId}/toggle-status
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Customer/Customer:toggleStatus
+    _legacy_controller: AdminCustomers
+  requirements:
+    customerId: \d+
+
+admin_customers_toggle_newsletter_subscription:
+  path: /{customerId}/toggle-newsletter-subscription
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Customer/Customer:toggleNewsletterSubscription
+    _legacy_controller: AdminCustomers
+  requirements:
+    customerId: \d+
+
+admin_customers_toggle_partner_offer_subscription:
+  path: /{customerId}/toggle-partner-offer-subscription
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Customer/Customer:togglePartnerOfferSubscription
+    _legacy_controller: AdminCustomers
+  requirements:
+    customerId: \d+
