@@ -337,7 +337,7 @@ class CategoryCore extends ObjectModel
         foreach ($all_cat as $cat) {
             /** @var Category $cat */
             $cat->deleteLite();
-            if (!$this->hasMultishopEntries()) {
+            if (!$cat->hasMultishopEntries()) {
                 $cat->deleteImage();
                 $cat->cleanGroups();
                 $cat->cleanAssoProducts();
