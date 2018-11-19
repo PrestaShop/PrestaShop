@@ -161,7 +161,7 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setOptions([
                     'field' => 'active',
                     'primary_field' => 'id_customer',
-                    'route' => 'admin_customers_index',
+                    'route' => 'admin_customers_toggle_status',
                     'route_param_name' => 'customerId',
                 ])
             )
@@ -171,7 +171,7 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setOptions([
                     'field' => 'newsletter',
                     'primary_field' => 'id_customer',
-                    'route' => 'admin_customers_index',
+                    'route' => 'admin_customers_toggle_newsletter_subscription',
                     'route_param_name' => 'customerId',
                 ])
             )
@@ -181,7 +181,7 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setOptions([
                     'field' => 'optin',
                     'primary_field' => 'id_customer',
-                    'route' => 'admin_customers_index',
+                    'route' => 'admin_customers_toggle_partner_offer_subscription',
                     'route_param_name' => 'customerId',
                 ])
             )

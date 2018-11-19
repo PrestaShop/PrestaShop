@@ -45,6 +45,13 @@ admin_customers_save_private_note:
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/Customer/Customer:savePrivateNote
     _legacy_controller: AdminCustomers
+
+admin_customers_toggle_status:
+  path: /{customerId}/toggle-status
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Customer/Customer:toggleStatus
+    _legacy_controller: AdminCustomers
   requirements:
     customerId: \d+
 
@@ -53,6 +60,13 @@ admin_customers_transform_guest_to_customer:
   methods: [POST]
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/Customer/Customer:transformGuestToCustomer
+    _legacy_controller: AdminCustomers
+
+admin_customers_toggle_newsletter_subscription:
+  path: /{customerId}/toggle-newsletter-subscription
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Customer/Customer:toggleNewsletterSubscription
     _legacy_controller: AdminCustomers
   requirements:
     customerId: \d+
@@ -63,3 +77,12 @@ admin_customers_set_required_fields:
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/Customer/Customer:setRequiredFields
     _legacy_controller: AdminCustomers
+
+admin_customers_toggle_partner_offer_subscription:
+  path: /{customerId}/toggle-partner-offer-subscription
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Customer/Customer:togglePartnerOfferSubscription
+    _legacy_controller: AdminCustomers
+  requirements:
+    customerId: \d+

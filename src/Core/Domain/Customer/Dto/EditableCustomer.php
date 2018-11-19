@@ -78,6 +78,11 @@ class EditableCustomer
     private $isPartnerOffersSubscribed;
 
     /**
+     * @var bool
+     */
+    private $isNewsletterSubscribed;
+
+    /**
      * @var array|int[]
      */
     private $groupIds;
@@ -313,5 +318,13 @@ class EditableCustomer
     public function getRiskId()
     {
         return $this->riskId;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isNewsletterSubscribed()
+    {
+        return $this->isNewsletterSubscribed;
     }
 }
