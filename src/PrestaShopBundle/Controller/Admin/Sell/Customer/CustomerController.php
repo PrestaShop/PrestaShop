@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin\Sell\Customer;
 
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\BulkDeleteCustomerCommand;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Command\DeleteCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\EditCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\EditableCustomer;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForEditing;
@@ -213,6 +214,34 @@ class CustomerController extends AbstractAdminController
 
             $command = new BulkDeleteCustomerCommand(
                 $data['customers_to_delete'],
+                new CustomerDeleteMethod($data['delete_method'])
+            );
+
+            $this->getCommandBus()->handle($command);
+        }
+
+        return $this->redirectToRoute('admin_customers_index');
+    }
+
+    /**
+     * Delete customer.
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function deleteAction(Request $request)
+    {
+        $form = $this->createForm(DeleteCustomersType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted()) {
+            $data = $form->getData();
+
+            $customerId = (int) reset($data['customers_to_delete']);
+
+            $command = new DeleteCustomerCommand(
+                new CustomerId($customerId),
                 new CustomerDeleteMethod($data['delete_method'])
             );
 

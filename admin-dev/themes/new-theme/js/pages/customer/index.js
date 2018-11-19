@@ -32,6 +32,11 @@ import BulkActionCheckboxExtension from '../../components/grid/extension/bulk-ac
 import SubmitBulkExtension from '../../components/grid/extension/submit-bulk-action-extension';
 import SubmitGridExtension from '../../components/grid/extension/submit-grid-action-extension';
 import LinkRowActionExtension from '../../components/grid/extension/link-row-action-extension';
+import ColumnTogglingExtension from "../../components/grid/extension/column-toggling-extension";
+import DeleteCustomersBulkActionExtension
+  from "../../components/grid/extension/action/bulk/customer/delete-customers-bulk-action-extension";
+import DeleteCustomerRowActionExtension
+  from "../../components/grid/extension/action/row/customer/delete-customer-row-action-extension";
 
 const $ = window.$;
 
@@ -46,4 +51,7 @@ $(() => {
   customerGrid.addExtension(new SubmitBulkExtension());
   customerGrid.addExtension(new SubmitGridExtension());
   customerGrid.addExtension(new LinkRowActionExtension());
+  customerGrid.addExtension(new ColumnTogglingExtension());
+  customerGrid.addExtension(new DeleteCustomersBulkActionExtension());
+  customerGrid.addExtension(new DeleteCustomerRowActionExtension());
 });
