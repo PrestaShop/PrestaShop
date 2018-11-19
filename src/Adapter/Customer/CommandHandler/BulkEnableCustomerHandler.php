@@ -27,27 +27,28 @@
 namespace PrestaShop\PrestaShop\Adapter\Customer\CommandHandler;
 
 use Customer;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Command\EnableCustomerCommand;
-use PrestaShop\PrestaShop\Core\Domain\Customer\CommandHandler\EnableCustomerHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Command\BulkEnableCustomerCommand;
+use PrestaShop\PrestaShop\Core\Domain\Customer\CommandHandler\BulkEnableCustomerHandlerInterface;
 
 /**
  * Handles command which enables given customer.
  *
  * @internal
  */
-final class EnableCustomerHandler extends AbstractCustomerHandler implements EnableCustomerHandlerInterface
+final class BulkEnableCustomerHandler extends AbstractCustomerHandler implements BulkEnableCustomerHandlerInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function handle(EnableCustomerCommand $command)
+    public function handle(BulkEnableCustomerCommand $command)
     {
-        $customerId = $command->getCustomerId();
-        $customer = new Customer($command->getCustomerId()->getValue());
+        foreach ($command->getCustomerIds() as $customerId) {
+            $customer = new Customer($customerId->getValue());
 
-        $this->assertCustomerWasFound($customerId, $customer);
+            $this->assertCustomerWasFound($customerId, $customer);
 
-        $customer->active = true;
-        $customer->save();
+            $customer->active = true;
+            $customer->update();
+        }
     }
 }

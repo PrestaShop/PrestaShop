@@ -24,17 +24,26 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Customer\CommandHandler;
+namespace PrestaShop\PrestaShop\Adapter\Customer\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Customer\Command\EnableCustomerCommand;
+use Customer;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Command\BulkDisableCustomerCommand;
+use PrestaShop\PrestaShop\Core\Domain\Customer\CommandHandler\BulkDisableCustomerHandlerInterface;
 
-/**
- * Defines API for EnableCustomerCommand command handler
- */
-interface EnableCustomerHandlerInterface
+final class BulkDisableCustomerHandler extends AbstractCustomerHandler implements BulkDisableCustomerHandlerInterface
 {
     /**
-     * @param EnableCustomerCommand $command
+     * {@inheritdoc}
      */
-    public function handle(EnableCustomerCommand $command);
+    public function handle(BulkDisableCustomerCommand $command)
+    {
+        foreach ($command->getCustomerIds() as $customerId) {
+            $customer = new Customer($customerId->getValue());
+
+            $this->assertCustomerWasFound($customerId, $customer);
+
+            $customer->active = false;
+            $customer->update();
+        }
+    }
 }
