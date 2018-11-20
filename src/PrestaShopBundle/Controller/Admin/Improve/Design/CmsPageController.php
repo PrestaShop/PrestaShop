@@ -426,7 +426,7 @@ class CmsPageController extends FrameworkBundleAdminController
         }
 
         if ($exception instanceof CmsPageCategoryException && 0 !== $statusCode) {
-            $errorMessage = $this->getCmsPageCategoryErrorByExceptionTypeAndCode($exception, $statusCode);
+            $errorMessage = $this->getCmsPageCategoryErrorByExceptionTypeAndCode($exception);
         }
 
         return $errorMessage;
@@ -474,11 +474,10 @@ class CmsPageController extends FrameworkBundleAdminController
      * Gets exception of cms page category by its type and status code.
      *
      * @param CmsPageCategoryException $exception
-     * @param int $statusCode
      *
      * @return string
      */
-    private function getCmsPageCategoryErrorByExceptionTypeAndCode(CmsPageCategoryException $exception, $statusCode)
+    private function getCmsPageCategoryErrorByExceptionTypeAndCode(CmsPageCategoryException $exception)
     {
         $exceptionTypeDictionary = [
             CmsPageCategoryConstraintException::class => [
@@ -491,6 +490,7 @@ class CmsPageController extends FrameworkBundleAdminController
         ];
 
         $exceptionType = get_class($exception);
+        $statusCode = $exception->getCode();
 
         if (isset($exceptionTypeDictionary[$exceptionType][$statusCode])) {
             return $exceptionTypeDictionary[$exceptionType][$statusCode];
