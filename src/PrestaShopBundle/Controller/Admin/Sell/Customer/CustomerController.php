@@ -42,12 +42,12 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Command\BulkEnableCustomerCommand
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\DeleteCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\EditCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\EditableCustomer;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerDeleteMethod;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 use PrestaShop\PrestaShop\Core\Search\Filters\CustomerFilters;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\CustomerInformation;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForViewing;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController as AbstractAdminController;
 use PrestaShopBundle\Form\Admin\Sell\Customer\PrivateNoteType;
@@ -57,7 +57,6 @@ use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use Symfony\Component\Form\FormInterface;
 use PrestaShopBundle\Form\Admin\Sell\Customer\DeleteCustomersType;
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -446,19 +445,24 @@ class CustomerController extends AbstractAdminController
      */
     public function toggleStatusAction($customerId)
     {
-        $customerId = new CustomerId($customerId);
-        /** @var EditableCustomer $editableCustomer */
-        $editableCustomer = $this->getQueryBus()->handle(new GetCustomerForEditing($customerId));
+        try {
+            $customerId = new CustomerId($customerId);
+            /** @var EditableCustomer $editableCustomer */
+            $editableCustomer = $this->getQueryBus()->handle(new GetCustomerForEditing($customerId));
 
-        $editCustomerCommand = new EditCustomerCommand($customerId);
-        $editCustomerCommand->setIsEnabled(!$editableCustomer->isEnabled());
 
-        $this->getCommandBus()->handle($editCustomerCommand);
+            $editCustomerCommand = new EditCustomerCommand($customerId);
+            $editCustomerCommand->setIsEnabled(!$editableCustomer->isEnabled());
 
-        $this->addFlash(
-            'success',
-            $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
-        );
+            $this->getCommandBus()->handle($editCustomerCommand);
+
+            $this->addFlash(
+                'success',
+                $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
+            );
+        } catch (CustomerException $e) {
+            $this->addFlash('error', $this->handleCustomerException($e));
+        }
 
         return $this->redirectToRoute('admin_customers_index');
     }
@@ -478,19 +482,23 @@ class CustomerController extends AbstractAdminController
      */
     public function toggleNewsletterSubscriptionAction($customerId)
     {
-        $customerId = new CustomerId($customerId);
-        /** @var EditableCustomer $editableCustomer */
-        $editableCustomer = $this->getQueryBus()->handle(new GetCustomerForEditing($customerId));
+        try {
+            $customerId = new CustomerId($customerId);
+            /** @var EditableCustomer $editableCustomer */
+            $editableCustomer = $this->getQueryBus()->handle(new GetCustomerForEditing($customerId));
 
-        $editCustomerCommand = new EditCustomerCommand($customerId);
-        $editCustomerCommand->setNewsletterSubscribed(!$editableCustomer->isNewsletterSubscribed());
+            $editCustomerCommand = new EditCustomerCommand($customerId);
+            $editCustomerCommand->setNewsletterSubscribed(!$editableCustomer->isNewsletterSubscribed());
 
-        $this->getCommandBus()->handle($editCustomerCommand);
+            $this->getCommandBus()->handle($editCustomerCommand);
 
-        $this->addFlash(
-            'success',
-            $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
-        );
+            $this->addFlash(
+                'success',
+                $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
+            );
+        } catch (CustomerException $e) {
+            $this->handleCustomerException($e);
+        }
 
         return $this->redirectToRoute('admin_customers_index');
     }
@@ -510,19 +518,23 @@ class CustomerController extends AbstractAdminController
      */
     public function togglePartnerOfferSubscriptionAction($customerId)
     {
-        $customerId = new CustomerId($customerId);
-        /** @var EditableCustomer $editableCustomer */
-        $editableCustomer = $this->getQueryBus()->handle(new GetCustomerForEditing($customerId));
+        try {
+            $customerId = new CustomerId($customerId);
+            /** @var EditableCustomer $editableCustomer */
+            $editableCustomer = $this->getQueryBus()->handle(new GetCustomerForEditing($customerId));
 
-        $editCustomerCommand = new EditCustomerCommand($customerId);
-        $editCustomerCommand->setIsPartnerOffersSubscribed(!$editableCustomer->isPartnerOffersSubscribed());
+            $editCustomerCommand = new EditCustomerCommand($customerId);
+            $editCustomerCommand->setIsPartnerOffersSubscribed(!$editableCustomer->isPartnerOffersSubscribed());
 
-        $this->getCommandBus()->handle($editCustomerCommand);
+            $this->getCommandBus()->handle($editCustomerCommand);
 
-        $this->addFlash(
-            'success',
-            $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
-        );
+            $this->addFlash(
+                'success',
+                $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
+            );
+        } catch (CustomerException $e) {
+            $this->addFlash('error', $this->handleCustomerException($e));
+        }
 
         return $this->redirectToRoute('admin_customers_index');
     }
@@ -548,17 +560,21 @@ class CustomerController extends AbstractAdminController
         if ($form->isSubmitted()) {
             $data = $form->getData();
 
-            $command = new BulkDeleteCustomerCommand(
-                $data['customers_to_delete'],
-                new CustomerDeleteMethod($data['delete_method'])
-            );
+            try {
+                $command = new BulkDeleteCustomerCommand(
+                    $data['customers_to_delete'],
+                    new CustomerDeleteMethod($data['delete_method'])
+                );
 
-            $this->getCommandBus()->handle($command);
+                $this->getCommandBus()->handle($command);
 
-            $this->addFlash(
-                'success',
-                $this->trans('The selection has been successfully deleted.', 'Admin.Notifications.Success')
-            );
+                $this->addFlash(
+                    'success',
+                    $this->trans('The selection has been successfully deleted.', 'Admin.Notifications.Success')
+                );
+            } catch (CustomerException $e) {
+                $this->addFlash('error', $this->handleCustomerException($e));
+            }
         }
 
         return $this->redirectToRoute('admin_customers_index');
@@ -587,14 +603,18 @@ class CustomerController extends AbstractAdminController
 
             $customerId = (int) reset($data['customers_to_delete']);
 
-            $command = new DeleteCustomerCommand(
-                new CustomerId($customerId),
-                new CustomerDeleteMethod($data['delete_method'])
-            );
+            try {
+                $command = new DeleteCustomerCommand(
+                    new CustomerId($customerId),
+                    new CustomerDeleteMethod($data['delete_method'])
+                );
 
-            $this->getCommandBus()->handle($command);
+                $this->getCommandBus()->handle($command);
 
-            $this->addFlash('success', $this->trans('Successful deletion.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful deletion.', 'Admin.Notifications.Success'));
+            } catch (CustomerException $e) {
+                $this->addFlash('error', $this->handleCustomerException($e));
+            }
         }
 
         return $this->redirectToRoute('admin_customers_index');
@@ -617,11 +637,15 @@ class CustomerController extends AbstractAdminController
     {
         $customerIds = $request->request->get('customer_customers_bulk', []);
 
-        $command = new BulkEnableCustomerCommand($customerIds);
+        try {
+            $command = new BulkEnableCustomerCommand($customerIds);
 
-        $this->getCommandBus()->handle($command);
+            $this->getCommandBus()->handle($command);
 
-        $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+            $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+        } catch (CustomerException $e) {
+            $this->addFlash('error', $this->handleCustomerException($e));
+        }
 
         return $this->redirectToRoute('admin_customers_index');
     }
@@ -641,14 +665,39 @@ class CustomerController extends AbstractAdminController
      */
     public function disableBulkAction(Request $request)
     {
-        $customerIds = $request->request->get('customer_customers_bulk', []);
+        try {
+            $customerIds = $request->request->get('customer_customers_bulk', []);
 
-        $command = new BulkDisableCustomerCommand($customerIds);
+            $command = new BulkDisableCustomerCommand($customerIds);
 
-        $this->getCommandBus()->handle($command);
+            $this->getCommandBus()->handle($command);
 
-        $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+            $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+        } catch (CustomerException $e) {
+            $this->addFlash('error', $this->handleCustomerException($e));
+        }
 
         return $this->redirectToRoute('admin_customers_index');
+    }
+
+    /**
+     * @param CustomerException $e
+     *
+     * @return string
+     */
+    protected function handleCustomerException(CustomerException $e)
+    {
+        $type = get_class($e);
+
+        $errorMessages = [
+            CustomerNotFoundException::class =>
+                $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'),
+        ];
+
+        if (isset($errorMessages[$type])) {
+            return $errorMessages[$type];
+        }
+
+        return $this->getFallbackErrorMessage($type, $e->getCode());
     }
 }
