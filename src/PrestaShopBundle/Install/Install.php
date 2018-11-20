@@ -64,6 +64,7 @@ use PrestaShopBundle\Service\Database\Upgrade as UpgradeDatabase;
 
 class Install extends AbstractInstall
 {
+    const FALLBACK_LANGUAGE = 'en';
     const SETTINGS_FILE = 'config/settings.inc.php';
     const BOOTSTRAP_FILE = 'config/bootstrap.php';
 
@@ -449,6 +450,7 @@ class Install extends AbstractInstall
                         }
                     }
                 }
+                $iso_codes_to_install[] = self::FALLBACK_LANGUAGE;
                 $iso_codes_to_install = array_unique($iso_codes_to_install);
             } else {
                 $iso_codes_to_install = null;

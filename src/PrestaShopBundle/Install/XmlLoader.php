@@ -41,8 +41,6 @@ use PrestaShop\PrestaShop\Adapter\Entity\DbQuery;
 
 class XmlLoader
 {
-    const FALLBACK_LANGUAGE = 'en';
-
     /**
      * @var LanguageList
      */
@@ -276,7 +274,7 @@ class XmlLoader
                 if ($iso == $this->language->getLanguageIso()) {
                     $default_lang = $id_lang;
                 }
-                if ($iso == self::FALLBACK_LANGUAGE) {
+                if ($iso == Install::FALLBACK_LANGUAGE) {
                     $fallback_lang = $id_lang;
                 }
 
@@ -371,16 +369,16 @@ class XmlLoader
 
     protected function getFallBackToDefaultLanguage($iso)
     {
-        return file_exists($this->lang_path . $iso . '/data/') ? $iso : self::FALLBACK_LANGUAGE;
+        return file_exists($this->lang_path . $iso . '/data/') ? $iso : Install::FALLBACK_LANGUAGE;
     }
 
     protected function getFallBackToDefaultEntityLanguage($iso, $entity)
     {
-        if ($this->getFallBackToDefaultLanguage($iso) === self::FALLBACK_LANGUAGE) {
-            return self::FALLBACK_LANGUAGE;
+        if ($this->getFallBackToDefaultLanguage($iso) === Install::FALLBACK_LANGUAGE) {
+            return Install::FALLBACK_LANGUAGE;
         }
 
-        return file_exists($this->lang_path . $this->getFallBackToDefaultLanguage($iso) . '/data/' . $entity . '.xml') ? $iso : self::FALLBACK_LANGUAGE;
+        return file_exists($this->lang_path . $this->getFallBackToDefaultLanguage($iso) . '/data/' . $entity . '.xml') ? $iso : Install::FALLBACK_LANGUAGE;
     }
 
     /**
