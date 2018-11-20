@@ -29,7 +29,7 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Customer;
 use PrestaShop\PrestaShop\Core\Search\Filters\CustomerFilters;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\CustomerInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController as AbstractAdminController;
 use PrestaShopBundle\Form\Admin\Sell\Customer\PrivateNoteType;
@@ -112,7 +112,7 @@ class CustomerController extends AbstractAdminController
     {
         try {
             /** @var CustomerInformation $customerInformation */
-            $customerInformation = $this->getQueryBus()->handle(new GetCustomerInformation(new CustomerId($customerId)));
+            $customerInformation = $this->getQueryBus()->handle(new GetCustomerForViewing(new CustomerId($customerId)));
         } catch (CustomerNotFoundException $e) {
             $this->addFlash(
                 'error',

@@ -58,8 +58,8 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\SentEmailInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\Subscriptions;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\ViewedProductInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerInformation;
-use PrestaShop\PrestaShop\Core\Domain\Customer\QueryHandler\GetCustomerInformationHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Customer\QueryHandler\GetCustomerForViewingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 use Product;
 use Referrer;
@@ -69,9 +69,9 @@ use Tools;
 use Validate;
 
 /**
- * Class GetCustomerInformationHandler.
+ * Handles commands which gets customer for viewing in Back Office.
  */
-final class GetCustomerInformationHandler implements GetCustomerInformationHandlerInterface
+final class GetCustomerForViewingHandler implements GetCustomerForViewingHandlerInterface
 {
     /**
      * @var int
@@ -106,7 +106,7 @@ final class GetCustomerInformationHandler implements GetCustomerInformationHandl
     /**
      * {@inheritdoc}
      */
-    public function handle(GetCustomerInformation $query)
+    public function handle(GetCustomerForViewing $query)
     {
         $customerId = $query->getCustomerId();
         $customer = new Customer($customerId->getValue());

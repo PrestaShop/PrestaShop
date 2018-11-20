@@ -3,11 +3,11 @@ services:
     public: true
 
   prestashop.adapter.customer.query_handler.get_customer_information:
-    class: 'PrestaShop\PrestaShop\Adapter\Customer\QueryHandler\GetCustomerInformationHandler'
+    class: 'PrestaShop\PrestaShop\Adapter\Customer\QueryHandler\GetCustomerForViewingHandler'
     arguments:
       - '@translator'
       - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
       - "@=service('prestashop.adapter.legacy.context').getContext().link"
     tags:
       - name: tactician.handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerInformation'
+        command: 'PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForViewing'

@@ -24,20 +24,33 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Customer\QueryHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Customer\Query;
 
-use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\CustomerInformation;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 
 /**
- * Class GetCustomerInformationHandlerInterface.
+ * Gets detailed customer information for viewing in Back Office.
  */
-interface GetCustomerInformationHandlerInterface
+class GetCustomerForViewing
 {
     /**
-     * @param GetCustomerInformation $query
-     *
-     * @return CustomerInformation
+     * @var CustomerId
      */
-    public function handle(GetCustomerInformation $query);
+    private $customerId;
+
+    /**
+     * @param CustomerId $customerId
+     */
+    public function __construct(CustomerId $customerId)
+    {
+        $this->customerId = $customerId;
+    }
+
+    /**
+     * @return CustomerId
+     */
+    public function getCustomerId()
+    {
+        return $this->customerId;
+    }
 }
