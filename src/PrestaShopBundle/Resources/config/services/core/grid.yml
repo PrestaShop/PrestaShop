@@ -431,6 +431,15 @@ services:
     prestashop.core.query.doctrine_search_criteria_applicator:
         class: 'PrestaShop\PrestaShop\Core\Grid\Query\DoctrineSearchCriteriaApplicator'
 
+    # Grid position definition
+    prestashop.core.grid.cms_page_category.position_definition:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Position\PositionDefinition'
+        arguments:
+            $table: 'cms_category'
+            $idField: 'id_cms_category'
+            $positionField: 'position'
+            $parentIdField: 'id_parent'
+
     # Grid position updater
     prestashop.core.grid.position.position_update_factory:
         class: 'PrestaShop\PrestaShop\Core\Grid\Position\PositionUpdateFactory'

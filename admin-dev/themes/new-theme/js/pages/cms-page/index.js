@@ -33,6 +33,7 @@ import LinkRowActionExtension from "../../components/grid/extension/link-row-act
 import SubmitBulkExtension from "../../components/grid/extension/submit-bulk-action-extension";
 import BulkActionCheckboxExtension from "../../components/grid/extension/bulk-action-checkbox-extension";
 import ColumnTogglingExtension from "../../components/grid/extension/column-toggling-extension";
+import PositionExtension from "../../components/grid/extension/position-extension";
 
 const $ = window.$;
 
@@ -48,4 +49,5 @@ $(() => {
   cmsCategory.addExtension(new BulkActionCheckboxExtension());
   cmsCategory.addExtension(new SubmitRowActionExtension());
   cmsCategory.addExtension(new ColumnTogglingExtension());
+  cmsCategory.addExtension(new PositionExtension());
 });
