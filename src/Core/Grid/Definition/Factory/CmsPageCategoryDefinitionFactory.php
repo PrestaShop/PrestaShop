@@ -131,14 +131,13 @@ final class CmsPageCategoryDefinitionFactory extends AbstractGridDefinitionFacto
             ->add((new PositionColumn('position'))
                 ->setName($this->trans('Position', [], 'Admin.Global'))
                 ->setOptions([
-                    'field' => 'position',
                     'id_field' => 'id_cms_category',
-                    'id_parent_field' => 'id_parent',
+                    'position_field' => 'position',
                     'update_method' => 'POST',
                     'update_route' => 'admin_cms_pages_update_position_cms_category',
-                    'route_params_extra_by_record' => [
-                        'cmsCategoryId' => 'id_cms_category',
-                        'cmsCategoryParentId' => 'id_parent',
+                    'route_params' => [
+                        'id_parent' => 'cmsCategoryParentId',
+                        'id_cms_category' => 'cmsCategoryId',
                     ],
                 ])
             )
