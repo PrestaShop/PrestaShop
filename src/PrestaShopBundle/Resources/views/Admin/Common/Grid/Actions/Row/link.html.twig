@@ -29,9 +29,8 @@
   {% set class = class ~ ' ' ~ attributes.class %}
 {% endif %}
 
-{% set routeParameters = [] %}
+{% set routeParameters = record|array_pluck(action.options.route_params_extra) %}
 {% set routeParameters = routeParameters|merge({(action.options.route_param_name) : record[action.options.route_param_field]}) %}
-{% set routeParameters = routeParameters|merge(action.options.route_params_extra)%}
 
 <a class="{{ class }}"
    href="{{ path(action.options.route, routeParameters) }}"
