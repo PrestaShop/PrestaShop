@@ -64,7 +64,7 @@
 					</div>
 					<input type="hidden" name="datepickerFrom" id="datepickerFrom" value="{$date_from|escape}" class="form-control">
 					<input type="hidden" name="datepickerTo" id="datepickerTo" value="{$date_to|escape}" class="form-control">
-					<input type="hidden" name="preselectDateRange" id="preselectDateRange" value="{if isset($preselect_date_range)}{$preselect_date_range}{/if}" class="form-control">
+					<input type="hidden" name="preselectDateRange" id="preselectDateRange" value="{if isset($preselect_date_range)}{$preselect_date_range|escape:'html'}{/if}" class="form-control">
 					<div class="form-group pull-right">
 						<button id="datepickerExpand" class="btn btn-default" type="button">
 							<i class="icon-calendar-empty"></i>
