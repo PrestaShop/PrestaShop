@@ -26,10 +26,8 @@
 {% set id_primary_key = record[id_property_name] %}
 {% set record_id = record[id_property_name] %}
 
-{% set routeParameters = [] %}
+{% set routeParameters = record|array_pluck(column.options.route_params_extra) %}
 {% set routeParameters = routeParameters|merge({(column.options.route_param_name) : id_primary_key}) %}
-{% set routeParameters = routeParameters|merge(column.options.route_params_extra)%}
-
 
 {% set isValid = record[column.id] is same as('1') %}
 
