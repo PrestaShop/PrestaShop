@@ -16,7 +16,3 @@ _orders:
 _stocks:
     resource: "stocks.yml"
     prefix: /stocks/
-
-_customers:
-    resource: "customer/customers.yml"
-    prefix: /customers/
