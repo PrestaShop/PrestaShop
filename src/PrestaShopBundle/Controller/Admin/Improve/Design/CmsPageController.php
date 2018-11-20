@@ -250,7 +250,7 @@ class CmsPageController extends FrameworkBundleAdminController
      *     redirectRoute="admin_cms_pages_index",
      *     redirectQueryParamsToKeep={"cmsCategoryParentId"}
      * )
-     * 
+     *
      * @param Request $request
      * @param int $cmsCategoryParentId
      *
