@@ -81,7 +81,7 @@ class DbPDOCore extends Db
         }
         $dsn .= ';charset=utf8';
 
-        return new PDO($dsn, $user, $password, array(PDO::ATTR_TIMEOUT => $timeout, PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true));
+        return new PDO($dsn, $user, $password, array(PDO::ATTR_TIMEOUT => $timeout, PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true, PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"));
     }
 
     /**
@@ -125,6 +125,11 @@ class DbPDOCore extends Db
             $this->link = $this->getPDO($this->server, $this->user, $this->password, $this->database, 5);
         } catch (PDOException $e) {
             throw new PrestaShopException('Link to database cannot be established: ' . $e->getMessage());
+        }
+        
+        // UTF-8 support
+        if ($this->link->exec('SET NAMES \'utf8\'') === false) {
+			throw new PrestaShopException('PrestaShop Fatal error: no utf-8 support. Please check your server configuration.'.$e->getMessage());
         }
 
         $this->link->exec('SET SESSION sql_mode = \'\'');
