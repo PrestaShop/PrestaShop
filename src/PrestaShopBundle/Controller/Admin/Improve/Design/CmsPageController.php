@@ -240,6 +240,17 @@ class CmsPageController extends FrameworkBundleAdminController
     /**
      * Updates cms page category position.
      *
+     * @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_cms_pages_index",
+     *     redirectQueryParamsToKeep={"cmsCategoryParentId"},
+     *     message="You do not have permission to edit this."
+     * )
+     * @DemoRestricted(
+     *     redirectRoute="admin_cms_pages_index",
+     *     redirectQueryParamsToKeep={"cmsCategoryParentId"}
+     * )
+     * 
      * @param Request $request
      * @param int $cmsCategoryParentId
      *
