@@ -50,7 +50,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
- * Class CmsPageCategoryDefinitionFactory
+ * Class CmsPageCategoryDefinitionFactory builds Grid definition for Cms page category listing.
  */
 final class CmsPageCategoryDefinitionFactory extends AbstractGridDefinitionFactory
 {
