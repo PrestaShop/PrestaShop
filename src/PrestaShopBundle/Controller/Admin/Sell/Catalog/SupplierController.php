@@ -156,9 +156,14 @@ class SupplierController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_suppliers_index');
     }
 
-    public function viewAction()
+    public function viewAction($supplierId)
     {
-        //todo: implement
+        $legacyLink = $this->getAdminLink('AdminSuppliers', [
+            'id_supplier' => $supplierId,
+            'viewsupplier' => 1,
+        ]);
+
+        return $this->redirect($legacyLink);
     }
 
     /**
