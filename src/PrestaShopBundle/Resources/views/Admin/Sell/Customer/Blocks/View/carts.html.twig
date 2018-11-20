@@ -43,15 +43,17 @@
         </thead>
         <tbody>
         {% for cart in customerInformation.cartsInformation %}
+          {% set cartViewUrl = getAdminLink('AdminCarts', true, {'id_cart': cart.cartId, 'viewcart': 1}) %}
+
           <tr>
-            <td>{{ cart.cartId }}</td>
-            <td>{{ cart.cartCreationDate }}</td>
-            <td>{{ cart.carrierName }}</td>
-            <td>{{ cart.cartTotal }}</td>
+            <td class="js-linkable-item cursor-pointer" data-linkable-href="{{ cartViewUrl }}">{{ cart.cartId }}</td>
+            <td class="js-linkable-item cursor-pointer" data-linkable-href="{{ cartViewUrl }}">{{ cart.cartCreationDate }}</td>
+            <td class="js-linkable-item cursor-pointer" data-linkable-href="{{ cartViewUrl }}">{{ cart.carrierName }}</td>
+            <td class="js-linkable-item cursor-pointer" data-linkable-href="{{ cartViewUrl }}">{{ cart.cartTotal }}</td>
             <td class="text-right">
               <div class="btn-group-action">
                 <div class="btn-group">
-                  <a href="{{ getAdminLink('AdminCarts', true, {'id_cart': cart.cartId, 'viewcart': 1}) }}"
+                  <a href="{{ cartViewUrl }}"
                      class="btn tooltip-link dropdown-item"
                      data-toggle="pstooltip"
                      data-placement="top"

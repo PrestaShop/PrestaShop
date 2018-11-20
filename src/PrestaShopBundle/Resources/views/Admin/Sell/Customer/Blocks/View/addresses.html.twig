@@ -54,12 +54,14 @@
         </thead>
         <tbody>
           {% for address in customerInformation.addressesInformation %}
+            {% set addressEditUrl = getAdminLink('AdminAddresses', true, {'id_address': address.addressId, 'addaddress': 1, 'back': app.request.uri}) %}
+
             <tr>
-              <td>{{ address.company }}</td>
-              <td>{{ address.fullName }}</td>
-              <td>{{ address.fullAddress }}</td>
-              <td>{{ address.countryName }}</td>
-              <td>
+              <td class="js-linkable-item cursor-pointer" data-linkable-href="{{ addressEditUrl }}">{{ address.company }}</td>
+              <td class="js-linkable-item cursor-pointer" data-linkable-href="{{ addressEditUrl }}">{{ address.fullName }}</td>
+              <td class="js-linkable-item cursor-pointer" data-linkable-href="{{ addressEditUrl }}">{{ address.fullAddress }}</td>
+              <td class="js-linkable-item cursor-pointer" data-linkable-href="{{ addressEditUrl }}">{{ address.countryName }}</td>
+              <td class="js-linkable-item cursor-pointer" data-linkable-href="{{ addressEditUrl }}">
                 {% if address.phone %}
                   {{ address.phone }}
                   {% if address.phoneMobile is not empty %}
@@ -74,7 +76,7 @@
               <td class="text-right">
                 <div class="btn-group-action">
                   <div class="btn-group">
-                    <a href="{{ getAdminLink('AdminAddresses', true, {'id_address': address.addressId, 'addaddress': 1, 'back': app.request.uri}) }}"
+                    <a href=""
                        class="btn tooltip-link dropdown-item"
                        data-toggle="pstooltip"
                        data-placement="top"

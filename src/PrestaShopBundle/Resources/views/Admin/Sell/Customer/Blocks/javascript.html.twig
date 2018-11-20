@@ -23,29 +23,7 @@
   * International Registered Trademark & Property of PrestaShop SA
   *#}
 
-{% set enableSidebar = true %}
-{% set layoutTitle = 'Manage your Customers'|trans({}, 'Admin.Orderscustomers.Feature') %}
-{% set layoutHeaderToolbarBtn = {
-  'add': {
-    'href': path('admin_customers_create'),
-    'desc': 'Add new customer'|trans({}, 'Admin.Orderscustomers.Feature'),
-    'icon': 'add_circle_outline'
-  }
-} %}
-
-{% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
-
-{% block content %}
-  <div class="row">
-    <div class="col">
-      {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': customerGrid} %}
-    </div>
-  </div>
+{% block customer_javascripts %}
+  <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
+  <script src="{{ asset('themes/new-theme/public/customer.bundle.js') }}"></script>
 {% endblock %}
-
-{% block javascripts %}
-  {{ parent() }}
-
-  {% include '@PrestaShop/Admin/Sell/Customer/Blocks/javascript.html.twig' %}
-{% endblock %}
-

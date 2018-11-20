@@ -44,14 +44,24 @@
         </thead>
         <tbody>
         {% for discount in customerInformation.discountsInformation %}
+          {% set discountEditUrl = getAdminLink('AdminCartRules', true, {'id_cart_rule': discount.discountId, 'addcart_rule': 1, 'back': app.request.uri}) %}
+
           <tr>
-            <td>{{ discount.discountId }}</td>
-            <td>{{ discount.code }}</td>
-            <td>{{ discount.name }}</td>
-            <td>
-              <i class="material-icons">{% if discount.active %}check{% else %}clear{% endif %}</i>
+            <td class="js-linkable-item cursor-pointer" data-linkable-href="{{ discountEditUrl }}">{{ discount.discountId }}</td>
+            <td class="js-linkable-item cursor-pointer" data-linkable-href="{{ discountEditUrl }}">{{ discount.code }}</td>
+            <td class="js-linkable-item cursor-pointer" data-linkable-href="{{ discountEditUrl }}">{{ discount.name }}</td>
+            <td class="js-linkable-item cursor-pointer" data-linkable-href="{{ discountEditUrl }}">
+              {% if discount.active %}
+                <i class="material-icons text-success">
+                  check
+                </i>
+              {% else %}
+                <i class="material-icons text-danger">
+                  clear
+                </i>
+              {% endif %}
             </td>
-            <td>{{ discount.availableQuantity }}</td>
+            <td class="js-linkable-item cursor-pointer" data-linkable-href="{{ discountEditUrl }}">{{ discount.availableQuantity }}</td>
             <td class="text-right">
               <div class="btn-group-action">
                 <div class="btn-group">

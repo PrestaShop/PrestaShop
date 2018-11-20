@@ -68,17 +68,19 @@
               </thead>
               <tbody>
               {% for order in customerInformation.ordersInformation.validOrders %}
+                {% set orderViewUrl = getAdminLink('AdminOrders', true, {'id_order': order.orderId, 'vieworder': 1}) %}
+
                 <tr>
-                  <td>{{ order.orderId }}</td>
-                  <td>{{ order.orderPlacedDate }}</td>
-                  <td>{{ order.paymentMethodName }}</td>
-                  <td>{{ order.orderStatus }}</td>
-                  <td>{{ order.orderProductsCount }}</td>
-                  <td>{{ order.totalPaid }}</td>
+                  <td class="js-linkable-item cursor-pointer" data-linkable-href="{{ orderViewUrl }}">{{ order.orderId }}</td>
+                  <td class="js-linkable-item cursor-pointer" data-linkable-href="{{ orderViewUrl }}">{{ order.orderPlacedDate }}</td>
+                  <td class="js-linkable-item cursor-pointer" data-linkable-href="{{ orderViewUrl }}">{{ order.paymentMethodName }}</td>
+                  <td class="js-linkable-item cursor-pointer" data-linkable-href="{{ orderViewUrl }}">{{ order.orderStatus }}</td>
+                  <td class="js-linkable-item cursor-pointer" data-linkable-href="{{ orderViewUrl }}">{{ order.orderProductsCount }}</td>
+                  <td class="js-linkable-item cursor-pointer" data-linkable-href="{{ orderViewUrl }}">{{ order.totalPaid }}</td>
                   <td class="text-right">
                     <div class="btn-group-action">
                       <div class="btn-group">
-                        <a href="{{ getAdminLink('AdminOrders', true, {'id_order': order.orderId, 'vieworder': 1}) }}"
+                        <a href="{{ orderViewUrl }}"
                            class="btn tooltip-link dropdown-item"
                            data-toggle="pstooltip"
                            data-placement="top"
@@ -114,17 +116,19 @@
               </thead>
               <tbody>
               {% for order in customerInformation.ordersInformation.invalidOrders %}
+                {% set orderViewUrl = getAdminLink('AdminOrders', true, {'id_order': order.orderId, 'vieworder': 1}) %}
+
                 <tr>
-                  <td>{{ order.orderId }}</td>
-                  <td>{{ order.orderPlacedDate }}</td>
-                  <td>{{ order.paymentMethodName }}</td>
-                  <td>{{ order.orderStatus }}</td>
-                  <td>{{ order.orderProductsCount }}</td>
-                  <td>{{ order.totalPaid }}</td>
+                  <td class="js-linkable-item cursor-pointer" data-linkable-href="{{ orderViewUrl }}">{{ order.orderId }}</td>
+                  <td class="js-linkable-item cursor-pointer" data-linkable-href="{{ orderViewUrl }}">{{ order.orderPlacedDate }}</td>
+                  <td class="js-linkable-item cursor-pointer" data-linkable-href="{{ orderViewUrl }}">{{ order.paymentMethodName }}</td>
+                  <td class="js-linkable-item cursor-pointer" data-linkable-href="{{ orderViewUrl }}">{{ order.orderStatus }}</td>
+                  <td class="js-linkable-item cursor-pointer" data-linkable-href="{{ orderViewUrl }}">{{ order.orderProductsCount }}</td>
+                  <td class="js-linkable-item cursor-pointer" data-linkable-href="{{ orderViewUrl }}">{{ order.totalPaid }}</td>
                   <td class="text-right">
                     <div class="btn-group-action">
                       <div class="btn-group">
-                        <a href="{{ getAdminLink('AdminOrders', true, {'id_order': order.orderId, 'vieworder': 1}) }}"
+                        <a href=""
                            class="btn tooltip-link dropdown-item"
                            data-toggle="pstooltip"
                            data-placement="top"
