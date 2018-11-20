@@ -49,7 +49,7 @@
             <th>{{ 'Address'|trans({}, 'Admin.Global') }}</th>
             <th>{{ 'Country'|trans({}, 'Admin.Global') }}</th>
             <th>{{ 'Phone number(s)'|trans({}, 'Admin.Orderscustomers.Feature') }}</th>
-            <th></th>
+            <th class="text-right">{{ 'Actions'|trans({}, 'Admin.Global') }}</th>
           </tr>
         </thead>
         <tbody>
@@ -72,29 +72,33 @@
                 {% endif %}
               </td>
               <td class="text-right">
-                <div class="btn-group">
-                  <a href="{{ getAdminLink('AdminAddresses', true, {'id_address': address.addressId, 'addaddress': 1, 'back': app.request.uri}) }}"
-                     class="btn btn-sm btn-outline-primary"
-                  >
-                    <i class="material-icons">edit</i>
-                    {{ 'Edit'|trans({}, 'Admin.Actions') }}
-                  </a>
-
-                  <button type="button"
-                          class="btn btn-sm btn-outline-primary dropdown-toggle dropdown-toggle-split"
-                          data-toggle="dropdown"
-                          aria-haspopup="true"
-                          aria-expanded="false"
-                  >
-                  </button>
-
-                  <div class="dropdown-menu menu-sm">
-                    <a class="dropdown-item" href="{{ getAdminLink('AdminAddresses', true, {'id_address': address.addressId, 'deleteaddress': 1, 'back': app.request.uri}) }}">
-                      <i class="material-icons">delete</i>
-                      {{ 'Delete'|trans({}, 'Admin.Actions') }}
+                <div class="btn-group-action">
+                  <div class="btn-group">
+                    <a href="{{ getAdminLink('AdminAddresses', true, {'id_address': address.addressId, 'addaddress': 1, 'back': app.request.uri}) }}"
+                       class="btn tooltip-link dropdown-item"
+                       data-toggle="pstooltip"
+                       data-placement="top"
+                       data-original-title="{{ 'Edit'|trans({}, 'Admin.Actions') }}"
+                    >
+                      <i class="material-icons">edit</i>
                     </a>
 
-                    {{ renderhook('displayAdminCustomersAddressesItemAction', {'id_address': address.addressId}) }}
+                    <a class="btn btn-link dropdown-toggle dropdown-toggle-dots dropdown-toggle-split"
+                       data-toggle="dropdown"
+                       aria-haspopup="true"
+                       aria-expanded="false"
+                    ></a>
+
+                    <div class="dropdown-menu dropdown-menu-right">
+                      <a class="btn tooltip-link dropdown-item"
+                         href="{{ getAdminLink('AdminAddresses', true, {'id_address': address.addressId, 'deleteaddress': 1, 'back': app.request.uri}) }}"
+                      >
+                        <i class="material-icons">delete</i>
+                        {{ 'Delete'|trans({}, 'Admin.Actions') }}
+                      </a>
+
+                      {{ renderhook('displayAdminCustomersAddressesItemAction', {'id_address': address.addressId}) }}
+                    </div>
                   </div>
                 </div>
               </td>
