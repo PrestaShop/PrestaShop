@@ -22,3 +22,9 @@ services:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Supplier\Command\BulkDeleteSupplierCommand
 
+  prestashop.adapter.supplier.command_handler.bulk_disable_supplier_handler:
+    class: PrestaShop\PrestaShop\Adapter\Supplier\CommandHandler\BulkDisableSupplierHandler
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\Supplier\Command\BulkDisableSupplierCommand
+
