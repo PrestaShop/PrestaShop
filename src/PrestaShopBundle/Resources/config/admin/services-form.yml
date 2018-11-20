@@ -1,0 +1,199 @@
+services:
+    form.type.date_picker:
+        class: PrestaShopBundle\Form\Admin\Type\DatePickerType
+        tags:
+          - { name: form.type }
+
+    form.type.product.simple_category:
+        class: PrestaShopBundle\Form\Admin\Category\SimpleCategory
+        arguments:
+            - "@translator"
+            - "@prestashop.adapter.data_provider.category"
+        tags:
+            - { name: form.type }
+
+    form.type.product.feature:
+        class: PrestaShopBundle\Form\Admin\Feature\ProductFeature
+        arguments:
+            - "@translator"
+            - "@prestashop.adapter.legacy.context"
+            - "@router"
+            - "@prestashop.adapter.data_provider.feature"
+        tags:
+            - { name: form.type }
+
+    form.type.product.attachment:
+        class: PrestaShopBundle\Form\Admin\Product\ProductAttachement
+        arguments:
+            - "@translator"
+            - "@prestashop.adapter.legacy.context"
+        tags:
+            - { name: form.type }
+
+    form.type.product.combination:
+        class: PrestaShopBundle\Form\Admin\Product\ProductCombination
+        arguments:
+            - "@translator"
+            - "@prestashop.adapter.legacy.context"
+        tags:
+            - { name: form.type }
+
+    form.type.product.custom_field:
+        class: PrestaShopBundle\Form\Admin\Product\ProductCustomField
+        arguments:
+            - "@translator"
+            - "@prestashop.adapter.legacy.context"
+        tags:
+            - { name: form.type }
+
+    form.type.product.information:
+        class: PrestaShopBundle\Form\Admin\Product\ProductInformation
+        arguments:
+            - "@translator"
+            - "@prestashop.adapter.legacy.context"
+            - "@router"
+            - "@prestashop.adapter.data_provider.category"
+            - "@prestashop.adapter.data_provider.product"
+            - "@prestashop.adapter.data_provider.feature"
+            - "@prestashop.adapter.data_provider.manufacturer"
+        tags:
+            - { name: form.type }
+
+    form.type.product.options:
+        class: PrestaShopBundle\Form\Admin\Product\ProductOptions
+        arguments:
+            - "@translator"
+            - "@prestashop.adapter.legacy.context"
+            - "@prestashop.adapter.data_provider.product"
+            - "@prestashop.adapter.data_provider.supplier"
+            - "@prestashop.adapter.data_provider.currency"
+            - "@prestashop.adapter.data_provider.attachment"
+            - "@router"
+        tags:
+            - { name: form.type }
+
+    form.type.product.price:
+        class: PrestaShopBundle\Form\Admin\Product\ProductPrice
+        arguments:
+            - "@translator"
+            - "@prestashop.adapter.data_provider.tax"
+            - "@router"
+            - "@prestashop.adapter.shop.context"
+            - "@prestashop.adapter.data_provider.country"
+            - "@prestashop.adapter.data_provider.currency"
+            - "@prestashop.adapter.data_provider.group"
+            - "@prestashop.adapter.legacy.context"
+            - "@prestashop.adapter.data_provider.customer"
+        tags:
+            - { name: form.type }
+
+    form.type.product.quantity:
+        class: PrestaShopBundle\Form\Admin\Product\ProductQuantity
+        arguments:
+            - "@translator"
+            - "@router"
+            - "@prestashop.adapter.legacy.context"
+        tags:
+            - { name: form.type }
+
+    form.type.product.seo:
+        class: PrestaShopBundle\Form\Admin\Product\ProductSeo
+        arguments:
+            - "@translator"
+            - "@prestashop.adapter.legacy.context"
+            - "@router"
+        tags:
+            - { name: form.type }
+
+    form.type.product.shipping:
+        class: PrestaShopBundle\Form\Admin\Product\ProductShipping
+        arguments:
+            - "@translator"
+            - "@prestashop.adapter.legacy.context"
+            - "@prestashop.adapter.data_provider.warehouse"
+            - "@prestashop.adapter.data_provider.carrier"
+        tags:
+            - { name: form.type }
+
+    form.type.product.specific_price:
+        class: PrestaShopBundle\Form\Admin\Product\ProductSpecificPrice
+        arguments:
+            - "@router"
+            - "@translator"
+            - "@prestashop.adapter.shop.context"
+            - "@prestashop.adapter.data_provider.country"
+            - "@prestashop.adapter.data_provider.currency"
+            - "@prestashop.adapter.data_provider.group"
+            - "@prestashop.adapter.legacy.context"
+            - "@prestashop.adapter.data_provider.customer"
+        tags:
+            - { name: form.type }
+
+    form.type.product.supplier_combination:
+        class: PrestaShopBundle\Form\Admin\Product\ProductSupplierCombination
+        arguments:
+            - "@translator"
+            - "@prestashop.adapter.legacy.context"
+            - "@prestashop.adapter.data_provider.currency"
+        tags:
+            - { name: form.type }
+
+    form.type.product.virtual:
+        class: PrestaShopBundle\Form\Admin\Product\ProductVirtual
+        arguments:
+            - "@translator"
+            - "@prestashop.adapter.legacy.context"
+        tags:
+            - { name: form.type }
+
+    form.type.product.warehouse_combination:
+        class: PrestaShopBundle\Form\Admin\Product\ProductWarehouseCombination
+        arguments:
+            - "@translator"
+            - "@prestashop.adapter.legacy.context"
+        tags:
+            - { name: form.type }
+
+    form.type.typeahead.product:
+        class: PrestaShopBundle\Form\Admin\Type\TypeaheadProductCollectionType
+        arguments:
+            - "@prestashop.adapter.data_provider.product"
+            - "@prestashop.adapter.data_provider.category"
+        tags:
+            - { name: form.type }
+
+    form.type.typeahead.product_pack:
+        class: PrestaShopBundle\Form\Admin\Type\TypeaheadProductPackCollectionType
+        arguments:
+            - "@prestashop.adapter.data_provider.product"
+        tags:
+            - { name: form.type }
+
+    form.type.typeahead.customer:
+        class: PrestaShopBundle\Form\Admin\Type\TypeaheadCustomerCollectionType
+        arguments:
+            - "@prestashop.adapter.data_provider.customer"
+        tags:
+            - { name: form.type }
+    form.type.product.combination_bulk:
+        class: PrestaShopBundle\Form\Admin\Product\ProductCombinationBulk
+        arguments:
+            - "@translator"
+            - "@prestashop.adapter.legacy.configuration"
+        tags:
+            - { name: form.type }
+
+    form.type.extension.textarea:
+        class: PrestaShopBundle\Form\Admin\Type\TextareaEmptyType
+        tags:
+            - { name: form.type_extension, extended_type: Symfony\Component\Form\Extension\Core\Type\TextareaType }
+
+    form.type.extension.text:
+        class: PrestaShopBundle\Form\Admin\Type\TextEmptyType
+        tags:
+            - { name: form.type_extension, extended_type: Symfony\Component\Form\Extension\Core\Type\TextType }
+
+    form.type.extension.money:
+        class: PrestaShopBundle\Form\Admin\Type\CustomMoneyType
+        tags:
+            - { name: form.type_extension, extended_type: Symfony\Component\Form\Extension\Core\Type\MoneyType }

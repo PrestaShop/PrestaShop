@@ -1,0 +1,28 @@
+parameters:
+
+services:
+    filesystem:
+        class: Symfony\Component\Filesystem\Filesystem
+    finder:
+        class: Symfony\Component\Finder\Finder
+
+    hook_provider:
+        class: PrestaShop\PrestaShop\Adapter\Hook\HookInformationProvider
+
+    hook_repository:
+        class: PrestaShop\PrestaShop\Core\Module\HookRepository
+        arguments: ["@hook_provider", "@shop", "@db"]
+
+    hook_configurator:
+        class: PrestaShop\PrestaShop\Core\Module\HookConfigurator
+        arguments: ["@hook_repository"]
+
+    theme_validator:
+        class: PrestaShop\PrestaShop\Core\Addon\Theme\ThemeValidator
+
+    theme_manager:
+        class: PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManager
+        arguments: ["@shop", "@configuration", "@theme_validator", "@employee", "@filesystem", "@finder", "@hook_configurator"]
+
+    hashing:
+        class: PrestaShop\PrestaShop\Core\Crypto\Hashing

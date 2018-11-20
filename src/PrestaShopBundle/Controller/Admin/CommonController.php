@@ -1,13 +1,13 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,20 +19,17 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @copyright 2007-2017 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 namespace PrestaShopBundle\Controller\Admin;
 
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
+use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use Symfony\Component\HttpFoundation\Request;
-use PrestaShopBundle\TransitionalBehavior\AdminPagePreferenceInterface;
-use PrestaShopBundle\Service\DataProvider\Admin\ProductInterface;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Component\HttpFoundation\Response;
+use PrestaShopBundle\Service\DataProvider\Admin\RecommendedModules;
 
 /**
  * Admin controller for the common actions across the whole admin interface.
@@ -61,9 +58,10 @@ class CommonController extends FrameworkBundleAdminController
      * @param integer $limit
      * @param integer $offset
      * @param integer $total
-     * @return array Template vars
+     * @param string $view full|quicknav To change default template used to render the content
+     * @return array|\Symfony\Component\HttpFoundation\Response
      */
-    public function paginationAction(Request $request, $limit = 10, $offset = 0, $total = 0)
+    public function paginationAction(Request $request, $limit = 10, $offset = 0, $total = 0, $view = 'full')
     {
         // base elements
         if ($limit <= 0) {
@@ -81,52 +79,53 @@ class CommonController extends FrameworkBundleAdminController
                 unset($callerParameters[$k]);
             }
         }
-        $routeName = $request->attributes->get('caller_route', $request->attributes->get('caller_parameters')['_route']);
-        $nextPageUrl = ($offset+$limit >= $total) ? false : $this->generateUrl($routeName, array_merge(
+        $routeName = $request->attributes->get('caller_route', $request->attributes->get('caller_parameters', ['_route' => false])['_route']);
+        $nextPageUrl = (!$routeName || ($offset+$limit >= $total)) ? false : $this->generateUrl($routeName, array_merge(
             $callerParameters,
             array(
                 'offset' => min($total-1, $offset+$limit),
                 'limit' => $limit
             )
         ));
-        $previousPageUrl = ($offset == 0) ? false : $this->generateUrl($routeName, array_merge(
+        $previousPageUrl = (!$routeName || ($offset == 0)) ? false : $this->generateUrl($routeName, array_merge(
             $callerParameters,
             array(
                 'offset' => max(0, $offset-$limit),
                 'limit' => $limit
             )
         ));
-        $firstPageUrl = ($offset == 0) ? false : $this->generateUrl($routeName, array_merge(
+        $firstPageUrl = (!$routeName || ($offset == 0)) ? false : $this->generateUrl($routeName, array_merge(
             $callerParameters,
             array(
                 'offset' => 0,
                 'limit' => $limit
             )
         ));
-        $lastPageUrl = ($offset+$limit >= $total) ? false : $this->generateUrl($routeName, array_merge(
+        $lastPageUrl = (!$routeName || ($offset+$limit >= $total)) ? false : $this->generateUrl($routeName, array_merge(
             $callerParameters,
             array(
                 'offset' => ($pageCount-1)*$limit,
                 'limit' => $limit
             )
         ));
-        $changeLimitUrl = $this->generateUrl($routeName, array_merge(
+        $changeLimitUrl = (!$routeName) ? false : $this->generateUrl($routeName, array_merge(
             $callerParameters,
             array(
                 'offset' => 0,
                 'limit' => '_limit'
             )
         ));
-        $jumpPageUrl = $this->generateUrl($routeName, array_merge(
+        $jumpPageUrl = (!$routeName) ? false : $this->generateUrl($routeName, array_merge(
             $callerParameters,
             array(
                 'offset' => 999999,
                 'limit' => $limit
             )
         ));
+        $limitChoices = $request->attributes->get('limit_choices', array(20, 50, 100));
 
         // Template vars injection
-        return array(
+        $vars = array(
             'limit' => $limit,
             'changeLimitUrl' => $changeLimitUrl,
             'first_url' => $firstPageUrl,
@@ -139,72 +138,72 @@ class CommonController extends FrameworkBundleAdminController
             'next_url' => $nextPageUrl,
             'last_url' => $lastPageUrl,
             'jump_page_url' => $jumpPageUrl,
+            'limit_choices' => $limitChoices,
+        );
+        if ($view != 'full') {
+            return $this->render('PrestaShopBundle:Admin:Common/pagination_'.$view.'.html.twig', $vars);
+        }
+        return $vars;
+    }
+
+    /**
+     * This will allow you to retrieve an HTML code with a list of recommended modules depending on the domain.
+     *
+     * @Template
+     * @param string $domain
+     * @param integer $limit
+     * @param integer $randomize
+     * @return array Template vars
+     */
+    public function recommendedModulesAction($domain, $limit = 0, $randomize = 0)
+    {
+        $recommendedModules = $this->container->get('prestashop.data_provider.modules.recommended');
+        /* @var $recommendedModules RecommendedModules */
+        $moduleIdList = $recommendedModules->getRecommendedModuleIdList($domain, ($randomize == 1));
+
+        $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
+        /* @var $modulesProvider AdminModuleDataProvider */
+        $modulesRepository = ModuleManagerBuilder::getInstance()->buildRepository();
+
+        $modules = array();
+        foreach ($moduleIdList as $id) {
+            try {
+                $module = $modulesRepository->getModule($id);
+            } catch (\Exception $e) {
+                continue;
+            }
+            $modules[] = $module;
+        }
+
+        if ($randomize == 1) {
+            shuffle($modules);
+        }
+
+        $modules = $recommendedModules->filterInstalledAndBadModules($modules);
+        $modules = $modulesProvider->generateAddonsUrls($modules);
+
+        return array(
+            'domain' => $domain,
+            'modules' => array_slice($modules, 0, $limit, true),
         );
     }
 
     /**
-     * Used by Dropfiles plugin to upload files asynchronously.
+     * Render a right sidebar with content from an URL
      *
-     * @param Request $request
-     *
-     * @return json encoded array data informations of uploaded file
+     * @param $url
+     * @param string $title
+     * @param string $footer
+     * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function uploadAction(Request $request)
+    public function renderSidebarAction($url, $title = '', $footer = '')
     {
-        $response = new Response();
-        $return_data = [];
-        $constraints = [];
+        $tools = $this->container->get('prestashop.adapter.tools');
 
-        if ($request->get('file_type') == 'image') {
-            $constraints = array(new \Symfony\Component\Validator\Constraints\Image(array(
-                'maxSize' => '1024k',
-                'mimeTypes' => array(
-                    'image/jpeg',
-                    'image/jpg',
-                    'image/png',
-                    'image/gif'
-                )
-            )));
-        } elseif ($request->get('file_type') == 'file') {
-            $constraints = array( new \Symfony\Component\Validator\Constraints\File(array(
-                'maxSize' => '1024k'
-            )));
-        }
-
-        $form = $this->createFormBuilder(null, array('csrf_protection' => false))
-            ->add('file', 'file', array(
-                'error_bubbling' => true,
-                'constraints' => $constraints
-            ))
-            ->getForm();
-
-        $form->handleRequest($request);
-
-        if ($request->isMethod('POST')) {
-            if ($form->isValid()) {
-                $file = $form->getData()['file'];
-
-                $fileName = md5(uniqid()) . '.' . $file->guessExtension();
-                $file->move(_PS_CACHE_DIR_.'tmp'.DIRECTORY_SEPARATOR.'upload', $fileName);
-
-                $return_data = array(
-                    'file_original_name' => $file->getClientOriginalName(),
-                    'file_name_tmp' => $fileName,
-                    'file_path_tmp' => _PS_CACHE_DIR_.'tmp'.DIRECTORY_SEPARATOR.'upload'.DIRECTORY_SEPARATOR.$fileName,
-                    'file_url_tmp' => __PS_BASE_URI__.'cache/tmp/upload/'.$fileName,
-                    'file_type' => $file->getClientMimeType(),
-                    'filesize' => filesize(_PS_CACHE_DIR_.'tmp'.DIRECTORY_SEPARATOR.'upload'.DIRECTORY_SEPARATOR.$fileName)
-                );
-            } else {
-                $error_msg = array();
-                foreach ($form->getErrors() as $key => $error) {
-                    $error_msg[] = $error->getMessage();
-                }
-                $return_data = array('message' => implode(" ", $error_msg));
-                $response->setStatusCode(400);
-            }
-        }
-
-        return $response->setContent(json_encode($return_data));
+        return $this->render('PrestaShopBundle:Admin:Common/_partials/_sidebar.html.twig', [
+            'footer' => $tools->purifyHTML($footer),
+            'title' => $title,
+            'url' => urldecode($url),
+        ]);
     }
 }

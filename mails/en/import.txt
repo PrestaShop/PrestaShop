@@ -1,0 +1,10 @@
+
+[{shop_url}] 
+
+Hi {firstname} {lastname}, 
+
+The file {filename} has been successfully imported to your shop. 
+
+{shop_name} [{shop_url}] powered
+by PrestaShop(tm) [http://www.prestashop.com/] 
+

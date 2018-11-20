@@ -1,0 +1,51 @@
+.products-catalog {
+
+  > .content {
+    background: $white;
+    padding: {
+      top: $grid-gutter-width / 2;
+      bottom: $grid-gutter-width / 2;
+    }
+    margin-bottom: 20px;
+  }
+
+  > .content:last-child {
+    margin-bottom: 0;
+  }
+
+  .icon-caret {
+    font-size: 0.625rem;
+    vertical-align: 0.0625rem;
+    cursor: pointer;
+    display: inline-block;
+
+    &.-current {
+      color: $primary;
+    }
+  }
+
+  table {
+    .form-control,
+    .select2 {
+      font-weight: normal;
+    }
+    .form-min-max {
+      display: inline-block;
+      width: 48%;
+    }
+    .action-enabled {
+      color: $brand-success
+    }
+    .action-disabled {
+      color: $brand-danger
+    }
+  }
+
+}
+
+.emptycatalog-icon {
+  > .material-icons {
+    color: $gray-light;
+    font-size: 12rem;
+  }
+}

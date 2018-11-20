@@ -11,6 +11,6 @@ VOUCHER CODE: {voucher_num} in the amount of {voucher_amount}
 Simply copy/paste this code during the payment process for your next
 order. 		 
 
-{shop_name} [{shop_url}] powered by
-PrestaShop(tm) [http://www.prestashop.com/] 
+{shop_name} [{shop_url}] powered
+by PrestaShop(tm) [http://www.prestashop.com/] 
 

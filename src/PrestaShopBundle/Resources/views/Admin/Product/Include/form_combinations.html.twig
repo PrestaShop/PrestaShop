@@ -1,0 +1,205 @@
+{#**
+ * 2007-2017 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2017 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *#}
+<div class="row" id="combinations">
+  <div class="col-md-9">
+    <h2>
+      {{ 'Manage your product combinations'|trans({}, 'Admin.Catalog.Feature') }}
+      <span
+        class="help-box"
+        data-toggle="popover"
+        data-content="{{ "Combinations are the different variations of a product, with attributes like its size, weight or color taking different values. To create a combination, you need to create your product attributes first. Go to Catalog > Attributes & Features for this!"|trans({}, 'Admin.Catalog.Help') }}"
+      ></span>
+    </h2>
+    <div id="attributes-generator">
+      <div class="alert alert-info" role="alert">
+        <i class="material-icons">help</i>
+        <p class="alert-text">
+          {{ 'To add combinations, you first need to create proper attributes and values in [1]Attributes & Features[/1]. <br> When done, you may enter the wanted attributes (like "size" or "color") and their respective values ("XS", "red", "all", etc.) in the field below; or simply select them from the right column. Then click on "Generate": it will automatically create all the combinations for you!'|trans({}, 'Admin.Catalog.Help')|replace({'[1]': '<a class="alert-link" href=' ~ getAdminLink("AdminAttributesGroups") ~ ' target="_blank">', '[/1]': '</a>'})|raw }}
+        </p>
+      </div>
+      <div class="row">
+        <div class="col-xl-10 col-lg-9">
+          <fieldset class="form-group">
+            {{ form_errors(form.attributes) }}
+            {{ form_widget(form.attributes) }}
+          </fieldset>
+        </div>
+        <div class="col-xl-2 col-lg-3">
+          <button class="btn btn-primary-outline" id="create-combinations">
+            Generate
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div id="combinations-bulk-form">
+      <div class="row">
+        <div class="col-md-12">
+          <p
+            class="form-control bulk-action"
+            data-toggle="collapse"
+            href="#bulk-combinations-container"
+            aria-expanded="false"
+            aria-controls="bulk-combinations-container"
+          >
+            {# First tag [1] is number of combinations selected. Second tag [2] is the total of combinations available. #}
+            <strong>{{ 'Bulk actions ([1]/[2] combination(s) selected)'|trans({}, 'Admin.Catalog.Feature')|replace({ '[1]': '<span class="js-bulk-combinations">0</span>', '[2]': combinations_count })|raw }}</strong>
+            <i class="material-icons pull-right">keyboard_arrow_down</i>
+          </p>
+        </div>
+        <div class="col-md-12 collapse js-collapse" id="bulk-combinations-container">
+          {{ include('PrestaShopBundle:Admin/Product:form_combinations_bulk.html.twig', { 'form': form_combination_bulk }) }}
+        </div>
+      </div>
+    </div>
+
+    <div class="combinations-list">
+      <table class="table table-striped table-no-bordered">
+        <thead id="combinations_thead" {% if not has_combinations %}style="display: none;"{% endif %}>
+          <tr class="uppercase">
+            <th>
+              <span>{{ 'Select'|trans([], 'Admin.Actions') }}</span>
+              <input type="checkbox" id="toggle-all-combinations" >
+            </th>
+            <th></th>
+            <th>{{ 'Combinations'|trans({}, 'Admin.Catalog.Feature') }}</th>
+            <th>{{ 'Impact on price'|trans({}, 'Admin.Catalog.Feature') }}</th>
+            <th>{{ 'Final price'|trans({}, 'Admin.Catalog.Feature') }}</th>
+            {% if 'PS_STOCK_MANAGEMENT'|configuration %}
+                <th>{{ 'Quantity'|trans({}, 'Admin.Catalog.Feature') }}</th>
+            {% endif %}
+            <th colspan="3" class="text-xs-right">{{ 'Default combination'|trans({}, 'Admin.Catalog.Feature') }}</th>
+          </tr>
+        </thead>
+        <tbody class="js-combinations-list panel-group accordion" id="accordion_combinations" data-action-delete-all="{{ path('admin_delete_all_attributes', { 'idProduct': 1 }) }}" data-weight-unit="{{ 'PS_WEIGHT_UNIT'|configuration }}" data-action-refresh-images="{{ path('admin_get_form_images_combination', { 'idProduct': 1 }) }}"  data-id-product= {{ id_product }} data-ids-product-attribute="{{ ids_product_attribute }}" data-combinations-url="{{ path('admin_combination_generate_form', { 'combinationIds': 1 }) }}">
+          {% if has_combinations %}
+            <tr class="combination loading timeline-wrapper" id="loading-attribute">
+              <td class="timeline-item" width="1%">
+              </td>
+              <td class="timeline-item img">
+                <div class="animated-background"></div>
+              </td>
+              <td>
+                <div class="animated-background"></div>
+              </td>
+              <td class="attribute-price">
+                <div class="animated-background"></div>
+              </td>
+              <td class="attribute-finalprice">
+                <div class="animated-background"></div>
+              </td>
+              {% if 'PS_STOCK_MANAGEMENT'|configuration %}
+                <td class="attribute-quantity">
+                  <div class="animated-background"></div>
+                </td>
+              {% endif %}
+              <td colspan="6"></td>
+            </tr>
+          {%  endif %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div id="attributes-list" class="col-md-3">
+    {% for attribute_group in attribute_groups %}
+      <div class="attribute-group">
+        <a
+          class="attribute-group-name {% if loop.index <= 3 %} collapsed {% endif %}"
+          data-toggle="collapse"
+          href="#attribute-group-{{ attribute_group.id }}"
+          aria-expanded="false"
+        >
+          {{ attribute_group.name }}
+        </a>
+        <div class="collapse {% if loop.index <= 3 %} in {% endif %} attributes " id="attribute-group-{{ attribute_group.id }}">
+          <div class="attributes-overflow {% if attribute_group.attributes|length > 7 %} two-columns {% endif %}">
+            {% for attribute in attribute_group.attributes %}
+              <div class="attribute">
+                <input
+                  class="js-attribute-checkbox"
+                  id="attribute-{{ attribute.id }}"
+                  data-label="{{ attribute_group.name }} : {{ attribute.name }}"
+                  data-value="{{ attribute.id }}"
+                  data-group-id="{{ attribute_group.id }}"
+                  type="checkbox"
+                >
+                <label class="attribute-label" for="attribute-{{ attribute.id }}">
+                  <span
+                    class="pretty-checkbox {% if attribute.color is empty %} not-color {% endif %}"
+                    {% if attribute.color is not empty %} style="background-color: {{ attribute.color }}" {% endif %}
+                  >
+                  </span>
+                  {{ attribute.name }}
+                </label>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+<div class="form-group">
+  <div class="row">
+
+    <div class="col-md-12">
+      <h2>{{ 'Availability preferences'|trans({}, 'Admin.Catalog.Feature') }}</h2>
+    </div>
+    {% if 'PS_STOCK_MANAGEMENT'|configuration %}
+      <div class="col-md-12">
+        <label class="form-control-label">{{ 'Behavior when out of stock'|trans({}, 'Admin.Catalog.Feature') }}</label>
+        {{ form_errors(form.out_of_stock) }}
+        {{ form_widget(form.out_of_stock) }}
+      </div>
+
+      <div class="col-md-4">
+        <label class="form-control-label">{{ form.available_now.vars.label }}</label>
+        {{ form_errors(form.available_now) }}
+        {{ form_widget(form.available_now) }}
+      </div>
+
+      <div class="col-md-4 ">
+        <label class="form-control-label">{{ form.available_later.vars.label }}</label>
+        {{ form_errors(form.available_later) }}
+        {{ form_widget(form.available_later) }}
+      </div>
+    {% else %}
+      <div class="col-md-12">
+        <h3>{{  'Stock management is disabled'|trans({}, 'Admin.Catalog.Feature') }}</h3>
+      </div>
+    {% endif %}
+
+    {% if not has_combinations %}
+    <div class="col-md-4 ">
+      <label class="form-control-label">{{ form.available_date.vars.label }}</label>
+      {{ form_errors(form.available_date) }}
+      {{ form_widget(form.available_date) }}
+    </div>
+    {% endif %}
+
+  </div>
+</div>

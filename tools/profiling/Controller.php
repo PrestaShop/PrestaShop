@@ -1,13 +1,13 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,8 +19,8 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @copyright 2007-2017 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -287,40 +287,6 @@ abstract class Controller extends ControllerCore
 
         $cache = Cache::retrieveAll();
         $this->total_cache_size = $this->getVarSize($cache);
-
-        // Retrieve module perfs
-        $result = Db::getInstance()->ExecuteS('
-    		SELECT *
-    		FROM '._DB_PREFIX_.'modules_perfs
-    		WHERE session = '.(int)Module::$_log_modules_perfs_session.'
-    		AND time_start >= '.(float)$start_time.'
-    		AND time_end <= '.(float)$this->profiler[count($this->profiler) - 1]['time']
-        );
-
-        foreach ($result as $row) {
-            $tmp_time = $row['time_end'] - $row['time_start'];
-            $tmp_memory = $row['memory_end'] - $row['memory_start'];
-            $this->total_modules_time += $tmp_time;
-            $this->total_modules_memory += $tmp_memory;
-
-            if (!isset($this->modules_perfs[$row['module']])) {
-                $this->modules_perfs[$row['module']] = array('time' => 0, 'memory' => 0, 'methods' => array());
-            }
-            $this->modules_perfs[$row['module']]['time'] += $tmp_time;
-            $this->modules_perfs[$row['module']]['methods'][$row['method']]['time'] = $tmp_time;
-            $this->modules_perfs[$row['module']]['memory'] += $tmp_memory;
-            $this->modules_perfs[$row['module']]['methods'][$row['method']]['memory'] = $tmp_memory;
-
-            if (!isset($this->hooks_perfs[$row['method']])) {
-                $this->hooks_perfs[$row['method']] = array('time' => 0, 'memory' => 0, 'modules' => array());
-            }
-            $this->hooks_perfs[$row['method']]['time'] += $tmp_time;
-            $this->hooks_perfs[$row['method']]['modules'][$row['module']]['time'] = $tmp_time;
-            $this->hooks_perfs[$row['method']]['memory'] += $tmp_memory;
-            $this->hooks_perfs[$row['method']]['modules'][$row['module']]['memory'] = $tmp_memory;
-        }
-        uasort($this->modules_perfs, 'prestashop_querytime_sort');
-        uasort($this->hooks_perfs, 'prestashop_querytime_sort');
 
         $queries = Db::getInstance()->queries;
         uasort($queries, 'prestashop_querytime_sort');

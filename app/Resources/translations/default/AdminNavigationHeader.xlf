@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="classes/lang/QuickAccessLang.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="8cf04a9734132302f96da8e113e80ce5">
+        <source>Home</source>
+        <target>Home</target>
+        <note>Context:
+File: classes/lang/QuickAccessLang.php:40</note>
+      </trans-unit>
+      <trans-unit id="bf4e361cd7132e11e34d34124bb04291">
+        <source>My Shop</source>
+        <target>My Shop</target>
+        <note>Context:
+File: classes/lang/QuickAccessLang.php:41</note>
+      </trans-unit>
+      <trans-unit id="52015afb6ec8b940ef903ff73f4c4058">
+        <source>New category</source>
+        <target>New category</target>
+        <note>Context:
+File: classes/lang/QuickAccessLang.php:42</note>
+      </trans-unit>
+      <trans-unit id="656c3be690ee43df4b845bd2a2ebe587">
+        <source>New product</source>
+        <target>New product</target>
+        <note>Context:
+File: classes/lang/QuickAccessLang.php:43</note>
+      </trans-unit>
+      <trans-unit id="a0d555e459a8227e786d2bfaf99b9974">
+        <source>New voucher</source>
+        <target>New voucher</target>
+        <note>Context:
+File: classes/lang/QuickAccessLang.php:44</note>
+      </trans-unit>
+      <trans-unit id="7442e29d7d53e549b78d93c46b8cdcfc">
+        <source>Orders</source>
+        <target>Orders</target>
+        <note>Context:
+File: classes/lang/QuickAccessLang.php:45</note>
+      </trans-unit>
+      <trans-unit id="f388bc3eaa4b9f72756a75693a12559d">
+        <source>Installed modules</source>
+        <target>Installed modules</target>
+        <note>Context:
+File: classes/lang/QuickAccessLang.php:46</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminQuickAccessesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="e5dc8e5afea0a065948622039358de37">
+        <source>New window</source>
+        <target>New window</target>
+        <note>Context:
+File: controllers/admin/AdminQuickAccessesController.php:69</note>
+      </trans-unit>
+      <trans-unit id="97e7c9a7d06eac006a28bf05467fcc8b">
+        <source>Link</source>
+        <target>Link</target>
+        <note>Context:
+File: controllers/admin/AdminQuickAccessesController.php:66</note>
+      </trans-unit>
+      <trans-unit id="fe501f6dab88efcbde9b3f062a5ae781">
+        <source>Quick Access menu</source>
+        <target>Quick Access menu</target>
+        <note>Context:
+File: controllers/admin/AdminQuickAccessesController.php:79</note>
+      </trans-unit>
+      <trans-unit id="55e4a48ac94061c93174d67635445e69">
+        <source>If it's a URL that comes from your back office, you MUST remove the security token.</source>
+        <target>If it's a URL that comes from your back office, you MUST remove the security token.</target>
+        <note>Context:
+File: controllers/admin/AdminQuickAccessesController.php:98</note>
+      </trans-unit>
+      <trans-unit id="2959ce8aed67d6b6e6f5cefd601f1091">
+        <source>Open in new window</source>
+        <target>Open in new window</target>
+        <note>Context:
+File: controllers/admin/AdminQuickAccessesController.php:102</note>
+      </trans-unit>
+      <trans-unit id="35c2475e5e8a5a14f8c1d9c1238e4cef">
+        <source>Add new quick access</source>
+        <target>Add new quick access</target>
+        <note>Context:
+File: controllers/admin/AdminQuickAccessesController.php:135</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/header.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="4f32a32dea642737580dd71cdfd8d3c0">
+        <source>Quick Access</source>
+        <target>Quick Access</target>
+        <note>Context:
+File: admin-dev/themes/default/template/header.tpl:125</note>
+      </trans-unit>
+      <trans-unit id="f84b4e2770ec98e3db2926cd49864d2f">
+        <source>My preferences</source>
+        <target>My preferences</target>
+        <note>Context:
+File: admin-dev/themes/default/template/header.tpl:233</note>
+      </trans-unit>
+      <trans-unit id="65e81c540f5af5f5c59901a076f9b024">
+        <source>My PrestaShop account</source>
+        <target>My PrestaShop account</target>
+        <note>Context:
+File: admin-dev/themes/default/template/header.tpl:235</note>
+      </trans-unit>
+      <trans-unit id="c87aacf5673fada1108c9f809d354311">
+        <source>Sign out</source>
+        <target>Sign out</target>
+        <note>Context:
+File: admin-dev/themes/default/template/header.tpl:238</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

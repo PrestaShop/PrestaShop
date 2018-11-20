@@ -1,13 +1,13 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,43 +19,24 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @copyright 2007-2017 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 namespace PrestaShopBundle\Form\Admin\Type;
 
-use Symfony\Component\Form\AbstractType;
+use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\Extension\Core\Type as FormType;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * This form class is responsible to create a nested category selector
+ * This form class is responsible to create a category selector using Nested sets
  */
-class ChoiceCategoriesTreeType extends AbstractType
+class ChoiceCategoriesTreeType extends CommonAbstractType
 {
-    private $label;
-    private $list;
-    private $valid_list;
-    private $multiple;
-
-    /**
-     * Constructor
-     *
-     * @param string $label The field label
-     * @param array $list The nested array categories
-     * @param array $valid_list The simple array categories used for choice validation
-     * @param bool $multiple Display checkbox or radio button
-     */
-    public function __construct($label = '', $list = array(), $valid_list = array(), $multiple = true)
-    {
-        $this->label = $label;
-        $this->list = $list;
-        $this->valid_list = $valid_list;
-        $this->multiple = $multiple;
-    }
-
     /**
      * {@inheritdoc}
      *
@@ -63,8 +44,8 @@ class ChoiceCategoriesTreeType extends AbstractType
      */
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
-        $view->vars['choices'] = $this->list;
-        $view->vars['multiple'] = $this->multiple;
+        $view->vars['choices'] = $options['list'];
+        $view->vars['multiple'] = $options['multiple'];
 
         //if form is submitted, inject categories values array to check or not each field
         if (!empty($view->vars['value']) && !empty($view->vars['value']['tree'])) {
@@ -79,9 +60,10 @@ class ChoiceCategoriesTreeType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('tree', 'choice', array(
+        $builder->add('tree', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
             'label' => false,
-            'choices' => $this->valid_list,
+            'choices' => $options['valid_list'],
+            'choices_as_values' => true,
             'required' => false,
             'multiple'  => true,
             'expanded'  => true,
@@ -90,11 +72,24 @@ class ChoiceCategoriesTreeType extends AbstractType
     }
 
     /**
-     * Returns the name of this type.
-     *
-     * @return string The name of this type
+     * {@inheritdoc}
      */
-    public function getName()
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults(array(
+            'label' => '',
+            'list' => [],
+            'valid_list' => [],
+            'multiple' => true,
+        ));
+    }
+
+    /**
+     * Returns the block prefix of this type.
+     *
+     * @return string The prefix name
+     */
+    public function getBlockPrefix()
     {
         return 'choice_tree';
     }

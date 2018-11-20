@@ -1,13 +1,13 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,10 +19,12 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @copyright 2007-2017 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
+use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 
 /**
  * @since 1.5.0.1
@@ -34,7 +36,7 @@ class TaxRulesTaxManagerCore implements TaxManagerInterface
     public $tax_calculator;
 
     /**
-     * @var \PrestaShop\PrestaShop\Core\Business\ConfigurationInterface
+     * @var \PrestaShop\PrestaShop\Core\ConfigurationInterface
      */
     private $configurationManager;
 
@@ -43,10 +45,10 @@ class TaxRulesTaxManagerCore implements TaxManagerInterface
      * @param Address $address
      * @param mixed $type An additional parameter for the tax manager (ex: tax rules id for TaxRuleTaxManager)
      */
-    public function __construct(Address $address, $type, \PrestaShop\PrestaShop\Core\Business\ConfigurationInterface $configurationManager = null)
+    public function __construct(Address $address, $type, \PrestaShop\PrestaShop\Core\ConfigurationInterface $configurationManager = null)
     {
         if ($configurationManager === null) {
-            $this->configurationManager = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\Business\\ConfigurationInterface');
+            $this->configurationManager = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\ConfigurationInterface');
         } else {
             $this->configurationManager = $configurationManager;
         }

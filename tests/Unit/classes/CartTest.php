@@ -1,13 +1,13 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,8 +19,8 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @copyright 2007-2017 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -30,7 +30,7 @@ use Exception;
 use PrestaShop\PrestaShop\Tests\TestCase\UnitTestCase;
 use PrestaShop\PrestaShop\Adapter\Product\PriceCalculator;
 use PrestaShop\PrestaShop\Adapter\AddressFactory;
-use PrestaShop\PrestaShop\Core\Business\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use Address;
 use Cart;
 use Order;
@@ -61,6 +61,7 @@ class FakeProductPriceCalculator
             'id_shop' => null,
             'id_product' => $id,
             'id_product_attribute' => $id,
+            'id_customization' => 0,
             'cart_quantity' => $product->quantity,
             'price' => $product->price
         );
@@ -92,9 +93,6 @@ class CartTest extends UnitTestCase
 
         Phake::when($addressFactory)->findOrCreate()->thenReturn($address);
         $this->container->bind('\\PrestaShop\\PrestaShop\\Adapter\\AddressFactory', $addressFactory);
-
-        $this->cart = new Cart;
-        $this->cart->id = 1;
     }
 
     public function teardown()
@@ -119,16 +117,21 @@ class CartTest extends UnitTestCase
     {
         $this->setRoundType(Order::ROUND_LINE);
 
+        $this->setUpCart();
+
         $this->productPriceCalculator->addFakeProduct(new FakeProduct(3, 10.125));
         $this->productPriceCalculator->addFakeProduct(new FakeProduct(1, 10.125));
 
-        $orderTotal = $this->cart->getOrderTotal(false, Cart::ONLY_PRODUCTS, $this->productPriceCalculator->getProducts());
+        $orderTotal = $this->cart->getOrderTotal(false, Cart::ONLY_PRODUCTS,
+            $this->productPriceCalculator->getProducts());
         $this->assertEquals(40.51, $orderTotal);
     }
 
     public function test_getOrderTotal_Round_Total_When_No_Tax()
     {
         $this->setRoundType(Order::ROUND_TOTAL);
+
+        $this->setUpCart();
 
         $this->productPriceCalculator->addFakeProduct(new FakeProduct(3, 10.125));
         $this->productPriceCalculator->addFakeProduct(new FakeProduct(1, 10.125));
@@ -141,10 +144,18 @@ class CartTest extends UnitTestCase
     {
         $this->setRoundType(Order::ROUND_ITEM);
 
+        $this->setUpCart();
+
         $this->productPriceCalculator->addFakeProduct(new FakeProduct(3, 10.125));
         $this->productPriceCalculator->addFakeProduct(new FakeProduct(1, 10.125));
 
         $orderTotal = $this->cart->getOrderTotal(false, Cart::ONLY_PRODUCTS, $this->productPriceCalculator->getProducts());
         $this->assertEquals(40.52, $orderTotal);
+    }
+
+    protected function setUpCart()
+    {
+        $this->cart = new Cart;
+        $this->cart->id = 1;
     }
 }

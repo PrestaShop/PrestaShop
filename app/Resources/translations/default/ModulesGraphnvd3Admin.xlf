@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/graphnvd3/graphnvd3.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="a9f70dff230e6fc8e878043486e6cddf">
+        <source>NVD3 Charts</source>
+        <target>NVD3 Charts</target>
+        <note>Context:
+File: modules/graphnvd3/graphnvd3.php:51</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

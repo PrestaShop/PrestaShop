@@ -1,13 +1,13 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,8 +19,8 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @copyright 2007-2017 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -60,15 +60,15 @@ class ValidateCore
     public static function isModuleUrl($url, &$errors)
     {
         if (!$url || $url == 'http://') {
-            $errors[] = Tools::displayError('Please specify module URL');
+            $errors[] = Context::getContext()->getTranslator()->trans('Please specify module URL', array(), 'Admin.Modules.Notification');
         } elseif (substr($url, -4) != '.tar' && substr($url, -4) != '.zip' && substr($url, -4) != '.tgz' && substr($url, -7) != '.tar.gz') {
-            $errors[] = Tools::displayError('Unknown archive type');
+            $errors[] = Context::getContext()->getTranslator()->trans('Unknown archive type.', array(), 'Admin.Modules.Notification');
         } else {
             if ((strpos($url, 'http')) === false) {
                 $url = 'http://'.$url;
             }
             if (!is_array(@get_headers($url))) {
-                $errors[] = Tools::displayError('Invalid URL');
+                $errors[] = Context::getContext()->getTranslator()->trans('Invalid URL', array(), 'Admin.Notifications.Error');
             }
         }
         if (!count($errors)) {
@@ -263,6 +263,16 @@ class ValidateCore
         return preg_match('/^[a-zA-Z]{2}(-[a-zA-Z]{2})?$/', $s);
     }
 
+    /**
+     * @link https://en.wikipedia.org/wiki/IETF_language_tag#ISO_3166-1_and_UN_M.49
+     * @param string $s
+     * @return bool
+     */
+    public static function isLocale($s)
+    {
+        return preg_match('/^[a-z]{2}-[A-Z]{2}$/', $s);
+    }
+
     public static function isStateIsoCode($iso_code)
     {
         return preg_match('/^[a-zA-Z0-9]{1,4}((-)[a-zA-Z0-9]{1,4})?$/', $iso_code);
@@ -432,16 +442,54 @@ class ValidateCore
      *
      * @param string $passwd Password to validate
      * @param int $size
+     *
      * @return bool Validity is ok or not
+     *
+     * @deprecated 1.7.0
      */
     public static function isPasswd($passwd, $size = Validate::PASSWORD_LENGTH)
     {
-        return (Tools::strlen($passwd) >= $size && Tools::strlen($passwd) < 255);
+        return self::isPlaintextPassword($passwd, $size);
+    }
+
+    /**
+     * Check if plaintext password is valid
+     * Size is limited by `password_hash()` (72 chars)
+     *
+     * @param string $plaintextPasswd Password to validate
+     * @param int    $size
+     *
+     * @return bool Indicates whether the given string is a valid plaintext password
+     *
+     * @since 1.7.0
+     */
+    public static function isPlaintextPassword($plaintextPasswd, $size = Validate::PASSWORD_LENGTH)
+    {
+        // The password lenght is limited by `password_hash()`
+        return (Tools::strlen($plaintextPasswd) >= $size && Tools::strlen($plaintextPasswd) <= 72);
+    }
+
+    /**
+     * Check if hashed password is valid
+     * PrestaShop supports both MD5 and `PASSWORD_BCRYPT` (PHP API)
+     * The lengths are 32 (MD5) or 60 (`PASSWORD_BCRYPT`)
+     * Anything else is invalid
+     *
+     * @param string $hashedPasswd Password to validate
+     * @param int    $size
+     *
+     * @return bool Indicates whether the given string is a valid hashed password
+     *
+     * @since 1.7.0
+     */
+    public static function isHashedPassword($hashedPasswd)
+    {
+        return (Tools::strlen($hashedPasswd) == 32 || Tools::strlen($hashedPasswd) == 60);
     }
 
     public static function isPasswdAdmin($passwd)
     {
-        return Validate::isPasswd($passwd, Validate::ADMIN_PASSWORD_LENGTH);
+        return Validate::isPlaintextPassword($passwd, Validate::ADMIN_PASSWORD_LENGTH);
     }
 
     /**
@@ -514,9 +562,11 @@ class ValidateCore
             return true;
         }
         if (preg_match('/^([0-9]{4})-((?:0?[1-9])|(?:1[0-2]))-((?:0?[1-9])|(?:[1-2][0-9])|(?:3[01]))([0-9]{2}:[0-9]{2}:[0-9]{2})?$/', $date, $birth_date)) {
-            if ($birth_date[1] > date('Y') && $birth_date[2] > date('m') && $birth_date[3] > date('d')
-                || $birth_date[1] == date('Y') && $birth_date[2] == date('m') && $birth_date[3] > date('d')
-                || $birth_date[1] == date('Y') && $birth_date[2] > date('m')) {
+            if ( $birth_date[1] > date('Y')
+                || ($birth_date[1] > date('Y') && $birth_date[2] > date('m'))
+                || ($birth_date[1] > date('Y') && $birth_date[2] > date('m') && $birth_date[3] > date('d'))
+                || ($birth_date[1] == date('Y') && $birth_date[2] == date('m') && $birth_date[3] > date('d'))
+                || ($birth_date[1] == date('Y') && $birth_date[2] > date('m')) ) {
                 return false;
             }
             return true;
@@ -543,7 +593,7 @@ class ValidateCore
      */
     public static function isPhoneNumber($number)
     {
-        return preg_match('/^[+0-9. ()-]*$/', $number);
+        return preg_match('/^[+0-9. ()\/-]*$/', $number);
     }
 
     /**
@@ -565,7 +615,7 @@ class ValidateCore
      */
     public static function isIsbn($isbn)
     {
-        return preg_match(Tools::cleanNonUnicodeSupport('/^[^<>;={}]*$/u'), $isbn);
+        return !$isbn || preg_match('/^[0-9-]{0,32}$/', $isbn);
     }
 
     /**
@@ -904,7 +954,7 @@ class ValidateCore
     }
 
     /**
-     * Price display method validity
+     * Check if $data is a string
      *
      * @param string $data Data to validate
      * @return bool Validity is ok or not
@@ -959,6 +1009,18 @@ class ValidateCore
     }
 
     /**
+     * Check if $string is a valid JSON string
+     *
+     * @param string $string JSON string to validate
+     * @return bool Validity is ok or not
+     */
+    public static function isJson($string)
+    {
+        json_decode($string);
+        return (json_last_error() == JSON_ERROR_NONE);
+    }
+
+    /**
      * Check for Latitude/Longitude
      *
      * @param string $data Coordinate to validate
@@ -1003,33 +1065,6 @@ class ValidateCore
                 if ($id == 0 || !Validate::isUnsignedInt($id)) {
                     return false;
                 }
-            }
-        }
-        return true;
-    }
-
-    /**
-     *
-     * @param array $zones
-     * @return bool return true if array contain all value required for an image map zone
-     */
-    public static function isSceneZones($zones)
-    {
-        foreach ($zones as $zone) {
-            if (!isset($zone['x1']) || !Validate::isUnsignedInt($zone['x1'])) {
-                return false;
-            }
-            if (!isset($zone['y1']) || !Validate::isUnsignedInt($zone['y1'])) {
-                return false;
-            }
-            if (!isset($zone['width']) || !Validate::isUnsignedInt($zone['width'])) {
-                return false;
-            }
-            if (!isset($zone['height']) || !Validate::isUnsignedInt($zone['height'])) {
-                return false;
-            }
-            if (!isset($zone['id_product']) || !Validate::isUnsignedInt($zone['id_product'])) {
-                return false;
             }
         }
         return true;
@@ -1094,5 +1129,10 @@ class ValidateCore
     public static function isOrderInvoiceNumber($id)
     {
         return (preg_match('/^(?:'.Configuration::get('PS_INVOICE_PREFIX', Context::getContext()->language->id).')\s*([0-9]+)$/i', $id));
+    }
+
+    public static function isThemeName($theme_name)
+    {
+        return (bool)preg_match('/^[\w-]{3,255}$/u', $theme_name);
     }
 }

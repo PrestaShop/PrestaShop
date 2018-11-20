@@ -1,4 +1,29 @@
 <?php
+/**
+ * 2007-2017 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2017 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
+
 namespace PrestaShop\PrestaShop\tests\TestCase;
 
 use Cache;
@@ -6,13 +31,14 @@ use Configuration;
 use Context;
 use Db;
 use PHPUnit_Framework_TestCase;
-use PrestaShop\PrestaShop\Core\Business\ContainerBuilder;
-use \PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
+use PrestaShop\PrestaShop\Core\ContainerBuilder;
+use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
-use PrestaShop\PrestaShop\Tests\Fake\FakeConfiguration;
-use PrestaShop\PrestaShop\Tests\Helper\Mocks\FakeEntityMapper;
 use Phake;
 use Symfony\Component\HttpKernel\Kernel;
+use PrestaShop\PrestaShop\Tests\TestCase\FakeEntityMapper;
+use PrestaShop\PrestaShop\Tests\TestCase\FakeConfiguration;
+use Symfony\Component\HttpFoundation\Request;
 
 class UnitTestCase extends PHPUnit_Framework_TestCase
 {
@@ -27,7 +53,7 @@ class UnitTestCase extends PHPUnit_Framework_TestCase
     public $entity_mapper;
 
     /**
-     * @var Context
+     * @var \ContextCore
      */
     public $context;
 
@@ -46,10 +72,30 @@ class UnitTestCase extends PHPUnit_Framework_TestCase
      */
     public $sfKernel;
 
-    public function setupDatabaseMock()
+    /**
+     * @var \Symfony\Component\HttpFoundation\Request
+     */
+    protected $request;
+
+    /**
+     * @var \ToolsCore
+     */
+    protected $tools;
+
+    /**
+     * @param null $mock
+     * @return Db|mixed
+     */
+    public function setupDatabaseMock($mock = null)
     {
-        $this->database = Phake::mock('Db');
+        if (is_null($mock)) {
+            $this->database = Phake::mock('Db');
+        } else {
+            $this->database = $mock;
+        }
         Db::setInstanceForTesting($this->database);
+
+        return $this->database;
     }
 
     public function setup()
@@ -64,21 +110,64 @@ class UnitTestCase extends PHPUnit_Framework_TestCase
         $this->container->bind('\\PrestaShop\\PrestaShop\\Adapter\\EntityMapper', $this->entity_mapper);
 
         $this->context = Phake::mock('Context');
+        Phake::when($this->context)->getTranslator()->thenReturn(
+            Phake::mock('\Symfony\Component\Translation\Translator')
+        );
 
         Phake::when($this->context)->cloneContext()->thenReturn($this->context);
 
         $this->context->shop = Phake::mock('Shop');
+        $this->context->controller = new \stdClass;
         Context::setInstanceForTesting($this->context);
 
         $this->cache = Phake::mock('Cache');
         Cache::setInstanceForTesting($this->cache);
+
+        $this->setupContextualTemplateEngineMock();
+        $this->setupContextualLanguageMock();
+        $this->setupContextualEmployeeMock();
+        $this->setupContextualCookieMock();
+        $this->setupRequestMock();
+    }
+
+    protected function setupContextualTemplateEngineMock()
+    {
+       $this->context->smarty = Phake::mock('Smarty');
+
+       return $this->context->smarty;
+    }
+
+    protected function setupContextualEmployeeMock()
+    {
+        $this->context->employee = Phake::mock('Employee');
+
+        return $this->context->employee;
+    }
+
+    protected function setupContextualLanguageMock()
+    {
+        $this->context->language = Phake::mock('Language');
+
+        return $this->context->language;
+    }
+
+    protected function setupContextualCookieMock() {
+        $this->context->cookie = Phake::mock('Cookie');
+
+        return $this->context->cookie;
+    }
+
+    protected function setupRequestMock()
+    {
+        $this->request = Request::createFromGlobals();
+        $this->tools = new \Tools($this->request);
     }
 
     public function setConfiguration(array $keys)
     {
         $fakeConfiguration = new FakeConfiguration($keys);
         $this->container->bind(
-            '\\PrestaShop\\PrestaShop\\Core\\Business\\ConfigurationInterface',
+            '\\PrestaShop\\PrestaShop\\Core\\ConfigurationInterface',
             $fakeConfiguration
         );
         return $fakeConfiguration;
@@ -86,12 +175,11 @@ class UnitTestCase extends PHPUnit_Framework_TestCase
 
     public function setupSfKernel()
     {
-        // Prepare Symfony kernel to resolve route.
-        $loader = require_once __DIR__.'/../../app/bootstrap.php.cache';
+        require_once __DIR__.'/../../app/autoload.php';
         require_once __DIR__.'/../../app/AppKernel.php';
         $this->sfKernel = new \AppKernel('test', true);
-        $this->sfKernel->loadClassCache();
         $this->sfKernel->boot();
+
         return $this->sfKernel;
     }
 

@@ -1,0 +1,100 @@
+// Tools
+@import "~bourbon/app/assets/stylesheets/bourbon";
+@import "../node_modules/PrestaKit/scss/custom/_variables.scss";
+@import "../node_modules/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css";
+@import "mixins/single_line_block";
+@import "mixins/notification_container";
+@import "mixins/notification_counter";
+@import "mixins/breakpoints";
+// Settings
+@import "config/settings";
+
+// Components
+@import "components/layout/content_div";
+@import "components/layout/header_toolbar";
+@import "components/layout/kpi";
+@import "components/layout/main_header";
+@import "components/layout/nav_bar";
+@import "components/layout/non_responsive";
+@import "components/category_tree";
+@import "components/dropzone";
+@import "components/notifications";
+@import "components/datepicker";
+
+// Pages specifics SCSS files
+@import "pages/product_page";
+@import "pages/products_catalog";
+@import "pages/translation_page";
+
+// Main Layout
+@import "pages/modules";
+
+// Other
+@import "components/tinymce";
+
+// Main Layout
+body {
+  background: $background-grey;
+}
+
+// To put into the PrestaKit
+$color-icons: #6c868e;
+.breadcrumb {
+  padding: 0.3125rem;
+  background: none;
+  border-radius: 0;
+  font-size: 0.75rem;
+  > li + li::before {
+    padding-right: 0;
+    padding-left: 0.1875rem;
+  }
+  > li > a {
+    color: #363A41; // TODO: Place the text color
+  }
+}
+.toolbar-button {
+  color: $color-icons;
+  text-align: center;
+  display: inline-block;
+  margin: 0 0.3125rem;
+  > .material-icons {
+    font-size: 1.5rem;
+  }
+  > .title {
+    font-size: 0.75rem;
+    color: $color-icons;
+    display: block;
+  }
+  &:hover {
+    text-decoration: none;
+  }
+}
+.col-center {
+  float: none;
+  margin: 0 auto;
+}
+._fullspace {
+  width: 100%;
+  height: 100%;
+}
+.bordered {
+  > .panel {
+    border: 0;
+  }
+  > .nav-item > .nav-link {
+    &.active {
+      border-bottom: 1px solid #FFFFFF;
+    }
+  }
+}
+#product_filter_column_active .select2 {
+  min-width: 4.375rem;
+}
+// Needed to override the default inline style of typeahead and take all the width
+span.twitter-typeahead {
+  display: block !important;
+  width: 100% !important;
+  input.tt-input {
+    width: 100% !important;
+  }
+}

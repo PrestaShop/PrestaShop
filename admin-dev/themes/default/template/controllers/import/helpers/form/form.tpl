@@ -1,31 +1,31 @@
-{*
-* 2007-2015 PrestaShop
-**
-* NOTICE OF LICENSE
-**
-* This source file is subject to the Academic Free License (AFL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/afl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-**
-* DISCLAIMER
-**
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-**
-* @author    PrestaShop SA <contact@prestashop.com>
-* @copyright 2007-2015 PrestaShop SA
-* @license   http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
-* International Registered Trademark & Property of PrestaShop SA
-*}
+{**
+ * 2007-2017 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2017 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *}
 <div class="leadin">{block name="leadin"}{/block}</div>
 {if $module_confirmation}
 <div class="alert alert-success clearfix">
-	{l s='Your .CSV file has been successfully imported into your shop. Don\'t forget to re-build the products\' search index.'}
+	{l s='Your file has been successfully imported into your shop. Don\'t forget to re-build the products\' search index.' d='Admin.Advparameters.Notification'}
 </div>
 {/if}
 <div class="row">
@@ -34,22 +34,22 @@
 		<div class="panel">
 			<h3>
 				<i class="icon-upload"></i>
-				{l s='Import'}
+				{l s='Import' d='Admin.Actions'}
 			</h3>
 			<div class="alert alert-info">
 				<ul class="list-unstyled">
-					<li>{l s='You can read information on CSV import at:'}
-						<a href="http://doc.prestashop.com/display/PS16/CSV+Import+Parameters" class="_blank">http://doc.prestashop.com/display/PS16/CSV+Import+Parameters</a>
+					<li>{l s='You can read information on import at:' d='Admin.Advparameters.Help'}
+						<a href="{l s='http://doc.prestashop.com/display/PS17/Import' d='Admin.Advparameters.Help'}" class="_blank">{l s='http://doc.prestashop.com/display/PS17/Import' d='Admin.Advparameters.Help'}</a>
 					</li>
 					<li>{l s='Read more about the CSV format at:'}
-						<a href="http://en.wikipedia.org/wiki/Comma-separated_values" class="_blank">http://en.wikipedia.org/wiki/Comma-separated_values</a>
+						<a href="{l s='http://en.wikipedia.org/wiki/Comma-separated_values' d='Admin.Advparameters.Help'}" class="_blank">{l s='http://en.wikipedia.org/wiki/Comma-separated_values' d='Admin.Advparameters.Help'}</a>
 					</li>
 				</ul>
 			</div>
 			<hr />
 			<form id="preview_import" action="{$current|escape:'html':'UTF-8'}&amp;token={$token|escape:'html':'UTF-8'}" method="post" enctype="multipart/form-data" class="form-horizontal">
 				<div class="form-group">
-					<label for="entity" class="control-label col-lg-4">{l s='What kind of entity would you like to import?'} </label>
+					<label for="entity" class="control-label col-lg-4">{l s='What do you want to import?' d='Admin.Advparameters.Feature'} </label>
 					<div class="col-lg-8">
 						<select name="entity" id="entity" class="fixed-width-xxl form-control">
 							{foreach $entities AS $entity => $i }
@@ -62,30 +62,31 @@
 				</div>
 				<div class="alert alert-warning import_products_categories">
 					<ul>
-						<li>{l s='Note that the Category import does not support having two categories with the same name.'}</li>
-						<li>{l s='Note that you can have several products with the same reference.'}</li>
+						<li>{l s='Note that the Category import does not support having two categories with the same name.' d='Admin.Advparameters.Notification'}</li>
+						<li>{l s='Note that you can have several products with the same reference.' d='Admin.Advparameters.Notification'}</li>
 					</ul>
 				</div>
 				<div class="alert alert-warning import_supply_orders_details">
-					<p>{l s='Importing Supply Order Details will reset your history of ordered products, if there are any.'}</p>
+					<p>{l s='Importing Supply Order Details will reset your history of ordered products, if there are any.' d='Admin.Advparameters.Notification'}</p>
 				</div>
 				<hr />
 				<div class="form-group" id="csv_file_uploader">
-					<label for="file" class="control-label col-lg-4">{l s='Select a CSV file to import'}</label>
+					<label for="file" class="control-label col-lg-4">{l s='Select a file to import' d='Admin.Advparameters.Feature'}</label>
 					<div class="col-lg-8">
 						<input id="file" type="file" name="file" data-url="{$current|escape:'html':'UTF-8'}&amp;token={$token|escape:'html':'UTF-8'}&amp;ajax=1&amp;action=uploadCsv" class="hide" />
 						<button class="ladda-button btn btn-default" data-style="expand-right" data-size="s" type="button" id="file-add-button">
 							<i class="icon-folder-open"></i>
-							{l s='Upload a file'}
+							{l s='Upload' d='Admin.Actions'}
 						</button>
 						{l s='or'}
 						<button class="btn btn-default csv-history-btn" type="button">
 							<span class="csv-history-nb badge">{$files_to_import|count}</span>
-							{l s="Choose from history / FTP"}
+							{l s="Choose from history / FTP" d='Admin.Advparameters.Feature'}
 						</button>
 						<p class="help-block">
-							{l s='Only UTF-8 and ISO 8859-1 encodings are allowed'}.<br/>
-							{l s='You can also upload your file via FTP to the following directory: %s .' sprintf=$path_import}
+							{l s='Allowed formats: .csv, .xls, .xlsx, .xlst, .ods, .ots' d='Admin.Advparameters.Help'}.<br/>
+							{l s='Only UTF-8 and ISO 8859-1 encodings are allowed' d='Admin.Advparameters.Help'}.<br/>
+							{l s='You can also upload your file via FTP to the following directory: %s .' sprintf=[$path_import] d='Admin.Advparameters.Help'}
 						</p>
 					</div>
 					<div class="alert alert-danger" id="file-errors" style="display:none"></div>
@@ -93,7 +94,7 @@
 				<div class="form-group" id="csv_files_history" style="display:none;" >
 					<div class="panel">
 						<div class="panel-heading">
-							{l s='History of uploaded .CSV'}
+							{l s='History of uploaded files' d='Admin.Advparameters.Feature'}
 							<span class="csv-history-nb badge">{$files_to_import|count}</span>
 							<button type="button" class="btn btn-link pull-right csv-history-btn">
 								<i class="icon-remove"></i>
@@ -106,7 +107,7 @@
 									<div class="btn-group pull-right">
 										<button type="button" data-filename="" class="csv-use-btn btn btn-default">
 											<i class="icon-ok"></i>
-											{l s='Use'}
+											{l s='Use' d='Admin.Actions'}
 										</button>
 										<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
 											<i class="icon-chevron-down"></i>
@@ -115,14 +116,14 @@
 											<li>
 												<a class="csv-download-link _blank" href="#">
 													<i class="icon-download"></i>
-													{l s='Download'}
+													{l s='Download' d='Admin.Actions'}
 												</a>
 											</li>
 											<li class="divider"></li>
 											<li>
 												<a class="csv-delete-link" href="#">
 													<i class="icon-trash"></i>
-													{l s='Delete'}
+													{l s='Delete' d='Admin.Actions'}
 												</a>
 											</li>
 										</ul>
@@ -138,7 +139,7 @@
 									<div class="btn-group pull-right">
 										<button type="button" data-filename="{$filename|escape:'html':'UTF-8'}" class="csv-use-btn btn btn-default">
 											<i class="icon-ok"></i>
-											{l s='Use'}
+											{l s='Use' d='Admin.Actions'}
 										</button>
 										<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
 											<i class="icon-chevron-down"></i>
@@ -154,7 +155,7 @@
 											<li>
 												<a href="{$current|escape:'html':'UTF-8'}&amp;token={$token|escape:'html':'UTF-8'}&amp;csvfilename={$filename|@urlencode}&amp;delete=1">
 													<i class="icon-trash"></i>
-													{l s='Delete'}
+													{l s='Delete' d='Admin.Actions'}
 												</a>
 											</li>
 										</ul>
@@ -175,7 +176,7 @@
 							<div class="btn-group pull-right">
 								<button id="file-remove-button" type="button" class="btn btn-default">
 									<i class="icon-refresh"></i>
-									{l s='Change'}
+									{l s='Change' d='Admin.Actions'}
 								</button>
 							</div>
 						</div>
@@ -185,7 +186,7 @@
 				<div class="form-group">
 					<label for="iso_lang" class="control-label col-lg-4">
 						<span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="{l s='The locale must be installed'}">
-							{l s='Language of the file'}
+							{l s='Language of the file' d='Admin.Advparameters.Feature'}
 						</span>
 					</label>
 					<div class="col-lg-8">
@@ -196,42 +197,35 @@
 						</select>
 					</div>
 				</div>
-				<div class="form-group">
-					<label for="convert" class="control-label col-lg-4">{l s='ISO 8859-1 encoded file?'}</label>
-					<div class="col-lg-8">
-						<label class="switch-light prestashop-switch fixed-width-lg">
-							<input name="convert" id="convert" type="checkbox" />
-							<span>
-								<span>{l s='Yes'}</span>
-								<span>{l s='No'}</span>
-							</span>
-							<a class="slide-button btn"></a>
-						</label>
+				<div id="csv-fields">
+					<div class="form-group">
+						<label for="separator" class="control-label col-lg-4">{l s='Field separator' d='Admin.Advparameters.Feature'}</label>
+						<div class="col-lg-8">
+							<input id="separator" name="separator" class="fixed-width-xs form-control" type="text" value="{if isset($separator_selected)}{$separator_selected|escape:'html':'UTF-8'}{else};{/if}" />
+							<div class="help-block">{l s='e.g. ' d='Admin.Advparameters.Help'} 1; Blouse; 129.90; 5</div>
+						</div>
+						<div class="form-group">
+							<label for="multiple_value_separator" class="control-label col-lg-4">{l s='Multiple value separator'}</label>
+							<div class="col-lg-8">
+								<input id="multiple_value_separator" name="multiple_value_separator" class="fixed-width-xs form-control" type="text" value="{if isset($multiple_value_separator_selected)}{$multiple_value_separator_selected|escape:'html':'UTF-8'}{else},{/if}" />
+								<div class="help-block">{l s='e.g. ' d='Admin.Advparameters.Help'} Blouse; red.jpg, blue.jpg, green.jpg; 129.90</div>
+							</div>
+						</div>
 					</div>
-				</div>
-				<div class="form-group">
-					<label for="separator" class="control-label col-lg-4">{l s='Field separator'}</label>
-					<div class="col-lg-8">
-						<input id="separator" name="separator" class="fixed-width-xs form-control" type="text" value="{if isset($separator_selected)}{$separator_selected|escape:'html':'UTF-8'}{else};{/if}" />
-						<div class="help-block">{l s='e.g. '} 1; Blouse; 129.90; 5</div>
-					</div>
-				</div>
-				<div class="form-group">
-					<label for="multiple_value_separator" class="control-label col-lg-4">{l s='Multiple value separator'}</label>
-					<div class="col-lg-8">
-						<input id="multiple_value_separator" name="multiple_value_separator" class="fixed-width-xs form-control" type="text" value="{if isset($multiple_value_separator_selected)}{$multiple_value_separator_selected|escape:'html':'UTF-8'}{else},{/if}" />
-						<div class="help-block">{l s='e.g. '} Blouse; red.jpg, blue.jpg, green.jpg; 129.90</div>
-					</div>
-				</div>
+  				</div>
 				<hr />
 				<div class="form-group">
-					<label for="truncate" class="control-label col-lg-4">{l s='Delete all'} <span id="entitie">{l s='categories'}</span> {l s='before import'} </label>
+					<label for="truncate" class="control-label col-lg-4">{l s='Delete all [1]categories[/1] before import' sprintf=[
+              '[1]' => '<span id="entitie">',
+              '[/1]' => '</span>'
+            ] d='Admin.Advparameters.Feature'
+            }</label>
 					<div class="col-lg-8">
 						<label class="switch-light prestashop-switch fixed-width-lg">
 							<input id="truncate" name="truncate" type="checkbox"/>
 							<span>
-								<span>{l s='Yes'}</span>
-								<span>{l s='No'}</span>
+								<span>{l s='Yes' d='Admin.Global'}</span>
+								<span>{l s='No' d='Admin.Global'}</span>
 							</span>
 							<a class="slide-button btn"></a>
 						</label>
@@ -239,29 +233,29 @@
 				</div>
 				<div class="form-group" style="display: none">
 					<label for="match_ref" class="control-label col-lg-4">
-						<span data-toggle="tooltip" class="label-tooltip" data-original-title="{l s='If enabled, the product\'s reference number MUST be unique!'}">
-							{l s='Use product reference as key'}
+						<span data-toggle="tooltip" class="label-tooltip" data-original-title="{l s='If enabled, the product\'s reference number MUST be unique!' d='Admin.Advparameters.Help'}">
+							{l s='Use product reference as key' d='Admin.Advparameters.Feature'}
 						</span>
 					</label>
 					<div class="col-lg-8">
 						<label class="switch-light prestashop-switch fixed-width-lg">
 							<input id="match_ref" name="match_ref" type="checkbox" />
 							<span>
-								<span>{l s='Yes'}</span>
-								<span>{l s='No'}</span>
+								<span>{l s='Yes' d='Admin.Global'}</span>
+								<span>{l s='No' d='Admin.Global'}</span>
 							</span>
 							<a class="slide-button btn"></a>
 						</label>
 					</div>
 				</div>
 				<div class="form-group">
-					<label for="regenerate" class="control-label col-lg-4">{l s='Skip thumbnails regeneration'}</label>
+					<label for="regenerate" class="control-label col-lg-4">{l s='Skip thumbnails regeneration' d='Admin.Advparameters.Feature'}</label>
 					<div class="col-lg-8">
 						<label class="switch-light prestashop-switch fixed-width-lg">
 							<input id="regenerate" name="regenerate" type="checkbox" />
 							<span>
-								<span>{l s='Yes'}</span>
-								<span>{l s='No'}</span>
+								<span>{l s='Yes' d='Admin.Global'}</span>
+								<span>{l s='No' d='Admin.Global'}</span>
 							</span>
 							<a class="slide-button btn"></a>
 						</label>
@@ -269,30 +263,40 @@
 				</div>
 				<div class="form-group">
 					<label for="forceIDs" class="control-label col-lg-4">
-						<span data-toggle="tooltip" class="label-tooltip" data-original-title="{l s='If you enable this option, your imported items\' ID number will be used as-is. If you do not enable this option, the imported ID number will be ignored, and PrestaShop will instead create auto-incremented ID numbers for all the imported items.'}">
-							{l s='Force all ID numbers'}
+						<span data-toggle="tooltip" class="label-tooltip" data-original-title="{l s='If you enable this option, your imported items\' ID number will be used as-is. If you do not enable this option, the imported ID numbers will be ignored, and PrestaShop will instead create auto-incremented ID numbers for all the imported items.' d='Admin.Advparameters.Help'}">
+							{l s='Force all ID numbers' d='Admin.Advparameters.Feature'}
 						</span>
 					</label>
 					<div class="col-lg-8">
 						<label class="switch-light prestashop-switch fixed-width-lg">
 							<input  id="forceIDs" name="forceIDs" type="checkbox"/>
 							<span>
-								<span>{l s='Yes'}</span>
-								<span>{l s='No'}</span>
+								<span>{l s='Yes' d='Admin.Global'}</span>
+								<span>{l s='No' d='Admin.Global'}</span>
 							</span>
 							<a class="slide-button btn"></a>
 						</label>
 					</div>
 				</div>
-<!--
-				{*if empty($files_to_import)*}
-				<div class="alert alert-info">{l s='You must upload a file in order to proceed to the next step'}</div>
-				{*if !count($files_to_import)*}
-				<p>{l s='There is no CSV file available. Please upload one using the \'Upload\' button above.'}</p>
--->
+				<div class="form-group">
+					<label for="sendemail" class="control-label col-lg-4">
+						<span data-toggle="tooltip" class="label-tooltip" data-original-title="{l s='Sends an email to let you know your import is complete. It can be useful when handling large files, as the import may take some time.' d='Admin.Advparameters.Help'}">
+							{l s='Send notification email' d='Admin.Advparameters.Feature'}</label>
+						</span>
+					<div class="col-lg-8">
+						<label class="switch-light prestashop-switch fixed-width-lg">
+							<input id="sendemail" name="sendemail" type="checkbox" checked="checked" />
+							<span>
+								<span>{l s='Yes' d='Admin.Global'}</span>
+								<span>{l s='No' d='Admin.Global'}</span>
+							</span>
+							<a class="slide-button btn"></a>
+						</label>
+					</div>
+				</div>
 				<div class="panel-footer">
 					<button type="submit" name="submitImportFile" id="submitImportFile" class="btn btn-default pull-right" >
-						<i class="process-icon-next"></i> <span>{l s='Next step'}</span>
+						<i class="process-icon-next"></i> <span>{l s='Next step' d='Admin.Advparameters.Feature'}</span>
 					</button>
 				</div>
 			</form>
@@ -303,50 +307,53 @@
 		<div class="panel">
 			<h3>
 				<i class="icon-list-alt"></i>
-				{l s='Available fields'}
+				{l s='Available fields' d='Admin.Advparameters.Feature'}
 			</h3>
 			<div id="availableFields" class="alert alert-info">
 				{$available_fields}
 			</div>
-			<p>{l s='* Required field'}</p>
+			<p>{l s='* Required field' d='Admin.Advparameters.Feature'}</p>
 		</div>
 		<div class="panel">
 			<div class="panel-heading">
 				<i class="icon-download"></i>
-				{l s='Download sample csv files'}
+				{l s='Download sample csv files' d='Admin.Advparameters.Feature'}
 			</div>
 
 			<div class="list-group">
 				<a class="list-group-item _blank" href="../docs/csv_import/categories_import.csv">
-					{l s='Sample Categories file'}
+					{l s='Sample Categories file' d='Admin.Advparameters.Feature'}
 				</a>
 				<a class="list-group-item _blank" href="../docs/csv_import/products_import.csv">
-					{l s='Sample Products file'}
+					{l s='Sample Products file' d='Admin.Advparameters.Feature'}
 				</a>
 				<a class="list-group-item _blank" href="../docs/csv_import/combinations_import.csv">
-					{l s='Sample Combinations file'}
+					{l s='Sample Combinations file' d='Admin.Advparameters.Feature'}
 				</a>
 				<a class="list-group-item _blank" href="../docs/csv_import/customers_import.csv">
-					{l s='Sample Customers file'}
+					{l s='Sample Customers file' d='Admin.Advparameters.Feature'}
 				</a>
 				<a class="list-group-item _blank" href="../docs/csv_import/addresses_import.csv">
-					{l s='Sample Addresses file'}
+					{l s='Sample Addresses file' d='Admin.Advparameters.Feature'}
 				</a>
 				<a class="list-group-item _blank" href="../docs/csv_import/manufacturers_import.csv">
-					{l s='Sample Manufacturers file'}
+					{l s='Sample Brands file' d='Admin.Advparameters.Feature'}
 				</a>
 				<a class="list-group-item _blank" href="../docs/csv_import/suppliers_import.csv">
-					{l s='Sample Suppliers file'}
+					{l s='Sample Suppliers file' d='Admin.Advparameters.Feature'}
 				</a>
 				<a class="list-group-item _blank" href="../docs/csv_import/alias_import.csv">
-					{l s='Sample Aliases file'}
+					{l s='Sample Aliases file' d='Admin.Advparameters.Feature'}
+				</a>
+				<a class="list-group-item _blank" href="../docs/csv_import/store_contacts.csv">
+					{l s='Sample Store Contacts file' d='Admin.Advparameters.Feature'}
 				</a>
 				{if $PS_ADVANCED_STOCK_MANAGEMENT}
 				<a class="list-group-item _blank" href="../docs/csv_import/supply_orders_import.csv">
-					{l s='Sample Supply Orders file'}
+					{l s='Sample Supply Orders file' d='Admin.Advparameters.Feature'}
 				</a>
 				<a class="list-group-item _blank" href="../docs/csv_import/supply_orders_details_import.csv">
-					{l s='Sample Supply Order Details file'}
+					{l s='Sample Supply Order Details file' d='Admin.Advparameters.Feature'}
 				</a>
 				{/if}
 			</div>
@@ -372,6 +379,12 @@
 		$('#csv_file_selected').show();
 		$('#csv_file_uploader').hide();
 		$('#csv_files_history').hide();
+		var pattern = /(\.)?(xls[xt]?|o[td]s)$/mgi;
+		if (pattern.exec(filename) != null) {
+			$("#csv-fields").hide();
+		} else {
+			$("#csv-fields").show();
+		}
 	}
 	// when user unselect the .csv
 	function csv_unselect() {
@@ -396,7 +409,7 @@
 		$('#file').fileupload({
 			dataType: 'json',
 			autoUpload: true,
-			acceptFileTypes: /(\.|\/)(csv)$/i,
+			acceptFileTypes: /(\.)?(csv|xls[xt]?|o[td]s)$/mgi,
 			singleFileUploads: true,
 			{if isset ($post_max_size)}maxFileSize: {$post_max_size},{/if}
 			start: function (e) {
@@ -467,6 +480,7 @@
 		if(selected){
 			$('#csv_file_selected').show();
 			$('#csv_file_uploader').hide();
+			csv_select(selected);
 		}
 
 		var truncateAuthorized = {$truncateAuthorized|intval};
@@ -476,11 +490,11 @@
 		$('#preview_import').submit(function(e) {
 			if ($('#truncate').get(0).checked) {
 				if (truncateAuthorized) {
-					if (!confirm('{l s='Are you sure that you would like to delete this entity: ' js=1}' + ' ' + $.trim($('#entity > option:selected').text().toLowerCase()) + '?'))
+					if (!confirm('{l s='Are you sure that you would like to delete this entity: ' js=1 d='Admin.Advparameters.Notification'}' + ' ' + $.trim($('#entity > option:selected').text().toLowerCase()) + '?'))
 						e.preventDefault();
 				}
 				else {
-					jAlert('{l s='You do not have permission to delete this. When the MultiStore mode is enabled, only a SuperAdmin can delete all items before an import.' js=1}');
+					jAlert('{l s='You do not have permission to delete this. When the MultiStore mode is enabled, only a SuperAdmin can delete all items before an import.' js=1 d='Admin.Advparameters.Notification'}');
 					return false;
 				}
 			}
@@ -513,7 +527,8 @@
 				$(".import_products_categories").hide();
 			}
 			if ($("#entity > option:selected").val() == 0 || $("#entity > option:selected").val() == 1 ||
-				$("#entity > option:selected").val() == 5 || $("#entity > option:selected").val() == 6) {
+				$("#entity > option:selected").val() == 5 || $("#entity > option:selected").val() == 6 ||
+				$("#entity > option:selected").val() == 8) {
 					$("#regenerate").closest('.form-group').show();
 			}
 			else {
@@ -522,7 +537,7 @@
 			if ($("#entity > option:selected").val() == 0 || $("#entity > option:selected").val() == 1 ||
 				$("#entity > option:selected").val() == 3 || $("#entity > option:selected").val() == 4 ||
 				$("#entity > option:selected").val() == 5 || $("#entity > option:selected").val() == 6 ||
-				$("#entity > option:selected").val() == 7) {
+				$("#entity > option:selected").val() == 7 || $("#entity > option:selected").val() == 8) {
 				$("#forceIDs").closest('.form-group').show();
 			}
 			else {

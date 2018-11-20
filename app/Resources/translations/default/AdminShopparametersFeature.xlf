@@ -1,0 +1,1924 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="classes/lang/GenderLang.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="127469a6b4253ebb77adccc0dd48461e">
+        <source>Mr.</source>
+        <target>Mr.</target>
+        <note>Context:
+File: classes/lang/GenderLang.php:40</note>
+      </trans-unit>
+      <trans-unit id="773442a125403cbb194c24c5a8d59b88">
+        <source>Mrs.</source>
+        <target>Mrs.</target>
+        <note>Context:
+File: classes/lang/GenderLang.php:41</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="classes/lang/GroupLang.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="c9fb01bb38360f1f3f595b7ccf3d3abe">
+        <source>Visitor</source>
+        <target>Visitor</target>
+        <note>Context:
+File: classes/lang/GroupLang.php:40</note>
+      </trans-unit>
+      <trans-unit id="adb831a7fdd83dd1e2a309ce7591dff8">
+        <source>Guest</source>
+        <target>Guest</target>
+        <note>Context:
+File: classes/lang/GroupLang.php:41</note>
+      </trans-unit>
+      <trans-unit id="ce26601dac0dea138b7295f02b7620a7">
+        <source>Customer</source>
+        <target>Customer</target>
+        <note>Context:
+File: classes/lang/GroupLang.php:42</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="classes/lang/ConfigurationLang.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="d2faf7873d8849348199df0e47d148ea">
+        <source>Dear Customer,
+
+Regards,
+Customer service</source>
+        <target>Dear Customer,
+
+Regards,
+Customer service</target>
+        <note>Context:
+File: classes/lang/ConfigurationLang.php:42
+ Comment: PS_CUSTOMER_SERVICE_SIGNATURE on configuration_lang table</note>
+      </trans-unit>
+      <trans-unit id="5a88dab595c4fe254a5154bd3ee26b7f">
+        <source>We are currently updating our shop and will be back really soon.
+Thanks for your patience.</source>
+        <target>We are currently updating our shop and will be back really soon.
+Thanks for your patience.</target>
+        <note>Context:
+File: classes/lang/ConfigurationLang.php:49
+ Comment: PS_MAINTENANCE_TEXT on configuration_lang table</note>
+      </trans-unit>
+      <trans-unit id="d1d2f5672327bcdef75062dc70e875df">
+        <source>#IN</source>
+        <target>#IN</target>
+        <note>Context:
+File: classes/lang/ConfigurationLang.php:54
+ Comment: PS_INVOICE_PREFIX on configuration_lang table</note>
+      </trans-unit>
+      <trans-unit id="b13c095eb3e41264a7b64504fa8348be">
+        <source>#DE</source>
+        <target>#DE</target>
+        <note>Context:
+File: classes/lang/ConfigurationLang.php:58
+ Comment: PS_DELIVERY_PREFIX on configuration_lang table</note>
+      </trans-unit>
+      <trans-unit id="a02341e3f02309e6a6c6832870a7e803">
+        <source>#RE</source>
+        <target>#RE</target>
+        <note>Context:
+File: classes/lang/ConfigurationLang.php:62
+ Comment: PS_RETURN_PREFIX on configuration_lang table</note>
+      </trans-unit>
+      <trans-unit id="4dfefaddceaa53498ee5bd840ac72692">
+        <source>a|about|above|after|again|against|all|am|an|and|any|are|aren|as|at|be|because|been|before|being|below|between|both|but|by|can|cannot|could|couldn|did|didn|do|does|doesn|doing|don|down|during|each|few|for|from|further|had|hadn|has|hasn|have|haven|having|he|ll|her|here|hers|herself|him|himself|his|how|ve|if|in|into|is|isn|it|its|itself|let|me|more|most|mustn|my|myself|no|nor|not|of|off|on|once|only|or|other|ought|our|ours|ourselves|out|over|own|same|shan|she|should|shouldn|so|some|such|than|that|the|their|theirs|them|themselves|then|there|these|they|re|this|those|through|to|too|under|until|up|very|was|wasn|we|were|weren|what|when|where|which|while|who|whom|why|with|won|would|wouldn|you|your|yours|yourself|yourselves</source>
+        <target>a|about|above|after|again|against|all|am|an|and|any|are|aren|as|at|be|because|been|before|being|below|between|both|but|by|can|cannot|could|couldn|did|didn|do|does|doesn|doing|don|down|during|each|few|for|from|further|had|hadn|has|hasn|have|haven|having|he|ll|her|here|hers|herself|him|himself|his|how|ve|if|in|into|is|isn|it|its|itself|let|me|more|most|mustn|my|myself|no|nor|not|of|off|on|once|only|or|other|ought|our|ours|ourselves|out|over|own|same|shan|she|should|shouldn|so|some|such|than|that|the|their|theirs|them|themselves|then|there|these|they|re|this|those|through|to|too|under|until|up|very|was|wasn|we|were|weren|what|when|where|which|while|who|whom|why|with|won|would|wouldn|you|your|yours|yourself|yourselves</target>
+        <note>Context:
+File: classes/lang/ConfigurationLang.php:66
+ Comment: PS_RETURN_PREFIX on configuration_lang table - No translate word per word but adapting for your language</note>
+      </trans-unit>
+      <trans-unit id="c3d67cba349c7ecb5465ae92bdb38970">
+        <source>You may unsubscribe at any moment. For that purpose, please find our contact info in the legal notice.</source>
+        <target>You may unsubscribe at any moment. For that purpose, please find our contact info in the legal notice.</target>
+        <note>Context:
+File: classes/lang/ConfigurationLang.php:70
+ Comment: NW_CONDITIONS on configuration_lang table - From ps_emailsubscription module</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="classes/lang/ContactLang.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="4b220f866824d97c12e2eb9b44e3b5e6">
+        <source>Webmaster</source>
+        <target>Webmaster</target>
+        <note>Context:
+File: classes/lang/ContactLang.php:40</note>
+      </trans-unit>
+      <trans-unit id="2273d1167a6212812d95dc8fadbae78e">
+        <source>Customer service</source>
+        <target>Customer service</target>
+        <note>Context:
+File: classes/lang/ContactLang.php:41</note>
+      </trans-unit>
+      <trans-unit id="e335310ef456f61ede772356e5ece2aa">
+        <source>If a technical problem occurs on this website</source>
+        <target>If a technical problem occurs on this website</target>
+        <note>Context:
+File: classes/lang/ContactLang.php:45</note>
+      </trans-unit>
+      <trans-unit id="c41c56aaf2db6aadfcdbe7e46422607d">
+        <source>For any question about a product, an order</source>
+        <target>For any question about a product, an order</target>
+        <note>Context:
+File: classes/lang/ContactLang.php:48</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminReferrersController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="d7e637a6e9ff116de2fa89551240a94d">
+        <source>Visits</source>
+        <target>Visits</target>
+        <note>Context:
+File: controllers/admin/AdminReferrersController.php:501</note>
+      </trans-unit>
+      <trans-unit id="a28735af01fbb1e35371cb120985ac47">
+        <source>Registrations</source>
+        <target>Registrations</target>
+        <note>Context:
+File: controllers/admin/AdminReferrersController.php:503</note>
+      </trans-unit>
+      <trans-unit id="ae5d01b6efa819cc7a7c05a8c57fcc2c">
+        <source>Visitors</source>
+        <target>Visitors</target>
+        <note>Context:
+File: controllers/admin/AdminReferrersController.php:500</note>
+      </trans-unit>
+      <trans-unit id="453aceb005ceaf54a47da15fee8b2a26">
+        <source>Pages</source>
+        <target>Pages</target>
+        <note>Context:
+File: controllers/admin/AdminReferrersController.php:92</note>
+      </trans-unit>
+      <trans-unit id="591411cc8927851db2002208676d8330">
+        <source>Reg.</source>
+        <target>Reg.</target>
+        <note>Context:
+File: controllers/admin/AdminReferrersController.php:97</note>
+      </trans-unit>
+      <trans-unit id="4bcce22b929055c8db5204629d0a64c1">
+        <source>Avg. cart</source>
+        <target>Avg. cart</target>
+        <note>Context:
+File: controllers/admin/AdminReferrersController.php:115</note>
+      </trans-unit>
+      <trans-unit id="43005b13d452a4ad6f2d8e29b499c55a">
+        <source>Reg. rate</source>
+        <target>Reg. rate</target>
+        <note>Context:
+File: controllers/admin/AdminReferrersController.php:122</note>
+      </trans-unit>
+      <trans-unit id="89741aae300253f498b0993fa678fa18">
+        <source>Order rate</source>
+        <target>Order rate</target>
+        <note>Context:
+File: controllers/admin/AdminReferrersController.php:507</note>
+      </trans-unit>
+      <trans-unit id="316853cc3718335f11c048e33b9be98a">
+        <source>Click</source>
+        <target>Click</target>
+        <note>Context:
+File: controllers/admin/AdminReferrersController.php:132</note>
+      </trans-unit>
+      <trans-unit id="095a1b43effec73955e31e790438de49">
+        <source>Base</source>
+        <target>Base</target>
+        <note>Context:
+File: controllers/admin/AdminReferrersController.php:139</note>
+      </trans-unit>
+      <trans-unit id="581007491cfa474c1e1c1943b4f7026e">
+        <source>Add new referrer</source>
+        <target>Add new referrer</target>
+        <note>Context:
+File: controllers/admin/AdminReferrersController.php:174</note>
+      </trans-unit>
+      <trans-unit id="bb166feff34b74fef81127259160c93a">
+        <source>Affiliate</source>
+        <target>Affiliate</target>
+        <note>Context:
+File: controllers/admin/AdminReferrersController.php:214</note>
+      </trans-unit>
+      <trans-unit id="467c4d2c6929de8029b216ef0c57df6a">
+        <source>Affiliates can access their data with this name and password.</source>
+        <target>Affiliates can access their data with this name and password.</target>
+        <note>Context:
+File: controllers/admin/AdminReferrersController.php:241</note>
+      </trans-unit>
+      <trans-unit id="6d4acea4a9682c8387d2117120a060e5">
+        <source>Front access:</source>
+        <target>Front access:</target>
+        <note>Context:
+File: controllers/admin/AdminReferrersController.php:242</note>
+      </trans-unit>
+      <trans-unit id="6691265cf8673ac521e3a1672d482723">
+        <source>Commission plan</source>
+        <target>Commission plan</target>
+        <note>Context:
+File: controllers/admin/AdminReferrersController.php:258</note>
+      </trans-unit>
+      <trans-unit id="51d53cd2ecdae6b5dd3397875197e898">
+        <source>Click fee</source>
+        <target>Click fee</target>
+        <note>Context:
+File: controllers/admin/AdminReferrersController.php:508</note>
+      </trans-unit>
+      <trans-unit id="2e27c4006a026eacfc1f85b41bf9bc4c">
+        <source>Base fee</source>
+        <target>Base fee</target>
+        <note>Context:
+File: controllers/admin/AdminReferrersController.php:509</note>
+      </trans-unit>
+      <trans-unit id="86190054fc32554662ffbb12b717e8d0">
+        <source>Percent fee</source>
+        <target>Percent fee</target>
+        <note>Context:
+File: controllers/admin/AdminReferrersController.php:510</note>
+      </trans-unit>
+      <trans-unit id="7ea17e2c839ae2f8e149a3c437773a0a">
+        <source>Technical information -- Simple mode</source>
+        <target>Technical information -- Simple mode</target>
+        <note>Context:
+File: controllers/admin/AdminReferrersController.php:294</note>
+      </trans-unit>
+      <trans-unit id="f4d72a64acd8929c0cc9ed96a7a336cc">
+        <source>Include</source>
+        <target>Include</target>
+        <note>Context:
+File: controllers/admin/AdminReferrersController.php:366</note>
+      </trans-unit>
+      <trans-unit id="0988f870ad8a7648219df0767f768b8d">
+        <source>HTTP referrer</source>
+        <target>HTTP referrer</target>
+        <note>Context:
+File: controllers/admin/AdminReferrersController.php:355</note>
+      </trans-unit>
+      <trans-unit id="843f2812f595e7ec7c5036e89fde02d6">
+        <source>Exclude</source>
+        <target>Exclude</target>
+        <note>Context:
+File: controllers/admin/AdminReferrersController.php:374</note>
+      </trans-unit>
+      <trans-unit id="efc92fb772a0037d7b1fab20dff56a85">
+        <source>Request URI</source>
+        <target>Request URI</target>
+        <note>Context:
+File: controllers/admin/AdminReferrersController.php:370</note>
+      </trans-unit>
+      <trans-unit id="71bbbb5468f517f3508ac436977f4dd4">
+        <source>Technical information -- Expert mode</source>
+        <target>Technical information -- Expert mode</target>
+        <note>Context:
+File: controllers/admin/AdminReferrersController.php:345</note>
+      </trans-unit>
+      <trans-unit id="10965b2740f42ad4887932c35cee26ab">
+        <source>Unique visitors</source>
+        <target>Unique visitors</target>
+        <note>Context:
+File: controllers/admin/AdminReferrersController.php:499</note>
+      </trans-unit>
+      <trans-unit id="d3139f39f1ad6324c80a9ddd50cc7867">
+        <source>Pages viewed</source>
+        <target>Pages viewed</target>
+        <note>Context:
+File: controllers/admin/AdminReferrersController.php:502</note>
+      </trans-unit>
+      <trans-unit id="200f5c9c419f0a53d5d361eff7b33abc">
+        <source>Registration rate</source>
+        <target>Registration rate</target>
+        <note>Context:
+File: controllers/admin/AdminReferrersController.php:506</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminSearchEnginesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="b6f05e5ddde1ec63d992d61144452dfa">
+        <source>Referrer</source>
+        <target>Referrer</target>
+        <note>Context:
+File: controllers/admin/AdminSearchEnginesController.php:64</note>
+      </trans-unit>
+      <trans-unit id="9aa1b03934893d7134a660af4204f2a9">
+        <source>Server</source>
+        <target>Server</target>
+        <note>Context:
+File: controllers/admin/AdminSearchEnginesController.php:69</note>
+      </trans-unit>
+      <trans-unit id="b864759d534539519ceaa2c03a39d4c2">
+        <source>GET variable</source>
+        <target>GET variable</target>
+        <note>Context:
+File: controllers/admin/AdminSearchEnginesController.php:59</note>
+      </trans-unit>
+      <trans-unit id="52e1c423b768c6e9850d70f3a41aca1d">
+        <source>$_GET variable</source>
+        <target>$_GET variable</target>
+        <note>Context:
+File: controllers/admin/AdminSearchEnginesController.php:76</note>
+      </trans-unit>
+      <trans-unit id="6c8b05f1f10d94ede52a64f7ab5bc5cc">
+        <source>Add new search engine</source>
+        <target>Add new search engine</target>
+        <note>Context:
+File: controllers/admin/AdminSearchEnginesController.php:93</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/statsforecast/statsforecast.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="ec0fc0100c4fc1ce4eea230c3dc10360">
+        <source>Undefined</source>
+        <target>Undefined</target>
+        <note>Context:
+File: modules/statsforecast/statsforecast.php:529</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/statslive/statslive.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="a55533db46597bee3cd16899c007257e">
+        <source>There are no visitors online.</source>
+        <target>There are no visitors online.</target>
+        <note>Context:
+File: modules/statslive/statslive.php:216</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/statspersonalinfos/statspersonalinfos.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="88183b946cc5f0e8c96b2e66e1c74a7e">
+        <source>Unknown</source>
+        <target>Unknown</target>
+        <note>Context:
+File: modules/statspersonalinfos/statspersonalinfos.php:332</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminPPreferencesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="df644ae155e79abf54175bd15d75f363">
+        <source>Product name</source>
+        <target>Product name</target>
+        <note>Context:
+File: controllers/admin/AdminPPreferencesController.php:117</note>
+      </trans-unit>
+      <trans-unit id="7331e9c21724c771c64a1e0afd2b8407">
+        <source>No default warehouse (default setting)</source>
+        <target>No default warehouse (default setting)</target>
+        <note>Context:
+File: controllers/admin/AdminPPreferencesController.php:41</note>
+      </trans-unit>
+      <trans-unit id="7dbe88f99044a2b7e37ae992b8651be4">
+        <source>Products (general)</source>
+        <target>Products (general)</target>
+        <note>Context:
+File: controllers/admin/AdminPPreferencesController.php:46</note>
+      </trans-unit>
+      <trans-unit id="bb98eaca8d91531f4ae177c9d395f1d4">
+        <source>Catalog mode</source>
+        <target>Catalog mode</target>
+        <note>Context:
+File: controllers/admin/AdminPPreferencesController.php:49</note>
+      </trans-unit>
+      <trans-unit id="eb1cef1202fdc4d7954899fbf9f1734b">
+        <source>Number of days for which the product is considered 'new'</source>
+        <target>Number of days for which the product is considered 'new'</target>
+        <note>Context:
+File: controllers/admin/AdminPPreferencesController.php:57</note>
+      </trans-unit>
+      <trans-unit id="9d980493b9016efc42443b1fdae49f33">
+        <source>Max size of product summary</source>
+        <target>Max size of product summary</target>
+        <note>Context:
+File: controllers/admin/AdminPPreferencesController.php:63</note>
+      </trans-unit>
+      <trans-unit id="b5069c99813cffc6933c18ab71fd6cd9">
+        <source>Quantity discounts based on</source>
+        <target>Quantity discounts based on</target>
+        <note>Context:
+File: controllers/admin/AdminPPreferencesController.php:71</note>
+      </trans-unit>
+      <trans-unit id="52be3e936f99d9746870ca7d356b3f21">
+        <source>Force update of friendly URL</source>
+        <target>Force update of friendly URL</target>
+        <note>Context:
+File: controllers/admin/AdminPPreferencesController.php:84</note>
+      </trans-unit>
+      <trans-unit id="8a93e785ac0d7204479e4697cbe8696c">
+        <source>Default activation status</source>
+        <target>Default activation status</target>
+        <note>Context:
+File: controllers/admin/AdminPPreferencesController.php:92</note>
+      </trans-unit>
+      <trans-unit id="cbb81506a7fe3ef03f7a89c76c52131a">
+        <source>Pagination</source>
+        <target>Pagination</target>
+        <note>Context:
+File: controllers/admin/AdminPPreferencesController.php:103</note>
+      </trans-unit>
+      <trans-unit id="7e1b4ee573c4ef023904fd90eb9ddea7">
+        <source>Products per page</source>
+        <target>Products per page</target>
+        <note>Context:
+File: controllers/admin/AdminPPreferencesController.php:106</note>
+      </trans-unit>
+      <trans-unit id="e29857ad6c4bbba99614831d7e3e5a3f">
+        <source>Default order by</source>
+        <target>Default order by</target>
+        <note>Context:
+File: controllers/admin/AdminPPreferencesController.php:113</note>
+      </trans-unit>
+      <trans-unit id="290b7c47045d269e2ccfa69e6477acfe">
+        <source>Product price</source>
+        <target>Product price</target>
+        <note>Context:
+File: controllers/admin/AdminPPreferencesController.php:118</note>
+      </trans-unit>
+      <trans-unit id="0cffebd3c32f4467e14759b2b7d3d515">
+        <source>Product add date</source>
+        <target>Product add date</target>
+        <note>Context:
+File: controllers/admin/AdminPPreferencesController.php:119</note>
+      </trans-unit>
+      <trans-unit id="d920ec381c352d9d92a53ed3d261e8c6">
+        <source>Product modified date</source>
+        <target>Product modified date</target>
+        <note>Context:
+File: controllers/admin/AdminPPreferencesController.php:120</note>
+      </trans-unit>
+      <trans-unit id="3cfcde53f39184634bc7b2344479fbc4">
+        <source>Position inside category</source>
+        <target>Position inside category</target>
+        <note>Context:
+File: controllers/admin/AdminPPreferencesController.php:121</note>
+      </trans-unit>
+      <trans-unit id="7b541de13ca0229406e134a373dd6382">
+        <source>Product quantity</source>
+        <target>Product quantity</target>
+        <note>Context:
+File: controllers/admin/AdminPPreferencesController.php:123</note>
+      </trans-unit>
+      <trans-unit id="75ed578ac3cb02b0ba40002a25bc0403">
+        <source>Product reference</source>
+        <target>Product reference</target>
+        <note>Context:
+File: controllers/admin/AdminPPreferencesController.php:124</note>
+      </trans-unit>
+      <trans-unit id="114a8ec626471fdc120f863a9fb25e4c">
+        <source>Default order method</source>
+        <target>Default order method</target>
+        <note>Context:
+File: controllers/admin/AdminPPreferencesController.php:129</note>
+      </trans-unit>
+      <trans-unit id="eb763a2e313718f33f55e1f0d84df6ee">
+        <source>Product page</source>
+        <target>Product page</target>
+        <note>Context:
+File: controllers/admin/AdminPPreferencesController.php:148</note>
+      </trans-unit>
+      <trans-unit id="b58704f2e2e18edc7c903342c2a42dfc">
+        <source>Display available quantities on the product page</source>
+        <target>Display available quantities on the product page</target>
+        <note>Context:
+File: controllers/admin/AdminPPreferencesController.php:151</note>
+      </trans-unit>
+      <trans-unit id="f8f1f78351c2864c334a80b706a303b2">
+        <source>Display remaining quantities when the quantity is lower than</source>
+        <target>Display remaining quantities when the quantity is lower than</target>
+        <note>Context:
+File: controllers/admin/AdminPPreferencesController.php:158</note>
+      </trans-unit>
+      <trans-unit id="a2ab7db4ee7104a693358c0c9d07c6ce">
+        <source>Display unavailable product attributes on the product page</source>
+        <target>Display unavailable product attributes on the product page</target>
+        <note>Context:
+File: controllers/admin/AdminPPreferencesController.php:166</note>
+      </trans-unit>
+      <trans-unit id="01dabe7ae47f9848c5e38f353a8f866f">
+        <source>Display the "add to cart" button when a product has attributes</source>
+        <target>Display the "add to cart" button when a product has attributes</target>
+        <note>Context:
+File: controllers/admin/AdminPPreferencesController.php:173</note>
+      </trans-unit>
+      <trans-unit id="0a91cf360875af4259f26bc7e2971132">
+        <source>Separator of attribute anchor on the product links</source>
+        <target>Separator of attribute anchor on the product links</target>
+        <note>Context:
+File: controllers/admin/AdminPPreferencesController.php:180</note>
+      </trans-unit>
+      <trans-unit id="f7699b3d1af7fe3cdb3a6ff301940fdf">
+        <source>Display discounted price</source>
+        <target>Display discounted price</target>
+        <note>Context:
+File: controllers/admin/AdminPPreferencesController.php:189</note>
+      </trans-unit>
+      <trans-unit id="ff26a60315cd84533d5339ba26617988">
+        <source>Products stock</source>
+        <target>Products stock</target>
+        <note>Context:
+File: controllers/admin/AdminPPreferencesController.php:200</note>
+      </trans-unit>
+      <trans-unit id="be6be43cab36ddf8024d237c4a2414f7">
+        <source>Allow ordering of out-of-stock products</source>
+        <target>Allow ordering of out-of-stock products</target>
+        <note>Context:
+File: controllers/admin/AdminPPreferencesController.php:203</note>
+      </trans-unit>
+      <trans-unit id="69983ae81c0090a571d3f60aedbd0d46">
+        <source>Enable stock management</source>
+        <target>Enable stock management</target>
+        <note>Context:
+File: controllers/admin/AdminPPreferencesController.php:211</note>
+      </trans-unit>
+      <trans-unit id="65055b5469b4ad0c6f799ad782d1ebe5">
+        <source>Default pack stock management</source>
+        <target>Default pack stock management</target>
+        <note>Context:
+File: controllers/admin/AdminPPreferencesController.php:251</note>
+      </trans-unit>
+      <trans-unit id="175db77b6b3ecd9633e85b5efc28bbc1">
+        <source>Decrement pack only.</source>
+        <target>Decrement pack only.</target>
+        <note>Context:
+File: controllers/admin/AdminPPreferencesController.php:257</note>
+      </trans-unit>
+      <trans-unit id="1ba020dea4ce06fa139a471db21f41a7">
+        <source>Decrement products in pack only.</source>
+        <target>Decrement products in pack only.</target>
+        <note>Context:
+File: controllers/admin/AdminPPreferencesController.php:261</note>
+      </trans-unit>
+      <trans-unit id="61b912928e920c280798dc648d4068fe">
+        <source>Decrement both.</source>
+        <target>Decrement both.</target>
+        <note>Context:
+File: controllers/admin/AdminPPreferencesController.php:265</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminGendersController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="63889cfb9d3cbe05d1bd2be5cc9953fd">
+        <source>Male</source>
+        <target>Male</target>
+        <note>Context:
+File: controllers/admin/AdminGendersController.php:136</note>
+      </trans-unit>
+      <trans-unit id="b719ce180ec7bd9641fece2f920f4817">
+        <source>Female</source>
+        <target>Female</target>
+        <note>Context:
+File: controllers/admin/AdminGendersController.php:141</note>
+      </trans-unit>
+      <trans-unit id="5e74f2daf4ae8030571ceee5b4837579">
+        <source>Social title</source>
+        <target>Social title</target>
+        <note>Context:
+File: controllers/admin/AdminGendersController.php:70</note>
+      </trans-unit>
+      <trans-unit id="e9bb5320b3890b6747c91b5a71ae5a01">
+        <source>Neutral</source>
+        <target>Neutral</target>
+        <note>Context:
+File: controllers/admin/AdminGendersController.php:146</note>
+      </trans-unit>
+      <trans-unit id="88972b928c146c793fc9bd5c41a27b95">
+        <source>Add new social title</source>
+        <target>Add new social title</target>
+        <note>Context:
+File: controllers/admin/AdminGendersController.php:101</note>
+      </trans-unit>
+      <trans-unit id="d583f5e653e36be901f9baafc9d975b3">
+        <source>Social titles</source>
+        <target>Social titles</target>
+        <note>Context:
+File: controllers/admin/AdminGendersController.php:113</note>
+      </trans-unit>
+      <trans-unit id="6fed80a8c8ded2f5e14a687e4a443abc">
+        <source>Image width</source>
+        <target>Image width</target>
+        <note>Context:
+File: controllers/admin/AdminGendersController.php:159</note>
+      </trans-unit>
+      <trans-unit id="2aa3aa9d021c7cfffb5afa08f52fbc51">
+        <source>Image height</source>
+        <target>Image height</target>
+        <note>Context:
+File: controllers/admin/AdminGendersController.php:166</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminImportController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="13348442cc6a27032d2b4aa28b75a5d3">
+        <source>Search</source>
+        <target>Search</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:453</note>
+      </trans-unit>
+      <trans-unit id="db72e24b402e8baf8df6ca786a59e4de">
+        <source>Rewritten URL</source>
+        <target>Rewritten URL</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:198</note>
+      </trans-unit>
+      <trans-unit id="effdb9ce6c5d44df31b89d7069c8e0fb">
+        <source>Alias</source>
+        <target>Alias</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:4414</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminShopController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="e93c33bd1341ab74195430daeb63db13">
+        <source>Shop name</source>
+        <target>Shop name</target>
+        <note>Context:
+File: controllers/admin/AdminShopController.php:366</note>
+      </trans-unit>
+      <trans-unit id="ccf107a5d46c6501c9f2f4345400dc2e">
+        <source>Shop ID</source>
+        <target>Shop ID</target>
+        <note>Context:
+File: controllers/admin/AdminShopController.php:50</note>
+      </trans-unit>
+      <trans-unit id="4493e821e06072415518bd7ae4077996">
+        <source>Shop group</source>
+        <target>Shop group</target>
+        <note>Context:
+File: controllers/admin/AdminShopController.php:422</note>
+      </trans-unit>
+      <trans-unit id="09059cedfd08d6e8a12417b285a79ffd">
+        <source>Root category</source>
+        <target>Root category</target>
+        <note>Context:
+File: controllers/admin/AdminShopController.php:65</note>
+      </trans-unit>
+      <trans-unit id="8849f8620b59b37526cebfb785d1df2d">
+        <source>Main URL for this shop</source>
+        <target>Main URL for this shop</target>
+        <note>Context:
+File: controllers/admin/AdminShopController.php:70</note>
+      </trans-unit>
+      <trans-unit id="0fc629d52a6553e98b76fffa727ba878">
+        <source>Edit this shop group</source>
+        <target>Edit this shop group</target>
+        <note>Context:
+File: controllers/admin/AdminShopController.php:100</note>
+      </trans-unit>
+      <trans-unit id="652342e19bf26f8d1b350e60aad3e3bf">
+        <source>Add new shop</source>
+        <target>Add new shop</target>
+        <note>Context:
+File: controllers/admin/AdminShopController.php:127</note>
+      </trans-unit>
+      <trans-unit id="224154fa6f3601b7de4690ba6a9ad8b4">
+        <source>Multistore tree</source>
+        <target>Multistore tree</target>
+        <note>Context:
+File: controllers/admin/AdminShopController.php:158</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminMetaController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="193cfc9be3b995831c6af2fea6650e60">
+        <source>Page</source>
+        <target>Page</target>
+        <note>Context:
+File: controllers/admin/AdminMetaController.php:66</note>
+      </trans-unit>
+      <trans-unit id="12cb401e3a068898222575c6a5ef5ece">
+        <source>Page title</source>
+        <target>Page title</target>
+        <note>Context:
+File: controllers/admin/AdminMetaController.php:338</note>
+      </trans-unit>
+      <trans-unit id="a7686ea311b65874a504a343c08a4341">
+        <source>Accented URL</source>
+        <target>Accented URL</target>
+        <note>Context:
+File: controllers/admin/AdminMetaController.php:86</note>
+      </trans-unit>
+      <trans-unit id="fb64c58d84a997e89be8de9897f36ecc">
+        <source>Redirect to the canonical URL</source>
+        <target>Redirect to the canonical URL</target>
+        <note>Context:
+File: controllers/admin/AdminMetaController.php:93</note>
+      </trans-unit>
+      <trans-unit id="720252deba3646242d7d43548bd57d78">
+        <source>No redirection (you may have duplicate content issues)</source>
+        <target>No redirection (you may have duplicate content issues)</target>
+        <note>Context:
+File: controllers/admin/AdminMetaController.php:98</note>
+      </trans-unit>
+      <trans-unit id="35df89560d52bdb19ba653e994fbb178">
+        <source>302 Moved Temporarily (recommended while setting up your store)</source>
+        <target>302 Moved Temporarily (recommended while setting up your store)</target>
+        <note>Context:
+File: controllers/admin/AdminMetaController.php:99</note>
+      </trans-unit>
+      <trans-unit id="317a1a7df329b3d6e9d7e36915ebde8c">
+        <source>301 Moved Permanently (recommended once you have gone live)</source>
+        <target>301 Moved Permanently (recommended once you have gone live)</target>
+        <note>Context:
+File: controllers/admin/AdminMetaController.php:100</note>
+      </trans-unit>
+      <trans-unit id="38bada4e8300d679ea0c293a8658605a">
+        <source>Disable Apache's MultiViews option</source>
+        <target>Disable Apache's MultiViews option</target>
+        <note>Context:
+File: controllers/admin/AdminMetaController.php:110</note>
+      </trans-unit>
+      <trans-unit id="1260ff0747d4dbe30fcc4d360891205f">
+        <source>Disable Apache's mod_security module</source>
+        <target>Disable Apache's mod_security module</target>
+        <note>Context:
+File: controllers/admin/AdminMetaController.php:118</note>
+      </trans-unit>
+      <trans-unit id="7959e21ff0b83542251ca0b4e9a62eea">
+        <source>Generate robots.txt file</source>
+        <target>Generate robots.txt file</target>
+        <note>Context:
+File: controllers/admin/AdminMetaController.php:135</note>
+      </trans-unit>
+      <trans-unit id="345d6249c20c6319bb09edaaf536744b">
+        <source>Robots file generation</source>
+        <target>Robots file generation</target>
+        <note>Context:
+File: controllers/admin/AdminMetaController.php:143</note>
+      </trans-unit>
+      <trans-unit id="43199543574edd476ab25337ad4a223c">
+        <source>Set shop URL</source>
+        <target>Set shop URL</target>
+        <note>Context:
+File: controllers/admin/AdminMetaController.php:154</note>
+      </trans-unit>
+      <trans-unit id="db309cb65c4220d02c0fd13927d315ae">
+        <source>Shop domain</source>
+        <target>Shop domain</target>
+        <note>Context:
+File: controllers/admin/AdminMetaController.php:164</note>
+      </trans-unit>
+      <trans-unit id="7efeee26d2914e586169f61213741599">
+        <source>SSL domain</source>
+        <target>SSL domain</target>
+        <note>Context:
+File: controllers/admin/AdminMetaController.php:170</note>
+      </trans-unit>
+      <trans-unit id="c274743f6bf3e3682c41e9ee269913f4">
+        <source>Base URI</source>
+        <target>Base URI</target>
+        <note>Context:
+File: controllers/admin/AdminMetaController.php:176</note>
+      </trans-unit>
+      <trans-unit id="3cb0403ba2ec65e9030c1013b5edb42d">
+        <source>Set up URLs</source>
+        <target>Set up URLs</target>
+        <note>Context:
+File: controllers/admin/AdminMetaController.php:192</note>
+      </trans-unit>
+      <trans-unit id="2cb749d5ceef7acb7790bbc1703f1fbd">
+        <source>Manage domain name</source>
+        <target>Manage domain name</target>
+        <note>Context:
+File: controllers/admin/AdminMetaController.php:203</note>
+      </trans-unit>
+      <trans-unit id="b6a208425b55c6e53b3114212cc525b6">
+        <source>Add a domain name</source>
+        <target>Add a domain name</target>
+        <note>Context:
+File: controllers/admin/AdminMetaController.php:207</note>
+      </trans-unit>
+      <trans-unit id="0d3ed57f8fd83cc2e9cf265a18663c0a">
+        <source>Schema of URLs</source>
+        <target>Schema of URLs</target>
+        <note>Context:
+File: controllers/admin/AdminMetaController.php:221</note>
+      </trans-unit>
+      <trans-unit id="e1622ba9f41f5b695bddc69e3ceaa204">
+        <source>Add a new page</source>
+        <target>Add a new page</target>
+        <note>Context:
+File: controllers/admin/AdminMetaController.php:234</note>
+      </trans-unit>
+      <trans-unit id="9ca94e67feafa7c087ed70257d54ce53">
+        <source>Keywords: %s</source>
+        <target>Keywords: %s</target>
+        <note>Context:
+File: controllers/admin/AdminMetaController.php:267</note>
+      </trans-unit>
+      <trans-unit id="532a7bf10fd5a4315e0dfefe7a110d43">
+        <source>Default pages</source>
+        <target>Default pages</target>
+        <note>Context:
+File: controllers/admin/AdminMetaController.php:290</note>
+      </trans-unit>
+      <trans-unit id="e334486a68366ba780f5140cfe8668ac">
+        <source>Module pages</source>
+        <target>Module pages</target>
+        <note>Context:
+File: controllers/admin/AdminMetaController.php:294</note>
+      </trans-unit>
+      <trans-unit id="b49c4d1248da006daf31db2577b7be4a">
+        <source>Meta tags</source>
+        <target>Meta tags</target>
+        <note>Context:
+File: controllers/admin/AdminMetaController.php:309</note>
+      </trans-unit>
+      <trans-unit id="c0a1f9eff88edb62c46edb084004e32b">
+        <source>Page name</source>
+        <target>Page name</target>
+        <note>Context:
+File: controllers/admin/AdminMetaController.php:319</note>
+      </trans-unit>
+      <trans-unit id="5575f8bf467eba7499f22e78db6f3f56">
+        <source>Route to products</source>
+        <target>Route to products</target>
+        <note>Context:
+File: controllers/admin/AdminMetaController.php:642</note>
+      </trans-unit>
+      <trans-unit id="1092637069f4ebf1bee2b02fd280888b">
+        <source>Route to category</source>
+        <target>Route to category</target>
+        <note>Context:
+File: controllers/admin/AdminMetaController.php:643</note>
+      </trans-unit>
+      <trans-unit id="e5bcaf8cdb205e965d4ba8fdf0dc898c">
+        <source>Route to category which has the "selected_filter" attribute for the "Layered Navigation" (blocklayered) module</source>
+        <target>Route to category which has the "selected_filter" attribute for the "Layered Navigation" (blocklayered) module</target>
+        <note>Context:
+File: controllers/admin/AdminMetaController.php:644</note>
+      </trans-unit>
+      <trans-unit id="08a551b84112995247355daf3b5d72ba">
+        <source>Route to supplier</source>
+        <target>Route to supplier</target>
+        <note>Context:
+File: controllers/admin/AdminMetaController.php:645</note>
+      </trans-unit>
+      <trans-unit id="1dc5f89ed6e4425ecef2613fda85e5c0">
+        <source>Route to brand</source>
+        <target>Route to brand</target>
+        <note>Context:
+File: controllers/admin/AdminMetaController.php:646</note>
+      </trans-unit>
+      <trans-unit id="e175934d3418b2070a829183b2bfe294">
+        <source>Route to page</source>
+        <target>Route to page</target>
+        <note>Context:
+File: controllers/admin/AdminMetaController.php:647</note>
+      </trans-unit>
+      <trans-unit id="01e4fd64862371a0f532b82e302d438d">
+        <source>Route to page category</source>
+        <target>Route to page category</target>
+        <note>Context:
+File: controllers/admin/AdminMetaController.php:648</note>
+      </trans-unit>
+      <trans-unit id="4b9a9672a96a435f1d15ad934e093104">
+        <source>Route to modules</source>
+        <target>Route to modules</target>
+        <note>Context:
+File: controllers/admin/AdminMetaController.php:649</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminMaintenanceController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="7fe15a347d66e291d7a1375273226205">
+        <source>Enable Shop</source>
+        <target>Enable Shop</target>
+        <note>Context:
+File: controllers/admin/AdminMaintenanceController.php:45</note>
+      </trans-unit>
+      <trans-unit id="daf835712085aaaf81818e7ebfeb66b8">
+        <source>Maintenance IP</source>
+        <target>Maintenance IP</target>
+        <note>Context:
+File: controllers/admin/AdminMaintenanceController.php:52</note>
+      </trans-unit>
+      <trans-unit id="9278432c5d2aec1ac4f42c23a941af21">
+        <source>Custom maintenance text</source>
+        <target>Custom maintenance text</target>
+        <note>Context:
+File: controllers/admin/AdminMaintenanceController.php:59</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminOrderPreferencesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="28e503c3e4f502b3631e255dfc527620">
+        <source>Enable final summary</source>
+        <target>Enable final summary</target>
+        <note>Context:
+File: controllers/admin/AdminOrderPreferencesController.php:55</note>
+      </trans-unit>
+      <trans-unit id="403e42a4b26e379cb13563c98ab63067">
+        <source>Enable guest checkout</source>
+        <target>Enable guest checkout</target>
+        <note>Context:
+File: controllers/admin/AdminOrderPreferencesController.php:62</note>
+      </trans-unit>
+      <trans-unit id="0fb43a164e61d758c5eddcceb67be0c1">
+        <source>Disable Reordering Option</source>
+        <target>Disable Reordering Option</target>
+        <note>Context:
+File: controllers/admin/AdminOrderPreferencesController.php:69</note>
+      </trans-unit>
+      <trans-unit id="c6ca929dc4c8193ad6cd154e9e075ac9">
+        <source>Minimum purchase total required in order to validate the order</source>
+        <target>Minimum purchase total required in order to validate the order</target>
+        <note>Context:
+File: controllers/admin/AdminOrderPreferencesController.php:76</note>
+      </trans-unit>
+      <trans-unit id="f30598053df0edf94d9463a2133d7f13">
+        <source>Recalculate shipping costs after editing the order</source>
+        <target>Recalculate shipping costs after editing the order</target>
+        <note>Context:
+File: controllers/admin/AdminOrderPreferencesController.php:83</note>
+      </trans-unit>
+      <trans-unit id="8f32f059d66d7f10db7668e75b4742e6">
+        <source>Allow multishipping</source>
+        <target>Allow multishipping</target>
+        <note>Context:
+File: controllers/admin/AdminOrderPreferencesController.php:90</note>
+      </trans-unit>
+      <trans-unit id="cd6aaf6d8287fd5a49122d36f0ff7024">
+        <source>Delayed shipping</source>
+        <target>Delayed shipping</target>
+        <note>Context:
+File: controllers/admin/AdminOrderPreferencesController.php:97</note>
+      </trans-unit>
+      <trans-unit id="e4045598261988d9988c594243a9434d">
+        <source>Terms of service</source>
+        <target>Terms of service</target>
+        <note>Context:
+File: controllers/admin/AdminOrderPreferencesController.php:104</note>
+      </trans-unit>
+      <trans-unit id="960e3de6241e862401f2bd93539e0381">
+        <source>Page for the Terms and conditions</source>
+        <target>Page for the Terms and conditions</target>
+        <note>Context:
+File: controllers/admin/AdminOrderPreferencesController.php:115</note>
+      </trans-unit>
+      <trans-unit id="bf3b3ed0e4fd43efff9c26b3d35c6c2f">
+        <source>Gift options</source>
+        <target>Gift options</target>
+        <note>Context:
+File: controllers/admin/AdminOrderPreferencesController.php:127</note>
+      </trans-unit>
+      <trans-unit id="d2c8471bccf2bbf30151cf50a96c3877">
+        <source>Offer gift wrapping</source>
+        <target>Offer gift wrapping</target>
+        <note>Context:
+File: controllers/admin/AdminOrderPreferencesController.php:131</note>
+      </trans-unit>
+      <trans-unit id="2a0677dae563d574fb1c50badaa4eabf">
+        <source>Gift-wrapping price</source>
+        <target>Gift-wrapping price</target>
+        <note>Context:
+File: controllers/admin/AdminOrderPreferencesController.php:138</note>
+      </trans-unit>
+      <trans-unit id="0d8bdbe98feb696dd76760ee1374a740">
+        <source>Gift-wrapping tax</source>
+        <target>Gift-wrapping tax</target>
+        <note>Context:
+File: controllers/admin/AdminOrderPreferencesController.php:145</note>
+      </trans-unit>
+      <trans-unit id="b667478ccafce4bff6d427a6bca06269">
+        <source>Offer recycled packaging</source>
+        <target>Offer recycled packaging</target>
+        <note>Context:
+File: controllers/admin/AdminOrderPreferencesController.php:154</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminGroupsController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="c6155aaecccf794cd2a00fcc35898022">
+        <source>Group name</source>
+        <target>Group name</target>
+        <note>Context:
+File: controllers/admin/AdminGroupsController.php:66</note>
+      </trans-unit>
+      <trans-unit id="9ba58ad734a38b533febf81361bd1a4f">
+        <source>Discount (%)</source>
+        <target>Discount (%)</target>
+        <note>Context:
+File: controllers/admin/AdminGroupsController.php:70</note>
+      </trans-unit>
+      <trans-unit id="ef53538ae41a651c7f72ab6cb1135d8c">
+        <source>Members</source>
+        <target>Members</target>
+        <note>Context:
+File: controllers/admin/AdminGroupsController.php:75</note>
+      </trans-unit>
+      <trans-unit id="f870b8a1af52a144a646db03f6f63f7d">
+        <source>Show prices</source>
+        <target>Show prices</target>
+        <note>Context:
+File: controllers/admin/AdminGroupsController.php:313</note>
+      </trans-unit>
+      <trans-unit id="3112209b2dd9b55cf5dbc4865dd15afd">
+        <source>Creation date</source>
+        <target>Creation date</target>
+        <note>Context:
+File: controllers/admin/AdminGroupsController.php:86</note>
+      </trans-unit>
+      <trans-unit id="4cd6d48d0fc07ca5526fd040edc982d0">
+        <source>Default groups options</source>
+        <target>Default groups options</target>
+        <note>Context:
+File: controllers/admin/AdminGroupsController.php:107</note>
+      </trans-unit>
+      <trans-unit id="fcd4748df327d0e328d0aef8c1d8e756">
+        <source>Visitors group</source>
+        <target>Visitors group</target>
+        <note>Context:
+File: controllers/admin/AdminGroupsController.php:110</note>
+      </trans-unit>
+      <trans-unit id="312541921a98c69b0f3ac8f5de1b6bb3">
+        <source>Guests group</source>
+        <target>Guests group</target>
+        <note>Context:
+File: controllers/admin/AdminGroupsController.php:118</note>
+      </trans-unit>
+      <trans-unit id="115041dc1655b3d837ac409e16c87f85">
+        <source>Customers group</source>
+        <target>Customers group</target>
+        <note>Context:
+File: controllers/admin/AdminGroupsController.php:126</note>
+      </trans-unit>
+      <trans-unit id="f5b8916c4201d4c8c725cc105da43b9a">
+        <source>Save, then add a category reduction.</source>
+        <target>Save, then add a category reduction.</target>
+        <note>Context:
+File: controllers/admin/AdminGroupsController.php:155</note>
+      </trans-unit>
+      <trans-unit id="3bc18b9a688cd9ee9c915cb0023a8d74">
+        <source>Add new group</source>
+        <target>Add new group</target>
+        <note>Context:
+File: controllers/admin/AdminGroupsController.php:167</note>
+      </trans-unit>
+      <trans-unit id="c38266740494aa4980d05c606fccac10">
+        <source>Customer group</source>
+        <target>Customer group</target>
+        <note>Context:
+File: controllers/admin/AdminGroupsController.php:266</note>
+      </trans-unit>
+      <trans-unit id="e8c371079e194d26e5e912e8f5e60408">
+        <source>Price display method</source>
+        <target>Price display method</target>
+        <note>Context:
+File: controllers/admin/AdminGroupsController.php:292</note>
+      </trans-unit>
+      <trans-unit id="c97b6c7f99c3c50efe826e657024d29b">
+        <source>Category discount</source>
+        <target>Category discount</target>
+        <note>Context:
+File: controllers/admin/AdminGroupsController.php:334</note>
+      </trans-unit>
+      <trans-unit id="a5b82d7328e66186000f675d6618c414">
+        <source>Modules authorization</source>
+        <target>Modules authorization</target>
+        <note>Context:
+File: controllers/admin/AdminGroupsController.php:340</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminSearchController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="22ffd0379431f3b615eb8292f6c31d12">
+        <source>Registration date</source>
+        <target>Registration date</target>
+        <note>Context:
+File: controllers/admin/AdminSearchController.php:297</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminStoresController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="57034def557be4e71accee021e74ce5b">
+        <source>Add new store</source>
+        <target>Add new store</target>
+        <note>Context:
+File: controllers/admin/AdminStoresController.php:102</note>
+      </trans-unit>
+      <trans-unit id="821b8ee6937cec96c30fdafbfe836d68">
+        <source>Stores</source>
+        <target>Stores</target>
+        <note>Context:
+File: controllers/admin/AdminStoresController.php:150</note>
+      </trans-unit>
+      <trans-unit id="cb6fd19e08242c75f1af9f4d15be875d">
+        <source>Store name (e.g. City Center Mall Store).</source>
+        <target>Store name (e.g. City Center Mall Store).</target>
+        <note>Context:
+File: controllers/admin/AdminStoresController.php:160</note>
+      </trans-unit>
+      <trans-unit id="e1bcd0aa73dbc610f1fc628499244d8f">
+        <source>Allowed characters: letters, spaces and %s</source>
+        <target>Allowed characters: letters, spaces and %s</target>
+        <note>Context:
+File: controllers/admin/AdminStoresController.php:161</note>
+      </trans-unit>
+      <trans-unit id="6f5373ad371f50f8d9846abf459e9770">
+        <source>Latitude / Longitude</source>
+        <target>Latitude / Longitude</target>
+        <note>Context:
+File: controllers/admin/AdminStoresController.php:212</note>
+      </trans-unit>
+      <trans-unit id="2315a2ebf1ec2420376642ce9b792076">
+        <source>Store coordinates (e.g. 45.265469/-47.226478).</source>
+        <target>Store coordinates (e.g. 45.265469/-47.226478).</target>
+        <note>Context:
+File: controllers/admin/AdminStoresController.php:216</note>
+      </trans-unit>
+      <trans-unit id="8ae5811be1a55b9b8447ad2dbdadbf6e">
+        <source>Picture</source>
+        <target>Picture</target>
+        <note>Context:
+File: controllers/admin/AdminStoresController.php:262</note>
+      </trans-unit>
+      <trans-unit id="6f8522e0610541f1ef215a22ffa66ff6">
+        <source>Monday</source>
+        <target>Monday</target>
+        <note>Context:
+File: controllers/admin/AdminStoresController.php:286</note>
+      </trans-unit>
+      <trans-unit id="5792315f09a5d54fb7e3d066672b507f">
+        <source>Tuesday</source>
+        <target>Tuesday</target>
+        <note>Context:
+File: controllers/admin/AdminStoresController.php:287</note>
+      </trans-unit>
+      <trans-unit id="796c163589f295373e171842f37265d5">
+        <source>Wednesday</source>
+        <target>Wednesday</target>
+        <note>Context:
+File: controllers/admin/AdminStoresController.php:288</note>
+      </trans-unit>
+      <trans-unit id="78ae6f0cd191d25147e252dc54768238">
+        <source>Thursday</source>
+        <target>Thursday</target>
+        <note>Context:
+File: controllers/admin/AdminStoresController.php:289</note>
+      </trans-unit>
+      <trans-unit id="c33b138a163847cdb6caeeb7c9a126b4">
+        <source>Friday</source>
+        <target>Friday</target>
+        <note>Context:
+File: controllers/admin/AdminStoresController.php:290</note>
+      </trans-unit>
+      <trans-unit id="8b7051187b9191cdcdae6ed5a10e5adc">
+        <source>Saturday</source>
+        <target>Saturday</target>
+        <note>Context:
+File: controllers/admin/AdminStoresController.php:291</note>
+      </trans-unit>
+      <trans-unit id="9d1a0949c39e66a0cd65240bc0ac9177">
+        <source>Sunday</source>
+        <target>Sunday</target>
+        <note>Context:
+File: controllers/admin/AdminStoresController.php:292</note>
+      </trans-unit>
+      <trans-unit id="63406c9482c644975f227cc93788e8fb">
+        <source>Choose your country</source>
+        <target>Choose your country</target>
+        <note>Context:
+File: controllers/admin/AdminStoresController.php:401</note>
+      </trans-unit>
+      <trans-unit id="ffea2d321be109fc7243cfeb515fe257">
+        <source>Choose your state (if applicable)</source>
+        <target>Choose your state (if applicable)</target>
+        <note>Context:
+File: controllers/admin/AdminStoresController.php:406</note>
+      </trans-unit>
+      <trans-unit id="de30ac479f8a73106c51739a0bc92cdc">
+        <source>Displayed in emails and page titles.</source>
+        <target>Displayed in emails and page titles.</target>
+        <note>Context:
+File: controllers/admin/AdminStoresController.php:414</note>
+      </trans-unit>
+      <trans-unit id="6dbec9966be60ecb814790443c2867f7">
+        <source>Shop email</source>
+        <target>Shop email</target>
+        <note>Context:
+File: controllers/admin/AdminStoresController.php:420</note>
+      </trans-unit>
+      <trans-unit id="17e5b9e86108a7fd53884cfaa66ddb35">
+        <source>Registration number</source>
+        <target>Registration number</target>
+        <note>Context:
+File: controllers/admin/AdminStoresController.php:427</note>
+      </trans-unit>
+      <trans-unit id="1b9a36c9acf2ab7a81d67a55432b6c8f">
+        <source>Shop address line 1</source>
+        <target>Shop address line 1</target>
+        <note>Context:
+File: controllers/admin/AdminStoresController.php:435</note>
+      </trans-unit>
+      <trans-unit id="1cdaa96d262fdea24b42a1fc28eb7564">
+        <source>Shop address line 2</source>
+        <target>Shop address line 2</target>
+        <note>Context:
+File: controllers/admin/AdminStoresController.php:440</note>
+      </trans-unit>
+      <trans-unit id="5dd532f0a63d89c5af0243b74732f63c">
+        <source>Contact details</source>
+        <target>Contact details</target>
+        <note>Context:
+File: controllers/admin/AdminStoresController.php:513</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminStatusesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="817434295a673aed431435658b65d9a7">
+        <source>Icon</source>
+        <target>Icon</target>
+        <note>Context:
+File: controllers/admin/AdminStatusesController.php:287</note>
+      </trans-unit>
+      <trans-unit id="c9f59be398981c130408612e51464e14">
+        <source>Send email to customer</source>
+        <target>Send email to customer</target>
+        <note>Context:
+File: controllers/admin/AdminStatusesController.php:89</note>
+      </trans-unit>
+      <trans-unit id="13a44cb3c08c1c40a3c5b62152538ee8">
+        <source>Email template</source>
+        <target>Email template</target>
+        <note>Context:
+File: controllers/admin/AdminStatusesController.php:117</note>
+      </trans-unit>
+      <trans-unit id="8b79d8d9315e50cd01d3ce641cdc61bc">
+        <source>Edit return status</source>
+        <target>Edit return status</target>
+        <note>Context:
+File: controllers/admin/AdminStatusesController.php:185</note>
+      </trans-unit>
+      <trans-unit id="60fd39d495f2a8d0674c236c004e8f21">
+        <source>Add new order status</source>
+        <target>Add new order status</target>
+        <note>Context:
+File: controllers/admin/AdminStatusesController.php:194</note>
+      </trans-unit>
+      <trans-unit id="f08b529034b579d49fa94abec7f93af0">
+        <source>Add new order return status</source>
+        <target>Add new order return status</target>
+        <note>Context:
+File: controllers/admin/AdminStatusesController.php:199</note>
+      </trans-unit>
+      <trans-unit id="34499467057e6ded44fd7861eee1893b">
+        <source>Return statuses</source>
+        <target>Return statuses</target>
+        <note>Context:
+File: controllers/admin/AdminStatusesController.php:235</note>
+      </trans-unit>
+      <trans-unit id="69a31da4cb502aa192d07ae4a8f48613">
+        <source>Status name</source>
+        <target>Status name</target>
+        <note>Context:
+File: controllers/admin/AdminStatusesController.php:478</note>
+      </trans-unit>
+      <trans-unit id="cb5feb1b7314637725a2e73bdc9f7295">
+        <source>Color</source>
+        <target>Color</target>
+        <note>Context:
+File: controllers/admin/AdminStatusesController.php:489</note>
+      </trans-unit>
+      <trans-unit id="192b587e5fc71cd5f25a6089c03bff87">
+        <source>Consider the associated order as validated.</source>
+        <target>Consider the associated order as validated.</target>
+        <note>Context:
+File: controllers/admin/AdminStatusesController.php:302</note>
+      </trans-unit>
+      <trans-unit id="6d6c83be0e74d3b3d041cd61fa607ede">
+        <source>Allow a customer to download and view PDF versions of his/her invoices.</source>
+        <target>Allow a customer to download and view PDF versions of his/her invoices.</target>
+        <note>Context:
+File: controllers/admin/AdminStatusesController.php:313</note>
+      </trans-unit>
+      <trans-unit id="9529bbf156fbe6c23b5fbd8b32900f68">
+        <source>Hide this status in all customer orders.</source>
+        <target>Hide this status in all customer orders.</target>
+        <note>Context:
+File: controllers/admin/AdminStatusesController.php:324</note>
+      </trans-unit>
+      <trans-unit id="a8f92721e361eceb4489636d29f56c21">
+        <source>Send an email to the customer when his/her order status has changed.</source>
+        <target>Send an email to the customer when his/her order status has changed.</target>
+        <note>Context:
+File: controllers/admin/AdminStatusesController.php:335</note>
+      </trans-unit>
+      <trans-unit id="05ffab376e5c4a64caa28a1c4bd9fc0d">
+        <source>Attach invoice PDF to email.</source>
+        <target>Attach invoice PDF to email.</target>
+        <note>Context:
+File: controllers/admin/AdminStatusesController.php:346</note>
+      </trans-unit>
+      <trans-unit id="53343ccca7ba90caa497d4c4b40f3ec7">
+        <source>Attach delivery slip PDF to email.</source>
+        <target>Attach delivery slip PDF to email.</target>
+        <note>Context:
+File: controllers/admin/AdminStatusesController.php:357</note>
+      </trans-unit>
+      <trans-unit id="5fe3d2e4d87dccabf5c9c1d81baf995c">
+        <source>Set the order as shipped.</source>
+        <target>Set the order as shipped.</target>
+        <note>Context:
+File: controllers/admin/AdminStatusesController.php:368</note>
+      </trans-unit>
+      <trans-unit id="67a8390e9643cecbac9d149da4242bf5">
+        <source>Set the order as paid.</source>
+        <target>Set the order as paid.</target>
+        <note>Context:
+File: controllers/admin/AdminStatusesController.php:379</note>
+      </trans-unit>
+      <trans-unit id="a886c3a69907e954c771aae074f24040">
+        <source>Show delivery PDF.</source>
+        <target>Show delivery PDF.</target>
+        <note>Context:
+File: controllers/admin/AdminStatusesController.php:390</note>
+      </trans-unit>
+      <trans-unit id="278c491bdd8a53618c149c4ac790da34">
+        <source>Template</source>
+        <target>Template</target>
+        <note>Context:
+File: controllers/admin/AdminStatusesController.php:398</note>
+      </trans-unit>
+      <trans-unit id="dc4e76994fd27117c21f83d09faa0649">
+        <source>Return status</source>
+        <target>Return status</target>
+        <note>Context:
+File: controllers/admin/AdminStatusesController.php:472</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/orders/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="57297718fdb439175177cf6b196172d1">
+        <source>Order status</source>
+        <target>Order status</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/form.tpl:1560</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminCustomerPreferencesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="a7ddcecde44eba59d425762fcdeec665">
+        <source>Re-display cart at login</source>
+        <target>Re-display cart at login</target>
+        <note>Context:
+File: controllers/admin/AdminCustomerPreferencesController.php:46</note>
+      </trans-unit>
+      <trans-unit id="fcae2ef516600f29ac9aa4b084981328">
+        <source>Send an email after registration</source>
+        <target>Send an email after registration</target>
+        <note>Context:
+File: controllers/admin/AdminCustomerPreferencesController.php:53</note>
+      </trans-unit>
+      <trans-unit id="9ca2e29ab10b2046b32dea40f4e5c232">
+        <source>Password reset delay</source>
+        <target>Password reset delay</target>
+        <note>Context:
+File: controllers/admin/AdminCustomerPreferencesController.php:60</note>
+      </trans-unit>
+      <trans-unit id="640fd0cc0ffa0316ae087652871f4486">
+        <source>minutes</source>
+        <target>minutes</target>
+        <note>Context:
+File: controllers/admin/AdminCustomerPreferencesController.php:66</note>
+      </trans-unit>
+      <trans-unit id="c760118c537146713521758269a44bd3">
+        <source>Enable B2B mode</source>
+        <target>Enable B2B mode</target>
+        <note>Context:
+File: controllers/admin/AdminCustomerPreferencesController.php:69</note>
+      </trans-unit>
+      <trans-unit id="dcc6fd9b580a958b3f42488265cb1300">
+        <source>Ask for birth date</source>
+        <target>Ask for birth date</target>
+        <note>Context:
+File: controllers/admin/AdminCustomerPreferencesController.php:76</note>
+      </trans-unit>
+      <trans-unit id="a5e968e6a3689ca07bbdbecb6b0710ff">
+        <source>Enable partner offers</source>
+        <target>Enable partner offers</target>
+        <note>Context:
+File: controllers/admin/AdminCustomerPreferencesController.php:83</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminPreferencesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="843fbaec27e324378999e09cc665a7f4">
+        <source>Round up away from zero, when it is half way there (recommended)</source>
+        <target>Round up away from zero, when it is half way there (recommended)</target>
+        <note>Context:
+File: controllers/admin/AdminPreferencesController.php:45</note>
+      </trans-unit>
+      <trans-unit id="9d70eb834e3574ca07a1f28083ecba1e">
+        <source>Round down towards zero, when it is half way there</source>
+        <target>Round down towards zero, when it is half way there</target>
+        <note>Context:
+File: controllers/admin/AdminPreferencesController.php:49</note>
+      </trans-unit>
+      <trans-unit id="5f9d1d092dc5658734b8af7187460b32">
+        <source>Round towards the next even value</source>
+        <target>Round towards the next even value</target>
+        <note>Context:
+File: controllers/admin/AdminPreferencesController.php:53</note>
+      </trans-unit>
+      <trans-unit id="8700a0015f3fc1c5d96ccc5140475dc3">
+        <source>Round towards the next odd value</source>
+        <target>Round towards the next odd value</target>
+        <note>Context:
+File: controllers/admin/AdminPreferencesController.php:57</note>
+      </trans-unit>
+      <trans-unit id="6186ae4fe9ec55025a9777dd973e0af2">
+        <source>Round up to the nearest value</source>
+        <target>Round up to the nearest value</target>
+        <note>Context:
+File: controllers/admin/AdminPreferencesController.php:61</note>
+      </trans-unit>
+      <trans-unit id="35853630b5da054ef55e8e02d8df4954">
+        <source>Round down to the nearest value</source>
+        <target>Round down to the nearest value</target>
+        <note>Context:
+File: controllers/admin/AdminPreferencesController.php:65</note>
+      </trans-unit>
+      <trans-unit id="1656072e927c8d3acd24359cbb648bb5">
+        <source>Enable SSL</source>
+        <target>Enable SSL</target>
+        <note>Context:
+File: controllers/admin/AdminPreferencesController.php:98</note>
+      </trans-unit>
+      <trans-unit id="73369322b5e1145bb2fc2268ce4d31f0">
+        <source>Enable SSL on all pages</source>
+        <target>Enable SSL on all pages</target>
+        <note>Context:
+File: controllers/admin/AdminPreferencesController.php:109</note>
+      </trans-unit>
+      <trans-unit id="cd1b98322104dbd61ca6ae0ab16df348">
+        <source>Increase front office security</source>
+        <target>Increase front office security</target>
+        <note>Context:
+File: controllers/admin/AdminPreferencesController.php:120</note>
+      </trans-unit>
+      <trans-unit id="913d66c5648cf0317ed371371fe44534">
+        <source>Allow iframes on HTML fields</source>
+        <target>Allow iframes on HTML fields</target>
+        <note>Context:
+File: controllers/admin/AdminPreferencesController.php:129</note>
+      </trans-unit>
+      <trans-unit id="06918a784fb394b84de012810120b75c">
+        <source>Use HTMLPurifier Library</source>
+        <target>Use HTMLPurifier Library</target>
+        <note>Context:
+File: controllers/admin/AdminPreferencesController.php:137</note>
+      </trans-unit>
+      <trans-unit id="ac2021d3c67ee796d7ab20a466ebd583">
+        <source>Round mode</source>
+        <target>Round mode</target>
+        <note>Context:
+File: controllers/admin/AdminPreferencesController.php:145</note>
+      </trans-unit>
+      <trans-unit id="019e96f05f09a70e37792a04e9e78cdc">
+        <source>Round type</source>
+        <target>Round type</target>
+        <note>Context:
+File: controllers/admin/AdminPreferencesController.php:154</note>
+      </trans-unit>
+      <trans-unit id="41032c67b9a3d88ff9a824a1f0845513">
+        <source>Round on each item</source>
+        <target>Round on each item</target>
+        <note>Context:
+File: controllers/admin/AdminPreferencesController.php:160</note>
+      </trans-unit>
+      <trans-unit id="a899eacfb98f1740127be5fe16bee5c7">
+        <source>Round on each line</source>
+        <target>Round on each line</target>
+        <note>Context:
+File: controllers/admin/AdminPreferencesController.php:164</note>
+      </trans-unit>
+      <trans-unit id="6d19eb8a9ca35d858824737173ebd011">
+        <source>Round on the total</source>
+        <target>Round on the total</target>
+        <note>Context:
+File: controllers/admin/AdminPreferencesController.php:168</note>
+      </trans-unit>
+      <trans-unit id="0a1e355325f75fe4cc3bf08b0f31f1c2">
+        <source>Number of decimals</source>
+        <target>Number of decimals</target>
+        <note>Context:
+File: controllers/admin/AdminPreferencesController.php:175</note>
+      </trans-unit>
+      <trans-unit id="267b70f19458077fe93a3fd63a6a648a">
+        <source>Display brands and suppliers</source>
+        <target>Display brands and suppliers</target>
+        <note>Context:
+File: controllers/admin/AdminPreferencesController.php:183</note>
+      </trans-unit>
+      <trans-unit id="922256753aa354c111471e85d4809ec5">
+        <source>Display best sellers</source>
+        <target>Display best sellers</target>
+        <note>Context:
+File: controllers/admin/AdminPreferencesController.php:190</note>
+      </trans-unit>
+      <trans-unit id="43b266c605d67eaa27801cc5dc0b3995">
+        <source>Enable Multistore</source>
+        <target>Enable Multistore</target>
+        <note>Context:
+File: controllers/admin/AdminPreferencesController.php:197</note>
+      </trans-unit>
+      <trans-unit id="8d9da6f9870d593e6921d3b728dc0c6b">
+        <source>Main Shop Activity</source>
+        <target>Main Shop Activity</target>
+        <note>Context:
+File: controllers/admin/AdminPreferencesController.php:205</note>
+      </trans-unit>
+      <trans-unit id="ab08050bd76be6690d1beff885570dfb">
+        <source>Please click here to check if your shop supports HTTPS.</source>
+        <target>Please click here to check if your shop supports HTTPS.</target>
+        <note>Context:
+File: controllers/admin/AdminPreferencesController.php:225</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminContactsController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="9aa698f602b1e5694855cee73a683488">
+        <source>Contacts</source>
+        <target>Contacts</target>
+        <note>Context:
+File: controllers/admin/AdminContactsController.php:63</note>
+      </trans-unit>
+      <trans-unit id="a4cd3191fdeea29906a113c78d4c0e26">
+        <source>Save messages?</source>
+        <target>Save messages?</target>
+        <note>Context:
+File: controllers/admin/AdminContactsController.php:86</note>
+      </trans-unit>
+      <trans-unit id="c41f67055a184ed2e895681336572761">
+        <source>Add new contact</source>
+        <target>Add new contact</target>
+        <note>Context:
+File: controllers/admin/AdminContactsController.php:137</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminSearchConfController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="9ab81f57823f6aeb02362291f23883e6">
+        <source>Aliases</source>
+        <target>Aliases</target>
+        <note>Context:
+File: controllers/admin/AdminSearchConfController.php:277</note>
+      </trans-unit>
+      <trans-unit id="325c9099ecef84ddc2912d5f0ed3fe2f">
+        <source>The "indexed" products have been analyzed by PrestaShop and will appear in the results of a front office search.</source>
+        <target>The "indexed" products have been analyzed by PrestaShop and will appear in the results of a front office search.</target>
+        <note>Context:
+File: controllers/admin/AdminSearchConfController.php:78</note>
+      </trans-unit>
+      <trans-unit id="b9a7c2c18f61b96ff75de6468d1c7519">
+        <source>Indexed products</source>
+        <target>Indexed products</target>
+        <note>Context:
+File: controllers/admin/AdminSearchConfController.php:79</note>
+      </trans-unit>
+      <trans-unit id="a1f25953ca9e49615b12a626584680c5">
+        <source>Building the product index may take a few minutes.</source>
+        <target>Building the product index may take a few minutes.</target>
+        <note>Context:
+File: controllers/admin/AdminSearchConfController.php:82</note>
+      </trans-unit>
+      <trans-unit id="b90813d74ad3dc25c5b976d932fd72d7">
+        <source>If your server stops before the process ends, you can resume the indexing by clicking "Add missing products to the index".</source>
+        <target>If your server stops before the process ends, you can resume the indexing by clicking "Add missing products to the index".</target>
+        <note>Context:
+File: controllers/admin/AdminSearchConfController.php:83</note>
+      </trans-unit>
+      <trans-unit id="d86f8ed15ec7a8f87fb1b0ed501dbb6b">
+        <source>Add missing products to the index</source>
+        <target>Add missing products to the index</target>
+        <note>Context:
+File: controllers/admin/AdminSearchConfController.php:87</note>
+      </trans-unit>
+      <trans-unit id="9897b2f361910e5188f231de872d8856">
+        <source>Re-build the entire index</source>
+        <target>Re-build the entire index</target>
+        <note>Context:
+File: controllers/admin/AdminSearchConfController.php:91</note>
+      </trans-unit>
+      <trans-unit id="9ed967cf992b654e59df8663fce97d59">
+        <source>You can set a cron job that will rebuild your index using the following URL:</source>
+        <target>You can set a cron job that will rebuild your index using the following URL:</target>
+        <note>Context:
+File: controllers/admin/AdminSearchConfController.php:94</note>
+      </trans-unit>
+      <trans-unit id="f4ff8a799e3f7446a3a67254cf038e7e">
+        <source>Search within word</source>
+        <target>Search within word</target>
+        <note>Context:
+File: controllers/admin/AdminSearchConfController.php:116</note>
+      </trans-unit>
+      <trans-unit id="969e3f96787be55242155cad3cd630d3">
+        <source>Search exact end match</source>
+        <target>Search exact end match</target>
+        <note>Context:
+File: controllers/admin/AdminSearchConfController.php:128</note>
+      </trans-unit>
+      <trans-unit id="8e7ace556216459cd9197423709bdd3a">
+        <source>Minimum word length (in characters)</source>
+        <target>Minimum word length (in characters)</target>
+        <note>Context:
+File: controllers/admin/AdminSearchConfController.php:140</note>
+      </trans-unit>
+      <trans-unit id="5bff181421d95b49ad5ce5bb08f0ffbe">
+        <source>Blacklisted words</source>
+        <target>Blacklisted words</target>
+        <note>Context:
+File: controllers/admin/AdminSearchConfController.php:147</note>
+      </trans-unit>
+      <trans-unit id="8c489d0946f66d17d73f26366a4bf620">
+        <source>Weight</source>
+        <target>Weight</target>
+        <note>Context:
+File: controllers/admin/AdminSearchConfController.php:156</note>
+      </trans-unit>
+      <trans-unit id="a9f445d59022dee4cb33385aef61620f">
+        <source>The "weight" represents its importance and relevance for the ranking of the products when completing a new search.</source>
+        <target>The "weight" represents its importance and relevance for the ranking of the products when completing a new search.</target>
+        <note>Context:
+File: controllers/admin/AdminSearchConfController.php:159</note>
+      </trans-unit>
+      <trans-unit id="892e1b613b7d9628760008536bdef5da">
+        <source>A word with a weight of eight will have four times more value than a word with a weight of two.</source>
+        <target>A word with a weight of eight will have four times more value than a word with a weight of two.</target>
+        <note>Context:
+File: controllers/admin/AdminSearchConfController.php:160</note>
+      </trans-unit>
+      <trans-unit id="33846fa0095bd29abbc2a8b742669b25">
+        <source>We advise you to set a greater weight for words which appear in the name or reference of a product. This will allow the search results to be as precise and relevant as possible.</source>
+        <target>We advise you to set a greater weight for words which appear in the name or reference of a product. This will allow the search results to be as precise and relevant as possible.</target>
+        <note>Context:
+File: controllers/admin/AdminSearchConfController.php:161</note>
+      </trans-unit>
+      <trans-unit id="15b481c8ea8041ab6000bec80b97db5a">
+        <source>Setting a weight to 0 will exclude that field from search index. Re-build of the entire index is required when changing to or from 0</source>
+        <target>Setting a weight to 0 will exclude that field from search index. Re-build of the entire index is required when changing to or from 0</target>
+        <note>Context:
+File: controllers/admin/AdminSearchConfController.php:162</note>
+      </trans-unit>
+      <trans-unit id="76a591808a254d4094e1c43f937b834f">
+        <source>Product name weight</source>
+        <target>Product name weight</target>
+        <note>Context:
+File: controllers/admin/AdminSearchConfController.php:165</note>
+      </trans-unit>
+      <trans-unit id="f391844c98222451204cbb678d591f86">
+        <source>Reference weight</source>
+        <target>Reference weight</target>
+        <note>Context:
+File: controllers/admin/AdminSearchConfController.php:171</note>
+      </trans-unit>
+      <trans-unit id="6af0a6ff1f2f2a61cbd8b98232314b03">
+        <source>Short description weight</source>
+        <target>Short description weight</target>
+        <note>Context:
+File: controllers/admin/AdminSearchConfController.php:177</note>
+      </trans-unit>
+      <trans-unit id="f90f799bc686f5d6a731b1f8074b4580">
+        <source>Description weight</source>
+        <target>Description weight</target>
+        <note>Context:
+File: controllers/admin/AdminSearchConfController.php:183</note>
+      </trans-unit>
+      <trans-unit id="05cdca5b85ff26e596c3af66ed4820d5">
+        <source>Category weight</source>
+        <target>Category weight</target>
+        <note>Context:
+File: controllers/admin/AdminSearchConfController.php:189</note>
+      </trans-unit>
+      <trans-unit id="3474b76644954c739226a10127d83329">
+        <source>Brand weight</source>
+        <target>Brand weight</target>
+        <note>Context:
+File: controllers/admin/AdminSearchConfController.php:195</note>
+      </trans-unit>
+      <trans-unit id="c152439199cebb7e1c27633efeaf1eda">
+        <source>Tags weight</source>
+        <target>Tags weight</target>
+        <note>Context:
+File: controllers/admin/AdminSearchConfController.php:201</note>
+      </trans-unit>
+      <trans-unit id="1b25f9ffbf4d185dbb985380a04732cc">
+        <source>Attributes weight</source>
+        <target>Attributes weight</target>
+        <note>Context:
+File: controllers/admin/AdminSearchConfController.php:207</note>
+      </trans-unit>
+      <trans-unit id="4871216a35362aebc0d9908e6e288765">
+        <source>Features weight</source>
+        <target>Features weight</target>
+        <note>Context:
+File: controllers/admin/AdminSearchConfController.php:213</note>
+      </trans-unit>
+      <trans-unit id="58e8dcd40d13b2c661ac86dbc9e04e02">
+        <source>Add new alias</source>
+        <target>Add new alias</target>
+        <note>Context:
+File: controllers/admin/AdminSearchConfController.php:229</note>
+      </trans-unit>
+      <trans-unit id="8eea62084ca7e541d918e823422bd82e">
+        <source>Result</source>
+        <target>Result</target>
+        <note>Context:
+File: controllers/admin/AdminSearchConfController.php:293</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/referrers/form_settings.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="521d4edc7c22d5f63bc5912ff2afa61a">
+        <source>Indexing</source>
+        <target>Indexing</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/referrers/form_settings.tpl:30</note>
+      </trans-unit>
+      <trans-unit id="97b22af4c50379be3da02a0b10f13ce3">
+        <source>Refresh index</source>
+        <target>Refresh index</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/referrers/form_settings.tpl:34</note>
+      </trans-unit>
+      <trans-unit id="ab0cf104f39708eabd07b8cb67e149ba">
+        <source>Cache</source>
+        <target>Cache</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/referrers/form_settings.tpl:43</note>
+      </trans-unit>
+      <trans-unit id="1faa3e365bfe45ad8e3a6c97da5b94d1">
+        <source>Refresh cache</source>
+        <target>Refresh cache</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/referrers/form_settings.tpl:47</note>
+      </trans-unit>
+      <trans-unit id="7400a4d2e88ba7fe219b1e11d382f3a2">
+        <source>Save direct traffic?</source>
+        <target>Save direct traffic?</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/referrers/form_settings.tpl:60</note>
+      </trans-unit>
+      <trans-unit id="9e7ff803e9245919433265f5430333c9">
+        <source>Exclude taxes in sales total?</source>
+        <target>Exclude taxes in sales total?</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/referrers/form_settings.tpl:80</note>
+      </trans-unit>
+      <trans-unit id="9cb43fe3704c7798a2564e0d9cd16d38">
+        <source>Exclude shipping in sales total?</source>
+        <target>Exclude shipping in sales total?</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/referrers/form_settings.tpl:100</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminTagsController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="9fc8691fab39cc1433cd39430edb0501">
+        <source>Add new tag</source>
+        <target>Add new tag</target>
+        <note>Context:
+File: controllers/admin/AdminTagsController.php:77</note>
+      </trans-unit>
+      <trans-unit id="c101058e7ea21bbbf2a5ac893088e90b">
+        <source>Tag</source>
+        <target>Tag</target>
+        <note>Context:
+File: controllers/admin/AdminTagsController.php:135</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/stores/helpers/form/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="ad179a1071ebd8b00e0ff4718301dcea">
+        <source>Hours:</source>
+        <target>Hours:</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/stores/helpers/form/form.tpl:66</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/referrers/helpers/view/view.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="c33e404a441c6ba9648f88af3c68a1ca">
+        <source>Statistics</source>
+        <target>Statistics</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/referrers/helpers/view/view.tpl:99</note>
+      </trans-unit>
+      <trans-unit id="208b51d8918ba3cdd679a5ec275df129">
+        <source>Filter by product:</source>
+        <target>Filter by product:</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/referrers/helpers/view/view.tpl:112</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/groups/helpers/form/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="40382ca2b15ff499eb4e5c101424bc81">
+        <source>Authorized modules:</source>
+        <target>Authorized modules:</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/groups/helpers/form/form.tpl:31</note>
+      </trans-unit>
+      <trans-unit id="32da1449064b7ef38d098e8061630883">
+        <source>This category already exists for this group.</source>
+        <target>This category already exists for this group.</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/groups/helpers/form/form.tpl:75</note>
+      </trans-unit>
+      <trans-unit id="e7446ea32216e8bf4fa8cb6460b725d6">
+        <source>Add a category discount</source>
+        <target>Add a category discount</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/groups/helpers/form/form.tpl:131</note>
+      </trans-unit>
+      <trans-unit id="29ea3cf72fb288e76bc4310bffabc03e">
+        <source>New group category discount</source>
+        <target>New group category discount</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/groups/helpers/form/form.tpl:150</note>
+      </trans-unit>
+      <trans-unit id="3b78dd28e2767e0e88e5591abd386d0f">
+        <source>Discount (%):</source>
+        <target>Discount (%):</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/groups/helpers/form/form.tpl:157</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/groups/helpers/view/view.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="734d291b0d07bae874a51370a032312e">
+        <source>Discount: %.2f%%</source>
+        <target>Discount: %.2f%%</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/groups/helpers/view/view.tpl:71</note>
+      </trans-unit>
+      <trans-unit id="c20aefc1b11dc684191ded8079cedab4">
+        <source>Group information</source>
+        <target>Group information</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/groups/helpers/view/view.tpl:32</note>
+      </trans-unit>
+      <trans-unit id="2dc9a383d693a2ded8b1ef832926ea93">
+        <source>Price display method:</source>
+        <target>Price display method:</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/groups/helpers/view/view.tpl:40</note>
+      </trans-unit>
+      <trans-unit id="02d29656d8379684796b01abfd2a9a13">
+        <source>Show prices:</source>
+        <target>Show prices:</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/groups/helpers/view/view.tpl:48</note>
+      </trans-unit>
+      <trans-unit id="4845f30b0c12e9dd97246f5f443338ad">
+        <source>Current category discount</source>
+        <target>Current category discount</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/groups/helpers/view/view.tpl:56</note>
+      </trans-unit>
+      <trans-unit id="42ba7a29aa37fc2cb42f5381e71afb9f">
+        <source>Members of this customer group</source>
+        <target>Members of this customer group</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/groups/helpers/view/view.tpl:82</note>
+      </trans-unit>
+      <trans-unit id="638dab2652b5c9fec7eeee0c8a12431b">
+        <source>Limited to the first 100 customers.</source>
+        <target>Limited to the first 100 customers.</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/groups/helpers/view/view.tpl:83</note>
+      </trans-unit>
+      <trans-unit id="3744cbfc625e57d0ac639f162dba21c1">
+        <source>Please use filters to narrow your search.</source>
+        <target>Please use filters to narrow your search.</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/groups/helpers/view/view.tpl:83</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

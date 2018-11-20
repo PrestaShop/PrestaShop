@@ -1,13 +1,13 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,37 +19,36 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @copyright 2007-2017 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 namespace PrestaShopBundle\Form\Admin\Product;
 
-use PrestaShopBundle\Form\Admin\Type\CommonModelAbstractType;
+use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Form\Extension\Core\Type as FormType;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * This form class is responsible to generate the basic product information form
+ * This form class is responsible to generate the basic product Warehouse combinations form
  */
-class ProductWarehouseCombination extends CommonModelAbstractType
+class ProductWarehouseCombination extends CommonAbstractType
 {
     private $translator;
     private $contextLegacy;
-    private $idWarehouse;
 
     /**
      * Constructor
      *
-     * @param int $idWarehouse The warehouse ID
      * @param object $translator
      * @param object $legacyContext
      */
-    public function __construct($idWarehouse, $translator, $legacyContext)
+    public function __construct($translator, $legacyContext)
     {
         $this->translator = $translator;
         $this->contextLegacy = $legacyContext->getContext();
-        $this->idWarehouse = $idWarehouse;
     }
 
     /**
@@ -59,31 +58,41 @@ class ProductWarehouseCombination extends CommonModelAbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('activated', 'checkbox', array(
+        $builder->add('activated', 'Symfony\Component\Form\Extension\Core\Type\CheckboxType', array(
             'required' => false,
-            'label' => $this->translator->trans('Stored', [], 'AdminProducts')
+            'label' => $this->translator->trans('Stored', [], 'Admin.Catalog.Feature')
         ))
-        ->add('id_product_attribute', 'hidden')
-        ->add('product_id', 'hidden')
-        ->add('warehouse_id', 'hidden')
-        ->add('location', 'text', array(
+        ->add('id_product_attribute', 'Symfony\Component\Form\Extension\Core\Type\HiddenType')
+        ->add('product_id', 'Symfony\Component\Form\Extension\Core\Type\HiddenType')
+        ->add('warehouse_id', 'Symfony\Component\Form\Extension\Core\Type\HiddenType')
+        ->add('location', 'Symfony\Component\Form\Extension\Core\Type\TextType', array(
             'required' => false,
-            'label' => $this->translator->trans('Location (optional)', [], 'AdminProducts')
+            'label' => $this->translator->trans('Location (optional)', [], 'Admin.Catalog.Feature')
         ));
 
         //set default minimal values for collection prototype
         $builder->setData([
-            'warehouse_id' => $this->idWarehouse,
+            'warehouse_id' => $options['id_warehouse'],
             'warehouse_activated' => false,
         ]);
     }
 
     /**
-     * Returns the name of this type.
-     *
-     * @return string The name of this type
+     * {@inheritdoc}
      */
-    public function getName()
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults(array(
+            'id_warehouse' => null,
+        ));
+    }
+
+    /**
+     * Returns the block prefix of this type.
+     *
+     * @return string The prefix name
+     */
+    public function getBlockPrefix()
     {
         return 'product_warehouse_combination';
     }

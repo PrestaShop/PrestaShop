@@ -1,0 +1,14 @@
+#!/bin/bash
+
+rm -Rf themes/classic
+git clone https://github.com/PrestaShop/StarterTheme themes/StarterTheme
+cd themes/StarterTheme
+# We switch to the same branch on the StarterTheme repo, but only if it exists.
+git branch -r | grep -P "(^|\s)\Korigin/$TRAVIS_BRANCH(?=\s|$)"
+if [ $? -eq 0 ]; then
+    git checkout $TRAVIS_BRANCH
+fi
+cd $TRAVIS_BUILD_DIR
+cp themes/StarterTheme/config/theme.dist.yml themes/StarterTheme/config/theme.yml
+bash ./travis-scripts/install-prestashop
+bash ./travis-scripts/run-selenium-tests

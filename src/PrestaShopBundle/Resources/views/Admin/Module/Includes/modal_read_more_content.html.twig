@@ -1,0 +1,198 @@
+{#**
+ * 2007-2017 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2017 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *#}
+{% set ats = module.attributes %}
+{% set name, displayName, nbRates,
+  starsRate, img, serviceUrl, version, cover, additionalDescription,
+  fullDescription, changeLog, customerBenefits, demoVideo, author, notFoundImg, features, badges =
+  ats.name, ats.displayName, ats.nbRates, ats.starsRate, ats.img,
+  ats.serviceUrl is defined and ats.serviceUrl|length > 0 ? ats.serviceUrl : false,
+  ats.version, ats.cover,
+  ats.additionalDescription is defined and ats.additionalDescription|length > 0 ? ats.additionalDescription : false,
+  ats.fullDescription is defined and ats.fullDescription|length > 0 ? ats.fullDescription : false,
+  ats.changeLog is defined and ats.changeLog|length > 0 ? ats.changeLog : false,
+  ats.customer_benefits is defined and ats.customer_benefits|length > 0 ? ats.customer_benefits : false,
+  ats.demo_video is defined and ats.demo_video|length > 0 ? ats.demo_video : false,
+  ats.author, 'https://cdn4.iconfinder.com/data/icons/ballicons-2-free/100/box-512.png',
+  ats.features,
+  ats.badges is defined and ats.badges|length > 0 ? ats.badges : false
+%}
+<div class="modal-dialog module-modal-dialog">
+  <!-- Modal content-->
+  <div class="modal-content module-modal-content no-padding">
+    <div class="modal-header module-modal-header">
+      <button aria-label="Close" data-dismiss="modal" class="close" type="button">
+          <span aria-hidden="true">
+            <i class="material-icons">close</i>
+          </span>
+      </button>
+      {% if nbRates > 0 %}
+        <div class="read-more-stars module-star-ranking-grid-{{ starsRate }}">
+          (
+          {{ nbRates }}
+          )
+        </div>
+      {% endif %}
+      <div>
+        <img class="module-logo-thumb" height="57" width="57" src="{{ img }}" alt="{{ displayName }}"/>
+        <div class="modal-title module-modal-title">
+          <h1>{{ displayName }}<br>
+            <small class="version">
+              {% if serviceUrl is defined and serviceUrl|length > 0 %}
+                {{ 'Service by %author%'|trans({'%author%' : author}, 'Admin.Modules.Feature') }}
+              {% else %}
+                {{ 'v%version% by %author%'|trans({ '%version%' : version, '%author%' : author }, 'Admin.Modules.Feature') }}
+              {% endif %}
+            </small>
+          </h1>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-body row module-modal-body">
+      <div class="col-md-12 module-big-cover">
+        <img src="{% if cover.big is defined %}{{ cover.big }}{% else %}{{ notFoundImg }}{% endif %}"/>
+      </div>
+      <div class="col-md-12 module-menu-readmore">
+        <nav class="navbar navbar-light">
+          {# tab list #}
+          <ul class="nav navbar-nav navbar-separator">
+            <li class="nav-item active">
+              <a class="nav-link module-readmore-tab" data-toggle="tab" href="#overview-{{ name }}">{{ 'Overview'|trans({}, 'Admin.Modules.Feature') }}</a>
+            </li>
+            {% if additionalDescription %}
+              <li class="nav-item">
+                <a class="nav-link module-readmore-tab" data-toggle="tab" href="#additional-{{ name }}">{{ 'Additional information'|trans({}, 'Admin.Modules.Feature') }}</a>
+              </li>
+            {% endif %}
+            {% if customerBenefits %}
+              <li class="nav-item">
+                <a class="nav-link module-readmore-tab" data-toggle="tab" href="#customer_benefits-{{ name }}">{{ 'Benefits'|trans({}, 'Admin.Modules.Feature') }}</a>
+              </li>
+            {% endif %}
+            {% if features %}
+              <li class="nav-item">
+                <a class="nav-link module-readmore-tab" data-toggle="tab" href="#features-{{ name }}">{{ 'Features'|trans({}, 'Admin.Modules.Feature') }}</a>
+              </li>
+            {% endif %}
+            {% if demoVideo %}
+              <li class="nav-item">
+                <a class="nav-link module-readmore-tab" data-toggle="tab" href="#demo_video-{{ name }}">{{ 'Demo video'|trans({}, 'Admin.Modules.Feature') }}</a>
+              </li>
+            {% endif %}
+            {% if changeLog %}
+              <li class="nav-item">
+                <a class="nav-link module-readmore-tab" data-toggle="tab" href="#changelog-{{ name }}">{{ 'Changelog'|trans({}, 'Admin.Modules.Feature') }}</a>
+              </li>
+            {% endif %}
+            {# end tab list #}
+          </ul>
+        </nav>
+        <div class="tab-content">
+          {# tab content list #}
+          <div id="overview-{{ name }}" class="tab-pane fade in active">
+            <p class="module-readmore-tab-content">
+              {% if fullDescription %}
+                {{ fullDescription|raw }}
+              {% else %}
+                {{ 'No description found for this module :('|trans({}, 'Admin.Modules.Notification') }}
+              {% endif %}
+            </p>
+          </div>
+
+          <div id="additional-{{ name }}" class="tab-pane fade">
+            <p class="module-readmore-tab-content">
+              {% if additionalDescription %}
+                {{ additionalDescription|raw }}
+              {% else %}
+                {{ 'No additional description provided for this module :('|trans({}, 'Admin.Modules.Notification') }}
+              {% endif %}
+            </p>
+          </div>
+
+          <div id="features-{{ name }}" class="tab-pane fade">
+            <p class="module-readmore-tab-content">
+              {% if features %}
+                {{ features|raw }}
+              {% else %}
+                {{ 'No feature list provided for this module :('|trans({}, 'Admin.Modules.Notification') }}
+              {% endif %}
+            </p>
+          </div>
+
+          <div id="customer_benefits-{{ name }}" class="tab-pane fade">
+            <p class="module-readmore-tab-content">
+              {% if customerBenefits %}
+                {{ customerBenefits|raw }}
+              {% else %}
+                {{ 'No customer benefits notes found for this module :('|trans({}, 'Admin.Modules.Notification') }}
+              {% endif %}
+            </p>
+          </div>
+
+          <div id="demo_video-{{ name }}" class="tab-pane fade">
+            <p class="module-readmore-tab-content">
+              {% if demoVideo %}
+                {{ youtube_link(demoVideo)|raw }}
+              {% else %}
+                {{ 'No demonstration video found for this module :('|trans({}, 'Admin.Modules.Notification') }}
+              {% endif %}
+            </p>
+          </div>
+
+          <div id="changelog-{{ name }}" class="tab-pane fade">
+            {% if changeLog %}
+              <ul class="module-readmore-tab-content">
+                {% for version, lines in changeLog|arrayCast|reverse %}
+                  <li>
+                    <b>{{version}}:</b>
+                    {% for line in lines %}
+                      {{line}}<br/>
+                    {% endfor %}
+                  </li>
+                {% endfor %}
+              </ul>
+            {% else %}
+              {{ 'No changelog provided for this module :('|trans({}, 'Admin.Modules.Notification') }}
+            {% endif %}
+          </div>
+          {# end tab content list #}
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer module-modal-footer">
+      {% if badges %}
+        <div class="pull-left module-badges-display">
+          {% for badge in badges %}
+            <img src="{{badge.img}}" alt="{{badge.label}}"/>
+            {{badge.label}}
+          {% endfor %}
+        </div>
+      {% endif %}
+      {% include 'PrestaShopBundle:Admin/Module/Includes:action_menu.html.twig' with { 'module': module, 'level' : level } %}
+    </div>
+  </div>
+</div>

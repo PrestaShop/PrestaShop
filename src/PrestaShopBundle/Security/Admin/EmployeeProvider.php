@@ -1,13 +1,13 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,19 +19,23 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @copyright 2007-2017 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShopBundle\Security\Admin;
 
+use Access;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 
+/**
+ * Class EmployeeProvider To retrieve Employee entities for the Symfony security components
+ * @package PrestaShopBundle\Security\Admin
+ */
 class EmployeeProvider implements UserProviderInterface
 {
     private $legacyContext;
@@ -46,10 +50,20 @@ class EmployeeProvider implements UserProviderInterface
         $this->legacyContext = $context->getContext();
     }
 
+    /**
+     * Fetch the Employee entity that matches the given username.
+     *
+     * @param string $username
+     * @return Employee
+     */
     public function loadUserByUsername($username)
     {
         if (isset($this->legacyContext->employee) && $this->legacyContext->employee->email == $username) {
-            return new Employee($this->legacyContext->employee);
+            $employee = new Employee($this->legacyContext->employee);
+            $employee->setRoles(
+                Access::getRoles($this->legacyContext->employee->id_profile)
+            );
+            return $employee;
         }
 
         throw new UsernameNotFoundException(
@@ -57,6 +71,12 @@ class EmployeeProvider implements UserProviderInterface
         );
     }
 
+    /**
+     * Reload an Employee and returns a fresh instance.
+     *
+     * @param UserInterface $employee
+     * @return Employee
+     */
     public function refreshUser(UserInterface $employee)
     {
         if (!$employee instanceof Employee) {
@@ -68,6 +88,12 @@ class EmployeeProvider implements UserProviderInterface
         return $this->loadUserByUsername($employee->getUsername());
     }
 
+    /**
+     * Tests if the given class supports the security layer. Here, only Employee class is allowed to be used to authenticate.
+     *
+     * @param string $class
+     * @return bool
+     */
     public function supportsClass($class)
     {
         return $class === 'PrestaShopBundle\Security\Admin\Employee';

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/ps_wirepayment/ps_wirepayment.php" source-language="en" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="763538d192c0e4a3a341c1c7d0db9240" approved="yes">
+        <source>%1$s (tax incl.)</source>
+        <target xml:lang="en">%1$s (tax incl.)</target>
+        <note>Context:
+File: modules/ps_wirepayment/ps_wirepayment.php:403</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_wirepayment/validation.php" source-language="en" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="e2b7dec8fa4b498156dfee6e4c84b156" approved="yes">
+        <source>This payment method is not available.</source>
+        <target xml:lang="en">This payment method is not available.</target>
+        <note>Context:
+File: modules/ps_wirepayment/validation.php:51</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_wirepayment/views/templates/hook/payment.tpl" source-language="en" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="5e1695822fc5af98f6b749ea3cbc9b4c" approved="yes">
+        <source>Pay by bank wire</source>
+        <target xml:lang="en">Pay by bank wire</target>
+        <note>Context:
+File: modules/ps_wirepayment/views/templates/hook/payment.tpl:29</note>
+      </trans-unit>
+      <trans-unit id="4e1fb9f4b46556d64db55d50629ee301" approved="yes">
+        <source>(order processing will be longer)</source>
+        <target xml:lang="en">(order processing will be longer)</target>
+        <note>Context:
+File: modules/ps_wirepayment/views/templates/hook/payment.tpl:29</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

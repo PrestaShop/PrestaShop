@@ -1,26 +1,35 @@
+$header-height: 36px
+
+.material-icons
+	line-height: inherit
+
 #header
 	z-index: 20
 #header_infos
 	@extend .navbar
 	@extend .navbar-inverse
 	@extend .navbar-fixed-top
-	height: 36px !important
+	height: $header-height
+	@media (max-width: $screen-sm)
+		height: auto
 	.navbar-header
 		width: 100%
+		@media (max-width: $screen-sm)
+			padding: 10px 0
 
-#header_shopversion
+#header_logo
 	@extend .navbar-brand
 	font-size: 1.3em !important
 	position: relative
 	height: 36px
 	background: url('#{$img-path}/prestashop-avatar-header_shopname.png') no-repeat top left
 	background-size: auto 36px
-	padding-left: 140px !important
+	padding-left: 205px !important
 	@include margin(0, 5px, 0, 0)
 	#shop_version
 		font-size: 10px
-	@media (max-width: $screen-xs)
-		display: none
+	@media (max-width: $screen-sm)
+		margin-left: 25px
 #header_shopname
 	@extend .navbar-brand
 	text-decoration: none
@@ -33,12 +42,12 @@
 	> li > a
 		height: 36px
 		display: block
-		color: white
-		&:hover i
-			color: white
-	> li > a > i
-		font-size: $icon-size-base
-		vertical-align: middle
+		color: $main-color
+		&:hover
+			color: $toolbar-buttons-hover-color
+		> i
+			font-size: $icon-size-base
+			vertical-align: middle
 	.notifs
 		width: 40px
 		position: relative
@@ -82,6 +91,7 @@
 	border: none
 	color: white
 	display: none
+
 #header_employee_box
 	@extend .nav
 	@extend .navbar-nav
@@ -116,19 +126,28 @@
 		.label-tooltip
 			padding: 9px 0
 			color: $brand-warning
+	.debug-mode
+		color: $contrasted-light-default
+		cursor: default
+		display: inline-block
+		margin-left: -13px
+		.label-tooltip
+			padding: 9px 0
+			color: $brand-warning
+	.maintenance-mode + .debug-mode
+		margin-left: 0
 #employee_infos
+	width: $header-height
+	box-sizing: border-box
 	.employee_name
 		position: relative
-		@include ltr
-			padding-right: 40px !important
-		@include rtl
-			padding-left: 40px !important
+		height: $header-height
 	.employee_avatar_small
 		.img-thumbnail
-			@include border-radius(0)
-		@include avatar(36px, 0px)
+			@include border-radius($header-height)
+		@include avatar($header-height, 0px)
 		position: absolute
-		top: 0px
+		top: 0
 		@include right(0)
 	img
 		border: none
@@ -137,11 +156,6 @@
 	i
 		font-size: $icon-size-base
 	@media (max-width: $screen-sm)
-		position: fixed !important
-		top: 36px !important
-		width: 100% !important
-		height: 100% !important
-		background-color: #383F50 !important
 		@include ltr
 			left: 0 !important
 		@include rtl
@@ -161,7 +175,47 @@
 		sup
 			font-size: 0.7em
 
+.bo_search_form
+	float: left
+	width: 250px
+	margin: 4px 0 0 0
+	@extend .hidden-xs
+	#bo_query
+		@include border-radius(0, 55px, 55px, 0)
+		color:       $main-color
+		background:  white
+		border:      1px solid $bg-content-color
+		border-left: none
+		@include box-shadow(none)
+		@include transition(none)
+	.input-group
+		margin: 0 !important
+	.input-group-btn
+		@include border-radius(55px, 0, 0, 55px)
+		border:       1px solid $bg-content-color
+		border-right: none
+		.btn
+			@include border-radius(55px, 0, 0, 55px)
+			@include box-shadow(none)
+			height: 29px
+			outline: none
+		.btn-default
+			@include box-shadow(none)
+			border: 1px solid transparent !important
+	.clear_search
+		position: absolute
+		top: 6px
+		z-index: 10
+		@include right(8px)
+	i
+		font-size: $icon-size-base
+
 #header_quick
+	font-size: 15px
+	a
+		color: $main-color
+		&:hover
+			color: $toolbar-buttons-hover-color
 	@extend .nav
 	@extend .navbar-nav
 	@include ltr
@@ -171,11 +225,32 @@
 	@extend .hidden-xs
 	@extend .hidden-sm
 
-#header_shop
+.header-list
 	@extend .nav
 	@extend .navbar-nav
 	@include ltr
 		@extend .navbar-left
+	@include rtl
+		@extend .navbar-right
+	@extend .hidden-sm
+	height:     $header-height
+	box-sizing: border-box
+	margin: 0 10px !important
+	li
+		> a
+			&.notifs
+				display:        block
+				height:         $header-height
+				min-width:      $header-height
+				line-height:    $header-height
+				box-sizing:     border-box
+				padding:        0 5px !important
+				vertical-align: middle
+
+#header_shop
+	@extend .nav
+	@extend .navbar-nav
+	@include ltr
 	@include rtl
 		@extend .navbar-right
 
@@ -191,3 +266,100 @@
 		font-size: 20px
 		color: rgba(white,.6)
 		line-height: 35px
+
+#notification
+	&.open
+		background: none
+	.notifs .material-icons
+		color: #6c868e
+	>.material-icons
+		font-size: 1.5rem
+		line-height: 1.375rem
+		vertical-align: middle
+	#total_notif_number_wrapper
+		display: inline-block
+		line-height: .875rem
+		height: .875rem
+		vertical-align: middle
+		position: absolute
+		top: .125rem
+		right: .125rem
+		color: #fff
+		background: #fb0
+		font-size: .5625rem
+		padding: 0 .25rem
+		border-radius: .625rem
+	.dropdown-menu
+		margin: 0
+		padding: 0
+		border-radius: 0
+		min-width: 25rem
+		box-shadow: none
+		.notifications
+			.nav-tabs
+				border-bottom: 1px solid #fff
+				.nav-item
+					margin-left: 0
+					width: 33%
+					text-align: center
+					margin-bottom: -1px
+					&.active a
+						border-top: 0
+						border-bottom: 2px solid #25b9d7
+						color: #363a41
+					&:hover a
+						color: #25b9d7
+					.nav-link
+						color: #6c868e
+						font-weight: 400
+						padding: .9375rem .9375rem .625rem
+						font-family: Open Sans,sans-serif
+						font-size: 0.75rem
+						text-transform: none
+						border: 0
+			.tab-content
+				border-top: .125rem solid #bbcdd2
+				padding: 0
+				margin-top: -.0625rem
+				.tab-pane
+					height: 11.875rem
+					overflow-y: auto
+					.no-notification
+						display: none
+					&.empty
+						color: #6c868e
+						text-align: center
+						&::after
+							content: "\E7F5"
+							font-family: "Material Icons"
+							opacity: 0.7
+							font-size: 5.625rem
+							color: #bbcdd2
+						> .no-notification
+							position: absolute
+							bottom: 0
+							width: 100%
+							display: block
+				.notif
+					display: block
+					padding: .625rem .9375rem
+					color: #6c868e
+					.material-icons
+						vertical-align: top
+						font-size: 16px
+						line-height: 16px
+					.message-notification-status
+						&.open
+							color: #5cb85c
+						&.closed
+							color: #d9534f
+						&.pending1, &.pending2
+							color: #FFBB00
+					strong
+						color: #363a41
+					&:hover
+						background-color: #3ed2f0
+						color: #fff
+						text-decoration: none
+						strong
+							color: #fff

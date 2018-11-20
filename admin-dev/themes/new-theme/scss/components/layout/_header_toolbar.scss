@@ -1,0 +1,65 @@
+.header-toolbar {
+  position: fixed;
+  background: $white;
+  top: $size-header-height;
+  left: $size-navbar-width;
+  height: $size-header-toolbar-height;
+  right: 0;
+  z-index: 501;
+  padding-left: 0.625rem;
+  border-bottom: 0.0625rem solid $color-separator;
+
+  > .title {
+    padding: 0.3125rem;
+    font-size: 1.625rem;
+    font-weight: normal;
+    margin-top: -0.625rem;
+  }
+
+  > .breadcrumb {
+    margin: 0;
+  }
+}
+
+.toolbar-icons {
+  position: absolute;
+  top: 1.25rem;
+  right: 0.625rem;
+}
+
+.page-head-tabs {
+    display: inline-block;
+    position: absolute;
+    bottom: 0;
+
+    > .tab {
+        display: inline-block;
+        float: left;
+        height: 40px;
+        line-height: 40px;
+        padding: 0 10px;
+        vertical-align: middle;
+        color: #363a41;
+        box-sizing: border-box;
+        font-size: 16px;
+        text-decoration: none;
+
+        .notification-container {
+            @include notification_container();
+
+            .notification-counter {
+                @include notification_counter();
+            }
+        }
+    }
+
+    > .current {
+        border-bottom: 3px solid #3ed2f0;
+    }
+}
+
+.page-sidebar-closed {
+  .header-toolbar {
+    left: $size-navbar-width-mini;
+  }
+}

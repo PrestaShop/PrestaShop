@@ -1,32 +1,32 @@
-{*
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Academic Free License (AFL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/afl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-* @author    PrestaShop SA <contact@prestashop.com>
-* @copyright 2007-2015 PrestaShop SA
-* @license   http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
-* International Registered Trademark & Property of PrestaShop SA
-*}
+{**
+ * 2007-2017 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2017 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *}
 
 <div class="form-horizontal well">
 	<div class="form-group">
 		<label class="control-label col-lg-3">
-			{l s='Name'}
+			{l s='Name' d='Admin.Global'}
 		</label>
 		<div class="col-lg-9">
 			<input class="form-control" type="text" name="discount_name" value="" />
@@ -35,20 +35,20 @@
 
 	<div class="form-group">
 		<label class="control-label col-lg-3">
-			{l s='Type'}
+			{l s='Type' d='Admin.Catalog.Feature'}
 		</label>
 		<div class="col-lg-9">
 			<select class="form-control" name="discount_type" id="discount_type">
-				<option value="1">{l s='Percent'}</option>
-				<option value="2">{l s='Amount'}</option>
-				<option value="3">{l s='Free shipping'}</option>
+				<option value="1">{l s='Percent' d='Admin.Global'}</option>
+				<option value="2">{l s='Amount' d='Admin.Global'}</option>
+				<option value="3">{l s='Free shipping' d='Admin.Shipping.Feature'}</option>
 			</select>
 		</div>
 	</div>
 
 	<div id="discount_value_field" class="form-group">
 		<label class="control-label col-lg-3">
-			{l s='Value'}
+			{l s='Value' d='Admin.Global'}
 		</label>
 		<div class="col-lg-9">
 			<div class="input-group">
@@ -59,7 +59,7 @@
 				<input class="form-control" type="text" name="discount_value"/>
 			</div>
 			<p class="text-muted" id="discount_value_help" style="display: none;">
-				{l s='This value must include taxes.'}
+				{l s='This value must include taxes.' d='Admin.Orderscustomers.Notification'}
 			</p>
 		</div>
 	</div>
@@ -67,7 +67,7 @@
 	{if $order->hasInvoice()}
 	<div class="form-group">
 		<label class="control-label col-lg-3">
-			{l s='Invoice'}
+			{l s='Invoice' d='Admin.Global'}
 		</label>
 		<div class="col-lg-9">
 			<select name="discount_invoice">
@@ -84,12 +84,12 @@
 		<div class="col-lg-9 col-lg-offset-3">
 			<p class="checkbox">
 				<label class="control-label" for="discount_all_invoices">
-					<input type="checkbox" name="discount_all_invoices" id="discount_all_invoices" value="1" /> 
-					{l s='Apply on all invoices'}
+					<input type="checkbox" name="discount_all_invoices" id="discount_all_invoices" value="1" />
+					{l s='Apply on all invoices' d='Admin.Orderscustomers.Feature'}
 				</label>
 			</p>
 			<p class="help-block">
-				{l s='If you chooses to create this discount for all invoices, only one discount will be created per order invoice.'}
+				{l s='If you chooses to create this discount for all invoices, only one discount will be created per order invoice.' d='Admin.Orderscustomers.Help'}
 			</p>
 		</div>
 	</div>
@@ -99,11 +99,11 @@
 		<div class="col-lg-9 col-lg-offset-3">
 			<button class="btn btn-default" type="button" id="cancel_add_voucher">
 				<i class="icon-remove text-danger"></i>
-				{l s='Cancel'}
+				{l s='Cancel' d='Admin.Actions'}
 			</button>
 			<button class="btn btn-default" type="submit" name="submitNewVoucher">
 				<i class="icon-ok text-success"></i>
-				{l s='Add'}
+				{l s='Add' d='Admin.Actions'}
 			</button>
 		</div>
 	</div>

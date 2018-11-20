@@ -1,13 +1,13 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,14 +19,20 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @copyright 2007-2017 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+/**
+ * Class DateRangeCore
+ */
 class DateRangeCore extends ObjectModel
 {
+    /** @var string $time_start */
     public $time_start;
+
+    /** @var string $time_end */
     public $time_end;
 
     /**
@@ -37,10 +43,15 @@ class DateRangeCore extends ObjectModel
         'primary' => 'id_date_range',
         'fields' => array(
             'time_start' => array('type' => self::TYPE_DATE, 'validate' => 'isDate', 'required' => true),
-            'time_end' =>    array('type' => self::TYPE_DATE, 'validate' => 'isDate', 'required' => true),
+            'time_end' => array('type' => self::TYPE_DATE, 'validate' => 'isDate', 'required' => true),
         ),
     );
 
+    /**
+     * Get current range
+     *
+     * @return mixed
+     */
     public static function getCurrentRange()
     {
         $result = Db::getInstance()->getRow('
@@ -54,8 +65,10 @@ class DateRangeCore extends ObjectModel
             $dateRange->time_start = date('Y-m-d');
             $dateRange->time_end = strftime('%Y-%m-%d %H:%M:%S', strtotime($dateRange->time_start) + $rangeSize);
             $dateRange->add();
+
             return $dateRange->id;
         }
+
         return $result['id_date_range'];
     }
 }

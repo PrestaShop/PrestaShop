@@ -1,13 +1,13 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,15 +19,15 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @copyright 2007-2017 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 /**
  * Step 1 : display language form
  */
-class InstallControllerHttpWelcome extends InstallControllerHttp
+class InstallControllerHttpWelcome extends InstallControllerHttp implements HttpConfigureInterface
 {
     public function processNextStep()
     {
@@ -37,7 +37,7 @@ class InstallControllerHttpWelcome extends InstallControllerHttp
     {
         return true;
     }
-    
+
     /**
      * Change language
      */
@@ -45,6 +45,14 @@ class InstallControllerHttpWelcome extends InstallControllerHttp
     {
         if (Tools::getValue('language')) {
             $this->session->lang = Tools::getValue('language');
+        }
+
+        $locale = $this->language->getLanguage($this->session->lang)->locale;
+        if (!empty($this->session->lang) && !is_file(_PS_ROOT_DIR_ . '/app/Resources/translations/' . $locale . '/Install.' . $locale . '.xlf')) {
+            Language::downloadAndInstallLanguagePack($this->session->lang, _PS_VERSION_, null, false);
+            $this->clearCache();
+        }
+        if (Tools::getIsset('language') && is_dir(_PS_ROOT_DIR_ . '/app/Resources/translations/' . $locale)) {
             $this->redirect('welcome');
         }
     }
@@ -56,7 +64,6 @@ class InstallControllerHttpWelcome extends InstallControllerHttp
     {
         $this->can_upgrade = false;
         if (file_exists(_PS_ROOT_DIR_.'/config/settings.inc.php')) {
-            @include_once(_PS_ROOT_DIR_.'/config/settings.inc.php');
             if (version_compare(_PS_VERSION_, _PS_INSTALL_VERSION_, '<')) {
                 $this->can_upgrade = true;
                 $this->ps_version = _PS_VERSION_;
@@ -64,5 +71,11 @@ class InstallControllerHttpWelcome extends InstallControllerHttp
         }
 
         $this->displayTemplate('welcome');
+    }
+
+    private function clearCache()
+    {
+        $fs = new \Symfony\Component\Filesystem\Filesystem();
+        $fs->remove(_PS_ROOT_DIR_ . '/app/cache/' . (_PS_MODE_DEV_ ? 'dev' : 'prod'));
     }
 }

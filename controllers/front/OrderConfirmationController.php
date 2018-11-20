@@ -1,13 +1,13 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,10 +19,11 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @copyright 2007-2017 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+use PrestaShop\PrestaShop\Adapter\Order\OrderPresenter;
 
 class OrderConfirmationControllerCore extends FrontController
 {
@@ -33,34 +34,30 @@ class OrderConfirmationControllerCore extends FrontController
     public $id_order;
     public $reference;
     public $secure_key;
+    public $order_presenter;
 
     /**
-     * Initialize order confirmation controller
+     * Initialize order confirmation controller.
+     *
      * @see FrontController::init()
      */
     public function init()
     {
         parent::init();
 
-        $this->id_cart = (int)(Tools::getValue('id_cart', 0));
-        $is_guest = false;
-
-        /* check if the cart has been made by a Guest customer, for redirect link */
-        if (Cart::isGuestCartByCartId($this->id_cart)) {
-            $is_guest = true;
-            $redirectLink = 'index.php?controller=guest-tracking';
-        } else {
-            $redirectLink = 'index.php?controller=history';
+        if (true === (bool) Tools::getValue('free_order')) {
+            $this->checkFreeOrder();
         }
 
-        $this->id_module = (int)(Tools::getValue('id_module', 0));
-        $this->id_order = Order::getOrderByCartId((int)($this->id_cart));
+        $this->id_cart = (int) (Tools::getValue('id_cart', 0));
+
+        $redirectLink = 'index.php?controller=history';
+
+        $this->id_module = (int) (Tools::getValue('id_module', 0));
+        $this->id_order = Order::getIdByCartId((int) ($this->id_cart));
         $this->secure_key = Tools::getValue('key', false);
-        $order = new Order((int)($this->id_order));
-        if ($is_guest) {
-            $customer = new Customer((int)$order->id_customer);
-            $redirectLink .= '&id_order='.$order->reference.'&email='.urlencode($customer->email);
-        }
+        $order = new Order((int) ($this->id_order));
+
         if (!$this->id_order || !$this->id_module || !$this->secure_key || empty($this->secure_key)) {
             Tools::redirect($redirectLink.(Tools::isSubmit('slowvalidation') ? '&slowvalidation' : ''));
         }
@@ -68,81 +65,96 @@ class OrderConfirmationControllerCore extends FrontController
         if (!Validate::isLoadedObject($order) || $order->id_customer != $this->context->customer->id || $this->secure_key != $order->secure_key) {
             Tools::redirect($redirectLink);
         }
-        $module = Module::getInstanceById((int)($this->id_module));
+        $module = Module::getInstanceById((int) ($this->id_module));
         if ($order->module != $module->name) {
             Tools::redirect($redirectLink);
         }
+        $this->order_presenter = new OrderPresenter();
     }
 
     /**
-     * Assign template vars related to page content
+     * Assign template vars related to page content.
+     *
      * @see FrontController::initContent()
      */
     public function initContent()
     {
+        if (Configuration::isCatalogMode()) {
+            Tools::redirect('index.php');
+        }
+
+        $order = new Order(Order::getIdByCartId((int) ($this->id_cart)));
+        $presentedOrder = $this->order_presenter->present($order);
+        $register_form = $this
+            ->makeCustomerForm()
+            ->setGuestAllowed(false)
+            ->fillWith(Tools::getAllValues());
+
         parent::initContent();
 
         $this->context->smarty->assign(array(
-            'is_guest' => $this->context->customer->is_guest,
-            'HOOK_ORDER_CONFIRMATION' => $this->displayOrderConfirmation(),
-            'HOOK_PAYMENT_RETURN' => $this->displayPaymentReturn()
+            'HOOK_ORDER_CONFIRMATION' => $this->displayOrderConfirmation($order),
+            'HOOK_PAYMENT_RETURN' => $this->displayPaymentReturn($order),
+            'order' => $presentedOrder,
+            'register_form' => $register_form,
         ));
 
         if ($this->context->customer->is_guest) {
-            $this->context->smarty->assign(array(
-                'id_order' => $this->id_order,
-                'reference_order' => $this->reference,
-                'id_order_formatted' => sprintf('#%06d', $this->id_order),
-                'email' => $this->context->customer->email
-            ));
             /* If guest we clear the cookie for security reason */
             $this->context->customer->mylogout();
         }
-
-        $this->setTemplate(_PS_THEME_DIR_.'order-confirmation.tpl');
+        $this->setTemplate('checkout/order-confirmation');
     }
 
     /**
-     * Execute the hook displayPaymentReturn
+     * Execute the hook displayPaymentReturn.
      */
-    public function displayPaymentReturn()
+    public function displayPaymentReturn($order)
     {
-        if (Validate::isUnsignedId($this->id_order) && Validate::isUnsignedId($this->id_module)) {
-            $params = array();
-            $order = new Order($this->id_order);
-            $currency = new Currency($order->id_currency);
-
-            if (Validate::isLoadedObject($order)) {
-                $params['total_to_pay'] = $order->getOrdersTotalPaid();
-                $params['currency'] = $currency->sign;
-                $params['objOrder'] = $order;
-                $params['currencyObj'] = $currency;
-
-                return Hook::exec('displayPaymentReturn', $params, $this->id_module);
-            }
+        if (!Validate::isUnsignedId($this->id_module)) {
+            return false;
         }
-        return false;
+
+        return Hook::exec('displayPaymentReturn', array('order' => $order), $this->id_module);
     }
 
     /**
-     * Execute the hook displayOrderConfirmation
+     * Execute the hook displayOrderConfirmation.
      */
-    public function displayOrderConfirmation()
+    public function displayOrderConfirmation($order)
     {
-        if (Validate::isUnsignedId($this->id_order)) {
-            $params = array();
-            $order = new Order($this->id_order);
-            $currency = new Currency($order->id_currency);
+        return Hook::exec('displayOrderConfirmation', array('order' => $order));
+    }
 
-            if (Validate::isLoadedObject($order)) {
-                $params['total_to_pay'] = $order->getOrdersTotalPaid();
-                $params['currency'] = $currency->sign;
-                $params['objOrder'] = $order;
-                $params['currencyObj'] = $currency;
-
-                return Hook::exec('displayOrderConfirmation', $params);
-            }
+    /**
+     * Check if an order is free and create it
+     */
+    private function checkFreeOrder()
+    {
+        $cart = $this->context->cart;
+        if ($cart->id_customer == 0 || $cart->id_address_delivery == 0 || $cart->id_address_invoice == 0) {
+            Tools::redirect($this->context->link->getPageLink('order'));
         }
-        return false;
+
+        $customer = new Customer($cart->id_customer);
+        if (!Validate::isLoadedObject($customer)) {
+            Tools::redirect($this->context->link->getPageLink('order'));
+        }
+
+        $total = (float)$cart->getOrderTotal(true, Cart::BOTH);
+        if ($total > 0) {
+            Tools::redirect($this->context->link->getPageLink('order'));
+        }
+
+        $order = new PaymentFree();
+        $order->validateOrder(
+            $cart->id,
+            Configuration::get('PS_OS_PAYMENT'),
+            0,
+            $this->trans('Free order', array(), 'Admin.Orderscustomers.Feature'),
+            null, array(), null, false,
+            $cart->secure_key
+        );
+
     }
 }

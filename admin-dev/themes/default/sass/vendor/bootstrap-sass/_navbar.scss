@@ -180,6 +180,28 @@
   }
 }
 
+// Shop state / Maintenance / Debug
+
+.shop-state {
+  float: left;
+  padding: $navbar-padding-vertical $navbar-padding-horizontal;
+  font-size: $font-size-large;
+  line-height: $line-height-computed;
+  height: $navbar-height;
+  margin-right: $navbar-padding-horizontal;
+
+  &:hover,
+  &:focus {
+    text-decoration: none;
+  }
+
+  > .material-icons {
+    font-size: $font-size-large;
+    color: #ffbb00;
+    float: left;
+    margin-right: $navbar-padding-horizontal;
+  }
+}
 
 // Navbar toggle
 //
@@ -369,7 +391,8 @@
 .navbar-default {
   background-color: $navbar-default-bg;
 
-  .navbar-brand {
+  .navbar-brand,
+  .shop-state {
     color: $navbar-default-brand-color;
     &:hover,
     &:focus {
@@ -500,47 +523,17 @@
 // Inverse navbar
 
 .navbar-inverse {
-  background-color: $navbar-inverse-bg;
-
+  background: $contrasted-light-default;
   .navbar-brand {
-    color: $navbar-inverse-brand-color;
+    color: $main-color;
     &:hover,
     &:focus {
-      color: $navbar-inverse-brand-hover-color;
-      background-color: $navbar-inverse-brand-hover-bg;
+      color: $toolbar-buttons-hover-color;
     }
   }
 
   .navbar-text {
     color: $navbar-inverse-color;
-  }
-
-  .navbar-nav {
-    > li > a {
-      color: $navbar-inverse-link-color;
-
-      &:hover,
-      &:focus {
-        color: $navbar-inverse-link-hover-color;
-        background-color: $navbar-inverse-link-hover-bg;
-      }
-    }
-    > .active > a {
-      &,
-      &:hover,
-      &:focus {
-        color: $navbar-inverse-link-active-color;
-        background-color: $navbar-inverse-link-active-bg;
-      }
-    }
-    > .disabled > a {
-      &,
-      &:hover,
-      &:focus {
-        color: $navbar-inverse-link-disabled-color;
-        background-color: $navbar-inverse-link-disabled-bg;
-      }
-    }
   }
 
   // Darken the responsive nav toggle

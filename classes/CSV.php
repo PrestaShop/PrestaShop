@@ -1,13 +1,13 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,8 +19,8 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @copyright 2007-2017 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -37,10 +37,11 @@ class CSVCore
 
     /**
     * Loads objects, filename and optionnaly a delimiter.
-    * @param array|Iterator $collection Collection of objects / arrays (of non-objects)
-    * @param string $filename : used later to save the file
-    * @param string $delimiter Optional : delimiter used
-    */
+     *
+     * @param array|Iterator $collection Collection of objects / arrays (of non-objects)
+     * @param string         $filename   used later to save the file
+     * @param string         $delimiter  delimiter used
+     */
     public function __construct($collection, $filename, $delimiter = ';')
     {
         $this->filename = $filename;
@@ -57,13 +58,13 @@ class CSVCore
     {
         $this->headers();
 
-        $header_line = false;
+        $headerLine = false;
 
         foreach ($this->collection as $object) {
             $vars = get_object_vars($object);
-            if (!$header_line) {
+            if (!$headerLine) {
                 $this->output(array_keys($vars));
-                $header_line = true;
+                $headerLine = true;
             }
 
             // outputs values
@@ -75,11 +76,13 @@ class CSVCore
     /**
      * Wraps data and echoes
      * Uses defined delimiter
+     *
+     * @param array $data
      */
     public function output($data)
     {
-        $wraped_data = array_map(array('CSVCore', 'wrap'), $data);
-        echo sprintf("%s\n", implode($this->delimiter, $wraped_data));
+        $wrappedData = array_map(array('CSVCore', 'wrap'), $data);
+        echo sprintf("%s\n", implode($this->delimiter, $wrappedData));
     }
 
     /**
@@ -90,6 +93,7 @@ class CSVCore
     public static function wrap($data)
     {
         $data = str_replace(array('"', ';'), '', $data);
+
         return sprintf('"%s"', $data);
     }
 

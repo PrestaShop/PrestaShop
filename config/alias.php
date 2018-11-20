@@ -1,13 +1,13 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,39 +19,21 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @copyright 2007-2017 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-function fd($var)
-{
-    return (Tools::fd($var));
-}
 
-function p($var)
-{
-    return (Tools::p($var));
-}
+use Symfony\Component\VarDumper\VarDumper;
 
-function d($var)
-{
-    Tools::d($var);
-}
-
-function ppp($var)
-{
-    return (Tools::p($var));
-}
-
-function ddd($var)
-{
-    Tools::d($var);
-}
-
-function epr($var, $message_type = null, $destination = null, $extra_headers = null)
-{
-    return Tools::error_log($var, $message_type, $destination, $extra_headers);
+if (!function_exists('dump')) {
+    function dump($var)
+    {
+        foreach (func_get_args() as $var) {
+            VarDumper::dump($var);
+        }
+    }
 }
 
 /**
@@ -78,17 +60,6 @@ function displayFatalError()
         $error = error_get_last();
     }
     if ($error !== null && in_array($error['type'], array(E_ERROR, E_PARSE, E_COMPILE_ERROR ))) {
-        echo '[PrestaShop] Fatal error in module file :'.$error['file'].':<br />'.$error['message'];
-    }
-}
-
-/**
- * @deprecated
- */
-if (method_exists('Tools', 'nl2br')) {
-    function nl2br2($string)
-    {
-        Tools::displayAsDeprecated();
-        return Tools::nl2br($string);
+        echo '[PrestaShop] Fatal error in module file: '.$error['file'].':'.$error['line'].'<br />'.$error['message'];
     }
 }

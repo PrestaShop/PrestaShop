@@ -1,0 +1,1255 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/ps_emailgenerator/templates/modules/ps_emailalerts/order_changed.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="31ee1241ee08294dfc2ca85698fda2a1">
+        <source>Hi {firstname} {lastname},</source>
+        <target>Hi {firstname} {lastname},</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/modules/ps_emailalerts/order_changed.php:6</note>
+      </trans-unit>
+      <trans-unit id="fce4d5217e51f199cfbd10ae913cc5dd">
+        <source><![CDATA[You can review your order and download your invoice from the <a href="{history_url}">"Order history"</a> section of your customer account by clicking <a href="{my_account_url}">"My account"</a> on our shop.]]></source>
+        <target><![CDATA[You can review your order and download your invoice from the <a href="{history_url}">"Order history"</a> section of your customer account by clicking <a href="{my_account_url}">"My account"</a> on our shop.]]></target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/modules/ps_emailalerts/order_changed.php:40</note>
+      </trans-unit>
+      <trans-unit id="992ed3f1f7ce7be683fd4051138b693e">
+        <source><![CDATA[If you have a guest account, you can follow your order via the <a href="{guest_tracking_url}?id_order={order_name}">"Guest Tracking"</a> section on our shop.]]></source>
+        <target><![CDATA[If you have a guest account, you can follow your order via the <a href="{guest_tracking_url}?id_order={order_name}">"Guest Tracking"</a> section on our shop.]]></target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/modules/ps_emailalerts/order_changed.php:49</note>
+      </trans-unit>
+      <trans-unit id="008400d8db73946ba53b2d7f091eb845">
+        <source>Order {order_name}</source>
+        <target>Order {order_name}</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/modules/ps_emailalerts/order_changed.php:21</note>
+      </trans-unit>
+      <trans-unit id="6eaf1dae59f88437851d95f504f9cb3c">
+        <source>Order edited</source>
+        <target>Order edited</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/modules/ps_emailalerts/order_changed.php:21</note>
+      </trans-unit>
+      <trans-unit id="fe61da38922f840543c9f7a4f5dc8140">
+        <source><![CDATA[Your order with the reference <span><strong>{order_name}</strong></span> has been modified.]]></source>
+        <target><![CDATA[Your order with the reference <span><strong>{order_name}</strong></span> has been modified.]]></target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/modules/ps_emailalerts/order_changed.php:24</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_emailgenerator/templates/core/cheque.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="b4556791acee238c77be9ed338a29e80">
+        <source>Thank you for shopping with {shop_name}!</source>
+        <target>Thank you for shopping with {shop_name}!</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/cheque.php:7</note>
+      </trans-unit>
+      <trans-unit id="3f8b7a7948f4fd5d9bb34d63746dfd23">
+        <source><![CDATA[Your order with the reference <span><strong>{order_name}</strong></span> has been placed successfully and will be <strong>shipped as soon as we receive your payment</strong>.]]></source>
+        <target><![CDATA[Your order with the reference <span><strong>{order_name}</strong></span> has been placed successfully and will be <strong>shipped as soon as we receive your payment</strong>.]]></target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/cheque.php:25</note>
+      </trans-unit>
+      <trans-unit id="6702a6e3bc2dce95c3e3b61fe578f29c">
+        <source>Amount:</source>
+        <target>Amount:</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/cheque.php:49</note>
+      </trans-unit>
+      <trans-unit id="a51341e25ff7710496cf86468d797169">
+        <source><![CDATA[If you have a guest account, you can follow your order via the <a href="{guest_tracking_url}">"Guest Tracking"</a> section on our shop.]]></source>
+        <target><![CDATA[If you have a guest account, you can follow your order via the <a href="{guest_tracking_url}">"Guest Tracking"</a> section on our shop.]]></target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/cheque.php:76</note>
+      </trans-unit>
+      <trans-unit id="d698e777b19f6f487ae0490950174fde">
+        <source>Awaiting check payment</source>
+        <target>Awaiting check payment</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/cheque.php:22</note>
+      </trans-unit>
+      <trans-unit id="ecf01c46965fdfd36eb98b271276c0d5">
+        <source>You have selected to pay by check.</source>
+        <target>You have selected to pay by check.</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/cheque.php:45</note>
+      </trans-unit>
+      <trans-unit id="b6592595266708e46d1d420ab7153213">
+        <source>Here are the bank details for your check:</source>
+        <target>Here are the bank details for your check:</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/cheque.php:48</note>
+      </trans-unit>
+      <trans-unit id="1c3bd8f6bd066270354607c08f930baf">
+        <source>Payable to the order of:</source>
+        <target>Payable to the order of:</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/cheque.php:50</note>
+      </trans-unit>
+      <trans-unit id="8f1fb2295c4289bae9fc26549b4b45f2">
+        <source>Please mail your check to:</source>
+        <target>Please mail your check to:</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/cheque.php:51</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_emailgenerator/templates/modules/ps_emailalerts/new_order.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="f5d74ea75357b5e139854c14f8e24fe3">
+        <source>Order details</source>
+        <target>Order details</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/modules/ps_emailalerts/new_order.php:28</note>
+      </trans-unit>
+      <trans-unit id="2ca3deb5cd68fa9119b285804fab572f">
+        <source>Order:</source>
+        <target>Order:</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/modules/ps_emailalerts/new_order.php:31</note>
+      </trans-unit>
+      <trans-unit id="101f2450ccefbd344b37971c5d27f96d">
+        <source>Placed on</source>
+        <target>Placed on</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/modules/ps_emailalerts/new_order.php:31</note>
+      </trans-unit>
+      <trans-unit id="a0e8e26f6f9354192425b9a23227a5ba">
+        <source>Payment:</source>
+        <target>Payment:</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/modules/ps_emailalerts/new_order.php:32</note>
+      </trans-unit>
+      <trans-unit id="63d5049791d9d79d86e9a108b0a999ca">
+        <source>Reference</source>
+        <target>Reference</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/modules/ps_emailalerts/new_order.php:47</note>
+      </trans-unit>
+      <trans-unit id="deb10517653c255364175796ace3553f">
+        <source>Product</source>
+        <target>Product</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/modules/ps_emailalerts/new_order.php:48</note>
+      </trans-unit>
+      <trans-unit id="6c957f72dc8cdacc75762f2cbdcdfaf2">
+        <source>Unit price</source>
+        <target>Unit price</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/modules/ps_emailalerts/new_order.php:49</note>
+      </trans-unit>
+      <trans-unit id="694e8d1f2ee056f98ee488bdc4982d73">
+        <source>Quantity</source>
+        <target>Quantity</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/modules/ps_emailalerts/new_order.php:50</note>
+      </trans-unit>
+      <trans-unit id="0eede552438475bdfe820c13f24c9399">
+        <source>Total price</source>
+        <target>Total price</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/modules/ps_emailalerts/new_order.php:51</note>
+      </trans-unit>
+      <trans-unit id="068f80c7519d0528fb08e82137a72131">
+        <source>Products</source>
+        <target>Products</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/modules/ps_emailalerts/new_order.php:67</note>
+      </trans-unit>
+      <trans-unit id="9d5bf15117441a1b52eb1f0808e4aad3">
+        <source>Discounts</source>
+        <target>Discounts</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/modules/ps_emailalerts/new_order.php:95</note>
+      </trans-unit>
+      <trans-unit id="41c1d61bfff3fc9b1fd8f195061b8caa">
+        <source>Gift-wrapping</source>
+        <target>Gift-wrapping</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/modules/ps_emailalerts/new_order.php:123</note>
+      </trans-unit>
+      <trans-unit id="ea9cf7e47ff33b2be14e6dd07cbcefc6">
+        <source>Shipping</source>
+        <target>Shipping</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/modules/ps_emailalerts/new_order.php:151</note>
+      </trans-unit>
+      <trans-unit id="bb09440b8cab954c036c4a45558857a5">
+        <source>Total Tax paid</source>
+        <target>Total Tax paid</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/modules/ps_emailalerts/new_order.php:179</note>
+      </trans-unit>
+      <trans-unit id="ea067eb37801c5aab1a1c685eb97d601">
+        <source>Total paid</source>
+        <target>Total paid</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/modules/ps_emailalerts/new_order.php:207</note>
+      </trans-unit>
+      <trans-unit id="f8617a92ba0a0a4eabee724eab7c9f48">
+        <source>Carrier:</source>
+        <target>Carrier:</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/modules/ps_emailalerts/new_order.php:241</note>
+      </trans-unit>
+      <trans-unit id="af0f5bdc5be121b9307687aeeae38c17">
+        <source>Delivery address</source>
+        <target>Delivery address</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/modules/ps_emailalerts/new_order.php:267</note>
+      </trans-unit>
+      <trans-unit id="1fbc7e5f1b92c7ec072397b59a0bb5da">
+        <source>Billing address</source>
+        <target>Billing address</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/modules/ps_emailalerts/new_order.php:286</note>
+      </trans-unit>
+      <trans-unit id="5c1cc11c191c9a0f32d16439618ed3bb">
+        <source>Customer message:</source>
+        <target>Customer message:</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/modules/ps_emailalerts/new_order.php:312</note>
+      </trans-unit>
+      <trans-unit id="1a81759353d36dbd31059fc261af0aa2">
+        <source>Congratulations!</source>
+        <target>Congratulations!</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/modules/ps_emailalerts/new_order.php:6</note>
+      </trans-unit>
+      <trans-unit id="6881c1c321e65a31d35137f960022cf7">
+        <source>A new order was placed on {shop_name} by the following customer: {firstname} {lastname} ({email})</source>
+        <target>A new order was placed on {shop_name} by the following customer: {firstname} {lastname} ({email})</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/modules/ps_emailalerts/new_order.php:13</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_emailgenerator/templates/core/download_product.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="5f55a607fea61a402ceac66cc99f1e9e">
+        <source><![CDATA[Thank you for your order with the reference {order_name} from <strong>{shop_name}</strong>]]></source>
+        <target><![CDATA[Thank you for your order with the reference {order_name} from <strong>{shop_name}</strong>]]></target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/download_product.php:7</note>
+      </trans-unit>
+      <trans-unit id="30acb55a5efc4a32a30a0c3db85f37d1">
+        <source>Product(s) now available for download</source>
+        <target>Product(s) now available for download</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/download_product.php:22</note>
+      </trans-unit>
+      <trans-unit id="afae9cdc5d9b4583915a579cb0c67788">
+        <source><![CDATA[You have <span><strong>{nbProducts}</strong></span> product(s) now available for download using the following link(s):]]></source>
+        <target><![CDATA[You have <span><strong>{nbProducts}</strong></span> product(s) now available for download using the following link(s):]]></target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/download_product.php:25</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_emailgenerator/templates/core/guest_to_customer.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="9893de883531529d4a66a3851265f02e">
+        <source>Your customer account creation</source>
+        <target>Your customer account creation</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/guest_to_customer.php:21</note>
+      </trans-unit>
+      <trans-unit id="499e229d39934f1a36f3f48718cc19cc">
+        <source><![CDATA[Your guest account for <span><strong>{shop_name}</strong></span> has been transformed into a customer account.]]></source>
+        <target><![CDATA[Your guest account for <span><strong>{shop_name}</strong></span> has been transformed into a customer account.]]></target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/guest_to_customer.php:24</note>
+      </trans-unit>
+      <trans-unit id="49bea2c7e271e5cd440a295dd6fadc72">
+        <source>Please be careful when sharing these login details with others.</source>
+        <target>Please be careful when sharing these login details with others.</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/guest_to_customer.php:41</note>
+      </trans-unit>
+      <trans-unit id="b75184fa489c948c6debc4d635fefa5a">
+        <source>You can access your customer account on our shop:</source>
+        <target>You can access your customer account on our shop:</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/guest_to_customer.php:50</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_emailgenerator/templates/core/password.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="78e365acb087fd1f8d494dae0001de10">
+        <source>E-mail address:</source>
+        <target>E-mail address:</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/password.php:24</note>
+      </trans-unit>
+      <trans-unit id="53423ed6d9f522de8d41539456628786">
+        <source>Your new {shop_name} login details</source>
+        <target>Your new {shop_name} login details</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/password.php:21</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_emailgenerator/templates/core/order_return_state.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="34d125dc458bced25eaf5e2e272c0d75">
+        <source>Return #{id_order_return} - update</source>
+        <target>Return #{id_order_return} - update</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/order_return_state.php:21</note>
+      </trans-unit>
+      <trans-unit id="96aac675caae8b0ca0a5227ce8a6a7c6">
+        <source>We have updated the progress on your return #{id_order_return}, the new status is:</source>
+        <target>We have updated the progress on your return #{id_order_return}, the new status is:</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/order_return_state.php:24</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_emailgenerator/templates/core/forward_msg.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="8595a98bbe6d6b0e3b9b0681b3b4aa71">
+        <source>Customer service - Forwarded discussion</source>
+        <target>Customer service - Forwarded discussion</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/forward_msg.php:21</note>
+      </trans-unit>
+      <trans-unit id="85ae5cfc68837cc8e50609b84babba09">
+        <source><![CDATA[<span><strong>{employee}</strong></span> wanted to forward this discussion to you.]]></source>
+        <target><![CDATA[<span><strong>{employee}</strong></span> wanted to forward this discussion to you.]]></target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/forward_msg.php:24</note>
+      </trans-unit>
+      <trans-unit id="a9854b516855755f7a9246d781d4f57b">
+        <source>Discussion history:</source>
+        <target>Discussion history:</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/forward_msg.php:25</note>
+      </trans-unit>
+      <trans-unit id="f4df87e5e465151ae8d5954bec01d9ec">
+        <source><![CDATA[<span><strong>{employee}</strong></span> added <span><strong>"{comment}"</strong></span>]]></source>
+        <target><![CDATA[<span><strong>{employee}</strong></span> added <span><strong>"{comment}"</strong></span>]]></target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/forward_msg.php:26</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_emailgenerator/templates/core/voucher.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="6edfaaf163aab585fb50f909e6f2cadf">
+        <source>Voucher created</source>
+        <target>Voucher created</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/voucher.php:21</note>
+      </trans-unit>
+      <trans-unit id="17ab9221f0e6cb342a02d31c56c79c2b">
+        <source><![CDATA[A voucher has been created in your name as a result of your order with the reference <span><strong>{order_name}</strong></span>.]]></source>
+        <target><![CDATA[A voucher has been created in your name as a result of your order with the reference <span><strong>{order_name}</strong></span>.]]></target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/voucher.php:24</note>
+      </trans-unit>
+      <trans-unit id="25cecf399c0cd872952ced4a7d150e0d">
+        <source><![CDATA[<span><strong>Voucher code: {voucher_num}</strong></span> in the amount of <span><strong>{voucher_amount}</strong></span>]]></source>
+        <target><![CDATA[<span><strong>Voucher code: {voucher_num}</strong></span> in the amount of <span><strong>{voucher_amount}</strong></span>]]></target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/voucher.php:25</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_emailgenerator/templates/modules/referralprogram/referralprogram-voucher.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="f4f614c22d9d2cbd0f9aa08cd59600d2">
+        <source>Simply copy/paste this code during the payment process for your next order.</source>
+        <target>Simply copy/paste this code during the payment process for your next order.</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/modules/referralprogram/referralprogram-voucher.php:24</note>
+      </trans-unit>
+      <trans-unit id="abe1585bf97403d8a9a01a272183585a">
+        <source>Here is the code of your voucher:</source>
+        <target>Here is the code of your voucher:</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/modules/referralprogram/referralprogram-voucher.php:23</note>
+      </trans-unit>
+      <trans-unit id="6540b502e953f4c05abeb8f234cd50bf">
+        <source>Referral Program</source>
+        <target>Referral Program</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/modules/referralprogram/referralprogram-voucher.php:19</note>
+      </trans-unit>
+      <trans-unit id="dd863685846fc4eddcc9d6d09ddd5264">
+        <source>We have created a voucher in your name for referring a friend.</source>
+        <target>We have created a voucher in your name for referring a friend.</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/modules/referralprogram/referralprogram-voucher.php:22</note>
+      </trans-unit>
+      <trans-unit id="389df865c60c8fc7b86bf773eb5b121c">
+        <source>, with an amount of</source>
+        <target>, with an amount of</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/modules/referralprogram/referralprogram-voucher.php:23</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_emailgenerator/templates/core/employee_password.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="4785f7efb27f2905a05564903db18b23">
+        <source>Your {shop_name} login information</source>
+        <target>Your {shop_name} login information</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/employee_password.php:21</note>
+      </trans-unit>
+      <trans-unit id="a1fd16fcb98f1a6ec4312a10e6a3acba">
+        <source><![CDATA[Here is your personal login information for <span><strong>{shop_name}</strong></span>:]]></source>
+        <target><![CDATA[Here is your personal login information for <span><strong>{shop_name}</strong></span>:]]></target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/employee_password.php:24</note>
+      </trans-unit>
+      <trans-unit id="668a8d8d7ffe5da112b266e46b79b685">
+        <source>First name:</source>
+        <target>First name:</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/employee_password.php:25</note>
+      </trans-unit>
+      <trans-unit id="be5e0b5d50d48b049bd0f7b57cd163f9">
+        <source>Last name:</source>
+        <target>Last name:</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/employee_password.php:26</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_emailgenerator/templates/core/import.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="a218495ad30949e8ea1f64a261e37463">
+        <source>Import complete</source>
+        <target>Import complete</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/import.php:21</note>
+      </trans-unit>
+      <trans-unit id="293a2b3dd4b7fb2d950c8128be6d14f7">
+        <source>The file {filename} has been successfully imported to your shop.</source>
+        <target>The file {filename} has been successfully imported to your shop.</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/import.php:24</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_emailgenerator/templates/core/footer.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="2ef8544a3e6d7f08ce2cadc006bd1bf0">
+        <source><![CDATA[<a href="{shop_url}">{shop_name}</a> powered by <a href="http://www.prestashop.com/">PrestaShop™</a>]]></source>
+        <target><![CDATA[<a href="{shop_url}">{shop_name}</a> powered by <a href="http://www.prestashop.com/">PrestaShop™</a>]]></target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/footer.php:6</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_emailgenerator/templates/core/test.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="8b1a9953c4611296a827abf8c47804d7">
+        <source>Hello</source>
+        <target>Hello</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/test.php:5</note>
+      </trans-unit>
+      <trans-unit id="0afa69e0eb948ce9fb81e14cc0c7cf0b">
+        <source><![CDATA[This is a <strong>test e-mail</strong> from your shop.<br /><br /> If you can read this, the test was successful!]]></source>
+        <target><![CDATA[This is a <strong>test e-mail</strong> from your shop.<br /><br /> If you can read this, the test was successful!]]></target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/test.php:14</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_emailgenerator/templates/core/in_transit.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="7ec4f8b296984ffe6ea829b7e1743577">
+        <source>In transit</source>
+        <target>In transit</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/in_transit.php:46</note>
+      </trans-unit>
+      <trans-unit id="873a6c9ce4b0711161105e4a6d943bb6">
+        <source><![CDATA[Your order with the reference <span><strong>{order_name}</strong></span> is currently in transit.]]></source>
+        <target><![CDATA[Your order with the reference <span><strong>{order_name}</strong></span> is currently in transit.]]></target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/in_transit.php:49</note>
+      </trans-unit>
+      <trans-unit id="34f49f671cedfb2d5f8080ec14120281">
+        <source>You can track your package using the following link:</source>
+        <target>You can track your package using the following link:</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/in_transit.php:50</note>
+      </trans-unit>
+      <trans-unit id="1b0d1cd23421d9cea08507e950e87094">
+        <source>{followup}</source>
+        <target>{followup}</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/in_transit.php:50</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_emailgenerator/templates/core/log_alert.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="07e3b33fd6a9b33d3d9cacea26dc1899">
+        <source>You have received a new log alert</source>
+        <target>You have received a new log alert</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/log_alert.php:21</note>
+      </trans-unit>
+      <trans-unit id="17357f0ed7c82a1620f4311667886a63">
+        <source><![CDATA[<span><strong>Warning:</strong></span> you have received a new log alert in your Back Office.]]></source>
+        <target><![CDATA[<span><strong>Warning:</strong></span> you have received a new log alert in your Back Office.]]></target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/log_alert.php:24</note>
+      </trans-unit>
+      <trans-unit id="32ef0cc5af8577c12e075c3cb285a786">
+        <source><![CDATA[You can check for it in the <span><strong>"Tools" > "Logs"</strong></span> section of your Back Office.]]></source>
+        <target><![CDATA[You can check for it in the <span><strong>"Tools" > "Logs"</strong></span> section of your Back Office.]]></target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/log_alert.php:25</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_emailgenerator/templates/core/bankwire.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="9b33ea5c9409a67cb6e1f6bc3f0828f0">
+        <source>Awaiting wire payment</source>
+        <target>Awaiting wire payment</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/bankwire.php:22</note>
+      </trans-unit>
+      <trans-unit id="f4a6af01d092af11dca29cb89578b124">
+        <source>You have selected to pay by wire transfer.</source>
+        <target>You have selected to pay by wire transfer.</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/bankwire.php:45</note>
+      </trans-unit>
+      <trans-unit id="fc1ae3c1dd1d9d9a44da719fa9966f0e">
+        <source>Here are the bank details for your transfer:</source>
+        <target>Here are the bank details for your transfer:</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/bankwire.php:48</note>
+      </trans-unit>
+      <trans-unit id="21e4851289ecc91b65023c2563344aa7">
+        <source>Account owner:</source>
+        <target>Account owner:</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/bankwire.php:50</note>
+      </trans-unit>
+      <trans-unit id="20a650d87733bd5895c979de29864a73">
+        <source>Account details:</source>
+        <target>Account details:</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/bankwire.php:51</note>
+      </trans-unit>
+      <trans-unit id="312d898d92d8ba90499ef0dac27270be">
+        <source>Bank address:</source>
+        <target>Bank address:</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/bankwire.php:52</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_emailgenerator/templates/core/contact.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="a1cee0a898793ad5101154ac97984d8a">
+        <source>Message from a {shop_name} customer</source>
+        <target>Message from a {shop_name} customer</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/contact.php:6</note>
+      </trans-unit>
+      <trans-unit id="31e15b28c2f071f74f47eb8bcd612d94">
+        <source>Customer e-mail address:</source>
+        <target>Customer e-mail address:</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/contact.php:21</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_emailgenerator/templates/core/contact_form.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="83fa39a28a4d159061c408fbd6a249e7">
+        <source>Order ID:</source>
+        <target>Order ID:</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/contact_form.php:23</note>
+      </trans-unit>
+      <trans-unit id="53659d236625358b98797389fd2504fa">
+        <source>Attached file:</source>
+        <target>Attached file:</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/contact_form.php:25</note>
+      </trans-unit>
+      <trans-unit id="1edbec13a38606f19c0bae544a7c6552">
+        <source>Your message to {shop_name} Customer Service</source>
+        <target>Your message to {shop_name} Customer Service</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/contact_form.php:6</note>
+      </trans-unit>
+      <trans-unit id="e92ba0cecb0593f537515b2aa2d1c701">
+        <source>Your message has been sent successfully.</source>
+        <target>Your message has been sent successfully.</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/contact_form.php:21</note>
+      </trans-unit>
+      <trans-unit id="465d60b936c982d7b57674f30ba022d0">
+        <source>Product:</source>
+        <target>Product:</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/contact_form.php:24</note>
+      </trans-unit>
+      <trans-unit id="76890cf906149b370ea6f7d1bd8eaf9a">
+        <source>We will answer as soon as possible.</source>
+        <target>We will answer as soon as possible.</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/contact_form.php:41</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_emailgenerator/templates/core/account.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="22a9d6a64a74d0f58a11fa7013f4b83a">
+        <source>Thank you for creating a customer account at {shop_name}.</source>
+        <target>Thank you for creating a customer account at {shop_name}.</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/account.php:7</note>
+      </trans-unit>
+      <trans-unit id="d5b14d16c4008efddbee79cb56af5455">
+        <source>Here are your login details:</source>
+        <target>Here are your login details:</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/account.php:25</note>
+      </trans-unit>
+      <trans-unit id="d70650ce5612f05bfe75c1962fa1e519">
+        <source>Important Security Tips:</source>
+        <target>Important Security Tips:</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/account.php:45</note>
+      </trans-unit>
+      <trans-unit id="def00214a95442dc7899951abd9a6104">
+        <source>Always keep your account details safe.</source>
+        <target>Always keep your account details safe.</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/account.php:47</note>
+      </trans-unit>
+      <trans-unit id="1559b55f6ea1de9f9b8826e9be306e6f">
+        <source>Never disclose your login details to anyone.</source>
+        <target>Never disclose your login details to anyone.</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/account.php:48</note>
+      </trans-unit>
+      <trans-unit id="7601ee5e7968d91a7b4f099f4b4b84d0">
+        <source>Change your password regularly.</source>
+        <target>Change your password regularly.</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/account.php:49</note>
+      </trans-unit>
+      <trans-unit id="8f9011f4a1219e51c8a0638d2af3f29a">
+        <source>Should you suspect someone is using your account illegally, please notify us immediately.</source>
+        <target>Should you suspect someone is using your account illegally, please notify us immediately.</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/account.php:50</note>
+      </trans-unit>
+      <trans-unit id="de421ce3bebc9b5a2ee30fcf0312cb68">
+        <source>You can now place orders on our shop:</source>
+        <target>You can now place orders on our shop:</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/account.php:65</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_emailgenerator/templates/modules/followup/followup_1.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="a037426f7ede13b30759469aaca5ad91">
+        <source>Your {shop_name} login details</source>
+        <target>Your {shop_name} login details</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/modules/followup/followup_1.php:46</note>
+      </trans-unit>
+      <trans-unit id="784e102689c17fd18fe94135d4fa864d">
+        <source>Your cart at {shop_name}</source>
+        <target>Your cart at {shop_name}</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/modules/followup/followup_1.php:21</note>
+      </trans-unit>
+      <trans-unit id="8dec16ec73558f6fb2515cce4293ce6f">
+        <source>Your cart has been saved, you can resume your order by visiting our shop:</source>
+        <target>Your cart has been saved, you can resume your order by visiting our shop:</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/modules/followup/followup_1.php:25</note>
+      </trans-unit>
+      <trans-unit id="ca0c09ad63f8cd2f732058be8d2b3a97">
+        <source>We noticed that during your last visit on {shop_name}, you did not complete the order you had started.</source>
+        <target>We noticed that during your last visit on {shop_name}, you did not complete the order you had started.</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/modules/followup/followup_1.php:24</note>
+      </trans-unit>
+      <trans-unit id="2213ab34c63663d94f96efdb6a9be339">
+        <source><![CDATA[As an incentive, we can give you a discount of {amount}% off your next order! This offer is valid for <span><strong>{days}</strong></span> days, so do not waste a moment!]]></source>
+        <target><![CDATA[As an incentive, we can give you a discount of {amount}% off your next order! This offer is valid for <span><strong>{days}</strong></span> days, so do not waste a moment!]]></target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/modules/followup/followup_1.php:26</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_emailgenerator/templates/core/header_order_conf.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="2769d37f4eb00f2c9b940ee928f1b426">
+        <source>Message from {shop_name}</source>
+        <target>Message from {shop_name}</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/header_order_conf.php:6</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_emailgenerator/templates/core/payment.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="6daabaab43cdbd67346ae71828b1710c">
+        <source>Payment processed</source>
+        <target>Payment processed</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/payment.php:22</note>
+      </trans-unit>
+      <trans-unit id="2762264cddd3133c3486886e31681873">
+        <source><![CDATA[Your payment for order with the reference <strong><span>{order_name}</span></strong> was successfully processed.]]></source>
+        <target><![CDATA[Your payment for order with the reference <strong><span>{order_name}</span></strong> was successfully processed.]]></target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/payment.php:25</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_emailgenerator/templates/core/outofstock.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="be07158cdaa6c7244af799f3cdd6dad5">
+        <source>Thanks for your order with the reference {order_name} from {shop_name}.</source>
+        <target>Thanks for your order with the reference {order_name} from {shop_name}.</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/outofstock.php:7</note>
+      </trans-unit>
+      <trans-unit id="e25d137c27dca2618629678d2df71113">
+        <source>Item(s) out of stock</source>
+        <target>Item(s) out of stock</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/outofstock.php:22</note>
+      </trans-unit>
+      <trans-unit id="5468cd18ba24d269db5ebe9177abca4a">
+        <source>Unfortunately, one or more items are currently out of stock. This may cause a slight delay in your delivery. Please accept our apologies and rest assured that we are working hard to rectify this.</source>
+        <target>Unfortunately, one or more items are currently out of stock. This may cause a slight delay in your delivery. Please accept our apologies and rest assured that we are working hard to rectify this.</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/outofstock.php:25</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_emailgenerator/templates/core/order_canceled.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="3baf03ed2980c9f339731f052c12b37d">
+        <source>Order canceled</source>
+        <target>Order canceled</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/order_canceled.php:21</note>
+      </trans-unit>
+      <trans-unit id="50651089ed12eb33b55394a0a17618de">
+        <source><![CDATA[Your order with the reference <span><strong>{order_name}</strong></span> from <span><strong>{shop_name}</strong></span> has been canceled.]]></source>
+        <target><![CDATA[Your order with the reference <span><strong>{order_name}</strong></span> from <span><strong>{shop_name}</strong></span> has been canceled.]]></target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/order_canceled.php:24</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_emailgenerator/templates/core/credit_slip.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="72dbe899c04eb3875b29b5b274340dac">
+        <source>Credit slip created</source>
+        <target>Credit slip created</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/credit_slip.php:21</note>
+      </trans-unit>
+      <trans-unit id="b1c95c88d55558a6c04dea50425199df">
+        <source><![CDATA[We have generated a credit slip in your name for order with the reference <span><strong>{order_name}</strong></span>.]]></source>
+        <target><![CDATA[We have generated a credit slip in your name for order with the reference <span><strong>{order_name}</strong></span>.]]></target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/credit_slip.php:24</note>
+      </trans-unit>
+      <trans-unit id="99f89e9a116e1c07f62ba17fb0312db6">
+        <source><![CDATA[You can review this credit slip and download your invoice from the <a href="{history_url}">"My credit slips"</a> section of your account by clicking <a href="{my_account_url}">"My account"</a> on our shop.]]></source>
+        <target><![CDATA[You can review this credit slip and download your invoice from the <a href="{history_url}">"My credit slips"</a> section of your account by clicking <a href="{my_account_url}">"My account"</a> on our shop.]]></target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/credit_slip.php:40</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_emailgenerator/templates/core/order_merchant_comment.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="940663fd4428d2c86f9a4780b6574028">
+        <source>Message:</source>
+        <target>Message:</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/order_merchant_comment.php:25</note>
+      </trans-unit>
+      <trans-unit id="ad9fd7d0fe973ddaef093d912d0b57e2">
+        <source><![CDATA[You have received a new message from <span><strong>{shop_name}</strong></span> regarding order with the reference <span><strong>{order_name}</strong></span>.]]></source>
+        <target><![CDATA[You have received a new message from <span><strong>{shop_name}</strong></span> regarding order with the reference <span><strong>{order_name}</strong></span>.]]></target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/order_merchant_comment.php:24</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_emailgenerator/templates/core/order_changed.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="ac32eb3619340a6b6aff41d9797665d4">
+        <source>Order changed</source>
+        <target>Order changed</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/order_changed.php:21</note>
+      </trans-unit>
+      <trans-unit id="0e6321e9d36186e957652f07d88116a5">
+        <source><![CDATA[Your order with the reference <span><strong>{order_name}</strong></span> from <span><strong>{shop_name}</strong></span> has been changed by the merchant.]]></source>
+        <target><![CDATA[Your order with the reference <span><strong>{order_name}</strong></span> from <span><strong>{shop_name}</strong></span> has been changed by the merchant.]]></target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/order_changed.php:24</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_emailgenerator/templates/core/password_query.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="280f51a8705636bd7e7ba595529411d4">
+        <source>Password reset request for {shop_name}</source>
+        <target>Password reset request for {shop_name}</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/password_query.php:21</note>
+      </trans-unit>
+      <trans-unit id="18f3152ffe51f0d446558f666dc8d5ea">
+        <source><![CDATA[You have requested to reset your <span><strong>{shop_name}</strong></span> login details.]]></source>
+        <target><![CDATA[You have requested to reset your <span><strong>{shop_name}</strong></span> login details.]]></target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/password_query.php:24</note>
+      </trans-unit>
+      <trans-unit id="09ce893cc7228918df5657665b899249">
+        <source>Please note that this will change your current password.</source>
+        <target>Please note that this will change your current password.</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/password_query.php:25</note>
+      </trans-unit>
+      <trans-unit id="278b2a400e176e90d476fb69cb881f59">
+        <source>To confirm this action, please use the following link:</source>
+        <target>To confirm this action, please use the following link:</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/password_query.php:26</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_emailgenerator/templates/core/voucher_new.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="5bb0c38774ca650d9548d682e175dc75">
+        <source>This is to inform you about the creation of a voucher.</source>
+        <target>This is to inform you about the creation of a voucher.</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/voucher_new.php:21</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_emailgenerator/templates/core/backoffice_order.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="abc81c0d865925584b1269c996d7b297">
+        <source>A new order has been generated on your behalf.</source>
+        <target>A new order has been generated on your behalf.</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/backoffice_order.php:21</note>
+      </trans-unit>
+      <trans-unit id="bffeb374bf71938ffc4faa42afbf1679">
+        <source><![CDATA[Please go on <a href="{order_link}">{order_link}</a> to finalize the payment.]]></source>
+        <target><![CDATA[Please go on <a href="{order_link}">{order_link}</a> to finalize the payment.]]></target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/backoffice_order.php:24</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_emailgenerator/templates/core/shipped.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="d0cc952b66ca292a2e4a1bc53453b287">
+        <source>Your order has been shipped</source>
+        <target>Your order has been shipped</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/shipped.php:7</note>
+      </trans-unit>
+      <trans-unit id="747cf5c8587184b9e489ff897d97c20d">
+        <source>Shipped</source>
+        <target>Shipped</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/shipped.php:22</note>
+      </trans-unit>
+      <trans-unit id="e9933131bfeef332fc84561f8e23aeba">
+        <source><![CDATA[Your order with the reference <span><strong>{order_name}</strong></span> has been shipped.]]></source>
+        <target><![CDATA[Your order with the reference <span><strong>{order_name}</strong></span> has been shipped.]]></target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/shipped.php:25</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_emailgenerator/templates/core/preparation.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="643562a9ae7099c8aabfdc93478db117">
+        <source>Processing</source>
+        <target>Processing</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/preparation.php:21</note>
+      </trans-unit>
+      <trans-unit id="d87f9ab0faa0b39a5240d1ce19529905">
+        <source><![CDATA[We are currently processing your <strong><span>{shop_name}</span></strong> order with the reference <strong><span>{order_name}</span></strong>.]]></source>
+        <target><![CDATA[We are currently processing your <strong><span>{shop_name}</span></strong> order with the reference <strong><span>{order_name}</span></strong>.]]></target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/preparation.php:24</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_emailgenerator/templates/core/payment_error.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="3dd0be333980f0b0f0895cdb6322d117">
+        <source>Payment processing error</source>
+        <target>Payment processing error</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/payment_error.php:21</note>
+      </trans-unit>
+      <trans-unit id="96c8c962f040049e80bccbea08e2d776">
+        <source><![CDATA[There is a problem with your payment for <strong><span>{shop_name}</span></strong> order with the reference <strong><span>{order_name}</span></strong>. Please contact us at your earliest convenience.]]></source>
+        <target><![CDATA[There is a problem with your payment for <strong><span>{shop_name}</span></strong> order with the reference <strong><span>{order_name}</span></strong>. Please contact us at your earliest convenience.]]></target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/payment_error.php:24</note>
+      </trans-unit>
+      <trans-unit id="5f2142258e3f214d12efeb927f2a7aef">
+        <source>We cannot ship your order until we receive your payment.</source>
+        <target>We cannot ship your order until we receive your payment.</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/payment_error.php:25</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_emailgenerator/templates/core/reply_msg.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="2ddbd3a9b06eadccdea8e1b372830d69">
+        <source>Please do not reply directly to this email, we will not receive it.</source>
+        <target>Please do not reply directly to this email, we will not receive it.</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/reply_msg.php:22</note>
+      </trans-unit>
+      <trans-unit id="95d1732a1f5200c8e176bea0a5562804">
+        <source><![CDATA[In order to reply, please use the following link: <a href="{link}">{link}</a>]]></source>
+        <target><![CDATA[In order to reply, please use the following link: <a href="{link}">{link}</a>]]></target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/reply_msg.php:24</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_emailgenerator/templates/modules/ps_emailalerts/productoutofstock.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="bb372ddf88ad8fcc480f7a8599a92abc">
+        <source>Hi,</source>
+        <target>Hi,</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/modules/ps_emailalerts/productoutofstock.php:6</note>
+      </trans-unit>
+      <trans-unit id="756a94b60256e8aacdf10706925eb01e">
+        <source>{product} is nearly out of stock.</source>
+        <target>{product} is nearly out of stock.</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/modules/ps_emailalerts/productoutofstock.php:21</note>
+      </trans-unit>
+      <trans-unit id="72943b79a01324b1875811ff792bdad0">
+        <source>The remaining stock is now less than the specified minimum of</source>
+        <target>The remaining stock is now less than the specified minimum of</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/modules/ps_emailalerts/productoutofstock.php:24</note>
+      </trans-unit>
+      <trans-unit id="ab8f74636fc3f34b09b1300a2393a0b8">
+        <source>Remaining stock:</source>
+        <target>Remaining stock:</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/modules/ps_emailalerts/productoutofstock.php:25</note>
+      </trans-unit>
+      <trans-unit id="a36e5157843703cdad66073626eb54cb">
+        <source><![CDATA[You are advised to open the product&#039;s admin Product Page in order to replenish your inventory.]]></source>
+        <target><![CDATA[You are advised to open the product&#039;s admin Product Page in order to replenish your inventory.]]></target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/modules/ps_emailalerts/productoutofstock.php:26</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_emailgenerator/templates/core/order_customer_comment.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="381fc38b470ed543424afbd43f224453">
+        <source>Message from a customer</source>
+        <target>Message from a customer</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/order_customer_comment.php:21</note>
+      </trans-unit>
+      <trans-unit id="1607c3534ee9bdb8638858fa4bb9261b">
+        <source>You have received a new message regarding order with the reference</source>
+        <target>You have received a new message regarding order with the reference</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/order_customer_comment.php:24</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_emailgenerator/templates/modules/ps_emailalerts/return_slip.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="5eea367ea73b909880393bd1ae79fc67">
+        <source>Customer:</source>
+        <target>Customer:</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/modules/ps_emailalerts/return_slip.php:28</note>
+      </trans-unit>
+      <trans-unit id="f285446f60a203b0f7c3ad0b14d13d29">
+        <source>You have received a new return request for {shop_name}.</source>
+        <target>You have received a new return request for {shop_name}.</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/modules/ps_emailalerts/return_slip.php:15</note>
+      </trans-unit>
+      <trans-unit id="cd8ee64ef80cd6bb4e320a7d0563b56f">
+        <source>Return details</source>
+        <target>Return details</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/modules/ps_emailalerts/return_slip.php:24</note>
+      </trans-unit>
+      <trans-unit id="f2d476bf166cc31b450908f8606b0fd5">
+        <source>{order_name} Placed on {date}</source>
+        <target>{order_name} Placed on {date}</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/modules/ps_emailalerts/return_slip.php:27</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_emailgenerator/templates/core/refund.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="9b45ae8a346e0587013cdb1494e113d8">
+        <source>Refund processed</source>
+        <target>Refund processed</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/refund.php:21</note>
+      </trans-unit>
+      <trans-unit id="b3e67c974cc0ca43712679a17bedf6db">
+        <source><![CDATA[We have processed your <strong><span>{shop_name}</span></strong> refund for order with the reference <strong><span>{order_name}</span></strong>.]]></source>
+        <target><![CDATA[We have processed your <strong><span>{shop_name}</span></strong> refund for order with the reference <strong><span>{order_name}</span></strong>.]]></target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/refund.php:24</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_emailgenerator/templates/modules/referralprogram/referralprogram-congratulations.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="90e0a7c3c7230e2188794af89350ea7b">
+        <source><![CDATA[Your referred friend <span><strong>{sponsored_firstname} {sponsored_lastname}</strong></span> has placed his or her first order on <a href="{shop_url}">{shop_name}</a>!]]></source>
+        <target><![CDATA[Your referred friend <span><strong>{sponsored_firstname} {sponsored_lastname}</strong></span> has placed his or her first order on <a href="{shop_url}">{shop_name}</a>!]]></target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/modules/referralprogram/referralprogram-congratulations.php:21</note>
+      </trans-unit>
+      <trans-unit id="eb7c04362c657d5651703a43307e61c2">
+        <source><![CDATA[We are pleased to offer you a voucher worth <span><strong>{discount_display} (voucher # {discount_name})</strong></span> that you can use on your next order.]]></source>
+        <target><![CDATA[We are pleased to offer you a voucher worth <span><strong>{discount_display} (voucher # {discount_name})</strong></span> that you can use on your next order.]]></target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/modules/referralprogram/referralprogram-congratulations.php:22</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_emailgenerator/templates/modules/referralprogram/referralprogram-invitation.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="677182971924ee6799eb365f688c5572">
+        <source>Best regards,</source>
+        <target>Best regards,</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/modules/referralprogram/referralprogram-invitation.php:40</note>
+      </trans-unit>
+      <trans-unit id="efd0d72633aeb91f063cfa143f56ca6b">
+        <source>join us!</source>
+        <target>join us!</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/modules/referralprogram/referralprogram-invitation.php:6</note>
+      </trans-unit>
+      <trans-unit id="9607a6790558da43af7334b50dfb5354">
+        <source><![CDATA[Your friend <span><strong>{firstname} {lastname}</strong></span> wants to refer you on <a href="{shop_url}">{shop_name}</a>!]]></source>
+        <target><![CDATA[Your friend <span><strong>{firstname} {lastname}</strong></span> wants to refer you on <a href="{shop_url}">{shop_name}</a>!]]></target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/modules/referralprogram/referralprogram-invitation.php:21</note>
+      </trans-unit>
+      <trans-unit id="a234487df6f91f04f3d99a597681a4ac">
+        <source><![CDATA[We are pleased to offer you a voucher worth <span><strong>{discount}</strong></span> that you can use on your next order.]]></source>
+        <target><![CDATA[We are pleased to offer you a voucher worth <span><strong>{discount}</strong></span> that you can use on your next order.]]></target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/modules/referralprogram/referralprogram-invitation.php:22</note>
+      </trans-unit>
+      <trans-unit id="99c81bae8075078e8af2bccbdd5e98b6">
+        <source><![CDATA[Get referred and earn a discount voucher of <span><strong>{discount}!</strong></span>]]></source>
+        <target><![CDATA[Get referred and earn a discount voucher of <span><strong>{discount}!</strong></span>]]></target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/modules/referralprogram/referralprogram-invitation.php:23</note>
+      </trans-unit>
+      <trans-unit id="36791224f527482e84d2ff30fbb3c699">
+        <source><![CDATA[It&#039;s very easy to sign up. Just click here!]]></source>
+        <target><![CDATA[It&#039;s very easy to sign up. Just click here!]]></target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/modules/referralprogram/referralprogram-invitation.php:24</note>
+      </trans-unit>
+      <trans-unit id="edfb7a07b2d6386a1308f34c1a08aa0e">
+        <source><![CDATA[When signing up, don&#039;t forget to provide the e-mail address of your referring friend:]]></source>
+        <target><![CDATA[When signing up, don&#039;t forget to provide the e-mail address of your referring friend:]]></target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/modules/referralprogram/referralprogram-invitation.php:39</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_emailgenerator/templates/modules/followup/followup_3.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="66472df69ec288388183a74a6e34e942">
+        <source>Thanks for your trust.</source>
+        <target>Thanks for your trust.</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/modules/followup/followup_3.php:7</note>
+      </trans-unit>
+      <trans-unit id="5a230b8b0490a33cf1fa3a577e1b4ef3">
+        <source>You are one of our best customers and as such we want to thank you for your continued patronage.</source>
+        <target>You are one of our best customers and as such we want to thank you for your continued patronage.</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/modules/followup/followup_3.php:22</note>
+      </trans-unit>
+      <trans-unit id="86736a3055a9913b2c64671cd333e159">
+        <source><![CDATA[As appreciation for your loyalty, we want to give you a discount of <span><strong>{amount}</strong></span>% valid on your next order! This offer is valid for <span><strong>{days}</strong></span> days, so do not waste a moment!]]></source>
+        <target><![CDATA[As appreciation for your loyalty, we want to give you a discount of <span><strong>{amount}</strong></span>% valid on your next order! This offer is valid for <span><strong>{days}</strong></span> days, so do not waste a moment!]]></target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/modules/followup/followup_3.php:25</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_emailgenerator/templates/modules/followup/followup_2.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="42578524d7fb1953f903bcc5160495ea">
+        <source>Here is your coupon:</source>
+        <target>Here is your coupon:</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/modules/followup/followup_2.php:23</note>
+      </trans-unit>
+      <trans-unit id="24986b852e72fcfba407bd807f790abd">
+        <source>Enter this code in your shopping cart to get your discount.</source>
+        <target>Enter this code in your shopping cart to get your discount.</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/modules/followup/followup_2.php:24</note>
+      </trans-unit>
+      <trans-unit id="212dcee7c3ca3ee5fbae444b2f07c62d">
+        <source>Thank you for your order at {shop_name}.</source>
+        <target>Thank you for your order at {shop_name}.</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/modules/followup/followup_2.php:7</note>
+      </trans-unit>
+      <trans-unit id="3a5fa552bd31ebcceae0973cd384406b">
+        <source><![CDATA[As our way of saying thanks, we want to give you a discount of <span><strong>{amount}</strong></span>% off your next order! This offer is valid for <span><strong>{days}</strong></span> days, so do not waste a moment!]]></source>
+        <target><![CDATA[As our way of saying thanks, we want to give you a discount of <span><strong>{amount}</strong></span>% off your next order! This offer is valid for <span><strong>{days}</strong></span> days, so do not waste a moment!]]></target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/modules/followup/followup_2.php:22</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_emailgenerator/templates/modules/followup/followup_4.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="7ed5b90c2f87440a6e83fc35dca83242">
+        <source>You are one of our best customers, however you have not placed an order in {days_threshold} days.</source>
+        <target>You are one of our best customers, however you have not placed an order in {days_threshold} days.</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/modules/followup/followup_4.php:24</note>
+      </trans-unit>
+      <trans-unit id="08706a0434d504af130649d9fd74ca54">
+        <source><![CDATA[We wish to thank you for the trust you have placed in us and want to give you a discount of {amount}% valid on your next order! This offer is valid for <span><strong>{days}</strong></span> days, so do not waste a moment!]]></source>
+        <target><![CDATA[We wish to thank you for the trust you have placed in us and want to give you a discount of {amount}% valid on your next order! This offer is valid for <span><strong>{days}</strong></span> days, so do not waste a moment!]]></target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/modules/followup/followup_4.php:26</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_emailgenerator/templates/modules/ps_emailsubscription/newsletter_voucher.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="7bf7f18afabb5122fa68fbab617e509b">
+        <source>Newsletter subscription</source>
+        <target>Newsletter subscription</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/modules/ps_emailsubscription/newsletter_voucher.php:21</note>
+      </trans-unit>
+      <trans-unit id="289f1fb0b0a7ed1c03d1f1f597666f67">
+        <source>Regarding your newsletter subscription, we are pleased to offer you the following voucher:</source>
+        <target>Regarding your newsletter subscription, we are pleased to offer you the following voucher:</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/modules/ps_emailsubscription/newsletter_voucher.php:24</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_emailgenerator/templates/modules/ps_emailsubscription/newsletter_conf.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="4e1c51e233f1ed368c58db9ef09010ba">
+        <source>Thank you for subscribing to our newsletter.</source>
+        <target>Thank you for subscribing to our newsletter.</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/modules/ps_emailsubscription/newsletter_conf.php:22</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_emailgenerator/templates/modules/ps_emailsubscription/newsletter_verif.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="3f796454690dc2d7f26db5d45c48b187">
+        <source>Thank you for subscribing to our newsletter, please confirm your request by clicking the link below :</source>
+        <target>Thank you for subscribing to our newsletter, please confirm your request by clicking the link below :</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/modules/ps_emailsubscription/newsletter_verif.php:21</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_emailgenerator/templates/modules/ps_emailalerts/customer_qty.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="9b096ae55ce4d2bb889392144c104069">
+        <source>{product} is now available.</source>
+        <target>{product} is now available.</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/modules/ps_emailalerts/customer_qty.php:21</note>
+      </trans-unit>
+      <trans-unit id="5b736bebe50e10240ff58d486494dc7b">
+        <source>This item is once again in-stock.</source>
+        <target>This item is once again in-stock.</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/modules/ps_emailalerts/customer_qty.php:24</note>
+      </trans-unit>
+      <trans-unit id="16ce091d5fafd5b92941221eab85f3af">
+        <source>You can access the product page by clicking on the link:</source>
+        <target>You can access the product page by clicking on the link:</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/modules/ps_emailalerts/customer_qty.php:25</note>
+      </trans-unit>
+      <trans-unit id="d5c8de069674d35946f2e88642635485">
+        <source>You can order it right now from our online shop.</source>
+        <target>You can order it right now from our online shop.</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/modules/ps_emailalerts/customer_qty.php:26</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_emailgenerator/templates/modules/ps_emailalerts/productcoverage.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="6983ddb3442f4ad4a3b94e94a1ebd3dc">
+        <source>{product} is almost out of stock.</source>
+        <target>{product} is almost out of stock.</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/modules/ps_emailalerts/productcoverage.php:21</note>
+      </trans-unit>
+      <trans-unit id="22609de33e6e9ee1be5b2bf9ae16514c">
+        <source>The stock cover is now less than the specified minimum of:</source>
+        <target>The stock cover is now less than the specified minimum of:</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/modules/ps_emailalerts/productcoverage.php:24</note>
+      </trans-unit>
+      <trans-unit id="81899e9a62d3f952e81d5f72437470f9">
+        <source>Current stock cover:</source>
+        <target>Current stock cover:</target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/modules/ps_emailalerts/productcoverage.php:25</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

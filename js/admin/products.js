@@ -1,12 +1,12 @@
 /**
- * 2007-2015 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -18,8 +18,8 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @copyright 2007-2017 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -805,7 +805,11 @@ product_tabs['Associations'] = new function(){
 				scroll:false,
 				cacheLength:0,
 				formatItem: function(item) {
-					return item[1]+' - '+item[0];
+					var itemStringToReturn = item[item.length - 1];
+					for(var istr = 0; istr < item.length - 1;istr++){
+						itemStringToReturn += " " + item[istr];
+					}
+					return itemStringToReturn;
 				}
 			}).result(self.addAccessory);
 
@@ -827,8 +831,11 @@ product_tabs['Associations'] = new function(){
 	{
 		if (data == null)
 			return false;
-		var productId = data[1];
-		var productName = data[0];
+		var productId = data[data.length - 1];
+		var productName;
+		for(var istr = 0; istr < data.length - 1;istr++){
+			productName += " " + data[istr];
+		}
 
 		var $divAccessories = $('#divAccessories');
 		var $inputAccessories = $('#inputAccessories');
@@ -1046,7 +1053,7 @@ product_tabs['Informations'] = new function(){
 					addRelatedProduct(i[1], i[0]);
 				$(this).val('');
 			});
-		 addRelatedProduct(id_product_redirected, product_name_redirected);
+		 addRelatedProduct(id_type_redirected, product_name_redirected);
 	};
 
 	this.bindTagImage = function (){

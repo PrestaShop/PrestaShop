@@ -1,27 +1,27 @@
-{*
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Academic Free License (AFL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/afl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-* @author    PrestaShop SA <contact@prestashop.com>
-* @copyright 2007-2015 PrestaShop SA
-* @license   http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
-* International Registered Trademark & Property of PrestaShop SA
-*}
+{**
+ * 2007-2017 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2017 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *}
 
 {extends file='helpers/form/form.tpl'}
 
@@ -29,18 +29,18 @@
 	{if $input.type == 'text_customer'}
 		<span>{$customer->firstname} {$customer->lastname}</span>
 		<p>
-			<a class="text-muted" href="{$url_customer}">{l s='View details on the customer page'}</a>
+			<a class="text-muted" href="{$url_customer}">{l s='View details on the customer page' d='Admin.Orderscustomers.Help'}</a>
 		</p>
 	{elseif $input.type == 'text_order'}
 		<span>{$text_order}</span>
 		<p>
-			<a class="text-muted" href="{$url_order}">{l s='View details on the order page'}</a>
+			<a class="text-muted" href="{$url_order}">{l s='View details on the order page' d='Admin.Orderscustomers.Help'}</a>
 		</p>
 	{elseif $input.type == 'pdf_order_return'}
 		<p>
 			{if $state_order_return == 2}
 				<a class="btn" href="{$link->getPageLink('pdf-order-return', true, NULL, "id_order_return={$id_order_return|intval}&adtoken={Tools::getAdminTokenLite('AdminReturn')}&id_employee={$employee->id|intval}")|escape:'html':'UTF-8'}">
-					<i class="icon-file-text"></i> {l s='Print out'}
+					<i class="icon-file-text"></i> {l s='Print out' d='Admin.Actions'}
 				</a>
 			{else}
 				--
@@ -50,10 +50,10 @@
 		<table class="table">
 			<thead>
 				<tr>
-					<th>{l s='Reference'}</th>
-					<th>{l s='Product name'}</th>
-					<th class="text-center">{l s='Quantity'}</th>
-					<th class="text-center">{l s='Action'}</th>
+					<th>{l s='Reference' d='Admin.Global'}</th>
+					<th>{l s='Product name' d='Admin.Catalog.Feature'}</th>
+					<th class="text-center">{l s='Quantity' d='Admin.Global'}</th>
+					<th class="text-center">{l s='Action' d='Admin.Global'}</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -65,7 +65,7 @@
 						<td class="text-center">
 							<a class="btn btn-default" href="{$current|escape:'html':'UTF-8'}&amp;deleteorder_return_detail&amp;id_order_detail={$returnedCustomization['id_order_detail']}&amp;id_order_return={$id_order_return}&amp;id_customization={$returnedCustomization['id_customization']}&amp;token={$token|escape:'html':'UTF-8'}">
 								<i class="icon-remove"></i>
-								{l s='Delete'}
+								{l s='Delete' d='Admin.Actions'}
 							</a>
 						</td>
 					</tr>
@@ -89,7 +89,7 @@
 									{elseif $type == Product::CUSTOMIZE_TEXTFIELD}
 											{foreach from=$datas item='data'}
 												<div class="form-group">
-													<span class="control-label col-lg-3"><strong>{if $data['name']}{$data['name']}{else}{l s='Text #%d' sprintf=$smarty.foreach.data.iteration}{/if}</strong></span>
+													<span class="control-label col-lg-3"><strong>{if $data['name']}{$data['name']}{else}{l s='Text #%d' sprintf=[$smarty.foreach.data.iteration] d='Admin.Orderscustomers.Feature'}{/if}</strong></span>
 													<div class="col-lg-9">
 														<p class="form-control-static">
 															{$data['value']}
@@ -114,7 +114,7 @@
 							<td class="text-center">
 								<a class="btn btn-default"  href="{$current|escape:'html':'UTF-8'}&amp;deleteorder_return_detail&amp;id_order_detail={$product['id_order_detail']}&amp;id_order_return={$id_order_return}&amp;token={$token|escape:'html':'UTF-8'}">
 									<i class="icon-remove"></i>
-									{l s='Delete'}
+									{l s='Delete' d='Admin.Actions'}
 								</a>
 							</td>
 						</tr>

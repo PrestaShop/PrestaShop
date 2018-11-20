@@ -32,7 +32,7 @@
     <tax id="23" name="VAT MT 18%" rate="18" auto-generated="1" from-eu-tax-group="virtual"/>
     <tax id="24" name="PTU PL 23%" rate="23" auto-generated="1" from-eu-tax-group="virtual"/>
     <tax id="25" name="IVA PT 23%" rate="23" auto-generated="1" from-eu-tax-group="virtual"/>
-    <tax id="26" name="TVA RO 24%" rate="24" auto-generated="1" from-eu-tax-group="virtual"/>
+    <tax id="26" name="TVA RO 20%" rate="20" auto-generated="1" from-eu-tax-group="virtual"/>
     <tax id="27" name="Moms SE 25%" rate="25" auto-generated="1" from-eu-tax-group="virtual"/>
     <tax id="28" name="DDV SI 22%" rate="22" auto-generated="1" from-eu-tax-group="virtual"/>
     <tax id="29" name="DPH SK 20%" rate="20" auto-generated="1" from-eu-tax-group="virtual"/>

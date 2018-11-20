@@ -334,25 +334,27 @@ function new_thumbnails_creation($targetPath, $targetFile, $name, $current_path,
     return $all_ok;
 }
 
-
-// Get a remote file, using whichever mechanism is enabled
+/**
+ * Get a file from a URL using whichever mechanism is enabled
+ * @param string $url the url to get the file from
+ * @return bool|string false or the file's string content
+ */
 function get_file_by_url($url)
 {
-    if (ini_get('allow_url_fopen')) {
-        return file_get_contents($url);
+    $data = false;
+
+    if (function_exists('curl_version')) {
+        $ch = curl_init();
+
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_URL, $url);
+
+        $data = curl_exec($ch);
+        curl_close($ch);
+    } elseif (in_array(ini_get('allow_url_fopen'), array('On', 'on', '1'))) {
+        $data = file_get_contents($url);
     }
-    if (!function_exists('curl_version')) {
-        return false;
-    }
-
-    $ch = curl_init();
-
-    curl_setopt($ch, CURLOPT_HEADER, 0);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt($ch, CURLOPT_URL, $url);
-
-    $data = curl_exec($ch);
-    curl_close($ch);
 
     return $data;
 }

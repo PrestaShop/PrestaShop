@@ -1,27 +1,27 @@
-{*
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Academic Free License (AFL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/afl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-* @author    PrestaShop SA <contact@prestashop.com>
-* @copyright 2007-2015 PrestaShop SA
-* @license   http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
-* International Registered Trademark & Property of PrestaShop SA
-*}
+{**
+ * 2007-2017 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2017 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *}
 
 <script type="text/javascript">
 	var come_from = 'AdminModulesPositions';
@@ -31,7 +31,7 @@
 
 {if !$can_move}
 					<p class="alert alert-warning">
-						{l s='If you want to order/move the following data, please select a shop from the shop list.'}
+						{l s='If you want to order/move the following data, please select a shop from the shop list.' d='Admin.Design.Notification'}
 					</p>
 {/if}
 
@@ -41,10 +41,10 @@
 			<form class="well form-horizontal" id="position_filer">
 				<div class="row">
 					<div class="form-group col-lg-6 col-sm-12">
-						<label class="control-label col-lg-4" style="text-align: left">{l s='Show'}</label>
+						<label class="control-label col-lg-4" style="text-align: left">{l s='Show' d='Admin.Actions'}</label>
 						<div class="col-lg-7">
 							<select id="show_modules" class="filter" style="width: 100%;">
-								<option value="all">{l s='All modules'}&nbsp;</option>
+								<option value="all">{l s='All modules' d='Admin.Design.Feature'}&nbsp;</option>
 								{foreach $modules as $module}
 									<option value="{$module->id|intval}"{if $display_key == $module->id} selected="selected"{/if}>{$module->displayName|escape:'html':'UTF-8'}</option>
 								{/foreach}
@@ -52,7 +52,7 @@
 						</div>
 					</div>
 					<div class="form-group col-lg-6 col-sm-12">
-						<label class="control-label col-lg-offset-1 col-lg-4" style="text-align: left">{l s='Search for a hook'}</label>
+						<label class="control-label col-lg-offset-1 col-lg-4" style="text-align: left">{l s='Search for a hook' d='Admin.Design.Feature'}</label>
 						<div class="col-lg-7">
 							<div class="input-group">
 								<div class="input-group-addon"><i class="icon icon-search"></i></div>
@@ -66,7 +66,7 @@
 							<p class="checkbox">
 								<label class="control-label" for="hook_position">
 									<input type="checkbox" id="hook_position"/>
-									{l s='Display non-positionable hooks'}
+									{l s='Display non-positionable hooks' d='Admin.Design.Feature'}
 								</label>
 							</p>
 					</div>
@@ -84,7 +84,7 @@
 								{if $hook['module_count'] && $can_move}
 								<input type="checkbox" id="Ghook{$hook['id_hook']}" onclick="hookCheckboxes({$hook['id_hook']}, 0, this)"/>
 								{/if}
-								{$hook['module_count']} {if $hook['module_count'] > 1}{l s='Modules'}{else}{l s='Module'}{/if}
+								{$hook['module_count']} {if $hook['module_count'] > 1}{l s='Modules' d='Admin.Global'}{else}{l s='Module' d='Admin.Global'}{/if}
 							</span>
 
 							{if !empty($hook['description'])}
@@ -133,7 +133,7 @@
 									<div class="btn-group">
 										<a class="btn btn-default" href="{$current|escape:'html':'UTF-8'}&amp;id_module={$module['instance']->id|intval}&amp;id_hook={$hook['id_hook']}&amp;editGraft{if $display_key}&amp;show_modules={$display_key}{/if}&amp;token={$token|escape:'html':'UTF-8'}">
 											<i class="icon-pencil"></i>
-											{l s='Edit'}
+											{l s='Edit' d='Admin.Actions'}
 										</a>
 										<a class="btn btn-default dropdown-toggle" data-toggle="dropdown">
 											<span class="caret"></span>&nbsp;
@@ -142,7 +142,7 @@
 											<li>
 												<a href="{$current|escape:'html':'UTF-8'}&amp;id_module={$module['instance']->id|intval}&amp;id_hook={$hook['id_hook']}&amp;deleteGraft{if $display_key}&amp;show_modules={$display_key}{/if}&amp;token={$token|escape:'html':'UTF-8'}">
 													<i class="icon-minus-sign-alt"></i>
-													{l s='Unhook'}
+													{l s='Unhook' d='Admin.Design.Feature'}
 												</a>
 											</li>
 										</ul>
@@ -161,7 +161,7 @@
 					<div id="unhook_button_position_bottom">
 						<button type="submit" class="btn btn-default" name="unhookform">
 							<i class="icon-minus-sign-alt"></i>
-							{l s='Unhook the selection'}
+							{l s='Unhook the selection' d='Admin.Design.Feature'}
 						</button>
 					</div>
 				</form>
@@ -169,28 +169,16 @@
 		</div>
 	</div>
 	<div class="col-lg-3">
-		<div class="panel">
-			<h3><i class="icon-eye-open"></i> {l s='Live Edit'}</h3>
-			{if $live_edit}
-				<p>{l s='You have to select a shop to use Live Edit'}</p>
-			{else}
-				<p>{l s='Click here to be redirected to the front office of your shop where you can move and delete modules directly.'}</p>
-					<a class="btn btn-default _blank" href="{$url_live_edit|escape:'html':'UTF-8'}">
-						<i class="icon-edit"></i>
-						{l s='Run Live Edit'}
-					</a>
-			{/if}
-		</div>
 		<div class="panel" id="modules-position-selection-panel">
-			<h3><i class="icon-check"></i> {l s='Selection'}</h3>
+			<h3><i class="icon-check"></i> {l s='Selection' d='Admin.Global'}</h3>
 			<p>
-				<span id="modules-position-single-selection">{l s='1 module selected'}</span>
+				<span id="modules-position-single-selection">{l s='1 module selected' d='Admin.Design.Feature'}</span>
 				<span id="modules-position-multiple-selection">
-					<span id="modules-position-selection-count"></span> {l s='modules selected'}
+					<span id="modules-position-selection-count"></span> {l s='modules selected' d='Admin.Design.Feature'}
 				</span>
 			</p>
 			<div class="text-center">
-				<button class="btn btn-default"><i class="icon-remove"></i> {l s='Unhook the selection'}</button>
+				<button class="btn btn-default"><i class="icon-remove"></i> {l s='Unhook the selection' d='Admin.Design.Feature'}</button>
 			</div>
 		</div>
 	</div>

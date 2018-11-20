@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="src/Adapter/Product/AdminProductWrapper.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="7173e38e8a10ed379625687638ddfe74">
+        <source>Successful deletion</source>
+        <target>Successful deletion</target>
+        <note>Context:
+File: src/Adapter/Product/AdminProductWrapper.php:445</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/autoupgrade/AdminSelfTab.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="149cd107b688af7a007e739fd51ac919">
+        <source>Successful deletion.</source>
+        <target>Successful deletion.</target>
+        <note>Context:
+File: modules/autoupgrade/AdminSelfTab.php:175</note>
+      </trans-unit>
+      <trans-unit id="fb52feac670f0252be93737558eebdb7">
+        <source>Successful creation.</source>
+        <target>Successful creation.</target>
+        <note>Context:
+File: modules/autoupgrade/AdminSelfTab.php:176</note>
+      </trans-unit>
+      <trans-unit id="b4a34d3f58b039e7685c2e39b5413757">
+        <source>Successful update.</source>
+        <target>Successful update.</target>
+        <note>Context:
+File: modules/autoupgrade/AdminSelfTab.php:176</note>
+      </trans-unit>
+      <trans-unit id="6483df61619946ebf2427ba360df7ce5">
+        <source>The settings have been successfully updated.</source>
+        <target>The settings have been successfully updated.</target>
+        <note>Context:
+File: modules/autoupgrade/AdminSelfTab.php:177</note>
+      </trans-unit>
+      <trans-unit id="893a9104a7f0ebd94a7f4171d1996c7d">
+        <source>The image was successfully deleted.</source>
+        <target>The image was successfully deleted.</target>
+        <note>Context:
+File: modules/autoupgrade/AdminSelfTab.php:178</note>
+      </trans-unit>
+      <trans-unit id="e9d71289fdbe4799d4fe91ccc17be0af">
+        <source>The thumbnails were successfully regenerated.</source>
+        <target>The thumbnails were successfully regenerated.</target>
+        <note>Context:
+File: modules/autoupgrade/AdminSelfTab.php:179</note>
+      </trans-unit>
+      <trans-unit id="4a6c326f3ec43e638da38a44a21b5eb7">
+        <source>Comment successfully added.</source>
+        <target>Comment successfully added.</target>
+        <note>Context:
+File: modules/autoupgrade/AdminSelfTab.php:180</note>
+      </trans-unit>
+      <trans-unit id="1b73f0da557b7b0773d0fc6b5fd0a3b4">
+        <source>Successful upload.</source>
+        <target>Successful upload.</target>
+        <note>Context:
+File: modules/autoupgrade/AdminSelfTab.php:183</note>
+      </trans-unit>
+      <trans-unit id="759d07e8bdf6d3a5863ed521009b3ac1">
+        <source>Duplication was completed successfully.</source>
+        <target>Duplication was completed successfully.</target>
+        <note>Context:
+File: modules/autoupgrade/AdminSelfTab.php:184</note>
+      </trans-unit>
+      <trans-unit id="9bbf45a624c880d590d7b6796e5a7a9c">
+        <source>The module was successfully downloaded.</source>
+        <target>The module was successfully downloaded.</target>
+        <note>Context:
+File: modules/autoupgrade/AdminSelfTab.php:178</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="classes/controller/AdminController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="02d5b938505dcda41a52ef3abcbd354a">
+        <source>The selection has been successfully deleted.</source>
+        <target>The selection has been successfully deleted.</target>
+        <note>Context:
+File: classes/controller/AdminController.php:455</note>
+      </trans-unit>
+      <trans-unit id="1802a23025825ae791c1eea0118ee5f0">
+        <source>The status has been successfully updated.</source>
+        <target>The status has been successfully updated.</target>
+        <note>Context:
+File: classes/controller/AdminController.php:458</note>
+      </trans-unit>
+      <trans-unit id="13f1ce18a02ac5293cf5a4274f9300de">
+        <source>The selected images have successfully been moved.</source>
+        <target>The selected images have successfully been moved.</target>
+        <note>Context:
+File: classes/controller/AdminController.php:478</note>
+      </trans-unit>
+      <trans-unit id="714903406a224ca68890e377ea111388">
+        <source>Your cover image selection has been saved.</source>
+        <target>Your cover image selection has been saved.</target>
+        <note>Context:
+File: classes/controller/AdminController.php:479</note>
+      </trans-unit>
+      <trans-unit id="b2266c7007fff254b1a9373f8a648a1c">
+        <source>The image's shop association has been modified.</source>
+        <target>The image's shop association has been modified.</target>
+        <note>Context:
+File: classes/controller/AdminController.php:480</note>
+      </trans-unit>
+      <trans-unit id="3a627484fcb2a5d110b44a390d5ee7c1">
+        <source>A zone has been assigned to the selection successfully.</source>
+        <target>A zone has been assigned to the selection successfully.</target>
+        <note>Context:
+File: classes/controller/AdminController.php:481</note>
+      </trans-unit>
+      <trans-unit id="be3af9d697c193da1a7dbfcf195050ea">
+        <source>Successful upgrade.</source>
+        <target>Successful upgrade.</target>
+        <note>Context:
+File: classes/controller/AdminController.php:482</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_specials/ps_specials.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="efc226b17e0532afff43be870bff0de7">
+        <source>The settings have been updated.</source>
+        <target>The settings have been updated.</target>
+        <note>Context:
+File: modules/ps_specials/ps_specials.php:129</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="f38f5974cdc23279ffe6d203641a8bdf">
+        <source>Settings updated.</source>
+        <target>Settings updated.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:1239</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_imageslider/ps_imageslider.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="20015706a8cbd457cbb6ea3e7d5dc9b3">
+        <source>Configuration updated</source>
+        <target>Configuration updated</target>
+        <note>Context:
+File: modules/ps_imageslider/ps_imageslider.php:434</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_emailsubscription/ps_emailsubscription.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="c888438d14855d7d96a2724ee9c306bd">
+        <source>Settings updated</source>
+        <target>Settings updated</target>
+        <note>Context:
+File: modules/ps_emailsubscription/ps_emailsubscription.php:157</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminStatusesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="79f062391903591d68e514a400e136cf">
+        <source>The status has been updated successfully.</source>
+        <target>The status has been updated successfully.</target>
+        <note>Context:
+File: controllers/admin/AdminStatusesController.php:686</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminThemesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="ebc7584c0a97bc4aa867c11fc4760b3f">
+        <source>Your theme has been correctly exported: %path%</source>
+        <target>Your theme has been correctly exported: %path%</target>
+        <note>Context:
+File: controllers/admin/AdminThemesController.php:252</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminCategoriesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="de360c8b5dd9a9fdd592b1c08b3b4a62">
+        <source>The status has been updated successfully</source>
+        <target>The status has been updated successfully</target>
+        <note>Context:
+File: controllers/admin/AdminCategoriesController.php:1017</note>
+      </trans-unit>
+      <trans-unit id="f86f7b91afe27e79305a6b07bdb0d3c0">
+        <source>Failed to update the status</source>
+        <target>Failed to update the status</target>
+        <note>Context:
+File: controllers/admin/AdminCategoriesController.php:1018</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/access/helpers/form/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="151648106e4bf98297882ea2ea1c4b0e">
+        <source>Update successful</source>
+        <target>Update successful</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/access/helpers/form/form.tpl:228</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

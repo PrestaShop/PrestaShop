@@ -47,7 +47,6 @@
         <meta meta_page="module-bankwire-validation" left="0" right="0"/>
         <meta meta_page="module-bankwire-payment" left="0" right="0"/>
         <meta meta_page="module-cashondelivery-validation" left="0" right="0"/>
-        <meta meta_page="products-comparison" left="0" right="0"/>
     </metas>
     <modules>
         <module action="enable" name="socialsharing"/>
@@ -115,7 +114,6 @@
             <hook module="socialsharing" hook="displayRightColumnProduct" position="1"/>
             <hook module="socialsharing" hook="actionObjectProductUpdateAfter" position="1"/>
             <hook module="socialsharing" hook="actionObjectProductDeleteAfter" position="1"/>
-            <hook module="socialsharing" hook="displayCompareExtraInformation" position="1"/>
             <hook module="blockbanner" hook="displayHeader" position="2"/>
             <hook module="blockbanner" hook="displayBanner" position="1"/>
             <hook module="blockbanner" hook="actionObjectLanguageAddAfter" position="1"/>
@@ -301,7 +299,6 @@
             <hook module="productcomments" hook="displayRightColumnProduct" position="2"/>
             <hook module="productcomments" hook="displayProductTab" position="1"/>
             <hook module="productcomments" hook="displayProductTabContent" position="1"/>
-            <hook module="productcomments" hook="displayProductComparison" position="1"/>
             <hook module="productcomments" hook="displayProductListReviews" position="1"/>
             <hook module="sendtoafriend" hook="displayHeader" position="33"/>
             <hook module="sendtoafriend" hook="displayLeftColumnProduct" position="1"/>

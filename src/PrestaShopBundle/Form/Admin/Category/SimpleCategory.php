@@ -1,13 +1,13 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,37 +19,36 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @copyright 2007-2017 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 namespace PrestaShopBundle\Form\Admin\Category;
 
-use Symfony\Component\Form\AbstractType;
+use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Form\Extension\Core\Type as FormType;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * This form class is responsible to generate the basic category form
  * Name (not translated), and parent category selector
  */
-class SimpleCategory extends AbstractType
+class SimpleCategory extends CommonAbstractType
 {
     private $translator;
     private $categories;
-    private $ajax;
 
     /**
      * Constructor
      *
      * @param object $translator
      * @param object $categoryDataProvider
-     * @param bool $ajax If the form is called from ajax query
      */
-    public function __construct($translator, $categoryDataProvider, $ajax = false)
+    public function __construct($translator, $categoryDataProvider)
     {
         $this->translator = $translator;
-        $this->ajax = $ajax;
         $this->formatValidList($categoryDataProvider->getNestedCategories());
     }
 
@@ -61,7 +60,7 @@ class SimpleCategory extends AbstractType
     protected function formatValidList($list)
     {
         foreach ($list as $item) {
-            $this->categories[$item['id_category']] = $item['name'];
+            $this->categories[$item['name']] = $item['id_category'];
 
             if (isset($item['children'])) {
                 $this->formatValidList($item['children']);
@@ -76,32 +75,43 @@ class SimpleCategory extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('name', 'text', array(
-            'label' => $this->translator->trans('Name', [], 'AdminCategories'),
+        $builder->add('name', 'Symfony\Component\Form\Extension\Core\Type\TextType', array(
+            'label' => $this->translator->trans('Name', [], 'Admin.Global'),
             'required' => false,
-            'attr' => ['placeholder' => $this->translator->trans('Name', [], 'AdminCategories'), 'class' => 'ajax'],
-            'constraints' => $this->ajax ? [] : array(
+            'attr' => ['placeholder' => $this->translator->trans('Category name', [], 'Admin.Catalog.Feature'), 'class' => 'ajax'],
+            'constraints' => $options['ajax'] ? [] : array(
                 new Assert\NotBlank(),
-                new Assert\Length(array('min' => 3))
+                new Assert\Length(array('min' => 1, 'max' => 128))
             )
         ))
-        ->add('id_parent', 'choice', array(
-            'choices' =>  $this->categories,
-            'required' =>  true,
-            'label' => $this->translator->trans('Parent category', [], 'AdminProducts')
-        ))
-        ->add('save', 'button', array(
-            'label' => $this->translator->trans('Save', [], 'AdminCategories'),
-            'attr' => ['class' => 'submit'],
+        ->add('id_parent', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
+            'choices' => $this->categories,
+            'choices_as_values' => true,
+            'required' => true,
+            'attr' => array(
+                'data-toggle' => 'select2',
+                'data-minimumResultsForSearch' => '7',
+            ),
+            'label' => $this->translator->trans('Parent of the category', [], 'Admin.Catalog.Feature')
         ));
     }
 
     /**
-     * Returns the name of this type.
-     *
-     * @return string The name of this type
+     * {@inheritdoc}
      */
-    public function getName()
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults(array(
+            'ajax' => false,
+        ));
+    }
+
+    /**
+     * Returns the block prefix of this type.
+     *
+     * @return string The prefix name
+     */
+    public function getBlockPrefix()
     {
         return 'new_simple_category';
     }

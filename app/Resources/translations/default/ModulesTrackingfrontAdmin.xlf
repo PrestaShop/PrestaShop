@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/trackingfront/trackingfront.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="e8a827db4eca37d2c6cdef8e406f6fa9">
+        <source>Tracking - Front office</source>
+        <target>Tracking - Front office</target>
+        <note>Context:
+File: modules/trackingfront/trackingfront.php:42</note>
+      </trans-unit>
+      <trans-unit id="d565f36c06949442a4eb998354376c5b">
+        <source>Enables your affiliates to access their own statistics. See Stats/Referrers.</source>
+        <target>Enables your affiliates to access their own statistics. See Stats/Referrers.</target>
+        <note>Context:
+File: modules/trackingfront/trackingfront.php:44</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

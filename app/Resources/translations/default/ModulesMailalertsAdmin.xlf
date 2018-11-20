@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/ps_emailalerts/mailalerts-account.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="ae0e822b6fad0de61c231ef188997e92">
+        <source>You must have a product to delete an alert.</source>
+        <target>You must have a product to delete an alert.</target>
+        <note>Context:
+File: modules/ps_emailalerts/mailalerts-account.php:43</note>
+      </trans-unit>
+      <trans-unit id="0d15d3afa8c174934ff0e43ce3b99bd3">
+        <source>You must be logged in to manage your alerts.</source>
+        <target>You must be logged in to manage your alerts.</target>
+        <note>Context:
+File: modules/ps_emailalerts/mailalerts-account.php:51</note>
+      </trans-unit>
+      <trans-unit id="a9839ad48cf107667f73bad1d651f2ca">
+        <source>No template found</source>
+        <target>No template found</target>
+        <note>Context:
+File: modules/ps_emailalerts/mailalerts-account.php:64</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_emailalerts/ps_emailalerts.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="fd30254803e8db32521d3390131a44da">
+        <source>Mail alerts</source>
+        <target>Mail alerts</target>
+        <note>Context:
+File: modules/ps_emailalerts/ps_emailalerts.php:65</note>
+      </trans-unit>
+      <trans-unit id="fa3434addac072a154177a8e960f00d3">
+        <source>Sends e-mail notifications to customers and merchants regarding stock and order modifications.</source>
+        <target>Sends e-mail notifications to customers and merchants regarding stock and order modifications.</target>
+        <note>Context:
+File: modules/ps_emailalerts/ps_emailalerts.php:66</note>
+      </trans-unit>
+      <trans-unit id="c1ee76f076a5b97e3b4b0c0e5703246e">
+        <source>Cannot update settings</source>
+        <target>Cannot update settings</target>
+        <note>Context:
+File: modules/ps_emailalerts/ps_emailalerts.php:223</note>
+      </trans-unit>
+      <trans-unit id="ce241f25e003bafeb9fce6857d8f027f">
+        <source>Please type one (or more) e-mail address</source>
+        <target>Please type one (or more) e-mail address</target>
+        <note>Context:
+File: modules/ps_emailalerts/ps_emailalerts.php:192</note>
+      </trans-unit>
+      <trans-unit id="29aae9c646337554f4de7ae29050c39f">
+        <source>Invalid e-mail:</source>
+        <target>Invalid e-mail:</target>
+        <note>Context:
+File: modules/ps_emailalerts/ps_emailalerts.php:199</note>
+      </trans-unit>
+      <trans-unit id="462390017ab0938911d2d4e964c0cab7">
+        <source>Settings updated successfully</source>
+        <target>Settings updated successfully</target>
+        <note>Context:
+File: modules/ps_emailalerts/ps_emailalerts.php:231</note>
+      </trans-unit>
+      <trans-unit id="7cb9a154f101c674c945f88dad5c5e28">
+        <source>No message</source>
+        <target>No message</target>
+        <note>Context:
+File: modules/ps_emailalerts/ps_emailalerts.php:283</note>
+      </trans-unit>
+      <trans-unit id="1d744a9ad1dac20645cfc4a36b77323b">
+        <source>image(s)</source>
+        <target>image(s)</target>
+        <note>Context:
+File: modules/ps_emailalerts/ps_emailalerts.php:304</note>
+      </trans-unit>
+      <trans-unit id="9137796c15dd92e5553c3f29574d0968">
+        <source>Voucher code:</source>
+        <target>Voucher code:</target>
+        <note>Context:
+File: modules/ps_emailalerts/ps_emailalerts.php:336</note>
+      </trans-unit>
+      <trans-unit id="58a20987a1f4e45d508b4491614a2c57">
+        <source>Customer notifications</source>
+        <target>Customer notifications</target>
+        <note>Context:
+File: modules/ps_emailalerts/ps_emailalerts.php:885</note>
+      </trans-unit>
+      <trans-unit id="808aaaa33716529eb7c9f658ff4a15b5">
+        <source>Product availability</source>
+        <target>Product availability</target>
+        <note>Context:
+File: modules/ps_emailalerts/ps_emailalerts.php:892
+ Comment: retro compat 1.5</note>
+      </trans-unit>
+      <trans-unit id="bad4762226d82261d8c31fc120a03ed2">
+        <source>Gives the customer the option of receiving a notification when an out-of-stock product is available again.</source>
+        <target>Gives the customer the option of receiving a notification when an out-of-stock product is available again.</target>
+        <note>Context:
+File: modules/ps_emailalerts/ps_emailalerts.php:894</note>
+      </trans-unit>
+      <trans-unit id="a5b84d670ff303fdc89d20cf979a1003">
+        <source>Order edit</source>
+        <target>Order edit</target>
+        <note>Context:
+File: modules/ps_emailalerts/ps_emailalerts.php:911
+ Comment: retro compat 1.5</note>
+      </trans-unit>
+      <trans-unit id="0c00f6da997acaa413d658206e25235a">
+        <source>Send a notification to the customer when an order is edited.</source>
+        <target>Send a notification to the customer when an order is edited.</target>
+        <note>Context:
+File: modules/ps_emailalerts/ps_emailalerts.php:913</note>
+      </trans-unit>
+      <trans-unit id="4c9120f1a5947445c0e9620254ceb30b">
+        <source>New order</source>
+        <target>New order</target>
+        <note>Context:
+File: modules/ps_emailalerts/ps_emailalerts.php:940
+ Comment: retro compat 1.5</note>
+      </trans-unit>
+      <trans-unit id="382ba298d6c80b03037629d326811919">
+        <source>Receive a notification when an order is placed.</source>
+        <target>Receive a notification when an order is placed.</target>
+        <note>Context:
+File: modules/ps_emailalerts/ps_emailalerts.php:942</note>
+      </trans-unit>
+      <trans-unit id="b55197a49e8c4cd8c314bc2aa39d6feb">
+        <source>Out of stock</source>
+        <target>Out of stock</target>
+        <note>Context:
+File: modules/ps_emailalerts/ps_emailalerts.php:959
+ Comment: retro compat 1.5</note>
+      </trans-unit>
+      <trans-unit id="c0146c441cd6d5dc9d6e0ea1464b345f">
+        <source>Receive a notification if the available quantity of a product is below the following threshold.</source>
+        <target>Receive a notification if the available quantity of a product is below the following threshold.</target>
+        <note>Context:
+File: modules/ps_emailalerts/ps_emailalerts.php:961</note>
+      </trans-unit>
+      <trans-unit id="2a63f555989152ba866b43a1faacd680">
+        <source>Threshold</source>
+        <target>Threshold</target>
+        <note>Context:
+File: modules/ps_emailalerts/ps_emailalerts.php:977</note>
+      </trans-unit>
+      <trans-unit id="5b38721cd2e6ea2e12a664fb6dca1990">
+        <source>Quantity for which a product is considered out of stock.</source>
+        <target>Quantity for which a product is considered out of stock.</target>
+        <note>Context:
+File: modules/ps_emailalerts/ps_emailalerts.php:980</note>
+      </trans-unit>
+      <trans-unit id="135d106e835a4fa3b6fb5c4638a5d76b">
+        <source>Coverage warning</source>
+        <target>Coverage warning</target>
+        <note>Context:
+File: modules/ps_emailalerts/ps_emailalerts.php:988
+ Comment: retro compat 1.5</note>
+      </trans-unit>
+      <trans-unit id="218786c9273b95bc637e7adb710b4195">
+        <source>Receive a notification when a product has insufficient coverage.</source>
+        <target>Receive a notification when a product has insufficient coverage.</target>
+        <note>Context:
+File: modules/ps_emailalerts/ps_emailalerts.php:990</note>
+      </trans-unit>
+      <trans-unit id="9841bdc50c4226cb6ec5db76494249e6">
+        <source>Coverage</source>
+        <target>Coverage</target>
+        <note>Context:
+File: modules/ps_emailalerts/ps_emailalerts.php:1006</note>
+      </trans-unit>
+      <trans-unit id="2a4ae220a78d0c4a4d4c2b7285753321">
+        <source>Stock coverage, in days. Also, the stock coverage of a given product will be calculated based on this number.</source>
+        <target>Stock coverage, in days. Also, the stock coverage of a given product will be calculated based on this number.</target>
+        <note>Context:
+File: modules/ps_emailalerts/ps_emailalerts.php:1009</note>
+      </trans-unit>
+      <trans-unit id="4762fdc5fdf2ab3118f73fe252a6668b">
+        <source>Returns</source>
+        <target>Returns</target>
+        <note>Context:
+File: modules/ps_emailalerts/ps_emailalerts.php:1016
+ Comment: retro compat 1.5</note>
+      </trans-unit>
+      <trans-unit id="6408356e699097abbb968b575499f76e">
+        <source>Receive a notification when a customer requests a merchandise return.</source>
+        <target>Receive a notification when a customer requests a merchandise return.</target>
+        <note>Context:
+File: modules/ps_emailalerts/ps_emailalerts.php:1018</note>
+      </trans-unit>
+      <trans-unit id="4c3c81fd56b02829a5a1cf953396cd55">
+        <source>E-mail addresses</source>
+        <target>E-mail addresses</target>
+        <note>Context:
+File: modules/ps_emailalerts/ps_emailalerts.php:1036</note>
+      </trans-unit>
+      <trans-unit id="ee15e8240b16c6d48b217a1965b0ff22">
+        <source>One e-mail address per line (e.g. bob@example.com).</source>
+        <target>One e-mail address per line (e.g. bob@example.com).</target>
+        <note>Context:
+File: modules/ps_emailalerts/ps_emailalerts.php:1038</note>
+      </trans-unit>
+      <trans-unit id="6f974bbda9064a9c0836370dbf5a6076">
+        <source>Merchant notifications</source>
+        <target>Merchant notifications</target>
+        <note>Context:
+File: modules/ps_emailalerts/ps_emailalerts.php:1044</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

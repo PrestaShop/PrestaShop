@@ -44,10 +44,6 @@
     <name>Awaiting bank wire payment</name>
     <template>bankwire</template>
   </order_state>
-  <order_state id="Awaiting_PayPal_payment">
-    <name>Awaiting PayPal payment</name>
-    <template/>
-  </order_state>
   <order_state id="Payment_remotely_accepted">
     <name>Remote payment accepted</name>
     <template>payment</template>

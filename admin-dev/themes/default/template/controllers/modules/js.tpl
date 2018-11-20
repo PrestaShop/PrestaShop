@@ -1,27 +1,27 @@
-{*
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Academic Free License (AFL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/afl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-* @author    PrestaShop SA <contact@prestashop.com>
-* @copyright 2007-2015 PrestaShop SA
-* @license   http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
-* International Registered Trademark & Property of PrestaShop SA
-*}
+{**
+ * 2007-2017 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2017 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *}
 
 <script type="text/javascript">{$autocompleteList}</script>
 <script type="text/javascript">
@@ -71,7 +71,7 @@
 
 		if (module_name != '')
 			$.uiTableFilter($('#moduleContainer').find('table'), module_name);
-		
+
 		$('#moduleQuicksearch').on('keyup', function(){
 			val = this.value;
 			if ($('#filter_all').hasClass('active'))
@@ -85,15 +85,15 @@
 					clearInterval(interval);
 					interval = null;
 				}
-			
+
 		}, 100);
-	
-			
+
+
 		}).on('keydown', function(e){
 			if (e.keyCode == 13)
 				return false;
 		});
-		
+
 		$('input[name="filtername"]').result(function(event, data, formatted) {
 			$('#filternameForm').submit();
 		});
@@ -113,7 +113,7 @@
 				$(this).attr("rel", "false");
 				$("input[name=modules]").removeAttr("checked");
 			}
-		});		
+		});
 
 		// Method to reload filter in ajax
 		$('.categoryModuleFilterLink').click(function()
@@ -211,12 +211,12 @@
 			return false;
 		}
 
-		$(document).on('change', '#module_type_filter, #module_install_filter, #module_status_filter, #country_module_value_filter', function() { 
-			setFilter(); 
+		$(document).on('change', '#module_type_filter, #module_install_filter, #module_status_filter, #country_module_value_filter', function() {
+			setFilter();
 		});
 
 		$('.moduleTabPreferencesChoise').change(function()
-		{			
+		{
 			var value_pref = $(this).val();
 			var module_pref = $(this).attr('name');
 			module_pref = module_pref.substring(2, module_pref.length);
@@ -239,7 +239,7 @@
 				}
 			});
 		});
-		
+
 		// Method to save favorites preferences
 		$('.moduleFavorite').change(function()
 		{
@@ -308,7 +308,7 @@
 					else
 						$('#favorite-count').html(total_favorites-1);
 	              }
-	                
+
 	            },
 	            error: function(res,textStatus,jqXHR)
 	            {

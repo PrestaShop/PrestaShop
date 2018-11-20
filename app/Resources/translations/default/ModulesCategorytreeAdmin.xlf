@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/ps_categorytree/ps_categorytree.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="60cc52727703ddd6792698d958ef76aa">
+        <source>Category tree links</source>
+        <target>Category tree links</target>
+        <note>Context:
+File: modules/ps_categorytree/ps_categorytree.php:45</note>
+      </trans-unit>
+      <trans-unit id="15a6f5841d9e4d7e62bec3319b4b7036">
+        <source>Adds a block featuring product categories.</source>
+        <target>Adds a block featuring product categories.</target>
+        <note>Context:
+File: modules/ps_categorytree/ps_categorytree.php:46</note>
+      </trans-unit>
+      <trans-unit id="1379a6b19242372c1f23cc9adedfcdd6">
+        <source>Category root</source>
+        <target>Category root</target>
+        <note>Context:
+File: modules/ps_categorytree/ps_categorytree.php:168</note>
+      </trans-unit>
+      <trans-unit id="c6d333d07d30f7b4c31a94bbd510bf88">
+        <source>Select which category is displayed in the block. The current category is the one the visitor is currently browsing.</source>
+        <target>Select which category is displayed in the block. The current category is the one the visitor is currently browsing.</target>
+        <note>Context:
+File: modules/ps_categorytree/ps_categorytree.php:170</note>
+      </trans-unit>
+      <trans-unit id="89b278a71f2be5f620307502326587a0">
+        <source>Home category</source>
+        <target>Home category</target>
+        <note>Context:
+File: modules/ps_categorytree/ps_categorytree.php:175</note>
+      </trans-unit>
+      <trans-unit id="62381fc27e62649a16182a616de3f7ea">
+        <source>Current category</source>
+        <target>Current category</target>
+        <note>Context:
+File: modules/ps_categorytree/ps_categorytree.php:180</note>
+      </trans-unit>
+      <trans-unit id="52b68aaa602d202c340d9e4e9157f276">
+        <source>Parent category</source>
+        <target>Parent category</target>
+        <note>Context:
+File: modules/ps_categorytree/ps_categorytree.php:185</note>
+      </trans-unit>
+      <trans-unit id="f225631c1a6f71e99cc779f6bbf06dd4">
+        <source>Current category, unless it has no subcategories, in which case the parent category of the current category is used</source>
+        <target>Current category, unless it has no subcategories, in which case the parent category of the current category is used</target>
+        <note>Context:
+File: modules/ps_categorytree/ps_categorytree.php:190</note>
+      </trans-unit>
+      <trans-unit id="19561e33450d1d3dfe6af08df5710dd0">
+        <source>Maximum depth</source>
+        <target>Maximum depth</target>
+        <note>Context:
+File: modules/ps_categorytree/ps_categorytree.php:196</note>
+      </trans-unit>
+      <trans-unit id="584d4e251b6f778eda9cfc2fc756b0b0">
+        <source>Set the maximum depth of category sublevels displayed in this block (0 = infinite).</source>
+        <target>Set the maximum depth of category sublevels displayed in this block (0 = infinite).</target>
+        <note>Context:
+File: modules/ps_categorytree/ps_categorytree.php:198</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

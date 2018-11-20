@@ -1,0 +1,70 @@
+ul.category-tree {
+  padding: 0;
+  .less,
+  .more {
+    background: none;
+    position: relative;
+    > .checkbox {
+      cursor: pointer;
+    }
+    &::before {
+      position: absolute;
+      font-family: 'Material Icons';
+      cursor: pointer;
+      font-size: 1.25rem;
+      color: $gray-medium;
+      top: -0.25rem;
+    }
+  }
+  .less {
+    &::before {
+      content: "\E313";
+    }
+  }
+  .more {
+    &::before {
+      content: "\E5CC";
+    }
+  }
+  .category-label {
+    display: block;
+    padding-left: 0;
+    .category {
+      cursor: pointer;
+      position: absolute;
+      top: 0;
+      right: -9px;
+    }
+  }
+  ul {
+    padding-left: 1.563rem;
+  }
+  li {
+    list-style: none;
+    background-repeat: no-repeat;
+    background-size: 12px 12px;
+    background-position: 0 3px;
+    .checkbox,
+    .radio {
+      padding-left: 20px;
+      padding-top: 0;
+    }
+    > ul {
+      display: none;
+    }
+  }
+}
+#tree-categories {
+  padding: 0.625rem;
+  border: $gray-light 1px solid;
+  border-radius: 0.1875rem;
+  .categories-tree-actions {
+    display: inline-block;
+    margin-left: 0.9375rem;
+    i.material-icons {
+      font-size: 1.25rem;
+      vertical-align: bottom;
+    }
+    color: $gray-medium;
+  }
+}

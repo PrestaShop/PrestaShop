@@ -1,0 +1,43 @@
+.kpi-container {
+  position: relative;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: none;
+  }
+}
+
+.kpi-refresh {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.kpi-content {
+  position: relative;
+
+  > .material-icons {
+    position: absolute;
+    top: 0;
+    left: 0;
+    font-size: 2.25rem;
+    color: $primary;
+  }
+
+  > .title,
+  > .subtitle,
+  > .value {
+    font-size: 0.75rem;
+    padding-left: 3.125rem;
+    display: block;
+    color: $gray-dark;
+  }
+  > .subtitle {
+    text-transform: uppercase;
+    color: $gray-medium;
+  }
+  > .value {
+    font-size: 1.25rem;
+    color: $primary;
+  }
+}

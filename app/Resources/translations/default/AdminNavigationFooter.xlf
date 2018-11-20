@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="admin-dev/themes/default/template/footer.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="bbaff12800505b22a853e8b7f4eb6a22">
+        <source>Contact</source>
+        <target>Contact</target>
+        <note>Context:
+File: admin-dev/themes/default/template/footer.tpl:57</note>
+      </trans-unit>
+      <trans-unit id="3e937d04c1c83492260a33d926ca587c">
+        <source>Bug Tracker</source>
+        <target>Bug Tracker</target>
+        <note>Context:
+File: admin-dev/themes/default/template/footer.tpl:62</note>
+      </trans-unit>
+      <trans-unit id="e6a7f8a2f42cc35979973da8dfb10720">
+        <source>Forum</source>
+        <target>Forum</target>
+        <note>Context:
+File: admin-dev/themes/default/template/footer.tpl:67</note>
+      </trans-unit>
+      <trans-unit id="b3f252777a69b110667756babe83a98f">
+        <source>Addons</source>
+        <target>Addons</target>
+        <note>Context:
+File: admin-dev/themes/default/template/footer.tpl:72</note>
+      </trans-unit>
+      <trans-unit id="cf270e40d273f9e7fd7c3061729060c3">
+        <source>Training</source>
+        <target>Training</target>
+        <note>Context:
+File: admin-dev/themes/default/template/footer.tpl:77</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

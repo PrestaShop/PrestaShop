@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/ps_wirepayment/ps_wirepayment.php" source-language="en" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="a246a8e9907530c4c36b8b4c37bbc823" approved="yes">
+        <source>Accept payments for your products via bank wire transfer.</source>
+        <target xml:lang="en">Accept payments for your products via bank wire transfer.</target>
+        <note>Context:
+File: modules/ps_wirepayment/ps_wirepayment.php:76</note>
+      </trans-unit>
+      <trans-unit id="cbe0a99684b145e77f3e14174ac212e3" approved="yes">
+        <source>Are you sure about removing these details?</source>
+        <target xml:lang="en">Are you sure about removing these details?</target>
+        <note>Context:
+File: modules/ps_wirepayment/ps_wirepayment.php:77</note>
+      </trans-unit>
+      <trans-unit id="0ea0227283d959415eda0cfa31d9f718" approved="yes">
+        <source>Account owner and account details must be configured before using this module.</source>
+        <target xml:lang="en">Account owner and account details must be configured before using this module.</target>
+        <note>Context:
+File: modules/ps_wirepayment/ps_wirepayment.php:79</note>
+      </trans-unit>
+      <trans-unit id="a02758d758e8bec77a33d7f392eb3f8a" approved="yes">
+        <source>No currency has been set for this module.</source>
+        <target xml:lang="en">No currency has been set for this module.</target>
+        <note>Context:
+File: modules/ps_wirepayment/ps_wirepayment.php:82</note>
+      </trans-unit>
+      <trans-unit id="bfa43217dfe8261ee7cb040339085677" approved="yes">
+        <source>Account details are required.</source>
+        <target xml:lang="en">Account details are required.</target>
+        <note>Context:
+File: modules/ps_wirepayment/ps_wirepayment.php:128</note>
+      </trans-unit>
+      <trans-unit id="ccab155f173ac76f79eb192703f86b18" approved="yes">
+        <source>Account owner is required.</source>
+        <target xml:lang="en">Account owner is required.</target>
+        <note>Context:
+File: modules/ps_wirepayment/ps_wirepayment.php:130</note>
+      </trans-unit>
+      <trans-unit id="5dd532f0a63d89c5af0243b74732f63c" approved="yes">
+        <source>Contact details</source>
+        <target xml:lang="en">Contact details</target>
+        <note>Context:
+File: modules/ps_wirepayment/ps_wirepayment.php:278</note>
+      </trans-unit>
+      <trans-unit id="857216dd1b374de9bf54068fcd78a8f3" approved="yes">
+        <source>Account owner</source>
+        <target xml:lang="en">Account owner</target>
+        <note>Context:
+File: modules/ps_wirepayment/ps_wirepayment.php:284</note>
+      </trans-unit>
+      <trans-unit id="3ec365dd533ddb7ef3d1c111186ce872" approved="yes">
+        <source>Details</source>
+        <target xml:lang="en">Details</target>
+        <note>Context:
+File: modules/ps_wirepayment/ps_wirepayment.php:290</note>
+      </trans-unit>
+      <trans-unit id="6b154cafbab54ba3a1e76a78c290c02a" approved="yes">
+        <source>Such as bank branch, IBAN number, BIC, etc.</source>
+        <target xml:lang="en">Such as bank branch, IBAN number, BIC, etc.</target>
+        <note>Context:
+File: modules/ps_wirepayment/ps_wirepayment.php:292</note>
+      </trans-unit>
+      <trans-unit id="f9a1a1bb716cbae0503d351ea2af4b34" approved="yes">
+        <source>Bank address</source>
+        <target xml:lang="en">Bank address</target>
+        <note>Context:
+File: modules/ps_wirepayment/ps_wirepayment.php:297</note>
+      </trans-unit>
+      <trans-unit id="da22c93ccb398c72070f4000cc7b59a1" approved="yes">
+        <source>Customization</source>
+        <target xml:lang="en">Customization</target>
+        <note>Context:
+File: modules/ps_wirepayment/ps_wirepayment.php:310</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_wirepayment/views/templates/hook/infos.tpl" source-language="en" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="c1be305030739396775edaca9813f77d" approved="yes">
+        <source>This module allows you to accept secure payments by bank wire.</source>
+        <target xml:lang="en">This module allows you to accept secure payments by bank wire.</target>
+        <note>Context:
+File: modules/ps_wirepayment/views/templates/hook/infos.tpl:28</note>
+      </trans-unit>
+      <trans-unit id="5fb4bbf993c23848433caf58e6b2816d" approved="yes">
+        <source>That said, you must manually confirm the order upon receiving the bank wire.</source>
+        <target xml:lang="en">That said, you must manually confirm the order upon receiving the bank wire.</target>
+        <note>Context:
+File: modules/ps_wirepayment/views/templates/hook/infos.tpl:30</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

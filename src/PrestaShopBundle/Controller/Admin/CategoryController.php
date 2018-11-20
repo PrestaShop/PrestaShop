@@ -1,13 +1,13 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,16 +19,15 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @copyright 2007-2017 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShopBundle\Controller\Admin;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use PrestaShopBundle\Form\Admin\Category\SimpleCategory as SimpleFormCategory;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Admin controller for the Category pages
@@ -51,10 +50,8 @@ class CategoryController extends FrameworkBundleAdminController
         $currentIdShop = $shopContext->getContextShopID();
 
         $form = $this->createFormBuilder()
-            ->add('category', new SimpleFormCategory(
-                $this->container->get('prestashop.adapter.translator'),
-                $this->container->get('prestashop.adapter.data_provider.category')
-            ))->getForm();
+            ->add('category', 'PrestaShopBundle\Form\Admin\Category\SimpleCategory')
+            ->getForm();
 
         $form->handleRequest($request);
 
@@ -74,11 +71,36 @@ class CategoryController extends FrameworkBundleAdminController
             if ($category = $adminCategoryController->processAdd()) {
                 $response->setData(['category' => $category]);
             }
+
+            if($request->query->has('id_product')) {
+                $productAdapter = $this->get('prestashop.adapter.data_provider.product');
+                $product = $productAdapter->getProduct($request->query->get('id_product'));
+                $product->addToCategories($category->id);
+                $product->save();
+            }
         } else {
             $response->setStatusCode(400);
             $response->setData($this->getFormErrorsForJS($form));
         }
 
         return $response;
+    }
+
+    /**
+     * Get Categories formatted like ajax_product_file.php
+     *
+     * @param $limit
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function getAjaxCategoriesAction($limit, Request $request)
+    {
+        if (!$request->isXmlHttpRequest()) {
+            throw new NotFoundHttpException('Should be ajax request.');
+        }
+
+        return new JsonResponse(
+            $this->get('prestashop.adapter.data_provider.category')->getAjaxCategories($request->get('query'), $limit, true)
+        );
     }
 }

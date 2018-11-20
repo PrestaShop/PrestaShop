@@ -1,0 +1,789 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/ps_facetedsearch/src/Ps_FacetedsearchProductSearchProvider.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="05d61847840bcddb5d37374de3be0ccc">
+        <source>Name, A to Z</source>
+        <target>Name, A to Z</target>
+        <note>Context:
+File: modules/ps_facetedsearch/src/Ps_FacetedsearchProductSearchProvider.php:124</note>
+      </trans-unit>
+      <trans-unit id="e21f2ef58ff858167655c18a874f9706">
+        <source>Name, Z to A</source>
+        <target>Name, Z to A</target>
+        <note>Context:
+File: modules/ps_facetedsearch/src/Ps_FacetedsearchProductSearchProvider.php:127</note>
+      </trans-unit>
+      <trans-unit id="e2174d7435696694b8f4d984d99eef03">
+        <source>Price, low to high</source>
+        <target>Price, low to high</target>
+        <note>Context:
+File: modules/ps_facetedsearch/src/Ps_FacetedsearchProductSearchProvider.php:130</note>
+      </trans-unit>
+      <trans-unit id="0ee81913615b71aba7dc8bbf1f144672">
+        <source>Price, high to low</source>
+        <target>Price, high to low</target>
+        <note>Context:
+File: modules/ps_facetedsearch/src/Ps_FacetedsearchProductSearchProvider.php:133</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/Adapter/NewProducts/NewProductsProductSearchProvider.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="900a70008b0ed52ee5f6907f7b61f0e8">
+        <source>Date added, newest to oldest</source>
+        <target>Date added, newest to oldest</target>
+        <note>Context:
+File: src/Adapter/NewProducts/NewProductsProductSearchProvider.php:85</note>
+      </trans-unit>
+      <trans-unit id="c2718c816e7ebf8495e3c9ce20061317">
+        <source>Date added, oldest to newest</source>
+        <target>Date added, oldest to newest</target>
+        <note>Context:
+File: src/Adapter/NewProducts/NewProductsProductSearchProvider.php:88</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/Core/Product/ProductPresenter.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="03c2e7e41ffc181a4e84080b4710e81e">
+        <source>New</source>
+        <target>New</target>
+        <note>Context:
+File: src/Core/Product/ProductPresenter.php:331</note>
+      </trans-unit>
+      <trans-unit id="019d1ca7d50cc54b995f60d456435e87">
+        <source>Used</source>
+        <target>Used</target>
+        <note>Context:
+File: src/Core/Product/ProductPresenter.php:363</note>
+      </trans-unit>
+      <trans-unit id="6da03a74721a0554b7143254225cc08a">
+        <source>Refurbished</source>
+        <target>Refurbished</target>
+        <note>Context:
+File: src/Core/Product/ProductPresenter.php:370</note>
+      </trans-unit>
+      <trans-unit id="03de921a8ea82897e13d33d66c28b4db">
+        <source>Online only</source>
+        <target>Online only</target>
+        <note>Context:
+File: src/Core/Product/ProductPresenter.php:310</note>
+      </trans-unit>
+      <trans-unit id="800e90e940e7f1fb938b0fda5137f38c">
+        <source>On sale!</source>
+        <target>On sale!</target>
+        <note>Context:
+File: src/Core/Product/ProductPresenter.php:317</note>
+      </trans-unit>
+      <trans-unit id="63b539babcf7978229d66ba4052ca71f">
+        <source>Reduced price</source>
+        <target>Reduced price</target>
+        <note>Context:
+File: src/Core/Product/ProductPresenter.php:324</note>
+      </trans-unit>
+      <trans-unit id="4492081ca02b059f9e8af4ddaf0f7292">
+        <source>Pack</source>
+        <target>Pack</target>
+        <note>Context:
+File: src/Core/Product/ProductPresenter.php:338</note>
+      </trans-unit>
+      <trans-unit id="656c3be690ee43df4b845bd2a2ebe587">
+        <source>New product</source>
+        <target>New product</target>
+        <note>Context:
+File: src/Core/Product/ProductPresenter.php:356</note>
+      </trans-unit>
+      <trans-unit id="cb3c718c905f00adbb6735f55bfb38ef">
+        <source>Product available with different options</source>
+        <target>Product available with different options</target>
+        <note>Context:
+File: src/Core/Product/ProductPresenter.php:439</note>
+      </trans-unit>
+      <trans-unit id="b55197a49e8c4cd8c314bc2aa39d6feb">
+        <source>Out of stock</source>
+        <target>Out of stock</target>
+        <note>Context:
+File: src/Core/Product/ProductPresenter.php:447</note>
+      </trans-unit>
+      <trans-unit id="348325afced7f3da215310efbe21f1c1">
+        <source>Last items in stock</source>
+        <target>Last items in stock</target>
+        <note>Context:
+File: src/Core/Product/ProductPresenter.php:478</note>
+      </trans-unit>
+      <trans-unit id="a3b6a4d0897451813950029a3066f219">
+        <source>ean13</source>
+        <target>ean13</target>
+        <note>Context:
+File: src/Core/Product/ProductPresenter.php:656</note>
+      </trans-unit>
+      <trans-unit id="6496117322fd76fa12ac1b87d8a4db6c">
+        <source>isbn</source>
+        <target>isbn</target>
+        <note>Context:
+File: src/Core/Product/ProductPresenter.php:658</note>
+      </trans-unit>
+      <trans-unit id="2f9e567efb6a38663162f65eaac2d73b">
+        <source>upc</source>
+        <target>upc</target>
+        <note>Context:
+File: src/Core/Product/ProductPresenter.php:660</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/Core/Product/Search/SortOrderFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="ad24ffca4f9e9c0c7e80fe1512df6db9">
+        <source>Relevance</source>
+        <target>Relevance</target>
+        <note>Context:
+File: src/Core/Product/Search/SortOrderFactory.php:45</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/classic/templates/catalog/_partials/miniatures/product.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="3601146c4e948c32b6424d2c0a7f0118">
+        <source>Price</source>
+        <target>Price</target>
+        <note>Context:
+File: themes/classic/templates/catalog/_partials/miniatures/product.tpl:58</note>
+      </trans-unit>
+      <trans-unit id="4d8adffdc001189e0202c01ac529a3a9">
+        <source>Regular price</source>
+        <target>Regular price</target>
+        <note>Context:
+File: themes/classic/templates/catalog/_partials/miniatures/product.tpl:49</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="classes/controller/FrontController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="104d9898c04874d0fbac36e125fa1369">
+        <source>Discount</source>
+        <target>Discount</target>
+        <note>Context:
+File: classes/controller/FrontController.php:1510</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/front/ProductController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="9dea4016dbcc290b773ab2fae678aaa8">
+        <source>Items</source>
+        <target>Items</target>
+        <note>Context:
+File: controllers/front/ProductController.php:947</note>
+      </trans-unit>
+      <trans-unit id="7d74f3b92b19da5e606d737d339a9679">
+        <source>Item</source>
+        <target>Item</target>
+        <note>Context:
+File: controllers/front/ProductController.php:947</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/front/listing/SearchController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="eb6b06cab0dd72e04c4da68d511facf2">
+        <source>Search results</source>
+        <target>Search results</target>
+        <note>Context:
+File: controllers/front/listing/SearchController.php:84</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/front/SitemapController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="01f7ac959c1e6ebbb2e0ee706a7a5255">
+        <source>Best sellers</source>
+        <target>Best sellers</target>
+        <note>Context:
+File: controllers/front/SitemapController.php:157</note>
+      </trans-unit>
+      <trans-unit id="af1b98adf7f686b84cd0b443e022b7a0">
+        <source>Categories</source>
+        <target>Categories</target>
+        <note>Context:
+File: controllers/front/SitemapController.php:40</note>
+      </trans-unit>
+      <trans-unit id="453aceb005ceaf54a47da15fee8b2a26">
+        <source>Pages</source>
+        <target>Pages</target>
+        <note>Context:
+File: controllers/front/SitemapController.php:42</note>
+      </trans-unit>
+      <trans-unit id="c8f312df214e2295809027c6ca79d232">
+        <source>Price drop</source>
+        <target>Price drop</target>
+        <note>Context:
+File: controllers/front/SitemapController.php:162</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/classic/templates/catalog/listing/supplier.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="4c5c40c99a89125e22218cb62335c60a">
+        <source>List of products by supplier %s</source>
+        <target>List of products by supplier %s</target>
+        <note>Context:
+File: themes/classic/templates/catalog/listing/supplier.tpl:28</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/front/listing/SupplierController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="d9e0619813f9247f8a506b9b1e61599f">
+        <source>List of all suppliers</source>
+        <target>List of all suppliers</target>
+        <note>Context:
+File: controllers/front/listing/SupplierController.php:88</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/front/listing/ManufacturerController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="108b413416adf90e7c6f21a68bb02dd2">
+        <source>%number% products</source>
+        <target>%number% products</target>
+        <note>Context:
+File: controllers/front/listing/ManufacturerController.php:186</note>
+      </trans-unit>
+      <trans-unit id="8e7fb1213c4692b195ed6b7cf580d7f3">
+        <source>%number% product</source>
+        <target>%number% product</target>
+        <note>Context:
+File: controllers/front/listing/ManufacturerController.php:186</note>
+      </trans-unit>
+      <trans-unit id="bd51980476ab3cd93603c9548fb78775">
+        <source>List of all brands</source>
+        <target>List of all brands</target>
+        <note>Context:
+File: controllers/front/listing/ManufacturerController.php:90</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/classic/modules/ps_specials/views/templates/hook/ps_specials.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="588907ab2d492aca0b07b5bf9c931eea">
+        <source>On sale</source>
+        <target>On sale</target>
+        <note>Context:
+File: themes/classic/modules/ps_specials/views/templates/hook/ps_specials.tpl:28</note>
+      </trans-unit>
+      <trans-unit id="f95ceb82c51c99dc9b9e5678b291c44b">
+        <source>All sale products</source>
+        <target>All sale products</target>
+        <note>Context:
+File: themes/classic/modules/ps_specials/views/templates/hook/ps_specials.tpl:36</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/front/listing/CategoryController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="aa89fd8bf65df5c1a1c11474bf2c16b5">
+        <source>Category: %category_name%</source>
+        <target>Category: %category_name%</target>
+        <note>Context:
+File: controllers/front/listing/CategoryController.php:212</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/StarterTheme/templates/catalog/listing/manufacturer.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="d0679d37c204278465192d34b1917c01">
+        <source>List of products by brand %brand_name%</source>
+        <target>List of products by brand %brand_name%</target>
+        <note>Context:
+File: themes/StarterTheme/templates/catalog/listing/manufacturer.tpl:29</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/classic/modules/ps_newproducts/views/templates/hook/ps_newproducts.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="9ff0635f5737513b1a6f559ac2bff745">
+        <source>New products</source>
+        <target>New products</target>
+        <note>Context:
+File: themes/classic/modules/ps_newproducts/views/templates/hook/ps_newproducts.tpl:28</note>
+      </trans-unit>
+      <trans-unit id="60efcc704ef1456678f77eb9ee20847b">
+        <source>All new products</source>
+        <target>All new products</target>
+        <note>Context:
+File: themes/classic/modules/ps_newproducts/views/templates/hook/ps_newproducts.tpl:36</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/StarterTheme/templates/catalog/brands.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="84be54bb4bd1b755a27d86388700d097">
+        <source>Brands</source>
+        <target>Brands</target>
+        <note>Context:
+File: themes/StarterTheme/templates/catalog/brands.tpl:31</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/StarterTheme/templates/catalog/suppliers.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="1814d65a76028fdfbadab64a5a8076df">
+        <source>Suppliers</source>
+        <target>Suppliers</target>
+        <note>Context:
+File: themes/StarterTheme/templates/catalog/suppliers.tpl:9</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/StarterTheme/templates/customer/order-return.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="deb10517653c255364175796ace3553f">
+        <source>Product</source>
+        <target>Product</target>
+        <note>Context:
+File: themes/StarterTheme/templates/customer/order-return.tpl:46</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/StarterTheme/templates/catalog/_partials/product-add-to-cart.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="694e8d1f2ee056f98ee488bdc4982d73">
+        <source>Quantity</source>
+        <target>Quantity</target>
+        <note>Context:
+File: themes/StarterTheme/templates/catalog/_partials/product-add-to-cart.tpl:30</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/StarterTheme/templates/customer/_partials/order-detail-return.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="6c957f72dc8cdacc75762f2cbdcdfaf2">
+        <source>Unit price</source>
+        <target>Unit price</target>
+        <note>Context:
+File: themes/StarterTheme/templates/customer/_partials/order-detail-return.tpl:36</note>
+      </trans-unit>
+      <trans-unit id="0eede552438475bdfe820c13f24c9399">
+        <source>Total price</source>
+        <target>Total price</target>
+        <note>Context:
+File: themes/StarterTheme/templates/customer/_partials/order-detail-return.tpl:37</note>
+      </trans-unit>
+      <trans-unit id="fdfac28b5ad628f25649d9c2eb4fc62e">
+        <source>Returned</source>
+        <target>Returned</target>
+        <note>Context:
+File: themes/StarterTheme/templates/customer/_partials/order-detail-return.tpl:35</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/StarterTheme/templates/catalog/product.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="63d5049791d9d79d86e9a108b0a999ca">
+        <source>Reference</source>
+        <target>Reference</target>
+        <note>Context:
+File: themes/StarterTheme/templates/catalog/product.tpl:84</note>
+      </trans-unit>
+      <trans-unit id="ea254ced8be4adb6c4a2750e84087da6">
+        <source>Availability date:</source>
+        <target>Availability date:</target>
+        <note>Context:
+File: themes/StarterTheme/templates/catalog/product.tpl:123</note>
+      </trans-unit>
+      <trans-unit id="7dcd185f890fd28f69d1ed210292d77f">
+        <source>Data sheet</source>
+        <target>Data sheet</target>
+        <note>Context:
+File: themes/StarterTheme/templates/catalog/product.tpl:184</note>
+      </trans-unit>
+      <trans-unit id="9e2941b3c81256fac10392aaca4ccfde">
+        <source>Condition</source>
+        <target>Condition</target>
+        <note>Context:
+File: themes/StarterTheme/templates/catalog/product.tpl:93</note>
+      </trans-unit>
+      <trans-unit id="e54a973d0c3342dac6ee7d9e145c6f83">
+        <source>Pack content</source>
+        <target>Pack content</target>
+        <note>Context:
+File: themes/StarterTheme/templates/catalog/product.tpl:197</note>
+      </trans-unit>
+      <trans-unit id="98edb85b00d9527ad5acebe451b3fae6">
+        <source>Accessories</source>
+        <target>Accessories</target>
+        <note>Context:
+File: themes/StarterTheme/templates/catalog/product.tpl:210</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/StarterTheme/templates/catalog/_partials/product-customization.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="54c02ba7929b1fda4847991a45b58a48">
+        <source>Product customization</source>
+        <target>Product customization</target>
+        <note>Context:
+File: themes/StarterTheme/templates/catalog/_partials/product-customization.tpl:28</note>
+      </trans-unit>
+      <trans-unit id="5d1190edfb16f1dcaaecc56570c864be">
+        <source>Your customization:</source>
+        <target>Your customization:</target>
+        <note>Context:
+File: themes/StarterTheme/templates/catalog/_partials/product-customization.tpl:40</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/StarterTheme/templates/catalog/_partials/products-top.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="fb526aaa0add86e4e124263db50438c8">
+        <source>Showing %from%-%to% of %total% item(s)</source>
+        <target>Showing %from%-%to% of %total% item(s)</target>
+        <note>Context:
+File: themes/StarterTheme/templates/catalog/_partials/products-top.tpl:37</note>
+      </trans-unit>
+      <trans-unit id="498007f495e00b14f415d5f6ae6a1362">
+        <source>There are %product_count% products.</source>
+        <target>There are %product_count% products.</target>
+        <note>Context:
+File: themes/StarterTheme/templates/catalog/_partials/products-top.tpl:27</note>
+      </trans-unit>
+      <trans-unit id="79ac892bd1769d83ef1c16dae9f4eddd">
+        <source>There is 1 product.</source>
+        <target>There is 1 product.</target>
+        <note>Context:
+File: themes/StarterTheme/templates/catalog/_partials/products-top.tpl:29</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/StarterTheme/templates/catalog/_partials/product-prices.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="d502fa4950894baeaeaf3c5195bb8206">
+        <source>Save %percentage%</source>
+        <target>Save %percentage%</target>
+        <note>Context:
+File: themes/StarterTheme/templates/catalog/_partials/product-prices.tpl:47</note>
+      </trans-unit>
+      <trans-unit id="5e9ce3b8961433dfa8cd441709c78176">
+        <source>Save %amount%</source>
+        <target>Save %amount%</target>
+        <note>Context:
+File: themes/StarterTheme/templates/catalog/_partials/product-prices.tpl:49</note>
+      </trans-unit>
+      <trans-unit id="48fa315ec57b5fea80176d1c5f9f6bbf">
+        <source>(%unit_price%)</source>
+        <target>(%unit_price%)</target>
+        <note>Context:
+File: themes/StarterTheme/templates/catalog/_partials/product-prices.tpl:79</note>
+      </trans-unit>
+      <trans-unit id="e532954941a2469e3b3ae35ce44885d6">
+        <source>%price% tax excl.</source>
+        <target>%price% tax excl.</target>
+        <note>Context:
+File: themes/StarterTheme/templates/catalog/_partials/product-prices.tpl:57</note>
+      </trans-unit>
+      <trans-unit id="a72a454b308052ed277f7b69ab307caa">
+        <source>Instead of %price%</source>
+        <target>Instead of %price%</target>
+        <note>Context:
+File: themes/StarterTheme/templates/catalog/_partials/product-prices.tpl:63</note>
+      </trans-unit>
+      <trans-unit id="98508b5a9b590896cc627beb46d86b96">
+        <source>Including %amount% for ecotax</source>
+        <target>Including %amount% for ecotax</target>
+        <note>Context:
+File: themes/StarterTheme/templates/catalog/_partials/product-prices.tpl:69</note>
+      </trans-unit>
+      <trans-unit id="a134618182b99ff9151d7e0b6b92410a">
+        <source>(not impacted by the discount)</source>
+        <target>(not impacted by the discount)</target>
+        <note>Context:
+File: themes/StarterTheme/templates/catalog/_partials/product-prices.tpl:71</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/StarterTheme/templates/catalog/_partials/product-details.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="1be6f9eb563f3bf85c78b4219bf09de9">
+        <source>Brand</source>
+        <target>Brand</target>
+        <note>Context:
+File: themes/StarterTheme/templates/catalog/_partials/product-details.tpl:10</note>
+      </trans-unit>
+      <trans-unit id="fcebe56087b9373f15514831184fa572">
+        <source>In stock</source>
+        <target>In stock</target>
+        <note>Context:
+File: themes/StarterTheme/templates/catalog/_partials/product-details.tpl:28</note>
+      </trans-unit>
+      <trans-unit id="4594f39c6dac58760daeb19d79389576">
+        <source>Specific References</source>
+        <target>Specific References</target>
+        <note>Context:
+File: themes/StarterTheme/templates/catalog/_partials/product-details.tpl:67</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/classic/templates/catalog/_partials/active_filters.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="cfff8593a3adedd98a18631f85152d23">
+        <source>%1$s: </source>
+        <target>%1$s: </target>
+        <note>Context:
+File: themes/classic/templates/catalog/_partials/active_filters.tpl:35</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/StarterTheme/templates/catalog/_partials/product-discounts.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="fc21aa6a8b0bceb8570c8c81b6b38307">
+        <source>Volume discounts</source>
+        <target>Volume discounts</target>
+        <note>Context:
+File: themes/StarterTheme/templates/catalog/_partials/product-discounts.tpl:28</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/classic/templates/catalog/_partials/product-discounts.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="861c0c6ef832cd96c5fe152f9d610973">
+        <source>You Save</source>
+        <target>You Save</target>
+        <note>Context:
+File: themes/classic/templates/catalog/_partials/product-discounts.tpl:34</note>
+      </trans-unit>
+      <trans-unit id="64c22a1426c5b8fce46c6314d73dc99e">
+        <source>Up to %discount%</source>
+        <target>Up to %discount%</target>
+        <note>Context:
+File: themes/classic/templates/catalog/_partials/product-discounts.tpl:42</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/classic/templates/catalog/product.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="56e11b516943cb38a57c9a53219a8370">
+        <source>This pack contains</source>
+        <target>This pack contains</target>
+        <note>Context:
+File: themes/classic/templates/catalog/product.tpl:113</note>
+      </trans-unit>
+      <trans-unit id="b5a7adde1af5c87d7fd797b6245c2a39">
+        <source>Description</source>
+        <target>Description</target>
+        <note>Context:
+File: themes/classic/templates/catalog/product.tpl:158</note>
+      </trans-unit>
+      <trans-unit id="b8900d8adf598b6653bb8c071bc49a1d">
+        <source>Product Details</source>
+        <target>Product Details</target>
+        <note>Context:
+File: themes/classic/templates/catalog/product.tpl:168</note>
+      </trans-unit>
+      <trans-unit id="7e2708aeb65763c54052f57ed1a1ec1d">
+        <source>Attachments</source>
+        <target>Attachments</target>
+        <note>Context:
+File: themes/classic/templates/catalog/product.tpl:177</note>
+      </trans-unit>
+      <trans-unit id="3767d4f3efe17bd95a1bc7cf4194bb93">
+        <source>You might also like</source>
+        <target>You might also like</target>
+        <note>Context:
+File: themes/classic/templates/catalog/product.tpl:237</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/classic/modules/ps_searchbar/ps_searchbar.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="5bdba1fc0fba1010d61ce253c2e57da8">
+        <source>Search our catalog</source>
+        <target>Search our catalog</target>
+        <note>Context:
+File: themes/classic/modules/ps_searchbar/ps_searchbar.tpl:29</note>
+      </trans-unit>
+      <trans-unit id="13348442cc6a27032d2b4aa28b75a5d3">
+        <source>Search</source>
+        <target>Search</target>
+        <note>Context:
+File: themes/classic/modules/ps_searchbar/ps_searchbar.tpl:32</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/classic/modules/ps_featuredproducts/views/templates/hook/ps_featuredproducts.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="f473acb18ebcd825235ca5624203f31a">
+        <source>Popular Products</source>
+        <target>Popular Products</target>
+        <note>Context:
+File: themes/classic/modules/ps_featuredproducts/views/templates/hook/ps_featuredproducts.tpl:27</note>
+      </trans-unit>
+      <trans-unit id="40dec546414c1ebdfde8d9858f0938c3">
+        <source>All products</source>
+        <target>All products</target>
+        <note>Context:
+File: themes/classic/modules/ps_featuredproducts/views/templates/hook/ps_featuredproducts.tpl:35</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/classic/modules/ps_rssfeed/views/templates/hook/ps_rssfeed.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="10fd25dcd3353c0ba3731d4a23657f2e">
+        <source>No RSS feed added</source>
+        <target>No RSS feed added</target>
+        <note>Context:
+File: themes/classic/modules/ps_rssfeed/views/templates/hook/ps_rssfeed.tpl:36</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/classic/modules/ps_emailalerts/views/templates/hook/my-account.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="4edfd10d0bb5f51e0fd2327df608b5a8">
+        <source>My alerts</source>
+        <target>My alerts</target>
+        <note>Context:
+File: themes/classic/modules/ps_emailalerts/views/templates/hook/my-account.tpl:30</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/classic/modules/ps_viewedproduct/views/template/hook/ps_viewedproduct.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="43560641f91e63dc83682bc598892fa1">
+        <source>Viewed products</source>
+        <target>Viewed products</target>
+        <note>Context:
+File: themes/classic/modules/ps_viewedproduct/views/template/hook/ps_viewedproduct.tpl:26</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_productinfo/views/templates/hook/ps_productinfo.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="035749e4c50392a661c0f1b220ae0516">
+        <source>1 person is currently watching this product.</source>
+        <target>1 person is currently watching this product.</target>
+        <note>Context:
+File: modules/ps_productinfo/views/templates/hook/ps_productinfo.tpl:29</note>
+      </trans-unit>
+      <trans-unit id="c24cf2abae9286b8f69a8ccdf7ed8d5e">
+        <source>%nb_people% people are currently watching this product.</source>
+        <target>%nb_people% people are currently watching this product.</target>
+        <note>Context:
+File: modules/ps_productinfo/views/templates/hook/ps_productinfo.tpl:31</note>
+      </trans-unit>
+      <trans-unit id="247f15e3dc0e7906ab9573685423899f">
+        <source>Last time this product was bought: %date_last_order%</source>
+        <target>Last time this product was bought: %date_last_order%</target>
+        <note>Context:
+File: modules/ps_productinfo/views/templates/hook/ps_productinfo.tpl:37</note>
+      </trans-unit>
+      <trans-unit id="160b4798999cb85c815beeb40ac268cc">
+        <source>Last time this product was added to a cart: %date_last_cart%</source>
+        <target>Last time this product was added to a cart: %date_last_cart%</target>
+        <note>Context:
+File: modules/ps_productinfo/views/templates/hook/ps_productinfo.tpl:41</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/classic/modules/ps_supplierlist/views/templates/_partials/supplier_form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="ecf253735ac0cba84a9d2eeff1f1b87c">
+        <source>All suppliers</source>
+        <target>All suppliers</target>
+        <note>Context:
+File: themes/classic/modules/ps_supplierlist/views/templates/_partials/supplier_form.tpl:28</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/classic/modules/ps_supplierlist/views/templates/hook/ps_supplierlist.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="496689fbd342f80d30f1f266d060415a">
+        <source>No supplier</source>
+        <target>No supplier</target>
+        <note>Context:
+File: themes/classic/modules/ps_supplierlist/views/templates/hook/ps_supplierlist.tpl:37</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/classic/modules/ps_bestsellers/views/templates/hook/ps_bestsellers.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="d7b2933ba512ada478c97fa43dd7ebe6">
+        <source>Best Sellers</source>
+        <target>Best Sellers</target>
+        <note>Context:
+File: themes/classic/modules/ps_bestsellers/views/templates/hook/ps_bestsellers.tpl:27</note>
+      </trans-unit>
+      <trans-unit id="eae99cd6a931f3553123420b16383812">
+        <source>All best sellers</source>
+        <target>All best sellers</target>
+        <note>Context:
+File: themes/classic/modules/ps_bestsellers/views/templates/hook/ps_bestsellers.tpl:35</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/classic/modules/ps_brandlist/views/templates/_partials/brand_form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="e18a22d145b38e4fff582663b5b4ec1e">
+        <source>All brands</source>
+        <target>All brands</target>
+        <note>Context:
+File: themes/classic/modules/ps_brandlist/views/templates/_partials/brand_form.tpl:28</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/classic/modules/ps_brandlist/views/templates/hook/ps_brandlist.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="8e41eae149ff3fa38cc9c4fde945f2c3">
+        <source>No brand</source>
+        <target>No brand</target>
+        <note>Context:
+File: themes/classic/modules/ps_brandlist/views/templates/hook/ps_brandlist.tpl:37</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/classic/modules/ps_categoryproducts/views/templates/hook/ps_categoryproducts.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="f55e0a28b86c2ab66ac632ab9ddf1833">
+        <source>%s other product in the same category:</source>
+        <target>%s other product in the same category:</target>
+        <note>Context:
+File: themes/classic/modules/ps_categoryproducts/views/templates/hook/ps_categoryproducts.tpl:28</note>
+      </trans-unit>
+      <trans-unit id="bebb44f38b03407098d48198c1d0aaa5">
+        <source>%s other products in the same category:</source>
+        <target>%s other products in the same category:</target>
+        <note>Context:
+File: themes/classic/modules/ps_categoryproducts/views/templates/hook/ps_categoryproducts.tpl:30</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/classic/modules/ps_crossselling/views/templates/hook/ps_crossselling.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="ef2b66b0b65479e08ff0cce29e19d006">
+        <source>Customers who bought this product also bought:</source>
+        <target>Customers who bought this product also bought:</target>
+        <note>Context:
+File: themes/classic/modules/ps_crossselling/views/templates/hook/ps_crossselling.tpl:27</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/StarterTheme/templates/catalog/_partials/active_filters.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="53cea05976132fada38935bdc05ad156">
+        <source>%facet_label%: %facet_value%</source>
+        <target>%facet_label%: %facet_value%</target>
+        <note>Context:
+File: themes/StarterTheme/templates/catalog/_partials/active_filters.tpl:30</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/StarterTheme/templates/catalog/listing/supplier.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="bcdf044a723993079e77ec66e4d6cbf2">
+        <source>List of products by supplier %supplier_name%</source>
+        <target>List of products by supplier %supplier_name%</target>
+        <note>Context:
+File: themes/StarterTheme/templates/catalog/listing/supplier.tpl:9</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

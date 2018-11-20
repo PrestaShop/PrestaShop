@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="controllers/admin/AdminStatsTabController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="452a7601dbc6f2c38aa89e68bda8b603">
+        <source>Stats</source>
+        <target>Stats</target>
+        <note>Context:
+File: controllers/admin/AdminStatsTabController.php:44</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminStatsController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="ee6b00aa9d931ecaf45cd5d0e3fcec0c">
+        <source>%d%% of your Catalog</source>
+        <target>%d%% of your Catalog</target>
+        <note>Context:
+File: controllers/admin/AdminStatsController.php:618</note>
+      </trans-unit>
+      <trans-unit id="82ad4f0be97f8f36d31e2540aacb155d">
+        <source>No customers</source>
+        <target>No customers</target>
+        <note>Context:
+File: controllers/admin/AdminStatsController.php:633</note>
+      </trans-unit>
+      <trans-unit id="0cae6e79394f63d1b655d65764c8b37b">
+        <source>%d%% Female Customers</source>
+        <target>%d%% Female Customers</target>
+        <note>Context:
+File: controllers/admin/AdminStatsController.php:635</note>
+      </trans-unit>
+      <trans-unit id="736a55c4150f19ccecdbba208fb98fb1">
+        <source>%d%% Male Customers</source>
+        <target>%d%% Male Customers</target>
+        <note>Context:
+File: controllers/admin/AdminStatsController.php:637</note>
+      </trans-unit>
+      <trans-unit id="270416544ff49d63fdc7b423d174a223">
+        <source>%d%% Neutral Customers</source>
+        <target>%d%% Neutral Customers</target>
+        <note>Context:
+File: controllers/admin/AdminStatsController.php:639</note>
+      </trans-unit>
+      <trans-unit id="86730d7947a117f6c049cfe444cff01f">
+        <source>%d years</source>
+        <target>%d years</target>
+        <note>Context:
+File: controllers/admin/AdminStatsController.php:647</note>
+      </trans-unit>
+      <trans-unit id="d372f1901a8533a1e46d6ec304087700">
+        <source>%.1f hours</source>
+        <target>%.1f hours</target>
+        <note>Context:
+File: controllers/admin/AdminStatsController.php:659</note>
+      </trans-unit>
+      <trans-unit id="08cfa7751d1812e961560f623e082aba">
+        <source>No orders</source>
+        <target>No orders</target>
+        <note>Context:
+File: controllers/admin/AdminStatsController.php:722</note>
+      </trans-unit>
+      <trans-unit id="9aee5f7903fbed5f7d715e4011961b59">
+        <source>%d%% %s</source>
+        <target>%d%% %s</target>
+        <note>Context:
+File: controllers/admin/AdminStatsController.php:725</note>
+      </trans-unit>
+      <trans-unit id="d79de24a931cdfd25615c068f1f2765a">
+        <source>No category</source>
+        <target>No category</target>
+        <note>Context:
+File: controllers/admin/AdminStatsController.php:795</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

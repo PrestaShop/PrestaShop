@@ -24,4 +24,16 @@
   <stock_mvt_reason id="Supply_Order">
     <name>Supply Order</name>
   </stock_mvt_reason>
+  <stock_mvt_reason id="Customer_Order_1">
+    <name>Customer Order</name>
+  </stock_mvt_reason>
+  <stock_mvt_reason id="Product_Return">
+    <name>Product Return</name>
+  </stock_mvt_reason>
+  <stock_mvt_reason id="Employee_Edition">
+    <name>Employee Edition</name>
+  </stock_mvt_reason>
+  <stock_mvt_reason id="Employee_Edition_1">
+    <name>Employee Edition</name>
+  </stock_mvt_reason>
 </entity_stock_mvt_reason>

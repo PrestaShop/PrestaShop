@@ -1,13 +1,13 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,13 +19,14 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @copyright 2007-2017 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 class AttachmentControllerCore extends FrontController
 {
+
     public function postProcess()
     {
         $a = new Attachment(Tools::getValue('id_attachment'), $this->context->language->id);
@@ -44,7 +45,43 @@ class AttachmentControllerCore extends FrontController
         header('Content-Length: '.filesize(_PS_DOWNLOAD_DIR_.$a->file));
         header('Content-Disposition: attachment; filename="'.utf8_decode($a->file_name).'"');
         @set_time_limit(0);
-        readfile(_PS_DOWNLOAD_DIR_.$a->file);
+        self::readfileChunked(_PS_DOWNLOAD_DIR_.$a->file);        
         exit;
     }
+
+    /**
+     * @see   http://ca2.php.net/manual/en/function.readfile.php#54295
+     */
+    function readfileChunked($filename,$retbytes=true)
+    {
+        // how many bytes per chunk
+        $chunksize = 1*(1024*1024);
+        $buffer = '';
+        $totalBytes = 0;
+
+        $handle = fopen($filename, 'rb');
+        if ($handle === false)
+        {
+            return false;
+        }
+        while (!feof($handle))
+        {
+            $buffer = fread($handle, $chunksize);
+            echo $buffer;
+            ob_flush();
+            flush();
+            if ($retbytes)
+            {
+                $totalBytes += strlen($buffer);
+            }
+        }
+        $status = fclose($handle);
+        if ($retbytes && $status)
+        {
+            // return num. bytes delivered like readfile() does.
+            return $totalBytes;
+        }
+        return $status;
+    }
+    
 }

@@ -1,13 +1,13 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -18,10 +18,10 @@
  * versions in the future. If you wish to customize PrestaShop for your
  * needs please refer to http://www.prestashop.com for more information.
  *
- *  @author 	PrestaShop SA <contact@prestashop.com>
- *  @copyright  2007-2015 PrestaShop SA
- *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
- *  International Registered Trademark & Property of PrestaShop SA
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2017 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
  */
 namespace PrestaShopBundle\Service\DataUpdater\Admin;
 
@@ -37,7 +37,7 @@ interface ProductInterface
      *
      * @param array $productListId The ID list of products to (de)activate
      * @param boolean $activate True to activate, false to deactivate.
-     * @throws DataUpdateException If an error occured during update (not really blocking since its just activation flag)
+     * @throws \PrestaShopBundle\Exception\UpdateProductException If an error occured during update (not really blocking since its just activation flag)
      * @return boolean True when succeed.
      */
     public function activateProductIdList(array $productListId, $activate = true);
@@ -46,7 +46,7 @@ interface ProductInterface
      * Do a safe delete on given product IDs
      *
      * @param array $productListId The ID list of products to delete
-     * @throws DataUpdateException If deletion failed (some normal cases can brings this, it's not a Development error)
+     * @throws \PrestaShopBundle\Exception\UpdateProductException If deletion failed (some normal cases can brings this, it's not a Development error)
      * @return boolean True when succeed.
      */
     public function deleteProductIdList(array $productIdList);
@@ -55,7 +55,7 @@ interface ProductInterface
      * Duplicates the given product IDs
      *
      * @param array $productListId The ID list of products to delete
-     * @throws DataUpdateException If duplication failed.
+     * @throws \PrestaShopBundle\Exception\UpdateProductException If duplication failed.
      * @return boolean True when succeed.
      */
     public function duplicateProductIdList(array $productIdList);
@@ -64,7 +64,7 @@ interface ProductInterface
      * Do a safe delete on given product ID
      *
      * @param integer $productId The product ID to delete
-     * @throws DataUpdateException If deletion failed (some normal cases can brings this, it's not a Development error)
+     * @throws \PrestaShopBundle\Exception\UpdateProductException If deletion failed (some normal cases can brings this, it's not a Development error)
      * @return boolean
      */
     public function deleteProduct($productId);
@@ -87,7 +87,7 @@ interface ProductInterface
      *
      * @param array $productList The list of products to sort (keys: ID, values: old positions) The natural order of the array is the new order to update.
      * @param array $filterParams Contains the ID of the category to sort. Take it from AdminProductDataProvider::getPersistedFilterParameters().
-     * @throws DataUpdateException If deletion failed (some normal cases can brings this, it's not a Development error)
+     * @throws \PrestaShopBundle\Exception\UpdateProductException If deletion failed (some normal cases can brings this, it's not a Development error)
      * @return boolean True when succeed.
      */
     public function sortProductIdList(array $productList, $filterParams);

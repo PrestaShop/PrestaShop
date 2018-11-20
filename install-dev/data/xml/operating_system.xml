@@ -16,6 +16,12 @@
     <operating_system id="Windows_8">
       <name>Windows 8</name>
     </operating_system>
+    <operating_system id="Windows_8_1">
+      <name>Windows 8.1</name>
+    </operating_system>
+    <operating_system id="Windows_10">
+      <name>Windows 10</name>
+    </operating_system>
     <operating_system id="MacOsX">
       <name>MacOsX</name>
     </operating_system>

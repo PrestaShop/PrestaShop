@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/dateofdelivery/dateofdelivery.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="b0f76e26cffaf27784d901a64f39593e">
+        <source>Date of delivery</source>
+        <target>Date of delivery</target>
+        <note>Context:
+File: modules/dateofdelivery/dateofdelivery.php:45</note>
+      </trans-unit>
+      <trans-unit id="98110868b266d63c3bacdac4430169cf">
+        <source>Displays an approximate date of delivery</source>
+        <target>Displays an approximate date of delivery</target>
+        <note>Context:
+File: modules/dateofdelivery/dateofdelivery.php:46</note>
+      </trans-unit>
+      <trans-unit id="0ea55758c7a68c0309b915e4b718d6b8">
+        <source>Date format is invalid</source>
+        <target>Date format is invalid</target>
+        <note>Context:
+File: modules/dateofdelivery/dateofdelivery.php:241</note>
+      </trans-unit>
+      <trans-unit id="7ccf58c950043c9fbfed668df13ce608">
+        <source>Settings are updated</source>
+        <target>Settings are updated</target>
+        <note>Context:
+File: modules/dateofdelivery/dateofdelivery.php:250</note>
+      </trans-unit>
+      <trans-unit id="ecfe3ba0ff66a97029088e8e90a3f051">
+        <source>Minimum time is invalid</source>
+        <target>Minimum time is invalid</target>
+        <note>Context:
+File: modules/dateofdelivery/dateofdelivery.php:259</note>
+      </trans-unit>
+      <trans-unit id="0245cd1cce5ecea8eb23b043be00d80a">
+        <source>Maximum time is invalid</source>
+        <target>Maximum time is invalid</target>
+        <note>Context:
+File: modules/dateofdelivery/dateofdelivery.php:261</note>
+      </trans-unit>
+      <trans-unit id="e6843321c8b0edea8cf333519316ed7b">
+        <source>Carrier is invalid</source>
+        <target>Carrier is invalid</target>
+        <note>Context:
+File: modules/dateofdelivery/dateofdelivery.php:263</note>
+      </trans-unit>
+      <trans-unit id="3499ed6a79c0b8cd01157de23fc1cfe6">
+        <source>This rule has already been defined for this carrier.</source>
+        <target>This rule has already been defined for this carrier.</target>
+        <note>Context:
+File: modules/dateofdelivery/dateofdelivery.php:265</note>
+      </trans-unit>
+      <trans-unit id="50e1f1030812a9a8fd66dfff17099fcd">
+        <source>An error occurred on adding of carrier rule.</source>
+        <target>An error occurred on adding of carrier rule.</target>
+        <note>Context:
+File: modules/dateofdelivery/dateofdelivery.php:277</note>
+      </trans-unit>
+      <trans-unit id="240276f48ff2e0e5fe620ff311e677b5">
+        <source>An error occurred on updating of carrier rule.</source>
+        <target>An error occurred on updating of carrier rule.</target>
+        <note>Context:
+File: modules/dateofdelivery/dateofdelivery.php:288</note>
+      </trans-unit>
+      <trans-unit id="b9e3eda70ccb175c96a56bd79b89bd8b">
+        <source>Carrier rule deleted successfully</source>
+        <target>Carrier rule deleted successfully</target>
+        <note>Context:
+File: modules/dateofdelivery/dateofdelivery.php:299</note>
+      </trans-unit>
+      <trans-unit id="25e775663057cfc945da15827d972699">
+        <source>Carrier rule added successfully</source>
+        <target>Carrier rule added successfully</target>
+        <note>Context:
+File: modules/dateofdelivery/dateofdelivery.php:303</note>
+      </trans-unit>
+      <trans-unit id="c20585756aa4f1b448a11ce77a054e32">
+        <source>Carrier rule updated successfully</source>
+        <target>Carrier rule updated successfully</target>
+        <note>Context:
+File: modules/dateofdelivery/dateofdelivery.php:306</note>
+      </trans-unit>
+      <trans-unit id="0008e84621e5c9f21f8a55387a28692f">
+        <source>Extra time when a product is out of stock</source>
+        <target>Extra time when a product is out of stock</target>
+        <note>Context:
+File: modules/dateofdelivery/dateofdelivery.php:517</note>
+      </trans-unit>
+      <trans-unit id="225e75c29d32392d311f5dc94c792384">
+        <source>day(s)</source>
+        <target>day(s)</target>
+        <note>Context:
+File: modules/dateofdelivery/dateofdelivery.php:620</note>
+      </trans-unit>
+      <trans-unit id="521d02cf307201053a46e0b9c5b5170c">
+        <source>Extra time for preparation of the order</source>
+        <target>Extra time for preparation of the order</target>
+        <note>Context:
+File: modules/dateofdelivery/dateofdelivery.php:523</note>
+      </trans-unit>
+      <trans-unit id="cec31ec82e3bdee482baaa9f5b11eeed">
+        <source>Preparation option</source>
+        <target>Preparation option</target>
+        <note>Context:
+File: modules/dateofdelivery/dateofdelivery.php:529</note>
+      </trans-unit>
+      <trans-unit id="15b4020fafe2bcadf41fbdb2e7fa137a">
+        <source>Saturday preparation</source>
+        <target>Saturday preparation</target>
+        <note>Context:
+File: modules/dateofdelivery/dateofdelivery.php:537</note>
+      </trans-unit>
+      <trans-unit id="9685cbc6ac9090137fb087d4f48d0561">
+        <source>Sunday preparation</source>
+        <target>Sunday preparation</target>
+        <note>Context:
+File: modules/dateofdelivery/dateofdelivery.php:542</note>
+      </trans-unit>
+      <trans-unit id="104f1a7d59077b514d4105fcee0e42ff">
+        <source>Date format:</source>
+        <target>Date format:</target>
+        <note>Context:
+File: modules/dateofdelivery/dateofdelivery.php:550</note>
+      </trans-unit>
+      <trans-unit id="3dcd8484e9bd43eeaa84e114aba42048">
+        <source>You can see all parameters available at: %site%</source>
+        <target>You can see all parameters available at: %site%</target>
+        <note>Context:
+File: modules/dateofdelivery/dateofdelivery.php:552</note>
+      </trans-unit>
+      <trans-unit id="85140afa1c99d6b4dc10179e2c5b4151">
+        <source>Carrier :</source>
+        <target>Carrier :</target>
+        <note>Context:
+File: modules/dateofdelivery/dateofdelivery.php:602</note>
+      </trans-unit>
+      <trans-unit id="1b9f5204ddf0881dc9f3a7bf65d4ac15">
+        <source>Delivery between</source>
+        <target>Delivery between</target>
+        <note>Context:
+File: modules/dateofdelivery/dateofdelivery.php:728</note>
+      </trans-unit>
+      <trans-unit id="19dfe063714422004b75043eaf74c9b8">
+        <source>Delivery option</source>
+        <target>Delivery option</target>
+        <note>Context:
+File: modules/dateofdelivery/dateofdelivery.php:624</note>
+      </trans-unit>
+      <trans-unit id="fe635ae5e30a73b4390c6d2e1a41e5be">
+        <source>Delivery on Saturday</source>
+        <target>Delivery on Saturday</target>
+        <note>Context:
+File: modules/dateofdelivery/dateofdelivery.php:632</note>
+      </trans-unit>
+      <trans-unit id="8d57b36293565ad925dc7dc4a9d3e724">
+        <source>Delivery on Sunday</source>
+        <target>Delivery on Sunday</target>
+        <note>Context:
+File: modules/dateofdelivery/dateofdelivery.php:637</note>
+      </trans-unit>
+      <trans-unit id="aeae9747bcdc4f7c25aa95c2a6765952">
+        <source>Name of carrier</source>
+        <target>Name of carrier</target>
+        <note>Context:
+File: modules/dateofdelivery/dateofdelivery.php:724</note>
+      </trans-unit>
+      <trans-unit id="52f253c711cff509bd5e4df2b18b697a">
+        <source>Saturday delivery</source>
+        <target>Saturday delivery</target>
+        <note>Context:
+File: modules/dateofdelivery/dateofdelivery.php:732</note>
+      </trans-unit>
+      <trans-unit id="fcddbca356dee064438a399fc0c4c84e">
+        <source>Sunday delivery</source>
+        <target>Sunday delivery</target>
+        <note>Context:
+File: modules/dateofdelivery/dateofdelivery.php:738</note>
+      </trans-unit>
+      <trans-unit id="b5813d499e8a122485995dd7851c1fb2">
+        <source>%1$d day(s) and %2$d day(s)</source>
+        <target>%1$d day(s) and %2$d day(s)</target>
+        <note>Context:
+File: modules/dateofdelivery/dateofdelivery.php:750</note>
+      </trans-unit>
+      <trans-unit id="387a8014f530f080bf2f3be723f8c164">
+        <source>Link list</source>
+        <target>Link list</target>
+        <note>Context:
+File: modules/dateofdelivery/dateofdelivery.php:760</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/dateofdelivery/views/templates/hook/button.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="e6ff622b31d0cd1c32c775d1e1f20831">
+        <source>Add a new carrier rule</source>
+        <target>Add a new carrier rule</target>
+        <note>Context:
+File: modules/dateofdelivery/views/templates/hook/button.tpl:28</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

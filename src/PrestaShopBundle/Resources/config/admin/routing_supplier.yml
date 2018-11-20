@@ -1,10 +1,8 @@
-# All the Attributes related routes
-
 admin_supplier_refresh_product_supplier_combination_form:
     path:     /refresh-product-supplier-combination-form/{idProduct}/{supplierIds}
     methods:  [GET]
     defaults:
-        _controller: PrestaShopBundle\Controller\Admin\SupplierController::refreshProductSupplierCombinationFormAction
+        _controller: PrestaShopBundle:Admin/Supplier:refreshProductSupplierCombinationForm
         supplierIds: 0
         idProduct: 0
     requirements:

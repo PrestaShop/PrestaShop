@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="controllers/admin/AdminMetaController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="73ca86c0d6a5d58e868c54c3a1524c6c">
+        <source>Before you can use this tool, you need to:</source>
+        <target>Before you can use this tool, you need to:</target>
+        <note>Context:
+File: controllers/admin/AdminMetaController.php:137</note>
+      </trans-unit>
+      <trans-unit id="636fc324804393cc1d3306a541cc871f">
+        <source>1) Create a blank .htaccess file in your root directory.</source>
+        <target>1) Create a blank .htaccess file in your root directory.</target>
+        <note>Context:
+File: controllers/admin/AdminMetaController.php:126</note>
+      </trans-unit>
+      <trans-unit id="1a53c64bc79e181125e94976211eb401">
+        <source>2) Give it write permissions (CHMOD 666 on Unix system).</source>
+        <target>2) Give it write permissions (CHMOD 666 on Unix system).</target>
+        <note>Context:
+File: controllers/admin/AdminMetaController.php:139</note>
+      </trans-unit>
+      <trans-unit id="10ebcb160107c452a2fc3c51804fc780">
+        <source>Your robots.txt file MUST be in your website's root directory and nowhere else (e.g. http://www.example.com/robots.txt).</source>
+        <target>Your robots.txt file MUST be in your website's root directory and nowhere else (e.g. http://www.example.com/robots.txt).</target>
+        <note>Context:
+File: controllers/admin/AdminMetaController.php:132
+ Comment: Options to generate robot.txt</note>
+      </trans-unit>
+      <trans-unit id="54a81582e2ea2a98cebaabab9c454957">
+        <source>Generate your "robots.txt" file by clicking on the following button (this will erase the old robots.txt file)</source>
+        <target>Generate your "robots.txt" file by clicking on the following button (this will erase the old robots.txt file)</target>
+        <note>Context:
+File: controllers/admin/AdminMetaController.php:134</note>
+      </trans-unit>
+      <trans-unit id="d999a32b68fd420ce389f774c231c637">
+        <source>1) Create a blank robots.txt file in your root directory.</source>
+        <target>1) Create a blank robots.txt file in your root directory.</target>
+        <note>Context:
+File: controllers/admin/AdminMetaController.php:138</note>
+      </trans-unit>
+      <trans-unit id="4836c0b3d56db59ba29844b8bcec084d">
+        <source>Here you can set the URL for your shop. If you migrate your shop to a new URL, remember to change the values below.</source>
+        <target>Here you can set the URL for your shop. If you migrate your shop to a new URL, remember to change the values below.</target>
+        <note>Context:
+File: controllers/admin/AdminMetaController.php:161</note>
+      </trans-unit>
+      <trans-unit id="117fb47c0109ce0c9415a7f60f084c39">
+        <source>The multistore option is enabled. If you want to change the URL of your shop, you must go to the "Multistore" page under the "Advanced Parameters" menu.</source>
+        <target>The multistore option is enabled. If you want to change the URL of your shop, you must go to the "Multistore" page under the "Advanced Parameters" menu.</target>
+        <note>Context:
+File: controllers/admin/AdminMetaController.php:185</note>
+      </trans-unit>
+      <trans-unit id="488acc51322abb701f50f1e753f7c19e">
+        <source>This section enables you to change the default pattern of your links. In order to use this functionality, PrestaShop's "Friendly URL" option must be enabled, and Apache's URL rewriting module (mod_rewrite) must be activated on your web server.</source>
+        <target>This section enables you to change the default pattern of your links. In order to use this functionality, PrestaShop's "Friendly URL" option must be enabled, and Apache's URL rewriting module (mod_rewrite) must be activated on your web server.</target>
+        <note>Context:
+File: controllers/admin/AdminMetaController.php:222</note>
+      </trans-unit>
+      <trans-unit id="3ecf3d1a434ba446f75b21deb67826c6">
+        <source>There are several available keywords for each route listed below; note that keywords with * are required!</source>
+        <target>There are several available keywords for each route listed below; note that keywords with * are required!</target>
+        <note>Context:
+File: controllers/admin/AdminMetaController.php:222</note>
+      </trans-unit>
+      <trans-unit id="e3fc732382d81895d218614e841ea222">
+        <source>To add a keyword in your URL, use the {keyword} syntax. If the keyword is not empty, you can add text before or after the keyword with syntax {prepend:keyword:append}. For example {-hey-:meta_title} will add "-hey-my-title" in the URL if the meta title is set.</source>
+        <target>To add a keyword in your URL, use the {keyword} syntax. If the keyword is not empty, you can add text before or after the keyword with syntax {prepend:keyword:append}. For example {-hey-:meta_title} will add "-hey-my-title" in the URL if the meta title is set.</target>
+        <note>Context:
+File: controllers/admin/AdminMetaController.php:222</note>
+      </trans-unit>
+      <trans-unit id="843afaeb1d84245d7cf7d0877a7258dd">
+        <source>You can only display the page list in a shop context.</source>
+        <target>You can only display the page list in a shop context.</target>
+        <note>Context:
+File: controllers/admin/AdminMetaController.php:452</note>
+      </trans-unit>
+      <trans-unit id="b8a27e47e64caa3e36c8894c3745357b">
+        <source>Before being able to use this tool, you need to:</source>
+        <target>Before being able to use this tool, you need to:</target>
+        <note>Context:
+File: controllers/admin/AdminMetaController.php:512
+ Comment: Message copied/pasted from the information tip</note>
+      </trans-unit>
+      <trans-unit id="d7faa8eb2f73f2c764e387d3d7c57556">
+        <source>Create a blank .htaccess in your root directory.</source>
+        <target>Create a blank .htaccess in your root directory.</target>
+        <note>Context:
+File: controllers/admin/AdminMetaController.php:513</note>
+      </trans-unit>
+      <trans-unit id="5dab5160dfb25b3a4d6c51416dac5c87">
+        <source>Give it write permissions (CHMOD 666 on Unix system).</source>
+        <target>Give it write permissions (CHMOD 666 on Unix system).</target>
+        <note>Context:
+File: controllers/admin/AdminMetaController.php:514</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminOrderPreferencesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="85a1ca0031f114f8409d15c6790856f5">
+        <source>Assign a valid page if you want it to be read.</source>
+        <target>Assign a valid page if you want it to be read.</target>
+        <note>Context:
+File: controllers/admin/AdminOrderPreferencesController.php:182</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminEmailsController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="4f0c0475f4b0b0b2b0def4256b8e2300">
+        <source>You must define an SMTP server and an SMTP port. If you do not know it, use the PHP mail() function instead.</source>
+        <target>You must define an SMTP server and an SMTP port. If you do not know it, use the PHP mail() function instead.</target>
+        <note>Context:
+File: controllers/admin/AdminEmailsController.php:315</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminGroupsController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="2a266db001f17e9fdcbc17ac7f169922">
+        <source>The discount value is incorrect (must be a percentage).</source>
+        <target>The discount value is incorrect (must be a percentage).</target>
+        <note>Context:
+File: controllers/admin/AdminGroupsController.php:482</note>
+      </trans-unit>
+      <trans-unit id="5f455758d7337262fdeedba6d54ec89f">
+        <source>Wrong category ID.</source>
+        <target>Wrong category ID.</target>
+        <note>Context:
+File: controllers/admin/AdminGroupsController.php:479</note>
+      </trans-unit>
+      <trans-unit id="14d9080664b90f7ff1bcd739aa34f5d0">
+        <source>The discount value is incorrect.</source>
+        <target>The discount value is incorrect.</target>
+        <note>Context:
+File: controllers/admin/AdminGroupsController.php:532</note>
+      </trans-unit>
+      <trans-unit id="5d4aa63b116fb3fe40589e20c1574661">
+        <source>You cannot save group reductions.</source>
+        <target>You cannot save group reductions.</target>
+        <note>Context:
+File: controllers/admin/AdminGroupsController.php:541</note>
+      </trans-unit>
+      <trans-unit id="a5ee25b466967f2e940d8c7f973a6906">
+        <source>An error occurred while updating this group.</source>
+        <target>An error occurred while updating this group.</target>
+        <note>Context:
+File: controllers/admin/AdminGroupsController.php:559</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminStoresController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="86de674d7405670db52e79ec1665b0b1">
+        <source>An address located in a country containing states must have a state selected.</source>
+        <target>An address located in a country containing states must have a state selected.</target>
+        <note>Context:
+File: controllers/admin/AdminStoresController.php:338</note>
+      </trans-unit>
+      <trans-unit id="60e8343766afd5e69c5797ea7380ce8e">
+        <source>Latitude and longitude are required.</source>
+        <target>Latitude and longitude are required.</target>
+        <note>Context:
+File: controllers/admin/AdminStoresController.php:345</note>
+      </trans-unit>
+      <trans-unit id="1ae9a82096a0077dde65dec6b1344792">
+        <source>The specified state is not located in this country.</source>
+        <target>The specified state is not located in this country.</target>
+        <note>Context:
+File: controllers/admin/AdminStoresController.php:528</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminStatusesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="510f6a8fda6eb21f9ff01954e034a29a">
+        <source>For security reasons, you cannot delete default order statuses.</source>
+        <target>For security reasons, you cannot delete default order statuses.</target>
+        <note>Context:
+File: controllers/admin/AdminStatusesController.php:610</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminReferrersController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="787e0ec1d05653f65a03b10c179356e1">
+        <source>Please install the "%modulename%" module in order to give your affiliates access to their own statistics.</source>
+        <target>Please install the "%modulename%" module in order to give your affiliates access to their own statistics.</target>
+        <note>Context:
+File: controllers/admin/AdminReferrersController.php:247</note>
+      </trans-unit>
+      <trans-unit id="ab20dd433a5e44c6166509b6c0075b9d">
+        <source>Percent of the sales.</source>
+        <target>Percent of the sales.</target>
+        <note>Context:
+File: controllers/admin/AdminReferrersController.php:278</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminSearchController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="ef553500695e07c58644bbdd166581be">
+        <source>This is not a valid IP address:</source>
+        <target>This is not a valid IP address:</target>
+        <note>Context:
+File: controllers/admin/AdminSearchController.php:165</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminGendersController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="f164e438206718c5539f6761d83e26b7">
+        <source>Width and height must be numeric values.</source>
+        <target>Width and height must be numeric values.</target>
+        <note>Context:
+File: controllers/admin/AdminGendersController.php:200</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminSearchConfController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="d2317f906b956432eebb5c8814bfb65e">
+        <source>Aliases and results are both required.</source>
+        <target>Aliases and results are both required.</target>
+        <note>Context:
+File: controllers/admin/AdminSearchConfController.php:315</note>
+      </trans-unit>
+      <trans-unit id="a43994b123cc1e321a83cd6d10edb6a5">
+        <source>Is not a valid result</source>
+        <target>Is not a valid result</target>
+        <note>Context:
+File: controllers/admin/AdminSearchConfController.php:318</note>
+      </trans-unit>
+      <trans-unit id="3b50177d99c96fbf78912e239d59804a">
+        <source>Is not a valid alias</source>
+        <target>Is not a valid alias</target>
+        <note>Context:
+File: controllers/admin/AdminSearchConfController.php:322</note>
+      </trans-unit>
+      <trans-unit id="84b4d8c8cdd02488c0f868e97b22a3c2">
+        <source>Creation successful</source>
+        <target>Creation successful</target>
+        <note>Context:
+File: controllers/admin/AdminSearchConfController.php:334</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminShopController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="837e57427bf283453398a561c9516398">
+        <source>You cannot delete this shop (customer and/or order dependency).</source>
+        <target>You cannot delete this shop (customer and/or order dependency).</target>
+        <note>Context:
+File: controllers/admin/AdminShopController.php:272</note>
+      </trans-unit>
+      <trans-unit id="e3651705f1156de17be5bf1943c480b3">
+        <source>Please create some sub-categories for this root category.</source>
+        <target>Please create some sub-categories for this root category.</target>
+        <note>Context:
+File: controllers/admin/AdminShopController.php:312</note>
+      </trans-unit>
+      <trans-unit id="cf52c411b5659457074fd9962435307f">
+        <source>You need to select at least the root category.</source>
+        <target>You need to select at least the root category.</target>
+        <note>Context:
+File: controllers/admin/AdminShopController.php:319</note>
+      </trans-unit>
+      <trans-unit id="18f086b62387b20309c709bbf9fe4fdb">
+        <source>Warning: You won't be able to change the group of this shop if this shop belongs to a group with one of these options activated: Share Customers, Share Quantities or Share Orders.</source>
+        <target>Warning: You won't be able to change the group of this shop if this shop belongs to a group with one of these options activated: Share Customers, Share Quantities or Share Orders.</target>
+        <note>Context:
+File: controllers/admin/AdminShopController.php:398</note>
+      </trans-unit>
+      <trans-unit id="1ff40978236e0d196983386376b0a5e3">
+        <source>You can only move your shop to a shop group with all "share" options disabled -- or to a shop group with no customers/orders.</source>
+        <target>You can only move your shop to a shop group with all "share" options disabled -- or to a shop group with no customers/orders.</target>
+        <note>Context:
+File: controllers/admin/AdminShopController.php:400</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/shop/helpers/list/list_content.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="c2cdad0778bdd9995afb2b4d27387675">
+        <source>Click here to set a URL for this shop.</source>
+        <target>Click here to set a URL for this shop.</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/shop/helpers/list/list_content.tpl:41</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/shop/helpers/list/list_action_delete.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="b869af59d40b52d2ad275c9f5ed81461">
+        <source>You cannot delete this shop (customer and/or order dependency)</source>
+        <target>You cannot delete this shop (customer and/or order dependency)</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/shop/helpers/list/list_action_delete.tpl:27</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/referrers/form_settings.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="60496e92d8c44007e78f095a1cb6adc2">
+        <source>The module '%s' must be activated and configurated in order to have all the statistics</source>
+        <target>The module '%s' must be activated and configurated in order to have all the statistics</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/referrers/form_settings.tpl:133</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/groups/helpers/form/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="57f51ca7c7ae71c5ac955cbce1942622">
+        <source>Caution: The discount applied to a category does not stack with the overall reduction but instead replaces it.</source>
+        <target>Caution: The discount applied to a category does not stack with the overall reduction but instead replaces it.</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/groups/helpers/form/form.tpl:154</note>
+      </trans-unit>
+      <trans-unit id="30de5dc59697ad3a8b60a3290a67de6c">
+        <source>Only products that have this category as the default category will be affected.</source>
+        <target>Only products that have this category as the default category will be affected.</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/groups/helpers/form/form.tpl:155</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

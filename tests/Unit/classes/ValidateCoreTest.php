@@ -1,13 +1,13 @@
 <?php
 /**
- * 2007-2015 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,8 +19,8 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @copyright 2007-2017 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -56,6 +56,14 @@ class ValidateCoreTest extends PHPUnit_Framework_TestCase
     public function testIsEmail($expected, $input)
     {
         $this->assertSame($expected, Validate::isEmail($input));
+    }
+
+    /**
+     * @dataProvider isBirthDateProvider
+     */
+    public function testIsBirthDate($expected, $input)
+    {
+        $this->assertSame($expected, Validate::isBirthDate($input));
     }
 
     /**
@@ -98,16 +106,16 @@ class ValidateCoreTest extends PHPUnit_Framework_TestCase
     {
         $this->assertSame($expected, Validate::isOptFloat($input));
     }
-        
-        // --- providers ---
 
-        public function isIp2LongDataProvider()
-        {
-            return array(
+    // --- providers ---
+
+    public function isIp2LongDataProvider()
+    {
+        return array(
             array(false, 'toto'),
             array(true, '123')
         );
-        }
+    }
 
     public function isMd5DataProvider()
     {
@@ -146,6 +154,18 @@ class ValidateCoreTest extends PHPUnit_Framework_TestCase
             array(false, 'john.doe@prestashop'),
             array(false, 123456789),
             array(false, false),
+        );
+    }
+
+    public function isBirthDateProvider()
+    {
+        return array(
+            array(true, '1991-04-19'),
+            array(true, '2015-03-22'),
+            array(true, '1945-07-25'),
+            array(false, '2020-03-19'),
+            array(false, '1991-03-33'),
+            array(false, '1991-15-19'),
         );
     }
 

@@ -1,0 +1,365 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/welcome/welcome.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="83218ac34c1834c26781fe4bde918ee4">
+        <source>Welcome</source>
+        <target>Welcome</target>
+        <note>Context:
+File: modules/welcome/welcome.php:56</note>
+      </trans-unit>
+      <trans-unit id="bf2e8e9545a7aa0e8279986eea30e2db">
+        <source>Help the user to create his first product.</source>
+        <target>Help the user to create his first product.</target>
+        <note>Context:
+File: modules/welcome/welcome.php:57</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/welcome/OnBoarding/Configuration.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="cec23b2350e76e6d8c06b3d44ae04ce3">
+        <source>Let's create your first product</source>
+        <target>Let's create your first product</target>
+        <note>Context:
+File: modules/welcome/OnBoarding/Configuration.php:65</note>
+      </trans-unit>
+      <trans-unit id="543a5aed6af3b1a0caf2bfe48b6c59f2">
+        <source>What do you want to tell about it? Think about what your customers want to know.</source>
+        <target>What do you want to tell about it? Think about what your customers want to know.</target>
+        <note>Context:
+File: modules/welcome/OnBoarding/Configuration.php:67</note>
+      </trans-unit>
+      <trans-unit id="3aeb6c214db86e113e07bdefd6f0bbbe">
+        <source>Add clear and attractive information. Don't worry, you can edit it later :)</source>
+        <target>Add clear and attractive information. Don't worry, you can edit it later :)</target>
+        <note>Context:
+File: modules/welcome/OnBoarding/Configuration.php:68</note>
+      </trans-unit>
+      <trans-unit id="96fd3aef4886801f89835232451ed4ee">
+        <source>Give your product a catchy name.</source>
+        <target>Give your product a catchy name.</target>
+        <note>Context:
+File: modules/welcome/OnBoarding/Configuration.php:73</note>
+      </trans-unit>
+      <trans-unit id="ae94c31490652b720e0f269281ec587a">
+        <source>Fill out the essential details in this tab. The other tabs are for more advanced information.</source>
+        <target>Fill out the essential details in this tab. The other tabs are for more advanced information.</target>
+        <note>Context:
+File: modules/welcome/OnBoarding/Configuration.php:86</note>
+      </trans-unit>
+      <trans-unit id="d9be3eb406443bd8858204256bf83513">
+        <source>Add one or more pictures so your product looks tempting!</source>
+        <target>Add one or more pictures so your product looks tempting!</target>
+        <note>Context:
+File: modules/welcome/OnBoarding/Configuration.php:93</note>
+      </trans-unit>
+      <trans-unit id="69168bfbea070ea2d4d311cef7c4c39a">
+        <source>How much do you want to sell it for?</source>
+        <target>How much do you want to sell it for?</target>
+        <note>Context:
+File: modules/welcome/OnBoarding/Configuration.php:100</note>
+      </trans-unit>
+      <trans-unit id="331ca7db26429b18d4fc27a4c0682aa2">
+        <source>Yay! You just created your first product. Looks good, right?</source>
+        <target>Yay! You just created your first product. Looks good, right?</target>
+        <note>Context:
+File: modules/welcome/OnBoarding/Configuration.php:111</note>
+      </trans-unit>
+      <trans-unit id="0edb272a8cfaf08e1253f7b453df3480">
+        <source>Give your shop its own identity</source>
+        <target>Give your shop its own identity</target>
+        <note>Context:
+File: modules/welcome/OnBoarding/Configuration.php:119</note>
+      </trans-unit>
+      <trans-unit id="f22c2cafb35dcc4a2a0d140a3d651d73">
+        <source>How do you want your shop to look? What makes it so special?</source>
+        <target>How do you want your shop to look? What makes it so special?</target>
+        <note>Context:
+File: modules/welcome/OnBoarding/Configuration.php:121</note>
+      </trans-unit>
+      <trans-unit id="888a400770d1964e24b28779d48a3ece">
+        <source>Customize your theme or choose the best design from our theme catalog.</source>
+        <target>Customize your theme or choose the best design from our theme catalog.</target>
+        <note>Context:
+File: modules/welcome/OnBoarding/Configuration.php:122</note>
+      </trans-unit>
+      <trans-unit id="cf297199c39d0871b40dacdbceb98832">
+        <source>A good way to start is to add your own logo here!</source>
+        <target>A good way to start is to add your own logo here!</target>
+        <note>Context:
+File: modules/welcome/OnBoarding/Configuration.php:127</note>
+      </trans-unit>
+      <trans-unit id="f2495fb7f9d820abb99c7b920f74361c">
+        <source>If you want something really special, have a look at the theme catalog!</source>
+        <target>If you want something really special, have a look at the theme catalog!</target>
+        <note>Context:
+File: modules/welcome/OnBoarding/Configuration.php:137</note>
+      </trans-unit>
+      <trans-unit id="9067f937e50eccdb6e7aeaf92cd054e1">
+        <source>Get your shop ready for payments</source>
+        <target>Get your shop ready for payments</target>
+        <note>Context:
+File: modules/welcome/OnBoarding/Configuration.php:145</note>
+      </trans-unit>
+      <trans-unit id="69b49a643f6ca4b943c6bc99e263b5b4">
+        <source>How do you want your customers to pay you?</source>
+        <target>How do you want your customers to pay you?</target>
+        <note>Context:
+File: modules/welcome/OnBoarding/Configuration.php:147</note>
+      </trans-unit>
+      <trans-unit id="2f612032b9e1b60bd7b569e99c1e9ee4">
+        <source>Adapt your offer to your market: add the most popular payment methods for your customers!</source>
+        <target>Adapt your offer to your market: add the most popular payment methods for your customers!</target>
+        <note>Context:
+File: modules/welcome/OnBoarding/Configuration.php:148</note>
+      </trans-unit>
+      <trans-unit id="af7c66bbf83c48324a2787cc5f5b90cc">
+        <source>These payment methods are already available to your customers.</source>
+        <target>These payment methods are already available to your customers.</target>
+        <note>Context:
+File: modules/welcome/OnBoarding/Configuration.php:153</note>
+      </trans-unit>
+      <trans-unit id="5bb5e61f625be5604d26e93ce35bf820">
+        <source>And you can choose to add other payment methods from here!</source>
+        <target>And you can choose to add other payment methods from here!</target>
+        <note>Context:
+File: modules/welcome/OnBoarding/Configuration.php:163</note>
+      </trans-unit>
+      <trans-unit id="2eda6b6f1c298d51960ba299fbb9b2c3">
+        <source>Choose your shipping solutions</source>
+        <target>Choose your shipping solutions</target>
+        <note>Context:
+File: modules/welcome/OnBoarding/Configuration.php:171</note>
+      </trans-unit>
+      <trans-unit id="7461f1e6cc12ebf12c1b757fda70cd04">
+        <source>How do you want to deliver your products?</source>
+        <target>How do you want to deliver your products?</target>
+        <note>Context:
+File: modules/welcome/OnBoarding/Configuration.php:173</note>
+      </trans-unit>
+      <trans-unit id="d769ab532918e6ff5f39d12c0f21ba42">
+        <source>Select the shipping solutions the most likely to suit your customers! Create your own carrier or add a ready-made module.</source>
+        <target>Select the shipping solutions the most likely to suit your customers! Create your own carrier or add a ready-made module.</target>
+        <note>Context:
+File: modules/welcome/OnBoarding/Configuration.php:174</note>
+      </trans-unit>
+      <trans-unit id="57667bc65ba18f633595319dc6e2ff0f">
+        <source>Here are the shipping methods available on your shop today.</source>
+        <target>Here are the shipping methods available on your shop today.</target>
+        <note>Context:
+File: modules/welcome/OnBoarding/Configuration.php:179</note>
+      </trans-unit>
+      <trans-unit id="369cb52120a70dd8568cb6529ed6c765">
+        <source>You can offer more delivery options by setting up additional carriers</source>
+        <target>You can offer more delivery options by setting up additional carriers</target>
+        <note>Context:
+File: modules/welcome/OnBoarding/Configuration.php:189</note>
+      </trans-unit>
+      <trans-unit id="8e0dbde341d9f7ee07f245d2434b3285">
+        <source>Improve your shop with modules</source>
+        <target>Improve your shop with modules</target>
+        <note>Context:
+File: modules/welcome/OnBoarding/Configuration.php:197</note>
+      </trans-unit>
+      <trans-unit id="ee566ba0c5af0554cf89c9fc12699986">
+        <source>Add new features and manage existing ones thanks to modules.</source>
+        <target>Add new features and manage existing ones thanks to modules.</target>
+        <note>Context:
+File: modules/welcome/OnBoarding/Configuration.php:199</note>
+      </trans-unit>
+      <trans-unit id="8f2dd8cbf2ed7e2edf0a56c63fe7f8c9">
+        <source>Some modules are already pre-installed, others may be free or paid modules - browse our selection and find out what is available!</source>
+        <target>Some modules are already pre-installed, others may be free or paid modules - browse our selection and find out what is available!</target>
+        <note>Context:
+File: modules/welcome/OnBoarding/Configuration.php:200</note>
+      </trans-unit>
+      <trans-unit id="9ef9b18a610d823a8a3555acb879c686">
+        <source>Discover our module selection in the first tab. Manage your modules on the second one and be aware of notifications in the third tab.</source>
+        <target>Discover our module selection in the first tab. Manage your modules on the second one and be aware of notifications in the third tab.</target>
+        <note>Context:
+File: modules/welcome/OnBoarding/Configuration.php:205</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/welcome/views/contents/end.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="c03cc59a15ca0026a7ab3d27c559fc94">
+        <source>Over to you!</source>
+        <target>Over to you!</target>
+        <note>Context:
+File: modules/welcome/views/contents/end.tpl:28</note>
+      </trans-unit>
+      <trans-unit id="bd7f2b6fca549764564962b931388799">
+        <source>You've seen the essential, but there's a lot more to explore.</source>
+        <target>You've seen the essential, but there's a lot more to explore.</target>
+        <note>Context:
+File: modules/welcome/views/contents/end.tpl:30</note>
+      </trans-unit>
+      <trans-unit id="2963152f4af9a5c721b657c191e65287">
+        <source>Some ressources can help you go further:</source>
+        <target>Some ressources can help you go further:</target>
+        <note>Context:
+File: modules/welcome/views/contents/end.tpl:31</note>
+      </trans-unit>
+      <trans-unit id="0bd72b8c7a3131410b7d9173937aee42">
+        <source>Starter Guide</source>
+        <target>Starter Guide</target>
+        <note>Context:
+File: modules/welcome/views/contents/end.tpl:38</note>
+      </trans-unit>
+      <trans-unit id="e6a7f8a2f42cc35979973da8dfb10720">
+        <source>Forum</source>
+        <target>Forum</target>
+        <note>Context:
+File: modules/welcome/views/contents/end.tpl:44</note>
+      </trans-unit>
+      <trans-unit id="cf270e40d273f9e7fd7c3061729060c3">
+        <source>Training</source>
+        <target>Training</target>
+        <note>Context:
+File: modules/welcome/views/contents/end.tpl:52</note>
+      </trans-unit>
+      <trans-unit id="a1b4f53bc793c237fbfa1370cc7119e5">
+        <source>Video tutorial</source>
+        <target>Video tutorial</target>
+        <note>Context:
+File: modules/welcome/views/contents/end.tpl:58</note>
+      </trans-unit>
+      <trans-unit id="51cdccf36c2b30017317d5fb74e0f766">
+        <source>I'm ready</source>
+        <target>I'm ready</target>
+        <note>Context:
+File: modules/welcome/views/contents/end.tpl:65</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/welcome/views/contents/welcome.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="9ad776f10bab1af366c5a778f6843c6d">
+        <source>Welcome to your shop!</source>
+        <target>Welcome to your shop!</target>
+        <note>Context:
+File: modules/welcome/views/contents/welcome.tpl:28</note>
+      </trans-unit>
+      <trans-unit id="2cbf0061207494c9dce122b293baa628">
+        <source>Hi! My name is Preston and I'm here to show you around.</source>
+        <target>Hi! My name is Preston and I'm here to show you around.</target>
+        <note>Context:
+File: modules/welcome/views/contents/welcome.tpl:30</note>
+      </trans-unit>
+      <trans-unit id="f666c0a66c5d0ad6e3ffff76fbe1ba7a">
+        <source>You will discover a few essential steps before you can launch your shop:</source>
+        <target>You will discover a few essential steps before you can launch your shop:</target>
+        <note>Context:
+File: modules/welcome/views/contents/welcome.tpl:31</note>
+      </trans-unit>
+      <trans-unit id="effa93903da7512b8c1cfa3e588ef265">
+        <source>Create your first product, customize your shop, configure shipping and payments...</source>
+        <target>Create your first product, customize your shop, configure shipping and payments...</target>
+        <note>Context:
+File: modules/welcome/views/contents/welcome.tpl:32</note>
+      </trans-unit>
+      <trans-unit id="c07acd58fccb46536772b5461fbd6b82">
+        <source>Let's get started!</source>
+        <target>Let's get started!</target>
+        <note>Context:
+File: modules/welcome/views/contents/welcome.tpl:35</note>
+      </trans-unit>
+      <trans-unit id="61057a0c84605444201929bdd72014f0">
+        <source>Later</source>
+        <target>Later</target>
+        <note>Context:
+File: modules/welcome/views/contents/welcome.tpl:38</note>
+      </trans-unit>
+      <trans-unit id="a6122a65eaa676f700ae68d393054a37">
+        <source>Start</source>
+        <target>Start</target>
+        <note>Context:
+File: modules/welcome/views/contents/welcome.tpl:39</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/welcome/views/navbar.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="5288ff6ac61192d7aaa0cde233172439">
+        <source>Launch your shop!</source>
+        <target>Launch your shop!</target>
+        <note>Context:
+File: modules/welcome/views/navbar.tpl:29</note>
+      </trans-unit>
+      <trans-unit id="f1cefec9e2196c672a622347f1fbc325">
+        <source>Resume</source>
+        <target>Resume</target>
+        <note>Context:
+File: modules/welcome/views/navbar.tpl:37</note>
+      </trans-unit>
+      <trans-unit id="47f8b2f0734e26f53a3f4ca2aa5bdf52">
+        <source>Stop the OnBoarding</source>
+        <target>Stop the OnBoarding</target>
+        <note>Context:
+File: modules/welcome/views/navbar.tpl:40</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/welcome/views/templates/lost.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="c1971ccebcf29ddc64c66218a75ea67d">
+        <source>Hey! Are you lost?</source>
+        <target>Hey! Are you lost?</target>
+        <note>Context:
+File: modules/welcome/views/templates/lost.tpl:28</note>
+      </trans-unit>
+      <trans-unit id="bfc5a2ef18761320c6f699d790a204c4">
+        <source>To continue, click here:</source>
+        <target>To continue, click here:</target>
+        <note>Context:
+File: modules/welcome/views/templates/lost.tpl:29</note>
+      </trans-unit>
+      <trans-unit id="bf7b3e2996598c588ca98a6715c5cde9">
+        <source>If you want to stop the tutorial for good, click here:</source>
+        <target>If you want to stop the tutorial for good, click here:</target>
+        <note>Context:
+File: modules/welcome/views/templates/lost.tpl:33</note>
+      </trans-unit>
+      <trans-unit id="44ae30cf103b6835c27cd42bd0352038">
+        <source>Quit the Welcome tutorial</source>
+        <target>Quit the Welcome tutorial</target>
+        <note>Context:
+File: modules/welcome/views/templates/lost.tpl:35</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/welcome/views/content.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="a0bfb8e59e6c13fc8d990781f77694fe">
+        <source>Continue</source>
+        <target>Continue</target>
+        <note>Context:
+File: modules/welcome/views/content.tpl:40</note>
+      </trans-unit>
+      <trans-unit id="3342209ae0c129fabccab65b82a503a6">
+        <source>Skip this tutorial</source>
+        <target>Skip this tutorial</target>
+        <note>Context:
+File: modules/welcome/views/content.tpl:41</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/welcome/views/templates/tooltip.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="48c7c41b72e1d678923ce3571aa65b2d">
+        <source>Step</source>
+        <target>Step</target>
+        <note>Context:
+File: modules/welcome/views/templates/tooltip.tpl:29</note>
+      </trans-unit>
+      <trans-unit id="10ac3d04253ef7e1ddc73e6091c0cd55">
+        <source>Next</source>
+        <target>Next</target>
+        <note>Context:
+File: modules/welcome/views/templates/tooltip.tpl:33</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

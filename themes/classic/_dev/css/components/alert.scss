@@ -1,0 +1,49 @@
+.ps-alert-error {
+  margin-bottom: 0;
+}
+
+.ps-alert-error,
+.ps-alert-success {
+  .item {
+    align-items: center;
+    border: 2px $brand-danger solid;
+    display: flex;
+    background-color: $brand-danger;
+    margin-bottom: 1rem;
+
+    i {
+      border: 15px $brand-danger solid;
+      display: flex;
+
+      svg {
+        background-color: $brand-danger;
+        width: 24px;
+        height: 24px;
+      }
+    }
+
+    p {
+      background-color: $body-bg;
+      margin: 0;
+      padding: 18px 20px 18px 20px;
+      width: 100%;
+    }
+  }
+}
+
+.ps-alert-success {
+  padding: 0.25rem 0.25rem 2.75rem 0.25rem;
+
+  .item {
+    border-color: $brand-success;
+    background-color: $brand-success;
+
+    i {
+      border-color: $brand-success;
+
+      svg {
+        background-color: $brand-success;
+      }
+    }
+  }
+}
