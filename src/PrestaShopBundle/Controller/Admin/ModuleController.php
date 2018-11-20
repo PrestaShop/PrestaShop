@@ -300,31 +300,34 @@ class ModuleController extends FrameworkBundleAdminController
                     $response[$module]['status'] = $moduleManager->{$action}($module);
                 }
 
-                if ($response[$module]['status'] === null) {
-                    $response[$module]['status'] = false;
-                    $response[$module]['msg'] = $translator->trans(
-                        '%module% did not return a valid response on %action% action.',
-                        array(
-                            '%module%' => $module,
-                            '%action%' => $action, ),
-                        'Admin.Modules.Notification'
-                    );
-                } elseif ($response[$module]['status'] === false) {
-                    $error = $moduleManager->getError($module);
-                    $response[$module]['msg'] = $translator->trans(
-                        'Cannot %action% module %module%. %error_details%',
-                        array(
-                            '%action%' => str_replace('_', ' ', $action),
-                            '%module%' => $module,
-                            '%error_details%' => $error, ),
-                        'Admin.Modules.Notification'
-                    );
-                } else {
+                if ($response[$module]['status'] === true) {
                     $response[$module]['msg'] = $translator->trans(
                         '%action% action on module %module% succeeded.',
                         array(
                             '%action%' => ucfirst(str_replace('_', ' ', $action)),
-                            '%module%' => $module, ),
+                            '%module%' => $module,
+                        ),
+                        'Admin.Modules.Notification'
+                    );
+                } elseif ($response[$module]['status'] === false) {
+                    $error                    = $moduleManager->getError($module);
+                    $response[$module]['msg'] = $translator->trans(
+                        'Cannot %action% module %module%. %error_details%',
+                        array(
+                            '%action%'        => str_replace('_', ' ', $action),
+                            '%module%'        => $module,
+                            '%error_details%' => $error,
+                        ),
+                        'Admin.Modules.Notification'
+                    );
+                } else {
+                    $response[$module]['status'] = false;
+                    $response[$module]['msg']    = $translator->trans(
+                        '%module% did not return a valid response on %action% action.',
+                        array(
+                            '%module%' => $module,
+                            '%action%' => $action,
+                        ),
                         'Admin.Modules.Notification'
                     );
                 }

@@ -39,7 +39,7 @@ use Module as LegacyModule;
  */
 class Module implements ModuleInterface
 {
-    /** @var legacyInstance Module The instance of the legacy module */
+    /** @var LegacyModule Module The instance of the legacy module */
     public $instance = null;
 
     /**
@@ -213,7 +213,15 @@ class Module implements ModuleInterface
         // "Notice: Use of undefined constant _PS_INSTALL_LANGS_PATH_ - assumed '_PS_INSTALL_LANGS_PATH_'"
         LegacyModule::updateTranslationsAfterInstall(false);
 
-        return $this->instance->install();
+        $result = $this->instance->install();
+        if (1 === $result || 0 === $result) {
+            // Because some modules returns 1 instead true and 0 instead false. Other value types are not expected.
+            // The best way is to check for non Boolean type and `throw \UnexpectedValueException`,
+            // but it's need much refactoring to catch the exception.
+            $result = (bool)$result;
+        }
+
+        return $result;
     }
 
     public function onUninstall()
