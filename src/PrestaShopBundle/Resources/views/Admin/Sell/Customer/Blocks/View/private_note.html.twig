@@ -28,7 +28,7 @@
     <i class="material-icons">visibility_off</i>
     {{ 'Add a private note'|trans({}, 'Admin.Orderscustomers.Feature') }}
   </h3>
-  <div class="card-body">
+  <div class="card-body clearfix">
     <div class="alert alert-info" role="alert">
       <p class="alert-text">
         {{ 'This note will be displayed to all employees but not to customers.'|trans({}, 'Admin.Orderscustomers.Help') }}
@@ -38,8 +38,7 @@
     {{ form_start(privateNoteForm) }}
       {{ form_widget(privateNoteForm.note) }}
 
-      <button class="btn btn-primary btn-sm pull-right mt-1" type="submit">
-        <i class="material-icons">save</i>
+      <button class="btn btn-primary float-right mt-3" type="submit">
         {{ 'Save'|trans({}, 'Admin.Actions') }}
       </button>
     {{ form_end(privateNoteForm) }}
