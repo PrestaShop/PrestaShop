@@ -137,7 +137,6 @@ final class CmsPageCategoryDefinitionFactory extends AbstractGridDefinitionFacto
                     'update_route' => 'admin_cms_pages_update_position_cms_category',
                     'route_params' => [
                         'id_parent' => 'cmsCategoryParentId',
-                        'id_cms_category' => 'cmsCategoryId',
                     ],
                 ])
             )

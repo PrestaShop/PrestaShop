@@ -38,6 +38,8 @@ use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryE
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategoryId;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
+use PrestaShop\PrestaShop\Core\Grid\Position\Exception\PositionDataException;
+use PrestaShop\PrestaShop\Core\Grid\Position\Exception\PositionUpdateException;
 use PrestaShop\PrestaShop\Core\Search\Filters\CmsPageCategoryFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -238,12 +240,46 @@ class CmsPageController extends FrameworkBundleAdminController
     /**
      * Updates cms page category position.
      *
+     * @param Request $request
      * @param int $cmsCategoryParentId
-     * @param int $cmsCategoryId
+     *
+     * @return RedirectResponse
      */
-    public function updateCmsCategoryPositionAction($cmsCategoryParentId, $cmsCategoryId)
+    public function updateCmsCategoryPositionAction(Request $request, $cmsCategoryParentId)
     {
-        // todo : implement with access checking
+        $positionsData = [
+            'positions' => $request->request->get('positions'),
+            'parentId' => $cmsCategoryParentId,
+        ];
+
+        $positionDefinition =  $this->get('prestashop.core.grid.cms_page_category.position_definition');
+
+        $positionUpdateFactory = $this->get('prestashop.core.grid.position.position_update_factory');
+
+        try {
+            $positionUpdate = $positionUpdateFactory->buildPositionUpdate($positionsData, $positionDefinition);
+        } catch (PositionDataException $e) {
+            $errors = [$e->toArray()];
+            $this->flashErrors($errors);
+
+            return $this->redirectToRoute('admin_cms_pages_index', [
+                'cmsCategoryParentId' => $cmsCategoryParentId,
+            ]);
+        }
+
+        $updater = $this->get('prestashop.core.grid.position.doctrine_grid_position_updater');
+
+        try {
+            $updater->update($positionUpdate);
+            $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+        } catch (PositionUpdateException $e) {
+            $errors = [$e->toArray()];
+            $this->flashErrors($errors);
+        }
+
+        return $this->redirectToRoute('admin_cms_pages_index', [
+            'cmsCategoryParentId' => $cmsCategoryParentId,
+        ]);
     }
 
     /**
