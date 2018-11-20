@@ -149,7 +149,7 @@ final class CmsPageCategoryDefinitionFactory extends AbstractGridDefinitionFacto
                     'primary_field' => 'id_cms_category',
                     'route_param_name' => 'cmsCategoryId',
                     'route_params_extra' => [
-                        'cmsCategoryParentId' => $this->cmsCategoryParentId,
+                        'id_parent' => 'cmsCategoryParentId',
                     ],
                 ])
             )
