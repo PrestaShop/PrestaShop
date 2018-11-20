@@ -213,7 +213,12 @@ class Module implements ModuleInterface
         // "Notice: Use of undefined constant _PS_INSTALL_LANGS_PATH_ - assumed '_PS_INSTALL_LANGS_PATH_'"
         LegacyModule::updateTranslationsAfterInstall(false);
 
-        return $this->instance->install();
+        $result = $this->instance->install();
+        if (1 === $result || 0 === $result) {
+            $result = (bool)$result;
+        }
+
+        return $result;
     }
 
     public function onUninstall()
