@@ -38,18 +38,30 @@
             <th>{{ 'Date'|trans({}, 'Admin.Global') }}</th>
             <th>{{ 'Carrier'|trans({}, 'Admin.Global') }}</th>
             <th>{{ 'Total'|trans({}, 'Admin.Global') }}</th>
-            <th></th>
+            <th class="text-right">{{ 'Actions'|trans({}, 'Admin.Global') }}</th>
           </tr>
         </thead>
         <tbody>
         {% for cart in customerInformation.cartsInformation %}
           <tr>
             <td>{{ cart.cartId }}</td>
-            <td>
-              <a href="{{ getAdminLink('AdminCarts', true, {'id_cart': cart.cartId, 'viewcart': 1}) }}">{{ cart.cartCreationDate }}</a>
-            </td>
+            <td>{{ cart.cartCreationDate }}</td>
             <td>{{ cart.carrierName }}</td>
             <td>{{ cart.cartTotal }}</td>
+            <td class="text-right">
+              <div class="btn-group-action">
+                <div class="btn-group">
+                  <a href="{{ getAdminLink('AdminCarts', true, {'id_cart': cart.cartId, 'viewcart': 1}) }}"
+                     class="btn tooltip-link dropdown-item"
+                     data-toggle="pstooltip"
+                     data-placement="top"
+                     data-original-title="{{ 'View'|trans({}, 'Admin.Actions') }}"
+                  >
+                    <i class="material-icons">zoom_in</i>
+                  </a>
+                </div>
+              </div>
+            </td>
           </tr>
         {% endfor %}
         </tbody>
