@@ -23,9 +23,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-{% set routeParameters = [] %}
+{% set routeParameters = record|array_pluck(column.options.route_params_extra) %}
 {% set routeParameters = routeParameters|merge({(column.options.route_param_name) : record[column.options.route_param_field]}) %}
-{% set routeParameters = routeParameters|merge(column.options.route_params_extra)%}
 
 <a href="{{ path(column.options.route, routeParameters) }}">
   {{ record[column.options.field] }}
