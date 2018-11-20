@@ -186,9 +186,14 @@ class AdminOrdersControllerCore extends AdminController
 
     public static function setOrderCurrency($echo, $tr)
     {
-        $order = new Order($tr['id_order']);
+        if (!empty($tr['id_currency'])) {
+            $idCurrency = (int) $tr['id_currency'];
+        } else {
+            $order = new Order($tr['id_order']);
+            $idCurrency = (int) $order->id_currency;
+        }
 
-        return Tools::displayPrice($echo, (int) $order->id_currency);
+        return Tools::displayPrice($echo, $idCurrency);
     }
 
     public function initPageHeaderToolbar()
