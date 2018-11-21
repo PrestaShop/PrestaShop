@@ -24,16 +24,14 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject;
+namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler;
 
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\FormDataHandlerInterface;
-use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\FormDataProviderInterface;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
-use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * Class FormHandlerFactory
+ * Creates new form handlers.
  */
 final class FormHandlerFactory implements FormHandlerFactoryInterface
 {
@@ -48,43 +46,32 @@ final class FormHandlerFactory implements FormHandlerFactoryInterface
     private $translator;
 
     /**
-     * @var FormFactoryInterface
-     */
-    private $formFactory;
-
-    /**
-     * @var bool
+     * @var string
      */
     private $isDemoModeEnabled;
 
     /**
      * @param HookDispatcherInterface $hookDispatcher
      * @param TranslatorInterface $translator
-     * @param FormFactoryInterface $formFactory
      * @param bool $isDemoModeEnabled
      */
     public function __construct(
         HookDispatcherInterface $hookDispatcher,
         TranslatorInterface $translator,
-        FormFactoryInterface $formFactory,
         $isDemoModeEnabled
     ) {
         $this->hookDispatcher = $hookDispatcher;
         $this->translator = $translator;
         $this->isDemoModeEnabled = $isDemoModeEnabled;
-        $this->formFactory = $formFactory;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function create($formType, FormDataProviderInterface $dataProvider, FormDataHandlerInterface $dataHandler)
+    public function createWithDataHandler(FormDataHandlerInterface $dataHandler)
     {
         return new FormHandler(
-            $formType,
-            $dataProvider,
             $dataHandler,
-            $this->formFactory,
             $this->hookDispatcher,
             $this->translator,
             $this->isDemoModeEnabled

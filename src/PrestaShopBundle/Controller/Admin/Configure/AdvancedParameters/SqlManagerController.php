@@ -43,6 +43,7 @@ use PrestaShop\PrestaShop\Core\Domain\SqlManagement\SqlRequestSettings;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\ValueObject\SqlRequestId;
 use PrestaShop\PrestaShop\Core\Export\Exception\FileWritingException;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\RequestSqlFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -172,7 +173,7 @@ class SqlManagerController extends FrameworkBundleAdminController
      */
     public function createAction(Request $request)
     {
-        $sqlRequestForm = $this->getSqlRequestFormHandler()->getForm();
+        $sqlRequestForm = $this->getSqlRequestFormBuilder()->getForm();
         $sqlRequestForm->handleRequest($request);
 
         if ($this->getSqlRequestFormHandler()->handle($sqlRequestForm)) {
@@ -415,11 +416,19 @@ class SqlManagerController extends FrameworkBundleAdminController
     }
 
     /**
-     * @return \PrestaShop\PrestaShop\Core\Form\IdentifiableObject\FormHandlerInterface
+     * @return \PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface
      */
     protected function getSqlRequestFormHandler()
     {
         return $this->get('prestashop.core.form.identifiable_object.sql_request_form_handler');
+    }
+
+    /**
+     * @return FormBuilderInterface
+     */
+    protected function getSqlRequestFormBuilder()
+    {
+        return $this->get('prestashop.core.form.builder.sql_request_form_builder');
     }
 
     /**

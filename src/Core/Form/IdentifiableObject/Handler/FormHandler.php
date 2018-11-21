@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -24,40 +24,23 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject;
+namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler;
 
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\FormDataHandlerInterface;
-use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\FormDataProviderInterface;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use Symfony\Component\Form\FormError;
-use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * Class FormHandler
+ * Handles identifiable object form and delegates form data saving to data handler.
  */
 final class FormHandler implements FormHandlerInterface
 {
     /**
-     * @var string
-     */
-    private $formType;
-
-    /**
-     * @var FormDataProviderInterface
-     */
-    private $dataProvider;
-
-    /**
      * @var FormDataHandlerInterface
      */
     private $dataHandler;
-
-    /**
-     * @var FormFactoryInterface
-     */
-    private $formFactory;
 
     /**
      * @var HookDispatcherInterface
@@ -75,54 +58,21 @@ final class FormHandler implements FormHandlerInterface
     private $isDemoModeEnabled;
 
     /**
-     * @param string $formType
-     * @param FormDataProviderInterface $dataProvider
      * @param FormDataHandlerInterface $dataHandler
-     * @param FormFactoryInterface $formFactory
      * @param HookDispatcherInterface $hookDispatcher
      * @param TranslatorInterface $translator
      * @param bool $isDemoModeEnabled
      */
     public function __construct(
-        $formType,
-        FormDataProviderInterface $dataProvider,
         FormDataHandlerInterface $dataHandler,
-        FormFactoryInterface $formFactory,
         HookDispatcherInterface $hookDispatcher,
         TranslatorInterface $translator,
         $isDemoModeEnabled
     ) {
-        $this->formFactory = $formFactory;
-        $this->dataProvider = $dataProvider;
         $this->dataHandler = $dataHandler;
         $this->hookDispatcher = $hookDispatcher;
         $this->translator = $translator;
-        $this->formType = $formType;
         $this->isDemoModeEnabled = $isDemoModeEnabled;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getForm(array $options = [])
-    {
-        return $this->buildForm(
-            $this->dataProvider->getDefaultData(),
-            null,
-            $options
-        );
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getFormFor($id, array $options = [])
-    {
-        return $this->buildForm(
-            $this->dataProvider->getData($id),
-            $id,
-            $options
-        );
     }
 
     /**
@@ -139,26 +89,6 @@ final class FormHandler implements FormHandlerInterface
     public function handleFor($id, FormInterface $form)
     {
         return $this->handleForm($form, $id);
-    }
-
-    /**
-     * @param mixed $data
-     * @param int|null $id
-     * @param array $options
-     *
-     * @return FormInterface
-     */
-    private function buildForm($data, $id = null, array $options = [])
-    {
-        $formBuilder = $this->formFactory->createBuilder($this->formType, $data, $options);
-
-        $this->hookDispatcher->dispatchWithParameters('action' . $formBuilder->getName() . 'FormBuilderModifier', [
-            'form_builder' => $formBuilder,
-            'data' => &$data,
-            'id' => $id,
-        ]);
-
-        return $formBuilder->getForm();
     }
 
     /**
