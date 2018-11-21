@@ -1746,7 +1746,7 @@ class AdminProductsControllerCore extends AdminController
                 } elseif (!$this->updateTags($languages, $this->object)) {
                     $this->errors[] = $this->trans('An error occurred while adding tags.', array(), 'Admin.Catalog.Notification');
                 } else {
-                    Hook::exec('actionProductAdd', array('id_product' => (int) $this->object->id, 'product' => $this->object));
+                    Hook::exec('actionProductAdd', array('id_product_old' => null, 'id_product' => (int) $this->object->id, 'product' => $this->object));
                     if (in_array($this->object->visibility, array('both', 'search')) && Configuration::get('PS_SEARCH_INDEXATION')) {
                         Search::indexation(false, $this->object->id);
                     }
