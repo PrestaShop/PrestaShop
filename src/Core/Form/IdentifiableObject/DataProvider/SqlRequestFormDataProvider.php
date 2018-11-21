@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetSqlRequestForEditin
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Class SqlRequestFormDataProvider
+ * Class SqlRequestFormDataProvider.
  */
 final class SqlRequestFormDataProvider implements FormDataProviderInterface
 {
