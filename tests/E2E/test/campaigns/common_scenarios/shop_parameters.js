@@ -135,7 +135,7 @@ module.exports = {
           return promise
             .then(() => client.waitForExistAndClick(OnBoarding.welcomeSteps.training_button))
             .then(() => client.switchWindow(3))
-            .then(() => client.checkTextValue(OnBoarding.externals.training_title, "PrestaShop Training", 'equal'))
+            .then(() => client.isExisting(OnBoarding.externals.discover_training_button, 5000))
             .then(() => client.switchWindow(0));
         });
         test('should click on "Video tutorial" button', () => {

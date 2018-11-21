@@ -76,16 +76,18 @@ scenario('The shop installation', () => {
     if (rcLink !== "") {
       test('should copy the downloaded RC to the auto upgrade directory', () => client.copyFileToAutoUpgrade(downloadsFolderPath, filename, rcTarget + "admin-dev/autoupgrade/download"));
     }
-    test('should click on "More options (Expert mode)" button', () => client.waitForExistAndClick(ModulePage.more_option_button));
-    test('should select the "Channel" option', () => client.waitAndSelectByValue(ModulePage.channel_select, "archive"));
-    test('should select the "Archive to use" option', () => client.waitAndSelectByValue(ModulePage.archive_select, global.filename));
-    test('should set the Number of the version you want to upgrade to', () => client.waitAndSetValue(ModulePage.version_number, global.filename.replace(".zip", "")));
-    test('should click on "save" button', () => client.waitForExistAndClick(ModulePage.save_button));
-    test('should verify the success message', () => client.waitForVisibleElement(ModulePage.save_message));
+    test('should select the "Channel" option', () => {
+      client.scrollTo(ModulePage.version_number, 50)
+      client.waitAndSelectByValue(ModulePage.channel_select, "archive", 2000)
+    });
+    test('should select the "Archive to use" option', () => client.waitAndSelectByValue(ModulePage.archive_select, global.filename, 2000));
+    test('should set the Number of the version you want to upgrade to', () => client.waitAndSetValue(ModulePage.version_number, global.filename.replace(".zip", ""), 2000));
+    test('should click on "save" button', () => client.waitForExistAndClick(ModulePage.save_button, 2000));
+    test('should verify the success message', () => client.waitForVisibleElement(ModulePage.save_message, 2000));
     test('should click on "refresh the page" button', () => {
       return promise
         .then(() => client.moveToObject(ModulePage.upgrade_block))
-        .then(() => client.waitForExistAndClick(ModulePage.refresh_button));
+        .then(() => client.waitForExistAndClick(ModulePage.refresh_button, 2000));
     });
     test('should click on "Upgrade PrestaShop now!" button', () => client.waitForExistAndClick(ModulePage.upgrade_button));
     test('should wait until the Upgrade is finished', () => client.waitForExist(ModulePage.loader_tag, 310000));

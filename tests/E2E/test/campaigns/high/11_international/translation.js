@@ -14,8 +14,8 @@ scenario('Edit a translation', () => {
     test('should go to "Translations" page', () => client.goToSubtabMenuPage(Menu.Improve.International.international_menu, Menu.Improve.International.translations_submenu));
     test('should select "themes translations" in the "MODIFY TRANSLATIONS" section', () => client.waitAndSelectByValue(Translations.translations_type, "themes"));
     test('should select the language "English (English)" in the "MODIFY TRANSLATIONS" section', () => client.waitAndSelectByValue(Translations.translations_language, "en"));
-    test('should click on "Modify" button', () => client.waitForExistAndClick(Translations.modify_button));
-    test('should click on "Shop" button', () =>  {
+    test('should click on "Modify" button', () => client.waitForExistAndClick(Translations.modify_button, 2000));
+    test('should click on "Shop" button', () => {
       return promise
         .then(() => client.isVisible(AddProductPage.symfony_toolbar, 3000))
         .then(() => {

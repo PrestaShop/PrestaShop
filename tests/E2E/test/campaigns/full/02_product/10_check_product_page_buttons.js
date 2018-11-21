@@ -2,6 +2,8 @@ const {AccessPageBO} = require('../../../selectors/BO/access_page');
 const {AddProductPage} = require('../../../selectors/BO/add_product_page');
 const {productPage} = require('../../../selectors/FO/product_page');
 const {Menu} = require('../../../selectors/BO/menu.js');
+const commonScenarios = require('../../common_scenarios/product');
+
 let promise = Promise.resolve();
 
 let firstProductData = {
@@ -55,6 +57,7 @@ scenario('Check product page buttons', () => {
         .then(() => client.waitForExistAndClick(AddProductPage.preview_buttons));
     });
     test('should switch to the Front Office', () => client.switchWindow(1));
+    commonScenarios.clickOnPreviewLink(client, AddProductPage.preview_link, productPage.product_name);
     test('should check that the product name is equal to "TEST PRODUCT' + date_time + '"', () => client.checkTextValue(productPage.product_name, firstProductData.name, "contain"));
   }, 'product/product');
 
