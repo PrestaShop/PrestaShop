@@ -82,7 +82,7 @@ final class EmailLogsDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getId()
     {
-        return 'EmailLogs';
+        return 'email_logs';
     }
 
     /**

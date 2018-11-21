@@ -5,26 +5,22 @@
       <trans-unit id="c4d74515416a5d1be75cfcd3e148e8e5">
         <source>Please mark each checkbox for the currency, or currencies, for which you want the payment module(s) to be available.</source>
         <target>Please mark each checkbox for the currency, or currencies, for which you want the payment module(s) to be available.</target>
-        <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Improve/Payment/Preferences/Blocks/payment_preferences_form_block.html.twig:38</note>
+        <note>Line: 38</note>
       </trans-unit>
       <trans-unit id="b193f3e27f6936fd26746b39aca66587">
         <source>Please mark each checkbox for the customer group(s), for which you want the payment module(s) to be available.</source>
         <target>Please mark each checkbox for the customer group(s), for which you want the payment module(s) to be available.</target>
-        <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Improve/Payment/Preferences/Blocks/payment_preferences_form_block.html.twig:65</note>
+        <note>Line: 65</note>
       </trans-unit>
       <trans-unit id="a8fc3e8b2c61a74ac9b50e36604525c8">
         <source>Please mark each checkbox for the country, or countries, in which you want the payment module(s) to be available.</source>
         <target>Please mark each checkbox for the country, or countries, in which you want the payment module(s) to be available.</target>
-        <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Improve/Payment/Preferences/Blocks/payment_preferences_form_block.html.twig:92</note>
+        <note>Line: 92</note>
       </trans-unit>
       <trans-unit id="27acfbd58a7ff9f12c9ac05dd94733c5">
         <source>Please mark each checkbox for the carrier, or carrier, for which you want the payment module(s) to be available.</source>
         <target>Please mark each checkbox for the carrier, or carrier, for which you want the payment module(s) to be available.</target>
-        <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Improve/Payment/Preferences/Blocks/payment_preferences_form_block.html.twig:119</note>
+        <note>Line: 119</note>
       </trans-unit>
     </body>
   </file>
@@ -33,20 +29,17 @@ File: src/PrestaShopBundle/Resources/views/Admin/Improve/Payment/Preferences/Blo
       <trans-unit id="bf300d92910197db357bc70d62143559">
         <source>This is where you decide what payment modules are available for different variations like your customers' currency, group, and country.</source>
         <target>This is where you decide what payment modules are available for different variations like your customers' currency, group, and country.</target>
-        <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Improve/Payment/Preferences/payment_preferences.html.twig:47</note>
+        <note>Line: 47</note>
       </trans-unit>
       <trans-unit id="faf0cf10ced3f7e6202c929d8633a616">
         <source>A check mark indicates you want the payment module available.</source>
         <target>A check mark indicates you want the payment module available.</target>
-        <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Improve/Payment/Preferences/payment_preferences.html.twig:50</note>
+        <note>Line: 50</note>
       </trans-unit>
       <trans-unit id="2bae052f842849e596b0c6bf6adec2bf">
         <source>If it is not checked then this means that the payment module is disabled.</source>
         <target>If it is not checked then this means that the payment module is disabled.</target>
-        <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Improve/Payment/Preferences/payment_preferences.html.twig:51</note>
+        <note>Line: 51</note>
       </trans-unit>
     </body>
   </file>

@@ -76,7 +76,7 @@ class InstallManager
     }
 
     /**
-     * @return string
+     * @return VersionNumber
      *
      * @throws \RuntimeException
      */

@@ -83,8 +83,8 @@ if (isset($_GET['run']) && ($_GET['run'] === 'check-version')) {
 
         $latestVersionAvailable = $installManager->getLatestStableAvailableVersion();
 
-        $isThisTheLatestAvailableVersion = (_PS_VERSION_ === $latestVersionAvailable);
-        if ($isThisTheLatestAvailableVersion) {
+        $isThisTheLatestStableAvailableVersion = ($latestVersionAvailable->compare(VersionNumber::fromString(_PS_VERSION_)) < 1);
+        if ($isThisTheLatestStableAvailableVersion) {
             die(json_encode([
                 'thereIsAMoreRecentPSVersionAndItCanBeInstalled' => false,
             ]));

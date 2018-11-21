@@ -361,11 +361,13 @@ var formCategory = (function() {
 var featuresCollection = (function() {
 
   var collectionHolder = $('.feature-collection');
+  var maxCollectionChildren = collectionHolder.children('.row').length;
 
   /** Add a feature */
   function add() {
-    var newForm = collectionHolder.attr('data-prototype').replace(/__name__/g, collectionHolder.children('.row').length);
+    var newForm = collectionHolder.attr('data-prototype').replace(/__name__/g, maxCollectionChildren);
     collectionHolder.append(newForm);
+    maxCollectionChildren += 1;
     prestaShopUiKit.initSelects();
   }
 
@@ -398,7 +400,7 @@ var featuresCollection = (function() {
 
         if('' !== $(this).val()) {
           $.ajax({
-            url: $(this).attr('data-action').replace(/\/\d+(?=\?.*)/, '/' + $(this).val()),
+            url: $(this).attr('data-action').replace(/\/\d+((?=\?.*))?/, '/' + $(this).val()),
             success: function(response) {
               $selector.prop('disabled', response.length === 0);
               $selector.empty();
@@ -644,7 +646,7 @@ var form = (function() {
         //update the customization ids
         if (typeof response.customization_fields_ids != "undefined") {
           $.each(response.customization_fields_ids, function (k, v) {
-              $("#form_step6_custom_fields_" + k + "_id_customization_field").val(v);
+            $("#form_step6_custom_fields_" + k + "_id_customization_field").val(v);
           });
         }
 
@@ -742,23 +744,23 @@ var form = (function() {
   }
 
   function updateMissingTranslatedNames() {
-      var namesDiv = $('#form_step1_names');
-      var defaultLanguageValue = null;
-      $("input[id^='form_step1_name_']", namesDiv).each(function(index) {
-          var value = $(this).val();
-          // The first language is ALWAYS the employee language
-          if (0 === index) {
-              defaultLanguageValue = value;
-          } else if (0 === value.length) {
-              $(this).val(defaultLanguageValue);
-          }
-      });
+    var namesDiv = $('#form_step1_names');
+    var defaultLanguageValue = null;
+    $("input[id^='form_step1_name_']", namesDiv).each(function(index) {
+      var value = $(this).val();
+      // The first language is ALWAYS the employee language
+      if (0 === index) {
+        defaultLanguageValue = value;
+      } else if (0 === value.length) {
+        $(this).val(defaultLanguageValue);
+      }
+    });
   }
 
   /**
    * Depending on the provided params, this method displays or hides
    * an error panel with the form errors not linked to a specific field.
-   * 
+   *
    * @param {string} content The HTML content to display
    */
   function updateDisplayGlobalErrors(content) {
@@ -941,10 +943,12 @@ var form = (function() {
 var customFieldCollection = (function() {
 
   var collectionHolder = $('ul.customFieldCollection');
+  var maxCollectionChildren = collectionHolder.children().length;
 
   /** Add a custom field */
   function add() {
-    var newForm = collectionHolder.attr('data-prototype').replace(/__name__/g, collectionHolder.children().length);
+    var newForm = collectionHolder.attr('data-prototype').replace(/__name__/g, maxCollectionChildren);
+    maxCollectionChildren += 1;
     collectionHolder.append('<li>' + newForm + '</li>');
   }
 
