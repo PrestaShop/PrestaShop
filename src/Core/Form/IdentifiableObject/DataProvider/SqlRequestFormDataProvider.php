@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Domain\SqlManagement\EditableSqlRequest;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetSqlRequestForEditing;
 
 /**
- * Class SqlRequestFormDataProvider.
+ * Provides data for SqlRequest forms.
  */
 final class SqlRequestFormDataProvider implements FormDataProviderInterface
 {
@@ -43,9 +43,8 @@ final class SqlRequestFormDataProvider implements FormDataProviderInterface
     /**
      * @param CommandBusInterface $queryBus
      */
-    public function __construct(
-        CommandBusInterface $queryBus
-    ) {
+    public function __construct(CommandBusInterface $queryBus)
+    {
         $this->queryBus = $queryBus;
     }
 
