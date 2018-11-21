@@ -389,8 +389,7 @@ class CustomerController extends AbstractAdminController
         $type = get_class($e);
 
         $errorMessages = [
-            CustomerNotFoundException::class =>
-                $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'),
+            CustomerNotFoundException::class => $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'),
         ];
 
         if (isset($errorMessages[$type])) {
