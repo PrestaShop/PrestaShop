@@ -24,22 +24,21 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject;
+namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler;
 
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\FormDataHandlerInterface;
-use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\FormDataProviderInterface;
 
 /**
- * Interface FormHandlerFactoryInterface
+ * Defines interface for form handler factories.
  */
 interface FormHandlerFactoryInterface
 {
     /**
-     * @param string $formType Fully-qualified form type class name
-     * @param FormDataProviderInterface $dataProvider
+     * Creates new form handler with given data handler.
+     *
      * @param FormDataHandlerInterface $dataHandler
      *
      * @return FormHandlerInterface
      */
-    public function create($formType, FormDataProviderInterface $dataProvider, FormDataHandlerInterface $dataHandler);
+    public function createWithDataHandler(FormDataHandlerInterface $dataHandler);
 }

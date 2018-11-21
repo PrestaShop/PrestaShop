@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -24,34 +24,15 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject;
+namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler;
 
 use Symfony\Component\Form\FormInterface;
 
 /**
- * Interface FormHandlerInterface
+ * Defines interface for handling identifiable object's form.
  */
 interface FormHandlerInterface
 {
-    /**
-     * Get form for object creation with default data.
-     *
-     * @param array $options
-     *
-     * @return FormInterface
-     */
-    public function getForm(array $options = []);
-
-    /**
-     * Get form for given object with pre-filled data.
-     *
-     * @param int $id
-     * @param array $options
-     *
-     * @return FormInterface
-     */
-    public function getFormFor($id, array $options = []);
-
     /**
      * Handles form by creating new object.
      *
