@@ -28,6 +28,9 @@ namespace PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject;
 
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerException;
 
+/**
+ * Stores method in which customer can be deleted.
+ */
 class CustomerDeleteMethod
 {
     /**

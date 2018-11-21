@@ -31,6 +31,8 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Command\BulkDeleteCustomerCommand
 use PrestaShop\PrestaShop\Core\Domain\Customer\CommandHandler\BulkDeleteCustomerHandlerInterface;
 
 /**
+ * Handles command that deletes customers in bulk action.
+ *
  * @internal
  */
 final class BulkDeleteCustomerHandler extends AbstractCustomerHandler implements BulkDeleteCustomerHandlerInterface

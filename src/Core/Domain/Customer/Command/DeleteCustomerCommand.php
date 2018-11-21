@@ -29,6 +29,9 @@ namespace PrestaShop\PrestaShop\Core\Domain\Customer\Command;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerDeleteMethod;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 
+/**
+ * Deletes given customer.
+ */
 class DeleteCustomerCommand
 {
     /**

@@ -30,6 +30,11 @@ use Customer;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\BulkDisableCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\CommandHandler\BulkDisableCustomerHandlerInterface;
 
+/**
+ * Handles command that disables customers in bulk action.
+ *
+ * @internal
+ */
 final class BulkDisableCustomerHandler extends AbstractCustomerHandler implements BulkDisableCustomerHandlerInterface
 {
     /**

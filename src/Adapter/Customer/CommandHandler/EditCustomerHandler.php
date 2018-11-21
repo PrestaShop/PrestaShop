@@ -36,7 +36,9 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\DuplicateCustomerEmailE
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\Email;
 
 /**
- * Handles command which edits customer's data
+ * Handles commands which edits given customer with provided data.
+ *
+ * @internal
  */
 final class EditCustomerHandler extends AbstractCustomerHandler implements EditCustomerHandlerInterface
 {

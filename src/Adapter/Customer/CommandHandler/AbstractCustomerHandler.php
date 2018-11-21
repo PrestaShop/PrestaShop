@@ -30,6 +30,11 @@ use Customer;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 
+/**
+ * Provides reusable methods for customer command handlers.
+ *
+ * @internal
+ */
 abstract class AbstractCustomerHandler
 {
     /**
