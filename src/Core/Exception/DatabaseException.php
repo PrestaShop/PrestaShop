@@ -24,24 +24,11 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Util\Url;
+namespace PrestaShop\PrestaShop\Core\Exception;
 
 /**
- * Interface UrlFileCheckerInterface defines contract for UrlFileChecker.
+ * Class DatabaseException any error linked to the database use this class as a base.
  */
-interface UrlFileCheckerInterface
+class DatabaseException extends CoreException
 {
-    /**
-     * Check if .htaccess file for Front Office is writable.
-     *
-     * @return bool
-     */
-    public function isHtaccessFileWritable();
-
-    /**
-     * Check if robots.txt file for Front Office is writable.
-     *
-     * @return bool
-     */
-    public function isRobotsFileWritable();
 }

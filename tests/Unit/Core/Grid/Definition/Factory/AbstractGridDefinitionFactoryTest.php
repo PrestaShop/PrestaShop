@@ -72,7 +72,7 @@ class AbstractGridDefinitionFactoryTest extends TestCase
             ->expects($this->once())
             ->method('dispatchWithParameters')
             ->withConsecutive(
-                [$this->equalTo('actiontest_idGridDefinitionModifier')],
+                [$this->equalTo('actionTestIdGridDefinitionModifier')],
                 [$this->isType('array'), $this->arrayHasKey('definition')]
             )
         ;

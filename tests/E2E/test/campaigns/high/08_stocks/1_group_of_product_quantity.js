@@ -34,8 +34,9 @@ scenario('Modify quantity and check the movement of a group of product', client 
       return promise
 
         .then(() => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.stocks_submenu))
-        .then(() => client.pause(3000))
+        .then(() => client.pause(5000))
         .then(() => client.isVisible(Stock.sort_product_icon, 2000))
+        .then(() => client.pause(5000))
         .then(() => {
           if (global.isVisible) {
             client.waitForVisibleAndClick(Stock.sort_product_icon);

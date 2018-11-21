@@ -5,14 +5,12 @@
       <trans-unit id="d33f69bfa67e20063a8905c923d9cf59">
         <source>Language selector block</source>
         <target>Language selector block</target>
-        <note>Context:
-File: modules/ps_languageselector/ps_languageselector.php:46</note>
+        <note>Line: 46</note>
       </trans-unit>
       <trans-unit id="26519a08e607733fa050b88303bea070">
         <source>Adds a block allowing customers to select a language for your store's content.</source>
         <target>Adds a block allowing customers to select a language for your store's content.</target>
-        <note>Context:
-File: modules/ps_languageselector/ps_languageselector.php:47</note>
+        <note>Line: 47</note>
       </trans-unit>
     </body>
   </file>

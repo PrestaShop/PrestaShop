@@ -116,7 +116,9 @@ class ModuleTabUnregister
     private function removeDuplicatedParent(Tab $tab)
     {
         $remainingChildren = $this->tabRepository->findByParentId($tab->getIdParent());
-        if (count($remainingChildren) > 1) {
+        // Or more than one children, the parent tab is still used.
+        // If there is no children, the deletion is likely to be done manually by the module.
+        if (count($remainingChildren) !== 1) {
             return;
         }
 

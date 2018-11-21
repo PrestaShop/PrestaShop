@@ -1590,7 +1590,7 @@ class AdminTranslationsControllerCore extends AdminController
         } elseif ($save_and_stay) {
             Tools::redirectAdmin($url_base . '&lang=' . $this->lang_selected->iso_code . '&type=' . $this->type_selected . '&module=' . Tools::getValue('module') . '&theme=' . $this->theme_selected);
         } else {
-            Tools::redirectAdmin($url_base);
+            Tools::redirectAdmin($url_base . '&action=settings');
         }
     }
 

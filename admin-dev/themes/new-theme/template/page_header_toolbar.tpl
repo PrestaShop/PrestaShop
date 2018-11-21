@@ -61,7 +61,8 @@
                 {$toolbar_btn['modules-list'].desc}
               </a>
             {/if}
-            {if isset($help_link)}
+
+            {if isset($help_link) and $help_link != false}
 
               {if $enableSidebar}
                 <a class="btn btn-outline-secondary btn-help btn-sidebar" href="#"
