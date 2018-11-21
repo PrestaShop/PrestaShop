@@ -228,8 +228,8 @@ class AdminAccessControllerCore extends AdminController
     }
 
     /**
-     * @param $tab_id
-     * @param $permission
+     * @param int $tab_id
+     * @param string $permission
      *
      * @return bool
      *
@@ -250,10 +250,6 @@ class AdminAccessControllerCore extends AdminController
             }
         }
 
-        if (!$this->access('edit')) {
-            return false;
-        }
-
-        return true;
+        return $this->access('edit');
     }
 }
