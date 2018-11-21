@@ -29,7 +29,6 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\EditableSqlRequest;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetSqlRequestForEditing;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Class SqlRequestFormDataProvider.
@@ -37,24 +36,16 @@ use Symfony\Component\HttpFoundation\Request;
 final class SqlRequestFormDataProvider implements FormDataProviderInterface
 {
     /**
-     * @var Request
-     */
-    private $request;
-
-    /**
      * @var CommandBusInterface
      */
     private $queryBus;
 
     /**
      * @param CommandBusInterface $queryBus
-     * @param Request $request
      */
     public function __construct(
-        CommandBusInterface $queryBus,
-        Request $request = null
+        CommandBusInterface $queryBus
     ) {
-        $this->request = $request;
         $this->queryBus = $queryBus;
     }
 
@@ -76,22 +67,10 @@ final class SqlRequestFormDataProvider implements FormDataProviderInterface
     }
 
     /**
-     * When "Export to SQL Manager" feature is used,
-     * it adds "name" and "sql" to request's POST data
-     * which is used as default form data
-     * when creating RequestSql.
-     *
      * {@inheritdoc}
      */
     public function getDefaultData()
     {
-        if ($this->request && $this->request->request->has('sql')) {
-            return [
-                'sql' => $this->request->request->get('sql'),
-                'name' => $this->request->request->get('name'),
-            ];
-        }
-
         return null;
     }
 }

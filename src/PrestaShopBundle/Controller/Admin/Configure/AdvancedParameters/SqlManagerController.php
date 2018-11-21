@@ -173,7 +173,9 @@ class SqlManagerController extends FrameworkBundleAdminController
      */
     public function createAction(Request $request)
     {
-        $sqlRequestForm = $this->getSqlRequestFormBuilder()->getForm();
+        $data = $this->getSqlRequestDataFromRequest($request);
+
+        $sqlRequestForm = $this->getSqlRequestFormBuilder()->getForm($data);
         $sqlRequestForm->handleRequest($request);
 
         if ($this->getSqlRequestFormHandler()->handle($sqlRequestForm)) {
@@ -210,19 +212,19 @@ class SqlManagerController extends FrameworkBundleAdminController
     public function editAction($sqlRequestId, Request $request)
     {
         try {
-            $sqlRequestForm = $this->getSqlRequestFormHandler()->getFormFor($sqlRequestId);
+            $sqlRequestForm = $this->getSqlRequestFormBuilder()->getFormFor($sqlRequestId);
             $sqlRequestForm->handleRequest($request);
+
+            if ($this->getSqlRequestFormHandler()->handleFor($sqlRequestId, $sqlRequestForm)) {
+                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_sql_requests_index');
+            }
         } catch (SqlRequestNotFoundException $e) {
             $this->addFlash(
                 'error',
                 $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error')
             );
-
-            return $this->redirectToRoute('admin_sql_requests_index');
-        }
-
-        if ($this->getSqlRequestFormHandler()->handleFor($sqlRequestId, $sqlRequestForm)) {
-            $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
 
             return $this->redirectToRoute('admin_sql_requests_index');
         }
@@ -429,6 +431,28 @@ class SqlManagerController extends FrameworkBundleAdminController
     protected function getSqlRequestFormBuilder()
     {
         return $this->get('prestashop.core.form.builder.sql_request_form_builder');
+    }
+
+    /**
+     * When "Export to SQL Manager" feature is used,
+     * it adds "name" and "sql" to request's POST data
+     * which is used as default form data
+     * when creating SqlRequest.
+     *
+     * @param Request $request
+     *
+     * @return array
+     */
+    protected function getSqlRequestDataFromRequest(Request $request)
+    {
+        if ($request->request->has('sql') || $request->request->has('name')) {
+            return [
+                'sql' => $request->request->get('sql'),
+                'name' => $request->request->get('name'),
+            ];
+        }
+
+        return [];
     }
 
     /**

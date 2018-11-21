@@ -6,4 +6,3 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\SqlRequestFormDataProvider'
     arguments:
       - '@prestashop.core.query_bus'
-      - '@=service("request_stack").getMasterRequest()'
