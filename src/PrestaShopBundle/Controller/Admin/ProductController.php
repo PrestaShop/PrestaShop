@@ -896,16 +896,16 @@ class ProductController extends FrameworkBundleAdminController
             return $this->redirectToRoute('admin_product_catalog');
         }
 
-        /** @var ProductInterfaceProvider $productProvider */
+        /* @var $productProvider ProductInterfaceProvider */
         $productProvider = $this->get('prestashop.core.admin.data_provider.product_interface');
 
-        /** @var ProductInterfaceUpdater $productUpdater */
+        /* @var $productUpdater ProductInterfaceUpdater */
         $productUpdater = $this->get('prestashop.core.admin.data_updater.product_interface');
 
-        /** @var LoggerInterface $logger */
+        /* @var $logger LoggerInterface */
         $logger = $this->get('logger');
 
-        /** @var HookDispatcher $hookDispatcher */
+        /* @var $hookDispatcher HookDispatcher */
         $hookDispatcher = $this->get('prestashop.core.hook.dispatcher');
 
         try {
@@ -1163,10 +1163,15 @@ class ProductController extends FrameworkBundleAdminController
         $productProvider = $this->get('prestashop.core.admin.data_provider.product_interface');
 
         // we merge empty filter set with given values, to reset the other filters!
-        $productProvider->persistFilterParameters(array_merge(AdminFilter::getProductCatalogEmptyFilter(), [
-            'filter_column_sav_quantity' => ($quantity == 'none') ? '' : $quantity,
-            'filter_column_active' => ($active == 'none') ? '' : $active,
-        ]));
+        $productProvider->persistFilterParameters(
+            array_merge(
+                AdminFilter::getProductCatalogEmptyFilter(),
+                [
+                    'filter_column_sav_quantity' => ($quantity == 'none') ? '' : $quantity,
+                    'filter_column_active' => ($active == 'none') ? '' : $active,
+                ]
+            )
+        );
 
         return $this->redirectToRoute('admin_product_catalog');
     }
