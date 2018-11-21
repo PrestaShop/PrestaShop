@@ -147,7 +147,13 @@ class ProductController extends FrameworkBundleAdminController
         $toolbarButtons = $this->getToolbarButtons();
 
         // Fetch product list (and cache it into view subcall to listAction)
-        $products = $productProvider->getCatalogProductList($offset, $limit, $orderBy, $sortOrder, $request->request->all());
+        $products = $productProvider->getCatalogProductList(
+            $offset,
+            $limit,
+            $orderBy,
+            $sortOrder,
+            $request->request->all()
+        );
         $lastSql = $productProvider->getLastCompiledSql();
 
         $hasCategoryFilter = $productProvider->isCategoryFiltered();
