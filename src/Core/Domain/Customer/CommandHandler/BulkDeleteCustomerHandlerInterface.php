@@ -28,6 +28,9 @@ namespace PrestaShop\PrestaShop\Core\Domain\Customer\CommandHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\BulkDeleteCustomerCommand;
 
+/**
+ * Defines interface for customer bulk delete command handler.
+ */
 interface BulkDeleteCustomerHandlerInterface
 {
     /**

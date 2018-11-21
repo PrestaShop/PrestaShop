@@ -32,6 +32,8 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryHandler\GetCustomerForEditingHandlerInterface;
 
 /**
+ * Gets customer data that can be edited.
+ *
  * @internal
  */
 final class GetCustomerForEditingHandler implements GetCustomerForEditingHandlerInterface

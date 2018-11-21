@@ -28,7 +28,13 @@ namespace PrestaShop\PrestaShop\Core\Domain\Customer\CommandHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\DeleteCustomerCommand;
 
+/**
+ * Defines interface for handling command that deletes given customer.
+ */
 interface DeleteCustomerHandlerInterface
 {
+    /**
+     * @param DeleteCustomerCommand $command
+     */
     public function handle(DeleteCustomerCommand $command);
 }

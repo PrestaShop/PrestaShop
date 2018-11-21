@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Customer\CommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\BulkEnableCustomerCommand;
 
 /**
- * Defines API for EnableCustomerCommand command handler
+ * Defines interface for handling command that enables given customers.
  */
 interface BulkEnableCustomerHandlerInterface
 {

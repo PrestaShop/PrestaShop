@@ -28,6 +28,9 @@ namespace PrestaShop\PrestaShop\Core\Domain\Customer\CommandHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\EditCustomerCommand;
 
+/**
+ * Defines interface for handling customer editing command.
+ */
 interface EditCustomerHandlerInterface
 {
     /**

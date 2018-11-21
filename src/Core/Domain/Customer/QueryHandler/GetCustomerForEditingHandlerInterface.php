@@ -26,9 +26,18 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Customer\QueryHandler;
 
+use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\EditableCustomer;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForEditing;
 
+/**
+ * Defines interface for handler that gets customer data that can be edited.
+ */
 interface GetCustomerForEditingHandlerInterface
 {
+    /**
+     * @param GetCustomerForEditing $query
+     *
+     * @return EditableCustomer
+     */
     public function handle(GetCustomerForEditing $query);
 }

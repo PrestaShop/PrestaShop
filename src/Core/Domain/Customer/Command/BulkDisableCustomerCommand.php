@@ -28,6 +28,9 @@ namespace PrestaShop\PrestaShop\Core\Domain\Customer\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 
+/**
+ * Disables customers in bulk action.
+ */
 class BulkDisableCustomerCommand
 {
     /**

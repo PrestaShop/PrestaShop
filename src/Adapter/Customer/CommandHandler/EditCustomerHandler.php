@@ -31,6 +31,8 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Command\EditCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\CommandHandler\EditCustomerHandlerInterface;
 
 /**
+ * Handles commands which edits given customer with provided data.
+ *
  * @internal
  */
 final class EditCustomerHandler extends AbstractCustomerHandler implements EditCustomerHandlerInterface

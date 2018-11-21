@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Command\BulkEnableCustomerCommand
 use PrestaShop\PrestaShop\Core\Domain\Customer\CommandHandler\BulkEnableCustomerHandlerInterface;
 
 /**
- * Handles command which enables given customer.
+ * Handles command which enables given customers.
  *
  * @internal
  */

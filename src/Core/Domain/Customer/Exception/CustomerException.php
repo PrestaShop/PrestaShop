@@ -28,6 +28,9 @@ namespace PrestaShop\PrestaShop\Core\Domain\Customer\Exception;
 
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 
+/**
+ * Base exception for Customer sub-domain
+ */
 class CustomerException extends DomainException
 {
 }

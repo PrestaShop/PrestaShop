@@ -28,6 +28,9 @@ namespace PrestaShop\PrestaShop\Core\Domain\Customer\CommandHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\BulkDisableCustomerCommand;
 
+/**
+ * Defines interface for handling command that disables given customers.
+ */
 interface BulkDisableCustomerHandlerInterface
 {
     /**
