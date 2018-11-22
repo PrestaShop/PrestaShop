@@ -27,8 +27,8 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Supplier\Exception;
 
 /**
- * Class CannotDisableSupplierException
+ * Class CannotUpdateSupplierStatusException
  */
-class CannotDisableSupplierException extends SupplierException
+class CannotUpdateSupplierStatusException extends SupplierException
 {
 }

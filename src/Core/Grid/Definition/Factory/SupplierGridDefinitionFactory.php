@@ -215,7 +215,19 @@ final class SupplierGridDefinitionFactory extends AbstractGridDefinitionFactory
     protected function getBulkActions()
     {
         return (new BulkActionCollection())
-            ->add((new SubmitBulkAction('delete_supplier'))
+            ->add((new SubmitBulkAction('suppliers_enable_selection'))
+                ->setName($this->trans('Enable selection', [], 'Admin.Actions'))
+                ->setOptions([
+                    'submit_route' => 'admin_suppliers_bulk_enable',
+                ])
+            )
+            ->add((new SubmitBulkAction('suppliers_disable_selection'))
+                ->setName($this->trans('Disable selection', [], 'Admin.Actions'))
+                ->setOptions([
+                    'submit_route' => 'admin_suppliers_bulk_disable',
+                ])
+            )
+            ->add((new SubmitBulkAction('suppliers_delete'))
                 ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
                 ->setOptions([
                     'submit_route' => 'admin_suppliers_bulk_delete',

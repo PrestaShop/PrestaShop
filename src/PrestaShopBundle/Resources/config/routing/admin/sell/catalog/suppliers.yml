@@ -47,6 +47,20 @@ admin_suppliers_bulk_delete:
     _controller: 'PrestaShopBundle:Admin\Sell\Catalog\Supplier:bulkDelete'
     _legacy_controller: AdminSuppliers
 
+admin_suppliers_bulk_enable:
+  path: /bulk-enable
+  methods: POST
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Sell\Catalog\Supplier:bulkEnable'
+    _legacy_controller: AdminSuppliers
+
+admin_suppliers_bulk_disable:
+  path: /bulk-disable
+  methods: POST
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Sell\Catalog\Supplier:bulkDisable'
+    _legacy_controller: AdminSuppliers
+
 admin_suppliers_toggle_status:
   path: /{supplierId}/toggle-status
   methods: POST
