@@ -37,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ImageColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\LinkColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ToggleColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
@@ -102,6 +103,12 @@ final class SupplierGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setName($this->trans('ID', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'id_supplier',
+                ])
+            )
+            ->add((new ImageColumn('logo'))
+                ->setName($this->trans('Logo', [], 'Admin.Global'))
+                ->setOptions([
+                    'src_field' => 'logo',
                 ])
             )
             ->add((new LinkColumn('name'))
