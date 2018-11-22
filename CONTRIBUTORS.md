@@ -155,7 +155,7 @@ GitHub contributors:
 - Gabriel Schwardy
 - Gaelle ITZKOVITZ
 - Gamesh
-- Geoffray
+- Geoffray Warnants
 - gfilippakis
 - ggedamed
 - Giant Leap Lab
