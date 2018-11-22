@@ -75,6 +75,6 @@ class CategoryId
             );
         }
 
-        $this->categoryId = $categoryId;
+        $this->categoryId = (int) $categoryId;
     }
 }
