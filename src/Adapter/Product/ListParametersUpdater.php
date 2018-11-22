@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Exception\ProductException;
  * Can manage filter parameters from request in Product Catalogue Page.
  * For internal use only.
  */
-final class FilterParametersUpdater
+final class ListParametersUpdater
 {
     /**
      * In case of position ordering all the filters should be reset.
@@ -65,7 +65,7 @@ final class FilterParametersUpdater
      *
      * @throws ProductException
      */
-    public function buildFilters(
+    public function buildListParameters(
         array $queryFilterParameters,
         array $persistedFilterParameters,
         array $defaultFilterParameters

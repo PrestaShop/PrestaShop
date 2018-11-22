@@ -27,7 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin;
 
 use Exception;
-use PrestaShop\PrestaShop\Adapter\Product\FilterParametersUpdater;
+use PrestaShop\PrestaShop\Adapter\Product\ListParametersUpdater;
 use PrestaShop\PrestaShop\Adapter\Tax\TaxRuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Warehouse\WarehouseDataProvider;
 use PrestaShopBundle\Component\CsvResponse;
@@ -60,6 +60,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use PrestaShopBundle\Form\Admin\Product\ProductCategories;
 use Product;
+use Category;
 use Tools;
 
 /**
@@ -122,21 +123,26 @@ class ProductController extends FrameworkBundleAdminController
         $request->getSession()->set('_locale', $language->locale);
         $request = $this->get('prestashop.adapter.product.filter_categories_request_purifier')->purify($request);
 
-        /* @var $productProvider ProductInterfaceProvider */
+        /** @var ProductInterfaceProvider $productProvider */
         $productProvider = $this->get('prestashop.core.admin.data_provider.product_interface');
 
         // Set values from persistence and replace in the request
         $persistedFilterParameters = $productProvider->getPersistedFilterParameters();
-        /** @var FilterParametersUpdater $filterParametersUpdater */
-        $filterParametersUpdater = $this->get('prestashop.adapter.product.filter_parameters_updater');
-        $filters = $filterParametersUpdater->buildFilters(
+        /** @var ListParametersUpdater $listParametersUpdater */
+        $listParametersUpdater = $this->get('prestashop.adapter.product.list_parameters_updater');
+        $listParameters = $listParametersUpdater->buildListParameters(
             $request->query->all(),
             $persistedFilterParameters,
             compact('offset', 'limit', 'orderBy', 'sortOrder')
         );
-        extract($filters);
+        $offset = $listParameters['offset'];
+        $limit = $listParameters['limit'];
+        $orderBy = $listParameters['orderBy'];
+        $sortOrder = $listParameters['sortOrder'];
 
-        $persistedFilterParameters = array_replace($persistedFilterParameters, $request->request->all());
+        //The product provider performs the same merge internally, so we do the same so that the displayed filters are
+        //consistent with the request ones
+        $combinedFilterParameters = array_replace($persistedFilterParameters, $request->request->all());
 
         $toolbarButtons = $this->getToolbarButtons();
 
@@ -166,26 +172,31 @@ class ProductController extends FrameworkBundleAdminController
             $paginationParameters = $request->attributes->all();
             $paginationParameters['_route'] = 'admin_product_catalog';
             $categoriesForm = $this->createForm(ProductCategories::class);
-            if (!empty($persistedFilterParameters['filter_category'])) {
+            if (!empty($combinedFilterParameters['filter_category'])) {
                 $categoriesForm->setData(
                     [
                         'categories' => [
-                            'tree' => [0 => $persistedFilterParameters['filter_category']],
+                            'tree' => [0 => $combinedFilterParameters['filter_category']],
                         ],
                     ]
                 );
             }
         }
 
-        $cleanFilterParameters = $filterParametersUpdater->cleanFiltersForPositionOrdering($persistedFilterParameters, $orderBy, $hasCategoryFilter);
+        $cleanFilterParameters = $listParametersUpdater->cleanFiltersForPositionOrdering($combinedFilterParameters, $orderBy, $hasCategoryFilter);
 
         $permissionError = null;
         if ($this->get('session')->getFlashBag()->has('permission_error')) {
             $permissionError = $this->get('session')->getFlashBag()->get('permission_error')[0];
         }
 
-        $activateDragAndDrop = ('position_ordering' === $orderBy)
-            || ('position' === $orderBy && 'asc' === $sortOrder && !$hasColumnFilter);
+        $categoriesFormView = $categoriesForm->createView();
+        $selectedCategory = !empty($combinedFilterParameters['filter_category']) ? new Category($combinedFilterParameters['filter_category']) : null;
+
+        //Drag and drop is ONLY activated when EXPLICITLY requested by the user
+        //Meaning a category is selected and the user clicks on REORDER button
+        $activateDragAndDrop = 'position_ordering' === $orderBy && $hasCategoryFilter;
+
         // Template vars injection
         return array_merge(
             $cleanFilterParameters,
@@ -196,6 +207,7 @@ class ProductController extends FrameworkBundleAdminController
                 'sortOrder' => $sortOrder,
                 'has_filter' => $hasCategoryFilter || $hasColumnFilter,
                 'has_category_filter' => $hasCategoryFilter,
+                'selected_category' => $selectedCategory,
                 'has_column_filter' => $hasColumnFilter,
                 'products' => $products,
                 'last_sql' => $lastSql,
@@ -204,7 +216,7 @@ class ProductController extends FrameworkBundleAdminController
                 'activate_drag_and_drop' => $activateDragAndDrop,
                 'pagination_parameters' => $paginationParameters,
                 'layoutHeaderToolbarBtn' => $toolbarButtons,
-                'categories' => $categoriesForm->createView(),
+                'categories' => $categoriesFormView,
                 'pagination_limit_choices' => $productProvider->getPaginationLimitChoices(),
                 'import_link' => $this->generateUrl('admin_import', ['import_type' => 'products']),
                 'sql_manager_add_link' => $this->get('prestashop.adapter.legacy.context')->getAdminLink('AdminRequestSql', true, ['addrequest_sql' => 1]),
@@ -241,7 +253,7 @@ class ProductController extends FrameworkBundleAdminController
         $sortOrder = 'asc',
         $view = 'full'
     ) {
-        /* @var $productProvider ProductInterfaceProvider */
+        /** @var ProductInterfaceProvider $productProvider */
         $productProvider = $this->get('prestashop.core.admin.data_provider.product_interface');
         $adminProductWrapper = $this->get('prestashop.adapter.admin.wrapper.product');
         $totalCount = 0;
@@ -254,14 +266,17 @@ class ProductController extends FrameworkBundleAdminController
         if ($products === null) {
             // get old values from persistence (before the current update)
             $persistedFilterParameters = $productProvider->getPersistedFilterParameters();
-            /** @var FilterParametersUpdater $filterParametersUpdater */
-            $filterParametersUpdater = $this->get('prestashop.adapter.product.filter_parameters_updater');
-            $filters = $filterParametersUpdater->buildFilters(
+            /** @var ListParametersUpdater $listParametersUpdater */
+            $listParametersUpdater = $this->get('prestashop.adapter.product.list_parameters_updater');
+            $listParameters = $listParametersUpdater->buildListParameters(
                 $request->query->all(),
                 $persistedFilterParameters,
                 compact('offset', 'limit', 'orderBy', 'sortOrder')
             );
-            extract($filters);
+            $offset = $listParameters['offset'];
+            $limit = $listParameters['limit'];
+            $orderBy = $listParameters['orderBy'];
+            $sortOrder = $listParameters['sortOrder'];
 
             /**
              * 2 hooks are triggered here:
@@ -272,7 +287,7 @@ class ProductController extends FrameworkBundleAdminController
             $lastSql = $productProvider->getLastCompiledSql();
         }
 
-        $hasColumnFilter = $productProvider->isColumnFiltered();
+        $hasCategoryFilter = $productProvider->isCategoryFiltered();
 
         // Adds controller info (URLs, etc...) to product list
         foreach ($products as &$product) {
@@ -291,10 +306,13 @@ class ProductController extends FrameworkBundleAdminController
             $product['preview_url'] = $adminProductWrapper->getPreviewUrlFromId($product['id_product']);
         }
 
+        //Drag and drop is ONLY activated when EXPLICITLY requested by the user
+        //Meaning a category is selected and the user clicks on REORDER button
+        $activateDragAndDrop = 'position_ordering' === $orderBy && $hasCategoryFilter;
+
         // Template vars injection
         $vars = array(
-            'activate_drag_and_drop' => ('position_ordering' === $orderBy)
-            || ('position' === $orderBy && 'asc' === $sortOrder && !$hasColumnFilter),
+            'activate_drag_and_drop' => $activateDragAndDrop,
             'products' => $products,
             'product_count' => $totalCount,
             'last_sql_query' => $lastSql,
@@ -351,7 +369,7 @@ class ProductController extends FrameworkBundleAdminController
         $productProvider = $this->get('prestashop.core.admin.data_provider.product_interface');
         $languages = $this->get('prestashop.adapter.legacy.context')->getLanguages();
 
-        /* @var $productProvider ProductInterfaceProvider */
+        /** @var ProductInterfaceProvider $productProvider */
         $productAdapter = $this->get('prestashop.adapter.data_provider.product');
         $productShopCategory = $this->getContext()->shop->id_category;
 
@@ -548,11 +566,11 @@ class ProductController extends FrameworkBundleAdminController
             throw $e;
         }
 
+        /** @var StockInterface $stockManager */
         $stockManager = $this->get('prestashop.core.data_provider.stock_interface');
-        /* @var $stockManager StockInterface */
 
+        /** @var WarehouseDataProvider $warehouseProvider */
         $warehouseProvider = $this->get('prestashop.adapter.data_provider.warehouse');
-        /* @var $warehouseProvider WarehouseDataProvider */
 
         //If context shop is define to a group shop, disable the form
         if ($shopContext->isShopGroupContext()) {
@@ -682,15 +700,15 @@ class ProductController extends FrameworkBundleAdminController
         }
 
         $productIdList = $request->request->get('bulk_action_selected_products');
+        /** @var ProductInterfaceUpdater $productUpdater */
         $productUpdater = $this->get('prestashop.core.admin.data_updater.product_interface');
-        /* @var $productUpdater ProductInterfaceUpdater */
 
+        /** @var LoggerInterface $logger */
         $logger = $this->get('logger');
-        /* @var $logger LoggerInterface */
 
         $hookEventParameters = ['product_list_id' => $productIdList];
+        /** @var HookDispatcher $hookDispatcher */
         $hookDispatcher = $this->get('prestashop.core.hook.dispatcher');
-        /* @var $hookDispatcher HookDispatcher */
 
         try {
             $hasMessages = $this->get('session')->getFlashBag()->has('success');
@@ -842,17 +860,17 @@ class ProductController extends FrameworkBundleAdminController
             return $this->redirectToRoute('admin_product_catalog');
         }
 
+        /** @var ProductInterfaceProvider $productProvider */
         $productProvider = $this->get('prestashop.core.admin.data_provider.product_interface');
-        /* @var $productProvider ProductInterfaceProvider */
 
+        /** @var ProductInterfaceUpdater $productUpdater */
         $productUpdater = $this->get('prestashop.core.admin.data_updater.product_interface');
-        /* @var $productUpdater ProductInterfaceUpdater */
 
+        /** @var LoggerInterface $logger */
         $logger = $this->get('logger');
-        /* @var $logger LoggerInterface */
 
+        /** @var HookDispatcher $hookDispatcher */
         $hookDispatcher = $this->get('prestashop.core.hook.dispatcher');
-        /* @var $hookDispatcher HookDispatcher */
 
         try {
             switch ($action) {
@@ -944,14 +962,14 @@ class ProductController extends FrameworkBundleAdminController
         }
 
         $productUpdater = $this->get('prestashop.core.admin.data_updater.product_interface');
-        /* @var $productUpdater ProductInterfaceUpdater */
+        /** @var ProductInterfaceUpdater $productUpdater */
 
+        /** @var LoggerInterface $logger */
         $logger = $this->get('logger');
-        /* @var $logger LoggerInterface */
 
         $hookEventParameters = ['product_id' => $id];
+        /** @var HookDispatcher $hookDispatcher */
         $hookDispatcher = $this->get('prestashop.core.hook.dispatcher');
-        /* @var $hookDispatcher HookDispatcher */
 
         try {
             if ($this->isDemoModeEnabled()) {
@@ -1093,8 +1111,8 @@ class ProductController extends FrameworkBundleAdminController
     {
         $quantity = urldecode($quantity);
 
+        /** @var ProductInterfaceProvider $productProvider */
         $productProvider = $this->get('prestashop.core.admin.data_provider.product_interface');
-        /* @var $productProvider ProductInterfaceProvider */
 
         // we merge empty filter set with given values, to reset the other filters!
         $productProvider->persistFilterParameters(array_merge(AdminFilter::getProductCatalogEmptyFilter(), [
