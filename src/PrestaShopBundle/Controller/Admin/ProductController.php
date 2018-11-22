@@ -119,6 +119,11 @@ class ProductController extends FrameworkBundleAdminController
             return $this->redirect('admin_dashboard');
         }
 
+        // Only ordering position when order is asc
+        if ('position_ordering' === $orderBy) {
+            $sortOrder = 'asc';
+        }
+
         $language = $this->getContext()->language;
         $request->getSession()->set('_locale', $language->locale);
         $request = $this->get('prestashop.adapter.product.filter_categories_request_purifier')->purify($request);
@@ -270,6 +275,11 @@ class ProductController extends FrameworkBundleAdminController
         $productProvider = $this->get('prestashop.core.admin.data_provider.product_interface');
         $adminProductWrapper = $this->get('prestashop.adapter.admin.wrapper.product');
         $totalCount = 0;
+
+        // Only ordering position when order is asc
+        if ('position_ordering' === $orderBy) {
+            $sortOrder = 'asc';
+        }
 
         $this->get('prestashop.service.product')->cleanupOldTempProducts();
 
@@ -908,9 +918,14 @@ class ProductController extends FrameworkBundleAdminController
         /* @var $hookDispatcher HookDispatcher */
         $hookDispatcher = $this->get('prestashop.core.hook.dispatcher');
 
+        /* Initialize router params variable. */
+        $routerParams = [];
         try {
             switch ($action) {
                 case 'sort':
+                    /* Change position_ordering to position */
+                    $routerParams['orderBy'] = 'position';
+
                     $productIdList = $request->request->get('mass_edit_action_sorted_products');
                     $productPositionList = $request->request->get('mass_edit_action_sorted_positions');
                     $hookEventParameters = [
@@ -976,7 +991,7 @@ class ProductController extends FrameworkBundleAdminController
 
         $urlGenerator = $this->get('prestashop.core.admin.url_generator');
 
-        return $this->redirect($urlGenerator->generate('admin_product_catalog'));
+        return $this->redirect($urlGenerator->generate('admin_product_catalog', $routerParams));
     }
 
     /**
