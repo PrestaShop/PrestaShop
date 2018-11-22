@@ -48,7 +48,7 @@ final class SupplierLogoThumbnailProvider implements ImageProviderInterface
 
     /**
      * @param ImageTagSourceParserInterface $imageTagSourceParser
-     * @param $contextShopId
+     * @param int $contextShopId
      */
     public function __construct(
         ImageTagSourceParserInterface $imageTagSourceParser,
