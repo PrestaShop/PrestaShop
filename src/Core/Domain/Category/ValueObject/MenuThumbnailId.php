@@ -24,49 +24,59 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Category\Command;
+namespace PrestaShop\PrestaShop\Core\Domain\Category\ValueObject;
 
-use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
-use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\MenuThumbnailId;
+use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryException;
 
 /**
- * Deletes given menu thumbnail for category.
+ * Stores id for category's menu thumbnail image.
  */
-class DeleteCategoryMenuThumbnailImageCommand
+class MenuThumbnailId
 {
     /**
-     * @var CategoryId
+     * @var array Category is of having maximum of 3 menu thumbnails with defined Ids.
      */
-    private $categoryId;
+    const ALLOWED_ID_VALUES = [0, 1, 2];
 
     /**
-     * @var MenuThumbnailId
+     * @var int
      */
     private $menuThumbnailId;
 
     /**
-     * @param CategoryId $categoryId
-     * @param MenuThumbnailId $menuThumbnailId
+     * @param int $menuThumbnailId
      */
-    public function __construct(CategoryId $categoryId, MenuThumbnailId $menuThumbnailId)
+    public function __construct($menuThumbnailId)
     {
-        $this->categoryId = $categoryId;
+        $this->assertMenuThumbnailIsWithinAllowedValueRange($menuThumbnailId);
+
         $this->menuThumbnailId = $menuThumbnailId;
     }
 
     /**
-     * @return CategoryId
+     * @return int
      */
-    public function getCategoryId()
+    public function getValue()
     {
-        return $this->categoryId;
+        return $this->menuThumbnailId;
     }
 
     /**
-     * @return MenuThumbnailId
+     * @param int $menuThumbnailId
      */
-    public function getMenuThumbnailId()
+    private function assertMenuThumbnailIsWithinAllowedValueRange($menuThumbnailId)
     {
-        return $this->menuThumbnailId;
+        if (!is_numeric($menuThumbnailId)
+            || empty($menuThumbnailId)
+            || !in_array($menuThumbnailId, self::ALLOWED_ID_VALUES)
+        ) {
+            throw new CategoryException(
+                sprintf(
+                    'Category menu  thumbnail id "%s" invalid. Available values are: %s',
+                    var_export($menuThumbnailId, true),
+                    implode(',', self::ALLOWED_ID_VALUES)
+                )
+            );
+        }
     }
 }

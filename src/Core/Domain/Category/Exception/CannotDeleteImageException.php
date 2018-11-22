@@ -24,49 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Category\Command;
-
-use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
-use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\MenuThumbnailId;
+namespace PrestaShop\PrestaShop\Core\Domain\Category\Exception;
 
 /**
- * Deletes given menu thumbnail for category.
+ * Thrown when category image was attempted to delete but failed.
  */
-class DeleteCategoryMenuThumbnailImageCommand
+class CannotDeleteImageException extends CategoryException
 {
     /**
-     * @var CategoryId
+     * Error codes to specify which type of image were not deleted.
      */
-    private $categoryId;
-
-    /**
-     * @var MenuThumbnailId
-     */
-    private $menuThumbnailId;
-
-    /**
-     * @param CategoryId $categoryId
-     * @param MenuThumbnailId $menuThumbnailId
-     */
-    public function __construct(CategoryId $categoryId, MenuThumbnailId $menuThumbnailId)
-    {
-        $this->categoryId = $categoryId;
-        $this->menuThumbnailId = $menuThumbnailId;
-    }
-
-    /**
-     * @return CategoryId
-     */
-    public function getCategoryId()
-    {
-        return $this->categoryId;
-    }
-
-    /**
-     * @return MenuThumbnailId
-     */
-    public function getMenuThumbnailId()
-    {
-        return $this->menuThumbnailId;
-    }
+    const COVER_IMAGE = 1;
+    const THUMBNAIL_IMAGE = 2;
+    const MENU_THUMBNAIL_IMAGE = 3;
 }
