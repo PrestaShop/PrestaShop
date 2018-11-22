@@ -129,6 +129,7 @@ services:
         class: 'PrestaShop\PrestaShop\Core\Grid\Data\Factory\SupplierGridDataFactory'
         arguments:
             - '@prestashop.core.grid.data_provider.supplier'
+            - '@prestashop.adapter.supplier.provider.supplier_logo'
 
     # Grid definition factories
     prestashop.core.grid.definition.factory.abstract_grid_definition:
