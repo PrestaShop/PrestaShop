@@ -119,11 +119,6 @@ class ProductController extends FrameworkBundleAdminController
             return $this->redirect('admin_dashboard');
         }
 
-        // Only ordering position when order is asc
-        if ('position_ordering' === $orderBy) {
-            $sortOrder = 'asc';
-        }
-
         $language = $this->getContext()->language;
         $request->getSession()->set('_locale', $language->locale);
         $request = $this->get('prestashop.adapter.product.filter_categories_request_purifier')->purify($request);
@@ -275,11 +270,6 @@ class ProductController extends FrameworkBundleAdminController
         $productProvider = $this->get('prestashop.core.admin.data_provider.product_interface');
         $adminProductWrapper = $this->get('prestashop.adapter.admin.wrapper.product');
         $totalCount = 0;
-
-        // Only ordering position when order is asc
-        if ('position_ordering' === $orderBy) {
-            $sortOrder = 'asc';
-        }
 
         $this->get('prestashop.service.product')->cleanupOldTempProducts();
 

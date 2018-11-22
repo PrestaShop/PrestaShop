@@ -70,12 +70,42 @@ final class ListParametersUpdater
         array $persistedFilterParameters,
         array $defaultFilterParameters
     ) {
-        return [
-            'offset' => (int) $this->getParameter('offset', $queryFilterParameters, $persistedFilterParameters, $defaultFilterParameters),
-            'limit' => (int) $this->getParameter('limit', $queryFilterParameters, $persistedFilterParameters, $defaultFilterParameters),
-            'orderBy' => (string) $this->getParameter('orderBy', $queryFilterParameters, $persistedFilterParameters, $defaultFilterParameters),
-            'sortOrder' => (string) $this->getParameter('sortOrder', $queryFilterParameters, $persistedFilterParameters, $defaultFilterParameters),
+        $filters = [
+            'offset' => (int) $this->getParameter(
+                'offset',
+                $queryFilterParameters,
+                $persistedFilterParameters,
+                $defaultFilterParameters
+            ),
+            'limit' => (int) $this->getParameter(
+                'limit',
+                $queryFilterParameters,
+                $persistedFilterParameters,
+                $defaultFilterParameters
+            ),
+            'orderBy' => (string) $this->getParameter(
+                'orderBy',
+                $queryFilterParameters,
+                $persistedFilterParameters,
+                $defaultFilterParameters
+            ),
+            'sortOrder' => (string) $this->getParameter(
+                'sortOrder',
+                $queryFilterParameters,
+                $persistedFilterParameters,
+                $defaultFilterParameters
+            ),
         ];
+
+        /**
+         * We need to force the sort order when the order by
+         * is set to position_ordering
+         */
+        if ('position_ordering' === $filters['orderBy']) {
+            $filters['sortOrder'] = 'asc';
+        }
+
+        return $filters;
     }
 
     /**
