@@ -39,6 +39,7 @@ use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierException;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\SupplierId;
 use PrestaShop\PrestaShop\Core\Search\Filters\SupplierFilters;
+use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
@@ -203,8 +204,34 @@ class SupplierController extends FrameworkBundleAdminController
         return $this->redirect($legacyLink);
     }
 
-    public function exportAction()
+    public function exportAction(SupplierFilters $filters)
     {
+        $supplierGridFactory = $this->get('prestashop.core.grid.factory.supplier');
+        $supplierGrid = $supplierGridFactory->getGrid($filters);
+
+        $headers = [
+            'id_supplier' => $this->trans('ID', 'Admin.Global'),
+            'name' => $this->trans('Name', 'Admin.Global'),
+            'products_count' => $this->trans('Number of products', 'Admin.Catalog.Feature'),
+            'active' => $this->trans('Enabled', 'Admin.Global'),
+        ];
+
+        $data = [];
+
+        foreach ($supplierGrid->getData()->getRecords()->all() as $record) {
+            $data[] = [
+                'id_supplier' => $record['id_supplier'],
+                'name' => $record['name'],
+                'products_count' => $record['products_count'],
+                'active' => $record['active'],
+            ];
+        }
+
+        return (new CsvResponse())
+            ->setData($data)
+            ->setHeadersData($headers)
+            ->setFileName('supplier_' . date('Y-m-d_His') . '.csv')
+        ;
     }
 
     /**
