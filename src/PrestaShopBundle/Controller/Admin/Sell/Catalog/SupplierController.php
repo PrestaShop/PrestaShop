@@ -203,6 +203,10 @@ class SupplierController extends FrameworkBundleAdminController
         return $this->redirect($legacyLink);
     }
 
+    public function exportAction()
+    {
+    }
+
     /**
      * Gets error by exception type.
      *
