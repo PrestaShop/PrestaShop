@@ -38,7 +38,7 @@ class ImageTagSourceParserTest extends TestCase
 
     public function setUp()
     {
-        $this->parser = new ImageTagSourceParser('/my-shop');
+        $this->parser = new ImageTagSourceParser('/my-shop/');
     }
 
     /**
