@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Command\BulkDeleteSupplierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Command\BulkDisableSupplierCommand;
+use PrestaShop\PrestaShop\Core\Domain\Supplier\Command\BulkEnableSupplierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Command\DeleteSupplierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Command\ToggleSupplierStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\CannotDeleteSupplierException;
@@ -148,8 +149,21 @@ class SupplierController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_suppliers_index');
     }
 
-    public function bulkEnableAction()
+    public function bulkEnableAction(Request $request)
     {
+        $suppliersToDisable = $request->request->get('suppliers_bulk');
+
+        try {
+            $this->getCommandBus()->handle(new BulkEnableSupplierCommand($suppliersToDisable));
+            $this->addFlash(
+                'success',
+                $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
+            );
+        } catch (SupplierException $exception) {
+            $this->addFlash('error', $this->handleException($exception));
+        }
+
+        return $this->redirectToRoute('admin_suppliers_index');
     }
 
     public function editAction($supplierId)
