@@ -193,9 +193,7 @@
   }
   .module-actions {
     display: flex;
-    justify-content: center;
-    position: relative;
-    bottom: -25px;
+    justify-content: flex-end;
 
     .dropdown-menu {
       right: 10px;
@@ -203,14 +201,6 @@
     }
     .btn-group, .btn {
       width: 100%;
-    }
-  }
-}
-
-.module-item-wrapper-list {
-  .module-actions {
-    .btn:first-of-type {
-      margin-right: 10px;
     }
   }
 }
@@ -657,7 +647,7 @@ form#importDropzone {
   display: none;
 }
 
-.form-action-button-container {
+.module-actions {
   // @toDo: move to ui kit
   .dropdown-toggle-split-text {
     color: #AEAEAE;
