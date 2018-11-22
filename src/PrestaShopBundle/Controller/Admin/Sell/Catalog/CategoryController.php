@@ -29,6 +29,8 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\AbstractCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddRootCategoryCommand;
+use PrestaShop\PrestaShop\Core\Domain\Category\Command\DeleteCategoryCoverImageCommand;
+use PrestaShop\PrestaShop\Core\Domain\Category\Command\DeleteCategoryMenuThumbnailImageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\EditCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\EditRootCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\EditableCategory;
@@ -36,6 +38,7 @@ use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryConstraintExcep
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\MenuThumbnailId;
 use PrestaShop\PrestaShop\Core\Domain\Group\DefaultGroups;
 use PrestaShop\PrestaShop\Core\Domain\Group\Query\GetDefaultGroups;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -60,6 +63,7 @@ use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Class CategoryController is responsible for "Sell > Catalog > Categories" page.
@@ -337,6 +341,70 @@ class CategoryController extends FrameworkBundleAdminController
             'editRootCategoryForm' => $rootCategoryForm->createView(),
             'editableCategory' => $editableCategory,
             'defaultGroups' => $defaultGroups,
+        ]);
+    }
+
+    /**
+     * Deletes category cover image.
+     *
+     * @param Request $request
+     * @param int $categoryId
+     *
+     * @return RedirectResponse
+     */
+    public function deleteCoverImageAction(Request $request, $categoryId)
+    {
+        if (!$this->isCsrfTokenValid('delete-cover-image', $request->request->get('_csrf_token'))) {
+            return $this->redirectToRoute('admin_security_compromised', [
+                'uri' => $this->generateUrl('admin_category_edit', [
+                    'categoryId' => $categoryId,
+                ], UrlGeneratorInterface::ABSOLUTE_URL),
+            ]);
+        }
+
+        $this->getCommandBus()->handle(new DeleteCategoryCoverImageCommand(new CategoryId($categoryId)));
+
+        $this->addFlash(
+            'success',
+            $this->trans('The image was successfully deleted.', 'Admin.Notifications.Success')
+        );
+
+        return $this->redirectToRoute('admin_category_edit', [
+            'categoryId' => $categoryId,
+        ]);
+    }
+
+    /**
+     * Delete given menu thumbnail for category.
+     *
+     * @param Request $request
+     * @param int $categoryId
+     * @param int $menuThumbnailId
+     *
+     * @return RedirectResponse
+     */
+    public function deleteMenuThumbnailAction(Request $request, $categoryId, $menuThumbnailId)
+    {
+        if (!$this->isCsrfTokenValid('delete-menu-thumbnail', $request->request->get('_csrf_token'))) {
+            return $this->redirectToRoute('admin_security_compromised', [
+                'uri' => $this->generateUrl('admin_category_edit', [
+                    'categoryId' => $categoryId,
+                ], UrlGeneratorInterface::ABSOLUTE_URL),
+            ]);
+        }
+
+        $this->getCommandBus()->handle(new DeleteCategoryMenuThumbnailImageCommand(
+            new CategoryId($categoryId),
+            new MenuThumbnailId($menuThumbnailId)
+        ));
+
+        $this->addFlash(
+            'success',
+            $this->trans('The image was successfully deleted.', 'Admin.Notifications.Success')
+        );
+
+        return $this->redirectToRoute('admin_category_edit', [
+            'categoryId' => $categoryId,
         ]);
     }
 
