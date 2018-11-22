@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Grid\Data\Factory;
 use PrestaShop\PrestaShop\Core\Grid\Data\GridData;
 use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollection;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
+use PrestaShop\PrestaShop\Core\Image\ImageProviderInterface;
 
 /**
  * Class SupplierGridDataFactory gets data for supplier grid.
@@ -41,11 +42,19 @@ final class SupplierGridDataFactory implements GridDataFactoryInterface
     private $supplierDataFactory;
 
     /**
+     * @var ImageProviderInterface
+     */
+    private $supplierLogoImageProvider;
+
+    /**
      * @param GridDataFactoryInterface $supplierDataFactory
      */
-    public function __construct(GridDataFactoryInterface $supplierDataFactory)
-    {
+    public function __construct(
+        GridDataFactoryInterface $supplierDataFactory,
+        ImageProviderInterface $supplierLogoImageProvider
+    ) {
         $this->supplierDataFactory = $supplierDataFactory;
+        $this->supplierLogoImageProvider = $supplierLogoImageProvider;
     }
 
     /**
@@ -74,7 +83,7 @@ final class SupplierGridDataFactory implements GridDataFactoryInterface
     private function applyModification(array $suppliers)
     {
         foreach ($suppliers as $i => $supplier) {
-            $suppliers[$i]['logo'] = '';
+            $suppliers[$i]['logo'] = $this->supplierLogoImageProvider->getPath($supplier['id_supplier']);
         }
 
         return $suppliers;

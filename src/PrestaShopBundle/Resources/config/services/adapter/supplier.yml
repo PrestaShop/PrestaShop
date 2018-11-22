@@ -2,6 +2,12 @@ services:
   _defaults:
     public: true
 
+  prestashop.adapter.supplier.provider.supplier_logo:
+    class: 'PrestaShop\PrestaShop\Adapter\Supplier\SupplierLogoThumbnailProvider'
+    arguments:
+      - '@prestashop.core.image.parser.image_tag_source_parser'
+      - "@=service('prestashop.adapter.legacy.context').getContext().shop.id"
+
 # Command handlers
 
   prestashop.adapter.supplier.command_handler.toggle_supplier_status_handler:
