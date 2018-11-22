@@ -67,7 +67,7 @@ final class SupplierLogoThumbnailProvider implements ImageProviderInterface
 
         $imageTag = ImageManager::thumbnail(
             $pathToImage,
-            'lang_mini_' . $supplierId . '_' . $this->contextShopId . '.jpg',
+            'supplier_mini_' . $supplierId . '_' . $this->contextShopId . '.jpg',
             HelperList::LIST_THUMBNAIL_SIZE
         );
 
