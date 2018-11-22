@@ -67,3 +67,10 @@ admin_suppliers_toggle_status:
   defaults:
     _controller: 'PrestaShopBundle:Admin\Sell\Catalog\Supplier:toggleStatus'
     _legacy_controller: AdminSuppliers
+
+admin_suppliers_export:
+  path: /export
+  methods: POST
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Sell\Catalog\Supplier:export'
+    _legacy_controller: AdminSuppliers

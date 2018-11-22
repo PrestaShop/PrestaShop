@@ -28,9 +28,12 @@ namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\SubmitBulkAction;
+use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\SubmitRowAction;
+use PrestaShop\PrestaShop\Core\Grid\Action\Type\LinkGridAction;
+use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
@@ -233,6 +236,44 @@ final class SupplierGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'submit_route' => 'admin_suppliers_bulk_delete',
                     'confirm_message' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
                 ])
+            )
+        ;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getGridActions()
+    {
+        return (new GridActionCollection())
+            ->add((new LinkGridAction('import'))
+                ->setName($this->trans('Import', [], 'Admin.Actions'))
+                ->setIcon('cloud_upload')
+                ->setOptions([
+                    'route' => 'admin_import',
+                    'route_params' => [
+                        'import_type' => 'suppliers',
+                    ],
+                ])
+            )
+            ->add((new LinkGridAction('export'))
+                ->setName($this->trans('Export', [], 'Admin.Actions'))
+                ->setIcon('cloud_download')
+                ->setOptions([
+                    'route' => 'admin_suppliers_export',
+                ])
+            )
+            ->add((new SimpleGridAction('common_refresh_list'))
+                ->setName($this->trans('Refresh list', [], 'Admin.Advparameters.Feature'))
+                ->setIcon('refresh')
+            )
+            ->add((new SimpleGridAction('common_show_query'))
+                ->setName($this->trans('Show SQL query', [], 'Admin.Actions'))
+                ->setIcon('code')
+            )
+            ->add((new SimpleGridAction('common_export_sql_manager'))
+                ->setName($this->trans('Export to SQL Manager', [], 'Admin.Actions'))
+                ->setIcon('storage')
             )
         ;
     }

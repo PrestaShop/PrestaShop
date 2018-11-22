@@ -31,6 +31,8 @@ import ColumnTogglingExtension from "../../components/grid/extension/column-togg
 import SubmitRowActionExtension from "../../components/grid/extension/action/row/submit-row-action-extension";
 import BulkActionCheckboxExtension from "../../components/grid/extension/bulk-action-checkbox-extension";
 import SubmitBulkActionExtension from "../../components/grid/extension/submit-bulk-action-extension";
+import ReloadListExtension from "../../components/grid/extension/reload-list-extension";
+import ExportToSqlManagerExtension from "../../components/grid/extension/export-to-sql-manager-extension";
 
 const $ = window.$;
 
@@ -43,4 +45,6 @@ $(() => {
   supplierGrid.addExtension(new SubmitRowActionExtension());
   supplierGrid.addExtension(new BulkActionCheckboxExtension());
   supplierGrid.addExtension(new SubmitBulkActionExtension());
+  supplierGrid.addExtension(new ReloadListExtension());
+  supplierGrid.addExtension(new ExportToSqlManagerExtension());
 });
