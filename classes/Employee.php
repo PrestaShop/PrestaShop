@@ -644,10 +644,12 @@ class EmployeeCore extends ObjectModel
     public static function setLastConnectionDate($idEmployee)
     {
         return Db::getInstance()->execute('
-			UPDATE `' . _DB_PREFIX_ . 'employee`
-			SET `last_connection_date` = CURRENT_DATE()
-			WHERE `id_employee` = ' . (int) $idEmployee . ' AND `last_connection_date`< CURRENT_DATE()
-		');
+            UPDATE `' . _DB_PREFIX_ . 'employee`
+            SET `last_connection_date` = CURRENT_DATE()
+            WHERE `id_employee` = ' . (int) $idEmployee . '
+            AND (`last_connection_date` < CURRENT_DATE()
+            OR `last_connection_date` IS NULL)
+        ');
     }
 
     /**
