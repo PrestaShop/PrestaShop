@@ -26,8 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Supplier\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Supplier\Command\BulkDisableSupplierCommand;
-use PrestaShop\PrestaShop\Core\Domain\Supplier\CommandHandler\BulkDisableSupplierHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Supplier\Command\BulkEnableSupplierCommand;
+use PrestaShop\PrestaShop\Core\Domain\Supplier\CommandHandler\BulkEnableSupplierHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\CannotUpdateSupplierStatusException;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierException;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierNotFoundException;
@@ -35,16 +35,16 @@ use PrestaShopException;
 use Supplier;
 
 /**
- * Class BulkDisableSupplierHandler is responsible for disabling multiple suppliers.
+ * Class BulkEnableSupplierHandler is responsible for enabling multiple suppliers.
  */
-final class BulkDisableSupplierHandler implements BulkDisableSupplierHandlerInterface
+final class BulkEnableSupplierHandler implements BulkEnableSupplierHandlerInterface
 {
     /**
      * {@inheritdoc}
      *
      * @throws SupplierException
      */
-    public function handle(BulkDisableSupplierCommand $command)
+    public function handle(BulkEnableSupplierCommand $command)
     {
         try {
             foreach ($command->getSupplierIds() as $supplierId) {
@@ -53,18 +53,18 @@ final class BulkDisableSupplierHandler implements BulkDisableSupplierHandlerInte
                 if (0 >= $entity->id) {
                     throw new SupplierNotFoundException(
                         sprintf(
-                            'Supplier object with id "%s" has not been found for disabling status.',
+                            'Supplier object with id "%s" has not been found for enabling status.',
                             $supplierId->getValue()
                         )
                     );
                 }
 
-                $entity->active = false;
+                $entity->active = true;
 
                 if (false === $entity->update()) {
                     throw new CannotUpdateSupplierStatusException(
                         sprintf(
-                            'Unable to disable supplier object with id "%s"',
+                            'Unable to enable supplier object with id "%s"',
                             $supplierId->getValue()
                         )
                     );
@@ -72,7 +72,7 @@ final class BulkDisableSupplierHandler implements BulkDisableSupplierHandlerInte
             }
         } catch (PrestaShopException $e) {
             throw new SupplierException(
-                'Unexpected error occurred when handling bulk disable supplier',
+                'Unexpected error occurred when handling bulk enable supplier',
                 0,
                 $e
             );
