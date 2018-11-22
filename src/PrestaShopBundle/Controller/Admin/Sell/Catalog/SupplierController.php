@@ -41,7 +41,10 @@ use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\SupplierId;
 use PrestaShop\PrestaShop\Core\Search\Filters\SupplierFilters;
 use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -53,6 +56,8 @@ class SupplierController extends FrameworkBundleAdminController
      * Show suppliers listing.
      *
      * @Template("@PrestaShop/Admin/Sell/Catalog/Suppliers/index.html.twig")
+     *
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @param SupplierFilters $filters
      *
@@ -71,6 +76,13 @@ class SupplierController extends FrameworkBundleAdminController
         ];
     }
 
+    /**
+     * Filters list results.
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
     public function searchAction(Request $request)
     {
         $definitionFactory = $this->get('prestashop.core.grid.definition.factory.supplier');
@@ -89,6 +101,17 @@ class SupplierController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_suppliers_index', ['filters' => $filters]);
     }
 
+    /**
+     * Displays supplier creation form and handles form submit which creates new supplier.
+     *
+     * @AdminSecurity(
+     *     "is_granted('create', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_suppliers_index",
+     *     message="You do not have permission to add this."
+     * )
+     *
+     * @return RedirectResponse
+     */
     public function createAction()
     {
         $legacyLink = $this->getAdminLink('AdminSuppliers', [
@@ -98,6 +121,22 @@ class SupplierController extends FrameworkBundleAdminController
         return $this->redirect($legacyLink);
     }
 
+    /**
+     * Deletes supplier.
+     *
+     * @AdminSecurity(
+     *     "is_granted('delete', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_suppliers_index",
+     *     message="You do not have permission to delete this."
+     * )
+     * @DemoRestricted(
+     *     redirectRoute="admin_suppliers_index"
+     * )
+     *
+     * @param int $supplierId
+     *
+     * @return RedirectResponse
+     */
     public function deleteAction($supplierId)
     {
         try {
@@ -115,6 +154,22 @@ class SupplierController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_suppliers_index');
     }
 
+    /**
+     * Bulk deletion of suppliers.
+     *
+     * @AdminSecurity(
+     *     "is_granted('delete', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_suppliers_index",
+     *     message="You do not have permission to delete this."
+     * )
+     * @DemoRestricted(
+     *     redirectRoute="admin_suppliers_index"
+     * )
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
     public function bulkDeleteAction(Request $request)
     {
         $suppliersToDelete = $request->request->get('suppliers_bulk');
@@ -133,6 +188,22 @@ class SupplierController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_suppliers_index');
     }
 
+    /**
+     * Bulk disables supplier statuses.
+     *
+     * @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_suppliers_index",
+     *     message="You do not have permission to edit this."
+     * )
+     * @DemoRestricted(
+     *     redirectRoute="admin_suppliers_index"
+     * )
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
     public function bulkDisableAction(Request $request)
     {
         $suppliersToDisable = $request->request->get('suppliers_bulk');
@@ -150,6 +221,22 @@ class SupplierController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_suppliers_index');
     }
 
+    /**
+     * Bulk enables supplier statuses.
+     *
+     * @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_suppliers_index",
+     *     message="You do not have permission to edit this."
+     * )
+     * @DemoRestricted(
+     *     redirectRoute="admin_suppliers_index"
+     * )
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
     public function bulkEnableAction(Request $request)
     {
         $suppliersToDisable = $request->request->get('suppliers_bulk');
@@ -167,6 +254,19 @@ class SupplierController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_suppliers_index');
     }
 
+    /**
+     * Displays edit supplier form and submits form.
+     *
+     * @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_suppliers_index",
+     *     message="You do not have permission to edit this."
+     * )
+     *
+     * @param int $supplierId
+     *
+     * @return RedirectResponse
+     */
     public function editAction($supplierId)
     {
         $legacyLink = $this->getAdminLink('AdminSuppliers', [
@@ -177,6 +277,22 @@ class SupplierController extends FrameworkBundleAdminController
         return $this->redirect($legacyLink);
     }
 
+    /**
+     * Toggles supplier active status.
+     *
+     * @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_suppliers_index",
+     *     message="You do not have permission to edit this."
+     * )
+     * @DemoRestricted(
+     *     redirectRoute="admin_suppliers_index"
+     * )
+     *
+     * @param int $supplierId
+     *
+     * @return RedirectResponse
+     */
     public function toggleStatusAction($supplierId)
     {
         try {
@@ -194,6 +310,15 @@ class SupplierController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_suppliers_index');
     }
 
+    /**
+     * Views supplier products information.
+     *
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     *
+     * @param int $supplierId
+     *
+     * @return RedirectResponse
+     */
     public function viewAction($supplierId)
     {
         $legacyLink = $this->getAdminLink('AdminSuppliers', [
@@ -204,6 +329,12 @@ class SupplierController extends FrameworkBundleAdminController
         return $this->redirect($legacyLink);
     }
 
+    /**
+     * Exports to csv visible suppliers list data.
+     *
+     * @param SupplierFilters $filters
+     * @return CsvResponse
+     */
     public function exportAction(SupplierFilters $filters)
     {
         $supplierGridFactory = $this->get('prestashop.core.grid.factory.supplier');

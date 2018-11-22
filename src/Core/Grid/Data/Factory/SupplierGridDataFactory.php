@@ -48,6 +48,7 @@ final class SupplierGridDataFactory implements GridDataFactoryInterface
 
     /**
      * @param GridDataFactoryInterface $supplierDataFactory
+     * @param ImageProviderInterface $supplierLogoImageProvider
      */
     public function __construct(
         GridDataFactoryInterface $supplierDataFactory,
