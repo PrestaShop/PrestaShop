@@ -97,7 +97,7 @@ final class ListParametersUpdater
             ),
         ];
 
-        /**
+        /*
          * We need to force the sort order when the order by
          * is set to position_ordering
          */
