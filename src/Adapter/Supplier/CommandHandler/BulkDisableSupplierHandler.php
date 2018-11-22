@@ -28,14 +28,14 @@ namespace PrestaShop\PrestaShop\Adapter\Supplier\CommandHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Command\BulkDisableSupplierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\CommandHandler\BulkDisableSupplierHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\CannotDisableSupplierException;
+use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\CannotUpdateSupplierStatusException;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierException;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierNotFoundException;
 use PrestaShopException;
 use Supplier;
 
 /**
- * Class BulkDisableSupplierHandler
+ * Class BulkDisableSupplierHandler is responsible for disabling multiple suppliers.
  */
 final class BulkDisableSupplierHandler implements BulkDisableSupplierHandlerInterface
 {
@@ -62,7 +62,7 @@ final class BulkDisableSupplierHandler implements BulkDisableSupplierHandlerInte
                 $entity->active = false;
 
                 if (false === $entity->update()) {
-                    throw new CannotDisableSupplierException(
+                    throw new CannotUpdateSupplierStatusException(
                         sprintf(
                             'Unable to disable cms category object with id "%s"',
                             $supplierId->getValue()

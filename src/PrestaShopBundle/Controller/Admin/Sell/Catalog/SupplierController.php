@@ -27,10 +27,12 @@
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Command\BulkDeleteSupplierCommand;
+use PrestaShop\PrestaShop\Core\Domain\Supplier\Command\BulkDisableSupplierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Command\DeleteSupplierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Command\ToggleSupplierStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\CannotDeleteSupplierException;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\CannotToggleSupplierStatusException;
+use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\CannotUpdateSupplierStatusException;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierException;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierNotFoundException;
@@ -129,6 +131,27 @@ class SupplierController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_suppliers_index');
     }
 
+    public function bulkDisableAction(Request $request)
+    {
+        $suppliersToDisable = $request->request->get('suppliers_bulk');
+
+        try {
+            $this->getCommandBus()->handle(new BulkDisableSupplierCommand($suppliersToDisable));
+            $this->addFlash(
+                'success',
+                $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
+            );
+        } catch (SupplierException $exception) {
+            $this->addFlash('error', $this->handleException($exception));
+        }
+
+        return $this->redirectToRoute('admin_suppliers_index');
+    }
+
+    public function bulkEnableAction()
+    {
+    }
+
     public function editAction($supplierId)
     {
         $legacyLink = $this->getAdminLink('AdminSuppliers', [
@@ -198,6 +221,10 @@ class SupplierController extends FrameworkBundleAdminController
             ),
             CannotToggleSupplierStatusException::class => $this->trans(
                 'An error occurred while updating the status.',
+                'Admin.Notifications.Error'
+            ),
+            CannotUpdateSupplierStatusException::class => $this->trans(
+                'An error occurred while updating the status for an object.',
                 'Admin.Notifications.Error'
             ),
         ];
