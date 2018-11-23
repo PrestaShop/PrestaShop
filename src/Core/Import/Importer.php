@@ -27,10 +27,10 @@
 namespace PrestaShop\PrestaShop\Core\Import;
 
 use PrestaShop\PrestaShop\Core\Import\Access\ImportAccessCheckerInterface;
-use PrestaShop\PrestaShop\Core\Import\Configuration\ImportConfig;
 use PrestaShop\PrestaShop\Core\Import\Configuration\ImportConfigInterface;
 use PrestaShop\PrestaShop\Core\Import\Configuration\ImportRuntimeConfigInterface;
 use PrestaShop\PrestaShop\Core\Import\Entity\ImportEntityDeleterInterface;
+use PrestaShop\PrestaShop\Core\Import\Handler\ImportHandlerInterface;
 
 /**
  * Class Importer is responsible for data import.
@@ -62,10 +62,27 @@ final class Importer implements ImporterInterface
     /**
      * {@inheritdoc}
      */
-    public function import(ImportConfigInterface $importConfig, ImportRuntimeConfigInterface $runtimeConfig)
-    {
+    public function import(
+        ImportConfigInterface $importConfig,
+        ImportRuntimeConfigInterface $runtimeConfig,
+        ImportHandlerInterface $importHandler
+    ) {
         if ($this->shouldTruncateData($importConfig, $runtimeConfig) && $this->accessChecker->canTruncateData()) {
             $this->entityDeleter->deleteAll($importConfig->getEntityType());
+        }
+
+        if ($runtimeConfig->shouldValidateData()) {
+            $importHandler->validate();
+        } else {
+            if ($this->isFirstIteration($runtimeConfig)) {
+                $importHandler->setUp();
+            }
+
+            $importHandler->import();
+        }
+
+        if ($this->hasImportFinished($runtimeConfig)) {
+            $importHandler->tearDown();
         }
     }
 
@@ -79,14 +96,38 @@ final class Importer implements ImporterInterface
      *
      * @return bool
      */
-    private function shouldTruncateData(
+    public function shouldTruncateData(
         ImportConfigInterface $importConfig,
         ImportRuntimeConfigInterface $runtimeConfig
     ) {
-        return $importConfig->truncate() &&
-            !$runtimeConfig->shouldValidateData() &&
+        return $importConfig->truncate() && $this->isFirstIteration($runtimeConfig);
+    }
+
+    /**
+     * Checks if current import iteration is the first.
+     *
+     * @param ImportRuntimeConfigInterface $runtimeConfig
+     *
+     * @return bool
+     */
+    private function isFirstIteration(ImportRuntimeConfigInterface $runtimeConfig)
+    {
+        return !$runtimeConfig->shouldValidateData() &&
             0 === $runtimeConfig->getOffset() &&
             0 === $runtimeConfig->getProcessIndex()
         ;
+    }
+
+    /**
+     * Checks if the import process has finished.
+     *
+     * @param ImportRuntimeConfigInterface $runtimeConfig
+     *
+     * @return bool
+     */
+    private function hasImportFinished(ImportRuntimeConfigInterface $runtimeConfig)
+    {
+        //@todo WIP
+        return !$runtimeConfig->shouldValidateData();
     }
 }
