@@ -174,6 +174,7 @@ class ProductController extends FrameworkBundleAdminController
                 ]
             );
         }
+
         // Pagination
         $paginationParameters = $request->attributes->all();
         $paginationParameters['_route'] = 'admin_product_catalog';
@@ -484,7 +485,7 @@ class ProductController extends FrameworkBundleAdminController
             );
         }
 
-        /* @var $form Form */
+        /* @var Form $form */
         $form->handleRequest($request);
         $formData = $form->getData();
         $formData['step3']['combinations'] = $combinationsList;
@@ -525,7 +526,7 @@ class ProductController extends FrameworkBundleAdminController
 
                     $product = $productSaveResult;
 
-                    /* @var $product Product */
+                    /* @var Product $product */
                     $adminProductController->processSuppliers($product->id);
                     $adminProductController->processFeatures($product->id);
                     $adminProductController->processSpecificPricePriorities();
@@ -896,16 +897,16 @@ class ProductController extends FrameworkBundleAdminController
             return $this->redirectToRoute('admin_product_catalog');
         }
 
-        /* @var $productProvider ProductInterfaceProvider */
+        /* @var ProductInterfaceProvider $productProvider */
         $productProvider = $this->get('prestashop.core.admin.data_provider.product_interface');
 
-        /* @var $productUpdater ProductInterfaceUpdater */
+        /* @var ProductInterfaceUpdater $productUpdater */
         $productUpdater = $this->get('prestashop.core.admin.data_updater.product_interface');
 
-        /* @var $logger LoggerInterface */
+        /* @var LoggerInterface $logger */
         $logger = $this->get('logger');
 
-        /* @var $hookDispatcher HookDispatcher */
+        /* @var HookDispatcher $hookDispatcher */
         $hookDispatcher = $this->get('prestashop.core.hook.dispatcher');
 
         /* Initialize router params variable. */
