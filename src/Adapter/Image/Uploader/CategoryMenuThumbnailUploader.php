@@ -88,7 +88,7 @@ final class CategoryMenuThumbnailUploader implements ImageUploaderInterface
         $helper = new HelperImageUploader('thumbnail');
         $uploadedFiles = $helper->process();
 
-        if (count($availableKeys) < count($files)) {
+        if (count($availableKeys) < count($uploadedFiles)) {
             throw new MenuThumbnailsLimitException(
                 sprintf('Maximum number of menu thumbnails was reached for category "%s"', $categoryId)
             );

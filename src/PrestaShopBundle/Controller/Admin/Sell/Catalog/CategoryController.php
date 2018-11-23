@@ -45,6 +45,7 @@ use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotDeleteImageExcept
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Category\Exception\MenuThumbnailsLimitException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryDeleteMode;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
@@ -162,6 +163,7 @@ class CategoryController extends FrameworkBundleAdminController
         }
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Categories/add.html.twig', [
+            'allowMenuThumbnailsUpload' => true,
             'categoryForm' => $categoryAddForm->createView(),
             'defaultGroups' => $defaultGroups,
         ]);
@@ -223,6 +225,7 @@ class CategoryController extends FrameworkBundleAdminController
         }
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Categories/add_root.html.twig', [
+            'allowMenuThumbnailsUpload' => true,
             'rootCategoryForm' => $rootCategoryForm->createView(),
             'defaultGroups' => $defaultGroups,
         ]);
@@ -300,6 +303,8 @@ class CategoryController extends FrameworkBundleAdminController
         $defaultGroups = $this->getQueryBus()->handle(new GetDefaultGroups());
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Categories/edit.html.twig', [
+            'allowMenuThumbnailsUpload' => $editableCategory->canContainMoreMenuThumbnails(),
+            'maxMenuThumbnails' => count(MenuThumbnailId::ALLOWED_ID_VALUES),
             'contextLangId' => $this->getContextLangId(),
             'editCategoryForm' => $categoryForm->createView(),
             'editableCategory' => $editableCategory,
@@ -368,6 +373,8 @@ class CategoryController extends FrameworkBundleAdminController
         $defaultGroups = $this->getQueryBus()->handle(new GetDefaultGroups());
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Categories/edit_root.html.twig', [
+            'allowMenuThumbnailsUpload' => $editableCategory->canContainMoreMenuThumbnails(),
+            'maxMenuThumbnails' => count(MenuThumbnailId::ALLOWED_ID_VALUES),
             'contextLangId' => $this->getContextLangId(),
             'editRootCategoryForm' => $rootCategoryForm->createView(),
             'editableCategory' => $editableCategory,
@@ -539,6 +546,11 @@ class CategoryController extends FrameworkBundleAdminController
 
         $errorMessagesForDisplay = [
             CategoryNotFoundException::class => $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'),
+            MenuThumbnailsLimitException::class => sprintf(
+                '%s %s',
+                $this->trans('An error occurred while uploading the image:', 'Admin.Catalog.Notification'),
+                $this->trans('You cannot upload more files', 'Admin.Notifications.Error')
+            ),
         ];
 
         if (isset($errorMessagesForDisplay[$type])) {
