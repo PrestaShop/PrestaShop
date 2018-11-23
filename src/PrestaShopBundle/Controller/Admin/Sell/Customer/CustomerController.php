@@ -27,7 +27,15 @@
 namespace PrestaShopBundle\Controller\Admin\Sell\Customer;
 
 use PrestaShop\PrestaShop\Core\Search\Filters\CustomerFilters;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\CustomerInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController as AbstractAdminController;
+use PrestaShopBundle\Form\Admin\Sell\Customer\PrivateNoteType;
+use PrestaShopBundle\Form\Admin\Sell\Customer\TransferGuestAccountType;
+use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -90,7 +98,10 @@ class CustomerController extends AbstractAdminController
     }
 
     /**
-     * Show customer details page.
+     * View customer information.
+     *
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute="admin_customers_index")
+     * @DemoRestricted(redirectRoute="admin_customers_index")
      *
      * @param int $customerId
      * @param Request $request
@@ -99,11 +110,36 @@ class CustomerController extends AbstractAdminController
      */
     public function viewAction($customerId, Request $request)
     {
-        return $this->redirect(
-            $this->getAdminLink($request->attributes->get('_legacy_controller'), [
-                'viewcustomer' => 1,
+        try {
+            /** @var CustomerInformation $customerInformation */
+            $customerInformation = $this->getQueryBus()->handle(new GetCustomerForViewing(new CustomerId($customerId)));
+        } catch (CustomerNotFoundException $e) {
+            $this->addFlash(
+                'error',
+                $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error')
+            );
+
+            return $this->redirectToRoute('admin_customers_index');
+        }
+
+        $transferGuestAccountForm = null;
+        if ($customerInformation->getPersonalInformation()->isGuest()) {
+            $transferGuestAccountForm = $this->createForm(TransferGuestAccountType::class, [
                 'id_customer' => $customerId,
-            ])
-        );
+            ])->createView();
+        }
+
+        $privateNoteForm = $this->createForm(PrivateNoteType::class, [
+            'note' => $customerInformation->getGeneralInformation()->getPrivateNote(),
+        ]);
+
+        return $this->render('@PrestaShop/Admin/Sell/Customer/view.html.twig', [
+            'enableSidebar' => true,
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+            'customerInformation' => $customerInformation,
+            'isMultistoreEnabled' => $this->get('prestashop.adapter.feature.multistore')->isActive(),
+            'transferGuestAccountForm' => $transferGuestAccountForm,
+            'privateNoteForm' => $privateNoteForm->createView(),
+        ]);
     }
 }
