@@ -177,7 +177,7 @@ function updateProduct(event, eventType, updateUrl) {
         currentRequestDelayedId = null;
       }
     });
-  }.bind(currentRequest, currentRequestDelayedId), 250);
+  }.bind(currentRequest, currentRequestDelayedId), 1000);
 }
 
 /**
