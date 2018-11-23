@@ -108,6 +108,11 @@ class CategoryController extends FrameworkBundleAdminController
     /**
      * Show "Add new" form and handle form submit.
      *
+     * @AdminSecurity(
+     *     "is_granted(['create'], request.get('_legacy_controller'))",
+     *     message="You do not have permission to create this."
+     * )
+     *
      * @param Request $request
      *
      * @return Response
@@ -162,6 +167,11 @@ class CategoryController extends FrameworkBundleAdminController
     /**
      * Show "Add new root category" page & process adding.
      *
+     * @AdminSecurity(
+     *     "is_granted(['create'], request.get('_legacy_controller'))",
+     *     message="You do not have permission to create this."
+     * )
+     *
      * @param Request $request
      *
      * @return Response
@@ -214,6 +224,11 @@ class CategoryController extends FrameworkBundleAdminController
 
     /**
      * Show & process category editing.
+     *
+     * @AdminSecurity(
+     *     "is_granted(['update'], request.get('_legacy_controller'))",
+     *     message="You do not have permission to edit this."
+     * )
      *
      * @param int $categoryId
      * @param Request $request
@@ -287,6 +302,11 @@ class CategoryController extends FrameworkBundleAdminController
     /**
      * Show and process category editing.
      *
+     * @AdminSecurity(
+     *     "is_granted(['update'], request.get('_legacy_controller'))",
+     *     message="You do not have permission to edit this."
+     * )
+     *
      * @param int $categoryId
      * @param Request $request
      *
@@ -348,6 +368,11 @@ class CategoryController extends FrameworkBundleAdminController
     /**
      * Deletes category cover image.
      *
+     * @AdminSecurity(
+     *     "is_granted(['update'], request.get('_legacy_controller'))",
+     *     message="You do not have permission to edit this."
+     * )
+     *
      * @param Request $request
      * @param int $categoryId
      *
@@ -381,6 +406,11 @@ class CategoryController extends FrameworkBundleAdminController
 
     /**
      * Delete given menu thumbnail for category.
+     *
+     * @AdminSecurity(
+     *     "is_granted(['update'], request.get('_legacy_controller'))",
+     *     message="You do not have permission to edit this."
+     * )
      *
      * @param Request $request
      * @param int $categoryId
@@ -766,7 +796,8 @@ class CategoryController extends FrameworkBundleAdminController
         return (new CsvResponse())
             ->setData($data)
             ->setHeadersData($headers)
-            ->setFileName('category_' . date('Y-m-d_His') . '.csv');
+            ->setFileName('category_' . date('Y-m-d_His') . '.csv')
+        ;
     }
 
     /**
