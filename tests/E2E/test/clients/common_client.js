@@ -1,6 +1,5 @@
 const {getClient} = require('../common.webdriverio.js');
-const {selector} = require('../globals.webdriverio.js');
-const {languageFO} = require('../../test/selectors/FO/index');
+const {languageFO} = require('../selectors/FO/index');
 let path = require('path');
 let fs = require('fs');
 let pdfUtil = require('pdf-to-text');
@@ -492,11 +491,9 @@ class CommonClient {
     delete object[pos];
   }
 
-  setAttributeById(selector) {
+  refresh() {
     return this.client
-      .execute(function (selector) {
-        document.getElementById(selector).style.display = 'none';
-      }, selector);
+      .refresh();
   }
 
   stringifyNumber(number) {
@@ -506,7 +503,6 @@ class CommonClient {
     if (number % 10 === 0) return deca[Math.floor(number / 10) - 2] + 'ieth';
     return deca[Math.floor(number / 10) - 2] + 'y-' + special[number % 10];
   }
-
 
   /**
    * This function searches the data in the table in case a filter input exists
