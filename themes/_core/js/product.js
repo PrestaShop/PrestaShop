@@ -163,13 +163,11 @@ function updateProduct(event, eventType, updateUrl) {
         replaceAddToCartSections(data);
         const minimalProductQuantity = parseInt(data.product_minimal_quantity, 10);
 
-
         // Prevent quantity input from blinking with classic theme.
         if (!isNaN(minimalProductQuantity)
-            && $quantityWantedInput.val() < minimalProductQuantity
             && eventType !== 'updatedProductQuantity'
         ) {
-          $quantityWantedInput.prop('min', minimalProductQuantity);
+          $quantityWantedInput.attr('min', minimalProductQuantity);
           $quantityWantedInput.val(minimalProductQuantity);
         }
         prestashop.emit('updatedProduct', data);
