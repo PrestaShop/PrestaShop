@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Category\Command\DeleteCategoryMenuThumbna
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\EditCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\EditRootCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\EditableCategory;
+use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotDeleteImageException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
@@ -362,12 +363,16 @@ class CategoryController extends FrameworkBundleAdminController
             ]);
         }
 
-        $this->getCommandBus()->handle(new DeleteCategoryCoverImageCommand(new CategoryId($categoryId)));
+        try {
+            $this->getCommandBus()->handle(new DeleteCategoryCoverImageCommand(new CategoryId($categoryId)));
 
-        $this->addFlash(
-            'success',
-            $this->trans('The image was successfully deleted.', 'Admin.Notifications.Success')
-        );
+            $this->addFlash(
+                'success',
+                $this->trans('The image was successfully deleted.', 'Admin.Notifications.Success')
+            );
+        } catch (CategoryException $e) {
+            $this->addFlash('error', $this->handleImageDeletingException($e));
+        }
 
         return $this->redirectToRoute('admin_category_edit', [
             'categoryId' => $categoryId,
@@ -393,15 +398,19 @@ class CategoryController extends FrameworkBundleAdminController
             ]);
         }
 
-        $this->getCommandBus()->handle(new DeleteCategoryMenuThumbnailImageCommand(
-            new CategoryId($categoryId),
-            new MenuThumbnailId($menuThumbnailId)
-        ));
+        try {
+            $this->getCommandBus()->handle(new DeleteCategoryMenuThumbnailImageCommand(
+                new CategoryId($categoryId),
+                new MenuThumbnailId($menuThumbnailId)
+            ));
 
-        $this->addFlash(
-            'success',
-            $this->trans('The image was successfully deleted.', 'Admin.Notifications.Success')
-        );
+            $this->addFlash(
+                'success',
+                $this->trans('The image was successfully deleted.', 'Admin.Notifications.Success')
+            );
+        } catch (CategoryException $e) {
+            $this->addFlash('error', $this->handleImageDeletingException($e));
+        }
 
         return $this->redirectToRoute('admin_category_edit', [
             'categoryId' => $categoryId,
@@ -865,5 +874,33 @@ class CategoryController extends FrameworkBundleAdminController
         ];
 
         return $toolbarButtons;
+    }
+
+    /**
+     * Handle exception which occurs when deleting category image (cover, thumbnails).
+     *
+     * @param CategoryException $e
+     *
+     * @return string
+     */
+    private function handleImageDeletingException(CategoryException $e)
+    {
+        $type = get_class($e);
+
+        $errorMessages = [
+            CannotDeleteImageException::class =>
+                $this->trans('Unable to delete associated images.', 'Admin.Notifications.Error'),
+            CategoryNotFoundException::class => sprintf(
+                '%s %s',
+                $this->trans('An error occurred while updating the status for an object.', 'Admin.Notifications.Error'),
+                $this->trans('(cannot load object)', 'Admin.Notifications.Error')
+            ),
+        ];
+
+        if (isset($errorMessages[$type])) {
+            return $errorMessages[$type];
+        }
+
+        return $this->getFallbackErrorMessage($type, $e->getCode());
     }
 }
