@@ -188,7 +188,7 @@ class ProductController extends FrameworkBundleAdminController
             );
         }
 
-        $cleanFilterParameters = $filterParametersUpdater->cleanFiltersForPositionOrdering(
+        $cleanFilterParameters = $listParametersUpdater->cleanFiltersForPositionOrdering(
             $combinedFilterParameters,
             $orderBy,
             $hasCategoryFilter
