@@ -94,7 +94,17 @@
         <div class="col-sm">
           {% include '@PrestaShop/Admin/Sell/Catalog/Categories/Blocks/menu_thumbnail_images.html.twig' %}
 
-          {{ form_widget(categoryForm.menu_thumbnail_images) }}
+          {% if allowMenuThumbnailsUpload %}
+            {{ form_widget(categoryForm.menu_thumbnail_images) }}
+          {% else %}
+            {{ form_widget(categoryForm.menu_thumbnail_images, {'attr': {'class': 'd-none'}}) }}
+
+            <div class="alert alert-warning" role="alert">
+              <p class="alert-text">
+                {{ 'You have reached the limit (%s) of files to upload, please remove files to continue uploading'|trans({'%s': maxMenuThumbnails}, 'Admin.Catalog.Notification') }}
+              </p>
+            </div>
+          {% endif %}
         </div>
       </div>
 

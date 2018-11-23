@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Category;
 
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
+use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\MenuThumbnailId;
 
 /**
  * Stores category data needed for editing.
@@ -277,5 +278,13 @@ class EditableCategory
     public function isRootCategory()
     {
         return $this->isRootCategory;
+    }
+
+    /**
+     * @return bool
+     */
+    public function canContainMoreMenuThumbnails()
+    {
+        return count($this->getMenuThumbnailImages()) < count(MenuThumbnailId::ALLOWED_ID_VALUES);
     }
 }
