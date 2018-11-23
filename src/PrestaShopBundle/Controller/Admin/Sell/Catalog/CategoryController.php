@@ -148,11 +148,14 @@ class CategoryController extends FrameworkBundleAdminController
                 );
                 $this->populateCommandWithFormData($command, $data);
 
-                $this->getCommandBus()->handle($command);
+                /** @var CategoryId $categoryId */
+                $categoryId = $this->getCommandBus()->handle($command);
 
                 $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
 
-                return $this->redirectToRoute('admin_category_add');
+                return $this->redirectToRoute('admin_category_edit', [
+                    'categoryId' => $categoryId->getValue(),
+                ]);
             } catch (CategoryException $e) {
                 $this->addFlash('error', $this->handleAddException($e));
             }
@@ -206,11 +209,14 @@ class CategoryController extends FrameworkBundleAdminController
                 );
                 $this->populateCommandWithFormData($command, $data);
 
-                $this->getCommandBus()->handle($command);
+                /** @var CategoryId $categoryId */
+                $categoryId = $this->getCommandBus()->handle($command);
 
                 $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
 
-                return $this->redirectToRoute('admin_category_add');
+                return $this->redirectToRoute('admin_category_edit_root', [
+                    'categoryId' => $categoryId->getValue(),
+                ]);
             } catch (CategoryException $e) {
                 $this->addFlash('error', $this->handleAddException($e));
             }
@@ -282,7 +288,9 @@ class CategoryController extends FrameworkBundleAdminController
 
                 $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
 
-                return $this->redirectToRoute('admin_category_add');
+                return $this->redirectToRoute('admin_category_edit', [
+                    'categoryId' => $categoryId->getValue(),
+                ]);
             } catch (CategoryException $e) {
                 $this->addFlash('error', $this->handleEditException($e));
             }
@@ -348,7 +356,9 @@ class CategoryController extends FrameworkBundleAdminController
 
                 $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
 
-                return $this->redirectToRoute('admin_category_add');
+                return $this->redirectToRoute('admin_category_edit_root', [
+                    'categoryId' => $categoryId->getValue(),
+                ]);
             } catch (CategoryException $e) {
                 $this->addFlash('error', $this->handleEditException($e));
             }
