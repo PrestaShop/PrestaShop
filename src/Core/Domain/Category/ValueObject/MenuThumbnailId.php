@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryException;
 class MenuThumbnailId
 {
     /**
-     * @var array Category is of having maximum of 3 menu thumbnails with defined Ids.
+     * @var array category is of having maximum of 3 menu thumbnails with defined Ids
      */
     const ALLOWED_ID_VALUES = [0, 1, 2];
 

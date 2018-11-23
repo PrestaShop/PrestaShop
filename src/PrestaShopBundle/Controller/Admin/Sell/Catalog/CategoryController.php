@@ -928,8 +928,7 @@ class CategoryController extends FrameworkBundleAdminController
         $type = get_class($e);
 
         $errorMessages = [
-            CannotDeleteImageException::class =>
-                $this->trans('Unable to delete associated images.', 'Admin.Notifications.Error'),
+            CannotDeleteImageException::class => $this->trans('Unable to delete associated images.', 'Admin.Notifications.Error'),
             CategoryNotFoundException::class => sprintf(
                 '%s %s',
                 $this->trans('An error occurred while updating the status for an object.', 'Admin.Notifications.Error'),
