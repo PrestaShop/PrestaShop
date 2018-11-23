@@ -278,6 +278,7 @@ class ImportController extends FrameworkBundleAdminController
         $importConfig = $importConfigFactory->buildFromRequest($request);
         $runtimeConfig = $runtimeConfigFactory->buildFromRequest($request);
 
+        //@todo pass import handler
         $importer->import($importConfig, $runtimeConfig);
 
         //@todo WIP.

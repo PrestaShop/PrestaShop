@@ -43,6 +43,7 @@ final class ImportRuntimeConfigFactory implements ImportRuntimeConfigFactoryInte
             $request->request->get('offset'),
             $request->request->get('limit'),
             $request->request->get('moreStep'),
+            $request->request->get('crossStepsVars', []),
             $request->request->get('type_value', [])
         );
     }

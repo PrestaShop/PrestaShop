@@ -57,10 +57,16 @@ final class ImportRuntimeConfig implements ImportRuntimeConfigInterface
     private $entityFields;
 
     /**
+     * @var array
+     */
+    private $sharedData;
+
+    /**
      * @param bool $shouldValidateData
      * @param int $offset
      * @param int $limit
      * @param int $processIndex
+     * @param array $sharedData
      * @param array $entityFields
      */
     public function __construct(
@@ -68,6 +74,7 @@ final class ImportRuntimeConfig implements ImportRuntimeConfigInterface
         $offset,
         $limit,
         $processIndex,
+        array $sharedData,
         array $entityFields
     ) {
         $this->shouldValidateData = $shouldValidateData;
@@ -75,6 +82,7 @@ final class ImportRuntimeConfig implements ImportRuntimeConfigInterface
         $this->limit = $limit;
         $this->processIndex = $processIndex;
         $this->entityFields = $entityFields;
+        $this->sharedData = $sharedData;
     }
 
     /**
@@ -115,5 +123,13 @@ final class ImportRuntimeConfig implements ImportRuntimeConfigInterface
     public function getEntityFields()
     {
         return $this->entityFields;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSharedData()
+    {
+        return $this->sharedData;
     }
 }

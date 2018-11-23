@@ -24,29 +24,34 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Import;
-
-use PrestaShop\PrestaShop\Core\Import\Configuration\ImportConfigInterface;
-use PrestaShop\PrestaShop\Core\Import\Configuration\ImportRuntimeConfigInterface;
-use PrestaShop\PrestaShop\Core\Import\Handler\ImportHandlerInterface;
+namespace PrestaShop\PrestaShop\Core\Import\Handler;
 
 /**
- * Interface ImporterInterface describes an import processing unit.
+ * Class AbstractImportHandler is an abstract handler for import.
  */
-interface ImporterInterface
+abstract class AbstractImportHandler implements ImportHandlerInterface
 {
     /**
-     * Process the import.
-     *
-     * @param ImportConfigInterface $importConfig
-     * @param ImportRuntimeConfigInterface $runtimeConfig
-     * @param ImportHandlerInterface $importHandler
-     *
-     * @return
+     * {@inheritdoc}
      */
-    public function import(
-        ImportConfigInterface $importConfig,
-        ImportRuntimeConfigInterface $runtimeConfig,
-        ImportHandlerInterface $importHandler
-    );
+    public function setUp()
+    {
+
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function validate()
+    {
+
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function tearDown()
+    {
+
+    }
 }
