@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -24,34 +24,19 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Import\Handler;
+namespace PrestaShop\PrestaShop\Core\Import\File;
+
+use SplFileInfo;
 
 /**
- * Class AbstractImportHandler is an abstract handler for import.
+ * Interface FileOpenerInterface describes an import file opener.
  */
-abstract class AbstractImportHandler implements ImportHandlerInterface
+interface FileOpenerInterface
 {
     /**
-     * {@inheritdoc}
+     * @param SplFileInfo $file
+     *
+     * @return mixed file handle
      */
-    public function setUp()
-    {
-
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function validate()
-    {
-
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function tearDown()
-    {
-
-    }
+    public function open(SplFileInfo $file);
 }

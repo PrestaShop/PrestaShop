@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -24,29 +24,39 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Import\Configuration;
+namespace PrestaShop\PrestaShop\Adapter\Import\Handler;
 
-use Symfony\Component\HttpFoundation\Request;
+use PrestaShop\PrestaShop\Core\Import\Exception\NotSupportedImportTypeException;
+use PrestaShop\PrestaShop\Core\Import\Handler\ImportHandlerFinderInterface;
+use PrestaShop\PrestaShop\Core\Import\Handler\ImportHandlerInterface;
 
 /**
- * Class ImportRuntimeConfigFactory is responsible for building import runtime config.
+ * Class ImportHandlerFinder is responsible for finding a proper import handler.
  */
-final class ImportRuntimeConfigFactory implements ImportRuntimeConfigFactoryInterface
+final class ImportHandlerFinder implements ImportHandlerFinderInterface
 {
+    /**
+     * @var ImportHandlerInterface[]
+     */
+    private $importHandlers;
+
+    /**
+     * @param ImportHandlerInterface[] $importHandlers
+     */
+    public function __construct(array $importHandlers)
+    {
+        $this->importHandlers = $importHandlers;
+    }
+
     /**
      * {@inheritdoc}
      */
-    public function buildFromRequest(Request $request)
+    public function find($importEntityType)
     {
-        $sharedData = $request->request->get('crossStepsVars', []);
+        if (!isset($this->importHandlers[$importEntityType])) {
+            throw new NotSupportedImportTypeException();
+        }
 
-        return new ImportRuntimeConfig(
-            $request->request->getBoolean('validate'),
-            $request->request->getInt('offset'),
-            $request->request->getInt('limit'),
-            $request->request->getInt('moreStep'),
-            json_decode($sharedData, true),
-            $request->request->get('type_value', [])
-        );
+        return $this->importHandlers[$importEntityType];
     }
 }

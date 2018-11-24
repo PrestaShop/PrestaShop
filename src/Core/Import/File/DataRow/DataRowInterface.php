@@ -53,4 +53,11 @@ interface DataRowInterface extends ArrayAccess, IteratorAggregate, Countable
      * @return self
      */
     public static function createFromArray(array $data);
+
+    /**
+     * @param mixed $offset
+     *
+     * @return DataCellInterface
+     */
+    public function offsetGet($offset);
 }

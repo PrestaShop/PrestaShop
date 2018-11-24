@@ -26,6 +26,10 @@
 
 namespace PrestaShop\PrestaShop\Core\Import\Handler;
 
+use PrestaShop\PrestaShop\Core\Import\Configuration\ImportConfigInterface;
+use PrestaShop\PrestaShop\Core\Import\Configuration\ImportRuntimeConfigInterface;
+use PrestaShop\PrestaShop\Core\Import\File\DataRow\DataRowInterface;
+
 /**
  * Interface ImportHandlerInterface describes an import handler.
  */
@@ -39,13 +43,23 @@ interface ImportHandlerInterface
     /**
      * Executed before import process is started.
      * After the validation step.
+     *
+     * @param ImportConfigInterface $importConfig
      */
-    public function setUp();
+    public function setUp(ImportConfigInterface $importConfig);
 
     /**
-     * Executes import process.
+     * Imports one data row.
+     *
+     * @param ImportConfigInterface $importConfig
+     * @param ImportRuntimeConfigInterface $runtimeConfig
+     * @param DataRowInterface $dataRow
      */
-    public function import();
+    public function importRow(
+        ImportConfigInterface $importConfig,
+        ImportRuntimeConfigInterface $runtimeConfig,
+        DataRowInterface $dataRow
+    );
 
     /**
      * Executed when the import process is completed.
