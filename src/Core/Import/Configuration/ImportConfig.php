@@ -82,6 +82,11 @@ final class ImportConfig implements ImportConfigInterface
     private $sendEmail;
 
     /**
+     * @var int
+     */
+    private $skipRows;
+
+    /**
      * @param string $fileName
      * @param int $entityType
      * @param string $languageIso
@@ -92,6 +97,7 @@ final class ImportConfig implements ImportConfigInterface
      * @param bool $matchReferences
      * @param bool $forceIds
      * @param bool $sendEmail
+     * @param int $skipRows
      */
     public function __construct(
         $fileName,
@@ -103,7 +109,8 @@ final class ImportConfig implements ImportConfigInterface
         $skipThumbnailRegeneration,
         $matchReferences,
         $forceIds,
-        $sendEmail
+        $sendEmail,
+        $skipRows = 0
     ) {
         $this->fileName = $fileName;
         $this->entityType = $entityType;
@@ -115,6 +122,7 @@ final class ImportConfig implements ImportConfigInterface
         $this->matchReferences = $matchReferences;
         $this->forceIds = $forceIds;
         $this->sendEmail = $sendEmail;
+        $this->skipRows = $skipRows;
     }
 
     /**
@@ -195,5 +203,13 @@ final class ImportConfig implements ImportConfigInterface
     public function sendEmail()
     {
         return $this->sendEmail;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getNumberOfRowsToSkip()
+    {
+        return $this->skipRows;
     }
 }

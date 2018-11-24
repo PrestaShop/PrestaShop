@@ -30,7 +30,9 @@ use PrestaShop\PrestaShop\Core\Import\Access\ImportAccessCheckerInterface;
 use PrestaShop\PrestaShop\Core\Import\Configuration\ImportConfigInterface;
 use PrestaShop\PrestaShop\Core\Import\Configuration\ImportRuntimeConfigInterface;
 use PrestaShop\PrestaShop\Core\Import\Entity\ImportEntityDeleterInterface;
+use PrestaShop\PrestaShop\Core\Import\File\FileReaderInterface;
 use PrestaShop\PrestaShop\Core\Import\Handler\ImportHandlerInterface;
+use SplFileInfo;
 
 /**
  * Class Importer is responsible for data import.
@@ -48,15 +50,31 @@ final class Importer implements ImporterInterface
     private $accessChecker;
 
     /**
+     * @var FileReaderInterface
+     */
+    private $fileReader;
+
+    /**
+     * @var ImportDirectory
+     */
+    private $importDir;
+
+    /**
      * @param ImportAccessCheckerInterface $accessChecker
      * @param ImportEntityDeleterInterface $entityDeleter
+     * @param FileReaderInterface $fileReader
+     * @param ImportDirectory $importDir
      */
     public function __construct(
         ImportAccessCheckerInterface $accessChecker,
-        ImportEntityDeleterInterface $entityDeleter
+        ImportEntityDeleterInterface $entityDeleter,
+        FileReaderInterface $fileReader,
+        ImportDirectory $importDir
     ) {
         $this->entityDeleter = $entityDeleter;
         $this->accessChecker = $accessChecker;
+        $this->fileReader = $fileReader;
+        $this->importDir = $importDir;
     }
 
     /**
@@ -71,14 +89,38 @@ final class Importer implements ImporterInterface
             $this->entityDeleter->deleteAll($importConfig->getEntityType());
         }
 
+        $importFile = new SplFileInfo($this->importDir.$importConfig->getFileName());
+
         if ($runtimeConfig->shouldValidateData()) {
             $importHandler->validate();
         } else {
             if ($this->isFirstIteration($runtimeConfig)) {
-                $importHandler->setUp();
+                $importHandler->setUp($importConfig);
             }
 
-            $importHandler->import();
+            $rowIndex = 0;
+            $skipRows = $importConfig->getNumberOfRowsToSkip() + $runtimeConfig->getOffset();
+            $limit = $runtimeConfig->getLimit();
+
+            foreach ($this->fileReader->read($importFile) as $dataRow) {
+                // Skip rows until the correct row is reached.
+                if ($rowIndex < $skipRows) {
+                    $rowIndex++;
+                    continue;
+                }
+
+                // If import process limit is reached - stop importing the rows.
+                if ($rowIndex >= $limit) {
+                    break;
+                }
+
+                // Import one row
+                $importHandler->importRow(
+                    $importConfig,
+                    $runtimeConfig,
+                    $dataRow
+                );
+            }
         }
 
         if ($this->hasImportFinished($runtimeConfig)) {

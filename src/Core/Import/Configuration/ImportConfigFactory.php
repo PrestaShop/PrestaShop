@@ -59,7 +59,8 @@ final class ImportConfigFactory implements ImportConfigFactoryInterface
             $request->request->get('regenerate', $request->getSession()->get('regenerate', false)),
             $request->request->get('match_ref', $request->getSession()->get('match_ref', false)),
             $request->request->get('forceIDs', $request->getSession()->get('forceIDs', false)),
-            $request->request->get('sendemail', $request->getSession()->get('sendemail', true))
+            $request->request->get('sendemail', $request->getSession()->get('sendemail', true)),
+            $request->request->get('skip', 0)
         );
     }
 }
