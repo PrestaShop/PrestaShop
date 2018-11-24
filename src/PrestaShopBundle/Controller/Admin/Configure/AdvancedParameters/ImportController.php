@@ -274,14 +274,16 @@ class ImportController extends FrameworkBundleAdminController
         $importer = $this->get('prestashop.core.import.importer');
         $importConfigFactory = $this->get('prestashop.core.import.config_factory');
         $runtimeConfigFactory = $this->get('prestashop.core.import.runtime_config_factory');
+        $importHandlerFinder = $this->get('prestashop.adapter.import.handler_finder');
 
         $importConfig = $importConfigFactory->buildFromRequest($request);
         $runtimeConfig = $runtimeConfigFactory->buildFromRequest($request);
 
-        //@todo pass import handler
-        $importer->import($importConfig, $runtimeConfig);
-
-        //@todo WIP.
+        $importer->import(
+            $importConfig,
+            $runtimeConfig,
+            $importHandlerFinder->find($importConfig->getEntityType())
+        );
 
         return $this->json([
             'errors' => $errors,

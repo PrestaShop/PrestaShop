@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -24,29 +24,19 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Import\Configuration;
-
-use Symfony\Component\HttpFoundation\Request;
+namespace PrestaShop\PrestaShop\Core\Import\Handler;
 
 /**
- * Class ImportRuntimeConfigFactory is responsible for building import runtime config.
+ * Interface ImportHandlerFinderInterface describes an import handler finder.
  */
-final class ImportRuntimeConfigFactory implements ImportRuntimeConfigFactoryInterface
+interface ImportHandlerFinderInterface
 {
     /**
-     * {@inheritdoc}
+     * Find the proper import handler for given entity type.
+     *
+     * @param $importEntityType
+     *
+     * @return ImportHandlerInterface
      */
-    public function buildFromRequest(Request $request)
-    {
-        $sharedData = $request->request->get('crossStepsVars', []);
-
-        return new ImportRuntimeConfig(
-            $request->request->getBoolean('validate'),
-            $request->request->getInt('offset'),
-            $request->request->getInt('limit'),
-            $request->request->getInt('moreStep'),
-            json_decode($sharedData, true),
-            $request->request->get('type_value', [])
-        );
-    }
+    public function find($importEntityType);
 }

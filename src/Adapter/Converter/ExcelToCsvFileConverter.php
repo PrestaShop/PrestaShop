@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter\Converter;
 
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PrestaShop\PrestaShop\Core\File\Converter\FileConverterInterface;
+use PrestaShop\PrestaShop\Core\Import\ImportDirectory;
 use SplFileInfo;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -53,7 +54,7 @@ final class ExcelToCsvFileConverter implements FileConverterInterface
 
     /**
      * @param Filesystem $filesystem
-     * @param string $csvDirectory path to CSV files directory
+     * @param $csvDirectory
      * @param string $excelDirectory path to excel files directory
      */
     public function __construct(Filesystem $filesystem, $csvDirectory, $excelDirectory)

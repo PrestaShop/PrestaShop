@@ -15,3 +15,34 @@ services:
             - '%database_prefix%'
             - '@prestashop.adapter.legacy.configuration'
             - '@prestashop.core.image.file_deleter'
+
+    prestashop.adapter.import.excel_to_csv_converter:
+        class: 'PrestaShop\PrestaShop\Adapter\Converter\ExcelToCsvFileConverter'
+        arguments:
+            - '@filesystem'
+            - '@=service("prestashop.core.import.dir").getDir()'
+            - '@=service("prestashop.core.import.dir").getDir() ~ "csvfromexcel/"'
+
+    prestashop.adapter.import.file_opener:
+        class: 'PrestaShop\PrestaShop\Adapter\Import\CsvFileOpener'
+        arguments:
+            - '@prestashop.adapter.import.excel_to_csv_converter'
+            - '@prestashop.core.import.dir'
+
+    prestashop.adapter.import.handler.product:
+        class: 'PrestaShop\PrestaShop\Adapter\Import\Handler\ProductImportHandler'
+        arguments:
+            - '@prestashop.adapter.import.data_formatter'
+            - '@doctrine.dbal.default_connection'
+            - '%database_prefix%'
+
+    prestashop.adapter.import.handler_finder:
+        class: 'PrestaShop\PrestaShop\Adapter\Import\Handler\ImportHandlerFinder'
+        arguments:
+            -
+              1: '@prestashop.adapter.import.handler.product'
+
+    prestashop.adapter.import.data_formatter:
+        class: 'PrestaShop\PrestaShop\Adapter\Import\ImportDataFormatter'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
