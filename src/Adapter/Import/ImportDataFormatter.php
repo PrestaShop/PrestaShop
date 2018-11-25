@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Import;
 
 use Language;
+use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 
 /**
@@ -39,9 +40,17 @@ final class ImportDataFormatter
      */
     private $configuration;
 
-    public function __construct(ConfigurationInterface $configuration)
-    {
+    /**
+     * @var Tools
+     */
+    private $tools;
+
+    public function __construct(
+        ConfigurationInterface $configuration,
+        Tools $tools
+    ) {
         $this->configuration = $configuration;
+        $this->tools = $tools;
     }
 
     /**
@@ -130,5 +139,17 @@ final class ImportDataFormatter
         }
 
         return $content;
+    }
+
+    /**
+     * Transform given value into a friendly url string.
+     *
+     * @param string $value
+     *
+     * @return string
+     */
+    public function createFriendlyUrl($value)
+    {
+        return $this->tools->linkRewrite($value);
     }
 }

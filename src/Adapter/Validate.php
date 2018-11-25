@@ -111,4 +111,28 @@ class Validate
     {
         return ValidateLegacy::isLangIsoCode($isoCode);
     }
+
+    /**
+     * Check for an integer validity (unsigned).
+     *
+     * @param int $value Integer to validate
+     *
+     * @return bool
+     */
+    public function isUnsignedInt($value)
+    {
+        return ValidateLegacy::isUnsignedInt($value);
+    }
+
+    /**
+     * Check for a rewritten url validity.
+     *
+     * @param string $value
+     *
+     * @return bool
+     */
+    public function isLinkRewrite($value)
+    {
+        return ValidateLegacy::isLinkRewrite($value);
+    }
 }
