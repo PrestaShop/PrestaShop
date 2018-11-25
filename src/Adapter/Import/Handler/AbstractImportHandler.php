@@ -26,18 +26,48 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Import\Handler;
 
-use Language;
 use ObjectModel;
 use PrestaShop\PrestaShop\Adapter\Import\ImportDataFormatter;
 use PrestaShop\PrestaShop\Core\Import\Configuration\ImportConfigInterface;
 use PrestaShop\PrestaShop\Core\Import\File\DataRow\DataRowInterface;
 use PrestaShop\PrestaShop\Core\Import\Handler\ImportHandlerInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Class AbstractImportHandler is an abstract handler for import.
  */
 abstract class AbstractImportHandler implements ImportHandlerInterface
 {
+    /**
+     * @var ImportDataFormatter
+     */
+    protected $dataFormatter;
+
+    /**
+     * @var array
+     */
+    protected $contextShopIds;
+
+    /**
+     * @var bool whether the multistore feature is enabled.
+     */
+    protected $isMultistoreEnabled;
+
+    /**
+     * @var int
+     */
+    protected $currentContextShopId;
+
+    /**
+     * @var TranslatorInterface
+     */
+    protected $translator;
+
+    /**
+     * @var array all shops ids
+     */
+    protected $allShopIds;
+
     /**
      * Callback methods with field names as keys.
      * Callback methods are executed on fields during import process.
@@ -69,17 +99,52 @@ abstract class AbstractImportHandler implements ImportHandlerInterface
      * @var array entity default values
      */
     private $defaultValues = [];
+
     /**
-     * @var ImportDataFormatter
+     * @var array
      */
-    private $dataFormatter;
+    private $warnings = [];
+
+    /**
+     * @var array
+     */
+    private $errors = [];
+
+    /**
+     * @var array
+     */
+    private $notices = [];
+
+    /**
+     * @var int
+     */
+    private $contextLanguageId;
 
     /**
      * @param ImportDataFormatter $dataFormatter
+     * @param array $allShopIds
+     * @param array $contextShopIds
+     * @param int $currentContextShopId
+     * @param bool $isMultistoreEnabled
+     * @param int $contextLanguageId
+     * @param TranslatorInterface $translator
      */
-    public function __construct(ImportDataFormatter $dataFormatter)
-    {
+    public function __construct(
+        ImportDataFormatter $dataFormatter,
+        array $allShopIds,
+        array $contextShopIds,
+        $currentContextShopId,
+        $isMultistoreEnabled,
+        $contextLanguageId,
+        TranslatorInterface $translator
+    ) {
         $this->dataFormatter = $dataFormatter;
+        $this->contextShopIds = $contextShopIds;
+        $this->currentContextShopId = $currentContextShopId;
+        $this->isMultistoreEnabled = $isMultistoreEnabled;
+        $this->translator = $translator;
+        $this->allShopIds = $allShopIds;
+        $this->contextLanguageId = $contextLanguageId;
     }
 
     /**
@@ -151,6 +216,60 @@ abstract class AbstractImportHandler implements ImportHandlerInterface
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function getWarnings()
+    {
+        return $this->warnings;
+    }
+
+    /**
+     * Add a warning message.
+     *
+     * @param string $message
+     */
+    public function warning($message)
+    {
+        $this->warnings[] = $message;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getErrors()
+    {
+        return $this->errors;
+    }
+
+    /**
+     * Add an error message.
+     *
+     * @param string $message
+     */
+    public function error($message)
+    {
+        $this->errors[] = $message;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getNotices()
+    {
+        return $this->notices;
+    }
+
+    /**
+     * Add a notice message.
+     *
+     * @param string $message
+     */
+    public function notice($message)
+    {
+        $this->notices[] = $message;
+    }
+
+    /**
      * Fetch a data value by given entity field name out of data row.
      *
      * @param DataRowInterface $dataRow
@@ -193,16 +312,14 @@ abstract class AbstractImportHandler implements ImportHandlerInterface
      * @param ObjectModel $entity
      * @param array $entityFields
      * @param DataRowInterface $dataRow
-     * @param string $languageIso
+     * @param int $languageId
      */
     protected function fillEntityData(
         ObjectModel $entity,
         array $entityFields,
         DataRowInterface $dataRow,
-        $languageIso
+        $languageId
     ) {
-        $languageId = Language::getIdByIso($languageIso);
-
         foreach ($entityFields as $field) {
             $value = $this->fetchDataValueByKey($dataRow, $entityFields, $field);
 
@@ -220,5 +337,35 @@ abstract class AbstractImportHandler implements ImportHandlerInterface
                 $entity->{$field} = $value;
             }
         }
+    }
+
+    /**
+     * Add a warning message with additional entity data.
+     *
+     * @param string $message
+     * @param string $entityName
+     * @param int|null $entityId
+     */
+    protected function addEntityWarning($message, $entityName, $entityId = null)
+    {
+        $this->warning(sprintf(
+            '%s (ID %s) %s',
+            (string) $entityName,
+            null !== $entityId ? (int) $entityId : '',
+            $message
+        ));
+    }
+
+    /**
+     * Checks if entity exists in the database.
+     *
+     * @param ObjectModel $entity
+     * @param string $table database table without prefix, e.g. "product".
+     *
+     * @return bool
+     */
+    protected function entityExists(ObjectModel $entity, $table)
+    {
+        return $entity->id && ObjectModel::existsInDatabase($entity->id, $table);
     }
 }

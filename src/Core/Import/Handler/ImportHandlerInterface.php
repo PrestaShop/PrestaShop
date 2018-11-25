@@ -65,4 +65,25 @@ interface ImportHandlerInterface
      * Executed when the import process is completed.
      */
     public function tearDown();
+
+    /**
+     * Get warning messages that occurred during import.
+     *
+     * @return array
+     */
+    public function getWarnings();
+
+    /**
+     * Get error messages that occurred during import.
+     *
+     * @return array
+     */
+    public function getErrors();
+
+    /**
+     * Get notice messages that occurred during import.
+     *
+     * @return array
+     */
+    public function getNotices();
 }
