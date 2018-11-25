@@ -191,4 +191,14 @@ class Context implements MultistoreContextCheckerInterface
     {
         return Shop::getContext() === Shop::CONTEXT_GROUP;
     }
+
+    /**
+     * Get list of all shop IDs.
+     *
+     * @return array
+     */
+    public function getAllShopIds()
+    {
+        return Shop::getCompleteListOfShopsID();
+    }
 }
