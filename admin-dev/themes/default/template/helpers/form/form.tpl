@@ -913,10 +913,10 @@
 		// precedence conflicts with other document.ready() blocks
 		{foreach $languages as $k => $language}
 			languages[{$k}] = {
-				id_lang: {$language.id_lang},
-				iso_code: '{$language.iso_code}',
-				name: '{$language.name}',
-				is_default: '{$language.is_default}'
+				id_lang: {$language.id_lang|escape:'javascript'},
+				iso_code: '{$language.iso_code|escape:'javascript'}',
+				name: '{$language.name|escape:'javascript'}',
+				is_default: '{$language.is_default|escape:'javascript'}'
 			};
 		{/foreach}
 		// we need allowEmployeeFormLang var in ajax request

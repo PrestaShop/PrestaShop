@@ -72,7 +72,7 @@
 		var token_admin_orders = '{getAdminToken tab='AdminOrders'}';
 		var token_admin_customers = '{getAdminToken tab='AdminCustomers'}';
 		var token_admin_customer_threads = '{getAdminToken tab='AdminCustomerThreads'}';
-		var currentIndex = '{$currentIndex|@addcslashes:'\''}';
+		var currentIndex = '{$currentIndex|escape:'javascript':'UTF-8'|escape:'quotes'}';
 		var employee_token = '{getAdminToken tab='AdminEmployees'}';
 		var choose_language_translate = '{l s='Choose language:' js=1 d='Admin.Actions'}';
 		var default_language = '{$default_language|intval}';
