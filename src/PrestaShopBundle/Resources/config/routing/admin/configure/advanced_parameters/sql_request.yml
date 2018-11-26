@@ -1,98 +1,97 @@
-admin_sql_request:
+admin_sql_requests_index:
     path: /
     methods: [GET]
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\SqlManager:index'
         _legacy_controller: AdminRequestSql
-#@todo: uncomment when CQRS pages are hookable
-#        _legacy_link: AdminRequestSql
+        _legacy_link: AdminRequestSql
 
-admin_sql_request_search:
+admin_sql_requests_search:
     path: /
     methods: [POST]
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\SqlManager:search'
         _legacy_controller: AdminRequestSql
-#        _legacy_link: AdminRequestSql:search
+        _legacy_link: AdminRequestSql:search
 
-admin_sql_request_process:
-    path: /settings
+admin_sql_requests_process_settings:
+    path: /process-settings
     methods: [POST]
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\SqlManager:processForm'
         _legacy_controller: AdminRequestSql
-#        _legacy_link: AdminRequestSql:update
+        _legacy_link: AdminRequestSql:update
 
-admin_sql_request_create:
+admin_sql_requests_create:
     path: /new
     methods: [GET, POST]
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\SqlManager:create'
         _legacy_controller: AdminRequestSql
-#        _legacy_link: AdminRequestSql:addrequest_sql
+        _legacy_link: AdminRequestSql:addrequest_sql
 
-admin_sql_request_edit:
-    path: /edit/{sqlRequestId}
+admin_sql_requests_edit:
+    path: /{sqlRequestId}/edit
     methods: [GET, POST]
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\SqlManager:edit'
         _legacy_controller: AdminRequestSql
-#        _legacy_link: AdminRequestSql:updaterequest_sql
-#        _legacy_parameters:
-#            id_request_sql: sqlRequestId
+        _legacy_link: AdminRequestSql:updaterequest_sql
+        _legacy_parameters:
+            id_request_sql: sqlRequestId
     requirements:
         sqlRequestId: \d+
 
-admin_sql_request_delete:
-    path: /delete/{sqlRequestId}
+admin_sql_requests_delete:
+    path: /{sqlRequestId}/delete
     methods: [GET]
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\SqlManager:delete'
         _legacy_controller: AdminRequestSql
-#        _legacy_link: AdminRequestSql:deleterequest_sql
-#        _legacy_parameters:
-#            id_request_sql: sqlRequestId
+        _legacy_link: AdminRequestSql:deleterequest_sql
+        _legacy_parameters:
+            id_request_sql: sqlRequestId
     requirements:
         sqlRequestId: \d+
 
-admin_sql_request_delete_bulk:
-    path: /delete/bulk
+admin_sql_requests_delete_bulk:
+    path: /delete-bulk
     methods: [POST]
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\SqlManager:deleteBulk'
         _legacy_controller: AdminRequestSql
-#        _legacy_link: AdminRequestSql:submitBulkdeleterequest_sql
+        _legacy_link: AdminRequestSql:submitBulkdeleterequest_sql
 
-admin_sql_request_table_columns:
+admin_sql_requests_table_columns:
     path: /tables/{mySqlTableName}/columns
     methods: [GET]
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\SqlManager:ajaxTableColumns'
         _legacy_controller: AdminRequestSql
-#        _legacy_link: AdminRequestSql:ajax
-#        _legacy_parameters:
-#            table: mySqlTableName
+        _legacy_link: AdminRequestSql:ajax
+        _legacy_parameters:
+            table: mySqlTableName
 
-admin_sql_request_view:
-    path: /view/{sqlRequestId}
+admin_sql_requests_view:
+    path: /{sqlRequestId}/view
     methods: [GET]
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\SqlManager:view'
         _legacy_controller: AdminRequestSql
-#        _legacy_link: AdminRequestSql:viewsql_request
-#        _legacy_parameters:
-#            id_request_sql: sqlRequestId
+        _legacy_link: AdminRequestSql:viewsql_request
+        _legacy_parameters:
+            id_request_sql: sqlRequestId
     requirements:
         sqlRequestId: \d+
 
-admin_sql_request_export:
-    path: /export/{sqlRequestId}
+admin_sql_requests_export:
+    path: /{sqlRequestId}/export
     methods: [GET]
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\SqlManager:export'
         _legacy_controller: AdminRequestSql
-#        _legacy_link: AdminRequestSql:exportsql_request
-#        _legacy_parameters:
-#            id_request_sql: sqlRequestId
+        _legacy_link: AdminRequestSql:exportsql_request
+        _legacy_parameters:
+            id_request_sql: sqlRequestId
     requirements:
         sqlRequestId: \d+

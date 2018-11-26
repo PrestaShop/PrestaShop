@@ -87,3 +87,21 @@
         {{ label|trans({}, 'Admin.Advparameters.Feature') }}
     </a>
 {% endmacro %}
+
+{# Show form widget with errors rendered below it #}
+{% macro form_widget_with_error(form, vars) %}
+  {% set vars = vars|default({}) %}
+  {% set attr = vars.attr|default({}) %}
+  {% set errors = form.vars.errors %}
+
+  {% set attr = attr|merge({'class': (attr.class is defined ? attr.class : '') ~ (errors|length > 0 ? ' is-invalid' : '')} ) %}
+  {% set vars = vars|merge({'attr': attr}) %}
+
+  {{ form_widget(form, vars) }}
+
+  {% for error in form.vars.errors %}
+    <div class="invalid-feedback">
+      {{ error.message }}
+    </div>
+  {% endfor %}
+{% endmacro %}

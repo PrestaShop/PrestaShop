@@ -117,7 +117,7 @@ class SqlManagerPage {
    * @param {String} data
    */
   addToQuery(data) {
-    const $queryInput = $('#form_request_sql_sql');
+    const $queryInput = $('#sql_request_sql');
     $queryInput.val($queryInput.val() + ' ' + data);
   }
 }
