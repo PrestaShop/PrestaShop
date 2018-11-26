@@ -129,3 +129,8 @@ services:
         class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ThemePageLayoutsChoiceProvider'
         arguments:
             - '@=service("prestashop.adapter.legacy.context").getContext().shop.theme'
+
+    prestashop.core.form.choice_provider.customer_required_fields:
+        class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CustomerRequiredFieldsChoiceProvider'
+        arguments:
+            - '@translator'
