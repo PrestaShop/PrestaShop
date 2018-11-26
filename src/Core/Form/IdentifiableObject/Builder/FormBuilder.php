@@ -60,7 +60,7 @@ final class FormBuilder implements FormBuilderInterface
      * @param FormFactoryInterface $formFactory
      * @param HookDispatcherInterface $hookDispatcher
      * @param FormDataProviderInterface $dataProvider
-     * @param $formType
+     * @param string $formType
      */
     public function __construct(
         FormFactoryInterface $formFactory,
