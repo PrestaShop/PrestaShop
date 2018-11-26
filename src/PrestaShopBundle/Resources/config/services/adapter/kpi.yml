@@ -54,3 +54,10 @@ services:
             - '@translator'
             - '@prestashop.adapter.legacy.kpi_configuration'
             - '@=service("prestashop.adapter.legacy.context").getAdminLink("AdminStats", true, {"ajax": 1, "action": "getKpi", "kpi": "products_per_category"})'
+
+    prestashop.adapter.kpi.most_common_customers_gender:
+        class: 'PrestaShop\PrestaShop\Adapter\Kpi\MostCommonCustomersGenderKpi'
+        arguments:
+          - '@translator'
+          - '@prestashop.adapter.legacy.kpi_configuration'
+          - '@=service("prestashop.adapter.legacy.context").getAdminLink("AdminStats", true, {"ajax": 1, "action": "getKpi", "kpi": "customer_main_gender"})'
