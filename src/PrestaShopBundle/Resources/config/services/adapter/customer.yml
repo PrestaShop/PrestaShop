@@ -30,4 +30,4 @@ services:
     class: 'PrestaShop\PrestaShop\Adapter\Customer\CommandHandler\SetRequiredFieldsForCustomerHandler'
     tags:
       - name: tactician.handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\Customer\Command\SetRequiredFieldsForCustomerHandler'
+        command: 'PrestaShop\PrestaShop\Core\Domain\Customer\Command\SetRequiredFieldsForCustomerCommand'

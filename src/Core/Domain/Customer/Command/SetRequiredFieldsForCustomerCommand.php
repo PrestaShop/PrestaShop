@@ -27,19 +27,13 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Customer\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\InvalidCustomerRequiredFieldsException;
+use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\RequiredField;
 
 /**
  * Sets required fields for new customer when signing up in Front Office
  */
 class SetRequiredFieldsForCustomerCommand
 {
-    /**
-     * @var array Fields that can be required
-     */
-    const ALLOWED_REQUIRED_FIELDS = [
-        'optin',
-    ];
-
     /**
      * @var string[]
      */
@@ -74,11 +68,15 @@ class SetRequiredFieldsForCustomerCommand
             return;
         }
 
-        if (!empty(array_diff($requiredFields, self::ALLOWED_REQUIRED_FIELDS))) {
+        $allowedRequiredFields = [
+            RequiredField::PARTNER_OFFERS,
+        ];
+
+        if (!empty(array_diff($requiredFields, $allowedRequiredFields))) {
             throw new InvalidCustomerRequiredFieldsException(
                 sprintf(
                     'Invalid customer required fields provided. Allowed fields are: %s',
-                    implode(',', self::ALLOWED_REQUIRED_FIELDS)
+                    implode(',', $allowedRequiredFields)
                 )
             );
         }

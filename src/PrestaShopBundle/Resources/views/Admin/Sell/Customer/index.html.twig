@@ -54,6 +54,12 @@
       {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': customerGrid} %}
     </div>
   {% endblock %}
+
+  {% block customer_required_fields_form %}
+    <div class="col-md-12">
+      {% include '@PrestaShop/Admin/Sell/Customer/Blocks/Index/required_fields.html.twig' %}
+    </div>
+  {% endblock %}
 {% endblock %}
 
 {% block javascripts %}
