@@ -69,3 +69,9 @@ services:
             - '@prestashop.adapter.legacy.kpi_configuration'
             - '@=service("prestashop.adapter.legacy.context").getAdminLink("AdminStats", true, {"ajax": 1, "action": "getKpi", "kpi": "avg_customer_age"})'
 
+    prestashop.adapter.kpi.order_per_customer:
+        class: 'PrestaShop\PrestaShop\Adapter\Kpi\OrdersPerCustomerKpi'
+        arguments:
+          - '@translator'
+          - '@prestashop.adapter.legacy.kpi_configuration'
+          - '@=service("prestashop.adapter.legacy.context").getAdminLink("AdminStats", true, {"ajax": 1, "action": "getKpi", "kpi": "orders_per_customer"})'
