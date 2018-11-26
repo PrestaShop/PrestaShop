@@ -40,5 +40,5 @@ interface FormHandlerFactoryInterface
      *
      * @return FormHandlerInterface
      */
-    public function createWithDataHandler(FormDataHandlerInterface $dataHandler);
+    public function create(FormDataHandlerInterface $dataHandler);
 }

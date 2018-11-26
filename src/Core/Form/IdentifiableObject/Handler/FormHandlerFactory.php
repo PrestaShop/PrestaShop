@@ -68,7 +68,7 @@ final class FormHandlerFactory implements FormHandlerFactoryInterface
     /**
      * {@inheritdoc}
      */
-    public function createWithDataHandler(FormDataHandlerInterface $dataHandler)
+    public function create(FormDataHandlerInterface $dataHandler)
     {
         return new FormHandler(
             $dataHandler,
