@@ -1,0 +1,5 @@
+# SQL files to execute 
+sql:
+    - file: "sql/file1.sql"
+    # But key is optionnal
+    - "sql/another-subfolder/file2.sql"
