@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin\Sell\Customer;
 
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\SetRequiredFieldsForCustomerCommand;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetRequiredFieldsForCustomer;
 use PrestaShop\PrestaShop\Core\Search\Filters\CustomerFilters;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\CustomerInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
@@ -179,6 +180,8 @@ class CustomerController extends AbstractAdminController
      */
     protected function getRequiredFieldsForm()
     {
-        return $this->createForm(RequiredFieldsType::class, ['required_fields' => ['optin']]);
+        $requiredFields = $this->getQueryBus()->handle(new GetRequiredFieldsForCustomer());
+
+        return $this->createForm(RequiredFieldsType::class, ['required_fields' => $requiredFields]);
     }
 }
