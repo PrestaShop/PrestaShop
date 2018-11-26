@@ -49,11 +49,11 @@
     </div>
   {% endblock %}
 
-  <div class="row">
-    <div class="col">
+  {% block customers_listing %}
+    <div class="col-md-12">
       {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': customerGrid} %}
     </div>
-  </div>
+  {% endblock %}
 {% endblock %}
 
 {% block javascripts %}

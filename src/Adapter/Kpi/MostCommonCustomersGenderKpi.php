@@ -73,7 +73,7 @@ final class MostCommonCustomersGenderKpi implements KpiInterface
     {
         $helper = new HelperKpi();
         $helper->id = 'box-gender';
-        $helper->icon = 'icon-male';
+        $helper->icon = 'person';
         $helper->color = 'color1';
         $helper->title = $this->translator->trans('Customers', [], 'Admin.Global');
         $helper->subtitle = $this->translator->trans('All Time', [], 'Admin.Global');
