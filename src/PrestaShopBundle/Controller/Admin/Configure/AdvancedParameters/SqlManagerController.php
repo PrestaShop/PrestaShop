@@ -178,7 +178,9 @@ class SqlManagerController extends FrameworkBundleAdminController
         $sqlRequestForm = $this->getSqlRequestFormBuilder()->getForm($data);
         $sqlRequestForm->handleRequest($request);
 
-        if ($this->getSqlRequestFormHandler()->handle($sqlRequestForm)) {
+        $result = $this->getSqlRequestFormHandler()->handle($sqlRequestForm);
+
+        if (null !== $result->getIdentifiableObjectId()) {
             $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
 
             return $this->redirectToRoute('admin_sql_requests_index');
@@ -215,7 +217,9 @@ class SqlManagerController extends FrameworkBundleAdminController
             $sqlRequestForm = $this->getSqlRequestFormBuilder()->getFormFor($sqlRequestId);
             $sqlRequestForm->handleRequest($request);
 
-            if ($this->getSqlRequestFormHandler()->handleFor($sqlRequestId, $sqlRequestForm)) {
+            $result = $this->getSqlRequestFormHandler()->handleFor($sqlRequestId, $sqlRequestForm);
+
+            if (null !== $result->getIdentifiableObjectId()) {
                 $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_sql_requests_index');

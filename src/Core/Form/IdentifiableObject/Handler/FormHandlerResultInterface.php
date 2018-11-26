@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -26,29 +26,29 @@
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler;
 
-use Symfony\Component\Form\FormInterface;
-
 /**
- * Defines interface for handling identifiable object's form.
+ * Defines interface for form handler result DTO
  */
-interface FormHandlerInterface
+interface FormHandlerResultInterface
 {
     /**
-     * Handles form by creating new object.
+     * Check if form is valid and does not contains any errors
      *
-     * @param FormInterface $form
-     *
-     * @return FormHandlerResultInterface
+     * @return bool
      */
-    public function handle(FormInterface $form);
+    public function isValid();
 
     /**
-     * Handles form for given object.
+     * Check if form was actually submitted
      *
-     * @param int $id
-     * @param FormInterface $form
-     *
-     * @return FormHandlerResultInterface
+     * @return bool
      */
-    public function handleFor($id, FormInterface $form);
+    public function isSubmitted();
+
+    /**
+     * Get identifiable object id
+     *
+     * @return int|null ID of identifiable object or null if it does not exist
+     */
+    public function getIdentifiableObjectId();
 }
