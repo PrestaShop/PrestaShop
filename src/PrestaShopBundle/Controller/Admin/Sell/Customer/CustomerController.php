@@ -59,12 +59,15 @@ class CustomerController extends AbstractAdminController
      */
     public function indexAction(Request $request, CustomerFilters $filters)
     {
+        $customersKpiFactory = $this->get('prestashop.core.kpi_row.factory.customers');
+
         $customerGridFactory = $this->get('prestashop.core.grid.factory.customer');
         $customerGrid = $customerGridFactory->getGrid($filters);
 
         return $this->render('@PrestaShop/Admin/Sell/Customer/index.html.twig', [
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'customerGrid' => $this->presentGrid($customerGrid),
+            'customersKpi' => $customersKpiFactory->build(),
         ]);
     }
 
