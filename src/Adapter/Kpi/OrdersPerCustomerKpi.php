@@ -68,8 +68,8 @@ final class OrdersPerCustomerKpi implements KpiInterface
     {
         $helper = new HelperKpi();
         $helper->id = 'box-age';
-        $helper->icon = 'icon-calendar';
-        $helper->color = 'color2';
+        $helper->icon = 'shopping_basket';
+        $helper->color = 'color4';
 
         $helper->title = $this->translator->trans('Orders per Customer', [], 'Admin.Orderscustomers.Feature');
         $helper->subtitle = $this->translator->trans('All Time', [], 'Admin.Global');

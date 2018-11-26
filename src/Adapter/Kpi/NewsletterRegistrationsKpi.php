@@ -73,8 +73,8 @@ final class NewsletterRegistrationsKpi implements KpiInterface
     {
         $helper = new HelperKpi();
         $helper->id = 'box-newsletter';
-        $helper->icon = 'icon-envelope';
-        $helper->color = 'color4';
+        $helper->icon = 'mail_outline';
+        $helper->color = 'color3';
 
         $helper->title = $this->translator->trans('Newsletter Registrations', [], 'Admin.Orderscustomers.Feature');
         $helper->subtitle = $this->translator->trans('All Time', [], 'Admin.Global');

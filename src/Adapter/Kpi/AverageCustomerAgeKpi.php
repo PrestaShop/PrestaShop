@@ -68,7 +68,7 @@ final class AverageCustomerAgeKpi implements KpiInterface
     {
         $helper = new HelperKpi();
         $helper->id = 'box-age';
-        $helper->icon = 'icon-calendar';
+        $helper->icon = 'calendar_today';
         $helper->color = 'color2';
 
         $helper->title = $this->translator->trans('Average Age', [], 'Admin.Orderscustomers.Feature');
