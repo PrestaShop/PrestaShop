@@ -95,12 +95,12 @@ final class FormHandler implements FormHandlerInterface
      * @param FormInterface $form
      * @param int|null $id
      *
-     * @return int
+     * @return FormHandlerResultInterface
      */
     private function handleForm(FormInterface $form, $id = null)
     {
         if (!$form->isSubmitted()) {
-            return 0;
+            return FormHandlerResult::createNotSubmitted();
         }
 
         if ($this->isDemoModeEnabled) {
@@ -110,11 +110,11 @@ final class FormHandler implements FormHandlerInterface
                 )
             );
 
-            return 0;
+            return FormHandlerResult::createSubmittedButNotValid();
         }
 
         if (!$form->isValid()) {
-            return 0;
+            return FormHandlerResult::createSubmittedButNotValid();
         }
 
         if (null !== $id) {
@@ -128,7 +128,7 @@ final class FormHandler implements FormHandlerInterface
      * @param FormInterface $form
      * @param int $id
      *
-     * @return int
+     * @return FormHandlerResultInterface
      */
     private function handleFormUpdate(FormInterface $form, $id)
     {
@@ -145,13 +145,13 @@ final class FormHandler implements FormHandlerInterface
             'id' => $id,
         ]);
 
-        return $id;
+        return FormHandlerResult::createWithId($id);
     }
 
     /**
      * @param FormInterface $form
      *
-     * @return int
+     * @return FormHandlerResult
      */
     private function handleFormCreate(FormInterface $form)
     {
@@ -167,6 +167,6 @@ final class FormHandler implements FormHandlerInterface
             'id' => $id,
         ]);
 
-        return $id;
+        return FormHandlerResult::createWithId($id);
     }
 }
