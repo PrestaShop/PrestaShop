@@ -32,10 +32,17 @@ import BulkActionCheckboxExtension from '../../components/grid/extension/bulk-ac
 import SubmitBulkExtension from '../../components/grid/extension/submit-bulk-action-extension';
 import SubmitGridExtension from '../../components/grid/extension/submit-grid-action-extension';
 import LinkRowActionExtension from '../../components/grid/extension/link-row-action-extension';
+import LinkableItem from "../../components/linkable-item";
 
 const $ = window.$;
 
 $(() => {
+  // in customer view page
+  // there are a lot of tables
+  // where you click any row
+  // and it redirects user to related page
+  new LinkableItem();
+
   const customerGrid = new Grid('customer');
 
   customerGrid.addExtension(new ReloadListActionExtension());
