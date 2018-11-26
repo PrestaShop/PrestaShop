@@ -35,6 +35,8 @@ interface GetRequiredFieldsForCustomerHandlerInterface
 {
     /**
      * @param GetRequiredFieldsForCustomer $query
+     *
+     * @return string[]
      */
     public function handle(GetRequiredFieldsForCustomer $query);
 }

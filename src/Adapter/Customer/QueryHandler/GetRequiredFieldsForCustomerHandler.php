@@ -24,31 +24,36 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\Customer\CommandHandler;
+namespace PrestaShop\PrestaShop\Adapter\Customer\QueryHandler;
 
 use Customer;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Command\SetRequiredFieldsForCustomerCommand;
-use PrestaShop\PrestaShop\Core\Domain\Customer\CommandHandler\SetRequiredFieldsForCustomerHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CannotSetRequiredFieldsForCustomerException;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetRequiredFieldsForCustomer;
+use PrestaShop\PrestaShop\Core\Domain\Customer\QueryHandler\GetRequiredFieldsForCustomerHandlerInterface;
 
 /**
- * Handles command which sets required fields for customer.
+ * Handles query which gets required fields for customer sing up
  *
  * @internal
  */
-final class SetRequiredFieldsForCustomerHandler implements SetRequiredFieldsForCustomerHandlerInterface
+final class GetRequiredFieldsForCustomerHandler implements GetRequiredFieldsForCustomerHandlerInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function handle(SetRequiredFieldsForCustomerCommand $command)
+    public function handle(GetRequiredFieldsForCustomer $query)
     {
-        $object = new Customer();
+        $requiredFields = (new Customer())->getFieldsRequiredDatabase();
 
-        if (!$object->addFieldsRequiredDatabase($command->getRequiredFields())) {
-            throw new CannotSetRequiredFieldsForCustomerException(
-                sprintf('Cannot set "%s" required fields for customer', implode(',', $command->getRequiredFields()))
-            );
+        if (empty($requiredFields)) {
+            return [];
         }
+
+        $fields = [];
+
+        foreach ($requiredFields as $field) {
+            $fields[] = $field['field_name'];
+        }
+
+        return $fields;
     }
 }
