@@ -37,11 +37,11 @@ interface ImportHandlerInterface
 {
     /**
      * Executed before import process is started.
-     * After the validation step.
      *
      * @param ImportConfigInterface $importConfig
+     * @param ImportRuntimeConfigInterface $runtimeConfig
      */
-    public function setUp(ImportConfigInterface $importConfig);
+    public function setUp(ImportConfigInterface $importConfig, ImportRuntimeConfigInterface $runtimeConfig);
 
     /**
      * Imports one data row.
@@ -58,8 +58,11 @@ interface ImportHandlerInterface
 
     /**
      * Executed when the import process is completed.
+     *
+     * @param ImportConfigInterface $importConfig
+     * @param ImportRuntimeConfigInterface $runtimeConfig
      */
-    public function tearDown();
+    public function tearDown(ImportConfigInterface $importConfig, ImportRuntimeConfigInterface $runtimeConfig);
 
     /**
      * Get warning messages that occurred during import.

@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\Import\Handler;
 use ObjectModel;
 use PrestaShop\PrestaShop\Adapter\Import\ImportDataFormatter;
 use PrestaShop\PrestaShop\Core\Import\Configuration\ImportConfigInterface;
+use PrestaShop\PrestaShop\Core\Import\Configuration\ImportRuntimeConfigInterface;
 use PrestaShop\PrestaShop\Core\Import\File\DataRow\DataRowInterface;
 use PrestaShop\PrestaShop\Core\Import\Handler\ImportHandlerInterface;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -150,7 +151,7 @@ abstract class AbstractImportHandler implements ImportHandlerInterface
     /**
      * {@inheritdoc}
      */
-    public function setUp(ImportConfigInterface $importConfig)
+    public function setUp(ImportConfigInterface $importConfig, ImportRuntimeConfigInterface $runtimeConfig)
     {
         $languageIso = trim($importConfig->getLanguageIso());
         $locale = strtolower($languageIso) . '_' . strtoupper($languageIso) . '.UTF-8';
@@ -202,7 +203,7 @@ abstract class AbstractImportHandler implements ImportHandlerInterface
     /**
      * {@inheritdoc}
      */
-    public function tearDown()
+    public function tearDown(ImportConfigInterface $importConfig, ImportRuntimeConfigInterface $runtimeConfig)
     {
 
     }
