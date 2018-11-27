@@ -285,9 +285,14 @@ class ImportController extends FrameworkBundleAdminController
             $importHandlerFinder->find($importConfig->getEntityType())
         );
 
-        return $this->json([
+        //@todo warnings, notices, totalCount
+        $response = [
             'errors' => $errors,
-        ]);
+        ];
+
+        $response += $runtimeConfig->toArray();
+
+        return $this->json($response);
     }
 
     /**

@@ -89,10 +89,15 @@ final class Importer implements ImporterInterface
             $this->entityDeleter->deleteAll($importConfig->getEntityType());
         }
 
-        $importHandler->setUp($importConfig);
+        $importHandler->setUp($importConfig, $runtimeConfig);
         $importFile = new SplFileInfo($this->importDir.$importConfig->getFileName());
 
+        // Current row index
         $rowIndex = 0;
+
+        // Number of rows processed during import process.
+        $processedRows = 0;
+
         $skipRows = $importConfig->getNumberOfRowsToSkip() + $runtimeConfig->getOffset();
         $limit = $runtimeConfig->getLimit();
 
@@ -104,7 +109,7 @@ final class Importer implements ImporterInterface
             }
 
             // If import process limit is reached - stop importing the rows.
-            if ($rowIndex >= $limit) {
+            if ($rowIndex > $limit) {
                 break;
             }
 
@@ -114,9 +119,17 @@ final class Importer implements ImporterInterface
                 $runtimeConfig,
                 $dataRow
             );
+            $processedRows++;
+            $rowIndex++;
         }
 
-        $importHandler->tearDown();
+        $runtimeConfig->setNumberOfProcessedRows($processedRows);
+
+        if (!$runtimeConfig->isFinished()) {
+            $runtimeConfig->incrementProcessIndex();
+        }
+
+        $importHandler->tearDown($importConfig, $runtimeConfig);
     }
 
     /**

@@ -189,15 +189,17 @@ final class ProductImportHandler extends AbstractImportHandler
     /**
      * {@inheritdoc}
      */
-    public function setUp(ImportConfigInterface $importConfig)
+    public function setUp(ImportConfigInterface $importConfig, ImportRuntimeConfigInterface $runtimeConfig)
     {
-        parent::setUp($importConfig);
+        parent::setUp($importConfig, $runtimeConfig);
 
         if (!defined('PS_MASS_PRODUCT_CREATION')) {
             define('PS_MASS_PRODUCT_CREATION', true);
         }
 
-        Module::setBatchMode(true);
+        if (!$runtimeConfig->shouldValidateData()) {
+            Module::setBatchMode(true);
+        }
     }
 
     /**
@@ -305,12 +307,13 @@ final class ProductImportHandler extends AbstractImportHandler
     /**
      * {@inheritdoc}
      */
-    public function tearDown()
+    public function tearDown(ImportConfigInterface $importConfig, ImportRuntimeConfigInterface $runtimeConfig)
     {
-        parent::tearDown();
-        Module::processDeferedFuncCall();
-        Module::processDeferedClearCache();
-        Tag::updateTagCount();
+        if (!$runtimeConfig->shouldValidateData()) {
+            Module::processDeferedFuncCall();
+            Module::processDeferedClearCache();
+            Tag::updateTagCount();
+        }
     }
 
     /**

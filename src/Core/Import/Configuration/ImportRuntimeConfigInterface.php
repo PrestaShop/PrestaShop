@@ -84,4 +84,44 @@ interface ImportRuntimeConfigInterface
      * @return array
      */
     public function getEntityFields();
+
+    /**
+     * Increment the current import process index by one.
+     */
+    public function incrementProcessIndex();
+
+    /**
+     * Check if the import is completely finished.
+     *
+     * @return bool
+     */
+    public function isFinished();
+
+    /**
+     * Set number of rows processed during import process runtime.
+     *
+     * @param int $number
+     */
+    public function setNumberOfProcessedRows($number);
+
+    /**
+     * Set request size in bytes.
+     *
+     * @param int $size
+     */
+    public function setRequestSizeInBytes($size);
+
+    /**
+     * Set post size limit in bytes.
+     *
+     * @param int $size
+     */
+    public function setPostSizeLimitInBytes($size);
+
+    /**
+     * Convert object to an array.
+     *
+     * @return array
+     */
+    public function toArray();
 }

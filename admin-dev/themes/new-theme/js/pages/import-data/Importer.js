@@ -78,7 +78,7 @@ export default class Importer {
       offset: offset,
       limit: batchSize,
       validateOnly: validateOnly ? 1 : 0,
-      moreStep: stepIndex,
+      stepIndex: stepIndex,
       crossStepsVars: JSON.stringify(recurringVariables)
     });
 
@@ -94,7 +94,10 @@ export default class Importer {
           return false;
         }
 
-        let nextStepIndex = response.oneMoreStep !== undefined ? response.oneMoreStep : stepIndex;
+        let nextStepIndex = response.processIndex !== undefined ? response.processIndex : stepIndex,
+            hasErrors = response.errors && response.errors.length,
+            hasWarnings = response.warnings && response.warnings.length,
+            hasNotices = response.notices && response.notices.length;
 
         if (response.totalCount !== undefined) {
           // The total rows count is retrieved only in the first batch response.
@@ -110,11 +113,11 @@ export default class Importer {
         }
 
         // Information messages are not shown during validation.
-        if (!validateOnly && response.informations) {
-          this.progressModal.showInfoMessages(response.informations);
+        if (!validateOnly && hasNotices) {
+          this.progressModal.showInfoMessages(response.notices);
         }
 
-        if (response.errors) {
+        if (hasErrors) {
           this.hasErrors = true;
           this.progressModal.showErrorMessages(response.errors);
 
@@ -124,7 +127,7 @@ export default class Importer {
             this._onImportStop();
             return false;
           }
-        } else if (response.warnings) {
+        } else if (hasWarnings) {
           this.hasWarnings = true;
           this.progressModal.showWarningMessages(response.warnings);
         }
