@@ -5806,7 +5806,7 @@ class ProductCore extends ObjectModel
             );
         }
 
-        Hook::exec('updateProduct', array('id_product' => (int) $this->id));
+        Hook::exec('actionProductUpdate', array('id_product' => (int) $this->id));
 
         return $return;
     }
@@ -6433,7 +6433,7 @@ class ProductCore extends ObjectModel
         if ($success && Configuration::get('PS_SEARCH_INDEXATION')) {
             Search::indexation(false, $this->id);
         }
-        Hook::exec('updateProduct', array('id_product' => (int) $this->id));
+        Hook::exec('actionProductUpdate', array('id_product' => (int) $this->id));
 
         return $success;
     }
