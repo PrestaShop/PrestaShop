@@ -119,6 +119,13 @@ interface ImportRuntimeConfigInterface
     public function setPostSizeLimitInBytes($size);
 
     /**
+     * Set the total number of rows to be imported.
+     *
+     * @param $number
+     */
+    public function setTotalNumberOfRows($number);
+
+    /**
      * Convert object to an array.
      *
      * @return array

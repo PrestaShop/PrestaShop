@@ -98,10 +98,18 @@ final class Importer implements ImporterInterface
         // Number of rows processed during import process.
         $processedRows = 0;
 
+        // Total number of importable rows in the whole file.
+        $totalNumberOfRows = 0;
+
         $skipRows = $importConfig->getNumberOfRowsToSkip() + $runtimeConfig->getOffset();
         $limit = $runtimeConfig->getLimit();
+        $isFirstIteration = $this->isFirstIteration($runtimeConfig);
 
         foreach ($this->fileReader->read($importFile) as $dataRow) {
+            if ($isFirstIteration) {
+                $totalNumberOfRows++;
+            }
+
             // Skip rows until the correct row is reached.
             if ($rowIndex < $skipRows) {
                 $rowIndex++;
@@ -110,6 +118,10 @@ final class Importer implements ImporterInterface
 
             // If import process limit is reached - stop importing the rows.
             if ($rowIndex > $limit) {
+                // On the first iteration we need to continue counting the number of rows
+                if ($isFirstIteration) {
+                    continue;
+                }
                 break;
             }
 
@@ -121,6 +133,11 @@ final class Importer implements ImporterInterface
             );
             $processedRows++;
             $rowIndex++;
+        }
+
+        // Calculate total number of rows only in the first import iteration.
+        if ($isFirstIteration && $runtimeConfig->shouldValidateData()) {
+            $runtimeConfig->setTotalNumberOfRows($totalNumberOfRows - $skipRows);
         }
 
         $runtimeConfig->setNumberOfProcessedRows($processedRows);
@@ -146,7 +163,11 @@ final class Importer implements ImporterInterface
         ImportConfigInterface $importConfig,
         ImportRuntimeConfigInterface $runtimeConfig
     ) {
-        return $importConfig->truncate() && $this->isFirstIteration($runtimeConfig);
+        return
+            $importConfig->truncate() &&
+            !$runtimeConfig->shouldValidateData() &&
+            $this->isFirstIteration($runtimeConfig)
+        ;
     }
 
     /**
@@ -158,7 +179,7 @@ final class Importer implements ImporterInterface
      */
     private function isFirstIteration(ImportRuntimeConfigInterface $runtimeConfig)
     {
-        return !$runtimeConfig->shouldValidateData() &&
+        return
             0 === $runtimeConfig->getOffset() &&
             0 === $runtimeConfig->getProcessIndex()
         ;

@@ -82,6 +82,11 @@ final class ImportRuntimeConfig implements ImportRuntimeConfigInterface
     private $postSizeLimit;
 
     /**
+     * @var int total number of rows to be imported.
+     */
+    private $totalNumberOfRows;
+
+    /**
      * @param bool $shouldValidateData
      * @param int $offset
      * @param int $limit
@@ -204,6 +209,14 @@ final class ImportRuntimeConfig implements ImportRuntimeConfigInterface
     /**
      * {@inheritdoc}
      */
+    public function setTotalNumberOfRows($number)
+    {
+        $this->totalNumberOfRows = $number;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function toArray()
     {
         return [
@@ -215,6 +228,7 @@ final class ImportRuntimeConfig implements ImportRuntimeConfigInterface
             'nextPostSize' => $this->requestSize,
             'postSizeLimit' => $this->postSizeLimit,
             'processIndex' => $this->processIndex,
+            'totalCount' => $this->totalNumberOfRows,
         ];
     }
 }
