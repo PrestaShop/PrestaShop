@@ -484,7 +484,16 @@ class CategoryCore extends ObjectModel
         $n = 1;
 
         if (isset($categoriesArray[0]) && $categoriesArray[0]['subcategories']) {
-            Category::subTree($categoriesArray, $categoriesArray[0]['subcategories'][0], $n);
+            $queries = Category::computeNTreeInfos($categoriesArray, $categoriesArray[0]['subcategories'][0], $n);
+
+            // update by batch of 5000 categories
+            $chunks = array_chunk($queries, 5000);
+            foreach ($chunks as $chunk) {
+                $sqlChunk = array_map(function ($value) { return '(' . rtrim(implode(',', $value)) . ')'; }, $chunk);
+                Db::getInstance()->execute('INSERT INTO `' . _DB_PREFIX_ . 'category` (id_category, nleft, nright) 
+                VALUES ' . rtrim(implode(',', $sqlChunk), ',') . ' 
+                ON DUPLICATE KEY UPDATE nleft=VALUES(nleft), nright=VALUES(nright)');
+            }
         }
     }
 
@@ -501,11 +510,36 @@ class CategoryCore extends ObjectModel
     }
 
     /**
+     * @param array $categories
+     * @param int $idCategory
+     * @param int $n
+     *
+     * @return array ntree infos
+     */
+    protected static function computeNTreeInfos(&$categories, $idCategory, &$n)
+    {
+        $queries = array();
+        $left = $n++;
+        if (isset($categories[(int) $idCategory]['subcategories'])) {
+            foreach ($categories[(int) $idCategory]['subcategories'] as $idSubcategory) {
+                $queries = array_merge($queries, Category::computeNTreeInfos($categories, (int) $idSubcategory, $n));
+            }
+        }
+        $right = (int) $n++;
+
+        $queries[] = array($idCategory, $left, $right);
+
+        return $queries;
+    }
+
+    /**
      * @param $categories
      * @param $idCategory
      * @param $n
      *
      * @return bool Indicates whether the sub tree of categories has been successfully updated
+     *
+     * @deprecated 1.7.6.0 use computeNTreeInfos + sql query instead
      */
     protected static function subTree(&$categories, $idCategory, &$n)
     {

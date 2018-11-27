@@ -1409,11 +1409,18 @@ class WebserviceRequestCore
             }
         }
 
+        $postponeNTreeRegeneration = false;
+
         if (!empty($arr_avoid_id) || empty($ids)) {
             $this->setError(404, 'Id(s) not exists: ' . implode(', ', $arr_avoid_id), 87);
             $this->_outputEnabled = true;
         } else {
             foreach ($objects as $object) {
+                if ($object instanceof Category) {
+                    $object->doNotRegenerateNTree = true;
+                    $postponeNTreeRegeneration = true;
+                }
+
                 /* @var ObjectModel $object */
                 if (isset($this->resourceConfiguration['objectMethods']) && isset($this->resourceConfiguration['objectMethods']['delete'])) {
                     $result = $object->{$this->resourceConfiguration['objectMethods']['delete']}();
@@ -1431,6 +1438,10 @@ class WebserviceRequestCore
             } else {
                 $this->_outputEnabled = false;
             }
+        }
+
+        if ($postponeNTreeRegeneration) {
+            Category::regenerateEntireNtree();
         }
     }
 
@@ -1481,6 +1492,7 @@ class WebserviceRequestCore
             return false;
         }
 
+        $postponeNTreeRegeneration = false;
         foreach ($xmlEntities as $xmlEntity) {
             /** @var SimpleXMLElement $xmlEntity */
             $attributes = $xmlEntity->children();
@@ -1496,6 +1508,12 @@ class WebserviceRequestCore
                     return false;
                 }
             }
+
+            if ($object instanceof Category) {
+                $object->doNotRegenerateNTree = true;
+                $postponeNTreeRegeneration = true;
+            }
+
             $this->objects[] = $object;
             $i18n = false;
             // attributes
@@ -1612,6 +1630,11 @@ class WebserviceRequestCore
                 }
             }
         }
+
+        if ($postponeNTreeRegeneration) {
+            Category::regenerateEntireNtree();
+        }
+
         if (!$this->hasErrors()) {
             $this->objOutput->setStatus($successReturnCode);
 
