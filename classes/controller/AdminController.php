@@ -1917,6 +1917,7 @@ class AdminControllerCore extends Controller
                 'multishop_context' => $this->multishop_context,
                 'default_tab_link' => $this->context->link->getAdminLink(Tab::getClassNameById((int) Context::getContext()->employee->default_tab)),
                 'login_link' => $this->context->link->getAdminLink('AdminLogin'),
+                'logout_link' => $this->context->link->getAdminLink('AdminLogin', true, [], ['logout' => 1]),
                 'collapse_menu' => isset($this->context->cookie->collapse_menu) ? (int) $this->context->cookie->collapse_menu : 0,
             ));
         } else {
