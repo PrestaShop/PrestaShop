@@ -87,7 +87,7 @@ script:
 
   - if [ $PRESTASHOP_TEST_TYPE = "unit" ]; then
         bash tests-legacy/check_phpunit.sh;
-        bash tests/check_phpunit.sh;
+        bash tests/check_unit.sh;
     fi
 
   - if [ $PRESTASHOP_TEST_TYPE = "e2e" ]; then
