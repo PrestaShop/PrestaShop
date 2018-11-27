@@ -62,6 +62,26 @@ final class ImportRuntimeConfig implements ImportRuntimeConfigInterface
     private $sharedData = [];
 
     /**
+     * @var int
+     */
+    private $stepIndex;
+
+    /**
+     * @var int
+     */
+    private $processedRows = 0;
+
+    /**
+     * @var int request size in bytes
+     */
+    private $requestSize;
+
+    /**
+     * @var int post size limit in bytes
+     */
+    private $postSizeLimit;
+
+    /**
      * @param bool $shouldValidateData
      * @param int $offset
      * @param int $limit
@@ -139,5 +159,62 @@ final class ImportRuntimeConfig implements ImportRuntimeConfigInterface
     public function addSharedDataItem($key, $value)
     {
         $this->sharedData[$key] = $value;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function incrementProcessIndex()
+    {
+        $this->stepIndex++;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isFinished()
+    {
+        return $this->processedRows < $this->limit;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setNumberOfProcessedRows($number)
+    {
+        $this->processedRows = $number;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setRequestSizeInBytes($size)
+    {
+        $this->requestSize = $size;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setPostSizeLimitInBytes($size)
+    {
+        $this->postSizeLimit = $size;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function toArray()
+    {
+        return [
+            'crossStepsVariables' => $this->sharedData,
+            'offset' => $this->offset,
+            'limit' => $this->limit,
+            'doneCount' => $this->offset + $this->processedRows,
+            'isFinished' => $this->isFinished(),
+            'nextPostSize' => $this->requestSize,
+            'postSizeLimit' => $this->postSizeLimit,
+            'processIndex' => $this->processIndex,
+        ];
     }
 }
