@@ -41,7 +41,7 @@ final class ImportRuntimeConfigFactory implements ImportRuntimeConfigFactoryInte
         $sharedData = $request->request->get('crossStepsVars', []);
 
         return new ImportRuntimeConfig(
-            $request->request->getBoolean('validate'),
+            $request->request->getBoolean('validateOnly'),
             $request->request->getInt('offset'),
             $request->request->getInt('limit'),
             $request->request->getInt('stepIndex'),
