@@ -214,7 +214,7 @@ class CustomerController extends AbstractAdminController
         try {
             $this->getCommandBus()->handle(new TransformGuestToCustomerCommand(new CustomerId($customerId)));
 
-            $this->addFlash('success',  $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+            $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
         } catch (CustomerNotFoundException $e) {
             $this->addFlash(
                 'error',
@@ -224,10 +224,8 @@ class CustomerController extends AbstractAdminController
             return $this->redirectToRoute('admin_customers_index');
         } catch (CustomerTransformationException $e) {
             $errors = [
-                CustomerTransformationException::CUSTOMER_IS_NOT_GUEST =>
-                    $this->trans('This customer already exists as a non-guest.', 'Admin.Orderscustomers.Notification'),
-                CustomerTransformationException::TRANSFORMATION_FAILED =>
-                    $this->trans('An error occurred while updating customer information.', 'Admin.Orderscustomers.Notification'),
+                CustomerTransformationException::CUSTOMER_IS_NOT_GUEST => $this->trans('This customer already exists as a non-guest.', 'Admin.Orderscustomers.Notification'),
+                CustomerTransformationException::TRANSFORMATION_FAILED => $this->trans('An error occurred while updating customer information.', 'Admin.Orderscustomers.Notification'),
             ];
 
             $error = isset($errors[$e->getCode()]) ?

@@ -43,7 +43,7 @@ final class SavePrivateNoteForCustomerHandler implements SavePrivateNoteForCusto
      */
     public function handle(SavePrivateNoteForCustomerCommand $command)
     {
-        $customerId =$command->getCustomerId();
+        $customerId = $command->getCustomerId();
         $customer = new Customer($customerId->getValue());
 
         if ($customer->id !== $customerId->getValue()) {
