@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\PrestaShopBundle\Routing\Converter;
+namespace LegacyTests\PrestaShopBundle\Routing\Converter;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShopBundle\Routing\Converter\CacheKeyGeneratorInterface;

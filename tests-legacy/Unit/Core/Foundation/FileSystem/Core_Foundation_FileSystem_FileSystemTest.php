@@ -24,9 +24,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Unit\Core\Foundation\FileSystem;
+namespace LegacyTests\Unit\Core\Foundation\FileSystem;
 
-use Tests\TestCase\UnitTestCase;
+use LegacyTests\TestCase\UnitTestCase;
 use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem;
 
 class Core_Foundation_FileSystem_FileSystemTest extends UnitTestCase

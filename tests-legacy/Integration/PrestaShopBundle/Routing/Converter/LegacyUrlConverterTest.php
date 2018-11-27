@@ -24,11 +24,11 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Integration\PrestaShopBundle\Routing\Converter;
+namespace LegacyTests\Integration\PrestaShopBundle\Routing\Converter;
 
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShopBundle\Routing\Converter\LegacyUrlConverter;
-use Tests\Integration\PrestaShopBundle\Test\LightWebTestCase;
+use LegacyTests\Integration\PrestaShopBundle\Test\LightWebTestCase;
 use Link;
 use ReflectionClass;
 

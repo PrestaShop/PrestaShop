@@ -24,12 +24,12 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Unit\Core\Cart\Calculation\Currencies;
+namespace LegacyTests\Unit\Core\Cart\Calculation\Currencies;
 
 use Configuration;
 use Context;
 use Currency;
-use Tests\Unit\Core\Cart\Calculation\AbstractCartCalculationTest;
+use LegacyTests\Unit\Core\Cart\Calculation\AbstractCartCalculationTest;
 
 class CurrencyTest extends AbstractCartCalculationTest
 {

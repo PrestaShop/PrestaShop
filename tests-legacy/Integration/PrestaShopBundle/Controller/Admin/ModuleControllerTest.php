@@ -24,10 +24,10 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Integration\PrestaShopBundle\Controller\Admin;
+namespace LegacyTests\Integration\PrestaShopBundle\Controller\Admin;
 
 use Context;
-use Tests\Integration\PrestaShopBundle\Test\WebTestCase;
+use LegacyTests\Integration\PrestaShopBundle\Test\WebTestCase;
 
 /**
  * @group demo

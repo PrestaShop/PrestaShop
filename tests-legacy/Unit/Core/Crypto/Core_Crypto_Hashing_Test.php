@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Unit\Core\Crypto;
+namespace LegacyTests\Unit\Core\Crypto;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Crypto\Hashing;

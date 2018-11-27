@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Unit\Core\Grid\Query;
+namespace LegacyTests\Unit\Core\Grid\Query;
 
 use stdClass;
 use PHPUnit\Framework\TestCase;

@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Core\Addon\Module;
+namespace LegacyTests\Core\Addon\Module;
 
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater;
@@ -32,8 +32,8 @@ use PrestaShop\PrestaShop\Core\Addon\AddonListFilter;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterOrigin;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterStatus;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterType;
-use Tests\TestCase\FakeLogger;
-use Tests\TestCase\UnitTestCase;
+use LegacyTests\TestCase\FakeLogger;
+use LegacyTests\TestCase\UnitTestCase;
 
 /**
  * @runInSeparateProcess

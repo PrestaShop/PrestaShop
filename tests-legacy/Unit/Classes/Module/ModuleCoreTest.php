@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Unit\Classes\Module;
+namespace LegacyTests\Unit\Classes\Module;
 
 use DomDocument;
 use Module;

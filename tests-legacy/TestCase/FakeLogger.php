@@ -25,7 +25,7 @@
  */
 
 
-namespace Tests\TestCase;
+namespace LegacyTests\TestCase;
 
 use Psr\Log\LoggerInterface;
 

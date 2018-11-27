@@ -24,10 +24,10 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Unit\Core\Cart\Calculation\Taxes;
+namespace LegacyTests\Unit\Core\Cart\Calculation\Taxes;
 
 use Configuration;
-use Tests\Unit\Core\Cart\Calculation\AbstractCartCalculationTest;
+use LegacyTests\Unit\Core\Cart\Calculation\AbstractCartCalculationTest;
 
 class CartTaxesTest extends AbstractCartCalculationTest
 {

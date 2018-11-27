@@ -25,10 +25,10 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Integration\Classes\Db;
+namespace LegacyTests\Integration\Classes\Db;
 
 use Db;
-use Tests\TestCase\IntegrationTestCase;
+use LegacyTests\TestCase\IntegrationTestCase;
 
 class DbTest extends IntegrationTestCase
 {

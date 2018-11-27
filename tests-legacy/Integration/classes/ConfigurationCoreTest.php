@@ -24,10 +24,10 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Integration\classes;
+namespace LegacyTests\Integration\classes;
 
-use Tests\TestCase\ReflexionHelper;
-use Tests\TestCase\IntegrationTestCase;
+use LegacyTests\TestCase\ReflexionHelper;
+use LegacyTests\TestCase\IntegrationTestCase;
 use Configuration;
 
 class ConfigurationCoreTest extends IntegrationTestCase

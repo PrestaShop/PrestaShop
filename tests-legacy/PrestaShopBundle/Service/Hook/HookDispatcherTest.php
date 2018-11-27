@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-namespace Tests\PrestaShopBundle\Service\Hook;
+namespace LegacyTests\PrestaShopBundle\Service\Hook;
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use PrestaShopBundle\Service\Hook\HookEvent;

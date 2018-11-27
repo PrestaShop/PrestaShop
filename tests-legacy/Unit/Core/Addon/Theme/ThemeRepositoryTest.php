@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Core\Addon;
+namespace LegacyTests\Core\Addon;
 
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeRepository;
 use PrestaShop\PrestaShop\Adapter\Configuration;

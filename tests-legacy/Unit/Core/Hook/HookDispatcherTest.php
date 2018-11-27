@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Unit\Core\Hook;
+namespace LegacyTests\Unit\Core\Hook;
 
 use PrestaShop\PrestaShop\Adapter\Hook\HookDispatcher as HookDispatcherAdapter;
 use PrestaShopBundle\Service\Hook\RenderingHookEvent;

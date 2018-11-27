@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\PrestaShopBundle\Utils;
+namespace LegacyTests\PrestaShopBundle\Utils;
 
 use Doctrine\DBAL\DBALException;
 use PrestaShopBundle\Install\DatabaseDump;

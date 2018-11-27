@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\TestCase;
+namespace LegacyTests\TestCase;
 
 use Cache;
 use Configuration;
@@ -35,8 +35,8 @@ use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use Phake;
 use Symfony\Component\HttpKernel\Kernel;
-use Tests\TestCase\FakeEntityMapper;
-use Tests\TestCase\FakeConfiguration;
+use LegacyTests\TestCase\FakeEntityMapper;
+use LegacyTests\TestCase\FakeConfiguration;
 use Symfony\Component\HttpFoundation\Request;
 
 class UnitTestCase extends \PHPUnit\Framework\TestCase

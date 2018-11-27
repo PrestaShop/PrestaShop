@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Integration\PrestaShopBundle\Controller\Api;
+namespace LegacyTests\Integration\PrestaShopBundle\Controller\Api;
 
 /**
  * @group api

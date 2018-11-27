@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Unit\Core\Foundation\IoC\Fixtures;
+namespace LegacyTests\Unit\Core\Foundation\IoC\Fixtures;
 
 class ClassWithDep
 {

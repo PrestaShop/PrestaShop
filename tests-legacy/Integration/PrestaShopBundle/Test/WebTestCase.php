@@ -24,9 +24,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Integration\PrestaShopBundle\Test;
+namespace LegacyTests\Integration\PrestaShopBundle\Test;
 
-use Tests\PrestaShopBundle\Utils\DatabaseCreator as Database;
+use LegacyTests\PrestaShopBundle\Utils\DatabaseCreator as Database;
 
 /**
  * Responsible of e2e and integration tests using Symfony.

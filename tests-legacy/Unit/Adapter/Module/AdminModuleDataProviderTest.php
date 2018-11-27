@@ -23,10 +23,10 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-namespace Tests\Unit\Adapter\Module;
+namespace LegacyTests\Unit\Adapter\Module;
 
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
-use Tests\TestCase\UnitTestCase;
+use LegacyTests\TestCase\UnitTestCase;
 use Phake;
 
 class AdminModuleDataProviderTest extends UnitTestCase

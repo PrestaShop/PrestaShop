@@ -24,10 +24,10 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Integration\PrestaShopBundle\Controller\Admin\Sell\Order;
+namespace LegacyTests\Integration\PrestaShopBundle\Controller\Admin\Sell\Order;
 
 use Symfony\Component\HttpFoundation\Response;
-use Tests\Integration\PrestaShopBundle\Test\WebTestCase;
+use LegacyTests\Integration\PrestaShopBundle\Test\WebTestCase;
 
 /**
  * @group demo

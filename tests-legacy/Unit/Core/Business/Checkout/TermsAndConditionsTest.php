@@ -24,9 +24,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Core\Checkout;
+namespace LegacyTests\Core\Checkout;
 
-use Tests\TestCase\UnitTestCase;
+use LegacyTests\TestCase\UnitTestCase;
 use PrestaShop\PrestaShop\Core\Checkout\TermsAndConditions;
 
 class TermsAndConditionsTest extends UnitTestCase

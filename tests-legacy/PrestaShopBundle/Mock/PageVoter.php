@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\PrestaShopBundle\Mock;
+namespace LegacyTests\PrestaShopBundle\Mock;
 
 use PrestaShopBundle\Security\Voter\PageVoter as BaseVoter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;

@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Unit\Core\Cart;
+namespace LegacyTests\Unit\Core\Cart;
 
 use Cache;
 use Cart;
@@ -36,11 +36,11 @@ use CustomizationField;
 use DateInterval;
 use DateTime;
 use Db;
-use Tests\TestCase\IntegrationTestCase;
+use LegacyTests\TestCase\IntegrationTestCase;
 use Product;
 use Pack;
 use StockAvailable;
-use Tests\Unit\Core\Cart\Calculation\CartOld;
+use LegacyTests\Unit\Core\Cart\Calculation\CartOld;
 
 /**
  * these tests aim to check cart using mocks

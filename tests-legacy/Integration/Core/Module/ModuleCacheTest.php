@@ -24,9 +24,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Integration\Core\Module;
+namespace LegacyTests\Integration\Core\Module;
 
-use Tests\TestCase\IntegrationTestCase;
+use LegacyTests\TestCase\IntegrationTestCase;
 use Module;
 
 class ModuleCacheTest extends IntegrationTestCase

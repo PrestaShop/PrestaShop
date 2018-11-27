@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-namespace Tests\Unit\Adapter\Module\Configuration;
+namespace LegacyTests\Unit\Adapter\Module\Configuration;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Statement;
@@ -31,7 +31,7 @@ use Doctrine\DBAL\Driver\PDOMySql\Driver;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Module\Configuration\ModuleSelfConfigurator;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository;
-use Tests\TestCase\UnitTestCase;
+use LegacyTests\TestCase\UnitTestCase;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Yaml\Yaml;
 

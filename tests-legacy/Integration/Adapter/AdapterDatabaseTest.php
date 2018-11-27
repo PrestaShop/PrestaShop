@@ -24,9 +24,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Integration\Adapter;
+namespace LegacyTests\Integration\Adapter;
 
-use Tests\TestCase\IntegrationTestCase;
+use LegacyTests\TestCase\IntegrationTestCase;
 use PrestaShop\PrestaShop\Adapter\Database;
 
 class AdapterDatabaseTest extends IntegrationTestCase

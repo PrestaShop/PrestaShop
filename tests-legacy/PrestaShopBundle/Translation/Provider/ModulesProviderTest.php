@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\PrestaShopBundle\Translation\Provider;
+namespace LegacyTests\PrestaShopBundle\Translation\Provider;
 
 use PrestaShopBundle\Translation\Provider\ModulesProvider;
 use PHPUnit\Framework\TestCase;

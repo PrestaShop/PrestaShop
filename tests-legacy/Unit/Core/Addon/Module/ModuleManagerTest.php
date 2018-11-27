@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Core\Addon\Module;
+namespace LegacyTests\Core\Addon\Module;
 
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManager;
 use PrestaShopBundle\Event\Dispatcher\NullDispatcher;

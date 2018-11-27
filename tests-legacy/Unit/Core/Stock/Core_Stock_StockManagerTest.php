@@ -24,10 +24,10 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Unit\Core\Stock;
+namespace LegacyTests\Unit\Core\Stock;
 
 use Exception;
-use Tests\TestCase\UnitTestCase;
+use LegacyTests\TestCase\UnitTestCase;
 use PrestaShop\PrestaShop\Core\Stock\StockManager;
 
 class FakeStockAvailable4759

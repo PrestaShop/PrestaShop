@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Unit\Core\Cart\Calculation\Carrier;
+namespace LegacyTests\Unit\Core\Cart\Calculation\Carrier;
 
 use Address;
 use Cache;
@@ -36,7 +36,7 @@ use Country;
 use Db;
 use RangePrice;
 use State;
-use Tests\Unit\Core\Cart\Calculation\AbstractCartCalculationTest;
+use LegacyTests\Unit\Core\Cart\Calculation\AbstractCartCalculationTest;
 use Zone;
 
 abstract class AbstractCarrierTest extends AbstractCartCalculationTest

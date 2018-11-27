@@ -124,7 +124,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Tests\\": "tests-legacy/"
+            "LegacyTests\\": "tests-legacy/"
         },
         "files": [
             "vendor/symfony/symfony/src/Symfony/Component/VarDumper/Resources/functions/dump.php"

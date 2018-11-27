@@ -25,7 +25,7 @@
  */
 
 
-namespace Tests\Unit\Core\Foundation\IoC\Fixtures;
+namespace LegacyTests\Unit\Core\Foundation\IoC\Fixtures;
 
 class Dummy
 {

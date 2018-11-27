@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Unit\Core\Grid\Position;
+namespace LegacyTests\Unit\Core\Grid\Position;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Grid\Position\Exception\PositionDataException;
