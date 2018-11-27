@@ -26,6 +26,8 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Customer;
 
+use PrestaShop\PrestaShop\Core\Domain\Customer\Command\SavePrivateNoteForCustomerCommand;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerException;
 use PrestaShop\PrestaShop\Core\Search\Filters\CustomerFilters;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\CustomerInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
@@ -36,6 +38,8 @@ use PrestaShopBundle\Form\Admin\Sell\Customer\PrivateNoteType;
 use PrestaShopBundle\Form\Admin\Sell\Customer\TransferGuestAccountType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -129,7 +133,7 @@ class CustomerController extends AbstractAdminController
             ])->createView();
         }
 
-        $privateNoteForm = $this->createForm(PrivateNoteType::class, [
+        $privateNoteForm = $this->getPrivateNoteForm([
             'note' => $customerInformation->getGeneralInformation()->getPrivateNote(),
         ]);
 
@@ -141,5 +145,60 @@ class CustomerController extends AbstractAdminController
             'transferGuestAccountForm' => $transferGuestAccountForm,
             'privateNoteForm' => $privateNoteForm->createView(),
         ]);
+    }
+
+    /**
+     * Save private note for customer.
+     *
+     * @param int $customerId
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function savePrivateNoteAction($customerId, Request $request)
+    {
+        $privateNoteForm = $this->getPrivateNoteForm();
+        $privateNoteForm->handleRequest($request);
+
+        if ($privateNoteForm->isSubmitted()) {
+            $data = $privateNoteForm->getData();
+
+            try {
+                $this->getCommandBus()->handle(new SavePrivateNoteForCustomerCommand(
+                    new CustomerId($customerId),
+                    $data['note']
+                ));
+
+                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+            } catch (CustomerNotFoundException $e) {
+                $this->addFlash(
+                    'error',
+                    $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error')
+                );
+
+                return $this->redirectToRoute('admin_customers_index');
+            } catch (CustomerException $e) {
+                $this->addFlash(
+                    'error',
+                    $this->getFallbackErrorMessage(get_class($e), $e->getCode())
+                );
+            }
+        }
+
+        return $this->redirectToRoute('admin_customers_view', [
+            'customerId' => $customerId,
+        ]);
+    }
+
+    /**
+     * Get form for customer's private note
+     *
+     * @param array $data
+     *
+     * @return FormInterface
+     */
+    protected function getPrivateNoteForm(array $data = [])
+    {
+        return $this->createForm(PrivateNoteType::class, $data);
     }
 }

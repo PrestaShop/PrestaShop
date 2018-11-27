@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -24,48 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject;
+namespace PrestaShop\PrestaShop\Core\Domain\Customer\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\InvalidCustomerIdException;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Command\SavePrivateNoteForCustomerCommand;
 
 /**
- * Class CustomerId.
+ * Defines interface for service that handles command which saves private note for customer
  */
-class CustomerId
+interface SavePrivateNoteForCustomerHandlerInterface
 {
     /**
-     * @var int
+     * @param SavePrivateNoteForCustomerCommand $command
      */
-    private $customerId;
-
-    /**
-     * @param $customerId
-     */
-    public function __construct($customerId)
-    {
-        $this->setCustomerId($customerId);
-    }
-
-    /**
-     * @return int
-     */
-    public function getValue()
-    {
-        return $this->customerId;
-    }
-
-    /**
-     * @param int $customerId
-     */
-    private function setCustomerId($customerId)
-    {
-        if (!is_numeric($customerId) || 0 > $customerId) {
-            throw new InvalidCustomerIdException(sprintf(
-                'Invalid Customer id value %s supplied. Customer id should be positive integer.',
-                var_export($customerId, true)
-            ));
-        }
-
-        $this->customerId = (int) $customerId;
-    }
+    public function handle(SavePrivateNoteForCustomerCommand $command);
 }

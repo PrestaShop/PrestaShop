@@ -11,3 +11,9 @@ services:
     tags:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForViewing'
+
+  prestashop.adapter.customer.command_handler.save_private_note_for_customer:
+    class: 'PrestaShop\PrestaShop\Adapter\Customer\CommandHandler\SavePrivateNoteForCustomerHandler'
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\Customer\Command\SavePrivateNoteForCustomerCommand'

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -24,48 +24,12 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject;
+namespace PrestaShop\PrestaShop\Core\Domain\Customer\Exception;
 
-use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\InvalidCustomerIdException;
-
-/**
- * Class CustomerId.
- */
-class CustomerId
+class CustomerConstraintException extends CustomerException
 {
     /**
-     * @var int
+     * @var int Is used when invalid (not string) private note is provided as private note
      */
-    private $customerId;
-
-    /**
-     * @param $customerId
-     */
-    public function __construct($customerId)
-    {
-        $this->setCustomerId($customerId);
-    }
-
-    /**
-     * @return int
-     */
-    public function getValue()
-    {
-        return $this->customerId;
-    }
-
-    /**
-     * @param int $customerId
-     */
-    private function setCustomerId($customerId)
-    {
-        if (!is_numeric($customerId) || 0 > $customerId) {
-            throw new InvalidCustomerIdException(sprintf(
-                'Invalid Customer id value %s supplied. Customer id should be positive integer.',
-                var_export($customerId, true)
-            ));
-        }
-
-        $this->customerId = (int) $customerId;
-    }
+    const INVALID_PRIVATE_NOTE = 1;
 }
