@@ -27,7 +27,9 @@
 namespace PrestaShopBundle\Controller\Admin\Sell\Customer;
 
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\SavePrivateNoteForCustomerCommand;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Command\TransformGuestToCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerException;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerTransformationException;
 use PrestaShop\PrestaShop\Core\Search\Filters\CustomerFilters;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\CustomerInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
@@ -120,7 +122,7 @@ class CustomerController extends AbstractAdminController
         } catch (CustomerNotFoundException $e) {
             $this->addFlash(
                 'error',
-                $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error')
+                $this->trans('This customer does not exist.', 'Admin.Orderscustomers.Notification')
             );
 
             return $this->redirectToRoute('admin_customers_index');
@@ -173,7 +175,7 @@ class CustomerController extends AbstractAdminController
             } catch (CustomerNotFoundException $e) {
                 $this->addFlash(
                     'error',
-                    $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error')
+                    $this->trans('This customer does not exist.', 'Admin.Orderscustomers.Notification')
                 );
 
                 return $this->redirectToRoute('admin_customers_index');
@@ -183,6 +185,52 @@ class CustomerController extends AbstractAdminController
                     $this->getFallbackErrorMessage(get_class($e), $e->getCode())
                 );
             }
+        }
+
+        return $this->redirectToRoute('admin_customers_view', [
+            'customerId' => $customerId,
+        ]);
+    }
+
+    /**
+     * Transforms guest to customer
+     *
+     * @param int $customerId
+     *
+     * @return RedirectResponse
+     */
+    public function transformGuestToCustomerAction($customerId)
+    {
+        try {
+            $this->getCommandBus()->handle(new TransformGuestToCustomerCommand(new CustomerId($customerId)));
+
+            $this->addFlash('success',  $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+        } catch (CustomerNotFoundException $e) {
+            $this->addFlash(
+                'error',
+                $this->trans('This customer does not exist.', 'Admin.Orderscustomers.Notification')
+            );
+
+            return $this->redirectToRoute('admin_customers_index');
+        } catch (CustomerTransformationException $e) {
+            $errors = [
+                CustomerTransformationException::CUSTOMER_IS_NOT_GUEST =>
+                    $this->trans('This customer already exists as a non-guest.', 'Admin.Orderscustomers.Notification'),
+                CustomerTransformationException::TRANSFORMATION_FAILED =>
+                    $this->trans('An error occurred while updating customer information.', 'Admin.Orderscustomers.Notification'),
+            ];
+
+            $error = isset($errors[$e->getCode()]) ?
+                $errors[$e->getCode()] :
+                $this->getFallbackErrorMessage(get_class($e), $e->getCode())
+            ;
+
+            $this->addFlash('error', $error);
+        } catch (CustomerException $e) {
+            $this->addFlash(
+                'error',
+                $this->getFallbackErrorMessage(get_class($e), $e->getCode())
+            );
         }
 
         return $this->redirectToRoute('admin_customers_view', [

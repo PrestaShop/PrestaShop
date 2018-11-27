@@ -17,3 +17,11 @@ services:
     tags:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\Customer\Command\SavePrivateNoteForCustomerCommand'
+
+  prestashop.adapter.customer.command_handler.transform_guest_to_customer:
+    class: 'PrestaShop\PrestaShop\Adapter\Customer\CommandHandler\TransformGuestToCustomerHandler'
+    arguments:
+      - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\Customer\Command\TransformGuestToCustomerCommand'

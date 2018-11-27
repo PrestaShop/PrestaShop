@@ -47,3 +47,12 @@ admin_customers_save_private_note:
     _legacy_controller: AdminCustomers
   requirements:
     customerId: \d+
+
+admin_customers_transform_guest_to_customer:
+  path: /{customerId}/transform-guest-to-customer
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Customer/Customer:transformGuestToCustomer
+    _legacy_controller: AdminCustomers
+  requirements:
+    customerId: \d+

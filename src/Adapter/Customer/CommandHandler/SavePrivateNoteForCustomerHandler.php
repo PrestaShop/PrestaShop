@@ -33,6 +33,8 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundExcepti
 
 /**
  * Handles command that saves private note for customer
+ *
+ * @internal
  */
 final class SavePrivateNoteForCustomerHandler implements SavePrivateNoteForCustomerHandlerInterface
 {
