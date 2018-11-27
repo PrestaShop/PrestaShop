@@ -666,3 +666,12 @@ services:
             - '@=service("prestashop.core.form.choice_provider.customer_required_fields").getChoices()'
         tags:
             - { name: form.type }
+
+    prestashop.bundle.form.admin.sell.customer.customer:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Customer\CustomerType'
+        arguments:
+            - '@=service("prestashop.adapter.form.choice_provider.gender_by_id_choice_provider").getChoices()'
+            - '@=service("prestashop.core.form.choice_provider.group_by_id").getChoices()'
+            - '@=service("prestashop.adapter.form.choice_provider.default_group_by_id_choice_provider").getChoices()'
+        tags:
+            - { name: form.type }
