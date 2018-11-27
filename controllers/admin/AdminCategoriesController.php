@@ -41,7 +41,7 @@ class AdminCategoriesControllerCore extends AdminController
     /** @var bool does the product have to be disable during the delete process */
     public $disable_products = false;
 
-    private $original_filter = '';
+    protected $original_filter = '';
 
     public function __construct()
     {

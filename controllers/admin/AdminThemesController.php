@@ -49,10 +49,10 @@ class AdminThemesControllerCore extends AdminController
     protected $theme_repository;
     protected $toolbar_scroll = false;
     protected $authAccesses = array();
-    private $img_error;
+    protected $img_error;
 
     /* @var LogoUploader $logo_uploader */
-    private $logo_uploader;
+    protected $logo_uploader;
 
     public function __construct()
     {
@@ -697,7 +697,7 @@ class AdminThemesControllerCore extends AdminController
      *
      * @return mixed
      */
-    private function translateAttributes($attributes)
+    protected function translateAttributes($attributes)
     {
         if (!empty($attributes)) {
             foreach ($attributes as $key => &$layout) {
