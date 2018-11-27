@@ -37,3 +37,9 @@ services:
     tags:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetRequiredFieldsForCustomer'
+
+  prestashop.adapter.customer.command_handler.add_customer:
+    class: 'PrestaShop\PrestaShop\Adapter\Customer\CommandHandler\AddCustomerHandler'
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\Customer\Command\AddCustomerCommand'
