@@ -99,7 +99,7 @@ export default class Importer {
             hasWarnings = response.warnings && response.warnings.length,
             hasNotices = response.notices && response.notices.length;
 
-        if (response.totalCount !== undefined) {
+        if (response.totalCount !== undefined && response.totalCount) {
           // The total rows count is retrieved only in the first batch response.
           this.totalRowsCount = response.totalCount;
         }
