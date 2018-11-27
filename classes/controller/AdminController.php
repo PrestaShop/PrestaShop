@@ -1967,7 +1967,7 @@ class AdminControllerCore extends Controller
                         array(
                             '[1]' => '<strong>',
                             '[/1]' => '</strong>',
-                            '[2]' => '<a href="' . $this->context->link->getAdminLink('AdminCarts') . '&action=filterOnlyAbandonedCarts">',
+                            '[2]' => '<a href="' . $this->context->link->getAdminLink('AdminCarts', true, array(), array('action' => 'filterOnlyAbandonedCarts')) . '">',
                              '[/2]' => '</a>',
                             '[3]' => '<br>',
                         ),
