@@ -347,7 +347,7 @@ if (isset($_POST['submit'])) {
     ?>"/>
 	<input type="hidden" id="descending" value="<?php echo $descending ? "true" : "false";
     ?>"/>
-	<?php $protocol = 'http';
+	<?php $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https" : "http";
     ?>
 	<input type="hidden" id="current_url" value="<?php echo str_replace(array('&filter='.$filter), array(''), $protocol."://".$_SERVER['HTTP_HOST'].Tools::safeOutput($_SERVER['REQUEST_URI']));
     ?>"/>
