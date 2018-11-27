@@ -71,6 +71,14 @@ interface ImportRuntimeConfigInterface
     public function getSharedData();
 
     /**
+     * Add a shared data item.
+     *
+     * @param string $key
+     * @param mixed $value
+     */
+    public function addSharedDataItem($key, $value);
+
+    /**
      * Get import entity fields.
      *
      * @return array

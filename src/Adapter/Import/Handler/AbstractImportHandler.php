@@ -202,14 +202,6 @@ abstract class AbstractImportHandler implements ImportHandlerInterface
     /**
      * {@inheritdoc}
      */
-    public function validate()
-    {
-
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function tearDown()
     {
 
@@ -282,7 +274,7 @@ abstract class AbstractImportHandler implements ImportHandlerInterface
     {
         $cellIndex = array_search($entityFieldName, $entityFields);
 
-        if ($dataRow->offsetExists($cellIndex)) {
+        if (false !== $cellIndex && $dataRow->offsetExists($cellIndex)) {
             $dataCell = $dataRow->offsetGet($cellIndex);
 
             return trim($dataCell->getValue());

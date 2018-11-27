@@ -237,7 +237,7 @@ final class ProductImportHandler extends AbstractImportHandler
         $this->loadMetaData($product, $importConfig);
         $this->fixFloatValues($product);
 
-        $productExistsById = $this->entityExists($product, $this->productTable);
+        $productExistsById = $this->entityExists($product, 'product');
         $productExistsByReference = $importConfig->matchReferences() &&
             $product->reference &&
             $product->existsRefInDatabase($product->reference)
@@ -296,10 +296,10 @@ final class ProductImportHandler extends AbstractImportHandler
                     $runtimeConfig->shouldValidateData(),
                     $productExistsById || $productExistsByReference
                 );
+
+                $this->linkAccessories($product, $runtimeConfig);
             }
         }
-
-        //@todo accessories
     }
 
     /**
@@ -307,6 +307,7 @@ final class ProductImportHandler extends AbstractImportHandler
      */
     public function tearDown()
     {
+        parent::tearDown();
         Module::processDeferedFuncCall();
         Module::processDeferedClearCache();
         Tag::updateTagCount();
@@ -938,6 +939,9 @@ final class ProductImportHandler extends AbstractImportHandler
         $validateOnly,
         $productName
     ) {
+        $reductionPercent = (float) $reductionPercent;
+        $reductionPrice = (float) $reductionPrice;
+
         if (!$reductionPrice <= 0 && $reductionPercent <= 0) {
             return;
         }
@@ -1339,6 +1343,27 @@ final class ProductImportHandler extends AbstractImportHandler
             foreach ($shopIds as $shop) {
                 StockAvailable::setQuantity((int) $product->id, 0, (int) $product->quantity, (int) $shop);
             }
+        }
+    }
+
+    private function linkAccessories(Product $product, ImportRuntimeConfigInterface $runtimeConfig)
+    {
+        // Accessories linkage
+        if ($runtimeConfig->shouldValidateData()) {
+            return;
+        }
+
+        $hasAccessories =
+            isset($product->accessories) &&
+            is_array($product->accessories) &&
+            count($product->accessories)
+        ;
+
+        if ($hasAccessories) {
+            $sharedData = $runtimeConfig->getSharedData();
+            $accessories = isset($sharedData['accessories']) ? $sharedData['accessories'] : [];
+            $accessories[$product->id] = $product->accessories;
+            $runtimeConfig->addSharedDataItem('accessories', $accessories);
         }
     }
 }
