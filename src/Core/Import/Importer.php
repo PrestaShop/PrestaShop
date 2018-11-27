@@ -89,43 +89,34 @@ final class Importer implements ImporterInterface
             $this->entityDeleter->deleteAll($importConfig->getEntityType());
         }
 
+        $importHandler->setUp($importConfig);
         $importFile = new SplFileInfo($this->importDir.$importConfig->getFileName());
 
-        if ($runtimeConfig->shouldValidateData()) {
-            $importHandler->validate();
-        } else {
-            if ($this->isFirstIteration($runtimeConfig)) {
-                $importHandler->setUp($importConfig);
+        $rowIndex = 0;
+        $skipRows = $importConfig->getNumberOfRowsToSkip() + $runtimeConfig->getOffset();
+        $limit = $runtimeConfig->getLimit();
+
+        foreach ($this->fileReader->read($importFile) as $dataRow) {
+            // Skip rows until the correct row is reached.
+            if ($rowIndex < $skipRows) {
+                $rowIndex++;
+                continue;
             }
 
-            $rowIndex = 0;
-            $skipRows = $importConfig->getNumberOfRowsToSkip() + $runtimeConfig->getOffset();
-            $limit = $runtimeConfig->getLimit();
-
-            foreach ($this->fileReader->read($importFile) as $dataRow) {
-                // Skip rows until the correct row is reached.
-                if ($rowIndex < $skipRows) {
-                    $rowIndex++;
-                    continue;
-                }
-
-                // If import process limit is reached - stop importing the rows.
-                if ($rowIndex >= $limit) {
-                    break;
-                }
-
-                // Import one row
-                $importHandler->importRow(
-                    $importConfig,
-                    $runtimeConfig,
-                    $dataRow
-                );
+            // If import process limit is reached - stop importing the rows.
+            if ($rowIndex >= $limit) {
+                break;
             }
+
+            // Import one row
+            $importHandler->importRow(
+                $importConfig,
+                $runtimeConfig,
+                $dataRow
+            );
         }
 
-        if ($this->hasImportFinished($runtimeConfig)) {
-            $importHandler->tearDown();
-        }
+        $importHandler->tearDown();
     }
 
     /**
@@ -158,18 +149,5 @@ final class Importer implements ImporterInterface
             0 === $runtimeConfig->getOffset() &&
             0 === $runtimeConfig->getProcessIndex()
         ;
-    }
-
-    /**
-     * Checks if the import process has finished.
-     *
-     * @param ImportRuntimeConfigInterface $runtimeConfig
-     *
-     * @return bool
-     */
-    private function hasImportFinished(ImportRuntimeConfigInterface $runtimeConfig)
-    {
-        //@todo WIP
-        return !$runtimeConfig->shouldValidateData();
     }
 }

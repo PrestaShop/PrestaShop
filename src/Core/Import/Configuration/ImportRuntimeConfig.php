@@ -59,7 +59,7 @@ final class ImportRuntimeConfig implements ImportRuntimeConfigInterface
     /**
      * @var array
      */
-    private $sharedData;
+    private $sharedData = [];
 
     /**
      * @param bool $shouldValidateData
@@ -131,5 +131,13 @@ final class ImportRuntimeConfig implements ImportRuntimeConfigInterface
     public function getSharedData()
     {
         return $this->sharedData;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function addSharedDataItem($key, $value)
+    {
+        $this->sharedData[$key] = $value;
     }
 }

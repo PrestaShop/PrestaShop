@@ -36,11 +36,6 @@ use PrestaShop\PrestaShop\Core\Import\File\DataRow\DataRowInterface;
 interface ImportHandlerInterface
 {
     /**
-     * Executed before any other import step, to validate the import data.
-     */
-    public function validate();
-
-    /**
      * Executed before import process is started.
      * After the validation step.
      *
