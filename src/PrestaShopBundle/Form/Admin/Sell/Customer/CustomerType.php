@@ -31,6 +31,7 @@ use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -51,13 +52,31 @@ class CustomerType extends AbstractType
     private $groupChoices;
 
     /**
+     * @var bool
+     */
+    private $isB2bFeatureEnabled;
+
+    /**
+     * @var array
+     */
+    private $riskChoices;
+
+    /**
      * @param array $genderChoices
      * @param array $groupChoices
+     * @param array $riskChoices
+     * @param bool $isB2bFeatureEnabled
      */
-    public function __construct(array $genderChoices, array $groupChoices)
-    {
+    public function __construct(
+        array $genderChoices,
+        array $groupChoices,
+        array $riskChoices,
+        $isB2bFeatureEnabled
+    ) {
         $this->genderChoices = $genderChoices;
         $this->groupChoices = $groupChoices;
+        $this->isB2bFeatureEnabled = $isB2bFeatureEnabled;
+        $this->riskChoices = $riskChoices;
     }
 
     /**
@@ -85,5 +104,32 @@ class CustomerType extends AbstractType
                 'choices' => $this->groupChoices,
             ])
         ;
+
+        if ($this->isB2bFeatureEnabled) {
+            $builder
+                ->add('company', TextType::class, [
+                    'required' => false,
+                ])
+                ->add('siret_code', TextType::class, [
+                    'required' => false,
+                ])
+                ->add('ape_code', TextType::class, [
+                    'required' => false,
+                ])
+                ->add('website', TextType::class, [
+                    'required' => false,
+                ])
+                ->add('allowed_outstanding_amount', NumberType::class, [
+                    'scale' => 6,
+                    'required' => false,
+                ])
+                ->add('max_payment_days', NumberType::class, [
+                    'required' => false,
+                ])
+                ->add('risk_id', ChoiceType::class, [
+                    'choices' => $this->riskChoices,
+                ])
+            ;
+        }
     }
 }

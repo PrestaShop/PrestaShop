@@ -672,5 +672,7 @@ services:
         arguments:
             - '@=service("prestashop.adapter.form.choice_provider.gender_by_id_choice_provider").getChoices()'
             - '@=service("prestashop.adapter.form.choice_provider.group_by_id_choice_provider").getChoices()'
+            - '@=service("prestashop.adapter.form.choice_provider.risk_by_id_choice_provider").getChoices()'
+            - '@=service("prestashop.core.b2b.b2b_feature").isActive()'
         tags:
             - { name: form.type }
