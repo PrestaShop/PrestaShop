@@ -24,9 +24,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Unit\Classes;
+namespace LegacyTests\Unit\Classes;
 
-use Tests\TestCase\IntegrationTestCase;
+use LegacyTests\TestCase\IntegrationTestCase;
 use Configuration;
 use Media;
 

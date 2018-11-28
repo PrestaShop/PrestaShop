@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Unit\Core\Cart\Calculation\SpecificPriceRules;
+namespace LegacyTests\Unit\Core\Cart\Calculation\SpecificPriceRules;
 
 class SpecificPriceRuleAmountTest extends AbstractSpecificPriceRuleTest
 {

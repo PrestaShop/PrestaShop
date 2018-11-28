@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\PrestaShopBundle\Mock;
+namespace LegacyTests\PrestaShopBundle\Mock;
 
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;

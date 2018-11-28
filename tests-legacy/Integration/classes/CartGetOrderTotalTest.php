@@ -25,9 +25,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Integration\classes;
+namespace LegacyTests\Integration\classes;
 
-use Tests\TestCase\IntegrationTestCase;
+use LegacyTests\TestCase\IntegrationTestCase;
 use PHPUnit_Framework_Assert as Assert;
 use Exception;
 use Address;
@@ -40,7 +40,7 @@ use Currency;
 use Db;
 use Group;
 use Order;
-use Tests\PrestaShopBundle\Utils\DatabaseCreator as Database;
+use LegacyTests\PrestaShopBundle\Utils\DatabaseCreator as Database;
 use Product;
 use Tools;
 use Tax;

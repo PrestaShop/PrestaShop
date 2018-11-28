@@ -24,14 +24,14 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Integration\Core\Foundation\Entity;
+namespace LegacyTests\Integration\Core\Foundation\Entity;
 
-use Tests\TestCase\IntegrationTestCase;
+use LegacyTests\TestCase\IntegrationTestCase;
 use PrestaShop\PrestaShop\Core\ContainerBuilder;
 use CMSRole;
 use CMSRoleRepository;
 use Db;
-use Tests\Unit\ContextMocker;
+use LegacyTests\Unit\ContextMocker;
 use Product;
 
 class EntityManagerTest extends IntegrationTestCase

@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Integration\PrestaShopBundle\Test;
+namespace LegacyTests\Integration\PrestaShopBundle\Test;
 
 use PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase as TestCase;
@@ -43,7 +43,7 @@ use Shop;
 
 /**
  * Responsible of e2e and integration tests using Symfony.
- * It is the same as Tests\Integration\PrestaShopBundle\Test\WebTestCase
+ * It is the same as LegacyTests\Integration\PrestaShopBundle\Test\WebTestCase
  * but lighter as it does not restore the database, but it still setup
  * a Symfony context.
  */

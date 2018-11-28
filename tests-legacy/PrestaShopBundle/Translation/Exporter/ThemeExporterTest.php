@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\PrestaShopBundle\Translation\Exporter;
+namespace LegacyTests\PrestaShopBundle\Translation\Exporter;
 
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
 use PrestaShop\TranslationToolsBundle\Translation\Dumper\XliffFileDumper;

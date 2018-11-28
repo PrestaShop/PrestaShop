@@ -24,11 +24,11 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Unit\Adapter\Cart;
+namespace LegacyTests\Unit\Adapter\Cart;
 
 use Configuration;
 use PrestaShop\PrestaShop\Adapter\Presenter\Cart\CartPresenter;
-use Tests\TestCase\UnitTestCase;
+use LegacyTests\TestCase\UnitTestCase;
 
 class CartPresenterTest extends UnitTestCase
 {

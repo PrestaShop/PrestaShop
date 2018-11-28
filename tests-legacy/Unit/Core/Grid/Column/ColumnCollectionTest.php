@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Unit\Core\Grid\Column;
+namespace LegacyTests\Unit\Core\Grid\Column;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;

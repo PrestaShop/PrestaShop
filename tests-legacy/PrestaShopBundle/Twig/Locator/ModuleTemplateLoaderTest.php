@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\PrestaShopBundle\Twig\Locator;
+namespace LegacyTests\PrestaShopBundle\Twig\Locator;
 
 use PrestaShopBundle\Twig\Locator\ModuleTemplateLoader;
 use PHPUnit\Framework\TestCase;

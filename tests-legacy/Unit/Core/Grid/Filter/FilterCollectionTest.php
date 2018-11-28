@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Unit\Core\Grid\Filter;
+namespace LegacyTests\Unit\Core\Grid\Filter;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;

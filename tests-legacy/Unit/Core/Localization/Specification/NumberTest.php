@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Unit\Core\Localization\Specification;
+namespace LegacyTests\Unit\Core\Localization\Specification;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Localization\Specification\Number as NumberSpecification;

@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\PrestaShopBundle\Command;
+namespace LegacyTests\PrestaShopBundle\Command;
 
 use PrestaShopBundle\Command\ExportThemeCommand;
 use Symfony\Component\Console\Tester\CommandTester;

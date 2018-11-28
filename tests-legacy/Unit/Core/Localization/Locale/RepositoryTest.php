@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Unit\Core\Localization\Locale;
+namespace LegacyTests\Unit\Core\Localization\Locale;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\Locale as CldrLocale;

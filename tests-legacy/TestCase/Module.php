@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\TestCase;
+namespace LegacyTests\TestCase;
 
 define('_RESSOURCE_MODULE_DIR_', realpath(dirname(__FILE__).'/../resources/module/'));
 

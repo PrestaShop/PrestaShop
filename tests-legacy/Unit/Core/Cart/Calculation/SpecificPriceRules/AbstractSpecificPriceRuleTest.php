@@ -24,10 +24,10 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Unit\Core\Cart\Calculation\SpecificPriceRules;
+namespace LegacyTests\Unit\Core\Cart\Calculation\SpecificPriceRules;
 
 use SpecificPriceRule;
-use Tests\Unit\Core\Cart\Calculation\AbstractCartCalculationTest;
+use LegacyTests\Unit\Core\Cart\Calculation\AbstractCartCalculationTest;
 
 abstract class AbstractSpecificPriceRuleTest extends AbstractCartCalculationTest
 {

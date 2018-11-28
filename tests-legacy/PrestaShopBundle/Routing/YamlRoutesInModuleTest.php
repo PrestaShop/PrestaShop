@@ -24,12 +24,12 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\PrestaShopBundle\Routing;
+namespace LegacyTests\PrestaShopBundle\Routing;
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\DependencyInjection\Container;
-use Tests\TestCase\Module as HelperModule;
+use LegacyTests\TestCase\Module as HelperModule;
 
 
 class YamlRoutesInModuleTest extends KernelTestCase

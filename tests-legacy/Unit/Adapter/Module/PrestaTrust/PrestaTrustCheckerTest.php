@@ -23,12 +23,12 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-namespace Tests\Unit\Adapter\Module\PrestaTrust;
+namespace LegacyTests\Unit\Adapter\Module\PrestaTrust;
 
 use Doctrine\Common\Cache\ArrayCache;
 use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShop\PrestaShop\Adapter\Module\PrestaTrust\PrestaTrustChecker;
-use Tests\TestCase\UnitTestCase;
+use LegacyTests\TestCase\UnitTestCase;
 
 /**
  * @runInSeparateProcess

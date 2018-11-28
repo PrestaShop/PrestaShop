@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Unit\Classes;
+namespace LegacyTests\Unit\Classes;
 
 use PHPUnit\Framework\TestCase;
 use Validate;

@@ -24,9 +24,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Unit\Core\Cart\Calculation\CartRules;
+namespace LegacyTests\Unit\Core\Cart\Calculation\CartRules;
 
-use Tests\Unit\Core\Cart\Calculation\AbstractCartCalculationTest;
+use LegacyTests\Unit\Core\Cart\Calculation\AbstractCartCalculationTest;
 
 /**
  * these tests aim to check the correct calculation of cart total when applying cart rules without code

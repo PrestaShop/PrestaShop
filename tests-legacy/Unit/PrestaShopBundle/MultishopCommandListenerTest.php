@@ -24,10 +24,10 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Unit\PrestaShopBundle;
+namespace LegacyTests\Unit\PrestaShopBundle;
 
-use Tests\TestCase\UnitTestCase;
-use Tests\Unit\ContextMocker;
+use LegacyTests\TestCase\UnitTestCase;
+use LegacyTests\Unit\ContextMocker;
 use PrestaShopBundle\EventListener\MultishopCommandListener;
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
 use Shop;

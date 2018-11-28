@@ -23,10 +23,10 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-namespace Tests\Unit\Adapter\Admin;
+namespace LegacyTests\Unit\Adapter\Admin;
 
 use PrestaShop\PrestaShop\Adapter\Admin\UrlGenerator;
-use Tests\TestCase\UnitTestCase;
+use LegacyTests\TestCase\UnitTestCase;
 use Phake;
 
 class UrlGeneratorTest extends UnitTestCase

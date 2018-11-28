@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Core\Addon\Module;
+namespace LegacyTests\Core\Addon\Module;
 
 use PHPUnit\Framework\TestCase;
 

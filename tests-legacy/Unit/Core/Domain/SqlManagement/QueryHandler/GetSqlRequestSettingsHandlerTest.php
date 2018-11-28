@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Unit\Core\Domain\SqlManagement\QueryHandler;
+namespace LegacyTests\Unit\Core\Domain\SqlManagement\QueryHandler;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;

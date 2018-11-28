@@ -24,12 +24,12 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Integration;
+namespace LegacyTests\Integration;
 
-use Tests\TestCase\IntegrationTestCase;
+use LegacyTests\TestCase\IntegrationTestCase;
 
 use Module;
-use Tests\TestCase\Module as HelperModule;
+use LegacyTests\TestCase\Module as HelperModule;
 
 class ModulesGetOverrideTest extends IntegrationTestCase
 {
