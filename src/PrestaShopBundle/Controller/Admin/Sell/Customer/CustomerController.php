@@ -178,7 +178,7 @@ class CustomerController extends AbstractAdminController
     /**
      * @return FormInterface
      */
-    protected function getRequiredFieldsForm()
+    private function getRequiredFieldsForm()
     {
         $requiredFields = $this->getQueryBus()->handle(new GetRequiredFieldsForCustomer());
 
