@@ -118,7 +118,7 @@ class CustomerController extends AbstractAdminController
     {
         try {
             /** @var CustomerInformation $customerInformation */
-            $customerInformation = $this->getQueryBus()->handle(new GetCustomerForViewing(new CustomerId($customerId)));
+            $customerInformation = $this->getQueryBus()->handle(new GetCustomerForViewing(new CustomerId((int) $customerId)));
         } catch (CustomerNotFoundException $e) {
             $this->addFlash(
                 'error',
@@ -172,7 +172,7 @@ class CustomerController extends AbstractAdminController
 
             try {
                 $this->getCommandBus()->handle(new SavePrivateNoteForCustomerCommand(
-                    new CustomerId($customerId),
+                    new CustomerId((int) $customerId),
                     $data['note']
                 ));
 
@@ -212,7 +212,7 @@ class CustomerController extends AbstractAdminController
     public function transformGuestToCustomerAction($customerId)
     {
         try {
-            $this->getCommandBus()->handle(new TransformGuestToCustomerCommand(new CustomerId($customerId)));
+            $this->getCommandBus()->handle(new TransformGuestToCustomerCommand(new CustomerId((int) $customerId)));
 
             $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
         } catch (CustomerNotFoundException $e) {
