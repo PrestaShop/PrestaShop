@@ -1224,4 +1224,20 @@ class ValidateCore
     {
         return (bool) preg_match('/^[\w-]{3,255}$/u', $theme_name);
     }
+
+    /**
+     * Check if enable_insecure_rsh exists in
+     * this PHP version otherwise disable the
+     * oProxyCommand option.
+     *
+     * @return boolean
+     */
+    public static function isValidImapUrl($imapUrl)
+    {
+        if (false === ini_get('imap.enable_insecure_rsh')) {
+            return preg_match('~^((?!oProxyCommand).)*$~i', $imapUrl);
+        }
+
+        return true;
+    }
 }
