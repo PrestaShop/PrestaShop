@@ -18,8 +18,8 @@ services:
   prestashop.adapter.form.choice_provider.gender_by_id_choice_provider:
     class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\GenderByIdChoiceProvider'
 
-  prestashop.adapter.form.choice_provider.default_group_by_id_choice_provider:
-    class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\DefaultGroupByIdChoiceProvider'
+  prestashop.adapter.form.choice_provider.group_by_id_choice_provider:
+    class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\GroupByIdChoiceProvider'
     arguments:
       - '@prestashop.adapter.legacy.configuration'
       - '@=service("prestashop.adapter.legacy.context").getLanguage().id'

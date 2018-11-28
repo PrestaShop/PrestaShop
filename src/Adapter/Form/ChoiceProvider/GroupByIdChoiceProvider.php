@@ -31,9 +31,9 @@ use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 
 /**
- * Provides choices for default groups
+ * Provides choices for customer groups
  */
-final class DefaultGroupByIdChoiceProvider implements FormChoiceProviderInterface
+final class GroupByIdChoiceProvider implements FormChoiceProviderInterface
 {
     /**
      * @var ConfigurationInterface
@@ -60,14 +60,24 @@ final class DefaultGroupByIdChoiceProvider implements FormChoiceProviderInterfac
      */
     public function getChoices()
     {
-        $visitorsGroup = new Group($this->configuration->get('PS_UNIDENTIFIED_GROUP'));
-        $guestsGroup = new Group($this->configuration->get('PS_GUEST_GROUP'));
-        $customersGroup = new Group($this->configuration->get('PS_CUSTOMER_GROUP'));
+        $choices = [];
+        $groups = Group::getGroups($this->contextLangId, true);
 
-        return [
-            $visitorsGroup->name[$this->contextLangId] = $visitorsGroup->id,
-            $guestsGroup->name[$this->contextLangId] = $guestsGroup->id,
-            $customersGroup->name[$this->contextLangId] = $customersGroup->id,
+        $groupsToSkip = [
+            (int) $this->configuration->get('PS_UNIDENTIFIED_GROUP'),
+            (int) $this->configuration->get('PS_GUEST_GROUP'),
         ];
+
+        foreach ($groups as $group) {
+            $groupId = $group['id_group'];
+
+            if (in_array($groups, $groupsToSkip)) {
+                continue;
+            }
+
+            $choices[$group['name']] = $groupId;
+        }
+
+        return $choices;
     }
 }

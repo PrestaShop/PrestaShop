@@ -51,20 +51,13 @@ class CustomerType extends AbstractType
     private $groupChoices;
 
     /**
-     * @var array
-     */
-    private $defaultGroupChoices;
-
-    /**
      * @param array $genderChoices
      * @param array $groupChoices
-     * @param array $defaultGroupChoices
      */
-    public function __construct(array $genderChoices, array $groupChoices, array $defaultGroupChoices)
+    public function __construct(array $genderChoices, array $groupChoices)
     {
         $this->genderChoices = $genderChoices;
         $this->groupChoices = $groupChoices;
-        $this->defaultGroupChoices = $defaultGroupChoices;
     }
 
     /**
@@ -75,20 +68,21 @@ class CustomerType extends AbstractType
         $builder
             ->add('gender_id', ChoiceType::class, [
                 'choices' => $this->genderChoices,
-                'required' => false,
+                'multiple' => false,
+                'expanded' => true,
             ])
             ->add('first_name', TextType::class)
             ->add('last_name', TextType::class)
             ->add('email', EmailType::class)
             ->add('password', PasswordType::class)
 
-            ->add('enabled', SwitchType::class)
-            ->add('partner_offers', SwitchType::class)
+            ->add('is_enabled', SwitchType::class)
+            ->add('is_partner_offers_subscribed', SwitchType::class)
             ->add('group_ids', MaterialChoiceTableType::class, [
                 'choices' => $this->groupChoices,
             ])
             ->add('default_group_id', ChoiceType::class, [
-                'choices' => $this->defaultGroupChoices,
+                'choices' => $this->groupChoices,
             ])
         ;
     }

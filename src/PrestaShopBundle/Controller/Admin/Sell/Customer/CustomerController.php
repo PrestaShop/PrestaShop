@@ -85,11 +85,12 @@ class CustomerController extends AbstractAdminController
      */
     public function createAction(Request $request)
     {
-        return $this->redirect(
-            $this->getAdminLink($request->attributes->get('_legacy_controller'), [
-                'addcustomer' => 1,
-            ])
-        );
+        $customerForm = $this->get('prestashop.core.form.identifiable_object.builder.customer_form_builder')->getForm();
+        $customerForm->handleRequest($request);
+
+        return $this->render('@PrestaShop/Admin/Sell/Customer/create.html.twig', [
+            'customerForm' => $customerForm->createView(),
+        ]);
     }
 
     /**
