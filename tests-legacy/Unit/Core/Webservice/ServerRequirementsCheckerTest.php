@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace LegacyLegacyTests\Unit\Core\Webservice;
+namespace LegacyTests\Unit\Core\Webservice;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Configuration;
