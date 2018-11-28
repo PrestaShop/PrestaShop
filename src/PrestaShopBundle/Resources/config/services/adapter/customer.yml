@@ -2,7 +2,7 @@ services:
   _defaults:
     public: true
 
-  prestashop.adapter.customer.query_handler.get_customer_information:
+  prestashop.adapter.customer.query_handler.get_customer_for_viewing:
     class: 'PrestaShop\PrestaShop\Adapter\Customer\QueryHandler\GetCustomerForViewingHandler'
     arguments:
       - '@translator'
@@ -43,3 +43,9 @@ services:
     tags:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\Customer\Command\AddCustomerCommand'
+
+  prestashop.adapter.customer.query_handler.get_customer_for_editing:
+    class: 'PrestaShop\PrestaShop\Adapter\Customer\QueryHandler\GetCustomerForEditingHandler'
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForEditing'
