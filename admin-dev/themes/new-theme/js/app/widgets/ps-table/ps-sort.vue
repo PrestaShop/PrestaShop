@@ -1,5 +1,5 @@
 <!--**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,34 +18,40 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *-->
 <template>
-  <button class="ps-sort" @click.prevent="sortFilter">
-    <i class="material-icons">swap_vert</i>
-  </button>
+  <div class="ps-sortable-column" data-sort-col-name="id_product" :data-sort-is-current="isCurrent" :data-sort-direction="sortDirection" @click="sortToggle">
+    <span role="columnheader"><slot /></span>
+    <span role="button" class="ps-sort" aria-label="Tri"></span>
+  </div>
 </template>
 
 <script>
   export default {
-    props: ['order'],
+    props: {
+      // column name
+      order: String,
+      // indicates the currently sorted column in the table
+      currentSort: String,
+    },
     methods: {
-      sortFilter() {
-        this.isSorted = !this.isSorted;
-        this.$emit('sort', this.order, this.isSorted);
+      sortToggle() {
+        // toggle direction
+        this.sortDirection = (this.sortDirection === 'asc') ? 'desc' : 'asc';
+        this.$emit('sort', this.order, this.sortDirection);
       },
     },
-    data: () => ({ isSorted: true }),
+    data: () => ({
+      sortDirection: 'asc',
+    }),
+    computed: {
+      isCurrent() {
+        return this.currentSort === this.order;
+      },
+    },
   };
 </script>
 
-<style lang="sass" scoped>
-  @import "../../../../scss/config/_settings.scss";
-  .ps-sort {
-    background: transparent;
-    border: none;
-    outline: none;
-  }
-</style>

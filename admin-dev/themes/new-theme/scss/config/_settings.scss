@@ -14,7 +14,8 @@ $size-navbar-width: 13.13rem;
 $size-navbar-width-mini: 3.125rem;
 $size-navbar-link-height: 1.75rem;
 $size-header-height: 2.5rem;
-$size-header-toolbar-height: 6.25rem;
+$size-header-toolbar-height: 5.313rem;
+$header-mobile-padding-y: .625rem;
 
 // Imported from bootstrap
 
@@ -63,21 +64,21 @@ $spacing-widths: (
 );
 $grid-breakpoints: (
   xs: 0,
-  sm: 544px,
-  md: 768px,
-  lg: 1024px,
-  xl: 1300px
+  sm: 34em,    // 544px
+  md: 48em,    // 768px
+  lg: 64em,    // 1024px
+  xl: 81.25em  // 1300px
 );
 
-$card-border-color: #e5e5e5 !default;
+$card-border-color: #dbe6e9 !default;
 $module-logo-size: 45px;
 
-$card-spacer-x: 1.25rem !default;
-$card-spacer-y: .75rem !default;
+$card-spacer-x: .625rem !default;
+$card-spacer-y: .625rem !default;
 $card-border-width: 1px !default;
-$card-border-radius: $border-radius !default;
+$card-border-radius: 5px !default;
 $card-border-radius-inner: $card-border-radius !default;
-$card-cap-bg: #f5f5f5 !default;
+$card-cap-bg: $gray-soft !default;
 $card-bg: #fff !default;
 $card-link-hover-color: #fff !default;
 $enable-rounded: true !default;

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -20,10 +20,11 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\Twig\Locator;
 
 use Twig\Loader\FilesystemLoader;
@@ -34,27 +35,29 @@ use Twig\Loader\FilesystemLoader;
 class ModuleTemplateLoader extends FilesystemLoader
 {
     /**
-     * {@inheritdoc}
+     * @param array $namespaces a collection of path namespaces with namespace names
+     * @param array $modulePaths A path or an array of paths where to look for module templates
      */
-    private $rootPath;
+    public function __construct(array $namespaces, array $modulePaths = array())
+    {
+        if (!empty($modulePaths)) {
+            $this->registerNamespacesFromConfig($modulePaths, $namespaces);
+        }
+    }
 
     /**
-     * @param string|array $paths    A path or an array of paths where to look for templates
-     * @param string|null  $rootPath The root path common to all relative paths (null for getcwd())
-     * @param string|null  $namespace A path namespace
+     * Register namespaces in module and link them to the right paths.
+     *
+     * @param array $modulePaths
+     * @param array $namespaces
      */
-    public function __construct($paths = array(), $rootPath = null, $namespace = 'PrestaShop')
+    private function registerNamespacesFromConfig(array $modulePaths, array $namespaces)
     {
-        $this->rootPath = (null === $rootPath ? getcwd() : $rootPath).DIRECTORY_SEPARATOR;
-        if (false !== $realPath = realpath($rootPath)) {
-            $this->rootPath = $realPath.DIRECTORY_SEPARATOR;
-        }
-
-        if ($paths) {
+        foreach ($namespaces as $namespace => $namespacePath) {
             $templatePaths = array();
 
-            foreach ($paths as $path) {
-                if (is_dir($dir = $path . '/views/'. $namespace)) {
+            foreach ($modulePaths as $path) {
+                if (is_dir($dir = $path . '/views/PrestaShop/' . $namespacePath)) {
                     $templatePaths[] = $dir;
                 }
             }

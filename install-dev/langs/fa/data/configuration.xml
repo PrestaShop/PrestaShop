@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<entity_configuration>
+  <configuration id="PS_INVOICE_PREFIX">
+    <value>#FA</value>
+  </configuration>
+  <configuration id="PS_DELIVERY_PREFIX">
+    <value>#DE</value>
+  </configuration>
+  <configuration id="PS_RETURN_PREFIX">
+    <value>#RE</value>
+  </configuration>
+  <configuration id="PS_SEARCH_BLACKLIST">
+    <value>و|یا|با|در|یک|روی|به|برای|تا|که</value>
+  </configuration>
+  <configuration id="PS_CUSTOMER_SERVICE_SIGNATURE">
+    <value>مشتری عزیز،&#xD;
+&#xD;
+با تشکر،&#xD;
+امور مشتریان</value>
+  </configuration>
+  <configuration id="PS_MAINTENANCE_TEXT">
+    <value>ما در حال به روز رسانی فروشگاه هستیم ولی به زودی باز خواهیم گشت.&#xD;
+از صبر و بردباری شما سپاس گذاریم.</value>
+  </configuration>
+  <configuration id="PS_LABEL_IN_STOCK_PRODUCTS">
+    <value></value>
+  </configuration>
+  <configuration id="PS_LABEL_OOS_PRODUCTS_BOA">
+    <value></value>
+  </configuration>
+  <configuration id="PS_LABEL_OOS_PRODUCTS_BOD">
+    <value>Out-of-Stock</value>
+  </configuration>
+</entity_configuration>

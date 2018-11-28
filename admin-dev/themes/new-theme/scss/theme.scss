@@ -11,6 +11,7 @@
 @import "mixins/stars";
 // Settings
 @import "config/settings";
+@import "config/keyframes";
 
 // Components
 @import "components/layout/content_div";
@@ -27,11 +28,27 @@
 @import "components/datepicker";
 @import "components/help_box";
 @import "components/ps_dropdown";
+@import "components/ps_number";
+@import "components/ps_radio";
+@import "components/ps_spinner";
+@import "components/ps_tree";
+@import "components/translatable_input";
+@import "components/choice_table";
+@import "components/form";
+@import "components/grid";
+@import "components/showcase-card";
+@import "components/material_choice_tree";
+@import "components/button_groups";
+@import "components/cursor";
 
 // Pages specifics SCSS files
 @import "pages/product_page";
 @import "pages/products_catalog";
 @import "pages/translation_page";
+@import "pages/stock_page";
+@import "pages/invoices";
+@import "pages/meta";
+@import "pages/import_data";
 
 // Main Layout
 @import "pages/modules";
@@ -49,15 +66,6 @@ body {
 }
 
 // To put into the PrestaKit
-.alert {
-  > ul {
-    margin-left: 1.5rem;
-  }
-}
-.col-center {
-  float: none;
-  margin: 0 auto;
-}
 ._fullspace {
   width: 100%;
   height: 100%;
@@ -75,6 +83,7 @@ body {
 #product_filter_column_active .select2 {
   min-width: 4.375rem;
 }
+
 // Needed to override the default inline style of typeahead and take all the width
 span.twitter-typeahead {
   display: block !important;
@@ -84,10 +93,41 @@ span.twitter-typeahead {
   }
 }
 
+// text buttons
+.btn.btn-text {
+  cursor: pointer;
+  padding: 0;
+  background: transparent;
+
+  &:focus {
+    box-shadow: none;
+  }
+}
+
+// setting dropdown button
+.dropdown-toggle.tool-button {
+  &:after {
+    content: "settings";
+    font-size: 1.375rem;
+    color: $medium-gray;
+  }
+}
+
 .translation-field {
   display: none;
 
   &.visible {
     display: block;
+  }
+}
+
+table.table {
+  font-size: 0.8rem;
+}
+
+// Needed to override the default inline style of modal header in translations-app
+.translations-app{
+  .modal-header{
+    display: initial;
   }
 }

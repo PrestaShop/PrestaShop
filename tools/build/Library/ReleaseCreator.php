@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -127,6 +127,7 @@ class ReleaseCreator
         'app/cache/..*$',
         '.idea',
         'tools/build$',
+        'tools/foreignkeyGenerator$',
         '.*node_modules.*',
     ];
 
@@ -195,7 +196,7 @@ class ReleaseCreator
      * @param bool $useZip
      * @param string $destinationDir
      */
-    public function __construct($version, $useInstaller = true, $useZip = true, $destinationDir = '')
+    public function __construct($version = null, $useInstaller = true, $useZip = true, $destinationDir = '')
     {
         $this->consoleWriter = new ConsoleWriter();
         $tmpDir = sys_get_temp_dir();
@@ -206,8 +207,12 @@ class ReleaseCreator
             ConsoleWriter::COLOR_GREEN
         );
         $this->projectPath = realpath(__DIR__ . '/../../..');
-        $this->version = $version;
+        $this->version = $version ? $version : $this->getCurrentVersion();
         $this->zipFileName = "prestashop_$this->version.zip";
+
+        if (empty($this->version)) {
+            throw new Exception('Version is not provided and cannot be found in project.');
+        }
 
         if (empty($destinationDir)) {
             $releasesDir = self::RELEASES_DIR_RELATIVE_PATH;
@@ -258,6 +263,7 @@ class ReleaseCreator
         );
         $this->createTmpProjectDir()
             ->setFilesConstants()
+            ->setupShopVersion()
             ->generateLicensesFile()
             ->runComposerInstall()
             ->createPackage();
@@ -315,7 +321,6 @@ class ReleaseCreator
     {
         $this->consoleWriter->displayText("Setting files constants...", ConsoleWriter::COLOR_YELLOW);
         $this->setConfigDefinesConstants()
-            ->setConfigAutoloadConstants()
             ->setInstallDevConfigurationConstants()
             ->setInstallDevInstallVersionConstants();
         $this->consoleWriter->displayText(" DONE{$this->lineSeparator}", ConsoleWriter::COLOR_GREEN);
@@ -344,19 +349,66 @@ class ReleaseCreator
     }
 
     /**
-     * Define all config/autoload.php constants to the desired version.
+     * Get the current version in the project
+     * 
+     * @return string PrestaShop version
+     */
+    protected function getCurrentVersion()
+    {
+        $kernelFile = $this->projectPath.'/app/AppKernel.php';
+        $matches = [];
+
+        $kernelFileContent = file_get_contents($kernelFile);
+        $kernelFileContent = preg_match(
+            '~const VERSION = \'(.*)\';~',
+            $kernelFileContent,
+            $matches
+        ); 
+
+        return $matches[1];
+    }
+
+    /**
+     * Define the PrestaShop version to the desired version.
      *
-     * @return $this
+     * @return self
      * @throws BuildException
      */
-    protected function setConfigAutoloadConstants()
+    protected function setupShopVersion()
     {
-        $configAutoloadPath = $this->tempProjectPath.'/config/autoload.php';
-        $configAutoloadContent = file_get_contents($configAutoloadPath);
-        $configAutoloadNewContent = preg_replace('#_PS_VERSION_\', \'(.*)\'\)#', '_PS_VERSION_\', \'' . $this->version . '\')', $configAutoloadContent);
+        $kernelFile = $this->tempProjectPath.'/app/AppKernel.php';
+        $version = new Version($this->version);
 
-        if (!file_put_contents($configAutoloadPath, $configAutoloadNewContent)) {
-            throw new BuildException("Unable to update contents of '$configAutoloadPath'");
+
+        $kernelFileContent = file_get_contents($kernelFile);
+        $kernelFileContent = preg_replace(
+            '~const VERSION = \'(.*)\';~',
+            "const VERSION = '".$version->getVersion()."';",
+            $kernelFileContent
+        );
+        $kernelFileContent = preg_replace(
+            '~const MAJOR_VERSION_STRING = \'(.*)\';~',
+            "const MAJOR_VERSION_STRING = '".$version->getMajorVersionString()."';",
+            $kernelFileContent
+        );
+        $kernelFileContent = preg_replace(
+            '~const MAJOR_VERSION = (.*);~',
+            "const MAJOR_VERSION = ".$version->getMajorVersion().";",
+            $kernelFileContent
+        );
+        $kernelFileContent = preg_replace(
+            '~const MINOR_VERSION = (.*);~',
+            "const MINOR_VERSION = ".$version->getMinorVersion().";",
+            $kernelFileContent
+        );
+        $kernelFileContent = preg_replace(
+            '~const RELEASE_VERSION = (.*);~',
+            "const RELEASE_VERSION = ".$version->getReleaseVersion().";",
+            $kernelFileContent
+        );
+
+        if (!file_put_contents($kernelFile, $kernelFileContent)) {
+            throw new BuildException("Unable to update contents of $kernelFile.");
         }
 
         return $this;
@@ -460,12 +512,12 @@ class ReleaseCreator
      */
     protected function createAndRenameFolders()
     {
-        if (!file_exists($this->tempProjectPath . '/app/cache/')) {
-            mkdir($this->tempProjectPath . '/app/cache', 0777, true);
+        if (!file_exists($this->tempProjectPath . '/var/cache/')) {
+            mkdir($this->tempProjectPath . '/var/cache', 0777, true);
         }
 
-        if (!file_exists($this->tempProjectPath . '/app/logs/')) {
-            mkdir($this->tempProjectPath . '/app/logs', 0777, true);
+        if (!file_exists($this->tempProjectPath . '/var/logs/')) {
+            mkdir($this->tempProjectPath . '/var/logs', 0777, true);
         }
         $itemsToRename = ['admin-dev' => 'admin', 'install-dev' => 'install'];
         $basePath = $this->tempProjectPath;
@@ -663,11 +715,19 @@ class ReleaseCreator
         exec($cmd);
 
         if ($this->useInstaller) {
-            exec("cd {$argProjectPath}/tools/build/Library/InstallUnpacker && php compile.php && cd -");
+            exec("cd {$argProjectPath}/tools/build/Library/InstallUnpacker && php compile.php {$this->version} && cd -");
             $zip = new ZipArchive();
             $zip->open("{$this->tempProjectPath}/{$this->zipFileName}", ZipArchive::CREATE | ZipArchive::OVERWRITE);
             $zip->addFile("{$this->tempProjectPath}/{$installerZipFilename}", $installerZipFilename);
             $zip->addFile("{$this->projectPath}/tools/build/Library/InstallUnpacker/index.php", 'index.php');
+
+            // add docs at the root
+            $zip->addGlob(
+                "{$this->projectPath}/tools/build/doc/*",
+                0,
+                array('remove_all_path' => true)
+            );
+
             $zip->close();
             exec("rm {$argProjectPath}/tools/build/Library/InstallUnpacker/index.php");
         } else {

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -28,7 +28,7 @@ function deactivate_custom_modules()
 {
     $db = Db::getInstance();
     $modulesDirOnDisk = array();
-    $modules = scandir(_PS_MODULE_DIR_);
+    $modules = scandir(_PS_MODULE_DIR_, SCANDIR_SORT_NONE);
     foreach ($modules as $name) {
         if (!in_array($name, array('.', '..', 'index.php', '.htaccess')) && @is_dir(_PS_MODULE_DIR_.$name.DIRECTORY_SEPARATOR) && @file_exists(_PS_MODULE_DIR_.$name.DIRECTORY_SEPARATOR.$name.'.php')) {
             if (!preg_match('/^[a-zA-Z0-9_-]+$/', $name)) {

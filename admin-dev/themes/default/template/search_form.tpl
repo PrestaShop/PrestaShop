@@ -1,5 +1,5 @@
 {**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,18 +18,17 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
-<form id="header_search" class="bo_search_form" method="post" action="{$baseAdminUrl}index.php?controller=AdminSearch&amp;token={getAdminToken tab='AdminSearch'}" role="search">
+<form id="header_search" class="component bo_search_form" method="post" action="{$baseAdminUrl}index.php?controller=AdminSearch&amp;token={getAdminToken tab='AdminSearch'}" role="search">
 	<div class="form-group">
 		<input type="hidden" name="bo_search_type" id="bo_search_type" />
 		<div class="input-group">
 			<div class="input-group-btn">
 				<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-					<i id="search_type_icon" class="icon-search"></i>
-					<i class="icon-caret-down"></i>
+					<i id="search_type_icon" class="material-icons">search</i>
 				</button>
 				<ul id="header_search_options" class="dropdown-menu">
 					<li class="search-all search-option active">

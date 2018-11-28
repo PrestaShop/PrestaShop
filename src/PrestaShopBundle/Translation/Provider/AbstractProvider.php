@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -118,8 +118,8 @@ abstract class AbstractProvider implements ProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getDefaultCatalogue($empty = true) {
-
+    public function getDefaultCatalogue($empty = true)
+    {
     }
 
     /**
@@ -147,6 +147,7 @@ abstract class AbstractProvider implements ProviderInterface
      * Get the Catalogue from database only.
      *
      * @param null $theme
+     *
      * @return MessageCatalogue A MessageCatalogue instance
      */
     public function getDatabaseCatalogue($theme = null)
@@ -169,7 +170,7 @@ abstract class AbstractProvider implements ProviderInterface
      */
     public function getResourceDirectory()
     {
-        return $this->resourceDirectory.DIRECTORY_SEPARATOR.$this->locale;
+        return $this->resourceDirectory . DIRECTORY_SEPARATOR . $this->locale;
     }
 
     /**

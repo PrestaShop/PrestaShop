@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -44,15 +44,27 @@ class AdminContactsControllerCore extends AdminController
             'delete' => array(
                 'text' => $this->trans('Delete selected', array(), 'Admin.Actions'),
                 'confirm' => $this->trans('Delete selected items?', array(), 'Admin.Notifications.Warning'),
-                'icon' => 'icon-trash'
-            )
+                'icon' => 'icon-trash',
+            ),
         );
 
         $this->fields_list = array(
-            'id_contact' => array('title' => $this->trans('ID', array(), 'Admin.Global'), 'align' => 'center', 'class' => 'fixed-width-xs'),
-            'name' => array('title' => $this->trans('Title', array(), 'Admin.Global')),
-            'email' => array('title' => $this->trans('Email address', array(), 'Admin.Global')),
-            'description' => array('title' => $this->trans('Description', array(), 'Admin.Global')),
+            'id_contact' => array(
+                'title' => $this->trans('ID', array(), 'Admin.Global'),
+                'align' => 'center',
+                'class' => 'fixed-width-xs',
+            ),
+            'name' => array(
+                'title' => $this->trans('Title', array(), 'Admin.Global'),
+                'maxlength' => 30,
+            ),
+            'email' => array(
+                'title' => $this->trans('Email address', array(), 'Admin.Global'),
+                'maxlength' => 50,
+            ),
+            'description' => array(
+                'title' => $this->trans('Description', array(), 'Admin.Global'),
+            ),
         );
     }
 
@@ -61,7 +73,7 @@ class AdminContactsControllerCore extends AdminController
         $this->fields_form = array(
             'legend' => array(
                 'title' => $this->trans('Contacts', array(), 'Admin.Shopparameters.Feature'),
-                'icon' => 'icon-envelope-alt'
+                'icon' => 'icon-envelope-alt',
             ),
             'input' => array(
                 array(
@@ -93,13 +105,13 @@ class AdminContactsControllerCore extends AdminController
                         array(
                             'id' => 'customer_service_on',
                             'value' => 1,
-                            'label' => $this->trans('Enabled', array(), 'Admin.Global')
+                            'label' => $this->trans('Enabled', array(), 'Admin.Global'),
                         ),
                         array(
                             'id' => 'customer_service_off',
                             'value' => 0,
-                            'label' => $this->trans('Disabled', array(), 'Admin.Global')
-                        )
+                            'label' => $this->trans('Disabled', array(), 'Admin.Global'),
+                        ),
                     ),
                 ),
                 array(
@@ -114,7 +126,7 @@ class AdminContactsControllerCore extends AdminController
             ),
             'submit' => array(
                 'title' => $this->trans('Save', array(), 'Admin.Actions'),
-            )
+            ),
         );
 
         if (Shop::isFeatureActive()) {
@@ -133,9 +145,9 @@ class AdminContactsControllerCore extends AdminController
         $this->initToolbar();
         if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_contact'] = array(
-                'href' => self::$currentIndex.'&addcontact&token='.$this->token,
+                'href' => self::$currentIndex . '&addcontact&token=' . $this->token,
                 'desc' => $this->trans('Add new contact', array(), 'Admin.Shopparameters.Feature'),
-                'icon' => 'process-icon-new'
+                'icon' => 'process-icon-new',
             );
         }
 

@@ -75,7 +75,7 @@ class FromBuilder {
             $len = strlen($sql);
             $sql .= $this->buildTable($v, $k);
             $sql .= $this->buildTableExpression($v, $k);
-            $sql .= $this->buildSubquery($v, $k);
+            $sql .= $this->buildSubQuery($v, $k);
 
             if ($len == strlen($sql)) {
                 throw new UnableToCreateSQLException('FROM', $k, $v, 'expr_type');

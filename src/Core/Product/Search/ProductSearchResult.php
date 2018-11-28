@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -19,11 +19,10 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 
 namespace PrestaShop\PrestaShop\Core\Product\Search;
 
@@ -39,6 +38,7 @@ class ProductSearchResult
     public function setProducts(array $products)
     {
         $this->products = $products;
+
         return $this;
     }
 
@@ -50,6 +50,7 @@ class ProductSearchResult
     public function setTotalProductsCount($totalProductsCount)
     {
         $this->totalProductsCount = $totalProductsCount;
+
         return $this;
     }
 
@@ -61,6 +62,7 @@ class ProductSearchResult
     public function setFacetCollection(FacetCollection $facetCollection)
     {
         $this->facetCollection = $facetCollection;
+
         return $this;
     }
 
@@ -72,6 +74,7 @@ class ProductSearchResult
     public function setEncodedFacets($encodedFacets)
     {
         $this->encodedFacets = $encodedFacets;
+
         return $this;
     }
 
@@ -83,6 +86,7 @@ class ProductSearchResult
     public function addAvailableSortOrder(SortOrder $sortOrder)
     {
         $this->availableSortOrders[] = $sortOrder;
+
         return $this;
     }
 
@@ -105,6 +109,7 @@ class ProductSearchResult
     public function setCurrentSortOrder(SortOrder $currentSortOrder)
     {
         $this->currentSortOrder = $currentSortOrder;
+
         return $this;
     }
 

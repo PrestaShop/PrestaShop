@@ -48,3 +48,9 @@ INSERT IGNORE INTO `PREFIX_hook` (`id_hook`, `name`, `title`, `description`, `po
   (NULL, 'displayAdminCustomersAddressesItemAction', 'Display new elements in the Back Office, tab AdminCustomers, Addresses actions', 'This hook launches modules when the Addresses list into the AdminCustomers tab is displayed in the Back Office', '1'),
   (NULL, 'displayDashboardToolbarTopMenu', 'Display new elements in back office page with a dashboard, on top Menu', 'This hook launches modules when a page with a dashboard is displayed', '1'),
   (NULL, 'displayDashboardToolbarIcons', 'Display new elements in back office page with dashboard, on icons list', 'This hook launches modules when the back office with dashboard is displayed', '1');
+
+INSERT IGNORE INTO `PREFIX_authorization_role` (`slug`) VALUES
+  ('ROLE_MOD_TAB_DEFAULT_CREATE'),
+  ('ROLE_MOD_TAB_DEFAULT_READ'),
+  ('ROLE_MOD_TAB_DEFAULT_UPDATE'),
+  ('ROLE_MOD_TAB_DEFAULT_DELETE');

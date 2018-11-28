@@ -1,5 +1,5 @@
 {**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
@@ -43,17 +43,19 @@
 													<i class="icon-check"></i> {l s='Use this theme'}
 												</a>
 
-												<button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-													<i class="icon-caret-down"></i>&nbsp;
-												</button>
-												<ul class="dropdown-menu">
-													<li>
-														<a href="{$link->getAdminLink('AdminThemes')|escape:'html':'UTF-8'}&amp;action=deleteTheme&amp;theme_name={$theme->getName()|urlencode}" title="{l s='Delete this theme'}" class="delete">
-															<i class="icon-trash"></i> {l s='Delete this theme'}
-														</a>
-													</li>
-												</ul>
+												{if $field['can_delete_themes']}
+                          <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                            <i class="icon-caret-down"></i>&nbsp;
+                          </button>
 
+                          <ul class="dropdown-menu">
+                            <li>
+                              <a href="{$link->getAdminLink('AdminThemes')|escape:'html':'UTF-8'}&amp;action=deleteTheme&amp;theme_name={$theme->getName()|urlencode}" title="{l s='Delete this theme'}" class="delete">
+                                <i class="icon-trash"></i> {l s='Delete this theme'}
+                              </a>
+                            </li>
+                          </ul>
+												{/if}
 											</div>
 										</div>
 									</div>
@@ -119,27 +121,7 @@
 
 
 {block name="after"}
-	<div class="panel clearfix" id="prestastore-content"></div>
 	<script type="text/javascript">
-		$.ajax({
-			type: 'POST',
-			headers: { "cache-control": "no-cache" },
-			url: 'ajax-tab.php?rand=' + new Date().getTime(),
-			async: true,
-			cache: false,
-			dataType : "html",
-			data: {
-				tab: 'AdminThemes',
-				token: '{$token|escape:'html':'UTF-8'}',
-				ajax: '1',
-				action:'getAddonsThemes',
-				page:'themes'
-			},
-			success: function(htmlData) {
-				$("#prestastore-content").html("<h3><i class='icon-picture-o'></i> {l s='Live from PrestaShop Addons!'}</h3>"+htmlData);
-			}
-		});
-
 		// These variable will move the form to another location
 		var formToMove = "appearance";
 		var formDestination = "js_theme_form_container";

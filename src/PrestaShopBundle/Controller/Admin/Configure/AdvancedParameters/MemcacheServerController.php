@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -28,12 +28,14 @@ namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use PrestaShop\PrestaShop\Adapter\Cache\MemcacheServerManager;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Responsible of "Configure > Advanced Parameters > Performance" servers block management
+ * Responsible of "Configure > Advanced Parameters > Performance" servers block management.
  */
 class MemcacheServerController extends FrameworkBundleAdminController
 {
@@ -44,14 +46,15 @@ class MemcacheServerController extends FrameworkBundleAdminController
         return new JsonResponse($this->getMemcacheManager()->getServers());
     }
 
+    /**
+     * @DemoRestricted(redirectRoute="admin_servers_test")
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse|\Symfony\Component\HttpFoundation\RedirectResponse
+     */
     public function testAction(Request $request)
     {
-        if ($this->isDemoModeEnabled()) {
-            $this->addFlash('error', $this->getDemoModeErrorMessage());
-
-            return $this->redirectToRoute('admin_servers_test');
-        }
-
         $queryValues = $request->query;
 
         if ($queryValues->has('server_ip') && $queryValues->has('server_port')) {
@@ -64,17 +67,18 @@ class MemcacheServerController extends FrameworkBundleAdminController
             return new JsonResponse(array('test' => $isValid));
         }
 
-        return new JsonResponse(array('errors' => 'error'), 400);
+        return new JsonResponse(array('errors' => 'error'), Response::HTTP_BAD_REQUEST);
     }
 
+    /**
+     * @DemoRestricted(redirectRoute="admin_servers_test")
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse|\Symfony\Component\HttpFoundation\RedirectResponse
+     */
     public function addAction(Request $request)
     {
-        if ($this->isDemoModeEnabled()) {
-            $this->addFlash('error', $this->getDemoModeErrorMessage());
-
-            return $this->redirectToRoute('admin_servers_test');
-        }
-
         if (!in_array(
             $this->authorizationLevel($this::CONTROLLER_NAME),
             array(
@@ -84,16 +88,19 @@ class MemcacheServerController extends FrameworkBundleAdminController
                 PageVoter::LEVEL_DELETE,
             )
         )) {
-            return new JsonResponse(array(
-                'errors' => array($this->trans('You do not have permission to create this.', 'Admin.Notifications.Error')
-                )
-            ), 400);
+            return new JsonResponse(
+                array(
+                    'errors' => array(
+                        $this->trans('You do not have permission to create this.', 'Admin.Notifications.Error'),
+                    ),
+                ),
+                Response::HTTP_BAD_REQUEST
+            );
         }
 
         $postValues = $request->request;
 
-        if (
-            $postValues->has('server_ip')
+        if ($postValues->has('server_ip')
             && $postValues->has('server_port')
             && $postValues->has('server_weight')
             && $this->getMemcacheManager()->testConfiguration(
@@ -104,7 +111,7 @@ class MemcacheServerController extends FrameworkBundleAdminController
             $server = $this->getMemcacheManager()
                 ->addServer(
                     $postValues->get('server_ip'),
-                    $postValues->get('server_port'),
+                    $postValues->getInt('server_port'),
                     $postValues->get('server_weight')
                 )
             ;
@@ -112,20 +119,25 @@ class MemcacheServerController extends FrameworkBundleAdminController
             return new JsonResponse($server, 201);
         }
 
-        return new JsonResponse(array('errors' => array(
-            $this->trans('The Memcached server cannot be added.', 'Admin.Advparameters.Notification')
-        )), 400);
-
+        return new JsonResponse(
+            array(
+                'errors' => array(
+                    $this->trans('The Memcached server cannot be added.', 'Admin.Advparameters.Notification'),
+                ),
+            ),
+            Response::HTTP_BAD_REQUEST
+        );
     }
 
+    /**
+     * @DemoRestricted(redirectRoute="admin_servers_test")
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse|\Symfony\Component\HttpFoundation\RedirectResponse
+     */
     public function deleteAction(Request $request)
     {
-        if ($this->isDemoModeEnabled()) {
-            $this->addFlash('error', $this->getDemoModeErrorMessage());
-
-            return $this->redirectToRoute('admin_servers_test');
-        }
-
         if (!in_array(
             $this->authorizationLevel($this::CONTROLLER_NAME),
             array(
@@ -135,25 +147,37 @@ class MemcacheServerController extends FrameworkBundleAdminController
                 PageVoter::LEVEL_DELETE,
             )
         )) {
-            return new JsonResponse(array(
-                'errors' => array($this->trans('You do not have permission to delete this.', 'Admin.Notifications.Error')
-                )
-            ), 400);
+            return new JsonResponse(
+                array(
+                    'errors' => array(
+                        $this->trans('You do not have permission to delete this.', 'Admin.Notifications.Error'),
+                    ),
+                ),
+                Response::HTTP_BAD_REQUEST
+            );
         }
 
         if ($request->request->has('server_id')) {
             $this->getMemcacheManager()->deleteServer($request->request->get('server_id'));
 
-            return new JsonResponse(array(), 204);
+            return new JsonResponse([], Response::HTTP_NO_CONTENT);
         }
 
-        return new JsonResponse(array('errors' => array(
-            $this->trans('There was an error when attempting to delete the Memcached server.', 'Admin.Advparameters.Notification')
-        )), 400);
+        return new JsonResponse(
+            array(
+                'errors' => array(
+                    $this->trans(
+                        'There was an error when attempting to delete the Memcached server.',
+                        'Admin.Advparameters.Notification'
+                    ),
+                ),
+            ),
+            Response::HTTP_BAD_REQUEST
+        );
     }
 
     /**
-     * @var MemcacheServerManager
+     * @return MemcacheServerManager
      */
     private function getMemcacheManager()
     {

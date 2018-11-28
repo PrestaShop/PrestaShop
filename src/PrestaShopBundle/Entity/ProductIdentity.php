@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -46,6 +46,7 @@ class ProductIdentity
 
     /**
      * @param array $identifiers
+     *
      * @return ProductIdentity
      */
     public static function fromArray(array $identifiers)
@@ -54,11 +55,11 @@ class ProductIdentity
             throw new BadRequestHttpException('The "productId" parameter is required');
         }
 
-        $productId = (int)$identifiers['product_id'];
+        $productId = (int) $identifiers['product_id'];
 
         $combinationId = 0;
         if (array_key_exists('combination_id', $identifiers)) {
-            $combinationId = (int)$identifiers['combination_id'];
+            $combinationId = (int) $identifiers['combination_id'];
         }
 
         return new self($productId, $combinationId);

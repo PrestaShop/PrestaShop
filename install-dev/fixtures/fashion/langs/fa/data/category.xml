@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<entity_category>
+  <category id="Clothes" id_shop="1">
+    <name>لباس ها</name>
+    <description>&lt;p&gt;&lt;span style="font-size:10pt;font-style:normal;"&gt;لباس های مد روز ما را بررسی کنید. گلچینی از بهترین آیتم ها برای تکمیل قفسه لباس شما. استایلی خاص بر اساس شخصیت خود انتخاب کنید.&lt;/span&gt;&lt;/p&gt;</description>
+    <link_rewrite>clothes</link_rewrite>
+    <meta_title/>
+    <meta_keywords/>
+    <meta_description/>
+  </category>
+  <category id="Men" id_shop="1">
+    <name>آقایان</name>
+    <description>&lt;p&gt;&lt;span style="font-size:10pt;font-style:normal;"&gt;تیشرت ها، ژاکت ها، پیراهن ها و اکسسوری های مردانه. از ملزومات اولیه تا ملزومات اصلی برای خلق هر نوع استایل. &lt;/span&gt;&lt;/p&gt;</description>
+    <link_rewrite>men</link_rewrite>
+    <meta_title/>
+    <meta_keywords/>
+    <meta_description/>
+  </category>
+  <category id="Women" id_shop="1">
+    <name>خانم ها</name>
+    <description>&lt;p&gt;&lt;span style="font-size:10pt;font-style:normal;"&gt;تیشرت ها، ژاکت ها، پیراهن ها و اکسسوری های زنانه. از ملزومات اولیه تا ملزومات اصلی برای خلق هر نوع استایل. &lt;/span&gt;&lt;/p&gt;</description>
+    <link_rewrite>women</link_rewrite>
+    <meta_title/>
+    <meta_keywords/>
+    <meta_description/>
+  </category>
+  <category id="Accessories" id_shop="1">
+    <name>اکسسوری ها</name>
+    <description>&lt;p&gt;&lt;span style="font-size:10pt;font-style:normal;"&gt;آیتم ها و اکسسوری هایی برای روی میز، آشپزخانه و یا اتاق نشیمن شما. منزل خود را با طراحی خود تبدیل به خانه ای چشم نواز کنید. &lt;/span&gt;&lt;/p&gt;</description>
+    <link_rewrite>accessories</link_rewrite>
+    <meta_title/>
+    <meta_keywords/>
+    <meta_description/>
+  </category>
+  <category id="Stationery" id_shop="1">
+    <name>نوشت افزار</name>
+    <description>&lt;p&gt;&lt;span style="font-size:10pt;font-style:normal;"&gt;دفترچه های یادداشت، سررسیدها، ملزومات اداری و سایر موارد مورد نیاز. تمامی چیزهایی که برای تلفیق راحتی با کاربرد پذیری، چه برای محل کار و چه برای منزل خود نیاز دارید. &lt;/span&gt;&lt;/p&gt;</description>
+    <link_rewrite>stationery</link_rewrite>
+    <meta_title/>
+    <meta_keywords/>
+    <meta_description/>
+  </category>
+  <category id="Home_Accessories" id_shop="1">
+    <name>ملزومات خانه</name>
+    <description>&lt;p&gt;&lt;span style="font-size:10pt;font-style:normal;"&gt;به جزییات اهمیت دهید. با گلچین ملزومات خانگی ما به طراحی داخلی خود جانی تازه ببخشید. &lt;/span&gt;&lt;/p&gt;</description>
+    <link_rewrite>home-accessories</link_rewrite>
+    <meta_title/>
+    <meta_keywords/>
+    <meta_description/>
+  </category>
+  <category id="Art" id_shop="1">
+    <name>هنر</name>
+    <description>&lt;p&gt;&lt;span style="font-size:10pt;font-style:normal;"&gt;پوسترهای همراه قاب و تصاویر خطی، تمام چیزهایی که برای شخصیت دادن به دیوارهای خود و آوردن پروژه های خلاق خود به زندگی نیاز دارید.&lt;/span&gt;&lt;/p&gt;</description>
+    <link_rewrite>art</link_rewrite>
+    <meta_title/>
+    <meta_keywords/>
+    <meta_description/>
+  </category>
+</entity_category>

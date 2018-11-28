@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,11 +27,10 @@
 namespace PrestaShop\PrestaShop\Adapter\Debug;
 
 use PrestaShop\PrestaShop\Adapter\Configuration;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 
 /**
- * This class manages Debug mode configuration for a Shop
+ * This class manages Debug mode configuration for a Shop.
  */
 class DebugModeConfiguration implements DataConfigurationInterface
 {
@@ -41,12 +40,12 @@ class DebugModeConfiguration implements DataConfigurationInterface
     private $configuration;
 
     /**
-     * @var DebugMode $debugMode Debug mode manager
+     * @var DebugMode Debug mode manager
      */
     private $debugMode;
 
     /**
-     * @var string $rootDir Path to the application defines path
+     * @var string Path to the application defines path
      */
     private $configDefinesPath;
 
@@ -58,21 +57,21 @@ class DebugModeConfiguration implements DataConfigurationInterface
     }
 
     /**
-     * Returns configuration used to manage Debug mode in back office
+     * Returns configuration used to manage Debug mode in back office.
      *
      * @return array
      */
     public function getConfiguration()
     {
         return array(
-            'disable_non_native_modules' => $this->configuration->get('PS_DISABLE_NON_NATIVE_MODULE'),
-            'disable_overrides' => $this->configuration->get('PS_DISABLE_OVERRIDES'),
+            'disable_non_native_modules' => $this->configuration->getBoolean('PS_DISABLE_NON_NATIVE_MODULE'),
+            'disable_overrides' => $this->configuration->getBoolean('PS_DISABLE_OVERRIDES'),
             'debug_mode' => $this->debugMode->isDebugModeEnabled(),
         );
     }
 
     /**
-     * @{inheritdoc}
+     * {@inheritdoc}
      */
     public function updateConfiguration(array $configuration)
     {
@@ -91,28 +90,28 @@ class DebugModeConfiguration implements DataConfigurationInterface
                     $errors[] = array(
                         'key' => 'Error: Could not write to file. Make sure that the correct permissions are set on the file %s',
                         'domain' => 'Admin.Advparameters.Notification',
-                        'parameters' => array($this->configDefinesPath)
+                        'parameters' => array($this->configDefinesPath),
                     );
                     break;
                 case DebugMode::DEBUG_MODE_ERROR_NO_DEFINITION_FOUND:
                     $errors[] = array(
                         'key' => 'Error: Could not find whether debug mode is enabled. Make sure that the correct permissions are set on the file %s',
                         'domain' => 'Admin.Advparameters.Notification',
-                        'parameters' => array($this->configDefinesPath)
+                        'parameters' => array($this->configDefinesPath),
                     );
                     break;
                 case DebugMode::DEBUG_MODE_ERROR_NO_WRITE_ACCESS_CUSTOM:
                     $errors[] = array(
                         'key' => 'Error: Could not write to file. Make sure that the correct permissions are set on the file %s',
                         'domain' => 'Admin.Advparameters.Notification',
-                        'parameters' => array($this->configDefinesPath)
+                        'parameters' => array($this->configDefinesPath),
                     );
                     break;
                 case DebugMode::DEBUG_MODE_ERROR_NO_READ_ACCESS:
                     $errors[] = array(
                         'key' => 'Error: Could not write to file. Make sure that the correct permissions are set on the file %s',
                         'domain' => 'Admin.Advparameters.Notification',
-                        'parameters' => array($this->configDefinesPath)
+                        'parameters' => array($this->configDefinesPath),
                     );
                     break;
                 default:
@@ -124,27 +123,22 @@ class DebugModeConfiguration implements DataConfigurationInterface
     }
 
     /**
-     * @{inheritdoc}
+     * {@inheritdoc}
      */
     public function validateConfiguration(array $configuration)
     {
-        $resolver = new OptionsResolver();
-        $resolver->setRequired(
-            array(
-                'disable_non_native_modules',
-                'disable_overrides',
-                'debug_mode',
-            )
+        return isset(
+            $configuration['disable_non_native_modules'],
+            $configuration['disable_overrides'],
+            $configuration['debug_mode']
         );
-        $resolver->resolve($configuration);
-
-        return true;
     }
 
     /**
-     * Change Debug mode value if needed
+     * Change Debug mode value if needed.
      *
      * @param $enableStatus
+     *
      * @return int the status of update
      */
     private function updateDebugMode($enableStatus)

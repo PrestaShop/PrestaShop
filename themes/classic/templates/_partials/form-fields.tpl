@@ -1,5 +1,5 @@
 {**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
@@ -88,9 +88,11 @@
 
         {block name='form_field_item_checkbox'}
           <span class="custom-checkbox">
-            <input name="{$field.name}" type="checkbox" value="1" {if $field.value}checked="checked"{/if} {if $field.required}required{/if}>
-            <span><i class="material-icons rtl-no-flip checkbox-checked">&#xE5CA;</i></span>
-            <label>{$field.label nofilter}</label >
+            <label>
+              <input name="{$field.name}" type="checkbox" value="1" {if $field.value}checked="checked"{/if} {if $field.required}required{/if}>
+              <span><i class="material-icons rtl-no-flip checkbox-checked">&#xE5CA;</i></span>
+              {$field.label nofilter}
+            </label>
           </span>
         {/block}
 
@@ -134,6 +136,7 @@
             <input
               class="form-control js-child-focus js-visible-password"
               name="{$field.name}"
+              title="{l s='At least 5 characters long' d='Shop.Forms.Help'}"
               type="password"
               value=""
               pattern=".{literal}{{/literal}5,{literal}}{/literal}"

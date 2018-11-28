@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -19,10 +19,11 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\Form\Admin\Type;
 
 use Symfony\Component\Form\FormView;
@@ -46,26 +47,26 @@ class TextWithUnitType extends AbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'widget' => 'single_text',
-            'unit' => 'unit'
-        ));
+            'unit' => 'unit',
+        ]);
     }
 
     /**
-     * @{inheritdoc}
+     * {@inheritdoc}
      */
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
         parent::buildView($view, $form, $options);
 
-        $view->vars = array_merge($view->vars, array(
-            'unit' => $options['unit']
-        ));
+        $view->vars = array_merge($view->vars, [
+            'unit' => $options['unit'],
+        ]);
     }
 
     /**
-     * @{inheritdoc}
+     * {@inheritdoc}
      */
     public function getBlockPrefix()
     {

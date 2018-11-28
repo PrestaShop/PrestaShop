@@ -5,8 +5,7 @@
       <trans-unit id="37c90b2d3eaec03973059cb01c3fea06">
         <source>Please log in to your customer account to view the order</source>
         <target>Please log in to your customer account to view the order</target>
-        <note>Context:
-File: controllers/front/GuestTrackingController.php:74</note>
+        <note>Line: 74</note>
       </trans-unit>
     </body>
   </file>

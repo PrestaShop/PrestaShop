@@ -337,6 +337,13 @@
   }
 }
 
+.advertising-block {
+  margin-bottom: 1.563rem;
+  img {
+    width: 100%;
+  }
+}
+
 /*** Responsive part ***/
 @include media-breakpoint-down(sm) {
   #category {
@@ -453,5 +460,26 @@
         margin-right: -15px;
       }
     }
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .category-cover{
+    display: none;
+  }
+
+  .block-category{
+    min-height: 0;
+    margin-bottom: 0;
+  }
+
+  .card-block{
+    padding: 0;
+  }
+
+  .card{
+    box-shadow: none;
+    background-color: inherit;
+    border: none;
   }
 }

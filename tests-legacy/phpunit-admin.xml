@@ -1,0 +1,28 @@
+<phpunit
+  bootstrap="bootstrap-admin.php"
+  processIsolation="false"
+>
+    <php>
+        <env name="SYMFONY_ENV" value="test"/>
+        <env name="kernel.environment" value="test" />
+        <server name="KERNEL_CLASS" value="AppKernel" />
+        <const name="_PS_IN_TEST_" value="1" />
+    </php>
+    <groups>
+      <include>
+        <group>admin</group>
+        <group>api</group>
+        <group>demo</group>
+      </include>
+    </groups>
+    <testsuites>
+        <testsuite name="Unit">
+            <directory>Unit</directory>
+        </testsuite>
+    </testsuites>
+    <testsuites>
+        <testsuite name="Integration">
+            <directory>Integration</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>

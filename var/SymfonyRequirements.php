@@ -1,4 +1,10 @@
 <?php
+/**
+ * Note: This file has been modified for PHP 7.2 compatibility.
+ * See:
+ * - https://github.com/PrestaShop/PrestaShop/pull/9409
+ * - https://github.com/sensiolabs/SensioDistributionBundle/pull/336
+ */
 
 /*
  * This file is part of the Symfony package.
@@ -389,7 +395,7 @@ class SymfonyRequirements extends RequirementCollection
     {
         /* mandatory requirements follow */
 
-        $installedPhpVersion = phpversion();
+        $installedPhpVersion = PHP_VERSION;
         $requiredPhpVersion = $this->getPhpRequiredVersion();
 
         $this->addRecommendation(
@@ -448,15 +454,8 @@ class SymfonyRequirements extends RequirementCollection
         }
 
         if (false !== $requiredPhpVersion && version_compare($installedPhpVersion, $requiredPhpVersion, '>=')) {
-            $timezones = array();
-            foreach (DateTimeZone::listAbbreviations() as $abbreviations) {
-                foreach ($abbreviations as $abbreviation) {
-                    $timezones[$abbreviation['timezone_id']] = true;
-                }
-            }
-
             $this->addRequirement(
-                isset($timezones[@date_default_timezone_get()]),
+                in_array(@date_default_timezone_get(), DateTimeZone::listIdentifiers(), true),
                 sprintf('Configured default timezone "%s" must be supported by your installation of PHP', @date_default_timezone_get()),
                 'Your default timezone is not supported by PHP. Check for typos in your <strong>php.ini</strong> file and have a look at the list of deprecated timezones at <a href="http://php.net/manual/en/timezones.others.php">http://php.net/manual/en/timezones.others.php</a>.'
             );
@@ -519,7 +518,7 @@ class SymfonyRequirements extends RequirementCollection
         if (extension_loaded('suhosin')) {
             $this->addPhpIniRequirement(
                 'suhosin.executor.include.whitelist',
-                create_function('$cfgValue', 'return false !== stripos($cfgValue, "phar");'),
+                function ($cfgValue) { return false !== stripos($cfgValue, "phar"); },
                 false,
                 'suhosin.executor.include.whitelist must be configured correctly in php.ini',
                 'Add "<strong>phar</strong>" to <strong>suhosin.executor.include.whitelist</strong> in php.ini<a href="#phpini">*</a>.'
@@ -537,7 +536,7 @@ class SymfonyRequirements extends RequirementCollection
 
             $this->addPhpIniRecommendation(
                 'xdebug.max_nesting_level',
-                create_function('$cfgValue', 'return $cfgValue > 100;'),
+                function ($cfgValue) { return $cfgValue > 100; },
                 true,
                 'xdebug.max_nesting_level should be above 100 in php.ini',
                 'Set "<strong>xdebug.max_nesting_level</strong>" to e.g. "<strong>250</strong>" in php.ini<a href="#phpini">*</a> to stop Xdebug\'s infinite recursion protection erroneously throwing a fatal error in your project.'
@@ -555,7 +554,7 @@ class SymfonyRequirements extends RequirementCollection
         if (extension_loaded('mbstring')) {
             $this->addPhpIniRequirement(
                 'mbstring.func_overload',
-                create_function('$cfgValue', 'return (int) $cfgValue === 0;'),
+                function ($cfgValue) { return (int) $cfgValue === 0; },
                 true,
                 'string functions should not be overloaded',
                 'Set "<strong>mbstring.func_overload</strong>" to <strong>0</strong> in php.ini<a href="#phpini">*</a> to disable function overloading by the mbstring extension.'
@@ -704,7 +703,7 @@ class SymfonyRequirements extends RequirementCollection
 
             $this->addPhpIniRecommendation(
                 'intl.error_level',
-                create_function('$cfgValue', 'return (int) $cfgValue === 0;'),
+                function ($cfgValue) { return (int) $cfgValue === 0; },
                 true,
                 'intl.error_level should be 0 in php.ini',
                 'Set "<strong>intl.error_level</strong>" to "<strong>0</strong>" in php.ini<a href="#phpini">*</a> to inhibit the messages when an error occurs in ICU functions.'
@@ -731,7 +730,7 @@ class SymfonyRequirements extends RequirementCollection
             'Install and/or enable a <strong>PHP accelerator</strong> (highly recommended).'
         );
 
-        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+        if ('WIN' === strtoupper(substr(PHP_OS, 0, 3))) {
             $this->addRecommendation(
                 $this->getRealpathCacheSize() >= 5 * 1024 * 1024,
                 'realpath_cache_size should be at least 5M in php.ini',

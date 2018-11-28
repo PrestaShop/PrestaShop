@@ -1,5 +1,5 @@
 <!--**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,30 +18,32 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *-->
 <template>
   <tr :class="{'low-stock':lowStock}">
-    <td class="d-flex align-items-center">
-      <PSCheckbox
-        :id="id"
-        :ref="id"
-        :model="product"
-        @checked="productChecked"
-      />
-      <PSMedia
-        class="d-flex align-items-center ml-2"
-        :thumbnail="thumbnail"
-      >
-        <p>
-          {{ product.product_name }}
-          <small v-if="hasCombination"><br />
-            {{ combinationName }}
-          </small>
-        </p>
-      </PSMedia>
+    <td>
+      <div class="d-flex align-items-center">
+        <PSCheckbox
+          :id="id"
+          :ref="id"
+          :model="product"
+          @checked="productChecked"
+        />
+        <PSMedia
+          class="d-flex align-items-center ml-2"
+          :thumbnail="thumbnail"
+        >
+          <p>
+            {{ product.product_name }}
+            <small v-if="hasCombination"><br />
+              {{ combinationName }}
+            </small>
+          </p>
+        </PSMedia>
+      </div>
     </td>
     <td>
       {{ reference }}
@@ -73,7 +75,7 @@
       </span>
       <span v-if="lowStock" class="stock-warning ico ml-2" data-toggle="pstooltip" data-placement="top" data-html="true" :title="lowStockLevel">!</span>
     </td>
-    <td class="qty-spinner text-sm-right">
+    <td class="qty-spinner text-right">
       <Spinner :product="product" @updateProductQty="updateProductQty" />
     </td>
   </tr>
@@ -170,35 +172,3 @@
     },
   };
 </script>
-
-<style lang="sass" type="text/scss" scoped>
-  @import "../../../../../../scss/config/_settings.scss";
-  .qty-update {
-    color: $brand-primary;
-    .material-icons {
-      vertical-align: middle;
-    }
-  }
-  .checkbox {
-    width: 5%;
-  }
-  .enable {
-    color: $success;
-  }
-  .disable {
-    color: $danger;
-  }
-  .low-stock {
-    background: $danger-hover;
-    .stock-warning {
-      color: $danger;
-      font-weight: bold;
-      &.ico {
-        border: 1px solid $danger;
-        background: lighten($danger, 30%);
-        padding: 0 5px;
-        cursor: pointer;
-      }
-    }
-  }
-</style>

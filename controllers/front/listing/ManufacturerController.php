@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -32,7 +32,7 @@ class ManufacturerControllerCore extends ProductListingFrontController
     public $php_self = 'manufacturer';
 
     protected $manufacturer;
-    private $label;
+    protected $label;
 
     public function canonicalRedirection($canonicalURL = '')
     {
@@ -72,11 +72,13 @@ class ManufacturerControllerCore extends ProductListingFrontController
     public function initContent()
     {
         if (Configuration::get('PS_DISPLAY_SUPPLIERS')) {
+            parent::initContent();
+
             if (Validate::isLoadedObject($this->manufacturer) && $this->manufacturer->active && $this->manufacturer->isAssociatedToShop()) {
                 $this->assignManufacturer();
                 $this->label = $this->trans(
                     'List of products by brand %brand_name%', array(
-                        '%brand_name%' => $this->manufacturer->name
+                        '%brand_name%' => $this->manufacturer->name,
                         ),
                     'Shop.Theme.Catalog'
                 );
@@ -91,7 +93,6 @@ class ManufacturerControllerCore extends ProductListingFrontController
                 );
                 $this->setTemplate('catalog/manufacturers', array('entity' => 'manufacturers'));
             }
-            parent::initContent();
         } else {
             $this->redirect_after = '404';
             $this->redirect();
@@ -104,7 +105,6 @@ class ManufacturerControllerCore extends ProductListingFrontController
         $query
             ->setIdManufacturer($this->manufacturer->id)
             ->setSortOrder(new SortOrder('product', Tools::getProductsOrder('by'), Tools::getProductsOrder('way')));
-        ;
 
         return $query;
     }

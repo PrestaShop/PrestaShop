@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,13 +19,22 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+require_once 'install_version.php';
 
-if (!extension_loaded('SimpleXML') || !extension_loaded('zip') || PHP_VERSION_ID < 50400 || !is_writable(__DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'var'.DIRECTORY_SEPARATOR.'cache')) {
+if (
+    !defined('PHP_VERSION_ID') // PHP_VERSION_ID is available since 5.2.7
+    || PHP_VERSION_ID < _PS_INSTALL_MINIMUM_PHP_VERSION_ID_
+    || !extension_loaded('SimpleXML')
+    || !extension_loaded('zip')
+    || !is_writable(
+        __DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'var'.DIRECTORY_SEPARATOR.'cache'
+    )
+) {
     require_once dirname(__FILE__).'/missing_requirement.php';
     exit();
 }

@@ -1,5 +1,5 @@
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,17 +18,23 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 import $ from 'jquery';
 import prestashop from 'prestashop';
+import { refreshCheckoutPage } from './common';
 
 $(document).ready(() => {
   prestashop.on('updateCart', (event) => {
     prestashop.cart = event.reason.cart;
     var getCartViewUrl = $('.js-cart').data('refresh-url');
+
+    if (!getCartViewUrl) {
+      return;
+    }
+
     var requestData = {};
 
     if (event && event.reason) {
@@ -52,6 +58,12 @@ $(document).ready(() => {
         var $input = $(input);
         $input.attr('value', $input.val());
       });
+
+      if ($('.js-cart-payment-step-refresh').length) {
+        // we get the refresh flag : on payment step we need to refresh page to be sure
+        // amount is correctly updated on payment modules
+        refreshCheckoutPage();
+      }
 
       prestashop.emit('updatedCart', {eventType: 'updateCart', resp: resp});
     }).fail((resp) => {
@@ -105,6 +117,7 @@ $(document).ready(() => {
             reason: {
               idProduct: resp.id_product,
               idProductAttribute: resp.id_product_attribute,
+              idCustomization: resp.id_customization,
               linkAction: 'add-to-cart',
               cart: resp.cart
             },

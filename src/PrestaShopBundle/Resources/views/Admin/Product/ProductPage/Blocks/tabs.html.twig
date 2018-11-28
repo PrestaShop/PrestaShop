@@ -1,5 +1,5 @@
 {#**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,11 +18,15 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 <div class="tabs js-tabs">
+  <div class="arrow d-xl-none js-arrow left-arrow float-left">
+    <i class="material-icons hide">chevron_left</i>
+  </div>
+
   <ul class="nav nav-tabs js-nav-tabs" id="form-nav" role="tablist">
     <li id="tab_step1" class="nav-item"><a href="#step1" role="tab" data-toggle="tab" class="nav-link active">{{ 'Basic settings'|trans({}, 'Admin.Catalog.Feature') }}</a></li>
     <li id="tab_step3" class="nav-item"><a href="#step3" role="tab" data-toggle="tab" class="nav-link">{{ 'Quantities'|trans({}, 'Admin.Catalog.Feature') }}</a></li>
@@ -34,9 +38,6 @@
       <li id="tab_hooks" class="nav-item"><a href="#hooks" role="tab" data-toggle="tab" class="nav-link">{{ 'Modules'|trans({}, 'Admin.Catalog.Feature') }}</a></li>
     {% endif %}
   </ul>
-  <div class="arrow d-xl-none js-arrow left-arrow float-left">
-    <i class="material-icons hide">chevron_left</i>
-  </div>
   <div class="arrow d-xl-none js-arrow right-arrow visible float-right">
     <i class="material-icons hide">chevron_right</i>
   </div>

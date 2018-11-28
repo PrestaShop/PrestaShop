@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,14 +19,14 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 function p15014_upgrade_sekeywords()
 {
-    Db::getInstance()->Execute('ALTER TABLE `'._DB_PREFIX_.'sekeyword` ADD id_shop INTEGER UNSIGNED NOT NULL DEFAULT 1 AFTER id_sekeyword');
-    Db::getInstance()->Execute('ALTER TABLE `'._DB_PREFIX_.'sekeyword` ADD id_shop_group INTEGER UNSIGNED NOT NULL DEFAULT 1 AFTER id_shop');
+    Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'sekeyword` ADD id_shop INTEGER UNSIGNED NOT NULL DEFAULT 1 AFTER id_sekeyword');
+    Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'sekeyword` ADD id_shop_group INTEGER UNSIGNED NOT NULL DEFAULT 1 AFTER id_shop');
     return true;
 }

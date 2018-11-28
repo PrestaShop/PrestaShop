@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -47,7 +47,7 @@ final class HookDataCollector extends DataCollector
     }
 
     /**
-     * @{inheritdoc}
+     * {@inheritdoc}
      */
     public function collect(Request $request, Response $response, \Exception $exception = null)
     {
@@ -63,6 +63,7 @@ final class HookDataCollector extends DataCollector
 
     /**
      * Return the list of every dispatched legacy hooks during one request.
+     *
      * @return array
      */
     public function getHooks()
@@ -72,6 +73,7 @@ final class HookDataCollector extends DataCollector
 
     /**
      * Return the list of every called legacy hooks during one request.
+     *
      * @return array
      */
     public function getCalledHooks()
@@ -81,6 +83,7 @@ final class HookDataCollector extends DataCollector
 
     /**
      * Return the list of every uncalled legacy hooks during oHookne request.
+     *
      * @return array
      */
     public function getNotCalledHooks()
@@ -89,7 +92,15 @@ final class HookDataCollector extends DataCollector
     }
 
     /**
-     * @{inheritdoc}
+     * {@inheritdoc}
+     */
+    public function reset()
+    {
+        $this->data = [];
+    }
+
+    /**
+     * {@inheritdoc}
      */
     public function getName()
     {
@@ -98,7 +109,8 @@ final class HookDataCollector extends DataCollector
 
     /**
      * @param array $hooksList
-     * @return array a better representation of arguments for HTML rendering.
+     *
+     * @return array a better representation of arguments for HTML rendering
      */
     private function stringifyHookArguments(array &$hooksList)
     {

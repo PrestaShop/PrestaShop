@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -92,7 +92,7 @@ class InstallControllerHttpSystem extends InstallControllerHttp implements HttpC
                     'title' => $this->translator->trans('Required PHP parameters', array(), 'Install'),
                     'success' => 1,
                     'checks' => array(
-                        'phpversion' => $this->translator->trans('PHP 5.4 or later is not enabled', array(), 'Install'),
+                        'phpversion' => $this->translator->trans('PHP 5.6 or later is not enabled', array(), 'Install'),
                         'upload' => $this->translator->trans('Cannot upload files', array(), 'Install'),
                         'system' => $this->translator->trans('Cannot create new files and folders', array(), 'Install'),
                         'curl' => $this->translator->trans('cURL extension is not enabled', array(), 'Install'),
@@ -103,7 +103,6 @@ class InstallControllerHttpSystem extends InstallControllerHttp implements HttpC
                         'simplexml' => $this->translator->trans('SimpleXML extension is not loaded', array(), 'Install'),
                         'zip' => $this->translator->trans('ZIP extension is not enabled', array(), 'Install'),
                         'fileinfo' => $this->translator->trans('Fileinfo extension is not enabled', array(), 'Install'),
-                        'fopen' => $this->translator->trans('Cannot open external URLs (requires allow_url_fopen as On)', array(), 'Install'),
                     )
                 ),
                 array(
@@ -149,6 +148,7 @@ class InstallControllerHttpSystem extends InstallControllerHttp implements HttpC
                         'gz' => $this->translator->trans('GZIP compression is not activated', array(), 'Install'),
                         'mbstring' => $this->translator->trans('Mbstring extension is not enabled', array(), 'Install'),
                         'dom' => $this->translator->trans('Dom extension is not loaded', array(), 'Install'),
+                        'fopen' => $this->translator->trans('Cannot open external URLs (requires allow_url_fopen as On)', array(), 'Install'),
                     )
                 ),
             ),

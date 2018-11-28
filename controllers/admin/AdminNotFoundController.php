@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -19,11 +19,10 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 class AdminNotFoundControllerCore extends AdminController
 {
     public function __construct()
@@ -37,7 +36,7 @@ class AdminNotFoundControllerCore extends AdminController
         return true;
     }
 
-    public function viewAccess()
+    public function viewAccess($disable = false)
     {
         return true;
     }
@@ -45,7 +44,7 @@ class AdminNotFoundControllerCore extends AdminController
     public function initContent()
     {
         $this->errors[] = $this->trans('Page not found', array(), 'Admin.Notifications.Error');
-        $tpl_vars['controller'] = Tools::getvalue('controllerUri', Tools::getvalue('controller'));
+        $tpl_vars['controller'] = Tools::getValue('controllerUri', Tools::getValue('controller'));
         $this->context->smarty->assign($tpl_vars);
         parent::initContent();
     }

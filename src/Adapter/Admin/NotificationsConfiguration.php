@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -19,17 +19,19 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Adapter\Admin;
 
 use PrestaShop\PrestaShop\Adapter\Configuration;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
-use Symfony\Component\OptionsResolver\Exception\UndefinedOptionsException;
 
+/**
+ * Manages the configuration data about notifications options.
+ */
 class NotificationsConfiguration implements DataConfigurationInterface
 {
     /**
@@ -43,19 +45,19 @@ class NotificationsConfiguration implements DataConfigurationInterface
     }
 
     /**
-     * @{inheritdoc}
+     * {@inheritdoc}
      */
     public function getConfiguration()
     {
         return array(
-            'show_notifs_new_orders' => $this->configuration->get('PS_SHOW_NEW_ORDERS'),
-            'show_notifs_new_customers' => $this->configuration->get('PS_SHOW_NEW_CUSTOMERS'),
-            'show_notifs_new_messages' => $this->configuration->get('PS_SHOW_NEW_MESSAGES'),
+            'show_notifs_new_orders' => $this->configuration->getBoolean('PS_SHOW_NEW_ORDERS'),
+            'show_notifs_new_customers' => $this->configuration->getBoolean('PS_SHOW_NEW_CUSTOMERS'),
+            'show_notifs_new_messages' => $this->configuration->getBoolean('PS_SHOW_NEW_MESSAGES'),
         );
     }
 
     /**
-     * @{inheritdoc}
+     * {@inheritdoc}
      */
     public function updateConfiguration(array $configuration)
     {
@@ -71,21 +73,14 @@ class NotificationsConfiguration implements DataConfigurationInterface
     }
 
     /**
-     * @{inheritdoc}
+     * {@inheritdoc}
      */
     public function validateConfiguration(array $configuration)
     {
-        $resolver = new OptionsResolver();
-        $resolver
-            ->setRequired(
-                array(
-                    'show_notifs_new_orders',
-                    'show_notifs_new_customers',
-                    'show_notifs_new_messages',
-                )
-            );
-        $resolver->resolve($configuration);
-
-        return true;
+        return isset(
+            $configuration['show_notifs_new_orders'],
+            $configuration['show_notifs_new_customers'],
+            $configuration['show_notifs_new_messages']
+        );
     }
 }

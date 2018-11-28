@@ -1,5 +1,5 @@
 {#**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *#}
@@ -35,7 +35,9 @@
     {{ form_errors(form.width) }}
     <div class="input-group">
       {{ form_widget(form.width) }}
-      <span class="input-group-addon">{{ dimension_unit }}</span>
+      <div class="input-group-append">
+        <span class="input-group-text">{{ dimension_unit }}</span>
+      </div>
     </div>
   </div>
 </div>
@@ -45,7 +47,9 @@
     {{ form_errors(form.height) }}
     <div class="input-group">
       {{ form_widget(form.height) }}
-      <span class="input-group-addon">{{ dimension_unit }}</span>
+      <div class="input-group-append">
+        <span class="input-group-text">{{ dimension_unit }}</span>
+      </div>
     </div>
   </div>
 </div>
@@ -55,7 +59,9 @@
     {{ form_errors(form.depth) }}
     <div class="input-group">
       {{ form_widget(form.depth) }}
-      <span class="input-group-addon">{{ dimension_unit }}</span>
+      <div class="input-group-append">
+        <span class="input-group-text">{{ dimension_unit }}</span>
+      </div>
     </div>
   </div>
 </div>
@@ -65,7 +71,9 @@
     {{ form_errors(form.weight) }}
     <div class="input-group">
       {{ form_widget(form.weight) }}
-      <span class="input-group-addon">{{ weight_unit }}</span>
+      <div class="input-group-append">
+        <span class="input-group-text">{{ weight_unit }}</span>
+      </div>
     </div>
   </div>
 </div>
@@ -78,12 +86,12 @@
         data-content="{{ "Display delivery time for a product is advised for merchants selling in Europe to comply with the local laws."|trans({}, 'Admin.Catalog.Help') }}" ></span>
     </h2>
     <div class="row">
-       <div class="col-md-12" {{ block('widget_container_attributes') }}>
+       <div class="col-md-12" {% if block('widget_container_attributes') is defined %} {{ block('widget_container_attributes') }} {% endif %}>
           {% for child in form.additional_delivery_times %}
             {% if child.vars.value == 1 %}
               <div class="widget-radio-inline">
                 {{ form_widget(child) }}
-                <a href="{{ getAdminLink("AdminPPreferences") }}" class="btn sensitive px-0" target=_blank><i class="material-icons">open_in_new</i> {{ "edit"|trans({}, 'Admin.Catalog.Help') }}</a>
+                <a href="{{ path('admin_product_preferences') }}" class="btn sensitive px-0" target=_blank><i class="material-icons">open_in_new</i> {{ "edit"|trans({}, 'Admin.Catalog.Help') }}</a>
               </div>
             {% else %}
               {{ form_widget(child) }}
@@ -145,7 +153,7 @@
 <div class="col-md-12">
   <div id="warehouse_combination_collection" class="col-md-12 form-group" data-url="{{ path('admin_warehouse_refresh_product_warehouse_combination_form') }}">
     {% if asm_globally_activated and isNotVirtual and isChecked %}
-      {{ include('PrestaShopBundle:Admin:Product/Include/form-warehouse-combination.html.twig', { 'warehouses': warehouses, 'form': form }) }}
+      {{ include('@PrestaShop/Admin:Product/ProductPage/Forms/form_warehouse_combination.html.twig', { 'warehouses': warehouses, 'form': form }) }}
     {% endif %}
   </div>
 </div>

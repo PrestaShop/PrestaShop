@@ -1,5 +1,5 @@
 {**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
@@ -932,6 +932,7 @@
                   {if ($order->hasBeenDelivered() || $order->hasProductReturned())}
                     <th class="text-center"><span class="title_box ">{l s='Returned' d='Admin.Orderscustomers.Feature'}</span></th>
                   {/if}
+                  {if $stock_location_is_available}<th class="text-center"><span class="title_box ">{l s='Stock location' d='Admin.Orderscustomers.Feature'}</span></th>{/if}
                   {if $stock_management}<th class="text-center"><span class="title_box ">{l s='Available quantity' d='Admin.Orderscustomers.Feature'}</span></th>{/if}
                   <th>
                     <span class="title_box ">{l s='Total' d='Admin.Global'}</span>

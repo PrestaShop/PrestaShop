@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -51,28 +51,28 @@ class AdminOrderMessageControllerCore extends AdminController
             'delete' => array(
                 'text' => $this->trans('Delete selected', array(), 'Admin.Actions'),
                 'confirm' => $this->trans('Delete selected items?', array(), 'Admin.Notifications.Warning'),
-                'icon' => 'icon-trash'
-            )
+                'icon' => 'icon-trash',
+            ),
         );
 
         $this->fields_list = array(
             'id_order_message' => array(
                 'title' => $this->trans('ID', array(), 'Admin.Global'),
-                'align' => 'center'
+                'align' => 'center',
             ),
             'name' => array(
-                'title' => $this->trans('Name', array(), 'Admin.Global')
+                'title' => $this->trans('Name', array(), 'Admin.Global'),
             ),
             'message' => array(
                 'title' => $this->trans('Message', array(), 'Admin.Global'),
-                'maxlength' => 300
-            )
+                'maxlength' => 300,
+            ),
         );
 
         $this->fields_form = array(
             'legend' => array(
                 'title' => $this->trans('Order messages', array(), 'Admin.Orderscustomers.Feature'),
-                'icon' => 'icon-mail'
+                'icon' => 'icon-mail',
             ),
             'input' => array(
                 array(
@@ -81,19 +81,19 @@ class AdminOrderMessageControllerCore extends AdminController
                     'label' => $this->trans('Name', array(), 'Admin.Global'),
                     'name' => 'name',
                     'size' => 53,
-                    'required' => true
+                    'required' => true,
                 ),
                 array(
                     'type' => 'textarea',
                     'lang' => true,
                     'label' => $this->trans('Message', array(), 'Admin.Global'),
                     'name' => 'message',
-                    'required' => true
-                )
+                    'required' => true,
+                ),
             ),
             'submit' => array(
                 'title' => $this->trans('Save', array(), 'Admin.Actions'),
-            )
+            ),
         );
     }
 
@@ -101,9 +101,9 @@ class AdminOrderMessageControllerCore extends AdminController
     {
         if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_order_message'] = array(
-                'href' => self::$currentIndex.'&addorder_message&token='.$this->token,
+                'href' => self::$currentIndex . '&addorder_message&token=' . $this->token,
                 'desc' => $this->trans('Add new order message', array(), 'Admin.Orderscustomers.Feature'),
-                'icon' => 'process-icon-new'
+                'icon' => 'process-icon-new',
             );
         }
 

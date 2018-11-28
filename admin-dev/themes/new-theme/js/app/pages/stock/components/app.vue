@@ -1,5 +1,5 @@
 <!--**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *-->
@@ -62,16 +62,12 @@
     },
     methods: {
       onPageChanged(pageIndex) {
-        const desc = this.$route.name === 'overview' ? '' : ' desc';
         this.$store.dispatch('updatePageIndex', pageIndex);
-        this.fetch(desc);
+        this.fetch('asc');
       },
-      fetch(desc) {
-        let sorting = desc;
+      fetch(sortDirection) {
         const action = this.$route.name === 'overview' ? 'getStock' : 'getMovements';
-        if (typeof desc !== 'string') {
-          sorting = ' desc';
-        }
+        const sorting = (sortDirection === 'desc') ? ' desc' : '';
         this.$store.dispatch('isLoading');
 
         this.filters = Object.assign({}, this.filters, {
@@ -114,37 +110,9 @@
 </script>
 
 <style lang="sass" type="text/scss">
-  @import "../../../../../scss/config/_settings.scss";
-  .header-toolbar {
+  // hide the layout header
+  #main-div > .header-toolbar {
     height: 0;
-    border: none;
-    .title {
-      display: none;
-    }
-  }
-  .stock-app {
-    padding: 3em 0 0 0;
-  }
-  .table {
-    td {
-      border: none;
-      padding: 5px 5px 5px;
-      word-wrap: break-word;
-      white-space: normal;
-    }
-    thead th {
-      padding: 5px inherit;
-      vertical-align: middle;
-      .material-icons {
-        color: $gray-medium;
-        vertical-align: middle;
-      }
-    }
-    td:first-child {
-      // product description inside the product column
-      p {
-        margin-bottom: 0;
-      }
-    }
+    display: none;
   }
 </style>

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -19,15 +19,15 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\DependencyInjection\Compiler;
 
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
-use Symfony\Component\Config\Resource\FileExistenceResource;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Config\FileLocator;
@@ -49,7 +49,6 @@ class LoadServicesFromModulesPass implements CompilerPassInterface
      * Load all services registered in every module.
      *
      * @param ContainerBuilder $container
-     * @return void
      */
     private function registerServicesFromModules(ContainerBuilder $container)
     {
@@ -57,9 +56,9 @@ class LoadServicesFromModulesPass implements CompilerPassInterface
 
         foreach ($this->getModulesPaths() as $modulePath) {
             if (in_array($modulePath->getFilename(), $installedModules)
-                && file_exists($modulePath.'/config/services.yml')
+                && file_exists($modulePath . '/config/services.yml')
             ) {
-                $loader = new YamlFileLoader($container, new FileLocator($modulePath.'/config/'));
+                $loader = new YamlFileLoader($container, new FileLocator($modulePath . '/config/'));
                 $loader->load('services.yml');
             }
         }
@@ -70,6 +69,6 @@ class LoadServicesFromModulesPass implements CompilerPassInterface
      */
     private function getModulesPaths()
     {
-        return Finder::create()->directories()->in(__DIR__.'/../../../../modules')->depth(0);
+        return Finder::create()->directories()->in(__DIR__ . '/../../../../modules')->depth(0);
     }
 }

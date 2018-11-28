@@ -1,0 +1,172 @@
+{#**
+ * 2007-2018 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2018 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *#}
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
+{% trans_default_domain "Admin.Advparameters.Feature" %}
+{% import '@PrestaShop/Admin/macros.html.twig' as ps %}
+
+{% set generalForm, uploadQuotaForm, notificationsForm = form.general, form.upload_quota, form.notifications %}
+
+{% block content %}
+  {{ form_start(form, {'attr' : {'class': 'form'} }) }}
+  <div class="row justify-content-center">
+    {% block administration_form_general %}
+      <div class="col-xl-10">
+        <div class="card" id="configuration_fieldset_general">
+          <h3 class="card-header">
+            <i class="material-icons">settings</i> {{ 'General'|trans({}, 'Admin.Global') }}
+          </h3>
+          <div class="card-block row">
+            <div class="card-text">
+              <div class="form-group row">
+                {{ ps.label_with_help(('Automatically check for module updates'|trans), ('New modules and updates are displayed on the modules page.'|trans({}, 'Admin.Advparameters.Help'))) }}
+                <div class="col-sm">
+                  {{ form_errors(generalForm.check_modules_update) }}
+                  {{ form_widget(generalForm.check_modules_update, {'attr' : {'class': 'custom-select'} }) }}
+                </div>
+              </div>
+              <div class="form-group row">
+                {{ ps.label_with_help(("Check the cookie's IP address"|trans), ('Check the IP address of the cookie in order to prevent your cookie from being stolen.'|trans({}, 'Admin.Advparameters.Help'))) }}
+                <div class="col-sm">
+                  {{ form_errors(generalForm.check_ip_address) }}
+                  {{ form_widget(generalForm.check_ip_address, {'attr' : {'class': 'custom-select'} }) }}
+                </div>
+              </div>
+              <div class="form-group row">
+                {{ ps.label_with_help(('Lifetime of front office cookies'|trans), ('Set the amount of hours during which the front office cookies are valid. After that amount of time, the customer will have to log in again.'|trans({}, 'Admin.Advparameters.Help'))) }}
+                <div class="col-sm">
+                  {{ form_errors(generalForm.front_cookie_lifetime) }}
+                  {{ form_widget(generalForm.front_cookie_lifetime) }}
+                </div>
+              </div>
+              <div class="form-group row">
+                {{ ps.label_with_help(('Lifetime of back office cookies'|trans), ('Set the amount of hours during which the back office cookies are valid. After that amount of time, the PrestaShop user will have to log in again.'|trans({}, 'Admin.Advparameters.Help'))) }}
+                <div class="col-sm">
+                  {{ form_errors(generalForm.back_cookie_lifetime) }}
+                  {{ form_widget(generalForm.back_cookie_lifetime) }}
+                </div>
+              </div>
+              {{ form_rest(generalForm) }}
+            </div>
+          </div>
+          <div class="card-footer">
+            <div class="d-flex justify-content-end">
+              <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endblock %}
+
+    {% block administration_form_upload_quota %}
+      <div class="col-xl-10">
+        <div class="card" id="configuration_fieldset_upload">
+          <h3 class="card-header">
+            <i class="material-icons">file_upload</i> {{ 'Upload quota'|trans }}
+          </h3>
+          <div class="card-block row">
+            <div class="card-text">
+              <div class="form-group row">
+                {{ ps.label_with_help(('Maximum size for attached files'|trans), ('Set the maximum size allowed for attachment files (in megabytes). This value has to be lower or equal to the maximum file upload allotted by your server (currently: %size% MB).'|trans({'%size%': 'PS_ATTACHMENT_MAXIMUM_SIZE'|configuration}, 'Admin.Advparameters.Help'))) }}
+                <div class="col-sm">
+                  {{ form_errors(uploadQuotaForm.max_size_attached_files) }}
+                  {{ form_widget(uploadQuotaForm.max_size_attached_files) }}
+                </div>
+              </div>
+              <div class="form-group row">
+                {{ ps.label_with_help(('Maximum size for a downloadable product'|trans), ('Define the upload limit for a downloadable product (in megabytes). This value has to be lower or equal to the maximum file upload allotted by your server (currently: %size% MB).'|trans({'%size%': 'PS_LIMIT_UPLOAD_FILE_VALUE'|configuration}, 'Admin.Advparameters.Help'))) }}
+                <div class="col-sm">
+                  {{ form_errors(uploadQuotaForm.max_size_downloadable_product) }}
+                  {{ form_widget(uploadQuotaForm.max_size_downloadable_product) }}
+                </div>
+              </div>
+              <div class="form-group row">
+                {{ ps.label_with_help(("Maximum size for a product's image"|trans), ('Define the upload limit for an image (in megabytes). This value has to be lower or equal to the maximum file upload allotted by your server (currently: %size% MB).'|trans({'%size%': 'PS_LIMIT_UPLOAD_IMAGE_VALUE'|configuration}, 'Admin.Advparameters.Help'))) }}
+                <div class="col-sm">
+                  {{ form_errors(uploadQuotaForm.max_size_product_image) }}
+                  {{ form_widget(uploadQuotaForm.max_size_product_image) }}
+                </div>
+              </div>
+              {{ form_rest(uploadQuotaForm) }}
+            </div>
+          </div>
+          <div class="card-footer">
+            <div class="d-flex justify-content-end">
+              <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endblock %}
+
+    {% block administration_form_notifications %}
+      <div class="col-xl-10">
+        <div class="card" id="configuration_fieldset_notifications">
+          <h3 class="card-header">
+            <i class="material-icons">priority_high</i> {{ 'Notifications'|trans }}
+          </h3>
+          <div class="card-block row">
+            <div class="card-text">
+
+              <div class="row">
+                <div class="col">
+                  {{ ps.infotip("Notifications are numbered bubbles displayed at the very top of your back office, right next to the shop's name. They display the number of new items since you last clicked on them."|trans({}, 'Admin.Advparameters.Help')) }}
+                </div>
+              </div>
+
+              <div class="form-group row">
+                {{ ps.label_with_help(('Show notifications for new orders'|trans), ("This will display notifications when new orders are made in your shop."|trans({}, 'Admin.Advparameters.Help'))) }}
+                <div class="col-sm">
+                  {{ form_errors(notificationsForm.show_notifs_new_orders) }}
+                  {{ form_widget(notificationsForm.show_notifs_new_orders, {'attr' : {'class': 'custom-select'} }) }}
+                </div>
+              </div>
+              <div class="form-group row">
+                {{ ps.label_with_help(('Show notifications for new customers'|trans), ('This will display notifications every time a new customer registers in your shop.'|trans({}, 'Admin.Advparameters.Help'))) }}
+                <div class="col-sm">
+                  {{ form_errors(notificationsForm.show_notifs_new_customers) }}
+                  {{ form_widget(notificationsForm.show_notifs_new_customers, {'attr' : {'class': 'custom-select'} }) }}
+                </div>
+              </div>
+              <div class="form-group row">
+                {{ ps.label_with_help(('Show notifications for new messages'|trans), ('This will display notifications when new messages are posted in your shop.'|trans({}, 'Admin.Advparameters.Help'))) }}
+                <div class="col-sm">
+                  {{ form_errors(notificationsForm.show_notifs_new_messages) }}
+                  {{ form_widget(notificationsForm.show_notifs_new_messages, {'attr' : {'class': 'custom-select'} }) }}
+                </div>
+              </div>
+              {{ form_rest(notificationsForm) }}
+            </div>
+          </div>
+          <div class="card-footer">
+            <div class="d-flex justify-content-end">
+              <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endblock %}
+  </div>
+  {{ form_end(form) }}
+{% endblock %}

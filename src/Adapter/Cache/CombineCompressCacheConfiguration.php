@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -28,13 +28,12 @@ namespace PrestaShop\PrestaShop\Adapter\Cache;
 
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 use PrestaShop\PrestaShop\Adapter\Tools;
 
 /**
- * This class manages CCC features configuration for a Shop
+ * This class manages CCC features configuration for a Shop.
  */
 class CombineCompressCacheConfiguration implements DataConfigurationInterface
 {
@@ -78,36 +77,35 @@ class CombineCompressCacheConfiguration implements DataConfigurationInterface
     }
 
     /**
-     * @{inheritdoc}
+     * {@inheritdoc}
      */
     public function getConfiguration()
     {
         return array(
-            'smart_cache_css' => $this->configuration->get('PS_CSS_THEME_CACHE'),
-            'smart_cache_js' => $this->configuration->get('PS_JS_THEME_CACHE'),
-            'apache_optimization' => $this->configuration->get('PS_HTACCESS_CACHE_CONTROL'),
+            'smart_cache_css' => $this->configuration->getBoolean('PS_CSS_THEME_CACHE'),
+            'smart_cache_js' => $this->configuration->getBoolean('PS_JS_THEME_CACHE'),
+            'apache_optimization' => $this->configuration->getBoolean('PS_HTACCESS_CACHE_CONTROL'),
         );
     }
 
     /**
-     * @{inheritdoc}
+     * {@inheritdoc}
      */
     public function updateConfiguration(array $configuration)
     {
         $errors = array();
 
         if ($this->validateConfiguration($configuration)) {
+            $this->updateCachesVersionsIfNeeded($configuration);
             if ($configuration['smart_cache_css'] || $configuration['smart_cache_js']) {
                 // Manage JS & CSS Smart cache
-                if ($this->createThemeCacheFolder()) {
-                    $this->updateCachesVersionsIfNeeded($configuration);
-                } else {
+                if (!$this->createThemeCacheFolder()) {
                     $errors[] = array(
                         'key' => 'To use Smarty Cache, the directory %directorypath% must be writable.',
                         'domain' => 'Admin.Advparameters.Notification',
                         'parameters' => array(
-                            '%directorypath%' => $this->getThemeCacheFolder()
-                        )
+                            '%directorypath%' => $this->getThemeCacheFolder(),
+                        ),
                     );
                 }
             }
@@ -124,21 +122,15 @@ class CombineCompressCacheConfiguration implements DataConfigurationInterface
     }
 
     /**
-     * @{inheritdoc}
+     * {@inheritdoc}
      */
     public function validateConfiguration(array $configuration)
     {
-        $resolver = new OptionsResolver();
-        $resolver->setRequired(
-            array(
-                'smart_cache_css',
-                'smart_cache_js',
-                'apache_optimization',
-            )
+        return isset(
+            $configuration['smart_cache_css'],
+            $configuration['smart_cache_js'],
+            $configuration['apache_optimization']
         );
-        $resolver->resolve($configuration);
-
-        return true;
     }
 
     /**
@@ -150,7 +142,8 @@ class CombineCompressCacheConfiguration implements DataConfigurationInterface
     }
 
     /**
-     * Creates Cache folder for the active theme
+     * Creates Cache folder for the active theme.
+     *
      * @return bool
      */
     private function createThemeCacheFolder()
@@ -166,7 +159,8 @@ class CombineCompressCacheConfiguration implements DataConfigurationInterface
     }
 
     /**
-     * Update Cache version of assets if needed
+     * Update Cache version of assets if needed.
+     *
      * @param array the configuration
      */
     private function updateCachesVersionsIfNeeded(array $configuration)
@@ -191,8 +185,10 @@ class CombineCompressCacheConfiguration implements DataConfigurationInterface
     }
 
     /**
-     * Creates .htaccess if Apache optimization feature is enabled
+     * Creates .htaccess if Apache optimization feature is enabled.
+     *
      * @param bool $enabled
+     *
      * @return array not empty in case of error
      */
     private function manageApacheOptimization($enabled)
@@ -202,14 +198,12 @@ class CombineCompressCacheConfiguration implements DataConfigurationInterface
 
         // feature activation
         if (false === $isCurrentlyEnabled && true === $enabled) {
-            if ($this->tools->generateHtaccess()) {
-                $this->configuration->set('PS_HTACCESS_CACHE_CONTROL', true);
-            } else {
+            $this->configuration->set('PS_HTACCESS_CACHE_CONTROL', true);
+            if (!$this->tools->generateHtaccess()) {
                 $errors = array(
                     'key' => 'Before being able to use this tool, you need to:[1][2]Create a blank .htaccess in your root directory.[/2][2]Give it write permissions (CHMOD 666 on Unix system).[/2][/1]',
                     'domain' => 'Admin.Advparameters.Notification',
-                    'parameters' =>
-                    array(
+                    'parameters' => array(
                         '[1]' => '<ul>',
                         '[/1]' => '</ul>',
                         '[2]' => '<li>',
@@ -222,6 +216,7 @@ class CombineCompressCacheConfiguration implements DataConfigurationInterface
 
         if (true === $isCurrentlyEnabled && false === $enabled) {
             $this->configuration->set('PS_HTACCESS_CACHE_CONTROL', false);
+            $this->tools->generateHtaccess();
         }
 
         return $errors;

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -19,13 +19,12 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-namespace PrestaShop\PrestaShop\Core\Form;
 
-use Symfony\Component\Form\FormInterface;
+namespace PrestaShop\PrestaShop\Core\Form;
 
 /**
  * Symfony forms data provider.
@@ -41,7 +40,9 @@ interface FormDataProviderInterface
      * Persists form Data in Database and Filesystem.
      *
      * @param array $data
+     *
      * @return array $errors if data can't persisted an array of errors messages
+     *
      * @throws UndefinedOptionsException
      */
     public function setData(array $data);

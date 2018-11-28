@@ -1,5 +1,5 @@
 {**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
@@ -26,7 +26,7 @@
   <li class="brand">
     <div class="brand-img"><a href="{$brand.url}"><img src="{$brand.image}" alt="{$brand.name}"></a></div>
     <div class="brand-infos">
-      <h3><a href="{$brand.url}">{$brand.name}</a></h3>
+      <p><a href="{$brand.url}">{$brand.name}</a></p>
       {$brand.text nofilter}
     </div>
     <div class="brand-products">

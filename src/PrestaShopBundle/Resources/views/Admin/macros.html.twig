@@ -1,5 +1,5 @@
 {#**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *#}
@@ -52,34 +52,56 @@
 </div>
 {% endmacro %}
 
-{% macro label_with_help(label, help) %}
-<label class="form-control-label">
+{% macro label_with_help(label, help, class = '') %}
+<label class="form-control-label {{ class }}">
   {{ label }}
-  <span class="help-box" data-toggle="popover"
-    data-title="{{ label }}"
+  <span
+    class="help-box"
+    data-toggle="popover"
     data-content="{{ help }}">
   </span>
 </label>
+<p class="sr-only">{{ help }}</p>
 {% endmacro %}
 
- {# Display arrows to reverse order of items #}
- {% macro sort_arrows(column, sortOrder, orderBy) %}
-    {% set sortOrder, orderBy = sortOrder|default(''), orderBy|default('') %}
+{# Table column headers with sorting indicators #}
+{% macro sortable_column_header(title, sortColumnName, orderBy, sortOrder) %}
+  {% set sortOrder, orderBy = sortOrder|default(''), orderBy|default('') %}
+    <div
+      class="ps-sortable-column"
+      data-sort-col-name="{{ sortColumnName }}"
+      {% if orderBy == sortColumnName %}
+        data-sort-is-current="true"
+        data-sort-direction="{{ sortOrder == 'desc' ? 'desc' : 'asc' }}"
+      {% endif %}
+    >
+      <span role="columnheader">{{ title }}</span>
+      <span role="button" class="ps-sort" aria-label="{{ 'Sort by'|trans({}, 'Admin.Actions') }}"></span>
+    </div>
+  </th>
+{% endmacro %}
 
-    {% spaceless %}
-      <span
-        psorderby="{{ column }}"
-        psorderway="asc"
-        class="icon-caret-up icon-caret {% if orderBy == column and sortOrder == 'asc' %}-current{% endif %}"
-      >
-        &#9650;
-      </span>
-      <span
-        psorderby="{{ column }}"
-        psorderway="desc"
-        class="icon-caret-down icon-caret {% if orderBy == column and sortOrder == 'desc' %}-current{% endif %}"
-      >
-        &#9660;
-      </span>
-    {% endspaceless %}
+{# Show link to import file sample #}
+{% macro import_file_sample(label, filename) %}
+    <a class="list-group-item list-group-item-action" href="{{ path('admin_import_sample_download', {'sampleName': filename}) }}">
+        {{ label|trans({}, 'Admin.Advparameters.Feature') }}
+    </a>
+{% endmacro %}
+
+{# Show form widget with errors rendered below it #}
+{% macro form_widget_with_error(form, vars) %}
+  {% set vars = vars|default({}) %}
+  {% set attr = vars.attr|default({}) %}
+  {% set errors = form.vars.errors %}
+
+  {% set attr = attr|merge({'class': (attr.class is defined ? attr.class : '') ~ (errors|length > 0 ? ' is-invalid' : '')} ) %}
+  {% set vars = vars|merge({'attr': attr}) %}
+
+  {{ form_widget(form, vars) }}
+
+  {% for error in form.vars.errors %}
+    <div class="invalid-feedback">
+      {{ error.message }}
+    </div>
+  {% endfor %}
 {% endmacro %}

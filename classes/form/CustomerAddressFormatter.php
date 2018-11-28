@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -20,11 +20,10 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 use Symfony\Component\Translation\TranslatorInterface;
 
 class CustomerAddressFormatterCore implements FormFormatterInterface
@@ -48,6 +47,7 @@ class CustomerAddressFormatterCore implements FormFormatterInterface
     public function setCountry(Country $country)
     {
         $this->country = $country;
+
         return $this;
     }
 
@@ -66,23 +66,23 @@ class CustomerAddressFormatterCore implements FormFormatterInterface
         $required = array_flip(AddressFormat::getFieldsRequired());
 
         $format = [
-            'id_address'  => (new FormField)
+            'id_address' => (new FormField())
                 ->setName('id_address')
                 ->setType('hidden'),
-            'id_customer' => (new FormField)
+            'id_customer' => (new FormField())
                 ->setName('id_customer')
                 ->setType('hidden'),
-            'back' => (new FormField)
+            'back' => (new FormField())
                 ->setName('back')
                 ->setType('hidden'),
-            'token'       => (new FormField)
+            'token' => (new FormField())
                 ->setName('token')
                 ->setType('hidden'),
-            'alias'       => (new FormField)
+            'alias' => (new FormField())
                 ->setName('alias')
                 ->setLabel(
                     $this->getFieldLabel('alias')
-                )
+                ),
         ];
 
         foreach ($fields as $field) {
@@ -96,6 +96,8 @@ class CustomerAddressFormatterCore implements FormFormatterInterface
                     if ($this->country->need_zip_code) {
                         $formField->setRequired(true);
                     }
+                } elseif ($field === 'phone') {
+                    $formField->setType('tel');
                 }
             } elseif (count($fieldParts) === 2) {
                 list($entity, $entityField) = $fieldParts;
@@ -106,7 +108,7 @@ class CustomerAddressFormatterCore implements FormFormatterInterface
                 $formField->setType('select');
 
                 // Also, what we really want is the id of the linked entity
-                $formField->setName('id_'.strtolower($entity));
+                $formField->setName('id_' . strtolower($entity));
 
                 if ($entity === 'Country') {
                     $formField->setType('countrySelect');
@@ -119,7 +121,7 @@ class CustomerAddressFormatterCore implements FormFormatterInterface
                     }
                 } elseif ($entity === 'State') {
                     if ($this->country->contains_states) {
-                        $states = State::getStatesByIdCountry($this->country->id);
+                        $states = State::getStatesByIdCountry($this->country->id, true);
                         foreach ($states as $state) {
                             $formField->addAvailableValue(
                                 $state['id_state'],
@@ -144,6 +146,21 @@ class CustomerAddressFormatterCore implements FormFormatterInterface
             }
 
             $format[$formField->getName()] = $formField;
+        }
+
+        //To add the extra fields in address form
+        $additionalAddressFormFields = Hook::exec('additionalCustomerAddressFields', array(), null, true);
+        if (is_array($additionalAddressFormFields)) {
+            foreach ($additionalAddressFormFields as $moduleName => $additionnalFormFields) {
+                if (!is_array($additionnalFormFields)) {
+                    continue;
+                }
+
+                foreach ($additionnalFormFields as $formField) {
+                    $formField->moduleName = $moduleName;
+                    $format[$moduleName . '_' . $formField->getName()] = $formField;
+                }
+            }
         }
 
         return $this->addConstraints(

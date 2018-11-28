@@ -1,5 +1,5 @@
 {**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,14 +18,14 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
   <div id="search_filters">
 
     {block name='facets_title'}
-      <h4 class="text-uppercase h6 hidden-sm-down">{l s='Filter By' d='Shop.Theme.Actions'}</h4>
+      <p class="text-uppercase h6 hidden-sm-down">{l s='Filter By' d='Shop.Theme.Actions'}</p>
     {/block}
 
     {block name='facets_clearall_button'}
@@ -40,14 +40,14 @@
     {foreach from=$facets item="facet"}
       {if $facet.displayed}
         <section class="facet clearfix">
-          <h1 class="h6 facet-title hidden-sm-down">{$facet.label}</h1>
+          <p class="h6 facet-title hidden-sm-down">{$facet.label}</p>
           {assign var=_expand_id value=10|mt_rand:100000}
           {assign var=_collapse value=true}
           {foreach from=$facet.filters item="filter"}
             {if $filter.active}{assign var=_collapse value=false}{/if}
           {/foreach}
           <div class="title hidden-md-up" data-target="#facet_{$_expand_id}" data-toggle="collapse"{if !$_collapse} aria-expanded="true"{/if}>
-            <h1 class="h6 facet-title">{$facet.label}</h1>
+            <p class="h6 facet-title">{$facet.label}</p>
             <span class="float-xs-right">
               <span class="navbar-toggler collapse-icons">
                 <i class="material-icons add">&#xE313;</i>

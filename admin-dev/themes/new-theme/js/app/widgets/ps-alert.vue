@@ -1,5 +1,5 @@
 <!--**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,12 +18,12 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *-->
 <template>
-  <div class="alert" :class="classObject" role="alert">
+  <div class="ps-alert alert" :class="classObject" role="alert">
     <button
       v-if="hasClose"
       type="button"
@@ -72,46 +72,3 @@
     },
   };
 </script>
-
-<style lang="sass" scoped>
-  @import "../../../scss/config/_settings.scss";
-
-  .close {
-    position: absolute;
-    right: 0.625rem;
-    top: 0.9375rem;
-    opacity: 1;
-    .material-icons {
-      font-size: 1.5rem;
-      .alert-info & {
-        color: $primary;
-      }
-      .alert-warning & {
-        color: $warning
-      }
-      .alert-danger & {
-        color: $danger;
-      }
-    }
-  }
-  .alert {
-    border-radius: 0;
-    border-width: 0.125rem;
-    padding: 0;
-    margin:0;
-    &.alert-info {
-      background: $notice;
-    }
-    &.alert-warning {
-      background: $warning-hover;
-    }
-    &.alert-danger {
-      background: $danger-hover;
-    }
-    .alert-text {
-      padding: 0.9375rem 0 0.9375rem 0.9375rem;
-      margin-left: 3.438rem;
-      background: white;
-    }
-  }
-</style>

@@ -1,5 +1,5 @@
 <!--**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,21 +18,21 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *-->
 <template>
-  <div>
+  <div class="ps-tree">
     <div class="mb-3 tree-header">
-      <span class="text-uppercase pointer" @click="expand">
+      <button class="btn btn-text text-uppercase pointer" @click="expand">
         <i class="material-icons">keyboard_arrow_down</i>
-        <strong v-if="translations">{{translations.expand}}</strong>
-      </span>
-      <span class="float-right text-uppercase pointer" @click="reduce">
+        <span v-if="translations">{{translations.expand}}</span>
+      </button>
+      <button class="btn btn-text float-right text-uppercase pointer" @click="reduce">
         <i class="material-icons">keyboard_arrow_up</i>
-        <strong v-if="translations">{{translations.reduce}}</strong>
-      </span>
+        <span v-if="translations">{{translations.reduce}}</span>
+      </button>
     </div>
     <ul class="tree" :class="className">
       <li v-for="(element, index) in model">
@@ -86,26 +86,3 @@
     },
   };
 </script>
-
-<style lang="sass" scoped>
-  @import "../../../../scss/config/_settings.scss";
-  ul {
-    list-style-type: none;
-    cursor: pointer;
-    padding: 0;
-    margin: 0;
-  }
-  strong {
-    font-weight: 600;
-  }
-  .tree-header {
-    border-bottom: $gray-light 1px solid;
-    color: $gray-medium;
-  }
-  .material-icons {
-    vertical-align: middle;
-  }
-  .pointer {
-    cursor: pointer;
-  }
-</style>

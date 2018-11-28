@@ -1,5 +1,5 @@
 {**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
@@ -92,6 +92,14 @@
 				<a id="desc-module-update" class="toolbar_btn" href="{$module_update_link}" title="{l s='Update'}">
 					<i class="process-icon-refresh"></i>
 					<div>{l s='Check update' d='Admin.Modules.Feature'}</div>
+				</a>
+			</li>
+			{/if}
+			{if isset($module_rtl_link)}
+			<li>
+				<a id="desc-module-rtl" class="toolbar_btn" href="{$module_rtl_link}" title="{l s='Generate RTL Stylesheets'}">
+					<i class="process-icon-rtl"></i>
+					<div>{l s='RTL Module' d='Admin.Modules.Feature'}</div>
 				</a>
 			</li>
 			{/if}

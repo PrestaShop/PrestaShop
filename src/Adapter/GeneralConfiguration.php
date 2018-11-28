@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -19,17 +19,18 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Adapter;
 
-use PrestaShop\PrestaShop\Adapter\Configuration;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
-use Symfony\Component\OptionsResolver\Exception\UndefinedOptionsException;
 
+/**
+ * Manages the configuration data about general options.
+ */
 class GeneralConfiguration implements DataConfigurationInterface
 {
     /**
@@ -43,20 +44,20 @@ class GeneralConfiguration implements DataConfigurationInterface
     }
 
     /**
-     * @{inheritdoc}
+     * {@inheritdoc}
      */
     public function getConfiguration()
     {
         return array(
-            'check_modules_update' => $this->configuration->get('PRESTASTORE_LIVE'),
-            'check_ip_address' => $this->configuration->get('PS_COOKIE_CHECKIP'),
+            'check_modules_update' => $this->configuration->getBoolean('PRESTASTORE_LIVE'),
+            'check_ip_address' => $this->configuration->getBoolean('PS_COOKIE_CHECKIP'),
             'front_cookie_lifetime' => $this->configuration->get('PS_COOKIE_LIFETIME_FO'),
             'back_cookie_lifetime' => $this->configuration->get('PS_COOKIE_LIFETIME_BO'),
         );
     }
 
     /**
-     * @{inheritdoc}
+     * {@inheritdoc}
      */
     public function updateConfiguration(array $configuration)
     {
@@ -73,22 +74,15 @@ class GeneralConfiguration implements DataConfigurationInterface
     }
 
     /**
-     * @{inheritdoc}
+     * {@inheritdoc}
      */
     public function validateConfiguration(array $configuration)
     {
-        $resolver = new OptionsResolver();
-        $resolver
-            ->setRequired(
-                array(
-                    'check_modules_update',
-                    'check_ip_address',
-                    'front_cookie_lifetime',
-                    'back_cookie_lifetime',
-                )
-            );
-        $resolver->resolve($configuration);
-
-        return true;
+        return isset(
+            $configuration['check_modules_update'],
+            $configuration['check_ip_address'],
+            $configuration['front_cookie_lifetime'],
+            $configuration['back_cookie_lifetime']
+        );
     }
 }
