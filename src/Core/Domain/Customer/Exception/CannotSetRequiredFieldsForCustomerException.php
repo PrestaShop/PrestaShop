@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Customer\Exception;
 
 /**
- * Class CannotSetRequiredFieldsForCustomerException
+ * Is thrown when setting required fields for customer fails
  */
 class CannotSetRequiredFieldsForCustomerException extends CustomerException
 {
