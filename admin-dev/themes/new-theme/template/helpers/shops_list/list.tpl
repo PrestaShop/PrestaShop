@@ -50,7 +50,7 @@
                               <i class="material-icons">&#xE869;</i>
                             </a>
                         {else}
-                            <a class="link-shop" href="{$shop_data['uri']}" target="_blank">
+                            <a class="link-shop" href="{$link->getBaseLink($shop_data['id_shop'])}" target="_blank">
                               <i class="material-icons">&#xE8F4;</i>
                             </a>
                         {/if}
