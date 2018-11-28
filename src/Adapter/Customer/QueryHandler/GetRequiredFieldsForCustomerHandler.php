@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetRequiredFieldsForCustome
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryHandler\GetRequiredFieldsForCustomerHandlerInterface;
 
 /**
- * Handles query which gets required fields for customer sing up
+ * Handles query which gets required fields for customer sign up
  *
  * @internal
  */
