@@ -660,7 +660,7 @@ services:
         tags:
           - { name: form.type }
 
-    prestashop.bundle.form.form.admin.sell.customer.required_fields:
+    form.type.customer.required_fields:
         class: 'PrestaShopBundle\Form\Admin\Sell\Customer\RequiredFieldsType'
         arguments:
             - '@=service("prestashop.core.form.choice_provider.customer_required_fields").getChoices()'
