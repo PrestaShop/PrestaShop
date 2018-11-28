@@ -248,7 +248,7 @@ class AdminAccessControllerCore extends AdminController
          * The current employee can't change its own permissions
          */
         if ($profile_id === $currentProfile) {
-            return false;
+            throw new PrestaShopException($this->trans('You do not have permission to edit your own permissions.', array(), 'Admin.Notifications.Error'));
         }
 
         $slug = Access::findSlugByIdTab($tab_id);
