@@ -244,12 +244,18 @@ class AdminAccessControllerCore extends AdminController
         $currentProfile = (int) ContextCore::getContext()->employee->id_profile;
         $slug = Access::findSlugByIdTab($tab_id);
 
+        /*
+         * The current employee must have the permission himself before granting it to someone else.
+         */
         foreach ((array) Access::getAuthorizationFromLegacy($permission) as $legacyAuthorization) {
             if (!Access::isGranted($slug . $legacyAuthorization, $currentProfile)) {
                 return false;
             }
         }
 
+        /*
+         * The current employee must be granted edit permission on the Access controller.
+         */
         return $this->access('edit');
     }
 }
