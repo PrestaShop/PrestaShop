@@ -45,29 +45,40 @@ export default class DeleteCustomerRowActionExtension {
     grid.getContainer().on('click', '.js-delete-customer-row-action', (event) => {
       event.preventDefault();
 
-      const $deleteCategoriesModal = $('#' + grid.getId() + '_grid_delete_customers_modal');
-      $deleteCategoriesModal.modal('show');
+      const $deleteCustomersModal = $(`#${grid.getId()}_grid_delete_customers_modal`);
+      $deleteCustomersModal.modal('show');
 
-      $deleteCategoriesModal.on('click', '.js-submit-delete-customers', () => {
+      $deleteCustomersModal.on('click', '.js-submit-delete-customers', () => {
         const $button = $(event.currentTarget);
-        const categoryId = $button.data('customer-id');
+        const customerId = $button.data('customer-id');
 
-        const $categoriesToDeleteInputBlock = $('#delete_customers_customers_to_delete');
+        this._addCustomerInput(customerId);
 
-        const categoryInput = $categoriesToDeleteInputBlock
-          .data('prototype')
-          .replace(/__name__/g, $categoriesToDeleteInputBlock.children().length);
-
-        const $item = $($.parseHTML(categoryInput)[0]);
-        $item.val(categoryId);
-
-        $categoriesToDeleteInputBlock.append($item);
-
-        const $form = $deleteCategoriesModal.find('form');
+        const $form = $deleteCustomersModal.find('form');
 
         $form.attr('action', $button.data('customer-delete-url'));
         $form.submit();
       });
     });
+  }
+
+  /**
+   * Adds input for selected customer to delete form
+   *
+   * @param {integer} customerId
+   *
+   * @private
+   */
+  _addCustomerInput(customerId) {
+    const $customersToDeleteInputBlock = $('#delete_customers_customers_to_delete');
+
+    const customerInput = $customersToDeleteInputBlock
+      .data('prototype')
+      .replace(/__name__/g, $customersToDeleteInputBlock.children().length);
+
+    const $item = $($.parseHTML(customerInput)[0]);
+    $item.val(customerId);
+
+    $customersToDeleteInputBlock.append($item);
   }
 }
