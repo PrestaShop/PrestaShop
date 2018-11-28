@@ -23,7 +23,9 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Import;
+
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -32,6 +34,7 @@ use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
+
 /**
  * Class ImportDataConfigurationType is responsible for displaying the configuration of the
  * Advanced Parameters -> Import -> second step list.
@@ -46,6 +49,7 @@ class ImportDataConfigurationType extends TranslatorAwareType
      * @var array choices for entity fields
      */
     private $entityFieldChoices;
+
     /**
      * @param TranslatorInterface $translator
      * @param array $locales
@@ -62,6 +66,7 @@ class ImportDataConfigurationType extends TranslatorAwareType
         $this->dataMatchChoices = $dataMatchChoices;
         $this->entityFieldChoices = $entityFieldChoices;
     }
+
     /**
      * {@inheritdoc}
      */
