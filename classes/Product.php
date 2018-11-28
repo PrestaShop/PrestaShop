@@ -4769,7 +4769,8 @@ class ProductCore extends ObjectModel
                 true,
                 $quantity
             );
-            $row['price_without_reduction'] = Product::getPriceStatic(
+            $row['price_without_reduction'] =
+            $row['price_without_reduction_without_tax'] = Product::getPriceStatic(
                 (int) $row['id_product'],
                 false,
                 $id_product_attribute,
@@ -4803,11 +4804,37 @@ class ProductCore extends ObjectModel
                 false,
                 $quantity
             );
+            $row['price_without_reduction_without_tax'] = Product::getPriceStatic(
+                (int) $row['id_product'],
+                false,
+                $id_product_attribute,
+                6,
+                null,
+                false,
+                false,
+                $quantity
+            );
         }
 
         $row['reduction'] = Product::getPriceStatic(
             (int) $row['id_product'],
             (bool) $usetax,
+            $id_product_attribute,
+            6,
+            null,
+            true,
+            true,
+            $quantity,
+            true,
+            null,
+            null,
+            null,
+            $specific_prices
+        );
+
+        $row['reduction_without_tax'] = Product::getPriceStatic(
+            (int) $row['id_product'],
+            false,
             $id_product_attribute,
             6,
             null,
