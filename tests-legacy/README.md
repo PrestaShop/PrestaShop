@@ -4,7 +4,7 @@ Tests Legacy
 This folder contains legacy unit and integration tests written for PrestaShop 1.7.0 to 1.7.5.
 
 As the structure of this folder evolved a lot in a short time, this resulted into multiple test methods being
-used : unit tests with phpunit, unit tests with phpunit using PrestaShop Core classes or a database fixtures,
+used: unit tests with phpunit, unit tests with phpunit using PrestaShop Core classes or a database fixtures,
 unit tests using Symfony testcase ...
 
 So they have been moved in this folder in order to clean `tests` directory where
