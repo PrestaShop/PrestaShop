@@ -142,8 +142,10 @@ class AdminAccessControllerCore extends AdminController
         }
 
         $tab_id = (int) Tools::getValue('id_tab');
+        $profile_id = (int) Tools::getValue('id_profile');
         $permission = Tools::getValue('perm');
-        if (!$this->isAllowedToEditPermissions($tab_id, $permission)) {
+
+        if (!$this->isAllowedToEditPermissions($tab_id, $permission, $profile_id)) {
             throw new PrestaShopException($this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error'));
         }
 
@@ -154,11 +156,9 @@ class AdminAccessControllerCore extends AdminController
             }
 
             $enabled = (int) Tools::getValue('enabled');
-            $id_tab = (int) Tools::getValue('id_tab');
-            $id_profile = (int) Tools::getValue('id_profile');
             $addFromParent = (int) Tools::getValue('addFromParent');
 
-            die($access->updateLgcAccess($id_profile, $id_tab, $permission, $enabled, $addFromParent));
+            die($access->updateLgcAccess($profile_id, $tab_id, $permission, $enabled, $addFromParent));
         }
     }
 
@@ -230,18 +230,27 @@ class AdminAccessControllerCore extends AdminController
     /**
      * @param int $tab_id
      * @param string $permission
+     * @param int $profile_id
      *
      * @return bool
      *
      * @throws Exception
      */
-    private function isAllowedToEditPermissions($tab_id, $permission)
+    private function isAllowedToEditPermissions($tab_id, $permission, $profile_id)
     {
         if ($tab_id === -1) {
             return false;
         }
 
         $currentProfile = (int) ContextCore::getContext()->employee->id_profile;
+
+        /**
+         * The current employee can't change its own permissions
+         */
+        if ($profile_id === $currentProfile) {
+            return false;
+        }
+
         $slug = Access::findSlugByIdTab($tab_id);
 
         /*
