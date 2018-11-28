@@ -148,7 +148,7 @@ services:
             - 'LogsPage'
 
     prestashop.admin.import.form_handler:
-        class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
+        class: 'PrestaShop\PrestaShop\Core\Form\ImportPageFormHandler'
         arguments:
             - '@prestashop.admin.import.form_builder'
             - '@prestashop.core.hook.dispatcher'
