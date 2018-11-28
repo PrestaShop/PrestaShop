@@ -40,7 +40,6 @@ use PrestaShopBundle\Form\Admin\Sell\Customer\PrivateNoteType;
 use PrestaShopBundle\Form\Admin\Sell\Customer\TransferGuestAccountType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -135,7 +134,7 @@ class CustomerController extends AbstractAdminController
             ])->createView();
         }
 
-        $privateNoteForm = $this->getPrivateNoteForm([
+        $privateNoteForm = $this->createForm(PrivateNoteType::class, [
             'note' => $customerInformation->getGeneralInformation()->getPrivateNote(),
         ]);
 
@@ -164,7 +163,7 @@ class CustomerController extends AbstractAdminController
      */
     public function savePrivateNoteAction($customerId, Request $request)
     {
-        $privateNoteForm = $this->getPrivateNoteForm();
+        $privateNoteForm = $this->createForm(PrivateNoteType::class);
         $privateNoteForm->handleRequest($request);
 
         if ($privateNoteForm->isSubmitted()) {
@@ -244,17 +243,5 @@ class CustomerController extends AbstractAdminController
         return $this->redirectToRoute('admin_customers_view', [
             'customerId' => $customerId,
         ]);
-    }
-
-    /**
-     * Get form for customer's private note
-     *
-     * @param array $data
-     *
-     * @return FormInterface
-     */
-    protected function getPrivateNoteForm(array $data = [])
-    {
-        return $this->createForm(PrivateNoteType::class, $data);
     }
 }
