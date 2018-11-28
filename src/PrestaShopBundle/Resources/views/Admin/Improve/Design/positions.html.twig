@@ -160,7 +160,7 @@
                               'editGraft': 1
                             } %}
                             {% if selectedModule %}
-                              {% set linkParams = liParams|merge({'show_modules': selectedModule}) %}
+                              {% set linkParams = linkParams|merge({'show_modules': selectedModule}) %}
                             {% endif %}
 
                             <a class="btn btn-outline-primary btn-sm" href="{{ getAdminLink('AdminModulesPositions', true, linkParams) }}">
