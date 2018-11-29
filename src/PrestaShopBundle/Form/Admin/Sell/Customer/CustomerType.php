@@ -64,21 +64,29 @@ class CustomerType extends AbstractType
     private $riskChoices;
 
     /**
+     * @var bool
+     */
+    private $isPartnerOffersEnabled;
+
+    /**
      * @param array $genderChoices
      * @param array $groupChoices
      * @param array $riskChoices
      * @param bool $isB2bFeatureEnabled
+     * @param bool $isPartnerOffersEnabled
      */
     public function __construct(
         array $genderChoices,
         array $groupChoices,
         array $riskChoices,
-        $isB2bFeatureEnabled
+        $isB2bFeatureEnabled,
+        $isPartnerOffersEnabled
     ) {
         $this->genderChoices = $genderChoices;
         $this->groupChoices = $groupChoices;
         $this->isB2bFeatureEnabled = $isB2bFeatureEnabled;
         $this->riskChoices = $riskChoices;
+        $this->isPartnerOffersEnabled = $isPartnerOffersEnabled;
     }
 
     /**
@@ -91,6 +99,8 @@ class CustomerType extends AbstractType
                 'choices' => $this->genderChoices,
                 'multiple' => false,
                 'expanded' => true,
+                'required' => false,
+                'placeholder' => null,
             ])
             ->add('first_name', TextType::class)
             ->add('last_name', TextType::class)
@@ -101,12 +111,19 @@ class CustomerType extends AbstractType
             ->add('birthday', BirthdayType::class, [
                 'required' => false,
             ])
-            ->add('is_enabled', SwitchType::class)
-            ->add('is_partner_offers_subscribed', SwitchType::class)
+            ->add('is_enabled', SwitchType::class, [
+                'required' => false,
+            ])
+            ->add('is_partner_offers_subscribed', SwitchType::class, [
+                'required' => false,
+                'disabled' => !$this->isPartnerOffersEnabled,
+            ])
             ->add('group_ids', MaterialChoiceTableType::class, [
                 'choices' => $this->groupChoices,
             ])
             ->add('default_group_id', ChoiceType::class, [
+                'required' => false,
+                'placeholder' => null,
                 'choices' => $this->groupChoices,
             ])
         ;
@@ -133,6 +150,8 @@ class CustomerType extends AbstractType
                     'required' => false,
                 ])
                 ->add('risk_id', ChoiceType::class, [
+                    'required' => false,
+                    'placeholder' => null,
                     'choices' => $this->riskChoices,
                 ])
             ;

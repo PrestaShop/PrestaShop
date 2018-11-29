@@ -31,28 +31,7 @@
 {% block content %}
   <div class="row justify-content-center">
     <div class="col">
-      {{ form_start(customerForm) }}
-      <div class="card">
-        <h3 class="card-header">
-          {{ 'SQL query'|trans }}
-        </h3>
-        <div class="card-block row">
-          <div class="card-text">
-            {{ form_rest(customerForm) }}
-          </div>
-        </div>
-        <div class="card-footer">
-          <a href="{{ path('admin_customers_index') }}" class="btn btn-outline-secondary">
-            <i class="material-icons">cancel</i>
-            {{ 'Cancel'|trans({}, 'Admin.Actions') }}
-          </a>
-          <button class="btn btn-primary float-right">
-            <i class="material-icons">save</i>
-            {{ 'Save'|trans({}, 'Admin.Actions') }}
-          </button>
-        </div>
-      </div>
-      {{ form_end(customerForm) }}
+      {% include '@PrestaShop/Admin/Sell/Customer/Blocks/form.html.twig' %}
     </div>
   </div>
 {% endblock %}

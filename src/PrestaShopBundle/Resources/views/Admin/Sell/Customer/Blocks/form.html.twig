@@ -1,0 +1,198 @@
+{#**
+  * 2007-2018 PrestaShop
+  *
+  * NOTICE OF LICENSE
+  *
+  * This source file is subject to the Open Software License (OSL 3.0)
+  * that is bundled with this package in the file LICENSE.txt.
+  * It is also available through the world-wide-web at this URL:
+  * https://opensource.org/licenses/OSL-3.0
+  * If you did not receive a copy of the license and are unable to
+  * obtain it through the world-wide-web, please send an email
+  * to license@prestashop.com so we can send you a copy immediately.
+  *
+  * DISCLAIMER
+  *
+  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+  * versions in the future. If you wish to customize PrestaShop for your
+  * needs please refer to http://www.prestashop.com for more information.
+  *
+  * @author    PrestaShop SA <contact@prestashop.com>
+  * @copyright 2007-2018 PrestaShop SA
+  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+  * International Registered Trademark & Property of PrestaShop SA
+  *#}
+
+{% block customer_form %}
+  {{ form_start(customerForm) }}
+    <div class="card">
+      <h3 class="card-header">
+        <i class="material-icons">person</i>
+        {{ 'Customer'|trans({}, 'Admin.Global') }}
+      </h3>
+      <div class="card-block row">
+        <div class="card-text">
+          <div class="form-group row">
+            <label for="{{ customerForm.gender_id.vars.id }}" class="form-control-label">{{ 'Social title'|trans({}, 'Admin.Global') }}</label>
+            <div class="col-sm">
+              {{ form_widget(customerForm.gender_id) }}
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="{{ customerForm.first_name.vars.id }}" class="form-control-label">{{ 'First name'|trans({}, 'Admin.Global') }}</label>
+            <div class="col-sm">
+              {{ form_widget(customerForm.first_name) }}
+              <small class="form-text">
+                {{ '%s %s'|format('Invalid characters:'|trans({}, 'Admin.Notifications.Info'), '0-9!<>,;?=+()@#"°{}_$%:') }}
+              </small>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="{{ customerForm.last_name.vars.id }}" class="form-control-label">{{ 'Last name'|trans({}, 'Admin.Global') }}</label>
+            <div class="col-sm">
+              {{ form_widget(customerForm.last_name) }}
+              <small class="form-text">
+                {{ '%s %s'|format('Invalid characters:'|trans({}, 'Admin.Notifications.Info'), '0-9!<>,;?=+()@#"°{}_$%:') }}
+              </small>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="{{ customerForm.email.vars.id }}" class="form-control-label">{{ 'Email'|trans({}, 'Admin.Global') }}</label>
+            <div class="col-sm">
+              {{ form_widget(customerForm.email) }}
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="{{ customerForm.password.vars.id }}" class="form-control-label">{{ 'Password'|trans({}, 'Admin.Global') }}</label>
+            <div class="col-sm">
+              {{ form_widget(customerForm.password) }}
+              <small class="form-text">
+                {{ 'Password should be at least %length% characters long.'|trans({}, 'Admin.Notifications.Info') }}
+              </small>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="{{ customerForm.birthday.vars.id }}" class="form-control-label">{{ 'Birthday'|trans({}, 'Admin.Orderscustomers.Feature') }}</label>
+            <div class="col-sm">
+              {{ form_widget(customerForm.birthday) }}
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="{{ customerForm.is_enabled.vars.id }}" class="form-control-label">{{ 'Enabled'|trans({}, 'Admin.Global') }}</label>
+            <div class="col-sm">
+              {{ form_widget(customerForm.is_enabled) }}
+              <small class="form-text">
+                {{ 'Enable or disable customer login.'|trans({}, 'Admin.Orderscustomers.Help') }}
+              </small>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="{{ customerForm.is_partner_offers_subscribed.vars.id }}" class="form-control-label">{{ 'Partner offers'|trans({}, 'Admin.Orderscustomers.Feature') }}</label>
+            <div class="col-sm">
+              {{ form_widget(customerForm.is_partner_offers_subscribed) }}
+              <small class="form-text">
+                {{ 'This customer will receive your ads via email.'|trans({}, 'Admin.Orderscustomers.Help') }}
+              </small>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="{{ customerForm.group_ids.vars.id }}" class="form-control-label">{{ 'Group access'|trans({}, 'Admin.Orderscustomers.Feature') }}</label>
+            <div class="col-sm">
+              {{ form_widget(customerForm.group_ids) }}
+              <small class="form-text">
+                {{ 'Select all the groups that you would like to apply to this customer.'|trans({}, 'Admin.Orderscustomers.Help') }}
+              </small>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="{{ customerForm.default_group_id.vars.id }}" class="form-control-label">{{ 'Default customer group'|trans({}, 'Admin.Orderscustomers.Feature') }}</label>
+            <div class="col-sm">
+              {{ form_widget(customerForm.default_group_id) }}
+              <small class="form-text">
+                {{ '%s %s'|format('This group will be the user\'s default group.'|trans({}, 'Admin.Orderscustomers.Help'), 'Only the discount for the selected group will be applied to this customer.'|trans({}, 'Admin.Orderscustomers.Help')) }}
+              </small>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="{{ customerForm.company_name.vars.id }}" class="form-control-label">{{ 'Company'|trans({}, 'Admin.Global') }}</label>
+            <div class="col-sm">
+              {{ form_widget(customerForm.company_name) }}
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="{{ customerForm.siret_code.vars.id }}" class="form-control-label">{{ 'SIRET'|trans({}, 'Admin.Orderscustomers.Feature') }}</label>
+            <div class="col-sm">
+              {{ form_widget(customerForm.siret_code) }}
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="{{ customerForm.ape_code.vars.id }}" class="form-control-label">{{ 'APE'|trans({}, 'Admin.Orderscustomers.Feature') }}</label>
+            <div class="col-sm">
+              {{ form_widget(customerForm.ape_code) }}
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="{{ customerForm.website.vars.id }}" class="form-control-label">{{ 'Website'|trans({}, 'Admin.Orderscustomers.Feature') }}</label>
+            <div class="col-sm">
+              {{ form_widget(customerForm.website) }}
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="{{ customerForm.allowed_outstanding_amount.vars.id }}" class="form-control-label">{{ 'Allowed outstanding amount'|trans({}, 'Admin.Orderscustomers.Feature') }}</label>
+            <div class="col-sm">
+              {{ form_widget(customerForm.allowed_outstanding_amount) }}
+              <small class="form-text">
+                {{ '%s 0-9'|format('Valid characters:'|trans({}, 'Admin.Orderscustomers.Help')) }}
+              </small>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="{{ customerForm.max_payment_days.vars.id }}" class="form-control-label">{{ 'Maximum number of payment days'|trans({}, 'Admin.Orderscustomers.Feature') }}</label>
+            <div class="col-sm">
+              {{ form_widget(customerForm.max_payment_days) }}
+              <small class="form-text">
+                {{ '%s 0-9'|format('Valid characters:'|trans({}, 'Admin.Orderscustomers.Help')) }}
+              </small>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="{{ customerForm.risk_id.vars.id }}" class="form-control-label">{{ 'Risk rating'|trans({}, 'Admin.Orderscustomers.Feature') }}</label>
+            <div class="col-sm">
+              {{ form_widget(customerForm.risk_id) }}
+            </div>
+          </div>
+
+          {% block customer_form_rest %}
+            {{ form_rest(customerForm) }}
+          {% endblock %}
+        </div>
+      </div>
+      <div class="card-footer">
+        <a href="{{ path('admin_customers_index') }}" class="btn btn-outline-secondary">
+          <i class="material-icons">cancel</i>
+          {{ 'Cancel'|trans({}, 'Admin.Actions') }}
+        </a>
+        <button class="btn btn-primary float-right">
+          <i class="material-icons">save</i>
+          {{ 'Save'|trans({}, 'Admin.Actions') }}
+        </button>
+      </div>
+    </div>
+  {{ form_end(customerForm) }}
+{% endblock %}
