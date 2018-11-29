@@ -30,7 +30,14 @@ use Address;
 use Db;
 use PrestaShop\PrestaShop\Adapter\Supplier\SupplierAddressProvider;
 use PrestaShop\PrestaShop\Adapter\Supplier\SupplierOrderValidator;
+use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\CannotDeleteSupplierAddressException;
+use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\CannotDeleteSupplierException;
+use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\CannotDeleteSupplierProductRelationException;
+use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierException;
+use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\SupplierId;
+use PrestaShopException;
+use Supplier;
 
 /**
  * Class AbstractDeleteSupplierHandler defines common actions required for
@@ -69,9 +76,91 @@ abstract class AbstractDeleteSupplierHandler
     }
 
     /**
+     * Removes supplier and all related content with it such as image, supplier and product relation
+     * and supplier address.
+     *
+     * @param SupplierId $supplierId
+     *
+     * @throws SupplierException
+     */
+    protected function removeSupplier(SupplierId $supplierId)
+    {
+        try {
+            $entity = new Supplier($supplierId->getValue());
+
+            if (0 >= $entity->id) {
+                throw new SupplierNotFoundException(
+                    sprintf(
+                        'Supplier object with id "%s" has not been found for deletion.',
+                        $supplierId->getValue()
+                    )
+                );
+            }
+
+            if ($this->hasPendingOrders($supplierId)) {
+                throw new CannotDeleteSupplierException(
+                    $supplierId,
+                    sprintf(
+                        'Supplier with id %s cannot be deleted due to it has pending orders',
+                        $supplierId->getValue()
+                    ),
+                    CannotDeleteSupplierException::HAS_PENDING_ORDERS
+                );
+            }
+
+            $this->startTransaction();
+
+            if (false === $this->deleteProductSupplierRelation($supplierId)) {
+                $this->rollbackTransaction();
+
+                throw new CannotDeleteSupplierProductRelationException(
+                    sprintf(
+                        'Unable to delete suppliers with id "%s" product relation from product_supplier table',
+                        $supplierId->getValue()
+                    )
+                );
+            }
+
+            if (false === $this->deleteSupplierAddress($supplierId)) {
+                $this->rollbackTransaction();
+
+                throw new CannotDeleteSupplierAddressException(
+                    sprintf(
+                        'Unable to set deleted flag for supplier with id "%s" address',
+                        $supplierId->getValue()
+                    )
+                );
+            }
+
+            if (false === $entity->delete()) {
+                $this->rollbackTransaction();
+
+                throw new CannotDeleteSupplierException(
+                    $supplierId,
+                    sprintf(
+                        'Unable to delete supplier object with id "%s"',
+                        $supplierId->getValue()
+                    )
+                );
+            }
+
+            $this->commitTransaction();
+        } catch (PrestaShopException $exception) {
+            throw new SupplierException(
+                sprintf(
+                    'An error occurred when deleting the supplier object with id "%s"',
+                    $supplierId->getValue()
+                ),
+                0,
+                $exception
+            );
+        }
+    }
+
+    /**
      * Starts mysql transaction.
      */
-    protected function startTransaction()
+    private function startTransaction()
     {
         Db::getInstance()->execute('START TRANSACTION;');
     }
@@ -79,7 +168,7 @@ abstract class AbstractDeleteSupplierHandler
     /**
      * Cancels mysql transaction which prevents from adding, updating, deleting unwanted data.
      */
-    protected function rollbackTransaction()
+    private function rollbackTransaction()
     {
         Db::getInstance()->execute('ROLLBACK;');
     }
@@ -87,7 +176,7 @@ abstract class AbstractDeleteSupplierHandler
     /**
      * Commits mysql transaction.
      */
-    protected function commitTransaction()
+    private function commitTransaction()
     {
         Db::getInstance()->execute('COMMIT;');
     }
@@ -99,7 +188,7 @@ abstract class AbstractDeleteSupplierHandler
      *
      * @return bool
      */
-    protected function deleteProductSupplierRelation(SupplierId $supplierId)
+    private function deleteProductSupplierRelation(SupplierId $supplierId)
     {
         $sql = 'DELETE FROM `' . $this->dbPrefix . 'product_supplier` WHERE `id_supplier`=' . $supplierId->getValue();
 
@@ -113,7 +202,7 @@ abstract class AbstractDeleteSupplierHandler
      *
      * @return bool
      */
-    protected function deleteSupplierAddress(SupplierId $supplierId)
+    private function deleteSupplierAddress(SupplierId $supplierId)
     {
         $supplierAddressId = $this->supplierAddressProvider->getIdBySupplier($supplierId->getValue());
 
@@ -134,7 +223,7 @@ abstract class AbstractDeleteSupplierHandler
      *
      * @return bool
      */
-    protected function hasPendingOrders(SupplierId $supplierId)
+    private function hasPendingOrders(SupplierId $supplierId)
     {
         return $this->supplierOrderValidator->hasPendingOrders($supplierId->getValue());
     }
