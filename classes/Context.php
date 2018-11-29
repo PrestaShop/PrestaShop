@@ -349,10 +349,7 @@ class ContextCore
         }
 
         $translator = $this->getTranslatorFromLocale($this->language->locale);
-        // In case we have at least 1 translated message, we return the current translator.
-        if (count($translator->getCatalogue($this->language->locale)->all())) {
-            $this->translator = $translator;
-        }
+        $this->translator = $translator;
 
         return $translator;
     }
