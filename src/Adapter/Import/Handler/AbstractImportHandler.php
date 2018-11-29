@@ -27,7 +27,9 @@
 namespace PrestaShop\PrestaShop\Adapter\Import\Handler;
 
 use ObjectModel;
+use PrestaShop\PrestaShop\Adapter\Database;
 use PrestaShop\PrestaShop\Adapter\Import\ImportDataFormatter;
+use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerInterface;
 use PrestaShop\PrestaShop\Core\Employee\ContextEmployeeProviderInterface;
 use PrestaShop\PrestaShop\Core\Import\Configuration\ImportConfigInterface;
 use PrestaShop\PrestaShop\Core\Import\Configuration\ImportRuntimeConfigInterface;
@@ -75,6 +77,11 @@ abstract class AbstractImportHandler implements ImportHandlerInterface
      * @var string import type label.
      */
     protected $importTypeLabel;
+
+    /**
+     * @var Database
+     */
+    protected $legacyDatabase;
 
     /**
      * Callback methods with field names as keys.
@@ -139,6 +146,11 @@ abstract class AbstractImportHandler implements ImportHandlerInterface
     private $employeeId;
 
     /**
+     * @var CacheClearerInterface
+     */
+    private $cacheClearer;
+
+    /**
      * @param ImportDataFormatter $dataFormatter
      * @param array $allShopIds
      * @param array $contextShopIds
@@ -148,6 +160,8 @@ abstract class AbstractImportHandler implements ImportHandlerInterface
      * @param TranslatorInterface $translator
      * @param LoggerInterface $logger
      * @param int $employeeId
+     * @param Database $legacyDatabase
+     * @param CacheClearerInterface $cacheClearer
      */
     public function __construct(
         ImportDataFormatter $dataFormatter,
@@ -158,7 +172,9 @@ abstract class AbstractImportHandler implements ImportHandlerInterface
         $contextLanguageId,
         TranslatorInterface $translator,
         LoggerInterface $logger,
-        $employeeId
+        $employeeId,
+        Database $legacyDatabase,
+        CacheClearerInterface $cacheClearer
     ) {
         $this->dataFormatter = $dataFormatter;
         $this->contextShopIds = $contextShopIds;
@@ -169,6 +185,8 @@ abstract class AbstractImportHandler implements ImportHandlerInterface
         $this->contextLanguageId = $contextLanguageId;
         $this->logger = $logger;
         $this->employeeId = $employeeId;
+        $this->legacyDatabase = $legacyDatabase;
+        $this->cacheClearer = $cacheClearer;
     }
 
     /**
@@ -221,6 +239,8 @@ abstract class AbstractImportHandler implements ImportHandlerInterface
             'delivery_in_stock' => $createMultilangField,
             'delivery_out_stock' => $createMultilangField,
         ];
+
+        $this->legacyDatabase->disableCache();
     }
 
     /**
@@ -228,30 +248,38 @@ abstract class AbstractImportHandler implements ImportHandlerInterface
      */
     public function tearDown(ImportConfigInterface $importConfig, ImportRuntimeConfigInterface $runtimeConfig)
     {
-        $offset = $runtimeConfig->getOffset();
-        $limit = $runtimeConfig->getLimit();
+        if (!$runtimeConfig->shouldValidateData()) {
+            $offset = $runtimeConfig->getOffset();
+            $limit = $runtimeConfig->getLimit();
 
-        $logMessage = sprintf(
-            $this->translator->trans('%s import', [], 'Admin.Advparameters.Notification'),
-            $this->importTypeLabel
-        );
-        $logMessage .= ' ';
-        $logMessage .= sprintf(
-            $this->translator->trans('(from %s to %s)', [], 'Admin.Advparameters.Notification'),
-            $offset,
-            $limit
-        );
-        if ($importConfig->truncate()) {
+            $logMessage = sprintf(
+                $this->translator->trans('%s import', [], 'Admin.Advparameters.Notification'),
+                $this->importTypeLabel
+            );
             $logMessage .= ' ';
-            $logMessage .= $this->translator->trans('with truncate', [], 'Admin.Advparameters.Notification');
+            $logMessage .= sprintf(
+                $this->translator->trans('(from %s to %s)', [], 'Admin.Advparameters.Notification'),
+                $offset,
+                $limit
+            );
+            if ($importConfig->truncate()) {
+                $logMessage .= ' ';
+                $logMessage .= $this->translator->trans('with truncate', [], 'Admin.Advparameters.Notification');
+            }
+            $this->logger->notice(
+                $logMessage,
+                [
+                    'allow_duplicate' => true,
+                    'object_type' => $this->importTypeLabel,
+                ]
+            );
+
+            if ($runtimeConfig->isFinished()) {
+                $this->cacheClearer->clear();
+            }
         }
-        $this->logger->notice(
-            $logMessage,
-            [
-                'employee_id' => $this->employeeId,
-                'object_type' => $this->importTypeLabel,
-            ]
-        );
+
+        $this->legacyDatabase->enableCache();
     }
 
     /**

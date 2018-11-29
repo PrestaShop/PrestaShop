@@ -41,6 +41,7 @@ use PrestaShop\PrestaShop\Adapter\Import\ImageCopier;
 use PrestaShop\PrestaShop\Adapter\Import\ImportDataFormatter;
 use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShop\PrestaShop\Adapter\Validate;
+use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerInterface;
 use PrestaShop\PrestaShop\Core\Employee\ContextEmployeeProviderInterface;
 use PrestaShop\PrestaShop\Core\Import\Configuration\ImportConfigInterface;
 use PrestaShop\PrestaShop\Core\Import\Configuration\ImportRuntimeConfigInterface;
@@ -97,11 +98,6 @@ final class ProductImportHandler extends AbstractImportHandler
     private $shopAddress;
 
     /**
-     * @var Database
-     */
-    private $legacyDatabase;
-
-    /**
      * @var int
      */
     private $languageId;
@@ -131,11 +127,12 @@ final class ProductImportHandler extends AbstractImportHandler
      * @param TranslatorInterface $translator
      * @param LoggerInterface $logger
      * @param int $employeeId
+     * @param Database $legacyDatabase
+     * @param CacheClearerInterface $cacheClearer
      * @param Connection $connection
      * @param string $dbPrefix
      * @param Configuration $configuration
      * @param Address $shopAddress
-     * @param Database $legacyDatabase
      * @param Validate $validate
      * @param Tools $tools
      * @param ImageCopier $imageCopier
@@ -150,11 +147,12 @@ final class ProductImportHandler extends AbstractImportHandler
         TranslatorInterface $translator,
         LoggerInterface $logger,
         $employeeId,
+        Database $legacyDatabase,
+        CacheClearerInterface $cacheClearer,
         Connection $connection,
         $dbPrefix,
         Configuration $configuration,
         Address $shopAddress,
-        Database $legacyDatabase,
         Validate $validate,
         Tools $tools,
         ImageCopier $imageCopier
@@ -168,7 +166,9 @@ final class ProductImportHandler extends AbstractImportHandler
             $contextLanguageId,
             $translator,
             $logger,
-            $employeeId
+            $employeeId,
+            $legacyDatabase,
+            $cacheClearer
         );
 
         $this->connection = $connection;
@@ -194,7 +194,6 @@ final class ProductImportHandler extends AbstractImportHandler
             'available_date' => date('Y-m-d'),
         ];
         $this->shopAddress = $shopAddress;
-        $this->legacyDatabase = $legacyDatabase;
         $this->validate = $validate;
         $this->tools = $tools;
         $this->imageCopier = $imageCopier;
