@@ -80,6 +80,11 @@ final class ProductImportHandler extends AbstractImportHandler
     private $productTable;
 
     /**
+     * @var string accessory database table name
+     */
+    private $accessoryTable;
+
+    /**
      * @var Configuration
      */
     private $configuration;
@@ -160,6 +165,7 @@ final class ProductImportHandler extends AbstractImportHandler
 
         $this->connection = $connection;
         $this->productTable = $dbPrefix.'product';
+        $this->accessoryTable = $dbPrefix.'accessory';
         $this->configuration = $configuration;
         $this->defaultValues = [
             'reference' => '',
@@ -310,6 +316,10 @@ final class ProductImportHandler extends AbstractImportHandler
     public function tearDown(ImportConfigInterface $importConfig, ImportRuntimeConfigInterface $runtimeConfig)
     {
         parent::tearDown($importConfig, $runtimeConfig);
+
+        if ($runtimeConfig->isFinished() && !$runtimeConfig->shouldValidateData()) {
+            $this->importAccessories($runtimeConfig);
+        }
 
         if (!$runtimeConfig->shouldValidateData()) {
             Module::processDeferedFuncCall();
@@ -1351,6 +1361,12 @@ final class ProductImportHandler extends AbstractImportHandler
         }
     }
 
+    /**
+     * Link product accessories.
+     *
+     * @param Product $product
+     * @param ImportRuntimeConfigInterface $runtimeConfig
+     */
     private function linkAccessories(Product $product, ImportRuntimeConfigInterface $runtimeConfig)
     {
         // Accessories linkage
@@ -1369,6 +1385,34 @@ final class ProductImportHandler extends AbstractImportHandler
             $accessories = isset($sharedData['accessories']) ? $sharedData['accessories'] : [];
             $accessories[$product->id] = $product->accessories;
             $runtimeConfig->addSharedDataItem('accessories', $accessories);
+        }
+    }
+
+    /**
+     * Import accessories.
+     *
+     * @param ImportRuntimeConfigInterface $runtimeConfig
+     */
+    private function importAccessories(ImportRuntimeConfigInterface $runtimeConfig)
+    {
+        $sharedData = $runtimeConfig->getSharedData();
+
+        if (!isset($sharedData['accessories'])) {
+            return;
+        }
+
+        foreach ($sharedData['accessories'] as $productId => $links) {
+            if (count($links) > 0) { // We delete and relink only if there is accessories to link...
+                // Bulk jobs: for performances, we need to do a minimum amount of SQL queries. No product inflation.
+                $uniqueIds = Product::getExistingIdsFromIdsOrRefs($links);
+                $this->connection->delete(
+                    $this->accessoryTable,
+                    [
+                        'id_product_1' => (int) $productId
+                    ]
+                );
+                Product::changeAccessoriesForProduct($uniqueIds, $productId);
+            }
         }
     }
 }
