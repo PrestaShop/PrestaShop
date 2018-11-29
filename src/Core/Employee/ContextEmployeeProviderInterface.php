@@ -37,4 +37,11 @@ interface ContextEmployeeProviderInterface
      * @return bool
      */
     public function isSuperAdmin();
+
+    /**
+     * Get context employee's ID.
+     *
+     * @return int
+     */
+    public function getId();
 }

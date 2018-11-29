@@ -73,9 +73,11 @@ export default class ImportBatchSizeCalculator {
    * Calculates the recommended import batch size.
    *
    * @param {number} currentBatchSize current import batch size
+   * @param {number} maxBatchSize greater than zero, the batch size that shouldn't be exceeded
+   *
    * @returns {number} recommended import batch size
    */
-  calculateBatchSize(currentBatchSize) {
+  calculateBatchSize(currentBatchSize, maxBatchSize = 0) {
     if (!this._importStartTime) {
       throw 'Import start is not marked.';
     }
@@ -84,9 +86,15 @@ export default class ImportBatchSizeCalculator {
       throw 'Import end is not marked.';
     }
 
-    return Math.min(
+    let candidates = [
       this._maxBatchSize,
       Math.max(this._minBatchSize, Math.floor(currentBatchSize * this._calculateAcceleration()))
-    );
+    ];
+
+    if (maxBatchSize > 0) {
+      candidates.push(maxBatchSize);
+    }
+
+    return Math.min(...candidates);
   }
 }

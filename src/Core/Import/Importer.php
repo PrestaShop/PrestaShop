@@ -102,7 +102,7 @@ final class Importer implements ImporterInterface
         $rowIndex = 0;
 
         // Number of rows processed during import process.
-        $processedRows = $runtimeConfig->getOffset();
+        $processedRows = 0;
 
         // Total number of importable rows in the whole file.
         $totalNumberOfRows = 0;
