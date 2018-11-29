@@ -109,6 +109,7 @@ class CustomerType extends AbstractType
                 'required' => $options['is_password_required'],
             ])
             ->add('birthday', BirthdayType::class, [
+                'widget' => 'single_text',
                 'required' => false,
             ])
             ->add('is_enabled', SwitchType::class, [
