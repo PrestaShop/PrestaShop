@@ -81,7 +81,7 @@ final class CmsPageCategoryDefinitionFactory extends AbstractGridDefinitionFacto
      */
     protected function getId()
     {
-        return 'Cms_page_category';
+        return 'cms_page_category';
     }
 
     /**
@@ -135,7 +135,7 @@ final class CmsPageCategoryDefinitionFactory extends AbstractGridDefinitionFacto
                     'position_field' => 'position',
                     'update_method' => 'POST',
                     'update_route' => 'admin_cms_pages_update_position_cms_category',
-                    'route_params' => [
+                    'record_route_params' => [
                         'id_parent' => 'cmsCategoryParentId',
                     ],
                 ])
