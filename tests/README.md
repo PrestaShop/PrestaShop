@@ -9,7 +9,7 @@ Multiple type of tests are available:
 
 # Unit tests
 
-PrestaShop unit tests are powered by phpunit.
+PrestaShop unit tests are powered by [phpunit][2].
 
 ## How to write unit tests
 
@@ -21,7 +21,6 @@ PrestaShop unit tests are powered by phpunit.
 or a static call, this class cannot be unit tested and should be tested using
 integration tests.
 
-
 ## Conventions
 
 - Use camelCase names for test function names.
@@ -31,6 +30,15 @@ integration tests.
 
 # Integration tests
 
-Incoming...
+PrestaShop integration tests are powered by [behat][3].
+	
+# End-to-end (e2e) tests
+
+PrestaShop end-to-end tests are powered by a tool suite as it requires:
+- to control a browser behavior
+- to mimic a user's behavior
+- to setup a test case and validate the behavior
 
 [1]: https://martinfowler.com/articles/mocksArentStubs.html#TheDifferenceBetweenMocksAndStubs
+[2]: https://phpunit.de/
+[3]: http://behat.org/en/latest/
