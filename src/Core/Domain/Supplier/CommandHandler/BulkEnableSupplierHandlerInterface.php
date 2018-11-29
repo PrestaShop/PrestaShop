@@ -35,8 +35,6 @@ interface BulkEnableSupplierHandlerInterface
 {
     /**
      * @param BulkEnableSupplierCommand $command
-     *
-     * @return void
      */
     public function handle(BulkEnableSupplierCommand $command);
 }

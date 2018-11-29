@@ -35,8 +35,6 @@ interface BulkDisableSupplierHandlerInterface
 {
     /**
      * @param BulkDisableSupplierCommand $command
-     *
-     * @return void
      */
     public function handle(BulkDisableSupplierCommand $command);
 }

@@ -26,8 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Supplier\Exception;
 
-use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
-
 /**
  * Class SupplierConstraintException
  */
