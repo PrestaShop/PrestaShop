@@ -26,11 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Supplier\CommandHandler;
 
-use Address;
 use PrestaShop\PrestaShop\Adapter\Entity\Db;
 use PrestaShop\PrestaShop\Adapter\Supplier\SupplierAddressProvider;
 use PrestaShop\PrestaShop\Adapter\Supplier\SupplierOrderValidator;
-use PrestaShop\PrestaShop\Adapter\Validate;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Command\DeleteSupplierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\CommandHandler\DeleteSupplierHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\CannotDeleteSupplierAddressException;
@@ -38,45 +36,14 @@ use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\CannotDeleteSupplierExc
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\CannotDeleteSupplierProductRelationException;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierException;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\SupplierId;
 use PrestaShopException;
 use Supplier;
 
 /**
  * Class DeleteSupplierHandler is responsible for deleting the supplier.
  */
-final class DeleteSupplierHandler implements DeleteSupplierHandlerInterface
+final class DeleteSupplierHandler extends AbstractDeleteSupplierHandler implements DeleteSupplierHandlerInterface
 {
-    /**
-     * @var SupplierOrderValidator
-     */
-    private $supplierOrderValidator;
-
-    /**
-     * @var string
-     */
-    private $dbPrefix;
-
-    /**
-     * @var SupplierAddressProvider
-     */
-    private $supplierAddressProvider;
-
-    /**
-     * @param SupplierOrderValidator $supplierOrderValidator
-     * @param SupplierAddressProvider $supplierAddressProvider
-     * @param string $dbPrefix
-     */
-    public function __construct(
-        SupplierOrderValidator $supplierOrderValidator,
-        SupplierAddressProvider $supplierAddressProvider,
-        $dbPrefix
-    ) {
-        $this->supplierOrderValidator = $supplierOrderValidator;
-        $this->dbPrefix = $dbPrefix;
-        $this->supplierAddressProvider = $supplierAddressProvider;
-    }
-
     /**
      * {@inheritdoc}
      *
@@ -151,40 +118,5 @@ final class DeleteSupplierHandler implements DeleteSupplierHandlerInterface
                 $exception
             );
         }
-    }
-
-    /**
-     * Deletes product supplier relation.
-     *
-     * @param SupplierId $supplierId
-     *
-     * @return bool
-     */
-    private function deleteProductSupplierRelation(SupplierId $supplierId)
-    {
-        $sql = 'DELETE FROM `' . $this->dbPrefix . 'product_supplier` WHERE `id_supplier`=' . $supplierId->getValue();
-
-        return Db::getInstance()->execute($sql);
-    }
-
-    /**
-     * Deletes supplier address.
-     *
-     * @param SupplierId $supplierId
-     *
-     * @return bool
-     */
-    private function deleteSupplierAddress(SupplierId $supplierId)
-    {
-        $supplierAddressId = $this->supplierAddressProvider->getIdBySupplier($supplierId->getValue());
-
-        $address = new Address($supplierAddressId);
-
-        if ($address->id) {
-            $address->deleted = true;
-            return $address->update();
-        }
-
-        return true;
     }
 }
