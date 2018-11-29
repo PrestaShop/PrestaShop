@@ -87,6 +87,21 @@ final class ImportRuntimeConfig implements ImportRuntimeConfigInterface
     private $totalNumberOfRows;
 
     /**
+     * @var array
+     */
+    private $notices;
+
+    /**
+     * @var array
+     */
+    private $warnings;
+
+    /**
+     * @var array
+     */
+    private $errors;
+
+    /**
      * @param bool $shouldValidateData
      * @param int $offset
      * @param int $limit
@@ -217,6 +232,30 @@ final class ImportRuntimeConfig implements ImportRuntimeConfigInterface
     /**
      * {@inheritdoc}
      */
+    public function setNotices(array $notices)
+    {
+        $this->notices = $notices;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setWarnings(array $warnings)
+    {
+        $this->warnings = $warnings;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setErrors(array $errors)
+    {
+        $this->errors = $errors;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function toArray()
     {
         return [
@@ -227,6 +266,9 @@ final class ImportRuntimeConfig implements ImportRuntimeConfigInterface
             'postSizeLimit' => $this->postSizeLimit,
             'processIndex' => $this->processIndex,
             'totalCount' => $this->totalNumberOfRows,
+            'notices' => $this->notices,
+            'warnings' => $this->warnings,
+            'errors' => $this->errors,
         ];
     }
 }

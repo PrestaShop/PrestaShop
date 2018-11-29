@@ -205,7 +205,9 @@ abstract class AbstractImportHandler implements ImportHandlerInterface
      */
     public function tearDown(ImportConfigInterface $importConfig, ImportRuntimeConfigInterface $runtimeConfig)
     {
-
+        $runtimeConfig->setNotices($this->getNotices());
+        $runtimeConfig->setWarnings($this->getWarnings());
+        $runtimeConfig->setErrors($this->getErrors());
     }
 
     /**
