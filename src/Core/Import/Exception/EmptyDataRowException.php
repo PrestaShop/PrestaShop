@@ -24,47 +24,11 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Import\File\DataRow;
-
-use ArrayAccess;
-use Countable;
-use IteratorAggregate;
-use PrestaShop\PrestaShop\Core\Import\File\DataCell\DataCellInterface;
+namespace PrestaShop\PrestaShop\Core\Import\Exception;
 
 /**
- * Interface DataRowInterface describes a data row from imported file.
+ * Class EmptyDataRowException thrown when the import handler finds an empty data row.
  */
-interface DataRowInterface extends ArrayAccess, IteratorAggregate, Countable
+class EmptyDataRowException extends ImportException
 {
-    /**
-     * Add a cell to this row.
-     *
-     * @param DataCellInterface $cell
-     *
-     * @return self
-     */
-    public function addCell(DataCellInterface $cell);
-
-    /**
-     * Create a data row from given array.
-     *
-     * @param array $data
-     *
-     * @return self
-     */
-    public static function createFromArray(array $data);
-
-    /**
-     * @param mixed $offset
-     *
-     * @return DataCellInterface
-     */
-    public function offsetGet($offset);
-
-    /**
-     * Check if the row is empty.
-     *
-     * @return bool
-     */
-    public function isEmpty();
 }
