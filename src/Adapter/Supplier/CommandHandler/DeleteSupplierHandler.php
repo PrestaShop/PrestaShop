@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Supplier\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\Entity\Db;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Command\DeleteSupplierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\CommandHandler\DeleteSupplierHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\CannotDeleteSupplierAddressException;
