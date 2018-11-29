@@ -26,13 +26,16 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Import\Handler;
 
+use Language;
 use ObjectModel;
+use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Database;
 use PrestaShop\PrestaShop\Adapter\Import\ImportDataFormatter;
+use PrestaShop\PrestaShop\Adapter\Validate;
 use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerInterface;
-use PrestaShop\PrestaShop\Core\Employee\ContextEmployeeProviderInterface;
 use PrestaShop\PrestaShop\Core\Import\Configuration\ImportConfigInterface;
 use PrestaShop\PrestaShop\Core\Import\Configuration\ImportRuntimeConfigInterface;
+use PrestaShop\PrestaShop\Core\Import\Exception\EmptyDataRowException;
 use PrestaShop\PrestaShop\Core\Import\File\DataRow\DataRowInterface;
 use PrestaShop\PrestaShop\Core\Import\Handler\ImportHandlerInterface;
 use Psr\Log\LoggerInterface;
@@ -82,6 +85,21 @@ abstract class AbstractImportHandler implements ImportHandlerInterface
      * @var Database
      */
     protected $legacyDatabase;
+
+    /**
+     * @var int
+     */
+    protected $languageId;
+
+    /**
+     * @var Configuration
+     */
+    protected $configuration;
+
+    /**
+     * @var Validate
+     */
+    protected $validate;
 
     /**
      * Callback methods with field names as keys.
@@ -162,6 +180,8 @@ abstract class AbstractImportHandler implements ImportHandlerInterface
      * @param int $employeeId
      * @param Database $legacyDatabase
      * @param CacheClearerInterface $cacheClearer
+     * @param Configuration $configuration
+     * @param Validate $validate
      */
     public function __construct(
         ImportDataFormatter $dataFormatter,
@@ -174,7 +194,9 @@ abstract class AbstractImportHandler implements ImportHandlerInterface
         LoggerInterface $logger,
         $employeeId,
         Database $legacyDatabase,
-        CacheClearerInterface $cacheClearer
+        CacheClearerInterface $cacheClearer,
+        Configuration $configuration,
+        Validate $validate
     ) {
         $this->dataFormatter = $dataFormatter;
         $this->contextShopIds = $contextShopIds;
@@ -187,6 +209,8 @@ abstract class AbstractImportHandler implements ImportHandlerInterface
         $this->employeeId = $employeeId;
         $this->legacyDatabase = $legacyDatabase;
         $this->cacheClearer = $cacheClearer;
+        $this->configuration = $configuration;
+        $this->validate = $validate;
     }
 
     /**
@@ -241,6 +265,34 @@ abstract class AbstractImportHandler implements ImportHandlerInterface
         ];
 
         $this->legacyDatabase->disableCache();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function importRow(
+        ImportConfigInterface $importConfig,
+        ImportRuntimeConfigInterface $runtimeConfig,
+        DataRowInterface $dataRow
+    ) {
+        if ($dataRow->isEmpty()) {
+            $this->warning(
+                $this->translator->trans(
+                    'There is an empty row in the file that won\'t be imported.',
+                    [],
+                    'Admin.Advparameters.Notification'
+                )
+            );
+            throw new EmptyDataRowException();
+        }
+
+        if (!$this->languageId) {
+            $this->languageId = Language::getIdByIso($importConfig->getLanguageIso());
+
+            if (!$this->validate->isUnsignedInt($this->languageId)) {
+                $this->languageId = $this->configuration->getInt('PS_LANG_DEFAULT');
+            }
+        }
     }
 
     /**

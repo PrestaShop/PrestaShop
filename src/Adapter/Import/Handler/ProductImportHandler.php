@@ -32,7 +32,6 @@ use Doctrine\DBAL\Connection;
 use Feature;
 use FeatureValue;
 use Image;
-use Language;
 use Manufacturer;
 use \Module;
 use PrestaShop\PrestaShop\Adapter\Configuration;
@@ -42,9 +41,9 @@ use PrestaShop\PrestaShop\Adapter\Import\ImportDataFormatter;
 use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShop\PrestaShop\Adapter\Validate;
 use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerInterface;
-use PrestaShop\PrestaShop\Core\Employee\ContextEmployeeProviderInterface;
 use PrestaShop\PrestaShop\Core\Import\Configuration\ImportConfigInterface;
 use PrestaShop\PrestaShop\Core\Import\Configuration\ImportRuntimeConfigInterface;
+use PrestaShop\PrestaShop\Core\Import\Exception\EmptyDataRowException;
 use PrestaShop\PrestaShop\Core\Import\File\DataRow\DataRowInterface;
 use Product;
 use ProductDownload;
@@ -88,24 +87,9 @@ final class ProductImportHandler extends AbstractImportHandler
     private $accessoryTable;
 
     /**
-     * @var Configuration
-     */
-    private $configuration;
-
-    /**
      * @var Address
      */
     private $shopAddress;
-
-    /**
-     * @var int
-     */
-    private $languageId;
-
-    /**
-     * @var Validate
-     */
-    private $validate;
 
     /**
      * @var Tools
@@ -168,13 +152,14 @@ final class ProductImportHandler extends AbstractImportHandler
             $logger,
             $employeeId,
             $legacyDatabase,
-            $cacheClearer
+            $cacheClearer,
+            $configuration,
+            $validate
         );
 
         $this->connection = $connection;
         $this->productTable = $dbPrefix.'product';
         $this->accessoryTable = $dbPrefix.'accessory';
-        $this->configuration = $configuration;
         $this->defaultValues = [
             'reference' => '',
             'supplier_reference' => '',
@@ -194,7 +179,6 @@ final class ProductImportHandler extends AbstractImportHandler
             'available_date' => date('Y-m-d'),
         ];
         $this->shopAddress = $shopAddress;
-        $this->validate = $validate;
         $this->tools = $tools;
         $this->imageCopier = $imageCopier;
         $this->importTypeLabel = $this->translator->trans('Products', [], 'Admin.Global');
@@ -224,12 +208,10 @@ final class ProductImportHandler extends AbstractImportHandler
         ImportRuntimeConfigInterface $runtimeConfig,
         DataRowInterface $dataRow
     ) {
-        if (!$this->languageId) {
-            $this->languageId = Language::getIdByIso($importConfig->getLanguageIso());
-
-            if (!$this->validate->isUnsignedInt($this->languageId)) {
-                $this->languageId = $this->configuration->getInt('PS_LANG_DEFAULT');
-            }
+        try {
+            parent::importRow($importConfig, $runtimeConfig, $dataRow);
+        } catch (EmptyDataRowException $e) {
+            return;
         }
 
         $entityFields = $runtimeConfig->getEntityFields();

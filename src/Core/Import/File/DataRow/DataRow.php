@@ -36,7 +36,7 @@ use PrestaShop\PrestaShop\Core\Import\File\DataCell\DataCellInterface;
 final class DataRow implements DataRowInterface
 {
     /**
-     * @var array of DataCellInterface objects
+     * @var DataCellInterface[]
      */
     private $cells = [];
 
@@ -110,5 +110,24 @@ final class DataRow implements DataRowInterface
     public function count()
     {
         return count($this->cells);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isEmpty()
+    {
+        if (0 === count($this->cells)) {
+            return true;
+        }
+
+        foreach ($this->cells as $cell) {
+            // If at least one cell is not empty - the row is not empty.
+            if ('' !== $cell->getValue()) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
