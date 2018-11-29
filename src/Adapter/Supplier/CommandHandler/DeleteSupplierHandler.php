@@ -76,6 +76,7 @@ final class DeleteSupplierHandler extends AbstractDeleteSupplierHandler implemen
 
             if (false === $this->deleteProductSupplierRelation($command->getSupplierId())) {
                 $this->rollbackTransaction();
+
                 throw new CannotDeleteSupplierProductRelationException(
                     sprintf(
                         'Unable to delete suppliers with id "%s" product relation from product_supplier table',
@@ -86,6 +87,7 @@ final class DeleteSupplierHandler extends AbstractDeleteSupplierHandler implemen
 
             if (false === $this->deleteSupplierAddress($command->getSupplierId())) {
                 $this->rollbackTransaction();
+
                 throw new CannotDeleteSupplierAddressException(
                     sprintf(
                         'Unable to set deleted flag for supplier with id "%s" address',
@@ -96,6 +98,7 @@ final class DeleteSupplierHandler extends AbstractDeleteSupplierHandler implemen
 
             if (false === $entity->delete()) {
                 $this->rollbackTransaction();
+
                 throw new CannotDeleteSupplierException(
                     $command->getSupplierId(),
                     sprintf(

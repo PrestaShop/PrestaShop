@@ -85,7 +85,7 @@ abstract class AbstractDeleteSupplierHandler
     }
 
     /**
-     * Commits the transaction.
+     * Commits mysql transaction.
      */
     protected function commitTransaction()
     {
