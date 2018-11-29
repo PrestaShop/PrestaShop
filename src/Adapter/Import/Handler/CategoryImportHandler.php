@@ -255,11 +255,10 @@ final class CategoryImportHandler extends AbstractImportHandler
             }
 
             $sharedData = $runtimeConfig->getSharedData();
-            if ($this->propertyAccessor->isReadable($sharedData, "[cat_moved][$category->id_parent]")) {
-                $category->parent = $this->propertyAccessor->getValue(
-                    $sharedData,
-                    "[cat_moved][$category->id_parent]"
-                );
+            $movedCategories = isset($sharedData['cat_moved']) ? $sharedData['cat_moved'] : [];
+
+            if (isset($movedCategories[$category->parent])) {
+                $category->parent = $movedCategories[$category->parent];
             }
             $category->id_parent = $category->parent;
         } elseif (is_string($category->parent)) {
@@ -450,7 +449,7 @@ final class CategoryImportHandler extends AbstractImportHandler
                 );
             }
             // If no id_category or update failed
-            $category->force_id = $importConfig->forceIds();
+            $category->force_id = (bool) $importConfig->forceIds();
             if (!$result && !$runtimeConfig->shouldValidateData()) {
                 $result = $category->add();
                 if ($categoryId && $category->id != $categoryId) {
@@ -522,7 +521,7 @@ final class CategoryImportHandler extends AbstractImportHandler
                     ]
                 );
 
-                if (empty($sharedData)) {
+                if (empty($shopData)) {
                     $shopData = implode($importConfig->getMultipleValueSeparator(), $this->contextShopIds);
                 }
 
