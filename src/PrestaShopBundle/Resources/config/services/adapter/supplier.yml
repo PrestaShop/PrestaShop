@@ -8,6 +8,9 @@ services:
       - '@prestashop.core.image.parser.image_tag_source_parser'
       - "@=service('prestashop.adapter.legacy.context').getContext().shop.id"
 
+  prestashop.adapter.supplier.supplier_order_validator:
+    class: 'PrestaShop\PrestaShop\Adapter\Supplier\SupplierOrderValidator'
+
 # Command handlers
 
   prestashop.adapter.supplier.command_handler.toggle_supplier_status_handler:
