@@ -27,8 +27,8 @@
 namespace PrestaShop\PrestaShop\Core\Import\Exception;
 
 /**
- * Class EmptyDataRowException thrown when the import handler finds an empty data row.
+ * Class InvalidDataRowException thrown when import handler encounters an invalid data row.
  */
-class EmptyDataRowException extends InvalidDataRowException
+class InvalidDataRowException extends ImportException
 {
 }

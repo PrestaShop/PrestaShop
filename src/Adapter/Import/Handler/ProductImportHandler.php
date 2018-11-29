@@ -43,7 +43,6 @@ use PrestaShop\PrestaShop\Adapter\Validate;
 use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerInterface;
 use PrestaShop\PrestaShop\Core\Import\Configuration\ImportConfigInterface;
 use PrestaShop\PrestaShop\Core\Import\Configuration\ImportRuntimeConfigInterface;
-use PrestaShop\PrestaShop\Core\Import\Exception\EmptyDataRowException;
 use PrestaShop\PrestaShop\Core\Import\File\DataRow\DataRowInterface;
 use Product;
 use ProductDownload;
@@ -208,11 +207,7 @@ final class ProductImportHandler extends AbstractImportHandler
         ImportRuntimeConfigInterface $runtimeConfig,
         DataRowInterface $dataRow
     ) {
-        try {
-            parent::importRow($importConfig, $runtimeConfig, $dataRow);
-        } catch (EmptyDataRowException $e) {
-            return;
-        }
+        parent::importRow($importConfig, $runtimeConfig, $dataRow);
 
         $entityFields = $runtimeConfig->getEntityFields();
         $productId = $this->fetchProductId(
