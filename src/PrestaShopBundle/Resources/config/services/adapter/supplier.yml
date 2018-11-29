@@ -23,6 +23,7 @@ services:
     class: PrestaShop\PrestaShop\Adapter\Supplier\CommandHandler\DeleteSupplierHandler
     arguments:
       - '@prestashop.adapter.supplier.supplier_order_validator'
+      - '%database_prefix%'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Supplier\Command\DeleteSupplierCommand
