@@ -39,9 +39,11 @@ services:
 
   prestashop.adapter.supplier.command_handler.bulk_delete_supplier_handler:
     class: PrestaShop\PrestaShop\Adapter\Supplier\CommandHandler\BulkDeleteSupplierHandler
+    parent: prestashop.adapter.supplier.command_handler.abstract_delete_supplier_handler
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Supplier\Command\BulkDeleteSupplierCommand
+    public: true
 
   prestashop.adapter.supplier.command_handler.bulk_disable_supplier_handler:
     class: PrestaShop\PrestaShop\Adapter\Supplier\CommandHandler\BulkDisableSupplierHandler
