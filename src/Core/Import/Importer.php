@@ -94,11 +94,8 @@ final class Importer implements ImporterInterface
         ImportRuntimeConfigInterface $runtimeConfig,
         ImportHandlerInterface $importHandler
     ) {
-        if ($this->shouldTruncateData($importConfig, $runtimeConfig) && $this->accessChecker->canTruncateData()) {
-            $this->entityDeleter->deleteAll($importConfig->getEntityType());
-        }
+        $this->setUp($importHandler, $importConfig, $runtimeConfig);
 
-        $importHandler->setUp($importConfig, $runtimeConfig);
         $importFile = new SplFileInfo($this->importDir.$importConfig->getFileName());
 
         // Current row index
@@ -126,7 +123,7 @@ final class Importer implements ImporterInterface
             }
 
             // If import process limit is reached - stop importing the rows.
-            if ($rowIndex > $limit) {
+            if ($rowIndex >= $limit) {
                 // On the first iteration we need to continue counting the number of rows
                 if ($isFirstIteration) {
                     continue;
@@ -155,15 +152,7 @@ final class Importer implements ImporterInterface
             $runtimeConfig->incrementProcessIndex();
         }
 
-        // Calculating shared data size and adding some extra bytes for other values.
-        $runtimeConfig->setRequestSizeInBytes(
-            mb_strlen(json_encode($runtimeConfig->getSharedData())) + 1024 * 64
-        );
-        $runtimeConfig->setPostSizeLimitInBytes($this->iniConfiguration->getUploadMaxSizeInBytes());
-        $runtimeConfig->setNotices($importHandler->getNotices());
-        $runtimeConfig->setWarnings($importHandler->getWarnings());
-        $runtimeConfig->setErrors($importHandler->getErrors());
-        $importHandler->tearDown($importConfig, $runtimeConfig);
+        $this->tearDown($importHandler, $importConfig, $runtimeConfig);
     }
 
     /**
@@ -200,5 +189,48 @@ final class Importer implements ImporterInterface
             0 === $runtimeConfig->getOffset() &&
             0 === $runtimeConfig->getProcessIndex()
         ;
+    }
+
+    /**
+     * Set the import process up.
+     *
+     * @param ImportHandlerInterface $importHandler
+     * @param ImportConfigInterface $importConfig
+     * @param ImportRuntimeConfigInterface $runtimeConfig
+     */
+    private function setUp(
+        ImportHandlerInterface $importHandler,
+        ImportConfigInterface $importConfig,
+        ImportRuntimeConfigInterface $runtimeConfig
+    ) {
+        if ($this->shouldTruncateData($importConfig, $runtimeConfig) && $this->accessChecker->canTruncateData()) {
+            $this->entityDeleter->deleteAll($importConfig->getEntityType());
+        }
+
+        $importHandler->setUp($importConfig, $runtimeConfig);
+    }
+
+    /**
+     * Tear the import process down.
+     *
+     * @param ImportHandlerInterface $importHandler
+     * @param ImportConfigInterface $importConfig
+     * @param ImportRuntimeConfigInterface $runtimeConfig
+     */
+    private function tearDown(
+        ImportHandlerInterface $importHandler,
+        ImportConfigInterface $importConfig,
+        ImportRuntimeConfigInterface $runtimeConfig
+    ) {
+        $importHandler->tearDown($importConfig, $runtimeConfig);
+
+        // Calculating shared data size and adding some extra bytes for other values.
+        $runtimeConfig->setRequestSizeInBytes(
+            mb_strlen(json_encode($runtimeConfig->getSharedData())) + 1024 * 64
+        );
+        $runtimeConfig->setPostSizeLimitInBytes($this->iniConfiguration->getUploadMaxSizeInBytes());
+        $runtimeConfig->setNotices($importHandler->getNotices());
+        $runtimeConfig->setWarnings($importHandler->getWarnings());
+        $runtimeConfig->setErrors($importHandler->getErrors());
     }
 }
