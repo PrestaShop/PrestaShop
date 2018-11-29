@@ -27,8 +27,6 @@
 namespace PrestaShop\PrestaShop\Adapter\Supplier\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Entity\Db;
-use PrestaShop\PrestaShop\Adapter\Supplier\SupplierAddressProvider;
-use PrestaShop\PrestaShop\Adapter\Supplier\SupplierOrderValidator;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Command\DeleteSupplierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\CommandHandler\DeleteSupplierHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\CannotDeleteSupplierAddressException;
@@ -63,7 +61,7 @@ final class DeleteSupplierHandler extends AbstractDeleteSupplierHandler implemen
                 );
             }
 
-            if ($this->supplierOrderValidator->hasPendingOrders($command->getSupplierId()->getValue())) {
+            if ($this->hasPendingOrders($command->getSupplierId())) {
                 throw new CannotDeleteSupplierException(
                     $command->getSupplierId(),
                     sprintf(
