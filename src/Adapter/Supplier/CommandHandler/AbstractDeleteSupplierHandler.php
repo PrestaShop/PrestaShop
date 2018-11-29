@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Supplier\CommandHandler;
 
+use Address;
 use Db;
 use PrestaShop\PrestaShop\Adapter\Supplier\SupplierAddressProvider;
 use PrestaShop\PrestaShop\Adapter\Supplier\SupplierOrderValidator;
@@ -124,5 +125,17 @@ abstract class AbstractDeleteSupplierHandler
         }
 
         return true;
+    }
+
+    /**
+     * Checks if the given supplier has pending orders.
+     *
+     * @param SupplierId $supplierId
+     *
+     * @return bool
+     */
+    protected function hasPendingOrders(SupplierId $supplierId)
+    {
+        return $this->supplierOrderValidator->hasPendingOrders($supplierId->getValue());
     }
 }

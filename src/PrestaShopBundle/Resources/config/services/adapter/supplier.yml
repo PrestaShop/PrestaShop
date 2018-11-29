@@ -16,6 +16,13 @@ services:
 
 # Command handlers
 
+  prestashop.adapter.supplier.command_handler.abstract_delete_supplier_handler:
+    class: PrestaShop\PrestaShop\Adapter\Supplier\CommandHandler\AbstractDeleteSupplierHandler
+    arguments:
+      - '@prestashop.adapter.supplier.supplier_order_validator'
+      - '@prestashop.adapter.supplier.provider.supplier_address'
+      - '%database_prefix%'
+
   prestashop.adapter.supplier.command_handler.toggle_supplier_status_handler:
     class: PrestaShop\PrestaShop\Adapter\Supplier\CommandHandler\ToggleSupplierStatusHandler
     tags:
@@ -24,13 +31,11 @@ services:
 
   prestashop.adapter.supplier.command_handler.delete_supplier_handler:
     class: PrestaShop\PrestaShop\Adapter\Supplier\CommandHandler\DeleteSupplierHandler
-    arguments:
-      - '@prestashop.adapter.supplier.supplier_order_validator'
-      - '@prestashop.adapter.supplier.provider.supplier_address'
-      - '%database_prefix%'
+    parent: prestashop.adapter.supplier.command_handler.abstract_delete_supplier_handler
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Supplier\Command\DeleteSupplierCommand
+    public: true
 
   prestashop.adapter.supplier.command_handler.bulk_delete_supplier_handler:
     class: PrestaShop\PrestaShop\Adapter\Supplier\CommandHandler\BulkDeleteSupplierHandler
