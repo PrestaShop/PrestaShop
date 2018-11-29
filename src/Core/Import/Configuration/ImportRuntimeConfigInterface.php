@@ -126,6 +126,33 @@ interface ImportRuntimeConfigInterface
     public function setTotalNumberOfRows($number);
 
     /**
+     * Set notices that occurred during the import process.
+     *
+     * @param array $notices
+     *
+     * @return array
+     */
+    public function setNotices(array $notices);
+
+    /**
+     * Set warnings that occurred during the import process.
+     *
+     * @param array $warnings
+     *
+     * @return array
+     */
+    public function setWarnings(array $warnings);
+
+    /**
+     * Set errors that occurred during the import process.
+     *
+     * @param array $errors
+     *
+     * @return array
+     */
+    public function setErrors(array $errors);
+
+    /**
      * Convert object to an array.
      *
      * @return array
