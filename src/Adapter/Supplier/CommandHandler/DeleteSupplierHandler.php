@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Supplier\CommandHandler;
 
+use PrestaShop\PrestaShop\Adapter\Supplier\SupplierOrderValidator;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Command\DeleteSupplierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\CommandHandler\DeleteSupplierHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\CannotDeleteSupplierException;
@@ -39,6 +40,19 @@ use Supplier;
  */
 final class DeleteSupplierHandler implements DeleteSupplierHandlerInterface
 {
+    /**
+     * @var SupplierOrderValidator
+     */
+    private $supplierOrderValidator;
+
+    /**
+     * @param SupplierOrderValidator $supplierOrderValidator
+     */
+    public function __construct(SupplierOrderValidator $supplierOrderValidator)
+    {
+        $this->supplierOrderValidator = $supplierOrderValidator;
+    }
+
     /**
      * {@inheritdoc}
      *
@@ -55,6 +69,17 @@ final class DeleteSupplierHandler implements DeleteSupplierHandlerInterface
                         'Supplier object with id "%s" has not been found for deletion.',
                         $command->getSupplierId()->getValue()
                     )
+                );
+            }
+
+            if ($this->supplierOrderValidator->hasPendingOrders($command->getSupplierId()->getValue())) {
+                throw new CannotDeleteSupplierException(
+                    $command->getSupplierId(),
+                    sprintf(
+                        'Supplier with id %s cannot be deleted due to it has pending orders',
+                        $command->getSupplierId()->getValue()
+                    ),
+                    CannotDeleteSupplierException::HAS_PENDING_ORDERS
                 );
             }
 
