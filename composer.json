@@ -120,7 +120,8 @@
         "johnkary/phpunit-speedtrap": "^1.1",
         "phake/phake": "@stable",
         "phpunit/phpunit": "~5.7",
-        "symfony/phpunit-bridge": "^3.0"
+        "symfony/phpunit-bridge": "^3.0",
+        "behat/behat": "^3.5"
     },
     "autoload-dev": {
         "psr-4": {
@@ -183,6 +184,9 @@
         "phpunit-controllers": [
             "@composer create-test-db",
             "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests-legacy/old-controllers.xml"
+        ],
+        "integration-domain-tests": [
+            "@php -d date.timezone=UTC ./vendor/bin/behat -c tests/Integration/Domain/behat.yml"
         ],
         "create-release": "@php tools/build/CreateRelease.php",
         "git-hook-install": "@php .github/contrib/install.php",
