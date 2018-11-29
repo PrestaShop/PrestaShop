@@ -48,7 +48,7 @@ use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 /**
- * Class SupplierGridDefinitionFactory
+ * Class SupplierGridDefinitionFactory creates definition for supplier grid.
  */
 final class SupplierGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
