@@ -31,12 +31,12 @@ use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\BirthdayType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Type is used to created form for customer add/edit actions
@@ -95,7 +95,9 @@ class CustomerType extends AbstractType
             ->add('first_name', TextType::class)
             ->add('last_name', TextType::class)
             ->add('email', EmailType::class)
-            ->add('password', PasswordType::class)
+            ->add('password', PasswordType::class, [
+                'required' => $options['is_password_required'],
+            ])
             ->add('birthday', BirthdayType::class, [
                 'required' => false,
             ])
@@ -135,5 +137,20 @@ class CustomerType extends AbstractType
                 ])
             ;
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver
+            ->setDefaults([
+                // password is configurable
+                // so it may be optional when editing customer
+                'is_password_required' => true,
+            ])
+            ->setAllowedTypes('is_password_required', 'bool')
+        ;
     }
 }
