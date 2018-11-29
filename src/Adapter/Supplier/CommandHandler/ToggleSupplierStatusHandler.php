@@ -66,7 +66,6 @@ final class ToggleSupplierStatusHandler implements ToggleSupplierStatusHandlerIn
                     )
                 );
             }
-
         } catch (PrestaShopException $exception) {
             throw new SupplierException(
                 sprintf(

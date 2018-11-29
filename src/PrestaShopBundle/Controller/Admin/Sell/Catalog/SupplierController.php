@@ -333,6 +333,7 @@ class SupplierController extends FrameworkBundleAdminController
      * Exports to csv visible suppliers list data.
      *
      * @param SupplierFilters $filters
+     *
      * @return CsvResponse
      */
     public function exportAction(SupplierFilters $filters)

@@ -35,8 +35,6 @@ interface ToggleSupplierStatusHandlerInterface
 {
     /**
      * @param ToggleSupplierStatusCommand $command
-     *
-     * @return void
      */
     public function handle(ToggleSupplierStatusCommand $command);
 }

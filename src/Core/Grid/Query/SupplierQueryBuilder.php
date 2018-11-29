@@ -233,7 +233,7 @@ final class SupplierQueryBuilder extends AbstractDoctrineQueryBuilder
             }
 
             if (in_array($filterName, ['id_supplier', 'active'], true)) {
-                $qb->andWhere($alias . '.`' . $filterName .'` = :' . $filterName);
+                $qb->andWhere($alias . '.`' . $filterName . '` = :' . $filterName);
                 $qb->setParameter($filterName, $value);
 
                 continue;

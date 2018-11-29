@@ -210,6 +210,7 @@ abstract class AbstractDeleteSupplierHandler
 
         if ($address->id) {
             $address->deleted = true;
+
             return $address->update();
         }
 
