@@ -33,6 +33,8 @@ use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\SupplierId;
  */
 class CannotDeleteSupplierException extends SupplierException
 {
+    const HAS_PENDING_ORDERS = 1;
+
     /**
      * @var SupplierId
      */

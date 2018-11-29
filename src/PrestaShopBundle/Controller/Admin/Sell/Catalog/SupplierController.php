@@ -439,6 +439,12 @@ class SupplierController extends FrameworkBundleAdminController
                     'Admin.Notifications.Error'
                 ),
             ],
+            CannotDeleteSupplierException::class => [
+                CannotDeleteSupplierException::HAS_PENDING_ORDERS => $this->trans(
+                    'It is not possible to delete a supplier if there are pending supplier orders.',
+                    'Admin.Catalog.Notification'
+                ),
+            ],
         ];
 
         $exceptionType = get_class($exception);
