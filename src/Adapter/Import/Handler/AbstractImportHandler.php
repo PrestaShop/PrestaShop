@@ -39,6 +39,8 @@ use PrestaShop\PrestaShop\Core\Import\Exception\EmptyDataRowException;
 use PrestaShop\PrestaShop\Core\Import\File\DataRow\DataRowInterface;
 use PrestaShop\PrestaShop\Core\Import\Handler\ImportHandlerInterface;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\PropertyAccess\PropertyAccess;
+use Symfony\Component\PropertyAccess\PropertyAccessor;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -100,6 +102,11 @@ abstract class AbstractImportHandler implements ImportHandlerInterface
      * @var Validate
      */
     protected $validate;
+
+    /**
+     * @var PropertyAccessor
+     */
+    protected $propertyAccessor;
 
     /**
      * Callback methods with field names as keys.
@@ -211,6 +218,7 @@ abstract class AbstractImportHandler implements ImportHandlerInterface
         $this->cacheClearer = $cacheClearer;
         $this->configuration = $configuration;
         $this->validate = $validate;
+        $this->propertyAccessor = PropertyAccess::createPropertyAccessor();
     }
 
     /**
