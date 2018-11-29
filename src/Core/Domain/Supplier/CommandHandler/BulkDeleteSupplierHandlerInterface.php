@@ -35,8 +35,6 @@ interface BulkDeleteSupplierHandlerInterface
 {
     /**
      * @param BulkDeleteSupplierCommand $command
-     *
-     * @return void
      */
     public function handle(BulkDeleteSupplierCommand $command);
 }

@@ -48,7 +48,7 @@ class CannotDeleteSupplierException extends SupplierException
      */
     public function __construct(
         SupplierId $supplierId,
-        $message = "",
+        $message = '',
         $code = 0,
         $previous = null
     ) {

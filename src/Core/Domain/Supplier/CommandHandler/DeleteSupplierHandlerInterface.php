@@ -35,8 +35,6 @@ interface DeleteSupplierHandlerInterface
 {
     /**
      * @param DeleteSupplierCommand $command
-     *
-     * @return void
      */
     public function handle(DeleteSupplierCommand $command);
 }
