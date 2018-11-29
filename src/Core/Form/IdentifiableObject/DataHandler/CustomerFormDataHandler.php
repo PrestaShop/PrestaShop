@@ -116,6 +116,7 @@ final class CustomerFormDataHandler implements FormDataHandlerInterface
             ->setWebsite($data['website'])
             ->setAllowedOutstandingAmount($data['allowed_outstanding_amount'])
             ->setMaxPaymentDays($data['max_payment_days'])
+            ->setRiskId($data['risk_id'])
         ;
 
         return $command;
