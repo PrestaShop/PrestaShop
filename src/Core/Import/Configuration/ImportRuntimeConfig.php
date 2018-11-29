@@ -221,9 +221,7 @@ final class ImportRuntimeConfig implements ImportRuntimeConfigInterface
     {
         return [
             'crossStepsVariables' => $this->sharedData,
-            'offset' => $this->offset,
-            'limit' => $this->limit,
-            'doneCount' => $this->offset + $this->processedRows,
+            'doneCount' => $this->processedRows,
             'isFinished' => $this->isFinished(),
             'nextPostSize' => $this->requestSize,
             'postSizeLimit' => $this->postSizeLimit,

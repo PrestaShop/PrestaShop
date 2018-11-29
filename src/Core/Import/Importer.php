@@ -96,13 +96,13 @@ final class Importer implements ImporterInterface
         $rowIndex = 0;
 
         // Number of rows processed during import process.
-        $processedRows = 0;
+        $processedRows = $runtimeConfig->getOffset();
 
         // Total number of importable rows in the whole file.
         $totalNumberOfRows = 0;
 
         $skipRows = $importConfig->getNumberOfRowsToSkip() + $runtimeConfig->getOffset();
-        $limit = $runtimeConfig->getLimit();
+        $limit = $runtimeConfig->getLimit() + $skipRows;
         $isFirstIteration = $this->isFirstIteration($runtimeConfig);
 
         foreach ($this->fileReader->read($importFile) as $dataRow) {
