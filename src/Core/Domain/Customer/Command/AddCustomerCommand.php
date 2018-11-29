@@ -87,6 +87,41 @@ class AddCustomerCommand
     private $shopId;
 
     /**
+     * @var string|null Only for B2b customers
+     */
+    private $companyName;
+
+    /**
+     * @var string|null Only for B2b customers
+     */
+    private $siretCode;
+
+    /**
+     * @var string|null Only for B2b customers
+     */
+    private $apeCode;
+
+    /**
+     * @var string|null Only for B2b customers
+     */
+    private $website;
+
+    /**
+     * @var float|null Only for B2b customers
+     */
+    private $allowedOutstandingAmount;
+
+    /**
+     * @var int|null Only for B2b customers
+     */
+    private $maxPaymentDays;
+
+    /**
+     * @var int|null Only for B2b customers
+     */
+    private $riskId;
+
+    /**
      * @param string $firstName
      * @param string $lastName
      * @param string $email
@@ -211,5 +246,144 @@ class AddCustomerCommand
     public function getShopId()
     {
         return $this->shopId;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getCompanyName()
+    {
+        return $this->companyName;
+    }
+
+    /**
+     * @param string|null $companyName
+     *
+     * @return self
+     */
+    public function setCompanyName($companyName)
+    {
+        $this->companyName = $companyName;
+
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getSiretCode()
+    {
+        return $this->siretCode;
+    }
+
+    /**
+     * @param string|null $siretCode
+     *
+     * @return self
+     */
+    public function setSiretCode($siretCode)
+
+    {
+        $this->siretCode = $siretCode;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getApeCode()
+    {
+        return $this->apeCode;
+    }
+
+    /**
+     * @param string|null $apeCode
+     *
+     * @return self
+     */
+    public function setApeCode($apeCode)
+    {
+        $this->apeCode = $apeCode;
+
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getWebsite()
+    {
+        return $this->website;
+    }
+
+    /**
+     * @param string|null $website
+     *
+     * @return self
+     */
+    public function setWebsite($website)
+    {
+        $this->website = $website;
+
+        return $this;
+    }
+
+    /**
+     * @return float|null
+     */
+    public function getAllowedOutstandingAmount()
+    {
+        return $this->allowedOutstandingAmount;
+    }
+
+    /**
+     * @param float|null $allowedOutstandingAmount
+     * @return self
+     */
+    public function setAllowedOutstandingAmount($allowedOutstandingAmount)
+    {
+        $this->allowedOutstandingAmount = $allowedOutstandingAmount;
+
+        return $this;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getMaxPaymentDays()
+    {
+        return $this->maxPaymentDays;
+    }
+
+    /**
+     * @param int|null $maxPaymentDays
+     *
+     * @return self
+     */
+    public function setMaxPaymentDays($maxPaymentDays)
+    {
+        $this->maxPaymentDays = $maxPaymentDays;
+
+        return $this;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getRiskId()
+    {
+        return $this->riskId;
+    }
+
+    /**
+     * @param int|null $riskId
+     *
+     * @return self
+     */
+    public function setRiskId($riskId)
+    {
+        $this->riskId = $riskId;
+
+        return $this;
     }
 }
