@@ -1,7 +1,6 @@
 Integration tests
 =================
 
-
 ## Run
 
 Run tests using behat binary using the right behat.yml configuration file
