@@ -54,4 +54,12 @@ final class ContextEmployeeProvider implements ContextEmployeeProviderInterface
     {
         return $this->contextEmployee->isSuperAdmin();
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getId()
+    {
+        return $this->contextEmployee->id;
+    }
 }

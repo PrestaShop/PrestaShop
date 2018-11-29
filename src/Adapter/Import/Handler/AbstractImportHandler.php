@@ -28,10 +28,12 @@ namespace PrestaShop\PrestaShop\Adapter\Import\Handler;
 
 use ObjectModel;
 use PrestaShop\PrestaShop\Adapter\Import\ImportDataFormatter;
+use PrestaShop\PrestaShop\Core\Employee\ContextEmployeeProviderInterface;
 use PrestaShop\PrestaShop\Core\Import\Configuration\ImportConfigInterface;
 use PrestaShop\PrestaShop\Core\Import\Configuration\ImportRuntimeConfigInterface;
 use PrestaShop\PrestaShop\Core\Import\File\DataRow\DataRowInterface;
 use PrestaShop\PrestaShop\Core\Import\Handler\ImportHandlerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -68,6 +70,11 @@ abstract class AbstractImportHandler implements ImportHandlerInterface
      * @var array all shops ids
      */
     protected $allShopIds;
+
+    /**
+     * @var string import type label.
+     */
+    protected $importTypeLabel;
 
     /**
      * Callback methods with field names as keys.
@@ -122,6 +129,16 @@ abstract class AbstractImportHandler implements ImportHandlerInterface
     private $contextLanguageId;
 
     /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
+     * @var int employee ID, used for logs.
+     */
+    private $employeeId;
+
+    /**
      * @param ImportDataFormatter $dataFormatter
      * @param array $allShopIds
      * @param array $contextShopIds
@@ -129,6 +146,8 @@ abstract class AbstractImportHandler implements ImportHandlerInterface
      * @param bool $isMultistoreEnabled
      * @param int $contextLanguageId
      * @param TranslatorInterface $translator
+     * @param LoggerInterface $logger
+     * @param int $employeeId
      */
     public function __construct(
         ImportDataFormatter $dataFormatter,
@@ -137,7 +156,9 @@ abstract class AbstractImportHandler implements ImportHandlerInterface
         $currentContextShopId,
         $isMultistoreEnabled,
         $contextLanguageId,
-        TranslatorInterface $translator
+        TranslatorInterface $translator,
+        LoggerInterface $logger,
+        $employeeId
     ) {
         $this->dataFormatter = $dataFormatter;
         $this->contextShopIds = $contextShopIds;
@@ -146,6 +167,8 @@ abstract class AbstractImportHandler implements ImportHandlerInterface
         $this->translator = $translator;
         $this->allShopIds = $allShopIds;
         $this->contextLanguageId = $contextLanguageId;
+        $this->logger = $logger;
+        $this->employeeId = $employeeId;
     }
 
     /**
@@ -205,7 +228,30 @@ abstract class AbstractImportHandler implements ImportHandlerInterface
      */
     public function tearDown(ImportConfigInterface $importConfig, ImportRuntimeConfigInterface $runtimeConfig)
     {
+        $offset = $runtimeConfig->getOffset();
+        $limit = $runtimeConfig->getLimit();
 
+        $logMessage = sprintf(
+            $this->translator->trans('%s import', [], 'Admin.Advparameters.Notification'),
+            $this->importTypeLabel
+        );
+        $logMessage .= ' ';
+        $logMessage .= sprintf(
+            $this->translator->trans('(from %s to %s)', [], 'Admin.Advparameters.Notification'),
+            $offset,
+            $limit
+        );
+        if ($importConfig->truncate()) {
+            $logMessage .= ' ';
+            $logMessage .= $this->translator->trans('with truncate', [], 'Admin.Advparameters.Notification');
+        }
+        $this->logger->notice(
+            $logMessage,
+            [
+                'employee_id' => $this->employeeId,
+                'object_type' => $this->importTypeLabel,
+            ]
+        );
     }
 
     /**
