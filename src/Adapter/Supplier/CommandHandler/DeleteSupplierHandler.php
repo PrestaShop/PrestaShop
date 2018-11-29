@@ -95,7 +95,20 @@ final class DeleteSupplierHandler implements DeleteSupplierHandlerInterface
                 );
             }
 
+            Db::getInstance()->execute('START TRANSACTION;');
+
+            if (false === $this->deleteProductSupplierRelation($command->getSupplierId())) {
+                Db::getInstance()->execute('ROLLBACK;');
+                throw new CannotDeleteSupplierProductRelationException(
+                    sprintf(
+                        'Unable to delete suppliers with id "%s" product relation from product_supplier table',
+                        $command->getSupplierId()->getValue()
+                    )
+                );
+            }
+
             if (false === $entity->delete()) {
+                Db::getInstance()->execute('ROLLBACK;');
                 throw new CannotDeleteSupplierException(
                     $command->getSupplierId(),
                     sprintf(
@@ -105,14 +118,7 @@ final class DeleteSupplierHandler implements DeleteSupplierHandlerInterface
                 );
             }
 
-            if (false === $this->deleteProductSupplierRelation($command->getSupplierId())) {
-                throw new CannotDeleteSupplierProductRelationException(
-                    sprintf(
-                        'Unable to delete suppliers with id "%s" product relation from product_supplier table',
-                        $command->getSupplierId()->getValue()
-                    )
-                );
-            }
+            Db::getInstance()->execute('COMMIT;');
         } catch (PrestaShopException $exception) {
             throw new SupplierException(
                 sprintf(
