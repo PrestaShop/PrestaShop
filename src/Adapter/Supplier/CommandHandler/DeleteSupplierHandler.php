@@ -26,12 +26,15 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Supplier\CommandHandler;
 
+use PrestaShop\PrestaShop\Adapter\Entity\Db;
 use PrestaShop\PrestaShop\Adapter\Supplier\SupplierOrderValidator;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Command\DeleteSupplierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\CommandHandler\DeleteSupplierHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\CannotDeleteSupplierException;
+use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\CannotDeleteSupplierProductRelationException;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierException;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\SupplierId;
 use PrestaShopException;
 use Supplier;
 
@@ -46,11 +49,20 @@ final class DeleteSupplierHandler implements DeleteSupplierHandlerInterface
     private $supplierOrderValidator;
 
     /**
-     * @param SupplierOrderValidator $supplierOrderValidator
+     * @var string
      */
-    public function __construct(SupplierOrderValidator $supplierOrderValidator)
-    {
+    private $dbPrefix;
+
+    /**
+     * @param SupplierOrderValidator $supplierOrderValidator
+     * @param string $dbPrefix
+     */
+    public function __construct(
+        SupplierOrderValidator $supplierOrderValidator,
+        $dbPrefix
+    ) {
         $this->supplierOrderValidator = $supplierOrderValidator;
+        $this->dbPrefix = $dbPrefix;
     }
 
     /**
@@ -92,6 +104,15 @@ final class DeleteSupplierHandler implements DeleteSupplierHandlerInterface
                     )
                 );
             }
+
+            if (false === $this->deleteProductSupplierRelation($command->getSupplierId())) {
+                throw new CannotDeleteSupplierProductRelationException(
+                    sprintf(
+                        'Unable to delete suppliers with id "%s" product relation from product_supplier table',
+                        $command->getSupplierId()->getValue()
+                    )
+                );
+            }
         } catch (PrestaShopException $exception) {
             throw new SupplierException(
                 sprintf(
@@ -102,5 +123,19 @@ final class DeleteSupplierHandler implements DeleteSupplierHandlerInterface
                 $exception
             );
         }
+    }
+
+    /**
+     * Deletes product supplier relation
+     *
+     * @param SupplierId $supplierId
+     *
+     * @return bool
+     */
+    private function deleteProductSupplierRelation(SupplierId $supplierId)
+    {
+        $sql = 'DELETE FROM `' . $this->dbPrefix . 'product_supplier` WHERE `id_supplier`=' . $supplierId->getValue();
+
+        return Db::getInstance()->execute($sql);
     }
 }
