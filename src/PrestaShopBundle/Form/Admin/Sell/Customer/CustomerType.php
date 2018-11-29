@@ -29,7 +29,9 @@ namespace PrestaShopBundle\Form\Admin\Sell\Customer;
 use PrestaShopBundle\Form\Admin\Type\Material\MaterialChoiceTableType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\BirthdayType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
@@ -94,7 +96,9 @@ class CustomerType extends AbstractType
             ->add('last_name', TextType::class)
             ->add('email', EmailType::class)
             ->add('password', PasswordType::class)
-
+            ->add('birthday', BirthdayType::class, [
+                'required' => false,
+            ])
             ->add('is_enabled', SwitchType::class)
             ->add('is_partner_offers_subscribed', SwitchType::class)
             ->add('group_ids', MaterialChoiceTableType::class, [
@@ -107,7 +111,7 @@ class CustomerType extends AbstractType
 
         if ($this->isB2bFeatureEnabled) {
             $builder
-                ->add('company', TextType::class, [
+                ->add('company_name', TextType::class, [
                     'required' => false,
                 ])
                 ->add('siret_code', TextType::class, [

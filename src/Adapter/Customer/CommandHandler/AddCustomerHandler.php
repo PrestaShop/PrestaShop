@@ -30,6 +30,7 @@ use Customer;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\AddCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\CommandHandler\AddCustomerHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerException;
+use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 
 /**
  * Handles command that adds new customer
@@ -57,10 +58,21 @@ final class AddCustomerHandler implements AddCustomerHandlerInterface
         $customer->birthday = $command->getBirthday();
         $customer->id_shop = $command->getShopId();
 
-        if (false === $customer->validateFields(false)) {
+        // fill b2b customer fields
+        $customer->company = $command->getCompanyName();
+        $customer->siret = $command->getSiretCode();
+        $customer->ape = $command->getApeCode();
+        $customer->website = $command->getWebsite();
+        $customer->outstanding_allow_amount = $command->getAllowedOutstandingAmount();
+        $customer->max_payment_days = $command->getMaxPaymentDays();
+        $customer->id_risk = $command->getRiskId();
+
+        if (false === $customer->validateFields()) {
             throw new CustomerException('Customer contains invalid field values');
         }
 
         $customer->add();
+
+        return new CustomerId((int) $customer->id);
     }
 }

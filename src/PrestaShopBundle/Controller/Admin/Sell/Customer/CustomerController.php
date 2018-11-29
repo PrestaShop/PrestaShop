@@ -88,6 +88,17 @@ class CustomerController extends AbstractAdminController
         $customerForm = $this->get('prestashop.core.form.identifiable_object.builder.customer_form_builder')->getForm();
         $customerForm->handleRequest($request);
 
+        $customerFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.customer_form_handler');
+        $result = $customerFormHandler->handle($customerForm);
+
+        if ($customerId = $result->getIdentifiableObjectId()) {
+            $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+
+            return $this->redirectToRoute('admin_customers_edit', [
+                'customerId' => $customerId,
+            ]);
+        }
+
         return $this->render('@PrestaShop/Admin/Sell/Customer/create.html.twig', [
             'customerForm' => $customerForm->createView(),
         ]);
