@@ -309,6 +309,8 @@ final class ProductImportHandler extends AbstractImportHandler
      */
     public function tearDown(ImportConfigInterface $importConfig, ImportRuntimeConfigInterface $runtimeConfig)
     {
+        parent::tearDown($importConfig, $runtimeConfig);
+
         if (!$runtimeConfig->shouldValidateData()) {
             Module::processDeferedFuncCall();
             Module::processDeferedClearCache();
