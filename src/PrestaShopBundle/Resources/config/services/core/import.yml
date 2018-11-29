@@ -125,3 +125,4 @@ services:
             - '@prestashop.adapter.import.entity_deleter'
             - '@prestashop.core.import.csv_file_reader'
             - '@prestashop.core.import.dir'
+            - '@prestashop.core.configuration.ini_configuration'

@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Import;
 
+use PrestaShop\PrestaShop\Core\Configuration\IniConfiguration;
 use PrestaShop\PrestaShop\Core\Import\Access\ImportAccessCheckerInterface;
 use PrestaShop\PrestaShop\Core\Import\Configuration\ImportConfigInterface;
 use PrestaShop\PrestaShop\Core\Import\Configuration\ImportRuntimeConfigInterface;
@@ -60,21 +61,29 @@ final class Importer implements ImporterInterface
     private $importDir;
 
     /**
+     * @var IniConfiguration
+     */
+    private $iniConfiguration;
+
+    /**
      * @param ImportAccessCheckerInterface $accessChecker
      * @param ImportEntityDeleterInterface $entityDeleter
      * @param FileReaderInterface $fileReader
      * @param ImportDirectory $importDir
+     * @param IniConfiguration $iniConfiguration
      */
     public function __construct(
         ImportAccessCheckerInterface $accessChecker,
         ImportEntityDeleterInterface $entityDeleter,
         FileReaderInterface $fileReader,
-        ImportDirectory $importDir
+        ImportDirectory $importDir,
+        IniConfiguration $iniConfiguration
     ) {
         $this->entityDeleter = $entityDeleter;
         $this->accessChecker = $accessChecker;
         $this->fileReader = $fileReader;
         $this->importDir = $importDir;
+        $this->iniConfiguration = $iniConfiguration;
     }
 
     /**
@@ -146,6 +155,14 @@ final class Importer implements ImporterInterface
             $runtimeConfig->incrementProcessIndex();
         }
 
+        // Calculating shared data size and adding some extra bytes for other values.
+        $runtimeConfig->setRequestSizeInBytes(
+            mb_strlen(json_encode($runtimeConfig->getSharedData())) + 1024 * 64
+        );
+        $runtimeConfig->setPostSizeLimitInBytes($this->iniConfiguration->getUploadMaxSizeInBytes());
+        $runtimeConfig->setNotices($importHandler->getNotices());
+        $runtimeConfig->setWarnings($importHandler->getWarnings());
+        $runtimeConfig->setErrors($importHandler->getErrors());
         $importHandler->tearDown($importConfig, $runtimeConfig);
     }
 
