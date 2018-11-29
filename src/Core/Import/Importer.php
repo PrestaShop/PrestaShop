@@ -31,6 +31,8 @@ use PrestaShop\PrestaShop\Core\Import\Access\ImportAccessCheckerInterface;
 use PrestaShop\PrestaShop\Core\Import\Configuration\ImportConfigInterface;
 use PrestaShop\PrestaShop\Core\Import\Configuration\ImportRuntimeConfigInterface;
 use PrestaShop\PrestaShop\Core\Import\Entity\ImportEntityDeleterInterface;
+use PrestaShop\PrestaShop\Core\Import\Exception\InvalidDataRowException;
+use PrestaShop\PrestaShop\Core\Import\Exception\SkippedIterationException;
 use PrestaShop\PrestaShop\Core\Import\File\FileReaderInterface;
 use PrestaShop\PrestaShop\Core\Import\Handler\ImportHandlerInterface;
 use SplFileInfo;
@@ -131,14 +133,21 @@ final class Importer implements ImporterInterface
                 break;
             }
 
-            // Import one row
-            $importHandler->importRow(
-                $importConfig,
-                $runtimeConfig,
-                $dataRow
-            );
-            $processedRows++;
-            $rowIndex++;
+            try {
+                // Import one row
+                $importHandler->importRow(
+                    $importConfig,
+                    $runtimeConfig,
+                    $dataRow
+                );
+            } catch (InvalidDataRowException $e) {
+                continue;
+            } catch (SkippedIterationException $e) {
+                continue;
+            } finally {
+                $processedRows++;
+                $rowIndex++;
+            }
         }
 
         // Calculate total number of rows only in the first import iteration.

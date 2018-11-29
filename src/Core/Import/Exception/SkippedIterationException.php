@@ -27,8 +27,8 @@
 namespace PrestaShop\PrestaShop\Core\Import\Exception;
 
 /**
- * Class EmptyDataRowException thrown when the import handler finds an empty data row.
+ * Class SkippedIterationException thrown when an import iteration is skipped.
  */
-class EmptyDataRowException extends InvalidDataRowException
+class SkippedIterationException extends ImportException
 {
 }
