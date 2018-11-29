@@ -124,7 +124,8 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "LegacyTests\\": "tests-legacy/"
+            "LegacyTests\\": "tests-legacy/",
+            "Tests\\": "tests/"
         },
         "files": [
             "vendor/symfony/symfony/src/Symfony/Component/VarDumper/Resources/functions/dump.php"
@@ -163,6 +164,9 @@
         "phpunit-legacy": [
             "@composer create-test-db",
             "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests-legacy/phpunit.xml"
+        ],
+        "unit-tests": [
+            "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests/Unit/phpunit.xml"
         ],
         "phpunit-admin": [
             "@composer create-test-db",
