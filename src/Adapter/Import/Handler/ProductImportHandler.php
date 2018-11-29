@@ -41,12 +41,14 @@ use PrestaShop\PrestaShop\Adapter\Import\ImageCopier;
 use PrestaShop\PrestaShop\Adapter\Import\ImportDataFormatter;
 use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShop\PrestaShop\Adapter\Validate;
+use PrestaShop\PrestaShop\Core\Employee\ContextEmployeeProviderInterface;
 use PrestaShop\PrestaShop\Core\Import\Configuration\ImportConfigInterface;
 use PrestaShop\PrestaShop\Core\Import\Configuration\ImportRuntimeConfigInterface;
 use PrestaShop\PrestaShop\Core\Import\File\DataRow\DataRowInterface;
 use Product;
 use ProductDownload;
 use ProductSupplier;
+use Psr\Log\LoggerInterface;
 use Shop;
 use SpecificPrice;
 use StockAvailable;
@@ -127,6 +129,8 @@ final class ProductImportHandler extends AbstractImportHandler
      * @param bool $isMultistoreEnabled
      * @param int $contextLanguageId
      * @param TranslatorInterface $translator
+     * @param LoggerInterface $logger
+     * @param int $employeeId
      * @param Connection $connection
      * @param string $dbPrefix
      * @param Configuration $configuration
@@ -144,6 +148,8 @@ final class ProductImportHandler extends AbstractImportHandler
         $isMultistoreEnabled,
         $contextLanguageId,
         TranslatorInterface $translator,
+        LoggerInterface $logger,
+        $employeeId,
         Connection $connection,
         $dbPrefix,
         Configuration $configuration,
@@ -160,7 +166,9 @@ final class ProductImportHandler extends AbstractImportHandler
             $currentContextShopId,
             $isMultistoreEnabled,
             $contextLanguageId,
-            $translator
+            $translator,
+            $logger,
+            $employeeId
         );
 
         $this->connection = $connection;
@@ -190,6 +198,7 @@ final class ProductImportHandler extends AbstractImportHandler
         $this->validate = $validate;
         $this->tools = $tools;
         $this->imageCopier = $imageCopier;
+        $this->importTypeLabel = $this->translator->trans('Products', [], 'Admin.Global');
     }
 
     /**

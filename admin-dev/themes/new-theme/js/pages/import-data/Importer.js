@@ -59,7 +59,7 @@ export default class Importer {
     this.progressModal.reset();
     this.progressModal.show();
 
-    // Starting the import with 5 elements in batch.
+    // Starting the import with default batch size, which is adjusted for next iterations.
     this._ajaxImport(0, this.defaultBatchSize);
   }
 
@@ -137,8 +137,8 @@ export default class Importer {
           this.batchSizeCalculator.markImportEnd();
 
           // Calculate next import batch size and offset.
-          let nextBatchSize = this.batchSizeCalculator.calculateBatchSize(batchSize);
           let nextOffset = offset + batchSize;
+          let nextBatchSize = this.batchSizeCalculator.calculateBatchSize(batchSize, this.totalRowsCount);
 
           // Showing a warning if post size limit is about to be reached.
           if (this.postSizeChecker.isReachingPostSizeLimit(response.postSizeLimit, response.nextPostSize)) {
