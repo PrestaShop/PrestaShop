@@ -26,39 +26,49 @@
 
 namespace Tests\Unit\Core\ConstraintValidator;
 
-use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\IsUrlRewrite;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\IsUrlRewriteValidator;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Test\ConstraintValidatorTestCase;
 
 /**
  * Class IsUrlRewriteValidatorTest
  */
-class IsUrlRewriteValidatorTest extends TestCase
+class IsUrlRewriteValidatorTest extends ConstraintValidatorTestCase
 {
     public function testItThrowsUnexpectedTypeExceptionOnIncorrectConstraintProvided()
     {
         $this->expectException(UnexpectedTypeException::class);
 
-        $isUrlRewrite = $this->createUrlRewriteValidator();
-
-        $isUrlRewrite->validate('valid-value', new NotBlank());
+        $this->validator->validate('valid-value', new NotBlank());
     }
 
     /**
-     * @dataProvider incorrectTypeRewriteUrls
+     * @dataProvider getIncorrectTypeRewriteUrls
      */
     public function testItThrowsUnexpectedTypeExceptionOnIncorrectValueTypeProvided($incorrectTypeRewriteUrl)
     {
         $this->expectException(UnexpectedTypeException::class);
 
-        $isUrlRewrite = $this->createUrlRewriteValidator();
-
-        $isUrlRewrite->validate($incorrectTypeRewriteUrl, new IsUrlRewrite());
+        $this->validator->validate($incorrectTypeRewriteUrl, new IsUrlRewrite());
     }
 
-    public function incorrectTypeRewriteUrls()
+    /**
+     * @dataProvider getIncorrectRewriteUrls
+     */
+    public function testItFindsIncorrectUrlRewritePattern($incorrectRewriteUrl)
+    {
+        $this->validator->validate($incorrectRewriteUrl, new IsUrlRewrite());
+
+        $this->buildViolation('Value "%value%" is invalid.')
+            ->setParameter('%value%', $incorrectRewriteUrl)
+            ->assertRaised()
+        ;
+    }
+
+    public function getIncorrectTypeRewriteUrls()
     {
         return [
             [
@@ -70,12 +80,25 @@ class IsUrlRewriteValidatorTest extends TestCase
         ];
     }
 
-    private function createUrlRewriteValidatorWithAscendingCharsAllowed()
+    public function getIncorrectRewriteUrls()
     {
-        return new IsUrlRewriteValidator(true);
+        return [
+            [
+                'test@!',
+            ],
+            [
+                '*test2*',
+            ],
+            [
+                'TęstĄČĘĖ',
+            ],
+            [
+                'tes/t/001',
+            ]
+        ];
     }
 
-    private function createUrlRewriteValidator()
+    protected function createValidator()
     {
         return new IsUrlRewriteValidator(false);
     }
