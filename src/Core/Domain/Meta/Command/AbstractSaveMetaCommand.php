@@ -34,6 +34,8 @@ use PrestaShop\PrestaShop\Core\Domain\Meta\Exception\MetaConstraintException;
 abstract class AbstractSaveMetaCommand
 {
     /**
+     * @todo: finish all validations
+     * 
      * Validates page name.
      *
      * @param string $pageName

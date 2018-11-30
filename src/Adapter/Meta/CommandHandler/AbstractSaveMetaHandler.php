@@ -24,44 +24,25 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\Meta;
-
-use Meta;
+namespace PrestaShop\PrestaShop\Adapter\Meta\CommandHandler;
 
 /**
- * todo: remove
- * Class MetaFormDataValidator is responsible for validating meta form fields according to entity.
+ * todo: inject some kind of validator service which will be used in constraints as well etc...
+ * Class AbstractSaveMetaHandler
  */
-class MetaFormDataValidator
+abstract class AbstractSaveMetaHandler
 {
     /**
-     * Validates meta form data and returns formatted error.
+     * Checks if url rewrite is set. It is not required only for index page so it can be skipped in such case.
      *
-     * @param array $data
      *
-     * @return array
+     * @param string $pageName
+     * @param string[] $rewriteUrl
      *
-     * @throws \PrestaShopDatabaseException
-     * @throws \PrestaShopException
+     * @return bool
      */
-    public function validate(array $data)
+    protected function doesUrlRewriteExists($pageName, array $rewriteUrl)
     {
-        $entity = new Meta();
-
-        $entity->page = $data['page_name'];
-        $entity->title = $data['page_title'];
-        $entity->description = $data['meta_description'];
-        $entity->keywords = $data['meta_keywords'];
-        $entity->url_rewrite = $data['url_rewrite'];
-
-        if (true !== $error = $entity->validateFields(false, true)) {
-            return [$error];
-        }
-
-        if (true !== $error = $entity->validateFieldsLang(false, true)) {
-            return [$error];
-        }
-
-        return [];
+        return 'index' === $pageName ? true : !empty(array_filter($rewriteUrl));
     }
 }

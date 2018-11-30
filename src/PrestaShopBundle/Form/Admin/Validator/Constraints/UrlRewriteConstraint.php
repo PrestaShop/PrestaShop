@@ -24,44 +24,25 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\Meta;
+namespace PrestaShopBundle\Form\Admin\Validator\Constraints;
 
-use Meta;
+use PrestaShopBundle\Form\Admin\Validator\UrlRewriteValidator;
+use Symfony\Component\Validator\Constraint;
 
 /**
- * todo: remove
- * Class MetaFormDataValidator is responsible for validating meta form fields according to entity.
+ * Class UrlRewriteConstraint.
+ *
+ * @Annotation
  */
-class MetaFormDataValidator
+class UrlRewriteConstraint extends Constraint
 {
+    public $message = 'The string "{{ string }}" contains illegal characters';
+
     /**
-     * Validates meta form data and returns formatted error.
-     *
-     * @param array $data
-     *
-     * @return array
-     *
-     * @throws \PrestaShopDatabaseException
-     * @throws \PrestaShopException
+     * {@inheritdoc}
      */
-    public function validate(array $data)
+    public function validatedBy()
     {
-        $entity = new Meta();
-
-        $entity->page = $data['page_name'];
-        $entity->title = $data['page_title'];
-        $entity->description = $data['meta_description'];
-        $entity->keywords = $data['meta_keywords'];
-        $entity->url_rewrite = $data['url_rewrite'];
-
-        if (true !== $error = $entity->validateFields(false, true)) {
-            return [$error];
-        }
-
-        if (true !== $error = $entity->validateFieldsLang(false, true)) {
-            return [$error];
-        }
-
-        return [];
+        return UrlRewriteValidator::class;
     }
 }
