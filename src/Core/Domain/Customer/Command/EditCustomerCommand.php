@@ -89,6 +89,41 @@ class EditCustomerCommand
     private $birthday;
 
     /**
+     * @var string|null
+     */
+    private $companyName;
+
+    /**
+     * @var string|null
+     */
+    private $siretCode;
+
+    /**
+     * @var string|null
+     */
+    private $apeCode;
+
+    /**
+     * @var string|null
+     */
+    private $website;
+
+    /**
+     * @var float|null
+     */
+    private $allowedOutstandingAmount;
+
+    /**
+     * @var int|null
+     */
+    private $maxPaymentDays;
+
+    /**
+     * @var int|null
+     */
+    private $riskId;
+
+    /**
      * @param CustomerId $customerId
      */
     public function __construct(CustomerId $customerId)
@@ -270,5 +305,117 @@ class EditCustomerCommand
     public function setBirthday($birthday)
     {
         $this->birthday = $birthday;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getCompanyName()
+    {
+        return $this->companyName;
+    }
+
+    /**
+     * @param string|null $companyName
+     */
+    public function setCompanyName($companyName)
+    {
+        $this->companyName = $companyName;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getSiretCode()
+    {
+        return $this->siretCode;
+    }
+
+    /**
+     * @param string|null $siretCode
+     */
+    public function setSiretCode($siretCode)
+    {
+        $this->siretCode = $siretCode;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getApeCode()
+    {
+        return $this->apeCode;
+    }
+
+    /**
+     * @param string|null $apeCode
+     */
+    public function setApeCode($apeCode)
+    {
+        $this->apeCode = $apeCode;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getWebsite()
+    {
+        return $this->website;
+    }
+
+    /**
+     * @param string|null $website
+     */
+    public function setWebsite($website)
+    {
+        $this->website = $website;
+    }
+
+    /**
+     * @return float|null
+     */
+    public function getAllowedOutstandingAmount()
+    {
+        return $this->allowedOutstandingAmount;
+    }
+
+    /**
+     * @param float|null $allowedOutstandingAmount
+     */
+    public function setAllowedOutstandingAmount($allowedOutstandingAmount)
+    {
+        $this->allowedOutstandingAmount = $allowedOutstandingAmount;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getMaxPaymentDays()
+    {
+        return $this->maxPaymentDays;
+    }
+
+    /**
+     * @param int|null $maxPaymentDays
+     */
+    public function setMaxPaymentDays($maxPaymentDays)
+    {
+        $this->maxPaymentDays = $maxPaymentDays;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getRiskId()
+    {
+        return $this->riskId;
+    }
+
+    /**
+     * @param int|null $riskId
+     */
+    public function setRiskId($riskId)
+    {
+        $this->riskId = $riskId;
     }
 }
