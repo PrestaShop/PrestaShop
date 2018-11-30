@@ -75,7 +75,7 @@ final class GroupByIdChoiceProvider implements FormChoiceProviderInterface
                 continue;
             }
 
-            $choices[$group['name']] = $groupId;
+            $choices[$group['name']] = (int) $groupId;
         }
 
         return $choices;

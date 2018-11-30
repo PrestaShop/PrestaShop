@@ -69,14 +69,7 @@ class FirstName
      */
     private function assertFirstNameIsValid($firstName)
     {
-        $matchesFirstNamePattern = preg_match(
-            preg_replace(
-                '/\\\[px]\{[a-z]{1,2}\}|(\/[a-z]*)u([a-z]*)$/i',
-                '$1$2',
-                '/^[^0-9!<>,;?=+()@#"°{}_$%:¤|]*$/u'
-            ),
-            stripslashes($firstName)
-        );
+        $matchesFirstNamePattern = preg_match('/^[^0-9!<>,;?=+()@#"°{}_$%:¤|]*$/u', stripslashes($firstName));
 
         if (!$matchesFirstNamePattern) {
             throw new CustomerConstraintException(
@@ -96,7 +89,7 @@ class FirstName
         $firstName = html_entity_decode($firstName, ENT_COMPAT, 'UTF-8');
 
         $length = function_exists('mb_strlen') ? mb_strlen($firstName, 'UTF-8') : strlen($firstName);
-        if (self::MAX_LENGTH > $length) {
+        if (self::MAX_LENGTH < $length) {
             throw new CustomerConstraintException(
                 sprintf('Customer first name is too long. Max allowed length is %s',self::MAX_LENGTH),
                 CustomerConstraintException::INVALID_FIRST_NAME

@@ -114,12 +114,28 @@ class CustomerController extends AbstractAdminController
      */
     public function editAction($customerId, Request $request)
     {
-        return $this->redirect(
-            $this->getAdminLink($request->attributes->get('_legacy_controller'), [
-                'updatecustomer' => 1,
-                'id_customer' => $customerId,
-            ])
-        );
+        $customerFormOptions = [
+            'is_password_required' => false,
+        ];
+        $customerForm = $this->get('prestashop.core.form.identifiable_object.builder.customer_form_builder')
+            ->getFormFor((int) $customerId, [], $customerFormOptions)
+        ;
+        $customerForm->handleRequest($request);
+
+        $customerFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.customer_form_handler');
+        $result = $customerFormHandler->handleFor((int) $customerId, $customerForm);
+
+        if ($customerId = $result->getIdentifiableObjectId()) {
+            $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+
+            return $this->redirectToRoute('admin_customers_edit', [
+                'customerId' => $customerId,
+            ]);
+        }
+
+        return $this->render('@PrestaShop/Admin/Sell/Customer/edit.html.twig', [
+            'customerForm' => $customerForm->createView(),
+        ]);
     }
 
     /**
