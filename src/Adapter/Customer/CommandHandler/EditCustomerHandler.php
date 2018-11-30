@@ -59,6 +59,8 @@ final class EditCustomerHandler implements EditCustomerHandlerInterface
         }
 
         $customer->update();
+
+        return $customerId;
     }
 
     /**
@@ -72,23 +74,23 @@ final class EditCustomerHandler implements EditCustomerHandlerInterface
         }
 
         if (null !== $command->getFirstName()) {
-            $customer->firstname = $command->getFirstName();
+            $customer->firstname = $command->getFirstName()->getValue();
         }
 
         if (null !== $command->getLastName()) {
-            $customer->lastname = $command->getLastName();
+            $customer->lastname = $command->getLastName()->getValue();
         }
 
         if (null !== $command->getEmail()) {
-            $customer->email = $command->getEmail();
+            $customer->email = $command->getEmail()->getValue();
         }
 
         if (null !== $command->getPassword()) {
-            $customer->passwd = $command->getPassword();
+            $customer->passwd = $command->getPassword()->getValue();
         }
 
         if (null !== $command->getBirthday()) {
-            $customer->birthday = $command->getBirthday();
+            $customer->birthday = $command->getBirthday()->format('Y-m-d');
         }
 
         if (null !== $command->isEnabled()) {

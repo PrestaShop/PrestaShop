@@ -92,7 +92,7 @@ class Email
         $email = html_entity_decode($email, ENT_COMPAT, 'UTF-8');
 
         $length = function_exists('mb_strlen') ? mb_strlen($email, 'UTF-8') : strlen($email);
-        if (self::MAX_LENGTH > $length) {
+        if (self::MAX_LENGTH < $length) {
             throw new CustomerConstraintException(
                 sprintf('Customer email is too long. Max allowed length is %s',self::MAX_LENGTH),
                 CustomerConstraintException::INVALID_EMAIL

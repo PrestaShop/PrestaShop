@@ -26,9 +26,15 @@
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 
+use DateTime;
+use DateTimeImmutable;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\AddCustomerCommand;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Command\EditCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
+use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\Email;
+use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\FirstName;
+use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\LastName;
 
 /**
  * Saves or updates customer data submitted in form
@@ -81,8 +87,14 @@ final class CustomerFormDataHandler implements FormDataHandlerInterface
     /**
      * {@inheritdoc}
      */
-    public function update($id, array $data)
+    public function update($customerId, array $data)
     {
+        $command = $this->buildCustomerEditCommand($customerId, $data);
+
+        /** @var CustomerId $customerId */
+        $customerId = $this->bus->handle($command);
+
+        return $customerId->getValue();
     }
 
     /**
@@ -118,6 +130,50 @@ final class CustomerFormDataHandler implements FormDataHandlerInterface
             ->setMaxPaymentDays($data['max_payment_days'])
             ->setRiskId($data['risk_id'])
         ;
+
+        return $command;
+    }
+
+    /**
+     * @param int $customerId
+     * @param array $data
+     *
+     * @return EditCustomerCommand
+     */
+    private function buildCustomerEditCommand($customerId, array $data)
+    {
+        $command = new EditCustomerCommand(new CustomerId($customerId));
+        $command
+            ->setEmail(new Email($data['email']))
+            ->setFirstName(new FirstName($data['first_name']))
+            ->setLastName(new LastName($data['last_name']))
+            ->setIsEnabled($data['is_enabled'])
+            ->setIsPartnerOffersSubscribed($data['is_partner_offers_subscribed'])
+            ->setDefaultGroupId((int) $data['default_group_id'])
+            ->setCompanyName(null !== $data['company_name'] ? $data['company_name'] : '')
+            ->setSiretCode(null !== $data['siret_code'] ? $data['siret_code'] : '')
+            ->setApeCode(null !== $data['ape_code'] ? $data['ape_code'] : '')
+            ->setWebsite(null !== $data['website'] ? $data['website'] : '')
+            ->setAllowedOutstandingAmount(
+                null !== $data['allowed_outstanding_amount'] ? (float) $data['allowed_outstanding_amount'] : null
+            )
+            ->setMaxPaymentDays(null !== $data['max_payment_days'])
+            ->setRiskId($data['risk_id'])
+        ;
+
+        if (null !== $data['group_ids']) {
+            $command->setGroupIds(
+                array_map(function ($groupId) { return (int) $groupId; }, $data['group_ids'])
+            );
+        }
+
+        if (null !== $data['gender_id']) {
+            $command->setGenderId($data['gender_id']);
+        }
+
+        if ($data['birthday'] instanceof DateTime) {
+            $command->setBirthday(DateTimeImmutable::createFromMutable($data['birthday']));
+        }
 
         return $command;
     }
