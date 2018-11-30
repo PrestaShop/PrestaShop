@@ -66,11 +66,6 @@ use WarehouseProductLocation;
 final class ProductImportHandler extends AbstractImportHandler
 {
     /**
-     * @var array entity default values
-     */
-    private $defaultValues = [];
-
-    /**
      * @var Connection database connection
      */
     private $connection;

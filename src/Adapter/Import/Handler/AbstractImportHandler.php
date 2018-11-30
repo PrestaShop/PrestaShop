@@ -109,6 +109,11 @@ abstract class AbstractImportHandler implements ImportHandlerInterface
     protected $propertyAccessor;
 
     /**
+     * @var array entity default values
+     */
+    protected $defaultValues = [];
+
+    /**
      * Callback methods with field names as keys.
      * Callback methods are executed on fields during import process.
      *
@@ -134,11 +139,6 @@ abstract class AbstractImportHandler implements ImportHandlerInterface
         'delivery_in_stock',
         'delivery_out_stock',
     ];
-
-    /**
-     * @var array entity default values
-     */
-    private $defaultValues = [];
 
     /**
      * @var array
