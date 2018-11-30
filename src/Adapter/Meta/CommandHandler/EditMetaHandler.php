@@ -46,6 +46,7 @@ final class EditMetaHandler implements EditMetaHandlerInterface
      */
     public function handle(EditMetaCommand $command)
     {
+        //todo: rewrite url validation
         try {
             $entity = new Meta($command->getMetaId()->getValue());
 

@@ -65,25 +65,11 @@ class EditMetaCommand extends SaveMetaCommand
     private $rewriteUrl;
 
     /**
-     * SaveMetaCommand constructor.
-     *
      * @param MetaId $metaId
-     * @param string $pageName
-     * @param string[] $rewriteUrl
-     *
-     * @throws MetaConstraintException
      */
-    public function __construct(
-        MetaId $metaId,
-        $pageName,
-        array $rewriteUrl
-    ) {
-        $this->validatePageName($pageName);
-        $this->validateRewriteUrl($rewriteUrl, $pageName);
-
+    public function __construct(MetaId $metaId)
+    {
         $this->metaId = $metaId;
-        $this->pageName = $pageName;
-        $this->rewriteUrl = $rewriteUrl;
     }
 
     /**
@@ -100,6 +86,21 @@ class EditMetaCommand extends SaveMetaCommand
     public function getPageName()
     {
         return $this->pageName;
+    }
+
+    /**
+     * @param string $pageName
+     *
+     * @return self
+     *
+     * @throws MetaConstraintException
+     */
+    public function setPageName($pageName)
+    {
+        $this->validatePageName($pageName);
+        $this->pageName = $pageName;
+
+        return $this;
     }
 
     /**
@@ -168,5 +169,17 @@ class EditMetaCommand extends SaveMetaCommand
     public function getRewriteUrl()
     {
         return $this->rewriteUrl;
+    }
+
+    /**
+     * @param string[] $rewriteUrl
+     *
+     * @return self
+     */
+    public function setRewriteUrl($rewriteUrl)
+    {
+        $this->rewriteUrl = $rewriteUrl;
+
+        return $this;
     }
 }

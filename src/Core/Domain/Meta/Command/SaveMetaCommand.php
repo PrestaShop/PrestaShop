@@ -49,22 +49,4 @@ abstract class SaveMetaCommand
             );
         }
     }
-
-    /**
-     * Validates rewrite url in case of it's not the index page which can have empty value as rewrite url.
-     *
-     * @param array $rewriteUrl
-     * @param string $pageName
-     *
-     * @throws MetaConstraintException
-     */
-    protected function validateRewriteUrl(array $rewriteUrl, $pageName)
-    {
-        if ('index' !== $pageName && empty(array_filter($rewriteUrl))) {
-            throw new MetaConstraintException(
-                'Meta rewrite url is required',
-                MetaConstraintException::INVALID_URL_REWRITE
-            );
-        }
-    }
 }
