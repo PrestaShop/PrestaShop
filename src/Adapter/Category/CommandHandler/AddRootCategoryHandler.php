@@ -87,6 +87,6 @@ final class AddRootCategoryHandler extends AbstractCategoryHandler implements Ad
 
         $this->uploadImages($category, $command);
 
-        return new CategoryId($category->id);
+        return new CategoryId((int) $category->id);
     }
 }

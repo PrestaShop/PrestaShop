@@ -406,7 +406,7 @@ class CategoryController extends FrameworkBundleAdminController
         }
 
         try {
-            $this->getCommandBus()->handle(new DeleteCategoryCoverImageCommand(new CategoryId($categoryId)));
+            $this->getCommandBus()->handle(new DeleteCategoryCoverImageCommand(new CategoryId((int) $categoryId)));
 
             $this->addFlash(
                 'success',
@@ -447,7 +447,7 @@ class CategoryController extends FrameworkBundleAdminController
 
         try {
             $this->getCommandBus()->handle(new DeleteCategoryMenuThumbnailImageCommand(
-                new CategoryId($categoryId),
+                new CategoryId((int) $categoryId),
                 new MenuThumbnailId($menuThumbnailId)
             ));
 
@@ -609,7 +609,7 @@ class CategoryController extends FrameworkBundleAdminController
         }
 
         try {
-            $command = new ToggleCategoryStatusCommand(new CategoryId($categoryId));
+            $command = new ToggleCategoryStatusCommand(new CategoryId((int) $categoryId));
 
             $this->getCommandBus()->handle($command);
 
@@ -761,7 +761,7 @@ class CategoryController extends FrameworkBundleAdminController
 
             try {
                 $command = new DeleteCategoryCommand(
-                    new CategoryId(reset($categoriesDeleteData['categories_to_delete'])),
+                    new CategoryId((int) reset($categoriesDeleteData['categories_to_delete'])),
                     new CategoryDeleteMode($categoriesDeleteData['delete_mode'])
                 );
 

@@ -59,6 +59,6 @@ final class AddCategoryHandler extends AbstractCategoryHandler implements AddCat
 
         $this->uploadImages($category, $command);
 
-        return new CategoryId($category->id);
+        return new CategoryId((int) $category->id);
     }
 }

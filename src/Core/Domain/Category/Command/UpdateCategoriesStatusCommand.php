@@ -91,7 +91,7 @@ class UpdateCategoriesStatusCommand
         }
 
         foreach ($categoryIds as $categoryId) {
-            $this->categoryIds[] = new CategoryId($categoryId);
+            $this->categoryIds[] = new CategoryId((int) $categoryId);
         }
 
         return $this;
