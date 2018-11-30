@@ -51,11 +51,6 @@ use Symfony\Component\Translation\TranslatorInterface;
 final class CategoryImportHandler extends AbstractImportHandler
 {
     /**
-     * @var int
-     */
-    private $defaultLanguageId;
-
-    /**
      * @var array core categories IDs, such as Root and Home.
      */
     private $coreCategories;
@@ -152,7 +147,6 @@ final class CategoryImportHandler extends AbstractImportHandler
     {
         parent::setUp($importConfig, $runtimeConfig);
 
-        $this->defaultLanguageId = $this->configuration->getInt('PS_LANG_DEFAULT');
         $this->coreCategories = [
             $this->configuration->getInt('PS_ROOT_CATEGORY'),
             $this->configuration->getInt('PS_HOME_CATEGORY'),
