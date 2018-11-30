@@ -84,7 +84,7 @@ class EditCategoryCommand extends AbstractCategoryCommand
             );
         }
 
-        if ($this->categoryId->isEqual(new CategoryId($parentCategoryId))) {
+        if ($this->categoryId->isEqual(new CategoryId((int) $parentCategoryId))) {
             throw new CategoryConstraintException('Category cannot be parent of itself.');
         }
 
