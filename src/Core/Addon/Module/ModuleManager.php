@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Addon\Module;
 
 use Exception;
+use PrestaShop\PrestaShop\Adapter\Cache\CacheClearer;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
@@ -39,7 +40,6 @@ use PrestaShopBundle\Event\ModuleManagementEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\Translation\TranslatorInterface;
-use Tools;
 
 class ModuleManager implements AddonManagerInterface
 {
@@ -96,6 +96,11 @@ class ModuleManager implements AddonManagerInterface
     private $actionParams;
 
     /**
+     * @var CacheClearer
+     */
+    private $cacheClearer;
+
+    /**
      * Used to check if the cache has already been cleaned.
      *
      * @var bool
@@ -110,6 +115,7 @@ class ModuleManager implements AddonManagerInterface
      * @param ModuleZipManager $moduleZipManager
      * @param TranslatorInterface $translator
      * @param EventDispatcherInterface $eventDispatcher
+     * @param CacheClearer $cacheClearer
      */
     public function __construct(
         AdminModuleDataProvider $adminModuleProvider,
@@ -118,7 +124,8 @@ class ModuleManager implements AddonManagerInterface
         ModuleRepository $moduleRepository,
         ModuleZipManager $moduleZipManager,
         TranslatorInterface $translator,
-        EventDispatcherInterface $eventDispatcher
+        EventDispatcherInterface $eventDispatcher,
+        CacheClearer $cacheClearer
     ) {
         $this->adminModuleProvider = $adminModuleProvider;
         $this->moduleProvider = $modulesProvider;
@@ -127,7 +134,7 @@ class ModuleManager implements AddonManagerInterface
         $this->moduleZipManager = $moduleZipManager;
         $this->translator = $translator;
         $this->eventDispatcher = $eventDispatcher;
-
+        $this->cacheClearer = $cacheClearer;
         $this->actionParams = new ParameterBag();
     }
 
@@ -785,7 +792,7 @@ class ModuleManager implements AddonManagerInterface
             return;
         }
 
-        Tools::clearAllCache();
+        $this->cacheClearer->clearSymfonyCache();
         $this->cacheCleared = true;
     }
 }
