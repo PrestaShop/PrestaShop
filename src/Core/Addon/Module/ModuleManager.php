@@ -599,7 +599,7 @@ class ModuleManager implements AddonManagerInterface
 
         $module = $this->moduleRepository->getModule($name);
         try {
-            $result =  $module->onMobileEnable();
+            $result = $module->onMobileEnable();
         } catch (Exception $e) {
             throw new Exception(
                 $this->translator->trans(
