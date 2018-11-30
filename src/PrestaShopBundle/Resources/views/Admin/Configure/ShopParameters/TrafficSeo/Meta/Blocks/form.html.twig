@@ -23,6 +23,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
+{% import '@PrestaShop/Admin/macros.html.twig' as ps %}
+
 {% block form %}
     {{ form_start(metaForm) }}
       <div class="card">
@@ -32,16 +34,15 @@
         <div class="card-block row">
           <div class="card-text">
             <div class="form-group row">
-              <label class="form-control-label">
+              <label for="{{ metaForm.page_name.vars.id }}" class="form-control-label">
                 {{ ps.label_with_help('Page name'|trans({}, 'Admin.Shopparameters.Feature'), ('Name of the related page.'|trans({}, 'Admin.Shopparameters.Help'))) }}
               </label>
               <div class="col-sm">
-                {{ form_errors(metaForm.page_name) }}
-                {{ form_widget(metaForm.page_name) }}
+                {{ ps.form_widget_with_error(metaForm.page_name) }}
               </div>
             </div>
             <div class="form-group row">
-              <label class="form-control-label">
+              <label for="{{ metaForm.page_title.vars.id }}" class="form-control-label">
                 {% set pageTilteLabel %}
                   {{ 'Title of this page.'|trans({}, 'Admin.Shopparameters.Help') }}
                   {{ 'Invalid characters:'|trans({}, 'Admin.Shopparameters.Help') ~ '  &lt;&gt;;=#{}'}}
@@ -50,12 +51,11 @@
                 {{ ps.label_with_help('Page title'|trans({}, 'Admin.Shopparameters.Feature'), (pageTilteLabel))}}
               </label>
               <div class="col-sm">
-                {{ form_errors(metaForm.page_title) }}
-                {{ form_widget(metaForm.page_title) }}
+                {{ ps.form_widget_with_error(metaForm.page_title) }}
               </div>
             </div>
             <div class="form-group row">
-              <label class="form-control-label">
+              <label for="{{ metaForm.meta_description.vars.id }}" class="form-control-label">
                 {% set metaDescriptionLabel %}
                   {{ 'A short description of your shop.'|trans({}, 'Admin.Shopparameters.Help') }}
                   {{ 'Invalid characters:'|trans({}, 'Admin.Shopparameters.Help') ~ ' &lt;&gt;;=#{}' }}
@@ -63,12 +63,11 @@
                 {{ ps.label_with_help('Meta description'|trans({}, 'Admin.Global'), (metaDescriptionLabel))}}
               </label>
               <div class="col-sm">
-                {{ form_errors(metaForm.meta_description) }}
-                {{ form_widget(metaForm.meta_description) }}
+                {{ ps.form_widget_with_error(metaForm.meta_description) }}
               </div>
             </div>
             <div class="form-group row">
-              <label class="form-control-label">
+              <label for="{{ metaForm.meta_keywords.vars.id }}" class="form-control-label">
                 {% set metaKeywordsLabel %}
                   {{ 'List of keywords for search engines.'|trans({}, 'Admin.Shopparameters.Help') }}
                   {{ 'To add tags, click in the field, write something, and then press the "Enter" key.'|trans({}, 'Admin.Shopparameters.Help') }}
@@ -77,12 +76,11 @@
                 {{ ps.label_with_help('Meta keywords'|trans({}, 'Admin.Global'), (metaKeywordsLabel))}}
               </label>
               <div class="col-sm">
-                {{ form_errors(metaForm.meta_keywords) }}
-                {{ form_widget(metaForm.meta_keywords) }}
+                {{ ps.form_widget_with_error(metaForm.meta_keywords) }}
               </div>
             </div>
             <div class="form-group row">
-              <label class="form-control-label">
+              <label for="{{ metaForm.url_rewrite.vars.id }}" class="form-control-label">
                 {% set rewriteUrlLabel %}
                   {{ 'For instance, "contacts" for http://example.com/shop/contacts to redirect to http://example.com/shop/contact-form.php'|trans({}, 'Admin.Shopparameters.Help') }}
                   {{ 'Only letters and hyphens are allowed.'|trans({}, 'Admin.Shopparameters.Help') }}
@@ -90,8 +88,7 @@
                 {{ ps.label_with_help('Rewritten URL'|trans({}, 'Admin.Shopparameters.Feature'), (rewriteUrlLabel))}}
               </label>
               <div class="col-sm">
-                {{ form_errors(metaForm.url_rewrite) }}
-                {{ form_widget(metaForm.url_rewrite) }}
+                {{ ps.form_widget_with_error(metaForm.url_rewrite) }}
               </div>
             </div>
             {{ form_rest(metaForm) }}

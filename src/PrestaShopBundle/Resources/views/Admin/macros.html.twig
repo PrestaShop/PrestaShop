@@ -99,11 +99,31 @@
     <small class="form-text">{{ extraVars.help }}</small>
   {% endif %}
 
-  {% for error in form.vars.errors %}
-    <div class="text-danger">
-      {{ error.message }}
-    </div>
+  {% set attr = vars.attr|default({}) %}
+  {% set errors = [] %}
+
+  {% for parentError in form.vars.errors %}
+    {% set errors = errors|merge([parentError.message]) %}
   {% endfor %}
+
+  {% for child in form.children %}
+    {% for error in child.vars.errors %}
+      {% set errors = errors|merge([error.message]) %}
+    {% endfor %}
+  {% endfor %}
+
+  {% set attr = attr|merge({'class': (attr.class is defined ? attr.class : '') ~ (errors|length > 0 ? ' is-invalid' : '')} ) %}
+  {% set vars = vars|merge({'attr': attr}) %}
+
+  {{ form_widget(form, vars) }}
+
+  {% if errors|length > 0 %}
+      {% for error in errors %}
+        <div class="text-danger">
+          {{ error }}
+        </div>
+      {% endfor %}
+  {% endif %}
 {% endmacro %}
 
  {#
