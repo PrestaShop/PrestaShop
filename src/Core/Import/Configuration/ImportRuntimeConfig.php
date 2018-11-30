@@ -208,6 +208,14 @@ final class ImportRuntimeConfig implements ImportRuntimeConfigInterface
     /**
      * {@inheritdoc}
      */
+    public function getNumberOfProcessedRows()
+    {
+        return $this->processedRows;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function setRequestSizeInBytes($size)
     {
         $this->requestSize = $size;

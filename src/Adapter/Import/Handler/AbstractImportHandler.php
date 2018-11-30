@@ -316,7 +316,6 @@ abstract class AbstractImportHandler implements ImportHandlerInterface
     {
         if (!$runtimeConfig->shouldValidateData()) {
             $offset = $runtimeConfig->getOffset();
-            $limit = $runtimeConfig->getLimit();
 
             $logMessage = sprintf(
                 $this->translator->trans('%s import', [], 'Admin.Advparameters.Notification'),
@@ -326,7 +325,7 @@ abstract class AbstractImportHandler implements ImportHandlerInterface
             $logMessage .= sprintf(
                 $this->translator->trans('(from %s to %s)', [], 'Admin.Advparameters.Notification'),
                 $offset,
-                $limit
+                $runtimeConfig->getNumberOfProcessedRows() + $offset
             );
             if ($importConfig->truncate()) {
                 $logMessage .= ' ';
