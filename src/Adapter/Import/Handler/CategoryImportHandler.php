@@ -137,6 +137,12 @@ final class CategoryImportHandler extends AbstractImportHandler
         $this->tools = $tools;
         $this->connection = $connection;
         $this->dbPrefix = $dbPrefix;
+        $this->importTypeLabel = $this->translator->trans('Categories', [], 'Admin.Global');
+        $this->defaultValues = [
+            'active' => '1',
+            'parent' => $this->configuration->getInt('PS_HOME_CATEGORY'),
+            'link_rewrite' => '',
+        ];
     }
 
     /**
@@ -176,6 +182,7 @@ final class CategoryImportHandler extends AbstractImportHandler
 
         $category->id_shop_default = $this->currentContextShopId;
 
+        $this->setDefaultValues($category);
         $this->fillEntityData($category, $entityFields, $dataRow, $this->languageId);
         $this->findParentCategory($category, $runtimeConfig, $categoryId);
         $this->fillLinkRewrite($category, $categoryId);
@@ -331,11 +338,11 @@ final class CategoryImportHandler extends AbstractImportHandler
     {
         if (isset($category->link_rewrite) && !empty($category->link_rewrite[$this->defaultLanguageId])) {
             $validLinkRewrite = $this->validate->isLinkRewrite($category->link_rewrite[$this->defaultLanguageId]);
+            $linkRewrite = $category->link_rewrite[$this->defaultLanguageId];
         } else {
             $validLinkRewrite = false;
+            $linkRewrite = $category->link_rewrite;
         }
-
-        $linkRewrite = $category->link_rewrite[$this->defaultLanguageId];
 
         if (empty($linkRewrite) || !$validLinkRewrite) {
             $category->link_rewrite = $this->dataFormatter->createFriendlyUrl(
