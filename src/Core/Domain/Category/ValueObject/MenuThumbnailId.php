@@ -50,7 +50,7 @@ class MenuThumbnailId
     {
         $this->assertMenuThumbnailIsWithinAllowedValueRange($menuThumbnailId);
 
-        $this->menuThumbnailId = (int) $menuThumbnailId;
+        $this->menuThumbnailId = $menuThumbnailId;
     }
 
     /**
@@ -66,7 +66,7 @@ class MenuThumbnailId
      */
     private function assertMenuThumbnailIsWithinAllowedValueRange($menuThumbnailId)
     {
-        if (!is_numeric($menuThumbnailId) || !in_array($menuThumbnailId, self::ALLOWED_ID_VALUES)) {
+        if (!is_int($menuThumbnailId) || !in_array($menuThumbnailId, self::ALLOWED_ID_VALUES)) {
             throw new CategoryException(
                 sprintf(
                     'Category menu  thumbnail id "%s" invalid. Available values are: %s',

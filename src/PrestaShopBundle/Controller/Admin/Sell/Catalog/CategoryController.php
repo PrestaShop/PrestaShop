@@ -448,7 +448,7 @@ class CategoryController extends FrameworkBundleAdminController
         try {
             $this->getCommandBus()->handle(new DeleteCategoryMenuThumbnailImageCommand(
                 new CategoryId((int) $categoryId),
-                new MenuThumbnailId($menuThumbnailId)
+                new MenuThumbnailId((int) $menuThumbnailId)
             ));
 
             $this->addFlash(
