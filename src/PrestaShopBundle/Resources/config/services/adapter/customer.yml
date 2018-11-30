@@ -49,3 +49,9 @@ services:
     tags:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForEditing'
+
+  prestashop.adapter.customer.command_handler.get_customer_for_editing:
+    class: 'PrestaShop\PrestaShop\Adapter\Customer\CommandHandler\EditCustomerHandler'
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\Customer\Command\EditCustomerCommand'

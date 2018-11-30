@@ -69,14 +69,7 @@ class LastName
      */
     private function assertLastNameIsValid($lastName)
     {
-        $matchesLastNamePattern = preg_match(
-            preg_replace(
-                '/\\\[px]\{[a-z]{1,2}\}|(\/[a-z]*)u([a-z]*)$/i',
-                '$1$2',
-                '/^[^0-9!<>,;?=+()@#"°{}_$%:¤|]*$/u'
-            ),
-            stripslashes($lastName)
-        );
+        $matchesLastNamePattern = preg_match('/^[^0-9!<>,;?=+()@#"°{}_$%:¤|]*$/u', stripslashes($lastName));
 
         if (!$matchesLastNamePattern) {
             throw new CustomerConstraintException(
@@ -96,7 +89,7 @@ class LastName
         $lastName = html_entity_decode($lastName, ENT_COMPAT, 'UTF-8');
 
         $length = function_exists('mb_strlen') ? mb_strlen($lastName, 'UTF-8') : strlen($lastName);
-        if (self::MAX_LENGTH > $length) {
+        if (self::MAX_LENGTH < $length) {
             throw new CustomerConstraintException(
                 sprintf('Customer email is too long. Max allowed length is %s',self::MAX_LENGTH),
                 CustomerConstraintException::INVALID_LAST_NAME

@@ -32,6 +32,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\BirthdayType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -147,7 +148,7 @@ class CustomerType extends AbstractType
                     'scale' => 6,
                     'required' => false,
                 ])
-                ->add('max_payment_days', NumberType::class, [
+                ->add('max_payment_days', IntegerType::class, [
                     'required' => false,
                 ])
                 ->add('risk_id', ChoiceType::class, [
