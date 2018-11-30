@@ -183,6 +183,10 @@ class ModuleTabRegister
         if ($data->has('ParentClassName') && !$data->has('parent_class_name')) {
             $this->logger->warning('Tab attribute "ParentClassName" is deprecated. You must use "parent_class_name" instead.');
         }
+        //Check if the tab was already added manually
+        if (Tab::getIdFromClassName($className)) {
+            throw new Exception(sprintf('Try to register an already existing tab %s', $className));
+        }
 
         return true;
     }
