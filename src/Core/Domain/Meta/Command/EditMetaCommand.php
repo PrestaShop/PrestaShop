@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Meta\ValueObject\MetaId;
 /**
  * Class EditMetaCommand
  */
-class EditMetaCommand extends SaveMetaCommand
+class EditMetaCommand extends AbstractSaveMetaCommand
 {
     /**
      * @var MetaId

@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Domain\Meta\Exception\MetaConstraintException;
 /**
  * Class AddMetaCommand is responsible for saving meta entities data.
  */
-class AddMetaCommand extends SaveMetaCommand
+class AddMetaCommand extends AbstractSaveMetaCommand
 {
     /**
      * @var string
