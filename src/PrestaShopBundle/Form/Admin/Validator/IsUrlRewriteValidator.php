@@ -59,7 +59,7 @@ class IsUrlRewriteValidator extends ConstraintValidator
             throw new UnexpectedTypeException($constraint, IsUrlRewrite::class);
         }
 
-        if (empty($value)) {
+        if (null === $value || '' === $value) {
             return;
         }
 

@@ -58,6 +58,7 @@ final class AddMetaHandler implements AddMetaHandlerInterface
      */
     public function handle(AddMetaCommand $command)
     {
+        //todo: copy from default language the values to the empty link rewrites
         try {
             $entity = new Meta();
             $entity->page = $command->getPageName();
