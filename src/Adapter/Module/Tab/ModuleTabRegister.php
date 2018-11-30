@@ -184,7 +184,7 @@ class ModuleTabRegister
             $this->logger->warning('Tab attribute "ParentClassName" is deprecated. You must use "parent_class_name" instead.');
         }
         //Check if the tab was already added manually
-        if (Tab::getIdFromClassName($className)) {
+        if ($this->tabRepository->findOneIdByClassName($className)) {
             throw new Exception(sprintf('Try to register an already existing tab %s', $className));
         }
 
