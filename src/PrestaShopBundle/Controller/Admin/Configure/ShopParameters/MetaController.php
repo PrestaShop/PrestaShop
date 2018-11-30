@@ -26,8 +26,11 @@
 
 namespace PrestaShopBundle\Controller\Admin\Configure\ShopParameters;
 
+
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Query\GetShowcaseCardIsClosed;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ValueObject\ShowcaseCard;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\MetaFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -155,31 +158,20 @@ class MetaController extends FrameworkBundleAdminController
      */
     public function createAction(Request $request)
     {
-        $metaFormHandler = $this->get('prestashop.admin.meta.form_handler');
-        $metaForm = $metaFormHandler->getForm();
-
+        $data = [];
+        $metaForm = $this->getMetaFormBuilder()->getForm($data);
         $metaForm->handleRequest($request);
 
-        if ($metaForm->isSubmitted()) {
-            if ($this->isDemoModeEnabled()) {
-                $this->addFlash('error', $this->getDemoModeErrorMessage());
+        $result = $this->getMetaFormHandler()->handle($metaForm);
 
-                return $this->redirectToRoute('admin_meta_index');
-            }
+        if (null !== $result->getIdentifiableObjectId()) {
+            $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
 
-            $errors = $metaFormHandler->save($metaForm->getData()['meta']);
-
-            if (empty($errors)) {
-                $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
-
-                return $this->redirectToRoute('admin_meta_index');
-            }
-
-            $this->flashErrors($errors);
+            return $this->redirectToRoute('admin_meta_index');
         }
 
         return $this->render('@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/create.html.twig', [
-                'form' => $metaForm->createView(),
+                'meta_form' => $metaForm->createView(),
             ]
         );
     }
@@ -362,5 +354,23 @@ class MetaController extends FrameworkBundleAdminController
         );
 
         return $this->redirectToRoute('admin_meta_index');
+    }
+
+    /**
+     * Gets form builder.
+     *
+     * @return FormBuilderInterface
+     */
+    private function getMetaFormBuilder()
+    {
+        return $this->get('prestashop.core.form.builder.meta_form_builder');
+    }
+
+    /**
+     * @return FormHandlerInterface
+     */
+    private function getMetaFormHandler()
+    {
+        return $this->get('prestashop.core.form.identifiable_object.meta_form_handler');
     }
 }
