@@ -109,6 +109,11 @@ abstract class AbstractImportHandler implements ImportHandlerInterface
     protected $propertyAccessor;
 
     /**
+     * @var int
+     */
+    protected $defaultLanguageId;
+
+    /**
      * @var array entity default values
      */
     protected $defaultValues = [];
@@ -219,6 +224,7 @@ abstract class AbstractImportHandler implements ImportHandlerInterface
         $this->configuration = $configuration;
         $this->validate = $validate;
         $this->propertyAccessor = PropertyAccess::createPropertyAccessor();
+        $this->defaultLanguageId = $this->configuration->getInt('PS_LANG_DEFAULT');
     }
 
     /**
