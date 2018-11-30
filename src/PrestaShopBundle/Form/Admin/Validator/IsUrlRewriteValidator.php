@@ -26,15 +26,15 @@
 
 namespace PrestaShopBundle\Form\Admin\Validator;
 
-use PrestaShopBundle\Form\Admin\Validator\Constraints\UrlRewriteConstraint;
+use PrestaShopBundle\Form\Admin\Validator\Constraints\IsUrlRewrite;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
 /**
- * Class UrlRewriteValidator is responsible of validating url rewrites according to valid patterns.
+ * Class IsUrlRewriteValidator is responsible of validating url rewrites according to valid patterns.
  */
-class UrlRewriteConstraintValidator extends ConstraintValidator
+class IsUrlRewriteValidator extends ConstraintValidator
 {
     /**
      * @var bool
@@ -54,8 +54,8 @@ class UrlRewriteConstraintValidator extends ConstraintValidator
      */
     public function validate($value, Constraint $constraint)
     {
-        if (!$constraint instanceof UrlRewriteConstraint) {
-            throw new UnexpectedTypeException($constraint, UrlRewriteConstraint::class);
+        if (!$constraint instanceof IsUrlRewrite) {
+            throw new UnexpectedTypeException($constraint, IsUrlRewrite::class);
         }
 
         if (empty($value)) {

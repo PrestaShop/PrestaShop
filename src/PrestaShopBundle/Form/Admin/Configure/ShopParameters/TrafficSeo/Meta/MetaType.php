@@ -27,19 +27,20 @@
 namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta;
 
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
-use PrestaShopBundle\Form\Admin\Type\TranslateTextType;
-use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use PrestaShopBundle\Form\Admin\Validator\Constraints\IsUrlRewrite;
+use PrestaShopBundle\Translation\TranslatorAwareTrait;
+use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Class MetaType is responsible for providing form fields for Shop parameters -> Traffic & Seo ->
  * Seo & Urls -> add and edit forms.
  */
-class MetaType extends TranslatorAwareType
+class MetaType extends AbstractType
 {
+    use TranslatorAwareTrait;
+
     /**
      * @var array
      */
@@ -51,20 +52,13 @@ class MetaType extends TranslatorAwareType
     private $modulePageChoices;
 
     /**
-     * MetaType constructor.
-     *
-     * @param TranslatorInterface $translator
-     * @param array $locales
      * @param array $defaultPageChoices
      * @param array $modulePageChoices
      */
     public function __construct(
-        TranslatorInterface $translator,
-        array $locales,
         array $defaultPageChoices,
         array $modulePageChoices
     ) {
-        parent::__construct($translator, $locales);
         $this->defaultPageChoices = $defaultPageChoices;
         $this->modulePageChoices = $modulePageChoices;
     }
@@ -77,8 +71,10 @@ class MetaType extends TranslatorAwareType
         $builder
             ->add('page_name', ChoiceType::class, [
                 'choices' => [
-                    $this->trans('Default pages', 'Admin.Shopparameters.Feature') => $this->defaultPageChoices,
-                    $this->trans('Module pages', 'Admin.Shopparameters.Feature') => $this->modulePageChoices,
+                    $this->trans('Default pages',[],  'Admin.Shopparameters.Feature') =>
+                        $this->defaultPageChoices,
+                    $this->trans('Module pages',[],  'Admin.Shopparameters.Feature') =>
+                        $this->modulePageChoices,
                 ],
                 'choice_translation_domain' => false,
             ])
@@ -96,12 +92,27 @@ class MetaType extends TranslatorAwareType
                 'options' => [
                     'attr' => [
                         'class' => 'js-token-field',
-                        'placeholder' => $this->trans('Add tag', 'Admin.Actions'),
+                        'placeholder' => $this->trans('Add tag', [],  'Admin.Actions'),
                     ],
                     'required' => false,
                 ],
             ])
-            ->add('url_rewrite', TranslatableType::class)
+            ->add('url_rewrite', TranslatableType::class, [
+                'constraints' => [
+                    new IsUrlRewrite([
+                        'message' => $this->trans(
+                            'The %s field is invalid.',
+                            [
+                                sprintf(
+                                    '"%s"',
+                                    $this->trans('Rewritten URL', [], 'Admin.Shopparameters.Feature')
+                                ),
+                            ],
+                            'Admin.Notifications.Error'
+                        ),
+                    ])
+                ]
+            ])
         ;
     }
 }

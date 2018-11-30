@@ -26,15 +26,15 @@
 
 namespace PrestaShopBundle\Form\Admin\Validator\Constraints;
 
-use PrestaShopBundle\Form\Admin\Validator\UrlRewriteValidator;
+use PrestaShopBundle\Form\Admin\Validator\IsUrlRewriteValidator;
 use Symfony\Component\Validator\Constraint;
 
 /**
- * Class UrlRewriteConstraint.
+ * Class IsUrlRewrite.
  *
  * @Annotation
  */
-class UrlRewriteConstraint extends Constraint
+class IsUrlRewrite extends Constraint
 {
     public $message = 'The string "{{ string }}" contains illegal characters';
 
@@ -43,6 +43,6 @@ class UrlRewriteConstraint extends Constraint
      */
     public function validatedBy()
     {
-        return UrlRewriteValidator::class;
+        return IsUrlRewriteValidator::class;
     }
 }

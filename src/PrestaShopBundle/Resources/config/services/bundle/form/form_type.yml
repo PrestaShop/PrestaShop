@@ -553,11 +553,11 @@ services:
             -
     form.type.shop.traffic_seo.meta:
         class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta\MetaType'
-        parent: 'form.type.translatable.aware'
-        public: true
         arguments:
             - '@=service("prestashop.core.form.choice_provider.default_page").getChoices()'
             - '@=service("prestashop.core.form.choice_provider.module_page").getChoices()'
+        calls:
+          - { method: setTranslator, arguments: ['@translator'] }
         tags:
             - { name: form.type }
 
