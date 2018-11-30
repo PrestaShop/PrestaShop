@@ -28,7 +28,6 @@ namespace Tests\Unit\Core\ConstraintValidator;
 
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\IsUrlRewrite;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\IsUrlRewriteValidator;
-use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Test\ConstraintValidatorTestCase;
@@ -68,6 +67,16 @@ class IsUrlRewriteValidatorTest extends ConstraintValidatorTestCase
         ;
     }
 
+    /**
+     * @dataProvider getCorrectRewriteUrls
+     */
+    public function testItFindsCorrectUrlRewritePatterns($correctRewriteUrl)
+    {
+        $this->validator->validate($correctRewriteUrl, new IsUrlRewrite());
+
+        $this->assertNoViolation();
+    }
+
     public function getIncorrectTypeRewriteUrls()
     {
         return [
@@ -98,8 +107,24 @@ class IsUrlRewriteValidatorTest extends ConstraintValidatorTestCase
         ];
     }
 
+    public function getCorrectRewriteUrls()
+    {
+        return [
+            [
+                'my-test',
+            ],
+            [
+                'test',
+            ],
+            [
+                '123-589-test',
+            ],
+        ];
+    }
+
     protected function createValidator()
     {
+        //todo: missing test case with ascendedCharsAllowed
         return new IsUrlRewriteValidator(false);
     }
 }
