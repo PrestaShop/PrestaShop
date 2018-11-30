@@ -80,6 +80,14 @@ class ModuleTabRegister
      */
     private $languages;
 
+    /**
+     * @param TabRepository $tabRepository
+     * @param LangRepository $langRepository
+     * @param LoggerInterface $logger
+     * @param TranslatorInterface $translator
+     * @param Filesystem $filesystem
+     * @param array $languages
+     */
     public function __construct(TabRepository $tabRepository, LangRepository $langRepository, LoggerInterface $logger, TranslatorInterface $translator, Filesystem $filesystem, array $languages)
     {
         $this->langRepository = $langRepository;

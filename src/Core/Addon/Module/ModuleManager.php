@@ -39,6 +39,7 @@ use PrestaShopBundle\Event\ModuleManagementEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\Translation\TranslatorInterface;
+use Tools;
 
 class ModuleManager implements AddonManagerInterface
 {
@@ -93,6 +94,13 @@ class ModuleManager implements AddonManagerInterface
      * @var ParameterBag
      */
     private $actionParams;
+
+    /**
+     * Used to check if the cache has already been cleaned.
+     *
+     * @var bool
+     */
+    private $cacheCleared = false;
 
     /**
      * @param AdminModuleDataProvider $adminModuleProvider
@@ -292,6 +300,7 @@ class ModuleManager implements AddonManagerInterface
         $this->checkConfirmationGiven(__FUNCTION__, $module);
         $result = $module->onInstall();
 
+        $this->clearCache();
         $this->dispatch(ModuleManagementEvent::INSTALL, $module);
 
         return $result;
@@ -332,6 +341,7 @@ class ModuleManager implements AddonManagerInterface
             $result &= $this->removeModuleFromDisk($name);
         }
 
+        $this->clearCache();
         $this->dispatch(ModuleManagementEvent::UNINSTALL, $module);
 
         return $result;
@@ -377,6 +387,8 @@ class ModuleManager implements AddonManagerInterface
 
         // Load and execute upgrade files
         $result = $this->moduleUpdater->upgrade($name) && $module->onUpgrade($version);
+
+        $this->clearCache();
         $this->dispatch(ModuleManagementEvent::UPGRADE, $module);
 
         return $result;
@@ -424,6 +436,7 @@ class ModuleManager implements AddonManagerInterface
             );
         }
 
+        $this->clearCache();
         $this->dispatch(ModuleManagementEvent::DISABLE, $module);
 
         return $result;
@@ -469,6 +482,8 @@ class ModuleManager implements AddonManagerInterface
                 $e
             );
         }
+
+        $this->clearCache();
         $this->dispatch(ModuleManagementEvent::ENABLE, $module);
 
         return $result;
@@ -515,7 +530,7 @@ class ModuleManager implements AddonManagerInterface
 
         $module = $this->moduleRepository->getModule($name);
         try {
-            return $module->onMobileDisable();
+            $result = $module->onMobileDisable();
         } catch (Exception $e) {
             throw new Exception(
                 $this->translator->trans(
@@ -530,6 +545,10 @@ class ModuleManager implements AddonManagerInterface
                 $e
             );
         }
+
+        $this->clearCache();
+
+        return $result;
     }
 
     /**
@@ -573,7 +592,7 @@ class ModuleManager implements AddonManagerInterface
 
         $module = $this->moduleRepository->getModule($name);
         try {
-            return $module->onMobileEnable();
+            $result =  $module->onMobileEnable();
         } catch (Exception $e) {
             throw new Exception(
                 $this->translator->trans(
@@ -588,6 +607,10 @@ class ModuleManager implements AddonManagerInterface
                 $e
             );
         }
+
+        $this->clearCache();
+
+        return $result;
     }
 
     /**
@@ -615,7 +638,7 @@ class ModuleManager implements AddonManagerInterface
 
         $module = $this->moduleRepository->getModule($name);
         try {
-            if ((bool) $keep_data && method_exists($this, 'reset')) {
+            if ((bool) $keep_data && method_exists($module->getInstance(), 'reset')) {
                 $this->dispatch(ModuleManagementEvent::UNINSTALL, $module);
                 $status = $module->onReset();
                 $this->dispatch(ModuleManagementEvent::INSTALL, $module);
@@ -751,5 +774,18 @@ class ModuleManager implements AddonManagerInterface
                     ->setSubject('PrestaTrust');
             }
         }
+    }
+
+    /**
+     * Clear smarty and Symfony cache (the sf2 cache is remove on the process shutdown).
+     */
+    private function clearCache()
+    {
+        if ($this->cacheCleared) {
+            return;
+        }
+
+        Tools::clearAllCache();
+        $this->cacheCleared = true;
     }
 }
