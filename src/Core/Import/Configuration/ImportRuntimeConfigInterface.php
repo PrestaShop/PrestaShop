@@ -86,6 +86,13 @@ interface ImportRuntimeConfigInterface
     public function getEntityFields();
 
     /**
+     * Get number of rows processed in current import iteration.
+     *
+     * @return int
+     */
+    public function getNumberOfProcessedRows();
+
+    /**
      * Increment the current import process index by one.
      */
     public function incrementProcessIndex();
