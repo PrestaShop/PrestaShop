@@ -59,31 +59,15 @@ class AddMetaCommand extends AbstractSaveMetaCommand
     private $rewriteUrl;
 
     /**
-     * AddMetaCommand constructor.
-     *
      * @param string $pageName
-     * @param string[] $pageTitle
-     * @param string[] $metaDescription
-     * @param string[] $metaKeywords
-     * @param string[] $rewriteUrl
      *
      * @throws MetaConstraintException
      */
-    public function __construct(
-        $pageName,
-        array $pageTitle,
-        array $metaDescription,
-        array $metaKeywords,
-        array $rewriteUrl
-    ) {
+    public function __construct($pageName)
+    {
         $this->validatePageName($pageName);
-        $this->validateRewriteUrl($rewriteUrl, $pageName);
 
         $this->pageName = $pageName;
-        $this->pageTitle = $pageTitle;
-        $this->metaDescription = $metaDescription;
-        $this->metaKeywords = $metaKeywords;
-        $this->rewriteUrl = $rewriteUrl;
     }
 
     /**
@@ -103,11 +87,35 @@ class AddMetaCommand extends AbstractSaveMetaCommand
     }
 
     /**
+     * @param string[] $pageTitle
+     *
+     * @return self
+     */
+    public function setPageTitle($pageTitle)
+    {
+        $this->pageTitle = $pageTitle;
+
+        return $this;
+    }
+
+    /**
      * @return string[]
      */
     public function getMetaDescription()
     {
         return $this->metaDescription;
+    }
+
+    /**
+     * @param string[] $metaDescription
+     *
+     * @return self
+     */
+    public function setMetaDescription($metaDescription)
+    {
+        $this->metaDescription = $metaDescription;
+
+        return $this;
     }
 
     /**
@@ -119,10 +127,33 @@ class AddMetaCommand extends AbstractSaveMetaCommand
     }
 
     /**
+     * @param string[] $metaKeywords
+     *
+     * @return self
+     */
+    public function setMetaKeywords($metaKeywords)
+    {
+        $this->metaKeywords = $metaKeywords;
+        return $this;
+    }
+
+    /**
      * @return string[]
      */
     public function getRewriteUrl()
     {
         return $this->rewriteUrl;
+    }
+
+    /**
+     * @param string[] $rewriteUrl
+     *
+     * @return self
+     */
+    public function setRewriteUrl($rewriteUrl)
+    {
+        $this->rewriteUrl = $rewriteUrl;
+
+        return $this;
     }
 }
