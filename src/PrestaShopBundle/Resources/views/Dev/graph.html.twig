@@ -1,0 +1,55 @@
+<html xmlns="http://www.w3.org/1999/html">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta charset="utf-8">
+  <title>PrestaShop service visualisation using graphviz</title>
+</head>
+<body>
+
+<div>
+  <form method="POST">
+    <label for="controller_name_input">Controller filepath</label>
+    <input id="controller_name_input" name="controller_name_input" type="text">
+    </input>
+
+    <p>
+      Example: src/PrestaShopBundle/Controller/Admin/AddonsController.php
+    </p>
+
+    <input type="submit"></input>
+  </form>
+
+</div>
+
+<textarea id="graphviz_data" style="display:none">
+{{ graph_data }}
+</textarea>
+
+<div id="graphviz_svg_div">
+  <!-- Target for dynamic svg generation -->
+</div>
+
+</body>
+<script language="javascript" type="text/javascript"
+        src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script language="javascript" type="text/javascript" src="http://www.webgraphviz.com/viz.js"></script>
+<script language="javascript" type="text/javascript">
+  jQuery(document).ready(function () {
+
+    var svg_div = jQuery('#graphviz_svg_div');
+    var graphviz_data_textarea = jQuery('#graphviz_data');
+
+    UpdateGraphviz();
+
+    function UpdateGraphviz() {
+      svg_div.html("");
+      var data = graphviz_data_textarea.val();
+      // Generate the Visualization of the Graph into "svg".
+      var svg = Viz(data, "svg");
+      svg_div.html("<hr>" + svg);
+    }
+  });
+</script>
+
+</html>
+<!-- Using http://www.webgraphviz.com -->

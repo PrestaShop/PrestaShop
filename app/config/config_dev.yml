@@ -49,3 +49,10 @@ prestashop:
     addons:
         api_client:
             ttl: 300 # 5min
+
+services:
+    _defaults:
+        public: true
+
+    prestashop.dev.graph_dumper:
+        class: PrestaShopBundle\Controller\Dev\ServicesGraphDumper
