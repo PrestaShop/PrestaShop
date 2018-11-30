@@ -24,9 +24,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Form\Admin\Validator\Constraints;
+namespace PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints;
 
-use PrestaShopBundle\Form\Admin\Validator\IsUrlRewriteValidator;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\IsUrlRewriteValidator;
 use Symfony\Component\Validator\Constraint;
 
 /**

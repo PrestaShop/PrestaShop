@@ -24,10 +24,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Form\Admin\Validator;
+namespace PrestaShop\PrestaShop\Core\ConstraintValidator;
 
-use PrestaShopBundle\Form\Admin\Validator\Constraints\IsUrlRewrite;
-use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\IsUrlRewrite;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
