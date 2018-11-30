@@ -40,3 +40,9 @@ _admin_translations_hot_reload_js:
         _controller: PrestaShopBundle:Admin/Translations:hashUpdateJs
     requirements:
         hash: .+
+
+_graph_dev:
+    path: /dev/services-graph
+    methods: [GET, POST]
+    defaults:
+        _controller: PrestaShopBundle:Dev\ServicesGraphVisualizer:index
