@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Command\AddMetaCommand;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Command\EditMetaCommand;
+use PrestaShop\PrestaShop\Core\Domain\Meta\Exception\MetaException;
 use PrestaShop\PrestaShop\Core\Domain\Meta\ValueObject\MetaId;
 
 /**
@@ -51,6 +52,8 @@ final class MetaFormDataHandler implements FormDataHandlerInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @throws MetaException
      */
     public function create(array $data)
     {
@@ -69,6 +72,8 @@ final class MetaFormDataHandler implements FormDataHandlerInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @throws MetaException
      */
     public function update($metaId, array $data)
     {
