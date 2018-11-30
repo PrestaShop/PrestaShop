@@ -16,6 +16,9 @@ services:
 
   prestashop.core.form.identifiable_object.data_handler.language_form_data_handler:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\LanguageFormDataHandler'
+
+  prestashop.core.form.identifiable_object.meta_form_data_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\MetaFormDataHandler'
     arguments:
       - '@prestashop.core.command_bus'
 

@@ -312,7 +312,7 @@ services:
             - '@form.factory'
             - '@prestashop.adapter.sql_manager.request_sql_form_data_validator'
             - '@prestashop.bundle.form.admin.configure.advanced_parameters.request_sql.form_data_provider'
-
+# todo: remove prestashop.admin.meta.form_handler
     prestashop.admin.meta.form_handler:
         class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta\MetaFormHandler'
         arguments:

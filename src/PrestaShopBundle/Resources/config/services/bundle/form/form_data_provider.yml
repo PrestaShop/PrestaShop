@@ -166,10 +166,3 @@ services:
         arguments:
           - '@prestashop.core.command_bus'
           - '@=service("prestashop.adapter.legacy.configuration").get("PS_ACTIVE_CRONJOB_EXCHANGE_RATE")'
-
-    prestashop.admin.traffic_seo.meta.form_data_provider:
-        class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta\MetaFormDataProvider'
-        arguments:
-            - '@prestashop.core.command_bus'
-            - '@prestashop.core.query_bus'
-            - '@prestashop.adapter.meta.meta_form_data_validator'
