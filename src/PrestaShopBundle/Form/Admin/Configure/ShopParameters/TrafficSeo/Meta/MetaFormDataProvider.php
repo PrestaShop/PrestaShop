@@ -40,6 +40,7 @@ use PrestaShop\PrestaShop\Core\Domain\Meta\Query\GetMetaForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Meta\ValueObject\MetaId;
 
 /**
+ * @todo: remove
  * Class MetaFormDataProvider is responsible for providing data for Shop parameters ->
  * Traffic & Seo -> Seo & Urls -> add/edit form.
  */
