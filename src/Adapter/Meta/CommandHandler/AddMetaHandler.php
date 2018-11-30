@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Core\Domain\Meta\Command\AddMetaCommand;
 use PrestaShop\PrestaShop\Core\Domain\Meta\CommandHandler\AddMetaHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Exception\CannotAddMetaException;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Exception\MetaException;
+use PrestaShop\PrestaShop\Core\Domain\Meta\ValueObject\MetaId;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopException;
 
@@ -81,5 +82,7 @@ final class AddMetaHandler implements AddMetaHandlerInterface
         }
 
         $this->hookDispatcher->dispatchWithParameters('actionAdminMetaSave');
+
+        return new MetaId($entity->id);
     }
 }

@@ -30,7 +30,9 @@ use Meta;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Command\EditMetaCommand;
 use PrestaShop\PrestaShop\Core\Domain\Meta\CommandHandler\EditMetaHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Exception\CannotEditMetaException;
+use PrestaShop\PrestaShop\Core\Domain\Meta\Exception\MetaException;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Exception\MetaNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Meta\ValueObject\MetaId;
 use PrestaShopException;
 
 /**
@@ -41,8 +43,7 @@ final class EditMetaHandler implements EditMetaHandlerInterface
     /**
      * {@inheritdoc}
      *
-     * @throws MetaNotFoundException
-     * @throws CannotEditMetaException
+     * @throws MetaException
      */
     public function handle(EditMetaCommand $command)
     {
@@ -89,5 +90,7 @@ final class EditMetaHandler implements EditMetaHandlerInterface
                 $exception
             );
         }
+
+        return new MetaId($entity->id);
     }
 }

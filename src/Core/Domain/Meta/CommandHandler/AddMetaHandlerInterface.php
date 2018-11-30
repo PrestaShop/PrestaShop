@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Meta\CommandHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\Meta\Command\AddMetaCommand;
+use PrestaShop\PrestaShop\Core\Domain\Meta\ValueObject\MetaId;
 
 /**
  * Interface AddMetaHandlerInterface defines contract for AddMetaHandler.
@@ -38,7 +39,7 @@ interface AddMetaHandlerInterface
      *
      * @param AddMetaCommand $command
      *
-     * @return void
+     * @return MetaId
      */
     public function handle(AddMetaCommand $command);
 }

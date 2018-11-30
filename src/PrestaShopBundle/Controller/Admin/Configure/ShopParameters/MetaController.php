@@ -26,9 +26,9 @@
 
 namespace PrestaShopBundle\Controller\Admin\Configure\ShopParameters;
 
-
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Query\GetShowcaseCardIsClosed;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ValueObject\ShowcaseCard;
+use PrestaShop\PrestaShop\Core\Domain\Meta\Exception\MetaNotFoundException;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\MetaFilters;
@@ -190,34 +190,28 @@ class MetaController extends FrameworkBundleAdminController
     public function editAction($metaId, Request $request)
     {
         $metaFormHandler = $this->get('prestashop.admin.meta.form_handler');
+        try {
+            $metaForm = $this->getMetaFormBuilder()->getFormFor($metaId);
+            $metaForm->handleRequest($request);
 
-        $metaForm = $metaFormHandler->getFormFor($metaId);
+            $result = $this->getMetaFormHandler()->handleFor($metaId, $metaForm);
 
-        $metaForm->handleRequest($request);
-
-        if ($metaForm->isSubmitted()) {
-            if ($this->isDemoModeEnabled()) {
-                $this->addFlash('error', $this->getDemoModeErrorMessage());
-
-                return $this->redirectToRoute('admin_meta_index');
-            }
-
-            $data = $metaForm->getData()['meta'];
-            $data['id'] = $metaId;
-
-            $errors = $metaFormHandler->save($data);
-
-            if (empty($errors)) {
+            if (null !== $result->getIdentifiableObjectId()) {
                 $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_meta_index');
             }
+        } catch (MetaNotFoundException $e) {
+            $this->addFlash(
+                'error',
+                $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error')
+            );
 
-            $this->flashErrors($errors);
+            return $this->redirectToRoute('admin_meta_index');
         }
 
         return $this->render('@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/edit.html.twig', [
-                'form' => $metaForm->createView(),
+                'meta_form' => $metaForm->createView(),
             ]
         );
     }
