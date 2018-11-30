@@ -62,19 +62,15 @@ class IsUrlRewriteValidator extends ConstraintValidator
             return;
         }
 
-        if (!is_array($value)) {
-            throw new UnexpectedTypeException($value, 'array');
+        if (!is_string($value)) {
+            throw new UnexpectedTypeException($value, 'string');
         }
 
-        foreach ($value as $urlRewrite) {
-            if (!$this->isUrlRewriteValid($urlRewrite)) {
-                $this->context->buildViolation($constraint->message)
-                    ->setParameter('{{ string }}', $urlRewrite)
-                    ->addViolation()
-                ;
-
-                break;
-            }
+        if (!$this->isUrlRewriteValid($value)) {
+            $this->context->buildViolation($constraint->message)
+                ->setParameter('{{ string }}', $value)
+                ->addViolation()
+            ;
         }
     }
 

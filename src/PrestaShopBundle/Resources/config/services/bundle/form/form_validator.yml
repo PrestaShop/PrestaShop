@@ -1,0 +1,10 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.bundle.form.admin.validator.is_url_rewrite_validator:
+    class: 'PrestaShopBundle\Form\Admin\Validator\IsUrlRewriteValidator'
+    arguments:
+      - '@=service("prestashop.adapter.legacy.configuration").get("PS_ALLOW_ACCENTED_CHARS_URL")'
+    tags:
+      - { name: validator.constraint_validator }
