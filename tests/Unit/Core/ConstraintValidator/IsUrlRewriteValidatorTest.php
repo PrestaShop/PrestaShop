@@ -27,6 +27,7 @@
 namespace Tests\Unit\Core\ConstraintValidator;
 
 use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\IsUrlRewrite;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\IsUrlRewriteValidator;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -36,13 +37,37 @@ use Symfony\Component\Validator\Constraints\NotBlank;
  */
 class IsUrlRewriteValidatorTest extends TestCase
 {
-    public function testItThrowsUnexpectedTypeExceptionOnIncorrectValueTypeProvided()
+    public function testItThrowsUnexpectedTypeExceptionOnIncorrectConstraintProvided()
     {
         $this->expectException(UnexpectedTypeException::class);
 
         $isUrlRewrite = $this->createUrlRewriteValidator();
 
         $isUrlRewrite->validate('valid-value', new NotBlank());
+    }
+
+    /**
+     * @dataProvider incorrectTypeRewriteUrls
+     */
+    public function testItThrowsUnexpectedTypeExceptionOnIncorrectValueTypeProvided($incorrectTypeRewriteUrl)
+    {
+        $this->expectException(UnexpectedTypeException::class);
+
+        $isUrlRewrite = $this->createUrlRewriteValidator();
+
+        $isUrlRewrite->validate($incorrectTypeRewriteUrl, new IsUrlRewrite());
+    }
+
+    public function incorrectTypeRewriteUrls()
+    {
+        return [
+            [
+                [],
+            ],
+            [
+                true,
+            ],
+        ];
     }
 
     private function createUrlRewriteValidatorWithAscendingCharsAllowed()
