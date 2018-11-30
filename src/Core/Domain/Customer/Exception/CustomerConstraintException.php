@@ -26,10 +26,33 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Customer\Exception;
 
+/**
+ * Is thrown when customer constraint is violated
+ */
 class CustomerConstraintException extends CustomerException
 {
     /**
+     * @var int Code is used when invalid email is provided for customer
+     */
+    const INVALID_EMAIL = 1;
+
+    /**
+     * @var int Code is used when invalid first name is provided for customer
+     */
+    const INVALID_FIRST_NAME = 2;
+
+    /**
+     * @var int Code is used when invalid last name is provided for customer
+     */
+    const INVALID_LAST_NAME = 3;
+
+    /**
+     * @var int Code is used when invalid password is provided for customer
+     */
+    const INVALID_PASSWORD = 4;
+
+    /**
      * @var int Is used when invalid (not string) private note is provided as private note
      */
-    const INVALID_PRIVATE_NOTE = 1;
+    const INVALID_PRIVATE_NOTE = 6;
 }
