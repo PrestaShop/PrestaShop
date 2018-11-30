@@ -53,6 +53,12 @@
     }
   }
 
+  .form-group {
+    .locale-input-group~.invalid-feedback  {
+        display: block;
+    }
+  }
+
   // make ps-switch align with label
   .ps-switch:not(.ps-switch-lg) {
     @include media-breakpoint-up('sm') {
