@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Form\Admin\Validator;
 
 use PrestaShopBundle\Form\Admin\Validator\Constraints\IsUrlRewrite;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
@@ -68,7 +69,8 @@ class IsUrlRewriteValidator extends ConstraintValidator
 
         if (!$this->isUrlRewriteValid($value)) {
             $this->context->buildViolation($constraint->message)
-                ->setParameter('{{ string }}', $value)
+                ->setTranslationDomain('Admin.Notifications.Error')
+                ->setParameter('%value%', $value)
                 ->addViolation()
             ;
         }

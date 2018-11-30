@@ -36,7 +36,7 @@ use Symfony\Component\Validator\Constraint;
  */
 class IsUrlRewrite extends Constraint
 {
-    public $message = 'The string "{{ string }}" contains illegal characters';
+    public $message = 'Value "%value%" is invalid.';
 
     /**
      * {@inheritdoc}

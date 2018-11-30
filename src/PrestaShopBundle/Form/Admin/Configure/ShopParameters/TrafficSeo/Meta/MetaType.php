@@ -100,18 +100,7 @@ class MetaType extends AbstractType
             ->add('url_rewrite', TranslatableType::class, [
                 'options' => [
                     'constraints' => [
-                        new IsUrlRewrite([
-                            'message' => $this->trans(
-                                'The %s field is invalid.',
-                                [
-                                    sprintf(
-                                        '"%s"',
-                                        $this->trans('Rewritten URL', [], 'Admin.Shopparameters.Feature')
-                                    ),
-                                ],
-                                'Admin.Notifications.Error'
-                            ),
-                        ])
+                        new IsUrlRewrite(),
                     ]
                 ],
             ])
