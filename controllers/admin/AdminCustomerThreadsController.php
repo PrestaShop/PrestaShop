@@ -436,8 +436,11 @@ class AdminCustomerThreadsControllerCore extends AdminController
                         $file_attachment['mime'] = $_FILES['joinFile']['type'];
                     }
                     $customer = new Customer($ct->id_customer);
+                    $reply = Tools::getValue('reply_message');
+                    if (Configuration::get('PS_MAIL_TYPE') != Mail::TYPE_TEXT)
+                        $reply = Tools::nl2br($reply);
                     $params = array(
-                        '{reply}' => Tools::nl2br(Tools::getValue('reply_message')),
+                        '{reply}' => $reply,
                         '{link}' => Tools::url(
                             $this->context->link->getPageLink('contact', true, null, null, false, $ct->id_shop),
                             'id_customer_thread=' . (int) $ct->id . '&token=' . $ct->token
