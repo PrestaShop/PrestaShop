@@ -81,6 +81,12 @@ class CategoriesProvider
         return self::$categoriesFromApi;
     }
 
+    public function refreshCategories()
+    {
+        self::$categories = null;
+        self::$categoriesFromApi = null;
+    }
+
     /**
      * Return the list of categories with the associated modules.
      *
@@ -90,6 +96,8 @@ class CategoriesProvider
      */
     public function getCategoriesMenu($modules)
     {
+        $this->refreshCategories();
+
         if (null === self::$categories) {
             // The Root category is "Categories"
             $categoriesListing = $this->getCategories();

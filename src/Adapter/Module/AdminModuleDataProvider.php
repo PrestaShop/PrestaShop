@@ -252,6 +252,8 @@ class AdminModuleDataProvider implements ModuleInterface
      */
     public function generateAddonsUrls(AddonsCollection $addons, $specific_action = null)
     {
+        $this->categoriesProvider->refreshCategories();
+
         foreach ($addons as $addon) {
             $urls = array();
             foreach ($this->moduleActions as $action) {
