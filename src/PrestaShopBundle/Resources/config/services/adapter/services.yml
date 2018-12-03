@@ -25,6 +25,7 @@ services:
 
     prestashop.adapter.check_missing_files:
         class: 'PrestaShop\PrestaShop\Adapter\Requirement\CheckMissingOrUpdatedFiles'
+
     prestashop.adapter.cache_clearer:
         class: 'PrestaShop\PrestaShop\Adapter\Cache\CacheClearer'
 
