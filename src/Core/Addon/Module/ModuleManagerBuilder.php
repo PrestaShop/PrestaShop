@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Addon\Module;
 
 use Context;
 use Db;
+use PrestaShop\PrestaShop\Adapter\Cache\CacheClearer;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use Doctrine\Common\Cache\FilesystemCache;
 use PrestaShop\PrestaShop\Adapter\Configuration;
@@ -109,7 +110,8 @@ class ModuleManagerBuilder
                     $this->buildRepository(),
                     self::$moduleZipManager,
                     self::$translator,
-                    new NullDispatcher()
+                    new NullDispatcher(),
+                    new CacheClearer()
                 );
             }
         }
