@@ -421,10 +421,10 @@ class AdminAddressesControllerCore extends AdminController
                 
                 // update cart
                 $cart = Cart::getCartByOrderId($id_order);
-                if ($address_type=='invoice') {
-                    $cart->id_address_invoice = (int)$this->object->id;
+                if ($address_type == 'invoice') {
+                    $cart->id_address_invoice = (int) $this->object->id;
                 } else {
-                    $cart->id_address_delivery = (int)$this->object->id;
+                    $cart->id_address_delivery = (int) $this->object->id;
                 }
                 $cart->update();
                 // redirect
