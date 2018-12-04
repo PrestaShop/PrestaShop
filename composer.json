@@ -36,7 +36,7 @@
         "nikic/php-parser": "^2.1",
         "paragonie/random_compat": "^1.4|^2.0",
         "pear/archive_tar": "~1.4.2",
-        "phpoffice/phpexcel": "~1.8",
+        "phpoffice/phpexcel": "~1.8.2",
         "prestashop/blockreassurance": "^3",
         "prestashop/contactform": "^4",
         "prestashop/dashactivity": "^2",
