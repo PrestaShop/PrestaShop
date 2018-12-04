@@ -186,10 +186,10 @@ module.exports = {
       return this.catalog_product_table + ' > tbody tr:first-child > td:nth-child(7)';
     },
     get catalog_product_quantity() {
-      return this.catalog_product_table + ' > tbody tr:first-child > td:nth-child(8)';
+      return this.catalog_product_table + ' > tbody tr:first-child > td:nth-child(9)';
     },
     get catalog_product_online() {
-      return this.catalog_product_table + ' > tbody tr:first-child > td:nth-child(9) > a > i';
+      return this.catalog_product_table + ' > tbody tr:first-child > td:nth-child(10) > a > i';
     },
     get catalog_reset_filter() {
       return this.catalog_product_table + ' .column-filters button[name="products_filter_reset"]';
