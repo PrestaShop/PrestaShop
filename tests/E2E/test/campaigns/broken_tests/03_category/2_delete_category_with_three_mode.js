@@ -50,23 +50,25 @@ let productData = [{
 }];
 
 let categoryData = {
-    name: 'category_name',
-    description: 'description of category',
-    picture: 'category_image.png',
-    thumb_picture: 'category_miniature.png',
-    meta_title: 'meta title category',
-    meta_description: 'meta description category',
-    meta_keywords: {
-      1: 'first key',
-      2: 'second key'
-    },
-    friendly_url: 'prestashop_Friendly_url'
-  };
+  name: 'category_name',
+  description: 'description of category',
+  picture: 'category_image.png',
+  thumb_picture: 'category_miniature.png',
+  meta_title: 'meta title category',
+  meta_description: 'meta description category',
+  meta_keywords: {
+    1: 'first key',
+    2: 'second key'
+  },
+  friendly_url: 'prestashop_Friendly_url'
+};
 
 /**
  * This scenario is based on the bug described in this ticket
- * http://forge.prestashop.com/browse/BOOM-4293
+ * http://forge.prestashop.com/browse/BOOM-4293 => https://github.com/PrestaShop/PrestaShop/issues/9811
+ * https://github.com/PrestaShop/PrestaShop/issues/10747
  **/
+
 
 scenario('Create, edit, check and delete "Category" with the "linkanddisable" mode', () => {
   scenario('Login in the Back Office', client => {
