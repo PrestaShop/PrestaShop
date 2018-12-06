@@ -239,7 +239,7 @@ class CustomerCore extends ObjectModel
         $this->id_shop_group = ($this->id_shop_group) ? $this->id_shop_group : Context::getContext()->shop->id_shop_group;
         $this->id_lang = ($this->id_lang) ? $this->id_lang : Context::getContext()->language->id;
         $this->birthday = (empty($this->years) ? $this->birthday : (int) $this->years . '-' . (int) $this->months . '-' . (int) $this->days);
-        $this->secure_key = md5(uniqid(rand(), true));
+        $this->secure_key = md5(uniqid(random_int(0, getrandmax()), true));
         $this->last_passwd_gen = date('Y-m-d H:i:s', strtotime('-' . Configuration::get('PS_PASSWD_TIME_FRONT') . 'minutes'));
 
         if ($this->newsletter && !Validate::isDate($this->newsletter_date_add)) {

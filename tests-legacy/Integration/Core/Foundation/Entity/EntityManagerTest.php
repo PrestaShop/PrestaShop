@@ -82,7 +82,7 @@ class EntityManagerTest extends IntegrationTestCase
 
         $entity = new CMSRole;
 
-        $name = "Yo CMS Role " . rand();
+        $name = "Yo CMS Role " . random_int(0, getrandmax());
 
         $entity->name    = $name;
         $entity->id_cms = 6666;

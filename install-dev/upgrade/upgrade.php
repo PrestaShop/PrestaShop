@@ -51,7 +51,7 @@ require_once(_PS_CONFIG_DIR_.'bootstrap.php');
 $logDir = _PS_ROOT_DIR_.'/var/logs/'.(_PS_MODE_DEV_ ? 'dev' : 'prod').'/';
 @mkdir($logDir, 0777, true);
 
-$upgrade = new Upgrade($logDir, dirname(dirname(__FILE__)).'/');
+$upgrade = new Upgrade($logDir, dirname(__FILE__,2).'/');
 if (isset($_GET['autoupgrade']) && $_GET['autoupgrade'] == 1) {
     $upgrade->setInAutoUpgrade(true);
 }

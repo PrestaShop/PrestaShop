@@ -1,5 +1,5 @@
 <?php
-   # ========================================================================#
+# ========================================================================#
    #
    #  This work is licensed under the Creative Commons Attribution 3.0 Unported
    #  License. To view a copy of this license,
@@ -3179,7 +3179,7 @@ class imageLib
     $BMP = unpack('Vheader_size/Vwidth/Vheight/vplanes/vbits_per_pixel'.
            '/Vcompression/Vsize_bitmap/Vhoriz_resolution'.
            '/Vvert_resolution/Vcolors_used/Vcolors_important', fread($f1, 40));
-      $BMP['colors'] = pow(2, $BMP['bits_per_pixel']);
+      $BMP['colors'] = 2** $BMP['bits_per_pixel'];
 
       if ($BMP['size_bitmap'] == 0) {
           $BMP['size_bitmap'] = $FILE['file_size'] - $FILE['bitmap_offset'];

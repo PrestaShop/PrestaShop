@@ -212,7 +212,7 @@ class PrestaShopBackupCore
         }
 
         // Generate some random number, to make it extra hard to guess backup file names
-        $rand = dechex(mt_rand(0, min(0xffffffff, mt_getrandmax())));
+        $rand = dechex(random_int(0, min(0xffffffff, mt_getrandmax())));
         $date = time();
         $backupfile = $this->getRealBackupPath() . $date . '-' . $rand . '.sql';
 
