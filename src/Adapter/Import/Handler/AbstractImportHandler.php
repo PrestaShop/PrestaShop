@@ -461,7 +461,9 @@ abstract class AbstractImportHandler implements ImportHandlerInterface
                 $value = $this->callbacks[$field]($value);
             }
 
-            if (in_array($field, $this->languageFields) && $languageId) {
+            $canBeTranslated = in_array($field, $this->languageFields) && $languageId;
+
+            if ($canBeTranslated) {
                 foreach ($value as $langId => $formattedValue) {
                     if (empty($entity->{$field}[$languageId]) || $langId == $languageId) {
                         $entity->{$field}[$langId] = $formattedValue;
