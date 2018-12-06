@@ -39,8 +39,8 @@
  * 
  */
 
-require_once dirname(__FILE__) . '/../exceptions/UnableToCreateSQLException.php';
-require_once dirname(__FILE__) . '/ColumnReferenceBuilder.php';
+require_once __DIR__ . '/../exceptions/UnableToCreateSQLException.php';
+require_once __DIR__ . '/ColumnReferenceBuilder.php';
 
 /**
  * This class implements the builder for the [INSERT] statement parts. 

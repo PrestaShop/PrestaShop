@@ -39,12 +39,12 @@
  * 
  */
 
-require_once dirname(__FILE__) . '/RefClauseBuilder.php';
-require_once dirname(__FILE__) . '/RefTypeBuilder.php';
-require_once dirname(__FILE__) . '/JoinBuilder.php';
-require_once dirname(__FILE__) . '/AliasBuilder.php';
-require_once dirname(__FILE__) . '/AliasBuilder.php';
-require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
+require_once __DIR__ . '/RefClauseBuilder.php';
+require_once __DIR__ . '/RefTypeBuilder.php';
+require_once __DIR__ . '/JoinBuilder.php';
+require_once __DIR__ . '/AliasBuilder.php';
+require_once __DIR__ . '/AliasBuilder.php';
+require_once __DIR__ . '/../utils/ExpressionType.php';
 
 /**
  * This class implements the builder for sub-queries. 

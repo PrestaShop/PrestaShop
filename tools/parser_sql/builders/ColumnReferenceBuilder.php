@@ -39,9 +39,9 @@
  * 
  */
 
-require_once dirname(__FILE__) . '/AliasBuilder.php';
-require_once dirname(__FILE__) . '/DirectionBuilder.php';
-require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
+require_once __DIR__ . '/AliasBuilder.php';
+require_once __DIR__ . '/DirectionBuilder.php';
+require_once __DIR__ . '/../utils/ExpressionType.php';
 /**
  * This class implements the builder for column references. 
  * You can overwrite all functions to achieve another handling.

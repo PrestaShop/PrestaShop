@@ -39,13 +39,13 @@
  * 
  */
 
-require_once dirname(__FILE__) . '/../exceptions/UnableToCreateSQLException.php';
-require_once dirname(__FILE__) . '/ColumnDefinitionBuilder.php';
-require_once dirname(__FILE__) . '/PrimaryKeyBuilder.php';
-require_once dirname(__FILE__) . '/ForeignKeyBuilder.php';
-require_once dirname(__FILE__) . '/CheckBuilder.php';
-require_once dirname(__FILE__) . '/LikeExpressionBuilder.php';
-require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
+require_once __DIR__ . '/../exceptions/UnableToCreateSQLException.php';
+require_once __DIR__ . '/ColumnDefinitionBuilder.php';
+require_once __DIR__ . '/PrimaryKeyBuilder.php';
+require_once __DIR__ . '/ForeignKeyBuilder.php';
+require_once __DIR__ . '/CheckBuilder.php';
+require_once __DIR__ . '/LikeExpressionBuilder.php';
+require_once __DIR__ . '/../utils/ExpressionType.php';
 /**
  * This class implements the builder for the table expressions 
  * within the create definitions of CREATE TABLE. 

@@ -326,7 +326,7 @@ class StockManager
                 (string) $configuration['PS_SHOP_NAME'],
                 null,
                 null,
-                dirname(__FILE__) . '/mails/',
+                __DIR__ . '/mails/',
                 false,
                 $idShop
             );

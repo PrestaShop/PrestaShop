@@ -39,10 +39,10 @@
  * 
  */
 
-require_once dirname(__FILE__) . '/../exceptions/UnableToCreateSQLException.php';
-require_once dirname(__FILE__) . '/ColumnReferenceBuilder.php';
-require_once dirname(__FILE__) . '/OperatorBuilder.php';
-require_once dirname(__FILE__) . '/ConstantBuilder.php';
+require_once __DIR__ . '/../exceptions/UnableToCreateSQLException.php';
+require_once __DIR__ . '/ColumnReferenceBuilder.php';
+require_once __DIR__ . '/OperatorBuilder.php';
+require_once __DIR__ . '/ConstantBuilder.php';
 
 /**
  * This class implements the references clause within a JOIN. 

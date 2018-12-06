@@ -92,7 +92,7 @@ class ThemeExporterTest extends TestCase
         );
 
         $this->themeExporter->finder = $this->finderMock;
-        $cacheDir = dirname(__FILE__) . '/' .
+        $cacheDir = __DIR__ . '/' .
             str_repeat('../', 5) .
             'app/cache/test';
         $this->themeExporter->exportDir = $cacheDir . '/export';

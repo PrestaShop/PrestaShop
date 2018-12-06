@@ -47,8 +47,8 @@ function editorial_update()
 		PRIMARY KEY (`id_editorial`, `id_lang`))
 		ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8');
 
-        if (file_exists(dirname(__FILE__).'/../../../modules/editorial/editorial.xml')) {
-            $xml = @simplexml_load_file(dirname(__FILE__).'/../../../modules/editorial/editorial.xml');
+        if (file_exists(__DIR__.'/../../../modules/editorial/editorial.xml')) {
+            $xml = @simplexml_load_file(__DIR__.'/../../../modules/editorial/editorial.xml');
             if (!$xml) {
                 return false;
             }
@@ -66,7 +66,7 @@ function editorial_update()
 				"'.(isset($xml->body->{'logo_subheading_'.$language['id_lang']}) ? pSQL($xml->body->{'logo_subheading_'.$language['id_lang']}) : '').'")');
             }
 
-            unlink(dirname(__FILE__).'/../../../modules/editorial/editorial.xml');
+            unlink(__DIR__.'/../../../modules/editorial/editorial.xml');
         }
     }
 }

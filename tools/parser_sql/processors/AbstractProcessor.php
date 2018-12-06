@@ -30,8 +30,8 @@
  * DAMAGE.
  */
 
-require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
-require_once dirname(__FILE__) . '/../lexer/PHPSQLLexer.php';
+require_once __DIR__ . '/../utils/ExpressionType.php';
+require_once __DIR__ . '/../lexer/PHPSQLLexer.php';
 
 /**
  * 

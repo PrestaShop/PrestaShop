@@ -39,8 +39,8 @@
  * 
  */
 
-require_once dirname(__FILE__) . '/InsertBuilder.php';
-require_once dirname(__FILE__) . '/ValuesBuilder.php';
+require_once __DIR__ . '/InsertBuilder.php';
+require_once __DIR__ . '/ValuesBuilder.php';
 
 /**
  * This class implements the builder for the whole Insert statement. You can overwrite

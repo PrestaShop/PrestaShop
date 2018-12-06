@@ -39,8 +39,8 @@
  * 
  */
 
-require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
-require_once dirname(__FILE__) . '/DirectionBuilder.php';
+require_once __DIR__ . '/../utils/ExpressionType.php';
+require_once __DIR__ . '/DirectionBuilder.php';
 
 /**
  * This class implements the builder for an alias within the ORDER-BY clause. 

@@ -25,7 +25,7 @@
  */
 
 
-require_once dirname(__FILE__) . '/ExpressionType.php';
+require_once __DIR__ . '/ExpressionType.php';
 
 class ExpressionToken {
 

@@ -39,10 +39,10 @@
  * 
  */
 
-require_once dirname(__FILE__) . '/../exceptions/UnableToCreateSQLException.php';
-require_once dirname(__FILE__) . '/ColumnReferenceBuilder.php';
-require_once dirname(__FILE__) . '/ColumnTypeBuilder.php';
-require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
+require_once __DIR__ . '/../exceptions/UnableToCreateSQLException.php';
+require_once __DIR__ . '/ColumnReferenceBuilder.php';
+require_once __DIR__ . '/ColumnTypeBuilder.php';
+require_once __DIR__ . '/../utils/ExpressionType.php';
 /**
  * This class implements the builder for the columndefinition statement part 
  * of CREATE TABLE. You can overwrite all functions to achieve another handling.

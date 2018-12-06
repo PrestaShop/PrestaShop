@@ -26,7 +26,7 @@
 
 namespace LegacyTests\TestCase;
 
-define('_RESSOURCE_MODULE_DIR_', realpath(dirname(__FILE__).'/../resources/module/'));
+define('_RESSOURCE_MODULE_DIR_', realpath(__DIR__.'/../resources/module/'));
 
 class Module
 {

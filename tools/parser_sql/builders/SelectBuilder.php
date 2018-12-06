@@ -38,12 +38,12 @@
  * @version   SVN: $Id: SelectBuilder.php 903 2014-01-06 11:29:19Z phosco@gmx.de $
  * 
  */
-require_once dirname(__FILE__) . '/../exceptions/UnableToCreateSQLException.php';
-require_once dirname(__FILE__) . '/ConstantBuilder.php';
-require_once dirname(__FILE__) . '/FunctionBuilder.php';
-require_once dirname(__FILE__) . '/SelectExpressionBuilder.php';
-require_once dirname(__FILE__) . '/SelectBracketExpressionBuilder.php';
-require_once dirname(__FILE__) . '/ColumnReferenceBuilder.php';
+require_once __DIR__ . '/../exceptions/UnableToCreateSQLException.php';
+require_once __DIR__ . '/ConstantBuilder.php';
+require_once __DIR__ . '/FunctionBuilder.php';
+require_once __DIR__ . '/SelectExpressionBuilder.php';
+require_once __DIR__ . '/SelectBracketExpressionBuilder.php';
+require_once __DIR__ . '/ColumnReferenceBuilder.php';
 
 /**
  * This class implements the builder for the [SELECT] field. You can overwrite

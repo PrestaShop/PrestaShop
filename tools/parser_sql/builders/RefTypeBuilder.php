@@ -39,7 +39,7 @@
  * 
  */
 
-require_once dirname(__FILE__) . '/../exceptions/UnsupportedFeatureException.php';
+require_once __DIR__ . '/../exceptions/UnsupportedFeatureException.php';
 
 /**
  * This class implements the references type within a JOIN. 
