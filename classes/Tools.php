@@ -255,7 +255,7 @@ class ToolsCore
      */
     public static function getProtocol($use_ssl = null)
     {
-        return !is_null($use_ssl) && $use_ssl ? 'https://' : 'http://';
+        return null !== $use_ssl && $use_ssl ? 'https://' : 'http://';
     }
 
     /**
@@ -2169,11 +2169,11 @@ class ToolsCore
      */
     public static function createFileFromUrl($url)
     {
-        $remoteFile = fopen($url, 'r');
+        $remoteFile = fopen($url, 'rb');
         if (!$remoteFile) {
             return false;
         }
-        $localFile = fopen(basename($url), 'w');
+        $localFile = fopen(basename($url), 'wb');
         if (!$localFile) {
             return false;
         }
@@ -2204,7 +2204,7 @@ class ToolsCore
 
     public static function copy($source, $destination, $stream_context = null)
     {
-        if (is_null($stream_context) && !preg_match('/^https?:\/\//', $source)) {
+        if (null === $stream_context && !preg_match('/^https?:\/\//', $source)) {
             return @copy($source, $destination);
         }
 
@@ -2326,14 +2326,14 @@ class ToolsCore
         }
 
         // Default values for parameters
-        if (is_null($path)) {
+        if (null === $path) {
             $path = _PS_ROOT_DIR_ . '/.htaccess';
         }
 
-        if (is_null($cache_control)) {
+        if (null === $cache_control) {
             $cache_control = (int) Configuration::get('PS_HTACCESS_CACHE_CONTROL');
         }
-        if (is_null($disable_multiviews)) {
+        if (null === $disable_multiviews) {
             $disable_multiviews = (int) Configuration::get('PS_HTACCESS_DISABLE_MULTIVIEWS');
         }
 
@@ -2359,7 +2359,7 @@ class ToolsCore
         }
 
         // Write .htaccess data
-        if (!$write_fd = @fopen($path, 'w')) {
+        if (!$write_fd = @fopen($path, 'wb')) {
             return false;
         }
         if ($specific_before) {
@@ -2606,7 +2606,7 @@ FileETag none
     {
         $robots_file = _PS_ROOT_DIR_ . '/robots.txt';
 
-        if (!$write_fd = @fopen($robots_file, 'w')) {
+        if (!$write_fd = @fopen($robots_file, 'wb')) {
             return false;
         }
 
@@ -2670,7 +2670,7 @@ FileETag none
             }
         }
 
-        if (is_null(Context::getContext())) {
+        if (null === Context::getContext()) {
             $sitemap_file = _PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . 'index_sitemap.xml';
         } else {
             $sitemap_file = _PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . Context::getContext()->shop->id . '_index_sitemap.xml';
@@ -3105,7 +3105,7 @@ exit;
         switch ($type) {
             case 'by':
                 $list = array(0 => 'name', 1 => 'price', 2 => 'date_add', 3 => 'date_upd', 4 => 'position', 5 => 'manufacturer_name', 6 => 'quantity', 7 => 'reference');
-                $value = (is_null($value) || $value === false || $value === '') ? (int) Configuration::get('PS_PRODUCTS_ORDER_BY') : $value;
+                $value = (null === $value || $value === false || $value === '') ? (int) Configuration::get('PS_PRODUCTS_ORDER_BY') : $value;
                 $value = (isset($list[$value])) ? $list[$value] : ((in_array($value, $list)) ? $value : 'position');
                 $order_by_prefix = '';
                 if ($prefix) {
@@ -3125,7 +3125,7 @@ exit;
             break;
 
             case 'way':
-                $value = (is_null($value) || $value === false || $value === '') ? (int) Configuration::get('PS_PRODUCTS_ORDER_WAY') : $value;
+                $value = (null === $value || $value === false || $value === '') ? (int) Configuration::get('PS_PRODUCTS_ORDER_WAY') : $value;
                 $list = array(0 => 'asc', 1 => 'desc');
 
                 return (isset($list[$value])) ? $list[$value] : ((in_array($value, $list)) ? $value : 'asc');
@@ -3280,7 +3280,7 @@ exit;
      */
     public static function clearSf2Cache($env = null)
     {
-        if (is_null($env)) {
+        if (null === $env) {
             $env = _PS_MODE_DEV_ ? 'dev' : 'prod';
         }
 
@@ -3362,7 +3362,7 @@ exit;
      */
     public static function isPHPCLI()
     {
-        return defined('STDIN') || (Tools::strtolower(php_sapi_name()) == 'cli' && (!isset($_SERVER['REMOTE_ADDR']) || empty($_SERVER['REMOTE_ADDR'])));
+        return defined('STDIN') || (Tools::strtolower(PHP_SAPI) == 'cli' && (!isset($_SERVER['REMOTE_ADDR']) || empty($_SERVER['REMOTE_ADDR'])));
     }
 
     public static function argvToGET($argc, $argv)
@@ -3634,7 +3634,7 @@ exit;
      */
     public static function arrayUnique($array)
     {
-        if (version_compare(phpversion(), '5.2.9', '<')) {
+        if (version_compare(PHP_VERSION, '5.2.9', '<')) {
             return array_unique($array);
         } else {
             return array_unique($array, SORT_REGULAR);

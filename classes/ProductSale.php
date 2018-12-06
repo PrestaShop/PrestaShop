@@ -83,7 +83,7 @@ class ProductSaleCore
         $orderTable = '';
 
         $invalidOrderBy = !Validate::isOrderBy($orderBy);
-        if ($invalidOrderBy || is_null($orderBy)) {
+        if ($invalidOrderBy || null === $orderBy) {
             $orderBy = 'quantity';
             $orderTable = 'ps';
         }
@@ -93,7 +93,7 @@ class ProductSaleCore
         }
 
         $invalidOrderWay = !Validate::isOrderWay($orderWay);
-        if ($invalidOrderWay || is_null($orderWay) || $orderBy == 'sales') {
+        if ($invalidOrderWay || null === $orderWay || $orderBy == 'sales') {
             $orderWay = 'DESC';
         }
 

@@ -49,7 +49,7 @@ class MaintenanceController extends FrameworkBundleAdminController
      */
     public function indexAction(Request $request, FormInterface $form = null)
     {
-        if (is_null($form)) {
+        if (null === $form) {
             $form = $this->get('prestashop.adapter.maintenance.form_handler')->getForm();
         }
 

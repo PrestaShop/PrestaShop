@@ -58,7 +58,7 @@ class LegacyContext
     {
         static $legacyContext = null;
 
-        if (is_null($legacyContext)) {
+        if (null === $legacyContext) {
             $legacyContext = Context::getContext();
 
             if ($legacyContext && !empty($legacyContext->shop) && !isset($legacyContext->controller) && isset($legacyContext->employee)) {

@@ -164,7 +164,7 @@ class EmployeeCore extends ObjectModel
     {
         parent::__construct($id, null, $idShop);
 
-        if (!is_null($idLang)) {
+        if (null !== $idLang) {
             $this->id_lang = (int) (Language::getLanguage($idLang) !== false) ? $idLang : Configuration::get('PS_LANG_DEFAULT');
         }
 
@@ -344,7 +344,7 @@ class EmployeeCore extends ObjectModel
         $crypto = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\Crypto\\Hashing');
 
         $passwordHash = $result['passwd'];
-        $shouldCheckPassword = !is_null($plaintextPassword);
+        $shouldCheckPassword = null !== $plaintextPassword;
         if ($shouldCheckPassword && !$crypto->checkHash($plaintextPassword, $passwordHash)) {
             return false;
         }

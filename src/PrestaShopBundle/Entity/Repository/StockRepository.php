@@ -236,7 +236,7 @@ class StockRepository extends StockManagementRepository
         $having = '',
         $orderByClause = null
     ) {
-        if (is_null($orderByClause)) {
+        if (null === $orderByClause) {
             $orderByClause = $this->orderByProductIds();
         }
 

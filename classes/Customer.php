@@ -402,7 +402,7 @@ class CustomerCore extends ObjectModel
             return false;
         }
 
-        $shouldCheckPassword = !is_null($plaintextPassword);
+        $shouldCheckPassword = null !== $plaintextPassword;
         if ($shouldCheckPassword && !$crypto->checkHash($plaintextPassword, $passwordHash)) {
             return false;
         }
@@ -596,7 +596,7 @@ class CustomerCore extends ObjectModel
             return array();
         }
 
-        if (is_null($idLang)) {
+        if (null === $idLang) {
             $idLang = Context::getContext()->language->id;
         }
 
@@ -620,7 +620,7 @@ class CustomerCore extends ObjectModel
      */
     public function getSimpleAddress($idAddress, $idLang = null)
     {
-        if (!$this->id || !intval($idAddress) || !$idAddress) {
+        if (!$this->id || !(int) $idAddress || !$idAddress) {
             return array(
                 'id' => '',
                 'alias' => '',
@@ -664,7 +664,7 @@ class CustomerCore extends ObjectModel
      */
     public function getSimpleAddressSql($idAddress = null, $idLang = null)
     {
-        if (is_null($idLang)) {
+        if (null === $idLang) {
             $idLang = Context::getContext()->language->id;
         }
         $shareOrder = (bool) Context::getContext()->shop->getGroup()->share_order;
@@ -701,7 +701,7 @@ class CustomerCore extends ObjectModel
                         AND a.`deleted` = 0
                         AND a.`active` = 1';
 
-        if (!is_null($idAddress)) {
+        if (null !== $idAddress) {
             $sql .= ' AND a.`id_address` = ' . (int) $idAddress;
         }
 

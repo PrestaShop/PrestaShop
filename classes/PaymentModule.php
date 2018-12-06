@@ -363,7 +363,7 @@ abstract class PaymentModuleCore extends Module
                     $order->total_shipping_tax_incl = (float) $this->context->cart->getPackageShippingCost((int) $id_carrier, true, null, $order->product_list);
                     $order->total_shipping = $order->total_shipping_tax_incl;
 
-                    if (!is_null($carrier) && Validate::isLoadedObject($carrier)) {
+                    if (null !== $carrier && Validate::isLoadedObject($carrier)) {
                         $order->carrier_tax_rate = $carrier->getTaxesRate(new Address((int) $this->context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')}));
                     }
 
@@ -416,7 +416,7 @@ abstract class PaymentModuleCore extends Module
                     }
 
                     // Adding an entry in order_carrier table
-                    if (!is_null($carrier)) {
+                    if (null !== $carrier) {
                         $order_carrier = new OrderCarrier();
                         $order_carrier->id_order = (int) $order->id;
                         $order_carrier->id_carrier = (int) $id_carrier;
@@ -591,7 +591,7 @@ abstract class PaymentModuleCore extends Module
                             // Set a new voucher code
                             $voucher->code = empty($voucher->code) ? substr(md5($order->id . '-' . $order->id_customer . '-' . $cart_rule['obj']->id), 0, 16) : $voucher->code . '-2';
                             if (preg_match('/\-([0-9]{1,2})\-([0-9]{1,2})$/', $voucher->code, $matches) && $matches[1] == $matches[2]) {
-                                $voucher->code = preg_replace('/' . $matches[0] . '$/', '-' . (intval($matches[1]) + 1), $voucher->code);
+                                $voucher->code = preg_replace('/' . $matches[0] . '$/', '-' . ((int) ($matches[1]) + 1), $voucher->code);
                             }
 
                             // Set the new voucher value
@@ -886,7 +886,7 @@ abstract class PaymentModuleCore extends Module
                     );
                 } else {
                     $error = $this->trans('Order creation failed', array(), 'Admin.Payment.Notification');
-                    PrestaShopLogger::addLog($error, 4, '0000002', 'Cart', intval($order->id_cart));
+                    PrestaShopLogger::addLog($error, 4, '0000002', 'Cart', (int) ($order->id_cart));
                     die($error);
                 }
             } // End foreach $order_detail_list
@@ -903,7 +903,7 @@ abstract class PaymentModuleCore extends Module
             return true;
         } else {
             $error = $this->trans('Cart cannot be loaded or an order has already been placed using this cart', array(), 'Admin.Payment.Notification');
-            PrestaShopLogger::addLog($error, 4, '0000001', 'Cart', intval($this->context->cart->id));
+            PrestaShopLogger::addLog($error, 4, '0000001', 'Cart', (int) ($this->context->cart->id));
             die($error);
         }
     }
@@ -1007,7 +1007,7 @@ abstract class PaymentModuleCore extends Module
         $values = '';
         if (count($id_module_list) == 0) {
             // fetch all installed module ids
-            $modules = PaymentModuleCore::getInstalledPaymentModules();
+            $modules = self::getInstalledPaymentModules();
             foreach ($modules as $module) {
                 $id_module_list[] = $module['id_module'];
             }

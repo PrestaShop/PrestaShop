@@ -229,8 +229,8 @@ class Version
     private function versionCompare($version, $operator)
     {
         if ($this->checkVersion($version)) {
-            $first = intval(trim(str_replace('.', '', $this->version)));
-            $second = intval(trim(str_replace('.', '', $version)));
+            $first = (int) (trim(str_replace('.', '', $this->version)));
+            $second = (int) (trim(str_replace('.', '', $version)));
             $firstLen = strlen($first);
             $secondLen = strlen($second);
             if ($firstLen > $secondLen) {

@@ -293,7 +293,7 @@ class CategoryCore extends ObjectModel
      */
     public function recurseLiteCategTree($maxDepth = 3, $currentDepth = 0, $idLang = null, $excludedIdsArray = null, $format = 'default')
     {
-        $idLang = is_null($idLang) ? Context::getContext()->language->id : (int) $idLang;
+        $idLang = null === $idLang ? Context::getContext()->language->id : (int) $idLang;
 
         $children = array();
         $subcats = $this->getSubCategories($idLang, true);
@@ -1046,7 +1046,7 @@ class CategoryCore extends ObjectModel
     public static function getRootCategory($idLang = null, Shop $shop = null)
     {
         $context = Context::getContext();
-        if (is_null($idLang)) {
+        if (null === $idLang) {
             $idLang = $context->language->id;
         }
         if (!$shop) {
@@ -1147,7 +1147,7 @@ class CategoryCore extends ObjectModel
      */
     public function getAllChildren($idLang = null)
     {
-        if (is_null($idLang)) {
+        if (null === $idLang) {
             $idLang = Context::getContext()->language->id;
         }
 
@@ -1167,7 +1167,7 @@ class CategoryCore extends ObjectModel
      */
     public function getAllParents($idLang = null)
     {
-        if (is_null($idLang)) {
+        if (null === $idLang) {
             $idLang = Context::getContext()->language->id;
         }
 
@@ -1483,7 +1483,7 @@ class CategoryCore extends ObjectModel
         $context = Context::getContext()->cloneContext();
         $context->shop = clone $context->shop;
 
-        if (is_null($idLang)) {
+        if (null === $idLang) {
             $idLang = $context->language->id;
         }
 
@@ -2159,7 +2159,7 @@ class CategoryCore extends ObjectModel
      */
     public static function getTopCategory($idLang = null)
     {
-        if (is_null($idLang)) {
+        if (null === $idLang) {
             $idLang = (int) Context::getContext()->language->id;
         }
         $cacheId = 'Category::getTopCategory_' . (int) $idLang;
@@ -2188,7 +2188,7 @@ class CategoryCore extends ObjectModel
     public function addPosition($position, $idShop = null)
     {
         $return = true;
-        if (is_null($idShop)) {
+        if (null === $idShop) {
             if (Shop::getContext() != Shop::CONTEXT_SHOP) {
                 foreach (Shop::getContextListShopID() as $idShop) {
                     $return &= Db::getInstance()->execute('

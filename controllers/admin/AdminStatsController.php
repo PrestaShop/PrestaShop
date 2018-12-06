@@ -390,7 +390,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
 		AND c.nright = c.nleft + 1'
         );
 
-        return intval($total - $used);
+        return (int) ($total - $used);
     }
 
     public static function getCustomerMainGender()

@@ -78,7 +78,7 @@ class CsvResponse extends StreamedResponse
     {
         parent::__construct($callback, $status, $headers);
 
-        if (is_null($callback)) {
+        if (null === $callback) {
             $this->setCallback(array($this, 'processData'));
         }
 

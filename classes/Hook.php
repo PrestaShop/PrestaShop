@@ -511,7 +511,7 @@ class HookCore extends ObjectModel
             }
 
             // If shop lists is null, we fill it with all shops
-            if (is_null($shop_list)) {
+            if (null === $shop_list) {
                 $shop_list = Shop::getCompleteListOfShopsID();
             }
 
@@ -744,7 +744,7 @@ class HookCore extends ObjectModel
         }
 
         $hookRegistry = self::getHookRegistry();
-        $isRegistryEnabled = !is_null($hookRegistry);
+        $isRegistryEnabled = null !== $hookRegistry;
 
         if ($isRegistryEnabled) {
             $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1);
@@ -977,7 +977,7 @@ class HookCore extends ObjectModel
     private static function getHookRegistry()
     {
         $sfContainer = SymfonyContainer::getInstance();
-        if (!is_null($sfContainer) && 'dev' === $sfContainer->getParameter('kernel.environment')) {
+        if (null !== $sfContainer && 'dev' === $sfContainer->getParameter('kernel.environment')) {
             return $sfContainer->get('prestashop.hooks_registry');
         }
 

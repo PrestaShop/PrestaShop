@@ -1171,7 +1171,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
         }
         imap_expunge($mbox);
         imap_close($mbox);
-        if (sizeof($message_errors) > 0) {
+        if (count($message_errors) > 0) {
             if (($more_error = $str_errors . $str_error_delete) && strlen($more_error) > 0) {
                 $message_errors = array_merge(array($more_error), $message_errors);
             }

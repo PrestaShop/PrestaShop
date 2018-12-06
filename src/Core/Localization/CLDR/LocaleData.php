@@ -101,7 +101,7 @@ class LocaleData
      * @return $this
      *               Fluent interface
      */
-    public function overrideWith(LocaleData $localeData)
+    public function overrideWith(self $localeData)
     {
         if (isset($localeData->localeCode)) {
             $this->localeCode = $localeData->localeCode;

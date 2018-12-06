@@ -36,7 +36,7 @@ class AdminModulesPositionsControllerCore extends AdminController
     public function postProcess()
     {
         // Getting key value for display
-        if (Tools::getValue('show_modules') && strval(Tools::getValue('show_modules')) != 'all') {
+        if (Tools::getValue('show_modules') && (string) (Tools::getValue('show_modules')) != 'all') {
             $this->display_key = (int) Tools::getValue('show_modules');
         }
 
@@ -477,7 +477,7 @@ class AdminModulesPositionsControllerCore extends AdminController
             $id_module = (int) (Tools::getValue('id_module'));
             $id_hook = (int) (Tools::getValue('id_hook'));
             $way = (int) (Tools::getValue('way'));
-            $positions = Tools::getValue(strval($id_hook));
+            $positions = Tools::getValue((string) $id_hook);
             $position = (is_array($positions)) ? array_search($id_hook . '_' . $id_module, $positions) : null;
             $module = Module::getInstanceById($id_module);
             if (Validate::isLoadedObject($module)) {

@@ -1001,7 +1001,7 @@ abstract class ModuleCore implements ModuleInterface
     public function registerExceptions($id_hook, $excepts, $shop_list = null)
     {
         // If shop lists is null, we fill it with all shops
-        if (is_null($shop_list)) {
+        if (null === $shop_list) {
             $shop_list = Shop::getContextListShopID();
         }
 
@@ -1148,7 +1148,7 @@ abstract class ModuleCore implements ModuleInterface
     {
         static $id2name = null;
 
-        if (is_null($id2name)) {
+        if (null === $id2name) {
             $id2name = array();
             $sql = 'SELECT `id_module`, `name` FROM `' . _DB_PREFIX_ . 'module`';
             if ($results = Db::getInstance()->executeS($sql)) {
@@ -1327,7 +1327,7 @@ abstract class ModuleCore implements ModuleInterface
                     $module_list[$item->name . '_disk'] = $item;
 
                     $module_name_list[] = '\'' . pSQL($item->name) . '\'';
-                    $modules_name_to_cursor[Tools::strtolower(strval($item->name))] = $item;
+                    $modules_name_to_cursor[Tools::strtolower((string) ($item->name))] = $item;
                 }
             }
 
@@ -2029,7 +2029,7 @@ abstract class ModuleCore implements ModuleInterface
         $sql = 'SELECT `id_module`, `id_shop`
             FROM `' . _DB_PREFIX_ . 'hook_module`
             WHERE `id_hook` = ' . (int) $id_hook . '
-            ' . ((!is_null($shop_list) && $shop_list) ? ' AND `id_shop` IN(' . implode(', ', array_map('intval', $shop_list)) . ')' : '') . '
+            ' . ((null !== $shop_list && $shop_list) ? ' AND `id_shop` IN(' . implode(', ', array_map('intval', $shop_list)) . ')' : '') . '
             ORDER BY `position`';
         $results = Db::getInstance()->executeS($sql);
         $position = array();
@@ -3355,7 +3355,7 @@ abstract class ModuleCore implements ModuleInterface
     public function get($serviceName)
     {
         if ($this->isSymfonyContext()) {
-            if (is_null($this->container)) {
+            if (null === $this->container) {
                 $this->container = SymfonyContainer::getInstance();
             }
 

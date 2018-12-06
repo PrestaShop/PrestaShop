@@ -352,7 +352,7 @@ class WarehouseCore extends ObjectModel
     public static function getWarehouses($ignore_shop = false, $id_shop = null)
     {
         if (!$ignore_shop) {
-            if (is_null($id_shop)) {
+            if (null === $id_shop) {
                 $id_shop = Context::getContext()->shop->id;
             }
         }
@@ -518,7 +518,7 @@ class WarehouseCore extends ObjectModel
             return false;
         }
 
-        if (is_null($id_shop)) {
+        if (null === $id_shop) {
             $id_shop = Context::getContext()->shop->id;
         }
 

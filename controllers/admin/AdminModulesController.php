@@ -801,7 +801,7 @@ class AdminModulesControllerCore extends AdminController
                         }
 
                         foreach ($module_to_update as $name => $attr) {
-                            if ((is_null($attr) && $this->logged_on_addons == 0) || ($attr['need_loggedOnAddons'] == 1 && $this->logged_on_addons == 0)) {
+                            if ((null === $attr && $this->logged_on_addons == 0) || ($attr['need_loggedOnAddons'] == 1 && $this->logged_on_addons == 0)) {
                                 $this->errors[] = $this->trans(
                                     'You need to be logged in to your PrestaShop Addons account in order to update the %s module. %s',
                                     array(
@@ -812,7 +812,7 @@ class AdminModulesControllerCore extends AdminController
                                     ),
                                     'Admin.Modules.Notification'
                                 );
-                            } elseif (!is_null($attr['id'])) {
+                            } elseif (null !== $attr['id']) {
                                 $download_ok = false;
                                 if ($attr['need_loggedOnAddons'] == 0
                                         && file_put_contents(
@@ -1348,7 +1348,7 @@ class AdminModulesControllerCore extends AdminController
         if ($show_country_modules && (isset($module->limited_countries) && !empty($module->limited_countries)
                 && ((is_array($module->limited_countries) && count($module->limited_countries)
                 && !in_array(strtolower($this->iso_default_country), $module->limited_countries))
-                || (!is_array($module->limited_countries) && strtolower($this->iso_default_country) != strval($module->limited_countries))))) {
+                || (!is_array($module->limited_countries) && strtolower($this->iso_default_country) != (string) ($module->limited_countries))))) {
             return true;
         }
 

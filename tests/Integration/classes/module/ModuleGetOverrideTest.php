@@ -31,7 +31,7 @@ use Tests\TestCase\IntegrationTestCase;
 use Module;
 use Tests\TestCase\Module as HelperModule;
 
-class ModulesGetOverrideTest extends IntegrationTestCase
+class ModuleGetOverrideTest extends IntegrationTestCase
 {
     /**
      * @return array a list of modules to control override features.

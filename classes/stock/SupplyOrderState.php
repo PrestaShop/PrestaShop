@@ -111,7 +111,7 @@ class SupplyOrderStateCore extends ObjectModel
         $query->from('supply_order_state', 's');
         $query->leftjoin('supply_order_state_lang', 'sl', 's.id_supply_order_state = sl.id_supply_order_state AND sl.id_lang=' . (int) $id_lang);
 
-        if (!is_null($id_state_referrer)) {
+        if (null !== $id_state_referrer) {
             $is_receipt_state = false;
             $is_editable = false;
             $is_delivery_note = false;

@@ -42,7 +42,7 @@ class TranslationRepository extends EntityRepository
         $queryBuilder->where('lang = :language');
         $queryBuilder->setParameter('language', $language);
 
-        if (!is_null($theme)) {
+        if (null !== $theme) {
             $queryBuilder->andWhere('theme = :theme');
             $queryBuilder->setParameter('theme', $theme);
         } else {

@@ -140,7 +140,7 @@ class ThemeProvider extends AbstractProvider
      */
     public function getResourceDirectory($baseDir = null)
     {
-        if (is_null($baseDir)) {
+        if (null === $baseDir) {
             $baseDir = $this->resourceDirectory;
         }
 
@@ -188,7 +188,7 @@ class ThemeProvider extends AbstractProvider
      */
     public function getDatabaseCatalogue($themeName = null)
     {
-        if (is_null($themeName)) {
+        if (null === $themeName) {
             $themeName = $this->themeName;
         }
 

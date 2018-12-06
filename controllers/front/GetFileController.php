@@ -36,7 +36,7 @@ class GetFileControllerCore extends FrontController
             if (!Validate::isSha1($filename)) {
                 die(Tools::displayError());
             }
-            $file = _PS_DOWNLOAD_DIR_ . strval(preg_replace('/\.{2,}/', '.', $filename));
+            $file = _PS_DOWNLOAD_DIR_ . (string) (preg_replace('/\.{2,}/', '.', $filename));
             $filename = ProductDownload::getFilenameFromFilename(Tools::getValue('file'));
             if (empty($filename)) {
                 $newFileName = Tools::getValue('filename');

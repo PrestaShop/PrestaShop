@@ -67,7 +67,7 @@ class HookEvent extends Event
         $globalParameters = array('_ps_version' => AppKernel::VERSION);
 
         $sfContainer = SymfonyContainer::getInstance();
-        if (!is_null($sfContainer) && !is_null($sfContainer->get('request_stack')->getCurrentRequest())) {
+        if (null !== $sfContainer && null !== $sfContainer->get('request_stack')->getCurrentRequest()) {
             $request = $sfContainer->get('request_stack')->getCurrentRequest();
             $globalParameters['request'] = $request;
             $globalParameters['route'] = $request->get('_route');

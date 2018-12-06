@@ -294,7 +294,7 @@ class AdminFilter
                     $operator = '>=';
                 }
 
-                if (is_null($operator)) {
+                if (null === $operator) {
                     $pattern = '#BETWEEN (?P<min>\d+\.?\d*) AND (?P<max>\d+\.?\d*)#';
                     if (0 === preg_match($pattern, $subject, $matches)) {
                         return '';

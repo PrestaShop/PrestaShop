@@ -100,7 +100,7 @@ class ModuleDataProvider
             $result['active_on_mobile'] = (bool) ($this->getDeviceStatus($name) & AddonListFilterDeviceStatus::DEVICE_MOBILE);
             $lastAccessDate = '0000-00-00 00:00:00';
 
-            if (!Tools::isPHPCLI() && !is_null($this->entityManager) && $this->employeeID) {
+            if (!Tools::isPHPCLI() && null !== $this->entityManager && $this->employeeID) {
                 $moduleID = (int) $result['id'];
 
                 $qb = $this->entityManager->createQueryBuilder();
