@@ -400,7 +400,7 @@ var featuresCollection = (function() {
 
         if('' !== $(this).val()) {
           $.ajax({
-            url: $(this).attr('data-action').replace(/\/\d+((?=\?.*))?/, '/' + $(this).val()),
+            url: $(this).attr('data-action').replace(/\/\d+(?!.*\/\d+)((?=\?.*))?/, '/' + $(this).val()),
             success: function(response) {
               $selector.prop('disabled', response.length === 0);
               $selector.empty();
@@ -1164,7 +1164,7 @@ var attachmentProduct = (function() {
 
         $.ajax({
           type: 'POST',
-          url: $('#form_step6_attachment_product').attr('data-action').replace(/\/\d+(?=\?.*)/, '/' + id_product),
+          url: $('#form_step6_attachment_product').attr('data-action').replace(/\/\d+(?!.*\/\d+)((?=\?.*))?/, '/' + id_product),
           data: data,
           contentType: false,
           processData: false,
