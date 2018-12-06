@@ -448,7 +448,7 @@ class AdminThemesControllerCore extends AdminController
                         'type' => 'file',
                         'name' => 'PS_FAVICON',
                         'tab' => 'icons',
-                        'thumb' => _PS_IMG_ . Configuration::get('PS_FAVICON') . (Tools::getValue('conf') ? sprintf('?%04d', random_int(0, 9999)) : ''),
+                        'thumb' => _PS_IMG_ . Configuration::get('PS_FAVICON') . (Tools::getValue('conf') ? sprintf('?%04d', mt_rand(0, 9999)) : ''),
                     ),
                 ),
                 'after_tabs' => array(
