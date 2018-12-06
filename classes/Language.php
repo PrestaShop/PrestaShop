@@ -1141,7 +1141,7 @@ class LanguageCore extends ObjectModel
 
             if ($fileSystem->exists($folder . '/modules')) {
                 foreach ($finder->directories()->in($folder . '/modules') as $moduleDirectory) {
-                    $moduleDestPath = _PS_MODULE_DIR_/' . $moduleDirectory->getFileName() . '/mails/' . $lang_pack['iso_code'];
+                    $moduleDestPath = _PS_MODULE_DIR_ . $moduleDirectory->getFileName() . '/mails/' . $lang_pack['iso_code'];
                     $fileSystem->mkdir($moduleDestPath, 0755);
 
                     $findEmails = new \Symfony\Component\Finder\Finder();
