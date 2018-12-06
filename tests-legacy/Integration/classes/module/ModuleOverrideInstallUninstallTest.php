@@ -70,8 +70,8 @@ class ModuleOverrideInstallUninstallTest extends IntegrationTestCase
         TestingModule::removeModule('pscsx3241');
         TestingModule::removeModule('pscsx32412');
 
-        @unlink(_PS_ROOT_DIR_.'/override/controllers/admin/AdminProductsController.php');
-        @unlink(_PS_ROOT_DIR_.'/override/classes/Cart.php');
+        @unlink(_PS_OVERRIDE_DIR_ . 'controllers/admin/AdminProductsController.php');
+        @unlink(_PS_OVERRIDE_DIR_ . 'classes/Cart.php');
     }
 
     public function testInstall()

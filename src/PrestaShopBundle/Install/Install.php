@@ -1078,8 +1078,8 @@ class Install extends AbstractInstall
     {
         $fixtures_path = _PS_INSTALL_FIXTURES_PATH_ . 'fashion/';
         $fixtures_name = 'fashion';
-        $zip_file = _PS_ROOT_DIR_ . '/download/fixtures.zip';
-        $temp_dir = _PS_ROOT_DIR_ . '/download/fixtures/';
+        $zip_file = _PS_DOWNLOAD_DIR_ . 'fixtures.zip';
+        $temp_dir = _PS_DOWNLOAD_DIR_ . 'fixtures/';
 
         // Load class (use fixture class if one exists, or use InstallXmlLoader)
         if (file_exists($fixtures_path . '/install.php')) {
