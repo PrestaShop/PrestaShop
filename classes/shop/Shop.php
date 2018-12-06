@@ -529,7 +529,7 @@ class ShopCore extends ObjectModel
         }
 
         $url = array();
-        $url['protocol'] = Tools::getShopProtocol();
+        $url['protocol'] = $auto_secure_mode && Tools::usingSecureMode() ? 'https://' : 'http://';
         $url['domain'] = $auto_secure_mode && Tools::usingSecureMode() ? $this->domain_ssl : $this->domain;
 
         if ($add_base_uri) {
