@@ -579,8 +579,8 @@ class LanguageCore extends ObjectModel
                     if (file_exists($image_directory . $this->iso_code . $image)) {
                         unlink($image_directory . $this->iso_code . $image);
                     }
-                    if (file_exists(_PS_IMG_DIR_/l/' . $this->id . '.jpg')) {
-                        unlink(_PS_IMG_DIR_/l/' . $this->id . '.jpg');
+                    if (file_exists(_PS_IMG_DIR_ . 'l/' . $this->id . '.jpg')) {
+                        unlink(_PS_IMG_DIR_ . 'l/' . $this->id . '.jpg');
                     }
                 }
             }
@@ -956,7 +956,7 @@ class LanguageCore extends ObjectModel
 
         $flag = Tools::file_get_contents('http://www.prestashop.com/download/lang_packs/flags/jpeg/' . $iso_code . '.jpg');
         if ($flag != null && !preg_match('/<body>/', $flag)) {
-            $file = fopen(_PS_IMG_DIR_/l/' . (int) $lang->id . '.jpg', 'w');
+            $file = fopen(_PS_IMG_DIR_ . 'l/' . (int) $lang->id . '.jpg', 'w');
             if ($file) {
                 fwrite($file, $flag);
                 fclose($file);
@@ -977,7 +977,7 @@ class LanguageCore extends ObjectModel
 
         foreach (array(_PS_CAT_IMG_DIR_, _PS_MANU_IMG_DIR_, _PS_PROD_IMG_DIR_, _PS_SUPP_IMG_DIR_) as $to) {
             foreach ($files_copy as $file) {
-                @copy(_PS_IMG_DIR_/l' . $file, $to . str_replace('/en', '/' . $iso_code, $file));
+                @copy(_PS_IMG_DIR_ . 'l' . $file, $to . str_replace('/en', '/' . $iso_code, $file));
             }
         }
 
@@ -988,7 +988,7 @@ class LanguageCore extends ObjectModel
 
     protected static function _copyNoneFlag($id)
     {
-        return copy(_PS_IMG_DIR_/l/none.jpg', _PS_IMG_DIR_/l/' . $id . '.jpg');
+        return copy(_PS_IMG_DIR_ . 'l/none.jpg', _PS_IMG_DIR_ . 'l/' . $id . '.jpg');
     }
 
     public static function isInstalled($iso_code)
