@@ -31,11 +31,11 @@ use PrestaShop\PrestaShop\Core\Import\ImportSettings;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use SplFileInfo;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Responsible of "Configure > Advanced Parameters > Import" step 2 page display.
@@ -47,11 +47,10 @@ class ImportDataConfigurationController extends FrameworkBundleAdminController
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      * @DemoRestricted(redirectRoute="admin_import")
-     * @Template("@PrestaShop/Admin/Configure/AdvancedParameters/ImportDataConfiguration/index.html.twig")
      *
      * @param Request $request
      *
-     * @return array|RedirectResponse
+     * @return RedirectResponse|Response
      */
     public function indexAction(Request $request)
     {
@@ -83,13 +82,16 @@ class ImportDataConfigurationController extends FrameworkBundleAdminController
         $presentedDataRowCollection = $dataRowCollectionPresenter->present($dataRowCollection);
         $entityFieldsProvider = $entityFieldsProviderFinder->find($importConfig->getEntityType());
 
-        return [
-            'importDataConfigurationForm' => $form->createView(),
-            'dataRowCollection' => $presentedDataRowCollection,
-            'maxVisibleColumns' => ImportSettings::MAX_VISIBLE_COLUMNS,
-            'showPagingArrows' => $presentedDataRowCollection['row_size'] > ImportSettings::MAX_VISIBLE_COLUMNS,
-            'requiredFields' => $entityFieldsProvider->getCollection()->getRequiredFields(),
-        ];
+        return $this->render(
+            '@PrestaShop/Admin/Configure/AdvancedParameters/ImportDataConfiguration/index.html.twig',
+            [
+                'importDataConfigurationForm' => $form->createView(),
+                'dataRowCollection' => $presentedDataRowCollection,
+                'maxVisibleColumns' => ImportSettings::MAX_VISIBLE_COLUMNS,
+                'showPagingArrows' => $presentedDataRowCollection['row_size'] > ImportSettings::MAX_VISIBLE_COLUMNS,
+                'requiredFields' => $entityFieldsProvider->getCollection()->getRequiredFields(),
+            ]
+        );
     }
 
     /**
