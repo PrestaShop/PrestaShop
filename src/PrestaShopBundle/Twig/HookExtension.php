@@ -29,6 +29,7 @@ namespace PrestaShopBundle\Twig;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository;
+use PrestaShop\PrestaShop\Core\Hook\RenderedHook;
 
 /**
  * This class is used by Twig_Environment and provide some methods callable from a twig template.
@@ -124,8 +125,8 @@ class HookExtension extends \Twig_Extension
         // The call to the render of the hooks is encapsulated into a ob management to avoid any call of echo from the
         // modules.
         ob_start();
+        /** @var RenderedHook $renderedHook */
         $renderedHook = $this->hookDispatcher->dispatchRenderingWithParameters($hookName, $hookParameters);
-        $renderedHook->outputContent();
         ob_clean();
 
         $render = [];
@@ -134,7 +135,7 @@ class HookExtension extends \Twig_Extension
             $render[] = [
                 'id' => $module,
                 'name' => $this->moduleDataProvider->getModuleName($module),
-                'content' => array_values($hookRender)[0],
+                'content' => $hookRender,
                 'attributes' => $moduleAttributes->all(),
             ];
         }
