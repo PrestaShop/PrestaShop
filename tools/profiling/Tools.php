@@ -49,7 +49,7 @@ class Tools extends ToolsCore
             $use_ssl = !empty($url);
             $url = $link->getPageLink($explode[0], $use_ssl);
             if (isset($explode[1])) {
-                $url .= '?'.$explode[1];
+                $url .= '?' . $explode[1];
             }
         }
 
@@ -75,7 +75,7 @@ class Tools extends ToolsCore
         if (empty($default_controller)) {
             $default_controller = 'AdminDashboard';
         }
-        $controllers = Dispatcher::getControllers(array(_PS_ADMIN_DIR_.'/tabs/', _PS_ADMIN_CONTROLLER_DIR_, _PS_OVERRIDE_DIR_.'controllers/admin/'));
+        $controllers = Dispatcher::getControllers(array(_PS_ADMIN_DIR_ . '/tabs/', _PS_ADMIN_CONTROLLER_DIR_, _PS_OVERRIDE_DIR_ . 'controllers/admin/'));
         if (!isset($controllers[strtolower($default_controller)])) {
             $default_controller = 'adminnotfound';
         }
@@ -92,7 +92,7 @@ class Tools extends ToolsCore
             $explode = explode('?', $url);
             $url = Context::getContext()->link->getPageLink($explode[0]);
             if (isset($explode[1])) {
-                $url .= '?'.$explode[1];
+                $url .= '?' . $explode[1];
             }
         }
     }

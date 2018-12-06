@@ -41,10 +41,10 @@ class File
         $file = readdir($dirp);
         while ($file !== false) {
             if ($file != '.' && $file != '..') {
-                if (is_dir($src.'/'.$file)) {
-                    File::recurseCopy($src.'/'.$file, $dst.'/'.$file);
+                if (is_dir($src . '/' . $file)) {
+                    File::recurseCopy($src . '/' . $file, $dst . '/' . $file);
                 } else {
-                    copy($src.'/'.$file, $dst.'/'.$file);
+                    copy($src . '/' . $file, $dst . '/' . $file);
                 }
             }
             $file = readdir($dirp);
@@ -63,10 +63,10 @@ class File
         $file = readdir($dirp);
         while ($file !== false) {
             if ($file != '.' && $file != '..') {
-                if (is_dir($dir.'/'.$file)) {
-                    File::recurseDelete($dir.'/'.$file);
+                if (is_dir($dir . '/' . $file)) {
+                    File::recurseDelete($dir . '/' . $file);
                 } else {
-                    unlink($dir.'/'.$file);
+                    unlink($dir . '/' . $file);
                 }
             }
             $file = readdir($dirp);

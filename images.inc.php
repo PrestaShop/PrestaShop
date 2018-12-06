@@ -127,18 +127,18 @@ function deleteImage($id_item, $id_image = null)
     if (!$id_image) {
         $path = _PS_CAT_IMG_DIR_;
         $table = 'category';
-        if (file_exists(_PS_TMP_IMG_DIR_.$table.'_'.$id_item.'.jpg')) {
-            unlink(_PS_TMP_IMG_DIR_.$table.'_'.$id_item.'.jpg');
+        if (file_exists(_PS_TMP_IMG_DIR_ . $table . '_' . $id_item . '.jpg')) {
+            unlink(_PS_TMP_IMG_DIR_ . $table . '_' . $id_item . '.jpg');
         }
-        if (!$id_image and file_exists($path.$id_item.'.jpg')) {
-            unlink($path.$id_item.'.jpg');
+        if (!$id_image and file_exists($path . $id_item . '.jpg')) {
+            unlink($path . $id_item . '.jpg');
         }
 
         /* Auto-generated images */
         $imagesTypes = ImageType::getImagesTypes();
         foreach ($imagesTypes as $k => $imagesType) {
-            if (file_exists($path.$id_item.'-'.$imagesType['name'].'.jpg')) {
-                unlink($path.$id_item.'-'.$imagesType['name'].'.jpg');
+            if (file_exists($path . $id_item . '-' . $imagesType['name'] . '.jpg')) {
+                unlink($path . $id_item . '-' . $imagesType['name'] . '.jpg');
             }
         }
     } else {
@@ -149,22 +149,22 @@ function deleteImage($id_item, $id_image = null)
         $image = new Image($id_image);
         $image->id_product = $id_item;
 
-        if (file_exists($path.$image->getExistingImgPath().'.jpg')) {
-            unlink($path.$image->getExistingImgPath().'.jpg');
+        if (file_exists($path . $image->getExistingImgPath() . '.jpg')) {
+            unlink($path . $image->getExistingImgPath() . '.jpg');
         }
 
         /* Auto-generated images */
         $imagesTypes = ImageType::getImagesTypes();
         foreach ($imagesTypes as $k => $imagesType) {
-            if (file_exists($path.$image->getExistingImgPath().'-'.$imagesType['name'].'.jpg')) {
-                unlink($path.$image->getExistingImgPath().'-'.$imagesType['name'].'.jpg');
+            if (file_exists($path . $image->getExistingImgPath() . '-' . $imagesType['name'] . '.jpg')) {
+                unlink($path . $image->getExistingImgPath() . '-' . $imagesType['name'] . '.jpg');
             }
         }
     }
 
     /* BO "mini" image */
-    if (file_exists(_PS_TMP_IMG_DIR_.$table.'_mini_'.$id_item.'.jpg')) {
-        unlink(_PS_TMP_IMG_DIR_.$table.'_mini_'.$id_item.'.jpg');
+    if (file_exists(_PS_TMP_IMG_DIR_ . $table . '_mini_' . $id_item . '.jpg')) {
+        unlink(_PS_TMP_IMG_DIR_ . $table . '_mini_' . $id_item . '.jpg');
     }
     return true;
 }

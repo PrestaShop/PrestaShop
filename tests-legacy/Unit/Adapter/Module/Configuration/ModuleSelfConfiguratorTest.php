@@ -60,7 +60,7 @@ class ModuleSelfConfiguratorTest extends UnitTestCase
         $this->connection = new ConnectionMock(array(), new Driver);
         $this->mockModuleRepository();
 
-        $this->defaultDir = __DIR__.'/../../../../resources/module-self-config-files';
+        $this->defaultDir = __DIR__ . '/../../../../resources/module-self-config-files';
         parent::setUp();
     }
 
@@ -99,9 +99,9 @@ class ModuleSelfConfiguratorTest extends UnitTestCase
     {
         // Module installed
         $name = 'ganalytics';
-        $filepath = $this->defaultDir.'/moduleConfExample.yml';
+        $filepath = $this->defaultDir . '/moduleConfExample.yml';
         $result = $this->getModuleSelfConfigurator()->module($name)->file($filepath)->validate();
-        $this->assertEmpty($result, 'Failed to pass the module for the following reasons: '.var_export($result, true));
+        $this->assertEmpty($result, 'Failed to pass the module for the following reasons: ' . var_export($result, true));
     }
 
     public function testModuleInstallationRequirementFail()
@@ -121,14 +121,14 @@ class ModuleSelfConfiguratorTest extends UnitTestCase
 
     public function testAllValid()
     {
-        $filepath = $this->defaultDir.'/moduleConfExample.yml';
+        $filepath = $this->defaultDir . '/moduleConfExample.yml';
         $name = 'bankwire';
         $this->assertEmpty($this->getModuleSelfConfigurator()->module($name)->file($filepath)->validate());
     }
 
     public function testConfigurationUpdate()
     {
-        $filepath = $this->defaultDir.'/moduleConfExampleConfStep.yml';
+        $filepath = $this->defaultDir . '/moduleConfExampleConfStep.yml';
         $name = 'bankwire';
         // Test before
         $this->assertNull($this->configuration->get('PAYPAL_SANDBOX'));
@@ -138,7 +138,7 @@ class ModuleSelfConfiguratorTest extends UnitTestCase
 
     public function testConfigurationDelete()
     {
-        $filepath = $this->defaultDir.'/moduleConfExampleConfStep.yml';
+        $filepath = $this->defaultDir . '/moduleConfExampleConfStep.yml';
         $name = 'bankwire';
         // Test before
         $this->configuration->set('PAYPAL_ONBOARDING', 1);
@@ -149,7 +149,7 @@ class ModuleSelfConfiguratorTest extends UnitTestCase
 
     public function testFilesExceptionMissingSource()
     {
-        $filepath = $this->defaultDir.'/moduleConfCrashFileSource.yml';
+        $filepath = $this->defaultDir . '/moduleConfCrashFileSource.yml';
         $name = 'bankwire';
 
         $this->setExpectedException('Exception', 'Missing source file');
@@ -158,7 +158,7 @@ class ModuleSelfConfiguratorTest extends UnitTestCase
 
     public function testFilesExceptionMissingDestination()
     {
-        $filepath = $this->defaultDir.'/moduleConfCrashFileDestination.yml';
+        $filepath = $this->defaultDir . '/moduleConfCrashFileDestination.yml';
         $name = 'bankwire';
 
         $this->setExpectedException('Exception', 'Missing destination file');
@@ -167,7 +167,7 @@ class ModuleSelfConfiguratorTest extends UnitTestCase
 
     public function testFilesStep()
     {
-        $filepath = $this->defaultDir.'/moduleConfExampleFilesStep.yml';
+        $filepath = $this->defaultDir . '/moduleConfExampleFilesStep.yml';
         $name = 'ganalytics';
 
         $basePath = __DIR__ . '/../../../../resources/module-self-config-files/..';
@@ -179,12 +179,12 @@ class ModuleSelfConfiguratorTest extends UnitTestCase
             ->method('copy')
             ->withConsecutive(
                 [
-                    $this->equalTo($basePath.'/modules/ganalytics/ganalytics.php'),
-                    $this->equalTo($basePath.'/modules/ganalytics/ganalytics_copy.php'),
+                    $this->equalTo($basePath . '/modules/ganalytics/ganalytics.php'),
+                    $this->equalTo($basePath . '/modules/ganalytics/ganalytics_copy.php'),
                 ],
                 [
                     $this->equalTo('http://localhost/img/logo.png'),
-                    $this->equalTo($basePath.'/modules/ganalytics/another-logo.png'),
+                    $this->equalTo($basePath . '/modules/ganalytics/another-logo.png'),
                 ]
             );
 
@@ -200,14 +200,14 @@ class ModuleSelfConfiguratorTest extends UnitTestCase
         // Then clean
         $filesystem = new Filesystem();
         $filesystem->remove(array(
-            __DIR__.'/../../../../resources/modules/ganalytics/ganalytics_copy.php',
-            __DIR__.'/../../../../resources/modules/ganalytics/avatar.jpg',
+            __DIR__ . '/../../../../resources/modules/ganalytics/ganalytics_copy.php',
+            __DIR__ . '/../../../../resources/modules/ganalytics/avatar.jpg',
         ));
     }
 
     public function testSqlStep()
     {
-        $filepath = $this->defaultDir.'/moduleConfExampleSqlStep.yml';
+        $filepath = $this->defaultDir . '/moduleConfExampleSqlStep.yml';
         $name = 'ganalytics';
 
         $this->assertTrue($this->getModuleSelfConfigurator()->module($name)->file($filepath)->configure());
@@ -220,7 +220,7 @@ class ModuleSelfConfiguratorTest extends UnitTestCase
 
     public function testSqlExceptionMissingFile()
     {
-        $filepath = $this->defaultDir.'/moduleConfCrashSql.yml';
+        $filepath = $this->defaultDir . '/moduleConfCrashSql.yml';
         $name = 'bankwire';
 
         $this->setExpectedException('Exception', 'Missing file path');
@@ -229,8 +229,8 @@ class ModuleSelfConfiguratorTest extends UnitTestCase
 
     public function testPhpStep()
     {
-        $filepath = $this->defaultDir.'/moduleConfExamplePhpStep.yml';
-        $php_filepath = __DIR__.'/../../../../resources/module-self-config-files/php/MyComplexModuleConfiguration.php';
+        $filepath = $this->defaultDir . '/moduleConfExamplePhpStep.yml';
+        $php_filepath = __DIR__ . '/../../../../resources/module-self-config-files/php/MyComplexModuleConfiguration.php';
         $name = 'ganalytics';
 
         // Test context with mocks

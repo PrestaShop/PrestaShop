@@ -130,11 +130,11 @@ class Step
     public function getControllerInstance()
     {
         if (null == $this->instance) {
-            if (!file_exists(_PS_INSTALL_CONTROLLERS_PATH_.'http/'.$this->name.'.php')) {
+            if (!file_exists(_PS_INSTALL_CONTROLLERS_PATH_ . 'http/' . $this->name . '.php')) {
                 throw new PrestashopInstallerException("Controller file 'http/{$this->name}.php' not found");
             }
 
-            require_once _PS_INSTALL_CONTROLLERS_PATH_.'http/'.$this->name.'.php';
+            require_once _PS_INSTALL_CONTROLLERS_PATH_ . 'http/' . $this->name . '.php';
 
             $this->instance = new $this->controllerName;
         }

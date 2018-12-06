@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-define('_PS_SMARTY_DIR_', _PS_VENDOR_DIR_.'prestashop/smarty/');
+define('_PS_SMARTY_DIR_', _PS_VENDOR_DIR_ . 'prestashop/smarty/');
 
 global $smarty;
 if (Configuration::get('PS_SMARTY_LOCAL')) {
@@ -34,19 +34,19 @@ if (Configuration::get('PS_SMARTY_LOCAL')) {
     $smarty = new Smarty();
 }
 
-$smarty->setCompileDir(_PS_CACHE_DIR_.'smarty/compile');
-$smarty->setCacheDir(_PS_CACHE_DIR_.'smarty/cache');
+$smarty->setCompileDir(_PS_CACHE_DIR_ . 'smarty/compile');
+$smarty->setCacheDir(_PS_CACHE_DIR_ . 'smarty/cache');
 $smarty->use_sub_dirs = true;
-$smarty->setConfigDir(_PS_SMARTY_DIR_.'configs');
+$smarty->setConfigDir(_PS_SMARTY_DIR_ . 'configs');
 $smarty->caching = false;
 
 if (Configuration::get('PS_SMARTY_CACHING_TYPE') == 'mysql') {
-    include _PS_CLASS_DIR_.'Smarty/SmartyCacheResourceMysql.php';
+    include _PS_CLASS_DIR_ . 'Smarty/SmartyCacheResourceMysql.php';
     $smarty->caching_type = 'mysql';
 }
 $smarty->force_compile = (Configuration::get('PS_SMARTY_FORCE_COMPILE') == _PS_SMARTY_FORCE_COMPILE_) ? true : false;
 $smarty->compile_check = (Configuration::get('PS_SMARTY_FORCE_COMPILE') >= _PS_SMARTY_CHECK_COMPILE_) ? true : false;
-$smarty->debug_tpl = _PS_ALL_THEMES_DIR_.'debug.tpl';
+$smarty->debug_tpl = _PS_ALL_THEMES_DIR_ . 'debug.tpl';
 
 /* Use this constant if you want to load smarty without all PrestaShop functions */
 if (defined('_PS_SMARTY_FAST_LOAD_') && _PS_SMARTY_FAST_LOAD_) {
@@ -54,12 +54,12 @@ if (defined('_PS_SMARTY_FAST_LOAD_') && _PS_SMARTY_FAST_LOAD_) {
 }
 
 if (defined('_PS_ADMIN_DIR_')) {
-    require_once dirname(__FILE__).'/smartyadmin.config.inc.php';
+    require_once dirname(__FILE__) . '/smartyadmin.config.inc.php';
 } else {
-    require_once dirname(__FILE__).'/smartyfront.config.inc.php';
+    require_once dirname(__FILE__) . '/smartyfront.config.inc.php';
 }
 
-require_once SMARTY_PLUGINS_DIR.'modifier.truncate.php';
+require_once SMARTY_PLUGINS_DIR . 'modifier.truncate.php';
 
 // This escape modifier is required for invoice PDF generation
 function smartyEscape($string, $esc_type = 'html', $char_set = null, $double_encode = true)

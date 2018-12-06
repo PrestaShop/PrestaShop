@@ -27,7 +27,7 @@
 if (!defined('_PS_ADMIN_DIR_')) {
     define('_PS_ADMIN_DIR_', getcwd());
 }
-include(_PS_ADMIN_DIR_.'/../config/config.inc.php');
+include(_PS_ADMIN_DIR_ . '/../config/config.inc.php');
 
 if (!Context::getContext()->employee->isLoggedBack()) {
     Tools::redirectAdmin(Context::getContext()->link->getAdminLink('AdminLogin'));
@@ -65,7 +65,7 @@ if (!$backupfile = Tools::getValue('filename')) {
 }
 
 // Check the realpath so we can validate the backup file is under the backup directory
-$backupfile = realpath($backupdir.DIRECTORY_SEPARATOR.$backupfile);
+$backupfile = realpath($backupdir . DIRECTORY_SEPARATOR . $backupfile);
 
 if ($backupfile === false || strncmp($backupdir, $backupfile, strlen($backupdir)) != 0) {
     die(Tools::dieOrLog('The backup file does not exist.'));
@@ -85,13 +85,13 @@ if ($fp === false) {
             'Unable to open backup file(s).',
             array(),
             'Admin.Advparameters.Notification'
-        ).' "'.addslashes($backupfile).'"'
+        ) . ' "' . addslashes($backupfile) . '"'
     );
 }
 
 // Add the correct headers, this forces the file is saved
-header('Content-Type: '.$contentType);
-header('Content-Disposition: attachment; filename="'.Tools::getValue('filename'). '"');
+header('Content-Type: ' . $contentType);
+header('Content-Disposition: attachment; filename="' . Tools::getValue('filename') . '"');
 
 if (ob_get_level() && ob_get_length() > 0) {
     ob_clean();
@@ -105,6 +105,6 @@ if ($ret === false) {
             'Unable to display backup file(s).',
             array(),
             'Admin.Advparameters.Notification'
-        ).' "'.addslashes($backupfile).'"'
+        ) . ' "' . addslashes($backupfile) . '"'
     );
 }

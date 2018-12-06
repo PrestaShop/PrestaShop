@@ -69,8 +69,8 @@ if (isset($_GET['action'])) {
             file_put_contents($put_contents_path, $image_data);
             //new thumb creation
             //try{
-            create_img_gd($current_path.$_POST['path'].$_POST['name'], $thumbs_base_path.$_POST['path'].$_POST['name'], 122, 91);
-            new_thumbnails_creation($current_path.$_POST['path'], $current_path.$_POST['path'].$_POST['name'], $_POST['name'], $current_path, $relative_image_creation, $relative_path_from_current_pos, $relative_image_creation_name_to_prepend, $relative_image_creation_name_to_append, $relative_image_creation_width, $relative_image_creation_height, $fixed_image_creation, $fixed_path_from_filemanager, $fixed_image_creation_name_to_prepend, $fixed_image_creation_to_append, $fixed_image_creation_width, $fixed_image_creation_height);
+            create_img_gd($current_path . $_POST['path'] . $_POST['name'], $thumbs_base_path . $_POST['path'] . $_POST['name'], 122, 91);
+            new_thumbnails_creation($current_path . $_POST['path'], $current_path . $_POST['path'] . $_POST['name'], $_POST['name'], $current_path, $relative_image_creation, $relative_path_from_current_pos, $relative_image_creation_name_to_prepend, $relative_image_creation_name_to_append, $relative_image_creation_width, $relative_image_creation_height, $fixed_image_creation, $fixed_path_from_filemanager, $fixed_image_creation_name_to_prepend, $fixed_image_creation_to_append, $fixed_image_creation_width, $fixed_image_creation_height);
             /*} catch (Exception $e) {
             $src_thumb=$mini_src="";
             }*/
@@ -79,9 +79,9 @@ if (isset($_GET['action'])) {
             if (strpos($_POST['path'], '/') === 0 || strpos($_POST['path'], '../') !== false || strpos($_POST['path'], './') === 0) {
                 die('wrong path');
             }
-            $path = $current_path.$_POST['path'];
+            $path = $current_path . $_POST['path'];
             $info = pathinfo($path);
-            $base_folder = $current_path.fix_dirname($_POST['path']).'/';
+            $base_folder = $current_path . fix_dirname($_POST['path']) . '/';
             switch ($info['extension']) {
                 case 'zip':
                     $zip = new ZipArchive;
@@ -91,7 +91,7 @@ if (isset($_GET['action'])) {
                             $OnlyFileName = $zip->getNameIndex($i);
                             $FullFileName = $zip->statIndex($i);
                             if ($FullFileName['name'][strlen($FullFileName['name']) - 1] == '/') {
-                                create_folder($base_folder.$FullFileName['name']);
+                                create_folder($base_folder . $FullFileName['name']);
                             }
                         }
                         //unzip into the folders
@@ -102,7 +102,7 @@ if (isset($_GET['action'])) {
                             if (!($FullFileName['name'][strlen($FullFileName['name']) - 1] == '/')) {
                                 $fileinfo = pathinfo($OnlyFileName);
                                 if (in_array(strtolower($fileinfo['extension']), $ext)) {
-                                    copy('zip://'.$path.'#'.$OnlyFileName, $base_folder.$FullFileName['name']);
+                                    copy('zip://' . $path . '#' . $OnlyFileName, $base_folder . $FullFileName['name']);
                                 }
                             }
                         }
@@ -121,7 +121,7 @@ if (isset($_GET['action'])) {
                     $phar->decompressFiles();
                     $files = array();
                     check_files_extensions_on_phar($phar, $files, '', $ext);
-                    $phar->extractTo($current_path.fix_dirname($_POST['path']).'/', $files, true);
+                    $phar->extractTo($current_path . fix_dirname($_POST['path']) . '/', $files, true);
 
                     break;
             }

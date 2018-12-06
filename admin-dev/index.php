@@ -39,7 +39,7 @@ if (!defined('PS_ADMIN_DIR')) {
     define('PS_ADMIN_DIR', _PS_ADMIN_DIR_);
 }
 
-require(_PS_ADMIN_DIR_.'/../config/config.inc.php');
+require(_PS_ADMIN_DIR_ . '/../config/config.inc.php');
 
 //small test to clear cache after upgrade
 if (Configuration::get('PS_UPGRADE_CLEAR_CACHE')) {
@@ -71,7 +71,7 @@ $apcLoader->register(true);
 if (_PS_MODE_DEV_) {
     Debug::enable();
 }
-require_once __DIR__.'/../app/AppKernel.php';
+require_once __DIR__ . '/../app/AppKernel.php';
 
 $kernel = new AppKernel(_PS_MODE_DEV_?'dev':'prod', _PS_MODE_DEV_);
 if (PHP_VERSION_ID < 70000) {
@@ -84,7 +84,7 @@ $request = Request::createFromGlobals();
 Request::setTrustedProxies([], Request::HEADER_X_FORWARDED_ALL);
 
 try {
-    require_once __DIR__.'/../autoload.php';
+    require_once __DIR__ . '/../autoload.php';
     $response = $kernel->handle($request, HttpKernelInterface::MASTER_REQUEST, false);
     $response->send();
     $kernel->terminate($request, $response);

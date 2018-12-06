@@ -34,10 +34,10 @@ function ps_1700_right_management()
     foreach (array('TAB' => 'class_name', 'MODULE' => 'name') as $element => $nameColumn) {
         foreach ($actions as $action) {
             Db::getInstance()->execute('
-                INSERT IGNORE INTO `'._DB_PREFIX_.'authorization_role`
+                INSERT IGNORE INTO `' . _DB_PREFIX_ . 'authorization_role`
                 (`slug`)
-                SELECT CONCAT("ROLE_MOD_'.$element.'_", UCASE(`'.$nameColumn.'`), "_'.$action.'")
-                FROM `'._DB_PREFIX_.strtolower($element).'`
+                SELECT CONCAT("ROLE_MOD_' . $element . '_", UCASE(`' . $nameColumn . '`), "_' . $action . '")
+                FROM `' . _DB_PREFIX_ . strtolower($element) . '`
             ');
         }
     }
@@ -48,7 +48,7 @@ function ps_1700_right_management()
     $accessObject = new Access;
 
     // Tabs
-    $oldAccess = Db::getInstance()->executeS('SELECT t.id_tab, a.id_profile, a.view, a.add, a.edit, a.delete FROM `'._DB_PREFIX_.'tab` t LEFT JOIN `'._DB_PREFIX_.'access_old` a USING (id_tab)');
+    $oldAccess = Db::getInstance()->executeS('SELECT t.id_tab, a.id_profile, a.view, a.add, a.edit, a.delete FROM `' . _DB_PREFIX_ . 'tab` t LEFT JOIN `' . _DB_PREFIX_ . 'access_old` a USING (id_tab)');
     if (empty($oldAccess)) {
         $oldAccess = array();
     }
@@ -68,7 +68,7 @@ function ps_1700_right_management()
     }
 
     // Modules
-    $oldAccess = Db::getInstance()->executeS('SELECT mo.id_module, m.id_profile, m.configure, m.view, m.uninstall FROM `'._DB_PREFIX_.'module` mo LEFT JOIN `'._DB_PREFIX_.'module_access_old` m USING (id_module)');
+    $oldAccess = Db::getInstance()->executeS('SELECT mo.id_module, m.id_profile, m.configure, m.view, m.uninstall FROM `' . _DB_PREFIX_ . 'module` mo LEFT JOIN `' . _DB_PREFIX_ . 'module_access_old` m USING (id_module)');
     if (empty($oldAccess)) {
         $oldAccess = array();
     }

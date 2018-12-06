@@ -50,9 +50,9 @@ class ModuleTemplateLoaderTest extends TestCase
         ];
 
         $paths = [
-            __DIR__.'/../Fixtures/module1',
-            __DIR__.'/../Fixtures/module2',
-            __DIR__.'/../Fixtures/module3',
+            __DIR__ . '/../Fixtures/module1',
+            __DIR__ . '/../Fixtures/module2',
+            __DIR__ . '/../Fixtures/module3',
         ];
 
         $this->loader = new ModuleTemplateLoader($namespaces, $paths);

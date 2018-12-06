@@ -47,7 +47,7 @@ class ModuleProviderTest extends TestCase
         ;
 
         $this->moduleName = 'ps_wirepayment';
-        self::$resourcesDir = __DIR__.'/../../resources/translations';
+        self::$resourcesDir = __DIR__ . '/../../resources/translations';
         $this->provider = new ModuleProvider($loader, self::$resourcesDir);
         $this->provider->setModuleName($this->moduleName);
     }

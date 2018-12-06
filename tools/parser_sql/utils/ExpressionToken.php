@@ -166,7 +166,7 @@ class ExpressionToken {
             $quote = $qchars[$i];
             if (($result[0] === $quote) && ($result[strlen($result) - 1] === $quote)) {
                 $result = substr($result, 1, -1);
-                return trim(str_replace($quote.$quote, $quote, $result));
+                return trim(str_replace($quote . $quote, $quote, $result));
             }
         }
         return $token;

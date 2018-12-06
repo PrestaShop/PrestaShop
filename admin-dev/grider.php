@@ -27,7 +27,7 @@
 if (!defined('_PS_ADMIN_DIR_')) {
     define('_PS_ADMIN_DIR_', getcwd());
 }
-include_once(_PS_ADMIN_DIR_.'/../config/config.inc.php');
+include_once(_PS_ADMIN_DIR_ . '/../config/config.inc.php');
 
 $module = Tools::getValue('module');
 $render = Tools::getValue('render');
@@ -51,7 +51,7 @@ if (!Validate::isModuleName($module)) {
     die(Tools::displayError());
 }
 
-if (!Tools::file_exists_cache($module_path = _PS_ROOT_DIR_.'/modules/'.$module.'/'.$module.'.php')) {
+if (!Tools::file_exists_cache($module_path = _PS_ROOT_DIR_ . '/modules/' . $module . '/' . $module . '.php')) {
     die(Tools::displayError());
 }
 

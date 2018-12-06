@@ -30,19 +30,19 @@ require_once 'install_version.php';
 
 // Check PHP version
 if (!defined('PHP_VERSION_ID') || PHP_VERSION_ID < _PS_INSTALL_MINIMUM_PHP_VERSION_ID_) {
-    die('You need at least PHP '._PS_INSTALL_MINIMUM_PHP_VERSION_.' to install PrestaShop. Your current PHP version is '.PHP_VERSION);
+    die('You need at least PHP ' . _PS_INSTALL_MINIMUM_PHP_VERSION_ . ' to install PrestaShop. Your current PHP version is ' . PHP_VERSION);
 }
 
 /* Redefine REQUEST_URI */
 $_SERVER['REQUEST_URI'] = '/install/index_cli.php';
-require_once dirname(__FILE__).'/init.php';
-require_once(__DIR__).DIRECTORY_SEPARATOR.'autoload.php';
-require_once _PS_INSTALL_PATH_.'classes/datas.php';
+require_once dirname(__FILE__) . '/init.php';
+require_once(__DIR__) . DIRECTORY_SEPARATOR . 'autoload.php';
+require_once _PS_INSTALL_PATH_ . 'classes/datas.php';
 ini_set('memory_limit', '256M');
 try {
-    require_once _PS_INSTALL_PATH_.'classes/controllerConsole.php';
+    require_once _PS_INSTALL_PATH_ . 'classes/controllerConsole.php';
     InstallControllerConsole::execute($argc, $argv);
-    echo '-- Installation successful! --'."\n";
+    echo '-- Installation successful! --' . "\n";
     Hook::init(null);
     exit(0);
 } catch (PrestashopInstallerException $e) {

@@ -47,9 +47,9 @@ class ThemeExtractorTest extends KernelTestCase
 
     public static function setUpBeforeClass()
     {
-        self::$rootDir = __DIR__.'/../../resources/themes/fake-theme';
-        self::$legacyFolder = self::$rootDir.'/lang';
-        self::$xliffFolder = self::$rootDir.'/translations';
+        self::$rootDir = __DIR__ . '/../../resources/themes/fake-theme';
+        self::$legacyFolder = self::$rootDir . '/lang';
+        self::$xliffFolder = self::$rootDir . '/translations';
     }
 
     public function setUp()
@@ -85,7 +85,7 @@ class ThemeExtractorTest extends KernelTestCase
             ->extract($this->getFakeTheme())
         ;
 
-        $legacyTranslationFile = self::$legacyFolder.'/en-US.php';
+        $legacyTranslationFile = self::$legacyFolder . '/en-US.php';
         $this->assertTrue($this->filesystem->exists($legacyTranslationFile));
     }
 
@@ -97,10 +97,10 @@ class ThemeExtractorTest extends KernelTestCase
         ;
 
         $isFilesExists = $this->filesystem->exists(array(
-            self::$xliffFolder.'/en-US/Shop/Theme/Actions.xlf',
-            self::$xliffFolder.'/en-US/Shop/Theme/Cart.xlf',
-            self::$xliffFolder.'/en-US/Shop/Theme/Product.xlf',
-            self::$xliffFolder.'/en-US/Shop/Foo/Bar.xlf',
+            self::$xliffFolder . '/en-US/Shop/Theme/Actions.xlf',
+            self::$xliffFolder . '/en-US/Shop/Theme/Cart.xlf',
+            self::$xliffFolder . '/en-US/Shop/Theme/Product.xlf',
+            self::$xliffFolder . '/en-US/Shop/Foo/Bar.xlf',
         ));
 
         $this->assertTrue($isFilesExists);
@@ -108,7 +108,7 @@ class ThemeExtractorTest extends KernelTestCase
 
     private function getFakeTheme()
     {
-        $configFile = self::$rootDir.'/config/theme.yml';
+        $configFile = self::$rootDir . '/config/theme.yml';
         $config = Yaml::parse(file_get_contents($configFile));
 
         $config['directory'] = self::$rootDir;

@@ -29,7 +29,7 @@
  */
 function migrate_tabs_15()
 {
-    include_once(_PS_INSTALL_PATH_.'upgrade/php/add_new_tab.php');
+    include_once(_PS_INSTALL_PATH_ . 'upgrade/php/add_new_tab.php');
 
     // ===== Remove deleted tabs =====
     $remove_tabs = array(
@@ -50,8 +50,8 @@ function migrate_tabs_15()
     }
 
     if ($ids) {
-        Db::getInstance()->delete('tab', 'id_tab IN ('.implode(', ', $ids).')');
-        Db::getInstance()->delete('tab_lang', 'id_tab IN ('.implode(', ', $ids).')');
+        Db::getInstance()->delete('tab', 'id_tab IN (' . implode(', ', $ids) . ')');
+        Db::getInstance()->delete('tab_lang', 'id_tab IN (' . implode(', ', $ids) . ')');
     }
 
     // ===== Create new parent tabs =====
@@ -92,10 +92,10 @@ function migrate_tabs_15()
         $id_parent = get_tab_id($from);
         if ($id_parent) {
             Db::getInstance()->execute('
-				UPDATE '._DB_PREFIX_.'tab
-				SET id_parent = '.$parent[$to].'
-				WHERE id_parent = '.$id_parent.'
-					OR id_tab = '.$id_parent.'
+				UPDATE ' . _DB_PREFIX_ . 'tab
+				SET id_parent = ' . $parent[$to] . '
+				WHERE id_parent = ' . $id_parent . '
+					OR id_tab = ' . $id_parent . '
 			');
         }
     }
@@ -133,22 +133,22 @@ function migrate_tabs_15()
         $id_tab = get_tab_id($from);
         if ($id_tab) {
             Db::getInstance()->execute('
-				UPDATE '._DB_PREFIX_.'tab
-				SET id_parent = '.$parent[$to].'
-				WHERE id_tab = '.$id_tab.'
+				UPDATE ' . _DB_PREFIX_ . 'tab
+				SET id_parent = ' . $parent[$to] . '
+				WHERE id_tab = ' . $id_tab . '
 			');
         }
     }
 
     // ===== Remove AdminThemes from Modules parent =====
     $id_tab_theme = Db::getInstance()->getValue(
-        'SELECT id_tab FROM '._DB_PREFIX_.'tab
+        'SELECT id_tab FROM ' . _DB_PREFIX_ . 'tab
 		WHERE class_name = \'AdminThemes\'
-			AND id_parent = '.$parent['AdminParentModules'].'
+			AND id_parent = ' . $parent['AdminParentModules'] . '
 	');
 
     if ($id_tab_theme) {
-        Db::getInstance()->delete('tab', 'id_tab = '.$id_tab_theme);
+        Db::getInstance()->delete('tab', 'id_tab = ' . $id_tab_theme);
     }
 
     // ===== Create new tabs (but not parents this time) =====
@@ -160,17 +160,17 @@ function migrate_tabs_15()
     // ===== Sort parent tabs =====
     $position = 0;
     foreach ($parent as $id) {
-        Db::getInstance()->update('tab', array('position' => $position++), 'id_tab = '.(int)$id);
+        Db::getInstance()->update('tab', array('position' => $position++), 'id_tab = ' . (int)$id);
     }
 
-    $sql = 'SELECT id_tab FROM '._DB_PREFIX_.'tab
-			WHERE id_tab NOT IN ('.implode(', ', $parent).')
+    $sql = 'SELECT id_tab FROM ' . _DB_PREFIX_ . 'tab
+			WHERE id_tab NOT IN (' . implode(', ', $parent) . ')
 				AND id_parent = 0';
     
     $id_tabs = Db::getInstance()->executeS($sql);
     if (is_array($id_tabs) && count($id_tabs)) {
         foreach (Db::getInstance()->executeS($sql) as $row) {
-            Db::getInstance()->update('tab', array('position' => $position++), 'id_tab = '.$row['id_tab']);
+            Db::getInstance()->update('tab', array('position' => $position++), 'id_tab = ' . $row['id_tab']);
         }
     }
 }
@@ -180,7 +180,7 @@ function get_tab_id($class_name)
     static $cache = array();
 
     if (!isset($cache[$class_name])) {
-        $cache[$class_name] = Db::getInstance()->getValue('SELECT id_tab FROM '._DB_PREFIX_.'tab WHERE class_name = \''.pSQL($class_name).'\'');
+        $cache[$class_name] = Db::getInstance()->getValue('SELECT id_tab FROM ' . _DB_PREFIX_ . 'tab WHERE class_name = \'' . pSQL($class_name) . '\'');
     }
     return $cache[$class_name];
 }

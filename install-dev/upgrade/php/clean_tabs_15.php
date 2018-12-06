@@ -26,7 +26,7 @@
 
 function clean_tabs_15()
 {
-    include_once(_PS_INSTALL_PATH_.'upgrade/php/migrate_tabs_15.php');
+    include_once(_PS_INSTALL_PATH_ . 'upgrade/php/migrate_tabs_15.php');
 
     $clean_tabs_15 = array(
     9 => array(
@@ -292,7 +292,7 @@ function clean_tabs_15()
     }
 
     if ($ids) {
-        Db::getInstance()->update('tab', array('active' => 0), 'id_tab IN ('.implode(', ', $ids).')');
+        Db::getInstance()->update('tab', array('active' => 0), 'id_tab IN (' . implode(', ', $ids) . ')');
     }
 
     //=====================================/
@@ -312,7 +312,7 @@ function clean_tabs_15()
     }
 
     if ($ids) {
-        Db::getInstance()->update('tab', array('id_parent' => $id_admin_tools), 'id_tab NOT IN ('.implode(', ', $ids).') AND `id_parent` <> -1');
+        Db::getInstance()->update('tab', array('id_parent' => $id_admin_tools), 'id_tab NOT IN (' . implode(', ', $ids) . ') AND `id_parent` <> -1');
     }
 
     //=====================================/
@@ -327,7 +327,7 @@ function clean_tabs_15()
 
     $id_AdminStockMvt = get_tab_id('AdminStockMvt');
     $id_AdminStock = get_tab_id('AdminStock');
-    Db::getInstance()->update('tab', array('id_parent' => $id_AdminStock), 'id_tab ='.$id_AdminStockMvt);
+    Db::getInstance()->update('tab', array('id_parent' => $id_AdminStock), 'id_tab =' . $id_AdminStockMvt);
     
     //rename some tabs
     renameTab(get_tab_id('AdminCartRules'), array('fr' => 'Règles paniers', 'es' => 'Reglas de cesta', 'en' => 'Cart Rules', 'de' => 'Warenkorb Preisregein', 'it' => 'Regole Carrello'));
@@ -363,7 +363,7 @@ function get_simple_clean_tab15($clean_tabs_15)
 function updatePositionAndActive15($clean_tabs_15)
 {
     foreach ($clean_tabs_15 as $id => $tab) {
-        Db::getInstance()->update('tab', array('position' => $tab['position'], 'active' => $tab['active']), '`id_tab`= '.get_tab_id($tab['class_name']));
+        Db::getInstance()->update('tab', array('position' => $tab['position'], 'active' => $tab['active']), '`id_tab`= ' . get_tab_id($tab['class_name']));
         if (isset($tab['children'])) {
             updatePositionAndActive15($tab['children']);
         }
@@ -375,11 +375,11 @@ function renameTab($id_tab, $names)
     if (!$id_tab) {
         return;
     }
-    $langues = Db::getInstance()->executeS('SELECT * FROM '._DB_PREFIX_.'lang');
+    $langues = Db::getInstance()->executeS('SELECT * FROM ' . _DB_PREFIX_ . 'lang');
 
     foreach ($langues as $lang) {
         if (array_key_exists($lang['iso_code'], $names)) {
-            Db::getInstance()->update('tab_lang', array('name' => $names[$lang['iso_code']]), '`id_tab`= '.$id_tab.' AND `id_lang` ='.$lang['id_lang']);
+            Db::getInstance()->update('tab_lang', array('name' => $names[$lang['iso_code']]), '`id_tab`= ' . $id_tab . ' AND `id_lang` =' . $lang['id_lang']);
         }
     }
 }

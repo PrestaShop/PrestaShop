@@ -104,8 +104,8 @@ class AdminModuleDataProviderTest extends UnitTestCase
         );
 
         $this->cacheProviderS = Phake::partialMock('Doctrine\Common\Cache\CacheProvider');
-        Phake::when($this->cacheProviderS)->contains($this->languageISOCode.'_addons_modules')->thenReturn(true);
-        Phake::when($this->cacheProviderS)->fetch($this->languageISOCode.'_addons_modules')->thenReturn($fakeModules);
+        Phake::when($this->cacheProviderS)->contains($this->languageISOCode . '_addons_modules')->thenReturn(true);
+        Phake::when($this->cacheProviderS)->fetch($this->languageISOCode . '_addons_modules')->thenReturn($fakeModules);
 
         $this->adminModuleDataProvider = new AdminModuleDataProvider(
             $this->translator,

@@ -44,7 +44,7 @@ class FrontOfficeProviderTest extends TestCase
             ->getMock()
         ;
 
-        self::$resourcesDir = __DIR__.'/../../resources/translations';
+        self::$resourcesDir = __DIR__ . '/../../resources/translations';
         $this->provider = new FrontOfficeProvider($loader, self::$resourcesDir);
     }
 

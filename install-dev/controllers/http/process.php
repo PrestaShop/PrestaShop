@@ -68,7 +68,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
         Context::getContext()->cart = new Cart();
         Context::getContext()->employee = new Employee(1);
         define('_PS_SMARTY_FAST_LOAD_', true);
-        require_once _PS_ROOT_DIR_.'/config/smarty.config.inc.php';
+        require_once _PS_ROOT_DIR_ . '/config/smarty.config.inc.php';
 
         Context::getContext()->smarty = $smarty;
     }
@@ -376,11 +376,11 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
     private function hasLargeFixtures()
     {
         $size = 0;
-        $fixtureDir = _PS_INSTALL_FIXTURES_PATH_.'fashion/data/';
+        $fixtureDir = _PS_INSTALL_FIXTURES_PATH_ . 'fashion/data/';
         $dh = opendir($fixtureDir);
         if ($dh) {
             while (($xmlFile = readdir($dh)) !== false) {
-                $size += filesize($fixtureDir.$xmlFile);
+                $size += filesize($fixtureDir . $xmlFile);
             }
             closedir($dh);
         }
@@ -390,12 +390,12 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
 
     private function clearConfigXML()
     {
-        $configXMLPath = _PS_ROOT_DIR_.'/config/xml/';
+        $configXMLPath = _PS_ROOT_DIR_ . '/config/xml/';
         $cacheFiles = scandir($configXMLPath, SCANDIR_SORT_NONE);
         $excludes = ['.htaccess', 'index.php'];
 
         foreach ($cacheFiles as $file) {
-            $filepath = $configXMLPath.$file;
+            $filepath = $configXMLPath . $file;
             if (is_file($filepath) && !in_array($file, $excludes)) {
                 unlink($filepath);
             }
@@ -404,10 +404,10 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
 
     private function clearConfigThemes()
     {
-        $themesPath = _PS_ROOT_DIR_.'/config/themes/';
+        $themesPath = _PS_ROOT_DIR_ . '/config/themes/';
         $cacheFiles = scandir($themesPath, SCANDIR_SORT_NONE);
         foreach ($cacheFiles as $file) {
-            $file = $themesPath.$file;
+            $file = $themesPath . $file;
             if (is_file($file)) {
                 unlink($file);
             }

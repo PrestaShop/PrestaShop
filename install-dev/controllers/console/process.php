@@ -92,7 +92,7 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
         if (!defined('_PS_SMARTY_FAST_LOAD_')) {
             define('_PS_SMARTY_FAST_LOAD_', true);
         }
-        require_once _PS_ROOT_DIR_.'/config/smarty.config.inc.php';
+        require_once _PS_ROOT_DIR_ . '/config/smarty.config.inc.php';
 
         Context::getContext()->smarty = $smarty;
     }
@@ -169,7 +169,7 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
                     'visitorType' => 1,
                     'source' => 'installer'
                 ));
-            Tools::file_get_contents('http://www.prestashop.com/ajax/controller.php?'.$params);
+            Tools::file_get_contents('http://www.prestashop.com/ajax/controller.php?' . $params);
         }
     }
 
@@ -307,12 +307,12 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
 
     private function clearConfigXML()
     {
-        $configXMLPath = _PS_ROOT_DIR_.'/config/xml/';
+        $configXMLPath = _PS_ROOT_DIR_ . '/config/xml/';
         $cacheFiles = scandir($configXMLPath, SCANDIR_SORT_NONE);
         $excludes = ['.htaccess', 'index.php'];
 
         foreach($cacheFiles as $file) {
-            $filepath = $configXMLPath.$file;
+            $filepath = $configXMLPath . $file;
             if (is_file($filepath) && !in_array($file, $excludes)) {
                 unlink($filepath);
             }
@@ -321,10 +321,10 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
 
     private function clearConfigThemes()
     {
-        $themesPath = _PS_ROOT_DIR_.'/config/themes/';
+        $themesPath = _PS_ROOT_DIR_ . '/config/themes/';
         $cacheFiles = scandir($themesPath, SCANDIR_SORT_NONE);
         foreach($cacheFiles as $file) {
-            $file = $themesPath.$file;
+            $file = $themesPath . $file;
             if (is_file($file)) {
                 unlink($file);
             }

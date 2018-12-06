@@ -31,14 +31,14 @@ function p1606module_exceptions()
     $core_controllers = array();
 
     foreach ($modules_dir as $module_dir) {
-        $module_path = _PS_MODULE_DIR_.$module_dir;
+        $module_path = _PS_MODULE_DIR_ . $module_dir;
 
         if ($module_dir[0] == '.' || $module_dir == 'index.php') {
             continue;
         }
 
-        if (file_exists($module_path.'/controllers/') && is_dir($module_path.'/controllers/')) {
-            $module_path_admin = $module_path.'/controllers/admin/';
+        if (file_exists($module_path . '/controllers/') && is_dir($module_path . '/controllers/')) {
+            $module_path_admin = $module_path . '/controllers/admin/';
             if (file_exists($module_path_admin) && is_dir($module_path_admin)) {
                 $admin = scandir($module_path_admin, SCANDIR_SORT_NONE);
                 foreach ($admin as $a_controller) {
@@ -53,7 +53,7 @@ function p1606module_exceptions()
                 }
             }
 
-            $module_path_front = $module_path.'/controllers/front/';
+            $module_path_front = $module_path . '/controllers/front/';
             if (file_exists($module_path_front) && is_dir($module_path_front)) {
                 $front = scandir($module_path_front, SCANDIR_SORT_NONE);
                 foreach ($front as $f_controller) {
@@ -70,7 +70,7 @@ function p1606module_exceptions()
         }
     }
 
-    $controller_dir = _PS_ROOT_DIR_.'/controllers/front/';
+    $controller_dir = _PS_ROOT_DIR_ . '/controllers/front/';
 
     if (file_exists($controller_dir) && is_dir($controller_dir)) {
         $front_controllers = scandir($controller_dir, SCANDIR_SORT_NONE);
@@ -83,17 +83,17 @@ function p1606module_exceptions()
         }
     }
 
-    $hook_module_exceptions = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'hook_module_exceptions`');
-    $sql_insert = 'INSERT INTO `'._DB_PREFIX_.'hook_module_exceptions` (`id_hook_module_exceptions`, `id_shop`, `id_module`, `id_hook`, `file_name`) VALUES ';
-    $sql_delete = 'DELETE FROM `'._DB_PREFIX_.'hook_module_exceptions` WHERE ';
+    $hook_module_exceptions = Db::getInstance()->executeS('SELECT * FROM `' . _DB_PREFIX_ . 'hook_module_exceptions`');
+    $sql_insert = 'INSERT INTO `' . _DB_PREFIX_ . 'hook_module_exceptions` (`id_hook_module_exceptions`, `id_shop`, `id_module`, `id_hook`, `file_name`) VALUES ';
+    $sql_delete = 'DELETE FROM `' . _DB_PREFIX_ . 'hook_module_exceptions` WHERE ';
 
     foreach ($hook_module_exceptions as $exception) {
         foreach ($modules_controllers as $module => $controllers) {
             if (in_array($exception['file_name'], $controllers) && !in_array($exception['file_name'], $core_controllers)) {
-                $sql_delete .= ' `id_hook_module_exceptions` = '.(int)$exception['id_hook_module_exceptions'].' AND';
+                $sql_delete .= ' `id_hook_module_exceptions` = ' . (int)$exception['id_hook_module_exceptions'] . ' AND';
                 foreach ($controllers as $cont) {
                     if ($exception['file_name'] == $cont) {
-                        $sql_insert .= '(null, '.(int)$exception['id_shop'].', '.(int)$exception['id_module'].', '.(int)$exception['id_hook'].', \'module-'.pSQL($module).'-'.pSQL($exception['file_name']).'\'),';
+                        $sql_insert .= '(null, ' . (int)$exception['id_shop'] . ', ' . (int)$exception['id_module'] . ', ' . (int)$exception['id_hook'] . ', \'module-' . pSQL($module) . '-' . pSQL($exception['file_name']) . '\'),';
                     }
                 }
             }

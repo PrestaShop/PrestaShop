@@ -175,7 +175,7 @@ class InstallControllerHttp
         $self = new self();
 
         if (Tools::getValue('compile_templates')) {
-            require_once(_PS_INSTALL_CONTROLLERS_PATH_.'http/smarty_compile.php');
+            require_once(_PS_INSTALL_CONTROLLERS_PATH_ . 'http/smarty_compile.php');
             exit;
         }
 
@@ -307,7 +307,7 @@ class InstallControllerHttp
      */
     public function redirect($step)
     {
-        header('location: index.php?step='.$step);
+        header('location: index.php?step=' . $step);
         exit;
     }
 
@@ -354,7 +354,7 @@ class InstallControllerHttp
         }
         if ($this->phone === null) {
             $this->phone = '';
-            if ($iframe = Tools::file_get_contents('http://api.prestashop.com/iframe/install.php?lang='.$this->language->getLanguageIso(), false, null, 3)) {
+            if ($iframe = Tools::file_get_contents('http://api.prestashop.com/iframe/install.php?lang=' . $this->language->getLanguageIso(), false, null, 3)) {
                 if (preg_match('/<img.+alt="([^"]+)".*>/Ui', $iframe, $matches) && isset($matches[1])) {
                     $this->phone = $matches[1];
                 }
@@ -461,10 +461,10 @@ class InstallControllerHttp
     public function displayTemplate($template, $get_output = false, $path = null)
     {
         if (!$path) {
-            $path = _PS_INSTALL_PATH_.'theme/views/';
+            $path = _PS_INSTALL_PATH_ . 'theme/views/';
         }
 
-        if (!file_exists($path.$template.'.php')) {
+        if (!file_exists($path . $template . '.php')) {
             throw new PrestashopInstallerException("Template '{$template}.php' not found");
         }
 
@@ -472,7 +472,7 @@ class InstallControllerHttp
             ob_start();
         }
 
-        include($path.$template.'.php');
+        include($path . $template . '.php');
 
         if ($get_output) {
             $content = ob_get_contents();

@@ -30,11 +30,11 @@ $path_to_17 = $argv[2];
 
 $grep = "grep -ri --exclude-dir=.git --exclude-dir=bin --exclude-dir=cache --exclude-dir=modules --exclude-dir=tests --exclude-dir=vendor --exclude=diff-hooks.php --exclude=diff-hooks.html";
 
-exec("$grep 'hook h=' ".$path_to_16."/themes", $hookHIn16);
-exec("$grep 'hook h=' ".$path_to_17."/themes", $hookHIn17);
+exec("$grep 'hook h=' " . $path_to_16 . "/themes", $hookHIn16);
+exec("$grep 'hook h=' " . $path_to_17 . "/themes", $hookHIn17);
 
-exec("$grep 'Hook::exec' ".$path_to_16, $hookExecIn16);
-exec("$grep 'Hook::exec' ".$path_to_17, $hookExecIn17);
+exec("$grep 'Hook::exec' " . $path_to_16, $hookExecIn16);
+exec("$grep 'Hook::exec' " . $path_to_17, $hookExecIn17);
 
 $hooks16 = array_merge(getFormattedHookList($hookHIn16, $path_to_16), getFormattedHookList($hookExecIn16, $path_to_16));
 $hooks17 = array_merge(getFormattedHookList($hookHIn17, $path_to_17), getFormattedHookList($hookExecIn17, $path_to_17));
@@ -86,13 +86,13 @@ function generateHTML($commonHooks, $hooksOnly16, $hooksOnly17, $hooks16, $hooks
 
     foreach ($commonHooks as $hookName => $files) {
         $html .= '<tr>';
-        $html .= '<td>'.$hookName.'</td><td><ul>';
+        $html .= '<td>' . $hookName . '</td><td><ul>';
         foreach ($files as $file) {
-            $html .= '<li>'.$file.'</li>';
+            $html .= '<li>' . $file . '</li>';
         }
         $html .= '</ul></td><td><ul>';
         foreach ($hooks17[$hookName] as $file) {
-            $html .= '<li>'.$file.'</li>';
+            $html .= '<li>' . $file . '</li>';
         }
         $html .= '</ul></td>';
         $html .= '</tr>';
@@ -110,9 +110,9 @@ function generateHTML($commonHooks, $hooksOnly16, $hooksOnly17, $hooks16, $hooks
 
     foreach ($hooksOnly16 as $hookName => $files) {
         $html .= '<tr>';
-        $html .= '<td>'.$hookName.'</td><td><ul>';
+        $html .= '<td>' . $hookName . '</td><td><ul>';
         foreach ($files as $file) {
-            $html .= '<li>'.$file.'</li>';
+            $html .= '<li>' . $file . '</li>';
         }
         $html .= '</ul></td>';
         $html .= '</tr>';
@@ -130,9 +130,9 @@ function generateHTML($commonHooks, $hooksOnly16, $hooksOnly17, $hooks16, $hooks
 
     foreach ($hooksOnly17 as $hookName => $files) {
         $html .= '<tr>';
-        $html .= '<td>'.$hookName.'</td><td><ul>';
+        $html .= '<td>' . $hookName . '</td><td><ul>';
         foreach ($files as $file) {
-            $html .= '<li>'.$file.'</li>';
+            $html .= '<li>' . $file . '</li>';
         }
         $html .= '</ul></td>';
         $html .= '</tr>';
@@ -144,7 +144,7 @@ function generateHTML($commonHooks, $hooksOnly16, $hooksOnly17, $hooks16, $hooks
   </body>
 </html>';
 
-    file_put_contents(dirname(__FILE__).DIRECTORY_SEPARATOR.'diff-hooks.html', $html);
+    file_put_contents(dirname(__FILE__) . DIRECTORY_SEPARATOR . 'diff-hooks.html', $html);
 }
 
 function getFormattedHookList($hookList, $folder)

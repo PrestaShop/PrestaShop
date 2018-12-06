@@ -127,7 +127,7 @@ function executeQueries($arrayOfQueries)
             try {
                 Db::getInstance()->execute($query);
             }catch (Exception $e) {
-                echo "Error:". $e->getMessage() . PHP_EOL;
+                echo "Error:" . $e->getMessage() . PHP_EOL;
             }
 
         }

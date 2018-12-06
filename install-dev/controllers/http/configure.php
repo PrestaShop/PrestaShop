@@ -59,7 +59,7 @@ class InstallControllerHttpConfigure extends InstallControllerHttp implements Ht
                     'visitorType' => 1,
                     'source' => 'installer'
                 ));
-                Tools::file_get_contents('http://www.prestashop.com/ajax/controller.php?'.$params);
+                Tools::file_get_contents('http://www.prestashop.com/ajax/controller.php?' . $params);
             }
 
             // If password fields are empty, but are already stored in session, do not fill them again
@@ -154,8 +154,8 @@ class InstallControllerHttpConfigure extends InstallControllerHttp implements Ht
                 $newwidth = $width * $percent;
                 $newheight = $height * $percent;
 
-                if (!is_writable(_PS_ROOT_DIR_.'/img/')) {
-                    $error = $this->translator->trans('Image folder %s is not writable', array(_PS_ROOT_DIR_.'/img/'), 'Install');
+                if (!is_writable(_PS_ROOT_DIR_ . '/img/')) {
+                    $error = $this->translator->trans('Image folder %s is not writable', array(_PS_ROOT_DIR_ . '/img/'), 'Install');
                 }
                 if (!$error) {
                     list($src_width, $src_height, $type) = getimagesize($tmp_name);
@@ -164,7 +164,7 @@ class InstallControllerHttpConfigure extends InstallControllerHttp implements Ht
                     $white = imagecolorallocate($dest_image, 255, 255, 255);
                     imagefilledrectangle($dest_image, 0, 0, $src_width, $src_height, $white);
                     imagecopyresampled($dest_image, $src_image, 0, 0, 0, 0, $src_width, $src_height, $src_width, $src_height);
-                    if (!imagejpeg($dest_image, _PS_ROOT_DIR_.'/img/logo.jpg', 95)) {
+                    if (!imagejpeg($dest_image, _PS_ROOT_DIR_ . '/img/logo.jpg', 95)) {
                         $error = $this->trans('An error occurred during logo copy.', array(), 'Install');
                     } else {
                         imagedestroy($dest_image);
@@ -199,11 +199,11 @@ class InstallControllerHttpConfigure extends InstallControllerHttp implements Ht
             return;
         }
 
-        if (!file_exists(_PS_INSTALL_DATA_PATH_.'xml/timezone.xml')) {
+        if (!file_exists(_PS_INSTALL_DATA_PATH_ . 'xml/timezone.xml')) {
             return array();
         }
 
-        $xml = @simplexml_load_file(_PS_INSTALL_DATA_PATH_.'xml/timezone.xml');
+        $xml = @simplexml_load_file(_PS_INSTALL_DATA_PATH_ . 'xml/timezone.xml');
         $timezones = array();
         if ($xml) {
             foreach ($xml->entities->timezone as $timezone) {
@@ -221,11 +221,11 @@ class InstallControllerHttpConfigure extends InstallControllerHttp implements Ht
      */
     public function getTimezoneByIso($iso)
     {
-        if (!file_exists(_PS_INSTALL_DATA_PATH_.'iso_to_timezone.xml')) {
+        if (!file_exists(_PS_INSTALL_DATA_PATH_ . 'iso_to_timezone.xml')) {
             return '';
         }
 
-        $xml = @simplexml_load_file(_PS_INSTALL_DATA_PATH_.'iso_to_timezone.xml');
+        $xml = @simplexml_load_file(_PS_INSTALL_DATA_PATH_ . 'iso_to_timezone.xml');
         $timezones = array();
         if ($xml) {
             foreach ($xml->relation as $relation) {
@@ -316,6 +316,6 @@ class InstallControllerHttpConfigure extends InstallControllerHttp implements Ht
             return;
         }
 
-        return '<span class="result aligned errorTxt">'.$this->errors[$field].'</span>';
+        return '<span class="result aligned errorTxt">' . $this->errors[$field] . '</span>';
     }
 }

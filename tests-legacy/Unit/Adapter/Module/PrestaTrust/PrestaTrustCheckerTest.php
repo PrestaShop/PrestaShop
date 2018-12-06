@@ -88,7 +88,7 @@ class PrestaTrustCheckerTest extends UnitTestCase
                     'pico' => 'https://www.addons.prestashop.com/random-url.jpg',
                 ),
             ), array(
-                'path' => __DIR__.'/../../../../resources/modules/ganalytics/'
+                'path' => __DIR__ . '/../../../../resources/modules/ganalytics/'
             )),
         );
 

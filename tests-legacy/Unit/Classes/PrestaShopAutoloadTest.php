@@ -64,9 +64,9 @@ class PrestaShopAutoloadTest extends TestCase
     public function testGenerateIndexWithoutOverride()
     {
         Configuration::updateGlobalValue('PS_DISABLE_OVERRIDES', 1);
-        @mkdir(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'override/classes/', 0777, true);
+        @mkdir(_PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . 'override/classes/', 0777, true);
         define('_PS_HOST_MODE_', 1);
-        file_put_contents(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'override/classes/Connection.php',
+        file_put_contents(_PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . 'override/classes/Connection.php',
             '<?php 
             class Connection extends ConnectionCore {
         }');
@@ -90,6 +90,6 @@ class PrestaShopAutoloadTest extends TestCase
 
     public static function tearDownAfterClass()
     {
-        @unlink(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'override/classes/Connection.php');
+        @unlink(_PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . 'override/classes/Connection.php');
     }
 }

@@ -44,7 +44,7 @@ class ThemeProviderTest extends TestCase
             ->getMock()
         ;
 
-        self::$resourcesDir = __DIR__.'/../../resources/themes/fakeTheme2';
+        self::$resourcesDir = __DIR__ . '/../../resources/themes/fakeTheme2';
         $this->provider = new ThemeProvider($loader, self::$resourcesDir);
         $this->provider->filesystem = new Filesystem();
     }

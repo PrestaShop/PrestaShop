@@ -30,7 +30,7 @@ if (!defined('_PS_ADMIN_DIR_')) {
     define('_PS_ADMIN_DIR_', getcwd());
 }
 
-require(_PS_ADMIN_DIR_.'/../config/config.inc.php');
+require(_PS_ADMIN_DIR_ . '/../config/config.inc.php');
 
 // For retrocompatibility with "tab" parameter
 if (!isset($_GET['controller']) && isset($_GET['tab'])) {
@@ -45,7 +45,7 @@ if (!isset($_REQUEST['controller']) && isset($_REQUEST['tab'])) {
 // Retrocompatibility with 1.4
 $_REQUEST['ajaxMode'] = $_POST['ajaxMode'] = $_GET['ajaxMode'] = $_REQUEST['ajax'] = $_POST['ajax'] = $_GET['ajax'] = 1;
 
-require_once __DIR__.'/../app/AppKernel.php';
+require_once __DIR__ . '/../app/AppKernel.php';
 $kernel = new AppKernel(_PS_MODE_DEV_?'dev':'prod', _PS_MODE_DEV_);
 $kernel->loadClassCache();
 $kernel->boot();

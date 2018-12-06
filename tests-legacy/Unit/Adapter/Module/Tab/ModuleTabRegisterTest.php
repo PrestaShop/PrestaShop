@@ -175,7 +175,7 @@ class ModuleTabRegisterTest extends UnitTestCase
                     $this->assertEquals($e->getMessage(), $tab['exception']);
                     continue;
                 }
-                $this->fail('Expected Exception "'.$tab['exception'].'" has not been raised.');
+                $this->fail('Expected Exception "' . $tab['exception'] . '" has not been raised.');
             }
         }
     }
@@ -190,7 +190,7 @@ class ModuleTabRegisterTest extends UnitTestCase
             foreach($tabs as $tab) {
                 $this->assertTrue(
                         in_array($tab['class_name'], $this->expectedTabsToAdd[$moduleName]),
-                        'Module '.$moduleName.' should not register '.$tab['class_name']);
+                        'Module ' . $moduleName . ' should not register ' . $tab['class_name']);
             }
 
             // In the opposite, we check no tab is missing
@@ -200,7 +200,7 @@ class ModuleTabRegisterTest extends UnitTestCase
                         continue 2;
                     }
                 }
-                $this->fail('ModuleAdminController '.$moduleAdminController.' is expected but not found in the list to register!');
+                $this->fail('ModuleAdminController ' . $moduleAdminController . ' is expected but not found in the list to register!');
             }
         }
     }

@@ -44,20 +44,20 @@ class ConfigurationCoreTest extends IntegrationTestCase
         Configuration::set('PS_TEST_GROUP_OVERRIDDEN', 'RESULT_GROUP_OVERRIDDEN', 0, 0);
 
         foreach ($id_shop_groups as $id_group) {
-            Configuration::set('PS_TEST_GROUP_OVERRIDDEN', 'RESULT_GROUP_OVERRIDDEN_'.$id_group, $id_group, 0);
+            Configuration::set('PS_TEST_GROUP_OVERRIDDEN', 'RESULT_GROUP_OVERRIDDEN_' . $id_group, $id_group, 0);
         }
 
         Configuration::updateGlobalValue('PS_TEST_SHOP_OVERRIDDEN', 'RESULT_SHOP_OVERRIDDEN');
         foreach ($id_shops as $id_shop) {
-            Configuration::set('PS_TEST_SHOP_OVERRIDDEN', 'RESULT_SHOP_OVERRIDDEN_'.$id_shop, 0, $id_shop);
+            Configuration::set('PS_TEST_SHOP_OVERRIDDEN', 'RESULT_SHOP_OVERRIDDEN_' . $id_shop, 0, $id_shop);
         }
 
         Configuration::updateGlobalValue('PS_TEST_GROUP_SHOP_OVERRIDDEN', 'RESULT_GROUP_SHOP_OVERRIDDEN');
         foreach ($id_shop_groups as $id_group) {
-            Configuration::set('PS_TEST_GROUP_SHOP_OVERRIDDEN', 'RESULT_GROUP_SHOP_OVERRIDDEN_GROUP_'.$id_group, $id_group, 0);
+            Configuration::set('PS_TEST_GROUP_SHOP_OVERRIDDEN', 'RESULT_GROUP_SHOP_OVERRIDDEN_GROUP_' . $id_group, $id_group, 0);
         }
         foreach ($id_shops as $id_shop) {
-            Configuration::set('PS_TEST_GROUP_SHOP_OVERRIDDEN', 'RESULT_GROUP_SHOP_OVERRIDDEN_SHOP_'.$id_shop, 0, $id_shop);
+            Configuration::set('PS_TEST_GROUP_SHOP_OVERRIDDEN', 'RESULT_GROUP_SHOP_OVERRIDDEN_SHOP_' . $id_shop, 0, $id_shop);
         }
     }
 

@@ -199,8 +199,8 @@ class UnitTestCase extends \PHPUnit\Framework\TestCase
 
     public function setupSfKernel()
     {
-        require_once __DIR__.'/../../vendor/autoload.php';
-        require_once __DIR__.'/../../app/AppKernel.php';
+        require_once __DIR__ . '/../../vendor/autoload.php';
+        require_once __DIR__ . '/../../app/AppKernel.php';
         $this->sfKernel = new \AppKernel('test', true);
         $this->sfKernel->boot();
 

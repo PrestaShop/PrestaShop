@@ -30,18 +30,18 @@ function deactivate_custom_modules()
     $modulesDirOnDisk = array();
     $modules = scandir(_PS_MODULE_DIR_, SCANDIR_SORT_NONE);
     foreach ($modules as $name) {
-        if (!in_array($name, array('.', '..', 'index.php', '.htaccess')) && @is_dir(_PS_MODULE_DIR_.$name.DIRECTORY_SEPARATOR) && @file_exists(_PS_MODULE_DIR_.$name.DIRECTORY_SEPARATOR.$name.'.php')) {
+        if (!in_array($name, array('.', '..', 'index.php', '.htaccess')) && @is_dir(_PS_MODULE_DIR_ . $name . DIRECTORY_SEPARATOR) && @file_exists(_PS_MODULE_DIR_ . $name . DIRECTORY_SEPARATOR . $name . '.php')) {
             if (!preg_match('/^[a-zA-Z0-9_-]+$/', $name)) {
-                die(Tools::displayError().' (Module '.$name.')');
+                die(Tools::displayError() . ' (Module ' . $name . ')');
             }
             $modulesDirOnDisk[] = $name;
         }
     }
 
-    $module_list_xml = _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'modules_list.xml';
+    $module_list_xml = _PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'xml' . DIRECTORY_SEPARATOR . 'modules_list.xml';
 
     if (!file_exists($module_list_xml)) {
-        $module_list_xml = _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'modules_list.xml';
+        $module_list_xml = _PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'modules_list.xml';
         if (!file_exists($module_list_xml)) {
             return false;
         }
@@ -57,7 +57,7 @@ function deactivate_custom_modules()
             if (in_array($nativeModulesType['type'], array('native', 'partner'))) {
                 $arrNativeModules[] = '""';
                 foreach ($nativeModulesType->module as $module) {
-                    $arrNativeModules[] = '"'.pSQL($module['name']).'"';
+                    $arrNativeModules[] = '"' . pSQL($module['name']) . '"';
                 }
             }
         }
@@ -66,8 +66,8 @@ function deactivate_custom_modules()
     if ($arrNativeModules) {
         $arrNonNative = $db->executeS('
     		SELECT *
-    		FROM `'._DB_PREFIX_.'module` m
-    		WHERE name NOT IN ('.implode(',', $arrNativeModules).') ');
+    		FROM `' . _DB_PREFIX_ . 'module` m
+    		WHERE name NOT IN (' . implode(',', $arrNativeModules) . ') ');
     }
 
     $uninstallMe = array("undefined-modules");
@@ -82,15 +82,15 @@ function deactivate_custom_modules()
     }
 
     foreach ($uninstallMe as $k => $v) {
-        $uninstallMe[$k] = '"'.pSQL($v).'"';
+        $uninstallMe[$k] = '"' . pSQL($v) . '"';
     }
 
     $return = Db::getInstance()->execute('
-	UPDATE `'._DB_PREFIX_.'module` SET `active` = 0 WHERE `name` IN ('.implode(',', $uninstallMe).')');
+	UPDATE `' . _DB_PREFIX_ . 'module` SET `active` = 0 WHERE `name` IN (' . implode(',', $uninstallMe) . ')');
 
-    if (count(Db::getInstance()->executeS('SHOW TABLES LIKE \''._DB_PREFIX_.'module_shop\''))> 0) {
+    if (count(Db::getInstance()->executeS('SHOW TABLES LIKE \'' . _DB_PREFIX_ . 'module_shop\''))> 0) {
         foreach ($uninstallMe as $k => $uninstall) {
-            $return &= Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'module_shop` WHERE `id_module` = '.(int)$k);
+            $return &= Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'module_shop` WHERE `id_module` = ' . (int)$k);
         }
     }
 

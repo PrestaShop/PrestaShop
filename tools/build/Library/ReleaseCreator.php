@@ -355,7 +355,7 @@ class ReleaseCreator
      */
     protected function getCurrentVersion()
     {
-        $kernelFile = $this->projectPath.'/app/AppKernel.php';
+        $kernelFile = $this->projectPath . '/app/AppKernel.php';
         $matches = [];
 
         $kernelFileContent = file_get_contents($kernelFile);
@@ -376,34 +376,34 @@ class ReleaseCreator
      */
     protected function setupShopVersion()
     {
-        $kernelFile = $this->tempProjectPath.'/app/AppKernel.php';
+        $kernelFile = $this->tempProjectPath . '/app/AppKernel.php';
         $version = new Version($this->version);
 
 
         $kernelFileContent = file_get_contents($kernelFile);
         $kernelFileContent = preg_replace(
             '~const VERSION = \'(.*)\';~',
-            "const VERSION = '".$version->getVersion()."';",
+            "const VERSION = '" . $version->getVersion() . "';",
             $kernelFileContent
         );
         $kernelFileContent = preg_replace(
             '~const MAJOR_VERSION_STRING = \'(.*)\';~',
-            "const MAJOR_VERSION_STRING = '".$version->getMajorVersionString()."';",
+            "const MAJOR_VERSION_STRING = '" . $version->getMajorVersionString() . "';",
             $kernelFileContent
         );
         $kernelFileContent = preg_replace(
             '~const MAJOR_VERSION = (.*);~',
-            "const MAJOR_VERSION = ".$version->getMajorVersion().";",
+            "const MAJOR_VERSION = " . $version->getMajorVersion() . ";",
             $kernelFileContent
         );
         $kernelFileContent = preg_replace(
             '~const MINOR_VERSION = (.*);~',
-            "const MINOR_VERSION = ".$version->getMinorVersion().";",
+            "const MINOR_VERSION = " . $version->getMinorVersion() . ";",
             $kernelFileContent
         );
         $kernelFileContent = preg_replace(
             '~const RELEASE_VERSION = (.*);~',
-            "const RELEASE_VERSION = ".$version->getReleaseVersion().";",
+            "const RELEASE_VERSION = " . $version->getReleaseVersion() . ";",
             $kernelFileContent
         );
 
@@ -422,7 +422,7 @@ class ReleaseCreator
      */
     protected function setInstallDevConfigurationConstants()
     {
-        $configPath = $this->tempProjectPath.'/install-dev/data/xml/configuration.xml';
+        $configPath = $this->tempProjectPath . '/install-dev/data/xml/configuration.xml';
 
         if (file_exists($configPath)) {
             $configPathContent = file_get_contents($configPath);
@@ -643,7 +643,7 @@ class ReleaseCreator
 
                 // Remove files.
                 foreach ($filesRemoveList as $file_to_remove) {
-                    if ($folder.'/'.$file_to_remove == $value) {
+                    if ($folder . '/' . $file_to_remove == $value) {
                         unset($filesList[$key]);
                         exec("rm -f {$argValue}");
                         continue 2;
@@ -652,7 +652,7 @@ class ReleaseCreator
 
                 // Remove folders.
                 foreach ($foldersRemoveList as $folder_to_remove) {
-                    if ($folder.'/'.$folder_to_remove == $value) {
+                    if ($folder . '/' . $folder_to_remove == $value) {
                         unset($filesList[$key]);
                         exec("rm -rf {$argValue}");
                         continue 2;
@@ -661,7 +661,7 @@ class ReleaseCreator
 
                 // Pattern to remove.
                 foreach ($patternsRemoveList as $pattern_to_remove) {
-                    if (preg_match('#'.$pattern_to_remove.'#', $value) == 1) {
+                    if (preg_match('#' . $pattern_to_remove . '#', $value) == 1) {
                         unset($filesList[$key]);
                         exec("rm -rf {$argValue}");
                         continue 2;
@@ -672,7 +672,7 @@ class ReleaseCreator
 
                 // Remove folders.
                 foreach ($foldersRemoveList as $folder_to_remove) {
-                    if ($folder.'/'.$folder_to_remove == $key) {
+                    if ($folder . '/' . $folder_to_remove == $key) {
                         unset($filesList[$key]);
                         exec("rm -rf {$argKey}");
                         continue 2;
@@ -681,7 +681,7 @@ class ReleaseCreator
 
                 // Pattern to remove.
                 foreach ($patternsRemoveList as $pattern_to_remove) {
-                    if (preg_match('#'.$pattern_to_remove.'#', $key) == 1) {
+                    if (preg_match('#' . $pattern_to_remove . '#', $key) == 1) {
                         unset($filesList[$key]);
                         exec("rm -rf {$argKey}");
                         continue 2;

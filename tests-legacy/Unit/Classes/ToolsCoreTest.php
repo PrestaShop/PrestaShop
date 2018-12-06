@@ -210,7 +210,7 @@ class ToolsCoreTest extends TestCase
         $this->assertEquals(
             $res1,
             $res2,
-            'Results differ between getDirectoriesWithGlob and getDirectoriesWithReaddir for path '.$path
+            'Results differ between getDirectoriesWithGlob and getDirectoriesWithReaddir for path ' . $path
         );
 
         $haveFilesTest = ($res1 !== []);

@@ -57,7 +57,7 @@ class ModuleRepositoryTest extends UnitTestCase
         }
 
         if (!defined('_PS_THEME_DIR_')) {
-            define('_PS_THEME_DIR_', _PS_ROOT_DIR_.'/themes/classic/');
+            define('_PS_THEME_DIR_', _PS_ROOT_DIR_ . '/themes/classic/');
         }
 
         if (!isset($_SERVER['HTTP_HOST'])) {
@@ -133,7 +133,7 @@ class ModuleRepositoryTest extends UnitTestCase
                 ),
                 new FakeLogger(),
                 $this->translatorStub,
-                __DIR__.'/../../../../resources/modules/'
+                __DIR__ . '/../../../../resources/modules/'
             ))
             ->setMethods(array('readCacheFile', 'generateCacheFile'))
             ->getMock()
@@ -267,8 +267,8 @@ class ModuleRepositoryTest extends UnitTestCase
         $installed_but_not_installed_modules = $this->moduleRepositoryStub->getFilteredList($filters);
 
         foreach ($installed_but_not_installed_modules as $module) {
-            $this->assertTrue($module->database->get('installed') == 1, $module->attributes->get('name').' marked as not installed ><');
-            $this->assertTrue($module->database->get('active') == 0, $module->attributes->get('name').' marked as enabled ><');
+            $this->assertTrue($module->database->get('installed') == 1, $module->attributes->get('name') . ' marked as not installed ><');
+            $this->assertTrue($module->database->get('active') == 0, $module->attributes->get('name') . ' marked as enabled ><');
         }
 
         foreach ($all_modules as $name => $module) {
@@ -286,7 +286,7 @@ class ModuleRepositoryTest extends UnitTestCase
 
         // Each module must have its origin attribute
         foreach ($this->moduleRepositoryStub->getFilteredList($filters) as $module) {
-            $this->assertTrue($module->attributes->has('origin'), $module->attributes->get('name').' has not an origin attribute');
+            $this->assertTrue($module->attributes->has('origin'), $module->attributes->get('name') . ' has not an origin attribute');
         }
     }
 
@@ -297,7 +297,7 @@ class ModuleRepositoryTest extends UnitTestCase
 
         // Each module must have its origin attribute
         foreach ($this->moduleRepositoryStub->getFilteredList($filters) as $module) {
-            $this->assertFalse($module->attributes->has('origin'), $module->attributes->get('name').' has an origin attribute, but should not');
+            $this->assertFalse($module->attributes->has('origin'), $module->attributes->get('name') . ' has an origin attribute, but should not');
         }
     }
 
@@ -308,7 +308,7 @@ class ModuleRepositoryTest extends UnitTestCase
 
         // Each module must have its origin attribute
         foreach ($this->moduleRepositoryStub->getFilteredList($filters) as $module) {
-            $this->assertFalse($module->attributes->has('origin'), $module->attributes->get('name').' has an origin attribute, but should not !');
+            $this->assertFalse($module->attributes->has('origin'), $module->attributes->get('name') . ' has an origin attribute, but should not !');
         }
     }
 
@@ -321,7 +321,7 @@ class ModuleRepositoryTest extends UnitTestCase
         $filters->setType(AddonListFilterType::MODULE);
 
         foreach ($this->moduleRepositoryStub->getFilteredList($filters) as $module) {
-            $this->assertTrue($module->attributes->get('productType') == 'module', $module->attributes->get('name').' has a product type "'.$module->attributes->get('productType').'"');
+            $this->assertTrue($module->attributes->get('productType') == 'module', $module->attributes->get('name') . ' has a product type "' . $module->attributes->get('productType') . '"');
         }
     }
 

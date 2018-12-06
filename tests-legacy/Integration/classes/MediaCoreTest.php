@@ -38,7 +38,7 @@ class MediaCoreTest extends IntegrationTestCase
     {
         $domain = Configuration::get('PS_SHOP_DOMAIN');
         $result = Media::getJqueryPath('1.11');
-        $this->assertEquals(true, in_array('http://'.$domain.__PS_BASE_URI__.'js/jquery/jquery.noConflict.php?version=1.11', $result));
+        $this->assertEquals(true, in_array('http://' . $domain . __PS_BASE_URI__ . 'js/jquery/jquery.noConflict.php?version=1.11', $result));
     }
 
     protected function setUp()
@@ -82,9 +82,9 @@ class MediaCoreTest extends IntegrationTestCase
      */
     public function testMinifyCSS($input, $fileuri, $output)
     {
-        $output = str_replace('//server/', '//'.$this->domain.'/', $output);
+        $output = str_replace('//server/', '//' . $this->domain . '/', $output);
         $return = Media::minifyCSS($input, $fileuri, $import_url);
-        $this->assertEquals($output, $return, 'MinifyCSS failed for data input : '.$input.'; Expected : '.$output.'; Returns : '.$return);
+        $this->assertEquals($output, $return, 'MinifyCSS failed for data input : ' . $input . '; Expected : ' . $output . '; Returns : ' . $return);
     }
 
     /**
@@ -93,7 +93,7 @@ class MediaCoreTest extends IntegrationTestCase
     public function testReplaceByAbsoluteURLPattern($input, $fileuri, $output, $expected)
     {
         $return = preg_match(Media::$pattern_callback, $input, $matches);
-        $this->assertEquals((bool)$expected, (bool)$return, 'ReplaceByAbsoluteURLPattern failed for data input : '.$input.(isset($matches[2]) && $matches[2] ? '; Matches : '.$matches[2] : ''));
+        $this->assertEquals((bool)$expected, (bool)$return, 'ReplaceByAbsoluteURLPattern failed for data input : ' . $input . (isset($matches[2]) && $matches[2] ? '; Matches : ' . $matches[2] : ''));
     }
 
     public function isJsInputsProvider()

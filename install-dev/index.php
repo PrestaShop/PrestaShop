@@ -32,19 +32,19 @@ if (
     || !extension_loaded('SimpleXML')
     || !extension_loaded('zip')
     || !is_writable(
-        __DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'var'.DIRECTORY_SEPARATOR.'cache'
+        __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'var' . DIRECTORY_SEPARATOR . 'cache'
     )
 ) {
-    require_once dirname(__FILE__).'/missing_requirement.php';
+    require_once dirname(__FILE__) . '/missing_requirement.php';
     exit();
 }
 
-require_once(dirname(__FILE__).DIRECTORY_SEPARATOR.'init.php');
-require_once(__DIR__).DIRECTORY_SEPARATOR.'autoload.php';
+require_once(dirname(__FILE__) . DIRECTORY_SEPARATOR . 'init.php');
+require_once(__DIR__) . DIRECTORY_SEPARATOR . 'autoload.php';
 
 try {
-    require_once(_PS_INSTALL_PATH_.'classes'.DIRECTORY_SEPARATOR.'controllerHttp.php');
-    require_once(_PS_INSTALL_PATH_.'classes'.DIRECTORY_SEPARATOR.'HttpConfigureInterface.php');
+    require_once(_PS_INSTALL_PATH_ . 'classes' . DIRECTORY_SEPARATOR . 'controllerHttp.php');
+    require_once(_PS_INSTALL_PATH_ . 'classes' . DIRECTORY_SEPARATOR . 'HttpConfigureInterface.php');
     InstallControllerHttp::execute();
 } catch (PrestashopInstallerException $e) {
     $e->displayMessage();

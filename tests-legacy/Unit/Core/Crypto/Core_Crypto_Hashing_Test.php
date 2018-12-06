@@ -45,8 +45,8 @@ class Core_Crypto_Hashing_Test extends TestCase
 
     public function test_simple_check_hash_md5()
     {
-        $this->assertTrue($this->hashing->checkHash("123", md5(_COOKIE_KEY_."123"), _COOKIE_KEY_));
-        $this->assertFalse($this->hashing->checkHash("23", md5(_COOKIE_KEY_."123"), _COOKIE_KEY_));
+        $this->assertTrue($this->hashing->checkHash("123", md5(_COOKIE_KEY_ . "123"), _COOKIE_KEY_));
+        $this->assertFalse($this->hashing->checkHash("23", md5(_COOKIE_KEY_ . "123"), _COOKIE_KEY_));
     }
 
     public function test_simple_encrypt()

@@ -221,12 +221,12 @@ class Datas
             }
             if (!isset($args_ok[$name])) {
                 if (!isset($row['default'])) {
-                    $errors[] = 'Field '.$row['name'].' is empty';
+                    $errors[] = 'Field ' . $row['name'] . ' is empty';
                 } else {
                     $this->$key = $row['default'];
                 }
             } elseif (isset($row['validate']) && !call_user_func(array('Validate', $row['validate']), $args_ok[$name])) {
-                $errors[] = 'Field '.$key.' is not valid';
+                $errors[] = 'Field ' . $key . ' is not valid';
             } else {
                 $this->$key = $args_ok[$name];
             }

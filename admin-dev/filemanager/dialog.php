@@ -14,7 +14,7 @@ if (isset($_POST['submit'])) {
         && !empty($_GET['fldr'])
         && preg_match('/\.{1,2}[\/|\\\]?/', urldecode($_GET['fldr'])) === 0
     ) {
-        $subdir = str_replace("\0", '', urldecode(trim($_GET['fldr'], '/').'/'));
+        $subdir = str_replace("\0", '', urldecode(trim($_GET['fldr'], '/') . '/'));
     } else {
         $subdir = '';
     }
@@ -53,23 +53,23 @@ if (isset($_POST['submit'])) {
         $subfolder .= '/';
     }
 
-    if (!file_exists($current_path.$subfolder.$subdir)) {
+    if (!file_exists($current_path . $subfolder . $subdir)) {
         $subdir = '';
-        if (!file_exists($current_path.$subfolder.$subdir)) {
+        if (!file_exists($current_path . $subfolder . $subdir)) {
             $subfolder = '';
         }
     }
 
     if (trim($subfolder) == '') {
-        $cur_dir = $upload_dir.$subdir;
-        $cur_path = $current_path.$subdir;
+        $cur_dir = $upload_dir . $subdir;
+        $cur_path = $current_path . $subdir;
         $thumbs_path = $thumbs_base_path;
         $parent = $subdir;
     } else {
-        $cur_dir = $upload_dir.$subfolder.$subdir;
-        $cur_path = $current_path.$subfolder.$subdir;
-        $thumbs_path = $thumbs_base_path.$subfolder;
-        $parent = $subfolder.$subdir;
+        $cur_dir = $upload_dir . $subfolder . $subdir;
+        $cur_path = $current_path . $subfolder . $subdir;
+        $thumbs_path = $thumbs_base_path . $subfolder;
+        $parent = $subfolder . $subdir;
     }
 
     $cycle = true;
@@ -80,20 +80,20 @@ if (isset($_POST['submit'])) {
         if ($parent == './') {
             $parent = '';
         }
-        if (file_exists($current_path.$parent.'config.php')) {
-            require_once($current_path.$parent.'config.php');
+        if (file_exists($current_path . $parent . 'config.php')) {
+            require_once($current_path . $parent . 'config.php');
             $cycle = false;
         }
 
         if ($parent == '') {
             $cycle = false;
         } else {
-            $parent = fix_dirname($parent).'/';
+            $parent = fix_dirname($parent) . '/';
         }
     }
 
-    if (!is_dir($thumbs_path.$subdir)) {
-        create_folder(false, $thumbs_path.$subdir);
+    if (!is_dir($thumbs_path . $subdir)) {
+        create_folder(false, $thumbs_path . $subdir);
     }
 
     if (isset($_GET['popup'])) {
@@ -145,11 +145,11 @@ if (isset($_POST['submit'])) {
         $lang = $_GET['lang'];
     }
 
-    $language_file = 'lang/'.$default_language.'.php';
+    $language_file = 'lang/' . $default_language . '.php';
     if ($lang != $default_language) {
         $path_parts = pathinfo($lang);
-        if (is_readable('lang/'.$path_parts['basename'].'.php')) {
-            $language_file = 'lang/'.$path_parts['basename'].'.php';
+        if (is_readable('lang/' . $path_parts['basename'] . '.php')) {
+            $language_file = 'lang/' . $path_parts['basename'] . '.php';
         } else {
             $lang = $default_language;
         }
@@ -349,7 +349,7 @@ if (isset($_POST['submit'])) {
     ?>"/>
 	<?php $protocol = Tools::getShopProtocol();
     ?>
-	<input type="hidden" id="current_url" value="<?php echo str_replace(array('&filter='.$filter), array(''), $protocol.$_SERVER['HTTP_HOST'].Tools::safeOutput($_SERVER['REQUEST_URI']));
+	<input type="hidden" id="current_url" value="<?php echo str_replace(array('&filter=' . $filter), array(''), $protocol . $_SERVER['HTTP_HOST'] . Tools::safeOutput($_SERVER['REQUEST_URI']));
     ?>"/>
 	<input type="hidden" id="lang_show_url" value="<?php echo Tools::safeOutput(lang_Show_url);
     ?>"/>
@@ -387,9 +387,9 @@ if (isset($_POST['submit'])) {
 }
     ?>
 						<form action="dialog.php" method="post" enctype="multipart/form-data" id="myAwesomeDropzone" class="dropzone">
-							<input type="hidden" name="path" value="<?php echo Tools::safeOutput($subfolder.$subdir);
+							<input type="hidden" name="path" value="<?php echo Tools::safeOutput($subfolder . $subdir);
     ?>"/>
-							<input type="hidden" name="path_thumb" value="<?php echo Tools::safeOutput($subfolder.$subdir);
+							<input type="hidden" name="path_thumb" value="<?php echo Tools::safeOutput($subfolder . $subdir);
     ?>"/>
 
 							<div class="fallback">
@@ -467,13 +467,13 @@ if (isset($_POST['submit'])) {
             $current_folder = array('file' => $file);
         } elseif ($file == "..") {
             $prev_folder = array('file' => $file);
-        } elseif (is_dir($current_path.$subfolder.$subdir.$file)) {
-            $date = filemtime($current_path.$subfolder.$subdir.$file);
-            $size = foldersize($current_path.$subfolder.$subdir.$file);
+        } elseif (is_dir($current_path . $subfolder . $subdir . $file)) {
+            $date = filemtime($current_path . $subfolder . $subdir . $file);
+            $size = foldersize($current_path . $subfolder . $subdir . $file);
             $file_ext = lang_Type_dir;
             $sorted[$k] = array('file' => $file, 'date' => $date, 'size' => $size, 'extension' => $file_ext);
         } else {
-            $file_path = $current_path.$subfolder.$subdir.$file;
+            $file_path = $current_path . $subfolder . $subdir . $file;
             $date = filemtime($file_path);
             $size = filesize($file_path);
             $file_ext = substr(strrchr($file, '.'), 1);
@@ -648,7 +648,7 @@ if (isset($_POST['submit'])) {
 
 	<div class="row-fluid">
 		<?php
-        $link = "dialog.php?".$get_params;
+        $link = "dialog.php?" . $get_params;
     ?>
 		<ul class="breadcrumb">
 			<li class="pull-left"><a href="<?php echo Tools::safeOutput($link) ?>/"><i class="icon-home"></i></a></li>
@@ -658,14 +658,14 @@ if (isset($_POST['submit'])) {
     $tmp_path = '';
     if (!empty($bc)) {
         foreach ($bc as $k => $b) {
-            $tmp_path .= $b."/";
+            $tmp_path .= $b . "/";
             if ($k == count($bc) - 2) {
                 ?>
 						<li class="active"><?php echo Tools::safeOutput($b) ?></li><?php
 
             } elseif ($b != "") {
                 ?>
-						<li><a href="<?php echo Tools::safeOutput($link.$tmp_path)?>"><?php echo Tools::safeOutput($b) ?></a></li>
+						<li><a href="<?php echo Tools::safeOutput($link . $tmp_path)?>"><?php echo Tools::safeOutput($b) ?></a></li>
 						<li><span class="divider"><?php echo "/";
                 ?></span></li>
 					<?php
@@ -677,7 +677,7 @@ if (isset($_POST['submit'])) {
 			<li class="pull-right">
 				<a class="btn-small" href="javascript:void('')" id="info"><i class="icon-question-sign"></i></a></li>
 			<li class="pull-right">
-				<a id="refresh" class="btn-small" href="dialog.php?<?php echo Tools::safeOutput($get_params.$subdir."&".uniqid()) ?>"><i class="icon-refresh"></i></a>
+				<a id="refresh" class="btn-small" href="dialog.php?<?php echo Tools::safeOutput($get_params . $subdir . "&" . uniqid()) ?>"><i class="icon-refresh"></i></a>
 			</li>
 
 			<li class="pull-right">
@@ -718,7 +718,7 @@ if (isset($_POST['submit'])) {
 	<!----- breadcrumb div end ------->
 	<div class="row-fluid ff-container">
 	<div class="span12">
-	<?php if (@opendir($current_path.$subfolder.$subdir) === false) {
+	<?php if (@opendir($current_path . $subfolder . $subdir) === false) {
     ?>
 		<br/>
 		<div class="alert alert-error">There is an error! The upload folder there isn't. Check your config.php file.
@@ -738,7 +738,7 @@ if (isset($_POST['submit'])) {
 	<?php if ($show_sorting_bar) {
     ?>
 		<!-- sorter -->
-		<div class="sorter-container <?php echo "list-view".Tools::safeOutput($view);
+		<div class="sorter-container <?php echo "list-view" . Tools::safeOutput($view);
     ?>">
 			<div class="file-name"><a class="sorter sort-name <?php if ($sort_by == "name") {
     echo ($descending) ? "descending" : "ascending";
@@ -772,7 +772,7 @@ if (isset($_POST['submit'])) {
 	<input type="hidden" id="file_number" value="<?php echo Tools::safeOutput($n_files);
     ?>"/>
 	<!--ul class="thumbnails ff-items"-->
-	<ul class="grid cs-style-2 <?php echo "list-view".Tools::safeOutput($view);
+	<ul class="grid cs-style-2 <?php echo "list-view" . Tools::safeOutput($view);
     ?>">
 	<?php
 
@@ -800,12 +800,12 @@ if (isset($_POST['submit'])) {
         $new_name = fix_filename($file, $transliteration);
         if ($file != '..' && $file != $new_name) {
             //rename
-            rename_folder($current_path.$subdir.$new_name, $new_name, $transliteration);
+            rename_folder($current_path . $subdir . $new_name, $new_name, $transliteration);
             $file = $new_name;
         }
         //add in thumbs folder if not exist
-        if (!file_exists($thumbs_path.$subdir.$file)) {
-            create_folder(false, $thumbs_path.$subdir.$file);
+        if (!file_exists($thumbs_path . $subdir . $file)) {
+            create_folder(false, $thumbs_path . $subdir . $file);
         }
         $class_ext = 3;
         if ($file == '..' && trim($subdir) != '') {
@@ -816,7 +816,7 @@ if (isset($_POST['submit'])) {
                 $src = "/";
             }
         } elseif ($file != '..') {
-            $src = $subdir.$file."/";
+            $src = $subdir . $file . "/";
         }
 
         ?>
@@ -833,7 +833,7 @@ if (isset($_POST['submit'])) {
     echo "dir";
 }
         ?>">
-				<a class="folder-link" href="dialog.php?<?php echo $get_params.rawurlencode($src)."&".uniqid() ?>">
+				<a class="folder-link" href="dialog.php?<?php echo $get_params . rawurlencode($src) . "&" . uniqid() ?>">
 					<div class="img-precontainer">
 						<div class="img-container directory"><span></span>
 							<img class="directory-img" src="img/<?php echo Tools::safeOutput($icon_theme);
@@ -870,7 +870,7 @@ if (isset($_POST['submit'])) {
     echo "ellipsis";
 }
     ?>">
-							<a class="folder-link" data-file="<?php echo Tools::safeOutput($file) ?>" href="dialog.php?<?php echo Tools::safeOutput($get_params.rawurlencode($src)."&".uniqid()) ?>"><?php echo Tools::safeOutput($file);
+							<a class="folder-link" data-file="<?php echo Tools::safeOutput($file) ?>" href="dialog.php?<?php echo Tools::safeOutput($get_params . rawurlencode($src) . "&" . uniqid()) ?>"><?php echo Tools::safeOutput($file);
     ?></a>
 						</h4>
 					</div>
@@ -893,8 +893,8 @@ if (isset($_POST['submit'])) {
 						<a href="javascript:void('')" class="tip-left edit-button <?php if ($rename_folders) {
     echo "rename-folder";
 }
-    ?>" title="<?php echo lang_Rename ?>" data-path="<?php echo Tools::safeOutput($subfolder.$subdir.$file);
-    ?>" data-thumb="<?php echo Tools::safeOutput($subdir.$file);
+    ?>" title="<?php echo lang_Rename ?>" data-path="<?php echo Tools::safeOutput($subfolder . $subdir . $file);
+    ?>" data-thumb="<?php echo Tools::safeOutput($subdir . $file);
     ?>">
 							<i class="icon-pencil <?php if (!$rename_folders) {
     echo 'icon-white';
@@ -904,8 +904,8 @@ if (isset($_POST['submit'])) {
     echo "delete-folder";
 }
     ?>" title="<?php echo lang_Erase ?>" data-confirm="<?php echo lang_Confirm_Folder_del;
-    ?>" data-path="<?php echo Tools::safeOutput($subfolder.$subdir.$file);
-    ?>" data-thumb="<?php echo Tools::safeOutput($subdir.$file);
+    ?>" data-path="<?php echo Tools::safeOutput($subfolder . $subdir . $file);
+    ?>" data-thumb="<?php echo Tools::safeOutput($subdir . $file);
     ?>">
 							<i class="icon-trash <?php if (!$delete_folders) {
     echo 'icon-white';
@@ -925,29 +925,29 @@ if (isset($_POST['submit'])) {
     foreach ($files as $nu => $file_array) {
         $file = $file_array['file'];
 
-        if ($file == '.' || $file == '..' || is_dir($current_path.$subfolder.$subdir.$file) || in_array($file, $hidden_files) || !in_array(fix_strtolower($file_array['extension']), $ext) || ($filter != '' && strpos($file, $filter) === false)) {
+        if ($file == '.' || $file == '..' || is_dir($current_path . $subfolder . $subdir . $file) || in_array($file, $hidden_files) || !in_array(fix_strtolower($file_array['extension']), $ext) || ($filter != '' && strpos($file, $filter) === false)) {
             continue;
         }
 
-        $file_path = $current_path.$subfolder.$subdir.$file;
+        $file_path = $current_path . $subfolder . $subdir . $file;
     //check if file have illegal caracter
 
-    $filename = substr($file, 0, '-'.(strlen($file_array['extension']) + 1));
+    $filename = substr($file, 0, '-' . (strlen($file_array['extension']) + 1));
 
         if ($file != fix_filename($file, $transliteration)) {
             $file1 = fix_filename($file, $transliteration);
-            $file_path1 = ($current_path.$subfolder.$subdir.$file1);
+            $file_path1 = ($current_path . $subfolder . $subdir . $file1);
             if (file_exists($file_path1)) {
                 $i = 1;
                 $info = pathinfo($file1);
-                while (file_exists($current_path.$subfolder.$subdir.$info['filename'].".[".$i."].".$info['extension'])) {
+                while (file_exists($current_path . $subfolder . $subdir . $info['filename'] . ".[" . $i . "]." . $info['extension'])) {
                     $i++;
                 }
-                $file1 = $info['filename'].".[".$i."].".$info['extension'];
-                $file_path1 = ($current_path.$subfolder.$subdir.$file1);
+                $file1 = $info['filename'] . ".[" . $i . "]." . $info['extension'];
+                $file_path1 = ($current_path . $subfolder . $subdir . $file1);
             }
 
-            $filename = substr($file1, 0, '-'.(strlen($file_array['extension']) + 1));
+            $filename = substr($file1, 0, '-' . (strlen($file_array['extension']) + 1));
             rename_file($file_path, fix_filename($filename, $transliteration), $transliteration);
             $file = $file1;
             $file_array['extension'] = fix_filename($file_array['extension'], $transliteration);
@@ -963,14 +963,14 @@ if (isset($_POST['submit'])) {
         $src_thumb = "";
         $extension_lower = fix_strtolower($file_array['extension']);
         if (in_array($extension_lower, $ext_img)) {
-            $src = $base_url.$cur_dir.rawurlencode($file);
-            $mini_src = $src_thumb = $thumbs_path.$subdir.$file;
+            $src = $base_url . $cur_dir . rawurlencode($file);
+            $mini_src = $src_thumb = $thumbs_path . $subdir . $file;
 
         //add in thumbs folder if not exist
         if (!file_exists($src_thumb)) {
             try {
                 create_img_gd($file_path, $src_thumb, 122, 91);
-                new_thumbnails_creation($current_path.$subfolder.$subdir, $file_path, $file, $current_path, $relative_image_creation, $relative_path_from_current_pos, $relative_image_creation_name_to_prepend, $relative_image_creation_name_to_append, $relative_image_creation_width, $relative_image_creation_height, $fixed_image_creation, $fixed_path_from_filemanager, $fixed_image_creation_name_to_prepend, $fixed_image_creation_to_append, $fixed_image_creation_width, $fixed_image_creation_height);
+                new_thumbnails_creation($current_path . $subfolder . $subdir, $file_path, $file, $current_path, $relative_image_creation, $relative_path_from_current_pos, $relative_image_creation_name_to_prepend, $relative_image_creation_name_to_append, $relative_image_creation_width, $relative_image_creation_height, $fixed_image_creation, $fixed_path_from_filemanager, $fixed_image_creation_name_to_prepend, $fixed_image_creation_to_append, $fixed_image_creation_width, $fixed_image_creation_height);
             } catch (Exception $e) {
                 $src_thumb = $mini_src = "";
             }
@@ -979,12 +979,12 @@ if (isset($_POST['submit'])) {
         //check if is smaller than thumb
         list($img_width, $img_height, $img_type, $attr) = getimagesize($file_path);
             if ($img_width < 122 && $img_height < 91) {
-                $src_thumb = $current_path.$subfolder.$subdir.$file;
+                $src_thumb = $current_path . $subfolder . $subdir . $file;
                 $show_original = true;
             }
 
             if ($img_width < 45 && $img_height < 38) {
-                $mini_src = $current_path.$subfolder.$subdir.$file;
+                $mini_src = $current_path . $subfolder . $subdir . $file;
                 $show_original_mini = true;
             }
         }
@@ -994,10 +994,10 @@ if (isset($_POST['submit'])) {
         $no_thumb = false;
         if ($src_thumb == "") {
             $no_thumb = true;
-            if (file_exists('img/'.$icon_theme.'/'.$extension_lower.".jpg")) {
-                $src_thumb = 'img/'.$icon_theme.'/'.$extension_lower.".jpg";
+            if (file_exists('img/' . $icon_theme . '/' . $extension_lower . ".jpg")) {
+                $src_thumb = 'img/' . $icon_theme . '/' . $extension_lower . ".jpg";
             } else {
-                $src_thumb = "img/".$icon_theme."/default.jpg";
+                $src_thumb = "img/" . $icon_theme . "/default.jpg";
             }
             $is_icon_thumb = true;
         }
@@ -1022,13 +1022,13 @@ if (isset($_POST['submit'])) {
 
     /* PrestaShop */
     if (isset($src_thumb) && $src_thumb) {
-        if (($src_thumb = preg_replace('#('.addslashes($current_path).')#ism', Tools::safeOutput(Context::getContext()->shop->physical_uri.'img/cms/'), $src_thumb)) == $src_thumb) {
-            $src_thumb = preg_replace('#('.addslashes($thumbs_base_path).')#ism', Tools::safeOutput(Context::getContext()->shop->physical_uri.'img/tmp/cms/'), $src_thumb);
+        if (($src_thumb = preg_replace('#(' . addslashes($current_path) . ')#ism', Tools::safeOutput(Context::getContext()->shop->physical_uri . 'img/cms/'), $src_thumb)) == $src_thumb) {
+            $src_thumb = preg_replace('#(' . addslashes($thumbs_base_path) . ')#ism', Tools::safeOutput(Context::getContext()->shop->physical_uri . 'img/tmp/cms/'), $src_thumb);
         }
     }
         if (isset($mini_src) && $mini_src) {
-            if (($mini_src = preg_replace('#('.addslashes($current_path).')#ism', Tools::safeOutput(Context::getContext()->shop->physical_uri.'img/cms/'), $mini_src)) == $mini_src) {
-                $mini_src = preg_replace('#('.addslashes($thumbs_base_path).')#ism', Tools::safeOutput(Context::getContext()->shop->physical_uri.'img/tmp/cms/'), $mini_src);
+            if (($mini_src = preg_replace('#(' . addslashes($current_path) . ')#ism', Tools::safeOutput(Context::getContext()->shop->physical_uri . 'img/cms/'), $mini_src)) == $mini_src) {
+                $mini_src = preg_replace('#(' . addslashes($thumbs_base_path) . ')#ism', Tools::safeOutput(Context::getContext()->shop->physical_uri . 'img/tmp/cms/'), $mini_src);
             }
         }
     /* END PrestaShop */
@@ -1055,7 +1055,7 @@ if (isset($_POST['submit'])) {
         ?>
 					<div class="img-container">
 						<span></span>
-						<img alt="<?php echo Tools::safeOutput($filename." thumbnails");
+						<img alt="<?php echo Tools::safeOutput($filename . " thumbnails");
         ?>" class="<?php echo $show_original ? "original" : "" ?> <?php echo $is_icon_thumb ? "icon" : "" ?>" src="<?php echo Tools::safeOutput($src_thumb);
         ?>">
 					</div>
@@ -1072,7 +1072,7 @@ if (isset($_POST['submit'])) {
 						<span></span>
 						<?php if ($mini_src != "") {
     ?>
-							<img alt="<?php echo Tools::safeOutput($filename." thumbnails");
+							<img alt="<?php echo Tools::safeOutput($filename . " thumbnails");
     ?>" class="<?php echo $show_original_mini ? "original" : "" ?> <?php echo $is_icon_thumb_mini ? "icon" : "" ?>" src="<?php echo Tools::safeOutput($mini_src);
     ?>">
 						<?php
@@ -1109,7 +1109,7 @@ if (isset($_POST['submit'])) {
 			<div class="file-date"><?php echo date(lang_Date_type, $file_array['date']) ?></div>
 			<div class="file-size"><?php echo makeSize($file_array['size']) ?></div>
 			<div class='img-dimension'><?php if ($is_img) {
-    echo $img_width."x".$img_height;
+    echo $img_width . "x" . $img_height;
 }
         ?></div>
 			<div class='file-extension'><?php echo Tools::safeOutput($extension_lower);
@@ -1117,7 +1117,7 @@ if (isset($_POST['submit'])) {
 			<figcaption>
 				<form action="force_download.php" method="post" class="download-form" id="form<?php echo Tools::safeOutput($nu);
         ?>">
-					<input type="hidden" name="path" value="<?php echo Tools::safeOutput($subfolder.$subdir) ?>"/>
+					<input type="hidden" name="path" value="<?php echo Tools::safeOutput($subfolder . $subdir) ?>"/>
 					<input type="hidden" class="name_download" name="name" value="<?php echo Tools::safeOutput($file) ?>"/>
 
 					<a title="<?php echo lang_Download ?>" class="tip-right" href="javascript:void('')" onclick="$('#form<?php echo Tools::safeOutput($nu);
@@ -1137,7 +1137,7 @@ if (isset($_POST['submit'])) {
 }
     ?>"
 						   title="<?php echo lang_Preview ?>" data-url="ajax_calls.php?action=media_preview&title=<?php echo Tools::safeOutput($filename);
-    ?>&file=<?php echo Tools::safeOutput(Context::getContext()->shop->physical_uri.'img/cms/'.$subfolder.$subdir.$file);
+    ?>&file=<?php echo Tools::safeOutput(Context::getContext()->shop->physical_uri . 'img/cms/' . $subfolder . $subdir . $file);
     ?>"
 						   href="javascript:void('');"><i class=" icon-eye-open"></i></a>
 					<?php
@@ -1151,8 +1151,8 @@ if (isset($_POST['submit'])) {
 					<a href="javascript:void('')" class="tip-left edit-button <?php if ($rename_files) {
     echo "rename-file";
 }
-        ?>" title="<?php echo lang_Rename ?>" data-path="<?php echo Tools::safeOutput($subfolder.$subdir.$file);
-        ?>" data-thumb="<?php echo Tools::safeOutput($subdir.$file);
+        ?>" title="<?php echo lang_Rename ?>" data-path="<?php echo Tools::safeOutput($subfolder . $subdir . $file);
+        ?>" data-thumb="<?php echo Tools::safeOutput($subdir . $file);
         ?>">
 						<i class="icon-pencil <?php if (!$rename_files) {
     echo 'icon-white';
@@ -1163,8 +1163,8 @@ if (isset($_POST['submit'])) {
     echo "delete-file";
 }
         ?>" title="<?php echo lang_Erase ?>" data-confirm="<?php echo lang_Confirm_del;
-        ?>" data-path="<?php echo Tools::safeOutput($subfolder.$subdir.$file);
-        ?>" data-thumb="<?php echo Tools::safeOutput($subdir.$file);
+        ?>" data-path="<?php echo Tools::safeOutput($subfolder . $subdir . $file);
+        ?>" data-thumb="<?php echo Tools::safeOutput($subdir . $file);
         ?>">
 						<i class="icon-trash <?php if (!$delete_files) {
     echo 'icon-white';

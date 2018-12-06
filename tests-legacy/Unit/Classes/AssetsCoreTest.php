@@ -102,7 +102,7 @@ class AssetsCoreTest extends TestCase
         $this->assertSame($toBeFound, $found);
 
         if ($toBeFound) {
-            $this->assertSame($expectedAsset['path'], $this->testsPath.$expectedPath);
+            $this->assertSame($expectedAsset['path'], $this->testsPath . $expectedPath);
         }
 
     }

@@ -88,23 +88,23 @@ function latin1_database_to_utf8()
         if (!Db::getInstance()->execute('SET NAMES latin1')) {
             echo 'Cannot change the sql encoding to latin1!';
         }
-        $query = 'SELECT `'.$table['id'].'`';
+        $query = 'SELECT `' . $table['id'] . '`';
         foreach ($table['fields'] as $field) {
-            $query .= ', `'.$field.'`';
+            $query .= ', `' . $field . '`';
         }
         if (isset($table['lang']) and $table['lang']) {
             $query .= ', `id_lang`';
         }
-        $query .= ' FROM `'._DB_PREFIX_.$table['name'].'`';
+        $query .= ' FROM `' . _DB_PREFIX_ . $table['name'] . '`';
         $latin1Datas = Db::getInstance()->executeS($query);
         if ($latin1Datas === false) {
             $warningExist = true;
             $requests .= '
 				<request result="fail">
-					<sqlQuery><![CDATA['.htmlentities($query).']]></sqlQuery>
-					<sqlMsgError><![CDATA['.htmlentities(Db::getInstance()->getMsgError()).']]></sqlMsgError>
-					<sqlNumberError><![CDATA['.htmlentities(Db::getInstance()->getNumberError()).']]></sqlNumberError>
-				</request>'."\n";
+					<sqlQuery><![CDATA[' . htmlentities($query) . ']]></sqlQuery>
+					<sqlMsgError><![CDATA[' . htmlentities(Db::getInstance()->getMsgError()) . ']]></sqlMsgError>
+					<sqlNumberError><![CDATA[' . htmlentities(Db::getInstance()->getNumberError()) . ']]></sqlNumberError>
+				</request>' . "\n";
         }
 
         if (Db::getInstance()->numRows()) {
@@ -113,23 +113,23 @@ function latin1_database_to_utf8()
                 echo 'Cannot change the sql encoding to utf8!';
             }
             foreach ($latin1Datas as $latin1Data) {
-                $query = 'UPDATE `'._DB_PREFIX_.$table['name'].'` SET';
+                $query = 'UPDATE `' . _DB_PREFIX_ . $table['name'] . '` SET';
                 foreach ($table['fields'] as $field) {
-                    $query .= ' `'.$field.'` = \''.pSQL($latin1Data[$field]).'\',';
+                    $query .= ' `' . $field . '` = \'' . pSQL($latin1Data[$field]) . '\',';
                 }
                 $query = rtrim($query, ',');
-                $query .= ' WHERE `'.$table['id'].'` = '.(int)($latin1Data[$table['id']]);
+                $query .= ' WHERE `' . $table['id'] . '` = ' . (int)($latin1Data[$table['id']]);
                 if (isset($table['lang']) and $table['lang']) {
-                    $query .= ' AND `id_lang` = '.(int)($latin1Data['id_lang']);
+                    $query .= ' AND `id_lang` = ' . (int)($latin1Data['id_lang']);
                 }
                 if (!Db::getInstance()->execute($query)) {
                     $warningExist = true;
                     $requests .= '
 						<request result="fail">
-							<sqlQuery><![CDATA['.htmlentities($query).']]></sqlQuery>
-							<sqlMsgError><![CDATA['.htmlentities(Db::getInstance()->getMsgError()).']]></sqlMsgError>
-							<sqlNumberError><![CDATA['.htmlentities(Db::getInstance()->getNumberError()).']]></sqlNumberError>
-						</request>'."\n";
+							<sqlQuery><![CDATA[' . htmlentities($query) . ']]></sqlQuery>
+							<sqlMsgError><![CDATA[' . htmlentities(Db::getInstance()->getMsgError()) . ']]></sqlMsgError>
+							<sqlNumberError><![CDATA[' . htmlentities(Db::getInstance()->getNumberError()) . ']]></sqlNumberError>
+						</request>' . "\n";
                 }
             }
         }

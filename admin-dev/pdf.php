@@ -27,7 +27,7 @@
 if (!defined('_PS_ADMIN_DIR_')) {
     define('_PS_ADMIN_DIR_', getcwd());
 }
-include(_PS_ADMIN_DIR_.'/../config/config.inc.php');
+include(_PS_ADMIN_DIR_ . '/../config/config.inc.php');
 
 /**
  * @deprecated 1.5.0
@@ -54,7 +54,7 @@ $function_array = array(
 $pdf_controller = new AdminPdfController();
 foreach ($function_array as $var => $function) {
     if (isset($_GET[$var])) {
-        $pdf_controller->{'process'.$function}();
+        $pdf_controller->{'process' . $function}();
         exit;
     }
 }

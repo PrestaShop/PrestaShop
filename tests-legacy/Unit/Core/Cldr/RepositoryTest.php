@@ -40,11 +40,11 @@ class RepositoryTest extends UnitTestCase
 
     public function setUp()
     {
-        $this->cldrCacheFolder = _PS_CACHE_DIR_.'cldr-test';
+        $this->cldrCacheFolder = _PS_CACHE_DIR_ . 'cldr-test';
         $this->locale = 'fr';
         $this->region = 'FR';
 
-        $provider = new RunTimeProvider(new FileProvider(new WebProvider('http://i18n.prestashop.com/cldr/json-full/'), _PS_CACHE_DIR_.'cldr-test'));
+        $provider = new RunTimeProvider(new FileProvider(new WebProvider('http://i18n.prestashop.com/cldr/json-full/'), _PS_CACHE_DIR_ . 'cldr-test'));
 
         $this->repository = new Repository($provider);
         $this->localeRepository = $this->repository->locales[$this->locale];
@@ -52,12 +52,12 @@ class RepositoryTest extends UnitTestCase
 
     public static function setUpBeforeClass()
     {
-        \Tools::deleteDirectory(_PS_CACHE_DIR_.'cldr-test');
+        \Tools::deleteDirectory(_PS_CACHE_DIR_ . 'cldr-test');
     }
 
     public static function tearDownAfterClass()
     {
-        \Tools::deleteDirectory(_PS_CACHE_DIR_.'cldr-test');
+        \Tools::deleteDirectory(_PS_CACHE_DIR_ . 'cldr-test');
     }
 
     public function testCacheFolderIsCreated()

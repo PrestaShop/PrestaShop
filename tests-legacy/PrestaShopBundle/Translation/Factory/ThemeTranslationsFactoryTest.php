@@ -140,15 +140,15 @@ class ThemeTranslationsFactoryTest extends TestCase
         return new MessageCatalogue(
             self::TEST_LOCALE,
             array(
-                'DefaultDomain.'.self::TEST_LOCALE => array(
+                'DefaultDomain.' . self::TEST_LOCALE => array(
                     'Default message' => 'Default MESSAGE',
                     'Default message bis' => 'Bis'
                 ),
-                'ShopFront.'.self::TEST_LOCALE => array(
+                'ShopFront.' . self::TEST_LOCALE => array(
                     'Add to Cart' => 'Add to Cart',
                     'Edit product' => 'Edit it'
                 ),
-                'messages.'.self::TEST_LOCALE => array(
+                'messages.' . self::TEST_LOCALE => array(
                     'foo' => 'Foo',
                     'bar' => 'Bar',
                     'baz' => 'Baz',
@@ -162,13 +162,13 @@ class ThemeTranslationsFactoryTest extends TestCase
         return new MessageCatalogue(
             self::TEST_LOCALE,
             array(
-                'DefaultDomain.'.self::TEST_LOCALE => array(
+                'DefaultDomain.' . self::TEST_LOCALE => array(
                     'Default message' => 'Default MESSAGE override xliff',
                 ),
-                'ShopFront.'.self::TEST_LOCALE => array(
+                'ShopFront.' . self::TEST_LOCALE => array(
                     'Add to Cart' => 'Add to Cart override xliff',
                 ),
-                'messages.'.self::TEST_LOCALE => array(
+                'messages.' . self::TEST_LOCALE => array(
                     'bar' => 'Bar override xlif',
                     'baz' => 'Baz override xliff',
                 ),

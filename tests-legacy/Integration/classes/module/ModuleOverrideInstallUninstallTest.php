@@ -70,8 +70,8 @@ class ModuleOverrideInstallUninstallTest extends IntegrationTestCase
         TestingModule::removeModule('pscsx3241');
         TestingModule::removeModule('pscsx32412');
 
-        @unlink(_PS_ROOT_DIR_.'/override/controllers/admin/AdminProductsController.php');
-        @unlink(_PS_ROOT_DIR_.'/override/classes/Cart.php');
+        @unlink(_PS_ROOT_DIR_ . '/override/controllers/admin/AdminProductsController.php');
+        @unlink(_PS_ROOT_DIR_ . '/override/classes/Cart.php');
     }
 
     public function testInstall()
@@ -104,14 +104,14 @@ class ModuleOverrideInstallUninstallTest extends IntegrationTestCase
          * resulted in the expected merged files.
          */
 
-        $ressource_path = realpath(dirname(__FILE__).'/../../../resources/ModulesOverrideInstallUninstallTest/');
-        $override_path_cart = _PS_ROOT_DIR_.'/'.PrestaShopAutoload::getInstance()->getClassPath('Cart');
-        $override_path_admin_product_controller = _PS_ROOT_DIR_.'/'.PrestaShopAutoload::getInstance()->getClassPath('AdminProductsController');
+        $ressource_path = realpath(dirname(__FILE__) . '/../../../resources/ModulesOverrideInstallUninstallTest/');
+        $override_path_cart = _PS_ROOT_DIR_ . '/' . PrestaShopAutoload::getInstance()->getClassPath('Cart');
+        $override_path_admin_product_controller = _PS_ROOT_DIR_ . '/' . PrestaShopAutoload::getInstance()->getClassPath('AdminProductsController');
 
         $actual_override_cart = file_get_contents($override_path_cart);
         $actual_override_admin_product = file_get_contents($override_path_admin_product_controller);
-        $expected_override_cart = file_get_contents($ressource_path.'/Cart.php');
-        $expected_override_admin_product = file_get_contents($ressource_path.'/AdminProductsController.php');
+        $expected_override_cart = file_get_contents($ressource_path . '/Cart.php');
+        $expected_override_admin_product = file_get_contents($ressource_path . '/AdminProductsController.php');
 
         $this->assertEquals(
             $this->cleanup($expected_override_cart),

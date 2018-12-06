@@ -129,8 +129,8 @@ class AdminProductsController extends AdminProductsControllerCore
         $modules_list = Hook::getHookModuleExecList('displayAdminProductsExtra');
         if (is_array($modules_list) && count($modules_list) > 0) {
             foreach ($modules_list as $m) {
-                $this->available_tabs['Module'.ucfirst($m['module'])] = 23;
-                $this->available_tabs_lang['Module'.ucfirst($m['module'])] = Module::getModuleName($m['module']);
+                $this->available_tabs['Module' . ucfirst($m['module'])] = 23;
+                $this->available_tabs_lang['Module' . ucfirst($m['module'])] = Module::getModuleName($m['module']);
             }
         }
 
@@ -168,29 +168,29 @@ class AdminProductsController extends AdminProductsControllerCore
         }
 
         $this->_join .= '
-		LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = a.`id_product`)
-		LEFT JOIN `'._DB_PREFIX_.'stock_available` sav ON (sav.`id_product` = a.`id_product` AND sav.`id_product_attribute` = 0
-		'.StockAvailable::addSqlShopRestriction(null, null, 'sav').') ';
+		LEFT JOIN `' . _DB_PREFIX_ . 'image` i ON (i.`id_product` = a.`id_product`)
+		LEFT JOIN `' . _DB_PREFIX_ . 'stock_available` sav ON (sav.`id_product` = a.`id_product` AND sav.`id_product_attribute` = 0
+		' . StockAvailable::addSqlShopRestriction(null, null, 'sav') . ') ';
 
         $alias = 'sa';
         $alias_image = 'image_shop';
 
         $id_shop = Shop::isFeatureActive() && Shop::getContext() == Shop::CONTEXT_SHOP? (int)$this->context->shop->id : 'a.id_shop_default';
-        $this->_join .= ' JOIN `'._DB_PREFIX_.'product_shop` sa ON (a.`id_product` = sa.`id_product` AND sa.id_shop = '.$id_shop.')
-				LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON ('.$alias.'.`id_category_default` = cl.`id_category` AND b.`id_lang` = cl.`id_lang` AND cl.id_shop = '.$id_shop.')
-				LEFT JOIN `'._DB_PREFIX_.'shop` shop ON (shop.id_shop = '.$id_shop.')
-				LEFT JOIN `'._DB_PREFIX_.'image_shop` image_shop ON (image_shop.`id_image` = i.`id_image` AND image_shop.`cover` = 1 AND image_shop.id_shop = '.$id_shop.')
-				LEFT JOIN `'._DB_PREFIX_.'product_download` pd ON (pd.`id_product` = a.`id_product`)';
+        $this->_join .= ' JOIN `' . _DB_PREFIX_ . 'product_shop` sa ON (a.`id_product` = sa.`id_product` AND sa.id_shop = ' . $id_shop . ')
+				LEFT JOIN `' . _DB_PREFIX_ . 'category_lang` cl ON (' . $alias . '.`id_category_default` = cl.`id_category` AND b.`id_lang` = cl.`id_lang` AND cl.id_shop = ' . $id_shop . ')
+				LEFT JOIN `' . _DB_PREFIX_ . 'shop` shop ON (shop.id_shop = ' . $id_shop . ')
+				LEFT JOIN `' . _DB_PREFIX_ . 'image_shop` image_shop ON (image_shop.`id_image` = i.`id_image` AND image_shop.`cover` = 1 AND image_shop.id_shop = ' . $id_shop . ')
+				LEFT JOIN `' . _DB_PREFIX_ . 'product_download` pd ON (pd.`id_product` = a.`id_product`)';
 
         $this->_select .= 'shop.name as shopname, a.id_shop_default, ';
-        $this->_select .= 'MAX('.$alias_image.'.id_image) id_image, cl.name `name_category`, '.$alias.'.`price`, 0 AS price_final, a.`is_virtual`, pd.`nb_downloadable`, sav.`quantity` as sav_quantity, '.$alias.'.`active`, IF(sav.`quantity`<=0, 1, 0) badge_danger';
+        $this->_select .= 'MAX(' . $alias_image . '.id_image) id_image, cl.name `name_category`, ' . $alias . '.`price`, 0 AS price_final, a.`is_virtual`, pd.`nb_downloadable`, sav.`quantity` as sav_quantity, ' . $alias . '.`active`, IF(sav.`quantity`<=0, 1, 0) badge_danger';
 
         if ($join_category) {
-            $this->_join .= ' INNER JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_product` = a.`id_product` AND cp.`id_category` = '.(int)$this->_category->id.') ';
+            $this->_join .= ' INNER JOIN `' . _DB_PREFIX_ . 'category_product` cp ON (cp.`id_product` = a.`id_product` AND cp.`id_category` = ' . (int)$this->_category->id . ') ';
             $this->_select .= ' , cp.`position`, ';
         }
 
-        $this->_group = 'GROUP BY '.$alias.'.id_product';
+        $this->_group = 'GROUP BY ' . $alias . '.id_product';
 
         $this->fields_list = array();
         $this->fields_list['id_product'] = array(
@@ -257,7 +257,7 @@ class AdminProductsController extends AdminProductsControllerCore
         $this->fields_list['active'] = array(
             'title' => $this->l('Status'),
             'active' => 'status',
-            'filter_key' => $alias.'!active',
+            'filter_key' => $alias . '!active',
             'align' => 'text-center',
             'type' => 'bool',
             'class' => 'fixed-width-sm',

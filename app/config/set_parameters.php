@@ -26,7 +26,7 @@
 
 use PrestaShopBundle\Install\Upgrade;
 
-$parametersFilepath = __DIR__  . '/parameters.php';
+$parametersFilepath = __DIR__ . '/parameters.php';
 if (!file_exists($parametersFilepath)) {
     // let's check first if there's some old config files which could be migrated
     if (Upgrade::migrateSettingsFile() === false) {
@@ -52,7 +52,7 @@ if (!defined('_PS_IN_TEST_') && isset($_SERVER['argv'])) {
 
 foreach ($parameters['parameters'] as $key => $value) {
     if (defined('_PS_IN_TEST_') && $key === 'database_name') {
-        $value = 'test_'.$value;
+        $value = 'test_' . $value;
     }
     $container->setParameter($key, $value);
 }

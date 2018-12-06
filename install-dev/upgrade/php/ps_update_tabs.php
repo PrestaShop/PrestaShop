@@ -26,7 +26,7 @@
 
 function ps_update_tabs()
 {
-    if (file_exists(__DIR__.'/../../data/xml/tab.xml')) {
+    if (file_exists(__DIR__ . '/../../data/xml/tab.xml')) {
         $tab_xml = simplexml_load_file(__DIR__ . '/../../data/xml/tab.xml');
         if (!empty($tab_xml)) {
             $tab_class_name = array();

@@ -16,7 +16,7 @@ function deleteDir($dir)
         if ($item == '.' || $item == '..') {
             continue;
         }
-        if (!deleteDir($dir.DIRECTORY_SEPARATOR.$item)) {
+        if (!deleteDir($dir . DIRECTORY_SEPARATOR . $item)) {
             return false;
         }
     }
@@ -27,7 +27,7 @@ function duplicate_file($old_path, $name)
 {
     if (file_exists($old_path)) {
         $info=pathinfo($old_path);
-        $new_path=$info['dirname']."/".$name.".".$info['extension'];
+        $new_path=$info['dirname'] . "/" . $name . "." . $info['extension'];
         if (file_exists($new_path)) {
             return false;
         }
@@ -40,7 +40,7 @@ function rename_file($old_path, $name, $transliteration)
     $name=fix_filename($name, $transliteration);
     if (file_exists($old_path)) {
         $info=pathinfo($old_path);
-        $new_path=$info['dirname']."/".$name.".".$info['extension'];
+        $new_path=$info['dirname'] . "/" . $name . "." . $info['extension'];
         if (file_exists($new_path)) {
             return false;
         }
@@ -52,7 +52,7 @@ function rename_folder($old_path, $name, $transliteration)
 {
     $name=fix_filename($name, $transliteration);
     if (file_exists($old_path)) {
-        $new_path=fix_dirname($old_path)."/".$name;
+        $new_path=fix_dirname($old_path) . "/" . $name;
         if (file_exists($new_path)) {
             return false;
         }
@@ -100,7 +100,7 @@ function foldersize($path)
 {
     $total_size = 0;
     $files = scandir($path, SCANDIR_SORT_NONE);
-    $cleanPath = rtrim($path, '/'). '/';
+    $cleanPath = rtrim($path, '/') . '/';
 
     foreach ($files as $t) {
         if ($t<>"." && $t<>"..") {
@@ -144,7 +144,7 @@ function check_files_extensions_on_path($path, $ext)
     } else {
         $files = scandir($path, SCANDIR_SORT_NONE);
         foreach ($files as $file) {
-            check_files_extensions_on_path(trim($path, '/')."/".$file, $ext);
+            check_files_extensions_on_path(trim($path, '/') . "/" . $file, $ext);
         }
     }
 }
@@ -155,14 +155,14 @@ function check_files_extensions_on_phar($phar, &$files, $basepath, $ext)
         if ($file->isFile()) {
             if (function_exists('mb_strtolower')) {
                 if (in_array(mb_strtolower($file->getExtension()), $ext)) {
-                    $files[] = $basepath.$file->getFileName();
+                    $files[] = $basepath . $file->getFileName();
                 } elseif (in_array(Tools::strtolower($file->getExtension()), $ext)) {
-                    $files[] = $basepath.$file->getFileName();
+                    $files[] = $basepath . $file->getFileName();
                 }
             }
         } elseif ($file->isDir()) {
             $iterator = new DirectoryIterator($file);
-            check_files_extensions_on_phar($iterator, $files, $basepath.$file->getFileName().'/', $ext);
+            check_files_extensions_on_phar($iterator, $files, $basepath . $file->getFileName() . '/', $ext);
         }
     }
 }
@@ -186,7 +186,7 @@ function fix_filename($str, $transliteration)
     // Here is a point: a good file UNKNOWN_LANGUAGE.jpg could become .jpg in previous code.
     // So we add that default 'file' name to fix that issue.
     if (strpos($str, '.') === 0) {
-        $str = 'file'.$str;
+        $str = 'file' . $str;
     }
 
     return trim($str);
@@ -226,11 +226,11 @@ function fix_path($path, $transliteration)
         $info['filename'] = substr($path, $s, $e);
         $info['basename'] = substr($path, $s);
     }
-    $tmp_path = $info['dirname'].DIRECTORY_SEPARATOR.$info['basename'];
+    $tmp_path = $info['dirname'] . DIRECTORY_SEPARATOR . $info['basename'];
 
     $str=fix_filename($info['filename'], $transliteration);
     if ($tmp_path!="") {
-        return $tmp_path.DIRECTORY_SEPARATOR.$str;
+        return $tmp_path . DIRECTORY_SEPARATOR . $str;
     } else {
         return $str;
     }
@@ -247,11 +247,11 @@ function base_url()
 
 function config_loading($current_path, $fld)
 {
-    if (file_exists($current_path.$fld.".config")) {
-        require_once($current_path.$fld.".config");
+    if (file_exists($current_path . $fld . ".config")) {
+        require_once($current_path . $fld . ".config");
         return true;
     }
-    echo "!!!!".$parent=fix_dirname($fld);
+    echo "!!!!" . $parent=fix_dirname($fld);
     if ($parent!="." && !empty($parent)) {
         config_loading($current_path, $parent);
     }
@@ -303,12 +303,12 @@ function new_thumbnails_creation($targetPath, $targetFile, $name, $current_path,
             if ($path!="" && $path[strlen($path)-1]!="/") {
                 $path.="/";
             }
-            if (!file_exists($targetPath.$path)) {
-                create_folder($targetPath.$path, false);
+            if (!file_exists($targetPath . $path)) {
+                create_folder($targetPath . $path, false);
             }
             $info=pathinfo($name);
             if (!endsWith($targetPath, $path)) {
-                if (!create_img($targetFile, $targetPath.$path.$relative_image_creation_name_to_prepend[$k].$info['filename'].$relative_image_creation_name_to_append[$k].".".$info['extension'], $relative_image_creation_width[$k], $relative_image_creation_height[$k])) {
+                if (!create_img($targetFile, $targetPath . $path . $relative_image_creation_name_to_prepend[$k] . $info['filename'] . $relative_image_creation_name_to_append[$k] . "." . $info['extension'], $relative_image_creation_width[$k], $relative_image_creation_height[$k])) {
                     $all_ok=false;
                 }
             }
@@ -321,12 +321,12 @@ function new_thumbnails_creation($targetPath, $targetFile, $name, $current_path,
             if ($path!="" && $path[strlen($path)-1]!="/") {
                 $path.="/";
             }
-            $base_dir=$path.substr_replace($targetPath, '', 0, strlen($current_path));
+            $base_dir=$path . substr_replace($targetPath, '', 0, strlen($current_path));
             if (!file_exists($base_dir)) {
                 create_folder($base_dir, false);
             }
             $info=pathinfo($name);
-            if (!create_img($targetFile, $base_dir.$fixed_image_creation_name_to_prepend[$k].$info['filename'].$fixed_image_creation_to_append[$k].".".$info['extension'], $fixed_image_creation_width[$k], $fixed_image_creation_height[$k])) {
+            if (!create_img($targetFile, $base_dir . $fixed_image_creation_name_to_prepend[$k] . $info['filename'] . $fixed_image_creation_to_append[$k] . "." . $info['extension'], $fixed_image_creation_width[$k], $fixed_image_creation_height[$k])) {
                 $all_ok=false;
             }
         }

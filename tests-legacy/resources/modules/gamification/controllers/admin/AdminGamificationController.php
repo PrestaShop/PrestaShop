@@ -1,6 +1,6 @@
 <?php
 
-include_once dirname(__FILE__).'/../../classes/Condition.php';
+include_once dirname(__FILE__) . '/../../classes/Condition.php';
 
 class AdminGamificationController extends ModuleAdminController
 {
@@ -18,16 +18,16 @@ class AdminGamificationController extends ModuleAdminController
     public function setMedia($isNewTheme = false)
     {
         $this->addJqueryUI('ui.progressbar');
-        $this->addJS(_MODULE_DIR_.$this->module->name.'/views/js/bubble-popup.js');
+        $this->addJS(_MODULE_DIR_ . $this->module->name . '/views/js/bubble-popup.js');
 
         if (version_compare(_PS_VERSION_, '1.6.0', '>=') === true) {
-            $this->addJs(_MODULE_DIR_.$this->module->name.'/views/js/gamification_bt.js');
+            $this->addJs(_MODULE_DIR_ . $this->module->name . '/views/js/gamification_bt.js');
         } else {
-            $this->addJs(_MODULE_DIR_.$this->module->name.'/views/js/gamification.js');
+            $this->addJs(_MODULE_DIR_ . $this->module->name . '/views/js/gamification.js');
         }
 
-        $this->addJs(_MODULE_DIR_.$this->module->name.'/views/js/jquery.isotope.js');
-        $this->addCSS(array(_MODULE_DIR_.$this->module->name.'/views/css/bubble-popup.css', _MODULE_DIR_.$this->module->name.'/views/css/isotope.css'));
+        $this->addJs(_MODULE_DIR_ . $this->module->name . '/views/js/jquery.isotope.js');
+        $this->addCSS(array(_MODULE_DIR_ . $this->module->name . '/views/css/bubble-popup.css', _MODULE_DIR_ . $this->module->name . '/views/css/isotope.css'));
         
         return parent::setMedia($isNewTheme);
     }
@@ -67,12 +67,12 @@ class AdminGamificationController extends ModuleAdminController
         $query->select('DISTINCT(b.`id_group`), bl.group_name, b.type');
         $query->from('badge', 'b');
         $query->join('
-			LEFT JOIN `'._DB_PREFIX_.'badge_lang` bl ON bl.`id_badge` = b.`id_badge`');
-        $query->where('bl.id_lang = '.(int)$this->context->language->id);
+			LEFT JOIN `' . _DB_PREFIX_ . 'badge_lang` bl ON bl.`id_badge` = b.`id_badge`');
+        $query->where('bl.id_lang = ' . (int)$this->context->language->id);
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 
         foreach ($result as $res) {
-            $groups['badges_'.$res['type']][$res['id_group']] = $res['group_name'];
+            $groups['badges_' . $res['type']][$res['id_group']] = $res['group_name'];
         }
 
         $badges_type = array(
@@ -297,14 +297,14 @@ class AdminGamificationController extends ModuleAdminController
         $firstname = $employee->firstname;
         $lastname = $employee->lastname;
         $email = $employee->email;
-        $return = @Tools::file_get_contents('http://api.prestashop.com/partner/premium/set_request.php?iso_country='.strtoupper($isoCountry).'&iso_lang='.strtolower($isoUser).'&host='.urlencode($_SERVER['HTTP_HOST']).'&ps_version='._PS_VERSION_.'&ps_creation='._PS_CREATION_DATE_.'&partner='.htmlentities(Tools::getValue('module')).'&shop='.urlencode(Configuration::get('PS_SHOP_NAME')).'&email='.urlencode($email).'&firstname='.urlencode($firstname).'&lastname='.urlencode($lastname).'&type=home');
+        $return = @Tools::file_get_contents('http://api.prestashop.com/partner/premium/set_request.php?iso_country=' . strtoupper($isoCountry) . '&iso_lang=' . strtolower($isoUser) . '&host=' . urlencode($_SERVER['HTTP_HOST']) . '&ps_version=' . _PS_VERSION_ . '&ps_creation=' . _PS_CREATION_DATE_ . '&partner=' . htmlentities(Tools::getValue('module')) . '&shop=' . urlencode(Configuration::get('PS_SHOP_NAME')) . '&email=' . urlencode($email) . '&firstname=' . urlencode($firstname) . '&lastname=' . urlencode($lastname) . '&type=home');
         die($return);
     }
 
     public function ajaxProcessCloseAdvice()
     {
         $id_advice = Advice::getIdByIdPs((int)Tools::getValue('id_advice'));
-        Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'advice` SET `hide` =  \'1\' WHERE  `id_advice` = '.(int)$id_advice.';');
+        Db::getInstance()->execute('UPDATE `' . _DB_PREFIX_ . 'advice` SET `hide` =  \'1\' WHERE  `id_advice` = ' . (int)$id_advice . ';');
         die();
     }
 }

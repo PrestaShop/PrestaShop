@@ -44,7 +44,7 @@ class BackOfficeProviderTest extends TestCase
             ->getMock()
         ;
 
-        self::$resourcesDir = __DIR__.'/../../resources/translations';
+        self::$resourcesDir = __DIR__ . '/../../resources/translations';
         $this->provider = new BackOfficeProvider($loader, self::$resourcesDir);
     }
 

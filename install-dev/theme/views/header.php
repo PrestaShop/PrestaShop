@@ -19,7 +19,7 @@
 	<script type="text/javascript" src="../js/jquery/plugins/jquery.chosen.js"></script>
 	<script type="text/javascript" src="theme/js/install.js"></script>
 	<script type="text/javascript" src="//www.prestashop.com/js/user-assistance.js"></script>
-	<?php if (file_exists(_PS_INSTALL_PATH_.'theme/js/'.self::$steps->current()->getName().'.js')): ?>
+	<?php if (file_exists(_PS_INSTALL_PATH_ . 'theme/js/' . self::$steps->current()->getName() . '.js')): ?>
 		<script type="text/javascript" src="theme/js/<?php echo self::$steps->current()->getName() ?>.js"></script>
 	<?php endif; ?>
 	<script type="text/javascript">
@@ -72,7 +72,7 @@
 	</ol>
 	<?php if (@fsockopen('api.prestashop.com', 80, $errno, $errst, 3)): ?>
 		<iframe scrolling="no" style="height:210px;width:200px;border:none;margin-top:20px" id="iframe_help"
-			src="https://api.prestashop.com/iframe/install.php?step=<?php echo self::$steps->current()->getName() ?>&lang=<?php echo $this->language->getLanguageIso() ?><?php if (isset($this->session->shop_country)) echo '&country='.$this->session->shop_country; ?>">
+			src="https://api.prestashop.com/iframe/install.php?step=<?php echo self::$steps->current()->getName() ?>&lang=<?php echo $this->language->getLanguageIso() ?><?php if (isset($this->session->shop_country)) echo '&country=' . $this->session->shop_country; ?>">
 			<p><?php echo $this->translator->trans('Contact us!', array(), 'Install') ?><br /><?php echo $this->getPhone() ?></p>
 		</iframe>
 	<?php endif; ?>

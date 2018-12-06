@@ -59,14 +59,14 @@ class CronJobsForms
         $id_shop = (int)Context::getContext()->shop->id;
         $id_shop_group = (int)Context::getContext()->shop->id_shop_group;
 
-        $currencies_cron_url = Tools::getShopDomain(true, true).__PS_BASE_URI__.basename(_PS_ADMIN_DIR_);
-        $currencies_cron_url .= '/cron_currency_rates.php?secure_key='.md5(_COOKIE_KEY_.Configuration::get('PS_SHOP_NAME'));
+        $currencies_cron_url = Tools::getShopDomain(true, true) . __PS_BASE_URI__ . basename(_PS_ADMIN_DIR_);
+        $currencies_cron_url .= '/cron_currency_rates.php?secure_key=' . md5(_COOKIE_KEY_ . Configuration::get('PS_SHOP_NAME'));
 
         if (($update == true) && (Tools::isSubmit('id_cronjob'))) {
             $id_cronjob = (int)Tools::getValue('id_cronjob');
-            $id_module = (int)Db::getInstance()->getValue('SELECT `id_module` FROM `'._DB_PREFIX_.bqSQL(self::$module->name).'`
-                WHERE `id_cronjob` = \''.(int)$id_cronjob.'\'
-                    AND `id_shop` = \''.$id_shop.'\' AND `id_shop_group` = \''.$id_shop_group.'\'');
+            $id_module = (int)Db::getInstance()->getValue('SELECT `id_module` FROM `' . _DB_PREFIX_ . bqSQL(self::$module->name) . '`
+                WHERE `id_cronjob` = \'' . (int)$id_cronjob . '\'
+                    AND `id_shop` = \'' . $id_shop . '\' AND `id_shop_group` = \'' . $id_shop_group . '\'');
 
             if ((bool)$id_module == true) {
                 $form[0]['form']['input'][] = array(
@@ -192,14 +192,14 @@ class CronJobsForms
     public static function getFormValues()
     {
         $token = Configuration::get('CRONJOBS_EXECUTION_TOKEN', null, 0, 0);
-        $admin_folder = str_replace(_PS_ROOT_DIR_.'/', null, basename(_PS_ADMIN_DIR_));
+        $admin_folder = str_replace(_PS_ROOT_DIR_ . '/', null, basename(_PS_ADMIN_DIR_));
         if (version_compare(_PS_VERSION_, '1.7', '<') == true) {
-            $path = Tools::getShopDomainSsl(true, true).__PS_BASE_URI__.$admin_folder.'/';
-            $curl_url = $path.Context::getContext()->link->getAdminLink('AdminCronJobs', false);
-            $curl_url .= '&token='.$token;
+            $path = Tools::getShopDomainSsl(true, true) . __PS_BASE_URI__ . $admin_folder . '/';
+            $curl_url = $path . Context::getContext()->link->getAdminLink('AdminCronJobs', false);
+            $curl_url .= '&token=' . $token;
         } else {
             $curl_url = Context::getContext()->link->getAdminLink('AdminCronJobs', false);
-            $curl_url .= '&token='.$token;
+            $curl_url .= '&token=' . $token;
         }
 
         return array(
@@ -207,13 +207,13 @@ class CronJobsForms
             'advanced_help' =>
                 '<div class="alert alert-info">
                     <p>'
-                        .self::$module->l('The Advanced mode enables you to use your own cron tasks manager instead of PrestaShop cron tasks webservice.', 'CronJobsForms').' '
-                        .self::$module->l('First of all, make sure the \'curl\' library is installed on your server.', 'CronJobsForms')
-                        .'<br />'.self::$module->l('To execute your cron tasks, please insert the following line in your cron tasks manager:', 'CronJobsForms').'
+                        . self::$module->l('The Advanced mode enables you to use your own cron tasks manager instead of PrestaShop cron tasks webservice.', 'CronJobsForms') . ' '
+                        . self::$module->l('First of all, make sure the \'curl\' library is installed on your server.', 'CronJobsForms')
+                        . '<br />' . self::$module->l('To execute your cron tasks, please insert the following line in your cron tasks manager:', 'CronJobsForms') . '
                     </p>
                     <br />
                     <ul class="list-unstyled">
-                        <li><code>0 * * * * curl '.(Configuration::get('PS_SSL_ENABLED') ? '-k ' : null).'"'.$curl_url.'"</code></li>
+                        <li><code>0 * * * * curl ' . (Configuration::get('PS_SSL_ENABLED') ? '-k ' : null) . '"' . $curl_url . '"</code></li>
                     </ul>
                 </div>'
         );
@@ -252,17 +252,17 @@ class CronJobsForms
         $id_shop_group = (int)Context::getContext()->shop->id_shop_group;
 
         $id_cronjob = (int)Tools::getValue('id_cronjob');
-        $cron = Db::getInstance()->getRow('SELECT * FROM `'._DB_PREFIX_.bqSQL(self::$module->name).'`
-            WHERE `id_cronjob` = \''.$id_cronjob.'\'
-            AND `id_shop` = \''.$id_shop.'\' AND `id_shop_group` = \''.$id_shop_group.'\'');
+        $cron = Db::getInstance()->getRow('SELECT * FROM `' . _DB_PREFIX_ . bqSQL(self::$module->name) . '`
+            WHERE `id_cronjob` = \'' . $id_cronjob . '\'
+            AND `id_shop` = \'' . $id_shop . '\' AND `id_shop_group` = \'' . $id_shop_group . '\'');
 
         if ((bool)$cron['id_module'] == false) {
             $description = Tools::safeOutput(Tools::getValue('description', $cron['description']));
             $task = urldecode(Tools::getValue('task', $cron['task']));
         } else {
-            $module_name = Db::getInstance()->getValue('SELECT `name` FROM `'._DB_PREFIX_.'module` WHERE `id_module` = \''.(int)$cron['id_module'].'\'');
-            $description = '<p class="form-control-static"><strong>'.Tools::safeOutput(Module::getModuleName($module_name)).'</strong></p>';
-            $task = '<p class="form-control-static"><strong>'.self::$module->l('Module - Hook', 'CronJobsForms').'</strong></p>';
+            $module_name = Db::getInstance()->getValue('SELECT `name` FROM `' . _DB_PREFIX_ . 'module` WHERE `id_module` = \'' . (int)$cron['id_module'] . '\'');
+            $description = '<p class="form-control-static"><strong>' . Tools::safeOutput(Module::getModuleName($module_name)) . '</strong></p>';
+            $task = '<p class="form-control-static"><strong>' . self::$module->l('Module - Hook', 'CronJobsForms') . '</strong></p>';
         }
 
         return array(
@@ -281,19 +281,19 @@ class CronJobsForms
         $id_shop_group = (int)Context::getContext()->shop->id_shop_group;
 
         self::$module->addNewModulesTasks();
-        $crons = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.bqSQL(self::$module->name).'` WHERE `id_shop` = \''.$id_shop.'\' AND `id_shop_group` = \''.$id_shop_group.'\'');
+        $crons = Db::getInstance()->executeS('SELECT * FROM `' . _DB_PREFIX_ . bqSQL(self::$module->name) . '` WHERE `id_shop` = \'' . $id_shop . '\' AND `id_shop_group` = \'' . $id_shop_group . '\'');
 
         foreach ($crons as $key => &$cron) {
             if (empty($cron['id_module']) == false) {
                 $module = Module::getInstanceById((int)$cron['id_module']);
 
                 if ($module == false) {
-                    Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.bqSQL(self::$module->name).' WHERE `id_cronjob` = \''.(int)$cron['id_cronjob'].'\'');
+                    Db::getInstance()->execute('DELETE FROM ' . _DB_PREFIX_ . bqSQL(self::$module->name) . ' WHERE `id_cronjob` = \'' . (int)$cron['id_cronjob'] . '\'');
                     unset($crons[$key]);
                     break;
                 }
 
-                $query = 'SELECT `name` FROM `'._DB_PREFIX_.'module` WHERE `id_module` = \''.(int)$cron['id_module'].'\'';
+                $query = 'SELECT `name` FROM `' . _DB_PREFIX_ . 'module` WHERE `id_module` = \'' . (int)$cron['id_module'] . '\'';
                 $module_name = Db::getInstance()->getValue($query);
 
                 $cron['description'] = Tools::safeOutput(Module::getModuleName($module_name));

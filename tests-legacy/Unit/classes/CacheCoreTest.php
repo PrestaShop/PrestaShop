@@ -134,7 +134,7 @@ class CacheCoreTest extends PHPUnit_Framework_TestCase
         $i = 0;
         foreach ($queries as $query) {
             $i++;
-            Cache::getInstance()->setQuery($query, array('queryResult '.$i));
+            Cache::getInstance()->setQuery($query, array('queryResult ' . $i));
         }
 
         $this->assertCount(4, $this->cacheArray);
@@ -169,7 +169,7 @@ class CacheCoreTest extends PHPUnit_Framework_TestCase
         $queries = $this->selectDataProvider();
         $i = 0;
         foreach ($queries as $query) {
-            Cache::getInstance()->setQuery($query, array('queryResult '.$i));
+            Cache::getInstance()->setQuery($query, array('queryResult ' . $i));
             if ($i == 3) {
                 break;
             }
@@ -289,7 +289,7 @@ class CacheCoreTest extends PHPUnit_Framework_TestCase
         $selectArray = array();
 
         for ($i = 0; $i <= 9; $i++) {
-            $selectArray[] = 'SELECT name FROM ps_configuration LEFT JOIN ps_confiture WHERE id = '.$i;
+            $selectArray[] = 'SELECT name FROM ps_configuration LEFT JOIN ps_confiture WHERE id = ' . $i;
         }
 
         return $selectArray;

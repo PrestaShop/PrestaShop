@@ -26,7 +26,7 @@
 
 function outstanding_allow_amount1530()
 {
-    $column_exist = Db::getInstance()->executeS('SHOW FIELDS FROM `'._DB_PREFIX_.'address`');
+    $column_exist = Db::getInstance()->executeS('SHOW FIELDS FROM `' . _DB_PREFIX_ . 'address`');
     $column_formated = array();
     $res = true;
     if ($column_exist) {
@@ -35,7 +35,7 @@ function outstanding_allow_amount1530()
         }
         
         if (in_array('outstanding_allow_amount', $column_formated)) {
-            Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'address` CHANGE  `outstanding_allow_amount` `outstanding_allow_amount` DECIMAL(20, 6) NOT NULL DEFAULT 0.000000');
+            Db::getInstance()->execute('ALTER TABLE `' . _DB_PREFIX_ . 'address` CHANGE  `outstanding_allow_amount` `outstanding_allow_amount` DECIMAL(20, 6) NOT NULL DEFAULT 0.000000');
         }
     }
     return $res;

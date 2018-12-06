@@ -118,7 +118,7 @@ class AppKernel extends Kernel
      */
     public function getCacheDir()
     {
-        return dirname(__DIR__).'/var/cache/'.$this->getEnvironment();
+        return dirname(__DIR__) . '/var/cache/' . $this->getEnvironment();
     }
 
     /**
@@ -126,7 +126,7 @@ class AppKernel extends Kernel
      */
     public function getLogDir()
     {
-        return dirname(__DIR__).'/var/logs';
+        return dirname(__DIR__) . '/var/logs';
     }
 
     /**
@@ -141,7 +141,7 @@ class AppKernel extends Kernel
             $container->addObjectResource($this);
         });
 
-        $loader->load($this->getRootDir().'/config/config_'.$this->getEnvironment().'.yml');
+        $loader->load($this->getRootDir() . '/config/config_' . $this->getEnvironment() . '.yml');
     }
 
     /**
@@ -190,7 +190,7 @@ class AppKernel extends Kernel
      */
     private function getParametersFile()
     {
-        return $this->getRootDir().'/config/parameters.php';
+        return $this->getRootDir() . '/config/parameters.php';
     }
 
     /**
@@ -221,7 +221,7 @@ class AppKernel extends Kernel
     private function enableComposerAutoloaderOnModules($modules)
     {
         foreach ($modules as $module) {
-            $autoloader = __DIR__.'/../modules/'.$module.'/vendor/autoload.php';
+            $autoloader = __DIR__ . '/../modules/' . $module . '/vendor/autoload.php';
 
             if (file_exists($autoloader)) {
                 include_once $autoloader;

@@ -87,7 +87,7 @@ abstract class Db extends DbCore
             }
 
             // Get tables in query
-            preg_match_all('/(from|join)\s+`?'._DB_PREFIX_.'([a-z0-9_-]+)/ui', $sql, $matches);
+            preg_match_all('/(from|join)\s+`?' . _DB_PREFIX_ . '([a-z0-9_-]+)/ui', $sql, $matches);
             foreach ($matches[2] as $table) {
                 if (!isset($this->tables[$table])) {
                     $this->tables[$table] = 0;

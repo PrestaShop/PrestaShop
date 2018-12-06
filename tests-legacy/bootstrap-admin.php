@@ -24,10 +24,10 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 define('_PS_ROOT_DIR_', __DIR__ . '/..');
-define('_PS_MODULE_DIR_', _PS_ROOT_DIR_.'/tests-legacy/resources/modules/');
-require_once(dirname(__FILE__).'/../admin-dev/bootstrap.php');
-require_once(_PS_CONFIG_DIR_.'autoload.php');
-require_once(dirname(__FILE__).'/../config/bootstrap.php');
+define('_PS_MODULE_DIR_', _PS_ROOT_DIR_ . '/tests-legacy/resources/modules/');
+require_once(dirname(__FILE__) . '/../admin-dev/bootstrap.php');
+require_once(_PS_CONFIG_DIR_ . 'autoload.php');
+require_once(dirname(__FILE__) . '/../config/bootstrap.php');
 
 /**
  * Following code makes tests run under phpstorm

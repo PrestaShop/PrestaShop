@@ -93,7 +93,7 @@ class CartGetOrderTotalTest extends IntegrationTestCase
 
     private static function deactivateCurrentCartRules()
     {
-        Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'cart_rule SET active = 0');
+        Db::getInstance()->execute('UPDATE ' . _DB_PREFIX_ . 'cart_rule SET active = 0');
     }
 
     private static function getLanguageId()
@@ -186,7 +186,7 @@ class CartGetOrderTotalTest extends IntegrationTestCase
     {
         static $taxes = array();
 
-        $name = $rate.'% TAX';
+        $name = $rate . '% TAX';
 
         if (!array_key_exists($name, $taxes)) {
             $tax = new Tax(null, self::getDefaultLanguageId());
@@ -207,7 +207,7 @@ class CartGetOrderTotalTest extends IntegrationTestCase
     {
         static $groups = array();
 
-        $name = $rate.'% TRG';
+        $name = $rate . '% TRG';
 
         if (!array_key_exists($name, $groups)) {
             $taxRulesGroup = new TaxRulesGroup(null, self::getDefaultLanguageId());
@@ -249,7 +249,7 @@ class CartGetOrderTotalTest extends IntegrationTestCase
         $address->firstname = 'Unit';
         $address->lastname = 'Tester';
         $address->address1 = '55 rue Raspail';
-        $address->alias = microtime().getmypid();
+        $address->alias = microtime() . getmypid();
         $address->city = 'Levallois';
         Assert::assertTrue($address->save());
         return $address;
@@ -296,8 +296,8 @@ class CartGetOrderTotalTest extends IntegrationTestCase
 
             if (null !== $shippingCost) {
                 // Populate one range
-                Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'range_price (id_carrier, delimiter1, delimiter2) VALUES (
-                    '.(int)$carrier->id.',
+                Db::getInstance()->execute('INSERT INTO ' . _DB_PREFIX_ . 'range_price (id_carrier, delimiter1, delimiter2) VALUES (
+                    ' . (int)$carrier->id . ',
                     0,1
                 )');
 
@@ -306,15 +306,15 @@ class CartGetOrderTotalTest extends IntegrationTestCase
 
                 // apply our shippingCost to all zones
                 Db::getInstance()->execute(
-                    'INSERT INTO '._DB_PREFIX_.'delivery (id_carrier, id_range_price, id_range_weight, id_zone, price)
-                     SELECT '.(int)$carrier->id.', '.(int)$id_range_price.', 0, id_zone, '.(float)$shippingCost.'
-                     FROM '._DB_PREFIX_.'zone'
+                    'INSERT INTO ' . _DB_PREFIX_ . 'delivery (id_carrier, id_range_price, id_range_weight, id_zone, price)
+                     SELECT ' . (int)$carrier->id . ', ' . (int)$id_range_price . ', 0, id_zone, ' . (float)$shippingCost . '
+                     FROM ' . _DB_PREFIX_ . 'zone'
                 );
 
                 // enable all zones
                 Db::getInstance()->execute(
-                    'INSERT INTO '._DB_PREFIX_.'carrier_zone (id_carrier, id_zone)
-                     SELECT '.(int)$carrier->id.', id_zone FROM '._DB_PREFIX_.'zone'
+                    'INSERT INTO ' . _DB_PREFIX_ . 'carrier_zone (id_carrier, id_zone)
+                     SELECT ' . (int)$carrier->id . ', id_zone FROM ' . _DB_PREFIX_ . 'zone'
                 );
             }
 
@@ -328,7 +328,7 @@ class CartGetOrderTotalTest extends IntegrationTestCase
     {
         $cartRule = new CartRule(null, self::getDefaultLanguageId());
 
-        $cartRule->name = $amount.' '.$type.' Cart Rule';
+        $cartRule->name = $amount . ' ' . $type . ' Cart Rule';
 
         $date_from = new \DateTime();
         $date_to = new \DateTime();

@@ -327,7 +327,7 @@ class imageLib
     // *** Make sure the file passed in is valid
     if (!$this->image) {
         if ($this->debug) {
-            throw new Exception('file ' . $this->getFileName() .' is missing or invalid');
+            throw new Exception('file ' . $this->getFileName() . ' is missing or invalid');
         } else {
             throw new Exception();
         }
@@ -399,7 +399,7 @@ class imageLib
     // *** Make sure the file passed in is valid
     if (!$this->image) {
         if ($this->debug) {
-            throw new Exception('file ' . $this->getFileName() .' is missing or invalid');
+            throw new Exception('file ' . $this->getFileName() . ' is missing or invalid');
         } else {
             throw new Exception();
         }
@@ -2100,17 +2100,17 @@ class imageLib
   {
       $len = strlen($val);
       if ($len < 0x8000) {
-          return chr(0x1c).chr($rec).chr($dat).
-      chr($len >> 8).
-      chr($len & 0xff).
+          return chr(0x1c) . chr($rec) . chr($dat) .
+      chr($len >> 8) .
+      chr($len & 0xff) .
       $val;
       } else {
-          return chr(0x1c).chr($rec).chr($dat).
-      chr(0x80).chr(0x04).
-      chr(($len >> 24) & 0xff).
-      chr(($len >> 16) & 0xff).
-      chr(($len >> 8) & 0xff).
-      chr(($len) & 0xff).
+          return chr(0x1c) . chr($rec) . chr($dat) .
+      chr(0x80) . chr(0x04) .
+      chr(($len >> 24) & 0xff) .
+      chr(($len >> 16) & 0xff) .
+      chr(($len >> 8) & 0xff) .
+      chr(($len) & 0xff) .
       $val;
       }
   }
@@ -3076,7 +3076,7 @@ class imageLib
           $thisline = '';
           for ($x = 0; $x < $imageX; $x++) {
               $argb = $this->GetPixelColor($gd_image, $x, $y);
-              $thisline .= chr($argb['blue']).chr($argb['green']).chr($argb['red']);
+              $thisline .= chr($argb['blue']) . chr($argb['green']) . chr($argb['red']);
           }
           while (strlen($thisline) % 4) {
               $thisline .= "\x00";
@@ -3105,7 +3105,7 @@ class imageLib
     $BITMAPINFOHEADER .= $this->LittleEndian2String(0, 4); // DWORD  biClrUsed;
     $BITMAPINFOHEADER .= $this->LittleEndian2String(0, 4); // DWORD  biClrImportant;
 
-    return $BITMAPFILEHEADER.$BITMAPINFOHEADER.$BMP;
+    return $BITMAPFILEHEADER . $BITMAPINFOHEADER . $BMP;
   }
 
 ## --------------------------------------------------------
@@ -3138,7 +3138,7 @@ class imageLib
   {
       $intstring = '';
       while ($number > 0) {
-          $intstring = $intstring.chr($number & 255);
+          $intstring = $intstring . chr($number & 255);
           $number >>= 8;
       }
       return str_pad($intstring, $minbytes, "\x00", STR_PAD_RIGHT);
@@ -3176,8 +3176,8 @@ class imageLib
       }
 
     //2 : Chargement des ent�tes BMP
-    $BMP = unpack('Vheader_size/Vwidth/Vheight/vplanes/vbits_per_pixel'.
-           '/Vcompression/Vsize_bitmap/Vhoriz_resolution'.
+    $BMP = unpack('Vheader_size/Vwidth/Vheight/vplanes/vbits_per_pixel' .
+           '/Vcompression/Vsize_bitmap/Vhoriz_resolution' .
            '/Vvert_resolution/Vcolors_used/Vcolors_important', fread($f1, 40));
       $BMP['colors'] = pow(2, $BMP['bits_per_pixel']);
 
@@ -3198,7 +3198,7 @@ class imageLib
     //3 : Chargement des couleurs de la palette
     $PALETTE = array();
       if ($BMP['colors'] < 16777216) {
-          $PALETTE = unpack('V'.$BMP['colors'], fread($f1, $BMP['colors']*4));
+          $PALETTE = unpack('V' . $BMP['colors'], fread($f1, $BMP['colors']*4));
       }
 
     //4 : Cr�ation de l'image
@@ -3212,7 +3212,7 @@ class imageLib
           $X=0;
           while ($X < $BMP['width']) {
               if ($BMP['bits_per_pixel'] == 24) {
-                  $COLOR = unpack("V", substr($IMG, $P, 3).$VIDE);
+                  $COLOR = unpack("V", substr($IMG, $P, 3) . $VIDE);
               } elseif ($BMP['bits_per_pixel'] == 16) {
 
           /*
@@ -3237,10 +3237,10 @@ class imageLib
                   $red = ($COLOR[1] & 0xf800) >> 8;
                   $COLOR[1] = $red * 65536 + $green * 256 + $blue;
               } elseif ($BMP['bits_per_pixel'] == 8) {
-                  $COLOR = unpack("n", $VIDE.substr($IMG, $P, 1));
+                  $COLOR = unpack("n", $VIDE . substr($IMG, $P, 1));
                   $COLOR[1] = $PALETTE[$COLOR[1]+1];
               } elseif ($BMP['bits_per_pixel'] == 4) {
-                  $COLOR = unpack("n", $VIDE.substr($IMG, floor($P), 1));
+                  $COLOR = unpack("n", $VIDE . substr($IMG, floor($P), 1));
                   if (($P*2)%2 == 0) {
                       $COLOR[1] = ($COLOR[1] >> 4) ;
                   } else {
@@ -3248,7 +3248,7 @@ class imageLib
                   }
                   $COLOR[1] = $PALETTE[$COLOR[1]+1];
               } elseif ($BMP['bits_per_pixel'] == 1) {
-                  $COLOR = unpack("n", $VIDE.substr($IMG, floor($P), 1));
+                  $COLOR = unpack("n", $VIDE . substr($IMG, floor($P), 1));
                   if (($P*8)%8 == 0) {
                       $COLOR[1] =  $COLOR[1]        >>7;
                   } elseif (($P*8)%8 == 1) {
