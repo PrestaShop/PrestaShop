@@ -97,9 +97,9 @@ class AmountImmutable
      *
      * @return \PrestaShop\PrestaShop\Core\Cart\AmountImmutable
      */
-    public function add(self $amount)
+    public function add(AmountImmutable $amount)
     {
-        return new self(
+        return new AmountImmutable(
             $this->getTaxIncluded() + $amount->getTaxIncluded(),
             $this->getTaxExcluded() + $amount->getTaxExcluded()
         );
@@ -112,9 +112,9 @@ class AmountImmutable
      *
      * @return \PrestaShop\PrestaShop\Core\Cart\AmountImmutable
      */
-    public function sub(self $amount)
+    public function sub(AmountImmutable $amount)
     {
-        return new self(
+        return new AmountImmutable(
             $this->getTaxIncluded() - $amount->getTaxIncluded(),
         $this->getTaxExcluded() - $amount->getTaxExcluded()
         );

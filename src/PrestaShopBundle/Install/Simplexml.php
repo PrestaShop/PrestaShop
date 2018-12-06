@@ -37,7 +37,7 @@ class Simplexml extends \SimpleXMLElement
      */
     public function addChild($name, $value = null, $namespace = null)
     {
-        if ($value instanceof self) {
+        if ($value instanceof Simplexml) {
             $content = trim((string) $value);
             if (strlen($content) > 0) {
                 $new_element = parent::addChild($name, str_replace('&', '&amp;', $content), $namespace);
