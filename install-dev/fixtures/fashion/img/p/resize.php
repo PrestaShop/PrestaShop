@@ -25,7 +25,7 @@
  */
 
 
-include('../../../../../config/config.inc.php');
+include(_PS_CONFIG_DIR_ . 'config.inc.php');
 ini_set('max_execution_time', 7200);
 ini_set('memory_limit', '512M');
 

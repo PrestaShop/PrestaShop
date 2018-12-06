@@ -24,5 +24,5 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-require(__DIR__.'/config/config.inc.php');
+require(_PS_CONFIG_DIR_ . 'config.inc.php');
 Dispatcher::getInstance()->dispatch();

@@ -25,7 +25,7 @@
  */
 
 
-include('../config/config.inc.php');
+include(_PS_CONFIG_DIR_ . 'config.inc.php');
 header('content-type: application/x-javascript');
 
 $jquery_folder = __DIR__.'/jquery/';

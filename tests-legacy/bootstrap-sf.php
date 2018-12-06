@@ -32,7 +32,7 @@ if (!defined('PS_ADMIN_DIR')) {
     define('PS_ADMIN_DIR', _PS_ADMIN_DIR_);
 }
 
-require_once(__DIR__.'/../config/config.inc.php');
+require_once(_PS_CONFIG_DIR_ . 'config.inc.php');
 
 /**
  * Following code makes tests run under phpstorm

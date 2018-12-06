@@ -26,7 +26,7 @@
 if (!defined('_PS_ADMIN_DIR_')) {
     define('_PS_ADMIN_DIR_', getcwd());
 }
-include(_PS_ADMIN_DIR_.'/../config/config.inc.php');
+include(_PS_CONFIG_DIR_ . 'config.inc.php');
 /* Getting cookie or logout */
 require_once(_PS_ADMIN_DIR_.'/init.php');
 
