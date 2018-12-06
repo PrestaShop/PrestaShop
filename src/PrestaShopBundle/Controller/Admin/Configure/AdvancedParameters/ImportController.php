@@ -34,7 +34,6 @@ use PrestaShopBundle\Exception\FileUploadException;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use PrestaShopBundle\Security\Voter\PageVoter;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -54,7 +53,6 @@ class ImportController extends FrameworkBundleAdminController
      * @param Request $request
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     * @Template("@PrestaShop/Admin/Configure/AdvancedParameters/ImportPage/import.html.twig")
      *
      * @return array|RedirectResponse|Response
      */
@@ -102,7 +100,10 @@ class ImportController extends FrameworkBundleAdminController
             'maxFileUploadSize' => $iniConfiguration->getPostMaxSizeInBytes(),
         ];
 
-        return $this->getTemplateParams($request) + $params;
+        return $this->render(
+            '@PrestaShop/Admin/Configure/AdvancedParameters/ImportPage/import.html.twig',
+            $this->getTemplateParams($request) + $params
+        );
     }
 
     /**
