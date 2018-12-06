@@ -44,7 +44,6 @@ final class ImportRuntimeConfigFactory implements ImportRuntimeConfigFactoryInte
             $request->request->getBoolean('validateOnly'),
             $request->request->getInt('offset'),
             $request->request->getInt('limit'),
-            $request->request->getInt('stepIndex'),
             json_decode($sharedData, true),
             $request->request->get('type_value', [])
         );

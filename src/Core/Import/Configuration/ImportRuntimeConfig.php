@@ -47,11 +47,6 @@ final class ImportRuntimeConfig implements ImportRuntimeConfigInterface
     private $limit;
 
     /**
-     * @var int
-     */
-    private $processIndex;
-
-    /**
      * @var array import entity fields mapping.
      */
     private $entityFields;
@@ -105,7 +100,6 @@ final class ImportRuntimeConfig implements ImportRuntimeConfigInterface
      * @param bool $shouldValidateData
      * @param int $offset
      * @param int $limit
-     * @param int $processIndex
      * @param array $sharedData
      * @param array $entityFields
      */
@@ -113,14 +107,12 @@ final class ImportRuntimeConfig implements ImportRuntimeConfigInterface
         $shouldValidateData,
         $offset,
         $limit,
-        $processIndex,
         array $sharedData,
         array $entityFields
     ) {
         $this->shouldValidateData = $shouldValidateData;
         $this->offset = $offset;
         $this->limit = $limit;
-        $this->processIndex = $processIndex;
         $this->entityFields = $entityFields;
         $this->sharedData = $sharedData;
     }
@@ -152,14 +144,6 @@ final class ImportRuntimeConfig implements ImportRuntimeConfigInterface
     /**
      * {@inheritdoc}
      */
-    public function getProcessIndex()
-    {
-        return $this->processIndex;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getEntityFields()
     {
         return $this->entityFields;
@@ -179,14 +163,6 @@ final class ImportRuntimeConfig implements ImportRuntimeConfigInterface
     public function addSharedDataItem($key, $value)
     {
         $this->sharedData[$key] = $value;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function incrementProcessIndex()
-    {
-        $this->stepIndex++;
     }
 
     /**
@@ -272,7 +248,6 @@ final class ImportRuntimeConfig implements ImportRuntimeConfigInterface
             'isFinished' => $this->isFinished(),
             'nextPostSize' => $this->requestSize,
             'postSizeLimit' => $this->postSizeLimit,
-            'processIndex' => $this->processIndex,
             'totalCount' => $this->totalNumberOfRows,
             'notices' => $this->notices,
             'warnings' => $this->warnings,

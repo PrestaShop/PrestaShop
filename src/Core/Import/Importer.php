@@ -157,10 +157,6 @@ final class Importer implements ImporterInterface
 
         $runtimeConfig->setNumberOfProcessedRows($processedRows);
 
-        if (!$runtimeConfig->isFinished()) {
-            $runtimeConfig->incrementProcessIndex();
-        }
-
         $this->tearDown($importHandler, $importConfig, $runtimeConfig);
     }
 
@@ -194,10 +190,7 @@ final class Importer implements ImporterInterface
      */
     private function isFirstIteration(ImportRuntimeConfigInterface $runtimeConfig)
     {
-        return
-            0 === $runtimeConfig->getOffset() &&
-            0 === $runtimeConfig->getProcessIndex()
-        ;
+        return 0 === $runtimeConfig->getOffset();
     }
 
     /**

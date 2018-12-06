@@ -69,16 +69,14 @@ export default class Importer {
    * @param {number} offset row number, from which the import job will start processing data.
    * @param {number} batchSize batch size of this import job.
    * @param {boolean} validateOnly whether the data should be only validated, if false - the data will be imported.
-   * @param {number} stepIndex current step index, retrieved from the ajax response
    * @param {Object} recurringVariables variables which are recurring between import batch jobs.
    * @private
    */
-  _ajaxImport(offset, batchSize, validateOnly = true, stepIndex = 0, recurringVariables = {}) {
+  _ajaxImport(offset, batchSize, validateOnly = true, recurringVariables = {}) {
     this._mergeConfiguration({
       offset: offset,
       limit: batchSize,
       validateOnly: validateOnly ? 1 : 0,
-      stepIndex: stepIndex,
       crossStepsVars: JSON.stringify(recurringVariables)
     });
 
@@ -94,8 +92,7 @@ export default class Importer {
           return false;
         }
 
-        let nextStepIndex = response.processIndex !== undefined ? response.processIndex : stepIndex,
-            hasErrors = response.errors && response.errors.length,
+        let hasErrors = response.errors && response.errors.length,
             hasWarnings = response.warnings && response.warnings.length,
             hasNotices = response.notices && response.notices.length;
 
@@ -152,7 +149,6 @@ export default class Importer {
             nextOffset,
             nextBatchSize,
             validateOnly,
-            nextStepIndex,
             response.crossStepsVariables
           );
         }
@@ -179,17 +175,6 @@ export default class Importer {
 
           // Continue with the data import.
           return this._ajaxImport(0, this.defaultBatchSize, false);
-        }
-
-        if (stepIndex < nextStepIndex) {
-          // If it's still not the last step of the import - continue with the next step.
-          return this._ajaxImport(
-            0,
-            this.defaultBatchSize,
-            false,
-            nextStepIndex,
-            response.crossStepsVariables
-          );
         }
 
         // Import is completely finished.
