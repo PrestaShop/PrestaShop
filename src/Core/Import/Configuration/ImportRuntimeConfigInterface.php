@@ -57,13 +57,6 @@ interface ImportRuntimeConfigInterface
     public function getLimit();
 
     /**
-     * Get current import process index.
-     *
-     * @return int
-     */
-    public function getProcessIndex();
-
-    /**
      * Get the data, that is shared between import processes.
      *
      * @return array
@@ -91,11 +84,6 @@ interface ImportRuntimeConfigInterface
      * @return int
      */
     public function getNumberOfProcessedRows();
-
-    /**
-     * Increment the current import process index by one.
-     */
-    public function incrementProcessIndex();
 
     /**
      * Check if the import is completely finished.
