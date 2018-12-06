@@ -414,7 +414,7 @@ class Install extends AbstractInstall
         if (!defined('_PS_SMARTY_FAST_LOAD_')) {
             define('_PS_SMARTY_FAST_LOAD_', true);
         }
-        require_once _PS_ROOT_DIR_ . '/config/smarty.config.inc.php';
+        require_once _PS_CONFIG_DIR_ . 'smarty.config.inc.php';
 
         $context->smarty = $smarty;
     }

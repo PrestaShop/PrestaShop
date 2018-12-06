@@ -48,8 +48,8 @@ class DebugMode
     public function isDebugModeEnabled()
     {
         $definesClean = '';
-        $customDefinesPath = _PS_ROOT_DIR_ . '/config/defines_custom.inc.php';
-        $definesPath = _PS_ROOT_DIR_ . '/config/defines.inc.php';
+        $customDefinesPath = _PS_CONFIG_DIR_ . 'defines_custom.inc.php';
+        $definesPath = _PS_CONFIG_DIR_ . 'defines.inc.php';
 
         if (is_readable($customDefinesPath)) {
             $definesClean = php_strip_whitespace($customDefinesPath);
@@ -92,7 +92,7 @@ class DebugMode
      */
     private function isCustomDefinesReadable()
     {
-        return is_readable(_PS_ROOT_DIR_ . '/config/defines_custom.inc.php');
+        return is_readable(_PS_CONFIG_DIR_ . 'defines_custom.inc.php');
     }
 
     /**
@@ -102,7 +102,7 @@ class DebugMode
      */
     private function isMainDefinesReadable()
     {
-        return is_readable(_PS_ROOT_DIR_ . '/config/defines.inc.php');
+        return is_readable(_PS_CONFIG_DIR_ . 'defines.inc.php');
     }
 
     /**
@@ -114,7 +114,7 @@ class DebugMode
      */
     private function updateDebugModeValueInMainFile($value)
     {
-        $filename = _PS_ROOT_DIR_ . '/config/defines.inc.php';
+        $filename = _PS_CONFIG_DIR_ . 'defines.inc.php';
         $cleanedFileContent = php_strip_whitespace($filename);
         $fileContent = Tools::file_get_contents($filename);
 
@@ -143,7 +143,7 @@ class DebugMode
      */
     private function updateDebugModeValueInCustomFile($value)
     {
-        $customFileName = _PS_ROOT_DIR_ . '/config/defines_custom.inc.php';
+        $customFileName = _PS_CONFIG_DIR_ . 'defines_custom.inc.php';
         $cleanedFileContent = php_strip_whitespace($customFileName);
         $fileContent = Tools::file_get_contents($customFileName);
 

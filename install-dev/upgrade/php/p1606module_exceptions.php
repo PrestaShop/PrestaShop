@@ -70,7 +70,7 @@ function p1606module_exceptions()
         }
     }
 
-    $controller_dir = _PS_ROOT_DIR_.'/controllers/front/';
+    $controller_dir = _PS_FRONT_CONTROLLER_DIR_;
 
     if (file_exists($controller_dir) && is_dir($controller_dir)) {
         $front_controllers = scandir($controller_dir, SCANDIR_SORT_NONE);

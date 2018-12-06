@@ -1815,7 +1815,7 @@ abstract class ModuleCore implements ModuleInterface
             }
         }
 
-        foreach (glob(_PS_ROOT_DIR_ . '/config/xml/themes/*.xml') as $theme_xml) {
+        foreach (glob(_PS_CONFIG_DIR_ . 'xml/themes/*.xml') as $theme_xml) {
             if (file_exists($theme_xml)) {
                 $content = Tools::file_get_contents($theme_xml);
                 $xml = @simplexml_load_string($content, null, LIBXML_NOCDATA);

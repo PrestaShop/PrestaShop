@@ -1345,7 +1345,7 @@ class AdminTranslationsControllerCore extends AdminController
             'modules' => array(
                 'name' => $this->trans('Installed modules translations', array(), 'Admin.International.Feature'),
                 'var' => '_MODULES',
-                'dir' => _PS_ROOT_DIR_ . '/modules/',
+                'dir' => _PS_MODULE_DIR_,
                 'file' => '',
                 'sf_controller' => true,
                 'choice_theme' => false,
@@ -1398,7 +1398,7 @@ class AdminTranslationsControllerCore extends AdminController
 
         // Set the path of selected theme
         if ($this->theme_selected) {
-            define('_PS_THEME_SELECTED_DIR_', _PS_ROOT_DIR_ . '/themes/' . $this->theme_selected . '/');
+            define('_PS_THEME_SELECTED_DIR_', _PS_ALL_THEMES_DIR_ . $this->theme_selected . '/');
         } else {
             define('_PS_THEME_SELECTED_DIR_', '');
         }
@@ -2868,7 +2868,7 @@ class AdminTranslationsControllerCore extends AdminController
                             if (!in_array($file, self::$ignore_folder)) {
                                 $files_to_copy_iso[] = array(
                                     'from' => $dir . $file,
-                                    'to' => str_replace((strpos($dir, _PS_CORE_DIR_) !== false) ? _PS_CORE_DIR_ : _PS_ROOT_DIR_, _PS_ROOT_DIR_ . '/themes/' . $current_theme, $dir) . $file,
+                                    'to' => str_replace((strpos($dir, _PS_CORE_DIR_) !== false) ? _PS_CORE_DIR_ : _PS_ROOT_DIR_, _PS_ALL_THEMES_DIR_ . $current_theme, $dir) . $file,
                                 );
                             }
                         }

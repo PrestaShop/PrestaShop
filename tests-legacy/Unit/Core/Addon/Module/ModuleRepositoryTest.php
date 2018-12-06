@@ -57,7 +57,7 @@ class ModuleRepositoryTest extends UnitTestCase
         }
 
         if (!defined('_PS_THEME_DIR_')) {
-            define('_PS_THEME_DIR_', _PS_ROOT_DIR_.'/themes/classic/');
+            define('_PS_THEME_DIR_', _PS_ALL_THEMES_DIR_ . 'classic/');
         }
 
         if (!isset($_SERVER['HTTP_HOST'])) {

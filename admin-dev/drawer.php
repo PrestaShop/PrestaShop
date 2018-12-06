@@ -47,7 +47,7 @@ if (!Validate::isModuleName($module)) {
     die(Tools::displayError());
 }
 
-if (!Tools::file_exists_cache($module_path = _PS_ROOT_DIR_.'/modules/'.$module.'/'.$module.'.php')) {
+if (!Tools::file_exists_cache($module_path = _PS_MODULE_DIR_ . $module.'/'.$module.'.php')) {
     die(Tools::displayError());
 }
 

@@ -448,7 +448,7 @@ class AdminDashboardControllerCore extends AdminController
         }
 
         if (!$return['has_errors']) {
-            $rss = @simplexml_load_file(_PS_ROOT_DIR_ . '/config/xml/blog-' . $this->context->language->iso_code . '.xml');
+            $rss = @simplexml_load_file(_PS_CONFIG_DIR_ . 'xml/blog-' . $this->context->language->iso_code . '.xml');
             if (!$rss) {
                 $return['has_errors'] = true;
             }

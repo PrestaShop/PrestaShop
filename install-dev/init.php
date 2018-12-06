@@ -70,11 +70,11 @@ if ((!is_dir(_PS_CORE_DIR_.DIRECTORY_SEPARATOR.'vendor') ||
     die('Error : please install <a href="https://getcomposer.org/">composer</a>. Then run "php composer.phar install"');
 }
 
-require_once _PS_CORE_DIR_.'/config/defines.inc.php';
-require_once _PS_CORE_DIR_.'/config/autoload.php';
+require_once _PS_CONFIG_DIR_ . 'defines.inc.php';
+require_once _PS_CONFIG_DIR_ . 'autoload.php';
 
-if (file_exists(_PS_CORE_DIR_.'/app/config/parameters.php')) {
-    require_once _PS_CORE_DIR_.'/config/bootstrap.php';
+if (file_exists(_PS_CORE_DIR_.'app/config/parameters.php')) {
+    require_once _PS_CONFIG_DIR_ . 'bootstrap.php';
 
     if (defined('_PS_IN_TEST_') && _PS_IN_TEST_) {
         $env = 'test';
@@ -104,7 +104,7 @@ if (!defined('_THEME_NAME_')) {
     }
 }
 
-require_once _PS_CORE_DIR_.'/config/defines_uri.inc.php';
+require_once _PS_CONFIG_DIR_ . 'defines_uri.inc.php';
 
 // Generate common constants
 define('PS_INSTALLATION_IN_PROGRESS', true);
@@ -118,7 +118,7 @@ define('_PS_INSTALL_FIXTURES_PATH_', _PS_INSTALL_PATH_.'fixtures/');
 // PrestaShop autoload is used to load some helpful classes like Tools.
 // Add classes used by installer bellow.
 
-require_once _PS_CORE_DIR_.'/config/alias.php';
+require_once _PS_CONFIG_DIR_ . 'alias.php';
 require_once _PS_INSTALL_PATH_.'classes/exception.php';
 require_once _PS_INSTALL_PATH_.'classes/session.php';
 

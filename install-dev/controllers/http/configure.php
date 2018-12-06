@@ -154,8 +154,8 @@ class InstallControllerHttpConfigure extends InstallControllerHttp implements Ht
                 $newwidth = $width * $percent;
                 $newheight = $height * $percent;
 
-                if (!is_writable(_PS_ROOT_DIR_.'/img/')) {
-                    $error = $this->translator->trans('Image folder %s is not writable', array(_PS_ROOT_DIR_.'/img/'), 'Install');
+                if (!is_writable(_PS_IMG_DIR_)) {
+                    $error = $this->translator->trans('Image folder %s is not writable', array(_PS_IMG_DIR_), 'Install');
                 }
                 if (!$error) {
                     list($src_width, $src_height, $type) = getimagesize($tmp_name);
@@ -164,7 +164,7 @@ class InstallControllerHttpConfigure extends InstallControllerHttp implements Ht
                     $white = imagecolorallocate($dest_image, 255, 255, 255);
                     imagefilledrectangle($dest_image, 0, 0, $src_width, $src_height, $white);
                     imagecopyresampled($dest_image, $src_image, 0, 0, 0, 0, $src_width, $src_height, $src_width, $src_height);
-                    if (!imagejpeg($dest_image, _PS_ROOT_DIR_.'/img/logo.jpg', 95)) {
+                    if (!imagejpeg($dest_image, _PS_IMG_DIR_ . 'logo.jpg', 95)) {
                         $error = $this->trans('An error occurred during logo copy.', array(), 'Install');
                     } else {
                         imagedestroy($dest_image);

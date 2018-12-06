@@ -1071,10 +1071,10 @@ class ToolsCore
      */
     public static function clearXMLCache()
     {
-        foreach (scandir(_PS_ROOT_DIR_ . '/config/xml', SCANDIR_SORT_NONE) as $file) {
+        foreach (scandir(_PS_CONFIG_DIR_ . 'xml', SCANDIR_SORT_NONE) as $file) {
             $path_info = pathinfo($file, PATHINFO_EXTENSION);
             if (($path_info == 'xml') && ($file != 'default.xml')) {
-                self::deleteFile(_PS_ROOT_DIR_ . '/config/xml/' . $file);
+                self::deleteFile(_PS_CONFIG_DIR_ . 'xml/' . $file);
             }
         }
     }

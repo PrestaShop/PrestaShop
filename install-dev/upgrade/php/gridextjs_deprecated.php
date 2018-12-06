@@ -33,7 +33,7 @@ function gridextjs_deprecated()
     if (defined('_PS_MODULE_DIR_')) {
         $gridextjs_path = _PS_MODULE_DIR_ . 'gridextjs';
     } elseif (defined('_PS_ROOT_DIR_')) {
-        $gridextjs_path = _PS_ROOT_DIR_ . '/modules/gridextjs';
+        $gridextjs_path = _PS_MODULE_DIR_ . 'gridextjs';
     } else {
         $gridextjs_path = dirname(__FILE__).'/../../../modules/gridextjs';
     }

@@ -26,7 +26,7 @@
 
 function update_customer_default_group()
 {
-    $filename = _PS_ROOT_DIR_.'/config/defines.inc.php';
+    $filename = _PS_CONFIG_DIR_ . 'defines.inc.php';
     $filename_old = str_replace('.inc.', '.old.', $filename);
     copy($filename, $filename_old);
     chmod($filename_old, 0664);

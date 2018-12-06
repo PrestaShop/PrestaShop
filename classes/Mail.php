@@ -628,8 +628,8 @@ class MailCore extends ObjectModel
     protected static function getTemplateBasePath($isoTemplate, $moduleName, $theme)
     {
         $basePathList = [
-            _PS_ROOT_DIR_ . '/themes/' . $theme->getName() . '/',
-            _PS_ROOT_DIR_ . '/themes/' . $theme->get('parent') . '/',
+            _PS_ALL_THEMES_DIR_ . $theme->getName() . '/',
+            _PS_ALL_THEMES_DIR_ . $theme->get('parent') . '/',
             _PS_ROOT_DIR_,
         ];
 
@@ -754,7 +754,7 @@ class MailCore extends ObjectModel
 
         $isoCode = Language::getIsoById((int) $idLang);
 
-        $file_core = _PS_ROOT_DIR_ . '/mails/' . $isoCode . '/lang.php';
+        $file_core = _PS_MAIL_DIR_ . $isoCode . '/lang.php';
         if (Tools::file_exists_cache($file_core) && empty($_LANGMAIL)) {
             include $file_core;
         }

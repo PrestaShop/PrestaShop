@@ -68,7 +68,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
         Context::getContext()->cart = new Cart();
         Context::getContext()->employee = new Employee(1);
         define('_PS_SMARTY_FAST_LOAD_', true);
-        require_once _PS_ROOT_DIR_.'/config/smarty.config.inc.php';
+        require_once _PS_CONFIG_DIR_ . 'smarty.config.inc.php';
 
         Context::getContext()->smarty = $smarty;
     }
@@ -390,7 +390,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
 
     private function clearConfigXML()
     {
-        $configXMLPath = _PS_ROOT_DIR_.'/config/xml/';
+        $configXMLPath = _PS_CONFIG_DIR_ . 'xml/';
         $cacheFiles = scandir($configXMLPath, SCANDIR_SORT_NONE);
         $excludes = ['.htaccess', 'index.php'];
 
@@ -404,7 +404,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
 
     private function clearConfigThemes()
     {
-        $themesPath = _PS_ROOT_DIR_.'/config/themes/';
+        $themesPath = _PS_CONFIG_DIR_ . 'themes/';
         $cacheFiles = scandir($themesPath, SCANDIR_SORT_NONE);
         foreach ($cacheFiles as $file) {
             $file = $themesPath.$file;

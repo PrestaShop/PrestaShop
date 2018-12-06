@@ -423,7 +423,7 @@ class ContextCore
         $locations = array(_PS_ROOT_DIR_ . '/app/Resources/translations');
 
         if (!is_null($this->shop)) {
-            $activeThemeLocation = _PS_ROOT_DIR_ . '/themes/' . $this->shop->theme_name . '/translations';
+            $activeThemeLocation = _PS_ALL_THEMES_DIR_ . $this->shop->theme_name . '/translations';
             if (is_dir($activeThemeLocation)) {
                 $locations[] = $activeThemeLocation;
             }

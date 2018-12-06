@@ -261,14 +261,14 @@ class LanguageCore extends ObjectModel
         $copy = ($iso_to && $theme_to) ? true : false;
 
         $lPath_from = _PS_TRANSLATIONS_DIR_ . (string) $iso_from . '/';
-        $tPath_from = _PS_ROOT_DIR_ . '/themes/' . (string) $theme_from . '/';
-        $pPath_from = _PS_ROOT_DIR_ . '/themes/' . (string) $theme_from . '/pdf/';
+        $tPath_from = _PS_ALL_THEMES_DIR_ . (string) $theme_from . '/';
+        $pPath_from = _PS_ALL_THEMES_DIR_ . (string) $theme_from . '/pdf/';
         $mPath_from = _PS_MAIL_DIR_ . (string) $iso_from . '/';
 
         if ($copy) {
             $lPath_to = _PS_TRANSLATIONS_DIR_ . (string) $iso_to . '/';
-            $tPath_to = _PS_ROOT_DIR_ . '/themes/' . (string) $theme_to . '/';
-            $pPath_to = _PS_ROOT_DIR_ . '/themes/' . (string) $theme_to . '/pdf/';
+            $tPath_to = _PS_ALL_THEMES_DIR_ . (string) $theme_to . '/';
+            $pPath_to = _PS_ALL_THEMES_DIR_ . (string) $theme_to . '/pdf/';
             $mPath_to = _PS_MAIL_DIR_ . (string) $iso_to . '/';
         }
 
@@ -579,8 +579,8 @@ class LanguageCore extends ObjectModel
                     if (file_exists($image_directory . $this->iso_code . $image)) {
                         unlink($image_directory . $this->iso_code . $image);
                     }
-                    if (file_exists(_PS_ROOT_DIR_ . '/img/l/' . $this->id . '.jpg')) {
-                        unlink(_PS_ROOT_DIR_ . '/img/l/' . $this->id . '.jpg');
+                    if (file_exists(_PS_IMG_DIR_/l/' . $this->id . '.jpg')) {
+                        unlink(_PS_IMG_DIR_/l/' . $this->id . '.jpg');
                     }
                 }
             }
@@ -956,7 +956,7 @@ class LanguageCore extends ObjectModel
 
         $flag = Tools::file_get_contents('http://www.prestashop.com/download/lang_packs/flags/jpeg/' . $iso_code . '.jpg');
         if ($flag != null && !preg_match('/<body>/', $flag)) {
-            $file = fopen(_PS_ROOT_DIR_ . '/img/l/' . (int) $lang->id . '.jpg', 'w');
+            $file = fopen(_PS_IMG_DIR_/l/' . (int) $lang->id . '.jpg', 'w');
             if ($file) {
                 fwrite($file, $flag);
                 fclose($file);
@@ -977,7 +977,7 @@ class LanguageCore extends ObjectModel
 
         foreach (array(_PS_CAT_IMG_DIR_, _PS_MANU_IMG_DIR_, _PS_PROD_IMG_DIR_, _PS_SUPP_IMG_DIR_) as $to) {
             foreach ($files_copy as $file) {
-                @copy(_PS_ROOT_DIR_ . '/img/l' . $file, $to . str_replace('/en', '/' . $iso_code, $file));
+                @copy(_PS_IMG_DIR_/l' . $file, $to . str_replace('/en', '/' . $iso_code, $file));
             }
         }
 
@@ -988,7 +988,7 @@ class LanguageCore extends ObjectModel
 
     protected static function _copyNoneFlag($id)
     {
-        return copy(_PS_ROOT_DIR_ . '/img/l/none.jpg', _PS_ROOT_DIR_ . '/img/l/' . $id . '.jpg');
+        return copy(_PS_IMG_DIR_/l/none.jpg', _PS_IMG_DIR_/l/' . $id . '.jpg');
     }
 
     public static function isInstalled($iso_code)
@@ -1126,7 +1126,7 @@ class LanguageCore extends ObjectModel
             $zipArchive->extractTo($folder);
             $zipArchive->close();
 
-            $coreDestPath = _PS_ROOT_DIR_ . '/mails/' . $lang_pack['iso_code'];
+            $coreDestPath = _PS_MAIL_DIR_/' . $lang_pack['iso_code'];
             $fileSystem->mkdir($coreDestPath, 0755);
 
             if ($fileSystem->exists($folder . '/core')) {
@@ -1141,7 +1141,7 @@ class LanguageCore extends ObjectModel
 
             if ($fileSystem->exists($folder . '/modules')) {
                 foreach ($finder->directories()->in($folder . '/modules') as $moduleDirectory) {
-                    $moduleDestPath = _PS_ROOT_DIR_ . '/modules/' . $moduleDirectory->getFileName() . '/mails/' . $lang_pack['iso_code'];
+                    $moduleDestPath = _PS_MODULE_DIR_/' . $moduleDirectory->getFileName() . '/mails/' . $lang_pack['iso_code'];
                     $fileSystem->mkdir($moduleDestPath, 0755);
 
                     $findEmails = new \Symfony\Component\Finder\Finder();
