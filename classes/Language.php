@@ -1126,7 +1126,7 @@ class LanguageCore extends ObjectModel
             $zipArchive->extractTo($folder);
             $zipArchive->close();
 
-            $coreDestPath = _PS_MAIL_DIR_/' . $lang_pack['iso_code'];
+            $coreDestPath = _PS_MAIL_DIR_ . $lang_pack['iso_code'];
             $fileSystem->mkdir($coreDestPath, 0755);
 
             if ($fileSystem->exists($folder . '/core')) {

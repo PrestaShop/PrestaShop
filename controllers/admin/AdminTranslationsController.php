@@ -1612,7 +1612,7 @@ class AdminTranslationsControllerCore extends AdminController
     /**
      * This method is used to write translation for mails.
      * This writes subject translation files
-     * (in root/mails/lang_choosen/lang.php or root/_PS_THEMES_DIR_/mails/lang_choosen/lang.php)
+     * (in root/mails/lang_choosen/lang.php or root/themes/mails/lang_choosen/lang.php)
      * and mails files.
      */
     protected function submitTranslationsMails()
