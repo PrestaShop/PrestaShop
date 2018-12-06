@@ -431,9 +431,11 @@ abstract class AbstractImportHandler implements ImportHandlerInterface
     protected function setDefaultValues(ObjectModel $entity)
     {
         $members = get_object_vars($entity);
-        foreach ($this->defaultValues as $k => $v) {
-            if ((array_key_exists($k, $members) && $entity->$k === null) || !array_key_exists($k, $members)) {
-                $entity->$k = $v;
+
+        foreach ($this->defaultValues as $field => $defaultValue) {
+            $fieldExists = array_key_exists($field, $members);
+            if (!$fieldExists || $entity->$field === null) {
+                $entity->$field = $defaultValue;
             }
         }
     }
