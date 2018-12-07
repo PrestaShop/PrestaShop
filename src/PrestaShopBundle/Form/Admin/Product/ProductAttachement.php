@@ -69,7 +69,7 @@ class ProductAttachement extends CommonAbstractType
             'label' => $this->translator->trans('File', array(), 'Admin.Global'),
             'constraints' => array(
                 new Assert\NotNull(array('message' => $this->translator->trans('Please select a file', array(), 'Admin.Catalog.Feature'))),
-                new Assert\File(array('maxSize' => $this->configuration->get('PS_ATTACHMENT_MAXIMUM_SIZE').'M')),
+                new Assert\File(array('maxSize' => $this->configuration->get('PS_ATTACHMENT_MAXIMUM_SIZE') . 'M')),
             ),
         ))
             ->add('name', TextType::class, array(

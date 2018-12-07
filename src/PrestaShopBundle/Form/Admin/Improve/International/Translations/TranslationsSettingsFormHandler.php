@@ -53,10 +53,10 @@ final class TranslationsSettingsFormHandler implements FormHandlerInterface
     private $formTypes;
 
     /**
-     * @param FormBuilderInterface    $formBuilder
+     * @param FormBuilderInterface $formBuilder
      * @param HookDispatcherInterface $hookDispatcher
-     * @param array                   $formTypes
-     * @param string                  $hookName
+     * @param array $formTypes
+     * @param string $hookName
      */
     public function __construct(
         FormBuilderInterface $formBuilder,

@@ -46,7 +46,7 @@ final class ContactByIdChoiceProvider implements FormChoiceProviderInterface
 
     /**
      * @param ContactRepositoryInterface $contactRepository
-     * @param int                        $langId
+     * @param int $langId
      */
     public function __construct(
         ContactRepositoryInterface $contactRepository,

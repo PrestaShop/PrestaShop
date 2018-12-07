@@ -164,7 +164,7 @@ class ProductSpecificPrice extends CommonAbstractType
                 'sp_id_customer',
                 TypeaheadCustomerCollectionType::class,
                 array(
-                    'remote_url' => $this->context->getAdminLink('AdminCustomers', true).'&sf2=1&ajax=1&tab=AdminCustomers&action=searchCustomers&customer_search=%QUERY',
+                    'remote_url' => $this->context->getAdminLink('AdminCustomers', true) . '&sf2=1&ajax=1&tab=AdminCustomers&action=searchCustomers&customer_search=%QUERY',
                     'mapping_value' => 'id_customer',
                     'mapping_name' => 'fullname_and_email',
                     'placeholder' => $this->translator->trans('All customers', array(), 'Admin.Global'),

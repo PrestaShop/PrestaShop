@@ -67,7 +67,7 @@ class AddressInformation
     private $addressId;
 
     /**
-     * @param int    $addressId
+     * @param int $addressId
      * @param string $company
      * @param string $fullName
      * @param string $fullAddress

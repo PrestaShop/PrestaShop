@@ -73,7 +73,7 @@ class AdminTagsControllerCore extends AdminController
     {
         if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_tag'] = array(
-                'href' => self::$currentIndex.'&addtag&token='.$this->token,
+                'href' => self::$currentIndex . '&addtag&token=' . $this->token,
                 'desc' => $this->trans('Add new tag', array(), 'Admin.Shopparameters.Feature'),
                 'icon' => 'process-icon-new',
             );
@@ -89,9 +89,9 @@ class AdminTagsControllerCore extends AdminController
 
         $this->_select = 'l.name as lang, COUNT(pt.id_product) as products';
         $this->_join = '
-			LEFT JOIN `'._DB_PREFIX_.'product_tag` pt
+			LEFT JOIN `' . _DB_PREFIX_ . 'product_tag` pt
 				ON (a.`id_tag` = pt.`id_tag`)
-			LEFT JOIN `'._DB_PREFIX_.'lang` l
+			LEFT JOIN `' . _DB_PREFIX_ . 'lang` l
 				ON (l.`id_lang` = a.`id_lang`)';
         $this->_group = 'GROUP BY a.name, a.id_lang';
 
@@ -100,7 +100,7 @@ class AdminTagsControllerCore extends AdminController
 
     public function postProcess()
     {
-        if ($this->access('edit') && Tools::getValue('submitAdd'.$this->table)) {
+        if ($this->access('edit') && Tools::getValue('submitAdd' . $this->table)) {
             if (($id = (int) Tools::getValue($this->identifier)) && ($obj = new $this->className($id)) && Validate::isLoadedObject($obj)) {
                 /** @var Tag $obj */
                 $previous_products = $obj->getProducts();

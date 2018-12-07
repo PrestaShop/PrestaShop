@@ -82,7 +82,7 @@ final class GridPresenter implements GridPresenterInterface
             'filters' => $searchCriteria->getFilters(),
         );
 
-        $this->hookDispatcher->dispatchWithParameters('action'.$definition->getId().'GridPresenterModifier', array(
+        $this->hookDispatcher->dispatchWithParameters('action' . $definition->getId() . 'GridPresenterModifier', array(
             'presented_grid' => &$presentedGrid,
         ));
 

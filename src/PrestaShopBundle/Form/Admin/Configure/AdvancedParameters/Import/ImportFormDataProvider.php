@@ -46,7 +46,7 @@ final class ImportFormDataProvider implements ImportFormDataProviderInterface
     private $session;
 
     /**
-     * @param FileFinder       $importFileFinder
+     * @param FileFinder $importFileFinder
      * @param SessionInterface $session
      */
     public function __construct(

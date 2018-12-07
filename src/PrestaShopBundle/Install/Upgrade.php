@@ -25,26 +25,26 @@
  */
 
 namespace {
-    $root_dir = realpath(__DIR__.'/../../..');
+    $root_dir = realpath(__DIR__ . '/../../..');
 
-    require_once $root_dir.'/vendor/paragonie/random_compat/lib/random.php';
+    require_once $root_dir . '/vendor/paragonie/random_compat/lib/random.php';
 
     if (!class_exists('PhpEncryptionEngine')) {
-        require_once $root_dir.'/classes/PhpEncryptionEngine.php';
+        require_once $root_dir . '/classes/PhpEncryptionEngine.php';
         class PhpEncryptionEngine extends \PhpEncryptionEngineCore
         {
         }
     }
 
     if (!class_exists('PhpEncryptionLegacyEngine')) {
-        require_once $root_dir.'/classes/PhpEncryptionLegacyEngine.php';
+        require_once $root_dir . '/classes/PhpEncryptionLegacyEngine.php';
         class PhpEncryptionLegacyEngine extends \PhpEncryptionLegacyEngineCore
         {
         }
     }
 
     if (!class_exists('PhpEncryption')) {
-        require_once $root_dir.'/classes/PhpEncryption.php';
+        require_once $root_dir . '/classes/PhpEncryption.php';
         class PhpEncryption extends \PhpEncryptionCore
         {
         }
@@ -170,7 +170,7 @@ namespace PrestaShopBundle\Install {
         public function __construct($cacheDir, $installDir)
         {
             $this->logger = new FileLogger();
-            $this->logger->setFilename($cacheDir.@date('Ymd').'_upgrade.log');
+            $this->logger->setFilename($cacheDir . @date('Ymd') . '_upgrade.log');
             $this->installDir = $installDir;
             $this->db = Db::getInstance();
         }
@@ -206,10 +206,10 @@ namespace PrestaShopBundle\Install {
             if (!defined('INSTALL_PATH')) {
                 define('INSTALL_PATH', $this->installDir);
             }
-            require_once INSTALL_PATH.'install_version.php';
+            require_once INSTALL_PATH . 'install_version.php';
             // needed for upgrade before 1.5
             if (!defined('__PS_BASE_URI__')) {
-                define('__PS_BASE_URI__', str_replace('//', '/', '/'.trim(preg_replace('#/(install(-dev)?/upgrade)$#', '/', str_replace('\\', '/', dirname($_SERVER['REQUEST_URI']))), '/').'/'));
+                define('__PS_BASE_URI__', str_replace('//', '/', '/' . trim(preg_replace('#/(install(-dev)?/upgrade)$#', '/', str_replace('\\', '/', dirname($_SERVER['REQUEST_URI']))), '/') . '/'));
             }
             if (!defined('_THEME_NAME_')) {
                 define('_THEME_NAME_', 'default');
@@ -220,30 +220,30 @@ namespace PrestaShopBundle\Install {
 
             // if _PS_ROOT_DIR_ is defined, use it instead of "guessing" the module dir.
             if (defined('_PS_ROOT_DIR_') and !defined('_PS_MODULE_DIR_')) {
-                define('_PS_MODULE_DIR_', _PS_ROOT_DIR_.'/modules/');
+                define('_PS_MODULE_DIR_', _PS_ROOT_DIR_ . '/modules/');
             } elseif (!defined('_PS_MODULE_DIR_')) {
-                define('_PS_MODULE_DIR_', _PS_INSTALL_PATH_.'/../modules/');
+                define('_PS_MODULE_DIR_', _PS_INSTALL_PATH_ . '/../modules/');
             }
 
             if (!defined('_PS_INSTALLER_PHP_UPGRADE_DIR_')) {
-                define('_PS_INSTALLER_PHP_UPGRADE_DIR_', _PS_INSTALL_PATH_.'upgrade/php/');
+                define('_PS_INSTALLER_PHP_UPGRADE_DIR_', _PS_INSTALL_PATH_ . 'upgrade/php/');
             }
 
             if (!defined('_PS_INSTALLER_SQL_UPGRADE_DIR_')) {
-                define('_PS_INSTALLER_SQL_UPGRADE_DIR_', _PS_INSTALL_PATH_.'upgrade/sql/');
+                define('_PS_INSTALLER_SQL_UPGRADE_DIR_', _PS_INSTALL_PATH_ . 'upgrade/sql/');
             }
 
             if (!defined('_THEMES_DIR_')) {
-                define('_THEMES_DIR_', __PS_BASE_URI__.'themes/');
+                define('_THEMES_DIR_', __PS_BASE_URI__ . 'themes/');
             }
             if (!defined('_PS_IMG_')) {
-                define('_PS_IMG_', __PS_BASE_URI__.'img/');
+                define('_PS_IMG_', __PS_BASE_URI__ . 'img/');
             }
             if (!defined('_PS_JS_DIR_')) {
-                define('_PS_JS_DIR_', __PS_BASE_URI__.'js/');
+                define('_PS_JS_DIR_', __PS_BASE_URI__ . 'js/');
             }
             if (!defined('_PS_CSS_DIR_')) {
-                define('_PS_CSS_DIR_', __PS_BASE_URI__.'css/');
+                define('_PS_CSS_DIR_', __PS_BASE_URI__ . 'css/');
             }
 
             $this->oldVersion = Configuration::get('PS_VERSION_DB');
@@ -272,16 +272,16 @@ namespace PrestaShopBundle\Install {
             }
 
             if (!defined('_PS_TOOL_DIR_')) {
-                define('_PS_TOOL_DIR_', _PS_ROOT_DIR_.'/tools/');
+                define('_PS_TOOL_DIR_', _PS_ROOT_DIR_ . '/tools/');
             }
             if (!defined('_PS_TRANSLATIONS_DIR_')) {
-                define('_PS_TRANSLATIONS_DIR_', _PS_ROOT_DIR_.'/translations/');
+                define('_PS_TRANSLATIONS_DIR_', _PS_ROOT_DIR_ . '/translations/');
             }
             if (!defined('_PS_MODULES_DIR_')) {
-                define('_PS_MODULES_DIR_', _PS_ROOT_DIR_.'/modules/');
+                define('_PS_MODULES_DIR_', _PS_ROOT_DIR_ . '/modules/');
             }
             if (!defined('_PS_MAILS_DIR_')) {
-                define('_PS_MAILS_DIR_', _PS_ROOT_DIR_.'/mails/');
+                define('_PS_MAILS_DIR_', _PS_ROOT_DIR_ . '/mails/');
             }
             if (!defined('_MEDIA_SERVER_1_')) {
                 define('_MEDIA_SERVER_1_', '');
@@ -313,7 +313,7 @@ namespace PrestaShopBundle\Install {
             Context::getContext()->cart = new Cart();
             Context::getContext()->employee = new Employee(1);
 
-            require_once _PS_ROOT_DIR_.'/config/smarty.config.inc.php';
+            require_once _PS_ROOT_DIR_ . '/config/smarty.config.inc.php';
 
             Context::getContext()->smarty = $smarty;
             Language::loadLanguages();
@@ -326,18 +326,18 @@ namespace PrestaShopBundle\Install {
             $full = version_compare('1.5.0.10', AppKernel::VERSION) < 0;
 
             $sql = 'SELECT IF(cl.`id_lang` IS NULL, c.`value`, cl.`value`) AS value
-			FROM `'._DB_PREFIX_.'configuration` c
-			LEFT JOIN `'._DB_PREFIX_.'configuration_lang` cl ON (c.`id_configuration` = cl.`id_configuration`)
-			WHERE c.`name`=\''.pSQL($name).'\'';
+			FROM `' . _DB_PREFIX_ . 'configuration` c
+			LEFT JOIN `' . _DB_PREFIX_ . 'configuration_lang` cl ON (c.`id_configuration` = cl.`id_configuration`)
+			WHERE c.`name`=\'' . pSQL($name) . '\'';
 
             if ($full) {
                 $id_shop = Shop::getContextShopID(true);
                 $id_shop_group = Shop::getContextShopGroupID(true);
                 if ($id_shop) {
-                    $sql .= ' AND c.`id_shop` = '.(int) $id_shop;
+                    $sql .= ' AND c.`id_shop` = ' . (int) $id_shop;
                 }
                 if ($id_shop_group) {
-                    $sql .= ' AND c.`id_shop_group` = '.(int) $id_shop_group;
+                    $sql .= ' AND c.`id_shop_group` = ' . (int) $id_shop_group;
                 }
             }
 
@@ -410,7 +410,7 @@ namespace PrestaShopBundle\Install {
             $mysqlEngine = (defined('_MYSQL_ENGINE_') ? _MYSQL_ENGINE_ : 'MyISAM');
             if (!$this->hasFailure()) {
                 foreach ($neededUpgradeFiles as $version) {
-                    $file = _PS_INSTALLER_SQL_UPGRADE_DIR_.$version.'.sql';
+                    $file = _PS_INSTALLER_SQL_UPGRADE_DIR_ . $version . '.sql';
                     if (!file_exists($file)) {
                         $this->logError('Error while loading SQL upgrade file "%file%.sql".', 33, array('%file%' => $version));
                     }
@@ -437,7 +437,7 @@ namespace PrestaShopBundle\Install {
                 $msgErrors = explode("\n", $output['prestashop:schema:update-without-foreign']['output']);
                 $this->logError('Error upgrading doctrine schema', 43);
                 foreach ($msgErrors as $msgError) {
-                    $this->logError('Doctrine SQL Error : '.$msgError, 43);
+                    $this->logError('Doctrine SQL Error : ' . $msgError, 43);
                 }
             }
         }
@@ -473,22 +473,22 @@ namespace PrestaShopBundle\Install {
                             /* Call a simple function */
                             if (false === mb_strpos($phpString, '::')) {
                                 $func_name = str_replace($pattern[0], '', $php[0]);
-                                if (!file_exists(_PS_INSTALLER_PHP_UPGRADE_DIR_.mb_strtolower($func_name).'.php')) {
-                                    $this->logWarning('[ERROR] '.$version.' PHP - missing file '.$query, 41, array(), true);
+                                if (!file_exists(_PS_INSTALLER_PHP_UPGRADE_DIR_ . mb_strtolower($func_name) . '.php')) {
+                                    $this->logWarning('[ERROR] ' . $version . ' PHP - missing file ' . $query, 41, array(), true);
                                 } else {
-                                    require_once _PS_INSTALLER_PHP_UPGRADE_DIR_.Tools::strtolower($func_name).'.php';
+                                    require_once _PS_INSTALLER_PHP_UPGRADE_DIR_ . Tools::strtolower($func_name) . '.php';
                                     $phpRes = call_user_func_array($func_name, $parameters);
                                 }
                             } else {
                                 /* Or an object method, not supported */
-                                $this->logWarning('[ERROR] '.$version.' PHP - Object Method call is forbidden ('.$php[0].'::'.str_replace($pattern[0], '', $php[1]).')', 42, array(), true);
+                                $this->logWarning('[ERROR] ' . $version . ' PHP - Object Method call is forbidden (' . $php[0] . '::' . str_replace($pattern[0], '', $php[1]) . ')', 42, array(), true);
                             }
                             if ((is_array($phpRes) and !empty($phpRes['error'])) || false === $phpRes) {
-                                $this->logWarning('[ERROR] PHP '.$version.' '.$query."\n".'
-								'.(empty($phpRes['error']) ? '' : $phpRes['error']."\n").'
-								'.(empty($phpRes['msg']) ? '' : ' - '.$phpRes['msg']), $version, array(), true);
+                                $this->logWarning('[ERROR] PHP ' . $version . ' ' . $query . "\n" . '
+								' . (empty($phpRes['error']) ? '' : $phpRes['error'] . "\n") . '
+								' . (empty($phpRes['msg']) ? '' : ' - ' . $phpRes['msg']), $version, array(), true);
                             } else {
-                                $this->logInfo('[OK] PHP '.$version.' : '.$query, $version, array(), true);
+                                $this->logInfo('[OK] PHP ' . $version . ' : ' . $query, $version, array(), true);
                             }
                         } else {
                             if (!$db->execute($query)) {
@@ -497,14 +497,14 @@ namespace PrestaShopBundle\Install {
 
                                 $duplicates = array('1050', '1054', '1060', '1061', '1062', '1091');
                                 if (!in_array($error_number, $duplicates, true)) {
-                                    $this->logWarning('SQL '.$version.'
-								'.$error_number.' in '.$query.': '.$error, $version, array(), true);
+                                    $this->logWarning('SQL ' . $version . '
+								' . $error_number . ' in ' . $query . ': ' . $error, $version, array(), true);
                                 } else {
-                                    $this->logInfo('SQL '.$version.'
-								'.$error_number.' in '.$query.': '.$error, $version, array(), true);
+                                    $this->logInfo('SQL ' . $version . '
+								' . $error_number . ' in ' . $query . ': ' . $error, $version, array(), true);
                                 }
                             } else {
-                                $this->logInfo('[OK] SQL '.$version.' : '.$query, $version, array(), true);
+                                $this->logInfo('[OK] SQL ' . $version . ' : ' . $query, $version, array(), true);
                             }
                         }
                     }
@@ -541,7 +541,7 @@ namespace PrestaShopBundle\Install {
                     )
                     && 'autoupgrade' !== $installedProduct->attributes->get('name')) {
                     $moduleName = $installedProduct->attributes->get('name');
-                    $this->logInfo('Disabling custom module '.$moduleName);
+                    $this->logInfo('Disabling custom module ' . $moduleName);
                     Module::disableAllByName($moduleName);
                 }
             }
@@ -565,13 +565,13 @@ namespace PrestaShopBundle\Install {
                 if (in_array($moduleName, self::$incompatibleModules, true)) {
                     $this->logInfo("Uninstalling module $moduleName, not supported in this PrestaShop version.");
                     $module->onUninstall();
-                    $fs->remove(_PS_MODULE_DIR_.$moduleName);
+                    $fs->remove(_PS_MODULE_DIR_ . $moduleName);
                 } else {
                     $attributes = $module->attributes;
                     if ($attributes->get('compatibility')) {
                         $maxVersion = $attributes->get('compatibility')->to;
                         if (-1 == version_compare($maxVersion, _PS_INSTALL_VERSION_) && Module::isEnabled($moduleName)) {
-                            $this->logInfo("Disabling module $moduleName. Max supported version : ".$maxVersion);
+                            $this->logInfo("Disabling module $moduleName. Max supported version : " . $maxVersion);
                             Module::disableAllByName($moduleName);
                         }
                     }
@@ -594,12 +594,12 @@ namespace PrestaShopBundle\Install {
             foreach ($list as $moduleName => $module) {
                 if ('PrestaShop' === $module->attributes->get('author')) {
                     if (!$moduleManagerBuilder->build()->isInstalled($moduleName)) {
-                        $this->logInfo('Installing native module '.$moduleName);
+                        $this->logInfo('Installing native module ' . $moduleName);
                         $module = $moduleManagerRepository->getModule($moduleName);
                         $module->onInstall();
                         $module->onEnable();
                     } else {
-                        $this->logInfo('Native module '.$moduleName.' already installed');
+                        $this->logInfo('Native module ' . $moduleName . ' already installed');
                     }
                 }
             }
@@ -610,25 +610,25 @@ namespace PrestaShopBundle\Install {
         private function cleanCache()
         {
             // Settings updated, compile and cache directories must be emptied
-            $install_dir = realpath(rtrim(_PS_INSTALL_PATH_, '\\/').DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
-            $tools_dir = $install_dir.'tools'.DIRECTORY_SEPARATOR;
+            $install_dir = realpath(rtrim(_PS_INSTALL_PATH_, '\\/') . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+            $tools_dir = $install_dir . 'tools' . DIRECTORY_SEPARATOR;
             $arrayToClean = array(
-                $tools_dir.'smarty'.DIRECTORY_SEPARATOR.'cache',
-                $tools_dir.'smarty'.DIRECTORY_SEPARATOR.'compile',
-                $tools_dir.'smarty_v2'.DIRECTORY_SEPARATOR.'cache',
-                $tools_dir.'smarty_v2'.DIRECTORY_SEPARATOR.'compile',
-                $install_dir.'app'.DIRECTORY_SEPARATOR.'cache'.DIRECTORY_SEPARATOR,
-                $install_dir.'cache'.DIRECTORY_SEPARATOR.'smarty'.DIRECTORY_SEPARATOR.'cache'.DIRECTORY_SEPARATOR,
-                $install_dir.'cache'.DIRECTORY_SEPARATOR.'smarty'.DIRECTORY_SEPARATOR.'compile'.DIRECTORY_SEPARATOR,
+                $tools_dir . 'smarty' . DIRECTORY_SEPARATOR . 'cache',
+                $tools_dir . 'smarty' . DIRECTORY_SEPARATOR . 'compile',
+                $tools_dir . 'smarty_v2' . DIRECTORY_SEPARATOR . 'cache',
+                $tools_dir . 'smarty_v2' . DIRECTORY_SEPARATOR . 'compile',
+                $install_dir . 'app' . DIRECTORY_SEPARATOR . 'cache' . DIRECTORY_SEPARATOR,
+                $install_dir . 'cache' . DIRECTORY_SEPARATOR . 'smarty' . DIRECTORY_SEPARATOR . 'cache' . DIRECTORY_SEPARATOR,
+                $install_dir . 'cache' . DIRECTORY_SEPARATOR . 'smarty' . DIRECTORY_SEPARATOR . 'compile' . DIRECTORY_SEPARATOR,
             );
 
             foreach ($arrayToClean as $dir) {
                 if (file_exists($dir)) {
                     foreach (scandir($dir, SCANDIR_SORT_NONE) as $file) {
                         if ('.' != $file[0] and 'index.php' != $file and '.htaccess' != $file) {
-                            if (is_file($dir.$file)) {
-                                unlink($dir.$file);
-                            } elseif (is_dir($dir.$file.DIRECTORY_SEPARATOR)) {
+                            if (is_file($dir . $file)) {
+                                unlink($dir . $file);
+                            } elseif (is_dir($dir . $file . DIRECTORY_SEPARATOR)) {
                                 //\Tools14::deleteDirectory($dir . $file . DIRECTORY_SEPARATOR, true);
                             }
                             // To more log
@@ -640,49 +640,49 @@ namespace PrestaShopBundle\Install {
                 }
             }
 
-            if (file_exists(_PS_ROOT_DIR_.'/var/cache/dev/class_index.php')) {
-                unlink(_PS_ROOT_DIR_.'/var/cache/dev/class_index.php');
+            if (file_exists(_PS_ROOT_DIR_ . '/var/cache/dev/class_index.php')) {
+                unlink(_PS_ROOT_DIR_ . '/var/cache/dev/class_index.php');
             }
-            if (file_exists(_PS_ROOT_DIR_.'/var/cache/prod/class_index.php')) {
-                unlink(_PS_ROOT_DIR_.'/var/cache/prod/class_index.php');
+            if (file_exists(_PS_ROOT_DIR_ . '/var/cache/prod/class_index.php')) {
+                unlink(_PS_ROOT_DIR_ . '/var/cache/prod/class_index.php');
             }
 
             // Clear XML files
-            if (file_exists(_PS_ROOT_DIR_.'/config/xml/blog-fr.xml')) {
-                unlink(_PS_ROOT_DIR_.'/config/xml/blog-fr.xml');
+            if (file_exists(_PS_ROOT_DIR_ . '/config/xml/blog-fr.xml')) {
+                unlink(_PS_ROOT_DIR_ . '/config/xml/blog-fr.xml');
             }
-            if (file_exists(_PS_ROOT_DIR_.'/config/xml/default_country_modules_list.xml')) {
-                unlink(_PS_ROOT_DIR_.'/config/xml/default_country_modules_list.xml');
+            if (file_exists(_PS_ROOT_DIR_ . '/config/xml/default_country_modules_list.xml')) {
+                unlink(_PS_ROOT_DIR_ . '/config/xml/default_country_modules_list.xml');
             }
-            if (file_exists(_PS_ROOT_DIR_.'/config/xml/modules_list.xml')) {
-                unlink(_PS_ROOT_DIR_.'/config/xml/modules_list.xml');
+            if (file_exists(_PS_ROOT_DIR_ . '/config/xml/modules_list.xml')) {
+                unlink(_PS_ROOT_DIR_ . '/config/xml/modules_list.xml');
             }
-            if (file_exists(_PS_ROOT_DIR_.'/config/xml/modules_native_addons.xml')) {
-                unlink(_PS_ROOT_DIR_.'/config/xml/modules_native_addons.xml');
+            if (file_exists(_PS_ROOT_DIR_ . '/config/xml/modules_native_addons.xml')) {
+                unlink(_PS_ROOT_DIR_ . '/config/xml/modules_native_addons.xml');
             }
-            if (file_exists(_PS_ROOT_DIR_.'/config/xml/must_have_modules_list.xml')) {
-                unlink(_PS_ROOT_DIR_.'/config/xml/must_have_modules_list.xml');
+            if (file_exists(_PS_ROOT_DIR_ . '/config/xml/must_have_modules_list.xml')) {
+                unlink(_PS_ROOT_DIR_ . '/config/xml/must_have_modules_list.xml');
             }
-            if (file_exists(_PS_ROOT_DIR_.'/config/xml/tab_modules_list.xml')) {
-                unlink(_PS_ROOT_DIR_.'/config/xml/tab_modules_list.xml');
+            if (file_exists(_PS_ROOT_DIR_ . '/config/xml/tab_modules_list.xml')) {
+                unlink(_PS_ROOT_DIR_ . '/config/xml/tab_modules_list.xml');
             }
-            if (file_exists(_PS_ROOT_DIR_.'/config/xml/trusted_modules_list.xml')) {
-                unlink(_PS_ROOT_DIR_.'/config/xml/trusted_modules_list.xml');
+            if (file_exists(_PS_ROOT_DIR_ . '/config/xml/trusted_modules_list.xml')) {
+                unlink(_PS_ROOT_DIR_ . '/config/xml/trusted_modules_list.xml');
             }
-            if (file_exists(_PS_ROOT_DIR_.'/config/xml/untrusted_modules_list.xml')) {
-                unlink(_PS_ROOT_DIR_.'/config/xml/untrusted_modules_list.xml');
+            if (file_exists(_PS_ROOT_DIR_ . '/config/xml/untrusted_modules_list.xml')) {
+                unlink(_PS_ROOT_DIR_ . '/config/xml/untrusted_modules_list.xml');
             }
         }
 
         private function cleanDefaultThemeCache()
         {
             $separator = addslashes(DIRECTORY_SEPARATOR);
-            $file = _PS_ROOT_DIR_.$separator.'themes'.$separator._THEME_NAME_.$separator.'cache'.$separator;
+            $file = _PS_ROOT_DIR_ . $separator . 'themes' . $separator . _THEME_NAME_ . $separator . 'cache' . $separator;
             if (file_exists($file)) {
                 foreach (scandir($file, SCANDIR_SORT_NONE) as $cache) {
-                    if ('.' != $cache[0] && 'index.php' != $cache && '.htaccess' != $cache && file_exists($file.$cache) && !is_dir($file.$cache)) {
-                        if (file_exists($file.$cache)) {
-                            unlink($file.$cache);
+                    if ('.' != $cache[0] && 'index.php' != $cache && '.htaccess' != $cache && file_exists($file . $cache) && !is_dir($file . $cache)) {
+                        if (file_exists($file . $cache)) {
+                            unlink($file . $cache);
                         }
                     }
                 }
@@ -692,19 +692,19 @@ namespace PrestaShopBundle\Install {
         private function updateDbImagesLegacy()
         {
             $db = $this->db;
-            $db->execute('UPDATE `'._DB_PREFIX_.'configuration` SET `name` = \'PS_LEGACY_IMAGES\' WHERE name LIKE \'0\' AND `value` = 1');
-            $db->execute('UPDATE `'._DB_PREFIX_.'configuration` SET `value` = 0 WHERE `name` LIKE \'PS_LEGACY_IMAGES\'');
-            if ($db->getValue('SELECT COUNT(id_product_download) FROM `'._DB_PREFIX_.'product_download` WHERE `active` = 1') > 0) {
-                $db->execute('UPDATE `'._DB_PREFIX_.'configuration` SET `value` = 1 WHERE `name` LIKE \'PS_VIRTUAL_PROD_FEATURE_ACTIVE\'');
+            $db->execute('UPDATE `' . _DB_PREFIX_ . 'configuration` SET `name` = \'PS_LEGACY_IMAGES\' WHERE name LIKE \'0\' AND `value` = 1');
+            $db->execute('UPDATE `' . _DB_PREFIX_ . 'configuration` SET `value` = 0 WHERE `name` LIKE \'PS_LEGACY_IMAGES\'');
+            if ($db->getValue('SELECT COUNT(id_product_download) FROM `' . _DB_PREFIX_ . 'product_download` WHERE `active` = 1') > 0) {
+                $db->execute('UPDATE `' . _DB_PREFIX_ . 'configuration` SET `value` = 1 WHERE `name` LIKE \'PS_VIRTUAL_PROD_FEATURE_ACTIVE\'');
             }
         }
 
         private function cleanupOldDirectories()
         {
             if ($this->adminDir) {
-                $path = $this->adminDir.DIRECTORY_SEPARATOR.'themes'.DIRECTORY_SEPARATOR.'default'.DIRECTORY_SEPARATOR
-                    .'template'.DIRECTORY_SEPARATOR.'controllers'.DIRECTORY_SEPARATOR.'modules'
-                    .DIRECTORY_SEPARATOR.'header.tpl';
+                $path = $this->adminDir . DIRECTORY_SEPARATOR . 'themes' . DIRECTORY_SEPARATOR . 'default' . DIRECTORY_SEPARATOR
+                    . 'template' . DIRECTORY_SEPARATOR . 'controllers' . DIRECTORY_SEPARATOR . 'modules'
+                    . DIRECTORY_SEPARATOR . 'header.tpl';
                 if (file_exists($path)) {
                     unlink($path);
                 }
@@ -713,7 +713,7 @@ namespace PrestaShopBundle\Install {
 
         private function updateLangs()
         {
-            $langs = $this->db->executeS('SELECT * FROM `'._DB_PREFIX_.'lang` WHERE `active` = 1');
+            $langs = $this->db->executeS('SELECT * FROM `' . _DB_PREFIX_ . 'lang` WHERE `active` = 1');
 
             if (is_array($langs)) {
                 foreach ($langs as $lang) {
@@ -750,7 +750,7 @@ namespace PrestaShopBundle\Install {
             }
 
             if (class_exists('\Tools2') && method_exists('\Tools2', 'generateHtaccess')) {
-                $url_rewrite = (bool) $this->db->getValue('SELECT `value` FROM `'._DB_PREFIX_.'configuration` WHERE name=\'PS_REWRITING_SETTINGS\'');
+                $url_rewrite = (bool) $this->db->getValue('SELECT `value` FROM `' . _DB_PREFIX_ . 'configuration` WHERE name=\'PS_REWRITING_SETTINGS\'');
 
                 \Tools2::generateHtaccess(null, $url_rewrite);
             }
@@ -914,7 +914,7 @@ namespace PrestaShopBundle\Install {
             $info = $this->getTranslator()->trans($quickInfo, $transVariables, 'Install');
             if ($this->inAutoUpgrade) {
                 if ($dbInfo) {
-                    $this->nextQuickInfo[] = '<div class="upgradeDbOk">'.$info.'</div>';
+                    $this->nextQuickInfo[] = '<div class="upgradeDbOk">' . $info . '</div>';
                 } else {
                     $this->nextQuickInfo[] = $info;
                 }
@@ -925,9 +925,9 @@ namespace PrestaShopBundle\Install {
                 }
                 if (null !== $id) {
                     if (!is_numeric($id)) {
-                        $customInfo = '<action result="info" id="'.$id.'"><![CDATA['.htmlentities($info)."]]></action>\n";
+                        $customInfo = '<action result="info" id="' . $id . '"><![CDATA[' . htmlentities($info) . "]]></action>\n";
                     } else {
-                        $customInfo = '<action result="info" id="'.$id.'" />'."\n";
+                        $customInfo = '<action result="info" id="' . $id . '" />' . "\n";
                     }
                     $this->infoList[] = $customInfo;
                 }
@@ -939,7 +939,7 @@ namespace PrestaShopBundle\Install {
             $info = $this->getTranslator()->trans($quickInfo, $transVariables, 'Install');
             if ($this->inAutoUpgrade) {
                 if ($dbInfo) {
-                    $this->nextQuickInfo[] = '<div class="upgradeDbError">'.$info.'</div>';
+                    $this->nextQuickInfo[] = '<div class="upgradeDbError">' . $info . '</div>';
                 } else {
                     $this->nextQuickInfo[] = $info;
                 }
@@ -954,9 +954,9 @@ namespace PrestaShopBundle\Install {
                 }
                 if (null !== $id) {
                     if (!is_numeric($id)) {
-                        $customWarning = '<action result="warning" id="'.$id.'"><![CDATA['.htmlentities($info)."]]></action>\n";
+                        $customWarning = '<action result="warning" id="' . $id . '"><![CDATA[' . htmlentities($info) . "]]></action>\n";
                     } else {
-                        $customWarning = '<action result="warning" id="'.$id.'" />'."\n";
+                        $customWarning = '<action result="warning" id="' . $id . '" />' . "\n";
                     }
                     $this->warningList[] = $customWarning;
                 }
@@ -968,7 +968,7 @@ namespace PrestaShopBundle\Install {
             $info = $this->getTranslator()->trans($quickInfo, $transVariables, 'Install');
             if ($this->inAutoUpgrade) {
                 if ($dbInfo) {
-                    $this->nextQuickInfo[] = '<div class="upgradeDbError">'.$info.'</div>';
+                    $this->nextQuickInfo[] = '<div class="upgradeDbError">' . $info . '</div>';
                 } else {
                     $this->nextQuickInfo[] = $info;
                 }
@@ -982,9 +982,9 @@ namespace PrestaShopBundle\Install {
                 }
                 if (null !== $id) {
                     if (!is_numeric($id)) {
-                        $customError = '<action result="error" id="'.$id.'"><![CDATA['.htmlentities($info)."]]></action>\n";
+                        $customError = '<action result="error" id="' . $id . '"><![CDATA[' . htmlentities($info) . "]]></action>\n";
                     } else {
-                        $customError = '<action result="error" id="'.$id.'" />'."\n";
+                        $customError = '<action result="error" id="' . $id . '" />' . "\n";
                     }
                     $this->failureList[] = $customError;
                 }
@@ -1059,9 +1059,9 @@ namespace PrestaShopBundle\Install {
                 $event->getIO()->write('Migrating old setting file...');
             }
 
-            $root_dir = realpath(__DIR__.'/../../../');
+            $root_dir = realpath(__DIR__ . '/../../../');
 
-            $phpParametersFilepath = $root_dir.'/app/config/parameters.php';
+            $phpParametersFilepath = $root_dir . '/app/config/parameters.php';
             $addNewCookieKey = false;
             if (file_exists($phpParametersFilepath)) {
                 $default_parameters = require $phpParametersFilepath;
@@ -1077,8 +1077,8 @@ namespace PrestaShopBundle\Install {
                 }
             }
 
-            if (!file_exists($phpParametersFilepath) && !file_exists($root_dir.'/app/config/parameters.yml')
-                && !file_exists($root_dir.'/'.self::SETTINGS_FILE)) {
+            if (!file_exists($phpParametersFilepath) && !file_exists($root_dir . '/app/config/parameters.yml')
+                && !file_exists($root_dir . '/' . self::SETTINGS_FILE)) {
                 if (null !== $event) {
                     $event->getIO()->write('No file to migrate!');
                     $event->getIO()->write('Finished...');
@@ -1090,7 +1090,7 @@ namespace PrestaShopBundle\Install {
             $filesystem = new Filesystem();
             $exportPhpConfigFile = function ($config, $destination) use ($filesystem) {
                 try {
-                    $filesystem->dumpFile($destination, '<?php return '.var_export($config, true).';'."\n");
+                    $filesystem->dumpFile($destination, '<?php return ' . var_export($config, true) . ';' . "\n");
                 } catch (IOException $e) {
                     return false;
                 }
@@ -1100,7 +1100,7 @@ namespace PrestaShopBundle\Install {
 
             $fileMigrated = false;
             if (!$addNewCookieKey) {
-                $default_parameters = Yaml::parse(file_get_contents($root_dir.'/app/config/parameters.yml.dist'));
+                $default_parameters = Yaml::parse(file_get_contents($root_dir . '/app/config/parameters.yml.dist'));
             }
             $default_parameters['parameters']['new_cookie_key'] = PhpEncryption::createNewRandomKey();
 
@@ -1115,15 +1115,15 @@ namespace PrestaShopBundle\Install {
                 return false;
             }
 
-            if (file_exists($root_dir.'/'.self::SETTINGS_FILE)) {
-                $tmp_settings = file_get_contents($root_dir.'/'.self::SETTINGS_FILE);
+            if (file_exists($root_dir . '/' . self::SETTINGS_FILE)) {
+                $tmp_settings = file_get_contents($root_dir . '/' . self::SETTINGS_FILE);
             } else {
                 $tmp_settings = null;
             }
 
-            if (!file_exists($root_dir.'/app/config/parameters.yml') && $tmp_settings && false !== mb_strpos($tmp_settings, '_DB_SERVER_')) {
+            if (!file_exists($root_dir . '/app/config/parameters.yml') && $tmp_settings && false !== mb_strpos($tmp_settings, '_DB_SERVER_')) {
                 $tmp_settings = preg_replace('/(\'|")\_/', '$1_LEGACY_', $tmp_settings);
-                $tmp_settings_file = str_replace('/settings', '/tmp_settings', $root_dir.'/'.self::SETTINGS_FILE);
+                $tmp_settings_file = str_replace('/settings', '/tmp_settings', $root_dir . '/' . self::SETTINGS_FILE);
                 file_put_contents($tmp_settings_file, $tmp_settings);
                 include $tmp_settings_file;
                 @unlink($tmp_settings_file);
@@ -1166,8 +1166,8 @@ namespace PrestaShopBundle\Install {
                             'mailer_password' => '',
                         ) + $default_parameters['parameters'],
                 );
-            } elseif (file_exists($root_dir.'/app/config/parameters.yml')) {
-                $parameters = Yaml::parse(file_get_contents($root_dir.'/app/config/parameters.yml'));
+            } elseif (file_exists($root_dir . '/app/config/parameters.yml')) {
+                $parameters = Yaml::parse(file_get_contents($root_dir . '/app/config/parameters.yml'));
                 if (empty($parameters['parameters'])) {
                     $parameters['parameters'] = array();
                 }
@@ -1182,8 +1182,8 @@ namespace PrestaShopBundle\Install {
                 $settings_content = "<?php\n";
                 $settings_content .= '//@deprecated 1.7';
 
-                file_put_contents($root_dir.'/'.self::SETTINGS_FILE, $settings_content);
-                file_put_contents($root_dir.'/app/config/parameters.yml', 'parameters:');
+                file_put_contents($root_dir . '/' . self::SETTINGS_FILE, $settings_content);
+                file_put_contents($root_dir . '/app/config/parameters.yml', 'parameters:');
             }
 
             if (null !== $event) {

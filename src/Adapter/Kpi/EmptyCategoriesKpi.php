@@ -59,10 +59,10 @@ final class EmptyCategoriesKpi implements KpiInterface
     private $hrefUrl;
 
     /**
-     * @param TranslatorInterface    $translator
+     * @param TranslatorInterface $translator
      * @param ConfigurationInterface $configuration
-     * @param string                 $sourceUrl
-     * @param string                 $hrefUrl
+     * @param string $sourceUrl
+     * @param string $hrefUrl
      */
     public function __construct(
         TranslatorInterface $translator,

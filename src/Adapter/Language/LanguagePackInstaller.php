@@ -50,7 +50,7 @@ final class LanguagePackInstaller implements LanguagePackInstallerInterface
      * LanguagePackInstaller constructor.
      *
      * @param TranslatorInterface $translator
-     * @param Version             $version
+     * @param Version $version
      */
     public function __construct(TranslatorInterface $translator, Version $version)
     {

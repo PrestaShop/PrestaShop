@@ -81,7 +81,7 @@ class UpdateEUTaxruleGroupsCommand extends ContainerAwareCommand
         /* Tweak */
         $this->output = $output;
 
-        $localizationPacksRoot = $this->getContainer()->getParameter('kernel.root_dir').'/../localization';
+        $localizationPacksRoot = $this->getContainer()->getParameter('kernel.root_dir') . '/../localization';
 
         if (!$localizationPacksRoot) {
             return $output->writeln("<error>Could not find the folder containing the localization files (should be 'localization' at the root of the PrestaShop folder)</error>");
@@ -94,7 +94,7 @@ class UpdateEUTaxruleGroupsCommand extends ContainerAwareCommand
                 continue;
             }
 
-            $localizationPackFile = $localizationPacksRoot.DIRECTORY_SEPARATOR.$entry;
+            $localizationPackFile = $localizationPacksRoot . DIRECTORY_SEPARATOR . $entry;
 
             $localizationPack = @simplexml_load_file($localizationPackFile);
 

@@ -47,10 +47,10 @@ class CarrierDataProvider
     /**
      * Get all carriers in a given language.
      *
-     * @param int         $id_lang   Language id
-     * @param bool        $active    Returns only active carriers when true
-     * @param bool        $delete
-     * @param bool|int    $id_zone
+     * @param int $id_lang Language id
+     * @param bool $active Returns only active carriers when true
+     * @param bool $delete
+     * @param bool|int $id_zone
      * @param null|string $ids_group
      * @param $modules_filters , possible values:
      * PS_CARRIERS_ONLY

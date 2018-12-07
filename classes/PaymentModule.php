@@ -60,17 +60,17 @@ abstract class PaymentModuleCore extends Module
         // Insert carrier availability
         $return &= $this->addCheckboxCarrierRestrictionsForModule();
 
-        if (!Configuration::get('CONF_'.mb_strtoupper($this->name).'_FIXED')) {
-            Configuration::updateValue('CONF_'.mb_strtoupper($this->name).'_FIXED', '0.2');
+        if (!Configuration::get('CONF_' . mb_strtoupper($this->name) . '_FIXED')) {
+            Configuration::updateValue('CONF_' . mb_strtoupper($this->name) . '_FIXED', '0.2');
         }
-        if (!Configuration::get('CONF_'.mb_strtoupper($this->name).'_VAR')) {
-            Configuration::updateValue('CONF_'.mb_strtoupper($this->name).'_VAR', '2');
+        if (!Configuration::get('CONF_' . mb_strtoupper($this->name) . '_VAR')) {
+            Configuration::updateValue('CONF_' . mb_strtoupper($this->name) . '_VAR', '2');
         }
-        if (!Configuration::get('CONF_'.mb_strtoupper($this->name).'_FIXED_FOREIGN')) {
-            Configuration::updateValue('CONF_'.mb_strtoupper($this->name).'_FIXED_FOREIGN', '0.2');
+        if (!Configuration::get('CONF_' . mb_strtoupper($this->name) . '_FIXED_FOREIGN')) {
+            Configuration::updateValue('CONF_' . mb_strtoupper($this->name) . '_FIXED_FOREIGN', '0.2');
         }
-        if (!Configuration::get('CONF_'.mb_strtoupper($this->name).'_VAR_FOREIGN')) {
-            Configuration::updateValue('CONF_'.mb_strtoupper($this->name).'_VAR_FOREIGN', '2');
+        if (!Configuration::get('CONF_' . mb_strtoupper($this->name) . '_VAR_FOREIGN')) {
+            Configuration::updateValue('CONF_' . mb_strtoupper($this->name) . '_VAR_FOREIGN', '2');
         }
 
         return $return;
@@ -78,10 +78,10 @@ abstract class PaymentModuleCore extends Module
 
     public function uninstall()
     {
-        if (!Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'module_country` WHERE id_module = '.(int) $this->id)
-            || !Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'module_currency` WHERE id_module = '.(int) $this->id)
-            || !Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'module_group` WHERE id_module = '.(int) $this->id)
-            || !Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'module_carrier` WHERE id_module = '.(int) $this->id)) {
+        if (!Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'module_country` WHERE id_module = ' . (int) $this->id)
+            || !Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'module_currency` WHERE id_module = ' . (int) $this->id)
+            || !Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'module_group` WHERE id_module = ' . (int) $this->id)
+            || !Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'module_carrier` WHERE id_module = ' . (int) $this->id)) {
             return false;
         }
 
@@ -103,8 +103,8 @@ abstract class PaymentModuleCore extends Module
 
         foreach ($shops as $s) {
             if (!Db::getInstance()->execute('
-                    INSERT INTO `'._DB_PREFIX_.'module_currency` (`id_module`, `id_shop`, `id_currency`)
-                    SELECT '.(int) $this->id.', "'.(int) $s.'", `id_currency` FROM `'._DB_PREFIX_.'currency` WHERE deleted = 0')) {
+                    INSERT INTO `' . _DB_PREFIX_ . 'module_currency` (`id_module`, `id_shop`, `id_currency`)
+                    SELECT ' . (int) $this->id . ', "' . (int) $s . '", `id_currency` FROM `' . _DB_PREFIX_ . 'currency` WHERE deleted = 0')) {
                 return false;
             }
         }
@@ -126,8 +126,8 @@ abstract class PaymentModuleCore extends Module
         }
 
         foreach ($shops as $s) {
-            if (!Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'module_currency` (`id_module`, `id_shop`, `id_currency`)
-                VALUES ('.(int) $this->id.', "'.(int) $s.'", -2)')) {
+            if (!Db::getInstance()->execute('INSERT INTO `' . _DB_PREFIX_ . 'module_currency` (`id_module`, `id_shop`, `id_currency`)
+                VALUES (' . (int) $this->id . ', "' . (int) $s . '", -2)')) {
                 return false;
             }
         }
@@ -174,8 +174,8 @@ abstract class PaymentModuleCore extends Module
 
         foreach ($shops as $s) {
             foreach ($carrier_ids as $id_carrier) {
-                if (!Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'module_carrier` (`id_module`, `id_shop`, `id_reference`)
-				VALUES ('.(int) $this->id.', "'.(int) $s.'", '.(int) $id_carrier.')')) {
+                if (!Db::getInstance()->execute('INSERT INTO `' . _DB_PREFIX_ . 'module_carrier` (`id_module`, `id_shop`, `id_reference`)
+				VALUES (' . (int) $this->id . ', "' . (int) $s . '", ' . (int) $id_carrier . ')')) {
                     return false;
                 }
             }
@@ -188,16 +188,16 @@ abstract class PaymentModuleCore extends Module
      * Validate an order in database
      * Function called from a payment module.
      *
-     * @param int    $id_cart
-     * @param int    $id_order_state
-     * @param float  $amount_paid       Amount really paid by customer (in the default currency)
-     * @param string $payment_method    Payment method (eg. 'Credit card')
-     * @param null   $message           Message to attach to order
-     * @param array  $extra_vars
-     * @param null   $currency_special
-     * @param bool   $dont_touch_amount
-     * @param bool   $secure_key
-     * @param Shop   $shop
+     * @param int $id_cart
+     * @param int $id_order_state
+     * @param float $amount_paid Amount really paid by customer (in the default currency)
+     * @param string $payment_method Payment method (eg. 'Credit card')
+     * @param null $message Message to attach to order
+     * @param array $extra_vars
+     * @param null $currency_special
+     * @param bool $dont_touch_amount
+     * @param bool $secure_key
+     * @param Shop $shop
      *
      * @throws PrestaShopException
      *
@@ -297,7 +297,7 @@ abstract class PaymentModuleCore extends Module
                     if ($error = $rule->checkValidity($this->context, true, true)) {
                         $this->context->cart->removeCartRule((int) $rule->id);
                         if (isset($this->context->cookie, $this->context->cookie->id_customer) && $this->context->cookie->id_customer && !empty($rule->code)) {
-                            Tools::redirect('index.php?controller=order&submitAddDiscount=1&discount_name='.urlencode($rule->code));
+                            Tools::redirect('index.php?controller=order&submitAddDiscount=1&discount_name=' . urlencode($rule->code));
                         } else {
                             $rule_name = isset($rule->name[(int) $this->context->cart->id_lang]) ? $rule->name[(int) $this->context->cart->id_lang] : $rule->code;
                             $error = $this->trans('The cart rule named "%1s" (ID %2s) used in this cart is not valid and has been withdrawn from cart', array($rule_name, (int) $rule->id), 'Admin.Payment.Notification');
@@ -472,7 +472,7 @@ abstract class PaymentModuleCore extends Module
                 $order = $order_list[$key];
                 if (isset($order->id)) {
                     if (!$secure_key) {
-                        $message .= '<br />'.$this->trans('Warning: the secure key is empty, check your payment account before validation', array(), 'Admin.Payment.Notification');
+                        $message .= '<br />' . $this->trans('Warning: the secure key is empty, check your payment account before validation', array(), 'Admin.Payment.Notification');
                     }
                     // Optional message to attach to this order
                     if (isset($message) & !empty($message)) {
@@ -509,7 +509,7 @@ abstract class PaymentModuleCore extends Module
                         $product_var_tpl = array(
                             'id_product' => $product['id_product'],
                             'reference' => $product['reference'],
-                            'name' => $product['name'].(isset($product['attributes']) ? ' - '.$product['attributes'] : ''),
+                            'name' => $product['name'] . (isset($product['attributes']) ? ' - ' . $product['attributes'] : ''),
                             'price' => Tools::displayPrice($product_price * $product['quantity'], $this->context->currency, false),
                             'quantity' => $product['quantity'],
                             'customization' => array(),
@@ -518,7 +518,7 @@ abstract class PaymentModuleCore extends Module
                         if (isset($product['price']) && $product['price']) {
                             $product_var_tpl['unit_price'] = Tools::displayPrice($product_price, $this->context->currency, false);
                             $product_var_tpl['unit_price_full'] = Tools::displayPrice($product_price, $this->context->currency, false)
-                                .' '.$product['unity'];
+                                . ' ' . $product['unity'];
                         } else {
                             $product_var_tpl['unit_price'] = $product_var_tpl['unit_price_full'] = '';
                         }
@@ -530,12 +530,12 @@ abstract class PaymentModuleCore extends Module
                                 $customization_text = '';
                                 if (isset($customization['datas'][Product::CUSTOMIZE_TEXTFIELD])) {
                                     foreach ($customization['datas'][Product::CUSTOMIZE_TEXTFIELD] as $text) {
-                                        $customization_text .= '<strong>'.$text['name'].'</strong>: '.$text['value'].'<br />';
+                                        $customization_text .= '<strong>' . $text['name'] . '</strong>: ' . $text['value'] . '<br />';
                                     }
                                 }
 
                                 if (isset($customization['datas'][Product::CUSTOMIZE_FILE])) {
-                                    $customization_text .= $this->trans('%d image(s)', array(count($customization['datas'][Product::CUSTOMIZE_FILE])), 'Admin.Payment.Notification').'<br />';
+                                    $customization_text .= $this->trans('%d image(s)', array(count($customization['datas'][Product::CUSTOMIZE_FILE])), 'Admin.Payment.Notification') . '<br />';
                                 }
 
                                 $customization_quantity = (int) $customization['quantity'];
@@ -590,9 +590,9 @@ abstract class PaymentModuleCore extends Module
                             unset($voucher->id);
 
                             // Set a new voucher code
-                            $voucher->code = empty($voucher->code) ? mb_substr(md5($order->id.'-'.$order->id_customer.'-'.$cart_rule['obj']->id), 0, 16) : $voucher->code.'-2';
+                            $voucher->code = empty($voucher->code) ? mb_substr(md5($order->id . '-' . $order->id_customer . '-' . $cart_rule['obj']->id), 0, 16) : $voucher->code . '-2';
                             if (preg_match('/\-([0-9]{1,2})\-([0-9]{1,2})$/', $voucher->code, $matches) && $matches[1] == $matches[2]) {
-                                $voucher->code = preg_replace('/'.$matches[0].'$/', '-'.(intval($matches[1]) + 1), $voucher->code);
+                                $voucher->code = preg_replace('/' . $matches[0] . '$/', '-' . (intval($matches[1]) + 1), $voucher->code);
                             }
 
                             // Set the new voucher value
@@ -648,7 +648,7 @@ abstract class PaymentModuleCore extends Module
                                     ),
                                     $params,
                                     $this->context->customer->email,
-                                    $this->context->customer->firstname.' '.$this->context->customer->lastname,
+                                    $this->context->customer->firstname . ' ' . $this->context->customer->lastname,
                                     null,
                                     null,
                                     null,
@@ -682,7 +682,7 @@ abstract class PaymentModuleCore extends Module
 
                         $cart_rules_list[] = array(
                             'voucher_name' => $cart_rule['obj']->name,
-                            'voucher_reduction' => (0.00 != $values['tax_incl'] ? '-' : '').Tools::displayPrice($values['tax_incl'], $this->context->currency, false),
+                            'voucher_reduction' => (0.00 != $values['tax_incl'] ? '-' : '') . Tools::displayPrice($values['tax_incl'], $this->context->currency, false),
                         );
                     }
 
@@ -838,7 +838,7 @@ abstract class PaymentModuleCore extends Module
                             Hook::exec('actionPDFInvoiceRender', array('order_invoice_list' => $order_invoice_list));
                             $pdf = new PDF($order_invoice_list, PDF::TEMPLATE_INVOICE, $this->context->smarty);
                             $file_attachement['content'] = $pdf->render(false);
-                            $file_attachement['name'] = Configuration::get('PS_INVOICE_PREFIX', (int) $order->id_lang, null, $order->id_shop).sprintf('%06d', $order->invoice_number).'.pdf';
+                            $file_attachement['name'] = Configuration::get('PS_INVOICE_PREFIX', (int) $order->id_lang, null, $order->id_shop) . sprintf('%06d', $order->invoice_number) . '.pdf';
                             $file_attachement['mime'] = 'application/pdf';
                         } else {
                             $file_attachement = null;
@@ -862,7 +862,7 @@ abstract class PaymentModuleCore extends Module
                                 ),
                                 $data,
                                 $this->context->customer->email,
-                                $this->context->customer->firstname.' '.$this->context->customer->lastname,
+                                $this->context->customer->firstname . ' ' . $this->context->customer->lastname,
                                 null,
                                 null,
                                 $file_attachement,
@@ -1008,7 +1008,7 @@ abstract class PaymentModuleCore extends Module
      *
      * @since 1.4.5
      *
-     * @param int   $id_currency
+     * @param int $id_currency
      * @param array $id_module_list
      *
      * @return bool
@@ -1025,13 +1025,13 @@ abstract class PaymentModuleCore extends Module
         }
 
         foreach ($id_module_list as $id_module) {
-            $values .= '('.(int) $id_module.','.(int) $id_currency.'),';
+            $values .= '(' . (int) $id_module . ',' . (int) $id_currency . '),';
         }
 
         if (!empty($values)) {
             return Db::getInstance()->execute('
-            INSERT INTO `'._DB_PREFIX_.'module_currency` (`id_module`, `id_currency`)
-            VALUES '.rtrim($values, ','));
+            INSERT INTO `' . _DB_PREFIX_ . 'module_currency` (`id_module`, `id_currency`)
+            VALUES ' . rtrim($values, ','));
         }
 
         return true;
@@ -1048,18 +1048,18 @@ abstract class PaymentModuleCore extends Module
     public static function getInstalledPaymentModules()
     {
         $hook_payment = 'Payment';
-        if (Db::getInstance()->getValue('SELECT `id_hook` FROM `'._DB_PREFIX_.'hook` WHERE `name` = \'paymentOptions\'')) {
+        if (Db::getInstance()->getValue('SELECT `id_hook` FROM `' . _DB_PREFIX_ . 'hook` WHERE `name` = \'paymentOptions\'')) {
             $hook_payment = 'paymentOptions';
         }
 
         return Db::getInstance()->executeS('
         SELECT DISTINCT m.`id_module`, h.`id_hook`, m.`name`, hm.`position`
-        FROM `'._DB_PREFIX_.'module` m
-        LEFT JOIN `'._DB_PREFIX_.'hook_module` hm ON hm.`id_module` = m.`id_module`'
-        .Shop::addSqlRestriction(false, 'hm').'
-        LEFT JOIN `'._DB_PREFIX_.'hook` h ON hm.`id_hook` = h.`id_hook`
-        INNER JOIN `'._DB_PREFIX_.'module_shop` ms ON (m.`id_module` = ms.`id_module` AND ms.id_shop='.(int) Context::getContext()->shop->id.')
-        WHERE h.`name` = \''.pSQL($hook_payment).'\'');
+        FROM `' . _DB_PREFIX_ . 'module` m
+        LEFT JOIN `' . _DB_PREFIX_ . 'hook_module` hm ON hm.`id_module` = m.`id_module`'
+        . Shop::addSqlRestriction(false, 'hm') . '
+        LEFT JOIN `' . _DB_PREFIX_ . 'hook` h ON hm.`id_hook` = h.`id_hook`
+        INNER JOIN `' . _DB_PREFIX_ . 'module_shop` ms ON (m.`id_module` = ms.`id_module` AND ms.id_shop=' . (int) Context::getContext()->shop->id . ')
+        WHERE h.`name` = \'' . pSQL($hook_payment) . '\'');
     }
 
     public static function preCall($module_name)
@@ -1084,8 +1084,8 @@ abstract class PaymentModuleCore extends Module
      * mails/current_iso_lang.
      *
      * @param string $template_name template name with extension
-     * @param int    $mail_type     Mail::TYPE_HTML or Mail::TYPE_TEXT
-     * @param array  $var           sent to smarty as 'list'
+     * @param int $mail_type Mail::TYPE_HTML or Mail::TYPE_TEXT
+     * @param array $var sent to smarty as 'list'
      *
      * @return string
      */
@@ -1097,10 +1097,10 @@ abstract class PaymentModuleCore extends Module
         }
 
         $pathToFindEmail = array(
-            _PS_THEME_DIR_.'mails'.DIRECTORY_SEPARATOR.$this->context->language->iso_code.DIRECTORY_SEPARATOR.$template_name,
-            _PS_THEME_DIR_.'mails'.DIRECTORY_SEPARATOR.'en'.DIRECTORY_SEPARATOR.$template_name,
-            _PS_MAIL_DIR_.$this->context->language->iso_code.DIRECTORY_SEPARATOR.$template_name,
-            _PS_MAIL_DIR_.'en'.DIRECTORY_SEPARATOR.$template_name,
+            _PS_THEME_DIR_ . 'mails' . DIRECTORY_SEPARATOR . $this->context->language->iso_code . DIRECTORY_SEPARATOR . $template_name,
+            _PS_THEME_DIR_ . 'mails' . DIRECTORY_SEPARATOR . 'en' . DIRECTORY_SEPARATOR . $template_name,
+            _PS_MAIL_DIR_ . $this->context->language->iso_code . DIRECTORY_SEPARATOR . $template_name,
+            _PS_MAIL_DIR_ . 'en' . DIRECTORY_SEPARATOR . $template_name,
         );
 
         foreach ($pathToFindEmail as $path) {

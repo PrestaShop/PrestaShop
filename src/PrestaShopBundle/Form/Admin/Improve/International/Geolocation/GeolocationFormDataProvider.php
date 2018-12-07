@@ -62,11 +62,11 @@ final class GeolocationFormDataProvider implements FormDataProviderInterface
     private $validator;
 
     /**
-     * @param DataConfigurationInterface  $geolocationByIpAddressConfiguration
-     * @param DataConfigurationInterface  $geolocationIpAddressWhitelistConfiguration
-     * @param DataConfigurationInterface  $geolocationOptionsConfiguration
+     * @param DataConfigurationInterface $geolocationByIpAddressConfiguration
+     * @param DataConfigurationInterface $geolocationIpAddressWhitelistConfiguration
+     * @param DataConfigurationInterface $geolocationOptionsConfiguration
      * @param GeoLiteCityCheckerInterface $geoLiteCityChecker
-     * @param ValidatorInterface          $validator
+     * @param ValidatorInterface $validator
      */
     public function __construct(
         DataConfigurationInterface $geolocationByIpAddressConfiguration,

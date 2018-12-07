@@ -89,7 +89,7 @@ class AdminSearchEnginesControllerCore extends AdminController
     {
         if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_search_engine'] = array(
-                'href' => self::$currentIndex.'&addsearch_engine&token='.$this->token,
+                'href' => self::$currentIndex . '&addsearch_engine&token=' . $this->token,
                 'desc' => $this->trans('Add new search engine', array(), 'Admin.Shopparameters.Feature'),
                 'icon' => 'process-icon-new',
             );

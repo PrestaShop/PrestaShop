@@ -69,12 +69,12 @@ class PaymentModulePreferencesType extends TranslatorAwareType
 
     /**
      * @param TranslatorInterface $translator
-     * @param array               $locales
-     * @param array               $paymentModules
-     * @param array               $countryChoices
-     * @param array               $groupChoices
-     * @param array               $carrierChoices
-     * @param array               $currencyChoices
+     * @param array $locales
+     * @param array $paymentModules
+     * @param array $countryChoices
+     * @param array $groupChoices
+     * @param array $carrierChoices
+     * @param array $currencyChoices
      * @param CountryDataProvider $countryDataProvider
      */
     public function __construct(

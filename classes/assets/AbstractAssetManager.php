@@ -53,7 +53,7 @@ abstract class AbstractAssetManagerCore
     protected function getFullPath($relativePath)
     {
         foreach ($this->getDirectories() as $baseDir) {
-            $fullPath = $baseDir.ltrim($relativePath, '/'); // not DIRECTORY_SEPARATOR because, it's path included manualy
+            $fullPath = $baseDir . ltrim($relativePath, '/'); // not DIRECTORY_SEPARATOR because, it's path included manualy
             if (file_exists($this->getPathFromUri($fullPath))) {
                 return $fullPath;
             }

@@ -52,9 +52,9 @@ final class NonInstalledLocalizationChoiceProvider implements FormChoiceProvider
     private $languagePackList;
 
     /**
-     * @param array                      $languagePackList
+     * @param array $languagePackList
      * @param LanguageValidatorInterface $languageValidator
-     * @param LanguageDataProvider       $languageProvider
+     * @param LanguageDataProvider $languageProvider
      */
     public function __construct(
         array $languagePackList,

@@ -298,30 +298,30 @@ class TreeCore
 
         if ($this->getContext()->controller instanceof ModuleAdminController && isset($controller_name) && file_exists($this->_normalizeDirectory(
                 $this->getContext()->controller->getTemplatePath()
-        ).$controller_name.DIRECTORY_SEPARATOR.$this->getTemplateDirectory().$template)) {
-            return $this->_normalizeDirectory($this->getContext()->controller->getTemplatePath()).
-                $controller_name.DIRECTORY_SEPARATOR.$this->getTemplateDirectory().$template;
+        ) . $controller_name . DIRECTORY_SEPARATOR . $this->getTemplateDirectory() . $template)) {
+            return $this->_normalizeDirectory($this->getContext()->controller->getTemplatePath()) .
+                $controller_name . DIRECTORY_SEPARATOR . $this->getTemplateDirectory() . $template;
         } elseif ($this->getContext()->controller instanceof ModuleAdminController && file_exists($this->_normalizeDirectory(
                 $this->getContext()->controller->getTemplatePath()
-        ).$this->getTemplateDirectory().$template)) {
+        ) . $this->getTemplateDirectory() . $template)) {
             return $this->_normalizeDirectory($this->getContext()->controller->getTemplatePath())
-                .$this->getTemplateDirectory().$template;
+                . $this->getTemplateDirectory() . $template;
         } elseif ($this->getContext()->controller instanceof AdminController && isset($controller_name)
-            && file_exists($this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(0)).'controllers'
-                .DIRECTORY_SEPARATOR.$controller_name.DIRECTORY_SEPARATOR.$this->getTemplateDirectory().$template)) {
-            return $this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(0)).'controllers'
-                .DIRECTORY_SEPARATOR.$controller_name.DIRECTORY_SEPARATOR.$this->getTemplateDirectory().$template;
+            && file_exists($this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(0)) . 'controllers'
+                . DIRECTORY_SEPARATOR . $controller_name . DIRECTORY_SEPARATOR . $this->getTemplateDirectory() . $template)) {
+            return $this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(0)) . 'controllers'
+                . DIRECTORY_SEPARATOR . $controller_name . DIRECTORY_SEPARATOR . $this->getTemplateDirectory() . $template;
         } elseif (file_exists($this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(1))
-                .$this->getTemplateDirectory().$template)) {
+                . $this->getTemplateDirectory() . $template)) {
             return $this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(1))
-                    .$this->getTemplateDirectory().$template;
+                    . $this->getTemplateDirectory() . $template;
         } elseif (file_exists($this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(0))
-                .$this->getTemplateDirectory().$template)) {
+                . $this->getTemplateDirectory() . $template)) {
             return $this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(0))
-                .$this->getTemplateDirectory().$template;
+                . $this->getTemplateDirectory() . $template;
         }
 
-        return $this->getTemplateDirectory().$template;
+        return $this->getTemplateDirectory() . $template;
     }
 
     public function setNoJS($value)
@@ -399,18 +399,18 @@ class TreeCore
     {
         //Adding tree.js
         $admin_webpath = str_ireplace(_PS_CORE_DIR_, '', _PS_ADMIN_DIR_);
-        $admin_webpath = preg_replace('/^'.preg_quote(DIRECTORY_SEPARATOR, '/').'/', '', $admin_webpath);
+        $admin_webpath = preg_replace('/^' . preg_quote(DIRECTORY_SEPARATOR, '/') . '/', '', $admin_webpath);
         $bo_theme = ((Validate::isLoadedObject($this->getContext()->employee)
             && $this->getContext()->employee->bo_theme) ? $this->getContext()->employee->bo_theme : 'default');
 
-        if (!file_exists(_PS_BO_ALL_THEMES_DIR_.$bo_theme.DIRECTORY_SEPARATOR.'template')) {
+        if (!file_exists(_PS_BO_ALL_THEMES_DIR_ . $bo_theme . DIRECTORY_SEPARATOR . 'template')) {
             $bo_theme = 'default';
         }
 
-        $js_path = __PS_BASE_URI__.$admin_webpath.'/themes/'.$bo_theme.'/js/tree.js';
+        $js_path = __PS_BASE_URI__ . $admin_webpath . '/themes/' . $bo_theme . '/js/tree.js';
         if ($this->getContext()->controller->ajax) {
             if (!$this->_no_js) {
-                $html = '<script type="text/javascript" src="'.$js_path.'"></script>';
+                $html = '<script type="text/javascript" src="' . $js_path . '"></script>';
             }
         } else {
             $this->getContext()->controller->addJs($js_path);
@@ -446,7 +446,7 @@ class TreeCore
             'id_tree' => $this->getIdTree(),
         ));
 
-        return (isset($html) ? $html : '').$template->fetch();
+        return (isset($html) ? $html : '') . $template->fetch();
     }
 
     public function renderNodes($data = null)

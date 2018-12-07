@@ -47,7 +47,7 @@ class ViewedProductInformation
     private $productUrl;
 
     /**
-     * @param int    $productId
+     * @param int $productId
      * @param string $productName
      * @param string $productUrl
      */

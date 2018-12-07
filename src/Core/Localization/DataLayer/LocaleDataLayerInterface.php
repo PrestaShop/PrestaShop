@@ -52,10 +52,10 @@ interface LocaleDataLayerInterface
     /**
      * Write a locale's CLDR data object into the data source.
      *
-     * @param string         $localeCode
-     *                                   The locale code (simplified IETF tag syntax)
-     *                                   Combination of ISO 639-1 (2-letters language code) and ISO 3166-2 (2-letters region code)
-     *                                   eg: fr-FR, en-US
+     * @param string $localeCode
+     *                           The locale code (simplified IETF tag syntax)
+     *                           Combination of ISO 639-1 (2-letters language code) and ISO 3166-2 (2-letters region code)
+     *                           eg: fr-FR, en-US
      * @param CldrLocaleData $localeData
      *                                   The locale's CLDR data to write
      *

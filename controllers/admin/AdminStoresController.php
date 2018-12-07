@@ -98,7 +98,7 @@ class AdminStoresControllerCore extends AdminController
     {
         if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_store'] = array(
-                'href' => self::$currentIndex.'&addstore&token='.$this->token,
+                'href' => self::$currentIndex . '&addstore&token=' . $this->token,
                 'desc' => $this->trans('Add new store', array(), 'Admin.Shopparameters.Feature'),
                 'icon' => 'process-icon-new',
             );
@@ -118,14 +118,14 @@ class AdminStoresControllerCore extends AdminController
 
         $this->_select = 'cl.`name` country, st.`name` state, sl.*';
         $this->_join = '
-            LEFT JOIN `'._DB_PREFIX_.'country_lang` cl
+            LEFT JOIN `' . _DB_PREFIX_ . 'country_lang` cl
                 ON (cl.`id_country` = a.`id_country`
-                AND cl.`id_lang` = '.(int) $this->context->language->id.')
-            LEFT JOIN `'._DB_PREFIX_.'state` st
+                AND cl.`id_lang` = ' . (int) $this->context->language->id . ')
+            LEFT JOIN `' . _DB_PREFIX_ . 'state` st
                 ON (st.`id_state` = a.`id_state`)
-            LEFT JOIN `'._DB_PREFIX_.'store_lang` sl
+            LEFT JOIN `' . _DB_PREFIX_ . 'store_lang` sl
                 ON (sl.`id_store` = a.`id_store`
-                AND sl.`id_lang` = '.(int) $this->context->language->id.') ';
+                AND sl.`id_lang` = ' . (int) $this->context->language->id . ') ';
 
         return parent::renderList();
     }
@@ -136,10 +136,10 @@ class AdminStoresControllerCore extends AdminController
             return;
         }
 
-        $image = _PS_STORE_IMG_DIR_.$obj->id.'.jpg';
+        $image = _PS_STORE_IMG_DIR_ . $obj->id . '.jpg';
         $image_url = ImageManager::thumbnail(
             $image,
-            $this->table.'_'.(int) $obj->id.'.'.$this->imageType,
+            $this->table . '_' . (int) $obj->id . '.' . $this->imageType,
             350,
             $this->imageType,
             true,
@@ -329,7 +329,7 @@ class AdminStoresControllerCore extends AdminController
 
     public function postProcess()
     {
-        if (isset($_POST['submitAdd'.$this->table])) {
+        if (isset($_POST['submitAdd' . $this->table])) {
             $langs = Language::getLanguages(false);
             /* Cleaning fields */
             foreach ($_POST as $kp => $vp) {
@@ -371,7 +371,7 @@ class AdminStoresControllerCore extends AdminController
             $postcode = Tools::getValue('postcode');
             /* Check zip code format */
             if ($country->zip_code_format && !$country->checkZipCode($postcode)) {
-                $this->errors[] = $this->trans('Your Zip/postal code is incorrect.', array(), 'Admin.Notifications.Error').'<br />'.$this->trans('It must be entered as follows:', array(), 'Admin.Notifications.Error').' '.str_replace('C', $country->iso_code, str_replace('N', '0', str_replace('L', 'A', $country->zip_code_format)));
+                $this->errors[] = $this->trans('Your Zip/postal code is incorrect.', array(), 'Admin.Notifications.Error') . '<br />' . $this->trans('It must be entered as follows:', array(), 'Admin.Notifications.Error') . ' ' . str_replace('C', $country->iso_code, str_replace('N', '0', str_replace('L', 'A', $country->zip_code_format)));
             } elseif (empty($postcode) && $country->need_zip_code) {
                 $this->errors[] = $this->trans('A Zip/postal code is required.', array(), 'Admin.Notifications.Error');
             } elseif ($postcode && !Validate::isPostCode($postcode)) {
@@ -406,20 +406,20 @@ class AdminStoresControllerCore extends AdminController
         $ret = parent::postImage($id);
         $generate_hight_dpi_images = (bool) Configuration::get('PS_HIGHT_DPI');
 
-        if (($id_store = (int) Tools::getValue('id_store')) && isset($_FILES) && count($_FILES) && file_exists(_PS_STORE_IMG_DIR_.$id_store.'.jpg')) {
+        if (($id_store = (int) Tools::getValue('id_store')) && isset($_FILES) && count($_FILES) && file_exists(_PS_STORE_IMG_DIR_ . $id_store . '.jpg')) {
             $images_types = ImageType::getImagesTypes('stores');
             foreach ($images_types as $image_type) {
                 ImageManager::resize(
-                    _PS_STORE_IMG_DIR_.$id_store.'.jpg',
-                    _PS_STORE_IMG_DIR_.$id_store.'-'.stripslashes($image_type['name']).'.jpg',
+                    _PS_STORE_IMG_DIR_ . $id_store . '.jpg',
+                    _PS_STORE_IMG_DIR_ . $id_store . '-' . stripslashes($image_type['name']) . '.jpg',
                     (int) $image_type['width'],
                     (int) $image_type['height']
                 );
 
                 if ($generate_hight_dpi_images) {
                     ImageManager::resize(
-                        _PS_STORE_IMG_DIR_.$id_store.'.jpg',
-                        _PS_STORE_IMG_DIR_.$id_store.'-'.stripslashes($image_type['name']).'2x.jpg',
+                        _PS_STORE_IMG_DIR_ . $id_store . '.jpg',
+                        _PS_STORE_IMG_DIR_ . $id_store . '-' . stripslashes($image_type['name']) . '2x.jpg',
                         (int) $image_type['width'] * 2,
                         (int) $image_type['height'] * 2
                     );
@@ -556,9 +556,9 @@ class AdminStoresControllerCore extends AdminController
     public function beforeUpdateOptions()
     {
         if (isset($_POST['PS_SHOP_STATE_ID']) && '0' != $_POST['PS_SHOP_STATE_ID']) {
-            $sql = 'SELECT `active` FROM `'._DB_PREFIX_.'state`
-					WHERE `id_country` = '.(int) Tools::getValue('PS_SHOP_COUNTRY_ID').'
-						AND `id_state` = '.(int) Tools::getValue('PS_SHOP_STATE_ID');
+            $sql = 'SELECT `active` FROM `' . _DB_PREFIX_ . 'state`
+					WHERE `id_country` = ' . (int) Tools::getValue('PS_SHOP_COUNTRY_ID') . '
+						AND `id_state` = ' . (int) Tools::getValue('PS_SHOP_STATE_ID');
             $isStateOk = Db::getInstance()->getValue($sql);
             if (1 != $isStateOk) {
                 $this->errors[] = $this->trans('The specified state is not located in this country.', array(), 'Admin.Shopparameters.Notification');

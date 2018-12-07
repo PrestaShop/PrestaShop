@@ -93,7 +93,7 @@ class ThemeProvider extends AbstractProvider
         }
 
         return array(
-                '^'.$this->getDomain(),
+                '^' . $this->getDomain(),
             );
     }
 
@@ -107,7 +107,7 @@ class ThemeProvider extends AbstractProvider
         }
 
         return array(
-                '#^'.$this->getDomain().'#',
+                '#^' . $this->getDomain() . '#',
             );
     }
 
@@ -144,7 +144,7 @@ class ThemeProvider extends AbstractProvider
             $baseDir = $this->resourceDirectory;
         }
 
-        $resourceDirectory = $baseDir.'/'.$this->themeName.'/translations/'.$this->getLocale();
+        $resourceDirectory = $baseDir . '/' . $this->themeName . '/translations/' . $this->getLocale();
         $this->filesystem->mkdir($resourceDirectory);
 
         return $resourceDirectory;
@@ -199,7 +199,7 @@ class ThemeProvider extends AbstractProvider
     {
         $theme = $this->themeRepository->getInstanceByName($this->themeName);
 
-        $path = $this->resourceDirectory.DIRECTORY_SEPARATOR.$this->themeName.DIRECTORY_SEPARATOR.'translations';
+        $path = $this->resourceDirectory . DIRECTORY_SEPARATOR . $this->themeName . DIRECTORY_SEPARATOR . 'translations';
 
         $this->filesystem->remove($path);
         $this->filesystem->mkdir($path);
@@ -210,7 +210,7 @@ class ThemeProvider extends AbstractProvider
             ->extract($theme, $this->locale)
         ;
 
-        $translationFilesPath = $path.DIRECTORY_SEPARATOR.$this->locale;
+        $translationFilesPath = $path . DIRECTORY_SEPARATOR . $this->locale;
         Flattenizer::flatten($translationFilesPath, $translationFilesPath, $this->locale, false);
 
         $finder = Finder::create();
@@ -224,7 +224,7 @@ class ThemeProvider extends AbstractProvider
      */
     public function getThemeCatalogue()
     {
-        $path = $this->resourceDirectory.DIRECTORY_SEPARATOR.$this->themeName.DIRECTORY_SEPARATOR.'translations';
+        $path = $this->resourceDirectory . DIRECTORY_SEPARATOR . $this->themeName . DIRECTORY_SEPARATOR . 'translations';
 
         return $this->getCatalogueFromPaths($path, $this->locale, current($this->getFilters()));
     }
@@ -258,6 +258,6 @@ class ThemeProvider extends AbstractProvider
      */
     public function getDefaultResourceDirectory()
     {
-        return $this->defaultTranslationDir.DIRECTORY_SEPARATOR.$this->locale;
+        return $this->defaultTranslationDir . DIRECTORY_SEPARATOR . $this->locale;
     }
 }

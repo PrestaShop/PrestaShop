@@ -49,7 +49,7 @@ abstract class CommonAbstractType extends AbstractType
     /**
      * Format legacy data list to mapping SF2 form field choice.
      *
-     * @param array  $list
+     * @param array $list
      * @param string $mapping_value
      * @param string $mapping_name
      *
@@ -71,7 +71,7 @@ abstract class CommonAbstractType extends AbstractType
     /**
      * Format legacy data list to mapping SF2 form field choice (possibility to have 2 name equals).
      *
-     * @param array  $list
+     * @param array $list
      * @param string $mapping_value
      * @param string $mapping_name
      *
@@ -81,7 +81,7 @@ abstract class CommonAbstractType extends AbstractType
     {
         $new_list = array();
         foreach ($list as $item) {
-            $new_list[$item[$mapping_value].' - '.$item[$mapping_name]] = $item[$mapping_value];
+            $new_list[$item[$mapping_value] . ' - ' . $item[$mapping_name]] = $item[$mapping_value];
         }
 
         return $new_list;

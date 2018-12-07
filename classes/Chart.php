@@ -110,7 +110,7 @@ class ChartCore
     public function fetch()
     {
         if ($this->timeMode) {
-            $options = 'xaxis:{mode:"time",timeformat:\''.addslashes($this->format).'\',min:'.$this->from.'000,max:'.$this->to.'000}';
+            $options = 'xaxis:{mode:"time",timeformat:\'' . addslashes($this->format) . '\',min:' . $this->from . '000,max:' . $this->to . '000}';
             if ('d' == $this->granularity) {
                 foreach ($this->curves as $curve) {
                     /* @var Curve $curve */
@@ -130,10 +130,10 @@ class ChartCore
 
         if (count($jsCurves)) {
             return '
-			<div id="flot'.self::$poolId.'" style="width:'.$this->width.'px;height:'.$this->height.'px"></div>
+			<div id="flot' . self::$poolId . '" style="width:' . $this->width . 'px;height:' . $this->height . 'px"></div>
 			<script type="text/javascript">
 				$(function () {
-					$.plot($(\'#flot'.self::$poolId.'\'), ['.implode(',', $jsCurves).'], {'.$options.'});
+					$.plot($(\'#flot' . self::$poolId . '\'), [' . implode(',', $jsCurves) . '], {' . $options . '});
 				});
 			</script>';
         }

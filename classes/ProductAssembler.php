@@ -63,7 +63,7 @@ class ProductAssemblerCore
             $nbDaysNewProduct = 20;
         }
 
-        $now = date('Y-m-d').' 00:00:00';
+        $now = date('Y-m-d') . ' 00:00:00';
 
         $sql = "SELECT
                     p.*,

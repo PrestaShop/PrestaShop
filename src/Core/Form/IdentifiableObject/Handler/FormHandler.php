@@ -59,9 +59,9 @@ final class FormHandler implements FormHandlerInterface
 
     /**
      * @param FormDataHandlerInterface $dataHandler
-     * @param HookDispatcherInterface  $hookDispatcher
-     * @param TranslatorInterface      $translator
-     * @param bool                     $isDemoModeEnabled
+     * @param HookDispatcherInterface $hookDispatcher
+     * @param TranslatorInterface $translator
+     * @param bool $isDemoModeEnabled
      */
     public function __construct(
         FormDataHandlerInterface $dataHandler,
@@ -93,7 +93,7 @@ final class FormHandler implements FormHandlerInterface
 
     /**
      * @param FormInterface $form
-     * @param null|int      $id
+     * @param null|int $id
      *
      * @return FormHandlerResultInterface
      */
@@ -126,7 +126,7 @@ final class FormHandler implements FormHandlerInterface
 
     /**
      * @param FormInterface $form
-     * @param int           $id
+     * @param int $id
      *
      * @return FormHandlerResultInterface
      */
@@ -134,14 +134,14 @@ final class FormHandler implements FormHandlerInterface
     {
         $data = $form->getData();
 
-        $this->hookDispatcher->dispatchWithParameters('actionBeforeUpdate'.$form->getName().'FormHandler', array(
+        $this->hookDispatcher->dispatchWithParameters('actionBeforeUpdate' . $form->getName() . 'FormHandler', array(
             'form_data' => &$data,
             'id' => $id,
         ));
 
         $this->dataHandler->update($id, $data);
 
-        $this->hookDispatcher->dispatchWithParameters('actionAfterUpdate'.$form->getName().'FormHandler', array(
+        $this->hookDispatcher->dispatchWithParameters('actionAfterUpdate' . $form->getName() . 'FormHandler', array(
             'id' => $id,
         ));
 
@@ -157,13 +157,13 @@ final class FormHandler implements FormHandlerInterface
     {
         $data = $form->getData();
 
-        $this->hookDispatcher->dispatchWithParameters('actionBeforeCreate'.$form->getName().'FormHandler', array(
+        $this->hookDispatcher->dispatchWithParameters('actionBeforeCreate' . $form->getName() . 'FormHandler', array(
             'form_data' => &$data,
         ));
 
         $id = $this->dataHandler->create($data);
 
-        $this->hookDispatcher->dispatchWithParameters('actionAfterCreate'.$form->getName().'FormHandler', array(
+        $this->hookDispatcher->dispatchWithParameters('actionAfterCreate' . $form->getName() . 'FormHandler', array(
             'id' => $id,
         ));
 

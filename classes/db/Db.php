@@ -277,8 +277,8 @@ abstract class DbCore
         }
 
         // Add here your slave(s) server(s) in this file
-        if (file_exists(_PS_ROOT_DIR_.'/config/db_slave_server.inc.php')) {
-            self::$_servers = array_merge(self::$_servers, require(_PS_ROOT_DIR_.'/config/db_slave_server.inc.php'));
+        if (file_exists(_PS_ROOT_DIR_ . '/config/db_slave_server.inc.php')) {
+            self::$_servers = array_merge(self::$_servers, require(_PS_ROOT_DIR_ . '/config/db_slave_server.inc.php'));
         }
 
         self::$_slave_servers_loaded = true;
@@ -308,11 +308,11 @@ abstract class DbCore
     /**
      * Instantiates a database connection.
      *
-     * @param string $server   Server address
-     * @param string $user     User login
+     * @param string $server Server address
+     * @param string $user User login
      * @param string $password User password
      * @param string $database Database name
-     * @param bool   $connect  If false, don't connect in constructor (since 1.5.0.1)
+     * @param bool $connect If false, don't connect in constructor (since 1.5.0.1)
      */
     public function __construct($server, $user, $password, $database, $connect = true)
     {
@@ -391,12 +391,12 @@ abstract class DbCore
     /**
      * Executes an INSERT query.
      *
-     * @param string $table       Table name without prefix
-     * @param array  $data        Data to insert as associative array. If $data is a list of arrays, multiple insert will be done
-     * @param bool   $null_values If we want to use NULL values instead of empty quotes
-     * @param bool   $use_cache
-     * @param int    $type        Must be Db::INSERT or Db::INSERT_IGNORE or Db::REPLACE
-     * @param bool   $add_prefix  Add or not _DB_PREFIX_ before table name
+     * @param string $table Table name without prefix
+     * @param array $data Data to insert as associative array. If $data is a list of arrays, multiple insert will be done
+     * @param bool $null_values If we want to use NULL values instead of empty quotes
+     * @param bool $use_cache
+     * @param int $type Must be Db::INSERT or Db::INSERT_IGNORE or Db::REPLACE
+     * @param bool $add_prefix Add or not _DB_PREFIX_ before table name
      *
      * @throws PrestaShopDatabaseException
      *
@@ -409,7 +409,7 @@ abstract class DbCore
         }
 
         if ($add_prefix) {
-            $table = _DB_PREFIX_.$table;
+            $table = _DB_PREFIX_ . $table;
         }
 
         if (Db::INSERT == $type) {
@@ -447,7 +447,7 @@ abstract class DbCore
                         throw new PrestaShopDatabaseException('On duplicate key cannot be used on insert with more than 1 VALUE group');
                     }
                 } else {
-                    $keys[] = '`'.bqSQL($key).'`';
+                    $keys[] = '`' . bqSQL($key) . '`';
                 }
 
                 if (!is_array($value)) {
@@ -460,17 +460,17 @@ abstract class DbCore
                 }
 
                 if (Db::ON_DUPLICATE_KEY == $type) {
-                    $duplicate_key_stringified .= '`'.bqSQL($key).'` = '.$string_value.',';
+                    $duplicate_key_stringified .= '`' . bqSQL($key) . '` = ' . $string_value . ',';
                 }
             }
             $first_loop = false;
-            $values_stringified[] = '('.implode(', ', $values).')';
+            $values_stringified[] = '(' . implode(', ', $values) . ')';
         }
         $keys_stringified = implode(', ', $keys);
 
-        $sql = $insert_keyword.' INTO `'.$table.'` ('.$keys_stringified.') VALUES '.implode(', ', $values_stringified);
+        $sql = $insert_keyword . ' INTO `' . $table . '` (' . $keys_stringified . ') VALUES ' . implode(', ', $values_stringified);
         if (Db::ON_DUPLICATE_KEY == $type) {
-            $sql .= ' ON DUPLICATE KEY UPDATE '.mb_substr($duplicate_key_stringified, 0, -1);
+            $sql .= ' ON DUPLICATE KEY UPDATE ' . mb_substr($duplicate_key_stringified, 0, -1);
         }
 
         return (bool) $this->q($sql, $use_cache);
@@ -479,13 +479,13 @@ abstract class DbCore
     /**
      * Executes an UPDATE query.
      *
-     * @param string $table       Table name without prefix
-     * @param array  $data        Data to insert as associative array. If $data is a list of arrays, multiple insert will be done
-     * @param string $where       WHERE condition
-     * @param int    $limit
-     * @param bool   $null_values If we want to use NULL values instead of empty quotes
-     * @param bool   $use_cache
-     * @param bool   $add_prefix  Add or not _DB_PREFIX_ before table name
+     * @param string $table Table name without prefix
+     * @param array $data Data to insert as associative array. If $data is a list of arrays, multiple insert will be done
+     * @param string $where WHERE condition
+     * @param int $limit
+     * @param bool $null_values If we want to use NULL values instead of empty quotes
+     * @param bool $use_cache
+     * @param bool $add_prefix Add or not _DB_PREFIX_ before table name
      *
      * @return bool
      */
@@ -496,27 +496,27 @@ abstract class DbCore
         }
 
         if ($add_prefix) {
-            $table = _DB_PREFIX_.$table;
+            $table = _DB_PREFIX_ . $table;
         }
 
-        $sql = 'UPDATE `'.bqSQL($table).'` SET ';
+        $sql = 'UPDATE `' . bqSQL($table) . '` SET ';
         foreach ($data as $key => $value) {
             if (!is_array($value)) {
                 $value = array('type' => 'text', 'value' => $value);
             }
             if ('sql' == $value['type']) {
-                $sql .= '`'.bqSQL($key)."` = {$value['value']},";
+                $sql .= '`' . bqSQL($key) . "` = {$value['value']},";
             } else {
-                $sql .= ($null_values && ('' === $value['value'] || is_null($value['value']))) ? '`'.bqSQL($key).'` = NULL,' : '`'.bqSQL($key)."` = '{$value['value']}',";
+                $sql .= ($null_values && ('' === $value['value'] || is_null($value['value']))) ? '`' . bqSQL($key) . '` = NULL,' : '`' . bqSQL($key) . "` = '{$value['value']}',";
             }
         }
 
         $sql = rtrim($sql, ',');
         if ($where) {
-            $sql .= ' WHERE '.$where;
+            $sql .= ' WHERE ' . $where;
         }
         if ($limit) {
-            $sql .= ' LIMIT '.(int) $limit;
+            $sql .= ' LIMIT ' . (int) $limit;
         }
 
         return (bool) $this->q($sql, $use_cache);
@@ -525,22 +525,22 @@ abstract class DbCore
     /**
      * Executes a DELETE query.
      *
-     * @param string $table      Name of the table to delete
-     * @param string $where      WHERE clause on query
-     * @param int    $limit      Number max of rows to delete
-     * @param bool   $use_cache  Use cache or not
-     * @param bool   $add_prefix Add or not _DB_PREFIX_ before table name
+     * @param string $table Name of the table to delete
+     * @param string $where WHERE clause on query
+     * @param int $limit Number max of rows to delete
+     * @param bool $use_cache Use cache or not
+     * @param bool $add_prefix Add or not _DB_PREFIX_ before table name
      *
      * @return bool
      */
     public function delete($table, $where = '', $limit = 0, $use_cache = true, $add_prefix = true)
     {
         if ($add_prefix) {
-            $table = _DB_PREFIX_.$table;
+            $table = _DB_PREFIX_ . $table;
         }
 
         $this->result = false;
-        $sql = 'DELETE FROM `'.bqSQL($table).'`'.($where ? ' WHERE '.$where : '').($limit ? ' LIMIT '.(int) $limit : '');
+        $sql = 'DELETE FROM `' . bqSQL($table) . '`' . ($where ? ' WHERE ' . $where : '') . ($limit ? ' LIMIT ' . (int) $limit : '');
         $res = $this->query($sql);
         if ($use_cache && $this->is_cache_enabled) {
             Cache::getInstance()->deleteQuery($sql);
@@ -553,7 +553,7 @@ abstract class DbCore
      * Executes a query.
      *
      * @param DbQuery|string $sql
-     * @param bool           $use_cache
+     * @param bool $use_cache
      *
      * @return bool
      */
@@ -574,9 +574,9 @@ abstract class DbCore
     /**
      * Executes return the result of $sql as array.
      *
-     * @param DbQuery|string $sql       Query to execute
-     * @param bool           $array     Return an array instead of a result object (deprecated since 1.5.0.1, use query method instead)
-     * @param bool           $use_cache
+     * @param DbQuery|string $sql Query to execute
+     * @param bool $array Return an array instead of a result object (deprecated since 1.5.0.1, use query method instead)
+     * @param bool $use_cache
      *
      * @throws PrestaShopDatabaseException
      *
@@ -635,8 +635,8 @@ abstract class DbCore
      * Returns an associative array containing the first row of the query
      * This function automatically adds "LIMIT 1" to the query.
      *
-     * @param DbQuery|string $sql       the select query (without "LIMIT 1")
-     * @param bool           $use_cache Find it in cache first
+     * @param DbQuery|string $sql the select query (without "LIMIT 1")
+     * @param bool $use_cache Find it in cache first
      *
      * @return null|array|bool|object
      */
@@ -646,7 +646,7 @@ abstract class DbCore
             $sql = $sql->build();
         }
 
-        $sql = rtrim($sql, " \t\n\r\0\x0B;").' LIMIT 1';
+        $sql = rtrim($sql, " \t\n\r\0\x0B;") . ' LIMIT 1';
         $this->result = false;
         $this->last_query = $sql;
 
@@ -684,7 +684,7 @@ abstract class DbCore
      * Returns a value from the first row, first column of a SELECT query.
      *
      * @param DbQuery|string $sql
-     * @param bool           $use_cache
+     * @param bool $use_cache
      *
      * @return null|false|string
      */
@@ -711,12 +711,12 @@ abstract class DbCore
         if (!$this->last_cached && $this->result) {
             $nrows = $this->_numRows($this->result);
             if ($this->is_cache_enabled) {
-                Cache::getInstance()->set($this->last_query_hash.'_nrows', $nrows);
+                Cache::getInstance()->set($this->last_query_hash . '_nrows', $nrows);
             }
 
             return $nrows;
         } elseif ($this->is_cache_enabled && $this->last_cached) {
-            return Cache::getInstance()->get($this->last_query_hash.'_nrows');
+            return Cache::getInstance()->get($this->last_query_hash . '_nrows');
         }
     }
 
@@ -724,7 +724,7 @@ abstract class DbCore
      * Executes a query.
      *
      * @param DbQuery|string $sql
-     * @param bool           $use_cache
+     * @param bool $use_cache
      *
      * @throws PrestaShopDatabaseException
      *
@@ -763,10 +763,10 @@ abstract class DbCore
         $errno = $this->getNumberError();
         if ($webservice_call && $errno) {
             $dbg = debug_backtrace();
-            WebserviceRequest::getInstance()->setError(500, '[SQL Error] '.$this->getMsgError().'. From '.(isset($dbg[3]['class']) ? $dbg[3]['class'] : '').'->'.$dbg[3]['function'].'() Query was : '.$sql, 97);
+            WebserviceRequest::getInstance()->setError(500, '[SQL Error] ' . $this->getMsgError() . '. From ' . (isset($dbg[3]['class']) ? $dbg[3]['class'] : '') . '->' . $dbg[3]['function'] . '() Query was : ' . $sql, 97);
         } elseif (_PS_DEBUG_SQL_ && $errno && !defined('PS_INSTALLATION_IN_PROGRESS')) {
             if ($sql) {
-                throw new PrestaShopDatabaseException($this->getMsgError().'<br /><br /><pre>'.$sql.'</pre>');
+                throw new PrestaShopDatabaseException($this->getMsgError() . '<br /><br /><pre>' . $sql . '</pre>');
             }
 
             throw new PrestaShopDatabaseException($this->getMsgError());
@@ -776,8 +776,8 @@ abstract class DbCore
     /**
      * Sanitize data which will be injected into SQL query.
      *
-     * @param string $string  SQL data which will be injected into SQL query
-     * @param bool   $html_ok Does data contain HTML code ? (optional)
+     * @param string $string SQL data which will be injected into SQL query
+     * @param bool $html_ok Does data contain HTML code ? (optional)
      *
      * @return string Sanitized data
      */
@@ -805,13 +805,13 @@ abstract class DbCore
     /**
      * Try a connection to the database.
      *
-     * @param string      $server      Server address
-     * @param string      $user        Login for database connection
-     * @param string      $pwd         Password for database connection
-     * @param string      $db          Database name
-     * @param bool        $new_db_link
+     * @param string $server Server address
+     * @param string $user Login for database connection
+     * @param string $pwd Password for database connection
+     * @param string $db Database name
+     * @param bool $new_db_link
      * @param bool|string $engine
-     * @param int         $timeout
+     * @param int $timeout
      *
      * @return int Error code or 0 if connection was successful
      */
@@ -824,8 +824,8 @@ abstract class DbCore
      * Try a connection to the database and set names to UTF-8.
      *
      * @param string $server Server address
-     * @param string $user   Login for database connection
-     * @param string $pwd    Password for database connection
+     * @param string $user Login for database connection
+     * @param string $pwd Password for database connection
      *
      * @return bool
      */
@@ -838,9 +838,9 @@ abstract class DbCore
      * Try a connection to the database and check if at least one table with same prefix exists.
      *
      * @param string $server Server address
-     * @param string $user   Login for database connection
-     * @param string $pwd    Password for database connection
-     * @param string $db     Database name
+     * @param string $user Login for database connection
+     * @param string $pwd Password for database connection
+     * @param string $db Database name
      * @param string $prefix Tables prefix
      *
      * @return bool
@@ -853,11 +853,11 @@ abstract class DbCore
     /**
      * Tries to connect to the database and create a table (checking creation privileges).
      *
-     * @param string      $server
-     * @param string      $user
-     * @param string      $pwd
-     * @param string      $db
-     * @param string      $prefix
+     * @param string $server
+     * @param string $user
+     * @param string $pwd
+     * @param string $db
+     * @param string $prefix
      * @param null|string $engine Table engine
      *
      * @return bool|string True, false or error

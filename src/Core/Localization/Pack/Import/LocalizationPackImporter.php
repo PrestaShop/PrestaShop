@@ -62,11 +62,11 @@ final class LocalizationPackImporter implements LocalizationPackImporterInterfac
     private $configuration;
 
     /**
-     * @param LocalizationPackLoaderInterface  $remoteLocalizationPackLoader
-     * @param LocalizationPackLoaderInterface  $localLocalizationPackLoader
+     * @param LocalizationPackLoaderInterface $remoteLocalizationPackLoader
+     * @param LocalizationPackLoaderInterface $localLocalizationPackLoader
      * @param LocalizationPackFactoryInterface $localizationPackFactory
-     * @param TranslatorInterface              $translator
-     * @param ConfigurationInterface           $configuration
+     * @param TranslatorInterface $translator
+     * @param ConfigurationInterface $configuration
      */
     public function __construct(
         LocalizationPackLoaderInterface $remoteLocalizationPackLoader,
@@ -170,7 +170,7 @@ final class LocalizationPackImporter implements LocalizationPackImporterInterfac
      *
      * @param string $message
      * @param string $domain
-     * @param array  $params
+     * @param array $params
      *
      * @return string
      */

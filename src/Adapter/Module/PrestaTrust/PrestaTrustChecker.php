@@ -69,8 +69,8 @@ class PrestaTrustChecker
     protected $translator;
 
     /**
-     * @param Cache               $cache      Cache provider to keep data between two requests
-     * @param ApiClient           $apiClient  Addons Marketplace API client (Guzzle)
+     * @param Cache $cache Cache provider to keep data between two requests
+     * @param ApiClient $apiClient Addons Marketplace API client (Guzzle)
      * @param TranslatorInterface $translator Translator for explanation messages
      */
     public function __construct(Cache $cache, ApiClient $apiClient, TranslatorInterface $translator)
@@ -112,7 +112,7 @@ class PrestaTrustChecker
      * or remaining one from another zip.
      * Any module copy pasted in the module folder won't go through this function.
      *
-     * @param string $name    Module technical name
+     * @param string $name Module technical name
      * @param string $zipFile Module Zip location
      */
     public function checkModuleZip(ModuleZip $zipFile)
@@ -149,7 +149,7 @@ class PrestaTrustChecker
             }
 
             if (in_array(trim($file_info['extension']), $this->checked_extensions, true)) {
-                $preparehash .= $zip->getFromName($file_info['dirname'].'/'.$file_info['basename']);
+                $preparehash .= $zip->getFromName($file_info['dirname'] . '/' . $file_info['basename']);
             }
         }
         $zip->close();
@@ -252,7 +252,7 @@ class PrestaTrustChecker
      * Send to the Marketplace API our details about the module, and get results
      * about its integrity and property.
      *
-     * @param string $hash     Calculted hash from the modules files
+     * @param string $hash Calculted hash from the modules files
      * @param string $contract Smart contract address from module
      *
      * @return array of check list results

@@ -55,7 +55,7 @@ final class ExportDirectory
     {
         return ($this->configuration->get('_PS_HOST_MODE_') ?
             $this->configuration->get('_PS_ROOT_DIR_') :
-            $this->configuration->get('_PS_ADMIN_DIR_')).DIRECTORY_SEPARATOR.'export'.DIRECTORY_SEPARATOR;
+            $this->configuration->get('_PS_ADMIN_DIR_')) . DIRECTORY_SEPARATOR . 'export' . DIRECTORY_SEPARATOR;
     }
 
     /**

@@ -38,7 +38,7 @@ abstract class StockManagerModuleCore extends Module
 
     public function hookStockManager()
     {
-        $class_file = _PS_MODULE_DIR_.'/'.$this->name.'/'.$this->stock_manager_class.'.php';
+        $class_file = _PS_MODULE_DIR_ . '/' . $this->name . '/' . $this->stock_manager_class . '.php';
 
         if (!isset($this->stock_manager_class) || !file_exists($class_file)) {
             die($this->trans('Incorrect Stock Manager class [%s]', array($this->stock_manager_class), 'Admin.Catalog.Notification'));

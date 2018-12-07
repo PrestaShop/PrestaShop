@@ -67,7 +67,7 @@ class Validate
      * Check if HTML content is clean.
      *
      * @param string $html
-     * @param bool   $allowIframe
+     * @param bool $allowIframe
      *
      * @return bool
      */

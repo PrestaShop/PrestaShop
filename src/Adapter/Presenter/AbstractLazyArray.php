@@ -190,7 +190,7 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
      *
      * @param mixed $offset
      * @param mixed $value
-     * @param bool  $force  if set, allow override of an existing method
+     * @param bool $force if set, allow override of an existing method
      *
      * @throws RuntimeException
      */
@@ -204,7 +204,7 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
      * think they must use the object syntax.
      *
      * @param mixed $offset
-     * @param bool  $force  if set, allow unset of an existing method
+     * @param bool $force if set, allow unset of an existing method
      *
      * @throws RuntimeException
      */
@@ -334,7 +334,7 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
     /**
      * @param mixed $offset
      * @param mixed $value
-     * @param bool  $force  if set, allow override of an existing method
+     * @param bool $force if set, allow override of an existing method
      *
      * @throws RuntimeException
      */
@@ -344,7 +344,7 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
             $result = $this->arrayAccessList->offsetGet($offset);
             if ('variable' !== $result['type']) {
                 throw new RuntimeException(
-                    'Trying to set the index '.print_r($offset, true).' of the LazyArray '.get_class($this).
+                    'Trying to set the index ' . print_r($offset, true) . ' of the LazyArray ' . get_class($this) .
                     ' already defined by a method is not allowed'
                 );
             }
@@ -357,7 +357,7 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
 
     /**
      * @param mixed $offset
-     * @param bool  $force  if set, allow unset of an existing method
+     * @param bool $force if set, allow unset of an existing method
      *
      * @throws RuntimeException
      */
@@ -368,7 +368,7 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
             $this->arrayAccessList->offsetUnset($offset);
         } else {
             throw new RuntimeException(
-                'Trying to unset the index '.print_r($offset, true).' of the LazyArray '.get_class($this).
+                'Trying to unset the index ' . print_r($offset, true) . ' of the LazyArray ' . get_class($this) .
                 ' already defined by a method is not allowed'
             );
         }

@@ -38,7 +38,7 @@ class SupplierDataProvider
      * Get all suppliers.
      *
      * @param bool $get_nb_products
-     * @param int  $id_lang
+     * @param int $id_lang
      * @param bool $active
      * @param bool $p
      * @param bool $n
@@ -54,7 +54,7 @@ class SupplierDataProvider
     /**
      * Get product suppliers.
      *
-     * @param int  $id_product
+     * @param int $id_product
      * @param bool $group_by_supplier
      *
      * @return array Suppliers

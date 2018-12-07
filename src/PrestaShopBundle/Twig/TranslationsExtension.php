@@ -80,7 +80,7 @@ class TranslationsExtension extends \Twig_Extension
      * Returns concatenated edit translation forms.
      *
      * @param array $translationsTree
-     * @param null  $themeName
+     * @param null $themeName
      *
      * @return string
      */
@@ -131,7 +131,7 @@ class TranslationsExtension extends \Twig_Extension
      * Returns a tree of translations key values.
      *
      * @param array $translationsTree
-     * @param null  $themeName
+     * @param null $themeName
      *
      * @return string
      */
@@ -188,7 +188,7 @@ class TranslationsExtension extends \Twig_Extension
 
                     // Close div with page class
                     $output .= '</div>';
-                    $output .= '<div class="page hide" data-status="inactive" data-page-index="'.$pageIndex.'">';
+                    $output .= '<div class="page hide" data-status="inactive" data-page-index="' . $pageIndex . '">';
                 }
 
                 ++$formIndex;
@@ -277,7 +277,7 @@ class TranslationsExtension extends \Twig_Extension
 
     protected function getTranslationHash($domain, $translationKey)
     {
-        return md5($domain.$translationKey);
+        return md5($domain . $translationKey);
     }
 
     /**
@@ -407,30 +407,30 @@ class TranslationsExtension extends \Twig_Extension
         if (array_key_exists('__fixed_length_id', $subtree)) {
             $fixedLengthId = $subtree['__fixed_length_id'];
             unset($subtree['__fixed_length_id']);
-            $id = ' id="'.$fixedLengthId.'" ';
-            $parentAttribute = ' data-parent-of="'.$fixedLengthId.'"';
+            $id = ' id="' . $fixedLengthId . '" ';
+            $parentAttribute = ' data-parent-of="' . $fixedLengthId . '"';
         }
 
         $domainAttribute = '';
         if (array_key_exists('__domain', $subtree)) {
-            $domainAttribute = ' data-domain="'.$subtree['__domain'].'" ';
+            $domainAttribute = ' data-domain="' . $subtree['__domain'] . '" ';
             unset($subtree['__domain']);
         }
 
         $totalTranslationsAttribute = '';
         if (array_key_exists('__messages', $subtree)) {
             $totalTranslations = count(array_values($subtree['__messages'])[0]);
-            $totalTranslationsAttribute = ' data-total-translations="'.$this->translator->trans(
+            $totalTranslationsAttribute = ' data-total-translations="' . $this->translator->trans(
                 '%nb_translations% expressions',
                     array('%nb_translations%' => $totalTranslations),
                     'Admin.International.Feature'
-                ).'"';
+                ) . '"';
         }
 
         $missingTranslationsAttribute = '';
         if (array_key_exists('__metadata', $subtree)) {
             $missingTranslations = $subtree['__metadata']['missing_translations'];
-            $missingTranslationsAttribute = ' data-missing-translations="'.$missingTranslations.'"';
+            $missingTranslationsAttribute = ' data-missing-translations="' . $missingTranslations . '"';
             unset($subtree['__metadata']);
         }
 
@@ -463,16 +463,16 @@ class TranslationsExtension extends \Twig_Extension
             $domain = $subtree['__metadata']['domain'];
 
             $missingTranslationsMessage =
-                '<div class="missing-translations-short-message pull-right hide">'.
+                '<div class="missing-translations-short-message pull-right hide">' .
                 $this->translator->trans(
                     '%nb_translations% missing',
                     array('%nb_translations%' => $missingTranslationsCount),
                     'Admin.International.Feature'
-                ).
+                ) .
                 '</div>'
             ;
             $missingTranslationsLongMessage =
-                '<div class="missing-translations-long-message hide">'.
+                '<div class="missing-translations-long-message hide">' .
                 $this->translator->trans(
                     '%nb_translations% translations are missing in %domain%',
                     array(
@@ -480,7 +480,7 @@ class TranslationsExtension extends \Twig_Extension
                         '%domain%' => $domain,
                     ),
                     'Admin.International.Feature'
-                ).
+                ) .
                 '</div>'
             ;
             $missingTranslationsClass = ' missing-translations';
@@ -547,30 +547,30 @@ class TranslationsExtension extends \Twig_Extension
     protected function tagSubject($subject, $isLastChild, $id = null)
     {
         if ($isLastChild) {
-            $openingTag = '<h2 class="domain-part">'.
+            $openingTag = '<h2 class="domain-part">' .
                 '<span class="delegate-toggle-messages{{ missing translations class }}">';
             $closingTag = '</span>{{ missing translations warning }}</h2>';
         } else {
             $openingTag = '<h2 class="domain-first-part"><i class="material-icons">&#xE315;</i><span>';
-            $closingTag = '</span>'.
-                '<div class="domain-actions">'.
-                '<span class="missing-translations pull-right hide">'.
-                '{{ missing translations warning }}'.
-                '</span>'.
-                '</div>'.
+            $closingTag = '</span>' .
+                '<div class="domain-actions">' .
+                '<span class="missing-translations pull-right hide">' .
+                '{{ missing translations warning }}' .
+                '</span>' .
+                '</div>' .
                 '</h2>';
         }
 
         if ($id) {
-            $openingTag = '<span id="_'.$id.'">';
+            $openingTag = '<span id="_' . $id . '">';
             $closingTag = '</span>';
 
             if (!$isLastChild) {
-                $openingTag = '<h2>'.$openingTag;
-                $closingTag = $closingTag.'</h2>';
+                $openingTag = '<h2>' . $openingTag;
+                $closingTag = $closingTag . '</h2>';
             }
         }
 
-        return $openingTag.$subject.$closingTag;
+        return $openingTag . $subject . $closingTag;
     }
 }

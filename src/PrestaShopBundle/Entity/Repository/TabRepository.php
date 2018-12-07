@@ -80,7 +80,7 @@ class TabRepository extends EntityRepository
      * Changes tab status.
      *
      * @param string $className tab's class name
-     * @param bool   $status    wanted status for the tab
+     * @param bool $status wanted status for the tab
      *
      * @throws \InvalidArgumentException
      */

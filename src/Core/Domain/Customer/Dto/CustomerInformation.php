@@ -99,19 +99,19 @@ class CustomerInformation
     private $generalInformation;
 
     /**
-     * @param CustomerId                  $customerId
-     * @param GeneralInformation          $generalInformation
-     * @param PersonalInformation         $personalInformation
-     * @param OrdersInformation           $ordersInformation
-     * @param CartInformation[]           $cartsInformation
-     * @param ProductsInformation         $productsInformation
-     * @param MessageInformation[]        $messagesInformation
-     * @param DiscountInformation[]       $discountsInformation
-     * @param SentEmailInformation[]      $sentEmailsInformation
+     * @param CustomerId $customerId
+     * @param GeneralInformation $generalInformation
+     * @param PersonalInformation $personalInformation
+     * @param OrdersInformation $ordersInformation
+     * @param CartInformation[] $cartsInformation
+     * @param ProductsInformation $productsInformation
+     * @param MessageInformation[] $messagesInformation
+     * @param DiscountInformation[] $discountsInformation
+     * @param SentEmailInformation[] $sentEmailsInformation
      * @param LastConnectionInformation[] $lastConnectionsInformation
-     * @param GroupInformation[]          $groupsInformation
-     * @param ReferrerInformation[]       $referrersInformation
-     * @param AddressInformation[]        $addressesInformation
+     * @param GroupInformation[] $groupsInformation
+     * @param ReferrerInformation[] $referrersInformation
+     * @param AddressInformation[] $addressesInformation
      */
     public function __construct(
         CustomerId $customerId,

@@ -59,7 +59,7 @@ abstract class AbstractGridDefinitionFactory implements GridDefinitionFactoryInt
             $this->getBulkActions()
         );
 
-        $this->hookDispatcher->dispatchWithParameters('action'.Container::camelize($definition->getId()).'GridDefinitionModifier', array(
+        $this->hookDispatcher->dispatchWithParameters('action' . Container::camelize($definition->getId()) . 'GridDefinitionModifier', array(
             'definition' => $definition,
         ));
 

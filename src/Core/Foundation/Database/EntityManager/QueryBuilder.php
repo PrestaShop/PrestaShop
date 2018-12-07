@@ -42,7 +42,7 @@ class QueryBuilder
         $escaped = $this->db->escape($value);
 
         if (is_string($value)) {
-            return "'".$escaped."'";
+            return "'" . $escaped . "'";
         }
 
         return $escaped;
@@ -60,13 +60,13 @@ class QueryBuilder
 
         foreach ($conditions as $key => $value) {
             if (is_scalar($value)) {
-                $parts[] = $key.' = '.$this->quote($value);
+                $parts[] = $key . ' = ' . $this->quote($value);
             } else {
                 $list = array();
                 foreach ($value as $item) {
                     $list[] = $this->quote($item);
                 }
-                $parts[] = $key.' IN ('.implode(', ', $list).')';
+                $parts[] = $key . ' IN (' . implode(', ', $list) . ')';
             }
         }
 

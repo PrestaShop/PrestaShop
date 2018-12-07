@@ -110,9 +110,9 @@ final class ColumnCollection extends AbstractCollection implements ColumnCollect
     /**
      * Insert new column into collection at given position.
      *
-     * @param string          $id        Existing column id
+     * @param string $id Existing column id
      * @param ColumnInterface $newColumn Column to insert
-     * @param string          $position  Position: "before" or "after"
+     * @param string $position Position: "before" or "after"
      *
      * @throws ColumnNotFoundException When column with gieven $id does not exist
      */

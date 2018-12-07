@@ -46,7 +46,7 @@ final class GroupByIdChoiceProvider implements FormChoiceProviderInterface
 
     /**
      * @param GroupDataProvider $groupDataProvider
-     * @param int               $langId
+     * @param int $langId
      */
     public function __construct(
         GroupDataProvider $groupDataProvider,

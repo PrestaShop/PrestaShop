@@ -140,7 +140,7 @@ class ApiClient
     /**
      * Prepare and call API for PrestaTrust integrity and property module details.
      *
-     * @param string $hash       Hash of module files
+     * @param string $hash Hash of module files
      * @param string $sc_address Smart contract (Module licence)
      *
      * @return object List of checks made and their results

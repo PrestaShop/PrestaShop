@@ -52,7 +52,7 @@ class ManufacturerRepository
     private $shopId;
 
     /**
-     * @param Connection     $connection
+     * @param Connection $connection
      * @param ContextAdapter $contextAdapter
      * @param $tablePrefix
      *

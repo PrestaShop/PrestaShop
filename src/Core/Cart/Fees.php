@@ -65,10 +65,10 @@ class Fees
     protected $isProcessed = false;
 
     /**
-     * @param Cart              $cart
+     * @param Cart $cart
      * @param CartRowCollection $cartRowCollection
-     * @param int               $computePrecision
-     * @param int               $id_carrier
+     * @param int $computePrecision
+     * @param int $id_carrier
      */
     public function processCalculation(
         Cart $cart,

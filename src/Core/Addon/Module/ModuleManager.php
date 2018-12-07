@@ -95,12 +95,12 @@ class ModuleManager implements AddonManagerInterface
     private $actionParams;
 
     /**
-     * @param AdminModuleDataProvider  $adminModuleProvider
-     * @param ModuleDataProvider       $modulesProvider
-     * @param ModuleDataUpdater        $modulesUpdater
-     * @param ModuleRepository         $moduleRepository
-     * @param ModuleZipManager         $moduleZipManager
-     * @param TranslatorInterface      $translator
+     * @param AdminModuleDataProvider $adminModuleProvider
+     * @param ModuleDataProvider $modulesProvider
+     * @param ModuleDataUpdater $modulesUpdater
+     * @param ModuleRepository $moduleRepository
+     * @param ModuleZipManager $moduleZipManager
+     * @param TranslatorInterface $translator
      * @param EventDispatcherInterface $eventDispatcher
      */
     public function __construct(
@@ -341,9 +341,9 @@ class ModuleManager implements AddonManagerInterface
      * Download new files from source, backup old files, replace files with new ones
      * and execute all necessary migration scripts form current version to the new one.
      *
-     * @param Addon  $name    the theme you want to upgrade
+     * @param Addon $name the theme you want to upgrade
      * @param string $version the version you want to up upgrade to
-     * @param string $source  if the upgrade is not coming from addons, you need to specify the path to the zipball
+     * @param string $source if the upgrade is not coming from addons, you need to specify the path to the zipball
      *
      * @return bool true for success
      */
@@ -713,7 +713,7 @@ class ModuleManager implements AddonManagerInterface
     /**
      * This function is a refacto of the event dispatching.
      *
-     * @param string                                          $event
+     * @param string $event
      * @param \PrestaShop\PrestaShop\Core\Addon\Module\Module $module
      */
     private function dispatch($event, $module)

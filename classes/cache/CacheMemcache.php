@@ -153,8 +153,8 @@ class CacheMemcacheCore extends Cache
      * Store a data in cache.
      *
      * @param string $key
-     * @param mixed  $value
-     * @param int    $ttl
+     * @param mixed $value
+     * @param int $ttl
      *
      * @return bool
      */
@@ -221,7 +221,7 @@ class CacheMemcacheCore extends Cache
                                     foreach ($dump as $entries) {
                                         if ($entries) {
                                             foreach ($entries as $key => $data) {
-                                                if (preg_match('#^'.$pattern.'$#', $key)) {
+                                                if (preg_match('#^' . $pattern . '$#', $key)) {
                                                     $this->_delete($key);
                                                 }
                                             }
@@ -256,12 +256,12 @@ class CacheMemcacheCore extends Cache
      * Add a memcache server.
      *
      * @param string $ip
-     * @param int    $port
-     * @param int    $weight
+     * @param int $port
+     * @param int $weight
      */
     public static function addServer($ip, $port, $weight)
     {
-        return Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'memcached_servers (ip, port, weight) VALUES(\''.pSQL($ip).'\', '.(int) $port.', '.(int) $weight.')', false);
+        return Db::getInstance()->execute('INSERT INTO ' . _DB_PREFIX_ . 'memcached_servers (ip, port, weight) VALUES(\'' . pSQL($ip) . '\', ' . (int) $port . ', ' . (int) $weight . ')', false);
     }
 
     /**
@@ -271,7 +271,7 @@ class CacheMemcacheCore extends Cache
      */
     public static function getMemcachedServers()
     {
-        return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT * FROM '._DB_PREFIX_.'memcached_servers', true, false);
+        return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT * FROM ' . _DB_PREFIX_ . 'memcached_servers', true, false);
     }
 
     /**
@@ -281,6 +281,6 @@ class CacheMemcacheCore extends Cache
      */
     public static function deleteServer($id_server)
     {
-        return Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'memcached_servers WHERE id_memcached_server='.(int) $id_server);
+        return Db::getInstance()->execute('DELETE FROM ' . _DB_PREFIX_ . 'memcached_servers WHERE id_memcached_server=' . (int) $id_server);
     }
 }

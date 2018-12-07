@@ -71,7 +71,7 @@ class PDFGeneratorCore extends TCPDF
     );
 
     /**
-     * @param bool   $use_cache
+     * @param bool $use_cache
      * @param string $orientation
      */
     public function __construct($use_cache = false, $orientation = 'P')
@@ -171,7 +171,7 @@ class PDFGeneratorCore extends TCPDF
      * Render HTML template.
      *
      * @param string $filename
-     * @param bool   $display  true:display to user, false:save, 'I','D','S' as fpdf display
+     * @param bool $display true:display to user, false:save, 'I','D','S' as fpdf display
      *
      * @throws PrestaShopException
      *

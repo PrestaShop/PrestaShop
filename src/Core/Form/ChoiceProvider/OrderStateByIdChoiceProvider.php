@@ -45,7 +45,7 @@ final class OrderStateByIdChoiceProvider implements FormChoiceProviderInterface
     private $orderStateDataProvider;
 
     /**
-     * @param int                             $languageId             language ID
+     * @param int $languageId language ID
      * @param OrderStateDataProviderInterface $orderStateDataProvider
      */
     public function __construct($languageId, OrderStateDataProviderInterface $orderStateDataProvider)

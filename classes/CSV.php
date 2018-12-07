@@ -40,8 +40,8 @@ class CSVCore
      * Loads objects, filename and optionnaly a delimiter.
      *
      * @param array|Iterator $collection Collection of objects / arrays (of non-objects)
-     * @param string         $filename   used later to save the file
-     * @param string         $delimiter  delimiter used
+     * @param string $filename used later to save the file
+     * @param string $delimiter delimiter used
      */
     public function __construct($collection, $filename, $delimiter = ';')
     {
@@ -108,6 +108,6 @@ class CSVCore
         header('Content-type: text/csv');
         header('Content-Type: application/force-download; charset=UTF-8');
         header('Cache-Control: no-store, no-cache');
-        header('Content-disposition: attachment; filename="'.$this->filename.'.csv"');
+        header('Content-disposition: attachment; filename="' . $this->filename . '.csv"');
     }
 }

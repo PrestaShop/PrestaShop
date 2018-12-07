@@ -51,9 +51,9 @@ class SqlRequestFormHandler
     private $requestSqlFormDataProvider;
 
     /**
-     * @param FormFactoryInterface        $formFactory
+     * @param FormFactoryInterface $formFactory
      * @param SqlRequestFormDataValidator $requestSqlFormDataValidator
-     * @param SqlRequestFormDataProvider  $requestSqlFormDataProvider
+     * @param SqlRequestFormDataProvider $requestSqlFormDataProvider
      */
     public function __construct(
         FormFactoryInterface $formFactory,

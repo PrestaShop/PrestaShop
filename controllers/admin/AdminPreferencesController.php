@@ -219,10 +219,10 @@ class AdminPreferencesControllerCore extends AdminController
                 }
 
                 $fields['PS_SSL_ENABLED']['type'] = 'disabled';
-                $fields['PS_SSL_ENABLED']['disabled'] = '<a class="btn btn-link" href="https://'.
-                    Tools::getShopDomainSsl().
-                    Tools::safeOutput($requestUri).'">'.
-                    $this->trans('Please click here to check if your shop supports HTTPS.', array(), 'Admin.Shopparameters.Feature').'</a>';
+                $fields['PS_SSL_ENABLED']['disabled'] = '<a class="btn btn-link" href="https://' .
+                    Tools::getShopDomainSsl() .
+                    Tools::safeOutput($requestUri) . '">' .
+                    $this->trans('Please click here to check if your shop supports HTTPS.', array(), 'Admin.Shopparameters.Feature') . '</a>';
             }
 
             $this->fields_options = array(

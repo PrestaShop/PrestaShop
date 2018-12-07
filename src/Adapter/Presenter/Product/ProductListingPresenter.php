@@ -33,8 +33,8 @@ class ProductListingPresenter extends ProductPresenter
 {
     /**
      * @param ProductPresentationSettings $settings
-     * @param array                       $product
-     * @param Language                    $language
+     * @param array $product
+     * @param Language $language
      *
      * @throws \ReflectionException
      *

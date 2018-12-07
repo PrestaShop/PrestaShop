@@ -55,7 +55,7 @@ final class EntityField implements EntityFieldInterface
      * @param string $name
      * @param string $label
      * @param string $description
-     * @param bool   $required
+     * @param bool $required
      */
     public function __construct($name, $label, $description = '', $required = false)
     {

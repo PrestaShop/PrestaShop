@@ -212,7 +212,7 @@ class ProductPrice extends CommonAbstractType
 
         for ($i = 0, $iMax = count($specificPricePriorityChoices); $i < $iMax; ++$i) {
             $builder->add(
-                'specificPricePriority_'.$i,
+                'specificPricePriority_' . $i,
                 FormType\ChoiceType::class,
                 array(
                     'choices' => $specificPricePriorityChoices,

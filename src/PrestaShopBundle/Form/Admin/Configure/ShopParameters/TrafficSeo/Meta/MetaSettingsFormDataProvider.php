@@ -75,9 +75,9 @@ final class MetaSettingsFormDataProvider implements FormDataProviderInterface
      * @param DataConfigurationInterface $setUpUrlDataConfiguration
      * @param DataConfigurationInterface $shopUrlsDataConfiguration
      * @param DataConfigurationInterface $urlSchemaDataConfiguration
-     * @param TranslatorInterface        $translator
-     * @param RouteValidator             $routeValidator
-     * @param Validate                   $validate
+     * @param TranslatorInterface $translator
+     * @param RouteValidator $routeValidator
+     * @param Validate $validate
      */
     public function __construct(
         DataConfigurationInterface $setUpUrlDataConfiguration,

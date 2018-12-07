@@ -216,7 +216,7 @@ class CacheMemcachedCore extends Cache
             $pattern = str_replace('\\*', '.*', preg_quote($key));
             $keys = $this->memcached->getAllKeys();
             foreach ($keys as $key => $data) {
-                if (preg_match('#^'.$pattern.'$#', $key)) {
+                if (preg_match('#^' . $pattern . '$#', $key)) {
                     $this->_delete($key);
                 }
             }
@@ -243,14 +243,14 @@ class CacheMemcachedCore extends Cache
      * Add a memcached server.
      *
      * @param string $ip
-     * @param int    $port
-     * @param int    $weight
+     * @param int $port
+     * @param int $weight
      *
      * @return bool
      */
     public static function addServer($ip, $port, $weight)
     {
-        return Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'memcached_servers (ip, port, weight) VALUES(\''.pSQL($ip).'\', '.(int) $port.', '.(int) $weight.')', false);
+        return Db::getInstance()->execute('INSERT INTO ' . _DB_PREFIX_ . 'memcached_servers (ip, port, weight) VALUES(\'' . pSQL($ip) . '\', ' . (int) $port . ', ' . (int) $weight . ')', false);
     }
 
     /**
@@ -260,7 +260,7 @@ class CacheMemcachedCore extends Cache
      */
     public static function getMemcachedServers()
     {
-        return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT * FROM '._DB_PREFIX_.'memcached_servers', true, false);
+        return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT * FROM ' . _DB_PREFIX_ . 'memcached_servers', true, false);
     }
 
     /**
@@ -272,6 +272,6 @@ class CacheMemcachedCore extends Cache
      */
     public static function deleteServer($id_server)
     {
-        return Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'memcached_servers WHERE id_memcached_server='.(int) $id_server);
+        return Db::getInstance()->execute('DELETE FROM ' . _DB_PREFIX_ . 'memcached_servers WHERE id_memcached_server=' . (int) $id_server);
     }
 }

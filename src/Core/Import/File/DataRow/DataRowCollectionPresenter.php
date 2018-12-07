@@ -70,7 +70,7 @@ final class DataRowCollectionPresenter implements DataRowCollectionPresenterInte
      * This allows all rows to be equal in size.
      *
      * @param DataRowInterface $dataRow
-     * @param int              $expectedRowSize number of columns this row will reach
+     * @param int $expectedRowSize number of columns this row will reach
      */
     private function normalizeDataRow(DataRowInterface $dataRow, $expectedRowSize)
     {

@@ -60,10 +60,10 @@ class LocalizationConfiguration implements DataConfigurationInterface
     private $adminModuleDataProvider;
 
     /**
-     * @param Configuration              $configuration
+     * @param Configuration $configuration
      * @param LanguageActivatorInterface $languageActivator
-     * @param CurrencyManager            $currencyManager
-     * @param AdminModuleDataProvider    $adminModuleDataProvider
+     * @param CurrencyManager $currencyManager
+     * @param AdminModuleDataProvider $adminModuleDataProvider
      */
     public function __construct(
         Configuration $configuration,

@@ -54,7 +54,7 @@ class GridExtension extends AbstractExtension
     private $cache;
 
     /**
-     * @param Environment      $twig
+     * @param Environment $twig
      * @param AdapterInterface $cache
      */
     public function __construct(Environment $twig, AdapterInterface $cache)
@@ -190,9 +190,9 @@ class GridExtension extends AbstractExtension
     /**
      * Get template for column.
      *
-     * @param array       $column
-     * @param array       $grid
-     * @param string      $basePath
+     * @param array $column
+     * @param array $grid
+     * @param string $basePath
      * @param null|string $defaultTemplate
      *
      * @return null|string

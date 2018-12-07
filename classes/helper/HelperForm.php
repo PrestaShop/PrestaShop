@@ -26,8 +26,8 @@
  use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 
  /**
-  * @since 1.5.0
-  */
+ * @since 1.5.0
+ */
 class HelperFormCore extends Helper
 {
     public $id;
@@ -71,7 +71,7 @@ class HelperFormCore extends Helper
     {
         $this->tpl = $this->createTemplate($this->base_tpl);
         if (is_null($this->submit_action)) {
-            $this->submit_action = 'submitAdd'.$this->table;
+            $this->submit_action = 'submitAdd' . $this->table;
         }
 
         $categories = true;
@@ -178,7 +178,7 @@ class HelperFormCore extends Helper
                                 $uploader->setFiles(array(
                                     0 => array(
                                         'type' => HelperUploader::TYPE_IMAGE,
-                                        'image' => isset($params['thumb']) ? '<img src="'.$params['thumb'].'" alt="'.(isset($params['title']) ? $params['title'] : '').'" title="'.(isset($params['title']) ? $params['title'] : '').'" />' : null,
+                                        'image' => isset($params['thumb']) ? '<img src="' . $params['thumb'] . '" alt="' . (isset($params['title']) ? $params['title'] : '') . '" title="' . (isset($params['title']) ? $params['title'] : '') . '" />' : null,
                                     ),
                                 ));
                             }
@@ -206,13 +206,13 @@ class HelperFormCore extends Helper
                         case 'textarea':
                             if ($tinymce) {
                                 $iso = $this->context->language->iso_code;
-                                $this->tpl_vars['iso'] = file_exists(_PS_CORE_DIR_.'/js/tiny_mce/langs/'.$iso.'.js') ? $iso : 'en';
+                                $this->tpl_vars['iso'] = file_exists(_PS_CORE_DIR_ . '/js/tiny_mce/langs/' . $iso . '.js') ? $iso : 'en';
                                 $this->tpl_vars['path_css'] = _THEME_CSS_DIR_;
-                                $this->tpl_vars['ad'] = __PS_BASE_URI__.basename(_PS_ADMIN_DIR_);
+                                $this->tpl_vars['ad'] = __PS_BASE_URI__ . basename(_PS_ADMIN_DIR_);
                                 $this->tpl_vars['tinymce'] = true;
 
-                                $this->context->controller->addJS(_PS_JS_DIR_.'tiny_mce/tiny_mce.js');
-                                $this->context->controller->addJS(_PS_JS_DIR_.'admin/tinymce.inc.js');
+                                $this->context->controller->addJS(_PS_JS_DIR_ . 'tiny_mce/tiny_mce.js');
+                                $this->context->controller->addJS(_PS_JS_DIR_ . 'admin/tinymce.inc.js');
                                 $tinymce = false;
                             }
 
@@ -260,7 +260,7 @@ class HelperFormCore extends Helper
             'fields' => $this->fields_form,
             'fields_value' => $this->fields_value,
             'required_fields' => $this->getFieldsRequired(),
-            'vat_number' => $moduleManager->isInstalled('vatnumber') && file_exists(_PS_MODULE_DIR_.'vatnumber/ajax.php'),
+            'vat_number' => $moduleManager->isInstalled('vatnumber') && file_exists(_PS_MODULE_DIR_ . 'vatnumber/ajax.php'),
             'module_dir' => _MODULE_DIR_,
             'base_url' => $this->context->shop->getBaseURL(),
             'contains_states' => (isset($this->fields_value['id_country'], $this->fields_value['id_state'])) ? Country::containsStates($this->fields_value['id_country']) : null,
@@ -302,9 +302,9 @@ class HelperFormCore extends Helper
 
         $assos = array();
         if ((int) $this->id) {
-            $sql = 'SELECT `id_shop`, `'.bqSQL($this->identifier).'`
-					FROM `'._DB_PREFIX_.bqSQL($this->table).'_shop`
-					WHERE `'.bqSQL($this->identifier).'` = '.(int) $this->id;
+            $sql = 'SELECT `id_shop`, `' . bqSQL($this->identifier) . '`
+					FROM `' . _DB_PREFIX_ . bqSQL($this->table) . '_shop`
+					WHERE `' . bqSQL($this->identifier) . '` = ' . (int) $this->id;
 
             foreach (Db::getInstance()->executeS($sql) as $row) {
                 $assos[$row['id_shop']] = $row['id_shop'];

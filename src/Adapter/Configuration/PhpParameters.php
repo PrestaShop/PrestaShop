@@ -85,7 +85,7 @@ class PhpParameters
     {
         try {
             $filesystem = new Filesystem();
-            $filesystem->dumpFile($this->filename, '<?php return '.var_export($this->configuration->get(), true).';'."\n");
+            $filesystem->dumpFile($this->filename, '<?php return ' . var_export($this->configuration->get(), true) . ';' . "\n");
 
             if (function_exists('opcache_invalidate')) {
                 opcache_invalidate($this->filename);

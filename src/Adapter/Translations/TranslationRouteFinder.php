@@ -73,8 +73,8 @@ class TranslationRouteFinder
     private $moduleRepository;
 
     /**
-     * @param TranslationService        $translationService
-     * @param Link                      $link
+     * @param TranslationService $translationService
+     * @param Link $link
      * @param ModuleRepositoryInterface $moduleRepository
      */
     public function __construct(

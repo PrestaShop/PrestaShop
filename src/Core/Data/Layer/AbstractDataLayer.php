@@ -112,7 +112,7 @@ abstract class AbstractDataLayer
      * current layer (because lower layer might hydrate/update the data object).
      *
      * @param mixed $id
-     *                    The data object identifier
+     *                  The data object identifier
      * @param mixed $data
      *                    The data object to write
      *
@@ -157,7 +157,7 @@ abstract class AbstractDataLayer
      * Propagate write to lower layer.
      *
      * @param mixed $id
-     *                    The data object identifier
+     *                  The data object identifier
      * @param mixed $data
      *                    The data object to write into this field
      *
@@ -182,7 +182,7 @@ abstract class AbstractDataLayer
      * This data object is written in the current layer to avoid read propagation next time.
      *
      * @param mixed $id
-     *                    Data object identifier
+     *                  Data object identifier
      * @param mixed $data
      *                    Data object received from lower layers
      *
@@ -196,7 +196,7 @@ abstract class AbstractDataLayer
                 $this->doWrite($id, $data);
             } catch (Exception $e) {
                 throw new DataLayerException(
-                    'Unable to write into "'.$id.'"" (data layer : "'.__CLASS__.'")',
+                    'Unable to write into "' . $id . '"" (data layer : "' . __CLASS__ . '")',
                     0,
                     $e
                 );
@@ -210,7 +210,7 @@ abstract class AbstractDataLayer
      * This data object is written in the current layer after lower layers have hydrated/updated (and written) it
      *
      * @param mixed $id
-     *                    Data object identifier
+     *                  Data object identifier
      * @param mixed $data
      *                    Data object received from lower layers
      *
@@ -230,7 +230,7 @@ abstract class AbstractDataLayer
                 $this->doWrite($id, $data);
             } catch (Exception $e) {
                 throw new DataLayerException(
-                    'Unable to write into "'.$id.'"" (data layer "'.__CLASS__.'")',
+                    'Unable to write into "' . $id . '"" (data layer "' . __CLASS__ . '")',
                     0,
                     $e
                 );
@@ -293,7 +293,7 @@ abstract class AbstractDataLayer
      * Might be a file edit, cache update, DB insert/update...
      *
      * @param mixed $id
-     *                    The data object identifier
+     *                  The data object identifier
      * @param mixed $data
      *                    The data object to be written
      *

@@ -48,7 +48,7 @@ final class MailMethodChoiceProvider implements FormChoiceProviderInterface
 
     /**
      * @param ConfigurationInterface $configuration
-     * @param TranslatorInterface    $translator
+     * @param TranslatorInterface $translator
      */
     public function __construct(
         ConfigurationInterface $configuration,
@@ -84,7 +84,7 @@ final class MailMethodChoiceProvider implements FormChoiceProviderInterface
 
     /**
      * @param string $key
-     * @param array  $params
+     * @param array $params
      * @param string $domain
      *
      * @return string

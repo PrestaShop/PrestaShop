@@ -184,8 +184,8 @@ class SpecificPriceController extends FrameworkBundleAdminController
     /**
      * Delete a specific price.
      *
-     * @param int     $idSpecificPrice The specific price ID
-     * @param Request $request         The request
+     * @param int $idSpecificPrice The specific price ID
+     * @param Request $request The request
      *
      * @return string
      */
@@ -206,7 +206,7 @@ class SpecificPriceController extends FrameworkBundleAdminController
     }
 
     /**
-     * @param int            $id
+     * @param int $id
      * @param \SpecificPrice $price
      *
      * @return array

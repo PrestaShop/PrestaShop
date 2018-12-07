@@ -32,7 +32,7 @@ interface InvoiceInterface
      * Return collection of Invoice.
      *
      * @param string $dateFrom Date From
-     * @param string $dateTo   Date To
+     * @param string $dateTo Date To
      *
      * @return array[InvoiceLegacy]
      */

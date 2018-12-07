@@ -43,8 +43,8 @@ final class LanguageQueryBuilder extends AbstractDoctrineQueryBuilder
     private $searchCriteriaApplicator;
 
     /**
-     * @param Connection                                $connection
-     * @param string                                    $dbPrefix
+     * @param Connection $connection
+     * @param string $dbPrefix
      * @param DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator
      */
     public function __construct(
@@ -90,7 +90,7 @@ final class LanguageQueryBuilder extends AbstractDoctrineQueryBuilder
     private function getLanguageQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $builder = $this->connection->createQueryBuilder()
-            ->from($this->dbPrefix.'lang', 'l')
+            ->from($this->dbPrefix . 'lang', 'l')
         ;
 
         $this->applyFilters($builder, $searchCriteria);
@@ -99,7 +99,7 @@ final class LanguageQueryBuilder extends AbstractDoctrineQueryBuilder
     }
 
     /**
-     * @param QueryBuilder            $builder
+     * @param QueryBuilder $builder
      * @param SearchCriteriaInterface $searchCriteria
      */
     private function applyFilters(QueryBuilder $builder, SearchCriteriaInterface $searchCriteria)
@@ -120,14 +120,14 @@ final class LanguageQueryBuilder extends AbstractDoctrineQueryBuilder
             }
 
             if (in_array($filterName, array('id_lang', 'active'), true)) {
-                $builder->andWhere($filterName.' = :'.$filterName);
+                $builder->andWhere($filterName . ' = :' . $filterName);
                 $builder->setParameter($filterName, $filterValue);
 
                 continue;
             }
 
-            $builder->andWhere($filterName.' LIKE :'.$filterName);
-            $builder->setParameter($filterName, '%'.$filterValue.'%');
+            $builder->andWhere($filterName . ' LIKE :' . $filterName);
+            $builder->setParameter($filterName, '%' . $filterValue . '%');
         }
     }
 }

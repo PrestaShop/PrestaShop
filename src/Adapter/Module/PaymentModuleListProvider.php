@@ -55,8 +55,8 @@ final class PaymentModuleListProvider implements PaymentModuleListProviderInterf
 
     /**
      * @param AddonRepositoryInterface $addonRepository
-     * @param ModuleRepository         $moduleRepository
-     * @param int                      $shopId
+     * @param ModuleRepository $moduleRepository
+     * @param int $shopId
      */
     public function __construct(
         AddonRepositoryInterface $addonRepository,

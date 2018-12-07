@@ -38,7 +38,7 @@ class SupplierController extends FrameworkBundleAdminController
     /**
      * refreshProductSupplierCombinationFormAction.
      *
-     * @param int        $idProduct
+     * @param int $idProduct
      * @param int|string $supplierIds The suppliers ids separate by "-"
      *
      * @return Response|string
@@ -66,7 +66,7 @@ class SupplierController extends FrameworkBundleAdminController
         //Pre-save of supplier product, needed for well form generation
         $_POST['supplier_loaded'] = 1;
         foreach ($suppliers as $idSupplier) {
-            $_POST['check_supplier_'.$idSupplier] = 1;
+            $_POST['check_supplier_' . $idSupplier] = 1;
         }
         $adminProductController = $adminProductWrapper->getInstance();
         $adminProductController->processSuppliers($idProduct);
@@ -93,7 +93,7 @@ class SupplierController extends FrameworkBundleAdminController
                 continue;
             }
 
-            $simpleSubForm->add('supplier_combination_'.$idSupplier, 'Symfony\Component\Form\Extension\Core\Type\CollectionType', array(
+            $simpleSubForm->add('supplier_combination_' . $idSupplier, 'Symfony\Component\Form\Extension\Core\Type\CollectionType', array(
                 'entry_type' => 'PrestaShopBundle\Form\Admin\Product\ProductSupplierCombination',
                 'entry_options' => array(
                     'id_supplier' => $idSupplier,

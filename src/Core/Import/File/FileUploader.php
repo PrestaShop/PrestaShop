@@ -50,7 +50,7 @@ final class FileUploader
 
     /**
      * @param TranslatorInterface $translator
-     * @param ImportDirectory     $importDirectory
+     * @param ImportDirectory $importDirectory
      */
     public function __construct(
         TranslatorInterface $translator,

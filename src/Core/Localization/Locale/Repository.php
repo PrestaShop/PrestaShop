@@ -144,7 +144,7 @@ class Repository implements RepositoryInterface
         $cldrLocale = $this->cldrLocaleRepository->getLocale($localeCode);
 
         if (null === $cldrLocale) {
-            throw new LocalizationException('CLDR locale not found for locale code "'.$localeCode.'"');
+            throw new LocalizationException('CLDR locale not found for locale code "' . $localeCode . '"');
         }
 
         return $this->buildNumberSpecification($cldrLocale);
@@ -168,7 +168,7 @@ class Repository implements RepositoryInterface
     {
         $cldrLocale = $this->cldrLocaleRepository->getLocale($localeCode);
         if (null === $cldrLocale) {
-            throw new LocalizationException('CLDR locale not found for locale code "'.$localeCode.'"');
+            throw new LocalizationException('CLDR locale not found for locale code "' . $localeCode . '"');
         }
 
         $currencies = $this->currencyRepository->getInstalledCurrencies();
@@ -214,12 +214,12 @@ class Repository implements RepositoryInterface
      *
      * @param CldrLocale $cldrLocale
      *                               This CldrLocale object is a low level data object extracted from CLDR data source
-     * @param Currency   $currency
-     *                               This Currency object brings missing specification to format a number as a price
-     * @param string     $localeCode
-     *                               Some price specs need to be localized (eg : currency symbol)
-     *                               Combination of ISO 639-1 (2-letters language code) and ISO 3166-2 (2-letters region code)
-     *                               eg: fr-FR, en-US
+     * @param Currency $currency
+     *                           This Currency object brings missing specification to format a number as a price
+     * @param string $localeCode
+     *                           Some price specs need to be localized (eg : currency symbol)
+     *                           Combination of ISO 639-1 (2-letters language code) and ISO 3166-2 (2-letters region code)
+     *                           eg: fr-FR, en-US
      *
      * @throws LocalizationException
      *

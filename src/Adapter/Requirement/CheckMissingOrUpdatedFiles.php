@@ -36,7 +36,7 @@ class CheckMissingOrUpdatedFiles
 {
     /**
      * @param null|string $dir
-     * @param string      $path
+     * @param string $path
      *
      * @return array
      */
@@ -48,7 +48,7 @@ class CheckMissingOrUpdatedFiles
         );
 
         if (is_null($dir)) {
-            $xml = @simplexml_load_file(_PS_API_URL_.'/xml/md5-'.AppKernel::MAJOR_VERSION.'/'.AppKernel::VERSION.'.xml');
+            $xml = @simplexml_load_file(_PS_API_URL_ . '/xml/md5-' . AppKernel::MAJOR_VERSION . '/' . AppKernel::VERSION . '.xml');
             if (!$xml) {
                 return $fileList;
             }
@@ -60,20 +60,20 @@ class CheckMissingOrUpdatedFiles
         $adminDir = basename(_PS_ADMIN_DIR_);
 
         foreach ($dir->md5file as $file) {
-            $filename = preg_replace('#^admin/#', $adminDir.'/', $path.$file['name']);
-            if (preg_match('#^'.$excludeRegexp.'#', $filename)) {
+            $filename = preg_replace('#^admin/#', $adminDir . '/', $path . $file['name']);
+            if (preg_match('#^' . $excludeRegexp . '#', $filename)) {
                 continue;
             }
 
-            if (!file_exists(_PS_ROOT_DIR_.'/'.$filename)) {
+            if (!file_exists(_PS_ROOT_DIR_ . '/' . $filename)) {
                 $fileList['missing'][] = $filename;
-            } elseif (md5_file(_PS_ROOT_DIR_.'/'.$filename) !== (string) $file) {
+            } elseif (md5_file(_PS_ROOT_DIR_ . '/' . $filename) !== (string) $file) {
                 $fileList['updated'][] = $filename;
             }
         }
 
         foreach ($dir->dir as $subdir) {
-            $this->getListOfUpdatedFiles($subdir, $path.$subdir['name'].'/');
+            $this->getListOfUpdatedFiles($subdir, $path . $subdir['name'] . '/');
         }
 
         return $fileList;

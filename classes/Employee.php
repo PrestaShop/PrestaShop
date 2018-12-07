@@ -156,7 +156,7 @@ class EmployeeCore extends ObjectModel
     /**
      * EmployeeCore constructor.
      *
-     * @param null|int $id     Employee ID
+     * @param null|int $id Employee ID
      * @param null|int $idLang Language ID
      * @param null|int $idShop Shop ID
      */
@@ -204,7 +204,7 @@ class EmployeeCore extends ObjectModel
     /**
      * Adds current Employee as a new Object to the database.
      *
-     * @param bool $autoDate   Automatically set `date_upd` and `date_add` columns
+     * @param bool $autoDate Automatically set `date_upd` and `date_add` columns
      * @param bool $nullValues Whether we want to use NULL values instead of empty quotes values
      *
      * @throws PrestaShopDatabaseException
@@ -214,7 +214,7 @@ class EmployeeCore extends ObjectModel
      */
     public function add($autoDate = true, $nullValues = true)
     {
-        $this->last_passwd_gen = date('Y-m-d H:i:s', strtotime('-'.Configuration::get('PS_PASSWD_TIME_BACK').'minutes'));
+        $this->last_passwd_gen = date('Y-m-d H:i:s', strtotime('-' . Configuration::get('PS_PASSWD_TIME_BACK') . 'minutes'));
         $this->saveOptin();
         $this->updateTextDirection();
 
@@ -263,7 +263,7 @@ class EmployeeCore extends ObjectModel
                 'visitorType' => 1,
                 'source' => 'backoffice',
             ));
-            Tools::file_get_contents('https://www.prestashop.com/ajax/controller.php?'.$params);
+            Tools::file_get_contents('https://www.prestashop.com/ajax/controller.php?' . $params);
         }
     }
 
@@ -276,19 +276,19 @@ class EmployeeCore extends ObjectModel
             return;
         }
 
-        $path = _PS_ADMIN_DIR_.DIRECTORY_SEPARATOR.'themes'.DIRECTORY_SEPARATOR.$this->bo_theme.DIRECTORY_SEPARATOR.'css'.DIRECTORY_SEPARATOR;
+        $path = _PS_ADMIN_DIR_ . DIRECTORY_SEPARATOR . 'themes' . DIRECTORY_SEPARATOR . $this->bo_theme . DIRECTORY_SEPARATOR . 'css' . DIRECTORY_SEPARATOR;
         $language = new Language($this->id_lang);
 
         if ($language->is_rtl && !mb_strpos($this->bo_css, '_rtl')) {
             $boCss = preg_replace('/^(.*)\.css$/', '$1_rtl.css', $this->bo_css);
 
-            if (file_exists($path.$boCss)) {
+            if (file_exists($path . $boCss)) {
                 $this->bo_css = $boCss;
             }
         } elseif (!$language->is_rtl && mb_strpos($this->bo_css, '_rtl')) {
             $boCss = preg_replace('/^(.*)_rtl\.css$/', '$1.css', $this->bo_css);
 
-            if (file_exists($path.$boCss)) {
+            if (file_exists($path . $boCss)) {
                 $this->bo_css = $boCss;
             }
         }
@@ -305,8 +305,8 @@ class EmployeeCore extends ObjectModel
     {
         return Db::getInstance()->executeS('
 			SELECT `id_employee`, `firstname`, `lastname`
-			FROM `'._DB_PREFIX_.'employee`
-			'.($activeOnly ? ' WHERE `active` = 1' : '').'
+			FROM `' . _DB_PREFIX_ . 'employee`
+			' . ($activeOnly ? ' WHERE `active` = 1' : '') . '
 			ORDER BY `lastname` ASC
 		');
     }
@@ -314,9 +314,9 @@ class EmployeeCore extends ObjectModel
     /**
      * Return employee instance from its e-mail (optionally check password).
      *
-     * @param string $email             e-mail
+     * @param string $email e-mail
      * @param string $plaintextPassword Password is also checked if specified
-     * @param bool   $activeOnly        Filter employee by active status
+     * @param bool $activeOnly Filter employee by active status
      *
      * @return bool|Employee|EmployeeCore Employee instance
      *                                    `false` if not found
@@ -330,7 +330,7 @@ class EmployeeCore extends ObjectModel
         $sql = new DbQuery();
         $sql->select('e.*');
         $sql->from('employee', 'e');
-        $sql->where('e.`email` = \''.pSQL($email).'\'');
+        $sql->where('e.`email` = \'' . pSQL($email) . '\'');
         if ($activeOnly) {
             $sql->where('e.`active` = 1');
         }
@@ -381,8 +381,8 @@ class EmployeeCore extends ObjectModel
 
         return (bool) Db::getInstance()->getValue('
 		    SELECT `id_employee`
-		    FROM `'._DB_PREFIX_.'employee`
-		    WHERE `email` = \''.pSQL($email).'\'
+		    FROM `' . _DB_PREFIX_ . 'employee`
+		    WHERE `email` = \'' . pSQL($email) . '\'
         ');
     }
 
@@ -402,8 +402,8 @@ class EmployeeCore extends ObjectModel
         $sql = new DbQuery();
         $sql->select('e.`id_employee`');
         $sql->from('employee', 'e');
-        $sql->where('e.`id_employee` = '.(int) $idEmployee);
-        $sql->where('e.`passwd` = \''.pSQL($passwordHash).'\'');
+        $sql->where('e.`id_employee` = ' . (int) $idEmployee);
+        $sql->where('e.`passwd` = \'' . pSQL($passwordHash) . '\'');
         $sql->where('e.`active` = 1');
 
         // Get result from DB
@@ -413,7 +413,7 @@ class EmployeeCore extends ObjectModel
     /**
      * Count amount of Employees with the given Profile ID.
      *
-     * @param int  $idProfile  Profile ID
+     * @param int $idProfile Profile ID
      * @param bool $activeOnly Only active Employees
      *
      * @return null|false|string
@@ -423,9 +423,9 @@ class EmployeeCore extends ObjectModel
         return Db::getInstance()->getValue(
             '
 		    SELECT COUNT(*)
-		    FROM `'._DB_PREFIX_.'employee`
-		    WHERE `id_profile` = '.(int) $idProfile.'
-		    '.($activeOnly ? ' AND `active` = 1' : '')
+		    FROM `' . _DB_PREFIX_ . 'employee`
+		    WHERE `id_profile` = ' . (int) $idProfile . '
+		    ' . ($activeOnly ? ' AND `active` = 1' : '')
         );
     }
 
@@ -477,18 +477,18 @@ class EmployeeCore extends ObjectModel
      */
     public function isLoggedBack()
     {
-        if (!Cache::isStored('isLoggedBack'.$this->id)) {
+        if (!Cache::isStored('isLoggedBack' . $this->id)) {
             /* Employee is valid only if it can be load and if cookie password is the same as database one */
             $result = (
                 $this->id && Validate::isUnsignedId($this->id) && Context::getContext()->cookie && Employee::checkPassword($this->id, Context::getContext()->cookie->passwd)
                     && (!isset(Context::getContext()->cookie->remote_addr) || Context::getContext()->cookie->remote_addr == ip2long(Tools::getRemoteAddr()) || !Configuration::get('PS_COOKIE_CHECKIP'))
             );
-            Cache::store('isLoggedBack'.$this->id, $result);
+            Cache::store('isLoggedBack' . $this->id, $result);
 
             return $result;
         }
 
-        return Cache::retrieve('isLoggedBack'.$this->id);
+        return Cache::retrieve('isLoggedBack' . $this->id);
     }
 
     /**
@@ -513,8 +513,8 @@ class EmployeeCore extends ObjectModel
         return Db::getInstance()->executeS(
             '
 		    SELECT `module`
-		    FROM `'._DB_PREFIX_.'module_preference`
-		    WHERE `id_employee` = '.(int) $this->id.' AND `favorite` = 1 AND (`interest` = 1 OR `interest` IS NULL)'
+		    FROM `' . _DB_PREFIX_ . 'module_preference`
+		    WHERE `id_employee` = ' . (int) $this->id . ' AND `favorite` = 1 AND (`interest` = 1 OR `interest` IS NULL)'
         );
     }
 
@@ -575,7 +575,7 @@ class EmployeeCore extends ObjectModel
     /**
      * Get Employees by Profile.
      *
-     * @param int  $idProfile  Profile ID
+     * @param int $idProfile Profile ID
      * @param bool $activeOnly Only active Employees
      *
      * @return null|array|false|mysqli_result|PDOStatement|resource
@@ -585,9 +585,9 @@ class EmployeeCore extends ObjectModel
         return Db::getInstance()->executeS(
             '
 		    SELECT *
-		    FROM `'._DB_PREFIX_.'employee`
-		    WHERE `id_profile` = '.(int) $idProfile.'
-		    '.($activeOnly ? ' AND `active` = 1' : '')
+		    FROM `' . _DB_PREFIX_ . 'employee`
+		    WHERE `id_profile` = ' . (int) $idProfile . '
+		    ' . ($activeOnly ? ' AND `active` = 1' : '')
         );
     }
 
@@ -612,7 +612,7 @@ class EmployeeCore extends ObjectModel
             return Tools::getAdminImageUrl('prestashop-avatar.png');
         }
 
-        return Tools::getShopProtocol().'profile.prestashop.com/'.urlencode($this->email).'.jpg';
+        return Tools::getShopProtocol() . 'profile.prestashop.com/' . urlencode($this->email) . '.jpg';
     }
 
     /**
@@ -626,8 +626,8 @@ class EmployeeCore extends ObjectModel
     {
         $element = bqSQL($element);
         $max = Db::getInstance()->getValue('
-			SELECT MAX(`id_'.$element.'`) as `id_'.$element.'`
-			FROM `'._DB_PREFIX_.$element.('order' == $element ? 's' : '').'`');
+			SELECT MAX(`id_' . $element . '`) as `id_' . $element . '`
+			FROM `' . _DB_PREFIX_ . $element . ('order' == $element ? 's' : '') . '`');
 
         // if no rows in table, set max to 0
         if ((int) $max < 1) {
@@ -647,9 +647,9 @@ class EmployeeCore extends ObjectModel
     public static function setLastConnectionDate($idEmployee)
     {
         return Db::getInstance()->execute('
-            UPDATE `'._DB_PREFIX_.'employee`
+            UPDATE `' . _DB_PREFIX_ . 'employee`
             SET `last_connection_date` = CURRENT_DATE()
-            WHERE `id_employee` = '.(int) $idEmployee.'
+            WHERE `id_employee` = ' . (int) $idEmployee . '
             AND (`last_connection_date` < CURRENT_DATE()
             OR `last_connection_date` IS NULL)
         ');
@@ -660,10 +660,10 @@ class EmployeeCore extends ObjectModel
      */
     public function stampResetPasswordToken()
     {
-        $salt = $this->id.'+'.uniqid(rand(), true);
-        $this->reset_password_token = sha1(time().$salt);
+        $salt = $this->id . '+' . uniqid(rand(), true);
+        $this->reset_password_token = sha1(time() . $salt);
         $validity = (int) Configuration::get('PS_PASSWD_RESET_VALIDITY') ?: 1440;
-        $this->reset_password_validity = date('Y-m-d H:i:s', strtotime('+'.$validity.' minutes'));
+        $this->reset_password_validity = date('Y-m-d H:i:s', strtotime('+' . $validity . ' minutes'));
     }
 
     /**

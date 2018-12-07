@@ -56,8 +56,8 @@ class CccReducerCore
         }
 
         $version = Configuration::get('PS_CCCCSS_VERSION');
-        $cccFilename = 'theme-'.$this->getFileNameIdentifierFromList($files).$version.'.css';
-        $destinationPath = $this->cacheDir.$cccFilename;
+        $cccFilename = 'theme-' . $this->getFileNameIdentifierFromList($files) . $version . '.css';
+        $destinationPath = $this->cacheDir . $cccFilename;
 
         if (!$this->filesystem->exists($destinationPath)) {
             CssMinifier::minify($files, $destinationPath);
@@ -67,7 +67,7 @@ class CccReducerCore
             'id' => 'theme-ccc',
             'type' => 'external',
             'path' => $destinationPath,
-            'uri' => $this->getFQDN().$this->getUriFromPath($destinationPath),
+            'uri' => $this->getFQDN() . $this->getUriFromPath($destinationPath),
             'media' => 'all',
             'priority' => StylesheetManager::DEFAULT_PRIORITY,
         );
@@ -93,19 +93,19 @@ class CccReducerCore
             }
 
             $version = Configuration::get('PS_CCCJS_VERSION');
-            $cccFilename = $position.'-'.$this->getFileNameIdentifierFromList($files).$version.'.js';
-            $destinationPath = $this->cacheDir.$cccFilename;
+            $cccFilename = $position . '-' . $this->getFileNameIdentifierFromList($files) . $version . '.js';
+            $destinationPath = $this->cacheDir . $cccFilename;
 
             if (!$this->filesystem->exists($destinationPath)) {
                 JsMinifier::minify($files, $destinationPath);
             }
 
             $cccItem = array();
-            $cccItem[$position.'-js-ccc'] = array(
-                'id' => $position.'-js-ccc',
+            $cccItem[$position . '-js-ccc'] = array(
+                'id' => $position . '-js-ccc',
                 'type' => 'external',
                 'path' => $destinationPath,
-                'uri' => $this->getFQDN().$this->getUriFromPath($destinationPath),
+                'uri' => $this->getFQDN() . $this->getUriFromPath($destinationPath),
                 'priority' => JavascriptManager::DEFAULT_PRIORITY,
                 'attribute' => '',
             );

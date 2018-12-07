@@ -65,7 +65,7 @@ class SqlManagerController extends FrameworkBundleAdminController
      *
      * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
      *
-     * @param Request           $request
+     * @param Request $request
      * @param RequestSqlFilters $filters
      *
      * @return Response
@@ -206,7 +206,7 @@ class SqlManagerController extends FrameworkBundleAdminController
      *     redirectRoute="admin_sql_requests_index"
      * )
      *
-     * @param int     $sqlRequestId
+     * @param int $sqlRequestId
      * @param Request $request
      *
      * @return Response
@@ -317,7 +317,7 @@ class SqlManagerController extends FrameworkBundleAdminController
      * )
      *
      * @param Request $request
-     * @param int     $sqlRequestId
+     * @param int $sqlRequestId
      *
      * @return Response
      */

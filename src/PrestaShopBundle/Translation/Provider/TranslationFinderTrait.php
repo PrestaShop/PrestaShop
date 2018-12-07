@@ -59,7 +59,7 @@ trait TranslationFinderTrait
             if (false !== mb_strpos($file->getBasename('.xlf'), $locale)) {
                 $domain = $file->getBasename('.xlf');
             } else {
-                $domain = $file->getBasename('.xlf').'.'.$locale;
+                $domain = $file->getBasename('.xlf') . '.' . $locale;
             }
 
             $fileCatalogue = $xliffFileLoader->load($file->getPathname(), $locale, $domain);

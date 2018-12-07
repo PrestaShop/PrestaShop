@@ -53,9 +53,9 @@ class ImportDataConfigurationType extends TranslatorAwareType
 
     /**
      * @param TranslatorInterface $translator
-     * @param array               $locales
-     * @param array               $dataMatchChoices
-     * @param array               $entityFieldChoices
+     * @param array $locales
+     * @param array $dataMatchChoices
+     * @param array $entityFieldChoices
      */
     public function __construct(
         TranslatorInterface $translator,

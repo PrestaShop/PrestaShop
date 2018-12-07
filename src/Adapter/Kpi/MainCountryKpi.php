@@ -52,9 +52,9 @@ final class MainCountryKpi implements KpiInterface
     private $sourceLink;
 
     /**
-     * @param TranslatorInterface    $translator
+     * @param TranslatorInterface $translator
      * @param ConfigurationInterface $configuration
-     * @param string                 $sourceLink    a link to refresh KPI
+     * @param string $sourceLink a link to refresh KPI
      */
     public function __construct(
         TranslatorInterface $translator,
@@ -74,7 +74,7 @@ final class MainCountryKpi implements KpiInterface
         $mainCountry = $this->configuration->get('MAIN_COUNTRY');
 
         $kpi = new HelperKpi();
-        $kpi->context->smarty->setTemplateDir(_PS_BO_ALL_THEMES_DIR_.'new-theme/template/');
+        $kpi->context->smarty->setTemplateDir(_PS_BO_ALL_THEMES_DIR_ . 'new-theme/template/');
         $kpi->id = 'box-country';
         $kpi->icon = 'home';
         $kpi->color = 'color2';

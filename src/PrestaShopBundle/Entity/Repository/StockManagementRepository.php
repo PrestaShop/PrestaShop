@@ -102,9 +102,9 @@ abstract class StockManagementRepository
 
     /**
      * @param ContainerInterface $container
-     * @param Connection         $connection
-     * @param ContextAdapter     $contextAdapter
-     * @param ImageManager       $imageManager
+     * @param Connection $connection
+     * @param ContextAdapter $contextAdapter
+     * @param ImageManager $imageManager
      * @param $tablePrefix
      *
      * @throws NotImplementedException
@@ -196,7 +196,7 @@ abstract class StockManagementRepository
                 $this->andWhere($queryParams),
                 $this->having($queryParams),
                 $this->orderBy($queryParams)
-            ).$this->paginate();
+            ) . $this->paginate();
 
         $statement = $this->connection->prepare($query);
         $this->bindStockManagementValues($statement, $queryParams);
@@ -214,7 +214,7 @@ abstract class StockManagementRepository
     /**
      * @param string $andWhereClause
      * @param string $having
-     * @param null   $orderByClause
+     * @param null $orderByClause
      *
      * @return mixed
      */
@@ -333,9 +333,9 @@ abstract class StockManagementRepository
     }
 
     /**
-     * @param Statement                  $statement
+     * @param Statement $statement
      * @param null|QueryParamsCollection $queryParams
-     * @param null|ProductIdentity       $productIdentity
+     * @param null|ProductIdentity $productIdentity
      */
     protected function bindStockManagementValues(
         Statement $statement,
@@ -371,7 +371,7 @@ abstract class StockManagementRepository
     }
 
     /**
-     * @param Statement             $statement
+     * @param Statement $statement
      * @param QueryParamsCollection $queryParams
      */
     protected function bindValuesInStatement(Statement $statement, QueryParamsCollection $queryParams)
@@ -388,7 +388,7 @@ abstract class StockManagementRepository
     }
 
     /**
-     * @param Statement             $statement
+     * @param Statement $statement
      * @param QueryParamsCollection $queryParams
      */
     protected function bindMaxResultsValue(Statement $statement, QueryParamsCollection $queryParams)
@@ -425,21 +425,21 @@ abstract class StockManagementRepository
                         DISTINCT CONCAT(agl.name, " - ", al.name)
                         SEPARATOR ", "
                     )
-                    FROM '.$this->tablePrefix.'product_attribute pa2
-                    JOIN '.$this->tablePrefix.'product_attribute_combination pac ON (
+                    FROM ' . $this->tablePrefix . 'product_attribute pa2
+                    JOIN ' . $this->tablePrefix . 'product_attribute_combination pac ON (
                         pac.id_product_attribute = pa2.id_product_attribute
                     )                    
-                    JOIN '.$this->tablePrefix.'attribute a ON (
+                    JOIN ' . $this->tablePrefix . 'attribute a ON (
                         a.id_attribute = pac.id_attribute
                     )
-                    JOIN '.$this->tablePrefix.'attribute_lang al ON (
+                    JOIN ' . $this->tablePrefix . 'attribute_lang al ON (
                         a.id_attribute = al.id_attribute
                         AND al.id_lang = :language_id
                     )
-                    JOIN '.$this->tablePrefix.'attribute_group ag ON (
+                    JOIN ' . $this->tablePrefix . 'attribute_group ag ON (
                         ag.id_attribute_group = a.id_attribute_group
                     )
-                    JOIN '.$this->tablePrefix.'attribute_group_lang agl ON (
+                    JOIN ' . $this->tablePrefix . 'attribute_group_lang agl ON (
                         ag.id_attribute_group = agl.id_attribute_group
                         AND agl.id_lang = :language_id
                     )                    
@@ -459,15 +459,15 @@ abstract class StockManagementRepository
                       CONCAT(fp.id_feature, ":", fp.id_feature_value)
                       ORDER BY fp.id_feature_value
                     ) AS features
-                        FROM '.$this->tablePrefix.'feature_product fp
-                            JOIN  '.$this->tablePrefix.'feature f ON (
+                        FROM ' . $this->tablePrefix . 'feature_product fp
+                            JOIN  ' . $this->tablePrefix . 'feature f ON (
                                 fp.id_feature = f.id_feature
                             )
-                            JOIN '.$this->tablePrefix.'feature_shop fs ON (
+                            JOIN ' . $this->tablePrefix . 'feature_shop fs ON (
                                 fs.id_shop = :shop_id AND
                                 fs.id_feature = f.id_feature
                             )
-                            JOIN '.$this->tablePrefix.'feature_value fv ON (
+                            JOIN ' . $this->tablePrefix . 'feature_value fv ON (
                                 f.id_feature = fv.id_feature AND
                                 fp.id_feature_value = fv.id_feature_value
                             )
@@ -491,7 +491,7 @@ abstract class StockManagementRepository
     protected function getCombinationCoverId(array $row)
     {
         $query = 'SELECT id_image 
-                  FROM '.$this->tablePrefix.'product_attribute_image pai
+                  FROM ' . $this->tablePrefix . 'product_attribute_image pai
                   WHERE id_product_attribute=:id_product_attribute
                   LIMIT 1';
         $statement = $this->connection->prepare($query);
@@ -514,11 +514,11 @@ abstract class StockManagementRepository
                     CONCAT(ag.id_attribute_group, ":", a.id_attribute)
                     ORDER BY ag.id_attribute_group, a.id_attribute
                 ) AS attributes
-                    FROM '.$this->tablePrefix.'product_attribute_combination pac
-                        JOIN '.$this->tablePrefix.'attribute a ON (
+                    FROM ' . $this->tablePrefix . 'product_attribute_combination pac
+                        JOIN ' . $this->tablePrefix . 'attribute a ON (
                             pac.id_attribute = a.id_attribute
                         )
-                        JOIN '.$this->tablePrefix.'attribute_group ag ON (
+                        JOIN ' . $this->tablePrefix . 'attribute_group ag ON (
                             ag.id_attribute_group = a.id_attribute_group
                         )                    
                     WHERE pac.id_product_attribute=:id_product_attribute';

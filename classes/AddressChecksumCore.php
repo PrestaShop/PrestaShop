@@ -47,7 +47,7 @@ class AddressChecksumCore implements ChecksumInterface
         $uniqId = '';
         $fields = $address->getFields();
         foreach ($fields as $name => $value) {
-            $uniqId .= $value.self::SEPARATOR;
+            $uniqId .= $value . self::SEPARATOR;
         }
         $uniqId = rtrim($uniqId, self::SEPARATOR);
 

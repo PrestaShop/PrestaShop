@@ -71,7 +71,7 @@ class CategoryController extends FrameworkBundleAdminController
      *
      * @AdminSecurity("is_granted(['read', 'update', 'create', 'delete'], request.get('_legacy_controller'))")
      *
-     * @param Request         $request
+     * @param Request $request
      * @param CategoryFilters $filters
      *
      * @return Response
@@ -210,7 +210,7 @@ class CategoryController extends FrameworkBundleAdminController
     /**
      * Show & process category editing.
      *
-     * @param int     $categoryId
+     * @param int $categoryId
      * @param Request $request
      *
      * @return Response
@@ -282,7 +282,7 @@ class CategoryController extends FrameworkBundleAdminController
     /**
      * Show and process category editing.
      *
-     * @param int     $categoryId
+     * @param int $categoryId
      * @param Request $request
      *
      * @return Response
@@ -342,7 +342,7 @@ class CategoryController extends FrameworkBundleAdminController
 
     /**
      * @param AbstractCategoryCommand $command
-     * @param array                   $data
+     * @param array $data
      */
     protected function populateCommandWithFormData(AbstractCategoryCommand $command, array $data)
     {
@@ -457,7 +457,7 @@ class CategoryController extends FrameworkBundleAdminController
      * Toggle category status.
      *
      * @param Request $request
-     * @param int     $categoryId
+     * @param int $categoryId
      *
      * @return JsonResponse
      */
@@ -689,7 +689,7 @@ class CategoryController extends FrameworkBundleAdminController
         return (new CsvResponse())
             ->setData($data)
             ->setHeadersData($headers)
-            ->setFileName('category_'.date('Y-m-d_His').'.csv')
+            ->setFileName('category_' . date('Y-m-d_His') . '.csv')
             ;
     }
 

@@ -198,8 +198,8 @@ abstract class ControllerCore
      * returns a new instance of this controller.
      *
      * @param string $class_name
-     * @param bool   $auth
-     * @param bool   $ssl
+     * @param bool $auth
+     * @param bool $ssl
      *
      * @return Controller
      */
@@ -292,8 +292,8 @@ abstract class ControllerCore
             if ($this->ajax) {
                 $action = Tools::toCamelCase(Tools::getValue('action'), true);
 
-                if (!empty($action) && method_exists($this, 'displayAjax'.$action)) {
-                    $this->{'displayAjax'.$action}();
+                if (!empty($action) && method_exists($this, 'displayAjax' . $action)) {
+                    $this->{'displayAjax' . $action}();
                 } elseif (method_exists($this, 'displayAjax')) {
                     $this->displayAjax();
                 }
@@ -389,10 +389,10 @@ abstract class ControllerCore
     /**
      * Adds a new stylesheet(s) to the page header.
      *
-     * @param array|string $css_uri        Path to CSS file, or list of css files like this : array(array(uri => media_type), ...)
-     * @param string       $css_media_type
-     * @param null|int     $offset
-     * @param bool         $check_path
+     * @param array|string $css_uri Path to CSS file, or list of css files like this : array(array(uri => media_type), ...)
+     * @param string $css_media_type
+     * @param null|int $offset
+     * @param bool $check_path
      *
      * @return true
      */
@@ -432,9 +432,9 @@ abstract class ControllerCore
     /**
      * Removes CSS stylesheet(s) from the queued stylesheet list.
      *
-     * @param array|string $css_uri        Path to CSS file or an array like: array(array(uri => media_type), ...)
-     * @param string       $css_media_type
-     * @param bool         $check_path
+     * @param array|string $css_uri Path to CSS file or an array like: array(array(uri => media_type), ...)
+     * @param string $css_media_type
+     * @param bool $check_path
      */
     public function removeCSS($css_uri, $css_media_type = 'all', $check_path = true)
     {
@@ -470,8 +470,8 @@ abstract class ControllerCore
     /**
      * Adds a new JavaScript file(s) to the page header.
      *
-     * @param array|string $js_uri     Path to JS file or an array like: array(uri, ...)
-     * @param bool         $check_path
+     * @param array|string $js_uri Path to JS file or an array like: array(uri, ...)
+     * @param bool $check_path
      */
     public function addJS($js_uri, $check_path = true)
     {
@@ -491,7 +491,7 @@ abstract class ControllerCore
             }
 
             if ($js_path && !in_array($js_path, $this->js_files, true)) {
-                $this->js_files[] = $js_path.($version ? '?'.$version : '');
+                $this->js_files[] = $js_path . ($version ? '?' . $version : '');
             }
         }
     }
@@ -499,8 +499,8 @@ abstract class ControllerCore
     /**
      * Removes JS file(s) from the queued JS file list.
      *
-     * @param array|string $js_uri     Path to JS file or an array like: array(uri, ...)
-     * @param bool         $check_path
+     * @param array|string $js_uri Path to JS file or an array like: array(uri, ...)
+     * @param bool $check_path
      */
     public function removeJS($js_uri, $check_path = true)
     {
@@ -522,9 +522,9 @@ abstract class ControllerCore
     /**
      * Adds jQuery library file to queued JS file list.
      *
-     * @param null|string $version  jQuery library version
-     * @param null|string $folder   jQuery file folder
-     * @param bool        $minifier if set tot true, a minified version will be included
+     * @param null|string $version jQuery library version
+     * @param null|string $folder jQuery file folder
+     * @param bool $minifier if set tot true, a minified version will be included
      */
     public function addJquery($version = null, $folder = null, $minifier = true)
     {
@@ -535,8 +535,8 @@ abstract class ControllerCore
      * Adds jQuery UI component(s) to queued JS file list.
      *
      * @param array|string $component
-     * @param string       $theme
-     * @param bool         $check_dependencies
+     * @param string $theme
+     * @param bool $check_dependencies
      */
     public function addJqueryUI($component, $theme = 'base', $check_dependencies = true)
     {
@@ -555,8 +555,8 @@ abstract class ControllerCore
      * Adds jQuery plugin(s) to queued JS file list.
      *
      * @param array|string $name
-     * @param string null  $folder
-     * @param bool         $css
+     * @param string null $folder
+     * @param bool $css
      */
     public function addJqueryPlugin($name, $folder = null, $css = true)
     {
@@ -628,8 +628,8 @@ abstract class ControllerCore
     /**
      * Checks if a template is cached.
      *
-     * @param string      $template
-     * @param null|string $cache_id   Cache item ID
+     * @param string $template
+     * @param null|string $cache_id Cache item ID
      * @param null|string $compile_id
      *
      * @return bool
@@ -649,7 +649,7 @@ abstract class ControllerCore
      * @param string $errno
      * @param string $errstr
      * @param string $errfile
-     * @param int    $errline
+     * @param int $errline
      *
      * @return bool
      */
@@ -662,7 +662,7 @@ abstract class ControllerCore
         switch ($errno) {
             case E_USER_ERROR:
             case E_ERROR:
-                die('Fatal error: '.$errstr.' in '.$errfile.' on line '.$errline);
+                die('Fatal error: ' . $errstr . ' in ' . $errfile . ' on line ' . $errline);
                 break;
             case E_USER_WARNING:
             case E_WARNING:
@@ -730,8 +730,8 @@ abstract class ControllerCore
          * @deprecated deprecated since 1.6.1.1
          * use 'actionAjaxDie'.$controller.$method.'Before' instead
          */
-        Hook::exec('actionBeforeAjaxDie'.$controller.$method, array('value' => $value));
-        Hook::exec('actionAjaxDie'.$controller.$method.'Before', array('value' => $value));
+        Hook::exec('actionBeforeAjaxDie' . $controller . $method, array('value' => $value));
+        Hook::exec('actionAjaxDie' . $controller . $method . 'Before', array('value' => $value));
         header('Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0');
 
         echo $value;

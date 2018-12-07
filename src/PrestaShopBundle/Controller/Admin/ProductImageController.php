@@ -41,7 +41,7 @@ class ProductImageController extends FrameworkBundleAdminController
     /**
      * Manage upload for product image.
      *
-     * @param int     $idProduct
+     * @param int $idProduct
      * @param Request $request
      *
      * @return string
@@ -61,7 +61,7 @@ class ProductImageController extends FrameworkBundleAdminController
                 'error_bubbling' => true,
                 'constraints' => array(
                     new Assert\NotNull(array('message' => $this->trans('Please select a file', 'Admin.Catalog.Feature'))),
-                    new Assert\Image(array('maxSize' => $this->configuration->get('PS_ATTACHMENT_MAXIMUM_SIZE').'M')),
+                    new Assert\Image(array('maxSize' => $this->configuration->get('PS_ATTACHMENT_MAXIMUM_SIZE') . 'M')),
                 ),
             ))
             ->getForm()
@@ -176,7 +176,7 @@ class ProductImageController extends FrameworkBundleAdminController
     /**
      * Delete an image from its ID.
      *
-     * @param int     $idImage
+     * @param int $idImage
      * @param Request $request
      *
      * @return JsonResponse

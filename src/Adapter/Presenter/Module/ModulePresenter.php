@@ -78,7 +78,7 @@ class ModulePresenter implements PresenterInterface
             $prices['displayPrice'] = $this->priceFormatter->convertAndFormat($prices[$iso_code]);
             $prices['raw'] = $prices[$iso_code];
         } else {
-            $prices['displayPrice'] = '$'.$prices['USD'];
+            $prices['displayPrice'] = '$' . $prices['USD'];
             $prices['raw'] = $prices['USD'];
         }
 

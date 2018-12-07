@@ -65,9 +65,9 @@ final class ServerRequirementsChecker implements ServerRequirementsCheckerInterf
     private $phpExtensionChecker;
 
     /**
-     * @param TranslatorInterface          $translator
-     * @param Configuration                $configuration
-     * @param HostingInformation           $hostingInformation
+     * @param TranslatorInterface $translator
+     * @param Configuration $configuration
+     * @param HostingInformation $hostingInformation
      * @param PhpExtensionCheckerInterface $phpExtensionChecker
      */
     public function __construct(

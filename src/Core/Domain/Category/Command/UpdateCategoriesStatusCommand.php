@@ -47,7 +47,7 @@ class UpdateCategoriesStatusCommand
     private $newStatus;
 
     /**
-     * @param int[]          $categoryIds
+     * @param int[] $categoryIds
      * @param CategoryStatus $newStatus
      *
      * @throws CategoryConstraintException

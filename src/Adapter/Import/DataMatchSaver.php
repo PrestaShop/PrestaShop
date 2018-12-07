@@ -46,7 +46,7 @@ final class DataMatchSaver
 
     /**
      * @param Connection $connection
-     * @param string     $dbPrefix
+     * @param string $dbPrefix
      */
     public function __construct(Connection $connection, $dbPrefix)
     {
@@ -57,16 +57,16 @@ final class DataMatchSaver
     /**
      * Save data match.
      *
-     * @param string $name     name of the match
-     * @param array  $value    value of the match
-     * @param int    $skipRows number of rows to skip from the import file
+     * @param string $name name of the match
+     * @param array $value value of the match
+     * @param int $skipRows number of rows to skip from the import file
      *
      * @return bool
      */
     public function save($name, array $value, $skipRows)
     {
         return (bool) $this->connection->insert(
-            $this->dbPrefix.'import_match',
+            $this->dbPrefix . 'import_match',
             array(
                 '`name`' => pSQL($name),
                 '`match`' => pSQL(implode('|', $value)),

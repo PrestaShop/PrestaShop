@@ -49,10 +49,10 @@ class AliasCore extends ObjectModel
     /**
      * AliasCore constructor.
      *
-     * @param null|int    $id     Alias ID
-     * @param null|string $alias  Alias
+     * @param null|int $id Alias ID
+     * @param null|string $alias Alias
      * @param null|string $search Search string
-     * @param null|int    $idLang Language ID
+     * @param null|int $idLang Language ID
      */
     public function __construct($id = null, $alias = null, $search = null, $idLang = null)
     {
@@ -68,8 +68,8 @@ class AliasCore extends ObjectModel
             } else {
                 $row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 				SELECT a.id_alias, a.search, a.alias
-				FROM `'._DB_PREFIX_.'alias` a
-				WHERE `alias` = \''.pSQL($alias).'\' AND `active` = 1');
+				FROM `' . _DB_PREFIX_ . 'alias` a
+				WHERE `alias` = \'' . pSQL($alias) . '\' AND `active` = 1');
 
                 if ($row) {
                     $this->id = (int) $row['id_alias'];
@@ -129,8 +129,8 @@ class AliasCore extends ObjectModel
 
         $aliases = Db::getInstance()->executeS('
 		SELECT a.alias
-		FROM `'._DB_PREFIX_.'alias` a
-		WHERE `search` = \''.pSQL($this->search).'\'');
+		FROM `' . _DB_PREFIX_ . 'alias` a
+		WHERE `search` = \'' . pSQL($this->search) . '\'');
 
         $aliases = array_map('implode', $aliases);
 
@@ -163,7 +163,7 @@ class AliasCore extends ObjectModel
         $sql = new DbQuery();
         $sql->select('a.`id_alias`');
         $sql->from('alias', 'a');
-        $sql->where('a.`id_alias` = '.(int) $idAlias);
+        $sql->where('a.`id_alias` = ' . (int) $idAlias);
         $row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
 
         return isset($row['id_alias']);

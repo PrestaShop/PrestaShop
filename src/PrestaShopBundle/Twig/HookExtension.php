@@ -54,7 +54,7 @@ class HookExtension extends \Twig_Extension
      * Constructor.
      *
      * @param HookDispatcherInterface $hookDispatcher
-     * @param ModuleDataProvider      $moduleDataProvider
+     * @param ModuleDataProvider $moduleDataProvider
      */
     public function __construct(
         HookDispatcherInterface $hookDispatcher,
@@ -108,8 +108,8 @@ class HookExtension extends \Twig_Extension
      *
      * The listeners will then return html data to display in the Twig template.
      *
-     * @param string $hookName       the name of the hook to trigger
-     * @param array  $hookParameters the parameters to send to the Hook
+     * @param string $hookName the name of the hook to trigger
+     * @param array $hookParameters the parameters to send to the Hook
      *
      * @throws \Exception if the hookName is missing
      *
@@ -147,8 +147,8 @@ class HookExtension extends \Twig_Extension
      *
      * The listeners will then return html data to display in the Twig template.
      *
-     * @param string $hookName       the name of the hook to trigger
-     * @param array  $hookParameters the parameters to send to the Hook
+     * @param string $hookName the name of the hook to trigger
+     * @param array $hookParameters the parameters to send to the Hook
      *
      * @throws \Exception if the hookName is missing
      *

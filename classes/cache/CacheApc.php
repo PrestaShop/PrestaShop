@@ -69,7 +69,7 @@ class CacheApcCore extends Cache
                 } else {
                     $key = $entry['info'];
                 }
-                if (preg_match('#^'.$pattern.'$#', $key)) {
+                if (preg_match('#^' . $pattern . '$#', $key)) {
                     $this->_delete($key);
                 }
             }
@@ -138,10 +138,10 @@ class CacheApcCore extends Cache
     /**
      * Store data in the cache.
      *
-     * @param string $key   Cache Key
-     * @param mixed  $value Value
-     * @param int    $ttl   Time to live in the cache
-     *                      0 = unlimited
+     * @param string $key Cache Key
+     * @param mixed $value Value
+     * @param int $ttl Time to live in the cache
+     *                 0 = unlimited
      *
      * @return bool Whether the data was successfully stored
      */

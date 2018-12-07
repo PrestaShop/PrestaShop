@@ -54,8 +54,8 @@ class CategoryProductSearchProvider implements ProductSearchProviderInterface
 
     /**
      * @param ProductSearchContext $context
-     * @param ProductSearchQuery   $query
-     * @param string               $type
+     * @param ProductSearchQuery $query
+     * @param string $type
      *
      * @throws \PrestaShopDatabaseException
      *
@@ -92,7 +92,7 @@ class CategoryProductSearchProvider implements ProductSearchProviderInterface
 
     /**
      * @param ProductSearchContext $context
-     * @param ProductSearchQuery   $query
+     * @param ProductSearchQuery $query
      *
      * @throws \PrestaShopDatabaseException
      *

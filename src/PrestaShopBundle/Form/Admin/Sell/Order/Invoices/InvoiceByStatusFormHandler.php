@@ -50,13 +50,13 @@ final class InvoiceByStatusFormHandler extends FormHandler
     private $pdfGenerator;
 
     /**
-     * @param FormBuilderInterface              $formBuilder
-     * @param HookDispatcherInterface           $hookDispatcher
-     * @param FormDataProviderInterface         $formDataProvider
-     * @param array                             $formTypes
-     * @param string                            $hookName
+     * @param FormBuilderInterface $formBuilder
+     * @param HookDispatcherInterface $hookDispatcher
+     * @param FormDataProviderInterface $formDataProvider
+     * @param array $formTypes
+     * @param string $hookName
      * @param OrderInvoiceDataProviderInterface $orderInvoiceDataProvider
-     * @param PDFGeneratorInterface             $pdfGenerator
+     * @param PDFGeneratorInterface $pdfGenerator
      */
     public function __construct(
         FormBuilderInterface $formBuilder,

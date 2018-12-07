@@ -45,7 +45,7 @@ final class CountryByIsoCodeChoiceProvider implements FormChoiceProviderInterfac
     private $langId;
 
     /**
-     * @param int                 $langId
+     * @param int $langId
      * @param CountryDataProvider $countryDataProvider
      */
     public function __construct(

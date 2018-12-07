@@ -100,8 +100,8 @@ abstract class CacheCore
      * Cache a data.
      *
      * @param string $key
-     * @param mixed  $value
-     * @param int    $ttl
+     * @param mixed $value
+     * @param int $ttl
      *
      * @return bool
      */
@@ -220,8 +220,8 @@ abstract class CacheCore
      * Store a data in cache.
      *
      * @param string $key
-     * @param mixed  $value
-     * @param int    $ttl
+     * @param mixed $value
+     * @param int $ttl
      *
      * @return bool
      */
@@ -302,7 +302,7 @@ abstract class CacheCore
         } else {
             $pattern = str_replace('\\*', '.*', preg_quote($key));
             foreach ($this->keys as $k => $ttl) {
-                if (preg_match('#^'.$pattern.'$#', $k)) {
+                if (preg_match('#^' . $pattern . '$#', $k)) {
                     $keys[] = $k;
                 }
             }
@@ -342,7 +342,7 @@ abstract class CacheCore
      * Store a query in cache.
      *
      * @param string $query
-     * @param array  $result
+     * @param array $result
      */
     public function setQuery($query, $result)
     {
@@ -386,7 +386,7 @@ abstract class CacheCore
      */
     public function getTableMapCacheKey($table)
     {
-        return Tools::hashIV(self::SQL_TABLES_NAME.'_'.$table);
+        return Tools::hashIV(self::SQL_TABLES_NAME . '_' . $table);
     }
 
     /**
@@ -413,9 +413,9 @@ abstract class CacheCore
     /**
      * Add the given query hash to the table to query key map.
      *
-     * @param string $key    query hash
-     * @param string $table  table name
-     * @param array  $tables the tables associated with the query
+     * @param string $key query hash
+     * @param string $table table name
+     * @param array $tables the tables associated with the query
      */
     private function addQueryKeyToTableMap($key, $table, $tables)
     {
@@ -506,7 +506,7 @@ abstract class CacheCore
             );
             foreach (array_keys($tableBuffer) as $fs_key) {
                 $invalidKeys[] = $fs_key;
-                $invalidKeys[] = $fs_key.'_nrows';
+                $invalidKeys[] = $fs_key . '_nrows';
                 unset($this->sql_tables_cached[$table][$fs_key]);
             }
             $this->_deleteMulti($invalidKeys);
@@ -527,8 +527,8 @@ abstract class CacheCore
      */
     public function getTables($string)
     {
-        if (preg_match_all('/(?:from|join|update|into)\s+`?('._DB_PREFIX_.
-            '[0-9a-z_-]+)(?:`?\s{0,},\s{0,}`?('._DB_PREFIX_.
+        if (preg_match_all('/(?:from|join|update|into)\s+`?(' . _DB_PREFIX_ .
+            '[0-9a-z_-]+)(?:`?\s{0,},\s{0,}`?(' . _DB_PREFIX_ .
             '[0-9a-z_-]+)`?)?(?:`|\s+|\Z)(?!\s*,)/Umsi', $string, $res)) {
             foreach ($res[2] as $table) {
                 if ('' != $table) {
@@ -562,7 +562,7 @@ abstract class CacheCore
                 if (!empty($this->sql_tables_cached[$table])) {
                     foreach ($this->sql_tables_cached[$table] as $fs_key => $tableMapInfos) {
                         $invalidKeys[] = $fs_key;
-                        $invalidKeys[] = $fs_key.'_nrows';
+                        $invalidKeys[] = $fs_key . '_nrows';
 
                         foreach ($tableMapInfos['otherTables'] as $otherTable) {
                             if ($this->removeEntryInTableMapCache($fs_key, $otherTable)) {
@@ -646,7 +646,7 @@ abstract class CacheCore
     protected function isBlacklist($query)
     {
         foreach ($this->blacklist as $find) {
-            if (false !== mb_strpos($query, _DB_PREFIX_.$find)) {
+            if (false !== mb_strpos($query, _DB_PREFIX_ . $find)) {
                 return true;
             }
         }
@@ -710,7 +710,7 @@ abstract class CacheCore
         if (false !== mb_strpos($key, '*')) {
             $regexp = str_replace('\\*', '.*', preg_quote($key, '#'));
             foreach (array_keys(Cache::$local) as $key) {
-                if (preg_match('#^'.$regexp.'$#', $key)) {
+                if (preg_match('#^' . $regexp . '$#', $key)) {
                     unset(Cache::$local[$key]);
                 }
             }

@@ -37,9 +37,9 @@ final class FilterParametersUpdater
     /**
      * In case of position ordering all the filters should be reset.
      *
-     * @param array  $filterParameters
+     * @param array $filterParameters
      * @param string $orderBy
-     * @param bool   $hasCategoryFilter
+     * @param bool $hasCategoryFilter
      *
      * @return array $filterParameters
      */
@@ -80,9 +80,9 @@ final class FilterParametersUpdater
 
     /**
      * @param string $parameterName
-     * @param array  $queryFilterParameters
-     * @param array  $persistedFilterParameters
-     * @param array  $defaultFilterParameters
+     * @param array $queryFilterParameters
+     * @param array $persistedFilterParameters
+     * @param array $defaultFilterParameters
      *
      * @throws ProductException
      *
@@ -108,8 +108,8 @@ final class FilterParametersUpdater
             );
         }
 
-        if ('last' === $value && isset($persistedFilterParameters['last_'.$parameterName])) {
-            $value = $persistedFilterParameters['last_'.$parameterName];
+        if ('last' === $value && isset($persistedFilterParameters['last_' . $parameterName])) {
+            $value = $persistedFilterParameters['last_' . $parameterName];
         }
 
         return $value;

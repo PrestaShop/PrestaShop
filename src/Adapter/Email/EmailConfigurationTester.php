@@ -52,7 +52,7 @@ final class EmailConfigurationTester implements EmailConfigurationTesterInterfac
 
     /**
      * @param ConfigurationInterface $configuration
-     * @param TranslatorInterface    $translator
+     * @param TranslatorInterface $translator
      */
     public function __construct(
         ConfigurationInterface $configuration,

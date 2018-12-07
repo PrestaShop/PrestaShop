@@ -37,10 +37,10 @@ class CountryDataProvider
     /**
      * Return available countries.
      *
-     * @param int  $id_lang        Language ID
-     * @param bool $active         return only active coutries
+     * @param int $id_lang Language ID
+     * @param bool $active return only active coutries
      * @param bool $contain_states return only country with states
-     * @param bool $list_states    Include the states list with the returned list
+     * @param bool $list_states Include the states list with the returned list
      *
      * @return array Countries and corresponding zones
      */

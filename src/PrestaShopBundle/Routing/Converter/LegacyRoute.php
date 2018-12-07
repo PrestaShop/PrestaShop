@@ -90,8 +90,8 @@ class LegacyRoute
      * LegacyRoute constructor.
      *
      * @param string $routeName
-     * @param array  $legacyLinks
-     * @param array  $routeParameters
+     * @param array $legacyLinks
+     * @param array $routeParameters
      */
     public function __construct($routeName, array $legacyLinks, array $routeParameters)
     {
@@ -155,7 +155,7 @@ class LegacyRoute
     }
 
     /**
-     * @param array  $legacyLinks
+     * @param array $legacyLinks
      * @param string $routeName
      *
      * @return array

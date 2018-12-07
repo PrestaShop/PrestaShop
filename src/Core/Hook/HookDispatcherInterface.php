@@ -45,7 +45,7 @@ interface HookDispatcherInterface extends EventDispatcherInterface
      * Dispatch hook with raw parameters.
      *
      * @param string $hookName
-     * @param array  $hookParameters
+     * @param array $hookParameters
      */
     public function dispatchWithParameters($hookName, array $hookParameters = array());
 
@@ -62,7 +62,7 @@ interface HookDispatcherInterface extends EventDispatcherInterface
      * Dispatch rendering hook with parameters.
      *
      * @param string $hookName
-     * @param array  $hookParameters
+     * @param array $hookParameters
      *
      * @return RenderedHookInterface
      */

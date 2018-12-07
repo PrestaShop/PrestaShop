@@ -82,7 +82,7 @@ final class CategoryFieldsProvider implements EntityFieldsProviderInterface
     /**
      * A shorter name method for translations.
      *
-     * @param string $id     translation ID
+     * @param string $id translation ID
      * @param string $domain translation domain
      *
      * @return string

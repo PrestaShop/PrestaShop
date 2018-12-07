@@ -46,8 +46,8 @@ class ImportLocalizationPackType extends TranslatorAwareType
 
     /**
      * @param TranslatorInterface $translator
-     * @param array               $locales
-     * @param array               $localizationPackChoices
+     * @param array $locales
+     * @param array $localizationPackChoices
      */
     public function __construct(
         TranslatorInterface $translator,

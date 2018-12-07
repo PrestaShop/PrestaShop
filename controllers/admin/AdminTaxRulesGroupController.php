@@ -77,7 +77,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
     {
         if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_tax_rules_group'] = array(
-                'href' => self::$currentIndex.'&addtax_rules_group&token='.$this->token,
+                'href' => self::$currentIndex . '&addtax_rules_group&token=' . $this->token,
                 'desc' => $this->trans('Add new tax rules group', array(), 'Admin.International.Feature'),
                 'icon' => 'process-icon-new',
             );
@@ -148,13 +148,13 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 			t.rate';
 
         $this->_join = '
-			LEFT JOIN `'._DB_PREFIX_.'country_lang` c
-				ON (a.`id_country` = c.`id_country` AND id_lang = '.(int) $this->context->language->id.')
-			LEFT JOIN `'._DB_PREFIX_.'state` s
+			LEFT JOIN `' . _DB_PREFIX_ . 'country_lang` c
+				ON (a.`id_country` = c.`id_country` AND id_lang = ' . (int) $this->context->language->id . ')
+			LEFT JOIN `' . _DB_PREFIX_ . 'state` s
 				ON (a.`id_state` = s.`id_state`)
-			LEFT JOIN `'._DB_PREFIX_.'tax` t
+			LEFT JOIN `' . _DB_PREFIX_ . 'tax` t
 				ON (a.`id_tax` = t.`id_tax`)';
-        $this->_where = 'AND `id_tax_rules_group` = '.(int) $id_group;
+        $this->_where = 'AND `id_tax_rules_group` = ' . (int) $id_group;
         $this->_use_found_rows = false;
 
         $this->show_toolbar = false;
@@ -178,7 +178,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
                     'label' => $this->trans('Name', array(), 'Admin.Global'),
                     'name' => 'name',
                     'required' => true,
-                    'hint' => $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info').' <>;=#{}',
+                    'hint' => $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info') . ' <>;=#{}',
                 ),
                 array(
                     'type' => 'switch',
@@ -312,9 +312,9 @@ class AdminTaxRulesGroupControllerCore extends AdminController
                         'name' => 'name',
                     ),
                     'hint' => array(
-                        $this->trans('You must define the behavior if an address matches multiple rules:', array(), 'Admin.International.Help').'<br>',
-                        $this->trans('- This tax only: Will apply only this tax', array(), 'Admin.International.Help').'<br>',
-                        $this->trans('- Combine: Combine taxes (e.g.: 10% + 5% = 15%)', array(), 'Admin.International.Help').'<br>',
+                        $this->trans('You must define the behavior if an address matches multiple rules:', array(), 'Admin.International.Help') . '<br>',
+                        $this->trans('- This tax only: Will apply only this tax', array(), 'Admin.International.Help') . '<br>',
+                        $this->trans('- Combine: Combine taxes (e.g.: 10% + 5% = 15%)', array(), 'Admin.International.Help') . '<br>',
                         $this->trans('- One after another: Apply taxes one after another (e.g.: 100 + 10% => 110 + 5% = 115.5)', array(), 'Admin.International.Help'),
                     ),
                 ),
@@ -371,7 +371,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
         $helper->allow_employee_form_lang = $this->allow_employee_form_lang;
         $helper->fields_value = $this->getFieldsValue($this->object);
         $helper->toolbar_btn['save_new_rule'] = array(
-            'href' => self::$currentIndex.'&amp;id_tax_rules_group='.$obj->id.'&amp;action=create_rule&amp;token='.$this->token,
+            'href' => self::$currentIndex . '&amp;id_tax_rules_group=' . $obj->id . '&amp;action=create_rule&amp;token=' . $this->token,
             'desc' => 'Save tax rule',
             'class' => 'process-icon-save',
         );
@@ -495,7 +495,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 
         if (0 == count($this->errors)) {
             Tools::redirectAdmin(
-                self::$currentIndex.'&'.$this->identifier.'='.(int) $tax_rules_group->id.'&conf=4&update'.$this->table.'&token='.$this->token
+                self::$currentIndex . '&' . $this->identifier . '=' . (int) $tax_rules_group->id . '&conf=4&update' . $this->table . '&token=' . $this->token
             );
         } else {
             $this->display = 'edit';
@@ -529,7 +529,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
         }
 
         Tools::redirectAdmin(
-            self::$currentIndex.'&'.$this->identifier.'='.(int) $tax_rules_group->id.'&conf=4&update'.$this->table.'&token='.$this->token
+            self::$currentIndex . '&' . $this->identifier . '=' . (int) $tax_rules_group->id . '&conf=4&update' . $this->table . '&token=' . $this->token
         );
     }
 

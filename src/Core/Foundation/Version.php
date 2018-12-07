@@ -72,11 +72,11 @@ class Version
     /**
      * Initialize version data.
      *
-     * @param string $version            Version
+     * @param string $version Version
      * @param string $majorVersionString Major version in string format
-     * @param int    $majorVersion       Major version
-     * @param int    $minorVersion       Minor version
-     * @param int    $releaseVersion     Release version
+     * @param int $majorVersion Major version
+     * @param int $minorVersion Minor version
+     * @param int $releaseVersion Release version
      */
     public function __construct(
         $version,

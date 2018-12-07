@@ -40,7 +40,7 @@ class Database extends AbstractInstall
      * @param string $password
      * @param string $prefix
      * @param string $engine
-     * @param bool   $clear
+     * @param bool $clear
      *
      * @return array List of errors
      */
@@ -66,12 +66,12 @@ class Database extends AbstractInstall
         }
 
         if (!$errors) {
-            $dbtype = ' ('.Db::getClass().')';
+            $dbtype = ' (' . Db::getClass() . ')';
             // Try to connect to database
             switch (Db::checkConnection($server, $login, $password, $database, true)) {
                 case 0:
                     if (!Db::checkEncoding($server, $login, $password)) {
-                        $errors[] = $this->translator->trans('Cannot convert database data to utf-8', array(), 'Install').$dbtype;
+                        $errors[] = $this->translator->trans('Cannot convert database data to utf-8', array(), 'Install') . $dbtype;
                     }
 
                     // Check if a table with same prefix already exists
@@ -90,13 +90,13 @@ class Database extends AbstractInstall
                     break;
 
                 case 1:
-                    $errors[] = $this->translator->trans('Database Server is not found. Please verify the login, password and server fields', array(), 'Install').$dbtype;
+                    $errors[] = $this->translator->trans('Database Server is not found. Please verify the login, password and server fields', array(), 'Install') . $dbtype;
                     break;
 
                 case 2:
-                    $error = $this->translator->trans('Connection to MySQL server succeeded, but database "%database%" not found', array('%database%' => $database), 'Install').$dbtype;
+                    $error = $this->translator->trans('Connection to MySQL server succeeded, but database "%database%" not found', array('%database%' => $database), 'Install') . $dbtype;
                     if ($this->createDatabase($server, $database, $login, $password, true)) {
-                        $error .= '<p>'.sprintf('<input type="button" value="%s" class="button" id="btCreateDB">', $this->translator->trans('Attempt to create the database automatically', array(), 'Install')).'</p>
+                        $error .= '<p>' . sprintf('<input type="button" value="%s" class="button" id="btCreateDB">', $this->translator->trans('Attempt to create the database automatically', array(), 'Install')) . '</p>
 						<script type="text/javascript">bindCreateDB();</script>';
                     }
                     $errors[] = $error;
@@ -113,14 +113,14 @@ class Database extends AbstractInstall
 
     public function createDatabase($server, $database, $login, $password, $dropit = false)
     {
-        $class = '\\'.Db::getClass();
+        $class = '\\' . Db::getClass();
 
         return call_user_func(array($class, 'createDatabase'), $server, $login, $password, $database, $dropit);
     }
 
     public function getBestEngine($server, $database, $login, $password)
     {
-        $class = '\\'.Db::getClass();
+        $class = '\\' . Db::getClass();
         $instance = new $class($server, $login, $password, $database, true);
         $engine = $instance->getBestEngine();
         unset($instance);

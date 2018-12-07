@@ -49,7 +49,7 @@ class ProductListingLazyArray extends ProductLazyArray
     }
 
     /**
-     * @param array                       $product
+     * @param array $product
      * @param ProductPresentationSettings $settings
      *
      * @return bool

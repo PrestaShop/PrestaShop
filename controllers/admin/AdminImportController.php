@@ -133,10 +133,10 @@ class AdminImportControllerCore extends AdminController
                     'id_product' => array('label' => $this->trans('Product ID', array(), 'Admin.Advparameters.Feature')),
                     'product_reference' => array('label' => $this->trans('Product Reference', array(), 'Admin.Advparameters.Feature')),
                     'group' => array(
-                        'label' => $this->trans('Attribute (Name:Type:Position)', array(), 'Admin.Advparameters.Feature').'*',
+                        'label' => $this->trans('Attribute (Name:Type:Position)', array(), 'Admin.Advparameters.Feature') . '*',
                     ),
                     'attribute' => array(
-                        'label' => $this->trans('Value (Value:Position)', array(), 'Admin.Advparameters.Feature').'*',
+                        'label' => $this->trans('Value (Value:Position)', array(), 'Admin.Advparameters.Feature') . '*',
                     ),
                     'supplier_reference' => array('label' => $this->trans('Supplier reference', array(), 'Admin.Advparameters.Feature')),
                     'reference' => array('label' => $this->trans('Reference', array(), 'Admin.Global')),
@@ -376,11 +376,11 @@ class AdminImportControllerCore extends AdminController
                     'id' => array('label' => $this->trans('ID', array(), 'Admin.Global')),
                     'active' => array('label' => $this->trans('Active  (0/1)', array(), 'Admin.Advparameters.Feature')),
                     'id_gender' => array('label' => $this->trans('Titles ID (Mr = 1, Ms = 2, else 0)', array(), 'Admin.Advparameters.Feature')),
-                    'email' => array('label' => $this->trans('Email', array(), 'Admin.Global').'*'),
-                    'passwd' => array('label' => $this->trans('Password', array(), 'Admin.Global').'*'),
+                    'email' => array('label' => $this->trans('Email', array(), 'Admin.Global') . '*'),
+                    'passwd' => array('label' => $this->trans('Password', array(), 'Admin.Global') . '*'),
                     'birthday' => array('label' => $this->trans('Birth date (yyyy-mm-dd)', array(), 'Admin.Advparameters.Feature')),
-                    'lastname' => array('label' => $this->trans('Last name', array(), 'Admin.Global').'*'),
-                    'firstname' => array('label' => $this->trans('First name', array(), 'Admin.Global').'*'),
+                    'lastname' => array('label' => $this->trans('Last name', array(), 'Admin.Global') . '*'),
+                    'firstname' => array('label' => $this->trans('First name', array(), 'Admin.Global') . '*'),
                     'newsletter' => array('label' => $this->trans('Newsletter (0/1)', array(), 'Admin.Advparameters.Feature')),
                     'optin' => array('label' => $this->trans('Partner offers (0/1)', array(), 'Admin.Advparameters.Feature')),
                     'date_add' => array('label' => $this->trans('Registration date (yyyy-mm-dd)', array(), 'Admin.Advparameters.Feature')),
@@ -414,20 +414,20 @@ class AdminImportControllerCore extends AdminController
                 $this->available_fields = array(
                     'no' => array('label' => $this->trans('Ignore this column', array(), 'Admin.Advparameters.Feature')),
                     'id' => array('label' => $this->trans('ID', array(), 'Admin.Global')),
-                    'alias' => array('label' => $this->trans('Alias', array(), 'Admin.Shopparameters.Feature').'*'),
+                    'alias' => array('label' => $this->trans('Alias', array(), 'Admin.Shopparameters.Feature') . '*'),
                     'active' => array('label' => $this->trans('Active  (0/1)', array(), 'Admin.Advparameters.Feature')),
-                    'customer_email' => array('label' => $this->trans('Customer email', array(), 'Admin.Advparameters.Feature').'*'),
+                    'customer_email' => array('label' => $this->trans('Customer email', array(), 'Admin.Advparameters.Feature') . '*'),
                     'id_customer' => array('label' => $this->trans('Customer ID', array(), 'Admin.Advparameters.Feature')),
                     'manufacturer' => array('label' => $this->trans('Brand', array(), 'Admin.Global')),
                     'supplier' => array('label' => $this->trans('Supplier', array(), 'Admin.Global')),
                     'company' => array('label' => $this->trans('Company', array(), 'Admin.Global')),
-                    'lastname' => array('label' => $this->trans('Last name', array(), 'Admin.Global').'*'),
-                    'firstname' => array('label' => $this->trans('First name ', array(), 'Admin.Global').'*'),
-                    'address1' => array('label' => $this->trans('Address', array(), 'Admin.Global').'*'),
+                    'lastname' => array('label' => $this->trans('Last name', array(), 'Admin.Global') . '*'),
+                    'firstname' => array('label' => $this->trans('First name ', array(), 'Admin.Global') . '*'),
+                    'address1' => array('label' => $this->trans('Address', array(), 'Admin.Global') . '*'),
                     'address2' => array('label' => $this->trans('Address (2)', array(), 'Admin.Global')),
-                    'postcode' => array('label' => $this->trans('Zip/postal code', array(), 'Admin.Global').'*'),
-                    'city' => array('label' => $this->trans('City', array(), 'Admin.Global').'*'),
-                    'country' => array('label' => $this->trans('Country', array(), 'Admin.Global').'*'),
+                    'postcode' => array('label' => $this->trans('Zip/postal code', array(), 'Admin.Global') . '*'),
+                    'city' => array('label' => $this->trans('City', array(), 'Admin.Global') . '*'),
+                    'country' => array('label' => $this->trans('Country', array(), 'Admin.Global') . '*'),
                     'state' => array('label' => $this->trans('State', array(), 'Admin.Global')),
                     'other' => array('label' => $this->trans('Other', array(), 'Admin.Global')),
                     'phone' => array('label' => $this->trans('Phone', array(), 'Admin.Global')),
@@ -482,8 +482,8 @@ class AdminImportControllerCore extends AdminController
                 $this->available_fields = array(
                     'no' => array('label' => $this->trans('Ignore this column', array(), 'Admin.Advparameters.Feature')),
                     'id' => array('label' => $this->trans('ID', array(), 'Admin.Global')),
-                    'alias' => array('label' => $this->trans('Alias', array(), 'Admin.Shopparameters.Feature').'*'),
-                    'search' => array('label' => $this->trans('Search', array(), 'Admin.Shopparameters.Feature').'*'),
+                    'alias' => array('label' => $this->trans('Alias', array(), 'Admin.Shopparameters.Feature') . '*'),
+                    'search' => array('label' => $this->trans('Search', array(), 'Admin.Shopparameters.Feature') . '*'),
                     'active' => array('label' => $this->trans('Active', array(), 'Admin.Global')),
                     );
                 self::$default_values = array(
@@ -507,14 +507,14 @@ class AdminImportControllerCore extends AdminController
                     'id' => array('label' => $this->trans('ID', array(), 'Admin.Global')),
                     'active' => array('label' => $this->trans('Active (0/1)', array(), 'Admin.Advparameters.Feature')),
                     'name' => array('label' => $this->trans('Name', array(), 'Admin.Global')),
-                    'address1' => array('label' => $this->trans('Address', array(), 'Admin.Global').'*'),
+                    'address1' => array('label' => $this->trans('Address', array(), 'Admin.Global') . '*'),
                     'address2' => array('label' => $this->trans('Address (2)', array(), 'Admin.Advparameters.Feature')),
                     'postcode' => array('label' => $this->trans('Zip/postal code', array(), 'Admin.Global')),
                     'state' => array('label' => $this->trans('State', array(), 'Admin.Global')),
-                    'city' => array('label' => $this->trans('City', array(), 'Admin.Global').'*'),
-                    'country' => array('label' => $this->trans('Country', array(), 'Admin.Global').'*'),
-                    'latitude' => array('label' => $this->trans('Latitude', array(), 'Admin.Advparameters.Feature').'*'),
-                    'longitude' => array('label' => $this->trans('Longitude', array(), 'Admin.Advparameters.Feature').'*'),
+                    'city' => array('label' => $this->trans('City', array(), 'Admin.Global') . '*'),
+                    'country' => array('label' => $this->trans('Country', array(), 'Admin.Global') . '*'),
+                    'latitude' => array('label' => $this->trans('Latitude', array(), 'Admin.Advparameters.Feature') . '*'),
+                    'longitude' => array('label' => $this->trans('Longitude', array(), 'Admin.Advparameters.Feature') . '*'),
                     'phone' => array('label' => $this->trans('Phone', array(), 'Admin.Global')),
                     'fax' => array('label' => $this->trans('Fax', array(), 'Admin.Global')),
                     'email' => array('label' => $this->trans('Email address', array(), 'Admin.Global')),
@@ -602,20 +602,20 @@ class AdminImportControllerCore extends AdminController
         $bo_theme = ((Validate::isLoadedObject($this->context->employee)
             && $this->context->employee->bo_theme) ? $this->context->employee->bo_theme : 'default');
 
-        if (!file_exists(_PS_BO_ALL_THEMES_DIR_.$bo_theme.DIRECTORY_SEPARATOR
-            .'template')) {
+        if (!file_exists(_PS_BO_ALL_THEMES_DIR_ . $bo_theme . DIRECTORY_SEPARATOR
+            . 'template')) {
             $bo_theme = 'default';
         }
 
         // We need to set parent media first, so that jQuery is loaded before the dependant plugins
         parent::setMedia($isNewTheme);
 
-        $this->addJs(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$bo_theme.'/js/jquery.iframe-transport.js');
-        $this->addJs(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$bo_theme.'/js/jquery.fileupload.js');
-        $this->addJs(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$bo_theme.'/js/jquery.fileupload-process.js');
-        $this->addJs(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$bo_theme.'/js/jquery.fileupload-validate.js');
-        $this->addJs(__PS_BASE_URI__.'js/vendor/spin.js');
-        $this->addJs(__PS_BASE_URI__.'js/vendor/ladda.js');
+        $this->addJs(__PS_BASE_URI__ . $this->admin_webpath . '/themes/' . $bo_theme . '/js/jquery.iframe-transport.js');
+        $this->addJs(__PS_BASE_URI__ . $this->admin_webpath . '/themes/' . $bo_theme . '/js/jquery.fileupload.js');
+        $this->addJs(__PS_BASE_URI__ . $this->admin_webpath . '/themes/' . $bo_theme . '/js/jquery.fileupload-process.js');
+        $this->addJs(__PS_BASE_URI__ . $this->admin_webpath . '/themes/' . $bo_theme . '/js/jquery.fileupload-validate.js');
+        $this->addJs(__PS_BASE_URI__ . 'js/vendor/spin.js');
+        $this->addJs(__PS_BASE_URI__ . 'js/vendor/ladda.js');
     }
 
     public function renderForm()
@@ -663,7 +663,7 @@ class AdminImportControllerCore extends AdminController
         uasort($files_to_import, array('AdminImportController', 'usortFiles'));
         foreach ($files_to_import as $k => &$filename) {
             //exclude .  ..  .svn and index.php and all hidden files
-            if (preg_match('/^\..*|index\.php/i', $filename) || is_dir(AdminImportController::getPath().$filename)) {
+            if (preg_match('/^\..*|index\.php/i', $filename) || is_dir(AdminImportController::getPath() . $filename)) {
                 unset($files_to_import[$k]);
             }
         }
@@ -752,7 +752,7 @@ class AdminImportControllerCore extends AdminController
 
     public function ajaxProcessuploadCsv()
     {
-        $filename_prefix = date('YmdHis').'-';
+        $filename_prefix = date('YmdHis') . '-';
 
         if (isset($_FILES['file']) && !empty($_FILES['file']['error'])) {
             switch ($_FILES['file']['error']) {
@@ -761,9 +761,9 @@ class AdminImportControllerCore extends AdminController
                     break;
                 case UPLOAD_ERR_FORM_SIZE:
                     $_FILES['file']['error'] = $this->trans('The uploaded file exceeds the post_max_size directive in php.ini. If your server configuration allows it, you may add a directive in your .htaccess, for example:', array(), 'Admin.Advparameters.Notification')
-                    .'<br/><a href="'.$this->context->link->getAdminLink('AdminMeta').'" >
-					<code>php_value post_max_size 20M</code> '.
-                    $this->trans('(click to open "Generators" page)', array(), 'Admin.Advparameters.Notification').'</a>';
+                    . '<br/><a href="' . $this->context->link->getAdminLink('AdminMeta') . '" >
+					<code>php_value post_max_size 20M</code> ' .
+                    $this->trans('(click to open "Generators" page)', array(), 'Admin.Advparameters.Notification') . '</a>';
                     break;
                 break;
                 case UPLOAD_ERR_PARTIAL:
@@ -778,11 +778,11 @@ class AdminImportControllerCore extends AdminController
         } elseif (!preg_match('#([^\.]*?)\.(csv|xls[xt]?|o[dt]s)$#is', $_FILES['file']['name'])) {
             $_FILES['file']['error'] = $this->trans('The extension of your file should be .csv.', array(), 'Admin.Advparameters.Notification');
         } elseif (!@filemtime($_FILES['file']['tmp_name']) ||
-            !@move_uploaded_file($_FILES['file']['tmp_name'], AdminImportController::getPath().$filename_prefix.str_replace("\0", '', $_FILES['file']['name']))) {
+            !@move_uploaded_file($_FILES['file']['tmp_name'], AdminImportController::getPath() . $filename_prefix . str_replace("\0", '', $_FILES['file']['name']))) {
             $_FILES['file']['error'] = $this->trans('An error occurred while uploading / copying the file.', array(), 'Admin.Advparameters.Notification');
         } else {
-            @chmod(AdminImportController::getPath().$filename_prefix.$_FILES['file']['name'], 0664);
-            $_FILES['file']['filename'] = $filename_prefix.str_replace('\0', '', $_FILES['file']['name']);
+            @chmod(AdminImportController::getPath() . $filename_prefix . $_FILES['file']['name'], 0664);
+            $_FILES['file']['filename'] = $filename_prefix . str_replace('\0', '', $_FILES['file']['name']);
         }
 
         die(json_encode($_FILES));
@@ -790,7 +790,7 @@ class AdminImportControllerCore extends AdminController
 
     public function renderView()
     {
-        $this->addJS(_PS_JS_DIR_.'admin/import.js');
+        $this->addJS(_PS_JS_DIR_ . 'admin/import.js');
 
         $handle = $this->openCsvFile();
         $nb_column = $this->getNbrColumn($handle, $this->separator);
@@ -798,7 +798,7 @@ class AdminImportControllerCore extends AdminController
 
         $res = array();
         foreach ($this->required_fields as $elem) {
-            $res[] = '\''.$elem.'\'';
+            $res[] = '\'' . $elem . '\'';
         }
 
         $data = array();
@@ -813,7 +813,7 @@ class AdminImportControllerCore extends AdminController
         $this->context->cookie->csv_selected = urlencode(Tools::getValue('csv'));
 
         $this->tpl_view_vars = array(
-            'import_matchs' => Db::getInstance()->executeS('SELECT * FROM '._DB_PREFIX_.'import_match', true, false),
+            'import_matchs' => Db::getInstance()->executeS('SELECT * FROM ' . _DB_PREFIX_ . 'import_match', true, false),
             'fields_value' => array(
                 'csv' => Tools::getValue('csv'),
                 'entity' => (int) Tools::getValue('entity'),
@@ -845,7 +845,7 @@ class AdminImportControllerCore extends AdminController
                 // Default cancel button - like old back link
                 $back = Tools::safeOutput(Tools::getValue('back', ''));
                 if (empty($back)) {
-                    $back = self::$currentIndex.'&token='.$this->token;
+                    $back = self::$currentIndex . '&token=' . $this->token;
                 }
 
                 $this->toolbar_btn['cancel'] = array(
@@ -863,15 +863,15 @@ class AdminImportControllerCore extends AdminController
 
     protected function generateContentTable($current_table, $nb_column, $handle, $glue)
     {
-        $html = '<table id="table'.$current_table.'" style="display: none;" class="table table-bordered"><thead><tr>';
+        $html = '<table id="table' . $current_table . '" style="display: none;" class="table table-bordered"><thead><tr>';
         // Header
         for ($i = 0; $i < $nb_column; ++$i) {
             if (MAX_COLUMNS * (int) $current_table <= $i && (int) $i < MAX_COLUMNS * ((int) $current_table + 1)) {
                 $html .= '<th>
-							<select id="type_value['.$i.']"
-								name="type_value['.$i.']"
+							<select id="type_value[' . $i . ']"
+								name="type_value[' . $i . ']"
 								class="type_value">
-								'.$this->getTypeValuesOptions($i).'
+								' . $this->getTypeValuesOptions($i) . '
 							</select>
 						</th>';
             }
@@ -884,10 +884,10 @@ class AdminImportControllerCore extends AdminController
             if ($this->convert) {
                 $line = $this->utf8EncodeArray($line);
             }
-            $html .= '<tr id="table_'.$current_table.'_line_'.$current_line.'">';
+            $html .= '<tr id="table_' . $current_table . '_line_' . $current_line . '">';
             foreach ($line as $nb_c => $column) {
                 if ((MAX_COLUMNS * (int) $current_table <= $nb_c) && ((int) $nb_c < MAX_COLUMNS * ((int) $current_table + 1))) {
-                    $html .= '<td>'.htmlentities(Tools::substr($column, 0, 200), ENT_QUOTES, 'UTF-8').'</td>';
+                    $html .= '<td>' . htmlentities(Tools::substr($column, 0, 200), ENT_QUOTES, 'UTF-8') . '</td>';
                 }
             }
             $html .= '</tr>';
@@ -964,9 +964,9 @@ class AdminImportControllerCore extends AdminController
         $uniqid_path = false;
 
         // try data:// protocole. If failed, old school file on filesystem.
-        if (false === ($fd = @fopen('data://text/plain;base64,'.base64_encode($field), 'rb'))) {
+        if (false === ($fd = @fopen('data://text/plain;base64,' . base64_encode($field), 'rb'))) {
             do {
-                $uniqid_path = _PS_UPLOAD_DIR_.uniqid();
+                $uniqid_path = _PS_UPLOAD_DIR_ . uniqid();
             } while (file_exists($uniqid_path));
             file_put_contents($uniqid_path, $field);
             $fd = fopen($uniqid_path, 'r');
@@ -1006,14 +1006,14 @@ class AdminImportControllerCore extends AdminController
 
         $options = '';
         foreach ($this->available_fields as $k => $field) {
-            $options .= '<option value="'.$k.'"';
+            $options .= '<option value="' . $k . '"';
             if ('price_tin' === $k) {
                 ++$nb_c;
             }
             if ($i === ($nb_c + 1) && (!in_array($k, $no_pre_select, true))) {
                 $options .= ' selected="selected"';
             }
-            $options .= '>'.$field['label'].'</option>';
+            $options .= '>' . $field['label'] . '</option>';
             ++$i;
         }
 
@@ -1037,14 +1037,14 @@ class AdminImportControllerCore extends AdminController
                 continue;
             }
             if ('price_tin' === $k) { // Special case for Product : either one or the other. Not both.
-                $fields[$i - 1] = '<div>'.$this->available_fields[$keys[$i - 1]]['label'].'<br/>&nbsp;&nbsp;<i>'.$this->trans('or', array(), 'Admin.Advparameters.Help').'</i>&nbsp;&nbsp; '.$field['label'].'</div>';
+                $fields[$i - 1] = '<div>' . $this->available_fields[$keys[$i - 1]]['label'] . '<br/>&nbsp;&nbsp;<i>' . $this->trans('or', array(), 'Admin.Advparameters.Help') . '</i>&nbsp;&nbsp; ' . $field['label'] . '</div>';
             } else {
                 if (isset($field['help'])) {
-                    $html = '&nbsp;<span class="help-box" data-toggle="popover" data-content="'.$field['help'].'"></span>';
+                    $html = '&nbsp;<span class="help-box" data-toggle="popover" data-content="' . $field['help'] . '"></span>';
                 } else {
                     $html = '';
                 }
-                $fields[] = '<div>'.$field['label'].$html.'</div>';
+                $fields[] = '<div>' . $field['label'] . $html . '</div>';
             }
             ++$i;
         }
@@ -1141,11 +1141,11 @@ class AdminImportControllerCore extends AdminController
      * according to $entity->$id_entity .
      * $id_image is used if we need to add a watermark.
      *
-     * @param int    $id_entity  id of product or category (set in entity)
-     * @param int    $id_image   (default null) id of the image if watermark enabled
-     * @param string $url        path or url to use
-     * @param string $entity     'products' or 'categories'
-     * @param bool   $regenerate
+     * @param int $id_entity id of product or category (set in entity)
+     * @param int $id_image (default null) id of the image if watermark enabled
+     * @param string $url path or url to use
+     * @param string $entity 'products' or 'categories'
+     * @param bool $regenerate
      *
      * @return bool
      */
@@ -1161,16 +1161,16 @@ class AdminImportControllerCore extends AdminController
                 $path = $image_obj->getPathForCreation();
                 break;
             case 'categories':
-                $path = _PS_CAT_IMG_DIR_.(int) $id_entity;
+                $path = _PS_CAT_IMG_DIR_ . (int) $id_entity;
                 break;
             case 'manufacturers':
-                $path = _PS_MANU_IMG_DIR_.(int) $id_entity;
+                $path = _PS_MANU_IMG_DIR_ . (int) $id_entity;
                 break;
             case 'suppliers':
-                $path = _PS_SUPP_IMG_DIR_.(int) $id_entity;
+                $path = _PS_SUPP_IMG_DIR_ . (int) $id_entity;
                 break;
             case 'stores':
-                $path = _PS_STORE_IMG_DIR_.(int) $id_entity;
+                $path = _PS_STORE_IMG_DIR_ . (int) $id_entity;
                 break;
         }
 
@@ -1184,7 +1184,7 @@ class AdminImportControllerCore extends AdminController
                 $part = rawurlencode($part);
             }
             unset($part);
-            $parced_url['path'] = '/'.implode('/', $parts);
+            $parced_url['path'] = '/' . implode('/', $parts);
         }
 
         if (isset($parced_url['query'])) {
@@ -1194,7 +1194,7 @@ class AdminImportControllerCore extends AdminController
         }
 
         if (!function_exists('http_build_url')) {
-            require_once _PS_TOOL_DIR_.'http_build_url/http_build_url.php';
+            require_once _PS_TOOL_DIR_ . 'http_build_url/http_build_url.php';
         }
 
         $url = http_build_url('', $parced_url);
@@ -1212,19 +1212,19 @@ class AdminImportControllerCore extends AdminController
             $tgt_width = $tgt_height = 0;
             $src_width = $src_height = 0;
             $error = 0;
-            ImageManager::resize($tmpfile, $path.'.jpg', null, null, 'jpg', false, $error, $tgt_width, $tgt_height, 5, $src_width, $src_height);
+            ImageManager::resize($tmpfile, $path . '.jpg', null, null, 'jpg', false, $error, $tgt_width, $tgt_height, 5, $src_width, $src_height);
             $images_types = ImageType::getImagesTypes($entity, true);
 
             if ($regenerate) {
                 $previous_path = null;
                 $path_infos = array();
-                $path_infos[] = array($tgt_width, $tgt_height, $path.'.jpg');
+                $path_infos[] = array($tgt_width, $tgt_height, $path . '.jpg');
                 foreach ($images_types as $image_type) {
                     $tmpfile = self::get_best_path($image_type['width'], $image_type['height'], $path_infos);
 
                     if (ImageManager::resize(
                         $tmpfile,
-                        $path.'-'.stripslashes($image_type['name']).'.jpg',
+                        $path . '-' . stripslashes($image_type['name']) . '.jpg',
                         $image_type['width'],
                         $image_type['height'],
                         'jpg',
@@ -1238,14 +1238,14 @@ class AdminImportControllerCore extends AdminController
                     )) {
                         // the last image should not be added in the candidate list if it's bigger than the original image
                         if ($tgt_width <= $src_width && $tgt_height <= $src_height) {
-                            $path_infos[] = array($tgt_width, $tgt_height, $path.'-'.stripslashes($image_type['name']).'.jpg');
+                            $path_infos[] = array($tgt_width, $tgt_height, $path . '-' . stripslashes($image_type['name']) . '.jpg');
                         }
                         if ('products' == $entity) {
-                            if (is_file(_PS_TMP_IMG_DIR_.'product_mini_'.(int) $id_entity.'.jpg')) {
-                                unlink(_PS_TMP_IMG_DIR_.'product_mini_'.(int) $id_entity.'.jpg');
+                            if (is_file(_PS_TMP_IMG_DIR_ . 'product_mini_' . (int) $id_entity . '.jpg')) {
+                                unlink(_PS_TMP_IMG_DIR_ . 'product_mini_' . (int) $id_entity . '.jpg');
                             }
-                            if (is_file(_PS_TMP_IMG_DIR_.'product_mini_'.(int) $id_entity.'_'.(int) Context::getContext()->shop->id.'.jpg')) {
-                                unlink(_PS_TMP_IMG_DIR_.'product_mini_'.(int) $id_entity.'_'.(int) Context::getContext()->shop->id.'.jpg');
+                            if (is_file(_PS_TMP_IMG_DIR_ . 'product_mini_' . (int) $id_entity . '_' . (int) Context::getContext()->shop->id . '.jpg')) {
+                                unlink(_PS_TMP_IMG_DIR_ . 'product_mini_' . (int) $id_entity . '_' . (int) Context::getContext()->shop->id . '.jpg');
                             }
                         }
                     }
@@ -1410,7 +1410,7 @@ class AdminImportControllerCore extends AdminController
                             '%id%' => (isset($category_to_create->id) && !empty($category_to_create->id)) ? $category_to_create->id : 'null', ), 'Admin.Advparameters.Notification');
                     }
                     if (true !== $field_error || isset($lang_field_error) && true !== $lang_field_error) {
-                        $this->errors[] = (true !== $field_error ? $field_error : '').(isset($lang_field_error) && true !== $lang_field_error ? $lang_field_error : '').
+                        $this->errors[] = (true !== $field_error ? $field_error : '') . (isset($lang_field_error) && true !== $lang_field_error ? $lang_field_error : '') .
                             Db::getInstance()->getMsgError();
                     }
                 }
@@ -1504,7 +1504,7 @@ class AdminImportControllerCore extends AdminController
         //copying images of categories
         if (isset($category->image) && !empty($category->image)) {
             if (!(AdminImportController::copyImg($category->id, null, $category->image, 'categories', !$regenerate))) {
-                $this->warnings[] = $category->image.' '.$this->trans('cannot be copied.', array(), 'Admin.Advparameters.Notification');
+                $this->warnings[] = $category->image . ' ' . $this->trans('cannot be copied.', array(), 'Admin.Advparameters.Notification');
             }
         }
         // If both failed, mysql error
@@ -1518,7 +1518,7 @@ class AdminImportControllerCore extends AdminController
                 ),
                 'Admin.Advparameters.Notification'
             );
-            $error_tmp = (true !== $field_error ? $field_error : '').(isset($lang_field_error) && true !== $lang_field_error ? $lang_field_error : '').Db::getInstance()->getMsgError();
+            $error_tmp = (true !== $field_error ? $field_error : '') . (isset($lang_field_error) && true !== $lang_field_error ? $lang_field_error : '') . Db::getInstance()->getMsgError();
             if ('' != $error_tmp) {
                 $this->errors[] = $error_tmp;
             }
@@ -1526,8 +1526,8 @@ class AdminImportControllerCore extends AdminController
             // Associate category to shop
             if ($shop_is_feature_active) {
                 Db::getInstance()->execute('
-					DELETE FROM '._DB_PREFIX_.'category_shop
-					WHERE id_category = '.(int) $category->id);
+					DELETE FROM ' . _DB_PREFIX_ . 'category_shop
+					WHERE id_category = ' . (int) $category->id);
 
                 if (!$shop_is_feature_active) {
                     $info['shop'] = 1;
@@ -1647,7 +1647,7 @@ class AdminImportControllerCore extends AdminController
             if (count($links) > 0) { // We delete and relink only if there is accessories to link...
                 // Bulk jobs: for performances, we need to do a minimum amount of SQL queries. No product inflation.
                 $unique_ids = Product::getExistingIdsFromIdsOrRefs($links);
-                Db::getInstance()->delete('accessory', 'id_product_1 = '.(int) $product_id);
+                Db::getInstance()->delete('accessory', 'id_product_1 = ' . (int) $product_id);
                 Product::changeAccessoriesForProduct($unique_ids, $product_id);
             }
             ++$line_count;
@@ -1684,9 +1684,9 @@ class AdminImportControllerCore extends AdminController
         } elseif ($match_ref && isset($info['reference'])) {
             $idProductByRef = (int) Db::getInstance()->getValue('
                                     SELECT p.`id_product`
-                                    FROM `'._DB_PREFIX_.'product` p
-                                    '.Shop::addSqlAssociation('product', 'p').'
-                                    WHERE p.`reference` = "'.pSQL($info['reference']).'"
+                                    FROM `' . _DB_PREFIX_ . 'product` p
+                                    ' . Shop::addSqlAssociation('product', 'p') . '
+                                    WHERE p.`reference` = "' . pSQL($info['reference']) . '"
                                 ', false);
             if ($idProductByRef) {
                 $id_product = $idProductByRef;
@@ -1773,7 +1773,7 @@ class AdminImportControllerCore extends AdminController
                         );
                     }
                     if (true !== $field_error || isset($lang_field_error) && true !== $lang_field_error) {
-                        $this->errors[] = (true !== $field_error ? $field_error : '').(isset($lang_field_error) && true !== $lang_field_error ? $lang_field_error : '').
+                        $this->errors[] = (true !== $field_error ? $field_error : '') . (isset($lang_field_error) && true !== $lang_field_error ? $lang_field_error : '') .
                             Db::getInstance()->getMsgError();
                     }
                 }
@@ -1805,7 +1805,7 @@ class AdminImportControllerCore extends AdminController
                         );
                     }
                     if (true !== $field_error || isset($lang_field_error) && true !== $lang_field_error) {
-                        $this->errors[] = (true !== $field_error ? $field_error : '').(isset($lang_field_error) && true !== $lang_field_error ? $lang_field_error : '').
+                        $this->errors[] = (true !== $field_error ? $field_error : '') . (isset($lang_field_error) && true !== $lang_field_error ? $lang_field_error : '') .
                             Db::getInstance()->getMsgError();
                     }
                 }
@@ -1856,7 +1856,7 @@ class AdminImportControllerCore extends AdminController
                                 );
                             }
                             if (true !== $field_error || isset($lang_field_error) && true !== $lang_field_error) {
-                                $this->errors[] = (true !== $field_error ? $field_error : '').(isset($lang_field_error) && true !== $lang_field_error ? $lang_field_error : '').
+                                $this->errors[] = (true !== $field_error ? $field_error : '') . (isset($lang_field_error) && true !== $lang_field_error ? $lang_field_error : '') .
                                     Db::getInstance()->getMsgError();
                             }
                         }
@@ -1956,9 +1956,9 @@ class AdminImportControllerCore extends AdminController
             if ($match_ref && $product->reference && $product->existsRefInDatabase($product->reference)) {
                 $datas = Db::getInstance()->getRow('
 					SELECT product_shop.`date_add`, p.`id_product`
-					FROM `'._DB_PREFIX_.'product` p
-					'.Shop::addSqlAssociation('product', 'p').'
-					WHERE p.`reference` = "'.pSQL($product->reference).'"
+					FROM `' . _DB_PREFIX_ . 'product` p
+					' . Shop::addSqlAssociation('product', 'p') . '
+					WHERE p.`reference` = "' . pSQL($product->reference) . '"
 				', false);
                 $product->id = (int) $datas['id_product'];
                 $product->date_add = pSQL($datas['date_add']);
@@ -1967,9 +1967,9 @@ class AdminImportControllerCore extends AdminController
             elseif ($productExistsInDatabase) {
                 $datas = Db::getInstance()->getRow('
 					SELECT product_shop.`date_add`
-					FROM `'._DB_PREFIX_.'product` p
-					'.Shop::addSqlAssociation('product', 'p').'
-					WHERE p.`id_product` = '.(int) $product->id, false);
+					FROM `' . _DB_PREFIX_ . 'product` p
+					' . Shop::addSqlAssociation('product', 'p') . '
+					WHERE p.`id_product` = ' . (int) $product->id, false);
                 $product->date_add = pSQL($datas['date_add']);
                 $res = ($validateOnly || $product->update());
             }
@@ -1999,7 +1999,7 @@ class AdminImportControllerCore extends AdminController
                 if (Product::PTYPE_VIRTUAL == $product->getType()) {
                     $product_download = new ProductDownload();
                     $product_download->filename = ProductDownload::getNewFilename();
-                    Tools::copy($info['file_url'], _PS_DOWNLOAD_DIR_.$product_download->filename);
+                    Tools::copy($info['file_url'], _PS_DOWNLOAD_DIR_ . $product_download->filename);
                     $product_download->id_product = (int) $product->id;
                     $product_download->nb_downloadable = (int) $info['nb_downloadable'];
                     $product_download->date_expiration = $info['date_expiration'];
@@ -2037,7 +2037,7 @@ class AdminImportControllerCore extends AdminController
                 (isset($info['name']) && !empty($info['name'])) ? Tools::safeOutput($info['name']) : 'No Name',
                 (isset($info['id']) && !empty($info['id'])) ? Tools::safeOutput($info['id']) : 'No ID'
             );
-            $this->errors[] = (true !== $field_error ? $field_error : '').(isset($lang_field_error) && true !== $lang_field_error ? $lang_field_error : '').
+            $this->errors[] = (true !== $field_error ? $field_error : '') . (isset($lang_field_error) && true !== $lang_field_error ? $lang_field_error : '') .
                 Db::getInstance()->getMsgError();
         } else {
             // Product supplier
@@ -2137,7 +2137,7 @@ class AdminImportControllerCore extends AdminController
                     foreach ($product->tags as $key => $tags) {
                         $str = '';
                         foreach ($tags as $one_tag) {
-                            $str .= $one_tag.$this->multiple_value_separator;
+                            $str .= $one_tag . $this->multiple_value_separator;
                         }
                         $str = rtrim($str, $this->multiple_value_separator);
 
@@ -2354,7 +2354,7 @@ class AdminImportControllerCore extends AdminController
                 (isset($category_to_create->id) && !empty($category_to_create->id)) ? $category_to_create->id : 'null'
             );
             if (true !== $field_error || isset($lang_field_error) && true !== $lang_field_error) {
-                $this->errors[] = (true !== $field_error ? $field_error : '').(isset($lang_field_error) && true !== $lang_field_error ? $lang_field_error : '').
+                $this->errors[] = (true !== $field_error ? $field_error : '') . (isset($lang_field_error) && true !== $lang_field_error ? $lang_field_error : '') .
                     Db::getInstance()->getMsgError();
             }
         }
@@ -2377,7 +2377,7 @@ class AdminImportControllerCore extends AdminController
             $attributes = $crossStepsVariables['attributes'];
         }
         foreach (Attribute::getAttributes($default_language) as $attribute) {
-            $attributes[$attribute['attribute_group'].'_'.$attribute['name']] = (int) $attribute['id_attribute'];
+            $attributes[$attribute['attribute_group'] . '_' . $attribute['name']] = (int) $attribute['id_attribute'];
         }
 
         $this->receiveTab();
@@ -2456,9 +2456,9 @@ class AdminImportControllerCore extends AdminController
         } elseif (Tools::getValue('match_ref') && isset($info['product_reference']) && $info['product_reference']) {
             $datas = Db::getInstance()->getRow('
 				SELECT p.`id_product`
-				FROM `'._DB_PREFIX_.'product` p
-				'.Shop::addSqlAssociation('product', 'p').'
-				WHERE p.`reference` = "'.pSQL($info['product_reference']).'"
+				FROM `' . _DB_PREFIX_ . 'product` p
+				' . Shop::addSqlAssociation('product', 'p') . '
+				WHERE p.`reference` = "' . pSQL($info['product_reference']) . '"
 			', false);
             if (isset($datas['id_product']) && $datas['id_product']) {
                 $product = new Product((int) $datas['id_product'], false, $default_language);
@@ -2513,13 +2513,13 @@ class AdminImportControllerCore extends AdminController
                             $this->warnings[] = $this->trans(
                                 '%data% cannot be saved',
                                 array(
-                                    '%data%' => (isset($image->id_product) ? ' ('.$image->id_product.')' : ''),
+                                    '%data%' => (isset($image->id_product) ? ' (' . $image->id_product . ')' : ''),
                                 ),
                                 'Admin.Advparameters.Notification'
                             );
                         }
                         if (true !== $field_error || true !== $lang_field_error) {
-                            $this->errors[] = (true !== $field_error ? $field_error : '').(isset($lang_field_error) && true !== $lang_field_error ? $lang_field_error : '').mysql_error();
+                            $this->errors[] = (true !== $field_error ? $field_error : '') . (isset($lang_field_error) && true !== $lang_field_error ? $lang_field_error : '') . mysql_error();
                         }
                     }
                 }
@@ -2594,7 +2594,7 @@ class AdminImportControllerCore extends AdminController
                         $groups[$group] = $obj->id;
                     //}
                     } else {
-                        $this->errors[] = (true !== $field_error ? $field_error : '').(isset($lang_field_error) && true !== $lang_field_error ? $lang_field_error : '');
+                        $this->errors[] = (true !== $field_error ? $field_error : '') . (isset($lang_field_error) && true !== $lang_field_error ? $lang_field_error : '');
                     }
 
                     // fills groups attributes
@@ -2631,7 +2631,7 @@ class AdminImportControllerCore extends AdminController
 
                 if (isset($groups_attributes[$key])) {
                     $group = $groups_attributes[$key]['group'];
-                    if (!isset($attributes[$group.'_'.$attribute]) && 2 == count($groups_attributes[$key])) {
+                    if (!isset($attributes[$group . '_' . $attribute]) && 2 == count($groups_attributes[$key])) {
                         $id_attribute_group = $groups_attributes[$key]['id'];
                         $obj = new Attribute();
                         // sets the proper id (corresponding to the right key)
@@ -2644,10 +2644,10 @@ class AdminImportControllerCore extends AdminController
                             if (!$validateOnly) {
                                 $obj->add();
                                 $obj->associateTo($id_shop_list);
-                                $attributes[$group.'_'.$attribute] = $obj->id;
+                                $attributes[$group . '_' . $attribute] = $obj->id;
                             }
                         } else {
-                            $this->errors[] = (true !== $field_error ? $field_error : '').(isset($lang_field_error) && true !== $lang_field_error ? $lang_field_error : '');
+                            $this->errors[] = (true !== $field_error ? $field_error : '') . (isset($lang_field_error) && true !== $lang_field_error ? $lang_field_error : '');
                         }
                     }
 
@@ -2742,8 +2742,8 @@ class AdminImportControllerCore extends AdminController
                     }
 
                     // fills our attributes array, in order to add the attributes to the product_attribute afterwards
-                    if (isset($attributes[$group.'_'.$attribute])) {
-                        $attributes_to_add[] = (int) $attributes[$group.'_'.$attribute];
+                    if (isset($attributes[$group . '_' . $attribute])) {
+                        $attributes_to_add[] = (int) $attributes[$group . '_' . $attribute];
                     }
 
                     // after insertion, we clean attribute position and group attribute position
@@ -2765,14 +2765,14 @@ class AdminImportControllerCore extends AdminController
                 // now adds the attributes in the attribute_combination table
                 if ($id_product_attribute_update) {
                     Db::getInstance()->execute('
-						DELETE FROM '._DB_PREFIX_.'product_attribute_combination
-						WHERE id_product_attribute = '.(int) $id_product_attribute);
+						DELETE FROM ' . _DB_PREFIX_ . 'product_attribute_combination
+						WHERE id_product_attribute = ' . (int) $id_product_attribute);
                 }
 
                 foreach ($attributes_to_add as $attribute_to_add) {
                     Db::getInstance()->execute('
-						INSERT IGNORE INTO '._DB_PREFIX_.'product_attribute_combination (id_attribute, id_product_attribute)
-						VALUES ('.(int) $attribute_to_add.','.(int) $id_product_attribute.')', false);
+						INSERT IGNORE INTO ' . _DB_PREFIX_ . 'product_attribute_combination (id_attribute, id_product_attribute)
+						VALUES (' . (int) $attribute_to_add . ',' . (int) $id_product_attribute . ')', false);
                 }
             }
 
@@ -3117,7 +3117,7 @@ class AdminImportControllerCore extends AdminController
                     'Admin.Advparameters.Notification'
                 );
             }
-            $this->errors[] = (true !== $field_error ? $field_error : '').(isset($lang_field_error) && true !== $lang_field_error ? $lang_field_error : '').
+            $this->errors[] = (true !== $field_error ? $field_error : '') . (isset($lang_field_error) && true !== $lang_field_error ? $lang_field_error : '') .
                 Db::getInstance()->getMsgError();
         }
     }
@@ -3208,7 +3208,7 @@ class AdminImportControllerCore extends AdminController
                         );
                     }
                     if (true !== $field_error || isset($lang_field_error) && true !== $lang_field_error) {
-                        $this->errors[] = (true !== $field_error ? $field_error : '').(isset($lang_field_error) && true !== $lang_field_error ? $lang_field_error : '').
+                        $this->errors[] = (true !== $field_error ? $field_error : '') . (isset($lang_field_error) && true !== $lang_field_error ? $lang_field_error : '') .
                             Db::getInstance()->getMsgError();
                     }
                 }
@@ -3246,7 +3246,7 @@ class AdminImportControllerCore extends AdminController
                         );
                     }
                     if (true !== $field_error || isset($lang_field_error) && true !== $lang_field_error) {
-                        $this->errors[] = (true !== $field_error ? $field_error : '').(isset($lang_field_error) && true !== $lang_field_error ? $lang_field_error : '').
+                        $this->errors[] = (true !== $field_error ? $field_error : '') . (isset($lang_field_error) && true !== $lang_field_error ? $lang_field_error : '') .
                             Db::getInstance()->getMsgError();
                     }
                 }
@@ -3355,14 +3355,14 @@ class AdminImportControllerCore extends AdminController
                     $address->id_manufacturer = (int) $manufacturer->id;
                 } else {
                     if (!$validateOnly) {
-                        $this->errors[] = Db::getInstance()->getMsgError().' '.sprintf(
+                        $this->errors[] = Db::getInstance()->getMsgError() . ' ' . sprintf(
                             $this->trans('%1$s (ID: %2$s) cannot be saved', array(), 'Admin.Advparameters.Notification'),
                             $manufacturer->name,
                             (isset($manufacturer->id) && !empty($manufacturer->id)) ? $manufacturer->id : 'null'
                         );
                     }
                     if (true !== $field_error || isset($lang_field_error) && true !== $lang_field_error) {
-                        $this->errors[] = (true !== $field_error ? $field_error : '').(isset($lang_field_error) && true !== $lang_field_error ? $lang_field_error : '').
+                        $this->errors[] = (true !== $field_error ? $field_error : '') . (isset($lang_field_error) && true !== $lang_field_error ? $lang_field_error : '') .
                             Db::getInstance()->getMsgError();
                     }
                 }
@@ -3384,14 +3384,14 @@ class AdminImportControllerCore extends AdminController
                     $address->id_supplier = (int) $supplier->id;
                 } else {
                     if (!$validateOnly) {
-                        $this->errors[] = Db::getInstance()->getMsgError().' '.sprintf(
+                        $this->errors[] = Db::getInstance()->getMsgError() . ' ' . sprintf(
                             $this->trans('%1$s (ID: %2$s) cannot be saved', array(), 'Admin.Advparameters.Notification'),
                             $supplier->name,
                             (isset($supplier->id) && !empty($supplier->id)) ? $supplier->id : 'null'
                         );
                     }
                     if (true !== $field_error || isset($lang_field_error) && true !== $lang_field_error) {
-                        $this->errors[] = (true !== $field_error ? $field_error : '').(isset($lang_field_error) && true !== $lang_field_error ? $lang_field_error : '').
+                        $this->errors[] = (true !== $field_error ? $field_error : '') . (isset($lang_field_error) && true !== $lang_field_error ? $lang_field_error : '') .
                             Db::getInstance()->getMsgError();
                     }
                 }
@@ -3431,7 +3431,7 @@ class AdminImportControllerCore extends AdminController
                 );
             }
             if (true !== $field_error || isset($lang_field_error) && true !== $lang_field_error) {
-                $this->errors[] = (true !== $field_error ? $field_error : '').(isset($lang_field_error) && true !== $lang_field_error ? $lang_field_error : '').
+                $this->errors[] = (true !== $field_error ? $field_error : '') . (isset($lang_field_error) && true !== $lang_field_error ? $lang_field_error : '') .
                     Db::getInstance()->getMsgError();
             }
         }
@@ -3508,7 +3508,7 @@ class AdminImportControllerCore extends AdminController
             //copying images of manufacturer
             if (!$validateOnly && isset($manufacturer->image) && !empty($manufacturer->image)) {
                 if (!AdminImportController::copyImg($manufacturer->id, null, $manufacturer->image, 'manufacturers', !$regenerate)) {
-                    $this->warnings[] = $manufacturer->image.' '.$this->trans('cannot be copied.', array(), 'Admin.Advparameters.Notification');
+                    $this->warnings[] = $manufacturer->image . ' ' . $this->trans('cannot be copied.', array(), 'Admin.Advparameters.Notification');
                 }
             }
 
@@ -3516,8 +3516,8 @@ class AdminImportControllerCore extends AdminController
                 // Associate supplier to group shop
                 if ($shop_is_feature_active && $manufacturer->shop) {
                     Db::getInstance()->execute('
-						DELETE FROM '._DB_PREFIX_.'manufacturer_shop
-						WHERE id_manufacturer = '.(int) $manufacturer->id);
+						DELETE FROM ' . _DB_PREFIX_ . 'manufacturer_shop
+						WHERE id_manufacturer = ' . (int) $manufacturer->id);
                     $manufacturer->shop = explode($this->multiple_value_separator, $manufacturer->shop);
                     $shops = array();
                     foreach ($manufacturer->shop as $shop) {
@@ -3537,14 +3537,14 @@ class AdminImportControllerCore extends AdminController
 
         if (!$res) {
             if (!$validateOnly) {
-                $this->errors[] = Db::getInstance()->getMsgError().' '.sprintf(
+                $this->errors[] = Db::getInstance()->getMsgError() . ' ' . sprintf(
                     $this->trans('%1$s (ID: %2$s) cannot be saved', array(), 'Admin.Advparameters.Notification'),
                     (isset($info['name']) && !empty($info['name'])) ? Tools::safeOutput($info['name']) : 'No Name',
                     (isset($info['id']) && !empty($info['id'])) ? Tools::safeOutput($info['id']) : 'No ID'
                 );
             }
             if (true !== $field_error || isset($lang_field_error) && true !== $lang_field_error) {
-                $this->errors[] = (true !== $field_error ? $field_error : '').(isset($lang_field_error) && true !== $lang_field_error ? $lang_field_error : '').
+                $this->errors[] = (true !== $field_error ? $field_error : '') . (isset($lang_field_error) && true !== $lang_field_error ? $lang_field_error : '') .
                     Db::getInstance()->getMsgError();
             }
         }
@@ -3624,12 +3624,12 @@ class AdminImportControllerCore extends AdminController
             //copying images of suppliers
             if (!$validateOnly && isset($supplier->image) && !empty($supplier->image)) {
                 if (!AdminImportController::copyImg($supplier->id, null, $supplier->image, 'suppliers', !$regenerate)) {
-                    $this->warnings[] = $supplier->image.' '.$this->trans('cannot be copied.', array(), 'Admin.Advparameters.Notification');
+                    $this->warnings[] = $supplier->image . ' ' . $this->trans('cannot be copied.', array(), 'Admin.Advparameters.Notification');
                 }
             }
 
             if (!$res) {
-                $this->errors[] = Db::getInstance()->getMsgError().' '.sprintf(
+                $this->errors[] = Db::getInstance()->getMsgError() . ' ' . sprintf(
                     $this->trans('%1$s (ID: %2$s) cannot be saved', array(), 'Admin.Advparameters.Notification'),
                     (isset($info['name']) && !empty($info['name'])) ? Tools::safeOutput($info['name']) : 'No Name',
                     (isset($info['id']) && !empty($info['id'])) ? Tools::safeOutput($info['id']) : 'No ID'
@@ -3638,8 +3638,8 @@ class AdminImportControllerCore extends AdminController
                 // Associate supplier to group shop
                 if ($shop_is_feature_active && $supplier->shop) {
                     Db::getInstance()->execute('
-						DELETE FROM '._DB_PREFIX_.'supplier_shop
-						WHERE id_supplier = '.(int) $supplier->id);
+						DELETE FROM ' . _DB_PREFIX_ . 'supplier_shop
+						WHERE id_supplier = ' . (int) $supplier->id);
                     $supplier->shop = explode($this->multiple_value_separator, $supplier->shop);
                     $shops = array();
                     foreach ($supplier->shop as $shop) {
@@ -3656,8 +3656,8 @@ class AdminImportControllerCore extends AdminController
                 }
             }
         } else {
-            $this->errors[] = $this->trans('Supplier is invalid', array(), 'Admin.Advparameters.Notification').' ('.$supplier->name.')';
-            $this->errors[] = (true !== $field_error ? $field_error : '').(isset($lang_field_error) && true !== $lang_field_error ? $lang_field_error : '');
+            $this->errors[] = $this->trans('Supplier is invalid', array(), 'Admin.Advparameters.Notification') . ' (' . $supplier->name . ')';
+            $this->errors[] = (true !== $field_error ? $field_error : '') . (isset($lang_field_error) && true !== $lang_field_error ? $lang_field_error : '');
         }
     }
 
@@ -3726,15 +3726,15 @@ class AdminImportControllerCore extends AdminController
             }
 
             if (!$res) {
-                $this->errors[] = Db::getInstance()->getMsgError().' '.sprintf(
+                $this->errors[] = Db::getInstance()->getMsgError() . ' ' . sprintf(
                     $this->trans('%1$s (ID: %2$s) cannot be saved', array(), 'Admin.Advparameters.Notification'),
                     $info['name'],
                     (isset($info['id']) ? $info['id'] : 'null')
                 );
             }
         } else {
-            $this->errors[] = $this->trans('Alias is invalid', array(), 'Admin.Advparameters.Notification').' ('.$alias->name.')';
-            $this->errors[] = (true !== $field_error ? $field_error : '').(isset($lang_field_error) && true !== $lang_field_error ? $lang_field_error : '');
+            $this->errors[] = $this->trans('Alias is invalid', array(), 'Admin.Advparameters.Notification') . ' (' . $alias->name . ')';
+            $this->errors[] = (true !== $field_error ? $field_error : '') . (isset($lang_field_error) && true !== $lang_field_error ? $lang_field_error : '');
         }
     }
 
@@ -3794,7 +3794,7 @@ class AdminImportControllerCore extends AdminController
 
         if (isset($store->image) && !empty($store->image)) {
             if (!(AdminImportController::copyImg($store->id, null, $store->image, 'stores', !$regenerate))) {
-                $this->warnings[] = $store->image.' '.$this->trans('cannot be copied.', array(), 'Admin.Advparameters.Notification');
+                $this->warnings[] = $store->image . ' ' . $this->trans('cannot be copied.', array(), 'Admin.Advparameters.Notification');
             }
         }
 
@@ -3838,7 +3838,7 @@ class AdminImportControllerCore extends AdminController
                         );
                     }
                     if (true !== $field_error || isset($lang_field_error) && true !== $lang_field_error) {
-                        $this->errors[] = (true !== $field_error ? $field_error : '').(isset($lang_field_error) && true !== $lang_field_error ? $lang_field_error : '').
+                        $this->errors[] = (true !== $field_error ? $field_error : '') . (isset($lang_field_error) && true !== $lang_field_error ? $lang_field_error : '') .
                             Db::getInstance()->getMsgError();
                     }
                 }
@@ -3875,7 +3875,7 @@ class AdminImportControllerCore extends AdminController
                         );
                     }
                     if (true !== $field_error || isset($lang_field_error) && true !== $lang_field_error) {
-                        $this->errors[] = (true !== $field_error ? $field_error : '').(isset($lang_field_error) && true !== $lang_field_error ? $lang_field_error : '').
+                        $this->errors[] = (true !== $field_error ? $field_error : '') . (isset($lang_field_error) && true !== $lang_field_error ? $lang_field_error : '') .
                             Db::getInstance()->getMsgError();
                     }
                 }
@@ -3894,7 +3894,7 @@ class AdminImportControllerCore extends AdminController
             }
 
             if (!$res) {
-                $this->errors[] = Db::getInstance()->getMsgError().' '.sprintf(
+                $this->errors[] = Db::getInstance()->getMsgError() . ' ' . sprintf(
                     $this->trans('%1$s (ID: %2$s) cannot be saved', array(), 'Admin.Advparameters.Notification'),
                     $info['name'],
                     (isset($info['id']) ? $info['id'] : 'null')
@@ -3902,8 +3902,8 @@ class AdminImportControllerCore extends AdminController
             }
         } else {
             $id_lang = Language::getIdByIso(Tools::getValue('iso_lang'));
-            $this->errors[] = $this->trans('Store is invalid', array(), 'Admin.Advparameters.Notification').' ('.$store->name[$id_lang].')';
-            $this->errors[] = (true !== $field_error ? $field_error : '').(isset($lang_field_error) && true !== $lang_field_error ? $lang_field_error : '');
+            $this->errors[] = $this->trans('Store is invalid', array(), 'Admin.Advparameters.Notification') . ' (' . $store->name[$id_lang] . ')';
+            $this->errors[] = (true !== $field_error ? $field_error : '') . (isset($lang_field_error) && true !== $lang_field_error ? $lang_field_error : '');
         }
     }
 
@@ -4187,8 +4187,8 @@ class AdminImportControllerCore extends AdminController
 					IFNULL(pa.upc, IFNULL(p.upc, \'\')) as upc
 				');
                 $query->from('product', 'p');
-                $query->leftJoin('product_attribute', 'pa', 'pa.id_product = p.id_product AND id_product_attribute = '.(int) $id_product_attribute);
-                $query->where('p.id_product = '.(int) $id_product);
+                $query->leftJoin('product_attribute', 'pa', 'pa.id_product = p.id_product AND id_product_attribute = ' . (int) $id_product_attribute);
+                $query->where('p.id_product = ' . (int) $id_product);
                 $query->where('p.is_virtual = 0 AND p.cache_is_pack = 0');
                 $res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
                 $product_infos = $res['0'];
@@ -4275,19 +4275,19 @@ class AdminImportControllerCore extends AdminController
             $dest_file = AdminImportController::getPath(strval(preg_replace('/\.{2,}/', '.', $filename)));
         } else {
             $csv_folder = AdminImportController::getPath();
-            $excel_folder = $csv_folder.'csvfromexcel/';
+            $excel_folder = $csv_folder . 'csvfromexcel/';
             $info = pathinfo($filename);
-            $csv_name = basename($filename, '.'.$info['extension']).'.csv';
-            $dest_file = $excel_folder.$csv_name;
+            $csv_name = basename($filename, '.' . $info['extension']) . '.csv';
+            $dest_file = $excel_folder . $csv_name;
 
             if (!is_dir($excel_folder)) {
                 mkdir($excel_folder);
             }
 
             if (!is_file($dest_file)) {
-                $reader_excel = IOFactory::createReaderForFile($csv_folder.$filename);
+                $reader_excel = IOFactory::createReaderForFile($csv_folder . $filename);
                 $reader_excel->setReadDataOnly(true);
-                $excel_file = $reader_excel->load($csv_folder.$filename);
+                $excel_file = $reader_excel->load($csv_folder . $filename);
 
                 $csv_writer = IOFactory::createWriter($excel_file, 'Csv');
 
@@ -4305,107 +4305,107 @@ class AdminImportControllerCore extends AdminController
         switch ((int) $case) {
             case $this->entities[$this->trans('Categories', array(), 'Admin.Global')]:
                 Db::getInstance()->execute('
-					DELETE FROM `'._DB_PREFIX_.'category`
-					WHERE id_category NOT IN ('.(int) Configuration::get('PS_HOME_CATEGORY').
-                    ', '.(int) Configuration::get('PS_ROOT_CATEGORY').')');
+					DELETE FROM `' . _DB_PREFIX_ . 'category`
+					WHERE id_category NOT IN (' . (int) Configuration::get('PS_HOME_CATEGORY') .
+                    ', ' . (int) Configuration::get('PS_ROOT_CATEGORY') . ')');
                 Db::getInstance()->execute('
-					DELETE FROM `'._DB_PREFIX_.'category_lang`
-					WHERE id_category NOT IN ('.(int) Configuration::get('PS_HOME_CATEGORY').
-                    ', '.(int) Configuration::get('PS_ROOT_CATEGORY').')');
+					DELETE FROM `' . _DB_PREFIX_ . 'category_lang`
+					WHERE id_category NOT IN (' . (int) Configuration::get('PS_HOME_CATEGORY') .
+                    ', ' . (int) Configuration::get('PS_ROOT_CATEGORY') . ')');
                 Db::getInstance()->execute('
-					DELETE FROM `'._DB_PREFIX_.'category_shop`
-					WHERE `id_category` NOT IN ('.(int) Configuration::get('PS_HOME_CATEGORY').
-                    ', '.(int) Configuration::get('PS_ROOT_CATEGORY').')');
-                Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'category` AUTO_INCREMENT = 3');
+					DELETE FROM `' . _DB_PREFIX_ . 'category_shop`
+					WHERE `id_category` NOT IN (' . (int) Configuration::get('PS_HOME_CATEGORY') .
+                    ', ' . (int) Configuration::get('PS_ROOT_CATEGORY') . ')');
+                Db::getInstance()->execute('ALTER TABLE `' . _DB_PREFIX_ . 'category` AUTO_INCREMENT = 3');
                 foreach (scandir(_PS_CAT_IMG_DIR_, SCANDIR_SORT_NONE) as $d) {
                     if (preg_match('/^[0-9]+(\-(.*))?\.jpg$/', $d)) {
-                        unlink(_PS_CAT_IMG_DIR_.$d);
+                        unlink(_PS_CAT_IMG_DIR_ . $d);
                     }
                 }
                 break;
             case $this->entities[$this->trans('Products', array(), 'Admin.Global')]:
-                Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product`');
-                Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_shop`');
-                Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'feature_product`');
-                Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_lang`');
-                Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'category_product`');
-                Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_tag`');
-                Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'image`');
-                Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'image_lang`');
-                Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'image_shop`');
-                Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'specific_price`');
-                Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'specific_price_priority`');
-                Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_carrier`');
-                Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'cart_product`');
-                if (count(Db::getInstance()->executeS('SHOW TABLES LIKE \''._DB_PREFIX_.'favorite_product\' '))) { //check if table exist
-                    Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'favorite_product`');
+                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'product`');
+                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'product_shop`');
+                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'feature_product`');
+                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'product_lang`');
+                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'category_product`');
+                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'product_tag`');
+                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'image`');
+                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'image_lang`');
+                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'image_shop`');
+                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'specific_price`');
+                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'specific_price_priority`');
+                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'product_carrier`');
+                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'cart_product`');
+                if (count(Db::getInstance()->executeS('SHOW TABLES LIKE \'' . _DB_PREFIX_ . 'favorite_product\' '))) { //check if table exist
+                    Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'favorite_product`');
                 }
-                Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_attachment`');
-                Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_country_tax`');
-                Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_download`');
-                Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_group_reduction_cache`');
-                Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_sale`');
-                Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_supplier`');
-                Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'warehouse_product_location`');
-                Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'stock`');
-                Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'stock_available`');
-                Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'stock_mvt`');
-                Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'customization`');
-                Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'customization_field`');
-                Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'supply_order_detail`');
-                Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'attribute_impact`');
-                Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_attribute`');
-                Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_attribute_shop`');
-                Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_attribute_combination`');
-                Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_attribute_image`');
-                Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'pack`');
+                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'product_attachment`');
+                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'product_country_tax`');
+                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'product_download`');
+                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'product_group_reduction_cache`');
+                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'product_sale`');
+                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'product_supplier`');
+                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'warehouse_product_location`');
+                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'stock`');
+                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'stock_available`');
+                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'stock_mvt`');
+                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'customization`');
+                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'customization_field`');
+                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'supply_order_detail`');
+                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'attribute_impact`');
+                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'product_attribute`');
+                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'product_attribute_shop`');
+                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'product_attribute_combination`');
+                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'product_attribute_image`');
+                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'pack`');
                 Image::deleteAllImages(_PS_PROD_IMG_DIR_);
                 if (!file_exists(_PS_PROD_IMG_DIR_)) {
                     mkdir(_PS_PROD_IMG_DIR_);
                 }
                 break;
             case $this->entities[$this->trans('Combinations', array(), 'Admin.Global')]:
-                Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'attribute`');
-                Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'attribute_impact`');
-                Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'attribute_lang`');
-                Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'attribute_group`');
-                Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'attribute_group_lang`');
-                Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'attribute_group_shop`');
-                Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'attribute_shop`');
-                Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_attribute`');
-                Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_attribute_shop`');
-                Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_attribute_combination`');
-                Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'product_attribute_image`');
-                Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'stock_available` WHERE id_product_attribute != 0');
+                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'attribute`');
+                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'attribute_impact`');
+                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'attribute_lang`');
+                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'attribute_group`');
+                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'attribute_group_lang`');
+                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'attribute_group_shop`');
+                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'attribute_shop`');
+                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'product_attribute`');
+                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'product_attribute_shop`');
+                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'product_attribute_combination`');
+                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'product_attribute_image`');
+                Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'stock_available` WHERE id_product_attribute != 0');
                 break;
             case $this->entities[$this->trans('Customers', array(), 'Admin.Global')]:
-                Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'customer`');
+                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'customer`');
                 break;
             case $this->entities[$this->trans('Addresses', array(), 'Admin.Global')]:
-                Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'address`');
+                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'address`');
                 break;
             case $this->entities[$this->trans('Brands', array(), 'Admin.Global')]:
-                Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'manufacturer`');
-                Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'manufacturer_lang`');
-                Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'manufacturer_shop`');
+                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'manufacturer`');
+                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'manufacturer_lang`');
+                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'manufacturer_shop`');
                 foreach (scandir(_PS_MANU_IMG_DIR_, SCANDIR_SORT_NONE) as $d) {
                     if (preg_match('/^[0-9]+(\-(.*))?\.jpg$/', $d)) {
-                        unlink(_PS_MANU_IMG_DIR_.$d);
+                        unlink(_PS_MANU_IMG_DIR_ . $d);
                     }
                 }
                 break;
             case $this->entities[$this->trans('Suppliers', array(), 'Admin.Global')]:
-                Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'supplier`');
-                Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'supplier_lang`');
-                Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'supplier_shop`');
+                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'supplier`');
+                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'supplier_lang`');
+                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'supplier_shop`');
                 foreach (scandir(_PS_SUPP_IMG_DIR_, SCANDIR_SORT_NONE) as $d) {
                     if (preg_match('/^[0-9]+(\-(.*))?\.jpg$/', $d)) {
-                        unlink(_PS_SUPP_IMG_DIR_.$d);
+                        unlink(_PS_SUPP_IMG_DIR_ . $d);
                     }
                 }
                 break;
             case $this->entities[$this->trans('Alias', array(), 'Admin.Shopparameters.Feature')]:
-                Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'alias`');
+                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'alias`');
                 break;
         }
         Image::clearTmpDir();
@@ -4458,9 +4458,9 @@ class AdminImportControllerCore extends AdminController
                     }
 
                     header('Content-Transfer-Encoding: binary');
-                    header('Content-Type: '.$mime_type);
-                    header('Content-Length: '.filesize($file));
-                    header('Content-Disposition: attachment; filename="'.$filename.'"');
+                    header('Content-Type: ' . $mime_type);
+                    header('Content-Length: ' . filesize($file));
+                    header('Content-Disposition: attachment; filename="' . $filename . '"');
                     $fp = fopen($file, 'rb');
                     while (is_resource($fp) && !feof($fp)) {
                         echo fgets($fp, 16384);
@@ -4591,10 +4591,10 @@ class AdminImportControllerCore extends AdminController
             if (false !== $import_type) {
                 $log_message = sprintf($this->trans('%s import', array(), 'Admin.Advparameters.Notification'), $import_type);
                 if (false !== $offset && false !== $limit) {
-                    $log_message .= ' '.sprintf($this->trans('(from %s to %s)', array(), 'Admin.Advparameters.Notification'), $offset, $limit);
+                    $log_message .= ' ' . sprintf($this->trans('(from %s to %s)', array(), 'Admin.Advparameters.Notification'), $offset, $limit);
                 }
                 if (Tools::getValue('truncate')) {
-                    $log_message .= ' '.$this->trans('with truncate', array(), 'Admin.Advparameters.Notification');
+                    $log_message .= ' ' . $this->trans('with truncate', array(), 'Admin.Advparameters.Notification');
                 }
                 PrestaShopLogger::addLog($log_message, 1, null, $import_type, null, true, (int) $this->context->employee->id);
             }
@@ -4608,21 +4608,21 @@ class AdminImportControllerCore extends AdminController
     public static function setLocale()
     {
         $iso_lang = trim(Tools::getValue('iso_lang'));
-        setlocale(LC_COLLATE, mb_strtolower($iso_lang).'_'.mb_strtoupper($iso_lang).'.UTF-8');
-        setlocale(LC_CTYPE, mb_strtolower($iso_lang).'_'.mb_strtoupper($iso_lang).'.UTF-8');
+        setlocale(LC_COLLATE, mb_strtolower($iso_lang) . '_' . mb_strtoupper($iso_lang) . '.UTF-8');
+        setlocale(LC_CTYPE, mb_strtolower($iso_lang) . '_' . mb_strtoupper($iso_lang) . '.UTF-8');
     }
 
     protected function addProductWarning($product_name, $product_id = null, $message = '')
     {
-        $this->warnings[] = $product_name.(isset($product_id) ? ' (ID '.$product_id.')' : '').' '
-            .$message;
+        $this->warnings[] = $product_name . (isset($product_id) ? ' (ID ' . $product_id . ')' : '') . ' '
+            . $message;
     }
 
     public function ajaxProcessSaveImportMatchs()
     {
         if ($this->access('edit')) {
             $match = implode('|', Tools::getValue('type_value'));
-            Db::getInstance()->execute('INSERT IGNORE INTO  `'._DB_PREFIX_.'import_match` (
+            Db::getInstance()->execute('INSERT IGNORE INTO  `' . _DB_PREFIX_ . 'import_match` (
 										`id_import_match` ,
 										`name` ,
 										`match`,
@@ -4630,38 +4630,38 @@ class AdminImportControllerCore extends AdminController
 										)
 										VALUES (
 										NULL ,
-										\''.pSQL(Tools::getValue('newImportMatchs')).'\',
-										\''.pSQL($match).'\',
-										\''.pSQL(Tools::getValue('skip')).'\'
+										\'' . pSQL(Tools::getValue('newImportMatchs')) . '\',
+										\'' . pSQL($match) . '\',
+										\'' . pSQL(Tools::getValue('skip')) . '\'
 										)', false);
 
-            die('{"id" : "'.Db::getInstance()->Insert_ID().'"}');
+            die('{"id" : "' . Db::getInstance()->Insert_ID() . '"}');
         }
     }
 
     public function ajaxProcessLoadImportMatchs()
     {
         if ($this->access('edit')) {
-            $return = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'import_match` WHERE `id_import_match` = '
-                .(int) Tools::getValue('idImportMatchs'), true, false);
-            die('{"id" : "'.$return[0]['id_import_match'].'", "matchs" : "'.$return[0]['match'].'", "skip" : "'
-                .$return[0]['skip'].'"}');
+            $return = Db::getInstance()->executeS('SELECT * FROM `' . _DB_PREFIX_ . 'import_match` WHERE `id_import_match` = '
+                . (int) Tools::getValue('idImportMatchs'), true, false);
+            die('{"id" : "' . $return[0]['id_import_match'] . '", "matchs" : "' . $return[0]['match'] . '", "skip" : "'
+                . $return[0]['skip'] . '"}');
         }
     }
 
     public function ajaxProcessDeleteImportMatchs()
     {
         if ($this->access('edit')) {
-            Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'import_match` WHERE `id_import_match` = '
-                .(int) Tools::getValue('idImportMatchs'), false);
+            Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'import_match` WHERE `id_import_match` = '
+                . (int) Tools::getValue('idImportMatchs'), false);
             die;
         }
     }
 
     public static function getPath($file = '')
     {
-        return (defined('_PS_HOST_MODE_') ? _PS_ROOT_DIR_ : _PS_ADMIN_DIR_).DIRECTORY_SEPARATOR.'import'
-            .DIRECTORY_SEPARATOR.$file;
+        return (defined('_PS_HOST_MODE_') ? _PS_ROOT_DIR_ : _PS_ADMIN_DIR_) . DIRECTORY_SEPARATOR . 'import'
+            . DIRECTORY_SEPARATOR . $file;
     }
 
     public function ajaxProcessImport()
@@ -4709,7 +4709,7 @@ class AdminImportControllerCore extends AdminController
                     ),
                     $templateVars,
                     $this->context->employee->email,
-                    $this->context->employee->firstname.' '.$this->context->employee->lastname,
+                    $this->context->employee->firstname . ' ' . $this->context->employee->lastname,
                     null,
                     null,
                     null,

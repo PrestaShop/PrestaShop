@@ -51,9 +51,9 @@ class GeolocationOptionsType extends TranslatorAwareType
     private $configuration;
 
     /**
-     * @param TranslatorInterface    $translator
-     * @param array                  $locales
-     * @param array                  $countryChoices
+     * @param TranslatorInterface $translator
+     * @param array $locales
+     * @param array $countryChoices
      * @param ConfigurationInterface $configuration
      */
     public function __construct(

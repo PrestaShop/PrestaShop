@@ -54,9 +54,9 @@ final class AverageProductsInCategoryKpi implements KpiInterface
     private $sourceUrl;
 
     /**
-     * @param TranslatorInterface    $translator
+     * @param TranslatorInterface $translator
      * @param ConfigurationInterface $kpiConfiguration
-     * @param string                 $sourceUrl
+     * @param string $sourceUrl
      */
     public function __construct(
         TranslatorInterface $translator,

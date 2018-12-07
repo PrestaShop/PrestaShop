@@ -59,10 +59,10 @@ final class TopCategoryKpi implements KpiInterface
     private $employeeIdLang;
 
     /**
-     * @param TranslatorInterface    $translator
+     * @param TranslatorInterface $translator
      * @param ConfigurationInterface $kpiConfiguration
-     * @param string                 $sourceUrl
-     * @param int                    $employeeIdLang
+     * @param string $sourceUrl
+     * @param int $employeeIdLang
      */
     public function __construct(
         TranslatorInterface $translator,

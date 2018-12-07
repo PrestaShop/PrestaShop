@@ -126,25 +126,25 @@ class HelperTreeShopsCore extends TreeCore
                 new TreeToolbarLink(
                     'Collapse All',
                     '#',
-                    '$(\'#'.$this->getId().'\').tree(\'collapseAll\'); return false;',
+                    '$(\'#' . $this->getId() . '\').tree(\'collapseAll\'); return false;',
                     'icon-collapse-alt'
                 ),
                 new TreeToolbarLink(
                     'Expand All',
                     '#',
-                    '$(\'#'.$this->getId().'\').tree(\'expandAll\'); return false;',
+                    '$(\'#' . $this->getId() . '\').tree(\'expandAll\'); return false;',
                     'icon-expand-alt'
                 ),
                 new TreeToolbarLink(
                     'Check All',
                     '#',
-                    'checkAllAssociatedShops($(\'#'.$this->getId().'\')); return false;',
+                    'checkAllAssociatedShops($(\'#' . $this->getId() . '\')); return false;',
                     'icon-check-sign'
                 ),
                 new TreeToolbarLink(
                     'Uncheck All',
                     '#',
-                    'uncheckAllAssociatedShops($(\'#'.$this->getId().'\')); return false;',
+                    'uncheckAllAssociatedShops($(\'#' . $this->getId() . '\')); return false;',
                     'icon-check-empty'
                 ),
             ));

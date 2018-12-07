@@ -69,11 +69,11 @@ final class SearchCriteriaWithCategoryParentIdFilterFactory implements Decorated
     private $contextShopCategoryId;
 
     /**
-     * @param Configuration                     $configuration
-     * @param Context                           $shopContext
-     * @param FeatureInterface                  $multistoreFeature
+     * @param Configuration $configuration
+     * @param Context $shopContext
+     * @param FeatureInterface $multistoreFeature
      * @param MultistoreContextCheckerInterface $multistoreContextChecker
-     * @param int                               $contextShopCategoryId
+     * @param int $contextShopCategoryId
      */
     public function __construct(
         Configuration $configuration,

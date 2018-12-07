@@ -65,36 +65,36 @@ class AdminSearchConfControllerCore extends AdminController
 
         // Search options
         $current_file_name = array_reverse(explode('/', $_SERVER['SCRIPT_NAME']));
-        $cron_url = Tools::getHttpHost(true, true).__PS_BASE_URI__.basename(_PS_ADMIN_DIR_).
-            '/searchcron.php?full=1&token='.mb_substr(_COOKIE_KEY_, 34, 8).(Shop::CONTEXT_SHOP == Shop::getContext() ? '&id_shop='.(int) Context::getContext()->shop->id : '');
+        $cron_url = Tools::getHttpHost(true, true) . __PS_BASE_URI__ . basename(_PS_ADMIN_DIR_) .
+            '/searchcron.php?full=1&token=' . mb_substr(_COOKIE_KEY_, 34, 8) . (Shop::CONTEXT_SHOP == Shop::getContext() ? '&id_shop=' . (int) Context::getContext()->shop->id : '');
 
-        list($total, $indexed) = Db::getInstance()->getRow('SELECT COUNT(*) as "0", SUM(product_shop.indexed) as "1" FROM '._DB_PREFIX_.'product p '.Shop::addSqlAssociation('product', 'p').' WHERE product_shop.`visibility` IN ("both", "search") AND product_shop.`active` = 1');
+        list($total, $indexed) = Db::getInstance()->getRow('SELECT COUNT(*) as "0", SUM(product_shop.indexed) as "1" FROM ' . _DB_PREFIX_ . 'product p ' . Shop::addSqlAssociation('product', 'p') . ' WHERE product_shop.`visibility` IN ("both", "search") AND product_shop.`active` = 1');
 
         $this->fields_options = array(
             'indexation' => array(
                 'title' => $this->trans('Indexing', array(), 'Admin.Shopparameters.Feature'),
                 'icon' => 'icon-cogs',
                 'info' => '<p>
-						'.$this->trans('The "indexed" products have been analyzed by PrestaShop and will appear in the results of a front office search.', array(), 'Admin.Shopparameters.Feature').'<br />
-						'.$this->trans('Indexed products', array(), 'Admin.Shopparameters.Feature').' <strong>'.(int) $indexed.' / '.(int) $total.'</strong>.
+						' . $this->trans('The "indexed" products have been analyzed by PrestaShop and will appear in the results of a front office search.', array(), 'Admin.Shopparameters.Feature') . '<br />
+						' . $this->trans('Indexed products', array(), 'Admin.Shopparameters.Feature') . ' <strong>' . (int) $indexed . ' / ' . (int) $total . '</strong>.
 					</p>
 					<p>
-						'.$this->trans('Building the product index may take a few minutes.', array(), 'Admin.Shopparameters.Feature').'
-						'.$this->trans('If your server stops before the process ends, you can resume the indexing by clicking "Add missing products to the index".', array(), 'Admin.Shopparameters.Feature').'
+						' . $this->trans('Building the product index may take a few minutes.', array(), 'Admin.Shopparameters.Feature') . '
+						' . $this->trans('If your server stops before the process ends, you can resume the indexing by clicking "Add missing products to the index".', array(), 'Admin.Shopparameters.Feature') . '
 					</p>
-					<a href="searchcron.php?token='.mb_substr(_COOKIE_KEY_, 34, 8).'&amp;redirect=1'.(Shop::CONTEXT_SHOP == Shop::getContext() ? '&id_shop='.(int) Context::getContext()->shop->id : '').'" class="btn-link">
+					<a href="searchcron.php?token=' . mb_substr(_COOKIE_KEY_, 34, 8) . '&amp;redirect=1' . (Shop::CONTEXT_SHOP == Shop::getContext() ? '&id_shop=' . (int) Context::getContext()->shop->id : '') . '" class="btn-link">
 						<i class="icon-external-link-sign"></i>
-						'.$this->trans('Add missing products to the index', array(), 'Admin.Shopparameters.Feature').'
+						' . $this->trans('Add missing products to the index', array(), 'Admin.Shopparameters.Feature') . '
 					</a><br />
-					<a href="searchcron.php?full=1&amp;token='.mb_substr(_COOKIE_KEY_, 34, 8).'&amp;redirect=1'.(Shop::CONTEXT_SHOP == Shop::getContext() ? '&id_shop='.(int) Context::getContext()->shop->id : '').'" class="btn-link">
+					<a href="searchcron.php?full=1&amp;token=' . mb_substr(_COOKIE_KEY_, 34, 8) . '&amp;redirect=1' . (Shop::CONTEXT_SHOP == Shop::getContext() ? '&id_shop=' . (int) Context::getContext()->shop->id : '') . '" class="btn-link">
 						<i class="icon-external-link-sign"></i>
-						'.$this->trans('Re-build the entire index', array(), 'Admin.Shopparameters.Feature').'
+						' . $this->trans('Re-build the entire index', array(), 'Admin.Shopparameters.Feature') . '
 					</a><br /><br />
 					<p>
-						'.$this->trans('You can set a cron job that will rebuild your index using the following URL:', array(), 'Admin.Shopparameters.Feature').'<br />
-						<a href="'.Tools::safeOutput($cron_url).'">
+						' . $this->trans('You can set a cron job that will rebuild your index using the following URL:', array(), 'Admin.Shopparameters.Feature') . '<br />
+						<a href="' . Tools::safeOutput($cron_url) . '">
 							<i class="icon-external-link-sign"></i>
-							'.Tools::safeOutput($cron_url).'
+							' . Tools::safeOutput($cron_url) . '
 						</a>
 					</p><br />',
                 'fields' => array(
@@ -121,7 +121,7 @@ class AdminSearchConfControllerCore extends AdminController
                                 'By default, to search for “blouse”, you have to enter “blous”, “blo”, etc (beginning of the word) – but not “lous” (within the word).',
                                 array(),
                                 'Admin.Shopparameters.Help'
-                            ).'<br/>'.
+                            ) . '<br/>' .
                             $this->trans(
                                 'With this option enabled, it also gives the good result if you search for “lous”, “ouse”, or anything contained in the word.',
                                 array(),
@@ -149,7 +149,7 @@ class AdminSearchConfControllerCore extends AdminController
                                 'By default, if you search "book", you will have "book", "bookcase" and "bookend".',
                                 array(),
                                 'Admin.Shopparameters.Help'
-                            ).'<br/>'.
+                            ) . '<br/>' .
                             $this->trans(
                                 'With this option enabled, it only gives one result “book”, as exact end of the indexed word is matching.',
                                 array(),
@@ -203,18 +203,18 @@ class AdminSearchConfControllerCore extends AdminController
                         'The "weight" represents its importance and relevance for the ranking of the products when completing a new search.',
                         array(),
                         'Admin.Shopparameters.Feature'
-                    ).'<br />
-						'.$this->trans(
+                    ) . '<br />
+						' . $this->trans(
                         'A word with a weight of eight will have four times more value than a word with a weight of two.',
                         array(),
                         'Admin.Shopparameters.Feature'
-                    ).'<br /><br />
-						'.$this->trans(
+                    ) . '<br /><br />
+						' . $this->trans(
                         'We advise you to set a greater weight for words which appear in the name or reference of a product. This will allow the search results to be as precise and relevant as possible.',
                         array(),
                         'Admin.Shopparameters.Feature'
-                    ).'<br /><br />
-						'.$this->trans(
+                    ) . '<br /><br />
+						' . $this->trans(
                         'Setting a weight to 0 will exclude that field from search index. Re-build of the entire index is required when changing to or from 0',
                         array(),
                         'Admin.Shopparameters.Feature'
@@ -288,7 +288,7 @@ class AdminSearchConfControllerCore extends AdminController
     {
         if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_alias'] = array(
-                'href' => self::$currentIndex.'&addalias&token='.$this->token,
+                'href' => self::$currentIndex . '&addalias&token=' . $this->token,
                 'desc' => $this->trans('Add new alias', array(), 'Admin.Shopparameters.Feature'),
                 'icon' => 'process-icon-new',
             );
@@ -297,7 +297,7 @@ class AdminSearchConfControllerCore extends AdminController
         parent::initPageHeaderToolbar();
         if ($this->can_import) {
             $this->toolbar_btn['import'] = array(
-                'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type=alias',
+                'href' => $this->context->link->getAdminLink('AdminImport', true) . '&import_type=alias',
                 'desc' => $this->trans('Import', array(), 'Admin.Actions'),
             );
         }
@@ -378,11 +378,11 @@ class AdminSearchConfControllerCore extends AdminController
             $this->errors[] = $this->trans('Aliases and results are both required.', array(), 'Admin.Shopparameters.Notification');
         }
         if (!Validate::isValidSearch($search)) {
-            $this->errors[] = $search.' '.$this->trans('Is not a valid result', array(), 'Admin.Shopparameters.Notification');
+            $this->errors[] = $search . ' ' . $this->trans('Is not a valid result', array(), 'Admin.Shopparameters.Notification');
         }
         foreach ($aliases as $alias) {
             if (!Validate::isValidSearch($alias)) {
-                $this->errors[] = $alias.' '.$this->trans('Is not a valid alias', array(), 'Admin.Shopparameters.Notification');
+                $this->errors[] = $alias . ' ' . $this->trans('Is not a valid alias', array(), 'Admin.Shopparameters.Notification');
             }
         }
 

@@ -59,11 +59,11 @@ class ModifyTranslationsType extends TranslatorAwareType
 
     /**
      * @param TranslatorInterface $translator
-     * @param array               $locales
-     * @param array               $translationTypeChoices
-     * @param array               $emailContentTypeChoices
-     * @param array               $themeChoices
-     * @param array               $moduleChoices
+     * @param array $locales
+     * @param array $translationTypeChoices
+     * @param array $emailContentTypeChoices
+     * @param array $themeChoices
+     * @param array $moduleChoices
      */
     public function __construct(
         TranslatorInterface $translator,

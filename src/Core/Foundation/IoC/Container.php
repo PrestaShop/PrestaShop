@@ -85,7 +85,7 @@ class Container
             if ($this->knowsNamespaceAlias($alias)) {
                 $class = ltrim(mb_substr($className, $colonPos + 1), '\\');
 
-                return $this->namespaceAliases[$alias].'\\'.$class;
+                return $this->namespaceAliases[$alias] . '\\' . $class;
             }
         }
 

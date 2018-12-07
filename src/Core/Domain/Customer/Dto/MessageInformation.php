@@ -52,7 +52,7 @@ class MessageInformation
     private $date;
 
     /**
-     * @param int    $customerThreadId
+     * @param int $customerThreadId
      * @param string $message
      * @param string $status
      * @param string $date
