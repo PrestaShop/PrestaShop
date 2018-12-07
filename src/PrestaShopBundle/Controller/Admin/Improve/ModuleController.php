@@ -420,9 +420,9 @@ class ModuleController extends ModuleAbstractController
                 if ($action != 'uninstall') {
                     $response[$module]['module_name'] = $module;
                     $response[$module]['is_configurable'] = (bool) $this->get('prestashop.core.admin.module.repository')
-                                                          ->getModule($module)
-                                                          ->attributes
-                                                          ->get('is_configurable')
+                        ->getModule($module)
+                        ->attributes
+                        ->get('is_configurable')
                     ;
                 }
             }
@@ -435,7 +435,7 @@ class ModuleController extends ModuleAbstractController
                     'status' => false,
                     'confirmation_subject' => $e->getSubject(),
                     'module' => $this->container->get('prestashop.adapter.presenter.module')
-                    ->presentCollection($modules)[0],
+                        ->presentCollection($modules)[0],
                     'msg' => $this->trans(
                         'Confirmation needed by module %module% on %action% (%subject%).',
                         'Admin.Modules.Notification',
@@ -469,7 +469,7 @@ class ModuleController extends ModuleAbstractController
                 '@PrestaShop/Admin/Module/Includes/action_menu.html.twig',
                 array(
                     'module' => $this->container->get('prestashop.adapter.presenter.module')
-                    ->presentCollection($modulesProvider->generateAddonsUrls($collection))[0],
+                        ->presentCollection($modulesProvider->generateAddonsUrls($collection))[0],
                     'level' => $this->authorizationLevel(self::CONTROLLER_NAME),
                 )
             );
@@ -560,9 +560,9 @@ class ModuleController extends ModuleAbstractController
                     array('%module%' => $moduleName)
                 );
                 $installationResponse['is_configurable'] = (bool) $this->get('prestashop.core.admin.module.repository')
-                                                         ->getModule($moduleName)
-                                                         ->attributes
-                                                         ->get('is_configurable')
+                    ->getModule($moduleName)
+                    ->attributes
+                    ->get('is_configurable')
                 ;
             } else {
                 $error = $moduleManager->getError($moduleName);
@@ -578,7 +578,7 @@ class ModuleController extends ModuleAbstractController
         } catch (UnconfirmedModuleActionException $e) {
             $collection = AddonsCollection::createFrom(array($e->getModule()));
             $modules = $this->get('prestashop.core.admin.data_provider.module_interface')
-                     ->generateAddonsUrls($collection)
+                ->generateAddonsUrls($collection)
             ;
             $installationResponse = array(
                 'status' => false,
@@ -792,7 +792,7 @@ class ModuleController extends ModuleAbstractController
             $collection = AddonsCollection::createFrom($category->modules);
             $modulesProvider->generateAddonsUrls($collection);
             $category->modules = $this->get('prestashop.adapter.presenter.module')
-                               ->presentCollection($category->modules)
+                ->presentCollection($category->modules)
             ;
         }
 

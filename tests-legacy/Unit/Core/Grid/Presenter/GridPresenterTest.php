@@ -90,9 +90,9 @@ class GridPresenterTest extends TestCase
         $definition->method('getColumns')
             ->willReturn(
                 (new ColumnCollection())
-                ->add($this->createColumnMock('test_1'))
-                ->add($this->createColumnMock('test_2'))
-                ->add($this->createColumnMock('test_3'))
+                    ->add($this->createColumnMock('test_1'))
+                    ->add($this->createColumnMock('test_2'))
+                    ->add($this->createColumnMock('test_3'))
             )
         ;
         $definition->method('getBulkActions')

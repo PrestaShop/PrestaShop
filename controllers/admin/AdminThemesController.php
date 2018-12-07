@@ -1053,9 +1053,9 @@ class AdminThemesControllerCore extends AdminController
 
             if ((bool) Tools::getValue('PS_GENERATE_RTL')) {
                 Language::getRtlStylesheetProcessor()
-                ->setProcessFOThemes(array(Tools::getValue('PS_THEMES_LIST')))
-                ->setRegenerate(true)
-                ->process()
+                    ->setProcessFOThemes(array(Tools::getValue('PS_THEMES_LIST')))
+                    ->setRegenerate(true)
+                    ->process()
                 ;
 
                 $this->confirmations[] = $this->trans(

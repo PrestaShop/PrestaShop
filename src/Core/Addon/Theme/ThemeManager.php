@@ -171,12 +171,12 @@ class ThemeManager implements AddonManagerInterface
         $this->disable($this->shop->theme_name);
 
         $this->doCreateCustomHooks($theme->get('global_settings.hooks.custom_hooks', array()))
-                ->doApplyConfiguration($theme->get('global_settings.configuration', array()))
-                ->doDisableModules($theme->get('global_settings.modules.to_disable', array()))
-                ->doEnableModules($theme->getModulesToEnable())
-                ->doResetModules($theme->get('global_settings.modules.to_reset', array()))
-                ->doApplyImageTypes($theme->get('global_settings.image_types'))
-                ->doHookModules($theme->get('global_settings.hooks.modules_to_hook'))
+            ->doApplyConfiguration($theme->get('global_settings.configuration', array()))
+            ->doDisableModules($theme->get('global_settings.modules.to_disable', array()))
+            ->doEnableModules($theme->getModulesToEnable())
+            ->doResetModules($theme->get('global_settings.modules.to_reset', array()))
+            ->doApplyImageTypes($theme->get('global_settings.image_types'))
+            ->doHookModules($theme->get('global_settings.hooks.modules_to_hook'))
         ;
 
         $theme->onEnable();
@@ -366,8 +366,8 @@ class ThemeManager implements AddonManagerInterface
         $modules_parent_dir = $sandboxPath . '/dependencies/modules';
         if ($this->filesystem->exists($modules_parent_dir)) {
             $module_dirs = $this->finder->directories()
-                                        ->in($modules_parent_dir)
-                                        ->depth('== 0')
+                ->in($modules_parent_dir)
+                ->depth('== 0')
             ;
 
             foreach (iterator_to_array($module_dirs) as $dir) {

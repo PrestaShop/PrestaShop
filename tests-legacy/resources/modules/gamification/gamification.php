@@ -119,7 +119,7 @@ class gamification extends Module
         if (version_compare(_PS_VERSION_, '1.7.0.0', '>=')) {
             //AdminPreferences
             $tab->id_parent = (int)Db::getInstance(_PS_USE_SQL_SLAVE_)
-                                ->getValue(
+                ->getValue(
                                     'SELECT MIN(id_tab)
 											FROM `'._DB_PREFIX_.'tab`
 											WHERE `class_name` = "'.pSQL('ShopParameters').'"'

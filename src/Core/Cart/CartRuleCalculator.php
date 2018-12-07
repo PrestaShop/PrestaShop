@@ -122,7 +122,7 @@ class CartRuleCalculator
             foreach ($this->cartRows as $cartRow) {
                 if ($cartRowCheapest === null
                     || $cartRowCheapest->getInitialUnitPrice()->getTaxIncluded() > $cartRow->getInitialUnitPrice()
-                                                                                           ->getTaxIncluded()
+                        ->getTaxIncluded()
                 ) {
                     $cartRowCheapest = $cartRow;
                 }

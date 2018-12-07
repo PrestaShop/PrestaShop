@@ -65,50 +65,50 @@ final class BackupDefinitionFactory extends AbstractGridDefinitionFactory
         return (new ColumnCollection())
             ->add(
                 (new BulkActionColumn('backup_bulk_file_names'))
-                ->setOptions(array(
+                    ->setOptions(array(
                     'bulk_field' => 'file_name',
                 ))
             )
             ->add(
                 (new DataColumn('date'))
-                ->setName($this->trans('Date', array(), 'Admin.Global'))
-                ->setOptions(array(
+                    ->setName($this->trans('Date', array(), 'Admin.Global'))
+                    ->setOptions(array(
                     'field' => 'date_formatted',
                     'sortable' => false,
                 ))
             )
             ->add(
                 (new DataColumn('age'))
-                ->setName($this->trans('Age', array(), 'Admin.Advparameters.Feature'))
-                ->setOptions(array(
+                    ->setName($this->trans('Age', array(), 'Admin.Advparameters.Feature'))
+                    ->setOptions(array(
                     'field' => 'age_formatted',
                     'sortable' => false,
                 ))
             )
             ->add(
                 (new DataColumn('file_name'))
-                ->setName($this->trans('Filename', array(), 'Admin.Global'))
-                ->setOptions(array(
+                    ->setName($this->trans('Filename', array(), 'Admin.Global'))
+                    ->setOptions(array(
                     'field' => 'file_name',
                     'sortable' => false,
                 ))
             )
             ->add(
                 (new DataColumn('file_size'))
-                ->setName($this->trans('File size', array(), 'Admin.Advparameters.Feature'))
-                ->setOptions(array(
+                    ->setName($this->trans('File size', array(), 'Admin.Advparameters.Feature'))
+                    ->setOptions(array(
                     'field' => 'file_size_formatted',
                     'sortable' => false,
                 ))
             )
             ->add(
                 (new ActionColumn('actions'))
-                ->setOptions(array(
+                    ->setOptions(array(
                     'actions' => (new RowActionCollection())
                         ->add(
                             (new LinkRowAction('view'))
-                            ->setIcon('remove_red_eye')
-                            ->setOptions(array(
+                                ->setIcon('remove_red_eye')
+                                ->setOptions(array(
                                 'route' => 'admin_backups_download_view',
                                 'route_param_name' => 'downloadFileName',
                                 'route_param_field' => 'file_name',
@@ -116,9 +116,9 @@ final class BackupDefinitionFactory extends AbstractGridDefinitionFactory
                         )
                         ->add(
                             (new SubmitRowAction('delete'))
-                            ->setName($this->trans('Delete', array(), 'Admin.Actions'))
-                            ->setIcon('delete')
-                            ->setOptions(array(
+                                ->setName($this->trans('Delete', array(), 'Admin.Actions'))
+                                ->setIcon('delete')
+                                ->setOptions(array(
                                 'method' => 'DELETE',
                                 'route' => 'admin_backups_delete',
                                 'route_param_name' => 'deleteFileName',
@@ -143,8 +143,8 @@ final class BackupDefinitionFactory extends AbstractGridDefinitionFactory
         return (new BulkActionCollection())
             ->add(
                 (new SubmitBulkAction('delete_backups'))
-                ->setName($this->trans('Delete selected', array(), 'Admin.Actions'))
-                ->setOptions(array(
+                    ->setName($this->trans('Delete selected', array(), 'Admin.Actions'))
+                    ->setOptions(array(
                     'submit_route' => 'admin_backups_bulk_delete',
                     'confirm_message' => $this->trans('Delete selected items?', array(), 'Admin.Notifications.Warning'),
                 ))

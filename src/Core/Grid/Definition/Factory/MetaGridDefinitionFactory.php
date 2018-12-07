@@ -95,47 +95,47 @@ final class MetaGridDefinitionFactory extends AbstractGridDefinitionFactory
         return (new ColumnCollection())
             ->add(
                 (new BulkActionColumn('bulk'))
-                ->setOptions(array(
+                    ->setOptions(array(
                     'bulk_field' => 'id_meta',
                 ))
             )
             ->add(
                 (new DataColumn('id_meta'))
-                ->setName($this->trans('ID', array(), 'Admin.Global'))
-                ->setOptions(array(
+                    ->setName($this->trans('ID', array(), 'Admin.Global'))
+                    ->setOptions(array(
                     'field' => 'id_meta',
                 ))
             )
             ->add(
                 (new DataColumn('page'))
-                ->setName($this->trans('Page', array(), 'Admin.Shopparameters.Feature'))
-                ->setOptions(array(
+                    ->setName($this->trans('Page', array(), 'Admin.Shopparameters.Feature'))
+                    ->setOptions(array(
                     'field' => 'page',
                 ))
             )
             ->add(
                 (new DataColumn('title'))
-                ->setName($this->trans('Page title', array(), 'Admin.Shopparameters.Feature'))
-                ->setOptions(array(
+                    ->setName($this->trans('Page title', array(), 'Admin.Shopparameters.Feature'))
+                    ->setOptions(array(
                     'field' => 'title',
                 ))
             )
             ->add(
                 (new DataColumn('url_rewrite'))
-                ->setName($this->trans('Friendly URL', array(), 'Admin.Global'))
-                ->setOptions(array(
+                    ->setName($this->trans('Friendly URL', array(), 'Admin.Global'))
+                    ->setOptions(array(
                     'field' => 'url_rewrite',
                 ))
             )
             ->add(
                 (new ActionColumn('actions'))
-                ->setName($this->trans('Actions', array(), 'Admin.Global'))
-                ->setOptions(array(
+                    ->setName($this->trans('Actions', array(), 'Admin.Global'))
+                    ->setOptions(array(
                     'actions' => (new RowActionCollection())
                         ->add(
                             (new LinkRowAction('edit'))
-                            ->setIcon('edit')
-                            ->setOptions(array(
+                                ->setIcon('edit')
+                                ->setOptions(array(
                                 'route' => 'admin_metas_edit',
                                 'route_param_name' => 'metaId',
                                 'route_param_field' => 'id_meta',
@@ -143,9 +143,9 @@ final class MetaGridDefinitionFactory extends AbstractGridDefinitionFactory
                         )
                         ->add(
                             (new SubmitRowAction('delete'))
-                            ->setName($this->trans('Delete', array(), 'Admin.Actions'))
-                            ->setIcon('delete')
-                            ->setOptions(array(
+                                ->setName($this->trans('Delete', array(), 'Admin.Actions'))
+                                ->setIcon('delete')
+                                ->setOptions(array(
                                 'method' => 'DELETE',
                                 'route' => 'admin_metas_delete',
                                 'route_param_name' => 'metaId',
@@ -170,41 +170,41 @@ final class MetaGridDefinitionFactory extends AbstractGridDefinitionFactory
         return (new FilterCollection())
             ->add(
                 (new Filter('id_meta', TextType::class))
-                ->setTypeOptions(array(
+                    ->setTypeOptions(array(
                     'required' => false,
                 ))
-                ->setAssociatedColumn('id_meta')
+                    ->setAssociatedColumn('id_meta')
             )
             ->add(
                 (new Filter('page', TextType::class))
-                ->setTypeOptions(array(
+                    ->setTypeOptions(array(
                     'required' => false,
                 ))
-                ->setAssociatedColumn('page')
+                    ->setAssociatedColumn('page')
             )
             ->add(
                 (new Filter('title', TextType::class))
-                ->setTypeOptions(array(
+                    ->setTypeOptions(array(
                     'required' => false,
                 ))
-                ->setAssociatedColumn('title')
+                    ->setAssociatedColumn('title')
             )
             ->add(
                 (new Filter('url_rewrite', TextType::class))
-                ->setTypeOptions(array(
+                    ->setTypeOptions(array(
                     'required' => false,
                 ))
-                ->setAssociatedColumn('url_rewrite')
+                    ->setAssociatedColumn('url_rewrite')
             )
             ->add(
                 (new Filter('actions', SearchAndResetType::class))
-                ->setTypeOptions(array(
+                    ->setTypeOptions(array(
                     'attr' => array(
                         'data-url' => $this->resetActionUrl,
                         'data-redirect' => $this->redirectionUrl,
                     ),
                 ))
-                ->setAssociatedColumn('actions')
+                    ->setAssociatedColumn('actions')
             )
         ;
     }
@@ -217,18 +217,18 @@ final class MetaGridDefinitionFactory extends AbstractGridDefinitionFactory
         return (new GridActionCollection())
             ->add(
                 (new SimpleGridAction('common_refresh_list'))
-                ->setName($this->trans('Refresh list', array(), 'Admin.Advparameters.Feature'))
-                ->setIcon('refresh')
+                    ->setName($this->trans('Refresh list', array(), 'Admin.Advparameters.Feature'))
+                    ->setIcon('refresh')
             )
             ->add(
                 (new SimpleGridAction('common_show_query'))
-                ->setName($this->trans('Show SQL query', array(), 'Admin.Actions'))
-                ->setIcon('code')
+                    ->setName($this->trans('Show SQL query', array(), 'Admin.Actions'))
+                    ->setIcon('code')
             )
             ->add(
                 (new SimpleGridAction('common_export_sql_manager'))
-                ->setName($this->trans('Export to SQL Manager', array(), 'Admin.Actions'))
-                ->setIcon('storage')
+                    ->setName($this->trans('Export to SQL Manager', array(), 'Admin.Actions'))
+                    ->setIcon('storage')
             )
         ;
     }
@@ -241,8 +241,8 @@ final class MetaGridDefinitionFactory extends AbstractGridDefinitionFactory
         return (new BulkActionCollection())
             ->add(
                 (new SubmitBulkAction('delete_seo_urls'))
-                ->setName($this->trans('Delete selected', array(), 'Admin.Actions'))
-                ->setOptions(array(
+                    ->setName($this->trans('Delete selected', array(), 'Admin.Actions'))
+                    ->setOptions(array(
                     'submit_route' => 'admin_metas_delete_bulk',
                     'confirm_message' => $this->trans('Delete selected items?', array(), 'Admin.Notifications.Warning'),
                 ))
