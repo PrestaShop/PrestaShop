@@ -43,7 +43,7 @@ final class ImportHandlerFinder implements ImportHandlerFinderInterface
     /**
      * @param ImportHandlerInterface[] $importHandlers
      */
-    public function __construct(array $importHandlers)
+    public function __construct(ImportHandlerInterface ...$importHandlers)
     {
         $this->importHandlers = $importHandlers;
     }
@@ -53,10 +53,12 @@ final class ImportHandlerFinder implements ImportHandlerFinderInterface
      */
     public function find($importEntityType)
     {
-        if (!isset($this->importHandlers[$importEntityType])) {
-            throw new NotSupportedImportTypeException();
+        foreach ($this->importHandlers as $importHandler) {
+            if ($importHandler->supports($importEntityType)) {
+                return $importHandler;
+            }
         }
 
-        return $this->importHandlers[$importEntityType];
+        throw new NotSupportedImportTypeException();
     }
 }

@@ -51,16 +51,16 @@ final class ImportConfigFactory implements ImportConfigFactoryInterface
 
         return new ImportConfig(
             $request->request->get('csv', $request->getSession()->get('csv')),
-            $request->request->get('entity', $request->getSession()->get('entity', 0)),
+            $request->request->getInt('entity', $request->getSession()->get('entity', 0)),
             $request->request->get('iso_lang', $request->getSession()->get('iso_lang')),
             $separator,
             $multivalueSeparator,
-            $request->request->get('truncate', $request->getSession()->get('truncate', false)),
-            $request->request->get('regenerate', $request->getSession()->get('regenerate', false)),
-            $request->request->get('match_ref', $request->getSession()->get('match_ref', false)),
-            $request->request->get('forceIDs', $request->getSession()->get('forceIDs', false)),
-            $request->request->get('sendemail', $request->getSession()->get('sendemail', true)),
-            $request->request->get('skip', 0)
+            $request->request->getBoolean('truncate', $request->getSession()->get('truncate', false)),
+            $request->request->getBoolean('regenerate', $request->getSession()->get('regenerate', false)),
+            $request->request->getBoolean('match_ref', $request->getSession()->get('match_ref', false)),
+            $request->request->getBoolean('forceIDs', $request->getSession()->get('forceIDs', false)),
+            $request->request->getBoolean('sendemail', $request->getSession()->get('sendemail', true)),
+            $request->request->getInt('skip', 0)
         );
     }
 }
