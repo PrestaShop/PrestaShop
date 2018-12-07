@@ -107,7 +107,7 @@ class AdminThemesControllerCore extends AdminController
                 //get addons theme if folder does not exist
                 $ids_themes = Tools::unSerialize(Configuration::get('PS_ADDONS_THEMES_IDS'));
 
-                if (!is_array($ids_themes) || (is_array($ids_themes) && !in_array((string) $addons_theme->id, $ids_themes))) {
+                if (!is_array($ids_themes) || (is_array($ids_themes) && !in_array((string) $addons_theme->id, $ids_themes, true))) {
                     $zip_content = Tools::addonsRequest(
                         'module',
                         array(
@@ -472,7 +472,7 @@ class AdminThemesControllerCore extends AdminController
             ),
         );
 
-        if (in_array('1', array_column($this->_languages, 'is_rtl'))) {
+        if (in_array('1', array_column($this->_languages, 'is_rtl'), true)) {
             $themes_list = array();
             $allThemes = $this->theme_repository->getList();
             foreach ($allThemes as $theme) {
@@ -712,7 +712,7 @@ class AdminThemesControllerCore extends AdminController
                         $layout['description'] = $this->translator->trans($layout['description'], array(), 'Admin.Design.Feature');
                     }
                 } else {
-                    if (in_array($key, array('name', 'description'))) {
+                    if (in_array($key, array('name', 'description'), true)) {
                         $attributes[$key] = $this->translator->trans($layout, array(), 'Admin.Design.Feature');
                     }
                 }
@@ -800,7 +800,8 @@ class AdminThemesControllerCore extends AdminController
                 AdminController::LEVEL_EDIT,
                 AdminController::LEVEL_ADD,
                 AdminController::LEVEL_DELETE,
-            )
+            ),
+            true
         )) {
             throw new InvalidArgumentException('Unknown access level : ' . $accessLevel);
         }

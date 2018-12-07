@@ -674,7 +674,7 @@ class AdminProductsController extends AdminProductsControllerCore
                     $this->errors[] = Tools::displayError('An error occurred while copying images.');
                 } else {
                     Hook::exec('actionProductAdd', array('id_product' => (int)$product->id, 'product' => $product));
-                    if (in_array($product->visibility, array('both', 'search')) && Configuration::get('PS_SEARCH_INDEXATION')) {
+                    if (in_array($product->visibility, array('both', 'search'), true) && Configuration::get('PS_SEARCH_INDEXATION')) {
                         Search::indexation(false, $product->id);
                     }
                     $this->redirect_after = self::$currentIndex.(Tools::getIsset('id_category') ? '&id_category='.(int)Tools::getValue('id_category') : '').'&conf=19&token='.$this->token;
@@ -1330,12 +1330,12 @@ class AdminProductsController extends AdminProductsControllerCore
             $this->tab_display = Tools::getValue('key_tab');
         }
         if (!$this->tab_display && $this->action) {
-            if (in_array($this->action, array_keys($this->available_tabs))) {
+            if (in_array($this->action, array_keys($this->available_tabs), true)) {
                 $this->tab_display = $this->action;
             }
         }
         if (!$this->tab_display) {
-            if (in_array($this->default_tab, $this->available_tabs)) {
+            if (in_array($this->default_tab, $this->available_tabs, true)) {
                 $this->tab_display = $this->default_tab;
             } else {
                 $this->tab_display = key($this->available_tabs);
@@ -1801,7 +1801,7 @@ class AdminProductsController extends AdminProductsControllerCore
                     $this->errors[] = Tools::displayError('An error occurred while adding tags.');
                 } else {
                     Hook::exec('actionProductAdd', array('id_product' => (int)$this->object->id, 'product' => $this->object));
-                    if (in_array($this->object->visibility, array('both', 'search')) && Configuration::get('PS_SEARCH_INDEXATION')) {
+                    if (in_array($this->object->visibility, array('both', 'search'), true) && Configuration::get('PS_SEARCH_INDEXATION')) {
                         Search::indexation(false, $this->object->id);
                     }
                 }
@@ -1845,7 +1845,7 @@ class AdminProductsController extends AdminProductsControllerCore
         if (!is_array($this->submitted_tabs)) {
             $this->submitted_tabs = Tools::getValue('submitted_tabs');
         }
-        if (is_array($this->submitted_tabs) && in_array($tab_name, $this->submitted_tabs)) {
+        if (is_array($this->submitted_tabs) && in_array($tab_name, $this->submitted_tabs, true)) {
             return true;
         }
         return false;
@@ -1924,7 +1924,7 @@ class AdminProductsController extends AdminProductsControllerCore
                         StockAvailable::setProductDependsOnStock((int)$this->object->id, $depends_on_stock, $this->context->shop->id);
                     }
                     PrestaShopLogger::addLog(sprintf($this->l('%s modification', 'AdminTab', false, false), $this->className), 1, null, $this->className, (int)$this->object->id, true, (int)$this->context->employee->id);
-                    if (in_array($this->context->shop->getContext(), array(Shop::CONTEXT_SHOP, Shop::CONTEXT_ALL))) {
+                    if (in_array($this->context->shop->getContext(), array(Shop::CONTEXT_SHOP, Shop::CONTEXT_ALL), true)) {
                         if ($this->isTabSubmitted('Shipping')) {
                             $this->addCarriers();
                         }
@@ -1967,7 +1967,7 @@ class AdminProductsController extends AdminProductsControllerCore
                         $this->processWarehouses();
                     }
                     if (empty($this->errors)) {
-                        if (in_array($object->visibility, array('both', 'search')) && Configuration::get('PS_SEARCH_INDEXATION')) {
+                        if (in_array($object->visibility, array('both', 'search'), true) && Configuration::get('PS_SEARCH_INDEXATION')) {
                             Search::indexation(false, $object->id);
                         }
                         if (Tools::isSubmit('submitAddProductAndPreview')) {
@@ -2114,7 +2114,7 @@ class AdminProductsController extends AdminProductsControllerCore
         if ($this->isProductFieldUpdated('id_category_default') && (!Tools::isSubmit('categoryBox') || !count(Tools::getValue('categoryBox')))) {
             $this->errors[] = $this->l('Products must be in at least one category.');
         }
-        if ($this->isProductFieldUpdated('id_category_default') && (!is_array(Tools::getValue('categoryBox')) || !in_array(Tools::getValue('id_category_default'), Tools::getValue('categoryBox')))) {
+        if ($this->isProductFieldUpdated('id_category_default') && (!is_array(Tools::getValue('categoryBox')) || !in_array(Tools::getValue('id_category_default'), Tools::getValue('categoryBox'), true))) {
             $this->errors[] = $this->l('This product must be in the default category.');
         }
         foreach ($languages as $language) {
@@ -2470,7 +2470,7 @@ class AdminProductsController extends AdminProductsControllerCore
         $content .= '
 		<tr class="'.($irow++ % 2 ? 'alt_row' : '').'">
 			<td>
-				<input type="checkbox" name="categoryBox[]" class="categoryBox'.($id_category_default == $id_category ? ' id_category_default' : '').'" id="categoryBox_'.$id_category.'" value="'.$id_category.'"'.((in_array($id_category, $indexedCategories) || ((int)(Tools::getValue('id_category')) == $id_category && !(int)($id_obj))) ? ' checked="checked"' : '').' />
+				<input type="checkbox" name="categoryBox[]" class="categoryBox'.($id_category_default == $id_category ? ' id_category_default' : '').'" id="categoryBox_'.$id_category.'" value="'.$id_category.'"'.((in_array($id_category, $indexedCategories, true) || ((int)(Tools::getValue('id_category')) == $id_category && !(int)($id_obj))) ? ' checked="checked"' : '').' />
 			</td>
 			<td>
 				'.$id_category.'
@@ -2751,7 +2751,7 @@ class AdminProductsController extends AdminProductsControllerCore
                 }
             }
             foreach ($associated_suppliers as $key => $associated_supplier) {
-                if (!in_array($associated_supplier->id_supplier, $suppliers_to_associate)) {
+                if (!in_array($associated_supplier->id_supplier, $suppliers_to_associate, true)) {
                     $associated_supplier->delete();
                     unset($associated_suppliers[$key]);
                 }
@@ -3339,7 +3339,7 @@ class AdminProductsController extends AdminProductsControllerCore
                     }
                     unset($customer);
                 }
-                if (!$specific_price['id_shop'] || in_array($specific_price['id_shop'], Shop::getContextListShopID())) {
+                if (!$specific_price['id_shop'] || in_array($specific_price['id_shop'], Shop::getContextListShopID(), true)) {
                     $content .= '
 					<tr '.($i % 2 ? 'class="alt_row"' : '').'>
 						<td>'.$rule_name.'</td>
@@ -4093,7 +4093,7 @@ class AdminProductsController extends AdminProductsControllerCore
             }
         }
         foreach ($this->actions_available as $action) {
-            if (!in_array($action, $this->actions) && isset($this->$action) && $this->$action) {
+            if (!in_array($action, $this->actions, true) && isset($this->$action) && $this->$action) {
                 $this->actions[] = $action;
             }
         }
@@ -4471,7 +4471,7 @@ class AdminProductsController extends AdminProductsControllerCore
                 if (Tools::getValue('value') === false) {
                     die(json_encode(array('error' => $this->l('Undefined value'))));
                 }
-                if (!in_array((int)Tools::getValue('value'), array(0, 1, 2))) {
+                if (!in_array((int)Tools::getValue('value'), array(0, 1, 2), true)) {
                     die(json_encode(array('error' => $this->l('Incorrect value'))));
                 }
                 StockAvailable::setProductOutOfStock($product->id, (int)Tools::getValue('value'));

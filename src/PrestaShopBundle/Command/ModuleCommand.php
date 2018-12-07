@@ -93,7 +93,7 @@ class ModuleCommand extends ContainerAwareCommand
         $action = $input->getArgument('action');
         $file = $input->getArgument('file path');
 
-        if (!in_array($action, $this->allowedActions)) {
+        if (!in_array($action, $this->allowedActions, true)) {
             $this->displayMessage(
                 $this->translator->trans(
                     'Unknown module action. It must be one of these values: %actions%',

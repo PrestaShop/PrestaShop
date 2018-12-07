@@ -83,7 +83,7 @@ class CategoryStatus
      */
     private function setStatus($status)
     {
-        if (!in_array($status, self::AVAILABLE_STATUSES)) {
+        if (!in_array($status, self::AVAILABLE_STATUSES, true)) {
             throw new CategoryConstraintException(
                 sprintf(
                     'Invalid category status %s supplied. Available statuses are "%s"',

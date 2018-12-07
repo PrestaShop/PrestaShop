@@ -422,7 +422,7 @@ class ImageManagerCore
         $nameExplode = explode('.', $filename);
         if (count($nameExplode) >= 2) {
             $currentExtension = mb_strtolower($nameExplode[count($nameExplode) - 1]);
-            if (!in_array($currentExtension, $authorizedExtensions)) {
+            if (!in_array($currentExtension, $authorizedExtensions, true)) {
                 return false;
             }
         } else {
@@ -630,7 +630,7 @@ class ImageManagerCore
 
         $mimeType = null;
         foreach ($types as $mime => $exts) {
-            if (in_array($extension, $exts)) {
+            if (in_array($extension, $exts, true)) {
                 $mimeType = $mime;
                 break;
             }

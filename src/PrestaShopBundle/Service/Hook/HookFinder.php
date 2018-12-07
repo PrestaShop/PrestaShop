@@ -81,7 +81,7 @@ class HookFinder
                 if (!count($this->expectedInstanceClasses)) {
                     continue;
                 }
-                if (is_object($content) && !in_array(get_class($content), $this->expectedInstanceClasses)) {
+                if (is_object($content) && !in_array(get_class($content), $this->expectedInstanceClasses, true)) {
                     throw new \Exception('The module ' . $moduleName . ' did not return expected class. Was ' . get_class($content) . ' instead of ' . implode(' or ', $this->expectedInstanceClasses) . '.');
                 } elseif (!is_object($content)) {
                     throw new \Exception('The module ' . $moduleName . ' did not return expected type. Was ' . gettype($content) . ' instead of ' . implode(' or ', $this->expectedInstanceClasses) . '.');

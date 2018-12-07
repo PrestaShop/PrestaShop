@@ -3033,7 +3033,7 @@ class AdminOrdersControllerCore extends AdminController
         $payment_modules = array();
 
         foreach (PaymentModule::getInstalledPaymentModules() as $p_module) {
-            if (in_array((int) $p_module['id_module'], $authorized_modules)) {
+            if (in_array((int) $p_module['id_module'], $authorized_modules, true)) {
                 $payment_modules[] = Module::getInstanceById((int) $p_module['id_module']);
             }
         }

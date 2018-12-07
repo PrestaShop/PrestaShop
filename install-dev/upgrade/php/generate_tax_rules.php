@@ -68,7 +68,7 @@ function generate_tax_rules()
 
         if ($states) {
             foreach ($states as $state) {
-                if (!in_array($state['tax_behavior'], array(PS_PRODUCT_TAX, PS_STATE_TAX, PS_BOTH_TAX))) {
+                if (!in_array($state['tax_behavior'], array(PS_PRODUCT_TAX, PS_STATE_TAX, PS_BOTH_TAX), true)) {
                     $tax_behavior = PS_PRODUCT_TAX;
                 } else {
                     $tax_behavior = $state['tax_behavior'];

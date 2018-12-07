@@ -183,11 +183,11 @@ final class CustomerQueryBuilder extends AbstractDoctrineQueryBuilder
         );
 
         foreach ($filters as $filterName => $filterValue) {
-            if (!in_array($filterName, $allowedFilters)) {
+            if (!in_array($filterName, $allowedFilters, true)) {
                 continue;
             }
 
-            if (in_array($filterName, array('active', 'newsletter', 'optin', 'id_customer'))) {
+            if (in_array($filterName, array('active', 'newsletter', 'optin', 'id_customer'), true)) {
                 $qb->andWhere('c.`' . $filterName . '` = :' . $filterName);
                 $qb->setParameter($filterName, $filterValue);
                 continue;

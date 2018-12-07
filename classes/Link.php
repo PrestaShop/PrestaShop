@@ -216,7 +216,7 @@ class LinkCore
             $params['category'] = (!$category) ? $product->category : $category;
             $cats = array();
             foreach ($product->getParentCategories($idLang) as $cat) {
-                if (!in_array($cat['id_category'], Link::$category_disable_rewrite)) {
+                if (!in_array($cat['id_category'], Link::$category_disable_rewrite, true)) {
                     //remove root and home category from the URL
                     $cats[] = $cat['link_rewrite'];
                 }
@@ -870,7 +870,7 @@ class LinkCore
     /**
      * Search for a shop whose domain matches the current url.
      *
-     * @return int|null
+     * @return null|int
      */
     public function getMatchingUrlShopId()
     {
@@ -1189,7 +1189,7 @@ class LinkCore
      * @param bool $pagination Show page number attribute
      * @param bool $array If false return an url, if true return an array
      *
-     * @return string|array
+     * @return array|string
      */
     public function getPaginationLink($type, $idObject, $nb = false, $sort = false, $pagination = false, $array = false)
     {
@@ -1223,9 +1223,9 @@ class LinkCore
                 if (Configuration::get('PS_REWRITING_SETTINGS') && ($k == 'isolang' || $k == 'id_lang')) {
                     continue;
                 }
-                $ifNb = (!$nb || ($nb && !in_array($k, $varsNb)));
-                $ifSort = (!$sort || ($sort && !in_array($k, $varsSort)));
-                $ifPagination = (!$pagination || ($pagination && !in_array($k, $varsPagination)));
+                $ifNb = (!$nb || ($nb && !in_array($k, $varsNb, true)));
+                $ifSort = (!$sort || ($sort && !in_array($k, $varsSort, true)));
+                $ifPagination = (!$pagination || ($pagination && !in_array($k, $varsPagination, true)));
                 if ($ifNb && $ifSort && $ifPagination) {
                     if (!is_array($value)) {
                         $vars[urlencode($k)] = $value;
@@ -1290,7 +1290,7 @@ class LinkCore
             $context = Context::getContext();
         }
 
-        if ((!$this->allow && in_array($idShop, array($context->shop->id,  null))) || !Language::isMultiLanguageActivated($idShop) || !$psRewritingSettings) {
+        if ((!$this->allow && in_array($idShop, array($context->shop->id,  null), true)) || !Language::isMultiLanguageActivated($idShop) || !$psRewritingSettings) {
             return '';
         }
 

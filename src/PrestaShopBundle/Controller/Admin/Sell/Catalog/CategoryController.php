@@ -472,7 +472,7 @@ class CategoryController extends FrameworkBundleAdminController
 
         $authLevel = $this->authorizationLevel($request->attributes->get('_legacy_controller'));
 
-        if (!in_array($authLevel, array(PageVoter::LEVEL_UPDATE, PageVoter::LEVEL_DELETE))) {
+        if (!in_array($authLevel, array(PageVoter::LEVEL_UPDATE, PageVoter::LEVEL_DELETE), true)) {
             return $this->json(array(
                 'status' => false,
                 'message' => $this->trans('You do not have permission to update this.', 'Admin.Notifications.Error'),

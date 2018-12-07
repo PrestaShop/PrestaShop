@@ -466,7 +466,7 @@ class AdminProductWrapper
                     unset($customer);
                 }
 
-                if (!$specific_price['id_shop'] || in_array($specific_price['id_shop'], Shop::getContextListShopID())) {
+                if (!$specific_price['id_shop'] || in_array($specific_price['id_shop'], Shop::getContextListShopID(), true)) {
                     $can_delete_specific_prices = true;
                     if (Shop::isFeatureActive()) {
                         $can_delete_specific_prices = (count($this->legacyContext->employee->getAssociatedShops()) > 1 && !$specific_price['id_shop']) || $specific_price['id_shop'];
@@ -608,11 +608,11 @@ class AdminProductWrapper
         $productCustomization = $product->getCustomizationFieldIds();
         $toDeleteCustomizationIds = array();
         foreach ($productCustomization as $customizationFiled) {
-            if (!in_array((int) $customizationFiled['id_customization_field'], $usedCustomizationIds)) {
+            if (!in_array((int) $customizationFiled['id_customization_field'], $usedCustomizationIds, true)) {
                 $toDeleteCustomizationIds[] = (int) $customizationFiled['id_customization_field'];
             }
             //if the customization_field is still in use, only delete the current context shops langs,
-            if (in_array((int) $customizationFiled['id_customization_field'], $customization_ids)) {
+            if (in_array((int) $customizationFiled['id_customization_field'], $customization_ids, true)) {
                 Customization::deleteCustomizationFieldLangByShop($customizationFiled['id_customization_field'], $shopList);
             }
         }

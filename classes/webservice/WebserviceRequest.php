@@ -911,11 +911,11 @@ class WebserviceRequestCore
      */
     protected function checkHTTPMethod()
     {
-        if (!in_array($this->method, array('GET', 'POST', 'PUT', 'DELETE', 'HEAD'))) {
+        if (!in_array($this->method, array('GET', 'POST', 'PUT', 'DELETE', 'HEAD'), true)) {
             $this->setError(405, 'Method ' . $this->method . ' is not valid', 23);
-        } elseif (isset($this->urlSegment[0], $this->resourceList[$this->urlSegment[0]]['forbidden_method']) && in_array($this->method, $this->resourceList[$this->urlSegment[0]]['forbidden_method'])) {
+        } elseif (isset($this->urlSegment[0], $this->resourceList[$this->urlSegment[0]]['forbidden_method']) && in_array($this->method, $this->resourceList[$this->urlSegment[0]]['forbidden_method'], true)) {
             $this->setError(405, 'Method ' . $this->method . ' is not allowed for the resource ' . $this->urlSegment[0], 101);
-        } elseif ($this->urlSegment[0] && !in_array($this->method, $this->keyPermissions[$this->urlSegment[0]])) {
+        } elseif ($this->urlSegment[0] && !in_array($this->method, $this->keyPermissions[$this->urlSegment[0]], true)) {
             $this->setError(405, 'Method ' . $this->method . ' is not allowed for the resource ' . $this->urlSegment[0] . ' with this authentication key', 25);
         } else {
             return true;
@@ -935,8 +935,8 @@ class WebserviceRequestCore
         $resourceNames = array_keys($this->resourceList);
         if ($this->urlSegment[0] == '') {
             $this->resourceConfiguration['objectsNodeName'] = 'resources';
-        } elseif (in_array($this->urlSegment[0], $resourceNames)) {
-            if (!in_array($this->urlSegment[0], array_keys($this->keyPermissions))) {
+        } elseif (in_array($this->urlSegment[0], $resourceNames, true)) {
+            if (!in_array($this->urlSegment[0], array_keys($this->keyPermissions), true)) {
                 $this->setError(401, 'Resource of type "' . $this->urlSegment[0] . '" is not allowed with this authentication key', 26);
 
                 return false;
@@ -1078,7 +1078,7 @@ class WebserviceRequestCore
         $i18n_available_filters = array();
         foreach ($this->resourceConfiguration['fields'] as $fieldName => $field) {
             if ((!isset($this->resourceConfiguration['hidden_fields']) ||
-                (isset($this->resourceConfiguration['hidden_fields']) && !in_array($fieldName, $this->resourceConfiguration['hidden_fields'])))) {
+                (isset($this->resourceConfiguration['hidden_fields']) && !in_array($fieldName, $this->resourceConfiguration['hidden_fields'], true)))) {
                 if ((!isset($field['i18n']) ||
                 (isset($field['i18n']) && !$field['i18n']))) {
                     $available_filters[] = $fieldName;
@@ -1090,10 +1090,10 @@ class WebserviceRequestCore
 
         // Date feature : date=1
         if (!empty($this->urlFragments['date']) && $this->urlFragments['date']) {
-            if (!in_array('date_add', $available_filters)) {
+            if (!in_array('date_add', $available_filters, true)) {
                 $available_filters[] = 'date_add';
             }
-            if (!in_array('date_upd', $available_filters)) {
+            if (!in_array('date_upd', $available_filters, true)) {
                 $available_filters[] = 'date_upd';
             }
             if (!array_key_exists('date_add', $this->resourceConfiguration['fields'])) {
@@ -1131,7 +1131,7 @@ class WebserviceRequestCore
                 if (isset($this->urlFragments['filter'])) {
                     foreach ($this->urlFragments['filter'] as $field => $url_param) {
                         if ($field != 'sort' && $field != 'limit') {
-                            if (!in_array($field, $available_filters)) {
+                            if (!in_array($field, $available_filters, true)) {
                                 // if there are linked tables
                                 if (isset($this->resourceConfiguration['linked_tables'], $this->resourceConfiguration['linked_tables'][$field])  ) {
                                     // contruct SQL join for linked tables
@@ -1149,7 +1149,7 @@ class WebserviceRequestCore
                                             return false;
                                         }
                                     }
-                                } elseif ($url_param != '' && in_array($field, $i18n_available_filters)) {
+                                } elseif ($url_param != '' && in_array($field, $i18n_available_filters, true)) {
                                     if (!is_array($url_param)) {
                                         $url_param = array($url_param);
                                     }
@@ -1218,15 +1218,15 @@ class WebserviceRequestCore
                     $fieldName = mb_substr($sort, 0, $delimiterPosition);
                     $direction = mb_strtoupper(mb_substr($sort, $delimiterPosition + 1));
                 }
-                if ($delimiterPosition === false || !in_array($direction, array('ASC', 'DESC'))) {
+                if ($delimiterPosition === false || !in_array($direction, array('ASC', 'DESC'), true)) {
                     $this->setError(400, 'The "sort" value has to be formed as this example: "field_ASC" or \'[field_1_DESC,field_2_ASC,field_3_ASC,...]\' ("field" has to be an available field)', 37);
 
                     return false;
-                } elseif (!in_array($fieldName, $available_filters) && !in_array($fieldName, $i18n_available_filters)) {
+                } elseif (!in_array($fieldName, $available_filters, true) && !in_array($fieldName, $i18n_available_filters, true)) {
                     $this->setError(400, 'Unable to filter by this field. However, these are available: ' . implode(', ', $available_filters) . ', for i18n fields:' . implode(', ', $i18n_available_filters), 38);
 
                     return false;
-                } elseif (in_array($fieldName, $i18n_available_filters)) {
+                } elseif (in_array($fieldName, $i18n_available_filters, true)) {
                     // for sort on i18n field
                     if (!preg_match('#main_i18n#', $sql_join)) {
                         $sql_join .= 'LEFT JOIN `' . _DB_PREFIX_ . bqSQL($this->resourceConfiguration['retrieveData']['table']) . '_lang` AS main_i18n ON (main.`' . bqSQL($this->resourceConfiguration['fields']['id']['sqlId']) . '` = main_i18n.`' . bqSQL($this->resourceConfiguration['fields']['id']['sqlId']) . '`)' . "\n";
@@ -1273,7 +1273,7 @@ class WebserviceRequestCore
         $filters = $this->manageFilters();
 
         /* If we only need to display the synopsis, analyzing the first row is sufficient */
-        if (isset($this->urlFragments['schema']) && in_array($this->urlFragments['schema'], array('blank', 'synopsis'))) {
+        if (isset($this->urlFragments['schema']) && in_array($this->urlFragments['schema'], array('blank', 'synopsis'), true)) {
             $filters = array('sql_join' => '', 'sql_filter' => '', 'sql_sort' => '', 'sql_limit' => ' LIMIT 1');
         }
 
@@ -1826,7 +1826,7 @@ class WebserviceRequestCore
                         $type_of_view = WebserviceOutputBuilder::VIEW_LIST;
                     }
 
-                    if (in_array($this->method, array('PUT', 'POST'))) {
+                    if (in_array($this->method, array('PUT', 'POST'), true)) {
                         $type_of_view = WebserviceOutputBuilder::VIEW_DETAILS;
                         $this->fieldsToDisplay = 'full';
                     }

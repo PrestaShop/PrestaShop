@@ -671,7 +671,7 @@ abstract class PaymentModuleCore extends Module
 
                         $order->addCartRule($cart_rule['obj']->id, $cart_rule['obj']->name, $values, 0, $cart_rule['obj']->free_shipping);
 
-                        if ($id_order_state != Configuration::get('PS_OS_ERROR') && $id_order_state != Configuration::get('PS_OS_CANCELED') && !in_array($cart_rule['obj']->id, $cart_rule_used)) {
+                        if ($id_order_state != Configuration::get('PS_OS_ERROR') && $id_order_state != Configuration::get('PS_OS_CANCELED') && !in_array($cart_rule['obj']->id, $cart_rule_used, true)) {
                             $cart_rule_used[] = $cart_rule['obj']->id;
 
                             // Create a new instance of Cart Rule without id_lang, in order to update its quantity

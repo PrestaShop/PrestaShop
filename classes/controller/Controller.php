@@ -119,7 +119,7 @@ abstract class ControllerCore
      *
      * @see Controller::run()
      *
-     * @var string|null
+     * @var null|string
      */
     protected $redirect_after = null;
 
@@ -490,7 +490,7 @@ abstract class ControllerCore
                 $js_path = Media::getJSPath($js_file);
             }
 
-            if ($js_path && !in_array($js_path, $this->js_files)) {
+            if ($js_path && !in_array($js_path, $this->js_files, true)) {
                 $this->js_files[] = $js_path . ($version ? '?' . $version : '');
             }
         }
@@ -513,8 +513,8 @@ abstract class ControllerCore
                 $js_file = Media::getJSPath($js_file);
             }
 
-            if ($js_file && in_array($js_file, $this->js_files)) {
-                unset($this->js_files[array_search($js_file, $this->js_files)]);
+            if ($js_file && in_array($js_file, $this->js_files, true)) {
+                unset($this->js_files[array_search($js_file, $this->js_files, true)]);
             }
         }
     }

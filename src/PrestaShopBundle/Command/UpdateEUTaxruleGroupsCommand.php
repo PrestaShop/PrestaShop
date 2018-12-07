@@ -213,7 +213,7 @@ class UpdateEUTaxruleGroupsCommand extends ContainerAwareCommand
             $name = $attribute->getName();
 
             // This attribute seems to cause trouble, skip it.
-            if ($name === 'account_number' || in_array($name, $attributesToRemove)) {
+            if ($name === 'account_number' || in_array($name, $attributesToRemove, true)) {
                 continue;
             }
 

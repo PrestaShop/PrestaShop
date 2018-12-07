@@ -786,7 +786,7 @@ class OrderDetailCore extends ObjectModel
         }
 
         $front = true;
-        if (!in_array(Context::getContext()->controller->controller_type, array('front', 'modulefront'))) {
+        if (!in_array(Context::getContext()->controller->controller_type, array('front', 'modulefront'), true)) {
             $front = false;
         }
 

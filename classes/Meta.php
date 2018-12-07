@@ -92,7 +92,7 @@ class MetaCore extends ObjectModel
         );
 
         foreach ($files as $file) {
-            if ($file != 'index.php' && !in_array(mb_strtolower(str_replace('Controller.php', '', $file)), $exludePages)) {
+            if ($file != 'index.php' && !in_array(mb_strtolower(str_replace('Controller.php', '', $file)), $exludePages, true)) {
                 $className = str_replace('.php', '', $file);
                 $reflection = class_exists($className) ? new ReflectionClass(str_replace('.php', '', $file)) : false;
                 $properties = $reflection ? $reflection->getDefaultProperties() : array();
@@ -121,8 +121,8 @@ class MetaCore extends ObjectModel
         if ($excludeFilled) {
             $metas = Meta::getMetas();
             foreach ($metas as $meta) {
-                if (in_array($meta['page'], $selectedPages)) {
-                    unset($selectedPages[array_search($meta['page'], $selectedPages)]);
+                if (in_array($meta['page'], $selectedPages, true)) {
+                    unset($selectedPages[array_search($meta['page'], $selectedPages, true)]);
                 }
             }
         }
@@ -142,7 +142,7 @@ class MetaCore extends ObjectModel
     /**
      * Get all Metas.
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return null|array|false|mysqli_result|PDOStatement|resource
      */
     public static function getMetas()
     {
@@ -154,7 +154,7 @@ class MetaCore extends ObjectModel
      *
      * @param int $idLang Language ID
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return null|array|false|mysqli_result|PDOStatement|resource
      */
     public static function getMetasByIdLang($idLang)
     {
@@ -173,7 +173,7 @@ class MetaCore extends ObjectModel
      * @param string $page
      * @param int $idLang Language ID
      *
-     * @return array|bool|null|object
+     * @return null|array|bool|object
      */
     public static function getMetaByPage($page, $idLang)
     {
@@ -194,7 +194,7 @@ class MetaCore extends ObjectModel
      *
      * @param int $idLang
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return null|array|false|mysqli_result|PDOStatement|resource
      */
     public static function getAllMeta($idLang)
     {
@@ -269,7 +269,7 @@ class MetaCore extends ObjectModel
      * @param int $idLang
      * @param string $urlRewrite
      *
-     * @return false|null|string
+     * @return null|false|string
      */
     public static function getEquivalentUrlRewrite($newIdLang, $idLang, $urlRewrite)
     {
@@ -294,7 +294,7 @@ class MetaCore extends ObjectModel
     public static function getMetaTags($idLang, $pageName, $title = '')
     {
         if (Configuration::get('PS_SHOP_ENABLE')
-            || in_array(Tools::getRemoteAddr(), explode(',', Configuration::get('PS_MAINTENANCE_IP')))) {
+            || in_array(Tools::getRemoteAddr(), explode(',', Configuration::get('PS_MAINTENANCE_IP')), true)) {
             if ($pageName == 'product' && ($idProduct = Tools::getValue('id_product'))) {
                 return Meta::getProductMetas($idProduct, $idLang, $pageName);
             } elseif ($pageName == 'category' && ($idCategory = Tools::getValue('id_category'))) {

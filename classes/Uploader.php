@@ -354,7 +354,7 @@ class UploaderCore
         $types = $this->getAcceptTypes();
 
         //TODO check mime type.
-        if (isset($types) && !in_array(Tools::strtolower(pathinfo($file['name'], PATHINFO_EXTENSION)), $types)) {
+        if (isset($types) && !in_array(Tools::strtolower(pathinfo($file['name'], PATHINFO_EXTENSION)), $types, true)) {
             $file['error'] = Context::getContext()->getTranslator()->trans('Filetype not allowed', array(), 'Admin.Notifications.Error');
 
             return false;
@@ -446,7 +446,7 @@ class UploaderCore
     {
         $last = $directory[mb_strlen($directory) - 1];
 
-        if (in_array($last, array('/', '\\'))) {
+        if (in_array($last, array('/', '\\'), true)) {
             $directory[mb_strlen($directory) - 1] = DIRECTORY_SEPARATOR;
 
             return $directory;

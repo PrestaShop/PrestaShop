@@ -120,7 +120,7 @@ class WebserviceOutputJSONCore implements WebserviceOutputInterface
         if ($node_name == 'api' && ($isAPICall == false)) {
             $isAPICall = true;
         }
-        if ($isAPICall && !in_array($node_name, array('description', 'schema', 'api'))) {
+        if ($isAPICall && !in_array($node_name, array('description', 'schema', 'api'), true)) {
             $this->content[] = $node_name;
         }
         if (isset($more_attr, $more_attr['id'])) {

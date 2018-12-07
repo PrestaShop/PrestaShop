@@ -151,7 +151,7 @@ class ConfigurationTestCore
             return true;
         }
 
-        return in_array('mod_rewrite', apache_get_modules());
+        return in_array('mod_rewrite', apache_get_modules(), true);
     }
 
     public static function test_new_phpversion()
@@ -176,7 +176,7 @@ class ConfigurationTestCore
 
     public static function test_fopen()
     {
-        return in_array(ini_get('allow_url_fopen'), array('On', 'on', '1'));
+        return in_array(ini_get('allow_url_fopen'), array('On', 'on', '1'), true);
     }
 
     public static function test_system($funcs)

@@ -335,7 +335,7 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
                     'filter_column_id_product',
                     'filter_column_sav_quantity',
                     'filter_column_price',
-                )), true);
+                ), true), true);
                 $field = mb_substr($filterParam, 14); // 'filter_column_' takes 14 chars
                 if (isset($sqlSelect[$field]['table'])) {
                     $sqlWhere[] = $sqlSelect[$field]['table'] . '.`' . $sqlSelect[$field]['field'] . '` ' . sprintf($sqlSelect[$field]['filtering'], $filterValue);

@@ -101,7 +101,7 @@ function smarty_modifier_htmlentitiesUTF8($string)
 
 function smartyRegisterFunction($smarty, $type, $function, $params, $lazy = true, $initial_lazy_register = null)
 {
-    if (!in_array($type, array('function', 'modifier', 'block'))) {
+    if (!in_array($type, array('function', 'modifier', 'block'), true)) {
         return false;
     }
 
@@ -150,7 +150,7 @@ function smartyHook($params, &$smarty)
 
         $moduleexcl = explode(',', $params['excl']);
         foreach ($modules as $module) {
-            if (!in_array($module['module'], $moduleexcl)) {
+            if (!in_array($module['module'], $moduleexcl, true)) {
                 $result .= Hook::exec($params['h'], $hook_params, $module['id_module']);
             }
         }

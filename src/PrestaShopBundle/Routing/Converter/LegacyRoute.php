@@ -62,7 +62,7 @@ class LegacyRoute
     {
         $indexAliases = array('list', 'index');
 
-        return empty($action) || in_array(mb_strtolower($action), $indexAliases);
+        return empty($action) || in_array(mb_strtolower($action), $indexAliases, true);
     }
 
     /**

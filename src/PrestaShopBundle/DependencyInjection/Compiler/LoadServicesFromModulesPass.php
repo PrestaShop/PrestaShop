@@ -55,7 +55,7 @@ class LoadServicesFromModulesPass implements CompilerPassInterface
         $installedModules = $container->getParameter('kernel.active_modules');
 
         foreach ($this->getModulesPaths() as $modulePath) {
-            if (in_array($modulePath->getFilename(), $installedModules)
+            if (in_array($modulePath->getFilename(), $installedModules, true)
                 && file_exists($modulePath . '/config/services.yml')
             ) {
                 $loader = new YamlFileLoader($container, new FileLocator($modulePath . '/config/'));

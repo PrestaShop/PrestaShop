@@ -458,7 +458,7 @@ class AdminDashboardControllerCore extends AdminController
                 foreach ($rss->channel->item as $item) {
                     if ($articles_limit > 0 && Validate::isCleanHtml((string) $item->title) && Validate::isCleanHtml((string) $item->description)
                         && isset($item->link, $item->title)  ) {
-                        if (in_array($this->context->mode, array(Context::MODE_HOST, Context::MODE_HOST_CONTRIB))) {
+                        if (in_array($this->context->mode, array(Context::MODE_HOST, Context::MODE_HOST_CONTRIB), true)) {
                             $utm_content = 'cloud';
                         } else {
                             $utm_content = 'download';

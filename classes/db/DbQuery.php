@@ -59,7 +59,7 @@ class DbQueryCore
     {
         $types = array('SELECT', 'DELETE');
 
-        if (!empty($type) && in_array($type, $types)) {
+        if (!empty($type) && in_array($type, $types, true)) {
             $this->query['type'] = $type;
         }
 

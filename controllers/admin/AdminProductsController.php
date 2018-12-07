@@ -553,7 +553,7 @@ class AdminProductsControllerCore extends AdminController
                     $this->errors[] = $this->trans('An error occurred while copying the image.', array(), 'Admin.Notifications.Error');
                 } else {
                     Hook::exec('actionProductAdd', array('id_product' => (int) $product->id, 'product' => $product));
-                    if (in_array($product->visibility, array('both', 'search')) && Configuration::get('PS_SEARCH_INDEXATION')) {
+                    if (in_array($product->visibility, array('both', 'search'), true) && Configuration::get('PS_SEARCH_INDEXATION')) {
                         Search::indexation(false, $product->id);
                     }
                     $this->redirect_after = self::$currentIndex . (Tools::getIsset('id_category') ? '&id_category=' . (int) Tools::getValue('id_category') : '') . '&conf=19&token=' . $this->token;
@@ -1242,14 +1242,14 @@ class AdminProductsControllerCore extends AdminController
 
         // Set tab to display if not decided already
         if (!$this->tab_display && $this->action) {
-            if (in_array($this->action, array_keys($this->available_tabs))) {
+            if (in_array($this->action, array_keys($this->available_tabs), true)) {
                 $this->tab_display = $this->action;
             }
         }
 
         // And if still not set, use default
         if (!$this->tab_display) {
-            if (in_array($this->default_tab, $this->available_tabs)) {
+            if (in_array($this->default_tab, $this->available_tabs, true)) {
                 $this->tab_display = $this->default_tab;
             } else {
                 $this->tab_display = key($this->available_tabs);
@@ -1260,7 +1260,7 @@ class AdminProductsControllerCore extends AdminController
     /**
      * postProcess for new form archi (need object return).
      *
-     * @return ObjectModel|false
+     * @return false|ObjectModel
      */
     public function postCoreProcess()
     {
@@ -1622,7 +1622,7 @@ class AdminProductsControllerCore extends AdminController
      * @param Product $product Product object to add image
      * @param string $method
      *
-     * @return int|false
+     * @return false|int
      */
     public function addProductImage($product, $method = 'auto')
     {
@@ -1665,7 +1665,7 @@ class AdminProductsControllerCore extends AdminController
      * @param string $method
      *
      * @throws PrestaShopException
-     * @return void|false
+     * @return false|void
      *
      */
     public function copyImage($id_product, $id_image, $method = 'auto')
@@ -1748,7 +1748,7 @@ class AdminProductsControllerCore extends AdminController
                     $this->errors[] = $this->trans('An error occurred while adding tags.', array(), 'Admin.Catalog.Notification');
                 } else {
                     Hook::exec('actionProductAdd', array('id_product' => (int) $this->object->id, 'product' => $this->object));
-                    if (in_array($this->object->visibility, array('both', 'search')) && Configuration::get('PS_SEARCH_INDEXATION')) {
+                    if (in_array($this->object->visibility, array('both', 'search'), true) && Configuration::get('PS_SEARCH_INDEXATION')) {
                         Search::indexation(false, $this->object->id);
                     }
                 }
@@ -1799,7 +1799,7 @@ class AdminProductsControllerCore extends AdminController
             $this->submitted_tabs = Tools::getValue('submitted_tabs');
         }
 
-        if (is_array($this->submitted_tabs) && in_array($tab_name, $this->submitted_tabs)) {
+        if (is_array($this->submitted_tabs) && in_array($tab_name, $this->submitted_tabs, true)) {
             return true;
         }
 
@@ -1896,7 +1896,7 @@ class AdminProductsControllerCore extends AdminController
                     }
 
                     PrestaShopLogger::addLog(sprintf('%s modification', $this->className), 1, null, $this->className, (int) $this->object->id, true, (int) $this->context->employee->id);
-                    if (in_array($this->context->shop->getContext(), array(Shop::CONTEXT_SHOP, Shop::CONTEXT_ALL))) {
+                    if (in_array($this->context->shop->getContext(), array(Shop::CONTEXT_SHOP, Shop::CONTEXT_ALL), true)) {
                         if ($this->isTabSubmitted('Shipping')) {
                             $this->addCarriers();
                         }
@@ -1949,7 +1949,7 @@ class AdminProductsControllerCore extends AdminController
                         $this->processWarehouses();
                     }
                     if (empty($this->errors)) {
-                        if (in_array($object->visibility, array('both', 'search')) && Configuration::get('PS_SEARCH_INDEXATION')) {
+                        if (in_array($object->visibility, array('both', 'search'), true) && Configuration::get('PS_SEARCH_INDEXATION')) {
                             Search::indexation(false, $object->id);
                         }
 
@@ -2136,7 +2136,7 @@ class AdminProductsControllerCore extends AdminController
             $this->errors[] = 'Products must be in at least one category.';
         }
 
-        if ($this->isProductFieldUpdated('id_category_default') && (!is_array(Tools::getValue('categoryBox')) || !in_array(Tools::getValue('id_category_default'), Tools::getValue('categoryBox')))) {
+        if ($this->isProductFieldUpdated('id_category_default') && (!is_array(Tools::getValue('categoryBox')) || !in_array(Tools::getValue('id_category_default'), Tools::getValue('categoryBox'), true))) {
             $this->errors[] = 'This product must be in the default category.';
         }
 
@@ -2440,7 +2440,7 @@ class AdminProductsControllerCore extends AdminController
             // Delete already associated suppliers if needed
             foreach ($associated_suppliers as $key => $associated_supplier) {
                 /** @var ProductSupplier $associated_supplier */
-                if (!in_array($associated_supplier->id_supplier, $suppliers_to_associate)) {
+                if (!in_array($associated_supplier->id_supplier, $suppliers_to_associate, true)) {
                     $associated_supplier->delete();
                     unset($associated_suppliers[$key]);
                 }
@@ -2974,7 +2974,7 @@ class AdminProductsControllerCore extends AdminController
                 if (Tools::getValue('value') === false) {
                     die(json_encode(array('error' => 'Undefined value')));
                 }
-                if (!in_array((int) Tools::getValue('value'), array(0, 1, 2))) {
+                if (!in_array((int) Tools::getValue('value'), array(0, 1, 2), true)) {
                     die(json_encode(array('error' => 'Incorrect value')));
                 }
 

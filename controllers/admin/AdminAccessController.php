@@ -147,7 +147,7 @@ class AdminAccessControllerCore extends AdminController
         if (Tools::isSubmit('submitAddAccess')) {
             $access = new Access();
             $perm = Tools::getValue('perm');
-            if (!in_array($perm, array('view', 'add', 'edit', 'delete', 'all'))) {
+            if (!in_array($perm, array('view', 'add', 'edit', 'delete', 'all'), true)) {
                 throw new PrestaShopException('permission does not exist');
             }
 
@@ -176,7 +176,7 @@ class AdminAccessControllerCore extends AdminController
             $id_module = (int) Tools::getValue('id_module');
             $id_profile = (int) Tools::getValue('id_profile');
 
-            if (!in_array($perm, array('view', 'configure', 'uninstall'))) {
+            if (!in_array($perm, array('view', 'configure', 'uninstall'), true)) {
                 throw new PrestaShopException('permission does not exist');
             }
 

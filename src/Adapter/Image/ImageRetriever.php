@@ -103,7 +103,7 @@ class ImageRetriever
         $filteredImages = array();
 
         foreach ($images as $image) {
-            if (in_array($productAttributeId, $image['associatedVariants'])) {
+            if (in_array($productAttributeId, $image['associatedVariants'], true)) {
                 $filteredImages[] = $image;
             }
         }
@@ -116,7 +116,7 @@ class ImageRetriever
      * @param int $id_image
      *
      * @throws \PrestaShopDatabaseException
-     * @return array|null
+     * @return null|array
      *
      */
     public function getImage($object, $id_image)

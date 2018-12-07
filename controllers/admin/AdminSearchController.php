@@ -249,7 +249,7 @@ class AdminSearchControllerCore extends AdminController
             if (mb_stripos($value, $this->query) !== false) {
                 $value = stripslashes($value);
                 $key = mb_strtolower(mb_substr($key, 0, -32));
-                if (in_array($key, array('AdminTab', 'index'))) {
+                if (in_array($key, array('AdminTab', 'index'), true)) {
                     continue;
                 }
                 // if class name doesn't exists, just ignore it

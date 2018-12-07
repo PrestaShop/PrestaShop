@@ -124,11 +124,11 @@ final class ServerRequirementsChecker implements ServerRequirementsCheckerInterf
         if (function_exists('apache_get_modules')) {
             $apache_modules = apache_get_modules();
 
-            if (false === in_array('mod_auth_basic', $apache_modules)) {
+            if (false === in_array('mod_auth_basic', $apache_modules, true)) {
                 $issues[] = self::ISSUE_APACHE_MOD_AUTH_BASIC_NOT_AVAILABLE;
             }
 
-            if (false === in_array('mod_rewrite', $apache_modules)) {
+            if (false === in_array('mod_rewrite', $apache_modules, true)) {
                 $issues[] = self::ISSUE_APACHE_MOD_AUTH_REWRITE_NOT_AVAILABLE;
             }
         } else {

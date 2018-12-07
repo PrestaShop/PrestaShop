@@ -68,7 +68,7 @@ class ImageTypeRepository
         );
 
         foreach ($this->getScopeList() as $scope_item) {
-            if (in_array($scope_item, $scope)) {
+            if (in_array($scope_item, $scope, true)) {
                 $data[$scope_item] = 1;
             } else {
                 $data[$scope_item] = 0;

@@ -389,18 +389,18 @@ class ToolsCore
     public static function usingSecureMode()
     {
         if (isset($_SERVER['HTTPS'])) {
-            return in_array(Tools::strtolower($_SERVER['HTTPS']), array(1, 'on'));
+            return in_array(Tools::strtolower($_SERVER['HTTPS']), array(1, 'on'), true);
         }
         // $_SERVER['SSL'] exists only in some specific configuration
         if (isset($_SERVER['SSL'])) {
-            return in_array(Tools::strtolower($_SERVER['SSL']), array(1, 'on'));
+            return in_array(Tools::strtolower($_SERVER['SSL']), array(1, 'on'), true);
         }
         // $_SERVER['REDIRECT_HTTPS'] exists only in some specific configuration
         if (isset($_SERVER['REDIRECT_HTTPS'])) {
-            return in_array(Tools::strtolower($_SERVER['REDIRECT_HTTPS']), array(1, 'on'));
+            return in_array(Tools::strtolower($_SERVER['REDIRECT_HTTPS']), array(1, 'on'), true);
         }
         if (isset($_SERVER['HTTP_SSL'])) {
-            return in_array(Tools::strtolower($_SERVER['HTTP_SSL']), array(1, 'on'));
+            return in_array(Tools::strtolower($_SERVER['HTTP_SSL']), array(1, 'on'), true);
         }
         if (isset($_SERVER['HTTP_X_FORWARDED_PROTO'])) {
             return Tools::strtolower($_SERVER['HTTP_X_FORWARDED_PROTO']) == 'https';
@@ -822,7 +822,7 @@ class ToolsCore
     /**
      * Implement array_replace for PHP <= 5.2.
      *
-     * @return array|mixed|null
+     * @return null|array|mixed
      *
      * @deprecated since version 1.7.4.0, to be removed.
      */
@@ -1060,7 +1060,7 @@ class ToolsCore
             $exclude_files = array($exclude_files);
         }
 
-        if (file_exists($file) && is_file($file) && array_search(basename($file), $exclude_files) === false) {
+        if (file_exists($file) && is_file($file) && array_search(basename($file), $exclude_files, true) === false) {
             @chmod($file, 0777); // NT ?
             unlink($file);
         }
@@ -1552,7 +1552,7 @@ class ToolsCore
                     if (preg_match('/<[\w]+[^>]*>/s', $tag[0])) {
                         array_unshift($open_tags, $tag[2]);
                     } elseif (preg_match('/<\/([\w]+)[^>]*>/s', $tag[0], $close_tag)) {
-                        $pos = array_search($close_tag[1], $open_tags);
+                        $pos = array_search($close_tag[1], $open_tags, true);
                         if ($pos !== false) {
                             array_splice($open_tags, $pos, 1);
                         }
@@ -1614,7 +1614,7 @@ class ToolsCore
                 if (!empty($dropped_tags)) {
                     if (!empty($open_tags)) {
                         foreach ($dropped_tags as $closing_tag) {
-                            if (!in_array($closing_tag[1], $open_tags)) {
+                            if (!in_array($closing_tag[1], $open_tags, true)) {
                                 array_unshift($open_tags, $closing_tag[1]);
                             }
                         }
@@ -2097,7 +2097,7 @@ class ToolsCore
     ) {
         $content = false;
 
-        if (in_array(ini_get('allow_url_fopen'), array('On', 'on', '1'))) {
+        if (in_array(ini_get('allow_url_fopen'), array('On', 'on', '1'), true)) {
             $content = @file_get_contents($url, $use_include_path, $stream_context);
         }
 
@@ -2980,7 +2980,7 @@ exit;
     {
         $disabled = explode(',', ini_get('disable_functions'));
 
-        return !in_array($function, $disabled) && is_callable($function);
+        return !in_array($function, $disabled, true) && is_callable($function);
     }
 
     public static function pRegexp($s, $delim)
@@ -3111,7 +3111,7 @@ exit;
             case 'by':
                 $list = array(0 => 'name', 1 => 'price', 2 => 'date_add', 3 => 'date_upd', 4 => 'position', 5 => 'manufacturer_name', 6 => 'quantity', 7 => 'reference');
                 $value = (is_null($value) || $value === false || $value === '') ? (int) Configuration::get('PS_PRODUCTS_ORDER_BY') : $value;
-                $value = (isset($list[$value])) ? $list[$value] : ((in_array($value, $list)) ? $value : 'position');
+                $value = (isset($list[$value])) ? $list[$value] : ((in_array($value, $list, true)) ? $value : 'position');
                 $order_by_prefix = '';
                 if ($prefix) {
                     if ($value == 'id_product' || $value == 'date_add' || $value == 'date_upd' || $value == 'price') {
@@ -3133,7 +3133,7 @@ exit;
                 $value = (is_null($value) || $value === false || $value === '') ? (int) Configuration::get('PS_PRODUCTS_ORDER_WAY') : $value;
                 $list = array(0 => 'asc', 1 => 'desc');
 
-                return (isset($list[$value])) ? $list[$value] : ((in_array($value, $list)) ? $value : 'asc');
+                return (isset($list[$value])) ? $list[$value] : ((in_array($value, $list, true)) ? $value : 'asc');
             break;
         }
     }
@@ -3764,7 +3764,7 @@ exit;
      * @param string $input File upload field name
      * @param bool $return_content If true, returns uploaded file contents
      *
-     * @return array|null
+     * @return null|array
      */
     public static function fileAttachment($input = 'fileUpload', $return_content = true)
     {

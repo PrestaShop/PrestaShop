@@ -88,7 +88,7 @@ class StepList implements IteratorAggregate
      */
     public function setOffsetFromStepName($stepName)
     {
-        $this->offset = (int) array_search($stepName, $this->stepNames);
+        $this->offset = (int) array_search($stepName, $this->stepNames, true);
 
         return $this;
     }
@@ -100,7 +100,7 @@ class StepList implements IteratorAggregate
      */
     public function getOffsetFromStepName($stepName)
     {
-        return (int) array_search($stepName, $this->stepNames);
+        return (int) array_search($stepName, $this->stepNames, true);
     }
 
     /**

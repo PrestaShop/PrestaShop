@@ -384,7 +384,7 @@ namespace PrestaShopBundle\Install {
 
                 if ($handle = opendir(_PS_INSTALLER_SQL_UPGRADE_DIR_)) {
                     while (false !== ($file = readdir($handle))) {
-                        if (!in_array($file, array('.', '..', 'index.php'))) {
+                        if (!in_array($file, array('.', '..', 'index.php'), true)) {
                             $upgradeFiles[] = str_replace('.sql', '', $file);
                         }
                     }
@@ -496,7 +496,7 @@ namespace PrestaShopBundle\Install {
                                 $error_number = $db->getNumberError();
 
                                 $duplicates = array('1050', '1054', '1060', '1061', '1062', '1091');
-                                if (!in_array($error_number, $duplicates)) {
+                                if (!in_array($error_number, $duplicates, true)) {
                                     $this->logWarning('SQL ' . $version . '
 								' . $error_number . ' in ' . $query . ': ' . $error, $version, array(), true);
                                 } else {
@@ -534,7 +534,8 @@ namespace PrestaShopBundle\Install {
                             array(
                                 AddonListFilterOrigin::ADDONS_NATIVE,
                                 AddonListFilterOrigin::ADDONS_NATIVE_ALL,
-                            )
+                            ),
+                            true
                         )
                         && 'PrestaShop' === $installedProduct->attributes->get('author')
                     )
@@ -561,7 +562,7 @@ namespace PrestaShopBundle\Install {
 
             $list = $moduleManagerRepository->getFilteredList($filters, true);
             foreach ($list as $moduleName => $module) {
-                if (in_array($moduleName, self::$incompatibleModules)) {
+                if (in_array($moduleName, self::$incompatibleModules, true)) {
                     $this->logInfo("Uninstalling module $moduleName, not supported in this PrestaShop version.");
                     $module->onUninstall();
                     $fs->remove(_PS_MODULE_DIR_ . $moduleName);

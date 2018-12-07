@@ -188,7 +188,7 @@ class AdminStoresControllerCore extends AdminController
                     'type' => 'text',
                     'label' => $this->trans('Zip/postal code', array(), 'Admin.Global'),
                     'name' => 'postcode',
-                    'required' => in_array('postcode', $required_fields),
+                    'required' => in_array('postcode', $required_fields, true),
                 ),
                 array(
                     'type' => 'text',
@@ -333,7 +333,7 @@ class AdminStoresControllerCore extends AdminController
             $langs = Language::getLanguages(false);
             /* Cleaning fields */
             foreach ($_POST as $kp => $vp) {
-                if (!in_array($kp, array('checkBoxShopGroupAsso_store', 'checkBoxShopAsso_store', 'hours'))) {
+                if (!in_array($kp, array('checkBoxShopGroupAsso_store', 'checkBoxShopAsso_store', 'hours'), true)) {
                     $_POST[$kp] = trim($vp);
                 }
                 if ('hours' === $kp) {

@@ -254,11 +254,11 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
                 : array();
 
             $errors = array();
-            if (in_array($idAddressDelivery, $invalidAddresses)) {
+            if (in_array($idAddressDelivery, $invalidAddresses, true)) {
                 $errors['delivery_address_error'] = $addressWarning;
             }
 
-            if (in_array($idAddressInvoice, $invalidAddresses)) {
+            if (in_array($idAddressInvoice, $invalidAddresses, true)) {
                 $errors['invoice_address_error'] = $addressWarning;
             }
 

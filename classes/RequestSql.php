@@ -236,7 +236,7 @@ class RequestSqlCore extends ObjectModel
         $tab = array();
 
         foreach ($attrs as $attr) {
-            if (in_array($attr['expr_type'], array('operator', 'const'))) {
+            if (in_array($attr['expr_type'], array('operator', 'const'), true)) {
                 continue;
             }
             if ($attribut = $this->cutAttribute($attr['base_expr'], $from)) {
@@ -403,7 +403,7 @@ class RequestSqlCore extends ObjectModel
         for ($i = 0; $i < $nb; ++$i) {
             $table = $from[$i];
 
-            if (isset($table['table']) && !in_array(str_replace('`', '', $table['table']), $this->getTables())) {
+            if (isset($table['table']) && !in_array(str_replace('`', '', $table['table']), $this->getTables(), true)) {
                 $this->error_sql['checkedFrom']['table'] = $table['table'];
 
                 return false;
@@ -511,7 +511,7 @@ class RequestSqlCore extends ObjectModel
                     
                 }
             } elseif ($attribut['expr_type'] == 'operator') {
-                if (!in_array(mb_strtoupper($attribut['base_expr']), $this->tested['operator'])) {
+                if (!in_array(mb_strtoupper($attribut['base_expr']), $this->tested['operator'], true)) {
                     $this->error_sql['checkedWhere']['operator'] = array($attribut['base_expr']);
 
                     return false;
@@ -560,7 +560,7 @@ class RequestSqlCore extends ObjectModel
             }
 
             if ($attribut['expr_type'] == 'operator') {
-                if (!in_array(mb_strtoupper($attribut['base_expr']), $this->tested['operator'])) {
+                if (!in_array(mb_strtoupper($attribut['base_expr']), $this->tested['operator'], true)) {
                     $this->error_sql['checkedHaving']['operator'] = array($attribut['base_expr']);
 
                     return false;

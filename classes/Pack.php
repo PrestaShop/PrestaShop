@@ -267,7 +267,7 @@ class PackCore extends Product
             self::STOCK_TYPE_DEFAULT,
         );
 
-        if (!in_array($packStockType, $allPackStockType)) {
+        if (!in_array($packStockType, $allPackStockType, true)) {
             throw new PrestaShopException('Unknown pack stock type');
         }
 
@@ -279,13 +279,13 @@ class PackCore extends Product
         }
 
         // Initialize with pack quantity if not only products
-        if (in_array($packStockType, array(self::STOCK_TYPE_PACK_ONLY, self::STOCK_TYPE_PACK_BOTH))) {
+        if (in_array($packStockType, array(self::STOCK_TYPE_PACK_ONLY, self::STOCK_TYPE_PACK_BOTH), true)) {
             $packQuantity = $packQuantityInStock;
         }
 
         // Set pack quantity to the minimum quantity of pack, or
         // product pack
-        if (in_array($packStockType, array(self::STOCK_TYPE_PACK_BOTH, self::STOCK_TYPE_PRODUCTS_ONLY))) {
+        if (in_array($packStockType, array(self::STOCK_TYPE_PACK_BOTH, self::STOCK_TYPE_PRODUCTS_ONLY), true)) {
             $items = array_values(Pack::getItems($idProduct, Configuration::get('PS_LANG_DEFAULT')));
 
             foreach ($items as $index => $item) {

@@ -629,7 +629,7 @@ class ModuleRepository implements ModuleRepositoryInterface
         $installedModules = array_keys($this->getInstalledModules());
 
         foreach ($modulesFiles as $moduleFile) {
-            if (in_array($moduleFile->getFilename(), $installedModules)) {
+            if (in_array($moduleFile->getFilename(), $installedModules, true)) {
                 $paths[] = $moduleFile->getPathname();
             }
         }

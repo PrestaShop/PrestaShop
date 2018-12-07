@@ -232,7 +232,7 @@ class AdminModulesControllerCore extends AdminController
             die('KO');
         }
         $result = mb_strtoupper((string) $xml->success);
-        if (!in_array($result, array('OK', 'KO'))) {
+        if (!in_array($result, array('OK', 'KO'), true)) {
             die('KO');
         }
         if ($result == 'OK') {
@@ -425,7 +425,7 @@ class AdminModulesControllerCore extends AdminController
         } else {
             //check if it's a real module
             foreach ($zip_folders as $folder) {
-                if (!in_array($folder, array('.', '..', '.svn', '.git', '__MACOSX')) && !Module::getInstanceByName($folder)) {
+                if (!in_array($folder, array('.', '..', '.svn', '.git', '__MACOSX'), true) && !Module::getInstanceByName($folder)) {
                     $this->errors[] = $this->trans('The module %1$s that you uploaded is not a valid module.', array($folder), 'Admin.Modules.Notification');
                     $this->recursiveDeleteOnDisk(_PS_MODULE_DIR_ . $folder);
                 }
@@ -856,7 +856,7 @@ class AdminModulesControllerCore extends AdminController
                     // Check potential error
                     if (!($module = Module::getInstanceByName(urldecode($name)))) {
                         $this->errors[] = $this->l('Module not found');
-                    } elseif (($this->context->mode >= Context::MODE_HOST_CONTRIB) && in_array($module->name, Module::$hosted_modules_blacklist)) {
+                    } elseif (($this->context->mode >= Context::MODE_HOST_CONTRIB) && in_array($module->name, Module::$hosted_modules_blacklist, true)) {
                         $this->errors[] = $this->trans('You do not have permission to access this module.', array(), 'Admin.Modules.Notification');
                     } elseif ($key == 'install' && !$this->access('add')) {
                         $this->errors[] = $this->trans('You do not have permission to install this module.', array(), 'Admin.Modules.Notification');
@@ -1095,7 +1095,7 @@ class AdminModulesControllerCore extends AdminController
         $all_modules = $all_unik_modules;
 
         foreach ($all_modules as $module) {
-            if (!isset($tab_modules_list) || in_array($module->name, $tab_modules_list)) {
+            if (!isset($tab_modules_list) || in_array($module->name, $tab_modules_list, true)) {
                 $perm = true;
                 if ($module->id) {
                     $perm &= Module::getPermissionStatic($module->id, 'configure');
@@ -1107,7 +1107,7 @@ class AdminModulesControllerCore extends AdminController
                     }
                 }
 
-                if (in_array($module->name, $this->list_partners_modules)) {
+                if (in_array($module->name, $this->list_partners_modules, true)) {
                     $module->type = 'addonsPartner';
                 }
 
@@ -1221,7 +1221,7 @@ class AdminModulesControllerCore extends AdminController
                 unset($modules[$k]);
             } else {
                 // Init serial and modules author list
-                if (!in_array($module->name, $this->list_natives_modules)) {
+                if (!in_array($module->name, $this->list_natives_modules, true)) {
                     $this->serial_modules .= $module->name . ' ' . $module->version . '-' . ($module->active ? 'a' : 'i') . "\n";
                 }
                 $module_author = $module->author;
@@ -1307,15 +1307,15 @@ class AdminModulesControllerCore extends AdminController
 
         // Filter on module type and author
         $show_type_modules = $this->filter_configuration['PS_SHOW_TYPE_MODULES_' . (int) $this->id_employee];
-        if ($show_type_modules == 'nativeModules' && !in_array($module->name, $this->list_natives_modules)) {
+        if ($show_type_modules == 'nativeModules' && !in_array($module->name, $this->list_natives_modules, true)) {
             return true;
-        } elseif ($show_type_modules == 'partnerModules' && !in_array($module->name, $this->list_partners_modules)) {
+        } elseif ($show_type_modules == 'partnerModules' && !in_array($module->name, $this->list_partners_modules, true)) {
             return true;
         } elseif ($show_type_modules == 'addonsModules' && (!isset($module->type) || $module->type != 'addonsBought')) {
             return true;
         } elseif ($show_type_modules == 'mustHaveModules' && (!isset($module->type) || $module->type != 'addonsMustHave')) {
             return true;
-        } elseif ($show_type_modules == 'otherModules' && (in_array($module->name, $this->list_partners_modules) || in_array($module->name, $this->list_natives_modules))) {
+        } elseif ($show_type_modules == 'otherModules' && (in_array($module->name, $this->list_partners_modules, true) || in_array($module->name, $this->list_natives_modules, true))) {
             return true;
         } elseif (mb_strpos($show_type_modules, 'authorModules[') !== false) {
             // setting selected author in authors set
@@ -1348,7 +1348,7 @@ class AdminModulesControllerCore extends AdminController
         $show_country_modules = $this->filter_configuration['PS_SHOW_COUNTRY_MODULES_' . (int) $this->id_employee];
         if ($show_country_modules && (isset($module->limited_countries) && !empty($module->limited_countries)
                 && ((is_array($module->limited_countries) && count($module->limited_countries)
-                && !in_array(mb_strtolower($this->iso_default_country), $module->limited_countries))
+                && !in_array(mb_strtolower($this->iso_default_country), $module->limited_countries, true))
                 || (!is_array($module->limited_countries) && mb_strtolower($this->iso_default_country) != strval($module->limited_countries))))) {
             return true;
         }

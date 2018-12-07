@@ -212,7 +212,7 @@ class HelperListCore extends Helper
         }
 
         // key_to_get is used to display the correct product category or cms category after a position change
-        $identifier = in_array($this->identifier, array('id_category', 'id_cms_category')) ? '_parent' : '';
+        $identifier = in_array($this->identifier, array('id_category', 'id_cms_category'), true) ? '_parent' : '';
         if ($identifier) {
             $key_to_get = 'id_' . ($this->is_cms ? 'cms_' : '') . 'category' . $identifier;
         }
@@ -232,7 +232,7 @@ class HelperListCore extends Helper
             // Check all available actions to add to the current list row
             foreach ($this->actions as $action) {
                 //Check if the action is available for the current row
-                if (!array_key_exists($action, $this->list_skip_actions) || !in_array($id, $this->list_skip_actions[$action])) {
+                if (!array_key_exists($action, $this->list_skip_actions) || !in_array($id, $this->list_skip_actions[$action], true)) {
                     $method_name = 'display' . ucfirst($action) . 'Link';
 
                     if (method_exists($this->context->controller, $method_name)) {
@@ -368,8 +368,8 @@ class HelperListCore extends Helper
             'actions' => $this->actions,
             'no_link' => $this->no_link,
             'current_index' => $this->currentIndex,
-            'view' => in_array('view', $this->actions),
-            'edit' => in_array('edit', $this->actions),
+            'view' => in_array('view', $this->actions, true),
+            'edit' => in_array('edit', $this->actions, true),
             'has_actions' => !empty($this->actions),
             'list_skip_actions' => $this->list_skip_actions,
             'row_hover' => $this->row_hover,
@@ -598,7 +598,7 @@ class HelperListCore extends Helper
 
         /* Determine total page number */
         $pagination = $this->_default_pagination;
-        if (in_array((int) Tools::getValue($this->list_id . '_pagination'), $this->_pagination)) {
+        if (in_array((int) Tools::getValue($this->list_id . '_pagination'), $this->_pagination, true)) {
             $pagination = (int) Tools::getValue($this->list_id . '_pagination');
         } elseif (isset($this->context->cookie->{$this->list_id . '_pagination'}) && $this->context->cookie->{$this->list_id . '_pagination'}) {
             $pagination = $this->context->cookie->{$this->list_id . '_pagination'};
@@ -749,7 +749,7 @@ class HelperListCore extends Helper
             'order_way' => $this->orderWay,
             'order_by' => $this->orderBy,
             'fields_display' => $this->fields_list,
-            'delete' => in_array('delete', $this->actions),
+            'delete' => in_array('delete', $this->actions, true),
             'identifier' => $this->identifier,
             'id_cat' => $id_cat,
             'shop_link_type' => $this->shopLinkType,
@@ -781,7 +781,7 @@ class HelperListCore extends Helper
             foreach ($this->bulk_actions as $action => $data) {
                 if (array_key_exists($action, $this->list_skip_actions)) {
                     foreach ($this->_list as $key => $row) {
-                        if (!in_array($row[$this->identifier], $this->list_skip_actions[$action])) {
+                        if (!in_array($row[$this->identifier], $this->list_skip_actions[$action], true)) {
                             return true;
                         }
                     }

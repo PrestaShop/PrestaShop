@@ -624,7 +624,7 @@ class ModuleController extends ModuleAbstractController
 
         $modulesOnDisk = $addonsProvider->generateAddonsUrls($modulesOnDisk);
         foreach ($modulesOnDisk as $module) {
-            if (!isset($modulesSelectList) || in_array($module->get('name'), $modulesSelectList)) {
+            if (!isset($modulesSelectList) || in_array($module->get('name'), $modulesSelectList, true)) {
                 $perm = true;
                 if ($module->get('id')) {
                     $perm &= Module::getPermissionStatic(
@@ -764,7 +764,8 @@ class ModuleController extends ModuleAbstractController
     {
         if (!in_array(
             $this->authorizationLevel(self::CONTROLLER_NAME),
-            $pageVoter
+            $pageVoter,
+            true
         )
         ) {
             return new JsonResponse(

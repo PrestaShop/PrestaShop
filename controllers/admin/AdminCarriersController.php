@@ -556,7 +556,7 @@ class AdminCarriersControllerCore extends AdminController
 
         $zones = Zone::getZones(false);
         foreach ($zones as $zone) {
-            $this->fields_value['zone_' . $zone['id_zone']] = Tools::getValue('zone_' . $zone['id_zone'], (in_array($zone['id_zone'], $carrier_zones_ids)));
+            $this->fields_value['zone_' . $zone['id_zone']] = Tools::getValue('zone_' . $zone['id_zone'], (in_array($zone['id_zone'], $carrier_zones_ids, true)));
         }
 
         // Added values of object Group
@@ -571,7 +571,7 @@ class AdminCarriersControllerCore extends AdminController
         $groups = Group::getGroups($this->context->language->id);
 
         foreach ($groups as $group) {
-            $this->fields_value['groupBox_' . $group['id_group']] = Tools::getValue('groupBox_' . $group['id_group'], (in_array($group['id_group'], $carrier_groups_ids) || empty($carrier_groups_ids) && !$obj->id));
+            $this->fields_value['groupBox_' . $group['id_group']] = Tools::getValue('groupBox_' . $group['id_group'], (in_array($group['id_group'], $carrier_groups_ids, true) || empty($carrier_groups_ids) && !$obj->id));
         }
 
         $this->fields_value['id_tax_rules_group'] = $this->object->getIdTaxRulesGroup($this->context);
@@ -594,7 +594,7 @@ class AdminCarriersControllerCore extends AdminController
         }
         $groups = Db::getInstance()->executeS('SELECT id_group FROM `' . _DB_PREFIX_ . 'group`');
         foreach ($groups as $group) {
-            if (Tools::getIsset('groupBox') && in_array($group['id_group'], Tools::getValue('groupBox'))) {
+            if (Tools::getIsset('groupBox') && in_array($group['id_group'], Tools::getValue('groupBox'), true)) {
                 Db::getInstance()->execute('
 					INSERT INTO ' . _DB_PREFIX_ . 'carrier_group (id_group, id_carrier)
 					VALUES(' . (int) $group['id_group'] . ',' . (int) $id_carrier . ')

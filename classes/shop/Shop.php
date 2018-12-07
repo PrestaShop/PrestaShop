@@ -383,7 +383,7 @@ class ShopCore extends ObjectModel
             Configuration::getMultiShopValues('PS_MEDIA_SERVER_3')
         );
 
-        if ((!$id_shop && defined('_PS_ADMIN_DIR_')) || Tools::isPHPCLI() || in_array($http_host, $all_media)) {
+        if ((!$id_shop && defined('_PS_ADMIN_DIR_')) || Tools::isPHPCLI() || in_array($http_host, $all_media, true)) {
             // If in admin, we can access to the shop without right URL
             if ((!$id_shop && Tools::isPHPCLI()) || defined('_PS_ADMIN_DIR_')) {
                 $id_shop = (int) Configuration::get('PS_SHOP_DEFAULT');
@@ -613,7 +613,7 @@ class ShopCore extends ObjectModel
             Shop::init();
         }
 
-        return in_array($table, self::$id_shop_default_tables);
+        return in_array($table, self::$id_shop_default_tables, true);
     }
 
     /**
@@ -900,7 +900,7 @@ class ShopCore extends ObjectModel
      */
     public static function getSharedShops($shop_id, $type)
     {
-        if (!in_array($type, array(Shop::SHARE_CUSTOMER, Shop::SHARE_ORDER, SHOP::SHARE_STOCK))) {
+        if (!in_array($type, array(Shop::SHARE_CUSTOMER, Shop::SHARE_ORDER, SHOP::SHARE_STOCK), true)) {
             die('Wrong argument ($type) in Shop::getSharedShops() method');
         }
 

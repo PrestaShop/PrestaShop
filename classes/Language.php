@@ -712,7 +712,7 @@ class LanguageCore extends ObjectModel
      * @param string $iso_code Iso code
      * @param bool $no_cache
      *
-     * @return false|null|string
+     * @return null|false|string
      */
     public static function getIdByIso($iso_code, $no_cache = false)
     {
@@ -753,7 +753,7 @@ class LanguageCore extends ObjectModel
      * @param string $isoCode
      *
      * @throws Exception
-     * @return string|false
+     * @return false|string
      *
      */
     public static function getLocaleByIso($isoCode)
@@ -775,7 +775,7 @@ class LanguageCore extends ObjectModel
      * @param string $locale
      *
      * @throws Exception
-     * @return string|false
+     * @return false|string
      *
      */
     public static function getIsoByLocale($locale)
@@ -953,7 +953,7 @@ class LanguageCore extends ObjectModel
             return false;
         }
 
-        if (isset($params_lang['allow_accented_chars_url']) && in_array($params_lang['allow_accented_chars_url'], array('1', 'true'))) {
+        if (isset($params_lang['allow_accented_chars_url']) && in_array($params_lang['allow_accented_chars_url'], array('1', 'true'), true)) {
             Configuration::updateGlobalValue('PS_ALLOW_ACCENTED_CHARS_URL', 1);
         }
 

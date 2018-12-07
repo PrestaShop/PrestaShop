@@ -186,7 +186,7 @@ class AdminGamificationController extends ModuleAdminController
         
         if (is_array($ids_ps_advice)) {
             foreach ($advices as $advice) {
-                if (is_array($ids_ps_advice) && in_array($advice['id_ps_advice'], $ids_ps_advice)) {
+                if (is_array($ids_ps_advice) && in_array($advice['id_ps_advice'], $ids_ps_advice, true)) {
                     $return['advices'][] = array(
                         'selector' => $advice['selector'],
                         'html' => GamificationTools::parseMetaData($advice['html']),

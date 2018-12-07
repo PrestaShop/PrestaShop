@@ -73,26 +73,26 @@ class TemplateFinderCore
         $entity = basename($entity);
         $id = (int) $id;
 
-        if (in_array($entity, $this->getProductListEntities())) {
+        if (in_array($entity, $this->getProductListEntities(), true)) {
             $templates = array(
                 'catalog/listing/' . $entity . '-' . $id,
                 'catalog/listing/' . $entity,
                 $template,
                 'catalog/listing/product-list',
             );
-        } elseif (in_array($entity, $this->getProductListSearchEntities())) {
+        } elseif (in_array($entity, $this->getProductListSearchEntities(), true)) {
             $templates = array(
                 'catalog/listing/' . $entity,
                 $template,
                 'catalog/listing/product-list',
             );
-        } elseif (in_array($entity, $this->getProductEntities())) {
+        } elseif (in_array($entity, $this->getProductEntities(), true)) {
             $templates = array(
                 'catalog/' . $entity . '-' . $id,
                 $template,
                 'catalog/product',
             );
-        } elseif (in_array($entity, $this->getBrandListEntities())) {
+        } elseif (in_array($entity, $this->getBrandListEntities(), true)) {
             $templates = array(
                 $template,
                 'catalog/brands',

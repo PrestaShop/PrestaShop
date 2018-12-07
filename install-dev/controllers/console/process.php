@@ -102,11 +102,11 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
         /* avoid exceptions on re-installation */
         $this->clearConfigXML() && $this->clearConfigThemes();
         $steps = explode(',', $this->datas->step);
-        if (in_array('all', $steps)) {
+        if (in_array('all', $steps, true)) {
             $steps = array('database','fixtures','theme','modules','addons_modules');
         }
 
-        if (in_array('database', $steps)) {
+        if (in_array('database', $steps, true)) {
             if (!$this->processGenerateSettingsFile()) {
                 $this->printErrors();
             }
@@ -132,25 +132,25 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
             }
         }
 
-        if (in_array('fixtures', $steps)) {
+        if (in_array('fixtures', $steps, true)) {
             if (!$this->processInstallFixtures()) {
                 $this->printErrors();
             }
         }
 
-        if (in_array('modules', $steps)) {
+        if (in_array('modules', $steps, true)) {
             if (!$this->processInstallModules()) {
                 $this->printErrors();
             }
         }
 
-        if (in_array('addons_modules', $steps)) {
+        if (in_array('addons_modules', $steps, true)) {
             if (!$this->processInstallAddonsModules()) {
                 $this->printErrors();
             }
         }
 
-        if (in_array('theme', $steps)) {
+        if (in_array('theme', $steps, true)) {
             if (!$this->processInstallTheme()) {
                 $this->printErrors();
             }
@@ -313,7 +313,7 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
 
         foreach($cacheFiles as $file) {
             $filepath = $configXMLPath.$file;
-            if (is_file($filepath) && !in_array($file, $excludes)) {
+            if (is_file($filepath) && !in_array($file, $excludes, true)) {
                 unlink($filepath);
             }
         }

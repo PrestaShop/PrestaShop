@@ -236,7 +236,7 @@ class DispatcherCore
         $this->setRequestUri();
 
         // Switch language if needed (only on front)
-        if (in_array($this->front_controller, array(self::FC_FRONT, self::FC_MODULE))) {
+        if (in_array($this->front_controller, array(self::FC_FRONT, self::FC_MODULE), true)) {
             Tools::switchLanguage();
         }
 
@@ -606,7 +606,7 @@ class DispatcherCore
 
         $language_ids = Language::getIDs();
 
-        if (isset($context->language) && !in_array($context->language->id, $language_ids)) {
+        if (isset($context->language) && !in_array($context->language->id, $language_ids, true)) {
             $language_ids[] = (int) $context->language->id;
         }
 
@@ -659,7 +659,7 @@ class DispatcherCore
             // Load custom routes
             foreach ($this->default_routes as $route_id => $route_data) {
                 if ($custom_route = Configuration::get('PS_ROUTE_' . $route_id, null, null, $id_shop)) {
-                    if (isset($context->language) && !in_array($context->language->id, $language_ids)) {
+                    if (isset($context->language) && !in_array($context->language->id, $language_ids, true)) {
                         $language_ids[] = (int) $context->language->id;
                     }
 

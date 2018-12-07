@@ -96,7 +96,7 @@ class LanguageList
      */
     public function setLanguage($iso)
     {
-        if (!in_array($iso, $this->getIsoList())) {
+        if (!in_array($iso, $this->getIsoList(), true)) {
             throw new PrestashopInstallerException('Language ' . $iso . ' not found');
         }
         $this->language = $iso;
@@ -170,7 +170,7 @@ class LanguageList
     /**
      * Parse HTTP_ACCEPT_LANGUAGE and get first data matching list of available languages.
      *
-     * @return bool|array
+     * @return array|bool
      */
     public function detectLanguage()
     {
@@ -185,7 +185,7 @@ class LanguageList
                 '(?:-(?P<subtag>[a-zA-Z]{2,8}))?(?:(?:;q=)' .
                 '(?P<quantifier>\d\.\d))?$/';
             if (preg_match($pattern, $lang, $m)) {
-                if (in_array($m['primarytag'], $this->getIsoList())) {
+                if (in_array($m['primarytag'], $this->getIsoList(), true)) {
                     return $m;
                 }
             }

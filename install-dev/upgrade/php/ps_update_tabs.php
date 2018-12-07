@@ -84,8 +84,8 @@ function ps_update_tabs()
 
                         if (!empty($tab_xml_data)) {
                             foreach ($tab_xml_data as $k => $tab) {
-                                if (in_array($k, $tab_class_name)) {
-                                    $tmp_class_name = array_keys($tab_class_name, $k)[0];
+                                if (in_array($k, $tab_class_name, true)) {
+                                    $tmp_class_name = array_keys($tab_class_name, $k, true)[0];
 
                                     if (array_key_exists($tmp_class_name, $tab_ids)) {
                                         $tmp_class_id = $tab_ids[$tmp_class_name];

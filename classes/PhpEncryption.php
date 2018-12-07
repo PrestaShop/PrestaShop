@@ -113,7 +113,7 @@ class PhpEncryptionCore
      */
     public static function resolveEngineToUse()
     {
-        if (false === in_array(\Defuse\Crypto\Core::CIPHER_METHOD, openssl_get_cipher_methods())) {
+        if (false === in_array(\Defuse\Crypto\Core::CIPHER_METHOD, openssl_get_cipher_methods(), true)) {
             return self::LEGACY_ENGINE;
         }
 

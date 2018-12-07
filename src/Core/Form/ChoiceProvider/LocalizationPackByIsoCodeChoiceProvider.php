@@ -109,7 +109,7 @@ final class LocalizationPackByIsoCodeChoiceProvider implements FormChoiceProvide
 
             // if localization pack was not loaded yet and it exists locally
             // then add it to choices list
-            if (!in_array($iso, $choices)) {
+            if (!in_array($iso, $choices, true)) {
                 $pack = $this->localLocalizationPackLoader->getLocalizationPack($iso);
                 $packName = $this->translator->trans(
                     '%s (local)',

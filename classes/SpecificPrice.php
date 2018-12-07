@@ -299,7 +299,7 @@ class SpecificPriceCore extends ObjectModel
         }
 
         // $specific_list is empty if the threshold is reached
-        if (empty($specific_list) || in_array($field_value, $specific_list)) {
+        if (empty($specific_list) || in_array($field_value, $specific_list, true)) {
             if ($name == 'id_product' && !self::$_hasGlobalProductRules) {
                 $query_extra = 'AND `' . $name . '` = ' . (int) $field_value . ' ';
             } else {

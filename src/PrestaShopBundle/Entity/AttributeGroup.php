@@ -138,7 +138,7 @@ class AttributeGroup
      */
     public function setGroupType($groupType)
     {
-        if (!in_array($groupType, $this->groupTypeAvailable)) {
+        if (!in_array($groupType, $this->groupTypeAvailable, true)) {
             throw new \InvalidArgumentException('Invalid group type');
         }
 

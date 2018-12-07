@@ -930,10 +930,10 @@ class CarrierCore extends ObjectModel
         }
 
         $keys = array_keys($price_list[0]);
-        if (!in_array('id_shop', $keys)) {
+        if (!in_array('id_shop', $keys, true)) {
             $keys[] = 'id_shop';
         }
-        if (!in_array('id_shop_group', $keys)) {
+        if (!in_array('id_shop_group', $keys, true)) {
             $keys[] = 'id_shop_group';
         }
 

@@ -122,7 +122,7 @@ class TranslationController extends ApiController
 
             $search = $request->query->get('search');
 
-            if (in_array($type, array('modules', 'themes')) && empty($selected)) {
+            if (in_array($type, array('modules', 'themes'), true) && empty($selected)) {
                 throw new Exception('This \'selected\' param is not valid.');
             }
 

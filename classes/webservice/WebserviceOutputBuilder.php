@@ -304,14 +304,14 @@ class WebserviceOutputBuilderCore
         $more_attr = array('shopName' => htmlspecialchars(Configuration::get('PS_SHOP_NAME')));
         $output .= $this->objectRender->renderNodeHeader('api', array(), $more_attr);
         foreach ($this->wsResource as $resourceName => $resource) {
-            if (in_array($resourceName, array_keys($key_permissions))) {
+            if (in_array($resourceName, array_keys($key_permissions), true)) {
                 $more_attr = array(
                     'xlink_resource' => $this->wsUrl . $resourceName,
-                    'get' => (in_array('GET', $key_permissions[$resourceName]) ? 'true' : 'false'),
-                    'put' => (in_array('PUT', $key_permissions[$resourceName]) ? 'true' : 'false'),
-                    'post' => (in_array('POST', $key_permissions[$resourceName]) ? 'true' : 'false'),
-                    'delete' => (in_array('DELETE', $key_permissions[$resourceName]) ? 'true' : 'false'),
-                    'head' => (in_array('HEAD', $key_permissions[$resourceName]) ? 'true' : 'false'),
+                    'get' => (in_array('GET', $key_permissions[$resourceName], true) ? 'true' : 'false'),
+                    'put' => (in_array('PUT', $key_permissions[$resourceName], true) ? 'true' : 'false'),
+                    'post' => (in_array('POST', $key_permissions[$resourceName], true) ? 'true' : 'false'),
+                    'delete' => (in_array('DELETE', $key_permissions[$resourceName], true) ? 'true' : 'false'),
+                    'head' => (in_array('HEAD', $key_permissions[$resourceName], true) ? 'true' : 'false'),
                 );
                 $output .= $this->objectRender->renderNodeHeader($resourceName, array(), $more_attr);
 
@@ -541,7 +541,7 @@ class WebserviceOutputBuilderCore
         $output = '';
         $show_field = true;
 
-        if (isset($ws_params['hidden_fields']) && in_array($field_name, $ws_params['hidden_fields'])) {
+        if (isset($ws_params['hidden_fields']) && in_array($field_name, $ws_params['hidden_fields'], true)) {
             return;
         }
 
@@ -698,7 +698,7 @@ class WebserviceOutputBuilderCore
         $output .= $this->setIndent($depth - 1) . $this->objectRender->renderNodeHeader($resource_name, array(), $more_attr);
 
         foreach ($fields_assoc as $field_name => $field) {
-            if (!is_array($this->fieldsToDisplay) || in_array($field_name, $this->fieldsToDisplay[$assoc_name])) {
+            if (!is_array($this->fieldsToDisplay) || in_array($field_name, $this->fieldsToDisplay[$assoc_name], true)) {
                 if ($field_name == 'id' && !isset($field['sqlId'])) {
                     $field['sqlId'] = 'id';
                     $field['value'] = $object_assoc['id'];

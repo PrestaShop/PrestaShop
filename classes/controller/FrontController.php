@@ -370,11 +370,11 @@ class FrontControllerCore extends Controller
                 unset($this->context->cookie->id_cart, $cart, $this->context->cookie->checkedTOS);
                 $this->context->cookie->check_cgv = false;
             } elseif (intval(Configuration::get('PS_GEOLOCATION_ENABLED'))
-                && !in_array(mb_strtoupper($this->context->cookie->iso_code_country), explode(';', Configuration::get('PS_ALLOWED_COUNTRIES')))
+                && !in_array(mb_strtoupper($this->context->cookie->iso_code_country), explode(';', Configuration::get('PS_ALLOWED_COUNTRIES')), true)
                 && $cart->nbProducts()
                 && intval(Configuration::get('PS_GEOLOCATION_NA_BEHAVIOR')) != -1
                 && !FrontController::isInWhitelistForGeolocation()
-                && !in_array($_SERVER['SERVER_NAME'], array('localhost', '127.0.0.1', '::1'))
+                && !in_array($_SERVER['SERVER_NAME'], array('localhost', '127.0.0.1', '::1'), true)
             ) {
                 /* Delete product of cart, if user can't make an order from his country */
                 PrestaShopLogger::addLog('Frontcontroller::init - GEOLOCATION is deleting a cart', 1, null, 'Cart', (int) $this->context->cookie->id_cart, true);
@@ -719,7 +719,7 @@ class FrontControllerCore extends Controller
     {
         if ($this->maintenance == true || !(int) Configuration::get('PS_SHOP_ENABLE')) {
             $this->maintenance = true;
-            if (!in_array(Tools::getRemoteAddr(), explode(',', Configuration::get('PS_MAINTENANCE_IP')))) {
+            if (!in_array(Tools::getRemoteAddr(), explode(',', Configuration::get('PS_MAINTENANCE_IP')), true)) {
                 header('HTTP/1.1 503 Service Unavailable');
                 header('Retry-After: 3600');
 
@@ -802,7 +802,7 @@ class FrontControllerCore extends Controller
             $excluded_key = array('isolang', 'id_lang', 'controller', 'fc', 'id_product', 'id_category', 'id_manufacturer', 'id_supplier', 'id_cms');
             $excluded_key = array_merge($excluded_key, $this->redirectionExtraExcludedKeys);
             foreach ($_GET as $key => $value) {
-                if (!in_array($key, $excluded_key) && Validate::isUrl($key) && Validate::isUrl($value)) {
+                if (!in_array($key, $excluded_key, true) && Validate::isUrl($key) && Validate::isUrl($value)) {
                     $params[Tools::safeOutput($key)] = Tools::safeOutput($value);
                 }
             }
@@ -836,10 +836,10 @@ class FrontControllerCore extends Controller
      */
     protected function geolocationManagement($defaultCountry)
     {
-        if (!in_array(Tools::getRemoteAddr(), array('localhost', '127.0.0.1', '::1'))) {
+        if (!in_array(Tools::getRemoteAddr(), array('localhost', '127.0.0.1', '::1'), true)) {
             /* Check if Maxmind Database exists */
             if (@filemtime(_PS_GEOIP_DIR_ . _PS_GEOIP_CITY_FILE_)) {
-                if (!isset($this->context->cookie->iso_code_country) || (isset($this->context->cookie->iso_code_country) && !in_array(mb_strtoupper($this->context->cookie->iso_code_country), explode(';', Configuration::get('PS_ALLOWED_COUNTRIES'))))) {
+                if (!isset($this->context->cookie->iso_code_country) || (isset($this->context->cookie->iso_code_country) && !in_array(mb_strtoupper($this->context->cookie->iso_code_country), explode(';', Configuration::get('PS_ALLOWED_COUNTRIES')), true))) {
                     $reader = new GeoIp2\Database\Reader(_PS_GEOIP_DIR_ . _PS_GEOIP_CITY_FILE_);
                     try {
                         $record = $reader->city(Tools::getRemoteAddr());
@@ -848,7 +848,7 @@ class FrontControllerCore extends Controller
                     }
 
                     if (is_object($record) && Validate::isLanguageIsoCode($record->country->isoCode) && (int) Country::getByIso(mb_strtoupper($record->country->isoCode)) != 0) {
-                        if (!in_array(mb_strtoupper($record->country->isoCode), explode(';', Configuration::get('PS_ALLOWED_COUNTRIES'))) && !FrontController::isInWhitelistForGeolocation()) {
+                        if (!in_array(mb_strtoupper($record->country->isoCode), explode(';', Configuration::get('PS_ALLOWED_COUNTRIES')), true) && !FrontController::isInWhitelistForGeolocation()) {
                             if (Configuration::get('PS_GEOLOCATION_BEHAVIOR') == _PS_GEOLOCATION_NO_CATALOG_) {
                                 $this->restrictedCountry = Country::GEOLOC_FORBIDDEN;
                             } elseif (Configuration::get('PS_GEOLOCATION_BEHAVIOR') == _PS_GEOLOCATION_NO_ORDER_) {
@@ -1256,7 +1256,7 @@ class FrontControllerCore extends Controller
     /**
      * Recovers cart information.
      *
-     * @return int|false
+     * @return false|int
      */
     protected function recoverCart()
     {
@@ -1654,7 +1654,7 @@ class FrontControllerCore extends Controller
             'tax-display-' . ($this->getDisplayTaxesLabel() ? 'enabled' : 'disabled') => true,
         );
 
-        if (in_array($this->php_self, $my_account_controllers)) {
+        if (in_array($this->php_self, $my_account_controllers, true)) {
             $body_classes['page-customer-account'] = true;
         }
 

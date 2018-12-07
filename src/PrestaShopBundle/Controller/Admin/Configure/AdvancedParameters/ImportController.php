@@ -175,7 +175,7 @@ class ImportController extends FrameworkBundleAdminController
             PageVoter::LEVEL_CREATE,
             PageVoter::LEVEL_UPDATE,
             PageVoter::LEVEL_DELETE,
-        ))) {
+        ), true)) {
             return $this->json(array(
                 'error' => $this->trans('You do not have permission to update this.', 'Admin.Notifications.Error'),
             ));
@@ -409,7 +409,7 @@ class ImportController extends FrameworkBundleAdminController
             PageVoter::LEVEL_CREATE,
             PageVoter::LEVEL_UPDATE,
             PageVoter::LEVEL_DELETE,
-        ))) {
+        ), true)) {
             $this->addFlash(
                 'error',
                 $this->trans(

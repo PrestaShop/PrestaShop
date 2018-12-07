@@ -503,13 +503,13 @@ class AdminManufacturersControllerCore extends AdminController
             'name' => 'id_address',
         );
 
-        if (in_array('company', $required_fields)) {
+        if (in_array('company', $required_fields, true)) {
             $form['input'][] = array(
                 'type' => 'text',
                 'label' => $this->trans('Company', array(), 'Admin.Global'),
                 'name' => 'company',
-                'display' => in_array('company', $required_fields),
-                'required' => in_array('company', $required_fields),
+                'display' => in_array('company', $required_fields, true),
+                'required' => in_array('company', $required_fields, true),
                 'maxlength' => 16,
                 'col' => 4,
                 'hint' => $this->trans('Company name for this brand', array(), 'Admin.Catalog.Help'),
@@ -544,14 +544,14 @@ class AdminManufacturersControllerCore extends AdminController
             'label' => $this->trans('Address (2)', array(), 'Admin.Global'),
             'name' => 'address2',
             'col' => 6,
-            'required' => in_array('address2', $required_fields),
+            'required' => in_array('address2', $required_fields, true),
         );
         $form['input'][] = array(
             'type' => 'text',
             'label' => $this->trans('Zip/postal code', array(), 'Admin.Global'),
             'name' => 'postcode',
             'col' => 2,
-            'required' => in_array('postcode', $required_fields),
+            'required' => in_array('postcode', $required_fields, true),
         );
         $form['input'][] = array(
             'type' => 'text',
@@ -590,14 +590,14 @@ class AdminManufacturersControllerCore extends AdminController
             'label' => $this->trans('Home phone', array(), 'Admin.Global'),
             'name' => 'phone',
             'col' => 4,
-            'required' => in_array('phone', $required_fields),
+            'required' => in_array('phone', $required_fields, true),
         );
         $form['input'][] = array(
             'type' => 'text',
             'label' => $this->trans('Mobile phone', array(), 'Admin.Global'),
             'name' => 'phone_mobile',
             'col' => 4,
-            'required' => in_array('phone_mobile', $required_fields),
+            'required' => in_array('phone_mobile', $required_fields, true),
         );
         $form['input'][] = array(
             'type' => 'textarea',

@@ -28,7 +28,7 @@
 use PrestaShopBundle\Install\Upgrade;
 
 // Although no arguments execute the script, you can get some help if requested.
-if (isset($argv) && is_array($argv) && in_array('--help', $argv)) {
+if (isset($argv) && is_array($argv) && in_array('--help', $argv, true)) {
     displayHelp();
     exit(0);
 }
@@ -41,7 +41,7 @@ define('PS_IN_UPGRADE', 1);
 @unlink(__DIR__.'/../../classes/db/MySQL.php');
 
 if (isset($_GET['adminDir']) && $_GET['adminDir'] && !defined('_PS_ADMIN_DIR_')) {
-    define('_PS_ADMIN_DIR_', base64_decode($_GET['adminDir']));
+    define('_PS_ADMIN_DIR_', base64_decode($_GET['adminDir'], true));
 }
 
 require_once(dirname(__FILE__).'/../init.php');
@@ -66,7 +66,7 @@ if (isset($_GET['updateDefaultTheme']) && $_GET['updateDefaultTheme']
 }
 
 if (isset($_GET['adminDir']) && $_GET['adminDir']) {
-    $upgrade->setAdminDir(base64_decode($_GET['adminDir']));
+    $upgrade->setAdminDir(base64_decode($_GET['adminDir'], true));
 }
 
 if (isset($_GET['idEmployee'])) {

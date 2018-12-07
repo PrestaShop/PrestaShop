@@ -87,7 +87,8 @@ class MemcacheServerController extends FrameworkBundleAdminController
                 PageVoter::LEVEL_UPDATE,
                 PageVoter::LEVEL_CREATE,
                 PageVoter::LEVEL_DELETE,
-            )
+            ),
+            true
         )) {
             return new JsonResponse(
                 array(
@@ -146,7 +147,8 @@ class MemcacheServerController extends FrameworkBundleAdminController
                 PageVoter::LEVEL_UPDATE,
                 PageVoter::LEVEL_CREATE,
                 PageVoter::LEVEL_DELETE,
-            )
+            ),
+            true
         )) {
             return new JsonResponse(
                 array(

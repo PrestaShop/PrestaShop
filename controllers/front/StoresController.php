@@ -70,7 +70,7 @@ class StoresControllerCore extends FrontController
             $data_fields_mod = false;
             foreach ($data_fields as $field_item) {
                 $field_item = trim($field_item);
-                if (!in_array($field_item, $ignore_field) && !empty($store[$field_item])) {
+                if (!in_array($field_item, $ignore_field, true) && !empty($store[$field_item])) {
                     $addr_out[] = ($field_item == 'city' && $state && isset($state->iso_code) && mb_strlen($state->iso_code)) ?
                         $store[$field_item] . ', ' . $state->iso_code : $store[$field_item];
                     $data_fields_mod = true;
@@ -90,7 +90,7 @@ class StoresControllerCore extends FrontController
     {
         // StarterTheme: Remove method when google maps v3 is done
         $distance_unit = Configuration::get('PS_DISTANCE_UNIT');
-        if (!in_array($distance_unit, array('km', 'mi'))) {
+        if (!in_array($distance_unit, array('km', 'mi'), true)) {
             $distance_unit = 'km';
         }
 
@@ -165,7 +165,7 @@ class StoresControllerCore extends FrontController
     public function initContent()
     {
         $distance_unit = Configuration::get('PS_DISTANCE_UNIT');
-        if (!in_array($distance_unit, array('km', 'mi'))) {
+        if (!in_array($distance_unit, array('km', 'mi'), true)) {
             $distance_unit = 'km';
         }
 

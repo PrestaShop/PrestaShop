@@ -335,7 +335,7 @@ class OrderSlipCore extends ObjectModel
 
             $order_slip->{'total_products_tax_' . $inc_or_ex_1} += $price * $quantity;
 
-            if (in_array(Configuration::get('PS_ROUND_TYPE'), array(Order::ROUND_ITEM, Order::ROUND_LINE))) {
+            if (in_array(Configuration::get('PS_ROUND_TYPE'), array(Order::ROUND_ITEM, Order::ROUND_LINE), true)) {
                 if (!isset($total_products[$id_tax_rules_group])) {
                     $total_products[$id_tax_rules_group] = 0;
                 }

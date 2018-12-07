@@ -397,7 +397,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
         //map all
         $new_form_data = array();
         foreach ($form_data as $k => $v) {
-            if (in_array($k, $this->unmapKeys) || in_array($k, $this->translatableKeys)) {
+            if (in_array($k, $this->unmapKeys, true) || in_array($k, $this->translatableKeys, true)) {
                 continue;
             }
             $new_form_data[$k] = $v;

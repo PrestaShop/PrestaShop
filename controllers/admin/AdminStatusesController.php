@@ -520,7 +520,7 @@ class AdminStatusesControllerCore extends AdminController
             $templates = array_unique(array_merge(scandir(_PS_ADMIN_DIR_ . '/' . $default_path . $iso_code, SCANDIR_SORT_NONE), $theme_templates));
             foreach ($templates as $key => $template) {
                 if (!strncmp(strrev($template), 'lmth.', 5)) {
-                    $search_result = array_search($template, $theme_templates);
+                    $search_result = array_search($template, $theme_templates, true);
                     $array[$iso_code][] = array(
                                 'id' => mb_substr($template, 0, -5),
                                 'name' => mb_substr($template, 0, -5),

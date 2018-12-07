@@ -62,7 +62,7 @@ class CheckRequirements
             $paramsOptionalResults = ConfigurationTest::check(ConfigurationTest::getDefaultTestsOp());
         }
 
-        $failRequired = in_array('fail', $paramsRequiredResults);
+        $failRequired = in_array('fail', $paramsRequiredResults, true);
 
         $testsErrors = $this->getErrorMessages();
 
@@ -84,7 +84,7 @@ class CheckRequirements
         if (!$isHostMode) {
             $results = array_merge($results, array(
                 'testsErrors' => $this->fillMissingDescriptions($testsErrors, $paramsOptionalResults),
-                'failOptional' => in_array('fail', $paramsOptionalResults),
+                'failOptional' => in_array('fail', $paramsOptionalResults, true),
                 'testsOptional' => $paramsOptionalResults,
             ));
         }

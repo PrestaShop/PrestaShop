@@ -227,7 +227,7 @@ class AdminAddressesControllerCore extends AdminController
                     'type' => 'text',
                     'label' => $this->trans('Company', array(), 'Admin.Global'),
                     'name' => 'company',
-                    'required' => in_array('company', $required_fields),
+                    'required' => in_array('company', $required_fields, true),
                     'col' => '4',
                     'hint' => $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info') . ' &lt;&gt;;=#{}',
                 );
@@ -236,7 +236,7 @@ class AdminAddressesControllerCore extends AdminController
                     'label' => $this->trans('VAT number', array(), 'Admin.Orderscustomers.Feature'),
                     'col' => '2',
                     'name' => 'vat_number',
-                    'required' => in_array('vat_number', $required_fields),
+                    'required' => in_array('vat_number', $required_fields, true),
                 );
             } elseif ($addr_field_item == 'lastname') {
                 if (isset($customer) &&
@@ -290,7 +290,7 @@ class AdminAddressesControllerCore extends AdminController
                     'label' => $this->trans('Address', array(), 'Admin.Global') . ' (2)',
                     'name' => 'address2',
                     'col' => '6',
-                    'required' => in_array('address2', $required_fields),
+                    'required' => in_array('address2', $required_fields, true),
                 );
             } elseif ($addr_field_item == 'postcode') {
                 $temp_fields[] = array(
@@ -313,7 +313,7 @@ class AdminAddressesControllerCore extends AdminController
                     'type' => 'select',
                     'label' => $this->trans('Country', array(), 'Admin.Global'),
                     'name' => 'id_country',
-                    'required' => in_array('Country:name', $required_fields) || in_array('country', $required_fields),
+                    'required' => in_array('Country:name', $required_fields, true) || in_array('country', $required_fields, true),
                     'col' => '4',
                     'default_value' => (int) $this->context->country->id,
                     'options' => array(
@@ -339,7 +339,7 @@ class AdminAddressesControllerCore extends AdminController
                     'type' => 'text',
                     'label' => $this->trans('Home phone', array(), 'Admin.Global'),
                     'name' => 'phone',
-                    'required' => in_array('phone', $required_fields),
+                    'required' => in_array('phone', $required_fields, true),
                     'col' => '4',
                 );
             } elseif ($addr_field_item == 'phone_mobile') {
@@ -347,7 +347,7 @@ class AdminAddressesControllerCore extends AdminController
                     'type' => 'text',
                     'label' => $this->trans('Mobile phone', array(), 'Admin.Global'),
                     'name' => 'phone_mobile',
-                    'required' => in_array('phone_mobile', $required_fields),
+                    'required' => in_array('phone_mobile', $required_fields, true),
                     'col' => '4',
                 );
             }

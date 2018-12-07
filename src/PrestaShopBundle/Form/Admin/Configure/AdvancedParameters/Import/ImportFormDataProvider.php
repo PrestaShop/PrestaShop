@@ -118,7 +118,7 @@ final class ImportFormDataProvider implements ImportFormDataProviderInterface
         $importFiles = $this->importFileFinder->getImportFileNames();
         $selectedFile = $importConfig->getFileName();
 
-        if ($selectedFile && !in_array($selectedFile, $importFiles)) {
+        if ($selectedFile && !in_array($selectedFile, $importFiles, true)) {
             $selectedFile = null;
         }
 

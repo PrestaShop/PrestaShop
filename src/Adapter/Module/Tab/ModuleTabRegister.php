@@ -134,7 +134,7 @@ class ModuleTabRegister
 
         foreach ($this->getModuleAdminControllersFilename($moduleName) as $adminControllerFileName) {
             $adminControllerName = str_replace('Controller.php', '', $adminControllerFileName);
-            if (in_array($adminControllerName, $tabsNames)) {
+            if (in_array($adminControllerName, $tabsNames, true)) {
                 continue;
             }
 
@@ -168,7 +168,7 @@ class ModuleTabRegister
             throw new Exception('Missing class name of tab');
         }
         // Check controller exists
-        if (!in_array($className . 'Controller.php', $this->getModuleAdminControllersFilename($moduleName))) {
+        if (!in_array($className . 'Controller.php', $this->getModuleAdminControllersFilename($moduleName), true)) {
             throw new Exception(sprintf('Class "%sController" not found in controllers/admin', $className));
         }
         // Deprecation check

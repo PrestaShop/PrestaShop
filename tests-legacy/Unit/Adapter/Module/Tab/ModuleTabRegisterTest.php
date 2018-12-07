@@ -190,7 +190,7 @@ class ModuleTabRegisterTest extends UnitTestCase
             // Be aware, it also include which can throw an exception later when being validated
             foreach($tabs as $tab) {
                 $this->assertTrue(
-                        in_array($tab['class_name'], $this->expectedTabsToAdd[$moduleName]),
+                        in_array($tab['class_name'], $this->expectedTabsToAdd[$moduleName], true),
                         'Module '.$moduleName.' should not register '.$tab['class_name']
                 );
             }

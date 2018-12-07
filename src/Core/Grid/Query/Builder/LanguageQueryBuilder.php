@@ -115,11 +115,11 @@ final class LanguageQueryBuilder extends AbstractDoctrineQueryBuilder
         );
 
         foreach ($searchCriteria->getFilters() as $filterName => $filterValue) {
-            if (!in_array($filterName, $allowedFilters)) {
+            if (!in_array($filterName, $allowedFilters, true)) {
                 continue;
             }
 
-            if (in_array($filterName, array('id_lang', 'active'))) {
+            if (in_array($filterName, array('id_lang', 'active'), true)) {
                 $builder->andWhere($filterName . ' = :' . $filterName);
                 $builder->setParameter($filterName, $filterValue);
 

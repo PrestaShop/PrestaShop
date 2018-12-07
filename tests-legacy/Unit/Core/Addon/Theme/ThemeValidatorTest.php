@@ -78,7 +78,7 @@ class ThemeValidatorTest extends TestCase
     {
         $options = array('valid', 'missfiles', 'missconfig');
 
-        if (!in_array($name, $options)) {
+        if (!in_array($name, $options, true)) {
             throw new \InvalidArgumentException(self::NOTICE.'getTheme($name) only accepts specified arguments');
         }
         $themeDir = __DIR__. '/../../../../resources/minimal-'.$name.'-theme/';

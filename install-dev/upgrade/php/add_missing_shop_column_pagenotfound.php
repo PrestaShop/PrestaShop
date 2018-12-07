@@ -34,12 +34,12 @@ function add_missing_shop_column_pagenotfound()
             $fields[$k] = $field['Field'];
         }
 
-        if (!in_array('id_shop_group', $fields)) {
+        if (!in_array('id_shop_group', $fields, true)) {
             $res &= Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'pagenotfound`
 				ADD `id_shop_group` INT(10) AFTER `id_pagenotfound`');
         }
 
-        if (!in_array('id_shop', $fields)) {
+        if (!in_array('id_shop', $fields, true)) {
             $res &= Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'pagenotfound`
 				ADD `id_shop` INT(10) AFTER `id_pagenotfound`');
         }

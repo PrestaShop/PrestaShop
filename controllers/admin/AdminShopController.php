@@ -647,7 +647,7 @@ class AdminShopControllerCore extends AdminController
      */
     public function processAdd()
     {
-        if (!Tools::getValue('categoryBox') || !in_array(Tools::getValue('id_category'), Tools::getValue('categoryBox'))) {
+        if (!Tools::getValue('categoryBox') || !in_array(Tools::getValue('id_category'), Tools::getValue('categoryBox'), true)) {
             $this->errors[] = $this->trans('You need to select at least the root category.', array(), 'Admin.Advparameters.Notification');
         }
 

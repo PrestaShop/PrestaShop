@@ -120,12 +120,12 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                     );
                 } else {
                     if (!$this->product->id_type_redirected) {
-                        if (in_array($this->product->redirect_type, array(ProductInterface::REDIRECT_TYPE_CATEGORY_MOVED_PERMANENTLY, ProductInterface::REDIRECT_TYPE_CATEGORY_FOUND))) {
+                        if (in_array($this->product->redirect_type, array(ProductInterface::REDIRECT_TYPE_CATEGORY_MOVED_PERMANENTLY, ProductInterface::REDIRECT_TYPE_CATEGORY_FOUND), true)) {
                             $this->product->id_type_redirected = $this->product->id_category_default;
                         } else {
                             $this->product->redirect_type = ProductInterface::REDIRECT_TYPE_NOT_FOUND;
                         }
-                    } elseif (in_array($this->product->redirect_type, array(ProductInterface::REDIRECT_TYPE_PRODUCT_MOVED_PERMANENTLY, ProductInterface::REDIRECT_TYPE_PRODUCT_FOUND)) && $this->product->id_type_redirected == $this->product->id) {
+                    } elseif (in_array($this->product->redirect_type, array(ProductInterface::REDIRECT_TYPE_PRODUCT_MOVED_PERMANENTLY, ProductInterface::REDIRECT_TYPE_PRODUCT_FOUND), true) && $this->product->id_type_redirected == $this->product->id) {
                         $this->product->redirect_type = ProductInterface::REDIRECT_TYPE_NOT_FOUND;
                     }
 
@@ -186,9 +186,9 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                     }
                     if ($id_object) {
                         $referers = array($_SERVER['HTTP_REFERER'], urldecode($_SERVER['HTTP_REFERER']));
-                        if (in_array($this->context->link->getCategoryLink($id_object), $referers)) {
+                        if (in_array($this->context->link->getCategoryLink($id_object), $referers, true)) {
                             $id_category = (int) $id_object;
-                        } elseif (isset($this->context->cookie->last_visited_category) && (int) $this->context->cookie->last_visited_category && in_array($this->context->link->getProductLink($id_object), $referers)) {
+                        } elseif (isset($this->context->cookie->last_visited_category) && (int) $this->context->cookie->last_visited_category && in_array($this->context->link->getProductLink($id_object), $referers, true)) {
                             $id_category = (int) $this->context->cookie->last_visited_category;
                         }
                     }
@@ -665,7 +665,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                         $id_attributes[$k] = (int) $row['id_attribute'];
                     }
                     foreach ($group['attributes'] as $key => $attribute) {
-                        if (!in_array((int) $key, $id_attributes)) {
+                        if (!in_array((int) $key, $id_attributes, true)) {
                             unset($group['attributes'][$key]);
                             unset($group['attributes_quantity'][$key]);
                         }
@@ -802,7 +802,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         }
         $indexes = array_flip($authorized_file_fields);
         foreach ($_FILES as $field_name => $file) {
-            if (in_array($field_name, $authorized_file_fields) && isset($file['tmp_name']) && !empty($file['tmp_name'])) {
+            if (in_array($field_name, $authorized_file_fields, true) && isset($file['tmp_name']) && !empty($file['tmp_name'])) {
                 $file_name = md5(uniqid(rand(), true));
                 if ($error = ImageManager::validateUpload($file, (int) Configuration::get('PS_PRODUCT_PICTURE_MAX_SIZE'))) {
                     $this->errors[] = $error;
@@ -846,13 +846,13 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
 
         $indexes = array_flip($authorized_text_fields);
         foreach ($_POST as $field_name => $value) {
-            if (in_array($field_name, $authorized_text_fields) && $value != '') {
+            if (in_array($field_name, $authorized_text_fields, true) && $value != '') {
                 if (!Validate::isMessage($value)) {
                     $this->errors[] = $this->trans('Invalid message', array(), 'Shop.Notifications.Error');
                 } else {
                     $this->context->cart->addTextFieldToProduct($this->product->id, $indexes[$field_name], Product::CUSTOMIZE_TEXTFIELD, $value);
                 }
-            } elseif (in_array($field_name, $authorized_text_fields) && $value == '') {
+            } elseif (in_array($field_name, $authorized_text_fields, true) && $value == '') {
                 $this->context->cart->deleteCustomizationToProduct((int) $this->product->id, $indexes[$field_name]);
             }
         }
@@ -969,7 +969,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
      * or by the group request parameter.
      *
      * @throws PrestaShopException
-     * @return int|null
+     * @return null|int
      *
      */
     private function getIdProductAttributeByRequestOrGroup()
@@ -1021,7 +1021,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
      * Return id_product_attribute by the group request parameter.
      *
      * @throws PrestaShopException
-     * @return int|null
+     * @return null|int
      *
      */
     private function getIdProductAttributeByGroup()

@@ -51,7 +51,7 @@ function getFileContent($fileOrContent, $debug)
         return file_get_contents('content/' . $fileOrContent);
     }
 
-    return base64_decode($fileOrContent);
+    return base64_decode($fileOrContent, true);
 }
 
 function getZipErrorMessage($errorCode)
@@ -155,7 +155,7 @@ if (isset($_POST['extract'])) {
     $fileList = array();
     for ($id = $startId; $id < min($numFiles, $lastId); ++$id) {
         $currentFile = $zip->getNameIndex($id);
-        if (in_array($currentFile, array('/index.php', 'index.php'))) {
+        if (in_array($currentFile, array('/index.php', 'index.php'), true)) {
             $indexContent = $zip->getFromIndex($id);
             if (!file_put_contents(getcwd() . '/index.php.temp', $indexContent)) {
                 die(json_encode(array(

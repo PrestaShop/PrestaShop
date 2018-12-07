@@ -107,7 +107,7 @@ class AdminTagsControllerCore extends AdminController
                 $removed_products = array();
 
                 foreach ($previous_products as $product) {
-                    if (!in_array($product['id_product'], $_POST['products'])) {
+                    if (!in_array($product['id_product'], $_POST['products'], true)) {
                         $removed_products[] = $product['id_product'];
                     }
                 }

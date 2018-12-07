@@ -356,7 +356,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
         switch ($this->wsObject->urlSegment[2]) {
             // Set the image path on display in relation to the header image
             case 'header':
-                if (in_array($this->wsObject->method, array('GET', 'HEAD', 'PUT'))) {
+                if (in_array($this->wsObject->method, array('GET', 'HEAD', 'PUT'), true)) {
                     $path = _PS_IMG_DIR_ . Configuration::get('PS_LOGO');
                 } else {
                     throw new WebserviceException('This method is not allowed with general image resources.', array(49, 405));
@@ -365,7 +365,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 
             // Set the image path on display in relation to the mail image
             case 'mail':
-                if (in_array($this->wsObject->method, array('GET', 'HEAD', 'PUT'))) {
+                if (in_array($this->wsObject->method, array('GET', 'HEAD', 'PUT'), true)) {
                     $path = _PS_IMG_DIR_ . Configuration::get('PS_LOGO_MAIL');
                     $alternative_path = _PS_IMG_DIR_ . Configuration::get('PS_LOGO');
                 } else {
@@ -375,7 +375,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 
             // Set the image path on display in relation to the invoice image
             case 'invoice':
-                if (in_array($this->wsObject->method, array('GET', 'HEAD', 'PUT'))) {
+                if (in_array($this->wsObject->method, array('GET', 'HEAD', 'PUT'), true)) {
                     $path = _PS_IMG_DIR_ . Configuration::get('PS_LOGO_INVOICE');
                     $alternative_path = _PS_IMG_DIR_ . Configuration::get('PS_LOGO');
                 } else {
@@ -385,7 +385,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 
             // Set the image path on display in relation to the icon store image
             case 'store_icon':
-                if (in_array($this->wsObject->method, array('GET', 'HEAD', 'PUT'))) {
+                if (in_array($this->wsObject->method, array('GET', 'HEAD', 'PUT'), true)) {
                     $path = _PS_IMG_DIR_ . Configuration::get('PS_STORES_ICON');
                     $this->imgExtension = 'gif';
                 } else {
@@ -560,7 +560,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                     $current_product = new Product($object_id);
                     $this->wsObject->urlSegment[3] = $current_product->getCoverWs();
                 }
-                if (!Validate::isUnsignedId($object_id) || !in_array($this->wsObject->urlSegment[3], $available_image_ids)) {
+                if (!Validate::isUnsignedId($object_id) || !in_array($this->wsObject->urlSegment[3], $available_image_ids, true)) {
                     throw new WebserviceException('This image id does not exist', array(57, 400));
                 }  
                     // Check for new image system
@@ -607,7 +607,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
             // Check the given size
             if ($this->imageType == 'products' && $image_size == 'bin') {
                 $filename = $directory . $object_id . '-' . $image_id . '.jpg';
-            } elseif (!in_array($image_size, $normal_image_size_names)) {
+            } elseif (!in_array($image_size, $normal_image_size_names, true)) {
                 $exception = new WebserviceException('This image size does not exist', array(58, 400));
                 throw $exception->setDidYouMean($image_size, $normal_image_size_names);
             }
@@ -737,7 +737,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
             }
             if ($this->wsObject->method == 'POST') {
                 $customizations = $this->getCustomizations();
-                if (!in_array((int) $this->wsObject->urlSegment[3], $customizations)) {
+                if (!in_array((int) $this->wsObject->urlSegment[3], $customizations, true)) {
                     throw new WebserviceException('Customization does not exist', array(61, 500));
                 }
                 $results = Db::getInstance()->executeS(
@@ -824,7 +824,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 
                     return $image->delete();
                 } elseif ($filename_exists) {
-                    if (in_array($this->imageType, array('categories', 'manufacturers', 'suppliers', 'stores'))) {
+                    if (in_array($this->imageType, array('categories', 'manufacturers', 'suppliers', 'stores'), true)) {
                         /** @var ObjectModel $object */
                         $object = new $this->wsObject->resourceList[$this->imageType]['class']((int) $this->wsObject->urlSegment[2]);
 
@@ -1056,7 +1056,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                 }
 
                 // Check mime content type
-                if (!$mime_type || !in_array($mime_type, $this->acceptedImgMimeTypes)) {
+                if (!$mime_type || !in_array($mime_type, $this->acceptedImgMimeTypes, true)) {
                     throw new WebserviceException('This type of image format is not recognized, allowed formats are: ' . implode('", "', $this->acceptedImgMimeTypes), array(73, 400));
                 } elseif ($file['error']) {
                     // Check error while uploading
@@ -1147,7 +1147,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                         $this->output = $this->objOutput->renderEntity($image, 1);
                         $image_content = array('sqlId' => 'content', 'value' => base64_encode(file_get_contents($this->imgToDisplay)), 'encode' => 'base64');
                         $this->output .= $this->objOutput->objectRender->renderField($image_content);
-                    } elseif (in_array($this->imageType, array('categories', 'manufacturers', 'suppliers', 'stores'))) {
+                    } elseif (in_array($this->imageType, array('categories', 'manufacturers', 'suppliers', 'stores'), true)) {
                         if (!($tmp_name = tempnam(_PS_TMP_IMG_DIR_, 'PS')) || !move_uploaded_file($file['tmp_name'], $tmp_name)) {
                             throw new WebserviceException('An error occurred during the image upload', array(76, 400));
                         } elseif (!ImageManager::resize($tmp_name, $reception_path)) {

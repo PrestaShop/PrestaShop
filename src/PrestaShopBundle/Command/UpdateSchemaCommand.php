@@ -114,7 +114,7 @@ class UpdateSchemaCommand extends ContainerAwareCommand
             $matches = array();
             if (preg_match('/ALTER TABLE (.+?) /', $sql, $matches)) {
                 $alteredTables = $matches[1];
-                if (in_array($alteredTables, $removedTables)) {
+                if (in_array($alteredTables, $removedTables, true)) {
                     unset($updateSchemaSql[$key]);
                 }
             }
@@ -124,7 +124,7 @@ class UpdateSchemaCommand extends ContainerAwareCommand
         foreach ($updateSchemaSql as $key => $sql) {
             if (preg_match('/ DROP FOREIGN KEY /', $sql)) {
                 $hashedSql = md5($sql);
-                if (in_array($hashedSql, $dropForeignKeyQueries)) {
+                if (in_array($hashedSql, $dropForeignKeyQueries, true)) {
                     unset($updateSchemaSql[$key]);
                 } else {
                     $dropForeignKeyQueries[] = $hashedSql;

@@ -127,7 +127,7 @@ class ThemeExtractor
             // AdminCatalogFeature to Admin.Catalog.Feature
             $domain = implode('.', preg_split('/(?=[A-Z])/', $domain, -1, PREG_SPLIT_NO_EMPTY));
 
-            if (in_array($domain, $defaultDomainsCatalogue)) {
+            if (in_array($domain, $defaultDomainsCatalogue, true)) {
                 foreach ($translation as $key => $trans) {
                     if ($catalogue->has($key, $domain)) {
                         $catalogue->set($key, $trans, $domain);

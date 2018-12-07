@@ -179,7 +179,7 @@ final class LegacyUrlConverter
             //We prioritize the actions defined in the migrated routes
             $controllerActions = $this->legacyRouteProvider->getActionsByController($parameters['controller']);
             foreach ($parameters as $parameter => $value) {
-                if (in_array($parameter, $controllerActions)) {
+                if (in_array($parameter, $controllerActions, true)) {
                     $legacyAction = $parameter;
                     break;
                 }

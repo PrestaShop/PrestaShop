@@ -185,7 +185,7 @@ class ProductSpecificPrice extends CommonAbstractType
                     'attr' => array(
                         'data-action' => $this->router->generate('admin_get_product_combinations', array('idProduct' => $options['id_product'])),
                         // used to force selected select option after options have been loaded
-                        'data-selected-attribute' => (array_keys($options, 'selected_product_attribute')) ? $options['selected_product_attribute'] : '0',
+                        'data-selected-attribute' => (array_keys($options, 'selected_product_attribute', true)) ? $options['selected_product_attribute'] : '0',
                     ),
                 )
             )

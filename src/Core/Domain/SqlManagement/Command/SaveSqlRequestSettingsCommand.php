@@ -79,7 +79,7 @@ class SaveSqlRequestSettingsCommand
             CharsetEncoding::UTF_8,
         );
 
-        if (!in_array($fileEncoding, $supportedFileEncodings)) {
+        if (!in_array($fileEncoding, $supportedFileEncodings, true)) {
             throw new SqlRequestSettingsConstraintException(
                 sprintf(
                     'Not supported File Encoding %s supplied. Supported encodings are %s',

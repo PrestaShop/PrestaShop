@@ -43,7 +43,7 @@ function move_translations_module_file()
     // Scan all modules and check if translation file exists
     foreach ($modules as $module_name) {
         // Check if is a good module
-        if (in_array($module_name, array('.', '..', '.svn', '.htaccess', 'index.php', 'autoupgrade')) || !is_dir(_PS_MODULE_DIR_.'/'.$module_name)) {
+        if (in_array($module_name, array('.', '..', '.svn', '.htaccess', 'index.php', 'autoupgrade'), true) || !is_dir(_PS_MODULE_DIR_.'/'.$module_name)) {
             continue;
         }
 

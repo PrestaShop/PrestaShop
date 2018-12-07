@@ -478,7 +478,7 @@ class AdminModulesPositionsControllerCore extends AdminController
             $id_hook = (int) (Tools::getValue('id_hook'));
             $way = (int) (Tools::getValue('way'));
             $positions = Tools::getValue(strval($id_hook));
-            $position = (is_array($positions)) ? array_search($id_hook . '_' . $id_module, $positions) : null;
+            $position = (is_array($positions)) ? array_search($id_hook . '_' . $id_module, $positions, true) : null;
             $module = Module::getInstanceById($id_module);
             if (Validate::isLoadedObject($module)) {
                 if ($module->updatePosition($id_hook, $way, $position)) {
@@ -598,7 +598,7 @@ class AdminModulesPositionsControllerCore extends AdminController
                 // position is i (autoincremented)
                 if (is_array($modules) && count($modules)) {
                     foreach ($modules as $id_module) {
-                        if ($id_module && !in_array($id_module, $ids)) {
+                        if ($id_module && !in_array($id_module, $ids, true)) {
                             $ids[] = (int) $id_module;
                             $value .= '(' . (int) $id_module . ', ' . (int) $id_shop . ', ' . (int) $id_hook . ', ' . (int) $i . '),';
                         }

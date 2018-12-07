@@ -503,7 +503,7 @@ class TreeCore
     {
         $last = $directory[mb_strlen($directory) - 1];
 
-        if (in_array($last, array('/', '\\'))) {
+        if (in_array($last, array('/', '\\'), true)) {
             $directory[mb_strlen($directory) - 1] = DIRECTORY_SEPARATOR;
 
             return $directory;

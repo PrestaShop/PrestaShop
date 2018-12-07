@@ -89,7 +89,7 @@ class FileUploaderCore
             return array('error' => Context::getContext()->getTranslator()->trans('File has an invalid extension, it should be one of these: %s.', array($these), 'Admin.Notifications.Error'));
         }
         $ext = $pathinfo['extension'];
-        if ($this->allowedExtensions && !in_array(mb_strtolower($ext), $this->allowedExtensions)) {
+        if ($this->allowedExtensions && !in_array(mb_strtolower($ext), $this->allowedExtensions, true)) {
             return array('error' => Context::getContext()->getTranslator()->trans('File has an invalid extension, it should be one of these: %s.', array($these), 'Admin.Notifications.Error'));
         }
 

@@ -80,7 +80,8 @@ class OrderPreferencesController extends FrameworkBundleAdminController
                 PageVoter::LEVEL_UPDATE,
                 PageVoter::LEVEL_CREATE,
                 PageVoter::LEVEL_DELETE,
-            )
+            ),
+            true
         )) {
             $this->addFlash(
                 'error',

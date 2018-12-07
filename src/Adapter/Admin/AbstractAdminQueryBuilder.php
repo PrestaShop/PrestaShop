@@ -43,7 +43,7 @@ abstract class AbstractAdminQueryBuilder
     const FILTERING_EQUAL_STRING = '= \'%s\'';
 
     /**
-     * @var string|null
+     * @var null|string
      */
     private $lastCompiledSql = null;
 

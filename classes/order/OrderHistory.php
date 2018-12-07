@@ -99,7 +99,7 @@ class OrderHistoryCore extends ObjectModel
         $old_os = $order->getCurrentOrderState();
 
         // executes hook
-        if (in_array($new_os->id, array(Configuration::get('PS_OS_PAYMENT'), Configuration::get('PS_OS_WS_PAYMENT')))) {
+        if (in_array($new_os->id, array(Configuration::get('PS_OS_PAYMENT'), Configuration::get('PS_OS_WS_PAYMENT')), true)) {
             Hook::exec('actionPaymentConfirmation', array('id_order' => (int) $order->id), null, false, true, false, $order->id_shop);
         }
 
@@ -210,7 +210,7 @@ class OrderHistoryCore extends ObjectModel
                         ProductSale::addProductSale($product['product_id'], $product['product_quantity']);
                         // @since 1.5.0 - Stock Management
                         if (!Pack::isPack($product['product_id']) &&
-                            in_array($old_os->id, $error_or_canceled_statuses) &&
+                            in_array($old_os->id, $error_or_canceled_statuses, true) &&
                             !StockAvailable::dependsOnStock($product['id_product'], (int) $order->id_shop)) {
                             StockAvailable::updateQuantity($product['product_id'], $product['product_attribute_id'], -(int) $product['product_quantity'], $order->id_shop);
                         }
@@ -220,13 +220,13 @@ class OrderHistoryCore extends ObjectModel
 
                         // @since 1.5.0 - Stock Management
                         if (!Pack::isPack($product['product_id']) &&
-                            in_array($new_os->id, $error_or_canceled_statuses) &&
+                            in_array($new_os->id, $error_or_canceled_statuses, true) &&
                             !StockAvailable::dependsOnStock($product['id_product'])) {
                             StockAvailable::updateQuantity($product['product_id'], $product['product_attribute_id'], (int) $product['product_quantity'], $order->id_shop);
                         }
                     } elseif (!$new_os->logable && !$old_os->logable &&
-                        in_array($new_os->id, $error_or_canceled_statuses) &&
-                        !in_array($old_os->id, $error_or_canceled_statuses) &&
+                        in_array($new_os->id, $error_or_canceled_statuses, true) &&
+                        !in_array($old_os->id, $error_or_canceled_statuses, true) &&
                         !StockAvailable::dependsOnStock($product['id_product'])
                     ) {
                         // if waiting for payment => payment error/canceled

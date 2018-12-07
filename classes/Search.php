@@ -168,7 +168,7 @@ class SearchCore
         }
 
         // If the language is constituted with symbol and there is no "words", then split every chars
-        if (in_array($iso_code, array('zh', 'tw', 'ja')) && function_exists('mb_strlen')) {
+        if (in_array($iso_code, array('zh', 'tw', 'ja'), true) && function_exists('mb_strlen')) {
             // Cut symbols from letters
             $symbols = '';
             $letters = '';
@@ -340,7 +340,7 @@ class SearchCore
         $alias = '';
         if ($order_by == 'price') {
             $alias = 'product_shop.';
-        } elseif (in_array($order_by, array('date_upd', 'date_add'))) {
+        } elseif (in_array($order_by, array('date_upd', 'date_add'), true)) {
             $alias = 'p.';
         }
         $sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity,

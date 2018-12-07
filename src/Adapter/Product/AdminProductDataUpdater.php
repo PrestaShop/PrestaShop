@@ -213,7 +213,7 @@ class AdminProductDataUpdater implements ProductInterface
                 throw new UpdateProductException('An error occurred while copying images.', 5008);
             }  
                 $this->hookDispatcher->dispatchWithParameters('actionProductAdd', array('id_product' => (int) $product->id, 'product' => $product));
-                if (in_array($product->visibility, array('both', 'search')) && Configuration::get('PS_SEARCH_INDEXATION')) {
+                if (in_array($product->visibility, array('both', 'search'), true) && Configuration::get('PS_SEARCH_INDEXATION')) {
                     Search::indexation(false, $product->id);
                 }
 

@@ -682,7 +682,7 @@ class AdminCategoriesControllerCore extends AdminController
         // remove category tree and radio button "is_root_category" if this category has the root category as parent category to avoid any conflict
         if ($this->_category->id_parent == (int) Configuration::get('PS_ROOT_CATEGORY') && Tools::isSubmit('updatecategory')) {
             foreach ($this->fields_form['input'] as $k => $input) {
-                if (in_array($input['name'], array('id_parent', 'is_root_category'))) {
+                if (in_array($input['name'], array('id_parent', 'is_root_category'), true)) {
                     unset($this->fields_form['input'][$k]);
                 }
             }
@@ -709,7 +709,7 @@ class AdminCategoriesControllerCore extends AdminController
             $category_groups_ids = array_merge($category_groups_ids, $preselected);
         }
         foreach ($groups as $group) {
-            $this->fields_value['groupBox_' . $group['id_group']] = Tools::getValue('groupBox_' . $group['id_group'], (in_array($group['id_group'], $category_groups_ids)));
+            $this->fields_value['groupBox_' . $group['id_group']] = Tools::getValue('groupBox_' . $group['id_group'], (in_array($group['id_group'], $category_groups_ids, true)));
         }
 
         $this->fields_value['is_root_category'] = (bool) Tools::isSubmit('add' . $this->table . 'root');
@@ -719,7 +719,7 @@ class AdminCategoriesControllerCore extends AdminController
 
     public function postProcess()
     {
-        if (!in_array($this->display, array('edit', 'add'))) {
+        if (!in_array($this->display, array('edit', 'add'), true)) {
             $this->multishop_context_group = false;
         }
         if (Tools::isSubmit('forcedeleteImage') || (isset($_FILES['image']) && $_FILES['image']['size'] > 0) || Tools::getValue('deleteImage')) {

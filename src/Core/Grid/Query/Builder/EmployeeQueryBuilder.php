@@ -149,7 +149,7 @@ final class EmployeeQueryBuilder extends AbstractDoctrineQueryBuilder
         );
 
         foreach ($filters as $filterName => $filterValue) {
-            if (!in_array($filterName, $allowedFilters)) {
+            if (!in_array($filterName, $allowedFilters, true)) {
                 continue;
             }
 

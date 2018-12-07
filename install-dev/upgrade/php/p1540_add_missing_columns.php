@@ -34,7 +34,7 @@ function p1540_add_missing_columns()
             $list_fields[$k] = $field['Field'];
         }
 
-        if (in_array('id_discount', $list_fields)) {
+        if (in_array('id_discount', $list_fields, true)) {
             if (!Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'loyalty` CHANGE `id_discount` `id_cart_rule` INT( 10 ) UNSIGNED NULL DEFAULT NULL')) {
                 $errors[] = Db::getInstance()->getMsgError();
             }
@@ -48,7 +48,7 @@ function p1540_add_missing_columns()
             foreach ($list_fields as $k => $field) {
                 $list_fields[$k] = $field['Field'];
             }
-            if (!in_array('id_shop', $list_fields)) {
+            if (!in_array('id_shop', $list_fields, true)) {
                 if (!Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'layered_product_attribute` ADD `id_shop` INT( 10 ) UNSIGNED NOT NULL DEFAULT "1" AFTER `id_attribute_group`')) {
                     $errors[] = Db::getInstance()->getMsgError();
                 }

@@ -273,10 +273,10 @@ class AdminWebserviceControllerCore extends AdminController
             $this->warnings[] = $this->trans('To avoid operating problems, please use an Apache server.', array(), 'Admin.Advparameters.Notification');
             if (function_exists('apache_get_modules')) {
                 $apache_modules = apache_get_modules();
-                if (!in_array('mod_auth_basic', $apache_modules)) {
+                if (!in_array('mod_auth_basic', $apache_modules, true)) {
                     $this->warnings[] = $this->trans('Please activate the \'mod_auth_basic\' Apache module to allow authentication of PrestaShop\'s webservice.', array(), 'Admin.Advparameters.Notification');
                 }
-                if (!in_array('mod_rewrite', $apache_modules)) {
+                if (!in_array('mod_rewrite', $apache_modules, true)) {
                     $this->warnings[] = $this->trans('Please activate the \'mod_rewrite\' Apache module to allow the PrestaShop webservice.', array(), 'Admin.Advparameters.Notification');
                 }
             } else {

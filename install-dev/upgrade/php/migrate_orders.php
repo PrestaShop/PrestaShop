@@ -113,10 +113,10 @@ function migrate_orders()
                 $order_details['unit_price_tax_excl'] = (float)$products['product_price'];
 
                 foreach (array_keys($order_details) as $k) {
-                    if (!in_array($k, $col_order_detail)) {
+                    if (!in_array($k, $col_order_detail, true)) {
                         unset($order_details[$k]);
                     } else {
-                        if (in_array($order_details[$k], array('product_price', 'reduction_percent', 'reduction_amount', 'group_reduction', 'product_quantity_discount', 'tax_rate', 'ecotax', 'ecotax_tax_rate'))) {
+                        if (in_array($order_details[$k], array('product_price', 'reduction_percent', 'reduction_amount', 'group_reduction', 'product_quantity_discount', 'tax_rate', 'ecotax', 'ecotax_tax_rate'), true)) {
                             $order_details[$k] = (float)$order_details[$k];
                         } else {
                             $order_details[$k] = Db::getInstance()->escape($order_details[$k]);

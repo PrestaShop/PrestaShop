@@ -94,7 +94,7 @@ final class DoctrineQueryParser implements QueryParserInterface
     /**
      * @param float|int $value
      *
-     * @return int|float
+     * @return float|int
      */
     private function parseNumericParameter($value)
     {

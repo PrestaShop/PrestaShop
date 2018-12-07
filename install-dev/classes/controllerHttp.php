@@ -151,7 +151,7 @@ class InstallControllerHttp
             $lang = (isset($detect_language['primarytag'])) ? $detect_language['primarytag'] : false;
         }
 
-        if (!in_array($lang, $this->language->getIsoList())) {
+        if (!in_array($lang, $this->language->getIsoList(), true)) {
             $lang = 'en';
         }
         $this->language->setLanguage($lang);

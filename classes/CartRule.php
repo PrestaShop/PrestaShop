@@ -411,7 +411,7 @@ class CartRuleCore extends ObjectModel
             if ($cart_rule['group_restriction']) {
                 $cartRuleGroups = Db::getInstance()->executeS('SELECT id_group FROM ' . _DB_PREFIX_ . 'cart_rule_group WHERE id_cart_rule = ' . (int) $cart_rule['id_cart_rule']);
                 foreach ($cartRuleGroups as $cartRuleGroup) {
-                    if (in_array($cartRuleGroup['id_group'], $customerGroups)) {
+                    if (in_array($cartRuleGroup['id_group'], $customerGroups, true)) {
                         continue 2;
                     }
                 }
@@ -895,7 +895,7 @@ class CartRuleCore extends ObjectModel
                             $count_matching_products = 0;
                             $matching_products_list = array();
                             foreach ($cart_attributes as $cart_attribute) {
-                                if (in_array($cart_attribute['id_attribute'], $product_rule['values'])) {
+                                if (in_array($cart_attribute['id_attribute'], $product_rule['values'], true)) {
                                     $count_matching_products += $cart_attribute['quantity'];
                                     if (
                                         $alreadyInCart
@@ -925,7 +925,7 @@ class CartRuleCore extends ObjectModel
                             $count_matching_products = 0;
                             $matching_products_list = array();
                             foreach ($cart_products as $cart_product) {
-                                if (in_array($cart_product['id_product'], $product_rule['values'])) {
+                                if (in_array($cart_product['id_product'], $product_rule['values'], true)) {
                                     $count_matching_products += $cart_product['quantity'];
                                     if ($alreadyInCart && $this->gift_product == $cart_product['id_product']) {
                                         --$count_matching_products;
@@ -954,12 +954,12 @@ class CartRuleCore extends ObjectModel
                             $count_matching_products = 0;
                             $matching_products_list = array();
                             foreach ($cart_categories as $cart_category) {
-                                if (in_array($cart_category['id_category'], $product_rule['values'])
+                                if (in_array($cart_category['id_category'], $product_rule['values'], true)
                                     /*
                                      * We also check that the product is not already in the matching product list,
                                      * because there are doubles in the query results (when the product is in multiple categories)
                                      */
-                                    && !in_array($cart_category['id_product'] . '-' . $cart_category['id_product_attribute'], $matching_products_list)) {
+                                    && !in_array($cart_category['id_product'] . '-' . $cart_category['id_product_attribute'], $matching_products_list, true)) {
                                     $count_matching_products += $cart_category['quantity'];
                                     $matching_products_list[] = $cart_category['id_product'] . '-' . $cart_category['id_product_attribute'];
                                 }
@@ -988,7 +988,7 @@ class CartRuleCore extends ObjectModel
                             $count_matching_products = 0;
                             $matching_products_list = array();
                             foreach ($cart_manufacturers as $cart_manufacturer) {
-                                if (in_array($cart_manufacturer['id_manufacturer'], $product_rule['values'])) {
+                                if (in_array($cart_manufacturer['id_manufacturer'], $product_rule['values'], true)) {
                                     $count_matching_products += $cart_manufacturer['quantity'];
                                     $matching_products_list[] = $cart_manufacturer['id_product'] . '-0';
                                 }
@@ -1013,7 +1013,7 @@ class CartRuleCore extends ObjectModel
                             $count_matching_products = 0;
                             $matching_products_list = array();
                             foreach ($cart_suppliers as $cart_supplier) {
-                                if (in_array($cart_supplier['id_supplier'], $product_rule['values'])) {
+                                if (in_array($cart_supplier['id_supplier'], $product_rule['values'], true)) {
                                     $count_matching_products += $cart_supplier['quantity'];
                                     $matching_products_list[] = $cart_supplier['id_product'] . '-0';
                                 }
@@ -1100,7 +1100,7 @@ class CartRuleCore extends ObjectModel
         }
 
         // Free shipping on selected carriers
-        if ($this->free_shipping && in_array($filter, array(CartRule::FILTER_ACTION_ALL, CartRule::FILTER_ACTION_ALL_NOCAP, CartRule::FILTER_ACTION_SHIPPING))) {
+        if ($this->free_shipping && in_array($filter, array(CartRule::FILTER_ACTION_ALL, CartRule::FILTER_ACTION_ALL_NOCAP, CartRule::FILTER_ACTION_SHIPPING), true)) {
             if (!$this->carrier_restriction) {
                 $reduction_value += $context->cart->getOrderTotal($use_tax, Cart::ONLY_SHIPPING, is_null($package) ? null : $package['products'], is_null($package) ? null : $package['id_carrier']);
             } else {
@@ -1119,7 +1119,7 @@ class CartRuleCore extends ObjectModel
             }
         }
 
-        if (in_array($filter, array(CartRule::FILTER_ACTION_ALL, CartRule::FILTER_ACTION_ALL_NOCAP, CartRule::FILTER_ACTION_REDUCTION))) {
+        if (in_array($filter, array(CartRule::FILTER_ACTION_ALL, CartRule::FILTER_ACTION_ALL_NOCAP, CartRule::FILTER_ACTION_REDUCTION), true)) {
             $order_package_products_total = 0;
             if ((float) $this->reduction_amount > 0
                 || $this->reduction_percent && $this->reduction_product == 0) {
@@ -1194,8 +1194,8 @@ class CartRuleCore extends ObjectModel
                 $selected_products = $this->checkProductRestrictionsFromCart($context->cart, true);
                 if (is_array($selected_products)) {
                     foreach ($package_products as $product) {
-                        if (in_array($product['id_product'] . '-' . $product['id_product_attribute'], $selected_products)
-                            || in_array($product['id_product'] . '-0', $selected_products)
+                        if (in_array($product['id_product'] . '-' . $product['id_product_attribute'], $selected_products, true)
+                            || in_array($product['id_product'] . '-0', $selected_products, true)
                             && (($this->reduction_exclude_special && !$product['reduction_applies']) || !$this->reduction_exclude_special)) {
                             $price = $product['price'];
                             if ($use_tax) {
@@ -1327,7 +1327,7 @@ class CartRuleCore extends ObjectModel
         }
 
         // Free gift
-        if ((int) $this->gift_product && in_array($filter, array(CartRule::FILTER_ACTION_ALL, CartRule::FILTER_ACTION_ALL_NOCAP, CartRule::FILTER_ACTION_GIFT))) {
+        if ((int) $this->gift_product && in_array($filter, array(CartRule::FILTER_ACTION_ALL, CartRule::FILTER_ACTION_ALL_NOCAP, CartRule::FILTER_ACTION_GIFT), true)) {
             $id_address = (is_null($package) ? 0 : $package['id_address']);
             foreach ($package_products as $product) {
                 if ($product['id_product'] == $this->gift_product && ($product['id_product_attribute'] == $this->gift_product_attribute || !(int) $this->gift_product_attribute)) {
@@ -1442,7 +1442,7 @@ class CartRuleCore extends ObjectModel
     ) {
         $array = array('selected' => array(), 'unselected' => array());
 
-        if (!in_array($type, array('country', 'carrier', 'group', 'cart_rule', 'shop'))) {
+        if (!in_array($type, array('country', 'carrier', 'group', 'cart_rule', 'shop'), true)) {
             return false;
         }
 
@@ -1467,11 +1467,11 @@ class CartRuleCore extends ObjectModel
 			' . ($i18n ? 'LEFT JOIN `' . _DB_PREFIX_ . $type . '_lang` tl ON (t.id_' . $type . ' = tl.id_' . $type . ' AND tl.id_lang = ' . (int) Context::getContext()->language->id . ')' : '') . '
 			WHERE 1
 			' . ($active_only ? 'AND t.active = 1' : '') . '
-			' . (in_array($type, array('carrier', 'shop')) ? ' AND t.deleted = 0' : '') . '
+			' . (in_array($type, array('carrier', 'shop'), true) ? ' AND t.deleted = 0' : '') . '
 			' . ($type == 'cart_rule' ? 'AND t.id_cart_rule != ' . (int) $this->id : '') .
                 $shop_list .
-                (in_array($type, array('carrier', 'shop')) ? ' ORDER BY t.name ASC ' : '') .
-                (in_array($type, array('country', 'group', 'cart_rule')) && $i18n ? ' ORDER BY tl.name ASC ' : '') .
+                (in_array($type, array('carrier', 'shop'), true) ? ' ORDER BY t.name ASC ' : '') .
+                (in_array($type, array('country', 'group', 'cart_rule'), true) && $i18n ? ' ORDER BY tl.name ASC ' : '') .
                 $sql_limit);
         } else {
             if ($type == 'cart_rule') {
@@ -1485,9 +1485,9 @@ class CartRuleCore extends ObjectModel
 				LEFT JOIN (SELECT id_' . $type . ' FROM `' . _DB_PREFIX_ . 'cart_rule_' . $type . '` WHERE id_cart_rule = ' . (int) $this->id . ') crt ON t.id_' . ($type == 'carrier' ? 'reference' : $type) . ' = crt.id_' . $type . '
 				WHERE 1 ' . ($active_only ? ' AND t.active = 1' : '') .
                     $shop_list
-                    . (in_array($type, array('carrier', 'shop')) ? ' AND t.deleted = 0' : '') .
-                    (in_array($type, array('carrier', 'shop')) ? ' ORDER BY t.name ASC ' : '') .
-                    (in_array($type, array('country', 'group')) && $i18n ? ' ORDER BY tl.name ASC ' : '') .
+                    . (in_array($type, array('carrier', 'shop'), true) ? ' AND t.deleted = 0' : '') .
+                    (in_array($type, array('carrier', 'shop'), true) ? ' ORDER BY t.name ASC ' : '') .
+                    (in_array($type, array('country', 'group'), true) && $i18n ? ' ORDER BY tl.name ASC ' : '') .
                     $sql_limit,
                     false
                 );
@@ -1635,7 +1635,7 @@ class CartRuleCore extends ObjectModel
     public static function cleanProductRuleIntegrity($type, $list)
     {
         // Type must be available in the 'type' enum of the table cart_rule_product_rule
-        if (!in_array($type, array('products', 'categories', 'attributes', 'manufacturers', 'suppliers'))) {
+        if (!in_array($type, array('products', 'categories', 'attributes', 'manufacturers', 'suppliers'), true)) {
             return false;
         }
 
@@ -1714,14 +1714,14 @@ class CartRuleCore extends ObjectModel
         $return = array();
         // Attribute id is not important for this filter in the global list
         // so the ids are replaced by 0
-        if (in_array($ruleType, array('products', 'categories', 'manufacturers', 'suppliers'))) {
+        if (in_array($ruleType, array('products', 'categories', 'manufacturers', 'suppliers'), true)) {
             $productsList = explode(':', preg_replace("#\-[0-9]+#", '-0', implode(':', $products)));
         } else {
             $productsList = $products;
         }
 
         foreach ($productsList as $k => $product) {
-            if (in_array($product, $eligibleProducts)) {
+            if (in_array($product, $eligibleProducts, true)) {
                 $return[] = $products[$k];
             }
         }

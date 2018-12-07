@@ -148,7 +148,7 @@ class PDFCore
      * @param mixed $object
      *
      * @throws PrestaShopException
-     * @return HTMLTemplate|false
+     * @return false|HTMLTemplate
      *
      */
     public function getTemplateObject($object)

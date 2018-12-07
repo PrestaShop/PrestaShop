@@ -170,7 +170,7 @@ class Reader implements ReaderInterface
      *  eg.: en, fr, en_GB, fr_FR...
      *
      * @throws LocalizationException
-     * @return string|null
+     * @return null|string
      *                     The parent locale code (CLDR filenames' style). Null if no parent.
      *
      */
@@ -184,7 +184,7 @@ class Reader implements ReaderInterface
         // The special case from supplemental data
         foreach ($this->supplementalXml->parentLocales->parentLocale as $data) {
             $locales = explode(' ', $data['locales']);
-            if (in_array($localeCode, $locales)) {
+            if (in_array($localeCode, $locales, true)) {
                 return $data['parent'];
             }
         }

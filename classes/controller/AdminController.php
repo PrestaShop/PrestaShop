@@ -773,7 +773,7 @@ class AdminControllerCore extends Controller
         }
 
         foreach ($_GET as $key => $value) {
-            if (is_array($value) || !in_array($key, array('controller', 'controllerUri'))) {
+            if (is_array($value) || !in_array($key, array('controller', 'controllerUri'), true)) {
                 return false;
             }
         }
@@ -781,7 +781,7 @@ class AdminControllerCore extends Controller
         $cookie = Context::getContext()->cookie;
         $whitelist = array('date_add', 'id_lang', 'id_employee', 'email', 'profile', 'passwd', 'remote_addr', 'shopContext', 'collapse_menu', 'checksum');
         foreach ($cookie->getAll() as $key => $value) {
-            if (!in_array($key, $whitelist)) {
+            if (!in_array($key, $whitelist, true)) {
                 unset($cookie->$key);
             }
         }
@@ -917,7 +917,7 @@ class AdminControllerCore extends Controller
     /**
      * @TODO uses redirectAdmin only if !$this->ajax
      *
-     * @return ObjectModel|bool
+     * @return bool|ObjectModel
      */
     public function postProcess()
     {
@@ -979,7 +979,7 @@ class AdminControllerCore extends Controller
     /**
      * Object Delete images.
      *
-     * @return ObjectModel|false
+     * @return false|ObjectModel
      */
     public function processDeleteImage()
     {
@@ -1067,7 +1067,7 @@ class AdminControllerCore extends Controller
      * Object Delete.
      *
      * @throws PrestaShopException
-     * @return ObjectModel|false
+     * @return false|ObjectModel
      *
      */
     public function processDelete()
@@ -1079,7 +1079,7 @@ class AdminControllerCore extends Controller
                 $this->errors[] = $this->trans('You need at least one object.', array(), 'Admin.Notifications.Error') .
                     ' <b>' . $this->table . '</b><br />' .
                     $this->trans('You cannot delete all of the items.', array(), 'Admin.Notifications.Error');
-            } elseif (array_key_exists('delete', $this->list_skip_actions) && in_array($object->id, $this->list_skip_actions['delete'])) { //check if some ids are in list_skip_actions and forbid deletion
+            } elseif (array_key_exists('delete', $this->list_skip_actions) && in_array($object->id, $this->list_skip_actions['delete'], true)) { //check if some ids are in list_skip_actions and forbid deletion
                 $this->errors[] = $this->trans('You cannot delete this item.', array(), 'Admin.Notifications.Error');
             } else {
                 if ($this->deleted) {
@@ -1115,7 +1115,7 @@ class AdminControllerCore extends Controller
     /**
      * Call the right method for creating or updating object.
      *
-     * @return ObjectModel|false|void
+     * @return false|ObjectModel|void
      */
     public function processSave()
     {
@@ -1132,7 +1132,7 @@ class AdminControllerCore extends Controller
      * Object creation.
      *
      * @throws PrestaShopException
-     * @return ObjectModel|false
+     * @return false|ObjectModel
      *
      */
     public function processAdd()
@@ -1185,7 +1185,7 @@ class AdminControllerCore extends Controller
      * Object update.
      *
      * @throws PrestaShopException
-     * @return ObjectModel|false|void
+     * @return false|ObjectModel|void
      *
      */
     public function processUpdate()
@@ -1300,7 +1300,7 @@ class AdminControllerCore extends Controller
      * Change object status (active, inactive).
      *
      * @throws PrestaShopException
-     * @return ObjectModel|false
+     * @return false|ObjectModel
      *
      */
     public function processStatus()
@@ -1335,7 +1335,7 @@ class AdminControllerCore extends Controller
     /**
      * Change object position.
      *
-     * @return ObjectModel|false
+     * @return false|ObjectModel
      */
     public function processPosition()
     {
@@ -1483,7 +1483,7 @@ class AdminControllerCore extends Controller
                     $method_name = 'updateOption' . Tools::toCamelCase($key, true);
                     if (method_exists($this, $method_name)) {
                         $this->$method_name(Tools::getValue($key));
-                    } elseif (isset($options['type']) && in_array($options['type'], array('textLang', 'textareaLang'))) {
+                    } elseif (isset($options['type']) && in_array($options['type'], array('textLang', 'textareaLang'), true)) {
                         $list = array();
                         foreach ($languages as $language) {
                             $key_lang = Tools::getValue($key . '_' . $language['id_lang']);
@@ -1650,7 +1650,7 @@ class AdminControllerCore extends Controller
      *
      * @param bool $opt Return an empty object if load fail
      *
-     * @return ObjectModel|false
+     * @return false|ObjectModel
      */
     protected function loadObject($opt = false)
     {
@@ -2366,7 +2366,7 @@ class AdminControllerCore extends Controller
      * Function used to render the list to display for this controller.
      *
      * @throws PrestaShopException
-     * @return string|false
+     * @return false|string
      *
      */
     public function renderList()
@@ -2415,7 +2415,7 @@ class AdminControllerCore extends Controller
 
         // For compatibility reasons, we have to check standard actions in class attributes
         foreach ($this->actions_available as $action) {
-            if (!in_array($action, $this->actions) && isset($this->$action) && $this->$action) {
+            if (!in_array($action, $this->actions, true) && isset($this->$action) && $this->$action) {
                 $this->actions[] = $action;
             }
         }
@@ -2458,7 +2458,7 @@ class AdminControllerCore extends Controller
     /**
      * Override to render the view page.
      *
-     * @return string|false
+     * @return false|string
      */
     public function renderDetails()
     {
@@ -3463,7 +3463,7 @@ class AdminControllerCore extends Controller
         }
 
         $limit = (int) Tools::getValue($this->list_id . '_pagination', $limit);
-        if (in_array($limit, $this->_pagination) && $limit != $this->_default_pagination) {
+        if (in_array($limit, $this->_pagination, true) && $limit != $this->_default_pagination) {
             $this->context->cookie->{$this->list_id . '_pagination'} = $limit;
         } else {
             unset($this->context->cookie->{$this->list_id . '_pagination'});
@@ -3508,9 +3508,9 @@ class AdminControllerCore extends Controller
                 }
             }
 
-            if (in_array($module->name, $filter_modules_list) && $perm) {
+            if (in_array($module->name, $filter_modules_list, true) && $perm) {
                 $this->fillModuleData($module, 'array', null, $tracking_source);
-                $this->modules_list[array_search($module->name, $filter_modules_list)] = $module;
+                $this->modules_list[array_search($module->name, $filter_modules_list, true)] = $module;
             }
         }
         ksort($this->modules_list);
@@ -3647,7 +3647,7 @@ class AdminControllerCore extends Controller
 
         foreach ($definition['fields'] as $field => $def) {
             $skip = array();
-            if (in_array($field, array('passwd', 'no-picture'))) {
+            if (in_array($field, array('passwd', 'no-picture'), true)) {
                 $skip = array('required');
             }
 
@@ -4308,11 +4308,11 @@ class AdminControllerCore extends Controller
             ((empty($module->confirmUninstall)) ? 'return confirm(\'' . $this->l('Do you really want to uninstall this module?') . '\');' : 'return confirm(\'' . addslashes($module->confirmUninstall) . '\');') :
             $obj->onclickOption('uninstall', $module->options['uninstall_url']));
 
-        if ((Tools::getValue('module_name') == $module->name || in_array($module->name, explode('|', Tools::getValue('modules_list')))) && (int) Tools::getValue('conf') > 0) {
+        if ((Tools::getValue('module_name') == $module->name || in_array($module->name, explode('|', Tools::getValue('modules_list')), true)) && (int) Tools::getValue('conf') > 0) {
             $module->message = $this->_conf[(int) Tools::getValue('conf')];
         }
 
-        if ((Tools::getValue('module_name') == $module->name || in_array($module->name, explode('|', Tools::getValue('modules_list')))) && (int) Tools::getValue('conf') > 0) {
+        if ((Tools::getValue('module_name') == $module->name || in_array($module->name, explode('|', Tools::getValue('modules_list')), true)) && (int) Tools::getValue('conf') > 0) {
             unset($obj);
         }
     }
@@ -4328,7 +4328,7 @@ class AdminControllerCore extends Controller
      * @param null|string $back
      * @param bool|string $install_source_tracking
      *
-     * @return string|array
+     * @return array|string
      */
     public function displayModuleOptions($module, $output_type = 'link', $back = null, $install_source_tracking = false)
     {

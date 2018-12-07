@@ -131,7 +131,7 @@ class HTMLTemplateSupplyOrderFormCore extends HTMLTemplate
      * Get order taxes summary.
      *
      * @throws PrestaShopDatabaseException
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return null|array|false|mysqli_result|PDOStatement|resource
      *
      */
     protected function getTaxOrderSummary()

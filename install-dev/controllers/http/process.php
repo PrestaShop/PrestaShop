@@ -397,7 +397,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
 
         foreach ($cacheFiles as $file) {
             $filepath = $configXMLPath.$file;
-            if (is_file($filepath) && !in_array($file, $excludes)) {
+            if (is_file($filepath) && !in_array($file, $excludes, true)) {
                 unlink($filepath);
             }
         }

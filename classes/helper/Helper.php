@@ -237,14 +237,14 @@ class HelperCore
         if (is_array($selected_cat)) {
             foreach ($selected_cat as $cat) {
                 if (is_array($cat)) {
-                    $disabled = in_array($cat['id_category'], $disabled_categories);
+                    $disabled = in_array($cat['id_category'], $disabled_categories, true);
                     if ($cat['id_category'] != $root['id_category']) {
                         $html .= '<input ' . ($disabled ? 'disabled="disabled"' : '') . ' type="hidden" name="' . $input_name . '" value="' . $cat['id_category'] . '" >';
                     } else {
                         $home_is_selected = true;
                     }
                 } else {
-                    $disabled = in_array($cat, $disabled_categories);
+                    $disabled = in_array($cat, $disabled_categories, true);
                     if ($cat != $root['id_category']) {
                         $html .= '<input ' . ($disabled ? 'disabled="disabled"' : '') . ' type="hidden" name="' . $input_name . '" value="' . $cat . '" >';
                     } else {

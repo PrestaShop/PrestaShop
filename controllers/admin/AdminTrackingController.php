@@ -367,7 +367,7 @@ class AdminTrackingControllerCore extends AdminController
 
         // For compatibility reasons, we have to check standard actions in class attributes
         foreach ($this->actions_available as $action) {
-            if (!in_array($action, $this->actions) && isset($this->$action) && $this->$action) {
+            if (!in_array($action, $this->actions, true) && isset($this->$action) && $this->$action) {
                 $this->actions[] = $action;
             }
         }

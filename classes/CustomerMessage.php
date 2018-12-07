@@ -98,7 +98,7 @@ class CustomerMessageCore extends ObjectModel
      * @param int $idOrder Order ID
      * @param bool $private Private
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return null|array|false|mysqli_result|PDOStatement|resource
      */
     public static function getMessagesByOrderId($idOrder, $private = true)
     {

@@ -89,7 +89,7 @@ function p1606module_exceptions()
 
     foreach ($hook_module_exceptions as $exception) {
         foreach ($modules_controllers as $module => $controllers) {
-            if (in_array($exception['file_name'], $controllers) && !in_array($exception['file_name'], $core_controllers)) {
+            if (in_array($exception['file_name'], $controllers, true) && !in_array($exception['file_name'], $core_controllers, true)) {
                 $sql_delete .= ' `id_hook_module_exceptions` = '.(int)$exception['id_hook_module_exceptions'].' AND';
                 foreach ($controllers as $cont) {
                     if ($exception['file_name'] == $cont) {

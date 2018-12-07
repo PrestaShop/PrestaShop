@@ -43,7 +43,7 @@ require_once(dirname(__FILE__) . '/../utils/ExpressionType.php');
 class ExplainProcessor extends AbstractProcessor {
 
     protected function isStatement($keys, $needle = "EXPLAIN") {
-        $pos = array_search($needle, $keys);
+        $pos = array_search($needle, $keys, true);
         if (isset($keys[$pos + 1])) {
             return in_array($keys[$pos + 1], array('SELECT', 'DELETE', 'INSERT', 'REPLACE', 'UPDATE'), true);
         }

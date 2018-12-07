@@ -1126,7 +1126,7 @@ class ProductCore extends ObjectModel
         $product_cats = array();
 
         foreach ($categories as $new_id_categ) {
-            if (!in_array($new_id_categ, $current_categories)) {
+            if (!in_array($new_id_categ, $current_categories, true)) {
                 $product_cats[] = array(
                     'id_category' => (int) $new_id_categ,
                     'id_product' => (int) $this->id,
@@ -1317,7 +1317,7 @@ class ProductCore extends ObjectModel
         }
 
         $front = true;
-        if (!in_array($context->controller->controller_type, array('front', 'modulefront'))) {
+        if (!in_array($context->controller->controller_type, array('front', 'modulefront'), true)) {
             $front = false;
         }
 
@@ -1369,7 +1369,7 @@ class ProductCore extends ObjectModel
         }
 
         $front = true;
-        if (!in_array($context->controller->controller_type, array('front', 'modulefront'))) {
+        if (!in_array($context->controller->controller_type, array('front', 'modulefront'), true)) {
             $front = false;
         }
 
@@ -1434,7 +1434,7 @@ class ProductCore extends ObjectModel
             if (count($product_attribute) == count($attributes_list)) {
                 $diff = false;
                 for ($i = 0; $diff == false && isset($product_attribute[$i]); ++$i) {
-                    if (!in_array($product_attribute[$i], $attributes_list) || $key == $current_product_attribute) {
+                    if (!in_array($product_attribute[$i], $attributes_list, true) || $key == $current_product_attribute) {
                         $diff = true;
                     }
                 }
@@ -2564,7 +2564,7 @@ class ProductCore extends ObjectModel
         }
 
         $front = true;
-        if (!in_array($context->controller->controller_type, array('front', 'modulefront'))) {
+        if (!in_array($context->controller->controller_type, array('front', 'modulefront'), true)) {
             $front = false;
         }
 
@@ -2717,7 +2717,7 @@ class ProductCore extends ObjectModel
         }
 
         $front = true;
-        if (!in_array($context->controller->controller_type, array('front', 'modulefront'))) {
+        if (!in_array($context->controller->controller_type, array('front', 'modulefront'), true)) {
             $front = false;
         }
 
@@ -2855,7 +2855,7 @@ class ProductCore extends ObjectModel
         }
 
         $front = true;
-        if (!in_array($context->controller->controller_type, array('front', 'modulefront'))) {
+        if (!in_array($context->controller->controller_type, array('front', 'modulefront'), true)) {
             $front = false;
         }
 
@@ -3031,7 +3031,7 @@ class ProductCore extends ObjectModel
 
         $unique_array = array();
         foreach ($data as $sub_array) {
-            if (!in_array($sub_array, $unique_array)) {
+            if (!in_array($sub_array, $unique_array, true)) {
                 $unique_array[] = $sub_array;
             }
         }
@@ -5382,7 +5382,7 @@ class ProductCore extends ObjectModel
         // Hide the modules fields in the front-office
         // When a module adds a customization programmatically, it should set the `is_module` to 1
         $context = Context::getContext();
-        $front = isset($context->controller->controller_type) && in_array($context->controller->controller_type, array('front'));
+        $front = isset($context->controller->controller_type) && in_array($context->controller->controller_type, array('front'), true);
 
         if (!$result = Db::getInstance()->executeS('
             SELECT cf.`id_customization_field`, cf.`type`, cf.`required`, cfl.`name`, cfl.`id_lang`
@@ -5489,7 +5489,7 @@ class ProductCore extends ObjectModel
 
         if (is_array($required_fields) && count($required_fields)) {
             foreach ($required_fields as $required_field) {
-                if (!in_array($required_field, $fields_present)) {
+                if (!in_array($required_field, $fields_present, true)) {
                     return false;
                 }
             }
@@ -5951,14 +5951,14 @@ class ProductCore extends ObjectModel
 
         $to_add = array();
         foreach ($ids_new as $id) {
-            if (!in_array($id, $ids_orig)) {
+            if (!in_array($id, $ids_orig, true)) {
                 $to_add[] = $id;
             }
         }
 
         $to_delete = array();
         foreach ($ids_orig as $id) {
-            if (!in_array($id, $ids_new)) {
+            if (!in_array($id, $ids_new, true)) {
                 $to_delete[] = $id;
             }
         }
@@ -5973,7 +5973,7 @@ class ProductCore extends ObjectModel
 
         foreach ($to_add as $id) {
             // Update id_product if exists else create
-            if (in_array($id, $all_ids)) {
+            if (in_array($id, $all_ids, true)) {
                 Db::getInstance()->execute('UPDATE `' . _DB_PREFIX_ . 'product_attribute` SET id_product = ' . (int) $this->id . ' WHERE id_product_attribute=' . $id);
             } else {
                 Db::getInstance()->execute('INSERT INTO `' . _DB_PREFIX_ . 'product_attribute` (`id_product`) VALUES (' . (int) $this->id . ')');

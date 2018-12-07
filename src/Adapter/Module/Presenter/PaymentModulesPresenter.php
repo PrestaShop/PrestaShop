@@ -93,7 +93,7 @@ class PaymentModulesPresenter
 
         $paymentModulesToDisplay = array();
         foreach ($tabModuleNames as $moduleName) {
-            if (!in_array($moduleName, $installedModuleNames) ||
+            if (!in_array($moduleName, $installedModuleNames, true) ||
                 !$this->moduleDataProvider->can('configure', $moduleName)
             ) {
                 continue;

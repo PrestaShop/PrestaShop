@@ -525,7 +525,7 @@ class ThemeManager implements AddonManagerInterface
         foreach ($messageCatalog->all() as $domain => $messages) {
             $domain = str_replace('.' . $locale, '', $domain);
 
-            if (in_array($domain, $allDomains)) {
+            if (in_array($domain, $allDomains, true)) {
                 continue;
             }
 

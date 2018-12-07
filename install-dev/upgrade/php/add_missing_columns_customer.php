@@ -49,7 +49,7 @@ function add_missing_columns_customer()
     );
 
     foreach ($missing_fields as $field => $query) {
-        if (!in_array($field, $current_fields)) {
+        if (!in_array($field, $current_fields, true)) {
             $res &= $db->execute($query);
         }
     }

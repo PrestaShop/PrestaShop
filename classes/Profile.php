@@ -128,7 +128,7 @@ class ProfileCore extends ObjectModel
      */
     public static function getProfileAccesses($idProfile, $type = 'id_tab')
     {
-        if (!in_array($type, array('id_tab', 'class_name'))) {
+        if (!in_array($type, array('id_tab', 'class_name'), true)) {
             return false;
         }
 
@@ -177,7 +177,7 @@ class ProfileCore extends ObjectModel
                 foreach ($result as $row) {
                     $tab = self::findTabTypeInformationByAuthSlug($type, $row['slug']);
 
-                    self::$_cache_accesses[$idProfile][$type][$tab][array_search('1', $row)] = '1';
+                    self::$_cache_accesses[$idProfile][$type][$tab][array_search('1', $row, true)] = '1';
                 }
             }
         }

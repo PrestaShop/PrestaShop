@@ -168,7 +168,7 @@ function p15012_add_missing_columns()
         if (is_array($cols)) {
             foreach ($cols as $col => $q) {
                 // do only if column exists
-                if (is_array($list_fields) && in_array($col, $list_fields)) {
+                if (is_array($list_fields) && in_array($col, $list_fields, true)) {
                     $do = 'mod';
                 } else {
                     $do = 'add';

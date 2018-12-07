@@ -85,7 +85,7 @@ final class FilterParametersUpdater
      * @param array $defaultFilterParameters
      *
      * @throws ProductException
-     * @return string|int
+     * @return int|string
      *
      */
     private function getParameter(

@@ -416,7 +416,7 @@ class EmployeeCore extends ObjectModel
      * @param int $idProfile Profile ID
      * @param bool $activeOnly Only active Employees
      *
-     * @return false|null|string
+     * @return null|false|string
      */
     public static function countProfile($idProfile, $activeOnly = false)
     {
@@ -506,7 +506,7 @@ class EmployeeCore extends ObjectModel
     /**
      * Get favorite Module list.
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return null|array|false|mysqli_result|PDOStatement|resource
      */
     public function favoriteModulesList()
     {
@@ -529,7 +529,7 @@ class EmployeeCore extends ObjectModel
      */
     public function hasAuthOnShop($idShop)
     {
-        return $this->isSuperAdmin() || in_array($idShop, $this->associated_shops);
+        return $this->isSuperAdmin() || in_array($idShop, $this->associated_shops, true);
     }
 
     /**
@@ -565,7 +565,7 @@ class EmployeeCore extends ObjectModel
      */
     public function getDefaultShopID()
     {
-        if ($this->isSuperAdmin() || in_array(Configuration::get('PS_SHOP_DEFAULT'), $this->associated_shops)) {
+        if ($this->isSuperAdmin() || in_array(Configuration::get('PS_SHOP_DEFAULT'), $this->associated_shops, true)) {
             return Configuration::get('PS_SHOP_DEFAULT');
         }
 
@@ -578,7 +578,7 @@ class EmployeeCore extends ObjectModel
      * @param int $idProfile Profile ID
      * @param bool $activeOnly Only active Employees
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return null|array|false|mysqli_result|PDOStatement|resource
      */
     public static function getEmployeesByProfile($idProfile, $activeOnly = false)
     {

@@ -1211,7 +1211,7 @@ class CartCore extends ObjectModel
             Pack::STOCK_TYPE_PRODUCTS_ONLY,
             Pack::STOCK_TYPE_PACK_BOTH,
         );
-        $packStockTypesDefaultSupported = (int) in_array($defaultPackStockType, $packStockTypesAllowed);
+        $packStockTypesDefaultSupported = (int) in_array($defaultPackStockType, $packStockTypesAllowed, true);
         $firstUnionSql = 'SELECT cp.`quantity` as first_level_quantity, 0 as pack_quantity
           FROM `' . _DB_PREFIX_ . 'cart_product` cp';
         $secondUnionSql = 'SELECT 0 as first_level_quantity, cp.`quantity` * p.`quantity` as pack_quantity
@@ -1915,7 +1915,7 @@ class CartCore extends ObjectModel
             Cart::ONLY_WRAPPING,
             Cart::ONLY_PHYSICAL_PRODUCTS_WITHOUT_SHIPPING,
         );
-        if (!in_array($type, $allowedTypes)) {
+        if (!in_array($type, $allowedTypes, true)) {
             throw new \Exception('Invalid calculation type: ' . $type);
         }
 
@@ -1954,7 +1954,7 @@ class CartCore extends ObjectModel
 
         // CART CALCULATION
         $cartRules = array();
-        if (in_array($type, array(Cart::BOTH, Cart::ONLY_DISCOUNTS))) {
+        if (in_array($type, array(Cart::BOTH, Cart::ONLY_DISCOUNTS), true)) {
             $cartRules = $this->getCartRules();
         }
         $calculator = $this->newCalculator($products, $cartRules, $id_carrier);
@@ -2163,7 +2163,7 @@ class CartCore extends ObjectModel
     /**
      * @param $product
      *
-     * @return int|null
+     * @return null|int
      */
     public function getProductAddressId($product)
     {
@@ -2565,7 +2565,7 @@ class CartCore extends ObjectModel
         foreach ($package['warehouse_list'] as $id_warehouse) {
             $warehouse = new Warehouse((int) $id_warehouse);
             $available_warehouse_carriers = $warehouse->getCarriers();
-            if (in_array($id_carrier, $available_warehouse_carriers)) {
+            if (in_array($id_carrier, $available_warehouse_carriers, true)) {
                 return (int) $id_warehouse;
             }
         }
@@ -2813,11 +2813,11 @@ class CartCore extends ObjectModel
             $total_price += $cart_rule['minimum_amount_tax'] && $cart_rule['minimum_amount_shipping'] ? $real_best_price : 0;
             $total_price += !$cart_rule['minimum_amount_tax'] && $cart_rule['minimum_amount_shipping'] ? $real_best_price_wt : 0;
             if ($cart_rule['free_shipping'] && $cart_rule['carrier_restriction']
-                && in_array($cart_rule['id_cart_rule'], $cart_rules_in_cart)
+                && in_array($cart_rule['id_cart_rule'], $cart_rules_in_cart, true)
                 && $cart_rule['minimum_amount'] <= $total_price) {
                 $cr = new CartRule((int) $cart_rule['id_cart_rule']);
                 if (Validate::isLoadedObject($cr) &&
-                    $cr->checkValidity($context, in_array((int) $cart_rule['id_cart_rule'], $cart_rules_in_cart), false, false)) {
+                    $cr->checkValidity($context, in_array((int) $cart_rule['id_cart_rule'], $cart_rules_in_cart, true), false, false)) {
                     $carriers = $cr->getAssociatedRestrictions('carrier', true, false);
                     if (is_array($carriers) && count($carriers) && isset($carriers['selected'])) {
                         foreach ($carriers['selected'] as $carrier) {
@@ -2842,7 +2842,7 @@ class CartCore extends ObjectModel
                 foreach ($value['carrier_list'] as $id_carrier => $data) {
                     $total_price_with_tax += $data['price_with_tax'];
                     $total_price_without_tax += $data['price_without_tax'];
-                    $total_price_without_tax_with_rules = (in_array($id_carrier, $free_carriers_rules)) ? 0 : $total_price_without_tax;
+                    $total_price_without_tax_with_rules = (in_array($id_carrier, $free_carriers_rules, true)) ? 0 : $total_price_without_tax;
 
                     if (!isset($carrier_collection[$id_carrier])) {
                         $carrier_collection[$id_carrier] = new Carrier($id_carrier);
@@ -2930,7 +2930,7 @@ class CartCore extends ObjectModel
             return false;
         }
 
-        if (!in_array($id_carrier, array_keys($delivery_option_list[$id_address][$delivery_option[$id_address]]['carrier_list']))) {
+        if (!in_array($id_carrier, array_keys($delivery_option_list[$id_address][$delivery_option[$id_address]]['carrier_list']), true)) {
             return false;
         }
 
@@ -3206,7 +3206,7 @@ class CartCore extends ObjectModel
                 } elseif (Configuration::get('PS_CARRIER_DEFAULT') == -2 && $option['is_best_grade']) {
                     $delivery_option[$id_address] = $key;
                     break;
-                } elseif ($option['unique_carrier'] && in_array(Configuration::get('PS_CARRIER_DEFAULT'), array_keys($option['carrier_list']))) {
+                } elseif ($option['unique_carrier'] && in_array(Configuration::get('PS_CARRIER_DEFAULT'), array_keys($option['carrier_list']), true)) {
                     $delivery_option[$id_address] = $key;
                     break;
                 }
@@ -4062,7 +4062,7 @@ class CartCore extends ObjectModel
      *
      * @param int $id_order
      *
-     * @return Cart|bool
+     * @return bool|Cart
      */
     public static function getCartByOrderId($id_order)
     {
@@ -4906,7 +4906,7 @@ class CartCore extends ObjectModel
     {
         $addresses_without_carriers = array();
         foreach ($this->getProducts(false, false, null, false) as $product) {
-            if (!in_array($product['id_address_delivery'], $addresses_without_carriers)
+            if (!in_array($product['id_address_delivery'], $addresses_without_carriers, true)
                 && !count(Carrier::getAvailableCarrierList(new Product($product['id_product']), null, $product['id_address_delivery'], null, null, $error))) {
                 $addresses_without_carriers[] = $product['id_address_delivery'];
             }
@@ -4960,7 +4960,7 @@ class CartCore extends ObjectModel
     /**
      * Get products with gifts and manually added occurrences separated.
      *
-     * @return array|null
+     * @return null|array
      */
     public function getProductsWithSeparatedGifts()
     {

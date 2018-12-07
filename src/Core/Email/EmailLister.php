@@ -66,7 +66,7 @@ class EmailLister
                 }
 
                 $mail_name_no_ext = $tmp[0];
-                if (!in_array($mail_name_no_ext, $mail_list)) {
+                if (!in_array($mail_name_no_ext, $mail_list, true)) {
                     $mail_list[] = $mail_name_no_ext;
                 }
             }

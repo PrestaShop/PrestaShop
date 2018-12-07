@@ -270,7 +270,7 @@ class PaymentModulePreferencesType extends TranslatorAwareType
 
         foreach ($limitedCountryIsoCodes as $isoCode) {
             $countryId = $this->countryDataProvider->getIdByIsoCode($isoCode);
-            $countryValueIndex = array_search($countryId, $this->countryChoices);
+            $countryValueIndex = array_search($countryId, $this->countryChoices, true);
             if (false !== $countryId && false !== $countryValueIndex) {
                 $countryChoices[] = $this->countryChoices[$countryValueIndex];
             }

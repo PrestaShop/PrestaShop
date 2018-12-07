@@ -125,7 +125,7 @@ final class ColumnCollection extends AbstractCollection implements ColumnCollect
             ));
         }
 
-        $existingColumnKeyPosition = array_search($id, array_keys($this->items));
+        $existingColumnKeyPosition = array_search($id, array_keys($this->items), true);
 
         if (self::POSITION_AFTER === $position) {
             ++$existingColumnKeyPosition;

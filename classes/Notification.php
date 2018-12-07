@@ -150,7 +150,7 @@ class NotificationCore
      */
     public function updateEmployeeLastElement($type)
     {
-        if (in_array($type, $this->types)) {
+        if (in_array($type, $this->types, true)) {
             // We update the last item viewed
             return Db::getInstance()->execute('
 			UPDATE `' . _DB_PREFIX_ . 'employee`

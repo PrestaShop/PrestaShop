@@ -85,7 +85,7 @@ class SearchAndResetType extends AbstractType
             );
         }
 
-        if (in_array(null, array($resetUrl, $redirectUrl))) {
+        if (in_array(null, array($resetUrl, $redirectUrl), true)) {
             throw new LogicException(sprintf(
                 'You must configure "reset_route" and "redirect_route" options for "%s" type.',
                 self::class

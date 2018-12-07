@@ -208,7 +208,7 @@ class XmlLoader
                 if (isset($dependencies[$entity])) {
                     $min = count($entities) - 1;
                     foreach ($dependencies[$entity] as $item) {
-                        if (($key = array_search($item, $sort_entities)) !== false) {
+                        if (($key = array_search($item, $sort_entities, true)) !== false) {
                             $min = min($min, $key);
                         }
                     }
@@ -854,7 +854,7 @@ class XmlLoader
 
         $list = array();
         foreach ($columns[$table] as $k => $v) {
-            if (!in_array($k, $exclude)) {
+            if (!in_array($k, $exclude, true)) {
                 $list[$k] = $v;
             }
         }
@@ -1077,7 +1077,7 @@ class XmlLoader
                 if (isset($dependencies[$entity])) {
                     $min = count($entities) - 1;
                     foreach ($dependencies[$entity] as $item) {
-                        if (($key = array_search($item, $sort_entities)) !== false) {
+                        if (($key = array_search($item, $sort_entities, true)) !== false) {
                             $min = min($min, $key);
                         }
                     }
@@ -1314,7 +1314,7 @@ class XmlLoader
 
             $store_identifier = $value;
             $i = 1;
-            while (in_array($store_identifier, $ids[$entity])) {
+            while (in_array($store_identifier, $ids[$entity], true)) {
                 $store_identifier = $value . '_' . $i++;
             }
             $ids[$entity][$primary] = $store_identifier;

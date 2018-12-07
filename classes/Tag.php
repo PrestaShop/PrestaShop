@@ -119,7 +119,7 @@ class TagCore extends ObjectModel
                     $tagObj->id_lang = (int) $idLang;
                     $tagObj->add();
                 }
-                if (!in_array($tagObj->id, $list)) {
+                if (!in_array($tagObj->id, $list, true)) {
                     $list[] = $tagObj->id;
                 }
             }

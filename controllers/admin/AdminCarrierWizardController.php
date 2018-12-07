@@ -439,7 +439,7 @@ class AdminCarrierWizardControllerCore extends AdminController
         $groups = Group::getGroups($this->context->language->id);
 
         foreach ($groups as $group) {
-            $fields_value['groupBox_' . $group['id_group']] = Tools::getValue('groupBox_' . $group['id_group'], (in_array($group['id_group'], $carrier_groups_ids) || empty($carrier_groups_ids) && !$carrier->id));
+            $fields_value['groupBox_' . $group['id_group']] = Tools::getValue('groupBox_' . $group['id_group'], (in_array($group['id_group'], $carrier_groups_ids, true) || empty($carrier_groups_ids) && !$carrier->id));
         }
 
         return $this->renderGenericForm(array('form' => $this->fields_form), $fields_value);
@@ -503,7 +503,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 
         $zones = Zone::getZones(false);
         foreach ($zones as $zone) {
-            $fields_value['zones'][$zone['id_zone']] = Tools::getValue('zone_' . $zone['id_zone'], (in_array($zone['id_zone'], $carrier_zones_ids)));
+            $fields_value['zones'][$zone['id_zone']] = Tools::getValue('zone_' . $zone['id_zone'], (in_array($zone['id_zone'], $carrier_zones_ids, true)));
         }
 
         if ($shipping_method == Carrier::SHIPPING_METHOD_FREE) {
@@ -610,7 +610,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 
             return;
         }
-        if ((!(int) $shipping_method = Tools::getValue('shipping_method')) || !in_array($shipping_method, array(Carrier::SHIPPING_METHOD_PRICE, Carrier::SHIPPING_METHOD_WEIGHT))) {
+        if ((!(int) $shipping_method = Tools::getValue('shipping_method')) || !in_array($shipping_method, array(Carrier::SHIPPING_METHOD_PRICE, Carrier::SHIPPING_METHOD_WEIGHT), true)) {
             return;
         }
 
@@ -937,7 +937,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 
         $definition = ObjectModel::getDefinition('Carrier');
         foreach ($definition['fields'] as $field => $def) {
-            if (is_array($step_fields[$step_number]) && !in_array($field, $step_fields[$step_number])) {
+            if (is_array($step_fields[$step_number]) && !in_array($field, $step_fields[$step_number], true)) {
                 unset($definition['fields'][$field]);
             }
         }

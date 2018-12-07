@@ -154,7 +154,7 @@ class AdminCartRulesControllerCore extends AdminController
                         if (is_array($rule_array = Tools::getValue('product_rule_' . $rule_group_id)) && count($rule_array)) {
                             foreach ($rule_array as $rule_id) {
                                 if (Tools::getValue('product_rule_' . $rule_group_id . '_' . $rule_id . '_type') == 'products'
-                                    && in_array($reduction_product, Tools::getValue('product_rule_select_' . $rule_group_id . '_' . $rule_id))) {
+                                    && in_array($reduction_product, Tools::getValue('product_rule_select_' . $rule_group_id . '_' . $rule_id), true)) {
                                     $already_restricted = true;
                                     break 2;
                                 }
@@ -170,7 +170,7 @@ class AdminCartRulesControllerCore extends AdminController
                     $rule_group_id = 1;
                     if (is_array($rule_group_array)) {
                         // Empty for (with a ; at the end), that just find the first rule_group_id available in rule_group_array
-                        for ($rule_group_id = 1; in_array($rule_group_id, $rule_group_array); ++$rule_group_id) {
+                        for ($rule_group_id = 1; in_array($rule_group_id, $rule_group_array, true); ++$rule_group_id) {
                             42;
                         }
                         $_POST['product_rule_group'][] = $rule_group_id;
@@ -440,7 +440,7 @@ class AdminCartRulesControllerCore extends AdminController
 				WHERE agl.id_lang = ' . (int) Context::getContext()->language->id . '
 				ORDER BY agl.name, al.name');
                 foreach ($results as $row) {
-                    $attributes[in_array($row['id'], $selected) ? 'selected' : 'unselected'][] = $row;
+                    $attributes[in_array($row['id'], $selected, true) ? 'selected' : 'unselected'][] = $row;
                 }
                 Context::getContext()->smarty->assign('product_rule_itemlist', $attributes);
                 $choose_content = $this->createTemplate('controllers/cart_rules/product_rule_itemlist.tpl')->fetch();
@@ -458,7 +458,7 @@ class AdminCartRulesControllerCore extends AdminController
 				WHERE id_lang = ' . (int) Context::getContext()->language->id . '
 				ORDER BY name');
                 foreach ($results as $row) {
-                    $products[in_array($row['id'], $selected) ? 'selected' : 'unselected'][] = $row;
+                    $products[in_array($row['id'], $selected, true) ? 'selected' : 'unselected'][] = $row;
                 }
                 Context::getContext()->smarty->assign('product_rule_itemlist', $products);
                 $choose_content = $this->createTemplate('product_rule_itemlist.tpl')->fetch();
@@ -471,7 +471,7 @@ class AdminCartRulesControllerCore extends AdminController
 				FROM ' . _DB_PREFIX_ . 'manufacturer
 				ORDER BY name');
                 foreach ($results as $row) {
-                    $products[in_array($row['id'], $selected) ? 'selected' : 'unselected'][] = $row;
+                    $products[in_array($row['id'], $selected, true) ? 'selected' : 'unselected'][] = $row;
                 }
                 Context::getContext()->smarty->assign('product_rule_itemlist', $products);
                 $choose_content = $this->createTemplate('product_rule_itemlist.tpl')->fetch();
@@ -484,7 +484,7 @@ class AdminCartRulesControllerCore extends AdminController
 				FROM ' . _DB_PREFIX_ . 'supplier
 				ORDER BY name');
                 foreach ($results as $row) {
-                    $products[in_array($row['id'], $selected) ? 'selected' : 'unselected'][] = $row;
+                    $products[in_array($row['id'], $selected, true) ? 'selected' : 'unselected'][] = $row;
                 }
                 Context::getContext()->smarty->assign('product_rule_itemlist', $products);
                 $choose_content = $this->createTemplate('product_rule_itemlist.tpl')->fetch();
@@ -502,7 +502,7 @@ class AdminCartRulesControllerCore extends AdminController
 				WHERE id_lang = ' . (int) Context::getContext()->language->id . '
 				ORDER BY name');
                 foreach ($results as $row) {
-                    $categories[in_array($row['id'], $selected) ? 'selected' : 'unselected'][] = $row;
+                    $categories[in_array($row['id'], $selected, true) ? 'selected' : 'unselected'][] = $row;
                 }
                 Context::getContext()->smarty->assign('product_rule_itemlist', $categories);
                 $choose_content = $this->createTemplate('product_rule_itemlist.tpl')->fetch();

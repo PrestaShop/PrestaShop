@@ -35,7 +35,7 @@ function generic_add_missing_column($table, $column_to_add)
         }
 
         foreach ($column_to_add as $name => $details) {
-            if (!in_array($name, $column_formated)) {
+            if (!in_array($name, $column_formated, true)) {
                 $res &= Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.$table.'` ADD COLUMN `'.$name.'` '.$details);
             }
         }

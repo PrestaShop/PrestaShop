@@ -462,7 +462,7 @@ class AdminCustomersControllerCore extends AdminController
             $visitor_group = Configuration::get('PS_UNIDENTIFIED_GROUP');
             $guest_group = Configuration::get('PS_GUEST_GROUP');
             foreach ($groups as $key => $g) {
-                if (in_array($g['id_group'], array($visitor_group, $guest_group))) {
+                if (in_array($g['id_group'], array($visitor_group, $guest_group), true)) {
                     unset($groups[$key]);
                 }
             }
@@ -597,7 +597,7 @@ class AdminCustomersControllerCore extends AdminController
 
         foreach ($groups as $group) {
             $this->fields_value['groupBox_' . $group['id_group']] =
-                Tools::getValue('groupBox_' . $group['id_group'], in_array($group['id_group'], $customer_groups_ids));
+                Tools::getValue('groupBox_' . $group['id_group'], in_array($group['id_group'], $customer_groups_ids, true));
         }
 
         return parent::renderForm();
@@ -934,7 +934,7 @@ class AdminCustomersControllerCore extends AdminController
     public function processSave()
     {
         // Check that default group is selected
-        if (!is_array(Tools::getValue('groupBox')) || !in_array(Tools::getValue('id_default_group'), Tools::getValue('groupBox'))) {
+        if (!is_array(Tools::getValue('groupBox')) || !in_array(Tools::getValue('id_default_group'), Tools::getValue('groupBox'), true)) {
             $this->errors[] = $this->trans('A default customer group must be selected in group box.', array(), 'Admin.Orderscustomers.Notification');
         }
 

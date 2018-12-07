@@ -546,7 +546,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
 
         // Database insertion
         if (Shop::checkIdShopDefault($this->def['table'])) {
-            $this->id_shop_default = (in_array(Configuration::get('PS_SHOP_DEFAULT'), $id_shop_list) == true) ? Configuration::get('PS_SHOP_DEFAULT') : min($id_shop_list);
+            $this->id_shop_default = (in_array(Configuration::get('PS_SHOP_DEFAULT'), $id_shop_list, true) == true) ? Configuration::get('PS_SHOP_DEFAULT') : min($id_shop_list);
         }
         if (!$result = Db::getInstance()->insert($this->def['table'], $this->getFields(), $null_values)) {
             return false;
@@ -608,7 +608,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      * saves them in a new row and loads newly saved values as a new object.
      *
      * @throws PrestaShopDatabaseException
-     * @return ObjectModel|false
+     * @return false|ObjectModel
      *
      */
     public function duplicateObject()
@@ -723,7 +723,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
         }
 
         if (Shop::checkIdShopDefault($this->def['table']) && !$this->id_shop_default) {
-            $this->id_shop_default = (in_array(Configuration::get('PS_SHOP_DEFAULT'), $id_shop_list) == true) ? Configuration::get('PS_SHOP_DEFAULT') : min($id_shop_list);
+            $this->id_shop_default = (in_array(Configuration::get('PS_SHOP_DEFAULT'), $id_shop_list, true) == true) ? Configuration::get('PS_SHOP_DEFAULT') : min($id_shop_list);
         }
         // Database update
         if (!$result = Db::getInstance()->update($this->def['table'], $this->getFields(), '`' . pSQL($this->def['primary']) . '` = ' . (int) $this->id, 0, $null_values)) {
@@ -960,7 +960,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
             if ((!$this->id_lang && isset($this->{$field_name}[$id_language]) && !empty($this->{$field_name}[$id_language]))
             || ($this->id_lang && isset($this->$field_name) && !empty($this->$field_name))) {
                 $fields[$id_language][$field_name] = $this->id_lang ? pSQL($this->$field_name, $html) : pSQL($this->{$field_name}[$id_language], $html);
-            } elseif (in_array($field_name, $this->fieldsRequiredLang)) {
+            } elseif (in_array($field_name, $this->fieldsRequiredLang, true)) {
                 $fields[$id_language][$field_name] = pSQL($this->id_lang ? $this->$field_name : $this->{$field_name}[Configuration::get('PS_LANG_DEFAULT')], $html);
             } else {
                 $fields[$id_language][$field_name] = '';
@@ -1085,7 +1085,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
         // Check if field is required
         $required_fields = $this->getCachedFieldsRequiredDatabase();
         if (!$id_lang || $id_lang == $ps_lang_default) {
-            if (!in_array('required', $skip) && (!empty($data['required']) || in_array($field, $required_fields))) {
+            if (!in_array('required', $skip, true) && (!empty($data['required']) || in_array($field, $required_fields, true))) {
                 if (Tools::isEmpty($value)) {
                     if ($human_errors) {
                         return $this->trans('The %s field is required.', array($this->displayFieldName($field, get_class($this))), 'Admin.Notifications.Error');
@@ -1103,12 +1103,12 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
         }
 
         // Check field values
-        if (!in_array('values', $skip) && !empty($data['values']) && is_array($data['values']) && !in_array($value, $data['values'])) {
+        if (!in_array('values', $skip, true) && !empty($data['values']) && is_array($data['values']) && !in_array($value, $data['values'], true)) {
             return $this->trans('Property %1$s has a bad value (allowed values are: %2$s).', array(get_class($this) . '->' . $field, implode(', ', $data['values'])), 'Admin.Notifications.Error');
         }
 
         // Check field size
-        if (!in_array('size', $skip) && !empty($data['size'])) {
+        if (!in_array('size', $skip, true) && !empty($data['size'])) {
             $size = $data['size'];
             if (!is_array($data['size'])) {
                 $size = array('min' => 0, 'max' => $data['size']);
@@ -1140,7 +1140,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
         }
 
         // Check field validator
-        if (!in_array('validate', $skip) && !empty($data['validate'])) {
+        if (!in_array('validate', $skip, true) && !empty($data['validate'])) {
             if (!method_exists('Validate', $data['validate'])) {
                 throw new PrestaShopException(
                     $this->trans(
@@ -1217,7 +1217,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
         foreach ($this->def['fields'] as $field => $data) {
             $value = Tools::getValue($field, $this->{$field});
             // Check if field is required by user
-            if (in_array($field, $required_fields_database)) {
+            if (in_array($field, $required_fields_database, true)) {
                 $data['required'] = true;
             }
 
@@ -1334,7 +1334,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
             } else {
                 $current_field['i18n'] = false;
             }
-            if ((isset($details['required']) && $details['required'] === true) || in_array($field_name, $required_fields)) {
+            if ((isset($details['required']) && $details['required'] === true) || in_array($field_name, $required_fields, true)) {
                 $current_field['required'] = true;
             } else {
                 $current_field['required'] = false;
@@ -1376,7 +1376,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      * @param string $sql_limit
      *
      * @throws PrestaShopDatabaseException
-     * @return array|null
+     * @return null|array
      *
      */
     public function getWebserviceObjectList($sql_join, $sql_filter, $sql_sort, $sql_limit)
@@ -1430,7 +1430,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
         $required_fields = $this->getCachedFieldsRequiredDatabase();
 
         foreach ($this->def['fields'] as $field => $data) {
-            if (!in_array($field, $required_fields)) {
+            if (!in_array($field, $required_fields, true)) {
                 continue;
             }
 
@@ -1454,7 +1454,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      * @param bool $all if true, returns required fields of all object classes
      *
      * @throws PrestaShopDatabaseException
-     * @return array|null
+     * @return null|array
      *
      */
     public function getFieldsRequiredDatabase($all = false)

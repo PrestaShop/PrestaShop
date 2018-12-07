@@ -298,7 +298,7 @@ class HookCore extends ObjectModel
             }
 
             $retroName = array_keys(array_filter($aliasesList, function ($elem) use ($hookName) {
-                return in_array($hookName, $elem);
+                return in_array($hookName, $elem, true);
             }));
 
             if (empty($retroName)) {
@@ -378,7 +378,7 @@ class HookCore extends ObjectModel
             return $alias_list[mb_strtolower($hook_name)];
         }
 
-        $retro_hook_name = array_search($hook_name, $alias_list);
+        $retro_hook_name = array_search($hook_name, $alias_list, true);
         if ($retro_hook_name === false) {
             return '';
         }
@@ -544,7 +544,7 @@ class HookCore extends ObjectModel
                     'position' => (int) ($position + 1),
                 ));
 
-                if (!in_array($shop_id, $shop_list_employee)) {
+                if (!in_array($shop_id, $shop_list_employee, true)) {
                     $where = '`id_module` = ' . (int) $module_instance->id . ' AND `id_shop` = ' . (int) $shop_id;
                     $return &= Db::getInstance()->delete('module_shop', $where);
                 }
@@ -702,7 +702,7 @@ class HookCore extends ObjectModel
             }
             if (isset($list[$retro_hook_name])) {
                 foreach ($list[$retro_hook_name] as $retro_module_call) {
-                    if (!in_array($retro_module_call['id_module'], $inserted_modules)) {
+                    if (!in_array($retro_module_call['id_module'], $inserted_modules, true)) {
                         $return[] = $retro_module_call;
                     }
                 }
@@ -840,7 +840,7 @@ class HookCore extends ObjectModel
                 continue;
             }
 
-            if ((bool) $disable_non_native_modules && Hook::$native_module && count(Hook::$native_module) && !in_array($array['module'], Hook::$native_module)) {
+            if ((bool) $disable_non_native_modules && Hook::$native_module && count(Hook::$native_module) && !in_array($array['module'], Hook::$native_module, true)) {
                 continue;
             }
 
@@ -862,7 +862,7 @@ class HookCore extends ObjectModel
                     $controller = 'module-' . $controller_obj->module->name . '-' . $controller;
                 }
 
-                if (in_array($controller, $exceptions)) {
+                if (in_array($controller, $exceptions, true)) {
                     continue;
                 }
 
@@ -870,7 +870,7 @@ class HookCore extends ObjectModel
                 $matching_name = array(
                     'authentication' => 'auth',
                 );
-                if (isset($matching_name[$controller]) && in_array($matching_name[$controller], $exceptions)) {
+                if (isset($matching_name[$controller]) && in_array($matching_name[$controller], $exceptions, true)) {
                     continue;
                 }
                 if (Validate::isLoadedObject($context->employee) && !Module::getPermissionStatic($array['id_module'], 'view', $context->employee)) {

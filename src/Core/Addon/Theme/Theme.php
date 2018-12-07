@@ -84,7 +84,7 @@ class Theme implements AddonInterface
                     if (is_array($module)) {
                         $module = key($module);
                     }
-                    if (null !== $module && !in_array($module, $modulesToEnable)) {
+                    if (null !== $module && !in_array($module, $modulesToEnable, true)) {
                         $modulesToEnable[] = $module;
                     }
                 }

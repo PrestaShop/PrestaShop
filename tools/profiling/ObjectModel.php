@@ -40,7 +40,7 @@ abstract class ObjectModel extends ObjectModelCore
         $class_list = array('ObjectModel', 'ObjectModelCore', $classname, $classname.'Core');
         $backtrace = debug_backtrace();
         foreach ($backtrace as $trace_id => $row) {
-            if (!isset($backtrace[$trace_id]['class']) || !in_array($backtrace[$trace_id]['class'], $class_list)) {
+            if (!isset($backtrace[$trace_id]['class']) || !in_array($backtrace[$trace_id]['class'], $class_list, true)) {
                 break;
             }
         }

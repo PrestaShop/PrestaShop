@@ -370,7 +370,7 @@ class CronJobs extends Module
             return true;
         }
 
-        return in_array(Tools::getRemoteAddr(), array('127.0.0.1', '::1')) || preg_match('/^172\.16\.|^192\.168\.|^10\.|^127\.|^localhost|\.local$/', Configuration::get('PS_SHOP_DOMAIN'));
+        return in_array(Tools::getRemoteAddr(), array('127.0.0.1', '::1'), true) || preg_match('/^172\.16\.|^192\.168\.|^10\.|^127\.|^localhost|\.local$/', Configuration::get('PS_SHOP_DOMAIN'));
     }
 
     protected function renderForm($form, $form_values, $action, $cancel = false, $back_url = false, $update = false)

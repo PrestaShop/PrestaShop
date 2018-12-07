@@ -295,7 +295,7 @@ class gamification extends Module
                 $this->processCleanAdvices(array_merge($data->advices, $data->advices_16));
 
                 if (function_exists('openssl_verify') && self::TEST_MODE === false) {
-                    if (!openssl_verify(Tools::jsonencode(array($data->conditions, $data->advices_lang)), base64_decode($data->signature), file_get_contents(dirname(__FILE__).'/prestashop.pub'))) {
+                    if (!openssl_verify(Tools::jsonencode(array($data->conditions, $data->advices_lang)), base64_decode($data->signature, true), file_get_contents(dirname(__FILE__).'/prestashop.pub'))) {
                         return false;
                     }
                 }
@@ -314,7 +314,7 @@ class gamification extends Module
                 }
 
                 if (function_exists('openssl_verify') && self::TEST_MODE === false) {
-                    if (!openssl_verify(Tools::jsonencode(array($data->advices_lang_16)), base64_decode($data->signature_16), file_get_contents(dirname(__FILE__).'/prestashop.pub'))) {
+                    if (!openssl_verify(Tools::jsonencode(array($data->advices_lang_16)), base64_decode($data->signature_16, true), file_get_contents(dirname(__FILE__).'/prestashop.pub'))) {
                         return false;
                     }
                 }
@@ -376,9 +376,9 @@ class gamification extends Module
                 }
                 try {
                     $cond = new Condition();
-                    if (in_array($condition->id_ps_condition, $current_conditions)) {
+                    if (in_array($condition->id_ps_condition, $current_conditions, true)) {
                         $cond = new Condition(Condition::getIdByIdPs($condition->id_ps_condition));
-                        unset($current_conditions[(int)array_search($condition->id_ps_condition, $current_conditions)]);
+                        unset($current_conditions[(int)array_search($condition->id_ps_condition, $current_conditions, true)]);
                     }
 
                     $cond->hydrate((array)$condition, (int)$id_lang);
@@ -426,13 +426,13 @@ class gamification extends Module
         foreach ($badges as $badge) {
             try {
                 //if badge already exist we update language data
-                if (in_array((int)$badge->id_ps_badge, $current_badges)) {
+                if (in_array((int)$badge->id_ps_badge, $current_badges, true)) {
                     $bdg = new Badge(Badge::getIdByIdPs((int)$badge->id_ps_badge));
                     $bdg->name[$id_lang] = $formated_badges_lang[$badge->id_ps_badge]['name'][$id_lang];
                     $bdg->description[$id_lang] = $formated_badges_lang[$badge->id_ps_badge]['description'][$id_lang];
                     $bdg->group_name[$id_lang] = $formated_badges_lang[$badge->id_ps_badge]['group_name'][$id_lang];
                     $bdg->update();
-                    unset($current_badges[(int)array_search($badge->id_ps_badge, $current_badges)]);
+                    unset($current_badges[(int)array_search($badge->id_ps_badge, $current_badges, true)]);
                 } else {
                     $badge_data = array_merge((array)$badge, $formated_badges_lang[$badge->id_ps_badge]);
                     $bdg = new Badge();

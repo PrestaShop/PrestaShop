@@ -287,7 +287,7 @@ class SupplierCore extends ObjectModel
     ) {
         $context = Context::getContext();
         $front = true;
-        if (!in_array($context->controller->controller_type, array('front', 'modulefront'))) {
+        if (!in_array($context->controller->controller_type, array('front', 'modulefront'), true)) {
             $front = false;
         }
 
@@ -338,7 +338,7 @@ class SupplierCore extends ObjectModel
             $orderBy = pSQL($orderBy[0]) . '.`' . pSQL($orderBy[1]) . '`';
         }
         $alias = '';
-        if (in_array($orderBy, array('price', 'date_add', 'date_upd'))) {
+        if (in_array($orderBy, array('price', 'date_add', 'date_upd'), true)) {
             $alias = 'product_shop.';
         } elseif ($orderBy == 'id_product') {
             $alias = 'p.';
@@ -419,7 +419,7 @@ class SupplierCore extends ObjectModel
     {
         $context = Context::getContext();
         $front = true;
-        if (!in_array($context->controller->controller_type, array('front', 'modulefront'))) {
+        if (!in_array($context->controller->controller_type, array('front', 'modulefront'), true)) {
             $front = false;
         }
 

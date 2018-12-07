@@ -293,7 +293,7 @@ class AttributeController extends FrameworkBundleAdminController
             $newProductImages = $productImages;
             foreach ($newProductImages as $k => $image) {
                 $newProductImages[$k]['id_image_attr'] = false;
-                if (in_array($image['id'], $combinationImages)) {
+                if (in_array($image['id'], $combinationImages, true)) {
                     $newProductImages[$k]['id_image_attr'] = true;
                 }
             }

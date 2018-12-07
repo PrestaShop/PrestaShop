@@ -301,7 +301,7 @@ class CategoryCore extends ObjectModel
             foreach ($subcats as &$subcat) {
                 if (!$subcat['id_category']) {
                     break;
-                } elseif (!is_array($excludedIdsArray) || !in_array($subcat['id_category'], $excludedIdsArray)) {
+                } elseif (!is_array($excludedIdsArray) || !in_array($subcat['id_category'], $excludedIdsArray, true)) {
                     $categ = new Category($subcat['id_category'], $idLang);
                     $children[] = $categ->recurseLiteCategTree($maxDepth, $currentDepth + 1, $idLang, $excludedIdsArray, $format);
                 }
@@ -730,7 +730,7 @@ class CategoryCore extends ObjectModel
      * @param string $limit Set the limit
      *                      Both the offset and limit can be given
      *
-     * @return array|null
+     * @return null|array
      */
     public static function getNestedCategories(
         $idRootCategory = null,
@@ -814,7 +814,7 @@ class CategoryCore extends ObjectModel
      *
      * @param int $idLang Language ID
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return null|array|false|mysqli_result|PDOStatement|resource
      */
     public static function getSimpleCategories($idLang)
     {
@@ -835,7 +835,7 @@ class CategoryCore extends ObjectModel
      *
      * @param int $idLang Language ID
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return null|array|false|mysqli_result|PDOStatement|resource
      */
     public static function getSimpleCategoriesWithParentInfos($idLang)
     {
@@ -959,7 +959,7 @@ class CategoryCore extends ObjectModel
             return false;
         }
 
-        $front = in_array($context->controller->controller_type, array('front', 'modulefront'));
+        $front = in_array($context->controller->controller_type, array('front', 'modulefront'), true);
         $idSupplier = (int) Tools::getValue('id_supplier');
 
         /* Return only the number of products */
@@ -1634,7 +1634,7 @@ class CategoryCore extends ObjectModel
     /**
      * Get Category groups.
      *
-     * @return array|null
+     * @return null|array
      */
     public function getGroups()
     {
@@ -1667,7 +1667,7 @@ class CategoryCore extends ObjectModel
     public function addGroupsIfNoExist($idGroup)
     {
         $groups = $this->getGroups();
-        if (!in_array((int) $idGroup, $groups)) {
+        if (!in_array((int) $idGroup, $groups, true)) {
             return $this->addGroups(array((int) $idGroup));
         }
 
@@ -1872,7 +1872,7 @@ class CategoryCore extends ObjectModel
      *
      * @param $idCategory
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return null|array|false|mysqli_result|PDOStatement|resource
      *
      * @since 1.7.0
      */
@@ -1967,7 +1967,7 @@ class CategoryCore extends ObjectModel
     /**
      * Get Children for the webservice.
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return null|array|false|mysqli_result|PDOStatement|resource
      */
     public function getChildrenWs()
     {
@@ -1983,7 +1983,7 @@ class CategoryCore extends ObjectModel
     /**
      * Get Products for webservice.
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return null|array|false|mysqli_result|PDOStatement|resource
      */
     public function getProductsWs()
     {
@@ -2013,7 +2013,7 @@ class CategoryCore extends ObjectModel
     /**
      * Recursively get amount of Products for the webservice.
      *
-     * @return false|int|null|string
+     * @return null|false|int|string
      */
     public function getWsNbProductsRecursive()
     {
@@ -2280,7 +2280,7 @@ class CategoryCore extends ObjectModel
     {
         $shop = new Shop($idShop);
         // if array is empty or if the default category is not selected, return false
-        if (!is_array($categories) || !count($categories) || !in_array($shop->id_category, $categories)) {
+        if (!is_array($categories) || !count($categories) || !in_array($shop->id_category, $categories, true)) {
             return false;
         }
 

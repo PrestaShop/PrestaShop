@@ -370,7 +370,7 @@ class MailCore extends ObjectModel
                 $isoArray[] = $isoDefault;
             }
 
-            if (!in_array('en', $isoArray)) {
+            if (!in_array('en', $isoArray, true)) {
                 $isoArray[] = 'en';
             }
 

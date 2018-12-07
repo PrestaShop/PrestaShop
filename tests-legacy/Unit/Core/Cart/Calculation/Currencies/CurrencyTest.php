@@ -139,7 +139,7 @@ class CurrencyTest extends AbstractCartCalculationTest
     /**
      * @param int $id fixture id
      *
-     * @return Currency|null
+     * @return null|Currency
      */
     protected function getCurrencyFromFixtureId($id)
     {

@@ -30,7 +30,7 @@ function deactivate_custom_modules()
     $modulesDirOnDisk = array();
     $modules = scandir(_PS_MODULE_DIR_, SCANDIR_SORT_NONE);
     foreach ($modules as $name) {
-        if (!in_array($name, array('.', '..', 'index.php', '.htaccess')) && @is_dir(_PS_MODULE_DIR_.$name.DIRECTORY_SEPARATOR) && @file_exists(_PS_MODULE_DIR_.$name.DIRECTORY_SEPARATOR.$name.'.php')) {
+        if (!in_array($name, array('.', '..', 'index.php', '.htaccess'), true) && @is_dir(_PS_MODULE_DIR_.$name.DIRECTORY_SEPARATOR) && @file_exists(_PS_MODULE_DIR_.$name.DIRECTORY_SEPARATOR.$name.'.php')) {
             if (!preg_match('/^[a-zA-Z0-9_-]+$/', $name)) {
                 die(Tools::displayError().' (Module '.$name.')');
             }
@@ -54,7 +54,7 @@ function deactivate_custom_modules()
     $arrNativeModules = array();
     if (is_array($nativeModules)) {
         foreach ($nativeModules as $nativeModulesType) {
-            if (in_array($nativeModulesType['type'], array('native', 'partner'))) {
+            if (in_array($nativeModulesType['type'], array('native', 'partner'), true)) {
                 $arrNativeModules[] = '""';
                 foreach ($nativeModulesType->module as $module) {
                     $arrNativeModules[] = '"'.pSQL($module['name']).'"';

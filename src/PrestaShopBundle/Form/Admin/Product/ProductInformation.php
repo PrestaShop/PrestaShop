@@ -310,7 +310,7 @@ class ProductInformation extends CommonAbstractType
                     }
 
                     $id = sprintf('%d-%d', $feature['feature'], $feature['value']);
-                    if (in_array($id, $ids)) {
+                    if (in_array($id, $ids, true)) {
                         unset($data['features'][$idx]);
                     } else {
                         $ids[] = $id;

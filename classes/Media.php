@@ -813,7 +813,7 @@ class MediaCore
                             }
                         }
                     }
-                    if (!in_array($src, Media::$inline_script_src) && !$script->getAttribute(Media::$pattern_keepinline)) {
+                    if (!in_array($src, Media::$inline_script_src, true) && !$script->getAttribute(Media::$pattern_keepinline)) {
                         Context::getContext()->controller->addJS($src);
                     }
                 }
@@ -859,7 +859,7 @@ class MediaCore
                 $results[1] = $protocolLink . ltrim($results[1], '/');
             }
 
-            if (in_array($results[1], Context::getContext()->controller->js_files) || in_array($results[1], Media::$inline_script_src)) {
+            if (in_array($results[1], Context::getContext()->controller->js_files, true) || in_array($results[1], Media::$inline_script_src, true)) {
                 return '';
             }
         }

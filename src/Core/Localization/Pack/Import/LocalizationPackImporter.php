@@ -155,7 +155,7 @@ final class LocalizationPackImporter implements LocalizationPackImporterInterfac
         );
 
         foreach ($config->getContentToImport() as $contentItem) {
-            if (!in_array($contentItem, $contentItems)) {
+            if (!in_array($contentItem, $contentItems, true)) {
                 $error = $this->trans('Invalid selection', 'Admin.Notifications.Error');
 
                 return array($error);

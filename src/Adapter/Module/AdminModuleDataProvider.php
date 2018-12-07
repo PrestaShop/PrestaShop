@@ -68,7 +68,7 @@ class AdminModuleDataProvider implements ModuleInterface
     private $logger;
 
     /**
-     * @var Router|null
+     * @var null|Router
      */
     private $router = null;
 
@@ -235,7 +235,7 @@ class AdminModuleDataProvider implements ModuleInterface
             return true;
         }
 
-        if (in_array($action, array('install', 'upgrade'))) {
+        if (in_array($action, array('install', 'upgrade'), true)) {
             return $this->employee->can('add', 'AdminModulessf');
         }
 

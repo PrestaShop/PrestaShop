@@ -71,7 +71,7 @@ trait PrestaShopTranslatorTrait
         $domain = str_replace('.', '', $domain);
         $contextCatalog = $this->getCatalogue()->all($domain);
 
-        if ($untranslated = array_search($translated, $contextCatalog)) {
+        if ($untranslated = array_search($translated, $contextCatalog, true)) {
             return $untranslated;
         }
 

@@ -205,7 +205,7 @@ abstract class AbstractProcessor {
     }
 
     protected function array_insert_after($array, $key, $entry) {
-        $idx = array_search($key, array_keys($array));
+        $idx = array_search($key, array_keys($array), true);
         $array = array_slice($array, 0, $idx + 1, true) + $entry
             + array_slice($array, $idx + 1, count($array) - 1, true);
         return $array;

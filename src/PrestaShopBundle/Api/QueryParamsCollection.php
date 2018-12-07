@@ -129,7 +129,7 @@ abstract class QueryParamsCollection
                 $this->getValidFilterParams()
             );
 
-            if (!in_array($name, $validParams)) {
+            if (!in_array($name, $validParams, true)) {
                 unset($queryParams[$name]);
             }
         });
@@ -151,7 +151,7 @@ abstract class QueryParamsCollection
         );
 
         $filters = array_filter(array_keys($allParameters), function ($filter) {
-            return in_array($filter, $this->getValidFilterParams());
+            return in_array($filter, $this->getValidFilterParams(), true);
         });
 
         $filterParams = array();
@@ -246,7 +246,7 @@ abstract class QueryParamsCollection
             $order = mb_strtolower($order);
             $filterColumn = $this->removeDirection($order);
 
-            if (!in_array($filterColumn, $this->getValidOrderParams())) {
+            if (!in_array($filterColumn, $this->getValidOrderParams(), true)) {
                 unset($queryParams['order'][$key]);
             }
         }
@@ -560,7 +560,7 @@ abstract class QueryParamsCollection
      */
     protected function appendSqlActiveFilter(array $filters, $active)
     {
-        if (in_array($active, array('0', '1'))) {
+        if (in_array($active, array('0', '1'), true)) {
             $filters[] = sprintf('AND %s = %s', '{active}', ':active');
         }
 
@@ -575,7 +575,7 @@ abstract class QueryParamsCollection
      */
     protected function appendSqlActiveFilterParam($value, $sqlParams)
     {
-        if (in_array($value, array('0', '1'))) {
+        if (in_array($value, array('0', '1'), true)) {
             $sqlParams[':active'] = $value;
         }
 

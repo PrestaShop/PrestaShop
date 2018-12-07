@@ -283,7 +283,7 @@ class Install extends AbstractInstall
         $sql_loader->setMetaData(array(
             'PREFIX_' => _DB_PREFIX_,
             'ENGINE_TYPE' => _MYSQL_ENGINE_,
-            'COLLATION' => (empty($collation_database) || !in_array($collation_database, $allowed_collation)) ? '' : 'COLLATE ' . $collation_database,
+            'COLLATION' => (empty($collation_database) || !in_array($collation_database, $allowed_collation, true)) ? '' : 'COLLATE ' . $collation_database,
         ));
 
         try {
@@ -598,7 +598,7 @@ class Install extends AbstractInstall
         $languages = array();
 
         foreach ($languages_list as $iso) {
-            if (!in_array($iso, $languages_available)) {
+            if (!in_array($iso, $languages_available, true)) {
                 EntityLanguage::downloadAndInstallLanguagePack($iso);
                 continue;
             }
@@ -998,7 +998,7 @@ class Install extends AbstractInstall
 
         if ($xml !== false && isset($xml->module)) {
             foreach ($xml->module as $modaddons) {
-                if (in_array($modaddons->name, $blacklist)) {
+                if (in_array($modaddons->name, $blacklist, true)) {
                     continue;
                 }
                 $addons_modules[] = array('id_module' => $modaddons->id, 'name' => $modaddons->name);

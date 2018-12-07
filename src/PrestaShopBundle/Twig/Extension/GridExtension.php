@@ -195,7 +195,7 @@ class GridExtension extends AbstractExtension
      * @param string $basePath
      * @param null|string $defaultTemplate
      *
-     * @return string|null
+     * @return null|string
      */
     private function getTemplatePath(array $column, array $grid, $basePath, $defaultTemplate = null)
     {

@@ -223,7 +223,7 @@ class CategoriesProvider
      */
     private function findModuleType(ApiModule $installedProduct, array $modulesTheme)
     {
-        if (in_array($installedProduct->attributes->get('name'), $modulesTheme)) {
+        if (in_array($installedProduct->attributes->get('name'), $modulesTheme, true)) {
             return self::CATEGORY_THEME;
         }
 
@@ -241,7 +241,7 @@ class CategoriesProvider
         $moduleCategory = $installedProduct->attributes->get('categoryName');
         $moduleCategoryParent = $this->getParentCategory($moduleCategory);
         if (!isset($categories['categories']->subMenu[$moduleCategoryParent])) {
-            if (in_array($installedProduct->attributes->get('name'), $this->modulesTheme)) {
+            if (in_array($installedProduct->attributes->get('name'), $this->modulesTheme, true)) {
                 $moduleCategoryParent = self::CATEGORY_THEME;
             } else {
                 $moduleCategoryParent = self::CATEGORY_OTHER;

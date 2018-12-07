@@ -37,7 +37,7 @@ function p15014_add_missing_columns()
             $list_fields[$k] = $field['Field'];
         }
 
-        if (in_array('id_group_shop', $list_fields)) {
+        if (in_array('id_group_shop', $list_fields, true)) {
             if (!Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'statssearch`
 				CHANGE `id_group_shop` `id_shop_group` INT(10) NOT NULL default "1"')) {
                 $errors[] = $db->getMsgError();

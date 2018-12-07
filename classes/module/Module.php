@@ -615,7 +615,7 @@ abstract class ModuleCore implements ModuleInterface
         if (file_exists($upgrade_path) && ($files = scandir($upgrade_path, SCANDIR_SORT_NONE))) {
             // Read each file name
             foreach ($files as $file) {
-                if (!in_array($file, array('.', '..', '.svn', 'index.php')) && preg_match('/\.php$/', $file)) {
+                if (!in_array($file, array('.', '..', '.svn', 'index.php'), true) && preg_match('/\.php$/', $file)) {
                     $tab = explode('-', $file);
 
                     if (!isset($tab[1])) {
@@ -801,7 +801,7 @@ abstract class ModuleCore implements ModuleInterface
 
         // Enable module in the shop where it is not enabled yet
         foreach ($list as $id) {
-            if (!in_array($id, $items)) {
+            if (!in_array($id, $items, true)) {
                 Db::getInstance()->insert('module_shop', array(
                     'id_module' => $this->id,
                     'id_shop' => $id,
@@ -1546,7 +1546,7 @@ abstract class ModuleCore implements ModuleInterface
             if (!isset($module->tab)) {
                 $module->tab = 'others';
             }
-            if (defined('_PS_HOST_MODE_') && in_array($module->name, self::$hosted_modules_blacklist)) {
+            if (defined('_PS_HOST_MODE_') && in_array($module->name, self::$hosted_modules_blacklist, true)) {
                 unset($module_list[$key]);
             } elseif (isset($modules_installed[$module->name])) {
                 $module->installed = true;
@@ -1636,7 +1636,7 @@ abstract class ModuleCore implements ModuleInterface
         $arr_native_modules = array();
         if (is_object($native_modules)) {
             foreach ($native_modules as $native_modules_type) {
-                if (in_array($native_modules_type['type'], array('native', 'partner'))) {
+                if (in_array($native_modules_type['type'], array('native', 'partner'), true)) {
                     $arr_native_modules[] = '""';
                     foreach ($native_modules_type->module as $module) {
                         $arr_native_modules[] = '"' . pSQL($module['name']) . '"';
@@ -1668,7 +1668,7 @@ abstract class ModuleCore implements ModuleInterface
         $modules = array();
         if (is_object($native_modules)) {
             foreach ($native_modules as $native_modules_type) {
-                if (in_array($native_modules_type['type'], array('native', 'partner'))) {
+                if (in_array($native_modules_type['type'], array('native', 'partner'), true)) {
                     foreach ($native_modules_type->module as $module) {
                         $modules[] = $module['name'];
                     }
@@ -1831,7 +1831,7 @@ abstract class ModuleCore implements ModuleInterface
         }
 
         foreach ($modules_on_disk as $name) {
-            if (!in_array($name, $trusted)) {
+            if (!in_array($name, $trusted, true)) {
                 if (Module::checkModuleFromAddonsApi($name)) {
                     $trusted[] = Tools::strtolower($name);
                 } else {
@@ -2216,7 +2216,7 @@ abstract class ModuleCore implements ModuleInterface
             foreach (Shop::getContextListShopID() as $shop_id) {
                 if (isset($exceptions_cache[$key], $exceptions_cache[$key][$shop_id])) {
                     foreach ($exceptions_cache[$key][$shop_id] as $file) {
-                        if (!in_array($file, $array_return)) {
+                        if (!in_array($file, $array_return, true)) {
                             $array_return[] = $file;
                         }
                     }
@@ -2635,7 +2635,7 @@ abstract class ModuleCore implements ModuleInterface
                 $matches
             );
 
-            if (($key = array_search('1', $role))) {
+            if (($key = array_search('1', $role, true))) {
                 $roles[$matches['moduleName']][$key] = '1';
             }
         }
@@ -2702,7 +2702,7 @@ abstract class ModuleCore implements ModuleInterface
      */
     public static function getPermissionStatic($id_module, $variable, $employee = null)
     {
-        if (!in_array($variable, array('view', 'configure', 'uninstall'))) {
+        if (!in_array($variable, array('view', 'configure', 'uninstall'), true)) {
             return false;
         }
 

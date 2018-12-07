@@ -1010,7 +1010,7 @@ class AdminImportControllerCore extends AdminController
             if ($k === 'price_tin') {
                 ++$nb_c;
             }
-            if ($i === ($nb_c + 1) && (!in_array($k, $no_pre_select))) {
+            if ($i === ($nb_c + 1) && (!in_array($k, $no_pre_select, true))) {
                 $options .= ' selected="selected"';
             }
             $options .= '>' . $field['label'] . '</option>';
@@ -1249,7 +1249,7 @@ class AdminImportControllerCore extends AdminController
                             }
                         }
                     }
-                    if (in_array($image_type['id_image_type'], $watermark_types)) {
+                    if (in_array($image_type['id_image_type'], $watermark_types, true)) {
                         Hook::exec('actionWatermark', array('id_image' => $id_image, 'id_product' => $id_entity));
                     }
                 }
@@ -1340,7 +1340,7 @@ class AdminImportControllerCore extends AdminController
     protected function categoryImportOne($info, $default_language_id, $id_lang, $force_ids, $regenerate, $shop_is_feature_active, &$cat_moved, $validateOnly = false)
     {
         $tab_categ = array(Configuration::get('PS_HOME_CATEGORY'), Configuration::get('PS_ROOT_CATEGORY'));
-        if (isset($info['id']) && in_array((int) $info['id'], $tab_categ)) {
+        if (isset($info['id']) && in_array((int) $info['id'], $tab_categ, true)) {
             $this->errors[] = $this->trans('The category ID must be unique. It can\'t be the same as the one for Root or Home category.', array(), 'Admin.Advparameters.Notification');
 
             return;
@@ -1479,7 +1479,7 @@ class AdminImportControllerCore extends AdminController
             $categories_home_root = array(Configuration::get('PS_ROOT_CATEGORY'), Configuration::get('PS_HOME_CATEGORY'));
             if ($category->id &&
                 $category->categoryExists($category->id) &&
-                !in_array($category->id, $categories_home_root) &&
+                !in_array($category->id, $categories_home_root, true) &&
                 !$validateOnly) {
                 $res = $category->update();
             }
@@ -2021,7 +2021,7 @@ class AdminImportControllerCore extends AdminController
                 $shop = Shop::getIdByName($shop);
             }
 
-            if (in_array($shop, $shop_ids)) {
+            if (in_array($shop, $shop_ids, true)) {
                 $shops[] = $shop;
             } else {
                 $this->addProductWarning(Tools::safeOutput($info['name']), $product->id, $this->trans('Shop is not valid', array(), 'Admin.Advparameters.Notification'));
@@ -2679,7 +2679,7 @@ class AdminImportControllerCore extends AdminController
                             // gets all the combinations of this product
                             $attribute_combinations = $product->getAttributeCombinations($default_language);
                             foreach ($attribute_combinations as $attribute_combination) {
-                                if ($id_product_attribute && in_array($id_product_attribute, $attribute_combination)) {
+                                if ($id_product_attribute && in_array($id_product_attribute, $attribute_combination, true)) {
                                     // FIXME: ~3s/declinaison
                                     $product->updateAttribute(
                                         $id_product_attribute,
@@ -2996,7 +2996,7 @@ class AdminImportControllerCore extends AdminController
                 $shop = new Shop((int) $id_shop);
                 $group_shop = $shop->getGroup();
                 if ($group_shop->share_customer) {
-                    if (!in_array($group_shop->id, $customers_shop['shared'])) {
+                    if (!in_array($group_shop->id, $customers_shop['shared'], true)) {
                         $customers_shop['shared'][(int) $id_shop] = $group_shop->id;
                     }
                 } else {
@@ -3041,7 +3041,7 @@ class AdminImportControllerCore extends AdminController
                     foreach ($id_group as $key => $id) {
                         $customer->id_shop = (int) $key;
                         $customer->id_shop_group = (int) $id;
-                        if ($customer_exist && ((int) $current_id_shop_group == (int) $id || in_array($current_id_shop, ShopGroup::getShopsFromGroup($id)))) {
+                        if ($customer_exist && ((int) $current_id_shop_group == (int) $id || in_array($current_id_shop, ShopGroup::getShopsFromGroup($id), true))) {
                             $customer->id = (int) $current_id_customer;
                             $res &= ($validateOnly || $customer->update());
                         } else {
@@ -3406,7 +3406,7 @@ class AdminImportControllerCore extends AdminController
             if (isset($customer_list) && count($customer_list) > 0) {
                 $filter_list = array();
                 foreach ($customer_list as $customer) {
-                    if (in_array($customer['id_customer'], $filter_list)) {
+                    if (in_array($customer['id_customer'], $filter_list, true)) {
                         continue;
                     }
 

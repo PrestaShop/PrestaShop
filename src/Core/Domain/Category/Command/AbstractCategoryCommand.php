@@ -80,12 +80,12 @@ abstract class AbstractCategoryCommand
     private $associatedShopIds;
 
     /**
-     * @var UploadedFile|null
+     * @var null|UploadedFile
      */
     private $coverImage;
 
     /**
-     * @var UploadedFile|null
+     * @var null|UploadedFile
      */
     private $thumbnailImage;
 

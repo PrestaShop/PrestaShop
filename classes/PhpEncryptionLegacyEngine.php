@@ -97,7 +97,7 @@ class PhpEncryptionLegacyEngineCore extends PhpEncryptionEngine
         }
 
         list($hmac, $encrypted) = $data;
-        $encrypted = base64_decode($encrypted);
+        $encrypted = base64_decode($encrypted, true);
         $newHmac = $this->generateHmac($encrypted);
         if ($hmac !== $newHmac) {
             return false;

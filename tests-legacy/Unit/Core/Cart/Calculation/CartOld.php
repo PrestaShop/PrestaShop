@@ -96,11 +96,11 @@ class CartOld extends Cart
         $virtual_context = Context::getContext()->cloneContext();
         $virtual_context->cart = $this;
 
-        if (!in_array($type, $array_type)) {
+        if (!in_array($type, $array_type, true)) {
             die(Tools::displayError());
         }
 
-        $with_shipping = in_array($type, array(Cart::BOTH, Cart::ONLY_SHIPPING));
+        $with_shipping = in_array($type, array(Cart::BOTH, Cart::ONLY_SHIPPING), true);
 
         // if cart rules are not used
         if ($type == Cart::ONLY_DISCOUNTS && !CartRule::isFeatureActive()) {
@@ -204,7 +204,7 @@ class CartOld extends Cart
 
             $id_tax_rules_group = $this->findTaxRulesGroupId($with_taxes, $product, $virtual_context);
 
-            if (in_array($ps_round_type, array(Order::ROUND_ITEM, Order::ROUND_LINE))) {
+            if (in_array($ps_round_type, array(Order::ROUND_ITEM, Order::ROUND_LINE), true)) {
                 if (!isset($products_total[$id_tax_rules_group])) {
                     $products_total[$id_tax_rules_group] = 0;
                 }
@@ -250,7 +250,7 @@ class CartOld extends Cart
 
         $order_total_discount = 0;
         $order_shipping_discount = 0;
-        if (!in_array($type, array(Cart::ONLY_SHIPPING, Cart::ONLY_PRODUCTS)) && CartRule::isFeatureActive()) {
+        if (!in_array($type, array(Cart::ONLY_SHIPPING, Cart::ONLY_PRODUCTS), true) && CartRule::isFeatureActive()) {
             $cart_rules = $this->getTotalCalculationCartRules($type, $with_shipping);
 
             $package = array(

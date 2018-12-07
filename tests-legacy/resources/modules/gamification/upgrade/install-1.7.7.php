@@ -39,13 +39,13 @@ function upgrade_module_1_7_7($object)
     
     $columns = Db::getInstance()->executeS('SHOW COLUMNS FROM `'._DB_PREFIX_.'advice` ');
     foreach ($columns as $c) {
-        if (in_array($c['Field'], array_keys($cols))) {
+        if (in_array($c['Field'], array_keys($cols), true)) {
             $cols[$c['Field']]['exist'] = true;
         }
     }
     
     foreach ($cols as $name => $co) {
-        if (in_array($name, array('start_day', 'stop_day'))) {
+        if (in_array($name, array('start_day', 'stop_day'), true)) {
             if (!$co['exist']) {
                 Db::getInstance()->execute($co['sql']);
             }

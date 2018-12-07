@@ -80,7 +80,8 @@ abstract class ModuleAbstractController extends FrameworkBundleAdminController
             array(
                 PageVoter::LEVEL_READ,
                 PageVoter::LEVEL_UPDATE,
-            )
+            ),
+            true
         )) {
             $toolbarButtons['add_module'] = array(
                 'href' => '#',

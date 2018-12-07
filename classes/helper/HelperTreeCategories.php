@@ -456,7 +456,7 @@ class HelperTreeCategoriesCore extends TreeCore
     private function _disableCategories(&$categories, $disabled_categories = null)
     {
         foreach ($categories as &$category) {
-            if (!isset($disabled_categories) || in_array($category['id_category'], $disabled_categories)) {
+            if (!isset($disabled_categories) || in_array($category['id_category'], $disabled_categories, true)) {
                 $category['disabled'] = true;
                 if (array_key_exists('children', $category) && is_array($category['children'])) {
                     self::_disableCategories($category['children']);
@@ -472,7 +472,7 @@ class HelperTreeCategoriesCore extends TreeCore
         $selected_childs = 0;
 
         foreach ($categories as $key => &$category) {
-            if (isset($parent) && in_array($category['id_category'], $selected)) {
+            if (isset($parent) && in_array($category['id_category'], $selected, true)) {
                 ++$selected_childs;
             }
 
