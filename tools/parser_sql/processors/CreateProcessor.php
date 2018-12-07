@@ -1,6 +1,6 @@
 <?php
 /**
- * CreateProcessor.php
+ * CreateProcessor.php.
  *
  * This file implements the processor for the CREATE TABLE statements.
  *
@@ -29,33 +29,30 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
  * DAMAGE.
  */
-
-require_once dirname(__FILE__) . '/AbstractProcessor.php';
-require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
+require_once dirname(__FILE__).'/AbstractProcessor.php';
+require_once dirname(__FILE__).'/../utils/ExpressionType.php';
 
 /**
- * 
  * This class processes the CREATE statements.
- * 
+ *
  * @author arothe
- * 
  */
-class CreateProcessor extends AbstractProcessor {
-
-    public function process($tokens) {
+class CreateProcessor extends AbstractProcessor
+{
+    public function process($tokens)
+    {
         $result = array();
-        $base_expr = "";
+        $base_expr = '';
 
         foreach ($tokens as $token) {
             $trim = mb_strtoupper(trim($token));
             $base_expr .= $token;
 
-            if ($trim === "") {
+            if ('' === $trim) {
                 continue;
             }
 
             switch ($trim) {
-
             case 'TEMPORARY':
                 $result['expr_type'] = ExpressionType::TEMPORARY_TABLE;
                 $result['not-exists'] = false;
@@ -87,7 +84,7 @@ class CreateProcessor extends AbstractProcessor {
         }
         $result['base_expr'] = trim($base_expr);
         $result['sub_tree'] = $expr;
+
         return $result;
     }
 }
-?>

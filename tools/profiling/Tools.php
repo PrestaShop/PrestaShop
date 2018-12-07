@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 class Tools extends ToolsCore
 {
     public static function redirect($url, $base_uri = __PS_BASE_URI__, Link $link = null, $headers = null)
@@ -32,11 +31,11 @@ class Tools extends ToolsCore
             $link = Context::getContext()->link;
         }
 
-        if (mb_strpos($url, 'http://') === false && mb_strpos($url, 'https://') === false && $link) {
-            if (mb_strpos($url, $base_uri) === 0) {
+        if (false === mb_strpos($url, 'http://') && false === mb_strpos($url, 'https://') && $link) {
+            if (0 === mb_strpos($url, $base_uri)) {
                 $url = mb_substr($url, mb_strlen($base_uri));
             }
-            if (mb_strpos($url, 'index.php?controller=') !== false && mb_strpos($url, 'index.php/') == 0) {
+            if (false !== mb_strpos($url, 'index.php?controller=') && 0 == mb_strpos($url, 'index.php/')) {
                 $url = mb_substr($url, mb_strlen('index.php?controller='));
                 if (Configuration::get('PS_REWRITING_SETTINGS')) {
                     $url = Tools::strReplaceFirst('&', '?', $url);
@@ -70,7 +69,7 @@ class Tools extends ToolsCore
     public static function getDefaultControllerClass()
     {
         if (isset(Context::getContext()->employee) && Validate::isLoadedObject(Context::getContext()->employee) && isset(Context::getContext()->employee->default_tab)) {
-            $default_controller = Tab::getClassNameById((int)Context::getContext()->employee->default_tab);
+            $default_controller = Tab::getClassNameById((int) Context::getContext()->employee->default_tab);
         }
         if (empty($default_controller)) {
             $default_controller = 'AdminDashboard';
@@ -80,13 +79,14 @@ class Tools extends ToolsCore
             $default_controller = 'adminnotfound';
         }
         $controller_class = $controllers[mb_strtolower($default_controller)];
+
         return $controller_class;
     }
 
     public static function redirectLink($url)
     {
         if (!preg_match('@^https?://@i', $url)) {
-            if (mb_strpos($url, __PS_BASE_URI__) !== false && mb_strpos($url, __PS_BASE_URI__) == 0) {
+            if (false !== mb_strpos($url, __PS_BASE_URI__) && 0 == mb_strpos($url, __PS_BASE_URI__)) {
                 $url = mb_substr($url, mb_strlen(__PS_BASE_URI__));
             }
             $explode = explode('?', $url);

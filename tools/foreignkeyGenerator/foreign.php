@@ -23,12 +23,12 @@
  */
 
 // Include PrestaShop configuration
-include __DIR__ . '/../../config/config.inc.php';
+include __DIR__.'/../../config/config.inc.php';
 
 // Include $changes
-include __DIR__ . '/changes.php';
+include __DIR__.'/changes.php';
 // Include $relations
-include __DIR__ . '/relations.php';
+include __DIR__.'/relations.php';
 
 /**
  * Clear all foreign keys.
@@ -38,20 +38,20 @@ function clearForeignKeys()
     $tables = Db::getInstance()->executeS('
         SELECT DISTINCT `table_name`, `constraint_name`
         FROM `information_schema`.`key_column_usage`
-        WHERE `constraint_schema` = \'' . _DB_NAME_ . '\'
+        WHERE `constraint_schema` = \''._DB_NAME_.'\'
         AND `referenced_table_name` IS NOT NULL
     ');
     if (is_array($tables)) {
         foreach ($tables as $table) {
             Db::getInstance()->execute(
                 '
-                ALTER TABLE `' . $table['table_name'] . '`
-				DROP FOREIGN KEY `' . $table['constraint_name'] . '`'
+                ALTER TABLE `'.$table['table_name'].'`
+				DROP FOREIGN KEY `'.$table['constraint_name'].'`'
             );
         }
     }
 
-    echo 'Foreign keys cleared' . PHP_EOL;
+    echo 'Foreign keys cleared'.PHP_EOL;
 }
 
 /**
@@ -63,17 +63,17 @@ function noNullParent($table)
 {
     $rows = Db::getInstance()->executeS(
         '
-        SELECT `id_' . $table . '`
-		FROM `' . _DB_PREFIX_ . $table . '`
+        SELECT `id_'.$table.'`
+		FROM `'._DB_PREFIX_.$table.'`
 		WHERE `id_parent` = 0'
     );
     if (is_array($rows)) {
         foreach ($rows as $row) {
             Db::getInstance()->execute(
                 '
-                UPDATE `' . _DB_PREFIX_ . $table . '`
-				SET `id_parent` = ' . (int) $row['id_' . $table] . '
-				WHERE `id_' . $table . '` = ' . (int) $row['id_' . $table]
+                UPDATE `'._DB_PREFIX_.$table.'`
+				SET `id_parent` = '.(int) $row['id_'.$table].'
+				WHERE `id_'.$table.'` = '.(int) $row['id_'.$table]
             );
         }
     }
@@ -92,14 +92,14 @@ function updateMismatchForeign()
     // Make sure that the id_tax_rules_group is set
     Db::getInstance()->execute(
         '
-        UPDATE `' . _DB_PREFIX_ . 'tax_rules_group`
+        UPDATE `'._DB_PREFIX_.'tax_rules_group`
 		SET `id_tax_rules_group` = 1
 		WHERE `id_tax_rules_group` = 0'
     );
     // Make sure the currency is set
     Db::getInstance()->execute(
         '
-        UPDATE `' . _DB_PREFIX_ . 'country`
+        UPDATE `'._DB_PREFIX_.'country`
         SET `id_currency` = 1
 		WHERE `id_currency` = 0'
     );
@@ -108,16 +108,16 @@ function updateMismatchForeign()
     if (!Db::getInstance()->getValue(
         '
         SELECT COUNT(*)
-		FROM `' . _DB_PREFIX_ . 'country`'
+		FROM `'._DB_PREFIX_.'country`'
     )) {
         Db::getInstance()->execute(
             '
-            INSERT INTO `' . _DB_PREFIX_ . 'country`
+            INSERT INTO `'._DB_PREFIX_.'country`
 			(`id_country`, `id_state`) VALUES(0, 1)'
         );
     }
 
-    echo 'Updated mismatch foreign keys' . PHP_EOL;
+    echo 'Updated mismatch foreign keys'.PHP_EOL;
 }
 
 /**
@@ -133,10 +133,9 @@ function executeQueries($arrayOfQueries)
         foreach ($queries as $query) {
             try {
                 Db::getInstance()->execute($query);
-            }catch (Exception $e) {
-                echo "Error:". $e->getMessage() . PHP_EOL;
+            } catch (Exception $e) {
+                echo 'Error:'.$e->getMessage().PHP_EOL;
             }
-
         }
     }
 }
@@ -154,19 +153,19 @@ function forgeChangesQueries($changes)
 
     foreach ($changes as $table => $fields) {
         foreach ($fields as $field => $params) {
-            $q = 'ALTER TABLE `' . _DB_PREFIX_ . $table . '` CHANGE ';
+            $q = 'ALTER TABLE `'._DB_PREFIX_.$table.'` CHANGE ';
             if (!isset($params['#type'])) {
-                echo 'Warning, change on ' . $table . '.' . $field .
-                    ' ignored due to no type specified' . "\n";
+                echo 'Warning, change on '.$table.'.'.$field.
+                    ' ignored due to no type specified'."\n";
                 continue;
             }
-            $q .= $field . ' ' . (isset($params['#name']) ?
-                        $params['#name'] : $field . ' ' . $params['#type']);
+            $q .= $field.' '.(isset($params['#name']) ?
+                        $params['#name'] : $field.' '.$params['#type']);
             $q .= (isset($params['#unsigned']) && $params['#unsigned'] ?
                         ' UNSIGNED' : '');
             $q .= (isset($params['#null']) && $params['#null'] ?
                         ' NULL' : ' NOT NULL');
-            $queries[$table][] = $q . ';';
+            $queries[$table][] = $q.';';
         }
     }
 
@@ -186,13 +185,13 @@ function forgeRelationsQueries($relations)
 
     foreach ($relations as $table => $fields) {
         foreach ($fields as $field => $foreign) {
-            $q = 'ALTER TABLE `' . _DB_PREFIX_ . $table . '`
-							ADD FOREIGN KEY (`' . $field . '`)';
+            $q = 'ALTER TABLE `'._DB_PREFIX_.$table.'`
+							ADD FOREIGN KEY (`'.$field.'`)';
             foreach ($foreign as $fTable => $fField) {
-                $q .= ' REFERENCES `' . _DB_PREFIX_ . $fTable . '`(`' . $fField . '`)
+                $q .= ' REFERENCES `'._DB_PREFIX_.$fTable.'`(`'.$fField.'`)
 								  ON DELETE NO ACTION ON UPDATE NO ACTION,';
             }
-            $queries[$table][] = rtrim($q, ',') . ';';
+            $queries[$table][] = rtrim($q, ',').';';
         }
     }
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * UnableToCreateSQLException.php
+ * UnableToCreateSQLException.php.
  *
  * This file implements the UnableToCreateSQLException class which is used within the
  * PHPSQLParser package.
@@ -36,40 +36,42 @@
  * method, which can handle the current expr_type field. It could be an error within the parser
  * output or a special case has not been modelled within the creator. Please create an issue
  * in such a case.
- *  
- * @author arothe
  *
+ * @author arothe
  */
-class UnableToCreateSQLException extends Exception {
-
+class UnableToCreateSQLException extends Exception
+{
     protected $part;
     protected $partkey;
     protected $entry;
     protected $entrykey;
 
-    public function __construct($part, $partkey, $entry, $entrykey) {
+    public function __construct($part, $partkey, $entry, $entrykey)
+    {
         $this->part = $part;
         $this->partkey = $partkey;
         $this->entry = $entry;
         $this->entrykey = $entrykey;
-        parent::__construct("unknown [" . $entrykey . "] = " .$entry[$entrykey] . " in \"" . $part . "\" [" . $partkey . "] ", 15);
+        parent::__construct('unknown ['.$entrykey.'] = '.$entry[$entrykey].' in "'.$part.'" ['.$partkey.'] ', 15);
     }
 
-    public function getEntry() {
+    public function getEntry()
+    {
         return $this->entry;
     }
 
-    public function getEntryKey() {
+    public function getEntryKey()
+    {
         return $this->entrykey;
     }
 
-    public function getSQLPart() {
+    public function getSQLPart()
+    {
         return $this->part;
     }
 
-    public function getSQLPartKey() {
+    public function getSQLPartKey()
+    {
         return $this->partkey;
     }
 }
-
-?>

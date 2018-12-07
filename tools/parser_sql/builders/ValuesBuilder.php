@@ -1,6 +1,6 @@
 <?php
 /**
- * ValuesBuilder.php
+ * ValuesBuilder.php.
  *
  * Builds the VALUES part of the INSERT statement.
  *
@@ -31,34 +31,35 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
+ *
  * @version   SVN: $Id: ValuesBuilder.php 830 2013-12-18 09:35:42Z phosco@gmx.de $
- * 
  */
-
-require_once dirname(__FILE__) . '/../exceptions/UnableToCreateSQLException.php';
-require_once dirname(__FILE__) . '/RecordBuilder.php';
+require_once dirname(__FILE__).'/../exceptions/UnableToCreateSQLException.php';
+require_once dirname(__FILE__).'/RecordBuilder.php';
 
 /**
- * This class implements the builder for the VALUES part of INSERT statement. 
+ * This class implements the builder for the VALUES part of INSERT statement.
  * You can overwrite all functions to achieve another handling.
  *
  * @author  André Rothe <andre.rothe@phosco.info>
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- *  
  */
-class ValuesBuilder {
-
-    protected function buildRecord($parsed) {
+class ValuesBuilder
+{
+    protected function buildRecord($parsed)
+    {
         $builder = new RecordBuilder();
+
         return $builder->build($parsed);
     }
 
-    public function build($parsed) {
-        $sql = "";
+    public function build($parsed)
+    {
+        $sql = '';
         foreach ($parsed as $k => $v) {
             $len = mb_strlen($sql);
             $sql .= $this->buildRecord($v);
@@ -67,10 +68,10 @@ class ValuesBuilder {
                 throw new UnableToCreateSQLException('VALUES', $k, $v, 'expr_type');
             }
 
-            $sql .= ",";
+            $sql .= ',';
         }
         $sql = mb_substr($sql, 0, -1);
-        return "VALUES " . $sql;
-    }    
+
+        return 'VALUES '.$sql;
+    }
 }
-?>

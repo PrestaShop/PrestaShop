@@ -1,6 +1,6 @@
 <?php
 /**
- * DefaultProcessor.php
+ * DefaultProcessor.php.
  *
  * This file implements the processor the unparsed sql string given by the user.
  *
@@ -29,22 +29,19 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
  * DAMAGE.
  */
-
-require_once(dirname(__FILE__) . '/AbstractProcessor.php');
-require_once(dirname(__FILE__) . '/UnionProcessor.php');
-require_once(dirname(__FILE__) . '/SQLProcessor.php');
+require_once dirname(__FILE__).'/AbstractProcessor.php';
+require_once dirname(__FILE__).'/UnionProcessor.php';
+require_once dirname(__FILE__).'/SQLProcessor.php';
 
 /**
- * 
  * This class processes the incoming sql string.
- * 
+ *
  * @author arothe
- * 
  */
-class DefaultProcessor extends AbstractProcessor {
-
-    public function process($sql) {
-
+class DefaultProcessor extends AbstractProcessor
+{
+    public function process($sql)
+    {
         $inputArray = $this->splitSQLIntoTokens($sql);
 
         // this is the highest level lexical analysis. This is the part of the
@@ -62,4 +59,3 @@ class DefaultProcessor extends AbstractProcessor {
         return $queries;
     }
 }
-?>

@@ -31,7 +31,7 @@ require_once 'Library/Version.php';
 $consoleWrite = new ConsoleWriter();
 $lineSeparator = PHP_EOL;
 
-if (php_sapi_name() !== 'cli') {
+if ('cli' !== php_sapi_name()) {
     $consoleWrite->displayText(
         "ERROR:{$lineSeparator}Must be run has a CLI script.{$lineSeparator}",
         ConsoleWriter::COLOR_RED
@@ -65,7 +65,7 @@ $releaseOptions = array(
     ),
 );
 $helpMessage = "Usage: php {prestashop_root_path}/tools/build/CreateRelease.php [--version=<version>] [options]{$lineSeparator}{$lineSeparator}"
-    . "Available options are:{$lineSeparator}{$lineSeparator}";
+    ."Available options are:{$lineSeparator}{$lineSeparator}";
 
 foreach ($releaseOptions as $optionName => $option) {
     $required = isset($option['required']) ? var_export($option['required'], true) : 'false';

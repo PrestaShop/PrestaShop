@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -84,7 +84,6 @@ class LocaleTest extends TestCase
             )
         ;
         /** @noinspection end */
-
         $formatter = new Formatter(
             Rounding::ROUND_HALF_UP,
             'latn'
@@ -102,13 +101,12 @@ class LocaleTest extends TestCase
     /**
      * Given a valid number (numeric)
      * When asking the locale to format this number
-     * Then the expected formatted number should be retrieved
+     * Then the expected formatted number should be retrieved.
      *
      * @param float|int $number
-     *  The number to be formatted
-     *
-     * @param string $expected
-     *  The formatted number
+     *                            The number to be formatted
+     * @param string    $expected
+     *                            The formatted number
      *
      * @dataProvider provideValidNumbers
      *
@@ -124,7 +122,7 @@ class LocaleTest extends TestCase
     /**
      * Given an invalid number (not numeric)
      * When asking the locale to format it
-     * Then an exception should be raised
+     * Then an exception should be raised.
      *
      * For more formatting cases, @see \LegacyTests\Unit\Core\Localization\Number\FormatterTest
      *
@@ -136,13 +134,13 @@ class LocaleTest extends TestCase
     }
 
     /**
-     * Provide valid numbers data (number + expected formatting result)
+     * Provide valid numbers data (number + expected formatting result).
      *
      * @return array
-     * [
-     *     [<raw number>, <expected formatted number>],
-     *     [...],
-     * ]
+     *               [
+     *               [<raw number>, <expected formatted number>],
+     *               [...],
+     *               ]
      */
     public function provideValidNumbers()
     {
@@ -158,18 +156,16 @@ class LocaleTest extends TestCase
     /**
      * Given a valid number (numeric) and a valid currency code
      * When asking the locale to format this number as a price of this currency
-     * Then the expected formatted price should be retrieved
+     * Then the expected formatted price should be retrieved.
      *
      * For more formatting cases, @see \LegacyTests\Unit\Core\Localization\Number\FormatterTest
      *
      * @param float|int|string $number
-     *  The number to be formatted
-     *
-     * @param string $currencyCode
-     *  The currency code
-     *
-     * @param string $expected
-     *  The formatted number
+     *                                       The number to be formatted
+     * @param string           $currencyCode
+     *                                       The currency code
+     * @param string           $expected
+     *                                       The formatted number
      *
      * @dataProvider provideValidPriceData
      *
@@ -183,13 +179,13 @@ class LocaleTest extends TestCase
     }
 
     /**
-     * Provide valid price data (number + currency code + expected formatted price)
+     * Provide valid price data (number + currency code + expected formatted price).
      *
      * @return array
-     * [
-     *     [<raw number>, <currency code>, <expected formatted price>],
-     *     [...],
-     * ]
+     *               [
+     *               [<raw number>, <currency code>, <expected formatted price>],
+     *               [...],
+     *               ]
      */
     public function provideValidPriceData()
     {
@@ -202,13 +198,12 @@ class LocaleTest extends TestCase
     /**
      * Given an invalid number (not numeric) or invalid currency
      * When asking the locale to format the number as a price
-     * Then an exception should be raised
+     * Then an exception should be raised.
      *
      * @param mixed $number
-     *  Potentially invalid number
-     *
+     *                        Potentially invalid number
      * @param mixed $currency
-     *  Potentially invalid currency
+     *                        Potentially invalid currency
      *
      * @dataProvider provideInvalidPriceData
      *

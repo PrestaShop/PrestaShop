@@ -1,6 +1,6 @@
 <?php
 /**
- * DuplicateProcessor.php
+ * DuplicateProcessor.php.
  *
  * This file implements the processor for the DUPLICATE statements.
  *
@@ -29,21 +29,17 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
  * DAMAGE.
  */
-
-require_once(dirname(__FILE__) . '/SetProcessor.php');
+require_once dirname(__FILE__).'/SetProcessor.php';
 
 /**
- * 
  * This class processes the DUPLICATE statements.
- * 
+ *
  * @author arothe
- * 
  */
-class DuplicateProcessor extends SetProcessor {
-
-    public function process($tokens) {
+class DuplicateProcessor extends SetProcessor
+{
+    public function process($tokens)
+    {
         return parent::process($tokens, false);
     }
-
 }
-?>

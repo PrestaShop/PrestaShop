@@ -1,6 +1,6 @@
 <?php
 /**
- * CreateTableOptionsBuilder.php
+ * CreateTableOptionsBuilder.php.
  *
  * Builds the table-options statement part of CREATE TABLE.
  *
@@ -31,61 +31,68 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
+ *
  * @version   SVN: $Id: CreateTableOptionsBuilder.php 923 2014-01-08 12:20:30Z phosco@gmx.de $
- * 
  */
-
-require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
-require_once dirname(__FILE__) . '/SelectExpressionBuilder.php';
-require_once dirname(__FILE__) . '/CharacterSetBuilder.php';
-require_once dirname(__FILE__) . '/CollationBuilder.php';
+require_once dirname(__FILE__).'/../utils/ExpressionType.php';
+require_once dirname(__FILE__).'/SelectExpressionBuilder.php';
+require_once dirname(__FILE__).'/CharacterSetBuilder.php';
+require_once dirname(__FILE__).'/CollationBuilder.php';
 
 /**
- * This class implements the builder for the table-options statement part of CREATE TABLE. 
+ * This class implements the builder for the table-options statement part of CREATE TABLE.
  * You can overwrite all functions to achieve another handling.
  *
  * @author  André Rothe <andre.rothe@phosco.info>
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- *  
  */
-class CreateTableOptionsBuilder {
-
-    protected function buildExpression($parsed) {
+class CreateTableOptionsBuilder
+{
+    protected function buildExpression($parsed)
+    {
         $builder = new SelectExpressionBuilder();
+
         return $builder->build($parsed);
     }
-	
-    protected function buildCharacterSet($parsed) {
+
+    protected function buildCharacterSet($parsed)
+    {
         $builder = new CharacterSetBuilder();
+
         return $builder->build($parsed);
     }
-    
-    protected function buildCollation($parsed) {
+
+    protected function buildCollation($parsed)
+    {
         $builder = new CollationBuilder();
+
         return $builder->build($parsed);
     }
-    
+
     /**
      * Returns a well-formatted delimiter string. If you don't need nice SQL,
      * you could simply return $parsed['delim'].
-     * 
-     * @param array $parsed The part of the output array, which contains the current expression.
+     *
+     * @param array $parsed the part of the output array, which contains the current expression
+     *
      * @return a string, which is added right after the expression
      */
-    protected function getDelimiter($parsed) {
-        return ($parsed['delim'] === false ? '' : (trim($parsed['delim']) . ' '));
+    protected function getDelimiter($parsed)
+    {
+        return false === $parsed['delim'] ? '' : (trim($parsed['delim']).' ');
     }
-     
-    public function build($parsed) {
-        if (!isset($parsed['options']) || $parsed['options'] === false) {
-            return "";
+
+    public function build($parsed)
+    {
+        if (!isset($parsed['options']) || false === $parsed['options']) {
+            return '';
         }
         $options = $parsed['options'];
-        $sql = "";
+        $sql = '';
         foreach ($options as $k => $v) {
             $len = mb_strlen($sql);
             $sql .= $this->buildExpression($v);
@@ -98,7 +105,7 @@ class CreateTableOptionsBuilder {
 
             $sql .= $this->getDelimiter($v);
         }
-        return " " . mb_substr($sql, 0, -1);
+
+        return ' '.mb_substr($sql, 0, -1);
     }
 }
-?>

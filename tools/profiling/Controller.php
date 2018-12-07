@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 abstract class Controller extends ControllerCore
 {
     protected $total_filesize = 0;
@@ -50,6 +49,7 @@ abstract class Controller extends ControllerCore
         } elseif (round($n, 2) > 0) {
             return '<span style="color:green">'.sprintf('%0.2f', $n).'</span>';
         }
+
         return '<span style="color:green">-</span>';
     }
 
@@ -62,6 +62,7 @@ abstract class Controller extends ControllerCore
         if ($n > 12) {
             return '<span style="color:#EF8B00">'.sprintf('%0.1f', $n).'</span>';
         }
+
         return '<span style="color:green">'.sprintf('%0.1f', $n).'</span>';
     }
 
@@ -73,7 +74,8 @@ abstract class Controller extends ControllerCore
         if ($n > 100) {
             return '<span style="color:#EF8B00">'.$n.' queries</span>';
         }
-        return '<span style="color:green">'.$n.' quer'.($n == 1 ? 'y' : 'ies').'</span>';
+
+        return '<span style="color:green">'.$n.' quer'.(1 == $n ? 'y' : 'ies').'</span>';
     }
 
     private function displayRowsBrowsed($n)
@@ -84,7 +86,8 @@ abstract class Controller extends ControllerCore
         if ($n > 100) {
             return '<span style="color:#EF8B00">'.$n.'  rows browsed</span>';
         }
-        return '<span style="color:green">'.$n.' row'.($n == 1 ? '' : 's').' browsed</span>';
+
+        return '<span style="color:green">'.$n.' row'.(1 == $n ? '' : 's').' browsed</span>';
     }
 
     private function getPhpVersionColor($version)
@@ -94,6 +97,7 @@ abstract class Controller extends ControllerCore
         } elseif (version_compare($version, '7.1') < 0) {
             return '<span style="color:#EF8B00">'.$version.' (Consider upgrading)</span>';
         }
+
         return '<span style="color:green">'.$version.' (OK)</span>';
     }
 
@@ -104,6 +108,7 @@ abstract class Controller extends ControllerCore
         } elseif (version_compare($version, '5.6') < 0) {
             return '<span style="color:#EF8B00">'.$version.' (Consider upgrading)</span>';
         }
+
         return '<span style="color:green">'.$version.' (OK)</span>';
     }
 
@@ -116,6 +121,7 @@ abstract class Controller extends ControllerCore
         } elseif ($n > 0) {
             return '<span style="color:green">'.round($n * 1000).'</span>'.($kikoo ? ' ms - Unicorn powered webserver!' : '');
         }
+
         return '<span style="color:green">-</span>'.($kikoo ? ' ms - Faster than light' : '');
     }
 
@@ -126,6 +132,7 @@ abstract class Controller extends ControllerCore
         } elseif ($n >= 50) {
             return '<span style="color:#EF8B00">'.$n.'</span>';
         }
+
         return '<span style="color:green">'.$n.'</span>';
     }
 
@@ -136,6 +143,7 @@ abstract class Controller extends ControllerCore
         } elseif ($n >= 50) {
             return '<span style="color:#EF8B00">'.$n.'</span>';
         }
+
         return '<span style="color:green">'.$n.'</span>';
     }
 
@@ -147,6 +155,7 @@ abstract class Controller extends ControllerCore
         if ($n > 2) {
             return 'style="color:#EF8B00"';
         }
+
         return 'style="color:green"';
     }
 
@@ -158,6 +167,7 @@ abstract class Controller extends ControllerCore
         if ($n > 2) {
             return 'style="color:#EF8B00"';
         }
+
         return 'style="color:green"';
     }
 
@@ -169,6 +179,7 @@ abstract class Controller extends ControllerCore
         if ($n > 20) {
             return 'style="color:#EF8B00"';
         }
+
         return 'style="color:green"';
     }
 
@@ -180,6 +191,7 @@ abstract class Controller extends ControllerCore
         if ($n > 10) {
             return 'style="color:#EF8B00"';
         }
+
         return 'style="color:green"';
     }
 
@@ -232,6 +244,7 @@ abstract class Controller extends ControllerCore
                 } elseif (method_exists($this, 'displayAjax')) {
                     $this->displayAjax();
                 }
+
                 return;
             }
         } else {
@@ -250,6 +263,7 @@ abstract class Controller extends ControllerCore
             $tmp = $this->getVarData($var);
         }
         $size = memory_get_usage() - $start_memory;
+
         return $size;
     }
 
@@ -258,7 +272,8 @@ abstract class Controller extends ControllerCore
         if (is_object($var)) {
             return $var;
         }
-        return (string)$var;
+
+        return (string) $var;
     }
 
     protected function processProfilingData()
@@ -276,7 +291,7 @@ abstract class Controller extends ControllerCore
         }
 
         foreach ($GLOBALS as $key => $value) {
-            if ($key != 'GLOBALS') {
+            if ('GLOBALS' != $key) {
                 $this->total_global_var_size += ($size = $this->getVarSize($value));
                 if ($size > 1024) {
                     $this->global_var_size[$key] = round($size / 1024);
@@ -441,7 +456,7 @@ abstract class Controller extends ControllerCore
 				<tr><td>Memory Limit</td><td>'.ini_get('memory_limit').'</td></tr>
 				<tr><td>Max Execution Time</td><td>'.ini_get('max_execution_time').'s</td></tr>
 				<tr><td>Smarty Cache</td><td><span style="color:'.(Configuration::get('PS_SMARTY_CACHE') ? 'green">enabled' : 'red">disabled').'</td></tr>
-				<tr><td>Smarty Compilation</td><td><span style="color:'.(Configuration::get('PS_SMARTY_FORCE_COMPILE') == 0 ? 'green">never recompile' : (Configuration::get('PS_SMARTY_FORCE_COMPILE') == 1 ? '#EF8B00">auto' : 'red">force compile')).'</td></tr>
+				<tr><td>Smarty Compilation</td><td><span style="color:'.(0 == Configuration::get('PS_SMARTY_FORCE_COMPILE') ? 'green">never recompile' : (1 == Configuration::get('PS_SMARTY_FORCE_COMPILE') ? '#EF8B00">auto' : 'red">force compile')).'</td></tr>
 			</table>
 		</div>';
     }
@@ -456,7 +471,7 @@ abstract class Controller extends ControllerCore
 				<tr><th>&nbsp;</th><th>Time</th><th>Cumulated Time</th><th>Memory Usage</th><th>Memory Peak Usage</th></tr>';
         $last = array('time' => $start_time, 'memory_usage' => 0);
         foreach ($this->profiler as $row) {
-            if ($row['block'] == 'checkAccess' && $row['time'] == $last['time']) {
+            if ('checkAccess' == $row['block'] && $row['time'] == $last['time']) {
                 continue;
             }
             echo '<tr>
@@ -514,7 +529,7 @@ abstract class Controller extends ControllerCore
             }
         }
         echo '	<tr>
-					<th><b>'.($count_hooks == 1 ? '1 hook' : (int)$count_hooks.' hooks').'</b></th>
+					<th><b>'.(1 == $count_hooks ? '1 hook' : (int) $count_hooks.' hooks').'</b></th>
 					<th>'.$this->getLoadTimeColor($this->total_modules_time).' ms</th>
 					<th>'.$this->getMemoryColor($this->total_modules_memory).' Mb</th>
 				</tr>
@@ -563,7 +578,7 @@ abstract class Controller extends ControllerCore
             }
         }
         echo '	<tr>
-					<th><b>'.($count_modules == 1 ? '1 module' : (int)$count_modules.' modules').'</b></th>
+					<th><b>'.(1 == $count_modules ? '1 module' : (int) $count_modules.' modules').'</b></th>
 					<th>'.$this->getLoadTimeColor($this->total_modules_time).' ms</th>
 					<th>'.$this->getMemoryColor($this->total_modules_memory).' Mb</th>
 				</tr>
@@ -594,9 +609,9 @@ abstract class Controller extends ControllerCore
 
             echo '
 				<tr>
-					<td class="pre"><pre>'.preg_replace("/(^[\s]*)/m", "", htmlspecialchars($data['query'], ENT_NOQUOTES, 'utf-8', false)).'</pre></td>
+					<td class="pre"><pre>'.preg_replace("/(^[\s]*)/m", '', htmlspecialchars($data['query'], ENT_NOQUOTES, 'utf-8', false)).'</pre></td>
 					<td data-value="'.$data['time'].'"><span '.$this->getTimeColor($data['time'] * 1000).'>'.(round($data['time'] * 1000, 1) < 0.1 ? '< 1' : round($data['time'] * 1000, 1)).'</span></td>
-					<td>'.(int)$data['rows'].'</td>
+					<td>'.(int) $data['rows'].'</td>
 					<td data-value="'.$data['filesort'].'">'.($data['filesort'] ? '<span style="color:red">Yes</span>' : '').'</td>
 					<td data-value="'.$data['group_by'].'">'.($data['group_by'] ? '<span style="color:red">Yes</span>' : '').'</td>
 					<td data-value="'.$data['location'].'">
@@ -667,7 +682,7 @@ abstract class Controller extends ControllerCore
 			<tr><th>#</th><th>Filename</th></tr>';
         foreach (get_included_files() as $file) {
             $file = str_replace('\\', '/', str_replace(_PS_ROOT_DIR_, '', $file));
-            if (mb_strpos($file, '/tools/profiling/') === 0) {
+            if (0 === mb_strpos($file, '/tools/profiling/')) {
                 continue;
             }
             echo '<tr><td>'.(++$i).'</td><td>'.$file.'</td></tr>';
@@ -737,5 +752,6 @@ function prestashop_querytime_sort($a, $b)
     if ($a['time'] == $b['time']) {
         return 0;
     }
+
     return ($a['time'] > $b['time']) ? -1 : 1;
 }

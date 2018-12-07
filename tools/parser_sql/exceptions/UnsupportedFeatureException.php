@@ -1,6 +1,6 @@
 <?php
 /**
- * UnsupportedFeatureException.php
+ * UnsupportedFeatureException.php.
  *
  * This file implements the UnsupportedFeatureException class which is used within the
  * PHPSQLParser package.
@@ -33,25 +33,24 @@
 
 /**
  * This exception will occur in the PHPSQLCreator, if the creator finds
- * a field name, which is unknown. The developers have created some 
- * additional output of the parser, but the creator class has not been 
+ * a field name, which is unknown. The developers have created some
+ * additional output of the parser, but the creator class has not been
  * enhanced. Please open an issue in such a case.
- * 
- * @author arothe
  *
+ * @author arothe
  */
-class UnsupportedFeatureException extends Exception {
-
+class UnsupportedFeatureException extends Exception
+{
     protected $key;
 
-    public function __construct($key) {
+    public function __construct($key)
+    {
         $this->key = $key;
-        parent::__construct($key . " not implemented.", 20);
+        parent::__construct($key.' not implemented.', 20);
     }
 
-    public function getKey() {
+    public function getKey()
+    {
         return $this->key;
     }
 }
-
-?>

@@ -1,6 +1,6 @@
 <?php
 /**
- * InsertBuilder.php
+ * InsertBuilder.php.
  *
  * Builds the [INSERT] statement part.
  *
@@ -31,40 +31,41 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
+ *
  * @version   SVN: $Id: InsertBuilder.php 830 2013-12-18 09:35:42Z phosco@gmx.de $
- * 
  */
-
-require_once dirname(__FILE__) . '/../exceptions/UnableToCreateSQLException.php';
-require_once dirname(__FILE__) . '/ColumnReferenceBuilder.php';
+require_once dirname(__FILE__).'/../exceptions/UnableToCreateSQLException.php';
+require_once dirname(__FILE__).'/ColumnReferenceBuilder.php';
 
 /**
- * This class implements the builder for the [INSERT] statement parts. 
+ * This class implements the builder for the [INSERT] statement parts.
  * You can overwrite all functions to achieve another handling.
  *
  * @author  André Rothe <andre.rothe@phosco.info>
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- *  
  */
-class InsertBuilder {
-
-    protected function buildColRef($parsed) {
+class InsertBuilder
+{
+    protected function buildColRef($parsed)
+    {
         $builder = new ColumnReferenceBuilder();
+
         return $builder->build($parsed);
     }
 
-    public function build($parsed) {
-        $sql = "INSERT INTO " . $parsed['table'];
+    public function build($parsed)
+    {
+        $sql = 'INSERT INTO '.$parsed['table'];
 
-        if ($parsed['columns'] === false) {
+        if (false === $parsed['columns']) {
             return $sql;
         }
 
-        $columns = "";
+        $columns = '';
         foreach ($parsed['columns'] as $k => $v) {
             $len = mb_strlen($columns);
             $columns .= $this->buildColRef($v);
@@ -73,16 +74,15 @@ class InsertBuilder {
                 throw new UnableToCreateSQLException('INSERT[columns]', $k, $v, 'expr_type');
             }
 
-            $columns .= ",";
+            $columns .= ',';
         }
 
-        if ($columns !== "") {
-            $columns = " (" . mb_substr($columns, 0, -1) . ")";
+        if ('' !== $columns) {
+            $columns = ' ('.mb_substr($columns, 0, -1).')';
         }
 
         $sql .= $columns;
+
         return $sql;
     }
-    
 }
-?>

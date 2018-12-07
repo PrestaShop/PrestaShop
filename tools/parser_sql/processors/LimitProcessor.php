@@ -1,6 +1,6 @@
 <?php
 /**
- * LimitProcessor.php
+ * LimitProcessor.php.
  *
  * This file implements the processor for the LIMIT statements.
  *
@@ -29,32 +29,30 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
  * DAMAGE.
  */
-
-require_once(dirname(__FILE__) . '/AbstractProcessor.php');
+require_once dirname(__FILE__).'/AbstractProcessor.php';
 
 /**
- * 
  * This class processes the LIMIT statements.
- * 
+ *
  * @author arothe
- * 
  */
-class LimitProcessor extends AbstractProcessor {
-
-    public function process($tokens) {
-        $rowcount = "";
-        $offset = "";
+class LimitProcessor extends AbstractProcessor
+{
+    public function process($tokens)
+    {
+        $rowcount = '';
+        $offset = '';
 
         $comma = -1;
         $exchange = false;
 
         for ($i = 0; $i < count($tokens); ++$i) {
             $trim = trim($tokens[$i]);
-            if ($trim === ",") {
+            if (',' === $trim) {
                 $comma = $i;
                 break;
             }
-            if ($trim === "OFFSET") {
+            if ('OFFSET' === $trim) {
                 $comma = $i;
                 $exchange = true;
                 break;
@@ -80,4 +78,3 @@ class LimitProcessor extends AbstractProcessor {
         return array('offset' => trim($offset), 'rowcount' => trim($rowcount));
     }
 }
-?>

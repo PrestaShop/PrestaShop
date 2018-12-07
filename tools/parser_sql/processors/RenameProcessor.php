@@ -1,6 +1,6 @@
 <?php
 /**
- * RenameProcessor.php
+ * RenameProcessor.php.
  *
  * This file implements the processor for the RENAME statements.
  *
@@ -29,22 +29,20 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
  * DAMAGE.
  */
-
-require_once(dirname(__FILE__) . '/AbstractProcessor.php');
-require_once(dirname(__FILE__) . '/../utils/ExpressionToken.php');
-require_once(dirname(__FILE__) . '/../utils/ExpressionType.php');
+require_once dirname(__FILE__).'/AbstractProcessor.php';
+require_once dirname(__FILE__).'/../utils/ExpressionToken.php';
+require_once dirname(__FILE__).'/../utils/ExpressionType.php';
 
 /**
- * 
  * This class processes the RENAME statements.
- * 
+ *
  * @author arothe
- * 
  */
-class RenameProcessor extends AbstractProcessor {
-
-    public function process($tokenList) {
-        $base_expr = "";
+class RenameProcessor extends AbstractProcessor
+{
+    public function process($tokenList)
+    {
+        $base_expr = '';
         $resultList = array();
         $tablePair = array();
 
@@ -60,18 +58,18 @@ class RenameProcessor extends AbstractProcessor {
             // separate source table from destination
                 $tablePair['source'] = array('expr_type' => ExpressionType::TABLE, 'table' => trim($base_expr),
                                              'no_quotes' => $this->revokeQuotation($base_expr),
-                                             'base_expr' => $base_expr);
-                $base_expr = "";
+                                             'base_expr' => $base_expr, );
+                $base_expr = '';
                 break;
 
             case ',':
             // split rename operations
                 $tablePair['destination'] = array('expr_type' => ExpressionType::TABLE, 'table' => trim($base_expr),
                                                   'no_quotes' => $this->revokeQuotation($base_expr),
-                                                  'base_expr' => $base_expr);
+                                                  'base_expr' => $base_expr, );
                 $resultList[] = $tablePair;
                 $tablePair = array();
-                $base_expr = "";
+                $base_expr = '';
                 break;
 
             default:
@@ -80,15 +78,13 @@ class RenameProcessor extends AbstractProcessor {
             }
         }
 
-        if ($base_expr !== "") {
+        if ('' !== $base_expr) {
             $tablePair['destination'] = array('expr_type' => ExpressionType::TABLE, 'table' => trim($base_expr),
                                               'no_quotes' => $this->revokeQuotation($base_expr),
-                                              'base_expr' => $base_expr);
+                                              'base_expr' => $base_expr, );
             $resultList[] = $tablePair;
         }
 
         return $resultList;
     }
-
 }
-?>

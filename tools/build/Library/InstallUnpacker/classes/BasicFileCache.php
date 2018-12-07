@@ -62,8 +62,8 @@ class BasicFileCache
      * @param string $filename
      *
      * @throws Exception
-     * @return bool
      *
+     * @return bool
      */
     public function save($data, $filename)
     {
@@ -95,6 +95,6 @@ class BasicFileCache
      */
     private function computeCacheFilepath($filename)
     {
-        return __DIR__ . DIRECTORY_SEPARATOR . $filename . '.cache';
+        return __DIR__.DIRECTORY_SEPARATOR.$filename.'.cache';
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * SQLProcessor.php
+ * SQLProcessor.php.
  *
  * This file implements the processor for the base SQL statements.
  *
@@ -29,37 +29,34 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
  * DAMAGE.
  */
-
-require_once(dirname(__FILE__) . '/AbstractProcessor.php');
-require_once(dirname(__FILE__) . '/SQLChunkProcessor.php');
+require_once dirname(__FILE__).'/AbstractProcessor.php';
+require_once dirname(__FILE__).'/SQLChunkProcessor.php';
 
 /**
- * 
  * This class processes the base SQL statements.
- * 
+ *
  * @author arothe
- * 
  */
-class SQLProcessor extends SQLChunkProcessor {
-
+class SQLProcessor extends SQLChunkProcessor
+{
     /*
-     * This function breaks up the SQL statement into logical sections. 
+     * This function breaks up the SQL statement into logical sections.
      * Some sections are then further handled by specialized processors.
      */
-    public function process($tokens) {
-        $prev_category = "";
-        $token_category = "";
+    public function process($tokens)
+    {
+        $prev_category = '';
+        $token_category = '';
         $skip_next = 0;
         $out = false;
 
         $tokenCount = count($tokens);
         for ($tokenNumber = 0; $tokenNumber < $tokenCount; ++$tokenNumber) {
-
             $token = $tokens[$tokenNumber];
             $trim = trim($token); // this removes also \n and \t!
 
             // if it starts with an "(", it should follow a SELECT
-            if ($trim !== "" && $trim[0] === "(" && $token_category === "") {
+            if ('' !== $trim && '(' === $trim[0] && '' === $token_category) {
                 $token_category = 'SELECT';
             }
 
@@ -67,16 +64,16 @@ class SQLProcessor extends SQLChunkProcessor {
              * If it isn't obvious, when $skip_next is set, then we ignore the next real token, that is we ignore whitespace.
              */
             if ($skip_next > 0) {
-                if ($trim === "") {
-                    if ($token_category !== "") { # is this correct??
+                if ('' === $trim) {
+                    if ('' !== $token_category) { // is this correct??
                         $out[$token_category][] = $token;
                     }
                     continue;
                 }
-                #to skip the token we replace it with whitespace
-                $trim = "";
-                $token = "";
-                $skip_next--;
+                //to skip the token we replace it with whitespace
+                $trim = '';
+                $token = '';
+                --$skip_next;
                 if ($skip_next > 0) {
                     continue;
                 }
@@ -84,7 +81,6 @@ class SQLProcessor extends SQLChunkProcessor {
 
             $upper = mb_strtoupper($trim);
             switch ($upper) {
-
             /* Tokens that get their own sections. These keywords have subclauses. */
             case 'SELECT':
             case 'ORDER':
@@ -111,34 +107,34 @@ class SQLProcessor extends SQLChunkProcessor {
             case 'EXECUTE':
             case 'PREPARE':
             case 'DEALLOCATE':
-                if ($trim === 'DEALLOCATE') {
+                if ('DEALLOCATE' === $trim) {
                     $skip_next = 1;
                 }
                 $token_category = $upper;
                 break;
 
             case 'SET':
-                if ($token_category !== 'TABLE') {
+                if ('TABLE' !== $token_category) {
                     $token_category = $upper;
                 }
                 break;
 
             case 'LIMIT':
             case 'PLUGIN':
-            # no separate section
-                if ($token_category === 'SHOW') {
+            // no separate section
+                if ('SHOW' === $token_category) {
                     continue;
                 }
                 $token_category = $upper;
                 break;
 
             case 'FROM':
-            # this FROM is different from FROM in other DML (not join related)
-                if ($token_category === 'PREPARE') {
+            // this FROM is different from FROM in other DML (not join related)
+                if ('PREPARE' === $token_category) {
                     continue 2;
                 }
-                # no separate section
-                if ($token_category === 'SHOW') {
+                // no separate section
+                if ('SHOW' === $token_category) {
                     continue;
                 }
                 $token_category = $upper;
@@ -149,9 +145,9 @@ class SQLProcessor extends SQLChunkProcessor {
             case 'SHOW':
                 $token_category = $upper;
                 break;
-                
+
             case 'DESC':
-                if ($token_category === '') {
+                if ('' === $token_category) {
                     // short version of DESCRIBE
                     $token_category = $upper;
                 }
@@ -166,10 +162,10 @@ class SQLProcessor extends SQLChunkProcessor {
 
             case 'DATABASE':
             case 'SCHEMA':
-                if ($prev_category === 'DROP') {
+                if ('DROP' === $prev_category) {
                     continue;
                 }
-                if ($prev_category === 'SHOW') {
+                if ('SHOW' === $prev_category) {
                     continue;
                 }
                 $token_category = $upper;
@@ -177,21 +173,21 @@ class SQLProcessor extends SQLChunkProcessor {
 
             case 'EVENT':
             // issue 71
-                if ($prev_category === 'DROP' || $prev_category === 'ALTER' || $prev_category === 'CREATE') {
+                if ('DROP' === $prev_category || 'ALTER' === $prev_category || 'CREATE' === $prev_category) {
                     $token_category = $upper;
                 }
                 break;
 
             case 'DATA':
             // prevent wrong handling of DATA as keyword
-                if ($prev_category === 'LOAD') {
+                if ('LOAD' === $prev_category) {
                     $token_category = $upper;
                 }
                 break;
 
             case 'INTO':
             // prevent wrong handling of CACHE within LOAD INDEX INTO CACHE...
-                if ($prev_category === 'LOAD') {
+                if ('LOAD' === $prev_category) {
                     $out[$prev_category][] = $upper;
                     continue 2;
                 }
@@ -200,14 +196,14 @@ class SQLProcessor extends SQLChunkProcessor {
 
             case 'USER':
             // prevent wrong processing as keyword
-                if ($prev_category === 'CREATE' || $prev_category === 'RENAME' || $prev_category === 'DROP') {
+                if ('CREATE' === $prev_category || 'RENAME' === $prev_category || 'DROP' === $prev_category) {
                     $token_category = $upper;
                 }
                 break;
 
             case 'VIEW':
             // prevent wrong processing as keyword
-                if ($prev_category === 'CREATE' || $prev_category === 'ALTER' || $prev_category === 'DROP') {
+                if ('CREATE' === $prev_category || 'ALTER' === $prev_category || 'DROP' === $prev_category) {
                     $token_category = $upper;
                 }
                 break;
@@ -242,8 +238,8 @@ class SQLProcessor extends SQLChunkProcessor {
                 continue 2;
 
             case 'REPLACE':
-                if ($prev_category === 'TABLE') {
-                    # part of the CREATE TABLE statement
+                if ('TABLE' === $prev_category) {
+                    // part of the CREATE TABLE statement
                     $out[$prev_category][] = $upper;
                     continue 2;
                 }
@@ -253,8 +249,8 @@ class SQLProcessor extends SQLChunkProcessor {
                 continue 2;
 
             case 'IGNORE':
-                if ($prev_category === 'TABLE') {
-                    # part of the CREATE TABLE statement
+                if ('TABLE' === $prev_category) {
+                    // part of the CREATE TABLE statement
                     $out[$prev_category][] = $upper;
                     continue 2;
                 }
@@ -263,7 +259,7 @@ class SQLProcessor extends SQLChunkProcessor {
                 break;
 
             case 'CHECK':
-                if ($prev_category === 'TABLE') {
+                if ('TABLE' === $prev_category) {
                     $out[$prev_category][] = $upper;
                     continue 2;
                 }
@@ -272,21 +268,21 @@ class SQLProcessor extends SQLChunkProcessor {
                 continue 2;
 
             case 'CREATE':
-                if ($prev_category === 'SHOW') {
+                if ('SHOW' === $prev_category) {
                     continue;
                 }
                 $token_category = $upper;
                 break;
 
             case 'TABLE':
-                if ($prev_category === 'CREATE') {
+                if ('CREATE' === $prev_category) {
                     $out[$prev_category][] = $upper;
                     $token_category = $upper;
                 }
                 break;
 
             case 'TEMPORARY':
-                if ($prev_category === 'CREATE') {
+                if ('CREATE' === $prev_category) {
                     $out[$prev_category][] = $upper;
                     $token_category = $prev_category;
                     continue 2;
@@ -294,7 +290,7 @@ class SQLProcessor extends SQLChunkProcessor {
                 break;
 
             case 'IF':
-                if ($prev_category === 'TABLE') {
+                if ('TABLE' === $prev_category) {
                     $token_category = 'CREATE';
                     $out[$token_category] = array_merge($out[$token_category], $out[$prev_category]);
                     $out[$prev_category] = array();
@@ -305,7 +301,7 @@ class SQLProcessor extends SQLChunkProcessor {
                 break;
 
             case 'NOT':
-                if ($prev_category === 'CREATE') {
+                if ('CREATE' === $prev_category) {
                     $token_category = $prev_category;
                     $out[$prev_category][] = $upper;
                     continue 2;
@@ -313,7 +309,7 @@ class SQLProcessor extends SQLChunkProcessor {
                 break;
 
             case 'EXISTS':
-                if ($prev_category === 'CREATE') {
+                if ('CREATE' === $prev_category) {
                     $out[$prev_category][] = $upper;
                     $prev_category = $token_category = 'TABLE';
                     continue 2;
@@ -321,8 +317,8 @@ class SQLProcessor extends SQLChunkProcessor {
                 break;
 
             case 'CACHE':
-                if ($prev_category === "" || $prev_category === 'RESET' || $prev_category === 'FLUSH'
-                        || $prev_category === 'LOAD') {
+                if ('' === $prev_category || 'RESET' === $prev_category || 'FLUSH' === $prev_category
+                        || 'LOAD' === $prev_category) {
                     $token_category = $upper;
                     continue 2;
                 }
@@ -330,7 +326,7 @@ class SQLProcessor extends SQLChunkProcessor {
 
             /* This is either LOCK TABLES or SELECT ... LOCK IN SHARE MODE */
             case 'LOCK':
-                if ($token_category === "") {
+                if ('' === $token_category) {
                     $token_category = $upper;
                     $out[$upper][0] = $upper;
                 } else {
@@ -342,11 +338,11 @@ class SQLProcessor extends SQLChunkProcessor {
                 break;
 
             case 'USING': /* USING in FROM clause is different from USING w/ prepared statement*/
-                if ($token_category === 'EXECUTE') {
+                if ('EXECUTE' === $token_category) {
                     $token_category = $upper;
                     continue 2;
                 }
-                if ($token_category === 'FROM' && !empty($out['DELETE'])) {
+                if ('FROM' === $token_category && !empty($out['DELETE'])) {
                     $token_category = $upper;
                     continue 2;
                 }
@@ -354,14 +350,14 @@ class SQLProcessor extends SQLChunkProcessor {
 
             /* DROP TABLE is different from ALTER TABLE DROP ... */
             case 'DROP':
-                if ($token_category !== 'ALTER') {
+                if ('ALTER' !== $token_category) {
                     $token_category = $upper;
                     continue 2;
                 }
                 break;
 
             case 'FOR':
-                if ($prev_category === 'SHOW') {
+                if ('SHOW' === $prev_category) {
                     continue;
                 }
                 $skip_next = 1;
@@ -370,26 +366,27 @@ class SQLProcessor extends SQLChunkProcessor {
                 break;
 
             case 'UPDATE':
-                if ($token_category === "") {
+                if ('' === $token_category) {
                     $token_category = $upper;
                     continue 2;
                 }
-                if ($token_category === 'DUPLICATE') {
+                if ('DUPLICATE' === $token_category) {
                     continue 2;
                 }
                 break;
 
             case 'START':
-                $trim = "BEGIN";
+                $trim = 'BEGIN';
                 $out[$upper][0] = $upper;
                 $skip_next = 1;
                 break;
 
             /* These tokens are ignored. */
             case 'TO':
-                if ($token_category === 'RENAME') {
+                if ('RENAME' === $token_category) {
                     break;
                 }
+                // no break
             case 'BY':
             case 'ALL':
             case 'SHARE':
@@ -399,7 +396,7 @@ class SQLProcessor extends SQLChunkProcessor {
                 break;
 
             case 'KEY':
-                if ($token_category === 'DUPLICATE') {
+                if ('DUPLICATE' === $token_category) {
                     continue 2;
                 }
                 break;
@@ -414,7 +411,7 @@ class SQLProcessor extends SQLChunkProcessor {
                 break;
 
             case 'WITH':
-                if ($token_category === 'GROUP') {
+                if ('GROUP' === $token_category) {
                     $skip_next = 1;
                     $out['OPTIONS'][] = 'WITH ROLLUP';
                     continue 2;
@@ -435,7 +432,7 @@ class SQLProcessor extends SQLChunkProcessor {
 
             // remove obsolete category after union (empty category because of
             // empty token before select)
-            if ($token_category !== "" && ($prev_category === $token_category)) {
+            if ('' !== $token_category && ($prev_category === $token_category)) {
                 $out[$token_category][] = $token;
             }
 
@@ -445,4 +442,3 @@ class SQLProcessor extends SQLChunkProcessor {
         return parent::process($out);
     }
 }
-?>

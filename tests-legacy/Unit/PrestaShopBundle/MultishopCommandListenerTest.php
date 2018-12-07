@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -44,7 +44,6 @@ class MultishopCommandListenerTest extends UnitTestCase
     public $commandListener;
 
     /**
-     *
      * @var Context
      */
     public $multishopContext;
@@ -56,7 +55,6 @@ class MultishopCommandListenerTest extends UnitTestCase
 
     public function setUp()
     {
-
         $this->contextMocker = new ContextMocker();
         $this->contextMocker->mockContext();
 
@@ -73,7 +71,6 @@ class MultishopCommandListenerTest extends UnitTestCase
         parent::tearDown();
         $this->contextMocker->resetContext();
     }
-
 
     public function testDefaultMultishopContext()
     {

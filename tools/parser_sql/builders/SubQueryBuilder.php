@@ -1,6 +1,6 @@
 <?php
 /**
- * SubQueryBuilder.php
+ * SubQueryBuilder.php.
  *
  * Builds the statements for sub-queries.
  *
@@ -31,71 +31,80 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
+ *
  * @version   SVN: $Id: SubQueryBuilder.php 830 2013-12-18 09:35:42Z phosco@gmx.de $
- * 
  */
-
-require_once dirname(__FILE__) . '/RefClauseBuilder.php';
-require_once dirname(__FILE__) . '/RefTypeBuilder.php';
-require_once dirname(__FILE__) . '/JoinBuilder.php';
-require_once dirname(__FILE__) . '/AliasBuilder.php';
-require_once dirname(__FILE__) . '/AliasBuilder.php';
-require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
+require_once dirname(__FILE__).'/RefClauseBuilder.php';
+require_once dirname(__FILE__).'/RefTypeBuilder.php';
+require_once dirname(__FILE__).'/JoinBuilder.php';
+require_once dirname(__FILE__).'/AliasBuilder.php';
+require_once dirname(__FILE__).'/AliasBuilder.php';
+require_once dirname(__FILE__).'/../utils/ExpressionType.php';
 
 /**
- * This class implements the builder for sub-queries. 
+ * This class implements the builder for sub-queries.
  * You can overwrite all functions to achieve another handling.
  *
  * @author  André Rothe <andre.rothe@phosco.info>
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- *  
  */
-class SubQueryBuilder {
-
-    protected function buildRefClause($parsed) {
+class SubQueryBuilder
+{
+    protected function buildRefClause($parsed)
+    {
         $builder = new RefClauseBuilder();
+
         return $builder->build($parsed);
     }
 
-    protected function buildRefType($parsed) {
+    protected function buildRefType($parsed)
+    {
         $builder = new RefTypeBuilder();
+
         return $builder->build($parsed);
     }
 
-    protected function buildJoin($parsed) {
+    protected function buildJoin($parsed)
+    {
         $builder = new JoinBuilder();
+
         return $builder->build($parsed);
     }
 
-    protected function buildAlias($parsed) {
+    protected function buildAlias($parsed)
+    {
         $builder = new AliasBuilder();
+
         return $builder->build($parsed);
     }
 
-    protected function buildSelectStatement($parsed) {
+    protected function buildSelectStatement($parsed)
+    {
         $builder = new SelectStatementBuilder();
+
         return $builder->build($parsed);
     }
 
-    public function build($parsed, $index = 0) {
-        if ($parsed['expr_type'] !== ExpressionType::SUBQUERY) {
-            return "";
+    public function build($parsed, $index = 0)
+    {
+        if (ExpressionType::SUBQUERY !== $parsed['expr_type']) {
+            return '';
         }
 
         $sql = $this->buildSelectStatement($parsed['sub_tree']);
-        $sql = "(" . $sql . ")";
+        $sql = '('.$sql.')';
         $sql .= $this->buildAlias($parsed);
 
-        if ($index !== 0) {
-            $sql = $this->buildJoin($parsed['join_type']) . $sql;
+        if (0 !== $index) {
+            $sql = $this->buildJoin($parsed['join_type']).$sql;
             $sql .= $this - buildRefType($parsed['ref_type']);
             $sql .= $this->buildRefClause($parsed['ref_clause']);
         }
+
         return $sql;
     }
 }
-?>

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -31,14 +31,13 @@ use PHPUnit\Framework\TestCase;
 
 class FloatParserTest extends TestCase
 {
-
     /**
      * Given a string containing a number with arbitrary characters as thousand and decimal separators
      * When constructing an ImmutableFloat from that string
-     * Then the string should be interpreted as a float by ImmutableFloat
+     * Then the string should be interpreted as a float by ImmutableFloat.
      *
      * @param string $string
-     * @param float $expected
+     * @param float  $expected
      *
      * @dataProvider provideValidStrings
      */
@@ -50,7 +49,8 @@ class FloatParserTest extends TestCase
     /**
      * Given a value that is not a string
      * When constructing an ImmutableFloat from that value using ::fromString
-     * Then an InvalidArgumentException should be thrown
+     * Then an InvalidArgumentException should be thrown.
+     *
      * @param mixed $value
      *
      * @expectedException \InvalidArgumentException
@@ -64,6 +64,7 @@ class FloatParserTest extends TestCase
     public function provideValidStrings()
     {
         $expected = 1234567.89;
+
         return array(
             array('1234567.89', $expected),
             array('1234567,89', $expected),

@@ -1,6 +1,6 @@
 <?php
 /**
- * SetProcessor.php
+ * SetProcessor.php.
  *
  * This file implements the processor for the SET statements.
  *
@@ -29,23 +29,21 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
  * DAMAGE.
  */
-
-require_once(dirname(__FILE__) . '/AbstractProcessor.php');
-require_once(dirname(__FILE__) . '/ExpressionListProcessor.php');
-require_once(dirname(__FILE__) . '/../utils/ExpressionType.php');
+require_once dirname(__FILE__).'/AbstractProcessor.php';
+require_once dirname(__FILE__).'/ExpressionListProcessor.php';
+require_once dirname(__FILE__).'/../utils/ExpressionType.php';
 
 /**
- * 
  * This class processes the SET statements.
- * 
+ *
  * @author arothe
- * 
  */
-class SetProcessor extends AbstractProcessor {
-
+class SetProcessor extends AbstractProcessor
+{
     private $expressionListProcessor;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->expressionListProcessor = new ExpressionListProcessor();
     }
 
@@ -53,15 +51,18 @@ class SetProcessor extends AbstractProcessor {
      * A SET list is simply a list of key = value expressions separated by comma (,).
      * This function produces a list of the key/value expressions.
      */
-    protected function getAssignment($base_expr) {
+    protected function getAssignment($base_expr)
+    {
         $assignment = $this->expressionListProcessor->process($this->splitSQLIntoTokens($base_expr));
+
         return array('expr_type' => ExpressionType::EXPRESSION, 'base_expr' => trim($base_expr),
-                     'sub_tree' => $assignment);
+                     'sub_tree' => $assignment, );
     }
 
-    public function process($tokens, $isUpdate = false) {
+    public function process($tokens, $isUpdate = false)
+    {
         $result = array();
-        $baseExpr = "";
+        $baseExpr = '';
         $assignment = false;
         $varType = false;
 
@@ -73,19 +74,19 @@ class SetProcessor extends AbstractProcessor {
             case 'SESSION':
             case 'GLOBAL':
                 if (!$isUpdate) {
-                    $varType = $this->getVariableType("@@" . $upper . ".");
-                    $baseExpr = "";
+                    $varType = $this->getVariableType('@@'.$upper.'.');
+                    $baseExpr = '';
                     continue 2;
                 }
                 break;
 
             case ',':
                 $assignment = $this->getAssignment($baseExpr);
-                if (!$isUpdate && $varType !== false) {
+                if (!$isUpdate && false !== $varType) {
                     $assignment['sub_tree'][0]['expr_type'] = $varType;
                 }
                 $result[] = $assignment;
-                $baseExpr = "";
+                $baseExpr = '';
                 $varType = false;
                 continue 2;
 
@@ -94,9 +95,9 @@ class SetProcessor extends AbstractProcessor {
             $baseExpr .= $token;
         }
 
-        if (trim($baseExpr) !== "") {
+        if ('' !== trim($baseExpr)) {
             $assignment = $this->getAssignment($baseExpr);
-            if (!$isUpdate && $varType !== false) {
+            if (!$isUpdate && false !== $varType) {
                 $assignment['sub_tree'][0]['expr_type'] = $varType;
             }
             $result[] = $assignment;
@@ -104,6 +105,4 @@ class SetProcessor extends AbstractProcessor {
 
         return $result;
     }
-
 }
-?>

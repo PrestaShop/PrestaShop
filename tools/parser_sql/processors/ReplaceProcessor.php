@@ -1,6 +1,6 @@
 <?php
 /**
- * ReplaceProcessor.php
+ * ReplaceProcessor.php.
  *
  * This file implements the processor for the REPLACE statements.
  *
@@ -29,21 +29,17 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
  * DAMAGE.
  */
-
-require_once(dirname(__FILE__) . '/InsertProcessor.php');
+require_once dirname(__FILE__).'/InsertProcessor.php';
 
 /**
- * 
  * This class processes the REPLACE statements.
- * 
+ *
  * @author arothe
- * 
  */
-class ReplaceProcessor extends InsertProcessor {
-
-    public function process($tokenList) {
+class ReplaceProcessor extends InsertProcessor
+{
+    public function process($tokenList)
+    {
         return parent::process($tokenList, 'REPLACE');
     }
-
 }
-?>

@@ -1,6 +1,6 @@
 <?php
 /**
- * ReservedBuilder.php
+ * ReservedBuilder.php.
  *
  * Builds reserved keywords.
  *
@@ -31,15 +31,14 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
+ *
  * @version   SVN: $Id: ReservedBuilder.php 830 2013-12-18 09:35:42Z phosco@gmx.de $
- * 
  */
-
-require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
+require_once dirname(__FILE__).'/../utils/ExpressionType.php';
 
 /**
  * This class implements the builder for reserved keywords.
@@ -47,19 +46,20 @@ require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
  *
  * @author  André Rothe <andre.rothe@phosco.info>
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- *  
  */
-class ReservedBuilder {
-
-    public function isReserved($parsed) {
-        return ($parsed['expr_type'] === ExpressionType::RESERVED);
+class ReservedBuilder
+{
+    public function isReserved($parsed)
+    {
+        return ExpressionType::RESERVED === $parsed['expr_type'];
     }
-    
-    public function build($parsed) {
+
+    public function build($parsed)
+    {
         if (!$this->isReserved($parsed)) {
-            return "";
+            return '';
         }
+
         return $parsed['base_expr'];
     }
 }
-?>

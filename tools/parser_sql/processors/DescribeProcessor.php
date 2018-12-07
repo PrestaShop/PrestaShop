@@ -1,6 +1,6 @@
 <?php
 /**
- * DescribeProcessor.php
+ * DescribeProcessor.php.
  *
  * This file implements the processor for the DESCRIBE statements.
  *
@@ -29,20 +29,17 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
  * DAMAGE.
  */
-
-require_once(dirname(__FILE__) . '/ExplainProcessor.php');
+require_once dirname(__FILE__).'/ExplainProcessor.php';
 
 /**
- * 
  * This class processes the DESCRIBE statements.
- * 
+ *
  * @author arothe
- * 
  */
-class DescribeProcessor extends ExplainProcessor {
-
-    protected function isStatement($keys, $needle = "DESCRIBE") {
+class DescribeProcessor extends ExplainProcessor
+{
+    protected function isStatement($keys, $needle = 'DESCRIBE')
+    {
         return parent::isStatement($keys, $needle);
     }
 }
-?>

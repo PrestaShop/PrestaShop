@@ -72,7 +72,7 @@ class Download
     {
         $curl_timeout = 60;
 
-        if (!extension_loaded('openssl') and mb_strpos('https://', $url) === true) {
+        if (!extension_loaded('openssl') and true === mb_strpos('https://', $url)) {
             $url = str_replace('https', 'http', $url);
         }
 
@@ -98,7 +98,7 @@ class Download
             curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
             $opts = stream_context_get_options($stream_context);
 
-            if (isset($opts['http']['method']) && mb_strtolower($opts['http']['method']) == 'post') {
+            if (isset($opts['http']['method']) && 'post' == mb_strtolower($opts['http']['method'])) {
                 curl_setopt($curl, CURLOPT_POST, true);
                 if (isset($opts['http']['content'])) {
                     parse_str($opts['http']['content'], $datas);
@@ -146,8 +146,8 @@ class Download
 
     /**
      * @throws Exception
-     * @return SimpleXMLElement
      *
+     * @return SimpleXMLElement
      */
     private function getFeed()
     {
@@ -175,8 +175,8 @@ class Download
      * @param SimpleXMLElement $feed
      *
      * @throws PrestashopCouldNotDownloadLatestVersionException
-     * @return \StdClass
      *
+     * @return \StdClass
      */
     private function getLatestStableBranchObjectFromFeed($feed)
     {
@@ -220,8 +220,8 @@ class Download
 
     /**
      * @throws Exception
-     * @return string
      *
+     * @return string
      */
     private function getXmlFeedFromCache()
     {
@@ -232,8 +232,8 @@ class Download
      * @param string $xml
      *
      * @throws Exception
-     * @return bool
      *
+     * @return bool
      */
     private function storeFeedIntoFileCache($xml)
     {

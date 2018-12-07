@@ -1,6 +1,6 @@
 <?php
 /**
- * OrderByAliasBuilder.php
+ * OrderByAliasBuilder.php.
  *
  * Builds an alias within an ORDER-BY clause.
  *
@@ -31,37 +31,38 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
+ *
  * @version   SVN: $Id: OrderByAliasBuilder.php 830 2013-12-18 09:35:42Z phosco@gmx.de $
- * 
  */
-
-require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
-require_once dirname(__FILE__) . '/DirectionBuilder.php';
+require_once dirname(__FILE__).'/../utils/ExpressionType.php';
+require_once dirname(__FILE__).'/DirectionBuilder.php';
 
 /**
- * This class implements the builder for an alias within the ORDER-BY clause. 
+ * This class implements the builder for an alias within the ORDER-BY clause.
  * You can overwrite all functions to achieve another handling.
  *
  * @author  André Rothe <andre.rothe@phosco.info>
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- *  
  */
-class OrderByAliasBuilder {
-
-    protected function buildDirection($parsed) {
+class OrderByAliasBuilder
+{
+    protected function buildDirection($parsed)
+    {
         $builder = new DirectionBuilder();
+
         return $builder->build($parsed);
     }
 
-    public function build($parsed) {
-        if ($parsed['expr_type'] !== ExpressionType::ALIAS) {
-            return "";
+    public function build($parsed)
+    {
+        if (ExpressionType::ALIAS !== $parsed['expr_type']) {
+            return '';
         }
-        return $parsed['base_expr'] . $this->buildDirection($parsed);
+
+        return $parsed['base_expr'].$this->buildDirection($parsed);
     }
 }
-?>

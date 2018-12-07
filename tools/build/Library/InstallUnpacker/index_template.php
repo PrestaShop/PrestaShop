@@ -30,14 +30,14 @@ define('_PS_INSTALL_MINIMUM_PHP_VERSION_', '5.6');
 define('_PS_VERSION_', '%ps-version-placeholder%');
 
 define('ZIP_NAME', 'prestashop.zip');
-define('TARGET_FOLDER', __DIR__ . '/');
+define('TARGET_FOLDER', __DIR__.'/');
 define('BATCH_SIZE', 500);
 
 // bust cache, or else it won't load the installer after the extraction is done
 header('Cache-Control: no-cache, no-store, must-revalidate');
 
 if (!defined('PHP_VERSION_ID') || PHP_VERSION_ID < _PS_INSTALL_MINIMUM_PHP_VERSION_ID_) {
-    die('You need at least PHP ' . _PS_INSTALL_MINIMUM_PHP_VERSION_ . ' to install PrestaShop. Your current PHP version is ' . PHP_VERSION);
+    die('You need at least PHP '._PS_INSTALL_MINIMUM_PHP_VERSION_.' to install PrestaShop. Your current PHP version is '.PHP_VERSION);
 }
 
 // --------------------------------------------------------------------------------
@@ -48,7 +48,7 @@ if (!defined('PHP_VERSION_ID') || PHP_VERSION_ID < _PS_INSTALL_MINIMUM_PHP_VERSI
 function getFileContent($fileOrContent, $debug)
 {
     if ($debug) {
-        return file_get_contents('content/' . $fileOrContent);
+        return file_get_contents('content/'.$fileOrContent);
     }
 
     return base64_decode($fileOrContent, true);
@@ -69,7 +69,7 @@ function getZipErrorMessage($errorCode)
     );
 
     if (isset($errors[$errorCode])) {
-        return 'Unzipping error - ' . $errors[$errorCode];
+        return 'Unzipping error - '.$errors[$errorCode];
     }
 
     return 'An unknown error was found while reading the zip file';
@@ -77,7 +77,7 @@ function getZipErrorMessage($errorCode)
 
 $selfUri = basename(__FILE__);
 
-if (isset($_GET['run']) && ($_GET['run'] === 'check-version')) {
+if (isset($_GET['run']) && ('check-version' === $_GET['run'])) {
     try {
         $installManager = new InstallManager();
 
@@ -107,7 +107,7 @@ if (isset($_GET['run']) && ($_GET['run'] === 'check-version')) {
     }
 }
 
-if ((isset($_POST['downloadLatest'])) && ($_POST['downloadLatest'] === 'true')) {
+if ((isset($_POST['downloadLatest'])) && ('true' === $_POST['downloadLatest'])) {
     try {
         $installManager = new InstallManager();
 
@@ -134,7 +134,7 @@ if (isset($_POST['extract'])) {
     }
 
     $zip = new ZipArchive();
-    if (true !== $error = $zip->open(__DIR__ . '/' . ZIP_NAME)) {
+    if (true !== $error = $zip->open(__DIR__.'/'.ZIP_NAME)) {
         die(json_encode(array(
             'error' => true,
             'message' => getZipErrorMessage($error),
@@ -145,7 +145,7 @@ if (isset($_POST['extract'])) {
         die(json_encode(array(
             'error' => true,
             'message' => 'You need to grant write permissions for PHP on the following directory: '
-                . realpath(TARGET_FOLDER),
+                .realpath(TARGET_FOLDER),
         )));
     }
 
@@ -157,10 +157,10 @@ if (isset($_POST['extract'])) {
         $currentFile = $zip->getNameIndex($id);
         if (in_array($currentFile, array('/index.php', 'index.php'), true)) {
             $indexContent = $zip->getFromIndex($id);
-            if (!file_put_contents(getcwd() . '/index.php.temp', $indexContent)) {
+            if (!file_put_contents(getcwd().'/index.php.temp', $indexContent)) {
                 die(json_encode(array(
                     'error' => true,
-                    'message' => 'Unable to write to file ' . getcwd() . '/index.php.temp',
+                    'message' => 'Unable to write to file '.getcwd().'/index.php.temp',
                 )));
             }
         } else {
@@ -169,10 +169,10 @@ if (isset($_POST['extract'])) {
     }
 
     foreach ($fileList as $currentFile) {
-        if ($zip->extractTo(TARGET_FOLDER, $currentFile) === false) {
+        if (false === $zip->extractTo(TARGET_FOLDER, $currentFile)) {
             die(json_encode(array(
                 'error' => true,
-                'message' => 'Extraction error - ' . $zip->getStatusString(),
+                'message' => 'Extraction error - '.$zip->getStatusString(),
                 'file' => $currentFile,
                 'numFiles' => $numFiles,
                 'lastId' => $lastId,
@@ -190,9 +190,9 @@ if (isset($_POST['extract'])) {
     $zip->close();
 
     if ($lastId >= $numFiles) {
-        unlink(getcwd() . '/index.php');
-        unlink(getcwd() . '/prestashop.zip');
-        rename(getcwd() . '/index.php.temp', getcwd() . '/index.php');
+        unlink(getcwd().'/index.php');
+        unlink(getcwd().'/prestashop.zip');
+        rename(getcwd().'/index.php.temp', getcwd().'/index.php');
     }
 
     die(json_encode(array(

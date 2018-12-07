@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,12 +23,10 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+require_once dirname(__FILE__).'/ExpressionType.php';
 
-
-require_once dirname(__FILE__) . '/ExpressionType.php';
-
-class ExpressionToken {
-
+class ExpressionToken
+{
     private $subTree;
     private $expression;
     private $key;
@@ -38,9 +36,10 @@ class ExpressionToken {
     private $upper;
     private $noQuotes;
 
-    public function __construct($key = "", $token = "") {
+    public function __construct($key = '', $token = '')
+    {
         $this->subTree = false;
-        $this->expression = "";
+        $this->expression = '';
         $this->key = $key;
         $this->token = $token;
         $this->tokenType = false;
@@ -49,139 +48,169 @@ class ExpressionToken {
         $this->noQuotes = null;
     }
 
-    # TODO: we could replace it with a constructor new ExpressionToken(this, "*")
-    public function addToken($string) {
+    // TODO: we could replace it with a constructor new ExpressionToken(this, "*")
+    public function addToken($string)
+    {
         $this->token .= $string;
     }
 
-    public function isEnclosedWithinParenthesis() {
-        return ($this->upper[0] === '(' && mb_substr($this->upper, -1) === ')');
+    public function isEnclosedWithinParenthesis()
+    {
+        return '(' === $this->upper[0] && ')' === mb_substr($this->upper, -1);
     }
 
-    public function setSubTree($tree) {
+    public function setSubTree($tree)
+    {
         $this->subTree = $tree;
     }
 
-    public function getSubTree() {
+    public function getSubTree()
+    {
         return $this->subTree;
     }
 
-    public function getUpper($idx = false) {
-        return $idx !== false ? $this->upper[$idx] : $this->upper;
+    public function getUpper($idx = false)
+    {
+        return false !== $idx ? $this->upper[$idx] : $this->upper;
     }
 
-    public function getTrim($idx = false) {
-        return $idx !== false ? $this->trim[$idx] : $this->trim;
+    public function getTrim($idx = false)
+    {
+        return false !== $idx ? $this->trim[$idx] : $this->trim;
     }
 
-    public function getToken($idx = false) {
-        return $idx !== false ? $this->token[$idx] : $this->token;
+    public function getToken($idx = false)
+    {
+        return false !== $idx ? $this->token[$idx] : $this->token;
     }
 
-    public function setNoQuotes($token, $qchars = '`') {
-        $this->noQuotes = ($token === null) ? null : $this->revokeQuotation($token, $qchars);
+    public function setNoQuotes($token, $qchars = '`')
+    {
+        $this->noQuotes = (null === $token) ? null : $this->revokeQuotation($token, $qchars);
     }
-    
-    public function setTokenType($type) {
+
+    public function setTokenType($type)
+    {
         $this->tokenType = $type;
     }
 
-    public function endsWith($needle) {
+    public function endsWith($needle)
+    {
         $length = mb_strlen($needle);
-        if ($length == 0) {
+        if (0 == $length) {
             return true;
         }
 
         $start = $length * -1;
-        return (mb_substr($this->token, $start) === $needle);
+
+        return mb_substr($this->token, $start) === $needle;
     }
 
-    public function isWhitespaceToken() {
-        return ($this->trim === "");
+    public function isWhitespaceToken()
+    {
+        return '' === $this->trim;
     }
 
-    public function isCommaToken() {
-        return ($this->trim === ",");
+    public function isCommaToken()
+    {
+        return ',' === $this->trim;
     }
 
-    public function isVariableToken() {
-        return $this->upper[0] === '@';
+    public function isVariableToken()
+    {
+        return '@' === $this->upper[0];
     }
 
-    public function isSubQueryToken() {
-        return preg_match("/^\\(\\s*SELECT/i", $this->trim);
+    public function isSubQueryToken()
+    {
+        return preg_match('/^\\(\\s*SELECT/i', $this->trim);
     }
 
-    public function isExpression() {
-        return $this->tokenType === ExpressionType::EXPRESSION;
+    public function isExpression()
+    {
+        return ExpressionType::EXPRESSION === $this->tokenType;
     }
 
-    public function isBracketExpression() {
-        return $this->tokenType === ExpressionType::BRACKET_EXPRESSION;
+    public function isBracketExpression()
+    {
+        return ExpressionType::BRACKET_EXPRESSION === $this->tokenType;
     }
 
-    public function isOperator() {
-        return $this->tokenType === ExpressionType::OPERATOR;
+    public function isOperator()
+    {
+        return ExpressionType::OPERATOR === $this->tokenType;
     }
 
-    public function isInList() {
-        return $this->tokenType === ExpressionType::IN_LIST;
+    public function isInList()
+    {
+        return ExpressionType::IN_LIST === $this->tokenType;
     }
 
-    public function isFunction() {
-        return $this->tokenType === ExpressionType::SIMPLE_FUNCTION;
+    public function isFunction()
+    {
+        return ExpressionType::SIMPLE_FUNCTION === $this->tokenType;
     }
 
-    public function isUnspecified() {
-        return ($this->tokenType === false);
+    public function isUnspecified()
+    {
+        return false === $this->tokenType;
     }
 
-    public function isVariable() {
-        return $this->tokenType === ExpressionType::GLOBAL_VARIABLE || $this->tokenType === ExpressionType::LOCAL_VARIABLE || $this->tokenType === ExpressionType::USER_VARIABLE;
-    }
-    
-    public function isAggregateFunction() {
-        return $this->tokenType === ExpressionType::AGGREGATE_FUNCTION;
+    public function isVariable()
+    {
+        return ExpressionType::GLOBAL_VARIABLE === $this->tokenType || ExpressionType::LOCAL_VARIABLE === $this->tokenType || ExpressionType::USER_VARIABLE === $this->tokenType;
     }
 
-    public function isColumnReference() {
-        return $this->tokenType === ExpressionType::COLREF;
+    public function isAggregateFunction()
+    {
+        return ExpressionType::AGGREGATE_FUNCTION === $this->tokenType;
     }
 
-    public function isConstant() {
-        return $this->tokenType === ExpressionType::CONSTANT;
+    public function isColumnReference()
+    {
+        return ExpressionType::COLREF === $this->tokenType;
     }
 
-    public function isSign() {
-        return $this->tokenType === ExpressionType::SIGN;
+    public function isConstant()
+    {
+        return ExpressionType::CONSTANT === $this->tokenType;
     }
 
-    public function isSubQuery() {
-        return $this->tokenType === ExpressionType::SUBQUERY;
+    public function isSign()
+    {
+        return ExpressionType::SIGN === $this->tokenType;
     }
 
-    private function revokeQuotation($token, $qchars = '`') {
+    public function isSubQuery()
+    {
+        return ExpressionType::SUBQUERY === $this->tokenType;
+    }
+
+    private function revokeQuotation($token, $qchars = '`')
+    {
         $result = trim($token);
-        for ($i = 0; $i < mb_strlen($qchars); $i++) {
+        for ($i = 0; $i < mb_strlen($qchars); ++$i) {
             $quote = $qchars[$i];
             if (($result[0] === $quote) && ($result[mb_strlen($result) - 1] === $quote)) {
                 $result = mb_substr($result, 1, -1);
+
                 return trim(str_replace($quote.$quote, $quote, $result));
             }
         }
+
         return $token;
     }
-    
-    public function toArray() {
+
+    public function toArray()
+    {
         $result = array();
         $result['expr_type'] = $this->tokenType;
         $result['base_expr'] = $this->token;
         if (!empty($this->noQuotes)) {
-            $result['no_quotes'] = $this->noQuotes;   
+            $result['no_quotes'] = $this->noQuotes;
         }
         $result['sub_tree'] = $this->subTree;
+
         return $result;
     }
 }
-
-?>

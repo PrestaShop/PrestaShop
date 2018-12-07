@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -60,11 +60,11 @@ class RepositoryTest extends TestCase
         );
 
         $getDataByCurrencyCode = function ($isoCode) use ($euroData, $peaceData) {
-            if ($isoCode == 'EUR') {
+            if ('EUR' == $isoCode) {
                 return $euroData;
             }
 
-            if ($isoCode == 'PCE') {
+            if ('PCE' == $isoCode) {
                 return $peaceData;
             }
 
@@ -77,23 +77,21 @@ class RepositoryTest extends TestCase
             ->willReturnCallback($getDataByCurrencyCode)
         ;
 
-        /** @var $dataRepo CurrencyDataRepositoryInterface */
+        /* @var $dataRepo CurrencyDataRepositoryInterface */
         $this->currencyRepository = new CurrencyRepository($dataRepo);
     }
 
     /**
      * Given a valid currency code
      * When asking the currency repository for the corresponding Currency
-     * Then the expected Currency instance should be returned
+     * Then the expected Currency instance should be returned.
      *
      * @param string $currencyCode
-     *  Alphabetic ISO 4217 currency code passed to retreive the wanted Currency instance
-     *
-     * @param array $expectedNames
-     *  Expected currency names, indexed by locale code
-     *
-     * @param array $expectedSymbols
-     *  Expected currency symbols, indexed by locale code
+     *                                Alphabetic ISO 4217 currency code passed to retreive the wanted Currency instance
+     * @param array  $expectedNames
+     *                                Expected currency names, indexed by locale code
+     * @param array  $expectedSymbols
+     *                                Expected currency symbols, indexed by locale code
      *
      * @throws \PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException
      * @dataProvider provideValidCurrencyCodes
@@ -111,7 +109,7 @@ class RepositoryTest extends TestCase
     }
 
     /**
-     * Provide valid currency codes and the expected results
+     * Provide valid currency codes and the expected results.
      *
      * Each data set item is structured as following :
      *  'Data set identifier' => [
@@ -141,7 +139,7 @@ class RepositoryTest extends TestCase
     /**
      * Given an unknown or invalid currency code
      * When asking the currency repository for the corresponding Currency
-     * Then an exception should be raised
+     * Then an exception should be raised.
      *
      * @expectedException \PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException
      */

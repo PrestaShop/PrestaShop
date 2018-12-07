@@ -1,6 +1,6 @@
 <?php
 /**
- * FunctionBuilder.php
+ * FunctionBuilder.php.
  *
  * Builds function statements.
  *
@@ -31,86 +31,101 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
+ *
  * @version   SVN: $Id: FunctionBuilder.php 830 2013-12-18 09:35:42Z phosco@gmx.de $
- * 
  */
-
-require_once dirname(__FILE__) . '/../exceptions/UnableToCreateSQLException.php';
-require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
-require_once dirname(__FILE__) . '/AliasBuilder.php';
-require_once dirname(__FILE__) . '/ColumnReferenceBuilder.php';
-require_once dirname(__FILE__) . '/ConstantBuilder.php';
-require_once dirname(__FILE__) . '/FunctionBuilder.php';
-require_once dirname(__FILE__) . '/ReservedBuilder.php';
-require_once dirname(__FILE__) . '/SelectExpressionBuilder.php';
-require_once dirname(__FILE__) . '/SelectBracketExpressionBuilder.php';
-require_once dirname(__FILE__) . '/DirectionBuilder.php';
+require_once dirname(__FILE__).'/../exceptions/UnableToCreateSQLException.php';
+require_once dirname(__FILE__).'/../utils/ExpressionType.php';
+require_once dirname(__FILE__).'/AliasBuilder.php';
+require_once dirname(__FILE__).'/ColumnReferenceBuilder.php';
+require_once dirname(__FILE__).'/ConstantBuilder.php';
+require_once dirname(__FILE__).'/FunctionBuilder.php';
+require_once dirname(__FILE__).'/ReservedBuilder.php';
+require_once dirname(__FILE__).'/SelectExpressionBuilder.php';
+require_once dirname(__FILE__).'/SelectBracketExpressionBuilder.php';
+require_once dirname(__FILE__).'/DirectionBuilder.php';
 
 /**
- * This class implements the builder for function calls. 
+ * This class implements the builder for function calls.
  * You can overwrite all functions to achieve another handling.
  *
  * @author  André Rothe <andre.rothe@phosco.info>
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- *  
  */
-class FunctionBuilder {
-
-    protected function buildDirection($parsed) {
+class FunctionBuilder
+{
+    protected function buildDirection($parsed)
+    {
         $builder = new DirectionBuilder();
+
         return $builder->build($parsed);
     }
-    
-    protected function buildAlias($parsed) {
+
+    protected function buildAlias($parsed)
+    {
         $builder = new AliasBuilder();
+
         return $builder->build($parsed);
     }
 
-    protected function buildColRef($parsed) {
+    protected function buildColRef($parsed)
+    {
         $builder = new ColumnReferenceBuilder();
+
         return $builder->build($parsed);
     }
 
-    protected function buildConstant($parsed) {
+    protected function buildConstant($parsed)
+    {
         $builder = new ConstantBuilder();
+
         return $builder->build($parsed);
     }
 
-    protected function buildReserved($parsed) {
+    protected function buildReserved($parsed)
+    {
         $builder = new ReservedBuilder();
+
         return $builder->build($parsed);
     }
 
-    protected function isReserved($parsed) {
+    protected function isReserved($parsed)
+    {
         $builder = new ReservedBuilder();
+
         return $builder->isReserved($parsed);
     }
-    
-    protected function buildSelectExpression($parsed) {
+
+    protected function buildSelectExpression($parsed)
+    {
         $builder = new SelectExpressionBuilder();
+
         return $builder->build($parsed);
     }
 
-    protected function buildSelectBracketExpression($parsed) {
+    protected function buildSelectBracketExpression($parsed)
+    {
         $builder = new SelectBracketExpressionBuilder();
+
         return $builder->build($parsed);
     }
 
-    public function build($parsed) {
-        if (($parsed['expr_type'] !== ExpressionType::AGGREGATE_FUNCTION)
-            && ($parsed['expr_type'] !== ExpressionType::SIMPLE_FUNCTION)) {
-            return "";
+    public function build($parsed)
+    {
+        if ((ExpressionType::AGGREGATE_FUNCTION !== $parsed['expr_type'])
+            && (ExpressionType::SIMPLE_FUNCTION !== $parsed['expr_type'])) {
+            return '';
         }
 
-        if ($parsed['sub_tree'] === false) {
-            return $parsed['base_expr'] . "()";
+        if (false === $parsed['sub_tree']) {
+            return $parsed['base_expr'].'()';
         }
 
-        $sql = "";
+        $sql = '';
         foreach ($parsed['sub_tree'] as $k => $v) {
             $len = mb_strlen($sql);
             $sql .= $this->build($v);
@@ -124,10 +139,9 @@ class FunctionBuilder {
                 throw new UnableToCreateSQLException('function subtree', $k, $v, 'expr_type');
             }
 
-            $sql .= ($this->isReserved($v) ? " " : ",");
+            $sql .= ($this->isReserved($v) ? ' ' : ',');
         }
-        return $parsed['base_expr'] . "(" . mb_substr($sql, 0, -1) . ")" . $this->buildAlias($parsed) . $this->buildDirection($parsed);
-    }
 
+        return $parsed['base_expr'].'('.mb_substr($sql, 0, -1).')'.$this->buildAlias($parsed).$this->buildDirection($parsed);
+    }
 }
-?>

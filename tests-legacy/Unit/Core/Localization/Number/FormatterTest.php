@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -62,19 +62,16 @@ class FormatterTest extends TestCase
     /**
      * Given a valid number and valid number specification
      * When asking the number formatter to format the said number, following the specification rules
-     * Then the expected result should be retrieved
+     * Then the expected result should be retrieved.
      *
-     * @param array $localeParams
-     *  The locale params
-     *
+     * @param array                        $localeParams
+     *                                                          The locale params
      * @param NumberSpecificationInterface $numberSpecification
-     *  The number specification
-     *
-     * @param float|int|string $number
-     *  The number to be formatted
-     *
-     * @param string $expectedResult
-     *  The formatted number
+     *                                                          The number specification
+     * @param float|int|string             $number
+     *                                                          The number to be formatted
+     * @param string                       $expectedResult
+     *                                                          The formatted number
      *
      * @dataProvider provideValidNumberFormatSpecs
      *
