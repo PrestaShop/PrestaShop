@@ -119,7 +119,7 @@ class HookDispatcher extends EventDispatcher implements HookDispatcherInterface
                 $listenerName = $event->popListener() ?: $listener[1];
 
                 $eventContent = $event->popContent();
-                $this->renderingContent[$listenerName] = (!is_string($eventContent) || strlen($eventContent) > strlen($obContent))
+                $this->renderingContent[$listenerName] = (!is_string($eventContent) || mb_strlen($eventContent) > mb_strlen($obContent))
                     ? $eventContent
                     : $obContent;
             }

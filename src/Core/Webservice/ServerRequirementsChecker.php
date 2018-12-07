@@ -117,7 +117,7 @@ final class ServerRequirementsChecker implements ServerRequirementsCheckerInterf
     {
         $issues = array();
 
-        if (false === strpos($this->hostingInformation->getServerInformation()['version'], 'Apache')) {
+        if (false === mb_strpos($this->hostingInformation->getServerInformation()['version'], 'Apache')) {
             $issues[] = self::ISSUE_NOT_APACHE_SERVER;
         }
 

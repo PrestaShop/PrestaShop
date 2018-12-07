@@ -127,7 +127,7 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
     {
         $filters = $this->getPersistedFilterParameters();
         foreach ($filters as $filterKey => $filterValue) {
-            if (strpos($filterKey, 'filter_column_') === 0 && $filterValue !== '') {
+            if (mb_strpos($filterKey, 'filter_column_') === 0 && $filterValue !== '') {
                 return true; // break at first column filter found
             }
         }
@@ -215,7 +215,7 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
         $showPositionColumn = $this->isCategoryFiltered();
         if ($orderBy == 'position_ordering' && $showPositionColumn) {
             foreach ($filterParams as $key => $param) {
-                if (strpos($key, 'filter_column_') === 0) {
+                if (mb_strpos($key, 'filter_column_') === 0) {
                     $filterParams[$key] = '';
                 }
             }
@@ -330,13 +330,13 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
             if (!$filterValue && $filterValue !== '0') {
                 continue;
             }
-            if (strpos($filterParam, 'filter_column_') === 0) {
+            if (mb_strpos($filterParam, 'filter_column_') === 0) {
                 $filterValue = Db::getInstance()->escape($filterValue, in_array($filterParam, array(
                     'filter_column_id_product',
                     'filter_column_sav_quantity',
                     'filter_column_price',
                 )), true);
-                $field = substr($filterParam, 14); // 'filter_column_' takes 14 chars
+                $field = mb_substr($filterParam, 14); // 'filter_column_' takes 14 chars
                 if (isset($sqlSelect[$field]['table'])) {
                     $sqlWhere[] = $sqlSelect[$field]['table'] . '.`' . $sqlSelect[$field]['field'] . '` ' . sprintf($sqlSelect[$field]['filtering'], $filterValue);
                 } else {

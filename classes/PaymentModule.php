@@ -60,17 +60,17 @@ abstract class PaymentModuleCore extends Module
         // Insert carrier availability
         $return &= $this->addCheckboxCarrierRestrictionsForModule();
 
-        if (!Configuration::get('CONF_' . strtoupper($this->name) . '_FIXED')) {
-            Configuration::updateValue('CONF_' . strtoupper($this->name) . '_FIXED', '0.2');
+        if (!Configuration::get('CONF_' . mb_strtoupper($this->name) . '_FIXED')) {
+            Configuration::updateValue('CONF_' . mb_strtoupper($this->name) . '_FIXED', '0.2');
         }
-        if (!Configuration::get('CONF_' . strtoupper($this->name) . '_VAR')) {
-            Configuration::updateValue('CONF_' . strtoupper($this->name) . '_VAR', '2');
+        if (!Configuration::get('CONF_' . mb_strtoupper($this->name) . '_VAR')) {
+            Configuration::updateValue('CONF_' . mb_strtoupper($this->name) . '_VAR', '2');
         }
-        if (!Configuration::get('CONF_' . strtoupper($this->name) . '_FIXED_FOREIGN')) {
-            Configuration::updateValue('CONF_' . strtoupper($this->name) . '_FIXED_FOREIGN', '0.2');
+        if (!Configuration::get('CONF_' . mb_strtoupper($this->name) . '_FIXED_FOREIGN')) {
+            Configuration::updateValue('CONF_' . mb_strtoupper($this->name) . '_FIXED_FOREIGN', '0.2');
         }
-        if (!Configuration::get('CONF_' . strtoupper($this->name) . '_VAR_FOREIGN')) {
-            Configuration::updateValue('CONF_' . strtoupper($this->name) . '_VAR_FOREIGN', '2');
+        if (!Configuration::get('CONF_' . mb_strtoupper($this->name) . '_VAR_FOREIGN')) {
+            Configuration::updateValue('CONF_' . mb_strtoupper($this->name) . '_VAR_FOREIGN', '2');
         }
 
         return $return;
@@ -590,7 +590,7 @@ abstract class PaymentModuleCore extends Module
                             unset($voucher->id);
 
                             // Set a new voucher code
-                            $voucher->code = empty($voucher->code) ? substr(md5($order->id . '-' . $order->id_customer . '-' . $cart_rule['obj']->id), 0, 16) : $voucher->code . '-2';
+                            $voucher->code = empty($voucher->code) ? mb_substr(md5($order->id . '-' . $order->id_customer . '-' . $cart_rule['obj']->id), 0, 16) : $voucher->code . '-2';
                             if (preg_match('/\-([0-9]{1,2})\-([0-9]{1,2})$/', $voucher->code, $matches) && $matches[1] == $matches[2]) {
                                 $voucher->code = preg_replace('/' . $matches[0] . '$/', '-' . (intval($matches[1]) + 1), $voucher->code);
                             }

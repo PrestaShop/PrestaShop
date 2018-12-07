@@ -66,7 +66,7 @@ class SetProcessor extends AbstractProcessor {
         $varType = false;
 
         foreach ($tokens as $token) {
-            $upper = strtoupper(trim($token));
+            $upper = mb_strtoupper(trim($token));
 
             switch ($upper) {
             case 'LOCAL':

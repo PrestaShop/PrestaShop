@@ -246,15 +246,15 @@ class UpgraderCore
     {
         $this->version_is_modified = true;
 
-        if (strpos($path, 'mails/') !== false) {
+        if (mb_strpos($path, 'mails/') !== false) {
             $this->changed_files['mail'][] = $path;
         } elseif (
-            strpos($path, '/en.php') !== false
-            || strpos($path, '/fr.php') !== false
-            || strpos($path, '/es.php') !== false
-            || strpos($path, '/it.php') !== false
-            || strpos($path, '/de.php') !== false
-            || strpos($path, 'translations/') !== false
+            mb_strpos($path, '/en.php') !== false
+            || mb_strpos($path, '/fr.php') !== false
+            || mb_strpos($path, '/es.php') !== false
+            || mb_strpos($path, '/it.php') !== false
+            || mb_strpos($path, '/de.php') !== false
+            || mb_strpos($path, 'translations/') !== false
         ) {
             $this->changed_files['translation'][] = $path;
         } else {

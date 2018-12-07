@@ -63,18 +63,18 @@ abstract class AbstractProcessor {
     protected function revokeQuotation($sql) {
         $result = trim($sql);
 
-        if (($result[0] === '`') && ($result[strlen($result) - 1] === '`')) {
-            $result = substr($result, 1, -1);
+        if (($result[0] === '`') && ($result[mb_strlen($result) - 1] === '`')) {
+            $result = mb_substr($result, 1, -1);
             return trim(str_replace('``', '`', $result));
         }
 
-        if (($result[0] === "'") && ($result[strlen($result) - 1] === "'")) {
-            $result = substr($result, 1, -1);
+        if (($result[0] === "'") && ($result[mb_strlen($result) - 1] === "'")) {
+            $result = mb_substr($result, 1, -1);
             return trim(str_replace("''", "'", $result));
         }
 
-        if (($result[0] === "\"") && ($result[strlen($result) - 1] === "\"")) {
-            $result = substr($result, 1, -1);
+        if (($result[0] === "\"") && ($result[mb_strlen($result) - 1] === "\"")) {
+            $result = mb_substr($result, 1, -1);
             return trim(str_replace("\"\"", "\"", $result));
         }
 
@@ -98,7 +98,7 @@ abstract class AbstractProcessor {
         $parenthesis = $parenthesisRemoved;
         $i = 0;
         $string = 0;
-        while ($i < strlen($trim)) {
+        while ($i < mb_strlen($trim)) {
 
             if ($trim[$i] === "\\") {
                 $i += 2; # an escape character, the next character is irrelevant
@@ -131,7 +131,7 @@ abstract class AbstractProcessor {
             return ExpressionType::USER_VARIABLE;
         }
 
-        $type = substr($expression, 2, strpos($expression, ".", 2));
+        $type = mb_substr($expression, 2, mb_strpos($expression, ".", 2));
 
         switch ($type) {
         case 'GLOBAL':

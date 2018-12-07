@@ -120,13 +120,13 @@ class UnionProcessor extends AbstractProcessor {
                 if ($trim === "") {
                     continue; // read the next token
                 }
-                if (strtoupper($trim) === $skipUntilToken) {
+                if (mb_strtoupper($trim) === $skipUntilToken) {
                     $skipUntilToken = false;
                     continue; // read the next token
                 }
             }
 
-            if (strtoupper($trim) !== "UNION") {
+            if (mb_strtoupper($trim) !== "UNION") {
                 $outputArray[] = $token; // here we get empty tokens, if we remove these, we get problems in parse_sql()
                 continue;
             }
@@ -138,7 +138,7 @@ class UnionProcessor extends AbstractProcessor {
                 if (trim($inputArray[$i]) === "") {
                     continue;
                 }
-                if (strtoupper($inputArray[$i]) !== "ALL") {
+                if (mb_strtoupper($inputArray[$i]) !== "ALL") {
                     break;
                 }
                 // the other for-loop should overread till "ALL"

@@ -497,15 +497,15 @@ class AdminImagesControllerCore extends AdminController
                             $image = str_replace('.', '_thumb.', $image);
                         }
 
-                        if (!file_exists($newDir . substr($image, 0, -4) . '-' . stripslashes($imageType['name']) . '.jpg')) {
+                        if (!file_exists($newDir . mb_substr($image, 0, -4) . '-' . stripslashes($imageType['name']) . '.jpg')) {
                             if (!file_exists($dir . $image) || !filesize($dir . $image)) {
                                 $this->errors[] = $this->trans('Source file does not exist or is empty (%filepath%)', array('%filepath%' => $dir . $image), 'Admin.Design.Notification');
-                            } elseif (!ImageManager::resize($dir . $image, $newDir . substr(str_replace('_thumb.', '.', $image), 0, -4) . '-' . stripslashes($imageType['name']) . '.jpg', (int) $imageType['width'], (int) $imageType['height'])) {
+                            } elseif (!ImageManager::resize($dir . $image, $newDir . mb_substr(str_replace('_thumb.', '.', $image), 0, -4) . '-' . stripslashes($imageType['name']) . '.jpg', (int) $imageType['width'], (int) $imageType['height'])) {
                                 $this->errors[] = $this->trans('Failed to resize image file (%filepath%)', array('%filepath%' => $dir . $image), 'Admin.Design.Notification');
                             }
 
                             if ($generate_hight_dpi_images) {
-                                if (!ImageManager::resize($dir . $image, $newDir . substr($image, 0, -4) . '-' . stripslashes($imageType['name']) . '2x.jpg', (int) $imageType['width'] * 2, (int) $imageType['height'] * 2)) {
+                                if (!ImageManager::resize($dir . $image, $newDir . mb_substr($image, 0, -4) . '-' . stripslashes($imageType['name']) . '2x.jpg', (int) $imageType['width'] * 2, (int) $imageType['height'] * 2)) {
                                     $this->errors[] = $this->trans('Failed to resize image file to high resolution (%filepath%)', array('%filepath%' => $dir . $image), 'Admin.Design.Notification');
                                 }
                             }

@@ -91,7 +91,7 @@ class GuestTrackingControllerCore extends FrontController
             $customer = new Customer((int) $this->order->id_customer);
             $password = Tools::getValue('password');
 
-            if (strlen($password) < Validate::PASSWORD_LENGTH) {
+            if (mb_strlen($password) < Validate::PASSWORD_LENGTH) {
                 $this->errors[] = $this->trans(
                     'Your password must be at least %min% characters long.',
                     array('%min%' => Validate::PASSWORD_LENGTH),

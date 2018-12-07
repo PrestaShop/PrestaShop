@@ -609,7 +609,7 @@ class HelperListCore extends Helper
         $identifier = Tools::getIsset($this->identifier) ? '&' . $this->identifier . '=' . (int) Tools::getValue($this->identifier) : '';
         $order = '';
         if (Tools::getIsset($this->table . 'Orderby')) {
-            $order = '&' . $this->table . 'Orderby=' . urlencode($this->orderBy) . '&' . $this->table . 'Orderway=' . urlencode(strtolower($this->orderWay));
+            $order = '&' . $this->table . 'Orderby=' . urlencode($this->orderBy) . '&' . $this->table . 'Orderway=' . urlencode(mb_strtolower($this->orderWay));
         }
 
         $action = $this->currentIndex . $identifier . '&token=' . $token . '#' . $this->list_id;
@@ -634,7 +634,7 @@ class HelperListCore extends Helper
         );
 
         if (!isset($this->table_id) && $this->position_identifier && (int) Tools::getValue($this->position_identifier, 1)) {
-            $this->table_id = substr($this->identifier, 3, strlen($this->identifier));
+            $this->table_id = mb_substr($this->identifier, 3, mb_strlen($this->identifier));
         }
 
         if ($this->position_identifier && ($this->orderBy == 'position' && $this->orderWay != 'DESC')) {
@@ -649,7 +649,7 @@ class HelperListCore extends Helper
             }
 
             $value_key = $prefix . $this->list_id . 'Filter_' . (array_key_exists('filter_key', $params) ? $params['filter_key'] : $key);
-            if ($key == 'active' && strpos($key, '!') !== false) {
+            if ($key == 'active' && mb_strpos($key, '!') !== false) {
                 $keys = explode('!', $params['filter_key']);
                 $value_key = $keys[1];
             }

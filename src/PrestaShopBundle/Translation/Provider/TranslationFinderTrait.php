@@ -56,7 +56,7 @@ trait TranslationFinderTrait
         }
 
         foreach ($translationFiles as $file) {
-            if (strpos($file->getBasename('.xlf'), $locale) !== false) {
+            if (mb_strpos($file->getBasename('.xlf'), $locale) !== false) {
                 $domain = $file->getBasename('.xlf');
             } else {
                 $domain = $file->getBasename('.xlf') . '.' . $locale;

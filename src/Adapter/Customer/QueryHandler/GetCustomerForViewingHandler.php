@@ -406,7 +406,7 @@ final class GetCustomerForViewingHandler implements GetCustomerForViewingHandler
 
             $customerMessages[] = new MessageInformation(
                 (int) $message['id_customer_thread'],
-                substr(strip_tags(html_entity_decode($message['message'], ENT_NOQUOTES, 'UTF-8')), 0, 75),
+                mb_substr(strip_tags(html_entity_decode($message['message'], ENT_NOQUOTES, 'UTF-8')), 0, 75),
                 $status,
                 Tools::displayDate($message['date_add'], null, true)
             );

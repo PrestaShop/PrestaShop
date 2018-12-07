@@ -171,14 +171,14 @@ class GridExtension extends AbstractExtension
         if (empty($grid['columns'])
             || empty($grid['sorting']['order_by'])
             || empty($grid['sorting']['order_way'])
-            || 'asc' != strtolower($grid['sorting']['order_way'])) {
+            || 'asc' != mb_strtolower($grid['sorting']['order_way'])) {
             return false;
         }
 
         foreach ($grid['columns'] as $column) {
             if ('position' == $column['type']) {
                 $positionField = $column['id'];
-                if (strtolower($positionField) == strtolower($grid['sorting']['order_by'])) {
+                if (mb_strtolower($positionField) == mb_strtolower($grid['sorting']['order_by'])) {
                     return true;
                 }
             }

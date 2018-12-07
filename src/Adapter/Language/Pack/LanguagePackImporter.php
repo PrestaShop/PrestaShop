@@ -124,7 +124,7 @@ final class LanguagePackImporter implements LanguagePackImporterInterface
         return sprintf(
             '%s-%s',
             isset($explodedLangCode[0]) ? $explodedLangCode[0] : '',
-            isset($explodedLangCode[1]) ? strtoupper($explodedLangCode[1]) : ''
+            isset($explodedLangCode[1]) ? mb_strtoupper($explodedLangCode[1]) : ''
         );
     }
 }

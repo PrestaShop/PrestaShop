@@ -231,8 +231,8 @@ class Version
         if ($this->checkVersion($version)) {
             $first = intval(trim(str_replace('.', '', $this->version)));
             $second = intval(trim(str_replace('.', '', $version)));
-            $firstLen = strlen($first);
-            $secondLen = strlen($second);
+            $firstLen = mb_strlen($first);
+            $secondLen = mb_strlen($second);
             if ($firstLen > $secondLen) {
                 $second = str_pad($second, $firstLen, 0);
             } elseif ($firstLen < $secondLen) {

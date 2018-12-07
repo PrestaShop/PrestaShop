@@ -157,7 +157,7 @@ class LanguageList
             $xml = @simplexml_load_file(_PS_INSTALL_DATA_PATH_ . 'xml/country.xml');
             if ($xml) {
                 foreach ($xml->entities->country as $country) {
-                    $iso = strtolower((string) $country['iso_code']);
+                    $iso = mb_strtolower((string) $country['iso_code']);
                     $countries[$iso] = isset($countries_lang[$iso]) ? $countries_lang[$iso] : $countries_default[$iso];
                 }
             }

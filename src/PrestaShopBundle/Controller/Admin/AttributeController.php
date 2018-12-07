@@ -110,7 +110,7 @@ class AttributeController extends FrameworkBundleAdminController
         foreach ($options as $idGroup => $attributes) {
             foreach ($attributes as $attribute) {
                 //If attribute is a group attribute, replace group data by all attributes group
-                if (false !== strpos($attribute, 'group')) {
+                if (false !== mb_strpos($attribute, 'group')) {
                     $allGroupAttributes = $this->get('prestashop.adapter.data_provider.attribute')->getAttributeIdsByGroup((int) $idGroup, true);
                     foreach ($allGroupAttributes as $groupAttribute) {
                         $newOptions[$idGroup][$groupAttribute] = $groupAttribute;

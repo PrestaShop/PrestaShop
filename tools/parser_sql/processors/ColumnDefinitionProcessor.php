@@ -110,7 +110,7 @@ class ColumnDefinitionProcessor extends AbstractProcessor {
                 continue;
             }
 
-            $upper = strtoupper($trim);
+            $upper = mb_strtoupper($trim);
 
             switch ($upper) {
 
@@ -119,7 +119,7 @@ class ColumnDefinitionProcessor extends AbstractProcessor {
             // the $expr entry and the index $key
                 $expr = $this->buildColDef(
                     $expr,
-                    trim(substr($base_expr, 0, -strlen($token))),
+                    trim(mb_substr($base_expr, 0, -mb_strlen($token))),
                     $options,
                     $refs,
                     $key - 1
@@ -245,7 +245,7 @@ class ColumnDefinitionProcessor extends AbstractProcessor {
             case 'CHARACTER':
                 if ($prevCategory === 'TEXT') {
                     $parsed = array('expr_type' => ExpressionType::DATA_TYPE, 'base_expr' => $trim);
-                    $expr[] = array('expr_type' => ExpressionType::CHARSET, 'base_expr' => substr($base_expr, 0, -1),
+                    $expr[] = array('expr_type' => ExpressionType::CHARSET, 'base_expr' => mb_substr($base_expr, 0, -1),
                                     'sub_tree' => $parsed);
                     $base_expr = $token;
                     $currCategory = 'CHARSET';
@@ -269,7 +269,7 @@ class ColumnDefinitionProcessor extends AbstractProcessor {
             case 'COLLATE':
                 if ($prevCategory === 'TEXT') {
                     $parsed = array('expr_type' => ExpressionType::RESERVED, 'base_expr' => $trim);
-                    $expr[] = array('expr_type' => ExpressionType::COLLATE, 'base_expr' => substr($base_expr, 0, -1),
+                    $expr[] = array('expr_type' => ExpressionType::COLLATE, 'base_expr' => mb_substr($base_expr, 0, -1),
                                     'sub_tree' => $parsed);
                     $base_expr = $token;
                     $currCategory = 'COLLATION';

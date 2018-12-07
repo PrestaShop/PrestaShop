@@ -220,7 +220,7 @@ function smartyTranslate($params, $smarty)
     $basename = basename($smarty->source->name, '.tpl');
     $key = $basename.'_'.md5($string);
 
-    if (isset($smarty->source) && (strpos($smarty->source->filepath, DIRECTORY_SEPARATOR.'override'.DIRECTORY_SEPARATOR) !== false)) {
+    if (isset($smarty->source) && (mb_strpos($smarty->source->filepath, DIRECTORY_SEPARATOR.'override'.DIRECTORY_SEPARATOR) !== false)) {
         $key = 'override_'.$key;
     }
 

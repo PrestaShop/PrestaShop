@@ -63,7 +63,7 @@ class LexerSplitter {
      * It initializes some fields.
      */
     public function __construct() {
-        $this->tokenSize = strlen(self::$splitters[0]); // should be the largest one
+        $this->tokenSize = mb_strlen(self::$splitters[0]); // should be the largest one
         $this->hashSet = array_flip(self::$splitters);
     }
 

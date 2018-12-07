@@ -124,7 +124,7 @@ class UpdateLicensesCommand extends Command
         ;
         $parser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7);
 
-        $output->writeln('Updating license in ' . strtoupper($ext) . ' files ...');
+        $output->writeln('Updating license in ' . mb_strtoupper($ext) . ' files ...');
         $progress = new ProgressBar($output, count($finder));
         $progress->start();
         $progress->setRedrawFrequency(20);
@@ -188,7 +188,7 @@ class UpdateLicensesCommand extends Command
     private function isAFLLicense($fileName)
     {
         foreach ($this->aflLicense as $afl) {
-            if (0 === strpos($fileName, $afl)) {
+            if (0 === mb_strpos($fileName, $afl)) {
                 return true;
             }
         }
@@ -234,7 +234,7 @@ class UpdateLicensesCommand extends Command
         if (count($matches)) {
             // Found - Replace it if prestashop one
             foreach ($matches as $match) {
-                if (stripos($match, 'prestashop') !== false) {
+                if (mb_stripos($match, 'prestashop') !== false) {
                     $content = str_replace($match, $text, $content);
                 }
             }
@@ -257,10 +257,10 @@ class UpdateLicensesCommand extends Command
             $replace = "<?php\n" . $this->license . "\n";
             $haystack = $file->getContents();
 
-            $pos = strpos($haystack, $needle);
+            $pos = mb_strpos($haystack, $needle);
             // Important, if the <?php is in the middle of the file, continue
             if ($pos === 0) {
-                $newstring = substr_replace($haystack, $replace, $pos, strlen($needle));
+                $newstring = substr_replace($haystack, $replace, $pos, mb_strlen($needle));
                 file_put_contents($file->getRelativePathname(), $newstring);
             }
 
@@ -270,7 +270,7 @@ class UpdateLicensesCommand extends Command
         $comments = $node->getAttribute('comments');
         foreach ($comments as $comment) {
             if ($comment instanceof \PhpParser\Comment
-                && strpos($comment->getText(), 'prestashop') !== false) {
+                && mb_strpos($comment->getText(), 'prestashop') !== false) {
                 file_put_contents($file->getRelativePathname(), str_replace($comment->getText(), $this->license, $file->getContents()));
             }
         }
@@ -289,7 +289,7 @@ class UpdateLicensesCommand extends Command
      */
     private function addLicenseToTwigTemplate(SplFileInfo $file)
     {
-        if (strrpos($file->getRelativePathName(), 'html.twig') !== false) {
+        if (mb_strrpos($file->getRelativePathName(), 'html.twig') !== false) {
             $this->addLicenseToFile($file, '{#', '#}');
         }
     }

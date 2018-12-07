@@ -50,7 +50,7 @@ class FileUploaderCore
     protected function toBytes($str)
     {
         $val = trim($str);
-        $last = strtolower($str[strlen($str) - 1]);
+        $last = mb_strtolower($str[mb_strlen($str) - 1]);
         switch ($last) {
             case 'g':
                 $val *= 1024;
@@ -89,7 +89,7 @@ class FileUploaderCore
             return array('error' => Context::getContext()->getTranslator()->trans('File has an invalid extension, it should be one of these: %s.', array($these), 'Admin.Notifications.Error'));
         }
         $ext = $pathinfo['extension'];
-        if ($this->allowedExtensions && !in_array(strtolower($ext), $this->allowedExtensions)) {
+        if ($this->allowedExtensions && !in_array(mb_strtolower($ext), $this->allowedExtensions)) {
             return array('error' => Context::getContext()->getTranslator()->trans('File has an invalid extension, it should be one of these: %s.', array($these), 'Admin.Notifications.Error'));
         }
 

@@ -522,8 +522,8 @@ class AdminStatusesControllerCore extends AdminController
                 if (!strncmp(strrev($template), 'lmth.', 5)) {
                     $search_result = array_search($template, $theme_templates);
                     $array[$iso_code][] = array(
-                                'id' => substr($template, 0, -5),
-                                'name' => substr($template, 0, -5),
+                                'id' => mb_substr($template, 0, -5),
+                                'name' => mb_substr($template, 0, -5),
                                 'folder' => ((!empty($search_result) ? $theme_path : $default_path)),
                     );
                 }

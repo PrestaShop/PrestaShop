@@ -240,7 +240,7 @@ class AdminAddressesControllerCore extends AdminController
                 );
             } elseif ($addr_field_item == 'lastname') {
                 if (isset($customer) &&
-                    !Tools::isSubmit('submit' . strtoupper($this->table)) &&
+                    !Tools::isSubmit('submit' . mb_strtoupper($this->table)) &&
                     Validate::isLoadedObject($customer) &&
                     !Validate::isLoadedObject($this->object)) {
                     $default_value = $customer->lastname;
@@ -259,7 +259,7 @@ class AdminAddressesControllerCore extends AdminController
                 );
             } elseif ($addr_field_item == 'firstname') {
                 if (isset($customer) &&
-                    !Tools::isSubmit('submit' . strtoupper($this->table)) &&
+                    !Tools::isSubmit('submit' . mb_strtoupper($this->table)) &&
                     Validate::isLoadedObject($customer) &&
                     !Validate::isLoadedObject($this->object)) {
                     $default_value = $customer->firstname;

@@ -52,7 +52,7 @@ class AdminSearchControllerCore extends AdminController
 
         /* Handle empty search field */
         if (!empty($this->query)) {
-            if (!$searchType && strlen($this->query) > 1) {
+            if (!$searchType && mb_strlen($this->query) > 1) {
                 $this->searchFeatures();
             }
 
@@ -194,7 +194,7 @@ class AdminSearchControllerCore extends AdminController
         $this->_list['modules'] = array();
         $all_modules = Module::getModulesOnDisk(true, true, Context::getContext()->employee->id);
         foreach ($all_modules as $module) {
-            if (stripos($module->name, $this->query) !== false || stripos($module->displayName, $this->query) !== false || stripos($module->description, $this->query) !== false) {
+            if (mb_stripos($module->name, $this->query) !== false || mb_stripos($module->displayName, $this->query) !== false || mb_stripos($module->description, $this->query) !== false) {
                 $module->linkto = 'index.php?tab=AdminModules&tab_module=' . $module->tab . '&module_name=' . $module->name . '&anchor=' . ucfirst($module->name) . '&token=' . Tools::getAdminTokenLite('AdminModules');
                 $this->_list['modules'][] = $module;
             }
@@ -238,17 +238,17 @@ class AdminSearchControllerCore extends AdminController
 		WHERE active = 1' . (defined('_PS_HOST_MODE_') ? ' AND t.`hide_host_mode` = 0' : '')
         );
         foreach ($result as $row) {
-            if (Access::isGranted('ROLE_MOD_TAB_' . strtoupper($row['class_name']) . '_READ', $this->context->employee->id_profile)) {
-                $tabs[strtolower($row['class_name'])] = $row['name'];
-                $key_match[strtolower($row['class_name'])] = $row['class_name'];
+            if (Access::isGranted('ROLE_MOD_TAB_' . mb_strtoupper($row['class_name']) . '_READ', $this->context->employee->id_profile)) {
+                $tabs[mb_strtolower($row['class_name'])] = $row['name'];
+                $key_match[mb_strtolower($row['class_name'])] = $row['class_name'];
             }
         }
 
         $this->_list['features'] = array();
         foreach ($_LANGADM as $key => $value) {
-            if (stripos($value, $this->query) !== false) {
+            if (mb_stripos($value, $this->query) !== false) {
                 $value = stripslashes($value);
-                $key = strtolower(substr($key, 0, -32));
+                $key = mb_strtolower(mb_substr($key, 0, -32));
                 if (in_array($key, array('AdminTab', 'index'))) {
                     continue;
                 }

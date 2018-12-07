@@ -93,7 +93,7 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
         $methods = $reflectionClass->getMethods(ReflectionMethod::IS_PUBLIC);
         foreach ($methods as $method) {
             $methodDoc = $method->getDocComment();
-            if (strpos($methodDoc, '@arrayAccess') !== false) {
+            if (mb_strpos($methodDoc, '@arrayAccess') !== false) {
                 $this->arrayAccessList[$this->convertMethodNameToIndex($method->getName())] =
                     array(
                         'type' => 'method',
@@ -382,7 +382,7 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
     private function convertMethodNameToIndex($methodName)
     {
         // remove "get" prefix from the function name
-        $strippedMethodName = substr($methodName, 3);
+        $strippedMethodName = mb_substr($methodName, 3);
 
         return Inflector::tableize($strippedMethodName);
     }

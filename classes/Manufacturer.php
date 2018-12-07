@@ -427,7 +427,7 @@ class ManufacturerCore extends ObjectModel
 
             return (int) count($result);
         }
-        if (strpos($orderBy, '.') > 0) {
+        if (mb_strpos($orderBy, '.') > 0) {
             $orderBy = explode('.', $orderBy);
             $orderBy = pSQL($orderBy[0]) . '.`' . pSQL($orderBy[1]) . '`';
         }

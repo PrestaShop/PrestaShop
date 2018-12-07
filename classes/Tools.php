@@ -83,7 +83,7 @@ class ToolsCore
                 $num_bytes = ceil($length * 0.75);
                 $bytes = self::getBytes($num_bytes);
 
-                return substr(rtrim(base64_encode($bytes), '='), 0, $length);
+                return mb_substr(rtrim(base64_encode($bytes), '='), 0, $length);
             case 'ALPHANUMERIC':
             default:
                 $str = 'abcdefghijkmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -95,7 +95,7 @@ class ToolsCore
         $result = '';
 
         for ($i = 0; $i < $length; ++$i) {
-            $position = ($position + ord($bytes[$i])) % strlen($str);
+            $position = ($position + ord($bytes[$i])) % mb_strlen($str);
             $result .= $str[$position];
         }
 
@@ -142,9 +142,9 @@ class ToolsCore
      */
     public static function strReplaceFirst($search, $replace, $subject, $cur = 0)
     {
-        $strPos = strpos($subject, $search, $cur);
+        $strPos = mb_strpos($subject, $search, $cur);
 
-        return $strPos !== false ? substr_replace($subject, $replace, (int) $strPos, strlen($search)) : $subject;
+        return $strPos !== false ? substr_replace($subject, $replace, (int) $strPos, mb_strlen($search)) : $subject;
     }
 
     /**
@@ -161,12 +161,12 @@ class ToolsCore
             $link = Context::getContext()->link;
         }
 
-        if (strpos($url, 'http://') === false && strpos($url, 'https://') === false && $link) {
-            if (strpos($url, $base_uri) === 0) {
-                $url = substr($url, strlen($base_uri));
+        if (mb_strpos($url, 'http://') === false && mb_strpos($url, 'https://') === false && $link) {
+            if (mb_strpos($url, $base_uri) === 0) {
+                $url = mb_substr($url, mb_strlen($base_uri));
             }
-            if (strpos($url, 'index.php?controller=') !== false && strpos($url, 'index.php/') == 0) {
-                $url = substr($url, strlen('index.php?controller='));
+            if (mb_strpos($url, 'index.php?controller=') !== false && mb_strpos($url, 'index.php/') == 0) {
+                $url = mb_substr($url, mb_strlen('index.php?controller='));
                 if (Configuration::get('PS_REWRITING_SETTINGS')) {
                     $url = Tools::strReplaceFirst('&', '?', $url);
                 }
@@ -205,11 +205,11 @@ class ToolsCore
     public static function redirectLink($url)
     {
         if (!preg_match('@^https?://@i', $url)) {
-            if (strpos($url, __PS_BASE_URI__) !== false && strpos($url, __PS_BASE_URI__) == 0) {
-                $url = substr($url, strlen(__PS_BASE_URI__));
+            if (mb_strpos($url, __PS_BASE_URI__) !== false && mb_strpos($url, __PS_BASE_URI__) == 0) {
+                $url = mb_substr($url, mb_strlen(__PS_BASE_URI__));
             }
-            if (strpos($url, 'index.php?controller=') !== false && strpos($url, 'index.php/') == 0) {
-                $url = substr($url, strlen('index.php?controller='));
+            if (mb_strpos($url, 'index.php?controller=') !== false && mb_strpos($url, 'index.php/') == 0) {
+                $url = mb_substr($url, mb_strlen('index.php?controller='));
             }
             $explode = explode('?', $url);
             $url = Context::getContext()->link->getPageLink($explode[0]);
@@ -276,8 +276,8 @@ class ToolsCore
         }
 
         $host = (isset($_SERVER['HTTP_X_FORWARDED_HOST']) ? $_SERVER['HTTP_X_FORWARDED_HOST'] : $httpHost);
-        if ($ignore_port && $pos = strpos($host, ':')) {
-            $host = substr($host, 0, $pos);
+        if ($ignore_port && $pos = mb_strpos($host, ':')) {
+            $host = mb_substr($host, 0, $pos);
         }
         if ($entities) {
             $host = htmlspecialchars($host, ENT_COMPAT, 'UTF-8');
@@ -369,7 +369,7 @@ class ToolsCore
         if (isset($_SERVER['HTTP_X_FORWARDED_FOR']) && $_SERVER['HTTP_X_FORWARDED_FOR'] && (!isset($_SERVER['REMOTE_ADDR'])
             || preg_match('/^127\..*/i', trim($_SERVER['REMOTE_ADDR'])) || preg_match('/^172\.16.*/i', trim($_SERVER['REMOTE_ADDR']))
             || preg_match('/^192\.168\.*/i', trim($_SERVER['REMOTE_ADDR'])) || preg_match('/^10\..*/i', trim($_SERVER['REMOTE_ADDR'])))) {
-            if (strpos($_SERVER['HTTP_X_FORWARDED_FOR'], ',')) {
+            if (mb_strpos($_SERVER['HTTP_X_FORWARDED_FOR'], ',')) {
                 $ips = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
 
                 return $ips[0];
@@ -1520,7 +1520,7 @@ class ToolsCore
         }
         $str = utf8_decode($str);
 
-        return utf8_encode(substr($str, 0, $max_length - Tools::strlen($suffix)) . $suffix);
+        return utf8_encode(mb_substr($str, 0, $max_length - Tools::strlen($suffix)) . $suffix);
     }
 
     /*Copied from CakePHP String utility file*/
@@ -1718,7 +1718,7 @@ class ToolsCore
             return mb_strtolower($str, 'utf-8');
         }
 
-        return strtolower($str);
+        return mb_strtolower($str);
     }
 
     public static function strlen($str, $encoding = 'UTF-8')
@@ -1731,7 +1731,7 @@ class ToolsCore
             return mb_strlen($str, $encoding);
         }
 
-        return strlen($str);
+        return mb_strlen($str);
     }
 
     public static function stripslashes($string)
@@ -1752,7 +1752,7 @@ class ToolsCore
             return mb_strtoupper($str, 'utf-8');
         }
 
-        return strtoupper($str);
+        return mb_strtoupper($str);
     }
 
     public static function substr($str, $start, $length = false, $encoding = 'utf-8')
@@ -1764,7 +1764,7 @@ class ToolsCore
             return mb_substr($str, (int) $start, ($length === false ? Tools::strlen($str) : (int) $length), $encoding);
         }
 
-        return substr($str, $start, ($length === false ? Tools::strlen($str) : (int) $length));
+        return mb_substr($str, $start, ($length === false ? Tools::strlen($str) : (int) $length));
     }
 
     public static function strpos($str, $find, $offset = 0, $encoding = 'UTF-8')
@@ -1773,7 +1773,7 @@ class ToolsCore
             return mb_strpos($str, $find, $offset, $encoding);
         }
 
-        return strpos($str, $find, $offset);
+        return mb_strpos($str, $find, $offset);
     }
 
     public static function strrpos($str, $find, $offset = 0, $encoding = 'utf-8')
@@ -1782,7 +1782,7 @@ class ToolsCore
             return mb_strrpos($str, $find, $offset, $encoding);
         }
 
-        return strrpos($str, $find, $offset);
+        return mb_strrpos($str, $find, $offset);
     }
 
     public static function ucfirst($str)
@@ -1961,10 +1961,10 @@ class ToolsCore
         $tmp = $value * $precision_factor;
         $tmp2 = (string) $tmp;
         // If the current value has already the desired precision
-        if (strpos($tmp2, '.') === false) {
+        if (mb_strpos($tmp2, '.') === false) {
             return $value;
         }
-        if ($tmp2[strlen($tmp2) - 1] == 0) {
+        if ($tmp2[mb_strlen($tmp2) - 1] == 0) {
             return $value;
         }
 
@@ -1985,10 +1985,10 @@ class ToolsCore
         $tmp = $value * $precision_factor;
         $tmp2 = (string) $tmp;
         // If the current value has already the desired precision
-        if (strpos($tmp2, '.') === false) {
+        if (mb_strpos($tmp2, '.') === false) {
             return $value;
         }
-        if ($tmp2[strlen($tmp2) - 1] == 0) {
+        if ($tmp2[mb_strlen($tmp2) - 1] == 0) {
             return $value;
         }
 
@@ -2047,7 +2047,7 @@ class ToolsCore
 
             if (
                 preg_match('/(.*-----BEGIN CERTIFICATE-----.*-----END CERTIFICATE-----){50}$/Uims', $ca_cert_content) &&
-                substr(rtrim($ca_cert_content), -1) == '-'
+                mb_substr(rtrim($ca_cert_content), -1) == '-'
             ) {
                 file_put_contents(_PS_CACHE_CA_CERT_FILE_, $ca_cert_content);
             }
@@ -2274,16 +2274,16 @@ class ToolsCore
             $hex .= $hex;
         }
 
-        $r = hexdec(substr($hex, 0, 2));
-        $g = hexdec(substr($hex, 2, 2));
-        $b = hexdec(substr($hex, 4, 2));
+        $r = hexdec(mb_substr($hex, 0, 2));
+        $g = hexdec(mb_substr($hex, 2, 2));
+        $b = hexdec(mb_substr($hex, 4, 2));
 
         return (($r * 299) + ($g * 587) + ($b * 114)) / 1000;
     }
 
     public static function parserSQL($sql)
     {
-        if (strlen($sql) > 0) {
+        if (mb_strlen($sql) > 0) {
             $parser = new PHPSQLParser($sql);
 
             return $parser->parsed;
@@ -2829,7 +2829,7 @@ exit;
         array_walk(
             $directoryList,
             function (&$absolutePath, $key) {
-                $absolutePath = substr($absolutePath, strrpos($absolutePath, '/') + 1);
+                $absolutePath = mb_substr($absolutePath, mb_strrpos($absolutePath, '/') + 1);
             }
         );
 
@@ -2997,13 +2997,13 @@ exit;
     {
         $pos = false;
         if ($needle) {
-            $pos = strpos($haystack, $needle);
+            $pos = mb_strpos($haystack, $needle);
         }
         if ($pos === false) {
             return $haystack;
         }
 
-        return substr_replace($haystack, $replace, $pos, strlen($needle));
+        return substr_replace($haystack, $replace, $pos, mb_strlen($needle));
     }
 
     /**
@@ -3022,8 +3022,8 @@ exit;
         }
 
         //Case management system of ubuntu, php version return 5.2.4-2ubuntu5.2
-        if (strpos($version, '-') !== false) {
-            $version = substr($version, 0, strpos($version, '-'));
+        if (mb_strpos($version, '-') !== false) {
+            $version = mb_substr($version, 0, mb_strpos($version, '-'));
         }
 
         return $version;
@@ -3150,9 +3150,9 @@ exit;
         if (is_numeric($value)) {
             return $value;
         } else {
-            $value_length = strlen($value);
-            $qty = (int) substr($value, 0, $value_length - 1);
-            $unit = Tools::strtolower(substr($value, $value_length - 1));
+            $value_length = mb_strlen($value);
+            $qty = (int) mb_substr($value, 0, $value_length - 1);
+            $unit = Tools::strtolower(mb_substr($value, $value_length - 1));
             switch ($unit) {
                 case 'k':
                     $qty *= 1024;
@@ -3192,7 +3192,7 @@ exit;
      */
     public static function url($begin, $end)
     {
-        return $begin . ((strpos($begin, '?') !== false) ? '&' : '?') . $end;
+        return $begin . ((mb_strpos($begin, '?') !== false) ? '&' : '?') . $end;
     }
 
     /**
@@ -3433,7 +3433,7 @@ exit;
 
             // we need strpos (example, evasive can be evasive20)
             foreach ($apache_module_list as $module) {
-                if (strpos($module, $name) !== false) {
+                if (mb_strpos($module, $name) !== false) {
                     return true;
                 }
             }
@@ -3547,11 +3547,11 @@ exit;
         if (!empty($ext)) {
             $real_ext = '.' . $ext;
         }
-        $real_ext_length = strlen($real_ext);
+        $real_ext_length = mb_strlen($real_ext);
 
         $subdir = ($dir) ? $dir . '/' : '';
         foreach ($files as $file) {
-            if (!$real_ext || (strpos($file, $real_ext) && strpos($file, $real_ext) == (strlen($file) - $real_ext_length))) {
+            if (!$real_ext || (mb_strpos($file, $real_ext) && mb_strpos($file, $real_ext) == (mb_strlen($file) - $real_ext_length))) {
                 $filtered_files[] = $subdir . $file;
             }
 
@@ -3623,7 +3623,7 @@ exit;
 
     public static function unSerialize($serialized, $object = false)
     {
-        if (is_string($serialized) && (strpos($serialized, 'O:') === false || !preg_match('/(^|;|{|})O:[0-9]+:"/', $serialized)) && !$object || $object) {
+        if (is_string($serialized) && (mb_strpos($serialized, 'O:') === false || !preg_match('/(^|;|{|})O:[0-9]+:"/', $serialized)) && !$object || $object) {
             return @unserialize($serialized);
         }
 
@@ -3770,7 +3770,7 @@ exit;
     {
         $file_attachment = null;
         if (isset($_FILES[$input]['name']) && !empty($_FILES[$input]['name']) && !empty($_FILES[$input]['tmp_name'])) {
-            $file_attachment['rename'] = uniqid() . Tools::strtolower(substr($_FILES[$input]['name'], -5));
+            $file_attachment['rename'] = uniqid() . Tools::strtolower(mb_substr($_FILES[$input]['name'], -5));
             if ($return_content) {
                 $file_attachment['content'] = file_get_contents($_FILES[$input]['tmp_name']);
             }
@@ -3819,9 +3819,9 @@ exit;
      */
     public static function rtrimString($str, $str_search)
     {
-        $length_str = strlen($str_search);
-        if (strlen($str) >= $length_str && substr($str, -$length_str) == $str_search) {
-            $str = substr($str, 0, -$length_str);
+        $length_str = mb_strlen($str_search);
+        if (mb_strlen($str) >= $length_str && mb_substr($str, -$length_str) == $str_search) {
+            $str = mb_substr($str, 0, -$length_str);
         }
 
         return $str;
@@ -4144,7 +4144,7 @@ exit;
             $path = $edit . '<li><a href="' . Tools::safeOutput($url_base . '&id_cms_category=' . $category->id . '&viewcategory&token=' . Tools::getAdminToken('AdminCmsContent' . (int) Tab::getIdFromClassName('AdminCmsContent') . (int) $context->employee->id)) . '">
 		' . $name . '</a></li> > ' . $path;
             if ($category->id == 1) {
-                return substr($path, 0, strlen($path) - 3);
+                return mb_substr($path, 0, mb_strlen($path) - 3);
             }
 
             return Tools::getPath($url_base, $category->id_parent, $path, '', 'cms');

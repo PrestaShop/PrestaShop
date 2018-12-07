@@ -76,7 +76,7 @@ class ToolsInstall
 
         $name = $xml->getName();
         $_value = trim((string)$xml);
-        if (strlen($_value) == 0) {
+        if (mb_strlen($_value) == 0) {
             $_value = null;
         }
 

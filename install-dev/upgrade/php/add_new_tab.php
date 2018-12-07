@@ -32,7 +32,7 @@ use PrestaShopBundle\Security\Voter\PageVoter;
  */
 function register_tab($className, $name, $id_parent, $returnId = false, $parentTab = null, $module = '')
 {
-    if (!is_null($parentTab) && !empty($parentTab) && strtolower(trim($parentTab)) !== 'null') {
+    if (!is_null($parentTab) && !empty($parentTab) && mb_strtolower(trim($parentTab)) !== 'null') {
         $id_parent = (int)Db::getInstance()->getValue('SELECT `id_tab` FROM `'._DB_PREFIX_.'tab` WHERE `class_name` = \''.pSQL($parentTab).'\'');
     }
 
@@ -66,7 +66,7 @@ function register_tab($className, $name, $id_parent, $returnId = false, $parentT
  */
 function get_new_tab_id($className, $returnId = false)
 {
-    if ($returnId && strtolower(trim($returnId)) !== 'false') {
+    if ($returnId && mb_strtolower(trim($returnId)) !== 'false') {
         return (int)Db::getInstance()->getValue('SELECT `id_tab`
 								FROM `'._DB_PREFIX_.'tab`
 								WHERE `class_name` = \''.pSQL($className).'\'');
@@ -127,14 +127,14 @@ function add_new_tab_17($className, $name, $id_parent, $returnId = false, $paren
 
     foreach (array(PageVoter::CREATE, PageVoter::READ, PageVoter::UPDATE, PageVoter::DELETE) as $role) {
         // 1- Add role
-        $roleToAdd = strtoupper('ROLE_MOD_TAB_'.$className.'_'.$role);
+        $roleToAdd = mb_strtoupper('ROLE_MOD_TAB_'.$className.'_'.$role);
         Db::getInstance()->execute('INSERT IGNORE INTO `'._DB_PREFIX_.'authorization_role` (`slug`)
             VALUES ("'.$roleToAdd.'")');
         $newID = Db::getInstance()->Insert_ID();
 
         // 2- Copy access from the parent
         if (!empty($parentClassName) && !empty($newID)) {
-            $parentRole = strtoupper('ROLE_MOD_TAB_'.pSQL($parentClassName).'_'.$role);
+            $parentRole = mb_strtoupper('ROLE_MOD_TAB_'.pSQL($parentClassName).'_'.$role);
             Db::getInstance()->execute(
                 'INSERT INTO `'._DB_PREFIX_.'access` (`id_profile`, `id_authorization_role`)
                 SELECT a.`id_profile`, '. (int)$newID .' as `id_authorization_role`

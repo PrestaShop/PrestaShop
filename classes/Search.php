@@ -102,13 +102,13 @@ class SearchCore
     {
         $sanitizedString = Search::sanitize($string, $id_lang, $indexation, $iso_code, false);
         $words = explode(' ', $sanitizedString);
-        if (strpos($string, '-') !== false) {
+        if (mb_strpos($string, '-') !== false) {
             $sanitizedString = Search::sanitize($string, $id_lang, $indexation, $iso_code, true);
             $words2 = explode(' ', $sanitizedString);
             // foreach word containing hyphen, we want to index additional word removing the hyphen
             // eg: t-shirt => tshirt
             foreach ($words2 as $word) {
-                if (strpos($word, '-') !== false) {
+                if (mb_strpos($word, '-') !== false) {
                     $word = str_replace('-', '', $word);
                     if (!empty($word)) {
                         $words[] = $word;
@@ -173,7 +173,7 @@ class SearchCore
             $symbols = '';
             $letters = '';
             foreach (explode(' ', $string) as $mb_word) {
-                if (strlen(Tools::replaceAccentedChars($mb_word)) == mb_strlen(Tools::replaceAccentedChars($mb_word))) {
+                if (mb_strlen(Tools::replaceAccentedChars($mb_word)) == mb_strlen(Tools::replaceAccentedChars($mb_word))) {
                     $letters .= $mb_word . ' ';
                 } else {
                     $symbols .= $mb_word . ' ';
@@ -234,7 +234,7 @@ class SearchCore
         $words = Search::extractKeyWords($expr, $id_lang, false, $context->language->iso_code);
 
         foreach ($words as $key => $word) {
-            if (!empty($word) && strlen($word) >= (int) Configuration::get('PS_SEARCH_MINWORDLEN')) {
+            if (!empty($word) && mb_strlen($word) >= (int) Configuration::get('PS_SEARCH_MINWORDLEN')) {
                 $sql_param_search = self::getSearchParamFromWord($word);
 
                 $intersect_array[] = 'SELECT DISTINCT si.id_product
@@ -312,7 +312,7 @@ class SearchCore
         if (empty($product_pool)) {
             return $ajax ? array() : array('total' => 0, 'result' => array());
         }
-        $product_pool = ((strpos($product_pool, ',') === false) ? (' = ' . (int) $product_pool . ' ') : (' IN (' . rtrim($product_pool, ',') . ') '));
+        $product_pool = ((mb_strpos($product_pool, ',') === false) ? (' = ' . (int) $product_pool . ' ') : (' IN (' . rtrim($product_pool, ',') . ') '));
 
         if ($ajax) {
             $sql = 'SELECT DISTINCT p.id_product, pl.name pname, cl.name cname,
@@ -333,7 +333,7 @@ class SearchCore
             return $db->executeS($sql, true, false);
         }
 
-        if (strpos($order_by, '.') > 0) {
+        if (mb_strpos($order_by, '.') > 0) {
             $order_by = explode('.', $order_by);
             $order_by = pSQL($order_by[0]) . '.`' . pSQL($order_by[1]) . '`';
         }

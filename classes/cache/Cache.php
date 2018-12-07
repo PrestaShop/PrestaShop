@@ -297,7 +297,7 @@ abstract class CacheCore
         $keys = array();
         if ($key == '*') {
             $keys = $this->keys;
-        } elseif (strpos($key, '*') === false) {
+        } elseif (mb_strpos($key, '*') === false) {
             $keys = array($key);
         } else {
             $pattern = str_replace('\\*', '.*', preg_quote($key));
@@ -646,7 +646,7 @@ abstract class CacheCore
     protected function isBlacklist($query)
     {
         foreach ($this->blacklist as $find) {
-            if (false !== strpos($query, _DB_PREFIX_ . $find)) {
+            if (false !== mb_strpos($query, _DB_PREFIX_ . $find)) {
                 return true;
             }
         }
@@ -707,7 +707,7 @@ abstract class CacheCore
      */
     public static function clean($key)
     {
-        if (strpos($key, '*') !== false) {
+        if (mb_strpos($key, '*') !== false) {
             $regexp = str_replace('\\*', '.*', preg_quote($key, '#'));
             foreach (array_keys(Cache::$local) as $key) {
                 if (preg_match('#^' . $regexp . '$#', $key)) {

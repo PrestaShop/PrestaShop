@@ -87,18 +87,18 @@ class CreateTableOptionsBuilder {
         $options = $parsed['options'];
         $sql = "";
         foreach ($options as $k => $v) {
-            $len = strlen($sql);
+            $len = mb_strlen($sql);
             $sql .= $this->buildExpression($v);
             $sql .= $this->buildCharacterSet($v);
             $sql .= $this->buildCollation($v);
 
-            if ($len == strlen($sql)) {
+            if ($len == mb_strlen($sql)) {
                 throw new UnableToCreateSQLException('CREATE TABLE options', $k, $v, 'expr_type');
             }
 
             $sql .= $this->getDelimiter($v);
         }
-        return " " . substr($sql, 0, -1);
+        return " " . mb_substr($sql, 0, -1);
     }
 }
 ?>

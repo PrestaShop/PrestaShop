@@ -62,14 +62,14 @@ class ReferenceDefinitionProcessor extends AbstractProcessor {
                 continue;
             }
 
-            $upper = strtoupper($trim);
+            $upper = mb_strtoupper($trim);
 
             switch ($upper) {
 
             case ',':
             # we stop on a single comma
             # or at the end of the array $tokens
-                $expr = $this->buildReferenceDef($expr, trim(substr($base_expr, 0, -strlen($token))), $key - 1);
+                $expr = $this->buildReferenceDef($expr, trim(mb_substr($base_expr, 0, -mb_strlen($token))), $key - 1);
                 break 2;
 
             case 'REFERENCES':
@@ -119,9 +119,9 @@ class ReferenceDefinitionProcessor extends AbstractProcessor {
 
             case 'RESTRICT':
             case 'CASCADE':
-                if (strpos($currCategory, 'REF_OPTION_') === 0) {
+                if (mb_strpos($currCategory, 'REF_OPTION_') === 0) {
                     $expr['sub_tree'][] = array('expr_type' => ExpressionType::RESERVED, 'base_expr' => $trim);
-                    $expr['on_' . strtolower(substr($currCategory, -6))] = $upper;
+                    $expr['on_' . mb_strtolower(mb_substr($currCategory, -6))] = $upper;
                     continue 2;
                 }
                 # else ?
@@ -129,9 +129,9 @@ class ReferenceDefinitionProcessor extends AbstractProcessor {
 
             case 'SET':
             case 'NO':
-                if (strpos($currCategory, 'REF_OPTION_') === 0) {
+                if (mb_strpos($currCategory, 'REF_OPTION_') === 0) {
                     $expr['sub_tree'][] = array('expr_type' => ExpressionType::RESERVED, 'base_expr' => $trim);
-                    $expr['on_' . strtolower(substr($currCategory, -6))] = $upper;
+                    $expr['on_' . mb_strtolower(mb_substr($currCategory, -6))] = $upper;
                     $currCategory = 'SEC_' . $currCategory;
                     continue 2;
                 }
@@ -140,9 +140,9 @@ class ReferenceDefinitionProcessor extends AbstractProcessor {
 
             case 'NULL':
             case 'ACTION':
-                if (strpos($currCategory, 'SEC_REF_OPTION_') === 0) {
+                if (mb_strpos($currCategory, 'SEC_REF_OPTION_') === 0) {
                     $expr['sub_tree'][] = array('expr_type' => ExpressionType::RESERVED, 'base_expr' => $trim);
-                    $expr['on_' . strtolower(substr($currCategory, -6))] .= ' ' . $upper;
+                    $expr['on_' . mb_strtolower(mb_substr($currCategory, -6))] .= ' ' . $upper;
                     $currCategory = 'REF_COL_LIST';
                     continue 2;
                 }
@@ -153,7 +153,7 @@ class ReferenceDefinitionProcessor extends AbstractProcessor {
                 switch ($currCategory) {
 
                 case 'REFERENCES':
-                    if ($upper[0] === '(' && substr($upper, -1) === ')') {
+                    if ($upper[0] === '(' && mb_substr($upper, -1) === ')') {
                         # index_col_name list
                         $processor = new IndexColumnListProcessor();
                         $cols = $processor->process($this->removeParenthesisFromStart($trim));

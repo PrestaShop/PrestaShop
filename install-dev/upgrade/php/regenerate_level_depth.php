@@ -51,7 +51,7 @@ function regenerate_children_categories($id_category, $level_depth)
         $cat_ids .= (string)$category['id_category'].',';
         regenerate_children_categories($category['id_category'], $new_depth);
     }
-    $cat_ids = substr($cat_ids, 0, -1);
+    $cat_ids = mb_substr($cat_ids, 0, -1);
 
     Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'category` SET `level_depth` = '.(int)$new_depth.' WHERE `id_category` IN ('.$cat_ids.')');
 }

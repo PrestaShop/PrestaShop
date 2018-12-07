@@ -108,7 +108,7 @@ class CookieCore
             '{2}((25[0-5]|2[0-4][0-9]|[1]{1}[0-9]{2}|[1-9]{1}[0-9]|[0-9]){1}))$/', $out[4])) {
             return false;
         }
-        if (!strstr(Tools::getHttpHost(false, false), '.')) {
+        if (!mb_strstr(Tools::getHttpHost(false, false), '.')) {
             return false;
         }
 
@@ -353,7 +353,7 @@ class CookieCore
     protected function encryptAndSetCookie($cookie = null)
     {
         // Check if the content fits in the Cookie
-        $length = (ini_get('mbstring.func_overload') & 2) ? mb_strlen($cookie, ini_get('default_charset')) : strlen($cookie);
+        $length = (ini_get('mbstring.func_overload') & 2) ? mb_strlen($cookie, ini_get('default_charset')) : mb_strlen($cookie);
         if ($length >= 1048576) {
             return false;
         }
@@ -409,7 +409,7 @@ class CookieCore
             return $result;
         }
         foreach ($this->_content as $key => $value) {
-            if (strncmp($key, $origin, strlen($origin)) == 0) {
+            if (strncmp($key, $origin, mb_strlen($origin)) == 0) {
                 $result[$key] = $value;
             }
         }

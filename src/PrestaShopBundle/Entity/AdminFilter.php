@@ -286,11 +286,11 @@ class AdminFilter
             return function ($subject) use ($filter) {
                 $operator = null;
 
-                if (false !== strpos($subject, '<=')) {
+                if (false !== mb_strpos($subject, '<=')) {
                     $operator = '<=';
                 }
 
-                if (false !== strpos($subject, '>=')) {
+                if (false !== mb_strpos($subject, '>=')) {
                     $operator = '>=';
                 }
 

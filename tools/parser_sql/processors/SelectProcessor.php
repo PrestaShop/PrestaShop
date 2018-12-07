@@ -51,7 +51,7 @@ class SelectProcessor extends SelectExpressionProcessor {
                 $expressionList[] = $expression;
                 $expression = "";
             } else {
-                switch (strtoupper($token)) {
+                switch (mb_strtoupper($token)) {
 
                 // add more SELECT options here
                 case 'DISTINCT':

@@ -203,7 +203,7 @@ class AdminManufacturersControllerCore extends AdminController
 
     public function processExport($text_delimiter = '"')
     {
-        if (strtolower($this->table) == 'address') {
+        if (mb_strtolower($this->table) == 'address') {
             $this->_defaultOrderBy = 'id_manufacturer';
             $this->_where = 'AND a.`id_customer` = 0 AND a.`id_supplier` = 0 AND a.`id_warehouse` = 0 AND a.`deleted`= 0';
         }

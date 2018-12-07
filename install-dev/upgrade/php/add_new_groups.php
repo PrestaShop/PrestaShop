@@ -33,20 +33,20 @@ function add_new_groups($french, $standard)
 
     $sql = '';
     foreach ($languages as $lang) {
-        if (strtolower($lang['iso_code']) == 'fr') {
+        if (mb_strtolower($lang['iso_code']) == 'fr') {
             $sql .= '('.(int)$last_id.', '.(int)$lang['id_lang'].', "'.pSQL($french).'"),';
         } else {
             $sql .= '('.(int)$last_id.', '.(int)$lang['id_lang'].', "'.pSQL($standard).'"),';
         }
     }
-    $sql = substr($sql, 0, strlen($sql) - 1);
+    $sql = mb_substr($sql, 0, mb_strlen($sql) - 1);
     $res &= Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'group_lang` (`id_group`, `id_lang`, `name`) VALUES '.$sql);
     // we add the different id_group in the configuration
-    if (strtolower($standard) == 'visitor') {
+    if (mb_strtolower($standard) == 'visitor') {
         $res &= Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'configuration` (`id_configuration`, `name`, `value`, `date_add`, `date_upd`) VALUES (NULL, "PS_UNIDENTIFIED_GROUP", "'.(int)$last_id.'", NOW(), NOW())');
-    } elseif (strtolower($standard) == 'guest') {
+    } elseif (mb_strtolower($standard) == 'guest') {
         $res &= Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'configuration` (`id_configuration`, `name`, `value`, `date_add`, `date_upd`) VALUES (NULL, "PS_GUEST_GROUP", "'.(int)$last_id.'", NOW(), NOW())');
-    } elseif (strtolower($standard) == 'test') {
+    } elseif (mb_strtolower($standard) == 'test') {
         $res &= Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'configuration` (`id_configuration`, `name`, `value`, `date_add`, `date_upd`) VALUES (NULL, "PS_TEST", "'.(int)$last_id.'", NOW(), NOW())');
     }
 

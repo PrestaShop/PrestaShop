@@ -397,7 +397,7 @@ class ImageManagerCore
 
         // For each allowed MIME type, we are looking for it inside the current MIME type
         foreach ($mimeTypeList as $type) {
-            if (strstr($mimeType, $type)) {
+            if (mb_strstr($mimeType, $type)) {
                 return true;
             }
         }
@@ -421,7 +421,7 @@ class ImageManagerCore
         }
         $nameExplode = explode('.', $filename);
         if (count($nameExplode) >= 2) {
-            $currentExtension = strtolower($nameExplode[count($nameExplode) - 1]);
+            $currentExtension = mb_strtolower($nameExplode[count($nameExplode) - 1]);
             if (!in_array($currentExtension, $authorizedExtensions)) {
                 return false;
             }
@@ -468,7 +468,7 @@ class ImageManagerCore
         if ((int) $maxFileSize > 0 && $file['size'] > $maxFileSize) {
             return Context::getContext()->getTranslator()->trans('Image is too large (%1$d kB). Maximum allowed: %2$d kB', array($file['size'] / 1000, $maxFileSize / 1000), 'Admin.Notifications.Error');
         }
-        if (substr($file['name'], -4) != '.ico') {
+        if (mb_substr($file['name'], -4) != '.ico') {
             return Context::getContext()->getTranslator()->trans('Image format not recognized, allowed formats are: .ico', array(), 'Admin.Notifications.Error');
         }
         if ($file['error']) {
@@ -626,7 +626,7 @@ class ImageManagerCore
             'image/jpeg' => array('jpg', 'jpeg'),
             'image/png' => array('png'),
         );
-        $extension = substr($fileName, strrpos($fileName, '.') + 1);
+        $extension = mb_substr($fileName, mb_strrpos($fileName, '.') + 1);
 
         $mimeType = null;
         foreach ($types as $mime => $exts) {

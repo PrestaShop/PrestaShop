@@ -59,7 +59,7 @@ class PositionCalculator {
             $spaces .= "   ";
             $i++;
         }
-        $holdem = substr($sql, 0, $charPos) . "^" . substr($sql, $charPos);
+        $holdem = mb_substr($sql, 0, $charPos) . "^" . mb_substr($sql, $charPos);
         echo $spaces . $text . " key:" . $key . "  parsed:" . $parsed . " back:" . serialize($backtracking) . " "
             . $holdem . "\n";
     }
@@ -77,7 +77,7 @@ class PositionCalculator {
         $ok = false;
         while (true) {
 
-            $pos = strpos($sql, $value, $offset);
+            $pos = mb_strpos($sql, $value, $offset);
             if ($pos === false) {
                 break;
             }
@@ -88,8 +88,8 @@ class PositionCalculator {
             }
 
             $after = "";
-            if (isset($sql[$pos + strlen($value)])) {
-                $after = $sql[$pos + strlen($value)];
+            if (isset($sql[$pos + mb_strlen($value)])) {
+                $after = $sql[$pos + mb_strlen($value)];
             }
 
             // if we have an operator, it should be surrounded by
@@ -99,10 +99,10 @@ class PositionCalculator {
             if ($expr_type === 'operator') {
 
                 $ok = ($before === "" || in_array($before, self::$_allowedOnOperator, true))
-                    || (strtolower($before) >= 'a' && strtolower($before) <= 'z') || ($before >= '0' && $before <= '9');
+                    || (mb_strtolower($before) >= 'a' && mb_strtolower($before) <= 'z') || ($before >= '0' && $before <= '9');
                 $ok = $ok
                     && ($after === "" || in_array($after, self::$_allowedOnOperator, true)
-                        || (strtolower($after) >= 'a' && strtolower($after) <= 'z') || ($after >= '0' && $after <= '9')
+                        || (mb_strtolower($after) >= 'a' && mb_strtolower($after) <= 'z') || ($after >= '0' && $after <= '9')
                         || ($after === '?') || ($after === '@'));
 
                 if (!$ok) {
@@ -177,8 +177,8 @@ class PositionCalculator {
                 // move the current pos after the keyword
                 // SELECT, WHERE, INSERT etc.
                 if (PHPSQLParserConstants::isReserved($key)) {
-                    $charPos = stripos($sql, $key, $charPos);
-                    $charPos += strlen($key);
+                    $charPos = mb_stripos($sql, $key, $charPos);
+                    $charPos += mb_strlen($key);
                 }
             }
         }
@@ -192,7 +192,7 @@ class PositionCalculator {
 
                 //$this->_printPos("0", $sql, $charPos, $key, $value, $backtracking);
 
-                $subject = substr($sql, $charPos);
+                $subject = mb_substr($sql, $charPos);
                 $pos = $this->findPositionWithinString(
                     $subject,
                     $value,
@@ -203,7 +203,7 @@ class PositionCalculator {
                 }
 
                 $parsed['position'] = $charPos + $pos;
-                $charPos += $pos + strlen($value);
+                $charPos += $pos + mb_strlen($value);
 
                 //$this->_printPos("1", $sql, $charPos, $key, $value, $backtracking);
 

@@ -210,7 +210,7 @@ class CacheMemcachedCore extends Cache
     {
         if ($key == '*') {
             $this->flush();
-        } elseif (strpos($key, '*') === false) {
+        } elseif (mb_strpos($key, '*') === false) {
             $this->_delete($key);
         } else {
             $pattern = str_replace('\\*', '.*', preg_quote($key));

@@ -72,18 +72,18 @@ class GroupByBuilder {
     public function build($parsed) {
         $sql = "";
         foreach ($parsed as $k => $v) {
-            $len = strlen($sql);
+            $len = mb_strlen($sql);
             $sql .= $this->buildColRef($v);
             $sql .= $this->buildPosition($v);
             $sql .= $this->buildFunction($v);
 
-            if ($len == strlen($sql)) {
+            if ($len == mb_strlen($sql)) {
                 throw new UnableToCreateSQLException('GROUP', $k, $v, 'expr_type');
             }
 
             $sql .= ", ";
         }
-        $sql = substr($sql, 0, -2);
+        $sql = mb_substr($sql, 0, -2);
         return "GROUP BY " . $sql;
     }
     

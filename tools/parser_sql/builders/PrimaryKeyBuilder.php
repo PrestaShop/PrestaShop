@@ -94,7 +94,7 @@ class PrimaryKeyBuilder {
         }
         $sql = "";
         foreach ($parsed['sub_tree'] as $k => $v) {
-            $len = strlen($sql);
+            $len = mb_strlen($sql);
             $sql .= $this->buildConstraint($v);
             $sql .= $this->buildReserved($v);
             $sql .= $this->buildColumnList($v);
@@ -102,13 +102,13 @@ class PrimaryKeyBuilder {
             $sql .= $this->buildIndexSize($v);
             $sql .= $this->buildIndexParser($v);
 
-            if ($len == strlen($sql)) {
+            if ($len == mb_strlen($sql)) {
                 throw new UnableToCreateSQLException('CREATE TABLE primary key subtree', $k, $v, 'expr_type');
             }
 
             $sql .= " ";
         }
-        return substr($sql, 0, -1);
+        return mb_substr($sql, 0, -1);
     }
 }
 ?>

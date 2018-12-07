@@ -131,7 +131,7 @@ class ValidateCoreTest extends TestCase
             array(1, md5('SomeRandomString')),
             array(0, ''),
             array(0, sha1('AnotherRandomString')),
-            array(0, substr(md5('AnotherRandomString'), 0, 31)),
+            array(0, mb_substr(md5('AnotherRandomString'), 0, 31)),
             array(0, 123),
             array(0, false),
         );
@@ -143,7 +143,7 @@ class ValidateCoreTest extends TestCase
             array(1, sha1('SomeRandomString')),
             array(0, ''),
             array(0, md5('AnotherRandomString')),
-            array(0, substr(sha1('AnotherRandomString'), 0, 39)),
+            array(0, mb_substr(sha1('AnotherRandomString'), 0, 39)),
             array(0, 123),
             array(0, false),
         );

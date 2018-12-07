@@ -1332,7 +1332,7 @@ class ProductCore extends ObjectModel
             $order_by_prefix = 'c';
         }
 
-        if (strpos($order_by, '.') > 0) {
+        if (mb_strpos($order_by, '.') > 0) {
             $order_by = explode('.', $order_by);
             $order_by_prefix = $order_by[0];
             $order_by = $order_by[1];
@@ -2597,7 +2597,7 @@ class ProductCore extends ObjectModel
                 WHERE cp.`id_product` = p.`id_product`)';
         }
 
-        if (strpos($order_by, '.') > 0) {
+        if (mb_strpos($order_by, '.') > 0) {
             $order_by = explode('.', $order_by);
             $order_by_prefix = $order_by[0];
             $order_by = $order_by[1];
@@ -2879,7 +2879,7 @@ class ProductCore extends ObjectModel
             ' . $sql_groups);
         }
 
-        if (strpos($order_by, '.') > 0) {
+        if (mb_strpos($order_by, '.') > 0) {
             $order_by = explode('.', $order_by);
             $order_by = pSQL($order_by[0]) . '.`' . pSQL($order_by[1]) . '`';
         }

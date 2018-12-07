@@ -57,7 +57,7 @@ class EmailLister
 
         // Remove unwanted .html / .txt / .tpl / .php / . / ..
         foreach ($mail_directory as $mail) {
-            if (strpos($mail->getFilename(), '.') !== false) {
+            if (mb_strpos($mail->getFilename(), '.') !== false) {
                 $tmp = explode('.', $mail->getFilename());
 
                 // Check for filename existence (left part) and if extension is html (right part)
@@ -82,7 +82,7 @@ class EmailLister
      */
     public function getCleanedMailName($mail_name)
     {
-        if (strpos($mail_name, '.') !== false) {
+        if (mb_strpos($mail_name, '.') !== false) {
             $tmp = explode('.', $mail_name);
 
             if ($tmp === false || !isset($tmp[0])) {

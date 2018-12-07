@@ -64,11 +64,11 @@ class PHPSQLParserUtils {
      * @param string $needle
      */
     protected function endsWith($haystack, $needle) {
-        $length = strlen($needle);
+        $length = mb_strlen($needle);
         if ($length == 0) {
             return true;
         }
-        return (substr($haystack, -$length) === $needle);
+        return (mb_substr($haystack, -$length) === $needle);
     }
 
     /**
@@ -76,8 +76,8 @@ class PHPSQLParserUtils {
      */
     protected function revokeQuotation($sql) {
         $result = trim($sql);
-        if (($result[0] === '`') && ($result[strlen($result) - 1] === '`')) {
-            $result = substr($result, 1, -1);
+        if (($result[0] === '`') && ($result[mb_strlen($result) - 1] === '`')) {
+            $result = mb_substr($result, 1, -1);
             return trim(str_replace('``', '`', $result));
         }
         return $sql;
@@ -101,7 +101,7 @@ class PHPSQLParserUtils {
         $parenthesis = $parenthesisRemoved;
         $i = 0;
         $string = 0;
-        while ($i < strlen($trim)) {
+        while ($i < mb_strlen($trim)) {
 
             if ($trim[$i] === "\\") {
                 $i += 2; # an escape character, the next character is irrelevant

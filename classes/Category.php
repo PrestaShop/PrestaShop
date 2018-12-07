@@ -2335,7 +2335,7 @@ class CategoryCore extends ObjectModel
             $sql .= '("' . (int) $idCategory . '", "' . (int) $idShop . '"),';
         }
         // removing last comma to avoid SQL error
-        $sql = substr($sql, 0, strlen($sql) - 1);
+        $sql = mb_substr($sql, 0, mb_strlen($sql) - 1);
 
         $return = Db::getInstance()->execute($sql);
         // we have to update position for every new entries

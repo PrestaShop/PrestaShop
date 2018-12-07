@@ -55,7 +55,7 @@ class ModuleFrontControllerCore extends FrontController
      */
     public function setTemplate($template, $params = array(), $locale = null)
     {
-        if (strpos($template, 'module:') === 0) {
+        if (mb_strpos($template, 'module:') === 0) {
             $this->template = $template;
         } else {
             parent::setTemplate($template, $params, $locale);

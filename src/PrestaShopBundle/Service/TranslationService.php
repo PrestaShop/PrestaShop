@@ -220,20 +220,20 @@ class TranslationService
     private function dataContainsSearchWord($search, $data)
     {
         if (is_string($search)) {
-            $search = strtolower($search);
+            $search = mb_strtolower($search);
 
-            return false !== strpos(strtolower($data['default']), $search) ||
-                false !== strpos(strtolower($data['xliff']), $search) ||
-                false !== strpos(strtolower($data['database']), $search);
+            return false !== mb_strpos(mb_strtolower($data['default']), $search) ||
+                false !== mb_strpos(mb_strtolower($data['xliff']), $search) ||
+                false !== mb_strpos(mb_strtolower($data['database']), $search);
         }
 
         if (is_array($search)) {
             $contains = true;
             foreach ($search as $s) {
-                $s = strtolower($s);
-                $contains &= false !== strpos(strtolower($data['default']), $s) ||
-                    false !== strpos(strtolower($data['xliff']), $s) ||
-                    false !== strpos(strtolower($data['database']), $s);
+                $s = mb_strtolower($s);
+                $contains &= false !== mb_strpos(mb_strtolower($data['default']), $s) ||
+                    false !== mb_strpos(mb_strtolower($data['xliff']), $s) ||
+                    false !== mb_strpos(mb_strtolower($data['database']), $s);
             }
 
             return $contains;

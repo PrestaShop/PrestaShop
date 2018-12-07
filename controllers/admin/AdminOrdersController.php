@@ -1245,7 +1245,7 @@ class AdminOrdersControllerCore extends AdminController
                         $cart->getOrderTotal(true, Cart::BOTH),
                         $payment_module->displayName,
                         $this->trans('Manual order -- Employee:', array(), 'Admin.Orderscustomers.Feature') . ' ' .
-                        substr($employee->firstname, 0, 1) . '. ' . $employee->lastname,
+                        mb_substr($employee->firstname, 0, 1) . '. ' . $employee->lastname,
                         array(),
                         null,
                         false,

@@ -112,7 +112,7 @@ class FunctionBuilder {
 
         $sql = "";
         foreach ($parsed['sub_tree'] as $k => $v) {
-            $len = strlen($sql);
+            $len = mb_strlen($sql);
             $sql .= $this->build($v);
             $sql .= $this->buildConstant($v);
             $sql .= $this->buildColRef($v);
@@ -120,13 +120,13 @@ class FunctionBuilder {
             $sql .= $this->buildSelectBracketExpression($v);
             $sql .= $this->buildSelectExpression($v);
 
-            if ($len == strlen($sql)) {
+            if ($len == mb_strlen($sql)) {
                 throw new UnableToCreateSQLException('function subtree', $k, $v, 'expr_type');
             }
 
             $sql .= ($this->isReserved($v) ? " " : ",");
         }
-        return $parsed['base_expr'] . "(" . substr($sql, 0, -1) . ")" . $this->buildAlias($parsed) . $this->buildDirection($parsed);
+        return $parsed['base_expr'] . "(" . mb_substr($sql, 0, -1) . ")" . $this->buildAlias($parsed) . $this->buildDirection($parsed);
     }
 
 }

@@ -164,7 +164,7 @@ class PrestaShopExceptionCore extends Exception
                     break;
                 }
 
-                if (in_array(strtolower($parameter->getName()), $criticalParameters)) {
+                if (in_array(mb_strtolower($parameter->getName()), $criticalParameters)) {
                     $hiddenArgs[] = '**hidden_' . $parameter->getName() . '**';
                 } else {
                     $hiddenArgs[] = $args[$argIndex];

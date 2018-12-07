@@ -35,7 +35,7 @@ if (!Tools::getValue('id_shop')) {
     Context::getContext()->shop->setContext(Shop::CONTEXT_SHOP, (int)Tools::getValue('id_shop'));
 }
 
-if (substr(_COOKIE_KEY_, 34, 8) != Tools::getValue('token')) {
+if (mb_substr(_COOKIE_KEY_, 34, 8) != Tools::getValue('token')) {
     die;
 }
 

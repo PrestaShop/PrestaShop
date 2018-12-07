@@ -56,7 +56,7 @@ class ShowProcessor extends AbstractProcessor {
         $prev = "";
 
         foreach ($tokens as $k => $token) {
-            $upper = strtoupper(trim($token));
+            $upper = mb_strtoupper(trim($token));
 
             if ($this->isWhitespaceToken($token)) {
                 continue;

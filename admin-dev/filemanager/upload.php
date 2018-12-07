@@ -11,8 +11,8 @@ $_POST['path_thumb'] = $thumbs_base_path.str_replace("\0", '', $_POST['path_thum
 $storeFolder = $_POST['path'];
 $storeFolderThumb = $_POST['path_thumb'];
 
-$path_pos = strpos($storeFolder, $current_path);
-$thumb_pos = strpos($_POST['path_thumb'], $thumbs_base_path);
+$path_pos = mb_strpos($storeFolder, $current_path);
+$thumb_pos = mb_strpos($_POST['path_thumb'], $thumbs_base_path);
 
 if ($path_pos === false || $thumb_pos === false
     || preg_match('/\.{1,2}[\/|\\\]/', $_POST['path_thumb']) !== 0

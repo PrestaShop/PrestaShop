@@ -100,7 +100,7 @@ class SubTreeBuilder {
         }
         $sql = "";
         foreach ($parsed['sub_tree'] as $k => $v) {
-            $len = strlen($sql);
+            $len = mb_strlen($sql);
             $sql .= $this->buildColRef($v);
             $sql .= $this->buildFunction($v);
             $sql .= $this->buildOperator($v);
@@ -109,13 +109,13 @@ class SubTreeBuilder {
             $sql .= $this->buildSelectBracketExpression($v);
             $sql .= $this->buildReserved($v);
 
-            if ($len == strlen($sql)) {
+            if ($len == mb_strlen($sql)) {
                 throw new UnableToCreateSQLException('expression subtree', $k, $v, 'expr_type');
             }
 
             $sql .= $delim;
         }
-        return substr($sql, 0, -strlen($delim));
+        return mb_substr($sql, 0, -mb_strlen($delim));
     }
 }
 ?>

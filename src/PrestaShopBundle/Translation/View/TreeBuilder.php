@@ -108,20 +108,20 @@ class TreeBuilder
     private function dataContainsSearchWord($search, $data)
     {
         if (is_string($search)) {
-            $search = strtolower($search);
+            $search = mb_strtolower($search);
 
-            return false !== strpos(strtolower($data['default']), $search) ||
-                false !== strpos(strtolower($data['xlf']), $search) ||
-                false !== strpos(strtolower($data['db']), $search);
+            return false !== mb_strpos(mb_strtolower($data['default']), $search) ||
+                false !== mb_strpos(mb_strtolower($data['xlf']), $search) ||
+                false !== mb_strpos(mb_strtolower($data['db']), $search);
         }
 
         if (is_array($search)) {
             $contains = true;
             foreach ($search as $s) {
-                $s = strtolower($s);
-                $contains &= false !== strpos(strtolower($data['default']), $s) ||
-                    false !== strpos(strtolower($data['xlf']), $s) ||
-                    false !== strpos(strtolower($data['db']), $s);
+                $s = mb_strtolower($s);
+                $contains &= false !== mb_strpos(mb_strtolower($data['default']), $s) ||
+                    false !== mb_strpos(mb_strtolower($data['xlf']), $s) ||
+                    false !== mb_strpos(mb_strtolower($data['db']), $s);
             }
 
             return $contains;
@@ -191,7 +191,7 @@ class TreeBuilder
         $index1 = 0;
         foreach ($tree as $k1 => $t1) {
             $index2 = 0;
-            if (is_array($t1) && '__' !== substr($k1, 0, 2)) {
+            if (is_array($t1) && '__' !== mb_substr($k1, 0, 2)) {
                 $this->addTreeInfo($router, $cleanTree, $index1, $k1, $k1, $theme, $search);
 
                 if (array_key_exists('__messages', $t1)) {
@@ -211,7 +211,7 @@ class TreeBuilder
 
                 foreach ($t1 as $k2 => $t2) {
                     $index3 = 0;
-                    if (is_array($t2) && '__' !== substr($k2, 0, 2)) {
+                    if (is_array($t2) && '__' !== mb_substr($k2, 0, 2)) {
                         $this->addTreeInfo($router, $cleanTree[$index1]['children'], $index2, $k2, $k1 . $k2, $theme, $search);
 
                         if (array_key_exists('__messages', $t2)) {
@@ -232,7 +232,7 @@ class TreeBuilder
                         }
 
                         foreach ($t2 as $k3 => $t3) {
-                            if (is_array($t3) && '__' !== substr($k3, 0, 2)) {
+                            if (is_array($t3) && '__' !== mb_substr($k3, 0, 2)) {
                                 $this->addTreeInfo($router, $cleanTree[$index1]['children'][$index2]['children'], $index3, $k3, $k1 . $k2 . $k3, $theme, $search);
 
                                 if (array_key_exists('__messages', $t3)) {

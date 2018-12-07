@@ -293,7 +293,7 @@ class TreeCore
     public function getTemplateFile($template)
     {
         if (preg_match_all('/((?:^|[A-Z])[a-z]+)/', get_class($this->getContext()->controller), $matches) !== false) {
-            $controller_name = strtolower($matches[0][1]);
+            $controller_name = mb_strtolower($matches[0][1]);
         }
 
         if ($this->getContext()->controller instanceof ModuleAdminController && isset($controller_name) && file_exists($this->_normalizeDirectory(
@@ -501,10 +501,10 @@ class TreeCore
 
     private function _normalizeDirectory($directory)
     {
-        $last = $directory[strlen($directory) - 1];
+        $last = $directory[mb_strlen($directory) - 1];
 
         if (in_array($last, array('/', '\\'))) {
-            $directory[strlen($directory) - 1] = DIRECTORY_SEPARATOR;
+            $directory[mb_strlen($directory) - 1] = DIRECTORY_SEPARATOR;
 
             return $directory;
         }

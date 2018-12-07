@@ -40,7 +40,7 @@ class Language
 
     public function __construct($iso)
     {
-        $this->iso_code = strtolower($iso);
+        $this->iso_code = mb_strtolower($iso);
         $xmlPath = _PS_INSTALL_LANGS_PATH_ . $iso . '/';
         $this->setPropertiesFromXml($xmlPath);
         $this->is_rtl = ($this->is_rtl === 'true') ? true : false;
@@ -120,7 +120,7 @@ class Language
     {
         if (!is_array($this->countries)) {
             $this->countries = array();
-            $filename = _PS_INSTALL_LANGS_PATH_ . substr($this->language_code, 0, 2) . '/data/country.xml';
+            $filename = _PS_INSTALL_LANGS_PATH_ . mb_substr($this->language_code, 0, 2) . '/data/country.xml';
 
             if (!file_exists($filename)) {
                 $filename = _PS_INSTALL_LANGS_PATH_ . 'en/data/country.xml';
@@ -128,7 +128,7 @@ class Language
 
             if ($xml = @simplexml_load_file($filename)) {
                 foreach ($xml->country as $country) {
-                    $this->countries[strtolower((string) $country['id'])] = (string) $country->name;
+                    $this->countries[mb_strtolower((string) $country['id'])] = (string) $country->name;
                 }
             }
         }

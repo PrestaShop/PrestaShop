@@ -516,12 +516,12 @@ class AdminEmployeesControllerCore extends AdminController
 
             // Unset set shops
             foreach ($_POST as $postkey => $postvalue) {
-                if (strstr($postkey, 'checkBoxShopAsso_' . $this->table) !== false) {
+                if (mb_strstr($postkey, 'checkBoxShopAsso_' . $this->table) !== false) {
                     unset($_POST[$postkey]);
                 }
             }
             foreach ($_GET as $postkey => $postvalue) {
-                if (strstr($postkey, 'checkBoxShopAsso_' . $this->table) !== false) {
+                if (mb_strstr($postkey, 'checkBoxShopAsso_' . $this->table) !== false) {
                     unset($_GET[$postkey]);
                 }
             }

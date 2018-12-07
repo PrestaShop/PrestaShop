@@ -43,7 +43,7 @@ class InstallSession
 
     public function __construct()
     {
-        session_name('install_'.substr(md5($_SERVER['HTTP_HOST']), 0, 12));
+        session_name('install_'.mb_substr(md5($_SERVER['HTTP_HOST']), 0, 12));
         $session_started = session_start();
         if (!($session_started)
         || (!isset($_SESSION['session_mode']) && (isset($_GET['_']) || isset($_POST['submitNext']) || isset($_POST['submitPrevious']) || isset($_POST['language'])))) {
@@ -71,8 +71,8 @@ class InstallSession
     {
         if (InstallSession::$_cookie_mode) {
             $ref = InstallSession::$_cookie->{$varname};
-            if (0 === strncmp($ref, 'serialized_array:', strlen('serialized_array:'))) {
-                $ref = unserialize(substr($ref, strlen('serialized_array:')));
+            if (0 === strncmp($ref, 'serialized_array:', mb_strlen('serialized_array:'))) {
+                $ref = unserialize(mb_substr($ref, mb_strlen('serialized_array:')));
             }
         } else {
             if (isset($_SESSION[$varname])) {

@@ -713,7 +713,7 @@ class AdminImportControllerCore extends AdminController
         //get post max size
         $post_max_size = ini_get('post_max_size');
         $bytes = (int) trim($post_max_size);
-        $last = strtolower($post_max_size[strlen($post_max_size) - 1]);
+        $last = mb_strtolower($post_max_size[mb_strlen($post_max_size) - 1]);
 
         switch ($last) {
             case 'g':
@@ -2174,7 +2174,7 @@ class AdminImportControllerCore extends AdminController
                         $image->position = Image::getHighestPosition($product->id) + 1;
                         $image->cover = (!$key && !$product_has_images) ? true : false;
                         $alt = $product->image_alt[$key];
-                        if (strlen($alt) > 0) {
+                        if (mb_strlen($alt) > 0) {
                             $image->legend = self::createMultiLangField($alt);
                         }
                         // file_exists doesn't work with HTTP protocol
@@ -2486,7 +2486,7 @@ class AdminImportControllerCore extends AdminController
 
                     if (isset($info['image_alt'])) {
                         $alt = self::split($info['image_alt']);
-                        if (isset($alt[$key]) && strlen($alt[$key]) > 0) {
+                        if (isset($alt[$key]) && mb_strlen($alt[$key]) > 0) {
                             $alt = self::createMultiLangField($alt[$key]);
                             $image->legend = $alt;
                         }
@@ -4444,7 +4444,7 @@ class AdminImportControllerCore extends AdminController
                     @unlink($file);
                 } elseif (file_exists($file)) {
                     $b_name = explode('.', $b_name);
-                    $b_name = strtolower($b_name[count($b_name) - 1]);
+                    $b_name = mb_strtolower($b_name[count($b_name) - 1]);
                     $mime_types = array('csv' => 'text/csv');
 
                     if (isset($mime_types[$b_name])) {
@@ -4608,8 +4608,8 @@ class AdminImportControllerCore extends AdminController
     public static function setLocale()
     {
         $iso_lang = trim(Tools::getValue('iso_lang'));
-        setlocale(LC_COLLATE, strtolower($iso_lang) . '_' . strtoupper($iso_lang) . '.UTF-8');
-        setlocale(LC_CTYPE, strtolower($iso_lang) . '_' . strtoupper($iso_lang) . '.UTF-8');
+        setlocale(LC_COLLATE, mb_strtolower($iso_lang) . '_' . mb_strtoupper($iso_lang) . '.UTF-8');
+        setlocale(LC_CTYPE, mb_strtolower($iso_lang) . '_' . mb_strtoupper($iso_lang) . '.UTF-8');
     }
 
     protected function addProductWarning($product_name, $product_id = null, $message = '')

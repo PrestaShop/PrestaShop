@@ -128,7 +128,7 @@ class TreeToolbarCore implements ITreeToolbarCore
     public function getTemplateFile($template)
     {
         if (preg_match_all('/((?:^|[A-Z])[a-z]+)/', get_class($this->getContext()->controller), $matches) !== false) {
-            $controllerName = strtolower($matches[0][1]);
+            $controllerName = mb_strtolower($matches[0][1]);
         }
 
         if ($this->getContext()->controller instanceof ModuleAdminController && file_exists($this->_normalizeDirectory(
@@ -208,10 +208,10 @@ class TreeToolbarCore implements ITreeToolbarCore
 
     private function _normalizeDirectory($directory)
     {
-        $last = $directory[strlen($directory) - 1];
+        $last = $directory[mb_strlen($directory) - 1];
 
         if (in_array($last, array('/', '\\'))) {
-            $directory[strlen($directory) - 1] = DIRECTORY_SEPARATOR;
+            $directory[mb_strlen($directory) - 1] = DIRECTORY_SEPARATOR;
 
             return $directory;
         }

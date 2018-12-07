@@ -50,12 +50,12 @@ class EntityRepository
 
     public function __call($method, $arguments)
     {
-        if (0 === strpos($method, 'findOneBy')) {
+        if (0 === mb_strpos($method, 'findOneBy')) {
             $one = true;
-            $by = substr($method, 9);
-        } elseif (0 === strpos($method, 'findBy')) {
+            $by = mb_substr($method, 9);
+        } elseif (0 === mb_strpos($method, 'findBy')) {
             $one = false;
-            $by = substr($method, 6);
+            $by = mb_substr($method, 6);
         } else {
             throw new Exception(sprintf('Undefind method %s.', $method));
         }
@@ -85,7 +85,7 @@ class EntityRepository
      */
     private function convertToDbFieldName($camel_case_field_name)
     {
-        return strtolower(preg_replace('/([a-z])([A-Z])/', '$1_$2', $camel_case_field_name));
+        return mb_strtolower(preg_replace('/([a-z])([A-Z])/', '$1_$2', $camel_case_field_name));
     }
 
     /**

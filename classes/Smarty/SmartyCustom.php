@@ -177,7 +177,7 @@ class SmartyCustomCore extends Smarty
 
         $sql .= ' AND cache_id="' . pSQL((string) $cache_id) . '"';
 
-        if (strlen($compile_id) > 32) {
+        if (mb_strlen($compile_id) > 32) {
             $compile_id = md5($compile_id);
         }
         $sql .= ' AND compile_id="' . pSQL((string) $compile_id) . '"';
@@ -199,7 +199,7 @@ class SmartyCustomCore extends Smarty
         static $is_in_lazy_cache = array();
         $template_md5 = md5($template);
 
-        if (strlen($compile_id) > 32) {
+        if (mb_strlen($compile_id) > 32) {
             $compile_id = md5($compile_id);
         }
 
@@ -256,7 +256,7 @@ class SmartyCustomCore extends Smarty
 
         $sql .= ',"' . pSQL((string) $cache_id) . '"';
 
-        if (strlen($compile_id) > 32) {
+        if (mb_strlen($compile_id) > 32) {
             $compile_id = md5($compile_id);
         }
         $sql .= ',"' . pSQL((string) $compile_id) . '"';
@@ -289,7 +289,7 @@ class SmartyCustomCore extends Smarty
         }
 
         if ($compile_id != null) {
-            if (strlen($compile_id) > 32) {
+            if (mb_strlen($compile_id) > 32) {
                 $compile_id = md5($compile_id);
             }
             $sql .= ' AND compile_id="' . pSQL((string) $compile_id) . '"';

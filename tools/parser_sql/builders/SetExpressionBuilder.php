@@ -82,19 +82,19 @@ class SetExpressionBuilder {
         }
         $sql = "";
         foreach ($parsed['sub_tree'] as $k => $v) {
-            $len = strlen($sql);
+            $len = mb_strlen($sql);
             $sql .= $this->buildColRef($v);
             $sql .= $this->buildConstant($v);
             $sql .= $this->buildOperator($v);
             $sql .= $this->buildFunction($v);
 
-            if ($len == strlen($sql)) {
+            if ($len == mb_strlen($sql)) {
                 throw new UnableToCreateSQLException('SET expression subtree', $k, $v, 'expr_type');
             }
 
             $sql .= " ";
         }
-        $sql = substr($sql, 0, -1);
+        $sql = mb_substr($sql, 0, -1);
         return $sql;
     }
 }

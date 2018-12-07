@@ -67,7 +67,7 @@ class ThemeExtractor
     {
         $this->catalog = new MessageCatalogue($locale);
         // remove the last "/"
-        $themeDirectory = substr($theme->getDirectory(), 0, -1);
+        $themeDirectory = mb_substr($theme->getDirectory(), 0, -1);
 
         $options = array(
             'path' => $themeDirectory,

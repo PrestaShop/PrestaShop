@@ -1749,7 +1749,7 @@ class OrderCore extends ObjectModel
      */
     public static function generateReference()
     {
-        return strtoupper(Tools::passwdGen(9, 'NO_NUMERIC'));
+        return mb_strtoupper(Tools::passwdGen(9, 'NO_NUMERIC'));
     }
 
     public function orderContainProduct($id_product)

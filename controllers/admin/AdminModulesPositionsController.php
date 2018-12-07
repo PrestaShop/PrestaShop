@@ -50,7 +50,7 @@ class AdminModulesPositionsControllerCore extends AdminController
         ));
 
         $baseUrl = $this->context->link->getAdminLink('AdminModulesPositions');
-        if (strpos($baseUrl, '?') === false) {
+        if (mb_strpos($baseUrl, '?') === false) {
             $baseUrl .= '?';
         }
 

@@ -217,7 +217,7 @@ class AdminThemesControllerCore extends AdminController
      */
     public function ajaxProcessGetAddonsThemes()
     {
-        $parent_domain = Tools::getHttpHost(true) . substr($_SERVER['REQUEST_URI'], 0, -1 * strlen(basename($_SERVER['REQUEST_URI'])));
+        $parent_domain = Tools::getHttpHost(true) . mb_substr($_SERVER['REQUEST_URI'], 0, -1 * mb_strlen(basename($_SERVER['REQUEST_URI'])));
         $iso_lang = $this->context->language->iso_code;
         $iso_currency = $this->context->currency->iso_code;
         $iso_country = $this->context->country->iso_code;
@@ -397,7 +397,7 @@ class AdminThemesControllerCore extends AdminController
 
         // Employee languages used for link and utm_source
         $lang = new Language($this->context->language->id);
-        $iso_lang_uc = strtoupper($lang->iso_code);
+        $iso_lang_uc = mb_strtoupper($lang->iso_code);
         $url = 'https://addons.prestashop.com/create-favicon.php?pab=1';
 
         $this->fields_options = array(
@@ -609,7 +609,7 @@ class AdminThemesControllerCore extends AdminController
             $theme_archive_server[] = '-';
 
             foreach ($files as $file) {
-                if (is_file(_PS_ALL_THEMES_DIR_ . $file) && substr(_PS_ALL_THEMES_DIR_ . $file, -4) == '.zip') {
+                if (is_file(_PS_ALL_THEMES_DIR_ . $file) && mb_substr(_PS_ALL_THEMES_DIR_ . $file, -4) == '.zip') {
                     $theme_archive_server[] = array(
                         'id' => basename(_PS_ALL_THEMES_DIR_ . $file),
                         'name' => basename(_PS_ALL_THEMES_DIR_ . $file),

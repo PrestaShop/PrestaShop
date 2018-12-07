@@ -134,7 +134,7 @@ class TabCore extends ObjectModel
         }
 
         /* Right management */
-        $slug = 'ROLE_MOD_TAB_' . strtoupper(self::getClassNameById($idTab));
+        $slug = 'ROLE_MOD_TAB_' . mb_strtoupper(self::getClassNameById($idTab));
 
         foreach (array('CREATE', 'READ', 'UPDATE', 'DELETE') as $action) {
             Db::getInstance()->execute('INSERT INTO `' . _DB_PREFIX_ . 'authorization_role` (`slug`) VALUES ("' . $slug . '_' . $action . '")');
@@ -156,13 +156,13 @@ class TabCore extends ObjectModel
     public function delete()
     {
         if (parent::delete()) {
-            $slug = 'ROLE_MOD_TAB_' . strtoupper($this->class_name);
+            $slug = 'ROLE_MOD_TAB_' . mb_strtoupper($this->class_name);
 
             foreach (array('CREATE', 'READ', 'UPDATE', 'DELETE') as $action) {
                 Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'authorization_role` WHERE `slug` = "' . $slug . '_' . $action . '"');
             }
 
-            if (is_array(self::$_getIdFromClassName) && isset(self::$_getIdFromClassName[strtolower($this->class_name)])) {
+            if (is_array(self::$_getIdFromClassName) && isset(self::$_getIdFromClassName[mb_strtolower($this->class_name)])) {
                 self::$_getIdFromClassName = null;
             }
 
@@ -254,7 +254,7 @@ class TabCore extends ObjectModel
 
         if (is_array($result)) {
             foreach ($result as $detail) {
-                $list[strtolower($detail['class_name'])] = $detail;
+                $list[mb_strtolower($detail['class_name'])] = $detail;
             }
         }
 
@@ -321,7 +321,7 @@ class TabCore extends ObjectModel
 
             if (is_array($result)) {
                 foreach ($result as $row) {
-                    self::$_getIdFromClassName[strtolower($row['class_name'])] = $row['id_tab'];
+                    self::$_getIdFromClassName[mb_strtolower($row['class_name'])] = $row['id_tab'];
                 }
             }
         }
@@ -349,7 +349,7 @@ class TabCore extends ObjectModel
             $className = 'DEFAULT';
         }
 
-        return strtolower($className);
+        return mb_strtolower($className);
     }
 
     /**

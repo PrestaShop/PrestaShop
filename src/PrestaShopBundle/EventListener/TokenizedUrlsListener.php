@@ -86,8 +86,8 @@ class TokenizedUrlsListener
          * every route prefixed by '_' won't be secured
          */
         if (
-            0 === strpos($route, '_') ||
-            0 === strpos($route, 'api_')
+            0 === mb_strpos($route, '_') ||
+            0 === mb_strpos($route, 'api_')
         ) {
             return;
         }
@@ -105,8 +105,8 @@ class TokenizedUrlsListener
 
         if (false === $token || !$this->tokenManager->isTokenValid(new CsrfToken($this->username, $token))) {
             // remove token if any
-            if (false !== strpos($uri, '_token=')) {
-                $uri = substr($uri, 0, strpos($uri, '_token='));
+            if (false !== mb_strpos($uri, '_token=')) {
+                $uri = mb_substr($uri, 0, mb_strpos($uri, '_token='));
             }
 
             $response = new RedirectResponse($this->router->generate('admin_security_compromised', array('uri' => urlencode($uri))));

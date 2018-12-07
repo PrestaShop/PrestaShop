@@ -95,7 +95,7 @@ class CreateDefinitionProcessor extends AbstractProcessor {
                 continue;
             }
 
-            $upper = strtoupper($trim);
+            $upper = mb_strtoupper($trim);
 
             switch ($upper) {
 
@@ -177,7 +177,7 @@ class CreateDefinitionProcessor extends AbstractProcessor {
                 if ($currCategory === 'INDEX_COL_LIST') {
                     $option = array('expr_type' => ExpressionType::RESERVED, 'base_expr' => $trim);
                     $expr[] = array('expr_type' => ExpressionType::INDEX_PARSER,
-                                    'base_expr' => substr($base_expr, 0, -strlen($token)),
+                                    'base_expr' => mb_substr($base_expr, 0, -mb_strlen($token)),
                                     'sub_tree' => array($option));
                     $base_expr = $token;
                     $currCategory = 'INDEX_PARSER';
@@ -190,7 +190,7 @@ class CreateDefinitionProcessor extends AbstractProcessor {
                 if ($currCategory === 'INDEX_COL_LIST') {
                     $option = array('expr_type' => ExpressionType::RESERVED, 'base_expr' => $trim);
                     $expr[] = array('expr_type' => ExpressionType::INDEX_SIZE,
-                                    'base_expr' => substr($base_expr, 0, -strlen($token)),
+                                    'base_expr' => mb_substr($base_expr, 0, -mb_strlen($token)),
                                     'sub_tree' => array($option));
                     $base_expr = $token;
                     $currCategory = 'INDEX_SIZE';
@@ -202,7 +202,7 @@ class CreateDefinitionProcessor extends AbstractProcessor {
             # starts an index option
                 if ($currCategory === 'INDEX_COL_LIST' || $currCategory === 'PRIMARY') {
                     $option = array('expr_type' => ExpressionType::RESERVED, 'base_expr' => $trim);
-                    $expr[] = array('base_expr' => substr($base_expr, 0, -strlen($token)), 'trim' => $trim,
+                    $expr[] = array('base_expr' => mb_substr($base_expr, 0, -mb_strlen($token)), 'trim' => $trim,
                                     'category' => $currCategory, 'sub_tree' => array($option));
                     $base_expr = $token;
                     $currCategory = 'INDEX_TYPE';
@@ -262,7 +262,7 @@ class CreateDefinitionProcessor extends AbstractProcessor {
             # this starts the next definition
                 $type = $this->correctExpressionType($expr);
                 $result['create-def'][] = array('expr_type' => $type,
-                                                'base_expr' => trim(substr($base_expr, 0, -strlen($token))),
+                                                'base_expr' => trim(mb_substr($base_expr, 0, -mb_strlen($token))),
                                                 'sub_tree' => $expr);
                 $base_expr = "";
                 $expr = array();
@@ -278,7 +278,7 @@ class CreateDefinitionProcessor extends AbstractProcessor {
                     break;
 
                 case 'PRIMARY':
-                    if ($upper[0] === '(' && substr($upper, -1) === ')') {
+                    if ($upper[0] === '(' && mb_substr($upper, -1) === ')') {
                         # the column list
                         $processor = new IndexColumnListProcessor();
                         $cols = $processor->process($this->removeParenthesisFromStart($trim));
@@ -292,7 +292,7 @@ class CreateDefinitionProcessor extends AbstractProcessor {
                     break;
 
                 case 'FOREIGN':
-                    if ($upper[0] === '(' && substr($upper, -1) === ')') {
+                    if ($upper[0] === '(' && mb_substr($upper, -1) === ')') {
                         $processor = new IndexColumnListProcessor();
                         $cols = $processor->process($this->removeParenthesisFromStart($trim));
                         $expr[] = array('expr_type' => ExpressionType::COLUMN_LIST, 'base_expr' => $trim,
@@ -308,7 +308,7 @@ class CreateDefinitionProcessor extends AbstractProcessor {
                 case 'KEY':
                 case 'UNIQUE':
                 case 'INDEX':
-                    if ($upper[0] === '(' && substr($upper, -1) === ')') {
+                    if ($upper[0] === '(' && mb_substr($upper, -1) === ')') {
                         $processor = new IndexColumnListProcessor();
                         $cols = $processor->process($this->removeParenthesisFromStart($trim));
                         $expr[] = array('expr_type' => ExpressionType::COLUMN_LIST, 'base_expr' => $trim,
@@ -350,7 +350,7 @@ class CreateDefinitionProcessor extends AbstractProcessor {
                     continue 3;
 
                 case 'CHECK':
-                    if ($upper[0] === '(' && substr($upper, -1) === ')') {
+                    if ($upper[0] === '(' && mb_substr($upper, -1) === ')') {
                         $processor = new ExpressionListProcessor();
                         $unparsed = $this->splitSQLIntoTokens($this->removeParenthesisFromStart($trim));
                         $parsed = $processor->process($unparsed);

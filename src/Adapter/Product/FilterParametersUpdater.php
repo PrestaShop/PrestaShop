@@ -47,7 +47,7 @@ final class FilterParametersUpdater
     {
         if ($orderBy == 'position_ordering' && $hasCategoryFilter) {
             foreach (array_keys($filterParameters) as $key) {
-                if (strpos($key, 'filter_column_') === 0) {
+                if (mb_strpos($key, 'filter_column_') === 0) {
                     $filterParameters[$key] = '';
                 }
             }

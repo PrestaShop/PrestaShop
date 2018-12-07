@@ -442,7 +442,7 @@ class WebserviceRequestCore
                 $specific_price_output,
                 null
             );
-            $arr_return[$name] = array('sqlId' => strtolower($name), 'value' => sprintf('%f', $return_value));
+            $arr_return[$name] = array('sqlId' => mb_strtolower($name), 'value' => sprintf('%f', $return_value));
         }
 
         return $arr_return;
@@ -499,7 +499,7 @@ class WebserviceRequestCore
         // Two global vars, for compatibility with the PS core...
         global $webservice_call, $display_errors;
         $webservice_call = true;
-        $display_errors = strtolower(ini_get('display_errors')) != 'off';
+        $display_errors = mb_strtolower(ini_get('display_errors')) != 'off';
         // __PS_BASE_URI__ is from Shop::$current_base_uri
         $this->wsUrl = Tools::getHttpHost(true) . __PS_BASE_URI__ . 'api/';
         // set the output object which manage the content and header structure and informations
@@ -643,7 +643,7 @@ class WebserviceRequestCore
     {
         global $display_errors;
         if (!isset($display_errors)) {
-            $display_errors = strtolower(ini_get('display_errors')) != 'off';
+            $display_errors = mb_strtolower(ini_get('display_errors')) != 'off';
         }
         if (isset($this->objOutput)) {
             $this->objOutput->setStatus($status);
@@ -704,7 +704,7 @@ class WebserviceRequestCore
      */
     public function webserviceErrorHandler($errno, $errstr, $errfile, $errline)
     {
-        $display_errors = strtolower(ini_get('display_errors')) != 'off';
+        $display_errors = mb_strtolower(ini_get('display_errors')) != 'off';
         if (!(error_reporting() & $errno) || $display_errors) {
             return;
         }
@@ -797,7 +797,7 @@ class WebserviceRequestCore
             } else {
                 if (empty($this->_key)) {
                     $this->setError(401, 'Authentication key is empty', 17);
-                } elseif (strlen($this->_key) != '32') {
+                } elseif (mb_strlen($this->_key) != '32') {
                     $this->setError(401, 'Invalid authentication key format', 18);
                 } else {
                     if (WebserviceKey::isKeyActive($this->_key)) {
@@ -985,7 +985,7 @@ class WebserviceRequestCore
         $bracket_level = 0;
         $part = array();
         $tmp = '';
-        $str_len = strlen($str);
+        $str_len = mb_strlen($str);
         for ($i = 0; $i < $str_len; ++$i) {
             if ($str[$i] == ',' && $bracket_level == 0) {
                 $part[] = $tmp;
@@ -1005,14 +1005,14 @@ class WebserviceRequestCore
         }
         $fields = array();
         foreach ($part as $str) {
-            $field_name = trim(substr($str, 0, (strpos($str, '[') === false ? strlen($str) : strpos($str, '['))));
+            $field_name = trim(mb_substr($str, 0, (mb_strpos($str, '[') === false ? mb_strlen($str) : mb_strpos($str, '['))));
             if (!isset($fields[$field_name])) {
                 $fields[$field_name] = null;
             }
-            if (strpos($str, '[') !== false) {
-                $sub_fields = substr($str, strpos($str, '[') + 1, strlen($str) - strpos($str, '[') - 2);
+            if (mb_strpos($str, '[') !== false) {
+                $sub_fields = mb_substr($str, mb_strpos($str, '[') + 1, mb_strlen($str) - mb_strpos($str, '[') - 2);
                 $tmp_array = array();
-                if (strpos($sub_fields, ',') !== false) {
+                if (mb_strpos($sub_fields, ',') !== false) {
                     $tmp_array = explode(',', $sub_fields);
                 } else {
                     $tmp_array = array($sub_fields);
@@ -1213,10 +1213,10 @@ class WebserviceRequestCore
             $sql_sort .= ' ORDER BY ';
 
             foreach ($sorts as $sort) {
-                $delimiterPosition = strrpos($sort, '_');
+                $delimiterPosition = mb_strrpos($sort, '_');
                 if ($delimiterPosition !== false) {
-                    $fieldName = substr($sort, 0, $delimiterPosition);
-                    $direction = strtoupper(substr($sort, $delimiterPosition + 1));
+                    $fieldName = mb_substr($sort, 0, $delimiterPosition);
+                    $direction = mb_strtoupper(mb_substr($sort, $delimiterPosition + 1));
                 }
                 if ($delimiterPosition === false || !in_array($direction, array('ASC', 'DESC'))) {
                     $this->setError(400, 'The "sort" value has to be formed as this example: "field_ASC" or \'[field_1_DESC,field_2_ASC,field_3_ASC,...]\' ("field" has to be an available field)', 37);
@@ -1361,7 +1361,7 @@ class WebserviceRequestCore
     public function executeEntityGetAndHead()
     {
         if ($this->resourceConfiguration['objectsNodeName'] != 'resources') {
-            if (!isset($this->urlSegment[1]) || !strlen($this->urlSegment[1])) {
+            if (!isset($this->urlSegment[1]) || !mb_strlen($this->urlSegment[1])) {
                 $return = $this->getFilteredObjectList();
             } else {
                 $return = $this->getFilteredObjectDetails();
@@ -1474,7 +1474,7 @@ class WebserviceRequestCore
         try {
             $xml = new SimpleXMLElement($this->_inputXml);
         } catch (Exception $error) {
-            $this->setError(500, 'XML error : ' . $error->getMessage() . "\n" . 'XML length : ' . strlen($this->_inputXml) . "\n" . 'Original XML : ' . $this->_inputXml, 127);
+            $this->setError(500, 'XML error : ' . $error->getMessage() . "\n" . 'XML length : ' . mb_strlen($this->_inputXml) . "\n" . 'Original XML : ' . $this->_inputXml, 127);
 
             return;
         }
@@ -1680,7 +1680,7 @@ class WebserviceRequestCore
             if ($matches[1] == '%' || $matches[3] == '%') {
                 $ret .= ' AND ' . $tableAlias . '`' . bqSQL($sqlId) . '` LIKE "' . pSQL($matches[1] . $matches[2] . $matches[3]) . "\"\n";
             } elseif ($matches[1] == '' && $matches[3] == '') {
-                if (strpos($matches[2], '|') > 0) {
+                if (mb_strpos($matches[2], '|') > 0) {
                     $values = explode('|', $matches[2]);
                     $ret .= ' AND (';
                     $temp = '';
@@ -1717,21 +1717,21 @@ class WebserviceRequestCore
     public function filterLanguage()
     {
         $arr_languages = array();
-        $length_values = strlen($this->urlFragments['language']);
+        $length_values = mb_strlen($this->urlFragments['language']);
         // if just one language is asked
         if (is_numeric($this->urlFragments['language'])) {
             $arr_languages[] = (int) $this->urlFragments['language'];
-        } elseif (strpos($this->urlFragments['language'], '[') === 0
+        } elseif (mb_strpos($this->urlFragments['language'], '[') === 0
             // if a range or a list is asked
-            && strpos($this->urlFragments['language'], ']') === $length_values - 1) {
-            if (strpos($this->urlFragments['language'], '|') !== false
-                xor strpos($this->urlFragments['language'], ',') !== false) {
+            && mb_strpos($this->urlFragments['language'], ']') === $length_values - 1) {
+            if (mb_strpos($this->urlFragments['language'], '|') !== false
+                xor mb_strpos($this->urlFragments['language'], ',') !== false) {
                 $params_values = str_replace(array(']', '['), '', $this->urlFragments['language']);
                 // it's a list
-                if (strpos($params_values, '|') !== false) {
+                if (mb_strpos($params_values, '|') !== false) {
                     $list_enabled_lang = explode('|', $params_values);
                     $arr_languages = $list_enabled_lang;
-                } elseif (strpos($params_values, ',') !== false) {
+                } elseif (mb_strpos($params_values, ',') !== false) {
                     // it's a range
                     $range_enabled_lang = explode(',', $params_values);
                     if (count($range_enabled_lang) != 2) {
@@ -1786,7 +1786,7 @@ class WebserviceRequestCore
                         ->setHeaderParams('Execution-Time', round(microtime(true) - $this->_startTime, 3))
         ;
 
-        $return['type'] = strtolower($this->outputFormat);
+        $return['type'] = mb_strtolower($this->outputFormat);
 
         // write this header only now (avoid hackers happiness...)
         if ($this->_authenticated) {
@@ -1864,7 +1864,7 @@ class WebserviceRequestCore
             $return['content'] = $this->objOutput->getErrors($this->errors);
         }
 
-        if (!isset($return['content']) || strlen($return['content']) <= 0) {
+        if (!isset($return['content']) || mb_strlen($return['content']) <= 0) {
             $this->objOutput->setHeaderParams('Content-Type', '');
         }
 
@@ -1885,10 +1885,10 @@ class WebserviceRequestCore
             $headers = array_merge($_ENV, $_SERVER);
             foreach ($headers as $key => $val) {
                 //we need this header
-                if (strpos(strtolower($key), 'content-type') !== false) {
+                if (mb_strpos(mb_strtolower($key), 'content-type') !== false) {
                     continue;
                 }
-                if (strtoupper(substr($key, 0, 5)) != 'HTTP_') {
+                if (mb_strtoupper(mb_substr($key, 0, 5)) != 'HTTP_') {
                     unset($headers[$key]);
                 }
             }
@@ -1896,7 +1896,7 @@ class WebserviceRequestCore
         //Normalize this array to Cased-Like-This structure.
         foreach ($headers as $key => $value) {
             $key = preg_replace('/^HTTP_/i', '', $key);
-            $key = str_replace(' ', '-', ucwords(strtolower(str_replace(array('-', '_'), ' ', $key))));
+            $key = str_replace(' ', '-', ucwords(mb_strtolower(str_replace(array('-', '_'), ' ', $key))));
             $retarr[$key] = $value;
         }
         ksort($retarr);

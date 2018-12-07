@@ -279,13 +279,13 @@ class EmployeeCore extends ObjectModel
         $path = _PS_ADMIN_DIR_ . DIRECTORY_SEPARATOR . 'themes' . DIRECTORY_SEPARATOR . $this->bo_theme . DIRECTORY_SEPARATOR . 'css' . DIRECTORY_SEPARATOR;
         $language = new Language($this->id_lang);
 
-        if ($language->is_rtl && !strpos($this->bo_css, '_rtl')) {
+        if ($language->is_rtl && !mb_strpos($this->bo_css, '_rtl')) {
             $boCss = preg_replace('/^(.*)\.css$/', '$1_rtl.css', $this->bo_css);
 
             if (file_exists($path . $boCss)) {
                 $this->bo_css = $boCss;
             }
-        } elseif (!$language->is_rtl && strpos($this->bo_css, '_rtl')) {
+        } elseif (!$language->is_rtl && mb_strpos($this->bo_css, '_rtl')) {
             $boCss = preg_replace('/^(.*)_rtl\.css$/', '$1.css', $this->bo_css);
 
             if (file_exists($path . $boCss)) {

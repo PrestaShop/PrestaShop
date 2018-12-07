@@ -98,7 +98,7 @@ class SelectBuilder {
     public function build($parsed) {
         $sql = "";
         foreach ($parsed as $k => $v) {
-            $len = strlen($sql);
+            $len = mb_strlen($sql);
             $sql .= $this->buildColRef($v);
             $sql .= $this->buildSelectBracketExpression($v);
             $sql .= $this->buildSelectExpression($v);
@@ -106,7 +106,7 @@ class SelectBuilder {
             $sql .= $this->buildConstant($v);
             $sql .= $this->buildReserved($v);
 
-            if ($len == strlen($sql)) {
+            if ($len == mb_strlen($sql)) {
                 throw new UnableToCreateSQLException('SELECT', $k, $v, 'expr_type');
             }
 

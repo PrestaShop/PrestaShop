@@ -196,7 +196,7 @@ function getPath($url_base, $id_category, $path = '', $highlight = '', $category
         $path = $edit.'<li><a href="'.Tools::safeOutput($url_base.'&id_cms_category='.$category->id.'&viewcategory&token='.Tools::getAdminToken('AdminCmsContent'.(int)Tab::getIdFromClassName('AdminCmsContent').(int)$context->employee->id)).'">
 		'.$name.'</a></li> > '.$path;
         if ($category->id == 1) {
-            return substr($path, 0, strlen($path) - 3);
+            return mb_substr($path, 0, mb_strlen($path) - 3);
         }
         return getPath($url_base, $category->id_parent, $path, '', 'cms');
     }
@@ -350,7 +350,7 @@ function simpleXMLToArray($xml, $flatten_values = true, $flatten_attributes = tr
 
     $name = $xml->getName();
     $value = trim((string)$xml);
-    if (strlen($value) == 0) {
+    if (mb_strlen($value) == 0) {
         $value = null;
     }
 
@@ -525,7 +525,7 @@ function runAdminTab($tab, $ajax_mode = false)
 
                         // ${1} in the replacement string of the regexp is required, because the token may begin with a number and mix up with it (e.g. $17)
                         $url = preg_replace('/([&?]token=)[^&]*(&.*)?$/', '${1}'.$admin_obj->token.'$2', $_SERVER['REQUEST_URI']);
-                        if (false === strpos($url, '?token=') && false === strpos($url, '&token=')) {
+                        if (false === mb_strpos($url, '?token=') && false === mb_strpos($url, '&token=')) {
                             $url .= '&token='.$admin_obj->token;
                         }
 
@@ -540,7 +540,7 @@ function runAdminTab($tab, $ajax_mode = false)
 
                         // ${1} in the replacement string of the regexp is required, because the token may begin with a number and mix up with it (e.g. $17)
                         $url = preg_replace('/([&?]token=)[^&]*(&.*)?$/', '${1}'.$admin_obj->token.'$2', $_SERVER['REQUEST_URI']);
-                        if (false === strpos($url, '?token=') && false === strpos($url, '&token=')) {
+                        if (false === mb_strpos($url, '?token=') && false === mb_strpos($url, '&token=')) {
                             $url .= '&token='.$admin_obj->token;
                         }
 

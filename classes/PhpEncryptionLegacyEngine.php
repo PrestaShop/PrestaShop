@@ -49,10 +49,10 @@ class PhpEncryptionLegacyEngineCore extends PhpEncryptionEngine
      */
     public function __construct($hexString)
     {
-        $this->key = substr($hexString, 0, 32);
+        $this->key = mb_substr($hexString, 0, 32);
         $this->ivSize = mcrypt_get_iv_size($this->cipher, $this->mode);
         $this->iv = mcrypt_create_iv($this->ivSize, MCRYPT_RAND);
-        $this->hmacIv = substr(sha1(_COOKIE_KEY_), 0, $this->ivSize);
+        $this->hmacIv = mb_substr(sha1(_COOKIE_KEY_), 0, $this->ivSize);
     }
 
     /**
@@ -65,7 +65,7 @@ class PhpEncryptionLegacyEngineCore extends PhpEncryptionEngine
     public function encrypt($plaintext)
     {
         $blockSize = mcrypt_get_block_size($this->cipher, $this->mode);
-        $pad = $blockSize - (strlen($plaintext) % $blockSize);
+        $pad = $blockSize - (mb_strlen($plaintext) % $blockSize);
 
         $cipherText = mcrypt_encrypt(
             $this->cipher,
@@ -103,8 +103,8 @@ class PhpEncryptionLegacyEngineCore extends PhpEncryptionEngine
             return false;
         }
 
-        $ivDec = substr($encrypted, 0, $this->ivSize);
-        $cipherText = substr($encrypted, $this->ivSize);
+        $ivDec = mb_substr($encrypted, 0, $this->ivSize);
+        $cipherText = mb_substr($encrypted, $this->ivSize);
 
         $data = mcrypt_decrypt(
             $this->cipher,
@@ -114,9 +114,9 @@ class PhpEncryptionLegacyEngineCore extends PhpEncryptionEngine
             $ivDec
         );
 
-        $pad = ord($data[strlen($data) - 1]);
+        $pad = ord($data[mb_strlen($data) - 1]);
 
-        return substr($data, 0, -$pad);
+        return mb_substr($data, 0, -$pad);
     }
 
     /**
@@ -151,15 +151,15 @@ class PhpEncryptionLegacyEngineCore extends PhpEncryptionEngine
     protected function generateKeygenS2k($hash, $password, $salt, $bytes)
     {
         $result = '';
-        foreach (range(0, ceil($bytes / strlen(hash($hash, null, true))) - 1) as $i) {
+        foreach (range(0, ceil($bytes / mb_strlen(hash($hash, null, true))) - 1) as $i) {
             $result .= hash(
                 $hash,
-                str_repeat("\0", $i) . str_pad(substr($salt, 0, 8), 8, "\0", STR_PAD_RIGHT) . $password,
+                str_repeat("\0", $i) . str_pad(mb_substr($salt, 0, 8), 8, "\0", STR_PAD_RIGHT) . $password,
                 true
             );
         }
 
-        return substr(
+        return mb_substr(
             $result,
             0,
             intval($bytes)

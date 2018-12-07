@@ -420,7 +420,7 @@ class DbPDOCore extends Db
             $value = 'MyISAM';
         } else {
             $row = $result->fetch();
-            if (!$row || strtolower($row['Value']) != 'yes') {
+            if (!$row || mb_strtolower($row['Value']) != 'yes') {
                 $value = 'MyISAM';
             }
         }

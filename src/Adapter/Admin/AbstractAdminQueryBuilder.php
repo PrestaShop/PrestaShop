@@ -174,7 +174,7 @@ abstract class AbstractAdminQueryBuilder
         // WHERE (recursive call)
         if (count($where)) {
             $s = $this->compileSqlWhere($where);
-            if (strlen($s) > 0) {
+            if (mb_strlen($s) > 0) {
                 $sql[] = 'WHERE ' . $s . PHP_EOL;
             }
         }

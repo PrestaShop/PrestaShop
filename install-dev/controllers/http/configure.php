@@ -89,20 +89,20 @@ class InstallControllerHttpConfigure extends InstallControllerHttp implements Ht
         // Check shop name
         if ($this->session->shop_name && !Validate::isGenericName($this->session->shop_name)) {
             $this->errors['shop_name'] = $this->translator->trans('Invalid shop name', array(), 'Install');
-        } elseif (strlen($this->session->shop_name) > 64) {
+        } elseif (mb_strlen($this->session->shop_name) > 64) {
             $this->errors['shop_name'] = $this->translator->trans('The field %field% is limited to %limit% characters', array('%limit%' => 64, '%field%' => $this->translator->trans('shop name', array(), 'Install')), 'Install');
         }
 
         // Check admin name
         if ($this->session->admin_firstname && !Validate::isName($this->session->admin_firstname)) {
             $this->errors['admin_firstname'] = $this->translator->trans('Your firstname contains some invalid characters', array(), 'Install');
-        } elseif (strlen($this->session->admin_firstname) > 32) {
+        } elseif (mb_strlen($this->session->admin_firstname) > 32) {
             $this->errors['admin_firstname'] = $this->translator->trans('The field %field% is limited to %limit% characters', array('%field%' => $this->translator->trans('firstname', array(), 'Install'), '%limit%' => 32), 'Install');
         }
 
         if ($this->session->admin_lastname && !Validate::isName($this->session->admin_lastname)) {
             $this->errors['admin_lastname'] = $this->translator->trans('Your lastname contains some invalid characters', array(), 'Install');
-        } elseif (strlen($this->session->admin_lastname) > 32) {
+        } elseif (mb_strlen($this->session->admin_lastname) > 32) {
             $this->errors['admin_lastname'] = $this->translator->trans('The field %field% is limited to %limit% characters', array('%field%' => $this->translator->trans('lastname', array(), 'Install'), '%limit%' => 32), 'Install');
         }
 
@@ -141,7 +141,7 @@ class InstallControllerHttpConfigure extends InstallControllerHttp implements Ht
         if (isset($_FILES['fileToUpload']['tmp_name']) && $_FILES['fileToUpload']['tmp_name']) {
             $file = $_FILES['fileToUpload'];
             $error = ImageManager::validateUpload($file, 300000);
-            if (!strlen($error)) {
+            if (!mb_strlen($error)) {
                 $tmp_name = tempnam(_PS_TMP_IMG_DIR_, 'PS');
                 if (!$tmp_name || !move_uploaded_file($file['tmp_name'], $tmp_name)) {
                     return false;
@@ -293,7 +293,7 @@ class InstallControllerHttpConfigure extends InstallControllerHttp implements Ht
         if (!$this->session->shop_country) {
             $detect_language = $this->language->detectLanguage();
             if (isset($detect_language['primarytag'])) {
-                $this->session->shop_country = strtolower(isset($detect_language['subtag']) ? $detect_language['subtag'] : $detect_language['primarytag']);
+                $this->session->shop_country = mb_strtolower(isset($detect_language['subtag']) ? $detect_language['subtag'] : $detect_language['primarytag']);
                 $this->session->shop_timezone = $this->getTimezoneByIso($this->session->shop_country);
             }
         }

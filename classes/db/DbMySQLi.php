@@ -96,7 +96,7 @@ class DbMySQLiCore extends Db
      */
     public static function createDatabase($host, $user = null, $password = null, $database = null, $dropit = false)
     {
-        if (strpos($host, ':') !== false) {
+        if (mb_strpos($host, ':') !== false) {
             list($host, $port) = explode(':', $host);
             $link = @new mysqli($host, $user, $password, null, $port);
         } else {
@@ -369,7 +369,7 @@ class DbMySQLiCore extends Db
             $value = 'MyISAM';
         }
         $row = $result->fetch_assoc();
-        if (!$row || strtolower($row['Value']) != 'yes') {
+        if (!$row || mb_strtolower($row['Value']) != 'yes') {
             $value = 'MyISAM';
         }
 

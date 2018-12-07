@@ -67,7 +67,7 @@ class AttachmentControllerCore extends FrontController
             ob_flush();
             flush();
             if ($retbytes) {
-                $totalBytes += strlen($buffer);
+                $totalBytes += mb_strlen($buffer);
             }
         }
         $status = fclose($handle);

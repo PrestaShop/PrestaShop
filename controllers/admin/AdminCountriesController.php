@@ -431,7 +431,7 @@ class AdminCountriesControllerCore extends AdminController
                 $this->errors[] = $error;
             }
         }
-        if (strlen($tmp_addr_format->format) <= 0) {
+        if (mb_strlen($tmp_addr_format->format) <= 0) {
             $this->errors[] = $this->trans('Address format invalid', array(), 'Admin.Notifications.Error');
         }
 

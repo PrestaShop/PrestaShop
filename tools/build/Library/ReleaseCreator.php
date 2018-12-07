@@ -627,7 +627,7 @@ class ReleaseCreator
         $folder
     ) {
         $tmpDir = sys_get_temp_dir();
-        $tmpDirPathLength = strlen($tmpDir);
+        $tmpDirPathLength = mb_strlen($tmpDir);
 
         foreach ($filesList as $key => $value) {
             $pathToTest = $value;
@@ -636,7 +636,7 @@ class ReleaseCreator
                 $pathToTest = $key;
             }
 
-            if (substr($pathToTest, 0, $tmpDirPathLength) != $tmpDir) {
+            if (mb_substr($pathToTest, 0, $tmpDirPathLength) != $tmpDir) {
                 throw new BuildException("Trying to delete a file somewhere else than in $tmpDir, path: $pathToTest");
             }
 
@@ -806,17 +806,17 @@ class ReleaseCreator
     protected function generateXMLDirectoryChecksum(array $files)
     {
         $content = null;
-        $subCount = substr_count($this->tempProjectPath, DIRECTORY_SEPARATOR);
+        $subCount = mb_substr_count($this->tempProjectPath, DIRECTORY_SEPARATOR);
 
         foreach ($files as $key => $value) {
             if (is_numeric($key)) {
                 $md5 = md5_file($value);
-                $count = substr_count($value, DIRECTORY_SEPARATOR) - $subCount + 1;
+                $count = mb_substr_count($value, DIRECTORY_SEPARATOR) - $subCount + 1;
                 $file_name = str_replace($this->tempProjectPath, null, $value);
                 $file_name = pathinfo($file_name, PATHINFO_BASENAME);
                 $content .= str_repeat("\t", $count) . "<md5file name=\"$file_name\">$md5</md5file>" . PHP_EOL;
             } else {
-                $count = substr_count($key, DIRECTORY_SEPARATOR) - $subCount + 1;
+                $count = mb_substr_count($key, DIRECTORY_SEPARATOR) - $subCount + 1;
                 $dir_name = str_replace($this->tempProjectPath, null, $key);
                 $dir_name = pathinfo($dir_name, PATHINFO_BASENAME);
                 $content .= str_repeat("\t", $count) . "<dir name=\"$dir_name\">" . PHP_EOL;

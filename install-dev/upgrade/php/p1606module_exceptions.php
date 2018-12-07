@@ -79,7 +79,7 @@ function p1606module_exceptions()
             if ($controller[0] == '.' || $controller == 'index.php') {
                 continue;
             }
-            $core_controllers[] = strtolower(str_replace('Controller.php', '', $controller));
+            $core_controllers[] = mb_strtolower(str_replace('Controller.php', '', $controller));
         }
     }
 

@@ -76,18 +76,18 @@ class RecordBuilder {
         }
         $sql = "";
         foreach ($parsed['data'] as $k => $v) {
-            $len = strlen($sql);
+            $len = mb_strlen($sql);
             $sql .= $this->buildConstant($v);
             $sql .= $this->buildFunction($v);
             $sql .= $this->buildOperator($v);
 
-            if ($len == strlen($sql)) {
+            if ($len == mb_strlen($sql)) {
                 throw new UnableToCreateSQLException(ExpressionType::RECORD, $k, $v, 'expr_type');
             }
 
             $sql .= ",";
         }
-        $sql = substr($sql, 0, -1);
+        $sql = mb_substr($sql, 0, -1);
         return "(" . $sql . ")";
     }
 

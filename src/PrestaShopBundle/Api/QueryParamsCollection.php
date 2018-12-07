@@ -158,7 +158,7 @@ abstract class QueryParamsCollection
         array_walk($filters, function ($filter) use ($allParameters, &$filterParams) {
             if (is_array($allParameters[$filter])) {
                 $allParameters[$filter] = array_filter($allParameters[$filter], function ($value) {
-                    return is_int($value) || (is_string($value) && strlen(trim($value)) > 0);
+                    return is_int($value) || (is_string($value) && mb_strlen(trim($value)) > 0);
                 });
             }
 
@@ -243,7 +243,7 @@ abstract class QueryParamsCollection
         }
 
         foreach ($queryParams['order'] as $key => &$order) {
-            $order = strtolower($order);
+            $order = mb_strtolower($order);
             $filterColumn = $this->removeDirection($order);
 
             if (!in_array($filterColumn, $this->getValidOrderParams())) {
@@ -290,7 +290,7 @@ abstract class QueryParamsCollection
         $implodableOrder = array();
 
         foreach ($this->queryParams['order'] as $order) {
-            $descendingOrder = false !== strpos($order, 'desc');
+            $descendingOrder = false !== mb_strpos($order, 'desc');
             $filterColumn = $this->removeDirection($order);
 
             $orderFiltered = '{' . $filterColumn . '}';

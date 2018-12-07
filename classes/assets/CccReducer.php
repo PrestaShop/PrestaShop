@@ -117,6 +117,6 @@ class CccReducerCore
 
     private function getFileNameIdentifierFromList(array $files)
     {
-        return substr(sha1(implode('|', $files)), 0, 6);
+        return mb_substr(sha1(implode('|', $files)), 0, 6);
     }
 }

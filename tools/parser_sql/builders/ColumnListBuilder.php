@@ -63,16 +63,16 @@ class ColumnListBuilder {
         }
         $sql = "";
         foreach ($parsed['sub_tree'] as $k => $v) {
-            $len = strlen($sql);
+            $len = mb_strlen($sql);
             $sql .= $this->buildIndexColumn($v);
 
-            if ($len == strlen($sql)) {
+            if ($len == mb_strlen($sql)) {
                 throw new UnableToCreateSQLException('CREATE TABLE column-list subtree', $k, $v, 'expr_type');
             }
 
             $sql .= " ";
         } 
-        return "(" . substr($sql, 0, -1) . ")";
+        return "(" . mb_substr($sql, 0, -1) . ")";
     }
 
 }

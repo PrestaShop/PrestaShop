@@ -148,7 +148,7 @@ class CustomerFormCore extends AbstractForm
     protected function validateFieldLength($fieldName, $maximumLength, $violationMessage)
     {
         $emailField = $this->getField($fieldName);
-        if (strlen($emailField->getValue()) > $maximumLength) {
+        if (mb_strlen($emailField->getValue()) > $maximumLength) {
             $emailField->addError($violationMessage);
         }
     }

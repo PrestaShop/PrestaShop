@@ -156,7 +156,7 @@ class ThemeExporter
      */
     protected function ensureFileBelongsToExportDirectory($filePath)
     {
-        $validFileLocation = substr(realpath($filePath), 0, strlen(realpath($this->exportDir))) === realpath($this->exportDir);
+        $validFileLocation = mb_substr(realpath($filePath), 0, mb_strlen(realpath($this->exportDir))) === realpath($this->exportDir);
 
         if (!$validFileLocation) {
             throw new \Exception('Invalid file location. This file should belong to the export directory');

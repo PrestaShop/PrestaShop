@@ -92,7 +92,7 @@ class PageVoter extends Voter
      */
     protected function can($action, $employeeProfileId)
     {
-        return Access::isGranted('ROLE_MOD_TAB_' . strtoupper($action), $employeeProfileId);
+        return Access::isGranted('ROLE_MOD_TAB_' . mb_strtoupper($action), $employeeProfileId);
     }
 
     /**
@@ -108,7 +108,7 @@ class PageVoter extends Voter
         $action = $subject;
 
         // add underscore to join if needed
-        if (substr($action, -1) !== '_') {
+        if (mb_substr($action, -1) !== '_') {
             $action .= '_';
         }
 

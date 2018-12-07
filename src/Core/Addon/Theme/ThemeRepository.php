@@ -129,7 +129,7 @@ class ThemeRepository implements AddonRepositoryInterface
 
         $themes = array();
         foreach ($themeDirectories as $directory) {
-            $name = basename(substr($directory, 0, -strlen($suffix)));
+            $name = basename(mb_substr($directory, 0, -mb_strlen($suffix)));
             $theme = $this->getInstanceByName($name);
             if (isset($theme)) {
                 $themes[$name] = $theme;

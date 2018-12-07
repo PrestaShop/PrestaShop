@@ -91,7 +91,7 @@ class DataLangCore
 
     public function slugify($string)
     {
-        return strtolower(str_replace(' ', '-', Tools::replaceAccentedChars($string)));
+        return mb_strtolower(str_replace(' ', '-', Tools::replaceAccentedChars($string)));
     }
 
     public function getDomain()

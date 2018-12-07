@@ -107,9 +107,9 @@ class StylesheetGenerator
     private function shouldProcessFile($file, $regenerate)
     {
         return
-            strpos($file, '/node_modules/') === false
+            mb_strpos($file, '/node_modules/') === false
             // does not end with .rtlfix
-            && substr(rtrim($file, '.' . $this->fileType), -4) !== $this->rtlSuffix
+            && mb_substr(rtrim($file, '.' . $this->fileType), -4) !== $this->rtlSuffix
             // RTL file does not exist or we are regenerating them
             && ($regenerate || !file_exists($this->getRtlFileName($file)))
         ;
@@ -137,7 +137,7 @@ class StylesheetGenerator
 
         $rendered = CSSJanus::transform($content);
 
-        if (strlen($rendered) === 0 && strlen($content) !== 0) {
+        if (mb_strlen($rendered) === 0 && mb_strlen($content) !== 0) {
             throw new GenerationException(
                 sprintf('Failed to generate RTL CSS from file: %s', $filePath)
             );

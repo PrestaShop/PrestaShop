@@ -77,18 +77,18 @@ class CharacterSetBuilder {
         }
         $sql = "";
         foreach ($parsed['sub_tree'] as $k => $v) {
-            $len = strlen($sql);
+            $len = mb_strlen($sql);
             $sql .= $this->buildOperator($v);
             $sql .= $this->buildReserved($v);
             $sql .= $this->buildConstant($v);
 
-            if ($len == strlen($sql)) {
+            if ($len == mb_strlen($sql)) {
                 throw new UnableToCreateSQLException('CREATE TABLE options CHARACTER SET subtree', $k, $v, 'expr_type');
             }
 
             $sql .= " ";
         }
-        return substr($sql, 0, -1);
+        return mb_substr($sql, 0, -1);
     }
 }
 ?>

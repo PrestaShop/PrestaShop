@@ -75,19 +75,19 @@ class ColumnTypeBuilder {
         }
         $sql = "";
         foreach ($parsed['sub_tree'] as $k => $v) {
-            $len = strlen($sql);
+            $len = mb_strlen($sql);
             $sql .= $this->buildDataType($v);
             $sql .= $this->buildColumnTypeBracketExpression($v);
             $sql .= $this->buildReserved($v);
             
-            if ($len == strlen($sql)) {
+            if ($len == mb_strlen($sql)) {
                 throw new UnableToCreateSQLException('CREATE TABLE column-type subtree', $k, $v, 'expr_type');
             }
     
             $sql .= " ";
         }
     
-        return substr($sql, 0, -1);
+        return mb_substr($sql, 0, -1);
     }
     
 }

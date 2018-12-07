@@ -206,7 +206,7 @@ class Localize
             $locale = self::getLocale();
         }
 
-        $locale = explode('_', strtoupper($locale));
+        $locale = explode('_', mb_strtoupper($locale));
 
         if (isset($locale[1]) === true) {
             return $locale[1];

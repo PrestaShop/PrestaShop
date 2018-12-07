@@ -37,7 +37,7 @@ final class CsvValueSeparatorNormalizer implements StringNormalizerInterface
     public function normalize($value)
     {
         $value = trim($value);
-        $value = substr($value, 0, 1);
+        $value = mb_substr($value, 0, 1);
 
         return $value ?: ImportSettings::DEFAULT_SEPARATOR;
     }

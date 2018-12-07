@@ -115,7 +115,7 @@ class SortOrder
 
     public function setDirection($dir)
     {
-        $direction = strtolower($dir);
+        $direction = mb_strtolower($dir);
         if (!in_array($direction, array('asc', 'desc', 'random'))) {
             throw new Exception(sprintf(
                 'Invalid SortOrder direction `%s`. Expecting one of: `ASC`, `DESC`, or `RANDOM`.',

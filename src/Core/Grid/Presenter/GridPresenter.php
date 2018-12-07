@@ -125,8 +125,8 @@ final class GridPresenter implements GridPresenterInterface
         /** @var ColumnInterface $column */
         foreach ($grid->getDefinition()->getColumns() as $column) {
             if ($column instanceof PositionColumn &&
-                strtolower($column->getId()) == strtolower($searchCriteria->getOrderBy()) &&
-                'asc' == strtolower($searchCriteria->getOrderWay())
+                mb_strtolower($column->getId()) == mb_strtolower($searchCriteria->getOrderBy()) &&
+                'asc' == mb_strtolower($searchCriteria->getOrderWay())
             ) {
                 return $column;
             }

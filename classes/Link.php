@@ -83,7 +83,7 @@ class LinkCore
     {
         $url = $this->getProductLink($product);
 
-        return $url . ((strpos($url, '?')) ? '&' : '?') . 'deletePicture=' . $idPicture;
+        return $url . ((mb_strpos($url, '?')) ? '&' : '?') . 'deletePicture=' . $idPicture;
     }
 
     /**
@@ -940,7 +940,7 @@ class LinkCore
         $theme = ((Shop::isFeatureActive() && file_exists(_PS_PROD_IMG_DIR_ . $ids . ($type ? '-' . $type : '') . '-' . Context::getContext()->shop->theme_name . '.jpg')) ? '-' . Context::getContext()->shop->theme_name : '');
         if (($psLegacyImages
                 && (file_exists(_PS_PROD_IMG_DIR_ . $ids . ($type ? '-' . $type : '') . $theme . '.jpg')))
-            || ($notDefault = strpos($ids, 'default') !== false)) {
+            || ($notDefault = mb_strpos($ids, 'default') !== false)) {
             if ($this->allow == 1 && !$notDefault) {
                 $uriPath = __PS_BASE_URI__ . $ids . ($type ? '-' . $type : '') . $theme . '/' . $name . '.jpg';
             } else {
@@ -1055,11 +1055,11 @@ class LinkCore
     public function getPageLink($controller, $ssl = null, $idLang = null, $request = null, $requestUrlEncode = false, $idShop = null, $relativeProtocol = false)
     {
         //If $controller contains '&' char, it means that $controller contains request data and must be parsed first
-        $p = strpos($controller, '&');
+        $p = mb_strpos($controller, '&');
         if ($p !== false) {
-            $request = substr($controller, $p + 1);
+            $request = mb_substr($controller, $p + 1);
             $requestUrlEncode = false;
-            $controller = substr($controller, 0, $p);
+            $controller = mb_substr($controller, 0, $p);
         }
 
         $controller = Tools::strReplaceFirst('.php', '', $controller);
@@ -1176,7 +1176,7 @@ class LinkCore
     {
         $url = rtrim(str_replace('?&', '?', $url), '?');
 
-        return $url . ($p == 1 ? '' : (!strstr($url, '?') ? '?' : '&') . 'p=' . (int) $p);
+        return $url . ($p == 1 ? '' : (!mb_strstr($url, '?') ? '?' : '&') . 'p=' . (int) $p);
     }
 
     /**
@@ -1241,7 +1241,7 @@ class LinkCore
 
         if (!$array) {
             if (count($vars)) {
-                return $url . (!strstr($url, '?') && ($this->allow == 1 || $url == $this->url) ? '?' : '&') . http_build_query($vars, '', '&');
+                return $url . (!mb_strstr($url, '?') && ($this->allow == 1 || $url == $this->url) ? '?' : '&') . http_build_query($vars, '', '&');
             } else {
                 return $url;
             }
@@ -1269,7 +1269,7 @@ class LinkCore
      */
     public function addSortDetails($url, $orderBy, $orderWay)
     {
-        return $url . (!strstr($url, '?') ? '?' : '&') . 'orderby=' . urlencode($orderBy) . '&orderway=' . urlencode($orderWay);
+        return $url . (!mb_strstr($url, '?') ? '?' : '&') . 'orderby=' . urlencode($orderBy) . '&orderway=' . urlencode($orderWay);
     }
 
     /**
@@ -1341,7 +1341,7 @@ class LinkCore
      */
     public static function getQuickLink($url)
     {
-        $legacyEnvironment = stripos($url, 'controller');
+        $legacyEnvironment = mb_stripos($url, 'controller');
 
         $patterns = array(
             '#' . Context::getContext()->link->getBaseLink() . '#',

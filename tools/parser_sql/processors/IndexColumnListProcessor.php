@@ -62,7 +62,7 @@ class IndexColumnListProcessor extends AbstractProcessor {
                 continue;
             }
 
-            $upper = strtoupper($trim);
+            $upper = mb_strtoupper($trim);
 
             switch ($upper) {
 
@@ -83,7 +83,7 @@ class IndexColumnListProcessor extends AbstractProcessor {
                 break;
 
             default:
-                if ($upper[0] === '(' && substr($upper, -1) === ')') {
+                if ($upper[0] === '(' && mb_substr($upper, -1) === ')') {
                     # the optional length
                     $expr['length'] = $this->removeParenthesisFromStart($trim);
                     continue 2;

@@ -24,7 +24,7 @@ if (isset($_POST['submit'])) {
 
     if ($subdir == '') {
         if (!empty($_COOKIE['last_position'])
-            && strpos($_COOKIE['last_position'], '.') === false
+            && mb_strpos($_COOKIE['last_position'], '.') === false
         ) {
             $subdir = trim($_COOKIE['last_position']);
         }
@@ -42,14 +42,14 @@ if (isset($_POST['submit'])) {
         $_SESSION['subfolder'] = '';
     }
     $subfolder = '';
-    if (!empty($_SESSION['subfolder']) && strpos($_SESSION['subfolder'], '../') === false
-        && strpos($_SESSION['subfolder'], './') === false && strpos($_SESSION['subfolder'], '/') !== 0
-        && strpos($_SESSION['subfolder'], '.') === false
+    if (!empty($_SESSION['subfolder']) && mb_strpos($_SESSION['subfolder'], '../') === false
+        && mb_strpos($_SESSION['subfolder'], './') === false && mb_strpos($_SESSION['subfolder'], '/') !== 0
+        && mb_strpos($_SESSION['subfolder'], '.') === false
     ) {
         $subfolder = $_SESSION['subfolder'];
     }
 
-    if ($subfolder != '' && $subfolder[strlen($subfolder) - 1] != '/') {
+    if ($subfolder != '' && $subfolder[mb_strlen($subfolder) - 1] != '/') {
         $subfolder .= '/';
     }
 
@@ -476,7 +476,7 @@ if (isset($_POST['submit'])) {
             $file_path = $current_path.$subfolder.$subdir.$file;
             $date = filemtime($file_path);
             $size = filesize($file_path);
-            $file_ext = substr(strrchr($file, '.'), 1);
+            $file_ext = mb_substr(mb_strrchr($file, '.'), 1);
             $sorted[$k] = array('file' => $file, 'date' => $date, 'size' => $size, 'extension' => $file_ext);
         }
     }
@@ -794,7 +794,7 @@ if (isset($_POST['submit'])) {
     );
     foreach ($files as $file_array) {
         $file = $file_array['file'];
-        if ($file == '.' || (isset($file_array['extension']) && $file_array['extension'] != lang_Type_dir) || ($file == '..' && $subdir == '') || in_array($file, $hidden_folders) || ($filter != '' && $file != ".." && strpos($file, $filter) === false)) {
+        if ($file == '.' || (isset($file_array['extension']) && $file_array['extension'] != lang_Type_dir) || ($file == '..' && $subdir == '') || in_array($file, $hidden_folders) || ($filter != '' && $file != ".." && mb_strpos($file, $filter) === false)) {
             continue;
         }
         $new_name = fix_filename($file, $transliteration);
@@ -925,14 +925,14 @@ if (isset($_POST['submit'])) {
     foreach ($files as $nu => $file_array) {
         $file = $file_array['file'];
 
-        if ($file == '.' || $file == '..' || is_dir($current_path.$subfolder.$subdir.$file) || in_array($file, $hidden_files) || !in_array(fix_strtolower($file_array['extension']), $ext) || ($filter != '' && strpos($file, $filter) === false)) {
+        if ($file == '.' || $file == '..' || is_dir($current_path.$subfolder.$subdir.$file) || in_array($file, $hidden_files) || !in_array(fix_strtolower($file_array['extension']), $ext) || ($filter != '' && mb_strpos($file, $filter) === false)) {
             continue;
         }
 
         $file_path = $current_path.$subfolder.$subdir.$file;
     //check if file have illegal caracter
 
-    $filename = substr($file, 0, '-'.(strlen($file_array['extension']) + 1));
+    $filename = mb_substr($file, 0, '-'.(mb_strlen($file_array['extension']) + 1));
 
         if ($file != fix_filename($file, $transliteration)) {
             $file1 = fix_filename($file, $transliteration);
@@ -947,7 +947,7 @@ if (isset($_POST['submit'])) {
                 $file_path1 = ($current_path.$subfolder.$subdir.$file1);
             }
 
-            $filename = substr($file1, 0, '-'.(strlen($file_array['extension']) + 1));
+            $filename = mb_substr($file1, 0, '-'.(mb_strlen($file_array['extension']) + 1));
             rename_file($file_path, fix_filename($filename, $transliteration), $transliteration);
             $file = $file1;
             $file_array['extension'] = fix_filename($file_array['extension'], $transliteration);

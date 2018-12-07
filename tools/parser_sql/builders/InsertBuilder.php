@@ -66,10 +66,10 @@ class InsertBuilder {
 
         $columns = "";
         foreach ($parsed['columns'] as $k => $v) {
-            $len = strlen($columns);
+            $len = mb_strlen($columns);
             $columns .= $this->buildColRef($v);
 
-            if ($len == strlen($columns)) {
+            if ($len == mb_strlen($columns)) {
                 throw new UnableToCreateSQLException('INSERT[columns]', $k, $v, 'expr_type');
             }
 
@@ -77,7 +77,7 @@ class InsertBuilder {
         }
 
         if ($columns !== "") {
-            $columns = " (" . substr($columns, 0, -1) . ")";
+            $columns = " (" . mb_substr($columns, 0, -1) . ")";
         }
 
         $sql .= $columns;

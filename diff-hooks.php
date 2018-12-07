@@ -184,5 +184,5 @@ function getHookName($str)
 
 function formatFilePath($path, $folder)
 {
-    return substr($path, strlen($folder));
+    return mb_substr($path, mb_strlen($folder));
 }

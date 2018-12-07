@@ -92,16 +92,16 @@ class MetaCore extends ObjectModel
         );
 
         foreach ($files as $file) {
-            if ($file != 'index.php' && !in_array(strtolower(str_replace('Controller.php', '', $file)), $exludePages)) {
+            if ($file != 'index.php' && !in_array(mb_strtolower(str_replace('Controller.php', '', $file)), $exludePages)) {
                 $className = str_replace('.php', '', $file);
                 $reflection = class_exists($className) ? new ReflectionClass(str_replace('.php', '', $file)) : false;
                 $properties = $reflection ? $reflection->getDefaultProperties() : array();
                 if (isset($properties['php_self'])) {
                     $selectedPages[$properties['php_self']] = $properties['php_self'];
                 } elseif (preg_match('/^[a-z0-9_.-]*\.php$/i', $file)) {
-                    $selectedPages[strtolower(str_replace('Controller.php', '', $file))] = strtolower(str_replace('Controller.php', '', $file));
+                    $selectedPages[mb_strtolower(str_replace('Controller.php', '', $file))] = mb_strtolower(str_replace('Controller.php', '', $file));
                 } elseif (preg_match('/^([a-z0-9_.-]*\/)?[a-z0-9_.-]*\.php$/i', $file)) {
-                    $selectedPages[strtolower(Context::getContext()->getTranslator()->trans('File %2$s (in directory %1$s)', array(dirname($file), str_replace('Controller.php', '', basename($file))), 'Admin.Notifications.Error'))] = strtolower(str_replace('Controller.php', '', basename($file)));
+                    $selectedPages[mb_strtolower(Context::getContext()->getTranslator()->trans('File %2$s (in directory %1$s)', array(dirname($file), str_replace('Controller.php', '', basename($file))), 'Admin.Notifications.Error'))] = mb_strtolower(str_replace('Controller.php', '', basename($file)));
                 }
             }
         }
@@ -183,7 +183,7 @@ class MetaCore extends ObjectModel
         		LEFT JOIN ' . _DB_PREFIX_ . 'meta_lang ml ON m.id_meta = ml.id_meta
         		WHERE (
         			m.page = "' . pSQL($page) . '"
-        			OR m.page = "' . pSQL(str_replace('-', '', strtolower($page))) . '"
+        			OR m.page = "' . pSQL(str_replace('-', '', mb_strtolower($page))) . '"
         		)
         		AND ml.id_lang = ' . (int) $idLang . '
 		' . Shop::addSqlRestrictionOnLang('ml'));

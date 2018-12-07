@@ -336,14 +336,14 @@ class FrontControllerCore extends Controller
 
             if ((!$has_currency || $has_country) && !$has_address_type) {
                 $id_country = $has_country && !Validate::isLanguageIsoCode($this->context->cookie->iso_code_country) ?
-                    (int) Country::getByIso(strtoupper($this->context->cookie->iso_code_country)) : (int) Tools::getCountry();
+                    (int) Country::getByIso(mb_strtoupper($this->context->cookie->iso_code_country)) : (int) Tools::getCountry();
 
                 $country = new Country($id_country, (int) $this->context->cookie->id_lang);
 
                 if (!$has_currency && validate::isLoadedObject($country) && $this->context->country->id !== $country->id) {
                     $this->context->country = $country;
                     $this->context->cookie->id_currency = (int) Currency::getCurrencyInstance($country->id_currency ? (int) $country->id_currency : (int) Configuration::get('PS_CURRENCY_DEFAULT'))->id;
-                    $this->context->cookie->iso_code_country = strtoupper($country->iso_code);
+                    $this->context->cookie->iso_code_country = mb_strtoupper($country->iso_code);
                 }
             }
         }
@@ -370,7 +370,7 @@ class FrontControllerCore extends Controller
                 unset($this->context->cookie->id_cart, $cart, $this->context->cookie->checkedTOS);
                 $this->context->cookie->check_cgv = false;
             } elseif (intval(Configuration::get('PS_GEOLOCATION_ENABLED'))
-                && !in_array(strtoupper($this->context->cookie->iso_code_country), explode(';', Configuration::get('PS_ALLOWED_COUNTRIES')))
+                && !in_array(mb_strtoupper($this->context->cookie->iso_code_country), explode(';', Configuration::get('PS_ALLOWED_COUNTRIES')))
                 && $cart->nbProducts()
                 && intval(Configuration::get('PS_GEOLOCATION_NA_BEHAVIOR')) != -1
                 && !FrontController::isInWhitelistForGeolocation()
@@ -782,7 +782,7 @@ class FrontControllerCore extends Controller
      */
     protected function canonicalRedirection($canonical_url = '')
     {
-        if (!$canonical_url || !Configuration::get('PS_CANONICAL_REDIRECT') || strtoupper($_SERVER['REQUEST_METHOD']) != 'GET') {
+        if (!$canonical_url || !Configuration::get('PS_CANONICAL_REDIRECT') || mb_strtoupper($_SERVER['REQUEST_METHOD']) != 'GET') {
             return;
         }
 
@@ -839,7 +839,7 @@ class FrontControllerCore extends Controller
         if (!in_array(Tools::getRemoteAddr(), array('localhost', '127.0.0.1', '::1'))) {
             /* Check if Maxmind Database exists */
             if (@filemtime(_PS_GEOIP_DIR_ . _PS_GEOIP_CITY_FILE_)) {
-                if (!isset($this->context->cookie->iso_code_country) || (isset($this->context->cookie->iso_code_country) && !in_array(strtoupper($this->context->cookie->iso_code_country), explode(';', Configuration::get('PS_ALLOWED_COUNTRIES'))))) {
+                if (!isset($this->context->cookie->iso_code_country) || (isset($this->context->cookie->iso_code_country) && !in_array(mb_strtoupper($this->context->cookie->iso_code_country), explode(';', Configuration::get('PS_ALLOWED_COUNTRIES'))))) {
                     $reader = new GeoIp2\Database\Reader(_PS_GEOIP_DIR_ . _PS_GEOIP_CITY_FILE_);
                     try {
                         $record = $reader->city(Tools::getRemoteAddr());
@@ -847,8 +847,8 @@ class FrontControllerCore extends Controller
                         $record = null;
                     }
 
-                    if (is_object($record) && Validate::isLanguageIsoCode($record->country->isoCode) && (int) Country::getByIso(strtoupper($record->country->isoCode)) != 0) {
-                        if (!in_array(strtoupper($record->country->isoCode), explode(';', Configuration::get('PS_ALLOWED_COUNTRIES'))) && !FrontController::isInWhitelistForGeolocation()) {
+                    if (is_object($record) && Validate::isLanguageIsoCode($record->country->isoCode) && (int) Country::getByIso(mb_strtoupper($record->country->isoCode)) != 0) {
+                        if (!in_array(mb_strtoupper($record->country->isoCode), explode(';', Configuration::get('PS_ALLOWED_COUNTRIES'))) && !FrontController::isInWhitelistForGeolocation()) {
                             if (Configuration::get('PS_GEOLOCATION_BEHAVIOR') == _PS_GEOLOCATION_NO_CATALOG_) {
                                 $this->restrictedCountry = Country::GEOLOC_FORBIDDEN;
                             } elseif (Configuration::get('PS_GEOLOCATION_BEHAVIOR') == _PS_GEOLOCATION_NO_ORDER_) {
@@ -857,7 +857,7 @@ class FrontControllerCore extends Controller
                             }
                         } else {
                             $hasBeenSet = !isset($this->context->cookie->iso_code_country);
-                            $this->context->cookie->iso_code_country = strtoupper($record->country->isoCode);
+                            $this->context->cookie->iso_code_country = mb_strtoupper($record->country->isoCode);
                         }
                     }
                 }
@@ -866,7 +866,7 @@ class FrontControllerCore extends Controller
                     $this->context->cookie->iso_code_country = Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT'));
                 }
 
-                if (isset($this->context->cookie->iso_code_country) && ($idCountry = (int) Country::getByIso(strtoupper($this->context->cookie->iso_code_country)))) {
+                if (isset($this->context->cookie->iso_code_country) && ($idCountry = (int) Country::getByIso(mb_strtoupper($this->context->cookie->iso_code_country)))) {
                     /* Update defaultCountry */
                     if ($defaultCountry->iso_code != $this->context->cookie->iso_code_country) {
                         $defaultCountry = new Country($idCountry);
@@ -1485,7 +1485,7 @@ class FrontControllerCore extends Controller
         );
 
         foreach ($assign_array as $assign_key => $assign_value) {
-            if (substr($assign_value, 0, 1) == '/' || $this->ssl) {
+            if (mb_substr($assign_value, 0, 1) == '/' || $this->ssl) {
                 $urls[$assign_key] = $http . Tools::getMediaServer($assign_value) . $assign_value;
             } else {
                 $urls[$assign_key] = $assign_value;
@@ -1733,7 +1733,7 @@ class FrontControllerCore extends Controller
         $url = Tools::getCurrentUrlProtocolPrefix() . $_SERVER['HTTP_HOST'] . $uriWithoutParams;
         $params = array();
         $paramsFromUri = '';
-        if (strpos($_SERVER['REQUEST_URI'], '?') !== false) {
+        if (mb_strpos($_SERVER['REQUEST_URI'], '?') !== false) {
             $paramsFromUri = explode('?', $_SERVER['REQUEST_URI'])[1];
         }
         parse_str($paramsFromUri, $params);

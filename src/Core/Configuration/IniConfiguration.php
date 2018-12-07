@@ -40,7 +40,7 @@ class IniConfiguration
     {
         $postMaxSize = ini_get('post_max_size');
         $bytes = (int) trim($postMaxSize);
-        $last = strtolower($postMaxSize[strlen($postMaxSize) - 1]);
+        $last = mb_strtolower($postMaxSize[mb_strlen($postMaxSize) - 1]);
 
         switch ($last) {
             case 'g':

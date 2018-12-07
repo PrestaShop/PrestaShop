@@ -108,7 +108,7 @@ class CustomerAddressFormatterCore implements FormFormatterInterface
                 $formField->setType('select');
 
                 // Also, what we really want is the id of the linked entity
-                $formField->setName('id_' . strtolower($entity));
+                $formField->setName('id_' . mb_strtolower($entity));
 
                 if ($entity === 'Country') {
                     $formField->setType('countrySelect');

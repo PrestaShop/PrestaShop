@@ -189,7 +189,7 @@ class CountryCore extends ObjectModel
             '
 			SELECT `id_country`
 			FROM `' . _DB_PREFIX_ . 'country`
-			WHERE `iso_code` = \'' . pSQL(strtoupper($isoCode)) . '\''
+			WHERE `iso_code` = \'' . pSQL(mb_strtoupper($isoCode)) . '\''
             . ($active ? ' AND active = 1' : '')
         );
 

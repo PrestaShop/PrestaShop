@@ -146,7 +146,7 @@ class GetFileControllerCore extends FrontController
         if (empty($mimeType)) {
             $bName = basename($filename);
             $bName = explode('.', $bName);
-            $bName = strtolower($bName[count($bName) - 1]);
+            $bName = mb_strtolower($bName[count($bName) - 1]);
 
             $mimeTypes = array(
             'ez' => 'application/andrew-inset',

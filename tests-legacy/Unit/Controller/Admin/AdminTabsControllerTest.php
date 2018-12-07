@@ -99,7 +99,7 @@ class AdminTabsControllerTest extends UnitTestCase
             ->method('query')
             ->with($this->callback(function ($subject) {
                 // It should check if multi-shop is active
-                return strpos($subject, 'PS_MULTISHOP_FEATURE_ACTIVE') !== false;
+                return mb_strpos($subject, 'PS_MULTISHOP_FEATURE_ACTIVE') !== false;
             }))
         ;
 
@@ -110,22 +110,22 @@ class AdminTabsControllerTest extends UnitTestCase
                     $builtQuery = $subject->build();
 
                     // It should select modules
-                    return strpos($builtQuery, 'module') !== false;
+                    return mb_strpos($builtQuery, 'module') !== false;
 
                 }
 
                 // It should select tabs
-                return strpos($subject, 'tab') !== false ||
+                return mb_strpos($subject, 'tab') !== false ||
                     // It should select authorization
-                    strpos($subject, 'authorization') !== false ||
-                    strpos($subject, 'ps_configuration') !== false ||
-                    strpos($subject, 'ps_shop') !== false ||
+                    mb_strpos($subject, 'authorization') !== false ||
+                    mb_strpos($subject, 'ps_configuration') !== false ||
+                    mb_strpos($subject, 'ps_shop') !== false ||
                     // It should select hook alias
-                    strpos($subject, 'hook_alias') !== false;
+                    mb_strpos($subject, 'hook_alias') !== false;
 
             }))
             ->will($this->returnCallback(function ($subject) {
-                if (strpos($subject, 'authorization') !== false) {
+                if (mb_strpos($subject, 'authorization') !== false) {
                     return array();
                 } else {
                     return false;

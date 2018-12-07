@@ -64,7 +64,7 @@ class Repository
     public function __construct($contextLanguage = null)
     {
         if ($contextLanguage) {
-            $contextLanguage = strtolower(is_object($contextLanguage) ? $contextLanguage->locale : $contextLanguage);
+            $contextLanguage = mb_strtolower(is_object($contextLanguage) ? $contextLanguage->locale : $contextLanguage);
             $contextLanguage = isset($this->non_iso_relational_language[$contextLanguage]) ? $this->non_iso_relational_language[$contextLanguage] : $contextLanguage;
         }
 
@@ -107,13 +107,13 @@ class Repository
         $locale = explode('-', $locale);
         if (count($locale) == 3) {
             $this->locale = $locale[0];
-            $this->region = $locale[1] . '-' . strtoupper($locale[2]);
+            $this->region = $locale[1] . '-' . mb_strtoupper($locale[2]);
         } else {
             $this->locale = $locale[0];
             if (!empty($locale[1])) {
-                $this->region = strtoupper($locale[1]);
+                $this->region = mb_strtoupper($locale[1]);
             } else {
-                $this->region = strtoupper($this->locale);
+                $this->region = mb_strtoupper($this->locale);
             }
         }
     }
@@ -172,7 +172,7 @@ class Repository
         $currencies = $this->repository->supplemental['codeMappings'];
         $datas = array();
         foreach (array_keys($currencies) as $currency_code) {
-            if ($currency_code === 'XTS' || strlen($currency_code) !== 3) {
+            if ($currency_code === 'XTS' || mb_strlen($currency_code) !== 3) {
                 continue;
             }
             $currency = $this->getCurrency($currency_code);
@@ -296,7 +296,7 @@ class Repository
      */
     private function isCurrencyValid($str)
     {
-        if ($str === 'XTS' || strlen($str) !== 3 || empty($this->repository->supplemental['codeMappings'][$str])) {
+        if ($str === 'XTS' || mb_strlen($str) !== 3 || empty($this->repository->supplemental['codeMappings'][$str])) {
             return false;
         }
 

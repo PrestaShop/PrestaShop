@@ -176,7 +176,7 @@ class UploaderCore
     {
         $postMaxSize = ini_get('post_max_size');
         $bytes = (int) trim($postMaxSize);
-        $last = strtolower($postMaxSize[strlen($postMaxSize) - 1]);
+        $last = mb_strtolower($postMaxSize[mb_strlen($postMaxSize) - 1]);
 
         switch ($last) {
             case 'g':
@@ -444,10 +444,10 @@ class UploaderCore
      */
     protected function normalizeDirectory($directory)
     {
-        $last = $directory[strlen($directory) - 1];
+        $last = $directory[mb_strlen($directory) - 1];
 
         if (in_array($last, array('/', '\\'))) {
-            $directory[strlen($directory) - 1] = DIRECTORY_SEPARATOR;
+            $directory[mb_strlen($directory) - 1] = DIRECTORY_SEPARATOR;
 
             return $directory;
         }

@@ -103,7 +103,7 @@ class OrderByProcessor extends AbstractProcessor {
         }
 
         foreach ($tokens as $token) {
-            $upper = strtoupper(trim($token));
+            $upper = mb_strtoupper(trim($token));
             switch ($upper) {
             case ',':
                 $out[] = $this->processOrderExpression($parseInfo, $select);

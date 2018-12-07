@@ -88,21 +88,21 @@ class TableBracketExpressionBuilder {
         }
         $sql = "";
         foreach ($parsed['sub_tree'] as $k => $v) {
-            $len = strlen($sql);
+            $len = mb_strlen($sql);
             $sql .= $this->buildColDef($v);
             $sql .= $this->buildPrimaryKey($v);
             $sql .= $this->buildCheck($v);
             $sql .= $this->buildLikeExpression($v);
             $sql .= $this->buildForeignKey($v);
             
-            if ($len == strlen($sql)) {
+            if ($len == mb_strlen($sql)) {
                 throw new UnableToCreateSQLException('CREATE TABLE create-def expression subtree', $k, $v, 'expr_type');
             }
 
             $sql .= ", ";
         }
 
-        $sql = " (" . substr($sql, 0, -2) . ")";
+        $sql = " (" . mb_substr($sql, 0, -2) . ")";
         return $sql;
     }
     

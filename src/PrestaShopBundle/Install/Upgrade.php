@@ -363,7 +363,7 @@ namespace PrestaShopBundle\Install {
                 $this->logError('There is no older version. Did you delete or rename the app/config/parameters.php file?', 29);
             }
 
-            if (strpos(_PS_INSTALL_VERSION_, '.') === false) {
+            if (mb_strpos(_PS_INSTALL_VERSION_, '.') === false) {
                 $this->logError(
                     '%install_version% is not a valid version number.',
                     40,
@@ -450,10 +450,10 @@ namespace PrestaShopBundle\Install {
                     $query = trim($query);
                     if (!empty($query)) {
                         /* If php code have to be executed */
-                        if (strpos($query, '/* PHP:') !== false) {
+                        if (mb_strpos($query, '/* PHP:') !== false) {
                             /* Parsing php code */
-                            $pos = strpos($query, '/* PHP:') + strlen('/* PHP:');
-                            $phpString = substr($query, $pos, strlen($query) - $pos - strlen(' */;'));
+                            $pos = mb_strpos($query, '/* PHP:') + mb_strlen('/* PHP:');
+                            $phpString = mb_substr($query, $pos, mb_strlen($query) - $pos - mb_strlen(' */;'));
                             $php = explode('::', $phpString);
                             preg_match('/\((.*)\)/', $phpString, $pattern);
                             $paramsString = trim($pattern[0], '()');
@@ -471,9 +471,9 @@ namespace PrestaShopBundle\Install {
 
                             $phpRes = null;
                             /* Call a simple function */
-                            if (strpos($phpString, '::') === false) {
+                            if (mb_strpos($phpString, '::') === false) {
                                 $func_name = str_replace($pattern[0], '', $php[0]);
-                                if (!file_exists(_PS_INSTALLER_PHP_UPGRADE_DIR_ . strtolower($func_name) . '.php')) {
+                                if (!file_exists(_PS_INSTALLER_PHP_UPGRADE_DIR_ . mb_strtolower($func_name) . '.php')) {
                                     $this->logWarning('[ERROR] ' . $version . ' PHP - missing file ' . $query, 41, array(), true);
                                 } else {
                                     require_once _PS_INSTALLER_PHP_UPGRADE_DIR_ . Tools::strtolower($func_name) . '.php';
@@ -1120,7 +1120,7 @@ namespace PrestaShopBundle\Install {
                 $tmp_settings = null;
             }
 
-            if (!file_exists($root_dir . '/app/config/parameters.yml') && $tmp_settings && strpos($tmp_settings, '_DB_SERVER_') !== false) {
+            if (!file_exists($root_dir . '/app/config/parameters.yml') && $tmp_settings && mb_strpos($tmp_settings, '_DB_SERVER_') !== false) {
                 $tmp_settings = preg_replace('/(\'|")\_/', '$1_LEGACY_', $tmp_settings);
                 $tmp_settings_file = str_replace('/settings', '/tmp_settings', $root_dir . '/' . self::SETTINGS_FILE);
                 file_put_contents($tmp_settings_file, $tmp_settings);

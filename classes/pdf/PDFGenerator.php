@@ -221,7 +221,7 @@ class PDFGeneratorCore extends TCPDF
     {
         $seed .= microtime();
 
-        if (function_exists('openssl_random_pseudo_bytes') && (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN')) {
+        if (function_exists('openssl_random_pseudo_bytes') && (mb_strtoupper(mb_substr(PHP_OS, 0, 3)) !== 'WIN')) {
             // this is not used on windows systems because it is very slow for a know bug
             $seed .= openssl_random_pseudo_bytes(512);
         } else {

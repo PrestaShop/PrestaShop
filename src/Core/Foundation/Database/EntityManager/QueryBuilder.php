@@ -50,7 +50,7 @@ class QueryBuilder
 
     public function buildWhereConditions($andOrOr, array $conditions)
     {
-        $operator = strtoupper($andOrOr);
+        $operator = mb_strtoupper($andOrOr);
 
         if ($operator !== 'AND' && $operator !== 'OR') {
             throw new Exception(sprintf('Invalid operator %s - must be "and" or "or".', $andOrOr));

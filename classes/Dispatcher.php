@@ -365,10 +365,10 @@ class DispatcherCore
                     $controllers['contactform'] = $controllers['contact'];
                 }
 
-                if (!isset($controllers[strtolower($this->controller)])) {
+                if (!isset($controllers[mb_strtolower($this->controller)])) {
                     $this->controller = $this->controller_not_found;
                 }
-                $controller_class = $controllers[strtolower($this->controller)];
+                $controller_class = $controllers[mb_strtolower($this->controller)];
                 $params_hook_action_dispatcher = array(
                     'controller_type' => self::FC_FRONT,
                     'controller_class' => $controller_class,
@@ -383,7 +383,7 @@ class DispatcherCore
                 $controller_class = 'PageNotFoundController';
                 if (Validate::isLoadedObject($module) && $module->active) {
                     $controllers = Dispatcher::getControllers(_PS_MODULE_DIR_ . "$module_name/controllers/front/");
-                    if (isset($controllers[strtolower($this->controller)])) {
+                    if (isset($controllers[mb_strtolower($this->controller)])) {
                         include_once _PS_MODULE_DIR_ . "$module_name/controllers/front/{$this->controller}.php";
                         if (file_exists(
                             _PS_OVERRIDE_DIR_ . "modules/$module_name/controllers/front/{$this->controller}.php"
@@ -422,11 +422,11 @@ class DispatcherCore
                         $retrocompatibility_admin_tab = _PS_MODULE_DIR_ . "{$tab->module}/{$tab->class_name}.php";
                     } else {
                         $controllers = Dispatcher::getControllers(_PS_MODULE_DIR_ . $tab->module . '/controllers/admin/');
-                        if (!isset($controllers[strtolower($this->controller)])) {
+                        if (!isset($controllers[mb_strtolower($this->controller)])) {
                             $this->controller = $this->controller_not_found;
                             $controller_class = 'AdminNotFoundController';
                         } else {
-                            $controller_name = $controllers[strtolower($this->controller)];
+                            $controller_name = $controllers[mb_strtolower($this->controller)];
                             // Controllers in modules can be named AdminXXX.php or AdminXXXController.php
                             include_once _PS_MODULE_DIR_ . "{$tab->module}/controllers/admin/$controller_name.php";
                             if (file_exists(
@@ -434,11 +434,11 @@ class DispatcherCore
                             )) {
                                 include_once _PS_OVERRIDE_DIR_ . "modules/{$tab->module}/controllers/admin/$controller_name.php";
                                 $controller_class = $controller_name . (
-                                    strpos($controller_name, 'Controller') ? 'Override' : 'ControllerOverride'
+                                    mb_strpos($controller_name, 'Controller') ? 'Override' : 'ControllerOverride'
                                 );
                             } else {
                                 $controller_class = $controller_name . (
-                                    strpos($controller_name, 'Controller') ? '' : 'Controller'
+                                    mb_strpos($controller_name, 'Controller') ? '' : 'Controller'
                                 );
                             }
                         }
@@ -456,7 +456,7 @@ class DispatcherCore
                             _PS_OVERRIDE_DIR_ . 'controllers/admin/',
                         )
                     );
-                    if (!isset($controllers[strtolower($this->controller)])) {
+                    if (!isset($controllers[mb_strtolower($this->controller)])) {
                         // If this is a parent tab, load the first child
                         if (Validate::isLoadedObject($tab)
                             && $tab->id_parent == 0
@@ -468,7 +468,7 @@ class DispatcherCore
                         $this->controller = $this->controller_not_found;
                     }
 
-                    $controller_class = $controllers[strtolower($this->controller)];
+                    $controller_class = $controllers[mb_strtolower($this->controller)];
                     $params_hook_action_dispatcher = array(
                         'controller_type' => self::FC_ADMIN,
                         'controller_class' => $controller_class,
@@ -564,7 +564,7 @@ class DispatcherCore
             preg_match('#^/([a-z]{2})(?:/.*)?$#', $requestUri, $matches)
         ) {
             $_GET['isolang'] = $matches[1];
-            $requestUri = substr($requestUri, 3);
+            $requestUri = mb_substr($requestUri, 3);
         }
 
         return $requestUri;
@@ -1008,7 +1008,7 @@ class DispatcherCore
         // Use routes ? (for url rewriting)
         if ($this->use_routes && !$controller && !defined('_PS_ADMIN_DIR_')) {
             if (!$this->request_uri) {
-                return strtolower($this->controller_not_found);
+                return mb_strtolower($this->controller_not_found);
             }
             $controller = $this->controller_not_found;
             $test_request_uri = preg_replace('/(=http:\/\/)/', '=', $this->request_uri);
@@ -1124,11 +1124,11 @@ class DispatcherCore
         foreach ($modules as $mod) {
             foreach (Dispatcher::getControllersInDirectory(_PS_MODULE_DIR_ . $mod->name . '/controllers/') as $controller) {
                 if ($type == 'admin') {
-                    if (strpos($controller, 'Admin') !== false) {
+                    if (mb_strpos($controller, 'Admin') !== false) {
                         $modules_controllers[$mod->name][] = $controller;
                     }
                 } elseif ($type == 'front') {
-                    if (strpos($controller, 'Admin') === false) {
+                    if (mb_strpos($controller, 'Admin') === false) {
                         $modules_controllers[$mod->name][] = $controller;
                     }
                 } else {
@@ -1157,12 +1157,12 @@ class DispatcherCore
         $controller_files = scandir($dir, SCANDIR_SORT_NONE);
         foreach ($controller_files as $controller_filename) {
             if ($controller_filename[0] != '.') {
-                if (!strpos($controller_filename, '.php') && is_dir($dir . $controller_filename)) {
+                if (!mb_strpos($controller_filename, '.php') && is_dir($dir . $controller_filename)) {
                     $controllers += Dispatcher::getControllersInDirectory(
                         $dir . $controller_filename . DIRECTORY_SEPARATOR
                     );
                 } elseif ($controller_filename != 'index.php') {
-                    $key = str_replace(array('controller.php', '.php'), '', strtolower($controller_filename));
+                    $key = str_replace(array('controller.php', '.php'), '', mb_strtolower($controller_filename));
                     $controllers[$key] = basename($controller_filename, '.php');
                 }
             }

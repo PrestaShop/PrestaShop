@@ -58,7 +58,7 @@ final class ControllerAction
     {
         preg_match('~(\w+)Controller(?:::(?:\w+)Action)?$~', $controller, $matches);
 
-        return !empty($matches) ? strtolower($matches[1]) : 'N/A';
+        return !empty($matches) ? mb_strtolower($matches[1]) : 'N/A';
     }
 
     /**
@@ -72,6 +72,6 @@ final class ControllerAction
     {
         preg_match('~::(\w+)Action$~', $controller, $matches);
 
-        return !empty($matches) ? strtolower($matches[1]) : 'N/A';
+        return !empty($matches) ? mb_strtolower($matches[1]) : 'N/A';
     }
 }

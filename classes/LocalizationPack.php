@@ -127,7 +127,7 @@ class LocalizationPackCore
             foreach ($xml->languages->language as $lang) {
                 //use this to get correct language code ex : qc become fr
                 $languageCode = explode('-', Language::getLanguageCodeByIso($lang['iso_code']));
-                $isoCode = $languageCode[0] . '-' . strtoupper($iso_localization_pack);
+                $isoCode = $languageCode[0] . '-' . mb_strtoupper($iso_localization_pack);
 
                 $cldrUpdate = new Update(_PS_TRANSLATIONS_DIR_);
                 $cldrUpdate->fetchLocale($isoCode);
@@ -277,7 +277,7 @@ class LocalizationPackCore
                         continue;
                     }
 
-                    $id_country = (int) Country::getByIso(strtoupper($rule_attributes['iso_code_country']));
+                    $id_country = (int) Country::getByIso(mb_strtoupper($rule_attributes['iso_code_country']));
                     if (!$id_country) {
                         continue;
                     }
@@ -287,7 +287,7 @@ class LocalizationPackCore
                     }
 
                     // Default values
-                    $id_state = (int) isset($rule_attributes['iso_code_state']) ? State::getIdByIso(strtoupper($rule_attributes['iso_code_state'])) : 0;
+                    $id_state = (int) isset($rule_attributes['iso_code_state']) ? State::getIdByIso(mb_strtoupper($rule_attributes['iso_code_state'])) : 0;
                     $id_county = 0;
                     $zipcode_from = 0;
                     $zipcode_to = 0;

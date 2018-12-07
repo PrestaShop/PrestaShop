@@ -82,7 +82,7 @@ abstract class Db extends DbCore
             $this->uniqQueries[$uniqSql]++;
 
             // No cache for query
-            if ($this->disableCache && !stripos($sql, 'SQL_NO_CACHE')) {
+            if ($this->disableCache && !mb_stripos($sql, 'SQL_NO_CACHE')) {
                 $sql = preg_replace('/^\s*select\s+/i', 'SELECT SQL_NO_CACHE ', trim($sql));
             }
 

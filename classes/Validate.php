@@ -62,10 +62,10 @@ class ValidateCore
     {
         if (!$url || $url == 'http://') {
             $errors[] = Context::getContext()->getTranslator()->trans('Please specify module URL', array(), 'Admin.Modules.Notification');
-        } elseif (substr($url, -4) != '.tar' && substr($url, -4) != '.zip' && substr($url, -4) != '.tgz' && substr($url, -7) != '.tar.gz') {
+        } elseif (mb_substr($url, -4) != '.tar' && mb_substr($url, -4) != '.zip' && mb_substr($url, -4) != '.tgz' && mb_substr($url, -7) != '.tar.gz') {
             $errors[] = Context::getContext()->getTranslator()->trans('Unknown archive type.', array(), 'Admin.Modules.Notification');
         } else {
-            if ((strpos($url, 'http')) === false) {
+            if ((mb_strpos($url, 'http')) === false) {
                 $url = 'http://' . $url;
             }
             if (!is_array(@get_headers($url))) {

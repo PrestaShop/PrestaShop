@@ -67,13 +67,13 @@ if (!$backupfile = Tools::getValue('filename')) {
 // Check the realpath so we can validate the backup file is under the backup directory
 $backupfile = realpath($backupdir.DIRECTORY_SEPARATOR.$backupfile);
 
-if ($backupfile === false || strncmp($backupdir, $backupfile, strlen($backupdir)) != 0) {
+if ($backupfile === false || strncmp($backupdir, $backupfile, mb_strlen($backupdir)) != 0) {
     die(Tools::dieOrLog('The backup file does not exist.'));
 }
 
-if (substr($backupfile, -4) == '.bz2') {
+if (mb_substr($backupfile, -4) == '.bz2') {
     $contentType = 'application/x-bzip2';
-} elseif (substr($backupfile, -3) == '.gz') {
+} elseif (mb_substr($backupfile, -3) == '.gz') {
     $contentType = 'application/x-gzip';
 } else {
     $contentType = 'text/x-sql';

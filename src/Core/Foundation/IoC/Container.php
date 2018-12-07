@@ -79,11 +79,11 @@ class Container
 
     public function resolveClassName($className)
     {
-        $colonPos = strpos($className, ':');
+        $colonPos = mb_strpos($className, ':');
         if (0 !== $colonPos && false !== $colonPos) {
-            $alias = substr($className, 0, $colonPos);
+            $alias = mb_substr($className, 0, $colonPos);
             if ($this->knowsNamespaceAlias($alias)) {
-                $class = ltrim(substr($className, $colonPos + 1), '\\');
+                $class = ltrim(mb_substr($className, $colonPos + 1), '\\');
 
                 return $this->namespaceAliases[$alias] . '\\' . $class;
             }

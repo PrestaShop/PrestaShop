@@ -47,7 +47,7 @@ class CreateProcessor extends AbstractProcessor {
         $base_expr = "";
 
         foreach ($tokens as $token) {
-            $trim = strtoupper(trim($token));
+            $trim = mb_strtoupper(trim($token));
             $base_expr .= $token;
 
             if ($trim === "") {

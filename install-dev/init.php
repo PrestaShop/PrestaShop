@@ -33,8 +33,8 @@ require_once 'install_version.php';
 
 // setting the memory limit to 128M only if current is lower
 $memory_limit = ini_get('memory_limit');
-if (substr($memory_limit, -1) != 'G'
-    && ((substr($memory_limit, -1) == 'M' && substr($memory_limit, 0, -1) < 128)
+if (mb_substr($memory_limit, -1) != 'G'
+    && ((mb_substr($memory_limit, -1) == 'M' && mb_substr($memory_limit, 0, -1) < 128)
         || is_numeric($memory_limit) && (intval($memory_limit) < 131072) && $memory_limit > 0)
 ) {
     @ini_set('memory_limit', '128M');
@@ -49,15 +49,15 @@ if (!isset($_SERVER['REQUEST_URI']) || $_SERVER['REQUEST_URI'] == '') {
     }
 }
 
-if ($tmp = strpos($_SERVER['REQUEST_URI'], '?')) {
-    $_SERVER['REQUEST_URI'] = substr($_SERVER['REQUEST_URI'], 0, $tmp);
+if ($tmp = mb_strpos($_SERVER['REQUEST_URI'], '?')) {
+    $_SERVER['REQUEST_URI'] = mb_substr($_SERVER['REQUEST_URI'], 0, $tmp);
 }
 $_SERVER['REQUEST_URI'] = str_replace('//', '/', $_SERVER['REQUEST_URI']);
 
 // we check if theses constants are defined
 // in order to use init.php in upgrade.php script
 if (!defined('__PS_BASE_URI__')) {
-    define('__PS_BASE_URI__', substr($_SERVER['REQUEST_URI'], 0, -1 * (strlen($_SERVER['REQUEST_URI']) - strrpos($_SERVER['REQUEST_URI'], '/')) - strlen(substr(dirname($_SERVER['REQUEST_URI']), strrpos(dirname($_SERVER['REQUEST_URI']), '/') + 1))));
+    define('__PS_BASE_URI__', mb_substr($_SERVER['REQUEST_URI'], 0, -1 * (mb_strlen($_SERVER['REQUEST_URI']) - mb_strrpos($_SERVER['REQUEST_URI'], '/')) - mb_strlen(mb_substr(dirname($_SERVER['REQUEST_URI']), mb_strrpos(dirname($_SERVER['REQUEST_URI']), '/') + 1))));
 }
 
 if (!defined('_PS_CORE_DIR_')) {
@@ -100,7 +100,7 @@ if (!defined('_THEME_NAME_')) {
             return strcmp($b, $a);
         });
 
-        define('_THEME_NAME_', basename(substr($themes[0], 0, -strlen('/config/theme.yml'))));
+        define('_THEME_NAME_', basename(mb_substr($themes[0], 0, -mb_strlen('/config/theme.yml'))));
     }
 }
 

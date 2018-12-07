@@ -231,7 +231,7 @@ class AdminModulesControllerCore extends AdminController
         if (!$xml) {
             die('KO');
         }
-        $result = strtoupper((string) $xml->success);
+        $result = mb_strtoupper((string) $xml->success);
         if (!in_array($result, array('OK', 'KO'))) {
             die('KO');
         }
@@ -389,9 +389,9 @@ class AdminModulesControllerCore extends AdminController
         }
 
         $url = preg_replace('#(?<=&|\?)(' . implode('|', $remove) . ')=.*?(&|$)#i', '', $url);
-        $len = strlen($url);
+        $len = mb_strlen($url);
         if ($url[$len - 1] == '&') {
-            $url = substr($url, 0, $len - 1);
+            $url = mb_substr($url, 0, $len - 1);
         }
 
         return $url;
@@ -403,7 +403,7 @@ class AdminModulesControllerCore extends AdminController
         $tmp_folder = _PS_MODULE_DIR_ . md5(time());
 
         $success = false;
-        if (substr($file, -4) == '.zip') {
+        if (mb_substr($file, -4) == '.zip') {
             if (Tools::ZipExtract($file, $tmp_folder)) {
                 $zip_folders = scandir($tmp_folder, SCANDIR_SORT_NONE);
                 if (Tools::ZipExtract($file, _PS_MODULE_DIR_)) {
@@ -444,7 +444,7 @@ class AdminModulesControllerCore extends AdminController
 
     protected function recursiveDeleteOnDisk($dir)
     {
-        if (strpos(realpath($dir), realpath(_PS_MODULE_DIR_)) === false) {
+        if (mb_strpos(realpath($dir), realpath(_PS_MODULE_DIR_)) === false) {
             return;
         }
         if (is_dir($dir)) {
@@ -596,8 +596,8 @@ class AdminModulesControllerCore extends AdminController
                 }
             } elseif (!isset($_FILES['file']['tmp_name']) || empty($_FILES['file']['tmp_name'])) {
                 $this->errors[] = $this->trans('No file has been selected', array(), 'Admin.Notifications.Error');
-            } elseif (substr($_FILES['file']['name'], -4) != '.tar' && substr($_FILES['file']['name'], -4) != '.zip'
-                && substr($_FILES['file']['name'], -4) != '.tgz' && substr($_FILES['file']['name'], -7) != '.tar.gz') {
+            } elseif (mb_substr($_FILES['file']['name'], -4) != '.tar' && mb_substr($_FILES['file']['name'], -4) != '.zip'
+                && mb_substr($_FILES['file']['name'], -4) != '.tgz' && mb_substr($_FILES['file']['name'], -7) != '.tar.gz') {
                 $this->errors[] = $this->trans('Unknown archive type.', array(), 'Admin.Modules.Notification');
             } elseif (!move_uploaded_file($_FILES['file']['tmp_name'], _PS_MODULE_DIR_ . $_FILES['file']['name'])) {
                 $this->errors[] = $this->trans('An error occurred while copying the archive to the module directory.', array(), 'Admin.Modules.Notification');
@@ -741,7 +741,7 @@ class AdminModulesControllerCore extends AdminController
                     $modules_list_save = implode('|', $modules);
                 }
             } elseif (($modules = Tools::getValue($key)) && $key != 'checkAndUpdate' && $key != 'updateAll') {
-                if (strpos($modules, '|')) {
+                if (mb_strpos($modules, '|')) {
                     $modules_list_save = $modules;
                     $modules = explode('|', $modules);
                 }
@@ -905,7 +905,7 @@ class AdminModulesControllerCore extends AdminController
                             $echo = $module->{$method}();
 
                             // After a successful install of a single module that has a configuration method, to the configuration page
-                            if ($key == 'install' && $echo === true && strpos(Tools::getValue('install'), '|') === false && method_exists($module, 'getContent')) {
+                            if ($key == 'install' && $echo === true && mb_strpos(Tools::getValue('install'), '|') === false && method_exists($module, 'getContent')) {
                                 Tools::redirectAdmin(self::$currentIndex . '&token=' . $this->token . '&configure=' . $module->name . '&conf=12');
                             }
                         }
@@ -993,7 +993,7 @@ class AdminModulesControllerCore extends AdminController
                                 foreach ($ad_modules['not_installed'] as $key => &$module) {
                                     if (isset($module->addons_buy_url)) {
                                         $module->addons_buy_url = str_replace('utm_source=v1trunk_api', 'utm_source=back-office', $module->addons_buy_url)
-                                            . '&utm_medium=related-modules&utm_campaign=back-office-' . strtoupper($this->context->language->iso_code)
+                                            . '&utm_medium=related-modules&utm_campaign=back-office-' . mb_strtoupper($this->context->language->iso_code)
                                             . '&utm_content=' . (($this->context->mode >= Context::MODE_HOST_CONTRIB) ? 'cloud' : 'download');
                                     }
                                     if (isset($module->description_full) && trim($module->description_full) != '') {
@@ -1226,7 +1226,7 @@ class AdminModulesControllerCore extends AdminController
                 }
                 $module_author = $module->author;
                 if (!empty($module_author) && ($module_author != '')) {
-                    $this->modules_authors[strtolower($module_author)] = 'notselected';
+                    $this->modules_authors[mb_strtolower($module_author)] = 'notselected';
                 }
             }
         }
@@ -1263,7 +1263,7 @@ class AdminModulesControllerCore extends AdminController
         // Filter on module name
         $filter_name = Tools::getValue('filtername');
         if (!empty($filter_name)) {
-            if (stristr($module->name, $filter_name) === false && stristr($module->displayName, $filter_name) === false && stristr($module->description, $filter_name) === false) {
+            if (mb_stristr($module->name, $filter_name) === false && mb_stristr($module->displayName, $filter_name) === false && mb_stristr($module->description, $filter_name) === false) {
                 return true;
             }
 
@@ -1317,11 +1317,11 @@ class AdminModulesControllerCore extends AdminController
             return true;
         } elseif ($show_type_modules == 'otherModules' && (in_array($module->name, $this->list_partners_modules) || in_array($module->name, $this->list_natives_modules))) {
             return true;
-        } elseif (strpos($show_type_modules, 'authorModules[') !== false) {
+        } elseif (mb_strpos($show_type_modules, 'authorModules[') !== false) {
             // setting selected author in authors set
-            $author_selected = substr(str_replace(array('authorModules[', "\'"), array('', "'"), $show_type_modules), 0, -1);
+            $author_selected = mb_substr(str_replace(array('authorModules[', "\'"), array('', "'"), $show_type_modules), 0, -1);
             $this->modules_authors[$author_selected] = 'selected';
-            if (empty($module->author) || strtolower($module->author) != $author_selected) {
+            if (empty($module->author) || mb_strtolower($module->author) != $author_selected) {
                 return true;
             }
         }
@@ -1348,8 +1348,8 @@ class AdminModulesControllerCore extends AdminController
         $show_country_modules = $this->filter_configuration['PS_SHOW_COUNTRY_MODULES_' . (int) $this->id_employee];
         if ($show_country_modules && (isset($module->limited_countries) && !empty($module->limited_countries)
                 && ((is_array($module->limited_countries) && count($module->limited_countries)
-                && !in_array(strtolower($this->iso_default_country), $module->limited_countries))
-                || (!is_array($module->limited_countries) && strtolower($this->iso_default_country) != strval($module->limited_countries))))) {
+                && !in_array(mb_strtolower($this->iso_default_country), $module->limited_countries))
+                || (!is_array($module->limited_countries) && mb_strtolower($this->iso_default_country) != strval($module->limited_countries))))) {
             return true;
         }
 

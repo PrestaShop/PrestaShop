@@ -99,7 +99,7 @@ class PrestaShopBackupCore
                 $backupDir
             );
 
-            if (strrpos($backupDir, DIRECTORY_SEPARATOR)) {
+            if (mb_strrpos($backupDir, DIRECTORY_SEPARATOR)) {
                 $backupDir .= DIRECTORY_SEPARATOR;
             }
         }
@@ -129,7 +129,7 @@ class PrestaShopBackupCore
             $backupfile = $backupdir . DIRECTORY_SEPARATOR;
         }
 
-        if ($backupfile === false || strncmp($backupdir, $backupfile, strlen($backupdir)) != 0) {
+        if ($backupfile === false || strncmp($backupdir, $backupfile, mb_strlen($backupdir)) != 0) {
             die(Tools::displayError());
         }
 
@@ -250,7 +250,7 @@ class PrestaShopBackupCore
             $table = current($table);
 
             // Skip tables which do not start with _DB_PREFIX_
-            if (strlen($table) < strlen(_DB_PREFIX_) || strncmp($table, _DB_PREFIX_, strlen(_DB_PREFIX_)) != 0) {
+            if (mb_strlen($table) < mb_strlen(_DB_PREFIX_) || strncmp($table, _DB_PREFIX_, mb_strlen(_DB_PREFIX_)) != 0) {
                 continue;
             }
 
@@ -291,7 +291,7 @@ class PrestaShopBackupCore
                                 $s .= $tmp;
                             } else {
                                 foreach ($lines as $line) {
-                                    if (strpos($line, '`' . $field . '`') !== false) {
+                                    if (mb_strpos($line, '`' . $field . '`') !== false) {
                                         if (preg_match('/(.*NOT NULL.*)/Ui', $line)) {
                                             $s .= "'',";
                                         } else {

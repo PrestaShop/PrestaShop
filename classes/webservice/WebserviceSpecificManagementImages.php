@@ -568,8 +568,8 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                     $path = implode('/', str_split((string) $image_id));
                     $image_size = $this->wsObject->urlSegment[4];
 
-                    if (file_exists($directory . $path . '/' . $image_id . (strlen($this->wsObject->urlSegment[4]) > 0 ? '-' . $this->wsObject->urlSegment[4] : '') . '.jpg')) {
-                        $filename = $directory . $path . '/' . $image_id . (strlen($this->wsObject->urlSegment[4]) > 0 ? '-' . $this->wsObject->urlSegment[4] : '') . '.jpg';
+                    if (file_exists($directory . $path . '/' . $image_id . (mb_strlen($this->wsObject->urlSegment[4]) > 0 ? '-' . $this->wsObject->urlSegment[4] : '') . '.jpg')) {
+                        $filename = $directory . $path . '/' . $image_id . (mb_strlen($this->wsObject->urlSegment[4]) > 0 ? '-' . $this->wsObject->urlSegment[4] : '') . '.jpg';
                         $orig_filename = $directory . $path . '/' . $image_id . '.jpg';
                     } else {
                         // else old system or not exists
@@ -1051,8 +1051,8 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                 if (empty($mime_type) || $mime_type == 'regular file') {
                     $mime_type = $file['type'];
                 }
-                if (($pos = strpos($mime_type, ';')) !== false) {
-                    $mime_type = substr($mime_type, 0, $pos);
+                if (($pos = mb_strpos($mime_type, ';')) !== false) {
+                    $mime_type = mb_substr($mime_type, 0, $pos);
                 }
 
                 // Check mime content type

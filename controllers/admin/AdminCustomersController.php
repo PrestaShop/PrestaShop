@@ -705,7 +705,7 @@ class AdminCustomersControllerCore extends AdminController
 
         $total_messages = count($messages);
         for ($i = 0; $i < $total_messages; ++$i) {
-            $messages[$i]['message'] = substr(strip_tags(html_entity_decode($messages[$i]['message'], ENT_NOQUOTES, 'UTF-8')), 0, 75);
+            $messages[$i]['message'] = mb_substr(strip_tags(html_entity_decode($messages[$i]['message'], ENT_NOQUOTES, 'UTF-8')), 0, 75);
             $messages[$i]['date_add'] = Tools::displayDate($messages[$i]['date_add'], null, true);
             if (isset(self::$meaning_status[$messages[$i]['status']])) {
                 $messages[$i]['status'] = self::$meaning_status[$messages[$i]['status']];

@@ -362,7 +362,7 @@ class ShopCore extends ObjectModel
             if ($through && $id_shop && !$is_main_uri) {
                 foreach ($result as $row) {
                     if ($row['id_shop'] == $id_shop && $row['main']) {
-                        $request_uri = substr($request_uri, strlen($found_uri));
+                        $request_uri = mb_substr($request_uri, mb_strlen($found_uri));
                         $url = str_replace('//', '/', $row['domain'] . $row['uri'] . $request_uri);
                         $redirect_type = Configuration::get('PS_CANONICAL_REDIRECT');
                         $redirect_code = ($redirect_type == 1 ? '302' : '301');
@@ -426,7 +426,7 @@ class ShopCore extends ObjectModel
                     $url .= $default_shop->getBaseURI() . 'index.php?' . http_build_query($params);
                 } else {
                     // Catch url with subdomain "www"
-                    if (strpos($url, 'www.') === 0 && 'www.' . $_SERVER['HTTP_HOST'] === $url || $_SERVER['HTTP_HOST'] === 'www.' . $url) {
+                    if (mb_strpos($url, 'www.') === 0 && 'www.' . $_SERVER['HTTP_HOST'] === $url || $_SERVER['HTTP_HOST'] === 'www.' . $url) {
                         $url .= $_SERVER['REQUEST_URI'];
                     } else {
                         $url .= $default_shop->getBaseURI();
@@ -1095,7 +1095,7 @@ class ShopCore extends ObjectModel
     public static function addSqlAssociation($table, $alias, $inner_join = true, $on = null, $force_not_default = false)
     {
         $table_alias = $table . '_shop';
-        if (strpos($table, '.') !== false) {
+        if (mb_strpos($table, '.') !== false) {
             list($table_alias, $table) = explode('.', $table);
         }
 

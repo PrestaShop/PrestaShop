@@ -31,7 +31,7 @@ include(_PS_ADMIN_DIR_.'/../config/config.inc.php');
 require_once(_PS_ADMIN_DIR_.'/init.php');
 
 $query = Tools::getValue('q', false);
-if (!$query || $query == '' || strlen($query) < 1) {
+if (!$query || $query == '' || mb_strlen($query) < 1) {
     die();
 }
 
@@ -42,8 +42,8 @@ if (!$query || $query == '' || strlen($query) < 1) {
  * is not write in the name field of the product.
  * So the ref pattern will be cut for the search request.
  */
-if ($pos = strpos($query, ' (ref:')) {
-    $query = substr($query, 0, $pos);
+if ($pos = mb_strpos($query, ' (ref:')) {
+    $query = mb_substr($query, 0, $pos);
 }
 
 $excludeIds = Tools::getValue('excludeIds', false);

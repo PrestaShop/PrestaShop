@@ -253,7 +253,7 @@ class XmlLoader
             return;
         }
 
-        if (substr($entity, 0, 1) == '.' || substr($entity, 0, 1) == '_') {
+        if (mb_substr($entity, 0, 1) == '.' || mb_substr($entity, 0, 1) == '_') {
             return;
         }
 
@@ -412,7 +412,7 @@ class XmlLoader
     protected function loadEntity($entity, $iso = null)
     {
         if (!isset($this->cache_xml_entity[$this->path_type][$entity][$iso])) {
-            if (substr($entity, 0, 1) == '.' || substr($entity, 0, 1) == '_') {
+            if (mb_substr($entity, 0, 1) == '.' || mb_substr($entity, 0, 1) == '_') {
                 return;
             }
 
@@ -501,7 +501,7 @@ class XmlLoader
             $entity_id = 0;
             if (!$xml->fields['primary']) {
                 $primary = 'id_' . $entity;
-            } elseif (strpos((string) $xml->fields['primary'], ',') === false) {
+            } elseif (mb_strpos((string) $xml->fields['primary'], ',') === false) {
                 $primary = (string) $xml->fields['primary'];
             }
             unset($xml);
@@ -610,7 +610,7 @@ class XmlLoader
         $entity_id = 0;
         if (!$xml->fields['primary']) {
             $primary = 'id_' . $entity;
-        } elseif (strpos((string) $xml->fields['primary'], ',') === false) {
+        } elseif (mb_strpos((string) $xml->fields['primary'], ',') === false) {
             $primary = (string) $xml->fields['primary'];
         }
 
@@ -1150,7 +1150,7 @@ class XmlLoader
 
         // Check if current table is an association table (if multiple primary keys)
         $is_association = false;
-        if (strpos($primary, ',') !== false) {
+        if (mb_strpos($primary, ',') !== false) {
             $is_association = true;
             $primary = array_map('trim', explode(',', $primary));
         }

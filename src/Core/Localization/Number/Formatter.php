@@ -226,12 +226,12 @@ class Formatter
      */
     protected function adjustMinorDigitsZeroes($minorDigits)
     {
-        if (strlen($minorDigits) > $this->numberSpecification->getMaxFractionDigits()) {
+        if (mb_strlen($minorDigits) > $this->numberSpecification->getMaxFractionDigits()) {
             // Strip any trailing zeroes.
             $minorDigits = rtrim($minorDigits, '0');
         }
 
-        if (strlen($minorDigits) < $this->numberSpecification->getMinFractionDigits()) {
+        if (mb_strlen($minorDigits) < $this->numberSpecification->getMinFractionDigits()) {
             // Re-add needed zeroes
             $minorDigits = str_pad(
                 $minorDigits,

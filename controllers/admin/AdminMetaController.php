@@ -420,7 +420,7 @@ class AdminMetaControllerCore extends AdminController
 
             foreach (Language::getIDs(false) as $id_lang) {
                 $current = Tools::getValue('url_rewrite_' . $id_lang);
-                if (strlen($current) == 0) {
+                if (mb_strlen($current) == 0) {
                     // Prioritize default language first
                     if ($defaultLangIsValidated) {
                         $_POST['url_rewrite_' . $id_lang] = Tools::getValue('url_rewrite_' . $default_language);

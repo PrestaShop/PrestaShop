@@ -109,7 +109,7 @@ class WhereBuilder {
     public function build($parsed) {
         $sql = "WHERE ";
         foreach ($parsed as $k => $v) {
-            $len = strlen($sql);
+            $len = mb_strlen($sql);
 
             $sql .= $this->buildOperator($v);
             $sql .= $this->buildConstant($v);
@@ -121,13 +121,13 @@ class WhereBuilder {
             $sql .= $this->buildWhereBracketExpression($v);
             $sql .= $this->buildUserVariable($v);
 
-            if (strlen($sql) == $len) {
+            if (mb_strlen($sql) == $len) {
                 throw new UnableToCreateSQLException('WHERE', $k, $v, 'expr_type');
             }
 
             $sql .= " ";
         }
-        return substr($sql, 0, -1);
+        return mb_substr($sql, 0, -1);
     }
 
 }

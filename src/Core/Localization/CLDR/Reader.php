@@ -190,9 +190,9 @@ class Reader implements ReaderInterface
         }
 
         // The common case with truncation
-        $pos = strrpos($localeCode, '_');
+        $pos = mb_strrpos($localeCode, '_');
         if (false !== $pos) {
-            $parent = substr($localeCode, 0, $pos);
+            $parent = mb_substr($localeCode, 0, $pos);
             if (false === $parent) {
                 throw new LocalizationException(
                     sprintf('Invalid locale code: "%s"', $localeCode)

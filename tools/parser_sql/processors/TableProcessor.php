@@ -87,7 +87,7 @@ class TableProcessor extends AbstractProcessor {
                 continue;
             }
 
-            $upper = strtoupper($trim);
+            $upper = mb_strtoupper($trim);
             switch ($upper) {
 
             case ',':
@@ -301,7 +301,7 @@ class TableProcessor extends AbstractProcessor {
 
                 case '':
                 # after table name
-                    if ($prevCategory === 'TABLE_NAME' && $upper[0] === '(' && substr($upper, -1) === ')') {
+                    if ($prevCategory === 'TABLE_NAME' && $upper[0] === '(' && mb_substr($upper, -1) === ')') {
                         $unparsed = $this->splitSQLIntoTokens($this->removeParenthesisFromStart($trim));
                         $processor = new CreateDefinitionProcessor();
                         $coldef = $processor->process($unparsed);

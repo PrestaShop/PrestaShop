@@ -391,7 +391,7 @@ class AdminProductsController extends AdminProductsControllerCore
             }
         }
         if ($orderByPriceFinal == 'price_final') {
-            if (strtolower($orderWayPriceFinal) == 'desc') {
+            if (mb_strtolower($orderWayPriceFinal) == 'desc') {
                 uasort($this->_list, 'cmpPriceDesc');
             } else {
                 uasort($this->_list, 'cmpPriceAsc');
@@ -2289,12 +2289,12 @@ class AdminProductsController extends AdminProductsControllerCore
     {
         if ($this->display == 'edit' || $this->display == 'add') {
             $this->fields_form = array();
-            if (substr($this->tab_display, 0, 6) == 'Module') {
-                $this->tab_display_module = strtolower(substr($this->tab_display, 6, Tools::strlen($this->tab_display) - 6));
+            if (mb_substr($this->tab_display, 0, 6) == 'Module') {
+                $this->tab_display_module = mb_strtolower(mb_substr($this->tab_display, 6, Tools::strlen($this->tab_display) - 6));
                 $this->tab_display = 'Modules';
             }
             if (method_exists($this, 'initForm'.$this->tab_display)) {
-                $this->tpl_form = strtolower($this->tab_display).'.tpl';
+                $this->tpl_form = mb_strtolower($this->tab_display).'.tpl';
             }
             if ($this->ajax) {
                 $this->content_only = true;
@@ -2310,7 +2310,7 @@ class AdminProductsController extends AdminProductsControllerCore
                     }
                     $product_tabs[$product_tab] = array(
                         'id' => $product_tab,
-                        'selected' => (strtolower($product_tab) == strtolower($this->tab_display) || (isset($this->tab_display_module) && 'module'.$this->tab_display_module == Tools::strtolower($product_tab))),
+                        'selected' => (mb_strtolower($product_tab) == mb_strtolower($this->tab_display) || (isset($this->tab_display_module) && 'module'.$this->tab_display_module == Tools::strtolower($product_tab))),
                         'name' => $this->available_tabs_lang[$product_tab],
                         'href' => $this->context->link->getAdminLink('AdminProducts').'&id_product='.(int)Tools::getValue('id_product').'&action='.$product_tab,
                     );
@@ -2717,8 +2717,8 @@ class AdminProductsController extends AdminProductsControllerCore
         );
         if (!$product->active) {
             $admin_dir = dirname($_SERVER['PHP_SELF']);
-            $admin_dir = substr($admin_dir, strrpos($admin_dir, '/') + 1);
-            $preview_url .= ((strpos($preview_url, '?') === false) ? '?' : '&').'adtoken='.$this->token.'&ad='.$admin_dir.'&id_employee='.(int)$this->context->employee->id;
+            $admin_dir = mb_substr($admin_dir, mb_strrpos($admin_dir, '/') + 1);
+            $preview_url .= ((mb_strpos($preview_url, '?') === false) ? '?' : '&').'adtoken='.$this->token.'&ad='.$admin_dir.'&id_employee='.(int)$this->context->employee->id;
         }
         return $preview_url;
     }
@@ -3293,7 +3293,7 @@ class AdminProductsController extends AdminProductsControllerCore
             $tmp[$group['id_group']] = $group;
         }
         $groups = $tmp;
-        $length_before = strlen($content);
+        $length_before = mb_strlen($content);
         if (is_array($specific_prices) && count($specific_prices)) {
             $i = 0;
             foreach ($specific_prices as $specific_price) {
@@ -3369,7 +3369,7 @@ class AdminProductsController extends AdminProductsControllerCore
                 }
             }
         }
-        if ($length_before === strlen($content)) {
+        if ($length_before === mb_strlen($content)) {
             $content .= '
 				<tr>
 					<td class="text-center" colspan="13"><i class="icon-warning-sign"></i>&nbsp;'.$this->l('No specific prices.').'</td>

@@ -354,8 +354,8 @@ class AdminShopUrlControllerCore extends AdminController
 
                 foreach ($urls as &$url) {
                     $title = $url['domain'] . $url['physical_uri'] . $url['virtual_uri'];
-                    if (strlen($title) > 23) {
-                        $title = substr($title, 0, 23) . '...';
+                    if (mb_strlen($title) > 23) {
+                        $title = mb_substr($title, 0, 23) . '...';
                     }
 
                     $url['name'] = $title;

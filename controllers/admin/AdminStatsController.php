@@ -597,22 +597,22 @@ class AdminStatsControllerCore extends AdminStatsTabController
             // Add flat fees for this order
             $flat_fees = Configuration::get('CONF_ORDER_FIXED') + (
                 $order['id_currency'] == Configuration::get('PS_CURRENCY_DEFAULT')
-                    ? Configuration::get('CONF_' . strtoupper($order['module']) . '_FIXED')
-                    : Configuration::get('CONF_' . strtoupper($order['module']) . '_FIXED_FOREIGN')
+                    ? Configuration::get('CONF_' . mb_strtoupper($order['module']) . '_FIXED')
+                    : Configuration::get('CONF_' . mb_strtoupper($order['module']) . '_FIXED_FOREIGN')
                 );
 
             // Add variable fees for this order
             $var_fees = $order['total_paid_tax_incl'] * (
                 $order['id_currency'] == Configuration::get('PS_CURRENCY_DEFAULT')
-                    ? Configuration::get('CONF_' . strtoupper($order['module']) . '_VAR')
-                    : Configuration::get('CONF_' . strtoupper($order['module']) . '_VAR_FOREIGN')
+                    ? Configuration::get('CONF_' . mb_strtoupper($order['module']) . '_VAR')
+                    : Configuration::get('CONF_' . mb_strtoupper($order['module']) . '_VAR_FOREIGN')
                 ) / 100;
 
             // Add shipping fees for this order
             $shipping_fees = $order['total_shipping_tax_excl'] * (
                 $order['id_country'] == Configuration::get('PS_COUNTRY_DEFAULT')
-                    ? Configuration::get('CONF_' . strtoupper($order['carrier_reference']) . '_SHIP')
-                    : Configuration::get('CONF_' . strtoupper($order['carrier_reference']) . '_SHIP_OVERSEAS')
+                    ? Configuration::get('CONF_' . mb_strtoupper($order['carrier_reference']) . '_SHIP')
+                    : Configuration::get('CONF_' . mb_strtoupper($order['carrier_reference']) . '_SHIP_OVERSEAS')
                 ) / 100;
 
             // Tally up these fees
@@ -865,7 +865,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
                 foreach ($themes as $theme) {
                     /* @var Theme $theme */
                     foreach ($languages as $language) {
-                        $kpi_key = substr(strtoupper($theme->getName() . '_' . $language['iso_code']), 0, 16);
+                        $kpi_key = mb_substr(mb_strtoupper($theme->getName() . '_' . $language['iso_code']), 0, 16);
                         $total += ConfigurationKPI::get('TRANSLATE_TOTAL_' . $kpi_key);
                         $translated += ConfigurationKPI::get('TRANSLATE_DONE_' . $kpi_key);
                     }

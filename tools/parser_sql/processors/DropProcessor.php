@@ -70,7 +70,7 @@ class DropProcessor extends AbstractProcessor {
             case 'SCHEMA':
             case 'DATABASE':
             case 'TABLE':
-                $expr_type = strtolower($token->getTrim());
+                $expr_type = mb_strtolower($token->getTrim());
                 break;
 
             case 'IF':

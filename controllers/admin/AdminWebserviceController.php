@@ -245,7 +245,7 @@ class AdminWebserviceControllerCore extends AdminController
 
     public function postProcess()
     {
-        if (Tools::getValue('key') && strlen(Tools::getValue('key')) < 32) {
+        if (Tools::getValue('key') && mb_strlen(Tools::getValue('key')) < 32) {
             $this->errors[] = $this->trans('Key length must be 32 character long.', array(), 'Admin.Advparameters.Notification');
         }
         if (WebserviceKey::keyExists(Tools::getValue('key')) && !Tools::getValue('id_webservice_account')) {
@@ -269,7 +269,7 @@ class AdminWebserviceControllerCore extends AdminController
 
     public function checkForWarning()
     {
-        if (strpos($_SERVER['SERVER_SOFTWARE'], 'Apache') === false) {
+        if (mb_strpos($_SERVER['SERVER_SOFTWARE'], 'Apache') === false) {
             $this->warnings[] = $this->trans('To avoid operating problems, please use an Apache server.', array(), 'Admin.Advparameters.Notification');
             if (function_exists('apache_get_modules')) {
                 $apache_modules = apache_get_modules();

@@ -73,11 +73,11 @@ class PHPSQLLexer {
      * @return boolean true, if the parameter $haystack ends with the character sequences $needle, false otherwise
      */
     protected function endsWith($haystack, $needle) {
-        $length = strlen($needle);
+        $length = mb_strlen($needle);
         if ($length == 0) {
             return true;
         }
-        return (substr($haystack, -$length) === $needle);
+        return (mb_substr($haystack, -$length) === $needle);
     }
 
     public function split($sql) {
@@ -90,13 +90,13 @@ class PHPSQLLexer {
 
         $splitLen = $this->splitters->getMaxLengthOfSplitter();
         $found = false;
-        $len = strlen($sql);
+        $len = mb_strlen($sql);
         $pos = 0;
 
         while ($pos < $len) {
 
             for ($i = $splitLen; $i > 0; $i--) {
-                $substr = substr($sql, $pos, $i);
+                $substr = mb_substr($sql, $pos, $i);
                 if ($this->splitters->isSplitter($substr)) {
 
                     if ($token !== "") {
@@ -278,8 +278,8 @@ class PHPSQLLexer {
 
                 // concat the previous tokens, till the token has been changed
                 $k = $i - 1;
-                $len = strlen($tokens[$i]);
-                while (($k >= 0) && ($len == strlen($tokens[$i]))) {
+                $len = mb_strlen($tokens[$i]);
+                while (($k >= 0) && ($len == mb_strlen($tokens[$i]))) {
                     if (!isset($tokens[$k])) { // FIXME: this can be wrong if we have schema . table . column
                         $k--;
                         continue;
@@ -294,8 +294,8 @@ class PHPSQLLexer {
 
                 // concat the next tokens, till the token has been changed
                 $k = $i + 1;
-                $len = strlen($tokens[$i]);
-                while (($k < $cnt) && ($len == strlen($tokens[$i]))) {
+                $len = mb_strlen($tokens[$i]);
+                while (($k < $cnt) && ($len == mb_strlen($tokens[$i]))) {
                     if (!isset($tokens[$k])) {
                         $k++;
                         continue;

@@ -60,16 +60,16 @@ class SetBuilder {
     public function build($parsed) {
         $sql = "";
         foreach ($parsed as $k => $v) {
-            $len = strlen($sql);
+            $len = mb_strlen($sql);
             $sql .= $this->buildSetExpression($v);
 
-            if ($len == strlen($sql)) {
+            if ($len == mb_strlen($sql)) {
                 throw new UnableToCreateSQLException('SET', $k, $v, 'expr_type');
             }
 
             $sql .= ",";
         }
-        return "SET " . substr($sql, 0, -1);
+        return "SET " . mb_substr($sql, 0, -1);
     }
 }
 ?>

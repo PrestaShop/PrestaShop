@@ -294,7 +294,7 @@ abstract class Controller extends ControllerCore
             $query_row = array(
                 'time' => $data['time'],
                 'query' => $data['query'],
-                'location' => str_replace('\\', '/', substr($data['stack'][0]['file'], strlen(_PS_ROOT_DIR_))).':'.$data['stack'][0]['line'],
+                'location' => str_replace('\\', '/', mb_substr($data['stack'][0]['file'], mb_strlen(_PS_ROOT_DIR_))).':'.$data['stack'][0]['line'],
                 'filesort' => false,
                 'rows' => 1,
                 'group_by' => false,
@@ -302,20 +302,20 @@ abstract class Controller extends ControllerCore
             );
             if (preg_match('/^\s*select\s+/i', $data['query'])) {
                 $explain = Db::getInstance()->executeS('explain '.$data['query']);
-                if (stristr($explain[0]['Extra'], 'filesort')) {
+                if (mb_stristr($explain[0]['Extra'], 'filesort')) {
                     $query_row['filesort'] = true;
                 }
                 foreach ($explain as $row) {
                     $query_row['rows'] *= $row['rows'];
                 }
-                if (stristr($data['query'], 'group by') && !preg_match('/(avg|count|min|max|group_concat|sum)\s*\(/i', $data['query'])) {
+                if (mb_stristr($data['query'], 'group by') && !preg_match('/(avg|count|min|max|group_concat|sum)\s*\(/i', $data['query'])) {
                     $query_row['group_by'] = true;
                 }
             }
 
             array_shift($data['stack']);
             foreach ($data['stack'] as $call) {
-                $query_row['stack'][] = str_replace('\\', '/', substr($call['file'], strlen(_PS_ROOT_DIR_))).':'.$call['line'];
+                $query_row['stack'][] = str_replace('\\', '/', mb_substr($call['file'], mb_strlen(_PS_ROOT_DIR_))).':'.$call['line'];
             }
 
             $this->array_queries[] = $query_row;
@@ -667,7 +667,7 @@ abstract class Controller extends ControllerCore
 			<tr><th>#</th><th>Filename</th></tr>';
         foreach (get_included_files() as $file) {
             $file = str_replace('\\', '/', str_replace(_PS_ROOT_DIR_, '', $file));
-            if (strpos($file, '/tools/profiling/') === 0) {
+            if (mb_strpos($file, '/tools/profiling/') === 0) {
                 continue;
             }
             echo '<tr><td>'.(++$i).'</td><td>'.$file.'</td></tr>';

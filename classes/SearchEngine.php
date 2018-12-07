@@ -61,7 +61,7 @@ class SearchEngineCore extends ObjectModel
         foreach ($result as $row) {
             $host = &$row['server'];
             $varname = &$row['getvar'];
-            if (strstr($parsedUrl['host'], $host)) {
+            if (mb_strstr($parsedUrl['host'], $host)) {
                 $array = array();
                 preg_match('/[^a-z]' . $varname . '=.+\&/U', $parsedUrl['query'], $array);
                 if (empty($array[0])) {
@@ -70,7 +70,7 @@ class SearchEngineCore extends ObjectModel
                 if (empty($array[0])) {
                     return false;
                 }
-                $str = urldecode(str_replace('+', ' ', ltrim(substr(rtrim($array[0], '&'), strlen($varname) + 1), '=')));
+                $str = urldecode(str_replace('+', ' ', ltrim(mb_substr(rtrim($array[0], '&'), mb_strlen($varname) + 1), '=')));
                 if (!Validate::isMessage($str)) {
                     return false;
                 }

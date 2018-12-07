@@ -175,7 +175,7 @@ class AddressFormatCore extends ObjectModel
             if ($totalNameUsed > 2) {
                 $this->_errorFormatList[] = $this->trans('This association has too many elements.', array(), 'Admin.Notifications.Error');
             } elseif ($totalNameUsed == 1) {
-                $associationName[0] = strtolower($associationName[0]);
+                $associationName[0] = mb_strtolower($associationName[0]);
                 if (in_array($associationName[0], self::$forbiddenPropertyList) ||
                     !$this->_checkValidateClassField('Address', $associationName[0], false)) {
                     $this->_errorFormatList[] = $this->trans('This name is not allowed.', array(), 'Admin.Notifications.Error') . ': ' .
@@ -186,7 +186,7 @@ class AddressFormatCore extends ObjectModel
                     $this->_errorFormatList[] = $this->trans('Syntax error with this pattern.', array(), 'Admin.Notifications.Error') . ': ' . $patternName;
                 } else {
                     $associationName[0] = ucfirst($associationName[0]);
-                    $associationName[1] = strtolower($associationName[1]);
+                    $associationName[1] = mb_strtolower($associationName[1]);
 
                     if (in_array($associationName[0], self::$forbiddenClassList)) {
                         $this->_errorFormatList[] = $this->trans('This name is not allowed.', array(), 'Admin.Notifications.Error') . ': ' .
@@ -195,7 +195,7 @@ class AddressFormatCore extends ObjectModel
                         // Check if the id field name exist in the Address class
                         // Don't check this attribute on Address (no sense)
                         if ($associationName[0] != 'Address') {
-                            $this->_checkValidateClassField('Address', 'id_' . strtolower($associationName[0]), true);
+                            $this->_checkValidateClassField('Address', 'id_' . mb_strtolower($associationName[0]), true);
                         }
 
                         // Check if the field name exist in the class write by the user
@@ -346,8 +346,8 @@ class AddressFormatCore extends ObjectModel
                                 // Check if the property exist in both classes
                                 if (($totalName == 2) && class_exists($associateName[0]) &&
                                     property_exists($associateName[0], $associateName[1]) &&
-                                    property_exists($address, 'id_' . strtolower($associateName[0]))) {
-                                    $idFieldName = 'id_' . strtolower($associateName[0]);
+                                    property_exists($address, 'id_' . mb_strtolower($associateName[0]))) {
+                                    $idFieldName = 'id_' . mb_strtolower($associateName[0]);
 
                                     if (!isset($temporyObject[$associateName[0]])) {
                                         $temporyObject[$associateName[0]] = new $associateName[0]($address->{$idFieldName});
@@ -482,8 +482,8 @@ class AddressFormatCore extends ObjectModel
             $publicProperties = $reflect->getProperties(ReflectionProperty::IS_PUBLIC);
             foreach ($publicProperties as $property) {
                 $propertyName = $property->getName();
-                if (preg_match('#id_\w#', $propertyName) && strlen($propertyName) > 3) {
-                    $nameObject = ucfirst(substr($propertyName, 3));
+                if (preg_match('#id_\w#', $propertyName) && mb_strlen($propertyName) > 3) {
+                    $nameObject = ucfirst(mb_substr($propertyName, 3));
                     if (!in_array($nameObject, self::$forbiddenClassList) &&
                             class_exists($nameObject)) {
                         $objectList[$nameObject] = new $nameObject();

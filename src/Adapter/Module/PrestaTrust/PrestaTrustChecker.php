@@ -223,11 +223,11 @@ class PrestaTrustChecker
 
         // Always ensure 0x prefix.
         // Address should be 20bytes=40 HEX-chars + prefix.
-        if (!self::hasHexPrefix($address) || strlen($address) !== 42) {
+        if (!self::hasHexPrefix($address) || mb_strlen($address) !== 42) {
             return false;
         }
 
-        if (!function_exists('ctype_xdigit') || !ctype_xdigit(substr($address, strlen('0x')))) {
+        if (!function_exists('ctype_xdigit') || !ctype_xdigit(mb_substr($address, mb_strlen('0x')))) {
             return false;
         }
 
@@ -245,7 +245,7 @@ class PrestaTrustChecker
     {
         $prefix = '0x';
 
-        return substr($str, 0, strlen($prefix)) === $prefix;
+        return mb_substr($str, 0, mb_strlen($prefix)) === $prefix;
     }
 
     /**

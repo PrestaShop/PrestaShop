@@ -408,11 +408,11 @@ class AdminControllerCore extends Controller
 
         $this->controller_type = 'admin';
         $this->controller_name = !empty($forceControllerName) ? $forceControllerName : get_class($this);
-        if (strpos($this->controller_name, 'ControllerOverride')) {
-            $this->controller_name = substr($this->controller_name, 0, -18);
+        if (mb_strpos($this->controller_name, 'ControllerOverride')) {
+            $this->controller_name = mb_substr($this->controller_name, 0, -18);
         }
-        if (strpos($this->controller_name, 'Controller')) {
-            $this->controller_name = substr($this->controller_name, 0, -10);
+        if (mb_strpos($this->controller_name, 'Controller')) {
+            $this->controller_name = mb_substr($this->controller_name, 0, -10);
         }
         parent::__construct();
 
@@ -512,9 +512,9 @@ class AdminControllerCore extends Controller
         }
 
         //$this->base_template_folder = _PS_BO_ALL_THEMES_DIR_.$this->bo_theme.'/template';
-        $this->override_folder = Tools::toUnderscoreCase(substr($this->controller_name, 5)) . '/';
+        $this->override_folder = Tools::toUnderscoreCase(mb_substr($this->controller_name, 5)) . '/';
         // Get the name of the folder containing the custom tpl files
-        $this->tpl_folder = Tools::toUnderscoreCase(substr($this->controller_name, 5)) . '/';
+        $this->tpl_folder = Tools::toUnderscoreCase(mb_substr($this->controller_name, 5)) . '/';
 
         $this->initShopContext();
 
@@ -815,26 +815,26 @@ class AdminControllerCore extends Controller
             foreach ($_POST as $key => $value) {
                 if ($value === '') {
                     unset($this->context->cookie->{$prefix . $key});
-                } elseif (stripos($key, $this->list_id . 'Filter_') === 0) {
+                } elseif (mb_stripos($key, $this->list_id . 'Filter_') === 0) {
                     $this->context->cookie->{$prefix . $key} = !is_array($value) ? $value : json_encode($value);
-                } elseif (stripos($key, 'submitFilter') === 0) {
+                } elseif (mb_stripos($key, 'submitFilter') === 0) {
                     $this->context->cookie->$key = !is_array($value) ? $value : json_encode($value);
                 }
             }
 
             foreach ($_GET as $key => $value) {
-                if (stripos($key, $this->list_id . 'Filter_') === 0) {
+                if (mb_stripos($key, $this->list_id . 'Filter_') === 0) {
                     $this->context->cookie->{$prefix . $key} = !is_array($value) ? $value : json_encode($value);
-                } elseif (stripos($key, 'submitFilter') === 0) {
+                } elseif (mb_stripos($key, 'submitFilter') === 0) {
                     $this->context->cookie->$key = !is_array($value) ? $value : json_encode($value);
                 }
-                if (stripos($key, $this->list_id . 'Orderby') === 0 && Validate::isOrderBy($value)) {
+                if (mb_stripos($key, $this->list_id . 'Orderby') === 0 && Validate::isOrderBy($value)) {
                     if ($value === '' || $value == $this->_defaultOrderBy) {
                         unset($this->context->cookie->{$prefix . $key});
                     } else {
                         $this->context->cookie->{$prefix . $key} = $value;
                     }
-                } elseif (stripos($key, $this->list_id . 'Orderway') === 0 && Validate::isOrderWay($value)) {
+                } elseif (mb_stripos($key, $this->list_id . 'Orderway') === 0 && Validate::isOrderWay($value)) {
                     if ($value === '' || $value == $this->_defaultOrderWay) {
                         unset($this->context->cookie->{$prefix . $key});
                     } else {
@@ -1026,7 +1026,7 @@ class AdminControllerCore extends Controller
                 unset($this->fields_list[$key]);
             } else {
                 if ('ID' === $datas['title']) {
-                    $headers[] = strtolower(Tools::htmlentitiesDecodeUTF8($datas['title']));
+                    $headers[] = mb_strtolower(Tools::htmlentitiesDecodeUTF8($datas['title']));
                 } else {
                     $headers[] = Tools::htmlentitiesDecodeUTF8($datas['title']);
                 }
@@ -1309,7 +1309,7 @@ class AdminControllerCore extends Controller
             if ($object->toggleStatus()) {
                 $matches = array();
                 if (preg_match('/[\?|&]controller=([^&]*)/', (string) $_SERVER['HTTP_REFERER'], $matches) !== false
-                    && strtolower($matches[1]) != strtolower(preg_replace('/controller/i', '', get_class($this)))) {
+                    && mb_strtolower($matches[1]) != mb_strtolower(preg_replace('/controller/i', '', get_class($this)))) {
                     $this->redirect_after = preg_replace('/[\?|&]conf=([^&]*)/i', '', (string) $_SERVER['HTTP_REFERER']);
                 } else {
                     $this->redirect_after = self::$currentIndex . '&token=' . $this->token;
@@ -1368,7 +1368,7 @@ class AdminControllerCore extends Controller
         $filters = $this->context->cookie->getFamily($prefix . $list_id . 'Filter_');
         foreach ($filters as $cookie_key => $filter) {
             if (strncmp($cookie_key, $prefix . $list_id . 'Filter_', 7 + Tools::strlen($prefix . $list_id)) == 0) {
-                $key = substr($cookie_key, 7 + Tools::strlen($prefix . $list_id));
+                $key = mb_substr($cookie_key, 7 + Tools::strlen($prefix . $list_id));
                 if (is_array($this->fields_list) && array_key_exists($key, $this->fields_list)) {
                     $this->context->cookie->$cookie_key = null;
                 }
@@ -1412,8 +1412,8 @@ class AdminControllerCore extends Controller
             foreach ($fields as $field => $values) {
                 if (isset($values['type']) && $values['type'] == 'selectLang') {
                     foreach ($languages as $lang) {
-                        if (Tools::getValue($field . '_' . strtoupper($lang['iso_code']))) {
-                            $fields[$field . '_' . strtoupper($lang['iso_code'])] = array(
+                        if (Tools::getValue($field . '_' . mb_strtoupper($lang['iso_code']))) {
+                            $fields[$field . '_' . mb_strtoupper($lang['iso_code'])] = array(
                                 'type' => 'select',
                                 'cast' => 'strval',
                                 'identifier' => 'mode',
@@ -1695,10 +1695,10 @@ class AdminControllerCore extends Controller
             // ${1} in the replacement string of the regexp is required,
             // because the token may begin with a number and mix up with it (e.g. $17)
             $url = preg_replace('/([&?]token=)[^&]*(&.*)?$/', '${1}' . $this->token . '$2', $_SERVER['REQUEST_URI']);
-            if (false === strpos($url, '?token=') && false === strpos($url, '&token=')) {
+            if (false === mb_strpos($url, '?token=') && false === mb_strpos($url, '&token=')) {
                 $url .= '&token=' . $this->token;
             }
-            if (strpos($url, '?') === false) {
+            if (mb_strpos($url, '?') === false) {
                 $url = str_replace('&token', '?controller=AdminDashboard&token', $url);
             }
 
@@ -2047,7 +2047,7 @@ class AdminControllerCore extends Controller
      */
     public function addRowAction($action)
     {
-        $action = strtolower($action);
+        $action = mb_strtolower($action);
         $this->actions[] = $action;
     }
 
@@ -2059,7 +2059,7 @@ class AdminControllerCore extends Controller
      */
     public function addRowActionSkipList($action, $list)
     {
-        $action = strtolower($action);
+        $action = mb_strtolower($action);
         $list = (array) $list;
 
         if (array_key_exists($action, $this->list_skip_actions)) {
@@ -2281,7 +2281,7 @@ class AdminControllerCore extends Controller
         $this->context->smarty->assign(array(
             'ps_version' => _PS_VERSION_,
             'timer_start' => $this->timer_start,
-            'iso_is_fr' => strtoupper($this->context->language->iso_code) == 'FR',
+            'iso_is_fr' => mb_strtoupper($this->context->language->iso_code) == 'FR',
             'modals' => $this->renderModal(),
         ));
     }
@@ -2300,7 +2300,7 @@ class AdminControllerCore extends Controller
         }
 
         // Iso needed to generate Addons login
-        $iso_code_caps = strtoupper($this->context->language->iso_code);
+        $iso_code_caps = mb_strtoupper($this->context->language->iso_code);
 
         $this->context->smarty->assign(array(
             'img_base_path' => __PS_BASE_URI__ . basename(_PS_ADMIN_DIR_) . '/',
@@ -2724,10 +2724,10 @@ class AdminControllerCore extends Controller
         }
 
         if ($class === null || $class == 'AdminTab') {
-            $class = substr(get_class($this), 0, -10);
-        } elseif (strtolower(substr($class, -10)) == 'controller') {
+            $class = mb_substr(get_class($this), 0, -10);
+        } elseif (mb_strtolower(mb_substr($class, -10)) == 'controller') {
             /* classname has changed, from AdminXXX to AdminXXXController, so we remove 10 characters and we keep same keys */
-            $class = substr($class, 0, -10);
+            $class = mb_substr($class, 0, -10);
         }
 
         return Translate::getAdminTranslation($string, $class, $addslashes, $htmlentities);
@@ -4696,28 +4696,28 @@ class AdminControllerCore extends Controller
     {
         if (
             Access::isGranted(
-                'ROLE_MOD_TAB_' . strtoupper($this->controller_name) . '_DELETE',
+                'ROLE_MOD_TAB_' . mb_strtoupper($this->controller_name) . '_DELETE',
                 $this->context->employee->id_profile
             )
         ) {
             return AdminController::LEVEL_DELETE;
         } elseif (
             Access::isGranted(
-                'ROLE_MOD_TAB_' . strtoupper($this->controller_name) . '_CREATE',
+                'ROLE_MOD_TAB_' . mb_strtoupper($this->controller_name) . '_CREATE',
                 $this->context->employee->id_profile
             )
         ) {
             return AdminController::LEVEL_ADD;
         } elseif (
             Access::isGranted(
-                'ROLE_MOD_TAB_' . strtoupper($this->controller_name) . '_UPDATE',
+                'ROLE_MOD_TAB_' . mb_strtoupper($this->controller_name) . '_UPDATE',
                 $this->context->employee->id_profile
             )
         ) {
             return AdminController::LEVEL_EDIT;
         } elseif (
             Access::isGranted(
-                'ROLE_MOD_TAB_' . strtoupper($this->controller_name) . '_READ',
+                'ROLE_MOD_TAB_' . mb_strtoupper($this->controller_name) . '_READ',
                 $this->context->employee->id_profile
             )
         ) {

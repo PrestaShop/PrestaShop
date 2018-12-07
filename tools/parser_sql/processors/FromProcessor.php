@@ -78,7 +78,7 @@ class FromProcessor extends AbstractProcessor {
         }
 
         // there is an expression, we have to parse it
-        if (substr(trim($parseInfo['table']), 0, 1) == '(') {
+        if (mb_substr(trim($parseInfo['table']), 0, 1) == '(') {
             $parseInfo['expression'] = $this->removeParenthesisFromStart($parseInfo['table']);
 
             if (preg_match("/^\\s*select/i", $parseInfo['expression'])) {
@@ -113,7 +113,7 @@ class FromProcessor extends AbstractProcessor {
         $i = 0;
 
         foreach ($tokens as $token) {
-            $upper = strtoupper(trim($token));
+            $upper = mb_strtoupper(trim($token));
 
             if ($skip_next && $token !== "") {
                 $parseInfo['token_count']++;

@@ -74,7 +74,7 @@ class SelectExpressionProcessor extends AbstractProcessor {
 
         for ($i = 0; $i < $token_count; ++$i) {
             $token = $tokens[$i];
-            $upper = strtoupper($token);
+            $upper = mb_strtoupper($token);
 
             if ($upper === 'AS') {
                 $alias = array('as' => true, "name" => "", "base_expr" => $token);

@@ -173,7 +173,7 @@ class HelperOptionsCore extends Helper
                 }
 
                 // Fill values for all languages for all lang fields
-                if (substr($field['type'], -4) == 'Lang') {
+                if (mb_substr($field['type'], -4) == 'Lang') {
                     $field['value'] = array();
                     foreach ($languages as $language) {
                         if ($field['type'] == 'textLang') {
@@ -188,7 +188,7 @@ class HelperOptionsCore extends Helper
                         } else {
                             $field['languages'][$language['id_lang']] = '';
                         }
-                        $field['value'][$language['id_lang']] = $this->getOptionValue($key . '_' . strtoupper($language['iso_code']), $field);
+                        $field['value'][$language['id_lang']] = $this->getOptionValue($key . '_' . mb_strtoupper($language['iso_code']), $field);
                     }
                 }
 

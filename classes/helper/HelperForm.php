@@ -95,7 +95,7 @@ class HelperFormCore extends Helper
                         case 'select':
                             $field_name = (string) $params['name'];
                             // If multiple select check that 'name' field is suffixed with '[]'
-                            if (isset($params['multiple']) && $params['multiple'] && stripos($field_name, '[]') === false) {
+                            if (isset($params['multiple']) && $params['multiple'] && mb_stripos($field_name, '[]') === false) {
                                 $params['name'] .= '[]';
                             }
                             break;

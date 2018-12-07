@@ -176,7 +176,7 @@ class UpdateSchemaCommand extends ContainerAwareCommand
                         $oldDefaultValue = $results[0]['Default'];
                         $extra = $results[0]['Extra'];
                         if ($oldDefaultValue !== null
-                            && strpos($oldDefaultValue, 'CURRENT_TIMESTAMP') === false) {
+                            && mb_strpos($oldDefaultValue, 'CURRENT_TIMESTAMP') === false) {
                             $oldDefaultValue = "'" . $oldDefaultValue . "'";
                         }
                         if ($oldDefaultValue === null) {
@@ -185,9 +185,9 @@ class UpdateSchemaCommand extends ContainerAwareCommand
                         // set the old default value
                         if (!($results[0]['Null'] == 'NO' && $results[0]['Default'] === null)
                             && !($oldDefaultValue === 'NULL'
-                                && strpos($matches[0][$matchKey], 'NOT NULL') !== false)
-                            && (strpos($matches[0][$matchKey], 'BLOB') === false)
-                            && (strpos($matches[0][$matchKey], 'TEXT') === false)
+                                && mb_strpos($matches[0][$matchKey], 'NOT NULL') !== false)
+                            && (mb_strpos($matches[0][$matchKey], 'BLOB') === false)
+                            && (mb_strpos($matches[0][$matchKey], 'TEXT') === false)
                         ) {
                             if (preg_match('/DEFAULT/', $matches[0][$matchKey])) {
                                 $matches[0][$matchKey] =

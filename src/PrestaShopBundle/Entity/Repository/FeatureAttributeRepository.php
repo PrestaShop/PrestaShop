@@ -210,7 +210,7 @@ class FeatureAttributeRepository
             $row['values'] = explode(',', $row['values']);
 
             $row['values'] = array_map(function ($value) {
-                if (false === strpos($value, ':')) {
+                if (false === mb_strpos($value, ':')) {
                     return $value;
                 }
 

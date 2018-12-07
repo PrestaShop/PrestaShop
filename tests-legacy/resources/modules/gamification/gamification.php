@@ -284,7 +284,7 @@ class gamification extends Module
             $this->refreshDatas($default_iso_lang);
         }
 
-        $cache_file = $this->cache_data.'data_'.strtoupper($iso_lang).'_'.strtoupper($iso_currency).'_'.strtoupper($iso_country).'.json';
+        $cache_file = $this->cache_data.'data_'.mb_strtoupper($iso_lang).'_'.mb_strtoupper($iso_currency).'_'.mb_strtoupper($iso_country).'.json';
         if (!$this->isFresh($cache_file, 86400)) {
             if ($this->getData($iso_lang)) {
                 $data = Tools::jsonDecode(Tools::file_get_contents($cache_file));
@@ -333,11 +333,11 @@ class gamification extends Module
         }
         $iso_country = $this->context->country->iso_code;
         $iso_currency = $this->context->currency->iso_code;
-        $file_name = 'data_'.strtoupper($iso_lang).'_'.strtoupper($iso_currency).'_'.strtoupper($iso_country).'.json';
+        $file_name = 'data_'.mb_strtoupper($iso_lang).'_'.mb_strtoupper($iso_currency).'_'.mb_strtoupper($iso_country).'.json';
         $versioning = '?v='.$this->version.'&ps_version='._PS_VERSION_;
         $data = Tools::file_get_contents($this->url_data.$file_name.$versioning);
 
-        return (bool)file_put_contents($this->cache_data.'data_'.strtoupper($iso_lang).'_'.strtoupper($iso_currency).'_'.strtoupper($iso_country).'.json', $data);
+        return (bool)file_put_contents($this->cache_data.'data_'.mb_strtoupper($iso_lang).'_'.mb_strtoupper($iso_currency).'_'.mb_strtoupper($iso_country).'.json', $data);
     }
 
     public function processCleanAdvices()

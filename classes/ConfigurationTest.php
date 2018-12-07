@@ -141,13 +141,13 @@ class ConfigurationTestCore
 
     public static function test_phpversion()
     {
-        return version_compare(substr(phpversion(), 0, 5), '5.6.0', '>=');
+        return version_compare(mb_substr(phpversion(), 0, 5), '5.6.0', '>=');
     }
 
     public static function test_apache_mod_rewrite()
     {
         if (isset($_SERVER['SERVER_SOFTWARE'])
-            && strpos(strtolower($_SERVER['SERVER_SOFTWARE']), 'apache') === false || !function_exists('apache_get_modules')) {
+            && mb_strpos(mb_strtolower($_SERVER['SERVER_SOFTWARE']), 'apache') === false || !function_exists('apache_get_modules')) {
             return true;
         }
 
@@ -156,7 +156,7 @@ class ConfigurationTestCore
 
     public static function test_new_phpversion()
     {
-        return version_compare(substr(phpversion(), 0, 5), '5.6.0', '>=');
+        return version_compare(mb_substr(phpversion(), 0, 5), '5.6.0', '>=');
     }
 
     public static function test_mysql_support()

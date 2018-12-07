@@ -158,7 +158,7 @@ class MediaCore
     {
         Media::$current_css_file = $fileUri;
 
-        if (strlen($cssContent) > 0) {
+        if (mb_strlen($cssContent) > 0) {
             $cssContent = Minify_CSSmin::minify($cssContent);
             $limit = Media::getBackTrackLimit();
             $cssContent = preg_replace_callback(Media::$pattern_callback, array('Media', 'replaceByAbsoluteURL'), $cssContent, $limit);
@@ -679,11 +679,11 @@ class MediaCore
         }
 
         // rebuild the original js_files array
-        if (strpos($compressedJsPath, _PS_ROOT_DIR_) !== false) {
+        if (mb_strpos($compressedJsPath, _PS_ROOT_DIR_) !== false) {
             $url = str_replace(_PS_ROOT_DIR_ . '/', __PS_BASE_URI__, $compressedJsPath);
         }
 
-        if (strpos($compressedJsPath, _PS_CORE_DIR_) !== false) {
+        if (mb_strpos($compressedJsPath, _PS_CORE_DIR_) !== false) {
             $url = str_replace(_PS_CORE_DIR_ . '/', __PS_BASE_URI__, $compressedJsPath);
         }
 
@@ -783,8 +783,8 @@ class MediaCore
             foreach ($scripts as $script) {
                 /** @var DOMElement $script */
                 if ($src = $script->getAttribute('src')) {
-                    if (substr($src, 0, 2) == '//') {
-                        $src = Tools::getCurrentUrlProtocolPrefix() . substr($src, 2);
+                    if (mb_substr($src, 0, 2) == '//') {
+                        $src = Tools::getCurrentUrlProtocolPrefix() . mb_substr($src, 2);
                     }
 
                     $patterns = array(
@@ -854,7 +854,7 @@ class MediaCore
         /* This is an external script, if it already belongs to js_files then remove it from content */
         preg_match('/src\s*=\s*["\']?([^"\']*)[^>]/ims', $original, $results);
         if (array_key_exists(1, $results)) {
-            if (substr($results[1], 0, 2) == '//') {
+            if (mb_substr($results[1], 0, 2) == '//') {
                 $protocolLink = Tools::getCurrentUrlProtocolPrefix();
                 $results[1] = $protocolLink . ltrim($results[1], '/');
             }

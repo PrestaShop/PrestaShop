@@ -385,9 +385,9 @@ class AdminModuleDataProvider implements ModuleInterface
                         // Instead of looping on the whole module list, we use $module_ids which can already be reduced
                         // thanks to the previous array_intersect(...)
                         foreach ($modules as $key => $module) {
-                            if (strpos($module->displayName, $keyword) !== false
-                                || strpos($module->name, $keyword) !== false
-                                || strpos($module->description, $keyword) !== false) {
+                            if (mb_strpos($module->displayName, $keyword) !== false
+                                || mb_strpos($module->name, $keyword) !== false
+                                || mb_strpos($module->description, $keyword) !== false) {
                                 $search_result[] = $key;
                             }
                         }

@@ -240,7 +240,7 @@ class AdminProductsControllerCore extends AdminController
         }
 
         if ($orderByPriceFinal == 'price_final') {
-            if (strtolower($orderWayPriceFinal) == 'desc') {
+            if (mb_strtolower($orderWayPriceFinal) == 'desc') {
                 uasort($this->_list, 'cmpPriceDesc');
             } else {
                 uasort($this->_list, 'cmpPriceAsc');
@@ -2391,8 +2391,8 @@ class AdminProductsControllerCore extends AdminController
 
         if (!$product->active) {
             $admin_dir = dirname($_SERVER['PHP_SELF']);
-            $admin_dir = substr($admin_dir, strrpos($admin_dir, '/') + 1);
-            $preview_url .= ((strpos($preview_url, '?') === false) ? '?' : '&') . 'adtoken=' . $this->token . '&ad=' . $admin_dir . '&id_employee=' . (int) $this->context->employee->id;
+            $admin_dir = mb_substr($admin_dir, mb_strrpos($admin_dir, '/') + 1);
+            $preview_url .= ((mb_strpos($preview_url, '?') === false) ? '?' : '&') . 'adtoken=' . $this->token . '&ad=' . $admin_dir . '&id_employee=' . (int) $this->context->employee->id;
         }
 
         return $preview_url;

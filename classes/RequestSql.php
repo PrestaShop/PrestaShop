@@ -511,7 +511,7 @@ class RequestSqlCore extends ObjectModel
                     }
                 }
             } elseif ($attribut['expr_type'] == 'operator') {
-                if (!in_array(strtoupper($attribut['base_expr']), $this->tested['operator'])) {
+                if (!in_array(mb_strtoupper($attribut['base_expr']), $this->tested['operator'])) {
                     $this->error_sql['checkedWhere']['operator'] = array($attribut['base_expr']);
 
                     return false;
@@ -560,7 +560,7 @@ class RequestSqlCore extends ObjectModel
             }
 
             if ($attribut['expr_type'] == 'operator') {
-                if (!in_array(strtoupper($attribut['base_expr']), $this->tested['operator'])) {
+                if (!in_array(mb_strtoupper($attribut['base_expr']), $this->tested['operator'])) {
                     $this->error_sql['checkedHaving']['operator'] = array($attribut['base_expr']);
 
                     return false;

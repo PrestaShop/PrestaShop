@@ -96,8 +96,8 @@ class QuickAccessCore extends ObjectModel
             } else {
                 preg_match('/controller=(.+)(&.+)?$/', $quick['link'], $admin_tab);
                 if (isset($admin_tab[1])) {
-                    if (strpos($admin_tab[1], '&')) {
-                        $admin_tab[1] = substr($admin_tab[1], 0, strpos($admin_tab[1], '&'));
+                    if (mb_strpos($admin_tab[1], '&')) {
+                        $admin_tab[1] = mb_substr($admin_tab[1], 0, mb_strpos($admin_tab[1], '&'));
                     }
                     $quick_access[$index]['target'] = $admin_tab[1];
 
@@ -106,8 +106,8 @@ class QuickAccessCore extends ObjectModel
                 $quickAccess[$index]['link'] = Context::getContext()->link->getBaseLink() . basename(_PS_ADMIN_DIR_) . '/' . $quick['link'];
             }
 
-            if (false === strpos($quickAccess[$index]['link'], 'token')) {
-                $separator = strpos($quickAccess[$index]['link'], '?') ? '&' : '?';
+            if (false === mb_strpos($quickAccess[$index]['link'], 'token')) {
+                $separator = mb_strpos($quickAccess[$index]['link'], '?') ? '&' : '?';
                 $quickAccess[$index]['link'] .= $separator . 'token=' . Tools::getAdminToken($tokenString);
             }
         }

@@ -124,7 +124,7 @@ class LanguageCore extends ObjectModel
      */
     public function getFields()
     {
-        $this->iso_code = strtolower($this->iso_code);
+        $this->iso_code = mb_strtolower($this->iso_code);
         if (empty($this->language_code)) {
             $this->language_code = $this->iso_code;
         }
@@ -722,7 +722,7 @@ class LanguageCore extends ObjectModel
 
         $key = 'Language::getIdByIso_' . $iso_code;
         if ($no_cache || !Cache::isStored($key)) {
-            $id_lang = Db::getInstance()->getValue('SELECT `id_lang` FROM `' . _DB_PREFIX_ . 'lang` WHERE `iso_code` = \'' . pSQL(strtolower($iso_code)) . '\'');
+            $id_lang = Db::getInstance()->getValue('SELECT `id_lang` FROM `' . _DB_PREFIX_ . 'lang` WHERE `iso_code` = \'' . pSQL(mb_strtolower($iso_code)) . '\'');
 
             Cache::store($key, $id_lang);
 
@@ -797,7 +797,7 @@ class LanguageCore extends ObjectModel
             die(Context::getContext()->getTranslator()->trans('Fatal error: ISO code is not correct', array(), 'Admin.International.Notification') . ' ' . Tools::safeOutput($iso_code));
         }
 
-        return Db::getInstance()->getValue('SELECT `language_code` FROM `' . _DB_PREFIX_ . 'lang` WHERE `iso_code` = \'' . pSQL(strtolower($iso_code)) . '\'');
+        return Db::getInstance()->getValue('SELECT `language_code` FROM `' . _DB_PREFIX_ . 'lang` WHERE `iso_code` = \'' . pSQL(mb_strtolower($iso_code)) . '\'');
     }
 
     public static function getLanguageByIETFCode($code)
@@ -1231,7 +1231,7 @@ class LanguageCore extends ObjectModel
             $files_list = Language::getLanguagePackListContent($lang['iso_code'], $gz);
             foreach ($modules_list as $module_name) {
                 foreach ($files_list as $i => $file) {
-                    if (strpos($file['filename'], 'modules/' . $module_name . '/') !== 0) {
+                    if (mb_strpos($file['filename'], 'modules/' . $module_name . '/') !== 0) {
                         unset($files_list[$i]);
                     }
                 }

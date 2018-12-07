@@ -110,16 +110,16 @@ class PHPSQLCreator {
         $rename = $parsed['RENAME'];
         $sql = "";
         foreach ($rename as $k => $v) {
-            $len = strlen($sql);
+            $len = mb_strlen($sql);
             $sql .= $this->processSourceAndDestTable($v);
 
-            if ($len == strlen($sql)) {
+            if ($len == mb_strlen($sql)) {
                 throw new UnableToCreateSQLException('RENAME', $k, $v, 'expr_type');
             }
 
             $sql .= ",";
         }
-        $sql = substr($sql, 0, -1);
+        $sql = mb_substr($sql, 0, -1);
         return "RENAME TABLE " . $sql;
     }
 

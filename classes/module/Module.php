@@ -262,19 +262,19 @@ abstract class ModuleCore implements ModuleInterface
             $this->ps_versions_compliancy['max'] = _PS_VERSION_;
         }
 
-        if (strlen($this->ps_versions_compliancy['min']) == 3) {
+        if (mb_strlen($this->ps_versions_compliancy['min']) == 3) {
             $this->ps_versions_compliancy['min'] .= '.0.0';
         }
 
-        if (strlen($this->ps_versions_compliancy['min']) == 5) {
+        if (mb_strlen($this->ps_versions_compliancy['min']) == 5) {
             $this->ps_versions_compliancy['min'] .= '.0';
         }
 
-        if (strlen($this->ps_versions_compliancy['max']) == 5) {
+        if (mb_strlen($this->ps_versions_compliancy['max']) == 5) {
             $this->ps_versions_compliancy['max'] .= '.999';
         }
 
-        if (strlen($this->ps_versions_compliancy['max']) == 3) {
+        if (mb_strlen($this->ps_versions_compliancy['max']) == 3) {
             $this->ps_versions_compliancy['max'] .= '.999.999';
         }
 
@@ -396,7 +396,7 @@ abstract class ModuleCore implements ModuleInterface
 
         // Permissions management
         foreach (array('CREATE', 'READ', 'UPDATE', 'DELETE') as $action) {
-            $slug = 'ROLE_MOD_MODULE_' . strtoupper($this->name) . '_' . $action;
+            $slug = 'ROLE_MOD_MODULE_' . mb_strtoupper($this->name) . '_' . $action;
 
             Db::getInstance()->execute(
                 'INSERT INTO `' . _DB_PREFIX_ . 'authorization_role` (`slug`) VALUES ("' . $slug . '")'
@@ -707,7 +707,7 @@ abstract class ModuleCore implements ModuleInterface
         $this->disable(true);
 
         // Delete permissions module access
-        $roles = Db::getInstance()->executeS('SELECT `id_authorization_role` FROM `' . _DB_PREFIX_ . 'authorization_role` WHERE `slug` LIKE "ROLE_MOD_MODULE_' . strtoupper($this->name) . '_%"');
+        $roles = Db::getInstance()->executeS('SELECT `id_authorization_role` FROM `' . _DB_PREFIX_ . 'authorization_role` WHERE `slug` LIKE "ROLE_MOD_MODULE_' . mb_strtoupper($this->name) . '_%"');
 
         if (!empty($roles)) {
             foreach ($roles as $role) {
@@ -1069,13 +1069,13 @@ abstract class ModuleCore implements ModuleInterface
             $reflection_class = new ReflectionClass($current_class);
             $file_path = realpath($reflection_class->getFileName());
             $realpath_module_dir = realpath(_PS_MODULE_DIR_);
-            if (substr(realpath($file_path), 0, strlen($realpath_module_dir)) == $realpath_module_dir) {
+            if (mb_substr(realpath($file_path), 0, mb_strlen($realpath_module_dir)) == $realpath_module_dir) {
                 // For controllers in module/controllers path
                 if (basename(dirname(dirname($file_path))) == 'controllers') {
                     self::$classInModule[$current_class] = basename(dirname(dirname(dirname($file_path))));
                 } else {
                     // For old AdminTab controllers
-                    self::$classInModule[$current_class] = substr(dirname($file_path), strlen($realpath_module_dir) + 1);
+                    self::$classInModule[$current_class] = mb_substr(dirname($file_path), mb_strlen($realpath_module_dir) + 1);
                 }
 
                 $file = _PS_MODULE_DIR_ . self::$classInModule[$current_class] . '/' . Context::getContext()->language->iso_code . '.php';
@@ -1181,7 +1181,7 @@ abstract class ModuleCore implements ModuleInterface
 
     public static function getModuleName($module)
     {
-        $iso = substr(Context::getContext()->language->iso_code, 0, 2);
+        $iso = mb_substr(Context::getContext()->language->iso_code, 0, 2);
 
         // Config file
         $config_file = _PS_MODULE_DIR_ . $module . '/config_' . $iso . '.xml';
@@ -1272,7 +1272,7 @@ abstract class ModuleCore implements ModuleInterface
                 break;
             }
 
-            $iso = substr(Context::getContext()->language->iso_code, 0, 2);
+            $iso = mb_substr(Context::getContext()->language->iso_code, 0, 2);
 
             // Check if config.xml module file exists and if it's not outdated
 
@@ -1353,7 +1353,7 @@ abstract class ModuleCore implements ModuleInterface
                         $parser->parse($file);
                         require_once $file_path;
                     } catch (PhpParser\Error $e) {
-                        $errors[] = Context::getContext()->getTranslator()->trans('%1$s (parse error in %2$s)', array($module, substr($file_path, strlen(_PS_ROOT_DIR_))), 'Admin.Modules.Notification');
+                        $errors[] = Context::getContext()->getTranslator()->trans('%1$s (parse error in %2$s)', array($module, mb_substr($file_path, mb_strlen(_PS_ROOT_DIR_))), 'Admin.Modules.Notification');
                     }
 
                     preg_match('/\n[\s\t]*?namespace\s.*?;/', $file, $ns);
@@ -1420,7 +1420,7 @@ abstract class ModuleCore implements ModuleInterface
                     } catch (Exception $e) {
                     }
                 } else {
-                    $module_errors[] = Context::getContext()->getTranslator()->trans('%1$s (class missing in %2$s)', array($module, substr($file_path, strlen(_PS_ROOT_DIR_))), 'Admin.Modules.Notification');
+                    $module_errors[] = Context::getContext()->getTranslator()->trans('%1$s (class missing in %2$s)', array($module, mb_substr($file_path, mb_strlen(_PS_ROOT_DIR_))), 'Admin.Modules.Notification');
                 }
             }
             $errors = array_merge($errors, $module_errors);
@@ -1732,7 +1732,7 @@ abstract class ModuleCore implements ModuleInterface
 
         if ($trusted_modules_list_content === null) {
             $trusted_modules_list_content = Tools::file_get_contents(_PS_ROOT_DIR_ . self::CACHE_FILE_TRUSTED_MODULES_LIST);
-            if (strpos($trusted_modules_list_content, $context->shop->theme->getName()) === false) {
+            if (mb_strpos($trusted_modules_list_content, $context->shop->theme->getName()) === false) {
                 self::generateTrustedXml();
             }
         }
@@ -1752,17 +1752,17 @@ abstract class ModuleCore implements ModuleInterface
 
         // If the module is trusted, which includes both partner modules and modules bought on Addons
 
-        if (stripos($trusted_modules_list_content, $module_name) !== false) {
+        if (mb_stripos($trusted_modules_list_content, $module_name) !== false) {
             // If the module is not a partner, then return 1 (which means the module is "trusted")
-            if (stripos($modules_list_content, '<module name="' . $module_name . '"/>') == false) {
+            if (mb_stripos($modules_list_content, '<module name="' . $module_name . '"/>') == false) {
                 return 1;
-            } elseif (stripos($default_country_modules_list_content, '<name><![CDATA[' . $module_name . ']]></name>') !== false) {
+            } elseif (mb_stripos($default_country_modules_list_content, '<name><![CDATA[' . $module_name . ']]></name>') !== false) {
                 // The module is a parter. If the module is in the file that contains module for this country then return 1 (which means the module is "trusted")
                 return 1;
             }
             // The module seems to be trusted, but it does not seem to be dedicated to this country
             return 2;
-        } elseif (stripos($untrusted_modules_list_content, $module_name) !== false) {
+        } elseif (mb_stripos($untrusted_modules_list_content, $module_name) !== false) {
             // If the module is already in the untrusted list, then return 0 (untrusted)
             return 0;
         } else {
@@ -1891,7 +1891,7 @@ abstract class ModuleCore implements ModuleInterface
             );
             $xml = Tools::addonsRequest('check_module', $params);
 
-            return (bool) (strpos($xml, 'success') !== false);
+            return (bool) (mb_strpos($xml, 'success') !== false);
         }
     }
 
@@ -2423,7 +2423,7 @@ abstract class ModuleCore implements ModuleInterface
     protected function getCurrentSubTemplate($template, $cache_id = null, $compile_id = null)
     {
         if (!isset($this->current_subtemplate[$template . '_' . $cache_id . '_' . $compile_id])) {
-            if (false === strpos($template, 'module:') &&
+            if (false === mb_strpos($template, 'module:') &&
                 !file_exists(_PS_ROOT_DIR_ . '/' . $template) &&
                 !file_exists($template)
             ) {
@@ -2478,7 +2478,7 @@ abstract class ModuleCore implements ModuleInterface
     public function isCached($template, $cache_id = null, $compile_id = null)
     {
         Tools::enableCache();
-        if (false === strpos($template, 'module:') && !file_exists(_PS_ROOT_DIR_ . '/' . $template)) {
+        if (false === mb_strpos($template, 'module:') && !file_exists(_PS_ROOT_DIR_ . '/' . $template)) {
             $template = $this->getTemplatePath($template);
         }
 
@@ -2572,7 +2572,7 @@ abstract class ModuleCore implements ModuleInterface
     <need_instance>' . (int) $this->need_instance . '</need_instance>' . (isset($this->limited_countries) ? "\n\t" . '<limited_countries>' . (count($this->limited_countries) == 1 ? $this->limited_countries[0] : '') . '</limited_countries>' : '') . '
 </module>';
         if (is_writable(_PS_MODULE_DIR_ . $this->name . '/')) {
-            $iso = substr(Context::getContext()->language->iso_code, 0, 2);
+            $iso = mb_substr(Context::getContext()->language->iso_code, 0, 2);
             $file = _PS_MODULE_DIR_ . $this->name . '/' . ($iso == 'en' ? 'config.xml' : 'config_' . $iso . '.xml');
             if (!@file_put_contents($file, $xml)) {
                 if (!is_writable($file)) {
@@ -2663,7 +2663,7 @@ abstract class ModuleCore implements ModuleInterface
                 $matches
             );
 
-            $m = Module::getInstanceByName(strtolower($matches['moduleName']));
+            $m = Module::getInstanceByName(mb_strtolower($matches['moduleName']));
 
             // the following condition handles invalid modules
             if ($m && !isset(self::$cache_lgc_access[$matches['moduleName']])) {
@@ -3324,7 +3324,7 @@ abstract class ModuleCore implements ModuleInterface
         $moduleName = preg_replace('/^ps_(\w+)/', '$1', $moduleName);
 
         foreach ($domains as $domain) {
-            if (false !== stripos($domain, $moduleName)) {
+            if (false !== mb_stripos($domain, $moduleName)) {
                 return true;
             }
         }

@@ -187,7 +187,7 @@ class StockController extends ApiController
         $message = 'The "delta" parameter is required';
 
         $content = $request->getContent();
-        if (strlen($content) > 0) {
+        if (mb_strlen($content) > 0) {
             $decodedContent = $this->guardAgainstInvalidRequestContent($content, $message);
             $request->request->set('delta', $decodedContent['delta']);
         }
@@ -221,7 +221,7 @@ class StockController extends ApiController
      */
     private function guardAgainstInvalidBulkEditionRequest(Request $request)
     {
-        if (strlen($request->getContent()) == 0) {
+        if (mb_strlen($request->getContent()) == 0) {
             $message = 'The request body should contain a JSON-encoded array of product identifiers and deltas';
             throw new BadRequestHttpException(sprintf('Invalid JSON content (%s)', $message));
         }

@@ -227,8 +227,8 @@ abstract class ControllerCore
         if (
             !headers_sent() &&
             isset($_SERVER['HTTP_USER_AGENT']) &&
-            (strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') !== false ||
-            strpos($_SERVER['HTTP_USER_AGENT'], 'Trident') !== false)
+            (mb_strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') !== false ||
+            mb_strpos($_SERVER['HTTP_USER_AGENT'], 'Trident') !== false)
         ) {
             header('X-UA-Compatible: IE=edge,chrome=1');
         }
@@ -403,7 +403,7 @@ abstract class ControllerCore
         }
 
         foreach ($css_uri as $css_file => $media) {
-            if (is_string($css_file) && strlen($css_file) > 1) {
+            if (is_string($css_file) && mb_strlen($css_file) > 1) {
                 if ($check_path) {
                     $css_path = Media::getCSSPath($css_file, $media);
                 } else {
@@ -443,7 +443,7 @@ abstract class ControllerCore
         }
 
         foreach ($css_uri as $css_file => $media) {
-            if (is_string($css_file) && strlen($css_file) > 1) {
+            if (is_string($css_file) && mb_strlen($css_file) > 1) {
                 if ($check_path) {
                     $css_path = Media::getCSSPath($css_file, $media);
                 } else {
@@ -587,7 +587,7 @@ abstract class ControllerCore
     {
         return
             !empty($_SERVER['HTTP_X_REQUESTED_WITH'])
-            && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest'
+            && mb_strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest'
         ;
     }
 

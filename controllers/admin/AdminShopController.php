@@ -144,8 +144,8 @@ class AdminShopControllerCore extends AdminController
 
                 foreach ($urls as &$url) {
                     $title = $url['domain'] . $url['physical_uri'] . $url['virtual_uri'];
-                    if (strlen($title) > 23) {
-                        $title = substr($title, 0, 23) . '...';
+                    if (mb_strlen($title) > 23) {
+                        $title = mb_substr($title, 0, 23) . '...';
                     }
 
                     $url['name'] = $title;
@@ -817,8 +817,8 @@ class AdminShopControllerCore extends AdminController
 
             if (!isset($tree[$id_shop_group]['children'][$id_shop]['children'][$id_shop_url])) {
                 $url = $row['domain'] . $row['physical_uri'] . $row['virtual_uri'];
-                if (strlen($url) > 23) {
-                    $url = substr($url, 0, 23) . '...';
+                if (mb_strlen($url) > 23) {
+                    $url = mb_substr($url, 0, 23) . '...';
                 }
 
                 $tree[$id_shop_group]['children'][$id_shop]['children'][$id_shop_url] = array(

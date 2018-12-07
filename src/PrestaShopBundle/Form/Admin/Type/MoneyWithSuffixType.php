@@ -76,7 +76,7 @@ class MoneyWithSuffixType extends MoneyType
      */
     private function applySuffix(&$value, $key, $suffix)
     {
-        if (strlen($value) > 0) {
+        if (mb_strlen($value) > 0) {
             $value = rtrim($value) . ' ' . $suffix;
         }
     }

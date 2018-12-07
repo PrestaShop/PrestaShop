@@ -101,12 +101,12 @@ class ConnectionsSourceCore extends ObjectModel
                 return false;
             }
 
-            if ((preg_replace('/^www./', '', $parsed['host']) == preg_replace('/^www./', '', Tools::getHttpHost(false, false))) && !strncmp($parsed['path'], $parsedHost['path'], strlen(__PS_BASE_URI__))) {
+            if ((preg_replace('/^www./', '', $parsed['host']) == preg_replace('/^www./', '', Tools::getHttpHost(false, false))) && !strncmp($parsed['path'], $parsedHost['path'], mb_strlen(__PS_BASE_URI__))) {
                 return false;
             }
 
-            $source->http_referer = substr($_SERVER['HTTP_REFERER'], 0, ConnectionsSource::$uri_max_size);
-            $source->keywords = substr(trim(SearchEngine::getKeywords($_SERVER['HTTP_REFERER'])), 0, ConnectionsSource::$uri_max_size);
+            $source->http_referer = mb_substr($_SERVER['HTTP_REFERER'], 0, ConnectionsSource::$uri_max_size);
+            $source->keywords = mb_substr(trim(SearchEngine::getKeywords($_SERVER['HTTP_REFERER'])), 0, ConnectionsSource::$uri_max_size);
         }
 
         $source->id_connections = (int) $cookie->id_connections;
@@ -121,7 +121,7 @@ class ConnectionsSourceCore extends ObjectModel
         if (!Validate::isUrl($source->request_uri)) {
             $source->request_uri = '';
         }
-        $source->request_uri = substr($source->request_uri, 0, ConnectionsSource::$uri_max_size);
+        $source->request_uri = mb_substr($source->request_uri, 0, ConnectionsSource::$uri_max_size);
 
         return $source->add();
     }

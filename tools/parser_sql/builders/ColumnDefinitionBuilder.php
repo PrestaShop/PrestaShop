@@ -69,17 +69,17 @@ class ColumnDefinitionBuilder {
         }
         $sql = "";
         foreach ($parsed['sub_tree'] as $k => $v) {
-            $len = strlen($sql);
+            $len = mb_strlen($sql);
             $sql .= $this->buildColRef($v);
             $sql .= $this->buildColumnType($v);
 
-            if ($len == strlen($sql)) {
+            if ($len == mb_strlen($sql)) {
                 throw new UnableToCreateSQLException('CREATE TABLE primary key subtree', $k, $v, 'expr_type');
             }
 
             $sql .= " ";
         }
-        return substr($sql, 0, -1);
+        return mb_substr($sql, 0, -1);
     }
 }
 ?>

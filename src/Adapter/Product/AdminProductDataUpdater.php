@@ -237,7 +237,7 @@ class AdminProductDataUpdater implements ProductInterface
             throw new \Exception('Cannot sort when filterParams does not contains \'filter_category\'.', 5010);
         }
         foreach ($filterParams as $k => $v) {
-            if ($v == '' || strpos($k, 'filter_') !== 0) {
+            if ($v == '' || mb_strpos($k, 'filter_') !== 0) {
                 continue;
             }
             if ($k == 'filter_category') {

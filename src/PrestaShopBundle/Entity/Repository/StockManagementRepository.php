@@ -300,7 +300,7 @@ abstract class StockManagementRepository
     {
         $orderByClause = $queryParams->getSqlOrder();
 
-        $descendingOrder = false !== strpos($orderByClause, ' DESC');
+        $descendingOrder = false !== mb_strpos($orderByClause, ' DESC');
 
         $productColumns = 'product_id, combination_id';
         if ($descendingOrder) {

@@ -50,7 +50,7 @@ class GroupByProcessor extends OrderByProcessor {
         }
 
         foreach ($tokens as $token) {
-            $trim = strtoupper(trim($token));
+            $trim = mb_strtoupper(trim($token));
             switch ($trim) {
             case ',':
                 $parsed = $this->processOrderExpression($parseInfo, $select);

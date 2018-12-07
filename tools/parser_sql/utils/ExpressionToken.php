@@ -45,7 +45,7 @@ class ExpressionToken {
         $this->token = $token;
         $this->tokenType = false;
         $this->trim = trim($token);
-        $this->upper = strtoupper($this->trim);
+        $this->upper = mb_strtoupper($this->trim);
         $this->noQuotes = null;
     }
 
@@ -55,7 +55,7 @@ class ExpressionToken {
     }
 
     public function isEnclosedWithinParenthesis() {
-        return ($this->upper[0] === '(' && substr($this->upper, -1) === ')');
+        return ($this->upper[0] === '(' && mb_substr($this->upper, -1) === ')');
     }
 
     public function setSubTree($tree) {
@@ -87,13 +87,13 @@ class ExpressionToken {
     }
 
     public function endsWith($needle) {
-        $length = strlen($needle);
+        $length = mb_strlen($needle);
         if ($length == 0) {
             return true;
         }
 
         $start = $length * -1;
-        return (substr($this->token, $start) === $needle);
+        return (mb_substr($this->token, $start) === $needle);
     }
 
     public function isWhitespaceToken() {
@@ -162,10 +162,10 @@ class ExpressionToken {
 
     private function revokeQuotation($token, $qchars = '`') {
         $result = trim($token);
-        for ($i = 0; $i < strlen($qchars); $i++) {
+        for ($i = 0; $i < mb_strlen($qchars); $i++) {
             $quote = $qchars[$i];
-            if (($result[0] === $quote) && ($result[strlen($result) - 1] === $quote)) {
-                $result = substr($result, 1, -1);
+            if (($result[0] === $quote) && ($result[mb_strlen($result) - 1] === $quote)) {
+                $result = mb_substr($result, 1, -1);
                 return trim(str_replace($quote.$quote, $quote, $result));
             }
         }

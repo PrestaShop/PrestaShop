@@ -50,7 +50,7 @@ function add_default_restrictions_modules_groups()
                 }
             }
                 // removing last comma to avoid SQL error
-                $sql = substr($sql, 0, strlen($sql) - 1);
+                $sql = mb_substr($sql, 0, mb_strlen($sql) - 1);
             $res &= Db::getInstance()->execute($sql);
         }
     }

@@ -409,7 +409,7 @@ class AdminLanguagesControllerCore extends AdminController
         }
         if ((!empty($_FILES['no_picture']['tmp_name']) || !empty($_FILES['flag']['tmp_name'])) && Validate::isLanguageIsoCode(Tools::getValue('iso_code'))) {
             if ($_FILES['no_picture']['error'] == UPLOAD_ERR_OK) {
-                $this->copyNoPictureImage(strtolower(Tools::getValue('iso_code')));
+                $this->copyNoPictureImage(mb_strtolower(Tools::getValue('iso_code')));
             }
             unset($_FILES['no_picture']);
         } else {
@@ -430,7 +430,7 @@ class AdminLanguagesControllerCore extends AdminController
         if ((isset($_FILES['no_picture']) && !$_FILES['no_picture']['error'] || isset($_FILES['flag']) && !$_FILES['flag']['error'])
                 && Validate::isLanguageIsoCode(Tools::getValue('iso_code'))) {
             if ($_FILES['no_picture']['error'] == UPLOAD_ERR_OK) {
-                $this->copyNoPictureImage(strtolower(Tools::getValue('iso_code')));
+                $this->copyNoPictureImage(mb_strtolower(Tools::getValue('iso_code')));
             }
             // class AdminTab deal with every $_FILES content, don't do that for no_picture
             unset($_FILES['no_picture']);

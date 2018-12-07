@@ -199,7 +199,7 @@ class CacheMemcacheCore extends Cache
     {
         if ($key == '*') {
             $this->flush();
-        } elseif (strpos($key, '*') === false) {
+        } elseif (mb_strpos($key, '*') === false) {
             $this->_delete($key);
         } else {
             // Get keys (this code comes from Doctrine 2 project)

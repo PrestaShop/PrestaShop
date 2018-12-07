@@ -67,7 +67,7 @@ class ExplainProcessor extends AbstractProcessor {
                     continue;
                 }
 
-                $upper = strtoupper($trim);
+                $upper = mb_strtoupper($trim);
 
                 switch ($upper) {
 

@@ -525,7 +525,7 @@ class SymfonyRequirements extends RequirementCollection
         if (extension_loaded('suhosin')) {
             $this->addPhpIniRequirement(
                 'suhosin.executor.include.whitelist',
-                function ($cfgValue) { return false !== stripos($cfgValue, "phar"); },
+                function ($cfgValue) { return false !== mb_stripos($cfgValue, "phar"); },
                 false,
                 'suhosin.executor.include.whitelist must be configured correctly in php.ini',
                 'Add "<strong>phar</strong>" to <strong>suhosin.executor.include.whitelist</strong> in php.ini<a href="#phpini">*</a>.'
@@ -741,7 +741,7 @@ class SymfonyRequirements extends RequirementCollection
             'Install and/or enable a <strong>PHP accelerator</strong> (highly recommended).'
         );
 
-        if ('WIN' === strtoupper(substr(PHP_OS, 0, 3))) {
+        if ('WIN' === mb_strtoupper(mb_substr(PHP_OS, 0, 3))) {
             $this->addRecommendation(
                 $this->getRealpathCacheSize() >= 5 * 1024 * 1024,
                 'realpath_cache_size should be at least 5M in php.ini',
@@ -786,8 +786,8 @@ class SymfonyRequirements extends RequirementCollection
         $size = trim($size);
         $unit = '';
         if (!ctype_digit($size)) {
-            $unit = strtolower(substr($size, -1, 1));
-            $size = (int) substr($size, 0, -1);
+            $unit = mb_strtolower(mb_substr($size, -1, 1));
+            $size = (int) mb_substr($size, 0, -1);
         }
         switch ($unit) {
             case 'g':

@@ -185,7 +185,7 @@ function fix_filename($str, $transliteration)
     // Empty or incorrectly transliterated filename.
     // Here is a point: a good file UNKNOWN_LANGUAGE.jpg could become .jpg in previous code.
     // So we add that default 'file' name to fix that issue.
-    if (strpos($str, '.') === 0) {
+    if (mb_strpos($str, '.') === 0) {
         $str = 'file'.$str;
     }
 
@@ -202,7 +202,7 @@ function fix_strtoupper($str)
     if (function_exists('mb_strtoupper')) {
         return mb_strtoupper($str);
     } else {
-        return strtoupper($str);
+        return mb_strtoupper($str);
     }
 }
 
@@ -212,19 +212,19 @@ function fix_strtolower($str)
     if (function_exists('mb_strtoupper')) {
         return mb_strtolower($str);
     } else {
-        return strtolower($str);
+        return mb_strtolower($str);
     }
 }
 
 function fix_path($path, $transliteration)
 {
     $info = pathinfo($path);
-    if (($s = strrpos($path, '/')) !== false) {
+    if (($s = mb_strrpos($path, '/')) !== false) {
         $s++;
     }
-    if (($e = strrpos($path, '.') - $s) !== strlen($info['filename'])) {
-        $info['filename'] = substr($path, $s, $e);
-        $info['basename'] = substr($path, $s);
+    if (($e = mb_strrpos($path, '.') - $s) !== mb_strlen($info['filename'])) {
+        $info['filename'] = mb_substr($path, $s, $e);
+        $info['basename'] = mb_substr($path, $s);
     }
     $tmp_path = $info['dirname'].DIRECTORY_SEPARATOR.$info['basename'];
 
@@ -291,7 +291,7 @@ function image_check_memory_usage($img, $max_breedte, $max_hoogte)
 
 function endsWith($haystack, $needle)
 {
-    return $needle === "" || substr($haystack, -strlen($needle)) === $needle;
+    return $needle === "" || mb_substr($haystack, -mb_strlen($needle)) === $needle;
 }
 
 function new_thumbnails_creation($targetPath, $targetFile, $name, $current_path, $relative_image_creation, $relative_path_from_current_pos, $relative_image_creation_name_to_prepend, $relative_image_creation_name_to_append, $relative_image_creation_width, $relative_image_creation_height, $fixed_image_creation, $fixed_path_from_filemanager, $fixed_image_creation_name_to_prepend, $fixed_image_creation_to_append, $fixed_image_creation_width, $fixed_image_creation_height)
@@ -300,7 +300,7 @@ function new_thumbnails_creation($targetPath, $targetFile, $name, $current_path,
     $all_ok = true;
     if ($relative_image_creation) {
         foreach ($relative_path_from_current_pos as $k => $path) {
-            if ($path != "" && $path[strlen($path) - 1] != "/") {
+            if ($path != "" && $path[mb_strlen($path) - 1] != "/") {
                 $path .= "/";
             }
             if (!file_exists($targetPath.$path)) {
@@ -318,10 +318,10 @@ function new_thumbnails_creation($targetPath, $targetFile, $name, $current_path,
     //create fixed thumbs
     if ($fixed_image_creation) {
         foreach ($fixed_path_from_filemanager as $k => $path) {
-            if ($path != "" && $path[strlen($path) - 1] != "/") {
+            if ($path != "" && $path[mb_strlen($path) - 1] != "/") {
                 $path .= "/";
             }
-            $base_dir = $path.substr_replace($targetPath, '', 0, strlen($current_path));
+            $base_dir = $path.substr_replace($targetPath, '', 0, mb_strlen($current_path));
             if (!file_exists($base_dir)) {
                 create_folder($base_dir, false);
             }

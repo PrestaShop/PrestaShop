@@ -536,7 +536,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 
         $extension = false;
         foreach ($extensions as $key => $val) {
-            if (substr(Tools::strtolower($filename), -4) == $key || substr(Tools::strtolower($filename), -5) == $key) {
+            if (mb_substr(Tools::strtolower($filename), -4) == $key || mb_substr(Tools::strtolower($filename), -5) == $key) {
                 $extension = $val;
                 break;
             }
@@ -1094,7 +1094,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
                     $match_found = true;
                 }
 
-                $new_ct = (Configuration::get('PS_SAV_IMAP_CREATE_THREADS') && !$match_found && (strpos($subject, '[no_sync]') == false));
+                $new_ct = (Configuration::get('PS_SAV_IMAP_CREATE_THREADS') && !$match_found && (mb_strpos($subject, '[no_sync]') == false));
 
                 $fetch_succeed = true;
                 if ($match_found || $new_ct) {
@@ -1121,7 +1121,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
                         }
 
                         foreach ($contacts as $contact) {
-                            if (isset($overview->to) && strpos($overview->to, $contact['email']) !== false) {
+                            if (isset($overview->to) && mb_strpos($overview->to, $contact['email']) !== false) {
                                 $id_contact = $contact['id_contact'];
                             }
                         }
@@ -1168,7 +1168,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
                         }
                         $message = iconv($this->getEncoding($structure), 'utf-8', $message);
                         $message = nl2br($message);
-                        if (!$message || strlen($message) == 0) {
+                        if (!$message || mb_strlen($message) == 0) {
                             $message_errors[] = $this->trans('The message body is empty, cannot import it.', array(), 'Admin.Orderscustomers.Notification');
                             $fetch_succeed = false;
                             continue;
@@ -1197,7 +1197,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
         imap_expunge($mbox);
         imap_close($mbox);
         if (sizeof($message_errors) > 0) {
-            if (($more_error = $str_errors . $str_error_delete) && strlen($more_error) > 0) {
+            if (($more_error = $str_errors . $str_error_delete) && mb_strlen($more_error) > 0) {
                 $message_errors = array_merge(array($more_error), $message_errors);
             }
 

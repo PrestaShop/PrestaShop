@@ -91,7 +91,7 @@ class TranslateCore
             }
         }
 
-        if (isset($modulesTabs[strtolower($class)])) {
+        if (isset($modulesTabs[mb_strtolower($class)])) {
             $classNameController = $class . 'controller';
             // if the class is extended by a module, use modules/[module_name]/xx.php lang file
             if (class_exists($classNameController) && Module::getModuleNameFromClass($classNameController)) {
@@ -221,13 +221,13 @@ class TranslateCore
                 $ret = str_replace('"', '&quot;', $string);
             }
 
-            $currentKey = strtolower('<{' . $name . '}' . _THEME_NAME_ . '>' . $source) . '_' . $key;
-            $defaultKey = strtolower('<{' . $name . '}prestashop>' . $source) . '_' . $key;
+            $currentKey = mb_strtolower('<{' . $name . '}' . _THEME_NAME_ . '>' . $source) . '_' . $key;
+            $defaultKey = mb_strtolower('<{' . $name . '}prestashop>' . $source) . '_' . $key;
 
-            if ('controller' == substr($source, -10, 10)) {
-                $file = substr($source, 0, -10);
-                $currentKeyFile = strtolower('<{' . $name . '}' . _THEME_NAME_ . '>' . $file) . '_' . $key;
-                $defaultKeyFile = strtolower('<{' . $name . '}prestashop>' . $file) . '_' . $key;
+            if ('controller' == mb_substr($source, -10, 10)) {
+                $file = mb_substr($source, 0, -10);
+                $currentKeyFile = mb_strtolower('<{' . $name . '}' . _THEME_NAME_ . '>' . $file) . '_' . $key;
+                $defaultKeyFile = mb_strtolower('<{' . $name . '}prestashop>' . $file) . '_' . $key;
             }
 
             if (isset($currentKeyFile) && !empty($_MODULES[$currentKeyFile])) {

@@ -220,7 +220,7 @@ class imageLib
 
         // *** Save the image file name. Only store this incase you want to display it
         $this->fileName = $fileName;
-        $this->fileExtension = fix_strtolower(strrchr($fileName, '.'));
+        $this->fileExtension = fix_strtolower(mb_strrchr($fileName, '.'));
 
         // *** Open up the file
         $this->image = $this->openImage($fileName);
@@ -315,7 +315,7 @@ class imageLib
     $cropPos = 'm';
         if (is_array($option) && fix_strtolower($option[0]) == 'crop') {
             $cropPos = $option[1];         # get the crop option
-        } elseif (strpos($option, '-') !== false) {
+        } elseif (mb_strpos($option, '-') !== false) {
             // *** Or pass in a hyphen seperated option
       $optionPiecesArray = explode('-', $option);
             $cropPos = end($optionPiecesArray);
@@ -481,7 +481,7 @@ class imageLib
       $pos = fix_strtolower($pos);
 
     // *** If co-ords have been entered
-    if (strstr($pos, 'x')) {
+    if (mb_strstr($pos, 'x')) {
         $pos = str_replace(' ', '', $pos);
 
         $xyArray = explode('x', $pos);
@@ -873,7 +873,7 @@ class imageLib
           } else {
               throw new Exception('Crop resize option array is badly formatted.');
           }
-      } elseif (strpos($option, 'crop') !== false) {
+      } elseif (mb_strpos($option, 'crop') !== false) {
           return 'crop';
       }
 
@@ -2100,7 +2100,7 @@ class imageLib
   #       http://php.net/manual/en/function.iptcembed.php
   #
   {
-      $len = strlen($val);
+      $len = mb_strlen($val);
       if ($len < 0x8000) {
           return chr(0x1c).chr($rec).chr($dat).
       chr($len >> 8).
@@ -2261,7 +2261,7 @@ class imageLib
       $y = $posArray['height'];
 
     // *** Set watermark opacity
-    if (fix_strtolower(strrchr($watermarkImage, '.')) == '.png') {
+    if (fix_strtolower(mb_strrchr($watermarkImage, '.')) == '.png') {
         $opacity = $this->invertTransparency($opacity, 100);
         $this->filterOpacity($stamp, $opacity);
     }
@@ -2296,7 +2296,7 @@ class imageLib
       $pos = fix_strtolower($pos);
 
     // *** If co-ords have been entered
-    if (strstr($pos, 'x')) {
+    if (mb_strstr($pos, 'x')) {
         $pos = str_replace(' ', '', $pos);
 
         $xyArray = explode('x', $pos);
@@ -2451,7 +2451,7 @@ class imageLib
         };
 
         // *** Get extension
-        $extension = strrchr($file, '.');
+        $extension = mb_strrchr($file, '.');
         $extension = fix_strtolower($extension);
         switch ($extension) {
             case '.jpg':
@@ -2534,7 +2534,7 @@ class imageLib
         }
 
     // *** Get extension
-        $extension = strrchr($savePath, '.');
+        $extension = mb_strrchr($savePath, '.');
         $extension = fix_strtolower($extension);
 
         $error = '';
@@ -2908,14 +2908,14 @@ class imageLib
   {
       $color = str_replace('#', '', $hex);
 
-      if (strlen($color) == 3) {
+      if (mb_strlen($color) == 3) {
           $color = $color . $color;
       }
 
       $rgb = array(
-      'r' => hexdec(substr($color, 0, 2)),
-      'g' => hexdec(substr($color, 2, 2)),
-      'b' => hexdec(substr($color, 4, 2)),
+      'r' => hexdec(mb_substr($color, 0, 2)),
+      'g' => hexdec(mb_substr($color, 2, 2)),
+      'b' => hexdec(mb_substr($color, 4, 2)),
       'a' => 0
     );
       return $rgb;
@@ -3051,7 +3051,7 @@ class imageLib
   function checkStringStartsWith($needle, $haystack)
   # Check if a string starts with a specific pattern
   {
-      return (substr($haystack, 0, strlen($needle)) == $needle);
+      return (mb_substr($haystack, 0, mb_strlen($needle)) == $needle);
   }
 
 
@@ -3080,13 +3080,13 @@ class imageLib
               $argb = $this->GetPixelColor($gd_image, $x, $y);
               $thisline .= chr($argb['blue']).chr($argb['green']).chr($argb['red']);
           }
-          while (strlen($thisline) % 4) {
+          while (mb_strlen($thisline) % 4) {
               $thisline .= "\x00";
           }
           $BMP .= $thisline;
       }
 
-      $bmpSize = strlen($BMP) + 14 + 40;
+      $bmpSize = mb_strlen($BMP) + 14 + 40;
     // BITMAPFILEHEADER [14 bytes] - http://msdn.microsoft.com/library/en-us/gdi/bitmaps_62uq.asp
     $BITMAPFILEHEADER = 'BM';                                    // WORD    bfType;
     $BITMAPFILEHEADER .= $this->LittleEndian2String($bmpSize, 4); // DWORD   bfSize;
@@ -3214,7 +3214,7 @@ class imageLib
           $X = 0;
           while ($X < $BMP['width']) {
               if ($BMP['bits_per_pixel'] == 24) {
-                  $COLOR = unpack("V", substr($IMG, $P, 3).$VIDE);
+                  $COLOR = unpack("V", mb_substr($IMG, $P, 3).$VIDE);
               } elseif ($BMP['bits_per_pixel'] == 16) {
 
           /*
@@ -3233,16 +3233,16 @@ class imageLib
           //$COLOR = unpack("n",substr($IMG,$P,2));
           //$COLOR[1] = $PALETTE[$COLOR[1]+1];
 
-          $COLOR = unpack("v", substr($IMG, $P, 2));
+          $COLOR = unpack("v", mb_substr($IMG, $P, 2));
                   $blue = ($COLOR[1] & 0x001f) << 3;
                   $green = ($COLOR[1] & 0x07e0) >> 3;
                   $red = ($COLOR[1] & 0xf800) >> 8;
                   $COLOR[1] = $red * 65536 + $green * 256 + $blue;
               } elseif ($BMP['bits_per_pixel'] == 8) {
-                  $COLOR = unpack("n", $VIDE.substr($IMG, $P, 1));
+                  $COLOR = unpack("n", $VIDE.mb_substr($IMG, $P, 1));
                   $COLOR[1] = $PALETTE[$COLOR[1] + 1];
               } elseif ($BMP['bits_per_pixel'] == 4) {
-                  $COLOR = unpack("n", $VIDE.substr($IMG, floor($P), 1));
+                  $COLOR = unpack("n", $VIDE.mb_substr($IMG, floor($P), 1));
                   if (($P * 2) % 2 == 0) {
                       $COLOR[1] = ($COLOR[1] >> 4) ;
                   } else {
@@ -3250,7 +3250,7 @@ class imageLib
                   }
                   $COLOR[1] = $PALETTE[$COLOR[1] + 1];
               } elseif ($BMP['bits_per_pixel'] == 1) {
-                  $COLOR = unpack("n", $VIDE.substr($IMG, floor($P), 1));
+                  $COLOR = unpack("n", $VIDE.mb_substr($IMG, floor($P), 1));
                   if (($P * 8) % 8 == 0) {
                       $COLOR[1] = $COLOR[1] >> 7;
                   } elseif (($P * 8) % 8 == 1) {

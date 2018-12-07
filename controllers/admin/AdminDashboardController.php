@@ -92,7 +92,7 @@ class AdminDashboardControllerCore extends AdminController
                     continue;
                 }
 
-                $forms['payment']['fields']['CONF_' . strtoupper($module->name) . '_FIXED'] = array(
+                $forms['payment']['fields']['CONF_' . mb_strtoupper($module->name) . '_FIXED'] = array(
                     'title' => $module->displayName,
                     'desc' => $this->trans(
                         'Choose a fixed fee for each order placed in %currency% with %module%.',
@@ -108,7 +108,7 @@ class AdminDashboardControllerCore extends AdminController
                     'defaultValue' => '0',
                     'suffix' => $currency->iso_code,
                 );
-                $forms['payment']['fields']['CONF_' . strtoupper($module->name) . '_VAR'] = array(
+                $forms['payment']['fields']['CONF_' . mb_strtoupper($module->name) . '_VAR'] = array(
                     'title' => $module->displayName,
                     'desc' => $this->trans(
                         'Choose a variable fee for each order placed in %currency% with %module%. It will be applied on the total paid with taxes.',
@@ -126,7 +126,7 @@ class AdminDashboardControllerCore extends AdminController
                 );
 
                 if (Currency::isMultiCurrencyActivated()) {
-                    $forms['payment']['fields']['CONF_' . strtoupper($module->name) . '_FIXED_FOREIGN'] = array(
+                    $forms['payment']['fields']['CONF_' . mb_strtoupper($module->name) . '_FIXED_FOREIGN'] = array(
                         'title' => $module->displayName,
                         'desc' => $this->trans(
                             'Choose a fixed fee for each order placed with a foreign currency with %module%.',
@@ -141,7 +141,7 @@ class AdminDashboardControllerCore extends AdminController
                         'defaultValue' => '0',
                         'suffix' => $currency->iso_code,
                     );
-                    $forms['payment']['fields']['CONF_' . strtoupper($module->name) . '_VAR_FOREIGN'] = array(
+                    $forms['payment']['fields']['CONF_' . mb_strtoupper($module->name) . '_VAR_FOREIGN'] = array(
                         'title' => $module->displayName,
                         'desc' => $this->trans(
                             'Choose a variable fee for each order placed with a foreign currency with %module%. It will be applied on the total paid with taxes.',
@@ -159,7 +159,7 @@ class AdminDashboardControllerCore extends AdminController
         }
 
         foreach ($carriers as $carrier) {
-            $forms['carriers']['fields']['CONF_' . strtoupper($carrier['id_reference']) . '_SHIP'] = array(
+            $forms['carriers']['fields']['CONF_' . mb_strtoupper($carrier['id_reference']) . '_SHIP'] = array(
                 'title' => $carrier['name'],
                 'desc' => $this->trans(
                     'For the carrier named %s, indicate the domestic delivery costs  in percentage of the price charged to customers.',
@@ -174,7 +174,7 @@ class AdminDashboardControllerCore extends AdminController
                 'defaultValue' => '0',
                 'suffix' => '%',
             );
-            $forms['carriers']['fields']['CONF_' . strtoupper($carrier['id_reference']) . '_SHIP_OVERSEAS'] = array(
+            $forms['carriers']['fields']['CONF_' . mb_strtoupper($carrier['id_reference']) . '_SHIP_OVERSEAS'] = array(
                 'title' => $carrier['name'],
                 'desc' => $this->trans(
                     'For the carrier named %s, indicate the overseas delivery costs in percentage of the price charged to customers.',

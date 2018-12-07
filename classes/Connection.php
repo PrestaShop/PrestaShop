@@ -93,7 +93,7 @@ class ConnectionCore extends ObjectModel
     {
         $idPage = false;
         // The connection is created if it does not exist yet and we get the current page id
-        if (!isset($cookie->id_connections) || !strstr(isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '', Tools::getHttpHost(false, false))) {
+        if (!isset($cookie->id_connections) || !mb_strstr(isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '', Tools::getHttpHost(false, false))) {
             $idPage = Connection::setNewConnection($cookie);
         }
         // If we do not track the pages, no need to get the page id
@@ -178,7 +178,7 @@ class ConnectionCore extends ObjectModel
             $connection->id_shop_group = Context::getContext()->shop->id_shop_group;
             $connection->date_add = $cookie->date_add;
             if (Validate::isAbsoluteUrl($referer)) {
-                $connection->http_referer = substr($referer, 0, 254);
+                $connection->http_referer = mb_substr($referer, 0, 254);
             }
             $connection->add();
             $cookie->id_connections = $connection->id;

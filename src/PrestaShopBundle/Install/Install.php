@@ -443,7 +443,7 @@ class Install extends AbstractInstall
                 $iso_codes_to_install = array($this->language->getLanguageIso());
                 if ($iso_country) {
                     $version = str_replace('.', '', AppKernel::VERSION);
-                    $version = substr($version, 0, 2);
+                    $version = mb_substr($version, 0, 2);
                     $localization_file_content = $this->getLocalizationPackContent($version, $iso_country);
 
                     if ($xml = @simplexml_load_string($localization_file_content)) {
@@ -613,7 +613,7 @@ class Install extends AbstractInstall
 
             $params_lang = array(
                 'name' => (string) $xml->name,
-                'iso_code' => substr((string) $xml->language_code, 0, 2),
+                'iso_code' => mb_substr((string) $xml->language_code, 0, 2),
                 'allow_accented_chars_url' => (string) $xml->allow_accented_chars_url,
                 'language_code' => (string) $xml->language_code,
                 'locale' => (string) $xml->locale,
@@ -817,7 +817,7 @@ class Install extends AbstractInstall
 
         // Set localization configuration
         $version = str_replace('.', '', AppKernel::VERSION);
-        $version = substr($version, 0, 2);
+        $version = mb_substr($version, 0, 2);
         $localization_file_content = $this->getLocalizationPackContent($version, $data['shop_country']);
 
         $locale = new LocalizationPack();

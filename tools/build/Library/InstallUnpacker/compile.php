@@ -53,7 +53,7 @@ if ($handle = opendir(__DIR__ . '/content')) {
         if (is_file($filePath)) {
             echo "File found: $entry\n";
 
-            if (strpos($template, $entry)) {
+            if (mb_strpos($template, $entry)) {
                 echo "\033[0;32mReplace entry: $entry\033[0m\n";
 
                 $content = base64_encode(file_get_contents($filePath));

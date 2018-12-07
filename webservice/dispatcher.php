@@ -68,7 +68,7 @@ if (($_SERVER['REQUEST_METHOD'] == 'PUT') || ($_SERVER['REQUEST_METHOD'] == 'POS
     fclose($putresource);
 }
 if (isset($input_xml) && strncmp($input_xml, 'xml=', 4) == 0) {
-    $input_xml = substr($input_xml, 4);
+    $input_xml = mb_substr($input_xml, 4);
 }
 
 $params = $_GET;

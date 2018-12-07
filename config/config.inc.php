@@ -57,7 +57,7 @@ if (!file_exists(_PS_ROOT_DIR_.'/app/config/parameters.yml') && !file_exists(_PS
 require_once $currentDir . DIRECTORY_SEPARATOR . 'bootstrap.php';
 
 /* Improve PHP configuration on Windows */
-if ('WIN' === strtoupper(substr(PHP_OS, 0, 3))) {
+if ('WIN' === mb_strtoupper(mb_substr(PHP_OS, 0, 3))) {
     Windows::improveFilesytemPerformances();
 }
 
@@ -145,7 +145,7 @@ $context->country = $default_country;
 @date_default_timezone_set(Configuration::get('PS_TIMEZONE'));
 
 /* Set locales */
-$locale = strtolower(Configuration::get('PS_LOCALE_LANGUAGE')).'_'.strtoupper(Configuration::get('PS_LOCALE_COUNTRY'));
+$locale = mb_strtolower(Configuration::get('PS_LOCALE_LANGUAGE')).'_'.mb_strtoupper(Configuration::get('PS_LOCALE_COUNTRY'));
 /* Please do not use LC_ALL here http://www.php.net/manual/fr/function.setlocale.php#25041 */
 setlocale(LC_COLLATE, $locale.'.UTF-8', $locale.'.utf8');
 setlocale(LC_CTYPE, $locale.'.UTF-8', $locale.'.utf8');

@@ -167,7 +167,7 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
 
         // Create WHERE clause with an array value (IN, NOT IN)
         if (is_array($value)) {
-            switch (strtolower($operator)) {
+            switch (mb_strtolower($operator)) {
                 case '=':
                 case 'in':
                     $this->query->$method($this->parseField($field) . ' IN(' . implode(', ', $this->formatValue($value, $field)) . ')');
@@ -184,7 +184,7 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
             }
         } else {
             // Create WHERE clause
-            switch (strtolower($operator)) {
+            switch (mb_strtolower($operator)) {
                 case '=':
                 case '!=':
                 case '<>':
@@ -265,7 +265,7 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
      */
     public function orderBy($field, $order = 'asc')
     {
-        $order = strtolower($order);
+        $order = mb_strtolower($order);
         if ($order != 'asc' && $order != 'desc') {
             throw new PrestaShopException('Order must be asc or desc');
         }

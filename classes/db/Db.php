@@ -470,7 +470,7 @@ abstract class DbCore
 
         $sql = $insert_keyword . ' INTO `' . $table . '` (' . $keys_stringified . ') VALUES ' . implode(', ', $values_stringified);
         if ($type == Db::ON_DUPLICATE_KEY) {
-            $sql .= ' ON DUPLICATE KEY UPDATE ' . substr($duplicate_key_stringified, 0, -1);
+            $sql .= ' ON DUPLICATE KEY UPDATE ' . mb_substr($duplicate_key_stringified, 0, -1);
         }
 
         return (bool) $this->q($sql, $use_cache);

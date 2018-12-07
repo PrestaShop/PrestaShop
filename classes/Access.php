@@ -214,7 +214,7 @@ class AccessCore extends ObjectModel
      */
     public static function sluggifyTab($tab, $authorization = '')
     {
-        return sprintf('ROLE_MOD_TAB_%s_%s', strtoupper($tab['class_name']), $authorization);
+        return sprintf('ROLE_MOD_TAB_%s_%s', mb_strtoupper($tab['class_name']), $authorization);
     }
 
     /**
@@ -227,7 +227,7 @@ class AccessCore extends ObjectModel
      */
     public static function sluggifyModule($module, $authorization = '')
     {
-        return sprintf('ROLE_MOD_MODULE_%s_%s', strtoupper($module['name']), $authorization);
+        return sprintf('ROLE_MOD_MODULE_%s_%s', mb_strtoupper($module['name']), $authorization);
     }
 
     /**

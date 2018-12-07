@@ -114,12 +114,12 @@ class HookCore extends ObjectModel
 
     public static function normalizeHookName($hookName)
     {
-        if (strtolower($hookName) == 'displayheader') {
+        if (mb_strtolower($hookName) == 'displayheader') {
             return 'displayHeader';
         }
         $hookAliasList = Hook::getHookAliasList();
-        if (isset($hookAliasList[strtolower($hookName)])) {
-            return $hookAliasList[strtolower($hookName)];
+        if (isset($hookAliasList[mb_strtolower($hookName)])) {
+            return $hookAliasList[mb_strtolower($hookName)];
         }
 
         return $hookName;
@@ -127,7 +127,7 @@ class HookCore extends ObjectModel
 
     public static function isDisplayHookName($hook_name)
     {
-        $hook_name = strtolower(self::normalizeHookName($hook_name));
+        $hook_name = mb_strtolower(self::normalizeHookName($hook_name));
 
         if ($hook_name === 'header' || $hook_name === 'displayheader') {
             // this hook is to add resources to the <head> section of the page
@@ -135,7 +135,7 @@ class HookCore extends ObjectModel
             return false;
         }
 
-        return strpos($hook_name, 'display') === 0;
+        return mb_strpos($hook_name, 'display') === 0;
     }
 
     /**
@@ -172,7 +172,7 @@ class HookCore extends ObjectModel
      */
     public static function getIdByName($hook_name)
     {
-        $hook_name = strtolower($hook_name);
+        $hook_name = mb_strtolower($hook_name);
         if (!Validate::isHookName($hook_name)) {
             return false;
         }
@@ -190,7 +190,7 @@ class HookCore extends ObjectModel
 			FROM `' . _DB_PREFIX_ . 'hook_alias` ha
 			INNER JOIN `' . _DB_PREFIX_ . 'hook` h ON ha.name = h.name', false);
             while ($row = $db->nextRow($result)) {
-                $hook_ids[strtolower($row['name'])] = $row['id_hook'];
+                $hook_ids[mb_strtolower($row['name'])] = $row['id_hook'];
             }
             Cache::store($cache_id, $hook_ids);
         } else {
@@ -236,7 +236,7 @@ class HookCore extends ObjectModel
             $hook_alias = array();
             if ($hook_alias_list) {
                 foreach ($hook_alias_list as $ha) {
-                    $hook_alias[strtolower($ha['alias'])] = $ha['name'];
+                    $hook_alias[mb_strtolower($ha['alias'])] = $ha['name'];
                 }
             }
             Cache::store($cache_id, $hook_alias);
@@ -374,8 +374,8 @@ class HookCore extends ObjectModel
     public static function getRetroHookName($hook_name)
     {
         $alias_list = Hook::getHookAliasList();
-        if (isset($alias_list[strtolower($hook_name)])) {
-            return $alias_list[strtolower($hook_name)];
+        if (isset($alias_list[mb_strtolower($hook_name)])) {
+            return $alias_list[mb_strtolower($hook_name)];
         }
 
         $retro_hook_name = array_search($hook_name, $alias_list);
@@ -666,7 +666,7 @@ class HookCore extends ObjectModel
             $list = array();
             if ($result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql)) {
                 foreach ($result as $row) {
-                    $row['hook'] = strtolower($row['hook']);
+                    $row['hook'] = mb_strtolower($row['hook']);
                     if (!isset($list[$row['hook']])) {
                         $list[$row['hook']] = array();
                     }
@@ -689,8 +689,8 @@ class HookCore extends ObjectModel
 
         // If hook_name is given, just get list of modules for this hook
         if ($hook_name) {
-            $retro_hook_name = strtolower(Hook::getRetroHookName($hook_name));
-            $hook_name = strtolower($hook_name);
+            $retro_hook_name = mb_strtolower(Hook::getRetroHookName($hook_name));
+            $hook_name = mb_strtolower($hook_name);
 
             $return = array();
             $inserted_modules = array();

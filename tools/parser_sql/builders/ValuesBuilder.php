@@ -60,16 +60,16 @@ class ValuesBuilder {
     public function build($parsed) {
         $sql = "";
         foreach ($parsed as $k => $v) {
-            $len = strlen($sql);
+            $len = mb_strlen($sql);
             $sql .= $this->buildRecord($v);
 
-            if ($len == strlen($sql)) {
+            if ($len == mb_strlen($sql)) {
                 throw new UnableToCreateSQLException('VALUES', $k, $v, 'expr_type');
             }
 
             $sql .= ",";
         }
-        $sql = substr($sql, 0, -1);
+        $sql = mb_substr($sql, 0, -1);
         return "VALUES " . $sql;
     }    
 }

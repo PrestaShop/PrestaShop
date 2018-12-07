@@ -37,7 +37,7 @@ function ps_1700_right_management()
                 INSERT IGNORE INTO `'._DB_PREFIX_.'authorization_role`
                 (`slug`)
                 SELECT CONCAT("ROLE_MOD_'.$element.'_", UCASE(`'.$nameColumn.'`), "_'.$action.'")
-                FROM `'._DB_PREFIX_.strtolower($element).'`
+                FROM `'._DB_PREFIX_.mb_strtolower($element).'`
             ');
         }
     }

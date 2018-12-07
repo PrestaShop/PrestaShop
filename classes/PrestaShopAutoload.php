@@ -131,7 +131,7 @@ class PrestaShopAutoload
         }
 
         // If $classname has not core suffix (E.g. Shop, Product)
-        if (substr($className, -4) != 'Core' && !class_exists($className, false)) {
+        if (mb_substr($className, -4) != 'Core' && !class_exists($className, false)) {
             $classDir = (isset($this->index[$className]['override'])
                 && $this->index[$className]['override'] === true) ? $this->normalizeDirectory(_PS_ROOT_DIR_) : $this->root_dir;
 
@@ -156,7 +156,7 @@ class PrestaShopAutoload
             // Call directly ProductCore, ShopCore class
             require_once $this->root_dir . $this->index[$className]['path'];
         }
-        if (strpos($className, 'PrestaShop\PrestaShop\Adapter\Entity') !== false) {
+        if (mb_strpos($className, 'PrestaShop\PrestaShop\Adapter\Entity') !== false) {
             require_once self::getNamespacedStubFileIndex();
         }
     }
@@ -185,8 +185,8 @@ class PrestaShopAutoload
         $contentNamespacedStub = '<?php ' . "\n" . 'namespace PrestaShop\\PrestaShop\\Adapter\\Entity;' . "\n\n";
 
         foreach ($coreClasses as $coreClassName => $coreClass) {
-            if (substr($coreClassName, -4) == 'Core') {
-                $coreClassName = substr($coreClassName, 0, -4);
+            if (mb_substr($coreClassName, -4) == 'Core') {
+                $coreClassName = mb_substr($coreClassName, 0, -4);
                 if ($coreClass['type'] != 'interface') {
                     $contentNamespacedStub .= $coreClass['type'] . ' ' . $coreClassName . ' extends \\' . $coreClassName . ' {};' . "\n";
                 }
@@ -209,8 +209,8 @@ class PrestaShopAutoload
         $contentStub = '<?php' . "\n\n";
 
         foreach ($coreClassesWOOverrides as $coreClassName => $coreClass) {
-            if (substr($coreClassName, -4) == 'Core') {
-                $coreClassNameNoCore = substr($coreClassName, 0, -4);
+            if (mb_substr($coreClassName, -4) == 'Core') {
+                $coreClassNameNoCore = mb_substr($coreClassName, 0, -4);
                 if ($coreClass['type'] != 'interface') {
                     $contentStub .= $coreClass['type'] . ' ' . $coreClassNameNoCore . ' extends ' . $coreClassName . ' {};' . "\n";
                 }
@@ -283,7 +283,7 @@ class PrestaShopAutoload
             if ($file[0] != '.') {
                 if (is_dir($rootDir . $path . $file)) {
                     $classes = array_merge($classes, $this->getClassesFromDir($path . $file . '/', $hostMode));
-                } elseif (substr($file, -4) == '.php') {
+                } elseif (mb_substr($file, -4) == '.php') {
                     $content = file_get_contents($rootDir . $path . $file);
 
                     $namespacePattern = '[\\a-z0-9_]*[\\]';
@@ -306,8 +306,8 @@ class PrestaShopAutoload
                             'override' => $hostMode,
                         );
 
-                        if (substr($m['classname'], -4) == 'Core') {
-                            $classes[substr($m['classname'], 0, -4)] = array(
+                        if (mb_substr($m['classname'], -4) == 'Core') {
+                            $classes[mb_substr($m['classname'], 0, -4)] = array(
                                 'path' => '',
                                 'type' => $classes[$m['classname']]['type'],
                                 'override' => $hostMode,
