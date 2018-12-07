@@ -31,7 +31,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Tab.
  *
- * @ORM\Table()
+ * @ORM\Table
  * @ORM\Entity(repositoryClass="PrestaShopBundle\Entity\Repository\TabRepository")
  */
 class Tab
