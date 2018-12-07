@@ -38,6 +38,7 @@ use PrestaShop\PrestaShop\Adapter\Validate;
 use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerInterface;
 use PrestaShop\PrestaShop\Core\Import\Configuration\ImportConfigInterface;
 use PrestaShop\PrestaShop\Core\Import\Configuration\ImportRuntimeConfigInterface;
+use PrestaShop\PrestaShop\Core\Import\Entity;
 use PrestaShop\PrestaShop\Core\Import\Exception\InvalidDataRowException;
 use PrestaShop\PrestaShop\Core\Import\Exception\SkippedIterationException;
 use PrestaShop\PrestaShop\Core\Import\File\DataRow\DataRowInterface;
@@ -540,5 +541,13 @@ final class CategoryImportHandler extends AbstractImportHandler
                 }
             }
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function supports($importEntityType)
+    {
+        return $importEntityType === Entity::TYPE_CATEGORIES;
     }
 }

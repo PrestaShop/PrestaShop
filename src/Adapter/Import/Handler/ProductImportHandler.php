@@ -43,6 +43,7 @@ use PrestaShop\PrestaShop\Adapter\Validate;
 use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerInterface;
 use PrestaShop\PrestaShop\Core\Import\Configuration\ImportConfigInterface;
 use PrestaShop\PrestaShop\Core\Import\Configuration\ImportRuntimeConfigInterface;
+use PrestaShop\PrestaShop\Core\Import\Entity;
 use PrestaShop\PrestaShop\Core\Import\File\DataRow\DataRowInterface;
 use Product;
 use ProductDownload;
@@ -1407,5 +1408,13 @@ final class ProductImportHandler extends AbstractImportHandler
                 Product::changeAccessoriesForProduct($uniqueIds, $productId);
             }
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function supports($importEntityType)
+    {
+        return $importEntityType === Entity::TYPE_PRODUCTS;
     }
 }

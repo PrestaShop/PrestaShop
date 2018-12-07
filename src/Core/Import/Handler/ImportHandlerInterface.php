@@ -87,4 +87,13 @@ interface ImportHandlerInterface
      * @return array
      */
     public function getNotices();
+
+    /**
+     * Check whether this import handler supports given entity type.
+     *
+     * @param int $importEntityType
+     *
+     * @return bool
+     */
+    public function supports($importEntityType);
 }

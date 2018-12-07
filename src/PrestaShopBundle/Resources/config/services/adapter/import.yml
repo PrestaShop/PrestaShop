@@ -75,9 +75,8 @@ services:
     prestashop.adapter.import.handler_finder:
         class: 'PrestaShop\PrestaShop\Adapter\Import\Handler\ImportHandlerFinder'
         arguments:
-            -
-              0: '@prestashop.adapter.import.handler.category'
-              1: '@prestashop.adapter.import.handler.product'
+            - '@prestashop.adapter.import.handler.category'
+            - '@prestashop.adapter.import.handler.product'
 
     prestashop.adapter.import.data_formatter:
         class: 'PrestaShop\PrestaShop\Adapter\Import\ImportDataFormatter'
