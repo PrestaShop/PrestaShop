@@ -119,11 +119,11 @@ class FromProcessor extends AbstractProcessor {
                 $parseInfo['token_count']++;
                 $skip_next = false;
                 continue;
-            } else {
+            }  
                 if ($skip_next) {
                     continue;
                 }
-            }
+            
 
             switch ($upper) {
             case 'OUTER':

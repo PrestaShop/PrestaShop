@@ -127,9 +127,9 @@ class AdminTabsControllerTest extends UnitTestCase
             ->will($this->returnCallback(function ($subject) {
                 if (mb_strpos($subject, 'authorization') !== false) {
                     return array();
-                } else {
+                }  
                     return false;
-                }
+                
             }))
         ;
 

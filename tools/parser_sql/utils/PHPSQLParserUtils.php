@@ -50,11 +50,11 @@ class PHPSQLParserUtils {
         $x .= "</pre>";
         if ($return) {
             return $x;
-        } else {
+        }  
             if (isset($_ENV['DEBUG'])) {
                 print $x . "\n";
             }
-        }
+        
     }
 
     /**
