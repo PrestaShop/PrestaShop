@@ -30,7 +30,12 @@ scenario('Create, edit, delete and check "Contact" in the Back Office', () => {
     }, 'common_client');
     commonScenarios.checkCustomerService(contactData, messageData);
   }, 'common_client');
-  scenario('Test 2: Edit, check a "Contact" in the Back Office and check it in the Front Office', () => {
+  scenario('Test 2: Edit, check a "Contact" in the Back Office and check it in the Front Office', client => {
+    test('should check and click on "Stop the OnBoarding" button', () => {
+      return promise
+        .then(() => client.isVisible(OnBoarding.stop_button))
+        .then(() => client.stopOnBoarding(OnBoarding.stop_button));
+    });
     commonScenarios.editContact(contactData);
     commonScenarios.checkContactBO(contactData);
     scenario('Go to the Front Office', client => {
