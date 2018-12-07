@@ -53,12 +53,12 @@ final class AliasFieldsProvider implements EntityFieldsProviderInterface
      */
     public function getCollection()
     {
-        $fields = [
+        $fields = array(
             new EntityField('id', $this->trans('ID', 'Admin.Global')),
             new EntityField('alias', $this->trans('Alias', 'Admin.Shopparameters.Feature'), '', true),
             new EntityField('search', $this->trans('Search', 'Admin.Shopparameters.Feature'), '', true),
             new EntityField('active', $this->trans('Active', 'Admin.Global')),
-        ];
+        );
 
         return EntityFieldCollection::createFromArray($fields);
     }
@@ -73,6 +73,6 @@ final class AliasFieldsProvider implements EntityFieldsProviderInterface
      */
     private function trans($id, $domain = 'Admin.Advparameters.Feature')
     {
-        return $this->translator->trans($id, [], $domain);
+        return $this->translator->trans($id, array(), $domain);
     }
 }

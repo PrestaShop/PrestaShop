@@ -38,7 +38,7 @@ class BulkDeleteSqlRequestCommand
     /**
      * @var SqlRequestId[]
      */
-    private $sqlRequestIds = [];
+    private $sqlRequestIds = array();
 
     /**
      * @param int[] $sqlRequestIds

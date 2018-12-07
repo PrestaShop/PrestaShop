@@ -52,13 +52,13 @@ class PreferencesController extends FrameworkBundleAdminController
 
         $form = $this->get('prestashop.admin.shipping_preferences.form_handler')->getForm();
 
-        return [
+        return array(
             'layoutTitle' => $this->trans('Preferences', 'Admin.Navigation.Menu'),
             'requireAddonsSearch' => true,
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($legacyController),
             'form' => $form->createView(),
-        ];
+        );
     }
 
     /**
@@ -74,11 +74,11 @@ class PreferencesController extends FrameworkBundleAdminController
 
         if (!in_array(
             $this->authorizationLevel($legacyController),
-            [
+            array(
                 PageVoter::LEVEL_UPDATE,
                 PageVoter::LEVEL_CREATE,
                 PageVoter::LEVEL_DELETE,
-            ]
+            )
         )) {
             $this->addFlash(
                 'error',

@@ -56,7 +56,7 @@ class InvoicesController extends FrameworkBundleAdminController
         $byStatusForm = $this->get('prestashop.admin.order.invoices.by_status.form_handler')->getForm();
         $optionsForm = $this->get('prestashop.admin.order.invoices.options.form_handler')->getForm();
 
-        return [
+        return array(
             'layoutTitle' => $this->trans('Invoices', 'Admin.Navigation.Menu'),
             'requireAddonsSearch' => true,
             'enableSidebar' => true,
@@ -64,7 +64,7 @@ class InvoicesController extends FrameworkBundleAdminController
             'byDateForm' => $byDateForm->createView(),
             'byStatusForm' => $byStatusForm->createView(),
             'optionsForm' => $optionsForm->createView(),
-        ];
+        );
     }
 
     /**
@@ -90,7 +90,7 @@ class InvoicesController extends FrameworkBundleAdminController
      * @param Request $request
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
-
+     *
      *
      * @return RedirectResponse
      */

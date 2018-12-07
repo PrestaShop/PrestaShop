@@ -117,9 +117,9 @@ class ImportMatchRepository implements RepositoryInterface
     {
         $this->connection->delete(
             $this->importMatchTable,
-            [
+            array(
                 'id_import_match' => $id,
-            ]
+            )
         );
     }
 }

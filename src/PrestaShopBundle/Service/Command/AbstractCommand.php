@@ -36,7 +36,7 @@ abstract class AbstractCommand
 {
     protected $kernel;
     protected $application;
-    protected $commands = [];
+    protected $commands = array();
 
     /**
      * Constructor.

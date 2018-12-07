@@ -108,7 +108,7 @@ final class LocalizationPackImporter implements LocalizationPackImporterInterfac
             if (null === $pack) {
                 $error = $this->trans('Cannot load the localization pack.', 'Admin.International.Notification');
 
-                return [$error];
+                return array($error);
             }
         }
 
@@ -136,33 +136,33 @@ final class LocalizationPackImporter implements LocalizationPackImporterInterfac
         if (empty($config->getCountryIsoCode())) {
             $error = $this->trans('Invalid selection', 'Admin.Notifications.Error');
 
-            return [$error];
+            return array($error);
         }
 
         if (empty($config->getContentToImport())) {
             $error = $this->trans('Please select at least one item to import.', 'Admin.International.Notification');
 
-            return [$error];
+            return array($error);
         }
 
-        $contentItems = [
+        $contentItems = array(
             LocalizationPackImportConfigInterface::CONTENT_STATES,
             LocalizationPackImportConfigInterface::CONTENT_TAXES,
             LocalizationPackImportConfigInterface::CONTENT_CURRENCIES,
             LocalizationPackImportConfigInterface::CONTENT_LANGUAGES,
             LocalizationPackImportConfigInterface::CONTENT_UNITS,
             LocalizationPackImportConfigInterface::CONTENT_GROUPS,
-        ];
+        );
 
         foreach ($config->getContentToImport() as $contentItem) {
             if (!in_array($contentItem, $contentItems)) {
                 $error = $this->trans('Invalid selection', 'Admin.Notifications.Error');
 
-                return [$error];
+                return array($error);
             }
         }
 
-        return [];
+        return array();
     }
 
     /**
@@ -174,7 +174,7 @@ final class LocalizationPackImporter implements LocalizationPackImporterInterfac
      *
      * @return string
      */
-    private function trans($message, $domain, array $params = [])
+    private function trans($message, $domain, array $params = array())
     {
         return $this->translator->trans($message, $params, $domain);
     }

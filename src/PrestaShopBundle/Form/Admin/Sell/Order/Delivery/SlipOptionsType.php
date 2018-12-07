@@ -47,9 +47,9 @@ class SlipOptionsType extends TranslatorAwareType
             ->add(
                 'prefix',
                 TranslatableType::class,
-                [
+                array(
                     'type' => TextType::class,
-                ]
+                )
             )
             ->add(
                 'number',
@@ -58,7 +58,8 @@ class SlipOptionsType extends TranslatorAwareType
             ->add(
                 'enable_product_image',
                 SwitchType::class
-            );
+            )
+        ;
     }
 
     /**

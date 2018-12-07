@@ -39,13 +39,13 @@ class SqlRequestSettingsType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('default_file_encoding', ChoiceType::class, [
-                'choices' => [
+            ->add('default_file_encoding', ChoiceType::class, array(
+                'choices' => array(
                     CharsetEncoding::UTF_8 => CharsetEncoding::UTF_8,
                     CharsetEncoding::ISO_8859_1 => CharsetEncoding::ISO_8859_1,
-                ],
+                ),
                 'translation_domain' => false,
-            ])
+            ))
         ;
     }
 }

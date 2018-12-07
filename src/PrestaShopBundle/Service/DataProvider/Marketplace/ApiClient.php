@@ -96,7 +96,8 @@ class ApiClient
     public function getCheckCustomer()
     {
         $response = $this->setMethod('check_customer')
-            ->getResponse();
+            ->getResponse()
+        ;
 
         return json_decode($response);
     }
@@ -150,7 +151,8 @@ class ApiClient
         $this->queryParameters['sc_address'] = $sc_address;
 
         $response = $this->setMethod('trust')
-            ->getResponse();
+            ->getResponse()
+        ;
 
         return json_decode($response);
     }
@@ -251,7 +253,8 @@ class ApiClient
     public function getResponse()
     {
         return (string) $this->addonsApiClient
-            ->get(null,
+            ->get(
+                null,
                 array('query' => $this->queryParameters,
                 )
             )->getBody()
@@ -261,7 +264,8 @@ class ApiClient
     public function getPostResponse()
     {
         return (string) $this->addonsApiClient
-            ->post(null,
+            ->post(
+                null,
                 array('query' => $this->queryParameters,
                 )
             )->getBody();

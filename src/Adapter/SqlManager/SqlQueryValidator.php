@@ -45,7 +45,7 @@ class SqlQueryValidator
      */
     public function validate($sql)
     {
-        $errors = [];
+        $errors = array();
 
         try {
             $requestSql = new RequestSql();
@@ -56,17 +56,17 @@ class SqlQueryValidator
                 $errors = $this->getErrors($requestSql->error_sql);
             }
         } catch (ErrorException $e) {
-            $errors[] = [
+            $errors[] = array(
                 'key' => 'Bad SQL query',
-                'parameters' => [],
+                'parameters' => array(),
                 'domain' => 'Admin.Notifications.Error',
-            ];
+            );
         } catch (PrestaShopDatabaseException $e) {
-            $errors[] = [
+            $errors[] = array(
                 'key' => 'Bad SQL query',
-                'parameters' => [],
+                'parameters' => array(),
                 'domain' => 'Admin.Notifications.Error',
-            ];
+            );
         }
 
         return $errors;
@@ -81,11 +81,11 @@ class SqlQueryValidator
      */
     private function getErrors(array $sqlErrors)
     {
-        $errors = [];
+        $errors = array();
 
         foreach ($sqlErrors as $key => $sqlError) {
             if (false === is_array($sqlError)) {
-                $sqlError = [];
+                $sqlError = array();
             }
 
             if ('checkedFrom' === $key) {
@@ -124,33 +124,33 @@ class SqlQueryValidator
     private function getFromKeywordError(array $legacyError)
     {
         if (isset($legacyError['table'])) {
-            return [
+            return array(
                 'key' => 'The "%tablename%" table does not exist.',
-                'parameters' => [
+                'parameters' => array(
                     '%tablename%' => $legacyError['table'],
-                ],
+                ),
                 'domain' => 'Admin.Advparameters.Notification',
-            ];
+            );
         }
 
         if (isset($legacyError['attribut'])) {
-            return [
+            return array(
                 'key' => 'The "%attribute%" attribute does not exist in the "%table%" table.',
-                'parameters' => [
+                'parameters' => array(
                     '%attribute%' => $legacyError['attribut'][0],
                     '%table%' => $legacyError['attribut'][1],
-                ],
+                ),
                 'domain' => 'Admin.Advparameters.Notification',
-            ];
+            );
         }
 
-        return [
+        return array(
             'key' => 'Undefined "%s" error',
-            'parameters' => [
+            'parameters' => array(
                 'checkedForm',
-            ],
+            ),
             'domain' => 'Admin.Advparameters.Notification',
-        ];
+        );
     }
 
     /**
@@ -163,41 +163,41 @@ class SqlQueryValidator
     private function getSelectKeywordError(array $legacyError)
     {
         if (isset($legacyError['table'])) {
-            return [
+            return array(
                 'key' => 'The "%tablename%" table does not exist.',
-                'parameters' => [
+                'parameters' => array(
                     '%tablename%' => $legacyError['table'],
-                ],
+                ),
                 'domain' => 'Admin.Advparameters.Notification',
-            ];
+            );
         }
 
         if (isset($legacyError['attribut'])) {
-            return [
+            return array(
                 'key' => 'The "%attribute%" attribute does not exist in the "%table%" table.',
-                'parameters' => [
+                'parameters' => array(
                     '%attribute%' => $legacyError['attribut'][0],
                     '%table%' => $legacyError['attribut'][1],
-                ],
+                ),
                 'domain' => 'Admin.Advparameters.Notification',
-            ];
+            );
         }
 
         if (isset($legacyError['*'])) {
-            return [
+            return array(
                 'key' => 'The "*" operator cannot be used in a nested query.',
-                'parameters' => [],
+                'parameters' => array(),
                 'domain' => 'Admin.Advparameters.Notification',
-            ];
+            );
         }
 
-        return [
+        return array(
             'key' => 'Undefined "%s" error',
-            'parameters' => [
+            'parameters' => array(
                 'checkedSelect',
-            ],
+            ),
             'domain' => 'Admin.Advparameters.Notification',
-        ];
+        );
     }
 
     /**
@@ -210,33 +210,33 @@ class SqlQueryValidator
     private function getWhereKeywordError(array $legacyError)
     {
         if (isset($legacyError['operator'])) {
-            return [
+            return array(
                 'key' => 'The operator "%s" is incorrect.',
-                'parameters' => [
+                'parameters' => array(
                     '%operator%' => $legacyError['operator'],
-                ],
+                ),
                 'domain' => 'Admin.Advparameters.Notification',
-            ];
+            );
         }
 
         if (isset($legacyError['attribut'])) {
-            return [
+            return array(
                 'key' => 'The "%attribute%" attribute does not exist in the "%table%" table.',
-                'parameters' => [
+                'parameters' => array(
                     '%attribute%' => $legacyError['attribut'][0],
                     '%table%' => $legacyError['attribut'][1],
-                ],
+                ),
                 'domain' => 'Admin.Advparameters.Notification',
-            ];
+            );
         }
 
-        return [
+        return array(
             'key' => 'Undefined "%s" error',
-            'parameters' => [
+            'parameters' => array(
                 'checkedWhere',
-            ],
+            ),
             'domain' => 'Admin.Advparameters.Notification',
-        ];
+        );
     }
 
     /**
@@ -249,33 +249,33 @@ class SqlQueryValidator
     private function getHavingKeywordError(array $legacyError)
     {
         if (isset($legacyError['operator'])) {
-            return [
+            return array(
                 'key' => 'The "%operator%" operator is incorrect.',
-                'parameters' => [
+                'parameters' => array(
                     '%operator%' => $legacyError['operator'],
-                ],
+                ),
                 'domain' => 'Admin.Advparameters.Notification',
-            ];
+            );
         }
 
         if (isset($legacyError['attribut'])) {
-            return [
+            return array(
                 'key' => 'The "%attribute%" attribute does not exist in the "%table%" table.',
-                'parameters' => [
+                'parameters' => array(
                     '%attribute%' => $legacyError['attribut'][0],
                     '%table%' => $legacyError['attribut'][1],
-                ],
+                ),
                 'domain' => 'Admin.Advparameters.Notification',
-            ];
+            );
         }
 
-        return [
+        return array(
             'key' => 'Undefined "%s" error',
-            'parameters' => [
+            'parameters' => array(
                 'checkedHaving',
-            ],
+            ),
             'domain' => 'Admin.Advparameters.Notification',
-        ];
+        );
     }
 
     /**
@@ -288,23 +288,23 @@ class SqlQueryValidator
     private function getOrderKeywordError(array $legacyError)
     {
         if (isset($legacyError['attribut'])) {
-            return [
+            return array(
                 'key' => 'The "%attribute%" attribute does not exist in the "%table%" table.',
-                'parameters' => [
+                'parameters' => array(
                     '%attribute%' => $legacyError['attribut'][0],
                     '%table%' => $legacyError['attribut'][1],
-                ],
+                ),
                 'domain' => 'Admin.Advparameters.Notification',
-            ];
+            );
         }
 
-        return [
+        return array(
             'key' => 'Undefined "%s" error',
-            'parameters' => [
+            'parameters' => array(
                 'checkedOrder',
-            ],
+            ),
             'domain' => 'Admin.Advparameters.Notification',
-        ];
+        );
     }
 
     /**
@@ -317,23 +317,23 @@ class SqlQueryValidator
     private function getGroupKeywordError(array $legacyError)
     {
         if (isset($legacyError['attribut'])) {
-            return [
+            return array(
                 'key' => 'The "%attribute%" attribute does not exist in the "%table%" table.',
-                'parameters' => [
+                'parameters' => array(
                     '%attribute%' => $legacyError['attribut'][0],
                     '%table%' => $legacyError['attribut'][1],
-                ],
+                ),
                 'domain' => 'Admin.Advparameters.Notification',
-            ];
+            );
         }
 
-        return [
+        return array(
             'key' => 'Undefined "%s" error',
-            'parameters' => [
+            'parameters' => array(
                 'checkedGroupBy',
-            ],
+            ),
             'domain' => 'Admin.Advparameters.Notification',
-        ];
+        );
     }
 
     /**
@@ -343,11 +343,11 @@ class SqlQueryValidator
      */
     private function getLimitKeywordError()
     {
-        return [
+        return array(
             'key' => 'The LIMIT clause must contain numeric arguments.',
-            'parameters' => [],
+            'parameters' => array(),
             'domain' => 'Admin.Advparameters.Notification',
-        ];
+        );
     }
 
     /**
@@ -360,21 +360,21 @@ class SqlQueryValidator
     private function getReferenceError(array $legacyError)
     {
         if (isset($legacyError['reference'])) {
-            return [
+            return array(
                 'key' => 'The "%reference%" reference does not exist in the "%table%" table.',
-                'parameters' => [
+                'parameters' => array(
                     '%reference%' => $legacyError['reference'][0],
                     '%table%' => $legacyError['attribut'][1],
-                ],
+                ),
                 'domain' => 'Admin.Advparameters.Notification',
-            ];
+            );
         }
 
-        return [
+        return array(
             'key' => 'When multiple tables are used, each attribute must refer back to a table.',
-            'parameters' => [],
+            'parameters' => array(),
             'domain' => 'Admin.Advparameters.Notification',
-        ];
+        );
     }
 
     /**
@@ -386,13 +386,13 @@ class SqlQueryValidator
      */
     private function getRequiredKeyError($legacyError)
     {
-        return [
+        return array(
             'key' => '"%key%" does not exist.',
-            'parameters' => [
+            'parameters' => array(
                 '%key%' => $legacyError,
-            ],
+            ),
             'domain' => 'Admin.Notifications.Error',
-        ];
+        );
     }
 
     /**
@@ -404,12 +404,12 @@ class SqlQueryValidator
      */
     private function getUnauthorizedKeyError($legacyError)
     {
-        return [
+        return array(
             'key' => '"%key%" is an unauthorized keyword.',
-            'parameters' => [
+            'parameters' => array(
                 '%key%' => $legacyError,
-            ],
+            ),
             'domain' => 'Admin.Advparameters.Notification',
-        ];
+        );
     }
 }

@@ -66,9 +66,9 @@ class SqlRequestFormDataValidator
         $requestSql->sql = $data['sql'];
 
         if (true !== $error = $requestSql->validateFields(false, true)) {
-            return [$error];
+            return array($error);
         }
 
-        return [];
+        return array();
     }
 }

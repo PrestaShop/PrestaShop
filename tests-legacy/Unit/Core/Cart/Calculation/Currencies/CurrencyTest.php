@@ -37,25 +37,25 @@ class CurrencyTest extends AbstractCartCalculationTest
     /**
      * isoCode : [a-zA-Z]{2,3}  @see Validate::isLanguageIsoCode()
      */
-    const CURRENCY_FIXTURES = [
-        1 => [
-            'isoCode'    => 'USD',
+    const CURRENCY_FIXTURES = array(
+        1 => array(
+            'isoCode' => 'USD',
             'changeRate' => 0.92,
-        ],
-        2 => [
-            'isoCode'    => 'CHF',
+        ),
+        2 => array(
+            'isoCode' => 'CHF',
             'changeRate' => 1.25,
-        ],
-        3 => [
-            'isoCode'    => 'EUR',
+        ),
+        3 => array(
+            'isoCode' => 'EUR',
             'changeRate' => 0.63,
-        ],
-    ];
+        ),
+    );
 
     /**
      * @var Currency[]
      */
-    protected $currencies = [];
+    protected $currencies = array();
 
     protected $defaultCurrencyId;
 
@@ -119,16 +119,16 @@ class CurrencyTest extends AbstractCartCalculationTest
             $currencyId = Currency::getIdByIsoCode($currencyFixture['isoCode']);
             // soft delete here...
             if (!$currencyId) {
-                $currency                  = new Currency();
-                $currency->name            = $currencyFixture['isoCode'];
-                $currency->iso_code        = $currencyFixture['isoCode'];
-                $currency->active          = 1;
+                $currency = new Currency();
+                $currency->name = $currencyFixture['isoCode'];
+                $currency->iso_code = $currencyFixture['isoCode'];
+                $currency->active = 1;
                 $currency->conversion_rate = $currencyFixture['changeRate'];
                 $currency->add();
             } else {
-                $currency                  = new Currency($currencyId);
-                $currency->name            = $currencyFixture['isoCode'];
-                $currency->active          = 1;
+                $currency = new Currency($currencyId);
+                $currency->name = $currencyFixture['isoCode'];
+                $currency->active = 1;
                 $currency->conversion_rate = $currencyFixture['changeRate'];
                 $currency->save();
             }
@@ -162,42 +162,42 @@ class CurrencyTest extends AbstractCartCalculationTest
         if ($currency === null) {
             throw new \Exception('Currency not found with fixture id = ' . $currencyId);
         }
-        $this->cart->id_currency        = $currency->id;
+        $this->cart->id_currency = $currency->id;
         Context::getContext()->currency = $currency;
     }
 
     public function currencyDataProvider()
     {
-        $data              = [];
-        $currencyIdDoubles = [
-            [
+        $data = array();
+        $currencyIdDoubles = array(
+            array(
                 'defaultCurrencyId' => 1,
-                'currencyId'        => 1,
-            ],
-            [
+                'currencyId' => 1,
+            ),
+            array(
                 'defaultCurrencyId' => 1,
-                'currencyId'        => 2,
-            ],
-            [
+                'currencyId' => 2,
+            ),
+            array(
                 'defaultCurrencyId' => 2,
-                'currencyId'        => 1,
-            ],
-            [
+                'currencyId' => 1,
+            ),
+            array(
                 'defaultCurrencyId' => 1,
-                'currencyId'        => 3,
-            ],
-            [
+                'currencyId' => 3,
+            ),
+            array(
                 'defaultCurrencyId' => 3,
-                'currencyId'        => 1,
-            ],
-        ];
+                'currencyId' => 1,
+            ),
+        );
         foreach ($currencyIdDoubles as $currencyIdDouble) {
             $dataSets = $this->getCurrencyData(
                 $currencyIdDouble['defaultCurrencyId'],
                 $currencyIdDouble['currencyId']
             );
             foreach ($dataSets as $k => $dataSet) {
-                $testCasePrefix             = 'defaultCurrency #'
+                $testCasePrefix = 'defaultCurrency #'
                                               . $currencyIdDouble['defaultCurrencyId']
                                               . ' / currencyId #'
                                               . $currencyIdDouble['currencyId']
@@ -221,40 +221,40 @@ class CurrencyTest extends AbstractCartCalculationTest
         }
 
 
-        return [
-            'empty cart'                             => [
-                'products'      => [],
+        return array(
+            'empty cart' => array(
+                'products' => array(),
                 'expectedTotal' => 0,
-                'cartRules'     => [],
-            ],
-            'one product in cart, quantity 1'        => [
-                'products'      => [1 => 1,],
+                'cartRules' => array(),
+            ),
+            'one product in cart, quantity 1' => array(
+                'products' => array(1 => 1,),
                 'expectedTotal' => $rate * (static::PRODUCT_FIXTURES[1]['price']
                                             + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE),
-                'cartRules'     => [],
-            ],
-            'one product in cart, quantity 3'        => [
-                'products'      => [1 => 3,],
+                'cartRules' => array(),
+            ),
+            'one product in cart, quantity 3' => array(
+                'products' => array(1 => 3,),
                 'expectedTotal' => round(
                     $rate * (3 * static::PRODUCT_FIXTURES[1]['price']
                              + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE),
                     2
                 ),
-                'cartRules'     => [],
-            ],
-            '3 products in cart, several quantities' => [
-                'products'      => [
+                'cartRules' => array(),
+            ),
+            '3 products in cart, several quantities' => array(
+                'products' => array(
                     2 => 2,
                     1 => 3,
                     3 => 1,
-                ],
+                ),
                 'expectedTotal' => $rate * (3 * static::PRODUCT_FIXTURES[1]['price']
                                             + 2 * static::PRODUCT_FIXTURES[2]['price']
                                             + static::PRODUCT_FIXTURES[3]['price']
                                             + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE),
-                'cartRules'     => [],
-            ],
-        ];
+                'cartRules' => array(),
+            ),
+        );
     }
 
 }

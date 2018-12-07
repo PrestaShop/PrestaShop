@@ -1,28 +1,28 @@
 <?php
 /*
-* 2007-2016 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Academic Free License (AFL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/afl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2016 PrestaShop SA
-*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+ * 2007-2016 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ *  @author PrestaShop SA <contact@prestashop.com>
+ *  @copyright  2007-2016 PrestaShop SA
+ *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ *  International Registered Trademark & Property of PrestaShop SA
+ */
 
 if (!defined('_PS_VERSION_')) {
     exit;
@@ -119,10 +119,12 @@ class gamification extends Module
         if (version_compare(_PS_VERSION_, '1.7.0.0', '>=')) {
             //AdminPreferences
             $tab->id_parent = (int)Db::getInstance(_PS_USE_SQL_SLAVE_)
-                                ->getValue('SELECT MIN(id_tab)
+                                ->getValue(
+                                    'SELECT MIN(id_tab)
 											FROM `'._DB_PREFIX_.'tab`
 											WHERE `class_name` = "'.pSQL('ShopParameters').'"'
-                                        );
+                                        )
+            ;
         } else {
             // AdminAdmin
             $tab->id_parent = (int)Tab::getIdFromClassName('AdminAdmin');
@@ -301,13 +303,13 @@ class gamification extends Module
                     $this->processImportConditions($data->conditions, $id_lang);
                 }
 
-                if ((isset($data->badges) && isset($data->badges_lang)) && (!isset($data->badges_only_visible_awb) && !isset($data->badges_only_visible_lang_awb))) {
+                if ((isset($data->badges, $data->badges_lang)  ) && (!isset($data->badges_only_visible_awb) && !isset($data->badges_only_visible_lang_awb))) {
                     $this->processImportBadges($data->badges, $data->badges_lang, $id_lang);
                 } else {
                     $this->processImportBadges(array_merge($data->badges_only_visible_awb, $data->badges), array_merge($data->badges_only_visible_lang_awb, $data->badges_lang), $id_lang);
                 }
 
-                if (isset($data->advices) && isset($data->advices_lang)) {
+                if (isset($data->advices, $data->advices_lang)  ) {
                     $this->processImportAdvices($data->advices, $data->advices_lang, $id_lang);
                 }
 
@@ -317,7 +319,7 @@ class gamification extends Module
                     }
                 }
 
-                if (version_compare(_PS_VERSION_, '1.6.0', '>=') === true && isset($data->advices_16) && isset($data->advices_lang_16)) {
+                if (version_compare(_PS_VERSION_, '1.6.0', '>=') === true && isset($data->advices_16, $data->advices_lang_16)  ) {
                     $this->processImportAdvices($data->advices_16, $data->advices_lang_16, $id_lang);
                 }
             }
@@ -499,7 +501,9 @@ class gamification extends Module
         Db::getInstance()->delete('condition_advice', 'id_advice='.(int)$id_advice);
         if (is_array($display_conditions)) {
             foreach ($display_conditions as $cond) {
-                Db::getInstance()->insert('condition_advice', array(
+                Db::getInstance()->insert(
+                    'condition_advice',
+                    array(
                     'id_condition' => (int) $cond_ids[$cond], 'id_advice' => (int) $id_advice, 'display' => 1)
                 );
             }
@@ -507,7 +511,9 @@ class gamification extends Module
 
         if (is_array($hide_conditions)) {
             foreach ($hide_conditions as $cond) {
-                Db::getInstance()->insert('condition_advice', array(
+                Db::getInstance()->insert(
+                    'condition_advice',
+                    array(
                     'id_condition' => (int) $cond_ids[$cond], 'id_advice' => (int) $id_advice, 'display' => 0)
                 );
             }
@@ -516,7 +522,9 @@ class gamification extends Module
         Db::getInstance()->delete('tab_advice', 'id_advice='.(int)$id_advice);
         if (isset($tabs) && is_array($tabs) && count($tabs)) {
             foreach ($tabs as $tab) {
-                Db::getInstance()->insert('tab_advice', array(
+                Db::getInstance()->insert(
+                    'tab_advice',
+                    array(
                     'id_tab' => (int)Tab::getIdFromClassName($tab), 'id_advice' => (int) $id_advice)
                 );
             }

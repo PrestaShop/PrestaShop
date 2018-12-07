@@ -157,7 +157,7 @@ abstract class AbstractProcessor {
     }
 
     protected function isCommentToken($token) {
-        return isset($token[0]) && isset($token[1])
+        return isset($token[0], $token[1])  
             && (($token[0] === '-' && $token[1] === '-') || ($token[0] === '/' && $token[1] === '*'));
     }
 

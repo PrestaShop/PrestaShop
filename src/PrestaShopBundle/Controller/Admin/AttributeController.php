@@ -46,27 +46,27 @@ class AttributeController extends FrameworkBundleAdminController
         $locales = $this->get('prestashop.adapter.legacy.context')->getLanguages();
         $attributes = $this->get('prestashop.adapter.data_provider.attribute')->getAttributes($locales[0]['id_lang'], true);
 
-        $dataGroupAttributes = [];
-        $data = [];
+        $dataGroupAttributes = array();
+        $data = array();
         foreach ($attributes as $attribute) {
             /* Construct attribute group selector. Ex : Color : All */
-            $dataGroupAttributes[$attribute['id_attribute_group']] = [
+            $dataGroupAttributes[$attribute['id_attribute_group']] = array(
                 'value' => 'group-' . $attribute['id_attribute_group'],
                 'label' => $attribute['public_name'] . ' : ' . $this->trans('All', 'Admin.Global'),
-                'data' => [
+                'data' => array(
                     'id_group' => $attribute['id_attribute_group'],
                     'name' => $attribute['public_name'],
-                ],
-            ];
+                ),
+            );
 
-            $data[] = [
+            $data[] = array(
                 'value' => $attribute['id_attribute'],
                 'label' => $attribute['public_name'] . ' : ' . $attribute['name'],
-                'data' => [
+                'data' => array(
                     'id_group' => $attribute['id_attribute_group'],
                     'name' => $attribute['name'],
-                ],
-            ];
+                ),
+            );
         }
 
         $data = array_merge($dataGroupAttributes, $data);
@@ -106,7 +106,7 @@ class AttributeController extends FrameworkBundleAdminController
         }, $product->getAttributeCombinations(1, false));
 
         //get clean attributes ids
-        $newOptions = [];
+        $newOptions = array();
         foreach ($options as $idGroup => $attributes) {
             foreach ($attributes as $attribute) {
                 //If attribute is a group attribute, replace group data by all attributes group
@@ -151,7 +151,8 @@ class AttributeController extends FrameworkBundleAdminController
                         'combination_' . $combination['id_product_attribute'],
                         'PrestaShopBundle\Form\Admin\Product\ProductCombination',
                         $combinationDataProvider->getFormCombination($combination['id_product_attribute'])
-                    );
+                    )
+                ;
                 $result['form'] .= $this->renderView(
                     '@Product/ProductPage/Forms/form_combination.html.twig',
                     array(
@@ -202,14 +203,15 @@ class AttributeController extends FrameworkBundleAdminController
             $attributeIds = $request->request->get('attribute-ids');
             foreach ($attributeIds as $attributeId) {
                 $legacyResponse = $this->get('prestashop.adapter.admin.controller.attribute_generator')
-                    ->ajaxProcessDeleteProductAttribute($attributeId, $idProduct);
+                    ->ajaxProcessDeleteProductAttribute($attributeId, $idProduct)
+                ;
             }
 
             if ($legacyResponse['status'] == 'error') {
                 $response->setStatusCode(400);
             }
 
-            $response->setData(['message' => $legacyResponse['message']]);
+            $response->setData(array('message' => $legacyResponse['message']));
         }
 
         return $response;
@@ -239,7 +241,8 @@ class AttributeController extends FrameworkBundleAdminController
 
         foreach ($combinations as $combination) {
             $res = $this->get('prestashop.adapter.admin.controller.attribute_generator')
-                ->ajaxProcessDeleteProductAttribute($combination['id_product_attribute'], $idProduct);
+                ->ajaxProcessDeleteProductAttribute($combination['id_product_attribute'], $idProduct)
+            ;
 
             if ($res['status'] == 'error') {
                 $response->setStatusCode(400);
@@ -247,7 +250,7 @@ class AttributeController extends FrameworkBundleAdminController
             }
         }
 
-        $response->setData(['message' => $res['message']]);
+        $response->setData(array('message' => $res['message']));
 
         return $response;
     }
@@ -279,7 +282,7 @@ class AttributeController extends FrameworkBundleAdminController
             return $response;
         }
 
-        $data = [];
+        $data = array();
         $combinations = $attributeAdapter->getProductCombinations($idProduct);
         foreach ($combinations as $combination) {
             //get combination images

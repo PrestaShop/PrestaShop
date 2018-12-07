@@ -50,145 +50,145 @@ class HashMapWhitelistFilterTest extends \PHPUnit_Framework_TestCase
 
     public function testKeysCanBeRemovedFromWhitelist()
     {
-        $subject = [
+        $subject = array(
             'foo' => 'something',
             'bar' => null,
-            'baz' => [],
-        ];
+            'baz' => array(),
+        );
 
         $filter = new HashMapWhitelistFilter();
-        $filter->whitelist([
+        $filter->whitelist(array(
             'foo', 'bar'
-        ]);
+        ));
 
-        $expected = [
+        $expected = array(
             'foo' => 'something',
             'bar' => null,
-        ];
+        );
 
         $this->assertSame($expected, $filter->filter($subject));
 
         // remove 'foo' from whitelist and filter again
         $filter->removeFromWhitelist('foo');
-        $expected = [
+        $expected = array(
             'bar' => null,
-        ];
+        );
 
         $this->assertSame($expected, $filter->filter($subject));
     }
 
     public function testKeysCanBeAddedToWhitelist()
     {
-        $subject = [
+        $subject = array(
             'foo' => 'something',
             'bar' => null,
-            'baz' => [],
-        ];
+            'baz' => array(),
+        );
 
         $filter = new HashMapWhitelistFilter();
-        $filter->whitelist([
+        $filter->whitelist(array(
             'foo'
-        ]);
+        ));
 
-        $expected = [
+        $expected = array(
             'foo' => 'something',
-        ];
+        );
 
         $this->assertSame($expected, $filter->filter($subject));
 
         // add 'bar' to the whitelist and filter again
-        $filter->whitelist(['bar']);
-        $expected = [
+        $filter->whitelist(array('bar'));
+        $expected = array(
             'foo' => 'something',
             'bar' => null,
-        ];
+        );
 
         $this->assertSame($expected, $filter->filter($subject));
     }
 
     public function provideTestCases()
     {
-        $basicArray = [
+        $basicArray = array(
             'foo' => 'something',
             'bar' => null,
-            'baz' => [],
-        ];
+            'baz' => array(),
+        );
 
-        $nestedArray = [
+        $nestedArray = array(
             'foo' => 'something',
             'bar' => null,
             'baz' => $basicArray,
-        ];
+        );
 
-        return [
-            'keep 1st'         => [
-                'subject'   => $basicArray,
-                'whitelist' => [
+        return array(
+            'keep 1st' => array(
+                'subject' => $basicArray,
+                'whitelist' => array(
                     'foo',
-                ],
-                'expected'  => [
+                ),
+                'expected' => array(
                     'foo' => 'something',
-                ],
-            ],
-            'keep 2nd'         => [
-                'subject'   => $basicArray,
-                'whitelist' => [
+                ),
+            ),
+            'keep 2nd' => array(
+                'subject' => $basicArray,
+                'whitelist' => array(
                     'bar',
-                ],
-                'expected'  => [
+                ),
+                'expected' => array(
                     'bar' => null,
-                ],
-            ],
-            'keep 3rd'         => [
-                'subject'   => $basicArray,
-                'whitelist' => [
+                ),
+            ),
+            'keep 3rd' => array(
+                'subject' => $basicArray,
+                'whitelist' => array(
                     'baz',
-                ],
-                'expected'  => [
+                ),
+                'expected' => array(
                     'baz' => array(),
-                ],
-            ],
-            'keep 1st and 2nd' => [
-                'subject'   => $basicArray,
-                'whitelist' => [
+                ),
+            ),
+            'keep 1st and 2nd' => array(
+                'subject' => $basicArray,
+                'whitelist' => array(
                     'foo', 'bar',
-                ],
-                'expected'  => [
+                ),
+                'expected' => array(
                     'foo' => 'something',
                     'bar' => null,
-                ],
-            ],
-            'keep all'         => [
-                'subject'   => $basicArray,
-                'whitelist' => [
+                ),
+            ),
+            'keep all' => array(
+                'subject' => $basicArray,
+                'whitelist' => array(
                     'foo', 'bar', 'baz',
-                ],
-                'expected'  => [
+                ),
+                'expected' => array(
                     'foo' => 'something',
                     'bar' => null,
-                    'baz' => [],
-                ],
-            ],
-            'keep none'        => [
-                'subject'   => $basicArray,
-                'whitelist' => [],
-                'expected'  => [],
-            ],
-            'nested filter' => [
-                'subject'   => $nestedArray,
-                'whitelist' => [
+                    'baz' => array(),
+                ),
+            ),
+            'keep none' => array(
+                'subject' => $basicArray,
+                'whitelist' => array(),
+                'expected' => array(),
+            ),
+            'nested filter' => array(
+                'subject' => $nestedArray,
+                'whitelist' => array(
                     'foo',
-                    'baz' => (new HashMapWhitelistFilter())->whitelist(['foo', 'baz'])
-                ],
-                'expected' => [
+                    'baz' => (new HashMapWhitelistFilter())->whitelist(array('foo', 'baz'))
+                ),
+                'expected' => array(
                     'foo' => 'something',
-                    'baz' => [
+                    'baz' => array(
                         'foo' => 'something',
-                        'baz' => []
-                    ],
-                ]
-            ]
-        ];
+                        'baz' => array()
+                    ),
+                )
+            )
+        );
     }
 
 }

@@ -71,9 +71,9 @@ class HookConfigurator
             $firstNullValueFound = true;
             $existing = isset($currentHooks[$hookName]) ?
                 $currentHooks[$hookName] :
-                []
+                array()
             ;
-            $currentHooks[$hookName] = [];
+            $currentHooks[$hookName] = array();
             foreach ($modules as $key => $module) {
                 if ($module === null && $firstNullValueFound) {
                     $firstNullValueFound = false;
@@ -109,7 +109,7 @@ class HookConfigurator
 
     private function getUniqueModuleToHookList(array $hooks)
     {
-        $list = [];
+        $list = array();
         foreach ($hooks as $modules) {
             $list = array_merge($list, $modules);
         }

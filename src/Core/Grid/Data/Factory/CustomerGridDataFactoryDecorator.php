@@ -90,7 +90,7 @@ final class CustomerGridDataFactoryDecorator implements GridDataFactoryInterface
      */
     private function applyModifications(RecordCollectionInterface $customers)
     {
-        $modifiedCustomers = [];
+        $modifiedCustomers = array();
 
         foreach ($customers as $customer) {
             if (empty($customer['social_title'])) {

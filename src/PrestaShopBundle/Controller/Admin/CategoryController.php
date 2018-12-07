@@ -53,25 +53,26 @@ class CategoryController extends FrameworkBundleAdminController
 
         $form = $this->createFormBuilder()
             ->add('category', SimpleCategory::class)
-            ->getForm();
+            ->getForm()
+        ;
 
         $form->handleRequest($request);
 
         if ($form->isValid()) {
             $data = $form->getData();
 
-            $_POST = [
+            $_POST = array(
                 'submitAddcategory' => 1,
                 'name_1' => $data['category']['name'],
                 'id_parent' => $data['category']['id_parent'],
                 'link_rewrite_1' => $tools->link_rewrite($data['category']['name']),
                 'active' => 1,
-                'checkBoxShopAsso_category' => $currentIdShop ? [$currentIdShop => $currentIdShop] : $shopList,
-            ];
+                'checkBoxShopAsso_category' => $currentIdShop ? array($currentIdShop => $currentIdShop) : $shopList,
+            );
 
             $adminCategoryController = $this->get('prestashop.adapter.admin.controller.category')->getInstance();
             if ($category = $adminCategoryController->processAdd()) {
-                $response->setData(['category' => $category]);
+                $response->setData(array('category' => $category));
             }
 
             if ($request->query->has('id_product')) {

@@ -161,17 +161,20 @@ class AdminShopControllerCore extends AdminController
                     'Collapse All',
                     '#',
                     '$(\'#' . $shops_tree->getId() . '\').tree(\'collapseAll\'); return false;',
-                    'icon-collapse-alt'),
+                    'icon-collapse-alt'
+                ),
                 new TreeToolbarLink(
                     'Expand All',
                     '#',
                     '$(\'#' . $shops_tree->getId() . '\').tree(\'expandAll\'); return false;',
-                    'icon-expand-alt'),
+                    'icon-expand-alt'
+                ),
             ))
             ->setAttribute('url_shop_group', $this->context->link->getAdminLink('AdminShopGroup'))
             ->setAttribute('url_shop', $this->context->link->getAdminLink('AdminShop'))
             ->setAttribute('url_shop_url', $this->context->link->getAdminLink('AdminShopUrl'))
-            ->setData($data);
+            ->setData($data)
+        ;
         $shops_tree = $shops_tree->render(null, false, false);
 
         if ($this->display == 'edit') {
@@ -223,7 +226,8 @@ class AdminShopControllerCore extends AdminController
 
             $helper = new HelperTreeCategories('categories-tree', null, (int) Tools::getValue('id_category'), null, false);
             $this->content = $helper->setSelectedCategories($selected_cat)->setUseSearch(true)->setUseCheckBox(true)
-                ->render();
+                ->render()
+            ;
         }
         parent::displayAjax();
     }
@@ -514,7 +518,8 @@ class AdminShopControllerCore extends AdminController
 
         $themes = (new ThemeManagerBuilder($this->context, Db::getInstance()))
                         ->buildRepository()
-                        ->getList();
+                        ->getList()
+        ;
 
         $this->fields_form['input'][] = array(
             'type' => 'theme',
@@ -602,7 +607,8 @@ class AdminShopControllerCore extends AdminController
         if (!$obj->theme_name) {
             $themes = (new ThemeManagerBuilder($this->context, Db::getInstance()))
                             ->buildRepository()
-                            ->getList();
+                            ->getList()
+            ;
             $theme = array_pop($themes);
             $theme_name = $theme->getName();
         } else {

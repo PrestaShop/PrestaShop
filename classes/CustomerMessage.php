@@ -133,14 +133,16 @@ class CustomerMessageCore extends ObjectModel
     public static function getTotalCustomerMessages($where = null)
     {
         if (is_null($where)) {
-            return (int) Db::getInstance()->getValue('
+            return (int) Db::getInstance()->getValue(
+                '
 				SELECT COUNT(*)
 				FROM ' . _DB_PREFIX_ . 'customer_message
 				LEFT JOIN `' . _DB_PREFIX_ . 'customer_thread` ct ON (cm.`id_customer_thread` = ct.`id_customer_thread`)
 				WHERE 1' . Shop::addSqlRestriction()
             );
         } else {
-            return (int) Db::getInstance()->getValue('
+            return (int) Db::getInstance()->getValue(
+                '
 				SELECT COUNT(*)
 				FROM ' . _DB_PREFIX_ . 'customer_message cm
 				LEFT JOIN `' . _DB_PREFIX_ . 'customer_thread` ct ON (cm.`id_customer_thread` = ct.`id_customer_thread`)
@@ -174,7 +176,8 @@ class CustomerMessageCore extends ObjectModel
      */
     public static function getLastMessageForCustomerThread($id_customer_thread)
     {
-        return (string) Db::getInstance()->getValue('
+        return (string) Db::getInstance()->getValue(
+            '
             SELECT message
             FROM ' . _DB_PREFIX_ . 'customer_message
             WHERE id_customer_thread = ' . (int) $id_customer_thread . '

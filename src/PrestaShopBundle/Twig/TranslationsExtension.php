@@ -240,7 +240,8 @@ class TranslationsExtension extends \Twig_Extension
         $translationValue = $this->getTranslationValue($properties['translation']);
         $defaultTranslationValue = $this->getDefaultTranslationValue(
             $properties['translation_key'],
-            $domain, $locale,
+            $domain,
+            $locale,
             $properties['translation']
         );
 
@@ -419,7 +420,8 @@ class TranslationsExtension extends \Twig_Extension
         $totalTranslationsAttribute = '';
         if (array_key_exists('__messages', $subtree)) {
             $totalTranslations = count(array_values($subtree['__messages'])[0]);
-            $totalTranslationsAttribute = ' data-total-translations="' . $this->translator->trans('%nb_translations% expressions',
+            $totalTranslationsAttribute = ' data-total-translations="' . $this->translator->trans(
+                '%nb_translations% expressions',
                     array('%nb_translations%' => $totalTranslations),
                     'Admin.International.Feature'
                 ) . '"';
@@ -462,7 +464,8 @@ class TranslationsExtension extends \Twig_Extension
 
             $missingTranslationsMessage =
                 '<div class="missing-translations-short-message pull-right hide">' .
-                $this->translator->trans('%nb_translations% missing',
+                $this->translator->trans(
+                    '%nb_translations% missing',
                     array('%nb_translations%' => $missingTranslationsCount),
                     'Admin.International.Feature'
                 ) .

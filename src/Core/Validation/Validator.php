@@ -49,11 +49,11 @@ final class Validator implements ValidatorInterface
     /**
      * {@inheritdoc}
      */
-    public function isCleanHtml($html, array $options = [])
+    public function isCleanHtml($html, array $options = array())
     {
-        $defaultOptions = [
+        $defaultOptions = array(
             'allow_iframe' => false,
-        ];
+        );
         $options = array_merge($defaultOptions, $options);
 
         return $this->validate->isCleanHtml($html, $options['allow_iframe']);

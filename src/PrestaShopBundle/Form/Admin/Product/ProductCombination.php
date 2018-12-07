@@ -71,162 +71,164 @@ class ProductCombination extends CommonAbstractType
     {
         $is_stock_management = $this->configuration->get('PS_STOCK_MANAGEMENT');
 
-        $builder->add('id_product_attribute', HiddenType::class, [
+        $builder->add('id_product_attribute', HiddenType::class, array(
             'required' => false,
-        ])
-            ->add('attribute_reference', TextType::class, [
+        ))
+            ->add('attribute_reference', TextType::class, array(
                 'required' => false,
-                'label' => $this->translator->trans('Reference', [], 'Admin.Global'),
+                'label' => $this->translator->trans('Reference', array(), 'Admin.Global'),
                 'empty_data' => '',
-            ])
-            ->add('attribute_ean13', TextType::class, [
+            ))
+            ->add('attribute_ean13', TextType::class, array(
                 'required' => false,
                 'error_bubbling' => true,
-                'label' => $this->translator->trans('EAN-13 or JAN barcode', [], 'Admin.Catalog.Feature'),
-                'constraints' => [
+                'label' => $this->translator->trans('EAN-13 or JAN barcode', array(), 'Admin.Catalog.Feature'),
+                'constraints' => array(
                     new Assert\Regex('/^[0-9]{0,13}$/'),
-                ],
+                ),
                 'empty_data' => '',
-            ])
-            ->add('attribute_isbn', TextType::class, [
+            ))
+            ->add('attribute_isbn', TextType::class, array(
                 'required' => false,
-                'label' => $this->translator->trans('ISBN code', [], 'Admin.Catalog.Feature'),
-                'constraints' => [
+                'label' => $this->translator->trans('ISBN code', array(), 'Admin.Catalog.Feature'),
+                'constraints' => array(
                     new Assert\Regex('/^[0-9-]{0,32}$/'),
-                ],
+                ),
                 'empty_data' => '',
-            ])
-            ->add('attribute_upc', TextType::class, [
+            ))
+            ->add('attribute_upc', TextType::class, array(
                 'required' => false,
-                'label' => $this->translator->trans('UPC barcode', [], 'Admin.Catalog.Feature'),
-                'constraints' => [
+                'label' => $this->translator->trans('UPC barcode', array(), 'Admin.Catalog.Feature'),
+                'constraints' => array(
                     new Assert\Regex('/^[0-9]{0,12}$/'),
-                ],
+                ),
                 'empty_data' => '',
-            ])
-            ->add('attribute_wholesale_price', MoneyType::class, [
+            ))
+            ->add('attribute_wholesale_price', MoneyType::class, array(
                 'required' => false,
-                'label' => $this->translator->trans('Cost price', [], 'Admin.Catalog.Feature'),
+                'label' => $this->translator->trans('Cost price', array(), 'Admin.Catalog.Feature'),
                 'currency' => $this->currency->iso_code,
-                'attr' => ['class' => 'attribute_wholesale_price'],
-            ])
-            ->add('attribute_price', MoneyType::class, [
+                'attr' => array('class' => 'attribute_wholesale_price'),
+            ))
+            ->add('attribute_price', MoneyType::class, array(
                 'required' => false,
-                'label' => $this->translator->trans('Impact on price (tax excl.)', [], 'Admin.Catalog.Feature'),
+                'label' => $this->translator->trans('Impact on price (tax excl.)', array(), 'Admin.Catalog.Feature'),
                 'currency' => $this->currency->iso_code,
-                'attr' => ['class' => 'attribute_priceTE'],
-            ])
-            ->add('attribute_priceTI', MoneyType::class, [
+                'attr' => array('class' => 'attribute_priceTE'),
+            ))
+            ->add('attribute_priceTI', MoneyType::class, array(
                 'required' => false,
                 'mapped' => false,
-                'label' => $this->translator->trans('Impact on price (tax incl.)', [], 'Admin.Catalog.Feature'),
+                'label' => $this->translator->trans('Impact on price (tax incl.)', array(), 'Admin.Catalog.Feature'),
                 'currency' => $this->currency->iso_code,
-                'attr' => ['class' => 'attribute_priceTI'],
-            ])
-            ->add('attribute_ecotax', MoneyType::class, [
+                'attr' => array('class' => 'attribute_priceTI'),
+            ))
+            ->add('attribute_ecotax', MoneyType::class, array(
                 'required' => false,
-                'label' => $this->translator->trans('Ecotax', [], 'Admin.Catalog.Feature'),
+                'label' => $this->translator->trans('Ecotax', array(), 'Admin.Catalog.Feature'),
                 'currency' => $this->currency->iso_code,
-                'constraints' => [
+                'constraints' => array(
                     new Assert\NotBlank(),
-                    new Assert\Type(['type' => 'float']),
-                ],
-            ])
-            ->add('attribute_weight', NumberType::class, [
+                    new Assert\Type(array('type' => 'float')),
+                ),
+            ))
+            ->add('attribute_weight', NumberType::class, array(
                 'required' => false,
-                'label' => $this->translator->trans('Impact on weight', [], 'Admin.Catalog.Feature'),
-            ])
-            ->add('attribute_unity', MoneyType::class, [
+                'label' => $this->translator->trans('Impact on weight', array(), 'Admin.Catalog.Feature'),
+            ))
+            ->add('attribute_unity', MoneyType::class, array(
                 'required' => false,
-                'label' => $this->translator->trans('Impact on price per unit (tax excl.)', [], 'Admin.Catalog.Feature'),
+                'label' => $this->translator->trans('Impact on price per unit (tax excl.)', array(), 'Admin.Catalog.Feature'),
                 'currency' => $this->currency->iso_code,
-                'attr' => ['class' => 'attribute_unity'],
-            ])
-            ->add('attribute_minimal_quantity', NumberType::class, [
+                'attr' => array('class' => 'attribute_unity'),
+            ))
+            ->add('attribute_minimal_quantity', NumberType::class, array(
                 'required' => false,
-                'label' => $this->translator->trans('Min. quantity for sale', [], 'Admin.Catalog.Feature'),
-                'constraints' => [
+                'label' => $this->translator->trans('Min. quantity for sale', array(), 'Admin.Catalog.Feature'),
+                'constraints' => array(
                     new Assert\NotBlank(),
-                    new Assert\Type(['type' => 'numeric']),
-                ],
-            ])
-            ->add('attribute_location', TextType::class, [
-                'label' => $this->translator->trans('Stock location', [], 'Admin.Catalog.Feature'),
-            ])
-            ->add('attribute_low_stock_threshold', NumberType::class, [
-                'label' => $this->translator->trans('Low stock level', [], 'Admin.Catalog.Feature'),
-                'constraints' => [
-                    new Assert\Type(['type' => 'numeric']),
-                ],
-                'attr' => [
+                    new Assert\Type(array('type' => 'numeric')),
+                ),
+            ))
+            ->add('attribute_location', TextType::class, array(
+                'label' => $this->translator->trans('Stock location', array(), 'Admin.Catalog.Feature'),
+            ))
+            ->add('attribute_low_stock_threshold', NumberType::class, array(
+                'label' => $this->translator->trans('Low stock level', array(), 'Admin.Catalog.Feature'),
+                'constraints' => array(
+                    new Assert\Type(array('type' => 'numeric')),
+                ),
+                'attr' => array(
                     'placeholder' => $this->translator->trans(
                         'Leave empty to disable',
-                        [],
+                        array(),
                         'Admin.Catalog.Help'
                     ),
-                ],
-            ])
-            ->add('attribute_low_stock_alert', CheckboxType::class, [
-                'label' => $this->translator->trans('Send me an email when the quantity is below or equals this level', [], 'Admin.Catalog.Feature'),
-                'constraints' => [
-                    new Assert\Type(['type' => 'bool']),
-                ],
-            ])
-            ->add('available_date_attribute', DatePickerType::class, [
+                ),
+            ))
+            ->add('attribute_low_stock_alert', CheckboxType::class, array(
+                'label' => $this->translator->trans('Send me an email when the quantity is below or equals this level', array(), 'Admin.Catalog.Feature'),
+                'constraints' => array(
+                    new Assert\Type(array('type' => 'bool')),
+                ),
+            ))
+            ->add('available_date_attribute', DatePickerType::class, array(
                 'required' => false,
-                'label' => $this->translator->trans('Availability date', [], 'Admin.Catalog.Feature'),
-                'attr' => ['class' => 'date', 'placeholder' => 'YYYY-MM-DD'],
-            ])
-            ->add('attribute_default', CheckboxType::class, [
-                'label' => $this->translator->trans('Set as default combination', [], 'Admin.Catalog.Feature'),
+                'label' => $this->translator->trans('Availability date', array(), 'Admin.Catalog.Feature'),
+                'attr' => array('class' => 'date', 'placeholder' => 'YYYY-MM-DD'),
+            ))
+            ->add('attribute_default', CheckboxType::class, array(
+                'label' => $this->translator->trans('Set as default combination', array(), 'Admin.Catalog.Feature'),
                 'required' => false,
-                'attr' => ['class' => 'attribute_default_checkbox'],
-            ]);
+                'attr' => array('class' => 'attribute_default_checkbox'),
+            ))
+        ;
         if ($is_stock_management) {
             $builder->add(
                 'attribute_quantity',
                 NumberType::class,
-                [
+                array(
                     'required' => true,
-                    'label' => $this->translator->trans('Quantity', [], 'Admin.Catalog.Feature'),
-                    'constraints' => [
+                    'label' => $this->translator->trans('Quantity', array(), 'Admin.Catalog.Feature'),
+                    'constraints' => array(
                         new Assert\NotBlank(),
-                        new Assert\Type(['type' => 'numeric']),
-                    ],
-                ]
+                        new Assert\Type(array('type' => 'numeric')),
+                    ),
+                )
             );
         }
-        $builder->add('id_image_attr', ChoiceType::class, [
-            'choices' => [],
+        $builder->add('id_image_attr', ChoiceType::class, array(
+            'choices' => array(),
             'required' => false,
             'expanded' => true,
             'multiple' => true,
-            'label' => $this->translator->trans('Select images of this combination:', [], 'Admin.Catalog.Feature'),
-            'attr' => ['class' => 'images'],
-        ])
-            ->add('final_price', MoneyType::class, [
+            'label' => $this->translator->trans('Select images of this combination:', array(), 'Admin.Catalog.Feature'),
+            'attr' => array('class' => 'images'),
+        ))
+            ->add('final_price', MoneyType::class, array(
                 'required' => false,
-                'label' => $this->translator->trans('Final price', [], 'Admin.Catalog.Feature'),
+                'label' => $this->translator->trans('Final price', array(), 'Admin.Catalog.Feature'),
                 'currency' => $this->currency->iso_code,
-            ]);
+            ))
+        ;
 
         $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
             $form = $event->getForm();
             $data = $event->getData();
 
-            $choices = [];
+            $choices = array();
             if (!empty($data['id_image_attr'])) {
                 foreach ($data['id_image_attr'] as $id) {
                     $choices[$id] = $id;
                 }
             }
 
-            $form->add('id_image_attr', ChoiceType::class, [
+            $form->add('id_image_attr', ChoiceType::class, array(
                 'choices' => $choices,
                 'required' => false,
                 'expanded' => true,
                 'multiple' => true,
-            ]);
+            ));
         });
     }
 

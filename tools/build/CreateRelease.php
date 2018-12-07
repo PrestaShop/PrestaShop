@@ -40,30 +40,30 @@ if (php_sapi_name() !== 'cli') {
     exit(1);
 }
 
-$releaseOptions = [
-    'version' => [
+$releaseOptions = array(
+    'version' => array(
         'description' => 'Desired release version of PrestaShop',
         'longopt' => 'version:',
-    ],
-    'no-zip' => [
+    ),
+    'no-zip' => array(
         'description' => 'Do not zip the release directory. Default: false.',
         'longopt' => 'no-zip',
-    ],
-    'destination-dir' => [
+    ),
+    'destination-dir' => array(
         'description' => 'Path where the release will be store. Default: tools/build/releases/prestashop_{version}',
         'longopt' => 'destination-dir::',
-    ],
-    'no-installer' => [
+    ),
+    'no-installer' => array(
         'required' => false,
         'description' => 'Do not put the installer in the release. Interesting if release will be upload remotly by FTP or for public release. Default: false.',
         'longopt' => 'no-installer',
-    ],
-    'help' => [
+    ),
+    'help' => array(
         'description' => 'Show help',
         'opt' => 'h',
         'longopt' => 'help',
-    ],
-];
+    ),
+);
 $helpMessage = "Usage: php {prestashop_root_path}/tools/build/CreateRelease.php [--version=<version>] [options]{$lineSeparator}{$lineSeparator}"
     . "Available options are:{$lineSeparator}{$lineSeparator}";
 

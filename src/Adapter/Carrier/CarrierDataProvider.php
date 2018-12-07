@@ -80,7 +80,7 @@ class CarrierDataProvider
         }
 
         $carriers = $this->getCarriers($languageId, true, false, false, null, $this->getAllCarriersConstant());
-        $carriersChoices = [];
+        $carriersChoices = array();
 
         foreach ($carriers as $carrier) {
             $carriersChoices[$carrier['name']] = $carrier['id_carrier'];
@@ -96,10 +96,10 @@ class CarrierDataProvider
      */
     public function getOrderByChoices()
     {
-        return [
+        return array(
             'Price' => Carrier::SORT_BY_PRICE,
             'Position' => Carrier::SORT_BY_POSITION,
-        ];
+        );
     }
 
     /**
@@ -109,10 +109,10 @@ class CarrierDataProvider
      */
     public function getOrderWayChoices()
     {
-        return [
+        return array(
             'Ascending' => Carrier::SORT_BY_ASC,
             'Descending' => Carrier::SORT_BY_DESC,
-        ];
+        );
     }
 
     /**

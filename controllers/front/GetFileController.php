@@ -97,7 +97,7 @@ class GetFileControllerCore extends FrontController
                 $this->displayCustomError('This file no longer exists.');
             }
 
-            if (isset($info['product_quantity_refunded']) && isset($info['product_quantity_return']) &&
+            if (isset($info['product_quantity_refunded'], $info['product_quantity_return']) &&
                 ($info['product_quantity_refunded'] > 0 || $info['product_quantity_return'] > 0)) {
                 $this->displayCustomError('This product has been refunded.');
             }

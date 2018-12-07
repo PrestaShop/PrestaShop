@@ -63,14 +63,14 @@ class CccReducerCore
             CssMinifier::minify($files, $destinationPath);
         }
 
-        $cssFileList['external']['theme-ccc'] = [
+        $cssFileList['external']['theme-ccc'] = array(
             'id' => 'theme-ccc',
             'type' => 'external',
             'path' => $destinationPath,
             'uri' => $this->getFQDN() . $this->getUriFromPath($destinationPath),
             'media' => 'all',
             'priority' => StylesheetManager::DEFAULT_PRIORITY,
-        ];
+        );
 
         return $cssFileList;
     }
@@ -100,15 +100,15 @@ class CccReducerCore
                 JsMinifier::minify($files, $destinationPath);
             }
 
-            $cccItem = [];
-            $cccItem[$position . '-js-ccc'] = [
+            $cccItem = array();
+            $cccItem[$position . '-js-ccc'] = array(
                 'id' => $position . '-js-ccc',
                 'type' => 'external',
                 'path' => $destinationPath,
                 'uri' => $this->getFQDN() . $this->getUriFromPath($destinationPath),
                 'priority' => JavascriptManager::DEFAULT_PRIORITY,
                 'attribute' => '',
-            ];
+            );
             $list['external'] = array_merge($cccItem, $list['external']);
         }
 

@@ -75,12 +75,14 @@ class AdminTabsControllerTest extends UnitTestCase
         $cookieMock = $this->getMockBuilder('\Cookie')
             ->disableOriginalConstructor()
             ->setMethods(array('getFamily'))
-            ->getMock();
+            ->getMock()
+        ;
 
         $cookieMock->expects($this->once())
             ->method('getFamily')
             ->with($this->anything())
-            ->willReturn(array());
+            ->willReturn(array())
+        ;
 
         $this->context->cookie = $cookieMock;
     }
@@ -90,14 +92,16 @@ class AdminTabsControllerTest extends UnitTestCase
         $dbMock = $this->getMockBuilder('\DbPDO')
             ->disableOriginalConstructor()
             ->setMethods(array('query', 'executeS', 'getMsgError'))
-            ->getMock();
+            ->getMock()
+        ;
 
         $dbMock->expects($this->any())
             ->method('query')
             ->with($this->callback(function ($subject) {
                 // It should check if multi-shop is active
                 return strpos($subject, 'PS_MULTISHOP_FEATURE_ACTIVE') !== false;
-            }));
+            }))
+        ;
 
         $dbMock->expects($this->any())
             ->method('executeS')
@@ -126,7 +130,8 @@ class AdminTabsControllerTest extends UnitTestCase
                 } else {
                     return false;
                 }
-            }));
+            }))
+        ;
 
         parent::setupDatabaseMock($dbMock);
     }

@@ -99,27 +99,27 @@ final class LanguageCopier implements LanguageCopierInterface
             try {
                 $this->filesystem->mkdir(dirname($destination));
             } catch (IOExceptionInterface $exception) {
-                $errors[] = [
+                $errors[] = array(
                     'key' => 'Cannot create the folder "%folder%". Please check your directory writing permissions.',
                     'domain' => 'Admin.International.Notification',
-                    'parameters' => [
+                    'parameters' => array(
                         '%folder%' => $destination,
-                    ],
-                ];
+                    ),
+                );
                 continue;
             }
 
             try {
                 $this->filesystem->copy($source, $destination);
             } catch (IOExceptionInterface $exception) {
-                $errors[] = [
+                $errors[] = array(
                     'key' => 'Impossible to copy "%source%" to "%dest%".',
                     'domain' => 'Admin.International.Notification',
-                    'parameters' => [
+                    'parameters' => array(
                         '%source%' => $source,
                         '%dest%' => $destination,
-                    ],
-                ];
+                    ),
+                );
                 continue;
             }
 
@@ -131,23 +131,23 @@ final class LanguageCopier implements LanguageCopierInterface
                 );
 
                 if (!$changedModuleTranslationKeys) {
-                    $errors[] = [
+                    $errors[] = array(
                         'key' => 'Impossible to translate "%dest%".',
                         'domain' => 'Admin.International.Notification',
-                        'parameters' => [
+                        'parameters' => array(
                             '%dest%' => $destination,
-                        ],
-                    ];
+                        ),
+                    );
                 }
             }
         }
 
         if (!empty($errors)) {
-            $errors[] = [
+            $errors[] = array(
                 'key' => 'A part of the data has been copied but some of the language files could not be found.',
                 'domain' => 'Admin.International.Notification',
-                'parameters' => [],
-            ];
+                'parameters' => array(),
+            );
         }
 
         return $errors;
@@ -162,7 +162,7 @@ final class LanguageCopier implements LanguageCopierInterface
      */
     private function validateConfig(LanguageCopierConfigInterface $config)
     {
-        $errors = [];
+        $errors = array();
 
         $languageFrom = $config->getLanguageFrom();
         $languageTo = $config->getLanguageTo();
@@ -170,26 +170,26 @@ final class LanguageCopier implements LanguageCopierInterface
         $themeTo = $config->getThemeTo();
 
         if (empty($languageFrom) || empty($languageTo)) {
-            $errors[] = [
+            $errors[] = array(
                 'key' => 'You must select two languages in order to copy data from one to another.',
                 'domain' => 'Admin.International.Notification',
-                'parameters' => [],
-            ];
+                'parameters' => array(),
+            );
         } elseif (empty($themeFrom) || empty($themeTo)) {
-            $errors[] = [
+            $errors[] = array(
                 'key' => 'You must select two themes in order to copy data from one to another.',
                 'domain' => 'Admin.International.Notification',
-                'parameters' => [],
-            ];
+                'parameters' => array(),
+            );
         } elseif (
             $themeFrom === $themeTo &&
             $languageFrom === $languageTo
         ) {
-            $errors[] = [
+            $errors[] = array(
                 'key' => 'There is nothing to copy (same language and theme).',
                 'domain' => 'Admin.International.Notification',
-                'parameters' => [],
-            ];
+                'parameters' => array(),
+            );
         } else {
             $fromThemeFound = false;
             $toThemeFound = false;
@@ -208,11 +208,11 @@ final class LanguageCopier implements LanguageCopierInterface
             }
 
             if (!$fromThemeFound || !$toThemeFound) {
-                $errors[] = [
+                $errors[] = array(
                     'key' => 'Theme(s) not found',
                     'domain' => 'Admin.International.Notification',
-                    'parameters' => [],
-                ];
+                    'parameters' => array(),
+                );
             }
         }
 
@@ -246,7 +246,7 @@ final class LanguageCopier implements LanguageCopierInterface
     private function changeModulesTranslationKeys($path, $themeFrom, $themeTo)
     {
         $content = file_get_contents($path);
-        $arrayReplace = [];
+        $arrayReplace = array();
         $result = true;
 
         if (preg_match_all('#\$_MODULE\[\'([^\']+)\'\]#Ui', $content, $matches)) {

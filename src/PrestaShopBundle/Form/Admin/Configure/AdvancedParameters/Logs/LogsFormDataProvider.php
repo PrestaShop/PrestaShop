@@ -50,7 +50,7 @@ final class LogsFormDataProvider implements FormDataProviderInterface
      */
     public function getData()
     {
-        return ['logs_by_email' => $this->logsConfiguration->getConfiguration()];
+        return array('logs_by_email' => $this->logsConfiguration->getConfiguration());
     }
 
     /**

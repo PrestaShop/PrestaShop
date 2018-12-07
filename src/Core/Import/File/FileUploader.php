@@ -87,7 +87,7 @@ final class FileUploader
                 $uploadedFileName
             );
         } catch (FileException $e) {
-            $error = $this->translator->trans('An error occurred while uploading / copying the file.', [], 'Admin.Advparameters.Notification');
+            $error = $this->translator->trans('An error occurred while uploading / copying the file.', array(), 'Admin.Advparameters.Notification');
 
             throw new FileUploadException($error);
         }
@@ -108,17 +108,17 @@ final class FileUploader
 
         switch ($uploadedFile->getError()) {
             case UPLOAD_ERR_INI_SIZE:
-                $error = $this->translator->trans('The uploaded file exceeds the upload_max_filesize directive in php.ini. If your server configuration allows it, you may add a directive in your .htaccess.', [], 'Admin.Advparameters.Notification');
+                $error = $this->translator->trans('The uploaded file exceeds the upload_max_filesize directive in php.ini. If your server configuration allows it, you may add a directive in your .htaccess.', array(), 'Admin.Advparameters.Notification');
                 break;
             case UPLOAD_ERR_FORM_SIZE:
-                $message = $this->translator->trans('The uploaded file exceeds the post_max_size directive in php.ini. If your server configuration allows it, you may add a directive in your .htaccess, for example:', [], 'Admin.Advparameters.Notification');
+                $message = $this->translator->trans('The uploaded file exceeds the post_max_size directive in php.ini. If your server configuration allows it, you may add a directive in your .htaccess, for example:', array(), 'Admin.Advparameters.Notification');
                 $error = sprintf('%s %s', $message, 'php_value post_max_size 20M');
                 break;
             case UPLOAD_ERR_PARTIAL:
-                $error = $this->translator->trans('The uploaded file was only partially uploaded.', [], 'Admin.Advparameters.Notification');
+                $error = $this->translator->trans('The uploaded file was only partially uploaded.', array(), 'Admin.Advparameters.Notification');
                 break;
             case UPLOAD_ERR_NO_FILE:
-                $error = $this->translator->trans('No file was uploaded.', [], 'Admin.Advparameters.Notification');
+                $error = $this->translator->trans('No file was uploaded.', array(), 'Admin.Advparameters.Notification');
                 break;
         }
 
@@ -127,7 +127,7 @@ final class FileUploader
         }
 
         if (!preg_match('#([^\.]*?)\.(csv|xls[xt]?|o[dt]s)$#is', $uploadedFile->getClientOriginalName())) {
-            $error = $this->translator->trans('The extension of your file should be .csv.', [], 'Admin.Advparameters.Notification');
+            $error = $this->translator->trans('The extension of your file should be .csv.', array(), 'Admin.Advparameters.Notification');
         }
 
         return $error;

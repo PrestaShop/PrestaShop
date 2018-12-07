@@ -62,7 +62,7 @@ final class HookDispatcher implements HookDispatcherInterface
     /**
      * {@inheritdoc}
      */
-    public function dispatchWithParameters($hookName, array $hookParameters = [])
+    public function dispatchWithParameters($hookName, array $hookParameters = array())
     {
         $this->dispatchHook(new Hook($hookName, $hookParameters));
     }
@@ -88,7 +88,7 @@ final class HookDispatcher implements HookDispatcherInterface
     /**
      * {@inheritdoc}
      */
-    public function dispatchRenderingWithParameters($hookName, array $hookParameters = [])
+    public function dispatchRenderingWithParameters($hookName, array $hookParameters = array())
     {
         return $this->dispatchRendering(new Hook($hookName, $hookParameters));
     }

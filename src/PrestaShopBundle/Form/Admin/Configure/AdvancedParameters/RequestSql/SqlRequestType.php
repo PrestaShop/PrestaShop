@@ -46,32 +46,32 @@ class SqlRequestType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('name', TextType::class, [
-                'constraints' => [
-                    new NotBlank([
+            ->add('name', TextType::class, array(
+                'constraints' => array(
+                    new NotBlank(array(
                         'message' => $this->trans(
                             'The %s field is required.',
-                            [
-                                sprintf('"%s"', $this->trans('SQL query name', [], 'Admin.Advparameters.Feature')),
-                            ],
+                            array(
+                                sprintf('"%s"', $this->trans('SQL query name', array(), 'Admin.Advparameters.Feature')),
+                            ),
                             'Admin.Notifications.Error'
                         ),
-                    ]),
-                ],
-            ])
-            ->add('sql', TextareaType::class, [
-                'constraints' => [
-                    new NotBlank([
+                    )),
+                ),
+            ))
+            ->add('sql', TextareaType::class, array(
+                'constraints' => array(
+                    new NotBlank(array(
                         'message' => $this->trans(
                             'The %s field is required.',
-                            [
-                                sprintf('"%s"', $this->trans('SQL query', [], 'Admin.Advparameters.Feature')),
-                            ],
+                            array(
+                                sprintf('"%s"', $this->trans('SQL query', array(), 'Admin.Advparameters.Feature')),
+                            ),
                             'Admin.Notifications.Error'
                         ),
-                    ]),
-                ],
-            ])
+                    )),
+                ),
+            ))
         ;
     }
 }

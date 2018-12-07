@@ -36,14 +36,15 @@ function ps1700_stores()
         $hours = Tools::unSerialize($store['hours']);
         if (is_array($hours)) {
             foreach ($hours as $key => $h) {
-                $hours[$key] = [$h];
+                $hours[$key] = array($h);
             }
         } else {
             $hours = array();
         }
         $hours = json_encode($hours);
 
-        $result &= Db::getInstance()->execute('
+        $result &= Db::getInstance()->execute(
+            '
             UPDATE `'._DB_PREFIX_.'store`
             SET `hours` = \''.$hours.'\'
             WHERE `id_store` = '.$store['id_store']

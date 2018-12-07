@@ -54,9 +54,9 @@ final class InvoiceModelByNameChoiceProvider implements FormChoiceProviderInterf
      */
     public function getChoices()
     {
-        $choices = [
+        $choices = array(
             'invoice' => 'invoice',
-        ];
+        );
 
         $invoiceModels = $this->invoiceModelFinder->find();
 

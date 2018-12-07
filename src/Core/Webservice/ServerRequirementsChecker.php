@@ -93,11 +93,11 @@ final class ServerRequirementsChecker implements ServerRequirementsCheckerInterf
         $issues = $this->lookForIssues();
 
         if (empty($issues)) {
-            return [];
+            return array();
         }
 
         $allWarningMessages = $this->getWarningMessages();
-        $selectedWarningMessages = [];
+        $selectedWarningMessages = array();
 
         foreach ($issues as $issue) {
             if (false === array_key_exists($issue, $allWarningMessages)) {
@@ -115,7 +115,7 @@ final class ServerRequirementsChecker implements ServerRequirementsCheckerInterf
      */
     private function lookForIssues()
     {
-        $issues = [];
+        $issues = array();
 
         if (false === strpos($this->hostingInformation->getServerInformation()['version'], 'Apache')) {
             $issues[] = self::ISSUE_NOT_APACHE_SERVER;
@@ -151,37 +151,37 @@ final class ServerRequirementsChecker implements ServerRequirementsCheckerInterf
      */
     private function getWarningMessages()
     {
-        return [
+        return array(
             self::ISSUE_NOT_APACHE_SERVER => $this->translator->trans(
                 'To avoid operating problems, please use an Apache server.',
-                [],
+                array(),
                 'Admin.Advparameters.Notification'
             ),
             self::ISSUE_CANNOT_CHECK_APACHE_MODULES => $this->translator->trans(
                 'Please activate the \'mod_auth_basic\' Apache module to allow authentication of PrestaShop\'s webservice.',
-                [],
+                array(),
                 'Admin.Advparameters.Notification'
             ),
             self::ISSUE_APACHE_MOD_AUTH_BASIC_NOT_AVAILABLE => $this->translator->trans(
                 'Please activate the \'mod_rewrite\' Apache module to allow the PrestaShop webservice.',
-                [],
+                array(),
                 'Admin.Advparameters.Notification'
             ),
             self::ISSUE_APACHE_MOD_AUTH_REWRITE_NOT_AVAILABLE => $this->translator->trans(
                 'We could not check to see if basic authentication and rewrite extensions have been activated. Please manually check if they\'ve been activated in order to use the PrestaShop webservice.',
-                [],
+                array(),
                 'Admin.Advparameters.Notification'
             ),
             self::ISSUE_EXT_SIMPLEXML_NOT_AVAILABLE => $this->translator->trans(
                 'Please activate the \'SimpleXML\' PHP extension to allow testing of PrestaShop\'s webservice.',
-                [],
+                array(),
                 'Admin.Advparameters.Notification'
             ),
             self::ISSUE_HTTPS_NOT_AVAILABLE => $this->translator->trans(
                 'It is preferable to use SSL (https:) for webservice calls, as it avoids the "man in the middle" type security issues.',
-                [],
+                array(),
                 'Admin.Advparameters.Notification'
             ),
-        ];
+        );
     }
 }

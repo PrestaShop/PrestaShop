@@ -74,14 +74,14 @@ class MetaController extends FrameworkBundleAdminController
         $helperBlockLinkProvider = $this->get('prestashop.core.util.helper_card.documentation_link_provider');
         $metaDataProvider = $this->get('prestashop.adapter.meta.data_provider');
 
-        return $this->render('@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/index.html.twig', [
-            'layoutHeaderToolbarBtn' => [
-                'add' => [
-                    'href' => $this->getAdminLink('AdminMeta', ['addmeta' => '']),
+        return $this->render('@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/index.html.twig', array(
+            'layoutHeaderToolbarBtn' => array(
+                'add' => array(
+                    'href' => $this->getAdminLink('AdminMeta', array('addmeta' => '')),
                     'desc' => $this->trans('Add a new page', 'Admin.Shopparameters.Feature'),
                     'icon' => 'add_circle_outline',
-                ],
-            ],
+                ),
+            ),
             'grid' => $presentedGrid,
             'metaForm' => $metaForm->createView(),
             'robotsForm' => $this->createFormBuilder()->getForm()->createView(),
@@ -96,7 +96,7 @@ class MetaController extends FrameworkBundleAdminController
             'help_link' => $this->generateSidebarLink('AdminMeta'),
             'helperDocLink' => $helperBlockLinkProvider->getLink('meta'),
             'indexPageId' => $metaDataProvider->getIdByPage('index'),
-        ]);
+        ));
     }
 
     /**
@@ -115,12 +115,12 @@ class MetaController extends FrameworkBundleAdminController
         $searchParametersForm = $gridFilterFormFactory->create($definitionFactory);
         $searchParametersForm->handleRequest($request);
 
-        $filters = [];
+        $filters = array();
         if ($searchParametersForm->isSubmitted()) {
             $filters = $searchParametersForm->getData();
         }
 
-        return $this->redirectToRoute('admin_metas_index', ['filters' => $filters]);
+        return $this->redirectToRoute('admin_metas_index', array('filters' => $filters));
     }
 
     /**
@@ -132,9 +132,9 @@ class MetaController extends FrameworkBundleAdminController
      */
     public function createAction()
     {
-        $legacyLink = $this->getAdminLink('AdminMeta', [
+        $legacyLink = $this->getAdminLink('AdminMeta', array(
             'addmeta' => 1,
-        ]);
+        ));
 
         return $this->redirect($legacyLink);
     }
@@ -150,10 +150,10 @@ class MetaController extends FrameworkBundleAdminController
      */
     public function editAction($metaId)
     {
-        $legacyLink = $this->getAdminLink('AdminMeta', [
+        $legacyLink = $this->getAdminLink('AdminMeta', array(
             'id_meta' => $metaId,
             'updatemeta' => 1,
-        ]);
+        ));
 
         return $this->redirect($legacyLink);
     }
@@ -171,7 +171,7 @@ class MetaController extends FrameworkBundleAdminController
     public function deleteAction($metaId)
     {
         $metaEraser = $this->get('prestashop.adapter.meta.meta_eraser');
-        $errors = $metaEraser->erase([$metaId]);
+        $errors = $metaEraser->erase(array($metaId));
 
         if (!empty($errors)) {
             $this->flashErrors($errors);
@@ -267,9 +267,9 @@ class MetaController extends FrameworkBundleAdminController
                 $this->trans(
                     'Cannot write into file: %filename%. Please check write permissions.',
                     'Admin.Notifications.Error',
-                    [
+                    array(
                         '%filename%' => $rootDir . '/robots.txt',
-                    ]
+                    )
                 )
             );
 

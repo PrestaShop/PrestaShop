@@ -60,8 +60,8 @@ class LogsController extends FrameworkBundleAdminController
 
         $logsByEmailForm = $this->getFormHandler()->getForm();
 
-        return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/LogsPage/index.html.twig', [
-            'layoutHeaderToolbarBtn' => [],
+        return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/LogsPage/index.html.twig', array(
+            'layoutHeaderToolbarBtn' => array(),
             'layoutTitle' => $this->trans('Logs', 'Admin.Navigation.Menu'),
             'requireAddonsSearch' => true,
             'requireBulkActions' => false,
@@ -70,7 +70,7 @@ class LogsController extends FrameworkBundleAdminController
             'help_link' => $this->generateSidebarLink('AdminLogs'),
             'logsByEmailForm' => $logsByEmailForm->createView(),
             'grid' => $this->presentGrid($grid),
-        ]);
+        ));
     }
 
     /**
@@ -92,13 +92,13 @@ class LogsController extends FrameworkBundleAdminController
         $searchParametersForm->handleRequest($request);
         $filters = array();
 
-        $this->dispatchHook('actionAdminLogsControllerPostProcessBefore', ['controller' => $this]);
+        $this->dispatchHook('actionAdminLogsControllerPostProcessBefore', array('controller' => $this));
 
         if ($searchParametersForm->isSubmitted()) {
             $filters = $searchParametersForm->getData();
         }
 
-        return $this->redirectToRoute('admin_logs_index', ['filters' => $filters]);
+        return $this->redirectToRoute('admin_logs_index', array('filters' => $filters));
     }
 
     /**

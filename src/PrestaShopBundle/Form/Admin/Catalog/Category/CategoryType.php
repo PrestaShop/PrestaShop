@@ -43,11 +43,11 @@ class CategoryType extends AbstractCategoryType
         parent::buildForm($builder, $options);
 
         $builder
-            ->add('id_parent', CategoryChoiceTreeType::class, [
+            ->add('id_parent', CategoryChoiceTreeType::class, array(
                 // when using CategoryType to edit category
                 // user should not be able to select that category as parent
-                'disabled_values' => null !== $options['id_category'] ? [$options['id_category']] : [],
-            ])
+                'disabled_values' => null !== $options['id_category'] ? array($options['id_category']) : array(),
+            ))
         ;
     }
 
@@ -57,10 +57,10 @@ class CategoryType extends AbstractCategoryType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver
-            ->setDefaults([
+            ->setDefaults(array(
                 'id_category' => null,
-            ])
-            ->setAllowedTypes('id_category', ['int', 'null'])
+            ))
+            ->setAllowedTypes('id_category', array('int', 'null'))
         ;
     }
 }

@@ -33,8 +33,8 @@ class AdminModulesControllerCore extends AdminController
         'blocklayered' => array('pm_advancedsearch4'),
     );
     /*
-    ** @var array map with $_GET keywords and their callback
-    */
+     ** @var array map with $_GET keywords and their callback
+     */
     protected $map = array(
         'check' => 'check',
         'install' => 'install',
@@ -372,11 +372,11 @@ class AdminModulesControllerCore extends AdminController
     }
 
     /*
-    ** Get current URL
-    **
-    ** @param array $remove List of keys to remove from URL
-    ** @return string
-    */
+     ** Get current URL
+     **
+     ** @param array $remove List of keys to remove from URL
+     ** @return string
+     */
     protected function getCurrentUrl($remove = array())
     {
         $url = $_SERVER['REQUEST_URI'];
@@ -464,9 +464,9 @@ class AdminModulesControllerCore extends AdminController
     }
 
     /*
-    ** Filter Configuration Methods
-    ** Set and reset filter configuration
-    */
+     ** Filter Configuration Methods
+     ** Set and reset filter configuration
+     */
 
     protected function setFilterModules($module_type, $country_module_value, $module_install, $module_status)
     {
@@ -486,9 +486,9 @@ class AdminModulesControllerCore extends AdminController
     }
 
     /*
-    ** Post Process Filter
-    **
-    */
+     ** Post Process Filter
+     **
+     */
 
     public function postProcessFilterModules()
     {
@@ -517,9 +517,9 @@ class AdminModulesControllerCore extends AdminController
     }
 
     /*
-    ** Post Process Module CallBack
-    **
-    */
+     ** Post Process Module CallBack
+     **
+     */
 
     public function postProcessReset()
     {
@@ -752,8 +752,8 @@ class AdminModulesControllerCore extends AdminController
             } elseif ($key == 'updateAll') {
                 $loggedOnAddons = false;
 
-                if (isset($this->context->cookie->username_addons)
-                    && isset($this->context->cookie->password_addons)
+                if (isset($this->context->cookie->username_addons, $this->context->cookie->password_addons)
+                     
                     && !empty($this->context->cookie->username_addons)
                     && !empty($this->context->cookie->password_addons)) {
                     $loggedOnAddons = true;
@@ -1171,7 +1171,8 @@ class AdminModulesControllerCore extends AdminController
                     _PS_MODULE_DIR_ . Tools::getValue('configure'),
                 ))
                 ->setRegenerate(true)
-                ->process();
+                ->process()
+            ;
             Tools::redirectAdmin('index.php?controller=adminmodules&configure=' . Tools::getValue('configure') . '&token=' . Tools::getValue('token') . '&conf=6');
         }
 

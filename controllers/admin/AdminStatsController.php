@@ -158,7 +158,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
     {
         $context = Context::getContext();
         $logged_on_addons = false;
-        if (isset($context->cookie->username_addons) && isset($context->cookie->password_addons)
+        if (isset($context->cookie->username_addons, $context->cookie->password_addons)  
             && !empty($context->cookie->username_addons) && !empty($context->cookie->password_addons)
         ) {
             $logged_on_addons = true;
@@ -858,7 +858,8 @@ class AdminStatsControllerCore extends AdminStatsTabController
             case 'frontoffice_translations':
                 $themes = (new ThemeManagerBuilder($this->context, Db::getInstance()))
                     ->buildRepository()
-                    ->getList();
+                    ->getList()
+                ;
                 $languages = Language::getLanguages();
                 $total = $translated = 0;
                 foreach ($themes as $theme) {

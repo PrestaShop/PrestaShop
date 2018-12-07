@@ -74,7 +74,7 @@ class CategoriesProvider
                 self::$categoriesFromApi = $this->apiClient->getCategories();
             } catch (RequestException $e) {
                 $this->logger->error('Modules categories could not be loaded from marketplace API');
-                self::$categoriesFromApi = [];
+                self::$categoriesFromApi = array();
             }
         }
 
@@ -106,7 +106,7 @@ class CategoriesProvider
             }
 
             // Clear custom categories if there is no module inside
-            foreach ([self::CATEGORY_THEME, self::CATEGORY_MY_MODULES] as $category) {
+            foreach (array(self::CATEGORY_THEME, self::CATEGORY_MY_MODULES) as $category) {
                 if (empty($categories['categories']->subMenu[$category]->modules)) {
                     unset($categories['categories']->subMenu[$category]);
                 }
@@ -128,21 +128,21 @@ class CategoriesProvider
      */
     private function initializeCategories($categoriesListing)
     {
-        $categories = [
+        $categories = array(
             'categories' => $this->createMenuObject('categories', 'Categories'),
-        ];
+        );
 
         if (empty($categoriesListing)) {
             $categories['categories']->subMenu[self::CATEGORY_THEME] = $this->createMenuObject(
                 self::CATEGORY_THEME,
                 self::CATEGORY_THEME_NAME,
-                [],
+                array(),
                 self::CATEGORY_THEME
             );
             $categories['categories']->subMenu[self::CATEGORY_MY_MODULES] = $this->createMenuObject(
                 self::CATEGORY_MY_MODULES,
                 self::CATEGORY_MY_MODULES_NAME,
-                [],
+                array(),
                 self::CATEGORY_MY_MODULES
             );
 
@@ -153,7 +153,7 @@ class CategoriesProvider
             $categories['categories']->subMenu[$category->name] = $this->createMenuObject(
                 $category->id_category,
                 $category->name,
-                [],
+                array(),
                 isset($category->tab) ? $category->tab : null
             );
         }
@@ -161,13 +161,13 @@ class CategoriesProvider
         $categories['categories']->subMenu[self::CATEGORY_THEME] = $this->createMenuObject(
             self::CATEGORY_THEME,
             self::CATEGORY_THEME_NAME,
-            [],
+            array(),
             self::CATEGORY_THEME
         );
         $categories['categories']->subMenu[self::CATEGORY_OTHER] = $this->createMenuObject(
             self::CATEGORY_OTHER,
             self::CATEGORY_OTHER_NAME,
-            [],
+            array(),
             self::CATEGORY_OTHER
         );
 
@@ -204,14 +204,14 @@ class CategoriesProvider
      *
      * @return object
      */
-    private function createMenuObject($menu, $name, $moduleIds = [], $tab = null)
+    private function createMenuObject($menu, $name, $moduleIds = array(), $tab = null)
     {
         return (object) array(
             'tab' => $tab,
             'name' => $name,
             'refMenu' => $menu,
             'modules' => $moduleIds,
-            'subMenu' => [],
+            'subMenu' => array(),
         );
     }
 

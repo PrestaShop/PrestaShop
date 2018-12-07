@@ -93,15 +93,15 @@ final class ColumnCollection extends AbstractCollection implements ColumnCollect
      */
     public function toArray()
     {
-        $columns = [];
+        $columns = array();
 
         foreach ($this->items as $item) {
-            $columns[] = [
+            $columns[] = array(
                 'id' => $item->getId(),
                 'name' => $item->getName(),
                 'type' => $item->getType(),
                 'options' => $item->getOptions(),
-            ];
+            );
         }
 
         return $columns;
@@ -120,7 +120,8 @@ final class ColumnCollection extends AbstractCollection implements ColumnCollect
     {
         if (!isset($this->items[$id])) {
             throw new ColumnNotFoundException(sprintf(
-                'Cannot insert new column into collection. Column with id "%s" was not found.', $id
+                'Cannot insert new column into collection. Column with id "%s" was not found.',
+                $id
             ));
         }
 
@@ -131,7 +132,7 @@ final class ColumnCollection extends AbstractCollection implements ColumnCollect
         }
 
         $columns = array_slice($this->items, 0, $existingColumnKeyPosition, true) +
-            [$newColumn->getId() => $newColumn] +
+            array($newColumn->getId() => $newColumn) +
             array_slice($this->items, $existingColumnKeyPosition, $this->count(), true);
 
         $this->items = $columns;

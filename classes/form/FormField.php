@@ -30,14 +30,14 @@ class FormFieldCore
     private $required = false;
     private $label = '';
     private $value = null;
-    private $availableValues = [];
+    private $availableValues = array();
     private $maxLength = null;
-    private $errors = [];
-    private $constraints = [];
+    private $errors = array();
+    private $constraints = array();
 
     public function toArray()
     {
-        return [
+        return array(
             'name' => $this->getName(),
             'type' => $this->getType(),
             'required' => $this->isRequired(),
@@ -46,7 +46,7 @@ class FormFieldCore
             'availableValues' => $this->getAvailableValues(),
             'maxLength' => $this->getMaxLength(),
             'errors' => $this->getErrors(),
-        ];
+        );
     }
 
     public function setName($name)

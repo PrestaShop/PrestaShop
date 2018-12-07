@@ -63,20 +63,20 @@ final class MailMethodChoiceProvider implements FormChoiceProviderInterface
      */
     public function getChoices()
     {
-        $choices = [];
+        $choices = array();
 
         if (null === $this->configuration->get('_PS_HOST_MODE_')) {
             $choices[
-                $this->trans('Use PHP\'s mail() function (recommended; works in most cases)', [], 'Admin.Advparameters.Feature')
+                $this->trans('Use PHP\'s mail() function (recommended; works in most cases)', array(), 'Admin.Advparameters.Feature')
             ] = MailOption::METHOD_NATIVE;
         }
 
         $choices[
-            $this->trans('Set my own SMTP parameters (for advanced users ONLY)', [], 'Admin.Advparameters.Feature')
+            $this->trans('Set my own SMTP parameters (for advanced users ONLY)', array(), 'Admin.Advparameters.Feature')
         ] = MailOption::METHOD_SMTP;
 
         $choices[
-            $this->trans('Never send emails (may be useful for testing purposes)', [], 'Admin.Advparameters.Feature')
+            $this->trans('Never send emails (may be useful for testing purposes)', array(), 'Admin.Advparameters.Feature')
         ] = MailOption::METHOD_NONE;
 
         return $choices;

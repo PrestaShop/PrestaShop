@@ -40,18 +40,19 @@ class GeneralType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('check_modules_update', SwitchType::class, [
+            ->add('check_modules_update', SwitchType::class, array(
                 'required' => true,
-            ])
-            ->add('check_ip_address', SwitchType::class, [
+            ))
+            ->add('check_ip_address', SwitchType::class, array(
                 'required' => true,
-            ])
-            ->add('front_cookie_lifetime', TextType::class, [
+            ))
+            ->add('front_cookie_lifetime', TextType::class, array(
                 'required' => true,
-            ])
-            ->add('back_cookie_lifetime', TextType::class, [
+            ))
+            ->add('back_cookie_lifetime', TextType::class, array(
                 'required' => true,
-            ]);
+            ))
+        ;
     }
 
     /**
@@ -59,9 +60,9 @@ class GeneralType extends TranslatorAwareType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
+        $resolver->setDefaults(array(
             'translation_domain' => 'Admin.Advparameters.Feature',
-        ]);
+        ));
     }
 
     /**

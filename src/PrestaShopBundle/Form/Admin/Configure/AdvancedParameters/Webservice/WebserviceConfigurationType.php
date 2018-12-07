@@ -42,12 +42,12 @@ class WebserviceConfigurationType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('enable_webservice', SwitchType::class, [
+            ->add('enable_webservice', SwitchType::class, array(
                 'required' => true,
-            ])
-            ->add('enable_cgi', SwitchType::class, [
+            ))
+            ->add('enable_cgi', SwitchType::class, array(
                 'required' => true,
-            ])
+            ))
         ;
     }
 
@@ -56,9 +56,9 @@ class WebserviceConfigurationType extends AbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
+        $resolver->setDefaults(array(
             'translation_domain' => 'Admin.Advparameters.Feature',
-        ]);
+        ));
     }
 
     /**

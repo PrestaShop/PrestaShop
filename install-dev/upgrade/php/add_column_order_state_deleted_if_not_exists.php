@@ -26,7 +26,7 @@
 
 function add_column_order_state_deleted_if_not_exists()
 {
-    $res  = true;
+    $res = true;
     $column = Db::getInstance()->executeS('SHOW FIELDS FROM `'._DB_PREFIX_.'order_state` LIKE "deleted"');
 
     if (empty($column)) {

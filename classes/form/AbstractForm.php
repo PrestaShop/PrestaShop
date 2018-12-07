@@ -37,8 +37,8 @@ abstract class AbstractFormCore implements FormInterface
 
     protected $formatter;
 
-    protected $formFields = [];
-    protected $errors = ['' => []];
+    protected $formFields = array();
+    protected $errors = array('' => array());
 
     public function __construct(
         Smarty $smarty,
@@ -104,7 +104,7 @@ abstract class AbstractFormCore implements FormInterface
         return $this->template;
     }
 
-    public function render(array $extraVariables = [])
+    public function render(array $extraVariables = array())
     {
         $scope = $this->smarty->createData(
             $this->smarty
@@ -150,7 +150,7 @@ abstract class AbstractFormCore implements FormInterface
         return !$this->hasErrors();
     }
 
-    public function fillWith(array $params = [])
+    public function fillWith(array $params = array())
     {
         $newFields = $this->formatter->getFormat();
 

@@ -104,7 +104,7 @@ class AttributeDataProvider
             return $o['id_product_attribute'];
         }, $allCombinations);
 
-        $combinations = [];
+        $combinations = array();
         foreach ($allCombinationsIds as $combinationId) {
             $combinations[] = $product->getAttributeCombinationsById($combinationId, $context->employee->id_lang)[0];
         }

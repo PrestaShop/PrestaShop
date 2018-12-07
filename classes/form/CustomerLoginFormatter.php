@@ -36,7 +36,7 @@ class CustomerLoginFormatterCore implements FormFormatterInterface
 
     public function getFormat()
     {
-        return [
+        return array(
             'back' => (new FormField())
                 ->setName('back')
                 ->setType('hidden'),
@@ -45,7 +45,9 @@ class CustomerLoginFormatterCore implements FormFormatterInterface
                 ->setType('email')
                 ->setRequired(true)
                 ->setLabel($this->translator->trans(
-                    'Email', [], 'Shop.Forms.Labels'
+                    'Email',
+                    array(),
+                    'Shop.Forms.Labels'
                 ))
                 ->addConstraint('isEmail'),
             'password' => (new FormField())
@@ -53,9 +55,11 @@ class CustomerLoginFormatterCore implements FormFormatterInterface
                 ->setType('password')
                 ->setRequired(true)
                 ->setLabel($this->translator->trans(
-                    'Password', [], 'Shop.Forms.Labels'
+                    'Password',
+                    array(),
+                    'Shop.Forms.Labels'
                 ))
                 ->addConstraint('isPasswd'),
-        ];
+        );
     }
 }

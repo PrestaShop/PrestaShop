@@ -47,10 +47,10 @@ class TextWithUnitType extends AbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
+        $resolver->setDefaults(array(
             'widget' => 'single_text',
             'unit' => 'unit',
-        ]);
+        ));
     }
 
     /**
@@ -60,9 +60,9 @@ class TextWithUnitType extends AbstractType
     {
         parent::buildView($view, $form, $options);
 
-        $view->vars = array_merge($view->vars, [
+        $view->vars = array_merge($view->vars, array(
             'unit' => $options['unit'],
-        ]);
+        ));
     }
 
     /**

@@ -55,8 +55,8 @@ class LocaleCacheDataLayerTest extends TestCase
 
     public function testReadWrite()
     {
-        $data      = new LocaleData();
-        $data->foo = ['bar', 'baz'];
+        $data = new LocaleData();
+        $data->foo = array('bar', 'baz');
 
         /** @noinspection PhpUnhandledExceptionInspection */
         $this->layer->write('fooBar', $data);
@@ -73,7 +73,7 @@ class LocaleCacheDataLayerTest extends TestCase
         );
 
         $this->assertSame(
-            ['bar', 'baz'],
+            array('bar', 'baz'),
             $cachedData->foo
         );
 

@@ -46,7 +46,7 @@ class AddonListFilter
     /**
      * @var array Names of all the addons to exclude from result
      */
-    public $exclude = [];
+    public $exclude = array();
 
     /**
      * @param int $origin

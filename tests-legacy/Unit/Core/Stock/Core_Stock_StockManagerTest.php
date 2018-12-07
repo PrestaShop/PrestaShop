@@ -194,7 +194,7 @@ class StockAvailableTest extends UnitTestCase
 
         $this->assertEquals($expected[0], $pack->stock_available->quantity);
         foreach ($products as $k => $product) {
-            $this->assertEquals($expected[$k+1], $product[0]->stock_available->quantity);
+            $this->assertEquals($expected[$k + 1], $product[0]->stock_available->quantity);
         }
     }
 
@@ -287,7 +287,7 @@ class StockAvailableTest extends UnitTestCase
 
         $this->assertEquals($expected[0], $pack->stock_available->quantity);
         foreach ($products as $k => $product) {
-            $this->assertEquals($expected[$k+1], $product[0]->stock_available->quantity);
+            $this->assertEquals($expected[$k + 1], $product[0]->stock_available->quantity);
         }
     }
 
@@ -389,15 +389,15 @@ class StockAvailableTest extends UnitTestCase
         $this->container->bind('\\PrestaShop\\PrestaShop\\Adapter\\StockManager', $this->packItemsManager);
 
 
-        $productToUpdate = ($product_to_update === 0)? $pack : $products[$product_to_update-1][0];
-        $productAttributeToUpdate = ($product_to_update === 0)? null : $products[$product_to_update-1][1];
+        $productToUpdate = ($product_to_update === 0)? $pack : $products[$product_to_update - 1][0];
+        $productAttributeToUpdate = ($product_to_update === 0)? null : $products[$product_to_update - 1][1];
 
         $stockManager = new StockManager();
         $stockManager->updateQuantity($productToUpdate, $productAttributeToUpdate, $delta);
 
         $this->assertEquals($expected[0], $pack->stock_available->quantity);
         foreach ($products as $k => $product) {
-            $this->assertEquals($expected[$k+1], $product[0]->stock_available->quantity);
+            $this->assertEquals($expected[$k + 1], $product[0]->stock_available->quantity);
         }
     }
 }

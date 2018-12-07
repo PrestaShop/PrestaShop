@@ -36,7 +36,7 @@ class EmbeddedAttributesFilter extends HashMapWhitelistFilter
 {
     public function __construct()
     {
-        $whitelist = [
+        $whitelist = array(
             'attributes',
             'available_later',
             'available_now',
@@ -69,7 +69,7 @@ class EmbeddedAttributesFilter extends HashMapWhitelistFilter
             'reference',
             'specific_prices',
             'tax_name',
-        ];
+        );
 
         $this->whitelist($whitelist);
     }

@@ -68,17 +68,17 @@ class GridExtension extends AbstractExtension
      */
     public function getFunctions()
     {
-        return [
-            new SimpleFunction('column_content', [$this, 'renderColumnContent'], [
-                'is_safe' => ['html'],
-            ]),
-            new SimpleFunction('column_header', [$this, 'renderColumnHeader'], [
-                'is_safe' => ['html'],
-            ]),
-            new SimpleFunction('is_ordering_column', [$this, 'isOrderingColumn'], [
-                'is_safe' => ['html'],
-            ]),
-        ];
+        return array(
+            new SimpleFunction('column_content', array($this, 'renderColumnContent'), array(
+                'is_safe' => array('html'),
+            )),
+            new SimpleFunction('column_header', array($this, 'renderColumnHeader'), array(
+                'is_safe' => array('html'),
+            )),
+            new SimpleFunction('is_ordering_column', array($this, 'isOrderingColumn'), array(
+                'is_safe' => array('html'),
+            )),
+        );
     }
 
     /**
@@ -116,11 +116,11 @@ class GridExtension extends AbstractExtension
             );
         }
 
-        return $this->twig->render($this->cache->getItem($templateCacheKey)->get(), [
+        return $this->twig->render($this->cache->getItem($templateCacheKey)->get(), array(
             'column' => $column,
             'record' => $record,
             'grid' => $grid,
-        ]);
+        ));
     }
 
     /**
@@ -155,10 +155,10 @@ class GridExtension extends AbstractExtension
             );
         }
 
-        return $this->twig->render($this->cache->getItem($templateCacheKey)->get(), [
+        return $this->twig->render($this->cache->getItem($templateCacheKey)->get(), array(
             'column' => $column,
             'grid' => $grid,
-        ]);
+        ));
     }
 
     /**

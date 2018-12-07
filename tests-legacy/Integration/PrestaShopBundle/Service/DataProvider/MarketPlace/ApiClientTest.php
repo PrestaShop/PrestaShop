@@ -68,11 +68,13 @@ class ApiClientTest extends KernelTestCase
     {
         $responseMock = $this->getMockBuilder('\GuzzleHttp\Message\Response')
             ->disableOriginalConstructor()
-            ->setMethods(['getBody'])
-            ->getMock();
+            ->setMethods(array('getBody'))
+            ->getMock()
+        ;
 
         $responseMock->method('getBody')
-            ->willReturn(json_encode((object)['modules' => []]));
+            ->willReturn(json_encode((object)array('modules' => array())))
+        ;
 
         return $responseMock;
     }
@@ -86,12 +88,14 @@ class ApiClientTest extends KernelTestCase
 
         $clientMock = $this->getMockBuilder('\GuzzleHttp\Client')
             ->disableOriginalConstructor()
-            ->setMethods(['get'])
-            ->getMock();
+            ->setMethods(array('get'))
+            ->getMock()
+        ;
 
         $clientMock->method('get')
             ->with($this->anything())
-            ->willReturn($responseMock);
+            ->willReturn($responseMock)
+        ;
 
         return $clientMock;
     }

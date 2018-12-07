@@ -115,10 +115,10 @@ final class GetCategoryForEditingHandler implements GetCategoryForEditingHandler
             return null;
         }
 
-        return [
+        return array(
             'size' => sprintf('%skB', $imageSize),
             'path' => $this->imageTagSourceParser->parse($imageTag),
-        ];
+        );
     }
 
     /**
@@ -169,10 +169,10 @@ final class GetCategoryForEditingHandler implements GetCategoryForEditingHandler
             return null;
         }
 
-        return [
+        return array(
             'size' => sprintf('%skB', $thumbSize),
             'path' => $this->imageTagSourceParser->parse($imageTag),
-        ];
+        );
     }
 
     /**
@@ -182,7 +182,7 @@ final class GetCategoryForEditingHandler implements GetCategoryForEditingHandler
      */
     private function getMenuThumbnailImages(CategoryId $categoryId)
     {
-        $menuThumbnails = [];
+        $menuThumbnails = array();
 
         for ($i = 0; $i < 3; ++$i) {
             if (file_exists(_PS_CAT_IMG_DIR_ . $categoryId->getValue() . '-' . $i . '_thumb.jpg')) {

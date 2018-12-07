@@ -39,14 +39,14 @@ class YesAndNoChoiceType extends TranslatorAwareType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
-            'choices' => [
+        $resolver->setDefaults(array(
+            'choices' => array(
                 $this->trans('Yes', 'Admin.Global') => 1,
                 $this->trans('No', 'Admin.Global') => 0,
-            ],
+            ),
             'required' => false,
             'choice_translation_domain' => false,
-        ]);
+        ));
     }
 
     /**

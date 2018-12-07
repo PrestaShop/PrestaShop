@@ -82,14 +82,14 @@ class LocalizationConfiguration implements DataConfigurationInterface
      */
     public function getConfiguration()
     {
-        return [
+        return array(
             'default_language' => $this->configuration->getInt('PS_LANG_DEFAULT'),
             'detect_language_from_browser' => $this->configuration->getBoolean('PS_DETECT_LANG'),
             'default_country' => $this->configuration->getInt('PS_COUNTRY_DEFAULT'),
             'detect_country_from_browser' => $this->configuration->getBoolean('PS_DETECT_COUNTRY'),
             'default_currency' => $this->configuration->getInt('PS_CURRENCY_DEFAULT'),
             'timezone' => $this->configuration->get('PS_TIMEZONE'),
-        ];
+        );
     }
 
     /**
@@ -97,7 +97,7 @@ class LocalizationConfiguration implements DataConfigurationInterface
      */
     public function updateConfiguration(array $config)
     {
-        $errors = [];
+        $errors = array();
 
         if ($this->validateConfiguration($config)) {
             $this->languageActivator->enable((int) $config['default_language']);

@@ -89,10 +89,10 @@ class CacheProvider extends AbstractLegacyRouteProvider
      */
     private function serializeLegacyRoutes(array $legacyRoutes)
     {
-        $flattenRoutes = [];
+        $flattenRoutes = array();
         /** @var LegacyRoute $legacyRoute */
         foreach ($legacyRoutes as $legacyRoute) {
-            $legacyLinks = [];
+            $legacyLinks = array();
             foreach ($legacyRoute->getLegacyLinks() as $legacyLink) {
                 if (empty($legacyLink['action'])) {
                     $legacyLinks[] = $legacyLink['controller'];
@@ -100,11 +100,11 @@ class CacheProvider extends AbstractLegacyRouteProvider
                     $legacyLinks[] = $legacyLink['controller'] . ':' . $legacyLink['action'];
                 }
             }
-            $flattenRoutes[] = [
+            $flattenRoutes[] = array(
                 'route_name' => $legacyRoute->getRouteName(),
                 'legacy_links' => $legacyLinks,
                 'legacy_parameters' => $legacyRoute->getRouteParameters(),
-            ];
+            );
         }
 
         return json_encode($flattenRoutes);
@@ -119,7 +119,7 @@ class CacheProvider extends AbstractLegacyRouteProvider
     {
         $flattenRoutes = json_decode($serializedLegacyRoutes, true);
 
-        $legacyRoutes = [];
+        $legacyRoutes = array();
         foreach ($flattenRoutes as $flattenRoute) {
             $legacyRoutes[$flattenRoute['route_name']] = new LegacyRoute(
                 $flattenRoute['route_name'],

@@ -76,14 +76,14 @@ class HashMapWhitelistFilter implements FilterInterface
      *
      * @var true[]
      */
-    protected $whitelistItems = [];
+    protected $whitelistItems = array();
 
     /**
      * Nested filters, indexed by $keyToKeep.
      *
      * @var FilterInterface[]
      */
-    protected $filters = [];
+    protected $filters = array();
 
     /**
      * Adds keys to the whitelist.

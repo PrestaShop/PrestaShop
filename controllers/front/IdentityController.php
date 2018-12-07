@@ -65,9 +65,9 @@ class IdentityControllerCore extends FrontController
             );
         }
 
-        $this->context->smarty->assign([
+        $this->context->smarty->assign(array(
             'customer_form' => $customer_form->getProxy(),
-        ]);
+        ));
 
         if ($should_redirect) {
             $this->redirectWithNotifications($this->getCurrentURL());

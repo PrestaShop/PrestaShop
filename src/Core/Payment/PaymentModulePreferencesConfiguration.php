@@ -62,7 +62,7 @@ final class PaymentModulePreferencesConfiguration implements DataConfigurationIn
      */
     public function getConfiguration()
     {
-        $config = [];
+        $config = array();
         $paymentModules = $this->paymentModuleProvider->getPaymentModuleList();
 
         foreach ($paymentModules as $paymentModule) {
@@ -80,7 +80,7 @@ final class PaymentModulePreferencesConfiguration implements DataConfigurationIn
      */
     public function updateConfiguration(array $config)
     {
-        $errors = [];
+        $errors = array();
 
         if ($this->validateConfiguration($config)) {
             $this->paymentRestrictionsConfigurator->configureCurrencyRestrictions($config['currency_restrictions']);

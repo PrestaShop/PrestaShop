@@ -84,7 +84,7 @@ class CommonController extends FrameworkBundleAdminController
                 unset($callerParameters[$k]);
             }
         }
-        $routeName = $request->attributes->get('caller_route', $request->attributes->get('caller_parameters', ['_route' => false])['_route']);
+        $routeName = $request->attributes->get('caller_route', $request->attributes->get('caller_parameters', array('_route' => false))['_route']);
         $nextPageUrl = (!$routeName || ($offset + $limit >= $total)) ? false : $this->generateUrl($routeName, array_merge(
             $callerParameters,
             array(
@@ -211,11 +211,11 @@ class CommonController extends FrameworkBundleAdminController
     {
         $tools = $this->get('prestashop.adapter.tools');
 
-        return $this->render('@PrestaShop/Admin/Common/_partials/_sidebar.html.twig', [
+        return $this->render('@PrestaShop/Admin/Common/_partials/_sidebar.html.twig', array(
             'footer' => $tools->purifyHTML($footer),
             'title' => $title,
             'url' => urldecode($url),
-        ]);
+        ));
     }
 
     /**
@@ -229,9 +229,9 @@ class CommonController extends FrameworkBundleAdminController
     {
         $presenter = $this->get('prestashop.core.kpi_row.presenter');
 
-        return $this->render('@PrestaShop/Admin/Common/Kpi/kpi_row.html.twig', [
+        return $this->render('@PrestaShop/Admin/Common/Kpi/kpi_row.html.twig', array(
             'kpiRow' => $presenter->present($kpiRow),
-        ]);
+        ));
     }
 
     /**
@@ -273,10 +273,10 @@ class CommonController extends FrameworkBundleAdminController
         $form = $this->createFormBuilder($formData);
         $form->add($formName, $formType);
 
-        return $this->render('@PrestaShop/Admin/Common/_partials/_form_field.html.twig', [
+        return $this->render('@PrestaShop/Admin/Common/_partials/_form_field.html.twig', array(
             'form' => $form->getForm()->get($formName)->get($fieldName)->createView(),
             'formId' => $formName . '_' . $fieldName . '_rendered',
-        ]);
+        ));
     }
 
     /**
@@ -293,7 +293,7 @@ class CommonController extends FrameworkBundleAdminController
         Request $request,
         $gridDefinitionFactoryService,
         $redirectRoute,
-        array $redirectQueryParamsToKeep = []
+        array $redirectQueryParamsToKeep = array()
     ) {
         $definitionFactory = $this->get($gridDefinitionFactoryService);
         $definition = $definitionFactory->getDefinition();
@@ -303,7 +303,7 @@ class CommonController extends FrameworkBundleAdminController
         $filtersForm = $gridFilterFormFactory->create($definition);
         $filtersForm->handleRequest($request);
 
-        $redirectParams = [];
+        $redirectParams = array();
 
         if ($filtersForm->isSubmitted()) {
             $redirectParams['filters'] = $filtersForm->getData();

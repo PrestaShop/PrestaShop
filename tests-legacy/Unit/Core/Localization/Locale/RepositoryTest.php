@@ -51,7 +51,7 @@ class RepositoryTest extends TestCase
          */
         /** CLDR Locale data object */
         $cldrLocale = $this->getMockBuilder(CldrLocale::class)
-            ->setMethods([
+            ->setMethods(array(
                 'getNumberPositivePattern',
                 'getNumberNegativePattern',
                 'getNumberSymbols',
@@ -60,11 +60,12 @@ class RepositoryTest extends TestCase
                 'getNumberGroupingUsed',
                 'getNumberPrimaryGroupSize',
                 'getNumberSecondaryGroupSize',
-            ])
-            ->getMock();
+            ))
+            ->getMock()
+        ;
         $cldrLocale->method('getNumberPositivePattern')->willReturn('');
         $cldrLocale->method('getNumberNegativePattern')->willReturn('');
-        $cldrLocale->method('getNumberSymbols')->willReturn([]);
+        $cldrLocale->method('getNumberSymbols')->willReturn(array());
         $cldrLocale->method('getNumberMaxFractionDigits')->willReturn(3);
         $cldrLocale->method('getNumberMinFractionDigits')->willReturn(0);
         $cldrLocale->method('getNumberGroupingUsed')->willReturn(true);
@@ -74,28 +75,35 @@ class RepositoryTest extends TestCase
         /** CLDR LocaleRepository (returning the data object) */
         $cldrLocaleRepository = $this->getMockBuilder(CldrLocaleRepository::class)
             ->disableOriginalConstructor()
-            ->getMock();
+            ->getMock()
+        ;
         $cldrLocaleRepository->method('getLocale')
-            ->willReturnMap([
-                ['fr-FR', $cldrLocale],
-                ['en-US', null],
-            ]);
+            ->willReturnMap(array(
+                array('fr-FR', $cldrLocale),
+                array('en-US', null),
+            ))
+        ;
 
         /** Currency */
         $currency = $this->getMockBuilder(Currency::class)
             ->disableOriginalConstructor()
-            ->getMock();
+            ->getMock()
+        ;
         $currency->method('getSymbol')
-            ->willReturn('€');
+            ->willReturn('€')
+        ;
         $currency->method('getIsoCode')
-            ->willReturn('EUR');
+            ->willReturn('EUR')
+        ;
 
         /** CurrencyRepository (returning Currencies ) */
         $currencyRepository = $this->getMockBuilder(CurrencyRepository::class)
             ->disableOriginalConstructor()
-            ->getMock();
+            ->getMock()
+        ;
         $currencyRepository->method('getInstalledCurrencies')
-            ->willReturn([$currency]);
+            ->willReturn(array($currency))
+        ;
 
         /** @var CldrLocaleRepository $cldrLocaleRepository */
         /** @var CurrencyRepository $currencyRepository */

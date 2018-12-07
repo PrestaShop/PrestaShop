@@ -92,7 +92,7 @@ abstract class AbstractCategoryCommand
     /**
      * @var UploadedFile[]
      */
-    private $menuThumbnailImages = [];
+    private $menuThumbnailImages = array();
 
     /**
      * @return string[]

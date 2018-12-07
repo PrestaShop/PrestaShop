@@ -38,12 +38,12 @@ final class BackupFilters extends Filters
      */
     public static function getDefaults()
     {
-        return [
+        return array(
             'limit' => 20,
             'offset' => 0,
             'orderBy' => null,
             'sortOrder' => null,
-            'filters' => [],
-        ];
+            'filters' => array(),
+        );
     }
 }

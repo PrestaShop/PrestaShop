@@ -73,24 +73,24 @@ class EmailConfigurationType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('send_emails_to', ChoiceType::class, [
+            ->add('send_emails_to', ChoiceType::class, array(
                 'choices' => $this->contactsChoiceProvider->getChoices(),
                 'choice_translation_domain' => false,
-            ])
-            ->add('mail_method', ChoiceType::class, [
+            ))
+            ->add('mail_method', ChoiceType::class, array(
                 'expanded' => true,
                 'multiple' => false,
                 'choices' => $this->mailMethodChoiceProvider->getChoices(),
-            ])
-            ->add('mail_type', ChoiceType::class, [
+            ))
+            ->add('mail_type', ChoiceType::class, array(
                 'expanded' => true,
                 'multiple' => false,
-                'choices' => [
+                'choices' => array(
                     $this->trans('Send email in HTML format', 'Admin.Advparameters.Feature') => MailOption::TYPE_HTML,
                     $this->trans('Send email in text format', 'Admin.Advparameters.Feature') => MailOption::TYPE_TXT,
                     $this->trans('Both', 'Admin.Advparameters.Feature') => MailOption::TYPE_BOTH,
-                ],
-            ])
+                ),
+            ))
             ->add('log_emails', SwitchType::class)
         ;
     }

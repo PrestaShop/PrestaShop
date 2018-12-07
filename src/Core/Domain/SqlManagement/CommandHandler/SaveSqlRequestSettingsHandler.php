@@ -66,10 +66,10 @@ final class SaveSqlRequestSettingsHandler implements SaveSqlRequestSettingsHandl
      */
     private function getEncodingFileValue(SaveSqlRequestSettingsCommand $command)
     {
-        $valuesMapping = [
+        $valuesMapping = array(
             CharsetEncoding::UTF_8 => 1,
             CharsetEncoding::ISO_8859_1 => 2,
-        ];
+        );
 
         return $valuesMapping[$command->getFileEncoding()];
     }

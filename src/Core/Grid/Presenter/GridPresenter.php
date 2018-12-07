@@ -56,35 +56,35 @@ final class GridPresenter implements GridPresenterInterface
         $definition = $grid->getDefinition();
         $searchCriteria = $grid->getSearchCriteria();
         $data = $grid->getData();
-        $presentedGrid = [
+        $presentedGrid = array(
             'id' => $definition->getId(),
             'name' => $definition->getName(),
             'filter_form' => $grid->getFilterForm()->createView(),
             'columns' => $this->getColumns($grid),
             'column_filters' => $this->getColumnFilters($definition),
-            'actions' => [
+            'actions' => array(
                 'grid' => $definition->getGridActions()->toArray(),
                 'bulk' => $definition->getBulkActions()->toArray(),
-            ],
-            'data' => [
+            ),
+            'data' => array(
                 'records' => $data->getRecords(),
                 'records_total' => $data->getRecordsTotal(),
                 'query' => $data->getQuery(),
-            ],
-            'pagination' => [
+            ),
+            'pagination' => array(
                 'offset' => $searchCriteria->getOffset(),
                 'limit' => $searchCriteria->getLimit(),
-            ],
-            'sorting' => [
+            ),
+            'sorting' => array(
                 'order_by' => $searchCriteria->getOrderBy(),
                 'order_way' => $searchCriteria->getOrderWay(),
-            ],
+            ),
             'filters' => $searchCriteria->getFilters(),
-        ];
+        );
 
-        $this->hookDispatcher->dispatchWithParameters('action' . $definition->getId() . 'GridPresenterModifier', [
+        $this->hookDispatcher->dispatchWithParameters('action' . $definition->getId() . 'GridPresenterModifier', array(
             'presented_grid' => &$presentedGrid,
-        ]);
+        ));
 
         return $presentedGrid;
     }
@@ -103,12 +103,12 @@ final class GridPresenter implements GridPresenterInterface
 
         $positionColumn = $this->getOrderingPosition($grid);
         if (null !== $positionColumn) {
-            array_unshift($columns, [
+            array_unshift($columns, array(
                 'id' => $positionColumn->getId(),
                 'name' => $positionColumn->getName(),
                 'type' => 'position_handle',
                 'options' => $positionColumn->getOptions(),
-            ]);
+            ));
         }
 
         return $columns;
@@ -144,7 +144,7 @@ final class GridPresenter implements GridPresenterInterface
      */
     private function getColumnFilters(GridDefinitionInterface $definition)
     {
-        $columnFiltersMapping = [];
+        $columnFiltersMapping = array();
 
         /** @var FilterInterface $filter */
         foreach ($definition->getFilters()->all() as $filter) {

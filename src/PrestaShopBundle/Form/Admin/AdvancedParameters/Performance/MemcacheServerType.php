@@ -42,18 +42,19 @@ class MemcacheServerType extends CommonAbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('memcache_ip', TextType::class, [
+            ->add('memcache_ip', TextType::class, array(
                 'required' => false,
                 'empty_data' => '',
-            ])
-            ->add('memcache_port', TextType::class, [
+            ))
+            ->add('memcache_port', TextType::class, array(
                 'required' => false,
                 'empty_data' => '',
-            ])
-            ->add('memcache_weight', TextType::class, [
+            ))
+            ->add('memcache_weight', TextType::class, array(
                 'required' => false,
                 'empty_data' => '',
-            ]);
+            ))
+        ;
     }
 
     /**
@@ -61,9 +62,9 @@ class MemcacheServerType extends CommonAbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
+        $resolver->setDefaults(array(
             'translation_domain' => 'Admin.Advparameters.Feature',
-        ]);
+        ));
     }
 
     /**

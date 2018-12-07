@@ -131,7 +131,7 @@ class CheckoutDeliveryStepCore extends AbstractCheckoutStep
             );
             $this->getCheckoutSession()->setGift(
                 isset($requestParams['gift']) ? $requestParams['gift'] : false,
-                (isset($requestParams['gift']) && isset($requestParams['gift_message'])) ? $requestParams['gift_message'] : ''
+                (isset($requestParams['gift'], $requestParams['gift_message'])  ) ? $requestParams['gift_message'] : ''
             );
         }
 
@@ -201,7 +201,8 @@ class CheckoutDeliveryStepCore extends AbstractCheckoutStep
                 'request_params' => $requestParams,
                 'completed' => &$isComplete,
             ),
-            Module::getModuleIdByName($currentDeliveryOption['external_module_name']));
+            Module::getModuleIdByName($currentDeliveryOption['external_module_name'])
+        );
 
         return $isComplete;
     }

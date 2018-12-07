@@ -33,7 +33,7 @@ class LegacyRouteTest extends TestCase
 {
     public function testConstructor()
     {
-        $legacyRoute = new LegacyRoute('product_index', ['AdminProduct'], []);
+        $legacyRoute = new LegacyRoute('product_index', array('AdminProduct'), array());
         $this->assertEquals('product_index', $legacyRoute->getRouteName());
         $this->assertEmpty($legacyRoute->getRouteParameters());
 
@@ -55,7 +55,7 @@ class LegacyRouteTest extends TestCase
 
     public function testConstructorAction()
     {
-        $legacyRoute = new LegacyRoute('product_create', ['AdminProduct:create'], []);
+        $legacyRoute = new LegacyRoute('product_create', array('AdminProduct:create'), array());
         $this->assertEquals('product_create', $legacyRoute->getRouteName());
         $this->assertEmpty($legacyRoute->getRouteParameters());
 
@@ -77,7 +77,7 @@ class LegacyRouteTest extends TestCase
 
     public function testConstructorParameters()
     {
-        $legacyRoute = new LegacyRoute('product_create', ['AdminProduct:create'], ['id_product' => 'productId']);
+        $legacyRoute = new LegacyRoute('product_create', array('AdminProduct:create'), array('id_product' => 'productId'));
         $this->assertEquals('product_create', $legacyRoute->getRouteName());
         $routeParameters = $legacyRoute->getRouteParameters();
         $this->assertNotEmpty($routeParameters);
@@ -101,7 +101,7 @@ class LegacyRouteTest extends TestCase
 
     public function testConstructorAliases()
     {
-        $legacyRoute = new LegacyRoute('product_create', ['AdminProduct:create', 'AdminProduct:new', 'SFProduct:new'], ['id_product' => 'productId']);
+        $legacyRoute = new LegacyRoute('product_create', array('AdminProduct:create', 'AdminProduct:new', 'SFProduct:new'), array('id_product' => 'productId'));
         $this->assertEquals('product_create', $legacyRoute->getRouteName());
         $routeParameters = $legacyRoute->getRouteParameters();
         $this->assertNotEmpty($routeParameters);
@@ -136,9 +136,9 @@ class LegacyRouteTest extends TestCase
 
     public function testStaticConstructor()
     {
-        $legacyRoute = LegacyRoute::buildLegacyRoute('product_index', [
+        $legacyRoute = LegacyRoute::buildLegacyRoute('product_index', array(
             '_legacy_link' => 'AdminProduct',
-        ]);
+        ));
         $this->assertEquals('product_index', $legacyRoute->getRouteName());
         $this->assertEmpty($legacyRoute->getRouteParameters());
 
@@ -160,9 +160,9 @@ class LegacyRouteTest extends TestCase
 
     public function testStaticConstructorAction()
     {
-        $legacyRoute = LegacyRoute::buildLegacyRoute('product_create', [
+        $legacyRoute = LegacyRoute::buildLegacyRoute('product_create', array(
             '_legacy_link' => 'AdminProduct:create',
-        ]);
+        ));
         $this->assertEquals('product_create', $legacyRoute->getRouteName());
         $this->assertEmpty($legacyRoute->getRouteParameters());
 
@@ -184,12 +184,12 @@ class LegacyRouteTest extends TestCase
 
     public function testStaticParameters()
     {
-        $legacyRoute = LegacyRoute::buildLegacyRoute('product_create', [
+        $legacyRoute = LegacyRoute::buildLegacyRoute('product_create', array(
             '_legacy_link' => 'AdminProduct:create',
-            '_legacy_parameters' => [
+            '_legacy_parameters' => array(
                 'id_product' => 'productId',
-            ]
-        ]);
+            )
+        ));
         $this->assertEquals('product_create', $legacyRoute->getRouteName());
         $routeParameters = $legacyRoute->getRouteParameters();
         $this->assertNotEmpty($routeParameters);
@@ -213,12 +213,12 @@ class LegacyRouteTest extends TestCase
 
     public function testStaticAliases()
     {
-        $legacyRoute = LegacyRoute::buildLegacyRoute('product_create', [
-            '_legacy_link' => ['AdminProduct:create', 'AdminProduct:new', 'SFProduct:new'],
-            '_legacy_parameters' => [
+        $legacyRoute = LegacyRoute::buildLegacyRoute('product_create', array(
+            '_legacy_link' => array('AdminProduct:create', 'AdminProduct:new', 'SFProduct:new'),
+            '_legacy_parameters' => array(
                 'id_product' => 'productId',
-            ]
-        ]);
+            )
+        ));
         $this->assertEquals('product_create', $legacyRoute->getRouteName());
         $routeParameters = $legacyRoute->getRouteParameters();
         $this->assertNotEmpty($routeParameters);

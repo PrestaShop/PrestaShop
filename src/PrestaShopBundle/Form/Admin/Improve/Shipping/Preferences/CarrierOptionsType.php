@@ -72,23 +72,23 @@ class CarrierOptionsType extends TranslatorAwareType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $carrierChoices = array_merge([
+        $carrierChoices = array_merge(array(
             'Best price' => -1,
             'Best grade' => -2,
-        ], $this->carriers);
+        ), $this->carriers);
 
         $builder
-            ->add('default_carrier', ChoiceType::class, [
+            ->add('default_carrier', ChoiceType::class, array(
                 'choices' => $carrierChoices,
-            ])
-            ->add('carrier_default_order_by', ChoiceType::class, [
+            ))
+            ->add('carrier_default_order_by', ChoiceType::class, array(
                 'choices' => $this->orderByChoices,
                 'choice_translation_domain' => 'Admin.Global',
-            ])
-            ->add('carrier_default_order_way', ChoiceType::class, [
+            ))
+            ->add('carrier_default_order_way', ChoiceType::class, array(
                 'choices' => $this->orderWayChoices,
                 'choice_translation_domain' => 'Admin.Global',
-            ])
+            ))
         ;
     }
 
@@ -97,9 +97,9 @@ class CarrierOptionsType extends TranslatorAwareType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
+        $resolver->setDefaults(array(
             'translation_domain' => 'Admin.Shipping.Feature',
-        ]);
+        ));
     }
 
     /**

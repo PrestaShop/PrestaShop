@@ -111,7 +111,7 @@ class Datas
             'validate' => 'isGenericName',
             'default' => 'PrestaShop',
         ),
-        'shop_activity'    => array(
+        'shop_activity' => array(
             'name' => 'activity',
             'default' => 0,
             'validate' => 'isInt',
@@ -126,7 +126,7 @@ class Datas
             'validate' => 'isName',
             'default' => 'John',
         ),
-        'admin_lastname'    => array(
+        'admin_lastname' => array(
             'name' => 'lastname',
             'validate' => 'isName',
             'default' => 'Doe',

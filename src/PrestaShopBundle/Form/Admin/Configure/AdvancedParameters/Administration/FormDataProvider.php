@@ -67,11 +67,11 @@ final class FormDataProvider implements FormDataProviderInterface
      */
     public function getData()
     {
-        return [
+        return array(
             'general' => $this->generalConfiguration->getConfiguration(),
             'upload_quota' => $this->uploadConfiguration->getConfiguration(),
             'notifications' => $this->notificationsConfiguration->getConfiguration(),
-        ];
+        );
     }
 
     /**

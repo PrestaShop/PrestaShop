@@ -29,9 +29,9 @@ require(__DIR__.'/../../config/config.inc.php');
 
 // useful variables
 
-$language   = Context::getContext()->language;
-$shop       = Context::getContext()->shop;
-$dbPrefix   = _DB_PREFIX_;
+$language = Context::getContext()->language;
+$shop = Context::getContext()->shop;
+$dbPrefix = _DB_PREFIX_;
 
 // Enable URL rewriting
 
@@ -95,9 +95,9 @@ function disableModule($moduleName)
 
 function hookModule($moduleName, $hookName)
 {
-    $dbPrefix   = _DB_PREFIX_;
-    $module     = Module::getInstanceByName($moduleName);
-    $moduleId   = $module->id;
+    $dbPrefix = _DB_PREFIX_;
+    $module = Module::getInstanceByName($moduleName);
+    $moduleId = $module->id;
     Db::getInstance()->execute(
         "DELETE FROM {$dbPrefix}hook_module WHERE id_module=$moduleId"
     );
@@ -127,8 +127,8 @@ $customizableProduct->text_fields = 1;
 $customizableProduct->save();
 
 // Then define it. There is unfortunately no API, so we encode the data in $_POST...
-$_POST[implode('_', ['label', 1, $id_customization_field, $language->id, $shop->id])] = 'my field';
-$_POST[implode('_', ['require', 1, $id_customization_field])] = true;
+$_POST[implode('_', array('label', 1, $id_customization_field, $language->id, $shop->id))] = 'my field';
+$_POST[implode('_', array('require', 1, $id_customization_field))] = true;
 $customizableProduct->updateLabels();
 
 echo "- added a required customizable text field to product #1\n";

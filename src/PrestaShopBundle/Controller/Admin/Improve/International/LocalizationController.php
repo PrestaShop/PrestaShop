@@ -61,15 +61,15 @@ class LocalizationController extends FrameworkBundleAdminController
         $localizationPackImportForm = $this->createForm(ImportLocalizationPackType::class);
         $localizationForm = $this->getLocalizationFormHandler()->getForm();
 
-        return $this->render('@PrestaShop/Admin/Improve/International/Localization/index.html.twig', [
-            'layoutHeaderToolbarBtn' => [],
+        return $this->render('@PrestaShop/Admin/Improve/International/Localization/index.html.twig', array(
+            'layoutHeaderToolbarBtn' => array(),
             'layoutTitle' => $this->trans('Localization', 'Admin.Navigation.Menu'),
             'requireAddonsSearch' => true,
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($legacyController),
             'localizationForm' => $localizationForm->createView(),
             'localizationPackImportForm' => $localizationPackImportForm->createView(),
-        ]);
+        ));
     }
 
     /**

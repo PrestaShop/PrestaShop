@@ -56,10 +56,10 @@ class ModuleOverrideInstallUninstallTest extends IntegrationTestCase
         $this->moduleManagerBuilder = ModuleManagerBuilder::getInstance();
         $this->moduleManager = $this->moduleManagerBuilder->build();
 
-        $this->moduleNames= [
+        $this->moduleNames = array(
             'pscsx3241',
             'pscsx32412',
-       ];
+       );
     }
 
     public static function tearDownAfterClass()
@@ -92,8 +92,8 @@ class ModuleOverrideInstallUninstallTest extends IntegrationTestCase
      */
     private function cleanup($str)
     {
-        $withoutDate        = preg_replace('#\* date: .*?\n#m', '', $str);
-        $withoutBlankLines  = preg_replace('#\n?^(?:\s*)$#m', "", $withoutDate);
+        $withoutDate = preg_replace('#\* date: .*?\n#m', '', $str);
+        $withoutBlankLines = preg_replace('#\n?^(?:\s*)$#m', "", $withoutDate);
         return $withoutBlankLines;
     }
 

@@ -53,12 +53,12 @@ final class InvoicesByDateDataProvider implements FormDataProviderInterface
     {
         $date = (new DateTime())->format('Y-m-d');
 
-        return [
-            'generate_by_date' => [
+        return array(
+            'generate_by_date' => array(
                 'date_from' => $date,
                 'date_to' => $date,
-            ],
-        ];
+            ),
+        );
     }
 
     /**
@@ -79,33 +79,33 @@ final class InvoicesByDateDataProvider implements FormDataProviderInterface
      */
     private function validate(array $data)
     {
-        $errors = [];
+        $errors = array();
 
         $dateFrom = date_create($data['generate_by_date']['date_from']);
         $dateTo = date_create($data['generate_by_date']['date_to']);
 
         if (false === $dateFrom) {
-            $errors[] = [
+            $errors[] = array(
                 'key' => 'Invalid "From" date',
                 'domain' => 'Admin.Orderscustomers.Notification',
-                'parameters' => [],
-            ];
+                'parameters' => array(),
+            );
         }
 
         if (false === $dateTo) {
-            $errors[] = [
+            $errors[] = array(
                 'key' => 'Invalid "To" date',
                 'domain' => 'Admin.Orderscustomers.Notification',
-                'parameters' => [],
-            ];
+                'parameters' => array(),
+            );
         }
 
         if (empty($errors) && !$this->orderInvoiceDataProvider->getByDateInterval($dateFrom, $dateTo)) {
-            $errors[] = [
+            $errors[] = array(
                 'key' => 'No invoice has been found for this period.',
                 'domain' => 'Admin.Orderscustomers.Notification',
-                'parameters' => [],
-            ];
+                'parameters' => array(),
+            );
         }
 
         return $errors;

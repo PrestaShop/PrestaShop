@@ -91,7 +91,7 @@ class PaymentModulesPresenter
         $installedModules = $this->moduleRepository->getInstalledModules();
         $installedModuleNames = array_keys($installedModules);
 
-        $paymentModulesToDisplay = [];
+        $paymentModulesToDisplay = array();
         foreach ($tabModuleNames as $moduleName) {
             if (!in_array($moduleName, $installedModuleNames) ||
                 !$this->moduleDataProvider->can('configure', $moduleName)

@@ -75,10 +75,11 @@ final class PaymentModuleListProvider implements PaymentModuleListProviderInterf
     {
         $filters = (new AddonListFilter())
             ->setType(AddonListFilterType::MODULE)
-            ->setStatus(AddonListFilterStatus::INSTALLED);
+            ->setStatus(AddonListFilterStatus::INSTALLED)
+        ;
 
         $modules = $this->addonRepository->getFilteredList($filters);
-        $paymentModules = [];
+        $paymentModules = array();
 
         /** @var Module $module */
         foreach ($modules as $module) {

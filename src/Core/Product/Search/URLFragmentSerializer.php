@@ -37,12 +37,12 @@ class URLFragmentSerializer
 
     private function unserializeListOfStrings($separator, $escape, $str)
     {
-        $list = [];
+        $list = array();
         $currentString = '';
         $escaping = false;
 
         // get UTF-8 chars, inspired from http://stackoverflow.com/questions/9438158/split-utf8-string-into-array-of-chars
-        $arr = [];
+        $arr = array();
         preg_match_all('/./u', $str, $arr);
         $chars = $arr[0];
 
@@ -80,7 +80,7 @@ class URLFragmentSerializer
 
     public function serialize(array $fragment)
     {
-        $parts = [];
+        $parts = array();
         foreach ($fragment as $key => $values) {
             array_unshift($values, $key);
             $parts[] = $this->serializeListOfStrings('-', '-', $values);
@@ -91,7 +91,7 @@ class URLFragmentSerializer
 
     public function unserialize($str)
     {
-        $fragment = [];
+        $fragment = array();
         $parts = $this->unserializeListOfStrings('/', '/', $str);
         foreach ($parts as $part) {
             $values = $this->unserializeListOfStrings('-', '-', $part);

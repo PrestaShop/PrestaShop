@@ -59,13 +59,13 @@ class FilterCategorySearchCriteriaListener
 
         $newSearchCriteria = $this->categorySearchCriteriaFactory->createFrom($event->getSearchCriteria());
 
-        $newFilters = new CategoryFilters([
+        $newFilters = new CategoryFilters(array(
             'orderBy' => $newSearchCriteria->getOrderBy(),
             'sortOrder' => $newSearchCriteria->getOrderWay(),
             'offset' => $newSearchCriteria->getOffset(),
             'limit' => $newSearchCriteria->getLimit(),
             'filters' => $newSearchCriteria->getFilters(),
-        ]);
+        ));
 
         $event->setSearchCriteria($newFilters);
     }

@@ -62,35 +62,36 @@ class ProductCustomField extends CommonAbstractType
         $builder->add(
             'id_customization_field',
             FormType\HiddenType::class,
-            [
+            array(
                 'required' => false,
-            ]
+            )
         )
-            ->add('label', TranslateType::class, [
+            ->add('label', TranslateType::class, array(
                 'type' => FormType\TextType::class,
-                'options' => ['constraints' => [
+                'options' => array('constraints' => array(
                     new Assert\NotBlank(),
-                    new Assert\Length(['min' => 2]),
-                ]],
+                    new Assert\Length(array('min' => 2)),
+                )),
                 'locales' => $this->locales,
                 'hideTabs' => true,
-                'label' => $this->translator->trans('Label', [], 'Admin.Global'),
-            ])
-            ->add('type', FormType\ChoiceType::class, [
-                'label' => $this->translator->trans('Type', [], 'Admin.Catalog.Feature'),
-                'choices' => [
-                    $this->translator->trans('Text', [], 'Admin.Global') => 1,
-                    $this->translator->trans('File', [], 'Admin.Global') => 0,
-                ],
-                'attr' => [
+                'label' => $this->translator->trans('Label', array(), 'Admin.Global'),
+            ))
+            ->add('type', FormType\ChoiceType::class, array(
+                'label' => $this->translator->trans('Type', array(), 'Admin.Catalog.Feature'),
+                'choices' => array(
+                    $this->translator->trans('Text', array(), 'Admin.Global') => 1,
+                    $this->translator->trans('File', array(), 'Admin.Global') => 0,
+                ),
+                'attr' => array(
                     'class' => 'c-select',
-                ],
+                ),
                 'required' => true,
-            ])
-            ->add('require', FormType\CheckboxType::class, [
-                'label' => $this->translator->trans('Required', [], 'Admin.Global'),
+            ))
+            ->add('require', FormType\CheckboxType::class, array(
+                'label' => $this->translator->trans('Required', array(), 'Admin.Global'),
                 'required' => false,
-            ]);
+            ))
+        ;
     }
 
     /**

@@ -38,7 +38,8 @@ class CheckTranslationDuplicatesCommand extends ContainerAwareCommand
     {
         $this
             ->setName('prestashop:translation:find-duplicates')
-            ->setDescription('Find duplicates of your translations');
+            ->setDescription('Find duplicates of your translations')
+        ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)

@@ -62,9 +62,9 @@ final class InvoiceOptionsDataProvider implements FormDataProviderInterface
      */
     public function getData()
     {
-        return [
+        return array(
             'invoice_options' => $this->invoiceOptionsConfiguration->getConfiguration(),
-        ];
+        );
     }
 
     /**
@@ -88,15 +88,15 @@ final class InvoiceOptionsDataProvider implements FormDataProviderInterface
      */
     private function validate(array $data)
     {
-        $errors = [];
+        $errors = array();
         $invoiceNumber = $data['invoice_options']['invoice_number'];
 
         if ($invoiceNumber > 0 && $invoiceNumber <= $this->nextInvoiceNumber) {
-            $errors[] = [
+            $errors[] = array(
                 'key' => 'Invalid invoice number.',
                 'domain' => 'Admin.Orderscustomers.Notification',
-                'parameters' => [],
-            ];
+                'parameters' => array(),
+            );
         }
 
         return $errors;

@@ -313,7 +313,7 @@ class PaymentOption implements HookContentClassInterface
 
     public function toArray()
     {
-        return [
+        return array(
             'module_name' => $this->moduleName,
             'binary' => $this->binary,
             'action' => $this->action,
@@ -322,7 +322,7 @@ class PaymentOption implements HookContentClassInterface
             'logo' => $this->logo,
             'additionalInformation' => $this->additionalInformation,
             'call_to_action_text' => $this->callToActionText,
-        ];
+        );
     }
 
     /**
@@ -364,7 +364,8 @@ class PaymentOption implements HookContentClassInterface
                       ->setAction($option['action'])
                       ->setForm($option['form'])
                       ->setInputs($option['inputs'])
-                      ->setLogo($option['logo']);
+                      ->setLogo($option['logo'])
+            ;
 
             $newOptions[] = $newOption;
         }

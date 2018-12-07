@@ -51,8 +51,8 @@ class SystemInformationController extends FrameworkBundleAdminController
         $requirementsSummary = $this->getRequirementsChecker()->getSummary();
         $systemInformationSummary = $this->getSystemInformation()->getSummary();
 
-        return [
-            'layoutHeaderToolbarBtn' => [],
+        return array(
+            'layoutHeaderToolbarBtn' => array(),
             'layoutTitle' => $this->trans('Information', 'Admin.Navigation.Menu'),
             'requireAddonsSearch' => true,
             'requireBulkActions' => false,
@@ -64,7 +64,7 @@ class SystemInformationController extends FrameworkBundleAdminController
             'system' => $systemInformationSummary,
             'requirements' => $requirementsSummary,
             'userAgent' => $request->headers->get('User-Agent'),
-        ];
+        );
     }
 
     /**

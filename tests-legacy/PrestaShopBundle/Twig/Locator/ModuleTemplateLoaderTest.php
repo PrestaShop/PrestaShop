@@ -44,16 +44,16 @@ class ModuleTemplateLoaderTest extends TestCase
      */
     protected function setUp()
     {
-        $namespaces = [
+        $namespaces = array(
             'Product' => 'Admin/Product',
             'PrestaShop' => '',
-        ];
+        );
 
-        $paths = [
+        $paths = array(
             __DIR__.'/../Fixtures/module1',
             __DIR__.'/../Fixtures/module2',
             __DIR__.'/../Fixtures/module3',
-        ];
+        );
 
         $this->loader = new ModuleTemplateLoader($namespaces, $paths);
     }
@@ -77,7 +77,8 @@ class ModuleTemplateLoaderTest extends TestCase
         self::assertCount(
             3,
             $this->loader->getPaths('PrestaShop'),
-            'One templates should be found.');
+            'One templates should be found.'
+        );
     }
 
     /**
@@ -100,17 +101,17 @@ class ModuleTemplateLoaderTest extends TestCase
      */
     public function getSourceContextsProvider()
     {
-        return [
-            ['module1', '@Product/test.html.twig', 'Module 1 wins as Module 3 is loaded after.'],
-            ['module1', '@PrestaShop/Admin/Product/test.html.twig', 'PrestaShop is the main namespace.'],
-            ['List from module 3', '@Product/ProductPage/Lists/list.html.twig', 'Module 3 templates are available.'],
-            ['module2', '@PrestaShop/test.html.twig', 'Module 2 templates are availables.'],
-        ];
+        return array(
+            array('module1', '@Product/test.html.twig', 'Module 1 wins as Module 3 is loaded after.'),
+            array('module1', '@PrestaShop/Admin/Product/test.html.twig', 'PrestaShop is the main namespace.'),
+            array('List from module 3', '@Product/ProductPage/Lists/list.html.twig', 'Module 3 templates are available.'),
+            array('module2', '@PrestaShop/test.html.twig', 'Module 2 templates are availables.'),
+        );
     }
 
     public function testEmptyConstructor()
     {
-        $loader = new ModuleTemplateLoader([]);
+        $loader = new ModuleTemplateLoader(array());
 
         self::assertEquals(array(), $loader->getPaths());
     }
@@ -120,12 +121,12 @@ class ModuleTemplateLoaderTest extends TestCase
      */
     public function testGetNamespaces()
     {
-        $loader = new ModuleTemplateLoader([]);
+        $loader = new ModuleTemplateLoader(array());
 
-        self::assertEquals([], $loader->getNamespaces());
+        self::assertEquals(array(), $loader->getNamespaces());
 
         $loader->addPath(sys_get_temp_dir(), 'named');
 
-        self::assertEquals(['named'], $loader->getNamespaces());
+        self::assertEquals(array('named'), $loader->getNamespaces());
     }
 }

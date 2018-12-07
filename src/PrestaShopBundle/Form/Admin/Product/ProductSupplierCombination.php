@@ -65,44 +65,45 @@ class ProductSupplierCombination extends CommonAbstractType
         $builder->add(
             'supplier_reference',
             FormType\TextType::class,
-            [
+            array(
                 'required' => false,
                 'label' => null,
                 'empty_data' => '',
-            ]
+            )
         )
             ->add(
                 'product_price',
                 FormType\MoneyType::class,
-                [
+                array(
                     'required' => false,
-                    'constraints' => [
+                    'constraints' => array(
                         new Assert\NotBlank(),
-                        new Assert\Type(['type' => 'float']),
-                    ],
-                ]
+                        new Assert\Type(array('type' => 'float')),
+                    ),
+                )
             )
             ->add(
                 'product_price_currency',
                 FormType\ChoiceType::class,
-                [
+                array(
                     'choices' => $this->formatDataChoicesList($this->currencyAdapter->getCurrencies(), 'id_currency'),
                     'required' => true,
-                    'attr' => [
+                    'attr' => array(
                         'class' => 'custom-select',
-                    ],
-                ]
+                    ),
+                )
             )
             ->add('id_product_attribute', FormType\HiddenType::class)
             ->add('product_id', FormType\HiddenType::class)
-            ->add('supplier_id', FormType\HiddenType::class);
+            ->add('supplier_id', FormType\HiddenType::class)
+        ;
 
         //set default minimal values for collection prototype
-        $builder->setData([
+        $builder->setData(array(
             'product_price' => 0,
             'supplier_id' => $options['id_supplier'],
             'product_price_currency' => $this->contextLegacy->currency->id,
-        ]);
+        ));
     }
 
     /**
@@ -110,9 +111,9 @@ class ProductSupplierCombination extends CommonAbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
+        $resolver->setDefaults(array(
             'id_supplier' => null,
-        ]);
+        ));
     }
 
     /**

@@ -101,17 +101,17 @@ class CartControllerCore extends FrontController
         $presenter = new CartPresenter();
         $presented_cart = $presenter->present($this->context->cart, $shouldSeparateGifts = true);
 
-        $this->context->smarty->assign([
+        $this->context->smarty->assign(array(
             'cart' => $presented_cart,
             'static_token' => Tools::getToken(false),
-        ]);
+        ));
 
         if (count($presented_cart['products']) > 0) {
             $this->setTemplate('checkout/cart');
         } else {
-            $this->context->smarty->assign([
+            $this->context->smarty->assign(array(
                 'allProductsLink' => $this->context->link->getCategoryLink(Configuration::get('PS_HOME_CATEGORY')),
-            ]);
+            ));
             $this->setTemplate('checkout/cart-empty');
         }
         parent::initContent();
@@ -134,9 +134,10 @@ class CartControllerCore extends FrontController
 
             // filter product output
             $presentedCart['products'] = $this->get('prestashop.core.filter.front_end_object.product_collection')
-                ->filter($presentedCart['products']);
+                ->filter($presentedCart['products'])
+            ;
 
-            $this->ajaxRender(Tools::jsonEncode([
+            $this->ajaxRender(Tools::jsonEncode(array(
                 'success' => true,
                 'id_product' => $this->id_product,
                 'id_product_attribute' => $this->id_product_attribute,
@@ -144,15 +145,15 @@ class CartControllerCore extends FrontController
                 'quantity' => $productQuantity,
                 'cart' => $presentedCart,
                 'errors' => empty($this->updateOperationError) ? '' : reset($this->updateOperationError),
-            ]));
+            )));
 
             return;
         } else {
-            $this->ajaxRender(Tools::jsonEncode([
+            $this->ajaxRender(Tools::jsonEncode(array(
                 'hasError' => true,
                 'errors' => $this->errors,
                 'quantity' => $productQuantity,
-            ]));
+            )));
 
             return;
         }
@@ -166,14 +167,14 @@ class CartControllerCore extends FrontController
 
         ob_end_clean();
         header('Content-Type: application/json');
-        $this->ajaxRender(Tools::jsonEncode([
+        $this->ajaxRender(Tools::jsonEncode(array(
             'cart_detailed' => $this->render('checkout/_partials/cart-detailed'),
             'cart_detailed_totals' => $this->render('checkout/_partials/cart-detailed-totals'),
             'cart_summary_items_subtotal' => $this->render('checkout/_partials/cart-summary-items-subtotal'),
             'cart_summary_totals' => $this->render('checkout/_partials/cart-summary-totals'),
             'cart_detailed_actions' => $this->render('checkout/_partials/cart-detailed-actions'),
             'cart_voucher' => $this->render('checkout/_partials/cart-voucher'),
-        ]));
+        )));
 
         return;
     }
@@ -206,20 +207,20 @@ class CartControllerCore extends FrontController
                 false,
                 false,
                 true,
-                [
+                array(
                     'quantity_wanted' => (int) $this->qty,
                     'preview' => $this->preview,
-                ]
+                )
             );
         } else {
             $url = false;
         }
         ob_end_clean();
         header('Content-Type: application/json');
-        $this->ajaxRender(Tools::jsonEncode([
+        $this->ajaxRender(Tools::jsonEncode(array(
             'success' => true,
             'productUrl' => $url,
-        ]));
+        )));
 
         return;
     }

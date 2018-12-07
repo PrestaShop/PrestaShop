@@ -478,7 +478,7 @@ class ToolsCore
         // @see: https://bugs.php.net/bug.php?id=73192
         // @see: https://3v4l.org/nFYJh
 
-        $matches = [];
+        $matches = array();
         if (!preg_match('/^[\w]+:\/\/(?<authority>[^\/?#$]+)/ui', $url, $matches)) {
             // relative url
             return '';
@@ -647,7 +647,7 @@ class ToolsCore
     public static function getCountry($address = null)
     {
         $id_country = (int) Tools::getValue('id_country');
-        if (!$id_country && isset($address) && isset($address->id_country) && $address->id_country) {
+        if (!$id_country && isset($address, $address->id_country) && $address->id_country) {
             $id_country = (int) $address->id_country;
         } elseif (Configuration::get('PS_DETECT_COUNTRY') && isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
             preg_match('#(?<=-)\w\w|\w\w(?!-)#', $_SERVER['HTTP_ACCEPT_LANGUAGE'], $array);
@@ -1102,7 +1102,8 @@ class ToolsCore
         if (null === $errorMessage) {
             $errorMessage = Context::getContext()
                 ->getTranslator()
-                ->trans('Fatal error', [], 'Admin.Notifications.Error');
+                ->trans('Fatal error', array(), 'Admin.Notifications.Error')
+            ;
         }
 
         if (_PS_MODE_DEV_) {
@@ -1511,7 +1512,7 @@ class ToolsCore
      * @return string $str truncated
      */
     /* CAUTION : Use it only on module hookEvents.
-    ** For other purposes use the smarty function instead */
+     ** For other purposes use the smarty function instead */
     public static function truncate($str, $max_length, $suffix = '...')
     {
         if (Tools::strlen($str) <= $max_length) {
@@ -1876,8 +1877,8 @@ class ToolsCore
         $f1 = pow(10.0, (float) abs($places));
 
         /* If the decimal precision guaranteed by FP arithmetic is higher than
-        * the requested places BUT is small enough to make sure a non-zero value
-        * is returned, pre-round the result to the precision */
+         * the requested places BUT is small enough to make sure a non-zero value
+         * is returned, pre-round the result to the precision */
         if ($precision_places > $places && $precision_places - $places < 15) {
             $f2 = pow(10.0, (float) abs($precision_places));
 
@@ -1888,7 +1889,7 @@ class ToolsCore
             }
 
             /* preround the result (tmp_value will always be something * 1e14,
-            * thus never larger than 1e15 here) */
+             * thus never larger than 1e15 here) */
             $tmp_value = Tools::round_helper($tmp_value, $mode);
             /* now correctly move the decimal point */
             $f2 = pow(10.0, (float) abs($places - $precision_places));
@@ -2228,7 +2229,7 @@ class ToolsCore
     public static function toCamelCase($str, $capitaliseFirstChar = false)
     {
         $str = Tools::strtolower($str);
-        $str = str_replace(' ', '', ucwords(str_replace(['-', '_'], ' ', $str)));
+        $str = str_replace(' ', '', ucwords(str_replace(array('-', '_'), ' ', $str)));
         if (!$capitaliseFirstChar) {
             $str = lcfirst($str);
         }
@@ -2825,7 +2826,8 @@ exit;
     public static function getDirectoriesWithGlob($path)
     {
         $directoryList = glob($path . '/*', GLOB_ONLYDIR | GLOB_NOSORT);
-        array_walk($directoryList,
+        array_walk(
+            $directoryList,
             function (&$absolutePath, $key) {
                 $absolutePath = substr($absolutePath, strrpos($absolutePath, '/') + 1);
             }
@@ -2843,7 +2845,7 @@ exit;
      */
     public static function getDirectoriesWithReaddir($path)
     {
-        $directoryList = [];
+        $directoryList = array();
         $dh = @opendir($path);
         if ($dh) {
             while (($file = @readdir($dh)) !== false) {
@@ -3719,7 +3721,7 @@ exit;
                 break;
             case 'module':
                 $post_data .= '&method=module&id_module=' . urlencode($params['id_module']);
-                if (isset($params['username_addons']) && isset($params['password_addons'])) {
+                if (isset($params['username_addons'], $params['password_addons'])  ) {
                     $post_data .= '&username=' . urlencode($params['username_addons']) . '&password=' . urlencode($params['password_addons']);
                 }
                 break;

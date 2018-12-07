@@ -45,13 +45,13 @@ class ControllerActionTest extends TestCase
      */
     public function getControllers()
     {
-        return [
-            ['MyNamespace\Foo\Bar\BarController::fooAction', ['bar', 'foo']],
-            ['ModuleNameSpace\YoloController::yoloAction', ['yolo', 'yolo']],
-            ['PrestaShop\Controller\Admin\ProductController::formAction', ['product', 'form']],
-            ['ModuleController', ['module', 'N/A']],
-            ['foo::actionAction', ['N/A', 'action']],
-            ['This is not even a FQCN', ['N/A', 'N/A']],
-        ];
+        return array(
+            array('MyNamespace\Foo\Bar\BarController::fooAction', array('bar', 'foo')),
+            array('ModuleNameSpace\YoloController::yoloAction', array('yolo', 'yolo')),
+            array('PrestaShop\Controller\Admin\ProductController::formAction', array('product', 'form')),
+            array('ModuleController', array('module', 'N/A')),
+            array('foo::actionAction', array('N/A', 'action')),
+            array('This is not even a FQCN', array('N/A', 'N/A')),
+        );
     }
 }

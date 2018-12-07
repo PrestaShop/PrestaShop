@@ -45,8 +45,8 @@ class PaginationType extends AbstractType
     {
         $builder
             ->add('products_per_page', IntegerType::class)
-            ->add('default_order_by', ChoiceType::class, [
-                'choices' => [
+            ->add('default_order_by', ChoiceType::class, array(
+                'choices' => array(
                     'Product name' => 0,
                     'Product price' => 1,
                     'Product add date' => 2,
@@ -55,17 +55,18 @@ class PaginationType extends AbstractType
                     'Brand' => 5,
                     'Product quantity' => 6,
                     'Product reference' => 7,
-                ],
+                ),
                 'required' => true,
-            ])
-            ->add('default_order_way', ChoiceType::class, [
-                'choices' => [
+            ))
+            ->add('default_order_way', ChoiceType::class, array(
+                'choices' => array(
                     'Ascending' => 0,
                     'Descending' => 1,
-                ],
+                ),
                 'required' => true,
                 'choice_translation_domain' => 'Admin.Global',
-            ]);
+            ))
+        ;
     }
 
     /**
@@ -73,9 +74,9 @@ class PaginationType extends AbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
+        $resolver->setDefaults(array(
             'translation_domain' => 'Admin.Shopparameters.Feature',
-        ]);
+        ));
     }
 
     /**

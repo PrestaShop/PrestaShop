@@ -40,24 +40,24 @@ class RepositoryTest extends TestCase
 
     protected function setUp()
     {
-        $euroData  = [
-            'isActive'       => true,
+        $euroData = array(
+            'isActive' => true,
             'conversionRate' => 1,
-            'isoCode'        => 'EUR',
+            'isoCode' => 'EUR',
             'numericIsoCode' => 978,
-            'symbols'        => ['fr-FR' => '€', 'en-US' => '€'],
-            'precision'      => 2,
-            'names'          => ['fr-FR' => 'euro', 'en-US' => 'euro'],
-        ];
-        $peaceData = [
-            'isActive'       => true,
+            'symbols' => array('fr-FR' => '€', 'en-US' => '€'),
+            'precision' => 2,
+            'names' => array('fr-FR' => 'euro', 'en-US' => 'euro'),
+        );
+        $peaceData = array(
+            'isActive' => true,
             'conversionRate' => 1,
-            'isoCode'        => 'PCE',
+            'isoCode' => 'PCE',
             'numericIsoCode' => 999,
-            'symbols'        => ['fr-FR' => '☮', 'en-US' => '☮'],
-            'precision'      => 2,
-            'names'          => ['fr-FR' => 'paix', 'en-US' => 'peace'],
-        ];
+            'symbols' => array('fr-FR' => '☮', 'en-US' => '☮'),
+            'precision' => 2,
+            'names' => array('fr-FR' => 'paix', 'en-US' => 'peace'),
+        );
 
         $getDataByCurrencyCode = function ($isoCode) use ($euroData, $peaceData) {
             if ($isoCode == 'EUR') {
@@ -74,7 +74,8 @@ class RepositoryTest extends TestCase
         $dataRepo = $this->createMock(CurrencyDataRepositoryInterface::class);
         $dataRepo
             ->method('getDataByCurrencyCode')
-            ->willReturnCallback($getDataByCurrencyCode);
+            ->willReturnCallback($getDataByCurrencyCode)
+        ;
 
         /** @var $dataRepo CurrencyDataRepositoryInterface */
         $this->currencyRepository = new CurrencyRepository($dataRepo);
@@ -123,18 +124,18 @@ class RepositoryTest extends TestCase
      */
     public function provideValidCurrencyCodes()
     {
-        return [
-            'French euro' => [
+        return array(
+            'French euro' => array(
                 'EUR',
-                ['fr-FR' => 'euro', 'en-US' => 'euro'],
-                ['fr-FR' => '€', 'en-US' => '€'],
-            ],
-            'Peace money' => [
+                array('fr-FR' => 'euro', 'en-US' => 'euro'),
+                array('fr-FR' => '€', 'en-US' => '€'),
+            ),
+            'Peace money' => array(
                 'PCE',
-                ['fr-FR' => 'paix', 'en-US' => 'peace'],
-                ['fr-FR' => '☮', 'en-US' => '☮'],
-            ],
-        ];
+                array('fr-FR' => 'paix', 'en-US' => 'peace'),
+                array('fr-FR' => '☮', 'en-US' => '☮'),
+            ),
+        );
     }
 
     /**

@@ -58,14 +58,14 @@ function ps_1750_update_module_tabs()
     if (!empty($adminModulesNotificationsTabId)) {
         renameTab(
             $adminModulesNotificationsTabId,
-            [
+            array(
                 'fr' => 'Alertes',
                 'es' => 'Alertas',
                 'en' => 'Alerts',
                 'gb' => 'Alerts',
                 'de' => 'Benachrichtigungen',
                 'it' => 'Avvisi',
-            ]
+            )
         );
     }
 
@@ -75,14 +75,14 @@ function ps_1750_update_module_tabs()
     if (!empty($adminModulesCatalogTabId)) {
         renameTab(
             $adminModulesCatalogTabId,
-            [
+            array(
                 'fr' => 'Catalogue de modules',
                 'es' => 'Catálogo de módulos',
                 'en' => 'Module Catalog',
                 'gb' => 'Module Catalog',
                 'de' => 'Versanddienst',
                 'it' => 'Catalogo dei moduli',
-            ]
+            )
         );
     }
 
@@ -92,14 +92,14 @@ function ps_1750_update_module_tabs()
     if (!empty($adminModulesManageTabId)) {
         renameTab(
             $adminModulesManageTabId,
-            [
+            array(
                 'fr' => 'Modules',
                 'es' => 'módulos',
                 'en' => 'Modules',
                 'gb' => 'Modules',
                 'de' => 'Modules',
                 'it' => 'Moduli',
-            ]
+            )
         );
     }
 
@@ -109,14 +109,14 @@ function ps_1750_update_module_tabs()
     if (!empty($adminModulesAddonsSelectionsTabId)) {
         renameTab(
             $adminModulesAddonsSelectionsTabId,
-            [
+            array(
                 'fr' => 'Sélections de modules',
                 'es' => 'Selecciones de módulos',
                 'en' => 'Module Selections',
                 'gb' => 'Module Selections',
                 'de' => 'Auswahl von Modulen',
                 'it' => 'Selezioni Moduli',
-            ]
+            )
         );
     }
 

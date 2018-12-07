@@ -154,7 +154,7 @@ class TranslationController extends ApiController
             $this->guardAgainstInvalidTranslationEditRequest($translations);
 
             $translationService = $this->container->get('prestashop.service.translation');
-            $response = [];
+            $response = array();
             foreach ($translations as $translation) {
                 if (!array_key_exists('theme', $translation)) {
                     $translation['theme'] = null;
@@ -199,7 +199,7 @@ class TranslationController extends ApiController
             $this->guardAgainstInvalidTranslationResetRequest($translations);
 
             $translationService = $this->container->get('prestashop.service.translation');
-            $response = [];
+            $response = array();
 
             foreach ($translations as $translation) {
                 if (!array_key_exists('theme', $translation)) {

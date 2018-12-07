@@ -58,10 +58,10 @@ final class EmployeeOptionsConfiguration implements DataConfigurationInterface
      */
     public function getConfiguration()
     {
-        return [
+        return array(
             'password_change_time' => (int) $this->configuration->get('PS_PASSWD_TIME_BACK'),
             'allow_employee_specific_language' => (int) $this->configuration->get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG'),
-        ];
+        );
     }
 
     /**
@@ -69,14 +69,14 @@ final class EmployeeOptionsConfiguration implements DataConfigurationInterface
      */
     public function updateConfiguration(array $configuration)
     {
-        $errors = [];
+        $errors = array();
 
         if (!$this->optionsChecker->canBeChanged()) {
-            $errors[] = [
+            $errors[] = array(
                 'key' => 'You can\'t change the value of this configuration field in the context of this shop .',
-                'parameters' => [],
+                'parameters' => array(),
                 'domain' => 'Admin.Notifications.Warning',
-            ];
+            );
 
             return $errors;
         }

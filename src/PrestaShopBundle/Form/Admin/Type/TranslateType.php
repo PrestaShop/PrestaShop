@@ -75,12 +75,12 @@ class TranslateType extends CommonAbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
+        $resolver->setDefaults(array(
             'type' => null,
-            'options' => [],
-            'locales' => [],
+            'options' => array(),
+            'locales' => array(),
             'hideTabs' => true,
-        ]);
+        ));
     }
 
     /**

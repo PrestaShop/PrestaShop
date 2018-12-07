@@ -475,7 +475,7 @@ class AdminProductWrapper
                     $price = Tools::ps_round($specific_price['price'], 2);
                     $fixed_price = ($price == Tools::ps_round($product->price, 2) || $specific_price['price'] == -1) ? '--' : Tools::displayPrice($price, $current_specific_currency);
 
-                    $content[] = [
+                    $content[] = array(
                         'id_specific_price' => $specific_price['id_specific_price'],
                         'id_product' => $product->id,
                         'rule_name' => $rule_name,
@@ -491,7 +491,7 @@ class AdminProductWrapper
                         'from_quantity' => $specific_price['from_quantity'],
                         'can_delete' => (!$rule->id && $can_delete_specific_prices) ? true : false,
                         'can_edit' => (!$rule->id && $can_delete_specific_prices) ? true : false,
-                    ];
+                    );
 
                     unset($customer_full_name);
                 }
@@ -559,12 +559,12 @@ class AdminProductWrapper
     public function getPricePriority($idProduct = null)
     {
         if (!$idProduct) {
-            return [
+            return array(
                 0 => 'id_shop',
                 1 => 'id_currency',
                 2 => 'id_country',
                 3 => 'id_group',
-            ];
+            );
         }
 
         $specific_price_priorities = SpecificPrice::getPriority((int) $idProduct);

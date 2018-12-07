@@ -66,7 +66,7 @@ class CMSDataProvider
      */
     public function getCMSChoices($languageId = null)
     {
-        $choices = [];
+        $choices = array();
 
         foreach ($this->getCMSPages($languageId) as $cms) {
             $choices[$cms['meta_title']] = $cms['id_cms'];

@@ -48,19 +48,19 @@ class PaymentMethodsController extends FrameworkBundleAdminController
 
         $shopContext = $this->get('prestashop.adapter.shop.context');
         $isSingleShopContext = $shopContext->isSingleShopContext();
-        $paymentModules = [];
+        $paymentModules = array();
 
         if ($isSingleShopContext) {
             $paymentMethodsPresenter = $this->get('prestashop.adapter.module.presenter.payment');
             $paymentModules = $paymentMethodsPresenter->present();
         }
 
-        return $this->render('@PrestaShop/Admin/Improve/Payment/PaymentMethods/payment_methods.html.twig', [
+        return $this->render('@PrestaShop/Admin/Improve/Payment/PaymentMethods/payment_methods.html.twig', array(
             'paymentModules' => $paymentModules,
             'isSingleShopContext' => $isSingleShopContext,
             'layoutTitle' => $this->trans('Payment Methods', 'Admin.Navigation.Menu'),
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($legacyController),
-        ]);
+        ));
     }
 }

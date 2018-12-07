@@ -70,12 +70,12 @@ final class FilterParametersUpdater
         array $persistedFilterParameters,
         array $defaultFilterParameters
     ) {
-        return [
+        return array(
             'offset' => (int) $this->getParameter('offset', $queryFilterParameters, $persistedFilterParameters, $defaultFilterParameters),
             'limit' => (int) $this->getParameter('limit', $queryFilterParameters, $persistedFilterParameters, $defaultFilterParameters),
             'orderBy' => (string) $this->getParameter('orderBy', $queryFilterParameters, $persistedFilterParameters, $defaultFilterParameters),
             'sortOrder' => (string) $this->getParameter('sortOrder', $queryFilterParameters, $persistedFilterParameters, $defaultFilterParameters),
-        ];
+        );
     }
 
     /**
@@ -104,7 +104,7 @@ final class FilterParametersUpdater
             throw new ProductException(
                 'Could not find the parameter %s',
                 'Admin.Notifications.Error',
-                [$parameterName]
+                array($parameterName)
             );
         }
 

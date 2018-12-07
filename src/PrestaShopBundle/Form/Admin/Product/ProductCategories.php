@@ -72,7 +72,7 @@ class ProductCategories extends TranslatorAwareType
         $builder->add('categories', ChoiceCategoriesTreeType::class, array(
             'label' => $this->trans('Categories', 'Admin.Catalog.Feature'),
             'list' => $this->categoryProvider->getNestedCategories(null, $this->languageId, false),
-            'valid_list' => [],
+            'valid_list' => array(),
             'multiple' => false,
             'expanded' => false,
         ));

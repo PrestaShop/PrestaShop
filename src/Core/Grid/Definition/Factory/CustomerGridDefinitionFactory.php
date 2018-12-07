@@ -97,7 +97,7 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getName()
     {
-        return $this->trans('Manage your Customers', [], 'Admin.Orderscustomers.Feature');
+        return $this->trans('Manage your Customers', array(), 'Admin.Orderscustomers.Feature');
     }
 
     /**
@@ -106,143 +106,163 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
     protected function getColumns()
     {
         $columns = (new ColumnCollection())
-            ->add((new BulkActionColumn('customers_bulk'))
-                ->setOptions([
+            ->add(
+                (new BulkActionColumn('customers_bulk'))
+                ->setOptions(array(
                     'bulk_field' => 'id_customer',
-                ])
+                ))
             )
-            ->add((new DataColumn('id_customer'))
-                ->setName($this->trans('ID', [], 'Admin.Global'))
-                ->setOptions([
+            ->add(
+                (new DataColumn('id_customer'))
+                ->setName($this->trans('ID', array(), 'Admin.Global'))
+                ->setOptions(array(
                     'field' => 'id_customer',
-                ])
+                ))
             )
-            ->add((new DataColumn('social_title'))
-                ->setName($this->trans('Social title', [], 'Admin.Global'))
-                ->setOptions([
+            ->add(
+                (new DataColumn('social_title'))
+                ->setName($this->trans('Social title', array(), 'Admin.Global'))
+                ->setOptions(array(
                     'field' => 'social_title',
-                ])
+                ))
             )
-            ->add((new DataColumn('firstname'))
-                ->setName($this->trans('First name', [], 'Admin.Global'))
-                ->setOptions([
+            ->add(
+                (new DataColumn('firstname'))
+                ->setName($this->trans('First name', array(), 'Admin.Global'))
+                ->setOptions(array(
                     'field' => 'firstname',
-                ])
+                ))
             )
-            ->add((new DataColumn('lastname'))
-                ->setName($this->trans('Last name', [], 'Admin.Global'))
-                ->setOptions([
+            ->add(
+                (new DataColumn('lastname'))
+                ->setName($this->trans('Last name', array(), 'Admin.Global'))
+                ->setOptions(array(
                     'field' => 'lastname',
-                ])
+                ))
             )
-            ->add((new DataColumn('email'))
-                ->setName($this->trans('Email address', [], 'Admin.Global'))
-                ->setOptions([
+            ->add(
+                (new DataColumn('email'))
+                ->setName($this->trans('Email address', array(), 'Admin.Global'))
+                ->setOptions(array(
                     'field' => 'email',
-                ])
+                ))
             )
-            ->add((new BadgeColumn('total_spent'))
-                ->setName($this->trans('Sales', [], 'Admin.Global'))
-                ->setOptions([
+            ->add(
+                (new BadgeColumn('total_spent'))
+                ->setName($this->trans('Sales', array(), 'Admin.Global'))
+                ->setOptions(array(
                     'field' => 'total_spent',
                     'empty_value' => '--',
-                ])
+                ))
             )
-            ->add((new ToggleColumn('active'))
-                ->setName($this->trans('Enabled', [], 'Admin.Global'))
-                ->setOptions([
+            ->add(
+                (new ToggleColumn('active'))
+                ->setName($this->trans('Enabled', array(), 'Admin.Global'))
+                ->setOptions(array(
                     'field' => 'active',
                     'primary_field' => 'id_customer',
                     'route' => 'admin_customers_index',
                     'route_param_name' => 'customerId',
-                ])
+                ))
             )
-            ->add((new ToggleColumn('newsletter'))
-                ->setName($this->trans('Newsletter', [], 'Admin.Global'))
-                ->setOptions([
+            ->add(
+                (new ToggleColumn('newsletter'))
+                ->setName($this->trans('Newsletter', array(), 'Admin.Global'))
+                ->setOptions(array(
                     'field' => 'newsletter',
                     'primary_field' => 'id_customer',
                     'route' => 'admin_customers_index',
                     'route_param_name' => 'customerId',
-                ])
+                ))
             )
-            ->add((new ToggleColumn('optin'))
-                ->setName($this->trans('Partner offers', [], 'Admin.Orderscustomers.Feature'))
-                ->setOptions([
+            ->add(
+                (new ToggleColumn('optin'))
+                ->setName($this->trans('Partner offers', array(), 'Admin.Orderscustomers.Feature'))
+                ->setOptions(array(
                     'field' => 'optin',
                     'primary_field' => 'id_customer',
                     'route' => 'admin_customers_index',
                     'route_param_name' => 'customerId',
-                ])
+                ))
             )
-            ->add((new DataColumn('date_add'))
-                ->setName($this->trans('Registration', [], 'Admin.Orderscustomers.Feature'))
-                ->setOptions([
+            ->add(
+                (new DataColumn('date_add'))
+                ->setName($this->trans('Registration', array(), 'Admin.Orderscustomers.Feature'))
+                ->setOptions(array(
                     'field' => 'date_add',
-                ])
+                ))
             )
-            ->add((new DataColumn('connect'))
-                ->setName($this->trans('Last visit', [], 'Admin.Orderscustomers.Feature'))
-                ->setOptions([
+            ->add(
+                (new DataColumn('connect'))
+                ->setName($this->trans('Last visit', array(), 'Admin.Orderscustomers.Feature'))
+                ->setOptions(array(
                     'field' => 'connect',
-                ])
+                ))
             )
-            ->add((new ActionColumn('actions'))
-                ->setOptions([
+            ->add(
+                (new ActionColumn('actions'))
+                ->setOptions(array(
                     'actions' => (new RowActionCollection())
-                        ->add((new LinkRowAction('edit'))
-                            ->setName($this->trans('Edit', [], 'Admin.Actions'))
+                        ->add(
+                            (new LinkRowAction('edit'))
+                            ->setName($this->trans('Edit', array(), 'Admin.Actions'))
                             ->setIcon('edit')
-                            ->setOptions([
+                            ->setOptions(array(
                                 'route' => 'admin_customers_edit',
                                 'route_param_name' => 'customerId',
                                 'route_param_field' => 'id_customer',
-                            ])
+                            ))
                         )
-                        ->add((new LinkRowAction('view'))
-                            ->setName($this->trans('View', [], 'Admin.Actions'))
+                        ->add(
+                            (new LinkRowAction('view'))
+                            ->setName($this->trans('View', array(), 'Admin.Actions'))
                             ->setIcon('zoom_in')
-                            ->setOptions([
+                            ->setOptions(array(
                                 'route' => 'admin_customers_view',
                                 'route_param_name' => 'customerId',
                                 'route_param_field' => 'id_customer',
-                            ])
+                            ))
                         )
-                        ->add((new SubmitRowAction('delete'))
-                            ->setName($this->trans('Delete', [], 'Admin.Actions'))
+                        ->add(
+                            (new SubmitRowAction('delete'))
+                            ->setName($this->trans('Delete', array(), 'Admin.Actions'))
                             ->setIcon('delete')
-                            ->setOptions([
+                            ->setOptions(array(
                                 'method' => 'DELETE',
                                 'route' => 'admin_customers_index',
                                 'route_param_name' => 'customerId',
                                 'route_param_field' => 'id_customer',
                                 'confirm_message' => $this->trans(
                                     'Delete selected item?',
-                                    [],
+                                    array(),
                                     'Admin.Notifications.Warning'
                                 ),
-                            ])
+                            ))
                         ),
-                ])
+                ))
             )
         ;
 
         if ($this->isB2bFeatureEnabled) {
-            $columns->addAfter('email', (new DataColumn('company'))
-                ->setName($this->trans('Company', [], 'Admin.Global'))
-                ->setOptions([
+            $columns->addAfter(
+                'email',
+                (new DataColumn('company'))
+                ->setName($this->trans('Company', array(), 'Admin.Global'))
+                ->setOptions(array(
                     'field' => 'company',
-                ])
+                ))
             );
         }
 
         if ($this->isMultistoreFeatureEnabled) {
-            $columns->addBefore('actions', (new DataColumn('shop_name'))
-                ->setName($this->trans('Shop', [], 'Admin.Global'))
-                ->setOptions([
+            $columns->addBefore(
+                'actions',
+                (new DataColumn('shop_name'))
+                ->setName($this->trans('Shop', array(), 'Admin.Global'))
+                ->setOptions(array(
                     'field' => 'shop_name',
                     'sortable' => false,
-                ])
+                ))
             );
         }
 
@@ -255,73 +275,84 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
     protected function getFilters()
     {
         $filters = (new FilterCollection())
-            ->add((new Filter('id_customer', NumberType::class))
-                ->setTypeOptions([
+            ->add(
+                (new Filter('id_customer', NumberType::class))
+                ->setTypeOptions(array(
                     'required' => false,
-                ])
+                ))
                 ->setAssociatedColumn('id_customer')
             )
-            ->add((new Filter('social_title', ChoiceType::class))
-                ->setTypeOptions([
+            ->add(
+                (new Filter('social_title', ChoiceType::class))
+                ->setTypeOptions(array(
                     'choices' => $this->genderChoices,
                     'expanded' => false,
                     'multiple' => false,
                     'required' => false,
                     'choice_translation_domain' => false,
-                ])
+                ))
                 ->setAssociatedColumn('social_title')
             )
-            ->add((new Filter('firstname', TextType::class))
-                ->setTypeOptions([
+            ->add(
+                (new Filter('firstname', TextType::class))
+                ->setTypeOptions(array(
                     'required' => false,
-                ])
+                ))
                 ->setAssociatedColumn('firstname')
             )
-            ->add((new Filter('lastname', TextType::class))
-                ->setTypeOptions([
+            ->add(
+                (new Filter('lastname', TextType::class))
+                ->setTypeOptions(array(
                     'required' => false,
-                ])
+                ))
                 ->setAssociatedColumn('lastname')
             )
-            ->add((new Filter('email', TextType::class))
-                ->setTypeOptions([
+            ->add(
+                (new Filter('email', TextType::class))
+                ->setTypeOptions(array(
                     'required' => false,
-                ])
+                ))
                 ->setAssociatedColumn('email')
             )
-            ->add((new Filter('active', YesAndNoChoiceType::class))
+            ->add(
+                (new Filter('active', YesAndNoChoiceType::class))
                 ->setAssociatedColumn('active')
             )
-            ->add((new Filter('newsletter', YesAndNoChoiceType::class))
+            ->add(
+                (new Filter('newsletter', YesAndNoChoiceType::class))
                 ->setAssociatedColumn('newsletter')
             )
-            ->add((new Filter('optin', YesAndNoChoiceType::class))
+            ->add(
+                (new Filter('optin', YesAndNoChoiceType::class))
                 ->setAssociatedColumn('optin')
             )
-            ->add((new Filter('date_add', DateRangeType::class))
-                ->setTypeOptions([
+            ->add(
+                (new Filter('date_add', DateRangeType::class))
+                ->setTypeOptions(array(
                     'required' => false,
-                ])
+                ))
                 ->setAssociatedColumn('date_add')
             )
-            ->add((new Filter('actions', SearchAndResetType::class))
-                ->setTypeOptions([
+            ->add(
+                (new Filter('actions', SearchAndResetType::class))
+                ->setTypeOptions(array(
                     'reset_route' => 'admin_common_reset_search',
-                    'reset_route_params' => [
+                    'reset_route_params' => array(
                         'controller' => 'customer',
                         'action' => 'index',
-                    ],
+                    ),
                     'redirect_route' => 'admin_customers_index',
-                ])
+                ))
                 ->setAssociatedColumn('actions')
             )
         ;
 
         if ($this->isB2bFeatureEnabled) {
-            $filters->add((new Filter('company', TextType::class))
-                ->setTypeOptions([
+            $filters->add(
+                (new Filter('company', TextType::class))
+                ->setTypeOptions(array(
                     'required' => false,
-                ])
+                ))
                 ->setAssociatedColumn('company')
             );
         }
@@ -335,33 +366,38 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
     protected function getGridActions()
     {
         return (new GridActionCollection())
-            ->add((new LinkGridAction('import'))
-                ->setName($this->trans('Import', [], 'Admin.Actions'))
+            ->add(
+                (new LinkGridAction('import'))
+                ->setName($this->trans('Import', array(), 'Admin.Actions'))
                 ->setIcon('cloud_upload')
-                ->setOptions([
+                ->setOptions(array(
                     'route' => 'admin_import',
-                    'route_params' => [
+                    'route_params' => array(
                         'import_type' => 'customers',
-                    ],
-                ])
+                    ),
+                ))
             )
-            ->add((new LinkGridAction('export'))
-                ->setName($this->trans('Export', [], 'Admin.Actions'))
+            ->add(
+                (new LinkGridAction('export'))
+                ->setName($this->trans('Export', array(), 'Admin.Actions'))
                 ->setIcon('cloud_download')
-                ->setOptions([
+                ->setOptions(array(
                     'route' => 'admin_customers_index',
-                ])
+                ))
             )
-            ->add((new SimpleGridAction('common_refresh_list'))
-                ->setName($this->trans('Refresh list', [], 'Admin.Advparameters.Feature'))
+            ->add(
+                (new SimpleGridAction('common_refresh_list'))
+                ->setName($this->trans('Refresh list', array(), 'Admin.Advparameters.Feature'))
                 ->setIcon('refresh')
             )
-            ->add((new SimpleGridAction('common_show_query'))
-                ->setName($this->trans('Show SQL query', [], 'Admin.Actions'))
+            ->add(
+                (new SimpleGridAction('common_show_query'))
+                ->setName($this->trans('Show SQL query', array(), 'Admin.Actions'))
                 ->setIcon('code')
             )
-            ->add((new SimpleGridAction('common_export_sql_manager'))
-                ->setName($this->trans('Export to SQL Manager', [], 'Admin.Actions'))
+            ->add(
+                (new SimpleGridAction('common_export_sql_manager'))
+                ->setName($this->trans('Export to SQL Manager', array(), 'Admin.Actions'))
                 ->setIcon('storage')
             )
         ;
@@ -373,23 +409,26 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
     protected function getBulkActions()
     {
         return (new BulkActionCollection())
-            ->add((new SubmitBulkAction('enable_selection'))
-                ->setName($this->trans('Enable selection', [], 'Admin.Actions'))
-                ->setOptions([
+            ->add(
+                (new SubmitBulkAction('enable_selection'))
+                ->setName($this->trans('Enable selection', array(), 'Admin.Actions'))
+                ->setOptions(array(
                     'submit_route' => 'admin_customers_index',
-                ])
+                ))
             )
-            ->add((new SubmitBulkAction('disable_selection'))
-                ->setName($this->trans('Disable selection', [], 'Admin.Actions'))
-                ->setOptions([
+            ->add(
+                (new SubmitBulkAction('disable_selection'))
+                ->setName($this->trans('Disable selection', array(), 'Admin.Actions'))
+                ->setOptions(array(
                     'submit_route' => 'admin_customers_index',
-                ])
+                ))
             )
-            ->add((new SubmitBulkAction('delete_selection'))
-                ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
-                ->setOptions([
+            ->add(
+                (new SubmitBulkAction('delete_selection'))
+                ->setName($this->trans('Delete selected', array(), 'Admin.Actions'))
+                ->setOptions(array(
                     'submit_route' => 'admin_customers_index',
-                ])
+                ))
             )
         ;
     }

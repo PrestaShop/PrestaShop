@@ -317,7 +317,8 @@ class FrontControllerCore extends Controller
                     'Current theme is unavailable. Please check your theme\'s directory name ("%s") and permissions.',
                     array(basename(rtrim(_PS_THEME_DIR_, '/\\'))),
                     'Admin.Design.Notification'
-                ));
+                )
+            );
         }
 
         if (Configuration::get('PS_GEOLOCATION_ENABLED')) {
@@ -502,7 +503,7 @@ class FrontControllerCore extends Controller
             'token' => Tools::getToken(),
         );
 
-        $modulesVariables = Hook::exec('actionFrontControllerSetVariables', [], null, true);
+        $modulesVariables = Hook::exec('actionFrontControllerSetVariables', array(), null, true);
 
         if (is_array($modulesVariables)) {
             foreach ($modulesVariables as $moduleName => $variables) {
@@ -530,7 +531,8 @@ class FrontControllerCore extends Controller
     protected function buildFrontEndObject($object)
     {
         $object = $this->get('prestashop.core.filter.front_end_object.main')
-            ->filter($object);
+            ->filter($object)
+        ;
 
         Hook::exec('actionBuildFrontEndObject', array(
             'obj' => &$object,
@@ -721,7 +723,7 @@ class FrontControllerCore extends Controller
                 header('HTTP/1.1 503 Service Unavailable');
                 header('Retry-After: 3600');
 
-                $this->registerStylesheet('theme-error', '/assets/css/error.css', ['media' => 'all', 'priority' => 50]);
+                $this->registerStylesheet('theme-error', '/assets/css/error.css', array('media' => 'all', 'priority' => 50));
                 $this->context->smarty->assign(array(
                     'urls' => $this->getTemplateVarUrls(),
                     'shop' => $this->getTemplateVarShop(),
@@ -743,7 +745,7 @@ class FrontControllerCore extends Controller
     {
         header('HTTP/1.1 403 Forbidden');
 
-        $this->registerStylesheet('theme-error', '/assets/css/error.css', ['media' => 'all', 'priority' => 50]);
+        $this->registerStylesheet('theme-error', '/assets/css/error.css', array('media' => 'all', 'priority' => 50));
         $this->context->smarty->assign(array(
             'urls' => $this->getTemplateVarUrls(),
             'shop' => $this->getTemplateVarShop(),
@@ -901,16 +903,16 @@ class FrontControllerCore extends Controller
      */
     public function setMedia()
     {
-        $this->registerStylesheet('theme-main', '/assets/css/theme.css', ['media' => 'all', 'priority' => 50]);
-        $this->registerStylesheet('theme-custom', '/assets/css/custom.css', ['media' => 'all', 'priority' => 1000]);
+        $this->registerStylesheet('theme-main', '/assets/css/theme.css', array('media' => 'all', 'priority' => 50));
+        $this->registerStylesheet('theme-custom', '/assets/css/custom.css', array('media' => 'all', 'priority' => 1000));
 
         if ($this->context->language->is_rtl) {
-            $this->registerStylesheet('theme-rtl', '/assets/css/rtl.css', ['media' => 'all', 'priority' => 900]);
+            $this->registerStylesheet('theme-rtl', '/assets/css/rtl.css', array('media' => 'all', 'priority' => 900));
         }
 
-        $this->registerJavascript('corejs', '/themes/core.js', ['position' => 'bottom', 'priority' => 0]);
-        $this->registerJavascript('theme-main', '/assets/js/theme.js', ['position' => 'bottom', 'priority' => 50]);
-        $this->registerJavascript('theme-custom', '/assets/js/custom.js', ['position' => 'bottom', 'priority' => 1000]);
+        $this->registerJavascript('corejs', '/themes/core.js', array('position' => 'bottom', 'priority' => 0));
+        $this->registerJavascript('theme-main', '/assets/js/theme.js', array('position' => 'bottom', 'priority' => 50));
+        $this->registerJavascript('theme-custom', '/assets/js/custom.js', array('position' => 'bottom', 'priority' => 1000));
 
         $assets = $this->context->shop->theme->getPageSpecificAssets($this->php_self);
         if (!empty($assets)) {
@@ -1049,12 +1051,12 @@ class FrontControllerCore extends Controller
             $params = array();
         }
 
-        $default_params = [
+        $default_params = array(
             'media' => AbstractAssetManager::DEFAULT_MEDIA,
             'priority' => AbstractAssetManager::DEFAULT_PRIORITY,
             'inline' => false,
             'server' => 'local',
-        ];
+        );
 
         $params = array_merge($default_params, $params);
 
@@ -1072,13 +1074,13 @@ class FrontControllerCore extends Controller
             $params = array();
         }
 
-        $default_params = [
+        $default_params = array(
             'position' => AbstractAssetManager::DEFAULT_JS_POSITION,
             'priority' => AbstractAssetManager::DEFAULT_PRIORITY,
             'inline' => false,
             'attributes' => null,
             'server' => 'local',
-        ];
+        );
 
         $params = array_merge($default_params, $params);
 
@@ -1106,7 +1108,7 @@ class FrontControllerCore extends Controller
 
         foreach ($css_uri as $legacy_uri) {
             if ($uri = $this->getAssetUriFromLegacyDeprecatedMethod($legacy_uri)) {
-                $this->registerStylesheet(sha1($uri), $uri, ['media' => $css_media_type, 'priority' => 80]);
+                $this->registerStylesheet(sha1($uri), $uri, array('media' => $css_media_type, 'priority' => 80));
             }
         }
     }
@@ -1148,7 +1150,7 @@ class FrontControllerCore extends Controller
 
         foreach ($js_uri as $legacy_uri) {
             if ($uri = $this->getAssetUriFromLegacyDeprecatedMethod($legacy_uri)) {
-                $this->registerJavascript(sha1($uri), $uri, ['position' => 'bottom', 'priority' => 80]);
+                $this->registerJavascript(sha1($uri), $uri, array('position' => 'bottom', 'priority' => 80));
             }
         }
     }
@@ -1199,9 +1201,9 @@ class FrontControllerCore extends Controller
         $css_path = '/js/jquery/ui/themes/' . $theme . '/minified/jquery-ui.min.css';
         $js_path = '/js/jquery/ui/jquery-ui.min.js';
 
-        $this->registerStylesheet('jquery-ui-theme', $css_theme_path, ['media' => 'all', 'priority' => 95]);
-        $this->registerStylesheet('jquery-ui', $css_path, ['media' => 'all', 'priority' => 90]);
-        $this->registerJavascript('jquery-ui', $js_path, ['position' => 'bottom', 'priority' => 90]);
+        $this->registerStylesheet('jquery-ui-theme', $css_theme_path, array('media' => 'all', 'priority' => 95));
+        $this->registerStylesheet('jquery-ui', $css_path, array('media' => 'all', 'priority' => 90));
+        $this->registerJavascript('jquery-ui', $js_path, array('position' => 'bottom', 'priority' => 90));
     }
 
     /**

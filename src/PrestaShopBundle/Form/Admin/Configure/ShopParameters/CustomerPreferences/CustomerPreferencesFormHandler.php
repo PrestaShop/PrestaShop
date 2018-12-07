@@ -71,7 +71,7 @@ final class CustomerPreferencesFormHandler extends FormHandler
      */
     private function handleB2bUpdate($b2bMode)
     {
-        $b2bTabs = ['AdminOutstanding'];
+        $b2bTabs = array('AdminOutstanding');
         foreach ($b2bTabs as $tabName) {
             $this->tabRepository->changeStatusByClassName($tabName, (bool) $b2bMode);
         }

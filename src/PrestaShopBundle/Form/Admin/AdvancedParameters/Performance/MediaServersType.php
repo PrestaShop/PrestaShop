@@ -42,18 +42,19 @@ class MediaServersType extends CommonAbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('media_server_one', TextType::class, [
+            ->add('media_server_one', TextType::class, array(
                 'required' => false,
                 'empty_data' => '',
-            ])
-            ->add('media_server_two', TextType::class, [
+            ))
+            ->add('media_server_two', TextType::class, array(
                 'required' => false,
                 'empty_data' => '',
-            ])
-            ->add('media_server_three', TextType::class, [
+            ))
+            ->add('media_server_three', TextType::class, array(
                 'required' => false,
                 'empty_data' => '',
-            ]);
+            ))
+        ;
     }
 
     /**
@@ -61,9 +62,9 @@ class MediaServersType extends CommonAbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
+        $resolver->setDefaults(array(
             'translation_domain' => 'Admin.Advparameters.Feature',
-        ]);
+        ));
     }
 
     /**

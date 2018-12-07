@@ -56,7 +56,7 @@ function getFileContent($fileOrContent, $debug)
 
 function getZipErrorMessage($errorCode)
 {
-    $errors = [
+    $errors = array(
         ZipArchive::ER_EXISTS => 'File already exists.',
         ZipArchive::ER_INCONS => 'Zip archive inconsistent or corrupted. Double check your uploaded files.',
         ZipArchive::ER_INVAL => 'Invalid argument.',
@@ -66,7 +66,7 @@ function getZipErrorMessage($errorCode)
         ZipArchive::ER_OPEN => "Can't open file. Make sure PHP has read access to the prestashop.zip file.",
         ZipArchive::ER_READ => 'Read error.',
         ZipArchive::ER_SEEK => 'Seek error.',
-    ];
+    );
 
     if (isset($errors[$errorCode])) {
         return 'Unzipping error - ' . $errors[$errorCode];
@@ -85,25 +85,25 @@ if (isset($_GET['run']) && ($_GET['run'] === 'check-version')) {
 
         $isThisTheLatestStableAvailableVersion = ($latestVersionAvailable->compare(VersionNumber::fromString(_PS_VERSION_)) < 1);
         if ($isThisTheLatestStableAvailableVersion) {
-            die(json_encode([
+            die(json_encode(array(
                 'thereIsAMoreRecentPSVersionAndItCanBeInstalled' => false,
-            ]));
+            )));
         }
 
         $possibleInstallIssues = $installManager->testDownloadCapabilities();
         if (false === empty($possibleInstallIssues)) {
-            die(json_encode([
+            die(json_encode(array(
                 'thereIsAMoreRecentPSVersionAndItCanBeInstalled' => false,
-            ]));
+            )));
         }
 
-        die(json_encode([
+        die(json_encode(array(
             'thereIsAMoreRecentPSVersionAndItCanBeInstalled' => true,
-        ]));
+        )));
     } catch (\Exception $e) {
-        die(json_encode([
+        die(json_encode(array(
             'thereIsAMoreRecentPSVersionAndItCanBeInstalled' => false,
-        ]));
+        )));
     }
 }
 
@@ -112,14 +112,14 @@ if ((isset($_POST['downloadLatest'])) && ($_POST['downloadLatest'] === 'true')) 
         $installManager = new InstallManager();
 
         $installManager->downloadUnzipAndReplaceLatestPSVersion();
-        die(json_encode([
+        die(json_encode(array(
             'success' => true,
-        ]));
+        )));
     } catch (\Exception $e) {
-        die(json_encode([
+        die(json_encode(array(
             'error' => true,
             'message' => $e->getMessage(),
-        ]));
+        )));
     }
 }
 
@@ -127,26 +127,26 @@ $startId = (isset($_POST['startId'])) ? (int) $_POST['startId'] : 0;
 
 if (isset($_POST['extract'])) {
     if (!extension_loaded('zip')) {
-        die(json_encode([
+        die(json_encode(array(
             'error' => true,
             'message' => 'You must install PHP zip extension first',
-        ]));
+        )));
     }
 
     $zip = new ZipArchive();
     if (true !== $error = $zip->open(__DIR__ . '/' . ZIP_NAME)) {
-        die(json_encode([
+        die(json_encode(array(
             'error' => true,
             'message' => getZipErrorMessage($error),
-        ]));
+        )));
     }
 
     if (!is_writable(TARGET_FOLDER)) {
-        die(json_encode([
+        die(json_encode(array(
             'error' => true,
             'message' => 'You need to grant write permissions for PHP on the following directory: '
                 . realpath(TARGET_FOLDER),
-        ]));
+        )));
     }
 
     $numFiles = $zip->numFiles;
@@ -155,13 +155,13 @@ if (isset($_POST['extract'])) {
     $fileList = array();
     for ($id = $startId; $id < min($numFiles, $lastId); ++$id) {
         $currentFile = $zip->getNameIndex($id);
-        if (in_array($currentFile, ['/index.php', 'index.php'])) {
+        if (in_array($currentFile, array('/index.php', 'index.php'))) {
             $indexContent = $zip->getFromIndex($id);
             if (!file_put_contents(getcwd() . '/index.php.temp', $indexContent)) {
-                die(json_encode([
+                die(json_encode(array(
                     'error' => true,
                     'message' => 'Unable to write to file ' . getcwd() . '/index.php.temp',
-                ]));
+                )));
             }
         } else {
             $fileList[] = $currentFile;
@@ -170,14 +170,14 @@ if (isset($_POST['extract'])) {
 
     foreach ($fileList as $currentFile) {
         if ($zip->extractTo(TARGET_FOLDER, $currentFile) === false) {
-            die(json_encode([
+            die(json_encode(array(
                 'error' => true,
                 'message' => 'Extraction error - ' . $zip->getStatusString(),
                 'file' => $currentFile,
                 'numFiles' => $numFiles,
                 'lastId' => $lastId,
                 'files' => $fileList,
-            ]));
+            )));
         }
     }
 
@@ -195,11 +195,11 @@ if (isset($_POST['extract'])) {
         rename(getcwd() . '/index.php.temp', getcwd() . '/index.php');
     }
 
-    die(json_encode([
+    die(json_encode(array(
         'error' => false,
         'numFiles' => $numFiles,
         'lastId' => $lastId,
-    ]));
+    )));
 }
 
 if (isset($_GET['element'])) {

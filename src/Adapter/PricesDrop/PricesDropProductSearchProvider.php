@@ -96,10 +96,11 @@ class PricesDropProductSearchProvider implements ProductSearchProviderInterface
         if (!empty($products)) {
             $result
                 ->setProducts($products)
-                ->setTotalProductsCount($count);
+                ->setTotalProductsCount($count)
+            ;
 
             $result->setAvailableSortOrders(
-                [
+                array(
                     (new SortOrder('product', 'name', 'asc'))->setLabel(
                         $this->translator->trans('Name, A to Z', array(), 'Shop.Theme.Catalog')
                     ),
@@ -112,7 +113,7 @@ class PricesDropProductSearchProvider implements ProductSearchProviderInterface
                     (new SortOrder('product', 'price', 'desc'))->setLabel(
                         $this->translator->trans('Price, high to low', array(), 'Shop.Theme.Catalog')
                     ),
-                ]
+                )
             );
         }
 

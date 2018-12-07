@@ -525,7 +525,7 @@ class AdminControllerCore extends Controller
 
         // Check if logged on Addons
         $this->logged_on_addons = false;
-        if (isset($this->context->cookie->username_addons) && isset($this->context->cookie->password_addons) && !empty($this->context->cookie->username_addons) && !empty($this->context->cookie->password_addons)) {
+        if (isset($this->context->cookie->username_addons, $this->context->cookie->password_addons) && !empty($this->context->cookie->username_addons) && !empty($this->context->cookie->password_addons)) {
             $this->logged_on_addons = true;
         }
 
@@ -1433,7 +1433,7 @@ class AdminControllerCore extends Controller
 
                 // Check if field is required
                 if ((!Shop::isFeatureActive() && isset($values['required']) && $values['required'])
-                    || (Shop::isFeatureActive() && isset($_POST['multishopOverrideOption'][$field]) && isset($values['required']) && $values['required'])) {
+                    || (Shop::isFeatureActive() && isset($_POST['multishopOverrideOption'][$field], $values['required']) && $values['required'])) {
                     if (isset($values['type']) && $values['type'] == 'textLang') {
                         foreach ($languages as $language) {
                             if (($value = Tools::getValue($field . '_' . $language['id_lang'])) == false && (string) $value != '0') {
@@ -1496,7 +1496,7 @@ class AdminControllerCore extends Controller
                                 }
                             }
                         }
-                        Configuration::updateValue($key, $list, isset($values['validation']) && isset($options['validation']) && $options['validation'] == 'isCleanHtml' ? true : false);
+                        Configuration::updateValue($key, $list, isset($values['validation'], $options['validation']) && $options['validation'] == 'isCleanHtml' ? true : false);
                     } else {
                         $val = (isset($options['cast']) ? $options['cast'](Tools::getValue($key)) : Tools::getValue($key));
                         if ($this->validateField($val, $options)) {
@@ -1844,7 +1844,8 @@ class AdminControllerCore extends Controller
                 'page' => $this->json ? json_encode($page) : $page,
                 'header' => $this->context->smarty->fetch($header_tpl),
                 'footer' => $this->context->smarty->fetch($footer_tpl),
-        ));
+        )
+        );
 
         $this->smartyOutputContent($this->layout);
     }
@@ -2984,7 +2985,7 @@ class AdminControllerCore extends Controller
             } else {
                 $this->errors[] = $this->trans('You do not have permission to add this.', array(), 'Admin.Notifications.Error');
             }
-        } elseif (isset($_GET['update' . $this->table]) && isset($_GET[$this->identifier])) {
+        } elseif (isset($_GET['update' . $this->table], $_GET[$this->identifier])  ) {
             $this->display = 'edit';
             if (!$this->access('edit')) {
                 $this->errors[] = $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error');
@@ -3367,7 +3368,7 @@ class AdminControllerCore extends Controller
             $this->fields_list[$orderBy]['order_key'] = $this->fields_list[$orderBy]['filter_key'];
         }
 
-        if (isset($this->fields_list[$orderBy]) && isset($this->fields_list[$orderBy]['order_key'])) {
+        if (isset($this->fields_list[$orderBy], $this->fields_list[$orderBy]['order_key'])  ) {
             $orderBy = $this->fields_list[$orderBy]['order_key'];
         }
 
@@ -3655,9 +3656,11 @@ class AdminControllerCore extends Controller
                     $value = Tools::getValue($field . '_' . $default_language->id);
                     // !isset => not exist || "" == $value can be === 0 (before, empty $value === 0 returned true)
                     if (!isset($value) || '' == $value) {
-                        $this->errors[$field . '_' . $default_language->id] = $this->trans('The field %field_name% is required at least in %lang%.',
+                        $this->errors[$field . '_' . $default_language->id] = $this->trans(
+                            'The field %field_name% is required at least in %lang%.',
                             array('%field_name%' => $object->displayFieldName($field, $class_name), '%lang%' => $default_language->name),
-                            'Admin.Notifications.Error');
+                            'Admin.Notifications.Error'
+                        );
                     }
                 }
 
@@ -3688,9 +3691,11 @@ class AdminControllerCore extends Controller
                             $res = Validate::$function($value);
                         }
                         if (!$res) {
-                            $this->errors[$field_lang . '_' . $language['id_lang']] = $this->trans('The %field_name% field (%lang%) is invalid.',
+                            $this->errors[$field_lang . '_' . $language['id_lang']] = $this->trans(
+                                'The %field_name% field (%lang%) is invalid.',
                                 array('%field_name%' => call_user_func(array($class_name, 'displayFieldName'), $field_lang, $class_name), '%lang%' => $language['name']),
-                                'Admin.Notifications.Error');
+                                'Admin.Notifications.Error'
+                            );
                         }
                     }
                 }
@@ -3919,11 +3924,11 @@ class AdminControllerCore extends Controller
      */
     protected function postImage($id)
     {
-        if (isset($this->fieldImageSettings['name']) && isset($this->fieldImageSettings['dir'])) {
+        if (isset($this->fieldImageSettings['name'], $this->fieldImageSettings['dir'])  ) {
             return $this->uploadImage($id, $this->fieldImageSettings['name'], $this->fieldImageSettings['dir'] . '/');
         } elseif (!empty($this->fieldImageSettings)) {
             foreach ($this->fieldImageSettings as $image) {
-                if (isset($image['name']) && isset($image['dir'])) {
+                if (isset($image['name'], $image['dir'])  ) {
                     $this->uploadImage($id, $image['name'], $image['dir'] . '/');
                 }
             }
@@ -4519,7 +4524,7 @@ class AdminControllerCore extends Controller
             }
         }
 
-        if (isset($module->preferences) && isset($module->preferences['favorite']) && $module->preferences['favorite'] == 1) {
+        if (isset($module->preferences, $module->preferences['favorite']) && $module->preferences['favorite'] == 1) {
             $remove_from_favorite['style'] = '';
             $mark_as_favorite['style'] = 'display:none;';
             $modules_options[] = $remove_from_favorite;

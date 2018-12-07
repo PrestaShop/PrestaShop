@@ -37,7 +37,7 @@ class RenderingHookEvent extends HookEvent
     /**
      * @var array
      */
-    private $currentContent = [];
+    private $currentContent = array();
     /**
      * @var string
      */

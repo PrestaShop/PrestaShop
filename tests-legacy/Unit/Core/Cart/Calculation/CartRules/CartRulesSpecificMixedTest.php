@@ -68,86 +68,86 @@ class CartRulesSpecificMixedTest extends AbstractCartCalculationTest
 
     public function cartWithMultipleProductSpecificCartRulesMixedProvider()
     {
-        return [
-            'empty cart'                                                                                                    => [
-                'products'        => [],
-                'expectedTotal'   => 0,
-                'cartRules'       => [8, 10],
+        return array(
+            'empty cart' => array(
+                'products' => array(),
+                'expectedTotal' => 0,
+                'cartRules' => array(8, 10),
                 'knownToFailOnV1' => false,
-            ],
-            'one product in cart, quantity 1, specific 5€ voucher on product #2, specific 50% voucher on product #2'        => [
-                'products'        => [
+            ),
+            'one product in cart, quantity 1, specific 5€ voucher on product #2, specific 50% voucher on product #2' => array(
+                'products' => array(
                     1 => 1,
-                ],
-                'expectedTotal'   => static::PRODUCT_FIXTURES[1]['price']
+                ),
+                'expectedTotal' => static::PRODUCT_FIXTURES[1]['price']
                                      + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
                 // specific discount not applied on product #1
-                'cartRules'       => [8, 10],
+                'cartRules' => array(8, 10),
                 'knownToFailOnV1' => false,
-            ],
-            'one product in cart, quantity 3, specific 5€ voucher on product #2, specific 50% voucher on product #2'        => [
-                'products'        => [
+            ),
+            'one product in cart, quantity 3, specific 5€ voucher on product #2, specific 50% voucher on product #2' => array(
+                'products' => array(
                     1 => 3,
-                ],
-                'expectedTotal'   => 3 * static::PRODUCT_FIXTURES[1]['price']
+                ),
+                'expectedTotal' => 3 * static::PRODUCT_FIXTURES[1]['price']
                                      + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
                 // specific discount not applied on product #1
-                'cartRules'       => [8, 10],
+                'cartRules' => array(8, 10),
                 'knownToFailOnV1' => false,
-            ],
-            'one product #2 in cart, quantity 3, specific 5€ voucher on product #2, specific 50% voucher on product #2'     => [
-                'products'        => [
+            ),
+            'one product #2 in cart, quantity 3, specific 5€ voucher on product #2, specific 50% voucher on product #2' => array(
+                'products' => array(
                     2 => 3,
-                ],
-                'expectedTotal'   => (1 - static::CART_RULES_FIXTURES[10]['percent'] / 100)
+                ),
+                'expectedTotal' => (1 - static::CART_RULES_FIXTURES[10]['percent'] / 100)
                                      * (3 * static::PRODUCT_FIXTURES[2]['price']
                                         - static::CART_RULES_FIXTURES[8]['amount'])
                                      + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
-                'cartRules'       => [8, 10],
+                'cartRules' => array(8, 10),
                 'knownToFailOnV1' => true,
-            ],
-            '3 products in cart, several quantities, specific 5€ voucher on product #2, specific 50% voucher on product #2' => [
-                'products'        => [
+            ),
+            '3 products in cart, several quantities, specific 5€ voucher on product #2, specific 50% voucher on product #2' => array(
+                'products' => array(
                     2 => 2, // 64.776
                     1 => 3, // 59.43
                     3 => 1, // 31.188
                     // total without rule : 155.41
-                ],
-                'expectedTotal'   => (1 - static::CART_RULES_FIXTURES[10]['percent'] / 100)
+                ),
+                'expectedTotal' => (1 - static::CART_RULES_FIXTURES[10]['percent'] / 100)
                                      * (2 * static::PRODUCT_FIXTURES[2]['price']
                                         - static::CART_RULES_FIXTURES[8]['amount'])
                                      + 3 * static::PRODUCT_FIXTURES[1]['price']
                                      + static::PRODUCT_FIXTURES[3]['price']
                                      + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
-                'cartRules'       => [8, 10],
+                'cartRules' => array(8, 10),
                 'knownToFailOnV1' => true,
-            ],
-        ];
+            ),
+        );
     }
 
     public function cartWithMultipleProductOutOfStockSpecificCartRulesMixedProvider()
     {
-        return [
+        return array(
 
-            'one product in cart, quantity 1, out of stock' => [
-                'products'        => [
+            'one product in cart, quantity 1, out of stock' => array(
+                'products' => array(
                     4 => 1,
-                ],
-                'expectedTotal'   => 0,
-                'cartRules'       => [],
+                ),
+                'expectedTotal' => 0,
+                'cartRules' => array(),
                 'knownToFailOnV1' => false,
-            ],
-            '2 products in cart, one is out of stock'       => [
-                'products'        => [
-                    1                 => 3,
-                    4                 => 1,
+            ),
+            '2 products in cart, one is out of stock' => array(
+                'products' => array(
+                    1 => 3,
+                    4 => 1,
                     'knownToFailOnV1' => false,
-                ],
-                'expectedTotal'   => 3 * static::PRODUCT_FIXTURES[1]['price']
+                ),
+                'expectedTotal' => 3 * static::PRODUCT_FIXTURES[1]['price']
                                      + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
-                'cartRules'       => [],
+                'cartRules' => array(),
                 'knownToFailOnV1' => false,
-            ],
-        ];
+            ),
+        );
     }
 }

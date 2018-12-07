@@ -36,7 +36,7 @@ final class RecordCollection extends AbstractCollection implements RecordCollect
     /**
      * @param array $records Raw records data
      */
-    public function __construct(array $records = [])
+    public function __construct(array $records = array())
     {
         $this->items = $records;
     }

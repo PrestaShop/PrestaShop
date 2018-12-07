@@ -70,16 +70,17 @@ final class PerformanceFormHandler extends AbstractFormHandler
         $formBuilder = $this->formFactory->createBuilder()
             ->add('smarty', SmartyType::class)
             ->add('debug_mode', DebugModeType::class)
-            ->add('optional_features', OptionalFeaturesType::class, [
+            ->add('optional_features', OptionalFeaturesType::class, array(
                 'are_combinations_used' => $this->combinationFeature->isUsed(),
-            ])
+            ))
             ->add('ccc', CombineCompressCacheType::class)
             ->add('media_servers', MediaServersType::class)
             ->add('caching', CachingType::class)
             ->add('add_memcache_server', MemcacheServerType::class)
-            ->setData($this->formDataProvider->getData());
+            ->setData($this->formDataProvider->getData())
+        ;
 
-        $this->hookDispatcher->dispatchWithParameters('displayPerformancePageForm', ['form_builder' => &$formBuilder]);
+        $this->hookDispatcher->dispatchWithParameters('displayPerformancePageForm', array('form_builder' => &$formBuilder));
 
         return $formBuilder->setData($formBuilder->getData())->getForm();
     }
@@ -92,7 +93,7 @@ final class PerformanceFormHandler extends AbstractFormHandler
         $errors = $this->formDataProvider->setData($data);
         $this->hookDispatcher->dispatchWithParameters(
             'actionPerformancePageFormSave',
-            ['errors' => &$errors, 'form_data' => &$data]
+            array('errors' => &$errors, 'form_data' => &$data)
         );
 
         return $errors;

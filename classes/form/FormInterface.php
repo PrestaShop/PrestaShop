@@ -29,7 +29,7 @@ interface FormInterface extends RenderableInterface
 {
     public function setAction($action);
 
-    public function fillWith(array $params = []);
+    public function fillWith(array $params = array());
 
     public function submit();
 
@@ -37,7 +37,7 @@ interface FormInterface extends RenderableInterface
 
     public function hasErrors();
 
-    public function render(array $extraVariables = []);
+    public function render(array $extraVariables = array());
 
     public function setTemplate($template);
 }

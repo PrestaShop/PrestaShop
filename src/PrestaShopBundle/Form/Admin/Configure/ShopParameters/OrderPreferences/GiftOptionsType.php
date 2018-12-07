@@ -75,18 +75,19 @@ class GiftOptionsType extends TranslatorAwareType
 
         $builder
             ->add('enable_gift_wrapping', SwitchType::class)
-            ->add('gift_wrapping_price', MoneyWithSuffixType::class, [
+            ->add('gift_wrapping_price', MoneyWithSuffixType::class, array(
                 'required' => false,
                 'currency' => $currencyIsoCode,
                 'suffix' => $this->trans('(tax excl.)', 'Admin.Global'),
-            ]);
+            ))
+        ;
 
         if (!$atcpShipWrap) {
-            $builder->add('gift_wrapping_tax_rules_group', ChoiceType::class, [
+            $builder->add('gift_wrapping_tax_rules_group', ChoiceType::class, array(
                 'required' => false,
                 'placeholder' => $this->trans('None', 'Admin.Global'),
                 'choices' => $this->taxChoices,
-            ]);
+            ));
         }
 
         $builder->add('offer_recyclable_pack', SwitchType::class);
@@ -97,9 +98,9 @@ class GiftOptionsType extends TranslatorAwareType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
+        $resolver->setDefaults(array(
             'translation_domain' => 'Admin.Shopparameters.Feature',
-        ]);
+        ));
     }
 
     /**

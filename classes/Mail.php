@@ -49,45 +49,45 @@ class MailCore extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = [
+    public static $definition = array(
         'table' => 'mail',
         'primary' => 'id_mail',
-        'fields' => [
-            'recipient' => [
+        'fields' => array(
+            'recipient' => array(
                 'type' => self::TYPE_STRING,
                 'validate' => 'isEmail',
                 'copy_post' => false,
                 'required' => true,
                 'size' => 255,
-            ],
-            'template' => [
+            ),
+            'template' => array(
                 'type' => self::TYPE_STRING,
                 'validate' => 'isTplName',
                 'copy_post' => false,
                 'required' => true,
                 'size' => 62,
-            ],
-            'subject' => [
+            ),
+            'subject' => array(
                 'type' => self::TYPE_STRING,
                 'validate' => 'isMailSubject',
                 'copy_post' => false,
                 'required' => true,
                 'size' => 255,
-            ],
-            'id_lang' => [
+            ),
+            'id_lang' => array(
                 'type' => self::TYPE_INT,
                 'validate' => 'isUnsignedId',
                 'copy_post' => false,
                 'required' => true,
-            ],
-            'date_add' => [
+            ),
+            'date_add' => array(
                 'type' => self::TYPE_DATE,
                 'validate' => 'isDate',
                 'copy_post' => false,
                 'required' => true,
-            ],
-        ],
-    ];
+            ),
+        ),
+    );
 
     /**
      * Mail content type.
@@ -154,7 +154,7 @@ class MailCore extends ObjectModel
         $keepGoing = array_reduce(
             Hook::exec(
                 'actionEmailSendBefore',
-                [
+                array(
                     'idLang' => &$idLang,
                     'template' => &$template,
                     'subject' => &$subject,
@@ -170,7 +170,7 @@ class MailCore extends ObjectModel
                     'idShop' => &$idShop,
                     'bcc' => &$bcc,
                     'replyTo' => &$replyTo,
-                ],
+                ),
                 null,
                 true
             ),
@@ -189,7 +189,7 @@ class MailCore extends ObjectModel
         }
 
         $configuration = Configuration::getMultiple(
-            [
+            array(
                 'PS_SHOP_EMAIL',
                 'PS_MAIL_METHOD',
                 'PS_MAIL_SERVER',
@@ -199,7 +199,7 @@ class MailCore extends ObjectModel
                 'PS_MAIL_SMTP_ENCRYPTION',
                 'PS_MAIL_SMTP_PORT',
                 'PS_MAIL_TYPE',
-            ],
+            ),
             null,
             null,
             $idShop
@@ -213,10 +213,10 @@ class MailCore extends ObjectModel
         // Hook to alter template vars
         Hook::exec(
             'sendMailAlterTemplateVars',
-            [
+            array(
                 'template' => $template,
                 'template_vars' => &$templateVars,
-            ]
+            )
         );
 
         if (!isset($configuration['PS_MAIL_SMTP_ENCRYPTION']) ||
@@ -267,7 +267,7 @@ class MailCore extends ObjectModel
         }
 
         if (!is_array($templateVars)) {
-            $templateVars = [];
+            $templateVars = array();
         }
 
         // Do not crash for this error, that may be a complicated customer name
@@ -347,7 +347,8 @@ class MailCore extends ObjectModel
                     $configuration['PS_MAIL_SMTP_ENCRYPTION']
                 )
                     ->setUsername($configuration['PS_MAIL_USER'])
-                    ->setPassword($configuration['PS_MAIL_PASSWD']);
+                    ->setPassword($configuration['PS_MAIL_PASSWD'])
+                ;
             } else {
                 $connection = \Swift_MailTransport::newInstance();
             }
@@ -360,7 +361,7 @@ class MailCore extends ObjectModel
             /* Get templates content */
             $iso = Language::getIsoById((int) $idLang);
             $isoDefault = Language::getIsoById((int) Configuration::get('PS_LANG_DEFAULT'));
-            $isoArray = [];
+            $isoArray = array();
             if ($iso) {
                 $isoArray[] = $iso;
             }
@@ -395,7 +396,7 @@ class MailCore extends ObjectModel
                     PrestaShopLogger::addLog(
                         Context::getContext()->getTranslator()->trans(
                             'Error - The following e-mail template is missing: %s',
-                            [$templatePath . $isoTemplate . '.txt'],
+                            array($templatePath . $isoTemplate . '.txt'),
                             'Admin.Advparameters.Notification'
                         )
                     );
@@ -408,7 +409,7 @@ class MailCore extends ObjectModel
                     PrestaShopLogger::addLog(
                         Context::getContext()->getTranslator()->trans(
                             'Error - The following e-mail template is missing: %s',
-                            [$templatePath . $isoTemplate . '.html'],
+                            array($templatePath . $isoTemplate . '.html'),
                             'Admin.Advparameters.Notification'
                         )
                     );
@@ -419,7 +420,7 @@ class MailCore extends ObjectModel
             }
 
             if (empty($templatePathExists)) {
-                self::dieOrLog($die, 'Error - The following e-mail template is missing: %s', [$template]);
+                self::dieOrLog($die, 'Error - The following e-mail template is missing: %s', array($template));
 
                 return false;
             }
@@ -428,12 +429,12 @@ class MailCore extends ObjectModel
             $templateTxt = '';
             Hook::exec(
                 'actionEmailAddBeforeContent',
-                [
+                array(
                     'template' => $template,
                     'template_html' => &$templateHtml,
                     'template_txt' => &$templateTxt,
                     'id_lang' => (int) $idLang,
-                ],
+                ),
                 null,
                 true
             );
@@ -447,12 +448,12 @@ class MailCore extends ObjectModel
             );
             Hook::exec(
                 'actionEmailAddAfterContent',
-                [
+                array(
                     'template' => $template,
                     'template_html' => &$templateHtml,
                     'template_txt' => &$templateTxt,
                     'id_lang' => (int) $idLang,
-                ],
+                ),
                 null,
                 true
             );
@@ -474,8 +475,8 @@ class MailCore extends ObjectModel
                 $message->setReplyTo($replyTo, ($replyToName !== '' ? $replyToName : null));
             }
 
-            $templateVars = array_map(['Tools', 'htmlentitiesDecodeUTF8'], $templateVars);
-            $templateVars = array_map(['Tools', 'stripslashes'], $templateVars);
+            $templateVars = array_map(array('Tools', 'htmlentitiesDecodeUTF8'), $templateVars);
+            $templateVars = array_map(array('Tools', 'stripslashes'), $templateVars);
 
             if (false !== Configuration::get('PS_LOGO_MAIL') &&
                 file_exists(_PS_IMG_DIR_ . Configuration::get('PS_LOGO_MAIL', null, null, $idShop))
@@ -533,15 +534,15 @@ class MailCore extends ObjectModel
             );
             $templateVars['{color}'] = Tools::safeOutput(Configuration::get('PS_MAIL_COLOR', null, null, $idShop));
             // Get extra template_vars
-            $extraTemplateVars = [];
+            $extraTemplateVars = array();
             Hook::exec(
                 'actionGetExtraMailTemplateVars',
-                [
+                array(
                     'template' => $template,
                     'template_vars' => $templateVars,
                     'extra_template_vars' => &$extraTemplateVars,
                     'id_lang' => (int) $idLang,
-                ],
+                ),
                 null,
                 true
             );
@@ -565,7 +566,7 @@ class MailCore extends ObjectModel
                 }
 
                 foreach ($fileAttachment as $attachment) {
-                    if (isset($attachment['content']) && isset($attachment['name']) && isset($attachment['mime'])) {
+                    if (isset($attachment['content'], $attachment['name'], $attachment['mime'])    ) {
                         $message->attach(
                             \Swift_Attachment::newInstance()->setFilename(
                                 $attachment['name']
@@ -579,9 +580,9 @@ class MailCore extends ObjectModel
             $message->setFrom(array($from => $fromName));
 
             // Hook to alter Swift Message before sending mail
-            Hook::exec('actionMailAlterMessageBeforeSend', [
+            Hook::exec('actionMailAlterMessageBeforeSend', array(
                 'message' => &$message,
-            ]);
+            ));
 
             $send = $swift->send($message);
 
@@ -596,13 +597,13 @@ class MailCore extends ObjectModel
                 $recipientsCc = $message->getCc();
                 $recipientsBcc = $message->getBcc();
                 if (!is_array($recipientsTo)) {
-                    $recipientsTo = [];
+                    $recipientsTo = array();
                 }
                 if (!is_array($recipientsCc)) {
-                    $recipientsCc = [];
+                    $recipientsCc = array();
                 }
                 if (!is_array($recipientsBcc)) {
-                    $recipientsBcc = [];
+                    $recipientsBcc = array();
                 }
                 foreach (array_merge($recipientsTo, $recipientsCc, $recipientsBcc) as $email => $recipient_name) {
                     /* @var Swift_Address $recipient */
@@ -627,11 +628,11 @@ class MailCore extends ObjectModel
 
     protected static function getTemplateBasePath($isoTemplate, $moduleName, $theme)
     {
-        $basePathList = [
+        $basePathList = array(
             _PS_ROOT_DIR_ . '/themes/' . $theme->getName() . '/',
             _PS_ROOT_DIR_ . '/themes/' . $theme->get('parent') . '/',
             _PS_ROOT_DIR_,
-        ];
+        );
 
         if ($moduleName !== false) {
             $templateRelativePath = '/modules/' . $moduleName . '/mails/';
@@ -705,7 +706,8 @@ class MailCore extends ObjectModel
                 }
                 $smtp = \Swift_SmtpTransport::newInstance($smtp_server, $smtpPort, $smtpEncryption)
                     ->setUsername($smtpLogin)
-                    ->setPassword($smtpPassword);
+                    ->setPassword($smtpPassword)
+                ;
                 $swift = \Swift_Mailer::newInstance($smtp);
             } else {
                 $swift = \Swift_Mailer::newInstance(\Swift_MailTransport::newInstance());
@@ -717,7 +719,8 @@ class MailCore extends ObjectModel
                 ->setFrom($from)
                 ->setTo($to)
                 ->setSubject($subject)
-                ->setBody($content);
+                ->setBody($content)
+            ;
 
             if ($swift->send($message)) {
                 $result = true;
@@ -782,12 +785,12 @@ class MailCore extends ObjectModel
     /* Rewrite of Swift_Message::generateId() without getmypid() */
     protected static function generateId($idstring = null)
     {
-        $midparams = [
+        $midparams = array(
             'utctime' => gmstrftime('%Y%m%d%H%M%S'),
             'randint' => mt_rand(),
             'customstr' => (preg_match('/^(?<!\\.)[a-z0-9\\.]+(?!\\.)$/iD', $idstring) ? $idstring : 'swift'),
             'hostname' => !empty($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : php_uname('n'),
-        ];
+        );
 
         return vsprintf('%s.%d.%s@%s', $midparams);
     }
@@ -834,7 +837,7 @@ class MailCore extends ObjectModel
         $length = $length - ($length % 4);
 
         if ($charset === 'UTF-8') {
-            $parts = [];
+            $parts = array();
             $maxchars = floor(($length * 3) / 4);
             $stringLength = Tools::strlen($string);
 
@@ -889,7 +892,7 @@ class MailCore extends ObjectModel
     protected static function dieOrLog(
         $die,
         $message,
-        $templates = [],
+        $templates = array(),
         $domain = 'Admin.Advparameters.Notification'
     ) {
         Tools::dieOrLog(

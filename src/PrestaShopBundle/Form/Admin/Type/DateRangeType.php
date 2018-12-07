@@ -37,20 +37,20 @@ class DateRangeType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('from', DatePickerType::class, [
+            ->add('from', DatePickerType::class, array(
                 'required' => false,
-                'attr' => [
+                'attr' => array(
                     'placeholder' => 'From',
-                ],
+                ),
                 'translation_domain' => 'Admin.Global',
-            ])
-            ->add('to', DatePickerType::class, [
+            ))
+            ->add('to', DatePickerType::class, array(
                 'required' => false,
-                'attr' => [
+                'attr' => array(
                     'placeholder' => 'To',
-                ],
+                ),
                 'translation_domain' => 'Admin.Global',
-            ])
+            ))
         ;
     }
 

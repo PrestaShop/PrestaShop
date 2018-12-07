@@ -126,7 +126,7 @@ class RepositoryTest extends UnitTestCase
 
         $datas = array();
         foreach ($currencies as $k => $v) {
-            if (strlen($k)!==3) {
+            if (strlen($k) !== 3) {
                 continue;
             }
             $datas[] = $k;

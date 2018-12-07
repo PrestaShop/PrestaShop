@@ -38,12 +38,12 @@ final class WebserviceKeyFilters extends Filters
      */
     public static function getDefaults()
     {
-        return [
+        return array(
             'limit' => 50,
             'offset' => 0,
             'orderBy' => 'id_webservice_account',
             'sortOrder' => 'asc',
-            'filters' => [],
-        ];
+            'filters' => array(),
+        );
     }
 }

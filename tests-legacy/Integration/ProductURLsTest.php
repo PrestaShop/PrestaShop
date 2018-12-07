@@ -62,7 +62,9 @@ class ProductURLsTest extends IntegrationTestCase
     {
         $url = $this->link->getProductLink(
             $id_product,
-            null, null, null,
+            null,
+            null,
+            null,
             $this->language->id,
             null,
             $id_product_attribute,
@@ -101,7 +103,7 @@ class ProductURLsTest extends IntegrationTestCase
     public function test_url_takes_variant_into_account__without_url_rewriting()
     {
         $this->disableURLRewriting();
-        $query = [];
+        $query = array();
         parse_str($this->getURL(1, 6)['query'], $query);
 
         $this->assertEquals(1, $query['id_product']);
@@ -111,7 +113,7 @@ class ProductURLsTest extends IntegrationTestCase
     public function test_url_ignores_variant_if_not_specified__without_url_rewriting()
     {
         $this->disableURLRewriting();
-        $query = [];
+        $query = array();
         parse_str($this->getURL(1, null)['query'], $query);
 
         $this->assertEquals(1, $query['id_product']);

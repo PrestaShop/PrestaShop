@@ -71,7 +71,7 @@ final class NonInstalledLocalizationChoiceProvider implements FormChoiceProvider
      */
     public function getChoices()
     {
-        $choices = [];
+        $choices = array();
         foreach (array_keys($this->languagePackList) as $locale) {
             if ($this->languageValidator->isInstalledByLocale($locale)) {
                 continue;

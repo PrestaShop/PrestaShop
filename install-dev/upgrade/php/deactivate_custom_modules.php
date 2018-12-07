@@ -88,7 +88,7 @@ function deactivate_custom_modules()
     $return = Db::getInstance()->execute('
 	UPDATE `'._DB_PREFIX_.'module` SET `active` = 0 WHERE `name` IN ('.implode(',', $uninstallMe).')');
 
-    if (count(Db::getInstance()->executeS('SHOW TABLES LIKE \''._DB_PREFIX_.'module_shop\''))> 0) {
+    if (count(Db::getInstance()->executeS('SHOW TABLES LIKE \''._DB_PREFIX_.'module_shop\'')) > 0) {
         foreach ($uninstallMe as $k => $uninstall) {
             $return &= Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'module_shop` WHERE `id_module` = '.(int)$k);
         }

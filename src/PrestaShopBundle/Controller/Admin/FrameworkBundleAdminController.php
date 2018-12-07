@@ -68,10 +68,10 @@ class FrameworkBundleAdminController extends Controller
      */
     public function overviewAction()
     {
-        return [
+        return array(
             'is_shop_context' => (new Context())->isShopContext(),
             'layoutTitle' => empty($this->layoutTitle) ? '' : $this->trans($this->layoutTitle, 'Admin.Navigation.Menu'),
-        ];
+        );
     }
 
     public function hashUpdateJsAction($hash)
@@ -101,7 +101,7 @@ class FrameworkBundleAdminController extends Controller
      */
     public function getFormErrorsForJS(Form $form)
     {
-        $errors = [];
+        $errors = array();
 
         if (empty($form)) {
             return $errors;
@@ -114,8 +114,8 @@ class FrameworkBundleAdminController extends Controller
                 $formId = 'bubbling_errors';
             } else {
                 $formId = str_replace(
-                    ['.', 'children[', ']', '_data'],
-                    ['_', '', '', ''],
+                    array('.', 'children[', ']', '_data'),
+                    array('_', '', '', ''),
                     $error->getCause()->getPropertyPath()
                 );
             }
@@ -189,10 +189,10 @@ class FrameworkBundleAdminController extends Controller
         $docLink = urlencode('https://help.prestashop.com/' . $legacyContext->getEmployeeLanguageIso() . '/doc/'
             . $section . '?version=' . $version . '&country=' . $legacyContext->getEmployeeLanguageIso());
 
-        return $this->generateUrl('admin_common_sidebar', [
+        return $this->generateUrl('admin_common_sidebar', array(
             'url' => $docLink,
             'title' => $title,
-        ]);
+        ));
     }
 
     /**
@@ -268,7 +268,7 @@ class FrameworkBundleAdminController extends Controller
      *
      * @return string
      */
-    protected function trans($key, $domain, array $parameters = [])
+    protected function trans($key, $domain, array $parameters = array())
     {
         return $this->get('translator')->trans($key, $parameters, $domain);
     }
@@ -365,10 +365,10 @@ class FrameworkBundleAdminController extends Controller
         return $this->trans(
             'An unexpected error occurred. [%type% code %code%]',
             'Admin.Notifications.Error',
-            [
+            array(
                 '%type%' => $type,
                 '%code%' => $code,
-            ]
+            )
         );
     }
 

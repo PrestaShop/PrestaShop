@@ -76,7 +76,8 @@ class ThemeExporterTest extends TestCase
 
         $this->zipManagerMock = $this->getMockBuilder('\PrestaShopBundle\Utils\ZipManager')
             ->disableOriginalConstructor()
-            ->getMock();
+            ->getMock()
+        ;
 
         $this->mockFilesystem();
 
@@ -138,33 +139,39 @@ class ThemeExporterTest extends TestCase
     {
         $this->extractorMock = $this->getMockBuilder('\PrestaShopBundle\Translation\Extractor\ThemeExtractor')
             ->disableOriginalConstructor()
-            ->getMock();
+            ->getMock()
+        ;
 
         $this->extractorMock->method('setOutputPath')
-            ->willReturn($this->extractorMock);
+            ->willReturn($this->extractorMock)
+        ;
     }
 
     protected function mockThemeRepository()
     {
         $this->repositoryMock = $this->getMockBuilder('\PrestaShop\PrestaShop\Core\Addon\Theme\ThemeRepository')
             ->disableOriginalConstructor()
-            ->getMock();
+            ->getMock()
+        ;
 
         $this->repositoryMock->method('getInstanceByName')
             ->willReturn(new Theme(array(
                 'directory' => '',
                 'name' => self::THEME_NAME
-            )));
+            )))
+        ;
     }
 
     protected function mockFilesystem()
     {
         $this->filesystemMock = $this->getMockBuilder('\Symfony\Component\Filesystem\Filesystem')
             ->disableOriginalConstructor()
-            ->getMock();
+            ->getMock()
+        ;
 
         $this->filesystemMock->method('mkdir')
-            ->willReturn(null);
+            ->willReturn(null)
+        ;
 
         Flattenizer::$filesystem = $this->filesystemMock;
     }
@@ -173,13 +180,16 @@ class ThemeExporterTest extends TestCase
     {
         $this->finderMock = $this->getMockBuilder('\Symfony\Component\Finder\Finder')
             ->disableOriginalConstructor()
-            ->getMock();
+            ->getMock()
+        ;
 
         $this->finderMock->method('in')
-            ->willReturn($this->finderMock);
+            ->willReturn($this->finderMock)
+        ;
 
         $this->finderMock->method('files')
-            ->willReturn(array());
+            ->willReturn(array())
+        ;
 
         Flattenizer::$finder = $this->finderMock;
     }
@@ -188,7 +198,8 @@ class ThemeExporterTest extends TestCase
     {
         $this->providerMock = $this->getMockBuilder('\PrestaShopBundle\Translation\Provider\ThemeProvider')
             ->disableOriginalConstructor()
-            ->getMock();
+            ->getMock()
+        ;
 
         $this->providerMock->method('getCatalogueFromPaths')
             ->willReturn(new MessageCatalogue(
@@ -200,7 +211,8 @@ class ThemeExporterTest extends TestCase
                         'Override Me Twice' => '',
                     )
                 )
-            ));
+            ))
+        ;
 
         $this->providerMock->method('getThemeCatalogue')
             ->willReturn(new MessageCatalogue(

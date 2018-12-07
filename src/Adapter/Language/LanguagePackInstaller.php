@@ -66,19 +66,19 @@ final class LanguagePackInstaller implements LanguagePackInstallerInterface
         $result = Language::downloadAndInstallLanguagePack($iso, $this->version->getVersion());
 
         if (false === $result) {
-            return [
+            return array(
                 $this->translator->trans(
                     'Fatal error: ISO code is not correct',
-                    [],
+                    array(),
                     'Admin.International.Notification'
                 ),
-            ];
+            );
         }
 
         if (is_array($result) && !empty($result)) {
             return $result;
         }
 
-        return [];
+        return array();
     }
 }

@@ -58,18 +58,18 @@ class GridPresenterTest extends TestCase
     {
         $presentedGrid = $this->gridPresenter->present($this->createGridMock());
 
-        $expectedPresentedGrid = [
-            'id' => [],
-            'name' => [],
-            'filter_form' => [],
-            'columns' => [],
-            'column_filters' => [],
-            'actions' => ['grid', 'bulk'],
-            'data' => ['records', 'records_total', 'query'],
-            'pagination' => ['offset', 'limit'],
-            'sorting' => ['order_by', 'order_way'],
-            'filters' => [],
-        ];
+        $expectedPresentedGrid = array(
+            'id' => array(),
+            'name' => array(),
+            'filter_form' => array(),
+            'columns' => array(),
+            'column_filters' => array(),
+            'actions' => array('grid', 'bulk'),
+            'data' => array('records', 'records_total', 'query'),
+            'pagination' => array('offset', 'limit'),
+            'sorting' => array('order_by', 'order_way'),
+            'filters' => array(),
+        );
 
         $this->assertInternalType('array', $presentedGrid);
 
@@ -88,33 +88,43 @@ class GridPresenterTest extends TestCase
 
         $definition = $this->createMock(GridDefinitionInterface::class);
         $definition->method('getColumns')
-            ->willReturn((new ColumnCollection())
+            ->willReturn(
+                (new ColumnCollection())
                 ->add($this->createColumnMock('test_1'))
                 ->add($this->createColumnMock('test_2'))
                 ->add($this->createColumnMock('test_3'))
-            );
+            )
+        ;
         $definition->method('getBulkActions')
-            ->willReturn(new BulkActionCollection());
+            ->willReturn(new BulkActionCollection())
+        ;
         $definition->method('getGridActions')
-            ->willReturn(new GridActionCollection());
+            ->willReturn(new GridActionCollection())
+        ;
         $definition->method('getFilters')
-            ->willReturn(new FilterCollection());
+            ->willReturn(new FilterCollection())
+        ;
 
         $criteria = $this->createMock(SearchCriteriaInterface::class);
 
         $filterForm = $this->createMock(FormInterface::class);
         $filterForm->method('createView')
-            ->willReturn(new FormView());
+            ->willReturn(new FormView())
+        ;
 
         $grid = $this->createMock(GridInterface::class);
         $grid->method('getData')
-            ->willReturn($data);
+            ->willReturn($data)
+        ;
         $grid->method('getDefinition')
-            ->willReturn($definition);
+            ->willReturn($definition)
+        ;
         $grid->method('getSearchCriteria')
-            ->willReturn($criteria);
+            ->willReturn($criteria)
+        ;
         $grid->method('getFilterForm')
-            ->willReturn($filterForm);
+            ->willReturn($filterForm)
+        ;
 
         return $grid;
     }
@@ -123,7 +133,8 @@ class GridPresenterTest extends TestCase
     {
         $column = $this->createMock(ColumnInterface::class);
         $column->method('getId')
-            ->willReturn($id);
+            ->willReturn($id)
+        ;
 
         return $column;
     }

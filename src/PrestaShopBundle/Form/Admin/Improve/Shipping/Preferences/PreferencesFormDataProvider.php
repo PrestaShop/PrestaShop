@@ -67,10 +67,10 @@ class PreferencesFormDataProvider implements FormDataProviderInterface
      */
     public function getData()
     {
-        return [
+        return array(
             'handling' => $this->handlingConfiguration->getConfiguration(),
             'carrier_options' => $this->carrierOptionsConfiguration->getConfiguration(),
-        ];
+        );
     }
 
     /**
@@ -97,30 +97,30 @@ class PreferencesFormDataProvider implements FormDataProviderInterface
      */
     protected function validate(array $data)
     {
-        $errors = [];
-        $numericFields = [
-            [
+        $errors = array();
+        $numericFields = array(
+            array(
                 'value' => $data['handling']['shipping_handling_charges'],
-                'name' => $this->translator->trans('Handling charges', [], 'Admin.Shipping.Feature'),
-            ],
-            [
+                'name' => $this->translator->trans('Handling charges', array(), 'Admin.Shipping.Feature'),
+            ),
+            array(
                 'value' => $data['handling']['free_shipping_price'],
-                'name' => $this->translator->trans('Free shipping starts at', [], 'Admin.Shipping.Feature'),
-            ],
-            [
+                'name' => $this->translator->trans('Free shipping starts at', array(), 'Admin.Shipping.Feature'),
+            ),
+            array(
                 'value' => $data['handling']['free_shipping_weight'],
-                'name' => $this->translator->trans('Free shipping starts at', [], 'Admin.Shipping.Feature'),
-            ],
-        ];
+                'name' => $this->translator->trans('Free shipping starts at', array(), 'Admin.Shipping.Feature'),
+            ),
+        );
 
         // Check if all numeric fields are positive numbers
         foreach ($numericFields as $field) {
             if (!is_numeric($field['value']) || $field['value'] < 0) {
-                $errors[] = [
+                $errors[] = array(
                     'key' => 'The %s field is invalid.',
                     'domain' => 'Admin.Notifications.Error',
-                    'parameters' => [$field['name']],
-                ];
+                    'parameters' => array($field['name']),
+                );
             }
         }
 

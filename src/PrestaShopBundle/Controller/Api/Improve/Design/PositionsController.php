@@ -50,24 +50,24 @@ class PositionsController extends ApiController
         $module = $this->container->get('prestashop.adapter.legacy.module')->getInstanceById($moduleId);
         if (empty($module)) {
             return $this->jsonResponse(
-                [
+                array(
                     'hasError' => true,
-                    'errors' => ['This module cannot be loaded.'],
-                ],
+                    'errors' => array('This module cannot be loaded.'),
+                ),
                 $request
             );
         }
 
         if (!$module->updatePosition($hookId, $way, $position)) {
             return $this->jsonResponse(
-                [
+                array(
                     'hasError' => true,
-                    'errors' => ['Cannot update module position.'],
-                ],
+                    'errors' => array('Cannot update module position.'),
+                ),
                 $request
             );
         }
 
-        return $this->jsonResponse([], $request);
+        return $this->jsonResponse(array(), $request);
     }
 }

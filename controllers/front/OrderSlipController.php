@@ -47,9 +47,9 @@ class OrderSlipControllerCore extends FrontController
             $this->warning[] = $this->trans('You have not received any credit slips.', array(), 'Shop.Notifications.Warning');
         }
 
-        $this->context->smarty->assign([
+        $this->context->smarty->assign(array(
             'credit_slips' => $credit_slips,
-        ]);
+        ));
 
         parent::initContent();
         $this->setTemplate('customer/order-slip');
@@ -57,7 +57,7 @@ class OrderSlipControllerCore extends FrontController
 
     public function getTemplateVarCreditSlips()
     {
-        $credit_slips = [];
+        $credit_slips = array();
         $orders_slip = OrderSlip::getOrdersSlip(((int) $this->context->cookie->id_customer));
 
         foreach ($orders_slip as $order_slip) {

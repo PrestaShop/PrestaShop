@@ -55,7 +55,7 @@ final class CurrencyByIdChoiceProvider implements FormChoiceProviderInterface
     public function getChoices()
     {
         $currencies = $this->currencyDataProvider->getCurrencies(false, true, true);
-        $choices = [];
+        $choices = array();
 
         foreach ($currencies as $currency) {
             $choices[sprintf('%s (%s)', $currency['name'], $currency['iso_code'])] = $currency['id_currency'];

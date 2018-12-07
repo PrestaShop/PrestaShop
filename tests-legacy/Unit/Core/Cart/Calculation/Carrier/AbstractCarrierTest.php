@@ -42,112 +42,112 @@ use Zone;
 abstract class AbstractCarrierTest extends AbstractCartCalculationTest
 {
 
-    const ZONE_FIXTURES = [
-        1 => [
+    const ZONE_FIXTURES = array(
+        1 => array(
             'name' => 'zone #1',
-        ],
-        2 => [
+        ),
+        2 => array(
             'name' => 'zone #2',
-        ],
-    ];
+        ),
+    );
 
-    const COUNTRY_FIXTURES = [
-        'FR' => [
+    const COUNTRY_FIXTURES = array(
+        'FR' => array(
             'zoneId' => 1,
-        ],
-        'US' => [
+        ),
+        'US' => array(
             'zoneId' => 2,
-        ],
-    ];
+        ),
+    );
 
-    const STATE_FIXTURES = [
-        1 => [
-            'zoneId'         => 1,
+    const STATE_FIXTURES = array(
+        1 => array(
+            'zoneId' => 1,
             'countryIsoCode' => 'FR',
-            'name'           => 'state #1',
-            'isoCode'        => 'TEST-1',
-        ],
-        2 => [
-            'zoneId'         => 2,
+            'name' => 'state #1',
+            'isoCode' => 'TEST-1',
+        ),
+        2 => array(
+            'zoneId' => 2,
             'countryIsoCode' => 'US',
-            'name'           => 'state #2',
-            'isoCode'        => 'TEST-2',
-        ],
-    ];
+            'name' => 'state #2',
+            'isoCode' => 'TEST-2',
+        ),
+    );
 
-    const ADDRESS_FIXTURES = [
-        1 => [
+    const ADDRESS_FIXTURES = array(
+        1 => array(
             'countryIsoCode' => 'FR',
-            'stateId'        => 1,
-            'postcode'       => 1,
-        ],
-        2 => [
+            'stateId' => 1,
+            'postcode' => 1,
+        ),
+        2 => array(
             'countryIsoCode' => 'US',
-            'stateId'        => 2,
-            'postcode'       => 1,
-        ],
-    ];
+            'stateId' => 2,
+            'postcode' => 1,
+        ),
+    );
 
-    const CARRIER_FIXTURES = [
-        1 => [
-            'name'   => 'carrier 1',
+    const CARRIER_FIXTURES = array(
+        1 => array(
+            'name' => 'carrier 1',
             'isFree' => false,
-            'ranges' => [
-                1 => [
-                    'from'           => 0,
-                    'to'             => 10000,
-                    'shippingPrices' => [
+            'ranges' => array(
+                1 => array(
+                    'from' => 0,
+                    'to' => 10000,
+                    'shippingPrices' => array(
                         1 => 3.1, // zoneId => price
                         2 => 4.3, // zoneId => price
-                    ],
-                ],
-            ],
-        ],
-        2 => [
-            'name'   => 'carrier 2',
+                    ),
+                ),
+            ),
+        ),
+        2 => array(
+            'name' => 'carrier 2',
             'isFree' => false,
-            'ranges' => [
-                1 => [
-                    'from'           => 0,
-                    'to'             => 10000,
-                    'shippingPrices' => [
+            'ranges' => array(
+                1 => array(
+                    'from' => 0,
+                    'to' => 10000,
+                    'shippingPrices' => array(
                         1 => 5.7, // zoneId => price
                         2 => 6.2, // zoneId => price
-                    ],
-                ],
-            ],
-        ],
-    ];
+                    ),
+                ),
+            ),
+        ),
+    );
 
     /**
      * @var Carrier[]
      */
-    protected $carriers = [];
+    protected $carriers = array();
 
     /**
      * @var RangePrice[]
      */
-    protected $priceRanges = [];
+    protected $priceRanges = array();
 
     /**
      * @var Zone[]
      */
-    protected $zones = [];
+    protected $zones = array();
 
     /**
      * @var array array of isoCode => previousZoneId
      */
-    protected $countries = [];
+    protected $countries = array();
 
     /**
      * @var State[]
      */
-    protected $states = [];
+    protected $states = array();
 
     /**
      * @var Address[]
      */
-    protected $addresses = [];
+    protected $addresses = array();
 
     public function setUp()
     {
@@ -180,7 +180,7 @@ abstract class AbstractCarrierTest extends AbstractCartCalculationTest
 
     public function tearDown()
     {
-        $this->cart->id_carrier          = 0;
+        $this->cart->id_carrier = 0;
         $this->cart->id_address_delivery = 0;
 
         foreach ($this->carriers as $carrier) {
@@ -220,15 +220,15 @@ abstract class AbstractCarrierTest extends AbstractCartCalculationTest
     protected function insertCarriers()
     {
         foreach (static::CARRIER_FIXTURES as $k => $carrierFixture) {
-            $carrier                  = new Carrier(null, Configuration::get('PS_LANG_DEFAULT'));
-            $carrier->name            = $carrierFixture['name'];
+            $carrier = new Carrier(null, Configuration::get('PS_LANG_DEFAULT'));
+            $carrier->name = $carrierFixture['name'];
             $carrier->shipping_method = Carrier::SHIPPING_METHOD_PRICE;
-            $carrier->delay           = '28 days later';
-            $carrier->active          = 1;
+            $carrier->delay = '28 days later';
+            $carrier->active = 1;
             $carrier->add();
-            $carrierPrices = [];
+            $carrierPrices = array();
             foreach ($carrierFixture['ranges'] as $rangeFixture) {
-                $range             = new RangePrice;
+                $range = new RangePrice;
                 $range->id_carrier = $carrier->id;
                 $range->delimiter1 = $rangeFixture['from'];
                 $range->delimiter2 = $rangeFixture['to'];
@@ -239,13 +239,13 @@ abstract class AbstractCarrierTest extends AbstractCartCalculationTest
                     if ($zone === null) {
                         throw new \Exception('Zone not found with fixture id = ' . $zoneId);
                     }
-                    $carrierPrices[] = [
-                        'id_range_price'  => (int) $range->id,
+                    $carrierPrices[] = array(
+                        'id_range_price' => (int) $range->id,
                         'id_range_weight' => null,
-                        'id_carrier'      => (int) $carrier->id,
-                        'id_zone'         => (int) $zone->id,
-                        'price'           => $price,
-                    ];
+                        'id_carrier' => (int) $carrier->id,
+                        'id_zone' => (int) $zone->id,
+                        'price' => $price,
+                    );
                 }
             }
 
@@ -273,7 +273,7 @@ abstract class AbstractCarrierTest extends AbstractCartCalculationTest
     protected function insertAddresses()
     {
         foreach (static::ZONE_FIXTURES as $k => $zoneFixture) {
-            $zone       = new Zone;
+            $zone = new Zone;
             $zone->name = $zoneFixture['name'];
             $zone->add();
             $this->zones[$k] = $zone;
@@ -282,24 +282,24 @@ abstract class AbstractCarrierTest extends AbstractCartCalculationTest
             $country = $this->getCountryFromIsoCode($isoCode);
             // store pevious value
             $this->countries[$isoCode] = $country->id_zone;
-            $zone                      = $this->getZoneFromFixtureId($countryFixture['zoneId']);
+            $zone = $this->getZoneFromFixtureId($countryFixture['zoneId']);
             if ($zone === null) {
                 throw new \Exception('Zone not found with fixture id = ' . $countryFixture['zoneId']);
             }
             $country->id_zone = $zone->id;
-            $country->active  = 1;
+            $country->active = 1;
             $country->save();
         }
         foreach (static::STATE_FIXTURES as $k => $stateFixture) {
-            $state           = new State;
-            $state->name     = $stateFixture['name'];
+            $state = new State;
+            $state->name = $stateFixture['name'];
             $state->iso_code = $stateFixture['isoCode'];
-            $zone            = $this->getZoneFromFixtureId($stateFixture['zoneId']);
+            $zone = $this->getZoneFromFixtureId($stateFixture['zoneId']);
             if ($zone === null) {
                 throw new \Exception('Zone not found with fixture id = ' . $stateFixture['zoneId']);
             }
             $state->id_zone = $zone->id;
-            $country        = $this->getCountryFromIsoCode($stateFixture['countryIsoCode']);
+            $country = $this->getCountryFromIsoCode($stateFixture['countryIsoCode']);
             if ($country === null) {
                 throw new \Exception('Country not found with fixture iso code = ' . $stateFixture['countryIsoCode']);
             }
@@ -314,17 +314,17 @@ abstract class AbstractCarrierTest extends AbstractCartCalculationTest
                 throw new \Exception('Country not found with fixture iso code = ' . $addressFixture['countryIsoCode']);
             }
             $address->id_country = $country->id;
-            $state               = $this->getStateFromFixtureId($addressFixture['stateId']);
+            $state = $this->getStateFromFixtureId($addressFixture['stateId']);
             if ($state === null) {
                 throw new \Exception('State not found with fixture id = ' . $addressFixture['stateId']);
             }
-            $address->id_state  = $state->id;
-            $address->postcode  = $addressFixture['postcode'];
-            $address->lastname  = 'lastname';
+            $address->id_state = $state->id;
+            $address->postcode = $addressFixture['postcode'];
+            $address->lastname = 'lastname';
             $address->firstname = 'firstname';
-            $address->address1  = 'address1';
-            $address->city      = 'city';
-            $address->alias     = 'alias';
+            $address->address1 = 'address1';
+            $address->city = 'city';
+            $address->alias = 'alias';
             $address->add();
             $this->addresses[$k] = $address;
         }

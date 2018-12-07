@@ -65,7 +65,7 @@ class GridPositionUpdaterTest extends TestCase
         $this->assertInstanceOf(PositionUpdateException::class, $caughtException);
         $this->assertEquals('Could not update #%i', $caughtException->getKey());
         $this->assertEquals('Admin.Catalog.Notification', $caughtException->getDomain());
-        $this->assertSame([5], $caughtException->getParameters());
+        $this->assertSame(array(5), $caughtException->getParameters());
     }
 
     /**
@@ -99,22 +99,24 @@ class GridPositionUpdaterTest extends TestCase
                 $this->isInstanceOf(PositionDefinitionInterface::class),
                 $this->equalTo(42)
             )
-            ->willReturn([
+            ->willReturn(array(
                 1 => 0,
                 5 => 1,
                 42 => 2,
-            ]);
+            ))
+        ;
 
         $updaterMock
             ->method('updatePositions')
             ->with(
                 $this->isInstanceOf(PositionDefinitionInterface::class),
-                $this->equalTo([
+                $this->equalTo(array(
                     1 => 0,
                     5 => 2,
                     42 => 1,
-                ])
-            );
+                ))
+            )
+        ;
 
         return $updaterMock;
     }
@@ -128,26 +130,27 @@ class GridPositionUpdaterTest extends TestCase
                 $this->isInstanceOf(PositionDefinitionInterface::class),
                 $this->equalTo(42)
             )
-            ->willReturn([
+            ->willReturn(array(
                 1 => 0,
                 5 => 1,
                 42 => 2,
-            ]);
+            ))
+        ;
 
         $updaterMock
             ->method('updatePositions')
             ->with(
                 $this->isInstanceOf(PositionDefinitionInterface::class),
-                $this->equalTo([
+                $this->equalTo(array(
                     1 => 0,
                     5 => 2,
                     42 => 1,
-                ])
+                ))
             )
             ->willThrowException(new PositionUpdateException(
                 'Could not update #%i',
                 'Admin.Catalog.Notification',
-                [5]
+                array(5)
             ))
         ;
 

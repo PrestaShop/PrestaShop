@@ -51,9 +51,9 @@ class LanguageController extends AbstractAdminController
         $languageGridFactory = $this->get('prestashop.core.grid.factory.language');
         $languageGrid = $languageGridFactory->getGrid($filters);
 
-        return $this->render('@PrestaShop/Admin/Improve/International/Language/index.html.twig', [
+        return $this->render('@PrestaShop/Admin/Improve/International/Language/index.html.twig', array(
             'languageGrid' => $this->presentGrid($languageGrid),
-        ]);
+        ));
     }
 
     /**
@@ -66,9 +66,9 @@ class LanguageController extends AbstractAdminController
     public function createAction(Request $request)
     {
         return $this->redirect(
-            $this->getAdminLink($request->attributes->get('_legacy_controller'), [
+            $this->getAdminLink($request->attributes->get('_legacy_controller'), array(
                 'addlang' => 1,
-            ])
+            ))
         );
     }
 
@@ -83,10 +83,10 @@ class LanguageController extends AbstractAdminController
     public function editAction($languageId, Request $request)
     {
         return $this->redirect(
-            $this->getAdminLink($request->attributes->get('_legacy_controller'), [
+            $this->getAdminLink($request->attributes->get('_legacy_controller'), array(
                 'addlang' => 1,
                 'id_lang' => $languageId,
-            ])
+            ))
         );
     }
 }

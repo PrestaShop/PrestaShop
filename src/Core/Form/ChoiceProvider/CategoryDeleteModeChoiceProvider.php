@@ -57,28 +57,28 @@ final class CategoryDeleteModeChoiceProvider implements FormChoiceProviderInterf
             '%s %s',
             $this->translator->trans(
                 'I want to associate the products without other categories to the parent category, then disable these products for now. I re-enable them when they are moved in their new category.',
-                [],
+                array(),
                 'Admin.Catalog.Notification'
             ),
-            $this->translator->trans('(Recommended)', [], 'Admin.Catalog.Notification')
+            $this->translator->trans('(Recommended)', array(), 'Admin.Catalog.Notification')
         );
 
         $associateOnlyLabel = $this->translator->trans(
             'I want to associate the products without other categories to the parent category, and keep them enabled.',
-            [],
+            array(),
             'Admin.Catalog.Notification'
         );
 
         $deleteProductLabel = $this->translator->trans(
             'I want to remove the products which are listed only within this category and no others.',
-            [],
+            array(),
             'Admin.Catalog.Notification'
         );
 
-        return [
+        return array(
             $associateAndDisableLabel => CategoryDeleteMode::ASSOCIATE_PRODUCTS_WITH_PARENT_AND_DISABLE,
             $associateOnlyLabel => CategoryDeleteMode::ASSOCIATE_PRODUCTS_WITH_PARENT_ONLY,
             $deleteProductLabel => CategoryDeleteMode::REMOVE_ASSOCIATED_PRODUCTS,
-        ];
+        );
     }
 }

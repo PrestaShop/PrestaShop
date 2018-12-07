@@ -87,7 +87,7 @@ final class EnabledLanguagesKpi implements KpiInterface
         $kpi->icon = 'mic';
         $kpi->color = 'color1';
         $kpi->href = $this->clickLink;
-        $kpi->title = $this->translator->trans('Enabled Languages', [], 'Admin.International.Feature');
+        $kpi->title = $this->translator->trans('Enabled Languages', array(), 'Admin.International.Feature');
 
         if (false !== $enabledLanguages) {
             $kpi->value = $enabledLanguages;

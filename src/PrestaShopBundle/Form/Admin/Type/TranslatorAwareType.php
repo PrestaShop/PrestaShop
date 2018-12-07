@@ -59,7 +59,7 @@ abstract class TranslatorAwareType extends CommonAbstractType
      *
      * @returns string
      */
-    protected function trans($key, $domain, $parameters = [])
+    protected function trans($key, $domain, $parameters = array())
     {
         return $this->translator->trans($key, $parameters, $domain);
     }
@@ -71,7 +71,7 @@ abstract class TranslatorAwareType extends CommonAbstractType
      */
     protected function getLocaleChoices()
     {
-        $locales = [];
+        $locales = array();
 
         foreach ($this->locales as $locale) {
             $locales[$locale['name']] = $locale['iso_code'];

@@ -34,7 +34,7 @@ use Symfony\Component\HttpFoundation\ParameterBag;
  */
 abstract class Filters extends ParameterBag implements SearchCriteriaInterface
 {
-    public function __construct(array $filters = [])
+    public function __construct(array $filters = array())
     {
         parent::__construct($filters);
     }
@@ -44,7 +44,7 @@ abstract class Filters extends ParameterBag implements SearchCriteriaInterface
      */
     public static function getDefaults()
     {
-        return [];
+        return array();
     }
 
     /**

@@ -38,7 +38,7 @@ final class DoctrineQueryParser implements QueryParserInterface
      */
     public function parse($query, array $queryParameters)
     {
-        $values = [];
+        $values = array();
         foreach ($queryParameters as $key => $value) {
             if (!is_string($key)) {
                 throw new UnsupportedParameterException('Only named parameters are supported in prepared queries.');

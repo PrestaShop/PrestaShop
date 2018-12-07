@@ -110,20 +110,20 @@ class VersionTest extends TestCase
 
     public function getCompareGreater()
     {
-        return [
-            ['1.2.3.4', false],
-            ['1', true],
-            ['1.2', true],
-            ['1.2.3', true],
-            ['2', false],
-            ['2.0', false],
-            ['1.3', false],
-            ['1.2.4', false],
-            ['1.2.3.5', false],
-            ['1.1', true],
-            ['1.2.2', true],
-            ['1.2.3.3', true],
-        ];
+        return array(
+            array('1.2.3.4', false),
+            array('1', true),
+            array('1.2', true),
+            array('1.2.3', true),
+            array('2', false),
+            array('2.0', false),
+            array('1.3', false),
+            array('1.2.4', false),
+            array('1.2.3.5', false),
+            array('1.1', true),
+            array('1.2.2', true),
+            array('1.2.3.3', true),
+        );
     }
 
     /**
@@ -139,20 +139,20 @@ class VersionTest extends TestCase
 
     public function getCompareGreaterEqual()
     {
-        return [
-            ['1.2.3.4', true],
-            ['1', true],
-            ['1.2', true],
-            ['1.2.3', true],
-            ['2', false],
-            ['2.0', false],
-            ['1.3', false],
-            ['1.2.4', false],
-            ['1.2.3.5', false],
-            ['1.1', true],
-            ['1.2.2', true],
-            ['1.2.3.3', true],
-        ];
+        return array(
+            array('1.2.3.4', true),
+            array('1', true),
+            array('1.2', true),
+            array('1.2.3', true),
+            array('2', false),
+            array('2.0', false),
+            array('1.3', false),
+            array('1.2.4', false),
+            array('1.2.3.5', false),
+            array('1.1', true),
+            array('1.2.2', true),
+            array('1.2.3.3', true),
+        );
     }
 
     /**
@@ -168,20 +168,20 @@ class VersionTest extends TestCase
 
     public function getCompareLess()
     {
-        return [
-            ['1.2.3.4', false],
-            ['1', false],
-            ['1.2', false],
-            ['1.2.3', false],
-            ['2', true],
-            ['2.0', true],
-            ['1.3', true],
-            ['1.2.4', true],
-            ['1.2.3.5', true],
-            ['1.1', false],
-            ['1.2.2', false],
-            ['1.2.3.3', false],
-        ];
+        return array(
+            array('1.2.3.4', false),
+            array('1', false),
+            array('1.2', false),
+            array('1.2.3', false),
+            array('2', true),
+            array('2.0', true),
+            array('1.3', true),
+            array('1.2.4', true),
+            array('1.2.3.5', true),
+            array('1.1', false),
+            array('1.2.2', false),
+            array('1.2.3.3', false),
+        );
     }
 
     /**
@@ -197,9 +197,9 @@ class VersionTest extends TestCase
 
     public function getAnotherCompareGreater()
     {
-        return [
-            ['1.2.0', false],
-        ];
+        return array(
+            array('1.2.0', false),
+        );
     }
 
     /**
@@ -215,20 +215,20 @@ class VersionTest extends TestCase
 
     public function getCompareLessEqual()
     {
-        return [
-            ['1.2.3.4', true],
-            ['1', false],
-            ['1.2', false],
-            ['1.2.3', false],
-            ['2', true],
-            ['2.0', true],
-            ['1.3', true],
-            ['1.2.4', true],
-            ['1.2.3.5', true],
-            ['1.1', false],
-            ['1.2.2', false],
-            ['1.2.3.3', false],
-        ];
+        return array(
+            array('1.2.3.4', true),
+            array('1', false),
+            array('1.2', false),
+            array('1.2.3', false),
+            array('2', true),
+            array('2.0', true),
+            array('1.3', true),
+            array('1.2.4', true),
+            array('1.2.3.5', true),
+            array('1.1', false),
+            array('1.2.2', false),
+            array('1.2.3.3', false),
+        );
     }
 
     /**
@@ -244,20 +244,20 @@ class VersionTest extends TestCase
 
     public function getCompareEqual()
     {
-        return [
-            ['1.2.3.4', true],
-            ['1', false],
-            ['1.2', false],
-            ['1.2.3', false],
-            ['2', false],
-            ['2.0', false],
-            ['1.3', false],
-            ['1.2.4', false],
-            ['1.2.3.5', false],
-            ['1.1', false],
-            ['1.2.2', false],
-            ['1.2.3.3', false],
-        ];
+        return array(
+            array('1.2.3.4', true),
+            array('1', false),
+            array('1.2', false),
+            array('1.2.3', false),
+            array('2', false),
+            array('2.0', false),
+            array('1.3', false),
+            array('1.2.4', false),
+            array('1.2.3.5', false),
+            array('1.1', false),
+            array('1.2.2', false),
+            array('1.2.3.3', false),
+        );
     }
 
     /**
@@ -273,20 +273,20 @@ class VersionTest extends TestCase
 
     public function getCompareNotEqual()
     {
-        return [
-            ['1.2.3.4', false],
-            ['1', true],
-            ['1.2', true],
-            ['1.2.3', true],
-            ['2', true],
-            ['2.0', true],
-            ['1.3', true],
-            ['1.2.4', true],
-            ['1.2.3.5', true],
-            ['1.1', true],
-            ['1.2.2', true],
-            ['1.2.3.3', true],
-        ];
+        return array(
+            array('1.2.3.4', false),
+            array('1', true),
+            array('1.2', true),
+            array('1.2.3', true),
+            array('2', true),
+            array('2.0', true),
+            array('1.3', true),
+            array('1.2.4', true),
+            array('1.2.3.5', true),
+            array('1.1', true),
+            array('1.2.2', true),
+            array('1.2.3.3', true),
+        );
     }
 
     /**
@@ -304,16 +304,16 @@ class VersionTest extends TestCase
 
     public function getInvalidVersions()
     {
-        return [
-            ['1.2.3.1.x'],
-            ['2.x'],
-            ['2   '],
-            [' 1  '],
-            ['11.'],
-            ['.2'],
-            ['1.2-beta'],
-            ['1.2-dev'],
-            ['1.2-rc1'],
-        ];
+        return array(
+            array('1.2.3.1.x'),
+            array('2.x'),
+            array('2   '),
+            array(' 1  '),
+            array('11.'),
+            array('.2'),
+            array('1.2-beta'),
+            array('1.2-dev'),
+            array('1.2-rc1'),
+        );
     }
 }

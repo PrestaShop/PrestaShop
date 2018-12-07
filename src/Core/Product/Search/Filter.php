@@ -45,14 +45,14 @@ class Filter
      */
     private $displayed = true;
 
-    private $properties = [];
+    private $properties = array();
     private $magnitude;
     private $value;
     private $nextEncodedFacets;
 
     public function toArray()
     {
-        return [
+        return array(
             'label' => $this->label,
             'type' => $this->type,
             'active' => $this->active,
@@ -61,7 +61,7 @@ class Filter
             'magnitude' => $this->magnitude,
             'value' => $this->value,
             'nextEncodedFacets' => $this->nextEncodedFacets,
-        ];
+        );
     }
 
     public function setLabel($label)

@@ -62,10 +62,10 @@ final class EmailConfigurationFormDataProvider implements FormDataProviderInterf
      */
     public function getData()
     {
-        return [
+        return array(
             'email_config' => $this->emailDataConfigurator->getConfiguration(),
             'smtp_config' => $this->smtpDataConfigurator->getConfiguration(),
-        ];
+        );
     }
 
     /**
@@ -93,15 +93,15 @@ final class EmailConfigurationFormDataProvider implements FormDataProviderInterf
      */
     private function checkSmtpConfiguration(array $config)
     {
-        $errors = [];
+        $errors = array();
         $isSmtpNotConfigured = empty($config['smtp_config']['server']) || empty($config['smtp_config']['port']);
 
         if (MailOption::METHOD_SMTP === $config['email_config']['mail_method'] && $isSmtpNotConfigured) {
-            $errors[] = [
+            $errors[] = array(
                 'key' => 'You must define an SMTP server and an SMTP port. If you do not know it, use the PHP mail() function instead.',
-                'parameters' => [],
+                'parameters' => array(),
                 'domain' => 'Admin.Shopparameters.Notification',
-            ];
+            );
         }
 
         return $errors;

@@ -43,34 +43,35 @@ class SmartyType extends CommonAbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('template_compilation', ChoiceType::class, [
-                'choices' => [
+            ->add('template_compilation', ChoiceType::class, array(
+                'choices' => array(
                     'Never recompile template files' => 0,
                     'Recompile templates if the files have been updated' => 1,
                     'Force compilation' => 2,
-                ],
+                ),
                 'required' => true,
-            ])
-            ->add('cache', SwitchType::class, [
+            ))
+            ->add('cache', SwitchType::class, array(
                 'required' => true,
-            ])
-            ->add('multi_front_optimization', SwitchType::class, [
+            ))
+            ->add('multi_front_optimization', SwitchType::class, array(
                 'required' => true,
-            ])
-            ->add('caching_type', ChoiceType::class, [
-                'choices' => [
+            ))
+            ->add('caching_type', ChoiceType::class, array(
+                'choices' => array(
                     'File System' => 'filesystem',
                     'MySQL' => 'mysql',
-                ],
+                ),
                 'required' => true,
-            ])
-            ->add('clear_cache', ChoiceType::class, [
-                'choices' => [
+            ))
+            ->add('clear_cache', ChoiceType::class, array(
+                'choices' => array(
                     'Never clear cache files' => 'never',
                     'Clear cache everytime something has been modified' => 'everytime',
-                ],
+                ),
                 'required' => true,
-            ]);
+            ))
+        ;
     }
 
     /**
@@ -78,9 +79,9 @@ class SmartyType extends CommonAbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
+        $resolver->setDefaults(array(
             'translation_domain' => 'Admin.Advparameters.Feature',
-        ]);
+        ));
     }
 
     /**

@@ -95,7 +95,7 @@ final class ImportDataConfigurationFormDataProvider implements ImportFormDataPro
         // Getting the number of cells in the first row
         $rowSize = count($dataRowCollection->offsetGet(0));
 
-        $data = [
+        $data = array(
             'csv' => $importConfig->getFileName(),
             'entity' => $importConfig->getEntityType(),
             'iso_lang' => $importConfig->getLanguageIso(),
@@ -106,8 +106,8 @@ final class ImportDataConfigurationFormDataProvider implements ImportFormDataPro
             'match_ref' => $importConfig->matchReferences(),
             'forceIDs' => $importConfig->forceIds(),
             'sendemail' => $importConfig->sendEmail(),
-            'type_value' => [],
-        ];
+            'type_value' => array(),
+        );
 
         $numberOfValuesAdded = 0;
 
@@ -130,22 +130,22 @@ final class ImportDataConfigurationFormDataProvider implements ImportFormDataPro
      */
     public function setData(array $data)
     {
-        $errors = [];
+        $errors = array();
 
         if (empty($data['match_name'])) {
-            $errors[] = [
+            $errors[] = array(
                 'key' => 'Please name your data matching configuration in order to save it.',
                 'domain' => 'Admin.Advparameters.Feature',
-                'parameters' => [],
-            ];
+                'parameters' => array(),
+            );
         }
 
         if ($this->configurationNameExists($data['match_name'])) {
-            $errors[] = [
+            $errors[] = array(
                 'key' => 'This name already exists.',
                 'domain' => 'Admin.Design.Notification',
-                'parameters' => [],
-            ];
+                'parameters' => array(),
+            );
         }
 
         if (empty($errors)) {

@@ -50,16 +50,16 @@ final class BadgeColumn extends AbstractColumn
         parent::configureOptions($resolver);
 
         $resolver
-            ->setRequired([
+            ->setRequired(array(
                 'field',
-            ])
-            ->setDefaults([
+            ))
+            ->setDefaults(array(
                 'badge_type' => 'success',
                 'empty_value' => '',
-            ])
+            ))
             ->setAllowedTypes('field', 'string')
             ->setAllowedTypes('empty_value', 'string')
-            ->setAllowedValues('badge_type', ['success', 'info', 'danger', 'warning'])
+            ->setAllowedValues('badge_type', array('success', 'info', 'danger', 'warning'))
         ;
     }
 }

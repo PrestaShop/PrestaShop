@@ -80,13 +80,13 @@ class SqlRequestFormDataProvider
             /** @var EditableSqlRequest $editableRequestSql */
             $editableRequestSql = $this->queryBus->handle($getRequestSqlForEditingQuery);
 
-            return [
+            return array(
                 'id' => $editableRequestSql->getSqlRequestId()->getValue(),
                 'name' => $editableRequestSql->getName(),
                 'sql' => $editableRequestSql->getSql(),
-            ];
+            );
         } catch (SqlRequestException $e) {
-            return [];
+            return array();
         }
     }
 
@@ -99,7 +99,7 @@ class SqlRequestFormDataProvider
      */
     public function saveData(array $requestSqlData)
     {
-        $errors = [];
+        $errors = array();
 
         try {
             $command = isset($requestSqlData['id']) ?
@@ -140,7 +140,8 @@ class SqlRequestFormDataProvider
     {
         return (new EditSqlRequestCommand(new SqlRequestId($requestSqlData['id'])))
             ->setName($requestSqlData['name'])
-            ->setSql($requestSqlData['sql']);
+            ->setSql($requestSqlData['sql'])
+        ;
     }
 
     /**
@@ -170,29 +171,29 @@ class SqlRequestFormDataProvider
      */
     private function getConstraintError(SqlRequestConstraintException $e)
     {
-        $invalidFieldDictionary = [
+        $invalidFieldDictionary = array(
             SqlRequestConstraintException::INVALID_NAME => 'name',
             SqlRequestConstraintException::INVALID_SQL_QUERY => 'sql',
             SqlRequestConstraintException::MALFORMED_SQL_QUERY => 'sql',
-        ];
+        );
 
         $code = $e->getCode();
 
         if (isset($invalidFieldDictionary[$code])) {
-            return [
+            return array(
                 'key' => 'The %s field is invalid.',
-                'parameters' => [
+                'parameters' => array(
                     $invalidFieldDictionary[$code],
-                ],
+                ),
                 'domain' => 'Admin.Notifications.Error',
-            ];
+            );
         }
 
-        return [
+        return array(
             'key' => 'Invalid data supplied.',
-            'parameters' => [],
+            'parameters' => array(),
             'domain' => 'Admin.Notifications.Error',
-        ];
+        );
     }
 
     /**
@@ -204,23 +205,23 @@ class SqlRequestFormDataProvider
      */
     private function getErrorByExceptionType(SqlRequestException $e)
     {
-        $exceptionDictionary = [
-            SqlRequestNotFoundException::class => [
+        $exceptionDictionary = array(
+            SqlRequestNotFoundException::class => array(
                 'key' => 'The object cannot be loaded (or found)',
-                'parameters' => [],
+                'parameters' => array(),
                 'domain' => 'Admin.Notifications.Error',
-            ],
-            CannotAddSqlRequestException::class => [
+            ),
+            CannotAddSqlRequestException::class => array(
                 'key' => 'An error occurred while creating an object.',
-                'parameters' => [],
+                'parameters' => array(),
                 'domain' => 'Admin.Notifications.Error',
-            ],
-            CannotEditSqlRequestException::class => [
+            ),
+            CannotEditSqlRequestException::class => array(
                 'key' => 'An error occurred while updating an object.',
-                'parameters' => [],
+                'parameters' => array(),
                 'domain' => 'Admin.Notifications.Error',
-            ],
-        ];
+            ),
+        );
 
         $exceptionType = get_class($e);
 
@@ -228,10 +229,10 @@ class SqlRequestFormDataProvider
             return $exceptionDictionary[$exceptionType];
         }
 
-        return [
+        return array(
             'key' => 'Unexpected error occurred.',
-            'parameters' => [],
+            'parameters' => array(),
             'domain' => 'Admin.Notifications.Error',
-        ];
+        );
     }
 }

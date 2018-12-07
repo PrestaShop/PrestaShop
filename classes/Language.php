@@ -162,7 +162,8 @@ class LanguageCore extends ObjectModel
 
         $themes = (new ThemeManagerBuilder($this->context, Db::getInstance()))
                         ->buildRepository()
-                        ->getList();
+                        ->getList()
+        ;
         foreach ($themes as $theme) {
             /* @var Theme $theme */
             $theme_dir = $theme->getDirectory();
@@ -193,7 +194,8 @@ class LanguageCore extends ObjectModel
                 ->setIsInstall(defined('PS_INSTALLATION_IN_PROGRESS'))
                 ->setProcessBOTheme(true)
                 ->setProcessDefaultModules(true)
-                ->process();
+                ->process()
+            ;
         }
 
         if ($only_add) {
@@ -217,7 +219,8 @@ class LanguageCore extends ObjectModel
             self::getRtlStylesheetProcessor()
                 ->setProcessBOTheme(true)
                 ->setProcessDefaultModules(true)
-                ->process();
+                ->process()
+            ;
         }
 
         return true;
@@ -454,7 +457,7 @@ class LanguageCore extends ObjectModel
         preg_match('#^' . preg_quote(_DB_PREFIX_) . '(.+)_lang$#i', $tableName, $m);
         $identifier = 'id_' . $m[1];
 
-        $fields = [];
+        $fields = array();
         // We will check if the table contains a column "id_shop"
         // If yes, we will add "id_shop" as a WHERE condition in queries copying data from default language
         $shop_field_exists = $primary_key_exists = false;
@@ -478,7 +481,7 @@ class LanguageCore extends ObjectModel
 
         // For each column, copy data from default language
         reset($columns);
-        $selectQueries = [];
+        $selectQueries = array();
         foreach ($columns as $column) {
             if ($identifier != $column['Field'] && $column['Field'] != 'id_lang') {
                 $selectQueries[] = '(

@@ -87,7 +87,8 @@ class AdminTranslationsControllerCore extends AdminController
 
         $this->themes = (new ThemeManagerBuilder($this->context, Db::getInstance()))
                             ->buildRepository()
-                            ->getList();
+                            ->getList()
+        ;
     }
 
     /*
@@ -132,7 +133,8 @@ class AdminTranslationsControllerCore extends AdminController
     public function initForm($method_name)
     {
         // Create a title for each translation page
-        $title = $this->trans('%1$s (Language: %2$s, Theme: %3$s)',
+        $title = $this->trans(
+            '%1$s (Language: %2$s, Theme: %3$s)',
                 array(
                     '%1$s' => (empty($this->translations_informations[$this->type_selected]['name']) ? false : $this->translations_informations[$this->type_selected]['name']),
                     '%2$s' => $this->lang_selected->name,
@@ -1902,10 +1904,10 @@ class AdminTranslationsControllerCore extends AdminController
         $files_per_directory = $this->getFileToParseByTypeTranslation();
 
         //Parse SF2 php files
-        $regexSf2Php = [
+        $regexSf2Php = array(
             '/->trans\(([\'\"])' . _PS_TRANS_PATTERN_ . '([\'\"])(,\s*?[\[|array\(](.*)[\]|\)])(,\s*?([\'\"])(.*)([\'\"]))?\)/Us',
             '/->transchoice\(([\'\"])' . _PS_TRANS_PATTERN_ . '([\'\"])(,\s*?(.*))(,\s*?[\[|array\(](.*)[\]|\)])(,\s*?([\'\"])(.*)([\'\"]))?\)/Us',
-        ];
+        );
 
         foreach ($files_per_directory['php-sf2'] as $dir => $files) {
             foreach ($files as $file) {
@@ -1944,10 +1946,10 @@ class AdminTranslationsControllerCore extends AdminController
         }
 
         //Parse SF2/Twig files
-        $regexSf2Tpl = [
+        $regexSf2Tpl = array(
             '/trans\(([\'\"])' . _PS_TRANS_PATTERN_ . '([\'\"])(,\s*?[\{\[](.*)[\}\]])(,\s*?([\'\"])(.*)([\'\"]))?\)/Us',
             '/transchoice\(([\'\"])' . _PS_TRANS_PATTERN_ . '([\'\"])(,\s*?(.*))(,\s*?[\{\[](.*)[\}\]])(,\s*?([\'\"])(.*)([\'\"]))?\)/Us',
-        ];
+        );
 
         foreach ($files_per_directory['tpl-sf2'] as $file) {
             // Get content for this file
@@ -2436,9 +2438,11 @@ class AdminTranslationsControllerCore extends AdminController
                 }
             }
         } else {
-            $this->warnings[] = $this->trans('A mail directory exists for the "%iso_code%" language, but not for the default language (%language%) in %folder%',
+            $this->warnings[] = $this->trans(
+                'A mail directory exists for the "%iso_code%" language, but not for the default language (%language%) in %folder%',
                 array('%iso_code%' => $this->lang_selected->iso_code, '%folder%' => str_replace(_PS_ROOT_DIR_, '', dirname($dir)), '%language%' => $default_language),
-                'Admin.International.Notification');
+                'Admin.International.Notification'
+            );
         }
 
         return $arr_return;

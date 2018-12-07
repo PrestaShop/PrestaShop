@@ -45,13 +45,17 @@ class Cart extends CartCore
 
     public function deleteProduct($id_product, $id_product_attribute = null, $id_customization = null, $id_address_delivery = 0)
     {
-        $result = Hook::exec('ppbsDeleteCartProduct', array(
+        $result = Hook::exec(
+            'ppbsDeleteCartProduct',
+            array(
                 'id_product' => $id_product,
                 'id_product_attribute' => $id_product_attribute,
                 'id_customization' => $id_customization,
                 'id_address_delivery' => $id_address_delivery,
             ),
-            null, false);
+            null,
+            false
+        );
         if ($result == false) {
             parent::deleteProduct($id_product, $id_product_attribute = null, $id_customization = null, $id_address_delivery = 0);
         }
@@ -62,14 +66,14 @@ class Cart extends CartCore
         $products = parent::getProducts($refresh, $id_product, $id_country);
 
         if (_PS_VERSION_ >= 1.6) {
-            $params = Hook::exec('ppbsGetProducts', array('products'=>$products), null, true);
+            $params = Hook::exec('ppbsGetProducts', array('products' => $products), null, true);
             if (isset($params['productpricebysize']['products'])) {
                 return $params['productpricebysize']['products'];
             } else {
                 return $products;
             }
         } else {
-            $params = Hook::exec('ppbsGetProducts', array('products'=>$products), null);
+            $params = Hook::exec('ppbsGetProducts', array('products' => $products), null);
             $params = json_decode($params, true);
             if (isset($params['products'])) {
                 return $params['products'];

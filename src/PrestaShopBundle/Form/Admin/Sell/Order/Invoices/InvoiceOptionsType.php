@@ -82,31 +82,31 @@ class InvoiceOptionsType extends TranslatorAwareType
             ->add('enable_invoices', SwitchType::class)
             ->add('enable_tax_breakdown', SwitchType::class)
             ->add('enable_product_images', SwitchType::class)
-            ->add('invoice_prefix', TranslatableType::class, [
+            ->add('invoice_prefix', TranslatableType::class, array(
                 'type' => TextType::class,
-            ])
+            ))
             ->add('add_current_year', SwitchType::class)
             ->add('reset_number_annually', SwitchType::class)
-            ->add('year_position', ChoiceType::class, [
-                'choices' => [
+            ->add('year_position', ChoiceType::class, array(
+                'choices' => array(
                     $this->trans('After the sequential number', 'Admin.Orderscustomers.Feature') => 0,
                     $this->trans('Before the sequential number', 'Admin.Orderscustomers.Feature') => 1,
-                ],
+                ),
                 'expanded' => true,
-            ])
-            ->add('invoice_number', NumberType::class, [
+            ))
+            ->add('invoice_number', NumberType::class, array(
                 'required' => false,
-            ])
-            ->add('legal_free_text', TranslatableType::class, [
+            ))
+            ->add('legal_free_text', TranslatableType::class, array(
                 'type' => TextareaType::class,
-            ])
-            ->add('footer_text', TranslatableType::class, [
+            ))
+            ->add('footer_text', TranslatableType::class, array(
                 'type' => TextType::class,
-            ])
-            ->add('invoice_model', ChoiceType::class, [
+            ))
+            ->add('invoice_model', ChoiceType::class, array(
                 'choices' => $this->invoiceModelChoiceProvider->getChoices(),
                 'translation_domain' => false,
-            ])
+            ))
             ->add('use_disk_cache', SwitchType::class)
         ;
     }
@@ -124,8 +124,8 @@ class InvoiceOptionsType extends TranslatorAwareType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
+        $resolver->setDefaults(array(
             'translation_domain' => 'Admin.Orderscustomers.Feature',
-        ]);
+        ));
     }
 }

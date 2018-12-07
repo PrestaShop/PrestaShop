@@ -37,10 +37,10 @@ class Ps_FeaturedProducts extends Module
         $this->version = '1.0.0';
         $this->author = 'PrestaShop';
         $this->need_instance = 0;
-        $this->ps_versions_compliancy = [
+        $this->ps_versions_compliancy = array(
             'min' => '1.7',
             'max' => _PS_VERSION_,
-        ];
+        );
 
         $this->bootstrap = true;
 

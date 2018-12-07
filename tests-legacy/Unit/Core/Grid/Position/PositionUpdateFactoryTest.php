@@ -41,9 +41,9 @@ class PositionUpdateFactoryTest extends TestCase
     public function testHandleData()
     {
         $definition = $this->getDefinition();
-        $data = ['positions' => [
-            ['rowId' => 1, 'oldPosition' => 1, 'newPosition' => 2]
-        ]];
+        $data = array('positions' => array(
+            array('rowId' => 1, 'oldPosition' => 1, 'newPosition' => 2)
+        ));
 
         $positionUpdateFactory = $this->getPositionUpdateFactory();
         $positionUpdate = $positionUpdateFactory->buildPositionUpdate($data, $definition);
@@ -62,12 +62,12 @@ class PositionUpdateFactoryTest extends TestCase
     public function testHandleDataWithParent()
     {
         $definition = $this->getDefinitionWithParent();
-        $data = [
-            'positions' => [
-                ['rowId' => 1, 'oldPosition' => 1, 'newPosition' => 2],
-            ],
+        $data = array(
+            'positions' => array(
+                array('rowId' => 1, 'oldPosition' => 1, 'newPosition' => 2),
+            ),
             'parentId' => 42,
-        ];
+        );
 
         $positionUpdateFactory = $this->getPositionUpdateFactory();
         $positionUpdate = $positionUpdateFactory->buildPositionUpdate($data, $definition);
@@ -85,38 +85,38 @@ class PositionUpdateFactoryTest extends TestCase
 
     public function testDataPositionsValidation()
     {
-        $this->checkDataValidation([], 'Missing positions in your data.');
+        $this->checkDataValidation(array(), 'Missing positions in your data.');
     }
 
     public function testDataEmptyPositionValidation()
     {
-        $this->checkDataValidation(['positions' => []], 'Missing positions in your data.');
+        $this->checkDataValidation(array('positions' => array()), 'Missing positions in your data.');
     }
 
     public function testDataPositionValidation()
     {
-        $data = ['positions' => [
-            ['row' => 1]
-        ]];
-        $this->checkDataValidation($data, PositionUpdateFactory::POSITION_KEY, [0, 'rowId']);
+        $data = array('positions' => array(
+            array('row' => 1)
+        ));
+        $this->checkDataValidation($data, PositionUpdateFactory::POSITION_KEY, array(0, 'rowId'));
 
-        $data = ['positions' => [
-            ['rowId' => 1]
-        ]];
-        $this->checkDataValidation($data, PositionUpdateFactory::POSITION_KEY, [0, 'oldPosition']);
+        $data = array('positions' => array(
+            array('rowId' => 1)
+        ));
+        $this->checkDataValidation($data, PositionUpdateFactory::POSITION_KEY, array(0, 'oldPosition'));
 
-        $data = ['positions' => [
-            ['rowId' => 1, 'oldPosition' => 1]
-        ]];
-        $this->checkDataValidation($data, PositionUpdateFactory::POSITION_KEY, [0, 'newPosition']);
+        $data = array('positions' => array(
+            array('rowId' => 1, 'oldPosition' => 1)
+        ));
+        $this->checkDataValidation($data, PositionUpdateFactory::POSITION_KEY, array(0, 'newPosition'));
     }
 
     public function testDataParentIdValidation()
     {
         $definition = $this->getDefinitionWithParent();
-        $data = ['positions' => [
-            ['rowId' => 1, 'oldPosition' => 1, 'newPosition' => 1]
-        ]];
+        $data = array('positions' => array(
+            array('rowId' => 1, 'oldPosition' => 1, 'newPosition' => 1)
+        ));
         $this->checkDataValidation($data, 'Missing parentId in your data.', null, $definition);
     }
 

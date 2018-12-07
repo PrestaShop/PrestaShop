@@ -61,64 +61,65 @@ class ProductCombinationBulk extends CommonAbstractType
         $this->priceDisplayPrecision = $options['price_display_precision'];
 
         if ($is_stock_management) {
-            $builder->add('quantity', NumberType::class, [
+            $builder->add('quantity', NumberType::class, array(
                 'required' => true,
-                'label' => $this->translator->trans('Quantity', [], 'Admin.Catalog.Feature'),
-            ]);
+                'label' => $this->translator->trans('Quantity', array(), 'Admin.Catalog.Feature'),
+            ));
         }
 
-        $builder->add('cost_price', MoneyType::class, [
+        $builder->add('cost_price', MoneyType::class, array(
             'required' => false,
-            'label' => $this->translator->trans('Cost Price', [], 'Admin.Catalog.Feature'),
-            'attr' => ['data-display-price-precision' => self::PRESTASHOP_DECIMALS],
+            'label' => $this->translator->trans('Cost Price', array(), 'Admin.Catalog.Feature'),
+            'attr' => array('data-display-price-precision' => self::PRESTASHOP_DECIMALS),
             'currency' => $this->isoCode,
-        ])
-            ->add('impact_on_weight', NumberType::class, [
+        ))
+            ->add('impact_on_weight', NumberType::class, array(
                 'required' => false,
-                'label' => $this->translator->trans('Impact on weight', [], 'Admin.Catalog.Feature'),
-            ])
-            ->add('impact_on_price_te', MoneyType::class, [
+                'label' => $this->translator->trans('Impact on weight', array(), 'Admin.Catalog.Feature'),
+            ))
+            ->add('impact_on_price_te', MoneyType::class, array(
                 'required' => false,
-                'label' => $this->translator->trans('Impact on price (tax excl.)', [], 'Admin.Catalog.Feature'),
+                'label' => $this->translator->trans('Impact on price (tax excl.)', array(), 'Admin.Catalog.Feature'),
                 'currency' => $this->isoCode,
-            ])
-            ->add('impact_on_price_ti', MoneyType::class, [
+            ))
+            ->add('impact_on_price_ti', MoneyType::class, array(
                 'required' => false,
                 'mapped' => false,
-                'label' => $this->translator->trans('Impact on price (tax incl.)', [], 'Admin.Catalog.Feature'),
+                'label' => $this->translator->trans('Impact on price (tax incl.)', array(), 'Admin.Catalog.Feature'),
                 'currency' => $this->isoCode,
-            ])
-            ->add('date_availability', DatePickerType::class, [
+            ))
+            ->add('date_availability', DatePickerType::class, array(
                 'required' => false,
-                'label' => $this->translator->trans('Availability date', [], 'Admin.Catalog.Feature'),
-                'attr' => ['class' => 'date', 'placeholder' => 'YYYY-MM-DD'],
-            ])
-            ->add('reference', TextType::class, [
+                'label' => $this->translator->trans('Availability date', array(), 'Admin.Catalog.Feature'),
+                'attr' => array('class' => 'date', 'placeholder' => 'YYYY-MM-DD'),
+            ))
+            ->add('reference', TextType::class, array(
                 'required' => false,
-                'label' => $this->translator->trans('Reference', [], 'Admin.Catalog.Feature'),
+                'label' => $this->translator->trans('Reference', array(), 'Admin.Catalog.Feature'),
                 'empty_data' => '',
-            ])
-            ->add('minimal_quantity', NumberType::class, [
+            ))
+            ->add('minimal_quantity', NumberType::class, array(
                 'required' => false,
-                'label' => $this->translator->trans('Minimum quantity', [], 'Admin.Catalog.Feature'),
-            ])
-            ->add('low_stock_threshold', NumberType::class, [
+                'label' => $this->translator->trans('Minimum quantity', array(), 'Admin.Catalog.Feature'),
+            ))
+            ->add('low_stock_threshold', NumberType::class, array(
                 'required' => false,
-                'label' => $this->translator->trans('Low stock level', [], 'Admin.Catalog.Feature'),
-            ])
-            ->add('low_stock_alert', CheckboxType::class, [
+                'label' => $this->translator->trans('Low stock level', array(), 'Admin.Catalog.Feature'),
+            ))
+            ->add('low_stock_alert', CheckboxType::class, array(
                 'required' => false,
-                'label' => $this->translator->trans('Send me an email when the quantity is below or equals this level', [], 'Admin.Catalog.Feature'),
-            ]);
+                'label' => $this->translator->trans('Send me an email when the quantity is below or equals this level', array(), 'Admin.Catalog.Feature'),
+            ))
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
+        $resolver->setDefaults(array(
             'validation_groups' => false,
             'iso_code' => '',
             'price_display_precision' => '',
-        ]);
+        ));
     }
 
     public function getBlockPrefix()

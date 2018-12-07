@@ -62,15 +62,15 @@ final class PositionModificationCollection extends AbstractCollection implements
      */
     public function toArray()
     {
-        $positionModifications = [];
+        $positionModifications = array();
 
         /** @var PositionModificationInterface $item */
         foreach ($this->items as $item) {
-            $positionModifications[] = [
+            $positionModifications[] = array(
                 'id' => $item->getId(),
                 'oldPosition' => $item->getOldPosition(),
                 'newPosition' => $item->getNewPosition(),
-            ];
+            );
         }
 
         return $positionModifications;

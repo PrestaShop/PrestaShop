@@ -48,7 +48,7 @@ class HookDispatcher extends EventDispatcher implements HookDispatcherInterface
     /**
      * @var array
      */
-    private $renderingContent = [];
+    private $renderingContent = array();
 
     /**
      * @var bool
@@ -129,7 +129,7 @@ class HookDispatcher extends EventDispatcher implements HookDispatcherInterface
         }
         if ($event instanceof RenderingHookEvent) {
             $event->setContent($this->renderingContent);
-            $this->renderingContent = [];
+            $this->renderingContent = array();
         }
     }
 
@@ -143,7 +143,7 @@ class HookDispatcher extends EventDispatcher implements HookDispatcherInterface
      *
      * @throws \Exception
      */
-    public function dispatchForParameters($eventName, array $parameters = [])
+    public function dispatchForParameters($eventName, array $parameters = array())
     {
         $event = new HookEvent();
         $event->setHookParameters($parameters);
@@ -161,7 +161,7 @@ class HookDispatcher extends EventDispatcher implements HookDispatcherInterface
      *
      * @throws \Exception
      */
-    public function renderForParameters($eventName, array $parameters = [])
+    public function renderForParameters($eventName, array $parameters = array())
     {
         $event = new RenderingHookEvent();
         $event->setHookParameters($parameters);
@@ -172,7 +172,7 @@ class HookDispatcher extends EventDispatcher implements HookDispatcherInterface
     /**
      * {@inheritdoc}
      */
-    public function dispatchWithParameters($hookName, array $hookParameters = [])
+    public function dispatchWithParameters($hookName, array $hookParameters = array())
     {
         $this->dispatch(new Hook($hookName, $hookParameters));
     }
@@ -193,7 +193,7 @@ class HookDispatcher extends EventDispatcher implements HookDispatcherInterface
     /**
      * {@inheritdoc}
      */
-    public function dispatchRenderingWithParameters($hookName, array $hookParameters = [])
+    public function dispatchRenderingWithParameters($hookName, array $hookParameters = array())
     {
         return $this->dispatchRendering(new Hook($hookName, $hookParameters));
     }

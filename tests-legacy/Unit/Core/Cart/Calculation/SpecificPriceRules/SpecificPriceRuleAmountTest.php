@@ -29,11 +29,11 @@ namespace LegacyTests\Unit\Core\Cart\Calculation\SpecificPriceRules;
 class SpecificPriceRuleAmountTest extends AbstractSpecificPriceRuleTest
 {
 
-    const SPECIFIC_PRICE_RULES_FIXTURES = [
-        1 => ['reductionType' => 'amount', 'reduction' => 1, 'fromQuantity' => 1],
-        2 => ['reductionType' => 'amount', 'reduction' => 3, 'fromQuantity' => 2],
-        3 => ['reductionType' => 'amount', 'reduction' => 300, 'fromQuantity' => 2],
-    ];
+    const SPECIFIC_PRICE_RULES_FIXTURES = array(
+        1 => array('reductionType' => 'amount', 'reduction' => 1, 'fromQuantity' => 1),
+        2 => array('reductionType' => 'amount', 'reduction' => 3, 'fromQuantity' => 2),
+        3 => array('reductionType' => 'amount', 'reduction' => 300, 'fromQuantity' => 2),
+    );
 
     /**
      * @dataProvider specificPriceRuleAmountProvider
@@ -63,88 +63,88 @@ class SpecificPriceRuleAmountTest extends AbstractSpecificPriceRuleTest
 
     public function specificPriceRuleAmountProvider()
     {
-        return [
-            '1 product in cart, quantity 1, one rule amount from quantity 1'                                  => [
-                'products'             => [
+        return array(
+            '1 product in cart, quantity 1, one rule amount from quantity 1' => array(
+                'products' => array(
                     1 => 1,
-                ],
-                'expectedTotal'        => static::PRODUCT_FIXTURES[1]['price']
+                ),
+                'expectedTotal' => static::PRODUCT_FIXTURES[1]['price']
                                           - static::SPECIFIC_PRICE_RULES_FIXTURES[1]['reduction']
                                           + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
-                'cartRules'            => [],
-                'specificCartRuleData' => [1],
-            ],
-            '1 product in cart, quantity 1, one rule amount from quantity 2'                                  => [
-                'products'             => [
+                'cartRules' => array(),
+                'specificCartRuleData' => array(1),
+            ),
+            '1 product in cart, quantity 1, one rule amount from quantity 2' => array(
+                'products' => array(
                     1 => 1,
-                ],
-                'expectedTotal'        => static::PRODUCT_FIXTURES[1]['price']
+                ),
+                'expectedTotal' => static::PRODUCT_FIXTURES[1]['price']
                                           + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
-                'cartRules'            => [],
-                'specificCartRuleData' => [2],
-            ],
-            '1 product in cart, quantity 3, one rule amount from quantity 1'                                  => [
-                'products'             => [
+                'cartRules' => array(),
+                'specificCartRuleData' => array(2),
+            ),
+            '1 product in cart, quantity 3, one rule amount from quantity 1' => array(
+                'products' => array(
                     1 => 3,
-                ],
-                'expectedTotal'        => 3 * static::PRODUCT_FIXTURES[1]['price']
+                ),
+                'expectedTotal' => 3 * static::PRODUCT_FIXTURES[1]['price']
                                           - 3 * static::SPECIFIC_PRICE_RULES_FIXTURES[1]['reduction']
                                           + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
-                'cartRules'            => [],
-                'specificCartRuleData' => [1],
-            ],
-            '1 product in cart, quantity 3, one rule amount from quantity 2'                                  => [
-                'products'             => [
+                'cartRules' => array(),
+                'specificCartRuleData' => array(1),
+            ),
+            '1 product in cart, quantity 3, one rule amount from quantity 2' => array(
+                'products' => array(
                     1 => 3,
-                ],
-                'expectedTotal'        => 3 * static::PRODUCT_FIXTURES[1]['price']
+                ),
+                'expectedTotal' => 3 * static::PRODUCT_FIXTURES[1]['price']
                                           - 3 * static::SPECIFIC_PRICE_RULES_FIXTURES[2]['reduction']
                                           + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
-                'cartRules'            => [],
-                'specificCartRuleData' => [2],
-            ],
-            '3 products in cart, several quantities, one rule amount from quantity 1'                         => [
-                'products'             => [
+                'cartRules' => array(),
+                'specificCartRuleData' => array(2),
+            ),
+            '3 products in cart, several quantities, one rule amount from quantity 1' => array(
+                'products' => array(
                     2 => 2,
                     1 => 3,
                     3 => 1,
-                ],
-                'expectedTotal'        => 3 * static::PRODUCT_FIXTURES[1]['price']
+                ),
+                'expectedTotal' => 3 * static::PRODUCT_FIXTURES[1]['price']
                                           - 3 * static::SPECIFIC_PRICE_RULES_FIXTURES[1]['reduction']
                                           + 2 * static::PRODUCT_FIXTURES[2]['price']
                                           - 2 * static::SPECIFIC_PRICE_RULES_FIXTURES[1]['reduction']
                                           + static::PRODUCT_FIXTURES[3]['price']
                                           - static::SPECIFIC_PRICE_RULES_FIXTURES[1]['reduction']
                                           + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
-                'cartRules'            => [],
-                'specificCartRuleData' => [1],
-            ],
-            '3 products in cart, several quantities, one rule amount from quantity 2'                         => [
-                'products'             => [
+                'cartRules' => array(),
+                'specificCartRuleData' => array(1),
+            ),
+            '3 products in cart, several quantities, one rule amount from quantity 2' => array(
+                'products' => array(
                     2 => 2,
                     1 => 3,
                     3 => 1,
-                ],
-                'expectedTotal'        => 3 * static::PRODUCT_FIXTURES[1]['price']
+                ),
+                'expectedTotal' => 3 * static::PRODUCT_FIXTURES[1]['price']
                                           - 3 * static::SPECIFIC_PRICE_RULES_FIXTURES[2]['reduction']
                                           + 2 * static::PRODUCT_FIXTURES[2]['price']
                                           - 2 * static::SPECIFIC_PRICE_RULES_FIXTURES[2]['reduction']
                                           + static::PRODUCT_FIXTURES[3]['price']
                                           + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
-                'cartRules'            => [],
-                'specificCartRuleData' => [2],
-            ],
-            '3 products in cart, several quantities, one rule amount from quantity 2, exceeding product price' => [
-                'products'             => [
+                'cartRules' => array(),
+                'specificCartRuleData' => array(2),
+            ),
+            '3 products in cart, several quantities, one rule amount from quantity 2, exceeding product price' => array(
+                'products' => array(
                     2 => 2,
                     1 => 3,
                     3 => 1,
-                ],
-                'expectedTotal'        => static::PRODUCT_FIXTURES[3]['price']
+                ),
+                'expectedTotal' => static::PRODUCT_FIXTURES[3]['price']
                                           + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
-                'cartRules'            => [],
-                'specificCartRuleData' => [3],
-            ],
-        ];
+                'cartRules' => array(),
+                'specificCartRuleData' => array(3),
+            ),
+        );
     }
 }

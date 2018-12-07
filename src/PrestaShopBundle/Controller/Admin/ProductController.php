@@ -156,10 +156,10 @@ class ProductController extends FrameworkBundleAdminController
 
             return $this->render(
                 '@PrestaShop/Admin/Product/CatalogPage/catalog_empty.html.twig',
-                [
+                array(
                     'layoutHeaderToolbarBtn' => $toolbarButtons,
                     'import_url' => $legacyUrlGenerator->generate('AdminImport'),
-                ]
+                )
             );
         } else {
             // Pagination
@@ -168,11 +168,11 @@ class ProductController extends FrameworkBundleAdminController
             $categoriesForm = $this->createForm(ProductCategories::class);
             if (!empty($persistedFilterParameters['filter_category'])) {
                 $categoriesForm->setData(
-                    [
-                        'categories' => [
-                            'tree' => [0 => $persistedFilterParameters['filter_category']],
-                        ],
-                    ]
+                    array(
+                        'categories' => array(
+                            'tree' => array(0 => $persistedFilterParameters['filter_category']),
+                        ),
+                    )
                 );
             }
         }
@@ -189,7 +189,7 @@ class ProductController extends FrameworkBundleAdminController
         // Template vars injection
         return array_merge(
             $cleanFilterParameters,
-            [
+            array(
                 'limit' => $limit,
                 'offset' => $offset,
                 'orderBy' => $orderBy,
@@ -206,14 +206,14 @@ class ProductController extends FrameworkBundleAdminController
                 'layoutHeaderToolbarBtn' => $toolbarButtons,
                 'categories' => $categoriesForm->createView(),
                 'pagination_limit_choices' => $productProvider->getPaginationLimitChoices(),
-                'import_link' => $this->generateUrl('admin_import', ['import_type' => 'products']),
+                'import_link' => $this->generateUrl('admin_import', array('import_type' => 'products')),
                 'sql_manager_add_link' => $this->generateUrl('admin_sql_requests_create'),
                 'enableSidebar' => true,
                 'help_link' => $this->generateSidebarLink('AdminProducts'),
                 'is_shop_context' => $this->get('prestashop.adapter.shop.context')->isShopContext(),
                 'permission_error' => $permissionError,
                 'layoutTitle' => $this->trans('Products', 'Admin.Global'),
-            ]
+            )
         );
     }
 
@@ -279,14 +279,14 @@ class ProductController extends FrameworkBundleAdminController
             $totalCount = isset($product['total']) ? $product['total'] : $totalCount;
             $product['url'] = $this->generateUrl(
                 'admin_product_form',
-                ['id' => $product['id_product']]
+                array('id' => $product['id_product'])
             );
             $product['unit_action_url'] = $this->generateUrl(
                 'admin_product_unit_action',
-                [
+                array(
                     'action' => 'duplicate',
                     'id' => $product['id_product'],
-                ]
+                )
             );
             $product['preview_url'] = $adminProductWrapper->getPreviewUrlFromId($product['id_product']);
         }
@@ -302,11 +302,11 @@ class ProductController extends FrameworkBundleAdminController
             'is_shop_context' => $this->get('prestashop.adapter.shop.context')->isShopContext(),
         );
         if ($view !== 'full') {
-            return $this->render('@Product/CatalogPage/Lists/list_' . $view . '.html.twig', array_merge($vars, [
+            return $this->render('@Product/CatalogPage/Lists/list_' . $view . '.html.twig', array_merge($vars, array(
                 'limit' => $limit,
                 'offset' => $offset,
                 'total' => $totalCount,
-            ]));
+            )));
         }
 
         return $vars;
@@ -372,9 +372,9 @@ class ProductController extends FrameworkBundleAdminController
         }
 
         $product->save();
-        $product->addToCategories([$productShopCategory]);
+        $product->addToCategories(array($productShopCategory));
 
-        return $this->redirectToRoute('admin_product_form', ['id' => $product->id]);
+        return $this->redirectToRoute('admin_product_form', array('id' => $product->id));
     }
 
     /**
@@ -416,18 +416,18 @@ class ProductController extends FrameworkBundleAdminController
         $formBulkCombinations = $this->createForm(
             ProductCombinationBulk::class,
             null,
-            [
+            array(
                 'iso_code' => $this
                     ->get('prestashop.adapter.legacy.context')
                     ->getContext()->currency->iso_code,
                 'price_display_precision' => $this->configuration
                     ->get('_PS_PRICE_DISPLAY_PRECISION_'),
-            ]
+            )
         );
 
         // Legacy code. To fix when Object model will change. But report Hooks.
         $postData = $request->request->all();
-        $combinationsList = [];
+        $combinationsList = array();
         if (!empty($postData)) {
             foreach ($postData as $postKey => $postValue) {
                 if (preg_match('/^combination_.*/', $postKey)) {
@@ -458,7 +458,7 @@ class ProductController extends FrameworkBundleAdminController
                     $errorMessage = $this->getDemoModeErrorMessage();
 
                     return $this->returnErrorJsonResponse(
-                        ['error' => [$errorMessage]],
+                        array('error' => array($errorMessage)),
                         Response::HTTP_SERVICE_UNAVAILABLE
                     );
                 }
@@ -481,7 +481,7 @@ class ProductController extends FrameworkBundleAdminController
 
                     if (false == $productSaveResult) {
                         return $this->returnErrorJsonResponse(
-                            ['error' => $adminProductController->errors],
+                            array('error' => $adminProductController->errors),
                             Response::HTTP_BAD_REQUEST
                         );
                     }
@@ -514,17 +514,18 @@ class ProductController extends FrameworkBundleAdminController
                     $adminProductWrapper->processProductOutOfStock($product, $_POST['out_of_stock']);
 
                     $customizationFieldsIds = $adminProductWrapper
-                        ->processProductCustomization($product, $_POST['custom_fields']);
+                        ->processProductCustomization($product, $_POST['custom_fields'])
+                    ;
 
                     $adminProductWrapper->processAttachments($product, $_POST['attachments']);
 
                     $adminProductController->processWarehouses();
 
                     $response = new JsonResponse();
-                    $response->setData([
+                    $response->setData(array(
                         'product' => $product,
                         'customization_fields_ids' => $customizationFieldsIds,
-                    ]);
+                    ));
 
                     if ($request->isXmlHttpRequest()) {
                         return $response;
@@ -541,7 +542,7 @@ class ProductController extends FrameworkBundleAdminController
             // so we need to return the right type of response if an exception it thrown
             if ($request->isXmlHttpRequest()) {
                 return $this->returnErrorJsonResponse(
-                    [],
+                    array(),
                     Response::HTTP_INTERNAL_SERVER_ERROR
                 );
             }
@@ -556,7 +557,7 @@ class ProductController extends FrameworkBundleAdminController
 
         //If context shop is define to a group shop, disable the form
         if ($shopContext->isShopGroupContext()) {
-            return $this->render('@Product/ProductPage/disabled_form_alert.html.twig', ['showContentHeader' => false]);
+            return $this->render('@Product/ProductPage/disabled_form_alert.html.twig', array('showContentHeader' => false));
         }
 
         // languages for switch dropdown
@@ -572,15 +573,16 @@ class ProductController extends FrameworkBundleAdminController
         }
 
         $doctrine = $this->getDoctrine()->getManager();
-        $language = empty($languages[0]) ? ['id_lang' => 1, 'id_shop' => 1] : $languages[0];
+        $language = empty($languages[0]) ? array('id_lang' => 1, 'id_shop' => 1) : $languages[0];
         $attributeGroups = $doctrine->getRepository('PrestaShopBundle:Attribute')->findByLangAndShop((int) $language['id_lang'], (int) $language['id_shop']);
 
         $drawerModules = (new HookFinder())->setHookName('displayProductPageDrawer')
-            ->setParams(['product' => $product])
+            ->setParams(array('product' => $product))
             ->addExpectedInstanceClasses('PrestaShop\PrestaShop\Core\Product\ProductAdminDrawer')
-            ->present();
+            ->present()
+        ;
 
-        return [
+        return array(
             'form' => $form->createView(),
             'formCombinations' => $formBulkCombinations->createView(),
             'categories' => $this->get('prestashop.adapter.data_provider.category')->getCategoriesWithBreadCrumb(),
@@ -589,13 +591,13 @@ class ProductController extends FrameworkBundleAdminController
             'has_combinations' => (isset($formData['step3']['id_product_attributes']) && count($formData['step3']['id_product_attributes']) > 0),
             'combinations_count' => isset($formData['step3']['id_product_attributes']) ? count($formData['step3']['id_product_attributes']) : 0,
             'asm_globally_activated' => $stockManager->isAsmGloballyActivated(),
-            'warehouses' => ($stockManager->isAsmGloballyActivated()) ? $warehouseProvider->getWarehouses() : [],
+            'warehouses' => ($stockManager->isAsmGloballyActivated()) ? $warehouseProvider->getWarehouses() : array(),
             'is_multishop_context' => $isMultiShopContext,
             'is_combination_active' => $this->get('prestashop.adapter.legacy.configuration')->combinationIsActive(),
             'showContentHeader' => false,
             'preview_link' => $preview_url,
             'preview_link_deactivate' => $preview_url_deactive,
-            'stats_link' => $this->getAdminLink('AdminStats', ['module' => 'statsproduct', 'id_product' => $id]),
+            'stats_link' => $this->getAdminLink('AdminStats', array('module' => 'statsproduct', 'id_product' => $id)),
             'help_link' => $this->generateSidebarLink('AdminProducts'),
             'languages' => $languages,
             'default_language_iso' => $languages[0]['iso_code'],
@@ -605,7 +607,7 @@ class ProductController extends FrameworkBundleAdminController
             'editable' => $this->isGranted(PageVoter::UPDATE, self::PRODUCT_OBJECT),
             'drawerModules' => $drawerModules,
             'layoutTitle' => $this->trans('Product', 'Admin.Global'),
-        ];
+        );
     }
 
     /**
@@ -622,16 +624,16 @@ class ProductController extends FrameworkBundleAdminController
     {
         $formBuilder = $this->createFormBuilder(
             $modelMapper->getFormData($product),
-            ['allow_extra_fields' => true]
+            array('allow_extra_fields' => true)
         )
             ->add('id_product', HiddenType::class)
             ->add('step1', ProductInformation::class)
-            ->add('step2', ProductPrice::class, ['id_product' => $product->id])
+            ->add('step2', ProductPrice::class, array('id_product' => $product->id))
             ->add('step3', ProductQuantity::class)
             ->add('step4', ProductShipping::class)
-            ->add('step5', ProductSeo::class, [
+            ->add('step5', ProductSeo::class, array(
                 'mapping_type' => $product->getRedirectType(),
-            ])
+            ))
             ->add('step6', ProductOptions::class)
         ;
 
@@ -689,7 +691,7 @@ class ProductController extends FrameworkBundleAdminController
         $logger = $this->get('logger');
         /* @var $logger LoggerInterface */
 
-        $hookEventParameters = ['product_list_id' => $productIdList];
+        $hookEventParameters = array('product_list_id' => $productIdList);
         $hookDispatcher = $this->get('prestashop.core.hook.dispatcher');
         /* @var $hookDispatcher HookDispatcher */
 
@@ -817,7 +819,7 @@ class ProductController extends FrameworkBundleAdminController
             $logger->warning($message);
         }
 
-        return new Response(json_encode(['result' => 'ok']));
+        return new Response(json_encode(array('result' => 'ok')));
     }
 
     /**
@@ -860,10 +862,10 @@ class ProductController extends FrameworkBundleAdminController
                 case 'sort':
                     $productIdList = $request->request->get('mass_edit_action_sorted_products');
                     $productPositionList = $request->request->get('mass_edit_action_sorted_positions');
-                    $hookEventParameters = [
+                    $hookEventParameters = array(
                         'product_list_id' => $productIdList,
                         'product_list_position' => $productPositionList,
-                    ];
+                    );
 
                     $hookDispatcher->dispatchWithParameters(
                         'actionAdminSortBefore',
@@ -879,7 +881,7 @@ class ProductController extends FrameworkBundleAdminController
                     $productList = array_combine($productIdList, $productPositionList);
                     $productUpdater->sortProductIdList(
                         $productList,
-                        ['filter_category' => $persistedFilterParams['filter_category']]
+                        array('filter_category' => $persistedFilterParams['filter_category'])
                     );
 
                     $this->addFlash(
@@ -890,10 +892,10 @@ class ProductController extends FrameworkBundleAdminController
                         'Products sorted: (' . implode(',', $productIdList) .
                         ') with positions (' . implode(',', $productPositionList) . ').'
                     );
-                    $hookEventParameters = [
+                    $hookEventParameters = array(
                         'product_list_id' => $productIdList,
                         'product_list_position' => $productPositionList,
-                    ];
+                    );
                     $hookDispatcher->dispatchWithParameters(
                         'actionAdminSortAfter',
                         $hookEventParameters
@@ -950,7 +952,7 @@ class ProductController extends FrameworkBundleAdminController
         $logger = $this->get('logger');
         /* @var $logger LoggerInterface */
 
-        $hookEventParameters = ['product_id' => $id];
+        $hookEventParameters = array('product_id' => $id);
         $hookDispatcher = $this->get('prestashop.core.hook.dispatcher');
         /* @var $hookDispatcher HookDispatcher */
 
@@ -1004,7 +1006,7 @@ class ProductController extends FrameworkBundleAdminController
                         $hookEventParameters
                     );
                     // stops here and redirect to the new product's page.
-                    return $this->redirectToRoute('admin_product_form', ['id' => $duplicateProductId]);
+                    return $this->redirectToRoute('admin_product_form', array('id' => $duplicateProductId));
                 case 'activate':
                     $hookDispatcher->dispatchWithParameters(
                         'actionAdminActivateBefore',
@@ -1015,7 +1017,7 @@ class ProductController extends FrameworkBundleAdminController
                         $hookEventParameters
                     );
                     // Hooks: managed in ProductUpdater
-                    $productUpdater->activateProductIdList([$id]);
+                    $productUpdater->activateProductIdList(array($id));
                     $this->addFlash('success', $this->trans('Product successfully activated.', 'Admin.Catalog.Notification'));
                     $logger->info('Product activated: ' . $id);
                     $hookDispatcher->dispatchWithParameters(
@@ -1037,7 +1039,7 @@ class ProductController extends FrameworkBundleAdminController
                         $hookEventParameters
                     );
                     // Hooks: managed in ProductUpdater
-                    $productUpdater->activateProductIdList([$id], false);
+                    $productUpdater->activateProductIdList(array($id), false);
                     $this->addFlash('success', $this->trans('Product successfully deactivated.', 'Admin.Catalog.Notification'));
                     $logger->info('Product deactivated: ' . $id);
                     $hookDispatcher->dispatchWithParameters(
@@ -1098,10 +1100,10 @@ class ProductController extends FrameworkBundleAdminController
         /* @var $productProvider ProductInterfaceProvider */
 
         // we merge empty filter set with given values, to reset the other filters!
-        $productProvider->persistFilterParameters(array_merge(AdminFilter::getProductCatalogEmptyFilter(), [
+        $productProvider->persistFilterParameters(array_merge(AdminFilter::getProductCatalogEmptyFilter(), array(
             'filter_column_sav_quantity' => ($quantity == 'none') ? '' : $quantity,
             'filter_column_active' => ($active == 'none') ? '' : $active,
-        ]));
+        )));
 
         return $this->redirectToRoute('admin_product_catalog');
     }
@@ -1155,9 +1157,9 @@ class ProductController extends FrameworkBundleAdminController
             case 'default':
         }
 
-        return $this->render('@PrestaShop/Admin/Common/_partials/_form_field.html.twig', [
+        return $this->render('@PrestaShop/Admin/Common/_partials/_form_field.html.twig', array(
             'form' => $form->getForm()->get($step)->get($fieldName)->createView(),
             'formId' => $step . '_' . $fieldName . '_rendered',
-        ]);
+        ));
     }
 }

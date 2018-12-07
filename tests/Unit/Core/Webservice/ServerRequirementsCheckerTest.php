@@ -61,7 +61,8 @@ class ServerRequirementsCheckerTest extends TestCase
         $this->mockedTranslator = $this->createMock(TranslatorInterface::class);
         $this->mockedTranslator
             ->method('trans')
-            ->will($this->returnArgument(0));
+            ->will($this->returnArgument(0))
+        ;
 
         $this->mockedConfiguration = $this->createMock(Configuration::class);
         $this->mockedHostingInformation = $this->createMock(HostingInformation::class);
@@ -73,7 +74,8 @@ class ServerRequirementsCheckerTest extends TestCase
     {
         $this->mockedHostingInformation
             ->method('getServerInformation')
-            ->willReturn(['version' => 'nginx']);
+            ->willReturn(array('version' => 'nginx'))
+        ;
 
         $errors = $this->createNewServerRequirementsChecker()->checkForErrors();
 
@@ -84,7 +86,8 @@ class ServerRequirementsCheckerTest extends TestCase
     {
         $this->mockedHostingInformation
             ->method('getServerInformation')
-            ->willReturn(['version' => 'Apache/2.4.29 (Ubuntu)']);
+            ->willReturn(array('version' => 'Apache/2.4.29 (Ubuntu)'))
+        ;
 
         $errors = $this->createNewServerRequirementsChecker()->checkForErrors();
 
@@ -95,7 +98,8 @@ class ServerRequirementsCheckerTest extends TestCase
     {
         $this->mockedConfiguration
             ->method('getBoolean')
-            ->will($this->returnValue(true));
+            ->will($this->returnValue(true))
+        ;
 
         $errors = $this->createNewServerRequirementsChecker()->checkForErrors();
 
@@ -106,7 +110,8 @@ class ServerRequirementsCheckerTest extends TestCase
     {
         $this->mockedConfiguration
             ->method('getBoolean')
-            ->will($this->returnValue(false));
+            ->will($this->returnValue(false))
+        ;
 
         $errors = $this->createNewServerRequirementsChecker()->checkForErrors();
 

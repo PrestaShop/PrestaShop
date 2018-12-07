@@ -211,7 +211,7 @@ class AdminAccessControllerCore extends AdminController
 
     protected function getChildrenTab(array &$tabs, $id_parent = 0)
     {
-        $children = [];
+        $children = array();
         foreach ($tabs as &$tab) {
             $id = $tab['id_tab'];
 

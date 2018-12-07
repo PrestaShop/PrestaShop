@@ -36,7 +36,7 @@ final class EntityFieldCollection implements EntityFieldCollectionInterface
     /**
      * @var array
      */
-    private $entityFields = [];
+    private $entityFields = array();
 
     /**
      * {@inheritdoc}
@@ -53,7 +53,7 @@ final class EntityFieldCollection implements EntityFieldCollectionInterface
      */
     public function getRequiredFields()
     {
-        $requiredFields = [];
+        $requiredFields = array();
 
         /** @var EntityFieldInterface $entityField */
         foreach ($this->entityFields as $entityField) {
@@ -70,15 +70,15 @@ final class EntityFieldCollection implements EntityFieldCollectionInterface
      */
     public function toArray()
     {
-        $array = [];
+        $array = array();
 
         /** @var EntityFieldInterface $entityField */
         foreach ($this->entityFields as $entityField) {
-            $array[] = [
+            $array[] = array(
                 'label' => $entityField->getLabel(),
                 'description' => $entityField->getDescription(),
                 'required' => $entityField->isRequired(),
-            ];
+            );
         }
 
         return $array;

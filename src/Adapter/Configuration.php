@@ -125,7 +125,7 @@ class Configuration extends ParameterBag implements ConfigurationInterface
      *
      * @throws \Exception
      */
-    public function set($key, $value, array $options = [])
+    public function set($key, $value, array $options = array())
     {
         // By default, set a piece of configuration for all available shops and shop groups
         $shopGroupId = null;

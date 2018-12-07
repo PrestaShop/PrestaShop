@@ -54,7 +54,7 @@ class ObjectPresenter implements PresenterInterface
         }
         $presentedObject['id'] = $object->id;
 
-        $mustRemove = ['deleted', 'active'];
+        $mustRemove = array('deleted', 'active');
         foreach ($mustRemove as $fieldName) {
             if (isset($presentedObject[$fieldName])) {
                 unset($presentedObject[$fieldName]);

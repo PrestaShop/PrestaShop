@@ -250,8 +250,8 @@ class ContextCore
             }
         }
 
-        return isset($_SERVER['HTTP_USER_AGENT'])
-            && isset(Context::getContext()->cookie)
+        return isset($_SERVER['HTTP_USER_AGENT'], Context::getContext()->cookie)
+             
             && (bool) Configuration::get('PS_ALLOW_MOBILE_DEVICE')
             && @filemtime(_PS_THEME_MOBILE_DIR_)
             && !Context::getContext()->cookie->no_mobile;
@@ -329,7 +329,7 @@ class ContextCore
         $this->cart->id_customer = (int) $customer->id;
 
         if (isset($idCarrier) && $idCarrier) {
-            $deliveryOption = [$this->cart->id_address_delivery => $idCarrier . ','];
+            $deliveryOption = array($this->cart->id_address_delivery => $idCarrier . ',');
             $this->cart->setDeliveryOption($deliveryOption);
         }
 
@@ -381,7 +381,8 @@ class ContextCore
                 ->files()
                 ->in($cacheDir)
                 ->depth('==0')
-                ->name('*.' . $locale . '.*');
+                ->name('*.' . $locale . '.*')
+            ;
             (new Filesystem())->remove($cache_file);
         }
 

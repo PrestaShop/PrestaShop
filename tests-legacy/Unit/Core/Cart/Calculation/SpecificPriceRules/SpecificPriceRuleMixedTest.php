@@ -29,12 +29,12 @@ namespace LegacyTests\Unit\Core\Cart\Calculation\SpecificPriceRules;
 class SpecificPriceRuleMixedTest extends AbstractSpecificPriceRuleTest
 {
 
-    const SPECIFIC_PRICE_RULES_FIXTURES = [
-        1 => ['reductionType' => 'percentage', 'reduction' => 10, 'fromQuantity' => 1, 'price' => 2],
-        2 => ['reductionType' => 'amount', 'reduction' => 3, 'fromQuantity' => 1, 'price' => 2],
-        3 => ['reductionType' => 'percentage', 'reduction' => 10, 'fromQuantity' => 2, 'price' => 2],
-        4 => ['reductionType' => 'amount', 'reduction' => 3, 'fromQuantity' => 2, 'price' => 2],
-    ];
+    const SPECIFIC_PRICE_RULES_FIXTURES = array(
+        1 => array('reductionType' => 'percentage', 'reduction' => 10, 'fromQuantity' => 1, 'price' => 2),
+        2 => array('reductionType' => 'amount', 'reduction' => 3, 'fromQuantity' => 1, 'price' => 2),
+        3 => array('reductionType' => 'percentage', 'reduction' => 10, 'fromQuantity' => 2, 'price' => 2),
+        4 => array('reductionType' => 'amount', 'reduction' => 3, 'fromQuantity' => 2, 'price' => 2),
+    );
 
     /**
      * @dataProvider specificPriceRuleMixedProvider
@@ -64,30 +64,30 @@ class SpecificPriceRuleMixedTest extends AbstractSpecificPriceRuleTest
 
     public function specificPriceRuleMixedProvider()
     {
-        return [
-            '3 products in cart, several quantities, one rule percent with price set from quantity 1' => [
-                'products'             => [
+        return array(
+            '3 products in cart, several quantities, one rule percent with price set from quantity 1' => array(
+                'products' => array(
                     2 => 2,
                     1 => 3,
                     3 => 1,
-                ],
-                'expectedTotal'        => 3 * static::SPECIFIC_PRICE_RULES_FIXTURES[1]['price']
+                ),
+                'expectedTotal' => 3 * static::SPECIFIC_PRICE_RULES_FIXTURES[1]['price']
                                           * (1 - static::SPECIFIC_PRICE_RULES_FIXTURES[1]['reduction'] / 100)
                                           + 2 * static::SPECIFIC_PRICE_RULES_FIXTURES[1]['price']
                                             * (1 - static::SPECIFIC_PRICE_RULES_FIXTURES[1]['reduction'] / 100)
                                           + static::SPECIFIC_PRICE_RULES_FIXTURES[1]['price']
                                             * (1 - static::SPECIFIC_PRICE_RULES_FIXTURES[1]['reduction'] / 100)
                                           + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
-                'cartRules'            => [],
-                'specificCartRuleData' => [1],
-            ],
-            '3 products in cart, several quantities, one rule amount with price set from quantity 1'  => [
-                'products'             => [
+                'cartRules' => array(),
+                'specificCartRuleData' => array(1),
+            ),
+            '3 products in cart, several quantities, one rule amount with price set from quantity 1' => array(
+                'products' => array(
                     2 => 2,
                     1 => 3,
                     3 => 1,
-                ],
-                'expectedTotal'        => max(
+                ),
+                'expectedTotal' => max(
                                               0,
                                               3 * static::SPECIFIC_PRICE_RULES_FIXTURES[2]['price']
                                               - 3 * static::SPECIFIC_PRICE_RULES_FIXTURES[2]['reduction']
@@ -97,31 +97,31 @@ class SpecificPriceRuleMixedTest extends AbstractSpecificPriceRuleTest
                                               - static::SPECIFIC_PRICE_RULES_FIXTURES[2]['reduction']
                                           )
                                           + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
-                'cartRules'            => [],
-                'specificCartRuleData' => [2],
-            ],
-            '3 products in cart, several quantities, one rule percent with price set from quantity 2' => [
-                'products'             => [
+                'cartRules' => array(),
+                'specificCartRuleData' => array(2),
+            ),
+            '3 products in cart, several quantities, one rule percent with price set from quantity 2' => array(
+                'products' => array(
                     2 => 2,
                     1 => 3,
                     3 => 1,
-                ],
-                'expectedTotal'        => 3 * static::SPECIFIC_PRICE_RULES_FIXTURES[3]['price']
+                ),
+                'expectedTotal' => 3 * static::SPECIFIC_PRICE_RULES_FIXTURES[3]['price']
                                           * (1 - static::SPECIFIC_PRICE_RULES_FIXTURES[3]['reduction'] / 100)
                                           + 2 * static::SPECIFIC_PRICE_RULES_FIXTURES[3]['price']
                                             * (1 - static::SPECIFIC_PRICE_RULES_FIXTURES[3]['reduction'] / 100)
                                           + static::PRODUCT_FIXTURES[3]['price']
                                           + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
-                'cartRules'            => [],
-                'specificCartRuleData' => [3],
-            ],
-            '3 products in cart, several quantities, one rule amount with price set from quantity 2'  => [
-                'products'             => [
+                'cartRules' => array(),
+                'specificCartRuleData' => array(3),
+            ),
+            '3 products in cart, several quantities, one rule amount with price set from quantity 2' => array(
+                'products' => array(
                     2 => 2,
                     1 => 3,
                     3 => 1,
-                ],
-                'expectedTotal'        => max(
+                ),
+                'expectedTotal' => max(
                                               0,
                                               3 * static::SPECIFIC_PRICE_RULES_FIXTURES[4]['price']
                                               - 3 * static::SPECIFIC_PRICE_RULES_FIXTURES[4]['reduction']
@@ -130,9 +130,9 @@ class SpecificPriceRuleMixedTest extends AbstractSpecificPriceRuleTest
                                           )
                                           + static::PRODUCT_FIXTURES[3]['price']
                                           + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
-                'cartRules'            => [],
-                'specificCartRuleData' => [4],
-            ],
-        ];
+                'cartRules' => array(),
+                'specificCartRuleData' => array(4),
+            ),
+        );
     }
 }

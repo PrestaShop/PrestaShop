@@ -51,11 +51,11 @@ class CategoryDeleteMode
     /**
      * @internal
      */
-    const AVAILABLE_MODES = [
+    const AVAILABLE_MODES = array(
         self::ASSOCIATE_PRODUCTS_WITH_PARENT_AND_DISABLE,
         self::ASSOCIATE_PRODUCTS_WITH_PARENT_ONLY,
         self::REMOVE_ASSOCIATED_PRODUCTS,
-    ];
+    );
 
     /**
      * @var string

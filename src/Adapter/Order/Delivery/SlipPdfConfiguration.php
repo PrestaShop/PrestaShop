@@ -53,7 +53,7 @@ final class SlipPdfConfiguration implements DataConfigurationInterface
      */
     public function getConfiguration()
     {
-        return [];
+        return array();
     }
 
     /**
@@ -63,31 +63,31 @@ final class SlipPdfConfiguration implements DataConfigurationInterface
     {
         if ($this->validateConfiguration($configuration)) {
             if (!Validate::isDate($configuration['date_to'])) {
-                $errors[] = [
+                $errors[] = array(
                     'key' => "Invalid 'to' date",
                     'domain' => 'Admin.Catalog.Notification',
-                    'parameters' => [],
-                ];
+                    'parameters' => array(),
+                );
             }
 
             if (!Validate::isDate($configuration['date_from'])) {
-                $errors[] = [
+                $errors[] = array(
                     'key' => "Invalid 'from' date",
                     'domain' => 'Admin.Catalog.Notification',
-                    'parameters' => [],
-                ];
+                    'parameters' => array(),
+                );
             }
 
             if (empty(Invoice::getByDeliveryDateInterval($configuration['date_from'], $configuration['date_to']))) {
-                $errors[] = [
+                $errors[] = array(
                     'key' => 'No delivery slip was found for this period.',
                     'domain' => 'Admin.Orderscustomers.Notification',
-                    'parameters' => [],
-                ];
+                    'parameters' => array(),
+                );
             }
         }
 
-        return !empty($errors) ? $errors : [];
+        return !empty($errors) ? $errors : array();
     }
 
     /**

@@ -74,13 +74,13 @@ final class SetUpUrlsDataConfiguration implements DataConfigurationInterface
      */
     public function getConfiguration()
     {
-        return [
+        return array(
             'friendly_url' => $this->configuration->getBoolean('PS_REWRITING_SETTINGS'),
             'accented_url' => $this->configuration->getBoolean('PS_ALLOW_ACCENTED_CHARS_URL'),
             'canonical_url_redirection' => $this->configuration->get('PS_CANONICAL_REDIRECT'),
             'disable_apache_multiview' => $this->configuration->getBoolean('PS_HTACCESS_DISABLE_MULTIVIEWS'),
             'disable_apache_mod_security' => $this->configuration->getBoolean('PS_HTACCESS_DISABLE_MODSEC'),
-        ];
+        );
     }
 
     /**
@@ -88,7 +88,7 @@ final class SetUpUrlsDataConfiguration implements DataConfigurationInterface
      */
     public function updateConfiguration(array $configuration)
     {
-        $errors = [];
+        $errors = array();
         if ($this->validateConfiguration($configuration)) {
             $this->configuration->set('PS_REWRITING_SETTINGS', $configuration['friendly_url']);
             $this->configuration->set('PS_ALLOW_ACCENTED_CHARS_URL', $configuration['accented_url']);
@@ -102,25 +102,28 @@ final class SetUpUrlsDataConfiguration implements DataConfigurationInterface
                 $errorMessage = $this->translator
                     ->trans(
                         'Before being able to use this tool, you need to:',
-                        [],
+                        array(),
                         'Admin.Shopparameters.Notification'
-                    );
+                    )
+                ;
 
                 $errorMessage .= ' ';
                 $errorMessage .= $this->translator
                     ->trans(
                         'Create a blank .htaccess in your root directory.',
-                        [],
+                        array(),
                         'Admin.Shopparameters.Notification'
-                    );
+                    )
+                ;
 
                 $errorMessage .= ' ';
                 $errorMessage .= $this->translator
                     ->trans(
                         'Give it write permissions (CHMOD 666 on Unix system).',
-                        [],
+                        array(),
                         'Admin.Shopparameters.Notification'
-                    );
+                    )
+                ;
 
                 $errors[] = $errorMessage;
             }

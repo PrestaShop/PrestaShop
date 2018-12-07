@@ -53,7 +53,7 @@ final class ProfileByIdChoiceProvider implements FormChoiceProviderInterface
     public function getChoices()
     {
         $profiles = Profile::getProfiles($this->contextLangId);
-        $choices = [];
+        $choices = array();
 
         foreach ($profiles as $profile) {
             $choices[$profile['name']] = $profile['id_profile'];

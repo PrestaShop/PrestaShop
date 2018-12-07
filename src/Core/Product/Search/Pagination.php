@@ -70,27 +70,27 @@ class Pagination
     {
         $current = $page === $this->getPage();
 
-        return [
+        return array(
             'type' => $type,
             'page' => $page,
             'clickable' => !$current,
             'current' => $type === 'page' ? $current : false,
-        ];
+        );
     }
 
     private function buildSpacer()
     {
-        return [
+        return array(
             'type' => 'spacer',
             'page' => null,
             'clickable' => false,
             'current' => false,
-        ];
+        );
     }
 
     public function buildLinks()
     {
-        $links = [];
+        $links = array();
 
         $addPageLink = function ($page) use (&$links) {
             static $lastPage = null;

@@ -52,10 +52,10 @@ final class BackupOptionsConfiguration implements DataConfigurationInterface
      */
     public function getConfiguration()
     {
-        return [
+        return array(
             'backup_all' => (bool) $this->configuration->get('PS_BACKUP_ALL'),
             'backup_drop_tables' => (bool) $this->configuration->get('PS_BACKUP_DROP_TABLE'),
-        ];
+        );
     }
 
     /**
@@ -68,7 +68,7 @@ final class BackupOptionsConfiguration implements DataConfigurationInterface
             $this->configuration->set('PS_BACKUP_DROP_TABLE', $config['backup_drop_tables']);
         }
 
-        return [];
+        return array();
     }
 
     /**

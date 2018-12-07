@@ -53,7 +53,7 @@ final class ProductFieldsProvider implements EntityFieldsProviderInterface
      */
     public function getCollection()
     {
-        $fields = [
+        $fields = array(
             new EntityField('id', $this->trans('ID', 'Admin.Global')),
             new EntityField('active', $this->trans('Active (0/1)')),
             new EntityField('name', $this->trans('Name', 'Admin.Global')),
@@ -172,7 +172,7 @@ final class ProductFieldsProvider implements EntityFieldsProviderInterface
                 )
             ),
             new EntityField('accessories', $this->trans('Accessories (x,y,z...)')),
-        ];
+        );
 
         return EntityFieldCollection::createFromArray($fields);
     }
@@ -187,6 +187,6 @@ final class ProductFieldsProvider implements EntityFieldsProviderInterface
      */
     private function trans($id, $domain = 'Admin.Advparameters.Feature')
     {
-        return $this->translator->trans($id, [], $domain);
+        return $this->translator->trans($id, array(), $domain);
     }
 }

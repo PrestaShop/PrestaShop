@@ -65,11 +65,11 @@ class GenerateByStatusType extends CommonAbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('order_states', ChoiceType::class, [
+            ->add('order_states', ChoiceType::class, array(
                 'expanded' => true,
                 'multiple' => true,
                 'choices' => $this->orderStateChoiceProvider->getChoices(),
-            ])
+            ))
         ;
     }
 
@@ -93,9 +93,9 @@ class GenerateByStatusType extends CommonAbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
+        $resolver->setDefaults(array(
             'translation_domain' => 'Admin.Orderscustomers.Feature',
-        ]);
+        ));
     }
 
     /**

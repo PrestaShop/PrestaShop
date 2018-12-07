@@ -39,12 +39,12 @@ final class LogsFilters extends Filters
      */
     public static function getDefaults()
     {
-        return [
+        return array(
             'limit' => 10,
             'offset' => 0,
             'orderBy' => 'id_log',
             'sortOrder' => 'desc',
-            'filters' => [],
-        ];
+            'filters' => array(),
+        );
     }
 }

@@ -40,7 +40,7 @@ final class GenderByIdChoiceProvider implements FormChoiceProviderInterface
     public function getChoices()
     {
         $genders = Gender::getGenders();
-        $choices = [];
+        $choices = array();
 
         /** @var Gender $gender */
         foreach ($genders as $gender) {

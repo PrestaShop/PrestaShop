@@ -88,34 +88,34 @@ class ModifyTranslationsType extends TranslatorAwareType
         $noTheme = $this->trans('Core (no theme selected)', 'Admin.International.Feature');
 
         $builder
-            ->add('translation_type', ChoiceType::class, [
+            ->add('translation_type', ChoiceType::class, array(
                 'choices' => $this->translationTypeChoices,
                 'choice_translation_domain' => false,
-            ])
-            ->add('email_content_type', ChoiceType::class, [
+            ))
+            ->add('email_content_type', ChoiceType::class, array(
                 'choices' => $this->emailContentTypeChoices,
                 'choice_translation_domain' => false,
-            ])
-            ->add('theme', ChoiceType::class, [
-                'choices' => [$noTheme => 0] +
+            ))
+            ->add('theme', ChoiceType::class, array(
+                'choices' => array($noTheme => 0) +
                     $this->themeChoices,
-                'choice_attr' => [
-                    $noTheme => [
+                'choice_attr' => array(
+                    $noTheme => array(
                         'class' => 'js-no-theme',
-                    ],
-                ],
+                    ),
+                ),
                 'choice_translation_domain' => false,
-            ])
-            ->add('module', ChoiceType::class, [
+            ))
+            ->add('module', ChoiceType::class, array(
                 'placeholder' => '---',
                 'choices' => $this->moduleChoices,
                 'choice_translation_domain' => false,
-            ])
-            ->add('language', ChoiceType::class, [
+            ))
+            ->add('language', ChoiceType::class, array(
                 'placeholder' => $this->trans('Language', 'Admin.Global'),
                 'choices' => $this->getLocaleChoices(),
                 'choice_translation_domain' => false,
-            ])
+            ))
         ;
     }
 }

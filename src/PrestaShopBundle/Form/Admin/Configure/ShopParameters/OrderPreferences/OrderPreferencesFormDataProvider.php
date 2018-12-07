@@ -75,10 +75,10 @@ class OrderPreferencesFormDataProvider implements FormDataProviderInterface
      */
     public function getData()
     {
-        return [
+        return array(
             'general' => $this->generalConfiguration->getConfiguration(),
             'gift_options' => $this->giftOptionsConfiguration->getConfiguration(),
-        ];
+        );
     }
 
     /**
@@ -115,8 +115,8 @@ class OrderPreferencesFormDataProvider implements FormDataProviderInterface
      */
     protected function validate(array $data)
     {
-        $errors = [];
-        $invalidFields = [];
+        $errors = array();
+        $invalidFields = array();
         $purchaseMinimumValue = $data['general']['purchase_minimum_value'];
         $giftWrappingPrice = $data['gift_options']['gift_wrapping_price'];
 
@@ -124,7 +124,7 @@ class OrderPreferencesFormDataProvider implements FormDataProviderInterface
         if (!is_numeric($purchaseMinimumValue) || $purchaseMinimumValue < 0) {
             $invalidFields[] = $this->translator->trans(
                 'Minimum purchase total required in order to validate the order',
-                [],
+                array(),
                 'Admin.Shopparameters.Feature'
             );
         }
@@ -137,11 +137,11 @@ class OrderPreferencesFormDataProvider implements FormDataProviderInterface
             $tosCms = $this->cmsDataProvider->getCMSById($tosCmsId);
 
             if (!$tosCms->id) {
-                $errors[] = [
+                $errors[] = array(
                     'key' => 'Assign a valid page if you want it to be read.',
                     'domain' => 'Admin.Shopparameters.Notification',
-                    'parameters' => [],
-                ];
+                    'parameters' => array(),
+                );
             }
         }
 
@@ -149,17 +149,17 @@ class OrderPreferencesFormDataProvider implements FormDataProviderInterface
         if (!empty($giftWrappingPrice) && (!is_numeric($giftWrappingPrice) || $giftWrappingPrice < 0)) {
             $invalidFields[] = $this->translator->trans(
                 'Gift-wrapping price',
-                [],
+                array(),
                 'Admin.Shopparameters.Feature'
             );
         }
 
         foreach ($invalidFields as $invalidField) {
-            $errors[] = [
+            $errors[] = array(
                 'key' => 'The %s field is invalid.',
                 'domain' => 'Admin.Notifications.Error',
-                'parameters' => [$invalidField],
-            ];
+                'parameters' => array($invalidField),
+            );
         }
 
         return $errors;

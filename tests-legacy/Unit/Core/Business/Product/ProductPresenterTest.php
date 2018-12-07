@@ -64,7 +64,7 @@ class ProductPresenterTest extends UnitTestCase
         $this->settings->restricted_country_mode = false;
         $this->settings->showPrices = true;
 
-        $this->product = [];
+        $this->product = array();
         $this->product['available_for_order'] = true;
         $this->product['id_product'] = 1;
         $this->product['id_product_attribute'] = 0;
@@ -95,9 +95,9 @@ class ProductPresenterTest extends UnitTestCase
         Phake::when($link)->getAddToCartURL(Phake::anyParameters())->thenReturn('http://add-to-cart.url');
 
         $imageRetriever = Phake::mock('PrestaShop\PrestaShop\Adapter\Image\ImageRetriever');
-        Phake::when($imageRetriever)->getProductImages(Phake::anyParameters())->thenReturn([
-            ['id_image' => 0, 'associatedVariants' => []]
-        ]);
+        Phake::when($imageRetriever)->getProductImages(Phake::anyParameters())->thenReturn(array(
+            array('id_image' => 0, 'associatedVariants' => array())
+        ));
 
         $presenter = new $presenterClass(
             $imageRetriever,
@@ -188,11 +188,11 @@ class ProductPresenterTest extends UnitTestCase
     public function test_can_add_to_cart_if_customized()
     {
         $this->product['customization_required'] = true;
-        $this->product['customizations'] = [
-            'fields' => [
-                ['is_customized' => true, 'required' => true]
-            ]
-        ];
+        $this->product['customizations'] = array(
+            'fields' => array(
+                array('is_customized' => true, 'required' => true)
+            )
+        );
         $this->assertEquals(
             'http://add-to-cart.url',
             $this->getPresentedProduct('add_to_cart_url')
@@ -202,12 +202,12 @@ class ProductPresenterTest extends UnitTestCase
     public function test_can_add_to_cart_if_customized_all_required_fields()
     {
         $this->product['customization_required'] = true;
-        $this->product['customizations'] = [
-            'fields' => [
-                ['is_customized' => true, 'required' => true],
-                ['is_customized' => false, 'required' => false]
-            ]
-        ];
+        $this->product['customizations'] = array(
+            'fields' => array(
+                array('is_customized' => true, 'required' => true),
+                array('is_customized' => false, 'required' => false)
+            )
+        );
         $this->assertEquals(
             'http://add-to-cart.url',
             $this->getPresentedProduct('add_to_cart_url')
@@ -227,11 +227,11 @@ class ProductPresenterTest extends UnitTestCase
     public function test_cannot_add_to_cart_from_listing_even_when_customized()
     {
         $this->product['customization_required'] = true;
-        $this->product['customizations'] = [
-            'fields' => [
-                ['is_customized' => true, 'required' => true]
-            ]
-        ];
+        $this->product['customizations'] = array(
+            'fields' => array(
+                array('is_customized' => true, 'required' => true)
+            )
+        );
         $this->assertEquals(
             null,
             $this->getPresentedProductForListing('add_to_cart_url')
@@ -252,10 +252,10 @@ class ProductPresenterTest extends UnitTestCase
     {
         $this->product['online_only'] = true;
         $this->assertEquals(
-            ['online-only' => [
-                'type'  => 'online-only',
+            array('online-only' => array(
+                'type' => 'online-only',
                 'label' => 'some label'
-            ]],
+            )),
             $this->getPresentedProduct('flags')
         );
     }
@@ -264,10 +264,10 @@ class ProductPresenterTest extends UnitTestCase
     {
         $this->product['reduction'] = true;
         $this->assertEquals(
-            ['discount' => [
-                'type'  => 'discount',
+            array('discount' => array(
+                'type' => 'discount',
                 'label' => 'some label'
-            ]],
+            )),
             $this->getPresentedProduct('flags')
         );
     }
@@ -277,10 +277,10 @@ class ProductPresenterTest extends UnitTestCase
         $this->product['reduction'] = true;
         $this->product['on_sale'] = true;
         $this->assertEquals(
-            ['on-sale' => [
-                'type'  => 'on-sale',
+            array('on-sale' => array(
+                'type' => 'on-sale',
                 'label' => 'some label'
-            ]],
+            )),
             $this->getPresentedProduct('flags')
         );
     }
@@ -289,10 +289,10 @@ class ProductPresenterTest extends UnitTestCase
     {
         $this->product['new'] = true;
         $this->assertEquals(
-            ['new' => [
-                'type'  => 'new',
+            array('new' => array(
+                'type' => 'new',
                 'label' => 'some label'
-            ]],
+            )),
             $this->getPresentedProduct('flags')
         );
     }
@@ -302,11 +302,11 @@ class ProductPresenterTest extends UnitTestCase
         $this->product['show_condition'] = true;
         $this->product['condition'] = 'new';
         $this->assertEquals(
-            [
-                'type'  => 'new',
+            array(
+                'type' => 'new',
                 'label' => 'some label',
                 'schema_url' => 'https://schema.org/NewCondition',
-            ],
+            ),
             $this->getPresentedProduct('condition')
         );
     }
@@ -317,7 +317,7 @@ class ProductPresenterTest extends UnitTestCase
         $this->product['available_for_order'] = false;
         $this->product['show_price'] = false;
         $this->assertEquals(
-            [],
+            array(),
             $this->getPresentedProduct('flags')
         );
     }

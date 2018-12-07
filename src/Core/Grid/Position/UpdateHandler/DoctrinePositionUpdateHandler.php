@@ -80,7 +80,7 @@ final class DoctrinePositionUpdateHandler implements PositionUpdateHandlerInterf
         }
 
         $positions = $qb->execute()->fetchAll();
-        $currentPositions = [];
+        $currentPositions = array();
         foreach ($positions as $position) {
             $positionId = $position[$positionDefinition->getIdField()];
             $currentPositions[$positionId] = $position[$positionDefinition->getPositionField()];
@@ -112,7 +112,7 @@ final class DoctrinePositionUpdateHandler implements PositionUpdateHandlerInterf
                     throw new PositionUpdateException(
                         'Could not update #%i',
                         'Admin.Catalog.Notification',
-                        [$rowId]
+                        array($rowId)
                     );
                 }
                 ++$positionIndex;

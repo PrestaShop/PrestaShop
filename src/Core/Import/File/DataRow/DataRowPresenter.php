@@ -38,13 +38,13 @@ final class DataRowPresenter implements DataRowPresenterInterface
      */
     public function present(DataRowInterface $dataRow)
     {
-        $presentedRow = [];
+        $presentedRow = array();
 
         /** @var DataCellInterface $dataCell */
         foreach ($dataRow as $dataCell) {
-            $presentedRow[] = [
+            $presentedRow[] = array(
                 'value' => $dataCell->getValue(),
-            ];
+            );
         }
 
         return $presentedRow;

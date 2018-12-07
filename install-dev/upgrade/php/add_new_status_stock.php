@@ -27,7 +27,7 @@
 function add_new_status_stock()
 {
     $translator = Context::getContext()->getTranslator();
-    $languages  = Language::getLanguages();
+    $languages = Language::getLanguages();
 
     // insert ps_tab AdminStockManagement
     $count = (int)Db::getInstance()->getValue(
@@ -45,7 +45,7 @@ function add_new_status_stock()
 
         // ps_tab_lang
         foreach ($languages as $lang) {
-            $idLang    = (int)$lang['id_lang'];
+            $idLang = (int)$lang['id_lang'];
             $stockName = pSQL(
                 $translator->trans(
                     'Stock',

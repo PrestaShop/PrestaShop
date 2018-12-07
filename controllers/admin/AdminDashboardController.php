@@ -133,7 +133,8 @@ class AdminDashboardControllerCore extends AdminController
                             array(
                                 '%module%' => $module->displayName,
                             ),
-                            'Admin.Dashboard.Help'),
+                            'Admin.Dashboard.Help'
+                        ),
                         'validation' => 'isPrice',
                         'cast' => 'floatval',
                         'type' => 'text',
@@ -456,7 +457,7 @@ class AdminDashboardControllerCore extends AdminController
             if ($rss) {
                 foreach ($rss->channel->item as $item) {
                     if ($articles_limit > 0 && Validate::isCleanHtml((string) $item->title) && Validate::isCleanHtml((string) $item->description)
-                        && isset($item->link) && isset($item->title)) {
+                        && isset($item->link, $item->title)  ) {
                         if (in_array($this->context->mode, array(Context::MODE_HOST, Context::MODE_HOST_CONTRIB))) {
                             $utm_content = 'cloud';
                         } else {

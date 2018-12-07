@@ -61,7 +61,7 @@ class DemoRestricted extends ConfigurationAnnotation
      *
      * @var array
      */
-    protected $redirectQueryParamsToKeep = [];
+    protected $redirectQueryParamsToKeep = array();
 
     /**
      * @return string

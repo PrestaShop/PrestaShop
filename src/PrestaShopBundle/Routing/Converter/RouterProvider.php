@@ -71,7 +71,7 @@ class RouterProvider extends AbstractLegacyRouteProvider
      */
     private function buildLegacyRoutes()
     {
-        $legacyRoutes = [];
+        $legacyRoutes = array();
         /** @var Route $route */
         foreach ($this->router->getRouteCollection() as $routeName => $route) {
             $routeDefaults = $route->getDefaults();

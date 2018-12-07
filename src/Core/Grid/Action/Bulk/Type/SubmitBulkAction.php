@@ -48,16 +48,16 @@ final class SubmitBulkAction extends AbstractBulkAction
     protected function configureOptions(OptionsResolver $resolver)
     {
         $resolver
-            ->setRequired([
+            ->setRequired(array(
                 'submit_route',
-            ])
-            ->setDefaults([
+            ))
+            ->setDefaults(array(
                 'confirm_message' => null,
                 'submit_method' => 'POST',
-            ])
+            ))
             ->setAllowedTypes('submit_route', 'string')
-            ->setAllowedTypes('confirm_message', ['string', 'null'])
-            ->setAllowedValues('submit_method', ['POST', 'GET'])
+            ->setAllowedTypes('confirm_message', array('string', 'null'))
+            ->setAllowedValues('submit_method', array('POST', 'GET'))
         ;
     }
 }

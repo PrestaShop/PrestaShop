@@ -55,7 +55,8 @@ class PassVsprintfContraintTest extends AbstractConstraintValidatorTest
     {
         $translation = (new Translation())
             ->setKey('List of products by brand %s')
-            ->setTranslation('Liste des produits de la marque %s');
+            ->setTranslation('Liste des produits de la marque %s')
+        ;
         $this->validator->validate($translation, new PassVsprintf());
 
         $this->assertNoViolation();
@@ -65,7 +66,8 @@ class PassVsprintfContraintTest extends AbstractConstraintValidatorTest
     {
         $translation = (new Translation())
             ->setKey('List of products by brand %s')
-            ->setTranslation('Liste des produits de la marque nope');
+            ->setTranslation('Liste des produits de la marque nope')
+        ;
         $constraint = new PassVsprintf();
 
         $this->validator->validate($translation, $constraint);

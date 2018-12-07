@@ -314,7 +314,7 @@ class HelperListCore extends Helper
                         $path_to_image = _PS_IMG_DIR_ . $params['image'] . '/' . Image::getImgFolderStatic($tr['id_image']) . (int) $tr['id_image'] . '.' . $this->imageType;
                     }
                     $this->_list[$index][$key] = ImageManager::thumbnail($path_to_image, $this->table . '_mini_' . $item_id . '_' . $this->context->shop->id . '.' . $this->imageType, 45, $this->imageType);
-                } elseif (isset($params['icon']) && isset($tr[$key]) && (isset($params['icon'][$tr[$key]]) || isset($params['icon']['default']))) {
+                } elseif (isset($params['icon'], $tr[$key]) && (isset($params['icon'][$tr[$key]]) || isset($params['icon']['default']))) {
                     if (!$this->bootstrap) {
                         if (isset($params['icon'][$tr[$key]]) && is_array($params['icon'][$tr[$key]])) {
                             $this->_list[$index][$key] = array(
@@ -494,7 +494,7 @@ class HelperListCore extends Helper
                 $pagePreference = SymfonyContainer::getInstance()->get('prestashop.core.admin.page_preference_interface');
                 $redirectLegacy = $pagePreference->getTemporaryShouldUseLegacyPage('product');
                 if (!$redirectLegacy && $this->identifier == 'id_product') {
-                    $href = Context::getContext()->link->getAdminLink('AdminProducts', true, ['id_product' => $id, 'updateproduct' => 1]);
+                    $href = Context::getContext()->link->getAdminLink('AdminProducts', true, array('id_product' => $id, 'updateproduct' => 1));
                 }
                 break;
             default:
@@ -541,7 +541,7 @@ class HelperListCore extends Helper
                 $pagePreference = SymfonyContainer::getInstance()->get('prestashop.core.admin.page_preference_interface');
                 $redirectLegacy = $pagePreference->getTemporaryShouldUseLegacyPage('product');
                 if (!$redirectLegacy && $this->identifier == 'id_product') {
-                    $href = Context::getContext()->link->getAdminLink('AdminProducts', true, ['id_product' => $id, 'deleteproduct' => 1]);
+                    $href = Context::getContext()->link->getAdminLink('AdminProducts', true, array('id_product' => $id, 'deleteproduct' => 1));
                 }
                 break;
             default:

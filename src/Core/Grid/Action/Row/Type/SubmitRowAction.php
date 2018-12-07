@@ -49,22 +49,22 @@ final class SubmitRowAction extends AbstractRowAction
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver
-            ->setRequired([
+            ->setRequired(array(
                 'route',
                 'route_param_name',
                 'route_param_field',
-            ])
-            ->setDefaults([
+            ))
+            ->setDefaults(array(
                 'method' => 'POST',
                 'confirm_message' => '',
                 'accessibility_checker' => null,
-            ])
+            ))
             ->setAllowedTypes('route', 'string')
             ->setAllowedTypes('route_param_name', 'string')
             ->setAllowedTypes('route_param_field', 'string')
             ->setAllowedTypes('method', 'string')
             ->setAllowedTypes('confirm_message', 'string')
-            ->setAllowedTypes('accessibility_checker', [AccessibilityCheckerInterface::class, 'callable', 'null'])
+            ->setAllowedTypes('accessibility_checker', array(AccessibilityCheckerInterface::class, 'callable', 'null'))
         ;
     }
 

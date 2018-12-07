@@ -55,7 +55,7 @@ final class TimezoneByNameChoiceProvider implements FormChoiceProviderInterface
     public function getChoices()
     {
         $timezones = $this->timezoneRepository->findAll();
-        $choices = [];
+        $choices = array();
 
         foreach ($timezones as $timezone) {
             $choices[$timezone['name']] = $timezone['name'];

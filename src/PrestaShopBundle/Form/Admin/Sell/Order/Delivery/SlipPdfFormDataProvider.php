@@ -50,7 +50,7 @@ final class SlipPdfFormDataProvider implements FormDataProviderInterface
      */
     public function getData()
     {
-        return [];
+        return array();
     }
 
     /**

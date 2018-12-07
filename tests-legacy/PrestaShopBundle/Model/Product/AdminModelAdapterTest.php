@@ -46,27 +46,27 @@ class AdminModelAdapterTest extends KernelTestCase
 
     private function fakeFormData()
     {
-        return [
+        return array(
             "id_product" => '',
-            "step1" => [
+            "step1" => array(
                 "type_product" => '',
-                "inputPackItems" => [],
-                "name" => [],
+                "inputPackItems" => array(),
+                "name" => array(),
                 "name_1" => "Amazing product",
                 "name_2" => "Amazing product",
-                "description" => [],
-                "description_short" => [],
+                "description" => array(),
+                "description_short" => array(),
                 "active" => '',
                 "price_shortcut" => '',
                 "qty_0_shortcut" => '',
-                "categories" => ['tree' => []],
+                "categories" => array('tree' => array()),
                 "id_category_default" => '',
-                "related_products" => [],
+                "related_products" => array(),
                 "id_manufacturer" => '',
-                "features" => [],
-                "images" => [],
-            ],
-            "step2" => [
+                "features" => array(),
+                "images" => array(),
+            ),
+            "step2" => array(
                 "price" => '',
                 "ecotax" => '',
                 "id_tax_rules_group" => '',
@@ -74,65 +74,65 @@ class AdminModelAdapterTest extends KernelTestCase
                 "wholesale_price" => '',
                 "unit_price" => '',
                 "unity" => '',
-                "specific_price" => [],
+                "specific_price" => array(),
                 "specificPricePriority_0" => '',
                 "specificPricePriority_1" => '',
                 "specificPricePriority_2" => '',
                 "specificPricePriority_3" => ''
-            ],
-            "step3" => [
+            ),
+            "step3" => array(
                 "advanced_stock_management" => '',
                 "depends_on_stock" => '',
                 "qty_0" => '',
-                "combinations" => [],
+                "combinations" => array(),
                 "out_of_stock" => '',
                 "minimal_quantity" => '',
                 "low_stock_threshold" => '',
                 "low_stock_alert" => '',
-                "available_now" => [],
-                "available_later" => [],
+                "available_now" => array(),
+                "available_later" => array(),
                 "available_date" => '',
                 "pack_stock_type" => '',
-                "virtual_product" => [],
-            ],
-            "step4" => [
+                "virtual_product" => array(),
+            ),
+            "step4" => array(
                 "width" => '',
                 "height" => '',
                 "depth" => '',
                 "weight" => '',
                 "additional_shipping_cost" => '',
-                "selectedCarriers" => [],
+                "selectedCarriers" => array(),
                 "additional_delivery_times" => '',
-                "delivery_in_stock" => [],
-                "delivery_out_stock" => [],
-            ],
-            "step5" => [
-                "link_rewrite" => [],
-                "meta_title" => [],
-                "meta_description" => [],
-            ],
-            "step6" => [
+                "delivery_in_stock" => array(),
+                "delivery_out_stock" => array(),
+            ),
+            "step5" => array(
+                "link_rewrite" => array(),
+                "meta_title" => array(),
+                "meta_description" => array(),
+            ),
+            "step6" => array(
                 "redirect_type" => '',
-                "id_type_redirected" => [],
+                "id_type_redirected" => array(),
                 "visibility" => '',
-                "tags" => [],
-                "display_options" => [],
+                "tags" => array(),
+                "display_options" => array(),
                 "upc" => '',
                 "ean13" => '',
                 "isbn" => '',
                 "reference" => '',
                 "condition" => '',
-                "suppliers" => [],
+                "suppliers" => array(),
                 "default_supplier" => '',
-                "custom_fields" => [],
-                "attachments" => [],
-                "supplier_combination_1" => []
-            ]
-        ];
+                "custom_fields" => array(),
+                "attachments" => array(),
+                "supplier_combination_1" => array()
+            )
+        );
     }
     private function fakeCombination()
     {
-        return array('0' => [
+        return array('0' => array(
             "id_product_attribute" => "6",
             "id_product" => "1",
             "reference" => "",
@@ -158,7 +158,7 @@ class AdminModelAdapterTest extends KernelTestCase
             "group_name" => "Taille",
             "attribute_name" => "L",
             "id_attribute" => "3"
-        ]);
+        ));
     }
 
     private function fakeProduct()

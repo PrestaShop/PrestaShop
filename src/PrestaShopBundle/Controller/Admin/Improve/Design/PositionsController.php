@@ -67,7 +67,7 @@ class PositionsController extends FrameworkBundleAdminController
 
         $this->manageLegacyFlashes($request->query->get('conf'));
 
-        $modules = [];
+        $modules = array();
         foreach ($installedModules as $installedModule) {
             if ($module = $moduleAdapter->getInstanceById($installedModule['id_module'])) {
                 // We want to be able to sort modules by display name
@@ -104,21 +104,21 @@ class PositionsController extends FrameworkBundleAdminController
         }
 
         $legacyContextService = $this->get('prestashop.adapter.legacy.context');
-        $saveUrlParams = [
+        $saveUrlParams = array(
              'addToHook' => '',
-        ];
+        );
         if ($this->selectedModule) {
             $saveUrlParams['show_modules'] = $this->selectedModule;
         }
         $saveUrl = $legacyContextService->getAdminLink('AdminModulesPositions', true, $saveUrlParams);
 
-        return [
-            'layoutHeaderToolbarBtn' => [
-                'save' => [
+        return array(
+            'layoutHeaderToolbarBtn' => array(
+                'save' => array(
                     'href' => $saveUrl,
                     'desc' => $this->trans('Transplant a module', 'Admin.Design.Feature'),
-                ],
-            ],
+                ),
+            ),
             'selectedModule' => $this->selectedModule,
             'selectedModule' => $this->selectedModule,
             'layoutTitle' => $this->trans('Positions', 'Admin.Navigation.Menu'),
@@ -131,7 +131,7 @@ class PositionsController extends FrameworkBundleAdminController
             'hooks' => $hooks,
             'modules' => $modules,
             'canMove' => $this->get('prestashop.adapter.shop.context')->isSingleShopContext(),
-        ];
+        );
     }
 
     /**
@@ -151,11 +151,11 @@ class PositionsController extends FrameworkBundleAdminController
         if (empty($unhooks)) {
             $moduleId = $request->query->get('moduleId');
             $hookId = $request->query->get('hookId');
-            $unhooks = [sprintf('%d_%d', $hookId, $moduleId)];
+            $unhooks = array(sprintf('%d_%d', $hookId, $moduleId));
             $context = $this->get('prestashop.adapter.shop.context')->getContextListShopID();
         }
 
-        $errors = [];
+        $errors = array();
         foreach ($unhooks as $unhook) {
             $explode = explode('_', $unhook);
             $hookId = (int) isset($explode[0]) ? $explode[0] : 0;
@@ -216,10 +216,10 @@ class PositionsController extends FrameworkBundleAdminController
             return;
         }
 
-        $messages = [
+        $messages = array(
             16 => $this->trans('The module transplanted successfully to the hook.', 'Admin.Modules.Notification'),
             17 => $this->trans('The module was successfully removed from the hook.', 'Admin.Modules.Notification'),
-        ];
+        );
 
         if (isset($messages[$messageId])) {
             $this->addFlash(

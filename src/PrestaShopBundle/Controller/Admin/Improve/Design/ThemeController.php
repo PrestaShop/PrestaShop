@@ -79,10 +79,10 @@ class ThemeController extends AbstractAdminController
             return $this->redirectToRoute('admin_theme_customize_page_layouts');
         }
 
-        return $this->render('@PrestaShop/Admin/Improve/Design/Theme/customize_page_layouts.html.twig', [
+        return $this->render('@PrestaShop/Admin/Improve/Design/Theme/customize_page_layouts.html.twig', array(
             'pageLayoutCustomizationForm' => $pageLayoutCustomizationForm->createView(),
             'pages' => $pages,
-        ]);
+        ));
     }
 
     /**

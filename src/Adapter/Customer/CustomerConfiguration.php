@@ -49,14 +49,14 @@ class CustomerConfiguration implements DataConfigurationInterface
      */
     public function getConfiguration()
     {
-        return [
+        return array(
             'redisplay_cart_at_login' => $this->configuration->getBoolean('PS_CART_FOLLOWING'),
             'send_email_after_registration' => $this->configuration->getBoolean('PS_CUSTOMER_CREATION_EMAIL'),
             'password_reset_delay' => $this->configuration->getInt('PS_PASSWD_TIME_FRONT'),
             'enable_b2b_mode' => $this->configuration->getBoolean('PS_B2B_ENABLE'),
             'ask_for_birthday' => $this->configuration->getBoolean('PS_CUSTOMER_BIRTHDATE'),
             'enable_offers' => $this->configuration->getBoolean('PS_CUSTOMER_OPTIN'),
-        ];
+        );
     }
 
     /**
@@ -73,7 +73,7 @@ class CustomerConfiguration implements DataConfigurationInterface
             $this->configuration->set('PS_CUSTOMER_OPTIN', (int) $config['enable_offers']);
         }
 
-        return [];
+        return array();
     }
 
     /**

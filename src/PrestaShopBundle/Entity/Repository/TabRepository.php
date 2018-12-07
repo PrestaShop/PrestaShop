@@ -38,7 +38,7 @@ class TabRepository extends EntityRepository
      */
     public function findByModule($moduleName)
     {
-        return $this->findBy(['module' => $moduleName]);
+        return $this->findBy(array('module' => $moduleName));
     }
 
     /**
@@ -48,7 +48,7 @@ class TabRepository extends EntityRepository
      */
     public function findByParentId($idParent)
     {
-        return $this->findBy(['idParent' => $idParent]);
+        return $this->findBy(array('idParent' => $idParent));
     }
 
     /**
@@ -58,7 +58,7 @@ class TabRepository extends EntityRepository
      */
     public function findOneByClassName($className)
     {
-        return $this->findOneBy(['className' => $className]);
+        return $this->findOneBy(array('className' => $className));
     }
 
     /**

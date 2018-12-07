@@ -53,7 +53,7 @@ class SmartySettingsTest extends IntegrationTestCase
         $this->assertEquals(
             '&lt;a&gt;hello&lt;/a&gt;',
             $this->escapeTemplateLocationComments(
-                $this->render('{$str}', ['str' => $str])
+                $this->render('{$str}', array('str' => $str))
             )
         );
     }
@@ -64,7 +64,7 @@ class SmartySettingsTest extends IntegrationTestCase
         $this->assertEquals(
             $str,
             $this->escapeTemplateLocationComments(
-                $this->render('{$str nofilter}', ['str' => $str])
+                $this->render('{$str nofilter}', array('str' => $str))
             )
         );
     }
@@ -75,7 +75,7 @@ class SmartySettingsTest extends IntegrationTestCase
         $this->assertEquals(
             '&lt;a&gt;hello&lt;/a&gt;',
             $this->escapeTemplateLocationComments(
-                $this->render('{$str|escape:"html"}', ['str' => $str])
+                $this->render('{$str|escape:"html"}', array('str' => $str))
             )
         );
     }

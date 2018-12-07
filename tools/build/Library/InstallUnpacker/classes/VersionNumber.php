@@ -60,7 +60,7 @@ class VersionNumber
     public static function fromString($versionNumberAsString)
     {
         $regexp = '#^(\d+\.\d+|\d+)\.(\d+)\.(\d+)$#';
-        $matches = [];
+        $matches = array();
 
         $matchingResult = preg_match($regexp, $versionNumberAsString, $matches);
 

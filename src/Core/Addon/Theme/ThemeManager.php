@@ -176,7 +176,8 @@ class ThemeManager implements AddonManagerInterface
                 ->doEnableModules($theme->getModulesToEnable())
                 ->doResetModules($theme->get('global_settings.modules.to_reset', array()))
                 ->doApplyImageTypes($theme->get('global_settings.image_types'))
-                ->doHookModules($theme->get('global_settings.hooks.modules_to_hook'));
+                ->doHookModules($theme->get('global_settings.hooks.modules_to_hook'))
+        ;
 
         $theme->onEnable();
 
@@ -282,7 +283,7 @@ class ThemeManager implements AddonManagerInterface
     private function doEnableModules(array $modules)
     {
         $moduleManagerBuilder = ModuleManagerBuilder::getInstance();
-        $moduleManager = $moduleManagerBuilder->build()->setActionParams(['confirmPrestaTrust' => true]);
+        $moduleManager = $moduleManagerBuilder->build()->setActionParams(array('confirmPrestaTrust' => true));
 
         foreach ($modules as $key => $moduleName) {
             if (!$moduleManager->isInstalled($moduleName)
@@ -296,7 +297,8 @@ class ThemeManager implements AddonManagerInterface
                             '%module%' => $moduleName,
                             '%error_details%' => $moduleManager->getError($moduleName),
                         ),
-                        'Admin.Modules.Notification')
+                        'Admin.Modules.Notification'
+                    )
                 );
             }
             if (!$moduleManager->isEnabled($moduleName)) {
@@ -356,7 +358,7 @@ class ThemeManager implements AddonManagerInterface
         if (!$this->themeValidator->isValid($theme)) {
             $this->filesystem->remove($sandboxPath);
             throw new PrestaShopException(
-                $this->translator->trans('This theme is not valid for PrestaShop 1.7', [], 'Admin.Design.Notification')
+                $this->translator->trans('This theme is not valid for PrestaShop 1.7', array(), 'Admin.Design.Notification')
             );
         }
 
@@ -365,7 +367,8 @@ class ThemeManager implements AddonManagerInterface
         if ($this->filesystem->exists($modules_parent_dir)) {
             $module_dirs = $this->finder->directories()
                                         ->in($modules_parent_dir)
-                                        ->depth('== 0');
+                                        ->depth('== 0')
+            ;
 
             foreach (iterator_to_array($module_dirs) as $dir) {
                 $destination = $module_root_dir . basename($dir->getFileName());
@@ -384,7 +387,7 @@ class ThemeManager implements AddonManagerInterface
                     'There is already a theme named '
                     . $theme->getName()
                     . ' in your themes/ folder. Remove it if you want to continue.',
-                    [],
+                    array(),
                     'Admin.Design.Notification'
                 )
             );

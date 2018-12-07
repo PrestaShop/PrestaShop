@@ -36,7 +36,7 @@ final class DataRowCollection implements DataRowCollectionInterface
     /**
      * @var array of DataRowInterface objects
      */
-    private $dataRows = [];
+    private $dataRows = array();
 
     /**
      * {@inheritdoc}

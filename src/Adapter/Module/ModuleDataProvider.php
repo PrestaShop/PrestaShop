@@ -107,7 +107,8 @@ class ModuleDataProvider
                 $qb->select('mh')
                     ->from('PrestaShopBundle:ModuleHistory', 'mh', 'mh.idModule')
                     ->where('mh.idEmployee = ?1')
-                    ->setParameter(1, $this->employeeID);
+                    ->setParameter(1, $this->employeeID)
+                ;
                 $query = $qb->getQuery();
                 $query->useResultCache(true);
                 $modulesHistory = $query->getResult();
@@ -121,7 +122,7 @@ class ModuleDataProvider
             return $result;
         }
 
-        return ['installed' => 0];
+        return array('installed' => 0);
     }
 
     /**
@@ -212,7 +213,9 @@ class ModuleDataProvider
                 $this->translator->trans(
                     'Parse error detected in main class of module %module%!',
                     array('%module%' => $name),
-                    'Admin.Modules.Notification'));
+                    'Admin.Modules.Notification'
+                )
+            );
 
             return false;
         }
@@ -233,7 +236,9 @@ class ModuleDataProvider
                         array(
                             '%module%' => $name,
                             '%error_message%' => $e->getMessage(), ),
-                        'Admin.Modules.Notification'));
+                        'Admin.Modules.Notification'
+                    )
+                );
 
                 return false;
             }

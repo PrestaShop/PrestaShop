@@ -91,6 +91,6 @@ final class InvoiceByDateFormHandler extends FormHandler
         // Generate PDF out of found invoices
         $this->pdfGenerator->generatePDF($invoiceCollection);
 
-        return [];
+        return array();
     }
 }

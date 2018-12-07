@@ -46,20 +46,20 @@ final class LinkRowAction extends AbstractRowAction
     protected function configureOptions(OptionsResolver $resolver)
     {
         $resolver
-            ->setRequired([
+            ->setRequired(array(
                 'route',
                 'route_param_name',
                 'route_param_field',
-            ])
-            ->setDefaults([
+            ))
+            ->setDefaults(array(
                 'confirm_message' => '',
                 'accessibility_checker' => null,
-            ])
+            ))
             ->setAllowedTypes('route', 'string')
             ->setAllowedTypes('route_param_name', 'string')
             ->setAllowedTypes('route_param_field', 'string')
             ->setAllowedTypes('confirm_message', 'string')
-            ->setAllowedTypes('accessibility_checker', [AccessibilityCheckerInterface::class, 'callable', 'null'])
+            ->setAllowedTypes('accessibility_checker', array(AccessibilityCheckerInterface::class, 'callable', 'null'))
         ;
     }
 

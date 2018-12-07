@@ -63,14 +63,14 @@ class WebserviceController extends FrameworkBundleAdminController
 
         $configurationWarnings = $this->lookForWarnings($request);
 
-        $twigValues = [
-            'layoutHeaderToolbarBtn' => [
-                'add' => [
+        $twigValues = array(
+            'layoutHeaderToolbarBtn' => array(
+                'add' => array(
                     'href' => $this->generateUrl('admin_webservice_list_create'),
                     'desc' => $this->trans('Add new webservice key', 'Admin.Advparameters.Feature'),
                     'icon' => 'add_circle_outline',
-                ],
-            ],
+                ),
+            ),
             'layoutTitle' => $this->trans('Webservice', 'Admin.Navigation.Menu'),
             'requireAddonsSearch' => false,
             'requireBulkActions' => false, // temporary
@@ -81,7 +81,7 @@ class WebserviceController extends FrameworkBundleAdminController
             'form' => $form->createView(),
             'grid' => $presentedGrid,
             'configurationWarnings' => $configurationWarnings,
-        ];
+        );
 
         return $this->render('@AdvancedParameters/WebservicePage/webservice.html.twig', $twigValues);
     }
@@ -96,9 +96,9 @@ class WebserviceController extends FrameworkBundleAdminController
     public function createAction()
     {
         //@todo: this action should point to new add page
-        $legacyLink = $this->getAdminLink('AdminWebservice', [
+        $legacyLink = $this->getAdminLink('AdminWebservice', array(
             'addwebservice_account' => 1,
-        ]);
+        ));
 
         return $this->redirect($legacyLink);
     }
@@ -114,10 +114,10 @@ class WebserviceController extends FrameworkBundleAdminController
      */
     public function editAction($webserviceAccountId)
     {
-        $legacyLink = $this->getAdminLink('AdminWebservice', [
+        $legacyLink = $this->getAdminLink('AdminWebservice', array(
             'id_webservice_account' => $webserviceAccountId,
             'updatewebservice_account' => 1,
-        ]);
+        ));
 
         return $this->redirect($legacyLink);
     }
@@ -140,13 +140,13 @@ class WebserviceController extends FrameworkBundleAdminController
         $searchParametersForm = $gridFilterFormFactory->create($webserviceDefinition);
 
         $searchParametersForm->handleRequest($request);
-        $filters = [];
+        $filters = array();
 
         if ($searchParametersForm->isSubmitted()) {
             $filters = $searchParametersForm->getData();
         }
 
-        return $this->redirectToRoute('admin_webservice', ['filters' => $filters]);
+        return $this->redirectToRoute('admin_webservice', array('filters' => $filters));
     }
 
     /**
@@ -164,7 +164,7 @@ class WebserviceController extends FrameworkBundleAdminController
     public function deleteSingleWebserviceAction($webserviceAccountId)
     {
         $webserviceEraser = $this->get('prestashop.adapter.webservice.webservice_key_eraser');
-        $errors = $webserviceEraser->erase([$webserviceAccountId]);
+        $errors = $webserviceEraser->erase(array($webserviceAccountId));
 
         if (!empty($errors)) {
             $this->flashErrors($errors);

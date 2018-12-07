@@ -47,12 +47,12 @@ final class DateTimeColumn extends AbstractColumn
         parent::configureOptions($resolver);
 
         $resolver
-            ->setRequired([
+            ->setRequired(array(
                 'field',
-            ])
-            ->setDefaults([
+            ))
+            ->setDefaults(array(
                 'format' => 'Y-m-d H:i:s',
-            ])
+            ))
             ->setAllowedTypes('format', 'string')
             ->setAllowedTypes('field', 'string')
         ;

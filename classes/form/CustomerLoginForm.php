@@ -66,13 +66,13 @@ class CustomerLoginFormCore extends AbstractForm
             );
 
             if (isset($authentication->active) && !$authentication->active) {
-                $this->errors[''][] = $this->translator->trans('Your account isn\'t available at this time, please contact us', [], 'Shop.Notifications.Error');
+                $this->errors[''][] = $this->translator->trans('Your account isn\'t available at this time, please contact us', array(), 'Shop.Notifications.Error');
             } elseif (!$authentication || !$customer->id || $customer->is_guest) {
-                $this->errors[''][] = $this->translator->trans('Authentication failed.', [], 'Shop.Notifications.Error');
+                $this->errors[''][] = $this->translator->trans('Authentication failed.', array(), 'Shop.Notifications.Error');
             } else {
                 $this->context->updateCustomer($customer);
 
-                Hook::exec('actionAuthentication', ['customer' => $this->context->customer]);
+                Hook::exec('actionAuthentication', array('customer' => $this->context->customer));
 
                 // Login information have changed, so we check if the cart rules still apply
                 CartRule::autoRemoveFromCart($this->context);
@@ -89,7 +89,7 @@ class CustomerLoginFormCore extends AbstractForm
             $this->formFields = $this->formatter->getFormat();
         }
 
-        return [
+        return array(
             'action' => $this->action,
             'urls' => $this->urls,
             'formFields' => array_map(
@@ -99,6 +99,6 @@ class CustomerLoginFormCore extends AbstractForm
                 $this->formFields
             ),
             'errors' => $this->getErrors(),
-        ];
+        );
     }
 }

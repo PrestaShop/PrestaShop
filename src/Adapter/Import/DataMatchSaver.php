@@ -67,11 +67,11 @@ final class DataMatchSaver
     {
         return (bool) $this->connection->insert(
             $this->dbPrefix . 'import_match',
-            [
+            array(
                 '`name`' => pSQL($name),
                 '`match`' => pSQL(implode('|', $value)),
                 '`skip`' => (int) $skipRows,
-            ]
+            )
         );
     }
 }

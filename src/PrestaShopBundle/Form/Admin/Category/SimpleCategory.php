@@ -77,27 +77,28 @@ class SimpleCategory extends CommonAbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('name', TextType::class, [
-            'label' => $this->translator->trans('Name', [], 'Admin.Global'),
+        $builder->add('name', TextType::class, array(
+            'label' => $this->translator->trans('Name', array(), 'Admin.Global'),
             'required' => false,
-            'attr' => [
-                'placeholder' => $this->translator->trans('Category name', [], 'Admin.Catalog.Feature'),
+            'attr' => array(
+                'placeholder' => $this->translator->trans('Category name', array(), 'Admin.Catalog.Feature'),
                 'class' => 'ajax',
-            ],
-            'constraints' => $options['ajax'] ? [] : [
+            ),
+            'constraints' => $options['ajax'] ? array() : array(
                 new Assert\NotBlank(),
-                new Assert\Length(['min' => 1, 'max' => 128]),
-            ],
-        ])
-            ->add('id_parent', ChoiceType::class, [
+                new Assert\Length(array('min' => 1, 'max' => 128)),
+            ),
+        ))
+            ->add('id_parent', ChoiceType::class, array(
                 'choices' => $this->categories,
                 'required' => true,
-                'attr' => [
+                'attr' => array(
                     'data-toggle' => 'select2',
                     'data-minimumResultsForSearch' => '7',
-                ],
-                'label' => $this->translator->trans('Parent of the category', [], 'Admin.Catalog.Feature'),
-            ]);
+                ),
+                'label' => $this->translator->trans('Parent of the category', array(), 'Admin.Catalog.Feature'),
+            ))
+        ;
     }
 
     /**
@@ -105,9 +106,9 @@ class SimpleCategory extends CommonAbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
+        $resolver->setDefaults(array(
             'ajax' => false,
-        ]);
+        ));
     }
 
     /**

@@ -36,10 +36,10 @@ class CategoryStatus
     const ENABLED = 'enabled';
     const DISABLED = 'disabled';
 
-    const AVAILABLE_STATUSES = [
+    const AVAILABLE_STATUSES = array(
         self::ENABLED,
         self::DISABLED,
-    ];
+    );
 
     /**
      * @var string

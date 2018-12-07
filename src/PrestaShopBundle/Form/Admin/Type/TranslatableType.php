@@ -83,11 +83,11 @@ class TranslatableType extends AbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
+        $resolver->setDefaults(array(
             'type' => TextType::class,
-            'options' => [],
+            'options' => array(),
             'locales' => $this->locales,
-        ]);
+        ));
 
         $resolver->setAllowedTypes('locales', 'array');
         $resolver->setAllowedTypes('options', 'array');

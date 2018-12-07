@@ -54,12 +54,12 @@ class ProfileChoiceType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver
-            ->setDefaults([
+            ->setDefaults(array(
                 'choices' => $this->profileChoices,
                 'translation_domain' => false,
                 'expanded' => false,
                 'multiple' => false,
-            ])
+            ))
         ;
     }
 

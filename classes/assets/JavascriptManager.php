@@ -28,17 +28,17 @@ class JavascriptManagerCore extends AbstractAssetManager
 {
     protected $list;
 
-    protected $valid_position = ['head', 'bottom'];
-    protected $valid_attribute = ['async', 'defer'];
+    protected $valid_position = array('head', 'bottom');
+    protected $valid_attribute = array('async', 'defer');
 
     protected function getDefaultList()
     {
-        $default = [];
+        $default = array();
         foreach ($this->valid_position as $position) {
-            $default[$position] = [
+            $default[$position] = array(
                 'external' => array(),
                 'inline' => array(),
-            ];
+            );
         }
 
         return $default;

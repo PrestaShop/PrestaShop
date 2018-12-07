@@ -115,17 +115,20 @@ class AdminShopGroupControllerCore extends AdminController
                     'Collapse All',
                     '#',
                     '$(\'#' . $shops_tree->getId() . '\').tree(\'collapseAll\'); return false;',
-                    'icon-collapse-alt'),
+                    'icon-collapse-alt'
+                ),
                 new TreeToolbarLink(
                     'Expand All',
                     '#',
                     '$(\'#' . $shops_tree->getId() . '\').tree(\'expandAll\'); return false;',
-                    'icon-expand-alt'),
+                    'icon-expand-alt'
+                ),
             ))
             ->setAttribute('url_shop_group', $this->context->link->getAdminLink('AdminShopGroup'))
             ->setAttribute('url_shop', $this->context->link->getAdminLink('AdminShop'))
             ->setAttribute('url_shop_url', $this->context->link->getAdminLink('AdminShopUrl'))
-            ->setData($data);
+            ->setData($data)
+        ;
         $shops_tree = $shops_tree->render(null, false, false);
 
         if ($this->display == 'edit') {

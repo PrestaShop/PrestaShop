@@ -149,7 +149,7 @@ abstract class AbstractRowAction implements RowActionInterface
      *
      * @param array $options
      */
-    private function resolveOptions(array $options = [])
+    private function resolveOptions(array $options = array())
     {
         $resolver = new OptionsResolver();
         $this->configureOptions($resolver);

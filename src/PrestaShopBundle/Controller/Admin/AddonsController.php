@@ -50,11 +50,11 @@ class AddonsController extends FrameworkBundleAdminController
         $response = new JsonResponse();
 
         // Parameters needed in order to authenticate the merchant : login and password
-        $params = [
+        $params = array(
             'format' => 'json',
             'username_addons' => $request->request->get('username_addons', null),
             'password_addons' => $request->request->get('password_addons', null),
-        ];
+        );
 
         try {
             $json = $addonsProvider->request('check_customer', $params);
@@ -71,16 +71,16 @@ class AddonsController extends FrameworkBundleAdminController
             );
             $response->headers->setCookie(new Cookie('is_contributor', (int) $json->is_contributor));
 
-            $response->setData(['success' => 1, 'message' => '']);
+            $response->setData(array('success' => 1, 'message' => ''));
             $modulesProvider->clearCatalogCache();
         } catch (Exception $e) {
-            $response->setData([
+            $response->setData(array(
                 'success' => 0,
                 'message' => $this->trans(
                     'PrestaShop was unable to log in to Addons. Please check your credentials and your Internet connection.',
                     'Admin.Notifications.Error'
                 ),
-            ]);
+            ));
         }
 
         return $response;
@@ -100,10 +100,10 @@ class AddonsController extends FrameworkBundleAdminController
 
         if ($request->isXmlHttpRequest()) {
             $response = new JsonResponse();
-            $response->setData([
+            $response->setData(array(
                 'success' => 1,
                 'message' => '',
-            ]);
+            ));
         } else {
             if ($request->server->get('HTTP_REFERER')) {
                 $url = $request->server->get('HTTP_REFERER');

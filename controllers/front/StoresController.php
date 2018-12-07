@@ -190,8 +190,8 @@ class StoresControllerCore extends FrontController
             unset($store['active']);
             // Prepare $store.address
             $address = new Address();
-            $store['address'] = [];
-            $attr = ['address1', 'address2', 'postcode', 'city', 'id_state', 'id_country'];
+            $store['address'] = array();
+            $attr = array('address1', 'address2', 'postcode', 'city', 'id_state', 'id_country');
             foreach ($attr as $a) {
                 $address->{$a} = $store[$a];
                 $store['address'][$a] = $store[$a];
@@ -203,30 +203,30 @@ class StoresControllerCore extends FrontController
             // Required for trad
             $temp = json_decode($store['hours'], true);
             unset($store['hours']);
-            $store['business_hours'] = [
-                [
+            $store['business_hours'] = array(
+                array(
                     'day' => $this->trans('Monday', array(), 'Shop.Theme.Global'),
                     'hours' => $temp[0],
-                ], [
+                ), array(
                     'day' => $this->trans('Tuesday', array(), 'Shop.Theme.Global'),
                     'hours' => $temp[1],
-                ], [
+                ), array(
                     'day' => $this->trans('Wednesday', array(), 'Shop.Theme.Global'),
                     'hours' => $temp[2],
-                ], [
+                ), array(
                     'day' => $this->trans('Thursday', array(), 'Shop.Theme.Global'),
                     'hours' => $temp[3],
-                ], [
+                ), array(
                     'day' => $this->trans('Friday', array(), 'Shop.Theme.Global'),
                     'hours' => $temp[4],
-                ], [
+                ), array(
                     'day' => $this->trans('Saturday', array(), 'Shop.Theme.Global'),
                     'hours' => $temp[5],
-                ], [
+                ), array(
                     'day' => $this->trans('Sunday', array(), 'Shop.Theme.Global'),
                     'hours' => $temp[6],
-                ],
-            ];
+                ),
+            );
             $store['image'] = $imageRetriever->getImage(new Store($store['id_store']), $store['id_store']);
             if (is_array($store['image'])) {
                 $store['image']['legend'] = $store['image']['legend'][$this->context->language->id];

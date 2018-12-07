@@ -52,12 +52,12 @@ final class EmailDataConfigurator implements DataConfigurationInterface
      */
     public function getConfiguration()
     {
-        return [
+        return array(
             'send_emails_to' => $this->configuration->get('PS_MAIL_EMAIL_MESSAGE'),
             'mail_method' => (int) $this->configuration->get('PS_MAIL_METHOD'),
             'mail_type' => (int) $this->configuration->get('PS_MAIL_TYPE'),
             'log_emails' => (bool) $this->configuration->get('PS_LOG_EMAILS'),
-        ];
+        );
     }
 
     /**
@@ -72,7 +72,7 @@ final class EmailDataConfigurator implements DataConfigurationInterface
             $this->configuration->set('PS_LOG_EMAILS', $config['log_emails']);
         }
 
-        return [];
+        return array();
     }
 
     /**

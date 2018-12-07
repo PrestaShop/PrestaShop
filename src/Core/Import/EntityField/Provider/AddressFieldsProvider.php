@@ -53,7 +53,7 @@ final class AddressFieldsProvider implements EntityFieldsProviderInterface
      */
     public function getCollection()
     {
-        $fields = [
+        $fields = array(
             new EntityField('id', $this->trans('ID', 'Admin.Global')),
             new EntityField('alias', $this->trans('Alias', 'Admin.Shopparameters.Feature'), '', true),
             new EntityField('active', $this->trans('Active  (0/1)')),
@@ -75,7 +75,7 @@ final class AddressFieldsProvider implements EntityFieldsProviderInterface
             new EntityField('phone_mobile', $this->trans('Mobile Phone', 'Admin.Global')),
             new EntityField('vat_number', $this->trans('VAT number', 'Admin.Orderscustomers.Feature')),
             new EntityField('dni', $this->trans('Identification number', 'Admin.Orderscustomers.Feature')),
-        ];
+        );
 
         return EntityFieldCollection::createFromArray($fields);
     }
@@ -90,6 +90,6 @@ final class AddressFieldsProvider implements EntityFieldsProviderInterface
      */
     private function trans($id, $domain = 'Admin.Advparameters.Feature')
     {
-        return $this->translator->trans($id, [], $domain);
+        return $this->translator->trans($id, array(), $domain);
     }
 }

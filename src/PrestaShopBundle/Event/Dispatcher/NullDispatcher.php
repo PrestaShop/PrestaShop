@@ -69,7 +69,7 @@ class NullDispatcher implements EventDispatcherInterface, HookDispatcherInterfac
     {
     }
 
-    public function dispatchWithParameters($hookName, array $hookParameters = [])
+    public function dispatchWithParameters($hookName, array $hookParameters = array())
     {
     }
 
@@ -77,7 +77,7 @@ class NullDispatcher implements EventDispatcherInterface, HookDispatcherInterfac
     {
     }
 
-    public function dispatchRenderingWithParameters($hookName, array $hookParameters = [])
+    public function dispatchRenderingWithParameters($hookName, array $hookParameters = array())
     {
     }
 }

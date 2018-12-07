@@ -49,7 +49,7 @@ class AddonsCollection implements ArrayAccess, Countable, IteratorAggregate
      *
      * @param array $addons
      */
-    public function __construct(array $addons = [])
+    public function __construct(array $addons = array())
     {
         $this->addons = $addons;
     }

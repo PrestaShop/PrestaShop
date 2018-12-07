@@ -492,7 +492,7 @@ class AdminCategoriesControllerCore extends AdminController
 
         $thumb_size = file_exists($thumb) ? filesize($thumb) / 1000 : false;
 
-        $menu_thumbnails = [];
+        $menu_thumbnails = array();
         for ($i = 0; $i < 3; ++$i) {
             if (file_exists(_PS_CAT_IMG_DIR_ . (int) $obj->id . '-' . $i . '_thumb.jpg')) {
                 $menu_thumbnails[$i]['type'] = HelperImageUploader::TYPE_IMAGE;
@@ -988,7 +988,7 @@ class AdminCategoriesControllerCore extends AdminController
         if (is_array($positions)) {
             foreach ($positions as $key => $value) {
                 $pos = explode('_', $value);
-                if ((isset($pos[1]) && isset($pos[2])) && ($pos[1] == $id_category_parent && $pos[2] == $id_category_to_move)) {
+                if ((isset($pos[1], $pos[2])  ) && ($pos[1] == $id_category_parent && $pos[2] == $id_category_to_move)) {
                     $position = $key;
                     break;
                 }
@@ -1003,9 +1003,9 @@ class AdminCategoriesControllerCore extends AdminController
                     $category->cleanPositions((int) $category->id_parent);
                 }
 
-                die(json_encode([
-                    'message' => $this->trans('Successful update.', [], 'Admin.Notifications.Success'),
-                ]));
+                die(json_encode(array(
+                    'message' => $this->trans('Successful update.', array(), 'Admin.Notifications.Success'),
+                )));
             } else {
                 die('{"hasError" : true, errors : "Cannot update categories position"}');
             }
@@ -1088,8 +1088,14 @@ class AdminCategoriesControllerCore extends AdminController
                 }
 
                 //Add image preview and delete url
-                $file['image'] = ImageManager::thumbnail(_PS_CAT_IMG_DIR_ . (int) $category->id . '-' . $id . '_thumb.jpg',
-                    $this->context->controller->table . '_' . (int) $category->id . '-' . $id . '_thumb.jpg', 100, 'jpg', true, true);
+                $file['image'] = ImageManager::thumbnail(
+                    _PS_CAT_IMG_DIR_ . (int) $category->id . '-' . $id . '_thumb.jpg',
+                    $this->context->controller->table . '_' . (int) $category->id . '-' . $id . '_thumb.jpg',
+                    100,
+                    'jpg',
+                    true,
+                    true
+                );
                 $file['delete_url'] = Context::getContext()->link->getAdminLink('AdminCategories') . '&deleteThumb='
                     . $id . '&id_category=' . (int) $category->id . '&updatecategory';
             }

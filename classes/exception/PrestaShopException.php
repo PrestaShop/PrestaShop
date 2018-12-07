@@ -145,15 +145,15 @@ class PrestaShopExceptionCore extends Exception
             return $args;
         }
 
-        $criticalParameters = [
+        $criticalParameters = array(
             'pwd',
             'pass',
             'passwd',
             'password',
             'database',
             'server',
-        ];
-        $hiddenArgs = [];
+        );
+        $hiddenArgs = array();
         try {
             $class = new \ReflectionClass($trace['class']);
             /** @var \ReflectionMethod $method */

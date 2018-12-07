@@ -49,7 +49,7 @@ class MoneyWithSuffixType extends MoneyType
         $tokens = explode('{{ widget }}', $pattern);
 
         // The only non-empty token will be the currency sign - append the suffix to it
-        array_walk($tokens, [$this, 'applySuffix'], $options['suffix']);
+        array_walk($tokens, array($this, 'applySuffix'), $options['suffix']);
 
         // Restore the pattern as it was before,
         // just the suffix is already appended after the currency sign

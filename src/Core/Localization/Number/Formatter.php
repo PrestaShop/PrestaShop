@@ -177,7 +177,7 @@ class Formatter
         $minorDigits = $number->getFractionalPart();
         $minorDigits = ('0' === $minorDigits) ? '' : $minorDigits;
 
-        return [$majorDigits, $minorDigits];
+        return array($majorDigits, $minorDigits);
     }
 
     /**
@@ -315,13 +315,13 @@ class Formatter
     protected function replaceSymbols($number)
     {
         $symbols = $this->numberSpecification->getSymbolsByNumberingSystem($this->numberingSystem);
-        $replacements = [
+        $replacements = array(
             self::DECIMAL_SEPARATOR_PLACEHOLDER => $symbols->getDecimal(),
             self::GROUP_SEPARATOR_PLACEHOLDER => $symbols->getGroup(),
             self::MINUS_SIGN_PLACEHOLDER => $symbols->getMinusSign(),
             self::PERCENT_SYMBOL_PLACEHOLDER => $symbols->getPercentSign(),
             self::PLUS_SIGN_PLACEHOLDER => $symbols->getPlusSign(),
-        ];
+        );
 
         return strtr($number, $replacements);
     }

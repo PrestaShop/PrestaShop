@@ -38,12 +38,12 @@ final class EmployeeFilters extends Filters
      */
     public static function getDefaults()
     {
-        return [
+        return array(
             'limit' => 50,
             'offset' => 0,
             'orderBy' => 'id_employee',
             'sortOrder' => 'asc',
-            'filters' => [],
-        ];
+            'filters' => array(),
+        );
     }
 }

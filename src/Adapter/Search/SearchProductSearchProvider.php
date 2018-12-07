@@ -67,7 +67,7 @@ class SearchProductSearchProvider implements ProductSearchProviderInterface
         ProductSearchContext $context,
         ProductSearchQuery $query
     ) {
-        $products = [];
+        $products = array();
         $count = 0;
 
         if (($string = $query->getSearchString())) {
@@ -135,7 +135,8 @@ class SearchProductSearchProvider implements ProductSearchProviderInterface
         if (!empty($products)) {
             $result
                 ->setProducts($products)
-                ->setTotalProductsCount($count);
+                ->setTotalProductsCount($count)
+            ;
 
             $result->setAvailableSortOrders(
                 $this->sortOrderFactory->getDefaultSortOrders()

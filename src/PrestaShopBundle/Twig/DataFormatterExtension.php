@@ -114,7 +114,7 @@ class DataFormatterExtension extends \Twig_Extension
      */
     public function arrayPluck(array $array, array $extractedKeys)
     {
-        $extractedArray = [];
+        $extractedArray = array();
         foreach ($extractedKeys as $key => $value) {
             if (is_int($key)) {
                 $oldKey = $value;

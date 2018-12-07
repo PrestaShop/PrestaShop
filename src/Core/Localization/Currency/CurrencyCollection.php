@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Localization\Currency;
 
 class CurrencyCollection implements IteratorAggregate, Countable
 {
-    protected $currencies = [];
+    protected $currencies = array();
 
     /**
      * Gets the current CurrencyCollection as an Iterator that includes all currencies.
@@ -154,7 +154,7 @@ class CurrencyCollection implements IteratorAggregate, Countable
      */
     public function clear()
     {
-        $this->currencies = [];
+        $this->currencies = array();
 
         return $this;
     }

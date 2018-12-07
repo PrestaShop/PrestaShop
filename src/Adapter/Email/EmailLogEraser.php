@@ -42,14 +42,14 @@ final class EmailLogEraser implements EmailLogEraserInterface
      */
     public function erase(array $mailLogIds)
     {
-        $errors = [];
+        $errors = array();
 
         if (empty($mailLogIds)) {
-            $errors[] = [
+            $errors[] = array(
                 'key' => 'You must select at least one element to delete.',
-                'parameters' => [],
+                'parameters' => array(),
                 'domain' => 'Admin.Notifications.Error',
-            ];
+            );
 
             return $errors;
         }
@@ -60,13 +60,13 @@ final class EmailLogEraser implements EmailLogEraserInterface
         /** @var Mail $emailLog */
         foreach ($emailLogs->getResults() as $emailLog) {
             if (!$emailLog->delete()) {
-                $errors[] = [
+                $errors[] = array(
                     'key' => 'Can\'t delete #%id%',
-                    'parameters' => [
+                    'parameters' => array(
                         '%id%' => $emailLog->id,
-                    ],
+                    ),
                     'domain' => 'Admin.Notifications.Error',
-                ];
+                );
 
                 continue;
             }

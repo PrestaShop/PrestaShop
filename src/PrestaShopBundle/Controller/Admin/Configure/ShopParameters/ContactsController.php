@@ -59,20 +59,20 @@ class ContactsController extends FrameworkBundleAdminController
 
         $contactsGrid = $contactsGridFactory->getGrid($filters);
 
-        return [
+        return array(
             'layoutTitle' => $this->trans('Contacts', 'Admin.Navigation.Menu'),
-            'layoutHeaderToolbarBtn' => [
-                'add' => [
+            'layoutHeaderToolbarBtn' => array(
+                'add' => array(
                     'href' => $this->generateUrl('admin_contacts_create'),
                     'desc' => $this->trans('Add new contact', 'Admin.Shopparameters.Feature'),
                     'icon' => 'add_circle_outline',
-                ],
-            ],
+                ),
+            ),
             'requireAddonsSearch' => true,
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'grid' => $gridPresenter->present($contactsGrid),
-        ];
+        );
     }
 
     /**
@@ -93,13 +93,13 @@ class ContactsController extends FrameworkBundleAdminController
         $filtersForm = $gridFilterFormFactory->create($contactsGridDefinition);
         $filtersForm->handleRequest($request);
 
-        $filters = [];
+        $filters = array();
 
         if ($filtersForm->isSubmitted()) {
             $filters = $filtersForm->getData();
         }
 
-        return $this->redirectToRoute('admin_contacts_index', ['filters' => $filters]);
+        return $this->redirectToRoute('admin_contacts_index', array('filters' => $filters));
     }
 
     /**
@@ -111,9 +111,9 @@ class ContactsController extends FrameworkBundleAdminController
      */
     public function createAction()
     {
-        $legacyLink = $this->getAdminLink('AdminContacts', [
+        $legacyLink = $this->getAdminLink('AdminContacts', array(
             'addcontact' => 1,
-        ]);
+        ));
 
         return $this->redirect($legacyLink);
     }
@@ -129,10 +129,10 @@ class ContactsController extends FrameworkBundleAdminController
      */
     public function editAction($contactId)
     {
-        $legacyLink = $this->getAdminLink('AdminContacts', [
+        $legacyLink = $this->getAdminLink('AdminContacts', array(
             'id_contact' => $contactId,
             'updatecontact' => 1,
-        ]);
+        ));
 
         return $this->redirect($legacyLink);
     }
@@ -151,7 +151,7 @@ class ContactsController extends FrameworkBundleAdminController
     {
         $contactDeleter = $this->get('prestashop.adapter.contact.deleter');
 
-        if ($errors = $contactDeleter->delete([$contactId])) {
+        if ($errors = $contactDeleter->delete(array($contactId))) {
             $this->flashErrors($errors);
         } else {
             $this->addFlash(

@@ -42,7 +42,8 @@ class StockManagementControllerTest extends ApiTestCase
 
         $stockMovementRepository = $this->getMockBuilder('PrestaShopBundle\Entity\Repository\StockMovementRepository')
             ->disableOriginalConstructor()
-            ->getMock();
+            ->getMock()
+        ;
 
         $stockMovementRepository->method('saveStockMvt')->willReturn(true);
         self::$container->set('prestashop.core.api.stock_movement.repository', $stockMovementRepository);
@@ -54,7 +55,8 @@ class StockManagementControllerTest extends ApiTestCase
     {
         $deleteMovements = 'DELETE FROM ps_stock_mvt';
         $statement = self::$kernel->getContainer()->get('doctrine.dbal.default_connection')
-            ->prepare($deleteMovements);
+            ->prepare($deleteMovements)
+        ;
         $statement->execute();
     }
 
@@ -67,7 +69,8 @@ class StockManagementControllerTest extends ApiTestCase
             reserved_quantity = 2
             WHERE id_product = 1 AND id_product_attribute = 1';
         $statement = self::$container->get('doctrine.dbal.default_connection')
-            ->prepare($updateProductQuantity);
+            ->prepare($updateProductQuantity)
+        ;
         $statement->execute();
     }
 
@@ -310,19 +313,29 @@ class StockManagementControllerTest extends ApiTestCase
 
         $content = $this->assertResponseBodyValidJson(200);
 
-        $this->assertArrayHasKey('product_available_quantity', $content,
+        $this->assertArrayHasKey(
+            'product_available_quantity',
+            $content,
             'The response body should contain a "product_available_quantity" property.'
         );
-        $this->assertArrayHasKey('product_physical_quantity', $content,
+        $this->assertArrayHasKey(
+            'product_physical_quantity',
+            $content,
             'The response body should contain a "product_physical_quantity" property.'
         );
-        $this->assertArrayHasKey('product_reserved_quantity', $content,
+        $this->assertArrayHasKey(
+            'product_reserved_quantity',
+            $content,
             'The response body should contain a "product_reserved_quantity" property.'
         );
-        $this->assertArrayHasKey('product_thumbnail', $content,
+        $this->assertArrayHasKey(
+            'product_thumbnail',
+            $content,
             'The response body should contain an "image_thumbnail_path" property.'
         );
-        $this->assertArrayHasKey('combination_thumbnail', $content,
+        $this->assertArrayHasKey(
+            'combination_thumbnail',
+            $content,
             'The response body should contain an "image_thumbnail_path" property.'
         );
 
@@ -358,13 +371,19 @@ class StockManagementControllerTest extends ApiTestCase
      */
     private function assertProductQuantity($expectedQuantities, $content)
     {
-        $this->assertSame($expectedQuantities['available_quantity'], $content['product_available_quantity'],
+        $this->assertSame(
+            $expectedQuantities['available_quantity'],
+            $content['product_available_quantity'],
             'The response body should contain the newly updated physical quantity.'
         );
-        $this->assertSame($expectedQuantities['physical_quantity'], $content['product_physical_quantity'],
+        $this->assertSame(
+            $expectedQuantities['physical_quantity'],
+            $content['product_physical_quantity'],
             'The response body should contain the newly updated quantity.'
         );
-        $this->assertSame($expectedQuantities['reserved_quantity'], $content['product_reserved_quantity'],
+        $this->assertSame(
+            $expectedQuantities['reserved_quantity'],
+            $content['product_reserved_quantity'],
             'The response body should contain the newly updated physical quantity.'
         );
     }
@@ -385,8 +404,14 @@ class StockManagementControllerTest extends ApiTestCase
         self::$client->request('POST', $bulkEditProductsRoute, array(), array(), array(), '[{"delta": 0}]');
         $this->assertResponseBodyValidJson(400);
 
-        self::$client->request('POST', $bulkEditProductsRoute, array(), array(), array(),
-            '[{"product_id": 1, "delta": 0}]');
+        self::$client->request(
+            'POST',
+            $bulkEditProductsRoute,
+            array(),
+            array(),
+            array(),
+            '[{"product_id": 1, "delta": 0}]'
+        );
         $this->assertResponseBodyValidJson(400);
     }
 
@@ -394,9 +419,15 @@ class StockManagementControllerTest extends ApiTestCase
     {
         $bulkEditProductsRoute = $this->router->generate('api_stock_bulk_edit_products');
 
-        self::$client->request('POST', $bulkEditProductsRoute, array(), array(), array(),
+        self::$client->request(
+            'POST',
+            $bulkEditProductsRoute,
+            array(),
+            array(),
+            array(),
             '[{"product_id": 1, "combination_id": 1, "delta": 3},' .
-            '{"product_id": 1, "combination_id": 1, "delta": -1}]');
+            '{"product_id": 1, "combination_id": 1, "delta": -1}]'
+        );
         $content = $this->assertResponseBodyValidJson(200);
 
         $this->assertArrayHasKey(0, $content, 'The response content should have one item with key #0');
@@ -410,9 +441,15 @@ class StockManagementControllerTest extends ApiTestCase
             $content[1]
         );
 
-        self::$client->request('POST', $bulkEditProductsRoute, array(), array(), array(),
+        self::$client->request(
+            'POST',
+            $bulkEditProductsRoute,
+            array(),
+            array(),
+            array(),
             '[{"product_id": 1, "combination_id": 1, "delta": 3},' .
-            '{"product_id": 1, "combination_id": 1, "delta": -3}]');
+            '{"product_id": 1, "combination_id": 1, "delta": -3}]'
+        );
         $content = $this->assertResponseBodyValidJson(200);
 
         $this->assertArrayHasKey(0, $content, 'The response content should have one item with key #0');

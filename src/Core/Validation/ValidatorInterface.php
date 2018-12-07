@@ -36,7 +36,7 @@ interface ValidatorInterface
      *
      * @return bool
      */
-    public function isCleanHtml($html, array $options = []);
+    public function isCleanHtml($html, array $options = array());
 
     /**
      * Check if Module name is valid.

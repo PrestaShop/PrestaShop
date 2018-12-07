@@ -125,17 +125,17 @@ class SpecificPriceController extends FrameworkBundleAdminController
             $message = $this->trans(
                 'Cannot find specific price %price%',
                 'Admin.Catalog.Notification',
-                ['price' => $idSpecificPrice]
+                array('price' => $idSpecificPrice)
             );
 
             return new Response($message, Response::HTTP_BAD_REQUEST);
         }
         $formData = $this->formatSpecificPriceToPrefillForm($idSpecificPrice, $price);
 
-        $options = [
+        $options = array(
             'id_product' => $price->id_product,
             'selected_product_attribute' => $price->id_product_attribute,
-        ];
+        );
 
         $formBuilder = $this->createFormBuilder();
         $formBuilder->add('modal', SpecificPriceFormType::class, $options);
@@ -146,11 +146,11 @@ class SpecificPriceController extends FrameworkBundleAdminController
         $productAdapter = $this->get('prestashop.adapter.data_provider.product');
         $product = $productAdapter->getProduct((int) $price->id_product);
 
-        return [
+        return array(
             'form' => $form->createView()->offsetGet('modal'),
             'has_combinations' => ($product->hasCombinations()),
             'is_modal' => true,
-        ];
+        );
     }
 
     /**
@@ -218,7 +218,7 @@ class SpecificPriceController extends FrameworkBundleAdminController
         } else {
             $reduction = $price->reduction;
         }
-        $formattedFormData = [
+        $formattedFormData = array(
             'sp_update_id' => $id,
             'sp_id_shop' => $price->id_shop,
             'sp_id_currency' => $price->id_currency,
@@ -234,9 +234,9 @@ class SpecificPriceController extends FrameworkBundleAdminController
             'sp_reduction' => $reduction,
             'sp_reduction_type' => $price->reduction_type,
             'sp_reduction_tax' => $price->reduction_tax,
-        ];
+        );
         if ($price->id_customer !== '0') {
-            $formattedFormData['sp_id_customer'] = ['data' => [$price->id_customer]];
+            $formattedFormData['sp_id_customer'] = array('data' => array($price->id_customer));
         }
         $cleanedFormData = array_map(function ($item) {
             if (!$item) {
@@ -246,7 +246,7 @@ class SpecificPriceController extends FrameworkBundleAdminController
             return $item;
         }, $formattedFormData);
 
-        return ['modal' => $cleanedFormData];
+        return array('modal' => $cleanedFormData);
     }
 
     /**

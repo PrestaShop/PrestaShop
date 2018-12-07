@@ -119,7 +119,7 @@ class TaxRuleDataProvider
     public function getTaxRulesGroupChoices($onlyActive = true)
     {
         $taxRulesGroups = $this->getTaxRulesGroups($onlyActive);
-        $choices = [];
+        $choices = array();
 
         foreach ($taxRulesGroups as $taxRulesGroup) {
             $choices[$taxRulesGroup['name']] = $taxRulesGroup['id_tax_rules_group'];

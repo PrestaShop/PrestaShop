@@ -58,11 +58,11 @@ final class SqlRequestFormDataProvider implements FormDataProviderInterface
         /** @var EditableSqlRequest $editableSqlRequest */
         $editableSqlRequest = $this->queryBus->handle($getRequestSqlForEditingQuery);
 
-        return [
+        return array(
             'id' => $editableSqlRequest->getSqlRequestId()->getValue(),
             'name' => $editableSqlRequest->getName(),
             'sql' => $editableSqlRequest->getSql(),
-        ];
+        );
     }
 
     /**

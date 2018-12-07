@@ -66,18 +66,18 @@ class RecommendedModules
         // FIXME: replace static by dynamic call from add-ons when available
         switch ($domain) {
             case 'products_quantity':
-                return ['pm_advancedpack', 'quotation', 'amazon', 'pushoncart', 'cartabandonmentpro'];
+                return array('pm_advancedpack', 'quotation', 'amazon', 'pushoncart', 'cartabandonmentpro');
             case 'products_shipping':
-                return ['orderpreparation', 'pqeasypost', 'printlabels', 'upstrackingv2'];
+                return array('orderpreparation', 'pqeasypost', 'printlabels', 'upstrackingv2');
             case 'products_price':
-                return ['ordertaxprofitreport', 'massiveprices', 'giftcards', 'groupinc', 'moneybookers', 'authorizeaim'];
+                return array('ordertaxprofitreport', 'massiveprices', 'giftcards', 'groupinc', 'moneybookers', 'authorizeaim');
             case 'products_seo':
-                return ['ganalytics', 'gshopping', 'leguide', 'seoexpert', 'pm_seointernallinking', 'ec_seo404'];
+                return array('ganalytics', 'gshopping', 'leguide', 'seoexpert', 'pm_seointernallinking', 'ec_seo404');
             case 'products_options':
-                return ['pm_multiplefeatures', 'pm_advancedsearch4', 'banipmod', 'mynewsletter', 'allinone_rewards', 'pm_cachemanager', 'lgcookieslaw', 'customfields'];
+                return array('pm_multiplefeatures', 'pm_advancedsearch4', 'banipmod', 'mynewsletter', 'allinone_rewards', 'pm_cachemanager', 'lgcookieslaw', 'customfields');
             case 'products_others':
             default:
-                return [];
+                return array();
         }
     }
 
@@ -90,7 +90,7 @@ class RecommendedModules
      */
     public function filterInstalledAndBadModules(array $moduleFullList)
     {
-        $installed_modules = [];
+        $installed_modules = array();
         array_map(function ($module) use (&$installed_modules) {
             $installed_modules[$module['name']] = $module;
         }, Module::getModulesInstalled());

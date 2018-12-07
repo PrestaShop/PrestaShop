@@ -110,12 +110,12 @@ class AddStandardProductTest extends AbstractCartTest
 
     public function updateQuantitiesProvider()
     {
-        return [
-            [1, 'up', true, 1],
-            [2, 'up', true, 2],
-            [2, 'down', true, 0],
-            [0, 'down', true, 0],
-        ];
+        return array(
+            array(1, 'up', true, 1),
+            array(2, 'up', true, 2),
+            array(2, 'down', true, 0),
+            array(0, 'down', true, 0),
+        );
     }
 
     /**
@@ -142,13 +142,13 @@ class AddStandardProductTest extends AbstractCartTest
 
     public function multipleUpdateQuantitiesProvider()
     {
-        return [
-            [[1, 'up', true, 1], [1, 'up', true, 2]],
-            [[2, 'up', true, 2], [2, 'down', true, 0]],
-            [[2, 'down', true, 0], [2, 'up', true, 2]],
-            [[0, 'down', true, 0], [1, 'nothing', true, 0]],
-            [[1, 'down', true, 0], [1, 'nothing', true, 0]],
-            [[1, 'up', true, 1], [10, 'nothing', false, 1]],
-        ];
+        return array(
+            array(array(1, 'up', true, 1), array(1, 'up', true, 2)),
+            array(array(2, 'up', true, 2), array(2, 'down', true, 0)),
+            array(array(2, 'down', true, 0), array(2, 'up', true, 2)),
+            array(array(0, 'down', true, 0), array(1, 'nothing', true, 0)),
+            array(array(1, 'down', true, 0), array(1, 'nothing', true, 0)),
+            array(array(1, 'up', true, 1), array(10, 'nothing', false, 1)),
+        );
     }
 }

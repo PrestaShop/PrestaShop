@@ -60,9 +60,9 @@ class EmailController extends FrameworkBundleAdminController
         $emailConfigurationForm = $this->getEmailConfigurationFormHandler()->getForm();
         $extensionChecker = $this->get('prestashop.core.configuration.php_extension_checker');
 
-        $testEmailSendingForm = $this->createForm(TestEmailSendingType::class, [
+        $testEmailSendingForm = $this->createForm(TestEmailSendingType::class, array(
             'send_email_to' => $configuration->get('PS_SHOP_EMAIL'),
-        ]);
+        ));
 
         $isEmailLogsEnabled = $configuration->get('PS_LOG_EMAILS');
 
@@ -74,7 +74,7 @@ class EmailController extends FrameworkBundleAdminController
             $presentedEmailLogsGrid = $this->presentGrid($emailLogsGrid);
         }
 
-        return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/Email/index.html.twig', [
+        return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/Email/index.html.twig', array(
             'emailConfigurationForm' => $emailConfigurationForm->createView(),
             'isOpenSslExtensionLoaded' => $extensionChecker->loaded('openssl'),
             'smtpMailMethod' => MailOption::METHOD_SMTP,
@@ -83,7 +83,7 @@ class EmailController extends FrameworkBundleAdminController
             'isEmailLogsEnabled' => $isEmailLogsEnabled,
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
-        ]);
+        ));
     }
 
     /**
@@ -102,13 +102,13 @@ class EmailController extends FrameworkBundleAdminController
         $filtersForm = $gridFilterFormFactory->create($emailLogsDefinition);
         $filtersForm->handleRequest($request);
 
-        $filters = [];
+        $filters = array();
 
         if ($filtersForm->isSubmitted()) {
             $filters = $filtersForm->getData();
         }
 
-        return $this->redirectToRoute('admin_emails_index', ['filters' => $filters]);
+        return $this->redirectToRoute('admin_emails_index', array('filters' => $filters));
     }
 
     /**
@@ -204,7 +204,7 @@ class EmailController extends FrameworkBundleAdminController
     public function deleteAction($mailId)
     {
         $mailLogsEraser = $this->get('prestashop.adapter.email.email_log_eraser');
-        $errors = $mailLogsEraser->erase([$mailId]);
+        $errors = $mailLogsEraser->erase(array($mailId));
 
         if (!empty($errors)) {
             $this->flashErrors($errors);
@@ -228,33 +228,33 @@ class EmailController extends FrameworkBundleAdminController
     public function sendTestAction(Request $request)
     {
         if ($this->isDemoModeEnabled()) {
-            return $this->json([
-                'errors' => [
+            return $this->json(array(
+                'errors' => array(
                     $this->getDemoModeErrorMessage(),
-                ],
-            ]);
+                ),
+            ));
         }
 
         if (!in_array(
             $this->authorizationLevel($request->attributes->get('_legacy_controller')),
-            [
+            array(
                 PageVoter::LEVEL_READ,
                 PageVoter::LEVEL_UPDATE,
                 PageVoter::LEVEL_CREATE,
                 PageVoter::LEVEL_DELETE,
-            ]
+            )
         )) {
-            return $this->json([
-                'errors' => [
+            return $this->json(array(
+                'errors' => array(
                     $this->trans('Access denied.', 'Admin.Notifications.Error'),
-                ],
-            ]);
+                ),
+            ));
         }
 
         $testEmailSendingForm = $this->createForm(TestEmailSendingType::class);
         $testEmailSendingForm->handleRequest($request);
 
-        $result = [];
+        $result = array();
 
         if ($testEmailSendingForm->isSubmitted()) {
             $emailConfigurationTester = $this->get('prestashop.adapter.email.email_configuration_tester');

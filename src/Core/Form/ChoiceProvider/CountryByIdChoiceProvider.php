@@ -64,7 +64,7 @@ final class CountryByIdChoiceProvider implements FormChoiceProviderInterface
     public function getChoices()
     {
         $countries = $this->countryDataProvider->getCountries($this->langId);
-        $choices = [];
+        $choices = array();
 
         foreach ($countries as $country) {
             $choices[$country['name']] = $country['id_country'];

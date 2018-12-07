@@ -53,12 +53,12 @@ class LocalUnitsConfiguration implements DataConfigurationInterface
      */
     public function getConfiguration()
     {
-        return [
+        return array(
             'weight_unit' => $this->configuration->get('PS_WEIGHT_UNIT'),
             'distance_unit' => $this->configuration->get('PS_DISTANCE_UNIT'),
             'volume_unit' => $this->configuration->get('PS_VOLUME_UNIT'),
             'dimension_unit' => $this->configuration->get('PS_DIMENSION_UNIT'),
-        ];
+        );
     }
 
     /**
@@ -66,7 +66,7 @@ class LocalUnitsConfiguration implements DataConfigurationInterface
      */
     public function updateConfiguration(array $config)
     {
-        $errors = [];
+        $errors = array();
 
         if ($this->validateConfiguration($config)) {
             $this->configuration->set('PS_WEIGHT_UNIT', $config['weight_unit']);

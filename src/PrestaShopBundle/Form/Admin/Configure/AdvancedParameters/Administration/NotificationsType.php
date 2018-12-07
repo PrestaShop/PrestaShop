@@ -39,15 +39,16 @@ class NotificationsType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('show_notifs_new_orders', SwitchType::class, [
+            ->add('show_notifs_new_orders', SwitchType::class, array(
                 'required' => true,
-            ])
-            ->add('show_notifs_new_customers', SwitchType::class, [
+            ))
+            ->add('show_notifs_new_customers', SwitchType::class, array(
                 'required' => true,
-            ])
-            ->add('show_notifs_new_messages', SwitchType::class, [
+            ))
+            ->add('show_notifs_new_messages', SwitchType::class, array(
                 'required' => true,
-            ]);
+            ))
+        ;
     }
 
     /**
@@ -55,9 +56,9 @@ class NotificationsType extends TranslatorAwareType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
+        $resolver->setDefaults(array(
             'translation_domain' => 'Admin.Advparameters.Feature',
-        ]);
+        ));
     }
 
     /**

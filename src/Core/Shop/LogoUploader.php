@@ -85,7 +85,7 @@ class LogoUploader
      *
      * @throws PrestaShopException in case of upload failure
      */
-    public function update($fieldName, $logoPrefix, array $files = [])
+    public function update($fieldName, $logoPrefix, array $files = array())
     {
         $files = empty($files) ? $_FILES : $files;
 
@@ -157,7 +157,7 @@ class LogoUploader
         }
     }
 
-    public function uploadIco($name, $destination, $files = [])
+    public function uploadIco($name, $destination, $files = array())
     {
         $files = empty($files) ? $_FILES : $files;
 

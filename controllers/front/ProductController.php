@@ -42,7 +42,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     /** @var Category */
     protected $category;
 
-    protected $redirectionExtraExcludedKeys = ['id_product_attribute', 'rewrite'];
+    protected $redirectionExtraExcludedKeys = array('id_product_attribute', 'rewrite');
 
     /**
      * @var array
@@ -200,7 +200,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 $moduleManagerBuilder = ModuleManagerBuilder::getInstance();
                 $moduleManager = $moduleManagerBuilder->build();
 
-                if (isset($this->context->cookie) && isset($this->category->id_category) && !($moduleManager->isInstalled('ps_categorytree') && $moduleManager->isEnabled('ps_categorytree'))) {
+                if (isset($this->context->cookie, $this->category->id_category) && !($moduleManager->isInstalled('ps_categorytree') && $moduleManager->isEnabled('ps_categorytree'))) {
                     $this->context->cookie->last_visited_category = (int) $this->category->id_category;
                 }
             }

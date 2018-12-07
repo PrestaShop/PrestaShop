@@ -62,7 +62,7 @@ final class ImportFormDataProvider implements ImportFormDataProviderInterface
      */
     public function getData(ImportConfigInterface $importConfig)
     {
-        return [
+        return array(
             'csv' => $this->getSelectedFile($importConfig),
             'entity' => $importConfig->getEntityType(),
             'iso_lang' => $importConfig->getLanguageIso(),
@@ -73,8 +73,8 @@ final class ImportFormDataProvider implements ImportFormDataProviderInterface
             'match_ref' => $importConfig->matchReferences(),
             'forceIDs' => $importConfig->forceIds(),
             'sendemail' => $importConfig->sendEmail(),
-            'type_value' => [],
-        ];
+            'type_value' => array(),
+        );
     }
 
     /**
@@ -82,14 +82,14 @@ final class ImportFormDataProvider implements ImportFormDataProviderInterface
      */
     public function setData(array $data)
     {
-        $errors = [];
+        $errors = array();
 
         if (empty($data['csv'])) {
-            $errors[] = [
+            $errors[] = array(
                 'key' => 'To proceed, please upload a file first.',
                 'domain' => 'Admin.Advparameters.Notification',
-                'parameters' => [],
-            ];
+                'parameters' => array(),
+            );
         } else {
             $this->session->set('csv', $data['csv']);
             $this->session->set('entity', $data['entity']);

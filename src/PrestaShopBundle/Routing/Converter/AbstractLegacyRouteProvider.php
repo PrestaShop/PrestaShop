@@ -102,7 +102,7 @@ abstract class AbstractLegacyRouteProvider implements LegacyRouteProviderInterfa
     private function initControllerActions()
     {
         if (null === $this->controllersActions) {
-            $this->controllersActions = [];
+            $this->controllersActions = array();
             /** @var LegacyRoute $legacyRoute */
             foreach ($this->getLegacyRoutes() as $legacyRoute) {
                 $this->controllersActions = array_merge_recursive($this->controllersActions, $legacyRoute->getControllersActions());

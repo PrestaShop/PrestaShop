@@ -66,7 +66,8 @@ class TaxRuleCore extends ObjectModel
             die(Tools::displayError());
         }
 
-        return Db::getInstance()->execute('
+        return Db::getInstance()->execute(
+            '
 			DELETE FROM `' . _DB_PREFIX_ . 'tax_rule`
 			WHERE `id_tax_rules_group` = ' . (int) $id_group
         );
@@ -81,7 +82,8 @@ class TaxRuleCore extends ObjectModel
 
     public static function getTaxRulesByGroupId($id_lang, $id_group)
     {
-        return Db::getInstance()->executeS('
+        return Db::getInstance()->executeS(
+            '
 		SELECT g.`id_tax_rule`,
 				 c.`name` AS country_name,
 				 s.`name` AS state_name,
@@ -102,7 +104,8 @@ class TaxRuleCore extends ObjectModel
 
     public static function deleteTaxRuleByIdTax($id_tax)
     {
-        return Db::getInstance()->execute('
+        return Db::getInstance()->execute(
+            '
 			DELETE FROM `' . _DB_PREFIX_ . 'tax_rule`
 			WHERE `id_tax` = ' . (int) $id_tax
         );
@@ -173,7 +176,8 @@ class TaxRuleCore extends ObjectModel
      */
     public static function swapTaxId($old_id, $new_id)
     {
-        return Db::getInstance()->execute('
+        return Db::getInstance()->execute(
+            '
 		UPDATE `' . _DB_PREFIX_ . 'tax_rule`
 		SET `id_tax` = ' . (int) $new_id . '
 		WHERE `id_tax` = ' . (int) $old_id

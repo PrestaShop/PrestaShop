@@ -49,34 +49,35 @@ class MaintenanceType extends TranslatorAwareType
             ->add(
                 'enable_shop',
                 SwitchType::class,
-                [
+                array(
                     'required' => true,
-                ]
+                )
             )
             ->add(
                 'maintenance_ip',
                 IpAddressType::class,
-                [
+                array(
                     'required' => false,
                     'empty_data' => '',
-                    'attr' => [
+                    'attr' => array(
                         'class' => 'col-md-5',
-                    ],
-                ]
+                    ),
+                )
             )
             ->add(
                 'maintenance_text',
                 TranslateType::class,
-                [
+                array(
                     'type' => FormattedTextareaType::class,
-                    'options' => [
+                    'options' => array(
                         'required' => false,
-                    ],
+                    ),
                     'locales' => $this->locales,
                     'hideTabs' => false,
                     'required' => true,
-                ]
-            );
+                )
+            )
+        ;
     }
 
     /**
@@ -84,9 +85,9 @@ class MaintenanceType extends TranslatorAwareType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
+        $resolver->setDefaults(array(
             'translation_domain' => 'Admin.Shopparameters.Feature',
-        ]);
+        ));
     }
 
     /**

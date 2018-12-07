@@ -67,7 +67,7 @@ class AdminSecurity extends Security
      *
      * @var array
      */
-    protected $redirectQueryParamsToKeep = [];
+    protected $redirectQueryParamsToKeep = array();
 
     /**
      * @return string

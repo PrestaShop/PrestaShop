@@ -48,12 +48,12 @@ final class LinkGridAction extends AbstractGridAction
     protected function configureOptions(OptionsResolver $resolver)
     {
         $resolver
-            ->setRequired([
+            ->setRequired(array(
                 'route',
-            ])
-            ->setDefaults([
-                'route_params' => [],
-            ])
+            ))
+            ->setDefaults(array(
+                'route_params' => array(),
+            ))
             ->setAllowedTypes('route', 'string')
             ->setAllowedTypes('route_params', 'array')
         ;

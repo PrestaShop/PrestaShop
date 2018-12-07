@@ -38,7 +38,7 @@ final class DataRow implements DataRowInterface
     /**
      * @var array of DataCellInterface objects
      */
-    private $cells = [];
+    private $cells = array();
 
     /**
      * {@inheritdoc}

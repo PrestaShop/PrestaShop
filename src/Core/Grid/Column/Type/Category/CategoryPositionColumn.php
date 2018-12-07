@@ -48,15 +48,15 @@ final class CategoryPositionColumn extends AbstractColumn
     protected function configureOptions(OptionsResolver $resolver)
     {
         $resolver
-            ->setRequired([
+            ->setRequired(array(
                 'field',
                 'id_field',
                 'id_parent_field',
                 'update_route',
-            ])
-            ->setDefaults([
+            ))
+            ->setDefaults(array(
                 'sortable' => true,
-            ])
+            ))
             ->setAllowedTypes('sortable', 'bool')
             ->setAllowedTypes('field', 'string')
             ->setAllowedTypes('id_field', 'string')

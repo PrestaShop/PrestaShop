@@ -406,14 +406,19 @@ class AdminAttributesGroupsControllerCore extends AdminController
             /** @var AttributeGroup $object */
             $object = new $this->className();
             foreach (Language::getLanguages(false) as $language) {
-                if ($object->isAttribute((int) Tools::getValue('id_attribute_group'),
-                    Tools::getValue('name_' . $language['id_lang']), $language['id_lang'])) {
-                    $this->errors['name_' . $language['id_lang']] = $this->trans('The attribute value "%1$s" already exist for %2$s language',
+                if ($object->isAttribute(
+                    (int) Tools::getValue('id_attribute_group'),
+                    Tools::getValue('name_' . $language['id_lang']),
+                    $language['id_lang']
+                )) {
+                    $this->errors['name_' . $language['id_lang']] = $this->trans(
+                        'The attribute value "%1$s" already exist for %2$s language',
                         array(
                             Tools::getValue('name_' . $language['id_lang']),
                             $language['name'],
                         ),
-                        'Admin.Catalog.Notification');
+                        'Admin.Catalog.Notification'
+                    );
                 }
             }
 
@@ -948,7 +953,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
             foreach ($positions as $position => $value) {
                 $pos = explode('_', $value);
 
-                if ((isset($pos[1]) && isset($pos[2])) && (int) $pos[2] === $id_attribute) {
+                if ((isset($pos[1], $pos[2])  ) && (int) $pos[2] === $id_attribute) {
                     if ($attribute = new Attribute((int) $pos[2])) {
                         if (isset($position) && $attribute->updatePosition($way, $position)) {
                             echo 'ok position ' . (int) $position . ' for attribute ' . (int) $pos[2] . '\r\n';

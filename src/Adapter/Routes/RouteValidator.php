@@ -59,9 +59,9 @@ class RouteValidator
      */
     public function doesRouteContainsRequiredKeywords($routeId, $rule)
     {
-        $missingKeywords = [];
+        $missingKeywords = array();
         $validationResult = Dispatcher::getInstance()->validateRoute($routeId, $rule, $missingKeywords);
 
-        return $validationResult ? [] : $missingKeywords;
+        return $validationResult ? array() : $missingKeywords;
     }
 }

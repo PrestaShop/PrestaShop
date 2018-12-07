@@ -68,23 +68,24 @@ final class WebserviceKeyStatusModifier
             $error = $this->translator
                 ->trans(
                     'An error occurred while updating the status for an object.',
-                    [],
+                    array(),
                     'Admin.Notifications.Error'
                 ) .
                 WebserviceKey::$definition['table'] .
-                $this->translator->trans('(cannot load object)', [], 'Admin.Notifications.Error');
+                $this->translator->trans('(cannot load object)', array(), 'Admin.Notifications.Error');
 
-            return [$error];
+            return array($error);
         }
 
         if (!$webserviceKey->toggleStatus()) {
             $error = $this->translator
-                ->trans('An error occurred while updating the status.', [], 'Admin.Notifications.Error');
+                ->trans('An error occurred while updating the status.', array(), 'Admin.Notifications.Error')
+            ;
 
-            return [$error];
+            return array($error);
         }
 
-        return [];
+        return array();
     }
 
     /**

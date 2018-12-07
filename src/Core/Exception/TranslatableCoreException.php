@@ -44,7 +44,7 @@ class TranslatableCoreException extends CoreException
     /**
      * @var array
      */
-    private $parameters = [];
+    private $parameters = array();
 
     /**
      * @param string $key
@@ -56,7 +56,7 @@ class TranslatableCoreException extends CoreException
     public function __construct(
         $key,
         $domain,
-        $parameters = [],
+        $parameters = array(),
         $code = 0,
         $previous = null
     ) {
@@ -132,10 +132,10 @@ class TranslatableCoreException extends CoreException
      */
     public function toArray()
     {
-        return [
+        return array(
             'key' => $this->key,
             'domain' => $this->domain,
             'parameters' => $this->parameters,
-        ];
+        );
     }
 }

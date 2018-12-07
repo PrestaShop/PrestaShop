@@ -114,7 +114,8 @@ final class MetaQueryBuilder extends AbstractDoctrineQueryBuilder
                 $this->dbPrefix . 'meta_lang',
                 'l',
                 'm.`id_meta` = l.`id_meta`'
-            );
+            )
+        ;
 
         $qb->andWhere('l.`id_lang`=' . $this->contextIdLang);
         $qb->andWhere('l.`id_shop`=' . $this->contextIdShop);

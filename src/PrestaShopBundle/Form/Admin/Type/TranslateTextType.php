@@ -84,10 +84,10 @@ class TranslateTextType extends AbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
-            'options' => [],
-            'locales' => [],
-        ]);
+        $resolver->setDefaults(array(
+            'options' => array(),
+            'locales' => array(),
+        ));
 
         $resolver->setAllowedTypes('locales', 'array');
         $resolver->setAllowedTypes('options', 'array');

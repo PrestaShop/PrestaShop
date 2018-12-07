@@ -52,12 +52,12 @@ final class TranslationTypeChoiceProvider implements FormChoiceProviderInterface
      */
     public function getChoices()
     {
-        return [
-            $this->translator->trans('Back office translations', [], 'Admin.International.Feature') => 'back',
-            $this->translator->trans('Themes translations', [], 'Admin.International.Feature') => 'themes',
-            $this->translator->trans('Installed modules translations', [], 'Admin.International.Feature') => 'modules',
-            $this->translator->trans('Email translations', [], 'Admin.International.Feature') => 'mails',
-            $this->translator->trans('Other translations', [], 'Admin.International.Feature') => 'others',
-        ];
+        return array(
+            $this->translator->trans('Back office translations', array(), 'Admin.International.Feature') => 'back',
+            $this->translator->trans('Themes translations', array(), 'Admin.International.Feature') => 'themes',
+            $this->translator->trans('Installed modules translations', array(), 'Admin.International.Feature') => 'modules',
+            $this->translator->trans('Email translations', array(), 'Admin.International.Feature') => 'mails',
+            $this->translator->trans('Other translations', array(), 'Admin.International.Feature') => 'others',
+        );
     }
 }

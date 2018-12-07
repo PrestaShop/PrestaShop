@@ -133,7 +133,7 @@ class ProductDataProvider
      */
     public function getImages($id_product, $id_lang)
     {
-        $data = [];
+        $data = array();
         foreach (Image::getImages($id_lang, $id_product) as $image) {
             $data[] = $this->getImage($image['id_image']);
         }
@@ -152,7 +152,7 @@ class ProductDataProvider
     {
         $imageData = new Image((int) $id_image);
 
-        return [
+        return array(
             'id' => $imageData->id,
             'id_product' => $imageData->id_product,
             'position' => $imageData->position,
@@ -160,6 +160,6 @@ class ProductDataProvider
             'legend' => $imageData->legend,
             'format' => $imageData->image_format,
             'base_image_url' => _THEME_PROD_DIR_ . $imageData->getImgPath(),
-        ];
+        );
     }
 }

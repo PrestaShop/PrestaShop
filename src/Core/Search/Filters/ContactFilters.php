@@ -38,12 +38,12 @@ final class ContactFilters extends Filters
      */
     public static function getDefaults()
     {
-        return [
+        return array(
             'limit' => 10,
             'offset' => 0,
             'orderBy' => 'id_contact',
             'sortOrder' => 'asc',
-            'filters' => [],
-        ];
+            'filters' => array(),
+        );
     }
 }

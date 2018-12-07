@@ -80,7 +80,7 @@ final class ContactGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getName()
     {
-        return $this->trans('Contacts', [], 'Admin.Navigation.Menu');
+        return $this->trans('Contacts', array(), 'Admin.Navigation.Menu');
     }
 
     /**
@@ -89,63 +89,71 @@ final class ContactGridDefinitionFactory extends AbstractGridDefinitionFactory
     protected function getColumns()
     {
         return (new ColumnCollection())
-            ->add((new BulkActionColumn('bulk'))
-                ->setOptions([
+            ->add(
+                (new BulkActionColumn('bulk'))
+                ->setOptions(array(
                     'bulk_field' => 'id_contact',
-                ])
+                ))
             )
-            ->add((new DataColumn('id_contact'))
-                ->setName($this->trans('ID', [], 'Admin.Global'))
-                ->setOptions([
+            ->add(
+                (new DataColumn('id_contact'))
+                ->setName($this->trans('ID', array(), 'Admin.Global'))
+                ->setOptions(array(
                     'field' => 'id_contact',
-                ])
+                ))
             )
-            ->add((new DataColumn('name'))
-                ->setName($this->trans('Title', [], 'Admin.Global'))
-                ->setOptions([
+            ->add(
+                (new DataColumn('name'))
+                ->setName($this->trans('Title', array(), 'Admin.Global'))
+                ->setOptions(array(
                     'field' => 'name',
-                ])
+                ))
             )
-            ->add((new DataColumn('email'))
-                ->setName($this->trans('Email address', [], 'Admin.Global'))
-                ->setOptions([
+            ->add(
+                (new DataColumn('email'))
+                ->setName($this->trans('Email address', array(), 'Admin.Global'))
+                ->setOptions(array(
                     'field' => 'email',
-                ])
+                ))
             )
-            ->add((new DataColumn('description'))
-                ->setName($this->trans('Description', [], 'Admin.Global'))
-                ->setOptions([
+            ->add(
+                (new DataColumn('description'))
+                ->setName($this->trans('Description', array(), 'Admin.Global'))
+                ->setOptions(array(
                     'field' => 'description',
-                ])
+                ))
             )
-            ->add((new ActionColumn('actions'))
-                ->setName($this->trans('Actions', [], 'Admin.Global'))
-                ->setOptions([
+            ->add(
+                (new ActionColumn('actions'))
+                ->setName($this->trans('Actions', array(), 'Admin.Global'))
+                ->setOptions(array(
                     'actions' => (new RowActionCollection())
-                        ->add((new LinkRowAction('edit'))
+                        ->add(
+                            (new LinkRowAction('edit'))
                             ->setIcon('edit')
-                            ->setOptions([
+                            ->setOptions(array(
                                 'route' => 'admin_contacts_edit',
                                 'route_param_name' => 'contactId',
                                 'route_param_field' => 'id_contact',
-                            ])
+                            ))
                         )
-                        ->add((new SubmitRowAction('delete'))
-                            ->setName($this->trans('Delete', [], 'Admin.Actions'))
+                        ->add(
+                            (new SubmitRowAction('delete'))
+                            ->setName($this->trans('Delete', array(), 'Admin.Actions'))
                             ->setIcon('delete')
-                            ->setOptions([
+                            ->setOptions(array(
                                 'method' => 'POST',
                                 'confirm_message' => $this->trans(
                                     'Delete selected item?',
-                                    [],
+                                    array(),
                                     'Admin.Notifications.Warning'
                                 ),
                                 'route' => 'admin_contacts_delete',
                                 'route_param_name' => 'contactId',
                                 'route_param_field' => 'id_contact',
-                            ])
+                            ))
                         ),
-                ])
+                ))
             )
         ;
     }
@@ -156,38 +164,43 @@ final class ContactGridDefinitionFactory extends AbstractGridDefinitionFactory
     protected function getFilters()
     {
         return (new FilterCollection())
-            ->add((new Filter('id_contact', TextType::class))
-                ->setTypeOptions([
+            ->add(
+                (new Filter('id_contact', TextType::class))
+                ->setTypeOptions(array(
                     'required' => false,
-                ])
+                ))
                 ->setAssociatedColumn('id_contact')
             )
-            ->add((new Filter('name', TextType::class))
-                ->setTypeOptions([
+            ->add(
+                (new Filter('name', TextType::class))
+                ->setTypeOptions(array(
                     'required' => false,
-                ])
+                ))
                 ->setAssociatedColumn('name')
             )
-            ->add((new Filter('email', TextType::class))
-                ->setTypeOptions([
+            ->add(
+                (new Filter('email', TextType::class))
+                ->setTypeOptions(array(
                     'required' => false,
-                ])
+                ))
                 ->setAssociatedColumn('email')
             )
-            ->add((new Filter('description', TextType::class))
-                ->setTypeOptions([
+            ->add(
+                (new Filter('description', TextType::class))
+                ->setTypeOptions(array(
                     'required' => false,
-                ])
+                ))
                 ->setAssociatedColumn('description')
             )
 
-            ->add((new Filter('actions', SearchAndResetType::class))
-                ->setTypeOptions([
-                    'attr' => [
+            ->add(
+                (new Filter('actions', SearchAndResetType::class))
+                ->setTypeOptions(array(
+                    'attr' => array(
                         'data-url' => $this->resetSearchUrl,
                         'data-redirect' => $this->redirectionUrl,
-                    ],
-                ])
+                    ),
+                ))
                 ->setAssociatedColumn('actions')
             )
         ;
@@ -199,12 +212,13 @@ final class ContactGridDefinitionFactory extends AbstractGridDefinitionFactory
     protected function getBulkActions()
     {
         return (new BulkActionCollection())
-            ->add((new SubmitBulkAction('delete_all'))
-                ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
-                ->setOptions([
+            ->add(
+                (new SubmitBulkAction('delete_all'))
+                ->setName($this->trans('Delete selected', array(), 'Admin.Actions'))
+                ->setOptions(array(
                     'submit_route' => 'admin_contacts_delete_bulk',
-                    'confirm_message' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
-                ])
+                    'confirm_message' => $this->trans('Delete selected items?', array(), 'Admin.Notifications.Warning'),
+                ))
             )
         ;
     }
@@ -215,16 +229,19 @@ final class ContactGridDefinitionFactory extends AbstractGridDefinitionFactory
     protected function getGridActions()
     {
         return (new GridActionCollection())
-            ->add((new SimpleGridAction('common_refresh_list'))
-                ->setName($this->trans('Refresh list', [], 'Admin.Advparameters.Feature'))
+            ->add(
+                (new SimpleGridAction('common_refresh_list'))
+                ->setName($this->trans('Refresh list', array(), 'Admin.Advparameters.Feature'))
                 ->setIcon('refresh')
             )
-            ->add((new SimpleGridAction('common_show_query'))
-                ->setName($this->trans('Show SQL query', [], 'Admin.Actions'))
+            ->add(
+                (new SimpleGridAction('common_show_query'))
+                ->setName($this->trans('Show SQL query', array(), 'Admin.Actions'))
                 ->setIcon('code')
             )
-            ->add((new SimpleGridAction('common_export_sql_manager'))
-                ->setName($this->trans('Export to SQL Manager', [], 'Admin.Actions'))
+            ->add(
+                (new SimpleGridAction('common_export_sql_manager'))
+                ->setName($this->trans('Export to SQL Manager', array(), 'Admin.Actions'))
                 ->setIcon('storage')
             )
         ;

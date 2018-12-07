@@ -69,7 +69,7 @@ final class InvoiceModelFinder implements FileFinderInterface
             ->name('invoice-*.tpl')
         ;
 
-        $fileNames = [];
+        $fileNames = array();
 
         foreach ($finder as $file) {
             $fileNames[] = $file->getFilename();

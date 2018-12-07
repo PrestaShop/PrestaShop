@@ -168,7 +168,7 @@ class AdminCountriesControllerCore extends AdminController
         $default_layout = '';
 
         // TODO: Use format from XML
-        $default_layout_tab = [
+        $default_layout_tab = array(
             array('firstname', 'lastname'),
             array('company'),
             array('vat_number'),
@@ -177,7 +177,7 @@ class AdminCountriesControllerCore extends AdminController
             array('postcode', 'city'),
             array('Country:name'),
             array('phone'),
-        ];
+        );
 
         foreach ($default_layout_tab as $line) {
             $default_layout .= implode(' ', $line) . "\r\n";
@@ -390,7 +390,8 @@ class AdminCountriesControllerCore extends AdminController
                     $res = Db::getInstance()->execute(
                             'UPDATE `' . _DB_PREFIX_ . 'state`
 							SET `id_zone` = ' . (int) Tools::getValue('id_zone') . '
-							WHERE `id_state` IN (' . implode(',', $ids) . ')');
+							WHERE `id_state` IN (' . implode(',', $ids) . ')'
+                    );
                 }
             }
         }

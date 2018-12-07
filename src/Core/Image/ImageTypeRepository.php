@@ -61,11 +61,11 @@ class ImageTypeRepository
 
     public function createType($name, $width, $height, array $scope)
     {
-        $data = [
+        $data = array(
             'name' => $this->db->escape($name),
             'width' => $this->db->escape($width),
             'height' => $this->db->escape($height),
-        ];
+        );
 
         foreach ($this->getScopeList() as $scope_item) {
             if (in_array($scope_item, $scope)) {
@@ -82,7 +82,7 @@ class ImageTypeRepository
 
     public function getScopeList()
     {
-        return ['products', 'categories', 'manufacturers', 'suppliers', 'stores'];
+        return array('products', 'categories', 'manufacturers', 'suppliers', 'stores');
     }
 
     public function getIdByName($name)

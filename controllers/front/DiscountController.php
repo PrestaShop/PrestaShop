@@ -47,9 +47,9 @@ class DiscountControllerCore extends FrontController
             $this->warning[] = $this->trans('You do not have any vouchers.', array(), 'Shop.Notifications.Warning');
         }
 
-        $this->context->smarty->assign([
+        $this->context->smarty->assign(array(
             'cart_rules' => $cart_rules,
-        ]);
+        ));
 
         parent::initContent();
         $this->setTemplate('customer/discount');
@@ -57,7 +57,7 @@ class DiscountControllerCore extends FrontController
 
     public function getTemplateVarCartRules()
     {
-        $cart_rules = [];
+        $cart_rules = array();
 
         $vouchers = CartRule::getCustomerCartRules(
             $this->context->language->id,
@@ -147,7 +147,7 @@ class DiscountControllerCore extends FrontController
      */
     protected function accumulateCartRuleValue($voucher)
     {
-        $cartRuleValue = [];
+        $cartRuleValue = array();
 
         if ($voucher['reduction_percent'] > 0) {
             $cartRuleValue[] = $this->formatReductionInPercentage($voucher['reduction_percent']);

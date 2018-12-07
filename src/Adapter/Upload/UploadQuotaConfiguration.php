@@ -81,11 +81,11 @@ class UploadQuotaConfiguration implements DataConfigurationInterface
     private function updateFileUploadConfiguration(array $configuration)
     {
         $uploadMaxSize = (int) str_replace('M', '', ini_get('upload_max_filesize'));
-        $sizes = [
+        $sizes = array(
             'max_size_attached_files' => $uploadMaxSize,
             'max_size_downloadable_product' => (int) str_replace('M', '', ini_get('post_max_size')),
             'max_size_product_image' => $uploadMaxSize,
-        ];
+        );
 
         $errors = array();
         foreach ($configuration as $configurationKey => $configurationValue) {

@@ -43,14 +43,14 @@ final class ContactDeleter
      */
     public function delete(array $contactIds)
     {
-        $errors = [];
+        $errors = array();
 
         if (empty($contactIds)) {
-            $errors[] = [
+            $errors[] = array(
                 'key' => 'You must select at least one element to delete.',
-                'parameters' => [],
+                'parameters' => array(),
                 'domain' => 'Admin.Notifications.Error',
-            ];
+            );
 
             return $errors;
         }
@@ -60,13 +60,13 @@ final class ContactDeleter
 
         foreach ($contactCollection as $contact) {
             if (!$contact->delete()) {
-                $errors[] = [
+                $errors[] = array(
                     'key' => 'Can\'t delete #%id%',
-                    'parameters' => [
+                    'parameters' => array(
                         '%id%' => $contact->id,
-                    ],
+                    ),
                     'domain' => 'Admin.Notifications.Error',
-                ];
+                );
 
                 continue;
             }

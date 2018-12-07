@@ -45,7 +45,7 @@ final class RenderedHook implements RenderedHookInterface
      * @param HookInterface $hook
      * @param array $content
      */
-    public function __construct(HookInterface $hook, array $content = [])
+    public function __construct(HookInterface $hook, array $content = array())
     {
         $this->hook = $hook;
         $this->content = $content;

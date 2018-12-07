@@ -40,7 +40,7 @@ class PercentageTest extends NumberTest
         $this->latinNumberSpec = new PercentageSpecification(
             '',
             '',
-            ['latin' => $this->latinSymbolList, 'arab' => $this->arabSymbolList],
+            array('latin' => $this->latinSymbolList, 'arab' => $this->arabSymbolList),
             3,
             0,
             true,

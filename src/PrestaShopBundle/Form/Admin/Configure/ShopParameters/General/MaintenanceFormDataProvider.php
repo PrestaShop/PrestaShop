@@ -50,9 +50,9 @@ final class MaintenanceFormDataProvider implements FormDataProviderInterface
      */
     public function getData()
     {
-        return [
+        return array(
             'general' => $this->maintenanceConfiguration->getConfiguration(),
-        ];
+        );
     }
 
     /**

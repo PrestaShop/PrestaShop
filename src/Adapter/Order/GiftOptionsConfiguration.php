@@ -49,12 +49,12 @@ class GiftOptionsConfiguration implements DataConfigurationInterface
      */
     public function getConfiguration()
     {
-        return [
+        return array(
             'enable_gift_wrapping' => $this->configuration->getBoolean('PS_GIFT_WRAPPING'),
             'gift_wrapping_price' => $this->configuration->get('PS_GIFT_WRAPPING_PRICE'),
             'gift_wrapping_tax_rules_group' => $this->configuration->get('PS_GIFT_WRAPPING_TAX_RULES_GROUP'),
             'offer_recyclable_pack' => $this->configuration->getBoolean('PS_RECYCLABLE_PACK'),
-        ];
+        );
     }
 
     /**
@@ -69,7 +69,7 @@ class GiftOptionsConfiguration implements DataConfigurationInterface
             $this->configuration->set('PS_RECYCLABLE_PACK', $configuration['offer_recyclable_pack']);
         }
 
-        return [];
+        return array();
     }
 
     /**

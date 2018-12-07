@@ -112,10 +112,10 @@ class AddressControllerCore extends FrontController
 
         $breadcrumb['links'][] = $this->addMyAccountToBreadcrumb();
 
-        $breadcrumb['links'][] = [
+        $breadcrumb['links'][] = array(
             'title' => $this->trans('Addresses', array(), 'Shop.Theme.Global'),
             'url' => $this->context->link->getPageLink('addresses'),
-        ];
+        );
 
         return $breadcrumb;
     }

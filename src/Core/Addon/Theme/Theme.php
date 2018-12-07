@@ -101,10 +101,10 @@ class Theme implements AddonInterface
 
     public function getPageSpecificAssets($pageId)
     {
-        return [
+        return array(
             'css' => $this->getPageSpecificCss($pageId),
             'js' => $this->getPageSpecificJs($pageId),
-        ];
+        );
     }
 
     public function onInstall()

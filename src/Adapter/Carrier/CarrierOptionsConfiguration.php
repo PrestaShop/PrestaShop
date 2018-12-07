@@ -54,11 +54,11 @@ class CarrierOptionsConfiguration implements DataConfigurationInterface
      */
     public function getConfiguration()
     {
-        return [
+        return array(
             'default_carrier' => $this->configuration->getInt('PS_CARRIER_DEFAULT'),
             'carrier_default_order_by' => $this->configuration->getInt('PS_CARRIER_DEFAULT_SORT'),
             'carrier_default_order_way' => $this->configuration->getInt('PS_CARRIER_DEFAULT_ORDER'),
-        ];
+        );
     }
 
     /**
@@ -72,7 +72,7 @@ class CarrierOptionsConfiguration implements DataConfigurationInterface
             $this->configuration->set('PS_CARRIER_DEFAULT_ORDER', $configuration['carrier_default_order_way']);
         }
 
-        return [];
+        return array();
     }
 
     /**

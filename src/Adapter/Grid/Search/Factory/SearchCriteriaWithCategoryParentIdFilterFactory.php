@@ -97,7 +97,7 @@ final class SearchCriteriaWithCategoryParentIdFilterFactory implements Decorated
         $categoryParentId = $this->resolveCategoryParentId();
 
         $filters = array_merge(
-            ['id_category_parent' => $categoryParentId],
+            array('id_category_parent' => $categoryParentId),
             $searchCriteria->getFilters()
         );
 

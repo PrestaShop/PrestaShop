@@ -68,9 +68,9 @@ final class SqlRequestConfiguration implements DataConfigurationInterface
         /** @var SqlRequestSettings $sqlRequestSettings */
         $sqlRequestSettings = $this->queryBus->handle(new GetSqlRequestSettings());
 
-        return [
+        return array(
             'default_file_encoding' => $sqlRequestSettings->getFileEncoding(),
-        ];
+        );
     }
 
     /**
@@ -78,7 +78,7 @@ final class SqlRequestConfiguration implements DataConfigurationInterface
      */
     public function updateConfiguration(array $configuration)
     {
-        $errors = [];
+        $errors = array();
 
         if ($this->validateConfiguration($configuration)) {
             try {
@@ -114,18 +114,18 @@ final class SqlRequestConfiguration implements DataConfigurationInterface
     {
         $code = $e->getCode();
 
-        $errorMessages = [
-            SqlRequestSettingsConstraintException::INVALID_FILE_ENCODING => [
+        $errorMessages = array(
+            SqlRequestSettingsConstraintException::INVALID_FILE_ENCODING => array(
                 'key' => 'The %s field is invalid.',
-                'parameters' => ['default_file_encoding'],
+                'parameters' => array('default_file_encoding'),
                 'domain' => 'Admin.Notifications.Error',
-            ],
-            SqlRequestSettingsConstraintException::NOT_SUPPORTED_FILE_ENCODING => [
+            ),
+            SqlRequestSettingsConstraintException::NOT_SUPPORTED_FILE_ENCODING => array(
                 'key' => 'The %s field is invalid.',
-                'parameters' => ['default_file_encoding'],
+                'parameters' => array('default_file_encoding'),
                 'domain' => 'Admin.Notifications.Error',
-            ],
-        ];
+            ),
+        );
 
         return $errorMessages[$code];
     }

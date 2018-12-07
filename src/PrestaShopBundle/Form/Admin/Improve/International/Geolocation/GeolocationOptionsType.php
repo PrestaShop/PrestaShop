@@ -74,25 +74,25 @@ class GeolocationOptionsType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('geolocation_behaviour', ChoiceType::class, [
-                'choices' => [
+            ->add('geolocation_behaviour', ChoiceType::class, array(
+                'choices' => array(
                     $this->trans('Visitors cannot see your catalog.', 'Admin.International.Feature') => $this->configuration->get('_PS_GEOLOCATION_NO_CATALOG_'),
                     $this->trans('Visitors can see your catalog but cannot place an order.', 'Admin.International.Feature') => $this->configuration->get('_PS_GEOLOCATION_NO_ORDER_'),
-                ],
+                ),
                 'choice_translation_domain' => false,
-            ])
-            ->add('geolocation_na_behaviour', ChoiceType::class, [
-                'choices' => [
+            ))
+            ->add('geolocation_na_behaviour', ChoiceType::class, array(
+                'choices' => array(
                     $this->trans('All features are available', 'Admin.International.Feature') => '-1',
                     $this->trans('Visitors cannot see your catalog.', 'Admin.International.Feature') => $this->configuration->get('_PS_GEOLOCATION_NO_CATALOG_'),
                     $this->trans('Visitors can see your catalog but cannot place an order.', 'Admin.International.Feature') => $this->configuration->get('_PS_GEOLOCATION_NO_ORDER_'),
-                ],
+                ),
                 'choice_translation_domain' => false,
-            ])
-            ->add('geolocation_countries', MaterialChoiceTableType::class, [
+            ))
+            ->add('geolocation_countries', MaterialChoiceTableType::class, array(
                 'choices' => $this->countryChoices,
                 'choice_translation_domain' => false,
-            ])
+            ))
         ;
 
         $builder->get('geolocation_countries')->addModelTransformer(new CallbackTransformer(

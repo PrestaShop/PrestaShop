@@ -52,7 +52,7 @@ class OrderPreferencesController extends FrameworkBundleAdminController
 
         $form = $this->get('prestashop.admin.order_preferences.form_handler')->getForm();
 
-        return [
+        return array(
             'layoutTitle' => $this->trans('Order settings', 'Admin.Navigation.Menu'),
             'requireAddonsSearch' => true,
             'enableSidebar' => true,
@@ -60,7 +60,7 @@ class OrderPreferencesController extends FrameworkBundleAdminController
             'form' => $form->createView(),
             'isMultishippingEnabled' => $this->configuration->getBoolean('PS_ALLOW_MULTISHIPPING'),
             'isAtcpShipWrapEnabled' => $this->configuration->getBoolean('PS_ATCP_SHIPWRAP'),
-        ];
+        );
     }
 
     /**
@@ -76,11 +76,11 @@ class OrderPreferencesController extends FrameworkBundleAdminController
 
         if (!in_array(
             $this->authorizationLevel($legacyController),
-            [
+            array(
                 PageVoter::LEVEL_UPDATE,
                 PageVoter::LEVEL_CREATE,
                 PageVoter::LEVEL_DELETE,
-            ]
+            )
         )) {
             $this->addFlash(
                 'error',

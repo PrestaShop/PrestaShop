@@ -57,10 +57,10 @@ class CustomerController extends AbstractAdminController
         $customerGridFactory = $this->get('prestashop.core.grid.factory.customer');
         $customerGrid = $customerGridFactory->getGrid($filters);
 
-        return $this->render('@PrestaShop/Admin/Sell/Customer/index.html.twig', [
+        return $this->render('@PrestaShop/Admin/Sell/Customer/index.html.twig', array(
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'customerGrid' => $this->presentGrid($customerGrid),
-        ]);
+        ));
     }
 
     /**
@@ -73,9 +73,9 @@ class CustomerController extends AbstractAdminController
     public function createAction(Request $request)
     {
         return $this->redirect(
-            $this->getAdminLink($request->attributes->get('_legacy_controller'), [
+            $this->getAdminLink($request->attributes->get('_legacy_controller'), array(
                 'addcustomer' => 1,
-            ])
+            ))
         );
     }
 
@@ -90,10 +90,10 @@ class CustomerController extends AbstractAdminController
     public function editAction($customerId, Request $request)
     {
         return $this->redirect(
-            $this->getAdminLink($request->attributes->get('_legacy_controller'), [
+            $this->getAdminLink($request->attributes->get('_legacy_controller'), array(
                 'updatecustomer' => 1,
                 'id_customer' => $customerId,
-            ])
+            ))
         );
     }
 
@@ -124,22 +124,22 @@ class CustomerController extends AbstractAdminController
 
         $transferGuestAccountForm = null;
         if ($customerInformation->getPersonalInformation()->isGuest()) {
-            $transferGuestAccountForm = $this->createForm(TransferGuestAccountType::class, [
+            $transferGuestAccountForm = $this->createForm(TransferGuestAccountType::class, array(
                 'id_customer' => $customerId,
-            ])->createView();
+            ))->createView();
         }
 
-        $privateNoteForm = $this->createForm(PrivateNoteType::class, [
+        $privateNoteForm = $this->createForm(PrivateNoteType::class, array(
             'note' => $customerInformation->getGeneralInformation()->getPrivateNote(),
-        ]);
+        ));
 
-        return $this->render('@PrestaShop/Admin/Sell/Customer/view.html.twig', [
+        return $this->render('@PrestaShop/Admin/Sell/Customer/view.html.twig', array(
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'customerInformation' => $customerInformation,
             'isMultistoreEnabled' => $this->get('prestashop.adapter.feature.multistore')->isActive(),
             'transferGuestAccountForm' => $transferGuestAccountForm,
             'privateNoteForm' => $privateNoteForm->createView(),
-        ]);
+        ));
     }
 }

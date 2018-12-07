@@ -94,7 +94,7 @@ final class WebserviceKeyDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getName()
     {
-        return $this->trans('Webservice', [], 'Admin.Navigation.Menu');
+        return $this->trans('Webservice', array(), 'Admin.Navigation.Menu');
     }
 
     /**
@@ -103,61 +103,68 @@ final class WebserviceKeyDefinitionFactory extends AbstractGridDefinitionFactory
     protected function getColumns()
     {
         return (new ColumnCollection())
-            ->add((new BulkActionColumn('bulk_action'))
-                ->setOptions([
+            ->add(
+                (new BulkActionColumn('bulk_action'))
+                ->setOptions(array(
                     'bulk_field' => 'id_webservice_account',
-                ])
+                ))
             )
-            ->add((new DataColumn('key'))
-                ->setName($this->trans('Key', [], 'Admin.Advparameters.Feature'))
-                ->setOptions([
+            ->add(
+                (new DataColumn('key'))
+                ->setName($this->trans('Key', array(), 'Admin.Advparameters.Feature'))
+                ->setOptions(array(
                     'field' => 'key',
-                ])
+                ))
             )
-            ->add((new DataColumn('description'))
-                ->setName($this->trans('Key description', [], 'Admin.Advparameters.Feature'))
-                ->setOptions([
+            ->add(
+                (new DataColumn('description'))
+                ->setName($this->trans('Key description', array(), 'Admin.Advparameters.Feature'))
+                ->setOptions(array(
                     'field' => 'description',
                     'sortable' => false,
-                ])
+                ))
             )
-            ->add((new ToggleColumn('active'))
-                ->setName($this->trans('Enabled', [], 'Admin.Global'))
-                ->setOptions([
+            ->add(
+                (new ToggleColumn('active'))
+                ->setName($this->trans('Enabled', array(), 'Admin.Global'))
+                ->setOptions(array(
                     'field' => 'active',
                     'primary_field' => 'id_webservice_account',
                     'route' => 'admin_webservice_status_toggle',
                     'route_param_name' => 'webserviceAccountId',
-                ])
+                ))
             )
-            ->add((new ActionColumn('actions'))
-                ->setName($this->trans('Actions', [], 'Admin.Global'))
-                ->setOptions([
+            ->add(
+                (new ActionColumn('actions'))
+                ->setName($this->trans('Actions', array(), 'Admin.Global'))
+                ->setOptions(array(
                     'actions' => (new RowActionCollection())
-                        ->add((new LinkRowAction('edit'))
+                        ->add(
+                            (new LinkRowAction('edit'))
                             ->setIcon('edit')
-                            ->setOptions([
+                            ->setOptions(array(
                                 'route' => 'admin_webservice_list_edit',
                                 'route_param_name' => 'webserviceAccountId',
                                 'route_param_field' => 'id_webservice_account',
-                            ])
+                            ))
                         )
-                        ->add((new SubmitRowAction('delete'))
-                            ->setName($this->trans('Delete', [], 'Admin.Actions'))
+                        ->add(
+                            (new SubmitRowAction('delete'))
+                            ->setName($this->trans('Delete', array(), 'Admin.Actions'))
                             ->setIcon('delete')
-                            ->setOptions([
+                            ->setOptions(array(
                                 'method' => 'DELETE',
                                 'route' => 'admin_delete_single_webservice_log',
                                 'route_param_name' => 'webserviceAccountId',
                                 'route_param_field' => 'id_webservice_account',
                                 'confirm_message' => $this->trans(
                                     'Delete selected item?',
-                                    [],
+                                    array(),
                                     'Admin.Notifications.Warning'
                                 ),
-                            ])
+                            ))
                         ),
-                ])
+                ))
             )
         ;
     }
@@ -168,33 +175,37 @@ final class WebserviceKeyDefinitionFactory extends AbstractGridDefinitionFactory
     protected function getFilters()
     {
         return (new FilterCollection())
-            ->add((new Filter('key', TextType::class))
-                ->setTypeOptions([
+            ->add(
+                (new Filter('key', TextType::class))
+                ->setTypeOptions(array(
                     'required' => false,
-                ])
+                ))
                 ->setAssociatedColumn('key')
             )
-            ->add((new Filter('description', TextType::class))
-                ->setTypeOptions([
+            ->add(
+                (new Filter('description', TextType::class))
+                ->setTypeOptions(array(
                     'required' => false,
-                ])
+                ))
                 ->setAssociatedColumn('description')
             )
-            ->add((new Filter('active', ChoiceType::class))
-                ->setTypeOptions([
+            ->add(
+                (new Filter('active', ChoiceType::class))
+                ->setTypeOptions(array(
                     'required' => false,
                     'choices' => $this->statusChoices,
                     'choice_translation_domain' => false,
-                ])
+                ))
                 ->setAssociatedColumn('active')
             )
-            ->add((new Filter('actions', SearchAndResetType::class))
-                ->setTypeOptions([
-                    'attr' => [
+            ->add(
+                (new Filter('actions', SearchAndResetType::class))
+                ->setTypeOptions(array(
+                    'attr' => array(
                         'data-url' => $this->resetActionUrl,
                         'data-redirect' => $this->redirectionUrl,
-                    ],
-                ])
+                    ),
+                ))
                 ->setAssociatedColumn('actions')
             )
         ;
@@ -206,16 +217,19 @@ final class WebserviceKeyDefinitionFactory extends AbstractGridDefinitionFactory
     protected function getGridActions()
     {
         return (new GridActionCollection())
-            ->add((new SimpleGridAction('common_refresh_list'))
-                ->setName($this->trans('Refresh list', [], 'Admin.Advparameters.Feature'))
+            ->add(
+                (new SimpleGridAction('common_refresh_list'))
+                ->setName($this->trans('Refresh list', array(), 'Admin.Advparameters.Feature'))
                 ->setIcon('refresh')
             )
-            ->add((new SimpleGridAction('common_show_query'))
-                ->setName($this->trans('Show SQL query', [], 'Admin.Actions'))
+            ->add(
+                (new SimpleGridAction('common_show_query'))
+                ->setName($this->trans('Show SQL query', array(), 'Admin.Actions'))
                 ->setIcon('code')
             )
-            ->add((new SimpleGridAction('common_export_sql_manager'))
-                ->setName($this->trans('Export to SQL Manager', [], 'Admin.Actions'))
+            ->add(
+                (new SimpleGridAction('common_export_sql_manager'))
+                ->setName($this->trans('Export to SQL Manager', array(), 'Admin.Actions'))
                 ->setIcon('storage')
             )
         ;
@@ -227,24 +241,27 @@ final class WebserviceKeyDefinitionFactory extends AbstractGridDefinitionFactory
     protected function getBulkActions()
     {
         return (new BulkActionCollection())
-            ->add((new SubmitBulkAction('webservice_enable_selection'))
-                ->setName($this->trans('Enable selection', [], 'Admin.Actions'))
-                ->setOptions([
+            ->add(
+                (new SubmitBulkAction('webservice_enable_selection'))
+                ->setName($this->trans('Enable selection', array(), 'Admin.Actions'))
+                ->setOptions(array(
                     'submit_route' => 'admin_webservice_bulk_enable',
-                ])
+                ))
             )
-            ->add((new SubmitBulkAction('webservice_disable_selection'))
-                ->setName($this->trans('Disable selection', [], 'Admin.Actions'))
-                ->setOptions([
+            ->add(
+                (new SubmitBulkAction('webservice_disable_selection'))
+                ->setName($this->trans('Disable selection', array(), 'Admin.Actions'))
+                ->setOptions(array(
                     'submit_route' => 'admin_webservice_bulk_disable',
-                ])
+                ))
             )
-            ->add((new SubmitBulkAction('delete_webservice'))
-                ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
-                ->setOptions([
+            ->add(
+                (new SubmitBulkAction('delete_webservice'))
+                ->setName($this->trans('Delete selected', array(), 'Admin.Actions'))
+                ->setOptions(array(
                     'submit_route' => 'admin_delete_multiple_webservice_log',
-                    'confirm_message' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
-                ])
+                    'confirm_message' => $this->trans('Delete selected items?', array(), 'Admin.Notifications.Warning'),
+                ))
             )
         ;
     }

@@ -64,16 +64,16 @@ class BackupController extends FrameworkBundleAdminController
         if ($request->query->has('download_filename')) {
             $hasDownloadFile = true;
             $backup = new Backup($request->query->get('download_filename'));
-            $downloadFile = [
+            $downloadFile = array(
                 'url' => $backup->getUrl(),
                 'size' => number_format($backup->getSize() * 0.000001, 2, '.', ''),
-            ];
+            );
         }
 
         $backupsGridFactory = $this->get('prestashop.core.grid.factory.backup');
         $backupGrid = $backupsGridFactory->getGrid($filters);
 
-        return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/Backup/index.html.twig', [
+        return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/Backup/index.html.twig', array(
             'backupGrid' => $this->presentGrid($backupGrid),
             'backupForm' => $backupForm->createView(),
             'isHostMode' => $configuration->get('_PS_HOST_MODE_'),
@@ -82,7 +82,7 @@ class BackupController extends FrameworkBundleAdminController
             'downloadFile' => $downloadFile,
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
-        ]);
+        ));
     }
 
     /**
@@ -100,15 +100,15 @@ class BackupController extends FrameworkBundleAdminController
     {
         $backup = new Backup($downloadFileName);
 
-        return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/Backup/download_view.html.twig', [
-            'downloadFile' => [
+        return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/Backup/download_view.html.twig', array(
+            'downloadFile' => array(
                 'url' => $backup->getUrl(),
                 'size' => $backup->getSize(),
-            ],
+            ),
             'layoutTitle' => $this->trans('View', 'Admin.Actions'),
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
-        ]);
+        ));
     }
 
     /**
@@ -163,7 +163,7 @@ class BackupController extends FrameworkBundleAdminController
                 )
             );
 
-            return $this->redirectToRoute('admin_backups_index', ['download_filename' => $backup->getFileName()]);
+            return $this->redirectToRoute('admin_backups_index', array('download_filename' => $backup->getFileName()));
         } catch (DirectoryIsNotWritableException $e) {
             $this->addFlash(
                 'error',
@@ -224,7 +224,7 @@ class BackupController extends FrameworkBundleAdminController
      */
     public function bulkDeleteAction(Request $request)
     {
-        $backupsToDelete = $request->request->get('backup_backup_bulk_file_names', []);
+        $backupsToDelete = $request->request->get('backup_backup_bulk_file_names', array());
 
         if (empty($backupsToDelete)) {
             $this->addFlash(
@@ -236,7 +236,7 @@ class BackupController extends FrameworkBundleAdminController
         }
 
         $backupRemover = $this->get('prestashop.adapter.backup.backup_remover');
-        $failedBackups = [];
+        $failedBackups = array();
 
         foreach ($backupsToDelete as $backupFileName) {
             $backup = new Backup($backupFileName);
@@ -255,7 +255,7 @@ class BackupController extends FrameworkBundleAdminController
             foreach ($failedBackups as $backupFileName) {
                 $this->addFlash(
                     'error',
-                    $this->trans('Can\'t delete #%id%', 'Admin.Notifications.Error', ['%id%' => $backupFileName])
+                    $this->trans('Can\'t delete #%id%', 'Admin.Notifications.Error', array('%id%' => $backupFileName))
                 );
             }
 

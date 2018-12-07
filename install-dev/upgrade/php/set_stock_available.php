@@ -38,7 +38,8 @@ function set_stock_available()
         $quantity = 0;
 
         //Try to get product attribues
-        $attributes = Db::getInstance()->executeS('
+        $attributes = Db::getInstance()->executeS(
+            '
 			SELECT quantity, id_product_attribute
 			FROM `'._DB_PREFIX_.'product_attribute`
 			WHERE `id_product` = '.(int)$row['id_product']

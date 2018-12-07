@@ -88,7 +88,8 @@ class OrderConfirmationControllerCore extends FrontController
         $register_form = $this
             ->makeCustomerForm()
             ->setGuestAllowed(false)
-            ->fillWith(Tools::getAllValues());
+            ->fillWith(Tools::getAllValues())
+        ;
 
         parent::initContent();
 
@@ -152,7 +153,10 @@ class OrderConfirmationControllerCore extends FrontController
             Configuration::get('PS_OS_PAYMENT'),
             0,
             $this->trans('Free order', array(), 'Admin.Orderscustomers.Feature'),
-            null, array(), null, false,
+            null,
+            array(),
+            null,
+            false,
             $cart->secure_key
         );
     }

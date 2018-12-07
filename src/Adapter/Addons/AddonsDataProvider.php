@@ -144,7 +144,8 @@ class AddonsDataProvider implements AddonsInterface
                     return $this->marketplaceClient->getServices();
                 case 'native_all':
                     return $this->marketplaceClient->setIsoCode('all')
-                        ->getNativesModules();
+                        ->getNativesModules()
+                    ;
                 case 'must-have':
                     return $this->marketplaceClient->getMustHaveModules();
                 case 'customer':
@@ -153,25 +154,29 @@ class AddonsDataProvider implements AddonsInterface
                     return $this->marketplaceClient
                         ->setUserMail($params['username_addons'])
                         ->setPassword($params['password_addons'])
-                        ->getCustomerThemes();
+                        ->getCustomerThemes()
+                    ;
                 case 'check_customer':
                     return $this->marketplaceClient
                         ->setUserMail($params['username_addons'])
                         ->setPassword($params['password_addons'])
-                        ->getCheckCustomer();
+                        ->getCheckCustomer()
+                    ;
                 case 'check_module':
                     return $this->marketplaceClient
                         ->setUserMail($params['username_addons'])
                         ->setPassword($params['password_addons'])
                         ->setModuleName($params['module_name'])
                         ->setModuleKey($params['module_key'])
-                        ->getCheckModule();
+                        ->getCheckModule()
+                    ;
                 case 'module_download':
                     if ($this->isAddonsAuthenticated()) {
                         return $this->marketplaceClient
                             ->setUserMail($params['username_addons'])
                             ->setPassword($params['password_addons'])
-                            ->getModuleZip($params['id_module']);
+                            ->getModuleZip($params['id_module'])
+                        ;
                     }
 
                     return $this->marketplaceClient->getModuleZip($params['id_module']);

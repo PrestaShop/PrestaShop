@@ -65,7 +65,9 @@ class OrderControllerCore extends FrontController
                 $this->errors[] = $this->trans('Sorry. We cannot renew your order.', array(), 'Shop.Notifications.Error');
             } elseif (!$duplication['success']) {
                 $this->errors[] = $this->trans(
-                    'Some items are no longer available, and we are unable to renew your order.', array(), 'Shop.Notifications.Error'
+                    'Some items are no longer available, and we are unable to renew your order.',
+                    array(),
+                    'Shop.Notifications.Error'
                 );
             } else {
                 $this->context->cookie->id_cart = $duplication['cart']->id;
@@ -119,7 +121,8 @@ class OrderControllerCore extends FrontController
                 $this->context,
                 $translator,
                 $this->makeAddressForm()
-            ));
+            ))
+        ;
 
         if (!$this->context->cart->isVirtualCart()) {
             $checkoutDeliveryStep = new CheckoutDeliveryStep(
@@ -139,7 +142,8 @@ class OrderControllerCore extends FrontController
                     $this->context->cart->getGiftWrappingPrice(
                         $checkoutDeliveryStep->getIncludeTaxes()
                     )
-                );
+                )
+            ;
 
             $this->checkoutProcess->addStep($checkoutDeliveryStep);
         }
@@ -283,7 +287,8 @@ class OrderControllerCore extends FrontController
         $this->checkoutProcess
             ->setNextStepReachable()
             ->markCurrentStep()
-            ->invalidateAllStepsAfterCurrent();
+            ->invalidateAllStepsAfterCurrent()
+        ;
 
         $this->saveDataToPersist($this->checkoutProcess);
 
@@ -295,14 +300,14 @@ class OrderControllerCore extends FrontController
             }
         }
 
-        $this->context->smarty->assign([
+        $this->context->smarty->assign(array(
             'checkout_process' => new RenderableProxy($this->checkoutProcess),
             'cart' => $presentedCart,
-        ]);
+        ));
 
-        $this->context->smarty->assign([
+        $this->context->smarty->assign(array(
             'display_transaction_updated_info' => Tools::getIsset('updatedTransaction'),
-        ]);
+        ));
 
         parent::initContent();
         $this->setTemplate('checkout/checkout');

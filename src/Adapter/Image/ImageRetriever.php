@@ -66,14 +66,14 @@ class ImageRetriever
         $images = $productInstance->getImages($language->id);
 
         if (empty($images)) {
-            return [];
+            return array();
         }
 
         $combinationImages = $productInstance->getCombinationImages($language->id);
         if (!$combinationImages) {
-            $combinationImages = [];
+            $combinationImages = array();
         }
-        $imageToCombinations = [];
+        $imageToCombinations = array();
 
         foreach ($combinationImages as $imgs) {
             foreach ($imgs as $img) {
@@ -94,7 +94,7 @@ class ImageRetriever
             if (isset($imageToCombinations[$image['id_image']])) {
                 $image['associatedVariants'] = $imageToCombinations[$image['id_image']];
             } else {
-                $image['associatedVariants'] = [];
+                $image['associatedVariants'] = array();
             }
 
             return $image;
@@ -145,22 +145,22 @@ class ImageRetriever
             $imageFolderPath = rtrim($root, DIRECTORY_SEPARATOR);
         }
 
-        $urls = [];
+        $urls = array();
         $image_types = ImageType::getImagesTypes($type, true);
 
         $extPath = $imageFolderPath . DIRECTORY_SEPARATOR . 'fileType';
         $ext = @file_get_contents($extPath) ?: 'jpg';
 
-        $mainImagePath = implode(DIRECTORY_SEPARATOR, [
+        $mainImagePath = implode(DIRECTORY_SEPARATOR, array(
             $imageFolderPath,
             $id_image . '.' . $ext,
-        ]);
+        ));
 
         foreach ($image_types as $image_type) {
-            $resizedImagePath = implode(DIRECTORY_SEPARATOR, [
+            $resizedImagePath = implode(DIRECTORY_SEPARATOR, array(
                 $imageFolderPath,
                 $id_image . '-' . $image_type['name'] . '.' . $ext,
-            ]);
+            ));
 
             if (!file_exists($resizedImagePath)) {
                 ImageManager::resize(
@@ -177,11 +177,11 @@ class ImageRetriever
                 $image_type['name']
             );
 
-            $urls[$image_type['name']] = [
+            $urls[$image_type['name']] = array(
                 'url' => $url,
                 'width' => (int) $image_type['width'],
                 'height' => (int) $image_type['height'],
-            ];
+            );
         }
 
         uasort($urls, function (array $a, array $b) {
@@ -213,27 +213,27 @@ class ImageRetriever
         $large_image_url = rtrim($this->link->getBaseLink(), '/') . '/upload/' . $imageHash;
         $small_image_url = $large_image_url . '_small';
 
-        $small = [
+        $small = array(
             'url' => $small_image_url,
-        ];
+        );
 
-        $large = [
+        $large = array(
             'url' => $large_image_url,
-        ];
+        );
 
         $medium = $large;
 
-        return [
-            'bySize' => [
+        return array(
+            'bySize' => array(
                 'small' => $small,
                 'medium' => $medium,
                 'large' => $large,
-            ],
+            ),
             'small' => $small,
             'medium' => $medium,
             'large' => $large,
             'legend' => '',
-        ];
+        );
     }
 
     /**
@@ -245,7 +245,7 @@ class ImageRetriever
      */
     public function getNoPictureImage(Language $language)
     {
-        $urls = [];
+        $urls = array();
         $type = 'products';
         $image_types = ImageType::getImagesTypes($type, true);
 
@@ -256,11 +256,11 @@ class ImageRetriever
                 $image_type['name']
             );
 
-            $urls[$image_type['name']] = [
+            $urls[$image_type['name']] = array(
                 'url' => $url,
                 'width' => (int) $image_type['width'],
                 'height' => (int) $image_type['height'],
-            ];
+            );
         }
 
         uasort($urls, function (array $a, array $b) {

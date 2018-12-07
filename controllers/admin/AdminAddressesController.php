@@ -412,7 +412,7 @@ class AdminAddressesControllerCore extends AdminController
         }
 
         /* If this address come from order's edition and is the same as the other one (invoice or delivery one)
-        ** we delete its id_address to force the creation of a new one */
+         ** we delete its id_address to force the creation of a new one */
         if ((int) Tools::getValue('id_order')) {
             $this->_redirect = false;
             if (isset($_POST['address_type'])) {

@@ -63,15 +63,15 @@ class EmployeeOptionsType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('password_change_time', TextWithUnitType::class, [
+            ->add('password_change_time', TextWithUnitType::class, array(
                 'required' => false,
                 'unit' => $this->trans('minutes', 'Admin.Advparameters.Feature'),
                 'disabled' => !$this->canOptionsBeChanged,
-            ])
-            ->add('allow_employee_specific_language', SwitchType::class, [
+            ))
+            ->add('allow_employee_specific_language', SwitchType::class, array(
                 'required' => false,
                 'disabled' => !$this->canOptionsBeChanged,
-            ])
+            ))
         ;
     }
 }

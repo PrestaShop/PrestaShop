@@ -81,7 +81,7 @@ final class InvoiceByStatusFormHandler extends FormHandler
             return $errors;
         }
 
-        $invoiceCollection = [];
+        $invoiceCollection = array();
 
         foreach ($data['generate_by_status']['order_states'] as $orderStateId) {
             // Put invoices for each selected status into one collection
@@ -92,11 +92,11 @@ final class InvoiceByStatusFormHandler extends FormHandler
         }
 
         if (empty($invoiceCollection)) {
-            $errors[] = [
+            $errors[] = array(
                 'key' => 'No invoice has been found for this status.',
                 'domain' => 'Admin.Orderscustomers.Notification',
-                'parameters' => [],
-            ];
+                'parameters' => array(),
+            );
         } else {
             // Generate PDF out of found invoices
             $this->pdfGenerator->generatePDF($invoiceCollection);

@@ -39,7 +39,7 @@ final class Filter implements FilterInterface
     /**
      * @var array Filter type options
      */
-    private $typeOptions = [];
+    private $typeOptions = array();
 
     /**
      * @var string Filter name

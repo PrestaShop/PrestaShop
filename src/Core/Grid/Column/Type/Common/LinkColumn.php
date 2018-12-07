@@ -48,15 +48,15 @@ final class LinkColumn extends AbstractColumn
     protected function configureOptions(OptionsResolver $resolver)
     {
         $resolver
-            ->setDefaults([
+            ->setDefaults(array(
                 'sortable' => true,
-            ])
-            ->setRequired([
+            ))
+            ->setRequired(array(
                 'field',
                 'route',
                 'route_param_name',
                 'route_param_field',
-            ])
+            ))
             ->setAllowedTypes('field', 'string')
             ->setAllowedTypes('route', 'string')
             ->setAllowedTypes('route_param_name', 'string')

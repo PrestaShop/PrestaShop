@@ -77,7 +77,7 @@ final class FormBuilder implements FormBuilderInterface
     /**
      * {@inheritdoc}
      */
-    public function getForm(array $data = [], array $options = [])
+    public function getForm(array $data = array(), array $options = array())
     {
         if (is_array($defaultData = $this->dataProvider->getDefaultData())) {
             $data = array_merge($defaultData, $data);
@@ -94,7 +94,7 @@ final class FormBuilder implements FormBuilderInterface
     /**
      * {@inheritdoc}
      */
-    public function getFormFor($id, array $data = [], array $options = [])
+    public function getFormFor($id, array $data = array(), array $options = array())
     {
         $data = array_merge($this->dataProvider->getData($id), $data);
 
@@ -114,15 +114,15 @@ final class FormBuilder implements FormBuilderInterface
      *
      * @return FormInterface
      */
-    private function buildForm($formType, $data, $id = null, array $options = [])
+    private function buildForm($formType, $data, $id = null, array $options = array())
     {
         $formBuilder = $this->formFactory->createBuilder($formType, $data, $options);
 
-        $this->hookDispatcher->dispatchWithParameters('action' . $formBuilder->getName() . 'FormBuilderModifier', [
+        $this->hookDispatcher->dispatchWithParameters('action' . $formBuilder->getName() . 'FormBuilderModifier', array(
             'form_builder' => $formBuilder,
             'data' => &$data,
             'id' => $id,
-        ]);
+        ));
 
         return $formBuilder->getForm();
     }

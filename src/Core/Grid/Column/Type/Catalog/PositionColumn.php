@@ -54,23 +54,23 @@ final class PositionColumn extends AbstractColumn
     protected function configureOptions(OptionsResolver $resolver)
     {
         $resolver
-            ->setRequired([
+            ->setRequired(array(
                 'id_field',
                 'position_field',
                 'update_route',
-            ])
-            ->setDefaults([
+            ))
+            ->setDefaults(array(
                 'sortable' => true,
                 'update_method' => 'GET',
-                'record_route_params' => [],
-            ])
+                'record_route_params' => array(),
+            ))
             ->setAllowedTypes('id_field', 'string')
             ->setAllowedTypes('position_field', 'string')
             ->setAllowedTypes('update_route', 'string')
             ->setAllowedTypes('sortable', 'bool')
             ->setAllowedTypes('update_method', 'string')
-            ->setAllowedTypes('record_route_params', ['array'])
-            ->setAllowedValues('update_method', ['GET', 'POST'])
+            ->setAllowedTypes('record_route_params', array('array'))
+            ->setAllowedValues('update_method', array('GET', 'POST'))
         ;
     }
 }

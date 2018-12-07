@@ -63,7 +63,7 @@ final class CountryByIsoCodeChoiceProvider implements FormChoiceProviderInterfac
      */
     public function getChoices()
     {
-        $choices = [];
+        $choices = array();
         $countries = $this->countryDataProvider->getCountries($this->langId);
 
         foreach ($countries as $country) {

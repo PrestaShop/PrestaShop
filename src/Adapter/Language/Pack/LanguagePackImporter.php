@@ -89,7 +89,7 @@ final class LanguagePackImporter implements LanguagePackImporterInterface
 
         $this->updateCldr($isoCode);
 
-        return [];
+        return array();
     }
 
     /**

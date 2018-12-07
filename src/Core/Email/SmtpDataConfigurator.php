@@ -52,14 +52,14 @@ final class SmtpDataConfigurator implements DataConfigurationInterface
      */
     public function getConfiguration()
     {
-        return [
+        return array(
             'domain' => $this->configuration->get('PS_MAIL_DOMAIN'),
             'server' => $this->configuration->get('PS_MAIL_SERVER'),
             'username' => $this->configuration->get('PS_MAIL_USER'),
             'password' => $this->configuration->get('PS_MAIL_PASSWD'),
             'encryption' => $this->configuration->get('PS_MAIL_SMTP_ENCRYPTION'),
             'port' => $this->configuration->get('PS_MAIL_SMTP_PORT'),
-        ];
+        );
     }
 
     /**
@@ -81,7 +81,7 @@ final class SmtpDataConfigurator implements DataConfigurationInterface
             }
         }
 
-        return [];
+        return array();
     }
 
     /**

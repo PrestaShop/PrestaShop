@@ -48,10 +48,10 @@ final class DeleteCategoryRowAction extends AbstractRowAction
     protected function configureOptions(OptionsResolver $resolver)
     {
         $resolver
-            ->setRequired([
+            ->setRequired(array(
                 'category_id_field',
                 'category_delete_route',
-            ])
+            ))
             ->setAllowedTypes('category_id_field', 'string')
             ->setAllowedTypes('category_delete_route', 'string')
         ;

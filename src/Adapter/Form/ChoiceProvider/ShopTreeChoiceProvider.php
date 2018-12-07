@@ -43,25 +43,25 @@ final class ShopTreeChoiceProvider implements FormChoiceProviderInterface
     public function getChoices()
     {
         $shopGroups = ShopGroup::getShopGroups();
-        $choices = [];
+        $choices = array();
 
         /** @var ShopGroup $shopGroup */
         foreach ($shopGroups as $shopGroup) {
-            $shopGroupChoices = [
+            $shopGroupChoices = array(
                 'name' => $shopGroup->name,
                 'id_shop' => null,
-                'children' => [],
-            ];
+                'children' => array(),
+            );
 
             $shops = ShopGroup::getShopsFromGroup($shopGroup->id);
 
             foreach ($shops as $shopId) {
                 $shop = Shop::getShop($shopId['id_shop']);
 
-                $shopGroupChoices['children'][] = [
+                $shopGroupChoices['children'][] = array(
                     'name' => $shop['name'],
                     'id_shop' => $shop['id_shop'],
-                ];
+                );
             }
 
             $choices[] = $shopGroupChoices;

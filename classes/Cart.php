@@ -1954,7 +1954,7 @@ class CartCore extends ObjectModel
 
         // CART CALCULATION
         $cartRules = array();
-        if (in_array($type, [Cart::BOTH, Cart::ONLY_DISCOUNTS])) {
+        if (in_array($type, array(Cart::BOTH, Cart::ONLY_DISCOUNTS))) {
             $cartRules = $this->getCartRules();
         }
         $calculator = $this->newCalculator($products, $cartRules, $id_carrier);
@@ -2018,11 +2018,11 @@ class CartCore extends ObjectModel
         $useEcotax = $this->configuration->get('PS_USE_ECOTAX');
         $precision = $this->configuration->get('_PS_PRICE_COMPUTE_PRECISION_');
         $configRoundType = $this->configuration->get('PS_ROUND_TYPE');
-        $roundTypes = [
+        $roundTypes = array(
             Order::ROUND_TOTAL => CartRow::ROUND_MODE_TOTAL,
             Order::ROUND_LINE => CartRow::ROUND_MODE_LINE,
             Order::ROUND_ITEM => CartRow::ROUND_MODE_ITEM,
-        ];
+        );
         if (isset($roundTypes[$configRoundType])) {
             $roundType = $roundTypes[$configRoundType];
         } else {
@@ -2059,7 +2059,8 @@ class CartCore extends ObjectModel
     public function getDiscountSubtotalWithoutGifts()
     {
         $discountSubtotal = $this->excludeGiftsDiscountFromTotal()
-            ->getOrderTotal(true, self::ONLY_DISCOUNTS);
+            ->getOrderTotal(true, self::ONLY_DISCOUNTS)
+        ;
         $this->includeGiftsDiscountInTotal();
 
         return $discountSubtotal;
@@ -2214,7 +2215,8 @@ class CartCore extends ObjectModel
                 Tools::ps_round(
                     $this->getGiftWrappingPrice($withTaxes),
                     $computePrecision
-                ), Currency::getCurrencyInstance((int) $this->id_currency)
+                ),
+                Currency::getCurrencyInstance((int) $this->id_currency)
             );
         }
 
@@ -3140,7 +3142,7 @@ class CartCore extends ObjectModel
     {
         $delivery_option_list = $this->getDeliveryOptionList();
         foreach ($delivery_option as $key => $value) {
-            if (isset($delivery_option_list[$key]) && isset($delivery_option_list[$key][$value])) {
+            if (isset($delivery_option_list[$key], $delivery_option_list[$key][$value])  ) {
                 if (count($delivery_option_list[$key][$value]['carrier_list']) == 1) {
                     return current(array_keys($delivery_option_list[$key][$value]['carrier_list']));
                 }
@@ -3552,7 +3554,8 @@ class CartCore extends ObjectModel
             }
 
             if (($shipping_method == Carrier::SHIPPING_METHOD_WEIGHT && !Carrier::checkDeliveryPriceByWeight($carrier->id, $this->getTotalWeight(), (int) $id_zone))
-                || ($shipping_method == Carrier::SHIPPING_METHOD_PRICE && !Carrier::checkDeliveryPriceByPrice($carrier->id, $total_package_without_shipping_tax_inc, $id_zone, (int) $this->id_currency)
+                || (
+                    $shipping_method == Carrier::SHIPPING_METHOD_PRICE && !Carrier::checkDeliveryPriceByPrice($carrier->id, $total_package_without_shipping_tax_inc, $id_zone, (int) $this->id_currency)
                 )) {
                 $shipping_cost += 0;
             } else {
@@ -4292,7 +4295,8 @@ class CartCore extends ObjectModel
         }
 
         // Backward compatibility: if true set customizations quantity to 0, they will be updated in Cart::_updateCustomizationQuantity
-        $new_customization_method = (int) Db::getInstance()->getValue('
+        $new_customization_method = (int) Db::getInstance()->getValue(
+            '
             SELECT COUNT(`id_customization`) FROM `' . _DB_PREFIX_ . 'cart_product`
             WHERE `id_cart` = ' . (int) $this->id .
                 ' AND `id_customization` != 0'
@@ -4345,7 +4349,7 @@ class CartCore extends ObjectModel
             }
 
             foreach ($product_gift as $gift) {
-                if (isset($gift['gift_product']) && isset($gift['gift_product_attribute']) && (int) $gift['gift_product'] == (int) $product['id_product'] && (int) $gift['gift_product_attribute'] == (int) $product['id_product_attribute']) {
+                if (isset($gift['gift_product'], $gift['gift_product_attribute']) && (int) $gift['gift_product'] == (int) $product['id_product'] && (int) $gift['gift_product_attribute'] == (int) $product['id_product_attribute']) {
                     $product['quantity'] = (int) $product['quantity'] - 1;
                 }
             }
@@ -4961,7 +4965,8 @@ class CartCore extends ObjectModel
     public function getProductsWithSeparatedGifts()
     {
         $products = $this->splitGiftsProductsQuantity()
-            ->getProducts($refresh = true);
+            ->getProducts($refresh = true)
+        ;
         $this->mergeGiftsProductsQuantity();
 
         return $products;

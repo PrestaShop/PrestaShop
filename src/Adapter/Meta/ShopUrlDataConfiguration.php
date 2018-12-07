@@ -73,11 +73,11 @@ final class ShopUrlDataConfiguration implements DataConfigurationInterface
      */
     public function getConfiguration()
     {
-        return [
+        return array(
             'domain' => $this->mainShopUrl->domain,
             'domain_ssl' => $this->mainShopUrl->domain_ssl,
             'physical_uri' => $this->mainShopUrl->physical_uri,
-        ];
+        );
     }
 
     /**
@@ -85,7 +85,7 @@ final class ShopUrlDataConfiguration implements DataConfigurationInterface
      */
     public function updateConfiguration(array $configuration)
     {
-        $errors = [];
+        $errors = array();
         try {
             if ($this->validateConfiguration($configuration)) {
                 $this->mainShopUrl->domain = $configuration['domain'];

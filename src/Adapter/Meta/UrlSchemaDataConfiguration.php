@@ -62,7 +62,7 @@ final class UrlSchemaDataConfiguration implements DataConfigurationInterface
      */
     public function getConfiguration()
     {
-        $configResult = [];
+        $configResult = array();
         foreach ($this->rules as $routeId => $defaultRule) {
             $result = $this->getConfigurationValue($routeId) ?: $defaultRule;
             $configResult[$routeId] = $result;
@@ -82,7 +82,7 @@ final class UrlSchemaDataConfiguration implements DataConfigurationInterface
             }
         }
 
-        return [];
+        return array();
     }
 
     /**

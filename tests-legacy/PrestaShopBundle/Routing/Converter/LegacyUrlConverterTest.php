@@ -45,9 +45,9 @@ class LegacyUrlConverterTest extends TestCase
     {
         $router = $this->buildRouterMock('admin_products_index', '/products', 'AdminProducts');
         $converter = new LegacyUrlConverter($router, new RouterProvider($router));
-        $url = $converter->convertByParameters([
+        $url = $converter->convertByParameters(array(
             'controller' => 'AdminProducts'
-        ]);
+        ));
         $this->assertEquals('/products', $url);
 
         $url = $converter->convertByUrl('?controller=AdminProducts');
@@ -58,10 +58,10 @@ class LegacyUrlConverterTest extends TestCase
     {
         $router = $this->buildRouterMock('admin_products_index', '/products', 'AdminProducts');
         $converter = new LegacyUrlConverter($router, new RouterProvider($router));
-        $url = $converter->convertByParameters([
+        $url = $converter->convertByParameters(array(
             'controller' => 'AdminProducts',
             'action' => 'index',
-        ]);
+        ));
         $this->assertEquals('/products', $url);
 
         $url = $converter->convertByUrl('?controller=AdminProducts&action=index');
@@ -72,10 +72,10 @@ class LegacyUrlConverterTest extends TestCase
     {
         $router = $this->buildRouterMock('admin_products_index', '/products', 'AdminProducts');
         $converter = new LegacyUrlConverter($router, new RouterProvider($router));
-        $url = $converter->convertByParameters([
+        $url = $converter->convertByParameters(array(
             'controller' => 'AdminProducts',
             'action' => 'LIST',
-        ]);
+        ));
         $this->assertEquals('/products', $url);
 
         $url = $converter->convertByUrl('?controller=AdminProducts&action=LIST');
@@ -86,10 +86,10 @@ class LegacyUrlConverterTest extends TestCase
     {
         $router = $this->buildRouterMock('admin_products_create', '/products/create', 'AdminProducts:create');
         $converter = new LegacyUrlConverter($router, new RouterProvider($router));
-        $url = $converter->convertByParameters([
+        $url = $converter->convertByParameters(array(
             'controller' => 'AdminProducts',
             'action' => 'create',
-        ]);
+        ));
         $this->assertEquals('/products/create', $url);
 
         $url = $converter->convertByUrl('?controller=AdminProducts&action=create');
@@ -100,10 +100,10 @@ class LegacyUrlConverterTest extends TestCase
     {
         $router = $this->buildRouterMock('admin_products_create', '/products/create', 'AdminProducts:create');
         $converter = new LegacyUrlConverter($router, new RouterProvider($router));
-        $url = $converter->convertByParameters([
+        $url = $converter->convertByParameters(array(
             'controller' => 'AdminProducts',
             'create' => true,
-        ]);
+        ));
         $this->assertEquals('/products/create', $url);
 
         $url = $converter->convertByUrl('?controller=AdminProducts&create=1');
@@ -114,10 +114,10 @@ class LegacyUrlConverterTest extends TestCase
     {
         $router = $this->buildRouterMock('admin_products_create', '/products/create', 'AdminProducts:create');
         $converter = new LegacyUrlConverter($router, new RouterProvider($router));
-        $url = $converter->convertByParameters([
+        $url = $converter->convertByParameters(array(
             'controller' => 'AdminProducts',
             'create' => '',
-        ]);
+        ));
         $this->assertEquals('/products/create', $url);
 
         $url = $converter->convertByUrl('?controller=AdminProducts&create');
@@ -126,25 +126,25 @@ class LegacyUrlConverterTest extends TestCase
 
     public function testMultipleLegacyLinks()
     {
-        $router = $this->buildRouterMock('admin_module_manage', '/manage/{category}/{keyword}', [
+        $router = $this->buildRouterMock('admin_module_manage', '/manage/{category}/{keyword}', array(
             'AdminModulesManage',
             'AdminModulesSf',
-        ]);
+        ));
         $converter = new LegacyUrlConverter($router, new RouterProvider($router));
 
         //First controller
-        $url = $converter->convertByParameters([
+        $url = $converter->convertByParameters(array(
             'controller' => 'AdminModulesManage'
-        ]);
+        ));
         $this->assertEquals('/manage/{category}/{keyword}', $url);
 
         $url = $converter->convertByUrl('?controller=AdminModulesManage');
         $this->assertEquals('/manage/{category}/{keyword}', $url);
 
         //Second controller
-        $url = $converter->convertByParameters([
+        $url = $converter->convertByParameters(array(
             'controller' => 'AdminModulesSf'
-        ]);
+        ));
         $this->assertEquals('/manage/{category}/{keyword}', $url);
 
         $url = $converter->convertByUrl('?controller=AdminModulesSf');
@@ -162,30 +162,30 @@ class LegacyUrlConverterTest extends TestCase
 
         $caughtException = null;
         try {
-            $converter->convertByParameters([
+            $converter->convertByParameters(array(
                 'controller' => 'AdminProducts',
                 'action' => 'create',
-            ]);
+            ));
         } catch (RouteNotFoundException $e) {
             $caughtException = $e;
         }
         $this->assertNotNull($caughtException);
 
         try {
-            $converter->convertByParameters([
+            $converter->convertByParameters(array(
                 'controller' => 'AdminProducts',
                 'create' => true,
-            ]);
+            ));
         } catch (RouteNotFoundException $e) {
             $caughtException = $e;
         }
         $this->assertNotNull($caughtException);
 
         try {
-            $converter->convertByParameters([
+            $converter->convertByParameters(array(
                 'controller' => 'AdminProducts',
                 'create' => '',
-            ]);
+            ));
         } catch (RouteNotFoundException $e) {
             $caughtException = $e;
         }
@@ -243,16 +243,16 @@ class LegacyUrlConverterTest extends TestCase
             'admin_products_edit',
             '/products/edit/{id}',
             'AdminProducts:edit',
-            ['id_product' => 'id'],
-            ['id' => 2]
+            array('id_product' => 'id'),
+            array('id' => 2)
         );
 
         $converter = new LegacyUrlConverter($router, new RouterProvider($router));
-        $url = $converter->convertByParameters([
+        $url = $converter->convertByParameters(array(
             'controller' => 'AdminProducts',
             'action' => 'edit',
             'id_product' => 2
-        ]);
+        ));
         //Mock returns the original path but the parameters are checked
         $this->assertEquals('/products/edit/{id}', $url);
 
@@ -272,15 +272,15 @@ class LegacyUrlConverterTest extends TestCase
             '/products/edit/{id}',
             'AdminProducts:edit',
             null, //No parameters matching rules defined
-            ['id' => 42]
+            array('id' => 42)
         );
 
         $converter = new LegacyUrlConverter($router, new RouterProvider($router));
-        $url = $converter->convertByParameters([
+        $url = $converter->convertByParameters(array(
             'controller' => 'AdminProducts',
             'action' => 'edit',
             'id' => '42'
-        ]);
+        ));
         //Mock returns the original path but the parameters are checked
         $this->assertEquals('/products/edit/{id}', $url);
 
@@ -292,18 +292,19 @@ class LegacyUrlConverterTest extends TestCase
     public function testConvertByRequest()
     {
         $router = $this->buildRouterMock('admin_products_create', '/products/create', 'AdminProducts:create');
-        $request = new Request([
+        $request = new Request(array(
             'controller' => 'AdminProducts',
             'action' => 'create',
-        ], [], [], [], [], [
+        ), array(), array(), array(), array(), array(
             'SERVER_PORT' => 80,
             'SERVER_NAME' => 'localhost',
-        ]);
+        ));
         $request->overrideGlobals();
 
         $contextMock = $this->getMockBuilder(RequestContext::class)
             ->disableOriginalConstructor()
-            ->getMock();
+            ->getMock()
+        ;
         $contextMock
             ->expects($this->once())
             ->method('fromRequest')
@@ -328,9 +329,9 @@ class LegacyUrlConverterTest extends TestCase
         $converter = new LegacyUrlConverter($router, new RouterProvider($router));
         $this->expectException(ArgumentException::class);
         $this->expectExceptionMessage('Missing required controller argument');
-        $converter->convertByParameters([
+        $converter->convertByParameters(array(
             'action' => 'create',
-        ]);
+        ));
     }
 
     public function testControllerNotFound()
@@ -342,10 +343,10 @@ class LegacyUrlConverterTest extends TestCase
         $caughtException = null;
 
         try {
-            $converter->convertByParameters([
+            $converter->convertByParameters(array(
                 'controller' => 'AdminModules',
                 'action' => 'configure',
-            ]);
+            ));
         } catch (RouteNotFoundException $e) {
             $caughtException = $e;
         }
@@ -363,10 +364,10 @@ class LegacyUrlConverterTest extends TestCase
         $caughtException = null;
 
         try {
-            $converter->convertByParameters([
+            $converter->convertByParameters(array(
                 'controller' => 'AdminProducts',
                 'action' => 'configure',
-            ]);
+            ));
         } catch (RouteNotFoundException $e) {
             $caughtException = $e;
         }
@@ -383,24 +384,24 @@ class LegacyUrlConverterTest extends TestCase
      */
     public function testMultipleRoutesActionWithTrue()
     {
-        $router = $this->buildMultipleRouterMock([
-            [
+        $router = $this->buildMultipleRouterMock(array(
+            array(
                 'route_name' => 'admin_products',
                 'path' => '/products',
                 '_legacy_link' => 'AdminProducts',
-            ],
-            [
+            ),
+            array(
                 'route_name' => 'admin_products_create',
                 'path' => '/products/create',
                 '_legacy_link' => 'AdminProducts:add',
-            ],
-        ]);
+            ),
+        ));
         $converter = new LegacyUrlConverter($router, new RouterProvider($router));
 
         //Test index by parameter
-        $url = $converter->convertByParameters([
+        $url = $converter->convertByParameters(array(
             'controller' => 'AdminProducts',
-        ]);
+        ));
         $this->assertEquals('/products', $url);
 
         //Test index by url
@@ -408,17 +409,17 @@ class LegacyUrlConverterTest extends TestCase
         $this->assertEquals('/products', $url);
 
         //Test create by parameter action
-        $url = $converter->convertByParameters([
+        $url = $converter->convertByParameters(array(
             'controller' => 'AdminProducts',
             'action' => 'add',
-        ]);
+        ));
         $this->assertEquals('/products/create', $url);
 
         //Test create by boolean value
-        $url = $converter->convertByParameters([
+        $url = $converter->convertByParameters(array(
             'controller' => 'AdminProducts',
             'add' => true,
-        ]);
+        ));
         $this->assertEquals('/products/create', $url);
 
         //Test url create by parameter action
@@ -442,9 +443,9 @@ class LegacyUrlConverterTest extends TestCase
     {
         $routeCollection = new RouteCollection();
 
-        $routeDefaults = [
+        $routeDefaults = array(
             '_legacy_link' => $legacyLink,
-        ];
+        );
         if (null !== $legacyParameters) {
             $routeDefaults['_legacy_parameters'] = $legacyParameters;
         }
@@ -529,9 +530,9 @@ class LegacyUrlConverterTest extends TestCase
     {
         $routeCollection = new RouteCollection();
         foreach ($routes as $route) {
-            $routeDefaults = [
+            $routeDefaults = array(
                 '_legacy_link' => $route['_legacy_link'],
-            ];
+            );
             if (!empty($route['_legacy_parameters'])) {
                 $routeDefaults['_legacy_parameters'] = $route['_legacy_parameters'];
             }

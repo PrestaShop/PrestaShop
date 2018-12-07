@@ -42,27 +42,28 @@ class UploadQuotaType extends TranslatorAwareType
             ->add(
                 'max_size_attached_files',
                 TextWithUnitType::class,
-                [
+                array(
                     'required' => true,
                     'unit' => $this->trans('megabytes', 'Admin.Advparameters.Feature'),
-                ]
+                )
             )
             ->add(
                 'max_size_downloadable_product',
                 TextWithUnitType::class,
-                [
+                array(
                     'required' => true,
                     'unit' => $this->trans('megabytes', 'Admin.Advparameters.Feature'),
-                ]
+                )
             )
             ->add(
                 'max_size_product_image',
                 TextWithUnitType::class,
-                [
+                array(
                     'required' => true,
                     'unit' => $this->trans('megabytes', 'Admin.Advparameters.Feature'),
-                ]
-            );
+                )
+            )
+        ;
     }
 
     /**
@@ -70,9 +71,9 @@ class UploadQuotaType extends TranslatorAwareType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
+        $resolver->setDefaults(array(
             'translation_domain' => 'Admin.Advparameters.Feature',
-        ]);
+        ));
     }
 
     /**

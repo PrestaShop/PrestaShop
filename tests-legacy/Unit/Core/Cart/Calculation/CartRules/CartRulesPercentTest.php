@@ -68,102 +68,103 @@ class CartRulesPercentTest extends AbstractCartCalculationTest
 
     public function cartWithOneCartRulePercentProvider()
     {
-        return [
-            'empty cart'                                                     => [
-                'products'        => [],
-                'expectedTotal'   => 0,
-                'cartRules'       => [2],
+        return array(
+            'empty cart' => array(
+                'products' => array(),
+                'expectedTotal' => 0,
+                'cartRules' => array(2),
                 'knownToFailOnV1' => false,
-            ],
-            'one product in cart, quantity 1, one 50% global voucher'        => [
-                'products'        => [
+            ),
+            'one product in cart, quantity 1, one 50% global voucher' => array(
+                'products' => array(
                     1 => 1,
-                ],
-                'expectedTotal'   => (1 - static::CART_RULES_FIXTURES[2]['percent'] / 100)
+                ),
+                'expectedTotal' => (1 - static::CART_RULES_FIXTURES[2]['percent'] / 100)
                                      * static::PRODUCT_FIXTURES[1]['price']
                                      + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
-                'cartRules'       => [2],
+                'cartRules' => array(2),
                 'knownToFailOnV1' => false,
-            ],
-            'one product in cart, quantity 3, one 50% global voucher'        => [
-                'products'        => [
+            ),
+            'one product in cart, quantity 3, one 50% global voucher' => array(
+                'products' => array(
                     1 => 3,
-                ],
-                'expectedTotal'   => (1 - static::CART_RULES_FIXTURES[2]['percent'] / 100)
+                ),
+                'expectedTotal' => (1 - static::CART_RULES_FIXTURES[2]['percent'] / 100)
                                      * 3 * static::PRODUCT_FIXTURES[1]['price']
                                      + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
-                'cartRules'       => [2],
+                'cartRules' => array(2),
                 'knownToFailOnV1' => false,
-            ],
-            '3 products in cart, several quantities, one 50% global voucher' => [
-                'products'        => [
+            ),
+            '3 products in cart, several quantities, one 50% global voucher' => array(
+                'products' => array(
                     2 => 2, // 64.776
                     1 => 3, // 59.43
                     3 => 1, // 31.188
                     // total without rule : 155.41
-                ],
-                'expectedTotal'   => (1 - static::CART_RULES_FIXTURES[2]['percent'] / 100)
+                ),
+                'expectedTotal' => (1 - static::CART_RULES_FIXTURES[2]['percent'] / 100)
                                      * (3 * static::PRODUCT_FIXTURES[1]['price']
                                         + 2 * static::PRODUCT_FIXTURES[2]['price']
                                         + static::PRODUCT_FIXTURES[3]['price'])
                                      + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
-                'cartRules'       => [2],
+                'cartRules' => array(2),
                 'knownToFailOnV1' => false,
-            ],
-        ];
+            ),
+        );
     }
 
     public function cartWithMultipleCartRulesPercentProvider()
     {
-        return [
-            'empty cart'                                                   => [
-                'products'        => [],
-                'expectedTotal'   => 0,
-                'cartRules'       => [2, 3],
+        return array(
+            'empty cart' => array(
+                'products' => array(),
+                'expectedTotal' => 0,
+                'cartRules' => array(2, 3),
                 'knownToFailOnV1' => false,
-            ],
-            'one product in cart, quantity 1, 2x % global vouchers'        => [
-                'products'        => [
+            ),
+            'one product in cart, quantity 1, 2x % global vouchers' => array(
+                'products' => array(
                     1 => 1,
-                ],
-                'expectedTotal'   => (1 - static::CART_RULES_FIXTURES[2]['percent'] / 100)
+                ),
+                'expectedTotal' => (1 - static::CART_RULES_FIXTURES[2]['percent'] / 100)
                                      * (1 - static::CART_RULES_FIXTURES[3]['percent'] / 100)
                                      * static::PRODUCT_FIXTURES[1]['price']
                                      + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
-                'cartRules'       => [2, 3],
+                'cartRules' => array(2, 3),
                 'knownToFailOnV1' => true,
-            ],
-            'one product in cart, quantity 3, 2x % global vouchers'        => [
-                'products'        => [
+            ),
+            'one product in cart, quantity 3, 2x % global vouchers' => array(
+                'products' => array(
                     1 => 3,
-                ],
-                'expectedTotal'   => round(
+                ),
+                'expectedTotal' => round(
                                          (1 - static::CART_RULES_FIXTURES[2]['percent'] / 100)
                                          * (1 - static::CART_RULES_FIXTURES[3]['percent'] / 100)
                                          * 3 * static::PRODUCT_FIXTURES[1]['price'],
                                          2
                                      )
                                      + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
-                'cartRules'       => [2, 3],
+                'cartRules' => array(2, 3),
                 'knownToFailOnV1' => true,
-            ],
-            '3 products in cart, several quantities, 2x % global vouchers' => [
-                'products'        => [
+            ),
+            '3 products in cart, several quantities, 2x % global vouchers' => array(
+                'products' => array(
                     2 => 2, // 64.776
                     1 => 3, // 59.43
                     3 => 1, // 31.188
                     // total without rule : 155.41
-                ],
-                'expectedTotal'   => (1 - static::CART_RULES_FIXTURES[2]['percent'] / 100)
+                ),
+                'expectedTotal' => (1 - static::CART_RULES_FIXTURES[2]['percent'] / 100)
                                      * (1 - static::CART_RULES_FIXTURES[3]['percent'] / 100)
-                                     * (3 * static::PRODUCT_FIXTURES[1]['price']
+                                     * (
+                                         3 * static::PRODUCT_FIXTURES[1]['price']
                                         + 2 * static::PRODUCT_FIXTURES[2]['price']
                                         + static::PRODUCT_FIXTURES[3]['price']
                                      )
                                      + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
-                'cartRules'       => [2, 3],
+                'cartRules' => array(2, 3),
                 'knownToFailOnV1' => true,
-            ],
-        ];
+            ),
+        );
     }
 }

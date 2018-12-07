@@ -85,16 +85,16 @@ final class BackupGridDataFactory implements GridDataFactoryInterface
     public function getData(SearchCriteriaInterface $searchCriteria)
     {
         $backups = $this->backupRepository->retrieveBackups()->all();
-        usort($backups, [$this->backupByDateComparator, 'compare']);
+        usort($backups, array($this->backupByDateComparator, 'compare'));
 
         $paginatedBackups = null !== $searchCriteria->getOffset() && null !== $searchCriteria->getLimit() ?
             array_slice($backups, $searchCriteria->getOffset(), $searchCriteria->getLimit()) :
             $backups;
 
-        $backupsArray = [];
+        $backupsArray = array();
 
         foreach ($paginatedBackups as $backup) {
-            $backupsArray[] = [
+            $backupsArray[] = array(
                 'file_name' => $backup->getFileName(),
                 'file_size' => $backup->getSize(),
                 'date' => $backup->getDate(),
@@ -102,7 +102,7 @@ final class BackupGridDataFactory implements GridDataFactoryInterface
                 'age_formatted' => $this->getFormattedAge($backup),
                 'date_formatted' => date($this->languageDateTimeFormat, $backup->getDate()->getTimestamp()),
                 'file_size_formatted' => $this->getFormattedSize($backup),
-            ];
+            );
         }
 
         $backupCollection = new RecordCollection($backupsArray);
@@ -123,22 +123,22 @@ final class BackupGridDataFactory implements GridDataFactoryInterface
     private function getFormattedAge(BackupInterface $backup)
     {
         if (TimeDefinition::HOUR_IN_SECONDS > $backup->getAge()) {
-            return sprintf('< 1 %s', $this->translator->trans('Hour', [], 'Admin.Global'));
+            return sprintf('< 1 %s', $this->translator->trans('Hour', array(), 'Admin.Global'));
         }
 
         if (TimeDefinition::DAY_IN_SECONDS > $backup->getAge()) {
             $hours = (int) floor($backup->getAge() / TimeDefinition::HOUR_IN_SECONDS);
             $label = 1 === $hours ?
-                $this->translator->trans('Hour', [], 'Admin.Global') :
-                $this->translator->trans('Hours', [], 'Admin.Global');
+                $this->translator->trans('Hour', array(), 'Admin.Global') :
+                $this->translator->trans('Hours', array(), 'Admin.Global');
 
             return sprintf('%s %s', $hours, $label);
         }
 
         $days = (int) floor($backup->getAge() / TimeDefinition::DAY_IN_SECONDS);
         $label = 1 === $days ?
-            $this->translator->trans('Day', [], 'Admin.Global') :
-            $this->translator->trans('Days', [], 'Admin.Global');
+            $this->translator->trans('Day', array(), 'Admin.Global') :
+            $this->translator->trans('Days', array(), 'Admin.Global');
 
         return sprintf('%s %s', $days, $label);
     }

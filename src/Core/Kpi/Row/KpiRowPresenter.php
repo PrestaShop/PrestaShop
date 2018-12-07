@@ -38,16 +38,16 @@ final class KpiRowPresenter implements KpiRowPresenterInterface
      */
     public function present(KpiRowInterface $kpiRow)
     {
-        $renderedKpis = [];
+        $renderedKpis = array();
 
         /** @var KpiInterface $kpi */
         foreach ($kpiRow->getKpis() as $kpi) {
             $renderedKpis[] = $kpi->render();
         }
 
-        return [
+        return array(
             'kpis' => $renderedKpis,
             'allowRefresh' => $kpiRow->isRefreshAllowed(),
-        ];
+        );
     }
 }

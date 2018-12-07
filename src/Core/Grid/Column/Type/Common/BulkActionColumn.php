@@ -45,9 +45,9 @@ final class BulkActionColumn extends AbstractColumn
     protected function configureOptions(OptionsResolver $resolver)
     {
         $resolver
-            ->setRequired([
+            ->setRequired(array(
                 'bulk_field',
-            ])
+            ))
             ->setAllowedTypes('bulk_field', 'string')
         ;
     }

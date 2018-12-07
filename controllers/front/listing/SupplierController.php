@@ -91,7 +91,9 @@ class SupplierControllerCore extends ProductListingFrontController
             } else {
                 $this->assignAll();
                 $this->label = $this->trans(
-                    'List of all suppliers', array(), 'Shop.Theme.Catalog'
+                    'List of all suppliers',
+                    array(),
+                    'Shop.Theme.Catalog'
                 );
                 $this->setTemplate('catalog/suppliers', array('entity' => 'suppliers'));
             }

@@ -89,7 +89,7 @@ class CategoryController extends FrameworkBundleAdminController
 
         $deleteCategoriesForm = $this->createForm(DeleteCategoriesType::class);
 
-        return $this->render('@PrestaShop/Admin/Sell/Catalog/Categories/index.html.twig', [
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Categories/index.html.twig', array(
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'enableSidebar' => true,
             'categoriesGrid' => $this->presentGrid($categoryGrid),
@@ -97,7 +97,7 @@ class CategoryController extends FrameworkBundleAdminController
             'layoutHeaderToolbarBtn' => $this->getCategoryToolbarButtons($request),
             'currentCategoryView' => $categoryViewData,
             'deleteCategoriesForm' => $deleteCategoriesForm->createView(),
-        ]);
+        ));
     }
 
     /**
@@ -112,16 +112,16 @@ class CategoryController extends FrameworkBundleAdminController
         /** @var DefaultGroups $defaultGroups */
         $defaultGroups = $this->getQueryBus()->handle(new GetDefaultGroups());
 
-        $emptyCategoryData = [
-            'group_association' => [
+        $emptyCategoryData = array(
+            'group_association' => array(
                 $defaultGroups->getVisitorsGroup()->getGroupId()->getValue(),
                 $defaultGroups->getGuestsGroup()->getGroupId()->getValue(),
                 $defaultGroups->getCustomersGroup()->getGroupId()->getValue(),
-            ],
-            'shop_association' => [
+            ),
+            'shop_association' => array(
                 $this->getContextShopId(),
-            ],
-        ];
+            ),
+        );
 
         $categoryAddForm = $this->createForm(CategoryType::class, $emptyCategoryData);
         $categoryAddForm->handleRequest($request);
@@ -148,10 +148,10 @@ class CategoryController extends FrameworkBundleAdminController
             }
         }
 
-        return $this->render('@PrestaShop/Admin/Sell/Catalog/Categories/add.html.twig', [
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Categories/add.html.twig', array(
             'categoryForm' => $categoryAddForm->createView(),
             'defaultGroups' => $defaultGroups,
-        ]);
+        ));
     }
 
     /**
@@ -166,16 +166,16 @@ class CategoryController extends FrameworkBundleAdminController
         /** @var DefaultGroups $defaultGroups */
         $defaultGroups = $this->getQueryBus()->handle(new GetDefaultGroups());
 
-        $emptyCategoryData = [
-            'group_association' => [
+        $emptyCategoryData = array(
+            'group_association' => array(
                 $defaultGroups->getVisitorsGroup()->getGroupId()->getValue(),
                 $defaultGroups->getGuestsGroup()->getGroupId()->getValue(),
                 $defaultGroups->getCustomersGroup()->getGroupId()->getValue(),
-            ],
-            'shop_association' => [
+            ),
+            'shop_association' => array(
                 $this->getContextShopId(),
-            ],
-        ];
+            ),
+        );
 
         $rootCategoryForm = $this->createForm(RootCategoryType::class, $emptyCategoryData);
         $rootCategoryForm->handleRequest($request);
@@ -201,10 +201,10 @@ class CategoryController extends FrameworkBundleAdminController
             }
         }
 
-        return $this->render('@PrestaShop/Admin/Sell/Catalog/Categories/add_root.html.twig', [
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Categories/add_root.html.twig', array(
             'rootCategoryForm' => $rootCategoryForm->createView(),
             'defaultGroups' => $defaultGroups,
-        ]);
+        ));
     }
 
     /**
@@ -223,14 +223,14 @@ class CategoryController extends FrameworkBundleAdminController
         $editableCategory = $this->getQueryBus()->handle(new GetCategoryForEditing($categoryId));
 
         if ($editableCategory->isRootCategory()) {
-            return $this->redirectToRoute('admin_category_edit_root', ['categoryId' => $categoryId->getValue()]);
+            return $this->redirectToRoute('admin_category_edit_root', array('categoryId' => $categoryId->getValue()));
         }
 
-        $categoryFormOptions = [
+        $categoryFormOptions = array(
             'id_category' => $categoryId->getValue(),
-        ];
+        );
 
-        $categoryFormData = [
+        $categoryFormData = array(
             'name' => $editableCategory->getName(),
             'active' => $editableCategory->isActive(),
             'id_parent' => $editableCategory->getParentId(),
@@ -241,7 +241,7 @@ class CategoryController extends FrameworkBundleAdminController
             'link_rewrite' => $editableCategory->getLinkRewrite(),
             'group_association' => $editableCategory->getGroupAssociationIds(),
             'shop_association' => $editableCategory->getShopAssociationIds(),
-        ];
+        );
 
         $categoryForm = $this->createForm(CategoryType::class, $categoryFormData, $categoryFormOptions);
         $categoryForm->handleRequest($request);
@@ -271,12 +271,12 @@ class CategoryController extends FrameworkBundleAdminController
         /** @var DefaultGroups $defaultGroups */
         $defaultGroups = $this->getQueryBus()->handle(new GetDefaultGroups());
 
-        return $this->render('@PrestaShop/Admin/Sell/Catalog/Categories/edit.html.twig', [
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Categories/edit.html.twig', array(
             'contextLangId' => $this->getContextLangId(),
             'editCategoryForm' => $categoryForm->createView(),
             'editableCategory' => $editableCategory,
             'defaultGroups' => $defaultGroups,
-        ]);
+        ));
     }
 
     /**
@@ -295,10 +295,10 @@ class CategoryController extends FrameworkBundleAdminController
         $editableCategory = $this->getQueryBus()->handle(new GetCategoryForEditing($categoryId));
 
         if (!$editableCategory->isRootCategory()) {
-            return $this->redirectToRoute('admin_category_edit', ['categoryId' => $categoryId->getValue()]);
+            return $this->redirectToRoute('admin_category_edit', array('categoryId' => $categoryId->getValue()));
         }
 
-        $rootCategoryForm = $this->createForm(RootCategoryType::class, [
+        $rootCategoryForm = $this->createForm(RootCategoryType::class, array(
             'name' => $editableCategory->getName(),
             'active' => $editableCategory->isActive(),
             'description' => $editableCategory->getDescription(),
@@ -308,7 +308,7 @@ class CategoryController extends FrameworkBundleAdminController
             'link_rewrite' => $editableCategory->getLinkRewrite(),
             'group_association' => $editableCategory->getGroupAssociationIds(),
             'shop_association' => $editableCategory->getShopAssociationIds(),
-        ]);
+        ));
         $rootCategoryForm->handleRequest($request);
 
         if ($rootCategoryForm->isSubmitted()) {
@@ -332,12 +332,12 @@ class CategoryController extends FrameworkBundleAdminController
         /** @var DefaultGroups $defaultGroups */
         $defaultGroups = $this->getQueryBus()->handle(new GetDefaultGroups());
 
-        return $this->render('@PrestaShop/Admin/Sell/Catalog/Categories/edit_root.html.twig', [
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Categories/edit_root.html.twig', array(
             'contextLangId' => $this->getContextLangId(),
             'editRootCategoryForm' => $rootCategoryForm->createView(),
             'editableCategory' => $editableCategory,
             'defaultGroups' => $defaultGroups,
-        ]);
+        ));
     }
 
     /**
@@ -396,9 +396,9 @@ class CategoryController extends FrameworkBundleAdminController
             return $this->handleConstraintException($exception);
         }
 
-        $errorMessagesForDisplay = [
+        $errorMessagesForDisplay = array(
             CategoryNotFoundException::class => $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'),
-        ];
+        );
 
         if (isset($errorMessagesForDisplay[$type])) {
             return $errorMessagesForDisplay[$type];
@@ -420,9 +420,9 @@ class CategoryController extends FrameworkBundleAdminController
             return $this->handleConstraintException($exception);
         }
 
-        $errorMessagesForDisplay = [
+        $errorMessagesForDisplay = array(
             CategoryNotFoundException::class => $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'),
-        ];
+        );
 
         if (isset($errorMessagesForDisplay[$type])) {
             return $errorMessagesForDisplay[$type];
@@ -438,13 +438,13 @@ class CategoryController extends FrameworkBundleAdminController
      */
     protected function handleConstraintException(CategoryConstraintException $e)
     {
-        $errorMessagesForDisplay = [
+        $errorMessagesForDisplay = array(
             CategoryConstraintException::TOO_MANY_MENU_THUMBNAILS => sprintf(
                 '%s %s',
                 $this->trans('An error occurred while uploading the image:', 'Admin.Catalog.Notification'),
                 $this->trans('You cannot upload more files', 'Admin.Notifications.Error')
             ),
-        ];
+        );
 
         if (isset($errorMessagesForDisplay[$e->getCode()])) {
             return $errorMessagesForDisplay[$e->getCode()];
@@ -464,19 +464,19 @@ class CategoryController extends FrameworkBundleAdminController
     public function processStatusToggleAction(Request $request, $categoryId)
     {
         if ($this->isDemoModeEnabled()) {
-            return $this->json([
+            return $this->json(array(
                 'status' => false,
                 'message' => $this->getDemoModeErrorMessage(),
-            ]);
+            ));
         }
 
         $authLevel = $this->authorizationLevel($request->attributes->get('_legacy_controller'));
 
-        if (!in_array($authLevel, [PageVoter::LEVEL_UPDATE, PageVoter::LEVEL_DELETE])) {
-            return $this->json([
+        if (!in_array($authLevel, array(PageVoter::LEVEL_UPDATE, PageVoter::LEVEL_DELETE))) {
+            return $this->json(array(
                 'status' => false,
                 'message' => $this->trans('You do not have permission to update this.', 'Admin.Notifications.Error'),
-            ]);
+            ));
         }
 
         try {
@@ -484,15 +484,15 @@ class CategoryController extends FrameworkBundleAdminController
 
             $this->getCommandBus()->handle($command);
 
-            $response = [
+            $response = array(
                 'status' => true,
                 'message' => $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success'),
-            ];
+            );
         } catch (CategoryException $e) {
-            $response = [
+            $response = array(
                 'status' => false,
                 'message' => $this->handleUpdateStatusException($e),
-            ];
+            );
         }
 
         return $this->json($response);
@@ -666,24 +666,24 @@ class CategoryController extends FrameworkBundleAdminController
         $categoriesGridFactory = $this->get('prestashop.core.grid.factory.category');
         $categoriesGrid = $categoriesGridFactory->getGrid($filters);
 
-        $headers = [
+        $headers = array(
             'id_category' => $this->trans('ID', 'Admin.Global'),
             'name' => $this->trans('Name', 'Admin.Global'),
             'description' => $this->trans('Description', 'Admin.Global'),
             'position' => $this->trans('Position', 'Admin.Global'),
             'active' => $this->trans('Displayed', 'Admin.Global'),
-        ];
+        );
 
-        $data = [];
+        $data = array();
 
         foreach ($categoriesGrid->getData()->getRecords()->all() as $record) {
-            $data[] = [
+            $data[] = array(
                 'id_category' => $record['id_category'],
                 'name' => $record['name'],
                 'description' => $record['description'],
                 'position' => $record['position'],
                 'active' => $record['active'],
-            ];
+            );
         }
 
         return (new CsvResponse())
@@ -704,7 +704,7 @@ class CategoryController extends FrameworkBundleAdminController
     {
         $type = get_class($e);
 
-        $errors = [
+        $errors = array(
             CategoryNotFoundException::class => sprintf(
                 '%s %s',
                 $this->trans('An error occurred while updating the status for an object.', 'Admin.Notifications.Error'),
@@ -714,7 +714,7 @@ class CategoryController extends FrameworkBundleAdminController
                 'An error occurred while updating the status for an object.',
                 'Admin.Notifications.Error'
             ),
-        ];
+        );
 
         if (isset($errors[$type])) {
             return $errors[$type];
@@ -735,16 +735,16 @@ class CategoryController extends FrameworkBundleAdminController
         $type = get_class($e);
 
         if (CategoryConstraintException::class === $type) {
-            $constraintErrors = [
+            $constraintErrors = array(
                 CategoryConstraintException::EMPTY_BULK_DELETE_DATA => $this->trans('You must select at least one element to delete.', 'Admin.Notifications.Error'),
-            ];
+            );
 
             if (isset($constraintErrors[$e->getCode()])) {
                 return $constraintErrors[$e->getCode()];
             }
         }
 
-        $errors = [
+        $errors = array(
             CategoryNotFoundException::class => sprintf(
                 '%s %s',
                 $this->trans('An error occurred while updating the status for an object.', 'Admin.Notifications.Error'),
@@ -754,7 +754,7 @@ class CategoryController extends FrameworkBundleAdminController
                 'You cannot remove this category because one of your shops uses it as a root category.',
                 'Admin.Catalog.Notification'
             ),
-        ];
+        );
 
         if (isset($errors[$type])) {
             return $errors[$type];
@@ -770,31 +770,31 @@ class CategoryController extends FrameworkBundleAdminController
      */
     protected function getCategoryToolbarButtons(Request $request)
     {
-        $toolbarButtons = [];
+        $toolbarButtons = array();
 
         if ($this->get('prestashop.adapter.feature.multistore')->isActive()) {
-            $toolbarButtons['add_root'] = [
-                'href' => $this->getAdminLink('AdminCategories', [
+            $toolbarButtons['add_root'] = array(
+                'href' => $this->getAdminLink('AdminCategories', array(
                     'addcategoryroot' => 1,
-                ]),
+                )),
                 'desc' => $this->trans('Add new root category', 'Admin.Catalog.Feature'),
                 'icon' => 'add_circle_outline',
-            ];
+            );
         }
 
-        $urlParams = [
+        $urlParams = array(
             'addcategory' => 1,
-        ];
+        );
 
         if ($request->query->has('id_category')) {
             $urlParams['id_parent'] = $request->query->get('id_category');
         }
 
-        $toolbarButtons['add'] = [
+        $toolbarButtons['add'] = array(
             'href' => $this->getAdminLink('AdminCategories', $urlParams),
             'desc' => $this->trans('Add new category', 'Admin.Catalog.Feature'),
             'icon' => 'add_circle_outline',
-        ];
+        );
 
         return $toolbarButtons;
     }

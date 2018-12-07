@@ -81,24 +81,24 @@ class LocalizationConfigurationType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('default_language', ChoiceType::class, [
+            ->add('default_language', ChoiceType::class, array(
                 'choices' => $this->languageChoices,
                 'choice_translation_domain' => false,
-            ])
+            ))
             ->add('detect_language_from_browser', SwitchType::class)
-            ->add('default_country', ChoiceType::class, [
+            ->add('default_country', ChoiceType::class, array(
                 'choices' => $this->countryChoices,
                 'choice_translation_domain' => false,
-            ])
+            ))
             ->add('detect_country_from_browser', SwitchType::class)
-            ->add('default_currency', ChoiceType::class, [
+            ->add('default_currency', ChoiceType::class, array(
                 'choices' => $this->currencyChoices,
                 'choice_translation_domain' => false,
-            ])
-            ->add('timezone', ChoiceType::class, [
+            ))
+            ->add('timezone', ChoiceType::class, array(
                 'choices' => $this->timezoneChoices,
                 'choice_translation_domain' => false,
-            ])
+            ))
         ;
     }
 }

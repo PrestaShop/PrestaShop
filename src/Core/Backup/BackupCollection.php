@@ -31,7 +31,7 @@ final class BackupCollection implements BackupCollectionInterface
     /**
      * @var BackupInterface[]
      */
-    private $backups = [];
+    private $backups = array();
 
     /**
      * {@inheritdoc}

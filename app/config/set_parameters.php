@@ -43,7 +43,7 @@ if (!array_key_exists('parameters', $parameters)) {
 
 if (!defined('_PS_IN_TEST_') && isset($_SERVER['argv'])) {
     $input = new \Symfony\Component\Console\Input\ArgvInput();
-    $env = $input->getParameterOption(['--env', '-e'], getenv('SYMFONY_ENV') ?: 'dev');
+    $env = $input->getParameterOption(array('--env', '-e'), getenv('SYMFONY_ENV') ?: 'dev');
 
     if ($env === 'test') {
         define('_PS_IN_TEST_', 1);

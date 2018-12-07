@@ -106,7 +106,7 @@ final class FormHandler implements FormHandlerInterface
         if ($this->isDemoModeEnabled) {
             $form->addError(
                 new FormError(
-                    $this->translator->trans('This functionality has been disabled.', [], 'Admin.Notifications.Error')
+                    $this->translator->trans('This functionality has been disabled.', array(), 'Admin.Notifications.Error')
                 )
             );
 
@@ -134,16 +134,16 @@ final class FormHandler implements FormHandlerInterface
     {
         $data = $form->getData();
 
-        $this->hookDispatcher->dispatchWithParameters('actionBeforeUpdate' . $form->getName() . 'FormHandler', [
+        $this->hookDispatcher->dispatchWithParameters('actionBeforeUpdate' . $form->getName() . 'FormHandler', array(
             'form_data' => &$data,
             'id' => $id,
-        ]);
+        ));
 
         $this->dataHandler->update($id, $data);
 
-        $this->hookDispatcher->dispatchWithParameters('actionAfterUpdate' . $form->getName() . 'FormHandler', [
+        $this->hookDispatcher->dispatchWithParameters('actionAfterUpdate' . $form->getName() . 'FormHandler', array(
             'id' => $id,
-        ]);
+        ));
 
         return FormHandlerResult::createWithId($id);
     }
@@ -157,15 +157,15 @@ final class FormHandler implements FormHandlerInterface
     {
         $data = $form->getData();
 
-        $this->hookDispatcher->dispatchWithParameters('actionBeforeCreate' . $form->getName() . 'FormHandler', [
+        $this->hookDispatcher->dispatchWithParameters('actionBeforeCreate' . $form->getName() . 'FormHandler', array(
             'form_data' => &$data,
-        ]);
+        ));
 
         $id = $this->dataHandler->create($data);
 
-        $this->hookDispatcher->dispatchWithParameters('actionAfterCreate' . $form->getName() . 'FormHandler', [
+        $this->hookDispatcher->dispatchWithParameters('actionAfterCreate' . $form->getName() . 'FormHandler', array(
             'id' => $id,
-        ]);
+        ));
 
         return FormHandlerResult::createWithId($id);
     }

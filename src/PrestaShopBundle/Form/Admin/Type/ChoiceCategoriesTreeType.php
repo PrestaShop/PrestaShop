@@ -61,14 +61,14 @@ class ChoiceCategoriesTreeType extends CommonAbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('tree', ChoiceType::class, [
+        $builder->add('tree', ChoiceType::class, array(
             'label' => false,
             'choices' => $options['valid_list'],
             'required' => false,
             'multiple' => true,
             'expanded' => true,
             'error_bubbling' => true,
-        ]);
+        ));
     }
 
     /**
@@ -76,13 +76,13 @@ class ChoiceCategoriesTreeType extends CommonAbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
+        $resolver->setDefaults(array(
             'label' => '',
-            'list' => [],
-            'valid_list' => [],
+            'list' => array(),
+            'valid_list' => array(),
             'multiple' => true,
             'expanded' => true,
-        ]);
+        ));
     }
 
     /**

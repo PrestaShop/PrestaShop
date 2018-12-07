@@ -75,35 +75,41 @@ class DoctrineGridDataFactoryTest extends TestCase
     {
         $statement = $this->createMock(PDOStatement::class);
         $statement->method('fetchAll')
-            ->willReturn([
-                [
+            ->willReturn(array(
+                array(
                     'id' => 1,
                     'name' => 'Test name 1',
-                ],
-                [
+                ),
+                array(
                     'id' => 2,
                     'name' => 'Test name 2',
-                ],
-            ]);
+                ),
+            ))
+        ;
         $statement->method('fetch')
-            ->willReturn(4);
+            ->willReturn(4)
+        ;
 
         $qb = $this->createMock(QueryBuilder::class);
         $qb->method('execute')
-            ->willReturn($statement);
+            ->willReturn($statement)
+        ;
         $qb->method('getSQL')
-            ->willReturn('SELECT * FROM ps_test WHERE id = :id');
+            ->willReturn('SELECT * FROM ps_test WHERE id = :id')
+        ;
         $qb->method('getParameters')
-            ->willReturn([
+            ->willReturn(array(
                 'id' => 1,
-            ])
+            ))
         ;
 
         $doctrineQueryBuilder = $this->createMock(DoctrineQueryBuilderInterface::class);
         $doctrineQueryBuilder->method('getSearchQueryBuilder')
-            ->willReturn($qb);
+            ->willReturn($qb)
+        ;
         $doctrineQueryBuilder->method('getCountQueryBuilder')
-            ->willReturn($qb);
+            ->willReturn($qb)
+        ;
 
         return $doctrineQueryBuilder;
     }
@@ -115,7 +121,8 @@ class DoctrineGridDataFactoryTest extends TestCase
     {
         $hookDispatcher = $this->createMock(HookDispatcherInterface::class);
         $hookDispatcher->method('dispatchWithParameters')
-            ->willReturn(null);
+            ->willReturn(null)
+        ;
 
         return $hookDispatcher;
     }
@@ -126,8 +133,9 @@ class DoctrineGridDataFactoryTest extends TestCase
     private function createQueryParserMock()
     {
         $queryParser = $this->getMockBuilder(QueryParserInterface::class)
-            ->setMethods(['parse'])
-            ->getMockForAbstractClass();
+            ->setMethods(array('parse'))
+            ->getMockForAbstractClass()
+        ;
 
         $queryParser->method('parse')->willReturn('SELECT * FROM ps_test WHERE id = 1');
 

@@ -32,7 +32,7 @@ class ConfigurationValidator
      */
     public function testSystemCanPerformDownloadUnzipAndReplace()
     {
-        $errors = [];
+        $errors = array();
 
         if (!$this->testCurl() && !$this->testFopen()) {
             $errors[] = 'You need allow_url_fopen or cURL enabled for automatic download to work.';
@@ -89,37 +89,37 @@ class ConfigurationValidator
         $this->checkRandomNameIsNotAlreadyUsed($dirPath);
 
         if (false === $this->createDirectoryTest($dirPath)) {
-            return ['Cannot create directories'];
+            return array('Cannot create directories');
         }
 
         list($fileCreationTestPath, $createFileResult) = $this->createFileTest($dirPath);
         if (false === $createFileResult) {
             $this->deleteDirectoryTest($dirPath);
-            return ['Cannot write files'];
+            return array('Cannot write files');
         }
 
         if (false === $this->downloadFileTest($dirPath)) {
             $this->deleteDirectoryTest($dirPath);
-            return ['Cannot download files from network'];
+            return array('Cannot download files from network');
         }
 
         list($fileMoveTestPath, $moveResult) = $this->moveFileTest($fileCreationTestPath);
         if (false === $moveResult) {
             $this->deleteDirectoryTest($dirPath);
-            return ['Cannot move files into prestashop root directory'];
+            return array('Cannot move files into prestashop root directory');
         }
 
         if (false === $this->deleteFileTest($fileMoveTestPath)) {
             $this->deleteDirectoryTest($dirPath);
-            return ['Cannot delete files in prestashop root directory'];
+            return array('Cannot delete files in prestashop root directory');
         }
 
         list($deleteDirectoryContentResult, $deleteDirectoryResult) = $this->deleteDirectoryTest($dirPath);
         if ((false === $deleteDirectoryContentResult) || (false === $deleteDirectoryResult)) {
-            return ['Cannot delete directories in prestashop root directory'];
+            return array('Cannot delete directories in prestashop root directory');
         }
 
-        return [];
+        return array();
     }
 
     /**
@@ -154,7 +154,7 @@ class ConfigurationValidator
         $fileCreationTestPath = $dirPath . DIRECTORY_SEPARATOR . 'test-file.php';
         $createFileResult = @file_put_contents($fileCreationTestPath, "<?php echo 'Hello world !';");
 
-        return [$fileCreationTestPath, $createFileResult];
+        return array($fileCreationTestPath, $createFileResult);
     }
 
     /**
@@ -182,7 +182,7 @@ class ConfigurationValidator
         $fileMoveTestPath = __DIR__ . DIRECTORY_SEPARATOR . 'test-move.php';
         $moveResult = @rename($fileCreationTestPath, $fileMoveTestPath);
 
-        return [$fileMoveTestPath, $moveResult];
+        return array($fileMoveTestPath, $moveResult);
     }
 
     /**
@@ -205,7 +205,7 @@ class ConfigurationValidator
         $deleteDirectoryContentResult = array_map('unlink', glob($dirPath . DIRECTORY_SEPARATOR . '*.*'));
         $deleteDirectoryResult = @rmdir($dirPath);
 
-        return [$deleteDirectoryContentResult, $deleteDirectoryResult];
+        return array($deleteDirectoryContentResult, $deleteDirectoryResult);
     }
 
     /**

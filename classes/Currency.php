@@ -276,7 +276,8 @@ class CurrencyCore extends ObjectModel
             ->where('c.`id_currency` = ' . (int) $currencyId)
             ->where('cs.`id_shop` = ' . (int) $shopId)
             ->where('c.`deleted` = 0')
-            ->where('c.`active` = 1');
+            ->where('c.`active` = 1')
+        ;
 
         return (bool) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
     }
@@ -314,7 +315,8 @@ class CurrencyCore extends ObjectModel
             ->innerJoin('currency_shop', 'cs', 'c.`id_currency` = cs.`id_currency`')
             ->where('cs.`id_shop` = ' . (int) $shopId)
             ->where('c.`deleted` = 0')
-            ->where('c.`active` = 1');
+            ->where('c.`active` = 1')
+        ;
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
     }

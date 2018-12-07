@@ -53,11 +53,11 @@ class CategoryChoiceTreeType extends AbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
+        $resolver->setDefaults(array(
             'choices_tree' => $this->categoryTreeChoices,
             'choice_label' => 'name',
             'choice_value' => 'id_category',
-        ]);
+        ));
     }
 
     /**

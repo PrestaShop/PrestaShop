@@ -74,10 +74,10 @@ class SaveSqlRequestSettingsCommand
             );
         }
 
-        $supportedFileEncodings = [
+        $supportedFileEncodings = array(
             CharsetEncoding::ISO_8859_1,
             CharsetEncoding::UTF_8,
-        ];
+        );
 
         if (!in_array($fileEncoding, $supportedFileEncodings)) {
             throw new SqlRequestSettingsConstraintException(

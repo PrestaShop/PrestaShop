@@ -213,7 +213,7 @@ class ToolsCoreTest extends TestCase
             'Results differ between getDirectoriesWithGlob and getDirectoriesWithReaddir for path '.$path
         );
 
-        $haveFilesTest = ($res1 !== []);
+        $haveFilesTest = ($res1 !== array());
 
         $this->assertEquals($haveFiles, $haveFilesTest);
     }
@@ -352,42 +352,42 @@ class ToolsCoreTest extends TestCase
 
     public function domainProvider()
     {
-        return [
-            ['http://example.com:80#@google.com/', 'example.com'],
-            ['http://example.com:80?@google.com/', 'example.com'],
-            ['http://example.com#@google.com/', 'example.com'],
-            ['http://example.com?@google.com/', 'example.com'],
-            ['https://example.com:80#@google.com/', 'example.com'],
-            ['https://example.com:80?@google.com/', 'example.com'],
-            ['http://example.com:80/', 'example.com'],
-            ['http://example.com/', 'example.com'],
-            ['https://example.com/', 'example.com'],
-            ['http://foo@bar.com:yolo@example.com:80/foo', 'example.com'],
-            ['https://example.com/', 'example.com'],
-            ['ttp://example.com:80#@google.com/', 'example.com'],
-            ['example.com:80#@google.com/', ''],
-            ['example.com:80?@google.com/', ''],
-            ['example.com#@google.com/', ''],
-            ['example.com?@google.com/', ''],
-            ['example.com:80#@google.com/', ''],
-            ['example.com:80?@google.com/', ''],
-            ['example.com:80/', ''],
-            ['example.com/', ''],
-            ['example.com/', ''],
-            ['foo@bar.com:yolo@example.com:80/foo', ''],
-            ['example.com/', ''],
-            ['/blah/bleh', ''],
-            ['/plop.html', ''],
-        ];
+        return array(
+            array('http://example.com:80#@google.com/', 'example.com'),
+            array('http://example.com:80?@google.com/', 'example.com'),
+            array('http://example.com#@google.com/', 'example.com'),
+            array('http://example.com?@google.com/', 'example.com'),
+            array('https://example.com:80#@google.com/', 'example.com'),
+            array('https://example.com:80?@google.com/', 'example.com'),
+            array('http://example.com:80/', 'example.com'),
+            array('http://example.com/', 'example.com'),
+            array('https://example.com/', 'example.com'),
+            array('http://foo@bar.com:yolo@example.com:80/foo', 'example.com'),
+            array('https://example.com/', 'example.com'),
+            array('ttp://example.com:80#@google.com/', 'example.com'),
+            array('example.com:80#@google.com/', ''),
+            array('example.com:80?@google.com/', ''),
+            array('example.com#@google.com/', ''),
+            array('example.com?@google.com/', ''),
+            array('example.com:80#@google.com/', ''),
+            array('example.com:80?@google.com/', ''),
+            array('example.com:80/', ''),
+            array('example.com/', ''),
+            array('example.com/', ''),
+            array('foo@bar.com:yolo@example.com:80/foo', ''),
+            array('example.com/', ''),
+            array('/blah/bleh', ''),
+            array('/plop.html', ''),
+        );
     }
 
     public function testStrReplaceFirstProvider() {
-        return [
-            ['s', 'f', 'seed', 0, 'feed'],
-            ['s', 'f', 'seed', 1, 'seed'],
-            ['e', 'o', 'feed', 0, 'foed'],
-            ['e', 'o', 'feed', 1, 'foed'],
-            ['e', 'o', 'feed', 2, 'feod'],
-        ];
+        return array(
+            array('s', 'f', 'seed', 0, 'feed'),
+            array('s', 'f', 'seed', 1, 'seed'),
+            array('e', 'o', 'feed', 0, 'foed'),
+            array('e', 'o', 'feed', 1, 'foed'),
+            array('e', 'o', 'feed', 2, 'feod'),
+        );
     }
 }

@@ -52,10 +52,10 @@ final class WebserviceConfiguration implements DataConfigurationInterface
      */
     public function getConfiguration()
     {
-        return [
+        return array(
             'enable_webservice' => $this->configuration->getBoolean('PS_WEBSERVICE'),
             'enable_cgi' => $this->configuration->getBoolean('PS_WEBSERVICE_CGI_HOST'),
-        ];
+        );
     }
 
     /**
@@ -68,7 +68,7 @@ final class WebserviceConfiguration implements DataConfigurationInterface
             $this->configuration->set('PS_WEBSERVICE_CGI_HOST', $configuration['enable_cgi']);
         }
 
-        return [];
+        return array();
     }
 
     /**

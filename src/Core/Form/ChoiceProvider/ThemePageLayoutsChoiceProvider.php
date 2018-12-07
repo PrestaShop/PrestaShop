@@ -52,7 +52,7 @@ final class ThemePageLayoutsChoiceProvider implements FormChoiceProviderInterfac
      */
     public function getChoices()
     {
-        $choices = [];
+        $choices = array();
 
         foreach ($this->theme->getAvailableLayouts() as $layoutId => $availableLayout) {
             $choices[sprintf('%s - %s', $availableLayout['name'], $availableLayout['description'])] = $layoutId;

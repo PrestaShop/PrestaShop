@@ -85,7 +85,7 @@ class SearchAndResetType extends AbstractType
             );
         }
 
-        if (in_array(null, [$resetUrl, $redirectUrl])) {
+        if (in_array(null, array($resetUrl, $redirectUrl))) {
             throw new LogicException(sprintf(
                 'You must configure "reset_route" and "redirect_route" options for "%s" type.',
                 self::class
@@ -103,15 +103,15 @@ class SearchAndResetType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver
-            ->setDefaults([
+            ->setDefaults(array(
                 'reset_route' => null,
-                'reset_route_params' => [],
+                'reset_route_params' => array(),
                 'redirect_route' => null,
-                'redirect_route_params' => [],
-            ])
-            ->setAllowedTypes('reset_route', ['string', 'null'])
+                'redirect_route_params' => array(),
+            ))
+            ->setAllowedTypes('reset_route', array('string', 'null'))
             ->setAllowedTypes('reset_route_params', 'array')
-            ->setAllowedTypes('redirect_route', ['string', 'null'])
+            ->setAllowedTypes('redirect_route', array('string', 'null'))
             ->setAllowedTypes('redirect_route_params', 'array')
         ;
     }

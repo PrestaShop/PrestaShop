@@ -49,7 +49,8 @@ class UpdateSchemaCommand extends ContainerAwareCommand
     {
         $this
             ->setName('prestashop:schema:update-without-foreign')
-            ->setDescription('Update the database');
+            ->setDescription('Update the database')
+        ;
     }
 
     /**
@@ -161,8 +162,11 @@ class UpdateSchemaCommand extends ContainerAwareCommand
                 if (preg_match_all('/([^\s,]*?) CHANGE (.+?) (.+?)(,|$)/', $sql, $matches)) {
                     foreach ($matches[2] as $matchKey => $fieldName) {
                         // remove table name
-                        $matches[0][$matchKey] = preg_replace('/(.+?) CHANGE/',
-                            ' CHANGE', $matches[0][$matchKey]);
+                        $matches[0][$matchKey] = preg_replace(
+                            '/(.+?) CHANGE/',
+                            ' CHANGE',
+                            $matches[0][$matchKey]
+                        );
                         // remove quote
                         $originalFieldName = $fieldName;
                         $fieldName = str_replace('`', '', $fieldName);
@@ -195,8 +199,11 @@ class UpdateSchemaCommand extends ContainerAwareCommand
                                         $oldDefaultValue . ' ' . $extra . '$2', $matches[0][$matchKey]);
                             }
                         }
-                        $updateSchemaSql[$key] = preg_replace('/ CHANGE ' . $originalFieldName . ' (.+?)(,|$)/uis',
-                            $matches[0][$matchKey], $updateSchemaSql[$key]);
+                        $updateSchemaSql[$key] = preg_replace(
+                            '/ CHANGE ' . $originalFieldName . ' (.+?)(,|$)/uis',
+                            $matches[0][$matchKey],
+                            $updateSchemaSql[$key]
+                        );
                     }
                 }
             }

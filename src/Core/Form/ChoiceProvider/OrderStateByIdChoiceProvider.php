@@ -62,7 +62,7 @@ final class OrderStateByIdChoiceProvider implements FormChoiceProviderInterface
     public function getChoices()
     {
         $orderStates = $this->orderStateDataProvider->getOrderStates($this->languageId);
-        $choices = [];
+        $choices = array();
 
         foreach ($orderStates as $orderState) {
             $choices[$orderState['name']] = $orderState['id_order_state'];

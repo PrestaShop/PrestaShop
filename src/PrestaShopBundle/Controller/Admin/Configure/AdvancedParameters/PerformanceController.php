@@ -53,17 +53,17 @@ class PerformanceController extends FrameworkBundleAdminController
      */
     public function indexAction(FormInterface $form = null)
     {
-        $toolbarButtons = [
-            'clear_cache' => [
+        $toolbarButtons = array(
+            'clear_cache' => array(
                 'href' => $this->generateUrl('admin_clear_cache'),
                 'desc' => $this->trans('Clear cache', 'Admin.Advparameters.Feature'),
                 'icon' => 'delete',
-            ],
-        ];
+            ),
+        );
 
         $form = is_null($form) ? $this->get('prestashop.adapter.performance.form_handler')->getForm() : $form;
 
-        return [
+        return array(
             'layoutHeaderToolbarBtn' => $toolbarButtons,
             'layoutTitle' => $this->trans('Performance', 'Admin.Navigation.Menu'),
             'requireAddonsSearch' => true,
@@ -74,7 +74,7 @@ class PerformanceController extends FrameworkBundleAdminController
             'requireFilterStatus' => false,
             'form' => $form->createView(),
             'servers' => $this->get('prestashop.adapter.memcache_server.manager')->getServers(),
-        ];
+        );
     }
 
     /**

@@ -54,7 +54,7 @@ final class BackupDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getName()
     {
-        return $this->trans('DB Backup', [], 'Admin.Navigation.Menu');
+        return $this->trans('DB Backup', array(), 'Admin.Navigation.Menu');
     }
 
     /**
@@ -63,66 +63,74 @@ final class BackupDefinitionFactory extends AbstractGridDefinitionFactory
     protected function getColumns()
     {
         return (new ColumnCollection())
-            ->add((new BulkActionColumn('backup_bulk_file_names'))
-                ->setOptions([
+            ->add(
+                (new BulkActionColumn('backup_bulk_file_names'))
+                ->setOptions(array(
                     'bulk_field' => 'file_name',
-                ])
+                ))
             )
-            ->add((new DataColumn('date'))
-                ->setName($this->trans('Date', [], 'Admin.Global'))
-                ->setOptions([
+            ->add(
+                (new DataColumn('date'))
+                ->setName($this->trans('Date', array(), 'Admin.Global'))
+                ->setOptions(array(
                     'field' => 'date_formatted',
                     'sortable' => false,
-                ])
+                ))
             )
-            ->add((new DataColumn('age'))
-                ->setName($this->trans('Age', [], 'Admin.Advparameters.Feature'))
-                ->setOptions([
+            ->add(
+                (new DataColumn('age'))
+                ->setName($this->trans('Age', array(), 'Admin.Advparameters.Feature'))
+                ->setOptions(array(
                     'field' => 'age_formatted',
                     'sortable' => false,
-                ])
+                ))
             )
-            ->add((new DataColumn('file_name'))
-                ->setName($this->trans('Filename', [], 'Admin.Global'))
-                ->setOptions([
+            ->add(
+                (new DataColumn('file_name'))
+                ->setName($this->trans('Filename', array(), 'Admin.Global'))
+                ->setOptions(array(
                     'field' => 'file_name',
                     'sortable' => false,
-                ])
+                ))
             )
-            ->add((new DataColumn('file_size'))
-                ->setName($this->trans('File size', [], 'Admin.Advparameters.Feature'))
-                ->setOptions([
+            ->add(
+                (new DataColumn('file_size'))
+                ->setName($this->trans('File size', array(), 'Admin.Advparameters.Feature'))
+                ->setOptions(array(
                     'field' => 'file_size_formatted',
                     'sortable' => false,
-                ])
+                ))
             )
-            ->add((new ActionColumn('actions'))
-                ->setOptions([
+            ->add(
+                (new ActionColumn('actions'))
+                ->setOptions(array(
                     'actions' => (new RowActionCollection())
-                        ->add((new LinkRowAction('view'))
+                        ->add(
+                            (new LinkRowAction('view'))
                             ->setIcon('remove_red_eye')
-                            ->setOptions([
+                            ->setOptions(array(
                                 'route' => 'admin_backups_download_view',
                                 'route_param_name' => 'downloadFileName',
                                 'route_param_field' => 'file_name',
-                            ])
+                            ))
                         )
-                        ->add((new SubmitRowAction('delete'))
-                            ->setName($this->trans('Delete', [], 'Admin.Actions'))
+                        ->add(
+                            (new SubmitRowAction('delete'))
+                            ->setName($this->trans('Delete', array(), 'Admin.Actions'))
                             ->setIcon('delete')
-                            ->setOptions([
+                            ->setOptions(array(
                                 'method' => 'DELETE',
                                 'route' => 'admin_backups_delete',
                                 'route_param_name' => 'deleteFileName',
                                 'route_param_field' => 'file_name',
                                 'confirm_message' => $this->trans(
                                     'Delete selected item?',
-                                    [],
+                                    array(),
                                     'Admin.Notifications.Warning'
                                 ),
-                            ])
+                            ))
                         ),
-                ])
+                ))
             )
         ;
     }
@@ -133,12 +141,13 @@ final class BackupDefinitionFactory extends AbstractGridDefinitionFactory
     protected function getBulkActions()
     {
         return (new BulkActionCollection())
-            ->add((new SubmitBulkAction('delete_backups'))
-                ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
-                ->setOptions([
+            ->add(
+                (new SubmitBulkAction('delete_backups'))
+                ->setName($this->trans('Delete selected', array(), 'Admin.Actions'))
+                ->setOptions(array(
                     'submit_route' => 'admin_backups_bulk_delete',
-                    'confirm_message' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
-                ])
+                    'confirm_message' => $this->trans('Delete selected items?', array(), 'Admin.Notifications.Warning'),
+                ))
             )
         ;
     }

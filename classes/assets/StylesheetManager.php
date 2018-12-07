@@ -40,10 +40,10 @@ class StylesheetManagerCore extends AbstractAssetManager
 
     protected function getDefaultList()
     {
-        return [
+        return array(
             'external' => array(),
             'inline' => array(),
-        ];
+        );
     }
 
     public function register(

@@ -69,10 +69,10 @@ final class EmailConfigurationTester implements EmailConfigurationTesterInterfac
     {
         $content = $this->translator->trans(
             'This is a test message. Your server is now configured to send email.',
-            [],
+            array(),
             'Admin.Advparameters.Feature'
         );
-        $subject = $this->translator->trans('Test message -- Prestashop', [], 'Admin.Advparameters.Feature');
+        $subject = $this->translator->trans('Test message -- Prestashop', array(), 'Admin.Advparameters.Feature');
 
         $smtpChecked = MailOption::METHOD_SMTP === (int) $config['mail_method'];
 
@@ -81,8 +81,8 @@ final class EmailConfigurationTester implements EmailConfigurationTesterInterfac
             $this->configuration->get('PS_MAIL_PASSWD')
         ;
         $password = str_replace(
-            ['&lt;', '&gt;', '&quot;', '&amp;'],
-            ['<', '>', '"', '&'],
+            array('&lt;', '&gt;', '&quot;', '&amp;'),
+            array('<', '>', '"', '&'),
             Tools::htmlentitiesUTF8($password)
         );
 
@@ -100,11 +100,11 @@ final class EmailConfigurationTester implements EmailConfigurationTesterInterfac
             Tools::htmlentitiesUTF8($config['smtp_encryption'])
         );
 
-        $errors = [];
+        $errors = array();
 
         if (false === $result || is_string($result)) {
             $errors[] =
-                $this->translator->trans('Error: Please check your configuration', [], 'Admin.Advparameters.Feature');
+                $this->translator->trans('Error: Please check your configuration', array(), 'Admin.Advparameters.Feature');
         }
 
         if (is_string($result)) {

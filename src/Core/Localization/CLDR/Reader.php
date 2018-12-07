@@ -45,7 +45,7 @@ class Reader implements ReaderInterface
 
     const DEFAULT_CURRENCY_DIGITS = 2;
 
-    protected $mainXml = [];
+    protected $mainXml = array();
 
     /**
      * Supplemental data for all locales.
@@ -153,7 +153,7 @@ class Reader implements ReaderInterface
      */
     protected function getLookup($localeCode)
     {
-        $lookup = [$localeCode];
+        $lookup = array($localeCode);
 
         while ($localeCode = $this->getParentLocale($localeCode)) {
             array_unshift($lookup, $localeCode);
@@ -216,9 +216,9 @@ class Reader implements ReaderInterface
     protected function getLocaleParts($localeTag)
     {
         $expl = explode('-', $localeTag);
-        $parts = [
+        $parts = array(
             'language' => $expl[0],
-        ];
+        );
         if (!empty($expl[1])) {
             $parts['region'] = $expl[1];
         }
@@ -278,7 +278,7 @@ class Reader implements ReaderInterface
     protected function getLocaleData($localeTag)
     {
         $xmlData = $this->getMainXmlData($localeTag);
-        $supplementalData = ['digits' => $this->getDigitsData()];
+        $supplementalData = array('digits' => $this->getDigitsData());
 
         return $this->mapLocaleData($xmlData, $supplementalData);
     }
@@ -519,7 +519,7 @@ class Reader implements ReaderInterface
      */
     protected function getDigitsData()
     {
-        $digitsSets = [];
+        $digitsSets = array();
         $results = $this->numberingSystemsXml->numberingSystems->xpath('//numberingSystem[@type="numeric"]');
         foreach ($results as $numberingSystem) {
             $systemId = (string) $numberingSystem['id'];

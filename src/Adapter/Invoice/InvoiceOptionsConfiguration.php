@@ -52,7 +52,7 @@ final class InvoiceOptionsConfiguration implements DataConfigurationInterface
      */
     public function getConfiguration()
     {
-        return [
+        return array(
             'enable_invoices' => $this->configuration->getBoolean('PS_INVOICE'),
             'enable_tax_breakdown' => $this->configuration->getBoolean('PS_INVOICE_TAXES_BREAKDOWN'),
             'enable_product_images' => $this->configuration->getBoolean('PS_PDF_IMG_INVOICE'),
@@ -65,7 +65,7 @@ final class InvoiceOptionsConfiguration implements DataConfigurationInterface
             'footer_text' => $this->configuration->get('PS_INVOICE_FREE_TEXT'),
             'invoice_model' => $this->configuration->get('PS_INVOICE_MODEL'),
             'use_disk_cache' => $this->configuration->getBoolean('PS_PDF_USE_CACHE'),
-        ];
+        );
     }
 
     /**
@@ -88,7 +88,7 @@ final class InvoiceOptionsConfiguration implements DataConfigurationInterface
             $this->configuration->set('PS_PDF_USE_CACHE', $configuration['use_disk_cache']);
         }
 
-        return [];
+        return array();
     }
 
     /**

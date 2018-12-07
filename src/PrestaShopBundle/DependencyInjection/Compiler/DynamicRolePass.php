@@ -60,6 +60,7 @@ class DynamicRolePass implements CompilerPassInterface
         $roleHierarchyVoterDefinition
             ->setPublic(false)
             ->addArgument(new Reference('prestashop.security.role.dynamic_role_hierarchy'))
-            ->addTag('security.voter', array('priority' => 245));
+            ->addTag('security.voter', array('priority' => 245))
+        ;
     }
 }

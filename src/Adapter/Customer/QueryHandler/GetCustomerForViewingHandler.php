@@ -155,23 +155,23 @@ final class GetCustomerForViewingHandler implements GetCustomerForViewingHandler
         $customerStats = $customer->getStats();
 
         $gender = new Gender($customer->id_gender, $this->contextLangId);
-        $socialTitle = $gender->name ?: $this->translator->trans('Unknown', [], 'Admin.Orderscustomers.Feature');
+        $socialTitle = $gender->name ?: $this->translator->trans('Unknown', array(), 'Admin.Orderscustomers.Feature');
 
         if ($customer->birthday && '0000-00-00' !== $customer->birthday) {
             $birthday = sprintf(
-                $this->translator->trans('%1$d years old (birth date: %2$s)', [], 'Admin.Orderscustomers.Feature'),
+                $this->translator->trans('%1$d years old (birth date: %2$s)', array(), 'Admin.Orderscustomers.Feature'),
                 $customerStats['age'],
                 Tools::displayDate($customer->birthday)
             );
         } else {
-            $birthday = $this->translator->trans('Unknown', [], 'Admin.Orderscustomers.Feature');
+            $birthday = $this->translator->trans('Unknown', array(), 'Admin.Orderscustomers.Feature');
         }
 
         $registrationDate = Tools::displayDate($customer->date_add, null, true);
         $lastUpdateDate = Tools::displayDate($customer->date_upd, null, true);
         $lastVisitDate = $customerStats['last_visit'] ?
             Tools::displayDate($customerStats['last_visit'], null, true) :
-            $this->translator->trans('Never', [], 'Admin.Global')
+            $this->translator->trans('Never', array(), 'Admin.Global')
         ;
 
         $customerShop = new Shop($customer->id_shop);
@@ -234,8 +234,8 @@ final class GetCustomerForViewingHandler implements GetCustomerForViewingHandler
      */
     private function getCustomerOrders(Customer $customer)
     {
-        $validOrders = [];
-        $invalidOrders = [];
+        $validOrders = array();
+        $invalidOrders = array();
 
         $orders = Order::getCustomerOrders($customer->id, true);
         $totalSpent = 0;
@@ -250,7 +250,7 @@ final class GetCustomerForViewingHandler implements GetCustomerForViewingHandler
             if (!isset($order['order_state'])) {
                 $order['order_state'] = $this->translator->trans(
                     'There is no status defined for this order.',
-                    [],
+                    array(),
                     'Admin.Orderscustomers.Notification'
                 );
             }
@@ -287,7 +287,7 @@ final class GetCustomerForViewingHandler implements GetCustomerForViewingHandler
     private function getCustomerCarts(Customer $customer)
     {
         $carts = Cart::getCustomerCarts($customer->id);
-        $customerCarts = [];
+        $customerCarts = array();
 
         foreach ($carts as $cart) {
             $cart = new Cart((int) $cart['id_cart']);
@@ -319,8 +319,8 @@ final class GetCustomerForViewingHandler implements GetCustomerForViewingHandler
      */
     private function getCustomerProducts(Customer $customer)
     {
-        $boughtProducts = [];
-        $viewedProducts = [];
+        $boughtProducts = array();
+        $viewedProducts = array();
 
         $products = $customer->getBoughtProducts();
         foreach ($products as $product) {
@@ -388,15 +388,15 @@ final class GetCustomerForViewingHandler implements GetCustomerForViewingHandler
      */
     private function getCustomerMessages(Customer $customer)
     {
-        $customerMessages = [];
+        $customerMessages = array();
         $messages = CustomerThread::getCustomerMessages((int) $customer->id);
 
-        $messageStatuses = [
-            'open' => $this->translator->trans('Open', [], 'Admin.Orderscustomers.Feature'),
-            'closed' => $this->translator->trans('Closed', [], 'Admin.Orderscustomers.Feature'),
-            'pending1' => $this->translator->trans('Pending 1', [], 'Admin.Orderscustomers.Feature'),
-            'pending2' => $this->translator->trans('Pending 2', [], 'Admin.Orderscustomers.Feature'),
-        ];
+        $messageStatuses = array(
+            'open' => $this->translator->trans('Open', array(), 'Admin.Orderscustomers.Feature'),
+            'closed' => $this->translator->trans('Closed', array(), 'Admin.Orderscustomers.Feature'),
+            'pending1' => $this->translator->trans('Pending 1', array(), 'Admin.Orderscustomers.Feature'),
+            'pending2' => $this->translator->trans('Pending 2', array(), 'Admin.Orderscustomers.Feature'),
+        );
 
         foreach ($messages as $message) {
             $status = isset($messageStatuses[$message['status']]) ?
@@ -423,7 +423,7 @@ final class GetCustomerForViewingHandler implements GetCustomerForViewingHandler
     private function getCustomerDiscounts(Customer $customer)
     {
         $discounts = CartRule::getCustomerCartRules($this->contextLangId, $customer->id, false, false);
-        $customerDiscounts = [];
+        $customerDiscounts = array();
 
         foreach ($discounts as $discount) {
             $availableQuantity = $discount['quantity'] > 0 ? (int) $discount['quantity_for_user'] : 0;
@@ -448,7 +448,7 @@ final class GetCustomerForViewingHandler implements GetCustomerForViewingHandler
     private function getLastEmailsSentToCustomer(Customer $customer)
     {
         $emails = $customer->getLastEmails();
-        $customerEmails = [];
+        $customerEmails = array();
 
         foreach ($emails as $email) {
             $customerEmails[] = new SentEmailInformation(
@@ -470,16 +470,16 @@ final class GetCustomerForViewingHandler implements GetCustomerForViewingHandler
     private function getLastCustomerConnections(Customer $customer)
     {
         $connections = $customer->getLastConnections();
-        $lastConnections = [];
+        $lastConnections = array();
 
         if (!is_array($connections)) {
-            $connections = [];
+            $connections = array();
         }
 
         foreach ($connections as $connection) {
             $httpReferer = $connection['http_referer'] ?
                 preg_replace('/^www./', '', parse_url($connection['http_referer'], PHP_URL_HOST)) :
-                $this->translator->trans('Direct link', [], 'Admin.Orderscustomers.Notification')
+                $this->translator->trans('Direct link', array(), 'Admin.Orderscustomers.Notification')
             ;
 
             $lastConnections[] = new LastConnectionInformation(
@@ -503,7 +503,7 @@ final class GetCustomerForViewingHandler implements GetCustomerForViewingHandler
     private function getCustomerGroups(Customer $customer)
     {
         $groups = $customer->getGroups();
-        $customerGroups = [];
+        $customerGroups = array();
 
         foreach ($groups as $groupId) {
             $group = new Group($groupId);
@@ -525,7 +525,7 @@ final class GetCustomerForViewingHandler implements GetCustomerForViewingHandler
     private function getCustomerReferrers(Customer $customer)
     {
         $referrers = Referrer::getReferrers($customer->id);
-        $customerReferrers = [];
+        $customerReferrers = array();
 
         foreach ($referrers as $referrer) {
             $customerReferrers[] = new ReferrerInformation(
@@ -546,7 +546,7 @@ final class GetCustomerForViewingHandler implements GetCustomerForViewingHandler
     private function getCustomerAddresses(Customer $customer)
     {
         $addresses = $customer->getAddresses($this->contextLangId);
-        $customerAddresses = [];
+        $customerAddresses = array();
 
         foreach ($addresses as $address) {
             $company = $address['company'] ?: '--';

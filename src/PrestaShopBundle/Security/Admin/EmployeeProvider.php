@@ -80,7 +80,7 @@ class EmployeeProvider implements UserProviderInterface
         ) {
             $employee = new Employee($this->legacyContext->employee);
             $employee->setRoles(
-                array_merge([self::ROLE_EMPLOYEE], Access::getRoles($this->legacyContext->employee->id_profile))
+                array_merge(array(self::ROLE_EMPLOYEE), Access::getRoles($this->legacyContext->employee->id_profile))
             );
 
             $cachedEmployee->set($employee);

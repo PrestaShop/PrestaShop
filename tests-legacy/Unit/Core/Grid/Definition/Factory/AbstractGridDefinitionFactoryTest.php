@@ -72,8 +72,8 @@ class AbstractGridDefinitionFactoryTest extends TestCase
             ->expects($this->once())
             ->method('dispatchWithParameters')
             ->withConsecutive(
-                [$this->equalTo('actionTestIdGridDefinitionModifier')],
-                [$this->isType('array'), $this->arrayHasKey('definition')]
+                array($this->equalTo('actionTestIdGridDefinitionModifier')),
+                array($this->isType('array'), $this->arrayHasKey('definition'))
             )
         ;
 
@@ -106,7 +106,8 @@ class AbstractGridDefinitionFactoryTest extends TestCase
     {
         $column = $this->createMock(ColumnInterface::class);
         $column->method('getId')
-            ->willReturn($id);
+            ->willReturn($id)
+        ;
 
         return $column;
     }

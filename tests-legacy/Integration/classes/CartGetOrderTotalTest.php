@@ -53,12 +53,12 @@ class CartGetOrderTotalTest extends IntegrationTestCase
     private static $id_address;
     protected $previousConfig = array(
         'PS_CART_RULE_FEATURE_ACTIVE' => null,
-        'PS_GROUP_FEATURE_ACTIVE'     => null,
-        'PS_ATCP_SHIPWRAP'            => null,
-        'PS_PRICE_ROUND_MODE'         => null,
-        'PS_ROUND_TYPE'               => null,
-        'PS_PRICE_DISPLAY_PRECISION'  => null,
-        'PS_TAX'                      => null,
+        'PS_GROUP_FEATURE_ACTIVE' => null,
+        'PS_ATCP_SHIPWRAP' => null,
+        'PS_PRICE_ROUND_MODE' => null,
+        'PS_ROUND_TYPE' => null,
+        'PS_PRICE_DISPLAY_PRECISION' => null,
+        'PS_TAX' => null,
     );
 
     public static function setUpBeforeClass()
@@ -520,18 +520,22 @@ class CartGetOrderTotalTest extends IntegrationTestCase
 
         $this->assertEquals(
             $cart->getOrderTotal(false, Cart::ONLY_PRODUCTS),
-            $cart->getOrderTotal(true, Cart::ONLY_PRODUCTS));
+            $cart->getOrderTotal(true, Cart::ONLY_PRODUCTS)
+        );
 
         $this->assertEquals(
             $cart->getOrderTotal(false, Cart::BOTH),
-            $cart->getOrderTotal(true, Cart::BOTH));
+            $cart->getOrderTotal(true, Cart::BOTH)
+        );
 
         $this->assertEquals(
             $cart->getOrderTotal(false, Cart::ONLY_SHIPPING),
-            $cart->getOrderTotal(true, Cart::ONLY_SHIPPING));
+            $cart->getOrderTotal(true, Cart::ONLY_SHIPPING)
+        );
 
         $this->assertEquals(
             $cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS),
-            $cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS));
+            $cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS)
+        );
     }
 }

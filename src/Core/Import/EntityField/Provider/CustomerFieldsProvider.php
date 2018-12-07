@@ -53,7 +53,7 @@ final class CustomerFieldsProvider implements EntityFieldsProviderInterface
      */
     public function getCollection()
     {
-        $fields = [
+        $fields = array(
             new EntityField('id', $this->trans('ID', 'Admin.Global')),
             new EntityField('active', $this->trans('Active  (0/1)')),
             new EntityField('id_gender', $this->trans('Titles ID (Mr = 1, Ms = 2, else 0)')),
@@ -72,7 +72,7 @@ final class CustomerFieldsProvider implements EntityFieldsProviderInterface
                 $this->trans('ID / Name of shop'),
                 $this->trans('Ignore this field if you don\'t use the Multistore tool. If you leave this field empty, the default shop will be used.', 'Admin.Advparameters.Help')
             ),
-        ];
+        );
 
         return EntityFieldCollection::createFromArray($fields);
     }
@@ -87,6 +87,6 @@ final class CustomerFieldsProvider implements EntityFieldsProviderInterface
      */
     private function trans($id, $domain = 'Admin.Advparameters.Feature')
     {
-        return $this->translator->trans($id, [], $domain);
+        return $this->translator->trans($id, array(), $domain);
     }
 }

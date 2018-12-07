@@ -57,26 +57,26 @@ final class CanonicalRedirectTypeChoiceProvider implements FormChoiceProviderInt
     {
         $noRedirectionMessage = $this->translator->trans(
             'No redirection (you may have duplicate content issues)',
-            [],
+            array(),
             'Admin.Shopparameters.Feature'
         );
 
         $movedTemporaryMessage = $this->translator->trans(
             '302 Moved Temporarily (recommended while setting up your store)',
-            [],
+            array(),
             'Admin.Shopparameters.Feature'
         );
 
         $movedPermanentlyMessage = $this->translator->trans(
             '301 Moved Permanently (recommended once you have gone live)',
-            [],
+            array(),
             'Admin.Shopparameters.Feature'
         );
 
-        return [
+        return array(
             $noRedirectionMessage => 0,
             $movedTemporaryMessage => 1,
             $movedPermanentlyMessage => 2,
-        ];
+        );
     }
 }

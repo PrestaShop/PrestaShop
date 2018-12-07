@@ -40,10 +40,10 @@ class MaterialChoiceTableType extends AbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
+        $resolver->setDefaults(array(
             'expanded' => true,
             'multiple' => true,
-        ]);
+        ));
     }
 
     /**

@@ -38,12 +38,12 @@ final class CustomerFilters extends Filters
      */
     public static function getDefaults()
     {
-        return [
+        return array(
             'limit' => 50,
             'offset' => 0,
             'orderBy' => 'date_add',
             'sortOrder' => 'DESC',
-            'filters' => [],
-        ];
+            'filters' => array(),
+        );
     }
 }

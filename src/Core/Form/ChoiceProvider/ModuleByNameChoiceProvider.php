@@ -53,7 +53,7 @@ final class ModuleByNameChoiceProvider implements FormChoiceProviderInterface
      */
     public function getChoices()
     {
-        $moduleChoices = [];
+        $moduleChoices = array();
 
         /** @var Module $module */
         foreach ($this->installedModules as $module) {

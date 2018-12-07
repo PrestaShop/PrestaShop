@@ -44,16 +44,16 @@ class SwitchType extends AbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
-            'choices' => [
+        $resolver->setDefaults(array(
+            'choices' => array(
                 'No' => false,
                 'Yes' => true,
-            ],
+            ),
             'multiple' => false,
             'expanded' => false,
             'disabled' => false,
             'choice_translation_domain' => self::TRANS_DOMAIN,
-        ]);
+        ));
         $resolver->setAllowedTypes('disabled', 'bool');
     }
 

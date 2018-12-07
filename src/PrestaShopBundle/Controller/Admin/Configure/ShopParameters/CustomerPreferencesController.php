@@ -54,13 +54,13 @@ class CustomerPreferencesController extends FrameworkBundleAdminController
 
         $form = $this->get('prestashop.admin.customer_preferences.form_handler')->getForm();
 
-        return [
+        return array(
             'layoutTitle' => $this->trans('Customers', 'Admin.Navigation.Menu'),
             'requireAddonsSearch' => true,
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($legacyController),
             'form' => $form->createView(),
-        ];
+        );
     }
 
     /**

@@ -76,11 +76,12 @@ class GeneralType extends TranslatorAwareType
             ->add('enable_final_summary', SwitchType::class)
             ->add('enable_guest_checkout', SwitchType::class)
             ->add('disable_reordering_option', SwitchType::class)
-            ->add('purchase_minimum_value', MoneyWithSuffixType::class, [
+            ->add('purchase_minimum_value', MoneyWithSuffixType::class, array(
                 'currency' => $currencyIsoCode,
                 'suffix' => $this->trans('(tax excl.)', 'Admin.Global'),
-            ])
-            ->add('recalculate_shipping_cost', SwitchType::class);
+            ))
+            ->add('recalculate_shipping_cost', SwitchType::class)
+        ;
 
         if ($isMultishippingEnabled) {
             $builder->add('allow_multishipping', SwitchType::class);
@@ -89,10 +90,11 @@ class GeneralType extends TranslatorAwareType
         $builder
             ->add('allow_delayed_shipping', SwitchType::class)
             ->add('enable_tos', SwitchType::class)
-            ->add('tos_cms_id', ChoiceType::class, [
+            ->add('tos_cms_id', ChoiceType::class, array(
                 'placeholder' => $this->trans('None', 'Admin.Global'),
                 'choices' => $this->tosCmsChoices,
-            ]);
+            ))
+        ;
     }
 
     /**
@@ -100,9 +102,9 @@ class GeneralType extends TranslatorAwareType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
+        $resolver->setDefaults(array(
             'translation_domain' => 'Admin.Shopparameters.Feature',
-        ]);
+        ));
     }
 
     /**

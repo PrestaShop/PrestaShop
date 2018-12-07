@@ -197,7 +197,7 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
         $limit,
         $orderBy,
         $sortOrder,
-        $post = [],
+        $post = array(),
         $avoidPersistence = false,
         $formatCldr = true
     ) {
@@ -208,7 +208,7 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
 
         $filterParams = $this->combinePersistentCatalogProductFilter(array_merge(
             $post,
-            ['last_offset' => $offset, 'last_limit' => $limit, 'last_orderBy' => $orderBy, 'last_sortOrder' => $sortOrder]
+            array('last_offset' => $offset, 'last_limit' => $limit, 'last_orderBy' => $orderBy, 'last_sortOrder' => $sortOrder)
         ), $avoidPersistence);
         $filterParams = AdminFilter::sanitizeFilterParameters($filterParams);
 
@@ -331,11 +331,11 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
                 continue;
             }
             if (strpos($filterParam, 'filter_column_') === 0) {
-                $filterValue = Db::getInstance()->escape($filterValue, in_array($filterParam, [
+                $filterValue = Db::getInstance()->escape($filterValue, in_array($filterParam, array(
                     'filter_column_id_product',
                     'filter_column_sav_quantity',
                     'filter_column_price',
-                ]), true);
+                )), true);
                 $field = substr($filterParam, 14); // 'filter_column_' takes 14 chars
                 if (isset($sqlSelect[$field]['table'])) {
                     $sqlWhere[] = $sqlSelect[$field]['table'] . '.`' . $sqlSelect[$field]['field'] . '` ' . sprintf($sqlSelect[$field]['filtering'], $filterValue);
@@ -367,9 +367,23 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
         $currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
         foreach ($products as &$product) {
             $product['total'] = $total; // total product count (filtered)
-            $product['price_final'] = Product::getPriceStatic($product['id_product'], true, null,
-                (int) Configuration::get('PS_PRICE_DISPLAY_PRECISION'), null, false, true, 1,
-                true, null, null, null, $nothing, true, true);
+            $product['price_final'] = Product::getPriceStatic(
+                $product['id_product'],
+                true,
+                null,
+                (int) Configuration::get('PS_PRICE_DISPLAY_PRECISION'),
+                null,
+                false,
+                true,
+                1,
+                true,
+                null,
+                null,
+                null,
+                $nothing,
+                true,
+                true
+            );
             if ($formatCldr) {
                 $product['price'] = Tools::displayPrice($product['price'], $currency);
                 $product['price_final'] = Tools::displayPrice($product['price_final'], $currency);
@@ -431,7 +445,7 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
      */
     public function getPaginationLimitChoices()
     {
-        $paginationLimitChoices = [20, 50, 100];
+        $paginationLimitChoices = array(20, 50, 100);
 
         $memory = Tools::getMemoryLimit();
 

@@ -62,13 +62,14 @@ class ExportThemeLanguageType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('iso_code', ChoiceType::class, [
+            ->add('iso_code', ChoiceType::class, array(
                 'choices' => $this->getLocaleChoices(),
                 'choice_translation_domain' => false,
-            ])
-            ->add('theme_name', ChoiceType::class, [
+            ))
+            ->add('theme_name', ChoiceType::class, array(
                 'choices' => $this->themeChoices,
                 'choice_translation_domain' => false,
-            ]);
+            ))
+        ;
     }
 }

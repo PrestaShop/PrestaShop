@@ -65,26 +65,26 @@ class ImportLocalizationPackType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('iso_localization_pack', ChoiceType::class, [
+            ->add('iso_localization_pack', ChoiceType::class, array(
                 'choices' => $this->localizationPackChoices,
                 'choice_translation_domain' => false,
-            ])
-            ->add('content_to_import', ChoiceType::class, [
+            ))
+            ->add('content_to_import', ChoiceType::class, array(
                 'expanded' => true,
                 'multiple' => true,
                 'choices' => $this->getContentToImportChoices(),
-                'data' => [
+                'data' => array(
                     LocalizationPackImportConfigInterface::CONTENT_STATES,
                     LocalizationPackImportConfigInterface::CONTENT_TAXES,
                     LocalizationPackImportConfigInterface::CONTENT_CURRENCIES,
                     LocalizationPackImportConfigInterface::CONTENT_LANGUAGES,
                     LocalizationPackImportConfigInterface::CONTENT_UNITS,
-                ],
+                ),
                 'choice_translation_domain' => false,
-            ])
-            ->add('download_pack_data', SwitchType::class, [
+            ))
+            ->add('download_pack_data', SwitchType::class, array(
                 'data' => 1,
-            ])
+            ))
         ;
     }
 
@@ -95,13 +95,13 @@ class ImportLocalizationPackType extends TranslatorAwareType
      */
     private function getContentToImportChoices()
     {
-        return [
+        return array(
             $this->trans('States', 'Admin.International.Feature') => LocalizationPackImportConfigInterface::CONTENT_STATES,
             $this->trans('Taxes', 'Admin.Global') => LocalizationPackImportConfigInterface::CONTENT_TAXES,
             $this->trans('Currencies', 'Admin.Global') => LocalizationPackImportConfigInterface::CONTENT_CURRENCIES,
             $this->trans('Languages', 'Admin.Global') => LocalizationPackImportConfigInterface::CONTENT_LANGUAGES,
             $this->trans('Units (e.g. weight, volume, distance)', 'Admin.International.Feature') => LocalizationPackImportConfigInterface::CONTENT_UNITS,
             $this->trans('Change the behavior of the price display for groups', 'Admin.International.Feature') => LocalizationPackImportConfigInterface::CONTENT_GROUPS,
-        ];
+        );
     }
 }

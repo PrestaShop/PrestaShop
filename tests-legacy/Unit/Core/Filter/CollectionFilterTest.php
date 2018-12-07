@@ -53,41 +53,41 @@ class CollectionFilterTest extends \PHPUnit_Framework_TestCase
 
     public function provideTestCases()
     {
-        $subject = [
-            [
+        $subject = array(
+            array(
                 'foo' => 'something',
                 'bar' => null,
-                'baz' => []
-            ],
-            [
+                'baz' => array()
+            ),
+            array(
                 'foo' => 'something',
-            ],
-            [
+            ),
+            array(
                 'bar' => null,
-                'baz' => [],
-            ],
-            []
-        ];
+                'baz' => array(),
+            ),
+            array()
+        );
 
-        return [
-            [
+        return array(
+            array(
                 'subject' => $subject,
-                'queue' => [
+                'queue' => array(
                     (new HashMapWhitelistFilter())
-                        ->whitelist(['foo'])
-                ],
-                'expectedResult' => [
-                    [
+                        ->whitelist(array('foo'))
+                ),
+                'expectedResult' => array(
+                    array(
                         'foo' => 'something',
-                    ],
-                    [
+                    ),
+                    array(
                         'foo' => 'something',
-                    ],
-                    [],
-                    [],
-                ]
-            ]
-        ];
+                    ),
+                    array(),
+                    array(),
+                )
+            )
+        );
     }
 
 }

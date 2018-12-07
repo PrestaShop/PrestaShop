@@ -79,10 +79,10 @@ class RenderedHookTest extends TestCase
      */
     private function content()
     {
-        return [
+        return array(
             'module_1' => '<h1>Hello World</h1>',
             'module_2' => '<p>How are you?</p>',
             'module_3' => ' ',
-        ];
+        );
     }
 }

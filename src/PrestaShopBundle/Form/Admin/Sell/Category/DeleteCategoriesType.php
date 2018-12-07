@@ -57,17 +57,17 @@ class DeleteCategoriesType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('delete_mode', ChoiceType::class, [
+            ->add('delete_mode', ChoiceType::class, array(
                 'expanded' => true,
                 'choices' => $this->categoryDeleteModelChoices,
                 'label' => false,
                 'data' => CategoryDeleteMode::ASSOCIATE_PRODUCTS_WITH_PARENT_AND_DISABLE,
-            ])
-            ->add('categories_to_delete', CollectionType::class, [
+            ))
+            ->add('categories_to_delete', CollectionType::class, array(
                 'entry_type' => HiddenType::class,
                 'label' => false,
                 'allow_add' => true,
-            ])
+            ))
         ;
     }
 }

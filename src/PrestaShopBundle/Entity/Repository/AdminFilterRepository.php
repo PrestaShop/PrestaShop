@@ -44,12 +44,12 @@ class AdminFilterRepository extends EntityRepository
      */
     public function findByEmployeeAndRouteParams($employeeId, $shopId, $controller, $action)
     {
-        return $this->findOneBy([
+        return $this->findOneBy(array(
             'employee' => $employeeId ?: 0,
             'shop' => $shopId ?: 0,
             'controller' => $controller,
             'action' => $action,
-        ]);
+        ));
     }
 
     /**
@@ -65,12 +65,12 @@ class AdminFilterRepository extends EntityRepository
      */
     public function removeByEmployeeAndRouteParams($employeeId, $shopId, $controller, $action)
     {
-        $adminFilter = $this->findOneBy([
+        $adminFilter = $this->findOneBy(array(
             'employee' => $employeeId ?: 0,
             'shop' => $shopId ?: 0,
             'controller' => $controller,
             'action' => $action,
-        ]);
+        ));
 
         if (null === $adminFilter) {
             return false;
@@ -94,12 +94,12 @@ class AdminFilterRepository extends EntityRepository
      */
     public function createOrUpdateByEmployeeAndRouteParams($employeeId, $shopId, $filters, $controller, $action)
     {
-        $adminFilter = $this->findOneBy([
+        $adminFilter = $this->findOneBy(array(
             'employee' => $employeeId,
             'shop' => $shopId,
             'controller' => $controller,
             'action' => $action,
-        ]);
+        ));
 
         $adminFilter = is_null($adminFilter) ? new AdminFilter() : $adminFilter;
 

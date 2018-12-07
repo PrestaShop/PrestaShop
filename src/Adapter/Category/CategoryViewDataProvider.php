@@ -97,17 +97,17 @@ class CategoryViewDataProvider
             && !$this->multishopFeature->isUsed()
             && $categoriesWithoutParentCount > 1
         ) {
-            $categoriesTree = [['name' => $category->name[$this->contextLangId]]];
+            $categoriesTree = array(array('name' => $category->name[$this->contextLangId]));
         }
 
         $categoriesTree = array_reverse($categoriesTree);
 
-        return [
+        return array(
             'breadcrumb_tree' => $categoriesTree,
             'id' => $category->id,
             'id_parent' => $category->id_parent,
             'is_home_category' => $this->configuration->get('PS_HOME_CATEGORY') == $category->id,
             'name' => $category->name[$this->contextLangId],
-        ];
+        );
     }
 }

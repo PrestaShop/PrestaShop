@@ -34,17 +34,17 @@ class TinyMceMaxLengthValidator extends ConstraintValidator
 {
     public function validate($value, Constraint $constraint)
     {
-        $replaceArray = [
+        $replaceArray = array(
             "\n",
             "\r",
             "\n\r",
-        ];
-        $str = str_replace($replaceArray, [''], strip_tags($value));
+        );
+        $str = str_replace($replaceArray, array(''), strip_tags($value));
 
         if (iconv_strlen($str) > $constraint->max) {
             $this->context->addViolation(
-                (new LegacyContext())->getContext()->getTranslator()->trans('This value is too long. It should have %limit% characters or less.', [], 'Admin.Catalog.Notification'),
-                ['%limit%' => $constraint->max]
+                (new LegacyContext())->getContext()->getTranslator()->trans('This value is too long. It should have %limit% characters or less.', array(), 'Admin.Catalog.Notification'),
+                array('%limit%' => $constraint->max)
             );
         }
     }

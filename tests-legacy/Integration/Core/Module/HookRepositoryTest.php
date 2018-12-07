@@ -64,14 +64,14 @@ class HookRepositoryTest extends IntegrationTestCase
 
     public function test_persist_and_retrieve()
     {
-        $modules = [
+        $modules = array(
             'ps_emailsubscription',
             'ps_featuredproducts'
-        ];
+        );
 
-        $this->hookRepository->persistHooksConfiguration([
+        $this->hookRepository->persistHooksConfiguration(array(
             'displayTestHookName' => $modules
-        ]);
+        ));
 
         $this->assertEquals(
             $modules,
@@ -81,15 +81,15 @@ class HookRepositoryTest extends IntegrationTestCase
 
     public function test_only_display_hooks_are_retrieved()
     {
-        $this->hookRepository->persistHooksConfiguration([
-            'displayTestHookName' => ['ps_emailsubscription', 'ps_featuredproducts'],
-            'notADisplayTestHookName' => ['ps_languageselector', 'ps_currencyselector']
-        ]);
+        $this->hookRepository->persistHooksConfiguration(array(
+            'displayTestHookName' => array('ps_emailsubscription', 'ps_featuredproducts'),
+            'notADisplayTestHookName' => array('ps_languageselector', 'ps_currencyselector')
+        ));
 
         $actual = $this->hookRepository->getDisplayHooksWithModules();
 
         $this->assertEquals(
-            ['ps_emailsubscription', 'ps_featuredproducts'],
+            array('ps_emailsubscription', 'ps_featuredproducts'),
             $actual['displayTestHookName']
         );
 
@@ -100,22 +100,22 @@ class HookRepositoryTest extends IntegrationTestCase
 
     public function test_exceptions_taken_into_account()
     {
-        $this->hookRepository->persistHooksConfiguration([
-            'displayTestHookNameWithExceptions' => [
-                [
-                    'ps_emailsubscription' => [
-                        'except_pages' => ['category', 'product']
-                    ]
-                ]
-            ]
-        ]);
+        $this->hookRepository->persistHooksConfiguration(array(
+            'displayTestHookNameWithExceptions' => array(
+                array(
+                    'ps_emailsubscription' => array(
+                        'except_pages' => array('category', 'product')
+                    )
+                )
+            )
+        ));
 
         $this->assertEquals(
-            [
-                'ps_emailsubscription' => [
-                    'except_pages' => ['category', 'product']
-                ]
-            ],
+            array(
+                'ps_emailsubscription' => array(
+                    'except_pages' => array('category', 'product')
+                )
+            ),
             $this->hookRepository->getHooksWithModules()['displayTestHookNameWithExceptions']
         );
     }

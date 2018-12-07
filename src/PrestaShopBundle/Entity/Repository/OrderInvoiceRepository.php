@@ -75,7 +75,7 @@ SQL;
         $statement->bindValue('shopIds', implode(',', array_map('intval', $shopIds)));
         $statement->execute();
 
-        $result = [];
+        $result = array();
 
         while ($row = $statement->fetch()) {
             $result[$row['id_order_state']] = $row['nbOrders'];

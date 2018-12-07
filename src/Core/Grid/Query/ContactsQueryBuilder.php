@@ -111,12 +111,12 @@ final class ContactsQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     private function getQueryBuilder(array $filters)
     {
-        $allowedFilters = [
+        $allowedFilters = array(
             'id_contact',
             'name',
             'email',
             'description',
-        ];
+        );
 
         $qb = $this->connection
             ->createQueryBuilder()

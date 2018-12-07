@@ -31,14 +31,14 @@ class Facet
     private $label;
     private $type;
     private $displayed = true;
-    private $properties = [];
-    private $filters = [];
+    private $properties = array();
+    private $filters = array();
     private $multipleSelectionAllowed = true;
     private $widgetType = 'radio';
 
     public function toArray()
     {
-        return [
+        return array(
             'label' => $this->label,
             'displayed' => $this->displayed,
             'type' => $this->type,
@@ -48,7 +48,7 @@ class Facet
             }, $this->filters),
             'multipleSelectionAllowed' => $this->multipleSelectionAllowed,
             'widgetType' => $this->widgetType,
-        ];
+        );
     }
 
     public function setLabel($label)

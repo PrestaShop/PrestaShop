@@ -35,12 +35,12 @@ class RequestSqlFilters extends Filters
      */
     public static function getDefaults()
     {
-        return [
+        return array(
             'limit' => 10,
             'offset' => 0,
             'orderBy' => 'id_request_sql',
             'sortOrder' => 'desc',
-            'filters' => [],
-        ];
+            'filters' => array(),
+        );
     }
 }

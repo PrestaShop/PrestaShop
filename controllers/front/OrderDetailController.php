@@ -184,10 +184,10 @@ class OrderDetailControllerCore extends FrontController
             if (Validate::isLoadedObject($order) && $order->id_customer == $this->context->customer->id) {
                 $this->order_to_display = (new OrderPresenter())->present($order);
 
-                $this->context->smarty->assign([
+                $this->context->smarty->assign(array(
                     'order' => $this->order_to_display,
-                    'HOOK_DISPLAYORDERDETAIL' => Hook::exec('displayOrderDetail', ['order' => $order]),
-                ]);
+                    'HOOK_DISPLAYORDERDETAIL' => Hook::exec('displayOrderDetail', array('order' => $order)),
+                ));
             } else {
                 $this->redirect_after = '404';
                 $this->redirect();

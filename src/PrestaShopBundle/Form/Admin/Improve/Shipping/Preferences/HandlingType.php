@@ -66,22 +66,22 @@ class HandlingType extends TranslatorAwareType
         $weightUnit = $configuration->get('PS_WEIGHT_UNIT');
 
         $builder
-            ->add('shipping_handling_charges', MoneyWithSuffixType::class, [
+            ->add('shipping_handling_charges', MoneyWithSuffixType::class, array(
                 'currency' => $defaultCurrency->iso_code,
                 'suffix' => $this->trans('(tax excl.)', 'Admin.Global'),
                 'required' => false,
                 'empty_data' => '0',
-            ])
-            ->add('free_shipping_price', MoneyType::class, [
+            ))
+            ->add('free_shipping_price', MoneyType::class, array(
                 'currency' => $defaultCurrency->iso_code,
                 'required' => false,
                 'empty_data' => '0',
-            ])
-            ->add('free_shipping_weight', TextWithUnitType::class, [
+            ))
+            ->add('free_shipping_weight', TextWithUnitType::class, array(
                 'unit' => $weightUnit,
                 'required' => false,
                 'empty_data' => '0',
-            ])
+            ))
         ;
     }
 
@@ -90,9 +90,9 @@ class HandlingType extends TranslatorAwareType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
+        $resolver->setDefaults(array(
             'translation_domain' => 'Admin.Shipping.Feature',
-        ]);
+        ));
     }
 
     /**

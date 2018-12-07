@@ -53,9 +53,9 @@ class GenerateByDateType extends CommonAbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
+        $resolver->setDefaults(array(
             'translation_domain' => 'Admin.Orderscustomers.Feature',
-        ]);
+        ));
     }
 
     /**

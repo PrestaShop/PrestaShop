@@ -82,7 +82,7 @@ class FormatterTest extends TestCase
      */
     public function testFormat($localeParams, $numberSpecification, $number, $expectedResult)
     {
-        $formatter       = $this->buildFormatter($localeParams);
+        $formatter = $this->buildFormatter($localeParams);
         $formattedNumber = $formatter->format($number, $numberSpecification);
 
         $this->assertSame($expectedResult, $formattedNumber);
@@ -90,7 +90,7 @@ class FormatterTest extends TestCase
 
     protected function buildFormatter($localeParams)
     {
-        $rounding        = $localeParams['rounding'];
+        $rounding = $localeParams['rounding'];
         $numberingSystem = $localeParams['numberingSystem'];
 
         return new Formatter(
@@ -101,142 +101,142 @@ class FormatterTest extends TestCase
 
     public function provideValidNumberFormatSpecs()
     {
-        return [
-            'French positive number'           => [
-                'localeParams'        => [
-                    'rounding'        => Rounding::ROUND_HALF_UP,
+        return array(
+            'French positive number' => array(
+                'localeParams' => array(
+                    'rounding' => Rounding::ROUND_HALF_UP,
                     'numberingSystem' => 'latn', // Occidental numbering system
-                ],
+                ),
                 'numberSpecification' => new NumberSpecification(
                     '#,##0.###',
                     '-#,##0.###',
-                    ['latn' => new NumberSymbolList(',', ' ', ';', '%', '-', '+', 'E', '^', '‰', '∞', 'NaN')],
+                    array('latn' => new NumberSymbolList(',', ' ', ';', '%', '-', '+', 'E', '^', '‰', '∞', 'NaN')),
                     3,
                     0,
                     true,
                     3,
                     3
                 ),
-                'number'              => 123456.789,
-                'expected'            => '123 456,789',
-            ],
-            'French negative number'           => [
-                'localeParams'        => [
-                    'rounding'        => Rounding::ROUND_HALF_UP,
+                'number' => 123456.789,
+                'expected' => '123 456,789',
+            ),
+            'French negative number' => array(
+                'localeParams' => array(
+                    'rounding' => Rounding::ROUND_HALF_UP,
                     'numberingSystem' => 'latn', // Occidental numbering system
-                ],
+                ),
                 'numberSpecification' => new NumberSpecification(
                     '#,##0.###',
                     '-#,##0.###',
-                    ['latn' => new NumberSymbolList(',', ' ', ';', '%', '-', '+', 'E', '^', '‰', '∞', 'NaN')],
+                    array('latn' => new NumberSymbolList(',', ' ', ';', '%', '-', '+', 'E', '^', '‰', '∞', 'NaN')),
                     3,
                     0,
                     true,
                     3,
                     3
                 ),
-                'number'              => -123456.789,
-                'expected'            => '-123 456,789',
-            ],
-            'English positive number'          => [
-                'localeParams'        => [
-                    'rounding'        => Rounding::ROUND_HALF_UP,
+                'number' => -123456.789,
+                'expected' => '-123 456,789',
+            ),
+            'English positive number' => array(
+                'localeParams' => array(
+                    'rounding' => Rounding::ROUND_HALF_UP,
                     'numberingSystem' => 'latn', // Occidental numbering system
-                ],
+                ),
                 'numberSpecification' => new NumberSpecification(
                     '#,##0.###',
                     '-#,##0.###',
-                    ['latn' => new NumberSymbolList('.', ',', ';', '%', '-', '+', 'E', '^', '‰', '∞', 'NaN')],
+                    array('latn' => new NumberSymbolList('.', ',', ';', '%', '-', '+', 'E', '^', '‰', '∞', 'NaN')),
                     3,
                     0,
                     true,
                     3,
                     3
                 ),
-                'number'              => 123456.789,
-                'expected'            => '123,456.789',
-            ],
-            'Too much fraction zeroes'         => [
-                'localeParams'        => [
-                    'rounding'        => Rounding::ROUND_HALF_UP,
+                'number' => 123456.789,
+                'expected' => '123,456.789',
+            ),
+            'Too much fraction zeroes' => array(
+                'localeParams' => array(
+                    'rounding' => Rounding::ROUND_HALF_UP,
                     'numberingSystem' => 'latn', // Occidental numbering system
-                ],
+                ),
                 'numberSpecification' => new NumberSpecification(
                     '#,##0.###',
                     '-#,##0.###',
-                    ['latn' => new NumberSymbolList('.', ',', ';', '%', '-', '+', 'E', '^', '‰', '∞', 'NaN')],
+                    array('latn' => new NumberSymbolList('.', ',', ';', '%', '-', '+', 'E', '^', '‰', '∞', 'NaN')),
                     3,
                     0,
                     true,
                     3,
                     3
                 ),
-                'number'              => '0.70000',
-                'expected'            => '0.7',
-            ],
-            'More fraction zeroes needed'      => [
-                'localeParams'        => [
-                    'rounding'        => Rounding::ROUND_HALF_UP,
+                'number' => '0.70000',
+                'expected' => '0.7',
+            ),
+            'More fraction zeroes needed' => array(
+                'localeParams' => array(
+                    'rounding' => Rounding::ROUND_HALF_UP,
                     'numberingSystem' => 'latn', // Occidental numbering system
-                ],
+                ),
                 'numberSpecification' => new NumberSpecification(
                     '#,##0.###',
                     '-#,##0.###',
-                    ['latn' => new NumberSymbolList('.', ',', ';', '%', '-', '+', 'E', '^', '‰', '∞', 'NaN')],
+                    array('latn' => new NumberSymbolList('.', ',', ';', '%', '-', '+', 'E', '^', '‰', '∞', 'NaN')),
                     3,
                     3,
                     true,
                     3,
                     3
                 ),
-                'number'              => '0.7',
-                'expected'            => '0.700',
-            ],
-            'Rounding needed 1'                => [
-                'localeParams'        => [
-                    'rounding'        => Rounding::ROUND_HALF_UP,
+                'number' => '0.7',
+                'expected' => '0.700',
+            ),
+            'Rounding needed 1' => array(
+                'localeParams' => array(
+                    'rounding' => Rounding::ROUND_HALF_UP,
                     'numberingSystem' => 'latn', // Occidental numbering system
-                ],
+                ),
                 'numberSpecification' => new NumberSpecification(
                     '#,##0.###',
                     '-#,##0.###',
-                    ['latn' => new NumberSymbolList('.', ',', ';', '%', '-', '+', 'E', '^', '‰', '∞', 'NaN')],
+                    array('latn' => new NumberSymbolList('.', ',', ';', '%', '-', '+', 'E', '^', '‰', '∞', 'NaN')),
                     3,
                     0,
                     true,
                     3,
                     3
                 ),
-                'number'              => 1.2349,
-                'expected'            => '1.235',
-            ],
-            'Rounding needed 2'                => [
-                'localeParams'        => [
-                    'rounding'        => Rounding::ROUND_HALF_UP,
+                'number' => 1.2349,
+                'expected' => '1.235',
+            ),
+            'Rounding needed 2' => array(
+                'localeParams' => array(
+                    'rounding' => Rounding::ROUND_HALF_UP,
                     'numberingSystem' => 'latn', // Occidental numbering system
-                ],
+                ),
                 'numberSpecification' => new NumberSpecification(
                     '#,##0.###',
                     '-#,##0.###',
-                    ['latn' => new NumberSymbolList('.', ',', ';', '%', '-', '+', 'E', '^', '‰', '∞', 'NaN')],
+                    array('latn' => new NumberSymbolList('.', ',', ';', '%', '-', '+', 'E', '^', '‰', '∞', 'NaN')),
                     3,
                     0,
                     true,
                     3,
                     3
                 ),
-                'number'              => 1.2344,
-                'expected'            => '1.234',
-            ],
-            'French positive price'            => [
-                'localeParams'        => [
-                    'rounding'        => Rounding::ROUND_HALF_UP,
+                'number' => 1.2344,
+                'expected' => '1.234',
+            ),
+            'French positive price' => array(
+                'localeParams' => array(
+                    'rounding' => Rounding::ROUND_HALF_UP,
                     'numberingSystem' => 'latn', // Occidental numbering system
-                ],
+                ),
                 'numberSpecification' => new PriceSpecification(
                     '#,##0.## ¤',
                     '-#,##0.## ¤',
-                    ['latn' => new NumberSymbolList(',', ' ', ';', '%', '-', '+', 'E', '^', '‰', '∞', 'NaN')],
+                    array('latn' => new NumberSymbolList(',', ' ', ';', '%', '-', '+', 'E', '^', '‰', '∞', 'NaN')),
                     2,
                     2,
                     true,
@@ -246,18 +246,18 @@ class FormatterTest extends TestCase
                     '€',
                     'EUR'
                 ),
-                'number'              => 123456.789,
-                'expected'            => '123 456,79 €',
-            ],
-            'French negative price'            => [
-                'localeParams'        => [
-                    'rounding'        => Rounding::ROUND_HALF_UP,
+                'number' => 123456.789,
+                'expected' => '123 456,79 €',
+            ),
+            'French negative price' => array(
+                'localeParams' => array(
+                    'rounding' => Rounding::ROUND_HALF_UP,
                     'numberingSystem' => 'latn', // Occidental numbering system
-                ],
+                ),
                 'numberSpecification' => new PriceSpecification(
                     '#,##0.## ¤',
                     '-#,##0.## ¤',
-                    ['latn' => new NumberSymbolList(',', ' ', ';', '%', '-', '+', 'E', '^', '‰', '∞', 'NaN')],
+                    array('latn' => new NumberSymbolList(',', ' ', ';', '%', '-', '+', 'E', '^', '‰', '∞', 'NaN')),
                     2,
                     2,
                     true,
@@ -267,18 +267,18 @@ class FormatterTest extends TestCase
                     '€',
                     'EUR'
                 ),
-                'number'              => -123456.781,
-                'expected'            => '-123 456,78 €',
-            ],
-            'USA negative price'               => [
-                'localeParams'        => [
-                    'rounding'        => Rounding::ROUND_HALF_UP,
+                'number' => -123456.781,
+                'expected' => '-123 456,78 €',
+            ),
+            'USA negative price' => array(
+                'localeParams' => array(
+                    'rounding' => Rounding::ROUND_HALF_UP,
                     'numberingSystem' => 'latn', // Occidental numbering system
-                ],
+                ),
                 'numberSpecification' => new PriceSpecification(
                     '¤ #,##0.##',
                     '-¤ #,##0.##',
-                    ['latn' => new NumberSymbolList('.', ',', ';', '%', '-', '+', 'E', '^', '‰', '∞', 'NaN')],
+                    array('latn' => new NumberSymbolList('.', ',', ';', '%', '-', '+', 'E', '^', '‰', '∞', 'NaN')),
                     2,
                     2,
                     true,
@@ -288,18 +288,18 @@ class FormatterTest extends TestCase
                     '$',
                     'USD'
                 ),
-                'number'              => -123456.789,
-                'expected'            => '-$ 123,456.79',
-            ],
-            'USA positive price with ISO code' => [
-                'localeParams'        => [
-                    'rounding'        => Rounding::ROUND_HALF_UP,
+                'number' => -123456.789,
+                'expected' => '-$ 123,456.79',
+            ),
+            'USA positive price with ISO code' => array(
+                'localeParams' => array(
+                    'rounding' => Rounding::ROUND_HALF_UP,
                     'numberingSystem' => 'latn', // Occidental numbering system
-                ],
+                ),
                 'numberSpecification' => new PriceSpecification(
                     '¤ #,##0.##',
                     '-¤ #,##0.##',
-                    ['latn' => new NumberSymbolList('.', ',', ';', '%', '-', '+', 'E', '^', '‰', '∞', 'NaN')],
+                    array('latn' => new NumberSymbolList('.', ',', ';', '%', '-', '+', 'E', '^', '‰', '∞', 'NaN')),
                     2,
                     2,
                     true,
@@ -309,9 +309,9 @@ class FormatterTest extends TestCase
                     '$',
                     'USD'
                 ),
-                'number'              => 123456.781,
-                'expected'            => 'USD 123,456.78',
-            ],
-        ];
+                'number' => 123456.781,
+                'expected' => 'USD 123,456.78',
+            ),
+        );
     }
 }

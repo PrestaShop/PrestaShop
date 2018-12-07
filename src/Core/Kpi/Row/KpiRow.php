@@ -41,7 +41,7 @@ final class KpiRow implements KpiRowInterface
     /**
      * @var array[KpiInterface]
      */
-    private $kpis = [];
+    private $kpis = array();
 
     /**
      * {@inheritdoc}

@@ -96,7 +96,7 @@ final class HookDataCollector extends DataCollector
      */
     public function reset()
     {
-        $this->data = [];
+        $this->data = array();
     }
 
     /**

@@ -43,7 +43,7 @@ class NumberCollection implements IteratorAggregate, Countable
      *
      * @var NumberSpecificationInterface[]
      */
-    protected $numberSpecifications = [];
+    protected $numberSpecifications = array();
 
     /**
      * Gets the current NumberCollection as an Iterator that includes all Number specification items.
@@ -141,7 +141,7 @@ class NumberCollection implements IteratorAggregate, Countable
      */
     public function clear()
     {
-        $this->numberSpecifications = [];
+        $this->numberSpecifications = array();
 
         return $this;
     }

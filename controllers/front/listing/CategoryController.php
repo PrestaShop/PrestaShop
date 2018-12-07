@@ -65,7 +65,7 @@ class CategoryControllerCore extends ProductListingFrontController
         } else {
             unset($params['page']);
         }
-        $canonicalUrl = http_build_url($parsedUrl, ['query' => http_build_query($params)]);
+        $canonicalUrl = http_build_url($parsedUrl, array('query' => http_build_query($params)));
 
         return $canonicalUrl;
     }
@@ -132,10 +132,10 @@ class CategoryControllerCore extends ProductListingFrontController
         if ($this->category->checkAccess($this->context->customer->id)) {
             $this->doProductSearch(
                 'catalog/listing/category',
-                [
+                array(
                     'entity' => 'category',
                     'id' => $this->category->id,
-                ]
+                )
             );
         }
     }

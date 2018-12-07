@@ -49,7 +49,7 @@ class PreferencesConfiguration implements DataConfigurationInterface
      */
     public function getConfiguration()
     {
-        return [
+        return array(
             'enable_ssl' => $this->configuration->getBoolean('PS_SSL_ENABLED'),
             'enable_ssl_everywhere' => $this->configuration->getBoolean('PS_SSL_ENABLED_EVERYWHERE'),
             'enable_token' => $this->configuration->getBoolean('PS_TOKEN_ENABLE'),
@@ -62,7 +62,7 @@ class PreferencesConfiguration implements DataConfigurationInterface
             'display_best_sellers' => $this->configuration->getBoolean('PS_DISPLAY_BEST_SELLERS'),
             'multishop_feature_active' => $this->configuration->getBoolean('PS_MULTISHOP_FEATURE_ACTIVE'),
             'shop_activity' => $this->configuration->get('PS_SHOP_ACTIVITY'),
-        ];
+        );
     }
 
     /**
@@ -85,7 +85,7 @@ class PreferencesConfiguration implements DataConfigurationInterface
             $this->configuration->set('PS_SHOP_ACTIVITY', $configuration['shop_activity']);
         }
 
-        return [];
+        return array();
     }
 
     /**

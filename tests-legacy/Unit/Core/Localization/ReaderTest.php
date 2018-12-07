@@ -92,57 +92,57 @@ class ReaderTest extends TestCase
 
     public function provideLocaleData()
     {
-        return [
-            'root' => [
-                'localeCode'   => 'root',
-                'expectedData' => [
+        return array(
+            'root' => array(
+                'localeCode' => 'root',
+                'expectedData' => array(
                     'defaultNumberingSystem' => 'latn',
-                    'digitsGroupSeparator'   => ',',
-                    'decimalSeparator'       => '.',
-                    'decimalPattern'         => '#,##0.###',
-                    'currencyPattern'        => '¤ #,##0.00',
-                ],
-            ],
-            'fr' => [
-                'localeCode'   => 'fr',
-                'expectedData' => [
+                    'digitsGroupSeparator' => ',',
+                    'decimalSeparator' => '.',
+                    'decimalPattern' => '#,##0.###',
+                    'currencyPattern' => '¤ #,##0.00',
+                ),
+            ),
+            'fr' => array(
+                'localeCode' => 'fr',
+                'expectedData' => array(
                     'defaultNumberingSystem' => 'latn',
-                    'digitsGroupSeparator'   => ' ',
-                    'decimalSeparator'       => ',',
-                    'decimalPattern'         => '#,##0.###',
-                    'currencyPattern'        => '#,##0.00 ¤',
-                ],
-            ],
-            'fr-FR' => [
-                'localeCode'   => 'fr-FR',
-                'expectedData' => [
+                    'digitsGroupSeparator' => ' ',
+                    'decimalSeparator' => ',',
+                    'decimalPattern' => '#,##0.###',
+                    'currencyPattern' => '#,##0.00 ¤',
+                ),
+            ),
+            'fr-FR' => array(
+                'localeCode' => 'fr-FR',
+                'expectedData' => array(
                     'defaultNumberingSystem' => 'latn',
-                    'digitsGroupSeparator'   => ' ',
-                    'decimalSeparator'       => ',',
-                    'decimalPattern'         => '#,##0.###',
-                    'currencyPattern'        => '#,##0.00 ¤',
-                ],
-            ],
-            'fr-CH' => [
-                'localeCode'   => 'fr-CH',
-                'expectedData' => [
+                    'digitsGroupSeparator' => ' ',
+                    'decimalSeparator' => ',',
+                    'decimalPattern' => '#,##0.###',
+                    'currencyPattern' => '#,##0.00 ¤',
+                ),
+            ),
+            'fr-CH' => array(
+                'localeCode' => 'fr-CH',
+                'expectedData' => array(
                     'defaultNumberingSystem' => 'latn',
-                    'digitsGroupSeparator'   => ' ',
-                    'decimalSeparator'       => ',',
-                    'decimalPattern'         => '#,##0.###',
-                    'currencyPattern'        => '#,##0.00 ¤ ;-#,##0.00 ¤',
-                ],
-            ],
-            'en-GB' => [
-                'localeCode'   => 'en-GB',
-                'expectedData' => [
+                    'digitsGroupSeparator' => ' ',
+                    'decimalSeparator' => ',',
+                    'decimalPattern' => '#,##0.###',
+                    'currencyPattern' => '#,##0.00 ¤ ;-#,##0.00 ¤',
+                ),
+            ),
+            'en-GB' => array(
+                'localeCode' => 'en-GB',
+                'expectedData' => array(
                     'defaultNumberingSystem' => 'latn',
-                    'digitsGroupSeparator'   => ',',
-                    'decimalSeparator'       => '.',
-                    'decimalPattern'         => '#,##0.###',
-                    'currencyPattern'        => '¤#,##0.00',
-                ],
-            ],
-        ];
+                    'digitsGroupSeparator' => ',',
+                    'decimalSeparator' => '.',
+                    'decimalPattern' => '#,##0.###',
+                    'currencyPattern' => '¤#,##0.00',
+                ),
+            ),
+        );
     }
 }

@@ -52,9 +52,9 @@ final class GeolocationIpAddressWhitelistConfiguration implements DataConfigurat
      */
     public function getConfiguration()
     {
-        return [
+        return array(
             'geolocation_whitelist' => $this->configuration->get('PS_GEOLOCATION_WHITELIST'),
-        ];
+        );
     }
 
     /**
@@ -66,7 +66,7 @@ final class GeolocationIpAddressWhitelistConfiguration implements DataConfigurat
             $this->configuration->set('PS_GEOLOCATION_WHITELIST', $config['geolocation_whitelist']);
         }
 
-        return [];
+        return array();
     }
 
     /**

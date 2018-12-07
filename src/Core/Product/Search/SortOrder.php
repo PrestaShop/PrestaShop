@@ -56,13 +56,13 @@ class SortOrder
 
     public function toArray()
     {
-        return [
+        return array(
             'entity' => $this->entity,
             'field' => $this->field,
             'direction' => $this->direction,
             'label' => $this->label,
             'urlParameter' => $this->toString(),
-        ];
+        );
     }
 
     public function toString()
@@ -116,7 +116,7 @@ class SortOrder
     public function setDirection($dir)
     {
         $direction = strtolower($dir);
-        if (!in_array($direction, ['asc', 'desc', 'random'])) {
+        if (!in_array($direction, array('asc', 'desc', 'random'))) {
             throw new Exception(sprintf(
                 'Invalid SortOrder direction `%s`. Expecting one of: `ASC`, `DESC`, or `RANDOM`.',
                 $dir

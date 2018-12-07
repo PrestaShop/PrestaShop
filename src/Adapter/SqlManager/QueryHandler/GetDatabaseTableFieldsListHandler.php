@@ -45,7 +45,7 @@ final class GetDatabaseTableFieldsListHandler implements GetDatabaseTableFieldsL
     public function handle(GetDatabaseTableFieldsList $query)
     {
         $attributes = (new RequestSql())->getAttributesByTable($query->getTableName());
-        $fields = [];
+        $fields = array();
 
         foreach ($attributes as $attribute) {
             $fields[] = new DatabaseTableField(

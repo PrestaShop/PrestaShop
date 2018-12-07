@@ -65,7 +65,7 @@ class TypeaheadCustomerCollectionType extends CommonAbstractType
 
         //if form is submitted, inject datas to display collection
         if (!empty($view->vars['value']) && !empty($view->vars['value']['data'])) {
-            $collection = [];
+            $collection = array();
 
             $i = 0;
             foreach ($view->vars['value']['data'] as $id) {
@@ -73,10 +73,10 @@ class TypeaheadCustomerCollectionType extends CommonAbstractType
                     continue;
                 }
                 $customer = $this->customerAdapter->getCustomer($id);
-                $collection[] = [
+                $collection[] = array(
                     'id' => $id,
                     'name' => $customer->firstname . ' ' . $customer->lastname . ' - ' . $customer->email,
-                ];
+                );
                 ++$i;
 
                 //if collection length is up to limit, break
@@ -95,14 +95,14 @@ class TypeaheadCustomerCollectionType extends CommonAbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('data', 'Symfony\Component\Form\Extension\Core\Type\CollectionType', [
+        $builder->add('data', 'Symfony\Component\Form\Extension\Core\Type\CollectionType', array(
             'entry_type' => 'Symfony\Component\Form\Extension\Core\Type\HiddenType',
             'allow_add' => true,
             'allow_delete' => true,
             'label' => false,
             'required' => false,
             'prototype' => true,
-        ]);
+        ));
     }
 
     /**
@@ -110,14 +110,14 @@ class TypeaheadCustomerCollectionType extends CommonAbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
+        $resolver->setDefaults(array(
             'remote_url' => '',
             'mapping_value' => 'id',
             'mapping_name' => 'name',
             'placeholder' => '',
             'template_collection' => '',
             'limit' => 0,
-        ]);
+        ));
     }
 
     /**

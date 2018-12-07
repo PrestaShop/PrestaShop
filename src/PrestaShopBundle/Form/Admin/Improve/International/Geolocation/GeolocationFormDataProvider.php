@@ -87,11 +87,11 @@ final class GeolocationFormDataProvider implements FormDataProviderInterface
      */
     public function getData()
     {
-        return [
+        return array(
             'geolocation_by_id_address' => $this->geolocationByIpAddressConfiguration->getConfiguration(),
             'geolocation_ip_address_whitelist' => $this->geolocationIpAddressWhitelistConfiguration->getConfiguration(),
             'geolocation_options' => $this->geolocationOptionsConfiguration->getConfiguration(),
-        ];
+        );
     }
 
     /**
@@ -99,30 +99,30 @@ final class GeolocationFormDataProvider implements FormDataProviderInterface
      */
     public function setData(array $data)
     {
-        $errors = [];
+        $errors = array();
 
         if ($data['geolocation_by_id_address']['geolocation_enabled'] && !$this->geoLiteCityChecker->isAvailable()) {
-            $errors[] = [
+            $errors[] = array(
                 'key' => 'The geolocation database is unavailable.',
-                'parameters' => [],
+                'parameters' => array(),
                 'domain' => 'Admin.International.Notification',
-            ];
+            );
         }
 
         if (empty($data['geolocation_options']['geolocation_countries'])) {
-            $errors[] = [
+            $errors[] = array(
                 'key' => 'Country selection is invalid.',
-                'parameters' => [],
+                'parameters' => array(),
                 'domain' => 'Admin.International.Notification',
-            ];
+            );
         }
 
         if (!$this->validator->isCleanHtml($data['geolocation_ip_address_whitelist']['geolocation_whitelist'])) {
-            $errors[] = [
+            $errors[] = array(
                 'key' => 'Invalid whitelist',
-                'parameters' => [],
+                'parameters' => array(),
                 'domain' => 'Admin.International.Notification',
-            ];
+            );
         }
 
         if (!empty($errors)) {

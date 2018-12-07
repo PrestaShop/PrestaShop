@@ -83,12 +83,12 @@ class ProductPreferencesFormDataProvider implements FormDataProviderInterface
      */
     public function getData()
     {
-        return [
+        return array(
             'general' => $this->generalConfiguration->getConfiguration(),
             'pagination' => $this->paginationConfiguration->getConfiguration(),
             'page' => $this->pageConfiguration->getConfiguration(),
             'stock' => $this->stockConfiguration->getConfiguration(),
-        ];
+        );
     }
 
     /**
@@ -115,13 +115,13 @@ class ProductPreferencesFormDataProvider implements FormDataProviderInterface
      */
     protected function validate(array $data)
     {
-        $invalidFields = [];
+        $invalidFields = array();
 
         $newDaysNumber = $data['general']['new_days_number'];
         if (!is_numeric($newDaysNumber) || 0 > $newDaysNumber) {
             $invalidFields[] = $this->translator->trans(
                 'Number of days for which the product is considered \'new\'',
-                [],
+                array(),
                 'Admin.Shopparameters.Feature'
             );
         }
@@ -130,7 +130,7 @@ class ProductPreferencesFormDataProvider implements FormDataProviderInterface
         if (!is_numeric($shortDescriptionLimit) || 0 >= $shortDescriptionLimit) {
             $invalidFields[] = $this->translator->trans(
                 'Max size of product summary',
-                [],
+                array(),
                 'Admin.Shopparameters.Feature'
             );
         }
@@ -139,23 +139,23 @@ class ProductPreferencesFormDataProvider implements FormDataProviderInterface
         if (!is_numeric($displayLastQuantities) || 0 > $displayLastQuantities) {
             $invalidFields[] = $this->translator->trans(
                 'Display remaining quantities when the quantity is lower than',
-                [],
+                array(),
                 'Admin.Shopparameters.Feature'
             );
         }
 
         $productsPerPage = $data['pagination']['products_per_page'];
         if (!is_numeric($productsPerPage) || 0 > $productsPerPage) {
-            $invalidFields[] = $this->translator->trans('Products per page', [], 'Admin.Shopparameters.Feature');
+            $invalidFields[] = $this->translator->trans('Products per page', array(), 'Admin.Shopparameters.Feature');
         }
 
-        $errors = [];
+        $errors = array();
         foreach ($invalidFields as $field) {
-            $errors[] = [
+            $errors[] = array(
                 'key' => 'The %s field is invalid.',
                 'domain' => 'Admin.Notifications.Error',
-                'parameters' => [$field],
-            ];
+                'parameters' => array($field),
+            );
         }
 
         return $errors;

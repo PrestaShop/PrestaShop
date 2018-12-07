@@ -76,7 +76,7 @@ class RoutingCacheKeyGenerator implements CacheKeyGeneratorInterface
      */
     public function getLastModifications()
     {
-        $routingFiles = [];
+        $routingFiles = array();
 
         if (count($this->coreRoutingPaths)) {
             $finder = new Finder();
@@ -89,7 +89,7 @@ class RoutingCacheKeyGenerator implements CacheKeyGeneratorInterface
         }
 
         foreach ($this->activeModulesPaths as $modulePath) {
-            $extensions = ['yml', 'yaml'];
+            $extensions = array('yml', 'yaml');
             foreach ($extensions as $extension) {
                 $routingFile = $modulePath . '/config/routes.' . $extension;
                 if (file_exists($routingFile)) {

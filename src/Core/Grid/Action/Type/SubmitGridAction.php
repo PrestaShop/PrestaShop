@@ -48,16 +48,16 @@ final class SubmitGridAction extends AbstractGridAction
     protected function configureOptions(OptionsResolver $resolver)
     {
         $resolver
-            ->setRequired([
+            ->setRequired(array(
                 'submit_route',
-            ])
-            ->setDefaults([
+            ))
+            ->setDefaults(array(
                 'submit_method' => 'POST',
                 'confirm_message' => null,
-            ])
+            ))
             ->setAllowedTypes('submit_route', 'string')
-            ->setAllowedTypes('confirm_message', ['null', 'string'])
-            ->setAllowedValues('submit_method', ['POST', 'GET'])
+            ->setAllowedTypes('confirm_message', array('null', 'string'))
+            ->setAllowedValues('submit_method', array('POST', 'GET'))
         ;
     }
 }

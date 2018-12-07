@@ -81,9 +81,9 @@ final class TranslationsSettingsFormHandler implements FormHandlerInterface
 
         $this->hookDispatcher->dispatchWithParameters(
             "action{$this->hookName}Form",
-            [
+            array(
                 'form_builder' => $this->formBuilder,
-            ]
+            )
         );
 
         return $this->formBuilder->getForm();
@@ -95,6 +95,6 @@ final class TranslationsSettingsFormHandler implements FormHandlerInterface
     public function save(array $data)
     {
         // Translations forms do not save data
-        return [];
+        return array();
     }
 }

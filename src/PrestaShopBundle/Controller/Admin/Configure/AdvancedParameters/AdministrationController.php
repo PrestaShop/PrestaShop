@@ -55,8 +55,8 @@ class AdministrationController extends FrameworkBundleAdminController
     {
         $form = is_null($form) ? $this->get('prestashop.adapter.administration.form_handler')->getForm() : $form;
 
-        return [
-            'layoutHeaderToolbarBtn' => [],
+        return array(
+            'layoutHeaderToolbarBtn' => array(),
             'layoutTitle' => $this->trans('Administration', 'Admin.Navigation.Menu'),
             'requireAddonsSearch' => true,
             'requireBulkActions' => false,
@@ -65,7 +65,7 @@ class AdministrationController extends FrameworkBundleAdminController
             'help_link' => $this->generateSidebarLink('AdminAdminPreferences'),
             'requireFilterStatus' => false,
             'form' => $form->createView(),
-        ];
+        );
     }
 
     /**

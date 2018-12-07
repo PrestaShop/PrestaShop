@@ -74,7 +74,7 @@ class LanguageDataProvider
         $result = Language::getJsonLanguageDetails($locale);
 
         if (false === $result) {
-            return [];
+            return array();
         }
 
         return $result;

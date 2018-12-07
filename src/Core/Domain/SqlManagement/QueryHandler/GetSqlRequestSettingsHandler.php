@@ -70,10 +70,10 @@ final class GetSqlRequestSettingsHandler implements GetSqlRequestSettingsHandler
      */
     private function getFileEncoding($rawValue)
     {
-        $valuesMapping = [
+        $valuesMapping = array(
             1 => CharsetEncoding::UTF_8,
             2 => CharsetEncoding::ISO_8859_1,
-        ];
+        );
 
         if (isset($valuesMapping[$rawValue])) {
             return $valuesMapping[$rawValue];

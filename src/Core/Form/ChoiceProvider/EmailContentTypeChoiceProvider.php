@@ -54,9 +54,9 @@ final class EmailContentTypeChoiceProvider implements FormChoiceProviderInterfac
      */
     public function getChoices()
     {
-        return [
-            $this->translator->trans('Subject', [], 'Admin.Global') => 'subject',
-            $this->translator->trans('Body', [], 'Admin.International.Feature') => 'body',
-        ];
+        return array(
+            $this->translator->trans('Subject', array(), 'Admin.Global') => 'subject',
+            $this->translator->trans('Body', array(), 'Admin.International.Feature') => 'body',
+        );
     }
 }

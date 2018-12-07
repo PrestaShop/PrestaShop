@@ -78,12 +78,12 @@ class Download
 
         $stream_context = null;
         if (preg_match('/^https?:\/\//', $url)) {
-            $stream_context = @stream_context_create([
-                'http' => ['timeout' => $curl_timeout, 'header' => "User-Agent:MyAgent/1.0\r\n"],
-            ]);
+            $stream_context = @stream_context_create(array(
+                'http' => array('timeout' => $curl_timeout, 'header' => "User-Agent:MyAgent/1.0\r\n"),
+            ));
         }
 
-        if (in_array(ini_get('allow_url_fopen'), ['On', 'on', '1']) || !preg_match('/^https?:\/\//', $url)) {
+        if (in_array(ini_get('allow_url_fopen'), array('On', 'on', '1')) || !preg_match('/^https?:\/\//', $url)) {
             $var = @file_get_contents($url, false, $stream_context);
 
             if ($var) {

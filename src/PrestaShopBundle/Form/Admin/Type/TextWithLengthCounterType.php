@@ -52,14 +52,14 @@ class TextWithLengthCounterType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver
-            ->setRequired([
+            ->setRequired(array(
                 'max_length',
-            ])
-            ->setDefaults([
+            ))
+            ->setDefaults(array(
                 'position' => 'before',
-            ])
+            ))
             ->setAllowedTypes('max_length', 'int')
-            ->setAllowedValues('position', ['before', 'after'])
+            ->setAllowedValues('position', array('before', 'after'))
         ;
     }
 

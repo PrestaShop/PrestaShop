@@ -62,11 +62,11 @@ final class CategoryMenuThumbnailUploader implements ImageUploaderInterface
     {
         //Get total of image already present in directory
         $files = scandir(_PS_CAT_IMG_DIR_, SCANDIR_SORT_NONE);
-        $usedKeys = [];
-        $allowedKeys = [0, 1, 2];
+        $usedKeys = array();
+        $allowedKeys = array(0, 1, 2);
 
         foreach ($files as $file) {
-            $matches = [];
+            $matches = array();
 
             if (preg_match('/^' . $categoryId . '-([0-9])?_thumb.jpg/i', $file, $matches) === 1) {
                 $usedKeys[] = (int) $matches[1];
@@ -77,13 +77,13 @@ final class CategoryMenuThumbnailUploader implements ImageUploaderInterface
 
         // HelperImageUploader::process() expects
         // uploaded file to be available in $_FILES
-        $_FILES['thumbnail'] = [
-            'error' => [$uploadedImage->getError()],
-            'name' => [$uploadedImage->getClientOriginalName()],
-            'size' => [$uploadedImage->getSize()],
-            'tmp_name' => [$uploadedImage->getPathname()],
-            'type' => [$uploadedImage->getMimeType()],
-        ];
+        $_FILES['thumbnail'] = array(
+            'error' => array($uploadedImage->getError()),
+            'name' => array($uploadedImage->getClientOriginalName()),
+            'size' => array($uploadedImage->getSize()),
+            'tmp_name' => array($uploadedImage->getPathname()),
+            'type' => array($uploadedImage->getMimeType()),
+        );
 
         $helper = new HelperImageUploader('thumbnail');
         $uploadedFiles = $helper->process();

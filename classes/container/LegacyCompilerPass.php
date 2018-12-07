@@ -39,13 +39,13 @@ class LegacyCompilerPass implements CompilerPassInterface
     {
         $context = Context::getContext();
 
-        $this->buildSyntheticDefinitions([
+        $this->buildSyntheticDefinitions(array(
             'configuration',
             'context',
             'db',
             'shop',
             'employee',
-        ], $container);
+        ), $container);
 
         $container->set('context', $context);
         $container->set('configuration', new Configuration());

@@ -60,7 +60,7 @@ class LegacyRoute
      */
     public static function isIndexAction($action)
     {
-        $indexAliases = ['list', 'index'];
+        $indexAliases = array('list', 'index');
 
         return empty($action) || in_array(strtolower($action), $indexAliases);
     }
@@ -75,10 +75,10 @@ class LegacyRoute
     {
         $legacyLinks = $routeDefaults['_legacy_link'];
         if (!is_array($legacyLinks)) {
-            $legacyLinks = [$legacyLinks];
+            $legacyLinks = array($legacyLinks);
         }
 
-        $legacyParameters = [];
+        $legacyParameters = array();
         if (!empty($routeDefaults['_legacy_parameters']) && is_array($routeDefaults['_legacy_parameters'])) {
             $legacyParameters = $routeDefaults['_legacy_parameters'];
         }
@@ -140,15 +140,15 @@ class LegacyRoute
      */
     private function buildLegacyLinks(array $legacyLinks)
     {
-        $brokenLegacyLinks = [];
+        $brokenLegacyLinks = array();
         foreach ($legacyLinks as $legacyLink) {
             $linkParts = explode(':', $legacyLink);
             $legacyController = $linkParts[0];
             $legacyAction = isset($linkParts[1]) ? $linkParts[1] : null;
-            $brokenLegacyLinks[] = [
+            $brokenLegacyLinks[] = array(
                 'controller' => $legacyController,
                 'action' => $legacyAction,
-            ];
+            );
         }
 
         return $brokenLegacyLinks;
@@ -162,11 +162,11 @@ class LegacyRoute
      */
     private function buildControllerActions(array $legacyLinks, $routeName)
     {
-        $controllersActions = [];
+        $controllersActions = array();
         foreach ($legacyLinks as $legacyLink) {
             $controller = $legacyLink['controller'];
             if (!isset($controllersActions[$controller])) {
-                $controllersActions[$controller] = [];
+                $controllersActions[$controller] = array();
             }
 
             $action = self::isIndexAction($legacyLink['action']) ? 'index' : $legacyLink['action'];

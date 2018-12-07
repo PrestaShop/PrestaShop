@@ -50,11 +50,11 @@ class PaginationConfiguration implements DataConfigurationInterface
      */
     public function getConfiguration()
     {
-        return [
+        return array(
             'products_per_page' => $this->configuration->get('PS_PRODUCTS_PER_PAGE'),
             'default_order_by' => $this->configuration->get('PS_PRODUCTS_ORDER_BY'),
             'default_order_way' => $this->configuration->get('PS_PRODUCTS_ORDER_WAY'),
-        ];
+        );
     }
 
     /**
@@ -62,7 +62,7 @@ class PaginationConfiguration implements DataConfigurationInterface
      */
     public function updateConfiguration(array $config)
     {
-        $errors = [];
+        $errors = array();
 
         if ($this->validateConfiguration($config)) {
             $this->configuration->set('PS_PRODUCTS_PER_PAGE', (int) $config['products_per_page']);
@@ -79,11 +79,11 @@ class PaginationConfiguration implements DataConfigurationInterface
     public function validateConfiguration(array $configuration)
     {
         $resolver = new OptionsResolver();
-        $resolver->setRequired([
+        $resolver->setRequired(array(
             'products_per_page',
             'default_order_by',
             'default_order_way',
-        ]);
+        ));
 
         $resolver->resolve($configuration);
 

@@ -93,7 +93,8 @@ class RequestSqlRepository implements RepositoryInterface, DoctrineQueryBuilderI
             ->select('rs.*')
             ->orderBy(sprintf('`%s`', $searchCriteria->getOrderBy()), $searchCriteria->getOrderWay())
             ->setFirstResult($searchCriteria->getOffset())
-            ->setMaxResults($searchCriteria->getLimit());
+            ->setMaxResults($searchCriteria->getLimit())
+        ;
     }
 
     /**

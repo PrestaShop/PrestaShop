@@ -102,14 +102,14 @@ class TranslationsController extends FrameworkBundleAdminController
         $formHandler = $this->get('prestashop.admin.translations_settings.form_handler');
         $form = $formHandler->getForm();
 
-        return [
+        return array(
             'layoutTitle' => $this->trans('Translations', 'Admin.Navigation.Menu'),
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($legacyController),
             'kpiRow' => $kpiRowFactory->build(),
             'translationSettingsForm' => $form->createView(),
-            'addLanguageUrl' => $legacyContext->getAdminLink('AdminLanguages', true, ['addlang' => '']),
-        ];
+            'addLanguageUrl' => $legacyContext->getAdminLink('AdminLanguages', true, array('addlang' => '')),
+        );
     }
 
     /**

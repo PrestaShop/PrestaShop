@@ -51,7 +51,7 @@ abstract class ModuleAbstractController extends FrameworkBundleAdminController
         $moduleManager = $this->get('prestashop.module.manager');
         $modules = $moduleManager->getModulesWithNotifications($modulesPresenterCallback);
 
-        return [
+        return array(
             'enableSidebar' => true,
             'layoutHeaderToolbarBtn' => $this->getToolbarButtons(),
             'layoutTitle' => $this->trans('Module notifications', 'Admin.Modules.Feature'),
@@ -62,7 +62,7 @@ abstract class ModuleAbstractController extends FrameworkBundleAdminController
             'requireFilterStatus' => false,
             'level' => $this->authorizationLevel($this::CONTROLLER_NAME),
             'errorMessage' => $this->trans('You do not have permission to add this.', 'Admin.Notifications.Error'),
-        ];
+        );
     }
 
     /**
@@ -73,7 +73,7 @@ abstract class ModuleAbstractController extends FrameworkBundleAdminController
     protected function getToolbarButtons()
     {
         // toolbarButtons
-        $toolbarButtons = [];
+        $toolbarButtons = array();
 
         if (!in_array(
             $this->authorizationLevel($this::CONTROLLER_NAME),
@@ -82,12 +82,12 @@ abstract class ModuleAbstractController extends FrameworkBundleAdminController
                 PageVoter::LEVEL_UPDATE,
             )
         )) {
-            $toolbarButtons['add_module'] = [
+            $toolbarButtons['add_module'] = array(
                 'href' => '#',
                 'desc' => $this->trans('Upload a module', 'Admin.Modules.Feature'),
                 'icon' => 'cloud_upload',
                 'help' => $this->trans('Upload a module', 'Admin.Modules.Feature'),
-            ];
+            );
         }
 
         return array_merge($toolbarButtons, $this->getAddonsConnectToolbar());
@@ -104,23 +104,23 @@ abstract class ModuleAbstractController extends FrameworkBundleAdminController
         if ($addonsProvider->isAddonsAuthenticated()) {
             $addonsEmail = $addonsProvider->getAddonsEmail();
 
-            return [
-                'addons_logout' => [
+            return array(
+                'addons_logout' => array(
                     'href' => '#',
                     'desc' => $addonsEmail['username_addons'],
                     'icon' => 'exit_to_app',
                     'help' => $this->trans('Synchronized with Addons marketplace!', 'Admin.Modules.Notification'),
-                ],
-            ];
+                ),
+            );
         }
 
-        return [
-            'addons_connect' => [
+        return array(
+            'addons_connect' => array(
                 'href' => '#',
                 'desc' => $this->trans('Connect to Addons marketplace', 'Admin.Modules.Feature'),
                 'icon' => 'vpn_key',
                 'help' => $this->trans('Connect to Addons marketplace', 'Admin.Modules.Feature'),
-            ],
-        ];
+            ),
+        );
     }
 }

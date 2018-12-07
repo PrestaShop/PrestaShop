@@ -67,11 +67,12 @@ final class PreferencesFormHandler implements FormHandlerInterface
     public function getForm()
     {
         return $this->formFactory->createBuilder()
-            ->add('general', PreferencesType::class, [
+            ->add('general', PreferencesType::class, array(
                 'is_ssl_enabled' => $this->configuration->getBoolean('PS_SSL_ENABLED'),
-            ])
+            ))
             ->setData($this->formDataProvider->getData())
-            ->getForm();
+            ->getForm()
+        ;
     }
 
     /**

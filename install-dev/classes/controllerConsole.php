@@ -156,7 +156,7 @@ abstract class InstallControllerConsole
             echo 'Errors :'. PHP_EOL;
             foreach ($errors as $error_process) {
                 if (!is_array($error_process)) {
-                    $error_process = [$error_process];
+                    $error_process = array($error_process);
                 }
                 foreach ($error_process as $error) {
                     echo(is_string($error) ? $error : print_r($error, true)).PHP_EOL;

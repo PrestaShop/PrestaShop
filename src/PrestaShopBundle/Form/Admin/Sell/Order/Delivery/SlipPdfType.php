@@ -46,23 +46,24 @@ class SlipPdfType extends CommonAbstractType
             ->add(
                 'date_from',
                 DatePickerType::class,
-                [
+                array(
                     'required' => false,
-                    'attr' => ['placeholder' => 'YYYY-MM-DD'],
+                    'attr' => array('placeholder' => 'YYYY-MM-DD'),
                     'data' => $now,
                     'empty_data' => $now,
-                ]
+                )
             )
             ->add(
                 'date_to',
                 DatePickerType::class,
-                [
+                array(
                     'required' => false,
-                    'attr' => ['placeholder' => 'YYYY-MM-DD'],
+                    'attr' => array('placeholder' => 'YYYY-MM-DD'),
                     'data' => $now,
                     'empty_data' => $now,
-                ]
-            );
+                )
+            )
+        ;
     }
 
     /**

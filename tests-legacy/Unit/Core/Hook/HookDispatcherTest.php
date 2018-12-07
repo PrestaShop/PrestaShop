@@ -61,7 +61,7 @@ class HookDispatcherTest extends TestCase
         $this->hookDispatcherAdapter
             ->expects($this->once())
             ->method('dispatchForParameters')
-            ->with($this->equalTo('hookName'), $this->equalTo([]))
+            ->with($this->equalTo('hookName'), $this->equalTo(array()))
         ;
 
         $this->hookDispatcher->dispatchHook($hook);
@@ -73,15 +73,15 @@ class HookDispatcherTest extends TestCase
         $this->hookDispatcherAdapter
             ->expects($this->once())
             ->method('dispatchForParameters')
-            ->with($this->equalTo('fooHook'), $this->equalTo(['bar' => 'Bar']))
+            ->with($this->equalTo('fooHook'), $this->equalTo(array('bar' => 'Bar')))
         ;
 
-        $this->hookDispatcher->dispatchWithParameters('fooHook', ['bar' => 'Bar']);
+        $this->hookDispatcher->dispatchWithParameters('fooHook', array('bar' => 'Bar'));
     }
 
     public function testDispatchRendering()
     {
-        $hook = new Hook('hookName', []);
+        $hook = new Hook('hookName', array());
 
         // stub rendering hook event behavior
         $hookEvent = $this->createRenderingHookEvent($hook->getParameters());
@@ -101,12 +101,12 @@ class HookDispatcherTest extends TestCase
 
         $this->assertInstanceOf(RenderedHook::class, $renderedHook);
         $this->assertEquals($hook, $renderedHook->getHook());
-        $this->assertEquals([], $renderedHook->getContent());
+        $this->assertEquals(array(), $renderedHook->getContent());
     }
 
     public function testDispatchRenderingWithParameters()
     {
-        $hook = new Hook('Baz', ['hello' => 'World']);
+        $hook = new Hook('Baz', array('hello' => 'World'));
 
         // stub rendering hook event behavior
         $hookEvent = $this->createRenderingHookEvent($hook->getParameters());
@@ -122,14 +122,14 @@ class HookDispatcherTest extends TestCase
             ->willReturn($hookEvent)
         ;
 
-        $renderedHook = $this->hookDispatcher->dispatchRenderingWithParameters('Baz', ['hello' => 'World']);
+        $renderedHook = $this->hookDispatcher->dispatchRenderingWithParameters('Baz', array('hello' => 'World'));
 
         $this->assertInstanceOf(RenderedHook::class, $renderedHook);
         $this->assertEquals($hook, $renderedHook->getHook());
-        $this->assertEquals(['hello' => 'World'], $renderedHook->getContent());
+        $this->assertEquals(array('hello' => 'World'), $renderedHook->getContent());
     }
 
-    private function createHook($name = 'hookName', $parameters = [])
+    private function createHook($name = 'hookName', $parameters = array())
     {
         $hookStub = $this->createMock(HookInterface::class);
 
@@ -144,11 +144,11 @@ class HookDispatcherTest extends TestCase
      * @param array $parameters
      * @return \PHPUnit_Framework_MockObject_MockObject|RenderingHookEvent
      */
-    private function createRenderingHookEvent($parameters = [])
+    private function createRenderingHookEvent($parameters = array())
     {
-        $parametersDispatched = [];
+        $parametersDispatched = array();
         foreach ($parameters as $key => $parameter) {
-            $parametersDispatched[$key] = empty($parameter) ? [] : [$parameter];
+            $parametersDispatched[$key] = empty($parameter) ? array() : array($parameter);
         }
 
         $renderingHookEventStub = $this->createMock(RenderingHookEvent::class);

@@ -144,9 +144,12 @@ class Install extends AbstractInstall
             !file_exists(_PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . $this->settingsFile)
             && !is_writable(_PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . dirname($this->settingsFile))
         ) {
-            $this->setError($this->translator->trans(
+            $this->setError(
+                $this->translator->trans(
                 '%folder% folder is not writable (check permissions)',
-                array('%folder%' => dirname($this->settingsFile)), 'Install')
+                array('%folder%' => dirname($this->settingsFile)),
+                'Install'
+            )
             );
 
             return false;
@@ -821,7 +824,7 @@ class Install extends AbstractInstall
         $locale->loadLocalisationPack($localization_file_content, false, true);
 
         // Create default employee
-        if (isset($data['admin_firstname']) && isset($data['admin_lastname']) && isset($data['admin_password']) && isset($data['admin_email'])) {
+        if (isset($data['admin_firstname'], $data['admin_lastname'], $data['admin_password'], $data['admin_email'])      ) {
             $employee = new Employee();
             $employee->firstname = Tools::ucfirst($data['admin_firstname']);
             $employee->lastname = Tools::ucfirst($data['admin_lastname']);
@@ -1052,7 +1055,7 @@ class Install extends AbstractInstall
             if (!$moduleManager->install($module_name)) {
                 /*$module_errors = $module->getErrors();
                 if (empty($module_errors)) {*/
-                $module_errors = [$this->translator->trans('Cannot install module "%module%"', array('%module%' => $module_name), 'Install')];
+                $module_errors = array($this->translator->trans('Cannot install module "%module%"', array('%module%' => $module_name), 'Install'));
                 /*}*/
                 $errors[$module_name] = $module_errors;
             }

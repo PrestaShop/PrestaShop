@@ -530,7 +530,8 @@ class SupplyOrderCore extends ObjectModel
 
     public function getAllExpectedQuantity()
     {
-        return Db::getInstance()->getValue('
+        return Db::getInstance()->getValue(
+            '
 			SELECT SUM(`quantity_expected`)
 			FROM `' . _DB_PREFIX_ . 'supply_order_detail`
 			WHERE `id_supply_order` = ' . (int) $this->id
@@ -539,7 +540,8 @@ class SupplyOrderCore extends ObjectModel
 
     public function getAllReceivedQuantity()
     {
-        return Db::getInstance()->getValue('
+        return Db::getInstance()->getValue(
+            '
 			SELECT SUM(`quantity_received`)
 			FROM `' . _DB_PREFIX_ . 'supply_order_detail`
 			WHERE `id_supply_order` = ' . (int) $this->id
@@ -548,7 +550,8 @@ class SupplyOrderCore extends ObjectModel
 
     public function getAllPendingQuantity()
     {
-        return Db::getInstance()->getValue('
+        return Db::getInstance()->getValue(
+            '
 			SELECT (SUM(`quantity_expected`) - SUM(`quantity_received`))
 			FROM `' . _DB_PREFIX_ . 'supply_order_detail`
 			WHERE `id_supply_order` = ' . (int) $this->id

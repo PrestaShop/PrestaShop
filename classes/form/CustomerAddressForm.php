@@ -85,7 +85,7 @@ class CustomerAddressFormCore extends AbstractForm
         return $this->fillWith($params);
     }
 
-    public function fillWith(array $params = [])
+    public function fillWith(array $params = array())
     {
         // This form is very tricky: fields may change depending on which
         // country is being submitted!
@@ -110,9 +110,11 @@ class CustomerAddressFormCore extends AbstractForm
             if ($postcode->isRequired()) {
                 $country = $this->formatter->getCountry();
                 if (!$country->checkZipCode($postcode->getValue())) {
-                    $postcode->addError($this->translator->trans('Invalid postcode - should look like "%zipcode%"',
+                    $postcode->addError($this->translator->trans(
+                        'Invalid postcode - should look like "%zipcode%"',
                         array('%zipcode%' => $country->zip_code_format),
-                        'Shop.Forms.Errors'));
+                        'Shop.Forms.Errors'
+                    ));
                     $is_valid = false;
                 }
             }
@@ -145,7 +147,7 @@ class CustomerAddressFormCore extends AbstractForm
         }
 
         if (empty($address->alias)) {
-            $address->alias = $this->translator->trans('My Address', [], 'Shop.Theme.Checkout');
+            $address->alias = $this->translator->trans('My Address', array(), 'Shop.Theme.Checkout');
         }
 
         Hook::exec('actionSubmitCustomerAddressForm', array('address' => &$address));

@@ -38,21 +38,21 @@ class RouterProviderTest extends TestCase
 {
     public function testBuildRoutes()
     {
-        $router = $this->buildMultipleRouterMock([
-            [
+        $router = $this->buildMultipleRouterMock(array(
+            array(
                 'route_name' => 'admin_products',
                 'path' => '/products',
                 '_legacy_link' => 'AdminProducts',
-            ],
-            [
+            ),
+            array(
                 'route_name' => 'admin_products_create',
                 'path' => '/products/create',
-                '_legacy_link' => [
+                '_legacy_link' => array(
                     'AdminProducts:add',
                     'AdminProducts:create'
-                ],
-            ],
-        ]);
+                ),
+            ),
+        ));
         $routerProvider = new RouterProvider($router);
         $legacyRoutes = $routerProvider->getLegacyRoutes();
         $this->assertCount(2, $legacyRoutes);
@@ -61,115 +61,115 @@ class RouterProviderTest extends TestCase
         /** @var LegacyRoute $legacyRoute */
         $legacyRoute = $legacyRoutes['admin_products'];
         $this->assertEquals('admin_products', $legacyRoute->getRouteName());
-        $this->assertSame(['AdminProducts' => [
+        $this->assertSame(array('AdminProducts' => array(
             'index' => 'admin_products',
-        ]], $legacyRoute->getControllersActions());
+        )), $legacyRoute->getControllersActions());
 
         $legacyRoute = $legacyRoutes['admin_products_create'];
         $this->assertEquals('admin_products_create', $legacyRoute->getRouteName());
-        $this->assertSame(['AdminProducts' => [
+        $this->assertSame(array('AdminProducts' => array(
             'add' => 'admin_products_create',
             'create' => 'admin_products_create',
-        ]], $legacyRoute->getControllersActions());
+        )), $legacyRoute->getControllersActions());
     }
 
     public function testControllersActions()
     {
-        $router = $this->buildMultipleRouterMock([
-            [
+        $router = $this->buildMultipleRouterMock(array(
+            array(
                 'route_name' => 'admin_products',
                 'path' => '/products',
                 '_legacy_link' => 'AdminProducts',
-            ],
-            [
+            ),
+            array(
                 'route_name' => 'admin_products_create',
                 'path' => '/products/create',
-                '_legacy_link' => [
+                '_legacy_link' => array(
                     'AdminProducts:add',
                     'AdminProducts:create'
-                ],
-            ],
-            [
+                ),
+            ),
+            array(
                 'route_name' => 'admin_categories_create',
                 'path' => '/products/create',
-                '_legacy_link' => [
+                '_legacy_link' => array(
                     'AdminCategories:add',
                     'AdminCategories:create'
-                ],
-            ],
-        ]);
+                ),
+            ),
+        ));
         $routerProvider = new RouterProvider($router);
         $controllersActions = $routerProvider->getControllersActions();
         $this->assertCount(2, $controllersActions);
-        $this->assertSame([
-            'AdminProducts' => [
+        $this->assertSame(array(
+            'AdminProducts' => array(
                 'index' => 'admin_products',
                 'add' => 'admin_products_create',
                 'create' => 'admin_products_create',
-            ],
-            'AdminCategories' => [
+            ),
+            'AdminCategories' => array(
                 'add' => 'admin_categories_create',
                 'create' => 'admin_categories_create',
-            ]
-        ], $controllersActions);
+            )
+        ), $controllersActions);
     }
 
     public function testGetActionsByController()
     {
-        $router = $this->buildMultipleRouterMock([
-            [
+        $router = $this->buildMultipleRouterMock(array(
+            array(
                 'route_name' => 'admin_products',
                 'path' => '/products',
                 '_legacy_link' => 'AdminProducts',
-            ],
-            [
+            ),
+            array(
                 'route_name' => 'admin_products_create',
                 'path' => '/products/create',
-                '_legacy_link' => [
+                '_legacy_link' => array(
                     'AdminProducts:add',
                     'AdminProducts:create'
-                ],
-            ],
-            [
+                ),
+            ),
+            array(
                 'route_name' => 'admin_categories_create',
                 'path' => '/products/create',
-                '_legacy_link' => [
+                '_legacy_link' => array(
                     'AdminCategories:add',
                     'AdminCategories:create'
-                ],
-            ],
-        ]);
+                ),
+            ),
+        ));
         $routerProvider = new RouterProvider($router);
         $controllerActions = $routerProvider->getActionsByController('AdminProducts');
         $this->assertCount(3, $controllerActions);
-        $this->assertSame(['index', 'add', 'create'], $controllerActions);
+        $this->assertSame(array('index', 'add', 'create'), $controllerActions);
     }
 
     public function testGetLegacyRouteByAction()
     {
-        $router = $this->buildMultipleRouterMock([
-            [
+        $router = $this->buildMultipleRouterMock(array(
+            array(
                 'route_name' => 'admin_products',
                 'path' => '/products',
                 '_legacy_link' => 'AdminProducts',
-            ],
-            [
+            ),
+            array(
                 'route_name' => 'admin_products_create',
                 'path' => '/products/create',
-                '_legacy_link' => [
+                '_legacy_link' => array(
                     'AdminProducts:add',
                     'AdminProducts:create'
-                ],
-            ],
-            [
+                ),
+            ),
+            array(
                 'route_name' => 'admin_categories_create',
                 'path' => '/products/create',
-                '_legacy_link' => [
+                '_legacy_link' => array(
                     'AdminCategories:add',
                     'AdminCategories:create'
-                ],
-            ],
-        ]);
+                ),
+            ),
+        ));
         $routerProvider = new RouterProvider($router);
         $legacyRoute = $routerProvider->getLegacyRouteByAction('AdminProducts', 'index');
         $this->assertEquals('admin_products', $legacyRoute->getRouteName());
@@ -198,21 +198,21 @@ class RouterProviderTest extends TestCase
 
     public function testControllerNotFound()
     {
-        $router = $this->buildMultipleRouterMock([
-            [
+        $router = $this->buildMultipleRouterMock(array(
+            array(
                 'route_name' => 'admin_products',
                 'path' => '/products',
                 '_legacy_link' => 'AdminProducts',
-            ],
-            [
+            ),
+            array(
                 'route_name' => 'admin_products_create',
                 'path' => '/products/create',
-                '_legacy_link' => [
+                '_legacy_link' => array(
                     'AdminProducts:add',
                     'AdminProducts:create'
-                ],
-            ],
-        ]);
+                ),
+            ),
+        ));
         $routerProvider = new RouterProvider($router);
 
         $caughtException = null;
@@ -276,9 +276,9 @@ class RouterProviderTest extends TestCase
     {
         $routeCollection = new RouteCollection();
         foreach ($routes as $route) {
-            $routeDefaults = [
+            $routeDefaults = array(
                 '_legacy_link' => $route['_legacy_link'],
-            ];
+            );
             if (!empty($route['_legacy_parameters'])) {
                 $routeDefaults['_legacy_parameters'] = $route['_legacy_parameters'];
             }

@@ -43,32 +43,32 @@ class SmtpConfigurationType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('domain', TextType::class, [
+            ->add('domain', TextType::class, array(
                 'required' => false,
                 'empty_data' => '',
-            ])
-            ->add('server', TextType::class, [
+            ))
+            ->add('server', TextType::class, array(
                 'required' => false,
-            ])
-            ->add('username', TextType::class, [
-                'required' => false,
-                'empty_data' => '',
-            ])
-            ->add('password', PasswordType::class, [
+            ))
+            ->add('username', TextType::class, array(
                 'required' => false,
                 'empty_data' => '',
-            ])
-            ->add('encryption', ChoiceType::class, [
-                'choices' => [
+            ))
+            ->add('password', PasswordType::class, array(
+                'required' => false,
+                'empty_data' => '',
+            ))
+            ->add('encryption', ChoiceType::class, array(
+                'choices' => array(
                     'None' => 'off',
                     'TLS' => 'tls',
                     'SSL' => 'ssl',
-                ],
+                ),
                 'choice_translation_domain' => 'Admin.Advparameters.Feature',
-            ])
-            ->add('port', TextType::class, [
+            ))
+            ->add('port', TextType::class, array(
                 'required' => false,
-            ])
+            ))
         ;
     }
 }

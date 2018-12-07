@@ -55,11 +55,11 @@ final class SlipOptionsConfiguration implements DataConfigurationInterface
      */
     public function getConfiguration()
     {
-        return [
+        return array(
             'prefix' => $this->configuration->get(self::PREFIX),
             'number' => $this->configuration->getInt(self::NUMBER),
             'enable_product_image' => $this->configuration->getBoolean(self::ENABLE_PRODUCT_IMAGE),
-        ];
+        );
     }
 
     /**
@@ -73,7 +73,7 @@ final class SlipOptionsConfiguration implements DataConfigurationInterface
             $this->configuration->set(self::ENABLE_PRODUCT_IMAGE, $configuration['enable_product_image']);
         }
 
-        return [];
+        return array();
     }
 
     /**

@@ -242,16 +242,16 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
         $this->initializeContext();
 
         return $this->model_install->configureShop(array(
-            'shop_name' =>                $this->datas->shop_name,
-            'shop_activity' =>            $this->datas->shop_activity,
-            'shop_country' =>            $this->datas->shop_country,
-            'shop_timezone' =>            $this->datas->timezone,
-            'use_smtp' =>                false,
-            'admin_firstname' =>        $this->datas->admin_firstname,
-            'admin_lastname' =>            $this->datas->admin_lastname,
-            'admin_password' =>            $this->datas->admin_password,
-            'admin_email' =>            $this->datas->admin_email,
-            'configuration_agrement' =>    true,
+            'shop_name' => $this->datas->shop_name,
+            'shop_activity' => $this->datas->shop_activity,
+            'shop_country' => $this->datas->shop_country,
+            'shop_timezone' => $this->datas->timezone,
+            'use_smtp' => false,
+            'admin_firstname' => $this->datas->admin_firstname,
+            'admin_lastname' => $this->datas->admin_lastname,
+            'admin_password' => $this->datas->admin_password,
+            'admin_email' => $this->datas->admin_email,
+            'configuration_agrement' => true,
             'send_informations' => true,
             'enable_ssl' => $this->datas->enable_ssl,
         ));
@@ -309,7 +309,7 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
     {
         $configXMLPath = _PS_ROOT_DIR_.'/config/xml/';
         $cacheFiles = scandir($configXMLPath, SCANDIR_SORT_NONE);
-        $excludes = ['.htaccess', 'index.php'];
+        $excludes = array('.htaccess', 'index.php');
 
         foreach($cacheFiles as $file) {
             $filepath = $configXMLPath.$file;

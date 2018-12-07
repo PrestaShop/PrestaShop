@@ -55,7 +55,7 @@ final class LanguageByIdChoiceProvider implements FormChoiceProviderInterface
     public function getChoices()
     {
         $languages = $this->languageDataProvider->getLanguages();
-        $choices = [];
+        $choices = array();
 
         foreach ($languages as $language) {
             $choices[$language['name']] = $language['id_lang'];

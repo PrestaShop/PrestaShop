@@ -55,15 +55,16 @@ class OptionalFeaturesType extends CommonAbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('combinations', SwitchType::class, [
+            ->add('combinations', SwitchType::class, array(
                 'disabled' => $this->isCombinationsUsed,
-            ])
-            ->add('features', SwitchType::class, [
+            ))
+            ->add('features', SwitchType::class, array(
                 'required' => true,
-            ])
-            ->add('customer_groups', SwitchType::class, [
+            ))
+            ->add('customer_groups', SwitchType::class, array(
                 'translation_domain' => 'Admin.Advparameters.features',
-            ]);
+            ))
+        ;
     }
 
     /**
@@ -71,9 +72,9 @@ class OptionalFeaturesType extends CommonAbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
+        $resolver->setDefaults(array(
             'translation_domain' => 'Admin.Global',
-        ]);
+        ));
     }
 
     /**

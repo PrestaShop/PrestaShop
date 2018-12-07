@@ -1150,7 +1150,7 @@ abstract class ModuleCore implements ModuleInterface
     public static function getInstanceById($id_module)
     {
         if (null === self::$cachedModuleNames) {
-            self::$cachedModuleNames = [];
+            self::$cachedModuleNames = array();
             $sql = 'SELECT `id_module`, `name` FROM `' . _DB_PREFIX_ . 'module`';
             if ($results = Db::getInstance()->executeS($sql)) {
                 foreach ($results as $row) {

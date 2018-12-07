@@ -173,8 +173,8 @@ final class PaymentRestrictionsConfigurator implements PaymentRestrictionsConfig
      */
     private function parseRestrictionData(array $restrictions)
     {
-        $moduleIds = [];
-        $insertValues = [];
+        $moduleIds = array();
+        $insertValues = array();
 
         $paymentModules = $this->paymentModuleProvider->getPaymentModuleList();
 
@@ -185,7 +185,7 @@ final class PaymentRestrictionsConfigurator implements PaymentRestrictionsConfig
                 $moduleIds[] = $moduleId;
 
                 if (!is_array($restriction)) {
-                    $restriction = [$restriction];
+                    $restriction = array($restriction);
                 }
 
                 foreach ($restriction as $restrictionValues) {
@@ -194,9 +194,9 @@ final class PaymentRestrictionsConfigurator implements PaymentRestrictionsConfig
             }
         }
 
-        return [
+        return array(
             $moduleIds,
             $insertValues,
-        ];
+        );
     }
 }

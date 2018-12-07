@@ -57,50 +57,50 @@ class CacheProviderTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $this->expectedFlattenArray = [
-            [
+        $this->expectedFlattenArray = array(
+            array(
                 'route_name' => 'admin_products',
-                'legacy_links' => [
+                'legacy_links' => array(
                     'AdminProducts',
                     'AdminProducts:index',
                     'AdminProducts:list',
-                ],
-                'legacy_parameters' => [],
-            ],
-            [
+                ),
+                'legacy_parameters' => array(),
+            ),
+            array(
                 'route_name' => 'admin_products_create',
-                'legacy_links' => [
+                'legacy_links' => array(
                     'AdminProducts:create',
                     'AdminProducts:new',
-                ],
-                'legacy_parameters' => [
+                ),
+                'legacy_parameters' => array(
                     'id_product' => 'productId',
-                ],
-            ],
-        ];
+                ),
+            ),
+        );
         $this->expectedCacheValue = json_encode($this->expectedFlattenArray);
 
-        $this->legacyRoutes = [
+        $this->legacyRoutes = array(
             'admin_products' => new LegacyRoute(
                 'admin_products',
-                [
+                array(
                     'AdminProducts',
                     'AdminProducts:index',
                     'AdminProducts:list',
-                ],
-                []
+                ),
+                array()
             ),
             'admin_products_create' => new LegacyRoute(
                 'admin_products_create',
-                [
+                array(
                     'AdminProducts:create',
                     'AdminProducts:new',
-                ],
-                [
+                ),
+                array(
                     'id_product' => 'productId',
-                ]
+                )
             )
-        ];
+        );
     }
 
     public function testGetLegacyRoutesAndSaveCache()
@@ -202,7 +202,8 @@ class CacheProviderTest extends TestCase
         $itemMock = $this
             ->getMockBuilder(CacheItemInterface::class)
             ->disableOriginalConstructor()
-            ->getMock();
+            ->getMock()
+        ;
 
         $itemMock
             ->expects($this->once())
@@ -225,7 +226,8 @@ class CacheProviderTest extends TestCase
         $cacheMock = $this
             ->getMockBuilder(AdapterInterface::class)
             ->disableOriginalConstructor()
-            ->getMock();
+            ->getMock()
+        ;
 
         $cacheMock
             ->expects($this->once())
@@ -250,7 +252,8 @@ class CacheProviderTest extends TestCase
         $itemMock = $this
             ->getMockBuilder(CacheItemInterface::class)
             ->disableOriginalConstructor()
-            ->getMock();
+            ->getMock()
+        ;
 
         $itemMock
             ->expects($this->once())
@@ -273,7 +276,8 @@ class CacheProviderTest extends TestCase
         $cacheMock = $this
             ->getMockBuilder(AdapterInterface::class)
             ->disableOriginalConstructor()
-            ->getMock();
+            ->getMock()
+        ;
 
         $cacheMock
             ->expects($this->once())
@@ -298,7 +302,8 @@ class CacheProviderTest extends TestCase
         $providerMock = $this
             ->getMockBuilder(LegacyRouteProviderInterface::class)
             ->disableOriginalConstructor()
-            ->getMock();
+            ->getMock()
+        ;
 
         $providerMock
             ->expects($this->once()) //Very important to assert this method is only called once to create the cache
@@ -317,7 +322,8 @@ class CacheProviderTest extends TestCase
         $providerMock = $this
             ->getMockBuilder(LegacyRouteProviderInterface::class)
             ->disableOriginalConstructor()
-            ->getMock();
+            ->getMock()
+        ;
 
         $providerMock
             ->expects($this->never()) //Very important to assert this method is only called once to create the cache
@@ -335,7 +341,8 @@ class CacheProviderTest extends TestCase
         $generatorMock = $this
             ->getMockBuilder(CacheKeyGeneratorInterface::class)
             ->disableOriginalConstructor()
-            ->getMock();
+            ->getMock()
+        ;
 
         $generatorMock
             ->method('getCacheKey')

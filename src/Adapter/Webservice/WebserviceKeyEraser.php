@@ -45,14 +45,14 @@ final class WebserviceKeyEraser
      */
     public function erase(array $webServiceKeyIds)
     {
-        $errors = [];
+        $errors = array();
 
         if (empty($webServiceKeyIds)) {
-            $errors[] = [
+            $errors[] = array(
                 'key' => 'You must select at least one element to delete.',
-                'parameters' => [],
+                'parameters' => array(),
                 'domain' => 'Admin.Notifications.Error',
-            ];
+            );
 
             return $errors;
         }
@@ -63,13 +63,13 @@ final class WebserviceKeyEraser
         /** @var WebserviceKey $webserviceKey */
         foreach ($webserviceKeys->getResults() as $webserviceKey) {
             if (!$webserviceKey->delete()) {
-                $errors[] = [
+                $errors[] = array(
                     'key' => 'Can\'t delete #%id%',
-                    'parameters' => [
+                    'parameters' => array(
                         '%id%' => $webserviceKey->id,
-                    ],
+                    ),
                     'domain' => 'Admin.Notifications.Error',
-                ];
+                );
 
                 continue;
             }

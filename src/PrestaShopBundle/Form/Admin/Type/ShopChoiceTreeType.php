@@ -53,12 +53,12 @@ class ShopChoiceTreeType extends AbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
+        $resolver->setDefaults(array(
             'choices_tree' => $this->shopTreeChoices,
             'multiple' => true,
             'choice_label' => 'name',
             'choice_value' => 'id_shop',
-        ]);
+        ));
     }
 
     /**

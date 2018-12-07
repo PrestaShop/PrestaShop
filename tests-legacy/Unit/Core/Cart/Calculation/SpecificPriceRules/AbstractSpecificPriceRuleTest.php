@@ -32,17 +32,17 @@ use LegacyTests\Unit\Core\Cart\Calculation\AbstractCartCalculationTest;
 abstract class AbstractSpecificPriceRuleTest extends AbstractCartCalculationTest
 {
 
-    const SPECIFIC_PRICE_RULES_FIXTURES = [
-        1 => ['reductionType' => 'percentage', 'reduction' => 23, 'fromQuantity' => 1],
-        2 => ['reductionType' => 'percentage', 'reduction' => 15, 'fromQuantity' => 2],
-        3 => ['reductionType' => 'amount', 'reduction' => 23, 'fromQuantity' => 1],
-        4 => ['reductionType' => 'amount', 'reduction' => 15, 'fromQuantity' => 2],
-    ];
+    const SPECIFIC_PRICE_RULES_FIXTURES = array(
+        1 => array('reductionType' => 'percentage', 'reduction' => 23, 'fromQuantity' => 1),
+        2 => array('reductionType' => 'percentage', 'reduction' => 15, 'fromQuantity' => 2),
+        3 => array('reductionType' => 'amount', 'reduction' => 23, 'fromQuantity' => 1),
+        4 => array('reductionType' => 'amount', 'reduction' => 15, 'fromQuantity' => 2),
+    );
 
     /**
      * @var SpecificPriceRule[]
      */
-    protected $specificPriceRules = [];
+    protected $specificPriceRules = array();
 
     public function tearDown()
     {
@@ -50,7 +50,7 @@ abstract class AbstractSpecificPriceRuleTest extends AbstractCartCalculationTest
             $rule->resetApplication();
             $rule->delete();
         }
-        $this->specificPriceRules=[];
+        $this->specificPriceRules = array();
         parent::tearDown();
     }
 
@@ -61,22 +61,22 @@ abstract class AbstractSpecificPriceRuleTest extends AbstractCartCalculationTest
             throw new \Exception('Unknown specific cart rule with id #' . $priceRuleId);
         }
         $specificCartRuleFixture = $fixtures[$priceRuleId];
-        $rule                    = new SpecificPriceRule;
-        $rule->id_shop           = \Context::getContext()->shop->id;
-        $rule->id_currency       = 0; // 0 = all
-        $rule->id_country        = 0; // 0 = all
-        $rule->id_group          = 0; // 0 = all
+        $rule = new SpecificPriceRule;
+        $rule->id_shop = \Context::getContext()->shop->id;
+        $rule->id_currency = 0; // 0 = all
+        $rule->id_country = 0; // 0 = all
+        $rule->id_group = 0; // 0 = all
         if (isset($specificCartRuleFixture['price'])) {
             $rule->price = $specificCartRuleFixture['price'];
         } else {
             // -1 to keep original product price
             $rule->price = -1;
         }
-        $rule->reduction_tax  = 1;
-        $rule->name           = 'price rule name';
+        $rule->reduction_tax = 1;
+        $rule->name = 'price rule name';
         $rule->reduction_type = $specificCartRuleFixture['reductionType'];
-        $rule->reduction      = $specificCartRuleFixture['reduction'];
-        $rule->from_quantity  = $specificCartRuleFixture['fromQuantity'];
+        $rule->reduction = $specificCartRuleFixture['reduction'];
+        $rule->from_quantity = $specificCartRuleFixture['fromQuantity'];
         $rule->add();
         $this->specificPriceRules[] = $rule;
 

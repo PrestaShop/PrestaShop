@@ -47,7 +47,7 @@ class RenderableProxy
         return $this->renderable->getTemplate();
     }
 
-    public function render(array $extraParams = [])
+    public function render(array $extraParams = array())
     {
         return $this->renderable->render($extraParams);
     }

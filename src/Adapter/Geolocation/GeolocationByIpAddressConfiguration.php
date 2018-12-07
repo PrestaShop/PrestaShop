@@ -53,9 +53,9 @@ final class GeolocationByIpAddressConfiguration implements DataConfigurationInte
      */
     public function getConfiguration()
     {
-        return [
+        return array(
             'geolocation_enabled' => $this->configuration->getBoolean('PS_GEOLOCATION_ENABLED'),
-        ];
+        );
     }
 
     /**
@@ -67,7 +67,7 @@ final class GeolocationByIpAddressConfiguration implements DataConfigurationInte
             $this->configuration->set('PS_GEOLOCATION_ENABLED', $config['geolocation_enabled']);
         }
 
-        return [];
+        return array();
     }
 
     /**

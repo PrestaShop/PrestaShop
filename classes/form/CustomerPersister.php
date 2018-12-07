@@ -28,7 +28,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 class CustomerPersisterCore
 {
-    private $errors = [];
+    private $errors = array();
     private $context;
     private $crypto;
     private $translator;
@@ -69,7 +69,7 @@ class CustomerPersisterCore
         )) {
             $msg = $this->translator->trans(
                 'Invalid email/password combination',
-                [],
+                array(),
                 'Shop.Notifications.Error'
             );
             $this->errors['email'][] = $msg;
@@ -99,7 +99,7 @@ class CustomerPersisterCore
 
                 $this->errors['email'][] = $this->translator->trans(
                     'There seems to be an issue with your account, please contact support',
-                    [],
+                    array(),
                     'Shop.Notifications.Error'
                 );
 
@@ -123,7 +123,7 @@ class CustomerPersisterCore
             if (Customer::customerExists($customer->email, false, true)) {
                 $this->errors['email'][] = $this->translator->trans(
                     'An account was already registered with this email address',
-                    [],
+                    array(),
                     'Shop.Notifications.Error'
                 );
 
@@ -136,9 +136,9 @@ class CustomerPersisterCore
         if ($ok) {
             $this->context->updateCustomer($customer);
             $this->context->cart->update();
-            Hook::exec('actionCustomerAccountUpdate', [
+            Hook::exec('actionCustomerAccountUpdate', array(
                 'customer' => $customer,
-            ]);
+            ));
             if ($guest_to_customer) {
                 $this->sendConfirmationMail($customer);
             }
@@ -153,7 +153,7 @@ class CustomerPersisterCore
             if (!$this->guest_allowed) {
                 $this->errors['password'][] = $this->translator->trans(
                     'Password is required',
-                    [],
+                    array(),
                     'Shop.Notifications.Error'
                 );
 
@@ -181,7 +181,7 @@ class CustomerPersisterCore
         if (Customer::customerExists($customer->email, false, true)) {
             $this->errors['email'][] = $this->translator->trans(
                 'An account was already registered with this email address',
-                [],
+                array(),
                 'Shop.Notifications.Error'
             );
 

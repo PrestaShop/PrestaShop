@@ -144,7 +144,7 @@ class ModuleActivatedListener
             'error',
             $this->translator->trans(
                 $moduleActivated->getMessage(),
-                [$moduleActivated->getModuleName()],
+                array($moduleActivated->getModuleName()),
                 $moduleActivated->getDomain()
             )
         );

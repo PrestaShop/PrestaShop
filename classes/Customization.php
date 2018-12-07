@@ -169,7 +169,8 @@ class CustomizationCore extends ObjectModel
             return 0;
         }
 
-        return (float) Db::getInstance()->getValue('
+        return (float) Db::getInstance()->getValue(
+            '
             SELECT SUM(`price`) FROM `' . _DB_PREFIX_ . 'customized_data`
             WHERE `id_customization` = ' . (int) $idCustomization
         );
@@ -188,7 +189,8 @@ class CustomizationCore extends ObjectModel
             return 0;
         }
 
-        return (float) Db::getInstance()->getValue('
+        return (float) Db::getInstance()->getValue(
+            '
             SELECT SUM(`weight`) FROM `' . _DB_PREFIX_ . 'customized_data`
             WHERE `id_customization` = ' . (int) $idCustomization
         );
@@ -229,7 +231,8 @@ class CustomizationCore extends ObjectModel
             $idShop = (int) Context::getContext()->shop->id;
         }
 
-        $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+        $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+            '
 		SELECT `name`
 		FROM `' . _DB_PREFIX_ . 'customization_field_lang`
 		WHERE `id_customization_field` = ' . (int) $idCustomization . ((int) $idShop ? ' AND `id_shop` = ' . (int) $idShop : '') . '
@@ -262,7 +265,8 @@ class CustomizationCore extends ObjectModel
             $results = Db::getInstance()->executeS(
                             'SELECT `id_customization`, `id_product`, `quantity`, `quantity_refunded`, `quantity_returned`
 							 FROM `' . _DB_PREFIX_ . 'customization`
-							 WHERE `id_customization` IN (' . $inValues . ')');
+							 WHERE `id_customization` IN (' . $inValues . ')'
+            );
 
             foreach ($results as $row) {
                 $quantities[$row['id_customization']] = $row;

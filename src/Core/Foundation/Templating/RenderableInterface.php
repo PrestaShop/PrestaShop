@@ -32,5 +32,5 @@ interface RenderableInterface
 
     public function getTemplate();
 
-    public function render(array $extraParams = []);
+    public function render(array $extraParams = array());
 }

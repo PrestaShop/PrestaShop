@@ -129,12 +129,12 @@ class PasswordControllerCore extends FrontController
                     $this->errors[] = $this->trans('The password and its confirmation do not match.', array(), 'Shop.Notifications.Error');
                 }
 
-                $this->context->smarty->assign([
+                $this->context->smarty->assign(array(
                     'customer_email' => $customer->email,
                     'customer_token' => $token,
                     'id_customer' => $id_customer,
                     'reset_token' => Tools::getValue('reset_token'),
-                ]);
+                ));
 
                 $this->setTemplate('customer/password-new');
             } else {
@@ -154,11 +154,11 @@ class PasswordControllerCore extends FrontController
                             $customer->removeResetPasswordToken();
                             $customer->update();
 
-                            $mail_params = [
+                            $mail_params = array(
                                 '{email}' => $customer->email,
                                 '{lastname}' => $customer->lastname,
                                 '{firstname}' => $customer->firstname,
-                            ];
+                            );
 
                             if (
                                 Mail::Send(
@@ -174,9 +174,9 @@ class PasswordControllerCore extends FrontController
                                     $customer->firstname . ' ' . $customer->lastname
                                 )
                             ) {
-                                $this->context->smarty->assign([
+                                $this->context->smarty->assign(array(
                                     'customer_email' => $customer->email,
-                                ]);
+                                ));
                                 $this->success[] = $this->trans('Your password has been successfully reset and a confirmation has been sent to your email address: %s', array($customer->email), 'Shop.Notifications.Success');
                                 $this->context->updateCustomer($customer);
                                 $this->redirectWithNotifications('index.php?controller=my-account');

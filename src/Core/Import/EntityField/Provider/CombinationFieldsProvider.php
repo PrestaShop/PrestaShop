@@ -53,7 +53,7 @@ final class CombinationFieldsProvider implements EntityFieldsProviderInterface
      */
     public function getCollection()
     {
-        $fields = [
+        $fields = array(
             new EntityField('id_product', $this->trans('Product ID')),
             new EntityField('product_reference', $this->trans('Product Reference')),
             new EntityField('group', $this->trans('Attribute (Name:Type:Position)'), '', true),
@@ -98,7 +98,7 @@ final class CombinationFieldsProvider implements EntityFieldsProviderInterface
                 $this->trans('Warehouse'),
                 $this->trans('ID of the warehouse to set as storage.', 'Admin.Advparameters.Help')
             ),
-        ];
+        );
 
         return EntityFieldCollection::createFromArray($fields);
     }
@@ -113,6 +113,6 @@ final class CombinationFieldsProvider implements EntityFieldsProviderInterface
      */
     private function trans($id, $domain = 'Admin.Advparameters.Feature')
     {
-        return $this->translator->trans($id, [], $domain);
+        return $this->translator->trans($id, array(), $domain);
     }
 }

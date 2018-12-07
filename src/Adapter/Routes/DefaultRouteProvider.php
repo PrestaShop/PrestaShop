@@ -46,7 +46,7 @@ class DefaultRouteProvider
     {
         $routes = $this->getDefaultRoutes();
 
-        $result = [];
+        $result = array();
         foreach ($routes as $routeId => $value) {
             $result[$routeId] = $value['keywords'];
         }
@@ -65,7 +65,7 @@ class DefaultRouteProvider
     {
         $routes = $this->getDefaultRoutes();
 
-        $result = [];
+        $result = array();
         foreach ($routes as $routeId => $value) {
             $result[$routeId] = $value['rule'];
         }

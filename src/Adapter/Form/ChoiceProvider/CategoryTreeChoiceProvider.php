@@ -53,7 +53,7 @@ final class CategoryTreeChoiceProvider implements FormChoiceProviderInterface
     public function getChoices()
     {
         $categories = $this->categoryDataProvider->getNestedCategories();
-        $choices = [];
+        $choices = array();
 
         foreach ($categories as $category) {
             $choices[] = $this->buildChoiceTree($category);
@@ -69,10 +69,10 @@ final class CategoryTreeChoiceProvider implements FormChoiceProviderInterface
      */
     private function buildChoiceTree(array $category)
     {
-        $tree = [
+        $tree = array(
             'id_category' => $category['id_category'],
             'name' => $category['name'],
-        ];
+        );
 
         if (isset($category['children'])) {
             foreach ($category['children'] as $childCategory) {

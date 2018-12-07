@@ -76,7 +76,7 @@ class ThemeValidatorTest extends TestCase
 
     private function getTheme($name = 'valid')
     {
-        $options = ['valid', 'missfiles', 'missconfig'];
+        $options = array('valid', 'missfiles', 'missconfig');
 
         if (!in_array($name, $options)) {
             throw new \InvalidArgumentException(self::NOTICE.'getTheme($name) only accepts specified arguments');

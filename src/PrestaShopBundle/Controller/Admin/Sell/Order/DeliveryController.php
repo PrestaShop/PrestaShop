@@ -71,7 +71,7 @@ class DeliveryController extends FrameworkBundleAdminController
             return $this->redirectToRoute('admin_order_delivery_slip');
         }
 
-        return [
+        return array(
             'optionsForm' => $form->createView(),
             'pdfForm' => $this->get('prestashop.adapter.order.delivery.slip.pdf.form_handler')->getForm()->createView(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
@@ -80,7 +80,7 @@ class DeliveryController extends FrameworkBundleAdminController
             'requireBulkActions' => false,
             'showContentHeader' => true,
             'enableSidebar' => true,
-        ];
+        );
     }
 
     /**
@@ -109,11 +109,11 @@ class DeliveryController extends FrameworkBundleAdminController
                     $this->get('prestashop.adapter.legacy.context')->getAdminLink(
                         'AdminPdf',
                         true,
-                        [
+                        array(
                             'date_from' => $pdf['date_from'],
                             'date_to' => $pdf['date_to'],
                             'submitAction' => 'generateDeliverySlipsPDF',
-                        ]
+                        )
                     )
                 );
             }

@@ -77,14 +77,14 @@ class TypeaheadProductPackCollectionType extends CommonAbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('data', CollectionType::class, [
+        $builder->add('data', CollectionType::class, array(
             'entry_type' => HiddenType::class,
             'allow_add' => true,
             'allow_delete' => true,
             'label' => false,
             'required' => false,
             'prototype' => true,
-        ]);
+        ));
     }
 
     /**
@@ -92,13 +92,13 @@ class TypeaheadProductPackCollectionType extends CommonAbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
+        $resolver->setDefaults(array(
             'remote_url' => '',
             'mapping_value' => 'id',
             'mapping_name' => 'name',
             'placeholder' => '',
             'template_collection' => '',
-        ]);
+        ));
     }
 
     /**

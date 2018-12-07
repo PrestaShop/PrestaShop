@@ -45,9 +45,9 @@ class ThemeCatalogController extends FrameworkBundleAdminController
     {
         $pageContent = file_get_contents($this->getAddonsUrl($request));
 
-        return $this->render('@PrestaShop/Admin/Improve/Design/ThemesCatalogPage/addons_store.html.twig', [
+        return $this->render('@PrestaShop/Admin/Improve/Design/ThemesCatalogPage/addons_store.html.twig', array(
             'pageContent' => $pageContent,
-            'layoutHeaderToolbarBtn' => [],
+            'layoutHeaderToolbarBtn' => array(),
             'layoutTitle' => $this->trans('Themes Catalog', 'Admin.Navigation.Menu'),
             'requireAddonsSearch' => true,
             'requireBulkActions' => false,
@@ -55,7 +55,7 @@ class ThemeCatalogController extends FrameworkBundleAdminController
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink('AdminThemesCatalog'),
             'requireFilterStatus' => false,
-        ]);
+        ));
     }
 
     /**

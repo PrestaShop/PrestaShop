@@ -65,8 +65,8 @@ class PositionsControllerTest extends WebTestCase
             $this->router->generate(
                 'admin_modules_positions_unhook'
             ),
-            [
-                'unhooks' => [
+            array(
+                'unhooks' => array(
                     sprintf('%d_%d', $this->hookId, $this->moduleId),
                     sprintf('%d_1000', $this->hookId),
                     sprintf('10000_%d', $this->moduleId),
@@ -77,8 +77,8 @@ class PositionsControllerTest extends WebTestCase
                     ),
                     'aa_dd',
                     'something'
-                ],
-            ]
+                ),
+            )
         );
 
         $response = $this->client->getResponse();
@@ -113,10 +113,10 @@ class PositionsControllerTest extends WebTestCase
             $this->router->generate(
                 'admin_modules_positions_unhook'
             ),
-            [
+            array(
                 'moduleId' => $this->moduleId,
                 'hookId' => $this->hookId,
-            ]
+            )
         );
 
         $response = $this->client->getResponse();

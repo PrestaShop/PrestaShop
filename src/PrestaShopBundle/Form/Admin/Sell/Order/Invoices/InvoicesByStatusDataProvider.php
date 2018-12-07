@@ -39,7 +39,7 @@ final class InvoicesByStatusDataProvider implements FormDataProviderInterface
      */
     public function getData()
     {
-        return [];
+        return array();
     }
 
     /**
@@ -60,15 +60,15 @@ final class InvoicesByStatusDataProvider implements FormDataProviderInterface
      */
     private function validate(array $data)
     {
-        $errors = [];
+        $errors = array();
         $orderStates = $data['generate_by_status']['order_states'];
 
         if (!is_array($orderStates) || !count($orderStates)) {
-            $errors[] = [
+            $errors[] = array(
                 'key' => 'You must select at least one order status.',
                 'domain' => 'Admin.Orderscustomers.Notification',
-                'parameters' => [],
-            ];
+                'parameters' => array(),
+            );
         }
 
         return $errors;

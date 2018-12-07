@@ -77,7 +77,7 @@ class CheckoutAddressesStepTest extends UnitTestCase
         return $this;
     }
 
-    private function assertTemplateParametersInclude(array $what, array $requestParams = [])
+    private function assertTemplateParametersInclude(array $what, array $requestParams = array())
     {
         $this->assertArraySubset(
             $what,
@@ -88,38 +88,38 @@ class CheckoutAddressesStepTest extends UnitTestCase
     public function test_if_customer_has_no_addresses_then_delivery_address_form_is_open()
     {
         $this->setCustomerAddressesCount(0);
-        $this->assertTemplateParametersInclude([
+        $this->assertTemplateParametersInclude(array(
             'show_delivery_address_form' => true
-        ]);
+        ));
     }
 
     public function test_if_customer_has_one_address_then_delivery_address_form_is_not_open()
     {
         $this->setCustomerAddressesCount(1);
-        $this->assertTemplateParametersInclude([
+        $this->assertTemplateParametersInclude(array(
             'show_delivery_address_form' => false
-        ]);
+        ));
     }
 
     public function test_if_customer_has_one_address_and_wants_different_invoice_then_invoice_open()
     {
         $this->setCustomerAddressesCount(1);
-        $this->assertTemplateParametersInclude([
+        $this->assertTemplateParametersInclude(array(
             'show_invoice_address_form' => true
-        ], [
+        ), array(
             'use_same_address' => false
-        ]);
+        ));
     }
 
     public function test_when_customer_has_one_delivery_address_and_edits_it_then_is_open()
     {
         $this->setCustomerAddressesCount(1);
-        $this->assertTemplateParametersInclude([
+        $this->assertTemplateParametersInclude(array(
             'show_delivery_address_form' => true,
-            'form_has_continue_button'   => true
-        ], [
-            'editAddress'   => 'delivery',
-            'id_address'    => null
-        ]);
+            'form_has_continue_button' => true
+        ), array(
+            'editAddress' => 'delivery',
+            'id_address' => null
+        ));
     }
 }

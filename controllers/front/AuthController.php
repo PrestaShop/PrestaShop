@@ -63,10 +63,10 @@ class AuthControllerCore extends FrontController
                 }
             }
 
-            $this->context->smarty->assign([
+            $this->context->smarty->assign(array(
                 'register_form' => $register_form->getProxy(),
                 'hook_create_account_top' => Hook::exec('displayCustomerAccountFormTop'),
-            ]);
+            ));
             $this->setTemplate('customer/registration');
         } else {
             $login_form = $this->makeLoginForm()->fillWith(
@@ -79,9 +79,9 @@ class AuthControllerCore extends FrontController
                 }
             }
 
-            $this->context->smarty->assign([
+            $this->context->smarty->assign(array(
                 'login_form' => $login_form->getProxy(),
-            ]);
+            ));
             $this->setTemplate('customer/authentication');
         }
 

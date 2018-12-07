@@ -169,7 +169,7 @@ final class CustomerQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     private function applyFilters(array $filters, QueryBuilder $qb)
     {
-        $allowedFilters = [
+        $allowedFilters = array(
             'id_customer',
             'social_title',
             'firstname',
@@ -180,14 +180,14 @@ final class CustomerQueryBuilder extends AbstractDoctrineQueryBuilder
             'optin',
             'date_add',
             'company',
-        ];
+        );
 
         foreach ($filters as $filterName => $filterValue) {
             if (!in_array($filterName, $allowedFilters)) {
                 continue;
             }
 
-            if (in_array($filterName, ['active', 'newsletter', 'optin', 'id_customer'])) {
+            if (in_array($filterName, array('active', 'newsletter', 'optin', 'id_customer'))) {
                 $qb->andWhere('c.`' . $filterName . '` = :' . $filterName);
                 $qb->setParameter($filterName, $filterValue);
                 continue;

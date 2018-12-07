@@ -42,14 +42,14 @@ class MaterialMultipleChoiceTableType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         foreach ($options['multiple_choices'] as $choices) {
-            $builder->add($choices['name'], ChoiceType::class, [
+            $builder->add($choices['name'], ChoiceType::class, array(
                 'label' => $choices['label'],
                 'choices' => $choices['choices'],
                 'expanded' => true,
                 'multiple' => $choices['multiple'],
                 'choice_label' => false,
                 'choice_translation_domain' => false,
-            ]);
+            ));
 
             $builder->get($choices['name'])->addModelTransformer(new CallbackTransformer(
                 function ($value) use ($choices) {
@@ -79,7 +79,7 @@ class MaterialMultipleChoiceTableType extends AbstractType
      */
     public function finishView(FormView $view, FormInterface $form, array $options)
     {
-        $entryIndexMapping = [];
+        $entryIndexMapping = array();
 
         foreach ($view->children as $childChoiceName => $childChoiceView) {
             foreach ($childChoiceView->children as $index => $childChoiceEntryView) {
@@ -95,10 +95,10 @@ class MaterialMultipleChoiceTableType extends AbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setRequired([
+        $resolver->setRequired(array(
             'multiple_choices',
             'choices',
-        ]);
+        ));
 
         $resolver->setAllowedTypes('choices', 'array');
         $resolver->setAllowedTypes('multiple_choices', 'array');

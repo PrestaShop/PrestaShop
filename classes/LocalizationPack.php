@@ -64,7 +64,8 @@ class LocalizationPackCore
                 $country = new Country($id_country);
             }
             if (!$id_country || !Validate::isLoadedObject($country)) {
-                $this->_errors[] = Context::getContext()->getTranslator()->trans('Cannot load country: %d',
+                $this->_errors[] = Context::getContext()->getTranslator()->trans(
+                    'Cannot load country: %d',
                     array($id_country),
                     'Admin.International.Notification'
                 );
@@ -495,7 +496,7 @@ class LocalizationPackCore
                 $attributes = $data->attributes();
                 $name = (string) $attributes['name'];
 
-                if (isset($name) && isset($attributes['value']) && Configuration::get($name) !== false) {
+                if (isset($name, $attributes['value']) && Configuration::get($name) !== false) {
                     if (!Configuration::updateValue($name, (string) $attributes['value'])) {
                         $this->_errors[] = Context::getContext()->getTranslator()->trans(
                             'An error occurred during the configuration setup: %1$s',

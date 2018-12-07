@@ -55,15 +55,15 @@ class PageLayoutsCustomizationType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('layouts', CollectionType::class, [
+            ->add('layouts', CollectionType::class, array(
                 'entry_type' => ChoiceType::class,
                 'translation_domain' => false,
-                'entry_options' => [
+                'entry_options' => array(
                     'label' => false,
                     'translation_domain' => false,
                     'choices' => $this->pageLayoutsChoices,
-                ],
-            ])
+                ),
+            ))
         ;
     }
 }

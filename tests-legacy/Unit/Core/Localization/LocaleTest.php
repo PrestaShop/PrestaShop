@@ -55,7 +55,7 @@ class LocaleTest extends TestCase
         $numberSpecification = new NumberSpecification(
             '#,##0.###',
             '-#,##0.###',
-            ['latn' => new NumberSymbolList(',', ' ', ';', '%', '-', '+', 'E', '^', '‰', '∞', 'NaN')],
+            array('latn' => new NumberSymbolList(',', ' ', ';', '%', '-', '+', 'E', '^', '‰', '∞', 'NaN')),
             3,
             2,
             true,
@@ -71,7 +71,7 @@ class LocaleTest extends TestCase
                 new PriceSpecification(
                     '#,##0.## ¤',
                     '-#,##0.## ¤',
-                    ['latn' => new NumberSymbolList(',', ' ', ';', '%', '-', '+', 'E', '^', '‰', '∞', 'NaN')],
+                    array('latn' => new NumberSymbolList(',', ' ', ';', '%', '-', '+', 'E', '^', '‰', '∞', 'NaN')),
                     2,
                     2,
                     true,
@@ -81,7 +81,8 @@ class LocaleTest extends TestCase
                     '€',
                     'EUR'
                 )
-            );
+            )
+        ;
         /** @noinspection end */
 
         $formatter = new Formatter(
@@ -145,13 +146,13 @@ class LocaleTest extends TestCase
      */
     public function provideValidNumbers()
     {
-        return [
-            [123456.789, '123 456,789'],
-            [-123456.789, '-123 456,789'],
-            ['0.7', '0,70'],
-            [1.2349, '1,235'],
-            [1.2343, '1,234'],
-        ];
+        return array(
+            array(123456.789, '123 456,789'),
+            array(-123456.789, '-123 456,789'),
+            array('0.7', '0,70'),
+            array(1.2349, '1,235'),
+            array(1.2343, '1,234'),
+        );
     }
 
     /**
@@ -192,10 +193,10 @@ class LocaleTest extends TestCase
      */
     public function provideValidPriceData()
     {
-        return [
-            [123456.789, 'EUR', '123 456,79 €'],
-            [-123456.781, 'EUR', '-123 456,78 €'],
-        ];
+        return array(
+            array(123456.789, 'EUR', '123 456,79 €'),
+            array(-123456.781, 'EUR', '-123 456,78 €'),
+        );
     }
 
     /**
@@ -220,10 +221,10 @@ class LocaleTest extends TestCase
 
     public function provideInvalidPriceData()
     {
-        return [
-            'Invalid number'   => ['foobar', 'EUR'],
-            'Unknown currency' => [123456.789, 'USD'],
-            'Invalid currency' => [123456.789, 123],
-        ];
+        return array(
+            'Invalid number' => array('foobar', 'EUR'),
+            'Unknown currency' => array(123456.789, 'USD'),
+            'Invalid currency' => array(123456.789, 123),
+        );
     }
 }

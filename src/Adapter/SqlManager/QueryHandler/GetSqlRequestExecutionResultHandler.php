@@ -63,7 +63,7 @@ final class GetSqlRequestExecutionResultHandler implements GetSqlRequestExecutio
             $rows = Db::getInstance()->executeS($entity->sql);
 
             if (empty($rows)) {
-                return new SqlRequestExecutionResult([], []);
+                return new SqlRequestExecutionResult(array(), array());
             }
 
             $columns = array_keys(reset($rows));

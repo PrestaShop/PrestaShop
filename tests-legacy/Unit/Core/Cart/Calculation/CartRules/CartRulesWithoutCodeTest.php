@@ -47,15 +47,15 @@ class CartRulesWithoutCodeTest extends AbstractCartCalculationTest
         $this->addProductToCart(2, 2);
         $this->addProductToCart(3, 1);
         // ad multiple fixtures without code
-        $cartRulesData = [
-            14 => ['priority' => 12, 'code' => '', 'percent' => 10, 'amount' => 0],
-            15 => ['priority' => 13, 'code' => '', 'percent' => 10, 'amount' => 0],
-        ];
+        $cartRulesData = array(
+            14 => array('priority' => 12, 'code' => '', 'percent' => 10, 'amount' => 0),
+            15 => array('priority' => 13, 'code' => '', 'percent' => 10, 'amount' => 0),
+        );
         foreach ($cartRulesData as $k => $cartRuleData) {
             $this->insertCartRule($k, $cartRuleData);
         }
         $cartRule = $this->getCartRuleFromFixtureId(1);
-        $result   = $cartRule->checkValidity(\Context::getContext(), false, false);
+        $result = $cartRule->checkValidity(\Context::getContext(), false, false);
         $this->assertEquals(true, $result);
 
         $expectedTotal = (1 - $cartRulesData[14]['percent'] / 100)

@@ -112,9 +112,9 @@ abstract class AbstractColumn implements ColumnInterface
     protected function configureOptions(OptionsResolver $resolver)
     {
         $resolver
-            ->setDefaults([
+            ->setDefaults(array(
                 'sortable' => true,
-            ])
+            ))
             ->setAllowedTypes('sortable', 'bool')
         ;
     }
@@ -124,7 +124,7 @@ abstract class AbstractColumn implements ColumnInterface
      *
      * @param array $options
      */
-    private function resolveOptions(array $options = [])
+    private function resolveOptions(array $options = array())
     {
         $resolver = new OptionsResolver();
         $this->configureOptions($resolver);

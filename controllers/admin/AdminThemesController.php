@@ -412,12 +412,14 @@ class AdminThemesControllerCore extends AdminController
                 'fields' => array(
                     'PS_LOGO' => array(
                         'title' => $this->trans('Header logo', array(), 'Admin.Design.Feature'),
-                        'hint' => $this->trans('Will appear on main page. Recommended size for the default theme: height %height% and width %width%.',
+                        'hint' => $this->trans(
+                            'Will appear on main page. Recommended size for the default theme: height %height% and width %width%.',
                             array(
                                 '%height%' => '40px',
                                 '%width%' => '200px',
                             ),
-                            'Admin.Design.Help'),
+                            'Admin.Design.Help'
+                        ),
                         'type' => 'file',
                         'name' => 'PS_LOGO',
                         'tab' => 'logo',
@@ -502,7 +504,7 @@ class AdminThemesControllerCore extends AdminController
             );
         }
 
-        $other_themes = $this->theme_repository->getListExcluding([$this->context->shop->theme->getName()]);
+        $other_themes = $this->theme_repository->getListExcluding(array($this->context->shop->theme->getName()));
         if (!empty($other_themes)) {
             $this->fields_options['theme'] = array(
                 'title' => $this->trans('Select a theme for the "%name%" shop', array('%name%' => $this->context->shop->name), 'Admin.Design.Feature'),
@@ -680,12 +682,12 @@ class AdminThemesControllerCore extends AdminController
     {
         $theme = $this->theme_repository->getInstanceByName($this->context->shop->theme->getName());
 
-        $this->context->smarty->assign([
+        $this->context->smarty->assign(array(
             'pages' => Meta::getAllMeta($this->context->language->id),
             'default_layout' => $this->translateAttributes($theme->getDefaultLayout()),
             'page_layouts' => $theme->getPageLayouts(),
             'available_layouts' => $this->translateAttributes($theme->getAvailableLayouts()),
-        ]);
+        ));
 
         $this->setTemplate('controllers/themes/configurelayouts.tpl');
     }
@@ -954,7 +956,7 @@ class AdminThemesControllerCore extends AdminController
         $path = $exporter->export($this->context->shop->theme);
         $this->confirmations[] = $this->trans(
             'Your theme has been correctly exported: %path%',
-            ['%path%' => $path],
+            array('%path%' => $path),
             'Admin.Notifications.Success'
         );
 
@@ -1053,7 +1055,8 @@ class AdminThemesControllerCore extends AdminController
                 Language::getRtlStylesheetProcessor()
                 ->setProcessFOThemes(array(Tools::getValue('PS_THEMES_LIST')))
                 ->setRegenerate(true)
-                ->process();
+                ->process()
+                ;
 
                 $this->confirmations[] = $this->trans(
                     'Your RTL stylesheets has been generated successfully',

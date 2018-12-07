@@ -47,23 +47,24 @@ class GeneralType extends TranslatorAwareType
     {
         $builder
             ->add('catalog_mode', SwitchType::class)
-            ->add('new_days_number', IntegerType::class, [
+            ->add('new_days_number', IntegerType::class, array(
                 'required' => false,
-            ])
-            ->add('short_description_limit', TextWithUnitType::class, [
+            ))
+            ->add('short_description_limit', TextWithUnitType::class, array(
                 'required' => false,
                 'unit' => $this->trans('characters', 'Admin.Shopparameters.Help'),
-            ])
-            ->add('quantity_discount', ChoiceType::class, [
-                'choices' => [
+            ))
+            ->add('quantity_discount', ChoiceType::class, array(
+                'choices' => array(
                     'Products' => 0,
                     'Combinations' => 1,
-                ],
+                ),
                 'choice_translation_domain' => 'Admin.Global',
                 'required' => true,
-            ])
+            ))
             ->add('force_friendly_url', SwitchType::class)
-            ->add('default_status', SwitchType::class);
+            ->add('default_status', SwitchType::class)
+        ;
     }
 
     /**
@@ -71,9 +72,9 @@ class GeneralType extends TranslatorAwareType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
+        $resolver->setDefaults(array(
             'translation_domain' => 'Admin.Shopparameters.Feature',
-        ]);
+        ));
     }
 
     /**

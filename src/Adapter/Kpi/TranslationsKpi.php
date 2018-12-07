@@ -78,7 +78,7 @@ final class TranslationsKpi implements KpiInterface
         $kpi->id = 'box-translations';
         $kpi->icon = 'list';
         $kpi->color = 'color3';
-        $kpi->title = $this->translator->trans('Front office Translations', [], 'Admin.International.Feature');
+        $kpi->title = $this->translator->trans('Front office Translations', array(), 'Admin.International.Feature');
 
         if (false !== $frontOfficeTranslations) {
             $kpi->value = $frontOfficeTranslations;

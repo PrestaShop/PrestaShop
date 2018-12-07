@@ -103,26 +103,26 @@ class PaymentModulePreferencesType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('currency_restrictions', MaterialMultipleChoiceTableType::class, [
+            ->add('currency_restrictions', MaterialMultipleChoiceTableType::class, array(
                 'label' => $this->trans('Currency restrictions', 'Admin.Payment.Feature'),
                 'choices' => $this->getCurrencyChoices(),
                 'multiple_choices' => $this->getCurrencyChoicesForPaymentModules(),
-            ])
-            ->add('country_restrictions', MaterialMultipleChoiceTableType::class, [
+            ))
+            ->add('country_restrictions', MaterialMultipleChoiceTableType::class, array(
                 'label' => $this->trans('Country restrictions', 'Admin.Payment.Feature'),
                 'choices' => $this->countryChoices,
                 'multiple_choices' => $this->getCountryChoicesForPaymentModules(),
-            ])
-            ->add('group_restrictions', MaterialMultipleChoiceTableType::class, [
+            ))
+            ->add('group_restrictions', MaterialMultipleChoiceTableType::class, array(
                 'label' => $this->trans('Group restrictions', 'Admin.Payment.Feature'),
                 'choices' => $this->groupChoices,
                 'multiple_choices' => $this->getGroupChoicesForPaymentModules(),
-            ])
-            ->add('carrier_restrictions', MaterialMultipleChoiceTableType::class, [
+            ))
+            ->add('carrier_restrictions', MaterialMultipleChoiceTableType::class, array(
                 'label' => $this->trans('Carrier restrictions', 'Admin.Payment.Feature'),
                 'choices' => $this->carrierChoices,
                 'multiple_choices' => $this->getCarrierChoicesForPaymentModules(),
-            ])
+            ))
         ;
     }
 
@@ -133,7 +133,7 @@ class PaymentModulePreferencesType extends TranslatorAwareType
      */
     private function getCurrencyChoicesForPaymentModules()
     {
-        $choices = [];
+        $choices = array();
 
         foreach ($this->paymentModules as $paymentModule) {
             $moduleInstance = $paymentModule->getInstance();
@@ -149,12 +149,12 @@ class PaymentModulePreferencesType extends TranslatorAwareType
                 $currencyChoices = $this->currencyChoices;
             }
 
-            $choices[] = [
+            $choices[] = array(
                 'name' => $paymentModule->get('name'),
                 'label' => $paymentModule->get('displayName'),
                 'multiple' => $allowMultipleCurrencies,
                 'choices' => $currencyChoices,
-            ];
+            );
         }
 
         return $choices;
@@ -167,7 +167,7 @@ class PaymentModulePreferencesType extends TranslatorAwareType
      */
     private function getCountryChoicesForPaymentModules()
     {
-        $multipleChoices = [];
+        $multipleChoices = array();
 
         foreach ($this->paymentModules as $paymentModule) {
             $limitedCountries = $paymentModule->get('limited_countries');
@@ -178,12 +178,12 @@ class PaymentModulePreferencesType extends TranslatorAwareType
                 $countryChoices = $this->countryChoices;
             }
 
-            $multipleChoices[] = [
+            $multipleChoices[] = array(
                 'name' => $paymentModule->get('name'),
                 'label' => $paymentModule->get('displayName'),
                 'multiple' => true,
                 'choices' => $countryChoices,
-            ];
+            );
         }
 
         return $multipleChoices;
@@ -196,15 +196,15 @@ class PaymentModulePreferencesType extends TranslatorAwareType
      */
     private function getGroupChoicesForPaymentModules()
     {
-        $groupChoices = [];
+        $groupChoices = array();
 
         foreach ($this->paymentModules as $paymentModule) {
-            $groupChoices[] = [
+            $groupChoices[] = array(
                 'name' => $paymentModule->get('name'),
                 'label' => $paymentModule->get('displayName'),
                 'multiple' => true,
                 'choices' => $this->groupChoices,
-            ];
+            );
         }
 
         return $groupChoices;
@@ -217,15 +217,15 @@ class PaymentModulePreferencesType extends TranslatorAwareType
      */
     private function getCarrierChoicesForPaymentModules()
     {
-        $carrierChoices = [];
+        $carrierChoices = array();
 
         foreach ($this->paymentModules as $paymentModule) {
-            $carrierChoices[] = [
+            $carrierChoices[] = array(
                 'name' => $paymentModule->get('name'),
                 'label' => $paymentModule->get('displayName'),
                 'multiple' => true,
                 'choices' => $this->carrierChoices,
-            ];
+            );
         }
 
         return $carrierChoices;
@@ -251,10 +251,10 @@ class PaymentModulePreferencesType extends TranslatorAwareType
      */
     private function getAdditionalCurrencyChoices()
     {
-        return [
+        return array(
             $this->trans('Customer currency', 'Admin.Payment.Feature') => -1,
             $this->trans('Shop default currency', 'Admin.Payment.Feature') => -2,
-        ];
+        );
     }
 
     /**
@@ -266,7 +266,7 @@ class PaymentModulePreferencesType extends TranslatorAwareType
      */
     private function getLimitedCountryChoices(array $limitedCountryIsoCodes)
     {
-        $countryChoices = [];
+        $countryChoices = array();
 
         foreach ($limitedCountryIsoCodes as $isoCode) {
             $countryId = $this->countryDataProvider->getIdByIsoCode($isoCode);
@@ -288,7 +288,7 @@ class PaymentModulePreferencesType extends TranslatorAwareType
      */
     private function sortPaymentModules(array $paymentModules)
     {
-        $sortingBy = [];
+        $sortingBy = array();
 
         foreach ($paymentModules as $key => $paymentModule) {
             $sortingBy[$key] = $paymentModule->get('displayName');

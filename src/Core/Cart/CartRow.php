@@ -109,7 +109,7 @@ class CartRow
     /**
      * @var array previous data for product: array given by Cart::getProducts()
      */
-    protected $rowData = [];
+    protected $rowData = array();
 
     /**
      * @var AmountImmutable

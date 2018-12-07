@@ -48,9 +48,9 @@ final class ImageColumn extends AbstractColumn
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver
-            ->setRequired([
+            ->setRequired(array(
                 'src_field',
-            ])
+            ))
             ->setAllowedTypes('src_field', 'string')
         ;
     }

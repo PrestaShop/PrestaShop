@@ -64,7 +64,8 @@ class ThemeExporter
     ) {
         $this->themeExtractor = $themeExtractor;
         $this->themeExtractor
-            ->setThemeProvider($themeProvider);
+            ->setThemeProvider($themeProvider)
+        ;
 
         $this->themeProvider = $themeProvider;
         $this->themeRepository = $themeRepository;
@@ -185,7 +186,8 @@ class ThemeExporter
         $theme = $this->themeRepository->getInstanceByName($themeName);
         $this->themeExtractor
             ->setOutputPath($tmpFolderPath)
-            ->extract($theme, $locale, $rootDir);
+            ->extract($theme, $locale, $rootDir)
+        ;
 
         Flattenizer::flatten($tmpFolderPath . DIRECTORY_SEPARATOR . $locale, $folderPath . DIRECTORY_SEPARATOR . $locale, $locale);
 

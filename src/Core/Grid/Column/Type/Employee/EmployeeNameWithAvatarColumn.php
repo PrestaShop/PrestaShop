@@ -47,9 +47,9 @@ final class EmployeeNameWithAvatarColumn extends AbstractColumn
         parent::configureOptions($resolver);
 
         $resolver
-            ->setRequired([
+            ->setRequired(array(
                 'field',
-            ])
+            ))
             ->setAllowedTypes('field', 'string')
         ;
     }

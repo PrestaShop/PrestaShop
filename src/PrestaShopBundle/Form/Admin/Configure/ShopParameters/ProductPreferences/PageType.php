@@ -49,15 +49,16 @@ class PageType extends AbstractType
             ->add('display_last_quantities', IntegerType::class)
             ->add('display_unavailable_attributes', SwitchType::class)
             ->add('allow_add_variant_to_cart_from_listing', SwitchType::class)
-            ->add('attribute_anchor_separator', ChoiceType::class, [
-                'choices' => [
+            ->add('attribute_anchor_separator', ChoiceType::class, array(
+                'choices' => array(
                     '-' => '-',
                     ',' => ',',
-                ],
+                ),
                 'required' => true,
                 'choice_translation_domain' => 'Admin.Global',
-            ])
-            ->add('display_discount_price', SwitchType::class);
+            ))
+            ->add('display_discount_price', SwitchType::class)
+        ;
     }
 
     /**
@@ -65,9 +66,9 @@ class PageType extends AbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
+        $resolver->setDefaults(array(
             'translation_domain' => 'Admin.Shopparameters.Feature',
-        ]);
+        ));
     }
 
     /**

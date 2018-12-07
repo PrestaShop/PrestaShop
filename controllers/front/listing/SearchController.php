@@ -76,7 +76,8 @@ class SearchControllerCore extends ProductListingFrontController
         $query
             ->setSortOrder(new SortOrder('product', 'position', 'desc'))
             ->setSearchString($this->search_string)
-            ->setSearchTag($this->search_tag);
+            ->setSearchTag($this->search_tag)
+        ;
 
         return $query;
     }

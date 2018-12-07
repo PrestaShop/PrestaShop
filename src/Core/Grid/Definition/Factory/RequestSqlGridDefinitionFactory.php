@@ -79,7 +79,7 @@ final class RequestSqlGridDefinitionFactory extends AbstractGridDefinitionFactor
      */
     protected function getName()
     {
-        return $this->trans('SQL Manager', [], 'Admin.Navigation.Menu');
+        return $this->trans('SQL Manager', array(), 'Admin.Navigation.Menu');
     }
 
     /**
@@ -88,70 +88,79 @@ final class RequestSqlGridDefinitionFactory extends AbstractGridDefinitionFactor
     protected function getColumns()
     {
         return (new ColumnCollection())
-            ->add((new BulkActionColumn('bulk'))
-                ->setOptions([
+            ->add(
+                (new BulkActionColumn('bulk'))
+                ->setOptions(array(
                     'bulk_field' => 'id_request_sql',
-                ])
+                ))
             )
-            ->add((new DataColumn('id_request_sql'))
-                ->setName($this->trans('ID', [], 'Admin.Global'))
-                ->setOptions([
+            ->add(
+                (new DataColumn('id_request_sql'))
+                ->setName($this->trans('ID', array(), 'Admin.Global'))
+                ->setOptions(array(
                     'field' => 'id_request_sql',
-                ])
+                ))
             )
-            ->add((new DataColumn('name'))
-                ->setName($this->trans('SQL query Name', [], 'Admin.Advparameters.Feature'))
-                ->setOptions([
+            ->add(
+                (new DataColumn('name'))
+                ->setName($this->trans('SQL query Name', array(), 'Admin.Advparameters.Feature'))
+                ->setOptions(array(
                     'field' => 'name',
-                ])
+                ))
             )
-            ->add((new DataColumn('sql'))
-                ->setName($this->trans('SQL query', [], 'Admin.Advparameters.Feature'))
-                ->setOptions([
+            ->add(
+                (new DataColumn('sql'))
+                ->setName($this->trans('SQL query', array(), 'Admin.Advparameters.Feature'))
+                ->setOptions(array(
                     'field' => 'sql',
-                ])
+                ))
             )
-            ->add((new ActionColumn('actions'))
-                ->setName($this->trans('Actions', [], 'Admin.Global'))
-                ->setOptions([
+            ->add(
+                (new ActionColumn('actions'))
+                ->setName($this->trans('Actions', array(), 'Admin.Global'))
+                ->setOptions(array(
                     'actions' => (new RowActionCollection())
-                        ->add((new LinkRowAction('export'))
+                        ->add(
+                            (new LinkRowAction('export'))
                             ->setIcon('cloud_download')
-                            ->setOptions([
+                            ->setOptions(array(
                                 'route' => 'admin_sql_requests_export',
                                 'route_param_name' => 'sqlRequestId',
                                 'route_param_field' => 'id_request_sql',
-                            ])
+                            ))
                         )
-                        ->add((new LinkRowAction('view'))
-                            ->setName($this->trans('View', [], 'Admin.Global'))
+                        ->add(
+                            (new LinkRowAction('view'))
+                            ->setName($this->trans('View', array(), 'Admin.Global'))
                             ->setIcon('remove_red_eye')
-                            ->setOptions([
+                            ->setOptions(array(
                                 'route' => 'admin_sql_requests_view',
                                 'route_param_name' => 'sqlRequestId',
                                 'route_param_field' => 'id_request_sql',
-                            ])
+                            ))
                         )
-                        ->add((new LinkRowAction('edit'))
-                            ->setName($this->trans('Edit', [], 'Admin.Global'))
+                        ->add(
+                            (new LinkRowAction('edit'))
+                            ->setName($this->trans('Edit', array(), 'Admin.Global'))
                             ->setIcon('edit')
-                            ->setOptions([
+                            ->setOptions(array(
                                 'route' => 'admin_sql_requests_edit',
                                 'route_param_name' => 'sqlRequestId',
                                 'route_param_field' => 'id_request_sql',
-                            ])
+                            ))
                         )
-                        ->add((new LinkRowAction('delete'))
-                            ->setName($this->trans('Delete', [], 'Admin.Actions'))
+                        ->add(
+                            (new LinkRowAction('delete'))
+                            ->setName($this->trans('Delete', array(), 'Admin.Actions'))
                             ->setIcon('delete')
-                            ->setOptions([
-                                'confirm_message' => $this->trans('Delete selected item?', [], 'Admin.Notifications.Warning'),
+                            ->setOptions(array(
+                                'confirm_message' => $this->trans('Delete selected item?', array(), 'Admin.Notifications.Warning'),
                                 'route' => 'admin_sql_requests_delete',
                                 'route_param_name' => 'sqlRequestId',
                                 'route_param_field' => 'id_request_sql',
-                            ])
+                            ))
                         ),
-                ])
+                ))
             )
         ;
     }
@@ -162,31 +171,35 @@ final class RequestSqlGridDefinitionFactory extends AbstractGridDefinitionFactor
     public function getFilters()
     {
         return (new FilterCollection())
-            ->add((new Filter('id_request_sql', TextType::class))
-                ->setTypeOptions([
+            ->add(
+                (new Filter('id_request_sql', TextType::class))
+                ->setTypeOptions(array(
                     'required' => false,
-                ])
+                ))
                 ->setAssociatedColumn('id_request_sql')
             )
-            ->add((new Filter('name', TextType::class))
-                ->setTypeOptions([
+            ->add(
+                (new Filter('name', TextType::class))
+                ->setTypeOptions(array(
                     'required' => false,
-                ])
+                ))
                 ->setAssociatedColumn('name')
             )
-            ->add((new Filter('sql', TextType::class))
-                ->setTypeOptions([
+            ->add(
+                (new Filter('sql', TextType::class))
+                ->setTypeOptions(array(
                     'required' => false,
-                ])
+                ))
                 ->setAssociatedColumn('sql')
             )
-            ->add((new Filter('actions', SearchAndResetType::class))
-                ->setTypeOptions([
-                    'attr' => [
+            ->add(
+                (new Filter('actions', SearchAndResetType::class))
+                ->setTypeOptions(array(
+                    'attr' => array(
                         'data-url' => $this->resetSearchUrl,
                         'data-redirect' => $this->redirectionUrl,
-                    ],
-                ])
+                    ),
+                ))
                 ->setAssociatedColumn('actions')
             )
         ;
@@ -198,13 +211,14 @@ final class RequestSqlGridDefinitionFactory extends AbstractGridDefinitionFactor
     protected function getBulkActions()
     {
         return (new BulkActionCollection())
-            ->add((new SubmitBulkAction('delete_all'))
-                ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
-                ->setOptions([
+            ->add(
+                (new SubmitBulkAction('delete_all'))
+                ->setName($this->trans('Delete selected', array(), 'Admin.Actions'))
+                ->setOptions(array(
                     'submit_route' => 'admin_sql_requests_delete_bulk',
                     'submit_method' => 'POST',
-                    'confirm_message' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
-                ])
+                    'confirm_message' => $this->trans('Delete selected items?', array(), 'Admin.Notifications.Warning'),
+                ))
             )
         ;
     }
@@ -215,16 +229,19 @@ final class RequestSqlGridDefinitionFactory extends AbstractGridDefinitionFactor
     protected function getGridActions()
     {
         return (new GridActionCollection())
-            ->add((new SimpleGridAction('common_refresh_list'))
-                ->setName($this->trans('Refresh list', [], 'Admin.Advparameters.Feature'))
+            ->add(
+                (new SimpleGridAction('common_refresh_list'))
+                ->setName($this->trans('Refresh list', array(), 'Admin.Advparameters.Feature'))
                 ->setIcon('refresh')
             )
-            ->add((new SimpleGridAction('common_show_query'))
-                ->setName($this->trans('Show SQL query', [], 'Admin.Actions'))
+            ->add(
+                (new SimpleGridAction('common_show_query'))
+                ->setName($this->trans('Show SQL query', array(), 'Admin.Actions'))
                 ->setIcon('code')
             )
-            ->add((new SimpleGridAction('common_export_sql_manager'))
-                ->setName($this->trans('Export to SQL Manager', [], 'Admin.Actions'))
+            ->add(
+                (new SimpleGridAction('common_export_sql_manager'))
+                ->setName($this->trans('Export to SQL Manager', array(), 'Admin.Actions'))
                 ->setIcon('storage')
             )
         ;

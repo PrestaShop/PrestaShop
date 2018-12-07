@@ -49,8 +49,8 @@ class ImportType extends TranslatorAwareType
     {
         $builder
             ->add('csv', HiddenType::class)
-            ->add('entity', ChoiceType::class, [
-                'choices' => [
+            ->add('entity', ChoiceType::class, array(
+                'choices' => array(
                     $this->trans('Categories', 'Admin.Global') => Entity::TYPE_CATEGORIES,
                     $this->trans('Products', 'Admin.Global') => Entity::TYPE_PRODUCTS,
                     $this->trans('Combinations', 'Admin.Global') => Entity::TYPE_COMBINATIONS,
@@ -60,14 +60,14 @@ class ImportType extends TranslatorAwareType
                     $this->trans('Suppliers', 'Admin.Global') => Entity::TYPE_SUPPLIERS,
                     $this->trans('Alias', 'Admin.Shopparameters.Feature') => Entity::TYPE_ALIAS,
                     $this->trans('Store contacts', 'Admin.Advparameters.Feature') => Entity::TYPE_STORE_CONTACTS,
-                ],
-            ])
-            ->add('file', FileType::class, [
+                ),
+            ))
+            ->add('file', FileType::class, array(
                 'required' => false,
-            ])
-            ->add('iso_lang', ChoiceType::class, [
+            ))
+            ->add('iso_lang', ChoiceType::class, array(
                 'choices' => $this->getLocaleChoices(),
-            ])
+            ))
             ->add('separator', TextType::class)
             ->add('multiple_value_separator', TextType::class)
             ->add('truncate', SwitchType::class)
@@ -98,8 +98,8 @@ class ImportType extends TranslatorAwareType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
+        $resolver->setDefaults(array(
             'translation_domain' => 'Admin.Shopparameters.Feature',
-        ]);
+        ));
     }
 }

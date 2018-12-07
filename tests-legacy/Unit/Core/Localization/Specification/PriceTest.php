@@ -40,7 +40,7 @@ class PriceTest extends NumberTest
         $this->latinNumberSpec = new PriceSpecification(
             '',
             '',
-            ['latin' => $this->latinSymbolList, 'arab' => $this->arabSymbolList],
+            array('latin' => $this->latinSymbolList, 'arab' => $this->arabSymbolList),
             3,
             0,
             true,

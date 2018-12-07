@@ -43,7 +43,7 @@ final class Entity
     const TYPE_ALIAS = 7;
     const TYPE_STORE_CONTACTS = 8;
 
-    const AVAILABLE_TYPES = [
+    const AVAILABLE_TYPES = array(
         'categories' => self::TYPE_CATEGORIES,
         'products' => self::TYPE_PRODUCTS,
         'combinations' => self::TYPE_COMBINATIONS,
@@ -53,7 +53,7 @@ final class Entity
         'suppliers' => self::TYPE_SUPPLIERS,
         'alias' => self::TYPE_ALIAS,
         'contacts' => self::TYPE_STORE_CONTACTS,
-    ];
+    );
 
     /**
      * Get import entity type from name.

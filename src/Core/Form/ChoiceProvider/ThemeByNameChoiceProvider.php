@@ -53,7 +53,7 @@ final class ThemeByNameChoiceProvider implements FormChoiceProviderInterface
      */
     public function getChoices()
     {
-        $themeChoices = [];
+        $themeChoices = array();
 
         /** @var Theme $theme */
         foreach ($this->themeCollection as $theme) {

@@ -49,7 +49,7 @@ class GeneralConfiguration implements DataConfigurationInterface
      */
     public function getConfiguration()
     {
-        return [
+        return array(
             'enable_final_summary' => $this->configuration->getBoolean('PS_FINAL_SUMMARY_ENABLED'),
             'enable_guest_checkout' => $this->configuration->getBoolean('PS_GUEST_CHECKOUT_ENABLED'),
             'disable_reordering_option' => $this->configuration->getBoolean('PS_DISALLOW_HISTORY_REORDERING'),
@@ -59,7 +59,7 @@ class GeneralConfiguration implements DataConfigurationInterface
             'allow_delayed_shipping' => $this->configuration->getBoolean('PS_SHIP_WHEN_AVAILABLE'),
             'enable_tos' => $this->configuration->getBoolean('PS_CONDITIONS'),
             'tos_cms_id' => $this->configuration->get('PS_CONDITIONS_CMS_ID'),
-        ];
+        );
     }
 
     /**
@@ -79,7 +79,7 @@ class GeneralConfiguration implements DataConfigurationInterface
             $this->configuration->set('PS_CONDITIONS_CMS_ID', $configuration['tos_cms_id']);
         }
 
-        return [];
+        return array();
     }
 
     /**

@@ -104,7 +104,7 @@ final class LanguageQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     private function applyFilters(QueryBuilder $builder, SearchCriteriaInterface $searchCriteria)
     {
-        $allowedFilters = [
+        $allowedFilters = array(
             'id_lang',
             'name',
             'iso_code',
@@ -112,14 +112,14 @@ final class LanguageQueryBuilder extends AbstractDoctrineQueryBuilder
             'date_format_lite',
             'date_format_full',
             'active',
-        ];
+        );
 
         foreach ($searchCriteria->getFilters() as $filterName => $filterValue) {
             if (!in_array($filterName, $allowedFilters)) {
                 continue;
             }
 
-            if (in_array($filterName, ['id_lang', 'active'])) {
+            if (in_array($filterName, array('id_lang', 'active'))) {
                 $builder->andWhere($filterName . ' = :' . $filterName);
                 $builder->setParameter($filterName, $filterValue);
 

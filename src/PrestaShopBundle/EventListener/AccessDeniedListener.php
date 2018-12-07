@@ -124,7 +124,7 @@ class AccessDeniedListener
             'error',
             $this->translator->trans(
                 $adminSecurity->getMessage(),
-                [],
+                array(),
                 $adminSecurity->getDomain()
             )
         );
@@ -140,7 +140,7 @@ class AccessDeniedListener
      */
     private function getQueryParamsFromRequestQuery(array $queryParametersToKeep, Request $request)
     {
-        $result = [];
+        $result = array();
 
         foreach ($queryParametersToKeep as $queryParameterName) {
             $value = $request->get($queryParameterName);

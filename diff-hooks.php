@@ -48,13 +48,13 @@ function generateJSON($commonHooks, $hooksOnly16, $hooksOnly17, $hooks16, $hooks
 {
     $a = file_put_contents(
         'hooks.json',
-        json_encode([
+        json_encode(array(
             '1.6' => $hooks16,
             '1.7' => $hooks17,
             'common' => $commonHooks,
             '1.6-only' => $hooksOnly16,
             '1.7-only' => $hooksOnly17,
-        ], JSON_PRETTY_PRINT)
+        ), JSON_PRETTY_PRINT)
     );
 
     exit($a);
@@ -62,7 +62,7 @@ function generateJSON($commonHooks, $hooksOnly16, $hooksOnly17, $hooks16, $hooks
 
 function generateHTML($commonHooks, $hooksOnly16, $hooksOnly17, $hooks16, $hooks17)
 {
-    $html  =  '
+    $html = '
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -76,7 +76,7 @@ function generateHTML($commonHooks, $hooksOnly16, $hooksOnly17, $hooks16, $hooks
   <body>
     <div class="container">';
 
-    $html .=  '<h1>Common hooks</h1>';
+    $html .= '<h1>Common hooks</h1>';
     $html .= '<table class="table table-bordered">';
     $html .= '<thead>';
     $html .= '<tr>';
@@ -149,7 +149,7 @@ function generateHTML($commonHooks, $hooksOnly16, $hooksOnly17, $hooks16, $hooks
 
 function getFormattedHookList($hookList, $folder)
 {
-    $list = [];
+    $list = array();
 
     foreach ($hookList as $hook) {
         $line = explode(':', $hook, 2);

@@ -53,47 +53,47 @@ class ImageTagSourceParserTest extends TestCase
 
     public function getTestCases()
     {
-        return [
-            [
+        return array(
+            array(
                 '<img src="/path/to/my_image.jpg">',
                 '/my-shop/path/to/my_image.jpg',
-            ],
-            [
+            ),
+            array(
                 '<img src="../path/to/my_image.jpg">',
                 '/my-shop/path/to/my_image.jpg',
-            ],
-            [
+            ),
+            array(
                 '<img class="test" src="../path/to/my_image.jpg" alt="some alt text">',
                 '/my-shop/path/to/my_image.jpg',
-            ],
-            [
+            ),
+            array(
                 '<img class="test" src="../path/to/my_image.jpg?time=123" alt="some alt text">',
                 '/my-shop/path/to/my_image.jpg?time=123',
-            ],
-            [
+            ),
+            array(
                 '<img class="test" src="../.././path/to/my_image.jpg?time=123" alt="some alt text">',
                 '/my-shop/path/to/my_image.jpg?time=123',
-            ],
-            [
+            ),
+            array(
                 '<img class="test" src="../../../../../../../path/to/my_image.jpg?time=123" alt="some alt text">',
                 '/my-shop/path/to/my_image.jpg?time=123',
-            ],
-            [
+            ),
+            array(
                 '<img class="test" src="./../../../path/to/my_image.jpg?time=123" alt="some alt text">',
                 '/my-shop/path/to/my_image.jpg?time=123',
-            ],
-            [
+            ),
+            array(
                 '<img class="test">',
                 null,
-            ],
-            [
+            ),
+            array(
                 'random string',
                 null,
-            ],
-            [
+            ),
+            array(
                 '<img class="">',
                 null,
-            ],
-        ];
+            ),
+        );
     }
 }

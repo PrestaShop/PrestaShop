@@ -48,9 +48,9 @@ class CurrencyTest extends TestCase
             1,
             'EUR',
             978,
-            ['fr-FR' => '€'],
+            array('fr-FR' => '€'),
             2,
-            ['fr-FR' => 'euro']
+            array('fr-FR' => 'euro')
         );
     }
 

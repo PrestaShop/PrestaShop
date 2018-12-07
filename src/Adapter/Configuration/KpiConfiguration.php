@@ -44,9 +44,9 @@ class KpiConfiguration extends Configuration
      */
     public function __call($name, $arguments)
     {
-        if (is_callable([$this, $name])) {
+        if (is_callable(array($this, $name))) {
             ConfigurationKPI::setKpiDefinition();
-            $result = call_user_func([$this, $name], $arguments);
+            $result = call_user_func(array($this, $name), $arguments);
             ConfigurationKPI::unsetKpiDefinition();
 
             return $result;

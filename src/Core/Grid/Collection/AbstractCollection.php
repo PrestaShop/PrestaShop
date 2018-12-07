@@ -37,7 +37,7 @@ abstract class AbstractCollection implements Iterator, Countable
     /**
      * @var array
      */
-    protected $items = [];
+    protected $items = array();
 
     /**
      * {@inheritdoc}

@@ -90,7 +90,7 @@ final class EmailLogsDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getName()
     {
-        return $this->trans('E-mail', [], 'Admin.Navigation.Menu');
+        return $this->trans('E-mail', array(), 'Admin.Navigation.Menu');
     }
 
     /**
@@ -99,65 +99,74 @@ final class EmailLogsDefinitionFactory extends AbstractGridDefinitionFactory
     protected function getColumns()
     {
         return (new ColumnCollection())
-            ->add((new BulkActionColumn('delete_email_logs'))
-                ->setOptions([
+            ->add(
+                (new BulkActionColumn('delete_email_logs'))
+                ->setOptions(array(
                     'bulk_field' => 'id_mail',
-                ])
+                ))
             )
-            ->add((new DataColumn('id_mail'))
-                ->setName($this->trans('ID', [], 'Admin.Global'))
-                ->setOptions([
+            ->add(
+                (new DataColumn('id_mail'))
+                ->setName($this->trans('ID', array(), 'Admin.Global'))
+                ->setOptions(array(
                     'field' => 'id_mail',
-                ])
+                ))
             )
-            ->add((new DataColumn('recipient'))
-                ->setName($this->trans('Recipient', [], 'Admin.Advparameters.Feature'))
-                ->setOptions([
+            ->add(
+                (new DataColumn('recipient'))
+                ->setName($this->trans('Recipient', array(), 'Admin.Advparameters.Feature'))
+                ->setOptions(array(
                     'field' => 'recipient',
-                ])
+                ))
             )
-            ->add((new DataColumn('template'))
-                ->setName($this->trans('Template', [], 'Admin.Advparameters.Feature'))
-                ->setOptions([
+            ->add(
+                (new DataColumn('template'))
+                ->setName($this->trans('Template', array(), 'Admin.Advparameters.Feature'))
+                ->setOptions(array(
                     'field' => 'template',
-                ])
+                ))
             )
-            ->add((new DataColumn('language'))
-                ->setName($this->trans('Language', [], 'Admin.Global'))
-                ->setOptions([
+            ->add(
+                (new DataColumn('language'))
+                ->setName($this->trans('Language', array(), 'Admin.Global'))
+                ->setOptions(array(
                     'field' => 'language',
-                ])
+                ))
             )
-            ->add((new DataColumn('subject'))
-                ->setName($this->trans('Subject', [], 'Admin.Advparameters.Feature'))
-                ->setOptions([
+            ->add(
+                (new DataColumn('subject'))
+                ->setName($this->trans('Subject', array(), 'Admin.Advparameters.Feature'))
+                ->setOptions(array(
                     'field' => 'subject',
-                ])
+                ))
             )
-            ->add((new DataColumn('date_add'))
-                ->setName($this->trans('Sent', [], 'Admin.Advparameters.Feature'))
-                ->setOptions([
+            ->add(
+                (new DataColumn('date_add'))
+                ->setName($this->trans('Sent', array(), 'Admin.Advparameters.Feature'))
+                ->setOptions(array(
                     'field' => 'date_add',
-                ])
+                ))
             )
-            ->add((new ActionColumn('actions'))
-                ->setName($this->trans('Actions', [], 'Admin.Global'))
-                ->setOptions([
+            ->add(
+                (new ActionColumn('actions'))
+                ->setName($this->trans('Actions', array(), 'Admin.Global'))
+                ->setOptions(array(
                     'actions' => (new RowActionCollection())
-                        ->add((new LinkRowAction('delete'))
+                        ->add(
+                            (new LinkRowAction('delete'))
                             ->setIcon('delete')
-                            ->setOptions([
+                            ->setOptions(array(
                                 'route' => 'admin_emails_delete',
                                 'route_param_name' => 'mailId',
                                 'route_param_field' => 'id_mail',
                                 'confirm_message' => $this->trans(
                                     'Delete selected item?',
-                                    [],
+                                    array(),
                                     'Admin.Notifications.Warning'
                                 ),
-                            ])
+                            ))
                         ),
-                ])
+                ))
             )
         ;
     }
@@ -168,51 +177,58 @@ final class EmailLogsDefinitionFactory extends AbstractGridDefinitionFactory
     protected function getFilters()
     {
         return (new FilterCollection())
-            ->add((new Filter('id_mail', TextType::class))
-                ->setTypeOptions([
+            ->add(
+                (new Filter('id_mail', TextType::class))
+                ->setTypeOptions(array(
                     'required' => false,
-                ])
+                ))
                 ->setAssociatedColumn('id_mail')
             )
-            ->add((new Filter('recipient', TextType::class))
-                ->setTypeOptions([
+            ->add(
+                (new Filter('recipient', TextType::class))
+                ->setTypeOptions(array(
                     'required' => false,
-                ])
+                ))
                 ->setAssociatedColumn('recipient')
             )
-            ->add((new Filter('template', TextType::class))
-                ->setTypeOptions([
+            ->add(
+                (new Filter('template', TextType::class))
+                ->setTypeOptions(array(
                     'required' => false,
-                ])
+                ))
                 ->setAssociatedColumn('template')
             )
-            ->add((new Filter('id_lang', ChoiceType::class))
-                ->setTypeOptions([
+            ->add(
+                (new Filter('id_lang', ChoiceType::class))
+                ->setTypeOptions(array(
                     'required' => false,
                     'choices' => $this->languageChoiceProvider->getChoices(),
                     'choice_translation_domain' => false,
-                ])
+                ))
                 ->setAssociatedColumn('language')
             )
-            ->add((new Filter('subject', TextType::class))
-                ->setTypeOptions([
+            ->add(
+                (new Filter('subject', TextType::class))
+                ->setTypeOptions(array(
                     'required' => false,
-                ])
+                ))
                 ->setAssociatedColumn('subject')
             )
-            ->add((new Filter('date_add', DateRangeType::class))
-                ->setTypeOptions([
+            ->add(
+                (new Filter('date_add', DateRangeType::class))
+                ->setTypeOptions(array(
                     'required' => false,
-                ])
+                ))
                 ->setAssociatedColumn('date_add')
             )
-            ->add((new Filter('actions', SearchAndResetType::class))
-                ->setTypeOptions([
-                    'attr' => [
+            ->add(
+                (new Filter('actions', SearchAndResetType::class))
+                ->setTypeOptions(array(
+                    'attr' => array(
                         'data-url' => $this->resetActionUrl,
                         'data-redirect' => $this->redirectionUrl,
-                    ],
-                ])
+                    ),
+                ))
                 ->setAssociatedColumn('actions')
             )
         ;
@@ -224,24 +240,28 @@ final class EmailLogsDefinitionFactory extends AbstractGridDefinitionFactory
     protected function getGridActions()
     {
         return (new GridActionCollection())
-            ->add((new SubmitGridAction('delete_all_email_logs'))
-                ->setName($this->trans('Erase all', [], 'Admin.Advparameters.Feature'))
+            ->add(
+                (new SubmitGridAction('delete_all_email_logs'))
+                ->setName($this->trans('Erase all', array(), 'Admin.Advparameters.Feature'))
                 ->setIcon('delete')
-                ->setOptions([
+                ->setOptions(array(
                     'submit_route' => 'admin_emails_delete_all',
-                    'confirm_message' => $this->trans('Are you sure?', [], 'Admin.Notifications.Warning'),
-                ])
+                    'confirm_message' => $this->trans('Are you sure?', array(), 'Admin.Notifications.Warning'),
+                ))
             )
-            ->add((new SimpleGridAction('common_refresh_list'))
-                ->setName($this->trans('Refresh list', [], 'Admin.Advparameters.Feature'))
+            ->add(
+                (new SimpleGridAction('common_refresh_list'))
+                ->setName($this->trans('Refresh list', array(), 'Admin.Advparameters.Feature'))
                 ->setIcon('refresh')
             )
-            ->add((new SimpleGridAction('common_show_query'))
-                ->setName($this->trans('Show SQL query', [], 'Admin.Actions'))
+            ->add(
+                (new SimpleGridAction('common_show_query'))
+                ->setName($this->trans('Show SQL query', array(), 'Admin.Actions'))
                 ->setIcon('code')
             )
-            ->add((new SimpleGridAction('common_export_sql_manager'))
-                ->setName($this->trans('Export to SQL Manager', [], 'Admin.Actions'))
+            ->add(
+                (new SimpleGridAction('common_export_sql_manager'))
+                ->setName($this->trans('Export to SQL Manager', array(), 'Admin.Actions'))
                 ->setIcon('storage')
             )
         ;
@@ -253,12 +273,13 @@ final class EmailLogsDefinitionFactory extends AbstractGridDefinitionFactory
     protected function getBulkActions()
     {
         return (new BulkActionCollection())
-            ->add((new SubmitBulkAction('delete_email_logs'))
-                ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
-                ->setOptions([
+            ->add(
+                (new SubmitBulkAction('delete_email_logs'))
+                ->setName($this->trans('Delete selected', array(), 'Admin.Actions'))
+                ->setOptions(array(
                     'submit_route' => 'admin_emails_delete_bulk',
-                    'confirm_message' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
-                ])
+                    'confirm_message' => $this->trans('Delete selected items?', array(), 'Admin.Notifications.Warning'),
+                ))
             )
         ;
     }

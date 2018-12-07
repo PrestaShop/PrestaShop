@@ -108,13 +108,13 @@ namespace PrestaShopBundle\Install {
         const FILE_PREFIX = 'PREFIX_';
         const ENGINE_TYPE = 'ENGINE_TYPE';
 
-        private static $classes14 = ['Cache', 'CacheFS', 'CarrierModule', 'Db', 'FrontController', 'Helper', 'ImportModule',
+        private static $classes14 = array('Cache', 'CacheFS', 'CarrierModule', 'Db', 'FrontController', 'Helper', 'ImportModule',
             'MCached', 'Module', 'ModuleGraph', 'ModuleGraphEngine', 'ModuleGrid', 'ModuleGridEngine',
             'MySQL', 'Order', 'OrderDetail', 'OrderDiscount', 'OrderHistory', 'OrderMessage', 'OrderReturn',
             'OrderReturnState', 'OrderSlip', 'OrderState', 'PDF', 'RangePrice', 'RangeWeight', 'StockMvt',
-            'StockMvtReason', 'SubDomain', 'Shop', 'Tax', 'TaxRule', 'TaxRulesGroup', 'WebserviceKey', 'WebserviceRequest', '', ];
+            'StockMvtReason', 'SubDomain', 'Shop', 'Tax', 'TaxRule', 'TaxRulesGroup', 'WebserviceKey', 'WebserviceRequest', '', );
 
-        private static $incompatibleModules = [
+        private static $incompatibleModules = array(
             'bankwire',
             'blockbanner',
             'blockcart',
@@ -165,7 +165,7 @@ namespace PrestaShopBundle\Install {
             'productpaymentlogos',
             'sendtoafriend',
             'themeconfigurator',
-        ];
+        );
 
         public function __construct($cacheDir, $installDir)
         {
@@ -364,8 +364,11 @@ namespace PrestaShopBundle\Install {
             }
 
             if (strpos(_PS_INSTALL_VERSION_, '.') === false) {
-                $this->logError('%install_version% is not a valid version number.', 40,
-                    array('%install_version%' => _PS_INSTALL_VERSION_));
+                $this->logError(
+                    '%install_version% is not a valid version number.',
+                    40,
+                    array('%install_version%' => _PS_INSTALL_VERSION_)
+                );
             }
         }
 
@@ -519,7 +522,8 @@ namespace PrestaShopBundle\Install {
 
             $filters = new AddonListFilter();
             $filters->setType(AddonListFilterType::MODULE)
-                ->removeStatus(AddonListFilterStatus::UNINSTALLED);
+                ->removeStatus(AddonListFilterStatus::UNINSTALLED)
+            ;
 
             $installedProducts = $moduleRepository->getFilteredList($filters);
             foreach ($installedProducts as $installedProduct) {

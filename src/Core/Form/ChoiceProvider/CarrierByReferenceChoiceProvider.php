@@ -60,7 +60,7 @@ final class CarrierByReferenceChoiceProvider implements FormChoiceProviderInterf
      */
     public function getChoices()
     {
-        $choices = [];
+        $choices = array();
 
         $carriers = $this->carrierDataProvider->getCarriers(
             $this->langId,

@@ -296,7 +296,7 @@ abstract class PaymentModuleCore extends Module
                 if (($rule = new CartRule((int) $cart_rule['obj']->id)) && Validate::isLoadedObject($rule)) {
                     if ($error = $rule->checkValidity($this->context, true, true)) {
                         $this->context->cart->removeCartRule((int) $rule->id);
-                        if (isset($this->context->cookie) && isset($this->context->cookie->id_customer) && $this->context->cookie->id_customer && !empty($rule->code)) {
+                        if (isset($this->context->cookie, $this->context->cookie->id_customer) && $this->context->cookie->id_customer && !empty($rule->code)) {
                             Tools::redirect('index.php?controller=order&submitAddDiscount=1&discount_name=' . urlencode($rule->code));
                         } else {
                             $rule_name = isset($rule->name[(int) $this->context->cart->id_lang]) ? $rule->name[(int) $this->context->cart->id_lang] : $rule->code;
@@ -649,7 +649,13 @@ abstract class PaymentModuleCore extends Module
                                     $params,
                                     $this->context->customer->email,
                                     $this->context->customer->firstname . ' ' . $this->context->customer->lastname,
-                                    null, null, null, null, _PS_MAIL_DIR_, false, (int) $order->id_shop
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    _PS_MAIL_DIR_,
+                                    false,
+                                    (int) $order->id_shop
                                 );
                             }
 
@@ -860,7 +866,10 @@ abstract class PaymentModuleCore extends Module
                                 null,
                                 null,
                                 $file_attachement,
-                                null, _PS_MAIL_DIR_, false, (int) $order->id_shop
+                                null,
+                                _PS_MAIL_DIR_,
+                                false,
+                                (int) $order->id_shop
                             );
                         }
                     }

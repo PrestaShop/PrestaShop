@@ -54,110 +54,110 @@ class LegacyUrlConverterTest extends LightWebTestCase
      */
     public static function getMigratedControllers()
     {
-        return [
-            'admin_administration' => ['/configure/advanced/administration/', 'AdminAdminPreferences'],
-            'admin_administration_save' => ['/configure/advanced/administration/', 'AdminAdminPreferences', 'update'],
+        return array(
+            'admin_administration' => array('/configure/advanced/administration/', 'AdminAdminPreferences'),
+            'admin_administration_save' => array('/configure/advanced/administration/', 'AdminAdminPreferences', 'update'),
 
-            'admin_backups' => ['/configure/advanced/backups/', 'AdminBackup'],
-            'admin_backups_save_options' => ['/configure/advanced/backups/', 'AdminBackup', 'update'],
-            'admin_backups_create' => ['/configure/advanced/backups/new', 'AdminBackup', 'addbackup'],
-            'admin_backups_delete' => ['/configure/advanced/backups/backup_file.zip', 'AdminBackup', 'delete', ['filename' => 'backup_file.zip']],
-            'admin_backups_bulk_delete' => ['/configure/advanced/backups/bulk-delete/', 'AdminBackup', 'submitBulkdeletebackup'],
+            'admin_backups' => array('/configure/advanced/backups/', 'AdminBackup'),
+            'admin_backups_save_options' => array('/configure/advanced/backups/', 'AdminBackup', 'update'),
+            'admin_backups_create' => array('/configure/advanced/backups/new', 'AdminBackup', 'addbackup'),
+            'admin_backups_delete' => array('/configure/advanced/backups/backup_file.zip', 'AdminBackup', 'delete', array('filename' => 'backup_file.zip')),
+            'admin_backups_bulk_delete' => array('/configure/advanced/backups/bulk-delete/', 'AdminBackup', 'submitBulkdeletebackup'),
 
-            'admin_module_catalog' => ['/improve/modules/catalog', 'AdminModulesCatalog'],
-            'admin_module_catalog_refresh' => ['/improve/modules/catalog/refresh', 'AdminModulesCatalog', 'refresh'],
-            'admin_module_catalog_post' => ['/improve/modules/catalog/recommended', 'AdminModulesCatalog', 'recommended'],
+            'admin_module_catalog' => array('/improve/modules/catalog', 'AdminModulesCatalog'),
+            'admin_module_catalog_refresh' => array('/improve/modules/catalog/refresh', 'AdminModulesCatalog', 'refresh'),
+            'admin_module_catalog_post' => array('/improve/modules/catalog/recommended', 'AdminModulesCatalog', 'recommended'),
 
-            'admin_module_manage' => ['/improve/modules/manage', 'AdminModulesManage'],
-            'admin_module_manage_alias' => ['/improve/modules/manage', 'AdminModulesSf'],
+            'admin_module_manage' => array('/improve/modules/manage', 'AdminModulesManage'),
+            'admin_module_manage_alias' => array('/improve/modules/manage', 'AdminModulesSf'),
 
-            'admin_module_notification' => ['/improve/modules/alerts', 'AdminModulesNotifications'],
-            'admin_module_notification_count' => ['/improve/modules/alerts/count', 'AdminModulesNotifications', 'count'],
+            'admin_module_notification' => array('/improve/modules/alerts', 'AdminModulesNotifications'),
+            'admin_module_notification_count' => array('/improve/modules/alerts/count', 'AdminModulesNotifications', 'count'),
 
-            'admin_module_updates' => ['/improve/modules/updates', 'AdminModulesUpdates'],
+            'admin_module_updates' => array('/improve/modules/updates', 'AdminModulesUpdates'),
 
-            'admin_module_addons_store' => ['/improve/modules/addons-store', 'AdminAddonsCatalog'],
+            'admin_module_addons_store' => array('/improve/modules/addons-store', 'AdminAddonsCatalog'),
 
-            'admin_modules_positions' => ['/improve/design/modules/positions/', 'AdminModulesPositions'],
-            'admin_modules_positions_unhook' => ['/improve/design/modules/positions/unhook', 'AdminModulesPositions', 'unhook'],
+            'admin_modules_positions' => array('/improve/design/modules/positions/', 'AdminModulesPositions'),
+            'admin_modules_positions_unhook' => array('/improve/design/modules/positions/unhook', 'AdminModulesPositions', 'unhook'),
 
-            'admin_customer_preferences' => ['/configure/shop/customer-preferences/', 'AdminCustomerPreferences'],
-            'admin_customer_preferences_process' => ['/configure/shop/customer-preferences/', 'AdminCustomerPreferences', 'update'],
+            'admin_customer_preferences' => array('/configure/shop/customer-preferences/', 'AdminCustomerPreferences'),
+            'admin_customer_preferences_process' => array('/configure/shop/customer-preferences/', 'AdminCustomerPreferences', 'update'),
 
-            'admin_order_delivery_slip' => ['/sell/orders/delivery-slips/', 'AdminDeliverySlip'],
-            'admin_order_delivery_slip_pdf' => ['/sell/orders/delivery-slips/pdf', 'AdminDeliverySlip', 'submitAdddelivery'],
+            'admin_order_delivery_slip' => array('/sell/orders/delivery-slips/', 'AdminDeliverySlip'),
+            'admin_order_delivery_slip_pdf' => array('/sell/orders/delivery-slips/pdf', 'AdminDeliverySlip', 'submitAdddelivery'),
 
-            'admin_import' => ['/configure/advanced/import/', 'AdminImport'],
-            'admin_import_file_upload' => ['/configure/advanced/import/file/upload', 'AdminImport', 'uploadCsv'],
-            'admin_import_file_delete' => ['/configure/advanced/import/file/delete', 'AdminImport', 'delete'],
-            'admin_import_file_download' => ['/configure/advanced/import/file/download', 'AdminImport', 'download'],
-            'admin_import_sample_download' => ['/configure/advanced/import/sample/download/categories_import', 'AdminImport', 'sampleDownload', ['sampleName' => 'categories_import']],
+            'admin_import' => array('/configure/advanced/import/', 'AdminImport'),
+            'admin_import_file_upload' => array('/configure/advanced/import/file/upload', 'AdminImport', 'uploadCsv'),
+            'admin_import_file_delete' => array('/configure/advanced/import/file/delete', 'AdminImport', 'delete'),
+            'admin_import_file_download' => array('/configure/advanced/import/file/download', 'AdminImport', 'download'),
+            'admin_import_sample_download' => array('/configure/advanced/import/sample/download/categories_import', 'AdminImport', 'sampleDownload', array('sampleName' => 'categories_import')),
 
-            'admin_system_information' => ['/configure/advanced/system-information/', 'AdminInformation'],
-            'admin_system_information_check_files' => ['/configure/advanced/system-information/files', 'AdminInformation', 'checkFiles'],
+            'admin_system_information' => array('/configure/advanced/system-information/', 'AdminInformation'),
+            'admin_system_information_check_files' => array('/configure/advanced/system-information/files', 'AdminInformation', 'checkFiles'),
 
-            'admin_logs_index' => ['/configure/advanced/logs/', 'AdminLogs'],
-            'admin_logs_save_settings' => ['/configure/advanced/logs/settings', 'AdminLogs', 'update'],
-            'admin_logs_delete_all' => ['/configure/advanced/logs/delete-all', 'AdminLogs', 'deletelog'],
+            'admin_logs_index' => array('/configure/advanced/logs/', 'AdminLogs'),
+            'admin_logs_save_settings' => array('/configure/advanced/logs/settings', 'AdminLogs', 'update'),
+            'admin_logs_delete_all' => array('/configure/advanced/logs/delete-all', 'AdminLogs', 'deletelog'),
 
-            'admin_maintenance' => ['/configure/shop/maintenance/', 'AdminMaintenance'],
-            'admin_maintenance_save' => ['/configure/shop/maintenance/', 'AdminMaintenance', 'update'],
+            'admin_maintenance' => array('/configure/shop/maintenance/', 'AdminMaintenance'),
+            'admin_maintenance_save' => array('/configure/shop/maintenance/', 'AdminMaintenance', 'update'),
 
-            'admin_order_preferences' => ['/configure/shop/order-preferences/', 'AdminOrderPreferences'],
-            'admin_order_preferences_save' => ['/configure/shop/order-preferences/', 'AdminOrderPreferences', 'update'],
+            'admin_order_preferences' => array('/configure/shop/order-preferences/', 'AdminOrderPreferences'),
+            'admin_order_preferences_save' => array('/configure/shop/order-preferences/', 'AdminOrderPreferences', 'update'),
 
-            'admin_product_preferences' => ['/configure/shop/product-preferences/', 'AdminPPreferences'],
-            'admin_product_preferences_process' => ['/configure/shop/product-preferences/', 'AdminPPreferences', 'update'],
+            'admin_product_preferences' => array('/configure/shop/product-preferences/', 'AdminPPreferences'),
+            'admin_product_preferences_process' => array('/configure/shop/product-preferences/', 'AdminPPreferences', 'update'),
 
-            'admin_performance' => ['/configure/advanced/performance/', 'AdminPerformance'],
-            'admin_performance_save' => ['/configure/advanced/performance/', 'AdminPerformance', 'update'],
-            'admin_clear_cache' => ['/configure/advanced/performance/clear-cache', 'AdminPerformance', 'empty_smarty_cache'],
-            'admin_servers_add' => ['/configure/advanced/performance/memcache/servers', 'AdminPerformance', 'submitAddServer'],
-            'admin_servers_delete' => ['/configure/advanced/performance/memcache/servers', 'AdminPerformance', 'deleteMemcachedServer'],
+            'admin_performance' => array('/configure/advanced/performance/', 'AdminPerformance'),
+            'admin_performance_save' => array('/configure/advanced/performance/', 'AdminPerformance', 'update'),
+            'admin_clear_cache' => array('/configure/advanced/performance/clear-cache', 'AdminPerformance', 'empty_smarty_cache'),
+            'admin_servers_add' => array('/configure/advanced/performance/memcache/servers', 'AdminPerformance', 'submitAddServer'),
+            'admin_servers_delete' => array('/configure/advanced/performance/memcache/servers', 'AdminPerformance', 'deleteMemcachedServer'),
 
-            'admin_preferences' => ['/configure/shop/preferences/preferences', 'AdminPreferences'],
-            'admin_preferences_save' => ['/configure/shop/preferences/preferences', 'AdminPreferences', 'update'],
+            'admin_preferences' => array('/configure/shop/preferences/preferences', 'AdminPreferences'),
+            'admin_preferences_save' => array('/configure/shop/preferences/preferences', 'AdminPreferences', 'update'),
 
-            'admin_shipping_preferences' => ['/improve/shipping/preferences', 'AdminShipping'],
-            'admin_shipping_preferences_save' => ['/improve/shipping/preferences', 'AdminShipping', 'update'],
+            'admin_shipping_preferences' => array('/improve/shipping/preferences', 'AdminShipping'),
+            'admin_shipping_preferences_save' => array('/improve/shipping/preferences', 'AdminShipping', 'update'),
 
-            'admin_stock_overview' => ['/sell/stocks/', 'AdminStockManagement'],
+            'admin_stock_overview' => array('/sell/stocks/', 'AdminStockManagement'),
 
-            'admin_theme_catalog' => ['/improve/design/themes-catalog/', 'AdminThemesCatalog'],
+            'admin_theme_catalog' => array('/improve/design/themes-catalog/', 'AdminThemesCatalog'),
 
-            'admin_international_translation_overview' => ['/improve/international/translations/', 'AdminTranslationSf'],
+            'admin_international_translation_overview' => array('/improve/international/translations/', 'AdminTranslationSf'),
 
-            'admin_payment_methods' => ['/improve/payment/payment_methods', 'AdminPayment'],
+            'admin_payment_methods' => array('/improve/payment/payment_methods', 'AdminPayment'),
 
-            'admin_localization_index' => ['/improve/international/localization/', 'AdminLocalization'],
-            'admin_localization_save_options' => ['/improve/international/localization/options', 'AdminLocalization', 'update'],
-            'admin_localization_import_pack' => ['/improve/international/localization/import-pack', 'AdminLocalization', 'submitLocalizationPack'],
+            'admin_localization_index' => array('/improve/international/localization/', 'AdminLocalization'),
+            'admin_localization_save_options' => array('/improve/international/localization/options', 'AdminLocalization', 'update'),
+            'admin_localization_import_pack' => array('/improve/international/localization/import-pack', 'AdminLocalization', 'submitLocalizationPack'),
 
-            'admin_geolocation_index' => ['/improve/international/geolocation/', 'AdminGeolocation'],
-            'admin_geolocation_save_options' => ['/improve/international/geolocation/process_form', 'AdminGeolocation', 'update'],
+            'admin_geolocation_index' => array('/improve/international/geolocation/', 'AdminGeolocation'),
+            'admin_geolocation_save_options' => array('/improve/international/geolocation/process_form', 'AdminGeolocation', 'update'),
 
-            'admin_payment_preferences' => ['/improve/payment/preferences', 'AdminPaymentPreferences'],
-            'admin_payment_preferences_process' => ['/improve/payment/preferences', 'AdminPaymentPreferences', 'update'],
+            'admin_payment_preferences' => array('/improve/payment/preferences', 'AdminPaymentPreferences'),
+            'admin_payment_preferences_process' => array('/improve/payment/preferences', 'AdminPaymentPreferences', 'update'),
 
-            'admin_order_invoices' => ['/sell/orders/invoices/', 'AdminInvoices'],
-            'admin_order_invoices_process' => ['/sell/orders/invoices/', 'AdminInvoices', 'update'],
-            'admin_order_invoices_generate_by_date' => ['/sell/orders/invoices/by_date', 'AdminInvoices', 'submitAddinvoice_date'],
-            'admin_order_invoices_generate_by_status' => ['/sell/orders/invoices/by_status', 'AdminInvoices', 'submitAddinvoice_status'],
+            'admin_order_invoices' => array('/sell/orders/invoices/', 'AdminInvoices'),
+            'admin_order_invoices_process' => array('/sell/orders/invoices/', 'AdminInvoices', 'update'),
+            'admin_order_invoices_generate_by_date' => array('/sell/orders/invoices/by_date', 'AdminInvoices', 'submitAddinvoice_date'),
+            'admin_order_invoices_generate_by_status' => array('/sell/orders/invoices/by_status', 'AdminInvoices', 'submitAddinvoice_status'),
 
-            'admin_emails_index' => ['/configure/advanced/emails/', 'AdminEmails'],
-            'admin_emails_search' => ['/configure/advanced/emails/', 'AdminEmails', 'search'],
-            'admin_emails_save_options' => ['/configure/advanced/emails/options', 'AdminEmails', 'update'],
-            'admin_emails_send_test' => ['/configure/advanced/emails/send-testing-email', 'AdminEmails', 'testEmail'],
-            'admin_emails_delete_bulk' => ['/configure/advanced/emails/delete-bulk', 'AdminEmails', 'submitBulkdeletemail'],
-            'admin_emails_delete_all' => ['/configure/advanced/emails/delete-all', 'AdminEmails', 'deleteAll'],
-            'admin_emails_delete' => ['/configure/advanced/emails/delete/42', 'AdminEmails', 'deletemail', ['id_mail' => 42]],
+            'admin_emails_index' => array('/configure/advanced/emails/', 'AdminEmails'),
+            'admin_emails_search' => array('/configure/advanced/emails/', 'AdminEmails', 'search'),
+            'admin_emails_save_options' => array('/configure/advanced/emails/options', 'AdminEmails', 'update'),
+            'admin_emails_send_test' => array('/configure/advanced/emails/send-testing-email', 'AdminEmails', 'testEmail'),
+            'admin_emails_delete_bulk' => array('/configure/advanced/emails/delete-bulk', 'AdminEmails', 'submitBulkdeletemail'),
+            'admin_emails_delete_all' => array('/configure/advanced/emails/delete-all', 'AdminEmails', 'deleteAll'),
+            'admin_emails_delete' => array('/configure/advanced/emails/delete/42', 'AdminEmails', 'deletemail', array('id_mail' => 42)),
 
-            'admin_metas_index' => ['/configure/shop/seo-urls/', 'AdminMeta'],
-            'admin_metas_search' => ['/configure/shop/seo-urls/', 'AdminMeta', 'search'],
-            'admin_metas_delete' => ['/configure/shop/seo-urls/42/delete', 'AdminMeta', 'deletemeta', ['id_meta' => 42]],
-            'admin_metas_delete_bulk' => ['/configure/shop/seo-urls/delete-bulk', 'AdminMeta', 'submitBulkdeletmeta'],
-            'admin_metas_save_options' => ['/configure/shop/seo-urls/options', 'AdminMeta', 'update'],
-            'admin_metas_generate_robots_file' => ['/configure/shop/seo-urls/generate-robots-file', 'AdminMeta', 'submitRobots'],
+            'admin_metas_index' => array('/configure/shop/seo-urls/', 'AdminMeta'),
+            'admin_metas_search' => array('/configure/shop/seo-urls/', 'AdminMeta', 'search'),
+            'admin_metas_delete' => array('/configure/shop/seo-urls/42/delete', 'AdminMeta', 'deletemeta', array('id_meta' => 42)),
+            'admin_metas_delete_bulk' => array('/configure/shop/seo-urls/delete-bulk', 'AdminMeta', 'submitBulkdeletmeta'),
+            'admin_metas_save_options' => array('/configure/shop/seo-urls/options', 'AdminMeta', 'update'),
+            'admin_metas_generate_robots_file' => array('/configure/shop/seo-urls/generate-robots-file', 'AdminMeta', 'submitRobots'),
 
             //This url is not ready to be migrated yet, the SF controller redirects to the legacy url
             // 'admin_meta_list_create' => ['/configure/shop/seo-urls/create', 'AdminMeta', 'addmeta'],
@@ -187,7 +187,7 @@ class LegacyUrlConverterTest extends LightWebTestCase
             'admin_webservice_status_toggle' => ['/configure/advanced/webservice/status/42', 'AdminWebservice', 'status', ['id_webservice_account' => 42]],
             'admin_webservice_bulk_enable' => ['/configure/advanced/webservice/status/bulk/enable', 'AdminWebservice', 'submitBulkenableSelectionwebservice_account'],
             'admin_webservice_bulk_disable' => ['/configure/advanced/webservice/status/bulk/disable', 'AdminWebservice', 'submitBulkdisableSelectionwebservice_account'],*/
-        ];
+        );
     }
 
     /**
@@ -195,12 +195,12 @@ class LegacyUrlConverterTest extends LightWebTestCase
      */
     public static function getLegacyControllers()
     {
-        return [
-            ['/admin-dev/index.php?controller=AdminLogin', 'AdminLogin'],
-            ['/admin-dev/index.php?controller=AdminModulesPositions&addToHook=', 'AdminModulesPositions', ['addToHook' => '']],
-            ['/admin-dev/index.php?controller=AdminModules', 'AdminModules'],
-            ['/admin-dev/index.php?controller=AdminModules&configure=ps_linklist', 'AdminModules', ['configure' => 'ps_linklist']],
-        ];
+        return array(
+            array('/admin-dev/index.php?controller=AdminLogin', 'AdminLogin'),
+            array('/admin-dev/index.php?controller=AdminModulesPositions&addToHook=', 'AdminModulesPositions', array('addToHook' => '')),
+            array('/admin-dev/index.php?controller=AdminModules', 'AdminModules'),
+            array('/admin-dev/index.php?controller=AdminModules&configure=ps_linklist', 'AdminModules', array('configure' => 'ps_linklist')),
+        );
     }
 
     public function testServiceExists()
@@ -211,8 +211,8 @@ class LegacyUrlConverterTest extends LightWebTestCase
 
     public function testLegacyWithRoute()
     {
-        $routeUrl = $this->link->getAdminLink("AdminModulesCatalog", true, ['route' => "admin_module_catalog_post"]);
-        $this->assertSameUrl('/improve/modules/catalog/recommended', $routeUrl, ['route']);
+        $routeUrl = $this->link->getAdminLink("AdminModulesCatalog", true, array('route' => "admin_module_catalog_post"));
+        $this->assertSameUrl('/improve/modules/catalog/recommended', $routeUrl, array('route'));
     }
 
     public function testDifferentLinkArguments()
@@ -226,16 +226,16 @@ class LegacyUrlConverterTest extends LightWebTestCase
         $routeUrl = $this->link->getAdminLink("AdminModulesCatalog", false);
         $this->assertSameUrl('/improve/modules/catalog', $routeUrl);
 
-        $routeUrl = $this->link->getAdminLink("AdminModulesCatalog", true, []);
+        $routeUrl = $this->link->getAdminLink("AdminModulesCatalog", true, array());
         $this->assertSameUrl('/improve/modules/catalog', $routeUrl);
 
         $routeUrl = $this->link->getAdminLink("AdminModulesCatalog", true, null);
         $this->assertSameUrl('/improve/modules/catalog', $routeUrl);
 
-        $routeUrl = $this->link->getAdminLink("AdminModulesCatalog", true, [], []);
+        $routeUrl = $this->link->getAdminLink("AdminModulesCatalog", true, array(), array());
         $this->assertSameUrl('/improve/modules/catalog', $routeUrl);
 
-        $routeUrl = $this->link->getAdminLink("AdminModulesCatalog", true, [], null);
+        $routeUrl = $this->link->getAdminLink("AdminModulesCatalog", true, array(), null);
         $this->assertSameUrl('/improve/modules/catalog', $routeUrl);
     }
 
@@ -268,10 +268,10 @@ class LegacyUrlConverterTest extends LightWebTestCase
         $caughtException = null;
         $caughtExceptionMessage = '';
         try {
-            $parameters = [
+            $parameters = array(
                 'controller' => $controller,
                 'action' => $action,
-            ];
+            );
             if (null !== $queryParameters) {
                 $parameters = array_merge($parameters, $queryParameters);
             }
@@ -315,13 +315,13 @@ class LegacyUrlConverterTest extends LightWebTestCase
      */
     private function doTestLegacyLinkClass($expectedUrl, $controller, $action = null, array $queryParameters = null)
     {
-        $parameters = [
+        $parameters = array(
             'action' => $action,
-        ];
+        );
         if (null !== $queryParameters) {
             $parameters = array_merge($parameters, $queryParameters);
         }
-        $linkUrl = $this->link->getAdminLink($controller, true, [], $parameters);
+        $linkUrl = $this->link->getAdminLink($controller, true, array(), $parameters);
         $this->assertSameUrl($expectedUrl, $linkUrl);
     }
 
@@ -345,11 +345,11 @@ class LegacyUrlConverterTest extends LightWebTestCase
      */
     private function doTestLegacyClassParameterAction($expectedUrl, $controller, $action = null, array $queryParameters = null)
     {
-        $parameters = null !== $queryParameters ? $queryParameters : [];
+        $parameters = null !== $queryParameters ? $queryParameters : array();
         if (null != $action) {
             $parameters[$action] = '';
         }
-        $linkUrl = $this->link->getAdminLink($controller, true, [], $parameters);
+        $linkUrl = $this->link->getAdminLink($controller, true, array(), $parameters);
         $this->assertSameUrl($expectedUrl, $linkUrl);
     }
 
@@ -374,8 +374,8 @@ class LegacyUrlConverterTest extends LightWebTestCase
      */
     public function doTestLegacyControllers($expectedUrl, $controller, array $parameters = null)
     {
-        $parameters = null === $parameters ? [] : $parameters;
-        $linkUrl = $this->link->getAdminLink($controller, true, [], $parameters);
+        $parameters = null === $parameters ? array() : $parameters;
+        $linkUrl = $this->link->getAdminLink($controller, true, array(), $parameters);
         $this->assertSameUrl($expectedUrl, $linkUrl);
     }
 
@@ -400,7 +400,7 @@ class LegacyUrlConverterTest extends LightWebTestCase
     public function testPostParameters()
     {
         $legacyUrl = $this->link->getAdminBaseLink() . basename(_PS_ADMIN_DIR_) . '/' .  \Dispatcher::getInstance()->createUrl('AdminModulesPositions');
-        $this->client->request('POST', $legacyUrl, ['submitAddToHook' => '']);
+        $this->client->request('POST', $legacyUrl, array('submitAddToHook' => ''));
         $response = $this->client->getResponse();
         $this->assertFalse($response->isRedirection());
         $this->assertNull($response->headers->get('location'));
@@ -431,7 +431,7 @@ class LegacyUrlConverterTest extends LightWebTestCase
     {
         $this->assertNotNull($url);
         $parsedUrl = parse_url($url);
-        $parameters = [];
+        $parameters = array();
         if (isset($parsedUrl['query'])) {
             parse_str($parsedUrl['query'], $parameters);
         }
@@ -444,10 +444,10 @@ class LegacyUrlConverterTest extends LightWebTestCase
             }
         }
 
-        $cleanUrl = http_build_url([
+        $cleanUrl = http_build_url(array(
             'path' => $parsedUrl['path'],
             'query' => http_build_query($parameters),
-        ]);
+        ));
 
         $this->assertNotEmpty($parsedUrl['path']);
         $this->assertTrue($expectedUrl == $cleanUrl, sprintf(

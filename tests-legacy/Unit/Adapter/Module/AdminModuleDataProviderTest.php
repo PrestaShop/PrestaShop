@@ -59,43 +59,51 @@ class AdminModuleDataProviderTest extends UnitTestCase
 
         $this->addonsDataProviderS = $this->getMockBuilder('PrestaShop\PrestaShop\Adapter\Addons\AddonsDataProvider')
             ->disableOriginalConstructor()
-            ->getMock();
+            ->getMock()
+        ;
 
         $this->categoriesProviderS = $this->getMockBuilder('PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider')
             ->disableOriginalConstructor()
-            ->getmock();
+            ->getmock()
+        ;
 
         $this->moduleDataProviderS = $this->getMockBuilder('PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider')
             ->disableOriginalConstructor()
-            ->getMock();
+            ->getMock()
+        ;
 
         /* The module catalog will contains only 5 modules for theses tests */
         $fakeModules = array(
-            $this->fakeModule(1,
+            $this->fakeModule(
+                1,
                 'pm_advancedpack',
                 'Advanced Pack 5 - Create ​​bundles of products',
                 'Cross-selling & Product Bundles',
                 'Allows the sale batch using any stocks actually available products composing your packs, and offers the opportunity to apply business operations'
             ),
-            $this->fakeModule(2,
+            $this->fakeModule(
+                2,
                 'cmcicpaiement',
                 'CM-CIC / Monetico Payment in one instalment',
                 'Payment by Card or Wallet',
                 'Accept bank card payments in your online shop with the CM-CIC / Monetico p@yment&nbsp;module!  This very popular means of secure payment reassures your customers when they make their purchases in your'
             ),
-            $this->fakeModule(3,
+            $this->fakeModule(
+                3,
                 'bitcoinpayment',
                 'Coinbase Payment (Bitcoin)',
                 'Other Payment Methods',
                 'Use the Coinbase payment module to give your customers the possibility of paying for their purchases in your store with Bitcoin!  This module uses the API from Coinbase, a globally recognized Bitcoin'
             ),
-            $this->fakeModule(4,
+            $this->fakeModule(
+                4,
                 'fake_module',
                 'Fake module 1',
                 'PHPUnit Fakes',
                 ''
             ),
-            $this->fakeModule(5,
+            $this->fakeModule(
+                5,
                 'fake_module_2',
                 'Fake module 2',
                 'PHPUnit Fakes',
@@ -170,7 +178,8 @@ class AdminModuleDataProviderTest extends UnitTestCase
                 'cacheProvider' => $this->cacheProviderS,
             ))
             ->setMethods(array('convertJsonForNewCatalog'))
-            ->getMock();
+            ->getMock()
+        ;
 
         $mock->clearCatalogCache();
 

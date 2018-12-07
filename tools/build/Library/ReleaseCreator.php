@@ -71,21 +71,21 @@ class ReleaseCreator
      *
      * @var array
      */
-    protected $filesRemoveList = ['.DS_Store', '.gitignore', '.gitmodules', '.travis.yml'];
+    protected $filesRemoveList = array('.DS_Store', '.gitignore', '.gitmodules', '.travis.yml');
 
     /**
      * Folders to remove.
      *
      * @var array
      */
-    protected $foldersRemoveList = [];
+    protected $foldersRemoveList = array();
 
     /**
      * Pattern of files or directories to remove.
      *
      * @var array
      */
-    protected $patternsRemoveList = [
+    protected $patternsRemoveList = array(
         'tests$',
         'tools/contrib$',
         'travis\-scripts$',
@@ -129,14 +129,14 @@ class ReleaseCreator
         'tools/build$',
         'tools/foreignkeyGenerator$',
         '.*node_modules.*',
-    ];
+    );
 
     /**
      * Contains all files and directories of the PrestaShop release.
      *
      * @var array
      */
-    protected $filesList = [];
+    protected $filesList = array();
 
     /**
      * Absolute path of the temp PrestaShop release.
@@ -266,7 +266,8 @@ class ReleaseCreator
             ->setupShopVersion()
             ->generateLicensesFile()
             ->runComposerInstall()
-            ->createPackage();
+            ->createPackage()
+        ;
         $endTime = date('H:i:s');
         $this->consoleWriter->displayText(
             "{$this->lineSeparator}--- Script ended at {$endTime}{$this->lineSeparator}",
@@ -322,7 +323,8 @@ class ReleaseCreator
         $this->consoleWriter->displayText("Setting files constants...", ConsoleWriter::COLOR_YELLOW);
         $this->setConfigDefinesConstants()
             ->setInstallDevConfigurationConstants()
-            ->setInstallDevInstallVersionConstants();
+            ->setInstallDevInstallVersionConstants()
+        ;
         $this->consoleWriter->displayText(" DONE{$this->lineSeparator}", ConsoleWriter::COLOR_GREEN);
 
         return $this;
@@ -356,7 +358,7 @@ class ReleaseCreator
     protected function getCurrentVersion()
     {
         $kernelFile = $this->projectPath.'/app/AppKernel.php';
-        $matches = [];
+        $matches = array();
 
         $kernelFileContent = file_get_contents($kernelFile);
         $kernelFileContent = preg_match(
@@ -519,7 +521,7 @@ class ReleaseCreator
         if (!file_exists($this->tempProjectPath . '/var/logs/')) {
             mkdir($this->tempProjectPath . '/var/logs', 0777, true);
         }
-        $itemsToRename = ['admin-dev' => 'admin', 'install-dev' => 'install'];
+        $itemsToRename = array('admin-dev' => 'admin', 'install-dev' => 'install');
         $basePath = $this->tempProjectPath;
 
         foreach ($itemsToRename as $oldName => $newName) {
@@ -585,7 +587,7 @@ class ReleaseCreator
         $flags = FilesystemIterator::SKIP_DOTS | RecursiveIteratorIterator::CHILD_FIRST;
         $iterator = new RecursiveDirectoryIterator($path, $flags);
         $childrens = iterator_count($iterator);
-        $structure = [];
+        $structure = array();
 
         if ($childrens > 0) {
             $children = $iterator->getChildren();

@@ -97,7 +97,9 @@ class ModuleZipManager
                 $this->translator->trans(
                     'Unable to find uploaded module at the following path: %file%',
                     array('%file%' => $source),
-                    'Admin.Modules.Notification'));
+                    'Admin.Modules.Notification'
+                )
+            );
         }
 
         $sandboxPath = $this->getSandboxPath($source);
@@ -109,7 +111,9 @@ class ModuleZipManager
                     array(
                         '%path%' => $sandboxPath,
                         '%error%' => $zip->getStatusString(), ),
-                    'Admin.Modules.Notification'));
+                    'Admin.Modules.Notification'
+                )
+            );
         }
 
         // Check the structure and get the module name
@@ -117,8 +121,9 @@ class ModuleZipManager
             ->directories()
             ->in($sandboxPath)
             ->depth('== 0')
-            ->exclude(['__MACOSX'])
-            ->ignoreVCS(true);
+            ->exclude(array('__MACOSX'))
+            ->ignoreVCS(true)
+        ;
 
         $validModuleStructure = false;
         // We must have only one folder in the zip, which contains the module files
@@ -131,8 +136,9 @@ class ModuleZipManager
                     ->files()
                     ->in($sandboxPath . $moduleName)
                     ->depth('== 0')
-                    ->exclude(['__MACOSX'])
-                    ->ignoreVCS(true);
+                    ->exclude(array('__MACOSX'))
+                    ->ignoreVCS(true)
+            ;
             foreach (iterator_to_array($moduleFolder) as $file) {
                 if ($file->getFileName() === $moduleName . '.php') {
                     $validModuleStructure = true;
@@ -146,7 +152,8 @@ class ModuleZipManager
             throw new Exception($this->translator->trans(
                     'This file does not seem to be a valid module zip',
                     array(),
-                    'Admin.Modules.Notification'));
+                    'Admin.Modules.Notification'
+            ));
         }
 
         $this->getSource($source)->setName($moduleName);

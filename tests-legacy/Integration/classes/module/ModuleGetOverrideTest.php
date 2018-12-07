@@ -38,16 +38,16 @@ class ModuleGetOverrideTest extends IntegrationTestCase
      */
     public function listModulesOnDisk()
     {
-        return [
-            ['bankwire'],
-            ['cronjobs'],
-            ['gamification'],
-            ['ganalytics'],
-            ['ps_emailsubscription'],
-            ['ps_featuredproducts'],
-            ['psaddonsconnect'],
-            ['pscsx3241'],
-        ];
+        return array(
+            array('bankwire'),
+            array('cronjobs'),
+            array('gamification'),
+            array('ganalytics'),
+            array('ps_emailsubscription'),
+            array('ps_featuredproducts'),
+            array('psaddonsconnect'),
+            array('pscsx3241'),
+        );
     }
 
     /**

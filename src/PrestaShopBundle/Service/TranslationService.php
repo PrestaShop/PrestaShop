@@ -269,7 +269,8 @@ class TranslationService
                 'domain' => $domain,
                 'key' => $key,
                 'theme' => $theme,
-            ));
+            ))
+        ;
 
         if (is_null($translation)) {
             $translation = new Translation();

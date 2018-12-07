@@ -42,10 +42,11 @@ final class LogsByEmailType extends CommonAbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('logs_by_email', TextType::class, [
+            ->add('logs_by_email', TextType::class, array(
                 'required' => true,
                 'label' => false,
-            ]);
+            ))
+        ;
     }
 
     /**
@@ -53,9 +54,9 @@ final class LogsByEmailType extends CommonAbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
+        $resolver->setDefaults(array(
             'translation_domain' => 'Admin.Advparameters.Feature',
-        ]);
+        ));
     }
 
     /**

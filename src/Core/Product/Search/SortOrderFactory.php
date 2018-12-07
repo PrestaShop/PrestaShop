@@ -39,7 +39,7 @@ class SortOrderFactory
 
     public function getDefaultSortOrders()
     {
-        return [
+        return array(
             (new SortOrder('product', 'position', 'desc'))->setLabel(
                 $this->translator->trans('Relevance', array(), 'Shop.Theme.Catalog')
             ),
@@ -55,6 +55,6 @@ class SortOrderFactory
             (new SortOrder('product', 'price', 'desc'))->setLabel(
                 $this->translator->trans('Price, high to low', array(), 'Shop.Theme.Catalog')
             ),
-        ];
+        );
     }
 }

@@ -50,14 +50,14 @@ class GeneralConfiguration implements DataConfigurationInterface
      */
     public function getConfiguration()
     {
-        return [
+        return array(
             'catalog_mode' => $this->configuration->getBoolean('PS_CATALOG_MODE'),
             'new_days_number' => $this->configuration->get('PS_NB_DAYS_NEW_PRODUCT'),
             'short_description_limit' => $this->configuration->get('PS_PRODUCT_SHORT_DESC_LIMIT'),
             'quantity_discount' => $this->configuration->get('PS_QTY_DISCOUNT_ON_COMBINATION'),
             'force_friendly_url' => $this->configuration->getBoolean('PS_FORCE_FRIENDLY_PRODUCT'),
             'default_status' => $this->configuration->getBoolean('PS_PRODUCT_ACTIVATION_DEFAULT'),
-        ];
+        );
     }
 
     /**
@@ -65,7 +65,7 @@ class GeneralConfiguration implements DataConfigurationInterface
      */
     public function updateConfiguration(array $config)
     {
-        $errors = [];
+        $errors = array();
 
         if ($this->validateConfiguration($config)) {
             $this->configuration->set('PS_CATALOG_MODE', (int) $config['catalog_mode']);
@@ -85,14 +85,14 @@ class GeneralConfiguration implements DataConfigurationInterface
     public function validateConfiguration(array $configuration)
     {
         $resolver = new OptionsResolver();
-        $resolver->setRequired([
+        $resolver->setRequired(array(
             'catalog_mode',
             'new_days_number',
             'short_description_limit',
             'quantity_discount',
             'force_friendly_url',
             'default_status',
-        ]);
+        ));
 
         $resolver->resolve($configuration);
 

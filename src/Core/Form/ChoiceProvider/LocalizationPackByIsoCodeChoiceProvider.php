@@ -87,7 +87,7 @@ final class LocalizationPackByIsoCodeChoiceProvider implements FormChoiceProvide
             $localizationPacks = $this->localLocalizationPackLoader->getLocalizationPackList();
         }
 
-        $choices = [];
+        $choices = array();
 
         if ($localizationPacks) {
             foreach ($localizationPacks as $pack) {
@@ -101,7 +101,8 @@ final class LocalizationPackByIsoCodeChoiceProvider implements FormChoiceProvide
             ->files()
             ->depth('0')
             ->in($rootDir . '/localization')
-            ->name('/^([a-z]{2})\.xml$/');
+            ->name('/^([a-z]{2})\.xml$/')
+        ;
 
         foreach ($finder as $file) {
             list($iso) = explode('.', $file->getFilename());
@@ -112,9 +113,9 @@ final class LocalizationPackByIsoCodeChoiceProvider implements FormChoiceProvide
                 $pack = $this->localLocalizationPackLoader->getLocalizationPack($iso);
                 $packName = $this->translator->trans(
                     '%s (local)',
-                    [
+                    array(
                         (string) $pack['name'],
-                    ],
+                    ),
                     'Admin.International.Feature'
                 );
 

@@ -166,7 +166,7 @@ class Price extends NumberSpecification
         parent::validateData();
 
         if (!isset($this->currencyDisplay)
-            || !in_array($this->currencyDisplay, [self::CURRENCY_DISPLAY_CODE, self::CURRENCY_DISPLAY_SYMBOL])
+            || !in_array($this->currencyDisplay, array(self::CURRENCY_DISPLAY_CODE, self::CURRENCY_DISPLAY_SYMBOL))
         ) {
             throw new LocalizationException('Invalid currencyDisplay');
         }

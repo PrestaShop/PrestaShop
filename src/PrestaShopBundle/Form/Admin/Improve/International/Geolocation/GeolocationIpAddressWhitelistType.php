@@ -43,13 +43,13 @@ class GeolocationIpAddressWhitelistType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('geolocation_whitelist', TextareaType::class, [
+            ->add('geolocation_whitelist', TextareaType::class, array(
                 'required' => false,
-                'attr' => [
+                'attr' => array(
                     'col' => 15,
                     'rows' => 30,
-                ],
-            ])
+                ),
+            ))
         ;
 
         $builder->get('geolocation_whitelist')
@@ -58,7 +58,7 @@ class GeolocationIpAddressWhitelistType extends AbstractType
                     return str_replace(';', "\n", $ipWhitelistTextWithSemiColons);
                 },
                 function ($ipWhitelistTextWithNewLines) {
-                    return str_replace(["\r\n", "\r", "\n"], ';', $ipWhitelistTextWithNewLines);
+                    return str_replace(array("\r\n", "\r", "\n"), ';', $ipWhitelistTextWithNewLines);
                 }
             ))
         ;

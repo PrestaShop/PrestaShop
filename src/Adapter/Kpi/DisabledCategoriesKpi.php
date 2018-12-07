@@ -77,7 +77,7 @@ final class DisabledCategoriesKpi implements KpiInterface
         $helper->id = 'box-disabled-categories';
         $helper->icon = 'toggle_off';
         $helper->color = 'color1';
-        $helper->title = $this->translator->trans('Disabled Categories', [], 'Admin.Catalog.Feature');
+        $helper->title = $this->translator->trans('Disabled Categories', array(), 'Admin.Catalog.Feature');
 
         if (false !== $this->kpiConfiguration->get('DISABLED_CATEGORIES')) {
             $helper->value = $this->kpiConfiguration->get('DISABLED_CATEGORIES');

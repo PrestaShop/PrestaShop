@@ -52,9 +52,9 @@ final class EmployeeOptionsFormDataProvider implements FormDataProviderInterface
      */
     public function getData()
     {
-        return [
+        return array(
             'options' => $this->employeeOptionsConfiguration->getConfiguration(),
-        ];
+        );
     }
 
     /**

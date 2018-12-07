@@ -41,10 +41,10 @@ final class ControllerAction
      */
     public static function fromString($controller)
     {
-        return [
+        return array(
             self::getControllerName($controller),
             self::getActionName($controller),
-        ];
+        );
     }
 
     /**

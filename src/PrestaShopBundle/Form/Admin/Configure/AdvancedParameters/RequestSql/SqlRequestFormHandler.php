@@ -112,13 +112,13 @@ class SqlRequestFormHandler
      *
      * @return FormInterface
      */
-    private function getRequestSqlForm(array $formData = [])
+    private function getRequestSqlForm(array $formData = array())
     {
         $builder = $this->formFactory->createBuilder()
             ->add('request_sql', SqlRequestType::class)
-            ->setData([
+            ->setData(array(
                 'request_sql' => $formData,
-            ])
+            ))
         ;
 
         return $builder->getForm();

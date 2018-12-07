@@ -78,52 +78,52 @@ abstract class AbstractCategoryType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('name', TranslatableType::class, [
+            ->add('name', TranslatableType::class, array(
                 'type' => TextType::class,
-            ])
-            ->add('active', SwitchType::class, [
+            ))
+            ->add('active', SwitchType::class, array(
                 'required' => false,
                 'data' => true,
-            ])
-            ->add('description', TranslatableType::class, [
+            ))
+            ->add('description', TranslatableType::class, array(
                 'type' => TextareaType::class,
                 'required' => false,
-            ])
-            ->add('cover_image', FileType::class, [
+            ))
+            ->add('cover_image', FileType::class, array(
                 'required' => false,
-            ])
-            ->add('thumbnail_image', FileType::class, [
+            ))
+            ->add('thumbnail_image', FileType::class, array(
                 'required' => false,
-            ])
-            ->add('menu_thumbnail_images', FileType::class, [
+            ))
+            ->add('menu_thumbnail_images', FileType::class, array(
                 'multiple' => true,
                 'required' => false,
-            ])
-            ->add('meta_title', TranslatableType::class, [
+            ))
+            ->add('meta_title', TranslatableType::class, array(
                 'type' => TextWithLengthCounterType::class,
-                'options' => [
+                'options' => array(
                     'max_length' => 70,
-                ],
-            ])
-            ->add('meta_description', TranslatableType::class, [
+                ),
+            ))
+            ->add('meta_description', TranslatableType::class, array(
                 'type' => TextareaType::class,
-                'options' => [
+                'options' => array(
                     'required' => false,
-                ],
-            ])
-            ->add('meta_keyword', TranslatableType::class, [
+                ),
+            ))
+            ->add('meta_keyword', TranslatableType::class, array(
                 'type' => TextType::class,
-                'options' => [
+                'options' => array(
                     'required' => false,
-                ],
-            ])
-            ->add('link_rewrite', TranslatableType::class, [
+                ),
+            ))
+            ->add('link_rewrite', TranslatableType::class, array(
                 'type' => TextType::class,
-            ])
-            ->add('group_association', MaterialChoiceTableType::class, [
+            ))
+            ->add('group_association', MaterialChoiceTableType::class, array(
                 'choices' => $this->customerGroupChoices,
                 'required' => false,
-            ])
+            ))
         ;
 
         if ($this->multistoreFeature->isUsed()) {

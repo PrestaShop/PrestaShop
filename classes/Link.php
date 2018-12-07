@@ -706,7 +706,7 @@ class LinkCore
         }
 
         if (!is_array($sfRouteParams)) {
-            $sfRouteParams = [];
+            $sfRouteParams = array();
         }
 
         if ($withToken && !TokenInUrls::isDisabled()) {
@@ -793,7 +793,7 @@ class LinkCore
 
         if (empty($routeName) && null !== $legacyUrlConverter) {
             try {
-                $conversionParameters = array_merge(['controller' => $controller], $sfRouteParams, $params);
+                $conversionParameters = array_merge(array('controller' => $controller), $sfRouteParams, $params);
                 unset($conversionParameters['token']);
 
                 return $legacyUrlConverter->convertByParameters($conversionParameters);

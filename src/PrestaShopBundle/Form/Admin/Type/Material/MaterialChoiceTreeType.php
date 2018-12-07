@@ -38,9 +38,9 @@ class MaterialChoiceTreeType extends AbstractType
      */
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
-        $selectedData = [];
+        $selectedData = array();
         if (null !== $form->getData()) {
-            $selectedData = is_array($form->getData()) ? $form->getData() : [$form->getData()];
+            $selectedData = is_array($form->getData()) ? $form->getData() : array($form->getData());
         }
 
         $view->vars['multiple'] = $options['multiple'];
@@ -58,15 +58,15 @@ class MaterialChoiceTreeType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver
-            ->setDefaults([
-                'choices_tree' => [],
+            ->setDefaults(array(
+                'choices_tree' => array(),
                 'choice_label' => 'name',
                 'choice_value' => 'id',
                 'choice_children' => 'children',
-                'disabled_values' => [],
+                'disabled_values' => array(),
                 'multiple' => false,
                 'compound' => false,
-            ])
+            ))
             ->setAllowedTypes('choices_tree', 'array')
             ->setAllowedTypes('multiple', 'bool')
             ->setAllowedTypes('choice_value', 'string')

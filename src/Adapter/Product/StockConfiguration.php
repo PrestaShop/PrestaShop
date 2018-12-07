@@ -50,7 +50,7 @@ class StockConfiguration implements DataConfigurationInterface
      */
     public function getConfiguration()
     {
-        return [
+        return array(
             'allow_ordering_oos' => $this->configuration->getBoolean('PS_ORDER_OUT_OF_STOCK'),
             'stock_management' => $this->configuration->getBoolean('PS_STOCK_MANAGEMENT'),
             'in_stock_label' => $this->configuration->get('PS_LABEL_IN_STOCK_PRODUCTS'),
@@ -59,7 +59,7 @@ class StockConfiguration implements DataConfigurationInterface
             'delivery_time' => (array) $this->configuration->get('PS_LABEL_DELIVERY_TIME_AVAILABLE'),
             'oos_delivery_time' => (array) $this->configuration->get('PS_LABEL_DELIVERY_TIME_OOSBOA'),
             'pack_stock_management' => $this->configuration->get('PS_PACK_STOCK_TYPE'),
-        ];
+        );
     }
 
     /**
@@ -67,7 +67,7 @@ class StockConfiguration implements DataConfigurationInterface
      */
     public function updateConfiguration(array $config)
     {
-        $errors = [];
+        $errors = array();
 
         if ($this->validateConfiguration($config)) {
             $this->configuration->set('PS_ORDER_OUT_OF_STOCK', (int) $config['allow_ordering_oos']);
@@ -89,7 +89,7 @@ class StockConfiguration implements DataConfigurationInterface
     public function validateConfiguration(array $configuration)
     {
         $resolver = new OptionsResolver();
-        $resolver->setRequired([
+        $resolver->setRequired(array(
             'allow_ordering_oos',
             'stock_management',
             'in_stock_label',
@@ -98,7 +98,7 @@ class StockConfiguration implements DataConfigurationInterface
             'oos_delivery_time',
             'oos_denied_backorders',
             'pack_stock_management',
-        ]);
+        ));
 
         $resolver->resolve($configuration);
 

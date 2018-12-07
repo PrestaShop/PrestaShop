@@ -56,7 +56,7 @@ class ExportThemeCommand extends ContainerAwareCommand
         $translator = $this->getContainer()->get('translator');
         $successMsg = $translator->trans(
             'Your theme has been correctly exported: %path%',
-            ['%path%' => $path],
+            array('%path%' => $path),
             'Admin.Design.Notification'
         );
         $formattedBlock = $formatter->formatBlock($successMsg, 'info', true);

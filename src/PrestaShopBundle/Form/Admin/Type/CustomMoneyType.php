@@ -43,14 +43,14 @@ class CustomMoneyType extends AbstractTypeExtension
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
+        $resolver->setDefaults(array(
             'precision' => null,
             'scale' => self::PRESTASHOP_DECIMALS,
             'grouping' => false,
             'divisor' => 1,
             'currency' => 'EUR',
             'compound' => false,
-        ]);
+        ));
 
         $resolver->setAllowedTypes('scale', 'int');
     }

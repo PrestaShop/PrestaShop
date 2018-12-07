@@ -53,10 +53,10 @@ class AdvancedConfiguration implements DataConfigurationInterface
      */
     public function getConfiguration()
     {
-        return [
+        return array(
             'language_identifier' => $this->configuration->get('PS_LOCALE_LANGUAGE'),
             'country_identifier' => $this->configuration->get('PS_LOCALE_COUNTRY'),
-        ];
+        );
     }
 
     /**
@@ -64,7 +64,7 @@ class AdvancedConfiguration implements DataConfigurationInterface
      */
     public function updateConfiguration(array $config)
     {
-        $errors = [];
+        $errors = array();
 
         if ($this->validateConfiguration($config)) {
             $this->configuration->set('PS_LOCALE_LANGUAGE', $config['language_identifier']);

@@ -38,56 +38,56 @@ use Configuration;
 class RuleWhenChangingCarrierTest extends AbstractCarrierTest
 {
 
-    const CART_RULES_FIXTURES = [
-        1 => ['code' => 'foo', 'priority' => 1, 'percent' => 55, 'amount' => 0, 'carrierRestrictionIds' => [2]],
-        2 => ['code' => 'bar', 'priority' => 1, 'percent' => 55, 'amount' => 0, 'carrierRestrictionIds' => [1]],
-        3 => ['code' => '', 'priority' => 1, 'percent' => 55, 'amount' => 0, 'carrierRestrictionIds' => [3]],
-    ];
+    const CART_RULES_FIXTURES = array(
+        1 => array('code' => 'foo', 'priority' => 1, 'percent' => 55, 'amount' => 0, 'carrierRestrictionIds' => array(2)),
+        2 => array('code' => 'bar', 'priority' => 1, 'percent' => 55, 'amount' => 0, 'carrierRestrictionIds' => array(1)),
+        3 => array('code' => '', 'priority' => 1, 'percent' => 55, 'amount' => 0, 'carrierRestrictionIds' => array(3)),
+    );
 
-    const CARRIER_FIXTURES = [
-        1 => [
-            'name'   => 'carrier 1',
+    const CARRIER_FIXTURES = array(
+        1 => array(
+            'name' => 'carrier 1',
             'isFree' => false,
-            'ranges' => [
-                1 => [
-                    'from'           => 0,
-                    'to'             => 10000,
-                    'shippingPrices' => [
+            'ranges' => array(
+                1 => array(
+                    'from' => 0,
+                    'to' => 10000,
+                    'shippingPrices' => array(
                         1 => 3.1, // zoneId => price
                         2 => 4.3, // zoneId => price
-                    ],
-                ],
-            ],
-        ],
-        2 => [
-            'name'   => 'carrier 2',
+                    ),
+                ),
+            ),
+        ),
+        2 => array(
+            'name' => 'carrier 2',
             'isFree' => false,
-            'ranges' => [
-                1 => [
-                    'from'           => 0,
-                    'to'             => 10000,
-                    'shippingPrices' => [
+            'ranges' => array(
+                1 => array(
+                    'from' => 0,
+                    'to' => 10000,
+                    'shippingPrices' => array(
                         1 => 5.7, // zoneId => price
                         2 => 6.2, // zoneId => price
-                    ],
-                ],
-            ],
-        ],
-        3 => [
-            'name'   => 'carrier 3',
+                    ),
+                ),
+            ),
+        ),
+        3 => array(
+            'name' => 'carrier 3',
             'isFree' => false,
-            'ranges' => [
-                1 => [
-                    'from'           => 0,
-                    'to'             => 10000,
-                    'shippingPrices' => [
+            'ranges' => array(
+                1 => array(
+                    'from' => 0,
+                    'to' => 10000,
+                    'shippingPrices' => array(
                         1 => 5.7, // zoneId => price
                         2 => 6.2, // zoneId => price
-                    ],
-                ],
-            ],
-        ],
-    ];
+                    ),
+                ),
+            ),
+        ),
+    );
 
     public function testCarrierSpecificCartRuleCorresponding()
     {
@@ -98,14 +98,14 @@ class RuleWhenChangingCarrierTest extends AbstractCarrierTest
 
         // tests
         $cartRule = $this->getCartRuleFromFixtureId(2);
-        $result   = $cartRule->checkValidity(\Context::getContext(), false, false);
+        $result = $cartRule->checkValidity(\Context::getContext(), false, false);
         $this->assertFalse($result);
 
         $cartRule = $this->getCartRuleFromFixtureId(1);
-        $result   = $cartRule->checkValidity(\Context::getContext(), false, false);
+        $result = $cartRule->checkValidity(\Context::getContext(), false, false);
         $this->assertTrue($result);
         $this->cartRulesInCart[] = $cartRule;
-        $result                  = $this->cart->addCartRule($cartRule->id);
+        $result = $this->cart->addCartRule($cartRule->id);
         $this->assertTrue($result);
         $cartRules = $this->cart->getCartRules();
         $this->assertCount(1, $cartRules);
@@ -113,7 +113,7 @@ class RuleWhenChangingCarrierTest extends AbstractCarrierTest
         $result = $cartRule->checkValidity(\Context::getContext(), false, false);
         $this->assertFalse($result);
         $this->cartRulesInCart[] = $cartRule;
-        $result                  = $this->cart->addCartRule($cartRule->id);
+        $result = $this->cart->addCartRule($cartRule->id);
         $this->assertFalse($result);
         $cartRules = $this->cart->getCartRules();
         $this->assertCount(1, $cartRules);
@@ -128,7 +128,7 @@ class RuleWhenChangingCarrierTest extends AbstractCarrierTest
 
         // tests
         $cartRule = $this->getCartRuleFromFixtureId(2);
-        $result   = $cartRule->checkValidity(\Context::getContext(), false, false);
+        $result = $cartRule->checkValidity(\Context::getContext(), false, false);
         $this->assertFalse($result);
     }
 
@@ -140,9 +140,9 @@ class RuleWhenChangingCarrierTest extends AbstractCarrierTest
         $this->addProductToCart(1, 1);
 
         // tests
-        $cartRule                = $this->getCartRuleFromFixtureId(1);
+        $cartRule = $this->getCartRuleFromFixtureId(1);
         $this->cartRulesInCart[] = $cartRule;
-        $result                  = $this->cart->addCartRule($cartRule->id);
+        $result = $this->cart->addCartRule($cartRule->id);
         $this->assertTrue($result);
         $cartRules = $this->cart->getCartRules();
         $this->assertCount(1, $cartRules);

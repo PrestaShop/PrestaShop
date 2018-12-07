@@ -61,7 +61,7 @@ final class GroupByIdChoiceProvider implements FormChoiceProviderInterface
      */
     public function getChoices()
     {
-        $choices = [];
+        $choices = array();
         $groups = $this->groupDataProvider->getGroups($this->langId);
 
         foreach ($groups as $group) {

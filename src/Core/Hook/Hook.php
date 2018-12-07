@@ -45,7 +45,7 @@ final class Hook implements HookInterface
      * @param string $name
      * @param array $parameters
      */
-    public function __construct($name, array $parameters = [])
+    public function __construct($name, array $parameters = array())
     {
         $this->name = $name;
         $this->parameters = $parameters;

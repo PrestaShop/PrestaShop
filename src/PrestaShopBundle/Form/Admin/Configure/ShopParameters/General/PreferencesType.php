@@ -95,48 +95,48 @@ class PreferencesType extends TranslatorAwareType
         }
 
         $builder
-            ->add('enable_ssl_everywhere', SwitchType::class, [
+            ->add('enable_ssl_everywhere', SwitchType::class, array(
                 'disabled' => !$isSslEnabled,
-            ])
-            ->add('enable_token', SwitchType::class, [
+            ))
+            ->add('enable_token', SwitchType::class, array(
                 'disabled' => !$this->isContextDependantOptionEnabled(),
-            ])
+            ))
             ->add('allow_html_iframes', SwitchType::class)
             ->add('use_htmlpurifier', SwitchType::class)
-            ->add('price_round_mode', ChoiceType::class, [
+            ->add('price_round_mode', ChoiceType::class, array(
                 'choices_as_values' => true,
-                'choices' => [
+                'choices' => array(
                     'Round up away from zero, when it is half way there (recommended)' => $configuration->get('PS_ROUND_HALF_UP'),
                     'Round down towards zero, when it is half way there' => $configuration->get('PS_ROUND_HALF_DOWN'),
                     'Round towards the next even value' => $configuration->get('PS_ROUND_HALF_EVEN'),
                     'Round towards the next odd value' => $configuration->get('PS_ROUND_HALF_ODD'),
                     'Round up to the nearest value' => $configuration->get('PS_ROUND_UP'),
                     'Round down to the nearest value' => $configuration->get('PS_ROUND_DOWN'),
-                ],
-            ])
-            ->add('price_round_type', ChoiceType::class, [
+                ),
+            ))
+            ->add('price_round_type', ChoiceType::class, array(
                 'choices_as_values' => true,
-                'choices' => [
+                'choices' => array(
                     'Round on each item' => Order::ROUND_ITEM,
                     'Round on each line' => Order::ROUND_LINE,
                     'Round on the total' => Order::ROUND_TOTAL,
-                ],
-            ])
-            ->add('price_display_precision', IntegerType::class, [
-                'attr' => [
+                ),
+            ))
+            ->add('price_display_precision', IntegerType::class, array(
+                'attr' => array(
                     'min' => 0,
-                ],
-            ])
+                ),
+            ))
             ->add('display_suppliers', SwitchType::class)
             ->add('display_best_sellers', SwitchType::class)
-            ->add('multishop_feature_active', SwitchType::class, [
+            ->add('multishop_feature_active', SwitchType::class, array(
                 'disabled' => !$this->isContextDependantOptionEnabled(),
-            ])
-            ->add('shop_activity', ChoiceType::class, [
+            ))
+            ->add('shop_activity', ChoiceType::class, array(
                 'required' => false,
                 'choices_as_values' => true,
                 'placeholder' => $this->trans('-- Please choose your main activity --', 'Install'),
-                'choices' => [
+                'choices' => array(
                     'Animals and Pets' => 2,
                     'Art and Culture' => 3,
                     'Babies' => 4,
@@ -157,9 +157,10 @@ class PreferencesType extends TranslatorAwareType
                     'Shoes and accessories' => 18,
                     'Sport and Entertainment' => 19,
                     'Travel' => 20,
-                ],
+                ),
                 'choice_translation_domain' => 'Install',
-            ]);
+            ))
+        ;
     }
 
     /**
@@ -177,9 +178,9 @@ class PreferencesType extends TranslatorAwareType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
+        $resolver->setDefaults(array(
             'translation_domain' => 'Admin.Shopparameters.Feature',
-        ]);
+        ));
     }
 
     /**

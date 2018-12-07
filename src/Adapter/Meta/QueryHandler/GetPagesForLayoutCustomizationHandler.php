@@ -55,7 +55,7 @@ final class GetPagesForLayoutCustomizationHandler implements GetPagesForLayoutCu
     public function handle(GetPagesForLayoutCustomization $query)
     {
         $metas = Meta::getAllMeta($this->contextLangId);
-        $pages = [];
+        $pages = array();
 
         foreach ($metas as $meta) {
             $pages[] = new LayoutCustomizationPage(

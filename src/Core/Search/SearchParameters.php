@@ -57,7 +57,7 @@ final class SearchParameters implements SearchParametersInterface
      */
     public function getFiltersFromRequest(Request $request, $filterClass)
     {
-        $filters = [];
+        $filters = array();
         $defaultValues = $filterClass::getDefaults();
 
         foreach (self::FILTER_TYPES as $type) {
@@ -76,13 +76,13 @@ final class SearchParameters implements SearchParametersInterface
             ->findByEmployeeAndRouteParams($employeeId, $shopId, $controller, $action)
         ;
 
-        $savedFilters = [];
+        $savedFilters = array();
 
         if ($adminFilter !== null) {
             $savedFilters = json_decode($adminFilter->getFilter(), true);
         }
 
-        $filters = [];
+        $filters = array();
 
         $defaultValues = $filterClass::getDefaults();
 

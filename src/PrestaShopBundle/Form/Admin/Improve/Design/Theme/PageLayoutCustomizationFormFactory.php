@@ -73,9 +73,9 @@ final class PageLayoutCustomizationFormFactory implements PageLayoutCustomizatio
     {
         $theme = $this->themeRepository->getInstanceByName($this->shopThemeName);
 
-        $pageLayoutCustomizationForm = $this->formFactory->create(PageLayoutsCustomizationType::class, [
+        $pageLayoutCustomizationForm = $this->formFactory->create(PageLayoutsCustomizationType::class, array(
             'layouts' => $this->getCustomizablePageLayouts($theme, $customizablePages),
-        ]);
+        ));
 
         return $pageLayoutCustomizationForm;
     }
@@ -91,7 +91,7 @@ final class PageLayoutCustomizationFormFactory implements PageLayoutCustomizatio
         $defaultLayout = $theme->getDefaultLayout();
         $pageLayouts = $theme->getPageLayouts();
 
-        $layouts = [];
+        $layouts = array();
 
         foreach ($customizationPages as $page) {
             $selectedLayout = isset($pageLayouts[$page->getPage()]) ?

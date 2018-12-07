@@ -74,6 +74,6 @@ class WarehouseDataProvider
     {
         $location = WarehouseProductLocation::getProductLocation($id_product, $id_product_attribute, $id_warehouse);
         // for 'activated', we test if $location is ===false or ==="", that's the only difference to know it...
-        return ['location' => $location, 'activated' => ($location !== false), 'product_id' => $id_product];
+        return array('location' => $location, 'activated' => ($location !== false), 'product_id' => $id_product);
     }
 }

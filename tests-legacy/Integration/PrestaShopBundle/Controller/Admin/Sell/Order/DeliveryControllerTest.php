@@ -60,14 +60,14 @@ class DeliveryControllerTest extends WebTestCase
             $this->router->generate(
                 'admin_order_delivery_slip'
             ),
-            [
-                'form' => [
-                    'options' => [
+            array(
+                'form' => array(
+                    'options' => array(
                         'number' => 'foo'
-                    ],
+                    ),
                     '_token' => $token
-                ],
-            ]
+                ),
+            )
         );
         $response = $this->client->getResponse();
         $this->assertEquals(
@@ -85,14 +85,14 @@ class DeliveryControllerTest extends WebTestCase
             $this->router->generate(
                 'admin_order_delivery_slip'
             ),
-            [
-                'form' => [
-                    'options' => [
+            array(
+                'form' => array(
+                    'options' => array(
                         'number' => '100'
-                    ],
+                    ),
                     '_token' => $token
-                ],
-            ]
+                ),
+            )
         );
         $response = $this->client->getResponse();
         $this->assertEquals(
@@ -114,14 +114,14 @@ class DeliveryControllerTest extends WebTestCase
             $this->router->generate(
                 'admin_order_delivery_slip_pdf'
             ),
-            [
-                'slip_pdf_form' => [
-                    'pdf' => [
+            array(
+                'slip_pdf_form' => array(
+                    'pdf' => array(
                         'date_from' => 'foo'
-                    ],
+                    ),
                     '_token' => $token
-                ],
-            ]
+                ),
+            )
         );
         $response = $this->client->getResponse();
         $this->assertEquals(
@@ -143,12 +143,12 @@ class DeliveryControllerTest extends WebTestCase
             $this->router->generate(
                 'admin_order_delivery_slip_pdf'
             ),
-            [
-                'slip_pdf_form' => [
-                    'pdf' => [],
+            array(
+                'slip_pdf_form' => array(
+                    'pdf' => array(),
                     '_token' => $token
-                ],
-            ]
+                ),
+            )
         );
         $response = $this->client->getResponse();
         $this->assertEquals(

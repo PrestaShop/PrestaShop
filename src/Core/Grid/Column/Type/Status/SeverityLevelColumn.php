@@ -47,12 +47,12 @@ final class SeverityLevelColumn extends AbstractColumn
         parent::configureOptions($resolver);
 
         $resolver
-            ->setRequired([
+            ->setRequired(array(
                 'field',
-            ])
-            ->setDefaults([
+            ))
+            ->setDefaults(array(
                 'with_message' => false,
-            ])
+            ))
             ->setAllowedTypes('with_message', 'bool')
             ->setAllowedTypes('field', 'string')
         ;

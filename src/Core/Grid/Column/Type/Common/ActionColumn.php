@@ -46,10 +46,10 @@ final class ActionColumn extends AbstractColumn
     protected function configureOptions(OptionsResolver $resolver)
     {
         $resolver
-            ->setDefaults([
+            ->setDefaults(array(
                 'actions' => null,
-            ])
-            ->setAllowedTypes('actions', ['null', RowActionCollection::class])
+            ))
+            ->setAllowedTypes('actions', array('null', RowActionCollection::class))
         ;
     }
 }

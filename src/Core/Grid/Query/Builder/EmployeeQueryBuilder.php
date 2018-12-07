@@ -119,7 +119,8 @@ final class EmployeeQueryBuilder extends AbstractDoctrineQueryBuilder
             ->leftJoin(
                 'e',
                 $this->dbPrefix . 'profile_lang',
-                'pl', 'e.id_profile = pl.id_profile AND pl.id_lang = ' . (int) $this->contextIdLang
+                'pl',
+                'e.id_profile = pl.id_profile AND pl.id_lang = ' . (int) $this->contextIdLang
             )
             ->andWhere('EXISTS (' . $sub->getSQL() . ')')
             ->setParameter('context_shop_ids', $this->contextShopIds, Connection::PARAM_INT_ARRAY)
@@ -138,14 +139,14 @@ final class EmployeeQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     private function applyFilters(QueryBuilder $queryBuilder, array $filters)
     {
-        $allowedFilters = [
+        $allowedFilters = array(
             'id_employee',
             'firstname',
             'lastname',
             'email',
             'profile',
             'active',
-        ];
+        );
 
         foreach ($filters as $filterName => $filterValue) {
             if (!in_array($filterName, $allowedFilters)) {

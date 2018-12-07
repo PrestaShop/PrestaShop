@@ -43,7 +43,8 @@ class GetSqlRequestSettingsHandlerTest extends TestCase
         $configuration = $this->createMock(ConfigurationInterface::class);
         $configuration->method('get')
             ->with('PS_ENCODING_FILE_MANAGER_SQL')
-            ->willReturn($configuredValue);
+            ->willReturn($configuredValue)
+        ;
 
         $getSqlRequestSettingsHandler = new GetSqlRequestSettingsHandler($configuration);
         $sqlRequestSettings = $getSqlRequestSettingsHandler->handle(new GetSqlRequestSettings());
@@ -54,23 +55,23 @@ class GetSqlRequestSettingsHandlerTest extends TestCase
 
     public function getInvalidConfiguration()
     {
-        return [
-            [
+        return array(
+            array(
                 null,
                 CharsetEncoding::UTF_8,
-            ],
-            [
+            ),
+            array(
                 1,
                 CharsetEncoding::UTF_8,
-            ],
-            [
+            ),
+            array(
                 2,
                 CharsetEncoding::ISO_8859_1,
-            ],
-            [
+            ),
+            array(
                 9999,
                 CharsetEncoding::UTF_8,
-            ],
-        ];
+            ),
+        );
     }
 }

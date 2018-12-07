@@ -127,7 +127,7 @@ class EditableCategory
         $isRootCategory,
         $coverImage = null,
         $thumbnailImage = null,
-        array $menuThumbnailImages = []
+        array $menuThumbnailImages = array()
     ) {
         $this->name = $name;
         $this->isActive = $isActive;

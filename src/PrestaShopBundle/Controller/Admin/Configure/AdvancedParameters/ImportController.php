@@ -87,19 +87,19 @@ class ImportController extends FrameworkBundleAdminController
             $data = $form->getData();
 
             if (!$errors = $formHandler->save($data)) {
-                return $this->redirectToRoute('admin_import_show_data', [], Response::HTTP_TEMPORARY_REDIRECT);
+                return $this->redirectToRoute('admin_import_show_data', array(), Response::HTTP_TEMPORARY_REDIRECT);
             }
 
             $this->flashErrors($errors);
         }
 
-        $params = [
+        $params = array(
             'importForm' => $form->createView(),
             'importFileUploadUrl' => $this->generateUrl('admin_import_file_upload'),
             'importFileNames' => $finder->getImportFileNames(),
             'importDirectory' => $importDir->getDir(),
             'maxFileUploadSize' => $iniConfiguration->getPostMaxSizeInBytes(),
-        ];
+        );
 
         return $this->getTemplateParams($request) + $params;
     }
@@ -145,13 +145,13 @@ class ImportController extends FrameworkBundleAdminController
         $presentedDataRowCollection = $dataRowCollectionPresenter->present($dataRowCollection);
         $entityFieldsProvider = $entityFieldsProviderFinder->find($importConfig->getEntityType());
 
-        return [
+        return array(
             'importDataConfigurationForm' => $form->createView(),
             'dataRowCollection' => $presentedDataRowCollection,
             'maxVisibleColumns' => ImportSettings::MAX_VISIBLE_COLUMNS,
             'showPagingArrows' => $presentedDataRowCollection['row_size'] > ImportSettings::MAX_VISIBLE_COLUMNS,
             'requiredFields' => $entityFieldsProvider->getCollection()->getRequiredFields(),
-        ];
+        );
     }
 
     /**
@@ -166,39 +166,39 @@ class ImportController extends FrameworkBundleAdminController
         $legacyController = $request->attributes->get('_legacy_controller');
 
         if ($this->isDemoModeEnabled()) {
-            return $this->json([
+            return $this->json(array(
                 'error' => $this->trans('This functionality has been disabled.', 'Admin.Notifications.Error'),
-            ]);
+            ));
         }
 
-        if (!in_array($this->authorizationLevel($legacyController), [
+        if (!in_array($this->authorizationLevel($legacyController), array(
             PageVoter::LEVEL_CREATE,
             PageVoter::LEVEL_UPDATE,
             PageVoter::LEVEL_DELETE,
-        ])) {
-            return $this->json([
+        ))) {
+            return $this->json(array(
                 'error' => $this->trans('You do not have permission to update this.', 'Admin.Notifications.Error'),
-            ]);
+            ));
         }
 
         $uploadedFile = $request->files->get('file');
         if (!$uploadedFile instanceof UploadedFile) {
-            return $this->json([
+            return $this->json(array(
                 'error' => $this->trans('No file was uploaded.', 'Admin.Advparameters.Notification'),
-            ]);
+            ));
         }
 
         try {
             $fileUploader = $this->get('prestashop.core.import.file_uploader');
             $file = $fileUploader->upload($uploadedFile);
         } catch (FileUploadException $e) {
-            return $this->json(['error' => $e->getMessage()]);
+            return $this->json(array('error' => $e->getMessage()));
         }
 
-        $response['file'] = [
+        $response['file'] = array(
             'name' => $file->getFilename(),
             'size' => $file->getSize(),
-        ];
+        );
 
         return $this->json($response);
     }
@@ -265,24 +265,24 @@ class ImportController extends FrameworkBundleAdminController
 
         $importConfig = $importConfigFactory->buildFromRequest($request);
         $form = $formHandler->getForm($importConfig);
-        $form->setData([
+        $form->setData(array(
             'match_name' => $request->request->get('match_name'),
             'skip' => $request->request->get('skip'),
             'type_value' => $request->request->get('type_value'),
-        ]);
+        ));
 
         $errors = $formHandler->save($form->getData());
-        $matches = [];
+        $matches = array();
 
         if (!$errors) {
             $importMatchRepository = $this->get('prestashop.core.admin.import_match.repository');
             $matches = $importMatchRepository->findAll();
         }
 
-        return $this->json([
+        return $this->json(array(
             'errors' => $errors,
             'matches' => $matches,
-        ]);
+        ));
     }
 
     /**
@@ -300,7 +300,7 @@ class ImportController extends FrameworkBundleAdminController
         $importMatchRepository = $this->get('prestashop.core.admin.import_match.repository');
         $importMatchRepository->deleteById($request->get('import_match_id'));
 
-        return $this->json([]);
+        return $this->json(array());
     }
 
     /**
@@ -334,7 +334,7 @@ class ImportController extends FrameworkBundleAdminController
             $fieldsCollection = $fieldsProvider->getCollection();
             $entityFields = $fieldsCollection->toArray();
         } catch (NotSupportedImportEntityException $e) {
-            $entityFields = [];
+            $entityFields = array();
         }
 
         return $this->json($entityFields);
@@ -373,15 +373,15 @@ class ImportController extends FrameworkBundleAdminController
     {
         $legacyController = $request->attributes->get('_legacy_controller');
 
-        return [
-            'layoutHeaderToolbarBtn' => [],
-            'layoutTitle' => $this->get('translator')->trans('Import', [], 'Admin.Navigation.Menu'),
+        return array(
+            'layoutHeaderToolbarBtn' => array(),
+            'layoutTitle' => $this->get('translator')->trans('Import', array(), 'Admin.Navigation.Menu'),
             'requireAddonsSearch' => true,
             'requireBulkActions' => false,
             'showContentHeader' => true,
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($legacyController),
-        ];
+        );
     }
 
     /**
@@ -405,11 +405,11 @@ class ImportController extends FrameworkBundleAdminController
             return false;
         }
 
-        if (!in_array($this->authorizationLevel($legacyController), [
+        if (!in_array($this->authorizationLevel($legacyController), array(
             PageVoter::LEVEL_CREATE,
             PageVoter::LEVEL_UPDATE,
             PageVoter::LEVEL_DELETE,
-        ])) {
+        ))) {
             $this->addFlash(
                 'error',
                 $this->trans(

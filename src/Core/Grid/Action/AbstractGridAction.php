@@ -143,7 +143,7 @@ abstract class AbstractGridAction implements GridActionInterface
      *
      * @param array $options
      */
-    private function resolveOptions(array $options = [])
+    private function resolveOptions(array $options = array())
     {
         $resolver = new OptionsResolver();
         $this->configureOptions($resolver);

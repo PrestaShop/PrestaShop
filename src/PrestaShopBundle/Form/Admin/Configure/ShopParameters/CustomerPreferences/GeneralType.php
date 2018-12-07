@@ -43,12 +43,13 @@ class GeneralType extends TranslatorAwareType
         $builder
             ->add('redisplay_cart_at_login', SwitchType::class)
             ->add('send_email_after_registration', SwitchType::class)
-            ->add('password_reset_delay', TextWithUnitType::class, [
+            ->add('password_reset_delay', TextWithUnitType::class, array(
                 'unit' => $this->trans('minutes', 'Admin.Shopparameters.Feature'),
-            ])
+            ))
             ->add('enable_b2b_mode', SwitchType::class)
             ->add('ask_for_birthday', SwitchType::class)
-            ->add('enable_offers', SwitchType::class);
+            ->add('enable_offers', SwitchType::class)
+        ;
     }
 
     /**
@@ -56,9 +57,9 @@ class GeneralType extends TranslatorAwareType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
+        $resolver->setDefaults(array(
             'translation_domain' => 'Admin.Shopparameters.Feature',
-        ]);
+        ));
     }
 
     /**

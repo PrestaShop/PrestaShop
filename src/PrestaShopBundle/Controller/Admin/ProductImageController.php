@@ -50,7 +50,7 @@ class ProductImageController extends FrameworkBundleAdminController
     {
         $response = new JsonResponse();
         $adminProductWrapper = $this->get('prestashop.adapter.admin.wrapper.product');
-        $return_data = [];
+        $return_data = array();
 
         if ($idProduct == 0 || !$request->isXmlHttpRequest()) {
             return $response;
@@ -59,12 +59,13 @@ class ProductImageController extends FrameworkBundleAdminController
         $form = $this->createFormBuilder(null, array('csrf_protection' => false))
             ->add('file', 'Symfony\Component\Form\Extension\Core\Type\FileType', array(
                 'error_bubbling' => true,
-                'constraints' => [
+                'constraints' => array(
                     new Assert\NotNull(array('message' => $this->trans('Please select a file', 'Admin.Catalog.Feature'))),
                     new Assert\Image(array('maxSize' => $this->configuration->get('PS_ATTACHMENT_MAXIMUM_SIZE') . 'M')),
-                ],
+                ),
             ))
-            ->getForm();
+            ->getForm()
+        ;
 
         $form->handleRequest($request);
 
@@ -143,7 +144,8 @@ class ProductImageController extends FrameworkBundleAdminController
                 'label' => $this->trans('Cover image', 'Admin.Catalog.Feature'),
                 'required' => false,
             ))
-            ->getForm();
+            ->getForm()
+        ;
 
         $form->handleRequest($request);
 

@@ -52,16 +52,17 @@ final class FileFinder
     public function getImportFileNames()
     {
         if (!$this->importDirectory->isReadable()) {
-            return [];
+            return array();
         }
 
         $finder = new Finder();
         $finder
             ->files()
             ->in($this->importDirectory->getDir())
-            ->notName('/^index\.php/i');
+            ->notName('/^index\.php/i')
+        ;
 
-        $fileNames = [];
+        $fileNames = array();
 
         foreach ($finder as $file) {
             $fileNames[] = $file->getFilename();

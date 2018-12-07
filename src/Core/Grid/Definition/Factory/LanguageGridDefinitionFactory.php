@@ -85,7 +85,7 @@ final class LanguageGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getName()
     {
-        return $this->trans('Languages', [], 'Admin.Global');
+        return $this->trans('Languages', array(), 'Admin.Global');
     }
 
     /**
@@ -94,93 +94,105 @@ final class LanguageGridDefinitionFactory extends AbstractGridDefinitionFactory
     protected function getColumns()
     {
         return (new ColumnCollection())
-            ->add((new BulkActionColumn('language_bulk'))
-                ->setOptions([
+            ->add(
+                (new BulkActionColumn('language_bulk'))
+                ->setOptions(array(
                     'bulk_field' => 'id_lang',
-                ])
+                ))
             )
-            ->add((new DataColumn('id_lang'))
-                ->setName($this->trans('ID', [], 'Admin.Global'))
-                ->setOptions([
+            ->add(
+                (new DataColumn('id_lang'))
+                ->setName($this->trans('ID', array(), 'Admin.Global'))
+                ->setOptions(array(
                     'field' => 'id_lang',
-                ])
+                ))
             )
-            ->add((new ImageColumn('flag'))
-                ->setName($this->trans('Flag', [], 'Admin.International.Feature'))
-                ->setOptions([
+            ->add(
+                (new ImageColumn('flag'))
+                ->setName($this->trans('Flag', array(), 'Admin.International.Feature'))
+                ->setOptions(array(
                     'src_field' => 'flag',
-                ])
+                ))
             )
-            ->add((new LinkColumn('name'))
-                ->setName($this->trans('Name', [], 'Admin.Global'))
-                ->setOptions([
+            ->add(
+                (new LinkColumn('name'))
+                ->setName($this->trans('Name', array(), 'Admin.Global'))
+                ->setOptions(array(
                     'field' => 'name',
                     'route' => 'admin_languages_edit',
                     'route_param_name' => 'languageId',
                     'route_param_field' => 'id_lang',
-                ])
+                ))
             )
-            ->add((new DataColumn('iso_code'))
-                ->setName($this->trans('ISO code', [], 'Admin.International.Feature'))
-                ->setOptions([
+            ->add(
+                (new DataColumn('iso_code'))
+                ->setName($this->trans('ISO code', array(), 'Admin.International.Feature'))
+                ->setOptions(array(
                     'field' => 'iso_code',
-                ])
+                ))
             )
-            ->add((new DataColumn('language_code'))
-                ->setName($this->trans('Language code', [], 'Admin.International.Feature'))
-                ->setOptions([
+            ->add(
+                (new DataColumn('language_code'))
+                ->setName($this->trans('Language code', array(), 'Admin.International.Feature'))
+                ->setOptions(array(
                     'field' => 'language_code',
-                ])
+                ))
             )
-            ->add((new DataColumn('date_format_lite'))
-                ->setName($this->trans('Date format', [], 'Admin.International.Feature'))
-                ->setOptions([
+            ->add(
+                (new DataColumn('date_format_lite'))
+                ->setName($this->trans('Date format', array(), 'Admin.International.Feature'))
+                ->setOptions(array(
                     'field' => 'date_format_lite',
-                ])
+                ))
             )
-            ->add((new DataColumn('date_format_full'))
-                ->setName($this->trans('Date format (full)', [], 'Admin.International.Feature'))
-                ->setOptions([
+            ->add(
+                (new DataColumn('date_format_full'))
+                ->setName($this->trans('Date format (full)', array(), 'Admin.International.Feature'))
+                ->setOptions(array(
                     'field' => 'date_format_full',
-                ])
+                ))
             )
-            ->add((new ToggleColumn('active'))
-                ->setName($this->trans('Enabled', [], 'Admin.Global'))
-                ->setOptions([
+            ->add(
+                (new ToggleColumn('active'))
+                ->setName($this->trans('Enabled', array(), 'Admin.Global'))
+                ->setOptions(array(
                     'field' => 'active',
                     'primary_field' => 'id_lang',
                     'route' => 'admin_languages_index',
                     'route_param_name' => 'languageId',
-                ])
+                ))
             )
-            ->add((new ActionColumn('actions'))
-                ->setName($this->trans('Actions', [], 'Admin.Global'))
-                ->setOptions([
+            ->add(
+                (new ActionColumn('actions'))
+                ->setName($this->trans('Actions', array(), 'Admin.Global'))
+                ->setOptions(array(
                     'actions' => (new RowActionCollection())
-                        ->add((new LinkRowAction('edit'))
-                            ->setName($this->trans('Edit', [], 'Admin.Actions'))
+                        ->add(
+                            (new LinkRowAction('edit'))
+                            ->setName($this->trans('Edit', array(), 'Admin.Actions'))
                             ->setIcon('edit')
-                            ->setOptions([
+                            ->setOptions(array(
                                 'route' => 'admin_languages_edit',
                                 'route_param_name' => 'languageId',
                                 'route_param_field' => 'id_lang',
-                            ])
+                            ))
                         )
-                        ->add((new SubmitRowAction('delete'))
-                            ->setName($this->trans('Delete', [], 'Admin.Actions'))
+                        ->add(
+                            (new SubmitRowAction('delete'))
+                            ->setName($this->trans('Delete', array(), 'Admin.Actions'))
                             ->setIcon('delete')
-                            ->setOptions([
+                            ->setOptions(array(
                                 'confirm_message' => $this->trans(
                                     'Delete selected item?',
-                                    [],
+                                    array(),
                                     'Admin.Notifications.Warning'
                                 ),
                                 'route' => 'admin_languages_index',
                                 'route_param_name' => 'languageId',
                                 'route_param_field' => 'id_lang',
-                            ])
+                            ))
                         ),
-                ])
+                ))
             )
         ;
     }
@@ -191,78 +203,86 @@ final class LanguageGridDefinitionFactory extends AbstractGridDefinitionFactory
     protected function getFilters()
     {
         return (new FilterCollection())
-             ->add((new Filter('id_lang', NumberType::class))
-                 ->setTypeOptions([
+             ->add(
+                 (new Filter('id_lang', NumberType::class))
+                 ->setTypeOptions(array(
                      'required' => false,
-                     'attr' => [
-                        'placeholder' => $this->translator->trans('Search ID', [], 'Admin.International.Help'),
-                     ],
-                 ])
+                     'attr' => array(
+                        'placeholder' => $this->translator->trans('Search ID', array(), 'Admin.International.Help'),
+                     ),
+                 ))
                  ->setAssociatedColumn('id_lang')
              )
-             ->add((new Filter('name', TextType::class))
-                 ->setTypeOptions([
+             ->add(
+                 (new Filter('name', TextType::class))
+                 ->setTypeOptions(array(
                      'required' => false,
-                     'attr' => [
-                         'placeholder' => $this->translator->trans('Search name', [], 'Admin.International.Help'),
-                     ],
-                 ])
+                     'attr' => array(
+                         'placeholder' => $this->translator->trans('Search name', array(), 'Admin.International.Help'),
+                     ),
+                 ))
                  ->setAssociatedColumn('name')
              )
-             ->add((new Filter('iso_code', TextType::class))
-                 ->setTypeOptions([
+             ->add(
+                 (new Filter('iso_code', TextType::class))
+                 ->setTypeOptions(array(
                      'required' => false,
-                     'attr' => [
-                         'placeholder' => $this->translator->trans('Search iso code', [], 'Admin.International.Help'),
-                     ],
-                 ])
+                     'attr' => array(
+                         'placeholder' => $this->translator->trans('Search iso code', array(), 'Admin.International.Help'),
+                     ),
+                 ))
                  ->setAssociatedColumn('iso_code')
              )
-             ->add((new Filter('language_code', TextType::class))
-                 ->setTypeOptions([
+             ->add(
+                 (new Filter('language_code', TextType::class))
+                 ->setTypeOptions(array(
                      'required' => false,
-                     'attr' => [
-                         'placeholder' => $this->translator->trans('Search code', [], 'Admin.International.Help'),
-                     ],
-                 ])
+                     'attr' => array(
+                         'placeholder' => $this->translator->trans('Search code', array(), 'Admin.International.Help'),
+                     ),
+                 ))
                  ->setAssociatedColumn('language_code')
              )
-             ->add((new Filter('date_format_lite', TextType::class))
-                 ->setTypeOptions([
+             ->add(
+                 (new Filter('date_format_lite', TextType::class))
+                 ->setTypeOptions(array(
                      'required' => false,
-                     'attr' => [
-                         'placeholder' => $this->translator->trans('Search date format', [], 'Admin.International.Help'),
-                     ],
-                 ])
+                     'attr' => array(
+                         'placeholder' => $this->translator->trans('Search date format', array(), 'Admin.International.Help'),
+                     ),
+                 ))
                  ->setAssociatedColumn('date_format_lite')
              )
-             ->add((new Filter('date_format_full', TextType::class))
-                 ->setTypeOptions([
+             ->add(
+                 (new Filter('date_format_full', TextType::class))
+                 ->setTypeOptions(array(
                      'required' => false,
-                     'attr' => [
-                         'placeholder' => $this->translator->trans('Search date format', [], 'Admin.International.Help'),
-                     ],
-                 ])
+                     'attr' => array(
+                         'placeholder' => $this->translator->trans('Search date format', array(), 'Admin.International.Help'),
+                     ),
+                 ))
                  ->setAssociatedColumn('date_format_full')
              )
-             ->add((new Filter('active', ChoiceType::class))
-                 ->setTypeOptions([
-                     'choices' => [
-                         $this->trans('Yes', [], 'Admin.Global') => 1,
-                         $this->trans('No', [], 'Admin.Global') => 0,
-                     ],
+             ->add(
+                 (new Filter('active', ChoiceType::class))
+                 ->setTypeOptions(array(
+                     'choices' => array(
+                         $this->trans('Yes', array(), 'Admin.Global') => 1,
+                         $this->trans('No', array(), 'Admin.Global') => 0,
+                     ),
                      'required' => false,
                      'choice_translation_domain' => false,
-                 ])
+                 ))
                  ->setAssociatedColumn('active')
              )
-             ->add((new Filter('actions', SearchAndResetType::class))
-                 ->setTypeOptions([
-                     'attr' => [
+             ->add(
+                 (new Filter('actions', SearchAndResetType::class))
+                 ->setTypeOptions(array(
+                     'attr' => array(
                          'data-url' => $this->resetUrl,
                          'data-redirect' => $this->redirectUrl,
-                     ],
-                 ])
+                     ),
+                 ))
                  ->setAssociatedColumn('actions')
              )
          ;
@@ -274,16 +294,19 @@ final class LanguageGridDefinitionFactory extends AbstractGridDefinitionFactory
     protected function getGridActions()
     {
         return (new GridActionCollection())
-            ->add((new SimpleGridAction('common_refresh_list'))
-                ->setName($this->trans('Refresh list', [], 'Admin.Advparameters.Feature'))
+            ->add(
+                (new SimpleGridAction('common_refresh_list'))
+                ->setName($this->trans('Refresh list', array(), 'Admin.Advparameters.Feature'))
                 ->setIcon('refresh')
             )
-            ->add((new SimpleGridAction('common_show_query'))
-                ->setName($this->trans('Show SQL query', [], 'Admin.Actions'))
+            ->add(
+                (new SimpleGridAction('common_show_query'))
+                ->setName($this->trans('Show SQL query', array(), 'Admin.Actions'))
                 ->setIcon('code')
             )
-            ->add((new SimpleGridAction('common_export_sql_manager'))
-                ->setName($this->trans('Export to SQL Manager', [], 'Admin.Actions'))
+            ->add(
+                (new SimpleGridAction('common_export_sql_manager'))
+                ->setName($this->trans('Export to SQL Manager', array(), 'Admin.Actions'))
                 ->setIcon('storage')
             )
         ;
@@ -295,24 +318,27 @@ final class LanguageGridDefinitionFactory extends AbstractGridDefinitionFactory
     protected function getBulkActions()
     {
         return (new BulkActionCollection())
-            ->add((new SubmitBulkAction('enable_selection'))
-                ->setName($this->trans('Enable selection', [], 'Admin.Actions'))
-                ->setOptions([
+            ->add(
+                (new SubmitBulkAction('enable_selection'))
+                ->setName($this->trans('Enable selection', array(), 'Admin.Actions'))
+                ->setOptions(array(
                     'submit_route' => 'admin_languages_index',
-                ])
+                ))
             )
-            ->add((new SubmitBulkAction('disable_selection'))
-                ->setName($this->trans('Disable selection', [], 'Admin.Actions'))
-                ->setOptions([
+            ->add(
+                (new SubmitBulkAction('disable_selection'))
+                ->setName($this->trans('Disable selection', array(), 'Admin.Actions'))
+                ->setOptions(array(
                     'submit_route' => 'admin_languages_index',
-                ])
+                ))
             )
-            ->add((new SubmitBulkAction('delete_selection'))
-                ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
-                ->setOptions([
+            ->add(
+                (new SubmitBulkAction('delete_selection'))
+                ->setName($this->trans('Delete selected', array(), 'Admin.Actions'))
+                ->setOptions(array(
                     'submit_route' => 'admin_languages_index',
-                    'confirm_message' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
-                ])
+                    'confirm_message' => $this->trans('Delete selected items?', array(), 'Admin.Notifications.Warning'),
+                ))
             )
         ;
     }

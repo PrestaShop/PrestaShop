@@ -98,7 +98,8 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
                     ->setIsInstall(true)
                     ->setLanguageCode($this->session->lang)
                     ->setProcessFOThemes(array('classic'))
-                    ->process();
+                    ->process()
+                ;
                 $this->processConfigureShop();
             } elseif (Tools::getValue('installFixtures') && !empty($this->session->process_validated['configureShop'])) {
                 $this->processInstallFixtures();
@@ -203,17 +204,17 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
         $this->initializeContext();
 
         $success = $this->model_install->configureShop(array(
-            'shop_name' =>                $this->session->shop_name,
-            'shop_activity' =>            $this->session->shop_activity,
-            'shop_country' =>            $this->session->shop_country,
-            'shop_timezone' =>            $this->session->shop_timezone,
-            'admin_firstname' =>        $this->session->admin_firstname,
-            'admin_lastname' =>            $this->session->admin_lastname,
-            'admin_password' =>            $this->session->admin_password,
-            'admin_email' =>            $this->session->admin_email,
-            'send_informations' =>        $this->session->send_informations,
-            'configuration_agrement' =>    $this->session->configuration_agrement,
-            'rewrite_engine' =>            $this->session->rewrite_engine,
+            'shop_name' => $this->session->shop_name,
+            'shop_activity' => $this->session->shop_activity,
+            'shop_country' => $this->session->shop_country,
+            'shop_timezone' => $this->session->shop_timezone,
+            'admin_firstname' => $this->session->admin_firstname,
+            'admin_lastname' => $this->session->admin_lastname,
+            'admin_password' => $this->session->admin_password,
+            'admin_email' => $this->session->admin_email,
+            'send_informations' => $this->session->send_informations,
+            'configuration_agrement' => $this->session->configuration_agrement,
+            'rewrite_engine' => $this->session->rewrite_engine,
         ));
 
         if (!$success || $this->model_install->getErrors()) {
@@ -392,7 +393,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
     {
         $configXMLPath = _PS_ROOT_DIR_.'/config/xml/';
         $cacheFiles = scandir($configXMLPath, SCANDIR_SORT_NONE);
-        $excludes = ['.htaccess', 'index.php'];
+        $excludes = array('.htaccess', 'index.php');
 
         foreach ($cacheFiles as $file) {
             $filepath = $configXMLPath.$file;

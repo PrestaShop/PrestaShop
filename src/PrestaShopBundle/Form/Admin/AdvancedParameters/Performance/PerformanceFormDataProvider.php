@@ -91,14 +91,14 @@ final class PerformanceFormDataProvider implements FormDataProviderInterface
      */
     public function getData()
     {
-        return [
+        return array(
             'smarty' => $this->smartyCacheConfiguration->getConfiguration(),
             'debug_mode' => $this->debugModeConfiguration->getConfiguration(),
             'optional_features' => $this->optionalFeaturesConfiguration->getConfiguration(),
             'ccc' => $this->combineCompressCacheConfiguration->getConfiguration(),
             'media_servers' => $this->mediaServerConfiguration->getConfiguration(),
             'caching' => $this->cachingConfiguration->getConfiguration(),
-        ];
+        );
     }
 
     /**

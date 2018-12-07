@@ -60,24 +60,25 @@ class ProductWarehouseCombination extends CommonAbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('activated', CheckboxType::class, [
+        $builder->add('activated', CheckboxType::class, array(
             'required' => false,
-            'label' => $this->translator->trans('Stored', [], 'Admin.Catalog.Feature'),
-        ])
+            'label' => $this->translator->trans('Stored', array(), 'Admin.Catalog.Feature'),
+        ))
             ->add('id_product_attribute', HiddenType::class)
             ->add('product_id', HiddenType::class)
             ->add('warehouse_id', HiddenType::class)
-            ->add('location', TextType::class, [
+            ->add('location', TextType::class, array(
                 'required' => false,
-                'label' => $this->translator->trans('Location (optional)', [], 'Admin.Catalog.Feature'),
+                'label' => $this->translator->trans('Location (optional)', array(), 'Admin.Catalog.Feature'),
                 'empty_data' => '',
-            ]);
+            ))
+        ;
 
         //set default minimal values for collection prototype
-        $builder->setData([
+        $builder->setData(array(
             'warehouse_id' => $options['id_warehouse'],
             'warehouse_activated' => false,
-        ]);
+        ));
     }
 
     /**
@@ -85,9 +86,9 @@ class ProductWarehouseCombination extends CommonAbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
+        $resolver->setDefaults(array(
             'id_warehouse' => null,
-        ]);
+        ));
     }
 
     /**

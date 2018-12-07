@@ -49,10 +49,10 @@ class DoctrineQueryParserTest extends TestCase
     public function testParseWithNamedParameters()
     {
         $preparedQuery = 'SELECT tests FROM pierre_rambaud WHERE motivation = :motivation AND energy = :energy';
-        $queryParameters = [
+        $queryParameters = array(
             'motivation' => 'OK',
             'energy' => 'none',
-        ];
+        );
 
         $expectedQuery = "SELECT tests FROM pierre_rambaud WHERE motivation = 'OK' AND energy = 'none'";
 
@@ -68,7 +68,7 @@ class DoctrineQueryParserTest extends TestCase
         $this->expectException(UnsupportedParameterException::class);
 
         $preparedQuery = 'SELECT tests FROM pierre_rambaud WHERE motivation = ? AND energy = ?';
-        $queryParameters = ['OK', 'none'];
+        $queryParameters = array('OK', 'none');
 
         $this->queryParser->parse($preparedQuery, $queryParameters);
     }
@@ -76,15 +76,15 @@ class DoctrineQueryParserTest extends TestCase
     public function testParseWithArrayNamedParameters()
     {
         $preparedQuery = 'SELECT tests FROM pierre_rambaud WHERE motivation IN (:motivation)';
-        $queryParameters = [
-            'motivation' => [
+        $queryParameters = array(
+            'motivation' => array(
                 'great',
                 'good',
                 'ok',
                 'nok',
                 'none',
-            ]
-        ];
+            )
+        );
 
         $expectedQuery = "SELECT tests FROM pierre_rambaud WHERE motivation IN ('great', 'good', 'ok', 'nok', 'none')";
 
@@ -100,15 +100,15 @@ class DoctrineQueryParserTest extends TestCase
         $this->expectException(UnsupportedParameterException::class);
 
         $preparedQuery = 'SELECT tests FROM pierre_rambaud WHERE motivation IN (?)';
-        $queryParameters = [
-            [
+        $queryParameters = array(
+            array(
                 'great',
                 'good',
                 'ok',
                 'nok',
                 'none',
-            ]
-        ];
+            )
+        );
 
         $this->queryParser->parse($preparedQuery, $queryParameters);
     }
@@ -116,9 +116,9 @@ class DoctrineQueryParserTest extends TestCase
     public function testParseWithNullNamedParameters()
     {
         $preparedQuery = 'SELECT tests FROM pierre_rambaud WHERE motivation IS :motivation';
-        $queryParameters = [
+        $queryParameters = array(
             'motivation' => null,
-        ];
+        );
 
         $expectedQuery = "SELECT tests FROM pierre_rambaud WHERE motivation IS NULL";
 
@@ -128,18 +128,18 @@ class DoctrineQueryParserTest extends TestCase
     public function testParseWithBooleanNamedParameters()
     {
         $preparedQuery = 'SELECT tests FROM pierre_rambaud WHERE motivation = :motivation';
-        $queryParameters = [
+        $queryParameters = array(
             'motivation' => false,
-        ];
+        );
 
         $expectedQuery = "SELECT tests FROM pierre_rambaud WHERE motivation = FALSE";
 
         $this->assertSame($expectedQuery, $this->queryParser->parse($preparedQuery, $queryParameters));
 
         $preparedQuery2 = 'SELECT tests FROM pierre_rambaud WHERE energy = :energy';
-        $queryParameters2 = [
+        $queryParameters2 = array(
             'energy' => true,
-        ];
+        );
 
         $expectedQuery2 = "SELECT tests FROM pierre_rambaud WHERE energy = TRUE";
 
@@ -152,9 +152,9 @@ class DoctrineQueryParserTest extends TestCase
         $this->expectException(UnsupportedParameterException::class);
 
         $preparedQuery = 'SELECT tests FROM pierre_rambaud WHERE motivation IN (:motivation)';
-        $queryParameters = [
+        $queryParameters = array(
             'motivation' => new stdClass(),
-        ];
+        );
 
         $this->queryParser->parse($preparedQuery, $queryParameters);
     }
@@ -162,18 +162,18 @@ class DoctrineQueryParserTest extends TestCase
     public function testParseWithNumericNamedParameters()
     {
         $preparedQuery = 'SELECT * FROM product WHERE id_product = :id_product';
-        $queryParameters = [
+        $queryParameters = array(
             'id_product' => 2,
-        ];
+        );
 
         $expectedQuery = "SELECT * FROM product WHERE id_product = 2";
 
         $this->assertSame($expectedQuery, $this->queryParser->parse($preparedQuery, $queryParameters));
 
         $preparedQuery = 'SELECT * FROM product WHERE price = :price';
-        $queryParameters = [
+        $queryParameters = array(
             'price' => 3.99,
-        ];
+        );
 
         $expectedQuery = "SELECT * FROM product WHERE price = 3.99";
 

@@ -28,11 +28,11 @@ namespace PrestaShop\PrestaShop\Core\Product\Search;
 
 class ProductSearchResult
 {
-    private $products = [];
+    private $products = array();
     private $totalProductsCount;
     private $facetCollection;
     private $encodedFacets;
-    private $availableSortOrders = [];
+    private $availableSortOrders = array();
     private $currentSortOrder;
 
     public function setProducts(array $products)
@@ -97,7 +97,7 @@ class ProductSearchResult
 
     public function setAvailableSortOrders(array $sortOrders)
     {
-        $this->availableSortOrders = [];
+        $this->availableSortOrders = array();
 
         foreach ($sortOrders as $sortOrder) {
             $this->addAvailableSortOrder($sortOrder);

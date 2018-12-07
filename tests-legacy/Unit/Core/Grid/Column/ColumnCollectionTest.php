@@ -41,11 +41,11 @@ class ColumnCollectionTest extends TestCase
             ->add($this->createColumnMock('third'))
         ;
 
-        $this->assertEquals([
+        $this->assertEquals(array(
             'first',
             'second',
             'third',
-        ], $this->getColumnPositions($columns));
+        ), $this->getColumnPositions($columns));
 
         return $columns;
     }
@@ -61,14 +61,14 @@ class ColumnCollectionTest extends TestCase
             ->addBefore('third', $this->createColumnMock('before_third'))
         ;
 
-        $this->assertEquals([
+        $this->assertEquals(array(
             'before_first',
             'first',
             'before_second',
             'second',
             'before_third',
             'third',
-        ], $this->getColumnPositions($columns));
+        ), $this->getColumnPositions($columns));
 
         return $columns;
     }
@@ -84,7 +84,7 @@ class ColumnCollectionTest extends TestCase
             ->addAfter('third', $this->createColumnMock('after_third'))
         ;
 
-        $this->assertEquals([
+        $this->assertEquals(array(
             'before_first',
             'first',
             'after_first',
@@ -94,7 +94,7 @@ class ColumnCollectionTest extends TestCase
             'before_third',
             'third',
             'after_third'
-        ], $this->getColumnPositions($columns));
+        ), $this->getColumnPositions($columns));
 
         return $columns;
     }
@@ -128,7 +128,7 @@ class ColumnCollectionTest extends TestCase
             ->addAfter('second', $this->createColumnMock('after_second'))
         ;
 
-        $this->assertEquals([
+        $this->assertEquals(array(
             'before_first',
             'before_first_2',
             'before_first_3',
@@ -138,7 +138,7 @@ class ColumnCollectionTest extends TestCase
             'second',
             'after_second',
             'third',
-        ], $this->getColumnPositions($columns));
+        ), $this->getColumnPositions($columns));
     }
 
     public function testNumericColumnIdAreAccepted()
@@ -153,7 +153,7 @@ class ColumnCollectionTest extends TestCase
             ->add($this->createColumnMock(5))
         ;
 
-        $this->assertEquals([
+        $this->assertEquals(array(
             2,
             3,
             1,
@@ -161,7 +161,7 @@ class ColumnCollectionTest extends TestCase
             'second',
             9,
             5,
-        ], $this->getColumnPositions($columns));
+        ), $this->getColumnPositions($columns));
     }
 
     public function testItThrowsExceptionWhenAddingColumnAfterNonExistingColumn()
@@ -201,7 +201,8 @@ class ColumnCollectionTest extends TestCase
     {
         $column = $this->createMock(ColumnInterface::class);
         $column->method('getId')
-            ->willReturn($id);
+            ->willReturn($id)
+        ;
 
         return $column;
     }
@@ -213,7 +214,7 @@ class ColumnCollectionTest extends TestCase
      */
     private function getColumnPositions(ColumnCollection $columns)
     {
-        $positions= [];
+        $positions = array();
 
         foreach ($columns as $column) {
             $positions[] = $column->getId();

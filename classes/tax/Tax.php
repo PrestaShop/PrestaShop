@@ -130,7 +130,8 @@ class TaxCore extends ObjectModel
      */
     public function isUsed()
     {
-        return Db::getInstance()->getValue('
+        return Db::getInstance()->getValue(
+            '
 		SELECT `id_tax`
 		FROM `' . _DB_PREFIX_ . 'order_detail_tax`
 		WHERE `id_tax` = ' . (int) $this->id

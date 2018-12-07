@@ -64,53 +64,53 @@ class FloatParserTest extends TestCase
     public function provideValidStrings()
     {
         $expected = 1234567.89;
-        return [
-            ['1234567.89', $expected],
-            ['1234567,89', $expected],
-            ['1,234,567.89', $expected],
-            ['1 234 567.89', $expected],
-            ['1 234 567,89', $expected],
-            ['1,234,567·89', $expected],
-            ['1.234.567,89', $expected],
-            ['12,34,567.89', $expected],
-            ["1'234'567.89", $expected],
-            ['1.234.567,89', $expected],
-            ['123,4567.89', $expected],
-            ['123456789', 123456789.00],
-            ['123,456', 123.456],
-            ['12,345,678', 12345.678],
-            ['9.E-10', 9.E-10],
-            ['-1,234,567.89', -1234567.89],
+        return array(
+            array('1234567.89', $expected),
+            array('1234567,89', $expected),
+            array('1,234,567.89', $expected),
+            array('1 234 567.89', $expected),
+            array('1 234 567,89', $expected),
+            array('1,234,567·89', $expected),
+            array('1.234.567,89', $expected),
+            array('12,34,567.89', $expected),
+            array("1'234'567.89", $expected),
+            array('1.234.567,89', $expected),
+            array('123,4567.89', $expected),
+            array('123456789', 123456789.00),
+            array('123,456', 123.456),
+            array('12,345,678', 12345.678),
+            array('9.E-10', 9.E-10),
+            array('-1,234,567.89', -1234567.89),
             // persian
-            'persian' => ['۲۰٫۵۰۱۲۳۶۴', 20.5012364],
+            'persian' => array('۲۰٫۵۰۱۲۳۶۴', 20.5012364),
             // arabic
-            'arabic' => ['٢٠٫٥٠١٢٣٦٤', 20.5012364],
+            'arabic' => array('٢٠٫٥٠١٢٣٦٤', 20.5012364),
             // edge cases
-            ['1 dot 10', 1.1],
-            ['1 hundred and 10 dot 15', 110.15],
-            ['1 thousand and 10', 1.1],
-            ['', 0.0],
-            ['   ', 0.0],
-        ];
+            array('1 dot 10', 1.1),
+            array('1 hundred and 10 dot 15', 110.15),
+            array('1 thousand and 10', 1.1),
+            array('', 0.0),
+            array('   ', 0.0),
+        );
     }
 
     public function provideInvalidValues()
     {
-        return [
-            ['1,'],
-            [',1'],
-            [','],
-            [' , '],
-            ['foo'],
-            ['1foo'],
-            ['0xff'],
-            ['minus 10'],
-            [false],
-            [true],
-            [null],
-            [array()],
-            [array(123)],
-            [new \stdClass()],
-        ];
+        return array(
+            array('1,'),
+            array(',1'),
+            array(','),
+            array(' , '),
+            array('foo'),
+            array('1foo'),
+            array('0xff'),
+            array('minus 10'),
+            array(false),
+            array(true),
+            array(null),
+            array(array()),
+            array(array(123)),
+            array(new \stdClass()),
+        );
     }
 }

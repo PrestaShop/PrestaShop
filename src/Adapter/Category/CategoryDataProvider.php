@@ -141,15 +141,15 @@ class CategoryDataProvider
     {
         $productCategories = $product->getCategories();
 
-        $results = [];
+        $results = array();
         foreach ($productCategories as $productCategory) {
             if (isset($this->categoryList[$productCategory])) {
                 $category = $this->categoryList[$productCategory];
-                $results[] = [
+                $results[] = array(
                     'id' => $category['id_category'],
                     'name' => $category['name'],
                     'breadcrumb' => $this->getBreadCrumb($category['id_category']),
-                ];
+                );
                 $productCategories[$category['name']] = $category['id_category'];
             }
         }
@@ -164,13 +164,13 @@ class CategoryDataProvider
      */
     public function getCategoriesWithBreadCrumb()
     {
-        $results = [];
+        $results = array();
         foreach ($this->categoryList as $category) {
-            $results[] = [
+            $results[] = array(
                 'id' => $category['id_category'],
                 'name' => $category['name'],
                 'breadcrumb' => $this->getBreadCrumb($category['id_category']),
-            ];
+            );
         }
 
         return $results;
@@ -199,7 +199,7 @@ class CategoryDataProvider
      */
     public function getParentNamesFromList($categoryId)
     {
-        $categories = [];
+        $categories = array();
 
         while (isset($this->categoryList[$categoryId])) {
             $category = $this->categoryList[$categoryId];
@@ -244,15 +244,15 @@ class CategoryDataProvider
             $limit
         );
 
-        $results = [];
+        $results = array();
         foreach ($searchCategories as $category) {
             $breadCrumb = $this->getBreadCrumb($category['id_category']);
-            $results[] = [
+            $results[] = array(
                 'id' => $category['id_category'],
                 'name' => ($nameAsBreadCrumb ? $breadCrumb : $category['name']),
                 'breadcrumb' => $breadCrumb,
                 'image' => Context::getContext()->link->getCatImageLink($category['name'], $category['id_category']),
-            ];
+            );
         }
 
         return $results;

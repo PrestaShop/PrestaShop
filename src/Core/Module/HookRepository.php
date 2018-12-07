@@ -62,12 +62,12 @@ class HookRepository
 
     public function createHook($hook_name, $title = '', $description = '', $position = 1)
     {
-        $this->db->insert('hook', [
+        $this->db->insert('hook', array(
             'name' => $this->db->escape($hook_name),
             'title' => $this->db->escape($title),
             'description' => $this->db->escape($description),
             'position' => $this->db->escape($position),
-        ], false, true, Db::REPLACE);
+        ), false, true, Db::REPLACE);
 
         return $this->getIdByName($hook_name);
     }
@@ -140,7 +140,7 @@ class HookRepository
                     $extra_data = current($module);
                 } else {
                     $module_name = $module;
-                    $extra_data = [];
+                    $extra_data = array();
                 }
 
                 ++$position;
@@ -149,12 +149,12 @@ class HookRepository
                     continue;
                 }
 
-                $row = [
+                $row = array(
                     'id_module' => $id_module,
                     'id_shop' => (int) $this->shop->id,
                     'id_hook' => $id_hook,
                     'position' => $position,
-                ];
+                );
 
                 $this->db->insert('hook_module', $row);
 
@@ -184,12 +184,12 @@ class HookRepository
         ");
 
         foreach ($pages as $page) {
-            $this->db->insert('hook_module_exceptions', [
+            $this->db->insert('hook_module_exceptions', array(
                 'id_shop' => $id_shop,
                 'id_module' => $id_module,
                 'id_hook' => $id_hook,
                 'file_name' => $page,
-            ]);
+            ));
         }
 
         return $this;
@@ -230,7 +230,7 @@ class HookRepository
 
         $rows = $this->db->executeS($sql);
 
-        $hooks = [];
+        $hooks = array();
 
         foreach ($rows as $row) {
             $exceptions = $this->getModuleHookExceptions(
@@ -241,9 +241,9 @@ class HookRepository
             if (empty($exceptions)) {
                 $hooks[$row['hook_name']][] = $row['module_name'];
             } else {
-                $hooks[$row['hook_name']][$row['module_name']] = [
+                $hooks[$row['hook_name']][$row['module_name']] = array(
                     'except_pages' => $exceptions,
-                ];
+                );
             }
         }
 
@@ -252,7 +252,7 @@ class HookRepository
 
     public function getDisplayHooksWithModules()
     {
-        $hooks = [];
+        $hooks = array();
         foreach ($this->getHooksWithModules() as $hook_name => $modules) {
             if ($this->hookInfo->isDisplayHookName($hook_name)) {
                 $hooks[$hook_name] = $modules;

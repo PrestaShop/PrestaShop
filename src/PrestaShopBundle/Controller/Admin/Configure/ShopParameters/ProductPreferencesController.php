@@ -53,20 +53,20 @@ class ProductPreferencesController extends FrameworkBundleAdminController
 
         if (!in_array(
             $this->authorizationLevel($legacyController),
-            [
+            array(
                 PageVoter::LEVEL_READ,
                 PageVoter::LEVEL_UPDATE,
                 PageVoter::LEVEL_CREATE,
                 PageVoter::LEVEL_DELETE,
-            ]
+            )
         )) {
             return $this->redirectToDefaultPage();
         }
 
         $form = $this->get('prestashop.admin.product_preferences.form_handler')->getForm();
 
-        return [
-            'layoutHeaderToolbarBtn' => [],
+        return array(
+            'layoutHeaderToolbarBtn' => array(),
             'layoutTitle' => $this->trans('Product Settings', 'Admin.Navigation.Menu'),
             'requireAddonsSearch' => true,
             'requireBulkAction' => false,
@@ -75,7 +75,7 @@ class ProductPreferencesController extends FrameworkBundleAdminController
             'help_link' => $this->generateSidebarLink($legacyController),
             'requireFilterStatus' => false,
             'form' => $form->createView(),
-        ];
+        );
     }
 
     /**
@@ -91,11 +91,11 @@ class ProductPreferencesController extends FrameworkBundleAdminController
 
         if (!in_array(
             $this->authorizationLevel($legacyController),
-            [
+            array(
                 PageVoter::LEVEL_UPDATE,
                 PageVoter::LEVEL_CREATE,
                 PageVoter::LEVEL_DELETE,
-            ]
+            )
         )) {
             $this->addFlash('error', $this->trans('You do not have permission to edit this.', 'Admin.Notifications.Error'));
 

@@ -71,12 +71,12 @@ class PositionsControllerTest extends WebTestCase
             $this->router->generate(
                 'api_improve_design_positions_update'
             ),
-            [
+            array(
                 'moduleId' => 999999,
                 'hookId' => $this->hookId,
                 'way' => 1,
-                'positions' => []
-            ]
+                'positions' => array()
+            )
         );
 
         $response = $this->client->getResponse();
@@ -88,7 +88,7 @@ class PositionsControllerTest extends WebTestCase
         $json = json_decode($response->getContent(), true);
         $this->assertArrayHasKey('hasError', $json['data']);
         $this->assertTrue($json['data']['hasError']);
-        $this->assertEquals(['This module cannot be loaded.'], $json['data']['errors']);
+        $this->assertEquals(array('This module cannot be loaded.'), $json['data']['errors']);
     }
 
     public function testMoveHookPositionToBottomWithUnavailablePositions()
@@ -98,12 +98,12 @@ class PositionsControllerTest extends WebTestCase
             $this->router->generate(
                 'api_improve_design_positions_update'
             ),
-            [
+            array(
                 'moduleId' => $this->moduleId,
                 'hookId' => $this->hookId,
                 'way' => 1,
-                'positions' => []
-            ]
+                'positions' => array()
+            )
         );
 
         $response = $this->client->getResponse();
@@ -115,7 +115,7 @@ class PositionsControllerTest extends WebTestCase
         $json = json_decode($response->getContent(), true);
         $this->assertArrayHasKey('hasError', $json['data']);
         $this->assertTrue($json['data']['hasError']);
-        $this->assertEquals(['Cannot update module position.'], $json['data']['errors']);
+        $this->assertEquals(array('Cannot update module position.'), $json['data']['errors']);
     }
 
     public function testMoveHookPositionToBottom()
@@ -125,15 +125,15 @@ class PositionsControllerTest extends WebTestCase
             $this->router->generate(
                 'api_improve_design_positions_update'
             ),
-            [
+            array(
                 'moduleId' => $this->moduleId,
                 'hookId' => $this->otherModuleId,
                 'way' => 1,
-                'positions' => [
+                'positions' => array(
                     sprintf('%d_%d', $this->otherModuleId, $this->hookId),
                     sprintf('%d_%d', $this->moduleId, $this->hookId),
-                ]
-            ]
+                )
+            )
         );
 
         $response = $this->client->getResponse();
@@ -144,7 +144,7 @@ class PositionsControllerTest extends WebTestCase
 
         $json = json_decode($response->getContent(), true);
         $this->assertArrayNotHasKey('hasError', $json['data']);
-        $this->assertEquals([], $json['data']);
+        $this->assertEquals(array(), $json['data']);
     }
 
     public function testMoveHookPositionToTop()
@@ -154,15 +154,15 @@ class PositionsControllerTest extends WebTestCase
             $this->router->generate(
                 'api_improve_design_positions_update'
             ),
-            [
+            array(
                 'moduleId' => $this->moduleId,
                 'hookId' => $this->hookId,
                 'way' => 0,
-                'positions' => [
+                'positions' => array(
                     sprintf('%d_%d', $this->moduleId, $this->hookId),
                     sprintf('%d_%d', $this->otherModuleId, $this->hookId),
-                ]
-            ]
+                )
+            )
         );
 
         $response = $this->client->getResponse();
@@ -173,6 +173,6 @@ class PositionsControllerTest extends WebTestCase
 
         $json = json_decode($response->getContent(), true);
         $this->assertArrayNotHasKey('hasError', $json['data']);
-        $this->assertEquals([], $json['data']);
+        $this->assertEquals(array(), $json['data']);
     }
 }

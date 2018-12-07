@@ -78,8 +78,8 @@ final class MainCountryKpi implements KpiInterface
         $kpi->id = 'box-country';
         $kpi->icon = 'home';
         $kpi->color = 'color2';
-        $kpi->title = $this->translator->trans('Main Country', [], 'Admin.International.Feature');
-        $kpi->subtitle = $this->translator->trans('30 Days', [], 'Admin.Global');
+        $kpi->title = $this->translator->trans('Main Country', array(), 'Admin.International.Feature');
+        $kpi->subtitle = $this->translator->trans('30 Days', array(), 'Admin.Global');
 
         if (false !== $mainCountry) {
             $kpi->value = $mainCountry;

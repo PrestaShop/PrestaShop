@@ -51,10 +51,10 @@ final class DataRowCollectionPresenter implements DataRowCollectionPresenterInte
      */
     public function present(DataRowCollectionInterface $dataRowCollection)
     {
-        $presentedCollection = [
-            'rows' => [],
+        $presentedCollection = array(
+            'rows' => array(),
             'row_size' => $dataRowCollection->getLargestRowSize(),
-        ];
+        );
 
         /** @var DataRowInterface $dataRow */
         foreach ($dataRowCollection as $dataRow) {

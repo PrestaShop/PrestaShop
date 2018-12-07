@@ -46,14 +46,14 @@ final class MetaEraser
      */
     public function erase(array $metaIds)
     {
-        $errors = [];
+        $errors = array();
 
         if (empty($metaIds)) {
-            $errors[] = [
+            $errors[] = array(
                 'key' => 'You must select at least one element to delete.',
-                'parameters' => [],
+                'parameters' => array(),
                 'domain' => 'Admin.Notifications.Error',
-            ];
+            );
 
             return $errors;
         }
@@ -64,13 +64,13 @@ final class MetaEraser
         /** @var Meta $item */
         foreach ($metaData->getResults() as $item) {
             if (!$item->delete()) {
-                $errors[] = [
+                $errors[] = array(
                     'key' => 'Can\'t delete #%id%',
-                    'parameters' => [
+                    'parameters' => array(
                         '%id%' => $item->id,
-                    ],
+                    ),
                     'domain' => 'Admin.Notifications.Error',
-                ];
+                );
 
                 continue;
             }

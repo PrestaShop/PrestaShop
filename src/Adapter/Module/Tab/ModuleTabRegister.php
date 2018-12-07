@@ -201,8 +201,9 @@ class ModuleTabRegister
                     ->in($modulePath)
                     ->depth('== 0')
                     ->name('*Controller.php')
-                    ->exclude(['index.php'])
-                    ->contains('/Controller\s+extends\s+/i');
+                    ->exclude(array('index.php'))
+                    ->contains('/Controller\s+extends\s+/i')
+        ;
 
         return iterator_to_array($moduleFolder);
     }
@@ -279,7 +280,9 @@ class ModuleTabRegister
                 $this->translator->trans(
                     'Failed to install admin tab "%name%".',
                     array('%name%' => $tab->name),
-                    'Admin.Modules.Notification'));
+                    'Admin.Modules.Notification'
+                )
+            );
         }
     }
 

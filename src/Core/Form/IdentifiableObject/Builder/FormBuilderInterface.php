@@ -41,7 +41,7 @@ interface FormBuilderInterface
      *
      * @return FormInterface
      */
-    public function getForm(array $data = [], array $options = []);
+    public function getForm(array $data = array(), array $options = array());
 
     /**
      * Create new form for given object.
@@ -52,5 +52,5 @@ interface FormBuilderInterface
      *
      * @return FormInterface
      */
-    public function getFormFor($id, array $data = [], array $options = []);
+    public function getFormFor($id, array $data = array(), array $options = array());
 }

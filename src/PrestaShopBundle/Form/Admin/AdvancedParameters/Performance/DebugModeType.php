@@ -42,15 +42,16 @@ class DebugModeType extends CommonAbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('disable_non_native_modules', SwitchType::class, [
+            ->add('disable_non_native_modules', SwitchType::class, array(
                 'required' => true,
-            ])
-            ->add('disable_overrides', SwitchType::class, [
+            ))
+            ->add('disable_overrides', SwitchType::class, array(
                 'required' => true,
-            ])
-            ->add('debug_mode', SwitchType::class, [
+            ))
+            ->add('debug_mode', SwitchType::class, array(
                 'required' => true,
-            ]);
+            ))
+        ;
     }
 
     /**
@@ -58,9 +59,9 @@ class DebugModeType extends CommonAbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
+        $resolver->setDefaults(array(
             'translation_domain' => 'Admin.Advparameters.Feature',
-        ]);
+        ));
     }
 
     /**

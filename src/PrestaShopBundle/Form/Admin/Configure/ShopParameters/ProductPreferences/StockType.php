@@ -48,28 +48,29 @@ class StockType extends TranslatorAwareType
         $builder
             ->add('allow_ordering_oos', SwitchType::class)
             ->add('stock_management', SwitchType::class)
-            ->add('in_stock_label', TranslatableType::class, [
+            ->add('in_stock_label', TranslatableType::class, array(
                 'type' => TextType::class,
-            ])
-            ->add('oos_allowed_backorders', TranslatableType::class, [
+            ))
+            ->add('oos_allowed_backorders', TranslatableType::class, array(
                 'type' => TextType::class,
-            ])
-            ->add('oos_denied_backorders', TranslatableType::class, [
+            ))
+            ->add('oos_denied_backorders', TranslatableType::class, array(
                 'type' => TextType::class,
-            ])
-            ->add('delivery_time', TranslatableType::class, [
+            ))
+            ->add('delivery_time', TranslatableType::class, array(
                 'type' => TextType::class,
-            ])
-            ->add('oos_delivery_time', TranslatableType::class, [
+            ))
+            ->add('oos_delivery_time', TranslatableType::class, array(
                 'type' => TextType::class,
-            ])
-            ->add('pack_stock_management', ChoiceType::class, [
-                'choices' => [
+            ))
+            ->add('pack_stock_management', ChoiceType::class, array(
+                'choices' => array(
                     'Decrement pack only.' => 0,
                     'Decrement products in pack only.' => 1,
                     'Decrement both.' => 2,
-                ],
-            ]);
+                ),
+            ))
+        ;
     }
 
     /**
@@ -77,9 +78,9 @@ class StockType extends TranslatorAwareType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
+        $resolver->setDefaults(array(
             'translation_domain' => 'Admin.Shopparameters.Feature',
-        ]);
+        ));
     }
 
     /**

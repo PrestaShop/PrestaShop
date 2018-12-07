@@ -86,7 +86,7 @@ class CombinationController extends FrameworkBundleAdminController
 
         if (is_array($combinations)) {
             foreach ($combinations as $combination) {
-                $combinationList[] = ['id' => $combination['id_product_attribute'], 'name' => $combination['attribute_designation']];
+                $combinationList[] = array('id' => $combination['id_product_attribute'], 'name' => $combination['attribute_designation']);
             }
         }
 

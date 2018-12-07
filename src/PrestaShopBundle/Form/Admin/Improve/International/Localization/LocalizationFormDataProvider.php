@@ -72,11 +72,11 @@ class LocalizationFormDataProvider implements FormDataProviderInterface
      */
     public function getData()
     {
-        return [
+        return array(
             'configuration' => $this->localizationConfiguration->getConfiguration(),
             'local_units' => $this->localUnitsConfiguration->getConfiguration(),
             'advanced' => $this->advancedConfiguration->getConfiguration(),
-        ];
+        );
     }
 
     /**

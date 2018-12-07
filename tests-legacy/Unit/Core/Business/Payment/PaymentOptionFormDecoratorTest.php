@@ -45,7 +45,7 @@ class PaymentOptionFormDecoratorTest extends UnitTestCase
 </form>
 </div>";
 
-        $exp  =
+        $exp =
 "<div>
 <p>Yolo</p>
 <form>

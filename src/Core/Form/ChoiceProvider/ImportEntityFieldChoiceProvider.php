@@ -65,10 +65,10 @@ final class ImportEntityFieldChoiceProvider implements FormChoiceProviderInterfa
         try {
             $entityFieldCollection = $this->entityFieldsProviderFinder->find($this->selectedEntity)->getCollection();
         } catch (NotSupportedImportEntityException $e) {
-            return [];
+            return array();
         }
 
-        $choices = [];
+        $choices = array();
 
         foreach ($entityFieldCollection as $entityField) {
             $label = $entityField->getLabel();

@@ -115,33 +115,33 @@ class SurvivalTest extends WebTestCase
      */
     public function getDataProvider()
     {
-        return [
-            'administration_page' => ['Administration', 'admin_administration'],
-            'admin_performance' => ['Performance', 'admin_performance'],
-            'admin_import' => ['Import', 'admin_import'],
-            'admin_preferences' => ['Preferences', 'admin_preferences'],
-            'admin_order_preferences' => ['Order Preferences', 'admin_order_preferences'],
-            'admin_maintenance' => ['Maintenance', 'admin_maintenance'],
-            'admin_product_preferences' => ['Product Preferences', 'admin_product_preferences'],
-            'admin_module_notification' => ['Module notifications', 'admin_module_notification'],
-            'admin_module_updates' => ['Module notifications', 'admin_module_updates'],
-            'admin_customer_preferences' => ['Customer Preferences', 'admin_customer_preferences'],
-            'admin_order_delivery_slip' => ['Delivery Slips', 'admin_order_delivery_slip'],
-            'admin_logs_index' => ['Logs', 'admin_logs_index'],
-            'admin_system_information' => ['Information', 'admin_system_information'],
+        return array(
+            'administration_page' => array('Administration', 'admin_administration'),
+            'admin_performance' => array('Performance', 'admin_performance'),
+            'admin_import' => array('Import', 'admin_import'),
+            'admin_preferences' => array('Preferences', 'admin_preferences'),
+            'admin_order_preferences' => array('Order Preferences', 'admin_order_preferences'),
+            'admin_maintenance' => array('Maintenance', 'admin_maintenance'),
+            'admin_product_preferences' => array('Product Preferences', 'admin_product_preferences'),
+            'admin_module_notification' => array('Module notifications', 'admin_module_notification'),
+            'admin_module_updates' => array('Module notifications', 'admin_module_updates'),
+            'admin_customer_preferences' => array('Customer Preferences', 'admin_customer_preferences'),
+            'admin_order_delivery_slip' => array('Delivery Slips', 'admin_order_delivery_slip'),
+            'admin_logs_index' => array('Logs', 'admin_logs_index'),
+            'admin_system_information' => array('Information', 'admin_system_information'),
             // @todo: something is missing for Vuejs application in translations page.
             //'admin_international_translation_overview' => ['Translations', 'admin_international_translation_overview'],
-            'admin_theme_catalog' => ['Themes Catalog', 'admin_theme_catalog'],
-            'admin_module_catalog' => ['Module selection', 'admin_module_catalog'],
-            'admin_module_manage' => ['Module Manager', 'admin_module_manage'],
-            'admin_shipping_preferences' => ['Shipping Preferences', 'admin_shipping_preferences'],
-            'admin_payment_methods' => ['Payment Methods', 'admin_payment_methods'],
-            'admin_geolocation_index' => ['Geolocation', 'admin_geolocation_index'],
-            'admin_localization_index' => ['Localization', 'admin_localization_index'],
-            'admin_payment_preferences' => ['Payment preferences', 'admin_payment_preferences'],
-            'admin_modules_positions' => ['Positions', 'admin_modules_positions'],
-            'admin_backups_index' => ['DB Backup', 'admin_backups_index'],
-        ];
+            'admin_theme_catalog' => array('Themes Catalog', 'admin_theme_catalog'),
+            'admin_module_catalog' => array('Module selection', 'admin_module_catalog'),
+            'admin_module_manage' => array('Module Manager', 'admin_module_manage'),
+            'admin_shipping_preferences' => array('Shipping Preferences', 'admin_shipping_preferences'),
+            'admin_payment_methods' => array('Payment Methods', 'admin_payment_methods'),
+            'admin_geolocation_index' => array('Geolocation', 'admin_geolocation_index'),
+            'admin_localization_index' => array('Localization', 'admin_localization_index'),
+            'admin_payment_preferences' => array('Payment preferences', 'admin_payment_preferences'),
+            'admin_modules_positions' => array('Positions', 'admin_modules_positions'),
+            'admin_backups_index' => array('DB Backup', 'admin_backups_index'),
+        );
     }
 
     /**
@@ -158,11 +158,11 @@ class SurvivalTest extends WebTestCase
 
         $tokenMock = $this
             ->getMockBuilder(AbstractToken::class)
-            ->setMethods([
+            ->setMethods(array(
                 'getUser',
                 'getRoles',
                 'isAuthenticated',
-            ])
+            ))
             ->getMockForAbstractClass()
         ;
 
@@ -173,7 +173,7 @@ class SurvivalTest extends WebTestCase
 
         $tokenMock->expects($this->any())
             ->method('getRoles')
-            ->willReturn([])
+            ->willReturn(array())
         ;
 
         $tokenMock->expects($this->any())
@@ -182,9 +182,9 @@ class SurvivalTest extends WebTestCase
         ;
 
         $tokenStorageMock = $this->getMockBuilder(TokenStorage::class)
-            ->setMethods([
+            ->setMethods(array(
                 'getToken',
-            ])
+            ))
             ->disableAutoload()
             ->disableOriginalConstructor()
             ->getMock()

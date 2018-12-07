@@ -76,8 +76,8 @@ class UrlSchemaType extends AbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
+        $resolver->setDefaults(array(
             'label' => false,
-        ]);
+        ));
     }
 }

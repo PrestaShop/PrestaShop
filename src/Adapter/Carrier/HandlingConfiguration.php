@@ -54,11 +54,11 @@ class HandlingConfiguration implements DataConfigurationInterface
      */
     public function getConfiguration()
     {
-        return [
+        return array(
             'shipping_handling_charges' => $this->configuration->get('PS_SHIPPING_HANDLING'),
             'free_shipping_price' => $this->configuration->get('PS_SHIPPING_FREE_PRICE'),
             'free_shipping_weight' => $this->configuration->get('PS_SHIPPING_FREE_WEIGHT'),
-        ];
+        );
     }
 
     /**
@@ -72,7 +72,7 @@ class HandlingConfiguration implements DataConfigurationInterface
             $this->configuration->set('PS_SHIPPING_FREE_WEIGHT', $configuration['free_shipping_weight']);
         }
 
-        return [];
+        return array();
     }
 
     /**

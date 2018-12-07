@@ -57,10 +57,10 @@ class ProductControllerTest extends WebTestCase
     public function getUnitActions()
     {
         return array(
-            ['delete'],
-            ['duplicate'],
-            ['activate'],
-            ['deactivate']
+            array('delete'),
+            array('duplicate'),
+            array('activate'),
+            array('deactivate')
         );
     }
 
@@ -81,10 +81,10 @@ class ProductControllerTest extends WebTestCase
     public function getBulkActions()
     {
         return array(
-            ['activate_all'],
-            ['deactivate_all'],
-            ['duplicate_all'],
-            ['delete_all']
+            array('activate_all'),
+            array('deactivate_all'),
+            array('duplicate_all'),
+            array('delete_all')
         );
     }
 

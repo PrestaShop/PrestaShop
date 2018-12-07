@@ -214,7 +214,7 @@ class ModuleManagerBuilder
         $themeName = Context::getContext()->shop->theme_name;
         $themeModules = $themeName ?
                         $themeManagerBuilder->buildRepository()->getInstanceByName($themeName)->getModulesToEnable() :
-                        [];
+                        array();
 
         self::$legacyLogger = new LegacyLogger();
         self::$categoriesProvider = new CategoriesProvider(

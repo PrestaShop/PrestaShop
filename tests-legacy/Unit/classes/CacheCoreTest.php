@@ -40,7 +40,8 @@ class CacheCoreTest extends PHPUnit_Framework_TestCase
 
         $memcachedMock = $this->getMockBuilder('CacheMemcache')
             ->setMethods(array('_set', '_get', 'isConnected', '_delete', '_deleteMulti'))
-            ->getMock();
+            ->getMock()
+        ;
 
         $memcachedMock->method('isConnected')->willReturn(true);
         $memcachedMock->method('_get')->willReturnCallback(array($this, 'getFromArray'));

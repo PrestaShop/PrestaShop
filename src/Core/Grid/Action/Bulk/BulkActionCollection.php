@@ -50,15 +50,15 @@ final class BulkActionCollection extends AbstractCollection implements BulkActio
      */
     public function toArray()
     {
-        $bulkActionsArray = [];
+        $bulkActionsArray = array();
 
         foreach ($this->items as $bulkAction) {
-            $bulkActionsArray[] = [
+            $bulkActionsArray[] = array(
                 'id' => $bulkAction->getId(),
                 'name' => $bulkAction->getName(),
                 'type' => $bulkAction->getType(),
                 'options' => $bulkAction->getOptions(),
-            ];
+            );
         }
 
         return $bulkActionsArray;

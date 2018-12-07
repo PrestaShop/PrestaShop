@@ -100,11 +100,11 @@ final class MetaSettingsFormDataProvider implements FormDataProviderInterface
      */
     public function getData()
     {
-        return [
+        return array(
             'set_up_urls' => $this->setUpUrlDataConfiguration->getConfiguration(),
             'shop_urls' => $this->shopUrlsDataConfiguration->getConfiguration(),
             'url_schema' => $this->urlSchemaDataConfiguration->getConfiguration(),
-        ];
+        );
     }
 
     /**
@@ -156,15 +156,15 @@ final class MetaSettingsFormDataProvider implements FormDataProviderInterface
      */
     private function validateUrlSchema(array $configuration)
     {
-        $patternErrors = [];
-        $requiredFieldErrors = [];
+        $patternErrors = array();
+        $requiredFieldErrors = array();
         foreach ($configuration as $routeId => $rule) {
             if (!$this->routeValidator->isRoutePattern($rule)) {
                 $patternErrors[] = $this->translator->trans(
                   'The route %routeRule% is not valid',
-                  [
+                  array(
                       '%routeRule%' => htmlspecialchars($rule),
-                  ],
+                  ),
                   'Admin.Shopparameters.Feature'
                 );
             }
@@ -175,11 +175,11 @@ final class MetaSettingsFormDataProvider implements FormDataProviderInterface
                 foreach ($missingKeywords as $keyword) {
                     $requiredFieldErrors[] = $this->translator->trans(
                         'Keyword "{%keyword%}" required for route "%routeName%" (rule: "%routeRule%")',
-                        [
+                        array(
                             '%keyword%' => $keyword,
                             '%routeName%' => $routeId,
                             '%routeRule%' => $rule,
-                        ],
+                        ),
                         'Admin.Shopparameters.Feature'
                     );
                 }
@@ -202,11 +202,11 @@ final class MetaSettingsFormDataProvider implements FormDataProviderInterface
      */
     private function validateShopUrl(array $configuration)
     {
-        $errors = [];
+        $errors = array();
         if (!$this->validate->isCleanHtml($configuration['domain'])) {
             $errors[] = $this->translator->trans(
                 'This domain is not valid.',
-                [],
+                array(),
                 'Admin.Notifications.Error'
             );
         }
@@ -214,7 +214,7 @@ final class MetaSettingsFormDataProvider implements FormDataProviderInterface
         if (!$this->validate->isCleanHtml($configuration['domain_ssl'])) {
             $errors[] = $this->translator->trans(
                 'The SSL domain is not valid.',
-                [],
+                array(),
                 'Admin.Notifications.Error'
             );
         }

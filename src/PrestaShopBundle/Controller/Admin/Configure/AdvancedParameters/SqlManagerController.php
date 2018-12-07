@@ -85,21 +85,21 @@ class SqlManagerController extends FrameworkBundleAdminController
 
         $settingsForm = $this->getSettingsFormHandler()->getForm();
 
-        return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/RequestSql/index.html.twig', [
-            'layoutHeaderToolbarBtn' => [
-                'add' => [
+        return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/RequestSql/index.html.twig', array(
+            'layoutHeaderToolbarBtn' => array(
+                'add' => array(
                     'href' => $this->generateUrl('admin_sql_requests_create'),
                     'desc' => $this->trans('Add new SQL query', 'Admin.Advparameters.Feature'),
                     'icon' => 'add_circle_outline',
-                ],
-            ],
+                ),
+            ),
             'layoutTitle' => $this->trans('SQL Manager', 'Admin.Navigation.Menu'),
             'requireAddonsSearch' => true,
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'requestSqlSettingsForm' => $settingsForm->createView(),
             'requestSqlGrid' => $presentedGrid,
-        ]);
+        ));
     }
 
     /**
@@ -119,13 +119,13 @@ class SqlManagerController extends FrameworkBundleAdminController
         $filtersForm = $gridFilterFormFactory->create($emailLogsDefinition);
         $filtersForm->handleRequest($request);
 
-        $filters = [];
+        $filters = array();
 
         if ($filtersForm->isSubmitted()) {
             $filters = $filtersForm->getData();
         }
 
-        return $this->redirectToRoute('admin_sql_requests_index', ['filters' => $filters]);
+        return $this->redirectToRoute('admin_sql_requests_index', array('filters' => $filters));
     }
 
     /**
@@ -186,14 +186,14 @@ class SqlManagerController extends FrameworkBundleAdminController
             return $this->redirectToRoute('admin_sql_requests_index');
         }
 
-        return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/RequestSql/create.html.twig', [
+        return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/RequestSql/create.html.twig', array(
             'layoutTitle' => $this->trans('SQL Manager', 'Admin.Navigation.Menu'),
             'requireAddonsSearch' => true,
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'requestSqlForm' => $sqlRequestForm->createView(),
             'dbTableNames' => $this->getDatabaseTables(),
-        ]);
+        ));
     }
 
     /**
@@ -233,14 +233,14 @@ class SqlManagerController extends FrameworkBundleAdminController
             return $this->redirectToRoute('admin_sql_requests_index');
         }
 
-        return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/RequestSql/edit.html.twig', [
+        return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/RequestSql/edit.html.twig', array(
             'layoutTitle' => $this->trans('SQL Manager', 'Admin.Navigation.Menu'),
             'requireAddonsSearch' => true,
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'requestSqlForm' => $sqlRequestForm->createView(),
             'dbTableNames' => $this->getDatabaseTables(),
-        ]);
+        ));
     }
 
     /**
@@ -333,14 +333,14 @@ class SqlManagerController extends FrameworkBundleAdminController
             return $this->redirectToRoute('admin_sql_requests_index');
         }
 
-        return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/RequestSql/view.html.twig', [
-            'layoutHeaderToolbarBtn' => [],
+        return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/RequestSql/view.html.twig', array(
+            'layoutHeaderToolbarBtn' => array(),
             'layoutTitle' => $this->trans('SQL Manager', 'Admin.Navigation.Menu'),
             'requireAddonsSearch' => true,
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'sqlRequestResult' => $sqlRequestExecutionResult,
-        ]);
+        ));
     }
 
     /**
@@ -398,7 +398,7 @@ class SqlManagerController extends FrameworkBundleAdminController
         /** @var DatabaseTableFields $databaseFields */
         $databaseFields = $this->getQueryBus()->handle($query);
 
-        return $this->json(['columns' => $databaseFields->getFields()]);
+        return $this->json(array('columns' => $databaseFields->getFields()));
     }
 
     /**
@@ -450,13 +450,13 @@ class SqlManagerController extends FrameworkBundleAdminController
     protected function getSqlRequestDataFromRequest(Request $request)
     {
         if ($request->request->has('sql') || $request->request->has('name')) {
-            return [
+            return array(
                 'sql' => $request->request->get('sql'),
                 'name' => $request->request->get('name'),
-            ];
+            );
         }
 
-        return [];
+        return array();
     }
 
     /**
@@ -471,15 +471,15 @@ class SqlManagerController extends FrameworkBundleAdminController
         $code = $e->getCode();
         $type = get_class($e);
 
-        $exceptionMessages = [
+        $exceptionMessages = array(
             SqlRequestNotFoundException::class => $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'),
             SqlRequestException::class => $this->trans('An error occurred while deleting the object.', 'Admin.Notifications.Error'),
-        ];
+        );
 
-        $deleteExceptionMessages = [
+        $deleteExceptionMessages = array(
             CannotDeleteSqlRequestException::CANNOT_SINGLE_DELETE => $this->trans('An error occurred while deleting the object.', 'Admin.Notifications.Error'),
             CannotDeleteSqlRequestException::CANNOT_BULK_DELETE => $this->trans('An error occurred while deleting this selection.', 'Admin.Notifications.Error'),
-        ];
+        );
 
         if (CannotDeleteSqlRequestException::class === $type
             && isset($deleteExceptionMessages[$code])
@@ -505,9 +505,9 @@ class SqlManagerController extends FrameworkBundleAdminController
     {
         $type = get_class($e);
 
-        $exceptionMessages = [
+        $exceptionMessages = array(
             SqlRequestNotFoundException::class => $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'),
-        ];
+        );
 
         if (isset($exceptionMessages[$type])) {
             return $exceptionMessages[$type];
@@ -545,9 +545,9 @@ class SqlManagerController extends FrameworkBundleAdminController
     {
         $code = $e->getCode();
 
-        $applicationErrors = [
+        $applicationErrors = array(
             FileWritingException::CANNOT_OPEN_FILE_FOR_WRITING => $this->trans('Cannot open export file for writing', 'Admin.Notifications.Error'),
-        ];
+        );
 
         if (isset($applicationErrors[$code])) {
             return $applicationErrors[$code];
@@ -565,9 +565,9 @@ class SqlManagerController extends FrameworkBundleAdminController
     {
         $type = get_class($e);
 
-        $domainErrors = [
+        $domainErrors = array(
             SqlRequestNotFoundException::class => $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'),
-        ];
+        );
 
         if (isset($domainErrors[$type])) {
             return $domainErrors[$type];

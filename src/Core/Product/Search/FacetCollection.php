@@ -28,7 +28,7 @@ namespace PrestaShop\PrestaShop\Core\Product\Search;
 
 class FacetCollection
 {
-    private $facets = [];
+    private $facets = array();
 
     public function addFacet(Facet $facet)
     {
@@ -39,7 +39,7 @@ class FacetCollection
 
     public function setFacets(array $facets)
     {
-        $this->facets = [];
+        $this->facets = array();
         foreach ($facets as $facet) {
             $this->addFacet($facet);
         }

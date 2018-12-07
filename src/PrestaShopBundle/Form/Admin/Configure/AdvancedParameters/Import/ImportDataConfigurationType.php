@@ -75,28 +75,28 @@ class ImportDataConfigurationType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('matches', ChoiceType::class, [
+            ->add('matches', ChoiceType::class, array(
                 'choices' => $this->dataMatchChoices,
                 'choice_translation_domain' => false,
-            ])
-            ->add('match_name', TextType::class, [
+            ))
+            ->add('match_name', TextType::class, array(
                 'required' => false,
-            ])
-            ->add('skip', IntegerType::class, [
+            ))
+            ->add('skip', IntegerType::class, array(
                 'data' => 1,
-            ])
-            ->add('type_value', CollectionType::class, [
+            ))
+            ->add('type_value', CollectionType::class, array(
                 'entry_type' => ChoiceType::class,
-                'entry_options' => [
-                    'choices' => [
+                'entry_options' => array(
+                    'choices' => array(
                             $this->trans('Ignore this column', 'Admin.Advparameters.Feature') => 'no',
-                        ] +
+                        ) +
                         $this->entityFieldChoices,
                     'choice_translation_domain' => false,
                     'label' => false,
-                ],
+                ),
                 'label' => false,
-            ])
+            ))
             ->add('entity', HiddenType::class)
             ->add('csv', HiddenType::class)
             ->add('iso_lang', HiddenType::class)

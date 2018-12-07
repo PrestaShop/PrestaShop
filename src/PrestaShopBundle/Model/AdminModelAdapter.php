@@ -50,6 +50,6 @@ class AdminModelAdapter
             return array('hook' => $hookFields);
         }
 
-        return [];
+        return array();
     }
 }

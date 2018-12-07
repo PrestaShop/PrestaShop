@@ -57,7 +57,7 @@ abstract class CommonAbstractType extends AbstractType
      */
     protected function formatDataChoicesList($list, $mapping_value = 'id', $mapping_name = 'name')
     {
-        $new_list = [];
+        $new_list = array();
         foreach ($list as $item) {
             if (array_key_exists($item[$mapping_name], $new_list)) {
                 return $this->formatDataDuplicateChoicesList($list, $mapping_value, $mapping_name);
@@ -80,7 +80,7 @@ abstract class CommonAbstractType extends AbstractType
      */
     protected function formatDataDuplicateChoicesList($list, $mapping_value = 'id', $mapping_name = 'name')
     {
-        $new_list = [];
+        $new_list = array();
         foreach ($list as $item) {
             $new_list[$item[$mapping_value] . ' - ' . $item[$mapping_name]] = $item[$mapping_value];
         }

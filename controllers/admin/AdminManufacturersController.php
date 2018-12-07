@@ -304,8 +304,14 @@ class AdminManufacturersControllerCore extends AdminController
         }
 
         $image = _PS_MANU_IMG_DIR_ . $manufacturer->id . '.jpg';
-        $image_url = ImageManager::thumbnail($image, $this->table . '_' . (int) $manufacturer->id . '.' . $this->imageType, 350,
-            $this->imageType, true, true);
+        $image_url = ImageManager::thumbnail(
+            $image,
+            $this->table . '_' . (int) $manufacturer->id . '.' . $this->imageType,
+            350,
+            $this->imageType,
+            true,
+            true
+        );
         $image_size = file_exists($image) ? filesize($image) / 1000 : false;
 
         $this->fields_form = array(

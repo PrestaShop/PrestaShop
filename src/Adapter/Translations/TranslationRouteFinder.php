@@ -107,14 +107,14 @@ class TranslationRouteFinder
                     $route = $this->link->getAdminLink(
                         'AdminTranslations',
                         true,
-                        [],
-                        [
+                        array(),
+                        array(
                             'lang' => $language,
                             'type' => self::MAILS,
                             'selected-emails' => self::BODY,
                             'selected-theme' => $propertyAccessor->getValue($routeProperties, '[theme]'),
                             'locale' => $this->translationService->langToLocale($language),
-                        ]
+                        )
                     );
                 }
 
@@ -129,11 +129,11 @@ class TranslationRouteFinder
                     $route = $this->link->getAdminLink(
                         'AdminTranslations',
                         true,
-                        [],
-                        [
+                        array(),
+                        array(
                             'type' => self::MODULES,
                             'module' => $moduleName,
-                        ]
+                        )
                     );
                 }
 
@@ -156,11 +156,11 @@ class TranslationRouteFinder
         $propertyAccessor = PropertyAccess::createPropertyAccessor();
         $language = $propertyAccessor->getValue($routeProperties, '[language]');
 
-        $parameters = [
+        $parameters = array(
             'lang' => $language,
             'type' => $propertyAccessor->getValue($routeProperties, '[translation_type]'),
             'locale' => $this->translationService->langToLocale($language),
-        ];
+        );
 
         switch ($propertyAccessor->getValue($routeProperties, '[translation_type]')) {
             case self::THEMES:
@@ -173,7 +173,7 @@ class TranslationRouteFinder
                 $parameters['selected'] = $emailContentType;
 
                 if (self::BODY === $emailContentType) {
-                    $parameters = [];
+                    $parameters = array();
                 }
 
                 break;
@@ -183,7 +183,7 @@ class TranslationRouteFinder
                 $parameters['selected'] = $moduleName;
 
                 if (!$this->isModuleUsingNewTranslationSystem($moduleName)) {
-                    $parameters = [];
+                    $parameters = array();
                 }
 
                 break;

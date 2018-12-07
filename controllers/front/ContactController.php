@@ -44,10 +44,10 @@ class ContactControllerCore extends FrontController
     {
         $breadcrumb = parent::getBreadcrumbLinks();
 
-        $breadcrumb['links'][] = [
-            'title' => $this->getTranslator()->trans('Contact us', [], 'Shop.Theme.Global'),
+        $breadcrumb['links'][] = array(
+            'title' => $this->getTranslator()->trans('Contact us', array(), 'Shop.Theme.Global'),
             'url' => $this->context->link->getPageLink('contact', true),
-        ];
+        );
 
         return $breadcrumb;
     }

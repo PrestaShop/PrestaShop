@@ -55,10 +55,10 @@ class ModuleTabManagementSubscriber implements EventSubscriberInterface
      */
     public static function getSubscribedEvents()
     {
-        return [
+        return array(
             ModuleManagementEvent::INSTALL => 'onModuleInstall',
             ModuleManagementEvent::UNINSTALL => 'onModuleUninstall',
-        ];
+        );
     }
 
     /**

@@ -73,7 +73,8 @@ class UpdateLicensesCommand extends Command
     {
         $this
             ->setName('prestashop:licenses:update')
-            ->setDescription('Rewrite your licenses to be up-to-date');
+            ->setDescription('Rewrite your licenses to be up-to-date')
+        ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -119,7 +120,8 @@ class UpdateLicensesCommand extends Command
                 'admin-dev/themes/default/public/',
                 'admin-dev/themes/new-theme/public/',
             ))
-            ->ignoreDotFiles(false);
+            ->ignoreDotFiles(false)
+        ;
         $parser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7);
 
         $output->writeln('Updating license in ' . strtoupper($ext) . ' files ...');

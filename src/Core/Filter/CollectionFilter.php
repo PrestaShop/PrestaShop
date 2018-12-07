@@ -35,7 +35,7 @@ class CollectionFilter implements FilterInterface
     /**
      * @var FilterInterface[]
      */
-    private $filters = [];
+    private $filters = array();
 
     /**
      * Sets process queue.
