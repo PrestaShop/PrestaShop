@@ -33,7 +33,7 @@ namespace PrestaShop\PrestaShop\Core\Grid\Position;
 final class PositionModification implements PositionModificationInterface
 {
     /**
-     * @var string|int
+     * @var int|string
      */
     private $id;
 
@@ -48,7 +48,7 @@ final class PositionModification implements PositionModificationInterface
     private $newPosition;
 
     /**
-     * @param string|int $id
+     * @param int|string $id
      * @param int $oldPosition
      * @param int $newPosition
      */

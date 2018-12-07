@@ -135,9 +135,9 @@ function check_files_extensions_on_path($path, $ext)
     if (!is_dir($path)) {
         $fileinfo = pathinfo($path);
         if (function_exists('mb_strtolower')) {
-            if (!in_array(mb_strtolower($fileinfo['extension']), $ext)) {
+            if (!in_array(mb_strtolower($fileinfo['extension']), $ext, true)) {
                 unlink($path);
-            } elseif (!in_array(Tools::strtolower($fileinfo['extension']), $ext)) {
+            } elseif (!in_array(Tools::strtolower($fileinfo['extension']), $ext, true)) {
                 unlink($path);
             }
         }
@@ -154,9 +154,9 @@ function check_files_extensions_on_phar($phar, &$files, $basepath, $ext)
     foreach ($phar as $file) {
         if ($file->isFile()) {
             if (function_exists('mb_strtolower')) {
-                if (in_array(mb_strtolower($file->getExtension()), $ext)) {
+                if (in_array(mb_strtolower($file->getExtension()), $ext, true)) {
                     $files[] = $basepath.$file->getFileName();
-                } elseif (in_array(Tools::strtolower($file->getExtension()), $ext)) {
+                } elseif (in_array(Tools::strtolower($file->getExtension()), $ext, true)) {
                     $files[] = $basepath.$file->getFileName();
                 }
             }
@@ -352,7 +352,7 @@ function get_file_by_url($url)
 
         $data = curl_exec($ch);
         curl_close($ch);
-    } elseif (in_array(ini_get('allow_url_fopen'), array('On', 'on', '1'))) {
+    } elseif (in_array(ini_get('allow_url_fopen'), array('On', 'on', '1'), true)) {
         $data = file_get_contents($url);
     }
 

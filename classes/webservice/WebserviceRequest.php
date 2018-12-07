@@ -47,7 +47,7 @@ class WebserviceRequestCore
     /**
      * Set if the management is specific or if it is classic (entity management).
      *
-     * @var WebserviceSpecificManagementImages|WebserviceSpecificManagementSearch|false
+     * @var false|WebserviceSpecificManagementImages|WebserviceSpecificManagementSearch
      */
     protected $objectSpecificManagement = false;
 
@@ -1479,7 +1479,7 @@ class WebserviceRequestCore
             return;
         }
 
-        /** @var SimpleXMLElement|Countable $xmlEntities */
+        /** @var Countable|SimpleXMLElement $xmlEntities */
         $xmlEntities = $xml->children();
         $object = null;
 

@@ -194,7 +194,7 @@ class CacheProviderTest extends TestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject|AdapterInterface
+     * @return AdapterInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     private function buildExistingCache()
     {
@@ -244,7 +244,7 @@ class CacheProviderTest extends TestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject|AdapterInterface
+     * @return AdapterInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     private function buildSavingCache()
     {
@@ -295,7 +295,7 @@ class CacheProviderTest extends TestCase
 
     /**
      * @param array $legacyRoutes
-     * @return \PHPUnit_Framework_MockObject_MockObject|LegacyRouteProviderInterface
+     * @return LegacyRouteProviderInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     private function buildMockRouterProvider(array $legacyRoutes)
     {
@@ -315,7 +315,7 @@ class CacheProviderTest extends TestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject|LegacyRouteProviderInterface
+     * @return LegacyRouteProviderInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     private function buildCachedRouterProvider()
     {
@@ -334,7 +334,7 @@ class CacheProviderTest extends TestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject|CacheKeyGeneratorInterface
+     * @return CacheKeyGeneratorInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     private function buildCacheKeyGenerator()
     {

@@ -523,10 +523,10 @@ class FrontControllerCore extends Controller
      *
      * @param array $object Variables inserted in the template (see FrontController::assignGeneralPurposeVariables)
      *
-     * @return array Variables to be inserted in the "prestashop" javascript object
-     *
      * @throws \PrestaShop\PrestaShop\Core\Filter\FilterException
      * @throws PrestaShopException
+     * @return array Variables to be inserted in the "prestashop" javascript object
+     *
      */
     protected function buildFrontEndObject($object)
     {
@@ -650,10 +650,10 @@ class FrontControllerCore extends Controller
     /**
      * Compiles and outputs full page content.
      *
-     * @return bool
-     *
      * @throws Exception
      * @throws SmartyException
+     * @return bool
+     *
      */
     public function display()
     {
@@ -942,9 +942,9 @@ class FrontControllerCore extends Controller
     /**
      * Sets and returns customer groups that the current customer(visitor) belongs to.
      *
+     * @throws PrestaShopDatabaseException
      * @return array
      *
-     * @throws PrestaShopDatabaseException
      */
     public static function getCurrentCustomerGroups()
     {
@@ -1191,7 +1191,7 @@ class FrontControllerCore extends Controller
     /**
      * Adds jQuery UI component(s) to queued JS file list.
      *
-     * @param string|array $component
+     * @param array|string $component
      * @param string $theme
      * @param bool $check_dependencies
      */
@@ -1223,7 +1223,7 @@ class FrontControllerCore extends Controller
     /**
      * Adds jQuery plugin(s) to queued JS file list.
      *
-     * @param string|array $name
+     * @param array|string $name
      * @param string null $folder
      * @param bool $css
      */

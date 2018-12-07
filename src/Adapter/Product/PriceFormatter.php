@@ -35,7 +35,7 @@ class PriceFormatter
 {
     /**
      * @param float $price
-     * @param string|null $currency
+     * @param null|string $currency
      *
      * @return float
      */
@@ -46,7 +46,7 @@ class PriceFormatter
 
     /**
      * @param float $price
-     * @param string|null $currency
+     * @param null|string $currency
      *
      * @return string
      */

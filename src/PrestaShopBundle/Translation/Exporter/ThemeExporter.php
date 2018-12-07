@@ -150,9 +150,9 @@ class ThemeExporter
     /**
      * @param $filePath
      *
+     * @throws \Exception
      * @return bool
      *
-     * @throws \Exception
      */
     protected function ensureFileBelongsToExportDirectory($filePath)
     {
@@ -280,9 +280,9 @@ class ThemeExporter
      * @param $themeName
      * @param $locale
      *
+     * @throws \Exception
      * @return string
      *
-     * @throws \Exception
      */
     protected function makeArchiveParentDirectory($themeName, $locale)
     {
@@ -359,7 +359,7 @@ class ThemeExporter
     }
 
     /**
-     * @param array|null $metadata
+     * @param null|array $metadata
      *
      * @return array
      */

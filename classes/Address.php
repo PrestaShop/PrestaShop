@@ -415,7 +415,7 @@ class AddressCore extends ObjectModel
      * @param int $id_customer Customer id
      * @param bool $active Active addresses only
      *
-     * @return bool|int|null
+     * @return null|bool|int
      */
     public static function getFirstCustomerAddressId($id_customer, $active = true)
     {
@@ -445,9 +445,9 @@ class AddressCore extends ObjectModel
      * @param int $id_address
      * @param bool $with_geoloc
      *
+     * @throws PrestaShopException
      * @return Address address
      *
-     * @throws PrestaShopException
      */
     public static function initialize($id_address = null, $with_geoloc = false)
     {
@@ -533,7 +533,7 @@ class AddressCore extends ObjectModel
      * @param int $id_address Address id
      * @param int $id_customer Customer id
      *
-     * @return false|null|string Amount of aliases found
+     * @return null|false|string Amount of aliases found
      * @todo: Find out if we shouldn't be returning an int instead? (breaking change)
      */
     public static function aliasExist($alias, $id_address, $id_customer)

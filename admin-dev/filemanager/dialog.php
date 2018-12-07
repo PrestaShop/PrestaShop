@@ -794,7 +794,7 @@ if (isset($_POST['submit'])) {
     );
     foreach ($files as $file_array) {
         $file = $file_array['file'];
-        if ($file == '.' || (isset($file_array['extension']) && $file_array['extension'] != lang_Type_dir) || ($file == '..' && $subdir == '') || in_array($file, $hidden_folders) || ($filter != '' && $file != ".." && mb_strpos($file, $filter) === false)) {
+        if ($file == '.' || (isset($file_array['extension']) && $file_array['extension'] != lang_Type_dir) || ($file == '..' && $subdir == '') || in_array($file, $hidden_folders, true) || ($filter != '' && $file != ".." && mb_strpos($file, $filter) === false)) {
             continue;
         }
         $new_name = fix_filename($file, $transliteration);
@@ -925,7 +925,7 @@ if (isset($_POST['submit'])) {
     foreach ($files as $nu => $file_array) {
         $file = $file_array['file'];
 
-        if ($file == '.' || $file == '..' || is_dir($current_path.$subfolder.$subdir.$file) || in_array($file, $hidden_files) || !in_array(fix_strtolower($file_array['extension']), $ext) || ($filter != '' && mb_strpos($file, $filter) === false)) {
+        if ($file == '.' || $file == '..' || is_dir($current_path.$subfolder.$subdir.$file) || in_array($file, $hidden_files, true) || !in_array(fix_strtolower($file_array['extension']), $ext, true) || ($filter != '' && mb_strpos($file, $filter) === false)) {
             continue;
         }
 
@@ -962,7 +962,7 @@ if (isset($_POST['submit'])) {
         $mini_src = "";
         $src_thumb = "";
         $extension_lower = fix_strtolower($file_array['extension']);
-        if (in_array($extension_lower, $ext_img)) {
+        if (in_array($extension_lower, $ext_img, true)) {
             $src = $base_url.$cur_dir.rawurlencode($file);
             $mini_src = $src_thumb = $thumbs_path.$subdir.$file;
 
@@ -1006,15 +1006,15 @@ if (isset($_POST['submit'])) {
         }
 
         $class_ext = 0;
-        if (in_array($extension_lower, $ext_video)) {
+        if (in_array($extension_lower, $ext_video, true)) {
             $class_ext = 4;
             $is_video = true;
-        } elseif (in_array($extension_lower, $ext_img)) {
+        } elseif (in_array($extension_lower, $ext_img, true)) {
             $class_ext = 2;
-        } elseif (in_array($extension_lower, $ext_music)) {
+        } elseif (in_array($extension_lower, $ext_music, true)) {
             $class_ext = 5;
             $is_audio = true;
-        } elseif (in_array($extension_lower, $ext_misc)) {
+        } elseif (in_array($extension_lower, $ext_misc, true)) {
             $class_ext = 3;
         } else {
             $class_ext = 1;
@@ -1128,7 +1128,7 @@ if (isset($_POST['submit'])) {
     ?>" data-toggle="lightbox" href="#previewLightbox"><i class=" icon-eye-open"></i></a>
 					<?php
 
-} elseif (($is_video || $is_audio) && in_array($extension_lower, $jplayer_ext)) {
+} elseif (($is_video || $is_audio) && in_array($extension_lower, $jplayer_ext, true)) {
     ?>
 						<a class="tip-right modalAV <?php if ($is_audio) {
     echo "audio";

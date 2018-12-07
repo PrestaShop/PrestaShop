@@ -88,9 +88,9 @@ class GridExtension extends AbstractExtension
      * @param array $column
      * @param array $grid
      *
+     * @throws RuntimeException when template cannot be found for column
      * @return string
      *
-     * @throws RuntimeException when template cannot be found for column
      */
     public function renderColumnContent(array $record, array $column, array $grid)
     {
@@ -193,7 +193,7 @@ class GridExtension extends AbstractExtension
      * @param array $column
      * @param array $grid
      * @param string $basePath
-     * @param string|null $defaultTemplate
+     * @param null|string $defaultTemplate
      *
      * @return string|null
      */

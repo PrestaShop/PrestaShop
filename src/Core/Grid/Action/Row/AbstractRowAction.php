@@ -44,7 +44,7 @@ abstract class AbstractRowAction implements RowActionInterface
     private $name;
 
     /**
-     * @var array|null
+     * @var null|array
      */
     private $options;
 

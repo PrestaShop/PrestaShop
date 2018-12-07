@@ -430,7 +430,7 @@ abstract class CacheCore
             }
 
             $otherTables = $tables;
-            unset($otherTables[array_search($table, $tables)]);
+            unset($otherTables[array_search($table, $tables, true)]);
             $this->sql_tables_cached[$table][$key] = array(
                 'count' => 1,
                 'otherTables' => $otherTables,

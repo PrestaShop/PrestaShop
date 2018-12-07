@@ -60,9 +60,9 @@ class DatabaseTableFields
     /**
      * @param DatabaseTableField[] $fields
      *
+     * @throws SqlManagementConstraintException
      * @return self
      *
-     * @throws SqlManagementConstraintException
      */
     private function setFields(array $fields)
     {

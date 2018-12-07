@@ -330,7 +330,7 @@ class CookieCore
     /**
      * Encrypt and set the Cookie.
      *
-     * @param string|null $cookie Cookie content
+     * @param null|string $cookie Cookie content
      *
      * @return bool Indicates whether the Cookie was successfully set
      *
@@ -344,7 +344,7 @@ class CookieCore
     /**
      * Encrypt and set the Cookie.
      *
-     * @param string|null $cookie Cookie content
+     * @param null|string $cookie Cookie content
      *
      * @return bool Indicates whether the Cookie was successfully set
      *

@@ -371,7 +371,7 @@ class imageLib
     }
 
     // *** Sharpen image (if jpg and the user wishes to do so)
-    if ($sharpen && in_array($this->fileExtension, $this->sharpenArray)) {
+    if ($sharpen && in_array($this->fileExtension, $this->sharpenArray, true)) {
 
       // *** Sharpen
       $this->sharpen();
@@ -422,7 +422,7 @@ class imageLib
     #
   {
       // *** If PNG, perform some transparency retention actions (gif untested)
-    if (in_array($this->fileExtension, $this->transparentArray) && $this->keepTransparency) {
+    if (in_array($this->fileExtension, $this->transparentArray, true) && $this->keepTransparency) {
         imagealphablending($im, false);
         imagesavealpha($im, true);
         $transparent = imagecolorallocatealpha($im, 255, 255, 255, 127);

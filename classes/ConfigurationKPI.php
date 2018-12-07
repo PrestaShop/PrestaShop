@@ -53,8 +53,8 @@ class ConfigurationKPICore extends Configuration
      * Get ID by name.
      *
      * @param string $key Configuration key
-     * @param int|null $idShopGroup ShopGroup ID
-     * @param int|null $idShop Shop ID
+     * @param null|int $idShopGroup ShopGroup ID
+     * @param null|int $idShop Shop ID
      *
      * @return int ConfigurationKPI ID
      */
@@ -101,7 +101,7 @@ class ConfigurationKPICore extends Configuration
      * Get global vlaue.
      *
      * @param string $key Configuration key
-     * @param int|null $idLang Language ID
+     * @param null|int $idLang Language ID
      *
      * @return string Global value
      */
@@ -136,9 +136,9 @@ class ConfigurationKPICore extends Configuration
      * Get multiple keys.
      *
      * @param array $keys Configuation keys
-     * @param int|null $idLang Language ID
-     * @param int|null $idShopGroup ShopGroup ID
-     * @param int|null $idShop Shop ID
+     * @param null|int $idLang Language ID
+     * @param null|int $idShopGroup ShopGroup ID
+     * @param null|int $idShop Shop ID
      *
      * @return array Configuration values
      */
@@ -155,9 +155,9 @@ class ConfigurationKPICore extends Configuration
      * Has key.
      *
      * @param string $key
-     * @param int|null $idLang Language ID
-     * @param int|null $idShopGroup ShopGroup ID
-     * @param int|null $idShop Shop ID
+     * @param null|int $idLang Language ID
+     * @param null|int $idShopGroup ShopGroup ID
+     * @param null|int $idShop Shop ID
      *
      * @return bool
      */

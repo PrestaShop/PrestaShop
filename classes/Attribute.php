@@ -73,9 +73,9 @@ class AttributeCore extends ObjectModel
     /**
      * AttributeCore constructor.
      *
-     * @param int|null $id Attribute ID
-     * @param int|null $idLang Language ID
-     * @param int|null $idShop Shop ID
+     * @param null|int $id Attribute ID
+     * @param null|int $idLang Language ID
+     * @param null|int $idShop Shop ID
      */
     public function __construct($id = null, $idLang = null, $idShop = null)
     {
@@ -148,10 +148,10 @@ class AttributeCore extends ObjectModel
      * @param bool $autoDate Automatically set `date_upd` and `date_add` column
      * @param bool $nullValues Whether we want to use NULL values instead of empty quotes values
      *
-     * @return bool Whether the Attribute has been successfully added
-     *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
+     * @return bool Whether the Attribute has been successfully added
+     *
      */
     public function add($autoDate = true, $nullValues = false)
     {

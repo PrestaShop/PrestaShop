@@ -176,7 +176,7 @@ class AddressFormatCore extends ObjectModel
                 $this->_errorFormatList[] = $this->trans('This association has too many elements.', array(), 'Admin.Notifications.Error');
             } elseif ($totalNameUsed == 1) {
                 $associationName[0] = mb_strtolower($associationName[0]);
-                if (in_array($associationName[0], self::$forbiddenPropertyList) ||
+                if (in_array($associationName[0], self::$forbiddenPropertyList, true) ||
                     !$this->_checkValidateClassField('Address', $associationName[0], false)) {
                     $this->_errorFormatList[] = $this->trans('This name is not allowed.', array(), 'Admin.Notifications.Error') . ': ' .
                     $associationName[0];
@@ -188,7 +188,7 @@ class AddressFormatCore extends ObjectModel
                     $associationName[0] = ucfirst($associationName[0]);
                     $associationName[1] = mb_strtolower($associationName[1]);
 
-                    if (in_array($associationName[0], self::$forbiddenClassList)) {
+                    if (in_array($associationName[0], self::$forbiddenClassList, true)) {
                         $this->_errorFormatList[] = $this->trans('This name is not allowed.', array(), 'Admin.Notifications.Error') . ': ' .
                         $associationName[0];
                     } else {
@@ -221,7 +221,7 @@ class AddressFormatCore extends ObjectModel
                 if (($patternsName = preg_split(self::_CLEANING_REGEX_, $lineField, -1, PREG_SPLIT_NO_EMPTY))) {
                     if (is_array($patternsName)) {
                         foreach ($patternsName as $patternName) {
-                            if (!in_array($patternName, $usedKeyList)) {
+                            if (!in_array($patternName, $usedKeyList, true)) {
                                 $this->_checkLiableAssociation($patternName, $fieldsValidate);
                                 $usedKeyList[] = $patternName;
                             } else {
@@ -397,7 +397,7 @@ class AddressFormatCore extends ObjectModel
                 $tmpText = '';
                 foreach ($patternsList as $pattern) {
                     if ((!array_key_exists('avoid', $patternRules)) ||
-                                (is_array($patternRules) && array_key_exists('avoid', $patternRules) && !in_array($pattern, $patternRules['avoid']))) {
+                                (is_array($patternRules) && array_key_exists('avoid', $patternRules) && !in_array($pattern, $patternRules['avoid'], true))) {
                         $tmpText .= (isset($addressFormatedValues[$pattern]) && !empty($addressFormatedValues[$pattern])) ?
                                 (((isset($style[$pattern])) ?
                                     (sprintf($style[$pattern], $addressFormatedValues[$pattern])) :
@@ -451,7 +451,7 @@ class AddressFormatCore extends ObjectModel
             $publicProperties = $reflect->getProperties(ReflectionProperty::IS_PUBLIC);
             foreach ($publicProperties as $property) {
                 $propertyName = $property->getName();
-                if ((!in_array($propertyName, AddressFormat::$forbiddenPropertyList)) &&
+                if ((!in_array($propertyName, AddressFormat::$forbiddenPropertyList, true)) &&
                         (!preg_match('#id|id_\w#', $propertyName))) {
                     $propertyList[] = $propertyName;
                 }
@@ -484,7 +484,7 @@ class AddressFormatCore extends ObjectModel
                 $propertyName = $property->getName();
                 if (preg_match('#id_\w#', $propertyName) && mb_strlen($propertyName) > 3) {
                     $nameObject = ucfirst(mb_substr($propertyName, 3));
-                    if (!in_array($nameObject, self::$forbiddenClassList) &&
+                    if (!in_array($nameObject, self::$forbiddenClassList, true) &&
                             class_exists($nameObject)) {
                         $objectList[$nameObject] = new $nameObject();
                     }
@@ -591,7 +591,7 @@ class AddressFormatCore extends ObjectModel
     /**
      * @param int $idCountry
      *
-     * @return false|null|string
+     * @return null|false|string
      *
      * @deprecated 1.7.0
      */
@@ -605,7 +605,7 @@ class AddressFormatCore extends ObjectModel
      *
      * @param int $idCountry Country ID
      *
-     * @return false|null|string Address format
+     * @return null|false|string Address format
      *
      * @since 1.7.0
      */

@@ -631,7 +631,7 @@ class TabCore extends ObjectModel
      * @param int $idParent
      * @param int $idProfile
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return null|array|false|mysqli_result|PDOStatement|resource
      */
     public static function getTabByIdProfile($idParent, $idProfile)
     {

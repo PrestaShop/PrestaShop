@@ -74,9 +74,9 @@ class UploadQuotaConfiguration implements DataConfigurationInterface
     /**
      * Update the file upload limit if possible.
      *
+     * @throws Exception
      * @return array the errors list during the update operation
      *
-     * @throws Exception
      */
     private function updateFileUploadConfiguration(array $configuration)
     {

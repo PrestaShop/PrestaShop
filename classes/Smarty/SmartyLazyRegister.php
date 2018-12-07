@@ -34,7 +34,7 @@ class SmartyLazyRegister
     /**
      * Register a function or method to be dynamically called later.
      *
-     * @param string|array $params function name or array(object name, method name)
+     * @param array|string $params function name or array(object name, method name)
      */
     public function register($params)
     {

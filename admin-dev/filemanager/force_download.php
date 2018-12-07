@@ -17,7 +17,7 @@ $path = $current_path.$_POST['path'];
 $name = $_POST['name'];
 
 $info = pathinfo($name);
-if (!in_array(fix_strtolower($info['extension']), $ext)) {
+if (!in_array(fix_strtolower($info['extension']), $ext, true)) {
     die('wrong extension');
 }
 

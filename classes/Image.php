@@ -97,10 +97,10 @@ class ImageCore extends ObjectModel
      * @param bool $autoDate Automatically set `date_upd` and `date_add` columns
      * @param bool $nullValues Whether we want to use NULL values instead of empty quotes values
      *
-     * @return bool Indicates whether the Image has been successfully added
-     *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
+     * @return bool Indicates whether the Image has been successfully added
+     *
      */
     public function add($autoDate = true, $nullValues = false)
     {
@@ -122,10 +122,10 @@ class ImageCore extends ObjectModel
      *
      * @param bool $nullValues Whether we want to use NULL values instead of empty quotes values
      *
-     * @return bool Indicates whether the Image has been successfully updated
-     *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
+     * @return bool Indicates whether the Image has been successfully updated
+     *
      */
     public function update($nullValues = false)
     {
@@ -141,9 +141,9 @@ class ImageCore extends ObjectModel
     /**
      * Deletes current Image from the database.
      *
+     * @throws PrestaShopException
      * @return bool `true` if delete was successful
      *
-     * @throws PrestaShopException
      */
     public function delete()
     {

@@ -182,7 +182,7 @@ class GroupReductionCore extends ObjectModel
      *
      * @param int $id_category
      *
-     * @return array|null
+     * @return null|array
      */
     public static function getGroupByCategoryId($id_category)
     {
@@ -209,7 +209,7 @@ class GroupReductionCore extends ObjectModel
      *
      * @param int $id_category
      *
-     * @return array|null
+     * @return null|array
      */
     public static function getGroupReductionByCategoryId($id_category)
     {

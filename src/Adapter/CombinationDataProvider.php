@@ -88,10 +88,10 @@ class CombinationDataProvider
      * @param array $combinationIds
      * @param int $languageId
      *
-     * @return array a list of formatted combinations
-     *
      * @throws \PrestaShopDatabaseException
      * @throws \PrestaShopException
+     * @return array a list of formatted combinations
+     *
      */
     public function getFormCombinations(array $combinationIds, $languageId)
     {

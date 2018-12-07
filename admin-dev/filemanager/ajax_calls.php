@@ -33,7 +33,7 @@ if (isset($_GET['action'])) {
 
             if (preg_match('/\.{1,2}[\/|\\\]/', $path_pos) !== 0
                 || $filename !== fix_filename($filename, $transliteration)
-                || !in_array(mb_strtolower($info['extension']), array('jpg', 'jpeg', 'png'))
+                || !in_array(mb_strtolower($info['extension']), array('jpg', 'jpeg', 'png'), true)
                 || mb_strpos($_POST['url'], 'http://featherfiles.aviary.com/') !== 0
                 || !isset($info['extension'])
 
@@ -48,7 +48,7 @@ if (isset($_GET['action'])) {
             $mime = mime_content_type($tmp);
             unlink($tmp);
 
-            if (!in_array($mime, $mime_img)) {
+            if (!in_array($mime, $mime_img, true)) {
                 die('wrong data');
             }
 
@@ -101,7 +101,7 @@ if (isset($_GET['action'])) {
 
                             if (!($FullFileName['name'][mb_strlen($FullFileName['name']) - 1] == '/')) {
                                 $fileinfo = pathinfo($OnlyFileName);
-                                if (in_array(mb_strtolower($fileinfo['extension']), $ext)) {
+                                if (in_array(mb_strtolower($fileinfo['extension']), $ext, true)) {
                                     copy('zip://'.$path.'#'.$OnlyFileName, $base_folder.$FullFileName['name']);
                                 }
                             }
@@ -187,7 +187,7 @@ if (isset($_GET['action'])) {
 				</div>
 			</div>
 			<?php
-            if (in_array(mb_strtolower($info['extension']), $ext_music)) {
+            if (in_array(mb_strtolower($info['extension']), $ext_music, true)) {
                 ?>
 
 				<script type="text/javascript">
@@ -219,7 +219,7 @@ if (isset($_GET['action'])) {
 
 			<?php
 
-            } elseif (in_array(mb_strtolower($info['extension']), $ext_video)) {
+            } elseif (in_array(mb_strtolower($info['extension']), $ext_video, true)) {
                 ?>
 
 				<script type="text/javascript">

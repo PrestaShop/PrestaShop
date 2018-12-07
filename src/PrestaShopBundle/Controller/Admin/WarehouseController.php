@@ -39,7 +39,7 @@ class WarehouseController extends FrameworkBundleAdminController
      *
      * @param int $idProduct
      *
-     * @return string|Response
+     * @return Response|string
      */
     public function refreshProductWarehouseCombinationFormAction($idProduct)
     {

@@ -61,9 +61,9 @@ class SaveSqlRequestSettingsCommand
     /**
      * @param string $fileEncoding
      *
+     * @throws SqlRequestSettingsConstraintException
      * @return self
      *
-     * @throws SqlRequestSettingsConstraintException
      */
     private function setFileEncoding($fileEncoding)
     {

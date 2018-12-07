@@ -65,7 +65,7 @@ if (isset($_POST['name'])) {
 }
 
 $info = pathinfo($path);
-if (isset($info['extension']) && !(isset($_GET['action']) && $_GET['action'] == 'delete_folder') && !in_array(mb_strtolower($info['extension']), $ext)) {
+if (isset($info['extension']) && !(isset($_GET['action']) && $_GET['action'] == 'delete_folder') && !in_array(mb_strtolower($info['extension']), $ext, true)) {
     die('wrong extension');
 }
 
