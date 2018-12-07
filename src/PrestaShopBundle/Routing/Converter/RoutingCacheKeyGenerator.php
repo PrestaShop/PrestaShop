@@ -110,7 +110,7 @@ class RoutingCacheKeyGenerator implements CacheKeyGeneratorInterface
     {
         $lastModifications = $this->getLastModifications();
         if (!count($lastModifications)) {
-            return null;
+            return;
         }
 
         return reset($lastModifications);

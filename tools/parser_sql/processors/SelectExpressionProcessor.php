@@ -58,7 +58,7 @@ class SelectExpressionProcessor extends AbstractProcessor {
         $tokens = $this->splitSQLIntoTokens($expression);
         $token_count = count($tokens);
         if ($token_count === 0) {
-            return null;
+            return;
         }
 
         /*

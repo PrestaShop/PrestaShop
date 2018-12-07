@@ -56,13 +56,13 @@ final class ImageTagSourceParser implements ImageTagSourceParserInterface
         $imageTag = preg_replace('/src="(\.\.\/|\.\/)+/', $replacement, $imageTag);
 
         if (null === $imageTag) {
-            return null;
+            return;
         }
 
         preg_match('/src="\/([^"]+)"/', $imageTag, $path);
 
         if (empty($path[1])) {
-            return null;
+            return;
         }
 
         return sprintf('%s%s', $this->shopRootUri, $path[1]);

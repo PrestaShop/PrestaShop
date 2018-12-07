@@ -64,7 +64,7 @@ class CacheCoreTest extends PHPUnit_Framework_TestCase
         if (isset($this->cacheArray[$args[0]])) {
             return $this->cacheArray[$args[0]];
         }  
-            return null;
+            return;
         
     }
 

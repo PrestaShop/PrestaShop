@@ -55,7 +55,7 @@ final class LocalLocalizationPackLoader extends AbstractLocalizationPackLoader
 
         $localizationFile = sprintf('%s/localization/localization.xml', $rootDir);
         if (!file_exists($localizationFile)) {
-            return null;
+            return;
         }
 
         return $this->loadXml($localizationFile);
@@ -72,7 +72,7 @@ final class LocalLocalizationPackLoader extends AbstractLocalizationPackLoader
 
         $localizationPackFile = sprintf('%s/localization/%s.xml', $rootDir, $countryIso);
         if (!file_exists($localizationPackFile)) {
-            return null;
+            return;
         }
 
         return $this->loadXml($localizationPackFile);

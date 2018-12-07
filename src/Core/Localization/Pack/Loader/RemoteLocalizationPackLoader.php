@@ -63,7 +63,7 @@ final class RemoteLocalizationPackLoader extends AbstractLocalizationPackLoader
 
         $xmlLocalizationPacks = $this->loadXml($apiUrl . '/rss/localization.xml');
         if (!$xmlLocalizationPacks) {
-            return null;
+            return;
         }
 
         return $xmlLocalizationPacks;
@@ -79,7 +79,7 @@ final class RemoteLocalizationPackLoader extends AbstractLocalizationPackLoader
 
         $pack = $this->loadXml($localizationPackUrl);
         if (false === $pack) {
-            return null;
+            return;
         }
 
         return $pack;

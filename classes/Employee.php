@@ -734,6 +734,6 @@ class EmployeeCore extends ObjectModel
             return Tab::getClassNameById($tabId) ?: null;
         }
 
-        return null;
+        return;
     }
 }

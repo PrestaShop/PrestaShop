@@ -76,7 +76,7 @@ class CurrencyDataProvider
     {
         $currencyId = Currency::getIdByIsoCode($isoCode);
         if (!$currencyId) {
-            return null;
+            return;
         }
 
         if (null === $idLang) {

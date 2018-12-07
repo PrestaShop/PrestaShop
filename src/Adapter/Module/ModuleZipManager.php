@@ -216,7 +216,7 @@ class ModuleZipManager
     private function getSource($source)
     {
         if (!array_key_exists($source, self::$sources)) {
-            return null;
+            return;
         }
 
         return self::$sources[$source];

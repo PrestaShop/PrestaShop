@@ -235,7 +235,7 @@ class Localize
     private static function canonicalize($locale)
     {
         if (empty($locale) || $locale == '') {
-            return null;
+            return;
         }
 
         $regex = '(?P<language>[a-z]{2,3})(?:[_-](?P<script>[a-z]{4}))?(?:[_-](?P<territory>[a-z]{2}))?(?:[_-](?P<variant>[a-z]{5,}))?';

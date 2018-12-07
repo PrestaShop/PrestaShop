@@ -889,7 +889,7 @@ class LinkCore
             try {
                 $result = Db::getInstance()->executeS($sql);
             } catch (PrestaShopDatabaseException $e) {
-                return null;
+                return;
             }
 
             foreach ($result as $row) {

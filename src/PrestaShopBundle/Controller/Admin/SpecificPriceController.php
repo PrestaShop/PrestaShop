@@ -240,7 +240,7 @@ class SpecificPriceController extends FrameworkBundleAdminController
         }
         $cleanedFormData = array_map(function ($item) {
             if (!$item) {
-                return null;
+                return;
             }
 
             return $item;
@@ -259,7 +259,7 @@ class SpecificPriceController extends FrameworkBundleAdminController
     private static function formatForDatePicker($dateAsString)
     {
         if ('0000-00-00 00:00:00' === $dateAsString) {
-            return null;
+            return;
         }
         try {
             $dateTime = new DateTime($dateAsString);
