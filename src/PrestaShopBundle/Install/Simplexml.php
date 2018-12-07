@@ -28,7 +28,7 @@ namespace PrestaShopBundle\Install;
 
 use DOMDocument;
 
-class SimplexmlElement extends \SimpleXMLElement
+class Simplexml extends \SimpleXMLElement
 {
     /**
      * Can add SimpleXMLElement values in XML tree.
