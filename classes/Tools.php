@@ -1873,13 +1873,13 @@ class ToolsCore
         }
 
         $precision_places = 14 - floor(log10(abs($value)));
-        $f1 = 10.0** (float) abs($places);
+        $f1 = 10.0 ** (float) abs($places);
 
         /* If the decimal precision guaranteed by FP arithmetic is higher than
         * the requested places BUT is small enough to make sure a non-zero value
         * is returned, pre-round the result to the precision */
         if ($precision_places > $places && $precision_places - $places < 15) {
-            $f2 = 10.0** (float) abs($precision_places);
+            $f2 = 10.0 ** (float) abs($precision_places);
 
             if ($precision_places >= 0) {
                 $tmp_value = $value * $f2;
@@ -1891,7 +1891,7 @@ class ToolsCore
             * thus never larger than 1e15 here) */
             $tmp_value = Tools::round_helper($tmp_value, $mode);
             /* now correctly move the decimal point */
-            $f2 = 10.0** (float) abs($places - $precision_places);
+            $f2 = 10.0 ** (float) abs($places - $precision_places);
             /* because places < precision_places */
             $tmp_value = $tmp_value / $f2;
         } else {
@@ -1956,7 +1956,7 @@ class ToolsCore
      */
     public static function ceilf($value, $precision = 0)
     {
-        $precision_factor = $precision == 0 ? 1 : 10** $precision;
+        $precision_factor = $precision == 0 ? 1 : 10 ** $precision;
         $tmp = $value * $precision_factor;
         $tmp2 = (string) $tmp;
         // If the current value has already the desired precision
@@ -1980,7 +1980,7 @@ class ToolsCore
      */
     public static function floorf($value, $precision = 0)
     {
-        $precision_factor = $precision == 0 ? 1 : 10** $precision;
+        $precision_factor = $precision == 0 ? 1 : 10 ** $precision;
         $tmp = $value * $precision_factor;
         $tmp2 = (string) $tmp;
         // If the current value has already the desired precision
@@ -3842,7 +3842,7 @@ exit;
         $base = log($size) / log(1024);
         $suffixes = array('', 'k', 'M', 'G', 'T');
 
-        return round(1024**( $base - floor($base)), $precision) . $suffixes[floor($base)];
+        return round(1024 ** ($base - floor($base)), $precision) . $suffixes[floor($base)];
     }
 
     public static function boolVal($value)
@@ -4023,7 +4023,7 @@ exit;
 
         uasort($rows, $sort_function);
 
-        $unit = 10** $precision;
+        $unit = 10 ** $precision;
 
         $int_amount = (int) round($unit * $amount);
 

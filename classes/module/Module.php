@@ -1071,8 +1071,8 @@ abstract class ModuleCore implements ModuleInterface
             $realpath_module_dir = realpath(_PS_MODULE_DIR_);
             if (substr(realpath($file_path), 0, strlen($realpath_module_dir)) == $realpath_module_dir) {
                 // For controllers in module/controllers path
-                if (basename(dirname($file_path,2)) == 'controllers') {
-                    self::$classInModule[$current_class] = basename(dirname($file_path,3));
+                if (basename(dirname($file_path, 2)) == 'controllers') {
+                    self::$classInModule[$current_class] = basename(dirname($file_path, 3));
                 } else {
                     // For old AdminTab controllers
                     self::$classInModule[$current_class] = substr(dirname($file_path), strlen($realpath_module_dir) + 1);
