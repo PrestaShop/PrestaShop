@@ -43,9 +43,9 @@ class QueryBuilder
 
         if (is_string($value)) {
             return "'" . $escaped . "'";
-        } else {
+        }  
             return $escaped;
-        }
+        
     }
 
     public function buildWhereConditions($andOrOr, array $conditions)

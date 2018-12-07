@@ -329,7 +329,7 @@ class CronJobs extends Module
                     NULL, TRUE, TRUE, '.$id_shop.', '.$id_shop_group.')';
 
             return Db::getInstance()->execute($query);
-        } else {
+        }  
             $is_frequency_valid = true;
             $hour = (int)$execution['hour'];
             $day = (int)$execution['day'];
@@ -350,7 +350,7 @@ class CronJobs extends Module
 
                 return Db::getInstance()->execute($query);
             }
-        }
+        
 
         return false;
     }

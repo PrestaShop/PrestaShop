@@ -816,12 +816,12 @@ class WebserviceRequestCore
                 $this->objOutput->setStatus(401);
 
                 return false;
-            } else {
+            }  
                 // only now we can say the access is authenticated
                 $this->_authenticated = true;
 
                 return true;
-            }
+            
         }
     }
 
@@ -1121,12 +1121,12 @@ class WebserviceRequestCore
                     $this->schemaToDisplay = $this->urlFragments[$schema];
 
                     return true;
-                } else {
+                }  
                     $this->setError(400, 'Please select a schema of type \'synopsis\' to get the whole schema informations (which fields are required, which kind of content...) or \'blank\' to get an empty schema to fill before using POST request', 28);
 
                     return false;
-                }
-            } else {
+                
+            }  
                 // if there are filters
                 if (isset($this->urlFragments['filter'])) {
                     foreach ($this->urlFragments['filter'] as $field => $url_param) {
@@ -1183,18 +1183,18 @@ class WebserviceRequestCore
                                     $this->setError(400, 'The field "' . $field . '" is dynamic. It is not possible to filter GET query with this field.', 34);
 
                                     return false;
-                                } else {
+                                }  
                                     if (isset($this->resourceConfiguration['retrieveData']['tableAlias'])) {
                                         $sql_filter .= $this->getSQLRetrieveFilter($this->resourceConfiguration['fields'][$field]['sqlId'], $url_param, $this->resourceConfiguration['retrieveData']['tableAlias'] . '.');
                                     } else {
                                         $sql_filter .= $this->getSQLRetrieveFilter($this->resourceConfiguration['fields'][$field]['sqlId'], $url_param);
                                     }
-                                }
+                                
                             }
                         }
                     }
                 }
-            }
+            
         }
 
         if (!$this->setFieldsToDisplay()) {
@@ -1255,9 +1255,9 @@ class WebserviceRequestCore
                 $this->setError(400, 'The "limit" value has to be formed as this example: "5,25" or "10"', 39);
 
                 return false;
-            } else {
+            }  
                 $sql_limit .= ' LIMIT ' . (int) ($limitArgs[0]) . (isset($limitArgs[1]) ? ', ' . (int) ($limitArgs[1]) : '') . "\n"; // LIMIT X|X, Y
-            }
+            
         }
         $filters['sql_join'] = $sql_join;
         $filters['sql_filter'] = $sql_filter;
@@ -1369,9 +1369,9 @@ class WebserviceRequestCore
 
             if (!$return) {
                 return false;
-            } else {
+            }  
                 $this->objects = $return;
-            }
+            
         }
 
         return true;
@@ -1548,9 +1548,9 @@ class WebserviceRequestCore
                             $this->setError(400, 'parameter "' . $fieldName . '" not writable. Please remove this attribute of this XML', 93);
 
                             return false;
-                        } else {
+                        }  
                             $object->{$fieldProperties['setter']}((string) $attributes->$fieldName);
-                        }
+                        
                     } elseif (property_exists($object, $sqlId)) {
                         $object->$sqlId = (string) $attributes->$fieldName;
                     } else {
@@ -1592,7 +1592,7 @@ class WebserviceRequestCore
                     $this->setError(400, 'Validation error: "' . $retValidateFields . '"', 85);
 
                     return false;
-                } else {
+                }  
                     // Call alternative method for add/update
                     $objectMethod = ($this->method == 'POST' ? 'add' : 'update');
                     if (isset($this->resourceConfiguration['objectMethods']) && array_key_exists($objectMethod, $this->resourceConfiguration['objectMethods'])) {
@@ -1644,7 +1644,7 @@ class WebserviceRequestCore
                     } else {
                         $this->setError(500, 'Unable to save resource', 46);
                     }
-                }
+                
             }
         }
 

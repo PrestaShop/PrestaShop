@@ -104,9 +104,9 @@ class InstallSession
     {
         if (InstallSession::$_cookie_mode) {
             return isset(InstallSession::$_cookie->{$varname});
-        } else {
+        }  
             return isset($_SESSION[$varname]);
-        }
+        
     }
 
     public function __unset($varname)

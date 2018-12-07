@@ -293,7 +293,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
             }
 
             return $sales;
-        } else {
+        }  
             return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
                 '
 			SELECT SUM(total_products / o.conversion_rate)
@@ -302,7 +302,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
 			WHERE `invoice_date` BETWEEN "' . pSQL($date_from) . ' 00:00:00" AND "' . pSQL($date_to) . ' 23:59:59" AND os.logable = 1
 			' . Shop::addSqlRestriction(false, 'o')
             );
-        }
+        
     }
 
     public static function get8020SalesCatalog($date_from, $date_to)
@@ -356,7 +356,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
             }
 
             return $orders;
-        } else {
+        }  
             $orders = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
                 '
 			SELECT COUNT(*) AS orders
@@ -365,7 +365,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
 			WHERE `invoice_date` BETWEEN "' . pSQL($date_from) . ' 00:00:00" AND "' . pSQL($date_to) . ' 23:59:59" AND os.logable = 1
 			' . Shop::addSqlRestriction(false, 'o')
             );
-        }
+        
 
         return $orders;
     }
@@ -555,7 +555,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
             }
 
             return $purchases;
-        } else {
+        }  
             return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
                 '
 			SELECT SUM(od.`product_quantity` * IF(
@@ -569,7 +569,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
 			WHERE `invoice_date` BETWEEN "' . pSQL($date_from) . ' 00:00:00" AND "' . pSQL($date_to) . ' 23:59:59" AND os.logable = 1
 			' . Shop::addSqlRestriction(false, 'o')
             );
-        }
+        
     }
 
     public static function getExpenses($date_from, $date_to, $granularity = false)

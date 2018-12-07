@@ -461,12 +461,12 @@ class OrderCore extends ObjectModel
             }
 
             return $this->update();
-        } else {
+        }  
             $order_detail->total_price_tax_incl -= $product_price_tax_incl;
             $order_detail->total_price_tax_excl -= $product_price_tax_excl;
             $order_detail->total_shipping_price_tax_incl -= $shipping_diff_tax_incl;
             $order_detail->total_shipping_price_tax_excl -= $shipping_diff_tax_excl;
-        }
+        
 
         return $order_detail->update() && $this->update();
     }
@@ -2309,9 +2309,9 @@ class OrderCore extends ObjectModel
 
         if ($order['min'] == $order['max']) {
             return $this->reference;
-        } else {
+        }  
             return $this->reference . '#' . ($this->id + 1 - $order['min']);
-        }
+        
     }
 
     /**

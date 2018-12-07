@@ -202,7 +202,7 @@ class TagCore extends ObjectModel
             AND pt.`id_lang` = ' . (int) $idLang . ' AND pt.`id_shop` = ' . (int) $context->shop->id . '
             ORDER BY times DESC
             LIMIT ' . (int) $nb);
-        } else {
+        }  
             return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
             SELECT t.name, counter AS times
             FROM `' . _DB_PREFIX_ . 'tag_count` pt
@@ -210,7 +210,7 @@ class TagCore extends ObjectModel
             WHERE pt.id_group = 0 AND pt.`id_lang` = ' . (int) $idLang . ' AND pt.`id_shop` = ' . (int) $context->shop->id . '
             ORDER BY times DESC
             LIMIT ' . (int) $nb);
-        }
+        
     }
 
     /**

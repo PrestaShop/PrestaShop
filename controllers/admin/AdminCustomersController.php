@@ -925,10 +925,10 @@ class AdminCustomersControllerCore extends AdminController
             }
 
             return parent::processUpdate();
-        } else {
+        }  
             $this->errors[] = $this->trans('An error occurred while loading the object.', array(), 'Admin.Orderscustomers.Notification') . '
 				<b>' . $this->table . '</b> ' . $this->trans('(cannot load object)', array(), 'Admin.Orderscustomers.Notification');
-        }
+        
     }
 
     public function processSave()

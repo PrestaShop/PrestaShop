@@ -1050,9 +1050,9 @@ class AdminImportControllerCore extends AdminController
         }
         if ($in_array) {
             return $fields;
-        } else {
+        }  
             return implode("\n\r", $fields);
-        }
+        
     }
 
     protected function receiveTab()

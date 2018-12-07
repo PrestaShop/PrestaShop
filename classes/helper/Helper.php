@@ -97,9 +97,9 @@ class HelperCore
 
         if (isset($override_tpl_path) && file_exists($override_tpl_path)) {
             return $this->context->smarty->createTemplate($override_tpl_path, $this->context->smarty);
-        } else {
+        }  
             return $this->context->smarty->createTemplate($this->base_folder . $tpl_name, $this->context->smarty);
-        }
+        
     }
 
     /**

@@ -125,11 +125,11 @@ class Container
 
         if (count($args) > 0) {
             return $refl->newInstanceArgs($args);
-        } else {
+        }  
             // newInstanceArgs with empty array fails in PHP 5.3 when the class
             // doesn't have an explicitly defined constructor
             return $refl->newInstance();
-        }
+        
     }
 
     private function doMake($serviceName, array $alreadySeen = array())
@@ -151,7 +151,7 @@ class Container
 
         if ($binding['shared'] && array_key_exists($serviceName, $this->instances)) {
             return $this->instances[$serviceName];
-        } else {
+        }  
             $constructor = $binding['constructor'];
 
             if (is_callable($constructor)) {
@@ -169,7 +169,7 @@ class Container
             }
 
             return $service;
-        }
+        
     }
 
     public function make($serviceName)

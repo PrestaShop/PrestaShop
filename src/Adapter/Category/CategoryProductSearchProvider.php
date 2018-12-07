@@ -78,7 +78,7 @@ class CategoryProductSearchProvider implements ProductSearchProviderInterface
                 true,
                 $query->getResultsPerPage()
             );
-        } else {
+        }  
             return $this->category->getProducts(
                 $context->getIdLang(),
                 $query->getPage(),
@@ -87,7 +87,7 @@ class CategoryProductSearchProvider implements ProductSearchProviderInterface
                 $query->getSortOrder()->toLegacyOrderWay(),
                 $type !== 'products'
             );
-        }
+        
     }
 
     /**

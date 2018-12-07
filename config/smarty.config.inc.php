@@ -76,9 +76,9 @@ function smartyEscape($string, $esc_type = 'html', $char_set = null, $double_enc
     global $smarty;
     if (($esc_type === 'html' || $esc_type === 'htmlall') && $smarty->escape_html) {
         return $string;
-    } else {
+    }  
         return smarty_modifier_escape($string, $esc_type, $char_set, $double_encode);
-    }
+    
 }
 
 smartyRegisterFunction($smarty, 'modifier', 'escape', 'smartyEscape');

@@ -92,9 +92,9 @@ class AddonsDataProvider implements AddonsInterface
         } catch (Exception $e) {
             if (!$this->isAddonsAuthenticated()) {
                 throw new Exception('Error sent by Addons. You may need to be logged.', 0, $e);
-            } else {
+            }  
                 throw new Exception('Error sent by Addons. You may be not allowed to download this module.', 0, $e);
-            }
+            
         }
 
         $temp_filename = tempnam($this->cacheDir, 'mod');
@@ -102,9 +102,9 @@ class AddonsDataProvider implements AddonsInterface
             $this->zipManager->storeInModulesFolder($temp_filename);
 
             return true;
-        } else {
+        }  
             throw new Exception('Cannot store module content in temporary folder !');
-        }
+        
     }
 
     /**

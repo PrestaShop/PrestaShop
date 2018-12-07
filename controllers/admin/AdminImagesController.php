@@ -371,9 +371,9 @@ class AdminImagesControllerCore extends AdminController
                 }
 
                 return parent::postProcess();
-            } else {
+            }  
                 $this->errors[] = $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error');
-            }
+            
         } else {
             return parent::postProcess();
         }

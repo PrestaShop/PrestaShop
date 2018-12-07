@@ -63,9 +63,9 @@ abstract class AbstractCheckoutStepCore implements CheckoutStepInterface
     {
         if ($this->isReachable()) {
             return $this->template;
-        } else {
+        }  
             return $this->unreachableStepTemplate;
-        }
+        
     }
 
     protected function getTranslator()
