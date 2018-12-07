@@ -76,8 +76,8 @@ $sql = 'SELECT p.`id_product`, pl.`link_rewrite`, p.`reference`, pl.`name`, imag
 
 $items = Db::getInstance()->executeS($sql);
 
-if ($items && ($disableCombination ||$excludeIds)) {
-    $results = [];
+if ($items && ($disableCombination || $excludeIds)) {
+    $results = array();
     foreach ($items as $item) {
         if (!$forceJson) {
             $item['name'] = str_replace('|', '&#124;', $item['name']);
@@ -152,5 +152,5 @@ if ($items && ($disableCombination ||$excludeIds)) {
     }
     echo json_encode(array_values($results));
 } else {
-    echo json_encode([]);
+    echo json_encode(array());
 }
