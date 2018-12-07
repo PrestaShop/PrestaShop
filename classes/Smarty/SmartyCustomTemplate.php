@@ -40,8 +40,8 @@ class SmartyCustomTemplateCore extends Smarty_Internal_Template
             }
 
             return $tpl;
-        }  
-            return parent::fetch($template, $cache_id, $compile_id, $parent, $display, $merge_tpl_vars, $no_output_filter);
-        
+        }
+
+        return parent::fetch($template, $cache_id, $compile_id, $parent, $display, $merge_tpl_vars, $no_output_filter);
     }
 }

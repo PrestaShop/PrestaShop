@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 class Datas
 {
     private static $instance = null;
@@ -87,13 +86,13 @@ class Datas
             'name' => 'db_clear',
             'default' => '1',
             'validate' => 'isInt',
-            'help' => 'Drop existing tables'
+            'help' => 'Drop existing tables',
         ),
         'database_create' => array(
             'name' => 'db_create',
             'default' => '0',
             'validate' => 'isInt',
-            'help' => 'Create the database if not exist'
+            'help' => 'Create the database if not exist',
         ),
         'database_prefix' => array(
             'name' => 'prefix',
@@ -139,12 +138,12 @@ class Datas
         'admin_email' => array(
             'name' => 'email',
             'validate' => 'isEmail',
-            'default' => 'pub@prestashop.com'
+            'default' => 'pub@prestashop.com',
         ),
         'show_license' => array(
             'name' => 'license',
             'default' => 0,
-            'help' => 'show PrestaShop license'
+            'help' => 'show PrestaShop license',
         ),
         'newsletter' => array(
             'name' => 'newsletter',
@@ -153,12 +152,12 @@ class Datas
         ),
         'theme' => array(
             'name' => 'theme',
-            'default' => ''
+            'default' => '',
         ),
         'enable_ssl' => array(
             'name' => 'ssl',
             'default' => 0,
-            'help' => 'enable SSL for PrestaShop'
+            'help' => 'enable SSL for PrestaShop',
         ),
     );
 
@@ -180,9 +179,10 @@ class Datas
 
     public static function getInstance()
     {
-        if (Datas::$instance === null) {
+        if (null === Datas::$instance) {
             Datas::$instance = new Datas();
         }
+
         return Datas::$instance;
     }
 
@@ -203,7 +203,7 @@ class Datas
                 continue;
             }
 
-            if ($res[1] == 'license' && !isset($res[2])) {
+            if ('license' == $res[1] && !isset($res[2])) {
                 $res[2] = 1;
             } elseif (!isset($res[2])) {
                 continue;

@@ -43,7 +43,7 @@ interface FormDataHandlerInterface
     /**
      * Update object with form data.
      *
-     * @param int $id
+     * @param int   $id
      * @param array $data
      *
      * @return int ID of identifiable object

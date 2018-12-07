@@ -45,7 +45,7 @@ final class OptionsChecker implements OptionsCheckerInterface
     private $multistoreContextChecker;
 
     /**
-     * @param FeatureInterface $multistoreFeature
+     * @param FeatureInterface                  $multistoreFeature
      * @param MultistoreContextCheckerInterface $multistoreContextChecker
      */
     public function __construct(

@@ -54,8 +54,7 @@ class SystemInformation
         HostingInformation $hostingInformation,
         MailingInformation $mailingInformation,
         ShopInformation $shopInformation
-    )
-    {
+    ) {
         $this->hostingInformation = $hostingInformation;
         $this->mailingInformation = $mailingInformation;
         $this->shopInformation = $shopInformation;

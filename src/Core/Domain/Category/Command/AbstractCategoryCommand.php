@@ -106,8 +106,8 @@ abstract class AbstractCategoryCommand
      * @param string[] $localizedNames
      *
      * @throws CategoryConstraintException
-     * @return $this
      *
+     * @return $this
      */
     public function setLocalizedNames(array $localizedNames)
     {
@@ -135,8 +135,8 @@ abstract class AbstractCategoryCommand
      * @param string[] $localizedLinkRewrites
      *
      * @throws CategoryConstraintException
-     * @return $this
      *
+     * @return $this
      */
     public function setLocalizedLinkRewrites(array $localizedLinkRewrites)
     {
@@ -184,8 +184,8 @@ abstract class AbstractCategoryCommand
      * @param bool $isActive
      *
      * @throws CategoryConstraintException
-     * @return $this
      *
+     * @return $this
      */
     public function setIsActive($isActive)
     {

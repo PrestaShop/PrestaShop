@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,22 +23,20 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
-
 interface HttpConfigureInterface
 {
     /**
-     * Process form to go to next step
+     * Process form to go to next step.
      */
     public function processNextStep();
 
     /**
-     * Validate current step
+     * Validate current step.
      */
     public function validate();
 
     /**
-     * Display current step view
+     * Display current step view.
      */
     public function display();
 }

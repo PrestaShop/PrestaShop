@@ -54,7 +54,7 @@ class GridExtension extends AbstractExtension
     private $cache;
 
     /**
-     * @param Environment $twig
+     * @param Environment      $twig
      * @param AdapterInterface $cache
      */
     public function __construct(Environment $twig, AdapterInterface $cache)
@@ -89,8 +89,8 @@ class GridExtension extends AbstractExtension
      * @param array $grid
      *
      * @throws RuntimeException when template cannot be found for column
-     * @return string
      *
+     * @return string
      */
     public function renderColumnContent(array $record, array $column, array $grid)
     {
@@ -190,9 +190,9 @@ class GridExtension extends AbstractExtension
     /**
      * Get template for column.
      *
-     * @param array $column
-     * @param array $grid
-     * @param string $basePath
+     * @param array       $column
+     * @param array       $grid
+     * @param string      $basePath
      * @param null|string $defaultTemplate
      *
      * @return null|string

@@ -22,7 +22,7 @@ interface SearchParametersInterface
      * Retrieve list of filters from User Request.
      *
      * @param Request $request
-     * @param string $filterClass the filter class
+     * @param string  $filterClass the filter class
      *
      * @return Filters A collection of filters
      */
@@ -31,11 +31,11 @@ interface SearchParametersInterface
     /**
      * Retrieve list of filters from User searches.
      *
-     * @param int $employeeId
-     * @param int $shopId
+     * @param int    $employeeId
+     * @param int    $shopId
      * @param string $filterClass the filter class
-     * @param string $controller the controller name
-     * @param string $action the action name
+     * @param string $controller  the controller name
+     * @param string $action      the action name
      *
      * @return Filters A collection of filters
      */

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -31,7 +31,6 @@ use Cache;
 use Carrier;
 use CartRule;
 use Configuration;
-use Context;
 use Country;
 use Db;
 use RangePrice;
@@ -41,7 +40,6 @@ use Zone;
 
 abstract class AbstractCarrierTest extends AbstractCartCalculationTest
 {
-
     const ZONE_FIXTURES = array(
         1 => array(
             'name' => 'zone #1',
@@ -164,10 +162,10 @@ abstract class AbstractCarrierTest extends AbstractCartCalculationTest
                 foreach ($cartRuleData['carrierRestrictionIds'] as $carrierId) {
                     $carrier = $this->getCarrierFromFixtureId($carrierId);
                     Db::getInstance()->execute(
-                        "
-                      INSERT INTO " . _DB_PREFIX_ . "cart_rule_carrier(`id_cart_rule`, `id_carrier`)
-                      VALUES('" . (int) $cartRule->id . "',
-                      '" . (int) $carrier->id . "')
+                        '
+                      INSERT INTO '._DB_PREFIX_."cart_rule_carrier(`id_cart_rule`, `id_carrier`)
+                      VALUES('".(int) $cartRule->id."',
+                      '".(int) $carrier->id."')
                     "
                     );
                 }
@@ -175,7 +173,6 @@ abstract class AbstractCarrierTest extends AbstractCartCalculationTest
             $this->cartRules[$k] = $cartRule;
         }
         Cache::clear();
-
     }
 
     public function tearDown()
@@ -202,7 +199,7 @@ abstract class AbstractCarrierTest extends AbstractCartCalculationTest
         foreach ($this->countries as $isoCode => $previousZoneId) {
             $countryId = Country::getByIso($isoCode);
             if (!$countryId) {
-                throw new \Exception('Country not found with iso code = ' . $isoCode);
+                throw new \Exception('Country not found with iso code = '.$isoCode);
             }
             $country = new Country($countryId);
             // restore pevious value
@@ -228,7 +225,7 @@ abstract class AbstractCarrierTest extends AbstractCartCalculationTest
             $carrier->add();
             $carrierPrices = array();
             foreach ($carrierFixture['ranges'] as $rangeFixture) {
-                $range = new RangePrice;
+                $range = new RangePrice();
                 $range->id_carrier = $carrier->id;
                 $range->delimiter1 = $rangeFixture['from'];
                 $range->delimiter2 = $rangeFixture['to'];
@@ -236,8 +233,8 @@ abstract class AbstractCarrierTest extends AbstractCartCalculationTest
                 $this->priceRanges[] = $range;
                 foreach ($rangeFixture['shippingPrices'] as $zoneId => $price) {
                     $zone = $this->getZoneFromFixtureId($zoneId);
-                    if ($zone === null) {
-                        throw new \Exception('Zone not found with fixture id = ' . $zoneId);
+                    if (null === $zone) {
+                        throw new \Exception('Zone not found with fixture id = '.$zoneId);
                     }
                     $carrierPrices[] = array(
                         'id_range_price' => (int) $range->id,
@@ -273,7 +270,7 @@ abstract class AbstractCarrierTest extends AbstractCartCalculationTest
     protected function insertAddresses()
     {
         foreach (static::ZONE_FIXTURES as $k => $zoneFixture) {
-            $zone = new Zone;
+            $zone = new Zone();
             $zone->name = $zoneFixture['name'];
             $zone->add();
             $this->zones[$k] = $zone;
@@ -283,40 +280,40 @@ abstract class AbstractCarrierTest extends AbstractCartCalculationTest
             // store pevious value
             $this->countries[$isoCode] = $country->id_zone;
             $zone = $this->getZoneFromFixtureId($countryFixture['zoneId']);
-            if ($zone === null) {
-                throw new \Exception('Zone not found with fixture id = ' . $countryFixture['zoneId']);
+            if (null === $zone) {
+                throw new \Exception('Zone not found with fixture id = '.$countryFixture['zoneId']);
             }
             $country->id_zone = $zone->id;
             $country->active = 1;
             $country->save();
         }
         foreach (static::STATE_FIXTURES as $k => $stateFixture) {
-            $state = new State;
+            $state = new State();
             $state->name = $stateFixture['name'];
             $state->iso_code = $stateFixture['isoCode'];
             $zone = $this->getZoneFromFixtureId($stateFixture['zoneId']);
-            if ($zone === null) {
-                throw new \Exception('Zone not found with fixture id = ' . $stateFixture['zoneId']);
+            if (null === $zone) {
+                throw new \Exception('Zone not found with fixture id = '.$stateFixture['zoneId']);
             }
             $state->id_zone = $zone->id;
             $country = $this->getCountryFromIsoCode($stateFixture['countryIsoCode']);
-            if ($country === null) {
-                throw new \Exception('Country not found with fixture iso code = ' . $stateFixture['countryIsoCode']);
+            if (null === $country) {
+                throw new \Exception('Country not found with fixture iso code = '.$stateFixture['countryIsoCode']);
             }
             $state->id_country = $country->id;
             $state->add();
             $this->states[$k] = $state;
         }
         foreach (static::ADDRESS_FIXTURES as $k => $addressFixture) {
-            $address = new Address;
+            $address = new Address();
             $country = $this->getCountryFromIsoCode($addressFixture['countryIsoCode']);
-            if ($country === null) {
-                throw new \Exception('Country not found with fixture iso code = ' . $addressFixture['countryIsoCode']);
+            if (null === $country) {
+                throw new \Exception('Country not found with fixture iso code = '.$addressFixture['countryIsoCode']);
             }
             $address->id_country = $country->id;
             $state = $this->getStateFromFixtureId($addressFixture['stateId']);
-            if ($state === null) {
-                throw new \Exception('State not found with fixture id = ' . $addressFixture['stateId']);
+            if (null === $state) {
+                throw new \Exception('State not found with fixture id = '.$addressFixture['stateId']);
             }
             $address->id_state = $state->id;
             $address->postcode = $addressFixture['postcode'];
@@ -353,7 +350,7 @@ abstract class AbstractCarrierTest extends AbstractCartCalculationTest
     {
         $countryId = Country::getByIso($isoCode);
         if (!$countryId) {
-            throw new \Exception('Country not found with iso code = ' . $isoCode);
+            throw new \Exception('Country not found with iso code = '.$isoCode);
         }
         $country = new Country($countryId);
 
@@ -390,15 +387,15 @@ abstract class AbstractCarrierTest extends AbstractCartCalculationTest
 
     protected function setCartCarrierFromFixtureId($carrierFixtureId)
     {
-        if ($carrierFixtureId == 0) {
+        if (0 == $carrierFixtureId) {
             $this->cart->id_carrier = 0;
 
             return;
         }
 
         $carrier = $this->getCarrierFromFixtureId($carrierFixtureId);
-        if ($carrier === null) {
-            throw new \Exception('Carrier not found with fixture id = ' . $carrierFixtureId);
+        if (null === $carrier) {
+            throw new \Exception('Carrier not found with fixture id = '.$carrierFixtureId);
         }
         $this->cart->id_carrier = $carrier->id;
 
@@ -410,15 +407,15 @@ abstract class AbstractCarrierTest extends AbstractCartCalculationTest
 
     protected function setCartAddress($addressId)
     {
-        if ($addressId == 0) {
+        if (0 == $addressId) {
             $this->cart->id_address_delivery = 0;
 
             return;
         }
 
         $address = $this->getAddressFromFixtureId($addressId);
-        if ($address === null) {
-            throw new \Exception('Address not found with fixture id = ' . $addressId);
+        if (null === $address) {
+            throw new \Exception('Address not found with fixture id = '.$addressId);
         }
         $this->cart->id_address_delivery = $address->id;
     }

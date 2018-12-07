@@ -62,8 +62,8 @@ class HookFinder
      * Execute hook specified in params and check if the result matches the expected classes if asked.
      *
      * @throws \Exception if class doesn't match interface or expected classes
-     * @return array Content returned by modules
      *
+     * @return array Content returned by modules
      */
     public function find()
     {
@@ -82,9 +82,9 @@ class HookFinder
                     continue;
                 }
                 if (is_object($content) && !in_array(get_class($content), $this->expectedInstanceClasses, true)) {
-                    throw new \Exception('The module ' . $moduleName . ' did not return expected class. Was ' . get_class($content) . ' instead of ' . implode(' or ', $this->expectedInstanceClasses) . '.');
+                    throw new \Exception('The module '.$moduleName.' did not return expected class. Was '.get_class($content).' instead of '.implode(' or ', $this->expectedInstanceClasses).'.');
                 } elseif (!is_object($content)) {
-                    throw new \Exception('The module ' . $moduleName . ' did not return expected type. Was ' . gettype($content) . ' instead of ' . implode(' or ', $this->expectedInstanceClasses) . '.');
+                    throw new \Exception('The module '.$moduleName.' did not return expected type. Was '.gettype($content).' instead of '.implode(' or ', $this->expectedInstanceClasses).'.');
                 }
             }
         }

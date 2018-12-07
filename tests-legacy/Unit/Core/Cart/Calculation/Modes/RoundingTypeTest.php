@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -33,11 +33,10 @@ use Tools;
 
 class RoundingTypeTest extends AbstractCartCalculationTest
 {
-
     /**
      * Order::ROUND_ITEM
      * Order::ROUND_LINE
-     * Order::ROUND_TOTAL
+     * Order::ROUND_TOTAL.
      */
     protected $defaultRoundingType;
 
@@ -58,7 +57,7 @@ class RoundingTypeTest extends AbstractCartCalculationTest
     }
 
     /**
-     * sets the default rounding type
+     * sets the default rounding type.
      *
      * @param string $roundingType Order::ROUND_ITEM|Order::ROUND_LINE|Order::ROUND_TOTAL
      */
@@ -99,14 +98,14 @@ class RoundingTypeTest extends AbstractCartCalculationTest
                 'roundingType' => Order::ROUND_ITEM,
             ),
             'ROUND_ITEM one product in cart, quantity 1' => array(
-                'products' => array(1 => 1,),
+                'products' => array(1 => 1),
                 'expectedTotal' => Tools::ps_round(static::PRODUCT_FIXTURES[1]['price'], 2)
                                    + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
                 'cartRules' => array(),
                 'roundingMode' => Order::ROUND_ITEM,
             ),
             'ROUND_ITEM one product in cart, quantity 3' => array(
-                'products' => array(1 => 3,),
+                'products' => array(1 => 3),
                 'expectedTotal' => Tools::ps_round(3 * Tools::ps_round(static::PRODUCT_FIXTURES[1]['price'], 2), 2)
                                    + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
                 'cartRules' => array(),
@@ -136,14 +135,14 @@ class RoundingTypeTest extends AbstractCartCalculationTest
                 'roundingType' => Order::ROUND_LINE,
             ),
             'ROUND_LINE one product in cart, quantity 1' => array(
-                'products' => array(1 => 1,),
+                'products' => array(1 => 1),
                 'expectedTotal' => Tools::ps_round(static::PRODUCT_FIXTURES[1]['price'], 2)
                                    + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
                 'cartRules' => array(),
                 'roundingMode' => Order::ROUND_LINE,
             ),
             'ROUND_LINE one product in cart, quantity 3' => array(
-                'products' => array(1 => 3,),
+                'products' => array(1 => 3),
                 'expectedTotal' => Tools::ps_round(3 * static::PRODUCT_FIXTURES[1]['price'], 2)
                                    + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
                 'cartRules' => array(),
@@ -173,14 +172,14 @@ class RoundingTypeTest extends AbstractCartCalculationTest
                 'roundingType' => Order::ROUND_TOTAL,
             ),
             'ROUND_TOTAL one product in cart, quantity 1' => array(
-                'products' => array(1 => 1,),
+                'products' => array(1 => 1),
                 'expectedTotal' => Tools::ps_round(static::PRODUCT_FIXTURES[1]['price'], 2)
                                    + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
                 'cartRules' => array(),
                 'roundingMode' => Order::ROUND_TOTAL,
             ),
             'ROUND_TOTAL one product in cart, quantity 3' => array(
-                'products' => array(1 => 3,),
+                'products' => array(1 => 3),
                 'expectedTotal' => Tools::ps_round(3 * static::PRODUCT_FIXTURES[1]['price'], 2)
                                    + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
                 'cartRules' => array(),

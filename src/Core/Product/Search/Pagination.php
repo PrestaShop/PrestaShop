@@ -74,7 +74,7 @@ class Pagination
             'type' => $type,
             'page' => $page,
             'clickable' => !$current,
-            'current' => $type === 'page' ? $current : false,
+            'current' => 'page' === $type ? $current : false,
         );
     }
 

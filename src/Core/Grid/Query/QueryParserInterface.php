@@ -32,8 +32,8 @@ namespace PrestaShop\PrestaShop\Core\Grid\Query;
 interface QueryParserInterface
 {
     /**
-     * @param string $query the prepared query
-     * @param array $queryParameters the query parameters
+     * @param string $query           the prepared query
+     * @param array  $queryParameters the query parameters
      *
      * @return string
      */

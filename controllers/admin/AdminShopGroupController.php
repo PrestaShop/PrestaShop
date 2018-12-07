@@ -97,9 +97,9 @@ class AdminShopGroupControllerCore extends AdminController
                 $urls = $current_shop->getUrls();
 
                 foreach ($urls as $key_url => &$url) {
-                    $title = $url['domain'] . $url['physical_uri'] . $url['virtual_uri'];
+                    $title = $url['domain'].$url['physical_uri'].$url['virtual_uri'];
                     if (mb_strlen($title) > 23) {
-                        $title = mb_substr($title, 0, 23) . '...';
+                        $title = mb_substr($title, 0, 23).'...';
                     }
 
                     $url['name'] = $title;
@@ -114,13 +114,13 @@ class AdminShopGroupControllerCore extends AdminController
                 new TreeToolbarLink(
                     'Collapse All',
                     '#',
-                    '$(\'#' . $shops_tree->getId() . '\').tree(\'collapseAll\'); return false;',
+                    '$(\'#'.$shops_tree->getId().'\').tree(\'collapseAll\'); return false;',
                     'icon-collapse-alt'
                 ),
                 new TreeToolbarLink(
                     'Expand All',
                     '#',
-                    '$(\'#' . $shops_tree->getId() . '\').tree(\'expandAll\'); return false;',
+                    '$(\'#'.$shops_tree->getId().'\').tree(\'expandAll\'); return false;',
                     'icon-expand-alt'
                 ),
             ))
@@ -131,7 +131,7 @@ class AdminShopGroupControllerCore extends AdminController
         ;
         $shops_tree = $shops_tree->render(null, false, false);
 
-        if ($this->display == 'edit') {
+        if ('edit' == $this->display) {
             $this->toolbar_title[] = $this->object->name;
         }
 
@@ -147,14 +147,14 @@ class AdminShopGroupControllerCore extends AdminController
     {
         parent::initPageHeaderToolbar();
 
-        if ($this->display != 'add' && $this->display != 'edit') {
+        if ('add' != $this->display && 'edit' != $this->display) {
             $this->page_header_toolbar_btn['new'] = array(
                 'desc' => $this->trans('Add a new shop group', array(), 'Admin.Advparameters.Feature'),
-                'href' => self::$currentIndex . '&add' . $this->table . '&token=' . $this->token,
+                'href' => self::$currentIndex.'&add'.$this->table.'&token='.$this->token,
             );
             $this->page_header_toolbar_btn['new_2'] = array(
                 'desc' => $this->trans('Add a new shop', array(), 'Admin.Advparameters.Feature'),
-                'href' => $this->context->link->getAdminLink('AdminShop') . '&addshop',
+                'href' => $this->context->link->getAdminLink('AdminShop').'&addshop',
                 'imgclass' => 'new_2',
                 'icon' => 'process-icon-new',
             );
@@ -165,10 +165,10 @@ class AdminShopGroupControllerCore extends AdminController
     {
         parent::initToolbar();
 
-        if ($this->display != 'add' && $this->display != 'edit') {
+        if ('add' != $this->display && 'edit' != $this->display) {
             $this->toolbar_btn['new'] = array(
                 'desc' => $this->trans('Add a new shop group', array(), 'Admin.Advparameters.Feature'),
-                'href' => self::$currentIndex . '&add' . $this->table . '&token=' . $this->token,
+                'href' => self::$currentIndex.'&add'.$this->table.'&token='.$this->token,
             );
         }
     }
@@ -195,7 +195,7 @@ class AdminShopGroupControllerCore extends AdminController
                     'required' => true,
                     'class' => 't',
                     'is_bool' => true,
-                    'disabled' => ($this->id_object && $this->display == 'edit' && ShopGroup::hasDependency($this->id_object, 'customer')) ? true : false,
+                    'disabled' => ($this->id_object && 'edit' == $this->display && ShopGroup::hasDependency($this->id_object, 'customer')) ? true : false,
                     'values' => array(
                         array(
                             'id' => 'share_customer_on',
@@ -206,7 +206,7 @@ class AdminShopGroupControllerCore extends AdminController
                             'value' => 0,
                         ),
                     ),
-                    'desc' => $this->trans('Once this option is enabled, the shops in this group will share customers. If a customer registers in any one of these shops, the account will automatically be available in the others shops of this group.', array(), 'Admin.Advparameters.Help') . '<br/>' . $this->trans('Warning: you will not be able to disable this option once you have registered customers.', array(), 'Admin.Advparameters.Help'),
+                    'desc' => $this->trans('Once this option is enabled, the shops in this group will share customers. If a customer registers in any one of these shops, the account will automatically be available in the others shops of this group.', array(), 'Admin.Advparameters.Help').'<br/>'.$this->trans('Warning: you will not be able to disable this option once you have registered customers.', array(), 'Admin.Advparameters.Help'),
                 ),
                 array(
                     'type' => 'switch',
@@ -234,7 +234,7 @@ class AdminShopGroupControllerCore extends AdminController
                     'required' => true,
                     'class' => 't',
                     'is_bool' => true,
-                    'disabled' => ($this->id_object && $this->display == 'edit' && ShopGroup::hasDependency($this->id_object, 'order')) ? true : false,
+                    'disabled' => ($this->id_object && 'edit' == $this->display && ShopGroup::hasDependency($this->id_object, 'order')) ? true : false,
                     'values' => array(
                         array(
                             'id' => 'share_order_on',
@@ -245,7 +245,7 @@ class AdminShopGroupControllerCore extends AdminController
                             'value' => 0,
                         ),
                     ),
-                    'desc' => $this->trans('Once this option is enabled (which is only possible if customers and available quantities are shared among shops), the customer\'s cart will be shared by all shops in this group. This way, any purchase started in one shop will be able to be completed in another shop from the same group.', array(), 'Admin.Advparameters.Help') . '<br/>' . $this->trans('Warning: You will not be able to disable this option once you\'ve started to accept orders.', array(), 'Admin.Advparameters.Help'),
+                    'desc' => $this->trans('Once this option is enabled (which is only possible if customers and available quantities are shared among shops), the customer\'s cart will be shared by all shops in this group. This way, any purchase started in one shop will be able to be completed in another shop from the same group.', array(), 'Admin.Advparameters.Help').'<br/>'.$this->trans('Warning: You will not be able to disable this option once you\'ve started to accept orders.', array(), 'Admin.Advparameters.Help'),
                 ),
                 array(
                     'type' => 'switch',
@@ -290,7 +290,7 @@ class AdminShopGroupControllerCore extends AdminController
         $default_shop = new Shop(Configuration::get('PS_SHOP_DEFAULT'));
         $this->tpl_form_vars = array(
             'disabled' => $disabled,
-            'checked' => (Tools::getValue('addshop_group') !== false) ? true : false,
+            'checked' => (false !== Tools::getValue('addshop_group')) ? true : false,
             'defaultGroup' => $default_shop->id_shop_group,
         );
 
@@ -318,11 +318,11 @@ class AdminShopGroupControllerCore extends AdminController
 
     public function postProcess()
     {
-        if (Tools::isSubmit('delete' . $this->table) || Tools::isSubmit('status') || Tools::isSubmit('status' . $this->table)) {
+        if (Tools::isSubmit('delete'.$this->table) || Tools::isSubmit('status') || Tools::isSubmit('status'.$this->table)) {
             /** @var ShopGroup $object */
             $object = $this->loadObject();
 
-            if (ShopGroup::getTotalShopGroup() == 1) {
+            if (1 == ShopGroup::getTotalShopGroup()) {
                 $this->errors[] = $this->trans('You cannot delete or disable the last shop group.', array(), 'Admin.Notifications.Error');
             } elseif ($object->haveShops()) {
                 $this->errors[] = $this->trans('You cannot delete or disable a shop group in use.', array(), 'Admin.Notifications.Error');

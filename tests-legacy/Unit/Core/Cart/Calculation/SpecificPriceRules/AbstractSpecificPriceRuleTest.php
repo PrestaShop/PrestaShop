@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -31,7 +31,6 @@ use LegacyTests\Unit\Core\Cart\Calculation\AbstractCartCalculationTest;
 
 abstract class AbstractSpecificPriceRuleTest extends AbstractCartCalculationTest
 {
-
     const SPECIFIC_PRICE_RULES_FIXTURES = array(
         1 => array('reductionType' => 'percentage', 'reduction' => 23, 'fromQuantity' => 1),
         2 => array('reductionType' => 'percentage', 'reduction' => 15, 'fromQuantity' => 2),
@@ -58,10 +57,10 @@ abstract class AbstractSpecificPriceRuleTest extends AbstractCartCalculationTest
     {
         $fixtures = static::SPECIFIC_PRICE_RULES_FIXTURES;
         if (!isset($fixtures[$priceRuleId])) {
-            throw new \Exception('Unknown specific cart rule with id #' . $priceRuleId);
+            throw new \Exception('Unknown specific cart rule with id #'.$priceRuleId);
         }
         $specificCartRuleFixture = $fixtures[$priceRuleId];
-        $rule = new SpecificPriceRule;
+        $rule = new SpecificPriceRule();
         $rule->id_shop = \Context::getContext()->shop->id;
         $rule->id_currency = 0; // 0 = all
         $rule->id_country = 0; // 0 = all

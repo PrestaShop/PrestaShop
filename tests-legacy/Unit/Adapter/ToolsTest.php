@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace LegacyTests\Unit\Adapter;
 
 use PrestaShop\PrestaShop\Adapter\Tools;
@@ -33,11 +34,11 @@ class ToolsTest extends TestCase
     /**
      * Given two numbers with arbitrary precision
      * When calling Tools:bcAdd with those numbers and a specific precision
-     * Then the method should return the sum of those numbers, rounded to the specified precision
+     * Then the method should return the sum of those numbers, rounded to the specified precision.
      *
      * @param string $leftOperand
      * @param string $rightOperand
-     * @param int $scale
+     * @param int    $scale
      * @param string $expectedResult
      *
      * @dataProvider provideTestCasesForBcAdd

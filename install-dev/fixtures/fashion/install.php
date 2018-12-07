@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 use PrestaShopBundle\Install\XmlLoader;
 
 /**
@@ -36,7 +35,7 @@ class InstallFixturesFashion extends XmlLoader
 {
     public function createEntityCustomer($identifier, array $data, array $data_lang)
     {
-        if ($identifier == 'John') {
+        if ('John' == $identifier) {
             $data['passwd'] = Tools::hash('123456789');
         }
 

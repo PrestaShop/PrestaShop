@@ -133,8 +133,8 @@ class OrderReturnCore extends ObjectModel
     {
         if (!$data = Db::getInstance()->getRow('
 		SELECT COUNT(`id_order_return`) AS total
-		FROM `' . _DB_PREFIX_ . 'order_return_detail`
-		WHERE `id_order_return` = ' . (int) $this->id)) {
+		FROM `'._DB_PREFIX_.'order_return_detail`
+		WHERE `id_order_return` = '.(int) $this->id)) {
             return false;
         }
 
@@ -148,10 +148,10 @@ class OrderReturnCore extends ObjectModel
         }
         $data = Db::getInstance()->executeS('
 		SELECT *
-		FROM `' . _DB_PREFIX_ . 'order_return`
-		WHERE `id_customer` = ' . (int) $customer_id .
-        ($order_id ? ' AND `id_order` = ' . (int) $order_id : '') .
-        ($no_denied ? ' AND `state` != 4' : '') . '
+		FROM `'._DB_PREFIX_.'order_return`
+		WHERE `id_customer` = '.(int) $customer_id.
+        ($order_id ? ' AND `id_order` = '.(int) $order_id : '').
+        ($no_denied ? ' AND `state` != 4' : '').'
 		ORDER BY `date_add` DESC');
         foreach ($data as $k => $or) {
             $state = new OrderReturnState($or['state']);
@@ -169,12 +169,12 @@ class OrderReturnCore extends ObjectModel
     {
         return Db::getInstance()->executeS('
 		SELECT *
-		FROM `' . _DB_PREFIX_ . 'order_return_detail`
-		WHERE `id_order_return` = ' . (int) $id_order_return);
+		FROM `'._DB_PREFIX_.'order_return_detail`
+		WHERE `id_order_return` = '.(int) $id_order_return);
     }
 
     /**
-     * @param int $order_return_id
+     * @param int   $order_return_id
      * @param Order $order
      *
      * @return array
@@ -222,7 +222,7 @@ class OrderReturnCore extends ObjectModel
 
     public static function deleteOrderReturnDetail($id_order_return, $id_order_detail, $id_customization = 0)
     {
-        return Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'order_return_detail` WHERE `id_order_detail` = ' . (int) $id_order_detail . ' AND `id_order_return` = ' . (int) $id_order_return . ' AND `id_customization` = ' . (int) $id_customization);
+        return Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'order_return_detail` WHERE `id_order_detail` = '.(int) $id_order_detail.' AND `id_order_return` = '.(int) $id_order_return.' AND `id_customization` = '.(int) $id_customization);
     }
 
     /**
@@ -234,28 +234,28 @@ class OrderReturnCore extends ObjectModel
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT product_quantity, date_add, orsl.name as state
-			FROM `' . _DB_PREFIX_ . 'order_return_detail` ord
-			LEFT JOIN `' . _DB_PREFIX_ . 'order_return` o
+			FROM `'._DB_PREFIX_.'order_return_detail` ord
+			LEFT JOIN `'._DB_PREFIX_.'order_return` o
 			ON o.id_order_return = ord.id_order_return
-			LEFT JOIN `' . _DB_PREFIX_ . 'order_return_state_lang` orsl
-			ON orsl.id_order_return_state = o.state AND orsl.id_lang = ' . (int) Context::getContext()->language->id . '
-			WHERE ord.`id_order_detail` = ' . (int) $id_order_detail);
+			LEFT JOIN `'._DB_PREFIX_.'order_return_state_lang` orsl
+			ON orsl.id_order_return_state = o.state AND orsl.id_lang = '.(int) Context::getContext()->language->id.'
+			WHERE ord.`id_order_detail` = '.(int) $id_order_detail);
     }
 
     /**
      * Add returned quantity to products list.
      *
      * @param array $products
-     * @param int $id_order
+     * @param int   $id_order
      */
     public static function addReturnedQuantity(&$products, $id_order)
     {
         $details = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
             'SELECT od.id_order_detail, GREATEST(od.product_quantity_return, IFNULL(SUM(ord.product_quantity),0)) as qty_returned
-			FROM ' . _DB_PREFIX_ . 'order_detail od
-			LEFT JOIN ' . _DB_PREFIX_ . 'order_return_detail ord
+			FROM '._DB_PREFIX_.'order_detail od
+			LEFT JOIN '._DB_PREFIX_.'order_return_detail ord
 			ON ord.id_order_detail = od.id_order_detail
-			WHERE od.id_order = ' . (int) $id_order . '
+			WHERE od.id_order = '.(int) $id_order.'
 			GROUP BY od.id_order_detail'
         );
         if (!$details) {

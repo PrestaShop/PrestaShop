@@ -67,7 +67,7 @@ class SwitchType extends AbstractType
         }
         $view->vars['attr']['class'] = 'ps-switch';
         if (isset($options['attr']['class'])) {
-            $view->vars['attr']['class'] .= ' ' . $options['attr']['class'];
+            $view->vars['attr']['class'] .= ' '.$options['attr']['class'];
         }
     }
 

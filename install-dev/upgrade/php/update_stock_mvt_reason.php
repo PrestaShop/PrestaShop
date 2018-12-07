@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,8 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
-
 function update_stock_mvt_reason()
 {
     //Get all stock mvts reasons already presents in the solution (from 1.4.x)
@@ -61,8 +59,8 @@ function update_stock_mvt_reason()
 			(8, 1, NOW(), NOW())
 	');
 
-    Db::getInstance()->execute("
-		INSERT INTO `"._DB_PREFIX_."stock_mvt_reason_lang` (`id_stock_mvt_reason`, `id_lang`, `name`)
+    Db::getInstance()->execute('
+		INSERT INTO `'._DB_PREFIX_."stock_mvt_reason_lang` (`id_stock_mvt_reason`, `id_lang`, `name`)
 		VALUES
 			(1, 1, 'Increase'),
 			(1, 2, 'Augmenter'),
@@ -111,7 +109,7 @@ function update_stock_mvt_reason()
         foreach ($mvts as $mvt) {
             Db::getInstance()->execute('
 				INSERT INTO `'._DB_PREFIX_.'stock_mvt_reason` (`sign`, `date_add`, `date_upd`)
-				VALUES ("'.(int)$mvt['sign'].'", "'.pSQL($mvt['date_add']).'", "'.pSQL($mvt['date_upd']).'")
+				VALUES ("'.(int) $mvt['sign'].'", "'.pSQL($mvt['date_add']).'", "'.pSQL($mvt['date_upd']).'")
 			');
 
             $row_id = Db::getInstance()->Insert_ID();
@@ -123,7 +121,7 @@ function update_stock_mvt_reason()
 
                 Db::getInstance()->execute('
 					INSERT INTO `'._DB_PREFIX_.'stock_mvt_reason_lang` (`id_stock_mvt_reason`, `id_lang`, `name`)
-					VALUES ("'.(int)$row_id.'", "'.(int)$mvt_lang['id_lang'].'", "'.pSQL($mvt_lang['name']).'")
+					VALUES ("'.(int) $row_id.'", "'.(int) $mvt_lang['id_lang'].'", "'.pSQL($mvt_lang['name']).'")
 				');
             }
         }

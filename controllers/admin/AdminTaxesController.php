@@ -118,7 +118,7 @@ class AdminTaxesControllerCore extends AdminController
     {
         if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_tax'] = array(
-                'href' => self::$currentIndex . '&addtax&token=' . $this->token,
+                'href' => self::$currentIndex.'&addtax&token='.$this->token,
                 'desc' => $this->trans('Add new tax', array(), 'Admin.International.Feature'),
                 'icon' => 'process-icon-new',
             );
@@ -131,12 +131,12 @@ class AdminTaxesControllerCore extends AdminController
      * Display delete action link.
      *
      * @param null|string $token
-     * @param int $id
+     * @param int         $id
      *
      * @throws Exception
      * @throws SmartyException
-     * @return string
      *
+     * @return string
      */
     public function displayDeleteLink($token, $id)
     {
@@ -153,8 +153,8 @@ class AdminTaxesControllerCore extends AdminController
         }
 
         $this->context->smarty->assign(array(
-            'href' => self::$currentIndex . '&' . $this->identifier . '=' . $id . '&delete' . $this->table . '&token=' . ($token != null ? $token : $this->token),
-            'confirm' => (isset($confirm) ? '\r' . $confirm : self::$cache_lang['DeleteItem'] . $id . ' ? '),
+            'href' => self::$currentIndex.'&'.$this->identifier.'='.$id.'&delete'.$this->table.'&token='.(null != $token ? $token : $this->token),
+            'confirm' => (isset($confirm) ? '\r'.$confirm : self::$cache_lang['DeleteItem'].$id.' ? '),
             'action' => self::$cache_lang['Delete'],
         ));
 
@@ -165,11 +165,11 @@ class AdminTaxesControllerCore extends AdminController
      * Fetch the template for action enable.
      *
      * @param string $token
-     * @param int $id
-     * @param int $value state enabled or not
-     * @param string $active status
-     * @param int $id_category
-     * @param int $id_product
+     * @param int    $id
+     * @param int    $value       state enabled or not
+     * @param string $active      status
+     * @param int    $id_category
+     * @param int    $id_product
      */
     public function displayEnableLink($token, $id, $value, $active, $id_category = null, $id_product = null)
     {
@@ -179,8 +179,8 @@ class AdminTaxesControllerCore extends AdminController
         $tpl_enable = $this->context->smarty->createTemplate('helpers/list/list_action_enable.tpl');
         $tpl_enable->assign(array(
             'enabled' => (bool) $value,
-            'url_enable' => self::$currentIndex . '&' . $this->identifier . '=' . (int) $id . '&' . $active . $this->table .
-                ((int) $id_category && (int) $id_product ? '&id_category=' . (int) $id_category : '') . '&token=' . ($token != null ? $token : $this->token),
+            'url_enable' => self::$currentIndex.'&'.$this->identifier.'='.(int) $id.'&'.$active.$this->table.
+                ((int) $id_category && (int) $id_product ? '&id_category='.(int) $id_category : '').'&token='.(null != $token ? $token : $this->token),
             'confirm' => isset($confirm) ? $confirm : null,
         ));
 
@@ -201,7 +201,7 @@ class AdminTaxesControllerCore extends AdminController
                     'name' => 'name',
                     'required' => true,
                     'lang' => true,
-                    'hint' => $this->trans('Tax name to display in carts and on invoices (e.g. "VAT").', array(), 'Admin.International.Help') . ' - ' . $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info') . ' <>;=#{}',
+                    'hint' => $this->trans('Tax name to display in carts and on invoices (e.g. "VAT").', array(), 'Admin.International.Help').' - '.$this->trans('Invalid characters:', array(), 'Admin.Notifications.Info').' <>;=#{}',
                 ),
                 array(
                     'type' => 'text',
@@ -209,7 +209,7 @@ class AdminTaxesControllerCore extends AdminController
                     'name' => 'rate',
                     'maxlength' => 6,
                     'required' => true,
-                    'hint' => $this->trans('Format: XX.XX or XX.XXX (e.g. 19.60 or 13.925)', array(), 'Admin.International.Help') . ' - ' . $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info') . ' <>;=#{}',
+                    'hint' => $this->trans('Format: XX.XX or XX.XXX (e.g. 19.60 or 13.925)', array(), 'Admin.International.Help').' - '.$this->trans('Invalid characters:', array(), 'Admin.Notifications.Info').' <>;=#{}',
                 ),
                 array(
                     'type' => 'switch',
@@ -241,11 +241,11 @@ class AdminTaxesControllerCore extends AdminController
 
     public function postProcess()
     {
-        if ($this->action == 'save') {
+        if ('save' == $this->action) {
             /* Checking fields validity */
             $this->validateRules();
             if (!count($this->errors)) {
-                $id = (int) (Tools::getValue('id_' . $this->table));
+                $id = (int) (Tools::getValue('id_'.$this->table));
 
                 /* Object update */
                 if (isset($id) && !empty($id)) {
@@ -256,12 +256,12 @@ class AdminTaxesControllerCore extends AdminController
                         $result = $object->update(false, false);
 
                         if (!$result) {
-                            $this->errors[] = $this->trans('An error occurred while updating an object.', array(), 'Admin.Notifications.Error') . ' <b>' . $this->table . '</b>';
+                            $this->errors[] = $this->trans('An error occurred while updating an object.', array(), 'Admin.Notifications.Error').' <b>'.$this->table.'</b>';
                         } elseif ($this->postImage($object->id)) {
-                            Tools::redirectAdmin(self::$currentIndex . '&id_' . $this->table . '=' . $object->id . '&conf=4' . '&token=' . $this->token);
+                            Tools::redirectAdmin(self::$currentIndex.'&id_'.$this->table.'='.$object->id.'&conf=4'.'&token='.$this->token);
                         }
                     } else {
-                        $this->errors[] = $this->trans('An error occurred while updating an object.', array(), 'Admin.Notifications.Error') . ' <b>' . $this->table . '</b> ' . $this->trans('(cannot load object)', array(), 'Admin.Notifications.Error');
+                        $this->errors[] = $this->trans('An error occurred while updating an object.', array(), 'Admin.Notifications.Error').' <b>'.$this->table.'</b> '.$this->trans('(cannot load object)', array(), 'Admin.Notifications.Error');
                     }
                 } else {
                     // Object creation
@@ -269,9 +269,9 @@ class AdminTaxesControllerCore extends AdminController
                     $object = new $this->className();
                     $this->copyFromPost($object, $this->table);
                     if (!$object->add()) {
-                        $this->errors[] = $this->trans('An error occurred while creating an object.', array(), 'Admin.Notifications.Error') . ' <b>' . $this->table . '</b>';
-                    } elseif (($_POST['id_' . $this->table] = $object->id /* voluntary */) && $this->postImage($object->id) && $this->_redirect) {
-                        Tools::redirectAdmin(self::$currentIndex . '&id_' . $this->table . '=' . $object->id . '&conf=3' . '&token=' . $this->token);
+                        $this->errors[] = $this->trans('An error occurred while creating an object.', array(), 'Admin.Notifications.Error').' <b>'.$this->table.'</b>';
+                    } elseif (($_POST['id_'.$this->table] = $object->id /* voluntary */) && $this->postImage($object->id) && $this->_redirect) {
+                        Tools::redirectAdmin(self::$currentIndex.'&id_'.$this->table.'='.$object->id.'&conf=3'.'&token='.$this->token);
                     }
                 }
             }
@@ -286,7 +286,7 @@ class AdminTaxesControllerCore extends AdminController
 
         if ($old_value != $value) {
             // Reset ecotax
-            if ($value == 0) {
+            if (0 == $value) {
                 Product::resetEcoTax();
             }
 

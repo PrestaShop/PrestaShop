@@ -1,12 +1,12 @@
 <?php
 
-include('config/config.php');
+include 'config/config.php';
 
-if ($_SESSION['verify'] != 'RESPONSIVEfilemanager') {
+if ('RESPONSIVEfilemanager' != $_SESSION['verify']) {
     die('Forbidden');
 }
 
-include('include/utils.php');
+include 'include/utils.php';
 
 if (isset($_GET['action'])) {
     switch ($_GET['action']) {
@@ -22,7 +22,7 @@ if (isset($_GET['action'])) {
                 $_SESSION['sort_by'] = $_GET['sort_by'];
             }
             if (isset($_GET['descending'])) {
-                $_SESSION['descending'] = $_GET['descending'] === 'true';
+                $_SESSION['descending'] = 'true' === $_GET['descending'];
             }
             break;
         case 'save_img':
@@ -31,12 +31,11 @@ if (isset($_GET['action'])) {
             $filename = $_POST['name'];
             $path_pos = $_POST['path'];
 
-            if (preg_match('/\.{1,2}[\/|\\\]/', $path_pos) !== 0
+            if (0 !== preg_match('/\.{1,2}[\/|\\\]/', $path_pos)
                 || $filename !== fix_filename($filename, $transliteration)
                 || !in_array(mb_strtolower($info['extension']), array('jpg', 'jpeg', 'png'), true)
-                || mb_strpos($_POST['url'], 'http://featherfiles.aviary.com/') !== 0
+                || 0 !== mb_strpos($_POST['url'], 'http://featherfiles.aviary.com/')
                 || !isset($info['extension'])
-
             ) {
                 die('wrong data');
             }
@@ -52,18 +51,18 @@ if (isset($_GET['action'])) {
                 die('wrong data');
             }
 
-            if ($image_data === false) {
+            if (false === $image_data) {
                 die('file could not be loaded');
             }
 
             $put_contents_path = $current_path;
 
             if (isset($_POST['path'])) {
-                $put_contents_path .= str_replace("\0", "", $_POST['path']);
+                $put_contents_path .= str_replace("\0", '', $_POST['path']);
             }
 
             if (isset($_POST['name'])) {
-                $put_contents_path .= str_replace("\0", "", $_POST['name']);
+                $put_contents_path .= str_replace("\0", '', $_POST['name']);
             }
 
             file_put_contents($put_contents_path, $image_data);
@@ -76,7 +75,7 @@ if (isset($_GET['action'])) {
             }*/
             break;
         case 'extract':
-            if (mb_strpos($_POST['path'], '/') === 0 || mb_strpos($_POST['path'], '../') !== false || mb_strpos($_POST['path'], './') === 0) {
+            if (0 === mb_strpos($_POST['path'], '/') || false !== mb_strpos($_POST['path'], '../') || 0 === mb_strpos($_POST['path'], './')) {
                 die('wrong path');
             }
             $path = $current_path.$_POST['path'];
@@ -84,22 +83,22 @@ if (isset($_GET['action'])) {
             $base_folder = $current_path.fix_dirname($_POST['path']).'/';
             switch ($info['extension']) {
                 case 'zip':
-                    $zip = new ZipArchive;
-                    if ($zip->open($path) === true) {
+                    $zip = new ZipArchive();
+                    if (true === $zip->open($path)) {
                         //make all the folders
-                        for ($i = 0; $i < $zip->numFiles; $i++) {
+                        for ($i = 0; $i < $zip->numFiles; ++$i) {
                             $OnlyFileName = $zip->getNameIndex($i);
                             $FullFileName = $zip->statIndex($i);
-                            if ($FullFileName['name'][mb_strlen($FullFileName['name']) - 1] == '/') {
+                            if ('/' == $FullFileName['name'][mb_strlen($FullFileName['name']) - 1]) {
                                 create_folder($base_folder.$FullFileName['name']);
                             }
                         }
                         //unzip into the folders
-                        for ($i = 0; $i < $zip->numFiles; $i++) {
+                        for ($i = 0; $i < $zip->numFiles; ++$i) {
                             $OnlyFileName = $zip->getNameIndex($i);
                             $FullFileName = $zip->statIndex($i);
 
-                            if (!($FullFileName['name'][mb_strlen($FullFileName['name']) - 1] == '/')) {
+                            if (!('/' == $FullFileName['name'][mb_strlen($FullFileName['name']) - 1])) {
                                 $fileinfo = pathinfo($OnlyFileName);
                                 if (in_array(mb_strtolower($fileinfo['extension']), $ext, true)) {
                                     copy('zip://'.$path.'#'.$OnlyFileName, $base_folder.$FullFileName['name']);
@@ -196,16 +195,11 @@ if (isset($_GET['action'])) {
 						$("#jquery_jplayer_1").jPlayer({
 							ready: function () {
 								$(this).jPlayer("setMedia", {
-									title: "<?php Tools::safeOutput($_GET['title']);
-                ?>",
-									mp3: "<?php echo Tools::safeOutput($preview_file);
-                ?>",
-									m4a: "<?php echo Tools::safeOutput($preview_file);
-                ?>",
-									oga: "<?php echo Tools::safeOutput($preview_file);
-                ?>",
-									wav: "<?php echo Tools::safeOutput($preview_file);
-                ?>"
+									title: "<?php Tools::safeOutput($_GET['title']); ?>",
+									mp3: "<?php echo Tools::safeOutput($preview_file); ?>",
+									m4a: "<?php echo Tools::safeOutput($preview_file); ?>",
+									oga: "<?php echo Tools::safeOutput($preview_file); ?>",
+									wav: "<?php echo Tools::safeOutput($preview_file); ?>"
 								});
 							},
 							swfPath: "js",
@@ -218,7 +212,6 @@ if (isset($_GET['action'])) {
 				</script>
 
 			<?php
-
             } elseif (in_array(mb_strtolower($info['extension']), $ext_video, true)) {
                 ?>
 
@@ -228,12 +221,9 @@ if (isset($_GET['action'])) {
 						$("#jquery_jplayer_1").jPlayer({
 							ready: function () {
 								$(this).jPlayer("setMedia", {
-									title: "<?php Tools::safeOutput($_GET['title']);
-                ?>",
-									m4v: "<?php echo Tools::safeOutput($preview_file);
-                ?>",
-									ogv: "<?php echo Tools::safeOutput($preview_file);
-                ?>"
+									title: "<?php Tools::safeOutput($_GET['title']); ?>",
+									m4v: "<?php echo Tools::safeOutput($preview_file); ?>",
+									ogv: "<?php echo Tools::safeOutput($preview_file); ?>"
 								});
 							},
 							swfPath: "js",
@@ -247,7 +237,6 @@ if (isset($_GET['action'])) {
 				</script>
 
 			<?php
-
             }
             break;
     }

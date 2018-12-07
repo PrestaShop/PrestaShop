@@ -38,8 +38,8 @@ trait TranslationFinderTrait
      * @param null $pattern
      *
      * @throws \Exception
-     * @return MessageCatalogue
      *
+     * @return MessageCatalogue
      */
     public function getCatalogueFromPaths($paths, $locale, $pattern = null)
     {
@@ -51,15 +51,15 @@ trait TranslationFinderTrait
             $finder->name($pattern);
         }
         $translationFiles = $finder->files()->notName('index.php')->in($paths);
-        if (count($translationFiles) === 0) {
+        if (0 === count($translationFiles)) {
             throw new \Exception('There is no translation file available.');
         }
 
         foreach ($translationFiles as $file) {
-            if (mb_strpos($file->getBasename('.xlf'), $locale) !== false) {
+            if (false !== mb_strpos($file->getBasename('.xlf'), $locale)) {
                 $domain = $file->getBasename('.xlf');
             } else {
-                $domain = $file->getBasename('.xlf') . '.' . $locale;
+                $domain = $file->getBasename('.xlf').'.'.$locale;
             }
 
             $fileCatalogue = $xliffFileLoader->load($file->getPathname(), $locale, $domain);

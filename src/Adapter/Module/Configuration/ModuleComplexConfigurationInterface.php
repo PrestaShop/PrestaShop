@@ -35,7 +35,7 @@ interface ModuleComplexConfigurationInterface
 {
     /**
      * @param Module $module
-     * @param array $params
+     * @param array  $params
      *
      * @return mixed
      */

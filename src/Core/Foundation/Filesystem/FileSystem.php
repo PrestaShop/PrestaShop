@@ -44,7 +44,7 @@ class FileSystem
 
     private function joinTwoPaths($a, $b)
     {
-        return $this->normalizePath($a) . DIRECTORY_SEPARATOR . $this->normalizePath($b);
+        return $this->normalizePath($a).DIRECTORY_SEPARATOR.$this->normalizePath($b);
     }
 
     /**
@@ -54,7 +54,7 @@ class FileSystem
     {
         if (func_num_args() < 2) {
             throw new Exception('joinPaths requires at least 2 arguments.');
-        } elseif (func_num_args() === 2) {
+        } elseif (2 === func_num_args()) {
             $arg_O = func_get_arg(0);
             $arg_1 = func_get_arg(1);
 
@@ -105,7 +105,7 @@ class FileSystem
         $entries = array();
 
         foreach (scandir($path) as $entry) {
-            if ($entry === '.' || $entry === '..') {
+            if ('.' === $entry || '..' === $entry) {
                 continue;
             }
 

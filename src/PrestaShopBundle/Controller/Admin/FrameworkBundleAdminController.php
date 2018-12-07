@@ -76,14 +76,14 @@ class FrameworkBundleAdminController extends Controller
 
     public function hashUpdateJsAction($hash)
     {
-        $contents = file_get_contents('http://localhost:8080/' . $hash . '.hot-update.js');
+        $contents = file_get_contents('http://localhost:8080/'.$hash.'.hot-update.js');
 
         return new Response($contents);
     }
 
     public function hashUpdateJsonAction($hash)
     {
-        $contents = file_get_contents('http://localhost:8080/' . $hash . '.hot-update.json');
+        $contents = file_get_contents('http://localhost:8080/'.$hash.'.hot-update.json');
 
         return new Response($contents);
     }
@@ -96,8 +96,8 @@ class FrameworkBundleAdminController extends Controller
      * @param Form $form The form
      *
      * @throws \Symfony\Component\Translation\Exception\InvalidArgumentException
-     * @return array[array[string]] Errors
      *
+     * @return array[array[string]] Errors
      */
     public function getFormErrorsForJS(Form $form)
     {
@@ -144,8 +144,8 @@ class FrameworkBundleAdminController extends Controller
      *
      * Wrapper to: @see HookDispatcher::dispatchWithParameters()
      *
-     * @param string $hookName The hook name
-     * @param array $parameters The hook parameters
+     * @param string $hookName   The hook name
+     * @param array  $parameters The hook parameters
      */
     protected function dispatchHook($hookName, array $parameters)
     {
@@ -157,12 +157,12 @@ class FrameworkBundleAdminController extends Controller
      *
      * Wrapper to: @see HookDispatcher::renderForParameters()
      *
-     * @param string $hookName The hook name
-     * @param array $parameters The hook parameters
+     * @param string $hookName   The hook name
+     * @param array  $parameters The hook parameters
      *
      * @throws \Exception
-     * @return array The responses of hooks
      *
+     * @return array The responses of hooks
      */
     protected function renderHook($hookName, array $parameters)
     {
@@ -172,8 +172,8 @@ class FrameworkBundleAdminController extends Controller
     /**
      * Generates a documentation link.
      *
-     * @param string $section Legacy controller name
-     * @param bool|string $title Help title
+     * @param string      $section Legacy controller name
+     * @param bool|string $title   Help title
      *
      * @return string
      */
@@ -186,8 +186,8 @@ class FrameworkBundleAdminController extends Controller
             $title = $this->trans('Help', 'Admin.Global');
         }
 
-        $docLink = urlencode('https://help.prestashop.com/' . $legacyContext->getEmployeeLanguageIso() . '/doc/'
-            . $section . '?version=' . $version . '&country=' . $legacyContext->getEmployeeLanguageIso());
+        $docLink = urlencode('https://help.prestashop.com/'.$legacyContext->getEmployeeLanguageIso().'/doc/'
+            .$section.'?version='.$version.'&country='.$legacyContext->getEmployeeLanguageIso());
 
         return $this->generateUrl('admin_common_sidebar', array(
             'url' => $docLink,
@@ -235,24 +235,24 @@ class FrameworkBundleAdminController extends Controller
      * @param string $controller name of the controller to valide access
      *
      * @throws \LogicException
-     * @return int
      *
+     * @return int
      */
     protected function authorizationLevel($controller)
     {
-        if ($this->isGranted(PageVoter::DELETE, $controller . '_')) {
+        if ($this->isGranted(PageVoter::DELETE, $controller.'_')) {
             return PageVoter::LEVEL_DELETE;
         }
 
-        if ($this->isGranted(PageVoter::CREATE, $controller . '_')) {
+        if ($this->isGranted(PageVoter::CREATE, $controller.'_')) {
             return PageVoter::LEVEL_CREATE;
         }
 
-        if ($this->isGranted(PageVoter::UPDATE, $controller . '_')) {
+        if ($this->isGranted(PageVoter::UPDATE, $controller.'_')) {
             return PageVoter::LEVEL_UPDATE;
         }
 
-        if ($this->isGranted(PageVoter::READ, $controller . '_')) {
+        if ($this->isGranted(PageVoter::READ, $controller.'_')) {
             return PageVoter::LEVEL_READ;
         }
 
@@ -262,9 +262,9 @@ class FrameworkBundleAdminController extends Controller
     /**
      * Get the translated chain from key.
      *
-     * @param string $key the key to be translated
-     * @param string $domain the domain to be selected
-     * @param array $parameters Optional, pass parameters if needed (uncommon)
+     * @param string $key        the key to be translated
+     * @param string $domain     the domain to be selected
+     * @param array  $parameters Optional, pass parameters if needed (uncommon)
      *
      * @return string
      */
@@ -309,18 +309,18 @@ class FrameworkBundleAdminController extends Controller
      * @param string $suffix
      *
      * @throws \LogicException
-     * @return bool
      *
+     * @return bool
      */
     protected function actionIsAllowed($action, $object = '', $suffix = '')
     {
         return (
-                $action === 'delete' . $suffix && $this->isGranted(PageVoter::DELETE, $object)
+                $action === 'delete'.$suffix && $this->isGranted(PageVoter::DELETE, $object)
             ) || (
-                ($action === 'activate' . $suffix || $action === 'deactivate' . $suffix) &&
+                ($action === 'activate'.$suffix || $action === 'deactivate'.$suffix) &&
                 $this->isGranted(PageVoter::UPDATE, $object)
             ) || (
-                ($action === 'duplicate' . $suffix) &&
+                ($action === 'duplicate'.$suffix) &&
                 ($this->isGranted(PageVoter::UPDATE, $object) || $this->isGranted(PageVoter::CREATE, $object))
             );
     }
@@ -332,24 +332,24 @@ class FrameworkBundleAdminController extends Controller
      * @param string $suffix
      *
      * @throws \Exception
-     * @return string
      *
+     * @return string
      */
     protected function getForbiddenActionMessage($action, $suffix = '')
     {
-        if ($action === 'delete' . $suffix) {
+        if ($action === 'delete'.$suffix) {
             return $this->trans('You do not have permission to delete this.', 'Admin.Notifications.Error');
         }
 
-        if ($action === 'deactivate' . $suffix || $action === 'activate' . $suffix) {
+        if ($action === 'deactivate'.$suffix || $action === 'activate'.$suffix) {
             return $this->trans('You do not have permission to edit this.', 'Admin.Notifications.Error');
         }
 
-        if ($action === 'duplicate' . $suffix) {
+        if ($action === 'duplicate'.$suffix) {
             return $this->trans('You do not have permission to add this.', 'Admin.Notifications.Error');
         }
 
-        throw new \Exception(sprintf('Invalid action (%s)', $action . $suffix));
+        throw new \Exception(sprintf('Invalid action (%s)', $action.$suffix));
     }
 
     /**
@@ -376,8 +376,8 @@ class FrameworkBundleAdminController extends Controller
      * Get Admin URI from PrestaShop 1.6 Back Office.
      *
      * @param string $controller the old Controller name
-     * @param bool $withToken whether we add token or not
-     * @param array $params url parameters
+     * @param bool   $withToken  whether we add token or not
+     * @param array  $params     url parameters
      *
      * @return string the page URI (with token)
      */
@@ -420,7 +420,7 @@ class FrameworkBundleAdminController extends Controller
 
     /**
      * @param array $errors
-     * @param int $httpStatusCode
+     * @param int   $httpStatusCode
      *
      * @return JsonResponse
      */

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -31,7 +31,6 @@ use LegacyTests\Unit\Core\Cart\Calculation\AbstractCartCalculationTest;
 
 class CartTaxesTest extends AbstractCartCalculationTest
 {
-
     const TAX_RULE_GROUPID_1 = 32;
     const ADDRESS_ID_1 = 2;
     const TAX_RATE_1 = 4;
@@ -96,7 +95,6 @@ class CartTaxesTest extends AbstractCartCalculationTest
         $this->compareCartTotalTaxIncl($expectedTotalTaxExcl);
 
         Configuration::set('PS_TAX', $prevConfTax);
-
     }
 
     public function cartTaxesProvider()
@@ -110,7 +108,7 @@ class CartTaxesTest extends AbstractCartCalculationTest
                 'addressId' => static::ADDRESS_ID_1,
             ),
             'tax #1: one product in cart, quantity 1' => array(
-                'products' => array(1 => 1,),
+                'products' => array(1 => 1),
                 'expectedTotalTaxExcl' => static::PRODUCT_FIXTURES[1]['price']
                                           + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
                 'expectedTotalTaxIncl' => static::PRODUCT_FIXTURES[1]['price'] * (1 + static::TAX_RATE_1 / 100)
@@ -119,7 +117,7 @@ class CartTaxesTest extends AbstractCartCalculationTest
                 'addressId' => static::ADDRESS_ID_1,
             ),
             'tax #2: one product in cart, quantity 1' => array(
-                'products' => array(5 => 1,),
+                'products' => array(5 => 1),
                 'expectedTotalTaxExcl' => static::PRODUCT_FIXTURES[5]['price']
                                           + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
                 'expectedTotalTaxIncl' => static::PRODUCT_FIXTURES[5]['price'] * (1 + static::TAX_RATE_2 / 100)
@@ -128,7 +126,7 @@ class CartTaxesTest extends AbstractCartCalculationTest
                 'addressId' => static::ADDRESS_ID_2,
             ),
             'tax #3: one product in cart, quantity 1' => array(
-                'products' => array(5 => 1,),
+                'products' => array(5 => 1),
                 'expectedTotalTaxExcl' => static::PRODUCT_FIXTURES[5]['price']
                                           + static::DEFAULT_WRAPPING_FEE,
                 'expectedTotalTaxIncl' => static::PRODUCT_FIXTURES[5]['price'] * (1 + static::TAX_RATE_3 / 100)
@@ -137,7 +135,7 @@ class CartTaxesTest extends AbstractCartCalculationTest
                 'addressId' => static::ADDRESS_ID_3,
             ),
             'tax #1: one product in cart, quantity 3' => array(
-                'products' => array(1 => 3,),
+                'products' => array(1 => 3),
                 'expectedTotalTaxExcl' => 3 * static::PRODUCT_FIXTURES[1]['price']
                                           + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
                 'expectedTotalTaxIncl' => 3 * static::PRODUCT_FIXTURES[1]['price'] * (1 + static::TAX_RATE_1 / 100)
@@ -146,7 +144,7 @@ class CartTaxesTest extends AbstractCartCalculationTest
                 'addressId' => static::ADDRESS_ID_1,
             ),
             'tax #2: one product in cart, quantity 3' => array(
-                'products' => array(5 => 3,),
+                'products' => array(5 => 3),
                 'expectedTotalTaxExcl' => 3 * static::PRODUCT_FIXTURES[5]['price']
                                           + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
                 'expectedTotalTaxIncl' => 3 * static::PRODUCT_FIXTURES[5]['price'] * (1 + static::TAX_RATE_2 / 100)
@@ -155,7 +153,7 @@ class CartTaxesTest extends AbstractCartCalculationTest
                 'addressId' => static::ADDRESS_ID_2,
             ),
             'tax #3: one product in cart, quantity 3' => array(
-                'products' => array(5 => 3,),
+                'products' => array(5 => 3),
                 'expectedTotalTaxExcl' => 3 * static::PRODUCT_FIXTURES[5]['price']
                                           + static::DEFAULT_WRAPPING_FEE,
                 'expectedTotalTaxIncl' => 3 * static::PRODUCT_FIXTURES[5]['price'] * (1 + static::TAX_RATE_3 / 100)

@@ -44,8 +44,8 @@ class EmployeeOptionsType extends TranslatorAwareType
 
     /**
      * @param TranslatorInterface $translator
-     * @param array $locales
-     * @param bool $canOptionsBeChanged
+     * @param array               $locales
+     * @param bool                $canOptionsBeChanged
      */
     public function __construct(
         TranslatorInterface $translator,

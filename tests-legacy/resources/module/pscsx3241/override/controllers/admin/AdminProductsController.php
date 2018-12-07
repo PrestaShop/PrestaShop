@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,9 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
-use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
-
 class AdminProductsController extends AdminProductsControllerCore
 {
     /** @var int Max image size for upload
@@ -44,7 +41,8 @@ class AdminProductsController extends AdminProductsControllerCore
     /**
      * The order in the array decides the order in the list of tab. If an element's value is a number, it will be preloaded.
      * The tabs are preloaded from the smallest to the highest number.
-     * @var array Product tabs.
+     *
+     * @var array product tabs
      */
     protected $available_tabs = array();
 
@@ -69,8 +67,8 @@ class AdminProductsController extends AdminProductsControllerCore
             'delete' => array(
                 'text' => $this->l('Delete selected'),
                 'icon' => 'icon-trash',
-                'confirm' => $this->l('Delete selected items?')
-            )
+                'confirm' => $this->l('Delete selected items?'),
+            ),
         );
         if (!Tools::getValue('id_product')) {
             $this->multishop_context_group = false;
@@ -80,8 +78,8 @@ class AdminProductsController extends AdminProductsControllerCore
 
         $this->imageType = 'jpg';
         $this->_defaultOrderBy = 'position';
-        $this->max_file_size = (int)(Configuration::get('PS_LIMIT_UPLOAD_FILE_VALUE') * 1000000);
-        $this->max_image_size = (int)Configuration::get('PS_PRODUCT_PICTURE_MAX_SIZE');
+        $this->max_file_size = (int) (Configuration::get('PS_LIMIT_UPLOAD_FILE_VALUE') * 1000000);
+        $this->max_image_size = (int) Configuration::get('PS_PRODUCT_PICTURE_MAX_SIZE');
         $this->allow_export = true;
 
         // @since 1.5 : translations for tabs
@@ -104,7 +102,7 @@ class AdminProductsController extends AdminProductsControllerCore
         );
 
         $this->available_tabs = array('Quantities' => 6, 'Warehouses' => 14);
-        if ($this->context->shop->getContext() != Shop::CONTEXT_GROUP) {
+        if (Shop::CONTEXT_GROUP != $this->context->shop->getContext()) {
             $this->available_tabs = array_merge($this->available_tabs, array(
                 'Informations' => 0,
                 'Pack' => 7,
@@ -138,25 +136,25 @@ class AdminProductsController extends AdminProductsControllerCore
             $this->context->cookie->id_category_products_filter = false;
         }
         if (Shop::isFeatureActive() && $this->context->cookie->id_category_products_filter) {
-            $category = new Category((int)$this->context->cookie->id_category_products_filter);
+            $category = new Category((int) $this->context->cookie->id_category_products_filter);
             if (!$category->inShop()) {
                 $this->context->cookie->id_category_products_filter = false;
                 Tools::redirectAdmin($this->context->link->getAdminLink('AdminProducts'));
             }
         }
         /* Join categories table */
-        if ($id_category = (int)Tools::getValue('productFilter_cl!name')) {
-            $this->_category = new Category((int)$id_category);
+        if ($id_category = (int) Tools::getValue('productFilter_cl!name')) {
+            $this->_category = new Category((int) $id_category);
             $_POST['productFilter_cl!name'] = $this->_category->name[$this->context->language->id];
         } else {
-            if ($id_category = (int)Tools::getValue('id_category')) {
+            if ($id_category = (int) Tools::getValue('id_category')) {
                 $this->id_current_category = $id_category;
                 $this->context->cookie->id_category_products_filter = $id_category;
             } elseif ($id_category = $this->context->cookie->id_category_products_filter) {
                 $this->id_current_category = $id_category;
             }
             if ($this->id_current_category) {
-                $this->_category = new Category((int)$this->id_current_category);
+                $this->_category = new Category((int) $this->id_current_category);
             } else {
                 $this->_category = new Category();
             }
@@ -175,7 +173,7 @@ class AdminProductsController extends AdminProductsControllerCore
         $alias = 'sa';
         $alias_image = 'image_shop';
 
-        $id_shop = Shop::isFeatureActive() && Shop::getContext() == Shop::CONTEXT_SHOP? (int)$this->context->shop->id : 'a.id_shop_default';
+        $id_shop = Shop::isFeatureActive() && Shop::CONTEXT_SHOP == Shop::getContext() ? (int) $this->context->shop->id : 'a.id_shop_default';
         $this->_join .= ' JOIN `'._DB_PREFIX_.'product_shop` sa ON (a.`id_product` = sa.`id_product` AND sa.id_shop = '.$id_shop.')
 				LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON ('.$alias.'.`id_category_default` = cl.`id_category` AND b.`id_lang` = cl.`id_lang` AND cl.id_shop = '.$id_shop.')
 				LEFT JOIN `'._DB_PREFIX_.'shop` shop ON (shop.id_shop = '.$id_shop.')
@@ -186,7 +184,7 @@ class AdminProductsController extends AdminProductsControllerCore
         $this->_select .= 'MAX('.$alias_image.'.id_image) id_image, cl.name `name_category`, '.$alias.'.`price`, 0 AS price_final, a.`is_virtual`, pd.`nb_downloadable`, sav.`quantity` as sav_quantity, '.$alias.'.`active`, IF(sav.`quantity`<=0, 1, 0) badge_danger';
 
         if ($join_category) {
-            $this->_join .= ' INNER JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_product` = a.`id_product` AND cp.`id_category` = '.(int)$this->_category->id.') ';
+            $this->_join .= ' INNER JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_product` = a.`id_product` AND cp.`id_category` = '.(int) $this->_category->id.') ';
             $this->_select .= ' , cp.`position`, ';
         }
 
@@ -197,7 +195,7 @@ class AdminProductsController extends AdminProductsControllerCore
             'title' => $this->l('ID'),
             'align' => 'center',
             'class' => 'fixed-width-xs',
-            'type' => 'int'
+            'type' => 'int',
         );
         $this->fields_list['image'] = array(
             'title' => $this->l('Image'),
@@ -205,18 +203,18 @@ class AdminProductsController extends AdminProductsControllerCore
             'image' => 'p',
             'orderby' => false,
             'filter' => false,
-            'search' => false
+            'search' => false,
         );
         $this->fields_list['name'] = array(
             'title' => $this->l('Name'),
-            'filter_key' => 'b!name'
+            'filter_key' => 'b!name',
         );
         $this->fields_list['reference'] = array(
             'title' => $this->l('Reference'),
             'align' => 'left',
         );
 
-        if (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_SHOP) {
+        if (Shop::isFeatureActive() && Shop::CONTEXT_SHOP != Shop::getContext()) {
             $this->fields_list['shopname'] = array(
                 'title' => $this->l('Default shop'),
                 'filter_key' => 'shop!name',
@@ -231,7 +229,7 @@ class AdminProductsController extends AdminProductsControllerCore
             'title' => $this->l('Base price'),
             'type' => 'price',
             'align' => 'text-right',
-            'filter_key' => 'a!price'
+            'filter_key' => 'a!price',
         );
         $this->fields_list['price_final'] = array(
             'title' => $this->l('Final price'),
@@ -239,7 +237,7 @@ class AdminProductsController extends AdminProductsControllerCore
             'align' => 'text-right',
             'havingFilter' => true,
             'orderby' => false,
-            'search' => false
+            'search' => false,
         );
 
         if (Configuration::get('PS_STOCK_MANAGEMENT')) {
@@ -261,15 +259,15 @@ class AdminProductsController extends AdminProductsControllerCore
             'align' => 'text-center',
             'type' => 'bool',
             'class' => 'fixed-width-sm',
-            'orderby' => false
+            'orderby' => false,
         );
 
-        if ($join_category && (int)$this->id_current_category) {
+        if ($join_category && (int) $this->id_current_category) {
             $this->fields_list['position'] = array(
                 'title' => $this->l('Position'),
                 'filter_key' => 'cp!position',
                 'align' => 'center',
-                'position' => 'position'
+                'position' => 'position',
             );
         }
     }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,7 +30,6 @@ use PrestaShop\PrestaShop\Core\Filter\HashMapWhitelistFilter;
 
 class HashMapWhitelistFilterTest extends \PHPUnit_Framework_TestCase
 {
-
     /**
      * @param array $subject
      * @param array $whitelist
@@ -58,7 +57,7 @@ class HashMapWhitelistFilterTest extends \PHPUnit_Framework_TestCase
 
         $filter = new HashMapWhitelistFilter();
         $filter->whitelist(array(
-            'foo', 'bar'
+            'foo', 'bar',
         ));
 
         $expected = array(
@@ -87,7 +86,7 @@ class HashMapWhitelistFilterTest extends \PHPUnit_Framework_TestCase
 
         $filter = new HashMapWhitelistFilter();
         $filter->whitelist(array(
-            'foo'
+            'foo',
         ));
 
         $expected = array(
@@ -178,17 +177,16 @@ class HashMapWhitelistFilterTest extends \PHPUnit_Framework_TestCase
                 'subject' => $nestedArray,
                 'whitelist' => array(
                     'foo',
-                    'baz' => (new HashMapWhitelistFilter())->whitelist(array('foo', 'baz'))
+                    'baz' => (new HashMapWhitelistFilter())->whitelist(array('foo', 'baz')),
                 ),
                 'expected' => array(
                     'foo' => 'something',
                     'baz' => array(
                         'foo' => 'something',
-                        'baz' => array()
+                        'baz' => array(),
                     ),
-                )
-            )
+                ),
+            ),
         );
     }
-
 }

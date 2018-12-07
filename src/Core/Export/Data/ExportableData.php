@@ -43,7 +43,7 @@ final class ExportableData implements ExportableDataInterface
 
     /**
      * @param string[] $titles
-     * @param array $rows
+     * @param array    $rows
      */
     public function __construct(array $titles, array $rows)
     {

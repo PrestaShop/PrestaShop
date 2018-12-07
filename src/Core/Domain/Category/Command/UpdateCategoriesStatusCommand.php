@@ -47,7 +47,7 @@ class UpdateCategoriesStatusCommand
     private $newStatus;
 
     /**
-     * @param int[] $categoryIds
+     * @param int[]          $categoryIds
      * @param CategoryStatus $newStatus
      *
      * @throws CategoryConstraintException
@@ -82,8 +82,8 @@ class UpdateCategoriesStatusCommand
      *
      * @throws CategoryConstraintException
      * @throws CategoryException
-     * @return self
      *
+     * @return self
      */
     private function setCategoryIds(array $categoryIds)
     {

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 class ToolsInstall
 {
     /**
@@ -48,24 +47,26 @@ class ToolsInstall
      * $array['parent']['child'][0] = 'a';
      * $array['parent']['child'][1] = 'b';
      * ...And so on.
-     * _____________________________________
-     * @param simpleXMLElement $xml the XML to convert
-     * @param bool $flattenValues    Choose wether to flatten values
-     *                                    or to set them under a particular index.
-     *                                    defaults to true;
-     * @param bool $flattenAttributes Choose wether to flatten attributes
-     *                                    or to set them under a particular index.
-     *                                    Defaults to true;
-     * @param bool $flattenChildren    Choose wether to flatten children
-     *                                    or to set them under a particular index.
-     *                                    Defaults to true;
-     * @param string $valueKey            index for values, in case $flattenValues was set to
-     *                            false. Defaults to "@value"
-     * @param string $attributesKey        index for attributes, in case $flattenAttributes was set to
-     *                            false. Defaults to "@attributes"
-     * @param string $childrenKey        index for children, in case $flattenChildren was set to
-     *                            false. Defaults to "@children"
-     * @return array the resulting array.
+     * _____________________________________.
+     *
+     * @param simpleXMLElement $xml               the XML to convert
+     * @param bool             $flattenValues     Choose wether to flatten values
+     *                                            or to set them under a particular index.
+     *                                            defaults to true;
+     * @param bool             $flattenAttributes Choose wether to flatten attributes
+     *                                            or to set them under a particular index.
+     *                                            Defaults to true;
+     * @param bool             $flattenChildren   Choose wether to flatten children
+     *                                            or to set them under a particular index.
+     *                                            Defaults to true;
+     * @param string           $valueKey          index for values, in case $flattenValues was set to
+     *                                            false. Defaults to "@value"
+     * @param string           $attributesKey     index for attributes, in case $flattenAttributes was set to
+     *                                            false. Defaults to "@attributes"
+     * @param string           $childrenKey       index for children, in case $flattenChildren was set to
+     *                                            false. Defaults to "@children"
+     *
+     * @return array the resulting array
      */
     public static function simpleXMLToArray($xml, $flattenValues = true, $flattenAttributes = true, $flattenChildren = true, $valueKey = '@value', $attributesKey = '@attributes', $childrenKey = '@children')
     {
@@ -75,12 +76,12 @@ class ToolsInstall
         }
 
         $name = $xml->getName();
-        $_value = trim((string)$xml);
-        if (mb_strlen($_value) == 0) {
+        $_value = trim((string) $xml);
+        if (0 == mb_strlen($_value)) {
             $_value = null;
         }
 
-        if ($_value !== null) {
+        if (null !== $_value) {
             if (!$flattenValues) {
                 $return[$valueKey] = $_value;
             } else {

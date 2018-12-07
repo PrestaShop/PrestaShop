@@ -98,7 +98,7 @@ class ProductSupplierCore extends ObjectModel
     {
         $res = parent::delete();
 
-        if ($res && $this->id_product_attribute == 0) {
+        if ($res && 0 == $this->id_product_attribute) {
             $items = ProductSupplier::getSupplierCollection($this->id_product, false);
             foreach ($items as $item) {
                 /** @var ProductSupplier $item */
@@ -114,9 +114,9 @@ class ProductSupplierCore extends ObjectModel
     /**
      * For a given product and supplier, gets the product supplier reference.
      *
-     * @param int $idProduct Product ID
+     * @param int $idProduct          Product ID
      * @param int $idProductAttribute Product Attribute ID
-     * @param int $idSupplier Supplier ID
+     * @param int $idSupplier         Supplier ID
      *
      * @return string Product Supplier reference
      */
@@ -127,9 +127,9 @@ class ProductSupplierCore extends ObjectModel
         $query->select('ps.product_supplier_reference');
         $query->from('product_supplier', 'ps');
         $query->where(
-            'ps.id_product = ' . (int) $idProduct . '
-			AND ps.id_product_attribute = ' . (int) $idProductAttribute . '
-			AND ps.id_supplier = ' . (int) $idSupplier
+            'ps.id_product = '.(int) $idProduct.'
+			AND ps.id_product_attribute = '.(int) $idProductAttribute.'
+			AND ps.id_supplier = '.(int) $idSupplier
         );
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
@@ -138,10 +138,10 @@ class ProductSupplierCore extends ObjectModel
     /**
      * For a given product and supplier, gets the product supplier unit price.
      *
-     * @param int $idProduct Product ID
-     * @param int $idProductAttribute Product Attribute ID
-     * @param int $idSupplier Supplier ID
-     * @param bool $withCurrency Optional With currency
+     * @param int  $idProduct          Product ID
+     * @param int  $idProductAttribute Product Attribute ID
+     * @param int  $idSupplier         Supplier ID
+     * @param bool $withCurrency       Optional With currency
      *
      * @return array
      */
@@ -155,9 +155,9 @@ class ProductSupplierCore extends ObjectModel
         }
         $query->from('product_supplier', 'ps');
         $query->where(
-            'ps.id_product = ' . (int) $idProduct . '
-			AND ps.id_product_attribute = ' . (int) $idProductAttribute . '
-			AND ps.id_supplier = ' . (int) $idSupplier
+            'ps.id_product = '.(int) $idProduct.'
+			AND ps.id_product_attribute = '.(int) $idProductAttribute.'
+			AND ps.id_supplier = '.(int) $idSupplier
         );
 
         if (!$withCurrency) {
@@ -188,9 +188,9 @@ class ProductSupplierCore extends ObjectModel
         $query->select('ps.id_product_supplier');
         $query->from('product_supplier', 'ps');
         $query->where(
-            'ps.id_product = ' . (int) $idProduct . '
-			AND ps.id_product_attribute = ' . (int) $idProductAttribute . '
-			AND ps.id_supplier = ' . (int) $idSupplier
+            'ps.id_product = '.(int) $idProduct.'
+			AND ps.id_product_attribute = '.(int) $idProductAttribute.'
+			AND ps.id_supplier = '.(int) $idSupplier
         );
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
@@ -219,9 +219,9 @@ class ProductSupplierCore extends ObjectModel
     /**
      * For a given Supplier, Product, returns the purchased price.
      *
-     * @param int $idProduct
-     * @param int $idProductAttribute Optional
-     * @param bool $convertedPrice Optional
+     * @param int  $idProduct
+     * @param int  $idProductAttribute Optional
+     * @param bool $convertedPrice     Optional
      *
      * @return array keys: price_te, id_currency
      */
@@ -234,8 +234,8 @@ class ProductSupplierCore extends ObjectModel
         $query = new DbQuery();
         $query->select('product_supplier_price_te as price_te, id_currency');
         $query->from('product_supplier');
-        $query->where('id_product = ' . (int) $idProduct . ' AND id_product_attribute = ' . (int) $idProductAttribute);
-        $query->where('id_supplier = ' . (int) $idSupplier);
+        $query->where('id_product = '.(int) $idProduct.' AND id_product_attribute = '.(int) $idProductAttribute);
+        $query->where('id_supplier = '.(int) $idSupplier);
 
         $row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($query);
         if ($convertedPrice) {
@@ -248,9 +248,9 @@ class ProductSupplierCore extends ObjectModel
     /**
      * For a given product and supplier, gets the product supplier datas.
      *
-     * @param int $idProduct Product ID
+     * @param int $idProduct          Product ID
      * @param int $idProductAttribute Product Attribute ID
-     * @param int $idSupplier Supplier ID
+     * @param int $idSupplier         Supplier ID
      *
      * @return array
      */
@@ -261,9 +261,9 @@ class ProductSupplierCore extends ObjectModel
         $query->select('ps.product_supplier_reference, ps.product_supplier_price_te as price, ps.id_currency');
         $query->from('product_supplier', 'ps');
         $query->where(
-            'ps.id_product = ' . (int) $idProduct . '
-			AND ps.id_product_attribute = ' . (int) $idProductAttribute . '
-			AND ps.id_supplier = ' . (int) $idSupplier
+            'ps.id_product = '.(int) $idProduct.'
+			AND ps.id_product_attribute = '.(int) $idProductAttribute.'
+			AND ps.id_supplier = '.(int) $idSupplier
         );
 
         $res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);

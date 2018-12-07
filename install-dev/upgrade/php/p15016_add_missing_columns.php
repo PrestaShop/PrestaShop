@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 function p15016_add_missing_columns()
 {
     $errors = array();
@@ -53,7 +52,7 @@ function p15016_add_missing_columns()
 
         $list_fields = Db::getInstance()->executeS('SHOW FIELDS FROM `'._DB_PREFIX_.'reinsurance_lang`');
 
-        if (!is_array($list_fields) || $list_fields == false) {
+        if (!is_array($list_fields) || false == $list_fields) {
             $return = Db::getInstance()->execute('
 				CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'reinsurance_lang` (
 					`id_reinsurance` INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -93,6 +92,6 @@ function p15016_add_missing_columns()
     }
 
     if (count($errors)) {
-        return array('error' => 1, 'msg' => implode(',', $errors)) ;
+        return array('error' => 1, 'msg' => implode(',', $errors));
     }
 }

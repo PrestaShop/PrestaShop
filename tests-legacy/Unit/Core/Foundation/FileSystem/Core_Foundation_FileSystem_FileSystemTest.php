@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -37,13 +37,13 @@ class Core_Foundation_FileSystem_FileSystemTest extends UnitTestCase
     public function setUp()
     {
         $this->fs = new FileSystem();
-        $this->fixturesPath = __DIR__ . DIRECTORY_SEPARATOR . 'fixtures';
+        $this->fixturesPath = __DIR__.DIRECTORY_SEPARATOR.'fixtures';
     }
 
     public function test_joinPaths_two_paths()
     {
         $this->assertEquals(
-            'a' . DIRECTORY_SEPARATOR . 'b',
+            'a'.DIRECTORY_SEPARATOR.'b',
             $this->fs->joinPaths('a', 'b')
         );
     }
@@ -51,7 +51,7 @@ class Core_Foundation_FileSystem_FileSystemTest extends UnitTestCase
     public function test_joinPaths_three_paths()
     {
         $this->assertEquals(
-            'a' . DIRECTORY_SEPARATOR . 'b' . DIRECTORY_SEPARATOR . 'c',
+            'a'.DIRECTORY_SEPARATOR.'b'.DIRECTORY_SEPARATOR.'c',
             $this->fs->joinPaths('a', 'b', 'c')
         );
     }
@@ -75,7 +75,7 @@ class Core_Foundation_FileSystem_FileSystemTest extends UnitTestCase
     public function test_joinPaths_normalizes_directory_separators()
     {
         $this->assertEquals(
-            'a' . DIRECTORY_SEPARATOR . 'b' . DIRECTORY_SEPARATOR . 'c' . DIRECTORY_SEPARATOR . 'd',
+            'a'.DIRECTORY_SEPARATOR.'b'.DIRECTORY_SEPARATOR.'c'.DIRECTORY_SEPARATOR.'d',
             $this->fs->joinPaths('a\\', 'b///', 'c\\', 'd/')
         );
     }
@@ -87,7 +87,7 @@ class Core_Foundation_FileSystem_FileSystemTest extends UnitTestCase
             $this->fs->joinPaths($this->fixturesPath, 'a', 'a.tmp'),
             $this->fs->joinPaths($this->fixturesPath, 'a', 'b'),
             $this->fs->joinPaths($this->fixturesPath, 'a', 'b', 'b.file'),
-            $this->fs->joinPaths($this->fixturesPath, 'toplevel.txt')
+            $this->fs->joinPaths($this->fixturesPath, 'toplevel.txt'),
         );
 
         $this->assertEquals(
@@ -101,7 +101,7 @@ class Core_Foundation_FileSystem_FileSystemTest extends UnitTestCase
         $expectedPaths = array(
             $this->fs->joinPaths($this->fixturesPath, 'a', 'a.tmp'),
             $this->fs->joinPaths($this->fixturesPath, 'a', 'b', 'b.file'),
-            $this->fs->joinPaths($this->fixturesPath, 'toplevel.txt')
+            $this->fs->joinPaths($this->fixturesPath, 'toplevel.txt'),
         );
 
         $this->assertEquals(
@@ -111,7 +111,8 @@ class Core_Foundation_FileSystem_FileSystemTest extends UnitTestCase
     }
 
     /**
-     * Rationale: ls /some/non/existing/file => ls: cannot access /some/non/existing/file: No such file or directory
+     * Rationale: ls /some/non/existing/file => ls: cannot access /some/non/existing/file: No such file or directory.
+     *
      * @expectedException \PrestaShop\PrestaShop\Core\Foundation\Filesystem\Exception
      */
     public function test_listEntriesRecursively_throws_if_path_does_not_exist()
@@ -120,7 +121,6 @@ class Core_Foundation_FileSystem_FileSystemTest extends UnitTestCase
     }
 
     /**
-     *
      * @expectedException \PrestaShop\PrestaShop\Core\Foundation\Filesystem\Exception
      */
     public function test_listEntriesRecursively_throws_when_path_is_a_file()

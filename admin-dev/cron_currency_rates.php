@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,18 +23,17 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 if (!defined('_PS_ADMIN_DIR_')) {
     define('_PS_ADMIN_DIR_', getcwd());
 }
-include(_PS_ADMIN_DIR_.'/../config/config.inc.php');
+include _PS_ADMIN_DIR_.'/../config/config.inc.php';
 
 if (isset($_GET['secure_key'])) {
     $secureKey = md5(_COOKIE_KEY_.Configuration::get('PS_SHOP_NAME'));
     if (!empty($secureKey) && $secureKey === $_GET['secure_key']) {
         $shop_ids = Shop::getCompleteListOfShopsID();
         foreach ($shop_ids as $shop_id) {
-            Shop::setContext(Shop::CONTEXT_SHOP, (int)$shop_id);
+            Shop::setContext(Shop::CONTEXT_SHOP, (int) $shop_id);
             Currency::refreshCurrencies();
         }
     }

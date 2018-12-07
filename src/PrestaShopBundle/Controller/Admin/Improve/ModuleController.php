@@ -387,7 +387,7 @@ class ModuleController extends ModuleAbstractController
 
         try {
             $response[$module]['status'] = $moduleManager->{$action}($module);
-            if ($response[$module]['status'] === null) {
+            if (null === $response[$module]['status']) {
                 $response[$module]['status'] = false;
                 $response[$module]['msg'] = $this->trans(
                     '%module% did not return a valid response on %action% action.',
@@ -397,7 +397,7 @@ class ModuleController extends ModuleAbstractController
                         '%action%' => $action,
                     )
                 );
-            } elseif ($response[$module]['status'] === false) {
+            } elseif (false === $response[$module]['status']) {
                 $error = $moduleManager->getError($module);
                 $response[$module]['msg'] = $this->trans(
                     'Cannot %action% module %module%. %error_details%',
@@ -417,7 +417,7 @@ class ModuleController extends ModuleAbstractController
                         '%module%' => $module,
                     )
                 );
-                if ($action != 'uninstall') {
+                if ('uninstall' != $action) {
                     $response[$module]['module_name'] = $module;
                     $response[$module]['is_configurable'] = (bool) $this->get('prestashop.core.admin.module.repository')
                         ->getModule($module)
@@ -462,7 +462,7 @@ class ModuleController extends ModuleAbstractController
             $logger->error($response[$module]['msg']);
         }
 
-        if ($response[$module]['status'] === true && $action != 'uninstall') {
+        if (true === $response[$module]['status'] && 'uninstall' != $action) {
             $moduleInstance = $moduleRepository->getModule($module);
             $collection = AddonsCollection::createFrom(array($moduleInstance));
             $response[$module]['action_menu_html'] = $this->container->get('templating')->render(
@@ -546,14 +546,14 @@ class ModuleController extends ModuleAbstractController
                 'module_name' => $moduleName,
             );
 
-            if ($installationResponse['status'] === null) {
+            if (null === $installationResponse['status']) {
                 $installationResponse['status'] = false;
                 $installationResponse['msg'] = $this->trans(
                     '%module% did not return a valid response on installation.',
                     'Admin.Modules.Notification',
                     array('%module%' => $moduleName)
                 );
-            } elseif ($installationResponse['status'] === true) {
+            } elseif (true === $installationResponse['status']) {
                 $installationResponse['msg'] = $this->trans(
                     'Installation of module %module% was successful.',
                     'Admin.Modules.Notification',
@@ -642,13 +642,13 @@ class ModuleController extends ModuleAbstractController
                     $perm &= !$access['edit'];
                 }
 
-                if ($module->get('author') === ModuleRepository::PARTNER_AUTHOR) {
+                if (ModuleRepository::PARTNER_AUTHOR === $module->get('author')) {
                     $module->set('type', 'addonsPartner');
                 }
 
                 if ($perm) {
                     $module->fillLogo();
-                    if ($module->database->get('installed') == 1) {
+                    if (1 == $module->database->get('installed')) {
                         $modulesList['installed'][] = $modulePresenter->present($module);
                     } else {
                         $modulesList['not_installed'][] = $modulePresenter->present($module);

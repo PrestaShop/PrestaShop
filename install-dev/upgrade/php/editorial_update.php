@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 function editorial_update()
 {
     /*Table creation*/
@@ -59,7 +58,7 @@ function editorial_update()
             foreach ($languages as $language) {
                 Db::getInstance()->execute('
 				INSERT INTO `'._DB_PREFIX_.'editorial_lang` (`id_editorial`, `id_lang`, `body_title`, `body_subheading`, `body_paragraph`, `body_logo_subheading`)
-				VALUES (1, '.(int)($language['id_lang']).',
+				VALUES (1, '.(int) ($language['id_lang']).',
 				"'.(isset($xml->body->{'title_'.$language['id_lang']}) ? pSQL($xml->body->{'title_'.$language['id_lang']}) : '').'",
 				"'.(isset($xml->body->{'subheading_'.$language['id_lang']}) ? pSQL($xml->body->{'subheading_'.$language['id_lang']}) : '').'",
 				"'.(isset($xml->body->{'paragraph_'.$language['id_lang']}) ? pSQL($xml->body->{'paragraph_'.$language['id_lang']}, true) : '').'",

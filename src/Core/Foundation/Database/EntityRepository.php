@@ -60,7 +60,7 @@ class EntityRepository
             throw new Exception(sprintf('Undefind method %s.', $method));
         }
 
-        if (count($arguments) !== 1) {
+        if (1 !== count($arguments)) {
             throw new Exception(sprintf('Method %s takes exactly one argument.', $method));
         }
 
@@ -92,14 +92,14 @@ class EntityRepository
      * Return ID field name.
      *
      * @throws Exception
-     * @return mixed
      *
+     * @return mixed
      */
     protected function getIdFieldName()
     {
         $primary = $this->entityMetaData->getPrimaryKeyFieldnames();
 
-        if (count($primary) === 0) {
+        if (0 === count($primary)) {
             throw new Exception(
                 sprintf(
                     'No primary key defined in entity `%s`.',
@@ -125,7 +125,7 @@ class EntityRepository
      */
     protected function getTableNameWithPrefix()
     {
-        return $this->db->escape($this->tablesPrefix . $this->entityMetaData->getTableName());
+        return $this->db->escape($this->tablesPrefix.$this->entityMetaData->getTableName());
     }
 
     /**
@@ -161,17 +161,16 @@ class EntityRepository
      */
     protected function hydrateOne(array $rows)
     {
-        if (count($rows) === 0) {
+        if (0 === count($rows)) {
             return;
         } elseif (count($rows) > 1) {
             throw new Exception('Too many rows returned.');
-        }  
-            $data = $rows[0];
-            $entity = $this->getNewEntity();
-            $entity->hydrate($data);
+        }
+        $data = $rows[0];
+        $entity = $this->getNewEntity();
+        $entity->hydrate($data);
 
-            return $entity;
-        
+        return $entity;
     }
 
     protected function hydrateMany(array $rows)
@@ -193,22 +192,22 @@ class EntityRepository
      * @param array $cumulativeConditions
      *
      * @throws Exception
-     * @return null|array|mixed
      *
+     * @return null|array|mixed
      */
     private function doFind($one, array $cumulativeConditions)
     {
         $whereClause = $this->queryBuilder->buildWhereConditions('AND', $cumulativeConditions);
 
-        $sql = 'SELECT * FROM ' . $this->getTableNameWithPrefix() . ' WHERE ' . $whereClause;
+        $sql = 'SELECT * FROM '.$this->getTableNameWithPrefix().' WHERE '.$whereClause;
 
         $rows = $this->db->select($sql);
 
         if ($one) {
             return $this->hydrateOne($rows);
-        }  
-            return $this->hydrateMany($rows);
-        
+        }
+
+        return $this->hydrateMany($rows);
     }
 
     /**
@@ -217,8 +216,8 @@ class EntityRepository
      * @param $id
      *
      * @throws Exception
-     * @return null|array|mixed
      *
+     * @return null|array|mixed
      */
     public function findOne($id)
     {
@@ -235,7 +234,7 @@ class EntityRepository
      */
     public function findAll()
     {
-        $sql = 'SELECT * FROM ' . $this->getTableNameWithPrefix();
+        $sql = 'SELECT * FROM '.$this->getTableNameWithPrefix();
 
         return $this->hydrateMany($this->db->select($sql));
     }

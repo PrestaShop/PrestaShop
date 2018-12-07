@@ -42,7 +42,7 @@ class PositionUpdateFactoryTest extends TestCase
     {
         $definition = $this->getDefinition();
         $data = array('positions' => array(
-            array('rowId' => 1, 'oldPosition' => 1, 'newPosition' => 2)
+            array('rowId' => 1, 'oldPosition' => 1, 'newPosition' => 2),
         ));
 
         $positionUpdateFactory = $this->getPositionUpdateFactory();
@@ -96,17 +96,17 @@ class PositionUpdateFactoryTest extends TestCase
     public function testDataPositionValidation()
     {
         $data = array('positions' => array(
-            array('row' => 1)
+            array('row' => 1),
         ));
         $this->checkDataValidation($data, PositionUpdateFactory::POSITION_KEY, array(0, 'rowId'));
 
         $data = array('positions' => array(
-            array('rowId' => 1)
+            array('rowId' => 1),
         ));
         $this->checkDataValidation($data, PositionUpdateFactory::POSITION_KEY, array(0, 'oldPosition'));
 
         $data = array('positions' => array(
-            array('rowId' => 1, 'oldPosition' => 1)
+            array('rowId' => 1, 'oldPosition' => 1),
         ));
         $this->checkDataValidation($data, PositionUpdateFactory::POSITION_KEY, array(0, 'newPosition'));
     }
@@ -115,15 +115,15 @@ class PositionUpdateFactoryTest extends TestCase
     {
         $definition = $this->getDefinitionWithParent();
         $data = array('positions' => array(
-            array('rowId' => 1, 'oldPosition' => 1, 'newPosition' => 1)
+            array('rowId' => 1, 'oldPosition' => 1, 'newPosition' => 1),
         ));
         $this->checkDataValidation($data, 'Missing parentId in your data.', null, $definition);
     }
 
     /**
-     * @param array $data
-     * @param null|string $expectedErrorKey
-     * @param null|array $expectedErrorParameters
+     * @param array                   $data
+     * @param null|string             $expectedErrorKey
+     * @param null|array              $expectedErrorParameters
      * @param null|PositionDefinition $definition
      */
     private function checkDataValidation(array $data, $expectedErrorKey = null, $expectedErrorParameters = null, $definition = null)

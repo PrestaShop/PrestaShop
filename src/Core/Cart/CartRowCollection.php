@@ -64,7 +64,7 @@ class CartRowCollection implements \Iterator, \Countable
 
     public function valid()
     {
-        return $this->getKey($this->iteratorPosition) !== null
+        return null !== $this->getKey($this->iteratorPosition)
                && array_key_exists(
                    $this->getKey($this->iteratorPosition),
                    $this->cartRows
@@ -76,9 +76,9 @@ class CartRowCollection implements \Iterator, \Countable
         $keys = array_keys($this->cartRows);
         if (!isset($keys[$iteratorPosition])) {
             return;
-        }  
-            return $keys[$iteratorPosition];
-        
+        }
+
+        return $keys[$iteratorPosition];
     }
 
     public function count()

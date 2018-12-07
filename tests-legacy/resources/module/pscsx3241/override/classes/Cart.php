@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,8 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
-
 class Cart extends CartCore
 {
     public $delivery_option;
@@ -56,7 +54,7 @@ class Cart extends CartCore
             null,
             false
         );
-        if ($result == false) {
+        if (false == $result) {
             parent::deleteProduct($id_product, $id_product_attribute = null, $id_customization = null, $id_address_delivery = 0);
         }
     }
@@ -69,17 +67,16 @@ class Cart extends CartCore
             $params = Hook::exec('ppbsGetProducts', array('products' => $products), null, true);
             if (isset($params['productpricebysize']['products'])) {
                 return $params['productpricebysize']['products'];
-            }  
-                return $products;
-            
-        }  
-            $params = Hook::exec('ppbsGetProducts', array('products' => $products), null);
-            $params = json_decode($params, true);
-            if (isset($params['products'])) {
-                return $params['products'];
-            }  
-                return $products;
-            
-        
+            }
+
+            return $products;
+        }
+        $params = Hook::exec('ppbsGetProducts', array('products' => $products), null);
+        $params = json_decode($params, true);
+        if (isset($params['products'])) {
+            return $params['products'];
+        }
+
+        return $products;
     }
 }

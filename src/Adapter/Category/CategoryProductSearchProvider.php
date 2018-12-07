@@ -54,12 +54,12 @@ class CategoryProductSearchProvider implements ProductSearchProviderInterface
 
     /**
      * @param ProductSearchContext $context
-     * @param ProductSearchQuery $query
-     * @param string $type
+     * @param ProductSearchQuery   $query
+     * @param string               $type
      *
      * @throws \PrestaShopDatabaseException
-     * @return array|false|int
      *
+     * @return array|false|int
      */
     private function getProductsOrCount(
         ProductSearchContext $context,
@@ -73,30 +73,30 @@ class CategoryProductSearchProvider implements ProductSearchProviderInterface
                 $query->getResultsPerPage(),
                 null,
                 null,
-                $type !== 'products',
+                'products' !== $type,
                 true,
                 true,
                 $query->getResultsPerPage()
             );
-        }  
-            return $this->category->getProducts(
+        }
+
+        return $this->category->getProducts(
                 $context->getIdLang(),
                 $query->getPage(),
                 $query->getResultsPerPage(),
                 $query->getSortOrder()->toLegacyOrderBy(),
                 $query->getSortOrder()->toLegacyOrderWay(),
-                $type !== 'products'
+                'products' !== $type
             );
-        
     }
 
     /**
      * @param ProductSearchContext $context
-     * @param ProductSearchQuery $query
+     * @param ProductSearchQuery   $query
      *
      * @throws \PrestaShopDatabaseException
-     * @return ProductSearchResult
      *
+     * @return ProductSearchResult
      */
     public function runQuery(
         ProductSearchContext $context,

@@ -64,7 +64,7 @@ class CartRuleCollection implements \Iterator
 
     public function valid()
     {
-        return $this->getKey($this->iteratorPosition) !== null
+        return null !== $this->getKey($this->iteratorPosition)
                && array_key_exists(
                    $this->getKey($this->iteratorPosition),
                    $this->cartRules
@@ -76,8 +76,8 @@ class CartRuleCollection implements \Iterator
         $keys = array_keys($this->cartRules);
         if (!isset($keys[$iteratorPosition])) {
             return;
-        }  
-            return $keys[$iteratorPosition];
-        
+        }
+
+        return $keys[$iteratorPosition];
     }
 }

@@ -55,7 +55,7 @@ class TaxCalculatorCore
 
     /**
      * @param array $taxes
-     * @param int $computation_method (COMBINE_METHOD | ONE_AFTER_ANOTHER_METHOD)
+     * @param int   $computation_method (COMBINE_METHOD | ONE_AFTER_ANOTHER_METHOD)
      */
     public function __construct(array $taxes = array(), $computation_method = TaxCalculator::COMBINE_METHOD)
     {
@@ -100,7 +100,7 @@ class TaxCalculatorCore
     public function getTotalRate()
     {
         $taxes = 0;
-        if ($this->computation_method == TaxCalculator::ONE_AFTER_ANOTHER_METHOD) {
+        if (TaxCalculator::ONE_AFTER_ANOTHER_METHOD == $this->computation_method) {
             $taxes = 1;
             foreach ($this->taxes as $tax) {
                 $taxes *= (1 + (abs($tax->rate) / 100));
@@ -121,7 +121,7 @@ class TaxCalculatorCore
     {
         $name = '';
         foreach ($this->taxes as $tax) {
-            $name .= $tax->name[(int) Context::getContext()->language->id] . ' - ';
+            $name .= $tax->name[(int) Context::getContext()->language->id].' - ';
         }
 
         $name = rtrim($name, ' - ');
@@ -141,7 +141,7 @@ class TaxCalculatorCore
         $taxes_amounts = array();
 
         foreach ($this->taxes as $tax) {
-            if ($this->computation_method == TaxCalculator::ONE_AFTER_ANOTHER_METHOD) {
+            if (TaxCalculator::ONE_AFTER_ANOTHER_METHOD == $this->computation_method) {
                 $taxes_amounts[$tax->id] = $price_te * (abs($tax->rate) / 100);
                 $price_te = $price_te + $taxes_amounts[$tax->id];
             } else {

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 if (!defined('_PS_MYSQL_REAL_ESCAPE_STRING_')) {
     define('_PS_MYSQL_REAL_ESCAPE_STRING_', function_exists('mysql_real_escape_string'));
 }
@@ -80,7 +79,7 @@ function latin1_database_to_utf8()
         array('name' => 'tab_lang', 'id' => 'id_tab', 'lang' => true, 'fields' => array('name')),
         array('name' => 'tag', 'id' => 'id_tag', 'fields' => array('name')),
         array('name' => 'tax_lang', 'id' => 'id_tax', 'lang' => true, 'fields' => array('name')),
-        array('name' => 'zone', 'id' => 'id_zone', 'fields' => array('name'))
+        array('name' => 'zone', 'id' => 'id_zone', 'fields' => array('name')),
     );
 
     foreach ($tables as $table) {
@@ -97,7 +96,7 @@ function latin1_database_to_utf8()
         }
         $query .= ' FROM `'._DB_PREFIX_.$table['name'].'`';
         $latin1Datas = Db::getInstance()->executeS($query);
-        if ($latin1Datas === false) {
+        if (false === $latin1Datas) {
             $warningExist = true;
             $requests .= '
 				<request result="fail">
@@ -118,9 +117,9 @@ function latin1_database_to_utf8()
                     $query .= ' `'.$field.'` = \''.pSQL($latin1Data[$field]).'\',';
                 }
                 $query = rtrim($query, ',');
-                $query .= ' WHERE `'.$table['id'].'` = '.(int)($latin1Data[$table['id']]);
+                $query .= ' WHERE `'.$table['id'].'` = '.(int) ($latin1Data[$table['id']]);
                 if (isset($table['lang']) and $table['lang']) {
-                    $query .= ' AND `id_lang` = '.(int)($latin1Data['id_lang']);
+                    $query .= ' AND `id_lang` = '.(int) ($latin1Data['id_lang']);
                 }
                 if (!Db::getInstance()->execute($query)) {
                     $warningExist = true;

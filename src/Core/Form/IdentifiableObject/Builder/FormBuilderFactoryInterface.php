@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\FormDataProv
 interface FormBuilderFactoryInterface
 {
     /**
-     * @param string $formType
+     * @param string                    $formType
      * @param FormDataProviderInterface $dataProvider
      *
      * @return FormBuilderInterface

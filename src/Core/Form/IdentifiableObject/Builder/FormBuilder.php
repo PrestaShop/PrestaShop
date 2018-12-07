@@ -57,10 +57,10 @@ final class FormBuilder implements FormBuilderInterface
     private $formType;
 
     /**
-     * @param FormFactoryInterface $formFactory
-     * @param HookDispatcherInterface $hookDispatcher
+     * @param FormFactoryInterface      $formFactory
+     * @param HookDispatcherInterface   $hookDispatcher
      * @param FormDataProviderInterface $dataProvider
-     * @param string $formType
+     * @param string                    $formType
      */
     public function __construct(
         FormFactoryInterface $formFactory,
@@ -107,10 +107,10 @@ final class FormBuilder implements FormBuilderInterface
     }
 
     /**
-     * @param string $formType
-     * @param array $data
+     * @param string   $formType
+     * @param array    $data
      * @param null|int $id
-     * @param array $options
+     * @param array    $options
      *
      * @return FormInterface
      */
@@ -118,7 +118,7 @@ final class FormBuilder implements FormBuilderInterface
     {
         $formBuilder = $this->formFactory->createBuilder($formType, $data, $options);
 
-        $this->hookDispatcher->dispatchWithParameters('action' . $formBuilder->getName() . 'FormBuilderModifier', array(
+        $this->hookDispatcher->dispatchWithParameters('action'.$formBuilder->getName().'FormBuilderModifier', array(
             'form_builder' => $formBuilder,
             'data' => &$data,
             'id' => $id,

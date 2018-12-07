@@ -57,7 +57,7 @@ final class ExportCsvFileWriter implements FileWriterInterface
      */
     public function write($fileName, ExportableDataInterface $data)
     {
-        $filePath = $this->exportDirectory . $fileName;
+        $filePath = $this->exportDirectory.$fileName;
 
         try {
             $exportFile = new SplFileObject($filePath, 'w');

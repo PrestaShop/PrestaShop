@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 function reorderpositions()
 {
     $res = true;
@@ -41,12 +40,12 @@ function reorderpositions()
 				WHERE `id_category` = '.$id_category.'
 				ORDER BY `position`');
             $sizeof = sizeof($result);
-            for ($i = 0; $i < $sizeof; $i++) {
+            for ($i = 0; $i < $sizeof; ++$i) {
                 $res &= Db::getInstance()->execute('
 					UPDATE `'._DB_PREFIX_.'category_product`
 					SET `position` = '.$i.'
 					WHERE `id_category` = '.$id_category.'
-					AND `id_product` = '.(int)($result[$i]['id_product']));
+					AND `id_product` = '.(int) ($result[$i]['id_product']));
             }
         }
     }
@@ -57,21 +56,21 @@ function reorderpositions()
 							SELECT DISTINCT c.*, cl.*
 							FROM `'._DB_PREFIX_.'category` c
 							LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category` AND `id_lang` = '.$ps_lang_default.')
-							WHERE c.id_parent = '.(int)($parent['id_parent']).'
+							WHERE c.id_parent = '.(int) ($parent['id_parent']).'
 							ORDER BY name ASC');
         foreach ($result as $i => $categ) {
             Db::getInstance()->execute('
 			UPDATE `'._DB_PREFIX_.'category`
-			SET `position` = '.(int)($i).'
-			WHERE `id_parent` = '.(int)($categ['id_parent']).'
-			AND `id_category` = '.(int)($categ['id_category']));
+			SET `position` = '.(int) ($i).'
+			WHERE `id_parent` = '.(int) ($categ['id_parent']).'
+			AND `id_category` = '.(int) ($categ['id_category']));
         }
 
         $result = Db::getInstance()->executeS('
 							SELECT DISTINCT c.*, cl.*
 							FROM `'._DB_PREFIX_.'category` c
 							LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category`)
-							WHERE c.id_parent = '.(int)($parent['id_parent']).'
+							WHERE c.id_parent = '.(int) ($parent['id_parent']).'
 							ORDER BY name ASC');
 
         // Remove number from category name
@@ -79,7 +78,7 @@ function reorderpositions()
             Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'category` c
 			LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category`)
 			SET `name` = \''.preg_replace('/^[0-9]+\./', '', $categ['name']).'\'
-			WHERE c.id_category = '.(int)($categ['id_category']).' AND id_lang = \''.(int)($categ['id_lang']).'\'');
+			WHERE c.id_category = '.(int) ($categ['id_category']).' AND id_lang = \''.(int) ($categ['id_lang']).'\'');
         }
     }
 
@@ -91,14 +90,14 @@ function reorderpositions()
             $result &= Db::getInstance()->executeS('
 				SELECT `id_cms_category`
 				FROM `'._DB_PREFIX_.'cms_category`
-				WHERE `id_parent` = '.(int)$id_category_parent.'
+				WHERE `id_parent` = '.(int) $id_category_parent.'
 				ORDER BY `position`');
             $sizeof = sizeof($result);
             for ($i = 0; $i < $sizeof; ++$i) {
                 $sql = 'UPDATE `'._DB_PREFIX_.'cms_category`
-						SET `position` = '.(int)$i.'
-						WHERE `id_parent` = '.(int)$id_category_parent.'
-						AND `id_cms_category` = '.(int)$result[$i]['id_cms_category'];
+						SET `position` = '.(int) $i.'
+						WHERE `id_parent` = '.(int) $id_category_parent.'
+						AND `id_cms_category` = '.(int) $result[$i]['id_cms_category'];
                 $res &= Db::getInstance()->execute($sql);
             }
         }

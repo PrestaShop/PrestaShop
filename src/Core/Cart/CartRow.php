@@ -132,16 +132,16 @@ class CartRow
     protected $isProcessed = false;
 
     /**
-     * @param array $rowData array item given by Cart::getProducts()
-     * @param PriceCalculator $priceCalculator
-     * @param AddressFactory $addressFactory
+     * @param array                $rowData              array item given by Cart::getProducts()
+     * @param PriceCalculator      $priceCalculator
+     * @param AddressFactory       $addressFactory
      * @param CustomerDataProvider $customerDataProvider
-     * @param CacheAdapter $cacheAdapter
-     * @param GroupDataProvider $groupDataProvider
-     * @param Database $databaseAdapter
-     * @param bool $useEcotax
-     * @param int $precision
-     * @param string $roundType see self::ROUND_MODE_*
+     * @param CacheAdapter         $cacheAdapter
+     * @param GroupDataProvider    $groupDataProvider
+     * @param Database             $databaseAdapter
+     * @param bool                 $useEcotax
+     * @param int                  $precision
+     * @param string               $roundType            see self::ROUND_MODE_*
      */
     public function __construct(
         $rowData,
@@ -191,8 +191,8 @@ class CartRow
      * Returns the initial unit price (ie without applying cart rules).
      *
      * @throws \Exception
-     * @return AmountImmutable
      *
+     * @return AmountImmutable
      */
     public function getInitialUnitPrice()
     {
@@ -207,8 +207,8 @@ class CartRow
      * return final price: initial minus the cart rule discounts.
      *
      * @throws \Exception
-     * @return AmountImmutable
      *
+     * @return AmountImmutable
      */
     public function getFinalUnitPrice()
     {
@@ -223,8 +223,8 @@ class CartRow
      * return final price: initial minus the cart rule discounts.
      *
      * @throws \Exception
-     * @return AmountImmutable
      *
+     * @return AmountImmutable
      */
     public function getFinalTotalPrice()
     {
@@ -289,9 +289,9 @@ class CartRow
                 || ($cartQuantity = $this->cacheAdapter->retrieve($cacheId)
                                     != (int) $quantity)) {
                 $sql = 'SELECT SUM(`quantity`)
-				FROM `' . _DB_PREFIX_ . 'cart_product`
-				WHERE `id_product` = ' . (int) $productId . '
-				AND `id_cart` = ' . (int) $cart->id;
+				FROM `'._DB_PREFIX_.'cart_product`
+				WHERE `id_product` = '.(int) $productId.'
+				AND `id_cart` = '.(int) $cart->id;
                 $cartQuantity = (int) $this->databaseAdapter->getValue($sql, _PS_USE_SQL_SLAVE_);
                 $this->cacheAdapter->store($cacheId, $cartQuantity);
             } else {
@@ -429,7 +429,7 @@ class CartRow
     {
         $percent = (float) $percent;
         if ($percent < 0 || $percent > 100) {
-            throw new \Exception('Invalid percentage discount given: ' . $percent);
+            throw new \Exception('Invalid percentage discount given: '.$percent);
         }
         $discountTaxIncluded = $this->finalTotalPrice->getTaxIncluded() * $percent / 100;
         $discountTaxExcluded = $this->finalTotalPrice->getTaxExcluded() * $percent / 100;

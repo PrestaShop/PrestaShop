@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -35,7 +35,6 @@ use Context;
 use CustomizationField;
 use DateInterval;
 use DateTime;
-use Db;
 use LegacyTests\TestCase\IntegrationTestCase;
 use Product;
 use Pack;
@@ -43,13 +42,12 @@ use StockAvailable;
 use LegacyTests\Unit\Core\Cart\Calculation\CartOld;
 
 /**
- * these tests aim to check cart using mocks
+ * these tests aim to check cart using mocks.
  *
  * products and cartRules are inserted as fixtures
  */
 abstract class AbstractCartTest extends IntegrationTestCase
 {
-
     const DEFAULT_SHIPPING_FEE = 7;
     const DEFAULT_WRAPPING_FEE = 0;
 
@@ -190,7 +188,7 @@ abstract class AbstractCartTest extends IntegrationTestCase
     protected function insertProductsFromFixtures()
     {
         foreach (static::PRODUCT_FIXTURES as $k => $productFixture) {
-            $product = new Product;
+            $product = new Product();
             $product->price = $productFixture['price'];
             $product->name = 'product name';
             $product->quantity = !empty($productFixture['quantity']) ? $productFixture['quantity'] : 1000;
@@ -220,7 +218,7 @@ abstract class AbstractCartTest extends IntegrationTestCase
             }
 
             if (isset($productFixture['is_pack'])
-                && $productFixture['is_pack'] === true
+                && true === $productFixture['is_pack']
             ) {
                 foreach ($productFixture['pack_items'] as $packItem) {
                     Pack::addItem(
@@ -233,7 +231,7 @@ abstract class AbstractCartTest extends IntegrationTestCase
 
             if (isset($productFixture['customizations'])) {
                 foreach ($productFixture['customizations'] as $customizationName) {
-                    $customizationField = new CustomizationField;
+                    $customizationField = new CustomizationField();
                     $customizationField->id_product = $product->id;
                     $customizationField->type = 1; // text field
                     $customizationField->required = 1;
@@ -267,7 +265,7 @@ abstract class AbstractCartTest extends IntegrationTestCase
     protected function addProductToCart($productFixtureId, $quantity)
     {
         $product = $this->getProductFromFixtureId($productFixtureId);
-        if ($product !== null) {
+        if (null !== $product) {
             $this->cart->updateQty($quantity, $product->id);
         }
     }
@@ -337,7 +335,7 @@ abstract class AbstractCartTest extends IntegrationTestCase
 
     protected function insertCartRule($cartRuleFixtureId, $cartRuleData)
     {
-        $cartRule = new CartRule;
+        $cartRule = new CartRule();
         $cartRule->reduction_percent = $cartRuleData['percent'];
         $cartRule->reduction_amount = $cartRuleData['amount'];
         $cartRule->name = array(Configuration::get('PS_LANG_DEFAULT') => 'foo');
@@ -349,7 +347,7 @@ abstract class AbstractCartTest extends IntegrationTestCase
         $cartRule->quantity_per_user = 1000;
         if (!empty($cartRuleData['productRestrictionId'])) {
             $product = $this->getProductFromFixtureId($cartRuleData['productRestrictionId']);
-            if ($product === null) {
+            if (null === $product) {
                 // if product does not exist, skip this rule
                 return;
             }
@@ -358,7 +356,7 @@ abstract class AbstractCartTest extends IntegrationTestCase
         }
         if (!empty($cartRuleData['productGiftId'])) {
             $product = $this->getProductFromFixtureId($cartRuleData['productGiftId']);
-            if ($product === null) {
+            if (null === $product) {
                 // if product does not exist, skip this rule
                 return;
             }
@@ -380,7 +378,7 @@ abstract class AbstractCartTest extends IntegrationTestCase
 
     /**
      * Silently add the cart rules from data
-     * if a cart rule does not exist or if it is already in cart, do nothing
+     * if a cart rule does not exist or if it is already in cart, do nothing.
      *
      * @param array $cartRuleFixtureIds
      *
@@ -391,7 +389,7 @@ abstract class AbstractCartTest extends IntegrationTestCase
         $allAdded = true;
         foreach ($cartRuleFixtureIds as $cartRuleFixtureId) {
             $cartRule = $this->getCartRuleFromFixtureId($cartRuleFixtureId);
-            if ($cartRule === null) {
+            if (null === $cartRule) {
                 $allAdded = false;
             } else {
                 $this->cartRulesInCart[] = $cartRule;
@@ -407,7 +405,7 @@ abstract class AbstractCartTest extends IntegrationTestCase
     protected function addCartRuleToCart($cartRuleFixtureId)
     {
         $cartRule = $this->getCartRuleFromFixtureId($cartRuleFixtureId);
-        if ($cartRule === null) {
+        if (null === $cartRule) {
             return false;
         }
         $this->cartRulesInCart[] = $cartRule;

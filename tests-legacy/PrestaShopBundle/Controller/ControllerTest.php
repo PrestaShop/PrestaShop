@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -64,12 +64,13 @@ class ControllerTest extends TestCase
      * @dataProvider getControllersClasses
      *
      * @param $controllerClass
+     *
      * @return mixed
      */
     public function itShouldRunTheTestedController($controllerClass)
     {
         /**
-         * @var Controller $testedController
+         * @var Controller
          */
         $testedController = new $controllerClass();
 
@@ -89,7 +90,7 @@ class ControllerTest extends TestCase
 
     /**
      * @return array list of all legacy controllers (Back Office)
-     * If you have migrated a page on Symfony, please remove the related test.
+     *               If you have migrated a page on Symfony, please remove the related test
      */
     public function getControllersClasses()
     {
@@ -141,8 +142,8 @@ class ControllerTest extends TestCase
 
     protected function declareRequiredConstants()
     {
-        $configDirectory = __DIR__ . '/../../../app/config';
-        $configuration = require_once($configDirectory . '/parameters.php');
+        $configDirectory = __DIR__.'/../../../app/config';
+        $configuration = require_once $configDirectory.'/parameters.php';
 
         if (defined('_PS_BO_ALL_THEMES_DIR_')) {
             return;
@@ -197,7 +198,7 @@ class ControllerTest extends TestCase
 
     protected function requireAliasesFunctions()
     {
-        require_once(__DIR__ . '/../../../config/alias.php');
+        require_once __DIR__.'/../../../config/alias.php';
     }
 
     /**
@@ -275,6 +276,7 @@ class ControllerTest extends TestCase
 
     /**
      * @param Controller $testedController
+     *
      * @return Tools
      */
     protected function prophesizeRequest(Controller $testedController)
@@ -292,7 +294,8 @@ class ControllerTest extends TestCase
         return new Tools($requestProphecy->reveal());
     }
 
-    public static function tearDownAfterClass() {
+    public static function tearDownAfterClass()
+    {
         Tools::resetRequest();
     }
 }

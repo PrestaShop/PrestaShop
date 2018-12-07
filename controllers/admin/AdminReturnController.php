@@ -39,9 +39,9 @@ class AdminReturnControllerCore extends AdminController
         parent::__construct();
 
         $this->_select = 'ors.color, orsl.`name`, o.`id_shop`';
-        $this->_join = 'LEFT JOIN ' . _DB_PREFIX_ . 'order_return_state ors ON (ors.`id_order_return_state` = a.`state`)';
-        $this->_join .= 'LEFT JOIN ' . _DB_PREFIX_ . 'order_return_state_lang orsl ON (orsl.`id_order_return_state` = a.`state` AND orsl.`id_lang` = ' . (int) $this->context->language->id . ')';
-        $this->_join .= ' LEFT JOIN ' . _DB_PREFIX_ . 'orders o ON (o.`id_order` = a.`id_order`)';
+        $this->_join = 'LEFT JOIN '._DB_PREFIX_.'order_return_state ors ON (ors.`id_order_return_state` = a.`state`)';
+        $this->_join .= 'LEFT JOIN '._DB_PREFIX_.'order_return_state_lang orsl ON (orsl.`id_order_return_state` = a.`state` AND orsl.`id_lang` = '.(int) $this->context->language->id.')';
+        $this->_join .= ' LEFT JOIN '._DB_PREFIX_.'orders o ON (o.`id_order` = a.`id_order`)';
 
         $this->fields_list = array(
             'id_order_return' => array('title' => $this->trans('ID', array(), 'Admin.Global'), 'align' => 'center', 'width' => 25),
@@ -163,11 +163,11 @@ class AdminReturnControllerCore extends AdminController
         $products = OrderReturn::getOrdersReturnProducts($this->object->id, $order);
 
         // Prepare customer explanation for display
-        $this->object->question = '<span class="normal-text">' . nl2br($this->object->question) . '</span>';
+        $this->object->question = '<span class="normal-text">'.nl2br($this->object->question).'</span>';
 
         $this->tpl_form_vars = array(
             'customer' => new Customer($this->object->id_customer),
-            'url_customer' => 'index.php?tab=AdminCustomers&id_customer=' . (int) $this->object->id_customer . '&viewcustomer&token=' . Tools::getAdminToken('AdminCustomers' . (int) (Tab::getIdFromClassName('AdminCustomers')) . (int) $this->context->employee->id),
+            'url_customer' => 'index.php?tab=AdminCustomers&id_customer='.(int) $this->object->id_customer.'&viewcustomer&token='.Tools::getAdminToken('AdminCustomers'.(int) (Tab::getIdFromClassName('AdminCustomers')).(int) $this->context->employee->id),
             'text_order' => $this->trans(
                 'Order #%id% from %date%',
                 array(
@@ -176,7 +176,7 @@ class AdminReturnControllerCore extends AdminController
                 ),
                 'Admin.Orderscustomers.Feature'
             ),
-            'url_order' => 'index.php?tab=AdminOrders&id_order=' . (int) $order->id . '&vieworder&token=' . Tools::getAdminToken('AdminOrders' . (int) Tab::getIdFromClassName('AdminOrders') . (int) $this->context->employee->id),
+            'url_order' => 'index.php?tab=AdminOrders&id_order='.(int) $order->id.'&vieworder&token='.Tools::getAdminToken('AdminOrders'.(int) Tab::getIdFromClassName('AdminOrders').(int) $this->context->employee->id),
             'picture_folder' => _THEME_PROD_PIC_DIR_,
             'returnedCustomizations' => $returned_customizations,
             'customizedDatas' => Product::getAllCustomizedDatas((int) ($order->id_cart)),
@@ -192,9 +192,9 @@ class AdminReturnControllerCore extends AdminController
     public function initToolbar()
     {
         // If display list, we don't want the "add" button
-        if (!$this->display || $this->display == 'list') {
+        if (!$this->display || 'list' == $this->display) {
             return;
-        } elseif ($this->display != 'options') {
+        } elseif ('options' != $this->display) {
             $this->toolbar_btn['save-and-stay'] = array(
                 'short' => 'SaveAndStay',
                 'href' => '#',
@@ -219,7 +219,7 @@ class AdminReturnControllerCore extends AdminController
                         }
                         if ((int) ($orderReturn->countProduct()) > 1) {
                             if (OrderReturn::deleteOrderReturnDetail($id_order_return, $id_order_detail, (int) (Tools::getValue('id_customization', 0)))) {
-                                Tools::redirectAdmin(self::$currentIndex . '&conf=4token=' . $this->token);
+                                Tools::redirectAdmin(self::$currentIndex.'&conf=4token='.$this->token);
                             } else {
                                 $this->errors[] = $this->trans('An error occurred while deleting the details of your order return.', array(), 'Admin.Orderscustomers.Notification');
                             }
@@ -261,7 +261,7 @@ class AdminReturnControllerCore extends AdminController
                             ),
                             $vars,
                             $customer->email,
-                            $customer->firstname . ' ' . $customer->lastname,
+                            $customer->firstname.' '.$customer->lastname,
                             null,
                             null,
                             null,
@@ -272,9 +272,9 @@ class AdminReturnControllerCore extends AdminController
                         );
 
                         if (Tools::isSubmit('submitAddorder_returnAndStay')) {
-                            Tools::redirectAdmin(self::$currentIndex . '&conf=4&token=' . $this->token . '&updateorder_return&id_order_return=' . (int) $id_order_return);
+                            Tools::redirectAdmin(self::$currentIndex.'&conf=4&token='.$this->token.'&updateorder_return&id_order_return='.(int) $id_order_return);
                         } else {
-                            Tools::redirectAdmin(self::$currentIndex . '&conf=4&token=' . $this->token);
+                            Tools::redirectAdmin(self::$currentIndex.'&conf=4&token='.$this->token);
                         }
                     }
                 } else {

@@ -50,8 +50,8 @@ class OrderReturnLazyArray extends AbstractLazyArray
      * OrderReturnLazyArray constructor.
      *
      * @param string $prefix
-     * @param Link $link
-     * @param array $orderReturn
+     * @param Link   $link
+     * @param array  $orderReturn
      *
      * @throws \ReflectionException
      */
@@ -85,7 +85,7 @@ class OrderReturnLazyArray extends AbstractLazyArray
             'order-detail',
             true,
             null,
-            'id_order=' . (int) $this->orderReturn['id_order']
+            'id_order='.(int) $this->orderReturn['id_order']
         );
     }
 
@@ -100,7 +100,7 @@ class OrderReturnLazyArray extends AbstractLazyArray
             'order-return',
             true,
             null,
-            'id_order_return=' . (int) $this->orderReturn['id_order_return']
+            'id_order_return='.(int) $this->orderReturn['id_order_return']
         );
     }
 
@@ -111,15 +111,15 @@ class OrderReturnLazyArray extends AbstractLazyArray
      */
     public function getReturnNumber()
     {
-        return $this->prefix . sprintf('%06d', $this->orderReturn['id_order_return']);
+        return $this->prefix.sprintf('%06d', $this->orderReturn['id_order_return']);
     }
 
     /**
      * @arrayAccess
      *
      * @throws PrestaShopException
-     * @return string
      *
+     * @return string
      */
     public function getReturnDate()
     {
@@ -133,12 +133,12 @@ class OrderReturnLazyArray extends AbstractLazyArray
      */
     public function getPrintUrl()
     {
-        return ($this->orderReturn['state'] == 2)
+        return (2 == $this->orderReturn['state'])
             ? $this->link->getPageLink(
                 'pdf-order-return',
                 true,
                 null,
-                'id_order_return=' . (int) $this->orderReturn['id_order_return']
+                'id_order_return='.(int) $this->orderReturn['id_order_return']
             )
             : '';
     }

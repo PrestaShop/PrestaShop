@@ -60,8 +60,8 @@ final class LocalizationPackByIsoCodeChoiceProvider implements FormChoiceProvide
     /**
      * @param LocalizationPackLoaderInterface $remoteLocalizationPackLoader
      * @param LocalizationPackLoaderInterface $localLocalizationPackLoader
-     * @param ConfigurationInterface $configuration
-     * @param TranslatorInterface $translator
+     * @param ConfigurationInterface          $configuration
+     * @param TranslatorInterface             $translator
      */
     public function __construct(
         LocalizationPackLoaderInterface $remoteLocalizationPackLoader,
@@ -100,7 +100,7 @@ final class LocalizationPackByIsoCodeChoiceProvider implements FormChoiceProvide
         $finder = (new Finder())
             ->files()
             ->depth('0')
-            ->in($rootDir . '/localization')
+            ->in($rootDir.'/localization')
             ->name('/^([a-z]{2})\.xml$/')
         ;
 

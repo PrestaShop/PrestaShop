@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -45,7 +45,7 @@ class PrestaShopAutoloadTest extends TestCase
     public function testGenerateIndex()
     {
         $this->assertTrue(file_exists($this->file_index));
-        $data = include($this->file_index);
+        $data = include $this->file_index;
         $this->assertEquals($data['OrderControllerCore']['path'], 'controllers/front/OrderController.php');
     }
 
@@ -59,7 +59,7 @@ class PrestaShopAutoloadTest extends TestCase
     /**
      * Given PS_DISABLE_OVERRIDES is enabled
      * When the class index is regenerated and we have override
-     * Then the override shouldn't be include in the class index
+     * Then the override shouldn't be include in the class index.
      */
     public function testGenerateIndexWithoutOverride()
     {
@@ -74,12 +74,12 @@ class PrestaShopAutoloadTest extends TestCase
         );
         PrestaShopAutoload::getInstance()->generateIndex();
         $this->assertTrue(file_exists($this->file_index));
-        $data = include($this->file_index);
+        $data = include $this->file_index;
         $this->assertEquals($data['OrderControllerCore']['path'], 'controllers/front/OrderController.php');
         $this->assertEquals($data['Connection']['override'], false);
         Configuration::updateGlobalValue('PS_DISABLE_OVERRIDES', 0);
         PrestaShopAutoload::getInstance()->generateIndex();
-        $data = include($this->file_index);
+        $data = include $this->file_index;
         $this->assertEquals($data['Connection']['override'], true);
     }
 

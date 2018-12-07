@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -28,7 +28,7 @@ $smarty->debugging = false;
 $smarty->debugging_ctrl = 'NONE';
 
 // Let user choose to force compilation
-$smarty->force_compile = (Configuration::get('PS_SMARTY_FORCE_COMPILE') == _PS_SMARTY_FORCE_COMPILE_) ? true : false;
+$smarty->force_compile = (_PS_SMARTY_FORCE_COMPILE_ == Configuration::get('PS_SMARTY_FORCE_COMPILE')) ? true : false;
 // But force compile_check since the performance impact is small and it is better for debugging
 $smarty->compile_check = true;
 
@@ -72,7 +72,7 @@ function smartyTranslate($params, $smarty)
     }
 
     if (($htmlEntities || $addSlashes)) {
-        $sprintf['legacy'] = $htmlEntities ? 'htmlspecialchars': 'addslashes';
+        $sprintf['legacy'] = $htmlEntities ? 'htmlspecialchars' : 'addslashes';
     }
 
     if (!empty($params['d'])) {
@@ -87,9 +87,8 @@ function smartyTranslate($params, $smarty)
 
             if (_PS_MODE_DEV_) {
                 throw new Exception($errorMessage);
-            }  
-                PrestaShopLogger::addLog($errorMessage);
-            
+            }
+            PrestaShopLogger::addLog($errorMessage);
         }
 
         if (!is_array($sprintf)) {
@@ -103,11 +102,10 @@ function smartyTranslate($params, $smarty)
 
             if (_PS_MODE_DEV_) {
                 throw new Exception($errorMessage);
-            }  
-                PrestaShopLogger::addLog($errorMessage);
+            }
+            PrestaShopLogger::addLog($errorMessage);
 
-                return $params['s'];
-            
+            return $params['s'];
         }
 
         return $translator->trans($params['s'], $sprintf, $params['d']);

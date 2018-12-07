@@ -127,39 +127,39 @@ class TreeToolbarCore implements ITreeToolbarCore
 
     public function getTemplateFile($template)
     {
-        if (preg_match_all('/((?:^|[A-Z])[a-z]+)/', get_class($this->getContext()->controller), $matches) !== false) {
+        if (false !== preg_match_all('/((?:^|[A-Z])[a-z]+)/', get_class($this->getContext()->controller), $matches)) {
             $controllerName = mb_strtolower($matches[0][1]);
         }
 
         if ($this->getContext()->controller instanceof ModuleAdminController && file_exists($this->_normalizeDirectory(
                 $this->getContext()->controller->getTemplatePath()
-        ) . $this->getTemplateDirectory() . $template)) {
+        ).$this->getTemplateDirectory().$template)) {
             return $this->_normalizeDirectory($this->getContext()->controller->getTemplatePath())
-                . $this->getTemplateDirectory() . $template;
+                .$this->getTemplateDirectory().$template;
         } elseif ($this->getContext()->controller instanceof AdminController && isset($controllerName)
-            && file_exists($this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(0)) . 'controllers'
-                . DIRECTORY_SEPARATOR . $controllerName . DIRECTORY_SEPARATOR . $this->getTemplateDirectory() . $template)) {
-            return $this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(0)) . 'controllers'
-                . DIRECTORY_SEPARATOR . $controllerName . DIRECTORY_SEPARATOR . $this->getTemplateDirectory() . $template;
+            && file_exists($this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(0)).'controllers'
+                .DIRECTORY_SEPARATOR.$controllerName.DIRECTORY_SEPARATOR.$this->getTemplateDirectory().$template)) {
+            return $this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(0)).'controllers'
+                .DIRECTORY_SEPARATOR.$controllerName.DIRECTORY_SEPARATOR.$this->getTemplateDirectory().$template;
         } elseif (file_exists($this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(1))
-                . $this->getTemplateDirectory() . $template)) {
+                .$this->getTemplateDirectory().$template)) {
             return $this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(1))
-                    . $this->getTemplateDirectory() . $template;
+                    .$this->getTemplateDirectory().$template;
         } elseif (file_exists($this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(0))
-                . $this->getTemplateDirectory() . $template)) {
+                .$this->getTemplateDirectory().$template)) {
             return $this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(0))
-                . $this->getTemplateDirectory() . $template;
-        }  
-            return $this->getTemplateDirectory() . $template;
-        
+                .$this->getTemplateDirectory().$template;
+        }
+
+        return $this->getTemplateDirectory().$template;
     }
 
     /**
      * @param ITreeToolbarButton $action
      *
      * @throws PrestaShopException
-     * @return TreeToolbar
      *
+     * @return TreeToolbar
      */
     public function addAction($action)
     {

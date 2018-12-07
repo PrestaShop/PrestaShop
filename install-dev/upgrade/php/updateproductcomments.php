@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,10 +23,9 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 function updateproductcomments()
 {
-    if (Db::getInstance()->executeS('SELECT * FROM '._DB_PREFIX_.'product_comment') !== false) {
+    if (false !== Db::getInstance()->executeS('SELECT * FROM '._DB_PREFIX_.'product_comment')) {
         Db::getInstance()->execute('CREATE TABLE IF NOT EXISTS '._DB_PREFIX_.'product_comment_criterion_lang (
 											`id_product_comment_criterion` INT( 11 ) UNSIGNED NOT NULL ,
 											`id_lang` INT(11) UNSIGNED NOT NULL ,

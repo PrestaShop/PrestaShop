@@ -76,8 +76,8 @@ class AddonsDataProvider implements AddonsInterface
      * @param $module_id
      *
      * @throws Exception
-     * @return bool
      *
+     * @return bool
      */
     public function downloadModule($module_id)
     {
@@ -92,19 +92,17 @@ class AddonsDataProvider implements AddonsInterface
         } catch (Exception $e) {
             if (!$this->isAddonsAuthenticated()) {
                 throw new Exception('Error sent by Addons. You may need to be logged.', 0, $e);
-            }  
-                throw new Exception('Error sent by Addons. You may be not allowed to download this module.', 0, $e);
-            
+            }
+            throw new Exception('Error sent by Addons. You may be not allowed to download this module.', 0, $e);
         }
 
         $temp_filename = tempnam($this->cacheDir, 'mod');
-        if (file_put_contents($temp_filename, $module_data) !== false) {
+        if (false !== file_put_contents($temp_filename, $module_data)) {
             $this->zipManager->storeInModulesFolder($temp_filename);
 
             return true;
-        }  
-            throw new Exception('Cannot store module content in temporary folder !');
-        
+        }
+        throw new Exception('Cannot store module content in temporary folder !');
     }
 
     /**
@@ -195,8 +193,8 @@ class AddonsDataProvider implements AddonsInterface
 
     /**
      * @throws Exception
-     * @return array
      *
+     * @return array
      */
     protected function getAddonsCredentials()
     {

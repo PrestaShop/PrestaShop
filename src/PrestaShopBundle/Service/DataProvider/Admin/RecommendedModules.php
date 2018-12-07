@@ -56,7 +56,7 @@ class RecommendedModules
     /**
      * Gets all recommended modules for a specific domain.
      *
-     * @param string $domain The given domain to filter recommended modules
+     * @param string     $domain    The given domain to filter recommended modules
      * @param bool|false $randomize To shuffle results
      *
      * @return array A list of modules names (identifiers)
@@ -96,7 +96,7 @@ class RecommendedModules
         }, Module::getModulesInstalled());
 
         foreach ($moduleFullList as $key => $module) {
-            if ((bool) array_key_exists($module->attributes->get('name'), $installed_modules) === true) {
+            if (true === (bool) array_key_exists($module->attributes->get('name'), $installed_modules)) {
                 unset($moduleFullList[$key]);
             }
             if (!isset($module->attributes->get('media')->img)) {

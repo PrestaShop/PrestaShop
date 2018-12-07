@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -24,7 +24,6 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-
 namespace LegacyTests\Integration;
 
 use LegacyTests\TestCase\IntegrationTestCase;
@@ -44,7 +43,8 @@ class SmartySettingsTest extends IntegrationTestCase
     private function render($templateString, array $parameters)
     {
         $this->smarty->assign($parameters);
-        return $this->smarty->fetch('string:' . $templateString);
+
+        return $this->smarty->fetch('string:'.$templateString);
     }
 
     public function test_a_link_is_escaped_automatically()

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -26,10 +26,8 @@
 
 namespace LegacyTests\Unit\Core\Cart\Calculation\Carrier;
 
-use Configuration;
-
 /**
- * these tests aim to check the correct calculation of cart total when applying cart rules
+ * these tests aim to check the correct calculation of cart total when applying cart rules.
  *
  * products are inserted as fixtures
  * products are inserted in cart from data providers
@@ -37,7 +35,6 @@ use Configuration;
  */
 class RuleWhenChangingCarrierTest extends AbstractCarrierTest
 {
-
     const CART_RULES_FIXTURES = array(
         1 => array('code' => 'foo', 'priority' => 1, 'percent' => 55, 'amount' => 0, 'carrierRestrictionIds' => array(2)),
         2 => array('code' => 'bar', 'priority' => 1, 'percent' => 55, 'amount' => 0, 'carrierRestrictionIds' => array(1)),
@@ -170,5 +167,4 @@ class RuleWhenChangingCarrierTest extends AbstractCarrierTest
         $cartRules = $this->cart->getCartRules();
         $this->assertCount(0, $cartRules);
     }
-
 }

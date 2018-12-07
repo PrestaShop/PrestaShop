@@ -59,8 +59,8 @@ class NewProductsProductSearchProvider implements ProductSearchProviderInterface
 
     /**
      * @param ProductSearchContext $context
-     * @param ProductSearchQuery $query
-     * @param string $type
+     * @param ProductSearchQuery   $query
+     * @param string               $type
      *
      * @return array
      */
@@ -73,7 +73,7 @@ class NewProductsProductSearchProvider implements ProductSearchProviderInterface
             $context->getIdLang(),
             $query->getPage(),
             $query->getResultsPerPage(),
-            $type !== 'products',
+            'products' !== $type,
             $query->getSortOrder()->toLegacyOrderBy(),
             $query->getSortOrder()->toLegacyOrderWay()
         );

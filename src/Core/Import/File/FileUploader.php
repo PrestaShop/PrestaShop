@@ -50,7 +50,7 @@ final class FileUploader
 
     /**
      * @param TranslatorInterface $translator
-     * @param ImportDirectory $importDirectory
+     * @param ImportDirectory     $importDirectory
      */
     public function __construct(
         TranslatorInterface $translator,
@@ -66,8 +66,8 @@ final class FileUploader
      * @param UploadedFile $uploadedFile
      *
      * @throws FileUploadException
-     * @return File
      *
+     * @return File
      */
     public function upload(UploadedFile $uploadedFile)
     {
@@ -102,7 +102,7 @@ final class FileUploader
      *
      * @return false|string Returns error string on error or FALSE otherwise
      */
-    protected function validateUploadedFile(UploadedFile $uploadedFile)
+    private function validateUploadedFile(UploadedFile $uploadedFile)
     {
         $error = false;
 

@@ -97,7 +97,7 @@ class AdminGendersControllerCore extends AdminController
     {
         if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_gender'] = array(
-                'href' => self::$currentIndex . '&addgender&token=' . $this->token,
+                'href' => self::$currentIndex.'&addgender&token='.$this->token,
                 'desc' => $this->trans('Add new social title', array(), 'Admin.Shopparameters.Feature'),
                 'icon' => 'process-icon-new',
             );
@@ -120,7 +120,7 @@ class AdminGendersControllerCore extends AdminController
                     'name' => 'name',
                     'lang' => true,
                     'col' => 4,
-                    'hint' => $this->trans('Invalid characters:', array(), 'Admin.Shopparameters.Help') . ' 0-9!&lt;&gt;,;?=+()@#"�{}_$%:',
+                    'hint' => $this->trans('Invalid characters:', array(), 'Admin.Shopparameters.Help').' 0-9!&lt;&gt;,;?=+()@#"�{}_$%:',
                     'required' => true,
                 ),
                 array(
@@ -195,7 +195,7 @@ class AdminGendersControllerCore extends AdminController
 
     protected function postImage($id)
     {
-        if (isset($this->fieldImageSettings['name'], $this->fieldImageSettings['dir'])  ) {
+        if (isset($this->fieldImageSettings['name'], $this->fieldImageSettings['dir'])) {
             if (!Validate::isInt(Tools::getValue('img_width')) || !Validate::isInt(Tools::getValue('img_height'))) {
                 $this->errors[] = $this->trans('Width and height must be numeric values.', array(), 'Admin.Shopparameters.Notification');
             } else {
@@ -207,7 +207,7 @@ class AdminGendersControllerCore extends AdminController
                     $height = null;
                 }
 
-                return $this->uploadImage($id, $this->fieldImageSettings['name'], $this->fieldImageSettings['dir'] . '/', false, $width, $height);
+                return $this->uploadImage($id, $this->fieldImageSettings['name'], $this->fieldImageSettings['dir'].'/', false, $width, $height);
             }
         }
 
@@ -219,8 +219,8 @@ class AdminGendersControllerCore extends AdminController
         parent::afterImageUpload();
 
         if (($id_gender = (int) Tools::getValue('id_gender')) &&
-             isset($_FILES) && count($_FILES) && file_exists(_PS_GENDERS_DIR_ . $id_gender . '.jpg')) {
-            $current_file = _PS_TMP_IMG_DIR_ . 'gender_mini_' . $id_gender . '_' . $this->context->shop->id . '.jpg';
+             isset($_FILES) && count($_FILES) && file_exists(_PS_GENDERS_DIR_.$id_gender.'.jpg')) {
+            $current_file = _PS_TMP_IMG_DIR_.'gender_mini_'.$id_gender.'_'.$this->context->shop->id.'.jpg';
 
             if (file_exists($current_file)) {
                 unlink($current_file);

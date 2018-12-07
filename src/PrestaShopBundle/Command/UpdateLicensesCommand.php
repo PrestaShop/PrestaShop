@@ -101,7 +101,7 @@ class UpdateLicensesCommand extends Command
         $finder = new Finder();
         $finder
             ->files()
-            ->name('*.' . $ext)
+            ->name('*.'.$ext)
             ->in(_PS_ROOT_DIR_)
             ->exclude(array(
                 '.git',
@@ -124,7 +124,7 @@ class UpdateLicensesCommand extends Command
         ;
         $parser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7);
 
-        $output->writeln('Updating license in ' . mb_strtoupper($ext) . ' files ...');
+        $output->writeln('Updating license in '.mb_strtoupper($ext).' files ...');
         $progress = new ProgressBar($output, count($finder));
         $progress->start();
         $progress->setRedrawFrequency(20);
@@ -141,7 +141,7 @@ class UpdateLicensesCommand extends Command
                             $this->addLicenseToNode($nodes[0], $file);
                         }
                     } catch (\PhpParser\Error $exception) {
-                        $output->writeln('Syntax error on file ' . $file->getRelativePathname() . '. Continue ...');
+                        $output->writeln('Syntax error on file '.$file->getRelativePathname().'. Continue ...');
                     }
                     break;
                 case 'js':
@@ -218,14 +218,14 @@ class UpdateLicensesCommand extends Command
     {
         $content = $file->getContents();
         // Regular expression found thanks to Stephen Ostermiller's Blog. http://blog.ostermiller.org/find-comment
-        $regex = '%' . $startDelimiter . '\*([^*]|[\r\n]|(\*+([^*' . $endDelimiter . ']|[\r\n])))*\*+' . $endDelimiter . '%';
+        $regex = '%'.$startDelimiter.'\*([^*]|[\r\n]|(\*+([^*'.$endDelimiter.']|[\r\n])))*\*+'.$endDelimiter.'%';
         $matches = array();
         $text = $this->license;
-        if ($startDelimiter != '\/') {
-            $text = $startDelimiter . ltrim($text, '/');
+        if ('\/' != $startDelimiter) {
+            $text = $startDelimiter.ltrim($text, '/');
         }
-        if ($endDelimiter != '\/') {
-            $text = rtrim($text, '/') . $endDelimiter;
+        if ('\/' != $endDelimiter) {
+            $text = rtrim($text, '/').$endDelimiter;
         }
 
         // Try to find an existing license
@@ -234,13 +234,13 @@ class UpdateLicensesCommand extends Command
         if (count($matches)) {
             // Found - Replace it if prestashop one
             foreach ($matches as $match) {
-                if (mb_stripos($match, 'prestashop') !== false) {
+                if (false !== mb_stripos($match, 'prestashop')) {
                     $content = str_replace($match, $text, $content);
                 }
             }
         } else {
             // Not found - Add it at the beginning of the file
-            $content = $text . "\n" . $content;
+            $content = $text."\n".$content;
         }
 
         file_put_contents($file->getRelativePathname(), $content);
@@ -254,12 +254,12 @@ class UpdateLicensesCommand extends Command
     {
         if (!$node->hasAttribute('comments')) {
             $needle = '<?php';
-            $replace = "<?php\n" . $this->license . "\n";
+            $replace = "<?php\n".$this->license."\n";
             $haystack = $file->getContents();
 
             $pos = mb_strpos($haystack, $needle);
             // Important, if the <?php is in the middle of the file, continue
-            if ($pos === 0) {
+            if (0 === $pos) {
                 $newstring = substr_replace($haystack, $replace, $pos, mb_strlen($needle));
                 file_put_contents($file->getRelativePathname(), $newstring);
             }
@@ -270,7 +270,7 @@ class UpdateLicensesCommand extends Command
         $comments = $node->getAttribute('comments');
         foreach ($comments as $comment) {
             if ($comment instanceof \PhpParser\Comment
-                && mb_strpos($comment->getText(), 'prestashop') !== false) {
+                && false !== mb_strpos($comment->getText(), 'prestashop')) {
                 file_put_contents($file->getRelativePathname(), str_replace($comment->getText(), $this->license, $file->getContents()));
             }
         }
@@ -289,7 +289,7 @@ class UpdateLicensesCommand extends Command
      */
     private function addLicenseToTwigTemplate(SplFileInfo $file)
     {
-        if (mb_strrpos($file->getRelativePathName(), 'html.twig') !== false) {
+        if (false !== mb_strrpos($file->getRelativePathName(), 'html.twig')) {
             $this->addLicenseToFile($file, '{#', '#}');
         }
     }

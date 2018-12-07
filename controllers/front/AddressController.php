@@ -96,7 +96,7 @@ class AddressControllerCore extends FrontController
         if (!$this->ajax && $this->should_redirect) {
             if (($back = Tools::getValue('back')) && Tools::urlBelongsToShop($back)) {
                 $mod = Tools::getValue('mod');
-                $this->redirectWithNotifications('index.php?controller=' . $back . ($mod ? '&back=' . $mod : ''));
+                $this->redirectWithNotifications('index.php?controller='.$back.($mod ? '&back='.$mod : ''));
             } else {
                 $this->redirectWithNotifications('index.php?controller=addresses');
             }

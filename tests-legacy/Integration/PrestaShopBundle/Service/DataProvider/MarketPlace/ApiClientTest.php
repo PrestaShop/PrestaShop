@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -73,7 +73,7 @@ class ApiClientTest extends KernelTestCase
         ;
 
         $responseMock->method('getBody')
-            ->willReturn(json_encode((object)array('modules' => array())))
+            ->willReturn(json_encode((object) array('modules' => array())))
         ;
 
         return $responseMock;

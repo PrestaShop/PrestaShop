@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,12 +29,7 @@ namespace LegacyTests\Unit\Core\Product;
 use Phake;
 use LegacyTests\TestCase\UnitTestCase;
 use PrestaShop\PrestaShop\Core\Product\ProductPresentationSettings;
-use PrestaShop\PrestaShop\Core\Price\PricePresenterInterface;
-use Product;
 use Language;
-use Link;
-use Context;
-use Adapter_ProductPriceCalculator;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter as BasePricePresenter;
 
 class PriceFormatter extends BasePricePresenter
@@ -43,6 +38,7 @@ class PriceFormatter extends BasePricePresenter
     {
         return $price;
     }
+
     public function format($price, $currency = null)
     {
         return "#$price";
@@ -58,7 +54,7 @@ class ProductPresenterTest extends UnitTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->settings = new ProductPresentationSettings;
+        $this->settings = new ProductPresentationSettings();
 
         $this->settings->catalog_mode = false;
         $this->settings->restricted_country_mode = false;
@@ -83,7 +79,7 @@ class ProductPresenterTest extends UnitTestCase
         $this->product['new'] = false;
         $this->product['pack'] = false;
         $this->product['show_price'] = true;
-        $this->language = new Language;
+        $this->language = new Language();
     }
 
     private function _presentProduct($presenterClass, $field)
@@ -96,13 +92,13 @@ class ProductPresenterTest extends UnitTestCase
 
         $imageRetriever = Phake::mock('PrestaShop\PrestaShop\Adapter\Image\ImageRetriever');
         Phake::when($imageRetriever)->getProductImages(Phake::anyParameters())->thenReturn(array(
-            array('id_image' => 0, 'associatedVariants' => array())
+            array('id_image' => 0, 'associatedVariants' => array()),
         ));
 
         $presenter = new $presenterClass(
             $imageRetriever,
             $link,
-            new PriceFormatter,
+            new PriceFormatter(),
             Phake::mock('PrestaShop\PrestaShop\Adapter\Product\ProductColorsRetriever'),
             $translator
         );
@@ -115,9 +111,9 @@ class ProductPresenterTest extends UnitTestCase
 
         if (null === $field) {
             return $product;
-        }  
-            return $product[$field];
-        
+        }
+
+        return $product[$field];
     }
 
     private function getPresentedProduct($field = null)
@@ -129,7 +125,6 @@ class ProductPresenterTest extends UnitTestCase
     {
         return $this->_presentProduct('PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductListingPresenter', $field);
     }
-
 
     public function test_price_should_be_shown_in_catalog_mode()
     {
@@ -190,8 +185,8 @@ class ProductPresenterTest extends UnitTestCase
         $this->product['customization_required'] = true;
         $this->product['customizations'] = array(
             'fields' => array(
-                array('is_customized' => true, 'required' => true)
-            )
+                array('is_customized' => true, 'required' => true),
+            ),
         );
         $this->assertEquals(
             'http://add-to-cart.url',
@@ -205,8 +200,8 @@ class ProductPresenterTest extends UnitTestCase
         $this->product['customizations'] = array(
             'fields' => array(
                 array('is_customized' => true, 'required' => true),
-                array('is_customized' => false, 'required' => false)
-            )
+                array('is_customized' => false, 'required' => false),
+            ),
         );
         $this->assertEquals(
             'http://add-to-cart.url',
@@ -229,8 +224,8 @@ class ProductPresenterTest extends UnitTestCase
         $this->product['customization_required'] = true;
         $this->product['customizations'] = array(
             'fields' => array(
-                array('is_customized' => true, 'required' => true)
-            )
+                array('is_customized' => true, 'required' => true),
+            ),
         );
         $this->assertEquals(
             null,
@@ -254,7 +249,7 @@ class ProductPresenterTest extends UnitTestCase
         $this->assertEquals(
             array('online-only' => array(
                 'type' => 'online-only',
-                'label' => 'some label'
+                'label' => 'some label',
             )),
             $this->getPresentedProduct('flags')
         );
@@ -266,7 +261,7 @@ class ProductPresenterTest extends UnitTestCase
         $this->assertEquals(
             array('discount' => array(
                 'type' => 'discount',
-                'label' => 'some label'
+                'label' => 'some label',
             )),
             $this->getPresentedProduct('flags')
         );
@@ -279,7 +274,7 @@ class ProductPresenterTest extends UnitTestCase
         $this->assertEquals(
             array('on-sale' => array(
                 'type' => 'on-sale',
-                'label' => 'some label'
+                'label' => 'some label',
             )),
             $this->getPresentedProduct('flags')
         );
@@ -291,7 +286,7 @@ class ProductPresenterTest extends UnitTestCase
         $this->assertEquals(
             array('new' => array(
                 'type' => 'new',
-                'label' => 'some label'
+                'label' => 'some label',
             )),
             $this->getPresentedProduct('flags')
         );

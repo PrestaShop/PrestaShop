@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -32,7 +32,6 @@ use LegacyTests\Unit\ContextMocker;
 
 class ProductControllerTest extends IntegrationTestCase
 {
-
     /**
      * @var ContextMocker
      */
@@ -57,11 +56,11 @@ class ProductControllerTest extends IntegrationTestCase
     /**
      * Call protected/private method of a class.
      *
-     * @param object $object     Instantiated object that we will run method on.
+     * @param object $object     instantiated object that we will run method on
      * @param string $methodName Method name to call
-     * @param array  $parameters Array of parameters to pass into method.
+     * @param array  $parameters array of parameters to pass into method
      *
-     * @return mixed Method return.
+     * @return mixed method return
      */
     public function invokeMethod($object, $methodName, array $parameters = array())
     {
@@ -73,7 +72,7 @@ class ProductControllerTest extends IntegrationTestCase
     }
 
     /**
-     * here we test that for a given dataset of specific prices, currency, ecotax... we get the correct discount result
+     * here we test that for a given dataset of specific prices, currency, ecotax... we get the correct discount result.
      *
      * @dataProvider specificPricesProvider
      *
@@ -93,10 +92,10 @@ class ProductControllerTest extends IntegrationTestCase
         $expected
     ) {
         $class = new \ReflectionClass(get_class($this->controller));
-        $property = $class->getProperty("context");
+        $property = $class->getProperty('context');
         $property->setAccessible(true);
 
-        $currency = new \Currency;
+        $currency = new \Currency();
         $currency->active = true;
         $currency->conversion_rate = $currencyData['conversion_rate'];
         $currency->sign = $currencyData['sign'];
@@ -132,7 +131,6 @@ class ProductControllerTest extends IntegrationTestCase
 
     public function specificPricesProvider()
     {
-
         $specificPrices = array(
             0 => array(
                 'id_specific_price' => '9',

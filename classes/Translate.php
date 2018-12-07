@@ -36,7 +36,7 @@ class TranslateCore
         global $_LANG;
 
         $string = preg_replace("/\\\*'/", "\'", $string);
-        $key = $class . '_' . md5($string);
+        $key = $class.'_'.md5($string);
 
         if (isset($_LANG[$key])) {
             $str = $_LANG[$key];
@@ -50,9 +50,9 @@ class TranslateCore
         $str = str_replace('"', '&quot;', $str);
 
         if (
-            $sprintf !== null &&
+            null !== $sprintf &&
             (!is_array($sprintf) || !empty($sprintf)) &&
-            !(count($sprintf) === 1 && isset($sprintf['legacy']))
+            !(1 === count($sprintf) && isset($sprintf['legacy']))
         ) {
             $str = Translate::checkAndReplaceArgs($str, $sprintf);
         }
@@ -65,8 +65,8 @@ class TranslateCore
      *
      * @param $string
      * @param string $class
-     * @param bool $addslashes
-     * @param bool $htmlentities
+     * @param bool   $addslashes
+     * @param bool   $htmlentities
      *
      * @return string
      */
@@ -77,22 +77,22 @@ class TranslateCore
         // @todo remove global keyword in translations files and use static
         global $_LANGADM;
 
-        if ($modulesTabs === null) {
+        if (null === $modulesTabs) {
             $modulesTabs = Tab::getModuleTabList();
         }
 
-        if ($_LANGADM == null) {
+        if (null == $_LANGADM) {
             $iso = Context::getContext()->language->iso_code;
             if (empty($iso)) {
                 $iso = Language::getIsoById((int) Configuration::get('PS_LANG_DEFAULT'));
             }
-            if (file_exists(_PS_TRANSLATIONS_DIR_ . $iso . '/admin.php')) {
-                include_once _PS_TRANSLATIONS_DIR_ . $iso . '/admin.php';
+            if (file_exists(_PS_TRANSLATIONS_DIR_.$iso.'/admin.php')) {
+                include_once _PS_TRANSLATIONS_DIR_.$iso.'/admin.php';
             }
         }
 
         if (isset($modulesTabs[mb_strtolower($class)])) {
-            $classNameController = $class . 'controller';
+            $classNameController = $class.'controller';
             // if the class is extended by a module, use modules/[module_name]/xx.php lang file
             if (class_exists($classNameController) && Module::getModuleNameFromClass($classNameController)) {
                 return Translate::getModuleTranslation(Module::$classInModule[$classNameController], $string, $classNameController, $sprintf, $addslashes);
@@ -101,8 +101,8 @@ class TranslateCore
 
         $string = preg_replace("/\\\*'/", "\'", $string);
         $key = md5($string);
-        if (isset($_LANGADM[$class . $key])) {
-            $str = $_LANGADM[$class . $key];
+        if (isset($_LANGADM[$class.$key])) {
+            $str = $_LANGADM[$class.$key];
         } else {
             $str = Translate::getGenericAdminTranslation($string, $key, $_LANGADM);
         }
@@ -113,9 +113,9 @@ class TranslateCore
         $str = str_replace('"', '&quot;', $str);
 
         if (
-            $sprintf !== null &&
+            null !== $sprintf &&
             (!is_array($sprintf) || !empty($sprintf)) &&
-            !(count($sprintf) === 1 && isset($sprintf['legacy']))
+            !(1 === count($sprintf) && isset($sprintf['legacy']))
         ) {
             $str = Translate::checkAndReplaceArgs($str, $sprintf);
         }
@@ -127,7 +127,7 @@ class TranslateCore
      * Return the translation for a string if it exists for the base AdminController or for helpers.
      *
      * @param $string string to translate
-     * @param null $key md5 key if already calculated (optional)
+     * @param null  $key       md5 key if already calculated (optional)
      * @param array $langArray Global array of admin translations
      *
      * @return string translation
@@ -139,12 +139,12 @@ class TranslateCore
             $key = md5($string);
         }
 
-        if (isset($langArray['AdminController' . $key])) {
-            $str = $langArray['AdminController' . $key];
-        } elseif (isset($langArray['Helper' . $key])) {
-            $str = $langArray['Helper' . $key];
-        } elseif (isset($langArray['AdminTab' . $key])) {
-            $str = $langArray['AdminTab' . $key];
+        if (isset($langArray['AdminController'.$key])) {
+            $str = $langArray['AdminController'.$key];
+        } elseif (isset($langArray['Helper'.$key])) {
+            $str = $langArray['Helper'.$key];
+        } elseif (isset($langArray['AdminTab'.$key])) {
+            $str = $langArray['AdminTab'.$key];
         } else {
             $str = $string;
         }
@@ -156,11 +156,11 @@ class TranslateCore
      * Get a translation for a module.
      *
      * @param Module|string $module
-     * @param string $originalString
-     * @param string $source
-     * @param null $sprintf
-     * @param bool $js
-     * @param null|string $locale
+     * @param string        $originalString
+     * @param string        $source
+     * @param null          $sprintf
+     * @param bool          $js
+     * @param null|string   $locale
      *
      * @return mixed|string
      */
@@ -186,12 +186,12 @@ class TranslateCore
         if (!isset($translationsMerged[$name][$iso])) {
             $filesByPriority = array(
                 // Translations in theme
-                _PS_THEME_DIR_ . 'modules/' . $name . '/translations/' . $iso . '.php',
-                _PS_THEME_DIR_ . 'modules/' . $name . '/' . $iso . '.php',
+                _PS_THEME_DIR_.'modules/'.$name.'/translations/'.$iso.'.php',
+                _PS_THEME_DIR_.'modules/'.$name.'/'.$iso.'.php',
                 // PrestaShop 1.5 translations
-                _PS_MODULE_DIR_ . $name . '/translations/' . $iso . '.php',
+                _PS_MODULE_DIR_.$name.'/translations/'.$iso.'.php',
                 // PrestaShop 1.4 translations
-                _PS_MODULE_DIR_ . $name . '/' . $iso . '.php',
+                _PS_MODULE_DIR_.$name.'/'.$iso.'.php',
             );
             foreach ($filesByPriority as $file) {
                 if (file_exists($file)) {
@@ -205,15 +205,15 @@ class TranslateCore
         $string = preg_replace("/\\\*'/", "\'", $originalString);
         $key = md5($string);
 
-        $cacheKey = $name . '|' . $string . '|' . $source . '|' . (int) $js . '|' . $iso;
+        $cacheKey = $name.'|'.$string.'|'.$source.'|'.(int) $js.'|'.$iso;
         if (isset($langCache[$cacheKey])) {
             $ret = $langCache[$cacheKey];
         } else {
-            if ($_MODULES == null) {
+            if (null == $_MODULES) {
                 if (
-                    $sprintf !== null &&
+                    null !== $sprintf &&
                     (!is_array($sprintf) || !empty($sprintf)) &&
-                    !(count($sprintf) === 1 && isset($sprintf['legacy']))
+                    !(1 === count($sprintf) && isset($sprintf['legacy']))
                 ) {
                     $string = Translate::checkAndReplaceArgs($string, $sprintf);
                 }
@@ -221,13 +221,13 @@ class TranslateCore
                 $ret = str_replace('"', '&quot;', $string);
             }
 
-            $currentKey = mb_strtolower('<{' . $name . '}' . _THEME_NAME_ . '>' . $source) . '_' . $key;
-            $defaultKey = mb_strtolower('<{' . $name . '}prestashop>' . $source) . '_' . $key;
+            $currentKey = mb_strtolower('<{'.$name.'}'._THEME_NAME_.'>'.$source).'_'.$key;
+            $defaultKey = mb_strtolower('<{'.$name.'}prestashop>'.$source).'_'.$key;
 
             if ('controller' == mb_substr($source, -10, 10)) {
                 $file = mb_substr($source, 0, -10);
-                $currentKeyFile = mb_strtolower('<{' . $name . '}' . _THEME_NAME_ . '>' . $file) . '_' . $key;
-                $defaultKeyFile = mb_strtolower('<{' . $name . '}prestashop>' . $file) . '_' . $key;
+                $currentKeyFile = mb_strtolower('<{'.$name.'}'._THEME_NAME_.'>'.$file).'_'.$key;
+                $defaultKeyFile = mb_strtolower('<{'.$name.'}prestashop>'.$file).'_'.$key;
             }
 
             if (isset($currentKeyFile) && !empty($_MODULES[$currentKeyFile])) {
@@ -246,9 +246,9 @@ class TranslateCore
             }
 
             if (
-                $sprintf !== null &&
+                null !== $sprintf &&
                 (!is_array($sprintf) || !empty($sprintf)) &&
-                !(count($sprintf) === 1 && isset($sprintf['legacy']))
+                !(1 === count($sprintf) && isset($sprintf['legacy']))
             ) {
                 $ret = Translate::checkAndReplaceArgs($ret, $sprintf);
             }
@@ -259,7 +259,7 @@ class TranslateCore
                 $ret = htmlspecialchars($ret, ENT_COMPAT, 'UTF-8');
             }
 
-            if ($sprintf === null) {
+            if (null === $sprintf) {
                 $langCache[$cacheKey] = $ret;
             }
         }
@@ -311,12 +311,12 @@ class TranslateCore
         $string = preg_replace("/\\\*'/", "\'", $string);
         $key = md5($string);
 
-        $str = (array_key_exists('PDF' . $key, $_LANGPDF) ? $_LANGPDF['PDF' . $key] : $string);
+        $str = (array_key_exists('PDF'.$key, $_LANGPDF) ? $_LANGPDF['PDF'.$key] : $string);
 
         if (
-            $sprintf !== null &&
+            null !== $sprintf &&
             (!is_array($sprintf) || !empty($sprintf)) &&
-            !(count($sprintf) === 1 && isset($sprintf['legacy']))
+            !(1 === count($sprintf) && isset($sprintf['legacy']))
         ) {
             $str = Translate::checkAndReplaceArgs($str, $sprintf);
         }
@@ -359,11 +359,11 @@ class TranslateCore
                 $match = array();
                 if (preg_match('/^\s*<\s*(\w+)/', $tag, $match)) {
                     $opener = $tag;
-                    $closer = '</' . $match[1] . '>';
+                    $closer = '</'.$match[1].'>';
 
-                    $string = str_replace('[' . $position . ']', $opener, $string);
-                    $string = str_replace('[/' . $position . ']', $closer, $string);
-                    $string = str_replace('[' . $position . '/]', $opener . $closer, $string);
+                    $string = str_replace('['.$position.']', $opener, $string);
+                    $string = str_replace('[/'.$position.']', $closer, $string);
+                    $string = str_replace('['.$position.'/]', $opener.$closer, $string);
                 }
             }
         }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -75,7 +75,7 @@ class PositionsControllerTest extends WebTestCase
                 'moduleId' => 999999,
                 'hookId' => $this->hookId,
                 'way' => 1,
-                'positions' => array()
+                'positions' => array(),
             )
         );
 
@@ -102,7 +102,7 @@ class PositionsControllerTest extends WebTestCase
                 'moduleId' => $this->moduleId,
                 'hookId' => $this->hookId,
                 'way' => 1,
-                'positions' => array()
+                'positions' => array(),
             )
         );
 
@@ -132,7 +132,7 @@ class PositionsControllerTest extends WebTestCase
                 'positions' => array(
                     sprintf('%d_%d', $this->otherModuleId, $this->hookId),
                     sprintf('%d_%d', $this->moduleId, $this->hookId),
-                )
+                ),
             )
         );
 
@@ -161,7 +161,7 @@ class PositionsControllerTest extends WebTestCase
                 'positions' => array(
                     sprintf('%d_%d', $this->moduleId, $this->hookId),
                     sprintf('%d_%d', $this->otherModuleId, $this->hookId),
-                )
+                ),
             )
         );
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -99,7 +99,7 @@ class AdminTabsControllerTest extends UnitTestCase
             ->method('query')
             ->with($this->callback(function ($subject) {
                 // It should check if multi-shop is active
-                return mb_strpos($subject, 'PS_MULTISHOP_FEATURE_ACTIVE') !== false;
+                return false !== mb_strpos($subject, 'PS_MULTISHOP_FEATURE_ACTIVE');
             }))
         ;
 
@@ -110,33 +110,32 @@ class AdminTabsControllerTest extends UnitTestCase
                     $builtQuery = $subject->build();
 
                     // It should select modules
-                    return mb_strpos($builtQuery, 'module') !== false;
-
+                    return false !== mb_strpos($builtQuery, 'module');
                 }
 
                 // It should select tabs
-                return mb_strpos($subject, 'tab') !== false ||
+                return false !== mb_strpos($subject, 'tab') ||
                     // It should select authorization
-                    mb_strpos($subject, 'authorization') !== false ||
-                    mb_strpos($subject, 'ps_configuration') !== false ||
-                    mb_strpos($subject, 'ps_shop') !== false ||
+                    false !== mb_strpos($subject, 'authorization') ||
+                    false !== mb_strpos($subject, 'ps_configuration') ||
+                    false !== mb_strpos($subject, 'ps_shop') ||
                     // It should select hook alias
-                    mb_strpos($subject, 'hook_alias') !== false;
-
+                    false !== mb_strpos($subject, 'hook_alias');
             }))
             ->will($this->returnCallback(function ($subject) {
-                if (mb_strpos($subject, 'authorization') !== false) {
+                if (false !== mb_strpos($subject, 'authorization')) {
                     return array();
-                }  
-                    return false;
-                
+                }
+
+                return false;
             }))
         ;
 
         parent::setupDatabaseMock($dbMock);
     }
 
-    public static function tearDownAfterClass() {
+    public static function tearDownAfterClass()
+    {
         Tools::resetRequest();
     }
 }

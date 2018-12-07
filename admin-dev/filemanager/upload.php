@@ -1,9 +1,10 @@
 <?php
-include('config/config.php');
-if ($_SESSION['verify'] != 'RESPONSIVEfilemanager') {
+
+include 'config/config.php';
+if ('RESPONSIVEfilemanager' != $_SESSION['verify']) {
     die('Forbidden');
 }
-include('include/utils.php');
+include 'include/utils.php';
 
 $_POST['path'] = $current_path.str_replace('\0', '', $_POST['path']);
 $_POST['path_thumb'] = $thumbs_base_path.str_replace("\0", '', $_POST['path_thumb']);
@@ -14,9 +15,9 @@ $storeFolderThumb = $_POST['path_thumb'];
 $path_pos = mb_strpos($storeFolder, $current_path);
 $thumb_pos = mb_strpos($_POST['path_thumb'], $thumbs_base_path);
 
-if ($path_pos === false || $thumb_pos === false
-    || preg_match('/\.{1,2}[\/|\\\]/', $_POST['path_thumb']) !== 0
-    || preg_match('/\.{1,2}[\/|\\\]/', $_POST['path']) !== 0) {
+if (false === $path_pos || false === $thumb_pos
+    || 0 !== preg_match('/\.{1,2}[\/|\\\]/', $_POST['path_thumb'])
+    || 0 !== preg_match('/\.{1,2}[\/|\\\]/', $_POST['path'])) {
     die('wrong path');
 }
 
@@ -25,12 +26,12 @@ $cycle = true;
 $max_cycles = 50;
 $i = 0;
 while ($cycle && $i < $max_cycles) {
-    $i++;
+    ++$i;
     if ($path == $current_path) {
         $cycle = false;
     }
     if (file_exists($path.'config.php')) {
-        require_once($path.'config.php');
+        require_once $path.'config.php';
         $cycle = false;
     }
     $path = fix_dirname($path).'/';
@@ -56,14 +57,14 @@ if (!empty($_FILES) && isset($_FILES['file']) && $_FILES['file']['size']) {
             $i = 1;
             $info = pathinfo($_FILES['file']['name']);
             while (file_exists($targetPath.$info['filename'].'_'.$i.'.'.$info['extension'])) {
-                $i++;
+                ++$i;
             }
             $_FILES['file']['name'] = $info['filename'].'_'.$i.'.'.$info['extension'];
         }
         $targetFile = $targetPath.$_FILES['file']['name'];
         $targetFileThumb = $targetPathThumb.$_FILES['file']['name'];
 
-        if (in_array(fix_strtolower($info['extension']), $ext_img, true) && @getimagesize($tempFile) != false) {
+        if (in_array(fix_strtolower($info['extension']), $ext_img, true) && false != @getimagesize($tempFile)) {
             $is_img = true;
         } else {
             $is_img = false;
@@ -85,14 +86,14 @@ if (!empty($_FILES) && isset($_FILES['file']) && $_FILES['file']['size']) {
                     $srcHeight = $imginfo[1];
 
                     if ($image_resizing) {
-                        if ($image_resizing_width == 0) {
-                            if ($image_resizing_height == 0) {
+                        if (0 == $image_resizing_width) {
+                            if (0 == $image_resizing_height) {
                                 $image_resizing_width = $srcWidth;
                                 $image_resizing_height = $srcHeight;
                             } else {
                                 $image_resizing_width = $image_resizing_height * $srcWidth / $srcHeight;
                             }
-                        } elseif ($image_resizing_height == 0) {
+                        } elseif (0 == $image_resizing_height) {
                             $image_resizing_height = $image_resizing_width * $srcHeight / $srcWidth;
                         }
                         $srcWidth = $image_resizing_width;
@@ -101,12 +102,12 @@ if (!empty($_FILES) && isset($_FILES['file']) && $_FILES['file']['size']) {
                     }
                     //max resizing limit control
                     $resize = false;
-                    if ($image_max_width != 0 && $srcWidth > $image_max_width) {
+                    if (0 != $image_max_width && $srcWidth > $image_max_width) {
                         $resize = true;
                         $srcHeight = $image_max_width * $srcHeight / $srcWidth;
                         $srcWidth = $image_max_width;
                     }
-                    if ($image_max_height != 0 && $srcHeight > $image_max_height) {
+                    if (0 != $image_max_height && $srcHeight > $image_max_height) {
                         $resize = true;
                         $srcWidth = $image_max_height * $srcWidth / $srcHeight;
                         $srcHeight = $image_max_height;

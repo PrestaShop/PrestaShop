@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 function ps16012_update_alias()
 {
     $step = 3000;
@@ -33,7 +32,7 @@ function ps16012_update_alias()
     if ($count_alias > 0) {
         $nb_loop = ceil($count_alias / $step);
     }
-    for ($i = 0; $i < $nb_loop; $i++) {
+    for ($i = 0; $i < $nb_loop; ++$i) {
         $sql = 'SELECT id_alias, alias, search FROM `'._DB_PREFIX_.'alias`';
         $start = intval(($i + 1) * $step);
         if ($aliass = Db::getInstance()->query($sql)) {
@@ -43,7 +42,7 @@ function ps16012_update_alias()
 					UPDATE `'._DB_PREFIX_.'alias`
 					SET alias = \''.pSQL(Tools::replaceAccentedChars($alias['alias'])).'\',
 					search = \''.pSQL(Tools::replaceAccentedChars($alias['search'])).'\'
-					WHERE id_alias = '.(int)$alias['id_alias']);
+					WHERE id_alias = '.(int) $alias['id_alias']);
                 }
             }
         }

@@ -55,10 +55,10 @@ class ProductDataProvider
     /**
      * Get a product.
      *
-     * @param int $id_product
-     * @param bool $full
-     * @param null|int $id_lang
-     * @param null|int $id_shop
+     * @param int         $id_product
+     * @param bool        $full
+     * @param null|int    $id_lang
+     * @param null|int    $id_shop
      * @param null|object $context
      *
      * @throws \LogicException If the product id is not set
@@ -101,8 +101,8 @@ class ProductDataProvider
     /**
      * Get product quantity.
      *
-     * @param int $id_product
-     * @param null|int $id_product_attribute
+     * @param int       $id_product
+     * @param null|int  $id_product_attribute
      * @param null|bool $cache_is_pack
      *
      * @return int stock
@@ -159,7 +159,7 @@ class ProductDataProvider
             'cover' => $imageData->cover ? true : false,
             'legend' => $imageData->legend,
             'format' => $imageData->image_format,
-            'base_image_url' => _THEME_PROD_DIR_ . $imageData->getImgPath(),
+            'base_image_url' => _THEME_PROD_DIR_.$imageData->getImgPath(),
         );
     }
 }

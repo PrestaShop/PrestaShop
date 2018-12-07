@@ -62,8 +62,8 @@ class EmployeeProvider implements UserProviderInterface
      *
      * @throws \Psr\Cache\InvalidArgumentException
      * @throws \Symfony\Component\Security\Core\Exception\UsernameNotFoundException
-     * @return Employee
      *
+     * @return Employee
      */
     public function loadUserByUsername($username)
     {
@@ -121,6 +121,6 @@ class EmployeeProvider implements UserProviderInterface
      */
     public function supportsClass($class)
     {
-        return $class === 'PrestaShopBundle\Security\Admin\Employee';
+        return 'PrestaShopBundle\Security\Admin\Employee' === $class;
     }
 }

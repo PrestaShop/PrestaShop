@@ -36,7 +36,7 @@ interface ImageUploaderInterface
     /**
      * Upload entity image.
      *
-     * @param int $entityId
+     * @param int          $entityId
      * @param UploadedFile $uploadedImage
      */
     public function upload($entityId, UploadedFile $uploadedImage);

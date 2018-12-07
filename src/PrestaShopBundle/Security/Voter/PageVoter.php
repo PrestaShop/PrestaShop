@@ -55,7 +55,7 @@ class PageVoter extends Voter
      * Indicates if this voter should pronounce on this attribute and subject.
      *
      * @param string $attribute Rights to test
-     * @param mixed $subject Subject to secure (a controller name)
+     * @param mixed  $subject   Subject to secure (a controller name)
      *
      * @return bool
      */
@@ -65,8 +65,8 @@ class PageVoter extends Voter
     }
 
     /**
-     * @param string $attribute Access right to test
-     * @param string $subject Controller name
+     * @param string         $attribute Access right to test
+     * @param string         $subject   Controller name
      * @param TokenInterface $token
      *
      * @return bool
@@ -84,21 +84,21 @@ class PageVoter extends Voter
      * Checks if the provided user profile is allowed to perform the requested action.
      *
      * @param string $action
-     * @param int $employeeProfileId
+     * @param int    $employeeProfileId
      *
      * @throws \Exception
-     * @return bool
      *
+     * @return bool
      */
     protected function can($action, $employeeProfileId)
     {
-        return Access::isGranted('ROLE_MOD_TAB_' . mb_strtoupper($action), $employeeProfileId);
+        return Access::isGranted('ROLE_MOD_TAB_'.mb_strtoupper($action), $employeeProfileId);
     }
 
     /**
      * Builds the action name by joining subject and attribute.
      *
-     * @param string $subject Subject the attribute is performed onto (usually a controller name)
+     * @param string $subject   Subject the attribute is performed onto (usually a controller name)
      * @param string $attribute
      *
      * @return string
@@ -108,10 +108,10 @@ class PageVoter extends Voter
         $action = $subject;
 
         // add underscore to join if needed
-        if (mb_substr($action, -1) !== '_') {
+        if ('_' !== mb_substr($action, -1)) {
             $action .= '_';
         }
 
-        return $action . $attribute;
+        return $action.$attribute;
     }
 }

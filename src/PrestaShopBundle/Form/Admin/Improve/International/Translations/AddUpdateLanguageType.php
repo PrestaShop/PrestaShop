@@ -44,8 +44,8 @@ class AddUpdateLanguageType extends TranslatorAwareType
 
     /**
      * @param TranslatorInterface $translator
-     * @param array $locales
-     * @param array $nonInstalledLocalizationChoices
+     * @param array               $locales
+     * @param array               $nonInstalledLocalizationChoices
      */
     public function __construct(
         TranslatorInterface $translator,

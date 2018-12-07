@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -83,14 +83,15 @@ class ModuleTemplateLoaderTest extends TestCase
 
     /**
      * @dataProvider getSourceContextsProvider
-     * @param string $sourceContent The template file content.
-     * @param string $twigPathAsked The Twig path asked during Twig template rendering.
-     * @param string $successMessage In case of failure, describe what is expected.
+     *
+     * @param string $sourceContent  the template file content
+     * @param string $twigPathAsked  the Twig path asked during Twig template rendering
+     * @param string $successMessage in case of failure, describe what is expected
      */
     public function testGetSourceContext($sourceContent, $twigPathAsked, $successMessage)
     {
         self::assertEquals(
-            $sourceContent . PHP_EOL,
+            $sourceContent.PHP_EOL,
             $this->loader->getSourceContext($twigPathAsked)->getCode(),
             $successMessage
         );

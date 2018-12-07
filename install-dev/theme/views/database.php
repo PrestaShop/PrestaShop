@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
- $this->displayTemplate('header') ?>
+ $this->displayTemplate('header'); ?>
 
 <!-- Database configuration -->
 <div id="dbPart">
@@ -37,32 +37,32 @@
 	<div id="formCheckSQL">
 		<p class="first" style="margin-top: 15px;">
 			<label for="dbServer"><?php echo $this->translator->trans('Database server address', array(), 'Install'); ?> </label>
-			<input size="25" class="text" type="text" id="dbServer" name="dbServer" value="<?php echo htmlspecialchars($this->database_server) ?>" />
+			<input size="25" class="text" type="text" id="dbServer" name="dbServer" value="<?php echo htmlspecialchars($this->database_server); ?>" />
 			<span class="userInfos aligned"><?php echo $this->translator->trans('The default port is 3306. To use a different port, add the port number at the end of your server\'s address i.e ":4242".', array(), 'Install'); ?></span>
 		</p>
 		<p>
 			<label for="dbName"><?php echo $this->translator->trans('Database name', array(), 'Install'); ?> </label>
-			<input size="10" class="text" type="text" id="dbName" name="dbName" value="<?php echo htmlspecialchars($this->database_name) ?>" />
+			<input size="10" class="text" type="text" id="dbName" name="dbName" value="<?php echo htmlspecialchars($this->database_name); ?>" />
 		</p>
 		<p>
 			<label for="dbLogin"><?php echo $this->translator->trans('Database login', array(), 'Install'); ?> </label>
-			<input class="text" size="10" type="text" id="dbLogin" name="dbLogin" value="<?php echo htmlspecialchars($this->database_login) ?>" />
+			<input class="text" size="10" type="text" id="dbLogin" name="dbLogin" value="<?php echo htmlspecialchars($this->database_login); ?>" />
 		</p>
 		<p>
 			<label for="dbPassword"><?php echo $this->translator->trans('Database password', array(), 'Install'); ?> </label>
-			<input class="text" size="10" type="password" id="dbPassword" name="dbPassword" value="<?php echo htmlspecialchars($this->database_password) ?>" />
+			<input class="text" size="10" type="password" id="dbPassword" name="dbPassword" value="<?php echo htmlspecialchars($this->database_password); ?>" />
 		</p>
 		<!--
 		<p>
 			<label for="dbEngine"><?php echo $this->translator->trans('Database Engine', array(), 'Install'); ?></label>
 			<select id="dbEngine" name="dbEngine">
-				<option value="InnoDB" <?php if ($this->database_engine == 'InnoDB'): ?>selected="selected"<?php endif; ?>>InnoDB</option>
-				<option value="MyISAM" <?php if ($this->database_engine == 'MyISAM'): ?>selected="selected"<?php endif; ?>>MyISAM</option>
+				<option value="InnoDB" <?php if ('InnoDB' == $this->database_engine): ?>selected="selected"<?php endif; ?>>InnoDB</option>
+				<option value="MyISAM" <?php if ('MyISAM' == $this->database_engine): ?>selected="selected"<?php endif; ?>>MyISAM</option>
 			</select>
 		</p>-->
 		<p>
 			<label for="db_prefix"><?php echo $this->translator->trans('Tables prefix', array(), 'Install'); ?></label>
-			<input class="text" type="text" id="db_prefix" name="db_prefix" value="<?php echo htmlspecialchars($this->database_prefix) ?>" />
+			<input class="text" type="text" id="db_prefix" name="db_prefix" value="<?php echo htmlspecialchars($this->database_prefix); ?>" />
 		</p>
 		<?php if (_PS_MODE_DEV_): ?>
 			<p>
@@ -77,11 +77,11 @@
 		<input class="text" type="hidden" id="rewrite_engine" name="rewrite_engine" value="0" />
 
 		<?php if ($this->errors): ?>
-			<p id="dbResultCheck" class="errorBlock"><?php echo implode('<br />', $this->errors) ?></p>
+			<p id="dbResultCheck" class="errorBlock"><?php echo implode('<br />', $this->errors); ?></p>
 		<?php else: ?>
 			<p id="dbResultCheck" style="display: none;"></p>
 		<?php endif; ?>
 	</div>
 </div>
 
-<?php $this->displayTemplate('footer') ?>
+<?php $this->displayTemplate('footer'); ?>

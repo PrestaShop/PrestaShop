@@ -68,7 +68,7 @@ class ProductShipping extends CommonAbstractType
         );
         $this->carriersChoices = array();
         foreach ($carriers as $carrier) {
-            $this->carriersChoices[$carrier['name'] . ' (' . $carrier['delay'] . ')'] = $carrier['id_reference'];
+            $this->carriersChoices[$carrier['name'].' ('.$carrier['delay'].')'] = $carrier['id_reference'];
         }
     }
 
@@ -208,7 +208,7 @@ class ProductShipping extends CommonAbstractType
 
         foreach ($this->warehouses as $warehouse) {
             $builder->add(
-                'warehouse_combination_' . $warehouse['id_warehouse'],
+                'warehouse_combination_'.$warehouse['id_warehouse'],
                 CollectionType::class,
                 array(
                     'entry_type' => 'PrestaShopBundle\Form\Admin\Product\ProductWarehouseCombination',

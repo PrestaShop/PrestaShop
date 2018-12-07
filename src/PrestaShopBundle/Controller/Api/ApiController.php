@@ -79,7 +79,7 @@ abstract class ApiController
         $decodedContent = json_decode($content, true);
 
         $jsonLastError = json_last_error();
-        if ($jsonLastError !== JSON_ERROR_NONE) {
+        if (JSON_ERROR_NONE !== $jsonLastError) {
             throw new BadRequestHttpException('The request body should be a valid JSON content');
         }
 
@@ -104,9 +104,9 @@ abstract class ApiController
     /**
      * Add additional info to JSON return.
      *
-     * @param Request $request
+     * @param Request                    $request
      * @param null|QueryParamsCollection $queryParams
-     * @param array $headers
+     * @param array                      $headers
      *
      * @return array
      */
@@ -168,11 +168,11 @@ abstract class ApiController
     }
 
     /**
-     * @param Request $request
+     * @param Request                    $request
      * @param null|QueryParamsCollection $queryParams
-     * @param null $data
-     * @param int $status
-     * @param array $headers
+     * @param null                       $data
+     * @param int                        $status
+     * @param array                      $headers
      *
      * @return JsonResponse
      */

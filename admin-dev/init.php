@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 ob_start();
 $timerStart = microtime(true);
 
@@ -42,13 +41,13 @@ try {
 
     $iso = $context->language->iso_code;
     if (file_exists(_PS_TRANSLATIONS_DIR_.$iso.'/errors.php')) {
-        include(_PS_TRANSLATIONS_DIR_.$iso.'/errors.php');
+        include _PS_TRANSLATIONS_DIR_.$iso.'/errors.php';
     }
     if (file_exists(_PS_TRANSLATIONS_DIR_.$iso.'/fields.php')) {
-        include(_PS_TRANSLATIONS_DIR_.$iso.'/fields.php');
+        include _PS_TRANSLATIONS_DIR_.$iso.'/fields.php';
     }
     if (file_exists(_PS_TRANSLATIONS_DIR_.$iso.'/admin.php')) {
-        include(_PS_TRANSLATIONS_DIR_.$iso.'/admin.php');
+        include _PS_TRANSLATIONS_DIR_.$iso.'/admin.php';
     }
 
     /* Server Params */
@@ -75,7 +74,7 @@ try {
         } else {
             // if default theme doesn't exists, try to find one, otherwise throw exception
             foreach (scandir($path, SCANDIR_SORT_NONE) as $theme) {
-                if ($theme[0] != '.' && file_exists($path.$theme.'/template/layout.tpl')) {
+                if ('.' != $theme[0] && file_exists($path.$theme.'/template/layout.tpl')) {
                     $context->employee->bo_theme = $theme;
                     break;
                 }
@@ -89,25 +88,24 @@ try {
     }
 
     // Change shop context ?
-    if (Shop::isFeatureActive() && Tools::getValue('setShopContext') !== false) {
+    if (Shop::isFeatureActive() && false !== Tools::getValue('setShopContext')) {
         $context->cookie->shopContext = Tools::getValue('setShopContext');
         $url = parse_url($_SERVER['REQUEST_URI']);
         $query = (isset($url['query'])) ? $url['query'] : '';
         parse_str($query, $parseQuery);
         unset($parseQuery['setShopContext']);
-        Tools::redirectAdmin($url['path'] . '?' . http_build_query($parseQuery, '', '&'));
+        Tools::redirectAdmin($url['path'].'?'.http_build_query($parseQuery, '', '&'));
     }
 
     $context->currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
-
 
     if ($context->employee->isLoggedBack()) {
         $shop_id = '';
         Shop::setContext(Shop::CONTEXT_ALL);
         if ($context->cookie->shopContext) {
             $split = explode('-', $context->cookie->shopContext);
-            if (count($split) == 2) {
-                if ($split[0] == 'g') {
+            if (2 == count($split)) {
+                if ('g' == $split[0]) {
                     if ($context->employee->hasAuthOnShopGroup($split[1])) {
                         Shop::setContext(Shop::CONTEXT_GROUP, $split[1]);
                     } else {

@@ -64,11 +64,11 @@ final class ImportDataConfigurationFormDataProvider implements ImportFormDataPro
     private $dataMatchSaver;
 
     /**
-     * @param ImportDirectory $importDirectory
+     * @param ImportDirectory                   $importDirectory
      * @param DataRowCollectionFactoryInterface $dataRowCollectionFactory
-     * @param ImportMatchRepository $importMatchRepository
-     * @param DataMatchSaver $dataMatchSaver
-     * @param array $entityFieldChoices
+     * @param ImportMatchRepository             $importMatchRepository
+     * @param DataMatchSaver                    $dataMatchSaver
+     * @param array                             $entityFieldChoices
      */
     public function __construct(
         ImportDirectory $importDirectory,
@@ -89,7 +89,7 @@ final class ImportDataConfigurationFormDataProvider implements ImportFormDataPro
      */
     public function getData(ImportConfigInterface $importConfig)
     {
-        $importFile = new SplFileInfo($this->importDirectory . $importConfig->getFileName());
+        $importFile = new SplFileInfo($this->importDirectory.$importConfig->getFileName());
         $dataRowCollection = $this->dataRowCollectionFactory->buildFromFile($importFile, 1);
 
         // Getting the number of cells in the first row

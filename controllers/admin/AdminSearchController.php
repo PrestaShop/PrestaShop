@@ -44,7 +44,7 @@ class AdminSearchControllerCore extends AdminController
 
         /* 1.6 code compatibility, as we use HelperList, we need to handle click to go to product */
         $action = Tools::getValue('action');
-        if ($action == 'redirectToProduct') {
+        if ('redirectToProduct' == $action) {
             $id_product = (int) Tools::getValue('id_product');
             $link = $this->context->link->getAdminLink('AdminProducts', false, array('id_product' => $id_product));
             Tools::redirectAdmin($link);
@@ -57,11 +57,11 @@ class AdminSearchControllerCore extends AdminController
             }
 
             /* Product research */
-            if (!$searchType || $searchType == 1) {
+            if (!$searchType || 1 == $searchType) {
                 /* Handle product ID */
-                if ($searchType == 1 && (int) $this->query && Validate::isUnsignedInt((int) $this->query)) {
+                if (1 == $searchType && (int) $this->query && Validate::isUnsignedInt((int) $this->query)) {
                     if (($product = new Product($this->query)) && Validate::isLoadedObject($product)) {
-                        Tools::redirectAdmin('index.php?tab=AdminProducts&id_product=' . (int) ($product->id) . '&token=' . Tools::getAdminTokenLite('AdminProducts'));
+                        Tools::redirectAdmin('index.php?tab=AdminProducts&id_product='.(int) ($product->id).'&token='.Tools::getAdminTokenLite('AdminProducts'));
                     }
                 }
 
@@ -70,12 +70,12 @@ class AdminSearchControllerCore extends AdminController
             }
 
             /* Customer */
-            if (!$searchType || $searchType == 2 || $searchType == 6) {
-                if (!$searchType || $searchType == 2) {
+            if (!$searchType || 2 == $searchType || 6 == $searchType) {
+                if (!$searchType || 2 == $searchType) {
                     /* Handle customer ID */
                     if ($searchType && (int) $this->query && Validate::isUnsignedInt((int) $this->query)) {
                         if (($customer = new Customer($this->query)) && Validate::isLoadedObject($customer)) {
-                            Tools::redirectAdmin('index.php?tab=AdminCustomers&id_customer=' . (int) $customer->id . '&viewcustomer' . '&token=' . Tools::getAdminToken('AdminCustomers' . (int) Tab::getIdFromClassName('AdminCustomers') . (int) $this->context->employee->id));
+                            Tools::redirectAdmin('index.php?tab=AdminCustomers&id_customer='.(int) $customer->id.'&viewcustomer'.'&token='.Tools::getAdminToken('AdminCustomers'.(int) Tab::getIdFromClassName('AdminCustomers').(int) $this->context->employee->id));
                         }
                     }
 
@@ -83,21 +83,21 @@ class AdminSearchControllerCore extends AdminController
                     $this->searchCustomer();
                 }
 
-                if ($searchType == 6) {
+                if (6 == $searchType) {
                     $this->searchIP();
                 }
             }
 
             /* Order */
-            if (!$searchType || $searchType == 3) {
+            if (!$searchType || 3 == $searchType) {
                 if (Validate::isUnsignedInt(trim($this->query)) && (int) $this->query && ($order = new Order((int) $this->query)) && Validate::isLoadedObject($order)) {
-                    if ($searchType == 3) {
-                        Tools::redirectAdmin('index.php?tab=AdminOrders&id_order=' . (int) $order->id . '&vieworder' . '&token=' . Tools::getAdminTokenLite('AdminOrders'));
+                    if (3 == $searchType) {
+                        Tools::redirectAdmin('index.php?tab=AdminOrders&id_order='.(int) $order->id.'&vieworder'.'&token='.Tools::getAdminTokenLite('AdminOrders'));
                     } else {
                         $row = get_object_vars($order);
                         $row['id_order'] = $row['id'];
                         $customer = $order->getCustomer();
-                        $row['customer'] = $customer->firstname . ' ' . $customer->lastname;
+                        $row['customer'] = $customer->firstname.' '.$customer->lastname;
                         $order_state = $order->getCurrentOrderState();
                         $row['osname'] = $order_state->name[$this->context->language->id];
                         $this->_list['orders'] = array($row);
@@ -105,8 +105,8 @@ class AdminSearchControllerCore extends AdminController
                 } else {
                     $orders = Order::getByReference($this->query);
                     $nb_orders = count($orders);
-                    if ($nb_orders == 1 && $searchType == 3) {
-                        Tools::redirectAdmin('index.php?tab=AdminOrders&id_order=' . (int) $orders[0]->id . '&vieworder' . '&token=' . Tools::getAdminTokenLite('AdminOrders'));
+                    if (1 == $nb_orders && 3 == $searchType) {
+                        Tools::redirectAdmin('index.php?tab=AdminOrders&id_order='.(int) $orders[0]->id.'&vieworder'.'&token='.Tools::getAdminTokenLite('AdminOrders'));
                     } elseif ($nb_orders) {
                         $this->_list['orders'] = array();
                         foreach ($orders as $order) {
@@ -114,40 +114,40 @@ class AdminSearchControllerCore extends AdminController
                             $row = get_object_vars($order);
                             $row['id_order'] = $row['id'];
                             $customer = $order->getCustomer();
-                            $row['customer'] = $customer->firstname . ' ' . $customer->lastname;
+                            $row['customer'] = $customer->firstname.' '.$customer->lastname;
                             $order_state = $order->getCurrentOrderState();
                             $row['osname'] = $order_state->name[$this->context->language->id];
                             $this->_list['orders'][] = $row;
                         }
-                    } elseif ($searchType == 3) {
-                        $this->errors[] = $this->trans('No order was found with this ID:', array(), 'Admin.Orderscustomers.Notification') . ' ' . Tools::htmlentitiesUTF8($this->query);
+                    } elseif (3 == $searchType) {
+                        $this->errors[] = $this->trans('No order was found with this ID:', array(), 'Admin.Orderscustomers.Notification').' '.Tools::htmlentitiesUTF8($this->query);
                     }
                 }
             }
 
             /* Invoices */
-            if ($searchType == 4) {
+            if (4 == $searchType) {
                 if (Validate::isOrderInvoiceNumber($this->query) && ($invoice = OrderInvoice::getInvoiceByNumber($this->query))) {
-                    Tools::redirectAdmin($this->context->link->getAdminLink('AdminPdf') . '&submitAction=generateInvoicePDF&id_order=' . (int) ($invoice->id_order));
+                    Tools::redirectAdmin($this->context->link->getAdminLink('AdminPdf').'&submitAction=generateInvoicePDF&id_order='.(int) ($invoice->id_order));
                 }
-                $this->errors[] = $this->trans('No invoice was found with this ID:', array(), 'Admin.Orderscustomers.Notification') . ' ' . Tools::htmlentitiesUTF8($this->query);
+                $this->errors[] = $this->trans('No invoice was found with this ID:', array(), 'Admin.Orderscustomers.Notification').' '.Tools::htmlentitiesUTF8($this->query);
             }
 
             /* Cart */
-            if ($searchType == 5) {
+            if (5 == $searchType) {
                 if ((int) $this->query && Validate::isUnsignedInt((int) $this->query) && ($cart = new Cart($this->query)) && Validate::isLoadedObject($cart)) {
-                    Tools::redirectAdmin('index.php?tab=AdminCarts&id_cart=' . (int) ($cart->id) . '&viewcart' . '&token=' . Tools::getAdminToken('AdminCarts' . (int) (Tab::getIdFromClassName('AdminCarts')) . (int) $this->context->employee->id));
+                    Tools::redirectAdmin('index.php?tab=AdminCarts&id_cart='.(int) ($cart->id).'&viewcart'.'&token='.Tools::getAdminToken('AdminCarts'.(int) (Tab::getIdFromClassName('AdminCarts')).(int) $this->context->employee->id));
                 }
-                $this->errors[] = $this->trans('No cart was found with this ID:', array(), 'Admin.Orderscustomers.Notification') . ' ' . Tools::htmlentitiesUTF8($this->query);
+                $this->errors[] = $this->trans('No cart was found with this ID:', array(), 'Admin.Orderscustomers.Notification').' '.Tools::htmlentitiesUTF8($this->query);
             }
             /* IP */
             // 6 - but it is included in the customer block
 
             /* Module search */
-            if (!$searchType || $searchType == 7) {
+            if (!$searchType || 7 == $searchType) {
                 /* Handle module name */
-                if ($searchType == 7 && Validate::isModuleName($this->query) && ($module = Module::getInstanceByName($this->query)) && Validate::isLoadedObject($module)) {
-                    Tools::redirectAdmin('index.php?tab=AdminModules&tab_module=' . $module->tab . '&module_name=' . $module->name . '&anchor=' . ucfirst($module->name) . '&token=' . Tools::getAdminTokenLite('AdminModules'));
+                if (7 == $searchType && Validate::isModuleName($this->query) && ($module = Module::getInstanceByName($this->query)) && Validate::isLoadedObject($module)) {
+                    Tools::redirectAdmin('index.php?tab=AdminModules&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor='.ucfirst($module->name).'&token='.Tools::getAdminTokenLite('AdminModules'));
                 }
 
                 /* Normal catalog search */
@@ -160,7 +160,7 @@ class AdminSearchControllerCore extends AdminController
     public function searchIP()
     {
         if (!ip2long(trim($this->query))) {
-            $this->errors[] = $this->trans('This is not a valid IP address:', array(), 'Admin.Shopparameters.Notification') . ' ' . Tools::htmlentitiesUTF8($this->query);
+            $this->errors[] = $this->trans('This is not a valid IP address:', array(), 'Admin.Shopparameters.Notification').' '.Tools::htmlentitiesUTF8($this->query);
 
             return;
         }
@@ -194,8 +194,8 @@ class AdminSearchControllerCore extends AdminController
         $this->_list['modules'] = array();
         $all_modules = Module::getModulesOnDisk(true, true, Context::getContext()->employee->id);
         foreach ($all_modules as $module) {
-            if (mb_stripos($module->name, $this->query) !== false || mb_stripos($module->displayName, $this->query) !== false || mb_stripos($module->description, $this->query) !== false) {
-                $module->linkto = 'index.php?tab=AdminModules&tab_module=' . $module->tab . '&module_name=' . $module->name . '&anchor=' . ucfirst($module->name) . '&token=' . Tools::getAdminTokenLite('AdminModules');
+            if (false !== mb_stripos($module->name, $this->query) || false !== mb_stripos($module->displayName, $this->query) || false !== mb_stripos($module->description, $this->query)) {
+                $module->linkto = 'index.php?tab=AdminModules&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor='.ucfirst($module->name).'&token='.Tools::getAdminTokenLite('AdminModules');
                 $this->_list['modules'][] = $module;
             }
         }
@@ -203,7 +203,7 @@ class AdminSearchControllerCore extends AdminController
         if (!is_numeric(trim($this->query)) && !Validate::isEmail($this->query)) {
             $iso_lang = Tools::strtolower(Context::getContext()->language->iso_code);
             $iso_country = Tools::strtolower(Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT')));
-            if (($json_content = Tools::file_get_contents('https://api-addons.prestashop.com/' . _PS_VERSION_ . '/search/' . urlencode($this->query) . '/' . $iso_country . '/' . $iso_lang . '/')) != false) {
+            if (false != ($json_content = Tools::file_get_contents('https://api-addons.prestashop.com/'._PS_VERSION_.'/search/'.urlencode($this->query).'/'.$iso_country.'/'.$iso_lang.'/'))) {
                 $results = json_decode($json_content, true);
                 if (isset($results['id'])) {
                     $this->_list['addons'] = array($results);
@@ -224,7 +224,7 @@ class AdminSearchControllerCore extends AdminController
         $this->_list['features'] = array();
 
         global $_LANGADM;
-        if ($_LANGADM === null) {
+        if (null === $_LANGADM) {
             return;
         }
 
@@ -233,12 +233,12 @@ class AdminSearchControllerCore extends AdminController
         $result = Db::getInstance()->executeS(
             '
 		SELECT class_name, name
-		FROM ' . _DB_PREFIX_ . 'tab t
-		INNER JOIN ' . _DB_PREFIX_ . 'tab_lang tl ON (t.id_tab = tl.id_tab AND tl.id_lang = ' . (int) $this->context->employee->id_lang . ')
-		WHERE active = 1' . (defined('_PS_HOST_MODE_') ? ' AND t.`hide_host_mode` = 0' : '')
+		FROM '._DB_PREFIX_.'tab t
+		INNER JOIN '._DB_PREFIX_.'tab_lang tl ON (t.id_tab = tl.id_tab AND tl.id_lang = '.(int) $this->context->employee->id_lang.')
+		WHERE active = 1'.(defined('_PS_HOST_MODE_') ? ' AND t.`hide_host_mode` = 0' : '')
         );
         foreach ($result as $row) {
-            if (Access::isGranted('ROLE_MOD_TAB_' . mb_strtoupper($row['class_name']) . '_READ', $this->context->employee->id_profile)) {
+            if (Access::isGranted('ROLE_MOD_TAB_'.mb_strtoupper($row['class_name']).'_READ', $this->context->employee->id_profile)) {
                 $tabs[mb_strtolower($row['class_name'])] = $row['name'];
                 $key_match[mb_strtolower($row['class_name'])] = $row['class_name'];
             }
@@ -246,7 +246,7 @@ class AdminSearchControllerCore extends AdminController
 
         $this->_list['features'] = array();
         foreach ($_LANGADM as $key => $value) {
-            if (mb_stripos($value, $this->query) !== false) {
+            if (false !== mb_stripos($value, $this->query)) {
                 $value = stripslashes($value);
                 $key = mb_strtolower(mb_substr($key, 0, -32));
                 if (in_array($key, array('AdminTab', 'index'), true)) {
@@ -283,7 +283,7 @@ class AdminSearchControllerCore extends AdminController
         $genders = array(0 => $this->trans('?', array(), 'Admin.Global'));
         foreach (Gender::getGenders() as $gender) {
             /* @var Gender $gender */
-            $genders_icon[$gender->id] = '../genders/' . (int) $gender->id . '.jpg';
+            $genders_icon[$gender->id] = '../genders/'.(int) $gender->id.'.jpg';
             $genders[$gender->id] = $gender->name;
         }
         $this->fields_list['customers'] = (array(
@@ -337,120 +337,119 @@ class AdminSearchControllerCore extends AdminController
 
         if (count($this->errors)) {
             return parent::renderView();
-        }  
-            $nb_results = 0;
-            foreach ($this->_list as $list) {
-                if ($list != false) {
-                    $nb_results += count($list);
-                }
+        }
+        $nb_results = 0;
+        foreach ($this->_list as $list) {
+            if (false != $list) {
+                $nb_results += count($list);
             }
-            $this->tpl_view_vars['nb_results'] = $nb_results;
+        }
+        $this->tpl_view_vars['nb_results'] = $nb_results;
 
-            if ($this->isCountableAndNotEmpty($this->_list, 'features')) {
-                $this->tpl_view_vars['features'] = $this->_list['features'];
-            }
+        if ($this->isCountableAndNotEmpty($this->_list, 'features')) {
+            $this->tpl_view_vars['features'] = $this->_list['features'];
+        }
 
-            if ($this->isCountableAndNotEmpty($this->_list, 'categories')) {
-                $categories = array();
-                foreach ($this->_list['categories'] as $category) {
-                    $categories[] = Tools::getPath(
+        if ($this->isCountableAndNotEmpty($this->_list, 'categories')) {
+            $categories = array();
+            foreach ($this->_list['categories'] as $category) {
+                $categories[] = Tools::getPath(
                         $this->context->link->getAdminLink('AdminCategories', false),
                         $category['id_category']
                     );
-                }
-                $this->tpl_view_vars['categories'] = $categories;
+            }
+            $this->tpl_view_vars['categories'] = $categories;
+        }
+
+        if ($this->isCountableAndNotEmpty($this->_list, 'products')) {
+            $view = '';
+            $this->initProductList();
+
+            $helper = new HelperList();
+            $helper->shopLinkType = '';
+            $helper->simple_header = true;
+            $helper->identifier = 'id_product';
+            $helper->actions = array('edit');
+            $helper->show_toolbar = false;
+            $helper->table = 'product';
+            /* 1.6 code compatibility, as we use HelperList, we need to handle click to go to product, a better way need to be find */
+            $helper->currentIndex = $this->context->link->getAdminLink('AdminSearch', false);
+            $helper->currentIndex .= '&action=redirectToProduct';
+
+            $query = trim(Tools::getValue('bo_query'));
+            $searchType = (int) Tools::getValue('bo_search_type');
+
+            if ($query) {
+                $helper->currentIndex .= '&bo_query='.$query.'&bo_search_type='.$searchType;
             }
 
-            if ($this->isCountableAndNotEmpty($this->_list, 'products')) {
-                $view = '';
-                $this->initProductList();
+            $helper->token = Tools::getAdminTokenLite('AdminSearch');
 
-                $helper = new HelperList();
-                $helper->shopLinkType = '';
-                $helper->simple_header = true;
-                $helper->identifier = 'id_product';
-                $helper->actions = array('edit');
-                $helper->show_toolbar = false;
-                $helper->table = 'product';
-                /* 1.6 code compatibility, as we use HelperList, we need to handle click to go to product, a better way need to be find */
-                $helper->currentIndex = $this->context->link->getAdminLink('AdminSearch', false);
-                $helper->currentIndex .= '&action=redirectToProduct';
-
-                $query = trim(Tools::getValue('bo_query'));
-                $searchType = (int) Tools::getValue('bo_search_type');
-
-                if ($query) {
-                    $helper->currentIndex .= '&bo_query=' . $query . '&bo_search_type=' . $searchType;
-                }
-
-                $helper->token = Tools::getAdminTokenLite('AdminSearch');
-
-                if ($this->_list['products']) {
-                    $view = $helper->generateList($this->_list['products'], $this->fields_list['products']);
-                }
-
-                $this->tpl_view_vars['products'] = $view;
-                $this->tpl_view_vars['productsCount'] = count($this->_list['products']);
+            if ($this->_list['products']) {
+                $view = $helper->generateList($this->_list['products'], $this->fields_list['products']);
             }
 
-            if ($this->isCountableAndNotEmpty($this->_list, 'customers')) {
-                $view = '';
-                $this->initCustomerList();
+            $this->tpl_view_vars['products'] = $view;
+            $this->tpl_view_vars['productsCount'] = count($this->_list['products']);
+        }
 
-                $helper = new HelperList();
-                $helper->shopLinkType = '';
-                $helper->simple_header = true;
-                $helper->identifier = 'id_customer';
-                $helper->actions = array('edit', 'view');
-                $helper->show_toolbar = false;
-                $helper->table = 'customer';
-                $helper->currentIndex = $this->context->link->getAdminLink('AdminCustomers', false);
-                $helper->token = Tools::getAdminTokenLite('AdminCustomers');
+        if ($this->isCountableAndNotEmpty($this->_list, 'customers')) {
+            $view = '';
+            $this->initCustomerList();
 
-                foreach ($this->_list['customers'] as $key => $val) {
-                    $this->_list['customers'][$key]['orders'] = Order::getCustomerNbOrders((int) $val['id_customer']);
-                }
+            $helper = new HelperList();
+            $helper->shopLinkType = '';
+            $helper->simple_header = true;
+            $helper->identifier = 'id_customer';
+            $helper->actions = array('edit', 'view');
+            $helper->show_toolbar = false;
+            $helper->table = 'customer';
+            $helper->currentIndex = $this->context->link->getAdminLink('AdminCustomers', false);
+            $helper->token = Tools::getAdminTokenLite('AdminCustomers');
 
-                $view = $helper->generateList($this->_list['customers'], $this->fields_list['customers']);
-                $this->tpl_view_vars['customers'] = $view;
-                $this->tpl_view_vars['customerCount'] = count($this->_list['customers']);
+            foreach ($this->_list['customers'] as $key => $val) {
+                $this->_list['customers'][$key]['orders'] = Order::getCustomerNbOrders((int) $val['id_customer']);
             }
 
-            if ($this->isCountableAndNotEmpty($this->_list, 'orders')) {
-                $view = '';
-                $this->initOrderList();
+            $view = $helper->generateList($this->_list['customers'], $this->fields_list['customers']);
+            $this->tpl_view_vars['customers'] = $view;
+            $this->tpl_view_vars['customerCount'] = count($this->_list['customers']);
+        }
 
-                $helper = new HelperList();
-                $helper->shopLinkType = '';
-                $helper->simple_header = true;
-                $helper->identifier = 'id_order';
-                $helper->actions = array('view');
-                $helper->show_toolbar = false;
-                $helper->table = 'order';
-                $helper->currentIndex = $this->context->link->getAdminLink('AdminOrders', false);
-                $helper->token = Tools::getAdminTokenLite('AdminOrders');
+        if ($this->isCountableAndNotEmpty($this->_list, 'orders')) {
+            $view = '';
+            $this->initOrderList();
 
-                $view = $helper->generateList($this->_list['orders'], $this->fields_list['orders']);
-                $this->tpl_view_vars['orders'] = $view;
-            }
+            $helper = new HelperList();
+            $helper->shopLinkType = '';
+            $helper->simple_header = true;
+            $helper->identifier = 'id_order';
+            $helper->actions = array('view');
+            $helper->show_toolbar = false;
+            $helper->table = 'order';
+            $helper->currentIndex = $this->context->link->getAdminLink('AdminOrders', false);
+            $helper->token = Tools::getAdminTokenLite('AdminOrders');
 
-            if ($this->isCountableAndNotEmpty($this->_list, 'modules')) {
-                $this->tpl_view_vars['modules'] = $this->_list['modules'];
-            }
+            $view = $helper->generateList($this->_list['orders'], $this->fields_list['orders']);
+            $this->tpl_view_vars['orders'] = $view;
+        }
 
-            if ($this->isCountableAndNotEmpty($this->_list, 'addons')) {
-                $this->tpl_view_vars['addons'] = $this->_list['addons'];
-            }
+        if ($this->isCountableAndNotEmpty($this->_list, 'modules')) {
+            $this->tpl_view_vars['modules'] = $this->_list['modules'];
+        }
 
-            return parent::renderView();
-        
+        if ($this->isCountableAndNotEmpty($this->_list, 'addons')) {
+            $this->tpl_view_vars['addons'] = $this->_list['addons'];
+        }
+
+        return parent::renderView();
     }
 
     /**
      * Check if key is present in array, is countable and has data.
      *
-     * @param array $array Array
-     * @param string $key Key
+     * @param array  $array Array
+     * @param string $key   Key
      *
      * @return bool
      */

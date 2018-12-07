@@ -55,9 +55,9 @@ final class PaymentRestrictionsConfigurator implements PaymentRestrictionsConfig
     private $paymentModuleProvider;
 
     /**
-     * @param Connection $connection
-     * @param string $databasePrefix
-     * @param int $shopId
+     * @param Connection                         $connection
+     * @param string                             $databasePrefix
+     * @param int                                $shopId
      * @param PaymentModuleListProviderInterface $paymentModuleProvider
      */
     public function __construct(
@@ -106,7 +106,7 @@ final class PaymentRestrictionsConfigurator implements PaymentRestrictionsConfig
 
     /**
      * @param string $restrictionType
-     * @param array $restrictions
+     * @param array  $restrictions
      */
     private function configureRestrictions($restrictionType, array $restrictions)
     {
@@ -120,15 +120,15 @@ final class PaymentRestrictionsConfigurator implements PaymentRestrictionsConfig
      * Clear current configuration for given restriction type.
      *
      * @param string $restrictionType
-     * @param int[] $moduleIds
+     * @param int[]  $moduleIds
      *
      * @return int
      */
     private function clearCurrentConfiguration($restrictionType, array $moduleIds)
     {
         $clearSql = '
-            DELETE FROM ' . $this->getTableNameForRestriction($restrictionType) . '
-            WHERE id_shop = ' . (int) $this->shopId . ' AND id_module IN (' . implode(',', array_map('intval', $moduleIds)) . ')
+            DELETE FROM '.$this->getTableNameForRestriction($restrictionType).'
+            WHERE id_shop = '.(int) $this->shopId.' AND id_module IN ('.implode(',', array_map('intval', $moduleIds)).')
         ';
 
         return $this->connection->executeUpdate($clearSql);
@@ -138,7 +138,7 @@ final class PaymentRestrictionsConfigurator implements PaymentRestrictionsConfig
      * Insert new configuration for given restriction type.
      *
      * @param string $restrictionType
-     * @param array $newConfiguration
+     * @param array  $newConfiguration
      */
     private function insertNewConfiguration($restrictionType, $newConfiguration)
     {
@@ -146,9 +146,9 @@ final class PaymentRestrictionsConfigurator implements PaymentRestrictionsConfig
             $fieldName = 'carrier' === $restrictionType ? 'reference' : $restrictionType;
 
             $this->connection->executeUpdate('
-                INSERT INTO `' . $this->getTableNameForRestriction($restrictionType) . '`
-                (`id_module`, `id_shop`, `id_' . $fieldName . '`)
-                VALUES ' . implode(',', $newConfiguration));
+                INSERT INTO `'.$this->getTableNameForRestriction($restrictionType).'`
+                (`id_module`, `id_shop`, `id_'.$fieldName.'`)
+                VALUES '.implode(',', $newConfiguration));
         }
     }
 
@@ -161,7 +161,7 @@ final class PaymentRestrictionsConfigurator implements PaymentRestrictionsConfig
      */
     private function getTableNameForRestriction($restrictionType)
     {
-        return $this->databasePrefix . 'module_' . $restrictionType;
+        return $this->databasePrefix.'module_'.$restrictionType;
     }
 
     /**
@@ -189,7 +189,7 @@ final class PaymentRestrictionsConfigurator implements PaymentRestrictionsConfig
                 }
 
                 foreach ($restriction as $restrictionValues) {
-                    $insertValues[] = '(' . (int) $moduleId . ', ' . (int) $this->shopId . ', ' . (int) $restrictionValues . ')';
+                    $insertValues[] = '('.(int) $moduleId.', '.(int) $this->shopId.', '.(int) $restrictionValues.')';
                 }
             }
         }

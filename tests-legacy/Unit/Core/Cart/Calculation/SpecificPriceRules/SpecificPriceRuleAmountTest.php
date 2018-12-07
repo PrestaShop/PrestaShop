@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -28,7 +28,6 @@ namespace LegacyTests\Unit\Core\Cart\Calculation\SpecificPriceRules;
 
 class SpecificPriceRuleAmountTest extends AbstractSpecificPriceRuleTest
 {
-
     const SPECIFIC_PRICE_RULES_FIXTURES = array(
         1 => array('reductionType' => 'amount', 'reduction' => 1, 'fromQuantity' => 1),
         2 => array('reductionType' => 'amount', 'reduction' => 3, 'fromQuantity' => 2),

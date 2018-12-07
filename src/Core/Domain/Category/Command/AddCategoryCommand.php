@@ -41,8 +41,8 @@ class AddCategoryCommand extends AbstractCategoryCommand
     /**
      * @param string[] $localizedNames
      * @param string[] $localizedLinkRewrites
-     * @param bool $isActive
-     * @param int $parentCategoryId
+     * @param bool     $isActive
+     * @param int      $parentCategoryId
      *
      * @throws CategoryConstraintException
      */
@@ -68,8 +68,8 @@ class AddCategoryCommand extends AbstractCategoryCommand
      * @param int $parentCategoryId
      *
      * @throws CategoryConstraintException
-     * @return self
      *
+     * @return self
      */
     public function setParentCategoryId($parentCategoryId)
     {

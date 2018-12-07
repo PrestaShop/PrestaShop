@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Core\ContainerBuilder;
 use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerAggregate;
@@ -38,14 +37,14 @@ ServiceLocator::setServiceContainerInstance($container);
 if (!file_exists(_PS_CACHE_DIR_)) {
     @mkdir(_PS_CACHE_DIR_);
     $warmer = new CacheWarmerAggregate(array(
-        new PrestaShopBundle\Cache\LocalizationWarmer(_PS_VERSION_, 'en') //@replace hard-coded Lang
+        new PrestaShopBundle\Cache\LocalizationWarmer(_PS_VERSION_, 'en'), //@replace hard-coded Lang
     ));
     $warmer->warmUp(_PS_CACHE_DIR_);
 }
 
-$configDirectory = __DIR__. '/../app/config';
-$phpParametersFilepath = $configDirectory . '/parameters.php';
-$yamlParametersFilepath = $configDirectory . '/parameters.yml';
+$configDirectory = __DIR__.'/../app/config';
+$phpParametersFilepath = $configDirectory.'/parameters.php';
+$yamlParametersFilepath = $configDirectory.'/parameters.yml';
 
 $filesystem = new Filesystem();
 
@@ -55,6 +54,7 @@ $exportPhpConfigFile = function ($config, $destination) use ($filesystem) {
     } catch (IOException $e) {
         return false;
     }
+
     return true;
 };
 
@@ -62,20 +62,20 @@ $exportPhpConfigFile = function ($config, $destination) use ($filesystem) {
 if (!file_exists($phpParametersFilepath) && file_exists($yamlParametersFilepath)) {
     $parameters = Yaml::parse($yamlParametersFilepath);
     if ($exportPhpConfigFile($parameters, $phpParametersFilepath)) {
-        $filesystem->dumpFile($yamlParametersFilepath, 'parameters:' . "\n");
+        $filesystem->dumpFile($yamlParametersFilepath, 'parameters:'."\n");
     }
 }
 
-$lastParametersModificationTime = (int)@filemtime($phpParametersFilepath);
+$lastParametersModificationTime = (int) @filemtime($phpParametersFilepath);
 
 if ($lastParametersModificationTime) {
-    $cachedParameters = _PS_CACHE_DIR_. 'appParameters.php';
+    $cachedParameters = _PS_CACHE_DIR_.'appParameters.php';
 
-    $lastParametersCacheModificationTime = (int)@filemtime($cachedParameters);
+    $lastParametersCacheModificationTime = (int) @filemtime($cachedParameters);
     if (!$lastParametersCacheModificationTime || $lastParametersCacheModificationTime < $lastParametersModificationTime) {
         // When parameters file is available, update its cache if it is stale.
         if (file_exists($phpParametersFilepath)) {
-            $config = require($phpParametersFilepath);
+            $config = require $phpParametersFilepath;
             $exportPhpConfigFile($config, $cachedParameters);
         } elseif (file_exists($yamlParametersFilepath)) {
             $config = Yaml::parse($yamlParametersFilepath);
@@ -83,7 +83,7 @@ if ($lastParametersModificationTime) {
         }
     }
 
-    $config = require_once _PS_CACHE_DIR_ . 'appParameters.php';
+    $config = require_once _PS_CACHE_DIR_.'appParameters.php';
     array_walk($config['parameters'], function (&$param) {
         $param = str_replace('%%', '%', $param);
     });
@@ -91,7 +91,7 @@ if ($lastParametersModificationTime) {
     $database_host = $config['parameters']['database_host'];
 
     if (!empty($config['parameters']['database_port'])) {
-        $database_host .= ':'. $config['parameters']['database_port'];
+        $database_host .= ':'.$config['parameters']['database_port'];
     }
 
     define('_DB_SERVER_', $database_host);
@@ -139,10 +139,10 @@ if ($lastParametersModificationTime) {
 
     define('_PS_CREATION_DATE_', $config['parameters']['ps_creation_date']);
 
-    if (isset($config['parameters']['_rijndael_key'], $config['parameters']['_rijndael_iv'])  ) {
+    if (isset($config['parameters']['_rijndael_key'], $config['parameters']['_rijndael_iv'])) {
         define('_RIJNDAEL_KEY_', $config['parameters']['_rijndael_key']);
         define('_RIJNDAEL_IV_', $config['parameters']['_rijndael_iv']);
     }
-} else if (file_exists(_PS_ROOT_DIR_.'/config/settings.inc.php')) {
-    require_once(_PS_ROOT_DIR_.'/config/settings.inc.php');
+} elseif (file_exists(_PS_ROOT_DIR_.'/config/settings.inc.php')) {
+    require_once _PS_ROOT_DIR_.'/config/settings.inc.php';
 }

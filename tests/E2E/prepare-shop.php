@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,9 +23,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 define('_PS_MODE_DEV_', false);
-require(__DIR__.'/../../config/config.inc.php');
+require __DIR__.'/../../config/config.inc.php';
 
 // useful variables
 
@@ -81,7 +80,6 @@ function enableGiftFeature()
 
 enableGiftFeature();
 
-
 echo "- Gift feature display enabled\n";
 
 // Setup modules
@@ -104,7 +102,6 @@ function hookModule($moduleName, $hookName)
     $module->registerHook($hookName);
     echo "- module `$moduleName` hooked to `$hookName`\n";
 }
-
 
 // We need a customizable product: we add a single required text field to the product with id 1.
 
@@ -137,7 +134,7 @@ echo "- added a required customizable text field to product #1\n";
 Language::checkAndAddLanguage('fr');
 echo "- added French language just so that we have 2\n";
 $languages = Language::getLanguages();
-echo "  Number of languages : ".count($languages)."\n";
+echo '  Number of languages : '.count($languages)."\n";
 
 $order = new Order(5);
 $history = new OrderHistory();

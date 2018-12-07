@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -35,14 +35,14 @@ class TermsAndConditionsTest extends UnitTestCase
 
     public function setUp()
     {
-        $this->terms = new TermsAndConditions;
+        $this->terms = new TermsAndConditions();
     }
 
     public function test_SetText_InsertsLinks()
     {
         $this->assertEquals(
             'hello <a href="http://www.world.com" id="cta-ho-0">world</a>',
-            $this->terms->setIdentifier('ho')->setText('hello [world]', "http://www.world.com")->format()
+            $this->terms->setIdentifier('ho')->setText('hello [world]', 'http://www.world.com')->format()
         );
     }
 
@@ -50,7 +50,7 @@ class TermsAndConditionsTest extends UnitTestCase
     {
         $this->assertEquals(
             'hello <a href="http://www.world.com" id="cta-hey-0">world</a> <a href="http://yay.com" id="cta-hey-1">yay</a>',
-            $this->terms->setIdentifier('hey')->setText('hello [world] [yay]', "http://www.world.com", "http://yay.com")->format()
+            $this->terms->setIdentifier('hey')->setText('hello [world] [yay]', 'http://www.world.com', 'http://yay.com')->format()
         );
     }
 

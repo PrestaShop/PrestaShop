@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,15 +23,14 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 function drop_column_from_product_lang_if_exists()
 {
-    $columns = Db::getInstance()->executeS('SHOW COLUMNS FROM `' . _DB_PREFIX_ . 'product_lang` 
+    $columns = Db::getInstance()->executeS('SHOW COLUMNS FROM `'._DB_PREFIX_.'product_lang` 
         WHERE Field IN (\'social_sharing_title\', \'social_sharing_description\')');
 
     if (!empty($columns)) {
         foreach ($columns as $column) {
-            Db::getInstance()->execute('ALTER TABLE `' . _DB_PREFIX_ . 'product_lang` DROP COLUMN `' . $column['Field'] . '`');
+            Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'product_lang` DROP COLUMN `'.$column['Field'].'`');
         }
     }
 }

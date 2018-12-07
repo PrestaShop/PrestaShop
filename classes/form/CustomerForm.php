@@ -77,7 +77,7 @@ class CustomerFormCore extends AbstractForm
     {
         $params = get_object_vars($customer);
         $params['id_customer'] = $customer->id;
-        $params['birthday'] = $customer->birthday === '0000-00-00' ? null : Tools::displayDate($customer->birthday);
+        $params['birthday'] = '0000-00-00' === $customer->birthday ? null : Tools::displayDate($customer->birthday);
 
         return $this->fillWith($params);
     }
@@ -91,7 +91,7 @@ class CustomerFormCore extends AbstractForm
 
         foreach ($this->formFields as $field) {
             $customerField = $field->getName();
-            if ($customerField === 'id_customer') {
+            if ('id_customer' === $customerField) {
                 $customerField = 'id';
             }
             if (property_exists($customer, $customerField)) {

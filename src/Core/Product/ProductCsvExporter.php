@@ -59,8 +59,8 @@ final class ProductCsvExporter implements ProductExporterInterface
      *
      * @throws \InvalidArgumentException
      * @throws \Symfony\Component\Translation\Exception\InvalidArgumentException
-     * @return CsvResponse
      *
+     * @return CsvResponse
      */
     public function export(array $products = array())
     {
@@ -92,7 +92,7 @@ final class ProductCsvExporter implements ProductExporterInterface
             ->setHeadersData($headersData)
             ->setModeType(CsvResponse::MODE_OFFSET)
             ->setLimit(5000)
-            ->setFileName('product_' . date('Y-m-d_His') . '.csv')
+            ->setFileName('product_'.date('Y-m-d_His').'.csv')
         ;
     }
 
@@ -103,8 +103,8 @@ final class ProductCsvExporter implements ProductExporterInterface
      * @param $domain
      *
      * @throws \Symfony\Component\Translation\Exception\InvalidArgumentException
-     * @return string
      *
+     * @return string
      */
     private function trans($key, $domain)
     {

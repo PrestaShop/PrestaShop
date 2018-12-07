@@ -69,12 +69,12 @@ class FormHandler implements FormHandlerInterface
     /**
      * FormHandler constructor.
      *
-     * @param FormBuilderInterface $formBuilder
-     * @param HookDispatcherInterface $hookDispatcher
+     * @param FormBuilderInterface      $formBuilder
+     * @param HookDispatcherInterface   $hookDispatcher
      * @param FormDataProviderInterface $formDataProvider
-     * @param array $formTypes
-     * @param string $hookName
-     * @param string $formName
+     * @param array                     $formTypes
+     * @param string                    $hookName
+     * @param string                    $formName
      */
     public function __construct(
         FormBuilderInterface $formBuilder,

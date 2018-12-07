@@ -109,21 +109,21 @@ class AdminManufacturersControllerCore extends AdminController
     {
         if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_manufacturer'] = array(
-                'href' => self::$currentIndex . '&addmanufacturer&token=' . $this->token,
+                'href' => self::$currentIndex.'&addmanufacturer&token='.$this->token,
                 'desc' => $this->trans('Add new brand', array(), 'Admin.Catalog.Feature'),
                 'icon' => 'process-icon-new',
             );
             $this->page_header_toolbar_btn['new_manufacturer_address'] = array(
-                'href' => self::$currentIndex . '&addaddress&token=' . $this->token,
+                'href' => self::$currentIndex.'&addaddress&token='.$this->token,
                 'desc' => $this->trans('Add new brand address', array(), 'Admin.Catalog.Feature'),
                 'icon' => 'process-icon-new',
             );
-        } elseif ($this->display == 'editaddresses' || $this->display == 'addaddress') {
+        } elseif ('editaddresses' == $this->display || 'addaddress' == $this->display) {
             // Default cancel button - like old back link
-            if (!isset($this->no_back) || $this->no_back == false) {
+            if (!isset($this->no_back) || false == $this->no_back) {
                 $back = Tools::safeOutput(Tools::getValue('back', ''));
                 if (empty($back)) {
-                    $back = self::$currentIndex . '&token=' . $this->token;
+                    $back = self::$currentIndex.'&token='.$this->token;
                 }
 
                 $this->page_header_toolbar_btn['cancel'] = array(
@@ -145,11 +145,11 @@ class AdminManufacturersControllerCore extends AdminController
         $this->_select = '
             COUNT(`id_product`) AS `products`, (
                 SELECT COUNT(ad.`id_manufacturer`) as `addresses`
-                FROM `' . _DB_PREFIX_ . 'address` ad
+                FROM `'._DB_PREFIX_.'address` ad
                 WHERE ad.`id_manufacturer` = a.`id_manufacturer`
                     AND ad.`deleted` = 0
                 GROUP BY ad.`id_manufacturer`) as `addresses`';
-        $this->_join = 'LEFT JOIN `' . _DB_PREFIX_ . 'product` p ON (a.`id_manufacturer` = p.`id_manufacturer`)';
+        $this->_join = 'LEFT JOIN `'._DB_PREFIX_.'product` p ON (a.`id_manufacturer` = p.`id_manufacturer`)';
         $this->_group = 'GROUP BY a.`id_manufacturer`';
 
         $this->context->smarty->assign('title_list', $this->trans('List of brands', array(), 'Admin.Catalog.Feature'));
@@ -203,7 +203,7 @@ class AdminManufacturersControllerCore extends AdminController
 
     public function processExport($text_delimiter = '"')
     {
-        if (mb_strtolower($this->table) == 'address') {
+        if ('address' == mb_strtolower($this->table)) {
             $this->_defaultOrderBy = 'id_manufacturer';
             $this->_where = 'AND a.`id_customer` = 0 AND a.`id_supplier` = 0 AND a.`id_warehouse` = 0 AND a.`deleted`= 0';
         }
@@ -232,12 +232,12 @@ class AdminManufacturersControllerCore extends AdminController
         $this->addRowAction('delete');
 
         // test if a filter is applied for this list
-        if (Tools::isSubmit('submitFilter' . $this->table) || $this->context->cookie->{'submitFilter' . $this->table} !== false) {
+        if (Tools::isSubmit('submitFilter'.$this->table) || false !== $this->context->cookie->{'submitFilter'.$this->table}) {
             $this->filter = true;
         }
 
         // test if a filter reset request is required for this list
-        $this->action = (isset($_POST['submitReset' . $this->table]) ? 'reset_filters' : '');
+        $this->action = (isset($_POST['submitReset'.$this->table]) ? 'reset_filters' : '');
 
         $this->fields_list = $this->getAddressFieldsList();
         $this->bulk_actions = array(
@@ -250,10 +250,10 @@ class AdminManufacturersControllerCore extends AdminController
 
         $this->_select = 'cl.`name` as country, m.`name` AS manufacturer_name';
         $this->_join = '
-			LEFT JOIN `' . _DB_PREFIX_ . 'country_lang` cl
-				ON (cl.`id_country` = a.`id_country` AND cl.`id_lang` = ' . (int) $this->context->language->id . ') ';
+			LEFT JOIN `'._DB_PREFIX_.'country_lang` cl
+				ON (cl.`id_country` = a.`id_country` AND cl.`id_lang` = '.(int) $this->context->language->id.') ';
         $this->_join .= '
-			LEFT JOIN `' . _DB_PREFIX_ . 'manufacturer` m
+			LEFT JOIN `'._DB_PREFIX_.'manufacturer` m
 				ON (a.`id_manufacturer` = m.`id_manufacturer`)';
         $this->_where = 'AND a.`id_customer` = 0 AND a.`id_supplier` = 0 AND a.`id_warehouse` = 0 AND a.`deleted`= 0';
 
@@ -277,7 +277,7 @@ class AdminManufacturersControllerCore extends AdminController
      * Display editaddresses action link.
      *
      * @param string $token the token to add to the link
-     * @param int $id the identifier to add to the link
+     * @param int    $id    the identifier to add to the link
      *
      * @return string
      */
@@ -288,9 +288,9 @@ class AdminManufacturersControllerCore extends AdminController
         }
 
         $this->context->smarty->assign(array(
-            'href' => self::$currentIndex .
-                '&' . $this->identifier . '=' . $id .
-                '&editaddresses&token=' . ($token != null ? $token : $this->token),
+            'href' => self::$currentIndex.
+                '&'.$this->identifier.'='.$id.
+                '&editaddresses&token='.(null != $token ? $token : $this->token),
             'action' => self::$cache_lang['editaddresses'],
         ));
 
@@ -303,10 +303,10 @@ class AdminManufacturersControllerCore extends AdminController
             return;
         }
 
-        $image = _PS_MANU_IMG_DIR_ . $manufacturer->id . '.jpg';
+        $image = _PS_MANU_IMG_DIR_.$manufacturer->id.'.jpg';
         $image_url = ImageManager::thumbnail(
             $image,
-            $this->table . '_' . (int) $manufacturer->id . '.' . $this->imageType,
+            $this->table.'_'.(int) $manufacturer->id.'.'.$this->imageType,
             350,
             $this->imageType,
             true,
@@ -327,7 +327,7 @@ class AdminManufacturersControllerCore extends AdminController
                     'name' => 'name',
                     'col' => 4,
                     'required' => true,
-                    'hint' => $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info') . ' &lt;&gt;;=#{}',
+                    'hint' => $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info').' &lt;&gt;;=#{}',
                 ),
                 array(
                     'type' => 'textarea',
@@ -338,7 +338,7 @@ class AdminManufacturersControllerCore extends AdminController
                     'rows' => 10,
                     'autoload_rte' => 'rte', //Enable TinyMCE editor for short description
                     'col' => 6,
-                    'hint' => $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info') . ' &lt;&gt;;=#{}',
+                    'hint' => $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info').' &lt;&gt;;=#{}',
                 ),
                 array(
                     'type' => 'textarea',
@@ -349,7 +349,7 @@ class AdminManufacturersControllerCore extends AdminController
                     'rows' => 10,
                     'col' => 6,
                     'autoload_rte' => 'rte', //Enable TinyMCE editor for description
-                    'hint' => $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info') . ' &lt;&gt;;=#{}',
+                    'hint' => $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info').' &lt;&gt;;=#{}',
                 ),
                 array(
                     'type' => 'file',
@@ -367,7 +367,7 @@ class AdminManufacturersControllerCore extends AdminController
                     'name' => 'meta_title',
                     'lang' => true,
                     'col' => 4,
-                    'hint' => $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info') . ' &lt;&gt;;=#{}',
+                    'hint' => $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info').' &lt;&gt;;=#{}',
                 ),
                 array(
                     'type' => 'text',
@@ -375,7 +375,7 @@ class AdminManufacturersControllerCore extends AdminController
                     'name' => 'meta_description',
                     'lang' => true,
                     'col' => 6,
-                    'hint' => $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info') . ' &lt;&gt;;=#{}',
+                    'hint' => $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info').' &lt;&gt;;=#{}',
                 ),
                 array(
                     'type' => 'tags',
@@ -384,7 +384,7 @@ class AdminManufacturersControllerCore extends AdminController
                     'lang' => true,
                     'col' => 6,
                     'hint' => array(
-                        $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info') . ' &lt;&gt;;=#{}',
+                        $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info').' &lt;&gt;;=#{}',
                         $this->trans('To add "tags," click inside the field, write something, and then press "Enter."', array(), 'Admin.Catalog.Help'),
                     ),
                 ),
@@ -428,13 +428,13 @@ class AdminManufacturersControllerCore extends AdminController
         );
 
         foreach ($this->_languages as $language) {
-            $this->fields_value['short_description_' . $language['id_lang']] = htmlentities(stripslashes($this->getFieldValue(
+            $this->fields_value['short_description_'.$language['id_lang']] = htmlentities(stripslashes($this->getFieldValue(
                 $manufacturer,
                 'short_description',
                 $language['id_lang']
             )), ENT_COMPAT, 'UTF-8');
 
-            $this->fields_value['description_' . $language['id_lang']] = htmlentities(stripslashes($this->getFieldValue(
+            $this->fields_value['description_'.$language['id_lang']] = htmlentities(stripslashes($this->getFieldValue(
                 $manufacturer,
                 'description',
                 $language['id_lang']
@@ -522,7 +522,7 @@ class AdminManufacturersControllerCore extends AdminController
             'name' => 'lastname',
             'required' => true,
             'col' => 4,
-            'hint' => $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info') . ' 0-9!&lt;&gt;,;?=+()@#"�{}_$%:',
+            'hint' => $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info').' 0-9!&lt;&gt;,;?=+()@#"�{}_$%:',
         );
         $form['input'][] = array(
             'type' => 'text',
@@ -530,7 +530,7 @@ class AdminManufacturersControllerCore extends AdminController
             'name' => 'firstname',
             'required' => true,
             'col' => 4,
-            'hint' => $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info') . ' 0-9!&lt;&gt;,;?=+()@#"�{}_$%:',
+            'hint' => $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info').' 0-9!&lt;&gt;,;?=+()@#"�{}_$%:',
         );
         $form['input'][] = array(
             'type' => 'text',
@@ -604,7 +604,7 @@ class AdminManufacturersControllerCore extends AdminController
             'label' => $this->trans('Other', array(), 'Admin.Global'),
             'name' => 'other',
             'required' => false,
-            'hint' => $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info') . ' &lt;&gt;;=#{}',
+            'hint' => $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info').' &lt;&gt;;=#{}',
             'rows' => 2,
             'cols' => 10,
             'col' => 6,
@@ -627,7 +627,7 @@ class AdminManufacturersControllerCore extends AdminController
 
         $back = Tools::safeOutput(Tools::getValue('back', ''));
         if (empty($back)) {
-            $back = self::$currentIndex . '&token=' . $this->token;
+            $back = self::$currentIndex.'&token='.$this->token;
         }
         if (!Validate::isCleanHtml($back)) {
             die(Tools::displayError());
@@ -665,10 +665,10 @@ class AdminManufacturersControllerCore extends AdminController
                 );
 
                 // Default cancel button - like old back link
-                if (!isset($this->no_back) || $this->no_back == false) {
+                if (!isset($this->no_back) || false == $this->no_back) {
                     $back = Tools::safeOutput(Tools::getValue('back', ''));
                     if (empty($back)) {
-                        $back = self::$currentIndex . '&token=' . $this->token;
+                        $back = self::$currentIndex.'&token='.$this->token;
                     }
 
                     $this->toolbar_btn['cancel'] = array(
@@ -683,7 +683,7 @@ class AdminManufacturersControllerCore extends AdminController
 
                 if ($this->can_import) {
                     $this->toolbar_btn['import'] = array(
-                        'href' => $this->context->link->getAdminLink('AdminImport', true) . '&import_type=manufacturers',
+                        'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type=manufacturers',
                         'desc' => $this->trans('Import', array(), 'Admin.Actions'),
                     );
                 }
@@ -699,7 +699,7 @@ class AdminManufacturersControllerCore extends AdminController
         /* @var Manufacturer $manufacturer */
 
         $this->toolbar_btn['new'] = array(
-                    'href' => $this->context->link->getAdminLink('AdminManufacturers') . '&addaddress=1&id_manufacturer=' . (int) $manufacturer->id,
+                    'href' => $this->context->link->getAdminLink('AdminManufacturers').'&addaddress=1&id_manufacturer='.(int) $manufacturer->id,
                     'desc' => $this->trans('Add address', array(), 'Admin.Catalog.Feature'),
                 );
 
@@ -731,7 +731,7 @@ class AdminManufacturersControllerCore extends AdminController
                 foreach ($comb_array as $key => $product_attribute) {
                     $list = '';
                     foreach ($product_attribute['attributes'] as $attribute) {
-                        $list .= $attribute[0] . ' - ' . $attribute[1] . ', ';
+                        $list .= $attribute[0].' - '.$attribute[1].', ';
                     }
                     $comb_array[$key]['attributes'] = rtrim($list, ', ');
                 }
@@ -753,14 +753,14 @@ class AdminManufacturersControllerCore extends AdminController
 
     public function initContent()
     {
-        if ($this->display == 'editaddresses' || $this->display == 'addaddress') {
+        if ('editaddresses' == $this->display || 'addaddress' == $this->display) {
             $this->content .= $this->renderFormAddress();
-        } elseif ($this->display == 'edit' || $this->display == 'add') {
+        } elseif ('edit' == $this->display || 'add' == $this->display) {
             if (!$this->loadObject(true)) {
                 return;
             }
             $this->content .= $this->renderForm();
-        } elseif ($this->display == 'view') {
+        } elseif ('view' == $this->display) {
             // Some controllers use the view action without an object
             if ($this->className) {
                 $this->loadObject(true);
@@ -819,27 +819,27 @@ class AdminManufacturersControllerCore extends AdminController
         if (($id_manufacturer = (int) Tools::getValue('id_manufacturer')) &&
             isset($_FILES) &&
             count($_FILES) &&
-            file_exists(_PS_MANU_IMG_DIR_ . $id_manufacturer . '.jpg')) {
+            file_exists(_PS_MANU_IMG_DIR_.$id_manufacturer.'.jpg')) {
             $images_types = ImageType::getImagesTypes('manufacturers');
             foreach ($images_types as $image_type) {
                 $res &= ImageManager::resize(
-                    _PS_MANU_IMG_DIR_ . $id_manufacturer . '.jpg',
-                    _PS_MANU_IMG_DIR_ . $id_manufacturer . '-' . stripslashes($image_type['name']) . '.jpg',
+                    _PS_MANU_IMG_DIR_.$id_manufacturer.'.jpg',
+                    _PS_MANU_IMG_DIR_.$id_manufacturer.'-'.stripslashes($image_type['name']).'.jpg',
                     (int) $image_type['width'],
                     (int) $image_type['height']
                 );
 
                 if ($generate_hight_dpi_images) {
                     $res &= ImageManager::resize(
-                        _PS_MANU_IMG_DIR_ . $id_manufacturer . '.jpg',
-                        _PS_MANU_IMG_DIR_ . $id_manufacturer . '-' . stripslashes($image_type['name']) . '2x.jpg',
+                        _PS_MANU_IMG_DIR_.$id_manufacturer.'.jpg',
+                        _PS_MANU_IMG_DIR_.$id_manufacturer.'-'.stripslashes($image_type['name']).'2x.jpg',
                         (int) $image_type['width'] * 2,
                         (int) $image_type['height'] * 2
                     );
                 }
             }
 
-            $current_logo_file = _PS_TMP_IMG_DIR_ . 'manufacturer_mini_' . $id_manufacturer . '_' . $this->context->shop->id . '.jpg';
+            $current_logo_file = _PS_TMP_IMG_DIR_.'manufacturer_mini_'.$id_manufacturer.'_'.$this->context->shop->id.'.jpg';
 
             if ($res && file_exists($current_logo_file)) {
                 unlink($current_logo_file);

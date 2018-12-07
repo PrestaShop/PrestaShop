@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -31,7 +31,6 @@ use PrestaShop\PrestaShop\Core\Filter\HashMapWhitelistFilter;
 
 class CollectionFilterTest extends \PHPUnit_Framework_TestCase
 {
-
     /**
      * @param array $subject
      * @param array $queue
@@ -57,7 +56,7 @@ class CollectionFilterTest extends \PHPUnit_Framework_TestCase
             array(
                 'foo' => 'something',
                 'bar' => null,
-                'baz' => array()
+                'baz' => array(),
             ),
             array(
                 'foo' => 'something',
@@ -66,7 +65,7 @@ class CollectionFilterTest extends \PHPUnit_Framework_TestCase
                 'bar' => null,
                 'baz' => array(),
             ),
-            array()
+            array(),
         );
 
         return array(
@@ -74,7 +73,7 @@ class CollectionFilterTest extends \PHPUnit_Framework_TestCase
                 'subject' => $subject,
                 'queue' => array(
                     (new HashMapWhitelistFilter())
-                        ->whitelist(array('foo'))
+                        ->whitelist(array('foo')),
                 ),
                 'expectedResult' => array(
                     array(
@@ -85,9 +84,8 @@ class CollectionFilterTest extends \PHPUnit_Framework_TestCase
                     ),
                     array(),
                     array(),
-                )
-            )
+                ),
+            ),
         );
     }
-
 }

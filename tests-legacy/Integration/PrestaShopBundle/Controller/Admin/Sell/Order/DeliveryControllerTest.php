@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -63,9 +63,9 @@ class DeliveryControllerTest extends WebTestCase
             array(
                 'form' => array(
                     'options' => array(
-                        'number' => 'foo'
+                        'number' => 'foo',
                     ),
-                    '_token' => $token
+                    '_token' => $token,
                 ),
             )
         );
@@ -88,9 +88,9 @@ class DeliveryControllerTest extends WebTestCase
             array(
                 'form' => array(
                     'options' => array(
-                        'number' => '100'
+                        'number' => '100',
                     ),
-                    '_token' => $token
+                    '_token' => $token,
                 ),
             )
         );
@@ -117,9 +117,9 @@ class DeliveryControllerTest extends WebTestCase
             array(
                 'slip_pdf_form' => array(
                     'pdf' => array(
-                        'date_from' => 'foo'
+                        'date_from' => 'foo',
                     ),
-                    '_token' => $token
+                    '_token' => $token,
                 ),
             )
         );
@@ -146,7 +146,7 @@ class DeliveryControllerTest extends WebTestCase
             array(
                 'slip_pdf_form' => array(
                     'pdf' => array(),
-                    '_token' => $token
+                    '_token' => $token,
                 ),
             )
         );

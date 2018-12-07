@@ -102,7 +102,7 @@ class AdminProductDataUpdater implements ProductInterface
         // Hooks: will trigger actionProductDelete multiple times
         $result = (new Product())->deleteSelection($productIdList);
 
-        if ($result === 0) {
+        if (0 === $result) {
             throw new UpdateProductException('Cannot delete many requested products.', 5006);
         }
 
@@ -149,7 +149,7 @@ class AdminProductDataUpdater implements ProductInterface
         // Hooks: will trigger actionProductDelete
         $result = $product->delete();
 
-        if ($result === 0) {
+        if (0 === $result) {
             throw new UpdateProductException('Cannot delete the requested product.', 5007);
         }
 
@@ -168,7 +168,7 @@ class AdminProductDataUpdater implements ProductInterface
         }
 
         $id_product_old = $product->id;
-        if (empty($product->price) && Shop::getContext() == Shop::CONTEXT_GROUP) {
+        if (empty($product->price) && Shop::CONTEXT_GROUP == Shop::getContext()) {
             $shops = ShopGroup::getShopsFromGroup(Shop::getContextShopGroupID());
             foreach ($shops as $shop) {
                 if ($product->isAssociatedToShop($shop['id_shop'])) {
@@ -185,7 +185,7 @@ class AdminProductDataUpdater implements ProductInterface
 
         // change product name to prefix it
         foreach ($product->name as $langKey => $oldName) {
-            if (!preg_match('/^' . str_replace('%s', '.*', preg_quote($namePattern, '/') . '$/'), $oldName)) {
+            if (!preg_match('/^'.str_replace('%s', '.*', preg_quote($namePattern, '/').'$/'), $oldName)) {
                 $newName = sprintf($namePattern, $oldName);
                 if (mb_strlen($newName, 'UTF-8') <= 127) {
                     $product->name[$langKey] = $newName;
@@ -196,7 +196,7 @@ class AdminProductDataUpdater implements ProductInterface
         if ($product->add()
             && Category::duplicateProductCategories($id_product_old, $product->id)
             && Product::duplicateSuppliers($id_product_old, $product->id)
-            && ($combination_images = Product::duplicateAttributes($id_product_old, $product->id)) !== false
+            && false !== ($combination_images = Product::duplicateAttributes($id_product_old, $product->id))
             && GroupReduction::duplicateReduction($id_product_old, $product->id)
             && Product::duplicateAccessories($id_product_old, $product->id)
             && Product::duplicateFeatures($id_product_old, $product->id)
@@ -211,17 +211,15 @@ class AdminProductDataUpdater implements ProductInterface
 
             if (!Image::duplicateProductImages($id_product_old, $product->id, $combination_images)) {
                 throw new UpdateProductException('An error occurred while copying images.', 5008);
-            }  
-                $this->hookDispatcher->dispatchWithParameters('actionProductAdd', array('id_product' => (int) $product->id, 'product' => $product));
-                if (in_array($product->visibility, array('both', 'search'), true) && Configuration::get('PS_SEARCH_INDEXATION')) {
-                    Search::indexation(false, $product->id);
-                }
+            }
+            $this->hookDispatcher->dispatchWithParameters('actionProductAdd', array('id_product' => (int) $product->id, 'product' => $product));
+            if (in_array($product->visibility, array('both', 'search'), true) && Configuration::get('PS_SEARCH_INDEXATION')) {
+                Search::indexation(false, $product->id);
+            }
 
-                return $product->id;
-            
-        }  
-            throw new \Exception('An error occurred while creating an object.', 5009);
-        
+            return $product->id;
+        }
+        throw new \Exception('An error occurred while creating an object.', 5009);
     }
 
     /**
@@ -237,10 +235,10 @@ class AdminProductDataUpdater implements ProductInterface
             throw new \Exception('Cannot sort when filterParams does not contains \'filter_category\'.', 5010);
         }
         foreach ($filterParams as $k => $v) {
-            if ($v == '' || mb_strpos($k, 'filter_') !== 0) {
+            if ('' == $v || 0 !== mb_strpos($k, 'filter_')) {
                 continue;
             }
-            if ($k == 'filter_category') {
+            if ('filter_category' == $k) {
                 continue;
             }
             throw new \Exception('Cannot sort when filterParams contains other filter than \'filter_category\'.', 5010);
@@ -274,7 +272,7 @@ class AdminProductDataUpdater implements ProductInterface
         sort($sortedPositions); // new positions to update
 
         // avoid '0', starts with '1', so shift right (+1)
-        if ($sortedPositions[1] === 0) {
+        if (0 === $sortedPositions[1]) {
             foreach ($sortedPositions as $k => $v) {
                 $sortedPositions[$k] = $v + 1;
             }
@@ -288,22 +286,22 @@ class AdminProductDataUpdater implements ProductInterface
         $fields = implode(',', $positionsMatcher);
 
         // update current pages.
-        $updatePositions = 'UPDATE `' . _DB_PREFIX_ . 'category_product` cp
-            INNER JOIN `' . _DB_PREFIX_ . 'product` p ON (cp.`id_product` = p.`id_product`)
-            ' . Shop::addSqlAssociation('product', 'p') . '
-            SET cp.`position` = ELT(cp.`position`, ' . $fields . '),
-                p.`date_upd` = "' . date('Y-m-d H:i:s') . '",
-                product_shop.`date_upd` = "' . date('Y-m-d H:i:s') . '"
-            WHERE cp.`id_category` = ' . (int) $categoryId . ' AND cp.`id_product` IN (' . implode(',', array_map('intval', array_keys($productList))) . ')';
+        $updatePositions = 'UPDATE `'._DB_PREFIX_.'category_product` cp
+            INNER JOIN `'._DB_PREFIX_.'product` p ON (cp.`id_product` = p.`id_product`)
+            '.Shop::addSqlAssociation('product', 'p').'
+            SET cp.`position` = ELT(cp.`position`, '.$fields.'),
+                p.`date_upd` = "'.date('Y-m-d H:i:s').'",
+                product_shop.`date_upd` = "'.date('Y-m-d H:i:s').'"
+            WHERE cp.`id_category` = '.(int) $categoryId.' AND cp.`id_product` IN ('.implode(',', array_map('intval', array_keys($productList))).')';
 
         Db::getInstance()->execute($updatePositions);
 
         // Fixes duplicates on all pages
         Db::getInstance()->query('SET @i := 0');
-        $selectPositions = 'UPDATE`' . _DB_PREFIX_ . 'category_product` cp
+        $selectPositions = 'UPDATE`'._DB_PREFIX_.'category_product` cp
             SET cp.`position` = (SELECT @i := @i + 1)
-            WHERE cp.`id_category` = ' . (int) $categoryId . '
-            ORDER BY cp.`id_product` NOT IN (' . implode(',', array_map('intval', array_keys($productList))) . '), cp.`position` ASC';
+            WHERE cp.`id_category` = '.(int) $categoryId.'
+            ORDER BY cp.`id_product` NOT IN ('.implode(',', array_map('intval', array_keys($productList))).'), cp.`position` ASC';
         Db::getInstance()->execute($selectPositions);
 
         return true;

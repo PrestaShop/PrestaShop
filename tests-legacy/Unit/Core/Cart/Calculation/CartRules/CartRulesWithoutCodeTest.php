@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,7 +29,7 @@ namespace LegacyTests\Unit\Core\Cart\Calculation\CartRules;
 use LegacyTests\Unit\Core\Cart\Calculation\AbstractCartCalculationTest;
 
 /**
- * these tests aim to check the correct calculation of cart total when applying cart rules without code
+ * these tests aim to check the correct calculation of cart total when applying cart rules without code.
  *
  * products are inserted as fixtures
  * products are inserted in cart from data providers
@@ -37,9 +37,8 @@ use LegacyTests\Unit\Core\Cart\Calculation\AbstractCartCalculationTest;
  */
 class CartRulesWithoutCodeTest extends AbstractCartCalculationTest
 {
-
     /**
-     * test bugfix BOOM-5477
+     * test bugfix BOOM-5477.
      */
     public function testMultipleCartRulesWithoutCode()
     {
@@ -66,5 +65,4 @@ class CartRulesWithoutCodeTest extends AbstractCartCalculationTest
                          + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE;
         $this->compareCartTotalTaxIncl($expectedTotal, true);
     }
-
 }

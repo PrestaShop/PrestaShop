@@ -38,7 +38,7 @@ class MailingInformation
      */
     public function isNativeMailUsed()
     {
-        return Configuration::get('PS_MAIL_METHOD') == 1;
+        return 1 == Configuration::get('PS_MAIL_METHOD');
     }
 
     /**

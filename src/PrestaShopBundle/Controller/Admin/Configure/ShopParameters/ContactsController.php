@@ -47,7 +47,7 @@ class ContactsController extends FrameworkBundleAdminController
      *
      * @Template("@PrestaShop/Admin/Configure/ShopParameters/Contact/Contacts/index.html.twig")
      *
-     * @param Request $request
+     * @param Request        $request
      * @param ContactFilters $filters
      *
      * @return array

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -25,7 +25,7 @@
  */
 
 /**
- * Step 4 : configure the shop and admin access
+ * Step 4 : configure the shop and admin access.
  */
 class InstallControllerHttpConfigure extends InstallControllerHttp implements HttpConfigureInterface
 {
@@ -38,7 +38,6 @@ class InstallControllerHttpConfigure extends InstallControllerHttp implements Ht
     public function processNextStep()
     {
         if (Tools::isSubmit('shop_name')) {
-
             // Save shop configuration
             $this->session->shop_name = trim(Tools::getValue('shop_name'));
             $this->session->shop_activity = Tools::getValue('shop_activity');
@@ -57,7 +56,7 @@ class InstallControllerHttpConfigure extends InstallControllerHttp implements Ht
                     'method' => 'addMemberToNewsletter',
                     'language' => $this->language->getLanguageIso(),
                     'visitorType' => 1,
-                    'source' => 'installer'
+                    'source' => 'installer',
                 ));
                 Tools::file_get_contents('http://www.prestashop.com/ajax/controller.php?'.$params);
             }
@@ -133,7 +132,7 @@ class InstallControllerHttpConfigure extends InstallControllerHttp implements Ht
     }
 
     /**
-     * Process the upload of new logo
+     * Process the upload of new logo.
      */
     public function processUploadLogo()
     {
@@ -180,7 +179,7 @@ class InstallControllerHttpConfigure extends InstallControllerHttp implements Ht
     }
 
     /**
-     * Obtain the timezone associated to an iso
+     * Obtain the timezone associated to an iso.
      */
     public function processTimezoneByIso()
     {
@@ -189,7 +188,7 @@ class InstallControllerHttpConfigure extends InstallControllerHttp implements Ht
     }
 
     /**
-     * Get list of timezones
+     * Get list of timezones.
      *
      * @return array
      */
@@ -207,16 +206,18 @@ class InstallControllerHttpConfigure extends InstallControllerHttp implements Ht
         $timezones = array();
         if ($xml) {
             foreach ($xml->entities->timezone as $timezone) {
-                $timezones[] = (string)$timezone['name'];
+                $timezones[] = (string) $timezone['name'];
             }
         }
+
         return $timezones;
     }
 
     /**
-     * Get a timezone associated to an iso
+     * Get a timezone associated to an iso.
      *
      * @param string $iso
+     *
      * @return string
      */
     public function getTimezoneByIso($iso)
@@ -229,9 +230,10 @@ class InstallControllerHttpConfigure extends InstallControllerHttp implements Ht
         $timezones = array();
         if ($xml) {
             foreach ($xml->relation as $relation) {
-                $timezones[(string)$relation['iso']] = (string)$relation['zone'];
+                $timezones[(string) $relation['iso']] = (string) $relation['zone'];
             }
         }
+
         return isset($timezones[$iso]) ? $timezones[$iso] : '';
     }
 
@@ -305,9 +307,10 @@ class InstallControllerHttpConfigure extends InstallControllerHttp implements Ht
     }
 
     /**
-     * Helper to display error for a field
+     * Helper to display error for a field.
      *
      * @param string $field
+     *
      * @return string|void
      */
     public function displayError($field)

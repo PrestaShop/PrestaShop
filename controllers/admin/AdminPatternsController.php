@@ -495,7 +495,7 @@ class AdminPatternsControllerCore extends AdminController
         $helper->title = 'This list use a simple Header with no toolbar';
         $helper->table = $this->name;
         $helper->token = Tools::getAdminTokenLite('AdminModules');
-        $helper->currentIndex = AdminController::$currentIndex . '&configure=' . $this->name;
+        $helper->currentIndex = AdminController::$currentIndex.'&configure='.$this->name;
 
         return $helper->generateList($content, $fields_list);
     }
@@ -599,7 +599,7 @@ class AdminPatternsControllerCore extends AdminController
         $helper->title = 'This list shows a lot of small columns';
         $helper->table = $this->name;
         $helper->token = Tools::getAdminTokenLite('AdminModules');
-        $helper->currentIndex = AdminController::$currentIndex . '&configure=' . $this->name;
+        $helper->currentIndex = AdminController::$currentIndex.'&configure='.$this->name;
 
         return $helper->generateList($content, $fields_list);
     }
@@ -621,7 +621,7 @@ class AdminPatternsControllerCore extends AdminController
         $helper->title = 'Moderate Comments';
         $helper->table = $this->name;
         $helper->token = Tools::getAdminTokenLite('AdminModules');
-        $helper->currentIndex = AdminController::$currentIndex . '&configure=' . $this->name;
+        $helper->currentIndex = AdminController::$currentIndex.'&configure='.$this->name;
 
         return $helper->generateList($content, $fields_list);
     }

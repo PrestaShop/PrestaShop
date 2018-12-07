@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -60,7 +60,7 @@ class ProductControllerTest extends WebTestCase
             array('delete'),
             array('duplicate'),
             array('activate'),
-            array('deactivate')
+            array('deactivate'),
         );
     }
 
@@ -72,7 +72,7 @@ class ProductControllerTest extends WebTestCase
     public function testBulkAction($action)
     {
         $actionUrl = $this->router->generate('admin_product_bulk_action', array(
-            'action' => $action
+            'action' => $action,
         ));
         $this->client->request('POST', $actionUrl);
         $this->assertSessionFlagBagContainsFailureMessage();
@@ -84,7 +84,7 @@ class ProductControllerTest extends WebTestCase
             array('activate_all'),
             array('deactivate_all'),
             array('duplicate_all'),
-            array('delete_all')
+            array('delete_all'),
         );
     }
 

@@ -67,7 +67,7 @@ class CustomerAddressFormCore extends AbstractForm
 
         $this->address = new Address($id_address, $this->language->id);
 
-        if ($this->address->id === null) {
+        if (null === $this->address->id) {
             return Tools::redirect('index.php?controller=404');
         }
 
@@ -120,7 +120,7 @@ class CustomerAddressFormCore extends AbstractForm
             }
         }
 
-        if (($hookReturn = Hook::exec('actionValidateCustomerAddressForm', array('form' => $this))) !== '') {
+        if ('' !== ($hookReturn = Hook::exec('actionValidateCustomerAddressForm', array('form' => $this)))) {
             $is_valid &= (bool) $hookReturn;
         }
 

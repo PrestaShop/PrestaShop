@@ -229,7 +229,7 @@ class CategoryControllerCore extends ProductListingFrontController
         $breadcrumb = parent::getBreadcrumbLinks();
 
         foreach ($this->category->getAllParents() as $category) {
-            if ($category->id_parent != 0 && !$category->is_root_category) {
+            if (0 != $category->id_parent && !$category->is_root_category) {
                 $breadcrumb['links'][] = $this->getCategoryPath($category);
             }
         }
@@ -248,10 +248,10 @@ class CategoryControllerCore extends ProductListingFrontController
     {
         $page = parent::getTemplateVarPage();
 
-        $page['body_classes']['category-id-' . $this->category->id] = true;
-        $page['body_classes']['category-' . $this->category->name] = true;
-        $page['body_classes']['category-id-parent-' . $this->category->id_parent] = true;
-        $page['body_classes']['category-depth-level-' . $this->category->level_depth] = true;
+        $page['body_classes']['category-id-'.$this->category->id] = true;
+        $page['body_classes']['category-'.$this->category->name] = true;
+        $page['body_classes']['category-id-parent-'.$this->category->id_parent] = true;
+        $page['body_classes']['category-depth-level-'.$this->category->level_depth] = true;
 
         return $page;
     }

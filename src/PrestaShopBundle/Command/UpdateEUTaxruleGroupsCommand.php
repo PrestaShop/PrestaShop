@@ -81,7 +81,7 @@ class UpdateEUTaxruleGroupsCommand extends ContainerAwareCommand
         /* Tweak */
         $this->output = $output;
 
-        $localizationPacksRoot = $this->getContainer()->getParameter('kernel.root_dir') . '/../localization';
+        $localizationPacksRoot = $this->getContainer()->getParameter('kernel.root_dir').'/../localization';
 
         if (!$localizationPacksRoot) {
             return $output->writeln("<error>Could not find the folder containing the localization files (should be 'localization' at the root of the PrestaShop folder)</error>");
@@ -94,7 +94,7 @@ class UpdateEUTaxruleGroupsCommand extends ContainerAwareCommand
                 continue;
             }
 
-            $localizationPackFile = $localizationPacksRoot . DIRECTORY_SEPARATOR . $entry;
+            $localizationPackFile = $localizationPacksRoot.DIRECTORY_SEPARATOR.$entry;
 
             $localizationPack = @simplexml_load_file($localizationPackFile);
 
@@ -104,7 +104,7 @@ class UpdateEUTaxruleGroupsCommand extends ContainerAwareCommand
             }
 
             foreach ($localizationPack->taxes->tax as $tax) {
-                if ((string) $tax['eu-tax-group'] === 'virtual') {
+                if ('virtual' === (string) $tax['eu-tax-group']) {
                     if (!isset($euLocalizationFiles[$localizationPackFile])) {
                         $euLocalizationFiles[$localizationPackFile] = array(
                             'virtualTax' => $tax,
@@ -124,7 +124,7 @@ class UpdateEUTaxruleGroupsCommand extends ContainerAwareCommand
             // Get max tax id, and list of nodes to kill
             $taxId = 0;
             foreach ($file['pack']->taxes->tax as $tax) {
-                if ((string) $tax['auto-generated'] === '1' && (string) $tax['from-eu-tax-group'] === 'virtual') {
+                if ('1' === (string) $tax['auto-generated'] && 'virtual' === (string) $tax['from-eu-tax-group']) {
                     $nodesToKill[] = $tax;
                 } else {
                     // We only count the ids of the taxes we're not going to remove!
@@ -133,7 +133,7 @@ class UpdateEUTaxruleGroupsCommand extends ContainerAwareCommand
             }
 
             foreach ($file['pack']->taxes->taxRulesGroup as $trg) {
-                if ((string) $trg['auto-generated'] === '1' && (string) $trg['eu-tax-group'] === 'virtual') {
+                if ('1' === (string) $trg['auto-generated'] && 'virtual' === (string) $trg['eu-tax-group']) {
                     $nodesToKill[] = $trg;
                 }
             }
@@ -213,7 +213,7 @@ class UpdateEUTaxruleGroupsCommand extends ContainerAwareCommand
             $name = $attribute->getName();
 
             // This attribute seems to cause trouble, skip it.
-            if ($name === 'account_number' || in_array($name, $attributesToRemove, true)) {
+            if ('account_number' === $name || in_array($name, $attributesToRemove, true)) {
                 continue;
             }
 

@@ -42,7 +42,7 @@ class GroupInformation
     private $name;
 
     /**
-     * @param int $groupId
+     * @param int    $groupId
      * @param string $name
      */
     public function __construct($groupId, $name)

@@ -44,7 +44,7 @@ class Tools
      * @deprecated use linkRewrite
      *
      * @param string $str
-     * @param bool $utf8Decode (deprecated)
+     * @param bool   $utf8Decode (deprecated)
      *
      * @return string
      */
@@ -57,13 +57,13 @@ class Tools
      * Return the friendly url from the provided string.
      *
      * @param string $str
-     * @param bool $utf8Decode (deprecated)
+     * @param bool   $utf8Decode (deprecated)
      *
      * @return string
      */
     public function linkRewrite($str, $utf8Decode = null)
     {
-        if ($utf8Decode !== null) {
+        if (null !== $utf8Decode) {
             LegacyTools::displayParameterAsDeprecated('utf8_decode');
         }
 
@@ -89,9 +89,9 @@ class Tools
     }
 
     /**
-     * @param string $html
+     * @param string      $html
      * @param null|string $uri_unescape
-     * @param bool $allow_style
+     * @param bool        $allow_style
      *
      * @return string
      */
@@ -174,7 +174,7 @@ class Tools
      * @note : PHP 5.3.0 introduce a 3rd parameter mode in round function
      *
      * @param float $value
-     * @param int $precision
+     * @param int   $precision
      *
      * @return float
      */
@@ -186,7 +186,7 @@ class Tools
     /**
      * Return domain name according to configuration and depending on ssl activation.
      *
-     * @param bool $http if true, return domain name with protocol
+     * @param bool $http     if true, return domain name with protocol
      * @param bool $entities if true, convert special chars to HTML entities
      *
      * @return string domain

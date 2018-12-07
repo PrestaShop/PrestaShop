@@ -138,7 +138,7 @@ class OrderSubtotalLazyArray extends AbstractLazyArray
                 'type' => 'shipping',
                 'label' => $this->translator->trans('Shipping and handling', array(), 'Shop.Theme.Checkout'),
                 'amount' => $shippingCost,
-                'value' => $shippingCost != 0 ? $this->priceFormatter->format(
+                'value' => 0 != $shippingCost ? $this->priceFormatter->format(
                     $shippingCost,
                     Currency::getCurrencyInstance((int) $this->order->id_currency)
                 )

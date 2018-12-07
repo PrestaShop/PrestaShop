@@ -49,7 +49,7 @@ class RouterProviderTest extends TestCase
                 'path' => '/products/create',
                 '_legacy_link' => array(
                     'AdminProducts:add',
-                    'AdminProducts:create'
+                    'AdminProducts:create',
                 ),
             ),
         ));
@@ -86,7 +86,7 @@ class RouterProviderTest extends TestCase
                 'path' => '/products/create',
                 '_legacy_link' => array(
                     'AdminProducts:add',
-                    'AdminProducts:create'
+                    'AdminProducts:create',
                 ),
             ),
             array(
@@ -94,7 +94,7 @@ class RouterProviderTest extends TestCase
                 'path' => '/products/create',
                 '_legacy_link' => array(
                     'AdminCategories:add',
-                    'AdminCategories:create'
+                    'AdminCategories:create',
                 ),
             ),
         ));
@@ -110,7 +110,7 @@ class RouterProviderTest extends TestCase
             'AdminCategories' => array(
                 'add' => 'admin_categories_create',
                 'create' => 'admin_categories_create',
-            )
+            ),
         ), $controllersActions);
     }
 
@@ -127,7 +127,7 @@ class RouterProviderTest extends TestCase
                 'path' => '/products/create',
                 '_legacy_link' => array(
                     'AdminProducts:add',
-                    'AdminProducts:create'
+                    'AdminProducts:create',
                 ),
             ),
             array(
@@ -135,7 +135,7 @@ class RouterProviderTest extends TestCase
                 'path' => '/products/create',
                 '_legacy_link' => array(
                     'AdminCategories:add',
-                    'AdminCategories:create'
+                    'AdminCategories:create',
                 ),
             ),
         ));
@@ -158,7 +158,7 @@ class RouterProviderTest extends TestCase
                 'path' => '/products/create',
                 '_legacy_link' => array(
                     'AdminProducts:add',
-                    'AdminProducts:create'
+                    'AdminProducts:create',
                 ),
             ),
             array(
@@ -166,7 +166,7 @@ class RouterProviderTest extends TestCase
                 'path' => '/products/create',
                 '_legacy_link' => array(
                     'AdminCategories:add',
-                    'AdminCategories:create'
+                    'AdminCategories:create',
                 ),
             ),
         ));
@@ -209,7 +209,7 @@ class RouterProviderTest extends TestCase
                 'path' => '/products/create',
                 '_legacy_link' => array(
                     'AdminProducts:add',
-                    'AdminProducts:create'
+                    'AdminProducts:create',
                 ),
             ),
         ));
@@ -236,6 +236,7 @@ class RouterProviderTest extends TestCase
 
     /**
      * @param array $routes
+     *
      * @return \PHPUnit_Framework_MockObject_MockObject|RouterInterface
      */
     private function buildMultipleRouterMock(array $routes)
@@ -257,7 +258,7 @@ class RouterProviderTest extends TestCase
         $mockRouter
             ->method('generate')
             ->will($this->returnCallback(
-                function($routeName) use ($routeCollection) {
+                function ($routeName) use ($routeCollection) {
                     $route = $routeCollection->get($routeName);
 
                     return null !== $route ? $route->getPath() : null;
@@ -270,6 +271,7 @@ class RouterProviderTest extends TestCase
 
     /**
      * @param array $routes
+     *
      * @return RouteCollection
      */
     private function buildRouteCollection(array $routes)

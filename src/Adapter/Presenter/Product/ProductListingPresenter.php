@@ -33,12 +33,12 @@ class ProductListingPresenter extends ProductPresenter
 {
     /**
      * @param ProductPresentationSettings $settings
-     * @param array $product
-     * @param Language $language
+     * @param array                       $product
+     * @param Language                    $language
      *
      * @throws \ReflectionException
-     * @return ProductLazyArray|ProductListingLazyArray
      *
+     * @return ProductLazyArray|ProductListingLazyArray
      */
     public function present(
         ProductPresentationSettings $settings,

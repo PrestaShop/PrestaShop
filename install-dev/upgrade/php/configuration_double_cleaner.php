@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 function configuration_double_cleaner()
 {
     $result = Db::getInstance()->executeS('
@@ -35,7 +34,7 @@ function configuration_double_cleaner()
         Db::getInstance()->execute('
 		DELETE FROM '._DB_PREFIX_.'configuration
 		WHERE name = \''.addslashes($row['name']).'\'
-		AND id_configuration != '.(int)($row['minid']));
+		AND id_configuration != '.(int) ($row['minid']));
     }
     Db::getInstance()->execute('
 	DELETE FROM '._DB_PREFIX_.'configuration_lang

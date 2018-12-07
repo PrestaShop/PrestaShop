@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,11 +23,10 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 if (!defined('_PS_ADMIN_DIR_')) {
     define('_PS_ADMIN_DIR_', getcwd());
 }
-include_once(_PS_ADMIN_DIR_.'/../config/config.inc.php');
+include_once _PS_ADMIN_DIR_.'/../config/config.inc.php';
 
 $module = Tools::getValue('module');
 $render = Tools::getValue('render');
@@ -42,7 +41,7 @@ $id_lang = Tools::getValue('id_lang');
 if (!isset($cookie->id_employee) || !$cookie->id_employee || $cookie->id_employee != $id_employee) {
     die(Tools::displayError());
 }
-    
+
 if (!Validate::isModuleName($module)) {
     die(Tools::displayError());
 }
@@ -55,8 +54,8 @@ $shop_id = '';
 Shop::setContext(Shop::CONTEXT_ALL);
 if (Context::getContext()->cookie->shopContext) {
     $split = explode('-', Context::getContext()->cookie->shopContext);
-    if (count($split) == 2) {
-        if ($split[0] == 'g') {
+    if (2 == count($split)) {
+        if ('g' == $split[0]) {
             if (Context::getContext()->employee->hasAuthOnShopGroup($split[1])) {
                 Shop::setContext(Shop::CONTEXT_GROUP, $split[1]);
             } else {
@@ -75,10 +74,10 @@ if (Context::getContext()->cookie->shopContext) {
 
 // Check multishop context and set right context if need
 if (Shop::getContext()) {
-    if (Shop::getContext() == Shop::CONTEXT_SHOP && !Shop::CONTEXT_SHOP) {
+    if (Shop::CONTEXT_SHOP == Shop::getContext() && !Shop::CONTEXT_SHOP) {
         Shop::setContext(Shop::CONTEXT_GROUP, Shop::getContextShopGroupID());
     }
-    if (Shop::getContext() == Shop::CONTEXT_GROUP && !Shop::CONTEXT_GROUP) {
+    if (Shop::CONTEXT_GROUP == Shop::getContext() && !Shop::CONTEXT_GROUP) {
         Shop::setContext(Shop::CONTEXT_ALL);
     }
 }
@@ -90,7 +89,7 @@ if (!$shop_id) {
     Context::getContext()->shop = new Shop($shop_id);
 }
 
-require_once($module_path);
+require_once $module_path;
 
 $graph = new $module();
 $graph->setEmployee($id_employee);

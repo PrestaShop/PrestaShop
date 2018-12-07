@@ -75,7 +75,7 @@ class SqlLoader
      * @deprecated use parseFile()
      *
      * @param string $filename
-     * @param bool $stop_when_fail
+     * @param bool   $stop_when_fail
      */
     public function parse_file($filename, $stop_when_fail = true)
     {
@@ -86,7 +86,7 @@ class SqlLoader
      * Parse a SQL file and execute queries.
      *
      * @param string $filename
-     * @param bool $stop_when_fail
+     * @param bool   $stop_when_fail
      */
     public function parseFile($filename, $stop_when_fail = true)
     {
@@ -101,7 +101,7 @@ class SqlLoader
      * Parse and execute a list of SQL queries.
      *
      * @param string $content
-     * @param bool $stop_when_fail
+     * @param bool   $stop_when_fail
      */
     public function parse($content, $stop_when_fail = true)
     {

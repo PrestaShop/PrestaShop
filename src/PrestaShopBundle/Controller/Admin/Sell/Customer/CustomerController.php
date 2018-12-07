@@ -47,7 +47,7 @@ class CustomerController extends AbstractAdminController
     /**
      * Show customers listing.
      *
-     * @param Request $request
+     * @param Request         $request
      * @param CustomerFilters $filters
      *
      * @return Response
@@ -82,7 +82,7 @@ class CustomerController extends AbstractAdminController
     /**
      * Show customer edit form & handle processing of it.
      *
-     * @param int $customerId
+     * @param int     $customerId
      * @param Request $request
      *
      * @return Response
@@ -103,7 +103,7 @@ class CustomerController extends AbstractAdminController
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute="admin_customers_index")
      * @DemoRestricted(redirectRoute="admin_customers_index")
      *
-     * @param int $customerId
+     * @param int     $customerId
      * @param Request $request
      *
      * @return Response

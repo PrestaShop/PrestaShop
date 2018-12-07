@@ -37,7 +37,7 @@ interface FileWriterInterface
     /**
      * Write data to file.
      *
-     * @param string $fileName
+     * @param string                  $fileName
      * @param ExportableDataInterface $data
      *
      * @return SplFileInfo

@@ -55,9 +55,9 @@ class CustomerPersisterCore
     {
         if ($customer->id) {
             return $this->update($customer, $clearTextPassword, $newPassword, $passwordRequired);
-        }  
-            return $this->create($customer, $clearTextPassword);
-        
+        }
+
+        return $this->create($customer, $clearTextPassword);
     }
 
     private function update(Customer $customer, $clearTextPassword, $newPassword, $passwordRequired = true)
@@ -222,7 +222,7 @@ class CustomerPersisterCore
                 '{email}' => $customer->email,
             ),
             $customer->email,
-            $customer->firstname . ' ' . $customer->lastname
+            $customer->firstname.' '.$customer->lastname
         );
     }
 }

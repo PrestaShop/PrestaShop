@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -25,7 +25,7 @@
  */
 
 /**
- * Step 1 : display language form
+ * Step 1 : display language form.
  */
 class InstallControllerHttpWelcome extends InstallControllerHttp implements HttpConfigureInterface
 {
@@ -39,7 +39,7 @@ class InstallControllerHttpWelcome extends InstallControllerHttp implements Http
     }
 
     /**
-     * Change language
+     * Change language.
      */
     public function process()
     {
@@ -48,17 +48,17 @@ class InstallControllerHttpWelcome extends InstallControllerHttp implements Http
         }
 
         $locale = $this->language->getLanguage($this->session->lang)->locale;
-        if (!empty($this->session->lang) && !is_file(_PS_ROOT_DIR_ . '/app/Resources/translations/' . $locale . '/Install.' . $locale . '.xlf')) {
+        if (!empty($this->session->lang) && !is_file(_PS_ROOT_DIR_.'/app/Resources/translations/'.$locale.'/Install.'.$locale.'.xlf')) {
             Language::downloadAndInstallLanguagePack($this->session->lang, _PS_VERSION_, null, false);
             $this->clearCache();
         }
-        if (Tools::getIsset('language') && is_dir(_PS_ROOT_DIR_ . '/app/Resources/translations/' . $locale)) {
+        if (Tools::getIsset('language') && is_dir(_PS_ROOT_DIR_.'/app/Resources/translations/'.$locale)) {
             $this->redirect('welcome');
         }
     }
 
     /**
-     * Display welcome step
+     * Display welcome step.
      */
     public function display()
     {
@@ -76,6 +76,6 @@ class InstallControllerHttpWelcome extends InstallControllerHttp implements Http
     private function clearCache()
     {
         $fs = new \Symfony\Component\Filesystem\Filesystem();
-        $fs->remove(_PS_ROOT_DIR_ . '/var/cache/' . (_PS_MODE_DEV_ ? 'dev' : 'prod'));
+        $fs->remove(_PS_ROOT_DIR_.'/var/cache/'.(_PS_MODE_DEV_ ? 'dev' : 'prod'));
     }
 }

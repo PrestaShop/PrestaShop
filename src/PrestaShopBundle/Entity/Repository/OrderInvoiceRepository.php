@@ -44,7 +44,7 @@ class OrderInvoiceRepository
 
     /**
      * @param Connection $connection
-     * @param string $tablePrefix
+     * @param string     $tablePrefix
      */
     public function __construct(Connection $connection, $tablePrefix)
     {

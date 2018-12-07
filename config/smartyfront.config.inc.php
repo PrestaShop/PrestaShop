@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -140,19 +140,18 @@ function smartyWidgetBlock($params, $content, $smarty)
         });
         // We don't display anything since the template is not rendered yet.
         return '';
-    }  
-        // Function gets called for the closing tag of the block.
-        // We restore the backed up variables in order not to override
-        // template variables.
-        if (!empty($backedUpVariablesStack)) {
-            $backedUpVariables = array_pop($backedUpVariablesStack);
-            foreach ($backedUpVariables as $key => $value) {
-                $smarty->assign($key, $value);
-            }
+    }
+    // Function gets called for the closing tag of the block.
+    // We restore the backed up variables in order not to override
+    // template variables.
+    if (!empty($backedUpVariablesStack)) {
+        $backedUpVariables = array_pop($backedUpVariablesStack);
+        foreach ($backedUpVariables as $key => $value) {
+            $smarty->assign($key, $value);
         }
-        // This time content is filled with rendered template, so return it.
-        return $content;
-    
+    }
+    // This time content is filled with rendered template, so return it.
+    return $content;
 }
 
 function smartyTranslate($params, $smarty)
@@ -187,9 +186,8 @@ function smartyTranslate($params, $smarty)
 
             if (_PS_MODE_DEV_) {
                 throw new Exception($errorMessage);
-            }  
-                PrestaShopLogger::addLog($errorMessage);
-            
+            }
+            PrestaShopLogger::addLog($errorMessage);
         }
 
         if (!is_array($params['sprintf'])) {
@@ -203,16 +201,15 @@ function smartyTranslate($params, $smarty)
 
             if (_PS_MODE_DEV_) {
                 throw new Exception($errorMessage);
-            }  
-                PrestaShopLogger::addLog($errorMessage);
+            }
+            PrestaShopLogger::addLog($errorMessage);
 
-                return $params['s'];
-            
+            return $params['s'];
         }
     }
 
     if (($translation = Context::getContext()->getTranslator()->trans($params['s'], $params['sprintf'], $params['d'])) !== $params['s']
-        && $params['mod'] === false) {
+        && false === $params['mod']) {
         return $translation;
     }
 
@@ -220,7 +217,7 @@ function smartyTranslate($params, $smarty)
     $basename = basename($smarty->source->name, '.tpl');
     $key = $basename.'_'.md5($string);
 
-    if (isset($smarty->source) && (mb_strpos($smarty->source->filepath, DIRECTORY_SEPARATOR.'override'.DIRECTORY_SEPARATOR) !== false)) {
+    if (isset($smarty->source) && (false !== mb_strpos($smarty->source->filepath, DIRECTORY_SEPARATOR.'override'.DIRECTORY_SEPARATOR))) {
         $key = 'override_'.$key;
     }
 
@@ -245,9 +242,9 @@ function smartyTranslate($params, $smarty)
         );
     }
 
-    if ($_LANG != null && isset($_LANG[$key])) {
+    if (null != $_LANG && isset($_LANG[$key])) {
         $msg = $_LANG[$key];
-    } elseif ($_LANG != null && isset($_LANG[Tools::strtolower($key)])) {
+    } elseif (null != $_LANG && isset($_LANG[Tools::strtolower($key)])) {
         $msg = $_LANG[Tools::strtolower($key)];
     } else {
         $msg = $params['s'];
@@ -259,7 +256,7 @@ function smartyTranslate($params, $smarty)
         $msg = addslashes($msg);
     }
 
-    if ($params['sprintf'] !== null) {
+    if (null !== $params['sprintf']) {
         $msg = Translate::checkAndReplaceArgs($msg, $params['sprintf']);
     }
 

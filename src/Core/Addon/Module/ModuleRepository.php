@@ -149,7 +149,7 @@ class ModuleRepository implements ModuleRepositoryInterface
         list($isoLang) = explode('-', $translator->getLocale());
 
         // Cache related variables
-        $this->cacheFilePath = $isoLang . '_local_modules';
+        $this->cacheFilePath = $isoLang.'_local_modules';
         $this->cacheProvider = $cacheProvider;
         $this->loadedModules = new ArrayCache();
 
@@ -202,14 +202,14 @@ class ModuleRepository implements ModuleRepositoryInterface
 
     /**
      * @param AddonListFilter $filter
-     * @param bool $skip_main_class_attributes
+     * @param bool            $skip_main_class_attributes
      *
      * @return AddonInterface[] retrieve a list of addons, regarding the $filter used
      */
     public function getFilteredList(AddonListFilter $filter, $skip_main_class_attributes = false)
     {
         if ($filter->status >= AddonListFilterStatus::ON_DISK
-            && $filter->status != AddonListFilterStatus::ALL) {
+            && AddonListFilterStatus::ALL != $filter->status) {
             $modules = $this->getModulesOnDisk($skip_main_class_attributes);
         } else {
             $modules = $this->getList();
@@ -217,11 +217,11 @@ class ModuleRepository implements ModuleRepositoryInterface
 
         foreach ($modules as $key => &$module) {
             // Part One : Removing addons not related to the selected product type
-            if ($filter->type != AddonListFilterType::ALL) {
-                if ($module->attributes->get('productType') == 'module') {
+            if (AddonListFilterType::ALL != $filter->type) {
+                if ('module' == $module->attributes->get('productType')) {
                     $productType = AddonListFilterType::MODULE;
                 }
-                if ($module->attributes->get('productType') == 'service') {
+                if ('service' == $module->attributes->get('productType')) {
                     $productType = AddonListFilterType::SERVICE;
                 }
                 if (!isset($productType) || $productType & ~$filter->type) {
@@ -231,31 +231,31 @@ class ModuleRepository implements ModuleRepositoryInterface
             }
 
             // Part Two : Remove module not installed if specified
-            if ($filter->status != AddonListFilterStatus::ALL) {
-                if ($module->database->get('installed') == 1
+            if (AddonListFilterStatus::ALL != $filter->status) {
+                if (1 == $module->database->get('installed')
                     && ($filter->hasStatus(AddonListFilterStatus::UNINSTALLED)
                         || !$filter->hasStatus(AddonListFilterStatus::INSTALLED))) {
                     unset($modules[$key]);
                     continue;
                 }
 
-                if ($module->database->get('installed') == 0
+                if (0 == $module->database->get('installed')
                     && (!$filter->hasStatus(AddonListFilterStatus::UNINSTALLED)
                         || $filter->hasStatus(AddonListFilterStatus::INSTALLED))) {
                     unset($modules[$key]);
                     continue;
                 }
 
-                if ($module->database->get('installed') == 1
-                    && $module->database->get('active') == 1
+                if (1 == $module->database->get('installed')
+                    && 1 == $module->database->get('active')
                     && !$filter->hasStatus(AddonListFilterStatus::DISABLED)
                     && $filter->hasStatus(AddonListFilterStatus::ENABLED)) {
                     unset($modules[$key]);
                     continue;
                 }
 
-                if ($module->database->get('installed') == 1
-                    && $module->database->get('active') == 0
+                if (1 == $module->database->get('installed')
+                    && 0 == $module->database->get('active')
                     && !$filter->hasStatus(AddonListFilterStatus::ENABLED)
                     && $filter->hasStatus(AddonListFilterStatus::DISABLED)) {
                     unset($modules[$key]);
@@ -264,7 +264,7 @@ class ModuleRepository implements ModuleRepositoryInterface
             }
 
             // Part Three : Remove addons not related to the proper source (ex Addons)
-            if ($filter->origin != AddonListFilterOrigin::ALL) {
+            if (AddonListFilterOrigin::ALL != $filter->origin) {
                 if (!$module->attributes->has('origin_filter_value') &&
                     !$filter->hasOrigin(AddonListFilterOrigin::DISK)
                 ) {
@@ -411,8 +411,8 @@ class ModuleRepository implements ModuleRepositoryInterface
      * Get the new module presenter class of the specified name provided.
      * It contains data from its instance, the disk, the database and from the marketplace if exists.
      *
-     * @param string $name The technical name of the module
-     * @param bool $skip_main_class_attributes
+     * @param string $name                       The technical name of the module
+     * @param bool   $skip_main_class_attributes
      *
      * @return Module
      */
@@ -422,8 +422,8 @@ class ModuleRepository implements ModuleRepositoryInterface
             return $this->loadedModules->fetch($name);
         }
 
-        $path = $this->modulePath . $name;
-        $php_file_path = $path . '/' . $name . '.php';
+        $path = $this->modulePath.$name;
+        $php_file_path = $path.'/'.$name.'.php';
 
         /* Data which design the module class */
         $attributes = array('name' => $name);
@@ -556,7 +556,7 @@ class ModuleRepository implements ModuleRepositoryInterface
 
         foreach ($modulesDirsList as $moduleDir) {
             $moduleName = $moduleDir->getFilename();
-            if (!file_exists($this->modulePath . $moduleName . '/' . $moduleName . '.php')) {
+            if (!file_exists($this->modulePath.$moduleName.'/'.$moduleName.'.php')) {
                 continue;
             }
             try {
@@ -625,7 +625,7 @@ class ModuleRepository implements ModuleRepositoryInterface
     public function getInstalledModulesPaths()
     {
         $paths = array();
-        $modulesFiles = Finder::create()->directories()->in(__DIR__ . '/../../../../modules')->depth(0);
+        $modulesFiles = Finder::create()->directories()->in(__DIR__.'/../../../../modules')->depth(0);
         $installedModules = array_keys($this->getInstalledModules());
 
         foreach ($modulesFiles as $moduleFile) {

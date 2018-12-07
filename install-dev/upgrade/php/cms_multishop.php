@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 function cms_multishop()
 {
     $shops = Db::getInstance()->executeS('
@@ -44,10 +43,10 @@ function cms_multishop()
             'link_rewrite' => pSQL($value['link_rewrite']),
             'meta_title' => pSQL($value['meta_title']),
             'meta_keywords' => pSQL($value['meta_keywords']),
-            'meta_description' => pSQL($value['meta_description'])
+            'meta_description' => pSQL($value['meta_description']),
             );
         foreach ($shops as $shop) {
-            if ($shop['id_shop'] != 1) {
+            if (1 != $shop['id_shop']) {
                 $cms['id_shop'] = $shop['id_shop'];
                 $data[] = $cms;
             }
@@ -74,10 +73,10 @@ function cms_multishop()
             'link_rewrite' => pSQL($value['link_rewrite']),
             'meta_title' => pSQL($value['meta_title']),
             'meta_keywords' => pSQL($value['meta_keywords']),
-            'meta_description' => pSQL($value['meta_description'])
+            'meta_description' => pSQL($value['meta_description']),
             );
         foreach ($shops as $shop) {
-            if ($shop['id_shop'] != 1) {
+            if (1 != $shop['id_shop']) {
                 $cms_category['id_shop'] = $shop['id_shop'];
                 $data[] = $cms_category;
             }

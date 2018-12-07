@@ -99,11 +99,11 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
                 $product['total_price_tax_excl'] = $product['unit_price_tax_excl'] * $product['product_quantity'];
                 $product['total_price_tax_incl'] = $product['unit_price_tax_incl'] * $product['product_quantity'];
 
-                if ($this->order_slip->partial == 1) {
+                if (1 == $this->order_slip->partial) {
                     $order_slip_detail = Db::getInstance()->getRow('
-                        SELECT * FROM `' . _DB_PREFIX_ . 'order_slip_detail`
-                        WHERE `id_order_slip` = ' . (int) $this->order_slip->id . '
-                        AND `id_order_detail` = ' . (int) $product['id_order_detail']);
+                        SELECT * FROM `'._DB_PREFIX_.'order_slip_detail`
+                        WHERE `id_order_slip` = '.(int) $this->order_slip->id.'
+                        AND `id_order_detail` = '.(int) $product['id_order_detail']);
 
                     $product['total_price_tax_excl'] = $order_slip_detail['amount_tax_excl'];
                     $product['total_price_tax_incl'] = $order_slip_detail['amount_tax_incl'];
@@ -120,7 +120,7 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
 
         unset($product); // remove reference
 
-        if ($this->order_slip->shipping_cost == 0) {
+        if (0 == $this->order_slip->shipping_cost) {
             $this->order->total_shipping_tax_incl = $this->order->total_shipping_tax_excl = 0;
         }
 
@@ -137,7 +137,7 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
         $this->order->total_paid_tax_excl += $this->order->total_shipping_tax_excl;
 
         $total_cart_rule = 0;
-        if ($this->order_slip->order_slip_type == 1 && is_array($cart_rules = $this->order->getCartRules($this->order_invoice->id))) {
+        if (1 == $this->order_slip->order_slip_type && is_array($cart_rules = $this->order->getCartRules($this->order_invoice->id))) {
             foreach ($cart_rules as $cart_rule) {
                 if ($tax_excluded_display) {
                     $total_cart_rule += $cart_rule['value_tax_excl'];
@@ -151,8 +151,8 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
             'order' => $this->order,
             'order_slip' => $this->order_slip,
             'order_details' => $this->order->products,
-            'cart_rules' => $this->order_slip->order_slip_type == 1 ? $this->order->getCartRules($this->order_invoice->id) : false,
-            'amount_choosen' => $this->order_slip->order_slip_type == 2 ? true : false,
+            'cart_rules' => 1 == $this->order_slip->order_slip_type ? $this->order->getCartRules($this->order_invoice->id) : false,
+            'amount_choosen' => 2 == $this->order_slip->order_slip_type ? true : false,
             'delivery_address' => $formatted_delivery_address,
             'invoice_address' => $formatted_invoice_address,
             'addresses' => array('invoice' => $invoice_address, 'delivery' => $delivery_address),
@@ -191,7 +191,7 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
      */
     public function getFilename()
     {
-        return Configuration::get('PS_CREDIT_SLIP_PREFIX', Context::getContext()->language->id, null, $this->order->id_shop) . sprintf('%06d', $this->order_slip->id) . '.pdf';
+        return Configuration::get('PS_CREDIT_SLIP_PREFIX', Context::getContext()->language->id, null, $this->order->id_shop).sprintf('%06d', $this->order_slip->id).'.pdf';
     }
 
     /**

@@ -138,7 +138,7 @@ class CombineCompressCacheConfiguration implements DataConfigurationInterface
      */
     private function getThemeCacheFolder()
     {
-        return $this->themePath . '/' . $this->themeName . '/cache/';
+        return $this->themePath.'/'.$this->themeName.'/cache/';
     }
 
     /**

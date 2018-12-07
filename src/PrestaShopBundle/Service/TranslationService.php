@@ -55,8 +55,8 @@ class TranslationService
      * @param $locale
      *
      * @throws Exception
-     * @return mixed
      *
+     * @return mixed
      */
     public function findLanguageByLocale($locale)
     {
@@ -73,14 +73,14 @@ class TranslationService
 
     /**
      * @throws Exception
-     * @return mixed
      *
+     * @return mixed
      */
     private function getLangToLocalesMapping()
     {
         $translationsDirectory = $this->getResourcesDirectory();
 
-        $legacyToStandardLocalesJson = file_get_contents($translationsDirectory . '/legacy-to-standard-locales.json');
+        $legacyToStandardLocalesJson = file_get_contents($translationsDirectory.'/legacy-to-standard-locales.json');
         $legacyToStandardLocales = json_decode($legacyToStandardLocalesJson, true);
 
         $jsonLastErrorCode = json_last_error();
@@ -96,7 +96,7 @@ class TranslationService
      */
     private function getResourcesDirectory()
     {
-        return $this->container->getParameter('kernel.root_dir') . '/Resources';
+        return $this->container->getParameter('kernel.root_dir').'/Resources';
     }
 
     /**
@@ -111,7 +111,7 @@ class TranslationService
     {
         $factory = $this->container->get('ps.translations_factory');
 
-        if ($selected !== 'classic' && $this->requiresThemeTranslationsFactory($selected, $type)) {
+        if ('classic' !== $selected && $this->requiresThemeTranslationsFactory($selected, $type)) {
             $factory = $this->container->get('ps.theme_translations_factory');
         }
 
@@ -136,7 +136,7 @@ class TranslationService
      */
     private function requiresThemeTranslationsFactory($theme, $type)
     {
-        return $type === 'themes' && !is_null($theme);
+        return 'themes' === $type && !is_null($theme);
     }
 
     /**

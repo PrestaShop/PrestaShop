@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace LegacyTests\Unit\Core\Foundation;
 
 use PrestaShop\PrestaShop\Core\Foundation\Version;
@@ -192,7 +193,7 @@ class VersionTest extends TestCase
      */
     public function testCompareGreaterAnotherVersion($version, $result)
     {
-        $this->assertEquals($result, $this->anotherVersion->isGreaterThan($version), self::ANOTHER_VERSION.' > '.$version . ' must be ' . ($result ? 'true' : 'false'));
+        $this->assertEquals($result, $this->anotherVersion->isGreaterThan($version), self::ANOTHER_VERSION.' > '.$version.' must be '.($result ? 'true' : 'false'));
     }
 
     public function getAnotherCompareGreater()
@@ -294,7 +295,6 @@ class VersionTest extends TestCase
      *
      * @param $version string  Version
      * @param $result  boolean Result
-     *
      */
     public function testCheckInvalidVersion($version)
     {

@@ -98,11 +98,11 @@ final class GetCategoryForEditingHandler implements GetCategoryForEditingHandler
     private function getCoverImage(CategoryId $categoryId)
     {
         $imageType = 'jpg';
-        $image = _PS_CAT_IMG_DIR_ . $categoryId->getValue() . '.' . $imageType;
+        $image = _PS_CAT_IMG_DIR_.$categoryId->getValue().'.'.$imageType;
 
         $imageTag = ImageManager::thumbnail(
             $image,
-            'category' . '_' . $categoryId->getValue() . '.' . $imageType,
+            'category'.'_'.$categoryId->getValue().'.'.$imageType,
             350,
             $imageType,
             true,
@@ -128,7 +128,7 @@ final class GetCategoryForEditingHandler implements GetCategoryForEditingHandler
      */
     private function getThumbnailImage(CategoryId $categoryId)
     {
-        $image = _PS_CAT_IMG_DIR_ . $categoryId->getValue() . '.jpg';
+        $image = _PS_CAT_IMG_DIR_.$categoryId->getValue().'.jpg';
         $imageTypes = ImageType::getImagesTypes('categories');
 
         $thumb = '';
@@ -136,11 +136,11 @@ final class GetCategoryForEditingHandler implements GetCategoryForEditingHandler
         $formattedSmall = ImageType::getFormattedName('small');
         foreach ($imageTypes as $k => $imageType) {
             if ($formattedSmall == $imageType['name']) {
-                $thumb = _PS_CAT_IMG_DIR_ . $categoryId->getValue() . '-' . $imageType['name'] . '.jpg';
+                $thumb = _PS_CAT_IMG_DIR_.$categoryId->getValue().'-'.$imageType['name'].'.jpg';
                 if (is_file($thumb)) {
                     $imageTag = ImageManager::thumbnail(
                         $thumb,
-                        'category_' . (int) $categoryId->getValue() . '-thumb.jpg',
+                        'category_'.(int) $categoryId->getValue().'-thumb.jpg',
                         (int) $imageType['width'],
                         'jpg',
                         true,
@@ -152,12 +152,12 @@ final class GetCategoryForEditingHandler implements GetCategoryForEditingHandler
 
         if (!is_file($thumb)) {
             $thumb = $image;
-            $imageName = 'category_' . $categoryId->getValue() . '-thumb.jpg';
+            $imageName = 'category_'.$categoryId->getValue().'-thumb.jpg';
 
             $imageTag = ImageManager::thumbnail($image, $imageName, 125, 'jpg', true, true);
             ImageManager::resize(
-                _PS_TMP_IMG_DIR_ . $imageName,
-                _PS_TMP_IMG_DIR_ . $imageName,
+                _PS_TMP_IMG_DIR_.$imageName,
+                _PS_TMP_IMG_DIR_.$imageName,
                 (int) $imageType['width'],
                 (int) $imageType['height']
             );
@@ -185,10 +185,10 @@ final class GetCategoryForEditingHandler implements GetCategoryForEditingHandler
         $menuThumbnails = array();
 
         for ($i = 0; $i < 3; ++$i) {
-            if (file_exists(_PS_CAT_IMG_DIR_ . $categoryId->getValue() . '-' . $i . '_thumb.jpg')) {
+            if (file_exists(_PS_CAT_IMG_DIR_.$categoryId->getValue().'-'.$i.'_thumb.jpg')) {
                 $imageTag = ImageManager::thumbnail(
-                    _PS_CAT_IMG_DIR_ . $categoryId->getValue() . '-' . $i . '_thumb.jpg',
-                    'category_' . $categoryId->getValue() . '-' . $i . '_thumb.jpg',
+                    _PS_CAT_IMG_DIR_.$categoryId->getValue().'-'.$i.'_thumb.jpg',
+                    'category_'.$categoryId->getValue().'-'.$i.'_thumb.jpg',
                     100,
                     'jpg',
                     true,

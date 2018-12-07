@@ -86,7 +86,7 @@ abstract class AbstractLegacyRouteProvider implements LegacyRouteProviderInterfa
         $action = LegacyRoute::isIndexAction($action) ? 'index' : $action;
         if (!isset($controllerActions[$action])) {
             throw new RouteNotFoundException(
-                sprintf('Could not find a route matching for legacy action: %s', $controller . ':' . $action)
+                sprintf('Could not find a route matching for legacy action: %s', $controller.':'.$action)
             );
         }
 

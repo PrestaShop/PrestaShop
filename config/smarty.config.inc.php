@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -40,11 +40,11 @@ $smarty->use_sub_dirs = true;
 $smarty->setConfigDir(_PS_SMARTY_DIR_.'configs');
 $smarty->caching = false;
 
-if (Configuration::get('PS_SMARTY_CACHING_TYPE') == 'mysql') {
+if ('mysql' == Configuration::get('PS_SMARTY_CACHING_TYPE')) {
     include _PS_CLASS_DIR_.'Smarty/SmartyCacheResourceMysql.php';
     $smarty->caching_type = 'mysql';
 }
-$smarty->force_compile = (Configuration::get('PS_SMARTY_FORCE_COMPILE') == _PS_SMARTY_FORCE_COMPILE_) ? true : false;
+$smarty->force_compile = (_PS_SMARTY_FORCE_COMPILE_ == Configuration::get('PS_SMARTY_FORCE_COMPILE')) ? true : false;
 $smarty->compile_check = (Configuration::get('PS_SMARTY_FORCE_COMPILE') >= _PS_SMARTY_CHECK_COMPILE_) ? true : false;
 $smarty->debug_tpl = _PS_ALL_THEMES_DIR_.'debug.tpl';
 
@@ -74,11 +74,11 @@ function smartyEscape($string, $esc_type = 'html', $char_set = null, $double_enc
     require_once $escapeModifierFile;
 
     global $smarty;
-    if (($esc_type === 'html' || $esc_type === 'htmlall') && $smarty->escape_html) {
+    if (('html' === $esc_type || 'htmlall' === $esc_type) && $smarty->escape_html) {
         return $string;
-    }  
-        return smarty_modifier_escape($string, $esc_type, $char_set, $double_encode);
-    
+    }
+
+    return smarty_modifier_escape($string, $esc_type, $char_set, $double_encode);
 }
 
 smartyRegisterFunction($smarty, 'modifier', 'escape', 'smartyEscape');

@@ -147,7 +147,7 @@ class HelperCalendarCore extends Helper
 
     public function setDateFrom($value)
     {
-        if (!isset($value) || $value == '') {
+        if (!isset($value) || '' == $value) {
             $value = date('Y-m-d', strtotime('-31 days'));
         }
 
@@ -171,7 +171,7 @@ class HelperCalendarCore extends Helper
 
     public function setDateTo($value)
     {
-        if (!isset($value) || $value == '') {
+        if (!isset($value) || '' == $value) {
             $value = date('Y-m-d');
         }
 
@@ -226,26 +226,26 @@ class HelperCalendarCore extends Helper
     {
         $context = Context::getContext();
         $admin_webpath = str_ireplace(_PS_CORE_DIR_, '', _PS_ADMIN_DIR_);
-        $admin_webpath = preg_replace('/^' . preg_quote(DIRECTORY_SEPARATOR, '/') . '/', '', $admin_webpath);
+        $admin_webpath = preg_replace('/^'.preg_quote(DIRECTORY_SEPARATOR, '/').'/', '', $admin_webpath);
         $bo_theme = ((Validate::isLoadedObject($context->employee)
             && $context->employee->bo_theme) ? $context->employee->bo_theme : 'default');
 
-        if (!file_exists(_PS_BO_ALL_THEMES_DIR_ . $bo_theme . DIRECTORY_SEPARATOR
-            . 'template')) {
+        if (!file_exists(_PS_BO_ALL_THEMES_DIR_.$bo_theme.DIRECTORY_SEPARATOR
+            .'template')) {
             $bo_theme = 'default';
         }
 
         if ($context->controller->ajax) {
-            $html = '<script type="text/javascript" src="' . __PS_BASE_URI__ . $admin_webpath
-                . '/themes/' . $bo_theme . '/js/date-range-picker.js"></script>';
-            $html .= '<script type="text/javascript" src="' . __PS_BASE_URI__ . $admin_webpath
-                . '/themes/' . $bo_theme . '/js/calendar.js"></script>';
+            $html = '<script type="text/javascript" src="'.__PS_BASE_URI__.$admin_webpath
+                .'/themes/'.$bo_theme.'/js/date-range-picker.js"></script>';
+            $html .= '<script type="text/javascript" src="'.__PS_BASE_URI__.$admin_webpath
+                .'/themes/'.$bo_theme.'/js/calendar.js"></script>';
         } else {
             $html = '';
-            $context->controller->addJs(__PS_BASE_URI__ . $admin_webpath
-                . '/themes/' . $bo_theme . '/js/date-range-picker.js');
-            $context->controller->addJs(__PS_BASE_URI__ . $admin_webpath
-                . '/themes/' . $bo_theme . '/js/calendar.js');
+            $context->controller->addJs(__PS_BASE_URI__.$admin_webpath
+                .'/themes/'.$bo_theme.'/js/date-range-picker.js');
+            $context->controller->addJs(__PS_BASE_URI__.$admin_webpath
+                .'/themes/'.$bo_theme.'/js/calendar.js');
         }
 
         $this->tpl = $this->createTemplate($this->base_tpl);

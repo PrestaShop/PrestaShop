@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -26,7 +26,7 @@
 
 namespace LegacyTests\Unit\Core\Cart\Calculation;
 
-use \Cart;
+use Cart;
 use CartRule;
 use Context;
 use Order;
@@ -36,13 +36,12 @@ use Tax;
 use Tools;
 
 /**
- * legacy code here : used to test behaviour between recent and previous version
+ * legacy code here : used to test behaviour between recent and previous version.
  */
 class CartOld extends Cart
 {
-
     /**
-     * This function returns the total cart amount
+     * This function returns the total cart amount.
      *
      * @param bool  $with_taxes With or without taxes
      * @param int   $type       Total type enum
@@ -103,21 +102,21 @@ class CartOld extends Cart
         $with_shipping = in_array($type, array(Cart::BOTH, Cart::ONLY_SHIPPING), true);
 
         // if cart rules are not used
-        if ($type == Cart::ONLY_DISCOUNTS && !CartRule::isFeatureActive()) {
+        if (Cart::ONLY_DISCOUNTS == $type && !CartRule::isFeatureActive()) {
             return 0;
         }
 
         // no shipping cost if is a cart with only virtuals products
         $virtual = $this->isVirtualCart();
-        if ($virtual && $type == Cart::ONLY_SHIPPING) {
+        if ($virtual && Cart::ONLY_SHIPPING == $type) {
             return 0;
         }
 
-        if ($virtual && $type == Cart::BOTH) {
+        if ($virtual && Cart::BOTH == $type) {
             $type = Cart::BOTH_WITHOUT_SHIPPING;
         }
 
-        if ($with_shipping || $type == Cart::ONLY_DISCOUNTS) {
+        if ($with_shipping || Cart::ONLY_DISCOUNTS == $type) {
             if (is_null($products) && is_null($id_carrier)) {
                 $shipping_fees = $this->getTotalShippingCost(null, (bool) $with_taxes);
             } else {
@@ -127,11 +126,11 @@ class CartOld extends Cart
             $shipping_fees = 0;
         }
 
-        if ($type == Cart::ONLY_SHIPPING) {
+        if (Cart::ONLY_SHIPPING == $type) {
             return $shipping_fees;
         }
 
-        if ($type == Cart::ONLY_PRODUCTS_WITHOUT_SHIPPING) {
+        if (Cart::ONLY_PRODUCTS_WITHOUT_SHIPPING == $type) {
             $type = Cart::ONLY_PRODUCTS;
         }
 
@@ -141,7 +140,7 @@ class CartOld extends Cart
             $products = $this->getProducts();
         }
 
-        if ($type == Cart::ONLY_PHYSICAL_PRODUCTS_WITHOUT_SHIPPING) {
+        if (Cart::ONLY_PHYSICAL_PRODUCTS_WITHOUT_SHIPPING == $type) {
             foreach ($products as $key => $product) {
                 if ($product['is_virtual']) {
                     unset($products[$key]);
@@ -165,7 +164,7 @@ class CartOld extends Cart
             if (array_key_exists('is_gift', $product) && $product['is_gift']) {
                 // products given away may appear twice if added manually
                 // so we prevent adding their subtotal twice if another line is found
-                $productIndex = $product['id_product'] . '-' . $product['id_product_attribute'];
+                $productIndex = $product['id_product'].'-'.$product['id_product_attribute'];
                 if ($productLines[$productIndex] > 1) {
                     continue;
                 }
@@ -208,13 +207,13 @@ class CartOld extends Cart
                 if (!isset($products_total[$id_tax_rules_group])) {
                     $products_total[$id_tax_rules_group] = 0;
                 }
-            } elseif (!isset($products_total[$id_tax_rules_group . '_' . $id_address])) {
-                $products_total[$id_tax_rules_group . '_' . $id_address] = 0;
+            } elseif (!isset($products_total[$id_tax_rules_group.'_'.$id_address])) {
+                $products_total[$id_tax_rules_group.'_'.$id_address] = 0;
             }
 
             switch ($ps_round_type) {
                 case Order::ROUND_TOTAL:
-                    $products_total[$id_tax_rules_group . '_' . $id_address] += $price
+                    $products_total[$id_tax_rules_group.'_'.$id_address] += $price
                                                                                 * (int) $product['cart_quantity'];
                     break;
 
@@ -239,12 +238,12 @@ class CartOld extends Cart
 
         $order_total_products = $order_total;
 
-        if ($type == Cart::ONLY_DISCOUNTS) {
+        if (Cart::ONLY_DISCOUNTS == $type) {
             $order_total = 0;
         }
 
         $wrappingFees = $this->calculateWrappingFees($with_taxes, $type);
-        if ($type == Cart::ONLY_WRAPPING) {
+        if (Cart::ONLY_WRAPPING == $type) {
             return $wrappingFees;
         }
 
@@ -265,7 +264,7 @@ class CartOld extends Cart
                 /** @var \CartRule $cartRule */
                 $cartRule = $item['obj'];
                 // If the cart rule offers free shipping, add the shipping cost
-                if (($with_shipping || $type == Cart::ONLY_DISCOUNTS) && $cartRule->free_shipping && !$flag) {
+                if (($with_shipping || Cart::ONLY_DISCOUNTS == $type) && $cartRule->free_shipping && !$flag) {
                     $order_shipping_discount = (float) Tools::ps_round(
                         $cartRule->getContextualValue(
                             $with_taxes,
@@ -325,15 +324,15 @@ class CartOld extends Cart
             $order_total -= $order_total_discount;
         }
 
-        if ($type == Cart::BOTH) {
+        if (Cart::BOTH == $type) {
             $order_total += $shipping_fees + $wrappingFees;
         }
 
-        if ($order_total < 0 && $type != Cart::ONLY_DISCOUNTS) {
+        if ($order_total < 0 && Cart::ONLY_DISCOUNTS != $type) {
             return 0;
         }
 
-        if ($type == Cart::ONLY_DISCOUNTS) {
+        if (Cart::ONLY_DISCOUNTS == $type) {
             return $order_total_discount;
         }
 

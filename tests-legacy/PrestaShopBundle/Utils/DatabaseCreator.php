@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -34,21 +34,21 @@ use Symfony\Component\Process\Process;
 class DatabaseCreator
 {
     /**
-     * Create the initialize database used for test
+     * Create the initialize database used for test.
      */
     public static function createTestDB()
     {
         define('_PS_IN_TEST_', true);
         define('__PS_BASE_URI__', '/');
-        define('_PS_ROOT_DIR_', __DIR__ . '/../../..');
-        define('_PS_MODULE_DIR_', _PS_ROOT_DIR_ . '/tests-legacy/resources/modules/');
-        require_once(__DIR__ . '/../../../install-dev/init.php');
+        define('_PS_ROOT_DIR_', __DIR__.'/../../..');
+        define('_PS_MODULE_DIR_', _PS_ROOT_DIR_.'/tests-legacy/resources/modules/');
+        require_once __DIR__.'/../../../install-dev/init.php';
 
         $install = new Install();
         \DbPDOCore::createDatabase(_DB_SERVER_, _DB_USER_, _DB_PASSWD_, _DB_NAME_, false);
         $install->clearDatabase(false);
         $install->installDatabase(true);
-        $process = new Process(PHP_BINARY . ' bin/console prestashop:schema:update-without-foreign --env=test');
+        $process = new Process(PHP_BINARY.' bin/console prestashop:schema:update-without-foreign --env=test');
         $process->run();
         $install->initializeTestContext();
         $install->installDefaultData('test_shop', false, false, false);
@@ -73,13 +73,13 @@ class DatabaseCreator
     }
 
     /**
-     * Restore the test database in its initial state from a dump generated during createTestDB
+     * Restore the test database in its initial state from a dump generated during createTestDB.
      *
      * @throws DBALException
      */
     public static function restoreTestDB()
     {
-        if (!file_exists(sys_get_temp_dir() . '/' . 'ps_dump.sql')) {
+        if (!file_exists(sys_get_temp_dir().'/'.'ps_dump.sql')) {
             throw new DBALException('You need to run \'composer create-test-db\' to create the initial test database');
         }
 

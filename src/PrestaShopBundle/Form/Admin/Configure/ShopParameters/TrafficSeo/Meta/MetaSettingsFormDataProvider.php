@@ -75,9 +75,9 @@ final class MetaSettingsFormDataProvider implements FormDataProviderInterface
      * @param DataConfigurationInterface $setUpUrlDataConfiguration
      * @param DataConfigurationInterface $shopUrlsDataConfiguration
      * @param DataConfigurationInterface $urlSchemaDataConfiguration
-     * @param TranslatorInterface $translator
-     * @param RouteValidator $routeValidator
-     * @param Validate $validate
+     * @param TranslatorInterface        $translator
+     * @param RouteValidator             $routeValidator
+     * @param Validate                   $validate
      */
     public function __construct(
         DataConfigurationInterface $setUpUrlDataConfiguration,
@@ -131,8 +131,8 @@ final class MetaSettingsFormDataProvider implements FormDataProviderInterface
      * @param array $data
      *
      * @throws PrestaShopException
-     * @return array - if array is not empty then error strings are returned
      *
+     * @return array - if array is not empty then error strings are returned
      */
     private function validateData(array $data)
     {
@@ -151,8 +151,8 @@ final class MetaSettingsFormDataProvider implements FormDataProviderInterface
      * @param array $configuration
      *
      * @throws PrestaShopException
-     * @return array
      *
+     * @return array
      */
     private function validateUrlSchema(array $configuration)
     {

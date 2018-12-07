@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -25,7 +25,7 @@
  */
 
 /**
- * Manage session for install script
+ * Manage session for install script.
  */
 class InstallSession
 {
@@ -38,6 +38,7 @@ class InstallSession
         if (!self::$_instance) {
             self::$_instance = new self();
         }
+
         return self::$_instance;
     }
 
@@ -82,13 +83,14 @@ class InstallSession
                 $ref = &$null;
             }
         }
+
         return $ref;
     }
 
     public function __set($varname, $value)
     {
         if (InstallSession::$_cookie_mode) {
-            if ($varname == 'xml_loader_ids') {
+            if ('xml_loader_ids' == $varname) {
                 return;
             }
             if (is_array($value)) {
@@ -104,9 +106,9 @@ class InstallSession
     {
         if (InstallSession::$_cookie_mode) {
             return isset(InstallSession::$_cookie->{$varname});
-        }  
-            return isset($_SESSION[$varname]);
-        
+        }
+
+        return isset($_SESSION[$varname]);
     }
 
     public function __unset($varname)

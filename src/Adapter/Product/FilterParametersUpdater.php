@@ -37,17 +37,17 @@ final class FilterParametersUpdater
     /**
      * In case of position ordering all the filters should be reset.
      *
-     * @param array $filterParameters
+     * @param array  $filterParameters
      * @param string $orderBy
-     * @param bool $hasCategoryFilter
+     * @param bool   $hasCategoryFilter
      *
      * @return array $filterParameters
      */
     public function cleanFiltersForPositionOrdering($filterParameters, $orderBy, $hasCategoryFilter)
     {
-        if ($orderBy == 'position_ordering' && $hasCategoryFilter) {
+        if ('position_ordering' == $orderBy && $hasCategoryFilter) {
             foreach (array_keys($filterParameters) as $key) {
-                if (mb_strpos($key, 'filter_column_') === 0) {
+                if (0 === mb_strpos($key, 'filter_column_')) {
                     $filterParameters[$key] = '';
                 }
             }
@@ -62,8 +62,8 @@ final class FilterParametersUpdater
      * @param array $defaultFilterParameters
      *
      * @throws ProductException
-     * @return array
      *
+     * @return array
      */
     public function buildFilters(
         array $queryFilterParameters,
@@ -80,13 +80,13 @@ final class FilterParametersUpdater
 
     /**
      * @param string $parameterName
-     * @param array $queryFilterParameters
-     * @param array $persistedFilterParameters
-     * @param array $defaultFilterParameters
+     * @param array  $queryFilterParameters
+     * @param array  $persistedFilterParameters
+     * @param array  $defaultFilterParameters
      *
      * @throws ProductException
-     * @return int|string
      *
+     * @return int|string
      */
     private function getParameter(
         $parameterName,
@@ -108,8 +108,8 @@ final class FilterParametersUpdater
             );
         }
 
-        if ($value === 'last' && isset($persistedFilterParameters['last_' . $parameterName])) {
-            $value = $persistedFilterParameters['last_' . $parameterName];
+        if ('last' === $value && isset($persistedFilterParameters['last_'.$parameterName])) {
+            $value = $persistedFilterParameters['last_'.$parameterName];
         }
 
         return $value;

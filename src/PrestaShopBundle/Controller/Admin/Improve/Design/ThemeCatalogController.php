@@ -74,11 +74,11 @@ class ThemeCatalogController extends FrameworkBundleAdminController
         $activity = $this->get('prestashop.adapter.legacy.configuration')->getInt('PS_SHOP_ACTIVITY');
 
         return "https://addons.prestashop.com/iframe/search-1.7.php?psVersion=$psVersion"
-            . "&isoLang=$languageCode"
-            . "&isoCurrency=$currencyCode"
-            . "&isoCountry=$countryCode"
-            . "&activity=$activity"
-            . "&parentUrl=$parent_domain"
-            . '&onlyThemes=1';
+            ."&isoLang=$languageCode"
+            ."&isoCurrency=$currencyCode"
+            ."&isoCountry=$countryCode"
+            ."&activity=$activity"
+            ."&parentUrl=$parent_domain"
+            .'&onlyThemes=1';
     }
 }

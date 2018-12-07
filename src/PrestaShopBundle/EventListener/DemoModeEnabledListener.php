@@ -71,10 +71,10 @@ class DemoModeEnabledListener
     /**
      * DemoModeEnabledListener constructor.
      *
-     * @param RouterInterface $router
+     * @param RouterInterface     $router
      * @param TranslatorInterface $translator
-     * @param SessionInterface $session
-     * @param Reader $annotationReader
+     * @param SessionInterface    $session
+     * @param Reader              $annotationReader
      * @param $isDemoModeEnabled
      */
     public function __construct(
@@ -150,7 +150,7 @@ class DemoModeEnabledListener
      * Retrieve DemoRestricted Annotation.
      *
      * @param Controller $controllerObject
-     * @param string $methodName
+     * @param string     $methodName
      *
      * @return null|DemoRestricted
      */
@@ -176,7 +176,7 @@ class DemoModeEnabledListener
     /**
      * Gets query parameters by comparing them to the current request attributes.
      *
-     * @param array $queryParametersToKeep
+     * @param array   $queryParametersToKeep
      * @param Request $request
      *
      * @return array

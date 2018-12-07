@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 function module_reinstall_blocksearch()
 {
     $res = true;
@@ -42,7 +41,9 @@ function module_reinstall_blocksearch()
 				WHERE h.name = "'.$hook_name.'" group by id_hook');
             $res &= Db::getInstance()->insert('hook_module', $row);
         }
+
         return $res;
     }
+
     return true;
 }

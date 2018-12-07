@@ -193,7 +193,7 @@ class StockMvtCore extends ObjectModel
      * @param int $id_product
      * @param int $id_product_attribute Use 0 if the product does not have attributes
      * @param int $quantity
-     * @param int $id_warehouse Optional
+     * @param int $id_warehouse         Optional
      *
      * @return array mvts
      */
@@ -208,12 +208,12 @@ class StockMvtCore extends ObjectModel
         $query->from('stock_mvt', 'sm');
         $query->innerJoin('stock', 's', 's.id_stock = sm.id_stock');
         $query->where('sm.sign = -1');
-        $query->where('sm.id_order = ' . (int) $id_order);
-        $query->where('s.id_product = ' . (int) $id_product . ' AND s.id_product_attribute = ' . (int) $id_product_attribute);
+        $query->where('sm.id_order = '.(int) $id_order);
+        $query->where('s.id_product = '.(int) $id_product.' AND s.id_product_attribute = '.(int) $id_product_attribute);
 
         // if filer by warehouse
         if (!is_null($id_warehouse)) {
-            $query->where('s.id_warehouse = ' . (int) $id_warehouse);
+            $query->where('s.id_warehouse = '.(int) $id_warehouse);
         }
 
         // orders the movements by date
@@ -253,15 +253,15 @@ class StockMvtCore extends ObjectModel
         $query->innerJoin('warehouse', 'w', 'w.id_warehouse = s.id_warehouse');
         $query->where('sm.sign = 1');
         if ($id_product_attribute) {
-            $query->where('s.id_product = ' . (int) $id_product . ' AND s.id_product_attribute = ' . (int) $id_product_attribute);
+            $query->where('s.id_product = '.(int) $id_product.' AND s.id_product_attribute = '.(int) $id_product_attribute);
         } else {
-            $query->where('s.id_product = ' . (int) $id_product);
+            $query->where('s.id_product = '.(int) $id_product);
         }
         $query->orderBy('date_add DESC');
 
         $res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 
-        if ($res != false) {
+        if (false != $res) {
             return $res['0'];
         }
 

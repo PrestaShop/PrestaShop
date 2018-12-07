@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,15 +23,12 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
-
-
 class Cart extends CartCore
 {
     /**
-     * Update the address id of the cart
+     * Update the address id of the cart.
      *
-     * @param int $id_address Current address id to change
+     * @param int $id_address     Current address id to change
      * @param int $id_address_new New address id
      */
     public function updateAddressId($id_address, $id_address_new)
@@ -50,15 +47,15 @@ class Cart extends CartCore
         }
 
         $sql = 'UPDATE `'._DB_PREFIX_.'cart_product`
-		SET `id_address_delivery` = '.(int)$id_address_new.'
-		WHERE  `id_cart` = '.(int)$this->id.'
-			AND `id_address_delivery` = '.(int)$id_address;
+		SET `id_address_delivery` = '.(int) $id_address_new.'
+		WHERE  `id_cart` = '.(int) $this->id.'
+			AND `id_address_delivery` = '.(int) $id_address;
         Db::getInstance()->execute($sql);
 
         $sql = 'UPDATE `'._DB_PREFIX_.'customization`
-			SET `id_address_delivery` = '.(int)$id_address_new.'
-			WHERE  `id_cart` = '.(int)$this->id.'
-				AND `id_address_delivery` = '.(int)$id_address;
+			SET `id_address_delivery` = '.(int) $id_address_new.'
+			WHERE  `id_cart` = '.(int) $this->id.'
+				AND `id_address_delivery` = '.(int) $id_address;
         Db::getInstance()->execute($sql);
     }
 
@@ -73,7 +70,7 @@ class Cart extends CartCore
 			SELECT cd.`value`
 			FROM `'._DB_PREFIX_.'customized_data` cd
 			INNER JOIN `'._DB_PREFIX_.'customization` c ON (cd.`id_customization`= c.`id_customization`)
-			WHERE cd.`type`= 0 AND c.`id_cart`='.(int)$this->id
+			WHERE cd.`type`= 0 AND c.`id_cart`='.(int) $this->id
         );
 
         foreach ($uploaded_files as $must_unlink) {
@@ -87,18 +84,18 @@ class Cart extends CartCore
 			WHERE `id_customization` IN (
 				SELECT `id_customization`
 				FROM `'._DB_PREFIX_.'customization`
-				WHERE `id_cart`='.(int)$this->id.'
+				WHERE `id_cart`='.(int) $this->id.'
 			)'
         );
 
         Db::getInstance()->execute(
             '
 			DELETE FROM `'._DB_PREFIX_.'customization`
-			WHERE `id_cart` = '.(int)$this->id
+			WHERE `id_cart` = '.(int) $this->id
         );
 
-        if (!Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'cart_rule` WHERE `id_cart` = '.(int)$this->id)
-         || !Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'cart_product` WHERE `id_cart` = '.(int)$this->id)) {
+        if (!Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'cart_rule` WHERE `id_cart` = '.(int) $this->id)
+         || !Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'cart_product` WHERE `id_cart` = '.(int) $this->id)) {
             return false;
         }
 

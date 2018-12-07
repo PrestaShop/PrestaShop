@@ -97,7 +97,7 @@ class CheckoutDeliveryStepCore extends AbstractCheckoutStep
 
     public function getGiftCostForLabel()
     {
-        if ($this->getGiftCost() != 0) {
+        if (0 != $this->getGiftCost()) {
             $taxLabel = '';
             $priceFormatter = new PriceFormatter();
 
@@ -131,7 +131,7 @@ class CheckoutDeliveryStepCore extends AbstractCheckoutStep
             );
             $this->getCheckoutSession()->setGift(
                 isset($requestParams['gift']) ? $requestParams['gift'] : false,
-                (isset($requestParams['gift'], $requestParams['gift_message'])  ) ? $requestParams['gift_message'] : ''
+                (isset($requestParams['gift'], $requestParams['gift_message'])) ? $requestParams['gift_message'] : ''
             );
         }
 

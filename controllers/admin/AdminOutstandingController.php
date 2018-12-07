@@ -45,10 +45,10 @@ class AdminOutstandingControllerCore extends AdminController
 		r.`color`,
 		c.`company`,
 		rl.`name` AS `risk`';
-        $this->_join = 'LEFT JOIN `' . _DB_PREFIX_ . 'orders` o ON (o.`id_order` = a.`id_order`)
-		LEFT JOIN `' . _DB_PREFIX_ . 'customer` c ON (c.`id_customer` = o.`id_customer`)
-		LEFT JOIN `' . _DB_PREFIX_ . 'risk` r ON (r.`id_risk` = c.`id_risk`)
-		LEFT JOIN `' . _DB_PREFIX_ . 'risk_lang` rl ON (r.`id_risk` = rl.`id_risk` AND rl.`id_lang` = ' . (int) $this->context->language->id . ')';
+        $this->_join = 'LEFT JOIN `'._DB_PREFIX_.'orders` o ON (o.`id_order` = a.`id_order`)
+		LEFT JOIN `'._DB_PREFIX_.'customer` c ON (c.`id_customer` = o.`id_customer`)
+		LEFT JOIN `'._DB_PREFIX_.'risk` r ON (r.`id_risk` = c.`id_risk`)
+		LEFT JOIN `'._DB_PREFIX_.'risk_lang` rl ON (r.`id_risk` = rl.`id_risk` AND rl.`id_lang` = '.(int) $this->context->language->id.')';
         $this->_where = 'AND number > 0';
         $this->_use_found_rows = false;
 
@@ -153,7 +153,7 @@ class AdminOutstandingControllerCore extends AdminController
             throw new PrestaShopException('object Customer cannot be loaded');
         }
 
-        return '<b>' . Tools::displayPrice($customer->getOutstanding(), Context::getContext()->currency) . '</b>';
+        return '<b>'.Tools::displayPrice($customer->getOutstanding(), Context::getContext()->currency).'</b>';
     }
 
     /**
@@ -173,7 +173,7 @@ class AdminOutstandingControllerCore extends AdminController
         }
 
         $link = $this->context->link->getAdminLink('AdminOrders');
-        $link .= '&vieworder&id_order=' . $order->id;
+        $link .= '&vieworder&id_order='.$order->id;
         $this->redirect_after = $link;
         $this->redirect();
     }

@@ -69,10 +69,10 @@ final class GridDefinition implements GridDefinitionInterface
     private $filters;
 
     /**
-     * @param string $id Unique grid identifier
-     * @param string $name
-     * @param ColumnCollectionInterface $columns
-     * @param FilterCollectionInterface $filters
+     * @param string                        $id          Unique grid identifier
+     * @param string                        $name
+     * @param ColumnCollectionInterface     $columns
+     * @param FilterCollectionInterface     $filters
      * @param GridActionCollectionInterface $gridActions
      * @param BulkActionCollectionInterface $bulkActions
      */

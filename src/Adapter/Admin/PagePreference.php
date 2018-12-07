@@ -67,7 +67,7 @@ class PagePreference implements AdminPagePreferenceInterface
             throw new \InvalidParameterException('$page parameter missing');
         }
 
-        return $this->session->has('should_use_legacy_page_for_' . $page) && $this->session->get('should_use_legacy_page_for_' . $page, 0) == 1;
+        return $this->session->has('should_use_legacy_page_for_'.$page) && 1 == $this->session->get('should_use_legacy_page_for_'.$page, 0);
     }
 
     /**
@@ -80,9 +80,9 @@ class PagePreference implements AdminPagePreferenceInterface
         }
 
         if ((bool) $useLegacy) {
-            $this->session->set('should_use_legacy_page_for_' . $page, 1);
+            $this->session->set('should_use_legacy_page_for_'.$page, 1);
         } else {
-            $this->session->remove('should_use_legacy_page_for_' . $page);
+            $this->session->remove('should_use_legacy_page_for_'.$page);
         }
     }
 
@@ -96,7 +96,7 @@ class PagePreference implements AdminPagePreferenceInterface
             return true;
         }
 
-        $version = Db::getInstance()->getValue('SELECT `value` FROM `' . _DB_PREFIX_ . 'configuration` WHERE `name` = "PS_INSTALL_VERSION"');
+        $version = Db::getInstance()->getValue('SELECT `value` FROM `'._DB_PREFIX_.'configuration` WHERE `name` = "PS_INSTALL_VERSION"');
         if (!$version) {
             return false;
         }
@@ -110,7 +110,7 @@ class PagePreference implements AdminPagePreferenceInterface
                 return false;
             default:
                 // show only for 1.7.x
-                if ($currentVersion[0] != '1' || $currentVersion[1] != '7') {
+                if ('1' != $currentVersion[0] || '7' != $currentVersion[1]) {
                     return false;
                 }
                 // show only if upgrade from older version than current one

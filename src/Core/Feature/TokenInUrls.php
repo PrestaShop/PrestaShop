@@ -39,6 +39,6 @@ final class TokenInUrls
      */
     public static function isDisabled()
     {
-        return getenv(self::ENV_VAR) === self::DISABLED;
+        return self::DISABLED === getenv(self::ENV_VAR);
     }
 }

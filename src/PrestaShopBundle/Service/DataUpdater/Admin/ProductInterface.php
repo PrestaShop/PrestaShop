@@ -37,7 +37,7 @@ interface ProductInterface
      * Activate or deactivate a list of products.
      *
      * @param array $productListId The ID list of products to (de)activate
-     * @param bool $activate true to activate, false to deactivate
+     * @param bool  $activate      true to activate, false to deactivate
      *
      * @throws \PrestaShopBundle\Exception\UpdateProductException If an error occured during update (not really blocking since its just activation flag)
      *
@@ -95,7 +95,7 @@ interface ProductInterface
      * Since the sort can be partial (only one page, with offset and limit), we MUST sort only the given IDs,
      * and keep the others safely sorted without any functional change (even if we can bulk shift positions to fix gaps and duplicates).
      *
-     * @param array $productList the list of products to sort (keys: ID, values: old positions) The natural order of the array is the new order to update
+     * @param array $productList  the list of products to sort (keys: ID, values: old positions) The natural order of the array is the new order to update
      * @param array $filterParams Contains the ID of the category to sort. Take it from AdminProductDataProvider::getPersistedFilterParameters().
      *
      * @throws \PrestaShopBundle\Exception\UpdateProductException If deletion failed (some normal cases can brings this, it's not a Development error)

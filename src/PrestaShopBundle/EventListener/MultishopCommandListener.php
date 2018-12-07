@@ -81,7 +81,7 @@ class MultishopCommandListener
     private function fixUnloadedConfig()
     {
         if (!defined('_DB_PREFIX_')) {
-            require_once $this->rootDir . '/../config/config.inc.php';
+            require_once $this->rootDir.'/../config/config.inc.php';
         }
     }
 }

@@ -45,21 +45,21 @@ class AdminCartsControllerCore extends AdminController
         $this->_orderWay = 'DESC';
 
         $this->_select = 'CONCAT(LEFT(c.`firstname`, 1), \'. \', c.`lastname`) `customer`, a.id_cart total, ca.name carrier, o.id_order,
-		IF (IFNULL(o.id_order, \'' . $this->trans('Non ordered', array(), 'Admin.Orderscustomers.Feature') . '\') = \'' . $this->trans('Non ordered', array(), 'Admin.Orderscustomers.Feature') . '\', IF(TIME_TO_SEC(TIMEDIFF(\'' . pSQL(date('Y-m-d H:i:00', time())) . '\', a.`date_add`)) > 86400, \'' . $this->trans('Abandoned cart', array(), 'Admin.Orderscustomers.Feature') . '\', \'' . $this->trans('Non ordered', array(), 'Admin.Orderscustomers.Feature') . '\'), o.id_order) AS status, IF(o.id_order, 1, 0) badge_success, IF(o.id_order, 0, 1) badge_danger, IF(co.id_guest, 1, 0) id_guest';
-        $this->_join = 'LEFT JOIN ' . _DB_PREFIX_ . 'customer c ON (c.id_customer = a.id_customer)
-		LEFT JOIN ' . _DB_PREFIX_ . 'currency cu ON (cu.id_currency = a.id_currency)
-		LEFT JOIN ' . _DB_PREFIX_ . 'carrier ca ON (ca.id_carrier = a.id_carrier)
-		LEFT JOIN ' . _DB_PREFIX_ . 'orders o ON (o.id_cart = a.id_cart)
+		IF (IFNULL(o.id_order, \''.$this->trans('Non ordered', array(), 'Admin.Orderscustomers.Feature').'\') = \''.$this->trans('Non ordered', array(), 'Admin.Orderscustomers.Feature').'\', IF(TIME_TO_SEC(TIMEDIFF(\''.pSQL(date('Y-m-d H:i:00', time())).'\', a.`date_add`)) > 86400, \''.$this->trans('Abandoned cart', array(), 'Admin.Orderscustomers.Feature').'\', \''.$this->trans('Non ordered', array(), 'Admin.Orderscustomers.Feature').'\'), o.id_order) AS status, IF(o.id_order, 1, 0) badge_success, IF(o.id_order, 0, 1) badge_danger, IF(co.id_guest, 1, 0) id_guest';
+        $this->_join = 'LEFT JOIN '._DB_PREFIX_.'customer c ON (c.id_customer = a.id_customer)
+		LEFT JOIN '._DB_PREFIX_.'currency cu ON (cu.id_currency = a.id_currency)
+		LEFT JOIN '._DB_PREFIX_.'carrier ca ON (ca.id_carrier = a.id_carrier)
+		LEFT JOIN '._DB_PREFIX_.'orders o ON (o.id_cart = a.id_cart)
 		LEFT JOIN (
             SELECT `id_guest`
-            FROM `' . _DB_PREFIX_ . 'connections`
+            FROM `'._DB_PREFIX_.'connections`
             WHERE
-                TIME_TO_SEC(TIMEDIFF(\'' . pSQL(date('Y-m-d H:i:00', time())) . '\', `date_add`)) < 1800
+                TIME_TO_SEC(TIMEDIFF(\''.pSQL(date('Y-m-d H:i:00', time())).'\', `date_add`)) < 1800
             LIMIT 1
        ) AS co ON co.`id_guest` = a.`id_guest`';
 
-        if (Tools::getValue('action') && Tools::getValue('action') == 'filterOnlyAbandonedCarts') {
-            $this->_having = 'status = \'' . $this->trans('Abandoned cart', array(), 'Admin.Orderscustomers.Feature') . '\'';
+        if (Tools::getValue('action') && 'filterOnlyAbandonedCarts' == Tools::getValue('action')) {
+            $this->_having = 'status = \''.$this->trans('Abandoned cart', array(), 'Admin.Orderscustomers.Feature').'\'';
         } else {
             $this->_use_found_rows = false;
         }
@@ -128,7 +128,7 @@ class AdminCartsControllerCore extends AdminController
     {
         if (empty($this->display)) {
             $this->page_header_toolbar_btn['export_cart'] = array(
-                'href' => self::$currentIndex . '&exportcart&token=' . $this->token,
+                'href' => self::$currentIndex.'&exportcart&token='.$this->token,
                 'desc' => $this->trans('Export carts', array(), 'Admin.Orderscustomers.Feature'),
                 'icon' => 'process-icon-export',
             );
@@ -150,13 +150,13 @@ class AdminCartsControllerCore extends AdminController
         $helper->color = 'color1';
         $helper->title = $this->trans('Conversion Rate', array(), 'Admin.Global');
         $helper->subtitle = $this->trans('30 days', array(), 'Admin.Global');
-        if (ConfigurationKPI::get('CONVERSION_RATE') !== false) {
+        if (false !== ConfigurationKPI::get('CONVERSION_RATE')) {
             $helper->value = ConfigurationKPI::get('CONVERSION_RATE');
         }
-        if (ConfigurationKPI::get('CONVERSION_RATE_CHART') !== false) {
+        if (false !== ConfigurationKPI::get('CONVERSION_RATE_CHART')) {
             $helper->data = ConfigurationKPI::get('CONVERSION_RATE_CHART');
         }
-        $helper->source = $this->context->link->getAdminLink('AdminStats') . '&ajax=1&action=getKpi&kpi=conversion_rate';
+        $helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=conversion_rate';
         $helper->refresh = (bool) (ConfigurationKPI::get('CONVERSION_RATE_EXPIRE') < $time);
         $kpis[] = $helper->generate();
 
@@ -168,11 +168,11 @@ class AdminCartsControllerCore extends AdminController
         $date_from = date(Context::getContext()->language->date_format_lite, strtotime('-2 day'));
         $date_to = date(Context::getContext()->language->date_format_lite, strtotime('-1 day'));
         $helper->subtitle = $this->trans('From %date1% to %date2%', array('%date1%' => $date_from, '%date2%' => $date_to), 'Admin.Orderscustomers.Feature');
-        $helper->href = $this->context->link->getAdminLink('AdminCarts') . '&action=filterOnlyAbandonedCarts';
-        if (ConfigurationKPI::get('ABANDONED_CARTS') !== false) {
+        $helper->href = $this->context->link->getAdminLink('AdminCarts').'&action=filterOnlyAbandonedCarts';
+        if (false !== ConfigurationKPI::get('ABANDONED_CARTS')) {
             $helper->value = ConfigurationKPI::get('ABANDONED_CARTS');
         }
-        $helper->source = $this->context->link->getAdminLink('AdminStats') . '&ajax=1&action=getKpi&kpi=abandoned_cart';
+        $helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=abandoned_cart';
         $helper->refresh = (bool) (ConfigurationKPI::get('ABANDONED_CARTS_EXPIRE') < $time);
         $kpis[] = $helper->generate();
 
@@ -182,11 +182,11 @@ class AdminCartsControllerCore extends AdminController
         $helper->color = 'color3';
         $helper->title = $this->trans('Average Order Value', array(), 'Admin.Orderscustomers.Feature');
         $helper->subtitle = $this->trans('30 days', array(), 'Admin.Global');
-        if (ConfigurationKPI::get('AVG_ORDER_VALUE') !== false) {
+        if (false !== ConfigurationKPI::get('AVG_ORDER_VALUE')) {
             $helper->value = $this->trans('%amount% tax excl.', array('%amount%' => ConfigurationKPI::get('AVG_ORDER_VALUE')), 'Admin.Orderscustomers.Feature');
         }
         if (ConfigurationKPI::get('AVG_ORDER_VALUE_EXPIRE') < $time) {
-            $helper->source = $this->context->link->getAdminLink('AdminStats') . '&ajax=1&action=getKpi&kpi=average_order_value';
+            $helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=average_order_value';
         }
         $kpis[] = $helper->generate();
 
@@ -196,10 +196,10 @@ class AdminCartsControllerCore extends AdminController
         $helper->color = 'color4';
         $helper->title = $this->trans('Net Profit per Visitor', array(), 'Admin.Orderscustomers.Feature');
         $helper->subtitle = $this->trans('30 days', array(), 'Admin.Global');
-        if (ConfigurationKPI::get('NETPROFIT_VISITOR') !== false) {
+        if (false !== ConfigurationKPI::get('NETPROFIT_VISITOR')) {
             $helper->value = ConfigurationKPI::get('NETPROFIT_VISITOR');
         }
-        $helper->source = $this->context->link->getAdminLink('AdminStats') . '&ajax=1&action=getKpi&kpi=netprofit_visitor';
+        $helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=netprofit_visitor';
         $helper->refresh = (bool) (ConfigurationKPI::get('NETPROFIT_VISITOR_EXPIRE') < $time);
         $kpis[] = $helper->generate();
 
@@ -235,7 +235,7 @@ class AdminCartsControllerCore extends AdminController
             $tax_calculation_method = Group::getPriceDisplayMethod(Group::getCurrent()->id);
         }
 
-        if ($tax_calculation_method == PS_TAX_EXC) {
+        if (PS_TAX_EXC == $tax_calculation_method) {
             $total_products = $summary['total_products'];
             $total_discounts = $summary['total_discounts_tax_exc'];
             $total_wrapping = $summary['total_wrapping_tax_exc'];
@@ -249,7 +249,7 @@ class AdminCartsControllerCore extends AdminController
             $total_shipping = $summary['total_shipping'];
         }
         foreach ($products as &$product) {
-            if ($tax_calculation_method == PS_TAX_EXC) {
+            if (PS_TAX_EXC == $tax_calculation_method) {
                 $product['product_price'] = $product['price'];
                 $product['product_total'] = $product['total'];
             } else {
@@ -258,16 +258,16 @@ class AdminCartsControllerCore extends AdminController
             }
             $image = array();
             if (isset($product['id_product_attribute']) && (int) $product['id_product_attribute']) {
-                $image = Db::getInstance()->getRow('SELECT id_image FROM ' . _DB_PREFIX_ . 'product_attribute_image WHERE id_product_attribute = ' . (int) $product['id_product_attribute']);
+                $image = Db::getInstance()->getRow('SELECT id_image FROM '._DB_PREFIX_.'product_attribute_image WHERE id_product_attribute = '.(int) $product['id_product_attribute']);
             }
             if (!isset($image['id_image'])) {
-                $image = Db::getInstance()->getRow('SELECT id_image FROM ' . _DB_PREFIX_ . 'image WHERE id_product = ' . (int) $product['id_product'] . ' AND cover = 1');
+                $image = Db::getInstance()->getRow('SELECT id_image FROM '._DB_PREFIX_.'image WHERE id_product = '.(int) $product['id_product'].' AND cover = 1');
             }
 
             $product['qty_in_stock'] = StockAvailable::getQuantityAvailableByProduct($product['id_product'], isset($product['id_product_attribute']) ? $product['id_product_attribute'] : null, (int) $id_shop);
 
             $image_product = new Image($image['id_image']);
-            $product['image'] = (isset($image['id_image']) ? ImageManager::thumbnail(_PS_IMG_DIR_ . 'p/' . $image_product->getExistingImgPath() . '.jpg', 'product_mini_' . (int) $product['id_product'] . (isset($product['id_product_attribute']) ? '_' . (int) $product['id_product_attribute'] : '') . '.jpg', 45, 'jpg') : '--');
+            $product['image'] = (isset($image['id_image']) ? ImageManager::thumbnail(_PS_IMG_DIR_.'p/'.$image_product->getExistingImgPath().'.jpg', 'product_mini_'.(int) $product['id_product'].(isset($product['id_product_attribute']) ? '_'.(int) $product['id_product_attribute'] : '').'.jpg', 45, 'jpg') : '--');
 
             $customized_datas = Product::getAllCustomizedDatas($this->context->cart->id, null, true, null, (int) $product['id_customization']);
             $this->context->cart->setProductCustomizedDatas($product, $customized_datas);
@@ -386,7 +386,7 @@ class AdminCartsControllerCore extends AdminController
         $errors = array();
         if ($this->access('edit')) {
             $errors = array();
-            if (Tools::getValue('only_display') != 1) {
+            if (1 != Tools::getValue('only_display')) {
                 if (!$this->context->cart->id || (!$id_product = (int) Tools::getValue('id_product'))) {
                     return;
                 }
@@ -395,8 +395,8 @@ class AdminCartsControllerCore extends AdminController
                     return;
                 }
                 foreach ($customization_fields as $customization_field) {
-                    $field_id = 'customization_' . $id_product . '_' . $customization_field['id_customization_field'];
-                    if ($customization_field['type'] == Product::CUSTOMIZE_TEXTFIELD) {
+                    $field_id = 'customization_'.$id_product.'_'.$customization_field['id_customization_field'];
+                    if (Product::CUSTOMIZE_TEXTFIELD == $customization_field['type']) {
                         if (!Tools::getValue($field_id)) {
                             if ($customization_field['required']) {
                                 $errors[] = $this->trans('Please fill in all the required fields.', array(), 'Admin.Notifications.Error');
@@ -407,7 +407,7 @@ class AdminCartsControllerCore extends AdminController
                             $errors[] = $this->trans('Invalid message', array(), 'Admin.Notifications.Error');
                         }
                         $this->context->cart->addTextFieldToProduct((int) $product->id, (int) $customization_field['id_customization_field'], Product::CUSTOMIZE_TEXTFIELD, Tools::getValue($field_id));
-                    } elseif ($customization_field['type'] == Product::CUSTOMIZE_FILE) {
+                    } elseif (Product::CUSTOMIZE_FILE == $customization_field['type']) {
                         if (!isset($_FILES[$field_id]) || !isset($_FILES[$field_id]['tmp_name']) || empty($_FILES[$field_id]['tmp_name'])) {
                             if ($customization_field['required']) {
                                 $errors[] = $this->trans('Please fill in all the required fields.', array(), 'Admin.Notifications.Error');
@@ -421,11 +421,11 @@ class AdminCartsControllerCore extends AdminController
                             $errors[] = $this->trans('An error occurred during the image upload process.', array(), 'Admin.Catalog.Notification');
                         }
                         $file_name = md5(uniqid(rand(), true));
-                        if (!ImageManager::resize($tmp_name, _PS_UPLOAD_DIR_ . $file_name)) {
+                        if (!ImageManager::resize($tmp_name, _PS_UPLOAD_DIR_.$file_name)) {
                             continue;
-                        } elseif (!ImageManager::resize($tmp_name, _PS_UPLOAD_DIR_ . $file_name . '_small', (int) Configuration::get('PS_PRODUCT_PICTURE_WIDTH'), (int) Configuration::get('PS_PRODUCT_PICTURE_HEIGHT'))) {
+                        } elseif (!ImageManager::resize($tmp_name, _PS_UPLOAD_DIR_.$file_name.'_small', (int) Configuration::get('PS_PRODUCT_PICTURE_WIDTH'), (int) Configuration::get('PS_PRODUCT_PICTURE_HEIGHT'))) {
                             $errors[] = $this->trans('An error occurred during the image upload process.', array(), 'Admin.Catalog.Notification');
-                        } elseif (!chmod(_PS_UPLOAD_DIR_ . $file_name, 0777) || !chmod(_PS_UPLOAD_DIR_ . $file_name . '_small', 0777)) {
+                        } elseif (!chmod(_PS_UPLOAD_DIR_.$file_name, 0777) || !chmod(_PS_UPLOAD_DIR_.$file_name.'_small', 0777)) {
                             $errors[] = $this->trans('An error occurred during the image upload process.', array(), 'Admin.Catalog.Notification');
                         } else {
                             $this->context->cart->addPictureToProduct((int) $product->id, (int) $customization_field['id_customization_field'], Product::CUSTOMIZE_FILE, $file_name);
@@ -454,13 +454,13 @@ class AdminCartsControllerCore extends AdminController
                 $errors[] = $this->trans('An order has already been placed with this cart.', array(), 'Admin.Catalog.Notification');
             } elseif (!($id_product = (int) Tools::getValue('id_product')) || !($product = new Product((int) $id_product, true, $this->context->language->id))) {
                 $errors[] = $this->trans('Invalid product', array(), 'Admin.Catalog.Notification');
-            } elseif (!($qty = Tools::getValue('qty')) || $qty == 0) {
+            } elseif (!($qty = Tools::getValue('qty')) || 0 == $qty) {
                 $errors[] = $this->trans('Invalid quantity', array(), 'Admin.Catalog.Notification');
             }
 
             // Don't try to use a product if not instanciated before due to errors
             if (isset($product) && $product->id) {
-                if (($id_product_attribute = Tools::getValue('id_product_attribute')) != 0) {
+                if (0 != ($id_product_attribute = Tools::getValue('id_product_attribute'))) {
                     if (!Product::isAvailableWhenOutOfStock($product->out_of_stock) && !Attribute::checkAttributeQty((int) $id_product_attribute, (int) $qty)) {
                         $errors[] = $this->trans('There are not enough products in stock.', array(), 'Admin.Catalog.Notification');
                     }
@@ -499,7 +499,7 @@ class AdminCartsControllerCore extends AdminController
     {
         if ($this->access('edit')) {
             $delivery_option = Tools::getValue('delivery_option');
-            if ($delivery_option !== false) {
+            if (false !== $delivery_option) {
                 $this->context->cart->setDeliveryOption(array($this->context->cart->id_address_delivery => $delivery_option));
             }
             if (Validate::isBool(($recyclable = (int) Tools::getValue('recyclable')))) {
@@ -595,9 +595,9 @@ class AdminCartsControllerCore extends AdminController
     public function ajaxProcessupdateFreeShipping()
     {
         if ($this->access('edit')) {
-            if (!$id_cart_rule = CartRule::getIdByCode(CartRule::BO_ORDER_CODE_PREFIX . (int) $this->context->cart->id)) {
+            if (!$id_cart_rule = CartRule::getIdByCode(CartRule::BO_ORDER_CODE_PREFIX.(int) $this->context->cart->id)) {
                 $cart_rule = new CartRule();
-                $cart_rule->code = CartRule::BO_ORDER_CODE_PREFIX . (int) $this->context->cart->id;
+                $cart_rule->code = CartRule::BO_ORDER_CODE_PREFIX.(int) $this->context->cart->id;
                 $cart_rule->name = array(Configuration::get('PS_LANG_DEFAULT') => $this->trans('Free Shipping', array(), 'Admin.Orderscustomers.Feature'));
                 $cart_rule->id_customer = (int) $this->context->cart->id_customer;
                 $cart_rule->free_shipping = true;
@@ -726,7 +726,7 @@ class AdminCartsControllerCore extends AdminController
                 $name .= $carrier['instance']->name;
 
                 if ($delivery_option['unique_carrier']) {
-                    $name .= ' - ' . $carrier['instance']->delay[$this->context->employee->id_lang];
+                    $name .= ' - '.$carrier['instance']->delay[$this->context->employee->id_lang];
                 }
 
                 if (!$id_default_carrier_delivery) {
@@ -736,7 +736,7 @@ class AdminCartsControllerCore extends AdminController
                     $id_default_carrier_delivery = $id_default_carrier;
                 }
                 if (!$this->context->cart->id_carrier) {
-                    $this->context->cart->setDeliveryOption(array($this->context->cart->id_address_delivery => (int) $carrier['instance']->id . ','));
+                    $this->context->cart->setDeliveryOption(array($this->context->cart->id_address_delivery => (int) $carrier['instance']->id.','));
                     $this->context->cart->save();
                 }
             }
@@ -796,7 +796,7 @@ class AdminCartsControllerCore extends AdminController
         $free_shipping = false;
         if (count($cart_rules)) {
             foreach ($cart_rules as $cart_rule) {
-                if ($cart_rule['id_cart_rule'] == CartRule::getIdByCode(CartRule::BO_ORDER_CODE_PREFIX . (int) $this->context->cart->id)) {
+                if ($cart_rule['id_cart_rule'] == CartRule::getIdByCode(CartRule::BO_ORDER_CODE_PREFIX.(int) $this->context->cart->id)) {
                     $free_shipping = true;
                     break;
                 }
@@ -822,7 +822,7 @@ class AdminCartsControllerCore extends AdminController
                 'order',
                 false,
                 (int) $this->context->cart->id_lang,
-                'step=3&recover_cart=' . $id_cart . '&token_cart=' . md5(_COOKIE_KEY_ . 'recover_cart_' . $id_cart)
+                'step=3&recover_cart='.$id_cart.'&token_cart='.md5(_COOKIE_KEY_.'recover_cart_'.$id_cart)
             ),
             'free_shipping' => (int) $free_shipping,
         );
@@ -876,7 +876,7 @@ class AdminCartsControllerCore extends AdminController
 
     public static function replaceZeroByShopName($echo, $tr)
     {
-        return $echo == '0' ? Carrier::getCarrierNameFromShopName() : $echo;
+        return '0' == $echo ? Carrier::getCarrierNameFromShopName() : $echo;
     }
 
     public function displayDeleteLink($token, $id, $name = null)
@@ -902,7 +902,7 @@ class AdminCartsControllerCore extends AdminController
 
         // Empty list is ok
         if (!is_array($this->_list)) {
-            $this->displayWarning($this->trans('Bad SQL query', array(), 'Admin.Notifications.Error') . '<br />' . htmlspecialchars($this->_list_error));
+            $this->displayWarning($this->trans('Bad SQL query', array(), 'Admin.Notifications.Error').'<br />'.htmlspecialchars($this->_list_error));
 
             return false;
         }

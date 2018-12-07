@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -55,7 +55,6 @@ class ServerRequirementsCheckerTest extends TestCase
      */
     private $mockedPhpExtensionChecker;
 
-
     public function setUp()
     {
         $this->mockedTranslator = $this->createMock(TranslatorInterface::class);
@@ -68,7 +67,6 @@ class ServerRequirementsCheckerTest extends TestCase
         $this->mockedHostingInformation = $this->createMock(HostingInformation::class);
         $this->mockedPhpExtensionChecker = $this->createMock(PhpExtensionCheckerInterface::class);
     }
-
 
     public function testErrorIsReturnedWhenNonApacheWebServerIsUsed()
     {

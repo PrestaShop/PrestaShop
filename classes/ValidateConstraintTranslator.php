@@ -49,19 +49,19 @@ class ValidateConstraintTranslatorCore
      */
     public function translate($validator)
     {
-        if ($validator === 'isName') {
+        if ('isName' === $validator) {
             return $this->translator->trans(
                 'Invalid name',
                 array(),
                 'Shop.Forms.Errors'
             );
-        } elseif ($validator === 'isBirthDate') {
+        } elseif ('isBirthDate' === $validator) {
             return $this->translator->trans(
                 'Format should be %s.',
                 array(Tools::formatDateStr('31 May 1970')),
                 'Shop.Forms.Errors'
             );
-        } elseif ($validator === 'required') {
+        } elseif ('required' === $validator) {
             return $this->translator->trans(
                 'Required field',
                 array(),

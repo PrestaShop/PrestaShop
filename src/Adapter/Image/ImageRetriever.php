@@ -49,7 +49,7 @@ class ImageRetriever
     }
 
     /**
-     * @param array $product
+     * @param array    $product
      * @param Language $language
      *
      * @return array
@@ -116,8 +116,8 @@ class ImageRetriever
      * @param int $id_image
      *
      * @throws \PrestaShopDatabaseException
-     * @return null|array
      *
+     * @return null|array
      */
     public function getImage($object, $id_image)
     {
@@ -125,7 +125,7 @@ class ImageRetriever
             return;
         }
 
-        if (get_class($object) === 'Product') {
+        if ('Product' === get_class($object)) {
             $type = 'products';
             $getImageURL = 'getImageLink';
             $root = _PS_PROD_IMG_DIR_;
@@ -133,7 +133,7 @@ class ImageRetriever
                 rtrim($root, DIRECTORY_SEPARATOR),
                 rtrim(Image::getImgFolderStatic($id_image), DIRECTORY_SEPARATOR),
             ));
-        } elseif (get_class($object) === 'Store') {
+        } elseif ('Store' === get_class($object)) {
             $type = 'stores';
             $getImageURL = 'getStoreImageLink';
             $root = _PS_STORE_IMG_DIR_;
@@ -148,18 +148,18 @@ class ImageRetriever
         $urls = array();
         $image_types = ImageType::getImagesTypes($type, true);
 
-        $extPath = $imageFolderPath . DIRECTORY_SEPARATOR . 'fileType';
+        $extPath = $imageFolderPath.DIRECTORY_SEPARATOR.'fileType';
         $ext = @file_get_contents($extPath) ?: 'jpg';
 
         $mainImagePath = implode(DIRECTORY_SEPARATOR, array(
             $imageFolderPath,
-            $id_image . '.' . $ext,
+            $id_image.'.'.$ext,
         ));
 
         foreach ($image_types as $image_type) {
             $resizedImagePath = implode(DIRECTORY_SEPARATOR, array(
                 $imageFolderPath,
-                $id_image . '-' . $image_type['name'] . '.' . $ext,
+                $id_image.'-'.$image_type['name'].'.'.$ext,
             ));
 
             if (!file_exists($resizedImagePath)) {
@@ -210,8 +210,8 @@ class ImageRetriever
      */
     public function getCustomizationImage($imageHash)
     {
-        $large_image_url = rtrim($this->link->getBaseLink(), '/') . '/upload/' . $imageHash;
-        $small_image_url = $large_image_url . '_small';
+        $large_image_url = rtrim($this->link->getBaseLink(), '/').'/upload/'.$imageHash;
+        $small_image_url = $large_image_url.'_small';
 
         $small = array(
             'url' => $small_image_url,
@@ -240,8 +240,8 @@ class ImageRetriever
      * @param Language $language
      *
      * @throws \PrestaShopDatabaseException
-     * @return array
      *
+     * @return array
      */
     public function getNoPictureImage(Language $language)
     {
@@ -252,7 +252,7 @@ class ImageRetriever
         foreach ($image_types as $image_type) {
             $url = $this->link->getImageLink(
                 '',
-                $language->iso_code . '-default',
+                $language->iso_code.'-default',
                 $image_type['name']
             );
 

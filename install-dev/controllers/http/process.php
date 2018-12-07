@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,13 +23,12 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 use PrestaShopBundle\Install\Install;
 use PrestaShopBundle\Install\XmlLoader;
 
 class InstallControllerHttpProcess extends InstallControllerHttp implements HttpConfigureInterface
 {
-    /** @var  Install */
+    /** @var Install */
     protected $model_install;
     public $process_steps = array();
     public $previous_button = false;
@@ -103,7 +102,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
                 $this->processConfigureShop();
             } elseif (Tools::getValue('installFixtures') && !empty($this->session->process_validated['configureShop'])) {
                 $this->processInstallFixtures();
-            } elseif (Tools::getValue('installModules') && (!empty($this->session->process_validated['installFixtures']) || $this->session->install_type != 'full')) {
+            } elseif (Tools::getValue('installModules') && (!empty($this->session->process_validated['installFixtures']) || 'full' != $this->session->install_type)) {
                 $this->processInstallModules();
             } elseif (Tools::getValue('installModulesAddons') && !empty($this->session->process_validated['installModules'])) {
                 $this->processInstallAddonsModules();
@@ -127,7 +126,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
     }
 
     /**
-     * PROCESS : generateSettingsFile
+     * PROCESS : generateSettingsFile.
      */
     public function processGenerateSettingsFile()
     {
@@ -149,7 +148,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
 
     /**
      * PROCESS : installDatabase
-     * Create database structure
+     * Create database structure.
      */
     public function processInstallDatabase()
     {
@@ -162,7 +161,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
 
     /**
      * PROCESS : installDefaultData
-     * Create default shop and languages
+     * Create default shop and languages.
      */
     public function processInstallDefaultData()
     {
@@ -179,7 +178,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
 
     /**
      * PROCESS : populateDatabase
-     * Populate database with default data
+     * Populate database with default data.
      */
     public function processPopulateDatabase()
     {
@@ -197,7 +196,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
 
     /**
      * PROCESS : configureShop
-     * Set default shop configuration
+     * Set default shop configuration.
      */
     public function processConfigureShop()
     {
@@ -227,7 +226,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
 
     /**
      * PROCESS : installModules
-     * Install all modules in ~/modules/ directory
+     * Install all modules in ~/modules/ directory.
      */
     public function processInstallModules()
     {
@@ -243,7 +242,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
 
     /**
      * PROCESS : installModulesAddons
-     * Install modules from addons
+     * Install modules from addons.
      */
     public function processInstallAddonsModules()
     {
@@ -262,7 +261,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
 
     /**
      * PROCESS : installFixtures
-     * Install fixtures (E.g. demo products)
+     * Install fixtures (E.g. demo products).
      */
     public function processInstallFixtures()
     {
@@ -280,7 +279,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
 
     /**
      * PROCESS : installTheme
-     * Install theme
+     * Install theme.
      */
     public function processInstallTheme()
     {
@@ -301,7 +300,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
     {
         $memoryLimit = Tools::getMemoryLimit();
         // The installer SHOULD take less than 32M, but may take up to 35/36M sometimes. So 42M is a good value :)
-        $lowMemory = ($memoryLimit != '-1' && $memoryLimit < Tools::getOctets('42M'));
+        $lowMemory = ('-1' != $memoryLimit && $memoryLimit < Tools::getOctets('42M'));
 
         // We fill the process step used for Ajax queries
         $this->process_steps[] = array('key' => 'generateSettingsFile', 'lang' => $this->translator->trans('Create file parameters', array(), 'Install'));
@@ -323,7 +322,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
         $this->process_steps[] = $populate_step;
         $this->process_steps[] = array('key' => 'configureShop', 'lang' => $this->translator->trans('Configure shop information', array(), 'Install'));
 
-        if ($this->session->install_type == 'full') {
+        if ('full' == $this->session->install_type) {
             $fixtures_step = array('key' => 'installFixtures', 'lang' => $this->translator->trans('Install demonstration data', array(), 'Install'));
             if ($lowMemory || $this->hasLargeFixtures()) {
                 $fixtures_step['subtasks'] = array();
@@ -353,12 +352,12 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
             'iso_country' => $this->session->shop_country,
             'email' => $this->session->admin_email,
             'shop_url' => Tools::getHttpHost(),
-            'version' => _PS_INSTALL_VERSION_
+            'version' => _PS_INSTALL_VERSION_,
         );
 
         if ($lowMemory) {
             foreach ($this->model_install->getAddonsModulesList($params) as $module) {
-                $install_modules['subtasks'][] = array('module' => (string)$module['name'], 'id_module' => (string)$module['id_module']);
+                $install_modules['subtasks'][] = array('module' => (string) $module['name'], 'id_module' => (string) $module['id_module']);
             }
         }
 
@@ -370,7 +369,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
     }
 
     /**
-     * Check if the fixtures directory is large
+     * Check if the fixtures directory is large.
      *
      * return bool
      */
@@ -380,7 +379,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
         $fixtureDir = _PS_INSTALL_FIXTURES_PATH_.'fashion/data/';
         $dh = opendir($fixtureDir);
         if ($dh) {
-            while (($xmlFile = readdir($dh)) !== false) {
+            while (false !== ($xmlFile = readdir($dh))) {
                 $size += filesize($fixtureDir.$xmlFile);
             }
             closedir($dh);

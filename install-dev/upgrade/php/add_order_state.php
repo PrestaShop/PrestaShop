@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 function add_order_state($conf_name, $name, $invoice, $send_email, $color, $unremovable, $logable, $delivery, $template = null)
 {
     $res = true;
@@ -43,7 +42,7 @@ function add_order_state($conf_name, $name, $invoice, $send_email, $color, $unre
 
     $res &= Db::getInstance()->execute('
 		INSERT INTO `'._DB_PREFIX_.'order_state` (`invoice`, `send_email`, `color`, `unremovable`, `logable`, `delivery`)
-		VALUES ('.(int)$invoice.', '.(int)$send_email.', "'.$color.'", '.(int)$unremovable.', '.(int)$logable.', '.(int)$delivery.')');
+		VALUES ('.(int) $invoice.', '.(int) $send_email.', "'.$color.'", '.(int) $unremovable.', '.(int) $logable.', '.(int) $delivery.')');
 
     $id_order_state = Db::getInstance()->getValue('
 		SELECT MAX(`id_order_state`)
@@ -52,21 +51,21 @@ function add_order_state($conf_name, $name, $invoice, $send_email, $color, $unre
     $languages = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'lang`');
     foreach ($languages as $lang) {
         $iso_code = $lang['iso_code'];
-        $iso_code_name = isset($name_lang[$iso_code])?$iso_code:'en';
-        $iso_code_template = isset($template_lang[$iso_code])?$iso_code:'en';
+        $iso_code_name = isset($name_lang[$iso_code]) ? $iso_code : 'en';
+        $iso_code_template = isset($template_lang[$iso_code]) ? $iso_code : 'en';
         $name = isset($name_lang[$iso_code]) ? $name_lang[$iso_code] : $name_lang['en'];
         $template = isset($template_lang[$iso_code]) ? $template_lang[$iso_code] : '';
 
         $res &= Db::getInstance()->execute('
 		INSERT IGNORE INTO `'._DB_PREFIX_.'order_state_lang` (`id_lang`, `id_order_state`, `name`, `template`)
-		VALUES ('.(int)$lang['id_lang'].', '.(int)$id_order_state.', "'. $name .'", "'. $template .'")
+		VALUES ('.(int) $lang['id_lang'].', '.(int) $id_order_state.', "'.$name.'", "'.$template.'")
 		');
     }
 
     $exist = Db::getInstance()->getValue('SELECT `id_configuration` FROM `'._DB_PREFIX_.'configuration` WHERE `name` = \''.pSQL($conf_name).'\'');
     if ($exist) {
-        $res &= Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'configuration` SET value = "'.(int)$id_order_state.'" WHERE `name` LIKE \''.pSQL($conf_name).'\'');
+        $res &= Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'configuration` SET value = "'.(int) $id_order_state.'" WHERE `name` LIKE \''.pSQL($conf_name).'\'');
     } else {
-        $res &= Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'configuration` (name, value) VALUES ("'.pSQL($conf_name).'", "'.(int)$id_order_state.'"');
+        $res &= Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'configuration` (name, value) VALUES ("'.pSQL($conf_name).'", "'.(int) $id_order_state.'"');
     }
 }

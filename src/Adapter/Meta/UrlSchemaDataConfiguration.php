@@ -49,7 +49,7 @@ final class UrlSchemaDataConfiguration implements DataConfigurationInterface
      * UrlSchemaDataConfiguration constructor.
      *
      * @param ConfigurationInterface $configuration
-     * @param array $rules
+     * @param array                  $rules
      */
     public function __construct(ConfigurationInterface $configuration, array $rules)
     {

@@ -133,8 +133,8 @@ class Calculator
      * @param bool $withTaxes
      *
      * @throws \Exception
-     * @return AmountImmutable
      *
+     * @return AmountImmutable
      */
     public function getTotal()
     {
@@ -157,8 +157,8 @@ class Calculator
 
     /**
      * @throws \Exception
-     * @return AmountImmutable
      *
+     * @return AmountImmutable
      */
     public function getRowTotal()
     {
@@ -172,8 +172,8 @@ class Calculator
 
     /**
      * @throws \Exception
-     * @return AmountImmutable
      *
+     * @return AmountImmutable
      */
     public function getDiscountTotal()
     {

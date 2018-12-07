@@ -60,9 +60,9 @@ final class LanguagePackImporter implements LanguagePackImporterInterface
 
     /**
      * @param LanguagePackInstallerInterface $languagePack
-     * @param LanguageDataProvider $languageProvider
-     * @param CacheClearerInterface $entireCacheClearer
-     * @param string $translationsDir
+     * @param LanguageDataProvider           $languageProvider
+     * @param CacheClearerInterface          $entireCacheClearer
+     * @param string                         $translationsDir
      */
     public function __construct(
         LanguagePackInstallerInterface $languagePack,

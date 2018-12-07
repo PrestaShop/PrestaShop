@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,7 +30,7 @@ use LegacyTests\Unit\Core\Cart\AbstractCartTest;
 use Cart;
 
 /**
- * these tests aim to check the correct calculation of cart total
+ * these tests aim to check the correct calculation of cart total.
  */
 abstract class AbstractCartCalculationTest extends AbstractCartTest
 {

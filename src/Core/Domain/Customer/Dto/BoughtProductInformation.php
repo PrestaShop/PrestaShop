@@ -52,10 +52,10 @@ class BoughtProductInformation
     private $boughtQuantity;
 
     /**
-     * @param int $orderId
+     * @param int    $orderId
      * @param string $boughtDate
      * @param string $productName
-     * @param int $boughtQuantity
+     * @param int    $boughtQuantity
      */
     public function __construct(
         $orderId,

@@ -85,7 +85,7 @@ class AdminLegacyLayoutControllerCore extends AdminController
             'content' => '{$content}', //replace content by original smarty tag var
             'enableSidebar' => $this->enableSidebar,
             'lite_display' => $this->lite_display,
-            'url_post' => self::$currentIndex . '&token=' . $this->token,
+            'url_post' => self::$currentIndex.'&token='.$this->token,
             'show_page_header_toolbar' => $this->show_page_header_toolbar,
             'page_header_toolbar_title' => $this->page_header_toolbar_title,
             'title' => $this->title ? $this->title : $this->page_header_toolbar_title,
@@ -93,7 +93,7 @@ class AdminLegacyLayoutControllerCore extends AdminController
             'page_header_toolbar_btn' => $this->page_header_toolbar_btn,
         );
 
-        if ($this->helpLink === false || !empty($this->helpLink)) {
+        if (false === $this->helpLink || !empty($this->helpLink)) {
             $vars['help_link'] = $this->helpLink;
         }
 

@@ -189,8 +189,8 @@ class OrderControllerCore extends FrontController
             : null;
 
         Db::getInstance()->execute(
-            'UPDATE ' . _DB_PREFIX_ . 'cart SET checkout_session_data = "' . pSQL(json_encode($data)) . '"
-                WHERE id_cart = ' . (int) $cart->id
+            'UPDATE '._DB_PREFIX_.'cart SET checkout_session_data = "'.pSQL(json_encode($data)).'"
+                WHERE id_cart = '.(int) $cart->id
         );
     }
 
@@ -204,7 +204,7 @@ class OrderControllerCore extends FrontController
         $cart = $this->context->cart;
         $customer = $this->context->customer;
         $rawData = Db::getInstance()->getValue(
-            'SELECT checkout_session_data FROM ' . _DB_PREFIX_ . 'cart WHERE id_cart = ' . (int) $cart->id
+            'SELECT checkout_session_data FROM '._DB_PREFIX_.'cart WHERE id_cart = '.(int) $cart->id
         );
         $data = json_decode($rawData, true);
         if (!is_array($data)) {
@@ -293,7 +293,7 @@ class OrderControllerCore extends FrontController
         $this->saveDataToPersist($this->checkoutProcess);
 
         if (!$this->checkoutProcess->hasErrors()) {
-            if ($_SERVER['REQUEST_METHOD'] !== 'GET' && !$this->ajax) {
+            if ('GET' !== $_SERVER['REQUEST_METHOD'] && !$this->ajax) {
                 return $this->redirectWithNotifications(
                     $this->checkoutProcess->getCheckoutSession()->getCheckoutURL()
                 );

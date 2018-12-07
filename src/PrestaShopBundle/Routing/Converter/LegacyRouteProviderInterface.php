@@ -74,8 +74,8 @@ interface LegacyRouteProviderInterface
      * @param string $action
      *
      * @throws RouteNotFoundException
-     * @return LegacyRoute
      *
+     * @return LegacyRoute
      */
     public function getLegacyRouteByAction($controller, $action);
 }

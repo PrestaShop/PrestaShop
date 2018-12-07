@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 function deactivate_custom_modules()
 {
     $db = Db::getInstance();
@@ -70,10 +69,10 @@ function deactivate_custom_modules()
     		WHERE name NOT IN ('.implode(',', $arrNativeModules).') ');
     }
 
-    $uninstallMe = array("undefined-modules");
+    $uninstallMe = array('undefined-modules');
     if (is_array($arrNonNative)) {
         foreach ($arrNonNative as $k => $aModule) {
-            $uninstallMe[(int)$aModule['id_module']] = $aModule['name'];
+            $uninstallMe[(int) $aModule['id_module']] = $aModule['name'];
         }
     }
 
@@ -90,7 +89,7 @@ function deactivate_custom_modules()
 
     if (count(Db::getInstance()->executeS('SHOW TABLES LIKE \''._DB_PREFIX_.'module_shop\'')) > 0) {
         foreach ($uninstallMe as $k => $uninstall) {
-            $return &= Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'module_shop` WHERE `id_module` = '.(int)$k);
+            $return &= Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'module_shop` WHERE `id_module` = '.(int) $k);
         }
     }
 

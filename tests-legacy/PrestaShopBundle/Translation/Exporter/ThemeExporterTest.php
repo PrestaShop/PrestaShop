@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -93,10 +93,10 @@ class ThemeExporterTest extends TestCase
         );
 
         $this->themeExporter->finder = $this->finderMock;
-        $cacheDir = dirname(__FILE__) . '/' .
-            str_repeat('../', 5) .
+        $cacheDir = dirname(__FILE__).'/'.
+            str_repeat('../', 5).
             'app/cache/test';
-        $this->themeExporter->exportDir = $cacheDir . '/export';
+        $this->themeExporter->exportDir = $cacheDir.'/export';
         $this->themeExporter->cacheDir = $cacheDir;
     }
 
@@ -105,7 +105,7 @@ class ThemeExporterTest extends TestCase
         $this->themeExporter->createZipArchive(self::THEME_NAME, self::LOCALE);
 
         $loader = new XliffFileLoader();
-        $archiveContentsParentDir = $this->themeExporter->exportDir . '/' . self::THEME_NAME . '/' . self::LOCALE;
+        $archiveContentsParentDir = $this->themeExporter->exportDir.'/'.self::THEME_NAME.'/'.self::LOCALE;
 
         $finder = Finder::create();
         $catalogue = new MessageCatalogue(self::LOCALE, array());
@@ -115,13 +115,13 @@ class ThemeExporterTest extends TestCase
                 $loader->load(
                     $file->getPathname(),
                     self::LOCALE,
-                    $file->getBasename('.' . $file->getExtension())
+                    $file->getBasename('.'.$file->getExtension())
                 )
             );
         }
 
         $messages = $catalogue->all();
-        $domain = 'ShopActions.' . self::LOCALE;
+        $domain = 'ShopActions.'.self::LOCALE;
         $this->assertArrayHasKey($domain, $messages);
 
         $this->assertArrayHasKey('Edit Product', $messages[$domain]);
@@ -157,7 +157,7 @@ class ThemeExporterTest extends TestCase
         $this->repositoryMock->method('getInstanceByName')
             ->willReturn(new Theme(array(
                 'directory' => '',
-                'name' => self::THEME_NAME
+                'name' => self::THEME_NAME,
             )))
         ;
     }
@@ -205,11 +205,11 @@ class ThemeExporterTest extends TestCase
             ->willReturn(new MessageCatalogue(
                 self::LOCALE,
                 array(
-                    'ShopActions.' . self::LOCALE => array(
+                    'ShopActions.'.self::LOCALE => array(
                         'Add Product' => 'Add',
                         'Override Me' => '',
                         'Override Me Twice' => '',
-                    )
+                    ),
                 )
             ))
         ;
@@ -218,11 +218,11 @@ class ThemeExporterTest extends TestCase
             ->willReturn(new MessageCatalogue(
                 self::LOCALE,
                 array(
-                    'ShopActions.' . self::LOCALE => array(
+                    'ShopActions.'.self::LOCALE => array(
                         'Edit Product' => 'Edit',
                         'Override Me' => 'Overridden',
                         'Override Me Twice' => 'Overridden Once',
-                    )
+                    ),
                 )
             ))
         ;
@@ -234,7 +234,7 @@ class ThemeExporterTest extends TestCase
                     'ShopActions' => array(
                         'Delete Product' => 'Delete',
                         'Override Me Twice' => 'Overridden Twice',
-                    )
+                    ),
                 )
             ))
         ;

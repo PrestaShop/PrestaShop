@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 function editorial_update_multishop()
 {
     $res = true;
@@ -31,5 +30,6 @@ function editorial_update_multishop()
         $res = Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'editorial` ADD `id_shop` INT(10) UNSIGNED NOT NULL AFTER `id_editorial`');
         $res &= Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'editorial` SET `id_shop` = 1');
     }
+
     return $res;
 }

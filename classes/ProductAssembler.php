@@ -63,7 +63,7 @@ class ProductAssemblerCore
             $nbDaysNewProduct = 20;
         }
 
-        $now = date('Y-m-d') . ' 00:00:00';
+        $now = date('Y-m-d').' 00:00:00';
 
         $sql = "SELECT
                     p.*,
@@ -88,7 +88,7 @@ class ProductAssemblerCore
 			    WHERE p.id_product = $idProduct";
 
         $rows = Db::getInstance()->executeS($sql);
-        if ($rows === false) {
+        if (false === $rows) {
             return $rawProduct;
         }
 

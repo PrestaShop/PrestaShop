@@ -43,8 +43,8 @@ class StockManager implements StockInterface
      * Gets available stock for a given product / combination / shop.
      *
      * @param object $product
-     * @param null $id_product_attribute
-     * @param null $id_shop
+     * @param null   $id_product_attribute
+     * @param null   $id_shop
      *
      * @return StockAvailable
      */
@@ -60,7 +60,7 @@ class StockManager implements StockInterface
             $outOfStock = $this->outOfStock((int) $product->id, $id_shop);
             $stockAvailable->out_of_stock = (int) $outOfStock;
 
-            if ($id_shop === null) {
+            if (null === $id_shop) {
                 $shop_group = $shopAdapter->getContextShopGroup();
             } else {
                 $shop_group = $shopAdapter->ShopGroup((int) $shopAdapter->getGroupFromShop((int) $id_shop));
@@ -106,11 +106,11 @@ class StockManager implements StockInterface
         $updatePhysicalQuantityQuery = '
             UPDATE {table_prefix}stock_available sa
             SET sa.physical_quantity = sa.quantity + sa.reserved_quantity
-            WHERE sa.id_shop = ' . (int) $shopId . '
+            WHERE sa.id_shop = '.(int) $shopId.'
         ';
 
         if ($idProduct) {
-            $updatePhysicalQuantityQuery .= ' AND sa.id_product = ' . (int) $idProduct;
+            $updatePhysicalQuantityQuery .= ' AND sa.id_product = '.(int) $idProduct;
         }
 
         $updatePhysicalQuantityQuery = str_replace('{table_prefix}', _DB_PREFIX_, $updatePhysicalQuantityQuery);
@@ -205,7 +205,7 @@ class StockManager implements StockInterface
      * For a given product, get its "out of stock" flag.
      *
      * @param int $productId
-     * @param int $shopId Optional : gets context if null @see Context::getContext()
+     * @param int $shopId    Optional : gets context if null @see Context::getContext()
      *
      * @return bool : depends on stock @see $depends_on_stock
      */

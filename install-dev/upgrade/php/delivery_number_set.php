@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 function delivery_number_set()
 {
     Configuration::loadConfiguration();
@@ -35,16 +34,16 @@ function delivery_number_set()
 	FROM '._DB_PREFIX_.'orders
 	ORDER BY id_order');
     foreach ($result as $row) {
-        $order = new Order((int)($row['id_order']));
+        $order = new Order((int) ($row['id_order']));
         $history = $order->getHistory(false);
         foreach ($history as $row2) {
-            $oS = new OrderState((int)($row2['id_order_state']), Configuration::get('PS_LANG_DEFAULT'));
+            $oS = new OrderState((int) ($row2['id_order_state']), Configuration::get('PS_LANG_DEFAULT'));
             if ($oS->delivery) {
-                Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'orders SET delivery_number = '.(int)($number++).', `delivery_date` = `date_add` WHERE id_order = '.(int)($order->id));
-                break ;
+                Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'orders SET delivery_number = '.(int) ($number++).', `delivery_date` = `date_add` WHERE id_order = '.(int) ($order->id));
+                break;
             }
         }
     }
     // Add configuration var
-    Configuration::updateValue('PS_DELIVERY_NUMBER', (int)($number));
+    Configuration::updateValue('PS_DELIVERY_NUMBER', (int) ($number));
 }

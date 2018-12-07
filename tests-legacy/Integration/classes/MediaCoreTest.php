@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -93,7 +93,7 @@ class MediaCoreTest extends IntegrationTestCase
     public function testReplaceByAbsoluteURLPattern($input, $fileuri, $output, $expected)
     {
         $return = preg_match(Media::$pattern_callback, $input, $matches);
-        $this->assertEquals((bool)$expected, (bool)$return, 'ReplaceByAbsoluteURLPattern failed for data input : '.$input.(isset($matches[2]) && $matches[2] ? '; Matches : '.$matches[2] : ''));
+        $this->assertEquals((bool) $expected, (bool) $return, 'ReplaceByAbsoluteURLPattern failed for data input : '.$input.(isset($matches[2]) && $matches[2] ? '; Matches : '.$matches[2] : ''));
     }
 
     public function isJsInputsProvider()

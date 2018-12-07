@@ -61,9 +61,9 @@ final class LanguageCopier implements LanguageCopierInterface
 
     /**
      * @param LanguageDataProvider $languageDataProvider
-     * @param TranslatorInterface $translator
-     * @param Filesystem $filesystem
-     * @param ThemeCollection $themeCollection
+     * @param TranslatorInterface  $translator
+     * @param Filesystem           $filesystem
+     * @param ThemeCollection      $themeCollection
      */
     public function __construct(
         LanguageDataProvider $languageDataProvider,
@@ -231,7 +231,7 @@ final class LanguageCopier implements LanguageCopierInterface
     private function isModuleContext($source, $destination, $language)
     {
         // Legacy condition
-        return false !== mb_strpos($destination, 'modules') && basename($source) === $language . '.php';
+        return false !== mb_strpos($destination, 'modules') && basename($source) === $language.'.php';
     }
 
     /**
@@ -255,7 +255,7 @@ final class LanguageCopier implements LanguageCopierInterface
             }
 
             $content = str_replace(array_keys($arrayReplace), array_values($arrayReplace), $content);
-            $result = file_put_contents($path, $content) === false ? false : true;
+            $result = false === file_put_contents($path, $content) ? false : true;
         }
 
         return $result;

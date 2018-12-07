@@ -128,7 +128,7 @@ class ContextCore
      */
     public function getMobileDetect()
     {
-        if ($this->mobile_detect === null) {
+        if (null === $this->mobile_detect) {
             $this->mobile_detect = new Mobile_Detect();
         }
 
@@ -142,7 +142,7 @@ class ContextCore
      */
     public function isMobile()
     {
-        if ($this->is_mobile === null) {
+        if (null === $this->is_mobile) {
             $mobileDetect = $this->getMobileDetect();
             $this->is_mobile = $mobileDetect->isMobile();
         }
@@ -157,7 +157,7 @@ class ContextCore
      */
     public function isTablet()
     {
-        if ($this->is_tablet === null) {
+        if (null === $this->is_tablet) {
             $mobileDetect = $this->getMobileDetect();
             $this->is_tablet = $mobileDetect->isTablet();
         }
@@ -172,10 +172,10 @@ class ContextCore
      */
     public function getMobileDevice()
     {
-        if ($this->mobile_device === null) {
+        if (null === $this->mobile_device) {
             $this->mobile_device = false;
             if ($this->checkMobileContext()) {
-                if (isset(Context::getContext()->cookie->no_mobile) && Context::getContext()->cookie->no_mobile == false && (int) Configuration::get('PS_ALLOW_MOBILE_DEVICE') != 0) {
+                if (isset(Context::getContext()->cookie->no_mobile) && false == Context::getContext()->cookie->no_mobile && 0 != (int) Configuration::get('PS_ALLOW_MOBILE_DEVICE')) {
                     $this->mobile_device = true;
                 } else {
                     switch ((int) Configuration::get('PS_ALLOW_MOBILE_DEVICE')) {
@@ -211,7 +211,7 @@ class ContextCore
     {
         static $device = null;
 
-        if ($device === null) {
+        if (null === $device) {
             if ($this->isTablet()) {
                 $device = Context::DEVICE_TABLET;
             } elseif ($this->isMobile()) {
@@ -228,8 +228,8 @@ class ContextCore
      * Checks if mobile context is possible.
      *
      * @throws PrestaShopException
-     * @return bool
      *
+     * @return bool
      */
     protected function checkMobileContext()
     {
@@ -251,7 +251,7 @@ class ContextCore
         }
 
         return isset($_SERVER['HTTP_USER_AGENT'], Context::getContext()->cookie)
-             
+
             && (bool) Configuration::get('PS_ALLOW_MOBILE_DEVICE')
             && @filemtime(_PS_THEME_MOBILE_DIR_)
             && !Context::getContext()->cookie->no_mobile;
@@ -316,7 +316,7 @@ class ContextCore
         $this->cookie->is_guest = $customer->isGuest();
         $this->cart->secure_key = $customer->secure_key;
 
-        if (Configuration::get('PS_CART_FOLLOWING') && (empty($this->cookie->id_cart) || Cart::getNbProducts($this->cookie->id_cart) == 0) && $idCart = (int) Cart::lastNoneOrderedCart($this->customer->id)) {
+        if (Configuration::get('PS_CART_FOLLOWING') && (empty($this->cookie->id_cart) || 0 == Cart::getNbProducts($this->cookie->id_cart)) && $idCart = (int) Cart::lastNoneOrderedCart($this->customer->id)) {
             $this->cart = new Cart($idCart);
         } else {
             $idCarrier = (int) $this->cart->id_carrier;
@@ -329,7 +329,7 @@ class ContextCore
         $this->cart->id_customer = (int) $customer->id;
 
         if (isset($idCarrier) && $idCarrier) {
-            $deliveryOption = array($this->cart->id_address_delivery => $idCarrier . ',');
+            $deliveryOption = array($this->cart->id_address_delivery => $idCarrier.',');
             $this->cart->setDeliveryOption($deliveryOption);
         }
 
@@ -363,7 +363,7 @@ class ContextCore
      */
     public function getTranslatorFromLocale($locale)
     {
-        $cacheDir = _PS_CACHE_DIR_ . 'translations';
+        $cacheDir = _PS_CACHE_DIR_.'translations';
         $translator = new Translator($locale, null, $cacheDir, false);
 
         // In case we have at least 1 translated message, we return the current translator.
@@ -381,7 +381,7 @@ class ContextCore
                 ->files()
                 ->in($cacheDir)
                 ->depth('==0')
-                ->name('*.' . $locale . '.*')
+                ->name('*.'.$locale.'.*')
             ;
             (new Filesystem())->remove($cache_file);
         }
@@ -399,7 +399,7 @@ class ContextCore
 
         $finder = Finder::create()
             ->files()
-            ->name('*.' . $locale . '.xlf')
+            ->name('*.'.$locale.'.xlf')
             ->notName($notName)
             ->in($this->getTranslationResourcesDirectories())
         ;
@@ -409,7 +409,7 @@ class ContextCore
 
             $translator->addResource($format, $file, $locale, $domain);
             if (!is_a($this->language, 'PrestashopBundle\Install\Language')) {
-                $translator->addResource('db', $domain . '.' . $locale . '.db', $locale, $domain);
+                $translator->addResource('db', $domain.'.'.$locale.'.db', $locale, $domain);
             }
         }
 
@@ -421,10 +421,10 @@ class ContextCore
      */
     protected function getTranslationResourcesDirectories()
     {
-        $locations = array(_PS_ROOT_DIR_ . '/app/Resources/translations');
+        $locations = array(_PS_ROOT_DIR_.'/app/Resources/translations');
 
         if (!is_null($this->shop)) {
-            $activeThemeLocation = _PS_ROOT_DIR_ . '/themes/' . $this->shop->theme_name . '/translations';
+            $activeThemeLocation = _PS_ROOT_DIR_.'/themes/'.$this->shop->theme_name.'/translations';
             if (is_dir($activeThemeLocation)) {
                 $locations[] = $activeThemeLocation;
             }

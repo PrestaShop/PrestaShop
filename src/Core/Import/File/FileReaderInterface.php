@@ -41,8 +41,8 @@ interface FileReaderInterface
      * @param SplFileInfo $file
      *
      * @throws UnreadableFileException
-     * @return Generator
      *
+     * @return Generator
      */
     public function read(SplFileInfo $file);
 }

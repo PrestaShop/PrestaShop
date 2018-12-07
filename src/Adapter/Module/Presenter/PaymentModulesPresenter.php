@@ -63,9 +63,9 @@ class PaymentModulesPresenter
 
     /**
      * @param TabModuleListProviderInterface $tabModuleListProvider
-     * @param ModuleDataProvider $moduleDataProvider
-     * @param PresenterInterface $modulePresenter
-     * @param ModuleRepository $moduleRepository
+     * @param ModuleDataProvider             $moduleDataProvider
+     * @param PresenterInterface             $modulePresenter
+     * @param ModuleRepository               $moduleRepository
      */
     public function __construct(
         TabModuleListProviderInterface $tabModuleListProvider,

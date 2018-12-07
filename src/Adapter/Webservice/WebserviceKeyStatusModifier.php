@@ -57,8 +57,8 @@ final class WebserviceKeyStatusModifier
      *
      * @throws \PrestaShopDatabaseException
      * @throws \PrestaShopException
-     * @return string[] - if empty when process of status change was successful
      *
+     * @return string[] - if empty when process of status change was successful
      */
     public function toggleStatus($columnId)
     {
@@ -70,8 +70,8 @@ final class WebserviceKeyStatusModifier
                     'An error occurred while updating the status for an object.',
                     array(),
                     'Admin.Notifications.Error'
-                ) .
-                WebserviceKey::$definition['table'] .
+                ).
+                WebserviceKey::$definition['table'].
                 $this->translator->trans('(cannot load object)', array(), 'Admin.Notifications.Error');
 
             return array($error);
@@ -92,12 +92,12 @@ final class WebserviceKeyStatusModifier
      * Updates status for multiple fields.
      *
      * @param array $columnIds
-     * @param int $status
+     * @param int   $status
      *
      * @throws \PrestaShopDatabaseException
      * @throws \PrestaShopException
-     * @return bool
      *
+     * @return bool
      */
     public function setStatus(array $columnIds, $status)
     {

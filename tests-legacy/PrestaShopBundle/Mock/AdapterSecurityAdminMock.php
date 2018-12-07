@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 
 /**
- * Admin Middleware security
+ * Admin Middleware security.
  */
 class AdapterSecurityAdminMock
 {
@@ -41,7 +41,7 @@ class AdapterSecurityAdminMock
 
     /**
      * Check if employee is logged in
-     * If not loggedin in, redirect to admin home page
+     * If not loggedin in, redirect to admin home page.
      *
      * @param GetResponseEvent $event
      *

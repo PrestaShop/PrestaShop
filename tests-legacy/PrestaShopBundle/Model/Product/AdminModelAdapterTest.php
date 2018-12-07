@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace LegacyTests\PrestaShopBundle\Model\Product;
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -47,117 +48,118 @@ class AdminModelAdapterTest extends KernelTestCase
     private function fakeFormData()
     {
         return array(
-            "id_product" => '',
-            "step1" => array(
-                "type_product" => '',
-                "inputPackItems" => array(),
-                "name" => array(),
-                "name_1" => "Amazing product",
-                "name_2" => "Amazing product",
-                "description" => array(),
-                "description_short" => array(),
-                "active" => '',
-                "price_shortcut" => '',
-                "qty_0_shortcut" => '',
-                "categories" => array('tree' => array()),
-                "id_category_default" => '',
-                "related_products" => array(),
-                "id_manufacturer" => '',
-                "features" => array(),
-                "images" => array(),
+            'id_product' => '',
+            'step1' => array(
+                'type_product' => '',
+                'inputPackItems' => array(),
+                'name' => array(),
+                'name_1' => 'Amazing product',
+                'name_2' => 'Amazing product',
+                'description' => array(),
+                'description_short' => array(),
+                'active' => '',
+                'price_shortcut' => '',
+                'qty_0_shortcut' => '',
+                'categories' => array('tree' => array()),
+                'id_category_default' => '',
+                'related_products' => array(),
+                'id_manufacturer' => '',
+                'features' => array(),
+                'images' => array(),
             ),
-            "step2" => array(
-                "price" => '',
-                "ecotax" => '',
-                "id_tax_rules_group" => '',
-                "on_sale" => '',
-                "wholesale_price" => '',
-                "unit_price" => '',
-                "unity" => '',
-                "specific_price" => array(),
-                "specificPricePriority_0" => '',
-                "specificPricePriority_1" => '',
-                "specificPricePriority_2" => '',
-                "specificPricePriority_3" => ''
+            'step2' => array(
+                'price' => '',
+                'ecotax' => '',
+                'id_tax_rules_group' => '',
+                'on_sale' => '',
+                'wholesale_price' => '',
+                'unit_price' => '',
+                'unity' => '',
+                'specific_price' => array(),
+                'specificPricePriority_0' => '',
+                'specificPricePriority_1' => '',
+                'specificPricePriority_2' => '',
+                'specificPricePriority_3' => '',
             ),
-            "step3" => array(
-                "advanced_stock_management" => '',
-                "depends_on_stock" => '',
-                "qty_0" => '',
-                "combinations" => array(),
-                "out_of_stock" => '',
-                "minimal_quantity" => '',
-                "low_stock_threshold" => '',
-                "low_stock_alert" => '',
-                "available_now" => array(),
-                "available_later" => array(),
-                "available_date" => '',
-                "pack_stock_type" => '',
-                "virtual_product" => array(),
+            'step3' => array(
+                'advanced_stock_management' => '',
+                'depends_on_stock' => '',
+                'qty_0' => '',
+                'combinations' => array(),
+                'out_of_stock' => '',
+                'minimal_quantity' => '',
+                'low_stock_threshold' => '',
+                'low_stock_alert' => '',
+                'available_now' => array(),
+                'available_later' => array(),
+                'available_date' => '',
+                'pack_stock_type' => '',
+                'virtual_product' => array(),
             ),
-            "step4" => array(
-                "width" => '',
-                "height" => '',
-                "depth" => '',
-                "weight" => '',
-                "additional_shipping_cost" => '',
-                "selectedCarriers" => array(),
-                "additional_delivery_times" => '',
-                "delivery_in_stock" => array(),
-                "delivery_out_stock" => array(),
+            'step4' => array(
+                'width' => '',
+                'height' => '',
+                'depth' => '',
+                'weight' => '',
+                'additional_shipping_cost' => '',
+                'selectedCarriers' => array(),
+                'additional_delivery_times' => '',
+                'delivery_in_stock' => array(),
+                'delivery_out_stock' => array(),
             ),
-            "step5" => array(
-                "link_rewrite" => array(),
-                "meta_title" => array(),
-                "meta_description" => array(),
+            'step5' => array(
+                'link_rewrite' => array(),
+                'meta_title' => array(),
+                'meta_description' => array(),
             ),
-            "step6" => array(
-                "redirect_type" => '',
-                "id_type_redirected" => array(),
-                "visibility" => '',
-                "tags" => array(),
-                "display_options" => array(),
-                "upc" => '',
-                "ean13" => '',
-                "isbn" => '',
-                "reference" => '',
-                "condition" => '',
-                "suppliers" => array(),
-                "default_supplier" => '',
-                "custom_fields" => array(),
-                "attachments" => array(),
-                "supplier_combination_1" => array()
-            )
+            'step6' => array(
+                'redirect_type' => '',
+                'id_type_redirected' => array(),
+                'visibility' => '',
+                'tags' => array(),
+                'display_options' => array(),
+                'upc' => '',
+                'ean13' => '',
+                'isbn' => '',
+                'reference' => '',
+                'condition' => '',
+                'suppliers' => array(),
+                'default_supplier' => '',
+                'custom_fields' => array(),
+                'attachments' => array(),
+                'supplier_combination_1' => array(),
+            ),
         );
     }
+
     private function fakeCombination()
     {
         return array('0' => array(
-            "id_product_attribute" => "6",
-            "id_product" => "1",
-            "reference" => "",
-            "supplier_reference" => "",
-            "location" => "",
-            "ean13" => "",
-            "isbn" => "",
-            "upc" => "",
-            "wholesale_price" => "0.000000",
-            "price" => "0.000000",
-            "ecotax" => "0.000000",
-            "quantity" => 300,
-            "weight" => "0.000000",
-            "unit_price_impact" => "0.000000",
-            "default_on" => null,
-            "minimal_quantity" => "1",
-            "low_stock_threshold" => "2",
-            "low_stock_alert" => "1",
-            "available_date" => "0000-00-00",
-            "id_shop" => "1",
-            "id_attribute_group" => "1",
-            "is_color_group" => "0",
-            "group_name" => "Taille",
-            "attribute_name" => "L",
-            "id_attribute" => "3"
+            'id_product_attribute' => '6',
+            'id_product' => '1',
+            'reference' => '',
+            'supplier_reference' => '',
+            'location' => '',
+            'ean13' => '',
+            'isbn' => '',
+            'upc' => '',
+            'wholesale_price' => '0.000000',
+            'price' => '0.000000',
+            'ecotax' => '0.000000',
+            'quantity' => 300,
+            'weight' => '0.000000',
+            'unit_price_impact' => '0.000000',
+            'default_on' => null,
+            'minimal_quantity' => '1',
+            'low_stock_threshold' => '2',
+            'low_stock_alert' => '1',
+            'available_date' => '0000-00-00',
+            'id_shop' => '1',
+            'id_attribute_group' => '1',
+            'is_color_group' => '0',
+            'group_name' => 'Taille',
+            'attribute_name' => 'L',
+            'id_attribute' => '3',
         ));
     }
 
@@ -200,7 +202,7 @@ class AdminModelAdapterTest extends KernelTestCase
     }
 
     /**
-     * Checks that the construction of object still works as expected
+     * Checks that the construction of object still works as expected.
      */
     public function testConstruct()
     {
@@ -232,28 +234,28 @@ class AdminModelAdapterTest extends KernelTestCase
     public function testGetFormCombination()
     {
         $expectedStructureReturn = array(
-            "id_product_attribute" => "6",
-            "attribute_reference" => "",
-            "attribute_ean13" => "",
-            "attribute_isbn" => "",
-            "attribute_upc" => "",
-            "attribute_wholesale_price" => "0.000000",
-            "attribute_price_impact" => 0,
-            "attribute_price" => "0.000000",
-            "final_price" => 0,
-            "attribute_priceTI" => "",
-            "attribute_ecotax" => "0.000000",
-            "attribute_weight_impact" => 0,
-            "attribute_weight" => "0.000000",
-            "attribute_unit_impact" => 0,
-            "attribute_unity" => "0.000000",
-            "attribute_minimal_quantity" => "1",
-            "attribute_low_stock_threshold" => "2",
-            "attribute_low_stock_alert" => "1",
-            "available_date_attribute" => "0000-00-00",
-            "attribute_default" => false,
-            "attribute_quantity" => 300,
-            "name" => "Taille - L",
+            'id_product_attribute' => '6',
+            'attribute_reference' => '',
+            'attribute_ean13' => '',
+            'attribute_isbn' => '',
+            'attribute_upc' => '',
+            'attribute_wholesale_price' => '0.000000',
+            'attribute_price_impact' => 0,
+            'attribute_price' => '0.000000',
+            'final_price' => 0,
+            'attribute_priceTI' => '',
+            'attribute_ecotax' => '0.000000',
+            'attribute_weight_impact' => 0,
+            'attribute_weight' => '0.000000',
+            'attribute_unit_impact' => 0,
+            'attribute_unity' => '0.000000',
+            'attribute_minimal_quantity' => '1',
+            'attribute_low_stock_threshold' => '2',
+            'attribute_low_stock_alert' => '1',
+            'available_date_attribute' => '0000-00-00',
+            'attribute_default' => false,
+            'attribute_quantity' => 300,
+            'name' => 'Taille - L',
         );
         $combinationDataProvider = new combinationDataProvider();
         $actualReturn = $combinationDataProvider->completeCombination($this->fakeCombination(), $this->product);

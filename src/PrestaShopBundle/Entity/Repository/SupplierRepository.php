@@ -47,7 +47,7 @@ class SupplierRepository
     private $tablePrefix;
 
     /**
-     * @param Connection $connection
+     * @param Connection     $connection
      * @param ContextAdapter $contextAdapter
      * @param $tablePrefix
      *

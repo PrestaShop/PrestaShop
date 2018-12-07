@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -139,7 +139,7 @@ class ModuleRepositoryTest extends UnitTestCase
                 ),
                 new FakeLogger(),
                 $this->translatorStub,
-                __DIR__.'/../../../../resources/modules/'
+                __DIR__.'/../../../../resources/modules/',
             ))
             ->setMethods(array('readCacheFile', 'generateCacheFile'))
             ->getMock()
@@ -184,12 +184,12 @@ class ModuleRepositoryTest extends UnitTestCase
 
         // Each module MUST have its database installed attribute as true
         foreach ($installed_modules as $module) {
-            $this->assertTrue($module->database->get('installed') == 1);
+            $this->assertTrue(1 == $module->database->get('installed'));
         }
 
         foreach ($all_modules as $name => $module) {
             // Each installed module must be found in the installed modules list
-            if ($module->database->get('installed') == 1) {
+            if (1 == $module->database->get('installed')) {
                 $this->assertTrue(array_key_exists($name, $installed_modules), sprintf('Module %s not found in the filtered list !', $name));
             }
         }
@@ -208,12 +208,12 @@ class ModuleRepositoryTest extends UnitTestCase
 
         // Each module MUST have its database installed attribute as true
         foreach ($not_installed_modules as $module) {
-            $this->assertTrue($module->database->get('installed') == 0);
+            $this->assertTrue(0 == $module->database->get('installed'));
         }
 
         foreach ($all_modules as $name => $module) {
             // Each installed module must be found in the installed modules list
-            if ($module->attributes->get('productType') == 'module' && $module->database->get('installed') == 0) {
+            if ('module' == $module->attributes->get('productType') && 0 == $module->database->get('installed')) {
                 $this->assertTrue(array_key_exists($name, $not_installed_modules), sprintf('Module %s not found in the filtered list !', $name));
             }
         }
@@ -232,14 +232,14 @@ class ModuleRepositoryTest extends UnitTestCase
 
         // Each module MUST have its database installed and enabled attributes as true
         foreach ($installed_and_active_modules as $module) {
-            $this->assertTrue($module->database->get('installed') == 1);
-            $this->assertTrue($module->database->get('active') == 1);
+            $this->assertTrue(1 == $module->database->get('installed'));
+            $this->assertTrue(1 == $module->database->get('active'));
         }
 
         foreach ($all_modules as $name => $module) {
             // Each installed module must be found in the installed modules list
-            if ($module->database->get('installed') == 1
-                && $module->database->get('active') == 1) {
+            if (1 == $module->database->get('installed')
+                && 1 == $module->database->get('active')) {
                 $this->assertTrue(array_key_exists($name, $installed_and_active_modules), sprintf('Module %s not found in the filtered list !', $name));
             }
         }
@@ -257,12 +257,12 @@ class ModuleRepositoryTest extends UnitTestCase
         $not_active_modules = $this->moduleRepositoryStub->getFilteredList($filters);
 
         foreach ($not_active_modules as $module) {
-            $this->assertTrue($module->database->get('active') == 0);
+            $this->assertTrue(0 == $module->database->get('active'));
         }
 
         foreach ($all_modules as $name => $module) {
             // Each installed module must be found in the installed modules list
-            if ($module->attributes->get('productType') == 'module' && $module->database->get('installed') == 1 && $module->database->get('active') == 0) {
+            if ('module' == $module->attributes->get('productType') && 1 == $module->database->get('installed') && 0 == $module->database->get('active')) {
                 $this->assertTrue(array_key_exists($name, $not_active_modules), sprintf('Module %s not found in the filtered list !', $name));
             }
         }
@@ -280,13 +280,13 @@ class ModuleRepositoryTest extends UnitTestCase
         $installed_but_not_installed_modules = $this->moduleRepositoryStub->getFilteredList($filters);
 
         foreach ($installed_but_not_installed_modules as $module) {
-            $this->assertTrue($module->database->get('installed') == 1, $module->attributes->get('name').' marked as not installed ><');
-            $this->assertTrue($module->database->get('active') == 0, $module->attributes->get('name').' marked as enabled ><');
+            $this->assertTrue(1 == $module->database->get('installed'), $module->attributes->get('name').' marked as not installed ><');
+            $this->assertTrue(0 == $module->database->get('active'), $module->attributes->get('name').' marked as enabled ><');
         }
 
         foreach ($all_modules as $name => $module) {
             // Each installed module must be found in the installed modules list
-            if ($module->database->get('installed') == 1 && $module->database->get('active') == 0) {
+            if (1 == $module->database->get('installed') && 0 == $module->database->get('active')) {
                 $this->assertTrue(array_key_exists($name, $installed_but_not_installed_modules), sprintf('Module %s not found in the filtered list !', $name));
             }
         }
@@ -334,7 +334,7 @@ class ModuleRepositoryTest extends UnitTestCase
         $filters->setType(AddonListFilterType::MODULE);
 
         foreach ($this->moduleRepositoryStub->getFilteredList($filters) as $module) {
-            $this->assertTrue($module->attributes->get('productType') == 'module', $module->attributes->get('name').' has a product type "'.$module->attributes->get('productType').'"');
+            $this->assertTrue('module' == $module->attributes->get('productType'), $module->attributes->get('name').' has a product type "'.$module->attributes->get('productType').'"');
         }
     }
 
@@ -344,7 +344,7 @@ class ModuleRepositoryTest extends UnitTestCase
         $filters->setType(AddonListFilterType::SERVICE);
 
         foreach ($this->moduleRepositoryStub->getFilteredList($filters) as $module) {
-            $this->assertTrue($module->attributes->get('productType') == 'service');
+            $this->assertTrue('service' == $module->attributes->get('productType'));
         }
     }
 

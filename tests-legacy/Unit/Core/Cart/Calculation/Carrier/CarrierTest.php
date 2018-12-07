@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -30,7 +30,6 @@ use Configuration;
 
 class CarrierTest extends AbstractCarrierTest
 {
-
     /**
      * @dataProvider shippingFeesProviderCarrier1
      */
@@ -95,7 +94,7 @@ class CarrierTest extends AbstractCarrierTest
                 'carrierId' => 1,
             ),
             'one product in cart, quantity 1' => array(
-                'products' => array(1 => 1,),
+                'products' => array(1 => 1),
                 'expectedTotal' => static::PRODUCT_FIXTURES[1]['price']
                                           + static::CARRIER_FIXTURES[1]['ranges'][1]['shippingPrices'][static::COUNTRY_FIXTURES[static::ADDRESS_FIXTURES[1]['countryIsoCode']]['zoneId']]
                                           + $shippingHandling + static::DEFAULT_WRAPPING_FEE,
@@ -107,7 +106,7 @@ class CarrierTest extends AbstractCarrierTest
                 'carrierId' => 1,
             ),
             'one product in cart, quantity 3' => array(
-                'products' => array(1 => 3,),
+                'products' => array(1 => 3),
                 'expectedTotal' => 3 * static::PRODUCT_FIXTURES[1]['price']
                                           + static::CARRIER_FIXTURES[1]['ranges'][1]['shippingPrices'][static::COUNTRY_FIXTURES[static::ADDRESS_FIXTURES[1]['countryIsoCode']]['zoneId']]
                                           + $shippingHandling + static::DEFAULT_WRAPPING_FEE,
@@ -154,7 +153,7 @@ class CarrierTest extends AbstractCarrierTest
                 'carrierId' => 2,
             ),
             'one product in cart, quantity 1' => array(
-                'products' => array(1 => 1,),
+                'products' => array(1 => 1),
                 'expectedTotal' => static::PRODUCT_FIXTURES[1]['price']
                                           + static::CARRIER_FIXTURES[2]['ranges'][1]['shippingPrices'][static::COUNTRY_FIXTURES[static::ADDRESS_FIXTURES[1]['countryIsoCode']]['zoneId']]
                                           + $shippingHandling + static::DEFAULT_WRAPPING_FEE,
@@ -166,7 +165,7 @@ class CarrierTest extends AbstractCarrierTest
                 'carrierId' => 2,
             ),
             'one product in cart, quantity 3' => array(
-                'products' => array(1 => 3,),
+                'products' => array(1 => 3),
                 'expectedTotal' => 3 * static::PRODUCT_FIXTURES[1]['price']
                                           + static::CARRIER_FIXTURES[2]['ranges'][1]['shippingPrices'][static::COUNTRY_FIXTURES[static::ADDRESS_FIXTURES[1]['countryIsoCode']]['zoneId']]
                                           + $shippingHandling + static::DEFAULT_WRAPPING_FEE,

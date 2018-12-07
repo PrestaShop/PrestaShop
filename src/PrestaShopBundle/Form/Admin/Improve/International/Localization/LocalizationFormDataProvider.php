@@ -54,8 +54,8 @@ class LocalizationFormDataProvider implements FormDataProviderInterface
 
     /**
      * @param LocalizationConfiguration $localizationConfiguration
-     * @param LocalUnitsConfiguration $localUnitsConfiguration
-     * @param AdvancedConfiguration $advancedConfiguration
+     * @param LocalUnitsConfiguration   $localUnitsConfiguration
+     * @param AdvancedConfiguration     $advancedConfiguration
      */
     public function __construct(
         LocalizationConfiguration $localizationConfiguration,

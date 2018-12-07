@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -31,9 +31,9 @@ function gridextjs_deprecated()
     // if exists, use _PS_MODULE_DIR_ or _PS_ROOT_DIR_
     // instead of guessing the modules dir
     if (defined('_PS_MODULE_DIR_')) {
-        $gridextjs_path = _PS_MODULE_DIR_ . 'gridextjs';
+        $gridextjs_path = _PS_MODULE_DIR_.'gridextjs';
     } elseif (defined('_PS_ROOT_DIR_')) {
-        $gridextjs_path = _PS_ROOT_DIR_ . '/modules/gridextjs';
+        $gridextjs_path = _PS_ROOT_DIR_.'/modules/gridextjs';
     } else {
         $gridextjs_path = dirname(__FILE__).'/../../../modules/gridextjs';
     }

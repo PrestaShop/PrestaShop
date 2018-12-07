@@ -41,14 +41,14 @@ class Language
     public function __construct($iso)
     {
         $this->iso_code = mb_strtolower($iso);
-        $xmlPath = _PS_INSTALL_LANGS_PATH_ . $iso . '/';
+        $xmlPath = _PS_INSTALL_LANGS_PATH_.$iso.'/';
         $this->setPropertiesFromXml($xmlPath);
-        $this->is_rtl = ($this->is_rtl === 'true') ? true : false;
+        $this->is_rtl = ('true' === $this->is_rtl) ? true : false;
     }
 
     public function setPropertiesFromXml($xmlPath)
     {
-        $xml = @simplexml_load_file($xmlPath . '/language.xml');
+        $xml = @simplexml_load_file($xmlPath.'/language.xml');
         if ($xml) {
             foreach ($xml->children() as $node) {
                 $this->{$node->getName()} = (string) $node;
@@ -120,10 +120,10 @@ class Language
     {
         if (!is_array($this->countries)) {
             $this->countries = array();
-            $filename = _PS_INSTALL_LANGS_PATH_ . mb_substr($this->language_code, 0, 2) . '/data/country.xml';
+            $filename = _PS_INSTALL_LANGS_PATH_.mb_substr($this->language_code, 0, 2).'/data/country.xml';
 
             if (!file_exists($filename)) {
-                $filename = _PS_INSTALL_LANGS_PATH_ . 'en/data/country.xml';
+                $filename = _PS_INSTALL_LANGS_PATH_.'en/data/country.xml';
             }
 
             if ($xml = @simplexml_load_file($filename)) {

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 function set_product_suppliers()
 {
     $ps_currency_default = Db::getInstance()->getValue('SELECT value
@@ -44,9 +43,9 @@ function set_product_suppliers()
 				`product_supplier_reference`, `product_supplier_price_te`,
 				`id_currency`)
 			VALUES
-			("'.(int)$row['id_product'].'", "0", "'.(int)$row['id_supplier'].'",
-			"'.pSQL($row['supplier_reference']).'", "'.(int)$row['wholesale_price'].'",
-				"'.(int)$ps_currency_default.'")
+			("'.(int) $row['id_product'].'", "0", "'.(int) $row['id_supplier'].'",
+			"'.pSQL($row['supplier_reference']).'", "'.(int) $row['wholesale_price'].'",
+				"'.(int) $ps_currency_default.'")
 		');
 
         //Try to get product attribues
@@ -54,7 +53,7 @@ function set_product_suppliers()
             '
 			SELECT id_product_attribute, supplier_reference, wholesale_price
 			FROM `'._DB_PREFIX_.'product_attribute`
-			WHERE `id_product` = '.(int)$row['id_product']
+			WHERE `id_product` = '.(int) $row['id_product']
         );
 
         //Add each attribute to stock_available
@@ -66,9 +65,9 @@ function set_product_suppliers()
 				`id_supplier`, `product_supplier_reference`,
 				`product_supplier_price_te`, `id_currency`)
 				VALUES
-				("'.(int)$row['id_product'].'", "'.(int)$attribute['id_product_attribute'].'",
-				"'.(int)$row['id_supplier'].'", "'.pSQL($attribute['supplier_reference']).'",
-				"'.(int)$attribute['wholesale_price'].'", "'.(int)$ps_currency_default.'")
+				("'.(int) $row['id_product'].'", "'.(int) $attribute['id_product_attribute'].'",
+				"'.(int) $row['id_supplier'].'", "'.pSQL($attribute['supplier_reference']).'",
+				"'.(int) $attribute['wholesale_price'].'", "'.(int) $ps_currency_default.'")
 			');
         }
     }

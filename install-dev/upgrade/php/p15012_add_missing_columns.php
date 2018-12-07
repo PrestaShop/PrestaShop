@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 function p15012_add_missing_columns()
 {
     $errors = array();
@@ -101,7 +100,6 @@ function p15012_add_missing_columns()
 		CHANGE `purchase_supplier_price` purchase_supplier_price DEC(20,6) NOT NULL DEFAULT "0.000000"';
     $q_list['order_detail']['original_product_price']['mod'] = 'ALTER TABLE `'._DB_PREFIX_.'order_detail`
 		CHANGE `original_product_price` original_product_price DEC(20,6) NOT NULL DEFAULT "0.000000"';
-
 
     $q_list['order_detail_tax']['unit_amount']['mod'] = 'ALTER TABLE `'._DB_PREFIX_.'order_detail_tax`
 		CHANGE `unit_amount` unit_amount DEC(10,6) NOT NULL DEFAULT "0.000000"';
@@ -185,8 +183,9 @@ function p15012_add_missing_columns()
 
     if (sizeof($errors) > 0) {
         $msg = implode("\r", $errors);
+
         return array('error' => 1, 'msg' => $msg);
-    }  
-        return true;
-    
+    }
+
+    return true;
 }

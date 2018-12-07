@@ -53,20 +53,20 @@ class ValidateCore
     /**
      * Check for module URL validity.
      *
-     * @param string $url module URL to validate
-     * @param array $errors Reference array for catching errors
+     * @param string $url    module URL to validate
+     * @param array  $errors Reference array for catching errors
      *
      * @return bool Validity is ok or not
      */
     public static function isModuleUrl($url, &$errors)
     {
-        if (!$url || $url == 'http://') {
+        if (!$url || 'http://' == $url) {
             $errors[] = Context::getContext()->getTranslator()->trans('Please specify module URL', array(), 'Admin.Modules.Notification');
-        } elseif (mb_substr($url, -4) != '.tar' && mb_substr($url, -4) != '.zip' && mb_substr($url, -4) != '.tgz' && mb_substr($url, -7) != '.tar.gz') {
+        } elseif ('.tar' != mb_substr($url, -4) && '.zip' != mb_substr($url, -4) && '.tgz' != mb_substr($url, -4) && '.tar.gz' != mb_substr($url, -7)) {
             $errors[] = Context::getContext()->getTranslator()->trans('Unknown archive type.', array(), 'Admin.Modules.Notification');
         } else {
-            if ((mb_strpos($url, 'http')) === false) {
-                $url = 'http://' . $url;
+            if (false === (mb_strpos($url, 'http'))) {
+                $url = 'http://'.$url;
             }
             if (!is_array(@get_headers($url))) {
                 $errors[] = Context::getContext()->getTranslator()->trans('Invalid URL', array(), 'Admin.Notifications.Error');
@@ -448,7 +448,7 @@ class ValidateCore
         $events .= '|onoffline|ononline|onpaste|onpropertychange|onreadystatechange|onresizeend|onresizestart|onrowenter|onrowexit|onrowsdelete|onrowsinserted|onscroll|onsearch|onselectionchange';
         $events .= '|onselectstart|onstart|onstop';
 
-        if (preg_match('/<[\s]*script/ims', $html) || preg_match('/(' . $events . ')[\s]*=/ims', $html) || preg_match('/.*script\:/ims', $html)) {
+        if (preg_match('/<[\s]*script/ims', $html) || preg_match('/('.$events.')[\s]*=/ims', $html) || preg_match('/.*script\:/ims', $html)) {
             return false;
         }
 
@@ -475,7 +475,7 @@ class ValidateCore
      * Check for password validity.
      *
      * @param string $passwd Password to validate
-     * @param int $size
+     * @param int    $size
      *
      * @return bool Validity is ok or not
      *
@@ -491,7 +491,7 @@ class ValidateCore
      * Size is limited by `password_hash()` (72 chars).
      *
      * @param string $plaintextPasswd Password to validate
-     * @param int $size
+     * @param int    $size
      *
      * @return bool Indicates whether the given string is a valid plaintext password
      *
@@ -510,7 +510,7 @@ class ValidateCore
      * Anything else is invalid.
      *
      * @param string $hashedPasswd Password to validate
-     * @param int $size
+     * @param int    $size
      *
      * @return bool Indicates whether the given string is a valid hashed password
      *
@@ -518,7 +518,7 @@ class ValidateCore
      */
     public static function isHashedPassword($hashedPasswd)
     {
-        return Tools::strlen($hashedPasswd) == 32 || Tools::strlen($hashedPasswd) == 60;
+        return 32 == Tools::strlen($hashedPasswd) || 60 == Tools::strlen($hashedPasswd);
     }
 
     public static function isPasswdAdmin($passwd)
@@ -582,7 +582,7 @@ class ValidateCore
 
     public static function isDateOrNull($date)
     {
-        if (is_null($date) || $date === '0000-00-00 00:00:00' || $date === '0000-00-00') {
+        if (is_null($date) || '0000-00-00 00:00:00' === $date || '0000-00-00' === $date) {
             return true;
         }
 
@@ -598,7 +598,7 @@ class ValidateCore
      */
     public static function isBirthDate($date)
     {
-        if (empty($date) || $date == '0000-00-00') {
+        if (empty($date) || '0000-00-00' == $date) {
             return true;
         }
         if (preg_match('/^([0-9]{4})-((?:0?[1-9])|(?:1[0-2]))-((?:0?[1-9])|(?:[1-2][0-9])|(?:3[01]))([0-9]{2}:[0-9]{2}:[0-9]{2})?$/', $date, $birth_date)) {
@@ -625,7 +625,7 @@ class ValidateCore
      */
     public static function isBool($bool)
     {
-        return $bool === null || is_bool($bool) || preg_match('/^(0|1)$/', $bool);
+        return null === $bool || is_bool($bool) || preg_match('/^(0|1)$/', $bool);
     }
 
     /**
@@ -714,7 +714,7 @@ class ValidateCore
      */
     public static function isOrderWay($way)
     {
-        return $way === 'ASC' | $way === 'DESC' | $way === 'asc' | $way === 'desc';
+        return 'ASC' === $way | 'DESC' === $way | 'asc' === $way | 'desc' === $way;
     }
 
     /**
@@ -776,7 +776,7 @@ class ValidateCore
      */
     public static function isInt($value)
     {
-        return (string) (int) $value === (string) $value || $value === false;
+        return (string) (int) $value === (string) $value || false === $value;
     }
 
     /**
@@ -818,7 +818,7 @@ class ValidateCore
 
     public static function isNullOrUnsignedId($id)
     {
-        return $id === null || Validate::isUnsignedId($id);
+        return null === $id || Validate::isUnsignedId($id);
     }
 
     /**
@@ -978,7 +978,7 @@ class ValidateCore
      */
     public static function isSortDirection($value)
     {
-        return $value !== null && ($value === 'ASC' || $value === 'DESC');
+        return null !== $value && ('ASC' === $value || 'DESC' === $value);
     }
 
     /**
@@ -1002,7 +1002,7 @@ class ValidateCore
      */
     public static function isPriceDisplayMethod($data)
     {
-        return $data == PS_TAX_EXC || $data == PS_TAX_INC;
+        return PS_TAX_EXC == $data || PS_TAX_INC == $data;
     }
 
     /**
@@ -1024,7 +1024,7 @@ class ValidateCore
      */
     public static function isCookie($data)
     {
-        return is_object($data) && get_class($data) == 'Cookie';
+        return is_object($data) && 'Cookie' == get_class($data);
     }
 
     /**
@@ -1048,7 +1048,7 @@ class ValidateCore
      */
     public static function isReductionType($data)
     {
-        return $data === 'amount' || $data === 'percentage';
+        return 'amount' === $data || 'percentage' === $data;
     }
 
     /**
@@ -1084,7 +1084,7 @@ class ValidateCore
      */
     public static function isSerializedArray($data)
     {
-        return $data === null || (is_string($data) && preg_match('/^a:[0-9]+:{.*;}$/s', $data));
+        return null === $data || (is_string($data) && preg_match('/^a:[0-9]+:{.*;}$/s', $data));
     }
 
     /**
@@ -1098,7 +1098,7 @@ class ValidateCore
     {
         json_decode($string);
 
-        return json_last_error() == JSON_ERROR_NONE;
+        return JSON_ERROR_NONE == json_last_error();
     }
 
     /**
@@ -1110,7 +1110,7 @@ class ValidateCore
      */
     public static function isCoordinate($data)
     {
-        return $data === null || preg_match('/^\-?[0-9]{1,8}\.[0-9]{1,8}$/s', $data);
+        return null === $data || preg_match('/^\-?[0-9]{1,8}\.[0-9]{1,8}$/s', $data);
     }
 
     /**
@@ -1146,7 +1146,7 @@ class ValidateCore
     {
         if (count($ids)) {
             foreach ($ids as $id) {
-                if ($id == 0 || !Validate::isUnsignedInt($id)) {
+                if (0 == $id || !Validate::isUnsignedInt($id)) {
                     return false;
                 }
             }
@@ -1178,11 +1178,11 @@ class ValidateCore
      */
     public static function isSiret($siret)
     {
-        if (Tools::strlen($siret) != 14) {
+        if (14 != Tools::strlen($siret)) {
             return false;
         }
         $sum = 0;
-        for ($i = 0; $i != 14; ++$i) {
+        for ($i = 0; 14 != $i; ++$i) {
             $tmp = ((($i + 1) % 2) + 1) * intval($siret[$i]);
             if ($tmp >= 10) {
                 $tmp -= 9;
@@ -1190,7 +1190,7 @@ class ValidateCore
             $sum += $tmp;
         }
 
-        return $sum % 10 === 0;
+        return 0 === $sum % 10;
     }
 
     /**
@@ -1217,7 +1217,7 @@ class ValidateCore
 
     public static function isOrderInvoiceNumber($id)
     {
-        return preg_match('/^(?:' . Configuration::get('PS_INVOICE_PREFIX', Context::getContext()->language->id) . ')\s*([0-9]+)$/i', $id);
+        return preg_match('/^(?:'.Configuration::get('PS_INVOICE_PREFIX', Context::getContext()->language->id).')\s*([0-9]+)$/i', $id);
     }
 
     public static function isThemeName($theme_name)

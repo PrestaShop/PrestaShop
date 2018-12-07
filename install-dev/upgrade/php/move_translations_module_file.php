@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -25,7 +25,7 @@
  */
 
 /**
- * Move all translation modules files 1.4 for a good architecture in 1.5
+ * Move all translation modules files 1.4 for a good architecture in 1.5.
  */
 function move_translations_module_file()
 {
@@ -71,7 +71,7 @@ function move_translations_module_file()
 
     if (!$res || (count($error_list) > 0)) {
         return array('error' => 1, 'msg' => implode("\r\n<br/>", $error_list));
-    }  
-        return true;
-    
+    }
+
+    return true;
 }

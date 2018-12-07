@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -31,7 +31,6 @@ use Configuration;
 
 class CartGiftWrappingTest extends AbstractCartCalculationTest
 {
-
     const GIFT_WRAPPING_PRICE = 5.3;
     protected $previousGiftWrapping;
     protected $previousGiftWrappingPrice;
@@ -73,7 +72,7 @@ class CartGiftWrappingTest extends AbstractCartCalculationTest
                 'cartRules' => array(),
             ),
             'one product in cart, quantity 1' => array(
-                'products' => array(1 => 1,),
+                'products' => array(1 => 1),
                 'expectedTotal' => static::PRODUCT_FIXTURES[1]['price']
                                                    + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
                 'expectedTotalWithGiftWrapping' => static::PRODUCT_FIXTURES[1]['price']
@@ -82,7 +81,7 @@ class CartGiftWrappingTest extends AbstractCartCalculationTest
                                                    + static::GIFT_WRAPPING_PRICE,
             ),
             'one product in cart, quantity 3' => array(
-                'products' => array(1 => 3,),
+                'products' => array(1 => 3),
                 'expectedTotal' => 3 * static::PRODUCT_FIXTURES[1]['price']
                                                    + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
                 'expectedTotalWithGiftWrapping' => 3 * static::PRODUCT_FIXTURES[1]['price']

@@ -173,7 +173,7 @@ class StockController extends ApiController
             ->setData($dataCallback)
             ->setHeadersData($headersData)
             ->setLimit(10000)
-            ->setFileName('stock_' . date('Y-m-d_His') . '.csv')
+            ->setFileName('stock_'.date('Y-m-d_His').'.csv')
         ;
     }
 
@@ -221,7 +221,7 @@ class StockController extends ApiController
      */
     private function guardAgainstInvalidBulkEditionRequest(Request $request)
     {
-        if (mb_strlen($request->getContent()) == 0) {
+        if (0 == mb_strlen($request->getContent())) {
             $message = 'The request body should contain a JSON-encoded array of product identifiers and deltas';
             throw new BadRequestHttpException(sprintf('Invalid JSON content (%s)', $message));
         }
@@ -238,12 +238,12 @@ class StockController extends ApiController
     {
         $decodedContent = $this->guardAgainstInvalidJsonBody($request->getContent());
 
-        $message = 'Each item of JSON-encoded array in the request body should contain ' .
-            'a product id ("product_id"), a quantity delta ("delta"). ' .
+        $message = 'Each item of JSON-encoded array in the request body should contain '.
+            'a product id ("product_id"), a quantity delta ("delta"). '.
             'The item of index #%d is invalid.';
 
         array_walk($decodedContent, function ($item, $index) use ($message) {
-            if (!array_key_exists('product_id', $item) || !array_key_exists('delta', $item) || $item['delta'] == 0) {
+            if (!array_key_exists('product_id', $item) || !array_key_exists('delta', $item) || 0 == $item['delta']) {
                 throw new BadRequestHttpException(sprintf($message, $index));
             }
         });

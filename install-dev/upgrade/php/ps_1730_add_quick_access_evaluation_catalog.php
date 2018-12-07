@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 function ps_1730_add_quick_access_evaluation_catalog()
 {
     $moduleManagerBuilder = \PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder::getInstance();
@@ -34,15 +33,15 @@ function ps_1730_add_quick_access_evaluation_catalog()
     if ($isStatscheckupInstalled) {
         $translator = Context::getContext()->getTranslator();
 
-        Db::getInstance()->execute('INSERT INTO `' . _DB_PREFIX_ . 'quick_access` SET link = "index.php?controller=AdminStats&module=statscheckup" ');
+        Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'quick_access` SET link = "index.php?controller=AdminStats&module=statscheckup" ');
 
-        $idQuickAccess = (int)Db::getInstance()->Insert_ID();
+        $idQuickAccess = (int) Db::getInstance()->Insert_ID();
 
         foreach (Language::getLanguages() as $language) {
-            Db::getInstance()->execute('INSERT INTO `' . _DB_PREFIX_ . 'quick_access_lang` SET 
-                `id_quick_access` = ' . $idQuickAccess . ',
-                `id_lang` = ' . (int)$language['id_lang'] . ',
-                `name` = "' . pSQL($translator->trans('Catalog evaluation', array(), 'Admin.Navigation.Header')) . '" ');
+            Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'quick_access_lang` SET 
+                `id_quick_access` = '.$idQuickAccess.',
+                `id_lang` = '.(int) $language['id_lang'].',
+                `name` = "'.pSQL($translator->trans('Catalog evaluation', array(), 'Admin.Navigation.Header')).'" ');
         }
     }
 }

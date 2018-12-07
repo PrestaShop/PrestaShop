@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -26,7 +26,6 @@
 
 namespace LegacyTests\Unit\Core\Foundation\IoC;
 
-use Exception;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
 use LegacyTests\Unit\Core\Foundation\IoC\Fixtures\Dummy;
@@ -65,7 +64,7 @@ class Core_Foundation_IoC_Container_Test extends TestCase
     public function test_bind_by_closure_instance_not_shared_by_default()
     {
         $this->container->bind('different', function () {
-            return new Dummy;
+            return new Dummy();
         });
 
         $first = $this->container->make('different');
@@ -77,7 +76,7 @@ class Core_Foundation_IoC_Container_Test extends TestCase
     public function test_bind_by_closure_instance_shared_if_explicitely_required()
     {
         $this->container->bind('same', function () {
-            return new Dummy;
+            return new Dummy();
         }, true);
 
         $first = $this->container->make('same');
@@ -155,7 +154,7 @@ class Core_Foundation_IoC_Container_Test extends TestCase
      */
     public function test_dependency_loop_doesnt_crash_container()
     {
-        /**
+        /*
          * CycleA depends on CycleB,
          * CycleB depends on CycleA
          */
@@ -178,14 +177,14 @@ class Core_Foundation_IoC_Container_Test extends TestCase
     }
 
     /**
-     * data provider for test_container_can_bind_values_directly
+     * data provider for test_container_can_bind_values_directly.
      */
     public function valuesToBind()
     {
         return array(
-            array(new Dummy),
+            array(new Dummy()),
             array(42),
-            array(array(1, 2, 3))
+            array(array(1, 2, 3)),
         );
     }
 
@@ -199,7 +198,7 @@ class Core_Foundation_IoC_Container_Test extends TestCase
     }
 
     /**
-     * @expectedException Exception
+     * @expectedException \Exception
      */
     public function test_container_doesnt_bind_strings_as_literal_values()
     {

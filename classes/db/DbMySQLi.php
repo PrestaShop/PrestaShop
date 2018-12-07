@@ -43,20 +43,20 @@ class DbMySQLiCore extends Db
      * @see DbCore::connect()
      *
      * @throws PrestaShopDatabaseException
-     * @return mysqli
      *
+     * @return mysqli
      */
     public function connect()
     {
         $socket = false;
         $port = false;
-        if (Tools::strpos($this->server, ':') !== false) {
+        if (false !== Tools::strpos($this->server, ':')) {
             list($server, $port) = explode(':', $this->server);
-            if (is_numeric($port) === false) {
+            if (false === is_numeric($port)) {
                 $socket = $port;
                 $port = false;
             }
-        } elseif (Tools::strpos($this->server, '/') !== false) {
+        } elseif (false !== Tools::strpos($this->server, '/')) {
             $socket = $this->server;
         }
 
@@ -86,24 +86,24 @@ class DbMySQLiCore extends Db
     /**
      * Tries to connect and create a new database.
      *
-     * @param string $host
+     * @param string      $host
      * @param null|string $user
      * @param null|string $password
      * @param null|string $database
-     * @param bool $dropit if true, drops the created database
+     * @param bool        $dropit   if true, drops the created database
      *
      * @return bool|mysqli_result
      */
     public static function createDatabase($host, $user = null, $password = null, $database = null, $dropit = false)
     {
-        if (mb_strpos($host, ':') !== false) {
+        if (false !== mb_strpos($host, ':')) {
             list($host, $port) = explode(':', $host);
             $link = @new mysqli($host, $user, $password, null, $port);
         } else {
             $link = @new mysqli($host, $user, $password);
         }
-        $success = $link->query('CREATE DATABASE `' . str_replace('`', '\\`', $database) . '`');
-        if ($dropit && ($link->query('DROP DATABASE `' . str_replace('`', '\\`', $database) . '`') !== false)) {
+        $success = $link->query('CREATE DATABASE `'.str_replace('`', '\\`', $database).'`');
+        if ($dropit && (false !== $link->query('DROP DATABASE `'.str_replace('`', '\\`', $database).'`'))) {
             return true;
         }
 
@@ -177,15 +177,14 @@ class DbMySQLiCore extends Db
 
         if (method_exists($result, 'fetch_all')) {
             return $result->fetch_all(MYSQLI_ASSOC);
-        }  
-            $ret = array();
+        }
+        $ret = array();
 
-            while ($row = $this->nextRow($result)) {
-                $ret[] = $row;
-            }
+        while ($row = $this->nextRow($result)) {
+            $ret[] = $row;
+        }
 
-            return $ret;
-        
+        return $ret;
     }
 
     /**
@@ -289,7 +288,7 @@ class DbMySQLiCore extends Db
      */
     public function set_db($db_name)
     {
-        return $this->link->query('USE `' . bqSQL($db_name) . '`');
+        return $this->link->query('USE `'.bqSQL($db_name).'`');
     }
 
     /**
@@ -298,9 +297,9 @@ class DbMySQLiCore extends Db
      * @see Db::hasTableWithSamePrefix()
      *
      * @param string $server Server address
-     * @param string $user Login for database connection
-     * @param string $pwd Password for database connection
-     * @param string $db Database name
+     * @param string $user   Login for database connection
+     * @param string $pwd    Password for database connection
+     * @param string $db     Database name
      * @param string $prefix Tables prefix
      *
      * @return bool
@@ -312,7 +311,7 @@ class DbMySQLiCore extends Db
             return false;
         }
 
-        $sql = 'SHOW TABLES LIKE \'' . $prefix . '%\'';
+        $sql = 'SHOW TABLES LIKE \''.$prefix.'%\'';
         $result = $link->query($sql);
 
         return (bool) $result->fetch_assoc();
@@ -323,13 +322,13 @@ class DbMySQLiCore extends Db
      *
      * @see Db::checkConnection()
      *
-     * @param string $server Server address
-     * @param string $user Login for database connection
-     * @param string $pwd Password for database connection
-     * @param string $db Database name
-     * @param bool $newDbLink
+     * @param string      $server    Server address
+     * @param string      $user      Login for database connection
+     * @param string      $pwd       Password for database connection
+     * @param string      $db        Database name
+     * @param bool        $newDbLink
      * @param bool|string $engine
-     * @param int $timeout
+     * @param int         $timeout
      *
      * @return int Error code or 0 if connection was successful
      */
@@ -346,7 +345,7 @@ class DbMySQLiCore extends Db
 
         // There is an @ because mysqli throw a warning when the database does not exists
         if (!@$link->real_connect($server, $user, $pwd, $db)) {
-            return (mysqli_connect_errno() == 1049) ? 2 : 1;
+            return (1049 == mysqli_connect_errno()) ? 2 : 1;
         }
 
         $link->close();
@@ -369,7 +368,7 @@ class DbMySQLiCore extends Db
             $value = 'MyISAM';
         }
         $row = $result->fetch_assoc();
-        if (!$row || mb_strtolower($row['Value']) != 'yes') {
+        if (!$row || 'yes' != mb_strtolower($row['Value'])) {
             $value = 'MyISAM';
         }
 
@@ -377,7 +376,7 @@ class DbMySQLiCore extends Db
         $sql = 'SHOW ENGINES';
         $result = $this->link->query($sql);
         while ($row = $result->fetch_assoc()) {
-            if ($row['Engine'] == 'InnoDB') {
+            if ('InnoDB' == $row['Engine']) {
                 if (in_array($row['Support'], array('DEFAULT', 'YES'), true)) {
                     $value = 'InnoDB';
                 }
@@ -391,11 +390,11 @@ class DbMySQLiCore extends Db
     /**
      * Tries to connect to the database and create a table (checking creation privileges).
      *
-     * @param string $server
-     * @param string $user
-     * @param string $pwd
-     * @param string $db
-     * @param string $prefix
+     * @param string      $server
+     * @param string      $user
+     * @param string      $pwd
+     * @param string      $db
+     * @param string      $prefix
      * @param null|string $engine Table engine
      *
      * @return bool|string True, false or error
@@ -407,20 +406,20 @@ class DbMySQLiCore extends Db
             return false;
         }
 
-        if ($engine === null) {
+        if (null === $engine) {
             $engine = 'MyISAM';
         }
 
         $result = $link->query('
-		CREATE TABLE `' . $prefix . 'test` (
+		CREATE TABLE `'.$prefix.'test` (
 			`test` tinyint(1) unsigned NOT NULL
-		) ENGINE=' . $engine);
+		) ENGINE='.$engine);
 
         if (!$result) {
             return $link->error;
         }
 
-        $link->query('DROP TABLE `' . $prefix . 'test`');
+        $link->query('DROP TABLE `'.$prefix.'test`');
 
         return true;
     }
@@ -431,8 +430,8 @@ class DbMySQLiCore extends Db
      * @see Db::checkEncoding()
      *
      * @param string $server Server address
-     * @param string $user Login for database connection
-     * @param string $pwd Password for database connection
+     * @param string $user   Login for database connection
+     * @param string $pwd    Password for database connection
      *
      * @return bool
      */
@@ -457,8 +456,8 @@ class DbMySQLiCore extends Db
     public static function checkAutoIncrement($server, $user, $pwd)
     {
         $link = @new mysqli($server, $user, $pwd);
-        $ret = (bool) (($result = $link->query('SELECT @@auto_increment_increment as aii')) && ($row = $result->fetch_assoc()) && $row['aii'] == 1);
-        $ret &= (bool) (($result = $link->query('SELECT @@auto_increment_offset as aio')) && ($row = $result->fetch_assoc()) && $row['aio'] == 1);
+        $ret = (bool) (($result = $link->query('SELECT @@auto_increment_increment as aii')) && ($row = $result->fetch_assoc()) && 1 == $row['aii']);
+        $ret &= (bool) (($result = $link->query('SELECT @@auto_increment_offset as aio')) && ($row = $result->fetch_assoc()) && 1 == $row['aio']);
         $link->close();
 
         return $ret;

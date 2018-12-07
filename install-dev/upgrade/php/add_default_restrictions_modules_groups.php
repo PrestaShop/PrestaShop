@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 function add_default_restrictions_modules_groups()
 {
     $res = true;
@@ -42,17 +41,17 @@ function add_default_restrictions_modules_groups()
     foreach ($groups as $group) {
         if (!is_array($modules) || !is_array($shops)) {
             return false;
-        }  
-            $sql = 'INSERT INTO `'._DB_PREFIX_.'module_group` (`id_module`, `id_shop`, `id_group`) VALUES ';
-            foreach ($modules as $mod) {
-                foreach ($shops as $s) {
-                    $sql .= '("'.(int)$mod['id_module'].'", "'.(int)$s.'", "'.(int)$group['id_group'].'"),';
-                }
+        }
+        $sql = 'INSERT INTO `'._DB_PREFIX_.'module_group` (`id_module`, `id_shop`, `id_group`) VALUES ';
+        foreach ($modules as $mod) {
+            foreach ($shops as $s) {
+                $sql .= '("'.(int) $mod['id_module'].'", "'.(int) $s.'", "'.(int) $group['id_group'].'"),';
             }
-                // removing last comma to avoid SQL error
-                $sql = mb_substr($sql, 0, mb_strlen($sql) - 1);
-            $res &= Db::getInstance()->execute($sql);
-        
+        }
+        // removing last comma to avoid SQL error
+        $sql = mb_substr($sql, 0, mb_strlen($sql) - 1);
+        $res &= Db::getInstance()->execute($sql);
     }
+
     return $res;
 }

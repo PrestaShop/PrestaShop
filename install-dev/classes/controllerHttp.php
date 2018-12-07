@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 use PrestaShopBundle\Install\LanguageList;
 
 class InstallControllerHttp
@@ -61,7 +60,7 @@ class InstallControllerHttp
     public $session;
 
     /**
-     * LanguageList
+     * LanguageList.
      */
     public $language;
 
@@ -96,32 +95,32 @@ class InstallControllerHttp
             array(
                 'name' => 'welcome',
                 'displayName' => $this->translator->trans('Choose your language', array(), 'Install'),
-                'controllerClass' => 'InstallControllerHttpWelcome'
+                'controllerClass' => 'InstallControllerHttpWelcome',
             ),
             array(
                 'name' => 'license',
                 'displayName' => $this->translator->trans('License agreements', array(), 'Install'),
-                'controllerClass' => 'InstallControllerHttpLicense'
+                'controllerClass' => 'InstallControllerHttpLicense',
             ),
             array(
                 'name' => 'system',
                 'displayName' => $this->translator->trans('System compatibility', array(), 'Install'),
-                'controllerClass' => 'InstallControllerHttpSystem'
+                'controllerClass' => 'InstallControllerHttpSystem',
             ),
             array(
                 'name' => 'configure',
                 'displayName' => $this->translator->trans('Store information', array(), 'Install'),
-                'controllerClass' => 'InstallControllerHttpConfigure'
+                'controllerClass' => 'InstallControllerHttpConfigure',
             ),
             array(
                 'name' => 'database',
                 'displayName' => $this->translator->trans('System configuration', array(), 'Install'),
-                'controllerClass' => 'InstallControllerHttpDatabase'
+                'controllerClass' => 'InstallControllerHttpDatabase',
             ),
             array(
                 'name' => 'process',
                 'displayName' => $this->translator->trans('Store installation', array(), 'Install'),
-                'controllerClass' => 'InstallControllerHttpProcess'
+                'controllerClass' => 'InstallControllerHttpProcess',
             ),
         );
         self::$steps = new StepList($stepConfig);
@@ -175,12 +174,12 @@ class InstallControllerHttp
         $self = new self();
 
         if (Tools::getValue('compile_templates')) {
-            require_once(_PS_INSTALL_CONTROLLERS_PATH_.'http/smarty_compile.php');
+            require_once _PS_INSTALL_CONTROLLERS_PATH_.'http/smarty_compile.php';
             exit;
         }
 
         $session = InstallSession::getInstance();
-        if (!$session->last_step || $session->last_step == 'welcome') {
+        if (!$session->last_step || 'welcome' == $session->last_step) {
             Tools::generateIndex();
         }
 
@@ -235,7 +234,6 @@ class InstallControllerHttp
 
         // Submit form to go to next step
         if (Tools::getValue('submitNext')) {
-
             self::$steps->current()->getControllerInstance()->processNextStep();
 
             // If current step is validated, let's go to next step
@@ -244,7 +242,7 @@ class InstallControllerHttp
             }
 
             // Don't display system step if mandatory requirements is valid
-            if (self::$steps->current()->getName() == 'system' && self::$steps->current()->getControllerInstance()->validate()) {
+            if ('system' == self::$steps->current()->getName() && self::$steps->current()->getControllerInstance()->validate()) {
                 self::$steps->next();
             }
 
@@ -267,7 +265,6 @@ class InstallControllerHttp
 
     public function init()
     {
-
     }
 
     public function process()
@@ -275,7 +272,7 @@ class InstallControllerHttp
     }
 
     /**
-     * Get steps list
+     * Get steps list.
      *
      * @return array
      */
@@ -290,9 +287,10 @@ class InstallControllerHttp
     }
 
     /**
-     * Find offset of a step by name
+     * Find offset of a step by name.
      *
      * @param string $step Step name
+     *
      * @return int
      */
     public static function getStepOffset($step)
@@ -301,7 +299,7 @@ class InstallControllerHttp
     }
 
     /**
-     * Make a HTTP redirection to a step
+     * Make a HTTP redirection to a step.
      *
      * @param string $step
      */
@@ -312,7 +310,7 @@ class InstallControllerHttp
     }
 
     /**
-     * Check if current step is first step in list of steps
+     * Check if current step is first step in list of steps.
      *
      * @return bool
      */
@@ -322,7 +320,7 @@ class InstallControllerHttp
     }
 
     /**
-     * Check if current step is last step in list of steps
+     * Check if current step is last step in list of steps.
      *
      * @return bool
      */
@@ -332,9 +330,10 @@ class InstallControllerHttp
     }
 
     /**
-     * Check is given step is already finished
+     * Check is given step is already finished.
      *
      * @param string $step
+     *
      * @return bool
      */
     public function isStepFinished($step)
@@ -343,16 +342,16 @@ class InstallControllerHttp
     }
 
     /**
-     * Get telephone used for this language
+     * Get telephone used for this language.
      *
      * @return string
      */
     public function getPhone()
     {
-        if (InstallSession::getInstance()->support_phone != null) {
+        if (null != InstallSession::getInstance()->support_phone) {
             return InstallSession::getInstance()->support_phone;
         }
-        if ($this->phone === null) {
+        if (null === $this->phone) {
             $this->phone = '';
             if ($iframe = Tools::file_get_contents('http://api.prestashop.com/iframe/install.php?lang='.$this->language->getLanguageIso(), false, null, 3)) {
                 if (preg_match('/<img.+alt="([^"]+)".*>/Ui', $iframe, $matches) && isset($matches[1])) {
@@ -361,11 +360,12 @@ class InstallControllerHttp
             }
         }
         InstallSession::getInstance()->support_phone = $this->phone;
+
         return $this->phone;
     }
 
     /**
-     * Get link to documentation for this language
+     * Get link to documentation for this language.
      *
      * Enter description here ...
      */
@@ -376,7 +376,7 @@ class InstallControllerHttp
     }
 
     /**
-     * Get link to tutorial video for this language
+     * Get link to tutorial video for this language.
      *
      * Enter description here ...
      */
@@ -387,7 +387,7 @@ class InstallControllerHttp
     }
 
     /**
-     * Get link to tailored help for this language
+     * Get link to tailored help for this language.
      *
      * Enter description here ...
      */
@@ -398,7 +398,7 @@ class InstallControllerHttp
     }
 
     /**
-     * Get link to forum for this language
+     * Get link to forum for this language.
      *
      * Enter description here ...
      */
@@ -409,7 +409,7 @@ class InstallControllerHttp
     }
 
     /**
-     * Get link to blog for this language
+     * Get link to blog for this language.
      *
      * Enter description here ...
      */
@@ -419,7 +419,7 @@ class InstallControllerHttp
     }
 
     /**
-     * Get link to support for this language
+     * Get link to support for this language.
      *
      * Enter description here ...
      */
@@ -434,9 +434,9 @@ class InstallControllerHttp
     }
 
     /**
-     * Send AJAX response in JSON format {success: bool, message: string}
+     * Send AJAX response in JSON format {success: bool, message: string}.
      *
-     * @param bool $success
+     * @param bool   $success
      * @param string $message
      */
     public function ajaxJsonAnswer($success, $message = '')
@@ -445,17 +445,18 @@ class InstallControllerHttp
             $message = print_r(@error_get_last(), true);
         }
         die(json_encode(array(
-            'success' => (bool)$success,
+            'success' => (bool) $success,
             'message' => $message,
             // 'memory' => round(memory_get_peak_usage()/1024/1024, 2).' Mo',
         )));
     }
 
     /**
-     * Display a template
+     * Display a template.
      *
-     * @param string $template Template name
-     * @param bool $get_output Is true, return template html
+     * @param string $template   Template name
+     * @param bool   $get_output Is true, return template html
+     *
      * @return string
      */
     public function displayTemplate($template, $get_output = false, $path = null)
@@ -472,13 +473,14 @@ class InstallControllerHttp
             ob_start();
         }
 
-        include($path.$template.'.php');
+        include $path.$template.'.php';
 
         if ($get_output) {
             $content = ob_get_contents();
             if (ob_get_level() && ob_get_length() > 0) {
                 ob_end_clean();
             }
+
             return $content;
         }
     }
@@ -491,6 +493,7 @@ class InstallControllerHttp
             $null = null;
             $ref = &$null;
         }
+
         return $ref;
     }
 

@@ -73,10 +73,10 @@ class SearchParametersResolver implements ArgumentValueResolverInterface
      * SearchParametersResolver constructor.
      *
      * @param SearchParametersInterface $searchParameters
-     * @param TokenStorageInterface $tokenStorage
-     * @param AdminFilterRepository $adminFilterRepository
-     * @param EventDispatcherInterface $dispatcher
-     * @param int $shopId The Shop id
+     * @param TokenStorageInterface     $tokenStorage
+     * @param AdminFilterRepository     $adminFilterRepository
+     * @param EventDispatcherInterface  $dispatcher
+     * @param int                       $shopId                The Shop id
      */
     public function __construct(
         SearchParametersInterface $searchParameters,

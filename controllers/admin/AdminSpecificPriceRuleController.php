@@ -57,10 +57,10 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
         $this->addRowAction('delete');
 
         $this->_select = 's.name shop_name, cu.iso_code as currency_iso_code, cl.name country_name, gl.name group_name';
-        $this->_join = 'LEFT JOIN ' . _DB_PREFIX_ . 'shop s ON (s.id_shop = a.id_shop)
-		LEFT JOIN ' . _DB_PREFIX_ . 'currency cu ON (cu.id_currency = a.id_currency)
-		LEFT JOIN ' . _DB_PREFIX_ . 'country_lang cl ON (cl.id_country = a.id_country AND cl.id_lang=' . (int) $this->context->language->id . ')
-		LEFT JOIN ' . _DB_PREFIX_ . 'group_lang gl ON (gl.id_group = a.id_group AND gl.id_lang=' . (int) $this->context->language->id . ')';
+        $this->_join = 'LEFT JOIN '._DB_PREFIX_.'shop s ON (s.id_shop = a.id_shop)
+		LEFT JOIN '._DB_PREFIX_.'currency cu ON (cu.id_currency = a.id_currency)
+		LEFT JOIN '._DB_PREFIX_.'country_lang cl ON (cl.id_country = a.id_country AND cl.id_lang='.(int) $this->context->language->id.')
+		LEFT JOIN '._DB_PREFIX_.'group_lang gl ON (gl.id_group = a.id_group AND gl.id_lang='.(int) $this->context->language->id.')';
         $this->_use_found_rows = false;
 
         $this->bulk_actions = array(
@@ -140,7 +140,7 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
     {
         if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_specific_price_rule'] = array(
-                'href' => self::$currentIndex . '&addspecific_price_rule&token=' . $this->token,
+                'href' => self::$currentIndex.'&addspecific_price_rule&token='.$this->token,
                 'desc' => $this->trans('Add new catalog price rule', array(), 'Admin.Catalog.Feature'),
                 'icon' => 'process-icon-new',
             );
@@ -159,9 +159,9 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
                 $this->_list[$k]['currency_name'] = ucfirst($currency['name']);
             }
 
-            if ($list['reduction_type'] == 'amount') {
+            if ('amount' == $list['reduction_type']) {
                 $this->_list[$k]['reduction_type'] = $this->list_reduction_type['amount'];
-            } elseif ($list['reduction_type'] == 'percentage') {
+            } elseif ('percentage' == $list['reduction_type']) {
                 $this->_list[$k]['reduction_type'] = $this->list_reduction_type['percentage'];
             }
         }
@@ -239,7 +239,7 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
                     'type' => 'text',
                     'label' => $this->trans('Price (tax excl.)', array(), 'Admin.Catalog.Feature'),
                     'name' => 'price',
-                    'disabled' => ($this->object->price == -1 ? 1 : 0),
+                    'disabled' => (-1 == $this->object->price ? 1 : 0),
                     'maxlength' => 10,
                     'suffix' => $this->context->currency->getSign('right'),
                 ),
@@ -304,7 +304,7 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
                 'title' => $this->trans('Save', array(), 'Admin.Actions'),
             ),
         );
-        if (($value = $this->getFieldValue($this->object, 'price')) != -1) {
+        if (-1 != ($value = $this->getFieldValue($this->object, 'price'))) {
             $price = number_format($value, 6);
         } else {
             $price = '';

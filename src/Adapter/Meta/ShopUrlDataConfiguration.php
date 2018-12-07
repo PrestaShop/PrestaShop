@@ -55,7 +55,7 @@ final class ShopUrlDataConfiguration implements DataConfigurationInterface
     /**
      * ShopUrlDataConfiguration constructor.
      *
-     * @param ShopUrl $mainShopUrl
+     * @param ShopUrl                $mainShopUrl
      * @param ConfigurationInterface $configuration
      */
     public function __construct(

@@ -71,7 +71,7 @@ class PDFGeneratorCore extends TCPDF
     );
 
     /**
-     * @param bool $use_cache
+     * @param bool   $use_cache
      * @param string $orientation
      */
     public function __construct($use_cache = false, $orientation = 'P')
@@ -171,7 +171,7 @@ class PDFGeneratorCore extends TCPDF
      * Render HTML template.
      *
      * @param string $filename
-     * @param bool $display true:display to user, false:save, 'I','D','S' as fpdf display
+     * @param bool   $display  true:display to user, false:save, 'I','D','S' as fpdf display
      *
      * @throws PrestaShopException
      *
@@ -185,15 +185,15 @@ class PDFGeneratorCore extends TCPDF
 
         $this->lastPage();
 
-        if ($display === true) {
+        if (true === $display) {
             $output = 'D';
-        } elseif ($display === false) {
+        } elseif (false === $display) {
             $output = 'S';
-        } elseif ($display == 'D') {
+        } elseif ('D' == $display) {
             $output = 'D';
-        } elseif ($display == 'S') {
+        } elseif ('S' == $display) {
             $output = 'S';
-        } elseif ($display == 'F') {
+        } elseif ('F' == $display) {
             $output = 'F';
         } else {
             $output = 'I';
@@ -221,7 +221,7 @@ class PDFGeneratorCore extends TCPDF
     {
         $seed .= microtime();
 
-        if (function_exists('openssl_random_pseudo_bytes') && (mb_strtoupper(mb_substr(PHP_OS, 0, 3)) !== 'WIN')) {
+        if (function_exists('openssl_random_pseudo_bytes') && ('WIN' !== mb_strtoupper(mb_substr(PHP_OS, 0, 3)))) {
             // this is not used on windows systems because it is very slow for a know bug
             $seed .= openssl_random_pseudo_bytes(512);
         } else {

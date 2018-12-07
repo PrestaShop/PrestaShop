@@ -43,7 +43,7 @@ class TreeBuilder
 
     /**
      * @param AbstractProvider $provider
-     * @param null $search
+     * @param null             $search
      *
      * @return array|mixed
      */
@@ -62,7 +62,7 @@ class TreeBuilder
 
         foreach ($translations as $domain => $messages) {
             $missingTranslations = 0;
-            $domainDatabase = str_replace('.' . $provider->getLocale(), '', $domain);
+            $domainDatabase = str_replace('.'.$provider->getLocale(), '', $domain);
 
             foreach ($messages as $translationKey => $translationValue) {
                 $data = array(
@@ -155,7 +155,7 @@ class TreeBuilder
 
             $subtree['__messages'] = array($domain => $messages);
             if (isset($messages['__metadata'])) {
-                $subtree['__fixed_length_id'] = '_' . sha1($domain);
+                $subtree['__fixed_length_id'] = '_'.sha1($domain);
                 list($subtree['__domain']) = explode('.', $domain);
                 $subtree['__metadata'] = $messages['__metadata'];
                 $subtree['__metadata']['domain'] = $subtree['__domain'];
@@ -171,8 +171,8 @@ class TreeBuilder
      *
      * @param $tree
      * @param Router $router
-     * @param null $theme
-     * @param null $search
+     * @param null   $theme
+     * @param null   $search
      *
      * @return array
      */
@@ -212,7 +212,7 @@ class TreeBuilder
                 foreach ($t1 as $k2 => $t2) {
                     $index3 = 0;
                     if (is_array($t2) && '__' !== mb_substr($k2, 0, 2)) {
-                        $this->addTreeInfo($router, $cleanTree[$index1]['children'], $index2, $k2, $k1 . $k2, $theme, $search);
+                        $this->addTreeInfo($router, $cleanTree[$index1]['children'], $index2, $k2, $k1.$k2, $theme, $search);
 
                         if (array_key_exists('__messages', $t2)) {
                             $nbMessage = count(current($t2['__messages']));
@@ -233,7 +233,7 @@ class TreeBuilder
 
                         foreach ($t2 as $k3 => $t3) {
                             if (is_array($t3) && '__' !== mb_substr($k3, 0, 2)) {
-                                $this->addTreeInfo($router, $cleanTree[$index1]['children'][$index2]['children'], $index3, $k3, $k1 . $k2 . $k3, $theme, $search);
+                                $this->addTreeInfo($router, $cleanTree[$index1]['children'][$index2]['children'], $index3, $k3, $k1.$k2.$k3, $theme, $search);
 
                                 if (array_key_exists('__messages', $t3)) {
                                     $nbMessage = count(current($t3['__messages']));

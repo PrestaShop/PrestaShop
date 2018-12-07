@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,9 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
-use PrestaShop\PrestaShop\Core\Payment\PaymentOption;
-
 if (!defined('_PS_VERSION_')) {
     exit;
 }
@@ -69,6 +66,7 @@ class bankwire extends PaymentModule
         ) {
             return false;
         }
+
         return true;
     }
 
@@ -80,18 +78,20 @@ class bankwire extends PaymentModule
                 || !parent::uninstall()) {
             return false;
         }
+
         return true;
     }
 
     /**
-     * tests for ModuleGetPossibleHooks
+     * tests for ModuleGetPossibleHooks.
      */
-    public function hookPaymentReturn(){
+    public function hookPaymentReturn()
+    {
         return;
     }
 
-    public function hookPaymentOptions(){
+    public function hookPaymentOptions()
+    {
         return;
     }
-
 }

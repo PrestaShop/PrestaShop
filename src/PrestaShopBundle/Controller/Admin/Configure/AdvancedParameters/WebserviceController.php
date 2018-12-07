@@ -48,7 +48,7 @@ class WebserviceController extends FrameworkBundleAdminController
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @param WebserviceKeyFilters $filters - filters for webservice list
-     * @param Request $request
+     * @param Request              $request
      *
      * @return Response
      */
@@ -158,8 +158,8 @@ class WebserviceController extends FrameworkBundleAdminController
      * @param int $webserviceAccountId
      *
      * @throws \PrestaShopException
-     * @return RedirectResponse
      *
+     * @return RedirectResponse
      */
     public function deleteSingleWebserviceAction($webserviceAccountId)
     {
@@ -187,8 +187,8 @@ class WebserviceController extends FrameworkBundleAdminController
      * @param Request $request
      *
      * @throws \PrestaShopException
-     * @return RedirectResponse
      *
+     * @return RedirectResponse
      */
     public function deleteMultipleWebserviceAction(Request $request)
     {
@@ -219,8 +219,8 @@ class WebserviceController extends FrameworkBundleAdminController
      *
      * @throws \PrestaShopDatabaseException
      * @throws \PrestaShopException
-     * @return RedirectResponse
      *
+     * @return RedirectResponse
      */
     public function enableMultipleStatusAction(Request $request)
     {
@@ -242,8 +242,8 @@ class WebserviceController extends FrameworkBundleAdminController
      *
      * @throws \PrestaShopDatabaseException
      * @throws \PrestaShopException
-     * @return RedirectResponse
      *
+     * @return RedirectResponse
      */
     public function disableMultipleStatusAction(Request $request)
     {
@@ -265,8 +265,8 @@ class WebserviceController extends FrameworkBundleAdminController
      *
      * @throws \PrestaShopDatabaseException
      * @throws \PrestaShopException
-     * @return RedirectResponse
      *
+     * @return RedirectResponse
      */
     public function toggleStatusAction($webserviceAccountId)
     {
@@ -294,8 +294,8 @@ class WebserviceController extends FrameworkBundleAdminController
      * @param Request $request
      *
      * @throws \Exception
-     * @return RedirectResponse
      *
+     * @return RedirectResponse
      */
     public function processFormAction(Request $request)
     {

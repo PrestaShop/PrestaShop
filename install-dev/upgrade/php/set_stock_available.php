@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 function set_stock_available()
 {
     $res = true;
@@ -42,7 +41,7 @@ function set_stock_available()
             '
 			SELECT quantity, id_product_attribute
 			FROM `'._DB_PREFIX_.'product_attribute`
-			WHERE `id_product` = '.(int)$row['id_product']
+			WHERE `id_product` = '.(int) $row['id_product']
         );
 
         //Add each attribute to stock_available
@@ -55,15 +54,15 @@ function set_stock_available()
 				INSERT INTO `'._DB_PREFIX_.'stock_available`
 				(`id_product`, `id_product_attribute`, `id_shop`, `id_group_shop`, `quantity`, `depends_on_stock`, `out_of_stock`)
 				VALUES
-				("'.(int)$row['id_product'].'", "'.(int)$attribute['id_product_attribute'].'", "1", "0", "'.(int)$attribute['quantity'].'", "0", "'.(int)$row['out_of_stock'].'")
+				("'.(int) $row['id_product'].'", "'.(int) $attribute['id_product_attribute'].'", "1", "0", "'.(int) $attribute['quantity'].'", "0", "'.(int) $row['out_of_stock'].'")
 			');
             if (!$res) {
                 return array('error' => Db::getInstance()->getNumberError(), 'msg' => '(attributes)'.Db::getInstance()->getMsgError());
             }
         }
 
-        if (count($attributes) == 0) {
-            $quantity = (int)$row['quantity'];
+        if (0 == count($attributes)) {
+            $quantity = (int) $row['quantity'];
         }
 
         //Add stock available for product;
@@ -71,11 +70,12 @@ function set_stock_available()
 			INSERT INTO `'._DB_PREFIX_.'stock_available`
 			(`id_product`, `id_product_attribute`, `id_shop`, `id_group_shop`, `quantity`, `depends_on_stock`, `out_of_stock`)
 			VALUES
-			("'.(int)$row['id_product'].'", "0", "1", "0", "'.(int)$quantity.'", "0", "'.(int)$row['out_of_stock'].'")
+			("'.(int) $row['id_product'].'", "0", "1", "0", "'.(int) $quantity.'", "0", "'.(int) $row['out_of_stock'].'")
 		');
         if (!$res) {
             return array('error' => Db::getInstance()->getNumberError(), 'msg' => '(products)'.Db::getInstance()->getMsgError());
         }
     }
+
     return $res;
 }

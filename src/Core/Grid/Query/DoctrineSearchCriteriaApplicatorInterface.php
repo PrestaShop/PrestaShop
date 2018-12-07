@@ -38,7 +38,7 @@ interface DoctrineSearchCriteriaApplicatorInterface
      * Apply pagination on query builder.
      *
      * @param SearchCriteriaInterface $searchCriteria
-     * @param QueryBuilder $queryBuilder
+     * @param QueryBuilder            $queryBuilder
      *
      * @return self
      */
@@ -48,7 +48,7 @@ interface DoctrineSearchCriteriaApplicatorInterface
      * Apply sorting on query builder.
      *
      * @param SearchCriteriaInterface $searchCriteria
-     * @param QueryBuilder $queryBuilder
+     * @param QueryBuilder            $queryBuilder
      *
      * @return self
      */

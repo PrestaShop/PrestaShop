@@ -191,7 +191,7 @@ class ModuleHistory
     {
         $this->setDateUpd(new DateTime(date('Y-m-d H:i:s')));
 
-        if ($this->getDateAdd() == null) {
+        if (null == $this->getDateAdd()) {
             $this->setDateAdd(new DateTime(date('Y-m-d H:i:s')));
         }
     }

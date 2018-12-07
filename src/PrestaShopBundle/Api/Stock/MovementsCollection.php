@@ -44,7 +44,7 @@ class MovementsCollection
         array_walk($stockMovementsParams, function ($item) use (&$movements) {
             $combinationId = 0;
 
-            if ($item['delta'] != 0) {
+            if (0 != $item['delta']) {
                 if (array_key_exists('combination_id', $item)) {
                     $combinationId = $item['combination_id'];
                 }
