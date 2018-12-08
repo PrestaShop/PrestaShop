@@ -153,10 +153,10 @@ class CurrencyCore extends ObjectModel
      *
      * @param bool $nullValues Whether we want to use NULL values instead of empty quotes values
      *
-     * @return bool Indicates whether the CartRule has been successfully updated
-     *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
+     * @return bool Indicates whether the CartRule has been successfully updated
+     *
      */
     public function update($nullValues = false)
     {
@@ -220,9 +220,9 @@ class CurrencyCore extends ObjectModel
     /**
      * Deletes current object from database.
      *
+     * @throws PrestaShopException
      * @return bool True if delete was successful
      *
-     * @throws PrestaShopException
      */
     public function delete()
     {

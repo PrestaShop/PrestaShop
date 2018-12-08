@@ -275,9 +275,9 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      * Prepare fields for ObjectModel class (add, update)
      * All fields are verified (pSQL, intval, ...).
      *
+     * @throws PrestaShopException
      * @return array All object fields
      *
-     * @throws PrestaShopException
      */
     public function getFields()
     {
@@ -321,9 +321,9 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      *
      * @since 1.5.0.1
      *
+     * @throws PrestaShopException
      * @return array
      *
-     * @throws PrestaShopException
      */
     public function getFieldsLang()
     {
@@ -499,9 +499,9 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      * @param bool $null_values
      * @param bool $auto_date
      *
+     * @throws PrestaShopException
      * @return bool Insertion result
      *
-     * @throws PrestaShopException
      */
     public function save($null_values = false, $auto_date = true)
     {
@@ -514,10 +514,10 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      * @param bool $auto_date
      * @param bool $null_values
      *
-     * @return bool Insertion result
-     *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
+     * @return bool Insertion result
+     *
      */
     public function add($auto_date = true, $null_values = false)
     {
@@ -607,9 +607,9 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      * Takes current object ID, gets its values from database,
      * saves them in a new row and loads newly saved values as a new object.
      *
+     * @throws PrestaShopDatabaseException
      * @return ObjectModel|false
      *
-     * @throws PrestaShopDatabaseException
      */
     public function duplicateObject()
     {
@@ -688,10 +688,10 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      *
      * @param bool $null_values
      *
-     * @return bool
-     *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
+     * @return bool
+     *
      */
     public function update($null_values = false)
     {
@@ -813,9 +813,9 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     /**
      * Deletes current object from database.
      *
+     * @throws PrestaShopException
      * @return bool True if delete was successful
      *
-     * @throws PrestaShopException
      */
     public function delete()
     {
@@ -882,9 +882,9 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     /**
      * Toggles object status in database.
      *
+     * @throws PrestaShopException
      * @return bool Update result
      *
-     * @throws PrestaShopException
      */
     public function toggleStatus()
     {
@@ -908,9 +908,9 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      *
      * @param array $fields_array
      *
+     * @throws PrestaShopException
      * @return array
      *
-     * @throws PrestaShopException
      */
     protected function getTranslationsFields($fields_array)
     {
@@ -974,9 +974,9 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      * @param bool $die
      * @param bool $error_return
      *
+     * @throws PrestaShopException
      * @return bool|string true, false or error message
      *
-     * @throws PrestaShopException
      */
     public function validateFields($die = true, $error_return = false)
     {
@@ -1008,9 +1008,9 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      * @param bool $die
      * @param bool $errorReturn
      *
+     * @throws PrestaShopException
      * @return bool|string true, false or error message
      *
-     * @throws PrestaShopException
      */
     public function validateFieldsLang($die = true, $errorReturn = false)
     {
@@ -1062,9 +1062,9 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      * @param array    $skip         array of fields to skip
      * @param bool     $human_errors if true, uses more descriptive, translatable error strings
      *
+     * @throws PrestaShopException
      * @return true|string true or error message string
      *
-     * @throws PrestaShopException
      */
     public function validateField($field, $value, $id_lang = null, $skip = array(), $human_errors = false)
     {
@@ -1375,9 +1375,9 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      * @param string $sql_sort
      * @param string $sql_limit
      *
+     * @throws PrestaShopDatabaseException
      * @return array|null
      *
-     * @throws PrestaShopDatabaseException
      */
     public function getWebserviceObjectList($sql_join, $sql_filter, $sql_sort, $sql_limit)
     {
@@ -1419,9 +1419,9 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      *
      * @param bool $htmlentities
      *
+     * @throws PrestaShopException
      * @return array
      *
-     * @throws PrestaShopException
      */
     public function validateFieldsRequiredDatabase($htmlentities = true)
     {
@@ -1453,9 +1453,9 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      *
      * @param bool $all if true, returns required fields of all object classes
      *
+     * @throws PrestaShopDatabaseException
      * @return array|null
      *
-     * @throws PrestaShopDatabaseException
      */
     public function getFieldsRequiredDatabase($all = false)
     {
@@ -1532,9 +1532,9 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      *
      * @param array $fields
      *
+     * @throws PrestaShopDatabaseException
      * @return bool
      *
-     * @throws PrestaShopDatabaseException
      */
     public function addFieldsRequiredDatabase($fields)
     {
@@ -1619,9 +1619,9 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      *
      * @param int|array $id_shops
      *
+     * @throws PrestaShopDatabaseException
      * @return bool|void
      *
-     * @throws PrestaShopDatabaseException
      */
     public function associateTo($id_shops)
     {
@@ -1655,9 +1655,9 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      *
      * @since 1.5.0.1
      *
+     * @throws PrestaShopDatabaseException
      * @return array
      *
-     * @throws PrestaShopDatabaseException
      */
     public function getAssociatedShops()
     {
@@ -1681,9 +1681,9 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      *
      * @param $id
      *
+     * @throws PrestaShopDatabaseException
      * @return bool|void
      *
-     * @throws PrestaShopDatabaseException
      */
     public function duplicateShops($id)
     {
@@ -1920,9 +1920,9 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      * @param array    $datas   List of data (multi-dimensional array)
      * @param int|null $id_lang
      *
+     * @throws PrestaShopException
      * @return array
      *
-     * @throws PrestaShopException
      */
     public static function hydrateCollection($class, array $datas, $id_lang = null)
     {
@@ -2090,9 +2090,9 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      * @param string   $field_name
      * @param int|null $id_lang
      *
+     * @throws PrestaShopException
      * @return mixed
      *
-     * @throws PrestaShopException
      */
     public function getFieldByLang($field_name, $id_lang = null)
     {

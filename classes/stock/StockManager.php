@@ -53,9 +53,9 @@ class StockManagerCore implements StockManagerInterface
      * @param int|null      $id_supply_order
      * @param Employee|null $employee
      *
+     * @throws PrestaShopException
      * @return bool
      *
-     * @throws PrestaShopException
      */
     public function addProduct(
         $id_product,
@@ -211,9 +211,9 @@ class StockManagerCore implements StockManagerInterface
      * @param int           $ignore_pack
      * @param Employee|null $employee
      *
+     * @throws PrestaShopException
      * @return array
      *
-     * @throws PrestaShopException
      */
     public function removeProduct(
         $id_product,

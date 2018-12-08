@@ -250,10 +250,10 @@ class CartCore extends ObjectModel
      * @param bool $autoDate   Automatically set `date_upd` and `date_add` columns
      * @param bool $nullValues Whether we want to use NULL values instead of empty quotes values
      *
-     * @return bool Whether the Cart has been successfully added
-     *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
+     * @return bool Whether the Cart has been successfully added
+     *
      */
     public function add($autoDate = true, $nullValues = false)
     {
@@ -275,10 +275,10 @@ class CartCore extends ObjectModel
      *
      * @param bool $nullValues Whether we want to use NULL values instead of empty quotes values
      *
-     * @return bool Whether the Cart has been successfully updated
-     *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
+     * @return bool Whether the Cart has been successfully updated
+     *
      */
     public function update($nullValues = false)
     {
@@ -334,9 +334,9 @@ class CartCore extends ObjectModel
     /**
      * Deletes current Cart from the database.
      *
+     * @throws PrestaShopException
      * @return bool True if delete was successful
      *
-     * @throws PrestaShopException
      */
     public function delete()
     {
@@ -539,9 +539,9 @@ class CartCore extends ObjectModel
      *                    - FILTER_ACTION_GIFT
      *                    - FILTER_ACTION_ALL_NOCAP
      *
+     * @throws PrestaShopDatabaseException
      * @return array
      *
-     * @throws PrestaShopDatabaseException
      */
     public function getOrderedCartRulesIds($filter = CartRule::FILTER_ACTION_ALL)
     {
@@ -1884,9 +1884,9 @@ class CartCore extends ObjectModel
      * @param int   $id_carrier
      * @param bool  $use_cache  @deprecated
      *
+     * @throws \Exception
      * @return float Order total
      *
-     * @throws \Exception
      */
     public function getOrderTotal(
         $withTaxes = true,

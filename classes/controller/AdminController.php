@@ -1066,9 +1066,9 @@ class AdminControllerCore extends Controller
     /**
      * Object Delete.
      *
+     * @throws PrestaShopException
      * @return ObjectModel|false
      *
-     * @throws PrestaShopException
      */
     public function processDelete()
     {
@@ -1131,9 +1131,9 @@ class AdminControllerCore extends Controller
     /**
      * Object creation.
      *
+     * @throws PrestaShopException
      * @return ObjectModel|false
      *
-     * @throws PrestaShopException
      */
     public function processAdd()
     {
@@ -1184,9 +1184,9 @@ class AdminControllerCore extends Controller
     /**
      * Object update.
      *
+     * @throws PrestaShopException
      * @return ObjectModel|false|void
      *
-     * @throws PrestaShopException
      */
     public function processUpdate()
     {
@@ -1299,9 +1299,9 @@ class AdminControllerCore extends Controller
     /**
      * Change object status (active, inactive).
      *
+     * @throws PrestaShopException
      * @return ObjectModel|false
      *
-     * @throws PrestaShopException
      */
     public function processStatus()
     {
@@ -2330,10 +2330,10 @@ class AdminControllerCore extends Controller
     }
 
     /**
-     * @return string
-     *
      * @throws Exception
      * @throws SmartyException
+     * @return string
+     *
      */
     public function renderModal()
     {
@@ -2365,9 +2365,9 @@ class AdminControllerCore extends Controller
     /**
      * Function used to render the list to display for this controller.
      *
+     * @throws PrestaShopException
      * @return string|false
      *
-     * @throws PrestaShopException
      */
     public function renderList()
     {
@@ -2468,10 +2468,10 @@ class AdminControllerCore extends Controller
     /**
      * Function used to render the form for this controller.
      *
-     * @return string
-     *
      * @throws Exception
      * @throws SmartyException
+     * @return string
+     *
      */
     public function renderForm()
     {
@@ -3480,9 +3480,9 @@ class AdminControllerCore extends Controller
      * @param array|string $filter_modules_list
      * @param string|bool  $tracking_source
      *
+     * @throws PrestaShopException
      * @return bool
      *
-     * @throws PrestaShopException
      */
     public function getModulesList($filter_modules_list, $tracking_source = false)
     {
@@ -3849,9 +3849,9 @@ class AdminControllerCore extends Controller
      *
      * @param int $id_object
      *
+     * @throws PrestaShopDatabaseException
      * @return bool|void
      *
-     * @throws PrestaShopDatabaseException
      */
     protected function updateAssoShop($id_object)
     {
@@ -4109,9 +4109,9 @@ class AdminControllerCore extends Controller
      *
      * @param bool $status
      *
+     * @throws PrestaShopException
      * @return bool true if success
      *
-     * @throws PrestaShopException
      */
     protected function processBulkStatusSelection($status)
     {

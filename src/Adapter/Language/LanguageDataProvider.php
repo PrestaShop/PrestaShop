@@ -65,9 +65,9 @@ class LanguageDataProvider
      *
      * @param string $locale
      *
+     * @throws Exception
      * @return array
      *
-     * @throws Exception
      */
     public function getLanguageDetails($locale)
     {

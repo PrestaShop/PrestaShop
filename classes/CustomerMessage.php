@@ -154,9 +154,9 @@ class CustomerMessageCore extends ObjectModel
     /**
      * Deletes current CustomerMessage from the database.
      *
+     * @throws PrestaShopException
      * @return bool `true` if delete was successful
      *
-     * @throws PrestaShopException
      */
     public function delete()
     {

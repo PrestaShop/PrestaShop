@@ -2213,9 +2213,9 @@ class ProductCore extends ObjectModel
      * @param $id_attributes
      * @param $combinations
      *
+     * @throws PrestaShopDatabaseException
      * @return bool
      *
-     * @throws PrestaShopDatabaseException
      */
     public function addAttributeCombinationMultiple($id_attributes, $combinations)
     {
@@ -5412,9 +5412,9 @@ class ProductCore extends ObjectModel
     /**
      * check if product has an activated and required customizationFields.
      *
+     * @throws \PrestaShopDatabaseException
      * @return bool
      *
-     * @throws \PrestaShopDatabaseException
      */
     public function hasActivatedRequiredCustomizableFields()
     {
@@ -6297,9 +6297,9 @@ class ProductCore extends ObjectModel
      * @param int|int[] $idAttributes
      * @param bool      $findBest
      *
+     * @throws PrestaShopException
      * @return int
      *
-     * @throws PrestaShopException
      */
     public static function getIdProductAttributeByIdAttributes($idProduct, $idAttributes, $findBest = false)
     {
@@ -6967,9 +6967,9 @@ class ProductCore extends ObjectModel
      *
      * @param array $customizationIds - Array of customization fields IDs
      *
+     * @throws PrestaShopDatabaseException
      * @return bool
      *
-     * @throws PrestaShopDatabaseException
      */
     public function deleteUnusedCustomizationFields($customizationIds)
     {
@@ -6995,9 +6995,9 @@ class ProductCore extends ObjectModel
      *
      * @param array $customizationIds - Array of excluded customization fields IDs
      *
+     * @throws PrestaShopDatabaseException
      * @return bool
      *
-     * @throws PrestaShopDatabaseException
      */
     public function softDeleteCustomizationFields($customizationIds)
     {

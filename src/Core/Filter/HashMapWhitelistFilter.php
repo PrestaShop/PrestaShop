@@ -111,9 +111,9 @@ class HashMapWhitelistFilter implements FilterInterface
      *
      * @param string|int $key
      *
+     * @throws FilterException if $key is not scalar
      * @return $this
      *
-     * @throws FilterException if $key is not scalar
      */
     public function removeFromWhitelist($key)
     {
@@ -154,9 +154,9 @@ class HashMapWhitelistFilter implements FilterInterface
      *
      * @param array $subject
      *
+     * @throws \RuntimeException
      * @return array The filtered subject
      *
-     * @throws \RuntimeException
      */
     public function filter($subject)
     {

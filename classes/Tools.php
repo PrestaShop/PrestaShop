@@ -707,9 +707,9 @@ class ToolsCore
      * @param Context|null $context
      * @param null         $language_code
      *
+     * @throws PrestaShopException
      * @return \PrestaShop\PrestaShop\Core\Cldr\Repository
      *
-     * @throws PrestaShopException
      */
     public static function getCldr(Context $context = null, $language_code = null)
     {
@@ -1086,9 +1086,9 @@ class ToolsCore
      * @param bool         $htmlentities DEPRECATED since 1.7.4.0
      * @param Context|null $context      DEPRECATED since 1.7.4.0
      *
+     * @throws PrestaShopException If _PS_MODE_DEV_ is enabled
      * @return string
      *
-     * @throws PrestaShopException If _PS_MODE_DEV_ is enabled
      */
     public static function displayError($errorMessage = null, $htmlentities = null, Context $context = null)
     {

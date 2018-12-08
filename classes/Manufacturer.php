@@ -119,9 +119,9 @@ class ManufacturerCore extends ObjectModel
     /**
      * Deletes current Manufacturer from the database.
      *
+     * @throws PrestaShopException
      * @return bool `true` if delete was successful
      *
-     * @throws PrestaShopException
      */
     public function delete()
     {

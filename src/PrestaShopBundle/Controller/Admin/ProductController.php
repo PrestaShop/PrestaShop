@@ -97,8 +97,6 @@ class ProductController extends FrameworkBundleAdminController
      * @param string  $orderBy   To order product list
      * @param string  $sortOrder To order product list
      *
-     * @return array|Template|RedirectResponse|Response
-     *
      * @throws \Symfony\Component\Translation\Exception\InvalidArgumentException
      * @throws \Symfony\Component\Routing\Exception\RouteNotFoundException
      * @throws \LogicException
@@ -106,6 +104,8 @@ class ProductController extends FrameworkBundleAdminController
      * @throws \Symfony\Component\Routing\Exception\InvalidParameterException
      * @throws \Symfony\Component\Form\Exception\LogicException
      * @throws \Symfony\Component\Form\Exception\AlreadySubmittedException
+     * @return array|Template|RedirectResponse|Response
+     *
      */
     public function catalogAction(
         Request $request,
@@ -334,10 +334,10 @@ class ProductController extends FrameworkBundleAdminController
      * Create a new basic product
      * Then return to form action.
      *
-     * @return RedirectResponse
-     *
      * @throws \LogicException
      * @throws \PrestaShopException
+     * @return RedirectResponse
+     *
      */
     public function newAction()
     {
@@ -385,9 +385,9 @@ class ProductController extends FrameworkBundleAdminController
      * @param int     $id      The product ID
      * @param Request $request
      *
+     * @throws \LogicException
      * @return array|Response Template vars
      *
-     * @throws \LogicException
      */
     public function formAction($id, Request $request)
     {
@@ -616,9 +616,9 @@ class ProductController extends FrameworkBundleAdminController
      * @param Product           $product
      * @param AdminModelAdapter $modelMapper
      *
+     * @throws \Symfony\Component\Process\Exception\LogicException
      * @return FormInterface
      *
-     * @throws \Symfony\Component\Process\Exception\LogicException
      */
     private function createProductForm(Product $product, AdminModelAdapter $modelMapper)
     {
@@ -1073,9 +1073,9 @@ class ProductController extends FrameworkBundleAdminController
     }
 
     /**
+     * @throws \Symfony\Component\Translation\Exception\InvalidArgumentException
      * @return CsvResponse
      *
-     * @throws \Symfony\Component\Translation\Exception\InvalidArgumentException
      */
     public function exportAction()
     {

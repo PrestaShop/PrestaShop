@@ -192,9 +192,9 @@ class DispatcherCore
     /**
      * Get current instance of dispatcher (singleton).
      *
+     * @throws PrestaShopException
      * @return Dispatcher
      *
-     * @throws PrestaShopException
      */
     public static function getInstance(SymfonyRequest $request = null)
     {
@@ -873,9 +873,9 @@ class DispatcherCore
      * @param string $anchor       Optional anchor to add at the end of this url
      * @param null   $id_shop
      *
+     * @throws PrestaShopException
      * @return string
      *
-     * @throws PrestaShopException
      */
     public function createUrl(
         $route_id,

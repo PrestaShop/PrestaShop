@@ -327,9 +327,9 @@ class OrderCore extends ObjectModel
      * @param OrderDetail $order_detail
      * @param int         $quantity
      *
+     * @throws PrestaShopException
      * @return bool
      *
-     * @throws PrestaShopException
      */
     public function deleteProduct($order, $order_detail, $quantity)
     {
@@ -394,9 +394,9 @@ class OrderCore extends ObjectModel
      * @param OrderDetail $order_detail
      * @param int         $quantity
      *
+     * @throws PrestaShopException
      * @return bool
      *
-     * @throws PrestaShopException
      */
     protected function _deleteProduct($order_detail, $quantity)
     {

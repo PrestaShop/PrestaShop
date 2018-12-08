@@ -118,9 +118,9 @@ class QuickAccessCore extends ObjectModel
     /**
      * Toggle new window.
      *
+     * @throws PrestaShopException
      * @return bool
      *
-     * @throws PrestaShopException
      */
     public function toggleNewWindow()
     {

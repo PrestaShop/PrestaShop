@@ -42,9 +42,9 @@ class DbMySQLiCore extends Db
      *
      * @see DbCore::connect()
      *
+     * @throws PrestaShopDatabaseException
      * @return mysqli
      *
-     * @throws PrestaShopDatabaseException
      */
     public function connect()
     {

@@ -667,9 +667,9 @@ class OrderInvoiceCore extends ObjectModel
     /**
      * @param int $id
      *
+     * @throws PrestaShopException
      * @return OrderInvoice
      *
-     * @throws PrestaShopException
      */
     public static function retrieveOneById($id)
     {

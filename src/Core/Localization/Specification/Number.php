@@ -170,9 +170,9 @@ class Number implements NumberInterface
      * @param string $numberingSystem
      *                                Numbering system to use when formatting numbers. @see http://cldr.unicode.org/translation/numbering-systems
      *
+     * @throws LocalizationException
      * @return NumberSymbolList
      *
-     * @throws LocalizationException
      */
     public function getSymbolsByNumberingSystem($numberingSystem = null)
     {

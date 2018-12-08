@@ -207,10 +207,10 @@ class CarrierCore extends ObjectModel
      * @param bool $autoDate   Automatically set `date_upd` and `date_add` columns
      * @param bool $nullValues Whether we want to use NULL values instead of empty quotes values
      *
-     * @return bool Whether the Carrier has been successfully added
-     *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
+     * @return bool Whether the Carrier has been successfully added
+     *
      */
     public function add($autoDate = true, $nullValues = false)
     {
@@ -1462,9 +1462,9 @@ class CarrierCore extends ObjectModel
      * @param Cart    $cart                Cart object
      * @param array   &$error              contain an error message if an error occurs
      *
+     * @throws PrestaShopDatabaseException
      * @return array Available Carriers
      *
-     * @throws PrestaShopDatabaseException
      */
     public static function getAvailableCarrierList(Product $product, $id_warehouse, $id_address_delivery = null, $id_shop = null, $cart = null, &$error = array())
     {

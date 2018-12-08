@@ -36,9 +36,9 @@ class EntityMetaDataRetriever
     /**
      * @param string $className
      *
+     * @throws \PrestaShop\PrestaShop\Adapter\CoreException
      * @return EntityMetaData
      *
-     * @throws \PrestaShop\PrestaShop\Adapter\CoreException
      */
     public function getEntityMetaData($className)
     {

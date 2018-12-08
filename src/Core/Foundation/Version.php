@@ -147,9 +147,9 @@ class Version
      *
      * @param $version Must be a valid version string, for example "1.7.4.0"
      *
+     * @throws InvalidVersionException If the provided version is invalid
      * @return bool
      *
-     * @throws InvalidVersionException If the provided version is invalid
      */
     public function isGreaterThan($version)
     {
@@ -161,9 +161,9 @@ class Version
      *
      * @param $version Must be a valid version string, for example "1.7.4.0"
      *
+     * @throws InvalidVersionException If the provided version is invalid
      * @return bool
      *
-     * @throws InvalidVersionException If the provided version is invalid
      */
     public function isGreaterThanOrEqualTo($version)
     {
@@ -175,9 +175,9 @@ class Version
      *
      * @param $version Must be a valid version string, for example "1.7.4.0"
      *
+     * @throws InvalidVersionException If the provided version is invalid
      * @return bool
      *
-     * @throws InvalidVersionException If the provided version is invalid
      */
     public function isLessThan($version)
     {
@@ -189,9 +189,9 @@ class Version
      *
      * @param $version Must be a valid version string, for example "1.7.4.0"
      *
+     * @throws InvalidVersionException If the provided version is invalid
      * @return bool
      *
-     * @throws InvalidVersionException If the provided version is invalid
      */
     public function isLessThanOrEqualTo($version)
     {
@@ -203,9 +203,9 @@ class Version
      *
      * @param $version Must be a valid version string, for example "1.7.4.0"
      *
+     * @throws InvalidVersionException If the provided version is invalid
      * @return bool
      *
-     * @throws InvalidVersionException If the provided version is invalid
      */
     public function isEqualTo($version)
     {
@@ -217,9 +217,9 @@ class Version
      *
      * @param $version Must be a valid version string, for example "1.7.4.0"
      *
+     * @throws InvalidVersionException If the provided version is invalid
      * @return bool
      *
-     * @throws InvalidVersionException If the provided version is invalid
      */
     public function isNotEqualTo($version)
     {
@@ -234,9 +234,9 @@ class Version
      * @param $operator Operator for version_compare(),
      *                  allowed values are: <, lt, <=, le, >, gt, >=, ge, ==, =, eq, !=, <>, ne
      *
+     * @throws InvalidVersionException if the provided version is invalid
      * @return bool result of the comparison
      *
-     * @throws InvalidVersionException if the provided version is invalid
      */
     private function versionCompare($version, $operator)
     {
@@ -260,9 +260,9 @@ class Version
      *
      * @param $version
      *
+     * @throws InvalidVersionException If the provided version is invalid
      * @return bool true only if version is valid, else throw an exception
      *
-     * @throws InvalidVersionException If the provided version is invalid
      */
     private function checkVersion($version)
     {

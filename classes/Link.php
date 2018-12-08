@@ -93,9 +93,9 @@ class LinkCore
      * @param $idLang
      * @param $idShop
      *
+     * @throws PrestaShopException
      * @return Product
      *
-     * @throws PrestaShopException
      */
     public function getProductObject($product, $idLang, $idShop)
     {
@@ -369,9 +369,9 @@ class LinkCore
      * @param $product
      * @param $idLang
      *
+     * @throws PrestaShopException
      * @return Category
      *
-     * @throws PrestaShopException
      */
     public function getCategoryObject($category, $idLang)
     {
@@ -694,9 +694,9 @@ class LinkCore
      * @param array(string) $sfRouteParams Optional parameters to use into New architecture specific cases. If these specific cases should redirect to legacy URLs, then this parameter is used to complete GET query string
      * @param array         $params        Optional
      *
+     * @throws PrestaShopException
      * @return string url
      *
-     * @throws PrestaShopException
      */
     public function getAdminLink($controller, $withToken = true, $sfRouteParams = array(), $params = array())
     {
@@ -833,9 +833,9 @@ class LinkCore
      * @param bool|null $ssl
      * @param bool      $relativeProtocol
      *
+     * @throws PrestaShopDatabaseException
      * @return string
      *
-     * @throws PrestaShopDatabaseException
      */
     public function getAdminBaseLink($idShop = null, $ssl = null, $relativeProtocol = false)
     {
@@ -1117,9 +1117,9 @@ class LinkCore
      * @param int     $idLang  Language ID
      * @param Context $context the context if needed
      *
+     * @throws PrestaShopException
      * @return string link
      *
-     * @throws PrestaShopException
      */
     public function getLanguageLink($idLang, Context $context = null)
     {
