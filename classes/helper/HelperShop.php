@@ -79,6 +79,7 @@ class HelperShopCore extends Helper
                 foreach ($group_data['shops'] as $shop_id => $shop_data) {
                     if ($shop_id == Shop::getContextShopID()) {
                         $current_shop_name = $shop_data['name'];
+
                         break;
                     }
                 }

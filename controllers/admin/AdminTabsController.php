@@ -316,6 +316,7 @@ class AdminTabsControllerCore extends AdminController
                     } else {
                         $this->errors[] = $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error');
                     }
+
                     break;
                 } elseif (Tools::isSubmit('submitBulk')) {
                     if ($this->access('edit')) {
@@ -324,6 +325,7 @@ class AdminTabsControllerCore extends AdminController
                     } else {
                         $this->errors[] = $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error');
                     }
+
                     break;
                 }
             }

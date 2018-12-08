@@ -229,6 +229,7 @@ class AdminCmsContentControllerCore extends AdminController
                     $pos = explode('_', $value);
                     if ((isset($pos[1], $pos[2])) && ($pos[1] == $id_category && $pos[2] == $id_cms)) {
                         $position = $key;
+
                         break;
                     }
                 }
@@ -258,6 +259,7 @@ class AdminCmsContentControllerCore extends AdminController
                     $pos = explode('_', $value);
                     if ((isset($pos[1], $pos[2])) && ($pos[1] == $id_cms_category_parent && $pos[2] == $id_cms_category_to_move)) {
                         $position = $key;
+
                         break;
                     }
                 }

@@ -76,6 +76,7 @@ try {
             foreach (scandir($path, SCANDIR_SORT_NONE) as $theme) {
                 if ('.' != $theme[0] && file_exists($path.$theme.'/template/layout.tpl')) {
                     $context->employee->bo_theme = $theme;
+
                     break;
                 }
             }

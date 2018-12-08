@@ -225,6 +225,7 @@ class LocalizationPackCore
                 $attributes = $taxData->attributes();
                 if (($id_tax = Tax::getTaxIdByName($attributes['name']))) {
                     $assoc_taxes[(int) $attributes['id']] = $id_tax;
+
                     continue;
                 }
                 $tax = new Tax();

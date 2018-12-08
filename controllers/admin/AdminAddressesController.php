@@ -540,6 +540,7 @@ class AdminAddressesControllerCore extends AdminController
                 $to_delete = new Address((int) $id);
                 if ($to_delete->isUsed()) {
                     $deleted = true;
+
                     break;
                 }
             }

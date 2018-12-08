@@ -275,12 +275,15 @@ class Condition extends ObjectModel
         switch ($this->type) {
             case 'configuration':
                 $this->processConfiguration();
+
             break;
             case 'install':
                 $this->processInstall();
+
             break;
             case 'sql':
                 $this->processSql();
+
             break;
         }
     }
@@ -330,22 +333,29 @@ class Condition extends ObjectModel
         switch ($operator) {
             case '>':
                 $result = $arg1 > $arg2;
+
                 break;
             case '>=':
                 $result = $arg1 >= $arg2;
+
                 break;
             case '<':
                 $result = $arg1 < $arg2;
+
                 break;
             case '<=':
                 $result = $arg1 <= $arg2;
+
                 break;
             case '==':
                 $result = $arg1 == $arg2;
+
                 break;
             case '!=':
                 $result = $arg1 != $arg2;
+
                 break;
+
             break;
         }
 

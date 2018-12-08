@@ -160,6 +160,7 @@ class LegacyUrlConverterTest extends TestCase
         $converter = new LegacyUrlConverter($router, new RouterProvider($router));
 
         $caughtException = null;
+
         try {
             $converter->convertByParameters([
                 'controller' => 'AdminProducts',

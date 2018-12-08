@@ -41,6 +41,7 @@ function p16012_pack_rework()
         foreach ($products as $product) {
             if (1 != $product) {
                 $work_with_stock = 0;
+
                 break;
             }
         }

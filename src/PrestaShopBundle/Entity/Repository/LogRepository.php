@@ -235,6 +235,7 @@ class LogRepository implements RepositoryInterface, DoctrineQueryBuilderInterfac
             if ('employee' == $filterName) {
                 $qb->andWhere('e.lastname LIKE :employee OR e.firstname LIKE :employee');
                 $qb->setParameter('employee', '%' . $filterValue . '%');
+
                 continue;
             }
 
@@ -248,6 +249,7 @@ class LogRepository implements RepositoryInterface, DoctrineQueryBuilderInterfac
                         'date_to' => $filterValue['to'],
                     ));
                 }
+
                 continue;
             }
 

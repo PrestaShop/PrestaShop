@@ -56,6 +56,7 @@ class GroupByProcessor extends OrderByProcessor
 
                 $out[] = $parsed;
                 $parseInfo = $this->initParseInfo();
+
                 break;
             default:
                 $parseInfo['base_expr'] .= $token;

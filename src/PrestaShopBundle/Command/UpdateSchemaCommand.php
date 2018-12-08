@@ -217,6 +217,7 @@ class UpdateSchemaCommand extends ContainerAwareCommand
                 $conn->executeQuery($sql);
             } catch (\Exception $e) {
                 $conn->rollBack();
+
                 throw($e);
             }
         }

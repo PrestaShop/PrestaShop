@@ -77,8 +77,10 @@ class SetProcessor extends AbstractProcessor
                 if (!$isUpdate) {
                     $varType = $this->getVariableType('@@'.$upper.'.');
                     $baseExpr = '';
+
                     continue 2;
                 }
+
                 break;
 
             case ',':
@@ -89,6 +91,7 @@ class SetProcessor extends AbstractProcessor
                 $result[] = $assignment;
                 $baseExpr = '';
                 $varType = false;
+
                 continue 2;
 
             default:

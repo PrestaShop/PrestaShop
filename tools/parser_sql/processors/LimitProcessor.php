@@ -50,11 +50,13 @@ class LimitProcessor extends AbstractProcessor
             $trim = trim($tokens[$i]);
             if (',' === $trim) {
                 $comma = $i;
+
                 break;
             }
             if ('OFFSET' === $trim) {
                 $comma = $i;
                 $exchange = true;
+
                 break;
             }
         }

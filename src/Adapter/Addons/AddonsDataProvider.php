@@ -189,6 +189,7 @@ class AddonsDataProvider implements AddonsInterface
             }
         } catch (Exception $e) {
             self::$is_addons_up = false;
+
             throw $e;
         }
     }

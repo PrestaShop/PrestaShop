@@ -145,13 +145,16 @@ abstract class AbstractProcessor
         switch ($type) {
         case 'GLOBAL':
             $type = ExpressionType::GLOBAL_VARIABLE;
+
             break;
         case 'LOCAL':
             $type = ExpressionType::LOCAL_VARIABLE;
+
             break;
         case 'SESSION':
         default:
             $type = ExpressionType::SESSION_VARIABLE;
+
             break;
         }
 

@@ -77,6 +77,7 @@ class TableProcessor extends AbstractProcessor
 
             if ($skip > 0) {
                 --$skip;
+
                 continue;
             }
 
@@ -98,30 +99,37 @@ class TableProcessor extends AbstractProcessor
                     $result['options'][] = $last;
                     $base_expr = '';
                 }
+
                 continue 2;
 
             case 'UNION':
                 if ('CREATE_DEF' === $prevCategory) {
                     $expr[] = $this->getReservedType($trim);
                     $currCategory = 'UNION';
+
                     continue 2;
                 }
+
                 break;
 
             case 'LIKE':
             // like without parenthesis
                 if ('TABLE_NAME' === $prevCategory) {
                     $currCategory = $upper;
+
                     continue 2;
                 }
+
                 break;
 
             case '=':
             // the optional operator
                 if ('TABLE_OPTION' === $prevCategory) {
                     $expr[] = $this->getOperatorType($trim);
+
                     continue 2; // don't change the category
                 }
+
                 break;
 
             case 'CHARACTER':
@@ -132,8 +140,10 @@ class TableProcessor extends AbstractProcessor
                 if ('TABLE_OPTION' === $prevCategory) {
                     // add it to the previous DEFAULT
                     $expr[] = $this->getReservedType($trim);
+
                     continue 2;
                 }
+
                 break;
 
             case 'SET':
@@ -141,8 +151,10 @@ class TableProcessor extends AbstractProcessor
                     // add it to a previous CHARACTER
                     $expr[] = $this->getReservedType($trim);
                     $currCategory = 'CHARSET';
+
                     continue 2;
                 }
+
                 break;
 
             case 'COLLATE':
@@ -150,32 +162,40 @@ class TableProcessor extends AbstractProcessor
                     // add it to the previous DEFAULT
                     $expr[] = $this->getReservedType($trim);
                     $currCategory = 'COLLATE';
+
                     continue 2;
                 }
+
                 break;
 
             case 'DIRECTORY':
                 if ('INDEX_DIRECTORY' === $currCategory || 'DATA_DIRECTORY' === $currCategory) {
                     // after INDEX or DATA
                     $expr[] = $this->getReservedType($trim);
+
                     continue 2;
                 }
+
                 break;
 
             case 'INDEX':
                 if ('CREATE_DEF' === $prevCategory) {
                     $expr[] = $this->getReservedType($trim);
                     $currCategory = 'INDEX_DIRECTORY';
+
                     continue 2;
                 }
+
                 break;
 
             case 'DATA':
                 if ('CREATE_DEF' === $prevCategory) {
                     $expr[] = $this->getReservedType($trim);
                     $currCategory = 'DATA_DIRECTORY';
+
                     continue 2;
                 }
+
                 break;
 
             case 'INSERT_METHOD':
@@ -198,8 +218,10 @@ class TableProcessor extends AbstractProcessor
                 if ('CREATE_DEF' === $prevCategory) {
                     $expr[] = $this->getReservedType($trim);
                     $currCategory = $prevCategory = 'TABLE_OPTION';
+
                     continue 2;
                 }
+
                 break;
 
             case 'DYNAMIC':
@@ -224,6 +246,7 @@ class TableProcessor extends AbstractProcessor
                                                  'sub_tree' => $expr, );
                     $this->clear($expr, $base_expr, $currCategory);
                 }
+
                 break;
 
             case 'IGNORE':
@@ -231,6 +254,7 @@ class TableProcessor extends AbstractProcessor
                 $expr[] = $this->getReservedType($trim);
                 $result['select-option'] = array('base_expr' => trim($base_expr), 'duplicates' => $trim, 'as' => false,
                                                  'sub_tree' => $expr, );
+
                 continue 2;
 
             case 'AS':
@@ -241,11 +265,13 @@ class TableProcessor extends AbstractProcessor
                 $result['select-option']['as'] = true;
                 $result['select-option']['base_expr'] = trim($base_expr);
                 $result['select-option']['sub_tree'] = $expr;
+
                 continue 2;
 
             case 'PARTITION':
             // TODO: parse partition options
                 $skip = -1;
+
                 break;
 
             default:
@@ -257,6 +283,7 @@ class TableProcessor extends AbstractProcessor
                                                  'base_expr' => trim($base_expr), 'delim' => ' ',
                                                  'sub_tree' => $expr, );
                     $this->clear($expr, $base_expr, $currCategory);
+
                     break;
 
                 case 'COLLATE':
@@ -266,6 +293,7 @@ class TableProcessor extends AbstractProcessor
                                                  'base_expr' => trim($base_expr), 'delim' => ' ',
                                                  'sub_tree' => $expr, );
                     $this->clear($expr, $base_expr, $currCategory);
+
                     break;
 
                 case 'DATA_DIRECTORY':
@@ -275,6 +303,7 @@ class TableProcessor extends AbstractProcessor
                                                  'base_expr' => trim($base_expr), 'delim' => ' ',
                                                  'sub_tree' => $expr, );
                     $this->clear($expr, $base_expr, $prevCategory);
+
                     continue 3;
 
                 case 'INDEX_DIRECTORY':
@@ -284,18 +313,21 @@ class TableProcessor extends AbstractProcessor
                                                  'base_expr' => trim($base_expr), 'delim' => ' ',
                                                  'sub_tree' => $expr, );
                     $this->clear($expr, $base_expr, $prevCategory);
+
                     continue 3;
 
                 case 'TABLE_NAME':
                     $result['base_expr'] = $result['name'] = $trim;
                     $result['no_quotes'] = $this->revokeQuotation($trim);
                     $this->clear($expr, $base_expr, $prevCategory);
+
                     break;
 
                 case 'LIKE':
                     $result['like'] = array('expr_type' => ExpressionType::TABLE, 'table' => $trim, 'base_expr' => $trim,
                                             'no_quotes' => $this->revokeQuotation($trim), );
                     $this->clear($expr, $base_expr, $currCategory);
+
                     break;
 
                 case '':
@@ -310,6 +342,7 @@ class TableProcessor extends AbstractProcessor
                         $base_expr = '';
                         $currCategory = 'CREATE_DEF';
                     }
+
                     break;
 
                 case 'UNION':
@@ -324,6 +357,7 @@ class TableProcessor extends AbstractProcessor
                     $result['options'][] = array('expr_type' => ExpressionType::UNION, 'base_expr' => trim($base_expr),
                                                  'delim' => ' ', 'sub_tree' => $expr, );
                     $this->clear($expr, $base_expr, $currCategory);
+
                     break;
 
                 default:
@@ -333,8 +367,10 @@ class TableProcessor extends AbstractProcessor
                                                  'base_expr' => trim($base_expr), 'delim' => ' ',
                                                  'sub_tree' => $expr, );
                     $this->clear($expr, $base_expr, $currCategory);
+
                     break;
                 }
+
                 break;
             }
 

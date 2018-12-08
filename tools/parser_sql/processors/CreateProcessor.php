@@ -57,25 +57,30 @@ class CreateProcessor extends AbstractProcessor
                 $result['expr_type'] = ExpressionType::TEMPORARY_TABLE;
                 $result['not-exists'] = false;
                 $expr[] = array('expr_type' => ExpressionType::RESERVED, 'base_expr' => $trim);
+
                 break;
 
             case 'TABLE':
                 $result['expr_type'] = ExpressionType::TABLE;
                 $result['not-exists'] = false;
                 $expr[] = array('expr_type' => ExpressionType::RESERVED, 'base_expr' => $trim);
+
                 break;
 
             case 'IF':
                 $expr[] = array('expr_type' => ExpressionType::RESERVED, 'base_expr' => $trim);
+
                 break;
 
             case 'NOT':
                 $expr[] = array('expr_type' => ExpressionType::RESERVED, 'base_expr' => $trim);
+
                 break;
 
             case 'EXISTS':
                 $result['not-exists'] = true;
                 $expr[] = array('expr_type' => ExpressionType::RESERVED, 'base_expr' => $trim);
+
                 break;
 
             default:

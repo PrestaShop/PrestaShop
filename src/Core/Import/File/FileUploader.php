@@ -109,16 +109,20 @@ final class FileUploader
         switch ($uploadedFile->getError()) {
             case UPLOAD_ERR_INI_SIZE:
                 $error = $this->translator->trans('The uploaded file exceeds the upload_max_filesize directive in php.ini. If your server configuration allows it, you may add a directive in your .htaccess.', [], 'Admin.Advparameters.Notification');
+
                 break;
             case UPLOAD_ERR_FORM_SIZE:
                 $message = $this->translator->trans('The uploaded file exceeds the post_max_size directive in php.ini. If your server configuration allows it, you may add a directive in your .htaccess, for example:', [], 'Admin.Advparameters.Notification');
                 $error = sprintf('%s %s', $message, 'php_value post_max_size 20M');
+
                 break;
             case UPLOAD_ERR_PARTIAL:
                 $error = $this->translator->trans('The uploaded file was only partially uploaded.', [], 'Admin.Advparameters.Notification');
+
                 break;
             case UPLOAD_ERR_NO_FILE:
                 $error = $this->translator->trans('No file was uploaded.', [], 'Admin.Advparameters.Notification');
+
                 break;
         }
 

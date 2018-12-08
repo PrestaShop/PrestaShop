@@ -415,6 +415,7 @@ class MailCore extends ObjectModel
                     );
                 } else {
                     $templatePathExists = true;
+
                     break;
                 }
             }
@@ -699,6 +700,7 @@ class MailCore extends ObjectModel
         $smtpEncryption
     ) {
         $result = false;
+
         try {
             if ($smtpChecked) {
                 if ('off' === Tools::strtolower($smtpEncryption)) {

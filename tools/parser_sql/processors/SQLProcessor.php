@@ -68,6 +68,7 @@ class SQLProcessor extends SQLChunkProcessor
                     if ('' !== $token_category) { // is this correct??
                         $out[$token_category][] = $token;
                     }
+
                     continue;
                 }
                 //to skip the token we replace it with whitespace
@@ -111,12 +112,14 @@ class SQLProcessor extends SQLChunkProcessor
                     $skip_next = 1;
                 }
                 $token_category = $upper;
+
                 break;
 
             case 'SET':
                 if ('TABLE' !== $token_category) {
                     $token_category = $upper;
                 }
+
                 break;
 
             case 'LIMIT':
@@ -126,6 +129,7 @@ class SQLProcessor extends SQLChunkProcessor
                     continue;
                 }
                 $token_category = $upper;
+
                 break;
 
             case 'FROM':
@@ -138,12 +142,14 @@ class SQLProcessor extends SQLChunkProcessor
                     continue;
                 }
                 $token_category = $upper;
+
                 break;
 
             case 'EXPLAIN':
             case 'DESCRIBE':
             case 'SHOW':
                 $token_category = $upper;
+
                 break;
 
             case 'DESC':
@@ -158,6 +164,7 @@ class SQLProcessor extends SQLChunkProcessor
             // jump over TABLE keyword
                 $token_category = $upper;
                 $skip_next = 1;
+
                 continue 2;
 
             case 'DATABASE':
@@ -169,6 +176,7 @@ class SQLProcessor extends SQLChunkProcessor
                     continue;
                 }
                 $token_category = $upper;
+
                 break;
 
             case 'EVENT':
@@ -176,6 +184,7 @@ class SQLProcessor extends SQLChunkProcessor
                 if ('DROP' === $prev_category || 'ALTER' === $prev_category || 'CREATE' === $prev_category) {
                     $token_category = $upper;
                 }
+
                 break;
 
             case 'DATA':
@@ -183,15 +192,18 @@ class SQLProcessor extends SQLChunkProcessor
                 if ('LOAD' === $prev_category) {
                     $token_category = $upper;
                 }
+
                 break;
 
             case 'INTO':
             // prevent wrong handling of CACHE within LOAD INDEX INTO CACHE...
                 if ('LOAD' === $prev_category) {
                     $out[$prev_category][] = $upper;
+
                     continue 2;
                 }
                 $token_category = $upper;
+
                 break;
 
             case 'USER':
@@ -199,6 +211,7 @@ class SQLProcessor extends SQLChunkProcessor
                 if ('CREATE' === $prev_category || 'RENAME' === $prev_category || 'DROP' === $prev_category) {
                     $token_category = $upper;
                 }
+
                 break;
 
             case 'VIEW':
@@ -206,6 +219,7 @@ class SQLProcessor extends SQLChunkProcessor
                 if ('CREATE' === $prev_category || 'ALTER' === $prev_category || 'DROP' === $prev_category) {
                     $token_category = $upper;
                 }
+
                 break;
 
             /*
@@ -235,36 +249,44 @@ class SQLProcessor extends SQLChunkProcessor
                 $token_category = $upper;
                 // set the category in case these get subclauses in a future version of MySQL
                 $out[$upper][0] = $upper;
+
                 continue 2;
 
             case 'REPLACE':
                 if ('TABLE' === $prev_category) {
                     // part of the CREATE TABLE statement
                     $out[$prev_category][] = $upper;
+
                     continue 2;
                 }
                 // set the category in case these get subclauses in a future version of MySQL
                 $token_category = $upper;
                 $out[$upper][0] = $upper;
+
                 continue 2;
 
             case 'IGNORE':
                 if ('TABLE' === $prev_category) {
                     // part of the CREATE TABLE statement
                     $out[$prev_category][] = $upper;
+
                     continue 2;
                 }
                 $out['OPTIONS'][] = $upper;
+
                 continue 2;
+
                 break;
 
             case 'CHECK':
                 if ('TABLE' === $prev_category) {
                     $out[$prev_category][] = $upper;
+
                     continue 2;
                 }
                 $token_category = $upper;
                 $out[$upper][0] = $upper;
+
                 continue 2;
 
             case 'CREATE':
@@ -272,6 +294,7 @@ class SQLProcessor extends SQLChunkProcessor
                     continue;
                 }
                 $token_category = $upper;
+
                 break;
 
             case 'TABLE':
@@ -279,14 +302,17 @@ class SQLProcessor extends SQLChunkProcessor
                     $out[$prev_category][] = $upper;
                     $token_category = $upper;
                 }
+
                 break;
 
             case 'TEMPORARY':
                 if ('CREATE' === $prev_category) {
                     $out[$prev_category][] = $upper;
                     $token_category = $prev_category;
+
                     continue 2;
                 }
+
                 break;
 
             case 'IF':
@@ -296,32 +322,40 @@ class SQLProcessor extends SQLChunkProcessor
                     $out[$prev_category] = array();
                     $out[$token_category][] = $upper;
                     $prev_category = $token_category;
+
                     continue 2;
                 }
+
                 break;
 
             case 'NOT':
                 if ('CREATE' === $prev_category) {
                     $token_category = $prev_category;
                     $out[$prev_category][] = $upper;
+
                     continue 2;
                 }
+
                 break;
 
             case 'EXISTS':
                 if ('CREATE' === $prev_category) {
                     $out[$prev_category][] = $upper;
                     $prev_category = $token_category = 'TABLE';
+
                     continue 2;
                 }
+
                 break;
 
             case 'CACHE':
                 if ('' === $prev_category || 'RESET' === $prev_category || 'FLUSH' === $prev_category
                         || 'LOAD' === $prev_category) {
                     $token_category = $upper;
+
                     continue 2;
                 }
+
                 break;
 
             /* This is either LOCK TABLES or SELECT ... LOCK IN SHARE MODE */
@@ -334,26 +368,33 @@ class SQLProcessor extends SQLChunkProcessor
                     $skip_next = 3;
                     $out['OPTIONS'][] = $trim;
                 }
+
                 continue 2;
+
                 break;
 
             case 'USING': /* USING in FROM clause is different from USING w/ prepared statement*/
                 if ('EXECUTE' === $token_category) {
                     $token_category = $upper;
+
                     continue 2;
                 }
                 if ('FROM' === $token_category && !empty($out['DELETE'])) {
                     $token_category = $upper;
+
                     continue 2;
                 }
+
                 break;
 
             /* DROP TABLE is different from ALTER TABLE DROP ... */
             case 'DROP':
                 if ('ALTER' !== $token_category) {
                     $token_category = $upper;
+
                     continue 2;
                 }
+
                 break;
 
             case 'FOR':
@@ -362,23 +403,28 @@ class SQLProcessor extends SQLChunkProcessor
                 }
                 $skip_next = 1;
                 $out['OPTIONS'][] = 'FOR UPDATE';
+
                 continue 2;
+
                 break;
 
             case 'UPDATE':
                 if ('' === $token_category) {
                     $token_category = $upper;
+
                     continue 2;
                 }
                 if ('DUPLICATE' === $token_category) {
                     continue 2;
                 }
+
                 break;
 
             case 'START':
                 $trim = 'BEGIN';
                 $out[$upper][0] = $upper;
                 $skip_next = 1;
+
                 break;
 
             /* These tokens are ignored. */
@@ -393,12 +439,14 @@ class SQLProcessor extends SQLChunkProcessor
             case 'MODE':
             case ';':
                 continue 2;
+
                 break;
 
             case 'KEY':
                 if ('DUPLICATE' === $token_category) {
                     continue 2;
                 }
+
                 break;
 
             /* These tokens set particular options for the statement. They never stand alone. */
@@ -407,15 +455,19 @@ class SQLProcessor extends SQLChunkProcessor
             case 'FORCE':
             case 'QUICK':
                 $out['OPTIONS'][] = $upper;
+
                 continue 2;
+
                 break;
 
             case 'WITH':
                 if ('GROUP' === $token_category) {
                     $skip_next = 1;
                     $out['OPTIONS'][] = 'WITH ROLLUP';
+
                     continue 2;
                 }
+
                 break;
 
             case 'AS':

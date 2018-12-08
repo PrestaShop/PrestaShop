@@ -86,6 +86,7 @@ class NotificationCore
                     Shop::addSqlRestriction(false, 'o') . '
 					ORDER BY `id_order` DESC
 					LIMIT 5';
+
                 break;
 
             case 'customer_message':
@@ -99,6 +100,7 @@ class NotificationCore
 						AND ct.id_shop IN (' . implode(', ', Shop::getContextListShopID()) . ')
 					ORDER BY c.`id_customer_message` DESC
 					LIMIT 5';
+
                 break;
             default:
                 $sql = '
@@ -108,6 +110,7 @@ class NotificationCore
                     Shop::addSqlRestriction(false, 't') . '
 					ORDER BY t.`id_' . bqSQL($type) . '` DESC
 					LIMIT 5';
+
                 break;
         }
 

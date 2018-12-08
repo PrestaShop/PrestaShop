@@ -179,6 +179,7 @@ final class LegacyUrlConverter
             foreach ($parameters as $parameter => $value) {
                 if (in_array($parameter, $controllerActions)) {
                     $legacyAction = $parameter;
+
                     break;
                 }
             }
@@ -196,6 +197,7 @@ final class LegacyUrlConverter
                     if (false === strpos($parameter, 'id_')
                         && false === strpos($parameter, '_id')) {
                         $legacyAction = $parameter;
+
                         break;
                     }
                 }

@@ -142,6 +142,7 @@ class ModuleZipManager
             foreach (iterator_to_array($moduleFolder) as $file) {
                 if ($file->getFileName() === $moduleName . '.php') {
                     $validModuleStructure = true;
+
                     break;
                 }
             }
@@ -149,6 +150,7 @@ class ModuleZipManager
 
         if (!$validModuleStructure) {
             $this->filesystem->remove($sandboxPath);
+
             throw new Exception($this->translator->trans(
                     'This file does not seem to be a valid module zip',
                     array(),

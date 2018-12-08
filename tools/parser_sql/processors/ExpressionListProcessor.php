@@ -57,6 +57,7 @@ class ExpressionListProcessor extends AbstractProcessor
             if ($skip_next) {
                 // skip the next non-whitespace token
                 $skip_next = false;
+
                 continue;
             }
 
@@ -88,9 +89,11 @@ class ExpressionListProcessor extends AbstractProcessor
                         switch ($tmpToken->getUpper()) {
                         case 'WITH':
                             $match_mode = 'WITH QUERY EXPANSION';
+
                             break;
                         case 'IN':
                             $match_mode = 'IN BOOLEAN MODE';
+
                             break;
 
                         default:
@@ -206,6 +209,7 @@ class ExpressionListProcessor extends AbstractProcessor
                     // single or first element of expression list -> all-column-alias
                     if (empty($resultList)) {
                         $curr->setTokenType(ExpressionType::COLREF);
+
                         break;
                     }
 
@@ -215,6 +219,7 @@ class ExpressionListProcessor extends AbstractProcessor
                     if (!$prev->isColumnReference() && !$prev->isConstant() && !$prev->isExpression()
                             && !$prev->isBracketExpression() && !$prev->isAggregateFunction() && !$prev->isVariable()) {
                         $curr->setTokenType(ExpressionType::COLREF);
+
                         break;
                     }
 
@@ -224,6 +229,7 @@ class ExpressionListProcessor extends AbstractProcessor
                     }
 
                     $curr->setTokenType(ExpressionType::OPERATOR);
+
                     break;
 
                 case ':=':
@@ -262,11 +268,13 @@ class ExpressionListProcessor extends AbstractProcessor
                 case 'IN':
                     $curr->setSubTree(false);
                     $curr->setTokenType(ExpressionType::OPERATOR);
+
                     break;
 
                 case 'NULL':
                     $curr->setSubTree(false);
                     $curr->setTokenType(ExpressionType::CONSTANT);
+
                     break;
 
                 case '-':
@@ -281,6 +289,7 @@ class ExpressionListProcessor extends AbstractProcessor
                     } else {
                         $curr->setTokenType(ExpressionType::SIGN);
                     }
+
                     break;
 
                 default:
@@ -291,11 +300,13 @@ class ExpressionListProcessor extends AbstractProcessor
                     case '"':
                     // it is a string literal
                         $curr->setTokenType(ExpressionType::CONSTANT);
+
                         break;
                     case '`':
                     // it is an escaped colum name
                         $curr->setTokenType(ExpressionType::COLREF);
                         $curr->setNoQuotes($curr->getToken());
+
                         break;
 
                     default:
@@ -303,6 +314,7 @@ class ExpressionListProcessor extends AbstractProcessor
                             if ($prev->isSign()) {
                                 $prev->addToken($curr->getToken()); // it is a negative numeric constant
                                 $prev->setTokenType(ExpressionType::CONSTANT);
+
                                 continue 3;
                             // skip current token
                             } else {
@@ -312,6 +324,7 @@ class ExpressionListProcessor extends AbstractProcessor
                             $curr->setTokenType(ExpressionType::COLREF);
                             $curr->setNoQuotes($curr->getToken());
                         }
+
                         break;
                     }
                 }

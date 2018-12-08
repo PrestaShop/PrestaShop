@@ -106,6 +106,7 @@ final class LanguageCopier implements LanguageCopierInterface
                         '%folder%' => $destination,
                     ],
                 ];
+
                 continue;
             }
 
@@ -120,6 +121,7 @@ final class LanguageCopier implements LanguageCopierInterface
                         '%dest%' => $destination,
                     ],
                 ];
+
                 continue;
             }
 

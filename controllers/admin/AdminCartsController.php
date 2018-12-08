@@ -401,6 +401,7 @@ class AdminCartsControllerCore extends AdminController
                             if ($customization_field['required']) {
                                 $errors[] = $this->trans('Please fill in all the required fields.', array(), 'Admin.Notifications.Error');
                             }
+
                             continue;
                         }
                         if (!Validate::isMessage(Tools::getValue($field_id))) {
@@ -412,6 +413,7 @@ class AdminCartsControllerCore extends AdminController
                             if ($customization_field['required']) {
                                 $errors[] = $this->trans('Please fill in all the required fields.', array(), 'Admin.Notifications.Error');
                             }
+
                             continue;
                         }
                         if ($error = ImageManager::validateUpload($_FILES[$field_id], (int) Configuration::get('PS_PRODUCT_PICTURE_MAX_SIZE'))) {
@@ -757,6 +759,7 @@ class AdminCartsControllerCore extends AdminController
                 $cart_obj = new Cart((int) $cart['id_cart']);
                 if ($cart['id_cart'] == $this->context->cart->id) {
                     unset($carts[$key]);
+
                     continue;
                 }
                 $currency = new Currency((int) $cart['id_currency']);
@@ -798,6 +801,7 @@ class AdminCartsControllerCore extends AdminController
             foreach ($cart_rules as $cart_rule) {
                 if ($cart_rule['id_cart_rule'] == CartRule::getIdByCode(CartRule::BO_ORDER_CODE_PREFIX . (int) $this->context->cart->id)) {
                     $free_shipping = true;
+
                     break;
                 }
             }

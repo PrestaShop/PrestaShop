@@ -425,6 +425,7 @@ class ModuleSelfConfigurator
 
         // Avoid unconsistant state with transactions
         $this->connection->beginTransaction();
+
         try {
             foreach ($config['sql'] as $data) {
                 $this->runSqlFile($data);
@@ -432,6 +433,7 @@ class ModuleSelfConfigurator
             $this->connection->commit();
         } catch (Exception $e) {
             $this->connection->rollBack();
+
             throw $e;
         }
     }

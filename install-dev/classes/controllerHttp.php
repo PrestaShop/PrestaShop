@@ -196,6 +196,7 @@ class InstallControllerHttp
                     foreach ($abbreviations as $abbreviation) {
                         if ($session->shop_timezone == $abbreviation['timezone_id']) {
                             @date_default_timezone_set($session->shop_timezone);
+
                             break 2;
                         }
                     }
@@ -228,6 +229,7 @@ class InstallControllerHttp
                 && !$check_step->getControllerInstance()->validate()) {
                 self::$steps->setOffset($key);
                 $session->step = $session->last_step = self::$steps->current()->getName();
+
                 break;
             }
         }

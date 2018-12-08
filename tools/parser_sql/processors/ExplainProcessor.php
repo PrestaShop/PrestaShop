@@ -71,6 +71,7 @@ class ExplainProcessor extends AbstractProcessor
                 case 'EXTENDED':
                 case 'PARTITIONS':
                     return array('expr_type' => ExpressionType::RESERVED, 'base_expr' => $token);
+
                     break;
 
                 case 'FORMAT':
@@ -119,11 +120,13 @@ class ExplainProcessor extends AbstractProcessor
             case 'TABLENAME':
                 $currCategory = 'WILD';
                 $expr[] = array('expr_type' => ExpressionType::COLREF, 'base_expr' => $trim);
+
                 break;
 
             case '':
                 $currCategory = 'TABLENAME';
                 $expr[] = array('expr_type' => ExpressionType::TABLE, 'base_expr' => $trim);
+
                 break;
 
             default:

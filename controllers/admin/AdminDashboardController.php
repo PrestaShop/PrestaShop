@@ -243,27 +243,33 @@ class AdminDashboardControllerCore extends AdminController
                 case 'day':
                     $date_from = date('Y-m-d');
                     $date_to = date('Y-m-d');
+
                     break;
                 case 'prev-day':
                     $date_from = date('Y-m-d', strtotime('-1 day'));
                     $date_to = date('Y-m-d', strtotime('-1 day'));
+
                     break;
                 case 'month':
                 default:
                     $date_from = date('Y-m-01');
                     $date_to = date('Y-m-d');
+
                     break;
                 case 'prev-month':
                     $date_from = date('Y-m-01', strtotime('-1 month'));
                     $date_to = date('Y-m-t', strtotime('-1 month'));
+
                     break;
                 case 'year':
                     $date_from = date('Y-01-01');
                     $date_to = date('Y-m-d');
+
                     break;
                 case 'prev-year':
                     $date_from = date('Y-m-01', strtotime('-1 year'));
                     $date_to = date('Y-12-t', strtotime('-1 year'));
+
                     break;
             }
             $this->context->employee->stats_date_from = $date_from;

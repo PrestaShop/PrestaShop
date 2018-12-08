@@ -535,6 +535,7 @@ class CronJobs extends Module
 
             if (false == $module) {
                 Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.bqSQL($this->name).' WHERE `id_cronjob` = \''.(int) $cron['id_cronjob'].'\'');
+
                 break;
             }
 

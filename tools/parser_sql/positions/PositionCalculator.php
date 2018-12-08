@@ -106,6 +106,7 @@ class PositionCalculator
 
                 if (!$ok) {
                     $offset = $pos + 1;
+
                     continue;
                 }
 

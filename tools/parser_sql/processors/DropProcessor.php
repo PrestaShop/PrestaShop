@@ -60,6 +60,7 @@ class DropProcessor extends AbstractProcessor
 
             if ($skip > 0) {
                 --$skip;
+
                 continue;
             }
 
@@ -69,26 +70,31 @@ class DropProcessor extends AbstractProcessor
             case 'DATABASE':
             case 'TABLE':
                 $expr_type = strtolower($token->getTrim());
+
                 break;
 
             case 'IF':
                 $warning = false;
                 $skip = 1;
+
                 break;
 
             case 'TEMPORARY':
                 $expr_type = ExpressionType::TEMPORARY_TABLE;
                 $skip = 1;
+
                 break;
 
             case 'RESTRICT':
             case 'CASCADE':
                 $option = $token->getUpper();
+
                 break;
 
             case ',':
                 $resultList[] = array('expr_type' => $expr_type, 'base_expr' => $base_expr);
                 $base_expr = '';
+
                 break;
 
             default:

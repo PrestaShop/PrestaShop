@@ -16,6 +16,7 @@ if (isset($_GET['action'])) {
             } else {
                 die('view type number missing');
             }
+
             break;
         case 'sort':
             if (isset($_GET['sort_by'])) {
@@ -24,6 +25,7 @@ if (isset($_GET['action'])) {
             if (isset($_GET['descending'])) {
                 $_SESSION['descending'] = 'true' === $_GET['descending'];
             }
+
             break;
         case 'save_img':
             $info = pathinfo($_POST['name']);
@@ -109,6 +111,7 @@ if (isset($_GET['action'])) {
                     } else {
                         echo 'failed to open file';
                     }
+
                     break;
                 case 'gz':
                     $p = new PharData($path);
@@ -124,6 +127,7 @@ if (isset($_GET['action'])) {
 
                     break;
             }
+
             break;
         case 'media_preview':
 
@@ -238,6 +242,7 @@ if (isset($_GET['action'])) {
 
 			<?php
             }
+
             break;
     }
 } else {

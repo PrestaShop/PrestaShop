@@ -103,6 +103,7 @@ class ThemeExporter
         $this->themeProvider->setThemeName($themeName);
 
         $mergedTranslations = $this->getCatalogueExtractedFromTemplates($themeName, $locale, $rootDir);
+
         try {
             $themeCatalogue = $this->themeProvider->getThemeCatalogue();
         } catch (\Exception $exception) {

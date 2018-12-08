@@ -72,6 +72,7 @@ class OrderByProcessor extends AbstractProcessor
 
                 if ($clause['alias']['no_quotes'] === $parseInfo['no_quotes']) {
                     $parseInfo['expr_type'] = ExpressionType::ALIAS;
+
                     break;
                 }
             }
@@ -111,14 +112,17 @@ class OrderByProcessor extends AbstractProcessor
             case ',':
                 $out[] = $this->processOrderExpression($parseInfo, $select);
                 $parseInfo = $this->initParseInfo();
+
                 break;
 
             case 'DESC':
                 $parseInfo['dir'] = 'DESC';
+
                 break;
 
             case 'ASC':
                 $parseInfo['dir'] = 'ASC';
+
                 break;
 
             default:

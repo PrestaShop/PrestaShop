@@ -618,6 +618,7 @@ class Install extends AbstractInstall
         foreach ($languages_list as $iso) {
             if (!in_array($iso, $languages_available)) {
                 EntityLanguage::downloadAndInstallLanguagePack($iso);
+
                 continue;
             }
 

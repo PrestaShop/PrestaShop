@@ -138,6 +138,7 @@ class PHPSQLLexer
         while ($i < $cnt) {
             if (!isset($tokens[$i])) {
                 ++$i;
+
                 continue;
             }
 
@@ -170,6 +171,7 @@ class PHPSQLLexer
         while ($i < $cnt) {
             if (!isset($tokens[$i])) {
                 ++$i;
+
                 continue;
             }
 
@@ -215,6 +217,7 @@ class PHPSQLLexer
         while ($i < $cnt) {
             if (!isset($tokens[$i])) {
                 ++$i;
+
                 continue;
             }
 
@@ -239,6 +242,7 @@ class PHPSQLLexer
         while ($i < $token_count) {
             if (!isset($tokens[$i])) {
                 ++$i;
+
                 continue;
             }
 
@@ -271,6 +275,7 @@ class PHPSQLLexer
         while ($i < $cnt) {
             if (!isset($tokens[$i])) {
                 ++$i;
+
                 continue;
             }
 
@@ -281,6 +286,7 @@ class PHPSQLLexer
                 while (($k >= 0) && ($len == strlen($tokens[$i]))) {
                     if (!isset($tokens[$k])) { // FIXME: this can be wrong if we have schema . table . column
                         --$k;
+
                         continue;
                     }
                     $tokens[$i] = $tokens[$k].$tokens[$i];
@@ -296,6 +302,7 @@ class PHPSQLLexer
                 while (($k < $cnt) && ($len == strlen($tokens[$i]))) {
                     if (!isset($tokens[$k])) {
                         ++$k;
+
                         continue;
                     }
                     $tokens[$i] .= $tokens[$k];
@@ -335,6 +342,7 @@ class PHPSQLLexer
         while ($i < $token_count) {
             if ('(' !== $tokens[$i]) {
                 ++$i;
+
                 continue;
             }
             $count = 1;
@@ -350,6 +358,7 @@ class PHPSQLLexer
                 unset($tokens[$n]);
                 if (0 === $count) {
                     ++$n;
+
                     break;
                 }
             }

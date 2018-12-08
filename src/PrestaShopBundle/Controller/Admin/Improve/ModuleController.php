@@ -172,6 +172,7 @@ class ModuleController extends ModuleAbstractController
                 foreach ($modulesListUnsorted['installed'] as $moduleInstalled) {
                     if ($moduleInstalled['attributes']['name'] == $value) {
                         $installed[] = $moduleInstalled;
+
                         continue 2;
                     }
                 }
@@ -179,6 +180,7 @@ class ModuleController extends ModuleAbstractController
                 foreach ($modulesListUnsorted['not_installed'] as $moduleNotInstalled) {
                     if ($moduleNotInstalled['attributes']['name'] == $value) {
                         $uninstalled[] = $moduleNotInstalled;
+
                         continue 2;
                     }
                 }

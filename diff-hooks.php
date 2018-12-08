@@ -153,6 +153,7 @@ function getFormattedHookList($hookList, $folder)
         $line = explode(':', $hook, 2);
         if (2 !== count($line)) {
             echo "Warning, could not parse hook in:\n$hook\n\n";
+
             continue;
         }
 
@@ -160,6 +161,7 @@ function getFormattedHookList($hookList, $folder)
 
         if (!preg_match('/^\w+$/', $hookName)) {
             echo "Warning, strange hook name found in {$line[0]}:\n$hookName\n\n";
+
             continue;
         }
 

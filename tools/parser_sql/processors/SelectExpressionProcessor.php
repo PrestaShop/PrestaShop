@@ -80,6 +80,7 @@ class SelectExpressionProcessor extends AbstractProcessor
                 $alias = array('as' => true, 'name' => '', 'base_expr' => $token);
                 $tokens[$i] = '';
                 $capture = true;
+
                 continue;
             }
 
@@ -96,6 +97,7 @@ class SelectExpressionProcessor extends AbstractProcessor
                 }
                 $alias['base_expr'] .= $token;
                 $tokens[$i] = '';
+
                 continue;
             }
 

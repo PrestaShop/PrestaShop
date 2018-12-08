@@ -516,6 +516,7 @@ abstract class ModuleCore implements ModuleInterface
                 if (function_exists($item)) {
                     $upgrade['success'] = false;
                     $upgrade['duplicate'] = true;
+
                     break 2;
                 }
             }
@@ -541,6 +542,7 @@ abstract class ModuleCore implements ModuleInterface
 
                 // If any errors, the module is disabled
                 $this->disable();
+
                 break;
             }
         }
@@ -1274,6 +1276,7 @@ abstract class ModuleCore implements ModuleInterface
             $module_errors = array();
             if (Module::useTooMuchMemory()) {
                 $module_errors[] = Context::getContext()->getTranslator()->trans('All modules cannot be loaded due to memory limit restrictions, please increase your memory_limit value on your server configuration', array(), 'Admin.Modules.Notification');
+
                 break;
             }
 
@@ -1301,6 +1304,7 @@ abstract class ModuleCore implements ModuleInterface
                         array($config_file),
                         'Admin.Modules.Notification'
                     );
+
                     break;
                 }
                 foreach (libxml_get_errors() as $error) {
@@ -1460,6 +1464,7 @@ abstract class ModuleCore implements ModuleInterface
             if (file_exists($f['file']) && (0 == $f['loggedOnAddons'] || $logged_on_addons)) {
                 if (Module::useTooMuchMemory()) {
                     $errors[] = Context::getContext()->getTranslator()->trans('All modules cannot be loaded due to memory limit restrictions, please increase your memory_limit value on your server configuration', array(), 'Admin.Modules.Notification');
+
                     break;
                 }
 
@@ -1995,6 +2000,7 @@ abstract class ModuleCore implements ModuleInterface
             foreach ($res as $key => $values) {
                 if ((int) $values[$this->identifier] == (int) $this->id) {
                     $k = $key;
+
                     break;
                 }
             }
@@ -3001,6 +3007,7 @@ abstract class ModuleCore implements ModuleInterface
                     if (preg_match('/module: (.*)/ism', $override_file[$method_override->getStartLine() - 5], $name) && preg_match('/date: (.*)/ism', $override_file[$method_override->getStartLine() - 4], $date) && preg_match('/version: ([0-9.]+)/ism', $override_file[$method_override->getStartLine() - 3], $version)) {
                         throw new Exception(Context::getContext()->getTranslator()->trans('The method %1$s in the class %2$s is already overridden by the module %3$s version %4$s at %5$s.', array($method->getName(), $classname, $name[1], $version[1], $date[1]), 'Admin.Modules.Notification'));
                     }
+
                     throw new Exception(Context::getContext()->getTranslator()->trans('The method %1$s in the class %2$s is already overridden.', array($method->getName(), $classname), 'Admin.Modules.Notification'));
                 }
 
@@ -3189,6 +3196,7 @@ abstract class ModuleCore implements ModuleInterface
                             $override_file[$line_number - 5] = $override_file[$line_number - 4] = $override_file[$line_number - 3] = $override_file[$line_number - 2] = $override_file[$line_number - 1] = '#--remove--#';
                         }
                         $line_content = '#--remove--#';
+
                         break;
                     }
                 }
@@ -3207,6 +3215,7 @@ abstract class ModuleCore implements ModuleInterface
                             $override_file[$line_number - 5] = $override_file[$line_number - 4] = $override_file[$line_number - 3] = $override_file[$line_number - 2] = $override_file[$line_number - 1] = '#--remove--#';
                         }
                         $line_content = '#--remove--#';
+
                         break;
                     }
                 }

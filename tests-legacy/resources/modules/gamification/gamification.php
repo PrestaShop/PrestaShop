@@ -381,6 +381,7 @@ class gamification extends Module
                 if (isset($condition->id)) {
                     unset($condition->id);
                 }
+
                 try {
                     $cond = new Condition();
                     if (in_array($condition->id_ps_condition, $current_conditions)) {

@@ -598,28 +598,34 @@ class AdminControllerCore extends Controller
             case 'add':
                 $breadcrumbs2['action']['name'] = $this->l('Add', null, null, false);
                 $breadcrumbs2['action']['icon'] = 'icon-plus';
+
                 break;
             case 'edit':
                 $breadcrumbs2['action']['name'] = $this->l('Edit', null, null, false);
                 $breadcrumbs2['action']['icon'] = 'icon-pencil';
+
                 break;
             case '':
             case 'list':
                 $breadcrumbs2['action']['name'] = $this->l('List', null, null, false);
                 $breadcrumbs2['action']['icon'] = 'icon-th-list';
+
                 break;
             case 'details':
             case 'view':
                 $breadcrumbs2['action']['name'] = $this->l('View details', null, null, false);
                 $breadcrumbs2['action']['icon'] = 'icon-zoom-in';
+
                 break;
             case 'options':
                 $breadcrumbs2['action']['name'] = $this->l('Options', null, null, false);
                 $breadcrumbs2['action']['icon'] = 'icon-cogs';
+
                 break;
             case 'generator':
                 $breadcrumbs2['action']['name'] = $this->l('Generator', null, null, false);
                 $breadcrumbs2['action']['icon'] = 'icon-flask';
+
                 break;
         }
 
@@ -647,16 +653,19 @@ class AdminControllerCore extends Controller
             case 'edit':
                 $this->toolbar_title[] = $this->l('Edit', null, null, false);
                 $this->addMetaTitle($this->l('Edit', null, null, false));
+
                 break;
 
             case 'add':
                 $this->toolbar_title[] = $this->l('Add new', null, null, false);
                 $this->addMetaTitle($this->l('Add new', null, null, false));
+
                 break;
 
             case 'view':
                 $this->toolbar_title[] = $this->l('View', null, null, false);
                 $this->addMetaTitle($this->l('View', null, null, false));
+
                 break;
         }
 
@@ -1475,6 +1484,7 @@ class AdminControllerCore extends Controller
 
                     if (!$hide_multishop_checkbox && Shop::isFeatureActive() && Shop::CONTEXT_ALL != Shop::getContext() && empty($options['no_multishop_checkbox']) && empty($_POST['multishopOverrideOption'][$key])) {
                         Configuration::deleteFromContext($key);
+
                         continue;
                     }
 
@@ -1549,6 +1559,7 @@ class AdminControllerCore extends Controller
                     $this->toolbar_title[] = is_array($obj->{$this->identifier_name}) ? $obj->{$this->identifier_name}[$this->context->employee->id_lang] : $obj->{$this->identifier_name};
                     $this->addMetaTitle($this->toolbar_title[count($this->toolbar_title) - 1]);
                 }
+
                 break;
             case 'edit':
                 $obj = $this->loadObject(true);
@@ -1558,6 +1569,7 @@ class AdminControllerCore extends Controller
                     $this->toolbar_title[] = sprintf($this->l('Edit: %s'), (is_array($obj->{$this->identifier_name}) && isset($obj->{$this->identifier_name}[$this->context->employee->id_lang])) ? $obj->{$this->identifier_name}[$this->context->employee->id_lang] : $obj->{$this->identifier_name});
                     $this->addMetaTitle($this->toolbar_title[count($this->toolbar_title) - 1]);
                 }
+
                 break;
         }
 
@@ -1604,6 +1616,7 @@ class AdminControllerCore extends Controller
                         'desc' => $this->l('Cancel'),
                     );
                 }
+
                 break;
             case 'view':
                 // Default cancel button - like old back link
@@ -1620,12 +1633,14 @@ class AdminControllerCore extends Controller
                         'desc' => $this->l('Back to list'),
                     );
                 }
+
                 break;
             case 'options':
                 $this->toolbar_btn['save'] = array(
                     'href' => '#',
                     'desc' => $this->l('Save'),
                 );
+
                 break;
             default:
                 // list
@@ -1795,6 +1810,7 @@ class AdminControllerCore extends Controller
                     $this->{$this->display . Tools::toCamelCase($this->className)}();
                 }
                 $this->context->smarty->assign('content', $this->context->smarty->fetch($tpl_action));
+
                 break;
             }
         }
@@ -3045,6 +3061,7 @@ class AdminControllerCore extends Controller
                         } else {
                             $this->errors[] = $this->trans('You do not have permission to delete this.', array(), 'Admin.Notifications.Error');
                         }
+
                         break;
                     } elseif ($this->access('edit')) {
                         $this->action = 'bulk' . $bulk_action;
@@ -3052,6 +3069,7 @@ class AdminControllerCore extends Controller
                     } else {
                         $this->errors[] = $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error');
                     }
+
                     break;
                 } elseif (Tools::isSubmit('submitBulk')) {
                     if ('delete' === $bulk_action) {
@@ -3061,6 +3079,7 @@ class AdminControllerCore extends Controller
                         } else {
                             $this->errors[] = $this->trans('You do not have permission to delete this.', array(), 'Admin.Notifications.Error');
                         }
+
                         break;
                     } elseif ($this->access('edit')) {
                         $this->action = 'bulk' . Tools::getValue('select_submitBulk');
@@ -3068,6 +3087,7 @@ class AdminControllerCore extends Controller
                     } else {
                         $this->errors[] = $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error');
                     }
+
                     break;
                 }
             }
@@ -3227,6 +3247,7 @@ class AdminControllerCore extends Controller
 
             if (false === $this->_list) {
                 $this->_list_error = Db::getInstance()->getMsgError();
+
                 break;
             }
 
