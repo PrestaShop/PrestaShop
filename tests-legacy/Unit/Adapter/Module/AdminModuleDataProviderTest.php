@@ -73,7 +73,7 @@ class AdminModuleDataProviderTest extends UnitTestCase
         $fakeModules = array(
             $this->fakeModule(1,
                 'pm_advancedpack',
-                'Advanced Pack 5 - Create ​​bundles of products',
+                'Advanced Pack 5 - Create bundles of products',
                 'Cross-selling & Product Bundles',
                 'Allows the sale batch using any stocks actually available products composing your packs, and offers the opportunity to apply business operations'
             ),
