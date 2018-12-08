@@ -495,7 +495,7 @@ class LocalizationPackCore
                 $attributes = $data->attributes();
                 $name = (string) $attributes['name'];
 
-                if (isset($name) && isset($attributes['value']) && false !== Configuration::get($name)) {
+                if (isset($name, $attributes['value'])   && false !== Configuration::get($name)) {
                     if (!Configuration::updateValue($name, (string) $attributes['value'])) {
                         $this->_errors[] = Context::getContext()->getTranslator()->trans(
                             'An error occurred during the configuration setup: %1$s',
