@@ -3365,7 +3365,7 @@ exit;
      */
     public static function isPHPCLI()
     {
-        return defined('STDIN') || (Tools::strtolower(php_sapi_name()) == 'cli' && (!isset($_SERVER['REMOTE_ADDR']) || empty($_SERVER['REMOTE_ADDR'])));
+        return defined('STDIN') || (Tools::strtolower(PHP_SAPI) == 'cli' && (!isset($_SERVER['REMOTE_ADDR']) || empty($_SERVER['REMOTE_ADDR'])));
     }
 
     public static function argvToGET($argc, $argv)
@@ -3637,7 +3637,7 @@ exit;
      */
     public static function arrayUnique($array)
     {
-        if (version_compare(phpversion(), '5.2.9', '<')) {
+        if (version_compare(PHP_VERSION, '5.2.9', '<')) {
             return array_unique($array);
         } else {
             return array_unique($array, SORT_REGULAR);
