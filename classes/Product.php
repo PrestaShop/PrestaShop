@@ -211,7 +211,7 @@ class ProductCore extends ObjectModel
     /** @var string Object last modification date */
     public $date_upd;
 
-    /*** @var array Tags */
+    /* @var array Tags */
     public $tags;
 
     /** @var int temporary or saved object */
@@ -3365,7 +3365,7 @@ class ProductCore extends ObjectModel
      * @param mixed $id_customization
      *
      * @return float Product price
-     **/
+     */
     public static function priceCalculation(
         $id_shop,
         $id_product,

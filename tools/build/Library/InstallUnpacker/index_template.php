@@ -41,7 +41,7 @@ if (!defined('PHP_VERSION_ID') || PHP_VERSION_ID < _PS_INSTALL_MINIMUM_PHP_VERSI
 }
 
 // --------------------------------------------------------------------------------
-/** COMPUTED INLINE CLASSES **/
+/** COMPUTED INLINE CLASSES */
 
 // --------------------------------------------------------------------------------
 

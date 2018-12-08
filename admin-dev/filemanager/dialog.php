@@ -32,9 +32,9 @@ if (isset($_POST['submit'])) {
         $subdir = '';
     }
 
-    /***
+    /*
      *SUB-DIR CODE
-     ***/
+     */
     if (!isset($_SESSION['subfolder'])) {
         $_SESSION['subfolder'] = '';
     }
