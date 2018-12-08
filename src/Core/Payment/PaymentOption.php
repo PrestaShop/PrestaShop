@@ -360,11 +360,11 @@ class PaymentOption implements HookContentClassInterface
 
             $newOption = new self();
             $newOption->setCallToActionText($option['cta_text'])
-                      ->setAdditionalInformation($option['additionalInformation'])
-                      ->setAction($option['action'])
-                      ->setForm($option['form'])
-                      ->setInputs($option['inputs'])
-                      ->setLogo($option['logo']);
+                ->setAdditionalInformation($option['additionalInformation'])
+                ->setAction($option['action'])
+                ->setForm($option['form'])
+                ->setInputs($option['inputs'])
+                ->setLogo($option['logo']);
 
             $newOptions[] = $newOption;
         }

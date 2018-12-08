@@ -105,29 +105,29 @@ final class WebserviceKeyDefinitionFactory extends AbstractGridDefinitionFactory
         return (new ColumnCollection())
             ->add(
                 (new BulkActionColumn('bulk_action'))
-                ->setOptions([
+                    ->setOptions([
                     'bulk_field' => 'id_webservice_account',
                 ])
             )
             ->add(
                 (new DataColumn('key'))
-                ->setName($this->trans('Key', [], 'Admin.Advparameters.Feature'))
-                ->setOptions([
+                    ->setName($this->trans('Key', [], 'Admin.Advparameters.Feature'))
+                    ->setOptions([
                     'field' => 'key',
                 ])
             )
             ->add(
                 (new DataColumn('description'))
-                ->setName($this->trans('Key description', [], 'Admin.Advparameters.Feature'))
-                ->setOptions([
+                    ->setName($this->trans('Key description', [], 'Admin.Advparameters.Feature'))
+                    ->setOptions([
                     'field' => 'description',
                     'sortable' => false,
                 ])
             )
             ->add(
                 (new ToggleColumn('active'))
-                ->setName($this->trans('Enabled', [], 'Admin.Global'))
-                ->setOptions([
+                    ->setName($this->trans('Enabled', [], 'Admin.Global'))
+                    ->setOptions([
                     'field' => 'active',
                     'primary_field' => 'id_webservice_account',
                     'route' => 'admin_webservice_status_toggle',
@@ -136,13 +136,13 @@ final class WebserviceKeyDefinitionFactory extends AbstractGridDefinitionFactory
             )
             ->add(
                 (new ActionColumn('actions'))
-                ->setName($this->trans('Actions', [], 'Admin.Global'))
-                ->setOptions([
+                    ->setName($this->trans('Actions', [], 'Admin.Global'))
+                    ->setOptions([
                     'actions' => (new RowActionCollection())
                         ->add(
                             (new LinkRowAction('edit'))
-                            ->setIcon('edit')
-                            ->setOptions([
+                                ->setIcon('edit')
+                                ->setOptions([
                                 'route' => 'admin_webservice_list_edit',
                                 'route_param_name' => 'webserviceAccountId',
                                 'route_param_field' => 'id_webservice_account',
@@ -150,9 +150,9 @@ final class WebserviceKeyDefinitionFactory extends AbstractGridDefinitionFactory
                         )
                         ->add(
                             (new SubmitRowAction('delete'))
-                            ->setName($this->trans('Delete', [], 'Admin.Actions'))
-                            ->setIcon('delete')
-                            ->setOptions([
+                                ->setName($this->trans('Delete', [], 'Admin.Actions'))
+                                ->setIcon('delete')
+                                ->setOptions([
                                 'method' => 'DELETE',
                                 'route' => 'admin_delete_single_webservice_log',
                                 'route_param_name' => 'webserviceAccountId',
@@ -177,36 +177,36 @@ final class WebserviceKeyDefinitionFactory extends AbstractGridDefinitionFactory
         return (new FilterCollection())
             ->add(
                 (new Filter('key', TextType::class))
-                ->setTypeOptions([
+                    ->setTypeOptions([
                     'required' => false,
                 ])
-                ->setAssociatedColumn('key')
+                    ->setAssociatedColumn('key')
             )
             ->add(
                 (new Filter('description', TextType::class))
-                ->setTypeOptions([
+                    ->setTypeOptions([
                     'required' => false,
                 ])
-                ->setAssociatedColumn('description')
+                    ->setAssociatedColumn('description')
             )
             ->add(
                 (new Filter('active', ChoiceType::class))
-                ->setTypeOptions([
+                    ->setTypeOptions([
                     'required' => false,
                     'choices' => $this->statusChoices,
                     'choice_translation_domain' => false,
                 ])
-                ->setAssociatedColumn('active')
+                    ->setAssociatedColumn('active')
             )
             ->add(
                 (new Filter('actions', SearchAndResetType::class))
-                ->setTypeOptions([
+                    ->setTypeOptions([
                     'attr' => [
                         'data-url' => $this->resetActionUrl,
                         'data-redirect' => $this->redirectionUrl,
                     ],
                 ])
-                ->setAssociatedColumn('actions')
+                    ->setAssociatedColumn('actions')
             )
         ;
     }
@@ -219,18 +219,18 @@ final class WebserviceKeyDefinitionFactory extends AbstractGridDefinitionFactory
         return (new GridActionCollection())
             ->add(
                 (new SimpleGridAction('common_refresh_list'))
-                ->setName($this->trans('Refresh list', [], 'Admin.Advparameters.Feature'))
-                ->setIcon('refresh')
+                    ->setName($this->trans('Refresh list', [], 'Admin.Advparameters.Feature'))
+                    ->setIcon('refresh')
             )
             ->add(
                 (new SimpleGridAction('common_show_query'))
-                ->setName($this->trans('Show SQL query', [], 'Admin.Actions'))
-                ->setIcon('code')
+                    ->setName($this->trans('Show SQL query', [], 'Admin.Actions'))
+                    ->setIcon('code')
             )
             ->add(
                 (new SimpleGridAction('common_export_sql_manager'))
-                ->setName($this->trans('Export to SQL Manager', [], 'Admin.Actions'))
-                ->setIcon('storage')
+                    ->setName($this->trans('Export to SQL Manager', [], 'Admin.Actions'))
+                    ->setIcon('storage')
             )
         ;
     }
@@ -243,22 +243,22 @@ final class WebserviceKeyDefinitionFactory extends AbstractGridDefinitionFactory
         return (new BulkActionCollection())
             ->add(
                 (new SubmitBulkAction('webservice_enable_selection'))
-                ->setName($this->trans('Enable selection', [], 'Admin.Actions'))
-                ->setOptions([
+                    ->setName($this->trans('Enable selection', [], 'Admin.Actions'))
+                    ->setOptions([
                     'submit_route' => 'admin_webservice_bulk_enable',
                 ])
             )
             ->add(
                 (new SubmitBulkAction('webservice_disable_selection'))
-                ->setName($this->trans('Disable selection', [], 'Admin.Actions'))
-                ->setOptions([
+                    ->setName($this->trans('Disable selection', [], 'Admin.Actions'))
+                    ->setOptions([
                     'submit_route' => 'admin_webservice_bulk_disable',
                 ])
             )
             ->add(
                 (new SubmitBulkAction('delete_webservice'))
-                ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
-                ->setOptions([
+                    ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
+                    ->setOptions([
                     'submit_route' => 'admin_delete_multiple_webservice_log',
                     'confirm_message' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
                 ])

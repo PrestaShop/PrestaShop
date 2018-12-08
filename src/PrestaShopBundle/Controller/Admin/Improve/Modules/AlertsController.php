@@ -52,7 +52,7 @@ class AlertsController extends ModuleAbstractController
     {
         return new JsonResponse(
             $this->get('prestashop.module.manager')
-            ->countModulesWithNotificationsDetailed()
+                ->countModulesWithNotificationsDetailed()
         );
     }
 }

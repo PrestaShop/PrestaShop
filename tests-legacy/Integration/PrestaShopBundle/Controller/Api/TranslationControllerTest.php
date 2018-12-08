@@ -39,8 +39,8 @@ class TranslationControllerTest extends ApiTestCase
         parent::setUp();
 
         $cacheMock = $this->getMockBuilder('PrestaShopBundle\Service\Cache\Refresh')
-                   ->disableOriginalConstructor()
-                   ->getMock();
+            ->disableOriginalConstructor()
+            ->getMock();
 
         $cacheMock
             ->method('execute')

@@ -95,49 +95,49 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
         return (new ColumnCollection())
             ->add(
                 (new BulkActionColumn('employee_bulk'))
-                ->setOptions([
+                    ->setOptions([
                     'bulk_field' => 'id_employee',
                 ])
             )
             ->add(
                 (new DataColumn('id_employee'))
-                ->setName($this->trans('ID', [], 'Admin.Global'))
-                ->setOptions([
+                    ->setName($this->trans('ID', [], 'Admin.Global'))
+                    ->setOptions([
                     'field' => 'id_employee',
                 ])
             )
             ->add(
                 (new DataColumn('firstname'))
-                ->setName($this->trans('First name', [], 'Admin.Global'))
-                ->setOptions([
+                    ->setName($this->trans('First name', [], 'Admin.Global'))
+                    ->setOptions([
                     'field' => 'firstname',
                 ])
             )
             ->add(
                 (new DataColumn('lastname'))
-                ->setName($this->trans('Last name', [], 'Admin.Global'))
-                ->setOptions([
+                    ->setName($this->trans('Last name', [], 'Admin.Global'))
+                    ->setOptions([
                     'field' => 'lastname',
                 ])
             )
             ->add(
                 (new DataColumn('email'))
-                ->setName($this->trans('Email address', [], 'Admin.Global'))
-                ->setOptions([
+                    ->setName($this->trans('Email address', [], 'Admin.Global'))
+                    ->setOptions([
                     'field' => 'email',
                 ])
             )
             ->add(
                 (new DataColumn('profile'))
-                ->setName($this->trans('Profile', [], 'Admin.Advparameters.Feature'))
-                ->setOptions([
+                    ->setName($this->trans('Profile', [], 'Admin.Advparameters.Feature'))
+                    ->setOptions([
                     'field' => 'profile_name',
                 ])
             )
             ->add(
                 (new ToggleColumn('active'))
-                ->setName($this->trans('Active', [], 'Admin.Global'))
-                ->setOptions([
+                    ->setName($this->trans('Active', [], 'Admin.Global'))
+                    ->setOptions([
                     'field' => 'active',
                     'primary_field' => 'id_employee',
                     'route' => 'admin_employees_index',
@@ -146,12 +146,12 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
             )
             ->add(
                 (new ActionColumn('actions'))
-                ->setOptions([
+                    ->setOptions([
                     'actions' => (new RowActionCollection())
                         ->add(
                             (new LinkRowAction('edit'))
-                            ->setIcon('edit')
-                            ->setOptions([
+                                ->setIcon('edit')
+                                ->setOptions([
                                 'route' => 'admin_employees_index',
                                 'route_param_name' => 'employeeId',
                                 'route_param_field' => 'id_employee',
@@ -159,9 +159,9 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
                         )
                         ->add(
                             (new SubmitRowAction('delete'))
-                            ->setName($this->trans('Delete', [], 'Admin.Actions'))
-                            ->setIcon('delete')
-                            ->setOptions([
+                                ->setName($this->trans('Delete', [], 'Admin.Actions'))
+                                ->setIcon('delete')
+                                ->setOptions([
                                 'confirm_message' => $this->trans(
                                     'Delete selected item?',
                                     [],
@@ -185,42 +185,42 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
         return (new FilterCollection())
             ->add(
                 (new Filter('id_employee', NumberType::class))
-                ->setTypeOptions([
+                    ->setTypeOptions([
                     'required' => false,
                 ])
-                ->setAssociatedColumn('id_employee')
+                    ->setAssociatedColumn('id_employee')
             )
             ->add(
                 (new Filter('firstname', TextType::class))
-                ->setTypeOptions([
+                    ->setTypeOptions([
                     'required' => false,
                 ])
-                ->setAssociatedColumn('firstname')
+                    ->setAssociatedColumn('firstname')
             )
             ->add(
                 (new Filter('lastname', TextType::class))
-                ->setTypeOptions([
+                    ->setTypeOptions([
                     'required' => false,
                 ])
-                ->setAssociatedColumn('lastname')
+                    ->setAssociatedColumn('lastname')
             )
             ->add(
                 (new Filter('email', TextType::class))
-                ->setTypeOptions([
+                    ->setTypeOptions([
                     'required' => false,
                 ])
-                ->setAssociatedColumn('email')
+                    ->setAssociatedColumn('email')
             )
             ->add(
                 (new Filter('profile', ProfileChoiceType::class))
-                ->setTypeOptions([
+                    ->setTypeOptions([
                     'required' => false,
                 ])
-                ->setAssociatedColumn('profile')
+                    ->setAssociatedColumn('profile')
             )
             ->add(
                 (new Filter('active', ChoiceType::class))
-                ->setTypeOptions([
+                    ->setTypeOptions([
                     'choices' => [
                         $this->trans('Yes', [], 'Admin.Global') => 1,
                         $this->trans('No', [], 'Admin.Global') => 0,
@@ -228,17 +228,17 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'required' => false,
                     'choice_translation_domain' => false,
                 ])
-                ->setAssociatedColumn('active')
+                    ->setAssociatedColumn('active')
             )
             ->add(
                 (new Filter('actions', SearchAndResetType::class))
-                ->setTypeOptions([
+                    ->setTypeOptions([
                     'attr' => [
                         'data-url' => $this->resetUrl,
                         'data-redirect' => $this->redirectUrl,
                     ],
                 ])
-                ->setAssociatedColumn('actions')
+                    ->setAssociatedColumn('actions')
             )
         ;
     }
@@ -251,18 +251,18 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
         return (new GridActionCollection())
             ->add(
                 (new SimpleGridAction('common_refresh_list'))
-                ->setName($this->trans('Refresh list', [], 'Admin.Advparameters.Feature'))
-                ->setIcon('refresh')
+                    ->setName($this->trans('Refresh list', [], 'Admin.Advparameters.Feature'))
+                    ->setIcon('refresh')
             )
             ->add(
                 (new SimpleGridAction('common_show_query'))
-                ->setName($this->trans('Show SQL query', [], 'Admin.Actions'))
-                ->setIcon('code')
+                    ->setName($this->trans('Show SQL query', [], 'Admin.Actions'))
+                    ->setIcon('code')
             )
             ->add(
                 (new SimpleGridAction('common_export_sql_manager'))
-                ->setName($this->trans('Export to SQL Manager', [], 'Admin.Actions'))
-                ->setIcon('storage')
+                    ->setName($this->trans('Export to SQL Manager', [], 'Admin.Actions'))
+                    ->setIcon('storage')
             )
         ;
     }
@@ -275,22 +275,22 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
         return (new BulkActionCollection())
             ->add(
                 (new SubmitBulkAction('enable_selection'))
-                ->setName($this->trans('Enable selection', [], 'Admin.Actions'))
-                ->setOptions([
+                    ->setName($this->trans('Enable selection', [], 'Admin.Actions'))
+                    ->setOptions([
                     'submit_route' => 'admin_employees_index',
                 ])
             )
             ->add(
                 (new SubmitBulkAction('disable_selection'))
-                ->setName($this->trans('Disable selection', [], 'Admin.Actions'))
-                ->setOptions([
+                    ->setName($this->trans('Disable selection', [], 'Admin.Actions'))
+                    ->setOptions([
                     'submit_route' => 'admin_employees_index',
                 ])
             )
             ->add(
                 (new SubmitBulkAction('delete_selection'))
-                ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
-                ->setOptions([
+                    ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
+                    ->setOptions([
                     'submit_route' => 'admin_employees_index',
                 ])
             )

@@ -570,7 +570,7 @@ class MailCore extends ObjectModel
                             \Swift_Attachment::newInstance()->setFilename(
                                 $attachment['name']
                             )->setContentType($attachment['mime'])
-                            ->setBody($attachment['content'])
+                                ->setBody($attachment['content'])
                         );
                     }
                 }

@@ -86,8 +86,8 @@ class AdminTranslationsControllerCore extends AdminController
         $this->link_lang_pack = str_replace('%ps_version%', _PS_VERSION_, $this->link_lang_pack);
 
         $this->themes = (new ThemeManagerBuilder($this->context, Db::getInstance()))
-                            ->buildRepository()
-                            ->getList();
+            ->buildRepository()
+            ->getList();
     }
 
     /*

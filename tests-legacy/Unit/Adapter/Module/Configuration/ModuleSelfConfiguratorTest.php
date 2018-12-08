@@ -236,10 +236,10 @@ class ModuleSelfConfiguratorTest extends UnitTestCase
         // Test context with mocks
         require_once $php_filepath;
         $mock = $this->getMockBuilder('\MyComplexModuleConfiguration')
-                     ->setMethods(array('run'))
-                     ->getMock();
+            ->setMethods(array('run'))
+            ->getMock();
         $mock->expects($this->exactly(2))
-             ->method('run');
+            ->method('run');
 
         // Redefine self configuratrion as mock
         $moduleSelfConfigurator = $this
