@@ -41,13 +41,13 @@ class AdminCurrenciesControllerCore extends AdminController
 
         parent::__construct();
 
-        $this->fields_list = array(
-            'name' => array('title' => $this->trans('Currency', array(), 'Admin.Global'), 'orderby' => false, 'search' => false),
-            'sign' => array('title' => $this->trans('Symbol', array(), 'Admin.International.Feature'), 'width' => 20, 'align' => 'center', 'orderby' => false, 'search' => false, 'class' => 'fixed-width-xs'),
-            'iso_code' => array('title' => $this->trans('ISO code', array(), 'Admin.International.Feature'), 'align' => 'center', 'class' => 'fixed-width-xs'),
-            'conversion_rate' => array('title' => $this->trans('Exchange rate', array(), 'Admin.International.Feature'), 'type' => 'float', 'align' => 'center', 'width' => 130, 'search' => false, 'filter_key' => 'currency_shop!conversion_rate'),
-            'active' => array('title' => $this->trans('Enabled', array(), 'Admin.Global'), 'width' => 25, 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false, 'class' => 'fixed-width-sm'),
-        );
+        $this->fields_list = [
+            'name' => ['title' => $this->trans('Currency', [], 'Admin.Global'), 'orderby' => false, 'search' => false],
+            'sign' => ['title' => $this->trans('Symbol', [], 'Admin.International.Feature'), 'width' => 20, 'align' => 'center', 'orderby' => false, 'search' => false, 'class' => 'fixed-width-xs'],
+            'iso_code' => ['title' => $this->trans('ISO code', [], 'Admin.International.Feature'), 'align' => 'center', 'class' => 'fixed-width-xs'],
+            'conversion_rate' => ['title' => $this->trans('Exchange rate', [], 'Admin.International.Feature'), 'type' => 'float', 'align' => 'center', 'width' => 130, 'search' => false, 'filter_key' => 'currency_shop!conversion_rate'],
+            'active' => ['title' => $this->trans('Enabled', [], 'Admin.Global'), 'width' => 25, 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false, 'class' => 'fixed-width-sm'],
+        ];
 
         $this->_select .= 'currency_shop.conversion_rate conversion_rate';
         $this->_join .= Shop::addSqlAssociation('currency', 'a');
@@ -87,80 +87,80 @@ class AdminCurrenciesControllerCore extends AdminController
     {
         $currency = null;
 
-        $this->fields_form = array(
-            'legend' => array(
-                'title' => $this->trans('Currencies', array(), 'Admin.Global'),
+        $this->fields_form = [
+            'legend' => [
+                'title' => $this->trans('Currencies', [], 'Admin.Global'),
                 'icon' => 'icon-money',
-            ),
-            'input' => array(
-                array(
+            ],
+            'input' => [
+                [
                     'type' => 'select',
                     'col' => '4',
-                    'label' => $this->trans('Currency', array(), 'Admin.Global'),
+                    'label' => $this->trans('Currency', [], 'Admin.Global'),
                     'name' => 'iso_code',
                     'required' => true,
-                    'hint' => $this->trans('ISO code (e.g. USD for Dollars, EUR for Euros, etc.).', array(), 'Admin.International.Help'),
-                    'options' => array(
+                    'hint' => $this->trans('ISO code (e.g. USD for Dollars, EUR for Euros, etc.).', [], 'Admin.International.Help'),
+                    'options' => [
                         'query' => $this->cldr->getAllCurrencies(),
                         'name' => 'name',
                         'id' => 'code',
-                    ),
-                ),
-                array(
+                    ],
+                ],
+                [
                     'type' => 'text',
-                    'label' => $this->trans('Exchange rate', array(), 'Admin.International.Feature'),
+                    'label' => $this->trans('Exchange rate', [], 'Admin.International.Feature'),
                     'name' => 'conversion_rate',
                     'maxlength' => 11,
                     'required' => true,
                     'col' => '2',
-                    'hint' => $this->trans('Exchange rates are calculated from one unit of your shop\'s default currency. For example, if the default currency is euros and your chosen currency is dollars, type "1.20" (1&euro; = $1.20).', array(), 'Admin.International.Help'),
-                ),
-                array(
+                    'hint' => $this->trans('Exchange rates are calculated from one unit of your shop\'s default currency. For example, if the default currency is euros and your chosen currency is dollars, type "1.20" (1&euro; = $1.20).', [], 'Admin.International.Help'),
+                ],
+                [
                     'type' => 'hidden',
-                    'label' => $this->trans('Enable', array(), 'Admin.Actions'),
+                    'label' => $this->trans('Enable', [], 'Admin.Actions'),
                     'name' => 'active',
                     'required' => false,
                     'is_bool' => true,
-                    'values' => array(
-                        array(
+                    'values' => [
+                        [
                             'id' => 'active_on',
                             'value' => 1,
-                            'label' => $this->trans('Enabled', array(), 'Admin.Global'),
-                        ),
-                        array(
+                            'label' => $this->trans('Enabled', [], 'Admin.Global'),
+                        ],
+                        [
                             'id' => 'active_off',
                             'value' => 0,
-                            'label' => $this->trans('Disabled', array(), 'Admin.Global'),
-                        ),
-                    ),
-                ),
-            ),
-        );
+                            'label' => $this->trans('Disabled', [], 'Admin.Global'),
+                        ],
+                    ],
+                ],
+            ],
+        ];
 
         if (Shop::isFeatureActive()) {
-            $this->fields_form['input'][] = array(
+            $this->fields_form['input'][] = [
                 'type' => 'shop',
-                'label' => $this->trans('Shop association', array(), 'Admin.Global'),
+                'label' => $this->trans('Shop association', [], 'Admin.Global'),
                 'name' => 'checkBoxShopAsso',
-            );
+            ];
         }
 
-        $this->fields_form['submit'] = array(
-            'title' => $this->trans('Save', array(), 'Admin.Actions'),
-        );
+        $this->fields_form['submit'] = [
+            'title' => $this->trans('Save', [], 'Admin.Actions'),
+        ];
 
         //form preselect : define the default currency or object value
         if (Tools::getValue('id_currency')) {
             $currency = new Currency((int) Tools::getValue('id_currency'));
             if ($currency) {
-                $this->fields_value = array(
+                $this->fields_value = [
                     'iso_code' => $currency->iso_code,
-                );
+                ];
             }
         } else {
-            $this->fields_value = array(
+            $this->fields_value = [
                 'iso_code' => $this->cldr->getCurrency()['code'],
-            );
+            ];
         }
 
         $this->context->smarty->assign('status', $currency ? $currency->active : 0);
@@ -173,13 +173,13 @@ class AdminCurrenciesControllerCore extends AdminController
     {
         if (Validate::isLoadedObject($object)) {
             if ($object->id == Configuration::get('PS_CURRENCY_DEFAULT')) {
-                $this->errors[] = $this->trans('You cannot delete the default currency', array(), 'Admin.International.Notification');
+                $this->errors[] = $this->trans('You cannot delete the default currency', [], 'Admin.International.Notification');
             } else {
                 return true;
             }
         } else {
-            $this->errors[] = $this->trans('An error occurred while deleting the object.', array(), 'Admin.Notifications.Error') . '
-                <b>' . $this->table . '</b> ' . $this->trans('(cannot load object)', array(), 'Admin.Notifications.Error');
+            $this->errors[] = $this->trans('An error occurred while deleting the object.', [], 'Admin.Notifications.Error') . '
+                <b>' . $this->table . '</b> ' . $this->trans('(cannot load object)', [], 'Admin.Notifications.Error');
         }
 
         return false;
@@ -189,13 +189,13 @@ class AdminCurrenciesControllerCore extends AdminController
     {
         if (Validate::isLoadedObject($object)) {
             if ($object->active && $object->id == Configuration::get('PS_CURRENCY_DEFAULT')) {
-                $this->errors[] = $this->trans('You cannot disable the default currency', array(), 'Admin.International.Notification');
+                $this->errors[] = $this->trans('You cannot disable the default currency', [], 'Admin.International.Notification');
             } else {
                 return true;
             }
         } else {
-            $this->errors[] = $this->trans('An error occurred while updating the status for an object.', array(), 'Admin.Notifications.Error') . '
-				<b>' . $this->table . '</b> ' . $this->trans('(cannot load object)', array(), 'Admin.Notifications.Error');
+            $this->errors[] = $this->trans('An error occurred while updating the status for an object.', [], 'Admin.Notifications.Error') . '
+				<b>' . $this->table . '</b> ' . $this->trans('(cannot load object)', [], 'Admin.Notifications.Error');
         }
 
         return false;
@@ -274,14 +274,14 @@ class AdminCurrenciesControllerCore extends AdminController
             if ($this->access('edit')) {
                 $this->action = 'exchangeRates';
             } else {
-                $this->errors[] = $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error');
+                $this->errors[] = $this->trans('You do not have permission to edit this.', [], 'Admin.Notifications.Error');
             }
         }
         if (Tools::isSubmit('submitAddcurrency') && !Tools::getValue('id_currency') && Currency::exists(Tools::getValue('iso_code'))) {
-            $this->errors[] = $this->trans('This currency already exists.', array(), 'Admin.International.Notification');
+            $this->errors[] = $this->trans('This currency already exists.', [], 'Admin.International.Notification');
         }
         if (Tools::isSubmit('submitAddcurrency') && (float) Tools::getValue('conversion_rate') <= 0) {
-            $this->errors[] = $this->trans('The currency conversion rate cannot be equal to 0.', array(), 'Admin.International.Notification');
+            $this->errors[] = $this->trans('The currency conversion rate cannot be equal to 0.', [], 'Admin.International.Notification');
         }
         parent::initProcess();
     }
@@ -289,11 +289,11 @@ class AdminCurrenciesControllerCore extends AdminController
     public function initPageHeaderToolbar()
     {
         if (empty($this->display)) {
-            $this->page_header_toolbar_btn['new_currency'] = array(
+            $this->page_header_toolbar_btn['new_currency'] = [
                 'href' => self::$currentIndex . '&addcurrency&token=' . $this->token,
-                'desc' => $this->trans('Add new currency', array(), 'Admin.International.Feature'),
+                'desc' => $this->trans('Add new currency', [], 'Admin.International.Feature'),
                 'icon' => 'process-icon-new',
-            );
+            ];
         }
 
         parent::initPageHeaderToolbar();
@@ -305,7 +305,7 @@ class AdminCurrenciesControllerCore extends AdminController
         $moduleManager = $moduleManagerBuilder->build();
 
         if (!$moduleManager->isInstalled('cronjobs')) {
-            die(json_encode(array()));
+            die(json_encode([]));
         }
 
         $enable = (int) Tools::getValue('enable');
@@ -322,7 +322,7 @@ class AdminCurrenciesControllerCore extends AdminController
             $cronJobs = new CronJobs();
             $cronJobs->addOneShotTask(
                 $cronJobUrl,
-                $this->trans('Live exchange Rate for %shop_name%', array('%shop_name%' => Configuration::get('PS_SHOP_NAME')), 'Admin.International.Feature')
+                $this->trans('Live exchange Rate for %shop_name%', ['%shop_name%' => Configuration::get('PS_SHOP_NAME')], 'Admin.International.Feature')
             );
 
             Configuration::updateValue('PS_ACTIVE_CRONJOB_EXCHANGE_RATE', Db::getInstance()->Insert_ID(), false, null, $this->context->shop->id);
@@ -335,6 +335,6 @@ class AdminCurrenciesControllerCore extends AdminController
             }
         }
 
-        die(json_encode(array()));
+        die(json_encode([]));
     }
 }

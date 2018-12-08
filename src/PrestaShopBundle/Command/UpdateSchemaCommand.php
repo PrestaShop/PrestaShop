@@ -49,7 +49,8 @@ class UpdateSchemaCommand extends ContainerAwareCommand
     {
         $this
             ->setName('prestashop:schema:update-without-foreign')
-            ->setDescription('Update the database');
+            ->setDescription('Update the database')
+        ;
     }
 
     /**
@@ -96,12 +97,12 @@ class UpdateSchemaCommand extends ContainerAwareCommand
         $schemaTool = new SchemaTool($this->em);
         $updateSchemaSql = $schemaTool->getUpdateSchemaSql($this->metadata, false);
 
-        $removedTables = array();
-        $dropForeignKeyQueries = array();
+        $removedTables = [];
+        $dropForeignKeyQueries = [];
 
         // Remove the DROP TABLE
         foreach ($updateSchemaSql as $key => $sql) {
-            $matches = array();
+            $matches = [];
             if (preg_match('/DROP TABLE (.+?)$/', $sql, $matches)) {
                 unset($updateSchemaSql[$key]);
                 $removedTables[] = $matches[1];
@@ -110,7 +111,7 @@ class UpdateSchemaCommand extends ContainerAwareCommand
 
         // Then remove the ALTER TABLE on removed tables
         foreach ($updateSchemaSql as $key => $sql) {
-            $matches = array();
+            $matches = [];
             if (preg_match('/ALTER TABLE (.+?) /', $sql, $matches)) {
                 $alteredTables = $matches[1];
                 if (in_array($alteredTables, $removedTables)) {
@@ -138,7 +139,7 @@ class UpdateSchemaCommand extends ContainerAwareCommand
             }
         }
 
-        $constraints = array();
+        $constraints = [];
 
         // Move DROP FOREIGN KEY at the beginning of the sql list
         foreach ($updateSchemaSql as $key => $sql) {
@@ -154,15 +155,18 @@ class UpdateSchemaCommand extends ContainerAwareCommand
 
         // Put back DEFAULT fields, since it cannot be described in the ORM model
         foreach ($updateSchemaSql as $key => $sql) {
-            $matches = array();
+            $matches = [];
             if (preg_match('/ALTER TABLE (.+?) /', $sql, $matches)) {
                 $tableName = $matches[1];
-                $matches = array();
+                $matches = [];
                 if (preg_match_all('/([^\s,]*?) CHANGE (.+?) (.+?)(,|$)/', $sql, $matches)) {
                     foreach ($matches[2] as $matchKey => $fieldName) {
                         // remove table name
-                        $matches[0][$matchKey] = preg_replace('/(.+?) CHANGE/',
-                            ' CHANGE', $matches[0][$matchKey]);
+                        $matches[0][$matchKey] = preg_replace(
+                            '/(.+?) CHANGE/',
+                            ' CHANGE',
+                            $matches[0][$matchKey]
+                        );
                         // remove quote
                         $originalFieldName = $fieldName;
                         $fieldName = str_replace('`', '', $fieldName);
@@ -195,8 +199,11 @@ class UpdateSchemaCommand extends ContainerAwareCommand
                                         $oldDefaultValue . ' ' . $extra . '$2', $matches[0][$matchKey]);
                             }
                         }
-                        $updateSchemaSql[$key] = preg_replace('/ CHANGE ' . $originalFieldName . ' (.+?)(,|$)/uis',
-                            $matches[0][$matchKey], $updateSchemaSql[$key]);
+                        $updateSchemaSql[$key] = preg_replace(
+                            '/ CHANGE ' . $originalFieldName . ' (.+?)(,|$)/uis',
+                            $matches[0][$matchKey],
+                            $updateSchemaSql[$key]
+                        );
                     }
                 }
             }

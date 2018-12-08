@@ -63,7 +63,7 @@ class NewProductsControllerCore extends ProductListingFrontController
     {
         return $this->trans(
             'New products',
-            array(),
+            [],
             'Shop.Theme.Catalog'
         );
     }

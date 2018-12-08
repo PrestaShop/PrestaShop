@@ -47,7 +47,8 @@ class NotificationsType extends TranslatorAwareType
             ])
             ->add('show_notifs_new_messages', SwitchType::class, [
                 'required' => true,
-            ]);
+            ])
+        ;
     }
 
     /**

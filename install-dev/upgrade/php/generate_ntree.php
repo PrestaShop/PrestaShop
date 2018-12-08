@@ -27,7 +27,7 @@
 function generate_ntree()
 {
     $categories = Db::getInstance()->executeS('SELECT id_category, id_parent FROM '._DB_PREFIX_.'category ORDER BY id_parent ASC, position ASC');
-    $categoriesArray = array();
+    $categoriesArray = [];
     if (is_array($categories)) {
         foreach ($categories as $category) {
             $categoriesArray[(int)$category['id_parent']]['subcategories'][(int)$category['id_category']] = 1;

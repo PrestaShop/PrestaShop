@@ -37,7 +37,7 @@ class FileSystem
     public function normalizePath($path)
     {
         return rtrim(
-            str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, $path),
+            str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $path),
             DIRECTORY_SEPARATOR
         );
     }
@@ -66,8 +66,8 @@ class FileSystem
             return $this->joinPaths(
                 $arg_0,
                 call_user_func_array(
-                    array($this,
-                          'joinPaths', ),
+                    [$this,
+                          'joinPaths', ],
                     array_slice($func_args, 1)
                 )
             );
@@ -102,7 +102,7 @@ class FileSystem
             );
         }
 
-        $entries = array();
+        $entries = [];
 
         foreach (scandir($path) as $entry) {
             if ($entry === '.' || $entry === '..') {
@@ -140,7 +140,7 @@ class FileSystem
     {
         return array_filter(
             $this->listEntriesRecursively($path),
-            array($this, 'matchOnlyFiles')
+            [$this, 'matchOnlyFiles']
         );
     }
 }

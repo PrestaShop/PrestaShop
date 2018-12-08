@@ -41,7 +41,7 @@ class AmountTest extends TestCase
 
     public function testAdd()
     {
-        $amount  = new AmountImmutable(2.3, 3.5);
+        $amount = new AmountImmutable(2.3, 3.5);
         $amount1 = new AmountImmutable(4.6, 7.2);
         $amount2 = $amount->add($amount1);
 
@@ -57,7 +57,7 @@ class AmountTest extends TestCase
 
     public function testSub()
     {
-        $amount  = new AmountImmutable(2.3, 3.5);
+        $amount = new AmountImmutable(2.3, 3.5);
         $amount1 = new AmountImmutable(4.8, 7.2);
         $amount2 = $amount1->sub($amount);
 

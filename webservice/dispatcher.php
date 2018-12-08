@@ -33,13 +33,13 @@ Context::getContext()->cart = new Cart();
 
 //set http auth headers for apache+php-cgi work around
 if (isset($_SERVER['HTTP_AUTHORIZATION']) && preg_match('/Basic\s+(.*)$/i', $_SERVER['HTTP_AUTHORIZATION'], $matches)) {
-    list($name, $password) = explode(':', base64_decode($matches[1]));
+    [$name, $password] = explode(':', base64_decode($matches[1]));
     $_SERVER['PHP_AUTH_USER'] = strip_tags($name);
 }
 
 //set http auth headers for apache+php-cgi work around if variable gets renamed by apache
 if (isset($_SERVER['REDIRECT_HTTP_AUTHORIZATION']) && preg_match('/Basic\s+(.*)$/i', $_SERVER['REDIRECT_HTTP_AUTHORIZATION'], $matches)) {
-    list($name, $password) = explode(':', base64_decode($matches[1]));
+    [$name, $password] = explode(':', base64_decode($matches[1]));
     $_SERVER['PHP_AUTH_USER'] = strip_tags($name);
 }
 
@@ -82,7 +82,7 @@ if (!class_exists($class_name)) {
 }
 // fetch the request
 WebserviceRequest::$ws_current_classname = $class_name;
-$request = call_user_func(array($class_name, 'getInstance'));
+$request = call_user_func([$class_name, 'getInstance']);
 
 $result = $request->fetch($key, $method, $_GET['url'], $params, $bad_class_name, $input_xml);
 

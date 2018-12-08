@@ -44,7 +44,7 @@ class CheckoutPersonalInformationStepCore extends AbstractCheckoutStep
         $this->registerForm = $registerForm;
     }
 
-    public function handleRequest(array $requestParameters = array())
+    public function handleRequest(array $requestParameters = [])
     {
         // personal info step is always reachable
         $this->step_is_reachable = true;
@@ -93,22 +93,24 @@ class CheckoutPersonalInformationStepCore extends AbstractCheckoutStep
         $this->setTitle(
             $this->getTranslator()->trans(
                 'Personal Information',
-                array(),
+                [],
                 'Shop.Theme.Checkout'
             )
         );
     }
 
-    public function render(array $extraParams = array())
+    public function render(array $extraParams = [])
     {
         return $this->renderTemplate(
-            $this->getTemplate(), $extraParams, array(
+            $this->getTemplate(),
+            $extraParams,
+            [
                 'show_login_form' => $this->show_login_form,
                 'login_form' => $this->loginForm->getProxy(),
                 'register_form' => $this->registerForm->getProxy(),
                 'guest_allowed' => $this->getCheckoutSession()->isGuestAllowed(),
                 'empty_cart_on_logout' => !Configuration::get('PS_CART_FOLLOWING'),
-            )
+            ]
         );
     }
 }

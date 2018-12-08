@@ -90,7 +90,8 @@ class ProductCustomField extends CommonAbstractType
             ->add('require', FormType\CheckboxType::class, [
                 'label' => $this->translator->trans('Required', [], 'Admin.Global'),
                 'required' => false,
-            ]);
+            ])
+        ;
     }
 
     /**

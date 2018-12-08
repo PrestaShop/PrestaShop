@@ -61,9 +61,9 @@ class SearchProvider extends AbstractProvider implements UseDefaultCatalogueInte
      */
     public function getTranslationDomains()
     {
-        return array(
+        return [
             '^' . $this->getDomain(),
-        );
+        ];
     }
 
     /**
@@ -71,9 +71,9 @@ class SearchProvider extends AbstractProvider implements UseDefaultCatalogueInte
      */
     public function getFilters()
     {
-        return array(
+        return [
             '#^' . $this->getDomain() . '#',
-        );
+        ];
     }
 
     /**
@@ -93,7 +93,7 @@ class SearchProvider extends AbstractProvider implements UseDefaultCatalogueInte
 
         foreach ($this->getFilters() as $filter) {
             $filteredCatalogue = $this->getCatalogueFromPaths(
-                array($this->getDefaultResourceDirectory()),
+                [$this->getDefaultResourceDirectory()],
                 $this->getLocale(),
                 $filter
             );

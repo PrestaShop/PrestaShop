@@ -51,11 +51,13 @@ class NumberTest extends TestCase
     {
         $this->latinSymbolList = $this->getMockBuilder(NumberSymbolList::class)
             ->disableOriginalConstructor()
-            ->getMock();
+            ->getMock()
+        ;
 
-        $this->arabSymbolList  = $this->getMockBuilder(NumberSymbolList::class)
+        $this->arabSymbolList = $this->getMockBuilder(NumberSymbolList::class)
             ->disableOriginalConstructor()
-            ->getMock();
+            ->getMock()
+        ;
 
         $this->latinNumberSpec = new NumberSpecification(
             '',
@@ -81,7 +83,7 @@ class NumberTest extends TestCase
         $this->assertSame(
             [
                 'latin' => $this->latinSymbolList,
-                'arab'  => $this->arabSymbolList,
+                'arab' => $this->arabSymbolList,
             ],
             $this->latinNumberSpec->getAllSymbols()
         );

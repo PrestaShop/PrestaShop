@@ -51,29 +51,29 @@ class WarehouseProductLocationCore extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'warehouse_product_location',
         'primary' => 'id_warehouse_product_location',
-        'fields' => array(
-            'location' => array('type' => self::TYPE_STRING, 'validate' => 'isReference', 'size' => 64),
-            'id_product' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'id_product_attribute' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'id_warehouse' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-        ),
-    );
+        'fields' => [
+            'location' => ['type' => self::TYPE_STRING, 'validate' => 'isReference', 'size' => 64],
+            'id_product' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'id_product_attribute' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'id_warehouse' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+        ],
+    ];
 
     /**
      * @see ObjectModel::$webserviceParameters
      */
-    protected $webserviceParameters = array(
-        'fields' => array(
-            'id_product' => array('xlink_resource' => 'products'),
-            'id_product_attribute' => array('xlink_resource' => 'combinations'),
-            'id_warehouse' => array('xlink_resource' => 'warehouses'),
-        ),
-        'hidden_fields' => array(
-        ),
-    );
+    protected $webserviceParameters = [
+        'fields' => [
+            'id_product' => ['xlink_resource' => 'products'],
+            'id_product_attribute' => ['xlink_resource' => 'combinations'],
+            'id_warehouse' => ['xlink_resource' => 'warehouses'],
+        ],
+        'hidden_fields' => [
+        ],
+    ];
 
     /**
      * For a given product and warehouse, gets the location.
@@ -90,7 +90,8 @@ class WarehouseProductLocationCore extends ObjectModel
         $query = new DbQuery();
         $query->select('wpl.location');
         $query->from('warehouse_product_location', 'wpl');
-        $query->where('wpl.id_product = ' . (int) $id_product . '
+        $query->where(
+            'wpl.id_product = ' . (int) $id_product . '
 			AND wpl.id_product_attribute = ' . (int) $id_product_attribute . '
 			AND wpl.id_warehouse = ' . (int) $id_warehouse
         );
@@ -113,7 +114,8 @@ class WarehouseProductLocationCore extends ObjectModel
         $query = new DbQuery();
         $query->select('wpl.id_warehouse_product_location');
         $query->from('warehouse_product_location', 'wpl');
-        $query->where('wpl.id_product = ' . (int) $id_product . '
+        $query->where(
+            'wpl.id_product = ' . (int) $id_product . '
 			AND wpl.id_product_attribute = ' . (int) $id_product_attribute . '
 			AND wpl.id_warehouse = ' . (int) $id_warehouse
         );

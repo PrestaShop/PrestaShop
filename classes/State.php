@@ -47,24 +47,24 @@ class StateCore extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'state',
         'primary' => 'id_state',
-        'fields' => array(
-            'id_country' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'id_zone' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'iso_code' => array('type' => self::TYPE_STRING, 'validate' => 'isStateIsoCode', 'required' => true, 'size' => 7),
-            'name' => array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 32),
-            'active' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-        ),
-    );
+        'fields' => [
+            'id_country' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'id_zone' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'iso_code' => ['type' => self::TYPE_STRING, 'validate' => 'isStateIsoCode', 'required' => true, 'size' => 7],
+            'name' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 32],
+            'active' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+        ],
+    ];
 
-    protected $webserviceParameters = array(
-        'fields' => array(
-            'id_zone' => array('xlink_resource' => 'zones'),
-            'id_country' => array('xlink_resource' => 'countries'),
-        ),
-    );
+    protected $webserviceParameters = [
+        'fields' => [
+            'id_zone' => ['xlink_resource' => 'zones'],
+            'id_country' => ['xlink_resource' => 'countries'],
+        ],
+    ];
 
     public static function getStates($idLang = false, $active = false)
     {
@@ -89,7 +89,8 @@ class StateCore extends ObjectModel
         }
         $cacheId = 'State::getNameById_' . (int) $idState;
         if (!Cache::isStored($cacheId)) {
-            $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+            $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+                '
 				SELECT `name`
 				FROM `' . _DB_PREFIX_ . 'state`
 				WHERE `id_state` = ' . (int) $idState
@@ -187,7 +188,8 @@ class StateCore extends ObjectModel
      */
     public function countUsed()
     {
-        $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+        $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+            '
 			SELECT COUNT(*)
 			FROM `' . _DB_PREFIX_ . 'address`
 			WHERE `' . $this->def['primary'] . '` = ' . (int) $this->id
@@ -210,7 +212,8 @@ class StateCore extends ObjectModel
             die(Tools::displayError());
         }
 
-        return Db::getInstance()->executeS('
+        return Db::getInstance()->executeS(
+            '
 			SELECT *
 			FROM `' . _DB_PREFIX_ . 'state` s
 			WHERE s.`id_country` = ' . (int) $idCountry . ($active ? ' AND s.active = 1' : '')
@@ -242,7 +245,8 @@ class StateCore extends ObjectModel
             die(Tools::displayError());
         }
 
-        return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+        return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+            '
 			SELECT `id_zone`
 			FROM `' . _DB_PREFIX_ . 'state`
 			WHERE `id_state` = ' . (int) $idState

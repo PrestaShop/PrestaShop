@@ -55,26 +55,26 @@ class CurrencyCore extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'currency',
         'primary' => 'id_currency',
         'multilang_shop' => true,
-        'fields' => array(
-            'name' => array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 64),
-            'iso_code' => array('type' => self::TYPE_STRING, 'validate' => 'isLanguageIsoCode', 'required' => true, 'size' => 3),
-            'conversion_rate' => array('type' => self::TYPE_FLOAT, 'validate' => 'isUnsignedFloat', 'required' => true, 'shop' => true),
-            'deleted' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'active' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-        ),
-    );
+        'fields' => [
+            'name' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 64],
+            'iso_code' => ['type' => self::TYPE_STRING, 'validate' => 'isLanguageIsoCode', 'required' => true, 'size' => 3],
+            'conversion_rate' => ['type' => self::TYPE_FLOAT, 'validate' => 'isUnsignedFloat', 'required' => true, 'shop' => true],
+            'deleted' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+            'active' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+        ],
+    ];
 
     /** @var array Currency cache */
-    protected static $currencies = array();
-    protected static $countActiveCurrencies = array();
+    protected static $currencies = [];
+    protected static $countActiveCurrencies = [];
 
-    protected $webserviceParameters = array(
+    protected $webserviceParameters = [
         'objectsNodeName' => 'currencies',
-    );
+    ];
 
     /**
      * contains the sign to display before price, according to its format.
@@ -123,8 +123,8 @@ class CurrencyCore extends ObjectModel
      */
     public static function resetStaticCache()
     {
-        static::$currencies = array();
-        static::$countActiveCurrencies = array();
+        static::$currencies = [];
+        static::$countActiveCurrencies = [];
     }
 
     /**
@@ -202,7 +202,7 @@ class CurrencyCore extends ObjectModel
             return false;
         }
 
-        $res = array();
+        $res = [];
         foreach ($selection as $id) {
             $obj = new Currency((int) $id);
             $res[$id] = $obj->delete();
@@ -276,7 +276,8 @@ class CurrencyCore extends ObjectModel
             ->where('c.`id_currency` = ' . (int) $currencyId)
             ->where('cs.`id_shop` = ' . (int) $shopId)
             ->where('c.`deleted` = 0')
-            ->where('c.`active` = 1');
+            ->where('c.`active` = 1')
+        ;
 
         return (bool) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
     }
@@ -314,7 +315,8 @@ class CurrencyCore extends ObjectModel
             ->innerJoin('currency_shop', 'cs', 'c.`id_currency` = cs.`id_currency`')
             ->where('cs.`id_shop` = ' . (int) $shopId)
             ->where('c.`deleted` = 0')
-            ->where('c.`active` = 1');
+            ->where('c.`active` = 1')
+        ;
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
     }
@@ -428,7 +430,7 @@ class CurrencyCore extends ObjectModel
     public static function checkPaymentCurrencies($idModule, $idShop = null)
     {
         if (empty($idModule)) {
-            return array();
+            return [];
         }
 
         if (is_null($idShop)) {
@@ -443,7 +445,7 @@ class CurrencyCore extends ObjectModel
 
         $currencies = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 
-        return $currencies ? $currencies : array();
+        return $currencies ? $currencies : [];
     }
 
     /**
@@ -580,14 +582,14 @@ class CurrencyCore extends ObjectModel
     {
         // Parse
         if (!$feed = Tools::simplexml_load_file(_PS_CURRENCY_FEED_URL_)) {
-            return Context::getContext()->getTranslator()->trans('Cannot parse feed.', array(), 'Admin.Notifications.Error');
+            return Context::getContext()->getTranslator()->trans('Cannot parse feed.', [], 'Admin.Notifications.Error');
         }
 
         // Default feed currency (EUR)
         $isoCodeSource = strval($feed->source['iso_code']);
 
         if (!$defaultCurrency = Currency::getDefaultCurrency()) {
-            return Context::getContext()->getTranslator()->trans('No default currency', array(), 'Admin.Notifications.Error');
+            return Context::getContext()->getTranslator()->trans('No default currency', [], 'Admin.Notifications.Error');
         }
 
         $currencies = Currency::getCurrencies(true, false, true);

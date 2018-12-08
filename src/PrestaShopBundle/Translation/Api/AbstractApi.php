@@ -42,13 +42,13 @@ abstract class AbstractApi
 
     public function getFormattedTranslations()
     {
-        $all = array();
+        $all = [];
 
         foreach ($this->getTranslations() as $key => $translation) {
-            $all[] = array(
+            $all[] = [
                 'translation_id' => $key,
                 'name' => $translation,
-            );
+            ];
         }
 
         return $all;

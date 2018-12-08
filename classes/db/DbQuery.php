@@ -36,17 +36,17 @@ class DbQueryCore
      *
      * @var array
      */
-    protected $query = array(
+    protected $query = [
         'type' => 'SELECT',
-        'select' => array(),
-        'from' => array(),
-        'join' => array(),
-        'where' => array(),
-        'group' => array(),
-        'having' => array(),
-        'order' => array(),
-        'limit' => array('offset' => 0, 'limit' => 0),
-    );
+        'select' => [],
+        'from' => [],
+        'join' => [],
+        'where' => [],
+        'group' => [],
+        'having' => [],
+        'order' => [],
+        'limit' => ['offset' => 0, 'limit' => 0],
+    ];
 
     /**
      * Sets type of the query.
@@ -57,7 +57,7 @@ class DbQueryCore
      */
     public function type($type)
     {
-        $types = array('SELECT', 'DELETE');
+        $types = ['SELECT', 'DELETE'];
 
         if (!empty($type) && in_array($type, $types)) {
             $this->query['type'] = $type;
@@ -265,10 +265,10 @@ class DbQueryCore
             $offset = 0;
         }
 
-        $this->query['limit'] = array(
+        $this->query['limit'] = [
             'offset' => $offset,
             'limit' => (int) $limit,
-        );
+        ];
 
         return $this;
     }

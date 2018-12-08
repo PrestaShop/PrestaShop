@@ -35,7 +35,7 @@ class CacheXcacheCore extends Cache
     {
         $this->keys = xcache_get(self::KEYS_NAME);
         if (!is_array($this->keys)) {
-            $this->keys = array();
+            $this->keys = [];
         }
     }
 

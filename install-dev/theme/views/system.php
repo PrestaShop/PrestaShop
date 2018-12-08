@@ -25,14 +25,14 @@
  */
  $this->displayTemplate('header') ?>
 
-<h2><?php echo $this->translator->trans('We are currently checking PrestaShop compatibility with your system environment', array(), 'Install') ?></h2>
+<h2><?php echo $this->translator->trans('We are currently checking PrestaShop compatibility with your system environment', [], 'Install') ?></h2>
 
-<p><?php echo $this->translator->trans('If you have any questions, please visit our <a href="%doc%" target="_blank">documentation</a> and <a href="%forum%" target="_blank">community forum</a>.', array('%doc%' => $this->getDocumentationLink(), '%forum%' => $this->getForumLink()), 'Install'); ?></p>
+<p><?php echo $this->translator->trans('If you have any questions, please visit our <a href="%doc%" target="_blank">documentation</a> and <a href="%forum%" target="_blank">community forum</a>.', ['%doc%' => $this->getDocumentationLink(), '%forum%' => $this->getForumLink()], 'Install'); ?></p>
 
 <?php if ($this->tests['required']['success']): ?>
-	<h3 class="okBlock"><?php echo $this->translator->trans('PrestaShop compatibility with your system environment has been verified!', array(), 'Install'); ?></h3>
+	<h3 class="okBlock"><?php echo $this->translator->trans('PrestaShop compatibility with your system environment has been verified!', [], 'Install'); ?></h3>
 <?php else: ?>
-	<h3 class="errorBlock"><?php echo $this->translator->trans('Oops! Please correct the item(s) below, and then click "Refresh information" to test the compatibility of your new system.', array(), 'Install'); ?></h3>
+	<h3 class="errorBlock"><?php echo $this->translator->trans('Oops! Please correct the item(s) below, and then click "Refresh information" to test the compatibility of your new system.', [], 'Install'); ?></h3>
 <?php endif; ?>
 <!-- Display tests results -->
 <?php foreach ($this->tests_render as $type => $categories): ?>
@@ -48,6 +48,6 @@
 	</ul>
 <?php endforeach; ?>
 
-<p><input class="button" value="<?php echo $this->translator->trans('Refresh', array(), 'Install'); ?> " type="submit" id="req_bt_refresh" /></p>
+<p><input class="button" value="<?php echo $this->translator->trans('Refresh', [], 'Install'); ?> " type="submit" id="req_bt_refresh" /></p>
 
 <?php $this->displayTemplate('footer') ?>

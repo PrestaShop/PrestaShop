@@ -96,12 +96,12 @@ class ThemeExtractorTest extends KernelTestCase
             ->extract($this->getFakeTheme())
         ;
 
-        $isFilesExists = $this->filesystem->exists(array(
+        $isFilesExists = $this->filesystem->exists([
             self::$xliffFolder.'/en-US/Shop/Theme/Actions.xlf',
             self::$xliffFolder.'/en-US/Shop/Theme/Cart.xlf',
             self::$xliffFolder.'/en-US/Shop/Theme/Product.xlf',
             self::$xliffFolder.'/en-US/Shop/Foo/Bar.xlf',
-        ));
+        ]);
 
         $this->assertTrue($isFilesExists);
     }

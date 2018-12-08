@@ -64,11 +64,11 @@ class ModulePresenter implements PresenterInterface
         $attributes['picos'] = $this->addPicos($attributes);
         $attributes['price'] = $this->getModulePrice($attributes['price']);
         $attributes['starsRate'] = str_replace('.', '', round($attributes['avgRate'] * 2) / 2); // Round to the nearest 0.5
-        return array(
+        return [
             'attributes' => $attributes,
             'disk' => $module->disk->all(),
             'database' => $module->database->all(),
-        );
+        ];
     }
 
     private function getModulePrice($prices)
@@ -111,7 +111,7 @@ class ModulePresenter implements PresenterInterface
      */
     private function addPicos(array $attributes)
     {
-        $picos = array();
+        $picos = [];
 
         // PrestaTrust display
         if (!empty($attributes['prestatrust']) && !empty($attributes['prestatrust']->pico)) {
@@ -121,12 +121,12 @@ class ModulePresenter implements PresenterInterface
                 $text = $attributes['prestatrust']->status ? 'OK' : 'KO';
                 $class = $attributes['prestatrust']->status ? 'text-success' : 'text-warning';
             }
-            $picos['prestatrust'] = array(
+            $picos['prestatrust'] = [
                 'img' => $attributes['prestatrust']->pico,
                 'label' => 'prestatrust',
                 'text' => $text,
                 'class' => $class,
-            );
+            ];
         }
 
         return $picos;

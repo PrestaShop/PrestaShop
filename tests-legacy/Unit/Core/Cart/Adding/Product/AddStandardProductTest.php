@@ -123,7 +123,7 @@ class AddStandardProductTest extends AbstractCartTest
      */
     public function testNumberOfProductsInCartIsReportedCorrectlyWhenUpdatingTheirQuantityTwice($first, $second)
     {
-        list($quantity, $operator, $expected, $quantityExpected) = $first;
+        [$quantity, $operator, $expected, $quantityExpected] = $first;
         $this->testNumberOfProductsInCartIsReportedCorrectlyWhenUpdatingTheirQuantityOnce(
             $quantity,
             $operator,
@@ -131,7 +131,7 @@ class AddStandardProductTest extends AbstractCartTest
             $quantityExpected
         );
 
-        list($quantity, $operator, $expected, $quantityExpected) = $second;
+        [$quantity, $operator, $expected, $quantityExpected] = $second;
         $this->testNumberOfProductsInCartIsReportedCorrectlyWhenUpdatingTheirQuantityOnce(
             $quantity,
             $operator,

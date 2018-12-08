@@ -381,7 +381,8 @@ class ContextCore
                 ->files()
                 ->in($cacheDir)
                 ->depth('==0')
-                ->name('*.' . $locale . '.*');
+                ->name('*.' . $locale . '.*')
+            ;
             (new Filesystem())->remove($cache_file);
         }
 
@@ -404,7 +405,7 @@ class ContextCore
         ;
 
         foreach ($finder as $file) {
-            list($domain, $locale, $format) = explode('.', $file->getBasename(), 3);
+            [$domain, $locale, $format] = explode('.', $file->getBasename(), 3);
 
             $translator->addResource($format, $file, $locale, $domain);
             if (!is_a($this->language, 'PrestashopBundle\Install\Language')) {
@@ -420,7 +421,7 @@ class ContextCore
      */
     protected function getTranslationResourcesDirectories()
     {
-        $locations = array(_PS_ROOT_DIR_ . '/app/Resources/translations');
+        $locations = [_PS_ROOT_DIR_ . '/app/Resources/translations'];
 
         if (!is_null($this->shop)) {
             $activeThemeLocation = _PS_ROOT_DIR_ . '/themes/' . $this->shop->theme_name . '/translations';

@@ -182,11 +182,11 @@ class Core_Foundation_IoC_Container_Test extends TestCase
      */
     public function valuesToBind()
     {
-        return array(
-            array(new Dummy),
-            array(42),
-            array(array(1, 2, 3))
-        );
+        return [
+            [new Dummy],
+            [42],
+            [[1, 2, 3]]
+        ];
     }
 
     /**

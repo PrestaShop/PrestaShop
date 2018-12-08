@@ -62,14 +62,14 @@ abstract class HTMLTemplateCore
 
         $id_shop = (int) $this->shop->id;
 
-        $this->smarty->assign(array(
+        $this->smarty->assign([
             'available_in_your_account' => $this->available_in_your_account,
             'shop_address' => $shop_address,
             'shop_fax' => Configuration::get('PS_SHOP_FAX', null, null, $id_shop),
             'shop_phone' => Configuration::get('PS_SHOP_PHONE', null, null, $id_shop),
             'shop_email' => Configuration::get('PS_SHOP_EMAIL', null, null, $id_shop),
             'free_text' => Configuration::get('PS_INVOICE_FREE_TEXT', (int) Context::getContext()->language->id, null, $id_shop),
-        ));
+        ]);
 
         return $this->smarty->fetch($this->getTemplate('footer'));
     }
@@ -85,7 +85,7 @@ abstract class HTMLTemplateCore
 
         $shop_address_obj = $this->shop->getAddress();
         if (isset($shop_address_obj) && $shop_address_obj instanceof Address) {
-            $shop_address = AddressFormat::generateAddress($shop_address_obj, array(), ' - ', ' ');
+            $shop_address = AddressFormat::generateAddress($shop_address_obj, [], ' - ', ' ');
         }
 
         return $shop_address;
@@ -123,7 +123,7 @@ abstract class HTMLTemplateCore
         $width = 0;
         $height = 0;
         if (!empty($path_logo)) {
-            list($width, $height) = getimagesize($path_logo);
+            [$width, $height] = getimagesize($path_logo);
         }
 
         // Limit the height of the logo for the PDF render
@@ -134,7 +134,7 @@ abstract class HTMLTemplateCore
             $width *= $ratio;
         }
 
-        $this->smarty->assign(array(
+        $this->smarty->assign([
             'logo_path' => $path_logo,
             'img_ps_dir' => 'http://' . Tools::getMediaServer(_PS_IMG_) . _PS_IMG_,
             'img_update_time' => Configuration::get('PS_IMG_UPDATE_TIME'),
@@ -144,7 +144,7 @@ abstract class HTMLTemplateCore
             'shop_details' => Configuration::get('PS_SHOP_DETAILS', null, null, (int) $id_shop),
             'width_logo' => $width,
             'height_logo' => $height,
-        ));
+        ]);
     }
 
     /**
@@ -157,9 +157,9 @@ abstract class HTMLTemplateCore
         $template = ucfirst(str_replace('HTMLTemplate', '', get_class($this)));
         $hook_name = 'displayPDF' . $template;
 
-        $this->smarty->assign(array(
-            'HOOK_DISPLAY_PDF' => Hook::exec($hook_name, array('object' => $object)),
-        ));
+        $this->smarty->assign([
+            'HOOK_DISPLAY_PDF' => Hook::exec($hook_name, ['object' => $object]),
+        ]);
     }
 
     /**

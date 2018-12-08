@@ -41,101 +41,101 @@ class AdminSlipControllerCore extends AdminController
 
         parent::__construct();
 
-        $this->fields_list = array(
-            'id_order_slip' => array(
-                'title' => $this->trans('ID', array(), 'Admin.Global'),
+        $this->fields_list = [
+            'id_order_slip' => [
+                'title' => $this->trans('ID', [], 'Admin.Global'),
                 'align' => 'center',
                 'class' => 'fixed-width-xs',
-            ),
-            'id_order' => array(
-                'title' => $this->trans('Order ID', array(), 'Admin.Orderscustomers.Feature'),
+            ],
+            'id_order' => [
+                'title' => $this->trans('Order ID', [], 'Admin.Orderscustomers.Feature'),
                 'align' => 'left',
                 'class' => 'fixed-width-md',
-            ),
-            'date_add' => array(
-                'title' => $this->trans('Date issued', array(), 'Admin.Orderscustomers.Feature'),
+            ],
+            'date_add' => [
+                'title' => $this->trans('Date issued', [], 'Admin.Orderscustomers.Feature'),
                 'type' => 'date',
                 'align' => 'right',
                 'filter_key' => 'a!date_add',
                 'havingFilter' => true,
-            ),
-            'id_pdf' => array(
-                'title' => $this->trans('PDF', array(), 'Admin.Global'),
+            ],
+            'id_pdf' => [
+                'title' => $this->trans('PDF', [], 'Admin.Global'),
                 'align' => 'center',
                 'callback' => 'printPDFIcons',
                 'orderby' => false,
                 'search' => false,
-                'remove_onclick' => true, ),
-        );
+                'remove_onclick' => true, ],
+        ];
 
         $this->_select = 'a.id_order_slip AS id_pdf';
-        $this->optionTitle = $this->trans('Slip', array(), 'Admin.Orderscustomers.Feature');
+        $this->optionTitle = $this->trans('Slip', [], 'Admin.Orderscustomers.Feature');
 
-        $this->fields_options = array(
-            'general' => array(
-                'title' => $this->trans('Credit slip options', array(), 'Admin.Orderscustomers.Feature'),
-                'fields' => array(
-                    'PS_CREDIT_SLIP_PREFIX' => array(
-                        'title' => $this->trans('Credit slip prefix', array(), 'Admin.Orderscustomers.Feature'),
-                        'desc' => $this->trans('Prefix used for credit slips.', array(), 'Admin.Orderscustomers.Help'),
+        $this->fields_options = [
+            'general' => [
+                'title' => $this->trans('Credit slip options', [], 'Admin.Orderscustomers.Feature'),
+                'fields' => [
+                    'PS_CREDIT_SLIP_PREFIX' => [
+                        'title' => $this->trans('Credit slip prefix', [], 'Admin.Orderscustomers.Feature'),
+                        'desc' => $this->trans('Prefix used for credit slips.', [], 'Admin.Orderscustomers.Help'),
                         'size' => 6,
                         'type' => 'textLang',
-                    ),
-                ),
-                'submit' => array('title' => $this->trans('Save', array(), 'Admin.Actions')),
-            ),
-        );
+                    ],
+                ],
+                'submit' => ['title' => $this->trans('Save', [], 'Admin.Actions')],
+            ],
+        ];
 
         $this->_where = Shop::addSqlRestriction(false, 'o');
     }
 
     public function initPageHeaderToolbar()
     {
-        $this->page_header_toolbar_btn['generate_pdf'] = array(
+        $this->page_header_toolbar_btn['generate_pdf'] = [
             'href' => self::$currentIndex . '&token=' . $this->token,
-            'desc' => $this->trans('Generate PDF', array(), 'Admin.Orderscustomers.Feature'),
+            'desc' => $this->trans('Generate PDF', [], 'Admin.Orderscustomers.Feature'),
             'icon' => 'process-icon-save-date',
-        );
+        ];
 
         parent::initPageHeaderToolbar();
     }
 
     public function renderForm()
     {
-        $this->fields_form = array(
-            'legend' => array(
-                'title' => $this->trans('Print a PDF', array(), 'Admin.Orderscustomers.Feature'),
+        $this->fields_form = [
+            'legend' => [
+                'title' => $this->trans('Print a PDF', [], 'Admin.Orderscustomers.Feature'),
                 'icon' => 'icon-print',
-            ),
-            'input' => array(
-                array(
+            ],
+            'input' => [
+                [
                     'type' => 'date',
-                    'label' => $this->trans('From', array(), 'Admin.Global'),
+                    'label' => $this->trans('From', [], 'Admin.Global'),
                     'name' => 'date_from',
                     'maxlength' => 10,
                     'required' => true,
-                    'hint' => $this->trans('Format: 2011-12-31 (inclusive).', array(), 'Admin.Orderscustomers.Help'),
-                ),
-                array(
+                    'hint' => $this->trans('Format: 2011-12-31 (inclusive).', [], 'Admin.Orderscustomers.Help'),
+                ],
+                [
                     'type' => 'date',
-                    'label' => $this->trans('To', array(), 'Admin.Global'),
+                    'label' => $this->trans('To', [], 'Admin.Global'),
                     'name' => 'date_to',
                     'maxlength' => 10,
                     'required' => true,
-                    'hint' => $this->trans('Format: 2012-12-31 (inclusive).', array(), 'Admin.Orderscustomers.Help'),
-                ),
-            ),
-            'submit' => array(
-                'title' => $this->trans('Generate PDF', array(), 'Admin.Orderscustomers.Feature'),
+                    'hint' => $this->trans('Format: 2012-12-31 (inclusive).', [], 'Admin.Orderscustomers.Help'),
+                ],
+            ],
+            'submit' => [
+                'title' => $this->trans('Generate PDF', [], 'Admin.Orderscustomers.Feature'),
                 'id' => 'submitPrint',
                 'icon' => 'process-icon-download-alt',
-            ),
-        );
+            ],
+        ];
 
-        $this->fields_value = array(
+        $this->fields_value = [
             'date_from' => date('Y-m-d'),
             'date_to' => date('Y-m-d'),
-        );
+        ];
 
         $this->show_toolbar = false;
 
@@ -146,17 +146,17 @@ class AdminSlipControllerCore extends AdminController
     {
         if (Tools::getValue('submitAddorder_slip')) {
             if (!Validate::isDate(Tools::getValue('date_from'))) {
-                $this->errors[] = $this->trans('Invalid "From" date', array(), 'Admin.Orderscustomers.Notification');
+                $this->errors[] = $this->trans('Invalid "From" date', [], 'Admin.Orderscustomers.Notification');
             }
             if (!Validate::isDate(Tools::getValue('date_to'))) {
-                $this->errors[] = $this->trans('Invalid "To" date', array(), 'Admin.Orderscustomers.Notification');
+                $this->errors[] = $this->trans('Invalid "To" date', [], 'Admin.Orderscustomers.Notification');
             }
             if (!count($this->errors)) {
                 $order_slips = OrderSlip::getSlipsIdByDate(Tools::getValue('date_from'), Tools::getValue('date_to'));
                 if (count($order_slips)) {
                     Tools::redirectAdmin($this->context->link->getAdminLink('AdminPdf') . '&submitAction=generateOrderSlipsPDF&date_from=' . urlencode(Tools::getValue('date_from')) . '&date_to=' . urlencode(Tools::getValue('date_to')));
                 }
-                $this->errors[] = $this->trans('No order slips were found for this period.', array(), 'Admin.Orderscustomers.Notification');
+                $this->errors[] = $this->trans('No order slips were found for this period.', [], 'Admin.Orderscustomers.Notification');
             }
         } else {
             return parent::postProcess();
@@ -169,19 +169,19 @@ class AdminSlipControllerCore extends AdminController
         $this->content .= $this->renderForm();
         $this->content .= $this->renderOptions();
 
-        $this->context->smarty->assign(array(
+        $this->context->smarty->assign([
             'content' => $this->content,
-        ));
+        ]);
     }
 
     public function initToolbar()
     {
         parent::initToolbar();
 
-        $this->toolbar_btn['save-date'] = array(
+        $this->toolbar_btn['save-date'] = [
             'href' => '#',
-            'desc' => $this->trans('Generate PDF', array(), 'Admin.Orderscustomers.Feature'),
-        );
+            'desc' => $this->trans('Generate PDF', [], 'Admin.Orderscustomers.Feature'),
+        ];
     }
 
     public function printPDFIcons($id_order_slip, $tr)
@@ -191,10 +191,10 @@ class AdminSlipControllerCore extends AdminController
             return '';
         }
 
-        $this->context->smarty->assign(array(
+        $this->context->smarty->assign([
             'order_slip' => $order_slip,
             'tr' => $tr,
-        ));
+        ]);
 
         return $this->createTemplate('_print_pdf_icon.tpl')->fetch();
     }

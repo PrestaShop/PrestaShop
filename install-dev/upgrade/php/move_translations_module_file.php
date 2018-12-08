@@ -39,11 +39,11 @@ function move_translations_module_file()
     // Get the list of modules
     $modules = scandir(_PS_MODULE_DIR_, SCANDIR_SORT_NONE);
 
-    $error_list = array();
+    $error_list = [];
     // Scan all modules and check if translation file exists
     foreach ($modules as $module_name) {
         // Check if is a good module
-        if (in_array($module_name, array('.', '..', '.svn', '.htaccess', 'index.php', 'autoupgrade')) || !is_dir(_PS_MODULE_DIR_.'/'.$module_name)) {
+        if (in_array($module_name, ['.', '..', '.svn', '.htaccess', 'index.php', 'autoupgrade']) || !is_dir(_PS_MODULE_DIR_.'/'.$module_name)) {
             continue;
         }
 
@@ -69,8 +69,8 @@ function move_translations_module_file()
         }
     }
 
-    if (!$res||(count($error_list)>0)) {
-        return array('error' => 1, 'msg' => implode("\r\n<br/>", $error_list));
+    if (!$res || (count($error_list) > 0)) {
+        return ['error' => 1, 'msg' => implode("\r\n<br/>", $error_list)];
     } else {
         return true;
     }

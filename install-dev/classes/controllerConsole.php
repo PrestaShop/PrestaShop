@@ -32,9 +32,9 @@ abstract class InstallControllerConsole
     /**
      * @var array List of installer steps
      */
-    protected static $steps = array('process');
+    protected static $steps = ['process'];
 
-    protected static $instances = array();
+    protected static $instances = [];
 
     /**
      * @var string Current step
@@ -44,7 +44,7 @@ abstract class InstallControllerConsole
     /**
      * @var array List of errors
      */
-    public $errors = array();
+    public $errors = [];
 
     public $controller;
 
@@ -151,7 +151,7 @@ abstract class InstallControllerConsole
         );
         if (count($errors)) {
             if (!is_array($errors)) {
-                $errors = array($errors);
+                $errors = [$errors];
             }
             echo 'Errors :'. PHP_EOL;
             foreach ($errors as $error_process) {

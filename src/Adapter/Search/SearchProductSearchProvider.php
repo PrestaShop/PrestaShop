@@ -87,13 +87,13 @@ class SearchProductSearchProvider implements ProductSearchProviderInterface
             $products = $result['result'];
             $count = $result['total'];
 
-            Hook::exec('actionSearch', array(
+            Hook::exec('actionSearch', [
                 'searched_query' => $queryString,
                 'total' => $count,
 
                 // deprecated since 1.7.x
                 'expr' => $queryString,
-            ));
+            ]);
         } elseif (($tag = $query->getSearchTag())) {
             $queryString = urldecode($tag);
 
@@ -121,13 +121,13 @@ class SearchProductSearchProvider implements ProductSearchProviderInterface
                 null
             );
 
-            Hook::exec('actionSearch', array(
+            Hook::exec('actionSearch', [
                 'searched_query' => $queryString,
                 'total' => $count,
 
                 // deprecated since 1.7.x
                 'expr' => $queryString,
-            ));
+            ]);
         }
 
         $result = new ProductSearchResult();
@@ -135,7 +135,8 @@ class SearchProductSearchProvider implements ProductSearchProviderInterface
         if (!empty($products)) {
             $result
                 ->setProducts($products)
-                ->setTotalProductsCount($count);
+                ->setTotalProductsCount($count)
+            ;
 
             $result->setAvailableSortOrders(
                 $this->sortOrderFactory->getDefaultSortOrders()

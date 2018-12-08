@@ -52,7 +52,7 @@ if (Tools::isSubmit('getAvailableFields') && Tools::isSubmit('entity')) {
 }
 
 if (Tools::isSubmit('ajaxProductPackItems')) {
-    $jsonArray = array();
+    $jsonArray = [];
     $products = Db::getInstance()->executeS('
 	SELECT p.`id_product`, pl.`name`
 	FROM `'._DB_PREFIX_.'product` p
@@ -86,7 +86,8 @@ if (Tools::isSubmit('updateElementEmployee') && Tools::getValue('updateElementEm
 if (Tools::isSubmit('searchCategory')) {
     $q = Tools::getValue('q');
     $limit = Tools::getValue('limit');
-    $results = Db::getInstance()->executeS('SELECT c.`id_category`, cl.`name`
+    $results = Db::getInstance()->executeS(
+        'SELECT c.`id_category`, cl.`name`
 		FROM `'._DB_PREFIX_.'category` c
 		LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category`'.Shop::addSqlRestrictionOnLang('cl').')
 		WHERE cl.`id_lang` = '.(int)$context->language->id.' AND c.`level_depth` <> 0
@@ -105,7 +106,7 @@ if (Tools::isSubmit('searchCategory')) {
 if (Tools::isSubmit('getParentCategoriesId') && $id_category = Tools::getValue('id_category')) {
     $category = new Category((int)$id_category);
     $results = Db::getInstance()->executeS('SELECT `id_category` FROM `'._DB_PREFIX_.'category` c WHERE c.`nleft` < '.(int)$category->nleft.' AND c.`nright` > '.(int)$category->nright.'');
-    $output = array();
+    $output = [];
     foreach ($results as $result) {
         $output[] = $result;
     }
@@ -119,7 +120,7 @@ if (Tools::isSubmit('getZones')) {
         $html .= '<option value="'.$z['id_zone'].'">'.$z['name'].'</option>';
     }
     $html .= '</select>';
-    $array = array('hasError' => false, 'errors' => '', 'data' => $html);
+    $array = ['hasError' => false, 'errors' => '', 'data' => $html];
     die(json_encode($array));
 }
 

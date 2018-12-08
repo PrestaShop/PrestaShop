@@ -103,7 +103,9 @@ class CustomerFormatterCore implements FormFormatterInterface
                 ->setType('radio-buttons')
                 ->setLabel(
                     $this->translator->trans(
-                        'Social title', [], 'Shop.Forms.Labels'
+                        'Social title',
+                        [],
+                        'Shop.Forms.Labels'
                     )
                 )
             ;
@@ -117,7 +119,9 @@ class CustomerFormatterCore implements FormFormatterInterface
             ->setName('firstname')
             ->setLabel(
                 $this->translator->trans(
-                    'First name', [], 'Shop.Forms.Labels'
+                    'First name',
+                    [],
+                    'Shop.Forms.Labels'
                 )
             )
             ->setRequired(true)
@@ -127,7 +131,9 @@ class CustomerFormatterCore implements FormFormatterInterface
             ->setName('lastname')
             ->setLabel(
                 $this->translator->trans(
-                    'Last name', [], 'Shop.Forms.Labels'
+                    'Last name',
+                    [],
+                    'Shop.Forms.Labels'
                 )
             )
             ->setRequired(true)
@@ -138,15 +144,21 @@ class CustomerFormatterCore implements FormFormatterInterface
                 ->setName('company')
                 ->setType('text')
                 ->setLabel($this->translator->trans(
-                    'Company', [], 'Shop.Forms.Labels'
-                ));
+                    'Company',
+                    [],
+                    'Shop.Forms.Labels'
+                ))
+            ;
             $format['siret'] = (new FormField())
                 ->setName('siret')
                 ->setType('text')
                 ->setLabel($this->translator->trans(
                     // Please localize this string with the applicable registration number type in your country. For example : "SIRET" in France and "Código fiscal" in Spain.
-                    'Identification number', [], 'Shop.Forms.Labels'
-                ));
+                    'Identification number',
+                    [],
+                    'Shop.Forms.Labels'
+                ))
+            ;
         }
 
         $format['email'] = (new FormField())
@@ -154,7 +166,9 @@ class CustomerFormatterCore implements FormFormatterInterface
             ->setType('email')
             ->setLabel(
                 $this->translator->trans(
-                    'Email', [], 'Shop.Forms.Labels'
+                    'Email',
+                    [],
+                    'Shop.Forms.Labels'
                 )
             )
             ->setRequired(true)
@@ -166,7 +180,9 @@ class CustomerFormatterCore implements FormFormatterInterface
                 ->setType('password')
                 ->setLabel(
                     $this->translator->trans(
-                        'Password', [], 'Shop.Forms.Labels'
+                        'Password',
+                        [],
+                        'Shop.Forms.Labels'
                     )
                 )
                 ->setRequired($this->password_is_required)
@@ -179,7 +195,9 @@ class CustomerFormatterCore implements FormFormatterInterface
                 ->setType('password')
                 ->setLabel(
                     $this->translator->trans(
-                        'New password', [], 'Shop.Forms.Labels'
+                        'New password',
+                        [],
+                        'Shop.Forms.Labels'
                     )
                 )
             ;
@@ -191,13 +209,15 @@ class CustomerFormatterCore implements FormFormatterInterface
                 ->setType('text')
                 ->setLabel(
                     $this->translator->trans(
-                        'Birthdate', [], 'Shop.Forms.Labels'
+                        'Birthdate',
+                        [],
+                        'Shop.Forms.Labels'
                     )
                 )
                 ->addAvailableValue('placeholder', Tools::getDateFormat())
                 ->addAvailableValue(
                     'comment',
-                    $this->translator->trans('(E.g.: %date_format%)', array('%date_format%' => Tools::formatDateStr('31 May 1970')), 'Shop.Forms.Help')
+                    $this->translator->trans('(E.g.: %date_format%)', ['%date_format%' => Tools::formatDateStr('31 May 1970')], 'Shop.Forms.Help')
                 )
             ;
         }
@@ -208,7 +228,9 @@ class CustomerFormatterCore implements FormFormatterInterface
                 ->setType('checkbox')
                 ->setLabel(
                     $this->translator->trans(
-                        'Receive offers from our partners', [], 'Shop.Theme.Customeraccount'
+                        'Receive offers from our partners',
+                        [],
+                        'Shop.Theme.Customeraccount'
                     )
                 )
                 ->setRequired($this->partner_optin_is_required)
@@ -216,7 +238,7 @@ class CustomerFormatterCore implements FormFormatterInterface
         }
 
         // ToDo, replace the hook exec with HookFinder when the associated PR will be merged
-        $additionalCustomerFormFields = Hook::exec('additionalCustomerFormFields', array(), null, true);
+        $additionalCustomerFormFields = Hook::exec('additionalCustomerFormFields', [], null, true);
 
         if (is_array($additionalCustomerFormFields)) {
             foreach ($additionalCustomerFormFields as $moduleName => $additionnalFormFields) {

@@ -53,10 +53,10 @@ class SearchControllerCore extends ProductListingFrontController
         $this->search_tag = Tools::getValue('tag');
 
         $this->context->smarty->assign(
-            array(
+            [
                 'search_string' => $this->search_string,
                 'search_tag' => $this->search_tag,
-            )
+            ]
         );
     }
 
@@ -67,7 +67,7 @@ class SearchControllerCore extends ProductListingFrontController
     {
         parent::initContent();
 
-        $this->doProductSearch('catalog/listing/search', array('entity' => 'search'));
+        $this->doProductSearch('catalog/listing/search', ['entity' => 'search']);
     }
 
     protected function getProductSearchQuery()
@@ -76,7 +76,8 @@ class SearchControllerCore extends ProductListingFrontController
         $query
             ->setSortOrder(new SortOrder('product', 'position', 'desc'))
             ->setSearchString($this->search_string)
-            ->setSearchTag($this->search_tag);
+            ->setSearchTag($this->search_tag)
+        ;
 
         return $query;
     }
@@ -90,6 +91,6 @@ class SearchControllerCore extends ProductListingFrontController
 
     public function getListingLabel()
     {
-        return $this->getTranslator()->trans('Search results', array(), 'Shop.Theme.Catalog');
+        return $this->getTranslator()->trans('Search results', [], 'Shop.Theme.Catalog');
     }
 }

@@ -40,101 +40,101 @@ class AdminContactsControllerCore extends AdminController
 
         parent::__construct();
 
-        $this->bulk_actions = array(
-            'delete' => array(
-                'text' => $this->trans('Delete selected', array(), 'Admin.Actions'),
-                'confirm' => $this->trans('Delete selected items?', array(), 'Admin.Notifications.Warning'),
+        $this->bulk_actions = [
+            'delete' => [
+                'text' => $this->trans('Delete selected', [], 'Admin.Actions'),
+                'confirm' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
                 'icon' => 'icon-trash',
-            ),
-        );
+            ],
+        ];
 
-        $this->fields_list = array(
-            'id_contact' => array(
-                'title' => $this->trans('ID', array(), 'Admin.Global'),
+        $this->fields_list = [
+            'id_contact' => [
+                'title' => $this->trans('ID', [], 'Admin.Global'),
                 'align' => 'center',
                 'class' => 'fixed-width-xs',
-            ),
-            'name' => array(
-                'title' => $this->trans('Title', array(), 'Admin.Global'),
+            ],
+            'name' => [
+                'title' => $this->trans('Title', [], 'Admin.Global'),
                 'maxlength' => 30,
-            ),
-            'email' => array(
-                'title' => $this->trans('Email address', array(), 'Admin.Global'),
+            ],
+            'email' => [
+                'title' => $this->trans('Email address', [], 'Admin.Global'),
                 'maxlength' => 50,
-            ),
-            'description' => array(
-                'title' => $this->trans('Description', array(), 'Admin.Global'),
-            ),
-        );
+            ],
+            'description' => [
+                'title' => $this->trans('Description', [], 'Admin.Global'),
+            ],
+        ];
     }
 
     public function renderForm()
     {
-        $this->fields_form = array(
-            'legend' => array(
-                'title' => $this->trans('Contacts', array(), 'Admin.Shopparameters.Feature'),
+        $this->fields_form = [
+            'legend' => [
+                'title' => $this->trans('Contacts', [], 'Admin.Shopparameters.Feature'),
                 'icon' => 'icon-envelope-alt',
-            ),
-            'input' => array(
-                array(
+            ],
+            'input' => [
+                [
                     'type' => 'text',
-                    'label' => $this->trans('Title', array(), 'Admin.Global'),
+                    'label' => $this->trans('Title', [], 'Admin.Global'),
                     'name' => 'name',
                     'required' => true,
                     'lang' => true,
                     'col' => 4,
-                    'hint' => $this->trans('Contact name (e.g. Customer Support).', array(), 'Admin.Shopparameters.Help'),
-                ),
-                array(
+                    'hint' => $this->trans('Contact name (e.g. Customer Support).', [], 'Admin.Shopparameters.Help'),
+                ],
+                [
                     'type' => 'text',
-                    'label' => $this->trans('Email address', array(), 'Admin.Global'),
+                    'label' => $this->trans('Email address', [], 'Admin.Global'),
                     'name' => 'email',
                     'required' => false,
                     'col' => 4,
-                    'hint' => $this->trans('Emails will be sent to this address.', array(), 'Admin.Shopparameters.Help'),
-                ),
-                array(
+                    'hint' => $this->trans('Emails will be sent to this address.', [], 'Admin.Shopparameters.Help'),
+                ],
+                [
                     'type' => 'switch',
-                    'label' => $this->trans('Save messages?', array(), 'Admin.Shopparameters.Feature'),
+                    'label' => $this->trans('Save messages?', [], 'Admin.Shopparameters.Feature'),
                     'name' => 'customer_service',
                     'required' => false,
                     'class' => 't',
                     'is_bool' => true,
-                    'hint' => $this->trans('If enabled, all messages will be saved in the "Customer Service" page under the "Customer" menu.', array(), 'Admin.Shopparameters.Help'),
-                    'values' => array(
-                        array(
+                    'hint' => $this->trans('If enabled, all messages will be saved in the "Customer Service" page under the "Customer" menu.', [], 'Admin.Shopparameters.Help'),
+                    'values' => [
+                        [
                             'id' => 'customer_service_on',
                             'value' => 1,
-                            'label' => $this->trans('Enabled', array(), 'Admin.Global'),
-                        ),
-                        array(
+                            'label' => $this->trans('Enabled', [], 'Admin.Global'),
+                        ],
+                        [
                             'id' => 'customer_service_off',
                             'value' => 0,
-                            'label' => $this->trans('Disabled', array(), 'Admin.Global'),
-                        ),
-                    ),
-                ),
-                array(
+                            'label' => $this->trans('Disabled', [], 'Admin.Global'),
+                        ],
+                    ],
+                ],
+                [
                     'type' => 'textarea',
-                    'label' => $this->trans('Description', array(), 'Admin.Global'),
+                    'label' => $this->trans('Description', [], 'Admin.Global'),
                     'name' => 'description',
                     'required' => false,
                     'lang' => true,
                     'col' => 6,
-                    'hint' => $this->trans('Further information regarding this contact.', array(), 'Admin.Shopparameters.Help'),
-                ),
-            ),
-            'submit' => array(
-                'title' => $this->trans('Save', array(), 'Admin.Actions'),
-            ),
-        );
+                    'hint' => $this->trans('Further information regarding this contact.', [], 'Admin.Shopparameters.Help'),
+                ],
+            ],
+            'submit' => [
+                'title' => $this->trans('Save', [], 'Admin.Actions'),
+            ],
+        ];
 
         if (Shop::isFeatureActive()) {
-            $this->fields_form['input'][] = array(
+            $this->fields_form['input'][] = [
                 'type' => 'shop',
-                'label' => $this->trans('Shop association', array(), 'Admin.Global'),
+                'label' => $this->trans('Shop association', [], 'Admin.Global'),
                 'name' => 'checkBoxShopAsso',
-            );
+            ];
         }
 
         return parent::renderForm();
@@ -144,11 +144,11 @@ class AdminContactsControllerCore extends AdminController
     {
         $this->initToolbar();
         if (empty($this->display)) {
-            $this->page_header_toolbar_btn['new_contact'] = array(
+            $this->page_header_toolbar_btn['new_contact'] = [
                 'href' => self::$currentIndex . '&addcontact&token=' . $this->token,
-                'desc' => $this->trans('Add new contact', array(), 'Admin.Shopparameters.Feature'),
+                'desc' => $this->trans('Add new contact', [], 'Admin.Shopparameters.Feature'),
                 'icon' => 'process-icon-new',
-            );
+            ];
         }
 
         parent::initPageHeaderToolbar();

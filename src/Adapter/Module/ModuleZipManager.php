@@ -43,7 +43,7 @@ class ModuleZipManager
     /*
      * Data
      */
-    private static $sources = array();
+    private static $sources = [];
 
     /*
      * Services
@@ -96,8 +96,10 @@ class ModuleZipManager
             throw new Exception(
                 $this->translator->trans(
                     'Unable to find uploaded module at the following path: %file%',
-                    array('%file%' => $source),
-                    'Admin.Modules.Notification'));
+                    ['%file%' => $source],
+                    'Admin.Modules.Notification'
+                )
+            );
         }
 
         $sandboxPath = $this->getSandboxPath($source);
@@ -106,10 +108,12 @@ class ModuleZipManager
             throw new Exception(
                 $this->translator->trans(
                     'Cannot extract module in %path% to get its name. %error%',
-                    array(
+                    [
                         '%path%' => $sandboxPath,
-                        '%error%' => $zip->getStatusString(), ),
-                    'Admin.Modules.Notification'));
+                        '%error%' => $zip->getStatusString(), ],
+                    'Admin.Modules.Notification'
+                )
+            );
         }
 
         // Check the structure and get the module name
@@ -118,7 +122,8 @@ class ModuleZipManager
             ->in($sandboxPath)
             ->depth('== 0')
             ->exclude(['__MACOSX'])
-            ->ignoreVCS(true);
+            ->ignoreVCS(true)
+        ;
 
         $validModuleStructure = false;
         // We must have only one folder in the zip, which contains the module files
@@ -132,7 +137,8 @@ class ModuleZipManager
                     ->in($sandboxPath . $moduleName)
                     ->depth('== 0')
                     ->exclude(['__MACOSX'])
-                    ->ignoreVCS(true);
+                    ->ignoreVCS(true)
+            ;
             foreach (iterator_to_array($moduleFolder) as $file) {
                 if ($file->getFileName() === $moduleName . '.php') {
                     $validModuleStructure = true;
@@ -145,8 +151,9 @@ class ModuleZipManager
             $this->filesystem->remove($sandboxPath);
             throw new Exception($this->translator->trans(
                     'This file does not seem to be a valid module zip',
-                    array(),
-                    'Admin.Modules.Notification'));
+                    [],
+                    'Admin.Modules.Notification'
+            ));
         }
 
         $this->getSource($source)->setName($moduleName);
@@ -170,7 +177,7 @@ class ModuleZipManager
             $sandboxPath . $name,
             $modulePath,
             null,
-            array('override' => true)
+            ['override' => true]
         );
         $this->eventDispatcher
             ->dispatch(

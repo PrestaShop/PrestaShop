@@ -78,7 +78,8 @@ class Tools
     public function bcadd($left_operand, $right_operand, $scale = null)
     {
         $result = (new Number((string) $left_operand))
-            ->plus(new Number((string) $right_operand));
+            ->plus(new Number((string) $right_operand))
+        ;
 
         if (null === $scale) {
             return (string) $result;
@@ -126,7 +127,8 @@ class Tools
      */
     private function generateHtaccessOnMultiViews($disableMultiView = false)
     {
-        return LegacyTools::generateHtaccess(null,
+        return LegacyTools::generateHtaccess(
+            null,
             null,
             null,
             '',
@@ -141,7 +143,8 @@ class Tools
      */
     public function generateHtaccessWithMultiViews()
     {
-        return LegacyTools::generateHtaccess(null,
+        return LegacyTools::generateHtaccess(
+            null,
             null,
             null,
             '',
@@ -156,7 +159,8 @@ class Tools
      */
     public function generateHtaccessWithoutMultiViews()
     {
-        return LegacyTools::generateHtaccess(null,
+        return LegacyTools::generateHtaccess(
+            null,
             null,
             null,
             '',

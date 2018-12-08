@@ -71,7 +71,8 @@ final class PreferencesFormHandler implements FormHandlerInterface
                 'is_ssl_enabled' => $this->configuration->getBoolean('PS_SSL_ENABLED'),
             ])
             ->setData($this->formDataProvider->getData())
-            ->getForm();
+            ->getForm()
+        ;
     }
 
     /**

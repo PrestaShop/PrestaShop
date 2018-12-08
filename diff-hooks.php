@@ -62,7 +62,7 @@ function generateJSON($commonHooks, $hooksOnly16, $hooksOnly17, $hooks16, $hooks
 
 function generateHTML($commonHooks, $hooksOnly16, $hooksOnly17, $hooks16, $hooks17)
 {
-    $html  =  '
+    $html = '
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -76,7 +76,7 @@ function generateHTML($commonHooks, $hooksOnly16, $hooksOnly17, $hooks16, $hooks
   <body>
     <div class="container">';
 
-    $html .=  '<h1>Common hooks</h1>';
+    $html .= '<h1>Common hooks</h1>';
     $html .= '<table class="table table-bordered">';
     $html .= '<thead>';
     $html .= '<tr>';

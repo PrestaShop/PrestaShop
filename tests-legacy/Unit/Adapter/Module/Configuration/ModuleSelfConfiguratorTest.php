@@ -57,7 +57,7 @@ class ModuleSelfConfiguratorTest extends UnitTestCase
     public function setUp()
     {
         $this->configuration = new ConfigurationMock();
-        $this->connection = new ConnectionMock(array(), new Driver);
+        $this->connection = new ConnectionMock([], new Driver);
         $this->mockModuleRepository();
 
         $this->defaultDir = __DIR__.'/../../../../resources/module-self-config-files';
@@ -173,7 +173,8 @@ class ModuleSelfConfiguratorTest extends UnitTestCase
         $basePath = __DIR__ . '/../../../../resources/module-self-config-files/..';
 
         $mockFilesystem = $this->getMockBuilder('\Symfony\Component\Filesystem\Filesystem')
-            ->getMock();
+            ->getMock()
+        ;
 
         $mockFilesystem->expects($this->exactly(2))
             ->method('copy')
@@ -186,7 +187,8 @@ class ModuleSelfConfiguratorTest extends UnitTestCase
                     $this->equalTo('http://localhost/img/logo.png'),
                     $this->equalTo($basePath.'/modules/ganalytics/another-logo.png'),
                 ]
-            );
+            )
+        ;
 
         $moduleSelfConfigurator = $this->getModuleSelfConfigurator(
             null,
@@ -199,10 +201,10 @@ class ModuleSelfConfiguratorTest extends UnitTestCase
 
         // Then clean
         $filesystem = new Filesystem();
-        $filesystem->remove(array(
+        $filesystem->remove([
             __DIR__.'/../../../../resources/modules/ganalytics/ganalytics_copy.php',
             __DIR__.'/../../../../resources/modules/ganalytics/avatar.jpg',
-        ));
+        ]);
     }
 
     public function testSqlStep()
@@ -236,25 +238,29 @@ class ModuleSelfConfiguratorTest extends UnitTestCase
         // Test context with mocks
         require_once $php_filepath;
         $mock = $this->getMockBuilder('\MyComplexModuleConfiguration')
-                     ->setMethods(array('run'))
-                     ->getMock();
+                     ->setMethods(['run'])
+                     ->getMock()
+        ;
         $mock->expects($this->exactly(2))
-             ->method('run');
+             ->method('run')
+        ;
 
         // Redefine self configuratrion as mock
         $moduleSelfConfigurator = $this
             ->getMockBuilder(
                 '\PrestaShop\PrestaShop\Adapter\Module\Configuration\ModuleSelfConfigurator'
             )
-            ->setConstructorArgs(array($this->moduleRepository, $this->configuration, $this->connection, new Filesystem()))
-            ->setMethods(array('loadPhpFile'))
-            ->getMock();
+            ->setConstructorArgs([$this->moduleRepository, $this->configuration, $this->connection, new Filesystem()])
+            ->setMethods(['loadPhpFile'])
+            ->getMock()
+        ;
 
         $moduleSelfConfigurator
             ->expects($this->exactly(2))
             ->method('loadPhpFile')
             ->with($php_filepath)
-            ->will($this->returnValue($mock));
+            ->will($this->returnValue($mock))
+        ;
 
         $this->assertTrue($moduleSelfConfigurator->module($name)->file($filepath)->configure());
     }
@@ -265,45 +271,56 @@ class ModuleSelfConfiguratorTest extends UnitTestCase
     {
         $moduleS = $this->getMockBuilder('PrestaShop\PrestaShop\Adapter\Module\Module')
             ->disableOriginalConstructor()
-            ->getMock();
+            ->getMock()
+        ;
         $moduleS
             ->method('onInstall')
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
         $moduleS
             ->method('onUninstall')
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
         $moduleS
             ->method('onDisable')
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
         $moduleS
             ->method('onEnable')
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
         $moduleS
             ->method('onReset')
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
         $moduleS
             ->method('onMobileDisable')
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
         $moduleS
             ->method('onMobileEnable')
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
         $moduleS
             ->method('hasValidInstance')
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
 
         $this->moduleRepository = $this->getMockBuilder('PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository')
             ->disableOriginalConstructor()
-            ->getMock();
+            ->getMock()
+        ;
 
         $this->moduleRepository
             ->method('getModule')
-            ->willReturn($moduleS);
+            ->willReturn($moduleS)
+        ;
     }
 }
 
 class ConfigurationMock extends Configuration
 {
-    private $configurationData = array();
+    private $configurationData = [];
 
     public function set($key, $value, array $options = [])
     {
@@ -325,8 +342,8 @@ class ConfigurationMock extends Configuration
 
 class ConnectionMock extends Connection
 {
-    public $sql = array();
-    public $executedSql = array();
+    public $sql = [];
+    public $executedSql = [];
 
     public function connect()
     {
@@ -338,12 +355,12 @@ class ConnectionMock extends Connection
     public function commit()
     {
         $this->executedSql = array_merge($this->executedSql, $this->sql);
-        $this->sql = array();
+        $this->sql = [];
     }
 
     public function rollBack()
     {
-        $this->sql = array();
+        $this->sql = [];
     }
 
     public function prepare($statement)

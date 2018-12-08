@@ -107,7 +107,8 @@ class ModuleDataProvider
                 $qb->select('mh')
                     ->from('PrestaShopBundle:ModuleHistory', 'mh', 'mh.idModule')
                     ->where('mh.idEmployee = ?1')
-                    ->setParameter(1, $this->employeeID);
+                    ->setParameter(1, $this->employeeID)
+                ;
                 $query = $qb->getQuery();
                 $query->useResultCache(true);
                 $modulesHistory = $query->getResult();
@@ -211,8 +212,10 @@ class ModuleDataProvider
             $this->logger->critical(
                 $this->translator->trans(
                     'Parse error detected in main class of module %module%!',
-                    array('%module%' => $name),
-                    'Admin.Modules.Notification'));
+                    ['%module%' => $name],
+                    'Admin.Modules.Notification'
+                )
+            );
 
             return false;
         }
@@ -230,10 +233,12 @@ class ModuleDataProvider
                 $logger->error(
                     $this->translator->trans(
                         'Error while loading file of module %module%. %error_message%',
-                        array(
+                        [
                             '%module%' => $name,
-                            '%error_message%' => $e->getMessage(), ),
-                        'Admin.Modules.Notification'));
+                            '%error_message%' => $e->getMessage(), ],
+                        'Admin.Modules.Notification'
+                    )
+                );
 
                 return false;
             }

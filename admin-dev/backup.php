@@ -41,7 +41,7 @@ $tabAccess = Profile::getProfileAccess(
 if ($tabAccess['view'] !== '1') {
     die(Context::getContext()->getTranslator()->trans(
         'You do not have permission to view this.',
-        array(),
+        [],
         'Admin.Advparameters.Notification'
     ));
 }
@@ -51,7 +51,7 @@ $backupdir = realpath(PrestaShopBackup::getBackupPath());
 if ($backupdir === false) {
     die(Context::getContext()->getTranslator()->trans(
         'There is no "/backup" directory.',
-        array(),
+        [],
         'Admin.Advparameters.Notification'
     ));
 }
@@ -59,7 +59,7 @@ if ($backupdir === false) {
 if (!$backupfile = Tools::getValue('filename')) {
     die(Context::getContext()->getTranslator()->trans(
         'No file has been specified.',
-        array(),
+        [],
         'Admin.Advparameters.Notification'
     ));
 }
@@ -83,7 +83,7 @@ $fp = @fopen($backupfile, 'r');
 if ($fp === false) {
     die(Context::getContext()->getTranslator()->trans(
             'Unable to open backup file(s).',
-            array(),
+            [],
             'Admin.Advparameters.Notification'
         ).' "'.addslashes($backupfile).'"'
     );
@@ -103,7 +103,7 @@ fclose($fp);
 if ($ret === false) {
     die(Context::getContext()->getTranslator()->trans(
             'Unable to display backup file(s).',
-            array(),
+            [],
             'Admin.Advparameters.Notification'
         ).' "'.addslashes($backupfile).'"'
     );

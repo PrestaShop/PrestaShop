@@ -64,7 +64,8 @@ final class UpdateCategoriesStatusHandler implements UpdateCategoriesStatusHandl
 
             if (!$entity->update()) {
                 throw new CannotUpdateCategoryStatusException(sprintf(
-                    'Cannot update status for category with id "%s"', $categoryId->getValue()
+                    'Cannot update status for category with id "%s"',
+                    $categoryId->getValue()
                 ));
             }
         }

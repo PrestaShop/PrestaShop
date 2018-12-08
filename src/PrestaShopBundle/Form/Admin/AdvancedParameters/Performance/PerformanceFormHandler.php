@@ -77,7 +77,8 @@ final class PerformanceFormHandler extends AbstractFormHandler
             ->add('media_servers', MediaServersType::class)
             ->add('caching', CachingType::class)
             ->add('add_memcache_server', MemcacheServerType::class)
-            ->setData($this->formDataProvider->getData());
+            ->setData($this->formDataProvider->getData())
+        ;
 
         $this->hookDispatcher->dispatchWithParameters('displayPerformancePageForm', ['form_builder' => &$formBuilder]);
 

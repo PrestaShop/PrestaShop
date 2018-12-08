@@ -28,7 +28,7 @@ class HelperKpiRowCore extends Helper
     public $base_folder = 'helpers/kpi/';
     public $base_tpl = 'row.tpl';
 
-    public $kpis = array();
+    public $kpis = [];
     public $refresh = true;
 
     public function generate()

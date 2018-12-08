@@ -52,13 +52,13 @@ class AdminCmsContentControllerCore extends AdminController
 
         $this->table = 'cms';
         $this->className = 'CMS';
-        $this->bulk_actions = array(
-            'delete' => array(
-                'text' => $this->trans('Delete selected', array(), 'Admin.Actions'),
-                'confirm' => $this->trans('Delete selected items?', array(), 'Admin.Notifications.Warning'),
+        $this->bulk_actions = [
+            'delete' => [
+                'text' => $this->trans('Delete selected', [], 'Admin.Actions'),
+                'confirm' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
                 'icon' => 'icon-trash',
-            ),
-        );
+            ],
+        ];
 
         $this->admin_cms_categories = new AdminCmsCategoriesController();
         $this->admin_cms_categories->tabAccess = $this->tabAccess;
@@ -103,16 +103,16 @@ class AdminCmsContentControllerCore extends AdminController
         }
 
         if ($this->display == 'list') {
-            $this->page_header_toolbar_btn['new_cms_category'] = array(
+            $this->page_header_toolbar_btn['new_cms_category'] = [
                 'href' => self::$currentIndex . '&addcms_category&token=' . $this->token,
-                'desc' => $this->trans('Add new page category', array(), 'Admin.Design.Help'),
+                'desc' => $this->trans('Add new page category', [], 'Admin.Design.Help'),
                 'icon' => 'process-icon-new',
-            );
-            $this->page_header_toolbar_btn['new_cms_page'] = array(
+            ];
+            $this->page_header_toolbar_btn['new_cms_page'] = [
                 'href' => self::$currentIndex . '&addcms&id_cms_category=' . (int) $id_cms_category . '&token=' . $this->token,
-                'desc' => $this->trans('Add new page', array(), 'Admin.Design.Help'),
+                'desc' => $this->trans('Add new page', [], 'Admin.Design.Help'),
                 'icon' => 'process-icon-new',
-            );
+            ];
         }
 
         $this->page_header_toolbar_title = implode(' ' . Configuration::get('PS_NAVIGATION_PIPE') . ' ', $this->toolbar_title);
@@ -137,7 +137,7 @@ class AdminCmsContentControllerCore extends AdminController
             }
 
             // CMS categories breadcrumb
-            $cms_tabs = array('cms_category', 'cms');
+            $cms_tabs = ['cms_category', 'cms'];
             // Cleaning links
             $cat_bar_index = self::$currentIndex;
             foreach ($cms_tabs as $tab) {
@@ -145,28 +145,28 @@ class AdminCmsContentControllerCore extends AdminController
                     $cat_bar_index = preg_replace('/&' . $tab . 'Orderby=([a-z _]*)&' . $tab . 'Orderway=([a-z]*)/i', '', self::$currentIndex);
                 }
             }
-            $this->context->smarty->assign(array(
+            $this->context->smarty->assign([
                 'cms_breadcrumb' => Tools::getPath($cat_bar_index, $id_cms_category, '', '', 'cms'),
-            ));
+            ]);
 
             $this->content .= $this->admin_cms_categories->renderList();
             $this->admin_cms->id_cms_category = $id_cms_category;
             $this->content .= $this->admin_cms->renderList();
         }
 
-        $this->context->smarty->assign(array(
+        $this->context->smarty->assign([
             'content' => $this->content,
             'show_page_header_toolbar' => $this->show_page_header_toolbar,
             'title' => $this->page_header_toolbar_title,
             'toolbar_btn' => $this->page_header_toolbar_btn,
             'page_header_toolbar_btn' => $this->page_header_toolbar_btn,
             'page_header_toolbar_title' => $this->toolbar_title,
-        ));
+        ]);
     }
 
     public function initToolbarTitle()
     {
-        $this->toolbar_title = is_array($this->breadcrumbs) ? array_unique($this->breadcrumbs) : array($this->breadcrumbs);
+        $this->toolbar_title = is_array($this->breadcrumbs) ? array_unique($this->breadcrumbs) : [$this->breadcrumbs];
 
         $id_cms_category = (int) Tools::getValue('id_cms_category');
         if ($id_cms_category && $id_cms_category !== 1) {
@@ -176,21 +176,21 @@ class AdminCmsContentControllerCore extends AdminController
 
         if ($this->display == 'edit_category') {
             if (Tools::getValue('addcms_category') !== false) {
-                $this->toolbar_title[] = $this->trans('Add new category', array(), 'Admin.Design.Feature');
+                $this->toolbar_title[] = $this->trans('Add new category', [], 'Admin.Design.Feature');
             } else {
                 if (isset($cms_category)) {
-                    $this->toolbar_title[] = $this->trans('Edit category: %name%', array('%name%' => $cms_category->name[$this->context->employee->id_lang]), 'Admin.Design.Feature');
+                    $this->toolbar_title[] = $this->trans('Edit category: %name%', ['%name%' => $cms_category->name[$this->context->employee->id_lang]], 'Admin.Design.Feature');
                 }
             }
         } elseif ($this->display == 'edit_page') {
             if (Tools::getValue('addcms') !== false) {
-                $this->toolbar_title[] = $this->trans('Add new page', array(), 'Admin.Design.Feature');
+                $this->toolbar_title[] = $this->trans('Add new page', [], 'Admin.Design.Feature');
             } elseif ($id_cms_page) {
                 $cms_page = new CMS($id_cms_page);
-                $this->toolbar_title[] = $this->trans('Edit page: %meta_title%', array('%meta_title%' => $cms_page->meta_title[$this->context->employee->id_lang]), 'Admin.Design.Feature');
+                $this->toolbar_title[] = $this->trans('Edit page: %meta_title%', ['%meta_title%' => $cms_page->meta_title[$this->context->employee->id_lang]], 'Admin.Design.Feature');
             }
         } elseif ($this->display == 'list' && isset($cms_category)) {
-            $this->toolbar_title[] = $this->trans('Category: %category%', array('%category%' => $cms_category->name[$this->context->employee->id_lang]), 'Admin.Design.Feature');
+            $this->toolbar_title[] = $this->trans('Category: %category%', ['%category%' => $cms_category->name[$this->context->employee->id_lang]], 'Admin.Design.Feature');
         }
     }
 

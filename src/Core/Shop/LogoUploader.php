@@ -168,10 +168,10 @@ class LogoUploader
                 throw new PrestaShopException(
                     Context::getContext()->getTranslator()->trans(
                         'An error occurred while uploading the favicon: cannot copy file "%s" to folder "%s".',
-                        array(
+                        [
                             $files[$name]['tmp_name'],
                             $destination,
-                        ),
+                        ],
                         'Admin.Design.Notification'
                     )
                 );

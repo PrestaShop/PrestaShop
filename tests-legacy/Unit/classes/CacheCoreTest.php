@@ -32,28 +32,29 @@ use Cache;
 
 class CacheCoreTest extends PHPUnit_Framework_TestCase
 {
-    private $cacheArray = array();
+    private $cacheArray = [];
 
     public function setUp()
     {
         parent::setUp();
 
         $memcachedMock = $this->getMockBuilder('CacheMemcache')
-            ->setMethods(array('_set', '_get', 'isConnected', '_delete', '_deleteMulti'))
-            ->getMock();
+            ->setMethods(['_set', '_get', 'isConnected', '_delete', '_deleteMulti'])
+            ->getMock()
+        ;
 
         $memcachedMock->method('isConnected')->willReturn(true);
-        $memcachedMock->method('_get')->willReturnCallback(array($this, 'getFromArray'));
-        $memcachedMock->method('_set')->willReturnCallback(array($this, 'setIntoArray'));
-        $memcachedMock->method('_delete')->willReturnCallback(array($this, 'deleteFromArray'));
-        $memcachedMock->method('_deleteMulti')->willReturnCallback(array($this, 'deleteMultiFromArray'));
+        $memcachedMock->method('_get')->willReturnCallback([$this, 'getFromArray']);
+        $memcachedMock->method('_set')->willReturnCallback([$this, 'setIntoArray']);
+        $memcachedMock->method('_delete')->willReturnCallback([$this, 'deleteFromArray']);
+        $memcachedMock->method('_deleteMulti')->willReturnCallback([$this, 'deleteMultiFromArray']);
 
         Cache::setInstanceForTesting($memcachedMock);
     }
 
     public function tearDown()
     {
-        $this->cacheArray = array();
+        $this->cacheArray = [];
     }
 
     public function getFromArray()
@@ -99,7 +100,7 @@ class CacheCoreTest extends PHPUnit_Framework_TestCase
     {
         $queries = $this->selectDataProvider();
         foreach ($queries as $query) {
-            Cache::getInstance()->setQuery($query, array('queryResult'));
+            Cache::getInstance()->setQuery($query, ['queryResult']);
         }
 
         foreach ($queries as $query) {
@@ -134,7 +135,7 @@ class CacheCoreTest extends PHPUnit_Framework_TestCase
         $i = 0;
         foreach ($queries as $query) {
             $i++;
-            Cache::getInstance()->setQuery($query, array('queryResult '.$i));
+            Cache::getInstance()->setQuery($query, ['queryResult '.$i]);
         }
 
         $this->assertCount(4, $this->cacheArray);
@@ -169,7 +170,7 @@ class CacheCoreTest extends PHPUnit_Framework_TestCase
         $queries = $this->selectDataProvider();
         $i = 0;
         foreach ($queries as $query) {
-            Cache::getInstance()->setQuery($query, array('queryResult '.$i));
+            Cache::getInstance()->setQuery($query, ['queryResult '.$i]);
             if ($i == 3) {
                 break;
             }
@@ -185,7 +186,7 @@ class CacheCoreTest extends PHPUnit_Framework_TestCase
 
         // inserting a new entry should update the query counter, and the LRU logic
         // should evict 0 and 2 query from the cache
-        Cache::getInstance()->setQuery($queries[4], array('queryResult 4'));
+        Cache::getInstance()->setQuery($queries[4], ['queryResult 4']);
 
         // check the cache only contains the query 1 3 and 4
         $queryHash = Cache::getInstance()->getQueryHash($queries[1]);
@@ -223,10 +224,10 @@ class CacheCoreTest extends PHPUnit_Framework_TestCase
     {
         $queries = $this->selectDataProvider();
         foreach ($queries as $query) {
-            Cache::getInstance()->setQuery($query, array('queryResult'));
+            Cache::getInstance()->setQuery($query, ['queryResult']);
         }
 
-        Cache::getInstance()->setQuery('SELECT name FROM ps_confiture WHERE id = 1', array('queryResultExtra'));
+        Cache::getInstance()->setQuery('SELECT name FROM ps_confiture WHERE id = 1', ['queryResultExtra']);
 
         $tableMapKey = Cache::getInstance()->getTableMapCacheKey('ps_configuration');
         $invalidatedKeys = $this->cacheArray[$tableMapKey];
@@ -250,7 +251,7 @@ class CacheCoreTest extends PHPUnit_Framework_TestCase
 
         // now check invalidation why full deletion of entry from "other table"
         foreach ($queries as $query) {
-            Cache::getInstance()->setQuery($query, array('queryResult'));
+            Cache::getInstance()->setQuery($query, ['queryResult']);
         }
 
         $tableMapKey = Cache::getInstance()->getTableMapCacheKey('ps_configuration');
@@ -286,7 +287,7 @@ class CacheCoreTest extends PHPUnit_Framework_TestCase
 
     public function selectDataProvider()
     {
-        $selectArray = array();
+        $selectArray = [];
 
         for ($i = 0; $i <= 9; $i++) {
             $selectArray[] = 'SELECT name FROM ps_configuration LEFT JOIN ps_confiture WHERE id = '.$i;

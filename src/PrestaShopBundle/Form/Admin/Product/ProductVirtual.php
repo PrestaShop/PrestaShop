@@ -135,7 +135,8 @@ class ProductVirtual extends CommonAbstractType
                     'label' => $this->translator->trans('Save', [], 'Admin.Actions'),
                     'attr' => ['class' => 'btn-primary pull-right'],
                 ]
-            );
+            )
+        ;
 
         $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
             $form = $event->getForm();

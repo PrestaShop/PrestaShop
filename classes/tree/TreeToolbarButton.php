@@ -48,7 +48,7 @@ abstract class TreeToolbarButtonCore
     public function setAttribute($name, $value)
     {
         if (!isset($this->_attributes)) {
-            $this->_attributes = array();
+            $this->_attributes = [];
         }
 
         $this->_attributes[$name] = $value;
@@ -75,7 +75,7 @@ abstract class TreeToolbarButtonCore
     public function getAttributes()
     {
         if (!isset($this->_attributes)) {
-            $this->_attributes = array();
+            $this->_attributes = [];
         }
 
         return $this->_attributes;
@@ -172,7 +172,8 @@ abstract class TreeToolbarButtonCore
         }
 
         if ($this->getContext()->controller instanceof ModuleAdminController && file_exists($this->_normalizeDirectory(
-                $this->getContext()->controller->getTemplatePath()) . $this->getTemplateDirectory() . $template)) {
+                $this->getContext()->controller->getTemplatePath()
+        ) . $this->getTemplateDirectory() . $template)) {
             return $this->_normalizeDirectory($this->getContext()->controller->getTemplatePath())
                 . $this->getTemplateDirectory() . $template;
         } elseif ($this->getContext()->controller instanceof AdminController && isset($controllerName)
@@ -211,7 +212,7 @@ abstract class TreeToolbarButtonCore
     {
         $last = $directory[strlen($directory) - 1];
 
-        if (in_array($last, array('/', '\\'))) {
+        if (in_array($last, ['/', '\\'])) {
             $directory[strlen($directory) - 1] = DIRECTORY_SEPARATOR;
 
             return $directory;

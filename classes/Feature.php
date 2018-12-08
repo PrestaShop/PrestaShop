@@ -38,23 +38,23 @@ class FeatureCore extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'feature',
         'primary' => 'id_feature',
         'multilang' => true,
-        'fields' => array(
-            'position' => array('type' => self::TYPE_INT, 'validate' => 'isInt'),
+        'fields' => [
+            'position' => ['type' => self::TYPE_INT, 'validate' => 'isInt'],
 
             /* Lang fields */
-            'name' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 128),
-        ),
-    );
+            'name' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 128],
+        ],
+    ];
 
-    protected $webserviceParameters = array(
+    protected $webserviceParameters = [
         'objectsNodeName' => 'product_features',
         'objectNodeName' => 'product_feature',
-        'fields' => array(),
-    );
+        'fields' => [],
+    ];
 
     /**
      * Get a feature data for a given id_feature and id_lang.
@@ -66,7 +66,8 @@ class FeatureCore extends ObjectModel
      */
     public static function getFeature($idLang, $idFeature)
     {
-        return Db::getInstance()->getRow('
+        return Db::getInstance()->getRow(
+            '
 			SELECT *
 			FROM `' . _DB_PREFIX_ . 'feature` f
 			LEFT JOIN `' . _DB_PREFIX_ . 'feature_lang` fl
@@ -130,7 +131,7 @@ class FeatureCore extends ObjectModel
         }
 
         $return = parent::add($autoDate, true);
-        Hook::exec('actionFeatureSave', array('id_feature' => $this->id));
+        Hook::exec('actionFeatureSave', ['id_feature' => $this->id]);
 
         return $return;
     }
@@ -172,7 +173,7 @@ class FeatureCore extends ObjectModel
         if ($result) {
             $result &= parent::update($nullValues);
             if ($result) {
-                Hook::exec('actionFeatureSave', array('id_feature' => $this->id));
+                Hook::exec('actionFeatureSave', ['id_feature' => $this->id]);
             }
         }
 
@@ -199,19 +200,21 @@ class FeatureCore extends ObjectModel
 			WHERE
 				`' . _DB_PREFIX_ . 'feature_value`.`id_feature` = ' . (int) $this->id . '
 		');
-        Db::getInstance()->execute('
+        Db::getInstance()->execute(
+            '
 			DELETE FROM `' . _DB_PREFIX_ . 'feature_value`
 			WHERE `id_feature` = ' . (int) $this->id
         );
         // Also delete related products
-        Db::getInstance()->execute('
+        Db::getInstance()->execute(
+            '
 			DELETE FROM `' . _DB_PREFIX_ . 'feature_product`
 			WHERE `id_feature` = ' . (int) $this->id
         );
 
         $return = parent::delete();
         if ($return) {
-            Hook::exec('actionFeatureDelete', array('id_feature' => $this->id));
+            Hook::exec('actionFeatureDelete', ['id_feature' => $this->id]);
         }
 
         /* Reinitializing position */
@@ -299,7 +302,8 @@ class FeatureCore extends ObjectModel
      */
     public function updatePosition($way, $position, $idFeature = null)
     {
-        if (!$res = Db::getInstance()->executeS('
+        if (!$res = Db::getInstance()->executeS(
+            '
 			SELECT `position`, `id_feature`
 			FROM `' . _DB_PREFIX_ . 'feature`
 			WHERE `id_feature` = ' . (int) ($idFeature ? $idFeature : $this->id) . '

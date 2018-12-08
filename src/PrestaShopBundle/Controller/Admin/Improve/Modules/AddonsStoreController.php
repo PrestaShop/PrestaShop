@@ -46,9 +46,9 @@ class AddonsStoreController extends FrameworkBundleAdminController
      */
     public function indexAction(Request $request)
     {
-        return $this->render('@PrestaShop/Admin/Improve/Module/addons_store.html.twig', array(
+        return $this->render('@PrestaShop/Admin/Improve/Module/addons_store.html.twig', [
             'pageContent' => file_get_contents($this->getAddonsUrl($request)),
-            'layoutHeaderToolbarBtn' => array(),
+            'layoutHeaderToolbarBtn' => [],
             'layoutTitle' => $this->trans('Module selection', 'Admin.Navigation.Menu'),
             'requireAddonsSearch' => true,
             'requireBulkActions' => false,
@@ -57,7 +57,7 @@ class AddonsStoreController extends FrameworkBundleAdminController
             'help_link' => $this->generateSidebarLink('AdminAddonsCatalog'),
             'requireFilterStatus' => false,
             'level' => $this->authorizationLevel($this::CONTROLLER_NAME),
-        ));
+        ]);
     }
 
     /**

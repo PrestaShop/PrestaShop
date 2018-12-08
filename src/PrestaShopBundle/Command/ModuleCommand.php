@@ -33,7 +33,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class ModuleCommand extends ContainerAwareCommand
 {
-    private $allowedActions = array(
+    private $allowedActions = [
         'install',
         'uninstall',
         'enable',
@@ -43,7 +43,7 @@ class ModuleCommand extends ContainerAwareCommand
         'reset',
         'upgrade',
         'configure',
-    );
+    ];
 
     /**
      * @var \Symfony\Component\Console\Helper\FormatterHelper
@@ -72,7 +72,8 @@ class ModuleCommand extends ContainerAwareCommand
             ->setDescription('Manage your modules via command line')
             ->addArgument('action', InputArgument::REQUIRED, sprintf('Action to execute (Allowed actions: %s).', implode(' / ', $this->allowedActions)))
             ->addArgument('module name', InputArgument::REQUIRED, 'Module on which the action will be executed')
-            ->addArgument('file path', InputArgument::OPTIONAL, 'YML file path for configuration');
+            ->addArgument('file path', InputArgument::OPTIONAL, 'YML file path for configuration')
+        ;
     }
 
     protected function init(InputInterface $input, OutputInterface $output)
@@ -96,9 +97,11 @@ class ModuleCommand extends ContainerAwareCommand
             $this->displayMessage(
                 $this->translator->trans(
                     'Unknown module action. It must be one of these values: %actions%',
-                    array('%actions%' => implode(' / ', $this->allowedActions)),
-                    'Admin.Modules.Notification'),
-                'error');
+                    ['%actions%' => implode(' / ', $this->allowedActions)],
+                    'Admin.Modules.Notification'
+                ),
+                'error'
+            );
 
             return;
         }
@@ -126,7 +129,7 @@ class ModuleCommand extends ContainerAwareCommand
             // And add a default message at the top
             array_unshift($errors, $this->translator->trans(
                 'Validation of configuration details failed:',
-                array(),
+                [],
                 'Admin.Modules.Notification'
             ));
             $this->displayMessage($errors, 'error');
@@ -137,8 +140,9 @@ class ModuleCommand extends ContainerAwareCommand
         // Actual configuration
         $moduleSelfConfigurator->configure();
         $this->displayMessage(
-            $this->translator->trans('Configuration successfully applied.', array(), 'Admin.Modules.Notification'),
-            'info');
+            $this->translator->trans('Configuration successfully applied.', [], 'Admin.Modules.Notification'),
+            'info'
+        );
     }
 
     protected function executeGenericModuleAction($action, $moduleName)
@@ -151,10 +155,11 @@ class ModuleCommand extends ContainerAwareCommand
             $this->displayMessage(
                 $this->translator->trans(
                     '%action% action on module %module% succeeded.',
-                    array(
+                    [
                         '%action%' => ucfirst(str_replace('_', ' ', $action)),
-                        '%module%' => $moduleName, ),
-                    'Admin.Modules.Notification')
+                        '%module%' => $moduleName, ],
+                    'Admin.Modules.Notification'
+                )
             );
 
             return;
@@ -164,12 +169,13 @@ class ModuleCommand extends ContainerAwareCommand
         $this->displayMessage(
             $this->translator->trans(
                 'Cannot %action% module %module%. %error_details%',
-                array(
+                [
                     '%action%' => str_replace('_', ' ', $action),
                     '%module%' => $moduleName,
-                    '%error_details%' => $error, ),
+                    '%error_details%' => $error, ],
                 'Admin.Modules.Notification'
-            ), 'error'
+            ),
+            'error'
         );
     }
 

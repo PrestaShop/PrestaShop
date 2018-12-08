@@ -181,7 +181,8 @@ class ProductCombination extends CommonAbstractType
                 'label' => $this->translator->trans('Set as default combination', [], 'Admin.Catalog.Feature'),
                 'required' => false,
                 'attr' => ['class' => 'attribute_default_checkbox'],
-            ]);
+            ])
+        ;
         if ($is_stock_management) {
             $builder->add(
                 'attribute_quantity',
@@ -208,7 +209,8 @@ class ProductCombination extends CommonAbstractType
                 'required' => false,
                 'label' => $this->translator->trans('Final price', [], 'Admin.Catalog.Feature'),
                 'currency' => $this->currency->iso_code,
-            ]);
+            ])
+        ;
 
         $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
             $form = $event->getForm();

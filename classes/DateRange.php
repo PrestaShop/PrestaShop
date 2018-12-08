@@ -38,14 +38,14 @@ class DateRangeCore extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'date_range',
         'primary' => 'id_date_range',
-        'fields' => array(
-            'time_start' => array('type' => self::TYPE_DATE, 'validate' => 'isDate', 'required' => true),
-            'time_end' => array('type' => self::TYPE_DATE, 'validate' => 'isDate', 'required' => true),
-        ),
-    );
+        'fields' => [
+            'time_start' => ['type' => self::TYPE_DATE, 'validate' => 'isDate', 'required' => true],
+            'time_end' => ['type' => self::TYPE_DATE, 'validate' => 'isDate', 'required' => true],
+        ],
+    ];
 
     /**
      * Get current range.

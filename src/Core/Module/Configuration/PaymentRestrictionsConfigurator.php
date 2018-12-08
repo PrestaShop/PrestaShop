@@ -110,7 +110,7 @@ final class PaymentRestrictionsConfigurator implements PaymentRestrictionsConfig
      */
     private function configureRestrictions($restrictionType, array $restrictions)
     {
-        list($moduleIds, $newConfiguration) = $this->parseRestrictionData($restrictions);
+        [$moduleIds, $newConfiguration] = $this->parseRestrictionData($restrictions);
 
         $this->clearCurrentConfiguration($restrictionType, $moduleIds);
         $this->insertNewConfiguration($restrictionType, $newConfiguration);

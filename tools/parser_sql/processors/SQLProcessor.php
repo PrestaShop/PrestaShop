@@ -297,7 +297,7 @@ class SQLProcessor extends SQLChunkProcessor {
                 if ($prev_category === 'TABLE') {
                     $token_category = 'CREATE';
                     $out[$token_category] = array_merge($out[$token_category], $out[$prev_category]);
-                    $out[$prev_category] = array();
+                    $out[$prev_category] = [];
                     $out[$token_category][] = $upper;
                     $prev_category = $token_category;
                     continue 2;

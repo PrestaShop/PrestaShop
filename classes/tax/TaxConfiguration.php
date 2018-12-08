@@ -26,7 +26,7 @@
  */
 class TaxConfigurationCore
 {
-    private $taxCalculationMethod = array();
+    private $taxCalculationMethod = [];
 
     /**
      * @return bool

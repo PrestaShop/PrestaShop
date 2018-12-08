@@ -37,7 +37,7 @@ function migrate_tabs_multi_shop()
 
     //check if current configuration has more than one shop
     if ($nbr_shop > 1) {
-        Db::getInstance()->update('configuration', array('value' => true), 'name = \'PS_MULTISHOP_FEATURE_ACTIVE\'');
+        Db::getInstance()->update('configuration', ['value' => true], 'name = \'PS_MULTISHOP_FEATURE_ACTIVE\'');
         $tab_shop_group_active = true;
     }
 
@@ -49,8 +49,8 @@ function migrate_tabs_multi_shop()
 
     // ===== add AdminShopGroup to parent AdminTools =====
     $admin_shop_group_id = add_new_tab('AdminShopGroup', 'en:Multi-shop|fr:Multiboutique|es:Multi-tienda|de:Multi-shop|it:Multi-shop', get_tab_id('AdminTools'), true);
-    Db::getInstance()->update('tab', array('active' => $tab_shop_group_active), 'id_tab = '.(int)$admin_shop_group_id);
+    Db::getInstance()->update('tab', ['active' => $tab_shop_group_active], 'id_tab = '.(int)$admin_shop_group_id);
 
     // ===== hide AdminShopUrl and AdminShop =====
-    Db::getInstance()->update('tab', array('id_parent' => '-1'), 'id_tab IN ('.get_tab_id('AdminShop').', '.get_tab_id('AdminShopUrl').')');
+    Db::getInstance()->update('tab', ['id_parent' => '-1'], 'id_tab IN ('.get_tab_id('AdminShop').', '.get_tab_id('AdminShopUrl').')');
 }

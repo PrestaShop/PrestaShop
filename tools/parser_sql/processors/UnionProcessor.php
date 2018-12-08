@@ -45,7 +45,7 @@ require_once(dirname(__FILE__) . '/../utils/ExpressionType.php');
 class UnionProcessor extends AbstractProcessor {
 
     public function isUnion($queries) {
-        $unionTypes = array('UNION', 'UNION ALL');
+        $unionTypes = ['UNION', 'UNION ALL'];
         foreach ($unionTypes as $unionType) {
             if (!empty($queries[$unionType])) {
                 return true;
@@ -65,7 +65,7 @@ class UnionProcessor extends AbstractProcessor {
      * The extra queries will be silently ignored.
      */
     protected function processMySQLUnion($queries) {
-        $unionTypes = array('UNION', 'UNION ALL');
+        $unionTypes = ['UNION', 'UNION ALL'];
         foreach ($unionTypes as $unionType) {
 
             if (empty($queries[$unionType])) {
@@ -97,7 +97,7 @@ class UnionProcessor extends AbstractProcessor {
     }
 
     public function process($inputArray) {
-        $outputArray = array();
+        $outputArray = [];
 
         // ometimes the parser needs to skip ahead until a particular
         // oken is found
@@ -110,7 +110,7 @@ class UnionProcessor extends AbstractProcessor {
 
         // ometimes a "query" consists of more than one query (like a UNION query)
         // his array holds all the queries
-        $queries = array();
+        $queries = [];
 
         foreach ($inputArray as $key => $token) {
             $trim = trim($token);
@@ -148,7 +148,7 @@ class UnionProcessor extends AbstractProcessor {
 
             // store the tokens related to the unionType
             $queries[$unionType][] = $outputArray;
-            $outputArray = array();
+            $outputArray = [];
         }
 
         // the query tokens after the last UNION or UNION ALL

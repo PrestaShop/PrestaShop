@@ -64,7 +64,8 @@ class ThemeExporter
     ) {
         $this->themeExtractor = $themeExtractor;
         $this->themeExtractor
-            ->setThemeProvider($themeProvider);
+            ->setThemeProvider($themeProvider)
+        ;
 
         $this->themeProvider = $themeProvider;
         $this->themeRepository = $themeRepository;
@@ -105,7 +106,7 @@ class ThemeExporter
         try {
             $themeCatalogue = $this->themeProvider->getThemeCatalogue();
         } catch (\Exception $exception) {
-            $themeCatalogue = new MessageCatalogue($locale, array());
+            $themeCatalogue = new MessageCatalogue($locale, []);
         }
         $databaseCatalogue = $this->themeProvider->getDatabaseCatalogue($themeName);
         $databaseCatalogue = $this->addLocaleToDomain($locale, $databaseCatalogue);
@@ -127,11 +128,11 @@ class ThemeExporter
 
         $this->filesystem->mkdir($archiveParentDirectory);
 
-        $this->dumper->dump($mergedTranslations, array(
+        $this->dumper->dump($mergedTranslations, [
             'path' => $archiveParentDirectory,
             'default_locale' => $locale,
             'root_dir' => $rootDir,
-        ));
+        ]);
 
         $this->renameCatalogues($locale, $archiveParentDirectory);
 
@@ -185,7 +186,8 @@ class ThemeExporter
         $theme = $this->themeRepository->getInstanceByName($themeName);
         $this->themeExtractor
             ->setOutputPath($tmpFolderPath)
-            ->extract($theme, $locale, $rootDir);
+            ->extract($theme, $locale, $rootDir)
+        ;
 
         Flattenizer::flatten($tmpFolderPath . DIRECTORY_SEPARATOR . $locale, $folderPath . DIRECTORY_SEPARATOR . $locale, $locale);
 
@@ -202,10 +204,10 @@ class ThemeExporter
 
         foreach ($finder->in($archiveParentDirectory . DIRECTORY_SEPARATOR . $locale)->files() as $file) {
             $parentDirectoryParts = explode(DIRECTORY_SEPARATOR, dirname($file));
-            $destinationFilenameParts = array(
+            $destinationFilenameParts = [
                 $archiveParentDirectory,
                 $parentDirectoryParts[count($parentDirectoryParts) - 1] . '.' . $locale . '.xlf',
-            );
+            ];
             $destinationFilename = implode(DIRECTORY_SEPARATOR, $destinationFilenameParts);
             if ($this->filesystem->exists($destinationFilename)) {
                 $this->filesystem->remove($destinationFilename);
@@ -264,12 +266,12 @@ class ThemeExporter
             mkdir($this->exportDir);
         }
 
-        $zipFilenameParts = array(
+        $zipFilenameParts = [
             $this->exportDir,
             $themeName,
             $locale,
             $themeName . '.' . $locale . '.zip',
-        );
+        ];
 
         return implode(DIRECTORY_SEPARATOR, $zipFilenameParts);
     }
@@ -348,7 +350,7 @@ class ThemeExporter
      */
     protected function addLocaleToDomain($locale, MessageCatalogue $sourceCatalogue)
     {
-        $catalogue = new MessageCatalogue($locale, array());
+        $catalogue = new MessageCatalogue($locale, []);
         foreach ($sourceCatalogue->all() as $domain => $messages) {
             $catalogue->add($messages, $domain . '.' . $locale);
         }
@@ -363,7 +365,7 @@ class ThemeExporter
      */
     protected function parseMetadataNotes(array $metadata = null)
     {
-        $defaultMetadata = array('file' => '', 'line' => '');
+        $defaultMetadata = ['file' => '', 'line' => ''];
 
         if (!$this->metadataContainNotes($metadata)) {
             return $defaultMetadata;
@@ -374,9 +376,9 @@ class ThemeExporter
             return $defaultMetadata;
         }
 
-        return array(
+        return [
             'file' => $matches['file'],
             'line' => $matches['line'],
-        );
+        ];
     }
 }

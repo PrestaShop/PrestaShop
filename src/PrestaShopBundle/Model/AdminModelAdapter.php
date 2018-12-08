@@ -47,7 +47,7 @@ class AdminModelAdapter
         if (array_key_exists('hook', $_POST)) {
             $hookFields = $_POST['hook'];
 
-            return array('hook' => $hookFields);
+            return ['hook' => $hookFields];
         }
 
         return [];

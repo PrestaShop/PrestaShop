@@ -39,7 +39,7 @@ function migrate_tabs_17()
         'SELECT id_parent FROM '._DB_PREFIX_.'tab WHERE module IS NOT NULL AND module != "" ORDER BY id_tab ASC'
     );
 
-    $moduleParents = array();
+    $moduleParents = [];
 
     foreach ($moduleTabs as $tab) {
         $idParent = $tab['id_parent'];

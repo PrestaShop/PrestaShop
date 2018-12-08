@@ -57,7 +57,8 @@ class PageType extends AbstractType
                 'required' => true,
                 'choice_translation_domain' => 'Admin.Global',
             ])
-            ->add('display_discount_price', SwitchType::class);
+            ->add('display_discount_price', SwitchType::class)
+        ;
     }
 
     /**

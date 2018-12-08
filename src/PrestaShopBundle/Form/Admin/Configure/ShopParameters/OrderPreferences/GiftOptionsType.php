@@ -79,7 +79,8 @@ class GiftOptionsType extends TranslatorAwareType
                 'required' => false,
                 'currency' => $currencyIsoCode,
                 'suffix' => $this->trans('(tax excl.)', 'Admin.Global'),
-            ]);
+            ])
+        ;
 
         if (!$atcpShipWrap) {
             $builder->add('gift_wrapping_tax_rules_group', ChoiceType::class, [

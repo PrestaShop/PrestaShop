@@ -58,7 +58,8 @@ class SlipOptionsType extends TranslatorAwareType
             ->add(
                 'enable_product_image',
                 SwitchType::class
-            );
+            )
+        ;
     }
 
     /**

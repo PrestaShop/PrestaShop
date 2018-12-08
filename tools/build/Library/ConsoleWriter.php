@@ -89,7 +89,7 @@ class ConsoleWriter
      */
     public function displayText($text, $color = self::COLOR_WHITE)
     {
-        $cliColors = array(
+        $cliColors = [
             self::COLOR_BLACK => '0;30',
             self::COLOR_DARK_GRAY => '1;30',
             self::COLOR_BLUE => '0;34',
@@ -106,7 +106,7 @@ class ConsoleWriter
             self::COLOR_YELLOW => '1;33',
             self::COLOR_LIGHT_GRAY => '0;37',
             self::COLOR_WHITE => '1;37',
-        );
+        ];
 
         if (empty($cliColors[$color])) {
             throw new BuildException('CLI color does not exist');

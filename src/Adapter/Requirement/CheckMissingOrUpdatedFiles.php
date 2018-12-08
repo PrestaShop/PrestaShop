@@ -42,10 +42,10 @@ class CheckMissingOrUpdatedFiles
      */
     public function getListOfUpdatedFiles($dir = null, $path = '')
     {
-        $fileList = array(
-            'missing' => array(),
-            'updated' => array(),
-        );
+        $fileList = [
+            'missing' => [],
+            'updated' => [],
+        ];
 
         if (is_null($dir)) {
             $xml = @simplexml_load_file(_PS_API_URL_ . '/xml/md5-' . AppKernel::MAJOR_VERSION . '/' . AppKernel::VERSION . '.xml');

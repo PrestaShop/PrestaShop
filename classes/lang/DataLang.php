@@ -64,10 +64,11 @@ class DataLangCore
             $finder = \Symfony\Component\Finder\Finder::create()
                 ->files()
                 ->name('*.' . $this->locale . '.xlf')
-                ->in((_PS_ROOT_DIR_ . '/app/Resources/translations'));
+                ->in((_PS_ROOT_DIR_ . '/app/Resources/translations'))
+            ;
 
             foreach ($finder as $file) {
-                list($domain, $locale, $format) = explode('.', $file->getBasename(), 3);
+                [$domain, $locale, $format] = explode('.', $file->getBasename(), 3);
                 $this->translator->addResource($format, $file, $locale, $domain);
             }
         }
@@ -75,7 +76,7 @@ class DataLangCore
 
     public function getFieldValue($field, $value)
     {
-        return $this->translator->trans($value, array(), $this->domain, $this->locale);
+        return $this->translator->trans($value, [], $this->domain, $this->locale);
     }
 
     public function getKeys()

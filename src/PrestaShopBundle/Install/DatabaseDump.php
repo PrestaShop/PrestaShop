@@ -74,14 +74,14 @@ class DatabaseDump
      *
      * @return string
      */
-    private function buildMySQLCommand($executable, array $arguments = array())
+    private function buildMySQLCommand($executable, array $arguments = [])
     {
-        $parts = array(
+        $parts = [
             escapeshellarg($executable),
             '-u', escapeshellarg($this->user),
             '-P', escapeshellarg($this->port),
             '-h', escapeshellarg($this->host),
-        );
+        ];
 
         if ($this->password) {
             $parts[] = '-p' . escapeshellarg($this->password);
@@ -103,7 +103,7 @@ class DatabaseDump
      */
     private function exec($command)
     {
-        $output = array();
+        $output = [];
         $ret = 1;
         exec($command, $output, $ret);
 
@@ -119,7 +119,7 @@ class DatabaseDump
      */
     private function dump()
     {
-        $dumpCommand = $this->buildMySQLCommand('mysqldump', array($this->databaseName));
+        $dumpCommand = $this->buildMySQLCommand('mysqldump', [$this->databaseName]);
         $dumpCommand .= ' > ' . escapeshellarg($this->dumpFile) . ' 2> /dev/null';
         $this->exec($dumpCommand);
     }
@@ -129,7 +129,7 @@ class DatabaseDump
      */
     public function restore()
     {
-        $restoreCommand = $this->buildMySQLCommand('mysql', array($this->databaseName));
+        $restoreCommand = $this->buildMySQLCommand('mysql', [$this->databaseName]);
         $restoreCommand .= ' < ' . escapeshellarg($this->dumpFile) . ' 2> /dev/null';
         $this->exec($restoreCommand);
     }

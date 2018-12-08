@@ -62,7 +62,9 @@ class ProductURLsTest extends IntegrationTestCase
     {
         $url = $this->link->getProductLink(
             $id_product,
-            null, null, null,
+            null,
+            null,
+            null,
             $this->language->id,
             null,
             $id_product_attribute,

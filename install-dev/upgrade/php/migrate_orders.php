@@ -26,7 +26,7 @@
 
 function migrate_orders()
 {
-    $array_errors = array();
+    $array_errors = [];
     $res = true;
     if (!defined('PS_TAX_EXC')) {
         define('PS_TAX_EXC', 1);
@@ -44,16 +44,16 @@ function migrate_orders()
     }
 
     if (!$col_order_detail_old) {
-        return array('error' => 1, 'msg' => 'unable to get fields list from order_detail table');
+        return ['error' => 1, 'msg' => 'unable to get fields list from order_detail table'];
     }
 
     $insert_order_detail = 'INSERT INTO `'._DB_PREFIX_.'order_detail_2` (`'.implode('`, `', $col_order_detail).'`) VALUES ';
 
-    $col_orders = array();
+    $col_orders = [];
     $col_orders_old = Db::getInstance()->executeS('SHOW FIELDS FROM `'._DB_PREFIX_.'orders`');
 
     if (!$col_orders_old) {
-        return array('error' => 1, 'msg' => 'unable to get fields list from orders table');
+        return ['error' => 1, 'msg' => 'unable to get fields list from orders table'];
     }
 
     foreach ($col_orders_old as $k => $field) {
@@ -81,7 +81,7 @@ function migrate_orders()
     }
     for ($i = 0; $i < $nb_loop; $i++) {
         $order_res = Db::getInstance()->query('SELECT * FROM `'._DB_PREFIX_.'orders` LIMIT '.(int)$start.', '.(int)$step);
-        $start = intval(($i+1) * $step);
+        $start = intval(($i + 1) * $step);
         $cpt = 0;
         $flush_limit = 200;
         while ($order = Db::getInstance()->nextRow($order_res)) {
@@ -116,7 +116,7 @@ function migrate_orders()
                     if (!in_array($k, $col_order_detail)) {
                         unset($order_details[$k]);
                     } else {
-                        if (in_array($order_details[$k], array('product_price', 'reduction_percent', 'reduction_amount', 'group_reduction', 'product_quantity_discount', 'tax_rate', 'ecotax', 'ecotax_tax_rate'))) {
+                        if (in_array($order_details[$k], ['product_price', 'reduction_percent', 'reduction_amount', 'group_reduction', 'product_quantity_discount', 'tax_rate', 'ecotax', 'ecotax_tax_rate'])) {
                             $order_details[$k] = (float)$order_details[$k];
                         } else {
                             $order_details[$k] = Db::getInstance()->escape($order_details[$k]);
@@ -131,7 +131,7 @@ function migrate_orders()
 
             $average_tax_used = 1;
             if ($sum_total_products > 0) {
-                $average_tax_used +=  $sum_tax_amount / $sum_total_products;
+                $average_tax_used += $sum_tax_amount / $sum_total_products;
             }
             $average_tax_used = round($average_tax_used, 4);
             $carrier_tax_rate = 1;
@@ -205,7 +205,7 @@ function migrate_orders()
     }
 
     if (!$res) {
-        return array('error' => 1, 'msg' => count($array_errors).' error(s) : <br/>'.implode('<br/>', $array_errors));
+        return ['error' => 1, 'msg' => count($array_errors).' error(s) : <br/>'.implode('<br/>', $array_errors)];
     }
 }
 
@@ -228,9 +228,9 @@ function mo_ps_round($val)
 
     switch ($ps_price_round_mode) {
         case 0:
-            return ceil($val * 100)/100;
+            return ceil($val * 100) / 100;
         case 1:
-            return floor($val * 100)/100;
+            return floor($val * 100) / 100;
         default:
             return round($val, 2);
     }
@@ -291,7 +291,7 @@ function mo_setProductPrices($row, $tax_calculation_method)
 
     $group_reduction = 1;
     if ($row['group_reduction'] > 0) {
-        $group_reduction =  1 - $row['group_reduction'] / 100;
+        $group_reduction = 1 - $row['group_reduction'] / 100;
     }
 
     if ($row['reduction_percent'] != 0) {

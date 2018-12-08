@@ -71,7 +71,7 @@ interface ProductInterface
      *
      * @return string[] The new filter params values
      */
-    public function combinePersistentCatalogProductFilter($paramsIn = array(), $avoidPersistence = false);
+    public function combinePersistentCatalogProductFilter($paramsIn = [], $avoidPersistence = false);
 
     /**
      * Returns a collection of products, using default language, currency and others, from Context.
@@ -86,7 +86,7 @@ interface ProductInterface
      *
      * @return array[mixed[]] A list of products, as an array of arrays of raw data
      */
-    public function getCatalogProductList($offset, $limit, $orderBy, $sortOrder, $post = array(), $avoidPersistence = false, $formatCldr = true);
+    public function getCatalogProductList($offset, $limit, $orderBy, $sortOrder, $post = [], $avoidPersistence = false, $formatCldr = true);
 
     /**
      * Retrieve global product count (for the current shop).

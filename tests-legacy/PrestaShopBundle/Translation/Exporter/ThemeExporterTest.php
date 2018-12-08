@@ -76,7 +76,8 @@ class ThemeExporterTest extends TestCase
 
         $this->zipManagerMock = $this->getMockBuilder('\PrestaShopBundle\Utils\ZipManager')
             ->disableOriginalConstructor()
-            ->getMock();
+            ->getMock()
+        ;
 
         $this->mockFilesystem();
 
@@ -107,7 +108,7 @@ class ThemeExporterTest extends TestCase
         $archiveContentsParentDir = $this->themeExporter->exportDir . '/' . self::THEME_NAME . '/' . self::LOCALE;
 
         $finder = Finder::create();
-        $catalogue = new MessageCatalogue(self::LOCALE, array());
+        $catalogue = new MessageCatalogue(self::LOCALE, []);
 
         foreach ($finder->in($archiveContentsParentDir)->files() as $file) {
             $catalogue->addCatalogue(
@@ -138,33 +139,39 @@ class ThemeExporterTest extends TestCase
     {
         $this->extractorMock = $this->getMockBuilder('\PrestaShopBundle\Translation\Extractor\ThemeExtractor')
             ->disableOriginalConstructor()
-            ->getMock();
+            ->getMock()
+        ;
 
         $this->extractorMock->method('setOutputPath')
-            ->willReturn($this->extractorMock);
+            ->willReturn($this->extractorMock)
+        ;
     }
 
     protected function mockThemeRepository()
     {
         $this->repositoryMock = $this->getMockBuilder('\PrestaShop\PrestaShop\Core\Addon\Theme\ThemeRepository')
             ->disableOriginalConstructor()
-            ->getMock();
+            ->getMock()
+        ;
 
         $this->repositoryMock->method('getInstanceByName')
-            ->willReturn(new Theme(array(
+            ->willReturn(new Theme([
                 'directory' => '',
                 'name' => self::THEME_NAME
-            )));
+            ]))
+        ;
     }
 
     protected function mockFilesystem()
     {
         $this->filesystemMock = $this->getMockBuilder('\Symfony\Component\Filesystem\Filesystem')
             ->disableOriginalConstructor()
-            ->getMock();
+            ->getMock()
+        ;
 
         $this->filesystemMock->method('mkdir')
-            ->willReturn(null);
+            ->willReturn(null)
+        ;
 
         Flattenizer::$filesystem = $this->filesystemMock;
     }
@@ -173,13 +180,16 @@ class ThemeExporterTest extends TestCase
     {
         $this->finderMock = $this->getMockBuilder('\Symfony\Component\Finder\Finder')
             ->disableOriginalConstructor()
-            ->getMock();
+            ->getMock()
+        ;
 
         $this->finderMock->method('in')
-            ->willReturn($this->finderMock);
+            ->willReturn($this->finderMock)
+        ;
 
         $this->finderMock->method('files')
-            ->willReturn(array());
+            ->willReturn([])
+        ;
 
         Flattenizer::$finder = $this->finderMock;
     }
@@ -188,42 +198,44 @@ class ThemeExporterTest extends TestCase
     {
         $this->providerMock = $this->getMockBuilder('\PrestaShopBundle\Translation\Provider\ThemeProvider')
             ->disableOriginalConstructor()
-            ->getMock();
+            ->getMock()
+        ;
 
         $this->providerMock->method('getCatalogueFromPaths')
             ->willReturn(new MessageCatalogue(
                 self::LOCALE,
-                array(
-                    'ShopActions.' . self::LOCALE => array(
+                [
+                    'ShopActions.' . self::LOCALE => [
                         'Add Product' => 'Add',
                         'Override Me' => '',
                         'Override Me Twice' => '',
-                    )
-                )
-            ));
+                    ]
+                ]
+            ))
+        ;
 
         $this->providerMock->method('getThemeCatalogue')
             ->willReturn(new MessageCatalogue(
                 self::LOCALE,
-                array(
-                    'ShopActions.' . self::LOCALE => array(
+                [
+                    'ShopActions.' . self::LOCALE => [
                         'Edit Product' => 'Edit',
                         'Override Me' => 'Overridden',
                         'Override Me Twice' => 'Overridden Once',
-                    )
-                )
+                    ]
+                ]
             ))
         ;
 
         $this->providerMock->method('getDatabaseCatalogue')
             ->willReturn(new MessageCatalogue(
                 self::LOCALE,
-                array(
-                    'ShopActions' => array(
+                [
+                    'ShopActions' => [
                         'Delete Product' => 'Delete',
                         'Override Me Twice' => 'Overridden Twice',
-                    )
-                )
+                    ]
+                ]
             ))
         ;
     }

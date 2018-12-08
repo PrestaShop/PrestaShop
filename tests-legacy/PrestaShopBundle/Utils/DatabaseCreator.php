@@ -55,14 +55,14 @@ class DatabaseCreator
         $install->populateDatabase();
         $install->installCldrDatas();
 
-        $install->configureShop(array(
+        $install->configureShop([
             'admin_firstname' => 'puff',
             'admin_lastname' => 'daddy',
             'admin_password' => 'test',
             'admin_email' => 'test@prestashop.com',
             'configuration_agrement' => true,
             'send_informations' => false,
-        ));
+        ]);
         $install->installFixtures();
         $install->installTheme();
         $language = new \Language(1);

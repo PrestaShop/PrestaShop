@@ -93,7 +93,7 @@ final class LegacyUrlConverter
     public function convertByUrl($url)
     {
         $parsedUrl = parse_url($url);
-        $parameters = array();
+        $parameters = [];
         if (isset($parsedUrl['query'])) {
             parse_str($parsedUrl['query'], $parameters);
         }

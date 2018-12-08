@@ -51,15 +51,15 @@ class CartGetOrderTotalTest extends IntegrationTestCase
 {
     private static $dump;
     private static $id_address;
-    protected $previousConfig = array(
+    protected $previousConfig = [
         'PS_CART_RULE_FEATURE_ACTIVE' => null,
-        'PS_GROUP_FEATURE_ACTIVE'     => null,
-        'PS_ATCP_SHIPWRAP'            => null,
-        'PS_PRICE_ROUND_MODE'         => null,
-        'PS_ROUND_TYPE'               => null,
-        'PS_PRICE_DISPLAY_PRECISION'  => null,
-        'PS_TAX'                      => null,
-    );
+        'PS_GROUP_FEATURE_ACTIVE' => null,
+        'PS_ATCP_SHIPWRAP' => null,
+        'PS_PRICE_ROUND_MODE' => null,
+        'PS_ROUND_TYPE' => null,
+        'PS_PRICE_DISPLAY_PRECISION' => null,
+        'PS_TAX' => null,
+    ];
 
     public static function setUpBeforeClass()
     {
@@ -184,7 +184,7 @@ class CartGetOrderTotalTest extends IntegrationTestCase
      */
     private static function getIdTax($rate)
     {
-        static $taxes = array();
+        static $taxes = [];
 
         $name = $rate.'% TAX';
 
@@ -205,7 +205,7 @@ class CartGetOrderTotalTest extends IntegrationTestCase
      */
     private static function getIdTaxRulesGroup($rate)
     {
-        static $groups = array();
+        static $groups = [];
 
         $name = $rate.'% TRG';
 
@@ -271,7 +271,7 @@ class CartGetOrderTotalTest extends IntegrationTestCase
      */
     private static function getIdCarrier($name, $shippingCost = null, $id_tax_rules_group = null)
     {
-        static $carriers = array();
+        static $carriers = [];
 
         if (!array_key_exists($name, $carriers)) {
             $carrier = new Carrier(null, self::getDefaultLanguageId());
@@ -520,18 +520,22 @@ class CartGetOrderTotalTest extends IntegrationTestCase
 
         $this->assertEquals(
             $cart->getOrderTotal(false, Cart::ONLY_PRODUCTS),
-            $cart->getOrderTotal(true, Cart::ONLY_PRODUCTS));
+            $cart->getOrderTotal(true, Cart::ONLY_PRODUCTS)
+        );
 
         $this->assertEquals(
             $cart->getOrderTotal(false, Cart::BOTH),
-            $cart->getOrderTotal(true, Cart::BOTH));
+            $cart->getOrderTotal(true, Cart::BOTH)
+        );
 
         $this->assertEquals(
             $cart->getOrderTotal(false, Cart::ONLY_SHIPPING),
-            $cart->getOrderTotal(true, Cart::ONLY_SHIPPING));
+            $cart->getOrderTotal(true, Cart::ONLY_SHIPPING)
+        );
 
         $this->assertEquals(
             $cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS),
-            $cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS));
+            $cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS)
+        );
     }
 }

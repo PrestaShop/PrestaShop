@@ -38,45 +38,45 @@ class AdminTagsControllerCore extends AdminController
 
         parent::__construct();
 
-        $this->fields_list = array(
-            'id_tag' => array(
-                'title' => $this->trans('ID', array(), 'Admin.Global'),
+        $this->fields_list = [
+            'id_tag' => [
+                'title' => $this->trans('ID', [], 'Admin.Global'),
                 'align' => 'center',
                 'class' => 'fixed-width-xs',
-            ),
-            'lang' => array(
-                'title' => $this->trans('Language', array(), 'Admin.Global'),
+            ],
+            'lang' => [
+                'title' => $this->trans('Language', [], 'Admin.Global'),
                 'filter_key' => 'l!name',
-            ),
-            'name' => array(
-                'title' => $this->trans('Name', array(), 'Admin.Global'),
+            ],
+            'name' => [
+                'title' => $this->trans('Name', [], 'Admin.Global'),
                 'filter_key' => 'a!name',
-            ),
-            'products' => array(
-                'title' => $this->trans('Products', array(), 'Admin.Global'),
+            ],
+            'products' => [
+                'title' => $this->trans('Products', [], 'Admin.Global'),
                 'align' => 'center',
                 'class' => 'fixed-width-xs',
                 'havingFilter' => true,
-            ),
-        );
+            ],
+        ];
 
-        $this->bulk_actions = array(
-            'delete' => array(
-                'text' => $this->trans('Delete selected', array(), 'Admin.Actions'),
+        $this->bulk_actions = [
+            'delete' => [
+                'text' => $this->trans('Delete selected', [], 'Admin.Actions'),
                 'icon' => 'icon-trash',
-                'confirm' => $this->trans('Delete selected items?', array(), 'Admin.Notifications.Warning'),
-            ),
-        );
+                'confirm' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
+            ],
+        ];
     }
 
     public function initPageHeaderToolbar()
     {
         if (empty($this->display)) {
-            $this->page_header_toolbar_btn['new_tag'] = array(
+            $this->page_header_toolbar_btn['new_tag'] = [
                 'href' => self::$currentIndex . '&addtag&token=' . $this->token,
-                'desc' => $this->trans('Add new tag', array(), 'Admin.Shopparameters.Feature'),
+                'desc' => $this->trans('Add new tag', [], 'Admin.Shopparameters.Feature'),
                 'icon' => 'process-icon-new',
-            );
+            ];
         }
 
         parent::initPageHeaderToolbar();
@@ -104,7 +104,7 @@ class AdminTagsControllerCore extends AdminController
             if (($id = (int) Tools::getValue($this->identifier)) && ($obj = new $this->className($id)) && Validate::isLoadedObject($obj)) {
                 /** @var Tag $obj */
                 $previous_products = $obj->getProducts();
-                $removed_products = array();
+                $removed_products = [];
 
                 foreach ($previous_products as $product) {
                     if (!in_array($product['id_product'], $_POST['products'])) {
@@ -130,38 +130,38 @@ class AdminTagsControllerCore extends AdminController
             return;
         }
 
-        $this->fields_form = array(
-            'legend' => array(
-                'title' => $this->trans('Tag', array(), 'Admin.Shopparameters.Feature'),
+        $this->fields_form = [
+            'legend' => [
+                'title' => $this->trans('Tag', [], 'Admin.Shopparameters.Feature'),
                 'icon' => 'icon-tag',
-            ),
-            'input' => array(
-                array(
+            ],
+            'input' => [
+                [
                     'type' => 'text',
-                    'label' => $this->trans('Name', array(), 'Admin.Global'),
+                    'label' => $this->trans('Name', [], 'Admin.Global'),
                     'name' => 'name',
                     'required' => true,
-                ),
-                array(
+                ],
+                [
                     'type' => 'select',
-                    'label' => $this->trans('Language', array(), 'Admin.Global'),
+                    'label' => $this->trans('Language', [], 'Admin.Global'),
                     'name' => 'id_lang',
                     'required' => true,
-                    'options' => array(
+                    'options' => [
                         'query' => Language::getLanguages(false),
                         'id' => 'id_lang',
                         'name' => 'name',
-                    ),
-                ),
-            ),
-            'selects' => array(
+                    ],
+                ],
+            ],
+            'selects' => [
                 'products' => $obj->getProducts(true),
                 'products_unselected' => $obj->getProducts(false),
-            ),
-            'submit' => array(
-                'title' => $this->trans('Save', array(), 'Admin.Actions'),
-            ),
-        );
+            ],
+            'submit' => [
+                'title' => $this->trans('Save', [], 'Admin.Actions'),
+            ],
+        ];
 
         return parent::renderForm();
     }

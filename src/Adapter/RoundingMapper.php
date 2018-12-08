@@ -45,14 +45,14 @@ final class RoundingMapper
      */
     public static function mapRounding($legacyRoundingMode)
     {
-        $roundModes = array(
+        $roundModes = [
             PS_ROUND_UP => Rounding::ROUND_CEIL,
             PS_ROUND_DOWN => Rounding::ROUND_FLOOR,
             PS_ROUND_HALF_UP => Rounding::ROUND_HALF_UP,
             PS_ROUND_HALF_DOWN => Rounding::ROUND_HALF_DOWN,
             PS_ROUND_HALF_EVEN => Rounding::ROUND_HALF_EVEN,
             PS_ROUND_HALF_ODD => Rounding::ROUND_HALF_EVEN, // Rounding::ROUND_HALF_ODD does not exist (never used)
-        );
+        ];
         if (!array_key_exists((int) $legacyRoundingMode, $roundModes)) {
             throw new \InvalidArgumentException('Unknown legacy rounding mode : ' . (int) $legacyRoundingMode);
         }

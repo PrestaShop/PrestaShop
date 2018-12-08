@@ -100,7 +100,7 @@ class CustomerAddressFormatterCore implements FormFormatterInterface
                     $formField->setType('tel');
                 }
             } elseif (count($fieldParts) === 2) {
-                list($entity, $entityField) = $fieldParts;
+                [$entity, $entityField] = $fieldParts;
 
                 // Fields specified using the Entity:field
                 // notation are actually references to other
@@ -149,7 +149,7 @@ class CustomerAddressFormatterCore implements FormFormatterInterface
         }
 
         //To add the extra fields in address form
-        $additionalAddressFormFields = Hook::exec('additionalCustomerAddressFields', array(), null, true);
+        $additionalAddressFormFields = Hook::exec('additionalCustomerAddressFields', [], null, true);
         if (is_array($additionalAddressFormFields)) {
             foreach ($additionalAddressFormFields as $moduleName => $additionnalFormFields) {
                 if (!is_array($additionnalFormFields)) {

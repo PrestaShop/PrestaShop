@@ -60,14 +60,14 @@ class ValuesProcessor extends AbstractProcessor {
 
         $values = $this->splitSQLIntoTokens($unparsed);
 
-        $parsed = array();
+        $parsed = [];
         foreach ($values as $k => $v) {
             if ($this->isCommaToken($v)) {
                 unset($values[$k]);
             } else {
                 $processor = new RecordProcessor();
-                $values[$k] = array('expr_type' => ExpressionType::RECORD, 'base_expr' => $v,
-                                    'data' => $this->recordProcessor->process($v));
+                $values[$k] = ['expr_type' => ExpressionType::RECORD, 'base_expr' => $v,
+                                    'data' => $this->recordProcessor->process($v)];
             }
         }
 

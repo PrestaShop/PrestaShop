@@ -81,10 +81,10 @@ class AddonsDataProvider implements AddonsInterface
      */
     public function downloadModule($module_id)
     {
-        $params = array(
+        $params = [
             'id_module' => $module_id,
             'format' => 'json',
-        );
+        ];
 
         // Module downloading
         try {
@@ -123,7 +123,7 @@ class AddonsDataProvider implements AddonsInterface
     /**
      * {@inheritdoc}
      */
-    public function request($action, $params = array())
+    public function request($action, $params = [])
     {
         if (!$this->isAddonsUp()) {
             throw new Exception('Previous call failed and disabled client.');
@@ -144,7 +144,8 @@ class AddonsDataProvider implements AddonsInterface
                     return $this->marketplaceClient->getServices();
                 case 'native_all':
                     return $this->marketplaceClient->setIsoCode('all')
-                        ->getNativesModules();
+                        ->getNativesModules()
+                    ;
                 case 'must-have':
                     return $this->marketplaceClient->getMustHaveModules();
                 case 'customer':
@@ -153,25 +154,29 @@ class AddonsDataProvider implements AddonsInterface
                     return $this->marketplaceClient
                         ->setUserMail($params['username_addons'])
                         ->setPassword($params['password_addons'])
-                        ->getCustomerThemes();
+                        ->getCustomerThemes()
+                    ;
                 case 'check_customer':
                     return $this->marketplaceClient
                         ->setUserMail($params['username_addons'])
                         ->setPassword($params['password_addons'])
-                        ->getCheckCustomer();
+                        ->getCheckCustomer()
+                    ;
                 case 'check_module':
                     return $this->marketplaceClient
                         ->setUserMail($params['username_addons'])
                         ->setPassword($params['password_addons'])
                         ->setModuleName($params['module_name'])
                         ->setModuleKey($params['module_key'])
-                        ->getCheckModule();
+                        ->getCheckModule()
+                    ;
                 case 'module_download':
                     if ($this->isAddonsAuthenticated()) {
                         return $this->marketplaceClient
                             ->setUserMail($params['username_addons'])
                             ->setPassword($params['password_addons'])
-                            ->getModuleZip($params['id_module']);
+                            ->getModuleZip($params['id_module'])
+                        ;
                     }
 
                     return $this->marketplaceClient->getModuleZip($params['id_module']);
@@ -199,10 +204,10 @@ class AddonsDataProvider implements AddonsInterface
         $username = $this->encryption->decrypt($request->cookies->get('username_addons'));
         $password = $this->encryption->decrypt($request->cookies->get('password_addons'));
 
-        return array(
+        return [
            'username_addons' => $username,
            'password_addons' => $password,
-        );
+        ];
     }
 
     /** Does this function should be in a User related class ? **/
@@ -211,9 +216,9 @@ class AddonsDataProvider implements AddonsInterface
         $request = Request::createFromGlobals();
         $username = $this->encryption->decrypt($request->cookies->get('username_addons'));
 
-        return array(
+        return [
             'username_addons' => $username,
-        );
+        ];
     }
 
     /**

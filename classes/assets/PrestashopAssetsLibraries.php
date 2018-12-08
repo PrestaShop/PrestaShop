@@ -34,18 +34,18 @@ class PrestashopAssetsLibraries
      *
      * @var array
      */
-    private static $assetsLibraries = array(
-        'font-awesome' => array(
+    private static $assetsLibraries = [
+        'font-awesome' => [
             // array of array because a library can have js & css
-            array(
+            [
                 'id' => 'font-awesome-css',
                 'type' => self::css,
                 'path' => '/themes/_libraries/font-awesome/css/font-awesome.min.css',
-                'params' => array('media' => 'all', 'priority' => 10),
-            ),
-        ),
+                'params' => ['media' => 'all', 'priority' => 10],
+            ],
+        ],
         // can imagine others libraries
-    );
+    ];
 
     /**
      * Get Library files from name.

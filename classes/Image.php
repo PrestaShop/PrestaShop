@@ -64,19 +64,19 @@ class ImageCore extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'image',
         'primary' => 'id_image',
         'multilang' => true,
-        'fields' => array(
-            'id_product' => array('type' => self::TYPE_INT, 'shop' => 'both', 'validate' => 'isUnsignedId', 'required' => true),
-            'position' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
-            'cover' => array('type' => self::TYPE_BOOL, 'allow_null' => true, 'validate' => 'isBool', 'shop' => true),
-            'legend' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 128),
-        ),
-    );
+        'fields' => [
+            'id_product' => ['type' => self::TYPE_INT, 'shop' => 'both', 'validate' => 'isUnsignedId', 'required' => true],
+            'position' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'],
+            'cover' => ['type' => self::TYPE_BOOL, 'allow_null' => true, 'validate' => 'isBool', 'shop' => true],
+            'legend' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 128],
+        ],
+    ];
 
-    protected static $_cacheGetSize = array();
+    protected static $_cacheGetSize = [];
 
     /**
      * ImageCore constructor.
@@ -316,12 +316,14 @@ class ImageCore extends ObjectModel
             unlink(_PS_TMP_IMG_DIR_ . 'product_' . $idProduct . '.jpg');
         }
 
-        return Db::getInstance()->execute('
+        return Db::getInstance()->execute(
+            '
 			UPDATE `' . _DB_PREFIX_ . 'image`
 			SET `cover` = NULL
 			WHERE `id_product` = ' . (int) $idProduct
         ) &&
-        Db::getInstance()->execute('
+        Db::getInstance()->execute(
+            '
 			UPDATE `' . _DB_PREFIX_ . 'image_shop` image_shop
 			SET image_shop.`cover` = NULL
 			WHERE image_shop.id_shop IN (' . implode(',', array_map('intval', Shop::getContextListShopID())) . ') AND image_shop.`id_product` = ' . (int) $idProduct
@@ -385,8 +387,10 @@ class ImageCore extends ObjectModel
                         if (!Configuration::get('PS_LEGACY_IMAGES')) {
                             $imageNew->createImgFolder();
                         }
-                        copy(_PS_PROD_IMG_DIR_ . $imageOld->getExistingImgPath() . '-' . $imageType['name'] . '.jpg',
-                        $newPath . '-' . $imageType['name'] . '.jpg');
+                        copy(
+                            _PS_PROD_IMG_DIR_ . $imageOld->getExistingImgPath() . '-' . $imageType['name'] . '.jpg',
+                        $newPath . '-' . $imageType['name'] . '.jpg'
+                        );
                         if (Configuration::get('WATERMARK_HASH')) {
                             $oldImagePath = _PS_PROD_IMG_DIR_ . $imageOld->getExistingImgPath() . '-' . $imageType['name'] . '-' . Configuration::get('WATERMARK_HASH') . '.jpg';
                             if (file_exists($oldImagePath)) {
@@ -545,7 +549,8 @@ class ImageCore extends ObjectModel
      */
     public function deleteProductAttributeImage()
     {
-        return Db::getInstance()->execute('
+        return Db::getInstance()->execute(
+            '
 			DELETE
 			FROM `' . _DB_PREFIX_ . 'product_attribute_image`
 			WHERE `id_image` = ' . (int) $this->id
@@ -569,7 +574,7 @@ class ImageCore extends ObjectModel
             return false;
         }
 
-        $filesToDelete = array();
+        $filesToDelete = [];
 
         // Delete auto-generated images
         $image_types = ImageType::getImagesTypes();

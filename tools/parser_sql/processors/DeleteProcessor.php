@@ -42,7 +42,7 @@ require_once(dirname(__FILE__) . '/AbstractProcessor.php');
 class DeleteProcessor extends AbstractProcessor {
 
     public function process($tokens) {
-        $tables = array();
+        $tables = [];
         $del = $tokens['DELETE'];
 
         foreach ($tokens['DELETE'] as $expression) {
@@ -57,7 +57,7 @@ class DeleteProcessor extends AbstractProcessor {
             }
         }
 
-        $tokens['DELETE'] = array('TABLES' => $tables);
+        $tokens['DELETE'] = ['TABLES' => $tables];
         return $tokens;
     }
 }

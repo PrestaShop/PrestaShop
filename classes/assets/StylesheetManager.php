@@ -25,7 +25,7 @@
  */
 class StylesheetManagerCore extends AbstractAssetManager
 {
-    private $valid_media = array(
+    private $valid_media = [
         'all',
         'braille',
         'embossed',
@@ -36,13 +36,13 @@ class StylesheetManagerCore extends AbstractAssetManager
         'speech',
         'tty',
         'tv',
-    );
+    ];
 
     protected function getDefaultList()
     {
         return [
-            'external' => array(),
-            'inline' => array(),
+            'external' => [],
+            'inline' => [],
         ];
     }
 
@@ -100,7 +100,7 @@ class StylesheetManagerCore extends AbstractAssetManager
             $type = ($inline) ? 'inline' : 'external';
         }
 
-        $this->list[$type][$id] = array(
+        $this->list[$type][$id] = [
             'id' => $id,
             'type' => $type,
             'path' => $fullPath,
@@ -108,7 +108,7 @@ class StylesheetManagerCore extends AbstractAssetManager
             'media' => $media,
             'priority' => $priority,
             'server' => $server,
-        );
+        ];
     }
 
     private function getSanitizedMedia($media)

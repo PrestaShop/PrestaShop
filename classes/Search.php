@@ -26,7 +26,8 @@
 define('PS_SEARCH_MAX_WORD_LENGTH', 15);
 
 /* Copied from Drupal search module, except for \x{0}-\x{2f} that has been replaced by \x{0}-\x{2c}\x{2e}-\x{2f} in order to keep the char '-' */
-define('PREG_CLASS_SEARCH_EXCLUDE',
+define(
+    'PREG_CLASS_SEARCH_EXCLUDE',
 '\x{0}-\x{2c}\x{2e}-\x{2f}\x{3a}-\x{40}\x{5b}-\x{60}\x{7b}-\x{bf}\x{d7}\x{f7}\x{2b0}-' .
 '\x{385}\x{387}\x{3f6}\x{482}-\x{489}\x{559}-\x{55f}\x{589}-\x{5c7}\x{5f3}-' .
 '\x{61f}\x{640}\x{64b}-\x{65e}\x{66a}-\x{66d}\x{670}\x{6d4}\x{6d6}-\x{6ed}' .
@@ -53,9 +54,11 @@ define('PREG_CLASS_SEARCH_EXCLUDE',
 '\x{31cf}\x{3200}-\x{33ff}\x{4dc0}-\x{4dff}\x{a015}\x{a490}-\x{a716}\x{a802}' .
 '\x{e000}-\x{f8ff}\x{fb29}\x{fd3e}-\x{fd3f}\x{fdfc}-\x{fdfd}' .
 '\x{fd3f}\x{fdfc}-\x{fe6b}\x{feff}-\x{ff0f}\x{ff1a}-\x{ff20}\x{ff3b}-\x{ff40}' .
-'\x{ff5b}-\x{ff65}\x{ff70}\x{ff9e}\x{ff9f}\x{ffe0}-\x{fffd}');
+'\x{ff5b}-\x{ff65}\x{ff70}\x{ff9e}\x{ff9f}\x{ffe0}-\x{fffd}'
+);
 
-define('PREG_CLASS_NUMBERS',
+define(
+    'PREG_CLASS_NUMBERS',
 '\x{30}-\x{39}\x{b2}\x{b3}\x{b9}\x{bc}-\x{be}\x{660}-\x{669}\x{6f0}-\x{6f9}' .
 '\x{966}-\x{96f}\x{9e6}-\x{9ef}\x{9f4}-\x{9f9}\x{a66}-\x{a6f}\x{ae6}-\x{aef}' .
 '\x{b66}-\x{b6f}\x{be7}-\x{bf2}\x{c66}-\x{c6f}\x{ce6}-\x{cef}\x{d66}-\x{d6f}' .
@@ -64,9 +67,11 @@ define('PREG_CLASS_NUMBERS',
 '\x{1946}-\x{194f}\x{2070}\x{2074}-\x{2079}\x{2080}-\x{2089}\x{2153}-\x{2183}' .
 '\x{2460}-\x{249b}\x{24ea}-\x{24ff}\x{2776}-\x{2793}\x{3007}\x{3021}-\x{3029}' .
 '\x{3038}-\x{303a}\x{3192}-\x{3195}\x{3220}-\x{3229}\x{3251}-\x{325f}\x{3280}-' .
-'\x{3289}\x{32b1}-\x{32bf}\x{ff10}-\x{ff19}');
+'\x{3289}\x{32b1}-\x{32bf}\x{ff10}-\x{ff19}'
+);
 
-define('PREG_CLASS_PUNCTUATION',
+define(
+    'PREG_CLASS_PUNCTUATION',
 '\x{21}-\x{23}\x{25}-\x{2a}\x{2c}-\x{2f}\x{3a}\x{3b}\x{3f}\x{40}\x{5b}-\x{5d}' .
 '\x{5f}\x{7b}\x{7d}\x{a1}\x{ab}\x{b7}\x{bb}\x{bf}\x{37e}\x{387}\x{55a}-\x{55f}' .
 '\x{589}\x{58a}\x{5be}\x{5c0}\x{5c3}\x{5f3}\x{5f4}\x{60c}\x{60d}\x{61b}\x{61f}' .
@@ -81,7 +86,8 @@ define('PREG_CLASS_PUNCTUATION',
 '\x{30fb}\x{fd3e}\x{fd3f}\x{fe30}-\x{fe52}\x{fe54}-\x{fe61}\x{fe63}\x{fe68}' .
 '\x{fe6a}\x{fe6b}\x{ff01}-\x{ff03}\x{ff05}-\x{ff0a}\x{ff0c}-\x{ff0f}\x{ff1a}' .
 '\x{ff1b}\x{ff1f}\x{ff20}\x{ff3b}-\x{ff3d}\x{ff3f}\x{ff5b}\x{ff5d}\x{ff5f}-' .
-'\x{ff65}');
+'\x{ff65}'
+);
 
 /*
  * Matches all CJK characters that are candidates for auto-splitting
@@ -136,7 +142,7 @@ class SearchCore
             }
         } else {
             $words = explode(' ', $string);
-            $processed_words = array();
+            $processed_words = [];
             // search for aliases for each word of the query
             foreach ($words as $word) {
                 $alias = new Alias(null, $word);
@@ -162,7 +168,7 @@ class SearchCore
         }
 
         // If the language is constituted with symbol and there is no "words", then split every chars
-        if (in_array($iso_code, array('zh', 'tw', 'ja')) && function_exists('mb_strlen')) {
+        if (in_array($iso_code, ['zh', 'tw', 'ja']) && function_exists('mb_strlen')) {
             // Cut symbols from letters
             $symbols = '';
             $letters = '';
@@ -223,8 +229,8 @@ class SearchCore
             return false;
         }
 
-        $intersect_array = array();
-        $score_array = array();
+        $intersect_array = [];
+        $score_array = [];
         $words = Search::extractKeyWords($expr, $id_lang, false, $context->language->iso_code);
 
         foreach ($words as $key => $word) {
@@ -246,7 +252,7 @@ class SearchCore
         }
 
         if (!count($words)) {
-            return $ajax ? array() : array('total' => 0, 'result' => array());
+            return $ajax ? [] : ['total' => 0, 'result' => []];
         }
 
         $score = '';
@@ -281,12 +287,12 @@ class SearchCore
 		AND product_shop.indexed = 1
 		' . $sql_groups, true, false);
 
-        $eligible_products = array();
+        $eligible_products = [];
         foreach ($results as $row) {
             $eligible_products[] = $row['id_product'];
         }
 
-        $eligible_products2 = array();
+        $eligible_products2 = [];
         foreach ($intersect_array as $query) {
             foreach ($db->executeS($query, true, false) as $row) {
                 $eligible_products2[] = $row['id_product'];
@@ -294,7 +300,7 @@ class SearchCore
         }
         $eligible_products = array_unique(array_intersect($eligible_products, array_unique($eligible_products2)));
         if (!count($eligible_products)) {
-            return $ajax ? array() : array('total' => 0, 'result' => array());
+            return $ajax ? [] : ['total' => 0, 'result' => []];
         }
 
         $product_pool = '';
@@ -304,7 +310,7 @@ class SearchCore
             }
         }
         if (empty($product_pool)) {
-            return $ajax ? array() : array('total' => 0, 'result' => array());
+            return $ajax ? [] : ['total' => 0, 'result' => []];
         }
         $product_pool = ((strpos($product_pool, ',') === false) ? (' = ' . (int) $product_pool . ' ') : (' IN (' . rtrim($product_pool, ',') . ') '));
 
@@ -334,7 +340,7 @@ class SearchCore
         $alias = '';
         if ($order_by == 'price') {
             $alias = 'product_shop.';
-        } elseif (in_array($order_by, array('date_upd', 'date_add'))) {
+        } elseif (in_array($order_by, ['date_upd', 'date_add'])) {
             $alias = 'p.';
         }
         $sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity,
@@ -384,7 +390,7 @@ class SearchCore
             $result_properties = Product::getProductsProperties((int) $id_lang, $result);
         }
 
-        return array('total' => $total, 'result' => $result_properties);
+        return ['total' => $total, 'result' => $result_properties];
     }
 
     /**
@@ -492,7 +498,7 @@ class SearchCore
         return $sql;
     }
 
-    protected static function getProductsToIndex($total_languages, $id_product = false, $limit = 50, $weight_array = array())
+    protected static function getProductsToIndex($total_languages, $id_product = false, $limit = 50, $weight_array = [])
     {
         $ids = null;
         if (!$id_product) {
@@ -632,7 +638,7 @@ class SearchCore
         } elseif ($full) {
             $db->execute('TRUNCATE ' . _DB_PREFIX_ . 'search_index');
             $db->execute('TRUNCATE ' . _DB_PREFIX_ . 'search_word');
-            ObjectModel::updateMultishopTable('Product', array('indexed' => 0));
+            ObjectModel::updateMultishopTable('Product', ['indexed' => 0]);
         } else {
             $db->execute('DELETE si FROM `' . _DB_PREFIX_ . 'search_index` si
 				INNER JOIN `' . _DB_PREFIX_ . 'product` p ON (p.id_product = si.id_product)
@@ -650,7 +656,7 @@ class SearchCore
         }
 
         // Every fields are weighted according to the configuration in the backend
-        $weight_array = array(
+        $weight_array = [
             'pname' => Configuration::get('PS_SEARCH_WEIGHT_PNAME'),
             'reference' => Configuration::get('PS_SEARCH_WEIGHT_REF'),
             'pa_reference' => Configuration::get('PS_SEARCH_WEIGHT_REF'),
@@ -667,11 +673,11 @@ class SearchCore
             'tags' => Configuration::get('PS_SEARCH_WEIGHT_TAG'),
             'attributes' => Configuration::get('PS_SEARCH_WEIGHT_ATTRIBUTE'),
             'features' => Configuration::get('PS_SEARCH_WEIGHT_FEATURE'),
-        );
+        ];
 
         // Those are kind of global variables required to save the processed data in the database every X occurrences, in order to avoid overloading MySQL
         $count_words = 0;
-        $query_array3 = array();
+        $query_array3 = [];
 
         // Retrieve the number of languages
         $total_languages = count(Language::getIDs(false));
@@ -679,7 +685,7 @@ class SearchCore
         $sql_attribute = Search::getSQLProductAttributeFields($weight_array);
         // Products are processed 50 by 50 in order to avoid overloading MySQL
         while (($products = Search::getProductsToIndex($total_languages, $id_product, 50, $weight_array)) && (count($products) > 0)) {
-            $products_array = array();
+            $products_array = [];
             // Now each non-indexed product is processed one by one, langage by langage
             foreach ($products as $product) {
                 if ((int) $weight_array['tags']) {
@@ -699,7 +705,7 @@ class SearchCore
                 }
 
                 // Data must be cleaned of html, bad characters, spaces and anything, then if the resulting words are long enough, they're added to the array
-                $product_array = array();
+                $product_array = [];
                 foreach ($product as $key => $value) {
                     if ($key == 'attributes_fields') {
                         foreach ($value as $pa_array) {
@@ -714,7 +720,7 @@ class SearchCore
 
                 // If we find words that need to be indexed, they're added to the word table in the database
                 if (is_array($product_array) && !empty($product_array)) {
-                    $query_array = $query_array2 = array();
+                    $query_array = $query_array2 = [];
                     foreach ($product_array as $word => $weight) {
                         if ($weight) {
                             $query_array[$word] = '(' . (int) $product['id_lang'] . ', ' . (int) $product['id_shop'] . ', \'' . pSQL($word) . '\')';
@@ -728,7 +734,7 @@ class SearchCore
 						INSERT IGNORE INTO ' . _DB_PREFIX_ . 'search_word (id_lang, id_shop, word)
 						VALUES ' . implode(',', $query_array), false);
                     }
-                    $word_ids_by_word = array();
+                    $word_ids_by_word = [];
                     if (is_array($query_array2) && !empty($query_array2)) {
                         // ...then their IDs are retrieved
                         $added_words = $db->executeS('
@@ -778,14 +784,14 @@ class SearchCore
     {
         if (is_array($products) && !empty($products)) {
             Db::getInstance()->execute('DELETE FROM ' . _DB_PREFIX_ . 'search_index WHERE id_product IN (' . implode(',', array_unique(array_map('intval', $products))) . ')');
-            ObjectModel::updateMultishopTable('Product', array('indexed' => 0), 'a.id_product IN (' . implode(',', array_map('intval', $products)) . ')');
+            ObjectModel::updateMultishopTable('Product', ['indexed' => 0], 'a.id_product IN (' . implode(',', array_map('intval', $products)) . ')');
         }
     }
 
     protected static function setProductsAsIndexed(&$products)
     {
         if (is_array($products) && !empty($products)) {
-            ObjectModel::updateMultishopTable('Product', array('indexed' => 1), 'a.id_product IN (' . implode(',', array_map('intval', $products)) . ')');
+            ObjectModel::updateMultishopTable('Product', ['indexed' => 1], 'a.id_product IN (' . implode(',', array_map('intval', $products)) . ')');
         }
     }
 
@@ -799,7 +805,7 @@ class SearchCore
 
             Db::getInstance()->execute($query, false);
         }
-        $queryArray3 = array();
+        $queryArray3 = [];
     }
 
     public static function searchTag(
@@ -860,7 +866,8 @@ class SearchCore
 			AND product_shop.`visibility` IN (\'both\', \'search\')
 			AND cs.`id_shop` = ' . (int) Context::getContext()->shop->id . '
 			' . $sql_groups . '
-			AND t.`name` LIKE \'%' . pSQL($tag) . '%\'');
+			AND t.`name` LIKE \'%' . pSQL($tag) . '%\''
+            );
         }
 
         $sql = 'SELECT DISTINCT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity, pl.`description_short`, pl.`link_rewrite`, pl.`name`, pl.`available_now`, pl.`available_later`,
@@ -917,7 +924,7 @@ class SearchCore
      */
     public static function getSearchParamFromWord($word)
     {
-        $word = str_replace(array('%', '_'), array('\\%', '\\_'), $word);
+        $word = str_replace(['%', '_'], ['\\%', '\\_'], $word);
         $start_search = Configuration::get('PS_SEARCH_START') ? '%' : '';
         $end_search = Configuration::get('PS_SEARCH_END') ? '' : '%';
         $start_pos = (int) ($word[0] == '-');

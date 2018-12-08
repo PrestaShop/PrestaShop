@@ -56,13 +56,13 @@ class QueryBuilder
             throw new Exception(sprintf('Invalid operator %s - must be "and" or "or".', $andOrOr));
         }
 
-        $parts = array();
+        $parts = [];
 
         foreach ($conditions as $key => $value) {
             if (is_scalar($value)) {
                 $parts[] = $key . ' = ' . $this->quote($value);
             } else {
-                $list = array();
+                $list = [];
                 foreach ($value as $item) {
                     $list[] = $this->quote($item);
                 }

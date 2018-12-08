@@ -31,9 +31,9 @@ use GuzzleHttp\Client;
 class ApiClient
 {
     private $addonsApiClient;
-    private $queryParameters = array(
+    private $queryParameters = [
         'format' => 'json',
-    );
+    ];
     private $defaultQueryParameters;
 
     /**
@@ -52,7 +52,7 @@ class ApiClient
         $this->addonsApiClient = $addonsApiClient;
         $this->toolsAdapter = $toolsAdapter;
 
-        list($isoLang) = explode('-', $locale);
+        [$isoLang] = explode('-', $locale);
 
         $this->setIsoLang($isoLang)
             ->setIsoCode($isoCode)
@@ -96,7 +96,8 @@ class ApiClient
     public function getCheckCustomer()
     {
         $response = $this->setMethod('check_customer')
-            ->getResponse();
+            ->getResponse()
+        ;
 
         return json_decode($response);
     }
@@ -110,7 +111,7 @@ class ApiClient
 
         $responseArray = json_decode($response);
 
-        return isset($responseArray->modules) ? $responseArray->modules : array();
+        return isset($responseArray->modules) ? $responseArray->modules : [];
     }
 
     public function getPreInstalledModules()
@@ -121,7 +122,7 @@ class ApiClient
         ;
         $responseDecoded = json_decode($response);
 
-        return isset($responseDecoded->modules) ? $responseDecoded->modules : array();
+        return isset($responseDecoded->modules) ? $responseDecoded->modules : [];
     }
 
     public function getMustHaveModules()
@@ -133,7 +134,7 @@ class ApiClient
 
         $responseArray = json_decode($response);
 
-        return isset($responseArray->modules) ? $responseArray->modules : array();
+        return isset($responseArray->modules) ? $responseArray->modules : [];
     }
 
     /**
@@ -150,7 +151,8 @@ class ApiClient
         $this->queryParameters['sc_address'] = $sc_address;
 
         $response = $this->setMethod('trust')
-            ->getResponse();
+            ->getResponse()
+        ;
 
         return json_decode($response);
     }
@@ -164,7 +166,7 @@ class ApiClient
 
         $responseArray = json_decode($response);
 
-        return isset($responseArray->services) ? $responseArray->services : array();
+        return isset($responseArray->services) ? $responseArray->services : [];
     }
 
     public function getCategories()
@@ -176,7 +178,7 @@ class ApiClient
 
         $responseArray = json_decode($response);
 
-        return isset($responseArray->module) ? $responseArray->module : array();
+        return isset($responseArray->module) ? $responseArray->module : [];
     }
 
     public function getModule($moduleId)
@@ -224,7 +226,7 @@ class ApiClient
             return $responseArray->modules;
         }
 
-        return array();
+        return [];
     }
 
     /**
@@ -245,15 +247,16 @@ class ApiClient
             return $responseDecoded->themes;
         }
 
-        return array();
+        return [];
     }
 
     public function getResponse()
     {
         return (string) $this->addonsApiClient
-            ->get(null,
-                array('query' => $this->queryParameters,
-                )
+            ->get(
+                null,
+                ['query' => $this->queryParameters,
+                ]
             )->getBody()
         ;
     }
@@ -261,9 +264,10 @@ class ApiClient
     public function getPostResponse()
     {
         return (string) $this->addonsApiClient
-            ->post(null,
-                array('query' => $this->queryParameters,
-                )
+            ->post(
+                null,
+                ['query' => $this->queryParameters,
+                ]
             )->getBody();
     }
 

@@ -47,13 +47,14 @@ class PassVsprintfValidator extends ConstraintValidator
 
         if ($this->countArgumentsOfTranslation($translation->getKey()) != $this->countArgumentsOfTranslation($translation->getTranslation())) {
             $this->context->buildViolation($constraint->message)
-                ->addViolation();
+                ->addViolation()
+            ;
         }
     }
 
     private function countArgumentsOfTranslation($property)
     {
-        $matches = array();
+        $matches = [];
         if (preg_match_all(PrestaShopTranslatorTrait::$regexSprintfParams, $property, $matches) === false) {
             throw new Exception('Preg_match failed');
         }

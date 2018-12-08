@@ -36,16 +36,17 @@ function generate_tax_rules()
 
     foreach ($taxes as $tax) {
         $id_tax = $tax['id_tax'];
-        $row = array(
+        $row = [
             'active' => 1,
             'id_tax_rules_group' => $id_tax,
             'name' => 'Rule '.$tax['rate'].'%',
-        );
+        ];
         $res &= Db::getInstance()->insert('tax_rules_group', $row);
         $id_tax_rules_group = Db::getInstance()->Insert_ID();
 
 
-        $countries = Db::getInstance()->executeS('
+        $countries = Db::getInstance()->executeS(
+            '
 		SELECT * FROM `'._DB_PREFIX_.'country` c
 		LEFT JOIN `'._DB_PREFIX_.'zone` z ON (c.`id_zone` = z.`id_zone`)
 		LEFT JOIN `'._DB_PREFIX_.'tax_zone` tz ON (tz.`id_zone` = z.`id_zone`)
@@ -67,7 +68,7 @@ function generate_tax_rules()
 
         if ($states) {
             foreach ($states as $state) {
-                if (!in_array($state['tax_behavior'], array(PS_PRODUCT_TAX, PS_STATE_TAX, PS_BOTH_TAX))) {
+                if (!in_array($state['tax_behavior'], [PS_PRODUCT_TAX, PS_STATE_TAX, PS_BOTH_TAX])) {
                     $tax_behavior = PS_PRODUCT_TAX;
                 } else {
                     $tax_behavior = $state['tax_behavior'];
@@ -85,13 +86,15 @@ function generate_tax_rules()
             }
         }
 
-        $res &= Db::getInstance()->execute('
+        $res &= Db::getInstance()->execute(
+            '
 		UPDATE `'._DB_PREFIX_.'product`
 		SET `id_tax_rules_group` = '.$id_tax_rules_group.'
 		WHERE `id_tax` = '.(int)$id_tax
         );
 
-        $res &= Db::getInstance()->execute('
+        $res &= Db::getInstance()->execute(
+            '
 		UPDATE `'._DB_PREFIX_.'carrier`
 		SET `id_tax_rules_group` = '.$id_tax_rules_group.'
 		WHERE `id_tax` = '.(int)$id_tax

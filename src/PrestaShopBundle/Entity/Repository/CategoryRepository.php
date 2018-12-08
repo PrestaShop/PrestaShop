@@ -117,7 +117,8 @@ class CategoryRepository
             INNER JOIN {table_prefix}category_lang cl ON (cl.id_category = c.id_category AND cl.id_lang = :language_id AND cl.id_shop = :shop_id)
             INNER JOIN {table_prefix}category_shop cs ON (cs.id_category = c.id_category AND cs.id_shop = :shop_id)
             ORDER BY c.id_parent ASC
-        ');
+        '
+        );
 
         $statement = $this->connection->prepare($query);
 
@@ -145,8 +146,8 @@ class CategoryRepository
     {
         $idRootCategory = (new CategoryDataProvider($this->contextAdapter))->getRootCategory()->id;
 
-        $categories = array();
-        $buff = array();
+        $categories = [];
+        $buff = [];
 
         foreach ($rows as $row) {
             $current = &$buff[$row['id_category']];
@@ -159,6 +160,6 @@ class CategoryRepository
             }
         }
 
-        return array('tree' => array('children' => $categories));
+        return ['tree' => ['children' => $categories]];
     }
 }

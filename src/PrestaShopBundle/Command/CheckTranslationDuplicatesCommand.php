@@ -38,7 +38,8 @@ class CheckTranslationDuplicatesCommand extends ContainerAwareCommand
     {
         $this
             ->setName('prestashop:translation:find-duplicates')
-            ->setDescription('Find duplicates of your translations');
+            ->setDescription('Find duplicates of your translations')
+        ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -52,7 +53,7 @@ class CheckTranslationDuplicatesCommand extends ContainerAwareCommand
         $progress->start();
         $progress->setRedrawFrequency(20);
 
-        $duplicates = array();
+        $duplicates = [];
 
         foreach ($catalogue as $domain => $messages) {
             $nbOfMessages = count($messages);
@@ -63,7 +64,7 @@ class CheckTranslationDuplicatesCommand extends ContainerAwareCommand
             for ($i = 0; $i < $nbOfMessages; ++$i) {
                 for ($j = ($i + 1); $j < $nbOfMessages; ++$j) {
                     if ($this->check($messages[$i], $messages[$j])) {
-                        $duplicates[$domain][] = array($i => $messages[$i], $j => $messages[$j]);
+                        $duplicates[$domain][] = [$i => $messages[$i], $j => $messages[$j]];
                     }
                 }
                 $progress->advance();

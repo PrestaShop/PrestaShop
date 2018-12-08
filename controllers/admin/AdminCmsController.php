@@ -48,48 +48,48 @@ class AdminCmsControllerCore extends AdminController
 
         parent::__construct();
 
-        $this->bulk_actions = array(
-            'delete' => array(
-                'text' => $this->trans('Delete selected', array(), 'Admin.Actions'),
-                'confirm' => $this->trans('Delete selected items?', array(), 'Admin.Notifications.Warning'),
+        $this->bulk_actions = [
+            'delete' => [
+                'text' => $this->trans('Delete selected', [], 'Admin.Actions'),
+                'confirm' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
                 'icon' => 'icon-trash',
-            ),
-        );
-        $this->fields_list = array(
-            'id_cms' => array(
-                'title' => $this->trans('ID', array(), 'Admin.Global'),
+            ],
+        ];
+        $this->fields_list = [
+            'id_cms' => [
+                'title' => $this->trans('ID', [], 'Admin.Global'),
                 'align' => 'center',
                 'class' => 'fixed-width-xs',
-            ),
-            'link_rewrite' => array(
-                'title' => $this->trans('URL', array(), 'Admin.Global'),
-            ),
-            'meta_title' => array(
-                'title' => $this->trans('Title', array(), 'Admin.Global'),
+            ],
+            'link_rewrite' => [
+                'title' => $this->trans('URL', [], 'Admin.Global'),
+            ],
+            'meta_title' => [
+                'title' => $this->trans('Title', [], 'Admin.Global'),
                 'filter_key' => 'b!meta_title',
                 'maxlength' => 50,
-            ),
-            'head_seo_title' => array(
-                'title' => $this->trans('Meta title', array(), 'Admin.Global'),
+            ],
+            'head_seo_title' => [
+                'title' => $this->trans('Meta title', [], 'Admin.Global'),
                 'filter_key' => 'b!head_seo_title',
                 'maxlength' => 50,
-            ),
-            'position' => array(
-                'title' => $this->trans('Position', array(), 'Admin.Global'),
+            ],
+            'position' => [
+                'title' => $this->trans('Position', [], 'Admin.Global'),
                 'filter_key' => 'position',
                 'align' => 'center',
                 'class' => 'fixed-width-sm',
                 'position' => 'position',
-            ),
-            'active' => array(
-                'title' => $this->trans('Displayed', array(), 'Admin.Global'),
+            ],
+            'active' => [
+                'title' => $this->trans('Displayed', [], 'Admin.Global'),
                 'align' => 'center',
                 'active' => 'status',
                 'class' => 'fixed-width-sm',
                 'type' => 'bool',
                 'orderby' => false,
-            ),
-        );
+            ],
+        ];
 
         // The controller can't be call directly
         // In this case, AdminCmsContentController::getCurrentCMSCategory() is null
@@ -100,7 +100,7 @@ class AdminCmsControllerCore extends AdminController
 
         $this->_category = AdminCmsContentController::getCurrentCMSCategory();
         $this->tpl_list_vars['icon'] = 'icon-folder-close';
-        $this->tpl_list_vars['title'] = $this->trans('Pages in category "%name%"', array('%name%' => $this->_category->name[Context::getContext()->employee->id_lang]), 'Admin.Design.Feature');
+        $this->tpl_list_vars['title'] = $this->trans('Pages in category "%name%"', ['%name%' => $this->_category->name[Context::getContext()->employee->id_lang]], 'Admin.Design.Feature');
         $this->_join = '
 		LEFT JOIN `' . _DB_PREFIX_ . 'cms_category` c ON (c.`id_cms_category` = a.`id_cms_category`)';
         $this->_select = 'a.position ';
@@ -114,15 +114,15 @@ class AdminCmsControllerCore extends AdminController
 
     public function initPageHeaderToolbar()
     {
-        $this->page_header_toolbar_btn['save-and-preview'] = array(
+        $this->page_header_toolbar_btn['save-and-preview'] = [
             'href' => '#',
-            'desc' => $this->trans('Save and preview', array(), 'Admin.Actions'),
-        );
-        $this->page_header_toolbar_btn['save-and-stay'] = array(
-            'short' => $this->trans('Save and stay', array(), 'Admin.Actions'),
+            'desc' => $this->trans('Save and preview', [], 'Admin.Actions'),
+        ];
+        $this->page_header_toolbar_btn['save-and-stay'] = [
+            'short' => $this->trans('Save and stay', [], 'Admin.Actions'),
             'href' => '#',
-            'desc' => $this->trans('Save and stay', array(), 'Admin.Actions'),
-        );
+            'desc' => $this->trans('Save and stay', [], 'Admin.Actions'),
+        ];
 
         return parent::initPageHeaderToolbar();
     }
@@ -145,150 +145,150 @@ class AdminCmsControllerCore extends AdminController
         $categories = CMSCategory::getCategories($this->context->language->id, false);
         $html_categories = CMSCategory::recurseCMSCategory($categories, $categories[0][1], 1, $this->getFieldValue($this->object, 'id_cms_category'), 1);
 
-        $this->fields_form = array(
+        $this->fields_form = [
             'tinymce' => true,
-            'legend' => array(
+            'legend' => [
                 'title' => $this->l('Page'),
                 'icon' => 'icon-folder-close',
-            ),
-            'input' => array(
+            ],
+            'input' => [
                 // custom template
-                array(
+                [
                     'type' => 'select_category',
-                    'label' => $this->trans('Page Category', array(), 'Admin.Design.Feature'),
+                    'label' => $this->trans('Page Category', [], 'Admin.Design.Feature'),
                     'name' => 'id_cms_category',
-                    'options' => array(
+                    'options' => [
                         'html' => $html_categories,
-                    ),
-                ),
-                array(
+                    ],
+                ],
+                [
                     'type' => 'text',
-                    'label' => $this->trans('Title', array(), 'Admin.Global'),
+                    'label' => $this->trans('Title', [], 'Admin.Global'),
                     'name' => 'meta_title',
                     'id' => 'name', // for copyMeta2friendlyURL compatibility
                     'lang' => true,
                     'required' => true,
                     'class' => 'copyMeta2friendlyURL',
-                    'hint' => array(
-                        $this->trans('Used in the h1 page tag, and as the default title tag value.', array(), 'Admin.Design.Help'),
-                        $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info') . ' &lt;&gt;;=#{}',
-                    ),
-                ),
-                array(
+                    'hint' => [
+                        $this->trans('Used in the h1 page tag, and as the default title tag value.', [], 'Admin.Design.Help'),
+                        $this->trans('Invalid characters:', [], 'Admin.Notifications.Info') . ' &lt;&gt;;=#{}',
+                    ],
+                ],
+                [
                     'type' => 'text',
-                    'label' => $this->trans('Meta title', array(), 'Admin.Global'),
+                    'label' => $this->trans('Meta title', [], 'Admin.Global'),
                     'name' => 'head_seo_title',
                     'lang' => true,
-                    'hint' => array(
-                        $this->trans('Used to override the title tag value. If left blank, the default title value is used.', array(), 'Admin.Design.Help'),
-                        $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info') . ' &lt;&gt;;=#{}',
-                    ),
-                ),
-                array(
+                    'hint' => [
+                        $this->trans('Used to override the title tag value. If left blank, the default title value is used.', [], 'Admin.Design.Help'),
+                        $this->trans('Invalid characters:', [], 'Admin.Notifications.Info') . ' &lt;&gt;;=#{}',
+                    ],
+                ],
+                [
                     'type' => 'text',
-                    'label' => $this->trans('Meta description', array(), 'Admin.Global'),
+                    'label' => $this->trans('Meta description', [], 'Admin.Global'),
                     'name' => 'meta_description',
                     'lang' => true,
-                    'hint' => $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info') . ' &lt;&gt;;=#{}',
-                ),
-                array(
+                    'hint' => $this->trans('Invalid characters:', [], 'Admin.Notifications.Info') . ' &lt;&gt;;=#{}',
+                ],
+                [
                     'type' => 'tags',
-                    'label' => $this->trans('Meta keywords', array(), 'Admin.Global'),
+                    'label' => $this->trans('Meta keywords', [], 'Admin.Global'),
                     'name' => 'meta_keywords',
                     'lang' => true,
-                    'hint' => array(
-                        $this->trans('To add "tags" click in the field, write something, and then press "Enter."', array(), 'Admin.Design.Help'),
-                        $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info') . ' &lt;&gt;;=#{}',
-                    ),
-                ),
-                array(
+                    'hint' => [
+                        $this->trans('To add "tags" click in the field, write something, and then press "Enter."', [], 'Admin.Design.Help'),
+                        $this->trans('Invalid characters:', [], 'Admin.Notifications.Info') . ' &lt;&gt;;=#{}',
+                    ],
+                ],
+                [
                     'type' => 'text',
-                    'label' => $this->trans('Friendly URL', array(), 'Admin.Global'),
+                    'label' => $this->trans('Friendly URL', [], 'Admin.Global'),
                     'name' => 'link_rewrite',
                     'required' => true,
                     'lang' => true,
-                    'hint' => $this->trans('Only letters and the hyphen (-) character are allowed.', array(), 'Admin.Design.Feature'),
-                ),
-                array(
+                    'hint' => $this->trans('Only letters and the hyphen (-) character are allowed.', [], 'Admin.Design.Feature'),
+                ],
+                [
                     'type' => 'textarea',
-                    'label' => $this->trans('Page content', array(), 'Admin.Design.Feature'),
+                    'label' => $this->trans('Page content', [], 'Admin.Design.Feature'),
                     'name' => 'content',
                     'autoload_rte' => true,
                     'lang' => true,
                     'rows' => 5,
                     'cols' => 40,
-                    'hint' => $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info') . ' <>;=#{}',
-                ),
-                array(
+                    'hint' => $this->trans('Invalid characters:', [], 'Admin.Notifications.Info') . ' <>;=#{}',
+                ],
+                [
                     'type' => 'switch',
-                    'label' => $this->trans('Indexation by search engines', array(), 'Admin.Design.Feature'),
+                    'label' => $this->trans('Indexation by search engines', [], 'Admin.Design.Feature'),
                     'name' => 'indexation',
                     'required' => false,
                     'class' => 't',
                     'is_bool' => true,
-                    'values' => array(
-                        array(
+                    'values' => [
+                        [
                             'id' => 'indexation_on',
                             'value' => 1,
-                            'label' => $this->trans('Enabled', array(), 'Admin.Global'),
-                        ),
-                        array(
+                            'label' => $this->trans('Enabled', [], 'Admin.Global'),
+                        ],
+                        [
                             'id' => 'indexation_off',
                             'value' => 0,
-                            'label' => $this->trans('Disabled', array(), 'Admin.Global'),
-                        ),
-                    ),
-                ),
-                array(
+                            'label' => $this->trans('Disabled', [], 'Admin.Global'),
+                        ],
+                    ],
+                ],
+                [
                     'type' => 'switch',
-                    'label' => $this->trans('Displayed', array(), 'Admin.Global'),
+                    'label' => $this->trans('Displayed', [], 'Admin.Global'),
                     'name' => 'active',
                     'required' => false,
                     'is_bool' => true,
-                    'values' => array(
-                        array(
+                    'values' => [
+                        [
                             'id' => 'active_on',
                             'value' => 1,
-                            'label' => $this->trans('Enabled', array(), 'Admin.Global'),
-                        ),
-                        array(
+                            'label' => $this->trans('Enabled', [], 'Admin.Global'),
+                        ],
+                        [
                             'id' => 'active_off',
                             'value' => 0,
-                            'label' => $this->trans('Disabled', array(), 'Admin.Global'),
-                        ),
-                    ),
-                ),
-            ),
-            'submit' => array(
-                'title' => $this->trans('Save', array(), 'Admin.Actions'),
-            ),
-            'buttons' => array(
-                'save_and_preview' => array(
+                            'label' => $this->trans('Disabled', [], 'Admin.Global'),
+                        ],
+                    ],
+                ],
+            ],
+            'submit' => [
+                'title' => $this->trans('Save', [], 'Admin.Actions'),
+            ],
+            'buttons' => [
+                'save_and_preview' => [
                     'name' => 'viewcms',
                     'type' => 'submit',
-                    'title' => $this->trans('Save and preview', array(), 'Admin.Actions'),
+                    'title' => $this->trans('Save and preview', [], 'Admin.Actions'),
                     'class' => 'btn btn-default pull-right',
                     'icon' => 'process-icon-preview',
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
 
         if (Shop::isFeatureActive()) {
-            $this->fields_form['input'][] = array(
+            $this->fields_form['input'][] = [
                 'type' => 'shop',
-                'label' => $this->trans('Shop association', array(), 'Admin.Global'),
+                'label' => $this->trans('Shop association', [], 'Admin.Global'),
                 'name' => 'checkBoxShopAsso',
-            );
+            ];
         }
 
         if (Validate::isLoadedObject($this->object)) {
             $this->context->smarty->assign('url_prev', $this->getPreviewUrl($this->object));
         }
 
-        $this->tpl_form_vars = array(
+        $this->tpl_form_vars = [
             'active' => $this->object->active,
             'PS_ALLOW_ACCENTED_CHARS_URL', (int) Configuration::get('PS_ALLOW_ACCENTED_CHARS_URL'),
-        );
+        ];
 
         return parent::renderForm();
     }
@@ -299,11 +299,11 @@ class AdminCmsControllerCore extends AdminController
         //self::$currentIndex = self::$currentIndex.'&cms';
         $this->position_group_identifier = (int) $this->id_cms_category;
 
-        $this->toolbar_title = $this->trans('Pages in this category', array(), 'Admin.Design.Feature');
-        $this->toolbar_btn['new'] = array(
+        $this->toolbar_title = $this->trans('Pages in this category', [], 'Admin.Design.Feature');
+        $this->toolbar_btn['new'] = [
             'href' => self::$currentIndex . '&add' . $this->table . '&id_cms_category=' . (int) $this->id_cms_category . '&token=' . $this->token,
-            'desc' => $this->trans('Add new', array(), 'Admin.Actions'),
-        );
+            'desc' => $this->trans('Add new', [], 'Admin.Actions'),
+        ];
 
         return parent::renderList();
     }
@@ -313,7 +313,7 @@ class AdminCmsControllerCore extends AdminController
         /* Display list header (filtering, pagination and column names) */
         $this->displayListHeader($token);
         if (!count($this->_list)) {
-            echo '<tr><td class="center" colspan="' . (count($this->fields_list) + 2) . '">' . $this->trans('No items found', array(), 'Admin.Design.Notification') . '</td></tr>';
+            echo '<tr><td class="center" colspan="' . (count($this->fields_list) + 2) . '">' . $this->trans('No items found', [], 'Admin.Design.Notification') . '</td></tr>';
         }
 
         /* Show the content of the table */
@@ -338,7 +338,7 @@ class AdminCmsControllerCore extends AdminController
             $cms = new CMS((int) Tools::getValue('id_cms'));
             $cms->cleanPositions($cms->id_cms_category);
             if (!$cms->delete()) {
-                $this->errors[] = $this->trans('An error occurred while deleting the object.', array(), 'Admin.Notifications.Error')
+                $this->errors[] = $this->trans('An error occurred while deleting the object.', [], 'Admin.Notifications.Error')
                     . ' <b>' . $this->table . ' (' . Db::getInstance()->getMsgError() . ')</b>';
             } else {
                 Tools::redirectAdmin(self::$currentIndex . '&id_cms_category=' . $cms->id_cms_category . '&conf=1&token=' . Tools::getAdminTokenLite('AdminCmsContent'));
@@ -355,12 +355,12 @@ class AdminCmsControllerCore extends AdminController
                         $token = Tools::getAdminTokenLite('AdminCmsContent');
                         Tools::redirectAdmin(self::$currentIndex . '&conf=2&token=' . $token . '&id_cms_category=' . (int) Tools::getValue('id_cms_category'));
                     }
-                    $this->errors[] = $this->trans('An error occurred while deleting this selection.', array(), 'Admin.Notifications.Error');
+                    $this->errors[] = $this->trans('An error occurred while deleting this selection.', [], 'Admin.Notifications.Error');
                 } else {
-                    $this->errors[] = $this->trans('You must select at least one element to delete.', array(), 'Admin.Notifications.Error');
+                    $this->errors[] = $this->trans('You must select at least one element to delete.', [], 'Admin.Notifications.Error');
                 }
             } else {
-                $this->errors[] = $this->trans('You do not have permission to delete this.', array(), 'Admin.Notifications.Error');
+                $this->errors[] = $this->trans('You do not have permission to delete this.', [], 'Admin.Notifications.Error');
             }
         } elseif (Tools::isSubmit('submitAddcms') || Tools::isSubmit('submitAddcmsAndPreview')) {
             parent::validateRules();
@@ -371,7 +371,7 @@ class AdminCmsControllerCore extends AdminController
                 $cms = new CMS();
                 $this->copyFromPost($cms, 'cms');
                 if (!$cms->add()) {
-                    $this->errors[] = $this->trans('An error occurred while creating an object.', array(), 'Admin.Notifications.Error') . ' <b>' . $this->table . ' (' . Db::getInstance()->getMsgError() . ')</b>';
+                    $this->errors[] = $this->trans('An error occurred while creating an object.', [], 'Admin.Notifications.Error') . ' <b>' . $this->table . ' (' . Db::getInstance()->getMsgError() . ')</b>';
                 } else {
                     $this->updateAssoShop($cms->id);
                 }
@@ -379,7 +379,7 @@ class AdminCmsControllerCore extends AdminController
                 $cms = new CMS($id_cms);
                 $this->copyFromPost($cms, 'cms');
                 if (!$cms->update()) {
-                    $this->errors[] = $this->trans('An error occurred while updating an object.', array(), 'Admin.Notifications.Error') . ' <b>' . $this->table . ' (' . Db::getInstance()->getMsgError() . ')</b>';
+                    $this->errors[] = $this->trans('An error occurred while updating an object.', [], 'Admin.Notifications.Error') . ' <b>' . $this->table . ' (' . Db::getInstance()->getMsgError() . ')</b>';
                 } else {
                     $this->updateAssoShop($cms->id);
                 }
@@ -394,12 +394,12 @@ class AdminCmsControllerCore extends AdminController
         } elseif (Tools::isSubmit('way') && Tools::isSubmit('id_cms') && (Tools::isSubmit('position'))) {
             /* @var CMS $object */
             if (!$this->access('edit')) {
-                $this->errors[] = $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error');
+                $this->errors[] = $this->trans('You do not have permission to edit this.', [], 'Admin.Notifications.Error');
             } elseif (!Validate::isLoadedObject($object = $this->loadObject())) {
-                $this->errors[] = $this->trans('An error occurred while updating the status for an object.', array(), 'Admin.Notifications.Error')
-                    . ' <b>' . $this->table . '</b> ' . $this->trans('(cannot load object)', array(), 'Admin.Notifications.Error');
+                $this->errors[] = $this->trans('An error occurred while updating the status for an object.', [], 'Admin.Notifications.Error')
+                    . ' <b>' . $this->table . '</b> ' . $this->trans('(cannot load object)', [], 'Admin.Notifications.Error');
             } elseif (!$object->updatePosition((int) Tools::getValue('way'), (int) Tools::getValue('position'))) {
-                $this->errors[] = $this->trans('Failed to update the position.', array(), 'Admin.Notifications.Error');
+                $this->errors[] = $this->trans('Failed to update the position.', [], 'Admin.Notifications.Error');
             } else {
                 Tools::redirectAdmin(self::$currentIndex . '&' . $this->table . 'Orderby=position&' . $this->table . 'Orderway=asc&conf=4&id_cms_category=' . (int) $object->id_cms_category . '&token=' . Tools::getAdminTokenLite('AdminCmsContent'));
             }
@@ -411,14 +411,14 @@ class AdminCmsControllerCore extends AdminController
                     if ($object->toggleStatus()) {
                         Tools::redirectAdmin(self::$currentIndex . '&conf=5&id_cms_category=' . (int) $object->id_cms_category . '&token=' . Tools::getValue('token'));
                     } else {
-                        $this->errors[] = $this->trans('An error occurred while updating the status.', array(), 'Admin.Notifications.Error');
+                        $this->errors[] = $this->trans('An error occurred while updating the status.', [], 'Admin.Notifications.Error');
                     }
                 } else {
-                    $this->errors[] = $this->trans('An error occurred while updating the status for an object.', array(), 'Admin.Notifications.Error')
-                        . ' <b>' . $this->table . '</b> ' . $this->trans('(cannot load object)', array(), 'Admin.Notifications.Error');
+                    $this->errors[] = $this->trans('An error occurred while updating the status for an object.', [], 'Admin.Notifications.Error')
+                        . ' <b>' . $this->table . '</b> ' . $this->trans('(cannot load object)', [], 'Admin.Notifications.Error');
                 }
             } else {
-                $this->errors[] = $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error');
+                $this->errors[] = $this->trans('You do not have permission to edit this.', [], 'Admin.Notifications.Error');
             }
         } elseif (Tools::isSubmit('submitBulkdeletecms')) {
             // Delete multiple CMS content
@@ -434,7 +434,7 @@ class AdminCmsControllerCore extends AdminController
                     Tools::redirectAdmin(self::$currentIndex . '&conf=2&token=' . Tools::getAdminTokenLite('AdminCmsContent') . '&id_cms_category=' . $id_cms_category);
                 }
             } else {
-                $this->errors[] = $this->trans('You do not have permission to delete this.', array(), 'Admin.Notifications.Error');
+                $this->errors[] = $this->trans('You do not have permission to delete this.', [], 'Admin.Notifications.Error');
             }
         } else {
             parent::postProcess(true);
@@ -445,11 +445,12 @@ class AdminCmsControllerCore extends AdminController
     {
         $preview_url = $this->context->link->getCMSLink($cms, null, null, $this->context->language->id);
         if (!$cms->active) {
-            $params = http_build_query(array(
+            $params = http_build_query(
+                [
                 'adtoken' => Tools::getAdminTokenLite('AdminCmsContent'),
                 'ad' => basename(_PS_ADMIN_DIR_),
                 'id_employee' => (int) $this->context->employee->id,
-                )
+                ]
             );
             $preview_url .= (strpos($preview_url, '?') === false ? '?' : '&') . $params;
         }

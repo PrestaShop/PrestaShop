@@ -39,8 +39,8 @@ class Upgrade extends AbstractCommand
         $command = new UpdateSchemaCommand();
         $this->application->add($command);
 
-        $this->commands[] = array(
+        $this->commands[] = [
             'command' => 'prestashop:schema:update-without-foreign',
-        );
+        ];
     }
 }

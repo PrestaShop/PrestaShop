@@ -42,7 +42,7 @@ use Symfony\Component\Translation\MessageCatalogue;
 class ThemeExtractor
 {
     private $catalog;
-    private $dumpers = array();
+    private $dumpers = [];
     private $format = 'xlf';
     private $outputPath;
     private $smartyExtractor;
@@ -69,11 +69,11 @@ class ThemeExtractor
         // remove the last "/"
         $themeDirectory = substr($theme->getDirectory(), 0, -1);
 
-        $options = array(
+        $options = [
             'path' => $themeDirectory,
             'default_locale' => $locale,
             'root_dir' => $rootDir,
-        );
+        ];
         $this->smartyExtractor->extract($themeDirectory, $this->catalog, $options['root_dir']);
 
         $this->overrideFromDefaultCatalog($locale, $this->catalog);

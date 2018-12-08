@@ -44,36 +44,36 @@ class CartProductTest extends AbstractCartCalculationTest
 
     public function cartWithoutCartRulesProvider()
     {
-        return array(
-            'empty cart'                             => array(
-                'products'      => array(),
+        return [
+            'empty cart' => [
+                'products' => [],
                 'expectedTotal' => 0,
-                'cartRules'     => array(),
-            ),
-            'one product in cart, quantity 1'        => array(
-                'products'      => array(1 => 1,),
+                'cartRules' => [],
+            ],
+            'one product in cart, quantity 1' => [
+                'products' => [1 => 1,],
                 'expectedTotal' => static::PRODUCT_FIXTURES[1]['price']
                                    + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
-                'cartRules'     => array(),
-            ),
-            'one product in cart, quantity 3'        => array(
-                'products'      => array(1 => 3,),
+                'cartRules' => [],
+            ],
+            'one product in cart, quantity 3' => [
+                'products' => [1 => 3,],
                 'expectedTotal' => 3 * static::PRODUCT_FIXTURES[1]['price']
                                    + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
-                'cartRules'     => array(),
-            ),
-            '3 products in cart, several quantities' => array(
-                'products'      => array(
+                'cartRules' => [],
+            ],
+            '3 products in cart, several quantities' => [
+                'products' => [
                     2 => 2,
                     1 => 3,
                     3 => 1,
-                ),
+                ],
                 'expectedTotal' => 3 * static::PRODUCT_FIXTURES[1]['price']
                                    + 2 * static::PRODUCT_FIXTURES[2]['price']
                                    + static::PRODUCT_FIXTURES[3]['price']
                                    + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
-                'cartRules'     => array(),
-            ),
-        );
+                'cartRules' => [],
+            ],
+        ];
     }
 }

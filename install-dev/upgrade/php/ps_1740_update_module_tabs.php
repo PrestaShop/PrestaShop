@@ -30,11 +30,11 @@
 function ps_1740_update_module_tabs()
 {
     // Add new sub menus for modules
-    $moduleTabsToBeAdded = array(
+    $moduleTabsToBeAdded = [
         'AdminModulesManage' => 'en:Installed modules|fr:Modules installés|es:Módulos instalados|de:Installierte Module|it:Moduli installati',
         'AdminModulesCatalog' => 'en:Selection|fr:Selection|es:Selección|de:Auswahl|it:Selezione',
         'AdminModulesNotifications' => 'en:Notifications|fr:Notifications|es:Notificaciones|de:Nachrichten|it:Notifiche'
-    );
+    ];
 
     include_once('add_new_tab.php');
     foreach ($moduleTabsToBeAdded as $className => $translations) {

@@ -74,11 +74,11 @@ class OptionalFeaturesConfiguration implements DataConfigurationInterface
      */
     public function getConfiguration()
     {
-        return array(
+        return [
             'combinations' => $this->combinationFeature->isActive(),
             'features' => $this->featureFeature->isActive(),
             'customer_groups' => $this->groupFeature->isActive(),
-        );
+        ];
     }
 
     /**
@@ -92,7 +92,7 @@ class OptionalFeaturesConfiguration implements DataConfigurationInterface
             $this->groupFeature->update((bool) $configuration['customer_groups']);
         }
 
-        return array();
+        return [];
     }
 
     /**

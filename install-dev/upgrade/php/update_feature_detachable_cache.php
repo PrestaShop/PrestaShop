@@ -26,7 +26,7 @@
 
 function update_feature_detachable_cache()
 {
-    $array_features = array(
+    $array_features = [
         'PS_SPECIFIC_PRICE_FEATURE_ACTIVE' => 'specific_price',
         'PS_SCENE_FEATURE_ACTIVE' => 'scene',
         'PS_PRODUCT_DOWNLOAD_FEATURE_ACTIVE' => 'product_download',
@@ -35,7 +35,7 @@ function update_feature_detachable_cache()
         'PS_GROUP_FEATURE_ACTIVE' => 'group',
         'PS_PACK_FEATURE_ACTIVE' => 'pack',
         'PS_ALIAS_FEATURE_ACTIVE' => 'alias',
-    );
+    ];
     $res = true;
     foreach ($array_features as $config_key => $feature) {
         // array_features is an array defined above, so please don't add bqSql !

@@ -106,7 +106,8 @@ class AbstractGridDefinitionFactoryTest extends TestCase
     {
         $column = $this->createMock(ColumnInterface::class);
         $column->method('getId')
-            ->willReturn($id);
+            ->willReturn($id)
+        ;
 
         return $column;
     }

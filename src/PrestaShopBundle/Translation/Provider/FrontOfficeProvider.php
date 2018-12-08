@@ -37,10 +37,10 @@ class FrontOfficeProvider extends AbstractProvider implements UseDefaultCatalogu
      */
     public function getTranslationDomains()
     {
-        return array(
+        return [
             '^Shop*',
             '^Modules(.*)Shop',
-        );
+        ];
     }
 
     /**
@@ -48,10 +48,10 @@ class FrontOfficeProvider extends AbstractProvider implements UseDefaultCatalogu
      */
     public function getFilters()
     {
-        return array(
+        return [
             '#^Shop*#',
             '#^Modules(.*)Shop#',
-        );
+        ];
     }
 
     /**
@@ -71,7 +71,7 @@ class FrontOfficeProvider extends AbstractProvider implements UseDefaultCatalogu
 
         foreach ($this->getFilters() as $filter) {
             $filteredCatalogue = $this->getCatalogueFromPaths(
-                array($this->getDefaultResourceDirectory()),
+                [$this->getDefaultResourceDirectory()],
                 $this->getLocale(),
                 $filter
             );

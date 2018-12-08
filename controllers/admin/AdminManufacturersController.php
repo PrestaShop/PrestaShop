@@ -31,7 +31,7 @@ class AdminManufacturersControllerCore extends AdminController
 {
     public $bootstrap = true;
     /** @var array countries list */
-    protected $countries_array = array();
+    protected $countries_array = [];
 
     public function __construct()
     {
@@ -47,55 +47,55 @@ class AdminManufacturersControllerCore extends AdminController
 
         parent::__construct();
 
-        $this->bulk_actions = array(
-            'delete' => array(
-                'text' => $this->trans('Delete selected', array(), 'Admin.Actions'),
+        $this->bulk_actions = [
+            'delete' => [
+                'text' => $this->trans('Delete selected', [], 'Admin.Actions'),
                 'icon' => 'icon-trash',
-                'confirm' => $this->trans('Delete selected items?', array(), 'Admin.Notifications.Warning'),
-            ),
-        );
+                'confirm' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
+            ],
+        ];
 
-        $this->fieldImageSettings = array(
+        $this->fieldImageSettings = [
             'name' => 'logo',
             'dir' => 'm',
-        );
+        ];
 
-        $this->fields_list = array(
-            'id_manufacturer' => array(
-                'title' => $this->trans('ID', array(), 'Admin.Global'),
+        $this->fields_list = [
+            'id_manufacturer' => [
+                'title' => $this->trans('ID', [], 'Admin.Global'),
                 'align' => 'center',
                 'class' => 'fixed-width-xs',
-            ),
-            'logo' => array(
-                'title' => $this->trans('Logo', array(), 'Admin.Global'),
+            ],
+            'logo' => [
+                'title' => $this->trans('Logo', [], 'Admin.Global'),
                 'image' => 'm',
                 'orderby' => false,
                 'search' => false,
                 'align' => 'center',
-            ),
-            'name' => array(
-                'title' => $this->trans('Name', array(), 'Admin.Global'),
+            ],
+            'name' => [
+                'title' => $this->trans('Name', [], 'Admin.Global'),
                 'width' => 'auto',
-            ),
-            'addresses' => array(
-                'title' => $this->trans('Addresses', array(), 'Admin.Catalog.Feature'),
+            ],
+            'addresses' => [
+                'title' => $this->trans('Addresses', [], 'Admin.Catalog.Feature'),
                 'search' => false,
                 'align' => 'center',
-            ),
-            'products' => array(
-                'title' => $this->trans('Products', array(), 'Admin.Catalog.Feature'),
+            ],
+            'products' => [
+                'title' => $this->trans('Products', [], 'Admin.Catalog.Feature'),
                 'search' => false,
                 'align' => 'center',
-            ),
-            'active' => array(
-                'title' => $this->trans('Enabled', array(), 'Admin.Global'),
+            ],
+            'active' => [
+                'title' => $this->trans('Enabled', [], 'Admin.Global'),
                 'active' => 'status',
                 'type' => 'bool',
                 'align' => 'center',
                 'class' => 'fixed-width-xs',
                 'orderby' => false,
-            ),
-        );
+            ],
+        ];
     }
 
     public function setMedia($isNewTheme = false)
@@ -108,16 +108,16 @@ class AdminManufacturersControllerCore extends AdminController
     public function initPageHeaderToolbar()
     {
         if (empty($this->display)) {
-            $this->page_header_toolbar_btn['new_manufacturer'] = array(
+            $this->page_header_toolbar_btn['new_manufacturer'] = [
                 'href' => self::$currentIndex . '&addmanufacturer&token=' . $this->token,
-                'desc' => $this->trans('Add new brand', array(), 'Admin.Catalog.Feature'),
+                'desc' => $this->trans('Add new brand', [], 'Admin.Catalog.Feature'),
                 'icon' => 'process-icon-new',
-            );
-            $this->page_header_toolbar_btn['new_manufacturer_address'] = array(
+            ];
+            $this->page_header_toolbar_btn['new_manufacturer_address'] = [
                 'href' => self::$currentIndex . '&addaddress&token=' . $this->token,
-                'desc' => $this->trans('Add new brand address', array(), 'Admin.Catalog.Feature'),
+                'desc' => $this->trans('Add new brand address', [], 'Admin.Catalog.Feature'),
                 'icon' => 'process-icon-new',
-            );
+            ];
         } elseif ($this->display == 'editaddresses' || $this->display == 'addaddress') {
             // Default cancel button - like old back link
             if (!isset($this->no_back) || $this->no_back == false) {
@@ -126,10 +126,10 @@ class AdminManufacturersControllerCore extends AdminController
                     $back = self::$currentIndex . '&token=' . $this->token;
                 }
 
-                $this->page_header_toolbar_btn['cancel'] = array(
+                $this->page_header_toolbar_btn['cancel'] = [
                     'href' => $back,
-                    'desc' => $this->trans('Cancel', array(), 'Admin.Actions'),
-                );
+                    'desc' => $this->trans('Cancel', [], 'Admin.Actions'),
+                ];
             }
         }
 
@@ -152,7 +152,7 @@ class AdminManufacturersControllerCore extends AdminController
         $this->_join = 'LEFT JOIN `' . _DB_PREFIX_ . 'product` p ON (a.`id_manufacturer` = p.`id_manufacturer`)';
         $this->_group = 'GROUP BY a.`id_manufacturer`';
 
-        $this->context->smarty->assign('title_list', $this->trans('List of brands', array(), 'Admin.Catalog.Feature'));
+        $this->context->smarty->assign('title_list', $this->trans('List of brands', [], 'Admin.Catalog.Feature'));
 
         $this->content .= parent::renderList();
     }
@@ -165,40 +165,40 @@ class AdminManufacturersControllerCore extends AdminController
             $this->countries_array[$country['id_country']] = $country['name'];
         }
 
-        return array(
-            'id_address' => array(
-                'title' => $this->trans('ID', array(), 'Admin.Global'),
+        return [
+            'id_address' => [
+                'title' => $this->trans('ID', [], 'Admin.Global'),
                 'align' => 'center',
                 'class' => 'fixed-width-xs',
-            ),
-            'manufacturer_name' => array(
-                'title' => $this->trans('Brand', array(), 'Admin.Global'),
+            ],
+            'manufacturer_name' => [
+                'title' => $this->trans('Brand', [], 'Admin.Global'),
                 'width' => 'auto',
                 'filter_key' => 'm!name',
-            ),
-            'firstname' => array(
-                'title' => $this->trans('First name', array(), 'Admin.Global'),
+            ],
+            'firstname' => [
+                'title' => $this->trans('First name', [], 'Admin.Global'),
                 'maxlength' => 30,
-            ),
-            'lastname' => array(
-                'title' => $this->trans('Last name', array(), 'Admin.Global'),
+            ],
+            'lastname' => [
+                'title' => $this->trans('Last name', [], 'Admin.Global'),
                 'filter_key' => 'a!lastname',
                 'maxlength' => 30,
-            ),
-            'postcode' => array(
-                'title' => $this->trans('Zip/Postal code', array(), 'Admin.Global'),
+            ],
+            'postcode' => [
+                'title' => $this->trans('Zip/Postal code', [], 'Admin.Global'),
                 'align' => 'right',
-            ),
-            'city' => array(
-                'title' => $this->trans('City', array(), 'Admin.Global'),
-            ),
-            'country' => array(
-                'title' => $this->trans('Country', array(), 'Admin.Global'),
+            ],
+            'city' => [
+                'title' => $this->trans('City', [], 'Admin.Global'),
+            ],
+            'country' => [
+                'title' => $this->trans('Country', [], 'Admin.Global'),
                 'type' => 'select',
                 'list' => $this->countries_array,
                 'filter_key' => 'cl!id_country',
-            ),
-        );
+            ],
+        ];
     }
 
     public function processExport($text_delimiter = '"')
@@ -213,9 +213,9 @@ class AdminManufacturersControllerCore extends AdminController
 
     public function initListManufacturerAddresses()
     {
-        $this->toolbar_title = $this->trans('Addresses', array(), 'Admin.Catalog.Feature');
+        $this->toolbar_title = $this->trans('Addresses', [], 'Admin.Catalog.Feature');
         // reset actions and query vars
-        $this->actions = array();
+        $this->actions = [];
         unset($this->fields_list, $this->_select, $this->_join, $this->_group, $this->_filterHaving, $this->_filter);
 
         $this->table = 'address';
@@ -240,13 +240,13 @@ class AdminManufacturersControllerCore extends AdminController
         $this->action = (isset($_POST['submitReset' . $this->table]) ? 'reset_filters' : '');
 
         $this->fields_list = $this->getAddressFieldsList();
-        $this->bulk_actions = array(
-            'delete' => array(
-                'text' => $this->trans('Delete selected', array(), 'Admin.Actions'),
+        $this->bulk_actions = [
+            'delete' => [
+                'text' => $this->trans('Delete selected', [], 'Admin.Actions'),
                 'icon' => 'icon-trash',
-                'confirm' => $this->trans('Delete selected items?', array(), 'Admin.Notifications.Warning'),
-            ),
-        );
+                'confirm' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
+            ],
+        ];
 
         $this->_select = 'cl.`name` as country, m.`name` AS manufacturer_name';
         $this->_join = '
@@ -257,7 +257,7 @@ class AdminManufacturersControllerCore extends AdminController
 				ON (a.`id_manufacturer` = m.`id_manufacturer`)';
         $this->_where = 'AND a.`id_customer` = 0 AND a.`id_supplier` = 0 AND a.`id_warehouse` = 0 AND a.`deleted`= 0';
 
-        $this->context->smarty->assign('title_list', $this->trans('Brand addresses', array(), 'Admin.Catalog.Feature'));
+        $this->context->smarty->assign('title_list', $this->trans('Brand addresses', [], 'Admin.Catalog.Feature'));
 
         // call postProcess() for take care about actions and filters
         $this->postProcess();
@@ -284,15 +284,15 @@ class AdminManufacturersControllerCore extends AdminController
     public function displayEditaddressesLink($token, $id)
     {
         if (!array_key_exists('editaddresses', self::$cache_lang)) {
-            self::$cache_lang['editaddresses'] = $this->trans('Edit', array(), 'Admin.Actions');
+            self::$cache_lang['editaddresses'] = $this->trans('Edit', [], 'Admin.Actions');
         }
 
-        $this->context->smarty->assign(array(
+        $this->context->smarty->assign([
             'href' => self::$currentIndex .
                 '&' . $this->identifier . '=' . $id .
                 '&editaddresses&token=' . ($token != null ? $token : $this->token),
             'action' => self::$cache_lang['editaddresses'],
-        ));
+        ]);
 
         return $this->context->smarty->fetch('helpers/list/list_action_edit.tpl');
     }
@@ -304,122 +304,128 @@ class AdminManufacturersControllerCore extends AdminController
         }
 
         $image = _PS_MANU_IMG_DIR_ . $manufacturer->id . '.jpg';
-        $image_url = ImageManager::thumbnail($image, $this->table . '_' . (int) $manufacturer->id . '.' . $this->imageType, 350,
-            $this->imageType, true, true);
+        $image_url = ImageManager::thumbnail(
+            $image,
+            $this->table . '_' . (int) $manufacturer->id . '.' . $this->imageType,
+            350,
+            $this->imageType,
+            true,
+            true
+        );
         $image_size = file_exists($image) ? filesize($image) / 1000 : false;
 
-        $this->fields_form = array(
+        $this->fields_form = [
             'tinymce' => true,
-            'legend' => array(
-                'title' => $this->trans('Brands', array(), 'Admin.Catalog.Feature'),
+            'legend' => [
+                'title' => $this->trans('Brands', [], 'Admin.Catalog.Feature'),
                 'icon' => 'icon-certificate',
-            ),
-            'input' => array(
-                array(
+            ],
+            'input' => [
+                [
                     'type' => 'text',
-                    'label' => $this->trans('Name', array(), 'Admin.Global'),
+                    'label' => $this->trans('Name', [], 'Admin.Global'),
                     'name' => 'name',
                     'col' => 4,
                     'required' => true,
-                    'hint' => $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info') . ' &lt;&gt;;=#{}',
-                ),
-                array(
+                    'hint' => $this->trans('Invalid characters:', [], 'Admin.Notifications.Info') . ' &lt;&gt;;=#{}',
+                ],
+                [
                     'type' => 'textarea',
-                    'label' => $this->trans('Short description', array(), 'Admin.Catalog.Feature'),
+                    'label' => $this->trans('Short description', [], 'Admin.Catalog.Feature'),
                     'name' => 'short_description',
                     'lang' => true,
                     'cols' => 60,
                     'rows' => 10,
                     'autoload_rte' => 'rte', //Enable TinyMCE editor for short description
                     'col' => 6,
-                    'hint' => $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info') . ' &lt;&gt;;=#{}',
-                ),
-                array(
+                    'hint' => $this->trans('Invalid characters:', [], 'Admin.Notifications.Info') . ' &lt;&gt;;=#{}',
+                ],
+                [
                     'type' => 'textarea',
-                    'label' => $this->trans('Description', array(), 'Admin.Global'),
+                    'label' => $this->trans('Description', [], 'Admin.Global'),
                     'name' => 'description',
                     'lang' => true,
                     'cols' => 60,
                     'rows' => 10,
                     'col' => 6,
                     'autoload_rte' => 'rte', //Enable TinyMCE editor for description
-                    'hint' => $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info') . ' &lt;&gt;;=#{}',
-                ),
-                array(
+                    'hint' => $this->trans('Invalid characters:', [], 'Admin.Notifications.Info') . ' &lt;&gt;;=#{}',
+                ],
+                [
                     'type' => 'file',
-                    'label' => $this->trans('Logo', array(), 'Admin.Global'),
+                    'label' => $this->trans('Logo', [], 'Admin.Global'),
                     'name' => 'logo',
                     'image' => $image_url ? $image_url : false,
                     'size' => $image_size,
                     'display_image' => true,
                     'col' => 6,
-                    'hint' => $this->trans('Upload a brand logo from your computer.', array(), 'Admin.Catalog.Help'),
-                ),
-                array(
+                    'hint' => $this->trans('Upload a brand logo from your computer.', [], 'Admin.Catalog.Help'),
+                ],
+                [
                     'type' => 'text',
-                    'label' => $this->trans('Meta title', array(), 'Admin.Global'),
+                    'label' => $this->trans('Meta title', [], 'Admin.Global'),
                     'name' => 'meta_title',
                     'lang' => true,
                     'col' => 4,
-                    'hint' => $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info') . ' &lt;&gt;;=#{}',
-                ),
-                array(
+                    'hint' => $this->trans('Invalid characters:', [], 'Admin.Notifications.Info') . ' &lt;&gt;;=#{}',
+                ],
+                [
                     'type' => 'text',
-                    'label' => $this->trans('Meta description', array(), 'Admin.Global'),
+                    'label' => $this->trans('Meta description', [], 'Admin.Global'),
                     'name' => 'meta_description',
                     'lang' => true,
                     'col' => 6,
-                    'hint' => $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info') . ' &lt;&gt;;=#{}',
-                ),
-                array(
+                    'hint' => $this->trans('Invalid characters:', [], 'Admin.Notifications.Info') . ' &lt;&gt;;=#{}',
+                ],
+                [
                     'type' => 'tags',
-                    'label' => $this->trans('Meta keywords', array(), 'Admin.Global'),
+                    'label' => $this->trans('Meta keywords', [], 'Admin.Global'),
                     'name' => 'meta_keywords',
                     'lang' => true,
                     'col' => 6,
-                    'hint' => array(
-                        $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info') . ' &lt;&gt;;=#{}',
-                        $this->trans('To add "tags," click inside the field, write something, and then press "Enter."', array(), 'Admin.Catalog.Help'),
-                    ),
-                ),
-                array(
+                    'hint' => [
+                        $this->trans('Invalid characters:', [], 'Admin.Notifications.Info') . ' &lt;&gt;;=#{}',
+                        $this->trans('To add "tags," click inside the field, write something, and then press "Enter."', [], 'Admin.Catalog.Help'),
+                    ],
+                ],
+                [
                     'type' => 'switch',
-                    'label' => $this->trans('Enable', array(), 'Admin.Actions'),
+                    'label' => $this->trans('Enable', [], 'Admin.Actions'),
                     'name' => 'active',
                     'required' => false,
                     'class' => 't',
                     'is_bool' => true,
-                    'values' => array(
-                        array(
+                    'values' => [
+                        [
                             'id' => 'active_on',
                             'value' => 1,
-                            'label' => $this->trans('Enabled', array(), 'Admin.Global'),
-                        ),
-                        array(
+                            'label' => $this->trans('Enabled', [], 'Admin.Global'),
+                        ],
+                        [
                             'id' => 'active_off',
                             'value' => 0,
-                            'label' => $this->trans('Disabled', array(), 'Admin.Global'),
-                        ),
-                    ),
-                ),
-            ),
-        );
+                            'label' => $this->trans('Disabled', [], 'Admin.Global'),
+                        ],
+                    ],
+                ],
+            ],
+        ];
 
         if (!($manufacturer = $this->loadObject(true))) {
             return;
         }
 
         if (Shop::isFeatureActive()) {
-            $this->fields_form['input'][] = array(
+            $this->fields_form['input'][] = [
                 'type' => 'shop',
-                'label' => $this->trans('Shop association', array(), 'Admin.Global'),
+                'label' => $this->trans('Shop association', [], 'Admin.Global'),
                 'name' => 'checkBoxShopAsso',
-            );
+            ];
         }
 
-        $this->fields_form['submit'] = array(
-            'title' => $this->trans('Save', array(), 'Admin.Actions'),
-        );
+        $this->fields_form['submit'] = [
+            'title' => $this->trans('Save', [], 'Admin.Actions'),
+        ];
 
         foreach ($this->_languages as $language) {
             $this->fields_value['short_description_' . $language['id_lang']] = htmlentities(stripslashes($this->getFieldValue(
@@ -449,169 +455,169 @@ class AdminManufacturersControllerCore extends AdminController
         $address = new ManufacturerAddress($id_address);
 
         $res = $address->getFieldsRequiredDatabase();
-        $required_fields = array();
+        $required_fields = [];
         foreach ($res as $row) {
             $required_fields[(int) $row['id_required_field']] = $row['field_name'];
         }
 
-        $form = array(
-            'legend' => array(
-                'title' => $this->trans('Addresses', array(), 'Admin.Catalog.Feature'),
+        $form = [
+            'legend' => [
+                'title' => $this->trans('Addresses', [], 'Admin.Catalog.Feature'),
                 'icon' => 'icon-building',
-            ),
-        );
+            ],
+        ];
 
         if (!$address->id_manufacturer || !Manufacturer::manufacturerExists($address->id_manufacturer)) {
-            $form['input'][] = array(
+            $form['input'][] = [
                 'type' => 'select',
-                'label' => $this->trans('Choose the brand', array(), 'Admin.Catalog.Feature'),
+                'label' => $this->trans('Choose the brand', [], 'Admin.Catalog.Feature'),
                 'name' => 'id_manufacturer',
-                'options' => array(
+                'options' => [
                     'query' => Manufacturer::getManufacturers(),
                     'id' => 'id_manufacturer',
                     'name' => 'name',
-                ),
-            );
+                ],
+            ];
         } else {
-            $form['input'][] = array(
+            $form['input'][] = [
                 'type' => 'text',
-                'label' => $this->trans('Brand', array(), 'Admin.Global'),
+                'label' => $this->trans('Brand', [], 'Admin.Global'),
                 'name' => 'name',
                 'col' => 4,
                 'disabled' => true,
-            );
+            ];
 
-            $form['input'][] = array(
+            $form['input'][] = [
                 'type' => 'hidden',
                 'name' => 'id_manufacturer',
-            );
+            ];
         }
 
-        $form['input'][] = array(
+        $form['input'][] = [
             'type' => 'hidden',
             'name' => 'alias',
-        );
+        ];
 
-        $form['input'][] = array(
+        $form['input'][] = [
             'type' => 'hidden',
             'name' => 'id_address',
-        );
+        ];
 
         if (in_array('company', $required_fields)) {
-            $form['input'][] = array(
+            $form['input'][] = [
                 'type' => 'text',
-                'label' => $this->trans('Company', array(), 'Admin.Global'),
+                'label' => $this->trans('Company', [], 'Admin.Global'),
                 'name' => 'company',
                 'display' => in_array('company', $required_fields),
                 'required' => in_array('company', $required_fields),
                 'maxlength' => 16,
                 'col' => 4,
-                'hint' => $this->trans('Company name for this brand', array(), 'Admin.Catalog.Help'),
-            );
+                'hint' => $this->trans('Company name for this brand', [], 'Admin.Catalog.Help'),
+            ];
         }
 
-        $form['input'][] = array(
+        $form['input'][] = [
             'type' => 'text',
-            'label' => $this->trans('Last name', array(), 'Admin.Global'),
+            'label' => $this->trans('Last name', [], 'Admin.Global'),
             'name' => 'lastname',
             'required' => true,
             'col' => 4,
-            'hint' => $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info') . ' 0-9!&lt;&gt;,;?=+()@#"�{}_$%:',
-        );
-        $form['input'][] = array(
+            'hint' => $this->trans('Invalid characters:', [], 'Admin.Notifications.Info') . ' 0-9!&lt;&gt;,;?=+()@#"�{}_$%:',
+        ];
+        $form['input'][] = [
             'type' => 'text',
-            'label' => $this->trans('First name', array(), 'Admin.Global'),
+            'label' => $this->trans('First name', [], 'Admin.Global'),
             'name' => 'firstname',
             'required' => true,
             'col' => 4,
-            'hint' => $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info') . ' 0-9!&lt;&gt;,;?=+()@#"�{}_$%:',
-        );
-        $form['input'][] = array(
+            'hint' => $this->trans('Invalid characters:', [], 'Admin.Notifications.Info') . ' 0-9!&lt;&gt;,;?=+()@#"�{}_$%:',
+        ];
+        $form['input'][] = [
             'type' => 'text',
-            'label' => $this->trans('Address', array(), 'Admin.Global'),
+            'label' => $this->trans('Address', [], 'Admin.Global'),
             'name' => 'address1',
             'col' => 6,
             'required' => true,
-        );
-        $form['input'][] = array(
+        ];
+        $form['input'][] = [
             'type' => 'text',
-            'label' => $this->trans('Address (2)', array(), 'Admin.Global'),
+            'label' => $this->trans('Address (2)', [], 'Admin.Global'),
             'name' => 'address2',
             'col' => 6,
             'required' => in_array('address2', $required_fields),
-        );
-        $form['input'][] = array(
+        ];
+        $form['input'][] = [
             'type' => 'text',
-            'label' => $this->trans('Zip/postal code', array(), 'Admin.Global'),
+            'label' => $this->trans('Zip/postal code', [], 'Admin.Global'),
             'name' => 'postcode',
             'col' => 2,
             'required' => in_array('postcode', $required_fields),
-        );
-        $form['input'][] = array(
+        ];
+        $form['input'][] = [
             'type' => 'text',
-            'label' => $this->trans('City', array(), 'Admin.Global'),
+            'label' => $this->trans('City', [], 'Admin.Global'),
             'name' => 'city',
             'col' => 4,
             'required' => true,
-        );
-        $form['input'][] = array(
+        ];
+        $form['input'][] = [
             'type' => 'select',
-            'label' => $this->trans('Country', array(), 'Admin.Global'),
+            'label' => $this->trans('Country', [], 'Admin.Global'),
             'name' => 'id_country',
             'required' => false,
             'default_value' => (int) $this->context->country->id,
             'col' => 4,
-            'options' => array(
+            'options' => [
                 'query' => Country::getCountries($this->context->language->id),
                 'id' => 'id_country',
                 'name' => 'name',
-            ),
-        );
-        $form['input'][] = array(
+            ],
+        ];
+        $form['input'][] = [
             'type' => 'select',
-            'label' => $this->trans('State', array(), 'Admin.Global'),
+            'label' => $this->trans('State', [], 'Admin.Global'),
             'name' => 'id_state',
             'required' => false,
             'col' => 4,
-            'options' => array(
-                'query' => array(),
+            'options' => [
+                'query' => [],
                 'id' => 'id_state',
                 'name' => 'name',
-            ),
-        );
-        $form['input'][] = array(
+            ],
+        ];
+        $form['input'][] = [
             'type' => 'text',
-            'label' => $this->trans('Home phone', array(), 'Admin.Global'),
+            'label' => $this->trans('Home phone', [], 'Admin.Global'),
             'name' => 'phone',
             'col' => 4,
             'required' => in_array('phone', $required_fields),
-        );
-        $form['input'][] = array(
+        ];
+        $form['input'][] = [
             'type' => 'text',
-            'label' => $this->trans('Mobile phone', array(), 'Admin.Global'),
+            'label' => $this->trans('Mobile phone', [], 'Admin.Global'),
             'name' => 'phone_mobile',
             'col' => 4,
             'required' => in_array('phone_mobile', $required_fields),
-        );
-        $form['input'][] = array(
+        ];
+        $form['input'][] = [
             'type' => 'textarea',
-            'label' => $this->trans('Other', array(), 'Admin.Global'),
+            'label' => $this->trans('Other', [], 'Admin.Global'),
             'name' => 'other',
             'required' => false,
-            'hint' => $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info') . ' &lt;&gt;;=#{}',
+            'hint' => $this->trans('Invalid characters:', [], 'Admin.Notifications.Info') . ' &lt;&gt;;=#{}',
             'rows' => 2,
             'cols' => 10,
             'col' => 6,
-        );
-        $form['submit'] = array(
-            'title' => $this->trans('Save', array(), 'Admin.Actions'),
-        );
+        ];
+        $form['submit'] = [
+            'title' => $this->trans('Save', [], 'Admin.Actions'),
+        ];
 
-        $this->fields_value = array(
+        $this->fields_value = [
             'name' => Manufacturer::getNameById($address->id_manufacturer),
             'alias' => 'manufacturer',
             'id_country' => $address->id_country,
-        );
+        ];
 
         $this->initToolbar();
         $this->fields_form[0]['form'] = $form;
@@ -632,7 +638,7 @@ class AdminManufacturersControllerCore extends AdminController
         $helper->token = $this->token;
         $helper->table = $this->table;
         $helper->identifier = $this->identifier;
-        $helper->title = $this->trans('Edit Addresses', array(), 'Admin.Catalog.Feature');
+        $helper->title = $this->trans('Edit Addresses', [], 'Admin.Catalog.Feature');
         $helper->id = $address->id;
         $helper->toolbar_scroll = true;
         $helper->languages = $this->_languages;
@@ -653,10 +659,10 @@ class AdminManufacturersControllerCore extends AdminController
         switch ($this->display) {
             case 'editaddresses':
             case 'addaddress':
-                $this->toolbar_btn['save'] = array(
+                $this->toolbar_btn['save'] = [
                     'href' => '#',
-                    'desc' => $this->trans('Save', array(), 'Admin.Actions'),
-                );
+                    'desc' => $this->trans('Save', [], 'Admin.Actions'),
+                ];
 
                 // Default cancel button - like old back link
                 if (!isset($this->no_back) || $this->no_back == false) {
@@ -665,10 +671,10 @@ class AdminManufacturersControllerCore extends AdminController
                         $back = self::$currentIndex . '&token=' . $this->token;
                     }
 
-                    $this->toolbar_btn['cancel'] = array(
+                    $this->toolbar_btn['cancel'] = [
                         'href' => $back,
-                        'desc' => $this->trans('Cancel', array(), 'Admin.Actions'),
-                    );
+                        'desc' => $this->trans('Cancel', [], 'Admin.Actions'),
+                    ];
                 }
                 break;
 
@@ -676,10 +682,10 @@ class AdminManufacturersControllerCore extends AdminController
                 parent::initToolbar();
 
                 if ($this->can_import) {
-                    $this->toolbar_btn['import'] = array(
+                    $this->toolbar_btn['import'] = [
                         'href' => $this->context->link->getAdminLink('AdminImport', true) . '&import_type=manufacturers',
-                        'desc' => $this->trans('Import', array(), 'Admin.Actions'),
-                    );
+                        'desc' => $this->trans('Import', [], 'Admin.Actions'),
+                    ];
                 }
         }
     }
@@ -692,12 +698,12 @@ class AdminManufacturersControllerCore extends AdminController
 
         /* @var Manufacturer $manufacturer */
 
-        $this->toolbar_btn['new'] = array(
+        $this->toolbar_btn['new'] = [
                     'href' => $this->context->link->getAdminLink('AdminManufacturers') . '&addaddress=1&id_manufacturer=' . (int) $manufacturer->id,
-                    'desc' => $this->trans('Add address', array(), 'Admin.Catalog.Feature'),
-                );
+                    'desc' => $this->trans('Add address', [], 'Admin.Catalog.Feature'),
+                ];
 
-        $this->toolbar_title = is_array($this->breadcrumbs) ? array_unique($this->breadcrumbs) : array($this->breadcrumbs);
+        $this->toolbar_title = is_array($this->breadcrumbs) ? array_unique($this->breadcrumbs) : [$this->breadcrumbs];
         $this->toolbar_title[] = $manufacturer->name;
 
         $addresses = $manufacturer->getAddresses($this->context->language->id);
@@ -714,11 +720,11 @@ class AdminManufacturersControllerCore extends AdminController
                 $comb_array[$combination['id_product_attribute']]['ean13'] = $combination['ean13'];
                 $comb_array[$combination['id_product_attribute']]['upc'] = $combination['upc'];
                 $comb_array[$combination['id_product_attribute']]['quantity'] = $combination['quantity'];
-                $comb_array[$combination['id_product_attribute']]['attributes'][] = array(
+                $comb_array[$combination['id_product_attribute']]['attributes'][] = [
                     $combination['group_name'],
                     $combination['attribute_name'],
                     $combination['id_attribute'],
-                );
+                ];
             }
 
             if (isset($comb_array)) {
@@ -734,13 +740,13 @@ class AdminManufacturersControllerCore extends AdminController
             }
         }
 
-        $this->tpl_view_vars = array(
+        $this->tpl_view_vars = [
             'manufacturer' => $manufacturer,
             'addresses' => $addresses,
             'products' => $products,
             'stock_management' => Configuration::get('PS_STOCK_MANAGEMENT'),
             'shopContext' => Shop::getContext(),
-        );
+        ];
 
         return parent::renderView();
     }
@@ -765,9 +771,9 @@ class AdminManufacturersControllerCore extends AdminController
             $this->content .= $this->renderOptions();
         }
 
-        $this->context->smarty->assign(array(
+        $this->context->smarty->assign([
             'content' => $this->content,
-        ));
+        ]);
     }
 
     /**
@@ -841,7 +847,7 @@ class AdminManufacturersControllerCore extends AdminController
         }
 
         if (!$res) {
-            $this->errors[] = $this->trans('Unable to resize one or more of your pictures.', array(), 'Admin.Catalog.Notification');
+            $this->errors[] = $this->trans('Unable to resize one or more of your pictures.', [], 'Admin.Catalog.Notification');
         }
 
         return $res;

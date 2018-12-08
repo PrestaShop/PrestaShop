@@ -62,7 +62,8 @@ class UploadQuotaType extends TranslatorAwareType
                     'required' => true,
                     'unit' => $this->trans('megabytes', 'Admin.Advparameters.Feature'),
                 ]
-            );
+            )
+        ;
     }
 
     /**

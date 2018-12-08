@@ -85,11 +85,11 @@ namespace PrestaShopBundle\Install {
     {
         /** @var \FileLogger */
         private $logger;
-        private $infoList = array();
-        private $warningList = array();
-        private $failureList = array();
-        private $nextQuickInfo = array();
-        private $nextErrors = array();
+        private $infoList = [];
+        private $warningList = [];
+        private $failureList = [];
+        private $nextQuickInfo = [];
+        private $nextErrors = [];
         private $next;
         private $nextDesc;
         private $inAutoUpgrade = false;
@@ -356,43 +356,46 @@ namespace PrestaShopBundle\Install {
         {
             $versionCompare = version_compare(_PS_INSTALL_VERSION_, $this->oldVersion);
             if ($versionCompare == '-1') {
-                $this->logError('Current version: %current%. Version to install: %future%.', 27, array('%current%' => $this->oldVersion, '%future%' => _PS_INSTALL_VERSION_));
+                $this->logError('Current version: %current%. Version to install: %future%.', 27, ['%current%' => $this->oldVersion, '%future%' => _PS_INSTALL_VERSION_]);
             } elseif ($versionCompare == 0) {
-                $this->logError('You already have the %future% version.', 28, array('%future%' => _PS_INSTALL_VERSION_));
+                $this->logError('You already have the %future% version.', 28, ['%future%' => _PS_INSTALL_VERSION_]);
             } elseif ($versionCompare === false) {
                 $this->logError('There is no older version. Did you delete or rename the app/config/parameters.php file?', 29);
             }
 
             if (strpos(_PS_INSTALL_VERSION_, '.') === false) {
-                $this->logError('%install_version% is not a valid version number.', 40,
-                    array('%install_version%' => _PS_INSTALL_VERSION_));
+                $this->logError(
+                    '%install_version% is not a valid version number.',
+                    40,
+                    ['%install_version%' => _PS_INSTALL_VERSION_]
+                );
             }
         }
 
         private function getSQLFiles()
         {
             //custom sql file creation
-            $neededUpgradeFiles = array();
+            $neededUpgradeFiles = [];
             if (!$this->hasFailure()) {
-                $upgradeFiles = array();
+                $upgradeFiles = [];
                 if (!file_exists(_PS_INSTALLER_SQL_UPGRADE_DIR_)) {
                     $this->logError('Unable to find upgrade directory in the installation path.', 31);
                 }
 
                 if ($handle = opendir(_PS_INSTALLER_SQL_UPGRADE_DIR_)) {
                     while (false !== ($file = readdir($handle))) {
-                        if (!in_array($file, array('.', '..', 'index.php'))) {
+                        if (!in_array($file, ['.', '..', 'index.php'])) {
                             $upgradeFiles[] = str_replace('.sql', '', $file);
                         }
                     }
                     closedir($handle);
                 }
                 if (empty($upgradeFiles)) {
-                    $this->logError('Cannot find the SQL upgrade files. Please verify that the %folder% folder is not empty)', 31, array('%folder%' => _PS_INSTALLER_SQL_UPGRADE_DIR_));
+                    $this->logError('Cannot find the SQL upgrade files. Please verify that the %folder% folder is not empty)', 31, ['%folder%' => _PS_INSTALLER_SQL_UPGRADE_DIR_]);
                 }
                 natcasesort($upgradeFiles);
 
-                $neededUpgradeFiles = array();
+                $neededUpgradeFiles = [];
                 foreach ($upgradeFiles as $version) {
                     if (version_compare($version, $this->oldVersion) == 1 && version_compare(_PS_INSTALL_VERSION_, $version) != -1) {
                         $neededUpgradeFiles[] = $version;
@@ -403,19 +406,19 @@ namespace PrestaShopBundle\Install {
                 $this->logError('No upgrade is possible.', 32);
             }
 
-            $sqlContentVersion = array();
+            $sqlContentVersion = [];
             $mysqlEngine = (defined('_MYSQL_ENGINE_') ? _MYSQL_ENGINE_ : 'MyISAM');
             if (!$this->hasFailure()) {
                 foreach ($neededUpgradeFiles as $version) {
                     $file = _PS_INSTALLER_SQL_UPGRADE_DIR_ . $version . '.sql';
                     if (!file_exists($file)) {
-                        $this->logError('Error while loading SQL upgrade file "%file%.sql".', 33, array('%file%' => $version));
+                        $this->logError('Error while loading SQL upgrade file "%file%.sql".', 33, ['%file%' => $version]);
                     }
                     if (!$sqlContent = file_get_contents($file)) {
-                        $this->logError('Error while loading SQL upgrade file "%file%.sql".', 33, array('%file%' => $version));
+                        $this->logError('Error while loading SQL upgrade file "%file%.sql".', 33, ['%file%' => $version]);
                     }
                     $sqlContent .= "\n";
-                    $sqlContent = str_replace(array(self::FILE_PREFIX, self::ENGINE_TYPE), array(_DB_PREFIX_, $mysqlEngine), $sqlContent);
+                    $sqlContent = str_replace([self::FILE_PREFIX, self::ENGINE_TYPE], [_DB_PREFIX_, $mysqlEngine], $sqlContent);
                     $sqlContent = preg_split("/;\s*[\r\n]+/", $sqlContent);
 
                     $sqlContentVersion[$version] = $sqlContent;
@@ -458,7 +461,7 @@ namespace PrestaShopBundle\Install {
                             if (isset($parameters[1])) {
                                 $parameters = $parameters[1];
                             } else {
-                                $parameters = array();
+                                $parameters = [];
                             }
                             if (is_array($parameters)) {
                                 foreach ($parameters as &$parameter) {
@@ -471,37 +474,37 @@ namespace PrestaShopBundle\Install {
                             if (strpos($phpString, '::') === false) {
                                 $func_name = str_replace($pattern[0], '', $php[0]);
                                 if (!file_exists(_PS_INSTALLER_PHP_UPGRADE_DIR_ . strtolower($func_name) . '.php')) {
-                                    $this->logWarning('[ERROR] ' . $version . ' PHP - missing file ' . $query, 41, array(), true);
+                                    $this->logWarning('[ERROR] ' . $version . ' PHP - missing file ' . $query, 41, [], true);
                                 } else {
                                     require_once _PS_INSTALLER_PHP_UPGRADE_DIR_ . Tools::strtolower($func_name) . '.php';
                                     $phpRes = call_user_func_array($func_name, $parameters);
                                 }
                             } else {
                                 /* Or an object method, not supported */
-                                $this->logWarning('[ERROR] ' . $version . ' PHP - Object Method call is forbidden (' . $php[0] . '::' . str_replace($pattern[0], '', $php[1]) . ')', 42, array(), true);
+                                $this->logWarning('[ERROR] ' . $version . ' PHP - Object Method call is forbidden (' . $php[0] . '::' . str_replace($pattern[0], '', $php[1]) . ')', 42, [], true);
                             }
                             if ((is_array($phpRes) and !empty($phpRes['error'])) || $phpRes === false) {
                                 $this->logWarning('[ERROR] PHP ' . $version . ' ' . $query . "\n" . '
 								' . (empty($phpRes['error']) ? '' : $phpRes['error'] . "\n") . '
-								' . (empty($phpRes['msg']) ? '' : ' - ' . $phpRes['msg']), $version, array(), true);
+								' . (empty($phpRes['msg']) ? '' : ' - ' . $phpRes['msg']), $version, [], true);
                             } else {
-                                $this->logInfo('[OK] PHP ' . $version . ' : ' . $query, $version, array(), true);
+                                $this->logInfo('[OK] PHP ' . $version . ' : ' . $query, $version, [], true);
                             }
                         } else {
                             if (!$db->execute($query)) {
                                 $error = $db->getMsgError();
                                 $error_number = $db->getNumberError();
 
-                                $duplicates = array('1050', '1054', '1060', '1061', '1062', '1091');
+                                $duplicates = ['1050', '1054', '1060', '1061', '1062', '1091'];
                                 if (!in_array($error_number, $duplicates)) {
                                     $this->logWarning('SQL ' . $version . '
-								' . $error_number . ' in ' . $query . ': ' . $error, $version, array(), true);
+								' . $error_number . ' in ' . $query . ': ' . $error, $version, [], true);
                                 } else {
                                     $this->logInfo('SQL ' . $version . '
-								' . $error_number . ' in ' . $query . ': ' . $error, $version, array(), true);
+								' . $error_number . ' in ' . $query . ': ' . $error, $version, [], true);
                                 }
                             } else {
-                                $this->logInfo('[OK] SQL ' . $version . ' : ' . $query, $version, array(), true);
+                                $this->logInfo('[OK] SQL ' . $version . ' : ' . $query, $version, [], true);
                             }
                         }
                     }
@@ -519,7 +522,8 @@ namespace PrestaShopBundle\Install {
 
             $filters = new AddonListFilter();
             $filters->setType(AddonListFilterType::MODULE)
-                ->removeStatus(AddonListFilterStatus::UNINSTALLED);
+                ->removeStatus(AddonListFilterStatus::UNINSTALLED)
+            ;
 
             $installedProducts = $moduleRepository->getFilteredList($filters);
             foreach ($installedProducts as $installedProduct) {
@@ -527,10 +531,10 @@ namespace PrestaShopBundle\Install {
                         $installedProduct->attributes->has('origin_filter_value')
                         && in_array(
                             $installedProduct->attributes->get('origin_filter_value'),
-                            array(
+                            [
                                 AddonListFilterOrigin::ADDONS_NATIVE,
                                 AddonListFilterOrigin::ADDONS_NATIVE_ALL,
-                            )
+                            ]
                         )
                         && 'PrestaShop' === $installedProduct->attributes->get('author')
                     )
@@ -607,7 +611,7 @@ namespace PrestaShopBundle\Install {
             // Settings updated, compile and cache directories must be emptied
             $install_dir = realpath(rtrim(_PS_INSTALL_PATH_, '\\/') . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
             $tools_dir = $install_dir . 'tools' . DIRECTORY_SEPARATOR;
-            $arrayToClean = array(
+            $arrayToClean = [
                 $tools_dir . 'smarty' . DIRECTORY_SEPARATOR . 'cache',
                 $tools_dir . 'smarty' . DIRECTORY_SEPARATOR . 'compile',
                 $tools_dir . 'smarty_v2' . DIRECTORY_SEPARATOR . 'cache',
@@ -615,7 +619,7 @@ namespace PrestaShopBundle\Install {
                 $install_dir . 'app' . DIRECTORY_SEPARATOR . 'cache' . DIRECTORY_SEPARATOR,
                 $install_dir . 'cache' . DIRECTORY_SEPARATOR . 'smarty' . DIRECTORY_SEPARATOR . 'cache' . DIRECTORY_SEPARATOR,
                 $install_dir . 'cache' . DIRECTORY_SEPARATOR . 'smarty' . DIRECTORY_SEPARATOR . 'compile' . DIRECTORY_SEPARATOR,
-            );
+            ];
 
             foreach ($arrayToClean as $dir) {
                 if (file_exists($dir)) {
@@ -631,7 +635,7 @@ namespace PrestaShopBundle\Install {
                         }
                     }
                 } else {
-                    $this->logInfo('[SKIP] directory "%directory%" does not exist and cannot be emptied.', null, array('%directory%' => str_replace($tools_dir, '', $dir)));
+                    $this->logInfo('[SKIP] directory "%directory%" does not exist and cannot be emptied.', null, ['%directory%' => str_replace($tools_dir, '', $dir)]);
                 }
             }
 
@@ -715,7 +719,7 @@ namespace PrestaShopBundle\Install {
                     $isoCode = $lang['iso_code'];
 
                     if (Validate::isLangIsoCode($isoCode)) {
-                        $errorsLanguage = array();
+                        $errorsLanguage = [];
 
                         Language::downloadLanguagePack($isoCode, AppKernel::VERSION, $errorsLanguage);
 
@@ -817,9 +821,9 @@ namespace PrestaShopBundle\Install {
             }
 
             $this->next = 'DisableModules';
-            $this->nextDesc = $this->getTranslator()->trans('Database upgrade completed.', array(), 'Install');
-            $this->nextQuickInfo[] = $this->getTranslator()->trans('Database upgrade completed.', array(), 'Install');
-            $this->nextQuickInfo[] = $this->getTranslator()->trans('Disabling modules now...', array(), 'Install');
+            $this->nextDesc = $this->getTranslator()->trans('Database upgrade completed.', [], 'Install');
+            $this->nextQuickInfo[] = $this->getTranslator()->trans('Database upgrade completed.', [], 'Install');
+            $this->nextQuickInfo[] = $this->getTranslator()->trans('Disabling modules now...', [], 'Install');
         }
 
         public function doDisableModules()
@@ -834,9 +838,9 @@ namespace PrestaShopBundle\Install {
             }
 
             $this->next = 'EnableModules';
-            $this->nextDesc = $this->getTranslator()->trans('Modules successfully disabled.', array(), 'Install');
-            $this->nextQuickInfo[] = $this->getTranslator()->trans('Modules successfully disabled.', array(), 'Install');
-            $this->nextQuickInfo[] = $this->getTranslator()->trans('Enabling modules now...', array(), 'Install');
+            $this->nextDesc = $this->getTranslator()->trans('Modules successfully disabled.', [], 'Install');
+            $this->nextQuickInfo[] = $this->getTranslator()->trans('Modules successfully disabled.', [], 'Install');
+            $this->nextQuickInfo[] = $this->getTranslator()->trans('Enabling modules now...', [], 'Install');
         }
 
         public function doEnableModules()
@@ -847,9 +851,9 @@ namespace PrestaShopBundle\Install {
             $this->enableNativeModules();
 
             $this->next = 'UpdateImage';
-            $this->nextDesc = $this->getTranslator()->trans('Modules successfully enabled.', array(), 'Install');
-            $this->nextQuickInfo[] = $this->getTranslator()->trans('Modules successfully enabled.', array(), 'Install');
-            $this->nextQuickInfo[] = $this->getTranslator()->trans('Upgrading images now...', array(), 'Install');
+            $this->nextDesc = $this->getTranslator()->trans('Modules successfully enabled.', [], 'Install');
+            $this->nextQuickInfo[] = $this->getTranslator()->trans('Modules successfully enabled.', [], 'Install');
+            $this->nextQuickInfo[] = $this->getTranslator()->trans('Upgrading images now...', [], 'Install');
         }
 
         public function doUpdateImage()
@@ -866,9 +870,9 @@ namespace PrestaShopBundle\Install {
             $this->cleanupOldDirectories();
 
             $this->next = 'UpdateLangHtaccess';
-            $this->nextDesc = $this->getTranslator()->trans('Images successfully upgraded.', array(), 'Install');
-            $this->nextQuickInfo[] = $this->getTranslator()->trans('Images successfully upgraded.', array(), 'Install');
-            $this->nextQuickInfo[] = $this->getTranslator()->trans('Upgrading languages now...', array(), 'Install');
+            $this->nextDesc = $this->getTranslator()->trans('Images successfully upgraded.', [], 'Install');
+            $this->nextQuickInfo[] = $this->getTranslator()->trans('Images successfully upgraded.', [], 'Install');
+            $this->nextQuickInfo[] = $this->getTranslator()->trans('Upgrading languages now...', [], 'Install');
         }
 
         public function doUpdateLangHtaccess()
@@ -880,9 +884,9 @@ namespace PrestaShopBundle\Install {
             $this->updateHtaccess();
 
             $this->next = 'UpdateTheme';
-            $this->nextDesc = $this->getTranslator()->trans('Languages successfully upgraded.', array(), 'Install');
-            $this->nextQuickInfo[] = $this->getTranslator()->trans('Languages successfully upgraded.', array(), 'Install');
-            $this->nextQuickInfo[] = $this->getTranslator()->trans('Upgrading theme now...', array(), 'Install');
+            $this->nextDesc = $this->getTranslator()->trans('Languages successfully upgraded.', [], 'Install');
+            $this->nextQuickInfo[] = $this->getTranslator()->trans('Languages successfully upgraded.', [], 'Install');
+            $this->nextQuickInfo[] = $this->getTranslator()->trans('Upgrading theme now...', [], 'Install');
         }
 
         public function doUpdateTheme()
@@ -895,8 +899,8 @@ namespace PrestaShopBundle\Install {
             }
 
             $this->next = 'UpgradeComplete';
-            $this->nextDesc = $this->getTranslator()->trans('Theme successfully upgraded.', array(), 'Install');
-            $this->nextQuickInfo[] = $this->getTranslator()->trans('Theme successfully upgraded.', array(), 'Install');
+            $this->nextDesc = $this->getTranslator()->trans('Theme successfully upgraded.', [], 'Install');
+            $this->nextQuickInfo[] = $this->getTranslator()->trans('Theme successfully upgraded.', [], 'Install');
         }
 
         public function getTranslator()
@@ -904,7 +908,7 @@ namespace PrestaShopBundle\Install {
             return $this->translator;
         }
 
-        public function logInfo($quickInfo, $id = null, $transVariables = array(), $dbInfo = false)
+        public function logInfo($quickInfo, $id = null, $transVariables = [], $dbInfo = false)
         {
             $info = $this->getTranslator()->trans($quickInfo, $transVariables, 'Install');
             if ($this->inAutoUpgrade) {
@@ -929,7 +933,7 @@ namespace PrestaShopBundle\Install {
             }
         }
 
-        public function logWarning($quickInfo, $id, $transVariables = array(), $dbInfo = false)
+        public function logWarning($quickInfo, $id, $transVariables = [], $dbInfo = false)
         {
             $info = $this->getTranslator()->trans($quickInfo, $transVariables, 'Install');
             if ($this->inAutoUpgrade) {
@@ -941,7 +945,7 @@ namespace PrestaShopBundle\Install {
                 $this->nextErrors[] = $info;
                 $this->warningList[] = $info;
                 if (empty($this->failureList)) {
-                    $this->nextDesc = $this->getTranslator()->trans('Warning detected during upgrade.', array(), 'Install');
+                    $this->nextDesc = $this->getTranslator()->trans('Warning detected during upgrade.', [], 'Install');
                 }
             } else {
                 if (!empty($quickInfo)) {
@@ -958,7 +962,7 @@ namespace PrestaShopBundle\Install {
             }
         }
 
-        public function logError($quickInfo, $id, $transVariables = array(), $dbInfo = false)
+        public function logError($quickInfo, $id, $transVariables = [], $dbInfo = false)
         {
             $info = $this->getTranslator()->trans($quickInfo, $transVariables, 'Install');
             if ($this->inAutoUpgrade) {
@@ -969,7 +973,7 @@ namespace PrestaShopBundle\Install {
                 }
                 $this->nextErrors[] = $info;
                 $this->failureList[] = $info;
-                $this->nextDesc = $this->getTranslator()->trans('Error detected during upgrade.', array(), 'Install');
+                $this->nextDesc = $this->getTranslator()->trans('Error detected during upgrade.', [], 'Install');
                 $this->next = 'error';
             } else {
                 if (!empty($quickInfo)) {
@@ -1139,8 +1143,8 @@ namespace PrestaShopBundle\Install {
                     $db_port = $db_server_port[1];
                 }
 
-                $parameters = array(
-                    'parameters' => array(
+                $parameters = [
+                    'parameters' => [
                             'database_host' => $db_server,
                             'database_port' => $db_port,
                             'database_user' => _LEGACY_DB_USER_,
@@ -1159,12 +1163,12 @@ namespace PrestaShopBundle\Install {
                             'mailer_host' => '127.0.0.1',
                             'mailer_user' => '',
                             'mailer_password' => '',
-                        ) + $default_parameters['parameters'],
-                );
+                        ] + $default_parameters['parameters'],
+                ];
             } elseif (file_exists($root_dir . '/app/config/parameters.yml')) {
                 $parameters = Yaml::parse(file_get_contents($root_dir . '/app/config/parameters.yml'));
                 if (empty($parameters['parameters'])) {
-                    $parameters['parameters'] = array();
+                    $parameters['parameters'] = [];
                 }
                 // add potentially missing default entries
                 $parameters['parameters'] = $parameters['parameters'] + $default_parameters['parameters'];

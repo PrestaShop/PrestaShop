@@ -28,7 +28,7 @@ class SupplyOrderStateLangCore extends DataLangCore
     // Don't replace domain in init() with $this->domain for translation parsing
     protected $domain = 'Admin.Orderscustomers.Feature';
 
-    protected $keys = array('id_supply_order_state');
+    protected $keys = ['id_supply_order_state'];
 
-    protected $fieldsToUpdate = array('name');
+    protected $fieldsToUpdate = ['name'];
 }

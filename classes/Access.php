@@ -38,14 +38,14 @@ class AccessCore extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'access',
         'primary' => 'id_profile',
-        'fields' => array(
-            'id_profile' => array('type' => self::TYPE_INT, 'validate' => 'isNullOrUnsignedId', 'copy_post' => false),
-            'id_authorization_role' => array('type' => self::TYPE_INT, 'validate' => 'isNullOrUnsignedId', 'copy_post' => false),
-        ),
-    );
+        'fields' => [
+            'id_profile' => ['type' => self::TYPE_INT, 'validate' => 'isNullOrUnsignedId', 'copy_post' => false],
+            'id_authorization_role' => ['type' => self::TYPE_INT, 'validate' => 'isNullOrUnsignedId', 'copy_post' => false],
+        ],
+    ];
 
     /**
      * Is access granted to this Role?
@@ -239,16 +239,16 @@ class AccessCore extends ObjectModel
      */
     public static function getAuthorizationFromLegacy($legacyAuth)
     {
-        $auth = array(
+        $auth = [
             'add' => 'CREATE',
             'view' => 'READ',
             'edit' => 'UPDATE',
             'configure' => 'UPDATE',
             'delete' => 'DELETE',
             'uninstall' => 'DELETE',
-            'duplicate' => array('CREATE', 'UPDATE'),
-            'all' => array('CREATE', 'READ', 'UPDATE', 'DELETE'),
-        );
+            'duplicate' => ['CREATE', 'UPDATE'],
+            'all' => ['CREATE', 'READ', 'UPDATE', 'DELETE'],
+        ];
 
         return isset($auth[$legacyAuth]) ? $auth[$legacyAuth] : false;
     }
@@ -349,7 +349,7 @@ class AccessCore extends ObjectModel
             $slug = self::findSlugByIdTab($idTab);
         }
 
-        $whereClauses = array();
+        $whereClauses = [];
 
         foreach ((array) self::getAuthorizationFromLegacy($lgcAuth) as $auth) {
             $slugLike = Db::getInstance()->escape($slug . $auth);
@@ -376,7 +376,7 @@ class AccessCore extends ObjectModel
             throw new \Exception('Cannot find role slug');
         }
 
-        $res = array();
+        $res = [];
         foreach ($roles as $role) {
             if ($enabled) {
                 $res[] = $this->addAccess($idProfile, $role['id_authorization_role']);
@@ -409,7 +409,7 @@ class AccessCore extends ObjectModel
             $slug = self::findSlugByIdModule($idModule);
         }
 
-        $whereClauses = array();
+        $whereClauses = [];
 
         foreach ((array) self::getAuthorizationFromLegacy($lgcAuth) as $auth) {
             $slugLike = Db::getInstance()->escape($slug . $auth);
@@ -422,7 +422,7 @@ class AccessCore extends ObjectModel
             WHERE ' . implode(' OR ', $whereClauses) . '
         ');
 
-        $res = array();
+        $res = [];
         foreach ($roles as $role) {
             if ($enabled) {
                 $res[] = $this->addModuleAccess($idProfile, $role['id_authorization_role']);

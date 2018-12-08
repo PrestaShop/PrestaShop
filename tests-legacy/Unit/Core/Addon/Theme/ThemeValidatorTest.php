@@ -45,9 +45,9 @@ class ThemeValidatorTest extends TestCase
 
         /* @var \PrestaShop\PrestaShop\Core\Addon\Theme\ThemeValidator */
         $this->validator = new ThemeValidator($translator, new FakeConfiguration(
-            array(
+            [
                 '_PS_ALL_THEMES_DIR_' => '/themes/',
-            )
+            ]
         ));
     }
 

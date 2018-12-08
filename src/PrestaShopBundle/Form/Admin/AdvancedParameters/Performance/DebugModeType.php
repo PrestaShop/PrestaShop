@@ -50,7 +50,8 @@ class DebugModeType extends CommonAbstractType
             ])
             ->add('debug_mode', SwitchType::class, [
                 'required' => true,
-            ]);
+            ])
+        ;
     }
 
     /**

@@ -196,7 +196,7 @@ class SmartyCustomCore extends Smarty
      */
     public function is_in_lazy_cache($template, $cache_id, $compile_id)
     {
-        static $is_in_lazy_cache = array();
+        static $is_in_lazy_cache = [];
         $template_md5 = md5($template);
 
         if (strlen($compile_id) > 32) {

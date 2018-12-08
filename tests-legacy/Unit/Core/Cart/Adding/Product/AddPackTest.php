@@ -68,7 +68,7 @@ class AddPackTest extends AbstractCartTest
         foreach (array_keys($this->oldConfig) as $k) {
             $this->oldConfig[$k] = Configuration::get($k);
         }
-        $this->pack          = $this->getProductFromFixtureId(self::ID_PACK_FIXTURE);
+        $this->pack = $this->getProductFromFixtureId(self::ID_PACK_FIXTURE);
         $this->productInPack = $this->getProductFromFixtureId(self::ID_PRODUCT_IN_PACK_FIXTURE);
     }
 
@@ -86,21 +86,21 @@ class AddPackTest extends AbstractCartTest
     {
         // Pack type decrement pack only
         Configuration::set('PS_PACK_STOCK_TYPE', Pack::STOCK_TYPE_PACK_ONLY);
-        $nbPack    = Product::getQuantity($this->pack->id);
+        $nbPack = Product::getQuantity($this->pack->id);
         $nbProduct = Product::getQuantity($this->productInPack->id);
         $this->assertEquals(10, $nbPack);
         $this->assertEquals(50, $nbProduct);
 
         // Pack type decrement products only
         Configuration::set('PS_PACK_STOCK_TYPE', Pack::STOCK_TYPE_PRODUCTS_ONLY);
-        $nbPack    = Product::getQuantity($this->pack->id);
+        $nbPack = Product::getQuantity($this->pack->id);
         $nbProduct = Product::getQuantity($this->productInPack->id);
         $this->assertEquals(5, $nbPack);
         $this->assertEquals(50, $nbProduct);
 
         // Pack type decrement pack and products
         Configuration::set('PS_PACK_STOCK_TYPE', Pack::STOCK_TYPE_PACK_BOTH);
-        $nbPack    = Product::getQuantity($this->pack->id);
+        $nbPack = Product::getQuantity($this->pack->id);
         $nbProduct = Product::getQuantity($this->productInPack->id);
         $this->assertEquals(5, $nbPack);
         $this->assertEquals(50, $nbProduct);
@@ -168,7 +168,7 @@ class AddPackTest extends AbstractCartTest
         $this->assertTrue($this->cart->updateQty(2, $this->pack->id));
         $this->assertTrue($this->cart->updateQty(30, $this->productInPack->id));
 
-        $nbPackInCart    = $this->cart->getProductQuantity($this->pack->id);
+        $nbPackInCart = $this->cart->getProductQuantity($this->pack->id);
         $nbProductInCart = $this->cart->getProductQuantity($this->productInPack->id);
 
         $this->assertEquals($packQuantity, $nbPackInCart['quantity']);

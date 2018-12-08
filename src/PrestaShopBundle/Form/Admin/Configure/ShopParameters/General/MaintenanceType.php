@@ -76,7 +76,8 @@ class MaintenanceType extends TranslatorAwareType
                     'hideTabs' => false,
                     'required' => true,
                 ]
-            );
+            )
+        ;
     }
 
     /**

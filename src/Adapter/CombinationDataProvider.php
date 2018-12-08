@@ -97,7 +97,7 @@ class CombinationDataProvider
     {
         $productId = (new Combination($combinationIds[0]))->id_product;
         $product = new Product($productId);
-        $combinations = array();
+        $combinations = [];
 
         foreach ($combinationIds as $combinationId) {
             $combinations[$combinationId] = $this->completeCombination(
@@ -145,9 +145,10 @@ class CombinationDataProvider
 
         $finalPrice = (new Number((string) $product->price))
             ->plus(new Number((string) $combination['price']))
-            ->toPrecision(CommonAbstractType::PRESTASHOP_DECIMALS);
+            ->toPrecision(CommonAbstractType::PRESTASHOP_DECIMALS)
+        ;
 
-        return array(
+        return [
             'id_product_attribute' => $combination['id_product_attribute'],
             'attribute_reference' => $combination['reference'],
             'attribute_ean13' => $combination['ean13'],
@@ -173,7 +174,7 @@ class CombinationDataProvider
             'attribute_quantity' => $this->productAdapter->getQuantity($product->id, $combination['id_product_attribute']),
             'name' => $this->getCombinationName($attributesCombinations),
             'id_product' => $product->id,
-        );
+        ];
     }
 
     /**
@@ -183,7 +184,7 @@ class CombinationDataProvider
      */
     private function getCombinationName($attributesCombinations)
     {
-        $name = array();
+        $name = [];
 
         foreach ($attributesCombinations as $attribute) {
             $name[] = $attribute['group_name'] . ' - ' . $attribute['attribute_name'];

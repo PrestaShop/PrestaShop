@@ -50,7 +50,8 @@ class CombineCompressCacheType extends CommonAbstractType
             ])
             ->add('apache_optimization', SwitchType::class, [
                 'required' => true,
-            ]);
+            ])
+        ;
     }
 
     /**

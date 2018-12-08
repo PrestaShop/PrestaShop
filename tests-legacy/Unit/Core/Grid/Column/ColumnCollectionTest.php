@@ -201,7 +201,8 @@ class ColumnCollectionTest extends TestCase
     {
         $column = $this->createMock(ColumnInterface::class);
         $column->method('getId')
-            ->willReturn($id);
+            ->willReturn($id)
+        ;
 
         return $column;
     }
@@ -213,7 +214,7 @@ class ColumnCollectionTest extends TestCase
      */
     private function getColumnPositions(ColumnCollection $columns)
     {
-        $positions= [];
+        $positions = [];
 
         foreach ($columns as $column) {
             $positions[] = $column->getId();

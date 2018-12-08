@@ -71,7 +71,8 @@ class ProductWarehouseCombination extends CommonAbstractType
                 'required' => false,
                 'label' => $this->translator->trans('Location (optional)', [], 'Admin.Catalog.Feature'),
                 'empty_data' => '',
-            ]);
+            ])
+        ;
 
         //set default minimal values for collection prototype
         $builder->setData([

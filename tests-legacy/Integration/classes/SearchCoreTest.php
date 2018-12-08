@@ -45,14 +45,14 @@ class SearchCoreTest extends IntegrationTestCase
 
     public function keywordsProvider()
     {
-        return array(
-            array('dress', 'dress%', false, true),
-            array('dres', 'dres%', false, true),
-            array('dress', '%dress%', true, true),
-            array('dress', 'dress', false, false),
-            array('dre%ss', 'dre\\\\%ss', false, false),
-            array('dre%ss', '%dre\\\\%ss', true, false),
-            array('-dress', 'dress%', false, true),
-        );
+        return [
+            ['dress', 'dress%', false, true],
+            ['dres', 'dres%', false, true],
+            ['dress', '%dress%', true, true],
+            ['dress', 'dress', false, false],
+            ['dre%ss', 'dre\\\\%ss', false, false],
+            ['dre%ss', '%dre\\\\%ss', true, false],
+            ['-dress', 'dress%', false, true],
+        ];
     }
 }

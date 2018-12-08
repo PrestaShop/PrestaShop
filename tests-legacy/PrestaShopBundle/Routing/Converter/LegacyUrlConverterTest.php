@@ -303,7 +303,8 @@ class LegacyUrlConverterTest extends TestCase
 
         $contextMock = $this->getMockBuilder(RequestContext::class)
             ->disableOriginalConstructor()
-            ->getMock();
+            ->getMock()
+        ;
         $contextMock
             ->expects($this->once())
             ->method('fromRequest')

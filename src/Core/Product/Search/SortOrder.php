@@ -72,7 +72,7 @@ class SortOrder
 
     public static function newFromString($paramValue)
     {
-        list($entity, $field, $direction) = explode('.', $paramValue);
+        [$entity, $field, $direction] = explode('.', $paramValue);
 
         return new SortOrder($entity, $field, $direction);
     }

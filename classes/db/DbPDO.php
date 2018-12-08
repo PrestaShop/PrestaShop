@@ -81,7 +81,7 @@ class DbPDOCore extends Db
         }
         $dsn .= ';charset=utf8';
 
-        return new PDO($dsn, $user, $password, array(PDO::ATTR_TIMEOUT => $timeout, PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true));
+        return new PDO($dsn, $user, $password, [PDO::ATTR_TIMEOUT => $timeout, PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true]);
     }
 
     /**
@@ -291,8 +291,8 @@ class DbPDOCore extends Db
      */
     public function _escape($str)
     {
-        $search = array('\\', "\0", "\n", "\r", "\x1a", "'", '"');
-        $replace = array('\\\\', '\\0', '\\n', '\\r', "\Z", "\'", '\"');
+        $search = ['\\', "\0", "\n", "\r", "\x1a", "'", '"'];
+        $replace = ['\\\\', '\\0', '\\n', '\\r', "\Z", "\'", '\"'];
 
         return str_replace($search, $replace, $str);
     }
@@ -430,7 +430,7 @@ class DbPDOCore extends Db
         $result = $this->link->query($sql);
         while ($row = $result->fetch()) {
             if ($row['Engine'] == 'InnoDB') {
-                if (in_array($row['Support'], array('DEFAULT', 'YES'))) {
+                if (in_array($row['Support'], ['DEFAULT', 'YES'])) {
                     $value = 'InnoDB';
                 }
                 break;

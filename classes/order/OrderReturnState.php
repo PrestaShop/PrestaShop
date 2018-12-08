@@ -34,17 +34,17 @@ class OrderReturnStateCore extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'order_return_state',
         'primary' => 'id_order_return_state',
         'multilang' => true,
-        'fields' => array(
-            'color' => array('type' => self::TYPE_STRING, 'validate' => 'isColor'),
+        'fields' => [
+            'color' => ['type' => self::TYPE_STRING, 'validate' => 'isColor'],
 
             /* Lang fields */
-            'name' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 64),
-        ),
-    );
+            'name' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 64],
+        ],
+    ];
 
     /**
      * Get all available order statuses.

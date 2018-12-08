@@ -41,7 +41,8 @@ class SaveSqlRequestSettingsHandlerTest extends TestCase
     {
         $configuration = $this->createMock(ConfigurationInterface::class);
         $configuration->method('set')
-            ->with('PS_ENCODING_FILE_MANAGER_SQL', $expectedValueFormat);
+            ->with('PS_ENCODING_FILE_MANAGER_SQL', $expectedValueFormat)
+        ;
 
         $handler = new SaveSqlRequestSettingsHandler($configuration);
         $handler->handle(new SaveSqlRequestSettingsCommand($configuredValue));

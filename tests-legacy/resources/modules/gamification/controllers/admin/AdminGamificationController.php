@@ -27,7 +27,7 @@ class AdminGamificationController extends ModuleAdminController
         }
 
         $this->addJs(_MODULE_DIR_.$this->module->name.'/views/js/jquery.isotope.js');
-        $this->addCSS(array(_MODULE_DIR_.$this->module->name.'/views/css/bubble-popup.css', _MODULE_DIR_.$this->module->name.'/views/css/isotope.css'));
+        $this->addCSS([_MODULE_DIR_.$this->module->name.'/views/css/bubble-popup.css', _MODULE_DIR_.$this->module->name.'/views/css/isotope.css']);
         
         return parent::setMedia($isNewTheme);
     }
@@ -62,7 +62,7 @@ class AdminGamificationController extends ModuleAdminController
         $badges_international->orderBy('id_group');
         $badges_international->orderBy('group_position');
         
-        $groups = array();
+        $groups = [];
         $query = new DbQuery();
         $query->select('DISTINCT(b.`id_group`), bl.group_name, b.type');
         $query->from('badge', 'b');
@@ -75,28 +75,28 @@ class AdminGamificationController extends ModuleAdminController
             $groups['badges_'.$res['type']][$res['id_group']] = $res['group_name'];
         }
 
-        $badges_type = array(
-            'badges_feature' => array('name' => $this->l('Features'), 'badges' => $badges_feature),
-            'badges_achievement' => array('name' => $this->l('Achievements'), 'badges' => $badges_achievement),
-            'badges_international' => array('name' => $this->l('International'), 'badges' => $badges_international),
-        );
+        $badges_type = [
+            'badges_feature' => ['name' => $this->l('Features'), 'badges' => $badges_feature],
+            'badges_achievement' => ['name' => $this->l('Achievements'), 'badges' => $badges_achievement],
+            'badges_international' => ['name' => $this->l('International'), 'badges' => $badges_international],
+        ];
         
-        $levels = array(
+        $levels = [
             1 => $this->l('1. Beginner'),
             2 => $this->l('2. Pro'),
             3 => $this->l('3. Expert'),
             4 => $this->l('4. Wizard'),
             5 => $this->l('5. Guru'),
             6 => $this->l('6. Legend'),
-        );
+        ];
         
-        $this->tpl_view_vars = array(
+        $this->tpl_view_vars = [
             'badges_type' => $badges_type,
             'current_level_percent' => (int)Configuration::get('GF_CURRENT_LEVEL_PERCENT'),
             'current_level' => (int)Configuration::get('GF_CURRENT_LEVEL'),
             'groups' => $groups,
             'levels' => $levels,
-        );
+        ];
 
         if (version_compare(_PS_VERSION_, '1.5.6.0', '>')) {
             $this->base_tpl_view = 'view_bt.tpl';
@@ -118,24 +118,24 @@ class AdminGamificationController extends ModuleAdminController
             Configuration::updateGlobalValue('GF_INSTALL_CALC', 1);
         }
             
-        $return = array(
+        $return = [
             'refresh_data' => $this->processRefreshData(),
             'daily_calculation' => $this->processMakeDailyCalculation(),
             'advice_validation' => $this->processAdviceValidation()
-            );
+            ];
         
         $return['advices_to_display'] = $this->processGetAdvicesToDisplay();
         //get only one random advice by tab
         if (count($return['advices_to_display']['advices']) > 1) {
-            $rand = rand(0, count($return['advices_to_display']['advices'])-1);
-            $return['advices_to_display']['advices'] = array($return['advices_to_display']['advices'][$rand]);
+            $rand = rand(0, count($return['advices_to_display']['advices']) - 1);
+            $return['advices_to_display']['advices'] = [$return['advices_to_display']['advices'][$rand]];
         }
         
         if (Tab::getIdFromClassName('AdminDashboard') == Tools::getValue('id_tab')) {
             $return['advices_premium_to_display'] = $this->processGetAdvicesToDisplay(true);
             
             if (count($return['advices_premium_to_display']['advices']) >= 2) {
-                $weighted_advices_array = array();
+                $weighted_advices_array = [];
                 foreach ($return['advices_premium_to_display']['advices'] as $prem_advice) {
                     $loop_flag = (int)$prem_advice['weight'];
                     if ($loop_flag) {
@@ -146,12 +146,12 @@ class AdminGamificationController extends ModuleAdminController
                         $weighted_advices_array[] = $prem_advice;
                     }
                 }
-                $rand = rand(0, count($weighted_advices_array)-1);
+                $rand = rand(0, count($weighted_advices_array) - 1);
                 do {
-                    $rand2 = rand(0, count($weighted_advices_array)-1);
+                    $rand2 = rand(0, count($weighted_advices_array) - 1);
                 } while ($rand == $rand2);
     
-                $return['advices_premium_to_display']['advices'] = array($weighted_advices_array[$rand], $weighted_advices_array[$rand2]);
+                $return['advices_premium_to_display']['advices'] = [$weighted_advices_array[$rand], $weighted_advices_array[$rand2]];
             } elseif (count($return['advices_premium_to_display']['advices']) > 0) {
                 $addons = Advice::getAddonsAdviceByIdTab((int)Tools::getValue('id_tab'));
                 $return['advices_premium_to_display']['advices'][] = array_shift($addons);
@@ -172,7 +172,7 @@ class AdminGamificationController extends ModuleAdminController
         
     public function processGetAdvicesToDisplay($only_premium = false)
     {
-        $return = array('advices' => array());
+        $return = ['advices' => []];
 
         
         $id_tab = (int)Tools::getValue('id_tab');
@@ -187,12 +187,12 @@ class AdminGamificationController extends ModuleAdminController
         if (is_array($ids_ps_advice)) {
             foreach ($advices as $advice) {
                 if (is_array($ids_ps_advice) && in_array($advice['id_ps_advice'], $ids_ps_advice)) {
-                    $return['advices'][] = array(
+                    $return['advices'][] = [
                         'selector' => $advice['selector'],
                         'html' => GamificationTools::parseMetaData($advice['html']),
                         'location' => $advice['location'],
                         'weight' => (int)$advice['weight']
-                    );
+                    ];
                 }
             }
         }
@@ -240,7 +240,7 @@ class AdminGamificationController extends ModuleAdminController
         $nbr_notif = Configuration::get('GF_NOTIFICATION', 0);
 
         if (count($ids_badge)) {
-            $not_viewed_badge = array();
+            $not_viewed_badge = [];
         } //reset the last badge only if there is new badge to validate
 
         foreach ($ids_badge as $id) {

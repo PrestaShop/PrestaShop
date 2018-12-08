@@ -69,7 +69,8 @@ class StockType extends TranslatorAwareType
                     'Decrement products in pack only.' => 1,
                     'Decrement both.' => 2,
                 ],
-            ]);
+            ])
+        ;
     }
 
     /**

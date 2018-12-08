@@ -62,7 +62,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     protected $id_shop = null;
 
     /** @var array List of shop IDs */
-    public $id_shop_list = array();
+    public $id_shop_list = [];
 
     /** @var bool */
     protected $get_shop_from_context = true;
@@ -89,52 +89,52 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      *
      * @var array
      */
-    protected $fieldsRequired = array();
+    protected $fieldsRequired = [];
 
     /**
      * @deprecated 1.5.0.1 Define property using $definition['table'] property instead.
      *
      * @var array
      */
-    protected $fieldsSize = array();
+    protected $fieldsSize = [];
 
     /**
      * @deprecated 1.5.0.1 Define property using $definition['table'] property instead.
      *
      * @var array
      */
-    protected $fieldsValidate = array();
+    protected $fieldsValidate = [];
 
     /**
      * @deprecated 1.5.0.1 Define property using $definition['table'] property instead.
      *
      * @var array
      */
-    protected $fieldsRequiredLang = array();
+    protected $fieldsRequiredLang = [];
 
     /**
      * @deprecated 1.5.0.1 Define property using $definition['table'] property instead.
      *
      * @var array
      */
-    protected $fieldsSizeLang = array();
+    protected $fieldsSizeLang = [];
 
     /**
      * @deprecated 1.5.0.1 Define property using $definition['table'] property instead.
      *
      * @var array
      */
-    protected $fieldsValidateLang = array();
+    protected $fieldsValidateLang = [];
 
     /**
      * @deprecated 1.5.0.1
      *
      * @var array
      */
-    protected $tables = array();
+    protected $tables = [];
 
     /** @var array Tables */
-    protected $webserviceParameters = array();
+    protected $webserviceParameters = [];
 
     /** @var string Path to image directory. Used for image deletion. */
     protected $image_dir = null;
@@ -150,7 +150,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      *
      * @since 1.5.0.1
      */
-    public static $definition = array();
+    public static $definition = [];
 
     /**
      * Holds compiled definitions of each ObjectModel class.
@@ -158,7 +158,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      *
      * @var array
      */
-    protected static $loaded_classes = array();
+    protected static $loaded_classes = [];
 
     /** @var array Contains current object definition. */
     protected $def;
@@ -196,14 +196,14 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     {
         $object = new $class();
 
-        return array(
+        return [
             'required' => $object->fieldsRequired,
             'size' => $object->fieldsSize,
             'validate' => $object->fieldsValidate,
             'requiredLang' => $object->fieldsRequiredLang,
             'sizeLang' => $object->fieldsSizeLang,
             'validateLang' => $object->fieldsValidateLang,
-        );
+        ];
     }
 
     /**
@@ -257,7 +257,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
         }
     }
 
-    protected function trans($id, array $parameters = array(), $domain = null, $locale = null)
+    protected function trans($id, array $parameters = [], $domain = null, $locale = null)
     {
         if (is_null($this->translator)) {
             $this->translator = Context::getContext()->getTranslator();
@@ -335,7 +335,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
         $this->validateFieldsLang();
         $is_lang_multishop = $this->isLangMultishop();
 
-        $fields = array();
+        $fields = [];
         if (!is_int($this->id_lang) || $this->id_lang <= 0) {
             foreach (Language::getIDs(false) as $id_lang) {
                 $fields[$id_lang] = $this->formatFields(self::FORMAT_LANG, $id_lang);
@@ -345,7 +345,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
                 }
             }
         } else {
-            $fields = array($this->id_lang => $this->formatFields(self::FORMAT_LANG, $this->id_lang));
+            $fields = [$this->id_lang => $this->formatFields(self::FORMAT_LANG, $this->id_lang)];
             $fields[$this->id_lang]['id_lang'] = $this->id_lang;
             if ($this->id_shop && $is_lang_multishop) {
                 $fields[$this->id_lang]['id_shop'] = (int) $this->id_shop;
@@ -367,7 +367,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      */
     protected function formatFields($type, $id_lang = null)
     {
-        $fields = array();
+        $fields = [];
 
         // Set primary key in fields
         if (isset($this->id)) {
@@ -423,7 +423,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     public static function formatValue($value, $type, $with_quotes = false, $purify = true, $allow_null = false)
     {
         if ($allow_null && $value === null) {
-            return array('type' => 'sql', 'value' => 'NULL');
+            return ['type' => 'sql', 'value' => 'NULL'];
         }
 
         switch ($type) {
@@ -526,8 +526,8 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
         }
 
         // @hook actionObject*AddBefore
-        Hook::exec('actionObjectAddBefore', array('object' => $this));
-        Hook::exec('actionObject' . $this->getFullyQualifiedName() . 'AddBefore', array('object' => $this));
+        Hook::exec('actionObjectAddBefore', ['object' => $this]);
+        Hook::exec('actionObject' . $this->getFullyQualifiedName() . 'AddBefore', ['object' => $this]);
 
         // Automatically fill dates
         if ($auto_date && property_exists($this, 'date_add')) {
@@ -597,8 +597,8 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
         }
 
         // @hook actionObject*AddAfter
-        Hook::exec('actionObjectAddAfter', array('object' => $this));
-        Hook::exec('actionObject' . $this->getFullyQualifiedName() . 'AddAfter', array('object' => $this));
+        Hook::exec('actionObjectAddAfter', ['object' => $this]);
+        Hook::exec('actionObject' . $this->getFullyQualifiedName() . 'AddAfter', ['object' => $this]);
 
         return $result;
     }
@@ -615,7 +615,8 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     {
         $definition = ObjectModel::getDefinition($this);
 
-        $res = Db::getInstance()->getRow('
+        $res = Db::getInstance()->getRow(
+            '
 					SELECT *
 					FROM `' . _DB_PREFIX_ . bqSQL($definition['table']) . '`
 					WHERE `' . bqSQL($definition['primary']) . '` = ' . (int) $this->id
@@ -627,8 +628,13 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
         unset($res[$definition['primary']]);
         foreach ($res as $field => &$value) {
             if (isset($definition['fields'][$field])) {
-                $value = ObjectModel::formatValue($value, $definition['fields'][$field]['type'], false, true,
-                                                  !empty($definition['fields'][$field]['allow_null']));
+                $value = ObjectModel::formatValue(
+                    $value,
+                    $definition['fields'][$field]['type'],
+                    false,
+                    true,
+                                                  !empty($definition['fields'][$field]['allow_null'])
+                );
             }
         }
 
@@ -650,8 +656,13 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
             foreach ($result as &$row) {
                 foreach ($row as $field => &$value) {
                     if (isset($definition['fields'][$field])) {
-                        $value = ObjectModel::formatValue($value, $definition['fields'][$field]['type'], false, true,
-                                                          !empty($definition['fields'][$field]['allow_null']));
+                        $value = ObjectModel::formatValue(
+                            $value,
+                            $definition['fields'][$field]['type'],
+                            false,
+                            true,
+                                                          !empty($definition['fields'][$field]['allow_null'])
+                        );
                     }
                 }
             }
@@ -685,8 +696,8 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     public function update($null_values = false)
     {
         // @hook actionObject*UpdateBefore
-        Hook::exec('actionObjectUpdateBefore', array('object' => $this));
-        Hook::exec('actionObject' . $this->getFullyQualifiedName() . 'UpdateBefore', array('object' => $this));
+        Hook::exec('actionObjectUpdateBefore', ['object' => $this]);
+        Hook::exec('actionObject' . $this->getFullyQualifiedName() . 'UpdateBefore', ['object' => $this]);
 
         $this->clearCache();
 
@@ -793,8 +804,8 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
         }
 
         // @hook actionObject*UpdateAfter
-        Hook::exec('actionObjectUpdateAfter', array('object' => $this));
-        Hook::exec('actionObject' . $this->getFullyQualifiedName() . 'UpdateAfter', array('object' => $this));
+        Hook::exec('actionObjectUpdateAfter', ['object' => $this]);
+        Hook::exec('actionObject' . $this->getFullyQualifiedName() . 'UpdateAfter', ['object' => $this]);
 
         return $result;
     }
@@ -809,8 +820,8 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     public function delete()
     {
         // @hook actionObject*DeleteBefore
-        Hook::exec('actionObjectDeleteBefore', array('object' => $this));
-        Hook::exec('actionObject' . $this->getFullyQualifiedName() . 'DeleteBefore', array('object' => $this));
+        Hook::exec('actionObjectDeleteBefore', ['object' => $this]);
+        Hook::exec('actionObject' . $this->getFullyQualifiedName() . 'DeleteBefore', ['object' => $this]);
 
         $this->clearCache();
         $result = true;
@@ -844,8 +855,8 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
         }
 
         // @hook actionObject*DeleteAfter
-        Hook::exec('actionObjectDeleteAfter', array('object' => $this));
-        Hook::exec('actionObject' . $this->getFullyQualifiedName() . 'DeleteAfter', array('object' => $this));
+        Hook::exec('actionObjectDeleteAfter', ['object' => $this]);
+        Hook::exec('actionObject' . $this->getFullyQualifiedName() . 'DeleteAfter', ['object' => $this]);
 
         return $result;
     }
@@ -883,7 +894,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
         }
 
         // Update only active field
-        $this->setFieldsToUpdate(array('active' => true));
+        $this->setFieldsToUpdate(['active' => true]);
 
         // Update active status on object
         $this->active = !(int) $this->active;
@@ -903,7 +914,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      */
     protected function getTranslationsFields($fields_array)
     {
-        $fields = array();
+        $fields = [];
 
         if ($this->id_lang == null) {
             foreach (Language::getIDs(false) as $id_lang) {
@@ -1013,7 +1024,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
 
             // If the object has not been loaded in multilanguage, then the value is the one for the current language of the object
             if (!is_array($values)) {
-                $values = array($this->id_lang => $values);
+                $values = [$this->id_lang => $values];
             }
 
             // The value for the default must always be set, so we put an empty string if it does not exists
@@ -1055,7 +1066,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      *
      * @throws PrestaShopException
      */
-    public function validateField($field, $value, $id_lang = null, $skip = array(), $human_errors = false)
+    public function validateField($field, $value, $id_lang = null, $skip = [], $human_errors = false)
     {
         static $ps_lang_default = null;
         static $ps_allow_html_iframe = null;
@@ -1077,9 +1088,9 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
             if (!in_array('required', $skip) && (!empty($data['required']) || in_array($field, $required_fields))) {
                 if (Tools::isEmpty($value)) {
                     if ($human_errors) {
-                        return $this->trans('The %s field is required.', array($this->displayFieldName($field, get_class($this))), 'Admin.Notifications.Error');
+                        return $this->trans('The %s field is required.', [$this->displayFieldName($field, get_class($this))], 'Admin.Notifications.Error');
                     } else {
-                        return $this->trans('Property %s is empty.', array(get_class($this) . '->' . $field), 'Admin.Notifications.Error');
+                        return $this->trans('Property %s is empty.', [get_class($this) . '->' . $field], 'Admin.Notifications.Error');
                     }
                 }
             }
@@ -1093,14 +1104,14 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
 
         // Check field values
         if (!in_array('values', $skip) && !empty($data['values']) && is_array($data['values']) && !in_array($value, $data['values'])) {
-            return $this->trans('Property %1$s has a bad value (allowed values are: %2$s).', array(get_class($this) . '->' . $field, implode(', ', $data['values'])), 'Admin.Notifications.Error');
+            return $this->trans('Property %1$s has a bad value (allowed values are: %2$s).', [get_class($this) . '->' . $field, implode(', ', $data['values'])], 'Admin.Notifications.Error');
         }
 
         // Check field size
         if (!in_array('size', $skip) && !empty($data['size'])) {
             $size = $data['size'];
             if (!is_array($data['size'])) {
-                $size = array('min' => 0, 'max' => $data['size']);
+                $size = ['min' => 0, 'max' => $data['size']];
             }
 
             $length = Tools::strlen($value);
@@ -1109,18 +1120,19 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
                     if (isset($data['lang']) && $data['lang']) {
                         $language = new Language((int) $id_lang);
 
-                        return $this->trans('Your entry in field %1$s (language %2$s) exceeds max length %3$d chars (incl. html tags).', array($this->displayFieldName($field, get_class($this)), $language->name, $size['max']), 'Admin.Notifications.Error');
+                        return $this->trans('Your entry in field %1$s (language %2$s) exceeds max length %3$d chars (incl. html tags).', [$this->displayFieldName($field, get_class($this)), $language->name, $size['max']], 'Admin.Notifications.Error');
                     } else {
-                        return $this->trans('The %1$s field is too long (%2$d chars max).', array($this->displayFieldName($field, get_class($this)), $size['max']), 'Admin.Notifications.Error');
+                        return $this->trans('The %1$s field is too long (%2$d chars max).', [$this->displayFieldName($field, get_class($this)), $size['max']], 'Admin.Notifications.Error');
                     }
                 } else {
-                    return $this->trans('The length of property %1$s is currently %2$d chars. It must be between %3$d and %4$d chars.',
-                        array(
+                    return $this->trans(
+                        'The length of property %1$s is currently %2$d chars. It must be between %3$d and %4$d chars.',
+                        [
                             get_class($this) . '->' . $field,
                             $length,
                             $size['min'],
                             $size['max'],
-                        ),
+                        ],
                         'Admin.Notifications.Error'
                     );
                 }
@@ -1133,7 +1145,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
                 throw new PrestaShopException(
                     $this->trans(
                         'Validation function not found: %s.',
-                        array($data['validate']),
+                        [$data['validate']],
                         'Admin.Notifications.Error'
                     )
                 );
@@ -1142,19 +1154,19 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
             if (!empty($value)) {
                 $res = true;
                 if (Tools::strtolower($data['validate']) == 'iscleanhtml') {
-                    if (!call_user_func(array('Validate', $data['validate']), $value, $ps_allow_html_iframe)) {
+                    if (!call_user_func(['Validate', $data['validate']], $value, $ps_allow_html_iframe)) {
                         $res = false;
                     }
                 } else {
-                    if (!call_user_func(array('Validate', $data['validate']), $value)) {
+                    if (!call_user_func(['Validate', $data['validate']], $value)) {
                         $res = false;
                     }
                 }
                 if (!$res) {
                     if ($human_errors) {
-                        return $this->trans('The %s field is invalid.', array($this->displayFieldName($field, get_class($this))), 'Admin.Notifications.Error');
+                        return $this->trans('The %s field is invalid.', [$this->displayFieldName($field, get_class($this))], 'Admin.Notifications.Error');
                     } else {
-                        return $this->trans('Property %s is not valid', array(get_class($this) . '->' . $field), 'Admin.Notifications.Error');
+                        return $this->trans('Property %s is not valid', [get_class($this) . '->' . $field], 'Admin.Notifications.Error');
                     }
                 }
             }
@@ -1200,7 +1212,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     public function validateController($htmlentities = true)
     {
         $this->cacheFieldsRequiredDatabase();
-        $errors = array();
+        $errors = [];
         $required_fields_database = $this->getCachedFieldsRequiredDatabase();
         foreach ($this->def['fields'] as $field => $data) {
             $value = Tools::getValue($field, $this->{$field});
@@ -1212,7 +1224,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
             // Checking for required fields
             if (isset($data['required']) && $data['required'] && empty($value) && $value !== '0') {
                 if (!$this->id || $field != 'passwd') {
-                    $errors[$field] = '<b>' . self::displayFieldName($field, get_class($this), $htmlentities) . '</b> ' . $this->trans('is required.', array(), 'Admin.Notifications.Error');
+                    $errors[$field] = '<b>' . self::displayFieldName($field, get_class($this), $htmlentities) . '</b> ' . $this->trans('is required.', [], 'Admin.Notifications.Error');
                 }
             }
 
@@ -1220,7 +1232,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
             if (isset($data['size']) && !empty($value) && Tools::strlen($value) > $data['size']) {
                 $errors[$field] = $this->trans(
                     '%1$s is too long. Maximum length: %2$d',
-                    array(self::displayFieldName($field, get_class($this), $htmlentities), $data['size']),
+                    [self::displayFieldName($field, get_class($this), $htmlentities), $data['size']],
                     'Admin.Notifications.Error'
                 );
             }
@@ -1231,9 +1243,9 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
                 if (isset($data['validate']) && (!call_user_func('Validate::' . $data['validate'], $value) && (!empty($value) || $data['required']))) {
                     $errors[$field] = $this->trans(
                             '%s is invalid.',
-                            array(
+                            [
                                 '<b>' . self::displayFieldName($field, get_class($this), $htmlentities) . '</b>',
-                            ),
+                            ],
                             'Admin.Notifications.Error'
                         );
                 } else {
@@ -1266,18 +1278,18 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     public function getWebserviceParameters($ws_params_attribute_name = null)
     {
         $this->cacheFieldsRequiredDatabase();
-        $default_resource_parameters = array(
+        $default_resource_parameters = [
             'objectSqlId' => $this->def['primary'],
-            'retrieveData' => array(
+            'retrieveData' => [
                 'className' => get_class($this),
                 'retrieveMethod' => 'getWebserviceObjectList',
-                'params' => array(),
+                'params' => [],
                 'table' => $this->def['table'],
-            ),
-            'fields' => array(
-                'id' => array('sqlId' => $this->def['primary'], 'i18n' => false),
-            ),
-        );
+            ],
+            'fields' => [
+                'id' => ['sqlId' => $this->def['primary'], 'i18n' => false],
+            ],
+        ];
 
         if ($ws_params_attribute_name === null) {
             $ws_params_attribute_name = 'webserviceParameters';
@@ -1310,9 +1322,9 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
         $required_fields = $this->getCachedFieldsRequiredDatabase();
         foreach ($this->def['fields'] as $field_name => $details) {
             if (!isset($resource_parameters['fields'][$field_name])) {
-                $resource_parameters['fields'][$field_name] = array();
+                $resource_parameters['fields'][$field_name] = [];
             }
-            $current_field = array();
+            $current_field = [];
             $current_field['sqlId'] = $field_name;
             if (isset($details['size'])) {
                 $current_field['maxSize'] = $details['size'];
@@ -1330,8 +1342,8 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
             if (isset($details['validate'])) {
                 $current_field['validateMethod'] = (
                                 array_key_exists('validateMethod', $resource_parameters['fields'][$field_name]) ?
-                                array_merge($resource_parameters['fields'][$field_name]['validateMethod'], array($details['validate'])) :
-                                array($details['validate'])
+                                array_merge($resource_parameters['fields'][$field_name]['validateMethod'], [$details['validate']]) :
+                                [$details['validate']]
                             );
             }
             $resource_parameters['fields'][$field_name] = array_merge($resource_parameters['fields'][$field_name], $current_field);
@@ -1414,7 +1426,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     public function validateFieldsRequiredDatabase($htmlentities = true)
     {
         $this->cacheFieldsRequiredDatabase();
-        $errors = array();
+        $errors = [];
         $required_fields = $this->getCachedFieldsRequiredDatabase();
 
         foreach ($this->def['fields'] as $field => $data) {
@@ -1429,7 +1441,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
             $value = Tools::getValue($field);
 
             if (empty($value)) {
-                $errors[$field] = $this->trans('The field %s is required.', array(self::displayFieldName($field, get_class($this), $htmlentities)), 'Admin.Notifications.Error');
+                $errors[$field] = $this->trans('The field %s is required.', [self::displayFieldName($field, get_class($this), $htmlentities)], 'Admin.Notifications.Error');
             }
         }
 
@@ -1488,7 +1500,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
                     self::$fieldsRequiredDatabase[$row['object_name']][(int) $row['id_required_field']] = pSQL($row['field_name']);
                 }
             } else {
-                self::$fieldsRequiredDatabase = array();
+                self::$fieldsRequiredDatabase = [];
             }
         }
     }
@@ -1512,7 +1524,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
 
         return !empty(self::$fieldsRequiredDatabase[$objectName])
             ? self::$fieldsRequiredDatabase[$objectName]
-            : array();
+            : [];
     }
 
     /**
@@ -1533,7 +1545,8 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
         $objectName = $this->getObjectName();
         if (!Db::getInstance()->execute(
             'DELETE FROM ' . _DB_PREFIX_ . 'required_field'
-            . " WHERE object_name = '" . Db::getInstance()->escape($objectName) . "'")
+            . " WHERE object_name = '" . Db::getInstance()->escape($objectName) . "'"
+        )
         ) {
             return false;
         }
@@ -1541,7 +1554,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
         foreach ($fields as $field) {
             if (!Db::getInstance()->insert(
                 'required_field',
-                array('object_name' => $objectName, 'field_name' => pSQL($field))
+                ['object_name' => $objectName, 'field_name' => pSQL($field)]
             )) {
                 return false;
             }
@@ -1581,7 +1594,8 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
 
         $cache_id = 'objectmodel_shop_' . $this->def['classname'] . '_' . (int) $this->id . '-' . (int) $id_shop;
         if (!ObjectModel::$cache_objects || !Cache::isStored($cache_id)) {
-            $associated = (bool) Db::getInstance()->getValue('
+            $associated = (bool) Db::getInstance()->getValue(
+                '
 				SELECT id_shop
 				FROM `' . pSQL(_DB_PREFIX_ . $this->def['table']) . '_shop`
 				WHERE `' . $this->def['primary'] . '` = ' . (int) $this->id . '
@@ -1616,16 +1630,16 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
         }
 
         if (!is_array($id_shops)) {
-            $id_shops = array($id_shops);
+            $id_shops = [$id_shops];
         }
 
-        $data = array();
+        $data = [];
         foreach ($id_shops as $id_shop) {
             if (!$this->isAssociatedToShop($id_shop)) {
-                $data[] = array(
+                $data[] = [
                     $this->def['primary'] => (int) $this->id,
                     'id_shop' => (int) $id_shop,
-                );
+                ];
             }
         }
 
@@ -1648,10 +1662,10 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     public function getAssociatedShops()
     {
         if (!Shop::isTableAssociated($this->def['table'])) {
-            return array();
+            return [];
         }
 
-        $list = array();
+        $list = [];
         $sql = 'SELECT id_shop FROM `' . _DB_PREFIX_ . $this->def['table'] . '_shop` WHERE `' . $this->def['primary'] . '` = ' . (int) $this->id;
         foreach (Db::getInstance()->executeS($sql) as $row) {
             $list[] = $row['id_shop'];
@@ -1681,7 +1695,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
 				FROM ' . _DB_PREFIX_ . $this->def['table'] . '_shop
 				WHERE ' . $this->def['primary'] . ' = ' . (int) $id;
         if ($results = Db::getInstance()->executeS($sql)) {
-            $ids = array();
+            $ids = [];
             foreach ($results as $row) {
                 $ids[] = $row['id_shop'];
             }
@@ -1754,7 +1768,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     public static function updateMultishopTable($classname, $data, $where = '')
     {
         $def = ObjectModel::getDefinition($classname);
-        $update_data = array();
+        $update_data = [];
         foreach ($data as $field => $value) {
             if (!isset($def['fields'][$field])) {
                 continue;
@@ -1837,10 +1851,12 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      */
     public static function existsInDatabase($id_entity, $table)
     {
-        $row = Db::getInstance()->getRow('
+        $row = Db::getInstance()->getRow(
+            '
 			SELECT `id_' . bqSQL($table) . '` as id
 			FROM `' . _DB_PREFIX_ . bqSQL($table) . '` e
-			WHERE e.`id_' . bqSQL($table) . '` = ' . (int) $id_entity, false
+			WHERE e.`id_' . bqSQL($table) . '` = ' . (int) $id_entity,
+            false
         );
 
         return isset($row['id']);
@@ -1914,8 +1930,8 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
             throw new PrestaShopException("Class '$class' not found");
         }
 
-        $collection = array();
-        $rows = array();
+        $collection = [];
+        $rows = [];
         if ($datas) {
             $definition = ObjectModel::getDefinition($class);
             if (!array_key_exists($definition['primary'], $datas[0])) {
@@ -1934,7 +1950,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
                     foreach ($definition['fields'] as $field => $data) {
                         if (!empty($data['lang'])) {
                             if (!is_array($rows[$id][$field])) {
-                                $rows[$id][$field] = array();
+                                $rows[$id][$field] = [];
                             }
                             $rows[$id][$field][$row['id_lang']] = $row[$field];
                         }
@@ -1978,11 +1994,11 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
             $definition['classname'] = $class;
 
             if (!empty($definition['multilang'])) {
-                $definition['associations'][PrestaShopCollection::LANG_ALIAS] = array(
+                $definition['associations'][PrestaShopCollection::LANG_ALIAS] = [
                     'type' => self::HAS_MANY,
                     'field' => $definition['primary'],
                     'foreign_field' => $definition['primary'],
-                );
+                ];
             }
 
             if ($field) {
@@ -2040,8 +2056,8 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
                 }
             }
         } else {
-            $this->def['fields'] = array();
-            $suffixs = array('', 'Lang');
+            $this->def['fields'] = [];
+            $suffixs = ['', 'Lang'];
             foreach ($suffixs as $suffix) {
                 foreach ($this->{'fieldsValidate' . $suffix} as $field => $validate) {
                     $this->def['fields'][$field]['validate'] = $validate;
@@ -2141,7 +2157,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
             return self::$htmlFields[$this->def['table']];
         }
 
-        self::$htmlFields[$this->def['table']] = array();
+        self::$htmlFields[$this->def['table']] = [];
 
         if (array_key_exists('fields', $this->def)) {
             foreach ($this->def['fields'] as $name => $field) {

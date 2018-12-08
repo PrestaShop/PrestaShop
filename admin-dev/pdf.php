@@ -39,7 +39,7 @@ if (!Context::getContext()->employee->id) {
     Tools::redirectAdmin('index.php?controller=AdminLogin');
 }
 
-$function_array = array(
+$function_array = [
     'pdf' => 'generateInvoicePDF',
     'id_order_slip' => 'generateOrderSlipPDF',
     'id_delivery' => 'generateDeliverySlipPDF',
@@ -49,7 +49,7 @@ $function_array = array(
     'slips' => 'generateOrderSlipsPDF',
     'deliveryslips' => 'generateDeliverySlipsPDF',
     'id_supply_order' => 'generateSupplyOrderFormPDF'
-);
+];
 
 $pdf_controller = new AdminPdfController();
 foreach ($function_array as $var => $function) {

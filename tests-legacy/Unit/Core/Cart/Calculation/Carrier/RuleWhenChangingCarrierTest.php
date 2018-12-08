@@ -46,12 +46,12 @@ class RuleWhenChangingCarrierTest extends AbstractCarrierTest
 
     const CARRIER_FIXTURES = [
         1 => [
-            'name'   => 'carrier 1',
+            'name' => 'carrier 1',
             'isFree' => false,
             'ranges' => [
                 1 => [
-                    'from'           => 0,
-                    'to'             => 10000,
+                    'from' => 0,
+                    'to' => 10000,
                     'shippingPrices' => [
                         1 => 3.1, // zoneId => price
                         2 => 4.3, // zoneId => price
@@ -60,12 +60,12 @@ class RuleWhenChangingCarrierTest extends AbstractCarrierTest
             ],
         ],
         2 => [
-            'name'   => 'carrier 2',
+            'name' => 'carrier 2',
             'isFree' => false,
             'ranges' => [
                 1 => [
-                    'from'           => 0,
-                    'to'             => 10000,
+                    'from' => 0,
+                    'to' => 10000,
                     'shippingPrices' => [
                         1 => 5.7, // zoneId => price
                         2 => 6.2, // zoneId => price
@@ -74,12 +74,12 @@ class RuleWhenChangingCarrierTest extends AbstractCarrierTest
             ],
         ],
         3 => [
-            'name'   => 'carrier 3',
+            'name' => 'carrier 3',
             'isFree' => false,
             'ranges' => [
                 1 => [
-                    'from'           => 0,
-                    'to'             => 10000,
+                    'from' => 0,
+                    'to' => 10000,
                     'shippingPrices' => [
                         1 => 5.7, // zoneId => price
                         2 => 6.2, // zoneId => price
@@ -98,14 +98,14 @@ class RuleWhenChangingCarrierTest extends AbstractCarrierTest
 
         // tests
         $cartRule = $this->getCartRuleFromFixtureId(2);
-        $result   = $cartRule->checkValidity(\Context::getContext(), false, false);
+        $result = $cartRule->checkValidity(\Context::getContext(), false, false);
         $this->assertFalse($result);
 
         $cartRule = $this->getCartRuleFromFixtureId(1);
-        $result   = $cartRule->checkValidity(\Context::getContext(), false, false);
+        $result = $cartRule->checkValidity(\Context::getContext(), false, false);
         $this->assertTrue($result);
         $this->cartRulesInCart[] = $cartRule;
-        $result                  = $this->cart->addCartRule($cartRule->id);
+        $result = $this->cart->addCartRule($cartRule->id);
         $this->assertTrue($result);
         $cartRules = $this->cart->getCartRules();
         $this->assertCount(1, $cartRules);
@@ -113,7 +113,7 @@ class RuleWhenChangingCarrierTest extends AbstractCarrierTest
         $result = $cartRule->checkValidity(\Context::getContext(), false, false);
         $this->assertFalse($result);
         $this->cartRulesInCart[] = $cartRule;
-        $result                  = $this->cart->addCartRule($cartRule->id);
+        $result = $this->cart->addCartRule($cartRule->id);
         $this->assertFalse($result);
         $cartRules = $this->cart->getCartRules();
         $this->assertCount(1, $cartRules);
@@ -128,7 +128,7 @@ class RuleWhenChangingCarrierTest extends AbstractCarrierTest
 
         // tests
         $cartRule = $this->getCartRuleFromFixtureId(2);
-        $result   = $cartRule->checkValidity(\Context::getContext(), false, false);
+        $result = $cartRule->checkValidity(\Context::getContext(), false, false);
         $this->assertFalse($result);
     }
 
@@ -140,9 +140,9 @@ class RuleWhenChangingCarrierTest extends AbstractCarrierTest
         $this->addProductToCart(1, 1);
 
         // tests
-        $cartRule                = $this->getCartRuleFromFixtureId(1);
+        $cartRule = $this->getCartRuleFromFixtureId(1);
         $this->cartRulesInCart[] = $cartRule;
-        $result                  = $this->cart->addCartRule($cartRule->id);
+        $result = $this->cart->addCartRule($cartRule->id);
         $this->assertTrue($result);
         $cartRules = $this->cart->getCartRules();
         $this->assertCount(1, $cartRules);

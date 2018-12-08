@@ -26,7 +26,7 @@
 
 function update_order_canada()
 {
-    $sql ='SHOW TABLES LIKE "'.str_replace('_', '\_', _DB_PREFIX_).'order\_tax"';
+    $sql = 'SHOW TABLES LIKE "'.str_replace('_', '\_', _DB_PREFIX_).'order\_tax"';
     $table = Db::getInstance()->executeS($sql);
 
     if (!count($table)) {
@@ -58,7 +58,7 @@ function update_order_canada()
         $values = '';
         if (is_array($id_order_list)) {
             foreach ($id_order_list as $order) {
-                $amount = array();
+                $amount = [];
                 $id_order = $order['id_order'];
             // in Order class, getTaxCalculationMethod
             // 	returns Group::getDefaultPriceDisplayMethod
@@ -70,7 +70,7 @@ function update_order_canada()
 
                 foreach ($products as $product) {
                     if (!array_key_exists($product['tax_name'], $amount)) {
-                        $amount[$product['tax_name']] = array('amount' => 0, 'rate' => $product['tax_rate']);
+                        $amount[$product['tax_name']] = ['amount' => 0, 'rate' => $product['tax_rate']];
                     }
 
                 // PS_TAX_EXC = 1, PS_TAX_INC = 0
@@ -113,9 +113,9 @@ function update_order_canada_ps_round($val)
 
     switch ($ps_price_round_mode) {
         case 0:
-            return ceil($val * 100)/100;
+            return ceil($val * 100) / 100;
         case 1:
-            return floor($val * 100)/100;
+            return floor($val * 100) / 100;
         default:
             return round($val, 2);
     }

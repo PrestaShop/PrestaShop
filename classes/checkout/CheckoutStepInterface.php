@@ -29,7 +29,7 @@ interface CheckoutStepInterface extends RenderableInterface
 {
     public function getTitle();
 
-    public function handleRequest(array $requestParameters = array());
+    public function handleRequest(array $requestParameters = []);
 
     public function setCheckoutProcess(CheckoutProcess $checkoutProcess);
 

@@ -65,9 +65,9 @@ class PreferencesController extends FrameworkBundleAdminController
         // SSL URI is used for the merchant to check if he has SSL enabled
         $sslUri = 'https://' . $toolsAdapter->getShopDomainSsl() . $request->getRequestUri();
 
-        return array(
-            'layoutHeaderToolbarBtn' => array(),
-            'layoutTitle' => $this->get('translator')->trans('Preferences', array(), 'Admin.Navigation.Menu'),
+        return [
+            'layoutHeaderToolbarBtn' => [],
+            'layoutTitle' => $this->get('translator')->trans('Preferences', [], 'Admin.Navigation.Menu'),
             'requireAddonsSearch' => true,
             'requireBulkActions' => false,
             'showContentHeader' => true,
@@ -77,7 +77,7 @@ class PreferencesController extends FrameworkBundleAdminController
             'form' => $form->createView(),
             'isSslEnabled' => $this->configuration->get('PS_SSL_ENABLED'),
             'sslUri' => $sslUri,
-        );
+        ];
     }
 
     /**
@@ -99,19 +99,19 @@ class PreferencesController extends FrameworkBundleAdminController
 
         if (!in_array(
             $this->authorizationLevel($this::CONTROLLER_NAME),
-            array(
+            [
                 PageVoter::LEVEL_READ,
                 PageVoter::LEVEL_UPDATE,
                 PageVoter::LEVEL_CREATE,
                 PageVoter::LEVEL_DELETE,
-            )
+            ]
         )) {
             $this->addFlash('error', $this->trans('You do not have permission to update this.', 'Admin.Notifications.Error'));
 
             return $this->redirectToRoute('admin_preferences');
         }
 
-        $this->dispatchHook('actionAdminPreferencesControllerPostProcessBefore', array('controller' => $this));
+        $this->dispatchHook('actionAdminPreferencesControllerPostProcessBefore', ['controller' => $this]);
 
         /** @var FormInterface $form */
         $form = $this->get('prestashop.adapter.preferences.form_handler')->getForm();

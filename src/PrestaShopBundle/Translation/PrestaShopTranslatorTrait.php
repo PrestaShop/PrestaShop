@@ -35,7 +35,7 @@ trait PrestaShopTranslatorTrait
     /**
      * {@inheritdoc}
      */
-    public function trans($id, array $parameters = array(), $domain = null, $locale = null)
+    public function trans($id, array $parameters = [], $domain = null, $locale = null)
     {
         if (null !== $domain) {
             $domain = str_replace('.', '', $domain);
@@ -46,7 +46,7 @@ trait PrestaShopTranslatorTrait
             unset($parameters['legacy']);
         }
 
-        $translated = parent::trans($id, array(), $domain, $locale);
+        $translated = parent::trans($id, [], $domain, $locale);
         if (isset($legacy) && 'htmlspecialchars' === $legacy) {
             $translated = call_user_func($legacy, $translated, ENT_NOQUOTES);
         } elseif (isset($legacy)) {
@@ -81,7 +81,7 @@ trait PrestaShopTranslatorTrait
     /**
      * {@inheritdoc}
      */
-    public function transChoice($id, $number, array $parameters = array(), $domain = null, $locale = null)
+    public function transChoice($id, $number, array $parameters = [], $domain = null, $locale = null)
     {
         if (null !== $domain) {
             $domain = str_replace('.', '', $domain);
@@ -91,7 +91,7 @@ trait PrestaShopTranslatorTrait
             return parent::transChoice($id, $number, $parameters, $domain, $locale);
         }
 
-        return vsprintf(parent::transChoice($id, $number, array(), $domain, $locale), $parameters);
+        return vsprintf(parent::transChoice($id, $number, [], $domain, $locale), $parameters);
     }
 
     /**

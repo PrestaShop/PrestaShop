@@ -111,7 +111,7 @@ class SearchParametersResolver implements ArgumentValueResolverInterface
     public function resolve(Request $request, ArgumentMetadata $argument)
     {
         $filtersClass = $argument->getType();
-        list($controller, $action) = ControllerAction::fromString($request->get('_controller'));
+        [$controller, $action] = ControllerAction::fromString($request->get('_controller'));
 
         $query = $request->query;
         $doesTheUrlContainsFilters = ($query->has('filters') || $query->has('limit') || $query->has('sortOrder'));

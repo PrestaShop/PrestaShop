@@ -77,10 +77,10 @@ abstract class ModuleAbstractController extends FrameworkBundleAdminController
 
         if (!in_array(
             $this->authorizationLevel($this::CONTROLLER_NAME),
-            array(
+            [
                 PageVoter::LEVEL_READ,
                 PageVoter::LEVEL_UPDATE,
-            )
+            ]
         )) {
             $toolbarButtons['add_module'] = [
                 'href' => '#',

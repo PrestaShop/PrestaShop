@@ -30,9 +30,9 @@ use ReflectionClass;
 
 class Container
 {
-    private $bindings = array();
-    private $instances = array();
-    private $namespaceAliases = array();
+    private $bindings = [];
+    private $instances = [];
+    private $namespaceAliases = [];
 
     public function knows($serviceName)
     {
@@ -52,10 +52,10 @@ class Container
             );
         }
 
-        $this->bindings[$serviceName] = array(
+        $this->bindings[$serviceName] = [
             'constructor' => $constructor,
             'shared' => $shared,
-        );
+        ];
 
         return $this;
     }
@@ -66,7 +66,8 @@ class Container
             throw new Exception(
                 sprintf(
                     'Namespace alias `%1$s` already exists and points to `%2$s`',
-                    $alias, $this->namespaceAliases[$alias]
+                    $alias,
+                    $this->namespaceAliases[$alias]
                 )
             );
         }
@@ -101,7 +102,7 @@ class Container
             throw new Exception(sprintf('This doesn\'t seem to be a class name: `%s`.', $className));
         }
 
-        $args = array();
+        $args = [];
 
         if ($refl->isAbstract()) {
             throw new Exception(sprintf('Cannot build abstract class: `%s`.', $className));
@@ -131,7 +132,7 @@ class Container
         }
     }
 
-    private function doMake($serviceName, array $alreadySeen = array())
+    private function doMake($serviceName, array $alreadySeen = [])
     {
         if (array_key_exists($serviceName, $alreadySeen)) {
             throw new Exception(sprintf(
@@ -173,6 +174,6 @@ class Container
 
     public function make($serviceName)
     {
-        return $this->doMake($serviceName, array());
+        return $this->doMake($serviceName, []);
     }
 }

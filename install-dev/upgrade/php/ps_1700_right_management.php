@@ -26,12 +26,12 @@
 
 function ps_1700_right_management()
 {
-    $actions = array('CREATE', 'READ', 'UPDATE', 'DELETE');
+    $actions = ['CREATE', 'READ', 'UPDATE', 'DELETE'];
 
     /**
      * Add roles
      */
-    foreach (array('TAB' => 'class_name', 'MODULE' => 'name') as $element => $nameColumn) {
+    foreach (['TAB' => 'class_name', 'MODULE' => 'name'] as $element => $nameColumn) {
         foreach ($actions as $action) {
             Db::getInstance()->execute('
                 INSERT IGNORE INTO `'._DB_PREFIX_.'authorization_role`
@@ -50,10 +50,10 @@ function ps_1700_right_management()
     // Tabs
     $oldAccess = Db::getInstance()->executeS('SELECT t.id_tab, a.id_profile, a.view, a.add, a.edit, a.delete FROM `'._DB_PREFIX_.'tab` t LEFT JOIN `'._DB_PREFIX_.'access_old` a USING (id_tab)');
     if (empty($oldAccess)) {
-        $oldAccess = array();
+        $oldAccess = [];
     }
     foreach ($oldAccess as $currOldAccess) {
-        foreach (array('view', 'add', 'edit', 'delete') as $action) {
+        foreach (['view', 'add', 'edit', 'delete'] as $action) {
             if (array_key_exists($action, $currOldAccess) && ($currOldAccess[$action] == '1'
                     || $currOldAccess['id_profile'] == _PS_ADMIN_PROFILE_
                     || empty($currOldAccess['id_profile']))) {
@@ -70,11 +70,11 @@ function ps_1700_right_management()
     // Modules
     $oldAccess = Db::getInstance()->executeS('SELECT mo.id_module, m.id_profile, m.configure, m.view, m.uninstall FROM `'._DB_PREFIX_.'module` mo LEFT JOIN `'._DB_PREFIX_.'module_access_old` m USING (id_module)');
     if (empty($oldAccess)) {
-        $oldAccess = array();
+        $oldAccess = [];
     }
 
     foreach ($oldAccess as $currOldAccess) {
-        foreach (array('configure', 'view', 'uninstall') as $action) {
+        foreach (['configure', 'view', 'uninstall'] as $action) {
             if (array_key_exists($action, $currOldAccess) && ($currOldAccess[$action] == '1'
                     || $currOldAccess['id_profile'] == _PS_ADMIN_PROFILE_
                     || empty($currOldAccess['id_profile']))) {

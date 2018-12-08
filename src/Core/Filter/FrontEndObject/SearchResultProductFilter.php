@@ -36,7 +36,7 @@ class SearchResultProductFilter extends HashMapWhitelistFilter
 {
     public function __construct()
     {
-        $whitelist = array(
+        $whitelist = [
             'active',
             'add_to_cart_url',
             'canonical_url',
@@ -65,7 +65,7 @@ class SearchResultProductFilter extends HashMapWhitelistFilter
             'tax_name',
             'unit_price',
             'url',
-        );
+        ];
 
         $this->whitelist($whitelist);
     }

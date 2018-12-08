@@ -5,78 +5,78 @@ use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 class AdminProductsController extends AdminProductsControllerCore
 {
     /*
-    * module: pscsx3241
-    * date: 2015-07-13 16:05:30
-    * version: 1
-    */
+     * module: pscsx3241
+     * date: 2015-07-13 16:05:30
+     * version: 1
+     */
     protected $max_file_size = null;
     /*
-    * module: pscsx3241
-    * date: 2015-07-13 16:05:30
-    * version: 1
-    */
+     * module: pscsx3241
+     * date: 2015-07-13 16:05:30
+     * version: 1
+     */
     protected $max_image_size = null;
     /*
-    * module: pscsx3241
-    * date: 2015-07-13 16:05:30
-    * version: 1
-    */
+     * module: pscsx3241
+     * date: 2015-07-13 16:05:30
+     * version: 1
+     */
     protected $_category;
 
     /*
-    * module: pscsx3241
-    * date: 2015-07-13 16:05:30
-    * version: 1
-    */
+     * module: pscsx3241
+     * date: 2015-07-13 16:05:30
+     * version: 1
+     */
     protected $tab_display;
     /*
-    * module: pscsx3241
-    * date: 2015-07-13 16:05:30
-    * version: 1
-    */
+     * module: pscsx3241
+     * date: 2015-07-13 16:05:30
+     * version: 1
+     */
     protected $tab_display_module;
 
     /*
-    * module: pscsx3241
-    * date: 2015-07-13 16:05:30
-    * version: 1
-    */
-    protected $available_tabs = array();
+     * module: pscsx3241
+     * date: 2015-07-13 16:05:30
+     * version: 1
+     */
+    protected $available_tabs = [];
     /*
-    * module: pscsx3241
-    * date: 2015-07-13 16:05:30
-    * version: 1
-    */
+     * module: pscsx3241
+     * date: 2015-07-13 16:05:30
+     * version: 1
+     */
     protected $default_tab = 'Informations';
     /*
-    * module: pscsx3241
-    * date: 2015-07-13 16:05:30
-    * version: 1
-    */
-    protected $available_tabs_lang = array();
+     * module: pscsx3241
+     * date: 2015-07-13 16:05:30
+     * version: 1
+     */
+    protected $available_tabs_lang = [];
     /*
-    * module: pscsx3241
-    * date: 2015-07-13 16:05:30
-    * version: 1
-    */
+     * module: pscsx3241
+     * date: 2015-07-13 16:05:30
+     * version: 1
+     */
     protected $position_identifier = 'id_product';
     /*
-    * module: pscsx3241
-    * date: 2015-07-13 16:05:30
-    * version: 1
-    */
+     * module: pscsx3241
+     * date: 2015-07-13 16:05:30
+     * version: 1
+     */
     protected $submitted_tabs;
     /*
-    * module: pscsx3241
-    * date: 2015-07-13 16:05:30
-    * version: 1
-    */
+     * module: pscsx3241
+     * date: 2015-07-13 16:05:30
+     * version: 1
+     */
     protected $id_current_category;
     /*
-    * module: pscsx3241
-    * date: 2015-07-13 16:05:30
-    * version: 1
-    */
+     * module: pscsx3241
+     * date: 2015-07-13 16:05:30
+     * version: 1
+     */
     public function __construct()
     {
         $this->bootstrap = true;
@@ -84,13 +84,13 @@ class AdminProductsController extends AdminProductsControllerCore
         $this->className = 'Product';
         $this->lang = true;
         $this->explicitSelect = true;
-        $this->bulk_actions = array(
-            'delete' => array(
+        $this->bulk_actions = [
+            'delete' => [
                 'text' => $this->l('Delete selected'),
                 'icon' => 'icon-trash',
                 'confirm' => $this->l('Delete selected items?')
-            )
-        );
+            ]
+        ];
         if (!Tools::getValue('id_product')) {
             $this->multishop_context_group = false;
         }
@@ -100,7 +100,7 @@ class AdminProductsController extends AdminProductsControllerCore
         $this->max_file_size = (int)(Configuration::get('PS_LIMIT_UPLOAD_FILE_VALUE') * 1000000);
         $this->max_image_size = (int)Configuration::get('PS_PRODUCT_PICTURE_MAX_SIZE');
         $this->allow_export = true;
-        $this->available_tabs_lang = array(
+        $this->available_tabs_lang = [
             'Informations' => $this->l('Information'),
             'Pack' => $this->l('Pack'),
             'VirtualProduct' => $this->l('Virtual Product'),
@@ -116,10 +116,10 @@ class AdminProductsController extends AdminProductsControllerCore
             'Quantities' => $this->l('Quantities'),
             'Suppliers' => $this->l('Suppliers'),
             'Warehouses' => $this->l('Warehouses'),
-        );
-        $this->available_tabs = array('Quantities' => 6, 'Warehouses' => 14);
+        ];
+        $this->available_tabs = ['Quantities' => 6, 'Warehouses' => 14];
         if ($this->context->shop->getContext() != Shop::CONTEXT_GROUP) {
-            $this->available_tabs = array_merge($this->available_tabs, array(
+            $this->available_tabs = array_merge($this->available_tabs, [
                 'Informations' => 0,
                 'Pack' => 7,
                 'VirtualProduct' => 8,
@@ -133,7 +133,7 @@ class AdminProductsController extends AdminProductsControllerCore
                 'Customization' => 11,
                 'Attachments' => 12,
                 'Suppliers' => 13,
-            ));
+            ]);
         }
         asort($this->available_tabs, SORT_NUMERIC);
 
@@ -194,65 +194,65 @@ class AdminProductsController extends AdminProductsControllerCore
             $this->_select .= ' , cp.`position`, ';
         }
         $this->_group = 'GROUP BY '.$alias.'.id_product';
-        $this->fields_list = array();
-        $this->fields_list['id_product'] = array(
+        $this->fields_list = [];
+        $this->fields_list['id_product'] = [
             'title' => $this->l('ID'),
             'align' => 'center',
             'class' => 'fixed-width-xs',
             'type' => 'int'
-        );
-        $this->fields_list['image'] = array(
+        ];
+        $this->fields_list['image'] = [
             'title' => $this->l('Image'),
             'align' => 'center',
             'image' => 'p',
             'orderby' => false,
             'filter' => false,
             'search' => false
-        );
-        $this->fields_list['name'] = array(
+        ];
+        $this->fields_list['name'] = [
             'title' => $this->l('Name'),
             'filter_key' => 'b!name'
-        );
-        $this->fields_list['reference'] = array(
+        ];
+        $this->fields_list['reference'] = [
             'title' => $this->l('Reference'),
             'align' => 'left',
-        );
+        ];
         if (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_SHOP) {
-            $this->fields_list['shopname'] = array(
+            $this->fields_list['shopname'] = [
                 'title' => $this->l('Default shop'),
                 'filter_key' => 'shop!name',
-            );
+            ];
         } else {
-            $this->fields_list['name_category'] = array(
+            $this->fields_list['name_category'] = [
                 'title' => $this->l('Category'),
                 'filter_key' => 'cl!name',
-            );
+            ];
         }
-        $this->fields_list['price'] = array(
+        $this->fields_list['price'] = [
             'title' => $this->l('Base price'),
             'type' => 'price',
             'align' => 'text-right',
             'filter_key' => 'a!price'
-        );
-        $this->fields_list['price_final'] = array(
+        ];
+        $this->fields_list['price_final'] = [
             'title' => $this->l('Final price'),
             'type' => 'price',
             'align' => 'text-right',
             'havingFilter' => true,
             'orderby' => false,
             'search' => false
-        );
+        ];
         if (Configuration::get('PS_STOCK_MANAGEMENT')) {
-            $this->fields_list['sav_quantity'] = array(
+            $this->fields_list['sav_quantity'] = [
                 'title' => $this->l('Quantity'),
                 'type' => 'int',
                 'align' => 'text-right',
                 'filter_key' => 'sav!quantity',
                 'orderby' => true,
                 'badge_danger' => true,
-            );
+            ];
         }
-        $this->fields_list['active'] = array(
+        $this->fields_list['active'] = [
             'title' => $this->l('Status'),
             'active' => 'status',
             'filter_key' => $alias.'!active',
@@ -260,21 +260,21 @@ class AdminProductsController extends AdminProductsControllerCore
             'type' => 'bool',
             'class' => 'fixed-width-sm',
             'orderby' => false
-        );
+        ];
         if ($join_category && (int)$this->id_current_category) {
-            $this->fields_list['position'] = array(
+            $this->fields_list['position'] = [
                 'title' => $this->l('Position'),
                 'filter_key' => 'cp!position',
                 'align' => 'center',
                 'position' => 'position'
-            );
+            ];
         }
     }
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:31
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:31
+     * version: 1
+     */
     public static function getQuantities($echo, $tr)
     {
         if ((int)$tr['is_virtual'] == 1 && $tr['nb_downloadable'] == 0) {
@@ -284,10 +284,10 @@ class AdminProductsController extends AdminProductsControllerCore
         }
     }
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:31
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:31
+     * version: 1
+     */
     public function setMedia()
     {
         parent::setMedia();
@@ -305,14 +305,14 @@ class AdminProductsController extends AdminProductsControllerCore
         $this->addJs(__PS_BASE_URI__.'js/vendor/ladda.js');
     }
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:31
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:31
+     * version: 1
+     */
     protected function _cleanMetaKeywords($keywords)
     {
         if (!empty($keywords) && $keywords != '') {
-            $out = array();
+            $out = [];
             $words = explode(',', $keywords);
             foreach ($words as $word_item) {
                 $word_item = trim($word_item);
@@ -326,10 +326,10 @@ class AdminProductsController extends AdminProductsControllerCore
         }
     }
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:31
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:31
+     * version: 1
+     */
     protected function copyFromPost(&$object, $table)
     {
         parent::copyFromPost($object, $table);
@@ -363,10 +363,10 @@ class AdminProductsController extends AdminProductsControllerCore
         }
     }
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:31
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:31
+     * version: 1
+     */
     public function getList($id_lang, $orderBy = null, $orderWay = null, $start = 0, $limit = null, $id_lang_shop = null)
     {
         $orderByPriceFinal = (empty($orderBy) ? ($this->context->cookie->__get($this->table.'Orderby') ? $this->context->cookie->__get($this->table.'Orderby') : 'id_'.$this->table) : $orderBy);
@@ -403,10 +403,10 @@ class AdminProductsController extends AdminProductsControllerCore
         }
     }
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:31
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:31
+     * version: 1
+     */
     protected function loadObject($opt = false)
     {
         $result = parent::loadObject($opt);
@@ -429,67 +429,70 @@ class AdminProductsController extends AdminProductsControllerCore
         return $result;
     }
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:31
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:31
+     * version: 1
+     */
     public function ajaxProcessGetCountriesOptions()
     {
         if (!$res = Country::getCountriesByIdShop((int)Tools::getValue('id_shop'), (int)$this->context->language->id)) {
             return ;
         }
         $tpl = $this->createTemplate('specific_prices_shop_update.tpl');
-        $tpl->assign(array(
+        $tpl->assign(
+            [
             'option_list' => $res,
             'key_id' => 'id_country',
             'key_value' => 'name'
-            )
+            ]
         );
         $this->content = $tpl->fetch();
     }
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:31
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:31
+     * version: 1
+     */
     public function ajaxProcessGetCurrenciesOptions()
     {
         if (!$res = Currency::getCurrenciesByIdShop((int)Tools::getValue('id_shop'))) {
             return ;
         }
         $tpl = $this->createTemplate('specific_prices_shop_update.tpl');
-        $tpl->assign(array(
+        $tpl->assign(
+            [
             'option_list' => $res,
             'key_id' => 'id_currency',
             'key_value' => 'name'
-            )
+            ]
         );
         $this->content = $tpl->fetch();
     }
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:31
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:31
+     * version: 1
+     */
     public function ajaxProcessGetGroupsOptions()
     {
         if (!$res = Group::getGroups((int)$this->context->language->id, (int)Tools::getValue('id_shop'))) {
             return ;
         }
         $tpl = $this->createTemplate('specific_prices_shop_update.tpl');
-        $tpl->assign(array(
+        $tpl->assign(
+            [
             'option_list' => $res,
             'key_id' => 'id_group',
             'key_value' => 'name'
-            )
+            ]
         );
         $this->content = $tpl->fetch();
     }
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:31
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:31
+     * version: 1
+     */
     public function processDeleteVirtualProduct()
     {
         if (!($id_product_download = ProductDownload::getIdFromIdProduct((int)Tools::getValue('id_product')))) {
@@ -506,15 +509,15 @@ class AdminProductsController extends AdminProductsControllerCore
         $this->tab_display = 'VirtualProduct';
     }
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:31
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:31
+     * version: 1
+     */
     public function ajaxProcessAddAttachment()
     {
         if (isset($_FILES['attachment_file'])) {
             if ((int)$_FILES['attachment_file']['error'] === 1) {
-                $_FILES['attachment_file']['error'] = array();
+                $_FILES['attachment_file']['error'] = [];
                 $max_upload = (int)ini_get('upload_max_filesize');
                 $max_post = (int)ini_get('post_max_size');
                 $upload_mb = min($max_upload, $max_post);
@@ -524,15 +527,15 @@ class AdminProductsController extends AdminProductsControllerCore
                     '<b>'.$upload_mb.'</b>'
                 );
             }
-            $_FILES['attachment_file']['error'] = array();
+            $_FILES['attachment_file']['error'] = [];
             $is_attachment_name_valid = false;
             $attachment_names = Tools::getValue('attachment_name');
             $attachment_descriptions = Tools::getValue('attachment_description');
             if (!isset($attachment_names) || !$attachment_names) {
-                $attachment_names = array();
+                $attachment_names = [];
             }
             if (!isset($attachment_descriptions) || !$attachment_descriptions) {
-                $attachment_descriptions = array();
+                $attachment_descriptions = [];
             }
             foreach ($attachment_names as $lang => $name) {
                 $language = Language::getLanguage((int)$lang);
@@ -617,10 +620,10 @@ class AdminProductsController extends AdminProductsControllerCore
     }
 
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:31
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:31
+     * version: 1
+     */
     public function processAttachments()
     {
         if ($id = (int)Tools::getValue($this->identifier)) {
@@ -632,10 +635,10 @@ class AdminProductsController extends AdminProductsControllerCore
         }
     }
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:32
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:32
+     * version: 1
+     */
     public function processDuplicate()
     {
         if (Validate::isLoadedObject($product = new Product((int)Tools::getValue('id_product')))) {
@@ -670,8 +673,8 @@ class AdminProductsController extends AdminProductsControllerCore
                 if (!Tools::getValue('noimage') && !Image::duplicateProductImages($id_product_old, $product->id, $combination_images)) {
                     $this->errors[] = Tools::displayError('An error occurred while copying images.');
                 } else {
-                    Hook::exec('actionProductAdd', array('id_product' => (int)$product->id, 'product' => $product));
-                    if (in_array($product->visibility, array('both', 'search')) && Configuration::get('PS_SEARCH_INDEXATION')) {
+                    Hook::exec('actionProductAdd', ['id_product' => (int)$product->id, 'product' => $product]);
+                    if (in_array($product->visibility, ['both', 'search']) && Configuration::get('PS_SEARCH_INDEXATION')) {
                         Search::indexation(false, $product->id);
                     }
                     $this->redirect_after = self::$currentIndex.(Tools::getIsset('id_category') ? '&id_category='.(int)Tools::getValue('id_category') : '').'&conf=19&token='.$this->token;
@@ -682,14 +685,14 @@ class AdminProductsController extends AdminProductsControllerCore
         }
     }
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:32
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:32
+     * version: 1
+     */
     public function processDelete()
     {
         if (Validate::isLoadedObject($object = $this->loadObject()) && isset($this->fieldImageSettings)) {
-            if (isset($object->noZeroObject) && count($taxes = call_user_func(array($this->className, $object->noZeroObject))) <= 1) {
+            if (isset($object->noZeroObject) && count($taxes = call_user_func([$this->className, $object->noZeroObject])) <= 1) {
                 $this->errors[] = Tools::displayError('You need at least one object.').' <b>'.$this->table.'</b><br />'.Tools::displayError('You cannot delete all of the items.');
             } else {
                 if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && $object->advanced_stock_management) {
@@ -716,10 +719,10 @@ class AdminProductsController extends AdminProductsControllerCore
         }
     }
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:32
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:32
+     * version: 1
+     */
     public function processImage()
     {
         $id_image = (int)Tools::getValue('id_image');
@@ -750,17 +753,17 @@ class AdminProductsController extends AdminProductsControllerCore
         }
     }
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:32
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:32
+     * version: 1
+     */
     protected function processBulkDelete()
     {
         if ($this->access('delete')) {
             if (is_array($this->boxes) && !empty($this->boxes)) {
                 $object = new $this->className();
                 if (isset($object->noZeroObject) &&
-                    (count(call_user_func(array($this->className, $object->noZeroObject))) <= 1 || count($_POST[$this->table.'Box']) == count(call_user_func(array($this->className, $object->noZeroObject))))) {
+                    (count(call_user_func([$this->className, $object->noZeroObject])) <= 1 || count($_POST[$this->table.'Box']) == count(call_user_func([$this->className, $object->noZeroObject])))) {
                     $this->errors[] = Tools::displayError('You need at least one object.').' <b>'.$this->table.'</b><br />'.Tools::displayError('You cannot delete all of the items.');
                 } else {
                     $success = 1;
@@ -809,10 +812,10 @@ class AdminProductsController extends AdminProductsControllerCore
         }
     }
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:32
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:32
+     * version: 1
+     */
     public function processProductAttribute()
     {
         if (!Combination::isFeatureActive() || !Tools::getValue('attribute_combination_list')) {
@@ -825,7 +828,7 @@ class AdminProductsController extends AdminProductsControllerCore
             if (!Tools::getIsset('attribute_combination_list') || Tools::isEmpty(Tools::getValue('attribute_combination_list'))) {
                 $this->errors[] = Tools::displayError('You must add at least one attribute.');
             }
-            $array_checks = array(
+            $array_checks = [
                 'reference' => 'isReference',
                 'supplier_reference' => 'isReference',
                 'location' => 'isReference',
@@ -840,9 +843,9 @@ class AdminProductsController extends AdminProductsControllerCore
                 'default_on' => 'isBool',
                 'minimal_quantity' => 'isUnsignedInt',
                 'available_date' => 'isDateFormat'
-            );
+            ];
             foreach ($array_checks as $property => $check) {
-                if (Tools::getValue('attribute_'.$property) !== false && !call_user_func(array('Validate', $check), Tools::getValue('attribute_'.$property))) {
+                if (Tools::getValue('attribute_'.$property) !== false && !call_user_func(['Validate', $check], Tools::getValue('attribute_'.$property))) {
                     $this->errors[] = sprintf(Tools::displayError('Field %s is not valid'), $property);
                 }
             }
@@ -864,10 +867,11 @@ class AdminProductsController extends AdminProductsControllerCore
                 }
                 if (($id_product_attribute = (int)Tools::getValue('id_product_attribute')) || ($id_product_attribute = $product->productAttributeExists(Tools::getValue('attribute_combination_list'), false, null, true, true))) {
                     if ($this->access('edit')) {
-                        if ($this->isProductFieldUpdated('available_date_attribute') && (Tools::getValue('available_date_attribute') != '' &&!Validate::isDateFormat(Tools::getValue('available_date_attribute')))) {
+                        if ($this->isProductFieldUpdated('available_date_attribute') && (Tools::getValue('available_date_attribute') != '' && !Validate::isDateFormat(Tools::getValue('available_date_attribute')))) {
                             $this->errors[] = Tools::displayError('Invalid date format.');
                         } else {
-                            $product->updateAttribute((int)$id_product_attribute,
+                            $product->updateAttribute(
+                                (int)$id_product_attribute,
                                 $this->isProductFieldUpdated('attribute_wholesale_price') ? Tools::getValue('attribute_wholesale_price') : null,
                                 $this->isProductFieldUpdated('attribute_price_impact') ? Tools::getValue('attribute_price') * Tools::getValue('attribute_price_impact') : null,
                                 $this->isProductFieldUpdated('attribute_weight_impact') ? Tools::getValue('attribute_weight') * Tools::getValue('attribute_weight_impact') : null,
@@ -880,7 +884,9 @@ class AdminProductsController extends AdminProductsControllerCore
                                 Tools::getValue('attribute_location'),
                                 Tools::getValue('attribute_upc'),
                                 $this->isProductFieldUpdated('attribute_minimal_quantity') ? Tools::getValue('attribute_minimal_quantity') : null,
-                                $this->isProductFieldUpdated('available_date_attribute') ? Tools::getValue('available_date_attribute') : null, false);
+                                $this->isProductFieldUpdated('available_date_attribute') ? Tools::getValue('available_date_attribute') : null,
+                                false
+                            );
                             StockAvailable::setProductDependsOnStock((int)$product->id, $product->depends_on_stock, null, (int)$id_product_attribute);
                             StockAvailable::setProductOutOfStock((int)$product->id, $product->out_of_stock, null, (int)$id_product_attribute);
                         }
@@ -907,7 +913,7 @@ class AdminProductsController extends AdminProductsControllerCore
                                 Tools::getValue('attribute_location'),
                                 Tools::getValue('attribute_upc'),
                                 Tools::getValue('attribute_minimal_quantity'),
-                                array(),
+                                [],
                                 Tools::getValue('available_date_attribute'),
                                 Tools::getValue('attribute_isbn')
                             );
@@ -942,10 +948,10 @@ class AdminProductsController extends AdminProductsControllerCore
         }
     }
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:32
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:32
+     * version: 1
+     */
     public function processFeatures()
     {
         if (!Feature::isFeatureActive()) {
@@ -978,10 +984,10 @@ class AdminProductsController extends AdminProductsControllerCore
     }
 
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:32
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:32
+     * version: 1
+     */
     public function processPricesModification()
     {
         $id_specific_prices = Tools::getValue('spm_id_specific_price');
@@ -1024,10 +1030,10 @@ class AdminProductsController extends AdminProductsControllerCore
         }
     }
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:32
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:32
+     * version: 1
+     */
     public function processPriceAddition()
     {
         if (!Tools::getIsset('submitPriceAddition')) {
@@ -1082,10 +1088,10 @@ class AdminProductsController extends AdminProductsControllerCore
         }
     }
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:32
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:32
+     * version: 1
+     */
     public function ajaxProcessDeleteSpecificPrice()
     {
         if ($this->access('delete')) {
@@ -1102,23 +1108,23 @@ class AdminProductsController extends AdminProductsControllerCore
             $error = Tools::displayError('You do not have permission to delete this.');
         }
         if (isset($error)) {
-            $json = array(
+            $json = [
                 'status' => 'error',
-                'message'=> $error
-            );
+                'message' => $error
+            ];
         } else {
-            $json = array(
+            $json = [
                 'status' => 'ok',
-                'message'=> $this->_conf[1]
-            );
+                'message' => $this->_conf[1]
+            ];
         }
         die(json_encode($json));
     }
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:32
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:32
+     * version: 1
+     */
     public function processSpecificPricePriorities()
     {
         if (!($obj = $this->loadObject())) {
@@ -1137,10 +1143,10 @@ class AdminProductsController extends AdminProductsControllerCore
         }
     }
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:32
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:32
+     * version: 1
+     */
     public function processCustomizationConfiguration()
     {
         $product = $this->object;
@@ -1168,10 +1174,10 @@ class AdminProductsController extends AdminProductsControllerCore
         }
     }
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:32
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:32
+     * version: 1
+     */
     public function processProductCustomization()
     {
         if (Validate::isLoadedObject($product = new Product((int)Tools::getValue('id_product')))) {
@@ -1192,10 +1198,10 @@ class AdminProductsController extends AdminProductsControllerCore
     }
 
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:32
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:32
+     * version: 1
+     */
     public function processPosition()
     {
         if (!Validate::isLoadedObject($object = $this->loadObject())) {
@@ -1206,16 +1212,16 @@ class AdminProductsController extends AdminProductsControllerCore
         } else {
             $category = new Category((int)Tools::getValue('id_category'));
             if (Validate::isLoadedObject($category)) {
-                Hook::exec('actionCategoryUpdate', array('category' => $category));
+                Hook::exec('actionCategoryUpdate', ['category' => $category]);
             }
             $this->redirect_after = self::$currentIndex.'&'.$this->table.'Orderby=position&'.$this->table.'Orderway=asc&action=Customization&conf=5'.(($id_category = (Tools::getIsset('id_category') ? (int)Tools::getValue('id_category') : '')) ? ('&id_category='.$id_category) : '').'&token='.Tools::getAdminTokenLite('AdminProducts');
         }
     }
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:32
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:32
+     * version: 1
+     */
     public function initProcess()
     {
         if (Tools::isSubmit('submitAddproductAndStay') || Tools::isSubmit('submitAddproduct')) {
@@ -1338,21 +1344,21 @@ class AdminProductsController extends AdminProductsControllerCore
     }
 
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:32
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:32
+     * version: 1
+     */
     public function postProcess()
     {
         if (!$this->redirect_after) {
             parent::postProcess();
         }
         if ($this->display == 'edit' || $this->display == 'add') {
-            $this->addJqueryUI(array(
+            $this->addJqueryUI([
                 'ui.core',
                 'ui.widget'
-            ));
-            $this->addjQueryPlugin(array(
+            ]);
+            $this->addjQueryPlugin([
                 'autocomplete',
                 'tablednd',
                 'thickbox',
@@ -1361,8 +1367,8 @@ class AdminProductsController extends AdminProductsControllerCore
                 'tagify',
                 'select2',
                 'validate'
-            ));
-            $this->addJS(array(
+            ]);
+            $this->addJS([
                 _PS_JS_DIR_.'admin/products.js',
                 _PS_JS_DIR_.'admin/attributes.js',
                 _PS_JS_DIR_.'admin/price.js',
@@ -1372,19 +1378,19 @@ class AdminProductsController extends AdminProductsControllerCore
                 _PS_JS_DIR_.'jquery/ui/jquery.ui.progressbar.min.js',
                 _PS_JS_DIR_.'vendor/spin.js',
                 _PS_JS_DIR_.'vendor/ladda.js'
-            ));
+            ]);
             $this->addJS(_PS_JS_DIR_.'jquery/plugins/select2/select2_locale_'.$this->context->language->iso_code.'.js');
             $this->addJS(_PS_JS_DIR_.'jquery/plugins/validate/localization/messages_'.$this->context->language->iso_code.'.js');
-            $this->addCSS(array(
+            $this->addCSS([
                 _PS_JS_DIR_.'jquery/plugins/timepicker/jquery-ui-timepicker-addon.css'
-            ));
+            ]);
         }
     }
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:32
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:32
+     * version: 1
+     */
     public function ajaxProcessDeleteProductAttribute()
     {
         if (!Combination::isFeatureActive()) {
@@ -1395,10 +1401,10 @@ class AdminProductsController extends AdminProductsControllerCore
             $id_product_attribute = (int)Tools::getValue('id_product_attribute');
             if ($id_product && Validate::isUnsignedId($id_product) && Validate::isLoadedObject($product = new Product($id_product))) {
                 if (($depends_on_stock = StockAvailable::dependsOnStock($id_product)) && StockAvailable::getQuantityAvailableByProduct($id_product, $id_product_attribute)) {
-                    $json = array(
+                    $json = [
                         'status' => 'error',
-                        'message'=> $this->l('It is not possible to delete a combination while it still has some quantities in the Advanced Stock Management. You must delete its stock first.')
-                    );
+                        'message' => $this->l('It is not possible to delete a combination while it still has some quantities in the Advanced Stock Management. You must delete its stock first.')
+                    ];
                 } else {
                     $product->deleteAttributeCombination((int)$id_product_attribute);
                     $product->checkDefaultAttributes();
@@ -1410,37 +1416,37 @@ class AdminProductsController extends AdminProductsControllerCore
                         Product::updateDefaultAttribute($id_product);
                     }
                     if ($depends_on_stock && !Stock::deleteStockByIds($id_product, $id_product_attribute)) {
-                        $json = array(
+                        $json = [
                             'status' => 'error',
-                            'message'=> $this->l('Error while deleting the stock')
-                        );
+                            'message' => $this->l('Error while deleting the stock')
+                        ];
                     } else {
-                        $json = array(
+                        $json = [
                             'status' => 'ok',
-                            'message'=> $this->_conf[1],
+                            'message' => $this->_conf[1],
                             'id_product_attribute' => (int)$id_product_attribute
-                        );
+                        ];
                     }
                 }
             } else {
-                $json = array(
+                $json = [
                     'status' => 'error',
-                    'message'=> $this->l('You cannot delete this attribute.')
-                );
+                    'message' => $this->l('You cannot delete this attribute.')
+                ];
             }
         } else {
-            $json = array(
+            $json = [
                 'status' => 'error',
-                'message'=> $this->l('You do not have permission to delete this.')
-            );
+                'message' => $this->l('You do not have permission to delete this.')
+            ];
         }
         die(json_encode($json));
     }
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:32
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:32
+     * version: 1
+     */
     public function ajaxProcessDefaultProductAttribute()
     {
         if ($this->access('edit')) {
@@ -1450,24 +1456,24 @@ class AdminProductsController extends AdminProductsControllerCore
             if (Validate::isLoadedObject($product = new Product((int)Tools::getValue('id_product')))) {
                 $product->deleteDefaultAttributes();
                 $product->setDefaultAttribute((int)Tools::getValue('id_product_attribute'));
-                $json = array(
+                $json = [
                     'status' => 'ok',
-                    'message'=> $this->_conf[4]
-                );
+                    'message' => $this->_conf[4]
+                ];
             } else {
-                $json = array(
+                $json = [
                     'status' => 'error',
-                    'message'=> $this->l('You cannot make this the default attribute.')
-                );
+                    'message' => $this->l('You cannot make this the default attribute.')
+                ];
             }
             die(json_encode($json));
         }
     }
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:32
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:32
+     * version: 1
+     */
     public function ajaxProcessEditProductAttribute()
     {
         if ($this->access('edit')) {
@@ -1476,17 +1482,17 @@ class AdminProductsController extends AdminProductsControllerCore
             if ($id_product && Validate::isUnsignedId($id_product) && Validate::isLoadedObject($product = new Product((int)$id_product))) {
                 $combinations = $product->getAttributeCombinationsById($id_product_attribute, $this->context->language->id);
                 foreach ($combinations as $key => $combination) {
-                    $combinations[$key]['attributes'][] = array($combination['group_name'], $combination['attribute_name'], $combination['id_attribute']);
+                    $combinations[$key]['attributes'][] = [$combination['group_name'], $combination['attribute_name'], $combination['id_attribute']];
                 }
                 die(json_encode($combinations));
             }
         }
     }
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:32
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:32
+     * version: 1
+     */
     public function ajaxPreProcess()
     {
         if (Tools::getIsset('update'.$this->table) && Tools::getIsset('id_'.$this->table)) {
@@ -1495,10 +1501,10 @@ class AdminProductsController extends AdminProductsControllerCore
         }
     }
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:32
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:32
+     * version: 1
+     */
     public function ajaxProcessUpdateProductImageShopAsso()
     {
         $id_product = Tools::getValue('id_product');
@@ -1541,10 +1547,10 @@ class AdminProductsController extends AdminProductsControllerCore
         }
     }
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:32
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:32
+     * version: 1
+     */
     public function ajaxProcessUpdateImagePosition()
     {
         $res = false;
@@ -1565,10 +1571,10 @@ class AdminProductsController extends AdminProductsControllerCore
         }
     }
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:32
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:32
+     * version: 1
+     */
     public function ajaxProcessUpdateCover()
     {
         Image::deleteCover((int)Tools::getValue('id_product'));
@@ -1583,10 +1589,10 @@ class AdminProductsController extends AdminProductsControllerCore
         }
     }
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:32
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:32
+     * version: 1
+     */
     public function ajaxProcessDeleteProductImage()
     {
         $this->display = 'content';
@@ -1623,10 +1629,10 @@ class AdminProductsController extends AdminProductsControllerCore
         }
     }
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:32
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:32
+     * version: 1
+     */
     protected function _validateSpecificPrice($id_shop, $id_currency, $id_country, $id_group, $id_customer, $price, $from_quantity, $reduction, $reduction_type, $from, $to, $id_combination = 0)
     {
         if (!Validate::isUnsignedId($id_shop) || !Validate::isUnsignedId($id_currency) || !Validate::isUnsignedId($id_country) || !Validate::isUnsignedId($id_group) || !Validate::isUnsignedId($id_customer)) {
@@ -1648,13 +1654,13 @@ class AdminProductsController extends AdminProductsControllerCore
     }
 
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:32
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:32
+     * version: 1
+     */
     protected function checkFeatures($languages, $feature_id)
     {
-        $rules = call_user_func(array('FeatureValue', 'getValidationRules'), 'FeatureValue');
+        $rules = call_user_func(['FeatureValue', 'getValidationRules'], 'FeatureValue');
         $feature = Feature::getFeature((int)Configuration::get('PS_LANG_DEFAULT'), $feature_id);
         foreach ($languages as $language) {
             if ($val = Tools::getValue('custom_'.$feature_id.'_'.$language['id_lang'])) {
@@ -1665,7 +1671,7 @@ class AdminProductsController extends AdminProductsControllerCore
                         ' <b>'.$feature['name'].'</b>',
                         $current_language->name
                     );
-                } elseif (!call_user_func(array('Validate', $rules['validateLang']['value']), $val)) {
+                } elseif (!call_user_func(['Validate', $rules['validateLang']['value']], $val)) {
                     $this->errors[] = sprintf(
                         Tools::displayError('A valid name required for feature. %1$s in %2$s.'),
                         ' <b>'.$feature['name'].'</b>',
@@ -1684,10 +1690,10 @@ class AdminProductsController extends AdminProductsControllerCore
     }
 
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:32
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:32
+     * version: 1
+     */
     public function addProductImage($product, $method = 'auto')
     {
         if ($id_image = (int)Tools::getValue('id_image')) {
@@ -1720,10 +1726,10 @@ class AdminProductsController extends AdminProductsControllerCore
     }
 
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:32
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:32
+     * version: 1
+     */
     public function copyImage($id_product, $id_image, $method = 'auto')
     {
         if (!isset($_FILES['image_product']['tmp_name'])) {
@@ -1749,23 +1755,23 @@ class AdminProductsController extends AdminProductsControllerCore
                 }
             }
             @unlink($tmpName);
-            Hook::exec('actionWatermark', array('id_image' => $id_image, 'id_product' => $id_product));
+            Hook::exec('actionWatermark', ['id_image' => $id_image, 'id_product' => $id_product]);
         }
     }
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:32
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:32
+     * version: 1
+     */
     protected function updateAssoShop($id_object)
     {
         return;
     }
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:32
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:32
+     * version: 1
+     */
     public function processAdd()
     {
         $this->checkProduct();
@@ -1794,8 +1800,8 @@ class AdminProductsController extends AdminProductsControllerCore
                 } elseif (!$this->updateTags($languages, $this->object)) {
                     $this->errors[] = Tools::displayError('An error occurred while adding tags.');
                 } else {
-                    Hook::exec('actionProductAdd', array('id_product' => (int)$this->object->id, 'product' => $this->object));
-                    if (in_array($this->object->visibility, array('both', 'search')) && Configuration::get('PS_SEARCH_INDEXATION')) {
+                    Hook::exec('actionProductAdd', ['id_product' => (int)$this->object->id, 'product' => $this->object]);
+                    if (in_array($this->object->visibility, ['both', 'search']) && Configuration::get('PS_SEARCH_INDEXATION')) {
                         Search::indexation(false, $this->object->id);
                     }
                 }
@@ -1830,10 +1836,10 @@ class AdminProductsController extends AdminProductsControllerCore
         return $this->object;
     }
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:32
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:32
+     * version: 1
+     */
     protected function isTabSubmitted($tab_name)
     {
         if (!is_array($this->submitted_tabs)) {
@@ -1845,10 +1851,10 @@ class AdminProductsController extends AdminProductsControllerCore
         return false;
     }
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:32
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:32
+     * version: 1
+     */
     public function processStatus()
     {
         $this->loadObject(true);
@@ -1868,10 +1874,10 @@ class AdminProductsController extends AdminProductsControllerCore
         return $res;
     }
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:32
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:32
+     * version: 1
+     */
     public function processUpdate()
     {
         $existing_product = $this->object;
@@ -1891,7 +1897,7 @@ class AdminProductsController extends AdminProductsControllerCore
                 $this->copyFromPost($object, $this->table);
                 $object->indexed = 0;
                 if (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_SHOP) {
-                    $object->setFieldsToUpdate((array)Tools::getValue('multishop_check', array()));
+                    $object->setFieldsToUpdate((array)Tools::getValue('multishop_check', []));
                 }
                 if ($this->context->shop->getContext() == Shop::CONTEXT_SHOP && !$object->isAssociatedToShop()) {
                     $is_associated_to_shop = false;
@@ -1918,7 +1924,7 @@ class AdminProductsController extends AdminProductsControllerCore
                         StockAvailable::setProductDependsOnStock((int)$this->object->id, $depends_on_stock, $this->context->shop->id);
                     }
                     PrestaShopLogger::addLog(sprintf($this->l('%s modification', 'AdminTab', false, false), $this->className), 1, null, $this->className, (int)$this->object->id, true, (int)$this->context->employee->id);
-                    if (in_array($this->context->shop->getContext(), array(Shop::CONTEXT_SHOP, Shop::CONTEXT_ALL))) {
+                    if (in_array($this->context->shop->getContext(), [Shop::CONTEXT_SHOP, Shop::CONTEXT_ALL])) {
                         if ($this->isTabSubmitted('Shipping')) {
                             $this->addCarriers();
                         }
@@ -1961,7 +1967,7 @@ class AdminProductsController extends AdminProductsControllerCore
                         $this->processWarehouses();
                     }
                     if (empty($this->errors)) {
-                        if (in_array($object->visibility, array('both', 'search')) && Configuration::get('PS_SEARCH_INDEXATION')) {
+                        if (in_array($object->visibility, ['both', 'search']) && Configuration::get('PS_SEARCH_INDEXATION')) {
                             Search::indexation(false, $object->id);
                         }
                         if (Tools::isSubmit('submitAddProductAndPreview')) {
@@ -1996,14 +2002,14 @@ class AdminProductsController extends AdminProductsControllerCore
     }
 
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:32
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:32
+     * version: 1
+     */
     public function checkProduct()
     {
         $className = 'Product';
-        $rules = call_user_func(array($this->className, 'getValidationRules'), $this->className);
+        $rules = call_user_func([$this->className, 'getValidationRules'], $this->className);
         $default_language = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
         $languages = Language::getLanguages(false);
         foreach ($rules['required'] as $field) {
@@ -2016,7 +2022,7 @@ class AdminProductsController extends AdminProductsControllerCore
                 }
                 $this->errors[] = sprintf(
                     Tools::displayError('The %s field is required.'),
-                    call_user_func(array($className, 'displayFieldName'), $field, $className)
+                    call_user_func([$className, 'displayFieldName'], $field, $className)
                 );
             }
         }
@@ -2024,7 +2030,7 @@ class AdminProductsController extends AdminProductsControllerCore
             if ($this->isProductFieldUpdated($fieldLang, $default_language->id) && !Tools::getValue($fieldLang.'_'.$default_language->id)) {
                 $this->errors[] = sprintf(
                     Tools::displayError('This %1$s field is required at least in %2$s'),
-                    call_user_func(array($className, 'displayFieldName'), $fieldLang, $className),
+                    call_user_func([$className, 'displayFieldName'], $fieldLang, $className),
                     $default_language->name
                 );
             }
@@ -2033,7 +2039,7 @@ class AdminProductsController extends AdminProductsControllerCore
             if ($this->isProductFieldUpdated($field) && ($value = Tools::getValue($field)) && Tools::strlen($value) > $maxLength) {
                 $this->errors[] = sprintf(
                     Tools::displayError('The %1$s field is too long (%2$d chars max).'),
-                    call_user_func(array($className, 'displayFieldName'), $field, $className),
+                    call_user_func([$className, 'displayFieldName'], $field, $className),
                     $maxLength
                 );
             }
@@ -2051,7 +2057,7 @@ class AdminProductsController extends AdminProductsControllerCore
                 if (Tools::strlen(strip_tags($value)) > $limit) {
                     $this->errors[] = sprintf(
                         Tools::displayError('This %1$s field (%2$s) is too long: %3$d chars max (current count %4$d).'),
-                        call_user_func(array($className, 'displayFieldName'), 'description_short'),
+                        call_user_func([$className, 'displayFieldName'], 'description_short'),
                         $language['name'],
                         $limit,
                         Tools::strlen(strip_tags($value))
@@ -2065,7 +2071,7 @@ class AdminProductsController extends AdminProductsControllerCore
                 if ($value && Tools::strlen($value) > $maxLength) {
                     $this->errors[] = sprintf(
                         Tools::displayError('The %1$s field is too long (%2$d chars max).'),
-                        call_user_func(array($className, 'displayFieldName'), $fieldLang, $className),
+                        call_user_func([$className, 'displayFieldName'], $fieldLang, $className),
                         $maxLength
                     );
                 }
@@ -2087,7 +2093,7 @@ class AdminProductsController extends AdminProductsControllerCore
                 if (!$res) {
                     $this->errors[] = sprintf(
                         Tools::displayError('The %s field is invalid.'),
-                        call_user_func(array($className, 'displayFieldName'), $field, $className)
+                        call_user_func([$className, 'displayFieldName'], $field, $className)
                     );
                 }
             }
@@ -2098,7 +2104,7 @@ class AdminProductsController extends AdminProductsControllerCore
                     if (!Validate::$function($value, (int)Configuration::get('PS_ALLOW_HTML_IFRAME'))) {
                         $this->errors[] = sprintf(
                             Tools::displayError('The %1$s field (%2$s) is invalid.'),
-                            call_user_func(array($className, 'displayFieldName'), $fieldLang, $className),
+                            call_user_func([$className, 'displayFieldName'], $fieldLang, $className),
                             $language['name']
                         );
                     }
@@ -2124,10 +2130,10 @@ class AdminProductsController extends AdminProductsControllerCore
     }
 
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:32
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:32
+     * version: 1
+     */
     protected function isProductFieldUpdated($field, $id_lang = null)
     {
         static $is_activated = null;
@@ -2144,10 +2150,10 @@ class AdminProductsController extends AdminProductsControllerCore
         }
     }
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:32
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:32
+     * version: 1
+     */
     protected function _removeTaxFromEcotax()
     {
         if ($ecotax = Tools::getValue('ecotax')) {
@@ -2155,10 +2161,10 @@ class AdminProductsController extends AdminProductsControllerCore
         }
     }
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:32
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:32
+     * version: 1
+     */
     protected function _applyTaxToEcotax($product)
     {
         if ($product->ecotax) {
@@ -2167,10 +2173,10 @@ class AdminProductsController extends AdminProductsControllerCore
     }
 
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:32
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:32
+     * version: 1
+     */
     public function updateDownloadProduct($product, $edit = 0)
     {
         if ((int)Tools::getValue('is_virtual_file') == 1) {
@@ -2235,10 +2241,10 @@ class AdminProductsController extends AdminProductsControllerCore
     }
 
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:32
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:32
+     * version: 1
+     */
     public function updateAccessories($product)
     {
         $product->deleteAccessories();
@@ -2252,10 +2258,10 @@ class AdminProductsController extends AdminProductsControllerCore
     }
 
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:32
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:32
+     * version: 1
+     */
     public function updateTags($languages, $product)
     {
         $tag_success = true;
@@ -2275,14 +2281,14 @@ class AdminProductsController extends AdminProductsControllerCore
         return $tag_success;
     }
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:32
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:32
+     * version: 1
+     */
     public function initContent($token = null)
     {
         if ($this->display == 'edit' || $this->display == 'add') {
-            $this->fields_form = array();
+            $this->fields_form = [];
             if (substr($this->tab_display, 0, 6) == 'Module') {
                 $this->tab_display_module = strtolower(substr($this->tab_display, 6, Tools::strlen($this->tab_display) - 6));
                 $this->tab_display = 'Modules';
@@ -2293,7 +2299,7 @@ class AdminProductsController extends AdminProductsControllerCore
             if ($this->ajax) {
                 $this->content_only = true;
             } else {
-                $product_tabs = array();
+                $product_tabs = [];
                 if (!method_exists($this, 'initForm'.$this->tab_display)) {
                     $this->tab_display = $this->default_tab;
                 }
@@ -2302,12 +2308,12 @@ class AdminProductsController extends AdminProductsControllerCore
                     if ($advanced_stock_management_active == 0 && $product_tab == 'Warehouses') {
                         continue;
                     }
-                    $product_tabs[$product_tab] = array(
+                    $product_tabs[$product_tab] = [
                         'id' => $product_tab,
                         'selected' => (strtolower($product_tab) == strtolower($this->tab_display) || (isset($this->tab_display_module) && 'module'.$this->tab_display_module == Tools::strtolower($product_tab))),
                         'name' => $this->available_tabs_lang[$product_tab],
                         'href' => $this->context->link->getAdminLink('AdminProducts').'&id_product='.(int)Tools::getValue('id_product').'&action='.$product_tab,
-                    );
+                    ];
                 }
                 $this->tpl_form_vars['product_tabs'] = $product_tabs;
             }
@@ -2330,7 +2336,8 @@ class AdminProductsController extends AdminProductsControllerCore
             $tree->setAttribute('is_category_filter', (bool)$this->id_current_category)
                 ->setAttribute('base_url', preg_replace('#&id_category=[0-9]*#', '', self::$currentIndex).'&token='.$this->token)
                 ->setInputName('id-category')
-                ->setSelectedCategories(array((int)$id_category));
+                ->setSelectedCategories([(int)$id_category])
+            ;
             $this->tpl_list_vars['category_tree'] = $tree->render();
             $this->tpl_list_vars['base_url'] = preg_replace('#&id_category=[0-9]*#', '', self::$currentIndex).'&token='.$this->token;
         }
@@ -2338,14 +2345,14 @@ class AdminProductsController extends AdminProductsControllerCore
         parent::initContent();
     }
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:32
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:32
+     * version: 1
+     */
     public function renderKpis()
     {
         $time = time();
-        $kpis = array();
+        $kpis = [];
 
         if (Configuration::get('PS_STOCK_MANAGEMENT')) {
             $helper = new HelperKpi();
@@ -2412,10 +2419,10 @@ class AdminProductsController extends AdminProductsControllerCore
         return $helper->generate();
     }
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:32
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:32
+     * version: 1
+     */
     public function renderList()
     {
         $this->addRowAction('edit');
@@ -2424,14 +2431,14 @@ class AdminProductsController extends AdminProductsControllerCore
         return parent::renderList();
     }
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:32
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:32
+     * version: 1
+     */
     public function ajaxProcessProductManufacturers()
     {
         $manufacturers = Manufacturer::getManufacturers(false, 0, true, false, false, false, true);
-        $jsonArray = array();
+        $jsonArray = [];
         if ($manufacturers) {
             foreach ($manufacturers as $manufacturer) {
                 $jsonArray[] = '{"optionValue": "'.(int)$manufacturer['id_manufacturer'].'", "optionDisplay": "'.htmlspecialchars(trim($manufacturer['name'])).'"}';
@@ -2441,11 +2448,11 @@ class AdminProductsController extends AdminProductsControllerCore
     }
 
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:32
-    * version: 1
-    */
-    public static function recurseCategoryForInclude($id_obj, $indexedCategories, $categories, $current, $id_category = null, $id_category_default = null, $has_suite = array())
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:32
+     * version: 1
+     */
+    public static function recurseCategoryForInclude($id_obj, $indexedCategories, $categories, $current, $id_category = null, $id_category_default = null, $has_suite = [])
     {
         global $done;
         static $irow;
@@ -2488,10 +2495,10 @@ class AdminProductsController extends AdminProductsControllerCore
         return $content;
     }
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:32
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:32
+     * version: 1
+     */
     protected function _displayDraftWarning($active)
     {
         $content = '<div class="warn draft" style="'.($active ? 'display:none' : '').'">
@@ -2502,91 +2509,91 @@ class AdminProductsController extends AdminProductsControllerCore
         $this->tpl_form_vars['draft_warning'] = $content;
     }
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:32
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:32
+     * version: 1
+     */
     public function initPageHeaderToolbar()
     {
         if (empty($this->display)) {
-            $this->page_header_toolbar_btn['new_product'] = array(
+            $this->page_header_toolbar_btn['new_product'] = [
                     'href' => self::$currentIndex.'&addproduct&token='.$this->token,
                     'desc' => $this->l('Add new product', null, null, false),
                     'icon' => 'process-icon-new'
-                );
+                ];
         }
         if ($this->display == 'edit') {
             if (($product = $this->loadObject(true)) && $product->isAssociatedToShop()) {
                 if ($url_preview = $this->getPreviewUrl($product)) {
-                    $this->page_header_toolbar_btn['preview'] = array(
+                    $this->page_header_toolbar_btn['preview'] = [
                         'short' => $this->l('Preview', null, null, false),
                         'href' => $url_preview,
                         'desc' => $this->l('Preview', null, null, false),
                         'target' => true,
                         'class' => 'previewUrl'
-                    );
+                    ];
                 }
                 $js = (bool)Image::getImages($this->context->language->id, (int)$product->id) ?
                     'confirm_link(\'\', \''.$this->l('This will copy the images too. If you wish to proceed, click "Yes". If not, click "No".', null, true, false).'\', \''.$this->l('Yes', null, true, false).'\', \''.$this->l('No', null, true, false).'\', \''.$this->context->link->getAdminLink('AdminProducts', true).'&id_product='.(int)$product->id.'&duplicateproduct'.'\', \''.$this->context->link->getAdminLink('AdminProducts', true).'&id_product='.(int)$product->id.'&duplicateproduct&noimage=1'.'\')'
                     :
                     'document.location = \''.$this->context->link->getAdminLink('AdminProducts', true).'&id_product='.(int)$product->id.'&duplicateproduct&noimage=1'.'\'';
                 if ($this->access('add')) {
-                    $this->page_header_toolbar_btn['duplicate'] = array(
+                    $this->page_header_toolbar_btn['duplicate'] = [
                         'short' => $this->l('Duplicate', null, null, false),
                         'desc' => $this->l('Duplicate', null, null, false),
                         'confirm' => 1,
                         'js' => $js
-                    );
+                    ];
                 }
                 if (file_exists(_PS_MODULE_DIR_.'statsproduct/statsproduct.php')) {
-                    $this->page_header_toolbar_btn['stats'] = array(
+                    $this->page_header_toolbar_btn['stats'] = [
                     'short' => $this->l('Statistics', null, null, false),
                     'href' => $this->context->link->getAdminLink('AdminStats').'&module=statsproduct&id_product='.(int)$product->id,
                     'desc' => $this->l('Product sales', null, null, false),
-                );
+                ];
                 }
                 if ($this->access('delete')) {
-                    $this->page_header_toolbar_btn['delete'] = array(
+                    $this->page_header_toolbar_btn['delete'] = [
                         'short' => $this->l('Delete', null, null, false),
                         'href' => $this->context->link->getAdminLink('AdminProducts').'&id_product='.(int)$product->id.'&deleteproduct',
                         'desc' => $this->l('Delete this product', null, null, false),
                         'confirm' => 1,
                         'js' => 'if (confirm(\''.$this->l('Delete product?', null, true, false).'\')){return true;}else{event.preventDefault();}'
-                    );
+                    ];
                 }
             }
         }
         parent::initPageHeaderToolbar();
     }
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:32
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:32
+     * version: 1
+     */
     public function initToolbar()
     {
         parent::initToolbar();
         if ($this->display == 'edit' || $this->display == 'add') {
-            $this->toolbar_btn['save'] = array(
+            $this->toolbar_btn['save'] = [
                 'short' => 'Save',
                 'href' => '#',
                 'desc' => $this->l('Save'),
-            );
-            $this->toolbar_btn['save-and-stay'] = array(
+            ];
+            $this->toolbar_btn['save-and-stay'] = [
                 'short' => 'SaveAndStay',
                 'href' => '#',
                 'desc' => $this->l('Save and stay'),
-            );
-            $this->toolbar_btn['newCombination'] = array(
+            ];
+            $this->toolbar_btn['newCombination'] = [
                 'short' => 'New combination',
                 'desc' => $this->l('New combination'),
                 'class' => 'toolbar-new'
-            );
+            ];
         } else {
-            $this->toolbar_btn['import'] = array(
+            $this->toolbar_btn['import'] = [
                 'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type=products',
                 'desc' => $this->l('Import')
-            );
+            ];
         }
         $this->context->smarty->assign('toolbar_scroll', 1);
         $this->context->smarty->assign('show_toolbar', 1);
@@ -2594,10 +2601,10 @@ class AdminProductsController extends AdminProductsControllerCore
     }
 
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:32
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:32
+     * version: 1
+     */
     public function renderForm()
     {
         $this->product_name = $this->object->name[$this->context->language->id];
@@ -2608,10 +2615,10 @@ class AdminProductsController extends AdminProductsControllerCore
         $this->context->smarty->assign('bullet_common_field', '');
         if (Shop::isFeatureActive() && $this->display == 'edit') {
             if (Shop::getContext() != Shop::CONTEXT_SHOP) {
-                $this->context->smarty->assign(array(
+                $this->context->smarty->assign([
                     'display_multishop_checkboxes' => true,
                     'multishop_check' => Tools::getValue('multishop_check'),
-                ));
+                ]);
             }
             if (Shop::getContext() != Shop::CONTEXT_ALL) {
                 $this->context->smarty->assign('bullet_common_field', '<i class="icon-circle text-orange"></i>');
@@ -2624,7 +2631,7 @@ class AdminProductsController extends AdminProductsControllerCore
         $this->tpl_form_vars['id_lang_default'] = Configuration::get('PS_LANG_DEFAULT');
         $this->tpl_form_vars['currentIndex'] = self::$currentIndex;
         $this->tpl_form_vars['display_multishop_checkboxes'] = (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_SHOP && $this->display == 'edit');
-        $this->fields_form = array('');
+        $this->fields_form = [''];
         $this->tpl_form_vars['token'] = $this->token;
         $this->tpl_form_vars['combinationImagesJs'] = $this->getCombinationImagesJs();
         $this->tpl_form_vars['PS_ALLOW_ACCENTED_CHARS_URL'] = (int)Configuration::get('PS_ALLOW_ACCENTED_CHARS_URL');
@@ -2683,14 +2690,14 @@ class AdminProductsController extends AdminProductsControllerCore
             }
         }
         $parent = parent::renderForm();
-        $this->addJqueryPlugin(array('autocomplete', 'fancybox', 'typewatch'));
+        $this->addJqueryPlugin(['autocomplete', 'fancybox', 'typewatch']);
         return $parent;
     }
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:32
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:32
+     * version: 1
+     */
     public function getPreviewUrl(Product $product)
     {
         $id_lang = Configuration::get('PS_LANG_DEFAULT', null, null, Context::getContext()->shop->id);
@@ -2717,23 +2724,23 @@ class AdminProductsController extends AdminProductsControllerCore
     }
 
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:32
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:32
+     * version: 1
+     */
     public function processSuppliers()
     {
         if ((int)Tools::getValue('supplier_loaded') === 1 && Validate::isLoadedObject($product = new Product((int)Tools::getValue('id_product')))) {
             $attributes = $product->getAttributesResume($this->context->language->id);
             if (empty($attributes)) {
-                $attributes[] = array(
+                $attributes[] = [
                     'id_product_attribute' => 0,
                     'attribute_designation' => ''
-                );
+                ];
             }
             $suppliers = Supplier::getSuppliers();
             $associated_suppliers = ProductSupplier::getSupplierCollection($product->id);
-            $suppliers_to_associate = array();
+            $suppliers_to_associate = [];
             $new_default_supplier = 0;
             if (Tools::isSubmit('default_supplier')) {
                 $new_default_supplier = (int)Tools::getValue('default_supplier');
@@ -2791,8 +2798,8 @@ class AdminProductsController extends AdminProductsControllerCore
                             )
                         );
                         $price = (float)str_replace(
-                            array(' ', ','),
-                            array('', '.'),
+                            [' ', ','],
+                            ['', '.'],
                             Tools::getValue(
                                 'product_price_'.$product->id.'_'.$attribute['id_product_attribute'].'_'.$supplier->id_supplier,
                                 0
@@ -2811,10 +2818,10 @@ class AdminProductsController extends AdminProductsControllerCore
                             $product->addSupplierReference($supplier->id_supplier, (int)$attribute['id_product_attribute'], $reference, (float)$price, (int)$id_currency);
                             if ($product->id_supplier == $supplier->id_supplier) {
                                 if ((int)$attribute['id_product_attribute'] > 0) {
-                                    $data = array(
+                                    $data = [
                                         'supplier_reference' => pSQL($reference),
                                         'wholesale_price' => (float)Tools::convertPrice($price, $id_currency)
-                                    );
+                                    ];
                                     $where = '
 										a.id_product = '.(int)$product->id.'
 										AND a.id_product_attribute = '.(int)$attribute['id_product_attribute'];
@@ -2851,23 +2858,23 @@ class AdminProductsController extends AdminProductsControllerCore
     }
 
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:32
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:32
+     * version: 1
+     */
     public function processWarehouses()
     {
         if ((int)Tools::getValue('warehouse_loaded') === 1 && Validate::isLoadedObject($product = new Product((int)$id_product = Tools::getValue('id_product')))) {
             $attributes = $product->getAttributesResume($this->context->language->id);
             if (empty($attributes)) {
-                $attributes[] = array(
+                $attributes[] = [
                     'id_product_attribute' => 0,
                     'attribute_designation' => ''
-                );
+                ];
             }
             $warehouses = Warehouse::getWarehouses(true);
             $associated_warehouses_collection = WarehouseProductLocation::getCollection($product->id);
-            $elements_to_manage = array();
+            $elements_to_manage = [];
             foreach ($attributes as $attribute) {
                 foreach ($warehouses as $warehouse) {
                     $key = $warehouse['id_warehouse'].'_'.$product->id.'_'.$attribute['id_product_attribute'];
@@ -2905,10 +2912,10 @@ class AdminProductsController extends AdminProductsControllerCore
         }
     }
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:32
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:32
+     * version: 1
+     */
     public function initFormAssociations($obj)
     {
         $product = $obj;
@@ -2916,10 +2923,10 @@ class AdminProductsController extends AdminProductsControllerCore
         $root = Category::getRootCategory();
         $default_category = $this->context->cookie->id_category_products_filter ? $this->context->cookie->id_category_products_filter : Context::getContext()->shop->id_category;
         if (!$product->id || !$product->isAssociatedToShop()) {
-            $selected_cat = Category::getCategoryInformations(Tools::getValue('categoryBox', array($default_category)), $this->default_form_language);
+            $selected_cat = Category::getCategoryInformations(Tools::getValue('categoryBox', [$default_category]), $this->default_form_language);
         } else {
             if (Tools::isSubmit('categoryBox')) {
-                $selected_cat = Category::getCategoryInformations(Tools::getValue('categoryBox', array($default_category)), $this->default_form_language);
+                $selected_cat = Category::getCategoryInformations(Tools::getValue('categoryBox', [$default_category]), $this->default_form_language);
             } else {
                 $selected_cat = Product::getProductCategoriesFull($product->id, $this->default_form_language);
             }
@@ -2944,7 +2951,7 @@ class AdminProductsController extends AdminProductsControllerCore
         }
         $data->assign('accessories', $accessories);
         $product->manufacturer_name = Manufacturer::getNameById($product->id_manufacturer);
-        $categories = array();
+        $categories = [];
         foreach ($selected_cat as $key => $category) {
             $categories[] = $key;
         }
@@ -2954,8 +2961,9 @@ class AdminProductsController extends AdminProductsControllerCore
             ->setRootCategory($root->id)
             ->setUseCheckBox(true)
             ->setUseSearch(true)
-            ->setSelectedCategories($categories);
-        $data->assign(array('default_category' => $default_category,
+            ->setSelectedCategories($categories)
+        ;
+        $data->assign(['default_category' => $default_category,
                     'selected_cat_ids' => implode(',', array_keys($selected_cat)),
                     'selected_cat' => $selected_cat,
                     'id_category_default' => $product->getDefaultCategory(),
@@ -2963,14 +2971,14 @@ class AdminProductsController extends AdminProductsControllerCore
                     'product' => $product,
                     'link' => $this->context->link,
                     'is_shop_context' => Shop::getContext() == Shop::CONTEXT_SHOP
-        ));
+        ]);
         $this->tpl_form_vars['custom_form'] = $data->fetch();
     }
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:33
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:33
+     * version: 1
+     */
     public function initFormPrices($obj)
     {
         $data = $this->createTemplate($this->tpl_form);
@@ -2981,7 +2989,7 @@ class AdminProductsController extends AdminProductsControllerCore
             $groups = Group::getGroups($this->context->language->id);
             $currencies = Currency::getCurrencies();
             $attributes = $obj->getAttributesGroups((int)$this->context->language->id);
-            $combinations = array();
+            $combinations = [];
             foreach ($attributes as $attribute) {
                 $combinations[$attribute['id_product_attribute']]['id_product_attribute'] = $attribute['id_product_attribute'];
                 if (!isset($combinations[$attribute['id_product_attribute']]['attributes'])) {
@@ -2992,18 +3000,26 @@ class AdminProductsController extends AdminProductsControllerCore
                     Tools::convertPrice(
                         Product::getPriceStatic((int)$obj->id, false, $attribute['id_product_attribute']),
                         $this->context->currency
-                    ), $this->context->currency
+                    ),
+                    $this->context->currency
                 );
             }
             foreach ($combinations as &$combination) {
                 $combination['attributes'] = rtrim($combination['attributes'], ' - ');
             }
-            $data->assign('specificPriceModificationForm', $this->_displaySpecificPriceModificationForm(
-                $this->context->currency, $shops, $currencies, $countries, $groups)
+            $data->assign(
+                'specificPriceModificationForm',
+                $this->_displaySpecificPriceModificationForm(
+                $this->context->currency,
+                $shops,
+                $currencies,
+                $countries,
+                $groups
+            )
             );
             $data->assign('ecotax_tax_excl', $obj->ecotax);
             $this->_applyTaxToEcotax($obj);
-            $data->assign(array(
+            $data->assign([
                 'shops' => $shops,
                 'admin_one_shop' => count($this->context->employee->getAssociatedShops()) == 1,
                 'currencies' => $currencies,
@@ -3013,7 +3029,7 @@ class AdminProductsController extends AdminProductsControllerCore
                 'multi_shop' => Shop::isFeatureActive(),
                 'link' => new Link(),
                 'pack' => new Pack()
-            ));
+            ]);
         } else {
             $this->displayWarning($this->l('You must save this product before adding specific pricing'));
             $product->id_tax_rules_group = (int)Product::getIdTaxRulesGroupMostUsed();
@@ -3022,21 +3038,21 @@ class AdminProductsController extends AdminProductsControllerCore
         $address = new Address();
         $address->id_country = (int)$this->context->country->id;
         $tax_rules_groups = TaxRulesGroup::getTaxRulesGroups(true);
-        $tax_rates = array(
-            0 => array(
+        $tax_rates = [
+            0 => [
                 'id_tax_rules_group' => 0,
-                'rates' => array(0),
+                'rates' => [0],
                 'computation_method' => 0
-            )
-        );
+            ]
+        ];
         foreach ($tax_rules_groups as $tax_rules_group) {
             $id_tax_rules_group = (int)$tax_rules_group['id_tax_rules_group'];
             $tax_calculator = TaxManagerFactory::getManager($address, $id_tax_rules_group)->getTaxCalculator();
-            $tax_rates[$id_tax_rules_group] = array(
+            $tax_rates[$id_tax_rules_group] = [
                 'id_tax_rules_group' => $id_tax_rules_group,
-                'rates' => array(),
+                'rates' => [],
                 'computation_method' => (int)$tax_calculator->computation_method
-            );
+            ];
             if (isset($tax_calculator->taxes) && count($tax_calculator->taxes)) {
                 foreach ($tax_calculator->taxes as $tax) {
                     $tax_rates[$id_tax_rules_group]['rates'][] = (float)$tax->rate;
@@ -3045,7 +3061,7 @@ class AdminProductsController extends AdminProductsControllerCore
                 $tax_rates[$id_tax_rules_group]['rates'][] = 0;
             }
         }
-        $data->assign(array(
+        $data->assign([
             'link' => $this->context->link,
             'currency' => $currency = $this->context->currency,
             'tax_rules_groups' => $tax_rules_groups,
@@ -3053,7 +3069,7 @@ class AdminProductsController extends AdminProductsControllerCore
             'ecotaxTaxRate' => Tax::getProductEcotaxRate(),
             'tax_exclude_taxe_option' => Tax::excludeTaxeOption(),
             'ps_use_ecotax' => Configuration::get('PS_USE_ECOTAX'),
-        ));
+        ]);
         $product->price = Tools::convertPrice($product->price, $this->context->currency, true, $this->context);
         if ($product->unit_price_ratio != 0) {
             $data->assign('unit_price', Tools::ps_round($product->price / $product->unit_price_ratio, 6));
@@ -3062,18 +3078,18 @@ class AdminProductsController extends AdminProductsControllerCore
         }
         $data->assign('ps_tax', Configuration::get('PS_TAX'));
         $data->assign('country_display_tax_label', $this->context->country->display_tax_label);
-        $data->assign(array(
+        $data->assign([
             'currency', $this->context->currency,
             'product' => $product,
             'token' => $this->token
-        ));
+        ]);
         $this->tpl_form_vars['custom_form'] = $data->fetch();
     }
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:33
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:33
+     * version: 1
+     */
     public function initFormSeo($product)
     {
         if (!$this->default_form_language) {
@@ -3081,7 +3097,7 @@ class AdminProductsController extends AdminProductsControllerCore
         }
         $data = $this->createTemplate($this->tpl_form);
         $context = Context::getContext();
-        $rewritten_links = array();
+        $rewritten_links = [];
         foreach ($this->_languages as $language) {
             $category = Category::getLinkRewrite((int)$product->id_category_default, (int)$language['id_lang']);
             $rewritten_links[(int)$language['id_lang']] = explode(
@@ -3089,7 +3105,7 @@ class AdminProductsController extends AdminProductsControllerCore
                 $context->link->getProductLink($product, '[REWRITE]', $category, null, (int)$language['id_lang'])
             );
         }
-        $data->assign(array(
+        $data->assign([
             'product' => $product,
             'languages' => $this->_languages,
             'id_lang' => $this->context->language->id,
@@ -3097,23 +3113,23 @@ class AdminProductsController extends AdminProductsControllerCore
             'curent_shop_url' => $this->context->shop->getBaseURL(),
             'default_form_language' => $this->default_form_language,
             'rewritten_links' => $rewritten_links
-        ));
+        ]);
         $this->tpl_form_vars['custom_form'] = $data->fetch();
     }
 
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:33
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:33
+     * version: 1
+     */
     public function getPackItems($product = null)
     {
-        $pack_items = array();
+        $pack_items = [];
         if (!$product) {
             $names_input = Tools::getValue('namePackItems');
             $ids_input = Tools::getValue('inputPackItems');
             if (!$names_input || !$ids_input) {
-                return array();
+                return [];
             }
             $ids = array_unique(explode('-', $ids_input));
             $names = array_unique(explode('¤', $names_input));
@@ -3121,7 +3137,7 @@ class AdminProductsController extends AdminProductsControllerCore
                 $length = count($ids);
                 for ($i = 0; $i < $length; $i++) {
                     if (!empty($ids[$i]) && !empty($names[$i])) {
-                        list($pack_items[$i]['pack_quantity'], $pack_items[$i]['id']) = explode('x', $ids[$i]);
+                        [$pack_items[$i]['pack_quantity'], $pack_items[$i]['id']] = explode('x', $ids[$i]);
                         $exploded_name = explode('x', $names[$i]);
                         $pack_items[$i]['name'] = $exploded_name[1];
                     }
@@ -3132,7 +3148,7 @@ class AdminProductsController extends AdminProductsControllerCore
             foreach ($product->packItems as $pack_item) {
                 $pack_items[$i]['id'] = $pack_item->id;
                 $pack_items[$i]['pack_quantity'] = $pack_item->pack_quantity;
-                $pack_items[$i]['name']    = $pack_item->name;
+                $pack_items[$i]['name'] = $pack_item->name;
                 $pack_items[$i]['reference'] = $pack_item->reference;
                 $pack_items[$i]['id_product_attribute'] = isset($pack_item->id_pack_product_attribute) && $pack_item->id_pack_product_attribute ? $pack_item->id_pack_product_attribute : 0;
                 $cover = $pack_item->id_pack_product_attribute ? Product::getCombinationImageById($pack_item->id_pack_product_attribute, Context::getContext()->language->id) : Product::getCover($pack_item->id);
@@ -3143,10 +3159,10 @@ class AdminProductsController extends AdminProductsControllerCore
         return $pack_items;
     }
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:33
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:33
+     * version: 1
+     */
     public function initFormPack($product)
     {
         $data = $this->createTemplate($this->tpl_form);
@@ -3164,19 +3180,19 @@ class AdminProductsController extends AdminProductsControllerCore
                 $input_namepack_items .= $pack_item['pack_quantity'].' x '.$pack_item['name'].'¤';
             }
         }
-        $data->assign(array(
+        $data->assign([
             'input_pack_items' => $input_pack_items,
             'input_namepack_items' => $input_namepack_items,
             'pack_items' => $pack_items,
             'product_type' => (int)Tools::getValue('type_product', $product->getType())
-        ));
+        ]);
         $this->tpl_form_vars['custom_form'] = $data->fetch();
     }
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:33
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:33
+     * version: 1
+     */
     public function initFormVirtualProduct($product)
     {
         $data = $this->createTemplate($this->tpl_form);
@@ -3196,28 +3212,32 @@ class AdminProductsController extends AdminProductsControllerCore
         if (!file_exists($exists_file)
             && !empty($product->productDownload->display_filename)
             && empty($product->cache_default_attribute)) {
-            $msg = sprintf(Tools::displayError('File "%s" is missing'),
-                $product->productDownload->display_filename);
+            $msg = sprintf(
+                Tools::displayError('File "%s" is missing'),
+                $product->productDownload->display_filename
+            );
         } else {
             $msg = '';
         }
         $virtual_product_file_uploader = new HelperUploader('virtual_product_file_uploader');
         $virtual_product_file_uploader->setMultiple(false)->setUrl(
             Context::getContext()->link->getAdminLink('AdminProducts').'&ajax=1&id_product='.(int)$product->id
-            .'&action=AddVirtualProductFile')->setPostMaxSize(Tools::getOctets(ini_get('upload_max_filesize')))
-            ->setTemplate('virtual_product.tpl');
-        $data->assign(array(
+            .'&action=AddVirtualProductFile'
+        )->setPostMaxSize(Tools::getOctets(ini_get('upload_max_filesize')))
+            ->setTemplate('virtual_product.tpl')
+        ;
+        $data->assign([
             'download_product_file_missing' => $msg,
             'download_dir_writable' => ProductDownload::checkWritableDir(),
             'up_filename' => strval(Tools::getValue('virtual_product_filename'))
-        ));
+        ]);
         $product->productDownload->nb_downloadable = ($product->productDownload->id > 0) ? $product->productDownload->nb_downloadable : htmlentities(Tools::getValue('virtual_product_nb_downloable'), ENT_COMPAT, 'UTF-8');
         $product->productDownload->date_expiration = ($product->productDownload->id > 0) ? ((!empty($product->productDownload->date_expiration) && $product->productDownload->date_expiration != '0000-00-00 00:00:00') ? date('Y-m-d', strtotime($product->productDownload->date_expiration)) : '') : htmlentities(Tools::getValue('virtual_product_expiration_date'), ENT_COMPAT, 'UTF-8');
         $product->productDownload->nb_days_accessible = ($product->productDownload->id > 0) ? $product->productDownload->nb_days_accessible : htmlentities(Tools::getValue('virtual_product_nb_days'), ENT_COMPAT, 'UTF-8');
         $product->productDownload->is_shareable = $product->productDownload->id > 0 && $product->productDownload->is_shareable;
         $iso_tiny_mce = $this->context->language->iso_code;
         $iso_tiny_mce = (file_exists(_PS_JS_DIR_.'tiny_mce/langs/'.$iso_tiny_mce.'.js') ? $iso_tiny_mce : 'en');
-        $data->assign(array(
+        $data->assign([
             'ad' => __PS_BASE_URI__.basename(_PS_ADMIN_DIR_),
             'iso_tiny_mce' => $iso_tiny_mce,
             'product' => $product,
@@ -3226,25 +3246,25 @@ class AdminProductsController extends AdminProductsControllerCore
             'link' => $this->context->link,
             'is_file' => $product->productDownload->checkFile(),
             'virtual_product_file_uploader' => $virtual_product_file_uploader->render()
-        ));
+        ]);
         $data->assign($this->tpl_form_vars);
         $this->tpl_form_vars['product'] = $product;
         $this->tpl_form_vars['custom_form'] = $data->fetch();
     }
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:33
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:33
+     * version: 1
+     */
     protected function _getFinalPrice($specific_price, $product_price, $tax_rate)
     {
         return $this->object->getPrice(false, $specific_price['id_product_attribute'], 2);
     }
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:33
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:33
+     * version: 1
+     */
     protected function _displaySpecificPriceModificationForm($defaultCurrency, $shops, $currencies, $countries, $groups)
     {
         if (!($obj = $this->loadObject())) {
@@ -3253,22 +3273,22 @@ class AdminProductsController extends AdminProductsControllerCore
         $content = '';
         $specific_prices = SpecificPrice::getByProductId((int)$obj->id);
         $specific_price_priorities = SpecificPrice::getPriority((int)$obj->id);
-        $tmp = array();
+        $tmp = [];
         foreach ($shops as $shop) {
             $tmp[$shop['id_shop']] = $shop;
         }
         $shops = $tmp;
-        $tmp = array();
+        $tmp = [];
         foreach ($currencies as $currency) {
             $tmp[$currency['id_currency']] = $currency;
         }
         $currencies = $tmp;
-        $tmp = array();
+        $tmp = [];
         foreach ($countries as $country) {
             $tmp[$country['id_country']] = $country;
         }
         $countries = $tmp;
-        $tmp = array();
+        $tmp = [];
         foreach ($groups as $group) {
             $tmp[$group['id_group']] = $group;
         }
@@ -3441,13 +3461,13 @@ class AdminProductsController extends AdminProductsControllerCore
         return $content;
     }
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:33
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:33
+     * version: 1
+     */
     protected function _getCustomizationFieldIds($labels, $alreadyGenerated, $obj)
     {
-        $customizableFieldIds = array();
+        $customizableFieldIds = [];
         if (isset($labels[Product::CUSTOMIZE_FILE])) {
             foreach ($labels[Product::CUSTOMIZE_FILE] as $id_customization_field => $label) {
                 $customizableFieldIds[] = 'label_'.Product::CUSTOMIZE_FILE.'_'.(int)($id_customization_field);
@@ -3469,25 +3489,27 @@ class AdminProductsController extends AdminProductsControllerCore
         return implode('¤', $customizableFieldIds);
     }
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:33
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:33
+     * version: 1
+     */
     protected function _displayLabelField(&$label, $languages, $default_language, $type, $fieldIds, $id_customization_field)
     {
         foreach ($languages as $language) {
             $input_value[$language['id_lang']] = (isset($label[(int)($language['id_lang'])])) ? $label[(int)($language['id_lang'])]['name'] : '';
         }
         $required = (isset($label[(int)($language['id_lang'])])) ? $label[(int)($language['id_lang'])]['required'] : false;
-        $template = $this->context->smarty->createTemplate('controllers/products/input_text_lang.tpl',
-            $this->context->smarty);
+        $template = $this->context->smarty->createTemplate(
+            'controllers/products/input_text_lang.tpl',
+            $this->context->smarty
+        );
         return '<div class="form-group">'
             .'<div class="col-lg-6">'
-            .$template->assign(array(
+            .$template->assign([
                 'languages' => $languages,
-                'input_name'  => 'label_'.$type.'_'.(int)($id_customization_field),
+                'input_name' => 'label_'.$type.'_'.(int)($id_customization_field),
                 'input_value' => $input_value
-            ))->fetch()
+            ])->fetch()
             .'</div>'
             .'<div class="col-lg-6">'
             .'<div class="checkbox">'
@@ -3500,15 +3522,15 @@ class AdminProductsController extends AdminProductsControllerCore
             .'</div>';
     }
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:33
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:33
+     * version: 1
+     */
     protected function _displayLabelFields(&$obj, &$labels, $languages, $default_language, $type)
     {
         $content = '';
         $type = (int)($type);
-        $labelGenerated = array(Product::CUSTOMIZE_FILE => (isset($labels[Product::CUSTOMIZE_FILE]) ? count($labels[Product::CUSTOMIZE_FILE]) : 0), Product::CUSTOMIZE_TEXTFIELD => (isset($labels[Product::CUSTOMIZE_TEXTFIELD]) ? count($labels[Product::CUSTOMIZE_TEXTFIELD]) : 0));
+        $labelGenerated = [Product::CUSTOMIZE_FILE => (isset($labels[Product::CUSTOMIZE_FILE]) ? count($labels[Product::CUSTOMIZE_FILE]) : 0), Product::CUSTOMIZE_TEXTFIELD => (isset($labels[Product::CUSTOMIZE_TEXTFIELD]) ? count($labels[Product::CUSTOMIZE_TEXTFIELD]) : 0)];
         $fieldIds = $this->_getCustomizationFieldIds($labels, $labelGenerated, $obj);
         if (isset($labels[$type])) {
             foreach ($labels[$type] as $id_customization_field => $label) {
@@ -3518,10 +3540,10 @@ class AdminProductsController extends AdminProductsControllerCore
         return $content;
     }
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:33
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:33
+     * version: 1
+     */
     public function initFormCustomization($obj)
     {
         $data = $this->createTemplate($this->tpl_form);
@@ -3530,7 +3552,7 @@ class AdminProductsController extends AdminProductsControllerCore
                 $labels = $obj->getCustomizationFields();
                 $has_file_labels = (int)$this->getFieldValue($obj, 'uploadable_files');
                 $has_text_labels = (int)$this->getFieldValue($obj, 'text_fields');
-                $data->assign(array(
+                $data->assign([
                     'obj' => $obj,
                     'table' => $this->table,
                     'languages' => $this->_languages,
@@ -3540,7 +3562,7 @@ class AdminProductsController extends AdminProductsControllerCore
                     'display_text_labels' => $this->_displayLabelFields($obj, $labels, $this->_languages, Configuration::get('PS_LANG_DEFAULT'), Product::CUSTOMIZE_TEXTFIELD),
                     'uploadable_files' => (int)($this->getFieldValue($obj, 'uploadable_files') ? (int)$this->getFieldValue($obj, 'uploadable_files') : '0'),
                     'text_fields' => (int)($this->getFieldValue($obj, 'text_fields') ? (int)$this->getFieldValue($obj, 'text_fields') : '0'),
-                ));
+                ]);
             } else {
                 $this->displayWarning($this->l('You must save the product in this shop before adding customization.'));
             }
@@ -3550,10 +3572,10 @@ class AdminProductsController extends AdminProductsControllerCore
         $this->tpl_form_vars['custom_form'] = $data->fetch();
     }
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:33
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:33
+     * version: 1
+     */
     public function initFormAttachments($obj)
     {
         if (!$this->default_form_language) {
@@ -3563,8 +3585,8 @@ class AdminProductsController extends AdminProductsControllerCore
         $data->assign('default_form_language', $this->default_form_language);
         if ((bool)$obj->id) {
             if ($this->product_exists_in_shop) {
-                $attachment_name = array();
-                $attachment_description = array();
+                $attachment_name = [];
+                $attachment_description = [];
                 foreach ($this->_languages as $language) {
                     $attachment_name[$language['id_lang']] = '';
                     $attachment_description[$language['id_lang']] = '';
@@ -3574,9 +3596,11 @@ class AdminProductsController extends AdminProductsControllerCore
                 $attachment_uploader = new HelperUploader('attachment_file');
                 $attachment_uploader->setMultiple(false)->setUseAjax(true)->setUrl(
                     Context::getContext()->link->getAdminLink('AdminProducts').'&ajax=1&id_product='.(int)$obj->id
-                    .'&action=AddAttachment')->setPostMaxSize((Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE') * 1024 * 1024))
-                    ->setTemplate('attachment_ajax.tpl');
-                $data->assign(array(
+                    .'&action=AddAttachment'
+                )->setPostMaxSize((Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE') * 1024 * 1024))
+                    ->setTemplate('attachment_ajax.tpl')
+                ;
+                $data->assign([
                     'obj' => $obj,
                     'table' => $this->table,
                     'ad' => __PS_BASE_URI__.basename(_PS_ADMIN_DIR_),
@@ -3589,7 +3613,7 @@ class AdminProductsController extends AdminProductsControllerCore
                     'attachment_name' => $attachment_name,
                     'attachment_description' => $attachment_description,
                     'attachment_uploader' => $attachment_uploader->render()
-                ));
+                ]);
             } else {
                 $this->displayWarning($this->l('You must save the product in this shop before adding attachements.'));
             }
@@ -3599,10 +3623,10 @@ class AdminProductsController extends AdminProductsControllerCore
         $this->tpl_form_vars['custom_form'] = $data->fetch();
     }
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:33
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:33
+     * version: 1
+     */
     public function initFormInformations($product)
     {
         if (!$this->default_form_language) {
@@ -3621,20 +3645,41 @@ class AdminProductsController extends AdminProductsControllerCore
             $product_download = new ProductDownload($id_product_download);
         }
         $product->{'productDownload'} = $product_download;
-        $product_props = array();
-        array_push($product_props, 'reference', 'ean13', 'upc',
-        'available_for_order', 'show_price', 'online_only',
+        $product_props = [];
+        array_push(
+            $product_props,
+            'reference',
+            'ean13',
+            'upc',
+        'available_for_order',
+            'show_price',
+            'online_only',
         'id_manufacturer'
         );
-        array_push($product_props,
-        'width', 'height', 'weight', 'active',
-        'is_virtual', 'cache_default_attribute',
-        'uploadable_files', 'text_fields'
+        array_push(
+            $product_props,
+        'width',
+            'height',
+            'weight',
+            'active',
+        'is_virtual',
+            'cache_default_attribute',
+        'uploadable_files',
+            'text_fields'
         );
-        array_push($product_props,
-            'price', 'wholesale_price', 'id_tax_rules_group', 'unit_price_ratio', 'on_sale',
-            'unity', 'minimum_quantity', 'additional_shipping_cost',
-            'available_now', 'available_later', 'available_date'
+        array_push(
+            $product_props,
+            'price',
+            'wholesale_price',
+            'id_tax_rules_group',
+            'unit_price_ratio',
+            'on_sale',
+            'unity',
+            'minimum_quantity',
+            'additional_shipping_cost',
+            'available_now',
+            'available_later',
+            'available_date'
         );
         if (Configuration::get('PS_USE_ECOTAX')) {
             array_push($product_props, 'ecotax');
@@ -3677,28 +3722,28 @@ class AdminProductsController extends AdminProductsControllerCore
         $this->tpl_form_vars['custom_form'] = $data->fetch();
     }
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:33
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:33
+     * version: 1
+     */
     public function initFormShipping($obj)
     {
         $data = $this->createTemplate($this->tpl_form);
-        $data->assign(array(
+        $data->assign([
                           'product' => $obj,
                           'ps_dimension_unit' => Configuration::get('PS_DIMENSION_UNIT'),
                           'ps_weight_unit' => Configuration::get('PS_WEIGHT_UNIT'),
                           'carrier_list' => $this->getCarrierList(),
                           'currency' => $this->context->currency,
-                          'country_display_tax_label' =>  $this->context->country->display_tax_label
-                      ));
+                          'country_display_tax_label' => $this->context->country->display_tax_label
+                      ]);
         $this->tpl_form_vars['custom_form'] = $data->fetch();
     }
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:33
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:33
+     * version: 1
+     */
     protected function getCarrierList()
     {
         $carrier_list = Carrier::getCarriers($this->context->language->id, false, false, false, null, Carrier::ALL_CARRIERS);
@@ -3716,17 +3761,17 @@ class AdminProductsController extends AdminProductsControllerCore
         return $carrier_list;
     }
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:33
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:33
+     * version: 1
+     */
     protected function addCarriers($product = null)
     {
         if (!isset($product)) {
             $product = new Product((int)Tools::getValue('id_product'));
         }
         if (Validate::isLoadedObject($product)) {
-            $carriers = array();
+            $carriers = [];
             if (Tools::getValue('selectedCarriers')) {
                 $carriers = Tools::getValue('selectedCarriers');
             }
@@ -3734,10 +3779,10 @@ class AdminProductsController extends AdminProductsControllerCore
         }
     }
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:33
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:33
+     * version: 1
+     */
     public function ajaxProcessaddProductImage()
     {
         self::$currentIndex = 'index.php?tab=AdminProducts';
@@ -3747,11 +3792,11 @@ class AdminProductsController extends AdminProductsControllerCore
             $legends = (array)$legends;
         }
         if (!Validate::isLoadedObject($product)) {
-            $files = array();
+            $files = [];
             $files[0]['error'] = Tools::displayError('Cannot add image because product creation failed.');
         }
         $image_uploader = new HelperImageUploader('file');
-        $image_uploader->setAcceptTypes(array('jpeg', 'gif', 'png', 'jpg'))->setMaxSize($this->max_image_size);
+        $image_uploader->setAcceptTypes(['jpeg', 'gif', 'png', 'jpg'])->setMaxSize($this->max_image_size);
         $files = $image_uploader->process();
         foreach ($files as &$file) {
             $image = new Image();
@@ -3808,35 +3853,35 @@ class AdminProductsController extends AdminProductsControllerCore
                 }
                 unlink($file['save_path']);
                 unset($file['save_path']);
-                Hook::exec('actionWatermark', array('id_image' => $image->id, 'id_product' => $product->id));
+                Hook::exec('actionWatermark', ['id_image' => $image->id, 'id_product' => $product->id]);
                 if (!$image->update()) {
                     $file['error'] = Tools::displayError('Error while updating status');
                     continue;
                 }
                 $shops = Shop::getContextListShopID();
                 $image->associateTo($shops);
-                $json_shops = array();
+                $json_shops = [];
                 foreach ($shops as $id_shop) {
                     $json_shops[$id_shop] = true;
                 }
-                $file['status']   = 'ok';
-                $file['id']       = $image->id;
+                $file['status'] = 'ok';
+                $file['id'] = $image->id;
                 $file['position'] = $image->position;
-                $file['cover']    = $image->cover;
-                $file['legend']   = $image->legend;
-                $file['path']     = $image->getExistingImgPath();
-                $file['shops']    = $json_shops;
+                $file['cover'] = $image->cover;
+                $file['legend'] = $image->legend;
+                $file['path'] = $image->getExistingImgPath();
+                $file['shops'] = $json_shops;
                 @unlink(_PS_TMP_IMG_DIR_.'product_'.(int)$product->id.'.jpg');
                 @unlink(_PS_TMP_IMG_DIR_.'product_mini_'.(int)$product->id.'_'.$this->context->shop->id.'.jpg');
             }
         }
-        die(json_encode(array($image_uploader->getName() => $files)));
+        die(json_encode([$image_uploader->getName() => $files]));
     }
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:33
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:33
+     * version: 1
+     */
     public function initFormImages($obj)
     {
         $data = $this->createTemplate($this->tpl_form);
@@ -3855,7 +3900,8 @@ class AdminProductsController extends AdminProductsControllerCore
                     }
                 }
                 $data->assign('shops', $shops);
-                $count_images = Db::getInstance()->getValue('
+                $count_images = Db::getInstance()->getValue(
+                    '
 					SELECT COUNT(id_product)
 					FROM '._DB_PREFIX_.'image
 					WHERE id_product = '.(int)$obj->id
@@ -3874,14 +3920,15 @@ class AdminProductsController extends AdminProductsControllerCore
                 $image_uploader->setMultiple(!(Tools::getUserBrowser() == 'Apple Safari' && Tools::getUserPlatform() == 'Windows'))
                     ->setUseAjax(true)->setUrl(
                     Context::getContext()->link->getAdminLink('AdminProducts').'&ajax=1&id_product='.(int)$obj->id
-                    .'&action=addProductImage');
-                $data->assign(array(
+                    .'&action=addProductImage'
+                    );
+                $data->assign([
                         'countImages' => $count_images,
                         'id_product' => (int)Tools::getValue('id_product'),
                         'id_category_default' => (int)$this->_category->id,
                         'images' => $images,
                         'iso_lang' => $languages[0]['iso_code'],
-                        'token' =>  $this->token,
+                        'token' => $this->token,
                         'table' => $this->table,
                         'max_image_size' => $this->max_image_size / 1024 / 1024,
                         'up_filename' => (string)Tools::getValue('virtual_product_filename_attribute'),
@@ -3890,7 +3937,7 @@ class AdminProductsController extends AdminProductsControllerCore
                         'languages' => $this->_languages,
                         'default_language' => (int)Configuration::get('PS_LANG_DEFAULT'),
                         'image_uploader' => $image_uploader->render()
-                ));
+                ]);
                 $type = ImageType::getByNameNType('%', 'products', 'height');
                 if (isset($type['name'])) {
                     $data->assign('imageType', $type['name']);
@@ -3906,19 +3953,19 @@ class AdminProductsController extends AdminProductsControllerCore
         $this->tpl_form_vars['custom_form'] = $data->fetch();
     }
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:33
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:33
+     * version: 1
+     */
     public function initFormCombinations($obj)
     {
         return $this->initFormAttributes($obj);
     }
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:33
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:33
+     * version: 1
+     */
     public function initFormAttributes($product)
     {
         $data = $this->createTemplate($this->tpl_form);
@@ -3931,7 +3978,7 @@ class AdminProductsController extends AdminProductsControllerCore
                     $data->assign('product', $product);
                     $this->displayWarning($this->l('A virtual product cannot have combinations.'));
                 } else {
-                    $attribute_js = array();
+                    $attribute_js = [];
                     $attributes = Attribute::getAttributes($this->context->language->id, true);
                     foreach ($attributes as $k => $attribute) {
                         $attribute_js[$attribute['id_attribute_group']][$attribute['id_attribute']] = $attribute['name'];
@@ -3964,13 +4011,13 @@ class AdminProductsController extends AdminProductsControllerCore
                     }
                     $data->assign('images', $images);
                     $data->assign($this->tpl_form_vars);
-                    $data->assign(array(
+                    $data->assign([
                         'list' => $this->renderListAttributes($product, $currency),
                         'product' => $product,
                         'id_category' => $product->getDefaultCategory(),
                         'token_generator' => Tools::getAdminTokenLite('AdminAttributeGenerator'),
                         'combination_exists' => (Shop::isFeatureActive() && (Shop::getContextShopGroup()->share_stock) && count(AttributeGroup::getAttributesGroups($this->context->language->id)) > 0 && $product->hasAttributes())
-                    ));
+                    ]);
                 }
             } else {
                 $this->displayWarning($this->l('You must save the product in this shop before adding combinations.'));
@@ -3982,36 +4029,36 @@ class AdminProductsController extends AdminProductsControllerCore
         $this->tpl_form_vars['custom_form'] = $data->fetch();
     }
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:33
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:33
+     * version: 1
+     */
     public function renderListAttributes($product, $currency)
     {
-        $this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
+        $this->bulk_actions = ['delete' => ['text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')]];
         $this->addRowAction('edit');
         $this->addRowAction('default');
         $this->addRowAction('delete');
         $default_class = 'highlighted';
-        $this->fields_list = array(
-            'attributes' => array('title' => $this->l('Attribute - value pair'), 'align' => 'left'),
-            'price' => array('title' => $this->l('Impact on price'), 'type' => 'price', 'align' => 'left'),
-            'weight' => array('title' => $this->l('Impact on weight'), 'align' => 'left'),
-            'reference' => array('title' => $this->l('Reference'), 'align' => 'left'),
-            'ean13' => array('title' => $this->l('EAN-13'), 'align' => 'left'),
-            'upc' => array('title' => $this->l('UPC'), 'align' => 'left')
-        );
-        $comb_array = array();
+        $this->fields_list = [
+            'attributes' => ['title' => $this->l('Attribute - value pair'), 'align' => 'left'],
+            'price' => ['title' => $this->l('Impact on price'), 'type' => 'price', 'align' => 'left'],
+            'weight' => ['title' => $this->l('Impact on weight'), 'align' => 'left'],
+            'reference' => ['title' => $this->l('Reference'), 'align' => 'left'],
+            'ean13' => ['title' => $this->l('EAN-13'), 'align' => 'left'],
+            'upc' => ['title' => $this->l('UPC'), 'align' => 'left']
+        ];
+        $comb_array = [];
         if ($product->id) {
             $combinations = $product->getAttributeCombinations($this->context->language->id);
-            $groups = array();
+            $groups = [];
             if (is_array($combinations)) {
                 $combination_images = $product->getCombinationImages($this->context->language->id);
                 foreach ($combinations as $k => $combination) {
                     $price_to_convert = Tools::convertPrice($combination['price'], $currency);
                     $price = Tools::displayPrice($price_to_convert, $currency);
                     $container['id_product_attribute'] = $combination['id_product_attribute'];
-                    $container['attributes'][] = array($combination['group_name'], $combination['attribute_name'], $combination['id_attribute']);
+                    $container['attributes'][] = [$combination['group_name'], $combination['attribute_name'], $combination['id_attribute']];
                     $container['wholesale_price'] = $combination['wholesale_price'];
                     $container['price'] = $price;
                     $container['weight'] = $combination['weight'].Configuration::get('PS_WEIGHT_UNIT');
@@ -4066,10 +4113,10 @@ class AdminProductsController extends AdminProductsControllerCore
         return $helper->generateList($comb_array, $this->fields_list);
     }
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:33
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:33
+     * version: 1
+     */
     public function initFormQuantities($obj)
     {
         if (!$this->default_form_language) {
@@ -4081,16 +4128,18 @@ class AdminProductsController extends AdminProductsControllerCore
             if ($this->product_exists_in_shop) {
                 $attributes = $obj->getAttributesResume($this->context->language->id);
                 if (empty($attributes)) {
-                    $attributes[] = array(
+                    $attributes[] = [
                         'id_product_attribute' => 0,
                         'attribute_designation' => ''
-                    );
+                    ];
                 }
-                $available_quantity = array();
-                $product_designation = array();
+                $available_quantity = [];
+                $product_designation = [];
                 foreach ($attributes as $attribute) {
-                    $available_quantity[$attribute['id_product_attribute']] = StockAvailable::getQuantityAvailableByProduct((int)$obj->id,
-                                                                                                                            $attribute['id_product_attribute']);
+                    $available_quantity[$attribute['id_product_attribute']] = StockAvailable::getQuantityAvailableByProduct(
+                        (int)$obj->id,
+                                                                                                                            $attribute['id_product_attribute']
+                    );
                     $product_designation[$attribute['id_product_attribute']] = rtrim(
                         $obj->name[$this->context->language->id].' - '.$attribute['attribute_designation'],
                         ' - '
@@ -4120,7 +4169,7 @@ class AdminProductsController extends AdminProductsControllerCore
                 $advanced_stock_management_warning = false;
                 if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && $obj->advanced_stock_management) {
                     $p_attributes = Product::getProductAttributesIds($obj->id);
-                    $warehouses = array();
+                    $warehouses = [];
                     if (!$p_attributes) {
                         $warehouses[] = Warehouse::getProductWarehouseList($obj->id, 0);
                     }
@@ -4144,7 +4193,7 @@ class AdminProductsController extends AdminProductsControllerCore
                 $pack_quantity = null;
                 if (Pack::isPack($obj->id)) {
                     $items = Pack::getItems((int)$obj->id, Configuration::get('PS_LANG_DEFAULT'));
-                    $pack_quantities = array();
+                    $pack_quantities = [];
                     foreach ($items as $item) {
                         if (!$item->isAvailableWhenOutOfStock((int)$item->out_of_stock)) {
                             $pack_id_product_attribute = Product::getDefaultAttribute($item->id, 1);
@@ -4163,7 +4212,7 @@ class AdminProductsController extends AdminProductsControllerCore
                         $this->displayWarning($this->l('You must have a common warehouse between this pack and its product.'));
                     }
                 }
-                $data->assign(array(
+                $data->assign([
                     'attributes' => $attributes,
                     'available_quantity' => $available_quantity,
                     'pack_quantity' => $pack_quantity,
@@ -4177,7 +4226,7 @@ class AdminProductsController extends AdminProductsControllerCore
                     'token' => $this->token,
                     'languages' => $this->_languages,
                     'id_lang' => $this->context->language->id
-                ));
+                ]);
             } else {
                 $this->displayWarning($this->l('You must save the product in this shop before managing quantities.'));
             }
@@ -4187,10 +4236,10 @@ class AdminProductsController extends AdminProductsControllerCore
         $this->tpl_form_vars['custom_form'] = $data->fetch();
     }
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:33
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:33
+     * version: 1
+     */
     public function initFormSuppliers($obj)
     {
         $data = $this->createTemplate($this->tpl_form);
@@ -4198,13 +4247,13 @@ class AdminProductsController extends AdminProductsControllerCore
             if ($this->product_exists_in_shop) {
                 $attributes = $obj->getAttributesResume($this->context->language->id);
                 if (empty($attributes)) {
-                    $attributes[] = array(
+                    $attributes[] = [
                         'id_product' => $obj->id,
                         'id_product_attribute' => 0,
                         'attribute_designation' => ''
-                    );
+                    ];
                 }
-                $product_designation = array();
+                $product_designation = [];
                 foreach ($attributes as $attribute) {
                     $product_designation[$attribute['id_product_attribute']] = rtrim(
                         $obj->name[$this->context->language->id].' - '.$attribute['attribute_designation'],
@@ -4229,7 +4278,7 @@ class AdminProductsController extends AdminProductsControllerCore
                         }
                     }
                 }
-                $data->assign(array(
+                $data->assign([
                     'attributes' => $attributes,
                     'suppliers' => $suppliers,
                     'default_supplier' => $default_supplier,
@@ -4241,7 +4290,7 @@ class AdminProductsController extends AdminProductsControllerCore
                     'link' => $this->context->link,
                     'token' => $this->token,
                     'id_default_currency' => Configuration::get('PS_CURRENCY_DEFAULT'),
-                ));
+                ]);
             } else {
                 $this->displayWarning($this->l('You must save the product in this shop before managing suppliers.'));
             }
@@ -4251,10 +4300,10 @@ class AdminProductsController extends AdminProductsControllerCore
         $this->tpl_form_vars['custom_form'] = $data->fetch();
     }
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:33
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:33
+     * version: 1
+     */
     public function initFormWarehouses($obj)
     {
         $data = $this->createTemplate($this->tpl_form);
@@ -4262,13 +4311,13 @@ class AdminProductsController extends AdminProductsControllerCore
             if ($this->product_exists_in_shop) {
                 $attributes = $obj->getAttributesResume($this->context->language->id);
                 if (empty($attributes)) {
-                    $attributes[] = array(
+                    $attributes[] = [
                         'id_product' => $obj->id,
                         'id_product_attribute' => 0,
                         'attribute_designation' => ''
-                    );
+                    ];
                 }
-                $product_designation = array();
+                $product_designation = [];
                 foreach ($attributes as $attribute) {
                     $product_designation[$attribute['id_product_attribute']] = rtrim(
                         $obj->name[$this->context->language->id].' - '.$attribute['attribute_designation'],
@@ -4277,7 +4326,7 @@ class AdminProductsController extends AdminProductsControllerCore
                 }
                 $warehouses = Warehouse::getWarehouses(true);
                 $associated_warehouses_collection = WarehouseProductLocation::getCollection($obj->id);
-                $data->assign(array(
+                $data->assign([
                     'attributes' => $attributes,
                     'warehouses' => $warehouses,
                     'associated_warehouses' => $associated_warehouses_collection,
@@ -4285,7 +4334,7 @@ class AdminProductsController extends AdminProductsControllerCore
                     'product' => $obj,
                     'link' => $this->context->link,
                     'token' => $this->token
-                ));
+                ]);
             } else {
                 $this->displayWarning($this->l('You must save the product in this shop before managing warehouses.'));
             }
@@ -4295,10 +4344,10 @@ class AdminProductsController extends AdminProductsControllerCore
         $this->tpl_form_vars['custom_form'] = $data->fetch();
     }
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:33
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:33
+     * version: 1
+     */
     public function initFormFeatures($obj)
     {
         if (!$this->default_form_language) {
@@ -4315,7 +4364,7 @@ class AdminProductsController extends AdminProductsControllerCore
                     $features = Feature::getFeatures($this->context->language->id, (Shop::isFeatureActive() && Shop::getContext() == Shop::CONTEXT_SHOP));
                     foreach ($features as $k => $tab_features) {
                         $features[$k]['current_item'] = false;
-                        $features[$k]['val'] = array();
+                        $features[$k]['val'] = [];
                         $custom = true;
                         foreach ($obj->getFeatures() as $tab_products) {
                             if ($tab_products['id_feature'] == $tab_features['id_feature']) {
@@ -4348,104 +4397,109 @@ class AdminProductsController extends AdminProductsControllerCore
         $this->tpl_form_vars['custom_form'] = $data->fetch();
     }
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:33
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:33
+     * version: 1
+     */
     public function ajaxProcessProductQuantity()
     {
         if (!Tools::getValue('actionQty')) {
-            return json_encode(array('error' => $this->l('Undefined action')));
+            return json_encode(['error' => $this->l('Undefined action')]);
         }
         $product = new Product((int)Tools::getValue('id_product'), true);
         switch (Tools::getValue('actionQty')) {
             case 'depends_on_stock':
                 if (Tools::getValue('value') === false) {
-                    die(json_encode(array('error' =>  $this->l('Undefined value'))));
+                    die(json_encode(['error' => $this->l('Undefined value')]));
                 }
                 if ((int)Tools::getValue('value') != 0 && (int)Tools::getValue('value') != 1) {
-                    die(json_encode(array('error' =>  $this->l('Incorrect value'))));
+                    die(json_encode(['error' => $this->l('Incorrect value')]));
                 }
                 if (!$product->advanced_stock_management && (int)Tools::getValue('value') == 1) {
-                    die(json_encode(array('error' =>  $this->l('Not possible if advanced stock management is disabled. '))));
+                    die(json_encode(['error' => $this->l('Not possible if advanced stock management is disabled. ')]));
                 }
                 if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')
                     && (int)Tools::getValue('value') == 1
-                    && (Pack::isPack($product->id)
+                    && (
+                        Pack::isPack($product->id)
                         && !Pack::allUsesAdvancedStockManagement($product->id)
-                        && ($product->pack_stock_type == Pack::STOCK_TYPE_PACK_BOTH
+                        && (
+                            $product->pack_stock_type == Pack::STOCK_TYPE_PACK_BOTH
                             || $product->pack_stock_type == Pack::STOCK_TYPE_PRODUCTS_ONLY
-                            || ($product->pack_stock_type == Pack::STOCK_TYPE_DEFAULT
+                            || (
+                                $product->pack_stock_type == Pack::STOCK_TYPE_DEFAULT
                                 && (Configuration::get('PS_PACK_STOCK_TYPE') == Pack::STOCK_TYPE_PRODUCTS_ONLY
                                     || Configuration::get('PS_PACK_STOCK_TYPE') == Pack::STOCK_TYPE_PACK_BOTH)
                             )
                         )
                     )
                 ) {
-                    die(json_encode(array('error' => $this->l('You cannot use advanced stock management for this pack because').'</br>'.
+                    die(json_encode(['error' => $this->l('You cannot use advanced stock management for this pack because').'</br>'.
                         $this->l('- advanced stock management is not enabled for these products').'</br>'.
-                        $this->l('- you have chosen to decrement products quantities.'))));
+                        $this->l('- you have chosen to decrement products quantities.')]));
                 }
                 StockAvailable::setProductDependsOnStock($product->id, (int)Tools::getValue('value'));
                 break;
             case 'pack_stock_type':
                 $value = Tools::getValue('value');
                 if ($value === false) {
-                    die(json_encode(array('error' =>  $this->l('Undefined value'))));
+                    die(json_encode(['error' => $this->l('Undefined value')]));
                 }
                 if ((int)$value != 0 && (int)$value != 1
                     && (int)$value != 2 && (int)$value != 3) {
-                    die(json_encode(array('error' =>  $this->l('Incorrect value'))));
+                    die(json_encode(['error' => $this->l('Incorrect value')]));
                 }
                 if ($product->depends_on_stock
                     && !Pack::allUsesAdvancedStockManagement($product->id)
-                    && ((int)$value == 1
+                    && (
+                        (int)$value == 1
                         || (int)$value == 2
-                        || ((int)$value == 3
+                        || (
+                            (int)$value == 3
                             && (Configuration::get('PS_PACK_STOCK_TYPE') == Pack::STOCK_TYPE_PRODUCTS_ONLY
                                 || Configuration::get('PS_PACK_STOCK_TYPE') == Pack::STOCK_TYPE_PACK_BOTH)
                         )
                     )
                 ) {
-                    die(json_encode(array('error' => $this->l('You cannot use this stock management option because:').'</br>'.
+                    die(json_encode(['error' => $this->l('You cannot use this stock management option because:').'</br>'.
                         $this->l('- advanced stock management is not enabled for these products').'</br>'.
-                        $this->l('- advanced stock management is enabled for the pack'))));
+                        $this->l('- advanced stock management is enabled for the pack')]));
                 }
                 Product::setPackStockType($product->id, $value);
                 break;
             case 'out_of_stock':
                 if (Tools::getValue('value') === false) {
-                    die(json_encode(array('error' =>  $this->l('Undefined value'))));
+                    die(json_encode(['error' => $this->l('Undefined value')]));
                 }
-                if (!in_array((int)Tools::getValue('value'), array(0, 1, 2))) {
-                    die(json_encode(array('error' =>  $this->l('Incorrect value'))));
+                if (!in_array((int)Tools::getValue('value'), [0, 1, 2])) {
+                    die(json_encode(['error' => $this->l('Incorrect value')]));
                 }
                 StockAvailable::setProductOutOfStock($product->id, (int)Tools::getValue('value'));
                 break;
             case 'set_qty':
                 if (Tools::getValue('value') === false || (!is_numeric(trim(Tools::getValue('value'))))) {
-                    die(json_encode(array('error' =>  $this->l('Undefined value'))));
+                    die(json_encode(['error' => $this->l('Undefined value')]));
                 }
                 if (Tools::getValue('id_product_attribute') === false) {
-                    die(json_encode(array('error' =>  $this->l('Undefined id product attribute'))));
+                    die(json_encode(['error' => $this->l('Undefined id product attribute')]));
                 }
                 StockAvailable::setQuantity($product->id, (int)Tools::getValue('id_product_attribute'), (int)Tools::getValue('value'));
-                Hook::exec('actionProductUpdate', array('id_product' => (int)$product->id, 'product' => $product));
+                Hook::exec('actionProductUpdate', ['id_product' => (int)$product->id, 'product' => $product]);
                 $error = ob_get_contents();
                 if (!empty($error)) {
                     ob_end_clean();
-                    die(json_encode(array('error' => $error)));
+                    die(json_encode(['error' => $error]));
                 }
                 break;
             case 'advanced_stock_management' :
                 if (Tools::getValue('value') === false) {
-                    die(json_encode(array('error' =>  $this->l('Undefined value'))));
+                    die(json_encode(['error' => $this->l('Undefined value')]));
                 }
                 if ((int)Tools::getValue('value') != 1 && (int)Tools::getValue('value') != 0) {
-                    die(json_encode(array('error' =>  $this->l('Incorrect value'))));
+                    die(json_encode(['error' => $this->l('Incorrect value')]));
                 }
                 if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && (int)Tools::getValue('value') == 1) {
-                    die(json_encode(array('error' =>  $this->l('Not possible if advanced stock management is disabled. '))));
+                    die(json_encode(['error' => $this->l('Not possible if advanced stock management is disabled. ')]));
                 }
                 $product->setAdvancedStockManagement((int)Tools::getValue('value'));
                 if (StockAvailable::dependsOnStock($product->id) == 1 && (int)Tools::getValue('value') == 0) {
@@ -4453,13 +4507,13 @@ class AdminProductsController extends AdminProductsControllerCore
                 }
                 break;
         }
-        die(json_encode(array('error' => false)));
+        die(json_encode(['error' => false]));
     }
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:33
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:33
+     * version: 1
+     */
     public function getCombinationImagesJS()
     {
         if (!($obj = $this->loadObject(true))) {
@@ -4479,10 +4533,10 @@ class AdminProductsController extends AdminProductsControllerCore
         return $content;
     }
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:33
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:33
+     * version: 1
+     */
     public function haveThisAccessory($accessory_id, $accessories)
     {
         foreach ($accessories as $accessory) {
@@ -4493,10 +4547,10 @@ class AdminProductsController extends AdminProductsControllerCore
         return false;
     }
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:33
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:33
+     * version: 1
+     */
     protected function initPack(Product $product)
     {
         $this->tpl_form_vars['is_pack'] = ($product->id && Pack::isPack($product->id)) || Tools::getValue('type_product') == Product::PTYPE_PACK;
@@ -4522,21 +4576,21 @@ class AdminProductsController extends AdminProductsControllerCore
     }
 
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:33
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:33
+     * version: 1
+     */
     public function initFormModules($obj)
     {
         $id_module = Db::getInstance()->getValue('SELECT `id_module` FROM `'._DB_PREFIX_.'module` WHERE `name` = \''.pSQL($this->tab_display_module).'\'');
-        $this->tpl_form_vars['custom_form'] = Hook::exec('displayAdminProductsExtra', array(), (int)$id_module);
+        $this->tpl_form_vars['custom_form'] = Hook::exec('displayAdminProductsExtra', [], (int)$id_module);
     }
 
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:33
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:33
+     * version: 1
+     */
     public function updatePackItems($product)
     {
         Pack::deleteItems($product->id);
@@ -4548,7 +4602,7 @@ class AdminProductsController extends AdminProductsControllerCore
                 foreach ($lines as $line) {
                     if (!empty($line)) {
                         $item_id_attribute = 0;
-                        count($array = explode('x', $line)) == 3 ? list($qty, $item_id, $item_id_attribute) = $array : list($qty, $item_id) = $array;
+                        count($array = explode('x', $line)) == 3 ? [$qty, $item_id, $item_id_attribute] = $array : [$qty, $item_id] = $array;
                         if ($qty > 0 && isset($item_id)) {
                             if (Pack::isPack((int)$item_id)) {
                                 $this->errors[] = Tools::displayError('You can\'t add product packs into a pack');
@@ -4562,27 +4616,27 @@ class AdminProductsController extends AdminProductsControllerCore
         }
     }
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:33
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:33
+     * version: 1
+     */
     public function getL($key)
     {
-        $trad = array(
+        $trad = [
             'Default category:' => $this->l('Default category'),
             'Catalog:' => $this->l('Catalog'),
             'Consider changing the default category.' => $this->l('Consider changing the default category.'),
             'ID' => $this->l('ID'),
             'Name' => $this->l('Name'),
             'Mark all checkbox(es) of categories in which product is to appear' => $this->l('Mark the checkbox of each categories in which this product will appear.')
-        );
+        ];
         return $trad[$key];
     }
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:33
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:33
+     * version: 1
+     */
     protected function _displayUnavailableProductWarning()
     {
         $content = '<div class="alert">
@@ -4593,10 +4647,10 @@ class AdminProductsController extends AdminProductsControllerCore
         $this->tpl_form_vars['warning_unavailable_product'] = $content;
     }
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:33
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:33
+     * version: 1
+     */
     public function ajaxProcessCheckProductName()
     {
         if ($this->access('view')) {
@@ -4620,10 +4674,10 @@ class AdminProductsController extends AdminProductsControllerCore
         }
     }
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:33
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:33
+     * version: 1
+     */
     public function ajaxProcessUpdatePositions()
     {
         if ($this->access('edit')) {
@@ -4639,7 +4693,7 @@ class AdminProductsController extends AdminProductsControllerCore
                             if (isset($position) && $product->updatePosition($way, $position)) {
                                 $category = new Category((int)$id_category);
                                 if (Validate::isLoadedObject($category)) {
-                                    hook::Exec('categoryUpdate', array('category' => $category));
+                                    hook::Exec('categoryUpdate', ['category' => $category]);
                                 }
                                 echo 'ok position '.(int)$position.' for product '.(int)$pos[2]."\r\n";
                             } else {
@@ -4655,10 +4709,10 @@ class AdminProductsController extends AdminProductsControllerCore
         }
     }
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:33
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:33
+     * version: 1
+     */
     public function ajaxProcessPublishProduct()
     {
         if ($this->access('edit')) {
@@ -4681,10 +4735,10 @@ class AdminProductsController extends AdminProductsControllerCore
         }
     }
     /*
-    * module: pscsx32412
-    * date: 2015-07-13 16:05:33
-    * version: 1
-    */
+     * module: pscsx32412
+     * date: 2015-07-13 16:05:33
+     * version: 1
+     */
     public function processImageLegends()
     {
         if (Tools::getValue('key_tab') == 'Images' && Validate::isLoadedObject($product = new Product((int)Tools::getValue('id_product')))) {

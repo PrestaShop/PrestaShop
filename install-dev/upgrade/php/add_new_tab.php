@@ -36,7 +36,7 @@ function register_tab($className, $name, $id_parent, $returnId = false, $parentT
         $id_parent = (int)Db::getInstance()->getValue('SELECT `id_tab` FROM `'._DB_PREFIX_.'tab` WHERE `class_name` = \''.pSQL($parentTab).'\'');
     }
 
-    $array = array();
+    $array = [];
     foreach (explode('|', $name) as $item) {
         $temp = explode(':', $item);
         $array[$temp[0]] = $temp[1];
@@ -125,7 +125,7 @@ function add_new_tab_17($className, $name, $id_parent, $returnId = false, $paren
         ');
     }
 
-    foreach (array(PageVoter::CREATE, PageVoter::READ, PageVoter::UPDATE, PageVoter::DELETE) as $role) {
+    foreach ([PageVoter::CREATE, PageVoter::READ, PageVoter::UPDATE, PageVoter::DELETE] as $role) {
         // 1- Add role
         $roleToAdd = strtoupper('ROLE_MOD_TAB_'.$className.'_'.$role);
         Db::getInstance()->execute('INSERT IGNORE INTO `'._DB_PREFIX_.'authorization_role` (`slug`)
@@ -135,7 +135,8 @@ function add_new_tab_17($className, $name, $id_parent, $returnId = false, $paren
         // 2- Copy access from the parent
         if (!empty($parentClassName) && !empty($newID)) {
             $parentRole = strtoupper('ROLE_MOD_TAB_'.pSQL($parentClassName).'_'.$role);
-            Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'access` (`id_profile`, `id_authorization_role`)
+            Db::getInstance()->execute(
+                'INSERT INTO `'._DB_PREFIX_.'access` (`id_profile`, `id_authorization_role`)
                 SELECT a.`id_profile`, '. (int)$newID .' as `id_authorization_role`
                 FROM `'._DB_PREFIX_.'access` a join `'._DB_PREFIX_.'authorization_role` ar on a.`id_authorization_role` = ar.`id_authorization_role`
                 WHERE ar.`slug` = "'.pSQL($parentRole).'"'

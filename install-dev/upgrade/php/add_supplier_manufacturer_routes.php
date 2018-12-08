@@ -38,10 +38,10 @@
 function add_supplier_manufacturer_routes()
 {
     Configuration::loadConfiguration();
-    $legacyRoutes = array(
+    $legacyRoutes = [
         'supplier_rule' => '{id}__{rewrite}',
         'manufacturer_rule' => '{id}_{rewrite}',
-    );
+    ];
     foreach ($legacyRoutes as $routeId => $rule) {
         if (!Configuration::get('PS_ROUTE_'.$routeId, null, 0, 0)) {
             Configuration::updateGlobalValue('PS_ROUTE_'.$routeId, $rule);

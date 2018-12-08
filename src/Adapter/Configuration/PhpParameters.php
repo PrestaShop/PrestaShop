@@ -39,7 +39,7 @@ class PhpParameters
     /**
      * @var array the current configuration
      */
-    private $configuration = array();
+    private $configuration = [];
 
     /**
      * @var string the PHP filename

@@ -114,7 +114,7 @@ class ProductController extends FrameworkBundleAdminController
         $orderBy = 'id_product',
         $sortOrder = 'desc'
     ) {
-        if (!$this->isGranted(array(PageVoter::READ, PageVoter::UPDATE, PageVoter::CREATE), self::PRODUCT_OBJECT)) {
+        if (!$this->isGranted([PageVoter::READ, PageVoter::UPDATE, PageVoter::CREATE], self::PRODUCT_OBJECT)) {
             return $this->redirect('admin_dashboard');
         }
 
@@ -292,7 +292,7 @@ class ProductController extends FrameworkBundleAdminController
         }
 
         // Template vars injection
-        $vars = array(
+        $vars = [
             'activate_drag_and_drop' => ('position_ordering' === $orderBy)
             || ('position' === $orderBy && 'asc' === $sortOrder && !$hasColumnFilter),
             'products' => $products,
@@ -300,7 +300,7 @@ class ProductController extends FrameworkBundleAdminController
             'last_sql_query' => $lastSql,
             'has_category_filter' => $productProvider->isCategoryFiltered(),
             'is_shop_context' => $this->get('prestashop.adapter.shop.context')->isShopContext(),
-        );
+        ];
         if ($view !== 'full') {
             return $this->render('@Product/CatalogPage/Lists/list_' . $view . '.html.twig', array_merge($vars, [
                 'limit' => $limit,
@@ -319,13 +319,13 @@ class ProductController extends FrameworkBundleAdminController
      */
     private function getToolbarButtons()
     {
-        $toolbarButtons = array();
-        $toolbarButtons['add'] = array(
+        $toolbarButtons = [];
+        $toolbarButtons['add'] = [
             'href' => $this->generateUrl('admin_product_new'),
             'desc' => $this->trans('New product', 'Admin.Actions'),
             'icon' => 'add_circle_outline',
             'help' => $this->trans('Create a new product: CTRL+P', 'Admin.Catalog.Help'),
-        );
+        ];
 
         return $toolbarButtons;
     }
@@ -393,7 +393,7 @@ class ProductController extends FrameworkBundleAdminController
     {
         gc_disable();
 
-        if (!$this->isGranted(array(PageVoter::READ, PageVoter::UPDATE, PageVoter::CREATE), self::PRODUCT_OBJECT)) {
+        if (!$this->isGranted([PageVoter::READ, PageVoter::UPDATE, PageVoter::CREATE], self::PRODUCT_OBJECT)) {
             return $this->redirect('admin_dashboard');
         }
 
@@ -514,7 +514,8 @@ class ProductController extends FrameworkBundleAdminController
                     $adminProductWrapper->processProductOutOfStock($product, $_POST['out_of_stock']);
 
                     $customizationFieldsIds = $adminProductWrapper
-                        ->processProductCustomization($product, $_POST['custom_fields']);
+                        ->processProductCustomization($product, $_POST['custom_fields'])
+                    ;
 
                     $adminProductWrapper->processAttachments($product, $_POST['attachments']);
 
@@ -578,7 +579,8 @@ class ProductController extends FrameworkBundleAdminController
         $drawerModules = (new HookFinder())->setHookName('displayProductPageDrawer')
             ->setParams(['product' => $product])
             ->addExpectedInstanceClasses('PrestaShop\PrestaShop\Core\Product\ProductAdminDrawer')
-            ->present();
+            ->present()
+        ;
 
         return [
             'form' => $form->createView(),
@@ -649,7 +651,7 @@ class ProductController extends FrameworkBundleAdminController
                 $this->addFlash('error', $this->trans(
                     'The value of the PHP.ini setting "max_input_vars" must be increased to %value% in order to be able to submit the product form.',
                     'Admin.Notifications.Error',
-                    array('%value%' => $combinationsInputs)
+                    ['%value%' => $combinationsInputs]
                 ));
             }
 

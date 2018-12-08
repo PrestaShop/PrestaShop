@@ -41,8 +41,8 @@ require_once(dirname(__FILE__) . '/OrderByProcessor.php');
  */
 class GroupByProcessor extends OrderByProcessor {
 
-    public function process($tokens, $select = array()) {
-        $out = array();
+    public function process($tokens, $select = []) {
+        $out = [];
         $parseInfo = $this->initParseInfo();
 
         if (!$tokens) {

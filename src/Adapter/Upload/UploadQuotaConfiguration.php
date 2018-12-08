@@ -50,11 +50,11 @@ class UploadQuotaConfiguration implements DataConfigurationInterface
      */
     public function getConfiguration()
     {
-        return array(
+        return [
             'max_size_attached_files' => $this->configuration->get('PS_ATTACHMENT_MAXIMUM_SIZE'),
             'max_size_downloadable_product' => $this->configuration->get('PS_LIMIT_UPLOAD_FILE_VALUE'),
             'max_size_product_image' => $this->configuration->get('PS_LIMIT_UPLOAD_IMAGE_VALUE'),
-        );
+        ];
     }
 
     /**
@@ -62,7 +62,7 @@ class UploadQuotaConfiguration implements DataConfigurationInterface
      */
     public function updateConfiguration(array $configuration)
     {
-        $errors = array();
+        $errors = [];
 
         if ($this->validateConfiguration($configuration)) {
             $errors = $this->updateFileUploadConfiguration($configuration);
@@ -87,15 +87,15 @@ class UploadQuotaConfiguration implements DataConfigurationInterface
             'max_size_product_image' => $uploadMaxSize,
         ];
 
-        $errors = array();
+        $errors = [];
         foreach ($configuration as $configurationKey => $configurationValue) {
             if (array_key_exists($configurationKey, $this->getConfiguration())) {
                 if ((int) $configurationValue > $sizes[$configurationKey]) {
-                    $errors[] = array(
+                    $errors[] = [
                         'key' => 'The limit chosen is larger than the server\'s maximum upload limit. Please increase the limits of your server.',
                         'domain' => 'Admin.Advparameters.Notification',
-                        'parameters' => array(),
-                    );
+                        'parameters' => [],
+                    ];
                 }
 
                 $this->configuration->set(
@@ -117,11 +117,11 @@ class UploadQuotaConfiguration implements DataConfigurationInterface
      */
     private function getConfigurationKey($key)
     {
-        $properties = array(
+        $properties = [
             'max_size_attached_files' => 'PS_ATTACHMENT_MAXIMUM_SIZE',
             'max_size_downloadable_product' => 'PS_LIMIT_UPLOAD_FILE_VALUE',
             'max_size_product_image' => 'PS_LIMIT_UPLOAD_IMAGE_VALUE',
-        );
+        ];
 
         return $properties[$key];
     }

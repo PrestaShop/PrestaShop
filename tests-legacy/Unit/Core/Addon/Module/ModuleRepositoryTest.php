@@ -70,17 +70,20 @@ class ModuleRepositoryTest extends UnitTestCase
          */
         $this->moduleDataProviderStub = $this->getMockBuilder('PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider')
             ->disableOriginalConstructor()
-            ->getMock();
+            ->getMock()
+        ;
         $this->moduleDataProviderStub
             ->method('findByName')
-            ->willReturn(array(
+            ->willReturn([
                 'installed' => 0,
                 'active' => true,
-            ));
+            ])
+        ;
         // required to have 'productType' field of module set up
         $this->moduleDataProviderStub
             ->method('isModuleMainClassValid')
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
 
         $this->setupSfKernel();
         $this->logger = $this->sfKernel->getContainer()->get('logger');
@@ -102,23 +105,26 @@ class ModuleRepositoryTest extends UnitTestCase
 
         $this->translatorStub = $this->getMockBuilder('Symfony\Component\Translation\Translator')
             ->disableOriginalConstructor()
-            ->getMock();
+            ->getMock()
+        ;
         $this->translatorStub
             ->method('trans')
-            ->will($this->returnArgument(0));
+            ->will($this->returnArgument(0))
+        ;
 
         $this->adminModuleDataProviderStub = $this->getMockBuilder('PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider')
-            ->setConstructorArgs(array($this->translatorStub, $this->logger, $this->addonsDataProviderS, $this->categoriesProviderS, $this->moduleDataProviderStub))
-            ->setMethods(array('getCatalogModulesNames'))
+            ->setConstructorArgs([$this->translatorStub, $this->logger, $this->addonsDataProviderS, $this->categoriesProviderS, $this->moduleDataProviderStub])
+            ->setMethods(['getCatalogModulesNames'])
             ->getMock()
         ;
 
         $this->adminModuleDataProviderStub
             ->method('getCatalogModulesNames')
-            ->willReturn(array());
+            ->willReturn([])
+        ;
 
         $this->moduleRepositoryStub = $this->getMockBuilder('PrestaShop\\PrestaShop\\Core\\Addon\\Module\\ModuleRepository')
-            ->setConstructorArgs(array(
+            ->setConstructorArgs([
                 $this->adminModuleDataProviderStub,
                 $this->moduleDataProviderStub,
                 new ModuleDataUpdater(
@@ -134,8 +140,8 @@ class ModuleRepositoryTest extends UnitTestCase
                 new FakeLogger(),
                 $this->translatorStub,
                 __DIR__.'/../../../../resources/modules/'
-            ))
-            ->setMethods(array('readCacheFile', 'generateCacheFile'))
+            ])
+            ->setMethods(['readCacheFile', 'generateCacheFile'])
             ->getMock()
         ;
 
@@ -144,14 +150,16 @@ class ModuleRepositoryTest extends UnitTestCase
          */
         $this->moduleRepositoryStub
             ->method('readCacheFile')
-            ->willReturn(array());
+            ->willReturn([])
+        ;
 
         /*
          * Mock function 'readCacheFile()' to disable the cache
          */
         $this->moduleRepositoryStub
             ->method('generateCacheFile')
-            ->will($this->returnArgument(0));
+            ->will($this->returnArgument(0))
+        ;
 
         /*
          * End of mocking for modules folder
@@ -169,7 +177,8 @@ class ModuleRepositoryTest extends UnitTestCase
 
         $filters = new AddonListFilter();
         $filters->setType(AddonListFilterType::MODULE)
-            ->setStatus(AddonListFilterStatus::INSTALLED);
+            ->setStatus(AddonListFilterStatus::INSTALLED)
+        ;
 
         $installed_modules = $this->moduleRepositoryStub->getFilteredList($filters);
 
@@ -192,7 +201,8 @@ class ModuleRepositoryTest extends UnitTestCase
 
         $filters = new AddonListFilter();
         $filters->setType(AddonListFilterType::MODULE)
-            ->setStatus(~AddonListFilterStatus::INSTALLED);
+            ->setStatus(~AddonListFilterStatus::INSTALLED)
+        ;
 
         $not_installed_modules = $this->moduleRepositoryStub->getFilteredList($filters);
 
@@ -215,7 +225,8 @@ class ModuleRepositoryTest extends UnitTestCase
 
         $filters = new AddonListFilter();
         $filters->setType(AddonListFilterType::MODULE)
-            ->setStatus(AddonListFilterStatus::ENABLED);
+            ->setStatus(AddonListFilterStatus::ENABLED)
+        ;
 
         $installed_and_active_modules = $this->moduleRepositoryStub->getFilteredList($filters);
 
@@ -240,7 +251,8 @@ class ModuleRepositoryTest extends UnitTestCase
 
         $filters = new AddonListFilter();
         $filters->setType(AddonListFilterType::MODULE)
-            ->setStatus(~AddonListFilterStatus::ENABLED);
+            ->setStatus(~AddonListFilterStatus::ENABLED)
+        ;
 
         $not_active_modules = $this->moduleRepositoryStub->getFilteredList($filters);
 
@@ -250,7 +262,7 @@ class ModuleRepositoryTest extends UnitTestCase
 
         foreach ($all_modules as $name => $module) {
             // Each installed module must be found in the installed modules list
-            if ($module->attributes->get('productType') == 'module' && $module->database->get('installed') == 1  && $module->database->get('active') == 0) {
+            if ($module->attributes->get('productType') == 'module' && $module->database->get('installed') == 1 && $module->database->get('active') == 0) {
                 $this->assertTrue(array_key_exists($name, $not_active_modules), sprintf('Module %s not found in the filtered list !', $name));
             }
         }
@@ -262,7 +274,8 @@ class ModuleRepositoryTest extends UnitTestCase
 
         $filters = new AddonListFilter();
         $filters->setType(AddonListFilterType::MODULE)
-            ->setStatus(AddonListFilterStatus::INSTALLED & ~AddonListFilterStatus::ENABLED);
+            ->setStatus(AddonListFilterStatus::INSTALLED & ~AddonListFilterStatus::ENABLED)
+        ;
 
         $installed_but_not_installed_modules = $this->moduleRepositoryStub->getFilteredList($filters);
 

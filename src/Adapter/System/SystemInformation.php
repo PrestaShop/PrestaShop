@@ -53,7 +53,8 @@ class SystemInformation
     public function __construct(
         HostingInformation $hostingInformation,
         MailingInformation $mailingInformation,
-        ShopInformation $shopInformation)
+        ShopInformation $shopInformation
+    )
     {
         $this->hostingInformation = $hostingInformation;
         $this->mailingInformation = $mailingInformation;
@@ -65,7 +66,7 @@ class SystemInformation
      */
     public function getSummary()
     {
-        return array(
+        return [
             'notHostMode' => !$this->hostingInformation->isHostMode(),
             'server' => $this->hostingInformation->getServerInformation(),
             'instaWebInstalled' => $this->hostingInformation->isApacheInstawebModule(),
@@ -74,6 +75,6 @@ class SystemInformation
             'shop' => $this->shopInformation->getShopInformation(),
             'isNativePHPmail' => $this->mailingInformation->isNativeMailUsed(),
             'smtp' => $this->mailingInformation->getSmtpInformation(),
-        );
+        ];
     }
 }

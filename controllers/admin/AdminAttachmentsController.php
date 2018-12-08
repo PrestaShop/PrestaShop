@@ -31,7 +31,7 @@ class AdminAttachmentsControllerCore extends AdminController
 {
     public $bootstrap = true;
 
-    protected $product_attachements = array();
+    protected $product_attachements = [];
 
     public function __construct()
     {
@@ -49,38 +49,38 @@ class AdminAttachmentsControllerCore extends AdminController
 
         parent::__construct();
 
-        $this->fields_list = array(
-            'id_attachment' => array(
-                'title' => $this->trans('ID', array(), 'Admin.Global'),
+        $this->fields_list = [
+            'id_attachment' => [
+                'title' => $this->trans('ID', [], 'Admin.Global'),
                 'align' => 'center',
                 'class' => 'fixed-width-xs',
-            ),
-            'name' => array(
-                'title' => $this->trans('Name', array(), 'Admin.Global'),
-            ),
-            'file' => array(
-                'title' => $this->trans('File', array(), 'Admin.Global'),
+            ],
+            'name' => [
+                'title' => $this->trans('Name', [], 'Admin.Global'),
+            ],
+            'file' => [
+                'title' => $this->trans('File', [], 'Admin.Global'),
                 'orderby' => false,
                 'search' => false,
-            ),
-            'file_size' => array(
-                'title' => $this->trans('Size', array(), 'Admin.Global'),
+            ],
+            'file_size' => [
+                'title' => $this->trans('Size', [], 'Admin.Global'),
                 'callback' => 'displayHumanReadableSize',
-            ),
-            'products' => array(
-                'title' => $this->trans('Associated with', array(), 'Admin.Catalog.Feature'),
-                'suffix' => $this->trans('product(s)', array(), 'Admin.Catalog.Feature'),
+            ],
+            'products' => [
+                'title' => $this->trans('Associated with', [], 'Admin.Catalog.Feature'),
+                'suffix' => $this->trans('product(s)', [], 'Admin.Catalog.Feature'),
                 'filter_key' => 'virtual_product_attachment!products',
-            ),
-        );
+            ],
+        ];
 
-        $this->bulk_actions = array(
-            'delete' => array(
-                'text' => $this->trans('Delete selected', array(), 'Admin.Notifications.Info'),
+        $this->bulk_actions = [
+            'delete' => [
+                'text' => $this->trans('Delete selected', [], 'Admin.Notifications.Info'),
                 'icon' => 'icon-trash',
-                'confirm' => $this->trans('Delete selected items?', array(), 'Admin.Notifications.Info'),
-            ),
-        );
+                'confirm' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Info'),
+            ],
+        ];
     }
 
     public function setMedia($isNewTheme = false)
@@ -88,7 +88,7 @@ class AdminAttachmentsControllerCore extends AdminController
         parent::setMedia($isNewTheme);
 
         $this->addJs(_PS_JS_DIR_ . '/admin/attachments.js');
-        Media::addJsDefL('confirm_text', $this->trans('This file is associated with the following products, do you really want to  delete it?', array(), 'Admin.Catalog.Notification'));
+        Media::addJsDefL('confirm_text', $this->trans('This file is associated with the following products, do you really want to  delete it?', [], 'Admin.Catalog.Notification'));
     }
 
     public static function displayHumanReadableSize($size)
@@ -99,11 +99,11 @@ class AdminAttachmentsControllerCore extends AdminController
     public function initPageHeaderToolbar()
     {
         if (empty($this->display)) {
-            $this->page_header_toolbar_btn['new_attachment'] = array(
+            $this->page_header_toolbar_btn['new_attachment'] = [
                 'href' => self::$currentIndex . '&addattachment&token=' . $this->token,
-                'desc' => $this->trans('Add new file', array(), 'Admin.Catalog.Feature'),
+                'desc' => $this->trans('Add new file', [], 'Admin.Catalog.Feature'),
                 'icon' => 'process-icon-new',
-            );
+            ];
         }
 
         parent::initPageHeaderToolbar();
@@ -116,7 +116,7 @@ class AdminAttachmentsControllerCore extends AdminController
             Tools::redirectLink($link);
         }
 
-        return $this->displayWarning($this->trans('File not found', array(), 'Admin.Catalog.Notification'));
+        return $this->displayWarning($this->trans('File not found', [], 'Admin.Catalog.Notification'));
     }
 
     public function renderForm()
@@ -130,41 +130,41 @@ class AdminAttachmentsControllerCore extends AdminController
             }
         }
 
-        $this->fields_form = array(
-            'legend' => array(
-                'title' => $this->trans('Add new file', array(), 'Admin.Catalog.Feature'),
+        $this->fields_form = [
+            'legend' => [
+                'title' => $this->trans('Add new file', [], 'Admin.Catalog.Feature'),
                 'icon' => 'icon-paper-clip',
-            ),
-            'input' => array(
-                array(
+            ],
+            'input' => [
+                [
                     'type' => 'text',
-                    'label' => $this->trans('Filename', array(), 'Admin.Global'),
+                    'label' => $this->trans('Filename', [], 'Admin.Global'),
                     'name' => 'name',
                     'required' => true,
                     'lang' => true,
                     'col' => 4,
-                ),
-                array(
+                ],
+                [
                     'type' => 'textarea',
-                    'label' => $this->trans('Description', array(), 'Admin.Global'),
+                    'label' => $this->trans('Description', [], 'Admin.Global'),
                     'name' => 'description',
                     'lang' => true,
                     'col' => 6,
-                ),
-                array(
+                ],
+                [
                     'type' => 'file',
                     'file' => isset($link) ? $link : null,
                     'size' => isset($size) ? $size : null,
-                    'label' => $this->trans('File', array(), 'Admin.Global'),
+                    'label' => $this->trans('File', [], 'Admin.Global'),
                     'name' => 'file',
                     'required' => true,
                     'col' => 6,
-                ),
-            ),
-            'submit' => array(
-                'title' => $this->trans('Save', array(), 'Admin.Actions'),
-            ),
-        );
+                ],
+            ],
+            'submit' => [
+                'title' => $this->trans('Save', [], 'Admin.Actions'),
+            ],
+        ];
 
         return parent::renderForm();
     }
@@ -176,7 +176,7 @@ class AdminAttachmentsControllerCore extends AdminController
         if (count($this->_list)) {
             $this->product_attachements = Attachment::getProductAttached((int) $id_lang, $this->_list);
 
-            $list_product_list = array();
+            $list_product_list = [];
             foreach ($this->_list as $list) {
                 $product_list = '';
 
@@ -192,17 +192,17 @@ class AdminAttachmentsControllerCore extends AdminController
             }
 
             // Assign array in list_action_delete.tpl
-            $this->tpl_delete_link_vars = array(
+            $this->tpl_delete_link_vars = [
                 'product_list' => $list_product_list,
                 'product_attachements' => $this->product_attachements,
-            );
+            ];
         }
     }
 
     public function postProcess()
     {
         if (_PS_MODE_DEMO_) {
-            $this->errors[] = $this->trans('This functionality has been disabled.', array(), 'Admin.Notifications.Error');
+            $this->errors[] = $this->trans('This functionality has been disabled.', [], 'Admin.Notifications.Error');
 
             return;
         }
@@ -218,10 +218,10 @@ class AdminAttachmentsControllerCore extends AdminController
                     if ($_FILES['file']['size'] > (Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE') * 1024 * 1024)) {
                         $this->errors[] = $this->trans(
                             'The file is too large. Maximum size allowed is: %1$d kB. The file you are trying to upload is %2$d kB.',
-                            array(
+                            [
                                 '%1$d' => (Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE') * 1024),
                                 '%2$d' => number_format(($_FILES['file']['size'] / 1024), 2, '.', ''),
-                            ),
+                            ],
                             'Admin.Notifications.Error'
                         );
                     } else {
@@ -229,7 +229,7 @@ class AdminAttachmentsControllerCore extends AdminController
                             $uniqid = sha1(microtime());
                         } while (file_exists(_PS_DOWNLOAD_DIR_ . $uniqid));
                         if (!move_uploaded_file($_FILES['file']['tmp_name'], _PS_DOWNLOAD_DIR_ . $uniqid)) {
-                            $this->errors[] = $this->trans('Failed to copy the file.', array(), 'Admin.Catalog.Notification');
+                            $this->errors[] = $this->trans('Failed to copy the file.', [], 'Admin.Catalog.Notification');
                         }
                         $_POST['file_name'] = $_FILES['file']['name'];
                         @unlink($_FILES['file']['tmp_name']);
@@ -243,11 +243,13 @@ class AdminAttachmentsControllerCore extends AdminController
                     $max_upload = (int) ini_get('upload_max_filesize');
                     $max_post = (int) ini_get('post_max_size');
                     $upload_mb = min($max_upload, $max_post);
-                    $this->errors[] = $this->trans('The file %file% exceeds the size allowed by the server. The limit is set to %size% MB.',
-                        array('%file%' => '<b>' . $_FILES['file']['name'] . '</b> ', '%size%' => '<b>' . $upload_mb . '</b>'),
-                        'Admin.Catalog.Notification');
+                    $this->errors[] = $this->trans(
+                        'The file %file% exceeds the size allowed by the server. The limit is set to %size% MB.',
+                        ['%file%' => '<b>' . $_FILES['file']['name'] . '</b> ', '%size%' => '<b>' . $upload_mb . '</b>'],
+                        'Admin.Catalog.Notification'
+                    );
                 } elseif (!isset($a) || (isset($a) && !file_exists(_PS_DOWNLOAD_DIR_ . $a->file))) {
-                    $this->errors[] = $this->trans('Upload error. Please check your server configurations for the maximum upload size allowed.', array(), 'Admin.Catalog.Notification');
+                    $this->errors[] = $this->trans('Upload error. Please check your server configurations for the maximum upload size allowed.', [], 'Admin.Catalog.Notification');
                 }
             }
             $this->validateRules();

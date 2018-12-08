@@ -173,7 +173,7 @@ class ExpressionToken {
     }
     
     public function toArray() {
-        $result = array();
+        $result = [];
         $result['expr_type'] = $this->tokenType;
         $result['base_expr'] = $this->token;
         if (!empty($this->noQuotes)) {

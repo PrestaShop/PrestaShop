@@ -108,8 +108,8 @@ class FloatParserTest extends TestCase
             [false],
             [true],
             [null],
-            [array()],
-            [array(123)],
+            [[]],
+            [[123]],
             [new \stdClass()],
         ];
     }

@@ -59,7 +59,7 @@ class ModuleSelfConfigurator
     /**
      * @var array
      */
-    protected $configs = array();
+    protected $configs = [];
 
     /**
      * @var string
@@ -155,7 +155,8 @@ class ModuleSelfConfigurator
         $files = Finder::create()
             ->files()
             ->in(_PS_MODULE_DIR_ . $this->module)
-            ->name($this->defaultConfigFile, null, true);
+            ->name($this->defaultConfigFile, null, true)
+        ;
 
         foreach ($files as $file) {
             $this->configFile = $file->getRealPath();
@@ -206,7 +207,7 @@ class ModuleSelfConfigurator
      */
     public function validate()
     {
-        $errors = array();
+        $errors = [];
         if ($this->module === null) {
             $errors[] = 'Module name not specified';
         }
@@ -379,7 +380,7 @@ class ModuleSelfConfigurator
             }
 
             // If we get a relative path from the yml, add the original path
-            foreach (array('source', 'dest') as $prop) {
+            foreach (['source', 'dest'] as $prop) {
                 $copy[$prop] = $this->convertRelativeToAbsolutePaths($copy[$prop]);
             }
 
@@ -405,7 +406,7 @@ class ModuleSelfConfigurator
             $file = $this->extractFilePath($data);
 
             $module = $this->moduleRepository->getModule($this->module);
-            $params = !empty($data['params']) ? $data['params'] : array();
+            $params = !empty($data['params']) ? $data['params'] : [];
 
             $this->loadPhpFile($file)->run($module, $params);
         }

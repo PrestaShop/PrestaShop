@@ -347,7 +347,8 @@ class MailCore extends ObjectModel
                     $configuration['PS_MAIL_SMTP_ENCRYPTION']
                 )
                     ->setUsername($configuration['PS_MAIL_USER'])
-                    ->setPassword($configuration['PS_MAIL_PASSWD']);
+                    ->setPassword($configuration['PS_MAIL_PASSWD'])
+                ;
             } else {
                 $connection = \Swift_MailTransport::newInstance();
             }
@@ -546,7 +547,7 @@ class MailCore extends ObjectModel
                 true
             );
             $templateVars = array_merge($templateVars, $extraTemplateVars);
-            $swift->registerPlugin(new \Swift_Plugins_DecoratorPlugin(array($toPlugin => $templateVars)));
+            $swift->registerPlugin(new \Swift_Plugins_DecoratorPlugin([$toPlugin => $templateVars]));
             if ($configuration['PS_MAIL_TYPE'] == Mail::TYPE_BOTH ||
                 $configuration['PS_MAIL_TYPE'] == Mail::TYPE_TEXT
             ) {
@@ -561,7 +562,7 @@ class MailCore extends ObjectModel
             if ($fileAttachment && !empty($fileAttachment)) {
                 // Multiple attachments?
                 if (!is_array(current($fileAttachment))) {
-                    $fileAttachment = array($fileAttachment);
+                    $fileAttachment = [$fileAttachment];
                 }
 
                 foreach ($fileAttachment as $attachment) {
@@ -576,7 +577,7 @@ class MailCore extends ObjectModel
                 }
             }
             /* Send mail */
-            $message->setFrom(array($from => $fromName));
+            $message->setFrom([$from => $fromName]);
 
             // Hook to alter Swift Message before sending mail
             Hook::exec('actionMailAlterMessageBeforeSend', [
@@ -705,7 +706,8 @@ class MailCore extends ObjectModel
                 }
                 $smtp = \Swift_SmtpTransport::newInstance($smtp_server, $smtpPort, $smtpEncryption)
                     ->setUsername($smtpLogin)
-                    ->setPassword($smtpPassword);
+                    ->setPassword($smtpPassword)
+                ;
                 $swift = \Swift_Mailer::newInstance($smtp);
             } else {
                 $swift = \Swift_Mailer::newInstance(\Swift_MailTransport::newInstance());
@@ -717,7 +719,8 @@ class MailCore extends ObjectModel
                 ->setFrom($from)
                 ->setTo($to)
                 ->setSubject($subject)
-                ->setBody($content);
+                ->setBody($content)
+            ;
 
             if ($swift->send($message)) {
                 $result = true;

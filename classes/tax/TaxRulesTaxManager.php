@@ -83,10 +83,10 @@ class TaxRulesTaxManagerCore implements TaxManagerInterface
         }
 
         if (!$tax_enabled) {
-            return new TaxCalculator(array());
+            return new TaxCalculator([]);
         }
 
-        $taxes = array();
+        $taxes = [];
         $postcode = 0;
 
         if (!empty($this->address->postcode)) {

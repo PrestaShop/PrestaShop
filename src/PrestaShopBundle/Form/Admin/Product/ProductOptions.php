@@ -225,7 +225,8 @@ class ProductOptions extends CommonAbstractType
                     'class' => 'custom-select',
                 ],
                 'label' => $this->translator->trans('Default suppliers', [], 'Admin.Catalog.Feature'),
-            ]);
+            ])
+        ;
 
         foreach ($this->suppliers as $supplier => $id) {
             $builder->add(

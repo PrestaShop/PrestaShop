@@ -42,11 +42,13 @@ function migrate_block_info_to_cms_block()
 			FROM `'._DB_PREFIX_.'configuration`
 			WHERE name="PS_LANG_DEFAULT"');
         // 2) parent::install()
-        $result = Db::getInstance()->insert('module',
-            array('name' => 'blockcms', 'active' => 1));
+        $result = Db::getInstance()->insert(
+            'module',
+            ['name' => 'blockcms', 'active' => 1]
+        );
         $id_module = Db::getInstance()->Insert_ID();
         // 3) hooks
-        $hooks = array('leftColumn', 'rightColumn', 'footer', 'header');
+        $hooks = ['leftColumn', 'rightColumn', 'footer', 'header'];
         foreach ($hooks as $hook_name) {
             // do not pSql hook_name
             $row = Db::getInstance()->getRow('SELECT h.id_hook, '.$id_module.' as id_module, MAX(hm.position)+1 as position

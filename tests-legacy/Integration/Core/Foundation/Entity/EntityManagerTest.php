@@ -84,7 +84,7 @@ class EntityManagerTest extends IntegrationTestCase
 
         $name = "Yo CMS Role " . rand();
 
-        $entity->name    = $name;
+        $entity->name = $name;
         $entity->id_cms = 6666;
 
         $this->entityManager->save($entity);

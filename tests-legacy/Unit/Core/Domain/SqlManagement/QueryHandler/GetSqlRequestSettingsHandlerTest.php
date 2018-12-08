@@ -43,7 +43,8 @@ class GetSqlRequestSettingsHandlerTest extends TestCase
         $configuration = $this->createMock(ConfigurationInterface::class);
         $configuration->method('get')
             ->with('PS_ENCODING_FILE_MANAGER_SQL')
-            ->willReturn($configuredValue);
+            ->willReturn($configuredValue)
+        ;
 
         $getSqlRequestSettingsHandler = new GetSqlRequestSettingsHandler($configuration);
         $sqlRequestSettings = $getSqlRequestSettingsHandler->handle(new GetSqlRequestSettings());

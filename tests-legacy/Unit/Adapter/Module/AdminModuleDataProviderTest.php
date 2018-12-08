@@ -54,54 +54,62 @@ class AdminModuleDataProviderTest extends UnitTestCase
 
         $this->setupSfKernel();
         $this->translator = $this->sfKernel->getContainer()->get('translator');
-        list($this->languageISOCode) = explode('-', $this->translator->getLocale());
+        [$this->languageISOCode] = explode('-', $this->translator->getLocale());
         $this->logger = $this->sfKernel->getContainer()->get('logger');
 
         $this->addonsDataProviderS = $this->getMockBuilder('PrestaShop\PrestaShop\Adapter\Addons\AddonsDataProvider')
             ->disableOriginalConstructor()
-            ->getMock();
+            ->getMock()
+        ;
 
         $this->categoriesProviderS = $this->getMockBuilder('PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider')
             ->disableOriginalConstructor()
-            ->getmock();
+            ->getmock()
+        ;
 
         $this->moduleDataProviderS = $this->getMockBuilder('PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider')
             ->disableOriginalConstructor()
-            ->getMock();
+            ->getMock()
+        ;
 
         /* The module catalog will contains only 5 modules for theses tests */
-        $fakeModules = array(
-            $this->fakeModule(1,
+        $fakeModules = [
+            $this->fakeModule(
+                1,
                 'pm_advancedpack',
                 'Advanced Pack 5 - Create ​​bundles of products',
                 'Cross-selling & Product Bundles',
                 'Allows the sale batch using any stocks actually available products composing your packs, and offers the opportunity to apply business operations'
             ),
-            $this->fakeModule(2,
+            $this->fakeModule(
+                2,
                 'cmcicpaiement',
                 'CM-CIC / Monetico Payment in one instalment',
                 'Payment by Card or Wallet',
                 'Accept bank card payments in your online shop with the CM-CIC / Monetico p@yment&nbsp;module!  This very popular means of secure payment reassures your customers when they make their purchases in your'
             ),
-            $this->fakeModule(3,
+            $this->fakeModule(
+                3,
                 'bitcoinpayment',
                 'Coinbase Payment (Bitcoin)',
                 'Other Payment Methods',
                 'Use the Coinbase payment module to give your customers the possibility of paying for their purchases in your store with Bitcoin!  This module uses the API from Coinbase, a globally recognized Bitcoin'
             ),
-            $this->fakeModule(4,
+            $this->fakeModule(
+                4,
                 'fake_module',
                 'Fake module 1',
                 'PHPUnit Fakes',
                 ''
             ),
-            $this->fakeModule(5,
+            $this->fakeModule(
+                5,
                 'fake_module_2',
                 'Fake module 2',
                 'PHPUnit Fakes',
                 ''
             ),
-        );
+        ];
 
         $this->cacheProviderS = Phake::partialMock('Doctrine\Common\Cache\CacheProvider');
         Phake::when($this->cacheProviderS)->contains($this->languageISOCode.'_addons_modules')->thenReturn(true);
@@ -126,7 +134,7 @@ class AdminModuleDataProviderTest extends UnitTestCase
 
     public function testSearchCanResultNoResultsOk()
     {
-        $filters = array('search' => 'doge');
+        $filters = ['search' => 'doge'];
         $modules = $this->adminModuleDataProvider->getCatalogModules($filters);
 
         $this->assertCount(0, $modules, sprintf('%s expected 0 modules, received %s.', self::NOTICE, count($modules)));
@@ -134,7 +142,7 @@ class AdminModuleDataProviderTest extends UnitTestCase
 
     public function testSearchWithUnknownFilterCriteriaReturnAllOk()
     {
-        $filters = array('random_filter' => 'doge');
+        $filters = ['random_filter' => 'doge'];
         $modulesWithFilter = $this->adminModuleDataProvider->getCatalogModules($filters);
 
         $modules = $this->adminModuleDataProvider->getCatalogModules();
@@ -144,7 +152,7 @@ class AdminModuleDataProviderTest extends UnitTestCase
 
     public function testSearchForASpecificModuleOk()
     {
-        $filters = array('search' => 'advancedpack');
+        $filters = ['search' => 'advancedpack'];
         $modules = $this->adminModuleDataProvider->getCatalogModules($filters);
 
         $this->assertCount(1, $modules);
@@ -152,7 +160,7 @@ class AdminModuleDataProviderTest extends UnitTestCase
 
     public function testSearchForASpecificModuleHaveMultipleResultsOk()
     {
-        $filters = array('search' => 'payment advanced');
+        $filters = ['search' => 'payment advanced'];
         $modules = $this->adminModuleDataProvider->getCatalogModules($filters);
 
         $this->assertCount(3, $modules);
@@ -161,16 +169,17 @@ class AdminModuleDataProviderTest extends UnitTestCase
     public function testCallToAddonsShouldReturnSameResultOk()
     {
         $mock = $this->getMockBuilder('PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider')
-            ->setConstructorArgs(array(
+            ->setConstructorArgs([
                 'languageISO' => $this->translator,
                 'logger' => $this->logger,
                 'addonsDataProvider' => $this->addonsDataProviderS,
                 'categoriesProvider' => $this->categoriesProviderS,
                 'moduleDataProvider' => $this->moduleDataProviderS,
                 'cacheProvider' => $this->cacheProviderS,
-            ))
-            ->setMethods(array('convertJsonForNewCatalog'))
-            ->getMock();
+            ])
+            ->setMethods(['convertJsonForNewCatalog'])
+            ->getMock()
+        ;
 
         $mock->clearCatalogCache();
 

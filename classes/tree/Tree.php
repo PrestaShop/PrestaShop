@@ -87,7 +87,7 @@ class TreeCore
     public function setAttribute($name, $value)
     {
         if (!isset($this->_attributes)) {
-            $this->_attributes = array();
+            $this->_attributes = [];
         }
 
         $this->_attributes[$name] = $value;
@@ -126,7 +126,7 @@ class TreeCore
     public function getAttributes()
     {
         if (!isset($this->_attributes)) {
-            $this->_attributes = array();
+            $this->_attributes = [];
         }
 
         return $this->_attributes;
@@ -162,7 +162,7 @@ class TreeCore
     public function getDataSearch()
     {
         if (!isset($this->_data_search)) {
-            $this->_data_search = array();
+            $this->_data_search = [];
         }
 
         return $this->_data_search;
@@ -182,7 +182,7 @@ class TreeCore
     public function getData()
     {
         if (!isset($this->_data)) {
-            $this->_data = array();
+            $this->_data = [];
         }
 
         return $this->_data;
@@ -283,7 +283,8 @@ class TreeCore
     {
         if (!isset($this->_template_directory)) {
             $this->_template_directory = $this->_normalizeDirectory(
-                self::DEFAULT_TEMPLATE_DIRECTORY);
+                self::DEFAULT_TEMPLATE_DIRECTORY
+            );
         }
 
         return $this->_template_directory;
@@ -296,11 +297,13 @@ class TreeCore
         }
 
         if ($this->getContext()->controller instanceof ModuleAdminController && isset($controller_name) && file_exists($this->_normalizeDirectory(
-                $this->getContext()->controller->getTemplatePath()) . $controller_name . DIRECTORY_SEPARATOR . $this->getTemplateDirectory() . $template)) {
+                $this->getContext()->controller->getTemplatePath()
+        ) . $controller_name . DIRECTORY_SEPARATOR . $this->getTemplateDirectory() . $template)) {
             return $this->_normalizeDirectory($this->getContext()->controller->getTemplatePath()) .
                 $controller_name . DIRECTORY_SEPARATOR . $this->getTemplateDirectory() . $template;
         } elseif ($this->getContext()->controller instanceof ModuleAdminController && file_exists($this->_normalizeDirectory(
-                $this->getContext()->controller->getTemplatePath()) . $this->getTemplateDirectory() . $template)) {
+                $this->getContext()->controller->getTemplatePath()
+        ) . $this->getTemplateDirectory() . $template)) {
             return $this->_normalizeDirectory($this->getContext()->controller->getTemplatePath())
                 . $this->getTemplateDirectory() . $template;
         } elseif ($this->getContext()->controller instanceof AdminController && isset($controller_name)
@@ -426,20 +429,22 @@ class TreeCore
                 $this->getContext()->smarty
             );
             $headerTemplate->assign($this->getAttributes())
-                ->assign(array(
+                ->assign(
+                    [
                     'title' => $this->getTitle(),
                     'toolbar' => $this->useToolbar() ? $this->renderToolbar() : null,
-                )
-            );
+                ]
+            )
+            ;
             $template->assign('header', $headerTemplate->fetch());
         }
 
         //Assign Tree nodes
-        $template->assign($this->getAttributes())->assign(array(
+        $template->assign($this->getAttributes())->assign([
             'id' => $this->getId(),
             'nodes' => $this->renderNodes($data),
             'id_tree' => $this->getIdTree(),
-        ));
+        ]);
 
         return (isset($html) ? $html : '') . $template->fetch();
     }
@@ -462,17 +467,17 @@ class TreeCore
                 $html .= $this->getContext()->smarty->createTemplate(
                     $this->getTemplateFile($this->getNodeFolderTemplate()),
                     $this->getContext()->smarty
-                )->assign(array(
+                )->assign([
                     'children' => $this->renderNodes($item['children']),
                     'node' => $item,
-                ))->fetch();
+                ])->fetch();
             } else {
                 $html .= $this->getContext()->smarty->createTemplate(
                     $this->getTemplateFile($this->getNodeItemTemplate()),
                     $this->getContext()->smarty
-                )->assign(array(
+                )->assign([
                     'node' => $item,
-                ))->fetch();
+                ])->fetch();
             }
         }
 
@@ -498,7 +503,7 @@ class TreeCore
     {
         $last = $directory[strlen($directory) - 1];
 
-        if (in_array($last, array('/', '\\'))) {
+        if (in_array($last, ['/', '\\'])) {
             $directory[strlen($directory) - 1] = DIRECTORY_SEPARATOR;
 
             return $directory;

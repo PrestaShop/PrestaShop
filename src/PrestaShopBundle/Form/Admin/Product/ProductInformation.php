@@ -245,7 +245,8 @@ class ProductInformation extends CommonAbstractType
                 'label' => $this->translator->trans('Retail price with tax', [], 'Admin.Catalog.Feature'),
                 'mapped' => false,
                 'currency' => $this->currency->iso_code,
-            ]);
+            ])
+        ;
         if ($is_stock_management) {
             $builder->add('qty_0_shortcut', FormType\NumberType::class, [
                 'required' => false,
@@ -287,7 +288,8 @@ class ProductInformation extends CommonAbstractType
                 'template_collection' => '<span class="label">%s</span><i class="material-icons delete">clear</i>',
                 'required' => false,
                 'label' => $this->translator->trans('Accessories', [], 'Admin.Catalog.Feature'),
-            ]);
+            ])
+        ;
 
         $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
             $data = $event->getData();

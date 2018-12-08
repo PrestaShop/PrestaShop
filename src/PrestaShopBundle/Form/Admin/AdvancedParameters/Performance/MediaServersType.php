@@ -53,7 +53,8 @@ class MediaServersType extends CommonAbstractType
             ->add('media_server_three', TextType::class, [
                 'required' => false,
                 'empty_data' => '',
-            ]);
+            ])
+        ;
     }
 
     /**

@@ -203,7 +203,7 @@ class OrderLazyArray extends AbstractLazyArray
                     if (isset($cartProduct['attributes'])) {
                         $orderProduct['attributes'] = $cartProduct['attributes'];
                     } else {
-                        $orderProduct['attributes'] = array();
+                        $orderProduct['attributes'] = [];
                     }
                     $orderProduct['cover'] = $cartProduct['cover'];
                     $orderProduct['unit_price_full'] = $cartProduct['unit_price_full'];
@@ -229,24 +229,24 @@ class OrderLazyArray extends AbstractLazyArray
 
         $amounts['subtotals'] = $this->subTotals;
 
-        $amounts['totals'] = array();
+        $amounts['totals'] = [];
         $amount = $this->includeTaxes() ? $order->total_paid : $order->total_paid_tax_excl;
-        $amounts['totals']['total'] = array(
+        $amounts['totals']['total'] = [
             'type' => 'total',
-            'label' => $this->translator->trans('Total', array(), 'Shop.Theme.Checkout'),
+            'label' => $this->translator->trans('Total', [], 'Shop.Theme.Checkout'),
             'amount' => $amount,
             'value' => $this->priceFormatter->format($amount, Currency::getCurrencyInstance((int) $order->id_currency)),
-        );
+        ];
 
-        $amounts['totals']['total_paid'] = array(
+        $amounts['totals']['total_paid'] = [
             'type' => 'total_paid',
-            'label' => $this->translator->trans('Total paid', array(), 'Shop.Theme.Checkout'),
+            'label' => $this->translator->trans('Total paid', [], 'Shop.Theme.Checkout'),
             'amount' => $order->total_paid_real,
             'value' => $this->priceFormatter->format(
                 $order->total_paid_real,
                 Currency::getCurrencyInstance((int) $order->id_currency)
             ),
-        );
+        ];
 
         return $amounts;
     }
@@ -270,7 +270,7 @@ class OrderLazyArray extends AbstractLazyArray
     {
         $order = $this->order;
 
-        $orderHistory = array();
+        $orderHistory = [];
         $context = Context::getContext();
         $historyList = $order->getHistory($context->language->id, false, true);
 
@@ -299,7 +299,7 @@ class OrderLazyArray extends AbstractLazyArray
     {
         $order = $this->order;
 
-        $messages = array();
+        $messages = [];
         $customerMessages = CustomerMessage::getMessagesByOrderId((int) $order->id, false);
 
         foreach ($customerMessages as $cmId => $customerMessage) {
@@ -344,10 +344,10 @@ class OrderLazyArray extends AbstractLazyArray
     {
         $order = $this->order;
 
-        $orderAddresses = array(
-            'delivery' => array(),
-            'invoice' => array(),
-        );
+        $orderAddresses = [
+            'delivery' => [],
+            'invoice' => [],
+        ];
 
         $addressDelivery = new Address((int) $order->id_address_delivery);
         $addressInvoice = new Address((int) $order->id_address_invoice);
@@ -355,11 +355,11 @@ class OrderLazyArray extends AbstractLazyArray
         if (!$order->isVirtual()) {
             $orderAddresses['delivery'] = $this->objectPresenter->present($addressDelivery);
             $orderAddresses['delivery']['formatted'] =
-                AddressFormat::generateAddress($addressDelivery, array(), '<br />');
+                AddressFormat::generateAddress($addressDelivery, [], '<br />');
         }
 
         $orderAddresses['invoice'] = $this->objectPresenter->present($addressInvoice);
-        $orderAddresses['invoice']['formatted'] = AddressFormat::generateAddress($addressInvoice, array(), '<br />');
+        $orderAddresses['invoice']['formatted'] = AddressFormat::generateAddress($addressInvoice, [], '<br />');
 
         return $orderAddresses;
     }
@@ -388,14 +388,14 @@ class OrderLazyArray extends AbstractLazyArray
      */
     public function getLabels()
     {
-        return array(
+        return [
             'tax_short' => ($this->includeTaxes())
-                ? $this->translator->trans('(tax incl.)', array(), 'Shop.Theme.Global')
-                : $this->translator->trans('(tax excl.)', array(), 'Shop.Theme.Global'),
+                ? $this->translator->trans('(tax incl.)', [], 'Shop.Theme.Global')
+                : $this->translator->trans('(tax excl.)', [], 'Shop.Theme.Global'),
             'tax_long' => ($this->includeTaxes())
-                ? $this->translator->trans('(tax included)', array(), 'Shop.Theme.Global')
-                : $this->translator->trans('(tax excluded)', array(), 'Shop.Theme.Global'),
-        );
+                ? $this->translator->trans('(tax included)', [], 'Shop.Theme.Global')
+                : $this->translator->trans('(tax excluded)', [], 'Shop.Theme.Global'),
+        ];
     }
 
     /**
@@ -411,7 +411,7 @@ class OrderLazyArray extends AbstractLazyArray
      */
     private function getDefaultHistory()
     {
-        return array(
+        return [
             'id_order_state' => '',
             'invoice' => '',
             'send_email' => '',
@@ -435,6 +435,6 @@ class OrderLazyArray extends AbstractLazyArray
             'ostate_name' => '',
             'history_date' => '',
             'contrast' => '',
-        );
+        ];
     }
 }

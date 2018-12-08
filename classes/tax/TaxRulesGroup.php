@@ -41,26 +41,26 @@ class TaxRulesGroupCore extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'tax_rules_group',
         'primary' => 'id_tax_rules_group',
-        'fields' => array(
-            'name' => array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 64),
-            'active' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'deleted' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'date_add' => array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
-            'date_upd' => array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
-        ),
-    );
+        'fields' => [
+            'name' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 64],
+            'active' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+            'deleted' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+            'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
+            'date_upd' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
+        ],
+    ];
 
-    protected $webserviceParameters = array(
+    protected $webserviceParameters = [
     'objectsNodeName' => 'tax_rule_groups',
     'objectNodeName' => 'tax_rule_group',
-        'fields' => array(
-        ),
-    );
+        'fields' => [
+        ],
+    ];
 
-    protected static $_taxes = array();
+    protected static $_taxes = [];
 
     public function update($null_values = false)
     {
@@ -114,13 +114,15 @@ class TaxRulesGroupCore extends ObjectModel
 
     public function getIdTaxRuleGroupFromHistorizedId($id_tax_rule)
     {
-        $params = Db::getInstance()->getRow('
+        $params = Db::getInstance()->getRow(
+            '
 		SELECT id_country, id_state, zipcode_from, zipcode_to, id_tax, behavior
 		FROM ' . _DB_PREFIX_ . 'tax_rule
 		WHERE id_tax_rule=' . (int) $id_tax_rule
         );
 
-        return Db::getInstance()->getValue('
+        return Db::getInstance()->getValue(
+            '
 		SELECT id_tax_rule
 		FROM ' . _DB_PREFIX_ . 'tax_rule
 		WHERE
@@ -145,7 +147,7 @@ class TaxRulesGroupCore extends ObjectModel
      */
     public static function getTaxRulesGroupsForOptions()
     {
-        $tax_rules[] = array('id_tax_rules_group' => 0, 'name' => Context::getContext()->getTranslator()->trans('No tax', array(), 'Admin.International.Notification'));
+        $tax_rules[] = ['id_tax_rules_group' => 0, 'name' => Context::getContext()->getTranslator()->trans('No tax', [], 'Admin.International.Notification')];
 
         return array_merge($tax_rules, TaxRulesGroup::getTaxRulesGroups());
     }
@@ -162,7 +164,8 @@ class TaxRulesGroupCore extends ObjectModel
      */
     public static function getAssociatedTaxRatesByIdCountry($id_country)
     {
-        $rows = Db::getInstance()->executeS('
+        $rows = Db::getInstance()->executeS(
+            '
 			SELECT rg.`id_tax_rules_group`, t.`rate`
 			FROM `' . _DB_PREFIX_ . 'tax_rules_group` rg
 			LEFT JOIN `' . _DB_PREFIX_ . 'tax_rule` tr ON (tr.`id_tax_rules_group` = rg.`id_tax_rules_group`)
@@ -172,7 +175,7 @@ class TaxRulesGroupCore extends ObjectModel
 			AND 0 between `zipcode_from` AND `zipcode_to`'
         );
 
-        $res = array();
+        $res = [];
         foreach ($rows as $row) {
             $res[$row['id_tax_rules_group']] = $row['rate'];
         }
@@ -210,7 +213,8 @@ class TaxRulesGroupCore extends ObjectModel
 
     public function isUsed()
     {
-        return Db::getInstance()->getValue('
+        return Db::getInstance()->getValue(
+            '
 		SELECT `id_tax_rules_group`
 		FROM `' . _DB_PREFIX_ . 'order_detail`
 		WHERE `id_tax_rules_group` = ' . (int) $this->id
@@ -240,6 +244,6 @@ class TaxRulesGroupCore extends ObjectModel
     {
         Tools::displayAsDeprecated();
 
-        return array();
+        return [];
     }
 }

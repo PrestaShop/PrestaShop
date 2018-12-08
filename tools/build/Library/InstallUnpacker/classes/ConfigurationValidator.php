@@ -65,7 +65,7 @@ class ConfigurationValidator
      */
     public function testFopen()
     {
-        return in_array(ini_get('allow_url_fopen'), array('On', 'on', '1'));
+        return in_array(ini_get('allow_url_fopen'), ['On', 'on', '1']);
     }
 
     /**
@@ -92,7 +92,7 @@ class ConfigurationValidator
             return ['Cannot create directories'];
         }
 
-        list($fileCreationTestPath, $createFileResult) = $this->createFileTest($dirPath);
+        [$fileCreationTestPath, $createFileResult] = $this->createFileTest($dirPath);
         if (false === $createFileResult) {
             $this->deleteDirectoryTest($dirPath);
             return ['Cannot write files'];
@@ -103,7 +103,7 @@ class ConfigurationValidator
             return ['Cannot download files from network'];
         }
 
-        list($fileMoveTestPath, $moveResult) = $this->moveFileTest($fileCreationTestPath);
+        [$fileMoveTestPath, $moveResult] = $this->moveFileTest($fileCreationTestPath);
         if (false === $moveResult) {
             $this->deleteDirectoryTest($dirPath);
             return ['Cannot move files into prestashop root directory'];
@@ -114,7 +114,7 @@ class ConfigurationValidator
             return ['Cannot delete files in prestashop root directory'];
         }
 
-        list($deleteDirectoryContentResult, $deleteDirectoryResult) = $this->deleteDirectoryTest($dirPath);
+        [$deleteDirectoryContentResult, $deleteDirectoryResult] = $this->deleteDirectoryTest($dirPath);
         if ((false === $deleteDirectoryContentResult) || (false === $deleteDirectoryResult)) {
             return ['Cannot delete directories in prestashop root directory'];
         }

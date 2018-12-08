@@ -71,38 +71,38 @@ class OrderStateCore extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'order_state',
         'primary' => 'id_order_state',
         'multilang' => true,
-        'fields' => array(
-            'send_email' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'module_name' => array('type' => self::TYPE_STRING, 'validate' => 'isModuleName'),
-            'invoice' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'color' => array('type' => self::TYPE_STRING, 'validate' => 'isColor'),
-            'logable' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'shipped' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'unremovable' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'delivery' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'hidden' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'paid' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'pdf_delivery' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'pdf_invoice' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'deleted' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+        'fields' => [
+            'send_email' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+            'module_name' => ['type' => self::TYPE_STRING, 'validate' => 'isModuleName'],
+            'invoice' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+            'color' => ['type' => self::TYPE_STRING, 'validate' => 'isColor'],
+            'logable' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+            'shipped' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+            'unremovable' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+            'delivery' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+            'hidden' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+            'paid' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+            'pdf_delivery' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+            'pdf_invoice' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+            'deleted' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
 
             /* Lang fields */
-            'name' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 64),
-            'template' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isTplName', 'size' => 64),
-        ),
-    );
+            'name' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 64],
+            'template' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isTplName', 'size' => 64],
+        ],
+    ];
 
-    protected $webserviceParameters = array(
-        'fields' => array(
-            'unremovable' => array(),
-            'delivery' => array(),
-            'hidden' => array(),
-        ),
-    );
+    protected $webserviceParameters = [
+        'fields' => [
+            'unremovable' => [],
+            'delivery' => [],
+            'hidden' => [],
+        ],
+    ];
 
     const FLAG_NO_HIDDEN = 1;  /* 00001 */
     const FLAG_LOGABLE = 2;  /* 00010 */

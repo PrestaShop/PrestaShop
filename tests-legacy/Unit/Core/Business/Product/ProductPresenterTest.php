@@ -253,7 +253,7 @@ class ProductPresenterTest extends UnitTestCase
         $this->product['online_only'] = true;
         $this->assertEquals(
             ['online-only' => [
-                'type'  => 'online-only',
+                'type' => 'online-only',
                 'label' => 'some label'
             ]],
             $this->getPresentedProduct('flags')
@@ -265,7 +265,7 @@ class ProductPresenterTest extends UnitTestCase
         $this->product['reduction'] = true;
         $this->assertEquals(
             ['discount' => [
-                'type'  => 'discount',
+                'type' => 'discount',
                 'label' => 'some label'
             ]],
             $this->getPresentedProduct('flags')
@@ -278,7 +278,7 @@ class ProductPresenterTest extends UnitTestCase
         $this->product['on_sale'] = true;
         $this->assertEquals(
             ['on-sale' => [
-                'type'  => 'on-sale',
+                'type' => 'on-sale',
                 'label' => 'some label'
             ]],
             $this->getPresentedProduct('flags')
@@ -290,7 +290,7 @@ class ProductPresenterTest extends UnitTestCase
         $this->product['new'] = true;
         $this->assertEquals(
             ['new' => [
-                'type'  => 'new',
+                'type' => 'new',
                 'label' => 'some label'
             ]],
             $this->getPresentedProduct('flags')
@@ -303,7 +303,7 @@ class ProductPresenterTest extends UnitTestCase
         $this->product['condition'] = 'new';
         $this->assertEquals(
             [
-                'type'  => 'new',
+                'type' => 'new',
                 'label' => 'some label',
                 'schema_url' => 'https://schema.org/NewCondition',
             ],

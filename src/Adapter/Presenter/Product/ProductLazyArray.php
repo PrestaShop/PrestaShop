@@ -145,7 +145,7 @@ class ProductLazyArray extends AbstractLazyArray
             return $this->product['attributes'];
         }
 
-        return array();
+        return [];
     }
 
     /**
@@ -220,24 +220,24 @@ class ProductLazyArray extends AbstractLazyArray
 
         switch ($this->product['condition']) {
             case 'new':
-                return array(
+                return [
                     'type' => 'new',
-                    'label' => $this->translator->trans('New product', array(), 'Shop.Theme.Catalog'),
+                    'label' => $this->translator->trans('New product', [], 'Shop.Theme.Catalog'),
                     'schema_url' => 'https://schema.org/NewCondition',
-                );
+                ];
             case 'used':
-                return array(
+                return [
                     'type' => 'used',
-                    'label' => $this->translator->trans('Used', array(), 'Shop.Theme.Catalog'),
+                    'label' => $this->translator->trans('Used', [], 'Shop.Theme.Catalog'),
                     'schema_url' => 'https://schema.org/UsedCondition',
-                );
+                ];
                 break;
             case 'refurbished':
-                return array(
+                return [
                     'type' => 'refurbished',
-                    'label' => $this->translator->trans('Refurbished', array(), 'Shop.Theme.Catalog'),
+                    'label' => $this->translator->trans('Refurbished', [], 'Shop.Theme.Catalog'),
                     'schema_url' => 'https://schema.org/RefurbishedCondition',
-                );
+                ];
                 break;
             default:
                 return false;
@@ -268,7 +268,7 @@ class ProductLazyArray extends AbstractLazyArray
     public function getEmbeddedAttributes()
     {
         $whitelist = $this->getProductAttributeWhitelist();
-        $embeddedProductAttributes = array();
+        $embeddedProductAttributes = [];
         foreach ($this->product as $attribute => $value) {
             if (in_array($attribute, $whitelist)) {
                 $embeddedProductAttributes[$attribute] = $value;
@@ -320,7 +320,7 @@ class ProductLazyArray extends AbstractLazyArray
      */
     public function getQuantityDiscounts()
     {
-        return (isset($this->product['quantity_discounts'])) ? $this->product['quantity_discounts'] : array();
+        return (isset($this->product['quantity_discounts'])) ? $this->product['quantity_discounts'] : [];
     }
 
     /**
@@ -387,14 +387,14 @@ class ProductLazyArray extends AbstractLazyArray
      */
     public function getLabels()
     {
-        return array(
+        return [
             'tax_short' => ($this->settings->include_taxes)
-                ? $this->translator->trans('(tax incl.)', array(), 'Shop.Theme.Global')
-                : $this->translator->trans('(tax excl.)', array(), 'Shop.Theme.Global'),
+                ? $this->translator->trans('(tax incl.)', [], 'Shop.Theme.Global')
+                : $this->translator->trans('(tax excl.)', [], 'Shop.Theme.Global'),
             'tax_long' => ($this->settings->include_taxes)
-                ? $this->translator->trans('Tax included', array(), 'Shop.Theme.Global')
-                : $this->translator->trans('Tax excluded', array(), 'Shop.Theme.Global'),
-        );
+                ? $this->translator->trans('Tax included', [], 'Shop.Theme.Global')
+                : $this->translator->trans('Tax excluded', [], 'Shop.Theme.Global'),
+        ];
     }
 
     /**
@@ -405,11 +405,11 @@ class ProductLazyArray extends AbstractLazyArray
     public function getEcotax()
     {
         if (isset($this->product['ecotax'])) {
-            return array(
+            return [
                 'value' => $this->priceFormatter->format($this->product['ecotax']),
                 'amount' => $this->product['ecotax'],
                 'rate' => $this->product['ecotax_rate'],
-            );
+            ];
         }
 
         return null;
@@ -424,46 +424,46 @@ class ProductLazyArray extends AbstractLazyArray
      */
     public function getFlags()
     {
-        $flags = array();
+        $flags = [];
 
         $show_price = $this->shouldShowPrice($this->settings, $this->product);
 
         if ($show_price && $this->product['online_only']) {
-            $flags['online-only'] = array(
+            $flags['online-only'] = [
                 'type' => 'online-only',
-                'label' => $this->translator->trans('Online only', array(), 'Shop.Theme.Catalog'),
-            );
+                'label' => $this->translator->trans('Online only', [], 'Shop.Theme.Catalog'),
+            ];
         }
 
         if ($show_price && $this->product['on_sale'] && !$this->settings->catalog_mode) {
-            $flags['on-sale'] = array(
+            $flags['on-sale'] = [
                 'type' => 'on-sale',
-                'label' => $this->translator->trans('On sale!', array(), 'Shop.Theme.Catalog'),
-            );
+                'label' => $this->translator->trans('On sale!', [], 'Shop.Theme.Catalog'),
+            ];
         }
 
         if ($show_price
             && $this->product['reduction']
             && !$this->settings->catalog_mode
             && !$this->product['on_sale']) {
-            $flags['discount'] = array(
+            $flags['discount'] = [
                 'type' => 'discount',
-                'label' => $this->translator->trans('Reduced price', array(), 'Shop.Theme.Catalog'),
-            );
+                'label' => $this->translator->trans('Reduced price', [], 'Shop.Theme.Catalog'),
+            ];
         }
 
         if ($this->product['new']) {
-            $flags['new'] = array(
+            $flags['new'] = [
                 'type' => 'new',
-                'label' => $this->translator->trans('New', array(), 'Shop.Theme.Catalog'),
-            );
+                'label' => $this->translator->trans('New', [], 'Shop.Theme.Catalog'),
+            ];
         }
 
         if ($this->product['pack']) {
-            $flags['pack'] = array(
+            $flags['pack'] = [
                 'type' => 'pack',
-                'label' => $this->translator->trans('Pack', array(), 'Shop.Theme.Catalog'),
-            );
+                'label' => $this->translator->trans('Pack', [], 'Shop.Theme.Catalog'),
+            ];
         }
 
         return $flags;
@@ -479,7 +479,7 @@ class ProductLazyArray extends AbstractLazyArray
         $colors = $this->productColorsRetriever->getColoredVariants($this->product['id_product']);
 
         if (!is_array($colors)) {
-            return array();
+            return [];
         }
 
         return array_map(function (array $color) {
@@ -771,7 +771,7 @@ class ProductLazyArray extends AbstractLazyArray
             } elseif ($product['quantity_wanted'] > 0 && $product['quantity'] > 0) {
                 $this->product['availability_message'] = $this->translator->trans(
                     'There are not enough products in stock',
-                    array(),
+                    [],
                     'Shop.Notifications.Error'
                 );
                 $this->product['availability'] = 'unavailable';
@@ -779,7 +779,7 @@ class ProductLazyArray extends AbstractLazyArray
             } elseif (!empty($product['quantity_all_versions']) && $product['quantity_all_versions'] > 0) {
                 $this->product['availability_message'] = $this->translator->trans(
                     'Product available with different options',
-                    array(),
+                    [],
                     'Shop.Theme.Catalog'
                 );
                 $this->product['availability_date'] = $product['available_date'];
@@ -804,7 +804,7 @@ class ProductLazyArray extends AbstractLazyArray
     {
         $this->product['availability_message'] = $this->translator->trans(
             'Last items in stock',
-            array(),
+            [],
             'Shop.Theme.Catalog'
         );
         $this->product['availability'] = 'last_remaining_items';
@@ -819,11 +819,11 @@ class ProductLazyArray extends AbstractLazyArray
     {
         switch ($key) {
             case 'ean13':
-                return $this->translator->trans('ean13', array(), 'Shop.Theme.Catalog');
+                return $this->translator->trans('ean13', [], 'Shop.Theme.Catalog');
             case 'isbn':
-                return $this->translator->trans('isbn', array(), 'Shop.Theme.Catalog');
+                return $this->translator->trans('isbn', [], 'Shop.Theme.Catalog');
             case 'upc':
-                return $this->translator->trans('upc', array(), 'Shop.Theme.Catalog');
+                return $this->translator->trans('upc', [], 'Shop.Theme.Catalog');
         }
 
         return $key;
@@ -834,7 +834,7 @@ class ProductLazyArray extends AbstractLazyArray
      */
     protected function getProductAttributeWhitelist()
     {
-        return array(
+        return [
             'id_shop_default',
             'id_manufacturer',
             'id_supplier',
@@ -948,7 +948,7 @@ class ProductLazyArray extends AbstractLazyArray
             'reference_to_display',
             'delivery_in_stock',
             'delivery_out_stock',
-        );
+        ];
     }
 
     /**
@@ -960,14 +960,14 @@ class ProductLazyArray extends AbstractLazyArray
      */
     protected function buildGroupedFeatures(array $productFeatures)
     {
-        $valuesByFeatureName = array();
-        $groupedFeatures = array();
+        $valuesByFeatureName = [];
+        $groupedFeatures = [];
 
         // features can either be "raw" (id_feature, id_product_id_feature_value)
         // or "full" (id_feature, name, value)
         // grouping can only be performed if they are "full"
         if (empty($productFeatures) || !array_key_exists('name', reset($productFeatures))) {
-            return array();
+            return [];
         }
 
         foreach ($productFeatures as $feature) {

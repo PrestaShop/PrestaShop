@@ -139,10 +139,10 @@ class AttributeController extends FrameworkBundleAdminController
 
         $response = new JsonResponse();
         $combinationDataProvider = $this->get('prestashop.adapter.data_provider.combination');
-        $result = array(
-            'ids_product_attribute' => array(),
+        $result = [
+            'ids_product_attribute' => [],
             'form' => '',
-        );
+        ];
 
         foreach ($attributes as $attribute) {
             foreach ($attribute as $combination) {
@@ -151,12 +151,13 @@ class AttributeController extends FrameworkBundleAdminController
                         'combination_' . $combination['id_product_attribute'],
                         'PrestaShopBundle\Form\Admin\Product\ProductCombination',
                         $combinationDataProvider->getFormCombination($combination['id_product_attribute'])
-                    );
+                    )
+                ;
                 $result['form'] .= $this->renderView(
                     '@Product/ProductPage/Forms/form_combination.html.twig',
-                    array(
+                    [
                         'form' => $form->createView(),
-                    )
+                    ]
                 );
                 $result['ids_product_attribute'][] = $combination['id_product_attribute'];
             }
@@ -174,7 +175,7 @@ class AttributeController extends FrameworkBundleAdminController
         if (count($combinations)) {
             $defaultProductAttributeId = $product->getDefaultIdProductAttribute();
             if (!$defaultProductAttributeId) {
-                list(, $firstAttributeCombination) = each($combinations[0]);
+                [, $firstAttributeCombination] = each($combinations[0]);
                 $product->setDefaultAttribute($firstAttributeCombination['id_product_attribute']);
             }
         }
@@ -202,7 +203,8 @@ class AttributeController extends FrameworkBundleAdminController
             $attributeIds = $request->request->get('attribute-ids');
             foreach ($attributeIds as $attributeId) {
                 $legacyResponse = $this->get('prestashop.adapter.admin.controller.attribute_generator')
-                    ->ajaxProcessDeleteProductAttribute($attributeId, $idProduct);
+                    ->ajaxProcessDeleteProductAttribute($attributeId, $idProduct)
+                ;
             }
 
             if ($legacyResponse['status'] == 'error') {
@@ -239,7 +241,8 @@ class AttributeController extends FrameworkBundleAdminController
 
         foreach ($combinations as $combination) {
             $res = $this->get('prestashop.adapter.admin.controller.attribute_generator')
-                ->ajaxProcessDeleteProductAttribute($combination['id_product_attribute'], $idProduct);
+                ->ajaxProcessDeleteProductAttribute($combination['id_product_attribute'], $idProduct)
+            ;
 
             if ($res['status'] == 'error') {
                 $response->setStatusCode(400);

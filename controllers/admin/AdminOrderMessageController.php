@@ -47,64 +47,64 @@ class AdminOrderMessageControllerCore extends AdminController
 
         parent::__construct();
 
-        $this->bulk_actions = array(
-            'delete' => array(
-                'text' => $this->trans('Delete selected', array(), 'Admin.Actions'),
-                'confirm' => $this->trans('Delete selected items?', array(), 'Admin.Notifications.Warning'),
+        $this->bulk_actions = [
+            'delete' => [
+                'text' => $this->trans('Delete selected', [], 'Admin.Actions'),
+                'confirm' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
                 'icon' => 'icon-trash',
-            ),
-        );
+            ],
+        ];
 
-        $this->fields_list = array(
-            'id_order_message' => array(
-                'title' => $this->trans('ID', array(), 'Admin.Global'),
+        $this->fields_list = [
+            'id_order_message' => [
+                'title' => $this->trans('ID', [], 'Admin.Global'),
                 'align' => 'center',
-            ),
-            'name' => array(
-                'title' => $this->trans('Name', array(), 'Admin.Global'),
-            ),
-            'message' => array(
-                'title' => $this->trans('Message', array(), 'Admin.Global'),
+            ],
+            'name' => [
+                'title' => $this->trans('Name', [], 'Admin.Global'),
+            ],
+            'message' => [
+                'title' => $this->trans('Message', [], 'Admin.Global'),
                 'maxlength' => 300,
-            ),
-        );
+            ],
+        ];
 
-        $this->fields_form = array(
-            'legend' => array(
-                'title' => $this->trans('Order messages', array(), 'Admin.Orderscustomers.Feature'),
+        $this->fields_form = [
+            'legend' => [
+                'title' => $this->trans('Order messages', [], 'Admin.Orderscustomers.Feature'),
                 'icon' => 'icon-mail',
-            ),
-            'input' => array(
-                array(
+            ],
+            'input' => [
+                [
                     'type' => 'text',
                     'lang' => true,
-                    'label' => $this->trans('Name', array(), 'Admin.Global'),
+                    'label' => $this->trans('Name', [], 'Admin.Global'),
                     'name' => 'name',
                     'size' => 53,
                     'required' => true,
-                ),
-                array(
+                ],
+                [
                     'type' => 'textarea',
                     'lang' => true,
-                    'label' => $this->trans('Message', array(), 'Admin.Global'),
+                    'label' => $this->trans('Message', [], 'Admin.Global'),
                     'name' => 'message',
                     'required' => true,
-                ),
-            ),
-            'submit' => array(
-                'title' => $this->trans('Save', array(), 'Admin.Actions'),
-            ),
-        );
+                ],
+            ],
+            'submit' => [
+                'title' => $this->trans('Save', [], 'Admin.Actions'),
+            ],
+        ];
     }
 
     public function initPageHeaderToolbar()
     {
         if (empty($this->display)) {
-            $this->page_header_toolbar_btn['new_order_message'] = array(
+            $this->page_header_toolbar_btn['new_order_message'] = [
                 'href' => self::$currentIndex . '&addorder_message&token=' . $this->token,
-                'desc' => $this->trans('Add new order message', array(), 'Admin.Orderscustomers.Feature'),
+                'desc' => $this->trans('Add new order message', [], 'Admin.Orderscustomers.Feature'),
                 'icon' => 'process-icon-new',
-            );
+            ];
         }
 
         parent::initPageHeaderToolbar();

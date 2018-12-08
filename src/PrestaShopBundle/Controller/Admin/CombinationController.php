@@ -55,9 +55,9 @@ class CombinationController extends FrameworkBundleAdminController
 
         return $response->setContent($this->renderView(
             '@Product/ProductPage/Forms/form_combination_collection.html.twig',
-            array(
+            [
                 'combinationForms' => $forms,
-            )
+            ]
         ));
     }
 
@@ -82,7 +82,7 @@ class CombinationController extends FrameworkBundleAdminController
 
         $combinations = $modelMapper->getAttributesResume($product);
 
-        $combinationList = array();
+        $combinationList = [];
 
         if (is_array($combinations)) {
             foreach ($combinations as $combination) {

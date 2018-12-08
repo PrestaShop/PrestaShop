@@ -33,7 +33,7 @@ if (isset($_GET['action'])) {
 
             if (preg_match('/\.{1,2}[\/|\\\]/', $path_pos) !== 0
                 || $filename !== fix_filename($filename, $transliteration)
-                || !in_array(strtolower($info['extension']), array('jpg', 'jpeg', 'png'))
+                || !in_array(strtolower($info['extension']), ['jpg', 'jpeg', 'png'])
                 || strpos($_POST['url'], 'http://featherfiles.aviary.com/') !== 0
                 || !isset($info['extension'])
 
@@ -119,7 +119,7 @@ if (isset($_GET['action'])) {
                     // unarchive from the tar
                     $phar = new PharData($path);
                     $phar->decompressFiles();
-                    $files = array();
+                    $files = [];
                     check_files_extensions_on_phar($phar, $files, '', $ext);
                     $phar->extractTo($current_path.fix_dirname($_POST['path']).'/', $files, true);
 

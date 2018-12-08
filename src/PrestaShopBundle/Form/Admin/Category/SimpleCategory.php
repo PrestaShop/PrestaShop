@@ -97,7 +97,8 @@ class SimpleCategory extends CommonAbstractType
                     'data-minimumResultsForSearch' => '7',
                 ],
                 'label' => $this->translator->trans('Parent of the category', [], 'Admin.Catalog.Feature'),
-            ]);
+            ])
+        ;
     }
 
     /**

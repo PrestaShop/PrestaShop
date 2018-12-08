@@ -67,40 +67,40 @@ class ManufacturerCore extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'manufacturer',
         'primary' => 'id_manufacturer',
         'multilang' => true,
-        'fields' => array(
-            'name' => array('type' => self::TYPE_STRING, 'validate' => 'isCatalogName', 'required' => true, 'size' => 64),
-            'active' => array('type' => self::TYPE_BOOL),
-            'date_add' => array('type' => self::TYPE_DATE),
-            'date_upd' => array('type' => self::TYPE_DATE),
+        'fields' => [
+            'name' => ['type' => self::TYPE_STRING, 'validate' => 'isCatalogName', 'required' => true, 'size' => 64],
+            'active' => ['type' => self::TYPE_BOOL],
+            'date_add' => ['type' => self::TYPE_DATE],
+            'date_upd' => ['type' => self::TYPE_DATE],
 
             /* Lang fields */
-            'description' => array('type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml'),
-            'short_description' => array('type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml'),
-            'meta_title' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
-            'meta_description' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 512),
-            'meta_keywords' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName'),
-        ),
-    );
+            'description' => ['type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml'],
+            'short_description' => ['type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml'],
+            'meta_title' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255],
+            'meta_description' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 512],
+            'meta_keywords' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName'],
+        ],
+    ];
 
-    protected $webserviceParameters = array(
-        'fields' => array(
-            'active' => array(),
-            'link_rewrite' => array('getter' => 'getLink', 'setter' => false),
-        ),
-        'associations' => array(
-            'addresses' => array(
+    protected $webserviceParameters = [
+        'fields' => [
+            'active' => [],
+            'link_rewrite' => ['getter' => 'getLink', 'setter' => false],
+        ],
+        'associations' => [
+            'addresses' => [
                 'resource' => 'address',
                 'setter' => false,
-                'fields' => array(
-                    'id' => array('xlink_resource' => 'addresses'),
-                ),
-            ),
-        ),
-    );
+                'fields' => [
+                    'id' => ['xlink_resource' => 'addresses'],
+                ],
+            ],
+        ],
+    ];
 
     /**
      * ManufacturerCore constructor.
@@ -216,7 +216,8 @@ class ManufacturerCore extends ObjectModel
                 $sqlGroups = (count($groups) ? 'IN (' . implode(',', $groups) . ')' : '= 1');
             }
 
-            $results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+            $results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
+                '
 					SELECT  p.`id_manufacturer`, COUNT(DISTINCT p.`id_product`) as nb_products
 					FROM `' . _DB_PREFIX_ . 'product` p USE INDEX (product_manufacturer)
 					' . Shop::addSqlAssociation('product', 'p') . '
@@ -232,7 +233,7 @@ class ManufacturerCore extends ObjectModel
 					GROUP BY p.`id_manufacturer`'
                 );
 
-            $counts = array();
+            $counts = [];
             foreach ($results as $result) {
                 $counts[(int) $result['id_manufacturer']] = (int) $result['nb_products'];
             }
@@ -266,25 +267,25 @@ class ManufacturerCore extends ObjectModel
     {
         $idLang = is_null($idLang) ? Context::getContext()->language->id : (int) $idLang;
 
-        $manufacturersList = array();
+        $manufacturersList = [];
         $manufacturers = Manufacturer::getManufacturers(false, $idLang);
         if ($manufacturers && count($manufacturers)) {
             foreach ($manufacturers as $manufacturer) {
                 if ($format === 'sitemap') {
-                    $manufacturersList[] = array(
+                    $manufacturersList[] = [
                         'id' => 'manufacturer-page-' . (int) $manufacturer['id_manufacturer'],
                         'label' => $manufacturer['name'],
                         'url' => Context::getContext()->link->getManufacturerLink($manufacturer['id_manufacturer'], $manufacturer['link_rewrite']),
-                        'children' => array(),
-                    );
+                        'children' => [],
+                    ];
                 } else {
-                    $manufacturersList[] = array(
+                    $manufacturersList[] = [
                         'id' => (int) $manufacturer['id_manufacturer'],
                         'link' => Context::getContext()->link->getManufacturerLink($manufacturer['id_manufacturer'], $manufacturer['link_rewrite']),
                         'name' => $manufacturer['name'],
                         'desc' => $manufacturer['description'],
-                        'children' => array(),
-                    );
+                        'children' => [],
+                    ];
                 }
             }
         }
@@ -299,12 +300,13 @@ class ManufacturerCore extends ObjectModel
      *
      * @return string name
      */
-    protected static $cacheName = array();
+    protected static $cacheName = [];
 
     public static function getNameById($idManufacturer)
     {
         if (!isset(self::$cacheName[$idManufacturer])) {
-            self::$cacheName[$idManufacturer] = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+            self::$cacheName[$idManufacturer] = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+                '
 				SELECT `name`
 				FROM `' . _DB_PREFIX_ . 'manufacturer`
 				WHERE `id_manufacturer` = ' . (int) $idManufacturer . '
@@ -324,7 +326,8 @@ class ManufacturerCore extends ObjectModel
      */
     public static function getIdByName($name)
     {
-        $result = Db::getInstance()->getRow('
+        $result = Db::getInstance()->getRow(
+            '
 			SELECT `id_manufacturer`
 			FROM `' . _DB_PREFIX_ . 'manufacturer`
 			WHERE `name` = \'' . pSQL($name) . '\''
@@ -380,7 +383,7 @@ class ManufacturerCore extends ObjectModel
         }
 
         $front = true;
-        if (!in_array($context->controller->controller_type, array('front', 'modulefront'))) {
+        if (!in_array($context->controller->controller_type, ['front', 'modulefront'])) {
             $front = false;
         }
 
@@ -510,7 +513,7 @@ class ManufacturerCore extends ObjectModel
     {
         $context = Context::getContext();
         $front = true;
-        if (!in_array($context->controller->controller_type, array('front', 'modulefront'))) {
+        if (!in_array($context->controller->controller_type, ['front', 'modulefront'])) {
             $front = false;
         }
 
@@ -535,7 +538,8 @@ class ManufacturerCore extends ObjectModel
      */
     public static function manufacturerExists($idManufacturer)
     {
-        $row = Db::getInstance()->getRow('
+        $row = Db::getInstance()->getRow(
+            '
 			SELECT `id_manufacturer`
 			FROM ' . _DB_PREFIX_ . 'manufacturer m
 			WHERE m.`id_manufacturer` = ' . (int) $idManufacturer
@@ -553,7 +557,8 @@ class ManufacturerCore extends ObjectModel
      */
     public function getAddresses($idLang)
     {
-        return Db::getInstance()->executeS('
+        return Db::getInstance()->executeS(
+            '
 			SELECT a.*, cl.name AS `country`, s.name AS `state`
 			FROM `' . _DB_PREFIX_ . 'address` AS a
 			LEFT JOIN `' . _DB_PREFIX_ . 'country_lang` AS cl ON (
@@ -574,7 +579,8 @@ class ManufacturerCore extends ObjectModel
      */
     public function getWsAddresses()
     {
-        return Db::getInstance()->executeS('
+        return Db::getInstance()->executeS(
+            '
 			SELECT a.id_address as id
 			FROM `' . _DB_PREFIX_ . 'address` AS a
 			' . Shop::addSqlAssociation('manufacturer', 'a') . '
@@ -593,13 +599,14 @@ class ManufacturerCore extends ObjectModel
      */
     public function setWsAddresses($idAddresses)
     {
-        $ids = array();
+        $ids = [];
 
         foreach ($idAddresses as $id) {
             $ids[] = (int) $id['id'];
         }
 
-        $result1 = (Db::getInstance()->execute('
+        $result1 = (
+            Db::getInstance()->execute('
 			UPDATE `' . _DB_PREFIX_ . 'address`
 			SET id_manufacturer = 0
 			WHERE id_manufacturer = ' . (int) $this->id . '
@@ -608,7 +615,8 @@ class ManufacturerCore extends ObjectModel
 
         $result2 = true;
         if (count($ids)) {
-            $result2 = (Db::getInstance()->execute('
+            $result2 = (
+                Db::getInstance()->execute('
 				UPDATE `' . _DB_PREFIX_ . 'address`
 				SET id_customer = 0, id_supplier = 0, id_manufacturer = ' . (int) $this->id . '
 				WHERE id_address IN(' . implode(',', $ids) . ')

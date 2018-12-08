@@ -47,29 +47,29 @@ class StockMvtReasonCore extends ObjectModel
      * @since 1.5.0
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'stock_mvt_reason',
         'primary' => 'id_stock_mvt_reason',
         'multilang' => true,
-        'fields' => array(
-            'sign' => array('type' => self::TYPE_INT),
-            'deleted' => array('type' => self::TYPE_BOOL),
-            'date_add' => array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
-            'date_upd' => array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
-            'name' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 255),
-        ),
-    );
+        'fields' => [
+            'sign' => ['type' => self::TYPE_INT],
+            'deleted' => ['type' => self::TYPE_BOOL],
+            'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
+            'date_upd' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
+            'name' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 255],
+        ],
+    ];
 
     /**
      * @see ObjectModel::$webserviceParameters
      */
-    protected $webserviceParameters = array(
+    protected $webserviceParameters = [
         'objectsNodeName' => 'stock_movement_reasons',
         'objectNodeName' => 'stock_movement_reason',
-        'fields' => array(
-            'sign' => array(),
-        ),
-    );
+        'fields' => [
+            'sign' => [],
+        ],
+    ];
 
     /**
      * Gets Stock Mvt Reasons.
