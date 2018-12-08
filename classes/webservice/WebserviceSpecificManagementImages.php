@@ -120,8 +120,8 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
     }
 
     /*
-    * This method need $this->imgToDisplay to be set if output don't needs to be XML
-    */
+     * This method need $this->imgToDisplay to be set if output don't needs to be XML
+     */
     public function getContent()
     {
         if ('' != $this->output) {

@@ -3115,8 +3115,8 @@ class AdminProductsController extends AdminProductsControllerCore
         $currency = $this->context->currency;
 
         /*
-        * Form for adding a virtual product like software, mp3, etc...
-        */
+         * Form for adding a virtual product like software, mp3, etc...
+         */
         $product_download = new ProductDownload();
         if ($id_product_download = $product_download->getIdFromIdProduct($this->getFieldValue($product, 'id'))) {
             $product_download = new ProductDownload($id_product_download);
@@ -3566,8 +3566,8 @@ class AdminProductsController extends AdminProductsControllerCore
         //$this->display = 'edit';
         $data->assign('product_name_redirected', Product::getProductName((int) $product->id_type_redirected, null, (int) $this->context->language->id));
         /*
-        * Form for adding a virtual product like software, mp3, etc...
-        */
+         * Form for adding a virtual product like software, mp3, etc...
+         */
         $product_download = new ProductDownload();
         if ($id_product_download = $product_download->getIdFromIdProduct($this->getFieldValue($product, 'id'))) {
             $product_download = new ProductDownload($id_product_download);

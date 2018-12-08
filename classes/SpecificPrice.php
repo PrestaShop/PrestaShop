@@ -491,7 +491,7 @@ class SpecificPriceCore extends ObjectModel
          * The date is not taken into account for the cache, but this is for the better because it keeps the consistency
          * for the whole script.
          * The price must not change between the top and the bottom of the page
-        */
+         */
 
         if (!self::couldHaveSpecificPrice($id_product)) {
             return array();

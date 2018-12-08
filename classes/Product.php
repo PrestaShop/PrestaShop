@@ -3152,10 +3152,10 @@ class ProductCore extends ObjectModel
         // If there is cart in context or if the specified id_cart is different from the context cart id
         if (!is_object($cur_cart) || (Validate::isUnsignedInt($id_cart) && $id_cart && $cur_cart->id != $id_cart)) {
             /*
-            * When a user (e.g., guest, customer, Google...) is on PrestaShop, he has already its cart as the global (see /init.php)
-            * When a non-user calls directly this method (e.g., payment module...) is on PrestaShop, he does not have already it BUT knows the cart ID
-            * When called from the back office, cart ID can be inexistant
-            */
+             * When a user (e.g., guest, customer, Google...) is on PrestaShop, he has already its cart as the global (see /init.php)
+             * When a non-user calls directly this method (e.g., payment module...) is on PrestaShop, he does not have already it BUT knows the cart ID
+             * When called from the back office, cart ID can be inexistant
+             */
             if (!$id_cart && !isset($context->employee)) {
                 die(Tools::displayError());
             }
@@ -4967,11 +4967,11 @@ class ProductCore extends ObjectModel
     }
 
     /*
-    * Select all features for a given language
-    *
-    * @param $id_lang Language id
-    * @return array Array with feature's data
-    */
+     * Select all features for a given language
+     *
+     * @param $id_lang Language id
+     * @return array Array with feature's data
+     */
     public static function getFrontFeaturesStatic($id_lang, $id_product)
     {
         if (!Feature::isFeatureActive()) {
@@ -5014,8 +5014,8 @@ class ProductCore extends ObjectModel
     }
 
     /*
-    ** Customization management
-    */
+     ** Customization management
+     */
 
     public static function getAllCustomizedDatas($id_cart, $id_lang = null, $only_in_cart = true, $id_shop = null, $id_customization = null)
     {
@@ -5148,8 +5148,8 @@ class ProductCore extends ObjectModel
     }
 
     /*
-    ** Add customization price for a single product
-    */
+     ** Add customization price for a single product
+     */
     public static function addProductCustomizationPrice(&$product, &$customized_datas)
     {
         if (!$customized_datas) {
@@ -5162,8 +5162,8 @@ class ProductCore extends ObjectModel
     }
 
     /*
-    ** Customization fields' label management
-    */
+     ** Customization fields' label management
+     */
 
     protected function _checkLabelField($field, $value)
     {

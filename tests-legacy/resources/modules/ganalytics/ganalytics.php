@@ -30,9 +30,9 @@ if (!defined('_PS_VERSION_')) {
 class ganalytics extends Module
 {
     /*
-    * This module will return false on install !!!
-    *
-    */
+     * This module will return false on install !!!
+     *
+     */
     public function __construct()
     {
         $this->name = 'ganalytics';

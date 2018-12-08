@@ -1511,7 +1511,7 @@ class ToolsCore
      * @return string $str truncated
      */
     /* CAUTION : Use it only on module hookEvents.
-    ** For other purposes use the smarty function instead */
+     ** For other purposes use the smarty function instead */
     public static function truncate($str, $max_length, $suffix = '...')
     {
         if (Tools::strlen($str) <= $max_length) {
@@ -1876,8 +1876,8 @@ class ToolsCore
         $f1 = pow(10.0, (float) abs($places));
 
         /* If the decimal precision guaranteed by FP arithmetic is higher than
-        * the requested places BUT is small enough to make sure a non-zero value
-        * is returned, pre-round the result to the precision */
+         * the requested places BUT is small enough to make sure a non-zero value
+         * is returned, pre-round the result to the precision */
         if ($precision_places > $places && $precision_places - $places < 15) {
             $f2 = pow(10.0, (float) abs($precision_places));
 
@@ -1888,7 +1888,7 @@ class ToolsCore
             }
 
             /* preround the result (tmp_value will always be something * 1e14,
-            * thus never larger than 1e15 here) */
+             * thus never larger than 1e15 here) */
             $tmp_value = Tools::round_helper($tmp_value, $mode);
             /* now correctly move the decimal point */
             $f2 = pow(10.0, (float) abs($places - $precision_places));

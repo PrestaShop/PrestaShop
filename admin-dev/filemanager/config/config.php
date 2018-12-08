@@ -122,7 +122,7 @@ $mime = array_merge($mime_img, $mime_file, $mime_video);
 
 /******************
  * AVIARY config
-*******************/
+ *******************/
 $aviary_active = false;
 $aviary_key = 'dvh8qudbp6yx2bnp';
 $aviary_secret = 'm6xaym5q42rpw433';
