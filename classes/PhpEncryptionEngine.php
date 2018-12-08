@@ -119,7 +119,6 @@ class PhpEncryptionEngineCore
      * @throws Exception
      * @return string
      *
-     *
      * @see https://github.com/paragonie/random_compat/blob/v1.4.1/lib/random_bytes_openssl.php
      * @see https://github.com/paragonie/random_compat/blob/v1.4.1/lib/random_bytes_mcrypt.php
      */

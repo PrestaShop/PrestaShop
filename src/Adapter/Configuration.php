@@ -189,7 +189,6 @@ class Configuration extends ParameterBag implements ConfigurationInterface
      * @throws \Exception
      * @return $this
      *
-     *
      * @deprecated since version 1.7.4.0
      */
     public function delete($key)

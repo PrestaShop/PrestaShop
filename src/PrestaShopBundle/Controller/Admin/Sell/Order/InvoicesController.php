@@ -91,7 +91,6 @@ class InvoicesController extends FrameworkBundleAdminController
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
      *
-     *
      * @return RedirectResponse
      */
     public function generatePdfByStatusAction(Request $request)

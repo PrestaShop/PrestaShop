@@ -3555,7 +3555,6 @@ exit;
      * @params string $ext Extention to filter files
      * @params string $dir Add this to prefix output for example /path/dir/*
      *
-     *
      * @since 1.5.0
      * @param mixed $path
      * @param mixed $ext

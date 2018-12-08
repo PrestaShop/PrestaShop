@@ -148,7 +148,6 @@ class Reader implements ReaderInterface
      *               The lookup
      *               ['root', <intermediate codes>, $localeCode]
      *
-     *
      * @see http://www.unicode.org/reports/tr35/tr35.html#Lookup
      */
     protected function getLookup($localeCode)

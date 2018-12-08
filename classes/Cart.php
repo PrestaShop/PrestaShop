@@ -459,7 +459,6 @@ class CartCore extends ObjectModel
     /**
      * Get Cart Rules.
      *
-     *
      * @param int  $filter  Filter enum:
      *                      - FILTER_ACTION_ALL
      *                      - FILTER_ACTION_SHIPPING
@@ -2308,7 +2307,6 @@ class CartCore extends ObjectModel
 
     /**
      * Get products grouped by package and by addresses to be sent individualy (one package = one shipping cost).
-     *
      *
      * @todo Add avaibility check
      * @param mixed $flush
