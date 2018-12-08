@@ -147,7 +147,7 @@ class LayoutExtension extends \Twig_Extension implements \Twig_Extension_Globals
         $helpLink = ''
     ) {
         if ($this->environment == 'test') {
-            return <<<EOF
+            return <<<'EOF'
 <html>
   <head>
     <title>Test layout</title>
