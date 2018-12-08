@@ -125,7 +125,6 @@ class HashMapWhitelistFilter implements FilterInterface
 
         unset($this->whitelistItems[$key], $this->filters[$key]);
         
-
         return $this;
     }
 

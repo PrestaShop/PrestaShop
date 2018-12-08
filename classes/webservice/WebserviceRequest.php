@@ -624,7 +624,6 @@ class WebserviceRequestCore
         $return = $this->returnOutput();
         unset($webservice_call, $display_errors);
         
-
         return $return;
     }
 

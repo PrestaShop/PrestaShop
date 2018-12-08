@@ -266,16 +266,6 @@ class CookieCore
     {
         unset($this->_content['id_customer'], $this->_content['id_guest'], $this->_content['is_guest'], $this->_content['id_connections'], $this->_content['customer_lastname'], $this->_content['customer_firstname'], $this->_content['passwd'], $this->_content['logged'], $this->_content['email'], $this->_content['id_cart'], $this->_content['id_address_invoice'], $this->_content['id_address_delivery']);
         
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
         $this->_modified = true;
     }
 

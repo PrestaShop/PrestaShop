@@ -199,7 +199,6 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
         }
         unset($tax_temp, $order_detail);
         
-
         if (Configuration::get('PS_PDF_IMG_INVOICE')) {
             foreach ($order_details as &$order_detail) {
                 if (null != $order_detail['image']) {
