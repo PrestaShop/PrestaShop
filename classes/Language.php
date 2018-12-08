@@ -1188,8 +1188,8 @@ class LanguageCore extends ObjectModel
      *
      * @since 1.5.0
      *
-     * @return bool
      * @param null|mixed $id_shop
+     * @return bool
      */
     public static function isMultiLanguageActivated($id_shop = null)
     {

@@ -115,8 +115,8 @@ class LanguageList
     /**
      * Get current language.
      *
-     * @return Language
      * @param null|mixed $iso
+     * @return Language
      */
     public function getLanguage($iso = null)
     {

@@ -2309,6 +2309,9 @@ class CartCore extends ObjectModel
     /**
      * Get products grouped by package and by addresses to be sent individualy (one package = one shipping cost).
      *
+     *
+     * @todo Add avaibility check
+     * @param mixed $flush
      * @return array array(
      *               0 => array( // First address
      *               0 => array(  // First package
@@ -2318,9 +2321,6 @@ class CartCore extends ObjectModel
      *               ),
      *               ),
      *               );
-     *
-     * @todo Add avaibility check
-     * @param mixed $flush
      */
     public function getPackageList($flush = false)
     {
@@ -3036,9 +3036,9 @@ class CartCore extends ObjectModel
      * This method replace the delimiter by a sequence of '0'.
      * The size of this sequence is fixed by the first digit of the return
      *
-     * @return int Intified value
      * @param mixed $string
      * @param mixed $delimiter
+     * @return int Intified value
      */
     public static function intifier($string, $delimiter = ',')
     {
@@ -3676,8 +3676,8 @@ class CartCore extends ObjectModel
     /**
      * Return total Cart weight.
      *
-     * @return float Total Cart weight
      * @param null|mixed $products
+     * @return float Total Cart weight
      */
     public function getTotalWeight($products = null)
     {
@@ -3764,9 +3764,9 @@ class CartCore extends ObjectModel
     /**
      * Return useful information about the cart.
      *
-     * @return array Cart details
      * @param null|mixed $id_lang
      * @param mixed $refresh
+     * @return array Cart details
      */
     public function getSummaryDetails($id_lang = null, $refresh = false)
     {
@@ -4124,12 +4124,12 @@ class CartCore extends ObjectModel
      * @params int $type
      * @params string $textValue
      *
-     * @return bool Always true
      * @todo: Improve this PHPDoc comment
      * @param mixed $id_product
      * @param mixed $index
      * @param mixed $type
      * @param mixed $text_value
+     * @return bool Always true
      */
     public function addTextFieldToProduct($id_product, $index, $type, $text_value)
     {
@@ -4139,11 +4139,11 @@ class CartCore extends ObjectModel
     /**
      * Add customer's pictures.
      *
-     * @return bool Always true
      * @param mixed $id_product
      * @param mixed $index
      * @param mixed $type
      * @param mixed $file
+     * @return bool Always true
      */
     public function addPictureToProduct($id_product, $index, $type, $file)
     {

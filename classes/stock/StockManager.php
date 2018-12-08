@@ -755,11 +755,11 @@ class StockManagerCore implements StockManagerInterface
      * @see StockManagerInterface::getProductCoverage()
      * Here, $coverage is a number of days
      *
-     * @return int number of days left (-1 if infinite)
      * @param mixed $id_product
      * @param mixed $id_product_attribute
      * @param mixed $coverage
      * @param null|mixed $id_warehouse
+     * @return int number of days left (-1 if infinite)
      */
     public function getProductCoverage($id_product, $id_product_attribute, $coverage, $id_warehouse = null)
     {

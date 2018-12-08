@@ -1111,12 +1111,12 @@ class ProductController extends FrameworkBundleAdminController
     /**
      * @deprecated since 1.7.5.0, to be removed in 1.8 rely on CommonController::renderFieldAction
      *
-     * @throws \OutOfBoundsException
-     * @throws \LogicException
-     * @throws \PrestaShopException
      * @param mixed $productId
      * @param mixed $step
      * @param mixed $fieldName
+     * @throws \OutOfBoundsException
+     * @throws \LogicException
+     * @throws \PrestaShopException
      */
     public function renderFieldAction($productId, $step, $fieldName)
     {

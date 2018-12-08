@@ -817,10 +817,10 @@ class ProductCore extends ObjectModel
     /**
      * Get the default attribute for a product.
      *
-     * @return int Attributes list
      * @param mixed $id_product
      * @param mixed $minimum_quantity
      * @param mixed $reset
+     * @return int Attributes list
      */
     public static function getDefaultAttribute($id_product, $minimum_quantity = 0, $reset = false)
     {
@@ -3023,8 +3023,8 @@ class ProductCore extends ObjectModel
     /**
      * getProductCategories return an array of categories which this product belongs to.
      *
-     * @return array of categories
      * @param mixed $id_product
+     * @return array of categories
      */
     public static function getProductCategories($id_product = '')
     {
@@ -3155,8 +3155,8 @@ class ProductCore extends ObjectModel
     /**
      * Get product cover image.
      *
-     * @return array Product cover image
      * @param mixed $id_product
+     * @return array Product cover image
      */
     public static function getCover($id_product, Context $context = null)
     {
@@ -6127,8 +6127,8 @@ class ProductCore extends ObjectModel
     /**
      * Webservice setter : set virtual field position in category.
      *
-     * @return bool
      * @param mixed $position
+     * @return bool
      */
     public function setWsPositionInCategory($position)
     {
@@ -6180,8 +6180,8 @@ class ProductCore extends ObjectModel
     /**
      * Webservice setter : set virtual field id_default_image in category.
      *
-     * @return bool
      * @param mixed $id_image
+     * @return bool
      */
     public function setCoverWs($id_image)
     {
@@ -6291,8 +6291,8 @@ class ProductCore extends ObjectModel
     /**
      * Checks if reference exists.
      *
-     * @return bool
      * @param mixed $reference
+     * @return bool
      */
     public function existsRefInDatabase($reference)
     {
@@ -7001,8 +7001,8 @@ class ProductCore extends ObjectModel
      * Gets a list of IDs from a list of IDs/Refs. The result will avoid duplicates, and checks if given IDs/Refs exists in DB.
      * Useful when a product list should be checked before a bulk operation on them (Only 1 query => performances).
      *
-     * @return array the IDs list, whithout duplicate and only existing ones
      * @param mixed $ids_or_refs
+     * @return array the IDs list, whithout duplicate and only existing ones
      */
     public static function getExistingIdsFromIdsOrRefs($ids_or_refs)
     {

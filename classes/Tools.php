@@ -550,8 +550,8 @@ class ToolsCore
     /**
      * Change language in cookie while clicking on a flag.
      *
-     * @return string iso code
      * @param null|mixed $cookie
+     * @return string iso code
      */
     public static function setCookieLanguage($cookie = null)
     {
@@ -667,8 +667,8 @@ class ToolsCore
     /**
      * Set cookie currency from POST or default currency.
      *
-     * @return Currency object
      * @param mixed $cookie
+     * @return Currency object
      */
     public static function setCurrency($cookie)
     {
@@ -3049,8 +3049,8 @@ exit;
     /**
      * @desc try to open a zip file in order to check if it's valid
      *
-     * @return bool success
      * @param mixed $from_file
+     * @return bool success
      */
     public static function ZipTest($from_file)
     {
@@ -3072,9 +3072,9 @@ exit;
     /**
      * @desc extract a zip file to the given directory
      *
-     * @return bool success
      * @param mixed $from_file
      * @param mixed $to_dir
+     * @return bool success
      */
     public static function ZipExtract($from_file, $to_dir)
     {
@@ -3361,8 +3361,8 @@ exit;
      *
      * @since 1.5.0
      *
-     * @return int the value of a configuration option in octet
      * @param mixed $option
+     * @return int the value of a configuration option in octet
      */
     public static function getOctets($option)
     {
@@ -3555,13 +3555,13 @@ exit;
      * @params string $ext Extention to filter files
      * @params string $dir Add this to prefix output for example /path/dir/*
      *
-     * @return array List of file found
      *
      * @since 1.5.0
      * @param mixed $path
      * @param mixed $ext
      * @param mixed $dir
      * @param mixed $recursive
+     * @return array List of file found
      */
     public static function scandir($path, $ext = 'php', $dir = '', $recursive = false)
     {
@@ -3936,8 +3936,8 @@ exit;
     /**
      * Allows to display the category description without HTML tags and slashes.
      *
-     * @return string
      * @param mixed $description
+     * @return string
      */
     public static function getDescriptionClean($description)
     {

@@ -160,8 +160,8 @@ class TaxRulesGroupCore extends ObjectModel
     }
 
     /**
-     * @return array
      * @param mixed $id_country
+     * @return array
      */
     public static function getAssociatedTaxRatesByIdCountry($id_country)
     {

@@ -842,8 +842,8 @@ class OrderCore extends ObjectModel
     /**
      * Get current order status name (eg. Awaiting payment, Delivered...).
      *
-     * @return array Order status details
      * @param mixed $id_lang
+     * @return array Order status details
      */
     public function getCurrentStateFull($id_lang)
     {
@@ -1049,8 +1049,8 @@ class OrderCore extends ObjectModel
     /**
      * Get product total without taxes.
      *
-     * @return Product total without taxes
      * @param mixed $products
+     * @return Product total without taxes
      */
     public function getTotalProductsWithoutTaxes($products = false)
     {
@@ -1060,8 +1060,8 @@ class OrderCore extends ObjectModel
     /**
      * Get product total with taxes.
      *
-     * @return Product total with taxes
      * @param mixed $products
+     * @return Product total with taxes
      */
     public function getTotalProductsWithTaxes($products = false)
     {

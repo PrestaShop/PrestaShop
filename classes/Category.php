@@ -2313,8 +2313,8 @@ class CategoryCore extends ObjectModel
     /**
      * Deletes all Categories from the Shop ID.
      *
-     * @return bool Indicates whether the Categories have been successfully removed
      * @param mixed $idShop
+     * @return bool Indicates whether the Categories have been successfully removed
      */
     public static function deleteCategoriesFromShop($idShop)
     {

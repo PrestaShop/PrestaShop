@@ -426,9 +426,9 @@ function simpleXMLToArray($xml, $flatten_values = true, $flatten_attributes = tr
 /**
  * for retrocompatibility with old AdminTab, old index.php.
  *
- * @return void
  * @param mixed $tab
  * @param mixed $ajax_mode
+ * @return void
  */
 function runAdminTab($tab, $ajax_mode = false)
 {

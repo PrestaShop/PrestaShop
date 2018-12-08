@@ -50,8 +50,8 @@ class ProfileCore extends ObjectModel
     /**
      * Get all available profiles.
      *
-     * @return array Profiles
      * @param mixed $idLang
+     * @return array Profiles
      */
     public static function getProfiles($idLang)
     {
