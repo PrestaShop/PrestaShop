@@ -326,7 +326,7 @@ class ProductLazyArray extends AbstractLazyArray
     /**
      * @arrayAccess
      *
-     * @return mixed|null
+     * @return null|mixed
      */
     public function getReferenceToDisplay()
     {
@@ -348,7 +348,7 @@ class ProductLazyArray extends AbstractLazyArray
     /**
      * @arrayAccess
      *
-     * @return array|null
+     * @return null|array
      */
     public function getGroupedFeatures()
     {
@@ -400,7 +400,7 @@ class ProductLazyArray extends AbstractLazyArray
     /**
      * @arrayAccess
      *
-     * @return array|null
+     * @return null|array
      */
     public function getEcotax()
     {
@@ -499,7 +499,7 @@ class ProductLazyArray extends AbstractLazyArray
     /**
      * @arrayAccess
      *
-     * @return 0|null
+     * @return null|0
      */
     public function getSpecificReferences()
     {

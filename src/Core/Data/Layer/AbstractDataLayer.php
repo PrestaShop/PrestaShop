@@ -43,7 +43,7 @@ abstract class AbstractDataLayer
     /**
      * The lower data layer to communicate with (read/write).
      *
-     * @var AbstractDataLayer|null
+     * @var null|AbstractDataLayer
      */
     protected $lowerDataLayer;
 
@@ -81,7 +81,7 @@ abstract class AbstractDataLayer
      *                  The data object identifier
      *
      * @throws DataLayerException
-     * @return mixed|null
+     * @return null|mixed
      *                    A data object. Null if not found.
      *
      */
@@ -141,7 +141,7 @@ abstract class AbstractDataLayer
      *  The field to read
      *
      * @throws DataLayerException
-     * @return mixed|null
+     * @return null|mixed
      *
      */
     protected function propagateRead($field)
@@ -281,7 +281,7 @@ abstract class AbstractDataLayer
      *
      * @throws DataLayerException
      *                            When read fails
-     * @return mixed|null
+     * @return null|mixed
      *                    The wanted data object (null if not found)
      *
      */

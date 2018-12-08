@@ -195,7 +195,7 @@ class ColumnCollectionTest extends TestCase
     /**
      * @param string $id
      *
-     * @return \PHPUnit_Framework_MockObject_MockObject|ColumnInterface
+     * @return ColumnInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     private function createColumnMock($id)
     {

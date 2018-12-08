@@ -49,7 +49,7 @@ class FrameworkBundleAdminController extends Controller
     protected $configuration;
 
     /**
-     * @var string|null
+     * @var null|string
      */
     protected $layoutTitle;
 

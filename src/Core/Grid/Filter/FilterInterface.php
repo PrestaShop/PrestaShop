@@ -73,7 +73,7 @@ interface FilterInterface
     /**
      * Get associated column.
      *
-     * @return string|null
+     * @return null|string
      */
     public function getAssociatedColumn();
 }

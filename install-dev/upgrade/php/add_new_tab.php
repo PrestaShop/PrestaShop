@@ -84,7 +84,7 @@ function get_new_tab_id($className, $returnId = false)
  * @param string $parentTab
  * @param string $module
  *
- * @return int|null Tab id if requested
+ * @return null|int Tab id if requested
  */
 function add_new_tab($className, $name, $id_parent, $returnId = false, $parentTab = null, $module = '')
 {
@@ -110,7 +110,7 @@ function add_new_tab($className, $name, $id_parent, $returnId = false, $parentTa
  * @param string $parentTab
  * @param string $module
  *
- * @return int|null Tab id if requested
+ * @return null|int Tab id if requested
  */
 function add_new_tab_17($className, $name, $id_parent, $returnId = false, $parentTab = null, $module = '')
 {

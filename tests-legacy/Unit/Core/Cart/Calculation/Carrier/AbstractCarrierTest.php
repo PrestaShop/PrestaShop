@@ -256,7 +256,7 @@ abstract class AbstractCarrierTest extends AbstractCartCalculationTest
     /**
      * @param int $id fixture id
      *
-     * @return Carrier|null
+     * @return null|Carrier
      */
     protected function getCarrierFromFixtureId($id)
     {
@@ -330,7 +330,7 @@ abstract class AbstractCarrierTest extends AbstractCartCalculationTest
     /**
      * @param int $id fixture id
      *
-     * @return Zone|null
+     * @return null|Zone
      */
     protected function getZoneFromFixtureId($id)
     {
@@ -344,7 +344,7 @@ abstract class AbstractCarrierTest extends AbstractCartCalculationTest
     /**
      * @param int $id fixture id
      *
-     * @return Country|null
+     * @return null|Country
      */
     protected function getCountryFromIsoCode($isoCode)
     {
@@ -360,7 +360,7 @@ abstract class AbstractCarrierTest extends AbstractCartCalculationTest
     /**
      * @param int $id fixture id
      *
-     * @return State|null
+     * @return null|State
      */
     protected function getStateFromFixtureId($id)
     {
@@ -374,7 +374,7 @@ abstract class AbstractCarrierTest extends AbstractCartCalculationTest
     /**
      * @param int $id fixture id
      *
-     * @return Address|null
+     * @return null|Address
      */
     protected function getAddressFromFixtureId($id)
     {

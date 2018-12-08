@@ -354,7 +354,7 @@ class SqlManagerController extends FrameworkBundleAdminController
      *
      * @param int $sqlRequestId Request SQL id
      *
-     * @return RedirectResponse|BinaryFileResponse
+     * @return BinaryFileResponse|RedirectResponse
      */
     public function exportAction($sqlRequestId)
     {

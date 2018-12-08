@@ -273,7 +273,7 @@ abstract class AbstractCartTest extends IntegrationTestCase
     /**
      * @param int $productFixtureId fixture product id
      *
-     * @return Product|null
+     * @return null|Product
      */
     protected function getProductFromFixtureId($productFixtureId)
     {
@@ -287,7 +287,7 @@ abstract class AbstractCartTest extends IntegrationTestCase
     /**
      * @param int $combinationFixtureName fixture combination name
      *
-     * @return Combination|null
+     * @return null|Combination
      */
     protected function getCombinationFromFixtureName($combinationFixtureName)
     {
@@ -301,7 +301,7 @@ abstract class AbstractCartTest extends IntegrationTestCase
     /**
      * @param int $customizationFixtureName fixture customization name
      *
-     * @return CustomizationField|null
+     * @return null|CustomizationField
      */
     protected function getCustomizationFieldFromFixtureName($customizationFixtureName)
     {
@@ -315,7 +315,7 @@ abstract class AbstractCartTest extends IntegrationTestCase
     /**
      * @param int $id fixture cart rule id
      *
-     * @return CartRule|null
+     * @return null|CartRule
      */
     protected function getCartRuleFromFixtureId($id)
     {

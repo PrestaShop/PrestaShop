@@ -44,7 +44,7 @@ class EmailLister
      * @param null $lang
      * @param null $dir
      *
-     * @return array|null
+     * @return null|array
      */
     public function getAvailableMails($dir)
     {

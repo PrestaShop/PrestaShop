@@ -615,7 +615,7 @@ class LanguageCore extends ObjectModel
      * Returns available languages.
      *
      * @param bool     $active   Select only active languages
-     * @param int|bool $id_shop  Shop ID
+     * @param bool|int $id_shop  Shop ID
      * @param bool     $ids_only If true, returns an array of language IDs
      *
      * @return array Languages
@@ -642,7 +642,7 @@ class LanguageCore extends ObjectModel
      * Returns an array of language IDs.
      *
      * @param bool     $active  Select only active languages
-     * @param int|bool $id_shop Shop ID
+     * @param bool|int $id_shop Shop ID
      *
      * @return array
      */

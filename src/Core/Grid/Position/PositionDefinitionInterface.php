@@ -58,7 +58,7 @@ interface PositionDefinitionInterface
      * is used to compute the positions in the parent scope.
      * It is optional as the position may be bound to the table scope only.
      *
-     * @return string|null
+     * @return null|string
      */
     public function getParentIdField();
 }

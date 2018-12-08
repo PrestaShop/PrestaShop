@@ -42,12 +42,12 @@ class FormHandlerResult implements FormHandlerResultInterface
     private $isSubmitted;
 
     /**
-     * @var int|null
+     * @var null|int
      */
     private $identifiableObjectId;
 
     /**
-     * @param int|null $identifiableObjectId ID of identifiable object or null if it does not exist
+     * @param null|int $identifiableObjectId ID of identifiable object or null if it does not exist
      * @param bool     $isSubmitted
      * @param bool     $isValid
      */
@@ -119,7 +119,7 @@ class FormHandlerResult implements FormHandlerResultInterface
     }
 
     /**
-     * @return int|null
+     * @return null|int
      */
     public function getIdentifiableObjectId()
     {

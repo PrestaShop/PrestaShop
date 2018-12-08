@@ -104,7 +104,7 @@ class ProductController extends FrameworkBundleAdminController
      * @throws \Symfony\Component\Routing\Exception\InvalidParameterException
      * @throws \Symfony\Component\Form\Exception\LogicException
      * @throws \Symfony\Component\Form\Exception\AlreadySubmittedException
-     * @return array|Template|RedirectResponse|Response
+     * @return array|RedirectResponse|Response|Template
      *
      */
     public function catalogAction(
@@ -231,7 +231,7 @@ class ProductController extends FrameworkBundleAdminController
      * @param string  $sortOrder To order product list
      * @param string  $view      full|quicknav To change default template used to render the content
      *
-     * @return array|Template|Response
+     * @return array|Response|Template
      */
     public function listAction(
         Request $request,

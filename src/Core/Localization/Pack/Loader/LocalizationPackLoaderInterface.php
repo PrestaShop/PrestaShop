@@ -36,7 +36,7 @@ interface LocalizationPackLoaderInterface
     /**
      * Get localization packs list.
      *
-     * @return SimpleXMLElement|null SimpleXMLElement with localization packs data or null if packs are not available
+     * @return null|SimpleXMLElement SimpleXMLElement with localization packs data or null if packs are not available
      */
     public function getLocalizationPackList();
 
@@ -45,7 +45,7 @@ interface LocalizationPackLoaderInterface
      *
      * @param string $countryIso Country ISO Alpha-2 code
      *
-     * @return SimpleXMLElement|null
+     * @return null|SimpleXMLElement
      */
     public function getLocalizationPack($countryIso);
 }

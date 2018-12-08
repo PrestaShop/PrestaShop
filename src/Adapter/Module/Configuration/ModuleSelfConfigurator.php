@@ -47,12 +47,12 @@ use Symfony\Component\Yaml\Yaml;
 class ModuleSelfConfigurator
 {
     /**
-     * @var string|null the module name
+     * @var null|string the module name
      */
     protected $module;
 
     /**
-     * @var string|null
+     * @var null|string
      */
     protected $configFile;
 
@@ -136,7 +136,7 @@ class ModuleSelfConfigurator
      * If defined, get the config file path or if possible, guess it.
      *
      * @throws InvalidArgumentException
-     * @return string|null
+     * @return null|string
      *
      */
     public function getFile()

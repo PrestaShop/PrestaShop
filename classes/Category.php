@@ -645,7 +645,7 @@ class CategoryCore extends ObjectModel
 
     /**
      * @param int      $idRootCategory     ID of root Category
-     * @param int|bool $idLang             Language ID
+     * @param bool|int $idLang             Language ID
      *                                     `false` if language filter should not be applied
      * @param bool     $active             Only return active categories
      * @param null     $groups
@@ -655,7 +655,7 @@ class CategoryCore extends ObjectModel
      * @param string   $limit              Set the limit
      *                                     Both the offset and limit can be given
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource Array with `id_category` and `name`
+     * @return null|array|false|mysqli_result|PDOStatement|resource Array with `id_category` and `name`
      */
     public static function getAllCategoriesName(
         $idRootCategory = null,
@@ -719,8 +719,8 @@ class CategoryCore extends ObjectModel
     /**
      * Get nested categories.
      *
-     * @param int|null $idRootCategory     Root Category ID
-     * @param int|bool $idLang             Language ID
+     * @param null|int $idRootCategory     Root Category ID
+     * @param bool|int $idLang             Language ID
      *                                     `false` if language filter should not be used
      * @param bool     $active             Whether the category must be active
      * @param null     $groups
@@ -924,18 +924,18 @@ class CategoryCore extends ObjectModel
      * @param int          $idLang               Language ID
      * @param int          $p                    Page number
      * @param int          $n                    Number of products per page
-     * @param string|null  $orderyBy             ORDER BY column
-     * @param string|null  $orderWay             Order way
+     * @param null|string  $orderyBy             ORDER BY column
+     * @param null|string  $orderWay             Order way
      * @param bool         $getTotal             If set to true, returns the total number of results only
      * @param bool         $active               If set to true, finds only active products
      * @param bool         $random               If true, sets a random filter for returned products
      * @param int          $randomNumberProducts Number of products to return if random is activated
      * @param bool         $checkAccess          If set to `true`, check if the current customer
      *                                           can see the products from this category
-     * @param Context|null $context              Instance of Context
+     * @param null|Context $context              Instance of Context
      *
      * @throws PrestaShopDatabaseException
-     * @return array|int|false Products, number of products or false (no access)
+     * @return array|false|int Products, number of products or false (no access)
      *
      */
     public function getProducts(
@@ -1075,8 +1075,8 @@ class CategoryCore extends ObjectModel
      * Get root Category object
      * Returns the top Category if there are multiple root Categories.
      *
-     * @param int|null  $idLang Language ID
-     * @param Shop|null $shop   Shop object
+     * @param null|int  $idLang Language ID
+     * @param null|Shop $shop   Shop object
      *
      * @return Category object
      */
@@ -1366,8 +1366,8 @@ class CategoryCore extends ObjectModel
     /**
      * Get link to this category.
      *
-     * @param Link|null $link   Link instance
-     * @param int|null  $idLang Language ID
+     * @param null|Link $link   Link instance
+     * @param null|int  $idLang Language ID
      *
      * @return string FO URL to this Category
      */
@@ -1391,7 +1391,7 @@ class CategoryCore extends ObjectModel
     /**
      * Get category name in given Language.
      *
-     * @param int|null $idLang Language ID
+     * @param null|int $idLang Language ID
      *
      * @return string Category name
      */
@@ -2134,10 +2134,10 @@ class CategoryCore extends ObjectModel
     /**
      * Get root Categories.
      *
-     * @param int|null $idLang Language ID
+     * @param null|int $idLang Language ID
      * @param bool     $active Whether the root Category must be active
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource Root Categories
+     * @return null|array|false|mysqli_result|PDOStatement|resource Root Categories
      */
     public static function getRootCategories($idLang = null, $active = true)
     {
@@ -2156,7 +2156,7 @@ class CategoryCore extends ObjectModel
     /**
      * Get Categories without parent.
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource Categories without parent
+     * @return null|array|false|mysqli_result|PDOStatement|resource Categories without parent
      */
     public static function getCategoriesWithoutParent()
     {
@@ -2191,7 +2191,7 @@ class CategoryCore extends ObjectModel
     /**
      * Get Top Category.
      *
-     * @param int|null $idLang Language ID
+     * @param null|int $idLang Language ID
      *
      * @return Category Top Category
      */
@@ -2219,7 +2219,7 @@ class CategoryCore extends ObjectModel
      * Add position to current Category.
      *
      * @param int      $position Position
-     * @param int|null $idShop   Shop ID
+     * @param null|int $idShop   Shop ID
      *
      * @return bool Indicates whether the position was successfully added
      */
@@ -2257,7 +2257,7 @@ class CategoryCore extends ObjectModel
      *
      * @param int $idCategory Category ID
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource Array with Shop IDs
+     * @return null|array|false|mysqli_result|PDOStatement|resource Array with Shop IDs
      */
     public static function getShopsByCategory($idCategory)
     {

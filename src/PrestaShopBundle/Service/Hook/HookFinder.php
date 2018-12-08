@@ -155,7 +155,7 @@ class HookFinder
      * Add an instance of class to be returned by the hook without
      * erasing the other values.
      *
-     * @param string|array $expectedInstanceClasses
+     * @param array|string $expectedInstanceClasses
      *
      * @return \PrestaShopBundle\Service\Hook\Finder
      */

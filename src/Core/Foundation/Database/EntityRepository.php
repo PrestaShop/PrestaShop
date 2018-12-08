@@ -193,7 +193,7 @@ class EntityRepository
      * @param array $cumulativeConditions
      *
      * @throws Exception
-     * @return array|mixed|null
+     * @return null|array|mixed
      *
      */
     private function doFind($one, array $cumulativeConditions)
@@ -217,7 +217,7 @@ class EntityRepository
      * @param $id
      *
      * @throws Exception
-     * @return array|mixed|null
+     * @return null|array|mixed
      *
      */
     public function findOne($id)

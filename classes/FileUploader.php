@@ -27,7 +27,7 @@ class FileUploaderCore
 {
     protected $allowedExtensions = array();
 
-    /** @var QqUploadedFileXhr|QqUploadedFileForm|false */
+    /** @var false|QqUploadedFileForm|QqUploadedFileXhr */
     protected $file;
     protected $sizeLimit;
 

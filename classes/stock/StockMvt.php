@@ -242,7 +242,7 @@ class StockMvtCore extends ObjectModel
      * @param int $id_product
      * @param int $id_product_attribute Use 0 if the product does not have attributes
      *
-     * @return bool|array
+     * @return array|bool
      */
     public static function getLastPositiveStockMvt($id_product, $id_product_attribute)
     {

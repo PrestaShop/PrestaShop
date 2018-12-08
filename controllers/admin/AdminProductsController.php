@@ -115,7 +115,7 @@ class AdminProductsControllerCore extends AdminController
     }
 
     /**
-     * @param Product|ObjectModel $object
+     * @param ObjectModel|Product $object
      * @param string              $table
      */
     protected function copyFromPost(&$object, $table)
@@ -2757,7 +2757,7 @@ class AdminProductsControllerCore extends AdminController
     /**
      * Ajax process upload images.
      *
-     * @param int|null $idProduct
+     * @param null|int $idProduct
      * @param string   $inputFileName
      * @param bool     $die           If method must die or return values
      *
