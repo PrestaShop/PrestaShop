@@ -39,6 +39,10 @@ class CartRulesPercentTest extends AbstractCartCalculationTest
 {
     /**
      * @dataProvider cartWithOneCartRulePercentProvider
+     * @param mixed $productData
+     * @param mixed $expectedTotal
+     * @param mixed $cartRuleData
+     * @param mixed $knownToFailOnV1
      */
     public function testCartWithOneCartRulePercent(
         $productData,
@@ -53,6 +57,10 @@ class CartRulesPercentTest extends AbstractCartCalculationTest
 
     /**
      * @dataProvider cartWithMultipleCartRulesPercentProvider
+     * @param mixed $productData
+     * @param mixed $expectedTotal
+     * @param mixed $cartRuleData
+     * @param mixed $knownToFailOnV1
      */
     public function testCartWithMultipleCartRulesPercent(
         $productData,

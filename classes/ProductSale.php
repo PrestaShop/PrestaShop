@@ -66,6 +66,8 @@ class ProductSaleCore
      * @param int $idLang     Language id
      * @param int $pageNumber Start from (optional)
      * @param int $nbProducts Number of products to return (optional)
+     * @param null|mixed $orderBy
+     * @param null|mixed $orderWay
      *
      * @return array|bool from Product::getProductProperties
      *                    `false` if failure

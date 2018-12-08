@@ -214,6 +214,7 @@ class ThemeCollection implements ArrayAccess, Countable, IteratorAggregate
      * Remove an addon from the collection by key.
      *
      * @param mixed the key (can be int or string)
+     * @param mixed $key
      *
      * @return bool true if the addon has been found and removed
      */

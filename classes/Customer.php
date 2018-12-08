@@ -1317,6 +1317,10 @@ class CustomerCore extends ObjectModel
 
     /**
      * @see ObjectModel::getWebserviceObjectList()
+     * @param mixed $sqlJoin
+     * @param mixed $sqlFilter
+     * @param mixed $sqlSort
+     * @param mixed $sqlLimit
      */
     public function getWebserviceObjectList($sqlJoin, $sqlFilter, $sqlSort, $sqlLimit)
     {

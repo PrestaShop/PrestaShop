@@ -406,6 +406,7 @@ class XmlLoader
      * Load an entity XML file.
      *
      * @param string $entity
+     * @param null|mixed $iso
      *
      * @return \SimpleXMLElement
      */
@@ -1064,6 +1065,7 @@ class XmlLoader
 
     /**
      * ONLY FOR DEVELOPMENT PURPOSE.
+     * @param mixed $entities
      */
     public function generateEntityFiles($entities)
     {
@@ -1141,6 +1143,7 @@ class XmlLoader
 
     /**
      * ONLY FOR DEVELOPMENT PURPOSE.
+     * @param mixed $entity
      */
     public function getEntityContents($entity)
     {
@@ -1286,6 +1289,9 @@ class XmlLoader
 
     /**
      * ONLY FOR DEVELOPMENT PURPOSE.
+     * @param mixed $entity
+     * @param mixed $primary
+     * @param null|mixed $id_format
      */
     public function generateId($entity, $primary, array $row = array(), $id_format = null)
     {
@@ -1325,6 +1331,7 @@ class XmlLoader
 
     /**
      * ONLY FOR DEVELOPMENT PURPOSE.
+     * @param mixed $entity
      */
     public function createXmlEntityNodes($entity, array $nodes, \SimpleXMLElement $entities)
     {
@@ -1344,6 +1351,8 @@ class XmlLoader
 
     /**
      * ONLY FOR DEVELOPMENT PURPOSE.
+     * @param mixed $entity
+     * @param mixed $path
      */
     public function backupImage($entity, $path)
     {

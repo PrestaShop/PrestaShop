@@ -795,6 +795,7 @@ class OrderCore extends ObjectModel
 
     /**
      * @deprecated 1.5.0.1 use Order::getCartRules() instead
+     * @param mixed $details
      */
     public function getDiscounts($details = false)
     {
@@ -842,6 +843,7 @@ class OrderCore extends ObjectModel
      * Get current order status name (eg. Awaiting payment, Delivered...).
      *
      * @return array Order status details
+     * @param mixed $id_lang
      */
     public function getCurrentStateFull($id_lang)
     {
@@ -1048,6 +1050,7 @@ class OrderCore extends ObjectModel
      * Get product total without taxes.
      *
      * @return Product total without taxes
+     * @param mixed $products
      */
     public function getTotalProductsWithoutTaxes($products = false)
     {
@@ -1058,6 +1061,7 @@ class OrderCore extends ObjectModel
      * Get product total with taxes.
      *
      * @return Product total with taxes
+     * @param mixed $products
      */
     public function getTotalProductsWithTaxes($products = false)
     {
@@ -1191,6 +1195,7 @@ class OrderCore extends ObjectModel
      * @param string $name
      * @param array  $values
      * @param int    $id_order_invoice
+     * @param null|mixed $free_shipping
      *
      * @return bool
      */
@@ -1296,6 +1301,7 @@ class OrderCore extends ObjectModel
 
     /**
      * This method allows to generate first invoice of the current order.
+     * @param mixed $use_existing_payment
      */
     public function setInvoice($use_existing_payment = false)
     {
@@ -1390,6 +1396,7 @@ class OrderCore extends ObjectModel
 
     /**
      * This method allows to fulfill the object order_invoice with sales figures.
+     * @param mixed $order_invoice
      */
     protected function setInvoiceDetails($order_invoice)
     {
@@ -2257,6 +2264,10 @@ class OrderCore extends ObjectModel
 
     /**
      * @see ObjectModel::getWebserviceObjectList()
+     * @param mixed $sql_join
+     * @param mixed $sql_filter
+     * @param mixed $sql_sort
+     * @param mixed $sql_limit
      */
     public function getWebserviceObjectList($sql_join, $sql_filter, $sql_sort, $sql_limit)
     {
@@ -2321,6 +2332,7 @@ class OrderCore extends ObjectModel
      * in this case this method suffix the order reference by a # and the order number
      *
      * @since 1.5.0.14
+     * @param mixed $id_order
      */
     public static function getUniqReferenceOf($id_order)
     {

@@ -85,6 +85,8 @@ class AliasCore extends ObjectModel
 
     /**
      * @see ObjectModel::add();
+     * @param mixed $autoDate
+     * @param mixed $nullValues
      */
     public function add($autoDate = true, $nullValues = false)
     {

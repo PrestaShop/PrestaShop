@@ -959,6 +959,8 @@ abstract class PaymentModuleCore extends Module
 
     /**
      * @param object Address $the_address that needs to be txt formated
+     * @param mixed $line_sep
+     * @param mixed $fields_style
      *
      * @return string the txt formated address block
      */

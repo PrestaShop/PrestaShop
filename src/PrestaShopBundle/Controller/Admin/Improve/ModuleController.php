@@ -266,6 +266,7 @@ class ModuleController extends ModuleAbstractController
      * @AdminSecurity("is_granted(['read', 'create', 'update', 'delete'], 'ADMINMODULESSF_')")
      *
      * @param Request $request
+     * @param mixed $moduleId
      *
      * @return Response
      */

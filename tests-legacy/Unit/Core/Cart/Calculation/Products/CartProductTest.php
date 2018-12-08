@@ -32,6 +32,9 @@ class CartProductTest extends AbstractCartCalculationTest
 {
     /**
      * @dataProvider cartWithoutCartRulesProvider
+     * @param mixed $productData
+     * @param mixed $expectedTotal
+     * @param mixed $cartRuleData
      */
     public function testCartWithoutCartRules($productData, $expectedTotal, $cartRuleData)
     {

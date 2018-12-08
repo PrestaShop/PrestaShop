@@ -112,6 +112,7 @@ class UploadQuotaConfiguration implements DataConfigurationInterface
      * Map array key to the related configuration property.
      *
      * @param string the array key
+     * @param mixed $key
      *
      * @return string the related configuration key
      */

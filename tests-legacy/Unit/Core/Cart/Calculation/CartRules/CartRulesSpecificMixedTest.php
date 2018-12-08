@@ -39,6 +39,10 @@ class CartRulesSpecificMixedTest extends AbstractCartCalculationTest
 {
     /**
      * @dataProvider cartWithMultipleProductSpecificCartRulesMixedProvider
+     * @param mixed $productData
+     * @param mixed $expectedTotal
+     * @param mixed $cartRuleData
+     * @param mixed $knownToFailOnV1
      */
     public function testCartWithMultipleProductSpecificCartRulesMixed(
         $productData,
@@ -53,6 +57,10 @@ class CartRulesSpecificMixedTest extends AbstractCartCalculationTest
 
     /**
      * @dataProvider cartWithMultipleProductOutOfStockSpecificCartRulesMixedProvider
+     * @param mixed $productData
+     * @param mixed $expectedTotal
+     * @param mixed $cartRuleData
+     * @param mixed $knownToFailOnV1
      */
     public function testCartWithMultipleProductOutOfStockSpecificCartRulesMixed(
         $productData,

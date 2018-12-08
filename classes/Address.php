@@ -159,6 +159,7 @@ class AddressCore extends ObjectModel
      * Build an Address.
      *
      * @param int $id_address Existing Address ID in order to load object (optional)
+     * @param null|mixed $id_lang
      */
     public function __construct($id_address = null, $id_lang = null)
     {
@@ -172,6 +173,8 @@ class AddressCore extends ObjectModel
 
     /**
      * @see ObjectModel::add()
+     * @param mixed $autodate
+     * @param mixed $null_values
      */
     public function add($autodate = true, $null_values = false)
     {
@@ -188,6 +191,7 @@ class AddressCore extends ObjectModel
 
     /**
      * @see ObjectModel::update()
+     * @param mixed $null_values
      */
     public function update($null_values = false)
     {

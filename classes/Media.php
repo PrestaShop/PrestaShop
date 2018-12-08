@@ -290,6 +290,8 @@ class MediaCore
      * return jquery path.
      *
      * @param mixed $version
+     * @param null|mixed $folder
+     * @param mixed $minifier
      *
      * @return string
      */
@@ -340,6 +342,8 @@ class MediaCore
      * return jqueryUI component path.
      *
      * @param mixed $component
+     * @param mixed $theme
+     * @param mixed $checkDependencies
      *
      * @return string
      */

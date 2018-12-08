@@ -56,6 +56,11 @@ class CartTaxesTest extends AbstractCartCalculationTest
 
     /**
      * @dataProvider cartTaxesProvider
+     * @param mixed $productData
+     * @param mixed $expectedTotalTaxExcl
+     * @param mixed $expectedTotalTaxIncl
+     * @param mixed $cartRuleData
+     * @param mixed $addressId
      */
     public function testTaxes(
         $productData,
@@ -75,6 +80,11 @@ class CartTaxesTest extends AbstractCartCalculationTest
 
     /**
      * @dataProvider cartTaxesProvider
+     * @param mixed $productData
+     * @param mixed $expectedTotalTaxExcl
+     * @param mixed $expectedTotalTaxIncl
+     * @param mixed $cartRuleData
+     * @param mixed $addressId
      */
     public function testWithoutTaxes(
         $productData,

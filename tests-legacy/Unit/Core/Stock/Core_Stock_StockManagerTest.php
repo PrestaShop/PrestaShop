@@ -185,6 +185,10 @@ class StockAvailableTest extends UnitTestCase
 
     /**
      * @dataProvider get_update_pack_quantity_provider
+     * @param mixed $default_stock_type
+     * @param mixed $products
+     * @param mixed $delta
+     * @param mixed $expected
      */
     public function test_update_pack_quantity($default_stock_type, FakeProduct4759 $pack, $products, $delta, $expected)
     {
@@ -273,6 +277,10 @@ class StockAvailableTest extends UnitTestCase
 
     /**
      * @dataProvider get_update_product_quantity_provider
+     * @param mixed $default_stock_type
+     * @param mixed $products
+     * @param mixed $delta
+     * @param mixed $expected
      */
     public function test_update_product_quantity($default_stock_type, FakeProduct4759 $pack, $products, $delta, $expected)
     {
@@ -382,6 +390,11 @@ class StockAvailableTest extends UnitTestCase
 
     /**
      * @dataProvider get_update_quantity_provider
+     * @param mixed $default_stock_type
+     * @param mixed $products
+     * @param mixed $product_to_update
+     * @param mixed $delta
+     * @param mixed $expected
      */
     public function test_update_quantity($default_stock_type, FakeProduct4759 $pack, $products, $product_to_update, $delta, $expected)
     {

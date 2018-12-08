@@ -265,6 +265,7 @@ class ToolsCore
      *
      * @param bool $http
      * @param bool $entities
+     * @param mixed $ignore_port
      *
      * @return string host
      */
@@ -550,6 +551,7 @@ class ToolsCore
      * Change language in cookie while clicking on a flag.
      *
      * @return string iso code
+     * @param null|mixed $cookie
      */
     public static function setCookieLanguage($cookie = null)
     {
@@ -666,6 +668,7 @@ class ToolsCore
      * Set cookie currency from POST or default currency.
      *
      * @return Currency object
+     * @param mixed $cookie
      */
     public static function setCurrency($cookie)
     {
@@ -733,6 +736,7 @@ class ToolsCore
      *
      * @param float        $price    Product price
      * @param array|object $currency Current currency (object, id_currency, NULL => context currency)
+     * @param mixed $no_utf8
      *
      * @return string Price correctly formated (sign, decimal separator...)
      *                if you modify this function, don't forget to modify the Javascript function formatCurrency (in tools.js)
@@ -973,6 +977,7 @@ class ToolsCore
      *
      * @param string $string String to sanitize
      * @param bool   $full   String contains HTML or not (optional)
+     * @param mixed $html
      *
      * @return string Sanitized string
      */
@@ -1018,6 +1023,7 @@ class ToolsCore
      * Delete directory and subdirectories.
      *
      * @param string $dirname Directory name
+     * @param mixed $delete_self
      */
     public static function deleteDirectory($dirname, $delete_self = true)
     {
@@ -1250,6 +1256,7 @@ class ToolsCore
      * Get token to prevent CSRF.
      *
      * @param string $token token to encrypt
+     * @param mixed $page
      */
     public static function getToken($page = true, Context $context = null)
     {
@@ -1294,6 +1301,7 @@ class ToolsCore
      *
      * @param string $url     An URL to use in BackOffice
      * @param bool   $entites Set to true to use htmlentities function on URL param
+     * @param mixed $entities
      */
     public static function getAdminUrl($url = null, $entities = false)
     {
@@ -1311,6 +1319,7 @@ class ToolsCore
      *
      * @param string $image   Image name
      * @param bool   $entites Set to true to use htmlentities function on image param
+     * @param mixed $entities
      */
     public static function getAdminImageUrl($image = null, $entities = false)
     {
@@ -1838,6 +1847,7 @@ class ToolsCore
      *
      * @param float $value
      * @param int   $precision
+     * @param null|mixed $round_mode
      *
      * @return float
      */
@@ -2254,6 +2264,7 @@ class ToolsCore
     /**
      * Converts SomethingLikeThis to something-like-this
      * The name comes from Perl, we like Perl.
+     * @param mixed $string
      */
     public static function camelCaseToKebabCase($string)
     {
@@ -2866,6 +2877,8 @@ exit;
      *
      * @param string $data
      * @param bool   $assoc (since 1.4.2.4) if true, convert to associativ array
+     * @param mixed $depth
+     * @param mixed $options
      *
      * @return array
      */
@@ -2880,6 +2893,8 @@ exit;
      * Convert an array to json string
      *
      * @param array $data
+     * @param mixed $options
+     * @param mixed $depth
      *
      * @return string json
      */
@@ -2894,6 +2909,7 @@ exit;
 
     /**
      * Display a warning message indicating that the method is deprecated.
+     * @param null|mixed $message
      */
     public static function displayAsDeprecated($message = null)
     {
@@ -2912,6 +2928,7 @@ exit;
 
     /**
      * Display a warning message indicating that the parameter is deprecated.
+     * @param mixed $parameter
      */
     public static function displayParameterAsDeprecated($parameter)
     {
@@ -3033,6 +3050,7 @@ exit;
      * @desc try to open a zip file in order to check if it's valid
      *
      * @return bool success
+     * @param mixed $from_file
      */
     public static function ZipTest($from_file)
     {
@@ -3055,6 +3073,8 @@ exit;
      * @desc extract a zip file to the given directory
      *
      * @return bool success
+     * @param mixed $from_file
+     * @param mixed $to_dir
      */
     public static function ZipExtract($from_file, $to_dir)
     {
@@ -3216,6 +3236,7 @@ exit;
      * Convert \n and \r\n and \r to <br />.
      *
      * @param string $string String to transform
+     * @param mixed $str
      *
      * @return string New string
      */
@@ -3228,6 +3249,9 @@ exit;
      * Clear cache for Smarty.
      *
      * @param Smarty $smarty
+     * @param mixed $tpl
+     * @param null|mixed $cache_id
+     * @param null|mixed $compile_id
      */
     public static function clearCache($smarty = null, $tpl = false, $cache_id = null, $compile_id = null)
     {
@@ -3252,6 +3276,7 @@ exit;
 
     /**
      * Clear compile for Smarty.
+     * @param null|mixed $smarty
      */
     public static function clearCompile($smarty = null)
     {
@@ -3282,6 +3307,7 @@ exit;
 
     /**
      * Clear Symfony cache.
+     * @param null|mixed $env
      */
     public static function clearSf2Cache($env = null)
     {
@@ -3336,6 +3362,7 @@ exit;
      * @since 1.5.0
      *
      * @return int the value of a configuration option in octet
+     * @param mixed $option
      */
     public static function getOctets($option)
     {
@@ -3531,6 +3558,10 @@ exit;
      * @return array List of file found
      *
      * @since 1.5.0
+     * @param mixed $path
+     * @param mixed $ext
+     * @param mixed $dir
+     * @param mixed $recursive
      */
     public static function scandir($path, $ext = 'php', $dir = '', $recursive = false)
     {
@@ -3906,6 +3937,7 @@ exit;
      * Allows to display the category description without HTML tags and slashes.
      *
      * @return string
+     * @param mixed $description
      */
     public static function getDescriptionClean($description)
     {
@@ -4092,6 +4124,8 @@ exit;
      * @param string $path        Current path
      * @param string $highlight   String to highlight (in XHTML/CSS)
      * @param string $type        Category type (products/cms)
+     * @param mixed $category_type
+     * @param mixed $home
      */
     public static function getPath($url_base, $id_category, $path = '', $highlight = '', $category_type = 'catalog', $home = false)
     {

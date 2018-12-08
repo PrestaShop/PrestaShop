@@ -1084,6 +1084,7 @@ class DispatcherCore
      * @var mixed
      *
      * @return array
+     * @param mixed $dirs
      */
     public static function getControllers($dirs)
     {

@@ -83,6 +83,7 @@ function includeDatepicker($id, $time = false)
  * @param string $baseUri  Base URI
  * @param string $theme    Theme name (eg. default)
  * @param array  $array_db Parameters in order to connect to database
+ * @param null|mixed $base_urls
  */
 function rewriteSettingsFile($base_urls = null, $theme = null, $array_db = null)
 {
@@ -146,6 +147,8 @@ function displayDate($sql_date, $with_time = false)
  * @param string $path        Current path
  * @param string $highlight   String to highlight (in XHTML/CSS)
  * @param string $type        Category type (products/cms)
+ * @param mixed $category_type
+ * @param mixed $home
  */
 function getPath($url_base, $id_category, $path = '', $highlight = '', $category_type = 'catalog', $home = false)
 {
@@ -301,6 +304,7 @@ function checkingTab($tab)
 
 /**
  * @TODO deprecate for Tab::checkTabRights()
+ * @param mixed $id_tab
  */
 function checkTabRights($id_tab)
 {
@@ -423,6 +427,8 @@ function simpleXMLToArray($xml, $flatten_values = true, $flatten_attributes = tr
  * for retrocompatibility with old AdminTab, old index.php.
  *
  * @return void
+ * @param mixed $tab
+ * @param mixed $ajax_mode
  */
 function runAdminTab($tab, $ajax_mode = false)
 {

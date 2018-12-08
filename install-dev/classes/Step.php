@@ -103,6 +103,7 @@ class Step
 
     /**
      * @param string $name
+     * @param mixed $controllerName
      *
      * @return Step
      */

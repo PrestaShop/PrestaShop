@@ -33,6 +33,7 @@ class FileSystem
     /**
      * Replaces directory separators with the system's native one
      * and trims the trailing separator.
+     * @param mixed $path
      */
     public function normalizePath($path)
     {
@@ -81,6 +82,7 @@ class FileSystem
      * and return it in an array.
      *
      * @return an array of SplFileInfo object indexed by file path
+     * @param mixed $path
      */
     public function listEntriesRecursively($path)
     {
@@ -135,6 +137,7 @@ class FileSystem
 
     /**
      * Same as listEntriesRecursively but returns only files.
+     * @param mixed $path
      */
     public function listFilesRecursively($path)
     {

@@ -113,6 +113,7 @@ class TaxRuleCore extends ObjectModel
 
     /**
      * @deprecated since 1.5
+     * @param mixed $id_county
      */
     public static function deleteTaxRuleByIdCounty($id_county)
     {
@@ -141,6 +142,7 @@ class TaxRuleCore extends ObjectModel
 
     /**
      * @param string $zipcode a range of zipcode (eg: 75000 / 75000-75015)
+     * @param mixed $zip_codes
      *
      * @return array an array containing two zipcode ordered by zipcode
      */
