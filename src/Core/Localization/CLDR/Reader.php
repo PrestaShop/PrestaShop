@@ -403,7 +403,7 @@ class Reader implements ReaderInterface
                 $alias = $format->alias;
                 if ($alias
                     && preg_match(
-                        "#^\.\.\/decimalFormats\[@numberSystem='([^)]+)'\]$#",
+                        "#^\\.\\.\\/decimalFormats\\[@numberSystem='([^)]+)'\\]$#",
                         (string) $alias['path'],
                         $matches
                     )
@@ -433,7 +433,7 @@ class Reader implements ReaderInterface
                 $alias = $format->alias;
                 if ($alias
                     && preg_match(
-                        "#^\.\.\/percentFormats\[@numberSystem='([^)]+)'\]$#",
+                        "#^\\.\\.\\/percentFormats\\[@numberSystem='([^)]+)'\\]$#",
                         (string) $alias['path'],
                         $matches
                     )
@@ -464,7 +464,7 @@ class Reader implements ReaderInterface
                 $alias = $format->alias;
                 if ($alias
                     && preg_match(
-                        "#^\.\.\/currencyFormats\[@numberSystem='([^)]+)'\]$#",
+                        "#^\\.\\.\\/currencyFormats\\[@numberSystem='([^)]+)'\\]$#",
                         (string) $alias['path'],
                         $matches
                     )

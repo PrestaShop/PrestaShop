@@ -1318,7 +1318,7 @@ class AdminModulesControllerCore extends AdminController
             return true;
         } elseif (strpos($show_type_modules, 'authorModules[') !== false) {
             // setting selected author in authors set
-            $author_selected = substr(str_replace(array('authorModules[', "\'"), array('', "'"), $show_type_modules), 0, -1);
+            $author_selected = substr(str_replace(array('authorModules[', "\\'"), array('', "'"), $show_type_modules), 0, -1);
             $this->modules_authors[$author_selected] = 'selected';
             if (empty($module->author) || strtolower($module->author) != $author_selected) {
                 return true;

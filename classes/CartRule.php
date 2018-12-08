@@ -1711,7 +1711,7 @@ class CartRuleCore extends ObjectModel
         // Attribute id is not important for this filter in the global list
         // so the ids are replaced by 0
         if (in_array($ruleType, array('products', 'categories', 'manufacturers', 'suppliers'))) {
-            $productsList = explode(':', preg_replace("#\-[0-9]+#", '-0', implode(':', $products)));
+            $productsList = explode(':', preg_replace('#\\-[0-9]+#', '-0', implode(':', $products)));
         } else {
             $productsList = $products;
         }

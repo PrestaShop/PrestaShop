@@ -31,7 +31,7 @@ function update_customer_default_group()
     copy($filename, $filename_old);
     chmod($filename_old, 0664);
     $content = file_get_contents($filename);
-    $pattern = "/define\('_PS_DEFAULT_CUSTOMER_GROUP_', (\d)\);/";
+    $pattern = "/define\\('_PS_DEFAULT_CUSTOMER_GROUP_', (\\d)\\);/";
     preg_match($pattern, $content, $matches);
     if (!defined('_PS_DEFAULT_CUSTOMER_GROUP_')) {
         define('_PS_DEFAULT_CUSTOMER_GROUP_', ((isset($matches[1]) and is_numeric($matches[1]))? $matches[1] : 3));

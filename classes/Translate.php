@@ -35,7 +35,7 @@ class TranslateCore
     {
         global $_LANG;
 
-        $string = preg_replace("/\\\*'/", "\'", $string);
+        $string = preg_replace("/\\\\*'/", "\\'", $string);
         $key = $class . '_' . md5($string);
 
         if (isset($_LANG[$key])) {
@@ -99,7 +99,7 @@ class TranslateCore
             }
         }
 
-        $string = preg_replace("/\\\*'/", "\'", $string);
+        $string = preg_replace("/\\\\*'/", "\\'", $string);
         $key = md5($string);
         if (isset($_LANGADM[$class . $key])) {
             $str = $_LANGADM[$class . $key];
@@ -134,7 +134,7 @@ class TranslateCore
      */
     public static function getGenericAdminTranslation($string, $key, &$langArray)
     {
-        $string = preg_replace("/\\\*'/", "\'", $string);
+        $string = preg_replace("/\\\\*'/", "\\'", $string);
         if (is_null($key)) {
             $key = md5($string);
         }
@@ -202,7 +202,7 @@ class TranslateCore
             $translationsMerged[$name][$iso] = true;
         }
 
-        $string = preg_replace("/\\\*'/", "\'", $originalString);
+        $string = preg_replace("/\\\\*'/", "\\'", $originalString);
         $key = md5($string);
 
         $cacheKey = $name . '|' . $string . '|' . $source . '|' . (int) $js . '|' . $iso;
@@ -308,7 +308,7 @@ class TranslateCore
             return str_replace('"', '&quot;', $string);
         }
 
-        $string = preg_replace("/\\\*'/", "\'", $string);
+        $string = preg_replace("/\\\\*'/", "\\'", $string);
         $key = md5($string);
 
         $str = (array_key_exists('PDF' . $key, $_LANGPDF) ? $_LANGPDF['PDF' . $key] : $string);

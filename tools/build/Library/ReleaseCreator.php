@@ -303,9 +303,9 @@ class ReleaseCreator
         if (file_exists("{$this->tempProjectPath}")) {
             exec("rm -rf $argTmpDestination");
         }
-        exec("mkdir $argTmpDestination && \
-            cd {$argProjectPath} && \
-            git archive HEAD | tar -xC {$argTmpDestination} && \
+        exec("mkdir $argTmpDestination && \\
+            cd {$argProjectPath} && \\
+            git archive HEAD | tar -xC {$argTmpDestination} && \\
             cd -");
         $this->consoleWriter->displayText(" DONE{$this->lineSeparator}", ConsoleWriter::COLOR_GREEN);
 
@@ -709,8 +709,8 @@ class ReleaseCreator
         $argTempProjectPath = escapeshellarg($this->tempProjectPath);
         $argInstallerZipFilename = escapeshellarg($installerZipFilename);
         $argProjectPath = escapeshellarg($this->projectPath);
-        $cmd = "cd {$argTempProjectPath} \
-            && zip -rq {$argInstallerZipFilename} . \
+        $cmd = "cd {$argTempProjectPath} \\
+            && zip -rq {$argInstallerZipFilename} . \\
             && cd -";
         exec($cmd);
 

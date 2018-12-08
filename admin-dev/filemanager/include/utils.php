@@ -176,7 +176,7 @@ function fix_filename($str, $transliteration)
             $str = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $str);
         }
 
-        $str = preg_replace("/[^a-zA-Z0-9\.\[\]_| -]/", '', $str);
+        $str = preg_replace("/[^a-zA-Z0-9\\.\\[\\]_| -]/", '', $str);
     }
 
     $str=str_replace(array('"', "'", "/", "\\"), "", $str);

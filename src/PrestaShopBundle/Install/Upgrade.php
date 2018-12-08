@@ -416,7 +416,7 @@ namespace PrestaShopBundle\Install {
                     }
                     $sqlContent .= "\n";
                     $sqlContent = str_replace(array(self::FILE_PREFIX, self::ENGINE_TYPE), array(_DB_PREFIX_, $mysqlEngine), $sqlContent);
-                    $sqlContent = preg_split("/;\s*[\r\n]+/", $sqlContent);
+                    $sqlContent = preg_split("/;\\s*[\r\n]+/", $sqlContent);
 
                     $sqlContentVersion[$version] = $sqlContent;
                 }

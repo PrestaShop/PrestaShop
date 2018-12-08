@@ -452,7 +452,7 @@ class AdminPatternsControllerCore extends AdminController
             ),
             array(
                 'id_carrier' => 9,
-                'name' => "Lorem ipsum dolor sit amet: \ / : * ? \" < > |",
+                'name' => 'Lorem ipsum dolor sit amet: \\ / : * ? " < > |',
                 'type_name' => 'Azerty',
                 'active' => 0,
             ),
