@@ -218,8 +218,7 @@ class ProductPresenterTest extends UnitTestCase
     {
         $this->product['id_product_attribute'] = 42;
         $this->settings->allow_add_variant_to_cart_from_listing = false;
-        $this->assertEquals(
-            null,
+        $this->assertNull(
             $this->getPresentedProductForListing('add_to_cart_url')
         );
     }
@@ -232,8 +231,7 @@ class ProductPresenterTest extends UnitTestCase
                 ['is_customized' => true, 'required' => true]
             ]
         ];
-        $this->assertEquals(
-            null,
+        $this->assertNull(
             $this->getPresentedProductForListing('add_to_cart_url')
         );
     }

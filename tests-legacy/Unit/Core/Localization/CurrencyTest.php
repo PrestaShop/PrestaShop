@@ -61,8 +61,7 @@ class CurrencyTest extends TestCase
      */
     public function testIsActive()
     {
-        $this->assertSame(
-            true,
+        $this->assertTrue(
             $this->currency->isActive(),
             'Wrong result for isActive()'
         );
