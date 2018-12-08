@@ -658,7 +658,7 @@ class AdminImagesControllerCore extends AdminController
             // Getting format generation
             $formats = ImageType::getImagesTypes($proc['type']);
             if ('all' != $type) {
-                $format = strval(Tools::getValue('format_' . $type));
+                $format = (string) (Tools::getValue('format_' . $type));
                 if ('all' != $format) {
                     foreach ($formats as $k => $form) {
                         if ($form['id_image_type'] != $format) {

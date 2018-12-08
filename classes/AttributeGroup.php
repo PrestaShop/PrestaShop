@@ -294,7 +294,7 @@ class AttributeGroupCore extends ObjectModel
     {
         $ids = array();
         foreach ($values as $value) {
-            $ids[] = intval($value['id']);
+            $ids[] = (int) ($value['id']);
         }
         Db::getInstance()->execute(
             '

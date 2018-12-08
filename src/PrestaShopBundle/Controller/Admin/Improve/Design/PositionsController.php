@@ -61,7 +61,7 @@ class PositionsController extends FrameworkBundleAdminController
         $installedModules = $moduleAdapter->getModulesInstalled();
 
         $selectedModule = $request->get('show_modules');
-        if ($selectedModule && 'all' != strval($selectedModule)) {
+        if ($selectedModule && 'all' != (string) $selectedModule) {
             $this->selectedModule = (int) $selectedModule;
         }
 

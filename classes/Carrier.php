@@ -757,7 +757,7 @@ class CarrierCore extends ObjectModel
                 }
             }
 
-            $row['name'] = ('0' != strval($row['name']) ? $row['name'] : Carrier::getCarrierNameFromShopName());
+            $row['name'] = ('0' != (string) ($row['name']) ? $row['name'] : Carrier::getCarrierNameFromShopName());
             $row['price'] = ((Carrier::SHIPPING_METHOD_FREE == $shipping_method) ? 0 : $cart->getPackageShippingCost((int) $row['id_carrier'], true, null, null, $id_zone));
             $row['price_tax_exc'] = ((Carrier::SHIPPING_METHOD_FREE == $shipping_method) ? 0 : $cart->getPackageShippingCost((int) $row['id_carrier'], false, null, null, $id_zone));
             $row['img'] = file_exists(_PS_SHIP_IMG_DIR_ . (int) $row['id_carrier'] . '.jpg') ? _THEME_SHIP_DIR_ . (int) $row['id_carrier'] . '.jpg' : '';
