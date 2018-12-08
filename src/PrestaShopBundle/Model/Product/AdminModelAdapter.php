@@ -186,7 +186,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
     public function __construct(
         LegacyContext $legacyContext,
         AdminProductWrapper $adminProductWrapper,
-        Tools $toolsAdapter,
+        ToolsLegacy $toolsAdapter,
         ProductDataProvider $productDataProvider,
         SupplierDataProvider $supplierDataProvider,
         WarehouseDataProvider $warehouseDataProvider,
