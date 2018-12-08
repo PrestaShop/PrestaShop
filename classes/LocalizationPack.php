@@ -64,7 +64,8 @@ class LocalizationPackCore
                 $country = new Country($id_country);
             }
             if (!$id_country || !Validate::isLoadedObject($country)) {
-                $this->_errors[] = Context::getContext()->getTranslator()->trans('Cannot load country: %d',
+                $this->_errors[] = Context::getContext()->getTranslator()->trans(
+                    'Cannot load country: %d',
                     array($id_country),
                     'Admin.International.Notification'
                 );

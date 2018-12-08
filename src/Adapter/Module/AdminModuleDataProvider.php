@@ -167,7 +167,8 @@ class AdminModuleDataProvider implements ModuleInterface
      */
     public function getAllModules()
     {
-        return LegacyModule::getModulesOnDisk(true,
+        return LegacyModule::getModulesOnDisk(
+            true,
             $this->addonsDataProvider->isAddonsAuthenticated(),
             (int) Context::getContext()->employee->id
         );
@@ -185,7 +186,8 @@ class AdminModuleDataProvider implements ModuleInterface
         }
 
         return $this->applyModuleFilters(
-                $this->catalog_modules, $filters
+                $this->catalog_modules,
+            $filters
         );
     }
 

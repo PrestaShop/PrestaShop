@@ -66,7 +66,8 @@ class Container
             throw new Exception(
                 sprintf(
                     'Namespace alias `%1$s` already exists and points to `%2$s`',
-                    $alias, $this->namespaceAliases[$alias]
+                    $alias,
+                    $this->namespaceAliases[$alias]
                 )
             );
         }

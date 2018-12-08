@@ -201,7 +201,8 @@ class CheckoutDeliveryStepCore extends AbstractCheckoutStep
                 'request_params' => $requestParams,
                 'completed' => &$isComplete,
             ),
-            Module::getModuleIdByName($currentDeliveryOption['external_module_name']));
+            Module::getModuleIdByName($currentDeliveryOption['external_module_name'])
+        );
 
         return $isComplete;
     }

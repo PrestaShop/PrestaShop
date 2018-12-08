@@ -42,7 +42,8 @@ function ps1700_stores()
         }
         $hours = json_encode($hours);
 
-        $result &= Db::getInstance()->execute('
+        $result &= Db::getInstance()->execute(
+            '
             UPDATE `'._DB_PREFIX_.'store`
             SET `hours` = \''.$hours.'\'
             WHERE `id_store` = '.$store['id_store']

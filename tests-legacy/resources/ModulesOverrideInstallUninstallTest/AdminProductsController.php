@@ -449,7 +449,8 @@ class AdminProductsController extends AdminProductsControllerCore
             return;
         }
         $tpl = $this->createTemplate('specific_prices_shop_update.tpl');
-        $tpl->assign(array(
+        $tpl->assign(
+            array(
             'option_list' => $res,
             'key_id' => 'id_country',
             'key_value' => 'name',
@@ -469,7 +470,8 @@ class AdminProductsController extends AdminProductsControllerCore
             return;
         }
         $tpl = $this->createTemplate('specific_prices_shop_update.tpl');
-        $tpl->assign(array(
+        $tpl->assign(
+            array(
             'option_list' => $res,
             'key_id' => 'id_currency',
             'key_value' => 'name',
@@ -489,7 +491,8 @@ class AdminProductsController extends AdminProductsControllerCore
             return;
         }
         $tpl = $this->createTemplate('specific_prices_shop_update.tpl');
-        $tpl->assign(array(
+        $tpl->assign(
+            array(
             'option_list' => $res,
             'key_id' => 'id_group',
             'key_value' => 'name',
@@ -886,7 +889,8 @@ class AdminProductsController extends AdminProductsControllerCore
                         if ($this->isProductFieldUpdated('available_date_attribute') && ('' != Tools::getValue('available_date_attribute') && !Validate::isDateFormat(Tools::getValue('available_date_attribute')))) {
                             $this->errors[] = Tools::displayError('Invalid date format.');
                         } else {
-                            $product->updateAttribute((int) $id_product_attribute,
+                            $product->updateAttribute(
+                                (int) $id_product_attribute,
                                 $this->isProductFieldUpdated('attribute_wholesale_price') ? Tools::getValue('attribute_wholesale_price') : null,
                                 $this->isProductFieldUpdated('attribute_price_impact') ? Tools::getValue('attribute_price') * Tools::getValue('attribute_price_impact') : null,
                                 $this->isProductFieldUpdated('attribute_weight_impact') ? Tools::getValue('attribute_weight') * Tools::getValue('attribute_weight_impact') : null,
@@ -899,7 +903,9 @@ class AdminProductsController extends AdminProductsControllerCore
                                 Tools::getValue('attribute_location'),
                                 Tools::getValue('attribute_upc'),
                                 $this->isProductFieldUpdated('attribute_minimal_quantity') ? Tools::getValue('attribute_minimal_quantity') : null,
-                                $this->isProductFieldUpdated('available_date_attribute') ? Tools::getValue('available_date_attribute') : null, false);
+                                $this->isProductFieldUpdated('available_date_attribute') ? Tools::getValue('available_date_attribute') : null,
+                                false
+                            );
                             StockAvailable::setProductDependsOnStock((int) $product->id, $product->depends_on_stock, null, (int) $id_product_attribute);
                             StockAvailable::setProductOutOfStock((int) $product->id, $product->out_of_stock, null, (int) $id_product_attribute);
                         }
@@ -3062,14 +3068,22 @@ class AdminProductsController extends AdminProductsControllerCore
                     Tools::convertPrice(
                         Product::getPriceStatic((int) $obj->id, false, $attribute['id_product_attribute']),
                         $this->context->currency
-                    ), $this->context->currency
+                    ),
+                    $this->context->currency
                 );
             }
             foreach ($combinations as &$combination) {
                 $combination['attributes'] = rtrim($combination['attributes'], ' - ');
             }
-            $data->assign('specificPriceModificationForm', $this->_displaySpecificPriceModificationForm(
-                $this->context->currency, $shops, $currencies, $countries, $groups)
+            $data->assign(
+                'specificPriceModificationForm',
+                $this->_displaySpecificPriceModificationForm(
+                $this->context->currency,
+                $shops,
+                $currencies,
+                $countries,
+                $groups
+            )
             );
             $data->assign('ecotax_tax_excl', $obj->ecotax);
             $this->_applyTaxToEcotax($obj);
@@ -3270,15 +3284,18 @@ class AdminProductsController extends AdminProductsControllerCore
         if (!file_exists($exists_file)
             && !empty($product->productDownload->display_filename)
             && empty($product->cache_default_attribute)) {
-            $msg = sprintf(Tools::displayError('File "%s" is missing'),
-                $product->productDownload->display_filename);
+            $msg = sprintf(
+                Tools::displayError('File "%s" is missing'),
+                $product->productDownload->display_filename
+            );
         } else {
             $msg = '';
         }
         $virtual_product_file_uploader = new HelperUploader('virtual_product_file_uploader');
         $virtual_product_file_uploader->setMultiple(false)->setUrl(
             Context::getContext()->link->getAdminLink('AdminProducts').'&ajax=1&id_product='.(int) $product->id
-            .'&action=AddVirtualProductFile')->setPostMaxSize(Tools::getOctets(ini_get('upload_max_filesize')))
+            .'&action=AddVirtualProductFile'
+        )->setPostMaxSize(Tools::getOctets(ini_get('upload_max_filesize')))
             ->setTemplate('virtual_product.tpl');
         $data->assign(array(
             'download_product_file_missing' => $msg,
@@ -3559,8 +3576,10 @@ class AdminProductsController extends AdminProductsControllerCore
             $input_value[$language['id_lang']] = (isset($label[(int) ($language['id_lang'])])) ? $label[(int) ($language['id_lang'])]['name'] : '';
         }
         $required = (isset($label[(int) ($language['id_lang'])])) ? $label[(int) ($language['id_lang'])]['required'] : false;
-        $template = $this->context->smarty->createTemplate('controllers/products/input_text_lang.tpl',
-            $this->context->smarty);
+        $template = $this->context->smarty->createTemplate(
+            'controllers/products/input_text_lang.tpl',
+            $this->context->smarty
+        );
 
         return '<div class="form-group">'
             .'<div class="col-lg-6">'
@@ -3659,7 +3678,8 @@ class AdminProductsController extends AdminProductsControllerCore
                 $attachment_uploader = new HelperUploader('attachment_file');
                 $attachment_uploader->setMultiple(false)->setUseAjax(true)->setUrl(
                     Context::getContext()->link->getAdminLink('AdminProducts').'&ajax=1&id_product='.(int) $obj->id
-                    .'&action=AddAttachment')->setPostMaxSize((Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE') * 1024 * 1024))
+                    .'&action=AddAttachment'
+                )->setPostMaxSize((Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE') * 1024 * 1024))
                     ->setTemplate('attachment_ajax.tpl');
                 $data->assign(array(
                     'obj' => $obj,
@@ -3708,19 +3728,40 @@ class AdminProductsController extends AdminProductsControllerCore
         }
         $product->{'productDownload'} = $product_download;
         $product_props = array();
-        array_push($product_props, 'reference', 'ean13', 'upc',
-        'available_for_order', 'show_price', 'online_only',
+        array_push(
+            $product_props,
+            'reference',
+            'ean13',
+            'upc',
+        'available_for_order',
+            'show_price',
+            'online_only',
         'id_manufacturer'
         );
-        array_push($product_props,
-        'width', 'height', 'weight', 'active',
-        'is_virtual', 'cache_default_attribute',
-        'uploadable_files', 'text_fields'
+        array_push(
+            $product_props,
+        'width',
+            'height',
+            'weight',
+            'active',
+        'is_virtual',
+            'cache_default_attribute',
+        'uploadable_files',
+            'text_fields'
         );
-        array_push($product_props,
-            'price', 'wholesale_price', 'id_tax_rules_group', 'unit_price_ratio', 'on_sale',
-            'unity', 'minimum_quantity', 'additional_shipping_cost',
-            'available_now', 'available_later', 'available_date'
+        array_push(
+            $product_props,
+            'price',
+            'wholesale_price',
+            'id_tax_rules_group',
+            'unit_price_ratio',
+            'on_sale',
+            'unity',
+            'minimum_quantity',
+            'additional_shipping_cost',
+            'available_now',
+            'available_later',
+            'available_date'
         );
         if (Configuration::get('PS_USE_ECOTAX')) {
             array_push($product_props, 'ecotax');
@@ -3947,7 +3988,8 @@ class AdminProductsController extends AdminProductsControllerCore
                     }
                 }
                 $data->assign('shops', $shops);
-                $count_images = Db::getInstance()->getValue('
+                $count_images = Db::getInstance()->getValue(
+                    '
 					SELECT COUNT(id_product)
 					FROM '._DB_PREFIX_.'image
 					WHERE id_product = '.(int) $obj->id
@@ -3966,7 +4008,8 @@ class AdminProductsController extends AdminProductsControllerCore
                 $image_uploader->setMultiple(!('Apple Safari' == Tools::getUserBrowser() && 'Windows' == Tools::getUserPlatform()))
                     ->setUseAjax(true)->setUrl(
                     Context::getContext()->link->getAdminLink('AdminProducts').'&ajax=1&id_product='.(int) $obj->id
-                    .'&action=addProductImage');
+                    .'&action=addProductImage'
+                    );
                 $data->assign(array(
                         'countImages' => $count_images,
                         'id_product' => (int) Tools::getValue('id_product'),
@@ -4186,8 +4229,10 @@ class AdminProductsController extends AdminProductsControllerCore
                 $available_quantity = array();
                 $product_designation = array();
                 foreach ($attributes as $attribute) {
-                    $available_quantity[$attribute['id_product_attribute']] = StockAvailable::getQuantityAvailableByProduct((int) $obj->id,
-                                                                                                                            $attribute['id_product_attribute']);
+                    $available_quantity[$attribute['id_product_attribute']] = StockAvailable::getQuantityAvailableByProduct(
+                        (int) $obj->id,
+                                                                                                                            $attribute['id_product_attribute']
+                    );
                     $product_designation[$attribute['id_product_attribute']] = rtrim(
                         $obj->name[$this->context->language->id].' - '.$attribute['attribute_designation'],
                         ' - '
@@ -4472,11 +4517,14 @@ class AdminProductsController extends AdminProductsControllerCore
                 }
                 if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')
                     && 1 == (int) Tools::getValue('value')
-                    && (Pack::isPack($product->id)
+                    && (
+                        Pack::isPack($product->id)
                         && !Pack::allUsesAdvancedStockManagement($product->id)
-                        && (Pack::STOCK_TYPE_PACK_BOTH == $product->pack_stock_type
+                        && (
+                            Pack::STOCK_TYPE_PACK_BOTH == $product->pack_stock_type
                             || Pack::STOCK_TYPE_PRODUCTS_ONLY == $product->pack_stock_type
-                            || (Pack::STOCK_TYPE_DEFAULT == $product->pack_stock_type
+                            || (
+                                Pack::STOCK_TYPE_DEFAULT == $product->pack_stock_type
                                 && (Pack::STOCK_TYPE_PRODUCTS_ONLY == Configuration::get('PS_PACK_STOCK_TYPE')
                                     || Pack::STOCK_TYPE_PACK_BOTH == Configuration::get('PS_PACK_STOCK_TYPE'))
                             )
@@ -4500,9 +4548,11 @@ class AdminProductsController extends AdminProductsControllerCore
                 }
                 if ($product->depends_on_stock
                     && !Pack::allUsesAdvancedStockManagement($product->id)
-                    && (1 == (int) $value
+                    && (
+                        1 == (int) $value
                         || 2 == (int) $value
-                        || (3 == (int) $value
+                        || (
+                            3 == (int) $value
                             && (Pack::STOCK_TYPE_PRODUCTS_ONLY == Configuration::get('PS_PACK_STOCK_TYPE')
                                 || Pack::STOCK_TYPE_PACK_BOTH == Configuration::get('PS_PACK_STOCK_TYPE'))
                         )

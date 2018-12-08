@@ -481,12 +481,16 @@ class AdminFeaturesControllerCore extends AdminController
         }
 
         if ('feature_value' == $this->table && ('save' == $this->action || 'delete' == $this->action || 'bulkDelete' == $this->action)) {
-            Hook::exec('displayFeatureValuePostProcess',
-                array('errors' => &$this->errors));
+            Hook::exec(
+                'displayFeatureValuePostProcess',
+                array('errors' => &$this->errors)
+            );
         } // send errors as reference to allow displayFeatureValuePostProcess to stop saving process
         else {
-            Hook::exec('displayFeaturePostProcess',
-                array('errors' => &$this->errors));
+            Hook::exec(
+                'displayFeaturePostProcess',
+                array('errors' => &$this->errors)
+            );
         } // send errors as reference to allow displayFeaturePostProcess to stop saving process
 
         parent::postProcess();

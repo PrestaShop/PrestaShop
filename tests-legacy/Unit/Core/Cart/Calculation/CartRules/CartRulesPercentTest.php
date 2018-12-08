@@ -155,7 +155,8 @@ class CartRulesPercentTest extends AbstractCartCalculationTest
                 ],
                 'expectedTotal' => (1 - static::CART_RULES_FIXTURES[2]['percent'] / 100)
                                      * (1 - static::CART_RULES_FIXTURES[3]['percent'] / 100)
-                                     * (3 * static::PRODUCT_FIXTURES[1]['price']
+                                     * (
+                                         3 * static::PRODUCT_FIXTURES[1]['price']
                                         + 2 * static::PRODUCT_FIXTURES[2]['price']
                                         + static::PRODUCT_FIXTURES[3]['price']
                                      )

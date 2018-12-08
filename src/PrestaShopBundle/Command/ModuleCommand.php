@@ -97,8 +97,10 @@ class ModuleCommand extends ContainerAwareCommand
                 $this->translator->trans(
                     'Unknown module action. It must be one of these values: %actions%',
                     array('%actions%' => implode(' / ', $this->allowedActions)),
-                    'Admin.Modules.Notification'),
-                'error');
+                    'Admin.Modules.Notification'
+                ),
+                'error'
+            );
 
             return;
         }
@@ -138,7 +140,8 @@ class ModuleCommand extends ContainerAwareCommand
         $moduleSelfConfigurator->configure();
         $this->displayMessage(
             $this->translator->trans('Configuration successfully applied.', array(), 'Admin.Modules.Notification'),
-            'info');
+            'info'
+        );
     }
 
     protected function executeGenericModuleAction($action, $moduleName)
@@ -154,7 +157,8 @@ class ModuleCommand extends ContainerAwareCommand
                     array(
                         '%action%' => ucfirst(str_replace('_', ' ', $action)),
                         '%module%' => $moduleName, ),
-                    'Admin.Modules.Notification')
+                    'Admin.Modules.Notification'
+                )
             );
 
             return;
@@ -169,7 +173,8 @@ class ModuleCommand extends ContainerAwareCommand
                     '%module%' => $moduleName,
                     '%error_details%' => $error, ),
                 'Admin.Modules.Notification'
-            ), 'error'
+            ),
+            'error'
         );
     }
 

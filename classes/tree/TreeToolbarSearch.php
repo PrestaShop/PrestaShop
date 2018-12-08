@@ -39,11 +39,15 @@ class TreeToolbarSearchCore extends TreeToolbarButtonCore implements ITreeToolba
     public function render()
     {
         if ($this->hasAttribute('data_search')) {
-            $this->setAttribute('typeahead_source',
-                $this->_renderData($this->getAttribute('data_search')));
+            $this->setAttribute(
+                'typeahead_source',
+                $this->_renderData($this->getAttribute('data_search'))
+            );
         } elseif ($this->hasAttribute('data')) {
-            $this->setAttribute('typeahead_source',
-                $this->_renderData($this->getAttribute('data')));
+            $this->setAttribute(
+                'typeahead_source',
+                $this->_renderData($this->getAttribute('data'))
+            );
         }
 
         $admin_webpath = str_ireplace(_PS_CORE_DIR_, '', _PS_ADMIN_DIR_);
