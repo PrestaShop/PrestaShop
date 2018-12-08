@@ -31,7 +31,7 @@ use PHPUnit\Framework\TestCase;
 
 class AdapterServiceLocatorTest extends TestCase
 {
-    public function test_get_delegates_to_service_container()
+    public function testGetDelegatesToServiceContainer()
     {
         ServiceLocator::setServiceContainerInstance(
             new Container()

@@ -38,7 +38,7 @@ class TermsAndConditionsTest extends UnitTestCase
         $this->terms = new TermsAndConditions;
     }
 
-    public function test_SetText_InsertsLinks()
+    public function testSetTextInsertsLinks()
     {
         $this->assertEquals(
             'hello <a href="http://www.world.com" id="cta-ho-0">world</a>',
@@ -46,7 +46,7 @@ class TermsAndConditionsTest extends UnitTestCase
         );
     }
 
-    public function test_SetText_InsertsSeveralLinks()
+    public function testSetTextInsertsSeveralLinks()
     {
         $this->assertEquals(
             'hello <a href="http://www.world.com" id="cta-hey-0">world</a> <a href="http://yay.com" id="cta-hey-1">yay</a>',
@@ -54,7 +54,7 @@ class TermsAndConditionsTest extends UnitTestCase
         );
     }
 
-    public function test_SetText_JustDoesntAddLinksWhenMissing()
+    public function testSetTextJustDoesntAddLinksWhenMissing()
     {
         $this->assertEquals(
             'hello world',

@@ -32,17 +32,17 @@ use Hook;
 
 class HookTest extends UnitTestCase
 {
-    public function test_isDisplayHookName__display_hooks_start_with_display()
+    public function testIsDisplayHookNameDisplayHooksStartWithDisplay()
     {
         $this->assertTrue(Hook::isDisplayHookName('displaySomething'));
     }
 
-    public function test_isDisplayHookName__display_hooks_cannot_start_with_action()
+    public function testIsDisplayHookNameDisplayHooksCannotStartWithAction()
     {
         $this->assertFalse(Hook::isDisplayHookName('actionDoWeirdStuff'));
     }
 
-    public function test_isDisplayHookName__header_is_not_a_display_hook()
+    public function testIsDisplayHookNameHeaderIsNotADisplayHook()
     {
         $this->assertFalse(Hook::isDisplayHookName('header'));
     }

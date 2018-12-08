@@ -488,7 +488,7 @@ class CartGetOrderTotalTest extends IntegrationTestCase
      * - the tax excluded shipping cost is deduced from the tax included shipping cost
      * 	 by removing the average tax rate of the cart
      */
-    public function testAverageTaxOfCartProducts_ShippingTax()
+    public function testAverageTaxOfCartProductsShippingTax()
     {
         Configuration::set('PS_ATCP_SHIPWRAP', true);
 

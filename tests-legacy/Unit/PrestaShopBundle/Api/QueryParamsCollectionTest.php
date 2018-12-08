@@ -61,7 +61,7 @@ class QueryParamsCollectionTest extends TestCase
      * @param $pageIndex
      * @param $pageSize
      */
-    public function it_should_raise_an_exception_on_invalid_pagination_params($pageIndex, $pageSize)
+    public function itShouldRaiseAnExceptionOnInvalidPaginationParams($pageIndex, $pageSize)
     {
         try {
             $this->it_should_make_query_params_from_a_request(
@@ -107,7 +107,7 @@ class QueryParamsCollectionTest extends TestCase
      * @param $pageSize
      * @param $expectedSqlClauses
      */
-    public function it_should_make_query_params_from_a_request(
+    public function itShouldMakeQueryParamsFromARequest(
         $order,
         $pageIndex,
         $pageSize,
@@ -147,7 +147,7 @@ class QueryParamsCollectionTest extends TestCase
      * @param $pageSize
      * @param $expectedSqlClauses
      */
-    public function it_should_make_query_params_with_product_filter_from_a_request(
+    public function itShouldMakeQueryParamsWithProductFilterFromARequest(
         $order,
         $pageIndex,
         $pageSize,
@@ -238,7 +238,7 @@ class QueryParamsCollectionTest extends TestCase
      * @param $expectedSql
      * @param $message
      */
-    public function it_should_make_query_params_with_filter_from_a_request(
+    public function itShouldMakeQueryParamsWithFilterFromARequest(
         $params,
         $expectedSql,
         $message

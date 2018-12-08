@@ -158,12 +158,12 @@ class ModuleRepositoryTest extends UnitTestCase
          */
     }
 
-    public function test_get_at_least_one_module_from_universe()
+    public function testGetAtLeastOneModuleFromUniverse()
     {
         $this->assertGreaterThan(0, count($this->moduleRepositoryStub->getList()));
     }
 
-    public function test_get_only_installed_modules()
+    public function testGetOnlyInstalledModules()
     {
         $all_modules = $this->moduleRepositoryStub->getList();
 
@@ -186,7 +186,7 @@ class ModuleRepositoryTest extends UnitTestCase
         }
     }
 
-    public function test_get_only_NOT_installed_modules()
+    public function testGetOnlyNOTInstalledModules()
     {
         $all_modules = $this->moduleRepositoryStub->getList();
 
@@ -209,7 +209,7 @@ class ModuleRepositoryTest extends UnitTestCase
         }
     }
 
-    public function test_get_only_enabled_modules()
+    public function testGetOnlyEnabledModules()
     {
         $all_modules = $this->moduleRepositoryStub->getList();
 
@@ -234,7 +234,7 @@ class ModuleRepositoryTest extends UnitTestCase
         }
     }
 
-    public function test_get_not_enabled_modules()
+    public function testGetNotEnabledModules()
     {
         $all_modules = $this->moduleRepositoryStub->getList();
 
@@ -256,7 +256,7 @@ class ModuleRepositoryTest extends UnitTestCase
         }
     }
 
-    public function test_get_installed_but_disabled_modules()
+    public function testGetInstalledButDisabledModules()
     {
         $all_modules = $this->moduleRepositoryStub->getList();
 
@@ -279,7 +279,7 @@ class ModuleRepositoryTest extends UnitTestCase
         }
     }
 
-    public function test_get_addons_from_marketplace_only()
+    public function testGetAddonsFromMarketplaceOnly()
     {
         $filters = new AddonListFilter();
         $filters->setOrigin(AddonListFilterOrigin::ADDONS_ALL);
@@ -290,7 +290,7 @@ class ModuleRepositoryTest extends UnitTestCase
         }
     }
 
-    public function test_get_addons_not_on_marketplace_1()
+    public function testGetAddonsNotOnMarketplace1()
     {
         $filters = new AddonListFilter();
         $filters->setOrigin(AddonListFilterOrigin::DISK);
@@ -301,7 +301,7 @@ class ModuleRepositoryTest extends UnitTestCase
         }
     }
 
-    public function test_get_addons_not_on_marketplace_2()
+    public function testGetAddonsNotOnMarketplace2()
     {
         $filters = new AddonListFilter();
         $filters->setOrigin(~AddonListFilterOrigin::ADDONS_ALL);
@@ -315,7 +315,7 @@ class ModuleRepositoryTest extends UnitTestCase
     /**
      * @todo how to get fake modules returned ?
      */
-    public function test_get_only_modules()
+    public function testGetOnlyModules()
     {
         $filters = new AddonListFilter();
         $filters->setType(AddonListFilterType::MODULE);
@@ -325,7 +325,7 @@ class ModuleRepositoryTest extends UnitTestCase
         }
     }
 
-    public function test_get_only_services()
+    public function testGetOnlyServices()
     {
         $filters = new AddonListFilter();
         $filters->setType(AddonListFilterType::SERVICE);
@@ -335,7 +335,7 @@ class ModuleRepositoryTest extends UnitTestCase
         }
     }
 
-    public function test_should_not_be_able_to_return_theme()
+    public function testShouldNotBeAbleToReturnTheme()
     {
         $filters = new AddonListFilter();
         $filters->setType(AddonListFilterType::THEME);
