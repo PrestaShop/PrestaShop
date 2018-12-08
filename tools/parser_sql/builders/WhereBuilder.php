@@ -1,6 +1,6 @@
 <?php
 /**
- * WhereBuilder.php
+ * WhereBuilder.php.
  *
  * Builds the WHERE part.
  *
@@ -31,83 +31,100 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
+ *
  * @version   SVN: $Id: WhereBuilder.php 830 2013-12-18 09:35:42Z phosco@gmx.de $
- * 
  */
-
-require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
-require_once dirname(__FILE__) . '/../exceptions/UnableToCreateSQLException.php';
-require_once dirname(__FILE__) . '/ColumnReferenceBuilder.php';
-require_once dirname(__FILE__) . '/ConstantBuilder.php';
-require_once dirname(__FILE__) . '/OperatorBuilder.php';
-require_once dirname(__FILE__) . '/FunctionBuilder.php';
-require_once dirname(__FILE__) . '/InListBuilder.php';
-require_once dirname(__FILE__) . '/WhereExpressionBuilder.php';
-require_once dirname(__FILE__) . '/WhereBracketExpressionBuilder.php';
-require_once dirname(__FILE__) . '/UserVariableBuilder.php';
-require_once dirname(__FILE__) . '/SubQueryBuilder.php';
+require_once dirname(__FILE__).'/../utils/ExpressionType.php';
+require_once dirname(__FILE__).'/../exceptions/UnableToCreateSQLException.php';
+require_once dirname(__FILE__).'/ColumnReferenceBuilder.php';
+require_once dirname(__FILE__).'/ConstantBuilder.php';
+require_once dirname(__FILE__).'/OperatorBuilder.php';
+require_once dirname(__FILE__).'/FunctionBuilder.php';
+require_once dirname(__FILE__).'/InListBuilder.php';
+require_once dirname(__FILE__).'/WhereExpressionBuilder.php';
+require_once dirname(__FILE__).'/WhereBracketExpressionBuilder.php';
+require_once dirname(__FILE__).'/UserVariableBuilder.php';
+require_once dirname(__FILE__).'/SubQueryBuilder.php';
 
 /**
- * This class implements the builder for the WHERE part. 
+ * This class implements the builder for the WHERE part.
  * You can overwrite all functions to achieve another handling.
  *
  * @author  André Rothe <andre.rothe@phosco.info>
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- *  
  */
-class WhereBuilder {
-
-    protected function buildColRef($parsed) {
+class WhereBuilder
+{
+    protected function buildColRef($parsed)
+    {
         $builder = new ColumnReferenceBuilder();
+
         return $builder->build($parsed);
     }
 
-    protected function buildConstant($parsed) {
+    protected function buildConstant($parsed)
+    {
         $builder = new ConstantBuilder();
+
         return $builder->build($parsed);
     }
 
-    protected function buildOperator($parsed) {
+    protected function buildOperator($parsed)
+    {
         $builder = new OperatorBuilder();
+
         return $builder->build($parsed);
     }
 
-    protected function buildFunction($parsed) {
+    protected function buildFunction($parsed)
+    {
         $builder = new FunctionBuilder();
+
         return $builder->build($parsed);
     }
 
-    protected function buildSubQuery($parsed) {
+    protected function buildSubQuery($parsed)
+    {
         $builder = new SubQueryBuilder();
+
         return $builder->build($parsed);
     }
 
-    protected function buildInList($parsed) {
+    protected function buildInList($parsed)
+    {
         $builder = new InListBuilder();
+
         return $builder->build($parsed);
     }
 
-    protected function buildWhereExpression($parsed) {
+    protected function buildWhereExpression($parsed)
+    {
         $builder = new WhereExpressionBuilder();
+
         return $builder->build($parsed);
     }
 
-    protected function buildWhereBracketExpression($parsed) {
+    protected function buildWhereBracketExpression($parsed)
+    {
         $builder = new WhereBracketExpressionBuilder();
+
         return $builder->build($parsed);
     }
 
-    protected function buildUserVariable($parsed) {
+    protected function buildUserVariable($parsed)
+    {
         $builder = new UserVariableBuilder();
+
         return $builder->build($parsed);
     }
 
-    public function build($parsed) {
-        $sql = "WHERE ";
+    public function build($parsed)
+    {
+        $sql = 'WHERE ';
         foreach ($parsed as $k => $v) {
             $len = strlen($sql);
 
@@ -125,10 +142,9 @@ class WhereBuilder {
                 throw new UnableToCreateSQLException('WHERE', $k, $v, 'expr_type');
             }
 
-            $sql .= " ";
+            $sql .= ' ';
         }
+
         return substr($sql, 0, -1);
     }
-
 }
-?>

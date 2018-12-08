@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -26,7 +26,6 @@
 
 namespace LegacyTests\Unit\Classes;
 
-use PrestaShop\PrestaShop\Adapter\Entity\CacheMemcache;
 use PHPUnit_Framework_TestCase;
 use Cache;
 
@@ -93,7 +92,7 @@ class CacheCoreTest extends PHPUnit_Framework_TestCase
     /**
      * When we set a query into cache
      * Then the cache should contain an entry with the cache key and its result
-     * AND entries which link each table from the query to the cache key
+     * AND entries which link each table from the query to the cache key.
      */
     public function testSetQuery()
     {
@@ -124,16 +123,16 @@ class CacheCoreTest extends PHPUnit_Framework_TestCase
     /**
      * When we set a query into cache AND the cache is full
      * Then we should make room into the cache by removing some entries
-     * No LRU strategy used here
+     * No LRU strategy used here.
      */
     public function testSetQueryWithCacheFull()
     {
         Cache::getInstance()->setMaxCachedObjectsByTable(2);
-        
+
         $queries = $this->selectDataProvider();
         $i = 0;
         foreach ($queries as $query) {
-            $i++;
+            ++$i;
             Cache::getInstance()->setQuery($query, array('queryResult '.$i));
         }
 
@@ -160,7 +159,7 @@ class CacheCoreTest extends PHPUnit_Framework_TestCase
     /**
      * When we set a query into cache AND the cache is full
      * Then we should make room into the cache by removing some entries using a LRU strategy.
-     * We verify the LRU strategy is working properly
+     * We verify the LRU strategy is working properly.
      */
     public function testCacheLRUWithCacheFull()
     {
@@ -170,10 +169,10 @@ class CacheCoreTest extends PHPUnit_Framework_TestCase
         $i = 0;
         foreach ($queries as $query) {
             Cache::getInstance()->setQuery($query, array('queryResult '.$i));
-            if ($i == 3) {
+            if (3 == $i) {
                 break;
             }
-            $i++;
+            ++$i;
         }
 
         // increment the counter for query 1 and 3
@@ -217,7 +216,7 @@ class CacheCoreTest extends PHPUnit_Framework_TestCase
      * When the cache is invalidated for a given table
      * Then all the associated queries should be invalidated,
      * AND if those queries are present into other table <=> query map (in case of a join for example)
-     * Then the entries from those maps should be removed as well
+     * Then the entries from those maps should be removed as well.
      */
     public function testCacheInvalidation()
     {
@@ -232,7 +231,7 @@ class CacheCoreTest extends PHPUnit_Framework_TestCase
         $invalidatedKeys = $this->cacheArray[$tableMapKey];
 
         $this->assertArrayHasKey($tableMapKey, $this->cacheArray);
-        
+
         Cache::getInstance()->deleteQuery('SELECT name FROM ps_configuration WHERE id = 1');
 
         $this->assertArrayNotHasKey($tableMapKey, $this->cacheArray);
@@ -281,14 +280,13 @@ class CacheCoreTest extends PHPUnit_Framework_TestCase
         }
     }
 
-
     // --- providers ---
 
     public function selectDataProvider()
     {
         $selectArray = array();
 
-        for ($i = 0; $i <= 9; $i++) {
+        for ($i = 0; $i <= 9; ++$i) {
             $selectArray[] = 'SELECT name FROM ps_configuration LEFT JOIN ps_confiture WHERE id = '.$i;
         }
 

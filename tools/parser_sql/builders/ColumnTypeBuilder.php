@@ -1,6 +1,6 @@
 <?php
 /**
- * ColumnTypeBuilder.php
+ * ColumnTypeBuilder.php.
  *
  * Builds the column type statement part of CREATE TABLE.
  *
@@ -31,64 +31,67 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
+ *
  * @version   SVN: $Id: ColumnTypeBuilder.php 935 2014-01-08 13:58:11Z phosco@gmx.de $
- * 
  */
-
-require_once dirname(__FILE__) . '/../exceptions/UnableToCreateSQLException.php';
-require_once dirname(__FILE__) . '/ReservedBuilder.php';
-require_once dirname(__FILE__) . '/ColumnTypeBracketExpressionBuilder.php';
-require_once dirname(__FILE__) . '/DataTypeBuilder.php';
-require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
+require_once dirname(__FILE__).'/../exceptions/UnableToCreateSQLException.php';
+require_once dirname(__FILE__).'/ReservedBuilder.php';
+require_once dirname(__FILE__).'/ColumnTypeBracketExpressionBuilder.php';
+require_once dirname(__FILE__).'/DataTypeBuilder.php';
+require_once dirname(__FILE__).'/../utils/ExpressionType.php';
 /**
- * This class implements the builder for the column type statement part of CREATE TABLE. 
+ * This class implements the builder for the column type statement part of CREATE TABLE.
  * You can overwrite all functions to achieve another handling.
  *
  * @author  André Rothe <andre.rothe@phosco.info>
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- *  
  */
-class ColumnTypeBuilder {
-
-    protected function buildColumnTypeBracketExpression($parsed) {
+class ColumnTypeBuilder
+{
+    protected function buildColumnTypeBracketExpression($parsed)
+    {
         $builder = new ColumnTypeBracketExpressionBuilder();
+
         return $builder->build($parsed);
     }
 
-    protected function buildReserved($parsed) {
+    protected function buildReserved($parsed)
+    {
         $builder = new ReservedBuilder();
+
         return $builder->build($parsed);
     }
 
-    protected function buildDataType($parsed) {
+    protected function buildDataType($parsed)
+    {
         $builder = new DataTypeBuilder();
+
         return $builder->build($parsed);
     }
-    
-    public function build($parsed) {
-        if ($parsed['expr_type'] !== ExpressionType::COLUMN_TYPE) {
-            return "";
+
+    public function build($parsed)
+    {
+        if (ExpressionType::COLUMN_TYPE !== $parsed['expr_type']) {
+            return '';
         }
-        $sql = "";
+        $sql = '';
         foreach ($parsed['sub_tree'] as $k => $v) {
             $len = strlen($sql);
             $sql .= $this->buildDataType($v);
             $sql .= $this->buildColumnTypeBracketExpression($v);
             $sql .= $this->buildReserved($v);
-            
+
             if ($len == strlen($sql)) {
                 throw new UnableToCreateSQLException('CREATE TABLE column-type subtree', $k, $v, 'expr_type');
             }
-    
-            $sql .= " ";
+
+            $sql .= ' ';
         }
-    
+
         return substr($sql, 0, -1);
     }
-    
 }
-?>

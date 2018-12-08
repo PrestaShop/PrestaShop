@@ -48,11 +48,11 @@ class ConfigurationValidator
         }
 
         // @todo: be able to use fallback util directories
-        $downloadDirPath = __DIR__ . DIRECTORY_SEPARATOR . 'download';
+        $downloadDirPath = __DIR__.DIRECTORY_SEPARATOR.'download';
         if (is_dir($downloadDirPath) || file_exists($downloadDirPath)) {
             $errors[] = "Directory 'download' already exists.";
         }
-        $downloadDirPath = __DIR__ . DIRECTORY_SEPARATOR . 'extracted';
+        $downloadDirPath = __DIR__.DIRECTORY_SEPARATOR.'extracted';
         if (is_dir($downloadDirPath) || file_exists($downloadDirPath)) {
             $errors[] = "Directory 'extracted' already exists.";
         }
@@ -95,22 +95,26 @@ class ConfigurationValidator
         list($fileCreationTestPath, $createFileResult) = $this->createFileTest($dirPath);
         if (false === $createFileResult) {
             $this->deleteDirectoryTest($dirPath);
+
             return ['Cannot write files'];
         }
 
         if (false === $this->downloadFileTest($dirPath)) {
             $this->deleteDirectoryTest($dirPath);
+
             return ['Cannot download files from network'];
         }
 
         list($fileMoveTestPath, $moveResult) = $this->moveFileTest($fileCreationTestPath);
         if (false === $moveResult) {
             $this->deleteDirectoryTest($dirPath);
+
             return ['Cannot move files into prestashop root directory'];
         }
 
         if (false === $this->deleteFileTest($fileMoveTestPath)) {
             $this->deleteDirectoryTest($dirPath);
+
             return ['Cannot delete files in prestashop root directory'];
         }
 
@@ -129,9 +133,9 @@ class ConfigurationValidator
      */
     private function getRandomDirectoryPath()
     {
-        $randomDirectoryName = 'test-' . uniqid();
+        $randomDirectoryName = 'test-'.uniqid();
 
-        return __DIR__ . DIRECTORY_SEPARATOR . $randomDirectoryName;
+        return __DIR__.DIRECTORY_SEPARATOR.$randomDirectoryName;
     }
 
     /**
@@ -151,7 +155,7 @@ class ConfigurationValidator
      */
     private function createFileTest($dirPath)
     {
-        $fileCreationTestPath = $dirPath . DIRECTORY_SEPARATOR . 'test-file.php';
+        $fileCreationTestPath = $dirPath.DIRECTORY_SEPARATOR.'test-file.php';
         $createFileResult = @file_put_contents($fileCreationTestPath, "<?php echo 'Hello world !';");
 
         return [$fileCreationTestPath, $createFileResult];
@@ -164,7 +168,7 @@ class ConfigurationValidator
      */
     private function downloadFileTest($dirPath)
     {
-        $downloadTestPath = $dirPath . DIRECTORY_SEPARATOR . 'test-download.txt';
+        $downloadTestPath = $dirPath.DIRECTORY_SEPARATOR.'test-download.txt';
         $target = 'https://www.google.com/robots.txt';
 
         return (bool) @file_put_contents($downloadTestPath, Download::fileGetContents($target));
@@ -179,7 +183,7 @@ class ConfigurationValidator
      */
     private function moveFileTest($fileCreationTestPath)
     {
-        $fileMoveTestPath = __DIR__ . DIRECTORY_SEPARATOR . 'test-move.php';
+        $fileMoveTestPath = __DIR__.DIRECTORY_SEPARATOR.'test-move.php';
         $moveResult = @rename($fileCreationTestPath, $fileMoveTestPath);
 
         return [$fileMoveTestPath, $moveResult];
@@ -202,7 +206,7 @@ class ConfigurationValidator
      */
     private function deleteDirectoryTest($dirPath)
     {
-        $deleteDirectoryContentResult = array_map('unlink', glob($dirPath . DIRECTORY_SEPARATOR . '*.*'));
+        $deleteDirectoryContentResult = array_map('unlink', glob($dirPath.DIRECTORY_SEPARATOR.'*.*'));
         $deleteDirectoryResult = @rmdir($dirPath);
 
         return [$deleteDirectoryContentResult, $deleteDirectoryResult];

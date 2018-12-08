@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -98,7 +98,7 @@ class RepositoryTest extends UnitTestCase
 
         $this->assertEquals($territory->code, 'FR');
 
-        $code = (string)$territory->currency;
+        $code = (string) $territory->currency;
 
         $this->assertEquals($code, 'EUR');
 
@@ -126,7 +126,7 @@ class RepositoryTest extends UnitTestCase
 
         $datas = array();
         foreach ($currencies as $k => $v) {
-            if (strlen($k)!==3) {
+            if (3 !== strlen($k)) {
                 continue;
             }
             $datas[] = $k;

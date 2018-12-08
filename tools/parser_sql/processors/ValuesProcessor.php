@@ -1,6 +1,6 @@
 <?php
 /**
- * ValuesProcessor.php
+ * ValuesProcessor.php.
  *
  * This file implements the processor for the VALUES statements.
  *
@@ -29,28 +29,27 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
  * DAMAGE.
  */
-
-require_once(dirname(__FILE__) . '/../utils/ExpressionType.php');
-require_once(dirname(__FILE__) . '/RecordProcessor.php');
-require_once(dirname(__FILE__) . '/AbstractProcessor.php');
+require_once dirname(__FILE__).'/../utils/ExpressionType.php';
+require_once dirname(__FILE__).'/RecordProcessor.php';
+require_once dirname(__FILE__).'/AbstractProcessor.php';
 
 /**
- * 
  * This class processes the VALUES statements.
- * 
+ *
  * @author arothe
- * 
  */
-class ValuesProcessor extends AbstractProcessor {
-
+class ValuesProcessor extends AbstractProcessor
+{
     private $recordProcessor;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->recordProcessor = new RecordProcessor();
     }
 
-    public function process($tokens) {
-        $unparsed = "";
+    public function process($tokens)
+    {
+        $unparsed = '';
         foreach ($tokens['VALUES'] as $k => $v) {
             if ($this->isWhitespaceToken($v)) {
                 continue;
@@ -67,13 +66,12 @@ class ValuesProcessor extends AbstractProcessor {
             } else {
                 $processor = new RecordProcessor();
                 $values[$k] = array('expr_type' => ExpressionType::RECORD, 'base_expr' => $v,
-                                    'data' => $this->recordProcessor->process($v));
+                                    'data' => $this->recordProcessor->process($v), );
             }
         }
 
         $tokens['VALUES'] = array_values($values);
+
         return $tokens;
     }
-
 }
-?>

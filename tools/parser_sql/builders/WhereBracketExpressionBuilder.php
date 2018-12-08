@@ -1,6 +1,6 @@
 <?php
 /**
- * WhereBracketExpressionBuilder.php
+ * WhereBracketExpressionBuilder.php.
  *
  * Builds bracket expressions within the WHERE part.
  *
@@ -31,75 +31,88 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
+ *
  * @version   SVN: $Id: WhereBracketExpressionBuilder.php 830 2013-12-18 09:35:42Z phosco@gmx.de $
- * 
  */
-
-require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
-require_once dirname(__FILE__) . '/../exceptions/UnableToCreateSQLException.php';
-require_once dirname(__FILE__) . '/ColumnReferenceBuilder.php';
-require_once dirname(__FILE__) . '/ConstantBuilder.php';
-require_once dirname(__FILE__) . '/OperatorBuilder.php';
-require_once dirname(__FILE__) . '/FunctionBuilder.php';
-require_once dirname(__FILE__) . '/InListBuilder.php';
-require_once dirname(__FILE__) . '/WhereExpressionBuilder.php';
-require_once dirname(__FILE__) . '/WhereBracketExpressionBuilder.php';
-require_once dirname(__FILE__) . '/UserVariableBuilder.php';
+require_once dirname(__FILE__).'/../utils/ExpressionType.php';
+require_once dirname(__FILE__).'/../exceptions/UnableToCreateSQLException.php';
+require_once dirname(__FILE__).'/ColumnReferenceBuilder.php';
+require_once dirname(__FILE__).'/ConstantBuilder.php';
+require_once dirname(__FILE__).'/OperatorBuilder.php';
+require_once dirname(__FILE__).'/FunctionBuilder.php';
+require_once dirname(__FILE__).'/InListBuilder.php';
+require_once dirname(__FILE__).'/WhereExpressionBuilder.php';
+require_once dirname(__FILE__).'/WhereBracketExpressionBuilder.php';
+require_once dirname(__FILE__).'/UserVariableBuilder.php';
 
 /**
- * This class implements the builder for bracket expressions within the WHERE part. 
+ * This class implements the builder for bracket expressions within the WHERE part.
  * You can overwrite all functions to achieve another handling.
  *
  * @author  André Rothe <andre.rothe@phosco.info>
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- *  
  */
-class WhereBracketExpressionBuilder {
-
-    protected function buildColRef($parsed) {
+class WhereBracketExpressionBuilder
+{
+    protected function buildColRef($parsed)
+    {
         $builder = new ColumnReferenceBuilder();
+
         return $builder->build($parsed);
     }
 
-    protected function buildConstant($parsed) {
+    protected function buildConstant($parsed)
+    {
         $builder = new ConstantBuilder();
+
         return $builder->build($parsed);
     }
 
-    protected function buildOperator($parsed) {
+    protected function buildOperator($parsed)
+    {
         $builder = new OperatorBuilder();
+
         return $builder->build($parsed);
     }
 
-    protected function buildFunction($parsed) {
+    protected function buildFunction($parsed)
+    {
         $builder = new FunctionBuilder();
+
         return $builder->build($parsed);
     }
 
-    protected function buildInList($parsed) {
+    protected function buildInList($parsed)
+    {
         $builder = new InListBuilder();
+
         return $builder->build($parsed);
     }
 
-    protected function buildWhereExpression($parsed) {
+    protected function buildWhereExpression($parsed)
+    {
         $builder = new WhereExpressionBuilder();
+
         return $builder->build($parsed);
     }
 
-    protected function buildUserVariable($parsed) {
+    protected function buildUserVariable($parsed)
+    {
         $builder = new UserVariableBuilder();
+
         return $builder->build($parsed);
     }
 
-    public function build($parsed) {
-        if ($parsed['expr_type'] !== ExpressionType::BRACKET_EXPRESSION) {
-            return "";
+    public function build($parsed)
+    {
+        if (ExpressionType::BRACKET_EXPRESSION !== $parsed['expr_type']) {
+            return '';
         }
-        $sql = "";
+        $sql = '';
         foreach ($parsed['sub_tree'] as $k => $v) {
             $len = strlen($sql);
             $sql .= $this->buildColRef($v);
@@ -115,12 +128,11 @@ class WhereBracketExpressionBuilder {
                 throw new UnableToCreateSQLException('WHERE expression subtree', $k, $v, 'expr_type');
             }
 
-            $sql .= " ";
+            $sql .= ' ';
         }
 
-        $sql = "(" . substr($sql, 0, -1) . ")";
+        $sql = '('.substr($sql, 0, -1).')';
+
         return $sql;
     }
-
 }
-?>

@@ -1,6 +1,6 @@
 <?php
 /**
- * JoinBuilder.php
+ * JoinBuilder.php.
  *
  * Builds the JOIN statement parts (within FROM).
  *
@@ -31,41 +31,39 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
+ *
  * @version   SVN: $Id: JoinBuilder.php 830 2013-12-18 09:35:42Z phosco@gmx.de $
- * 
  */
-
-require_once dirname(__FILE__) . '/../exceptions/UnsupportedFeatureException.php';
+require_once dirname(__FILE__).'/../exceptions/UnsupportedFeatureException.php';
 
 /**
- * This class implements the builder for the JOIN statement parts (within FROM). 
+ * This class implements the builder for the JOIN statement parts (within FROM).
  * You can overwrite all functions to achieve another handling.
  *
  * @author  André Rothe <andre.rothe@phosco.info>
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- *  
  */
-class JoinBuilder {
-
-    public function build($parsed) {
-        if ($parsed === 'CROSS') {
-            return ", ";
+class JoinBuilder
+{
+    public function build($parsed)
+    {
+        if ('CROSS' === $parsed) {
+            return ', ';
         }
-        if ($parsed === 'JOIN') {
-            return " INNER JOIN ";
+        if ('JOIN' === $parsed) {
+            return ' INNER JOIN ';
         }
-        if ($parsed === 'LEFT') {
-            return " LEFT JOIN ";
+        if ('LEFT' === $parsed) {
+            return ' LEFT JOIN ';
         }
-        if ($parsed === 'RIGHT') {
-            return " RIGHT JOIN ";
+        if ('RIGHT' === $parsed) {
+            return ' RIGHT JOIN ';
         }
         // TODO: add more
         throw new UnsupportedFeatureException($parsed);
     }
 }
-?>

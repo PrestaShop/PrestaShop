@@ -1,6 +1,6 @@
 <?php
 /**
- * SelectStatement.php
+ * SelectStatement.php.
  *
  * Builds the SELECT statement
  *
@@ -31,20 +31,19 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
+ *
  * @version   SVN: $Id: SelectStatementBuilder.php 830 2013-12-18 09:35:42Z phosco@gmx.de $
- * 
  */
-
-require_once dirname(__FILE__) . '/LimitBuilder.php';
-require_once dirname(__FILE__) . '/SelectBuilder.php';
-require_once dirname(__FILE__) . '/FromBuilder.php';
-require_once dirname(__FILE__) . '/WhereBuilder.php';
-require_once dirname(__FILE__) . '/GroupByBuilder.php';
-require_once dirname(__FILE__) . '/OrderByBuilder.php';
+require_once dirname(__FILE__).'/LimitBuilder.php';
+require_once dirname(__FILE__).'/SelectBuilder.php';
+require_once dirname(__FILE__).'/FromBuilder.php';
+require_once dirname(__FILE__).'/WhereBuilder.php';
+require_once dirname(__FILE__).'/GroupByBuilder.php';
+require_once dirname(__FILE__).'/OrderByBuilder.php';
 
 /**
  * This class implements the builder for the whole Select statement. You can overwrite
@@ -52,59 +51,70 @@ require_once dirname(__FILE__) . '/OrderByBuilder.php';
  *
  * @author  André Rothe <andre.rothe@phosco.info>
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- *  
  */
-class SelectStatementBuilder {
-
-    protected function buildSELECT($parsed) {
+class SelectStatementBuilder
+{
+    protected function buildSELECT($parsed)
+    {
         $builder = new SelectBuilder();
+
         return $builder->build($parsed);
     }
 
-    protected function buildFROM($parsed) {
+    protected function buildFROM($parsed)
+    {
         $builder = new FromBuilder();
+
         return $builder->build($parsed);
     }
 
-    protected function buildWHERE($parsed) {
+    protected function buildWHERE($parsed)
+    {
         $builder = new WhereBuilder();
+
         return $builder->build($parsed);
     }
 
-    protected function buildGROUP($parsed) {
+    protected function buildGROUP($parsed)
+    {
         $builder = new GroupByBuilder();
+
         return $builder->build($parsed);
     }
 
-    protected function buildORDER($parsed) {
+    protected function buildORDER($parsed)
+    {
         $builder = new OrderByBuilder();
+
         return $builder->build($parsed);
     }
 
-    protected function buildLIMIT($parsed) {
+    protected function buildLIMIT($parsed)
+    {
         $builder = new LimitBuilder();
+
         return $builder->build($parsed);
     }
 
-    public function build($parsed) {
+    public function build($parsed)
+    {
         $sql = $this->buildSELECT($parsed['SELECT']);
         if (isset($parsed['FROM'])) {
-            $sql .= " " . $this->buildFROM($parsed['FROM']);
+            $sql .= ' '.$this->buildFROM($parsed['FROM']);
         }
         if (isset($parsed['WHERE'])) {
-            $sql .= " " . $this->buildWHERE($parsed['WHERE']);
+            $sql .= ' '.$this->buildWHERE($parsed['WHERE']);
         }
         if (isset($parsed['GROUP'])) {
-            $sql .= " " . $this->buildGROUP($parsed['GROUP']);
+            $sql .= ' '.$this->buildGROUP($parsed['GROUP']);
         }
         if (isset($parsed['ORDER'])) {
-            $sql .= " " . $this->buildORDER($parsed['ORDER']);
+            $sql .= ' '.$this->buildORDER($parsed['ORDER']);
         }
         if (isset($parsed['LIMIT'])) {
-            $sql .= " " . $this->buildLIMIT($parsed['LIMIT']);
+            $sql .= ' '.$this->buildLIMIT($parsed['LIMIT']);
         }
+
         return $sql;
     }
-
 }
-?>

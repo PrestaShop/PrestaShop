@@ -72,7 +72,7 @@ class Download
     {
         $curl_timeout = 60;
 
-        if (!extension_loaded('openssl') and strpos('https://', $url) === true) {
+        if (!extension_loaded('openssl') and true === strpos('https://', $url)) {
             $url = str_replace('https', 'http', $url);
         }
 
@@ -98,7 +98,7 @@ class Download
             curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
             $opts = stream_context_get_options($stream_context);
 
-            if (isset($opts['http']['method']) && strtolower($opts['http']['method']) == 'post') {
+            if (isset($opts['http']['method']) && 'post' == strtolower($opts['http']['method'])) {
                 curl_setopt($curl, CURLOPT_POST, true);
                 if (isset($opts['http']['content'])) {
                     parse_str($opts['http']['content'], $datas);

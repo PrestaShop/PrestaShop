@@ -74,8 +74,8 @@ class Version
     {
         $this->version = $version;
         $versions = explode('.', $version);
-        $this->majorVersionString = $versions[0] . '.' . $versions[1];
-        $this->majorVersion = (int) ($versions[0] . $versions[1]);
+        $this->majorVersionString = $versions[0].'.'.$versions[1];
+        $this->majorVersion = (int) ($versions[0].$versions[1]);
         $this->minorVersion = $versions[2];
         $this->releaseVersion = $versions[3];
     }

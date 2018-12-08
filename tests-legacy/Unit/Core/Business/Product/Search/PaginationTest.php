@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -33,7 +33,7 @@ class PaginationTest extends Testcase
 {
     public function setUp()
     {
-        $this->pagination = new Pagination;
+        $this->pagination = new Pagination();
     }
 
     public function test_pagination_adds_context_first_and_last_page_and_previous_next()
@@ -48,7 +48,7 @@ class PaginationTest extends Testcase
             ['type' => 'page', 'clickable' => true, 'page' => 1,      'current' => false],
             ['type' => 'spacer', 'clickable' => false, 'page' => null,   'current' => false],
             ['type' => 'page', 'clickable' => true, 'page' => 4,      'current' => false],
-            ['type' => 'page', 'clickable' => false, 'page' => 5,      'current' => true ],
+            ['type' => 'page', 'clickable' => false, 'page' => 5,      'current' => true],
             ['type' => 'page', 'clickable' => true, 'page' => 6,      'current' => false],
             ['type' => 'spacer', 'clickable' => false, 'page' => null,   'current' => false],
             ['type' => 'page', 'clickable' => true, 'page' => 10,     'current' => false],

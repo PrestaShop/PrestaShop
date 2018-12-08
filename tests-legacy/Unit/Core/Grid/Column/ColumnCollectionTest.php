@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -93,7 +93,7 @@ class ColumnCollectionTest extends TestCase
             'after_second',
             'before_third',
             'third',
-            'after_third'
+            'after_third',
         ], $this->getColumnPositions($columns));
 
         return $columns;
@@ -213,7 +213,7 @@ class ColumnCollectionTest extends TestCase
      */
     private function getColumnPositions(ColumnCollection $columns)
     {
-        $positions= [];
+        $positions = [];
 
         foreach ($columns as $column) {
             $positions[] = $column->getId();

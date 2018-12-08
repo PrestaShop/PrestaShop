@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -44,7 +44,7 @@ class CartPresenterTest extends UnitTestCase
         parent::setup();
         $this->previousSeparator = Configuration::get('PS_ATTRIBUTE_ANCHOR_SEPARATOR');
         Configuration::set('PS_ATTRIBUTE_ANCHOR_SEPARATOR', '-');
-        $this->cartPresenter = new CartPresenter;
+        $this->cartPresenter = new CartPresenter();
     }
 
     public function tearDown()
@@ -56,10 +56,10 @@ class CartPresenterTest extends UnitTestCase
     /**
      * We check that our attributes are properly parsed from a string, EVEN IF their value or label also have the
      * separator in them.
-     * See https://regex101.com/r/wlRNtX/1 for examples used
+     * See https://regex101.com/r/wlRNtX/1 for examples used.
      *
      * @param string $asString
-     * @param array $asArray
+     * @param array  $asArray
      *
      * @dataProvider productAttributesProvider
      */

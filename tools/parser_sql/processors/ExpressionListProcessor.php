@@ -1,6 +1,6 @@
 <?php
 /**
- * ExpressionListProcessor.php
+ * ExpressionListProcessor.php.
  *
  * This file implements the processor for expression lists.
  *
@@ -29,28 +29,25 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
  * DAMAGE.
  */
-
-require_once(dirname(__FILE__) . '/AbstractProcessor.php');
-require_once(dirname(__FILE__) . '/DefaultProcessor.php');
-require_once(dirname(__FILE__) . '/../utils/ExpressionToken.php');
-require_once(dirname(__FILE__) . '/../utils/ExpressionType.php');
+require_once dirname(__FILE__).'/AbstractProcessor.php';
+require_once dirname(__FILE__).'/DefaultProcessor.php';
+require_once dirname(__FILE__).'/../utils/ExpressionToken.php';
+require_once dirname(__FILE__).'/../utils/ExpressionType.php';
 
 /**
- * 
  * This class processes expression lists.
- * 
+ *
  * @author arothe
- * 
  */
-class ExpressionListProcessor extends AbstractProcessor {
-
-    public function process($tokens) {
+class ExpressionListProcessor extends AbstractProcessor
+{
+    public function process($tokens)
+    {
         $resultList = array();
         $skip_next = false;
         $prev = new ExpressionToken();
 
         foreach ($tokens as $k => $v) {
-
             $curr = new ExpressionToken($k, $v);
 
             if ($curr->isWhitespaceToken()) {
@@ -65,18 +62,15 @@ class ExpressionListProcessor extends AbstractProcessor {
 
             /* is it a subquery? */
             if ($curr->isSubQueryToken()) {
-
                 $processor = new DefaultProcessor();
                 $curr->setSubTree($processor->process($this->removeParenthesisFromStart($curr->getTrim())));
                 $curr->setTokenType(ExpressionType::SUBQUERY);
-
             } elseif ($curr->isEnclosedWithinParenthesis()) {
                 /* is it an in-list? */
 
                 $localTokenList = $this->splitSQLIntoTokens($this->removeParenthesisFromStart($curr->getTrim()));
 
-                if ($prev->getUpper() === 'IN') {
-
+                if ('IN' === $prev->getUpper()) {
                     foreach ($localTokenList as $k => $v) {
                         $tmpToken = new ExpressionToken($k, $v);
                         if ($tmpToken->isCommaToken()) {
@@ -87,11 +81,9 @@ class ExpressionListProcessor extends AbstractProcessor {
                     $localTokenList = array_values($localTokenList);
                     $curr->setSubTree($this->process($localTokenList));
                     $curr->setTokenType(ExpressionType::IN_LIST);
-                } elseif ($prev->getUpper() === 'AGAINST') {
-
+                } elseif ('AGAINST' === $prev->getUpper()) {
                     $match_mode = false;
                     foreach ($localTokenList as $k => $v) {
-
                         $tmpToken = new ExpressionToken($k, $v);
                         switch ($tmpToken->getUpper()) {
                         case 'WITH':
@@ -104,14 +96,14 @@ class ExpressionListProcessor extends AbstractProcessor {
                         default:
                         }
 
-                        if ($match_mode !== false) {
+                        if (false !== $match_mode) {
                             unset($localTokenList[$k]);
                         }
                     }
 
                     $tmpToken = $this->process($localTokenList);
 
-                    if ($match_mode !== false) {
+                    if (false !== $match_mode) {
                         $match_mode = new ExpressionToken(0, $match_mode);
                         $match_mode->setTokenType(ExpressionType::MATCH_MODE);
                         $tmpToken[] = $match_mode->toArray();
@@ -120,9 +112,7 @@ class ExpressionListProcessor extends AbstractProcessor {
                     $curr->setSubTree($tmpToken);
                     $curr->setTokenType(ExpressionType::MATCH_ARGUMENTS);
                     $prev->setTokenType(ExpressionType::SIMPLE_FUNCTION);
-
                 } elseif ($prev->isColumnReference() || $prev->isFunction() || $prev->isAggregateFunction()) {
-
                     // if we have a colref followed by a parenthesis pair,
                     // it isn't a colref, it is a user-function
 
@@ -193,7 +183,6 @@ class ExpressionListProcessor extends AbstractProcessor {
 
                 // we have parenthesis, but it seems to be an expression
                 if ($curr->isUnspecified()) {
-
                     // TODO: the localTokenList could contain commas and further expressions,
                     // we must handle that like function parameters (see above)!
                     // this should solve issue 51
@@ -202,18 +191,15 @@ class ExpressionListProcessor extends AbstractProcessor {
                     $curr->setTokenType(ExpressionType::BRACKET_EXPRESSION);
                 }
             } elseif ($curr->isVariableToken()) {
-
-                # a variable
-                # it can be quoted
+                // a variable
+                // it can be quoted
 
                 $curr->setTokenType($this->getVariableType($curr->getUpper()));
                 $curr->setSubTree(false);
                 $curr->setNoQuotes(trim(trim($curr->getToken()), '@'), "`'\"");
-
             } else {
                 /* it is either an operator, a colref or a constant */
                 switch ($curr->getUpper()) {
-
                 case '*':
                     $curr->setSubTree(false); // o subtree
 
@@ -232,7 +218,7 @@ class ExpressionListProcessor extends AbstractProcessor {
                         break;
                     }
 
-                    if ($prev->isColumnReference() && $prev->endsWith(".")) {
+                    if ($prev->isColumnReference() && $prev->endsWith('.')) {
                         $prev->addToken('*'); // tablealias dot *
                         continue 2; // skip the current token
                     }
@@ -314,12 +300,11 @@ class ExpressionListProcessor extends AbstractProcessor {
 
                     default:
                         if (is_numeric($curr->getToken())) {
-
                             if ($prev->isSign()) {
                                 $prev->addToken($curr->getToken()); // it is a negative numeric constant
                                 $prev->setTokenType(ExpressionType::CONSTANT);
                                 continue 3;
-                                // skip current token
+                            // skip current token
                             } else {
                                 $curr->setTokenType(ExpressionType::CONSTANT);
                             }
@@ -335,26 +320,21 @@ class ExpressionListProcessor extends AbstractProcessor {
             /* is a reserved word? */
             if (!$curr->isOperator() && !$curr->isInList() && !$curr->isFunction() && !$curr->isAggregateFunction()
                     && PHPSQLParserConstants::isReserved($curr->getUpper())) {
-
                 if (PHPSQLParserConstants::isAggregateFunction($curr->getUpper())) {
                     $curr->setTokenType(ExpressionType::AGGREGATE_FUNCTION);
                     $curr->setNoQuotes(null);
-
-                } elseif ($curr->getUpper() === 'NULL') {
+                } elseif ('NULL' === $curr->getUpper()) {
                     // it is a reserved word, but we would like to set it as constant
                     $curr->setTokenType(ExpressionType::CONSTANT);
-
                 } else {
                     if (PHPSQLParserConstants::isParameterizedFunction($curr->getUpper())) {
                         // issue 60: check functions with parameters
                         // -> colref (we check parameters later)
                         // -> if there is no parameter, we leave the colref
                         $curr->setTokenType(ExpressionType::COLREF);
-
                     } elseif (PHPSQLParserConstants::isFunction($curr->getUpper())) {
                         $curr->setTokenType(ExpressionType::SIMPLE_FUNCTION);
                         $curr->setNoQuotes(null);
-
                     } else {
                         $curr->setTokenType(ExpressionType::RESERVED);
                         $curr->setNoQuotes(null);
@@ -386,4 +366,3 @@ class ExpressionListProcessor extends AbstractProcessor {
         return $this->toArray($resultList);
     }
 }
-?>

@@ -61,8 +61,8 @@ class InstallManager
         $this->unzip = new Unzip();
 
         // @todo: be able to use fallback util directories
-        $this->downloadDirectoryPath = __DIR__ . DIRECTORY_SEPARATOR . 'download';
-        $this->extractDirectoryPath = __DIR__ . DIRECTORY_SEPARATOR . 'extracted';
+        $this->downloadDirectoryPath = __DIR__.DIRECTORY_SEPARATOR.'download';
+        $this->extractDirectoryPath = __DIR__.DIRECTORY_SEPARATOR.'extracted';
     }
 
     /**
@@ -109,7 +109,7 @@ class InstallManager
         }
 
         // download zip archive
-        $destinationPath = realpath($this->downloadDirectoryPath) . DIRECTORY_SEPARATOR . 'prestashop-latest.zip';
+        $destinationPath = realpath($this->downloadDirectoryPath).DIRECTORY_SEPARATOR.'prestashop-latest.zip';
         $link = $this->download->getLatestStableAvailableVersionLink();
         Download::copy($link, $destinationPath);
 
@@ -150,7 +150,7 @@ class InstallManager
      */
     private function verifyUnzipFile($fileName)
     {
-        if (false === is_file($this->extractDirectoryPath . DIRECTORY_SEPARATOR . $fileName)) {
+        if (false === is_file($this->extractDirectoryPath.DIRECTORY_SEPARATOR.$fileName)) {
             throw new PrestashopCouldNotInstallLatestVersionException(sprintf(
                 'After unzip, missing %s file',
                 $fileName
@@ -166,8 +166,8 @@ class InstallManager
     private function replaceInstallFile($fileName)
     {
         $replaceFileResult = rename(
-            $this->extractDirectoryPath . DIRECTORY_SEPARATOR . $fileName,
-            __DIR__ . DIRECTORY_SEPARATOR . $fileName
+            $this->extractDirectoryPath.DIRECTORY_SEPARATOR.$fileName,
+            __DIR__.DIRECTORY_SEPARATOR.$fileName
         );
 
         if (false === $replaceFileResult) {
@@ -187,7 +187,7 @@ class InstallManager
     {
         $deleteDirectoryContentResult = array_map(
             'unlink',
-            glob($directoryPath . DIRECTORY_SEPARATOR . '*.*')
+            glob($directoryPath.DIRECTORY_SEPARATOR.'*.*')
         );
 
         $deleteDirectoryResult = @rmdir($directoryPath);

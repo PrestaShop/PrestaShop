@@ -1,6 +1,6 @@
 <?php
 /**
- * DropProcessor.php
+ * DropProcessor.php.
  *
  * This file implements the processor for the DROP statements.
  *
@@ -29,26 +29,24 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
  * DAMAGE.
  */
-
-require_once(dirname(__FILE__) . '/../utils/ExpressionToken.php');
-require_once(dirname(__FILE__) . '/../utils/ExpressionType.php');
-require_once(dirname(__FILE__) . '/AbstractProcessor.php');
+require_once dirname(__FILE__).'/../utils/ExpressionToken.php';
+require_once dirname(__FILE__).'/../utils/ExpressionType.php';
+require_once dirname(__FILE__).'/AbstractProcessor.php';
 
 /**
- * 
  * This class processes the DROP statements.
- * 
+ *
  * @author arothe
- * 
  */
-class DropProcessor extends AbstractProcessor {
-
+class DropProcessor extends AbstractProcessor
+{
     // TODO: we should enhance it to get the positions for the IF EXISTS keywords
     // look into the CreateProcessor to get an idea.
-    public function process($tokenList) {
+    public function process($tokenList)
+    {
         $skip = 0;
         $warning = true;
-        $base_expr = "";
+        $base_expr = '';
         $expr_type = false;
         $option = false;
         $resultList = array();
@@ -61,7 +59,7 @@ class DropProcessor extends AbstractProcessor {
             }
 
             if ($skip > 0) {
-                $skip --;
+                --$skip;
                 continue;
             }
 
@@ -90,7 +88,7 @@ class DropProcessor extends AbstractProcessor {
 
             case ',':
                 $resultList[] = array('expr_type' => $expr_type, 'base_expr' => $base_expr);
-                $base_expr = "";
+                $base_expr = '';
                 break;
 
             default:
@@ -98,11 +96,10 @@ class DropProcessor extends AbstractProcessor {
             }
         }
 
-        if ($base_expr !== "") {
+        if ('' !== $base_expr) {
             $resultList[] = array('expr_type' => $expr_type, 'base_expr' => $base_expr);
         }
 
         return array('option' => $option, 'warning' => $warning, 'object_list' => $resultList);
     }
 }
-?>

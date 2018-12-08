@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -32,7 +32,6 @@ use LegacyTests\PrestaShopBundle\Utils\DatabaseCreator as Database;
 
 class IntegrationTestCase extends TestCase
 {
-
     /**
      * @var ContextMocker
      */
@@ -54,6 +53,6 @@ class IntegrationTestCase extends TestCase
     public static function setUpBeforeClass()
     {
         Database::restoreTestDB();
-        require_once(__DIR__ . '/../../config/config.inc.php');
+        require_once __DIR__.'/../../config/config.inc.php';
     }
 }

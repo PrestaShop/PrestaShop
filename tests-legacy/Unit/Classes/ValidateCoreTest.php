@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -121,7 +121,7 @@ class ValidateCoreTest extends TestCase
     {
         return array(
             array(false, 'toto'),
-            array(true, '123')
+            array(true, '123'),
         );
     }
 
@@ -213,7 +213,7 @@ class ValidateCoreTest extends TestCase
             $this->trueFloatDataProvider(),
             array(
                 array(false, -12.2151),
-                array(false, -12,2151),
+                array(false, -12, 2151),
                 array(false, '-12.2151'),
                 array(false, ''),
                 array(false, 'A'),
@@ -227,7 +227,7 @@ class ValidateCoreTest extends TestCase
         return array(
             array(true, 12),
             array(true, 12.2151),
-            array(true, 12,2151),
+            array(true, 12, 2151),
             array(true, '12.2151'),
         );
     }
@@ -238,7 +238,7 @@ class ValidateCoreTest extends TestCase
             $this->trueFloatDataProvider(),
             array(
                 array(true, -12.2151),
-                array(true, -12,2151),
+                array(true, -12, 2151),
                 array(true, '-12.2151'),
                 array(false, ''),
                 array(false, 'A'),

@@ -1,6 +1,6 @@
 <?php
 /**
- * SelectProcessor.php
+ * SelectProcessor.php.
  *
  * This file implements the processor for the SELECT statements.
  *
@@ -29,30 +29,27 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
  * DAMAGE.
  */
-
-require_once(dirname(__FILE__) . '/SelectExpressionProcessor.php');
+require_once dirname(__FILE__).'/SelectExpressionProcessor.php';
 
 /**
- * 
  * This class processes the SELECT statements.
- * 
+ *
  * @author arothe
- * 
  */
-class SelectProcessor extends SelectExpressionProcessor {
-
-    public function process($tokens) {
-        $expression = "";
+class SelectProcessor extends SelectExpressionProcessor
+{
+    public function process($tokens)
+    {
+        $expression = '';
         $expressionList = array();
         foreach ($tokens as $token) {
             if ($this->isCommaToken($token)) {
                 $expression = parent::process(trim($expression));
                 $expression['delim'] = ',';
                 $expressionList[] = $expression;
-                $expression = "";
+                $expression = '';
             } else {
                 switch (strtoupper($token)) {
-
                 // add more SELECT options here
                 case 'DISTINCT':
                 case 'DISTINCTROW':
@@ -67,7 +64,7 @@ class SelectProcessor extends SelectExpressionProcessor {
                     $expression = parent::process(trim($token));
                     $expression['delim'] = ' ';
                     $expressionList[] = $expression;
-                    $expression = "";
+                    $expression = '';
                     break;
 
                 default:
@@ -80,7 +77,7 @@ class SelectProcessor extends SelectExpressionProcessor {
             $expression['delim'] = false;
             $expressionList[] = $expression;
         }
+
         return $expressionList;
     }
 }
-?>

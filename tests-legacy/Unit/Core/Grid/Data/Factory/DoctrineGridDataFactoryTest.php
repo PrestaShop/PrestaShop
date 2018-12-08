@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -61,7 +61,6 @@ class DoctrineGridDataFactoryTest extends TestCase
 
         $this->assertInstanceOf(GridDataInterface::class, $data);
         $this->assertInstanceOf(RecordCollectionInterface::class, $data->getRecords());
-
 
         $this->assertEquals(4, $data->getRecordsTotal());
         $this->assertCount(2, $data->getRecords());

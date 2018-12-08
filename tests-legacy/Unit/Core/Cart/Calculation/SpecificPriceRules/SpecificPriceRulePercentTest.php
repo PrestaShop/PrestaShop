@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -28,7 +28,6 @@ namespace LegacyTests\Unit\Core\Cart\Calculation\SpecificPriceRules;
 
 class SpecificPriceRulePercentTest extends AbstractSpecificPriceRuleTest
 {
-
     const SPECIFIC_PRICE_RULES_FIXTURES = [
         1 => ['reductionType' => 'percentage', 'reduction' => 23, 'fromQuantity' => 1],
         2 => ['reductionType' => 'percentage', 'reduction' => 15, 'fromQuantity' => 2],
@@ -63,72 +62,72 @@ class SpecificPriceRulePercentTest extends AbstractSpecificPriceRuleTest
     public function specificPriceRulePercentProvider()
     {
         return [
-            '1 product in cart, quantity 1, one rule percent from quantity 1'          => [
-                'products'             => [
+            '1 product in cart, quantity 1, one rule percent from quantity 1' => [
+                'products' => [
                     1 => 1,
                 ],
-                'expectedTotal'        => static::PRODUCT_FIXTURES[1]['price']
+                'expectedTotal' => static::PRODUCT_FIXTURES[1]['price']
                                           * (1 - static::SPECIFIC_PRICE_RULES_FIXTURES[1]['reduction'] / 100)
                                           + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
-                'cartRules'            => [],
+                'cartRules' => [],
                 'specificCartRuleData' => [1],
             ],
-            '1 product in cart, quantity 1, one rule percent from quantity 2'          => [
-                'products'             => [
+            '1 product in cart, quantity 1, one rule percent from quantity 2' => [
+                'products' => [
                     1 => 1,
                 ],
-                'expectedTotal'        => static::PRODUCT_FIXTURES[1]['price']
+                'expectedTotal' => static::PRODUCT_FIXTURES[1]['price']
                                           + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
-                'cartRules'            => [],
+                'cartRules' => [],
                 'specificCartRuleData' => [2],
             ],
-            '1 product in cart, quantity 3, one rule percent from quantity 1'          => [
-                'products'             => [
+            '1 product in cart, quantity 3, one rule percent from quantity 1' => [
+                'products' => [
                     1 => 3,
                 ],
-                'expectedTotal'        => 3 * static::PRODUCT_FIXTURES[1]['price']
+                'expectedTotal' => 3 * static::PRODUCT_FIXTURES[1]['price']
                                           * (1 - static::SPECIFIC_PRICE_RULES_FIXTURES[1]['reduction'] / 100)
                                           + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
-                'cartRules'            => [],
+                'cartRules' => [],
                 'specificCartRuleData' => [1],
             ],
-            '1 product in cart, quantity 3, one rule percent from quantity 2'          => [
-                'products'             => [
+            '1 product in cart, quantity 3, one rule percent from quantity 2' => [
+                'products' => [
                     1 => 3,
                 ],
-                'expectedTotal'        => 3 * static::PRODUCT_FIXTURES[1]['price']
+                'expectedTotal' => 3 * static::PRODUCT_FIXTURES[1]['price']
                                           * (1 - static::SPECIFIC_PRICE_RULES_FIXTURES[2]['reduction'] / 100)
                                           + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
-                'cartRules'            => [],
+                'cartRules' => [],
                 'specificCartRuleData' => [2],
             ],
             '3 products in cart, several quantities, one rule percent from quantity 1' => [
-                'products'             => [
+                'products' => [
                     2 => 2,
                     1 => 3,
                     3 => 1,
                 ],
-                'expectedTotal'        => (3 * static::PRODUCT_FIXTURES[1]['price']
+                'expectedTotal' => (3 * static::PRODUCT_FIXTURES[1]['price']
                                            + 2 * static::PRODUCT_FIXTURES[2]['price']
                                            + static::PRODUCT_FIXTURES[3]['price'])
                                           * (1 - static::SPECIFIC_PRICE_RULES_FIXTURES[1]['reduction'] / 100)
                                           + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
-                'cartRules'            => [],
+                'cartRules' => [],
                 'specificCartRuleData' => [1],
             ],
             '3 products in cart, several quantities, one rule percent from quantity 2' => [
-                'products'             => [
+                'products' => [
                     2 => 2,
                     1 => 3,
                     3 => 1,
                 ],
-                'expectedTotal'        => 3 * static::PRODUCT_FIXTURES[1]['price']
+                'expectedTotal' => 3 * static::PRODUCT_FIXTURES[1]['price']
                                           * (1 - static::SPECIFIC_PRICE_RULES_FIXTURES[2]['reduction'] / 100)
                                           + 2 * static::PRODUCT_FIXTURES[2]['price']
                                             * (1 - static::SPECIFIC_PRICE_RULES_FIXTURES[2]['reduction'] / 100)
                                           + static::PRODUCT_FIXTURES[3]['price']
                                           + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
-                'cartRules'            => [],
+                'cartRules' => [],
                 'specificCartRuleData' => [2],
             ],
         ];

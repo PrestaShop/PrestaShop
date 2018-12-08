@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -81,7 +81,7 @@ class ThemeValidatorTest extends TestCase
         if (!in_array($name, $options)) {
             throw new \InvalidArgumentException(self::NOTICE.'getTheme($name) only accepts specified arguments');
         }
-        $themeDir = __DIR__. '/../../../../resources/minimal-'.$name.'-theme/';
+        $themeDir = __DIR__.'/../../../../resources/minimal-'.$name.'-theme/';
         $themeConfigFile = $themeDir.'config/theme.yml';
 
         $config = (new Parser())->parse(file_get_contents($themeConfigFile));

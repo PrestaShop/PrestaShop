@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -32,8 +32,8 @@ use PHPUnit\Framework\TestCase;
 
 class ModuleManagerTest extends TestCase
 {
-    const UNINSTALLED_MODULE = "uninstalled-module";
-    const INSTALLED_MODULE = "installed-module";
+    const UNINSTALLED_MODULE = 'uninstalled-module';
+    const INSTALLED_MODULE = 'installed-module';
 
     private $moduleManager;
     private $adminModuleProviderS;
@@ -172,14 +172,14 @@ class ModuleManagerTest extends TestCase
                 'uninstall', self::INSTALLED_MODULE, true,
             ],
             [
-                'uninstall', self::UNINSTALLED_MODULE, false
+                'uninstall', self::UNINSTALLED_MODULE, false,
             ],
             [
                 'configure', self::INSTALLED_MODULE, true,
             ],
             [
-                'configure', self::UNINSTALLED_MODULE, false
-            ]
+                'configure', self::UNINSTALLED_MODULE, false,
+            ],
         ];
         $this->moduleProviderS = $this->getMockBuilder('PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider')
             ->disableOriginalConstructor()
@@ -191,11 +191,11 @@ class ModuleManagerTest extends TestCase
 
         $isInstalledValues = [
             [
-                self::INSTALLED_MODULE, true
+                self::INSTALLED_MODULE, true,
             ],
             [
-                self::UNINSTALLED_MODULE, false
-            ]
+                self::UNINSTALLED_MODULE, false,
+            ],
         ];
         $this->moduleProviderS
             ->method('isInstalled')
@@ -203,7 +203,7 @@ class ModuleManagerTest extends TestCase
 
         $isEnabledValues = [
             [self::INSTALLED_MODULE, true],
-            [self::UNINSTALLED_MODULE, false]
+            [self::UNINSTALLED_MODULE, false],
         ];
 
         $this->moduleProviderS

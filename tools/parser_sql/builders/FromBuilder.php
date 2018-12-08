@@ -1,6 +1,6 @@
 <?php
 /**
- * FromBuilder.php
+ * FromBuilder.php.
  *
  * Builds the FROM statement
  *
@@ -31,18 +31,17 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
+ *
  * @version   SVN: $Id: FromBuilder.php 830 2013-12-18 09:35:42Z phosco@gmx.de $
- * 
  */
-
-require_once dirname(__FILE__) . '/../exceptions/UnableToCreateSQLException.php';
-require_once dirname(__FILE__) . '/TableBuilder.php';
-require_once dirname(__FILE__) . '/TableExpressionBuilder.php';
-require_once dirname(__FILE__) . '/SubQueryBuilder.php';
+require_once dirname(__FILE__).'/../exceptions/UnableToCreateSQLException.php';
+require_once dirname(__FILE__).'/TableBuilder.php';
+require_once dirname(__FILE__).'/TableExpressionBuilder.php';
+require_once dirname(__FILE__).'/SubQueryBuilder.php';
 
 /**
  * This class implements the builder for the [FROM] part. You can overwrite
@@ -50,27 +49,33 @@ require_once dirname(__FILE__) . '/SubQueryBuilder.php';
  *
  * @author  André Rothe <andre.rothe@phosco.info>
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- *  
  */
-class FromBuilder {
-
-    protected function buildTable($parsed, $key) {
+class FromBuilder
+{
+    protected function buildTable($parsed, $key)
+    {
         $builder = new TableBuilder();
+
         return $builder->build($parsed, $key);
     }
 
-    protected function buildTableExpression($parsed, $key) {
+    protected function buildTableExpression($parsed, $key)
+    {
         $builder = new TableExpressionBuilder();
+
         return $builder->build($parsed, $key);
     }
 
-    protected function buildSubQuery($parsed, $key) {
+    protected function buildSubQuery($parsed, $key)
+    {
         $builder = new SubQueryBuilder();
+
         return $builder->build($parsed, $key);
     }
 
-    public function build($parsed) {
-        $sql = "";
+    public function build($parsed)
+    {
+        $sql = '';
         foreach ($parsed as $k => $v) {
             $len = strlen($sql);
             $sql .= $this->buildTable($v, $k);
@@ -81,7 +86,7 @@ class FromBuilder {
                 throw new UnableToCreateSQLException('FROM', $k, $v, 'expr_type');
             }
         }
-        return "FROM " . $sql;
+
+        return 'FROM '.$sql;
     }
 }
-?>

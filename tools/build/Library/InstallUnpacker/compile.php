@@ -33,8 +33,8 @@
  */
 function validateInput($argv)
 {
-    if (count($argv) !== 2) {
-        echo 'php compile.php <PS_VERSION>' . PHP_EOL;
+    if (2 !== count($argv)) {
+        echo 'php compile.php <PS_VERSION>'.PHP_EOL;
         die(1);
     }
 }
@@ -43,12 +43,12 @@ validateInput($argv);
 
 $psVersion = $argv[1];
 
-$template = file_get_contents(__DIR__ . '/index_template.php');
+$template = file_get_contents(__DIR__.'/index_template.php');
 
 // compute inline assets
-if ($handle = opendir(__DIR__ . '/content')) {
+if ($handle = opendir(__DIR__.'/content')) {
     while (false !== ($entry = readdir($handle))) {
-        $filePath = __DIR__ . '/content/' . $entry;
+        $filePath = __DIR__.'/content/'.$entry;
 
         if (is_file($filePath)) {
             echo "File found: $entry\n";
@@ -75,9 +75,9 @@ $template = str_replace('%ps-version-placeholder%', $psVersion, $template);
 // compute inline php classes
 // @todo: remove duplicate license headers
 $inlineContent = '';
-if ($handle = opendir(__DIR__ . '/classes')) {
+if ($handle = opendir(__DIR__.'/classes')) {
     while (false !== ($entry = readdir($handle))) {
-        $filePath = __DIR__ . '/classes/' . $entry;
+        $filePath = __DIR__.'/classes/'.$entry;
 
         if (is_file($filePath)) {
             echo "PHP File found: $entry\n";
@@ -86,7 +86,7 @@ if ($handle = opendir(__DIR__ . '/classes')) {
 
             $content = file_get_contents($filePath);
             $contentWithoutPHPTag = str_replace('<?php', '', $content);
-            $inlineContent .= PHP_EOL . PHP_EOL . $contentWithoutPHPTag;
+            $inlineContent .= PHP_EOL.PHP_EOL.$contentWithoutPHPTag;
         }
     }
 }
@@ -94,4 +94,4 @@ if ($handle = opendir(__DIR__ . '/classes')) {
 $placeholder = '/** COMPUTED INLINE CLASSES **/';
 $template = str_replace($placeholder, $inlineContent, $template);
 
-file_put_contents(getcwd() . '/index.php', $template);
+file_put_contents(getcwd().'/index.php', $template);

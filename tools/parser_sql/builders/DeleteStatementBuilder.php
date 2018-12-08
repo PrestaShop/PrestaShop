@@ -1,6 +1,6 @@
 <?php
 /**
- * DeleteStatementBuilder.php
+ * DeleteStatementBuilder.php.
  *
  * Builds the DELETE statement
  *
@@ -31,17 +31,16 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
+ *
  * @version   SVN: $Id: DeleteStatementBuilder.php 830 2013-12-18 09:35:42Z phosco@gmx.de $
- * 
  */
-
-require_once dirname(__FILE__) . '/WhereBuilder.php';
-require_once dirname(__FILE__) . '/FromBuilder.php';
-require_once dirname(__FILE__) . '/DeleteBuilder.php';
+require_once dirname(__FILE__).'/WhereBuilder.php';
+require_once dirname(__FILE__).'/FromBuilder.php';
+require_once dirname(__FILE__).'/DeleteBuilder.php';
 
 /**
  * This class implements the builder for the whole Delete statement. You can overwrite
@@ -49,32 +48,37 @@ require_once dirname(__FILE__) . '/DeleteBuilder.php';
  *
  * @author  André Rothe <andre.rothe@phosco.info>
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- *  
  */
-class DeleteStatementBuilder {
-
-    protected function buildWHERE($parsed) {
+class DeleteStatementBuilder
+{
+    protected function buildWHERE($parsed)
+    {
         $builder = new WhereBuilder();
+
         return $builder->build($parsed);
     }
 
-    protected function buildFROM($parsed) {
+    protected function buildFROM($parsed)
+    {
         $builder = new FromBuilder();
+
         return $builder->build($parsed);
     }
 
-    protected function buildDELETE($parsed) {
+    protected function buildDELETE($parsed)
+    {
         $builder = new DeleteBuilder();
+
         return $builder->build($parsed);
     }
-    
-    public function processDeleteStatement($parsed) {
-        $sql = $this->buildDELETE($parsed['DELETE']) . " " . $this->processFROM($parsed['FROM']);
+
+    public function processDeleteStatement($parsed)
+    {
+        $sql = $this->buildDELETE($parsed['DELETE']).' '.$this->processFROM($parsed['FROM']);
         if (isset($parsed['WHERE'])) {
-            $sql .= " " . $this->processWHERE($parsed['WHERE']);
+            $sql .= ' '.$this->processWHERE($parsed['WHERE']);
         }
+
         return $sql;
     }
-    
 }
-?>

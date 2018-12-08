@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,9 +29,9 @@ namespace LegacyTests\TestCase;
 class File
 {
     /**
-     * Recursivly copy a directory
+     * Recursivly copy a directory.
      *
-     * @var $src the source path (eg. /home/dir/to/copy)
+     * @var the  source path (eg. /home/dir/to/copy)
      * @var $dst the destination path (eg. /home/)
      */
     public static function recurseCopy($src, $dst)
@@ -39,8 +39,8 @@ class File
         $dirp = opendir($src);
         @mkdir($dst);
         $file = readdir($dirp);
-        while ($file !== false) {
-            if ($file != '.' && $file != '..') {
+        while (false !== $file) {
+            if ('.' != $file && '..' != $file) {
                 if (is_dir($src.'/'.$file)) {
                     File::recurseCopy($src.'/'.$file, $dst.'/'.$file);
                 } else {
@@ -53,16 +53,16 @@ class File
     }
 
     /**
-     * Recursivly delete a directory
+     * Recursivly delete a directory.
      *
-     * @var $dir the directory to delete path (eg. /home/dir/to/delete)
+     * @var the directory to delete path (eg. /home/dir/to/delete)
      */
     public static function recurseDelete($dir)
     {
         $dirp = opendir($dir);
         $file = readdir($dirp);
-        while ($file !== false) {
-            if ($file != '.' && $file != '..') {
+        while (false !== $file) {
+            if ('.' != $file && '..' != $file) {
                 if (is_dir($dir.'/'.$file)) {
                     File::recurseDelete($dir.'/'.$file);
                 } else {

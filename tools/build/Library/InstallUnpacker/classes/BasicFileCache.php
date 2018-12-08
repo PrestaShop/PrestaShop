@@ -95,6 +95,6 @@ class BasicFileCache
      */
     private function computeCacheFilepath($filename)
     {
-        return __DIR__ . DIRECTORY_SEPARATOR . $filename . '.cache';
+        return __DIR__.DIRECTORY_SEPARATOR.$filename.'.cache';
     }
 }

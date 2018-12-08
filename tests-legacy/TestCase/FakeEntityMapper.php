@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace LegacyTests\TestCase;
 
 use PrestaShop\PrestaShop\Adapter\EntityMapper;
@@ -37,13 +38,16 @@ class FakeEntityMapper extends EntityMapper
 
     /**
      * Stores the given entity in the fake database, so load call with the same id will fill the entity with it.
+     *
      * @param ObjectModel $entity
+     *
      * @return $this
+     *
      * @throws Exception
      */
     public function willReturn(ObjectModel $entity)
     {
-        if ($this->entity_being_built !== null) {
+        if (null !== $this->entity_being_built) {
             throw new Exception('Invalid usage of FakeEntityMapper::willReturn : an entity build was already started, please call FakeEntityMapper::forId to finish building your entity.');
         }
 
@@ -56,11 +60,12 @@ class FakeEntityMapper extends EntityMapper
      * @param $id
      * @param null $id_lang
      * @param null $id_shop
+     *
      * @throws Exception
      */
     public function forId($id, $id_lang = null, $id_shop = null)
     {
-        if ($this->entity_being_built === null) {
+        if (null === $this->entity_being_built) {
             throw new Exception('Invalid usage of FakeEntityMapper::forId : you need to call willReturn first.');
         }
 
@@ -72,6 +77,7 @@ class FakeEntityMapper extends EntityMapper
 
     /**
      * Fills the given entity with fields from the entity stored in the fake database if it exists.
+     *
      * @param $id
      * @param $id_lang
      * @param $entity
@@ -80,7 +86,7 @@ class FakeEntityMapper extends EntityMapper
      */
     public function load($id, $id_lang, $entity, $entity_defs, $id_shop, $should_cache_objects)
     {
-        if ($this->entity_being_built !== null) {
+        if (null !== $this->entity_being_built) {
             throw new Exception('Unifinished entity build : an entity build was started with FakeEntityMapper::willReturn, please call FakeEntityMapper::forId to finish building your entity.');
         }
 
@@ -93,9 +99,8 @@ class FakeEntityMapper extends EntityMapper
         }
     }
 
-
     private function buildCacheId($id, $class_name, $id_lang, $id_shop)
     {
-        return 'objectmodel_' . $class_name . '_' . (int)$id . '_' . (int)$id_shop . '_' . (int)$id_lang;
+        return 'objectmodel_'.$class_name.'_'.(int) $id.'_'.(int) $id_shop.'_'.(int) $id_lang;
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -32,14 +32,14 @@ use PrestaShop\PrestaShop\Core\Localization\Currency;
 class CurrencyTest extends TestCase
 {
     /**
-     * Currency to be tested
+     * Currency to be tested.
      *
      * @var Currency
      */
     protected $currency;
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     protected function setUp()
     {
@@ -57,7 +57,7 @@ class CurrencyTest extends TestCase
     /**
      * Given a valid Currency instance
      * When asking if it is active
-     * Then the expected boolean value should be returned
+     * Then the expected boolean value should be returned.
      */
     public function testIsActive()
     {
@@ -71,7 +71,7 @@ class CurrencyTest extends TestCase
     /**
      * Given a valid Currency instance
      * When requesting its conversion rate
-     * Then the expected numeric value should be returned
+     * Then the expected numeric value should be returned.
      */
     public function testGetConversionRate()
     {
@@ -85,7 +85,7 @@ class CurrencyTest extends TestCase
     /**
      * Given a valid Currency instance
      * When requesting its alphabetic ISO code
-     * Then the expected code should be returned
+     * Then the expected code should be returned.
      */
     public function testGetIsoCode()
     {
@@ -99,7 +99,7 @@ class CurrencyTest extends TestCase
     /**
      * Given a valid Currency instance
      * When requesting its numeric ISO code
-     * Then the expected code should be returned
+     * Then the expected code should be returned.
      */
     public function testGetNumericIsoCode()
     {
@@ -113,23 +113,23 @@ class CurrencyTest extends TestCase
     /**
      * Given a valid Currency instance and a valid + known locale code
      * When requesting the currency symbol for the said locale code
-     * Then the expected symbol should be returned
+     * Then the expected symbol should be returned.
      */
     public function testGetSymbol()
     {
-        /** @noinspection PhpUnhandledExceptionInspection */
+        /* @noinspection PhpUnhandledExceptionInspection */
         $this->assertSame(
             '€',
             $this->currency->getSymbol('fr-FR'),
             'Wrong result for getSymbol()'
         );
-        /** @noinspection end */
+        /* @noinspection end */
     }
 
     /**
      * Given a valid Currency instance and un unknown or invalid locale code
      * When requesting the currency symbol for the said locale code
-     * Then an exception should be raised
+     * Then an exception should be raised.
      *
      * @expectedException \PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException
      */
@@ -141,7 +141,7 @@ class CurrencyTest extends TestCase
     /**
      * Given a valid Currency instance
      * When requesting its decimal precision
-     * Then the expected value should be returned
+     * Then the expected value should be returned.
      */
     public function testGetDecimalPrecision()
     {
@@ -155,23 +155,23 @@ class CurrencyTest extends TestCase
     /**
      * Given a valid Currency instance and a valid + known locale code
      * When requesting the currency name for the said locale code
-     * Then the expected name should be returned
+     * Then the expected name should be returned.
      */
     public function testGetName()
     {
-        /** @noinspection PhpUnhandledExceptionInspection */
+        /* @noinspection PhpUnhandledExceptionInspection */
         $this->assertSame(
             'euro',
             $this->currency->getName('fr-FR'),
             'Wrong result for getName()'
         );
-        /** @noinspection end */
+        /* @noinspection end */
     }
 
     /**
      * Given a valid Currency instance and an invalid or unknown locale code
      * When requesting the currency name for the said locale code
-     * Then an exception should be raised
+     * Then an exception should be raised.
      *
      * @expectedException  \PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException
      */

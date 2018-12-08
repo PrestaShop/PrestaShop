@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -31,7 +31,8 @@ use Tools;
 
 class ToolsCoreTest extends TestCase
 {
-    protected function setUp() {
+    protected function setUp()
+    {
         $_POST = array();
         $_GET = array();
         Tools::resetRequest();
@@ -74,7 +75,7 @@ class ToolsCoreTest extends TestCase
         $this->setPostAndGet(array(
             '' => true,
             ' ' => true,
-            null => true
+            null => true,
         ));
 
         $this->assertEquals(false, Tools::getValue('', true));
@@ -96,19 +97,19 @@ class ToolsCoreTest extends TestCase
      */
     public function testGetValueStripsNullCharsFromReturnedStrings($rawString, $cleanedString)
     {
-        /**
+        /*
          * Check it cleans values stored in POST
          */
         $this->setPostAndGet(array('rawString' => $rawString));
         $this->assertEquals($cleanedString, Tools::getValue('rawString'));
 
-        /**
+        /*
          * Check it cleans values stored in GET
          */
         $this->setPostAndGet(array(), array('rawString' => $rawString));
         $this->assertEquals($cleanedString, Tools::getValue('rawString'));
 
-        /**
+        /*
          * Check it cleans default values too
          */
         $this->setPostAndGet();
@@ -123,83 +124,82 @@ class ToolsCoreTest extends TestCase
                 array(array('a' => 2), array('a' => 1)), // expected result
                 1, 0,                                     // amount and precision
                 array(array('a' => 1), array('a' => 1)), // source rows
-                'a'                                         // sort column
+                'a',                                         // sort column
             ),
             array(
                 // check with 1 decimal
                 array(array('a' => 1.5), array('a' => 1.5)),
                 1, 1,
                 array(array('a' => 1), array('a' => 1)),
-                'a'
+                'a',
             ),
             array(
                 // 2 decimals, but only one really needed
                 array(array('a' => 1.5), array('a' => 1.5)),
                 1, 2,
                 array(array('a' => 1), array('a' => 1)),
-                'a'
+                'a',
             ),
             array(
                 // check that the biggest "a" gets the adjustment
                 array(array('a' => 3), array('a' => 1)),
                 1, 0,
                 array(array('a' => 1), array('a' => 2)),
-                'a'
+                'a',
             ),
             array(
                 // check it works with amount > count($rows)
                 array(array('a' => 4), array('a' => 2)),
                 3, 0,
                 array(array('a' => 1), array('a' => 2)),
-                'a'
+                'a',
             ),
             array(
                 // 2 decimals
                 array(array('a' => 2.01), array('a' => 1)),
                 0.01, 2,
                 array(array('a' => 1), array('a' => 2)),
-                'a'
+                'a',
             ),
             array(
                 // 2 decimals, equal level of adjustment
                 array(array('a' => 2.01), array('a' => 1.01)),
                 0.02, 2,
                 array(array('a' => 1), array('a' => 2)),
-                'a'
+                'a',
             ),
             array(
                 // 2 decimals, different levels of adjustmnt
                 array(array('a' => 2.02), array('a' => 1.01)),
                 0.03, 2,
                 array(array('a' => 1), array('a' => 2)),
-                'a'
+                'a',
             ),
             array(
                 // check associative arrays are OK too
                 array(array('a' => 2.01), array('a' => 1.01)),
                 0.02, 2,
                 array('z' => array('a' => 1), 'x' => array('a' => 2)),
-                'a'
+                'a',
             ),
             array(
                 // check amount is rounded if it needs more precision than asked for
                 array(array('a' => 2.02), array('a' => 1.01)),
                 0.025, 2,
                 array(array('a' => 1), array('a' => 2)),
-                'a'
+                'a',
             ),
             array(
                 array(array('a' => 7.69), array('a' => 4.09), array('a' => 1.8)),
                 -0.32, 2,
                 array(array('a' => 7.8), array('a' => 4.2), array('a' => 1.9)),
-                'a'
-            )
+                'a',
+            ),
         );
     }
 
     /**
      *  @dataProvider dirProvider
-     *
      */
     public function testGetDirectories($path, $haveFiles)
     {
@@ -327,7 +327,8 @@ class ToolsCoreTest extends TestCase
         $this->assertEquals($expected, $actual, "Expected $source to be $expected in camel case, got $actual instead.");
     }
 
-    public static function tearDownAfterClass() {
+    public static function tearDownAfterClass()
+    {
         $_POST = array();
         $_GET = array();
     }
@@ -335,7 +336,8 @@ class ToolsCoreTest extends TestCase
     /**
      * @dataProvider testStrReplaceFirstProvider
      */
-    public function testStrReplaceFirst($search, $replace, $subject, $cur, $expected) {
+    public function testStrReplaceFirst($search, $replace, $subject, $cur, $expected)
+    {
         $this->assertEquals($expected, Tools::StrReplaceFirst($search, $replace, $subject, $cur));
     }
 
@@ -381,7 +383,8 @@ class ToolsCoreTest extends TestCase
         ];
     }
 
-    public function testStrReplaceFirstProvider() {
+    public function testStrReplaceFirstProvider()
+    {
         return [
             ['s', 'f', 'seed', 0, 'feed'],
             ['s', 'f', 'seed', 1, 'seed'],

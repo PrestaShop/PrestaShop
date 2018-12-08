@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -90,7 +90,7 @@ class AssetsCoreTest extends TestCase
                     $expectedAsset = $asset;
                 }
             }
-        } else if ('js' === $type) {
+        } elseif ('js' === $type) {
             foreach ($this->listJS as $asset) {
                 if ($asset['id'] === $id) {
                     $found = true;
@@ -104,7 +104,6 @@ class AssetsCoreTest extends TestCase
         if ($toBeFound) {
             $this->assertSame($expectedAsset['path'], $this->testsPath.$expectedPath);
         }
-
     }
 
     // --- providers ---

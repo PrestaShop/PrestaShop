@@ -141,7 +141,9 @@ class HookDispatcherTest extends TestCase
 
     /**
      * The event dispatcher puts every parameter dispatched in an array.
+     *
      * @param array $parameters
+     *
      * @return \PHPUnit_Framework_MockObject_MockObject|RenderingHookEvent
      */
     private function createRenderingHookEvent($parameters = [])

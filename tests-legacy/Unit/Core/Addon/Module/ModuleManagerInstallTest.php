@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -34,7 +34,6 @@ class ModuleManagerInstallTest extends TestCase
     {
         parent::setUp();
     }
-
 
     public function test_data_in_database_after_module_install()
     {

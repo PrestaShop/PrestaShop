@@ -1,6 +1,6 @@
 <?php
 /**
- * RecordProcessor.php
+ * RecordProcessor.php.
  *
  * This file implements the processor for records.
  *
@@ -29,36 +29,34 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
  * DAMAGE.
  */
-
-require_once(dirname(__FILE__) . '/AbstractProcessor.php');
-require_once(dirname(__FILE__) . '/ExpressionListProcessor.php');
+require_once dirname(__FILE__).'/AbstractProcessor.php';
+require_once dirname(__FILE__).'/ExpressionListProcessor.php';
 
 /**
- * 
  * This class processes records.
- * 
+ *
  * @author arothe
- * 
  */
-class RecordProcessor extends AbstractProcessor {
-
+class RecordProcessor extends AbstractProcessor
+{
     private $expressionListProcessor;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->expressionListProcessor = new ExpressionListProcessor();
     }
 
-    public function process($unparsed) {
+    public function process($unparsed)
+    {
         $unparsed = $this->removeParenthesisFromStart($unparsed);
         $values = $this->splitSQLIntoTokens($unparsed);
 
         foreach ($values as $k => $v) {
             if ($this->isCommaToken($v)) {
-                $values[$k] = "";
+                $values[$k] = '';
             }
         }
+
         return $this->expressionListProcessor->process($values);
     }
-
 }
-?>

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -27,7 +27,6 @@
 namespace LegacyTests\Unit\Classes;
 
 use LegacyTests\TestCase\UnitTestCase;
-
 use Hook;
 
 class HookTest extends UnitTestCase

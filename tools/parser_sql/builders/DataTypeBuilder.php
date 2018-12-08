@@ -1,6 +1,6 @@
 <?php
 /**
- * DataTypeBuilder.php
+ * DataTypeBuilder.php.
  *
  * Builds the data-type statement part of CREATE TABLE.
  *
@@ -31,31 +31,30 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
+ *
  * @version   SVN: $Id: DataTypeBuilder.php 830 2013-12-18 09:35:42Z phosco@gmx.de $
- * 
  */
-
-require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
+require_once dirname(__FILE__).'/../utils/ExpressionType.php';
 
 /**
- * This class implements the builder for the data-type statement part of CREATE TABLE. 
+ * This class implements the builder for the data-type statement part of CREATE TABLE.
  * You can overwrite all functions to achieve another handling.
  *
  * @author  André Rothe <andre.rothe@phosco.info>
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- *  
  */
-class DataTypeBuilder {
-
-    public function build($parsed) {
-        if ($parsed['expr_type'] !== ExpressionType::DATA_TYPE) {
-            return "";
+class DataTypeBuilder
+{
+    public function build($parsed)
+    {
+        if (ExpressionType::DATA_TYPE !== $parsed['expr_type']) {
+            return '';
         }
+
         return $parsed['base_expr'];
     }
 }
-?>

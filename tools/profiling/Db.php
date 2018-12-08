@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,46 +23,45 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 abstract class Db extends DbCore
 {
     /**
-     * Add SQL_NO_CACHE in SELECT queries
+     * Add SQL_NO_CACHE in SELECT queries.
      *
      * @var bool
      */
     public $disableCache = true;
 
     /**
-     * Total of queries
+     * Total of queries.
      *
      * @var int
      */
     public $count = 0;
 
     /**
-     * List of queries
+     * List of queries.
      *
      * @var array
      */
     public $queries = array();
-    
+
     /**
-     * List of uniq queries (replace numbers by XX)
+     * List of uniq queries (replace numbers by XX).
      *
      * @var array
      */
     public $uniqQueries = array();
-    
+
     /**
-     * List of tables
+     * List of tables.
      *
      * @var array
      */
     public $tables = array();
 
     /**
-     * Execute the query and log some informations
+     * Execute the query and log some informations.
      *
      * @see DbCore::query()
      */
@@ -72,14 +71,14 @@ abstract class Db extends DbCore
         if (preg_match('/^\s*explain\s+/i', $sql)) {
             $explain = true;
         }
-            
+
         if (!$explain) {
             $uniqSql = preg_replace('/[\'"][a-f0-9]{32}[\'"]/', '<span style="color:blue">XX</span>', $sql);
             $uniqSql = preg_replace('/[0-9]+/', '<span style="color:blue">XX</span>', $uniqSql);
             if (!isset($this->uniqQueries[$uniqSql])) {
                 $this->uniqQueries[$uniqSql] = 0;
             }
-            $this->uniqQueries[$uniqSql]++;
+            ++$this->uniqQueries[$uniqSql];
 
             // No cache for query
             if ($this->disableCache && !stripos($sql, 'SQL_NO_CACHE')) {
@@ -92,7 +91,7 @@ abstract class Db extends DbCore
                 if (!isset($this->tables[$table])) {
                     $this->tables[$table] = 0;
                 }
-                $this->tables[$table]++;
+                ++$this->tables[$table];
             }
 
             $start = microtime(true);
@@ -112,14 +111,14 @@ abstract class Db extends DbCore
             foreach ($stack as $call) {
                 $stack_light[] = array('file' => isset($call['file']) ? $call['file'] : 'undefined', 'line' => isset($call['line']) ? $call['line'] : 'undefined');
             }
-            
+
             $this->queries[] = array(
                 'query' => $sql,
                 'time' => $end - $start,
-                'stack' => $stack_light
+                'stack' => $stack_light,
             );
         }
-        
+
         return $result;
     }
 }

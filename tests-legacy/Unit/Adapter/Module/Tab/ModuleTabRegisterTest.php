@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace LegacyTests\Unit\Adapter\Module\Tab;
 
 use PrestaShop\PrestaShop\Adapter\Module\Tab\ModuleTabRegister;
@@ -63,59 +64,59 @@ class ModuleTabRegisterTest extends UnitTestCase
         'doge' => array('Wololo', 'AdminMissing', 'AdminMy'),
     );
 
-    protected  $languages = array(
+    protected $languages = array(
         array(
-            "id_lang" => 1,
-            "name" => "Français (French)",
-            "active" => "1",
-            "iso_code" => "fr",
-            "language_code" => "fr",
-            "locale" => "fr-FR",
-            "date_format_lite" => "d/m/Y",
-            "date_format_full" => "d/m/Y H:i:s",
-            "is_rtl" => "0",
-            "id_shop" => "1",
-            "shops" => array(),
+            'id_lang' => 1,
+            'name' => 'Français (French)',
+            'active' => '1',
+            'iso_code' => 'fr',
+            'language_code' => 'fr',
+            'locale' => 'fr-FR',
+            'date_format_lite' => 'd/m/Y',
+            'date_format_full' => 'd/m/Y H:i:s',
+            'is_rtl' => '0',
+            'id_shop' => '1',
+            'shops' => array(),
         ),
         array(
-            "id_lang" => 2,
-            "name" => "English (English)",
-            "active" => "1",
-            "iso_code" => "en",
-            "language_code" => "en-us",
-            "locale" => "en-US",
-            "date_format_lite" => "m/d/Y",
-            "date_format_full" => "m/d/Y H:i:s",
-            "is_rtl" => "0",
-            "id_shop" => "1",
-            "shops" => array(),
+            'id_lang' => 2,
+            'name' => 'English (English)',
+            'active' => '1',
+            'iso_code' => 'en',
+            'language_code' => 'en-us',
+            'locale' => 'en-US',
+            'date_format_lite' => 'm/d/Y',
+            'date_format_full' => 'm/d/Y H:i:s',
+            'is_rtl' => '0',
+            'id_shop' => '1',
+            'shops' => array(),
         ),
         array(
-            "id_lang" => 3,
-            "name" => "English (English)",
-            "active" => "1",
-            "iso_code" => "en",
-            "language_code" => "en-us",
-            "locale" => "en-US",
-            "date_format_lite" => "m/d/Y",
-            "date_format_full" => "m/d/Y H:i:s",
-            "is_rtl" => "0",
-            "id_shop" => "1",
-            "shops" => array(),
+            'id_lang' => 3,
+            'name' => 'English (English)',
+            'active' => '1',
+            'iso_code' => 'en',
+            'language_code' => 'en-us',
+            'locale' => 'en-US',
+            'date_format_lite' => 'm/d/Y',
+            'date_format_full' => 'm/d/Y H:i:s',
+            'is_rtl' => '0',
+            'id_shop' => '1',
+            'shops' => array(),
         ),
-        array (
-            "id_lang" => 3,
-            "name" => "Català (Catalan)",
-            "active" => "1",
-            "iso_code" => "ca",
-            "language_code" => "ca-es",
-            "locale" => "ca-ES",
-            "date_format_lite" => "d/m/Y",
-            "date_format_full" => "Y-m-d H:i:s",
-            "is_rtl" => "0",
-            "id_shop" => "1",
-            "shops" => array(),
-        )
+        array(
+            'id_lang' => 3,
+            'name' => 'Català (Catalan)',
+            'active' => '1',
+            'iso_code' => 'ca',
+            'language_code' => 'ca-es',
+            'locale' => 'ca-ES',
+            'date_format_lite' => 'd/m/Y',
+            'date_format_full' => 'Y-m-d H:i:s',
+            'is_rtl' => '0',
+            'id_shop' => '1',
+            'shops' => array(),
+        ),
     );
 
     /**
@@ -187,7 +188,7 @@ class ModuleTabRegisterTest extends UnitTestCase
 
             // We test there is no unexpected tab to register
             // Be aware, it also include which can throw an exception later when being validated
-            foreach($tabs as $tab) {
+            foreach ($tabs as $tab) {
                 $this->assertTrue(
                         in_array($tab['class_name'], $this->expectedTabsToAdd[$moduleName]),
                         'Module '.$moduleName.' should not register '.$tab['class_name']);

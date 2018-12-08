@@ -1,6 +1,6 @@
 <?php
 /**
- * SelectExpressionBuilder.php
+ * SelectExpressionBuilder.php.
  *
  * Builds simple expressions within a SELECT statement.
  *
@@ -31,45 +31,48 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
+ *
  * @version   SVN: $Id: SelectExpressionBuilder.php 830 2013-12-18 09:35:42Z phosco@gmx.de $
- * 
  */
-
-require_once dirname(__FILE__) . '/SubTreeBuilder.php';
-require_once dirname(__FILE__) . '/AliasBuilder.php';
-require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
+require_once dirname(__FILE__).'/SubTreeBuilder.php';
+require_once dirname(__FILE__).'/AliasBuilder.php';
+require_once dirname(__FILE__).'/../utils/ExpressionType.php';
 
 /**
- * This class implements the builder for simple expressions within a SELECT statement. 
+ * This class implements the builder for simple expressions within a SELECT statement.
  * You can overwrite all functions to achieve another handling.
  *
  * @author  André Rothe <andre.rothe@phosco.info>
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- *  
  */
-class SelectExpressionBuilder {
-
-    protected function buildSubTree($parsed, $delim) {
+class SelectExpressionBuilder
+{
+    protected function buildSubTree($parsed, $delim)
+    {
         $builder = new SubTreeBuilder();
+
         return $builder->build($parsed, $delim);
     }
 
-    protected function buildAlias($parsed) {
+    protected function buildAlias($parsed)
+    {
         $builder = new AliasBuilder();
+
         return $builder->build($parsed);
     }
 
-    public function build($parsed) {
-        if ($parsed['expr_type'] !== ExpressionType::EXPRESSION) {
-            return "";
+    public function build($parsed)
+    {
+        if (ExpressionType::EXPRESSION !== $parsed['expr_type']) {
+            return '';
         }
-        $sql = $this->buildSubTree($parsed, " ");
+        $sql = $this->buildSubTree($parsed, ' ');
         $sql .= $this->buildAlias($parsed);
+
         return $sql;
     }
 }
-?>

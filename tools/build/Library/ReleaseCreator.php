@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -175,7 +175,7 @@ class ReleaseCreator
     protected $useZip;
 
     /**
-     * Consisting of prestashop_ and the version. e.g prestashop_1.7.3.4.zip
+     * Consisting of prestashop_ and the version. e.g prestashop_1.7.3.4.zip.
      *
      * @var string
      */
@@ -192,8 +192,8 @@ class ReleaseCreator
      * Set the release wanted version, and some options.
      *
      * @param string $version
-     * @param bool $useInstaller
-     * @param bool $useZip
+     * @param bool   $useInstaller
+     * @param bool   $useZip
      * @param string $destinationDir
      */
     public function __construct($version = null, $useInstaller = true, $useZip = true, $destinationDir = '')
@@ -206,7 +206,7 @@ class ReleaseCreator
             "--- Temp dir used will be '{$tmpDir}'{$this->lineSeparator}",
             ConsoleWriter::COLOR_GREEN
         );
-        $this->projectPath = realpath(__DIR__ . '/../../..');
+        $this->projectPath = realpath(__DIR__.'/../../..');
         $this->version = $version ? $version : $this->getCurrentVersion();
         $this->zipFileName = "prestashop_$this->version.zip";
 
@@ -216,7 +216,7 @@ class ReleaseCreator
 
         if (empty($destinationDir)) {
             $releasesDir = self::RELEASES_DIR_RELATIVE_PATH;
-            $reference = $this->version . "_" . date("Ymd_His");
+            $reference = $this->version.'_'.date('Ymd_His');
             $destinationDir = "{$this->projectPath}/$releasesDir/$reference";
         }
         $this->destinationDir = $destinationDir;
@@ -232,12 +232,12 @@ class ReleaseCreator
                 "--- Release will have the installer and will be zipped.{$this->lineSeparator}",
                 ConsoleWriter::COLOR_GREEN
             );
-        } else if ($this->useZip) {
+        } elseif ($this->useZip) {
             $this->consoleWriter->displayText(
                 "--- Release will be zipped.{$this->lineSeparator}",
                 ConsoleWriter::COLOR_GREEN
             );
-        } else if ($this->useInstaller) {
+        } elseif ($this->useInstaller) {
             $this->consoleWriter->displayText(
                 "--- Release will have the installer.{$this->lineSeparator}",
                 ConsoleWriter::COLOR_GREEN
@@ -249,6 +249,7 @@ class ReleaseCreator
      * Create a new release.
      *
      * @return $this
+     *
      * @throws BuildException
      */
     public function createRelease()
@@ -319,7 +320,7 @@ class ReleaseCreator
      */
     protected function setFilesConstants()
     {
-        $this->consoleWriter->displayText("Setting files constants...", ConsoleWriter::COLOR_YELLOW);
+        $this->consoleWriter->displayText('Setting files constants...', ConsoleWriter::COLOR_YELLOW);
         $this->setConfigDefinesConstants()
             ->setInstallDevConfigurationConstants()
             ->setInstallDevInstallVersionConstants();
@@ -332,11 +333,12 @@ class ReleaseCreator
      * Define all config/defines.inc.php constants to the desired version.
      *
      * @return $this
+     *
      * @throws BuildException
      */
     protected function setConfigDefinesConstants()
     {
-        $configDefinesPath = $this->tempProjectPath . '/config/defines.inc.php';
+        $configDefinesPath = $this->tempProjectPath.'/config/defines.inc.php';
         $configDefinesContent = file_get_contents($configDefinesPath);
         $configDefinesNewContent = preg_replace('/(.*(define).*)_PS_MODE_DEV_(.*);/Ui', 'define(\'_PS_MODE_DEV_\', false);', $configDefinesContent);
         $configDefinesNewContent = preg_replace('/(.*)_PS_DISPLAY_COMPATIBILITY_WARNING_(.*);/Ui', 'define(\'_PS_DISPLAY_COMPATIBILITY_WARNING_\', false);', $configDefinesNewContent);
@@ -349,8 +351,8 @@ class ReleaseCreator
     }
 
     /**
-     * Get the current version in the project
-     * 
+     * Get the current version in the project.
+     *
      * @return string PrestaShop version
      */
     protected function getCurrentVersion()
@@ -363,7 +365,7 @@ class ReleaseCreator
             '~const VERSION = \'(.*)\';~',
             $kernelFileContent,
             $matches
-        ); 
+        );
 
         return $matches[1];
     }
@@ -372,13 +374,13 @@ class ReleaseCreator
      * Define the PrestaShop version to the desired version.
      *
      * @return self
+     *
      * @throws BuildException
      */
     protected function setupShopVersion()
     {
         $kernelFile = $this->tempProjectPath.'/app/AppKernel.php';
         $version = new Version($this->version);
-
 
         $kernelFileContent = file_get_contents($kernelFile);
         $kernelFileContent = preg_replace(
@@ -393,17 +395,17 @@ class ReleaseCreator
         );
         $kernelFileContent = preg_replace(
             '~const MAJOR_VERSION = (.*);~',
-            "const MAJOR_VERSION = ".$version->getMajorVersion().";",
+            'const MAJOR_VERSION = '.$version->getMajorVersion().';',
             $kernelFileContent
         );
         $kernelFileContent = preg_replace(
             '~const MINOR_VERSION = (.*);~',
-            "const MINOR_VERSION = ".$version->getMinorVersion().";",
+            'const MINOR_VERSION = '.$version->getMinorVersion().';',
             $kernelFileContent
         );
         $kernelFileContent = preg_replace(
             '~const RELEASE_VERSION = (.*);~',
-            "const RELEASE_VERSION = ".$version->getReleaseVersion().";",
+            'const RELEASE_VERSION = '.$version->getReleaseVersion().';',
             $kernelFileContent
         );
 
@@ -418,6 +420,7 @@ class ReleaseCreator
      * Define all install-dev/data/xml/configuration.xml constants to the desired version.
      *
      * @return $this
+     *
      * @throws BuildException
      */
     protected function setInstallDevConfigurationConstants()
@@ -441,13 +444,14 @@ class ReleaseCreator
      * Define all install-dev/install_version.php constants to the desired version.
      *
      * @return $this
+     *
      * @throws BuildException
      */
     protected function setInstallDevInstallVersionConstants()
     {
-        $installVersionPath = $this->tempProjectPath . '/install-dev/install_version.php';
+        $installVersionPath = $this->tempProjectPath.'/install-dev/install_version.php';
         $installVersionContent = file_get_contents($installVersionPath);
-        $installVersionNewContent = preg_replace('#_PS_INSTALL_VERSION_\', \'(.*)\'\)#', '_PS_INSTALL_VERSION_\', \'' . $this->version . '\')', $installVersionContent);
+        $installVersionNewContent = preg_replace('#_PS_INSTALL_VERSION_\', \'(.*)\'\)#', '_PS_INSTALL_VERSION_\', \''.$this->version.'\')', $installVersionContent);
 
         if (!file_put_contents($installVersionPath, $installVersionNewContent)) {
             throw new BuildException("Unable to update contents of '$installVersionPath'.");
@@ -461,21 +465,22 @@ class ReleaseCreator
      * in their filename into this unique one.
      *
      * @return $this
+     *
      * @throws BuildException
      */
     protected function generateLicensesFile()
     {
-        $this->consoleWriter->displayText("Generating licences file...", ConsoleWriter::COLOR_YELLOW);
+        $this->consoleWriter->displayText('Generating licences file...', ConsoleWriter::COLOR_YELLOW);
         $content = null;
         $directory = new \RecursiveDirectoryIterator($this->tempProjectPath);
         $iterator = new \RecursiveIteratorIterator($directory);
         $regex = new \RegexIterator($iterator, '/^.*\/.*license(\.txt)?$/i', \RecursiveRegexIterator::GET_MATCH);
 
-        foreach($regex as $file => $value) {
-            $content .= file_get_contents($file) . "\r\n\r\n";
+        foreach ($regex as $file => $value) {
+            $content .= file_get_contents($file)."\r\n\r\n";
         }
 
-        if (!file_put_contents($this->tempProjectPath . '/LICENSES', $content)) {
+        if (!file_put_contents($this->tempProjectPath.'/LICENSES', $content)) {
             throw new BuildException('Unable to create LICENSES file.');
         }
         $this->consoleWriter->displayText(" DONE{$this->lineSeparator}", ConsoleWriter::COLOR_GREEN);
@@ -487,16 +492,17 @@ class ReleaseCreator
      * Install all dependencies.
      *
      * @return $this
+     *
      * @throws BuildException
      */
     protected function runComposerInstall()
     {
-        $this->consoleWriter->displayText("Running composer install...", ConsoleWriter::COLOR_YELLOW);
+        $this->consoleWriter->displayText('Running composer install...', ConsoleWriter::COLOR_YELLOW);
         $argProjectPath = escapeshellarg($this->tempProjectPath);
         $command = "cd {$argProjectPath} && export SYMFONY_ENV=prod && composer install --no-dev --optimize-autoloader --classmap-authoritative --no-interaction 2>&1";
         exec($command, $output, $returnCode);
 
-        if ($returnCode != 0) {
+        if (0 != $returnCode) {
             throw new BuildException('Unable to run composer install.');
         }
         $this->consoleWriter->displayText(" DONE{$this->lineSeparator}", ConsoleWriter::COLOR_GREEN);
@@ -508,16 +514,17 @@ class ReleaseCreator
      * Create some required folders and rename a few.
      *
      * @return $this
+     *
      * @throws BuildException
      */
     protected function createAndRenameFolders()
     {
-        if (!file_exists($this->tempProjectPath . '/var/cache/')) {
-            mkdir($this->tempProjectPath . '/var/cache', 0777, true);
+        if (!file_exists($this->tempProjectPath.'/var/cache/')) {
+            mkdir($this->tempProjectPath.'/var/cache', 0777, true);
         }
 
-        if (!file_exists($this->tempProjectPath . '/var/logs/')) {
-            mkdir($this->tempProjectPath . '/var/logs', 0777, true);
+        if (!file_exists($this->tempProjectPath.'/var/logs/')) {
+            mkdir($this->tempProjectPath.'/var/logs', 0777, true);
         }
         $itemsToRename = ['admin-dev' => 'admin', 'install-dev' => 'install'];
         $basePath = $this->tempProjectPath;
@@ -559,7 +566,7 @@ class ReleaseCreator
      */
     protected function cleanTmpProject()
     {
-        $this->consoleWriter->displayText("--- Cleaning project...", ConsoleWriter::COLOR_YELLOW);
+        $this->consoleWriter->displayText('--- Cleaning project...', ConsoleWriter::COLOR_YELLOW);
         $this->createAndRenameFolders();
         $this->filesList = $this->getDirectoryStructure($this->tempProjectPath);
         $this->removeUnnecessaryFiles(
@@ -578,6 +585,7 @@ class ReleaseCreator
      * Return the directory structure of a given path as an array.
      *
      * @param string $path
+     *
      * @return array
      */
     protected function getDirectoryStructure($path)
@@ -590,10 +598,10 @@ class ReleaseCreator
         if ($childrens > 0) {
             $children = $iterator->getChildren();
 
-            for ($index = 0; $index < $childrens; $index += 1) {
+            for ($index = 0; $index < $childrens; ++$index) {
                 $pathname = $children->getPathname();
 
-                if ($children->hasChildren() === true) {
+                if (true === $children->hasChildren()) {
                     $structure[$pathname] = $this->getDirectoryStructure($pathname);
                 } else {
                     $structure[] = $pathname;
@@ -609,12 +617,14 @@ class ReleaseCreator
     /**
      * Delete unwanted files and folders in the PrestaShop tmp directory.
      *
-     * @param array $filesList
-     * @param array $filesRemoveList
-     * @param array $foldersRemoveList
-     * @param array $patternsRemoveList
+     * @param array  $filesList
+     * @param array  $filesRemoveList
+     * @param array  $foldersRemoveList
+     * @param array  $patternsRemoveList
      * @param string $folder
+     *
      * @return $this
+     *
      * @throws BuildException
      */
     protected function removeUnnecessaryFiles(
@@ -661,7 +671,7 @@ class ReleaseCreator
 
                 // Pattern to remove.
                 foreach ($patternsRemoveList as $pattern_to_remove) {
-                    if (preg_match('#'.$pattern_to_remove.'#', $value) == 1) {
+                    if (1 == preg_match('#'.$pattern_to_remove.'#', $value)) {
                         unset($filesList[$key]);
                         exec("rm -rf {$argValue}");
                         continue 2;
@@ -681,7 +691,7 @@ class ReleaseCreator
 
                 // Pattern to remove.
                 foreach ($patternsRemoveList as $pattern_to_remove) {
-                    if (preg_match('#'.$pattern_to_remove.'#', $key) == 1) {
+                    if (1 == preg_match('#'.$pattern_to_remove.'#', $key)) {
                         unset($filesList[$key]);
                         exec("rm -rf {$argKey}");
                         continue 2;
@@ -704,7 +714,7 @@ class ReleaseCreator
         if (!$this->useZip) {
             return $this;
         }
-        $this->consoleWriter->displayText("--- Creating zip archive...", ConsoleWriter::COLOR_YELLOW);
+        $this->consoleWriter->displayText('--- Creating zip archive...', ConsoleWriter::COLOR_YELLOW);
         $installerZipFilename = self::INSTALLER_ZIP_FILENAME;
         $argTempProjectPath = escapeshellarg($this->tempProjectPath);
         $argInstallerZipFilename = escapeshellarg($installerZipFilename);
@@ -748,7 +758,7 @@ class ReleaseCreator
      */
     protected function movePackage()
     {
-        $this->consoleWriter->displayText("--- Move package...", ConsoleWriter::COLOR_YELLOW);
+        $this->consoleWriter->displayText('--- Move package...', ConsoleWriter::COLOR_YELLOW);
         $tmpDir = sys_get_temp_dir();
         $argTempProjectPath = escapeshellarg($this->tempProjectPath);
 
@@ -773,19 +783,20 @@ class ReleaseCreator
      * Create a XML file with the checksum of all the PrestaShop release files.
      *
      * @return $this
+     *
      * @throws BuildException
      */
     protected function generateXMLChecksum()
     {
-        $this->consoleWriter->displayText("--- Generating XML checksum...", ConsoleWriter::COLOR_YELLOW);
+        $this->consoleWriter->displayText('--- Generating XML checksum...', ConsoleWriter::COLOR_YELLOW);
         $tmpDir = sys_get_temp_dir();
         $xmlPath = "{$tmpDir}/prestashop_$this->version.xml";
         $content = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>{$this->lineSeparator}"
-            . "<checksum_list>{$this->lineSeparator}"
-            . "\t<ps_root_dir version=\"$this->version\">{$this->lineSeparator}"
-            . $this->generateXMLDirectoryChecksum($this->filesList)
-            . "\t</ps_root_dir>{$this->lineSeparator}"
-            . "</checksum_list>{$this->lineSeparator}";
+            ."<checksum_list>{$this->lineSeparator}"
+            ."\t<ps_root_dir version=\"$this->version\">{$this->lineSeparator}"
+            .$this->generateXMLDirectoryChecksum($this->filesList)
+            ."\t</ps_root_dir>{$this->lineSeparator}"
+            ."</checksum_list>{$this->lineSeparator}";
 
         if (!file_put_contents($xmlPath, $content)) {
             throw new BuildException('Unable to generate XML checksum.');
@@ -799,6 +810,7 @@ class ReleaseCreator
      * Return the checksum of the files and folders given as parameter.
      *
      * @param array $files
+     *
      * @return string
      */
     protected function generateXMLDirectoryChecksum(array $files)
@@ -812,14 +824,14 @@ class ReleaseCreator
                 $count = substr_count($value, DIRECTORY_SEPARATOR) - $subCount + 1;
                 $file_name = str_replace($this->tempProjectPath, null, $value);
                 $file_name = pathinfo($file_name, PATHINFO_BASENAME);
-                $content .= str_repeat("\t", $count) . "<md5file name=\"$file_name\">$md5</md5file>" . PHP_EOL;
+                $content .= str_repeat("\t", $count)."<md5file name=\"$file_name\">$md5</md5file>".PHP_EOL;
             } else {
                 $count = substr_count($key, DIRECTORY_SEPARATOR) - $subCount + 1;
                 $dir_name = str_replace($this->tempProjectPath, null, $key);
                 $dir_name = pathinfo($dir_name, PATHINFO_BASENAME);
-                $content .= str_repeat("\t", $count) . "<dir name=\"$dir_name\">" . PHP_EOL;
+                $content .= str_repeat("\t", $count)."<dir name=\"$dir_name\">".PHP_EOL;
                 $content .= $this->generateXMLDirectoryChecksum($value);
-                $content .= str_repeat("\t", $count) . "</dir>" . PHP_EOL;
+                $content .= str_repeat("\t", $count).'</dir>'.PHP_EOL;
             }
         }
 

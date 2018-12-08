@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -35,7 +35,7 @@ class PaymentOptionFormDecoratorTest extends UnitTestCase
 {
     public function test_addHiddenSubmitButton_inserts_submit_button_into_form()
     {
-        $decorator = new PaymentOptionFormDecorator;
+        $decorator = new PaymentOptionFormDecorator();
 
         $form =
 "<div>
@@ -45,7 +45,7 @@ class PaymentOptionFormDecoratorTest extends UnitTestCase
 </form>
 </div>";
 
-        $exp  =
+        $exp =
 "<div>
 <p>Yolo</p>
 <form>
@@ -61,7 +61,7 @@ class PaymentOptionFormDecoratorTest extends UnitTestCase
 
     public function test_addHiddenSubmitButton_returns_false_when_multiple_forms()
     {
-        $decorator = new PaymentOptionFormDecorator;
+        $decorator = new PaymentOptionFormDecorator();
         $this->assertFalse(
             $decorator->addHiddenSubmitButton(
                 '<form></form><form></form>',
@@ -72,12 +72,13 @@ class PaymentOptionFormDecoratorTest extends UnitTestCase
 
     private function normalizeHTML($html)
     {
-        $doc = new DOMDocument;
+        $doc = new DOMDocument();
         if (!$doc->loadHTML($html)) {
             throw new Exception('Invalid HTML.');
         }
         $doc->preserveWhiteSpace = false;
         $doc->formatOutput = true;
+
         return $doc->saveHTML();
     }
 
@@ -87,6 +88,7 @@ class PaymentOptionFormDecoratorTest extends UnitTestCase
             $this->normalizeHTML($exp),
             $this->normalizeHTML($act)
         );
+
         return $this;
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -29,7 +29,7 @@ namespace LegacyTests\Unit\Core\Cart\Calculation\CartRules;
 use LegacyTests\Unit\Core\Cart\Calculation\AbstractCartCalculationTest;
 
 /**
- * these tests aim to check the correct calculation of cart total when applying cart rules
+ * these tests aim to check the correct calculation of cart total when applying cart rules.
  *
  * products are inserted as fixtures
  * products are inserted in cart from data providers
@@ -37,7 +37,6 @@ use LegacyTests\Unit\Core\Cart\Calculation\AbstractCartCalculationTest;
  */
 class CartRulesAmountTest extends AbstractCartCalculationTest
 {
-
     /**
      * @dataProvider cartWithOneCartRuleAmountProvider
      */
@@ -69,42 +68,42 @@ class CartRulesAmountTest extends AbstractCartCalculationTest
     public function cartWithOneCartRuleAmountProvider()
     {
         return [
-            'empty cart'                                                                                      => [
-                'products'      => [],
+            'empty cart' => [
+                'products' => [],
                 'expectedTotal' => 0,
-                'cartRules'     => [4],
-                'knownToFailOnV1'=>false,
+                'cartRules' => [4],
+                'knownToFailOnV1' => false,
             ],
-            'one product in cart, quantity 1, one 5€ global voucher'                                          => [
-                'products'      => [
+            'one product in cart, quantity 1, one 5€ global voucher' => [
+                'products' => [
                     1 => 1,
                 ],
                 'expectedTotal' => static::PRODUCT_FIXTURES[1]['price']
                                    - static::CART_RULES_FIXTURES[4]['amount']
                                    + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
-                'cartRules'     => [4],
-                'knownToFailOnV1'=>false,
+                'cartRules' => [4],
+                'knownToFailOnV1' => false,
             ],
-            'one product in cart, quantity 1, one 500€ global voucher'                                        => [
-                'products'      => [
+            'one product in cart, quantity 1, one 500€ global voucher' => [
+                'products' => [
                     1 => 1,
                 ],
                 'expectedTotal' => static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE, // voucher exceeds total
-                'cartRules'     => [5],
-                'knownToFailOnV1'=>false,
+                'cartRules' => [5],
+                'knownToFailOnV1' => false,
             ],
-            'one product in cart, quantity 3, one 5€ global voucher'                                          => [
-                'products'      => [
+            'one product in cart, quantity 3, one 5€ global voucher' => [
+                'products' => [
                     1 => 3,
                 ],
                 'expectedTotal' => 3 * static::PRODUCT_FIXTURES[1]['price']
                                    - static::CART_RULES_FIXTURES[4]['amount']
                                    + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
-                'cartRules'     => [4],
-                'knownToFailOnV1'=>false,
+                'cartRules' => [4],
+                'knownToFailOnV1' => false,
             ],
-            '3 products in cart, several quantities, one 5€ global voucher (reduced product at first place)'  => [
-                'products'      => [
+            '3 products in cart, several quantities, one 5€ global voucher (reduced product at first place)' => [
+                'products' => [
                     2 => 2, // 64.776
                     1 => 3, // 59.43
                     3 => 1, // 31.188
@@ -115,11 +114,11 @@ class CartRulesAmountTest extends AbstractCartCalculationTest
                                    + static::PRODUCT_FIXTURES[3]['price']
                                    - static::CART_RULES_FIXTURES[4]['amount']
                                    + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
-                'cartRules'     => [4],
-                'knownToFailOnV1'=>false,
+                'cartRules' => [4],
+                'knownToFailOnV1' => false,
             ],
             '3 products in cart, several quantities, one 5€ global voucher (reduced product at second place)' => [
-                'products'      => [
+                'products' => [
                     1 => 3, // 59.43
                     2 => 2, // 64.776
                     3 => 1, // 31.188
@@ -130,19 +129,19 @@ class CartRulesAmountTest extends AbstractCartCalculationTest
                                    + static::PRODUCT_FIXTURES[3]['price']
                                    - static::CART_RULES_FIXTURES[4]['amount']
                                    + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
-                'cartRules'     => [4],
-                'knownToFailOnV1'=>false,
+                'cartRules' => [4],
+                'knownToFailOnV1' => false,
             ],
-            '3 products in cart, several quantities, one 500€ global voucher'                                 => [
-                'products'      => [
+            '3 products in cart, several quantities, one 500€ global voucher' => [
+                'products' => [
                     2 => 2, // 64.776
                     1 => 3, // 59.43
                     3 => 1, // 31.188
                     // total without rule : 155.41
                 ],
                 'expectedTotal' => static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE, // voucher exceeds total
-                'cartRules'     => [5],
-                'knownToFailOnV1'=>false,
+                'cartRules' => [5],
+                'knownToFailOnV1' => false,
             ],
         ];
     }
@@ -150,36 +149,36 @@ class CartRulesAmountTest extends AbstractCartCalculationTest
     public function cartWithMultipleCartRulesAmountProvider()
     {
         return [
-            'empty cart'                                                                            => [
-                'products'      => [],
+            'empty cart' => [
+                'products' => [],
                 'expectedTotal' => 0,
-                'cartRules'     => [4, 6],
-                'knownToFailOnV1'=>false,
+                'cartRules' => [4, 6],
+                'knownToFailOnV1' => false,
             ],
-            'one product in cart, quantity 1, one 5€ global voucher, one 10€ global voucher'        => [
-                'products'      => [
+            'one product in cart, quantity 1, one 5€ global voucher, one 10€ global voucher' => [
+                'products' => [
                     1 => 1,
                 ],
                 'expectedTotal' => static::PRODUCT_FIXTURES[1]['price']
                                    - static::CART_RULES_FIXTURES[4]['amount']
                                    - static::CART_RULES_FIXTURES[6]['amount']
                                    + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
-                'cartRules'     => [4, 6],
-                'knownToFailOnV1'=>false,
+                'cartRules' => [4, 6],
+                'knownToFailOnV1' => false,
             ],
-            'one product in cart, quantity 3, one 5€ global voucher, one 10€ global voucher'        => [
-                'products'      => [
+            'one product in cart, quantity 3, one 5€ global voucher, one 10€ global voucher' => [
+                'products' => [
                     1 => 3,
                 ],
                 'expectedTotal' => 3 * static::PRODUCT_FIXTURES[1]['price']
                                    - static::CART_RULES_FIXTURES[4]['amount']
                                    - static::CART_RULES_FIXTURES[6]['amount']
                                    + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
-                'cartRules'     => [4, 6],
-                'knownToFailOnV1'=>false,
+                'cartRules' => [4, 6],
+                'knownToFailOnV1' => false,
             ],
             '3 products in cart, several quantities, one 5€ global voucher, one 10€ global voucher' => [
-                'products'      => [
+                'products' => [
                     2 => 2, // 64.776
                     1 => 3, // 59.43
                     3 => 1, // 31.188
@@ -191,8 +190,8 @@ class CartRulesAmountTest extends AbstractCartCalculationTest
                                    - static::CART_RULES_FIXTURES[4]['amount']
                                    - static::CART_RULES_FIXTURES[6]['amount']
                                    + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
-                'cartRules'     => [4, 6],
-                'knownToFailOnV1'=>false,
+                'cartRules' => [4, 6],
+                'knownToFailOnV1' => false,
             ],
         ];
     }

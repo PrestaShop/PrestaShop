@@ -1,6 +1,6 @@
 <?php
 /**
- * ForeignRefBuilder.php
+ * ForeignRefBuilder.php.
  *
  * Builds the FOREIGN KEY REFERENCES statement part of CREATE TABLE.
  *
@@ -31,51 +31,56 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
+ *
  * @version   SVN: $Id: ForeignRefBuilder.php 927 2014-01-08 13:01:17Z phosco@gmx.de $
- * 
  */
-
-require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
-require_once dirname(__FILE__) . '/../exceptions/UnableToCreateSQLException.php';
-require_once dirname(__FILE__) . '/TableBuilder.php';
-require_once dirname(__FILE__) . '/ReservedBuilder.php';
-require_once dirname(__FILE__) . '/ColumnListBuilder.php';
+require_once dirname(__FILE__).'/../utils/ExpressionType.php';
+require_once dirname(__FILE__).'/../exceptions/UnableToCreateSQLException.php';
+require_once dirname(__FILE__).'/TableBuilder.php';
+require_once dirname(__FILE__).'/ReservedBuilder.php';
+require_once dirname(__FILE__).'/ColumnListBuilder.php';
 
 /**
  * This class implements the builder for the FOREIGN KEY REFERENCES statement
- * part of CREATE TABLE. 
+ * part of CREATE TABLE.
  * You can overwrite all functions to achieve another handling.
  *
  * @author  André Rothe <andre.rothe@phosco.info>
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- *  
  */
-class ForeignRefBuilder {
-
-    protected function buildTable($parsed) {
+class ForeignRefBuilder
+{
+    protected function buildTable($parsed)
+    {
         $builder = new TableBuilder();
+
         return $builder->build($parsed, 0);
     }
 
-    protected function buildColumnList($parsed) {
+    protected function buildColumnList($parsed)
+    {
         $builder = new ColumnListBuilder();
+
         return $builder->build($parsed);
     }
 
-    protected function buildReserved($parsed) {
+    protected function buildReserved($parsed)
+    {
         $builder = new ReservedBuilder();
+
         return $builder->build($parsed);
     }
 
-    public function build($parsed) {
-        if ($parsed['expr_type'] !== ExpressionType::REFERENCE) {
-            return "";
+    public function build($parsed)
+    {
+        if (ExpressionType::REFERENCE !== $parsed['expr_type']) {
+            return '';
         }
-        $sql = "";
+        $sql = '';
         foreach ($parsed['sub_tree'] as $k => $v) {
             $len = strlen($sql);
             $sql .= $this->buildTable($v);
@@ -86,9 +91,9 @@ class ForeignRefBuilder {
                 throw new UnableToCreateSQLException('CREATE TABLE foreign ref subtree', $k, $v, 'expr_type');
             }
 
-            $sql .= " ";
+            $sql .= ' ';
         }
+
         return substr($sql, 0, -1);
     }
 }
-?>

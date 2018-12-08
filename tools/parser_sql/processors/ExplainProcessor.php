@@ -1,6 +1,6 @@
 <?php
 /**
- * ExplainProcessor.php
+ * ExplainProcessor.php.
  *
  * This file implements the processor for the EXPLAIN statements.
  *
@@ -29,55 +29,52 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
  * DAMAGE.
  */
-
-require_once(dirname(__FILE__) . '/AbstractProcessor.php');
-require_once(dirname(__FILE__) . '/../utils/ExpressionType.php');
+require_once dirname(__FILE__).'/AbstractProcessor.php';
+require_once dirname(__FILE__).'/../utils/ExpressionType.php';
 
 /**
- * 
  * This class processes the EXPLAIN statements.
- * 
+ *
  * @author arothe
- * 
  */
-class ExplainProcessor extends AbstractProcessor {
-
-    protected function isStatement($keys, $needle = "EXPLAIN") {
+class ExplainProcessor extends AbstractProcessor
+{
+    protected function isStatement($keys, $needle = 'EXPLAIN')
+    {
         $pos = array_search($needle, $keys);
         if (isset($keys[$pos + 1])) {
             return in_array($keys[$pos + 1], array('SELECT', 'DELETE', 'INSERT', 'REPLACE', 'UPDATE'), true);
         }
+
         return false;
     }
 
     // TODO: refactor that function
-    public function process($tokens, $keys = array()) {
-
-        $base_expr = "";
+    public function process($tokens, $keys = array())
+    {
+        $base_expr = '';
         $expr = array();
-        $currCategory = "";
+        $currCategory = '';
 
         if ($this->isStatement($keys)) {
             foreach ($tokens as $token) {
-
                 $trim = trim($token);
                 $base_expr .= $token;
 
-                if ($trim === '') {
+                if ('' === $trim) {
                     continue;
                 }
 
                 $upper = strtoupper($trim);
 
                 switch ($upper) {
-
                 case 'EXTENDED':
                 case 'PARTITIONS':
                     return array('expr_type' => ExpressionType::RESERVED, 'base_expr' => $token);
                     break;
 
                 case 'FORMAT':
-                    if ($currCategory === '') {
+                    if ('' === $currCategory) {
                         $currCategory = $upper;
                         $expr[] = array('expr_type' => ExpressionType::RESERVED, 'base_expr' => $trim);
                     }
@@ -85,7 +82,7 @@ class ExplainProcessor extends AbstractProcessor {
                     break;
 
                 case '=':
-                    if ($currCategory === 'FORMAT') {
+                    if ('FORMAT' === $currCategory) {
                         $expr[] = array('expr_type' => ExpressionType::OPERATOR, 'base_expr' => $trim);
                     }
                     // else?
@@ -93,10 +90,11 @@ class ExplainProcessor extends AbstractProcessor {
 
                 case 'TRADITIONAL':
                 case 'JSON':
-                    if ($currCategory === 'FORMAT') {
+                    if ('FORMAT' === $currCategory) {
                         $expr[] = array('expr_type' => ExpressionType::RESERVED, 'base_expr' => $trim);
+
                         return array('expr_type' => ExpressionType::EXPRESSION, 'base_expr' => trim($base_expr),
-                                     'sub_tree' => $expr);
+                                     'sub_tree' => $expr, );
                     }
                     // else?
                     break;
@@ -106,19 +104,18 @@ class ExplainProcessor extends AbstractProcessor {
                     break;
                 }
             }
+
             return empty($expr) ? null : $expr;
         }
 
         foreach ($tokens as $token) {
-
             $trim = trim($token);
 
-            if ($trim === '') {
+            if ('' === $trim) {
                 continue;
             }
 
             switch ($currCategory) {
-
             case 'TABLENAME':
                 $currCategory = 'WILD';
                 $expr[] = array('expr_type' => ExpressionType::COLREF, 'base_expr' => $trim);
@@ -133,7 +130,7 @@ class ExplainProcessor extends AbstractProcessor {
                 break;
             }
         }
+
         return empty($expr) ? null : $expr;
     }
 }
-?>

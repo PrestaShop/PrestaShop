@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -96,7 +96,7 @@ class AdminTabsControllerTest extends UnitTestCase
             ->method('query')
             ->with($this->callback(function ($subject) {
                 // It should check if multi-shop is active
-                return strpos($subject, 'PS_MULTISHOP_FEATURE_ACTIVE') !== false;
+                return false !== strpos($subject, 'PS_MULTISHOP_FEATURE_ACTIVE');
             }));
 
         $dbMock->expects($this->any())
@@ -106,22 +106,20 @@ class AdminTabsControllerTest extends UnitTestCase
                     $builtQuery = $subject->build();
 
                     // It should select modules
-                    return strpos($builtQuery, 'module') !== false;
-
+                    return false !== strpos($builtQuery, 'module');
                 }
 
                 // It should select tabs
-                return strpos($subject, 'tab') !== false ||
+                return false !== strpos($subject, 'tab') ||
                     // It should select authorization
-                    strpos($subject, 'authorization') !== false ||
-                    strpos($subject, 'ps_configuration') !== false ||
-                    strpos($subject, 'ps_shop') !== false ||
+                    false !== strpos($subject, 'authorization') ||
+                    false !== strpos($subject, 'ps_configuration') ||
+                    false !== strpos($subject, 'ps_shop') ||
                     // It should select hook alias
-                    strpos($subject, 'hook_alias') !== false;
-
+                    false !== strpos($subject, 'hook_alias');
             }))
             ->will($this->returnCallback(function ($subject) {
-                if (strpos($subject, 'authorization') !== false) {
+                if (false !== strpos($subject, 'authorization')) {
                     return array();
                 } else {
                     return false;
@@ -131,7 +129,8 @@ class AdminTabsControllerTest extends UnitTestCase
         parent::setupDatabaseMock($dbMock);
     }
 
-    public static function tearDownAfterClass() {
+    public static function tearDownAfterClass()
+    {
         Tools::resetRequest();
     }
 }

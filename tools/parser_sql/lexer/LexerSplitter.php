@@ -1,6 +1,6 @@
 <?php
 /**
- * LexerSplitter.php
+ * LexerSplitter.php.
  *
  * Defines the characters, which are used to split the given SQL string.
  * Part of PHPSQLParser.
@@ -32,12 +32,12 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
+ *
  * @version   SVN: $Id: LexerSplitter.php 842 2013-12-30 08:57:53Z phosco@gmx.de $
- * 
  */
 
 /**
@@ -47,49 +47,49 @@
  *
  * @author  André Rothe <andre.rothe@phosco.info>
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- *  
  */
-class LexerSplitter {
-
-    protected static $splitters = array("<=>", "\r\n", "!=", ">=", "<=", "<>", "<<", ">>", ":=", "\\", "&&", "||", ":=",
-                                       "/*", "*/", "--", ">", "<", "|", "=", "^", "(", ")", "\t", "\n", "'", "\"", "`",
-                                       ",", "@", " ", "+", "-", "*", "/", ";");
+class LexerSplitter
+{
+    protected static $splitters = array('<=>', "\r\n", '!=', '>=', '<=', '<>', '<<', '>>', ':=', '\\', '&&', '||', ':=',
+                                       '/*', '*/', '--', '>', '<', '|', '=', '^', '(', ')', "\t", "\n", "'", '"', '`',
+                                       ',', '@', ' ', '+', '-', '*', '/', ';', );
     protected $tokenSize;
     protected $hashSet;
 
     /**
      * Constructor.
-     * 
+     *
      * It initializes some fields.
      */
-    public function __construct() {
+    public function __construct()
+    {
         $this->tokenSize = strlen(self::$splitters[0]); // should be the largest one
         $this->hashSet = array_flip(self::$splitters);
     }
 
     /**
      * Get the maximum length of a split token.
-     * 
+     *
      * The largest element must be on position 0 of the internal $_splitters array,
      * so the function returns the length of that token. It must be > 0.
-     * 
+     *
      * @return int The number of characters for the largest split token.
      */
-    public function getMaxLengthOfSplitter() {
+    public function getMaxLengthOfSplitter()
+    {
         return $this->tokenSize;
     }
 
     /**
      * Looks into the internal split token array and compares the given token with
-     * the array content. It returns true, if the token will be found, false otherwise. 
-     *  
-     * @param String $token a string, which could be a split token. 
-     * 
-     * @return boolean true, if the given string will be a split token, false otherwise
+     * the array content. It returns true, if the token will be found, false otherwise.
+     *
+     * @param string $token a string, which could be a split token.
+     *
+     * @return bool true, if the given string will be a split token, false otherwise
      */
-    public function isSplitter($token) {
+    public function isSplitter($token)
+    {
         return isset($this->hashSet[$token]);
     }
 }
-
-?>

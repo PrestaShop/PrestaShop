@@ -1,6 +1,6 @@
 <?php
 /**
- * CreateStatement.php
+ * CreateStatement.php.
  *
  * Builds the CREATE statement
  *
@@ -31,17 +31,16 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
+ *
  * @version   SVN: $Id: CreateStatementBuilder.php 930 2014-01-08 13:07:55Z phosco@gmx.de $
- * 
  */
-
-require_once dirname(__FILE__) . '/LikeBuilder.php';
-require_once dirname(__FILE__) . '/SelectStatementBuilder.php';
-require_once dirname(__FILE__) . '/CreateBuilder.php';
+require_once dirname(__FILE__).'/LikeBuilder.php';
+require_once dirname(__FILE__).'/SelectStatementBuilder.php';
+require_once dirname(__FILE__).'/CreateBuilder.php';
 
 /**
  * This class implements the builder for the whole Create statement. You can overwrite
@@ -49,34 +48,40 @@ require_once dirname(__FILE__) . '/CreateBuilder.php';
  *
  * @author  André Rothe <andre.rothe@phosco.info>
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- *  
  */
-class CreateStatementBuilder {
-
-    protected function buildLIKE($parsed) {
+class CreateStatementBuilder
+{
+    protected function buildLIKE($parsed)
+    {
         $builder = new LikeBuilder();
+
         return $builder->build($parsed);
     }
 
-    protected function buildSelectStatement($parsed) {
+    protected function buildSelectStatement($parsed)
+    {
         $builder = new SelectStatementBuilder();
+
         return $builder->build($parsed);
     }
 
-    protected function buildCREATE($parsed) {
+    protected function buildCREATE($parsed)
+    {
         $builder = new CreateBuilder();
+
         return $builder->build($parsed);
     }
-    
-    public function build($parsed) {
+
+    public function build($parsed)
+    {
         $sql = $this->buildCREATE($parsed);
         if (isset($parsed['LIKE'])) {
-            $sql .= " " . $this->buildLIKE($parsed['LIKE']);
+            $sql .= ' '.$this->buildLIKE($parsed['LIKE']);
         }
         if (isset($parsed['SELECT'])) {
-            $sql .= " " . $this->buildSelectStatement($parsed);
+            $sql .= ' '.$this->buildSelectStatement($parsed);
         }
+
         return $sql;
     }
 }
-?>

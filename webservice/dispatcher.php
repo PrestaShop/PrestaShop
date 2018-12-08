@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,10 +23,9 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 ob_start();
 
-require_once(dirname(__FILE__).'/../config/config.inc.php');
+require_once dirname(__FILE__).'/../config/config.inc.php';
 
 // Cart is needed for some requests
 Context::getContext()->cart = new Cart();
@@ -56,18 +55,17 @@ if (isset($_SERVER['PHP_AUTH_USER'])) {
     die('401 Unauthorized');
 }
 
-
 $input_xml = null;
 
 // if a XML is in PUT or in POST
-if (($_SERVER['REQUEST_METHOD'] == 'PUT') || ($_SERVER['REQUEST_METHOD'] == 'POST')) {
-    $putresource = fopen("php://input", "r");
+if (('PUT' == $_SERVER['REQUEST_METHOD']) || ('POST' == $_SERVER['REQUEST_METHOD'])) {
+    $putresource = fopen('php://input', 'r');
     while ($putData = fread($putresource, 1024)) {
         $input_xml .= $putData;
     }
     fclose($putresource);
 }
-if (isset($input_xml) && strncmp($input_xml, 'xml=', 4) == 0) {
+if (isset($input_xml) && 0 == strncmp($input_xml, 'xml=', 4)) {
     $input_xml = substr($input_xml, 4);
 }
 
@@ -87,7 +85,7 @@ $request = call_user_func(array($class_name, 'getInstance'));
 $result = $request->fetch($key, $method, $_GET['url'], $params, $bad_class_name, $input_xml);
 
 // display result
-if (ob_get_length() != 0) {
+if (0 != ob_get_length()) {
     header('Content-Type: application/javascript');
 } // Useful for debug...
 

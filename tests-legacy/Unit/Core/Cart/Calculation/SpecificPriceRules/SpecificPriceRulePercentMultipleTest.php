@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -28,7 +28,6 @@ namespace LegacyTests\Unit\Core\Cart\Calculation\SpecificPriceRules;
 
 class SpecificPriceRulePercentMultipleTest extends AbstractSpecificPriceRuleTest
 {
-
     const SPECIFIC_PRICE_RULES_FIXTURES = [
         1 => ['reductionType' => 'percentage', 'reduction' => 23, 'fromQuantity' => 1],
         2 => ['reductionType' => 'percentage', 'reduction' => 15, 'fromQuantity' => 1],
@@ -63,24 +62,24 @@ class SpecificPriceRulePercentMultipleTest extends AbstractSpecificPriceRuleTest
     public function specificPriceRulePercentMultipleProvider()
     {
         return [
-            '1 product in cart, quantity 1, 2 rule percent from quantity 1, first is used'           => [
-                'products'             => [
+            '1 product in cart, quantity 1, 2 rule percent from quantity 1, first is used' => [
+                'products' => [
                     1 => 1,
                 ],
-                'expectedTotal'        => static::PRODUCT_FIXTURES[1]['price']
+                'expectedTotal' => static::PRODUCT_FIXTURES[1]['price']
                                           * (1 - static::SPECIFIC_PRICE_RULES_FIXTURES[1]['reduction'] / 100)
                                           + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
-                'cartRules'            => [],
+                'cartRules' => [],
                 'specificCartRuleData' => [1, 2],
             ],
             '1 product in cart, quantity 1, 2 rule percent from quantity 1, reversed, first is used' => [
-                'products'             => [
+                'products' => [
                     1 => 1,
                 ],
-                'expectedTotal'        => static::PRODUCT_FIXTURES[1]['price']
+                'expectedTotal' => static::PRODUCT_FIXTURES[1]['price']
                                           * (1 - static::SPECIFIC_PRICE_RULES_FIXTURES[2]['reduction'] / 100)
                                           + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
-                'cartRules'            => [],
+                'cartRules' => [],
                 'specificCartRuleData' => [2, 1],
             ],
         ];

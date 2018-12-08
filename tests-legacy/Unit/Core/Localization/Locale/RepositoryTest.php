@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -42,12 +42,12 @@ class RepositoryTest extends TestCase
     protected $localeRepository;
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     protected function setUp()
     {
         /**
-         * Mock the LocaleRepository dependencies :
+         * Mock the LocaleRepository dependencies :.
          */
         /** CLDR Locale data object */
         $cldrLocale = $this->getMockBuilder(CldrLocale::class)
@@ -97,15 +97,15 @@ class RepositoryTest extends TestCase
         $currencyRepository->method('getInstalledCurrencies')
             ->willReturn([$currency]);
 
-        /** @var CldrLocaleRepository $cldrLocaleRepository */
-        /** @var CurrencyRepository $currencyRepository */
+        /* @var CldrLocaleRepository $cldrLocaleRepository */
+        /* @var CurrencyRepository $currencyRepository */
         $this->localeRepository = new LocaleRepository($cldrLocaleRepository, $currencyRepository);
     }
 
     /**
      * Given a valid locale code
      * When asking the repository for the corresponding locale
-     * Then the expected Locale instance should be retrieved
+     * Then the expected Locale instance should be retrieved.
      */
     public function testGetLocale()
     {
@@ -118,7 +118,7 @@ class RepositoryTest extends TestCase
     /**
      * Given an invalid locale code
      * When asking the repository for the corresponding locale
-     * Then an exception should be raised
+     * Then an exception should be raised.
      *
      * @expectedException \PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException
      */

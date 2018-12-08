@@ -1,6 +1,6 @@
 <?php
 /**
- * ShowProcessor.php
+ * ShowProcessor.php.
  *
  * This file implements the processor for the SHOW statements.
  *
@@ -29,31 +29,30 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
  * DAMAGE.
  */
-
-require_once(dirname(__FILE__) . '/../utils/PHPSQLParserConstants.php');
-require_once(dirname(__FILE__) . '/../utils/ExpressionType.php');
-require_once(dirname(__FILE__) . '/LimitProcessor.php');
-require_once(dirname(__FILE__) . '/AbstractProcessor.php');
+require_once dirname(__FILE__).'/../utils/PHPSQLParserConstants.php';
+require_once dirname(__FILE__).'/../utils/ExpressionType.php';
+require_once dirname(__FILE__).'/LimitProcessor.php';
+require_once dirname(__FILE__).'/AbstractProcessor.php';
 
 /**
- * 
  * This class processes the SHOW statements.
- * 
+ *
  * @author arothe
- * 
  */
-class ShowProcessor extends AbstractProcessor {
-
+class ShowProcessor extends AbstractProcessor
+{
     private $limitProcessor;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->limitProcessor = new LimitProcessor();
     }
 
-    public function process($tokens) {
+    public function process($tokens)
+    {
         $resultList = array();
-        $category = "";
-        $prev = "";
+        $category = '';
+        $prev = '';
 
         foreach ($tokens as $k => $token) {
             $upper = strtoupper(trim($token));
@@ -63,10 +62,9 @@ class ShowProcessor extends AbstractProcessor {
             }
 
             switch ($upper) {
-
             case 'FROM':
                 $resultList[] = array('expr_type' => ExpressionType::RESERVED, 'base_expr' => trim($token));
-                if ($prev === 'INDEX' || $prev === 'COLUMNS') {
+                if ('INDEX' === $prev || 'COLUMNS' === $prev) {
                     continue;
                 }
                 $category = $upper;
@@ -122,18 +120,18 @@ class ShowProcessor extends AbstractProcessor {
                 case 'FROM':
                 case 'DATABASE':
                     $resultList[] = array('expr_type' => ExpressionType::DATABASE, 'name' => $token,
-                                          'no_quotes' => $this->revokeQuotation($token), 'base_expr' => $token);
+                                          'no_quotes' => $this->revokeQuotation($token), 'base_expr' => $token, );
                     break;
                 case 'FOR':
                     $resultList[] = array('expr_type' => ExpressionType::USER, 'name' => $token,
-                                          'no_quotes' => $this->revokeQuotation($token), 'base_expr' => $token);
+                                          'no_quotes' => $this->revokeQuotation($token), 'base_expr' => $token, );
                     break;
                 case 'INDEX':
                 case 'COLUMNS':
                 case 'TABLE':
                     $resultList[] = array('expr_type' => ExpressionType::TABLE, 'table' => $token,
-                                          'no_quotes' => $this->revokeQuotation($token), 'base_expr' => $token);
-                    $category = "TABLENAME";
+                                          'no_quotes' => $this->revokeQuotation($token), 'base_expr' => $token, );
+                    $category = 'TABLENAME';
                     break;
                 case 'FUNCTION':
                     if (PHPSQLParserConstants::isAggregateFunction($upper)) {
@@ -142,15 +140,15 @@ class ShowProcessor extends AbstractProcessor {
                         $expr_type = ExpressionType::SIMPLE_FUNCTION;
                     }
                     $resultList[] = array('expr_type' => $expr_type, 'name' => $token,
-                                          'no_quotes' => $this->revokeQuotation($token), 'base_expr' => $token);
+                                          'no_quotes' => $this->revokeQuotation($token), 'base_expr' => $token, );
                     break;
                 case 'PROCEDURE':
                     $resultList[] = array('expr_type' => ExpressionType::PROCEDURE, 'name' => $token,
-                                          'no_quotes' => $this->revokeQuotation($token), 'base_expr' => $token);
+                                          'no_quotes' => $this->revokeQuotation($token), 'base_expr' => $token, );
                     break;
                 case 'ENGINE':
                     $resultList[] = array('expr_type' => ExpressionType::ENGINE, 'name' => $token,
-                                          'no_quotes' => $this->revokeQuotation($token), 'base_expr' => $token);
+                                          'no_quotes' => $this->revokeQuotation($token), 'base_expr' => $token, );
                     break;
                 default:
                 // ignore
@@ -160,7 +158,7 @@ class ShowProcessor extends AbstractProcessor {
             }
             $prev = $category;
         }
+
         return $resultList;
     }
 }
-?>
