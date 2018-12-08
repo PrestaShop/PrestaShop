@@ -162,7 +162,8 @@ class LanguageCore extends ObjectModel
 
         $themes = (new ThemeManagerBuilder($this->context, Db::getInstance()))
             ->buildRepository()
-            ->getList();
+            ->getList()
+        ;
         foreach ($themes as $theme) {
             /* @var Theme $theme */
             $theme_dir = $theme->getDirectory();
@@ -193,7 +194,8 @@ class LanguageCore extends ObjectModel
                 ->setIsInstall(defined('PS_INSTALLATION_IN_PROGRESS'))
                 ->setProcessBOTheme(true)
                 ->setProcessDefaultModules(true)
-                ->process();
+                ->process()
+            ;
         }
 
         if ($only_add) {
@@ -217,7 +219,8 @@ class LanguageCore extends ObjectModel
             self::getRtlStylesheetProcessor()
                 ->setProcessBOTheme(true)
                 ->setProcessDefaultModules(true)
-                ->process();
+                ->process()
+            ;
         }
 
         return true;

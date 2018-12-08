@@ -64,7 +64,8 @@ class ProductImageController extends FrameworkBundleAdminController
                     new Assert\Image(array('maxSize' => $this->configuration->get('PS_ATTACHMENT_MAXIMUM_SIZE').'M')),
                 ],
             ))
-            ->getForm();
+            ->getForm()
+        ;
 
         $form->handleRequest($request);
 
@@ -143,7 +144,8 @@ class ProductImageController extends FrameworkBundleAdminController
                 'label' => $this->trans('Cover image', 'Admin.Catalog.Feature'),
                 'required' => false,
             ))
-            ->getForm();
+            ->getForm()
+        ;
 
         $form->handleRequest($request);
 

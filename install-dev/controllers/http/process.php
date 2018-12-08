@@ -97,7 +97,8 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
                     ->setIsInstall(true)
                     ->setLanguageCode($this->session->lang)
                     ->setProcessFOThemes(array('classic'))
-                    ->process();
+                    ->process()
+                ;
                 $this->processConfigureShop();
             } elseif (Tools::getValue('installFixtures') && !empty($this->session->process_validated['configureShop'])) {
                 $this->processInstallFixtures();

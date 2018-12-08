@@ -42,7 +42,8 @@ class StockManagementControllerTest extends ApiTestCase
 
         $stockMovementRepository = $this->getMockBuilder('PrestaShopBundle\Entity\Repository\StockMovementRepository')
             ->disableOriginalConstructor()
-            ->getMock();
+            ->getMock()
+        ;
 
         $stockMovementRepository->method('saveStockMvt')->willReturn(true);
         self::$container->set('prestashop.core.api.stock_movement.repository', $stockMovementRepository);
@@ -54,7 +55,8 @@ class StockManagementControllerTest extends ApiTestCase
     {
         $deleteMovements = 'DELETE FROM ps_stock_mvt';
         $statement = self::$kernel->getContainer()->get('doctrine.dbal.default_connection')
-            ->prepare($deleteMovements);
+            ->prepare($deleteMovements)
+        ;
         $statement->execute();
     }
 
@@ -67,7 +69,8 @@ class StockManagementControllerTest extends ApiTestCase
             reserved_quantity = 2
             WHERE id_product = 1 AND id_product_attribute = 1';
         $statement = self::$container->get('doctrine.dbal.default_connection')
-            ->prepare($updateProductQuantity);
+            ->prepare($updateProductQuantity)
+        ;
         $statement->execute();
     }
 

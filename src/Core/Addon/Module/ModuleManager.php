@@ -748,7 +748,8 @@ class ModuleManager implements AddonManagerInterface
             if ($module->attributes->has('prestatrust') && !$this->actionParams->has('confirmPrestaTrust')) {
                 throw (new UnconfirmedModuleActionException())->setModule($module)
                     ->setAction($action)
-                    ->setSubject('PrestaTrust');
+                    ->setSubject('PrestaTrust')
+                ;
             }
         }
     }

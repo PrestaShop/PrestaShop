@@ -79,7 +79,8 @@ final class WebserviceKeyStatusModifier
 
         if (!$webserviceKey->toggleStatus()) {
             $error = $this->translator
-                ->trans('An error occurred while updating the status.', [], 'Admin.Notifications.Error');
+                ->trans('An error occurred while updating the status.', [], 'Admin.Notifications.Error')
+            ;
 
             return [$error];
         }

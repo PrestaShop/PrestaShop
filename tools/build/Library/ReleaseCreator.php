@@ -267,7 +267,8 @@ class ReleaseCreator
             ->setupShopVersion()
             ->generateLicensesFile()
             ->runComposerInstall()
-            ->createPackage();
+            ->createPackage()
+        ;
         $endTime = date('H:i:s');
         $this->consoleWriter->displayText(
             "{$this->lineSeparator}--- Script ended at {$endTime}{$this->lineSeparator}",
@@ -323,7 +324,8 @@ class ReleaseCreator
         $this->consoleWriter->displayText('Setting files constants...', ConsoleWriter::COLOR_YELLOW);
         $this->setConfigDefinesConstants()
             ->setInstallDevConfigurationConstants()
-            ->setInstallDevInstallVersionConstants();
+            ->setInstallDevInstallVersionConstants()
+        ;
         $this->consoleWriter->displayText(" DONE{$this->lineSeparator}", ConsoleWriter::COLOR_GREEN);
 
         return $this;

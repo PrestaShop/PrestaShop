@@ -203,7 +203,8 @@ class ProductShipping extends CommonAbstractType
                     'required' => false,
                     'label' => $this->translator->trans('Delivery time of in-stock products:', [], 'Admin.Catalog.Feature'),
                 ]
-            );
+            )
+        ;
 
         foreach ($this->warehouses as $warehouse) {
             $builder->add(

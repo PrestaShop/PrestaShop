@@ -364,7 +364,8 @@ class PaymentOption implements HookContentClassInterface
                 ->setAction($option['action'])
                 ->setForm($option['form'])
                 ->setInputs($option['inputs'])
-                ->setLogo($option['logo']);
+                ->setLogo($option['logo'])
+            ;
 
             $newOptions[] = $newOption;
         }

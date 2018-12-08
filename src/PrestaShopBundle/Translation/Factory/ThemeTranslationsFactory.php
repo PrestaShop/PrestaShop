@@ -68,7 +68,8 @@ class ThemeTranslationsFactory extends TranslationsFactory
         $this->themeProvider
             ->setThemeName($themeName)
             ->setLocale($locale)
-            ->synchronizeTheme();
+            ->synchronizeTheme()
+        ;
 
         $translations = $this->getFrontTranslationsForThemeAndLocale($themeName, $locale, $search);
 

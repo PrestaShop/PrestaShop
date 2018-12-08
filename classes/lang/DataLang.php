@@ -64,7 +64,8 @@ class DataLangCore
             $finder = \Symfony\Component\Finder\Finder::create()
                 ->files()
                 ->name('*.'.$this->locale.'.xlf')
-                ->in((_PS_ROOT_DIR_.'/app/Resources/translations'));
+                ->in((_PS_ROOT_DIR_.'/app/Resources/translations'))
+            ;
 
             foreach ($finder as $file) {
                 list($domain, $locale, $format) = explode('.', $file->getBasename(), 3);

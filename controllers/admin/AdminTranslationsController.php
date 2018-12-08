@@ -87,7 +87,8 @@ class AdminTranslationsControllerCore extends AdminController
 
         $this->themes = (new ThemeManagerBuilder($this->context, Db::getInstance()))
             ->buildRepository()
-            ->getList();
+            ->getList()
+        ;
     }
 
     /*

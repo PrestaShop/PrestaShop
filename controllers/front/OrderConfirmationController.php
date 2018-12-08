@@ -88,7 +88,8 @@ class OrderConfirmationControllerCore extends FrontController
         $register_form = $this
             ->makeCustomerForm()
             ->setGuestAllowed(false)
-            ->fillWith(Tools::getAllValues());
+            ->fillWith(Tools::getAllValues())
+        ;
 
         parent::initContent();
 

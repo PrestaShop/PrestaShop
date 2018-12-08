@@ -1102,7 +1102,8 @@ class ToolsCore
         if (null === $errorMessage) {
             $errorMessage = Context::getContext()
                 ->getTranslator()
-                ->trans('Fatal error', [], 'Admin.Notifications.Error');
+                ->trans('Fatal error', [], 'Admin.Notifications.Error')
+            ;
         }
 
         if (_PS_MODE_DEV_) {

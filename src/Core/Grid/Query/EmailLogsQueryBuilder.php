@@ -65,7 +65,8 @@ final class EmailLogsQueryBuilder extends AbstractDoctrineQueryBuilder
 
         $this->searchCriteriaApplicator
             ->applySorting($searchCriteria, $qb)
-            ->applyPagination($searchCriteria, $qb);
+            ->applyPagination($searchCriteria, $qb)
+        ;
 
         return $qb;
     }
@@ -93,7 +94,8 @@ final class EmailLogsQueryBuilder extends AbstractDoctrineQueryBuilder
         $qb = $this->connection
             ->createQueryBuilder()
             ->from($this->dbPrefix.'mail', 'm')
-            ->leftJoin('m', $this->dbPrefix.'lang', 'l', 'm.id_lang = l.id_lang');
+            ->leftJoin('m', $this->dbPrefix.'lang', 'l', 'm.id_lang = l.id_lang')
+        ;
 
         foreach ($filters as $name => $value) {
             if ('id_lang' === $name) {

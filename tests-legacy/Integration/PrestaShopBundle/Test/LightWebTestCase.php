@@ -71,45 +71,54 @@ class LightWebTestCase extends TestCase
         $this->translator = self::$kernel->getContainer()->get('translator');
 
         $employeeMock = $this->getMockBuilder(Employee::class)
-            ->getMock();
+            ->getMock()
+        ;
         $employeeMock->id_profile = 1;
 
         $contextMock = $this->getMockBuilder(Context::class)
             ->setMethods(array('getTranslator', 'getContext'))
             ->disableOriginalConstructor()
-            ->getMock();
+            ->getMock()
+        ;
 
         $contextMock->method('getTranslator')
-            ->will(self::returnValue($this->translator));
+            ->will(self::returnValue($this->translator))
+        ;
 
         $contextMock->method('getContext')
-            ->will(self::returnValue($contextMock));
+            ->will(self::returnValue($contextMock))
+        ;
 
         $contextMock->employee = $employeeMock;
 
         $shopMock = $this->getMockBuilder(Shop::class)
             ->setMethods(array('getBaseURL'))
             ->disableOriginalConstructor()
-            ->getMock();
+            ->getMock()
+        ;
 
         $shopMock->id = 1;
         $shopMock->method('getBaseURL')
-            ->willReturn('my-awesome-url.com');
+            ->willReturn('my-awesome-url.com')
+        ;
 
         $contextMock->shop = $shopMock;
 
         $themeMock = $this->getMockBuilder(Theme::class)
             ->setMethods(array('getName'))
             ->disableOriginalConstructor()
-            ->getMock();
+            ->getMock()
+        ;
 
         $themeMock->method('getName')
-            ->willReturn('classic');
+            ->willReturn('classic')
+        ;
 
         $contextMock->shop->theme = $themeMock;
 
         $countryMock = $this->getMockBuilder(Country::class)
-            ->getMock();
+            ->getMock()
+        ;
         $countryMock->iso_code = 'en';
 
         $contextMock->country = $countryMock;
@@ -117,12 +126,14 @@ class LightWebTestCase extends TestCase
         $languageMock = $this->getMockBuilder(Language::class)
             ->disableAutoload()
             ->disableOriginalConstructor()
-            ->getMock();
+            ->getMock()
+        ;
         $contextMock->language = $languageMock;
 
         $currencyMock = $this->getMockBuilder(Currency::class)
             ->disableOriginalConstructor()
-            ->getMock();
+            ->getMock()
+        ;
 
         $contextMock->currency = $currencyMock;
 
@@ -148,10 +159,12 @@ class LightWebTestCase extends TestCase
             ])
             ->disableAutoload()
             ->disableOriginalConstructor()
-            ->getMock();
+            ->getMock()
+        ;
 
         $legacyContextMock->method('getContext')
-            ->willReturn($contextMock);
+            ->willReturn($contextMock)
+        ;
 
         $legacyContextMock->method('getLanguages')
             ->will(
@@ -173,12 +186,14 @@ class LightWebTestCase extends TestCase
                         ],
                     ]
                 )
-            );
+            )
+        ;
 
         $legacyContextMock->method('getLanguage')
             ->will(
                 self::returnValue($languageMock)
-            );
+            )
+        ;
 
         self::$kernel->getContainer()->set('prestashop.adapter.data_provider.currency', $currencyDataProviderMock);
         self::$kernel->getContainer()->set('prestashop.adapter.legacy.context', $legacyContextMock);
@@ -191,7 +206,8 @@ class LightWebTestCase extends TestCase
             ->setMethods(['get'])
             ->disableOriginalConstructor()
             ->disableAutoload()
-            ->getMock();
+            ->getMock()
+        ;
 
         $values = array(
             array('_PS_MODE_DEMO_', null, true),
@@ -199,7 +215,8 @@ class LightWebTestCase extends TestCase
         );
 
         $configurationMock->method('get')
-            ->will(self::returnValueMap($values));
+            ->will(self::returnValueMap($values))
+        ;
 
         self::$kernel->getContainer()->set('prestashop.adapter.legacy.configuration', $configurationMock);
     }

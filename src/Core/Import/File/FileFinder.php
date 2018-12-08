@@ -59,7 +59,8 @@ final class FileFinder
         $finder
             ->files()
             ->in($this->importDirectory->getDir())
-            ->notName('/^index\.php/i');
+            ->notName('/^index\.php/i')
+        ;
 
         $fileNames = [];
 

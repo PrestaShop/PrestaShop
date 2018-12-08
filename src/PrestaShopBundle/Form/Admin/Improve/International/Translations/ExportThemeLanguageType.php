@@ -69,6 +69,7 @@ class ExportThemeLanguageType extends TranslatorAwareType
             ->add('theme_name', ChoiceType::class, [
                 'choices' => $this->themeChoices,
                 'choice_translation_domain' => false,
-            ]);
+            ])
+        ;
     }
 }

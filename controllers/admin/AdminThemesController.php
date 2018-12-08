@@ -1055,7 +1055,8 @@ class AdminThemesControllerCore extends AdminController
                 Language::getRtlStylesheetProcessor()
                     ->setProcessFOThemes(array(Tools::getValue('PS_THEMES_LIST')))
                     ->setRegenerate(true)
-                    ->process();
+                    ->process()
+                ;
 
                 $this->confirmations[] = $this->trans(
                     'Your RTL stylesheets has been generated successfully',

@@ -112,7 +112,8 @@ class ModuleController extends ModuleAbstractController
 
         $filters = new AddonListFilter();
         $filters->setType(AddonListFilterType::MODULE | AddonListFilterType::SERVICE)
-            ->removeStatus(AddonListFilterStatus::UNINSTALLED);
+            ->removeStatus(AddonListFilterStatus::UNINSTALLED)
+        ;
         $installedProducts = $moduleRepository->getFilteredList($filters);
         $categories = $this->getCategories($modulesProvider, $installedProducts);
 
@@ -235,7 +236,8 @@ class ModuleController extends ModuleAbstractController
                     'idEmployee' => $currentEmployeeId,
                     'idModule' => $moduleAccessedId,
                 ]
-            );
+            )
+        ;
 
         if (null === $moduleHistory) {
             $moduleHistory = new ModuleHistory();
@@ -420,7 +422,8 @@ class ModuleController extends ModuleAbstractController
                     $response[$module]['is_configurable'] = (bool) $this->get('prestashop.core.admin.module.repository')
                         ->getModule($module)
                         ->attributes
-                        ->get('is_configurable');
+                        ->get('is_configurable')
+                    ;
                 }
             }
         } catch (UnconfirmedModuleActionException $e) {
@@ -559,7 +562,8 @@ class ModuleController extends ModuleAbstractController
                 $installationResponse['is_configurable'] = (bool) $this->get('prestashop.core.admin.module.repository')
                     ->getModule($moduleName)
                     ->attributes
-                    ->get('is_configurable');
+                    ->get('is_configurable')
+                ;
             } else {
                 $error = $moduleManager->getError($moduleName);
                 $installationResponse['msg'] = $this->trans(
@@ -574,7 +578,8 @@ class ModuleController extends ModuleAbstractController
         } catch (UnconfirmedModuleActionException $e) {
             $collection = AddonsCollection::createFrom(array($e->getModule()));
             $modules = $this->get('prestashop.core.admin.data_provider.module_interface')
-                ->generateAddonsUrls($collection);
+                ->generateAddonsUrls($collection)
+            ;
             $installationResponse = [
                 'status' => false,
                 'confirmation_subject' => $e->getSubject(),
@@ -787,7 +792,8 @@ class ModuleController extends ModuleAbstractController
             $collection = AddonsCollection::createFrom($category->modules);
             $modulesProvider->generateAddonsUrls($collection);
             $category->modules = $this->get('prestashop.adapter.presenter.module')
-                ->presentCollection($category->modules);
+                ->presentCollection($category->modules)
+            ;
         }
 
         return $categories;

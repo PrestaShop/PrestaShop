@@ -60,15 +60,18 @@ class AdminModuleDataProviderTest extends UnitTestCase
 
         $this->addonsDataProviderS = $this->getMockBuilder('PrestaShop\PrestaShop\Adapter\Addons\AddonsDataProvider')
             ->disableOriginalConstructor()
-            ->getMock();
+            ->getMock()
+        ;
 
         $this->categoriesProviderS = $this->getMockBuilder('PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider')
             ->disableOriginalConstructor()
-            ->getmock();
+            ->getmock()
+        ;
 
         $this->moduleDataProviderS = $this->getMockBuilder('PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider')
             ->disableOriginalConstructor()
-            ->getMock();
+            ->getMock()
+        ;
 
         /* The module catalog will contains only 5 modules for theses tests */
         $fakeModules = array(
@@ -176,7 +179,8 @@ class AdminModuleDataProviderTest extends UnitTestCase
                 'cacheProvider' => $this->cacheProviderS,
             ))
             ->setMethods(array('convertJsonForNewCatalog'))
-            ->getMock();
+            ->getMock()
+        ;
 
         $mock->clearCatalogCache();
 

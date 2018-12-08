@@ -259,7 +259,8 @@ class Calculator
         $cartRuleCalculator = new CartRuleCalculator();
         $cartRuleCalculator->setCartRules($this->cartRules)
             ->setCartRows($this->cartRows)
-            ->setCalculator($this);
+            ->setCalculator($this)
+        ;
         $cartRuleCalculator->applyCartRules();
     }
 

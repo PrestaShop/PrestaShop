@@ -158,11 +158,13 @@ class ModuleManagerTest extends TestCase
     {
         $this->adminModuleProviderS = $this->getMockBuilder('PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider')
             ->disableOriginalConstructor()
-            ->getMock();
+            ->getMock()
+        ;
 
         $this->adminModuleProviderS
             ->method('isAllowedAccess')
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
     }
 
     private function mockModuleProvider()
@@ -183,11 +185,13 @@ class ModuleManagerTest extends TestCase
         ];
         $this->moduleProviderS = $this->getMockBuilder('PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider')
             ->disableOriginalConstructor()
-            ->getMock();
+            ->getMock()
+        ;
 
         $this->moduleProviderS
             ->method('can')
-            ->will($this->returnValueMap($providerAuthorizations));
+            ->will($this->returnValueMap($providerAuthorizations))
+        ;
 
         $isInstalledValues = [
             [
@@ -199,7 +203,8 @@ class ModuleManagerTest extends TestCase
         ];
         $this->moduleProviderS
             ->method('isInstalled')
-            ->will($this->returnValueMap($isInstalledValues));
+            ->will($this->returnValueMap($isInstalledValues))
+        ;
 
         $isEnabledValues = [
             [self::INSTALLED_MODULE, true],
@@ -208,87 +213,108 @@ class ModuleManagerTest extends TestCase
 
         $this->moduleProviderS
             ->method('isEnabled')
-            ->will($this->returnValueMap($isEnabledValues));
+            ->will($this->returnValueMap($isEnabledValues))
+        ;
     }
 
     private function mockModuleUpdater()
     {
         $this->moduleUpdaterS = $this->getMockBuilder('PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater')
             ->disableOriginalConstructor()
-            ->getMock();
+            ->getMock()
+        ;
         $this->moduleUpdaterS
             ->method('removeModuleFromDisk')
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
         $this->moduleUpdaterS
             ->method('setModuleOnDiskFromAddons')
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
         $this->moduleUpdaterS
             ->method('upgrade')
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
     }
 
     private function mockModuleRepository()
     {
         $moduleS = $this->getMockBuilder('PrestaShop\PrestaShop\Adapter\Module\Module')
             ->setConstructorArgs(array(array(), array(), array()))
-            ->getMock();
+            ->getMock()
+        ;
         $moduleS
             ->method('onInstall')
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
         $moduleS
             ->method('onUpgrade')
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
         $moduleS
             ->method('onUninstall')
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
         $moduleS
             ->method('onDisable')
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
         $moduleS
             ->method('onEnable')
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
         $moduleS
             ->method('onReset')
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
         $moduleS
             ->method('onMobileDisable')
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
         $moduleS
             ->method('onMobileEnable')
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
 
         $this->moduleRepositoryS = $this->getMockBuilder('PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository')
             ->disableOriginalConstructor()
-            ->getMock();
+            ->getMock()
+        ;
 
         $this->moduleRepositoryS
             ->method('getModule')
-            ->willReturn($moduleS);
+            ->willReturn($moduleS)
+        ;
     }
 
     private function mockModuleZipManager()
     {
         $this->moduleZipManagerS = $this->getMockBuilder('PrestaShop\PrestaShop\Adapter\Module\ModuleZipManager')
             ->disableOriginalConstructor()
-            ->getMock();
+            ->getMock()
+        ;
 
         $this->moduleZipManagerS
             ->method('getName')
-            ->will($this->returnArgument(0));
+            ->will($this->returnArgument(0))
+        ;
 
         $this->moduleZipManagerS
-            ->method('storeInModulesFolder');
+            ->method('storeInModulesFolder')
+        ;
     }
 
     private function mockTranslator()
     {
         $this->translatorS = $this->getMockBuilder('Symfony\Component\Translation\Translator')
             ->disableOriginalConstructor()
-            ->getMock();
+            ->getMock()
+        ;
 
         $this->translatorS
             ->method('trans')
-            ->will($this->returnArgument(0));
+            ->will($this->returnArgument(0))
+        ;
     }
 
     private function mockDispatcher()
@@ -301,11 +327,13 @@ class ModuleManagerTest extends TestCase
         /* this is a super admin */
         $this->employeeS = $this->getMockBuilder('Employee')
             ->disableOriginalConstructor()
-            ->getMock();
+            ->getMock()
+        ;
 
         $this->employeeS
             ->method('can')
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
     }
 
     private function destroyMocks()

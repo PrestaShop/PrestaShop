@@ -202,7 +202,8 @@ class CacheProviderTest extends TestCase
         $itemMock = $this
             ->getMockBuilder(CacheItemInterface::class)
             ->disableOriginalConstructor()
-            ->getMock();
+            ->getMock()
+        ;
 
         $itemMock
             ->expects($this->once())
@@ -225,7 +226,8 @@ class CacheProviderTest extends TestCase
         $cacheMock = $this
             ->getMockBuilder(AdapterInterface::class)
             ->disableOriginalConstructor()
-            ->getMock();
+            ->getMock()
+        ;
 
         $cacheMock
             ->expects($this->once())
@@ -250,7 +252,8 @@ class CacheProviderTest extends TestCase
         $itemMock = $this
             ->getMockBuilder(CacheItemInterface::class)
             ->disableOriginalConstructor()
-            ->getMock();
+            ->getMock()
+        ;
 
         $itemMock
             ->expects($this->once())
@@ -273,7 +276,8 @@ class CacheProviderTest extends TestCase
         $cacheMock = $this
             ->getMockBuilder(AdapterInterface::class)
             ->disableOriginalConstructor()
-            ->getMock();
+            ->getMock()
+        ;
 
         $cacheMock
             ->expects($this->once())
@@ -299,7 +303,8 @@ class CacheProviderTest extends TestCase
         $providerMock = $this
             ->getMockBuilder(LegacyRouteProviderInterface::class)
             ->disableOriginalConstructor()
-            ->getMock();
+            ->getMock()
+        ;
 
         $providerMock
             ->expects($this->once()) //Very important to assert this method is only called once to create the cache
@@ -318,7 +323,8 @@ class CacheProviderTest extends TestCase
         $providerMock = $this
             ->getMockBuilder(LegacyRouteProviderInterface::class)
             ->disableOriginalConstructor()
-            ->getMock();
+            ->getMock()
+        ;
 
         $providerMock
             ->expects($this->never()) //Very important to assert this method is only called once to create the cache
@@ -336,7 +342,8 @@ class CacheProviderTest extends TestCase
         $generatorMock = $this
             ->getMockBuilder(CacheKeyGeneratorInterface::class)
             ->disableOriginalConstructor()
-            ->getMock();
+            ->getMock()
+        ;
 
         $generatorMock
             ->method('getCacheKey')

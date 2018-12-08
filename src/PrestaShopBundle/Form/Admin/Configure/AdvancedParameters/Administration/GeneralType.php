@@ -51,7 +51,8 @@ class GeneralType extends TranslatorAwareType
             ])
             ->add('back_cookie_lifetime', TextType::class, [
                 'required' => true,
-            ]);
+            ])
+        ;
     }
 
     /**

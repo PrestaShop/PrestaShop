@@ -103,7 +103,8 @@ class GridPositionUpdaterTest extends TestCase
                 1 => 0,
                 5 => 1,
                 42 => 2,
-            ]);
+            ])
+        ;
 
         $updaterMock
             ->method('updatePositions')
@@ -114,7 +115,8 @@ class GridPositionUpdaterTest extends TestCase
                     5 => 2,
                     42 => 1,
                 ])
-            );
+            )
+        ;
 
         return $updaterMock;
     }
@@ -132,7 +134,8 @@ class GridPositionUpdaterTest extends TestCase
                 1 => 0,
                 5 => 1,
                 42 => 2,
-            ]);
+            ])
+        ;
 
         $updaterMock
             ->method('updatePositions')

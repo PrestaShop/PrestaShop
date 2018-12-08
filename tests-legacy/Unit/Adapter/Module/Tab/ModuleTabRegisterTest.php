@@ -144,7 +144,8 @@ class ModuleTabRegisterTest extends UnitTestCase
         ;
         $this->tabRegister
             ->method('getModuleAdminControllersFilename')
-            ->will($this->returnValueMap($this->moduleAdminControllers));
+            ->will($this->returnValueMap($this->moduleAdminControllers))
+        ;
     }
 
     public function testWorkingTabsAreOk()

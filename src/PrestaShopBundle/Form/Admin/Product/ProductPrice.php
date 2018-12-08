@@ -199,7 +199,8 @@ class ProductPrice extends CommonAbstractType
                     'required' => false,
                     'label' => $this->translator->trans('Apply to all products', [], 'Admin.Catalog.Feature'),
                 ]
-            );
+            )
+        ;
 
         //generates fields for price priority
         $specificPricePriorityChoices = [

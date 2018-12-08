@@ -2059,7 +2059,8 @@ class CartCore extends ObjectModel
     public function getDiscountSubtotalWithoutGifts()
     {
         $discountSubtotal = $this->excludeGiftsDiscountFromTotal()
-            ->getOrderTotal(true, self::ONLY_DISCOUNTS);
+            ->getOrderTotal(true, self::ONLY_DISCOUNTS)
+        ;
         $this->includeGiftsDiscountInTotal();
 
         return $discountSubtotal;
@@ -4964,7 +4965,8 @@ class CartCore extends ObjectModel
     public function getProductsWithSeparatedGifts()
     {
         $products = $this->splitGiftsProductsQuantity()
-            ->getProducts($refresh = true);
+            ->getProducts($refresh = true)
+        ;
         $this->mergeGiftsProductsQuantity();
 
         return $products;

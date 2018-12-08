@@ -121,7 +121,8 @@ class OrderControllerCore extends FrontController
                 $this->context,
                 $translator,
                 $this->makeAddressForm()
-            ));
+            ))
+        ;
 
         if (!$this->context->cart->isVirtualCart()) {
             $checkoutDeliveryStep = new CheckoutDeliveryStep(
@@ -141,7 +142,8 @@ class OrderControllerCore extends FrontController
                     $this->context->cart->getGiftWrappingPrice(
                         $checkoutDeliveryStep->getIncludeTaxes()
                     )
-                );
+                )
+            ;
 
             $this->checkoutProcess->addStep($checkoutDeliveryStep);
         }
@@ -285,7 +287,8 @@ class OrderControllerCore extends FrontController
         $this->checkoutProcess
             ->setNextStepReachable()
             ->markCurrentStep()
-            ->invalidateAllStepsAfterCurrent();
+            ->invalidateAllStepsAfterCurrent()
+        ;
 
         $this->saveDataToPersist($this->checkoutProcess);
 

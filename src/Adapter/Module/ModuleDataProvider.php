@@ -107,7 +107,8 @@ class ModuleDataProvider
                 $qb->select('mh')
                     ->from('PrestaShopBundle:ModuleHistory', 'mh', 'mh.idModule')
                     ->where('mh.idEmployee = ?1')
-                    ->setParameter(1, $this->employeeID);
+                    ->setParameter(1, $this->employeeID)
+                ;
                 $query = $qb->getQuery();
                 $query->useResultCache(true);
                 $modulesHistory = $query->getResult();

@@ -383,7 +383,8 @@ class AdminShopUrlControllerCore extends AdminController
             ->setAttribute('url_shop_group', $this->context->link->getAdminLink('AdminShopGroup'))
             ->setAttribute('url_shop', $this->context->link->getAdminLink('AdminShop'))
             ->setAttribute('url_shop_url', $this->context->link->getAdminLink('AdminShopUrl'))
-            ->setData($data);
+            ->setData($data)
+        ;
         $shops_tree = $shops_tree->render(null, false, false);
 
         if (!$this->display && $this->id_shop) {

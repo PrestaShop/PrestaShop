@@ -184,7 +184,8 @@ class LogRepository implements RepositoryInterface, DoctrineQueryBuilderInterfac
 
         $this->searchCriteriaApplicator
             ->applyPagination($searchCriteria, $qb)
-            ->applySorting($searchCriteria, $qb);
+            ->applySorting($searchCriteria, $qb)
+        ;
 
         return $qb;
     }
@@ -218,7 +219,8 @@ class LogRepository implements RepositoryInterface, DoctrineQueryBuilderInterfac
         $qb = $this->connection
             ->createQueryBuilder()
             ->from($this->logTable, 'l')
-            ->leftJoin('l', $employeeTable, 'e', 'l.id_employee = e.id_employee');
+            ->leftJoin('l', $employeeTable, 'e', 'l.id_employee = e.id_employee')
+        ;
 
         if (null === $searchCriteria) {
             return $qb;

@@ -381,7 +381,8 @@ class ContextCore
                 ->files()
                 ->in($cacheDir)
                 ->depth('==0')
-                ->name('*.'.$locale.'.*');
+                ->name('*.'.$locale.'.*')
+            ;
             (new Filesystem())->remove($cache_file);
         }
 

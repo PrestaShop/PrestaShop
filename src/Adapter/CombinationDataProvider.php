@@ -145,7 +145,8 @@ class CombinationDataProvider
 
         $finalPrice = (new Number((string) $product->price))
             ->plus(new Number((string) $combination['price']))
-            ->toPrecision(CommonAbstractType::PRESTASHOP_DECIMALS);
+            ->toPrecision(CommonAbstractType::PRESTASHOP_DECIMALS)
+        ;
 
         return array(
             'id_product_attribute' => $combination['id_product_attribute'],

@@ -62,7 +62,8 @@ class MemcacheServerController extends FrameworkBundleAdminController
                 ->testConfiguration(
                     $queryValues->get('server_ip'),
                     $queryValues->getInt('server_port')
-                );
+                )
+            ;
 
             return new JsonResponse(array('test' => $isValid));
         }

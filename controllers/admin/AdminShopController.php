@@ -173,7 +173,8 @@ class AdminShopControllerCore extends AdminController
             ->setAttribute('url_shop_group', $this->context->link->getAdminLink('AdminShopGroup'))
             ->setAttribute('url_shop', $this->context->link->getAdminLink('AdminShop'))
             ->setAttribute('url_shop_url', $this->context->link->getAdminLink('AdminShopUrl'))
-            ->setData($data);
+            ->setData($data)
+        ;
         $shops_tree = $shops_tree->render(null, false, false);
 
         if ('edit' == $this->display) {
@@ -225,7 +226,8 @@ class AdminShopControllerCore extends AdminController
 
             $helper = new HelperTreeCategories('categories-tree', null, (int) Tools::getValue('id_category'), null, false);
             $this->content = $helper->setSelectedCategories($selected_cat)->setUseSearch(true)->setUseCheckBox(true)
-                ->render();
+                ->render()
+            ;
         }
         parent::displayAjax();
     }
@@ -516,7 +518,8 @@ class AdminShopControllerCore extends AdminController
 
         $themes = (new ThemeManagerBuilder($this->context, Db::getInstance()))
             ->buildRepository()
-            ->getList();
+            ->getList()
+        ;
 
         $this->fields_form['input'][] = array(
             'type' => 'theme',
@@ -604,7 +607,8 @@ class AdminShopControllerCore extends AdminController
         if (!$obj->theme_name) {
             $themes = (new ThemeManagerBuilder($this->context, Db::getInstance()))
                 ->buildRepository()
-                ->getList();
+                ->getList()
+            ;
             $theme = array_pop($themes);
             $theme_name = $theme->getName();
         } else {

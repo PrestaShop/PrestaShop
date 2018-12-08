@@ -72,7 +72,8 @@ class ModuleCommand extends ContainerAwareCommand
             ->setDescription('Manage your modules via command line')
             ->addArgument('action', InputArgument::REQUIRED, sprintf('Action to execute (Allowed actions: %s).', implode(' / ', $this->allowedActions)))
             ->addArgument('module name', InputArgument::REQUIRED, 'Module on which the action will be executed')
-            ->addArgument('file path', InputArgument::OPTIONAL, 'YML file path for configuration');
+            ->addArgument('file path', InputArgument::OPTIONAL, 'YML file path for configuration')
+        ;
     }
 
     protected function init(InputInterface $input, OutputInterface $output)

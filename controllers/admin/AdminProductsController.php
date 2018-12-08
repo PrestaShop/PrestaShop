@@ -293,7 +293,8 @@ class AdminProductsControllerCore extends AdminController
             ->setFullTree($full_tree)
             ->setChildrenOnly(true)
             ->setNoJS(true)
-            ->setRootCategory($category);
+            ->setRootCategory($category)
+        ;
 
         if ($input_name) {
             $tree->setInputName($input_name);

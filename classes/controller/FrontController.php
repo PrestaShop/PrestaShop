@@ -531,7 +531,8 @@ class FrontControllerCore extends Controller
     protected function buildFrontEndObject($object)
     {
         $object = $this->get('prestashop.core.filter.front_end_object.main')
-            ->filter($object);
+            ->filter($object)
+        ;
 
         Hook::exec('actionBuildFrontEndObject', array(
             'obj' => &$object,

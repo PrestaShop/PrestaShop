@@ -53,7 +53,8 @@ class CategoryController extends FrameworkBundleAdminController
 
         $form = $this->createFormBuilder()
             ->add('category', SimpleCategory::class)
-            ->getForm();
+            ->getForm()
+        ;
 
         $form->handleRequest($request);
 

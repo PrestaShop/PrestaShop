@@ -69,7 +69,8 @@ class FilterCollectionTest extends TestCase
     {
         $filter = $this->createMock(FilterInterface::class);
         $filter->method('getName')
-            ->willReturn($name);
+            ->willReturn($name)
+        ;
 
         return $filter;
     }

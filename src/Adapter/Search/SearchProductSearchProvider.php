@@ -135,7 +135,8 @@ class SearchProductSearchProvider implements ProductSearchProviderInterface
         if (!empty($products)) {
             $result
                 ->setProducts($products)
-                ->setTotalProductsCount($count);
+                ->setTotalProductsCount($count)
+            ;
 
             $result->setAvailableSortOrders(
                 $this->sortOrderFactory->getDefaultSortOrders()

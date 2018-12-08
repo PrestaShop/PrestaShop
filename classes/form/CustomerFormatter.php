@@ -147,7 +147,8 @@ class CustomerFormatterCore implements FormFormatterInterface
                     'Company',
                     [],
                     'Shop.Forms.Labels'
-                ));
+                ))
+            ;
             $format['siret'] = (new FormField())
                 ->setName('siret')
                 ->setType('text')
@@ -156,7 +157,8 @@ class CustomerFormatterCore implements FormFormatterInterface
                     'Identification number',
                     [],
                     'Shop.Forms.Labels'
-                ));
+                ))
+            ;
         }
 
         $format['email'] = (new FormField())

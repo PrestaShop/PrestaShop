@@ -155,7 +155,8 @@ class ModuleSelfConfigurator
         $files = Finder::create()
             ->files()
             ->in(_PS_MODULE_DIR_.$this->module)
-            ->name($this->defaultConfigFile, null, true);
+            ->name($this->defaultConfigFile, null, true)
+        ;
 
         foreach ($files as $file) {
             $this->configFile = $file->getRealPath();

@@ -214,27 +214,32 @@ class ThemeTranslationsFactoryTest extends TestCase
         $providerMock
             ->expects($this->any())
             ->method('getIdentifier')
-            ->willReturn($providerIdentifier);
+            ->willReturn($providerIdentifier)
+        ;
 
         $providerMock
             ->expects($this->any())
             ->method('getLocale')
-            ->willReturn($locale);
+            ->willReturn($locale)
+        ;
 
         $providerMock
             ->expects($this->any())
             ->method('getXliffCatalogue')
-            ->willReturn($this->getXliffCatalogue());
+            ->willReturn($this->getXliffCatalogue())
+        ;
 
         $providerMock
             ->expects($this->any())
             ->method('getDatabaseCatalogue')
-            ->willReturn($this->getDatabaseCatalogue());
+            ->willReturn($this->getDatabaseCatalogue())
+        ;
 
         $providerMock
             ->expects($this->any())
             ->method('getMessageCatalogue')
-            ->willReturn($this->getMessageCatalogue());
+            ->willReturn($this->getMessageCatalogue())
+        ;
 
         return $providerMock;
     }

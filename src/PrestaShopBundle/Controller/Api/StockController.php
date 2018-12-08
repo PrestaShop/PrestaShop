@@ -173,7 +173,8 @@ class StockController extends ApiController
             ->setData($dataCallback)
             ->setHeadersData($headersData)
             ->setLimit(10000)
-            ->setFileName('stock_'.date('Y-m-d_His').'.csv');
+            ->setFileName('stock_'.date('Y-m-d_His').'.csv')
+        ;
     }
 
     /**

@@ -104,7 +104,8 @@ final class SetUpUrlsDataConfiguration implements DataConfigurationInterface
                         'Before being able to use this tool, you need to:',
                         [],
                         'Admin.Shopparameters.Notification'
-                    );
+                    )
+                ;
 
                 $errorMessage .= ' ';
                 $errorMessage .= $this->translator
@@ -112,7 +113,8 @@ final class SetUpUrlsDataConfiguration implements DataConfigurationInterface
                         'Create a blank .htaccess in your root directory.',
                         [],
                         'Admin.Shopparameters.Notification'
-                    );
+                    )
+                ;
 
                 $errorMessage .= ' ';
                 $errorMessage .= $this->translator
@@ -120,7 +122,8 @@ final class SetUpUrlsDataConfiguration implements DataConfigurationInterface
                         'Give it write permissions (CHMOD 666 on Unix system).',
                         [],
                         'Admin.Shopparameters.Notification'
-                    );
+                    )
+                ;
 
                 $errors[] = $errorMessage;
             }

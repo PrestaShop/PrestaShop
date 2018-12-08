@@ -81,7 +81,8 @@ class LocaleTest extends TestCase
                     '€',
                     'EUR'
                 )
-            );
+            )
+        ;
         /** @noinspection end */
         $formatter = new Formatter(
             Rounding::ROUND_HALF_UP,

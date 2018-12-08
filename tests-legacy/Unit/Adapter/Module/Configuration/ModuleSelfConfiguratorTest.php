@@ -173,7 +173,8 @@ class ModuleSelfConfiguratorTest extends UnitTestCase
         $basePath = __DIR__.'/../../../../resources/module-self-config-files/..';
 
         $mockFilesystem = $this->getMockBuilder('\Symfony\Component\Filesystem\Filesystem')
-            ->getMock();
+            ->getMock()
+        ;
 
         $mockFilesystem->expects($this->exactly(2))
             ->method('copy')
@@ -186,7 +187,8 @@ class ModuleSelfConfiguratorTest extends UnitTestCase
                     $this->equalTo('http://localhost/img/logo.png'),
                     $this->equalTo($basePath.'/modules/ganalytics/another-logo.png'),
                 ]
-            );
+            )
+        ;
 
         $moduleSelfConfigurator = $this->getModuleSelfConfigurator(
             null,
@@ -237,9 +239,11 @@ class ModuleSelfConfiguratorTest extends UnitTestCase
         require_once $php_filepath;
         $mock = $this->getMockBuilder('\MyComplexModuleConfiguration')
             ->setMethods(array('run'))
-            ->getMock();
+            ->getMock()
+        ;
         $mock->expects($this->exactly(2))
-            ->method('run');
+            ->method('run')
+        ;
 
         // Redefine self configuratrion as mock
         $moduleSelfConfigurator = $this
@@ -248,13 +252,15 @@ class ModuleSelfConfiguratorTest extends UnitTestCase
             )
             ->setConstructorArgs(array($this->moduleRepository, $this->configuration, $this->connection, new Filesystem()))
             ->setMethods(array('loadPhpFile'))
-            ->getMock();
+            ->getMock()
+        ;
 
         $moduleSelfConfigurator
             ->expects($this->exactly(2))
             ->method('loadPhpFile')
             ->with($php_filepath)
-            ->will($this->returnValue($mock));
+            ->will($this->returnValue($mock))
+        ;
 
         $this->assertTrue($moduleSelfConfigurator->module($name)->file($filepath)->configure());
     }
@@ -265,39 +271,50 @@ class ModuleSelfConfiguratorTest extends UnitTestCase
     {
         $moduleS = $this->getMockBuilder('PrestaShop\PrestaShop\Adapter\Module\Module')
             ->disableOriginalConstructor()
-            ->getMock();
+            ->getMock()
+        ;
         $moduleS
             ->method('onInstall')
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
         $moduleS
             ->method('onUninstall')
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
         $moduleS
             ->method('onDisable')
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
         $moduleS
             ->method('onEnable')
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
         $moduleS
             ->method('onReset')
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
         $moduleS
             ->method('onMobileDisable')
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
         $moduleS
             ->method('onMobileEnable')
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
         $moduleS
             ->method('hasValidInstance')
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
 
         $this->moduleRepository = $this->getMockBuilder('PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository')
             ->disableOriginalConstructor()
-            ->getMock();
+            ->getMock()
+        ;
 
         $this->moduleRepository
             ->method('getModule')
-            ->willReturn($moduleS);
+            ->willReturn($moduleS)
+        ;
     }
 }
 

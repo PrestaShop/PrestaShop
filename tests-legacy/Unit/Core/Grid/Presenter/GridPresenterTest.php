@@ -93,29 +93,38 @@ class GridPresenterTest extends TestCase
                     ->add($this->createColumnMock('test_1'))
                     ->add($this->createColumnMock('test_2'))
                     ->add($this->createColumnMock('test_3'))
-            );
+            )
+        ;
         $definition->method('getBulkActions')
-            ->willReturn(new BulkActionCollection());
+            ->willReturn(new BulkActionCollection())
+        ;
         $definition->method('getGridActions')
-            ->willReturn(new GridActionCollection());
+            ->willReturn(new GridActionCollection())
+        ;
         $definition->method('getFilters')
-            ->willReturn(new FilterCollection());
+            ->willReturn(new FilterCollection())
+        ;
 
         $criteria = $this->createMock(SearchCriteriaInterface::class);
 
         $filterForm = $this->createMock(FormInterface::class);
         $filterForm->method('createView')
-            ->willReturn(new FormView());
+            ->willReturn(new FormView())
+        ;
 
         $grid = $this->createMock(GridInterface::class);
         $grid->method('getData')
-            ->willReturn($data);
+            ->willReturn($data)
+        ;
         $grid->method('getDefinition')
-            ->willReturn($definition);
+            ->willReturn($definition)
+        ;
         $grid->method('getSearchCriteria')
-            ->willReturn($criteria);
+            ->willReturn($criteria)
+        ;
         $grid->method('getFilterForm')
-            ->willReturn($filterForm);
+            ->willReturn($filterForm)
+        ;
 
         return $grid;
     }
@@ -124,7 +133,8 @@ class GridPresenterTest extends TestCase
     {
         $column = $this->createMock(ColumnInterface::class);
         $column->method('getId')
-            ->willReturn($id);
+            ->willReturn($id)
+        ;
 
         return $column;
     }

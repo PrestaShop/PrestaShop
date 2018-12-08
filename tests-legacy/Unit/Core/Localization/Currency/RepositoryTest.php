@@ -74,7 +74,8 @@ class RepositoryTest extends TestCase
         $dataRepo = $this->createMock(CurrencyDataRepositoryInterface::class);
         $dataRepo
             ->method('getDataByCurrencyCode')
-            ->willReturnCallback($getDataByCurrencyCode);
+            ->willReturnCallback($getDataByCurrencyCode)
+        ;
 
         /* @var $dataRepo CurrencyDataRepositoryInterface */
         $this->currencyRepository = new CurrencyRepository($dataRepo);

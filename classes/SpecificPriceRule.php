@@ -222,7 +222,8 @@ class SpecificPriceRuleCore extends ObjectModel
                 $query->select('p.`id_product`')
                     ->from('product', 'p')
                     ->leftJoin('product_shop', 'ps', 'p.`id_product` = ps.`id_product`')
-                    ->where('ps.id_shop = '.(int) $current_shop_id);
+                    ->where('ps.id_shop = '.(int) $current_shop_id)
+                ;
 
                 $attributes_join_added = false;
 
@@ -232,18 +233,21 @@ class SpecificPriceRuleCore extends ObjectModel
                         if (!$attributes_join_added) {
                             $query->select('pa.`id_product_attribute`')
                                 ->leftJoin('product_attribute', 'pa', 'p.`id_product` = pa.`id_product`')
-                                ->join(Shop::addSqlAssociation('product_attribute', 'pa', false));
+                                ->join(Shop::addSqlAssociation('product_attribute', 'pa', false))
+                            ;
 
                             $attributes_join_added = true;
                         }
 
                         $query->leftJoin('product_attribute_combination', 'pac'.(int) $id_condition, 'pa.`id_product_attribute` = pac'.(int) $id_condition.'.`id_product_attribute`')
-                            ->where('pac'.(int) $id_condition.'.`id_attribute` = '.(int) $condition['value']);
+                            ->where('pac'.(int) $id_condition.'.`id_attribute` = '.(int) $condition['value'])
+                        ;
                     } elseif ('manufacturer' == $condition['type']) {
                         $query->where('p.id_manufacturer = '.(int) $condition['value']);
                     } elseif ('category' == $condition['type']) {
                         $query->leftJoin('category_product', 'cp'.(int) $id_condition, 'p.`id_product` = cp'.(int) $id_condition.'.`id_product`')
-                            ->where('cp'.(int) $id_condition.'.id_category = '.(int) $condition['value']);
+                            ->where('cp'.(int) $id_condition.'.id_category = '.(int) $condition['value'])
+                        ;
                     } elseif ('supplier' == $condition['type']) {
                         $query->where('EXISTS(
 							SELECT
@@ -256,7 +260,8 @@ class SpecificPriceRuleCore extends ObjectModel
 						)');
                     } elseif ('feature' == $condition['type']) {
                         $query->leftJoin('feature_product', 'fp'.(int) $id_condition, 'p.`id_product` = fp'.(int) $id_condition.'.`id_product`')
-                            ->where('fp'.(int) $id_condition.'.`id_feature_value` = '.(int) $condition['value']);
+                            ->where('fp'.(int) $id_condition.'.`id_feature_value` = '.(int) $condition['value'])
+                        ;
                     }
                 }
 
@@ -280,7 +285,8 @@ class SpecificPriceRuleCore extends ObjectModel
                     ->select('NULL as `id_product_attribute`')
                     ->from('product', 'p')
                     ->leftJoin('product_shop', 'ps', 'p.`id_product` = ps.`id_product`')
-                    ->where('ps.id_shop = '.(int) $current_shop_id);
+                    ->where('ps.id_shop = '.(int) $current_shop_id)
+                ;
                 $query->where('p.`id_product` IN ('.implode(', ', array_map('intval', $products)).')');
                 $result = Db::getInstance()->executeS($query);
             } else {

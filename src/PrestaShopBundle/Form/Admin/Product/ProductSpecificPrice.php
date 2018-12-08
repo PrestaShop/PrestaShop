@@ -285,7 +285,8 @@ class ProductSpecificPrice extends CommonAbstractType
                     'label' => $this->translator->trans('Cancel', [], 'Admin.Actions'),
                     'attr' => ['class' => 'btn-outline-secondary js-cancel'],
                 ]
-            );
+            )
+        ;
         //
         // ResetType can't be used because the product page is wrapped
         // inside a big form: reset a specific price form the "right" way

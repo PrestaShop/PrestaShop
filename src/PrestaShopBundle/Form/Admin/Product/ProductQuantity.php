@@ -126,7 +126,8 @@ class ProductQuantity extends CommonAbstractType
                     'required' => true,
                     'multiple' => false,
                 ]
-            );
+            )
+        ;
 
         if ($is_stock_management) {
             $builder->add(
@@ -239,7 +240,8 @@ class ProductQuantity extends CommonAbstractType
                         'Admin.Catalog.Feature'
                     ),
                 ]
-            );
+            )
+        ;
 
         $builder->addEventListener(
             FormEvents::PRE_SET_DATA,

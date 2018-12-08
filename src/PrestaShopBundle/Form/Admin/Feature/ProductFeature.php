@@ -101,7 +101,8 @@ class ProductFeature extends CommonAbstractType
                 'hideTabs' => true,
                 'required' => false,
                 'label' => $this->translator->trans('OR Customized value', [], 'Admin.Catalog.Feature'),
-            ]);
+            ])
+        ;
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             $form = $event->getForm();

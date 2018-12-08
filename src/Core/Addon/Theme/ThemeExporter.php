@@ -73,7 +73,8 @@ class ThemeExporter
         $fileList = Finder::create()
             ->files()
             ->in($themeDir)
-            ->exclude(['node_modules']);
+            ->exclude(['node_modules'])
+        ;
 
         $this->fileSystem->mirror($themeDir, $cacheDir, $fileList);
     }
@@ -130,7 +131,8 @@ class ThemeExporter
         $files = Finder::create()
             ->files()
             ->in($sourceDir)
-            ->exclude(['node_modules']);
+            ->exclude(['node_modules'])
+        ;
 
         foreach ($files as $file) {
             $zip->addFile($file->getRealpath(), $file->getRelativePathName());

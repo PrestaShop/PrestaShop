@@ -49,7 +49,8 @@ class UpdateSchemaCommand extends ContainerAwareCommand
     {
         $this
             ->setName('prestashop:schema:update-without-foreign')
-            ->setDescription('Update the database');
+            ->setDescription('Update the database')
+        ;
     }
 
     /**

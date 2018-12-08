@@ -159,7 +159,8 @@ class PreferencesType extends TranslatorAwareType
                     'Travel' => 20,
                 ],
                 'choice_translation_domain' => 'Install',
-            ]);
+            ])
+        ;
     }
 
     /**

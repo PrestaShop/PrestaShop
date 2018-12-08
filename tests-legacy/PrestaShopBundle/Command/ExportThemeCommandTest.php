@@ -56,14 +56,17 @@ class ExportThemeCommandTest extends TestCase
     {
         $themeMock = $this->getMockBuilder('\PrestaShop\PrestaShop\Core\Addon\Theme\Theme')
             ->disableOriginalConstructor()
-            ->getMock();
+            ->getMock()
+        ;
 
         $themeRepositoryMock = $this->getMockBuilder('\PrestaShop\PrestaShop\Core\Addon\Theme\ThemeRepository')
             ->disableOriginalConstructor()
-            ->getMock();
+            ->getMock()
+        ;
 
         $themeRepositoryMock->method('getInstanceByName')
-            ->willReturn($themeMock);
+            ->willReturn($themeMock)
+        ;
 
         return $themeRepositoryMock;
     }
@@ -75,7 +78,8 @@ class ExportThemeCommandTest extends TestCase
     {
         $translatorMock = $this->getMockBuilder('\Symfony\Component\Translation\Translator')
             ->disableOriginalConstructor()
-            ->getMock();
+            ->getMock()
+        ;
 
         return $translatorMock;
     }
@@ -87,7 +91,8 @@ class ExportThemeCommandTest extends TestCase
     {
         $themeExporterMock = $this->getMockBuilder('\PrestaShop\PrestaShop\Core\Addon\Theme\ThemeExporter')
             ->disableOriginalConstructor()
-            ->getMock();
+            ->getMock()
+        ;
 
         return $themeExporterMock;
     }
@@ -99,7 +104,8 @@ class ExportThemeCommandTest extends TestCase
     {
         $containerMock = $this->getMockBuilder('\Symfony\Component\DependencyInjection\Container')
             ->disableOriginalConstructor()
-            ->getMock();
+            ->getMock()
+        ;
 
         $themeRepositoryMock = $this->mockThemeRepository();
         $translatorMock = $this->mockTranslator();
@@ -118,7 +124,8 @@ class ExportThemeCommandTest extends TestCase
                 );
 
                 return $services[$serviceId];
-            }));
+            }))
+        ;
 
         return $containerMock;
     }
@@ -130,15 +137,18 @@ class ExportThemeCommandTest extends TestCase
     {
         $helperSetMock = $this->getMockBuilder('\Symfony\Component\Console\Helper\HelperSet')
             ->disableOriginalConstructor()
-            ->getMock();
+            ->getMock()
+        ;
 
         $formatterHelperMock = $this->getMockBuilder('\Symfony\Component\Console\Helper\FormatterHelper')
             ->disableOriginalConstructor()
-            ->getMock();
+            ->getMock()
+        ;
 
         $helperSetMock->method('get')
             ->with('formatter')
-            ->willReturn($formatterHelperMock);
+            ->willReturn($formatterHelperMock)
+        ;
 
         return $helperSetMock;
     }

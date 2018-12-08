@@ -434,7 +434,8 @@ class TreeCore
                     'title' => $this->getTitle(),
                     'toolbar' => $this->useToolbar() ? $this->renderToolbar() : null,
                 )
-            );
+            )
+            ;
             $template->assign('header', $headerTemplate->fetch());
         }
 

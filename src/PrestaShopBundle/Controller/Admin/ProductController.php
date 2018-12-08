@@ -514,7 +514,8 @@ class ProductController extends FrameworkBundleAdminController
                     $adminProductWrapper->processProductOutOfStock($product, $_POST['out_of_stock']);
 
                     $customizationFieldsIds = $adminProductWrapper
-                        ->processProductCustomization($product, $_POST['custom_fields']);
+                        ->processProductCustomization($product, $_POST['custom_fields'])
+                    ;
 
                     $adminProductWrapper->processAttachments($product, $_POST['attachments']);
 
@@ -578,7 +579,8 @@ class ProductController extends FrameworkBundleAdminController
         $drawerModules = (new HookFinder())->setHookName('displayProductPageDrawer')
             ->setParams(['product' => $product])
             ->addExpectedInstanceClasses('PrestaShop\PrestaShop\Core\Product\ProductAdminDrawer')
-            ->present();
+            ->present()
+        ;
 
         return [
             'form' => $form->createView(),

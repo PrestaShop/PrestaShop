@@ -62,7 +62,8 @@ class SlipPdfType extends CommonAbstractType
                     'data' => $now,
                     'empty_data' => $now,
                 ]
-            );
+            )
+        ;
     }
 
     /**

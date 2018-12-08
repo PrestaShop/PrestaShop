@@ -99,22 +99,27 @@ class PrestaTrustCheckerTest extends UnitTestCase
 
         $this->apiClientS = $this->getMockBuilder('PrestaShopBundle\Service\DataProvider\Marketplace\ApiClient')
             ->disableOriginalConstructor()
-            ->getMock();
+            ->getMock()
+        ;
 
         $this->apiClientS
             ->method('setShopUrl')
-            ->will($this->returnValue($this->apiClientS));
+            ->will($this->returnValue($this->apiClientS))
+        ;
         $this->apiClientS
             ->method('getPrestaTrustCheck')
-            ->will($this->returnValue($this->prestatrustApiResults));
+            ->will($this->returnValue($this->prestatrustApiResults))
+        ;
 
         $this->translatorS = $this->getMockBuilder('Symfony\Component\Translation\Translator')
             ->disableOriginalConstructor()
-            ->getMock();
+            ->getMock()
+        ;
 
         $this->translatorS
             ->method('trans')
-            ->will($this->returnArgument(0));
+            ->will($this->returnArgument(0))
+        ;
 
         $cache = new ArrayCache();
         $cache->save('module-verified-from-addons-api', (object) array('hash' => '366d25acf8172ef93c7086c3ee78f9a2f3e7870356df498d34bda30fb294ae3b'));

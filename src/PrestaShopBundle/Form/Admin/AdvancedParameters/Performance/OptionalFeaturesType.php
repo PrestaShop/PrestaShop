@@ -63,7 +63,8 @@ class OptionalFeaturesType extends CommonAbstractType
             ])
             ->add('customer_groups', SwitchType::class, [
                 'translation_domain' => 'Admin.Advparameters.features',
-            ]);
+            ])
+        ;
     }
 
     /**

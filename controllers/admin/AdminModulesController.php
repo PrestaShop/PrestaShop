@@ -1171,7 +1171,8 @@ class AdminModulesControllerCore extends AdminController
                     _PS_MODULE_DIR_.Tools::getValue('configure'),
                 ))
                 ->setRegenerate(true)
-                ->process();
+                ->process()
+            ;
             Tools::redirectAdmin('index.php?controller=adminmodules&configure='.Tools::getValue('configure').'&token='.Tools::getValue('token').'&conf=6');
         }
 

@@ -95,7 +95,8 @@ class ProductSupplierCombination extends CommonAbstractType
             )
             ->add('id_product_attribute', FormType\HiddenType::class)
             ->add('product_id', FormType\HiddenType::class)
-            ->add('supplier_id', FormType\HiddenType::class);
+            ->add('supplier_id', FormType\HiddenType::class)
+        ;
 
         //set default minimal values for collection prototype
         $builder->setData([

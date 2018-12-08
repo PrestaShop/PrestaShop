@@ -70,7 +70,8 @@ class SmartyType extends CommonAbstractType
                     'Clear cache everytime something has been modified' => 'everytime',
                 ],
                 'required' => true,
-            ]);
+            ])
+        ;
     }
 
     /**

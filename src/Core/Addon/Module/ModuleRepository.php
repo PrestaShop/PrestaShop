@@ -551,7 +551,8 @@ class ModuleRepository implements ModuleRepositoryInterface
             ->in($this->modulePath)
             ->depth('== 0')
             ->exclude(array('__MACOSX'))
-            ->ignoreVCS(true);
+            ->ignoreVCS(true)
+        ;
 
         foreach ($modulesDirsList as $moduleDir) {
             $moduleName = $moduleDir->getFilename();
@@ -598,7 +599,8 @@ class ModuleRepository implements ModuleRepositoryInterface
     {
         $filters = new AddonListFilter();
         $filters->setType(AddonListFilterType::MODULE | AddonListFilterType::SERVICE)
-            ->setStatus(AddonListFilterStatus::INSTALLED);
+            ->setStatus(AddonListFilterStatus::INSTALLED)
+        ;
 
         return $this->getFilteredList($filters);
     }

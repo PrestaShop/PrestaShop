@@ -97,7 +97,8 @@ class ThemeRepository implements AddonRepositoryInterface
     public function getListExcluding(array $exclude)
     {
         $filter = (new AddonListFilter())
-            ->setExclude($exclude);
+            ->setExclude($exclude)
+        ;
 
         return $this->getFilteredList($filter);
     }

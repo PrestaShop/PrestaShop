@@ -53,7 +53,8 @@ class MemcacheServerType extends CommonAbstractType
             ->add('memcache_weight', TextType::class, [
                 'required' => false,
                 'empty_data' => '',
-            ]);
+            ])
+        ;
     }
 
     /**

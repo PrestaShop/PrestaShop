@@ -140,7 +140,8 @@ class SqlRequestFormDataProvider
     {
         return (new EditSqlRequestCommand(new SqlRequestId($requestSqlData['id'])))
             ->setName($requestSqlData['name'])
-            ->setSql($requestSqlData['sql']);
+            ->setSql($requestSqlData['sql'])
+        ;
     }
 
     /**

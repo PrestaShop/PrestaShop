@@ -122,7 +122,8 @@ class ModuleZipManager
             ->in($sandboxPath)
             ->depth('== 0')
             ->exclude(['__MACOSX'])
-            ->ignoreVCS(true);
+            ->ignoreVCS(true)
+        ;
 
         $validModuleStructure = false;
         // We must have only one folder in the zip, which contains the module files
@@ -136,7 +137,8 @@ class ModuleZipManager
                 ->in($sandboxPath.$moduleName)
                 ->depth('== 0')
                 ->exclude(['__MACOSX'])
-                ->ignoreVCS(true);
+                ->ignoreVCS(true)
+            ;
             foreach (iterator_to_array($moduleFolder) as $file) {
                 if ($file->getFileName() === $moduleName.'.php') {
                     $validModuleStructure = true;

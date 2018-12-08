@@ -127,7 +127,8 @@ class gamification extends Module
                                     'SELECT MIN(id_tab)
 											FROM `'._DB_PREFIX_.'tab`
 											WHERE `class_name` = "'.pSQL('ShopParameters').'"'
-                                        );
+                                        )
+            ;
         } else {
             // AdminAdmin
             $tab->id_parent = (int) Tab::getIdFromClassName('AdminAdmin');

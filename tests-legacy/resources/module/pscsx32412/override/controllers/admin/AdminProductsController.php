@@ -2165,7 +2165,8 @@ class AdminProductsController extends AdminProductsControllerCore
             $tree->setAttribute('is_category_filter', (bool) $this->id_current_category)
                 ->setAttribute('base_url', preg_replace('#&id_category=[0-9]*#', '', self::$currentIndex).'&token='.$this->token)
                 ->setInputName('id-category')
-                ->setSelectedCategories(array((int) $id_category));
+                ->setSelectedCategories(array((int) $id_category))
+            ;
             $this->tpl_list_vars['category_tree'] = $tree->render();
 
             // used to build the new url when changing category
@@ -2876,7 +2877,8 @@ class AdminProductsController extends AdminProductsControllerCore
             ->setRootCategory($root->id)
             ->setUseCheckBox(true)
             ->setUseSearch(true)
-            ->setSelectedCategories($categories);
+            ->setSelectedCategories($categories)
+        ;
 
         $data->assign(array('default_category' => $default_category,
                     'selected_cat_ids' => implode(',', array_keys($selected_cat)),
@@ -3162,7 +3164,8 @@ class AdminProductsController extends AdminProductsControllerCore
             Context::getContext()->link->getAdminLink('AdminProducts').'&ajax=1&id_product='.(int) $product->id
             .'&action=AddVirtualProductFile'
         )->setPostMaxSize(Tools::getOctets(ini_get('upload_max_filesize')))
-            ->setTemplate('virtual_product.tpl');
+            ->setTemplate('virtual_product.tpl')
+        ;
 
         $data->assign(array(
             'download_product_file_missing' => $msg,
@@ -3544,7 +3547,8 @@ class AdminProductsController extends AdminProductsControllerCore
                     Context::getContext()->link->getAdminLink('AdminProducts').'&ajax=1&id_product='.(int) $obj->id
                     .'&action=AddAttachment'
                 )->setPostMaxSize((Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE') * 1024 * 1024))
-                    ->setTemplate('attachment_ajax.tpl');
+                    ->setTemplate('attachment_ajax.tpl')
+                ;
 
                 $data->assign(array(
                     'obj' => $obj,

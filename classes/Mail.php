@@ -347,7 +347,8 @@ class MailCore extends ObjectModel
                     $configuration['PS_MAIL_SMTP_ENCRYPTION']
                 )
                     ->setUsername($configuration['PS_MAIL_USER'])
-                    ->setPassword($configuration['PS_MAIL_PASSWD']);
+                    ->setPassword($configuration['PS_MAIL_PASSWD'])
+                ;
             } else {
                 $connection = \Swift_MailTransport::newInstance();
             }
@@ -705,7 +706,8 @@ class MailCore extends ObjectModel
                 }
                 $smtp = \Swift_SmtpTransport::newInstance($smtp_server, $smtpPort, $smtpEncryption)
                     ->setUsername($smtpLogin)
-                    ->setPassword($smtpPassword);
+                    ->setPassword($smtpPassword)
+                ;
                 $swift = \Swift_Mailer::newInstance($smtp);
             } else {
                 $swift = \Swift_Mailer::newInstance(\Swift_MailTransport::newInstance());
@@ -717,7 +719,8 @@ class MailCore extends ObjectModel
                 ->setFrom($from)
                 ->setTo($to)
                 ->setSubject($subject)
-                ->setBody($content);
+                ->setBody($content)
+            ;
 
             if ($swift->send($message)) {
                 $result = true;
